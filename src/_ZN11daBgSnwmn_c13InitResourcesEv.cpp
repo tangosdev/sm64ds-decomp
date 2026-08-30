@@ -9,6 +9,7 @@
  * the hit (or the probe height) and raised 0xc3000. */
 #include "daBgSnwmn_c.h"
 #include "decl_common.h"
+#include "dBgCh_Gnd.h"
 
 extern "C" {
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
@@ -21,17 +22,12 @@ extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *b
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, u32 u);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int f1, int f2, u32 u1, u32 u2);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
-extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int data_ov072_02122c70[];
 }
 
 s32 daBgSnwmn_c::InitResources()
 {
-    char rg[0x50];
-    int v[3];
+    Vector3 pos;
     void *m;
 
     if (IsStarCollectedInLevel(0xa, 5) == 0)
@@ -54,16 +50,16 @@ s32 daBgSnwmn_c::InitResources()
 
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mCylClsn, this, data_ov072_02122c70, 0xc3000, 0x17c000, 0x800004, 0);
 
-    v[0] = mPosX;
-    v[1] = mPosY;
-    v[2] = mPosZ;
-    v[1] += 0x14000;
-    _ZN9dBgCh_GndC1Ev(rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg))
-        mPosY = *(int *)(rg + 0x44);
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    pos.y += 0x14000;
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    if (ground.DetectClsn())
+        mPosY = ground.clsnY;
     else
-        mPosY = v[1];
+        mPosY = pos.y;
     mPosY += 0xc3000;
     mVertAccel = 0;
     mTerminalVelocity = 0;
@@ -71,6 +67,5 @@ s32 daBgSnwmn_c::InitResources()
     mScaleY = 0x1800;
     mScaleZ = 0x1800;
     func_ov072_021208d8(this);
-    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
 }

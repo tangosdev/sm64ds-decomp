@@ -25,6 +25,7 @@
  * wall, notes/mwccarm-codegen.md.
  */
 #include "Skeeter.h"
+#include "dBgCh_Gnd.h"
 typedef int LocFix12;
 typedef struct { int w[2]; } LocSharedFilePtr;
 typedef struct { short x,y,z; } LocVector3_16;
@@ -32,7 +33,6 @@ typedef struct { int x,y,z; } LocVec3;
 typedef struct BMD_File BMD_File;
 typedef struct dActor_c dActor_c;
 struct C; typedef int (C::*PMF)();
-struct RG { char a[0x14]; int detect[16]; };
 
 extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
@@ -42,12 +42,7 @@ void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
 void func_0203558c(void* self);
 int func_ov090_02131e00(void* c, PMF* p);
-void _ZN9dBgCh_GndC1Ev(RG* self);
-void _ZN5dBgCh19StartDetectingWaterEv(RG* self);
-void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(RG* self, const LocVec3* v, dActor_c* a);
-int _ZN9dBgCh_Gnd10DetectClsnEv(RG* self);
-int SurfaceInfo_TestFlag0x20(int* p);
-void _ZN9dBgCh_GndD1Ev(RG* self);
+int SurfaceInfo_TestFlag0x20(const SurfaceInfo* p);
 int RandomIntInternal(int* seed);
 
 extern LocSharedFilePtr data_ov090_021344a0;
@@ -68,9 +63,8 @@ int Skeeter::InitResources()
 {
     char* c = (char*)this;
     BMD_File* f;
-    RG rg;
     int r;
-    LocVec3 pos;
+    Vector3 pos;
     LocVec3 v;
 
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov090_021344a0);
@@ -113,9 +107,9 @@ int Skeeter::InitResources()
     }
 
     {
-        _ZN9dBgCh_GndC1Ev(&rg);
-        *(int*)((char*)&rg + 0x4c) = 0xbb8000;
-        _ZN5dBgCh19StartDetectingWaterEv(&rg);
+        dBgCh_Gnd ground;
+        ground.mProbeHeight = 0xbb8000;
+        ground.StartDetectingWater();
         {
             int py = mPosY;
             int pz = mPosZ;
@@ -125,15 +119,15 @@ int Skeeter::InitResources()
             pos.y = ip;
             pos.z = pz;
         }
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, (dActor_c*)c);
+        ground.SetObjAndPos(pos, this);
         unk_3a8 = data_02092138;
-        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
-            if (SurfaceInfo_TestFlag0x20(rg.detect) != 0) {
+        if (ground.DetectClsn() != 0) {
+            if (SurfaceInfo_TestFlag0x20(&ground.surface) != 0) {
                 unk_39c = 1;
-                unk_3ac = rg.detect[12];
+                unk_3ac = ground.clsnY;
             } else {
-                unk_3a8 = rg.detect[12];
-                unk_3ac = rg.detect[12];
+                unk_3a8 = ground.clsnY;
+                unk_3ac = ground.clsnY;
             }
         }
 
@@ -144,7 +138,6 @@ int Skeeter::InitResources()
 
         if (unk_39c != 0) {
             func_ov090_02131e00(c, &data_ov090_021344f4);
-            _ZN9dBgCh_GndD1Ev(&rg);
             return 1;
         }
 
@@ -156,7 +149,6 @@ int Skeeter::InitResources()
             mAngleY = mPrevAngleY;
         }
         func_ov090_02131e00(c, &data_ov090_021344e4);
-        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     return 1;

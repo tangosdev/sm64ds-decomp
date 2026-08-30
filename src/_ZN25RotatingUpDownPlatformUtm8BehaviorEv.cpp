@@ -6,17 +6,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingUpDownPlatformUtm.h"
-typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct dBgCh_Gnd { char pad[0x54]; } dBgCh_Gnd;
+#include "dBgCh_Gnd.h"
+typedef Vector3 Vec3;
 
 extern "C" {
 extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *p);
 extern int Vec3_HorzDist(const Vec3 *a, const Vec3 *b);
 extern int _ZN8dActor_c13DistToCPlayerEv(void *thiz);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vec3 *pos, u32 e);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *rc);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *rc, const Vec3 *pos, void *actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *rc);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *src, void *m, void *dst);
 extern void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
@@ -30,7 +27,6 @@ extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *thiz, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
-extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *rc);
 }
 
 extern char data_020a0e68[];
@@ -45,7 +41,6 @@ int RotatingUpDownPlatformUtm::Behavior()
     Vec3 sp40;
     Vec3 sp4C;
     Vec3 sp58;
-    dBgCh_Gnd rc;
     int r4;
     int r6;
     int r5;
@@ -126,11 +121,11 @@ int RotatingUpDownPlatformUtm::Behavior()
         pos.z = mPosZ;
         pos.y = py - 0x14000;
     }
-    _ZN9dBgCh_GndC1Ev(&rc);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, 0);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
     mGroundY = pos.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
-        mGroundY = *(int *)((char *)&rc + 0x44);
+    if (ground.DetectClsn() != 0) {
+        mGroundY = ground.clsnY;
     }
 
     r6 = 0;
@@ -205,6 +200,5 @@ int RotatingUpDownPlatformUtm::Behavior()
     }
     }
 
-    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }
