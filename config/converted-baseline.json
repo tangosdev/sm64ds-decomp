@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2567,
+  "count": 2565,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -660,8 +660,6 @@
     "src/_ZN12daDossyCap_c6RenderEv.cpp",
     "src/_ZN12daDossyCap_cD0Ev.cpp",
     "src/_ZN12daDossyCap_cD1Ev.cpp",
-    "src/_ZN12daObjAbuku_cD0Ev.cpp",
-    "src/_ZN12daObjAbuku_cD1Ev.cpp",
     "src/_ZN13BasementWater16CleanupResourcesEv.cpp",
     "src/_ZN13BasementWaterD0Ev.cpp",
     "src/_ZN13BasementWaterD1Ev.cpp",

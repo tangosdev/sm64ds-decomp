@@ -24,6 +24,19 @@
 # pass, so the file is not in every PR's diff and does not conflict. Re-bank it
 # occasionally, on its own, to bank recent gains.
 #
+# ONE-WAY STALENESS HAS AN EXCEPTION, AND IT COST A DAY. A TU promotion REMOVES banked
+# paths: `tubuild.py` consolidates N per-symbol files into one, and the absorbing file
+# structurally cannot pass `no_mangled_refs`. So a promotion leaves the baseline stale in
+# the FAILING direction. Measured: PR #1996 promoted `ov002/daObjAbuku_c` while its own
+# checks were green -- they had run against a base predating the re-bank that first
+# banked the two files it deletes. Main went out of sync the moment it merged, and the
+# next unrelated PR to touch `src/**` (#1978) is the one that turned red for it.
+#
+# Hence the `push:` trigger below. It does not gate anything -- there is no branch
+# protection here and a red main is advisory -- but it attributes the breakage to the
+# merge that caused it instead of to whoever opens the next PR. Re-bank with
+# `--update --reason` naming the promotion; that is the designed path, not a workaround.
+#
 # Hence: no second checkout, and no root-file override the way langmode has one. The
 # escape hatch is a flag on the tool, used LOCALLY before you push.
 #
@@ -57,6 +70,17 @@ on:
       # the verdict now. A promotion PR trips `src/**` anyway (it deletes N files and
       # adds one), but a PR that only re-labels an entry `"status": "promoted"` would
       # not, and that alone changes what this gate says about an existing baseline.
+      - "tools/tu_manifest.py"
+      - "config/tu_manifest.d/**"
+      - "config/converted-baseline.json"
+      - ".github/workflows/converted-ratchet.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tools/tiers.py"
+      - "tools/tiers_ratchet.py"
+      - "tools/delaunder.py"
       - "tools/tu_manifest.py"
       - "config/tu_manifest.d/**"
       - "config/converted-baseline.json"
