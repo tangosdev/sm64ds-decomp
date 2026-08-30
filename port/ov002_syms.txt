@@ -361,3 +361,33 @@ data_ov002_02110afc data_ov002_02110b04 data_ov002_02110b08 data_ov002_02110b0c
 data_ov002_02110c20 data_ov002_02110dac data_ov002_02110db8 data_ov002_02110ddc
 data_ov002_02110de8 data_ov002_02110df4 data_ov002_02110e00 data_ov002_02110e0c
 data_ov002_02110e18
+
+# run rel0215 wave 3 (lane w3-c): SIX SYMBOLS for a class in ANOTHER overlay.
+# WATER_RING (244, ov064) hands TextureTransformer::Prepare and ::SetFile a BTA
+# descriptor that lives HERE, not in its own overlay -- the ShipWater /
+# SQUASHER shape, an overlay joining a per-symbol mount for a record another
+# class reaches by name. MEASURED off the first link's own unresolved list
+# (`unresolved external symbol _data_ov002_0210d6dc referenced in
+# WaterRing::InitResources`), not predicted.
+#
+# THE OTHER FIVE ARE ITS TRANSITIVE CLOSURE, walked over ov002's own relocs so
+# the mount's pointer pass has both ends of every word and rebases it -- the
+# gate-177 rule. Leaving them out would host four raw DS addresses inside the
+# descriptor (T2), which is the ptr_audit finding this avoids rather than
+# reports:
+#
+#   data_ov002_0210d6dc  0x18   the six-word descriptor: {0x78, ->02100360,
+#                               ->0210035c, ->02100380, 1, ->02100364}
+#   data_ov002_0210035c  0x4    one Fix12 zero
+#   data_ov002_02100360  0x4    one Fix12 0x1000
+#   data_ov002_02100364  0x1c   a seven-word record whose +4 points at
+#                               data_ov002_0210d6d0
+#   data_ov002_0210d6d0  0xc    three words, no pointers of its own
+#   data_ov002_02100380  0x1e0  the frame-key table (0, 0x22, 0x44, 0x66, ...);
+#                               0x1e0 runs to 0x02100560, which is the .rodata
+#                               section end out of this overlay's delinks
+#
+# Every one of the six takes its NATURAL next-symbol delta and every one of the
+# six was checked against it rather than assumed -- no pin is needed here.
+data_ov002_0210d6dc data_ov002_0210035c data_ov002_02100360
+data_ov002_02100364 data_ov002_0210d6d0 data_ov002_02100380

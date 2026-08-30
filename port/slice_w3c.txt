@@ -96,14 +96,33 @@ src/func_ov064_0211a49c.c
 src/func_ov064_0211a6e0.c
 src/__sinit_ov064_0211b59c.c
 #
-# ---- NO EXTERNAL CLOSURE LINE ----------------------------------------------
+# ---- THE MEASURED EXTERNAL CLOSURE -----------------------------------------
 #
-# Every arm9 / ov002 body this closure reaches is already in
-# build/port/walk_window.map on the base tip, checked symbol by symbol rather
-# than assumed -- including the nine func_ov064_0211a4c4 calls into
-# (DecIfAbove0_Short, func_02012790, Actor::FindWithID, Vec3_HorzAngle,
-# AngleDiff, Actor::FindWithActorID, Actor::SpawnSoundObj, func_02012694,
-# Player::Shock) and the two ov002 SharedFilePtrs the two InitResources read
-# (data_ov002_0210da10 / _0210d6dc for WaterRing, _0210d9a8 / _0210da38 for
-# TreasureChest, all mounted by gate 14). If the first link disagrees, the
-# measured lines get appended here rather than guessed.
+# NO src/ LINE, and that is a result rather than an oversight. All nine bodies
+# func_ov064_0211a4c4 calls (DecIfAbove0_Short, func_02012790,
+# Actor::FindWithID, Vec3_HorzAngle, AngleDiff, Actor::FindWithActorID,
+# Actor::SpawnSoundObj, func_02012694, Player::Shock) were already in
+# build/port/walk_window.map on the base tip, checked symbol by symbol.
+#
+# The first link returned SIX unresolveds and every one is a SPELLING, not a
+# missing body. Taken off the link's own list, never predicted:
+#
+#   _data_ov002_0210d6dc                       WaterRing's BTA descriptor was
+#     not in port/ov002_syms.txt. It and its five-symbol transitive closure now
+#     are; see that file's wave-3 block for the sizes and for why the closure
+#     is mounted rather than just the head (four raw DS words, T2).
+#   ?data_ov002_0210da10@@3PADA                four C++/C data-linkage bridges,
+#   ?data_ov064_0211c3d0@@3PAHA                aliased in
+#   ?data_ov064_0211c964@@3USharedFilePtr@@A   hal/actor_classes_ov064_w3c.cpp.
+#   ?data_ov064_0211c96c@@3USharedFilePtr@@A
+#   ?UntrackAndSpawnStar@Actor@@QAEXAACIABUVector3@@I@Z
+#     NOT an alias -- a RECEIVER FACE in port/unmatched/Ov064_TreasureChest.cpp.
+#     src/func_ov064_0211a2c4.cpp calls it as a __thiscall member returning
+#     void; the tree's definition is the Itanium C name, a __cdecl body taking
+#     self as its first stack argument. Aliasing one onto the other reads every
+#     argument one slot low. The matched arm9 TU
+#     (src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j.c) is ALREADY in
+#     port/slice_gate32.txt and compiles today -- the linker was discarding it
+#     for want of a reference, which is why the base map does not carry it.
+#     This lane's face is that reference, so the TU joins the binary without a
+#     slice line here.

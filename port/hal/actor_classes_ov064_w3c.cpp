@@ -166,6 +166,24 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZTV14daWater_Ring_c=__ZTV9WaterRing")
 #pragma comment(linker, "/alternatename:__ZTV11daObjTbox_c=__ZTV13TreasureChest")
 
+/* FOUR C++/C DATA-LINKAGE BRIDGES, the montymole / gate-179 reading and every
+   one MEASURED off this slice's first link rather than predicted. Both
+   InitResources are real C++ methods that declare their mounted data at file
+   scope with a specific type, so they emit the decorated spelling; ovdata emits
+   the C name only. Each LHS is declared and never defined, so
+   tools/alternatename_guard.py stays clean.
+
+   data_ov002_0210da10 is spelled TWO ways in this build now: gate 179's Piece
+   InitResources reads it as `SharedFilePtr` (already aliased in
+   hal/actor_classes_bowserpuzzle.cpp) and WaterRing's reads it as `char[]`.
+   Both land on the same C symbol; this is the second alias, not a replacement
+   for the first -- the data_ov064_0211adc8 precedent in that same file, which
+   needs both a `SharedFilePtr*[]` and a `void*[]` spelling for one array. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210da10@@3PADA=_data_ov002_0210da10")
+#pragma comment(linker, "/alternatename:?data_ov064_0211c3d0@@3PAHA=_data_ov064_0211c3d0")
+#pragma comment(linker, "/alternatename:?data_ov064_0211c964@@3USharedFilePtr@@A=_data_ov064_0211c964")
+#pragma comment(linker, "/alternatename:?data_ov064_0211c96c@@3USharedFilePtr@@A=_data_ov064_0211c96c")
+
 // ---- the trap --------------------------------------------------------------
 static void ov64w3c_trap_report(void *self, int slot)
 {

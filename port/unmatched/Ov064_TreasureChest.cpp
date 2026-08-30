@@ -118,7 +118,46 @@ extern PortEntry data_ov064_0211c98c[3];
 
 int func_ov064_0211a4c4(void *self);
 
+/* the arm9 body the receiver face below forwards into. Its matched TU is
+   src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j.c, already in
+   port/slice_gate32.txt -- it compiles into the build today and the linker
+   discards it for want of a reference, which is why the base map does not
+   carry it. */
+void *_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(
+        void *self, signed char *trackStarID, unsigned starID,
+        const void *spawnPos, unsigned char howToSpawnStar);
+
 }  /* extern "C" */
+
+/* PORT_HOST_ABI: a RECEIVER FACE, not an alias. src/func_ov064_0211a2c4.cpp
+   declares Actor::UntrackAndSpawnStar as a real C++ method returning void and
+   calls it on `this`, so it emits the __thiscall member mangle
+   `?UntrackAndSpawnStar@Actor@@QAEXAACIABUVector3@@I@Z` with the receiver in
+   ecx. The definition in the tree is the Itanium C name, a __cdecl body whose
+   FIRST STACK ARGUMENT is self. An /alternatename between the two is exactly
+   the receiver-ABI fault the campaign keeps measuring -- ecx would be ignored
+   and the four stack arguments would be read one slot low -- so this is a real
+   __thiscall definition that moves the receiver and forwards.
+
+   It cannot be written against include/Actor.h: line 340 declares the same
+   method returning `Actor *`, a different mangle and not a legal overload of
+   this one. Hence the local declaration, in a file that includes no headers.
+   The ov034 lane's `?_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j@@YAX...@Z`
+   alias is NOT this case: that caller spelled it as a free function taking
+   void* first, which is already __cdecl and needs no face. */
+struct Vector3 { int x, y, z; };
+struct Actor {
+    void UntrackAndSpawnStar(signed char &trackStarID, unsigned starID,
+                             const Vector3 &spawnPos, unsigned howToSpawnStar);
+};
+void Actor::UntrackAndSpawnStar(signed char &trackStarID, unsigned starID,
+                                const Vector3 &spawnPos,
+                                unsigned howToSpawnStar)
+{
+    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(
+        this, &trackStarID, starID, &spawnPos,
+        (unsigned char)howToSpawnStar);
+}
 
 /* PORT_HOST_ABI: mwcc pointer-to-member on a forward-declared struct, indexed.
    The matched func_ov064_0211a6ec writes the new index to this+0x16c, reads it
