@@ -26,6 +26,7 @@
 #include "sdat.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef unsigned char u8;
 
@@ -118,10 +119,44 @@ void  Player_PlaySoundEffect(int x, unsigned a, unsigned b);
 extern int data_0209b4a4[];
 extern int data_02099fac;             /* the 3D distance limit, romdata */
 
+// SM64DS_SND_REQLOG=1: ONE LINE PER REQUEST, WITH THE VERDICT ON THE SAME LINE.
+//
+// SM64DS_SND_TRACE already reports the two culls, but a cull report cannot
+// answer the question a missing sound actually asks first: did the request
+// HAPPEN. A level where a sound is absent because the game never asked for it
+// and a level where it was asked for and dropped produce the SAME quiet trace,
+// and telling those two apart is the whole opening move of a "sound X does not
+// play here" hunt -- it halves the search space before any deeper reading.
+//
+// So this logs every arrival at the front door together with the inputs the
+// decision is made on: the listener-relative vector the caller passed, the
+// distance that vector works out to, the limit it is about to be compared
+// against, and the bank and group in force. Off by default, latched once.
+int g_snd_reqlog = -1;
+extern signed char data_0208e428;        /* the bank every kind-3 sound rides */
+extern unsigned char data_0209b47c;      /* the loaded sound group */
+extern unsigned char data_0209b480;      /* master "sound effects on" */
+
+static void snd_req(unsigned kind, unsigned id, int type,
+                    const struct Vector3 *v, const char *verdict)
+{
+    if (g_snd_reqlog <= 0) return;
+    const int *c = (const int *)v;
+    fprintf(stderr, "[req] kind=%u id=0x%x type=%d cam=(%d,%d,%d) dist=%d "
+            "limit=%d bank=0x%02x group=%d sfx=%d -> %s\n",
+            kind, id, type,
+            c ? c[0] >> 12 : 0, c ? c[1] >> 12 : 0, c ? c[2] >> 12 : 0,
+            c ? func_02049018((int *)c) : -1, data_02099fac,
+            (unsigned char)data_0208e428, (int)data_0209b47c,
+            (int)data_0209b480, verdict);
+}
+
 // PORT_HOST_ABI: ARM r0/r1 argument ride-through into a (void)-declared
 // resolver, plus a host null guard where the DS could not reach the state.
 void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
 {
+    if (g_snd_reqlog < 0)
+        g_snd_reqlog = getenv("SM64DS_SND_REQLOG") != 0;
     // Self-initialise. Not every harness has a frame loop calling
     // sdat_host_tick -- smoke_player reaches Player::Behavior -> Sound::Play
     // directly -- and the table walkers below read data_020a5bb8 + 0x84
@@ -137,6 +172,7 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
             fprintf(stderr, "[snd] Sound::Play(%u, %u): no SEQARC entry "
                     "(group not loaded?) -- skipped\n", kind, id);
         }
+        snd_req(kind, id, -1, v, "DROPPED: no SEQARC entry");
         return;
     }
     // SM64DS_SND_TRACE also lights up the TWO SILENT RETURNS below. Both are
@@ -164,8 +200,10 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
                   "(distance %d, limit %d)\n", kind, id, t,
                   func_02049018((int *)v), data_02099fac);
             sd_vtrace_arm9_census("at the refusal");
+            snd_req(kind, id, t, v, "DROPPED: no 3D slot (range or pool full)");
             return;
         }
+        snd_req(kind, id, t, v, "accepted (positional)");
         Player_PlaySoundEffect((int)(size_t)r, kind, id);
         // func_0204f63c writes the voice it took back into the owner slot and
         // leaves it null if it could not get one (func_0204f934 has already
@@ -186,8 +224,10 @@ void _ZN5Sound4PlayEjjRK7Vector3(unsigned kind, unsigned id, struct Vector3 *v)
                     "-- culled\n", kind, id, t);
         SD_VT("play REFUSED Sound::Play(%u, %u) type %d: out of range\n",
               kind, id, t);
+        snd_req(kind, id, t, v, "DROPPED: out of range");
         return;
     }
+    snd_req(kind, id, t, v, "accepted");
     Player_PlaySoundEffect((int)(size_t)data_0209b4a4, kind, id);
     if (g_voice_trace && data_0209b4a4[0] == 0) {
         sd_vtrace("play REFUSED Sound::Play(%u, %u) type %d: the ARM9 voice "
