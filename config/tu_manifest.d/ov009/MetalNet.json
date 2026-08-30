@@ -43,7 +43,7 @@
       "symbol": "_ZN8MetalNet16OnPendingDestroyEv",
       "address": "0x02111ea4",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN8MetalNet16OnPendingDestroyEv.c",
+      "legacy_source": "src/_ZN8MetalNet16OnPendingDestroyEv.cpp",
       "ordinal": 3
     },
     {

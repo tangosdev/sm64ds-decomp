@@ -35,7 +35,7 @@
       "symbol": "_ZN7dBase_cD0Ev",
       "address": "0x02013ea4",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN7dBase_cD0Ev.c",
+      "legacy_source": "src/_ZN7dBase_cD0Ev.cpp",
       "ordinal": 1
     },
     {

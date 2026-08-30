@@ -29,7 +29,7 @@
       "symbol": "_ZN8CageLiftD0Ev",
       "address": "0x02111b08",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN8CageLiftD0Ev.c",
+      "legacy_source": "src/_ZN8CageLiftD0Ev.cpp",
       "ordinal": 1
     },
     {

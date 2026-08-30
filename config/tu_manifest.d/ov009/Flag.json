@@ -29,14 +29,14 @@
       "symbol": "_ZN4FlagD0Ev",
       "address": "0x021120a8",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN4FlagD0Ev.c",
+      "legacy_source": "src/_ZN4FlagD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN4Flag16CleanupResourcesEv",
       "address": "0x021120ec",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN4Flag16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN4Flag16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {

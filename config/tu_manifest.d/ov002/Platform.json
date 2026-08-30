@@ -37,7 +37,7 @@
       "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
       "address": "0x020ee4b0",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
       "ordinal": 2
     },
     {
@@ -93,7 +93,7 @@
       "symbol": "_ZN10dBgActor_cC2Ev",
       "address": "0x020eea50",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN10dBgActor_cC2Ev.c",
+      "legacy_source": "src/_ZN10dBgActor_cC2Ev.cpp",
       "ordinal": 10
     }
   ],
