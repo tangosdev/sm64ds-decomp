@@ -2617,7 +2617,7 @@ void hal_fill_princess_peach_vtable(void);           /* _ZTV13PrincessPeach, 31 
     {244, "WATER_RING", WaterRing_SpawnInfo, WaterRing_Spawn, \
      hal_fill_water_ring_vtable}, \
     {13, "TREASURE_CHEST", TreasureChest_SpawnInfo, TreasureChest_Spawn, \
-     hal_fill_treasure_chest_vtable},
+     hal_fill_treasure_chest_vtable}, \
     /* ---- run rel0215 wave 3 (lane w3-f): ov085's SIXTH AND LAST class. \
        PLACED ON NO LEVEL of the fifty-two, measured on this lane's own \
        baseline census over every id in port_level_table[] -- it declines \
