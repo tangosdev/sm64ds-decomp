@@ -174,15 +174,22 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     #         func_ov098_02137d40+0x17, func_ov081_02127ccc+0x14,
     #         func_ov098_02139e44+0x9, func_ov018_021128e0+0x16,
     #         func_ov098_021388bc+0x51
-    # EVERY ONE OF THE TWENTY-TWO PUSHES NOTHING. The calls are all
+    # NO PUSH IS LIVE AT THE TRANSFER IN ANY OF THE TWENTY-TWO. That is the
+    # claim, and it is narrower than "no window contains a push" -- eight of
+    # the windows DO contain argument pushes, for calls that intervene before
+    # the dispatch, and each of those is consumed by its own call with the
+    # stack retired by an `add esp,N` before the transfer is reached (one
+    # further window straddles a `ret`, so its pushes belong to the previous
+    # function outright). Thirteen windows carry a `push ebp` / `push esi`
+    # prologue save, which is frame and not argument. What stands AT the
+    # transfer is the same in all twenty-two, and that is what the pop contract
+    # turns on. The calls are all
     # `mov ecx,<reg> / mov eax,dword ptr [<reg>] / call dword ptr [eax+7Ch]`.
     # The eight jumps are cdecl forwarders that unwind their own frame first
     # (`mov ecx,dword ptr [ebp+8] / mov eax,dword ptr [ecx] / pop ebp / jmp
     # dword ptr [eax+7Ch]`), so the frame the slot method inherits holds the
     # FORWARDER's arguments, which the forwarder's own cdecl caller cleans. A
-    # `ret 4` there would eat one of those and desync that caller. The only
-    # `push` inside any of the twenty-two windows is a `push ebp` / `push esi`
-    # prologue save.
+    # `ret 4` there would eat one of those and desync that caller.
     #
     # So slot 31 is unanimous across both forms, and a zero pop is checked
     # rather than assumed. THAT ALSO CORRECTS A LOAD-BEARING CLAIM in

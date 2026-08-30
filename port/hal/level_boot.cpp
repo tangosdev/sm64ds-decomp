@@ -893,14 +893,26 @@ extern const unsigned port_ov048_ds_base, port_ov048_ds_end;
    after: run rel0215 (lane cleanup-w2) found TEN of the twenty-three stale, all
    ten in the same direction -- a pack that has since been mounted still called
    out as missing. Level 17 still read "unmounted ov066" on the day ov066
-   landed. Re-derive rather than trust a bracket: an overlay is mounted iff it
-   appears in PORT_ACTOR_OVERLAYS in port/CMakeLists.txt (the initial set plus
-   every list(APPEND)), which a configured build restates as one
-   build/port/host-src/ovNN_syms.c per mounted pack. Both readings were taken
-   for this sweep and they agree at 69 packs. ov067 is the ONE overlay any of
-   these rosters still names that this build does not mount -- it is in neither
-   PORT_ACTOR_OVERLAYS nor PORT_LEVEL_OVERLAYS, and there is no
-   port/ov067_syms.txt -- so level 45 carries the only live bracket in the list.
+   landed.
+
+   RE-DERIVE RATHER THAN TRUST A BRACKET, AND READ TWO SOURCES, NOT ONE.
+   PORT_ACTOR_OVERLAYS in port/CMakeLists.txt (the initial set plus every
+   list(APPEND)) yields SIXTY-EIGHT packs. A configured build emits one
+   build/port/host-src/ovNN_syms.c per mounted pack and yields SIXTY-NINE. The
+   readings do not agree, and the difference is not an error in either: ov009
+   is mounted WITHOUT being an actor overlay. It is in PORT_LEVEL_OVERLAYS
+   (CMakeLists ~1117) and carries its own explicit emission rule, OV009SYMS_C
+   at CMakeLists ~1487-1495, wired into each target's source list by name
+   beside ${ACTOR_OV_SYMS} rather than through it. So the host-src emission is
+   the COMPLETE reading and PORT_ACTOR_OVERLAYS is a subset of it; a check that
+   consults only the variable will call ov009 unmounted, and any future pack
+   given the same treatment with it.
+
+   ov067 is the ONE overlay any of these rosters still names that this build
+   does not mount, by both readings -- it is in neither PORT_ACTOR_OVERLAYS nor
+   PORT_LEVEL_OVERLAYS, there is no port/ov067_syms.txt, and the name appears
+   nowhere in port/CMakeLists.txt -- so level 45 carries the only live bracket
+   in the list.
 
      16 ov062 ov070 ov080 ov084 ov092 ov096 ov098 ov102   NOT LANDED  [all mounted]
      17 ov066 ov070 ov084 ov091 ov098 ov102              [all mounted]
