@@ -6,13 +6,33 @@
 #
 # BrickBlock here is NOT the breakable brick. Its RTTI is 19daObjBlockItemTag_c
 # (ov002 vtable 0x02108c18) and it is the item TAG: a 220-byte marker with no
-# model of its own that Bob-omb Battlefield and Whomp's Fortress park on top of
-# a real block. Four actor ids share the one class body and the one vtable:
+# model of its own, parked on top of a real block. Four actor ids share the one
+# class body and the one vtable:
 #
 #     0x141  321  ONE_UP_MUSHROOM_BLOCK_TAG
 #     0x142  322  MEGA_MUSHROOM_BLOCK_TAG
-#     0x143  323  SILVER_STAR_BLOCK_TAG (the JRB one)
-#     0x144  324  SILVER_STAR_BLOCK_TAG / SilverStarBlockTag_Spawn
+#     0x143  323  GREEN_SHELL_BLOCK_TAG
+#     0x144  324  SILVER_STAR_BLOCK_TAG
+#
+# ---- where they actually are, and the exercise level ------------------------
+#
+# COUNTED, not carried: a boot of all fifty mounted levels reading each census
+# (SM64DS_WINDOW_SELFTEST=2, hal/level_boot.cpp's own list).
+#
+#     321   level 0 x1, level 7 x2, level 42 x1     4 placements
+#     322   level 0 x1, level 13 x2, level 44 x1    4 placements
+#     323   level 0 x1, level 8 x1, level 10 x1     3 placements
+#     324   level 0 x1, level 42 x2                 3 placements
+#
+# LEVEL 0 IS THE EXERCISE LEVEL: it is the only level carrying all four, one
+# of each, so one run covers every cell on SHIPPED placements with no
+# SM64DS_SPAWN_ACTOR involved. SM64DS_LEVEL=0 SM64DS_TAG_PROBE=1 dispatches
+# cells 0, 1, 2 and 3 in order, rc 0 under FAULTS_FATAL.
+#
+# LEVEL 6 CARRIES NONE OF THE FOUR. The "x8 on Bob-omb Battlefield" this file's
+# gate-33 neighbour and hal/actor_classes_bob_world.cpp both used to claim came
+# from reading ov014's object tables rather than from a boot, and no level-6
+# census has ever produced one. Both sites are corrected in the same commit.
 #
 # ---- the chain, end to end, all four links read out of the tree -------------
 #

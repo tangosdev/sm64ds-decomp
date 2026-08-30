@@ -9353,8 +9353,11 @@ set_source_files_properties(
 # raw DS text address (0x020b429c / 0x020b41f8), mapped-but-NX on the host.
 # There is no benign index: every one of the four ids is a fault.
 #
-# With /vmg /vmm sizeof(PMF) is 8, the stride is `shl eax,3`, and the two
-# reads are the record's own {fn, delta} -- the ROM's dispatch exactly. Both
+# With /vmg /vmm sizeof(PMF) is 8. No shift is emitted at all -- the multiply
+# folds into the scaled index, so the `shl` disappears and the two reads become
+#                          mov ecx,_data_ov002_0210dd30[eax*8+4]
+#                          mov eax,_data_ov002_0210dd30[eax*8]
+# which is the record's own {fn, delta} -- the ROM's dispatch exactly. Both
 # halves of the fix are needed and neither is sufficient alone: the width puts
 # the read on the right record, and hal/actor_classes_bob_world.cpp's
 # port_itemtag_states_seat() puts a HOST address in that record. The seat

@@ -541,13 +541,21 @@ void _ZN9ModelAnimD1Ev(void *);
 void _ZN5ModelD1Ev(void *);
 }
 
-// ---- MEGA_MUSHROOM_BLOCK_TAG (322, ov002) x8 -------------------------------
+// ---- MEGA_MUSHROOM_BLOCK_TAG (322, ov002) x4 -------------------------------
 //
 // _ZTV10BrickBlock, ov002 0x02108c18, RTTI 19daObjBlockItemTag_c. A tag rather
 // than a block: 220 bytes, no model of its own (slot 9 is ActorBase::Render in
-// the ROM's own table), and Bob-omb Battlefield puts eight of them on top of
-// other objects. Slot 16 is the ROM's D0 minus its Deallocate, which for this
-// class is the vtable store and Actor's D2 -- it has no members to destroy.
+// the ROM's own table), parked on top of another object. Slot 16 is the ROM's
+// D0 minus its Deallocate, which for this class is the vtable store and
+// Actor's D2 -- it has no members to destroy.
+//
+// THE COUNT AND THE LEVELS ARE COUNTED, not read off an object table. A boot
+// of all fifty mounted levels reading each census puts 322 on level 0 x1,
+// level 13 x2 and level 44 x1 -- FOUR, and NOT ONE ON LEVEL 6. The "x8 on
+// Bob-omb Battlefield" this header carried came from ov014's object tables
+// rather than from a boot; no level-6 census has ever produced one. The other
+// three ids of this class sit at 321 (levels 0/7/42), 323 (0/8/10) and
+// 324 (0/42x2), and level 0 is the only level carrying all four.
 #include "BrickBlock.h"
 extern "C" {
 int _ZN10BrickBlock13InitResourcesEv(char *self);
@@ -603,8 +611,8 @@ static int __fastcall mmbt_d1(void *s, void *)
 // The four ids share this one class and pick their cell at InitResources:
 //   idx 0  id 321 ONE_UP_MUSHROOM_BLOCK_TAG   ROM 0x020b429c  spawns 0x114
 //   idx 1  id 322 MEGA_MUSHROOM_BLOCK_TAG     ROM 0x020b4250  spawns 0x115
-//   idx 2  id 323 SILVER_STAR_BLOCK_TAG (JRB) ROM 0x020b41f8  spawns 0x11d
-//   idx 3  id 324 SilverStarBlockTag          ROM 0x020b42e4  star + marker
+//   idx 2  id 323 GREEN_SHELL_BLOCK_TAG       ROM 0x020b41f8  spawns 0x11d
+//   idx 3  id 324 SILVER_STAR_BLOCK_TAG       ROM 0x020b42e4  star + marker
 extern "C" {
 void func_ov002_020b429c(char *self);
 void func_ov002_020b4250(char *self);
@@ -632,8 +640,13 @@ void func_ov002_020b42e4(char *self);
 // reached: the probe names the tag's id and index before the kill, and each
 // thunk names itself when it is entered.
 //
-// Used with SM64DS_SPAWN_ACTOR=15,322 (a brick block and a tag at the player),
-// because no mounted level's boot census actually carries ids 321-324.
+// THE STANDING EXERCISE IS SM64DS_LEVEL=0 SM64DS_TAG_PROBE=1, on SHIPPED
+// placements and with no spawn override: level 0 is the only level carrying
+// all four ids, one of each, so a single run drives cells 0, 1, 2 and 3 in
+// order. Measured rc 0 under FAULTS_FATAL.
+//
+// SM64DS_SPAWN_ACTOR=15,<id> (a brick block and a tag together at the player)
+// is the fallback for exercising one id on a level that does not place it.
 extern "C" {
 void func_ov002_020b38a0(char *self);          /* daObjBlockL_c::Kill */
 void *_ZN5Actor4NextEPKS_(const void *prev);
