@@ -1,6 +1,6 @@
 # Actor class naming from the ROM's spawn table
 
-How **2,241** symbols across **68** modules got real names [../tools/actor_names.py](../tools/actor_names.py),
+How **2,241** symbols across **68** modules got real names [tools/actor_names.py](../tools/actor_names.py),
 and where to look things up when drafting.
 
 ## Method
