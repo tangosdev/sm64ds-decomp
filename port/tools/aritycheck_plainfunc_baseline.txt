@@ -57,6 +57,22 @@
 #       func_0203dae4|include/decl_common.h went with it. Kept here as the
 #       worked example of a header row that could be CLOSED rather than
 #       ridden, since this file may only shrink.
+#   func_01ffa344|src/_ZN8Goomboss13InitResourcesEv.c  -- FIXED AND REMOVED,
+#   func_01ffa344|src/func_ov074_0211fa08.c            run rel0215 lane prop17.
+#       Both rows existed because the HOST body in hal/cxx_aliases.cpp was
+#       `int (int a, int b)` with `(void)b`, described in its own comment as
+#       "one caller's r1 ride-through". prop17 disassembled the ROM body
+#       rather than trusting that, and the first instruction settles it:
+#       0x01ffa344 opens `bic r1, r0, #0x80000000`, so r1 is WRITTEN before it
+#       is ever read and the function takes ONE argument. The two src TUs above
+#       were declaring it CORRECTLY and the host definition was the wrong one.
+#       Narrowed the host body to one parameter, which is safe both ways under
+#       __cdecl: the one caller that still pushes two words
+#       (src/func_ov002_020dc560.c, and the Goomboss_InitResources host copy)
+#       has the callee read only the first and cleans its own stack, exactly as
+#       the ROM discards r1. Two rows CLOSED, none added -- and a third was
+#       never opened, for src/func_ov074_021204c0.c, which prop17 propagated
+#       and which declares the same honest one-parameter form.
 #
 # Generated 2026-08-22 from the mg8 tree (branch mg8-sosbin + the plain-name
 # ratchet change) with:
@@ -68,8 +84,6 @@
 #
 # The list may only shrink.
 
-func_01ffa344|src/_ZN8Goomboss13InitResourcesEv.c
-func_01ffa344|src/func_ov074_0211fa08.c
 func_0200d8c8|src/_ZN5Actor10EarthquakeERK7Vector35Fix12IiE.cpp
 func_02011dcc|src/_ZN5Sound8SetMusicEjj.c
 func_02018a24|src/func_02018270.c

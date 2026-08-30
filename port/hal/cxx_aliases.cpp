@@ -195,11 +195,35 @@ int func_01ff9378(int a, int b)
 int func_01ffa594(int a, int b)
 { float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x - y;
   { int o; memcpy(&o, &r, 4); return o; } }
-/* f2i truncation; one caller's two-arg decl is an r1 ride-through */
-/* PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
+/* f2i truncation. ONE PARAMETER, and that is the ROM's own answer.
+   This used to be `int (int a, int b)` with `(void)b`, carrying a comment
+   that called the second word "one caller's r1 ride-through" -- the caller
+   being src/func_ov002_020dc560.c, which spells the prototype with two.
+   run rel0215 lane prop17 disassembled the ROM body instead of taking that
+   on trust, and the FIRST INSTRUCTION settles it:
+
+     01FFA344  bic r1, r0, #0x80000000     <- r1 is WRITTEN before it is read
+     01FFA348  mov r2, #0x9e
+     01FFA34C  subs r2, r2, r1, lsr #23    <- exponent, straight out of r0
+
+   Nothing on entry reads r1, so there is no ride-through and there never
+   was: this takes ONE argument. The two-parameter host body was a fiction
+   that the tree then had to keep feeding, and it cost real edits -- the
+   host copy port/unmatched/Goomboss_InitResources.cpp lists "func_01ffa344(x)
+   -> func_01ffa344(x, 0)" among the changes it makes to a matched TU, and two
+   rows sat in port/tools/aritycheck_plainfunc_baseline.txt for src TUs that
+   declared the honest one-parameter form.
+
+   Narrowing it is safe in both directions under __cdecl: a caller that still
+   pushes two words (func_ov002_020dc560.c, and the InitResources host copy)
+   has the callee read the first and cleans its own stack, exactly as the ROM
+   discards r1. Both baseline rows are deleted with this change; the list only
+   shrinks.
+
+   PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
    assemble -- see the block comment above. */
-int func_01ffa344(int a, int b)
-{ float x; memcpy(&x, &a, 4); (void)b; return (int)x; }
+int func_01ffa344(int a)
+{ float x; memcpy(&x, &a, 4); return (int)x; }
 /* ITCM signed divide (walk-speed scaling) */
 /* PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
    assemble -- see the block comment above. */
