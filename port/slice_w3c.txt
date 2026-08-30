@@ -122,7 +122,12 @@ src/__sinit_ov064_0211b59c.c
 #     self as its first stack argument. Aliasing one onto the other reads every
 #     argument one slot low. The matched arm9 TU
 #     (src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j.c) is ALREADY in
-#     port/slice_gate32.txt and compiles today -- the linker was discarding it
-#     for want of a reference, which is why the base map does not carry it.
-#     This lane's face is that reference, so the TU joins the binary without a
-#     slice line here.
+#     port/slice_gate32.txt, compiles today, and is LINKED AT BASE -- the base
+#     map carries it via the ov034 lane's @@YAXPAXPACIPBUVector3@@I@Z alias
+#     (arm9 stays 1994 linked at base and at this tip). What the base link
+#     lacked was only the MSVC __thiscall member mangle above, a different
+#     symbol from the Itanium C name; this lane's face defines that mangle,
+#     and the TU itself contributes nothing new to the count. The 25th newly
+#     linked TU of this branch is func_ov064_02119ea0, dead-stripped at base
+#     and referenced now by the WaterRing state seat (see its row in
+#     port/tools/inferred_stub_adjudicated.txt).
