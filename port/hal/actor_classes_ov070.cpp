@@ -436,23 +436,75 @@ static int ov70_fcf_kill(void *self)
 }
 
 // ---- the state PMF seat ----------------------------------------------------
+// ---- FLY_GUY'S SIX TICK HALVES NEED A __fastcall THUNK (lane w3-d) ---------
+//
+// THE SPLIT IS PER SITE, NOT PER CLASS, and FlyGuy is the first class in this
+// overlay where the two halves of a cell are reached by DIFFERENT calling
+// conventions. Measured with dumpbin over this build's own objects, not
+// reasoned about:
+//
+//   FlyGuy_ChangeState.cpp.obj -- the ENTER half, pp[0]
+//     mov eax,[ebp+0Ch] / mov ecx,[ebp+8] / mov [ecx+3BCh],eax
+//     mov eax,[eax] / test eax,eax / ... / pop ebp / JMP EAX
+//   It is a TAIL JUMP. The caller's own cdecl frame survives, so `c` is still
+//   at [esp+4] when the raw body reads it, and ecx happens to hold `c` too.
+//   A raw cdecl body is correct here and stays.
+//
+//   _ZN6FlyGuy8BehaviorEv.cpp.obj -- the TICK half, pp[1]
+//     mov ecx,[esi+3BCh] / mov eax,[ecx+8] / mov ecx,[ecx+0Ch]
+//     add ecx,esi / CALL EAX
+//   It is a REAL CALL inside Behavior's own frame, because Behavior does more
+//   work afterwards and cannot be a forwarder. The receiver goes in ECX and
+//   NOTHING IS PUSHED. A raw cdecl body reads its `c` from [esp+4], which here
+//   is Behavior's own spilled data -- a wrong pointer it then writes through
+//   (func_ov070_0211fa80's first statement is `*(int *)(c + 0x3dc) = 0`).
+//   Silent memory corruption, not a fault, which is why 300 frames of level 19
+//   came back rc 0 with it live.
+//
+// This is NOT the Amp/FlameChomp case and their rows are deliberately
+// untouched: func_ov070_02120d34 and func_ov070_0212180c are one-call
+// forwarders that MSVC compiles as `jmp eax` (verified in the same dumpbin
+// pass), so their tick bodies get the caller's frame and must stay raw cdecl.
+// The R9 sweep in port/unmatched/Ov070_PmfDispatch.cpp enumerated the
+// `c->pp + 1` shape and FlyGuy::Behavior is not in it -- its shape is a
+// `Holder { char pad[8]; PMF fn; }` read at +8, which that grep could not see.
+//
+// The enter and tick sets are DISJOINT (checked body by body against
+// __sinit_ov070_02122afc's own cell assignments), so no body needs both
+// conventions and a thunk on the tick side cannot disturb the enter side:
+//   cell 0x0212358c  enter 0211f5f0   tick 0211f48c
+//   cell 0x0212359c  enter 0211ffa8   tick 0211fd98
+//   cell 0x021235ac  enter 0211fd60   tick 0211fae4
+//   cell 0x021235bc  enter 0211f450   tick 0211f368
+//   cell 0x021235cc  enter 0211fa80   tick 0211f6e0
+//   cell 0x021235dc  enter 0211f694   tick 0211f62c
+//
+// One register argument, so MSVC reads the receiver from ecx and returns with
+// a bare `ret` -- which is what the call site wants, having pushed nothing.
+static int __fastcall fg_tick_f48c(void *s) { return func_ov070_0211f48c(s); }
+static int __fastcall fg_tick_fd98(void *s) { return func_ov070_0211fd98(s); }
+static int __fastcall fg_tick_fae4(void *s) { return func_ov070_0211fae4(s); }
+static int __fastcall fg_tick_f368(void *s) { return func_ov070_0211f368(s); }
+static int __fastcall fg_tick_f6e0(void *s) { return func_ov070_0211f6e0(s); }
+static int __fastcall fg_tick_f62c(void *s) { return func_ov070_0211f62c(s); }
+
 static void ov70_seat_state_pmfs(void)
 {
     struct Row { unsigned char *rec; void *fn; };
     static const Row rows[] = {
         /* FlyGuy's twelve, source order 0x021230c0.. */
         { data_ov070_021230c0, (void *)func_ov070_0211fa80 },
-        { data_ov070_021230c8, (void *)func_ov070_0211fd98 },
-        { data_ov070_021230d0, (void *)func_ov070_0211f62c },
+        { data_ov070_021230c8, (void *)fg_tick_fd98 }   /* TICK: cell 0212359c[1] */,
+        { data_ov070_021230d0, (void *)fg_tick_f62c }   /* TICK: cell 021235dc[1] */,
         { data_ov070_021230d8, (void *)func_ov070_0211fd60 },
-        { data_ov070_021230e0, (void *)func_ov070_0211f48c },
+        { data_ov070_021230e0, (void *)fg_tick_f48c }   /* TICK: cell 0212358c[1] */,
         { data_ov070_021230e8, (void *)func_ov070_0211ffa8 },
-        { data_ov070_021230f0, (void *)func_ov070_0211fae4 },
+        { data_ov070_021230f0, (void *)fg_tick_fae4 }   /* TICK: cell 021235ac[1] */,
         { data_ov070_021230f8, (void *)func_ov070_0211f450 },
-        { data_ov070_02123100, (void *)func_ov070_0211f368 },
+        { data_ov070_02123100, (void *)fg_tick_f368 }   /* TICK: cell 021235bc[1] */,
         { data_ov070_02123108, (void *)func_ov070_0211f694 },
         { data_ov070_02123110, (void *)func_ov070_0211f5f0 },
-        { data_ov070_02123118, (void *)func_ov070_0211f6e0 },
+        { data_ov070_02123118, (void *)fg_tick_f6e0 }   /* TICK: cell 021235cc[1] */,
         /* Amp's six */
         { data_ov070_0212320c, (void *)func_ov070_02120ce4 },
         { data_ov070_02123214, (void *)func_ov070_02120bf8 },
