@@ -1,0 +1,64 @@
+[Unit]
+Description=SM64DS port UDP relay
+Documentation=file:///home/sm64ds-relay/sm64ds-relay/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sm64ds-relay
+Group=sm64ds-relay
+WorkingDirectory=/home/sm64ds-relay/sm64ds-relay
+ExecStart=/usr/bin/python3 -u /home/sm64ds-relay/sm64ds-relay/relay.py
+
+# Listening port and the idle window. Both have sane defaults in relay.py;
+# they are spelled out here so the running configuration is visible in
+# systemctl cat sm64ds-relay.
+Environment=SM64DS_RELAY_PORT=41234
+Environment=SM64DS_RELAY_BIND=0.0.0.0
+Environment=SM64DS_RELAY_IDLE_S=90
+Environment=SM64DS_RELAY_STATS_S=60
+Environment=PYTHONUNBUFFERED=1
+
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sm64ds-relay
+
+# The relay reads no files, writes no files and needs no privileges. Take
+# everything away from it that it does not use.
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+# AF_UNIX belongs here: asyncio builds an internal socketpair for its signal
+# wakeup, and without it the relay cannot start under this unit.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+
+# Nothing here is unbounded, but a ceiling costs nothing.
+MemoryMax=256M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target

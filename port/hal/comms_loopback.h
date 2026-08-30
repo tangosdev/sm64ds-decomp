@@ -39,6 +39,53 @@
 // SM64DS_COMMS_FANOUT=1 still runs the ROM's steps 0x16 and 0x17, and
 // SM64DS_COMMS_REPORT=1 still prints the four slots. This file adds no knob
 // that changes what those two do.
+//
+// ---------------------------------------------------------------------------
+// THE ADDRESS MODES (run vsdec, lane NET). The same carrier, pointed somewhere
+// other than 127.0.0.1. ALL OPT-IN: with none of these set the mode is
+// loopback and the behaviour is what it was before they existed.
+//
+//   SM64DS_COMMS_HOST=<ip[:port]>   DIRECT MODE. A CHILD sends to this address
+//                                   instead of loopback. Ignored for a parent,
+//                                   which learns each child from its JOIN.
+//                                   Needs the two ends to be able to reach
+//                                   each other -- a LAN, or a forwarded port.
+//   SM64DS_COMMS_BIND_ANY=1         bind 0.0.0.0 instead of 127.0.0.1. Needed
+//                                   by a DIRECT-MODE PARENT, which otherwise
+//                                   can send but never receive. Opt-in on
+//                                   purpose: it is the difference between a
+//                                   socket only this machine can reach and one
+//                                   the whole network can.
+//
+//   SM64DS_COMMS_RELAY=<host[:port]>  RELAY MODE, the no-port-forwarding path.
+//                                   Everything goes to a rendezvous service
+//                                   which forwards parent->children and
+//                                   child->parent. Default port 41234.
+//   SM64DS_COMMS_CODE=<up to 8 ascii> the session code two players share.
+//                                   REQUIRED with RELAY and has no default;
+//                                   a default would put everyone who forgot to
+//                                   set one into the same session.
+//
+//   SM64DS_COMMS_DELAY_MS=<n>       TEST SCAFFOLDING: hold every received
+//                                   datagram n ms. ONE WAY -- both ends run it,
+//                                   so the round trip is 2n.
+//   SM64DS_COMMS_JITTER_MS=<n>      uniform +/- spread on that hold, which is
+//                                   also what makes reordering happen.
+//   SM64DS_COMMS_DUP=<1..4>         send each lockstep datagram k times. The
+//                                   in-flight redundancy lever, which is the
+//                                   one the redundancy finding at the bottom
+//                                   of comms_loopback.cpp did NOT refuse.
+//   SM64DS_COMMS_RESEND_MS=<n>      pin the republish interval. Without it the
+//                                   address modes start at 50 ms and retune to
+//                                   the handshake's measured round trip; a
+//                                   4 ms republish is right on loopback and is
+//                                   flooding over the internet.
+//
+// SLOT ASSIGNMENT OVER THE ADDRESS MODES: on loopback a child owns a slot by
+// BINDING its port, and the parent verifies the two agree. Off this machine a
+// peer binds whatever port it likes and a NAT rewrites it, so the child's slot
+// becomes a PROPOSAL carried in its JOIN and THE PARENT ASSIGNS -- the answer
+// comes back in the ACCEPT. The relay never assigns anything; it forwards.
 
 #ifndef PORT_HAL_COMMS_LOOPBACK_H
 #define PORT_HAL_COMMS_LOOPBACK_H
@@ -74,6 +121,19 @@ struct CommsLoopbackStats {
     unsigned long long dropped;      // datagrams refused by the header check
     unsigned long long resends;      // duplicate publishes of an open round
     unsigned long long stale_serves; // cached rounds re-sent to a lagging peer
+    // run vsdec, lane NET: the address modes.
+    int net_mode;                    // 0 loopback, 1 direct, 2 relay
+    bool relay_paired;               // relay mode: a status-0 ACK has landed
+    int handshake_rtt_ms;            // child: JOIN -> ACCEPT, or -1
+    int resend_ms;                   // the republish interval actually in use
+    int delay_ms;                    // induced one-way hold, 0 when off
+    int jitter_ms;
+    unsigned long long delay_overflow;  // datagrams the delay ring could not
+                                        // hold. Nonzero invalidates a run.
+    int input_delay;                    // pipelining depth in frames, 0 = off
+    unsigned long long starved;         // pipelined exchange() calls that still
+                                        // had to return 0: the input delay is
+                                        // set too low for the path
 };
 CommsLoopbackStats comms_loopback_stats();
 

@@ -1,0 +1,8 @@
+# This kit is copied to a Linux box and run there. The repo is checked out on
+# Windows with core.autocrlf=true, which would rewrite these files to CRLF and
+# leave the shell script with a "bad interpreter" error and the unit file with
+# stray carriage returns in its values. Keep them LF everywhere.
+*.sh      text eol=lf
+*.service text eol=lf
+*.py      text eol=lf
+*.md      text eol=lf
