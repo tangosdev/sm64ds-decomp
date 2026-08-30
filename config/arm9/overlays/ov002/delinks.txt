@@ -576,33 +576,9 @@ src/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/_ZN12daObjAbuku_cD1Ev.cpp:
+src/actors/daObjAbuku_c.cpp:
     complete
-    .text start:0x020b3298 end:0x020b32c8
-
-src/_ZN12daObjAbuku_cD0Ev.cpp:
-    complete
-    .text start:0x020b32c8 end:0x020b330c
-
-src/func_ov002_020b330c.cpp:
-    complete
-    .text start:0x020b330c end:0x020b3344
-
-src/func_ov002_020b3344.c:
-    complete
-    .text start:0x020b3344 end:0x020b33dc
-
-src/_ZN12daObjAbuku_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b33dc end:0x020b3518
-
-src/_ZN12daObjAbuku_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b3518 end:0x020b3568
-
-src/daObjAbuku_c_Spawn.c:
-    complete
-    .text start:0x020b3568 end:0x020b35a0
+    .text start:0x020b3298 end:0x020b35a0
 
 src/_ZN13BigBrickBlockD1Ev.cpp:
     complete

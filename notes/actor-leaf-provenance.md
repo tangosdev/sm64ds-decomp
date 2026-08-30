@@ -237,8 +237,7 @@ overlay.
 | 0x10e | `mLifeTimer` | 0x12c (300 frames) at init, `DecIfAbove0_Short`, pops at 0. |
 | 0x110 | `mParticle` | particle-handle shape, effect 1. |
 
-Sources: `src/_ZN12daObjAbuku_c13InitResourcesEv.cpp`,
-`src_tu/actors/daObjAbuku_c.cpp`.
+Source: `src/actors/daObjAbuku_c.cpp`.
 
 ## daEyBm_c -- include/daEyBm_c.h
 

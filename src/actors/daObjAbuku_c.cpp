@@ -1,19 +1,21 @@
 //cpp
-/* Manually curated shadow translation unit for ov002/daObjAbuku_c.
+/* Production translation unit for ov002/daObjAbuku_c.
  *
- * NOT ENROLLED and NOT CANONICAL: this readable C++ source is a research
- * artifact under src_tu/.  The seven licensed text functions are retained
- * from the legacy sources, but their class members now use the real
+ * This readable C++ source consolidates the seven licensed text functions from
+ * their legacy one-function files. Its class members use the real
  * daObjAbuku_c : dActor_c declaration and the real dCcAc_c subobject.
  *
  * mwccarm 2004/b56 emits one .text section per function in reverse source
- * order.  Keep the ROM-high function first below.  The compiler-owned
- * destructor at the end intentionally emits D0, D1, D2, vtable, and RTTI;
- * tubuild inventory records those extra sections instead of hiding them.
+ * order. Keep the ROM-high function first below. InitResources is the class's
+ * key function, so the vtable it emits naturally references the inline
+ * destructor in daObjAbuku_c.h. That makes mwccarm emit retail's D1 then D0
+ * and no D2, without an out-of-line definition or forcing helper. The raw
+ * vtable/RTTI output is audited even though production enrollment licenses only
+ * this TU's text and leaves the canonical data bytes in their ROM-owned ranges.
  *
  * Legacy sources covered by the seven licensed text ranges (ROM order):
- *   [0] 0x020b3298  src/_ZN12daObjAbuku_cD1Ev.c
- *   [1] 0x020b32c8  src/_ZN12daObjAbuku_cD0Ev.c
+ *   [0] 0x020b3298  src/_ZN12daObjAbuku_cD1Ev.cpp
+ *   [1] 0x020b32c8  src/_ZN12daObjAbuku_cD0Ev.cpp
  *   [2] 0x020b330c  src/func_ov002_020b330c.cpp
  *   [3] 0x020b3344  src/func_ov002_020b3344.c
  *   [4] 0x020b33dc  src/_ZN12daObjAbuku_c8BehaviorEv.cpp
@@ -23,31 +25,28 @@
 
 /* Real recovered class declarations and typed member/subobject access. */
 #include "daObjAbuku_c.h"
+#include "dBgCh_Gnd.h"
 #include "Player.h"
 #include "Sound.h"
 
-/* The collision probe still needs two TU-local POD views: RG's legacy
- * detection layout and a three-word Vector3 view.  Replacing the latter with
- * the shared Vector3 type changes this TU by adding an unlicensed destructor
- * helper, so it remains an evidenced, isolated shadow. */
+/* The collision probe uses the real dBgCh_Gnd declaration. It still needs a
+ * three-word POD position view: making the local itself a Vector3 changes this
+ * TU by adding an unlicensed destructor helper. */
 /* Vector3 is provided by include/types.h through common.h.  The legacy
  * func_ov002_020b3344.c carried a private three-int shadow, but keeping that
  * duplicate here is illegal once the merged C++ TU includes the real shared
  * declaration (and would discard Vector3's recovered destructor semantics). */
 
-/* shadow struct 'RG' */
-struct RG { char a[0x14]; int detect[16]; };
-
 /* This helper is intentionally POD.  The old C member used a local three-word
  * view; using the shared C++ Vector3 here would make mwccarm emit its vague-
  * linkage _ZN7Vector3D1Ev helper into this TU's .text, an extra symbol that
- * has no licensed range in this candidate. */
+ * has no licensed range in this production TU. */
 struct AbukuVector3 { int x, y, z; };
 
 /* Actor factory descriptor at ov002:0x02108940.  The ROM stores one of these
  * behind each actor-table entry: a factory, two scheduling priorities, flags,
  * and three fixed-point culling ranges.  Kept TU-local until the common actor
- * headers recover the shared type without widening this shadow's dependency
+ * headers recover the shared type without widening this TU's dependency
  * surface. */
 struct AbukuSpawnInfo {
     daObjAbuku_c *(*spawn)();
@@ -66,24 +65,23 @@ typedef char AbukuSpawnInfo_size_must_be_0x1c[
 /* shadow typedef 's64' */
 typedef long long s64;
 
+/* Two ABI seams are intentional. A natural `new daObjAbuku_c` relocates to
+ * global _Znwm instead of retail's fBase_c allocator, so the actor-table
+ * factory keeps the recovered allocation/construction sequence. dCcAc_c::Init
+ * takes Fix12<int> by value; spelling that typed call triggers mwccarm's known
+ * wrapper stack-homing divergence, while this ABI-equivalent declaration keeps
+ * the retail register call. The remaining declarations name free functions or
+ * globals, not shadow class methods. */
 extern "C" {
 extern int _ZTV12daObjAbuku_c[];
 extern void func_ov002_020b330c(daObjAbuku_c *);
 extern int func_ov002_020b3344(daObjAbuku_c *);
-extern void *data_020a0eac;
 extern void *_ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void *);
 extern void _ZN7dCcAc_cC1Ev(void *);
-extern void _ZN7dCcAc_cD1Ev(void *);
-extern void _ZN8dActor_cD2Ev(void *);
 extern int _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     dCcAc_c *, dActor_c *, Fix12i, Fix12i, unsigned int, unsigned int);
-extern void _ZN9dBgCh_GndC1Ev(struct RG*);
-extern void _ZN5dBgCh19StartDetectingWaterEv(struct RG*);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct RG*, const void*, void*);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct RG*);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern void _ZN9dBgCh_GndD1Ev(struct RG*);
 extern short data_02082214[];
 extern void _Z14ApproachLinearRiii(int *p, int b, int c);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -101,10 +99,10 @@ extern "C" daObjAbuku_c *daObjAbuku_c_Spawn();
  * Bubble_Spawn -- renamed to match the RTTI class name
  * (_ZTS12daObjAbuku_c), see include/daObjAbuku_c.h. */
 /* vtable identified: VT0 = _ZTV12daObjAbuku_c */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Actor-table factory: genuine C ABI boundary. */
 daObjAbuku_c *daObjAbuku_c_Spawn(void)
 {
-    daObjAbuku_c *p = (daObjAbuku_c *)_ZN7fBase_cnwEj(276);
+    daObjAbuku_c *p = (daObjAbuku_c *)_ZN7fBase_cnwEj(sizeof(daObjAbuku_c));
     if (p) {
         _ZN8dActor_cC2Ev(p);
         /* A compiler-emitted Itanium vtable names its -2/-1 preamble at
@@ -115,7 +113,6 @@ daObjAbuku_c *daObjAbuku_c_Spawn(void)
     return p;
 }
 }
-
 /* 0x02108940..0x0210895c, immediately before the vtable object. */
 extern "C" AbukuSpawnInfo Bubble_SpawnInfo = {
     daObjAbuku_c_Spawn,
@@ -186,10 +183,9 @@ int daObjAbuku_c::Behavior()
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* C-linkage helper; its receiver is the recovered class. */
 int func_ov002_020b3344(daObjAbuku_c *c){
-  struct RG rg;
+  dBgCh_Gnd rg;
   AbukuVector3 v;
-  _ZN9dBgCh_GndC1Ev(&rg);
-  _ZN5dBgCh19StartDetectingWaterEv(&rg);
+  rg.StartDetectingWater();
   int x = c->mPosX;
   int y = c->mPosY;
   int z = c->mPosZ;
@@ -197,14 +193,12 @@ int func_ov002_020b3344(daObjAbuku_c *c){
   v.x = x;
   v.y = yk;
   v.z = z;
-  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, c);
-  if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg)) {
-    if (SurfaceInfo_TestFlag0x20(rg.detect)) {
-      _ZN9dBgCh_GndD1Ev(&rg);
+  rg.SetObjAndPos(*reinterpret_cast<const Vector3 *>(&v), c);
+  if (rg.DetectClsn()) {
+    if (SurfaceInfo_TestFlag0x20((int*)&rg.surface)) {
       return 1;
     }
   }
-  _ZN9dBgCh_GndD1Ev(&rg);
   return 0;
 }
 }
@@ -221,13 +215,3 @@ void func_ov002_020b330c(daObjAbuku_c *c){
   c->MarkForDestruction();
 }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Compiler-owned destructor variants.                                      */
-/*                                                                            */
-/* mwccarm emits the complete (D1), deleting (D0), and base (D2) variants    */
-/* from this one class definition.  D2 and the class vtable/RTTI are kept in  */
-/* the object inventory even though the ROM text map currently owns only D0   */
-/* and D1; hiding those emissions would make this TU unsafe to promote.       */
-/* -------------------------------------------------------------------------- */
-daObjAbuku_c::~daObjAbuku_c() {}

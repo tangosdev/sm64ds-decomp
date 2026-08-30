@@ -1,25 +1,20 @@
 {
   "id": "ov002/daObjAbuku_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjAbuku_c.cpp",
+  "source": "src/actors/daObjAbuku_c.cpp",
   "promoted_source": "src/actors/daObjAbuku_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b3298..0x20b35a0, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjAbuku_c",
-    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "both neighbouring cuts are high-confidence in the regenerated current-main TU map"
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020b3298",
       "end": "0x020b35a0"
-    },
-    {
-      "name": ".data",
-      "start": "0x02108924",
-      "end": "0x021089e0"
     }
   ],
   "functions": [
@@ -73,565 +68,85 @@
       "ordinal": 6
     }
   ],
-  "data": [
-    {
-      "symbol": "_ZTI12daObjAbuku_c",
-      "address": "0x02108924",
-      "size": "0xc",
-      "evidence": "compiler-emitted class typeinfo; bytes and all three relocation destinations match the ov002 ROM/config"
-    },
-    {
-      "symbol": "_ZTS12daObjAbuku_c",
-      "address": "0x02108930",
-      "size": "0xf",
-      "evidence": "compiler-emitted class type-name string matches the ov002 ROM bytes"
-    },
-    {
-      "symbol": "Bubble_SpawnInfo",
-      "address": "0x02108940",
-      "size": "0x1c",
-      "evidence": "ROM actor descriptor: relocation at 0x02108940 targets daObjAbuku_c_Spawn; the remaining words decode as behavior/render priorities 0x123/0xa1, flags 0, rangeOffsetY 0x60000, range 0x200000, draw distance 0x1000000, and trailing zero"
-    },
-    {
-      "symbol": "_ZTV12daObjAbuku_c",
-      "address": "0x02108964",
-      "emitted_storage_address": "0x0210895c",
-      "address_point_bias": "0x8",
-      "size": "0x84",
-      "storage_alias": {
-        "symbol": "data_ov002_0210895c",
-        "address": "0x0210895c",
-        "size": "0x8",
-        "binding": "STB_GLOBAL",
-        "type": "STT_OBJECT",
-        "visibility": "STV_DEFAULT",
-        "reuse_compiler_only_symbol": "_ZN12daObjAbuku_cD2Ev"
-      },
-      "evidence": "compiler-emitted vtable storage includes the two-word Itanium preamble at 0x0210895c; public/configured address point is 0x02108964; bytes and all 32 relocations match"
-    }
-  ],
-  "rodata": [],
+  "data": [],
   "bss": [],
-  "relocations": [
+  "compiler_only_output": [
     {
-      "section": ".data",
-      "source": "0x02108924",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "arm9",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108928",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS12daObjAbuku_c",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x02108930"
-    },
-    {
-      "section": ".data",
-      "source": "0x0210892c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI8dActor_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0208e390"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108940",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "daObjAbuku_c_Spawn",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x020b3568"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108960",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
       "symbol": "_ZTI12daObjAbuku_c",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x02108924"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108964",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x020b3518"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108968",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data",
-      "source": "0x0210896c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108970",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043bf0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108974",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108978",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data",
-      "source": "0x0210897c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x020b33dc"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108980",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108984",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108988",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c6RenderEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043af0"
-    },
-    {
-      "section": ".data",
-      "source": "0x0210898c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108990",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108994",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043ac0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02108998",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data",
-      "source": "0x0210899c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089a0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089a4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN12daObjAbuku_cD1Ev",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x020b3298"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089a8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN12daObjAbuku_cD0Ev",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x020b32c8"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089ac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089b0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089b4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089b8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089bc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089c0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089c4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089c8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089cc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089d0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089d4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089d8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data",
-      "source": "0x021089dc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x020100dc"
-    }
-  ],
-  "externalized_output": [
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x8",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi17__class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a774"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e60"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xa",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108924",
+      "reason": "The key function emits daObjAbuku_c's typeinfo record. Its cartridge home is outside this text-only entry, so dsd supplies the canonical bytes; romdata_check proves this emitted copy before production isolation discards it."
     },
     {
       "symbol": "_ZTI7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
+      "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e54"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086d70"
-        }
-      ]
+      "reason": "The key function emits the inherited dBase_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key function emits the inherited fBase_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
     },
     {
       "symbol": "_ZTI8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
+      "disposition": "deadstrip-data",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e390",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS8dActor_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x0208e384"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e78"
-        }
-      ]
-    }
-  ],
-  "compiler_only_output": [
+      "reason": "The key function emits the inherited dActor_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
     {
-      "symbol": "_ZN12daObjAbuku_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
+      "symbol": "_ZTS12daObjAbuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108930",
+      "reason": "The key function emits daObjAbuku_c's type-name string. Its cartridge home is outside this text-only entry, so dsd supplies it and romdata_check proves the emitted string before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key function emits the inherited dBase_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key function emits the inherited fBase_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key function emits the inherited dActor_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTV12daObjAbuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108964",
+      "reason": "InitResources is the key function and emits the complete daObjAbuku_c vtable with its ABI preamble. The configured public address point is outside this text-only entry; romdata_check applies the measured eight-byte address-point convention and proves every emitted slot before isolation discards the copy."
+    },
+    {
+      "symbol": "Bubble_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108940",
+      "reason": "The actor-table descriptor is naturally defined beside its factory in this TU. Its canonical gap-owned home is outside the text-only claim; romdata_check proves the factory relocation and all descriptor words before production isolation discards the duplicate."
     }
   ],
   "notes": [
-    "MANUALLY CURATED READABLE C++ SHADOW: src_tu/actors/daObjAbuku_c.cpp now uses the real daObjAbuku_c : dActor_c declaration, typed dCcAc_c/member fields, member-form Behavior and InitResources, and one real ~daObjAbuku_c definition. The seven legacy owners under src/ remain untouched and enrolled.",
-    "TEXT-VERIFIED: tubuild verify is 7/7 MATCH with clean objisolate and relocation destinations. D0 (0x44) and D1 (0x30) are compiler-generated from the real destructor and match their licensed ROM ranges; the compiler orders the destructor group as D0/D1/D2 rather than ROM source order.",
-    "PARTIAL-LINK-VERIFIED: one compile reduced seven times is contribution-equivalent to all seven production objects; the partial scratch link reproduces 0x020b3298..0x020b35a0, ov002 (106/106 modules), and the stock ROM byte-for-byte.",
-    "DATA-CONTRIBUTION VERIFIED: after exact scratch-only D2 removal and six canonical inherited RTTI imports, the object emits one 0xbc .data contribution at 0x02108924..0x021089e0 containing Abuku ZTI, ZTS, typed Bubble_SpawnInfo, and vtable storage in retail order. All non-relocated bytes and all 36 relocation type/symbol/addend/module/address identities match ROM/config; the post-policy audit has 11 LICENSED definitions and no collisions, homeless symbols, or unlicensed sections.",
-    "WHOLE-TU LINK BLOCKED ONLY BY TEXT ORDER: mwccarm fixes the destructor group as D0,D1 after D2 removal, while retail is D1,D0. The whole-object scratch gate refuses before linking rather than silently placing those two exact bodies at each other's addresses.",
-    "PARTITIONED-LINK-VERIFIED: one 2004/b56 compile yields seven contribution-identical ROM-ordered text objects plus one exact 0xbc data object; the vtable storage-prefix alias and public address point match the content-bound baseline ELF, 106/106 modules reproduce, there are zero new symbol errors, and the full ROM SHA-256 equals stock.",
-    "PROMOTION REFUSED: production rombuild/delinks does not apply compiler_only_output, externalized_output, non-text ownership, or per-function text ordering to a full TU. This manifest is data/layout evidence, not an enrollment request."
+    "Genuine lifecycle source form: daObjAbuku_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU. The emitted vtable naturally requires D1 then D0 in retail order; mwcc emits no D2 and the source contains no hand-spelled destructor body or forcing helper.",
+    "The actor-table factory remains the one genuine C ABI construction boundary. Plain `new daObjAbuku_c` was measured and rejected because mwccarm calls unresolved `_Znwm`, while retail calls the actor-specific `_ZN7fBase_cnwEj`; the exact manual allocator/base/member-constructor sequence is retained rather than hiding a wrong relocation.",
+    "The manifest is deliberately text-only. All ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes, including Bubble_SpawnInfo and daObjAbuku_c's own RTTI, type name, and vtable. This lets ordinary production promotion preserve gap ownership while still making romdata_check binding evidence.",
+    "The older partitioned-link record described an out-of-line destructor source form that emitted D0, D1 and D2 in the wrong order. It was removed rather than carried forward as stale evidence after the inline/key-function form eliminated D2 and corrected section order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -641,913 +156,58 @@
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 7,
     "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI12daObjAbuku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjAbuku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjAbuku_c",
+        "Bubble_SpawnInfo"
+      ],
+      "dataExternalized": [
+        "Bubble_SpawnInfo",
+        "_ZTI12daObjAbuku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjAbuku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjAbuku_c"
+      ]
+    },
     "criteria": {
       "every_declared_function_defined": "PASS",
-      "every_declared_function_correct_size": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS AFTER EXACT SCRATCH POLICY -- D2 is deadstripped and six inherited vague RTTI copies become verified canonical imports; raw verify still inventories all seven",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
-      "no_constructor_or_destructor_variants": "WAIVED -- the real destructor intentionally emits licensed D0/D1 plus unlicensed D2; all are inventoried below",
-      "no_unexpected_vtable_rtti_or_data_emission": "PASS AFTER EXACT SCRATCH POLICY -- four Abuku-owned objects are licensed and six inherited vague copies are verified canonical imports",
-      "all_content_sections_licensed": "PASS AFTER EXACT SCRATCH POLICY -- object audit reports 11 LICENSED, zero nonlicensed symbols, zero unlicensed sections",
-      "relocation_destinations_verified": "PASS -- seven text functions, 36 owned data relocations, and eight inherited RTTI relocations"
-    },
-    "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "object-audit-refused",
-      "scratch": "build/tu/ov002-daObjAbuku_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true
-      },
-      "tuRange": null,
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 11
-        },
-        "emittedTextOrderIsRomAscending": false,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "symbolCheckNewVsBaseline": null,
-      "rom": null,
-      "linkerOutput": null
-    }
-  },
-  "unlicensed_output_observed": {
-    "note": "Present in the raw compiler object but removed or externalized only after exact scratch verification. These are deliberately not licensed as TU-owned retail contributions, and production promotion remains refused.",
-    "text": [
-      {
-        "symbol": "_ZN12daObjAbuku_cD2Ev",
-        "size": "0x30",
-        "binding": "STB_GLOBAL",
-        "in_rom": false,
-        "note": "compiler-emitted base destructor variant; no symbols.txt home or licensed ROM range"
-      }
-    ],
-    "data": [
-      {
-        "symbol": "_ZTI7fBase_c",
-        "size": "0x8",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x02086d70",
-        "note": "exact inherited vague copy; verified and externalized to the canonical arm9 definition in scratch"
-      },
-      {
-        "symbol": "_ZTS7fBase_c",
-        "size": "0x9",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x02086e60",
-        "note": "exact inherited vague name copy; verified and externalized to the canonical arm9 definition in scratch"
-      },
-      {
-        "symbol": "_ZTI7dBase_c",
-        "size": "0xc",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x02086e78",
-        "note": "exact inherited vague copy; verified and externalized to the canonical arm9 definition in scratch"
-      },
-      {
-        "symbol": "_ZTS7dBase_c",
-        "size": "0x9",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x02086e54",
-        "note": "exact inherited vague name copy; verified and externalized to the canonical arm9 definition in scratch"
-      },
-      {
-        "symbol": "_ZTI8dActor_c",
-        "size": "0xc",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x0208e390",
-        "note": "exact inherited vague copy; verified and externalized to the canonical arm9 definition in scratch"
-      },
-      {
-        "symbol": "_ZTS8dActor_c",
-        "size": "0xa",
-        "binding": "STB_LOPROC",
-        "rom_symbol_address": "0x0208e384",
-        "note": "exact inherited vague name copy; verified and externalized to the canonical arm9 definition in scratch"
-      }
-    ],
-    "bss": [],
-    "init": [],
-    "rodata": [],
-    "ctor": []
-  },
-  "partial_isolation": {
-    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-    "delinksChanged": false,
-    "derivedObjects": 7,
-    "contributionEquivalent": "7/7",
-    "comparedFields": [
-      "keptSection",
-      "keptBytes",
-      "relocs",
-      "defined",
-      "mapping",
-      "live",
-      "undefReferenced"
-    ],
-    "substitutedObjectPaths": [
-      "src/_ZN12daObjAbuku_cD1Ev.cpp",
-      "src/_ZN12daObjAbuku_cD0Ev.cpp",
-      "src/func_ov002_020b330c.cpp",
-      "src/func_ov002_020b3344.c",
-      "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-      "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-      "src/daObjAbuku_c_Spawn.c"
-    ],
-    "extraInertImports": 72,
-    "extraImportsWithNoHome": [
-      "_ZN12daObjAbuku_cD2Ev",
-      "_ZTVN3abi17__class_type_infoE",
-      "_ZTVN3abi20__si_class_type_infoE"
-    ],
-    "result": "partial-link-verified",
-    "phases": {
-      "delink": true,
-      "lcf": true,
-      "compile": true,
-      "link": true,
-      "checkModules": true,
-      "checkSymbols": false,
-      "rom": true
-    },
-    "tuRange": {
-      "start": "0x020b3298",
-      "end": "0x020b35a0",
-      "differingBytes": 0,
-      "firstDiff": null
-    },
-    "moduleFidelityPassed": true,
-    "symbolCheckNewVsBaseline": [],
-    "rom": {
-      "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-      "matchesStockRom": true
-    },
-    "scratch": "build/tu/ov002-daObjAbuku_c/link-partial (gitignored)",
-    "state": "partial-link-verified",
-    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
-    "legacyEntriesComplete": "7/7",
-    "artefacts": "build/tu/ov002-daObjAbuku_c/partial/partial.json (gitignored)"
-  },
-  "partitioned_link": {
-    "lastAttempt": {
-      "result": "partitioned-link-verified",
-      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
-      "trackedDelinksChanged": false,
-      "text": {
-        "toolchain": "2004/b56",
-        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-        "mergedBytes": 7576,
-        "contributionEquivalent": "7/7",
-        "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.cpp",
-          "src/_ZN12daObjAbuku_cD0Ev.cpp",
-          "src/func_ov002_020b330c.cpp",
-          "src/func_ov002_020b3344.c",
-          "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-          "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-          "src/daObjAbuku_c_Spawn.c"
-        ],
-        "rows": [
-          {
-            "ordinal": 0,
-            "symbol": "_ZN12daObjAbuku_cD1Ev",
-            "identical": true,
-            "relocCount": 3,
-            "differences": []
-          },
-          {
-            "ordinal": 1,
-            "symbol": "_ZN12daObjAbuku_cD0Ev",
-            "identical": true,
-            "relocCount": 5,
-            "differences": []
-          },
-          {
-            "ordinal": 2,
-            "symbol": "func_ov002_020b330c",
-            "identical": true,
-            "relocCount": 3,
-            "differences": []
-          },
-          {
-            "ordinal": 3,
-            "symbol": "func_ov002_020b3344",
-            "identical": true,
-            "relocCount": 7,
-            "differences": []
-          },
-          {
-            "ordinal": 4,
-            "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
-            "identical": true,
-            "relocCount": 12,
-            "differences": []
-          },
-          {
-            "ordinal": 5,
-            "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
-            "identical": true,
-            "relocCount": 1,
-            "differences": []
-          },
-          {
-            "ordinal": 6,
-            "symbol": "daObjAbuku_c_Spawn",
-            "identical": true,
-            "relocCount": 4,
-            "differences": []
-          }
-        ]
-      },
-      "compilerOnlyPolicy": {
-        "requested": [
-          "_ZN12daObjAbuku_cD2Ev"
-        ],
-        "deadstripped": [
-          "_ZN12daObjAbuku_cD2Ev"
-        ],
-        "droppedSections": [
-          21,
-          22
-        ],
-        "errors": null
-      },
-      "externalizedPolicy": {
-        "requested": [
-          "_ZTI7fBase_c",
-          "_ZTS7dBase_c",
-          "_ZTS7fBase_c",
-          "_ZTS8dActor_c",
-          "_ZTI7dBase_c",
-          "_ZTI8dActor_c"
-        ],
-        "externalized": [
-          "_ZTI7dBase_c",
-          "_ZTI7fBase_c",
-          "_ZTI8dActor_c",
-          "_ZTS7dBase_c",
-          "_ZTS7fBase_c",
-          "_ZTS8dActor_c"
-        ],
-        "droppedSections": [
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          14,
-          15
-        ],
-        "verificationOk": true,
-        "errors": []
-      },
-      "nontextPartition": {
-        "requestedSections": [
-          ".data"
-        ],
-        "licensedSymbols": [
-          "Bubble_SpawnInfo",
-          "_ZTI12daObjAbuku_c",
-          "_ZTS12daObjAbuku_c",
-          "_ZTV12daObjAbuku_c"
-        ],
-        "deferredOutputs": [
-          {
-            "symbol": "_ZN12daObjAbuku_cD1Ev",
-            "section": ".text",
-            "size": "0x00000030"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_cD0Ev",
-            "section": ".text",
-            "size": "0x00000044"
-          },
-          {
-            "symbol": "func_ov002_020b330c",
-            "section": ".text",
-            "size": "0x00000038"
-          },
-          {
-            "symbol": "func_ov002_020b3344",
-            "section": ".text",
-            "size": "0x00000098"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
-            "section": ".text",
-            "size": "0x0000013c"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
-            "section": ".text",
-            "size": "0x00000050"
-          },
-          {
-            "symbol": "daObjAbuku_c_Spawn",
-            "section": ".text",
-            "size": "0x00000038"
-          }
-        ],
-        "keptSectionIndices": [
-          12,
-          16,
-          17,
-          19
-        ],
-        "droppedSectionIndices": [
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31,
-          32,
-          33,
-          34,
-          35,
-          36
-        ],
-        "externalizedTextSymbols": [
-          "_ZN12daObjAbuku_c13InitResourcesEv",
-          "_ZN12daObjAbuku_c8BehaviorEv",
-          "_ZN12daObjAbuku_cD0Ev",
-          "_ZN12daObjAbuku_cD1Ev",
-          "daObjAbuku_c_Spawn"
-        ],
-        "deadTextSymbols": [
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$d",
-          "$d",
-          "$d",
-          "$d",
-          "$d",
-          "func_ov002_020b330c",
-          "func_ov002_020b3344"
-        ],
-        "liveSections": [
-          {
-            "index": 12,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 12
-          },
-          {
-            "index": 16,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 15
-          },
-          {
-            "index": 17,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 28
-          },
-          {
-            "index": 19,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 132
-          }
-        ],
-        "error": null
-      },
-      "ownedBeforePartition": {
-        "ok": true,
-        "rows": [
-          {
-            "section": ".data",
-            "start": "0x02108924",
-            "end": "0x021089e0",
-            "emittedBytes": 188,
-            "sizeOk": true,
-            "bytesOk": true,
-            "differingWords": 0,
-            "relocCount": 36
-          }
-        ],
-        "errors": []
-      },
-      "ownedAfterRebias": {
-        "ok": true,
-        "rows": [
-          {
-            "section": ".data",
-            "start": "0x02108924",
-            "end": "0x021089e0",
-            "emittedBytes": 188,
-            "sizeOk": true,
-            "bytesOk": true,
-            "differingWords": 0,
-            "relocCount": 36
-          }
-        ],
-        "errors": []
-      },
-      "vtableRebias": {
-        "rebased": [
-          {
-            "symbol": "_ZTV12daObjAbuku_c",
-            "bias": 8,
-            "oldValue": 0,
-            "newValue": 8,
-            "oldSize": 132,
-            "newSize": 124
-          }
-        ],
-        "aliases": [
-          {
-            "symbol": "data_ov002_0210895c",
-            "donor": "_ZN12daObjAbuku_cD2Ev",
-            "value": 0,
-            "size": 8,
-            "section": ".data"
-          }
-        ],
-        "error": null
-      },
-      "linkedStorageAliases": {
-        "ok": true,
-        "rows": [
-          {
-            "alias": "data_ov002_0210895c",
-            "vtable": "_ZTV12daObjAbuku_c",
-            "aliasMetadata": {
-              "address": 34638172,
-              "size": 8,
-              "binding": "STB_GLOBAL",
-              "type": "STT_OBJECT",
-              "visibility": "STV_DEFAULT",
-              "sectionIndex": 13,
-              "section": "OV002"
-            },
-            "vtableMetadata": {
-              "address": 34638180,
-              "size": 124,
-              "binding": "STB_GLOBAL",
-              "type": "STT_OBJECT",
-              "visibility": "STV_DEFAULT",
-              "sectionIndex": 13,
-              "section": "OV002"
-            },
-            "baselineElfSha256": "1dddee7fa196334e0d863ee38b26b650b63a9f7a1015708b6a3b8a6f2a247097",
-            "exact": true
-          }
-        ],
-        "errors": []
-      },
-      "objectHashes": {
-        "rawTuSha256": "85ec26d72ce26dd35d6503a695d2e2d0638fc7a995f48dea16f31357bb648631",
-        "rawTuBytes": 7576,
-        "tuObjectPath": "build/tu/ov002-daObjAbuku_c/link-partitioned/src_tu/actors/daObjAbuku_c.o",
-        "postPolicySha256": "4e9ccb4b65307714bf8a7f76613360c5352a50c0dfe2ffbe593e7a141b1c314f",
-        "reducedStorageSha256": "e131ac27b984c40e7126b9e5d8aefb55c3ba3a0dc304b47f4acfc3a9d9d95a41",
-        "linkedDataSha256": "3e376a2d7fbb218309f6ad0c89c9c6f278f6ba0e8b05df20e3b5b6f648b84596"
-      },
-      "artifactAudit": {
-        "ok": true,
-        "errors": [],
-        "expectedTuSelectors": [
-          "daObjAbuku_c.o(.data)"
-        ],
-        "observedTuSelectors": [
-          "daObjAbuku_c.o(.data)"
-        ],
-        "expectedLegacyCount": 7,
-        "selectorCount": 11623,
-        "objectCount": 11416,
-        "selectorListSha256": "e4c0a852da1dfc74b75acf408f2ae3a42d4070c1057e8f178ed9691fbe7bfc1a",
-        "objectListSha256": "df8f694839ee42ee4eb1bb523add6c706bfba74953912d88a4ee69598b714d2e"
-      },
-      "ranges": [
-        {
-          "section": ".text",
-          "start": "0x020b3298",
-          "end": "0x020b35a0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
-          "start": "0x02108924",
-          "end": "0x021089e0",
-          "differingBytes": 0,
-          "firstDiff": null
-        }
-      ],
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": true,
-        "checkSymbols": false,
-        "rom": true
-      },
-      "moduleFidelityPassed": true,
-      "symbolCheckNewVsBaseline": [],
-      "rom": {
-        "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true
-      },
-      "strayOutputs": null,
-      "scratch": "build/tu/ov002-daObjAbuku_c/link-partitioned (gitignored)"
-    },
-    "state": "partitioned-link-verified",
-    "stateMeaning": "At least one scratch-only attempt compiled one shadow TU into exact ROM-ordered text partitions plus exact owned non-text data and reproduced the stock ROM. The latest attempt is recorded separately; this is never a production enrollment or promotion state.",
-    "lastVerified": {
-      "result": "partitioned-link-verified",
-      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
-      "trackedDelinksChanged": false,
-      "text": {
-        "toolchain": "2004/b56",
-        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-        "mergedBytes": 7576,
-        "contributionEquivalent": "7/7",
-        "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.cpp",
-          "src/_ZN12daObjAbuku_cD0Ev.cpp",
-          "src/func_ov002_020b330c.cpp",
-          "src/func_ov002_020b3344.c",
-          "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-          "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-          "src/daObjAbuku_c_Spawn.c"
-        ],
-        "rows": [
-          {
-            "ordinal": 0,
-            "symbol": "_ZN12daObjAbuku_cD1Ev",
-            "identical": true,
-            "relocCount": 3,
-            "differences": []
-          },
-          {
-            "ordinal": 1,
-            "symbol": "_ZN12daObjAbuku_cD0Ev",
-            "identical": true,
-            "relocCount": 5,
-            "differences": []
-          },
-          {
-            "ordinal": 2,
-            "symbol": "func_ov002_020b330c",
-            "identical": true,
-            "relocCount": 3,
-            "differences": []
-          },
-          {
-            "ordinal": 3,
-            "symbol": "func_ov002_020b3344",
-            "identical": true,
-            "relocCount": 7,
-            "differences": []
-          },
-          {
-            "ordinal": 4,
-            "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
-            "identical": true,
-            "relocCount": 12,
-            "differences": []
-          },
-          {
-            "ordinal": 5,
-            "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
-            "identical": true,
-            "relocCount": 1,
-            "differences": []
-          },
-          {
-            "ordinal": 6,
-            "symbol": "daObjAbuku_c_Spawn",
-            "identical": true,
-            "relocCount": 4,
-            "differences": []
-          }
-        ]
-      },
-      "compilerOnlyPolicy": {
-        "requested": [
-          "_ZN12daObjAbuku_cD2Ev"
-        ],
-        "deadstripped": [
-          "_ZN12daObjAbuku_cD2Ev"
-        ],
-        "droppedSections": [
-          21,
-          22
-        ],
-        "errors": null
-      },
-      "externalizedPolicy": {
-        "requested": [
-          "_ZTI7fBase_c",
-          "_ZTS7dBase_c",
-          "_ZTS7fBase_c",
-          "_ZTS8dActor_c",
-          "_ZTI7dBase_c",
-          "_ZTI8dActor_c"
-        ],
-        "externalized": [
-          "_ZTI7dBase_c",
-          "_ZTI7fBase_c",
-          "_ZTI8dActor_c",
-          "_ZTS7dBase_c",
-          "_ZTS7fBase_c",
-          "_ZTS8dActor_c"
-        ],
-        "droppedSections": [
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          14,
-          15
-        ],
-        "verificationOk": true,
-        "errors": []
-      },
-      "nontextPartition": {
-        "requestedSections": [
-          ".data"
-        ],
-        "licensedSymbols": [
-          "Bubble_SpawnInfo",
-          "_ZTI12daObjAbuku_c",
-          "_ZTS12daObjAbuku_c",
-          "_ZTV12daObjAbuku_c"
-        ],
-        "deferredOutputs": [
-          {
-            "symbol": "_ZN12daObjAbuku_cD1Ev",
-            "section": ".text",
-            "size": "0x00000030"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_cD0Ev",
-            "section": ".text",
-            "size": "0x00000044"
-          },
-          {
-            "symbol": "func_ov002_020b330c",
-            "section": ".text",
-            "size": "0x00000038"
-          },
-          {
-            "symbol": "func_ov002_020b3344",
-            "section": ".text",
-            "size": "0x00000098"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
-            "section": ".text",
-            "size": "0x0000013c"
-          },
-          {
-            "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
-            "section": ".text",
-            "size": "0x00000050"
-          },
-          {
-            "symbol": "daObjAbuku_c_Spawn",
-            "section": ".text",
-            "size": "0x00000038"
-          }
-        ],
-        "keptSectionIndices": [
-          12,
-          16,
-          17,
-          19
-        ],
-        "droppedSectionIndices": [
-          23,
-          24,
-          25,
-          26,
-          27,
-          28,
-          29,
-          30,
-          31,
-          32,
-          33,
-          34,
-          35,
-          36
-        ],
-        "externalizedTextSymbols": [
-          "_ZN12daObjAbuku_c13InitResourcesEv",
-          "_ZN12daObjAbuku_c8BehaviorEv",
-          "_ZN12daObjAbuku_cD0Ev",
-          "_ZN12daObjAbuku_cD1Ev",
-          "daObjAbuku_c_Spawn"
-        ],
-        "deadTextSymbols": [
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$a",
-          "$d",
-          "$d",
-          "$d",
-          "$d",
-          "$d",
-          "func_ov002_020b330c",
-          "func_ov002_020b3344"
-        ],
-        "liveSections": [
-          {
-            "index": 12,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 12
-          },
-          {
-            "index": 16,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 15
-          },
-          {
-            "index": 17,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 28
-          },
-          {
-            "index": 19,
-            "name": ".data",
-            "type": "SHT_PROGBITS",
-            "size": 132
-          }
-        ],
-        "error": null
-      },
-      "ownedBeforePartition": {
-        "ok": true,
-        "rows": [
-          {
-            "section": ".data",
-            "start": "0x02108924",
-            "end": "0x021089e0",
-            "emittedBytes": 188,
-            "sizeOk": true,
-            "bytesOk": true,
-            "differingWords": 0,
-            "relocCount": 36
-          }
-        ],
-        "errors": []
-      },
-      "ownedAfterRebias": {
-        "ok": true,
-        "rows": [
-          {
-            "section": ".data",
-            "start": "0x02108924",
-            "end": "0x021089e0",
-            "emittedBytes": 188,
-            "sizeOk": true,
-            "bytesOk": true,
-            "differingWords": 0,
-            "relocCount": 36
-          }
-        ],
-        "errors": []
-      },
-      "vtableRebias": {
-        "rebased": [
-          {
-            "symbol": "_ZTV12daObjAbuku_c",
-            "bias": 8,
-            "oldValue": 0,
-            "newValue": 8,
-            "oldSize": 132,
-            "newSize": 124
-          }
-        ],
-        "aliases": [
-          {
-            "symbol": "data_ov002_0210895c",
-            "donor": "_ZN12daObjAbuku_cD2Ev",
-            "value": 0,
-            "size": 8,
-            "section": ".data"
-          }
-        ],
-        "error": null
-      },
-      "linkedStorageAliases": {
-        "ok": true,
-        "rows": [
-          {
-            "alias": "data_ov002_0210895c",
-            "vtable": "_ZTV12daObjAbuku_c",
-            "aliasMetadata": {
-              "address": 34638172,
-              "size": 8,
-              "binding": "STB_GLOBAL",
-              "type": "STT_OBJECT",
-              "visibility": "STV_DEFAULT",
-              "sectionIndex": 13,
-              "section": "OV002"
-            },
-            "vtableMetadata": {
-              "address": 34638180,
-              "size": 124,
-              "binding": "STB_GLOBAL",
-              "type": "STT_OBJECT",
-              "visibility": "STV_DEFAULT",
-              "sectionIndex": 13,
-              "section": "OV002"
-            },
-            "baselineElfSha256": "1dddee7fa196334e0d863ee38b26b650b63a9f7a1015708b6a3b8a6f2a247097",
-            "exact": true
-          }
-        ],
-        "errors": []
-      },
-      "objectHashes": {
-        "rawTuSha256": "85ec26d72ce26dd35d6503a695d2e2d0638fc7a995f48dea16f31357bb648631",
-        "rawTuBytes": 7576,
-        "tuObjectPath": "build/tu/ov002-daObjAbuku_c/link-partitioned/src_tu/actors/daObjAbuku_c.o",
-        "postPolicySha256": "4e9ccb4b65307714bf8a7f76613360c5352a50c0dfe2ffbe593e7a141b1c314f",
-        "reducedStorageSha256": "e131ac27b984c40e7126b9e5d8aefb55c3ba3a0dc304b47f4acfc3a9d9d95a41",
-        "linkedDataSha256": "3e376a2d7fbb218309f6ad0c89c9c6f278f6ba0e8b05df20e3b5b6f648b84596"
-      },
-      "artifactAudit": {
-        "ok": true,
-        "errors": [],
-        "expectedTuSelectors": [
-          "daObjAbuku_c.o(.data)"
-        ],
-        "observedTuSelectors": [
-          "daObjAbuku_c.o(.data)"
-        ],
-        "expectedLegacyCount": 7,
-        "selectorCount": 11623,
-        "objectCount": 11416,
-        "selectorListSha256": "e4c0a852da1dfc74b75acf408f2ae3a42d4070c1057e8f178ed9691fbe7bfc1a",
-        "objectListSha256": "df8f694839ee42ee4eb1bb523add6c706bfba74953912d88a4ee69598b714d2e"
-      },
-      "ranges": [
-        {
-          "section": ".text",
-          "start": "0x020b3298",
-          "end": "0x020b35a0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
-          "start": "0x02108924",
-          "end": "0x021089e0",
-          "differingBytes": 0,
-          "firstDiff": null
-        }
-      ],
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": true,
-        "checkSymbols": false,
-        "rom": true
-      },
-      "moduleFidelityPassed": true,
-      "symbolCheckNewVsBaseline": [],
-      "rom": {
-        "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true
-      },
-      "strayOutputs": null,
-      "scratch": "build/tu/ov002-daObjAbuku_c/link-partitioned (gitignored)"
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
     }
   }
 }

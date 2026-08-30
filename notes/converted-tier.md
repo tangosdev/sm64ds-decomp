@@ -197,7 +197,7 @@ volatile int vi; vi dummy;` would carry no `volatile` at the use site at all.
 
 `tools/tiers_ratchet.py` banks the SET of CONVERTED paths and fails when one
 leaves. A TU promotion consolidates N per-symbol `src/_ZN....cpp` files into the
-one `src/actors/X.cpp` they always were, which git records as N deletions plus one
+one `src/actors/<Class>.cpp` they always were, which git records as N deletions plus one
 addition. Every one read as
 
 ```sh
