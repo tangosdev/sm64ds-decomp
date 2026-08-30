@@ -5,8 +5,8 @@
  * Logic first recovered by andrewboudreau as a NONMATCHING body against
  * mwccarm 1.2/sp2p3; byte-matched here at 2004/b56 without changing what it
  * does. Two shapes were load-bearing: the mode test is a static inline
- * predicate in a C++ TU (the ROM materializes the bool, which C mode folds
- * away under every spelling - notes 6c/6bl), and the pair of words copied
+ * predicate in a C++ TU (the ROM materializes the bool, which no measured
+ * C-mode spelling reproduced - notes 6c/6bm), and the pair of words copied
  * out of data_ov075_0211d810 is an array-member struct copy, which keeps
  * both loads ahead of the flag read-modify-write instead of sinking the
  * second one past the first store.
