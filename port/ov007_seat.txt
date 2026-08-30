@@ -4055,6 +4055,13 @@ WHERE IT STOPS, and it is TWO PORT-PLUMBING GAPS, not a decomp gap:
      SM64DS_SCENE and walk_window.cpp:5833 falls through to the level boot, so a
      cold start lands in castle grounds. The title is reachable only through the
      scene harness.
+     GAP A IS CLOSED (run rel0215, lane boot-title). The owner ruled that the
+     game boots to its own first screen, and port_scene_env_want now answers 1
+     when nothing names a destination -- the decision itself lives in
+     hal/title_entry.cpp's port_boot_default_scene, which is also where the
+     four things that DO name a destination are listed. A cold start lands on
+     the title, picking a save file plays the game, and two toggles named in
+     port/README.md skip the menu and the opening cutscene.
   B. NOTHING CARRIES OUT THE SCENE REQUEST. Scene::SetSceneToSpawn writes
      data_02092664 and Scene::SpawnIfNecessary would consume it; the port runs
      the first half only. hal/level_change.cpp's port_scene_request_release is

@@ -135,6 +135,28 @@ def env_base(root, run_dir, instance):
     # A guarantee that depends on one mechanism is one mechanism away from
     # being a comment.
     e["SM64DS_MINIMIZED"] = "1"
+    # THE LEVEL THIS FILE HAS ALWAYS MEASURED, NOW SAID OUT LOUD (lane
+    # boot-title). Every rung here reads level-path output -- the
+    # "selftest: N frames, pos=(x, y, z)" line, the [comms:level] transport
+    # report, the [loopback:level] and [sync:level] counters -- and it got that
+    # level by NOT naming one, back when a bare launch defaulted to castle
+    # grounds. The owner's ruling moved that default to the title screen, so a
+    # bare launch is now a title run with no Player, no comms level report and
+    # no position line, and every rung below would fail on a change that has
+    # nothing to do with what they measure.
+    #
+    # THIS IS THE SAME RUN, NAMED. Level 1 IS castle grounds -- it is the
+    # value hal/level_boot.cpp's port_level_env_want defaulted to and the one
+    # PRECHANGE's positions and BMP hashes were recorded against -- so the
+    # constants at the top of this file stand unchanged and are still being
+    # compared against the identical boot. Nothing is relaxed: the assertions,
+    # the hashes and the exit codes are untouched.
+    #
+    # The sibling harnesses already spell it this way and always have:
+    # mp3_proof.py sets SM64DS_LEVEL on all three of its env builders, and
+    # mp2_two_windows.ps1 sets it with a comment calling the direct boot
+    # deliberate. This file was the one that relied on the default.
+    e["SM64DS_LEVEL"] = "1"
     e["SM64DS_INSTANCE"] = instance
     e["TEMP"] = os.path.join(run_dir, "tmp")
     e["TMP"] = e["TEMP"]

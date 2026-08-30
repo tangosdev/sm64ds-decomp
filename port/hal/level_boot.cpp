@@ -3081,7 +3081,15 @@ void *port_stage_a_boot(void *mc, int spawn)
    with mode 0 and the bit clear starts the opening). Deriving from the bit
    alone would fire the opening in all of them. The arm is set only by
    port_level_entry_latch (hal/level_change.cpp), which only the title bridge
-   calls -- so the default boot cannot reach it. */
+   and the VS start call -- so a level boot that names its own level cannot
+   reach it.
+   (run rel0215 lane boot-title: that last clause used to read "so the default
+   boot cannot reach it", and the default is now the title, which DOES reach
+   it. The protection is unchanged and the sentence above is its real form:
+   what cannot reach the arm is a boot that named a level, which is every one
+   of the forty-six selftests. The VS start reaches the arm and is then refused
+   by the ROM's own first precondition below, data_0209f2d8 != 0, because
+   PrepareVsMode writes mode 1.) */
 static int g_intro_armed;
 
 /* THE SUPPRESSION SEAM. The one place that says "not this time".
@@ -3126,11 +3134,49 @@ static int g_intro_armed;
 
    So the honest state is: the DECISION is solved and hosted, the CAST is not.
    Flipping this default is a one-line change once those four close, and the
-   run above is the worklist. SM64DS_INTRO=1 opts in today for that work. */
+   run above is the worklist. SM64DS_INTRO=1 opts in today for that work.
+
+   ---- THE FLIP HAPPENED, AND THE FOUR CLOSED ------------------------------
+
+   All four are closed and the opening runs end to end. The evidence is one
+   process in runs/rel0215/out/gatefix/after/intro.log:
+
+     122066  [intro] the opening is ARMED for this entry
+     122092  [intro] a cutscene script is running (007A23A0)
+     134543  [intro] boot: flags2 bit7 0 | pending 007a24e8 | running 007a42d8
+     137526  [intro] flags2 bit 7 0 -> 1
+
+   That last line is the whole proof. Nothing in the port writes that bit --
+   src/func_ov085_0212d5dc.cpp:51 does, and it is LakituBro's LAST opening
+   state, the one that hands control back after the camera flight settles. The
+   bit going 0 -> 1 means the opening played to its own end through the ROM's
+   own script, reloaded through its own cmd-0x0b pending word, and gave the
+   player the game. Gap 1 (actor 0x160) is seated, gap 2 and gap 4 are in
+   slices, and gap 3 is called by hand out of port_intro_seat_scripts below.
+
+   SO THE DEFAULT INVERTS: the opening PLAYS unless something says not this
+   time. It is still the ONE suppression seam and it still gates here rather
+   than anywhere else. Exactly one name says not this time --
+   SM64DS_SKIP_INTRO, the owner's "option to skip opening cutscene" -- and it
+   is read by PRESENCE, which is both the launcher's contract and the idiom the
+   rest of the game reads its environment with. hal/title_entry.cpp's
+   port_boot_skip_intro is the single reader.
+
+   NOTHING ELSE MOVES, and this is the half worth being precise about, because
+   a default that fires an opening in forty-six level selftests would be a
+   disaster and it cannot happen here. This function is only ever consulted
+   from port_intro_wants_play below, which returns 0 before reaching it unless
+   g_intro_armed is set, and g_intro_armed is set by exactly one caller --
+   port_level_entry_latch in hal/level_change.cpp, which only a title crossing
+   and the VS start reach. A direct SM64DS_LEVEL boot never arms, so it never
+   asks. The VS start does arm, and is then refused by the ROM's own first
+   precondition below (data_0209f2d8 != 0: PrepareVsMode writes mode 1), which
+   is measured rather than reasoned in this lane's proof runs. */
+extern "C" int port_boot_skip_intro(void);   /* hal/title_entry.cpp */
+
 extern "C" int port_intro_suppressed(void)
 {
-    const char *e = std::getenv("SM64DS_INTRO");
-    return (e && std::atoi(e) != 0) ? 0 : 1;
+    return port_boot_skip_intro();
 }
 
 /* Armed by the title bridge's own latch, for the next level boot only. */
@@ -3506,8 +3552,16 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        AND THE ONE ENTRY THAT WANTS IT CLEAR. port_intro_wants_play() (the seam
        above port_stage_boot_body) is true only for a title-bridge crossing into
-       a fresh file, and only with SM64DS_INTRO=1 -- see the seam for the four
-       measured gaps that keep it opt-in. On that one boot the bit is left
+       a fresh file.
+       (run rel0215 lane boot-title: this used to add "and only with
+       SM64DS_INTRO=1 -- see the seam for the four measured gaps that keep it
+       opt-in". BOTH HALVES ARE NOW FALSE. The four gaps closed, the seam's
+       default inverted, and the opening PLAYS unless SM64DS_SKIP_INTRO is
+       present; SM64DS_INTRO no longer exists as a knob. What is unchanged is
+       the sentence this correction interrupts -- the crossing into a fresh file
+       is still the only thing that makes this true, so no level boot that named
+       its own level can reach it.)
+       On that one boot the bit is left
        ALONE: LoadClsnAndObjects below then takes its own intro branch, declines to
        spawn the HUD exactly as the ROM does, and calls StartIntroCutscene. The
        bit gets set by the ROM's own hand at the end of the flight

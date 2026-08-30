@@ -1015,7 +1015,16 @@ extern "C" void port_scene_mg_overlay_load(void)
      threads a node onto an arm9-global destructor list the LEVEL path walks.
      The gate is what prevents that, not the call site, and the gate is still
      here: on a level run port_scene_env_want() answers -1, IsMinigameActorID
-     declines, and not one of the thirty-three runs. The ORDER is preserved as
+     declines, and not one of the thirty-three runs.
+     (run rel0215 lane boot-title: that sentence now has a second case, and the
+     gate covers it with no edit. Since the owner's boot-to-title ruling a
+     launch that names NO destination answers 1 rather than -1, so "a level
+     run" is no longer the same claim as "no SM64DS_SCENE". IsMinigameActorID
+     declines 1 exactly as it declines -1 -- src/IsMinigameActorID.c accepts
+     0x169..0x186, that is 361..390 inclusive --
+     so the forbidden thing still cannot happen. Corrected here rather than
+     left to be re-derived, because the sentence is load-bearing.)
+     The ORDER is preserved as
      well. The fill is reached from port_scene_registry_install at the tail of
      port_stage_a2_seat, which is before port_scene_run reaches the spawn, and
      on the DS LoadOverlay runs an overlay's static-init range before the

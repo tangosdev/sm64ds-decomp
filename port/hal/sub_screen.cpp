@@ -298,6 +298,39 @@ int g_tp_n = -1;            /* -1 = env not read yet, 0 = probe off */
 int g_tp_frame;             /* polls since the first one */
 int g_tp_cur = -1;          /* the frame being polled, for the camera log */
 
+/* ---- THE FORCED TAP, run rel0215 lane boot-title -------------------------
+ *
+ * A press SM64DS_SKIP_MENU asks for, consumed by poll_touch below in the same
+ * place the scripted probe and the comms injection are consumed. Two frames by
+ * default, because the ROM's edge is `new XOR old` and a one-frame press is a
+ * legal edge but leaves nothing held; two is what a tap looks like and it is
+ * what the proven chains in this tree script.
+ *
+ * NOT IN .dsstate, for the touch probe's own reason: a save-state load must not
+ * rewind the script that is driving the run. */
+static int g_force_n;
+static int g_force_x, g_force_y;
+
+extern "C" void port_touch_force_press(int x, int y, int frames)
+{
+    g_force_x = x;
+    g_force_y = y;
+    g_force_n = frames;
+}
+
+/* 1 and fills *fx/*fy while a forced press is outstanding, consuming one
+   frame of it. Declared locally at the call site rather than in a header
+   because it has exactly one producer and one consumer. */
+extern "C" int port_touch_forced(int *fx, int *fy)
+{
+    if (g_force_n <= 0)
+        return 0;
+    --g_force_n;
+    *fx = g_force_x;
+    *fy = g_force_y;
+    return 1;
+}
+
 void touch_probe_parse(void)
 {
     g_tp_n = 0;
@@ -488,6 +521,42 @@ void poll_touch(void)
             down = 1;
             sx = (unsigned char)tp->x;
             sy = (unsigned char)tp->y;
+        }
+    }
+
+    /* ---- SM64DS_SKIP_MENU's TAP, run rel0215 lane boot-title ---------------
+     *
+     * The third member of this family, in the same place and the same shape as
+     * the two around it, and it exists for a reason the other two do not have.
+     *
+     * The title screen -- top-state 11, src/func_ov007_020b0a20.c -- WAITS FOR
+     * A TOUCH AND NOTHING ELSE. Measured: a default boot with no input at all
+     * sits in that state for 3000 frames and never leaves it
+     * (out/boot-title/P0_attract_noinput.log, one state line at f1 and then
+     * silence). That is correct, it is what a title screen does, and it means
+     * there is no state the port can ASK for to get past it: the ROM's own way
+     * out is an input edge, and its own gate then decides whether to take it.
+     *
+     * So SM64DS_SKIP_MENU supplies the tap the player would have made, and the
+     * ROM's own conditions -- the down edge, its frame counter past 4, its own
+     * reading of the save slots through func_ov007_020aebac, and its animation
+     * being clear of its last 31 frames -- are all still the ones that decide.
+     * If the ROM refuses, the title stays up. The port does not overrule it.
+     *
+     * LANDING IT HERE IS THE WHOLE POINT, and it is the neighbouring block's
+     * point too: from this line on the tap is indistinguishable from a real
+     * one and travels the ROM's own path -- the change-edge store below,
+     * func_0203bb60, func_ov007_020c1db0's panel record, and the title's own
+     * gate. Nothing downstream knows a hand was not on the panel.
+     *
+     * hal/title_entry.cpp is the only caller and it only ever asks while the
+     * title is on screen. */
+    {
+        int fx = 0, fy = 0;
+        if (port_touch_forced(&fx, &fy)) {
+            down = 1;
+            sx = (unsigned char)fx;
+            sy = (unsigned char)fy;
         }
     }
 

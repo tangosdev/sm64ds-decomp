@@ -488,6 +488,24 @@ def main() -> int:
     bmps = sorted(bundle.glob("*selftest*.bmp"))
     say(bool(bmps), "a selftest BMP was written"
         + (f": {bmps[0].name} ({bmps[0].stat().st_size:,} bytes)" if bmps else ""))
+    # AND IT REACHED THE TITLE, which is a new question and a stronger one.
+    #
+    # This arm launches with the launcher's environment and nothing else, so
+    # since the owner's boot-to-title ruling it is a TITLE run. The two checks
+    # above are unchanged and still say exactly what they always said -- the
+    # exe survived N frames and reached the renderer -- but on their own they
+    # would now be satisfied by an exe that booted anything at all, the old
+    # level included, which is precisely the regression this ruling can suffer
+    # and the one nothing else in the kit would catch.
+    #
+    # The line is hal/scene_boot.cpp's own boot report, printed by
+    # port_scene_boot once the ROM's spawn spine has returned a scene object.
+    # It is not a message this script asked the game to print; it is the game
+    # saying which scene came up. Nothing above is relaxed to make room for it.
+    both = (out or "") + (err or "")
+    say("[scene] 1 = " in both,
+        "the shipped exe booted the TITLE, not a level -- the game's own "
+        "\"[scene] 1 = \" boot line is in the output")
 
     if args.live:
         print(f"\n7b. a real launch -- THIS OPENS A WINDOW for {args.live}s")

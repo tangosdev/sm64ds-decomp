@@ -16,6 +16,60 @@ build that never touches the byte-matching pipeline.
 - **32-bit host first.** The recovered ABI assumes 4-byte pointers. x64 comes
   after struct recovery makes layout host-independent.
 
+## How the game boots
+
+A launch with no `SM64DS_*` environment beyond what the launcher passes
+(`SM64DS_ASSET_ROOT`, `SM64DS_VOLUME`) boots the ROM's own opening:
+
+    title -> menu -> file select -> a slot is picked -> opening cutscene -> adventure
+
+That order is the ROM's, and it is worth reading carefully, because the
+cutscene is **last**, not first: `Stage::LoadClsnAndObjects` is what calls
+`StartIntroCutscene`, and that runs during the level boot `StartFile` asks for
+after the file has been picked. There is no cutscene before the title.
+
+Two toggles, both of which the launcher exposes:
+
+| Variable | Effect |
+|---|---|
+| `SM64DS_SKIP_MENU` | boot straight to the file select. The player still picks A, B or C. |
+| `SM64DS_SKIP_INTRO` | no opening cutscene. The title still comes up. |
+
+They compose. Both set is "file select, then straight into the game"; only
+`SKIP_MENU` still plays the cutscene, because the cutscene is downstream of the
+file pick rather than upstream of the title.
+
+**Presence is the signal; the value is never read.** A knob is on when its name
+is in the environment and off when it is not. The launcher expresses "off" by
+removing the name rather than writing `0`, and this is the same idiom the rest
+of the game already reads its environment with, so `SM64DS_SKIP_MENU=0` is
+**on** -- the name is there. Unset it to turn it off.
+
+`SM64DS_SKIP_MENU` reaches the file-select screen, which enters two known ov007
+unmatched-body traps (`func_ov007_020c368c`, `func_ov007_020caeac`). They were
+already there and already trapping; this is the first route that spends time in
+front of them. The count is a **dwell, not a severity** -- it scales with how
+long that screen is up (986 with a tap on frame 700, 2546 with no tap over 1200
+frames), a trap returns rather than faulting, and `rc` stays 0 with a clean
+census. The default route still reports 0.
+
+There is **no save medium yet**, so the file select offers three fresh files on
+every boot. All three are selectable and all three start a new adventure.
+Persistence is deliberately out of scope.
+
+### Developer opt-outs
+
+| Variable | Effect |
+|---|---|
+| `SM64DS_LEVEL=<n>` | boot that level directly, as before. The whole battery and every level proof uses this. |
+| `SM64DS_SCENE=<id>` | boot that scene directly, as before. Read **before** the default is consulted, so a named scene never sees the default. |
+| `SM64DS_VS_MAP=<0..3>` | boot a VS match. A destination too: the debug menu's VS row clears `SCENE` and `LEVEL` and sets only this. |
+| `SM64DS_BOOT_CLASSIC` | the pre-ruling boot, straight to castle grounds as Yoshi. This is the only opt-out; `SM64DS_TITLE_ENTRY` keeps the meaning it always had (arm the title bridge on an explicit `SM64DS_SCENE=1`) and does not select a boot. |
+
+The whole decision lives in one place, `port_boot_default_scene` in
+`hal/title_entry.cpp`, and that file's banner carries the derivation and the
+frame-by-frame trace of the chain.
+
 ## Gate ledger
 
 Each gate is a slice manifest + a smoke binary that proves one seam with
