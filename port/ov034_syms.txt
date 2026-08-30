@@ -154,26 +154,39 @@
 # rather than fixed: they are ov006's and ov022's -D to make, in ov006's and
 # ov022's own files.
 #
-#   src/_ZN6Player7ST_WAITE.cpp  (OV006 0x02110154, on port/slice_smb.txt and
-#     compiled today, but /OPT:REF strips it because nothing references it, so
-#     its object contributes no symbol to the map.) It declares
+#   src/_ZN6Player7ST_WAITE.cpp  (OV006 0x02110154, size 0x68, so its body is
+#     [0x02110154, 0x021101bc). On port/slice_smb.txt and compiled today, but
+#     /OPT:REF strips it because nothing references it, so its object
+#     contributes no symbol to the map.) It declares
 #     `void data_ov034_02114738(void);` and CALLS it.
-#     config/arm9/overlays/ov006/relocs.txt resolves its three call sites
-#     (0x0210e0a0, 0x0210e468, 0x0210f91c) to 0x02114738 module:overlay(6),
-#     which is func_ov006_02114738, a 0x14-byte function in OV006's OWN .text
-#     (that section runs 0x020bfec0..0x0212b890). This mount defines
-#     data_ov034_02114738 as a TWELVE-BYTE .bss destructor chain node. Before
-#     this mount the reference was undefined and seating that TU would have
-#     failed the link; after it, seating that TU CALLS INTO A DATA ARRAY.
-#     The fix when ov006's lane arrives is one line:
+#     ST_WAIT CONTAINS EXACTLY ONE SITE FOR THAT NAME: the arm_call at
+#     0x0211015c, which config/arm9/overlays/ov006/relocs.txt resolves to
+#     0x02114738 module:overlay(6) -- func_ov006_02114738, a 0x14-byte function
+#     in OV006's OWN .text (that section runs 0x020bfec0..0x0212b890).
+#     THE NAME HAS TWELVE SITES ACROSS OV006 (ten arm_call, two load), all
+#     module:overlay(6), and the other eleven are in ov006 functions OTHER than
+#     ST_WAIT. So the rename below is NOT a one-body fix: every ov006 TU that
+#     reaches 0x02114738 needs it, and ST_WAIT is only the one that happens to
+#     be compiled today. (An earlier draft of this note quoted 0x0210e0a0,
+#     0x0210e468 and 0x0210f91c as "its three call sites"; those are three of
+#     the other eleven, sitting in func_ov006_0210e098, func_ov006_0210e460 and
+#     func_ov006_0210f914. Re-derived per body rather than per grep hit.)
+#     This mount defines data_ov034_02114738 as a TWELVE-BYTE .bss destructor
+#     chain node. Before this mount the reference was undefined and seating any
+#     of those TUs would have failed the link; after it, seating one CALLS INTO
+#     A DATA ARRAY. The fix when ov006's lane arrives, per source:
 #       -Ddata_ov034_02114738=func_ov006_02114738
 #
-#   src/__sinit_ov022_021130bc.c  (OV022, in NO slice today.) It spells
+#   src/__sinit_ov022_021130bc.c  (OV022 0x021130bc, size 0x3c, body
+#     [0x021130bc, 0x021130f8). In NO slice today.) It spells
 #     data_ov034_0211442c and data_ov034_02114690 for OV022's own objects at
-#     those shared-window addresses; ov022's relocs resolve 0x021130ec and
-#     0x021130f4/0x02112914 to module:overlay(22). Both are DATA on both sides,
-#     so this one is a wrong-object bind rather than a call into data -- the
-#     Coffin/Spindrift shape. Fix:
+#     those shared-window addresses. Inside the sinit's own body there is ONE
+#     site each -- the loads at 0x021130ec and 0x021130f4 -- and ov022's relocs
+#     resolve both to module:overlay(22). 0x02114690 has a SECOND site at
+#     0x02112914, OUTSIDE this sinit and in another ov022 function, so that name
+#     needs the rename in two TUs; 0x0211442c has one site in the whole overlay.
+#     Both targets are DATA on both sides, so this is a wrong-object bind rather
+#     than a call into data -- the Coffin/Spindrift shape. Fix:
 #       -Ddata_ov034_0211442c=data_ov022_0211442c
 #       -Ddata_ov034_02114690=data_ov022_02114690
 #

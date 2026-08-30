@@ -168,14 +168,22 @@
 # _02112670, _02112678, _02112698, _021126a0, _021126b4, _021126c0, _021126cc,
 # _021126d8, _021126e4, _021126f0, _021126fc, _02112708 and _02112714 -- for
 # OV043's OWN objects at those shared-window addresses.
-# config/arm9/overlays/ov043/relocs.txt resolves its pool words (0x02111abc,
-# 0x02111ae4, 0x02112528 and the rest) to module:overlay(43). Before this mount
-# those names were undefined and seating that sinit would have failed the link;
-# after it, seating that sinit constructs sixteen of BOWSER-IN-THE-DARK-WORLD's
-# SharedFilePtrs and chain nodes in BOWSER-IN-THE-SKY's storage -- no link
-# error, no byte-gate signal, the Coffin/Spindrift shape. Written down here
-# rather than fixed: it is ov043's lane's -D to make, sixteen renames in
-# ov043's own file.
+# THE SINIT'S OWN BODY IS [0x02111940, 0x02111ae8) (size 0x1a8) and holds
+# EXACTLY SIXTEEN SITES, one per name -- 0x02111a6c, 0x02111a78, 0x02111a84,
+# 0x02111a88 and on to 0x02111ae4 -- and config/arm9/overlays/ov043/relocs.txt
+# resolves every one to module:overlay(43). Across the whole overlay those
+# sixteen names carry TWENTY-THREE sites, so SEVEN more sit in ov043 functions
+# OUTSIDE this sinit and need the same rename when their TUs arrive: the fix is
+# not confined to one body. (An earlier draft of this note quoted "0x02111abc,
+# 0x02111ae4, 0x02112528 and the rest" -- the first two are inside the sinit,
+# but 0x02112528 is one of the seven outside it. Re-derived per body rather
+# than per grep hit.)
+# Before this mount those names were undefined and seating that sinit would have
+# failed the link; after it, seating it constructs sixteen of
+# BOWSER-IN-THE-DARK-WORLD's SharedFilePtrs and chain nodes in
+# BOWSER-IN-THE-SKY's storage -- no link error, no byte-gate signal, the
+# Coffin/Spindrift shape. Written down here rather than fixed: it is ov043's
+# lane's -D to make, sixteen renames across ov043's own TUs.
 #
 # THE ONE THAT WAS ALREADY LIVE IS ALREADY ROUTED, and this lane checked rather
 # than assumed: src/func_ov043_02111320.c (LINKED) spells data_ov047_021125e0
