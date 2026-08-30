@@ -1,5 +1,5 @@
 {
-  "_note": "The CONVERTED file set, banked. tools/tiers_ratchet.py --check fails when a path here no longer passes all five criteria in tools/tiers.py. Removals need --reason and land in config/converted-backslide-exceptions.jsonl. Regenerate with `python tools/tiers_ratchet.py --update`.",
+  "_note": "The CONVERTED source/member identity set, banked. One-function sources use their path; promoted TU members append #symbol to that path. tools/tiers_ratchet.py --check fails when an identity no longer passes all five criteria in tools/tiers.py. Removals need --reason and land in config/converted-backslide-exceptions.jsonl. Regenerate with `python tools/tiers_ratchet.py --update`.",
   "criteria": [
     "real_name",
     "no_raw_offset",
@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2553,
+  "count": 2554,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -2516,7 +2516,8 @@
     "src/_ll_sdiv.c",
     "src/_s32_div_f.c",
     "src/_u32_div_f.c",
-    "src/actors/ActorBase_SceneNode.cpp",
+    "src/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv",
+    "src/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNodeC1Ev",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_c13InitResourcesEv.cpp",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
