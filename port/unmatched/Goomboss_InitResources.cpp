@@ -54,7 +54,18 @@ extern "C" {
     void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
     void _ZN11ShadowModel12InitCylinderEv(void *self);
-    s32 func_01ffa344(s32 a);
+/* THE ITCM f2i PRIMITIVE, DECLARED AS ITS HOST BODY DEFINES IT.
+   The ROM function at 0x01ffa344 takes ONE argument (a float bit pattern in
+   r0) and the src TU declares it that way. Its host body in
+   hal/cxx_aliases.cpp:154 is `int func_01ffa344(int a, int b)` with `(void)b`
+   -- the two-argument form exists for ONE other caller
+   (src/func_ov002_020dc560.c) whose own declaration is an r1 ride-through --
+   and under cdecl a one-argument call leaves that second slot unwritten.
+   The body discards it, so nothing reads it today, but
+   port/tools/aritycheck.py's plain-name ratchet is right to refuse the shape:
+   declare the full signature and pass it. The explicit 0 is the whole fix and
+   it cannot change the result. */
+    int func_01ffa344(int a, int b);
     void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
         void *self, void *actor, void *pos, s32 fx, s32 fy, u32 a, u32 b);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
@@ -156,7 +167,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     } while (j < 3);
 
     *(u8 *)(self + 0x604) = 3;
-    p = (void *)func_01ffa344((s32)data_ov074_02122e4c[*(u8 *)(self + 0x604)]);
+    p = (void *)func_01ffa344((s32)data_ov074_02122e4c[*(u8 *)(self + 0x604)], 0);
     *(void **)(self + 0x80) = p;
     *(void **)(self + 0x84) = p;
     *(void **)(self + 0x88) = p;
