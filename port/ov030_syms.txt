@@ -1,0 +1,252 @@
+# run rel0215 wave 1, lane cast-ov030: ov030's TALL TALL MOUNTAIN cast, per symbol.
+#
+# ov030 (level 22, high_mt, course 11) is already mounted WHOLE in
+# PORT_LEVEL_OVERLAYS (CMakeLists:1346). This is the SECOND mount of the same
+# overlay, per symbol -- the ov009/ov010/ov012/ov013/ov014/ov015/ov016/ov018/
+# ov019/ov020/ov021/ov022/ov045 dual-mount shape, which does not conflict:
+# --whole emits port_ov030_image/_patch/_at and NOTHING by name, while
+# --from-list --pack emits the named arrays plus port_ov030_syms_patch.
+#
+# WHY the cast needs the named mount rather than the image: the registry
+# rewrites each SpawnInfo's +0 word to the host factory and ActorBase's
+# constructor reads the two list priorities back out of the SAME record; the
+# class code reaches its SharedFilePtrs, its Fix12 tuning vectors and its
+# eleven-row state-dispatch storage BY NAME. Those have to be storage the actor
+# code and the registry agree on, which the whole image is not.
+#
+# ============================================================================
+# THE CAST MAP, BOTH ATTRIBUTION ROUTES (trap T6, and it EARNS its keep here)
+# ============================================================================
+# Raw bytes out of extracted/overlays/overlay_0030.bin, never the dsd export
+# (trap T4). Both routes are required of every id because ov014/ov015/ov016/
+# ov020/ov021/ov022/ov026/ov029/ov030/ov034/ov036 -- every level overlay --
+# share the load window at base 0x021111a0:
+#
+#   route A: the SpawnInfo's word[0] spawnFunc must land inside ov030's own
+#            image AND be one of ov030's own named factories;
+#   route B: the record's word[1] LOW HALFWORD must equal the id that the arm9
+#            table slot at 0x02090864 + id*4 was reached from.
+#
+# MEASURED, not quoted: 126 of the 391 arm9 spawn-table slots point at an
+# address inside 0x021111a0..0x02115c80. Route A alone would admit all 126.
+# EXACTLY FOUR pass both:
+#
+#   id   SpawnInfo   word[0] spawnFunc          idhalf  vtable installed  L22
+#   102  0x02115a24  0x0211164c RollingLogTtm_Spawn  102  0x02115a48       x1
+#   103  0x02115950  0x02111524 UkikiCage_Spawn      103  0x02115974    (not placed)
+#   267  0x02115b90  0x02114638 UkikiThief_Spawn     267  0x02115bfc       x1
+#   268  0x02115bac  0x021145e0 UkikiStar_Spawn      268  0x02115bfc    (not placed)
+#
+# "vtable installed" is the factory's own LAST literal-pool store, read out of
+# relocs.txt rather than inferred:
+#   from:0x02111558 to:0x02115974   (UkikiCage_Spawn's last pool word)
+#   from:0x02111684 to:0x02115a48   (RollingLogTtm_Spawn's last pool word)
+#   from:0x02114634 to:0x02115bfc   (UkikiStar_Spawn's last pool word)
+#   from:0x0211468c to:0x02115bfc   (UkikiThief_Spawn's last pool word)
+#
+# 267 AND 268 ARE THE SAME CLASS UNDER TWO SPAWN ENTRY POINTS. Both factories
+# store the SAME vtable 0x02115bfc, both allocate 972 bytes, and both run the
+# identical sub-object constructor chain (ModelAnim +0xd4, ShadowModel +0x138,
+# MovingCylinderClsn +0x160, WithMeshClsn +0x194, PathPtr +0x398). That is why
+# four SpawnInfos need only THREE vtables.
+#
+# THE BASELINE CENSUS, measured on this tree before a line was edited
+# (SM64DS_LEVEL=22, 300 frames, rc 0):
+#   [census] 171 spawned (35 classes), 4 skipped (4 classes)
+#            - 102 x1     RollingLogTtm   -- this lane
+#            - 231 x1     Fwoosh, ov091   -- NOT this lane
+#            - 232 x1     FlyGuy, ov070   -- NOT this lane
+#            - 267 x1     UkikiThief      -- this lane
+# 103 and 268 are not placed on level 22 at all, so neither can be proven by an
+# instance count; they are proven by registration and by their sinit running.
+#
+# ============================================================================
+# THE CONFIG'S CLASS LABELS ARE SHIFTED ONE CLASS. SEAT BY ADDRESS.
+# ============================================================================
+# This is the ov012 / ov072 "dsd class-identity swap/gap" shape (CMakeLists:
+# 1589-1600 and 1618-1627 both name it), a third instance, and it is the single
+# most dangerous thing in this overlay: filling a table by its config NAME here
+# fills a DIFFERENT CLASS'S TABLE and fails silently at run time.
+#
+# The ROM's own answer is each table's vtable[-1] -> type_info record -> word[1]
+# name pointer -> the NUL-terminated string, the route port/ov026_syms.txt's
+# wave-C section settled ov026's identity with:
+#
+#   table       vtable[-1]  name string          the class it really is
+#   0x02115974  0x02115934  "13daObjHmBskt_c"    UkikiCage  (Bskt = basket/cage)
+#   0x02115a48  0x021159f8  "15daObjHmMaruta_c"  RollingLogTtm (Maruta = LOG)
+#   0x02115bfc  0x02115b84  "7daMky_c"           the Ukiki  (Mky = monkey)
+#
+# and it agrees with the factory stores above on all three, and with the base
+# each factory constructs (Platform for Bskt and Maruta, plain Actor for Mky --
+# which is exactly why the first two carry Platform::Kill at slot 31 and the
+# third does not).
+#
+# WHAT CONFIG SAYS INSTEAD:
+#   config/arm9/overlays/ov030/symbols.txt:115  _ZTV9UkikiCage      0x02115a48
+#       -- that is ROLLINGLOGTTM'S table. UkikiCage's real table 0x02115974 has
+#          no _ZTV name at all, only data_ov030_02115974.
+#   config/arm9/overlays/ov030/symbols.txt:143  _ZTV13RollingLogTtm 0x02115bfc
+#   config/arm9/overlays/ov030/symbols.txt:144  _ZTV7daMky_c        0x02115bfc
+#       -- one address, two labels, and _ZTV7daMky_c is the correct one.
+#
+# The METHOD names carry the same shift: every _ZN9UkikiCage*Ev body is a slot
+# of the MARUTA table and every _ZN13RollingLogTtm*Ev body is a slot of the MKY
+# table. The real UkikiCage's six own bodies are all unnamed func_ov030_*.
+#
+# src/ IS INTERNALLY CORRECT ON THE ADDRESSES even though config's labels are
+# not, because the recovered sources took the identity from the type_info route:
+# UkikiCage_Spawn.c writes _ZTV13daObjHmBskt_c and RollingLogTtm_Spawn.c writes
+# _ZTV15daObjHmMaruta_c (include/decl_common.h:535 and :595 declare both). Only
+# UkikiStar_Spawn.c / UkikiThief_Spawn.c use the config spelling
+# _ZTV13RollingLogTtm (decl_common.h:524) for what is really daMky_c's table.
+# THIS LANE DOES NOT RENAME ANYTHING IN config/ OR src/. It seats by address and
+# records the defect; renaming would move byte-gate credit and ripple into the
+# decomp, which is not a port lane's call.
+#
+# ============================================================================
+# THREE VTABLE SPANS, DERIVED SLOT BY SLOT, AND THE FOUR WIDTH TRAPS
+# ============================================================================
+# Widths out of relocs.txt with targets resolved through config/arm9/symbols.txt,
+# the port/hal/actor_classes_ov072.cpp route. The SEMANTIC TAIL settles all
+# three, and it has to, because no mechanical route is right on all three:
+#
+#   table       A reloc run  B next sym  C typeinfo  TRUTH  what settles it
+#   0x02115974      32           32          33        32   tail: Actor last @30,
+#                                                            Platform::Kill @31
+#   0x02115a48      33           32          79 LIES   32   tail + PMF pairs
+#   0x02115bfc      31           33          none      31   tail: Actor last @30,
+#                                                            NO Platform::Kill
+#
+#   A over-reads on 0x02115a48 by one, because the first PMF word 0x02115ac8 is
+#     4-contiguous with the last real slot 0x02115ac4 and the run does not break.
+#   B over-reads on 0x02115bfc by two: dsd's next symbol is data_ov030_02115c80
+#     (.bss) and slots 31/32 are the two zero pad words at 0x02115c78/0x02115c7c.
+#   C is catastrophic on 0x02115a48: the next __si_class_type_info record after
+#     that table is daMky_c's at 0x02115b84, slot SEVENTY-NINE.
+#
+# THE FOUR WIDTH TRAPS, checked on every table:
+#   file tables      -- none in this overlay. The SharedFilePtrs are .bss
+#                       (0x02115cd0..0x02115d28) and are built by the sinits,
+#                       not laid next to a vtable.
+#   state records    -- FIRES, see below.
+#   typeinfo terms   -- fires on 0x02115a48 (route C above) and is the reason
+#                       route C is not quoted as evidence anywhere here.
+#   PMF SOURCE TABLE -- FIRES, and it is the same trap, the ov026 wave-20 shape.
+#     0x02115ac8..0x02115b78 is TWENTY-TWO {function, 0} pairs. All three tells
+#     fire: (1) every other word is ZERO; (2) dsd names ONE symbol per PAIR at
+#     8-byte stride, data_ov030_02115ac8 through _02115b70; (3) the semantic
+#     tail says the virtuals stopped two words earlier.
+#     AND THE FOURTH TELL, which ov026 could not use and this overlay can: the
+#     pairs point at 0x02112400..0x02114124, which is inside the MKY class's own
+#     code block, NOT Maruta's -- so this table does not even belong to the class
+#     whose vtable it follows. It is daMky_c's state-machine source, laid out
+#     before daMky_c's own type_info record in the ROM's own emission order.
+#
+# THE THREE SPANS ARE EXCLUDED FROM THIS MOUNT and are host arrays that
+# port/hal/actor_classes_ov030.cpp fills (the ov015/ov016/ov022/ov045/ov080/
+# ov072 rule -- a mounted vtable hands a factory DS code addresses):
+#
+#   0x0211596c..0x021159f4  UkikiCage      32 slots  drops data_ov030_02115974
+#   0x02115a40..0x02115ac8  RollingLogTtm  32 slots  drops _ZTV9UkikiCage
+#   0x02115bf4..0x02115c78  Ukiki/daMky_c  31 slots  drops _ZTV13RollingLogTtm
+#                                                    and _ZTV7daMky_c
+#
+# Each span is spelled INCLUDING its two-word Itanium prologue ([-2] offset-to-
+# top, [-1] type_info*), because the host arrays have no prologue and mounting a
+# stray type_info pointer is a raw DS address for nothing.
+#
+# ============================================================================
+# T3: EXPLICIT :0xSIZE AUDIT -- every symbol in this list was checked
+# ============================================================================
+# THREE PINS, and all three are dsd OVER-sizing rather than the ov002 under-size
+# the trap was written from. The mechanism is the same defect either way: the
+# next-symbol delta is not the record.
+#
+#   UkikiCage_SpawnInfo:0x1c      dsd infers 0x24
+#   RollingLogTtm_SpawnInfo:0x1c  dsd infers 0x24
+#     A SpawnInfo record is 0x1c bytes -- +0 spawnFunc, +4/+6 the two list
+#     priorities, +8 flags, +0xc..+0x18 five Fix12 words (tools/actor_names.py's
+#     layout). MEASURED TWICE INDEPENDENTLY on this overlay: UkikiThief_SpawnInfo
+#     0x02115b90 -> UkikiStar_SpawnInfo 0x02115bac is 0x1c, and UkikiStar_SpawnInfo
+#     0x02115bac -> data_ov030_02115bc8 is 0x1c. dsd stretches the other two to
+#     0x24 because the next symbol it names is the VTABLE, so the last two words
+#     of each are the vtable's own prologue -- 0x0211596c/0x02115970 and
+#     0x02115a40/0x02115a44. Unpinned, the mount would host a raw DS type_info
+#     pointer inside a record the registry rewrites.
+#
+#   data_ov030_02115bc8:0x2c      dsd infers 0x34
+#     Same shape at daMky_c's table: 0x02115bc8+0x2c = 0x02115bf4, which is
+#     exactly where the relocated run ends (eleven words, 0x02115bc8..0x02115bf0)
+#     and exactly where that vtable's prologue starts.
+#
+# NO SYMBOL IN THIS LIST IS UNDER-SIZED. The one that would bite is the state
+# storage data_ov030_02115e0c: src/__sinit_ov030_02114924.c declares it
+# `S16 data_ov030_02115e0c[11]` = 176 bytes, and it is the LAST symbol in .bss,
+# so ovdata's clamp-to-section-end gives it 0x02115ec0-0x02115e0c = 180. 180 >=
+# 176, so the eleven rows fit and no pin is owed. Recorded because the ov002
+# incident was exactly this symbol shape with the arithmetic the other way.
+#
+# ============================================================================
+# T2: RELOCATED WORDS IN THE MOUNT
+# ============================================================================
+# 40 of the 113 symbols below carry at least one relocated word. Every one of
+# those targets is either (a) another symbol in this same list, which ovdata's
+# load_relocs pass rebases, or (b) one of the 22 PMF pairs whose target is CODE
+# in ov030's own .text. The code ones are NEVER called through the mounted word:
+# port/unmatched/Ukiki_StateDispatch.cpp switches on the DS address and calls the
+# host body. Three further words point at arm9/ov002 type_info vtables
+# (0x0209a764 x3, 0x021089ec, 0x0208e390); those are read by nothing on the host
+# -- MSVC has its own RTTI -- and are mounted only to keep --pack's layout equal
+# to the ROM's.
+#
+# ============================================================================
+# THE LIST: 113 symbols
+# ============================================================================
+# Every ov030 .rodata / .data / .bss symbol that is not inside one of the three
+# vtable spans, sized by next-symbol delta (ovdata.py's own rule, clamped to the
+# containing delinks section) except the three pins above. Sections, from
+# config/arm9/overlays/ov030/delinks.txt:
+#   .rodata 0x02114690..0x0211484c   .ctor 0x02114dd0..0x02114ddc
+#   .data   0x02114de0..0x02115c80   .bss  0x02115c80..0x02115ec0
+# The .p__sinit words (the whole .ctor section) are not listed: a bring-up calls
+# the sinits directly rather than walking the ctor table, and ovdata refuses a
+# `.p`-prefixed name as a C identifier anyway. --pack's padding stands in.
+data_ov030_02114690 data_ov030_02114694 data_ov030_02114698
+data_ov030_021146b4 data_ov030_021146f0 data_ov030_02114750
+data_ov030_02114768 data_ov030_021147c4 data_ov030_02114824
+data_ov030_02114de0 data_ov030_02114de4 data_ov030_02114de8
+data_ov030_02114df0 data_ov030_02114df8 data_ov030_02114e00
+data_ov030_02114e08 data_ov030_02114e14 data_ov030_02114e20
+data_ov030_02114e30 data_ov030_02114e40 data_ov030_02114e50
+data_ov030_02114e60 data_ov030_02114e70 data_ov030_02114e80
+data_ov030_02114e90 data_ov030_02114ea8 data_ov030_02114ec4
+data_ov030_02114ee4 data_ov030_02114f04 data_ov030_02114f24
+data_ov030_02114f44 data_ov030_02114f74 data_ov030_02114fac
+data_ov030_02114ff4 data_ov030_02115044 data_ov030_02115094
+data_ov030_0211510c data_ov030_021151ec data_ov030_02115514
+data_ov030_02115934 data_ov030_02115940 UkikiCage_SpawnInfo:0x1c
+data_ov030_021159f4 data_ov030_021159f8 data_ov030_02115a04
+data_ov030_02115a10 RollingLogTtm_SpawnInfo:0x1c data_ov030_02115ac8
+data_ov030_02115ad0 data_ov030_02115ad8 data_ov030_02115ae0
+data_ov030_02115ae8 data_ov030_02115af0 data_ov030_02115af8
+data_ov030_02115b00 data_ov030_02115b08 data_ov030_02115b10
+data_ov030_02115b18 data_ov030_02115b20 data_ov030_02115b28
+data_ov030_02115b30 data_ov030_02115b38 data_ov030_02115b40
+data_ov030_02115b48 data_ov030_02115b50 data_ov030_02115b58
+data_ov030_02115b60 data_ov030_02115b68 data_ov030_02115b70
+data_ov030_02115b78 data_ov030_02115b84 UkikiThief_SpawnInfo
+UkikiStar_SpawnInfo data_ov030_02115bc8:0x2c data_ov030_02115c80
+data_ov030_02115c88 data_ov030_02115c90 data_ov030_02115c9c
+data_ov030_02115ca8 data_ov030_02115cb0 data_ov030_02115cb8
+data_ov030_02115cc4 data_ov030_02115cd0 data_ov030_02115cd8
+data_ov030_02115ce0 data_ov030_02115ce8 data_ov030_02115cf0
+data_ov030_02115cf8 data_ov030_02115d00 data_ov030_02115d08
+data_ov030_02115d10 data_ov030_02115d18 data_ov030_02115d20
+data_ov030_02115d28 data_ov030_02115d34 data_ov030_02115d40
+data_ov030_02115d4c data_ov030_02115d58 data_ov030_02115d64
+data_ov030_02115d70 data_ov030_02115d7c data_ov030_02115d88
+data_ov030_02115d94 data_ov030_02115da0 data_ov030_02115dac
+data_ov030_02115db8 data_ov030_02115dc4 data_ov030_02115dd0
+data_ov030_02115ddc data_ov030_02115de8 data_ov030_02115df4
+data_ov030_02115e00 data_ov030_02115e0c

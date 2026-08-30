@@ -1,0 +1,206 @@
+# slice_ov030cast.txt -- run rel0215 wave 1, lane cast-ov030.
+# ov030's TALL TALL MOUNTAIN cast: RollingLogTtm (102), UkikiCage (103),
+# UkikiThief (267) and UkikiStar (268), which are THREE classes, not four.
+#
+# Worktree C:/tmp/lvled-b, branch port/cast-ov030, base f77f01169, private build
+# C:/tmp/lvled-b/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/lvled-b/port.
+# Baseline gate on that tree BEFORE a line was edited: build green with every
+# post-link guard passing, level 22 booting rc 0 at 300 frames, and its census
+# reading "171 spawned -35 classes-, 4 skipped -4 classes-" with the four skips
+# being ids 102, 231, 232 and 267.
+#
+# ===========================================================================
+# 1. THE IDENTITY, ALL OF IT OUT OF THE ROM
+# ===========================================================================
+# The full derivation -- both attribution routes on every id, the three vtable
+# widths slot by slot, the four width traps, the T2/T3 audits -- is in
+# port/ov030_syms.txt's own header and is not repeated here. The summary:
+#
+#   id   class            ROM type_info name    vtable      slots  object
+#   102  RollingLogTtm    15daObjHmMaruta_c     0x02115a48   32    836   Platform
+#   103  UkikiCage        13daObjHmBskt_c       0x02115974   32   1248   Platform
+#   267  UkikiThief       7daMky_c              0x02115bfc   31    972   Actor
+#   268  UkikiStar        7daMky_c              0x02115bfc   31    972   Actor
+#
+# 267 AND 268 ARE ONE CLASS. Both factories store the SAME table, allocate the
+# same 972 bytes and run the same five sub-object constructors. That is why
+# four SpawnInfo records need only three vtables and only three fills.
+#
+# THE CONFIG'S _ZTV LABELS AND ITS MANGLED METHOD NAMES ARE SHIFTED ONE CLASS
+# and this slice is seated BY ADDRESS throughout. Every _ZN9UkikiCage*Ev body
+# below is really a RollingLogTtm method and every _ZN13RollingLogTtm*Ev body is
+# really a Ukiki method. Nothing in config/ or src/ is renamed by this lane;
+# port/ov030_syms.txt records the defect with the ROM evidence.
+#
+# ===========================================================================
+# 2. THE SOURCE INVENTORY, THREE WAYS
+# ===========================================================================
+# config/arm9/overlays/ov030/symbols.txt names 63 kind:function symbols
+# (60 in .text, 3 in .init). Counted the way port/slice_vs.txt section 2
+# prescribes, and the three sums close:
+#
+#   delinked to a src TU that exists      61
+#   present but NONMATCHING-bannered       0
+#   MISSING (no src file at all)           1   func_ov030_021136b0
+#   no delink block but a src file exists  1   func_ov030_02113324
+#                                        ----
+#                                          63
+#
+# TWO DECOMP-SIDE OBSERVATIONS, recorded so they are not re-derived as
+# mysteries, the way run mg7 lane L370's row was:
+#   - func_ov030_02113324 (0x2e8 bytes) has NO delink block in
+#     config/arm9/overlays/ov030/delinks.txt, but src/func_ov030_02113324.cpp
+#     exists and is a real body. It costs the port nothing -- the port slices a
+#     src file and does not need the block -- so it is in this slice.
+#   - func_ov030_021136b0 (0x3d0 bytes) has neither a delink block nor a src
+#     file. It is the ONLY missing body in the overlay and it is the Ukiki's
+#     state 3 TICK half. It gets a LOUD L2-pattern face in
+#     hal/actor_classes_ov030.cpp, never a silent stub.
+#
+# So the lane's ceiling is 62 src TUs, and four of those are displaced by host
+# copies, giving the 58 lines below.
+#
+# ===========================================================================
+# 3. THE FOUR DISPLACED TUs, EACH WITH ITS OWN REASON
+# ===========================================================================
+# The byte-matched original of each stays in src/ as the proof and is dropped
+# from this list, because a host copy defines the same symbol and listing both
+# would be an LNK2005.
+#
+#   src/func_ov030_02114170.cpp   -> unmatched/Ukiki_StateEnter.cpp
+#   src/func_ov030_02114134.cpp   -> unmatched/Ukiki_StateTick.cpp
+#     Both are mwcc POINTER-TO-MEMBER dispatch on a deliberately incomplete
+#     class -- `struct C { char pad[0x3a4]; PMF *pp; };`, no base, no virtuals
+#     -- so mwcc's PMF is the ROM's own 8-byte {function, delta} pair and MSVC's
+#     "unknown inheritance" form is not a plain function pointer. This is the
+#     BabyPenguin six-cell shape exactly (port/unmatched/BabyPenguin_StateEnter
+#     .cpp and _StateTick.cpp), one cell wider: ELEVEN cells, each two pairs
+#     (`S16 { S8 lo, hi; }` in the sinit's own declaration), enter at pp+0 and
+#     tick at pp+1. src/func_ov030_021141a8.c is the cell-pointer installer --
+#     it writes `*(Item16 **)(self + 0x3a4) = &data_ov030_02115e0c[idx]` -- and
+#     it is UNCHANGED and stays in this slice.
+#
+#   src/_ZN13RollingLogTtm8BehaviorEv.cpp -> unmatched/Ukiki_Behavior.cpp
+#     THE SHADOW-CLASS SLOT DEFECT, and it is the stack-unbalancing half rather
+#     than the merely-wrong-body half. The matched src models the ModelAnim at
+#     this+0xd4 with a local FOUR-virtual shadow `struct VObj` and calls `v3()`,
+#     which is the ROM's own numbering: the fourth word of an Itanium model
+#     vtable is UpdateVerts (0 D1, 1 D0, 2 DoSetFile, 3 UpdateVerts, 4
+#     Virtual10, 5 Render). MSVC folds D1/D0 into one slot, so the host's fourth
+#     word is Virtual10(Matrix4x3 &) -- __thiscall with ONE stack parameter,
+#     returning `ret 4` off a stack this caller never pushed. That is the exact
+#     pair of failures port/unmatched/MgMemory2_ShadowSlot_020c06dc.cpp
+#     measured. WHICH CLASS THE OBJECT IS was established from the CONSTRUCTOR
+#     and not guessed from the call: UkikiStar_Spawn / UkikiThief_Spawn both run
+#     `_ZN9ModelAnimC1Ev(p + 0xd4)`, so +0xd4 is a ModelAnim, whose UpdateVerts
+#     is MSVC slot 2 under include/ModelAnim.h. The dispatch stays VIRTUAL in
+#     the host copy, for MgFlower_ModelRender_020c3bf4.cpp's reason.
+#
+#   src/_ZN13RollingLogTtmD1Ev.cpp -> spelled INLINE in the fill (slot 16)
+#     A real MSVC-synthesised destructor over a local shadow class with no
+#     vtable store of its own -- the MotherPenguin / OneUpLogo / BabyPenguin
+#     shape, which gate 191 and gate 193 both keep OUT of the slice for the same
+#     reason (MSVC mangles `RollingLogTtm::~RollingLogTtm` as
+#     ?1RollingLogTtm@@UAE@XZ, never as the Itanium _ZN13RollingLogTtmD1Ev the
+#     vtable slot needs). The chain is spelled directly in the thunk, HIGH
+#     ADDRESS FIRST, from the src file's own member list.
+#
+# THE TWO SIBLING SHADOW CLASSES IN THIS SLICE ARE NOT DEFECTS, and the
+# distinction is the whole rule -- a sweep that flags every shadow gets it
+# wrong (MgMemory2_ShadowSlot_020c06dc.cpp's own closing paragraph):
+#   src/func_ov030_02111350.cpp  (UkikiCage's Render, ROM slot 9) and
+#   src/func_ov080_02127124.cpp  (RollingLogTtm's Render, ROM slot 9)
+# both model a plain Model with a SIX-virtual shadow and call `m(0)`, index 5.
+# hal/cxxname_bridge.cpp:511 DUAL-FILLS `_ZTV5Model[5] = mv_render` for exactly
+# this, so index 5 on the host is Render too and the shadow's numbering is
+# right. Verified by reading that line, not assumed. Neither object is a
+# ModelAnim: func_ov030_021111a0.c (UkikiCage's D1) and the Maruta dtors both
+# run `_ZN5ModelD1Ev(t + 0xd4)`, so both +0xd4 members are plain Models.
+#
+# ===========================================================================
+# 4. THE MEASURED CLOSURE GAP -- TWO ov080 LINES
+# ===========================================================================
+# RollingLogTtm's table takes TWO slots from ov080 rather than from arm9:
+#   slot  9 (Render)             0x02127124  func_ov080_02127124
+#   slot 27 (OnHitByMegaChar)    0x02127058  func_ov080_02127058
+# Both resolve `module:overlays(78,80)` in relocs.txt, and level 22's roster
+# loads ov080 and not ov078, so the ov080 spelling is the live one. Neither is
+# in any existing slice, so both are appended here. They raise ov080's linked
+# count, not ov030's; recorded so the delta reconciles.
+#
+# ===========================================================================
+# 5. NO LANGUAGE CXX ROWS ARE OWED
+# ===========================================================================
+# A comment-stripped token sweep over every ov030 .c file in this slice for the
+# //cpp marker and for `class `, `::`, `template`, `new `, `delete `,
+# `extern "C"`, `public:`, `private:`, `->*` and `.*` finds ZERO hits. Every
+# ov030 TU that carries C++ is already spelled .cpp. Run rather than guessed,
+# the way lane CCN's entry at port/CMakeLists.txt:805-814 prescribes.
+#
+# KEEP SQUARE BRACKETS BALANCED IN THIS FILE. CMake reads it with
+# file(STRINGS), which treats an unbalanced open square bracket as the start of
+# a bracket argument and collapses the rest of the file into ONE element -- the
+# slice then compiles EMPTY. Run mg9 lanes S381 and S364 and run mg11 lane RLT
+# all recorded this; it is recorded a fourth time here because the failure it
+# produces names the symbols and not the cause.
+
+src/func_ov030_021111a0.c
+src/func_ov030_021111ec.c
+src/func_ov030_0211124c.cpp
+src/func_ov030_0211130c.c
+src/func_ov030_02111350.cpp
+src/func_ov030_02111384.cpp
+src/func_ov030_02111410.cpp
+src/UkikiCage_Spawn.c
+src/_ZN9UkikiCageD1Ev.c
+src/_ZN9UkikiCageD0Ev.c
+src/_ZN9UkikiCage16CleanupResourcesEv.c
+src/_ZN9UkikiCage8BehaviorEv.c
+src/_ZN9UkikiCage13InitResourcesEv.c
+src/RollingLogTtm_Spawn.c
+src/_ZN13RollingLogTtmD0Ev.c
+src/func_ov030_0211172c.c
+src/func_ov030_02111734.c
+src/func_ov030_02111890.c
+src/func_ov030_02111908.c
+src/func_ov030_02111a00.c
+src/func_ov030_02111b20.c
+src/func_ov030_02111bc4.c
+src/func_ov030_02111dd0.cpp
+src/func_ov030_02111ea4.cpp
+src/func_ov030_02111f6c.cpp
+src/func_ov030_02112094.cpp
+src/func_ov030_021122b0.cpp
+src/func_ov030_021123a4.cpp
+src/func_ov030_02112400.cpp
+src/func_ov030_02112560.c
+src/func_ov030_02112578.c
+src/func_ov030_02112a14.c
+src/func_ov030_02112a84.c
+src/func_ov030_02112c14.c
+src/func_ov030_02112da0.c
+src/func_ov030_02112ff8.c
+src/func_ov030_02113094.c
+src/func_ov030_021132d4.cpp
+src/func_ov030_02113324.cpp
+src/func_ov030_0211360c.cpp
+src/func_ov030_02113a80.cpp
+src/func_ov030_02113b38.cpp
+src/func_ov030_02113be8.c
+src/func_ov030_02113d20.c
+src/func_ov030_02113fd8.c
+src/func_ov030_02113ff0.cpp
+src/func_ov030_02114124.c
+src/func_ov030_021141a8.c
+src/_ZN13RollingLogTtm16CleanupResourcesEv.c
+src/_ZN13RollingLogTtm16OnPendingDestroyEv.c
+src/_ZN13RollingLogTtm6RenderEv.cpp
+src/_ZN13RollingLogTtm13InitResourcesEv.cpp
+src/func_ov030_021145d4.c
+src/UkikiStar_Spawn.c
+src/UkikiThief_Spawn.c
+src/__sinit_ov030_0211484c.c
+src/__sinit_ov030_021148b8.c
+src/__sinit_ov030_02114924.c
+src/func_ov080_02127124.cpp
+src/func_ov080_02127058.c

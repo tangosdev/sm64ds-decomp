@@ -972,6 +972,21 @@ void port_ov013_pack_check(void);
 void port_ov013_syms_patch(void);
 void __sinit_ov013_021116b8(void);
 void __sinit_ov013_021116f8(void);
+/* run rel0215 wave 1, lane cast-ov030: ov030 per-symbol -- ALL THREE of the
+   overlay's own sinits run, because this lane registers every class the
+   overlay has (RollingLogTtm 102, UkikiCage 103, and the one 7daMky_c class
+   behind UkikiThief 267 and UkikiStar 268). Verified by reading their bodies:
+   0211484c and 021148b8 each build two SharedFilePtrs and nothing else, and
+   02114924 builds eleven SharedFilePtrs, four Vector3 tuning records AND the
+   ELEVEN-CELL PMF state table the Ukiki dispatches through -- the BabyPenguin
+   /MrBlizzard shape. ov030 is also whole-mounted (PORT_LEVEL_OVERLAYS,
+   CMakeLists:1346) for level 22's own object-table walks; this is the same
+   dual-mount shape ov009/ov012/ov013/ov014 use. ROM ORDER. */
+void port_ov030_pack_check(void);
+void port_ov030_syms_patch(void);
+void __sinit_ov030_0211484c(void);
+void __sinit_ov030_021148b8(void);
+void __sinit_ov030_02114924(void);
 
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
@@ -1278,6 +1293,17 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov013_syms_patch();
     __sinit_ov013_021116b8();   /* CLOCK_PENDULUM's SharedFilePtr */
     __sinit_ov013_021116f8();   /* the two CLOCK_HAND SharedFilePtrs */
+
+    /* run rel0215 wave 1, lane cast-ov030: ALL THREE of ov030's own sinits,
+       in ROM ORDER. Unlike gates 192/193/194 no sinit stays off here -- this
+       lane registers every class ov030 has. ov030 is also whole-mounted
+       (PORT_LEVEL_OVERLAYS) for level 22's own object-table walks. */
+    port_ov030_pack_check();
+    port_ov030_syms_patch();
+    __sinit_ov030_0211484c();   /* two SharedFilePtrs (files 1560, 1561) */
+    __sinit_ov030_021148b8();   /* two SharedFilePtrs (files 1562, 1563) */
+    __sinit_ov030_02114924();   /* eleven SharedFilePtrs, four tuning records,
+                                   AND the 11-cell PMF state table */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *
