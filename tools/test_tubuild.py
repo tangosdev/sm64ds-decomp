@@ -509,7 +509,11 @@ def _vague_externalization_fixture():
                 })
                 config["arm9"][address + reloc["r_offset"]] = (
                     "load", next_destination, "arm9")
-                name_index[target.name] = ("arm9", next_destination - reloc["r_addend"])
+                raw_bias = (reloc["r_addend"] - tubuild.OI.VTABLE_PREAMBLE
+                            if target.name.startswith("_ZTV")
+                            and reloc["r_addend"] >= tubuild.OI.VTABLE_PREAMBLE
+                            else reloc["r_addend"])
+                name_index[target.name] = ("arm9", next_destination - raw_bias)
                 next_destination += 4
         policies.append({
             "symbol": name, "disposition": "canonical-import",
