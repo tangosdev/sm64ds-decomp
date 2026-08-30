@@ -896,8 +896,19 @@ void hal_fill_key_vtable(void);                 /* fills _ZTV3Key, 31 (both ids)
    NO naming shift in this overlay -- see hal/actor_classes_ov070.cpp) and,
    for 196, from the existing ov002 mount. All four factories store their own
    host table by real name, so all four register directly; every fill is in
-   hal/actor_classes_ov070.cpp. FlyGuy (232) stays OFF: no bootable level
-   spawns it. */
+   hal/actor_classes_ov070.cpp.
+
+   FLYGUY (232) IS ON NOW (lane w3-d). This note used to end "FlyGuy (232)
+   stays OFF: no bootable level spawns it", which was true when wave 5 wrote
+   it. Level 19 (Snowman's Land) places FlyGuy and level 19 is mounted: the
+   baseline census on cons cc10acd4e reads "[spawn] actor 0xe8 not
+   registered, skipped", and 0xe8 is 232. port/ov070_syms.txt had already
+   done the hard half -- the vtable left out as host storage and all twelve
+   PMF sources rewritten with host addresses -- and predicted the rest
+   ("a future FlyGuy row then needs only a row and a fill"). It needed one
+   thing more than that: FlyGuy_SpawnInfo was not mounted, and is now. */
+extern unsigned char FlyGuy_SpawnInfo[];             /* ov070 0x02123144, +4 reads 232 */
+void *FlyGuy_Spawn(void);                            /* ov070 0x02120520 */
 extern unsigned char Amp_SpawnInfo[];                /* ov070 0x02123254, +4 reads 266 */
 void *Amp_Spawn(void);                               /* ov070 0x021210ac */
 extern unsigned char FlameChomp_SpawnInfo[];         /* ov070 0x0212334c, +4 reads 270 */
@@ -906,6 +917,7 @@ extern unsigned char FlameChompFire_SpawnInfo[];     /* ov070 0x02123424, +4 rea
 void *FlameChompFire_Spawn(void);                    /* ov070 0x021221fc */
 extern unsigned char PoppingLavaBubbles_SpawnInfo[]; /* ov002 0x021093bc, +4 reads 196 */
 void *PoppingLavaBubbles_Spawn(void);                /* ov002 0x020b6dd8 */
+void hal_fill_fly_guy_vtable(void);                   /* fills _ZTV6FlyGuy, 31 */
 void hal_fill_amp_vtable(void);                      /* fills _ZTV3Amp, 31 */
 void hal_fill_flame_chomp_vtable(void);              /* fills _ZTV10FlameChomp, 31 */
 void hal_fill_flame_chomp_fire_vtable(void);         /* fills _ZTV14FlameChompFire, 31 */
@@ -2126,6 +2138,14 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
     {283, "LAST_STAR", LastStar_SpawnInfo, LastStar_Spawn, 0}, \
     /* ---- run linkw wave 5 (lane w5-c): the rest of level 37's roaming cast.
        FLAME_CHOMP_FIRE is not level-placed; the chomp spawns it live. ---- */ \
+    /* FLY_GUY was the fourth ov070 class wave 5 left unregistered; level 19
+       places it and its baseline census skipped 0xe8. Its own slots run past
+       the usual seven -- 18, 19 and 29 are overrides where its three siblings
+       take the shared default -- and slot 9 is a host copy for the ModelAnim
+       slot-5 collision, the same one Amp and FlameChomp already take. See
+       hal/actor_classes_ov070.cpp. */ \
+    {232, "FLY_GUY", FlyGuy_SpawnInfo, FlyGuy_Spawn, \
+     hal_fill_fly_guy_vtable}, \
     {266, "AMP", Amp_SpawnInfo, Amp_Spawn, hal_fill_amp_vtable}, \
     {270, "FLAME_CHOMP", FlameChomp_SpawnInfo, FlameChomp_Spawn, \
      hal_fill_flame_chomp_vtable}, \

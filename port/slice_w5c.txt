@@ -153,3 +153,68 @@ src/func_ov002_020b6d28.c
 # port/ov070_syms.txt by name.
 port/hal/actor_classes_ov070.cpp
 port/hal/ov070_shadow_faces.cpp
+
+# ============================================================================
+# LANE w3-d: FLY_GUY (232), ov070's fourth class and the one wave 5 left
+# unregistered. wave 5's own note said its levels were unmounted; level 19
+# (Snowman's Land) places it and level 19 IS mounted, and the baseline census
+# on cons cc10acd4e proves it -- "[spawn] actor 0xe8 not registered, skipped",
+# and 0xe8 is 232.
+#
+# port/ov070_syms.txt predicted the rest exactly: "a future FlyGuy row then
+# needs only a row and a fill." Both of the usual traps were already disarmed
+# there -- _ZTV6FlyGuy was left out of the mount as host storage, and
+# ov70_seat_state_pmfs already rewrites all twelve of FlyGuy's PMF source
+# records with host addresses along with the other eighteen. The one thing
+# that note did not cover was FlyGuy_SpawnInfo, which was not mounted either;
+# it is now.
+#
+# A 31-slot table like its three siblings, and ov70_fill_shared serves it, but
+# FlyGuy overrides MORE slots than they do: 0/3/6/9/12/16/17 plus its own
+# 18 (OnYoshiTryEat, func_ov070_02120518), 19 (OnTurnIntoEgg,
+# func_ov070_021204ec) and 29 (OnAimedAtWithEgg, func_ov070_021204e4). Read
+# out of extracted/overlays/overlay_0070.bin at 0x02123168..0x021231e4; every
+# other slot is byte-identical to the three tables this file already serves.
+#
+# _ZN6FlyGuy6RenderEv.cpp IS NOT IN THIS LIST -- the ModelAnim slot-5
+# collision, and this one is the real thing rather than a false alarm. The
+# matched TU takes a LOCAL six-virtual ROM-order shadow off &mModelAnim and
+# calls its slot 5, and the member really is a ModelAnim: both destructors
+# call _ZN9ModelAnimD1Ev on this+0x300 and FlyGuy.h puts mModelAnim there.
+# _ZTV9ModelAnim cannot be dual-filled (Virtual18 already occupies MSVC's
+# slot 5), so this is the Whomp/Butterfly/Fish/BabyPenguin case exactly.
+# HOST COPY at the end of port/unmatched/ModelAnim_Renders.cpp; the matched
+# TU stays byte-locked in src/ as proof.
+#
+# BOTH DESTRUCTORS ARE IN THE LIST, unlike SnowmanBody's and SnowmanHead's:
+# _ZN6FlyGuyD1Ev is a plain .c body that names every member destructor and
+# offset outright, so there are no local shadow classes for MSVC to emit
+# undefined member dtors against and no host chain is needed. It stores
+# _ZTV6FlyGuy, the same spelling FlyGuy_Spawn.c uses. _ZN6FlyGuyD0Ev.c stores
+# the SAME ADDRESS under dsd's other name, _ZTV19daPropeller_Heyho_c
+# (symbols.txt carries both on 0x02123168), and gets a per-source rename in
+# port/CMakeLists.txt -- the same one-TU-one-name shape the two ov072 D0s got.
+#
+# Both destructors also end in func_ov002_020aed18 rather than Actor::D2:
+# FlyGuy derives from Enemy, not straight from Actor. That is ov002 code the
+# port already links and nothing here has to bridge.
+#
+# _ZN6FlyGuy13InitResourcesEv.cpp IS NOT IN THIS LIST EITHER -- a host
+# MIRROR, port/unmatched/FlyGuy_InitResources.cpp, whose only delta is
+# eight declarations moved. The matched TU declares its eight mounted
+# globals (seven SharedFilePtr, one PMF) OUTSIDE its own extern "C"
+# block, so MSVC gives them C++ linkage and asks for
+# ?data_ov070_02123530@@3USharedFilePtr@@A and seven siblings while the
+# mount emits C names -- eight LNK2019s. The mirror moves those eight
+# lines inside the block and changes nothing else; the body is character
+# for character the matched TU's. Coffin_InitResources.cpp is the same
+# shape. Matched TU stays byte-locked in src/ as proof.
+src/_ZN6FlyGuyD1Ev.c
+src/_ZN6FlyGuyD0Ev.c
+src/_ZN6FlyGuy16CleanupResourcesEv.c
+src/_ZN6FlyGuy16OnPendingDestroyEv.c
+src/_ZN6FlyGuy8BehaviorEv.cpp
+src/func_ov070_021204e4.c
+src/func_ov070_021204ec.cpp
+src/func_ov070_02120518.c
+src/FlyGuy_Spawn.c

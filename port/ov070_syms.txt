@@ -4,9 +4,23 @@
 # load window with ov071/ov073/ov074, the census's measured caution) carrying
 # FOUR classes -- FlyGuy (232), Amp (266), FlameChomp (270) and FlameChompFire
 # (271). Level 37 places Amp x2 and FlameChomp x1; FlameChompFire is spawned at
-# run time by the chomp. FlyGuy's levels are unmounted, so its registry row is
-# OFF (the ov019 rule: only rows for classes a bootable level spawns), but its
-# sinit still runs and its data is still mounted -- see the PMF note below.
+# run time by the chomp.
+#
+# FLYGUY'S ROW IS ON NOW (lane w3-d), and the sentence that used to sit here --
+# "FlyGuy's levels are unmounted, so its registry row is OFF" -- was true when
+# it was written and is not any more. Level 19's baseline census on cons
+# cc10acd4e reads "[spawn] actor 0xe8 not registered, skipped", and 0xe8 is 232:
+# Snowman's Land places FlyGuy and the level is mounted. This file predicted the
+# rest of it exactly -- "a future FlyGuy row then needs only a row and a fill" --
+# because the vtable was already left out as host storage and the seat already
+# rewrote all twelve of FlyGuy's PMF sources with host addresses.
+#
+# ONE THING THAT NOTE DID NOT COVER: FlyGuy_SpawnInfo (0x02123144) was NOT in
+# the mount, so the row had nothing to point at. It is added below in the
+# siblings' own shape -- the two data symbols ahead of it plus the record --
+# and it needs no size pin for the reason theirs do not: ovdata.py sizes off
+# next-SYMBOL deltas out of symbols.txt, and the next symbol is _ZTV6FlyGuy at
+# 0x02123168, giving the same 0x24 the three sibling records get.
 #
 # This is the per-symbol mount (the gate-83/gate-50/gate-176 shape): the
 # classes reach their SpawnInfo records, SharedFilePtr statics, dtor-chain
@@ -128,6 +142,7 @@ data_ov070_02123404
 # Each SpawnInfo sizes to 0x24 by delta, ending exactly on its excluded
 # vtable.
 data_ov070_021231f4
+data_ov070_02123120 data_ov070_0212312c FlyGuy_SpawnInfo
 data_ov070_0212323c data_ov070_02123248 Amp_SpawnInfo
 data_ov070_02123334 data_ov070_02123340 FlameChomp_SpawnInfo
 data_ov070_0212340c data_ov070_02123418 FlameChompFire_SpawnInfo

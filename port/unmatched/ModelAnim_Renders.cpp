@@ -469,4 +469,29 @@ int _ZN3Boo6RenderEv(void *selfv)
     return 1;
 }
 
+/* ---- FLY_GUY (actor 232, ov070) -------------------------------------------
+   The same ModelAnim slot-5 collision, a fourth overlay over, and this one is
+   the real thing rather than a false alarm on a plain Model.
+   src/_ZN6FlyGuy6RenderEv.cpp declares a LOCAL six-virtual ROM-order shadow
+   (m0..m4 then Target) and calls Target(0) on &mModelAnim, so its "slot 5" is
+   the ROM's ModelAnim::Render(const Vector3*). The receiver really is a
+   ModelAnim, checked two ways that agree: _ZN6FlyGuyD1Ev.c and
+   _ZN6FlyGuyD0Ev.c both call _ZN9ModelAnimD1Ev on this+0x300, and FlyGuy.h
+   puts mModelAnim at 0x300. _ZTV9ModelAnim's slot 5 is Virtual18 and the
+   array CANNOT be dual-filled for the reason this file's header gives, so the
+   matched TU is dropped from slice_w5c.txt and this is the port body.
+
+   Control flow is the matched source line for line -- the 0x40000 bit at
+   +0xb0 is FlyGuy.h's unk_0b0, and the argument really is a null Vector3
+   pointer (the ROM passes r1 = 0), not a scale this copy invented. */
+int _ZN6FlyGuy6RenderEv(void *self)
+{
+    char *c = (char *)self;
+    if (*(unsigned int *)(c + 0xb0) & 0x40000)
+        return 1;
+    /* ((ModelAnim *)&mModelAnim)->Render(0) -- ROM slot 5, spelled qualified */
+    ((ModelAnim *)(c + 0x300))->ModelAnim::Render((const Vector3 *)0);
+    return 1;
+}
+
 }  /* extern "C" */

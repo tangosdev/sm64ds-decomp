@@ -911,6 +911,16 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11SnowmanHeadD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS "_ZTV12daBgSnmHed_c=_ZTV11SnowmanHead")
+# Same shape once more, ov070's FlyGuy (lane w3-d): FlyGuy_Spawn.c and
+# _ZN6FlyGuyD1Ev.c both store `_ZTV6FlyGuy`, which is what
+# hal/actor_classes_ov070.cpp defines, while _ZN6FlyGuyD0Ev.c stores the SAME
+# ADDRESS (0x02123168) as `_ZTV19daPropeller_Heyho_c` -- symbols.txt carries
+# both names on it. One TU, one name, so a per-source rename rather than an
+# append to the shared alternatename baseline. As with the two ov072 D0s, the
+# LHS is undefined everywhere in this link, so this is not the R3 defeat case.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6FlyGuyD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV19daPropeller_Heyho_c=_ZTV6FlyGuy")
 
 # R5, run linkw wave 15 (lane w15): THREE ov025 TUs spell ov025's OWN vtable
 # 0x021139d4 (_ZTV11PyramidLift) as `data_ov027_021139d4` -- ov025, ov027,
@@ -11130,6 +11140,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
@@ -11317,6 +11328,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -11540,6 +11552,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
