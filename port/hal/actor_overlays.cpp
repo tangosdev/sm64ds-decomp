@@ -321,12 +321,22 @@ void __sinit_ov062_0211d6fc(void);
 /* ---- gate 32: ov091, which the CHAIN_CHOMP drags in ----------------------
    ChainChomp::InitResources spawns actor 27 -- the post it is chained to --
    and reads a word back out of it, so a level with a chomp and no ov091
-   faults on the first frame of the object walk. Six sinits, all of them
-   SharedFilePtr construction plus the state tables of classes this gate does
-   not register. No seat: actor 27's own class dispatches no
-   pointer-to-member. */
+   faults on the first frame of the object walk. Six sinits: four are pure
+   SharedFilePtr construction, and TWO of them also copy pointer-to-member
+   state records into bss.
+
+   THERE IS A SEAT NOW (run rel0215 wave 3, lane w3-f2). It was true while
+   gate 32 was the only customer that no registered ov091 class dispatched a
+   pointer-to-member; ARROW_PATH_LIFT (157), SQUARE_METAL_NET_LIFT (144) and
+   FWOOSH (231) all do. port_ov091_states_seat (hal/actor_classes_ov091.cpp)
+   rewrites the NINE mounted SOURCE records -- three for the lift class, six
+   for FWOOSH -- from their ROM code addresses to host ones, and it must run
+   BEFORE __sinit_ov091_021345dc and __sinit_ov091_02134a30 copy them across.
+   Those two are the copiers; the other four construct SharedFilePtrs and
+   touch no state record. */
 void port_ov091_pack_check(void);
 void port_ov091_syms_patch(void);
+void port_ov091_states_seat(void);
 void __sinit_ov091_02134524(void);
 void __sinit_ov091_021345dc(void);
 void __sinit_ov091_021346e8(void);
@@ -1289,6 +1299,10 @@ extern "C" void port_actor_overlays_sinits(void)
 
     port_ov091_pack_check();
     port_ov091_syms_patch();
+    /* lane w3-f2: BEFORE __sinit_ov091_021345dc (the three lift records into
+       data_ov091_021354e0) and __sinit_ov091_02134a30 (FWOOSH's six into
+       data_ov091_021356b0 / _021356c0 / _021356d0). */
+    port_ov091_states_seat();
     __sinit_ov091_02134524();
     __sinit_ov091_021345dc();
     __sinit_ov091_021346e8();

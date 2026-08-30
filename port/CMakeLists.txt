@@ -9881,6 +9881,62 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d5e5c.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov090_021343b0=data_ov006_021343b0")
 
+# run rel0215 wave 3 (lane w3-f2): ov091's THREE DECLINED IDS --
+# ARROW_PATH_LIFT (157) and SQUARE_METAL_NET_LIFT (144), which SHARE ONE CLASS
+# (RotatingUpDownPlatform / 13daLinelift2_c, ov091 0x02134ec0, 32 slots -- both
+# factories' single pool literal), and FWOOSH (231) (Stump / 10daHyuhyu_c,
+# 0x021353ac, 31 slots). Placed on levels 39, 37 and 22 and declined on all
+# three in this branch's base censuses.
+#
+# NO MOUNT IS ADDED, which is what makes this seat cheap. ov091 is already
+# mounted whole per symbol by port/ov091_syms.txt (gate 32, the mount
+# ChainChomp::InitResources drags in) and BOTH vtable spans are already gaps in
+# that list -- 0x02134ec0..0x02134f40 between SquareMetalNetLift_SpawnInfo and
+# data_ov091_02134f40, 0x021353a4..0x02135440 between Fwoosh_SpawnInfo and
+# data_ov091_02135440. All nine pointer-to-member SOURCE records and all three
+# of FWOOSH's bss cells are mounted at their true sizes too, so there is no T3
+# size audit here: no syms row was added.
+#
+# The two fills and the nine-record PMF state seat are
+# hal/actor_classes_ov091.cpp; the four host-copied TUs (three pointer-to-member
+# dispatch sites, and one MSVC front-end refusal on a NONMATCHING body's ARM asm
+# hatch) are unmatched/Ov091_HostSites.cpp, each refusal itemised in
+# port/slice_w3f2.txt. The gate-64 shape: the hal file and the host copy ride in
+# the slice's own SOURCES list, so the target lists take one token.
+#
+# THE SHARED-WINDOW CROSS-SPELLING AUDIT, BOTH DIRECTIONS. ov090, ov091 and
+# ov092 all load at 0x02130f00 and the two landed ov090/ov092 seats are in this
+# link. This slice DEFINES func_ov091_02134498 for the first time, which is the
+# right-hand side of the ov090 lane's rename twenty lines above. Nothing breaks
+# and the reason is worth stating: that routing is a per-source -D, a
+# compile-time textual rename inside ov090's own TU, and a -D cannot be defeated
+# by a definition appearing elsewhere. An /alternatename in its place WOULD have
+# gone inert the moment this slice landed -- this seat is exactly the event lane
+# cast-ov090 chose -D to survive. Checked the other direction too: no
+# /alternatename anywhere in port/ has an LHS this slice defines, and the two
+# aliases below have LHS names that are declared in include/decl_common.h
+# (446, 531) and defined nowhere.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f2.txt" SLICE_W3F2_LINES)
+set(SLICE_W3F2_SOURCES "")
+foreach(line IN LISTS SLICE_W3F2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3F2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_W3F2_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov091.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov091_HostSites.cpp")
+# ONE OF THIS SLICE'S TWENTY .c FILES IS REALLY C++ -- a //cpp marker and
+# top-level `extern "C"` declarations, which as C is a syntax error on line 3.
+# Found by the comment-stripped token sweep over all twenty (//cpp, extern "C",
+# class, virtual, ::), not by waiting for a compile failure. The other nineteen
+# are C, and all thirty-one were syntax-checked with this slice's own flags.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov091_02133c6c.c"
+    PROPERTIES LANGUAGE CXX)
+
 
 # run rel0215 wave 2 (lane cast-ov027): ov027's Snowman's Land cast --
 # SLIDING_ICE_SPAWNER (92), SLIDING_ICE (93), CHILL_BULLY (217), DA_PG_DFDR
@@ -11114,6 +11170,9 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
+    # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
+    # SQUARE_METAL_NET_LIFT (144) -- one class, two ids -- and FWOOSH (231).
+    ${SLICE_W3F2_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
@@ -11303,6 +11362,9 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
+    # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
+    # SQUARE_METAL_NET_LIFT (144) -- one class, two ids -- and FWOOSH (231).
+    ${SLICE_W3F2_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
@@ -11526,6 +11588,9 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
+    # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
+    # SQUARE_METAL_NET_LIFT (144) -- one class, two ids -- and FWOOSH (231).
+    ${SLICE_W3F2_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
