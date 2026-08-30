@@ -1,36 +1,56 @@
 # run rel0215 wave 2, lane cast-sweep2: OV034'S OWN CAST (level 26, Tiny-Huge
 # Island's CAVE, data/stage/tibi_deka_in). Overlay 2 of 4 in this lane.
 #
-# The three-way source inventory:
+# The three-way source inventory (run rel0215 lane prop18 closed the hole):
 #     delinked complete to a src/ TU   35
-#     present but NONMATCHING-bannered  0
-#     MISSING                           1   _ZN7Wiggler8BehaviorEv
+#     present but NONMATCHING-bannered  1   _ZN7Wiggler8BehaviorEv
+#     MISSING                           0
 #                                      --
 #                                      36  == config/arm9/overlays/ov034/
 #                                             symbols.txt's kind:function count
 #
-# THIRTY-ONE of the thirty-six are listed below.
+# THIRTY-TWO of the thirty-six are listed below.
 #
-# THE ONE MISSING BODY. _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, vtable
-# slot 6) has NO delink block in config/arm9/overlays/ov034/delinks.txt and no
-# src file anywhere in the tree -- the only such symbol in the overlay. It is
-# FACED LOUDLY in hal/actor_classes_ov034.cpp rather than stubbed -- the
-# hal/scene_boot.cpp l2_trap model exactly: both streams, flushed, with a hit
-# counter, and NOT the port_actor_slot_decline quarantine hook the ov030
-# func_ov030_021136b0 face uses. That difference was measured, not assumed:
-# decline hard-aborts under SM64DS_FAULTS_FATAL, which is right for a state tick
-# the ROM reaches rarely and wrong for slot 6, which every actor phase calls
-# EVERY FRAME -- wired that way this lane's first level-26 proof exited
-# 0xC0000409 on frame 1 instead of running, and in play every Wiggler would
-# quarantine itself immediately. A silent stub would still be worse: it would
-# make the Wiggler read as "asleep" rather than as a hole.
-# The face returns 1, which is the ROM body's ONLY return (0x021131dc
-# `mov r0, #1`), so the actor stays alive and inert rather than being torn down
-# by a return value the ROM never produces. WHAT THE PORT LOSES: the Wiggler
-# spawns, initialises all five of its segments, renders and holds state
-# DEMOWAIT, and never advances -- its Behavior is the only thing that calls the
-# state machine's tick half. That is the honest state of the class and the face
-# says it once per run.
+# THE LAST MISSING BODY LANDED, AND IT IS A DECLARED DRAFT.
+# _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, vtable slot 6) had NO delink
+# block in config/arm9/overlays/ov034/delinks.txt and no src file anywhere in
+# the tree -- the only such symbol in the overlay. Main matched it at 36e8cbcce
+# (PR #2008) and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.c here
+# VERBATIM, by address, blob 70a58eb36714d32803108c480fc7a9c9737a288d.
+#
+# READ THE BANNER BEFORE READING THE SLICE ROW. It is a DECLARED NONMATCHING
+# DRAFT at div 20 of 440 words and it is NOT enrolled in delinks.txt, so it
+# does not count as decompiled. What makes it admissible as the port's running
+# code is the SHAPE of the residue rather than its size: all twenty words are
+# register/scheduling routing, sixteen of them pure instruction reorder (our
+# word is in the cartridge a few words away with the registers already right)
+# and four the setup block's 0x1000 materialisation plus one address
+# association. Zero opcode, immediate or condition differences. Re-measured in
+# this tree at mwccarm 2004/b56 with strict relocs against
+# extracted/overlays/overlay_0034.bin at base 0x021111a0: size 0x6e0 exact,
+# 20 MISMATCH words, the same twenty main reports.
+#
+# THE FACE IS RETIRED. `ov34_missing_behavior` and its unread
+# `port_ov034_missing_behavior_hits()` accessor are deleted from
+# hal/actor_classes_ov034.cpp, the ov074 state-0 precedent prop17 set: a face
+# is a tenant, not a fixture. WHAT THE PORT GETS BACK: the Wiggler no longer
+# holds state DEMOWAIT forever. Behavior is the only caller of the state
+# machine's tick half, so seating it is what makes the tick half reachable at
+# all.
+#
+# THE SEAT NEEDED NO THUNK, AND THAT WAS VERIFIED FROM THE RELOCATIONS. The
+# ONLY reference to 0x02112b5c in ov034's relocs.txt is
+# `from:0x021144d4 kind:load`, which is _ZTV7Wiggler (0x021144bc) + 0x18 =
+# slot 6. No arm_call, no pointer-to-member record, no data-table word. So the
+# body is reached exclusively through the vtable, the existing
+# __fastcall(self, dummy) wrapper carries MSVC's thiscall across, and the
+# ov075 member-pointer recipe does not apply here.
+#
+# SIX NAMES ARE BRIDGED BY ADDRESS, not edited at the source: the decomp line
+# has taken a C++ rename this branch has not, so the body spells dCc_c /
+# dBgCh_Actr where this branch spells CylinderClsn / WithMeshClsn. The full
+# address table, the convention check and the /alternatename directives are in
+# hal/actor_classes_ov034.cpp.
 #
 # FOUR MORE TUs are HELD OUT, three host-copied because MSVC cannot deliver
 # their dispatch and one because it cannot deliver its receiver:
@@ -89,13 +109,24 @@
 #                             resolves and both bodies would call into ov052's
 #                             data.
 #
-# ONE SLICED TU DOES NOT REACH THE MAP, and the missing body is why.
+# THE SLICED TU THAT DID NOT REACH THE MAP NOW DOES (lane prop18).
 # src/func_ov034_02112874.c has exactly ONE caller in the whole ROM: the
-# arm_call at 0x02112eac, which is INSIDE _ZN7Wiggler8BehaviorEv. With Behavior
-# faced, nothing references it and /OPT:REF strips it, so linkage counts 30 of
-# 35 rather than 31. It stays on the slice: it is a matched body, it compiles,
-# and it becomes live the day the Behavior is decompiled. The ov030 lane's
-# Ukiki_StateTick note describes the same shape from the other direction.
+# arm_call at 0x02112eac, which is INSIDE _ZN7Wiggler8BehaviorEv. While
+# Behavior was faced nothing referenced it and /OPT:REF stripped it, so linkage
+# counted 30 of 35 rather than 31 -- measured, not predicted: it is absent from
+# the baseline walk_window.map at cons tip 75c3a5354. With the body seated it
+# is back, which is the second half of this lane's +2 linkage delta.
+# WHAT IT IS: the caterpillar. It drags the four trailing segments after the
+# head, sets each one's yaw from the segment ahead, writes their positions into
+# both MovingCylinderClsnWithPos arrays (+0x478 and +0x5b8, stride 0x40) and
+# ground-raycasts each one so it sits on the floor.
+# A THIRD SYMBOL CAME BACK WITH THEM AND IS NOT COUNTED HERE:
+# func_ov034_02112604, the state machine's TICK dispatcher, whose only caller is
+# also Behavior. /OPT:REF is transitive, so it was stripped too -- which is the
+# link-level statement of what the face cost. It is a HOST COPY
+# (port/unmatched/Wiggler_StateTick.cpp), so it changes the map and not the
+# linkage number. The ov030 lane's Ukiki_StateTick note describes the same
+# shape from the other direction.
 #
 # THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU -- Actor,
 # ActorBase, Enemy, Model, ModelAnim, ShadowModel, MaterialChanger,
@@ -104,11 +135,15 @@
 # helpers are all already in the walk_window link for other classes. Measured
 # off the link, not guessed.
 
-# ---- the class: factory, destructors, and the four non-Behavior slots -----
+# ---- the class: factory, destructors, and the five own slots --------------
 src/_ZN7WigglerD1Ev.c
 src/_ZN7WigglerD0Ev.c
 src/_ZN7Wiggler13InitResourcesEv.cpp
 src/_ZN7Wiggler16CleanupResourcesEv.c
+# slot 6, propagated from main 36e8cbcce by lane prop18. A DECLARED NONMATCHING
+# DRAFT (div 20 of 440, all of it register/scheduling routing) -- read the
+# banner block at the top of this file before quoting this row as a match.
+src/_ZN7Wiggler8BehaviorEv.c
 
 # ---- the eleven states, twenty-two handlers, in table order ---------------
 # 0 DEMOWAIT

@@ -10259,11 +10259,15 @@ list(APPEND SWEEP2_SOURCES hal/actor_classes_ov032.cpp ${SLICE_SWEEP2_OV032_SOUR
 
 # ---- 2/4: ov034, level 26 (Tiny-Huge Island's cave) ------------------------
 # WIGGLER (248) x1 -- level 26's WHOLE skip list, so this takes the level to
-# zero skipped. Thirty-two of the overlay's thirty-six TUs: one has no matched
-# body at all (_ZN7Wiggler8BehaviorEv, faced loudly) and three are host copies
-# (the two pointer-to-member state dispatch sites and the five-ModelAnim
-# slot-5 Render). One 31-slot Enemy table, and no identity shift. See
-# port/ov034_syms.txt and port/slice_sweep2_ov034.txt.
+# zero skipped. THIRTY-THREE of the overlay's thirty-six TUs since run rel0215
+# lane prop18: the last unhosted body, _ZN7Wiggler8BehaviorEv, was matched on
+# the decomp line (main 36e8cbcce, PR #2008) and propagated here by address, so
+# the loud face for it is gone and slot 6 runs the ROM's own frame. That body
+# is a DECLARED NONMATCHING DRAFT (div 20 of 440 words, all of it register and
+# scheduling routing) and its slice row says so. The remaining three held-out
+# TUs are host copies: the two pointer-to-member state dispatch sites and the
+# five-ModelAnim slot-5 Render. One 31-slot Enemy table, and no identity shift.
+# See port/ov034_syms.txt and port/slice_sweep2_ov034.txt.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov034.txt" SLICE_SWEEP2_OV034_LINES)
 set(SLICE_SWEEP2_OV034_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP2_OV034_LINES)
