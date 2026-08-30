@@ -462,9 +462,19 @@ contend for. Conversely the merge's largest prizes (the 73 Tier-2 TUs, 1,338 fil
 218 provably-C++ files that this plan schedules none of, because the size cliff makes that
 pool all-or-nothing merge work, not conversion work.
 
-## 7. Tooling caveat
+## 7. Tooling (resolved)
 
-Both plans want new files in `tools/` (`tu_create.py`, `tu_preflight.py`). The validator
-**restores all of `tools/` from base**, so no PR can exercise its own tool change. These
-are local dev tools rather than gates, so that is survivable — but do not let a batch's
-correctness depend on a tool the validator will delete.
+Both plans want new files in `tools/` (`tu_create.py`, `tu_preflight.py`). This used
+to be a caveat: the validator **restored all of `tools/` from base**, so no PR could
+exercise its own tool change, and a batch whose correctness depended on a new tool
+was validated with that tool deleted.
+
+That is no longer true. The validator runs the **committed test merge** whole,
+`tools/` included, so a batch ships its tools and is validated by them. A tools-only
+PR is now a full base-vs-merge ROM comparison instead of a green no-op, which is
+exactly the evidence a byte-neutral `tu_create.py` change wants.
+
+Two things a batch still may not put in `tools/`: anything under `tools/mwccarm/`
+(the compiler is the operator's, and a commit there is refused outright), and a
+`config/rombuild-versions.txt` pin naming a compiler build the validator does not
+have installed (validated, refused with a reason, never silently replaced).
