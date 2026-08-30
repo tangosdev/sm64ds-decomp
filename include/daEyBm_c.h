@@ -41,14 +41,17 @@ struct daEyBm_c : dActor_c {
        0x96 (150 frames) and is counted down by Behavior.
        [_ZN8daEyBm_c6RenderEv.cpp, _ZN8daEyBm_c8BehaviorEv.cpp,
         _ZN8daEyBm_c13InitResourcesEv.cpp] */
-    s32                       mParticle1;                       /* 0x328 */
-    s32                       mParticle2;                       /* 0x32c */
-    s16                       mLifeTimer;                       /* 0x330 */
+    u32                       mParticle1;                       /* 0x328 */
+    u32                       mParticle2;                       /* 0x32c */
+    u16                       mLifeTimer;                       /* 0x330 */
     u8                        pad_332[0x2];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
-    virtual ~daEyBm_c();
+    /* Inline plus vtable instantiation is load-bearing: mwcc emits retail's
+       D1 then D0 pair, with no homeless D2. InitResources is the first
+       out-of-line virtual and anchors this TU's vtable/RTTI group. */
+    virtual ~daEyBm_c() {}
 
     virtual s32  InitResources();       /* slot 0 */
     virtual s32  CleanupResources();    /* slot 3 */
@@ -56,6 +59,14 @@ struct daEyBm_c : dActor_c {
     virtual s32  Render();              /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
+
+private:
+    /* Class ownership, calls, bodies and codegen are proven. These readable
+       private spellings are inferred aliases; no original names survive. */
+    void SpawnDestroyEffect();
+    void UpdateCollision(dBgCh_Actr &collision);
+    void HurtPlayer();
+    void UpdateShadow();
 };
 
 typedef char daEyBm_c_size_must_be_0x334[

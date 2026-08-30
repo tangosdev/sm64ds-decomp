@@ -1574,6 +1574,10 @@ ov071	0x021219cc	func_ov071_021219cc	BigMrI_Spawn	spawnfunc
 ov071	0x02121a1c	func_ov071_02121a1c	MrI_Spawn	spawnfunc
 ov071	0x02121a6c	func_ov071_02121a6c	_ZN8daEyBm_cD1Ev	vtable slot 16
 ov071	0x02121aac	func_ov071_02121aac	_ZN8daEyBm_cD0Ev	vtable slot 17
+ov071	0x02121b08	func_ov071_02121b08	_ZN8daEyBm_c18SpawnDestroyEffectEv	inferred private class helper; effect 0x45 then destruction
+ov071	0x02121b50	func_ov071_02121b50	_ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr	inferred private class helper; owned collision update and destroy
+ov071	0x02121ba4	func_ov071_02121ba4	_ZN8daEyBm_c10HurtPlayerEv	inferred private class helper; player collision and destroy
+ov071	0x02121c6c	func_ov071_02121c6c	_ZN8daEyBm_c12UpdateShadowEv	inferred private class helper; matrix and ground shadow update
 ov071	0x02121d08	func_ov071_02121d08	_ZN8daEyBm_c16CleanupResourcesEv	vtable slot 3
 ov071	0x02121d10	func_ov071_02121d10	_ZN8daEyBm_c16OnPendingDestroyEv	vtable slot 12
 ov071	0x02121d14	func_ov071_02121d14	_ZN8daEyBm_c6RenderEv	vtable slot 9
