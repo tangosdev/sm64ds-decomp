@@ -9898,9 +9898,10 @@ set_source_files_properties(
 # size audit here: no syms row was added.
 #
 # The two fills and the nine-record PMF state seat are
-# hal/actor_classes_ov091.cpp; the four host-copied TUs (three pointer-to-member
-# dispatch sites, and one MSVC front-end refusal on a NONMATCHING body's ARM asm
-# hatch) are unmatched/Ov091_HostSites.cpp, each refusal itemised in
+# hal/actor_classes_ov091.cpp; the five host-copied TUs (three pointer-to-member
+# dispatch sites, FWOOSH's ModelAnim slot-5 Render, and one MSVC front-end
+# refusal on a NONMATCHING body's ARM asm hatch -- the last two both found by
+# running rather than by reading) are unmatched/Ov091_HostSites.cpp, itemised in
 # port/slice_w3f2.txt. The gate-64 shape: the hal file and the host copy ride in
 # the slice's own SOURCES list, so the target lists take one token.
 #

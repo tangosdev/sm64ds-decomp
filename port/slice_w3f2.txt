@@ -28,10 +28,11 @@
 # syntax-checked as this build would compile it (cl /Zs, the slice's own flags,
 # .c as C11 and .cpp/`//cpp` as C++17) and exactly one is a front-end refusal.
 #
-# ==== THE FOUR REFUSALS ====================================================
-# 31 TUs ride from src/. Four are host-copied into
+# ==== THE FIVE REFUSALS ====================================================
+# 30 TUs ride from src/. Five are host-copied into
 # port/unmatched/Ov091_HostSites.cpp and dropped from the list below; the
-# byte-matched originals STAY in src/ and are not edited. Two shapes:
+# byte-matched originals STAY in src/ and are not edited. Three shapes, and
+# only the first was predicted by the banked recon:
 #
 #  (1) THREE POINTER-TO-MEMBER DISPATCH SITES -- gate 16, the ov090 disease in
 #      both halves. The ROM's state record is EIGHT bytes {function, delta} and
@@ -62,7 +63,26 @@
 #            _Z14ApproachLinearRiii.
 #      The host copy names both by address. Nothing in src/ is edited.
 #
-#  (2) ONE MSVC FRONT-END REFUSAL.
+#  (2) ONE ModelAnim SLOT-5 COLLISION, AND THE RECON RULED IT THE OTHER WAY.
+#        src/_ZN5Stump6RenderEv.cpp                       FWOOSH's Render.
+#      w3-f banked "Render LINKS PLAIN because _ZTV5Model is dual-filled -- do
+#      not host-copy it". TRUE OF THE LIFTS, FALSE OF FWOOSH, and the split is
+#      the MEMBER the shadow sits over rather than the shadow:
+#        RotatingUpDownPlatform::Render shadows the plain MODEL at +0xd4 (its
+#          D1 calls _ZN5ModelD1Ev there) and hal/cxxname_bridge.cpp:507/511
+#          dual-fills _ZTV5Model at [4] AND [5], so it serves from src/ and
+#          does -- levels 39 and 37 run 300 frames rc 0 with it in this list.
+#        Stump::Render shadows the MODELANIM at +0x300 (Fwoosh_Spawn calls
+#          _ZN9ModelAnimC1Ev there). _ZTV9ModelAnim is filled in MSVC numbering
+#          where slot 5 is Virtual18, and it is NOT dual-filled, so index 5
+#          lands on the wrong body. The ov090 / Whomp / Fish / Spiny case (T1).
+#      FOUND BY RUNNING IT. The first level-22 run with this seat in faulted on
+#      frame 1 with c0000005 accessing 00000000, and the frames resolved
+#      Stump::Render+0x26 -> ModelAnim::Virtual18 -> ModelAnim::Virtual10 ->
+#      Model::Virtual10. Nothing static in this lane's checks would have caught
+#      it: the TU compiles, it links, and vtspan sizes the table correctly.
+#
+#  (3) ONE MSVC FRONT-END REFUSAL.
 #        src/func_ov091_021339fc.c is NONMATCHING-bannered ("hand-written asm,
 #            not a C decompilation ... asm hatch on a proven mwccarm 1.2
 #            register-allocation/scheduling wall") and the hatch is TWO ARM
@@ -80,7 +100,7 @@
 #      x86 front end can read. Measured before it was believed.
 #
 # ==== LANGUAGE =============================================================
-# Eleven of these 31 are .cpp and twenty are .c. The comment-stripped sweep for
+# Ten of these 30 are .cpp and twenty are .c. The comment-stripped sweep for
 # a `//cpp` marker, a top-level `extern "C"` block, `class`, `virtual` and
 # `::` over all twenty .c files finds ONE that is really C++:
 # src/func_ov091_02133c6c.c opens with `//cpp` and declares `extern "C"`
@@ -115,7 +135,7 @@
 # behind it.
 #
 # ==== THE LIST =============================================================
-# 14 lifts + 17 FWOOSH = 31.
+# 14 lifts + 16 FWOOSH = 30.
 
 # ---- ARROW_PATH_LIFT (157) + SQUARE_METAL_NET_LIFT (144) ------------------
 # the two factories: byte-identical 0x38-byte bodies, one pool literal each,
@@ -147,7 +167,7 @@ src/func_ov091_02132380.c
 src/Fwoosh_Spawn.c
 src/_ZN5Stump13InitResourcesEv.cpp
 src/_ZN5Stump16CleanupResourcesEv.cpp
-src/_ZN5Stump6RenderEv.cpp
+# (Render is NOT here -- the ModelAnim slot-5 collision, refusal (2) above)
 src/_ZN5Stump16OnPendingDestroyEv.c
 src/_ZN5StumpD1Ev.c
 src/_ZN5StumpD0Ev.c

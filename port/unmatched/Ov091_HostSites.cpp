@@ -1,4 +1,4 @@
-/* ov091 host sites -- the FOUR translation units of the ARROW_PATH_LIFT (157) /
+/* ov091 host sites -- the FIVE translation units of the ARROW_PATH_LIFT (157) /
  * SQUARE_METAL_NET_LIFT (144) / FWOOSH (231) seat that cannot ride from src/.
  * Run rel0215 wave 3, lane w3-f2. Every refusal is itemised in
  * port/slice_w3f2.txt; this file is the transcription.
@@ -25,7 +25,29 @@
  *     has already rewritten that word from the ROM's DS address to the host
  *     body's, verifying the mounted word against the ROM first.
  *
- * (2) ONE MSVC FRONT-END REFUSAL. src/func_ov091_021339fc.c is
+ * (2) ONE ModelAnim SLOT-5 COLLISION, FOUND BY RUNNING IT. The banked recon
+ *     ruled "Render LINKS PLAIN because _ZTV5Model is dual-filled -- do not
+ *     host-copy it". That is TRUE OF THE LIFTS and FALSE OF FWOOSH, and the
+ *     difference is which member the shadow sits over:
+ *       RotatingUpDownPlatform::Render shadows the plain Model at +0xd4 (its
+ *         D1 calls _ZN5ModelD1Ev on +0xd4), and hal/cxxname_bridge.cpp
+ *         DUAL-FILLS _ZTV5Model at [4] AND [5], so it serves from src/ and
+ *         does. Levels 39 and 37 run 300 frames rc 0 with it sliced.
+ *       Stump::Render shadows the ModelAnim at +0x300 (Fwoosh_Spawn calls
+ *         _ZN9ModelAnimC1Ev on +0x300), and _ZTV9ModelAnim is filled in MSVC
+ *         numbering where slot 5 is Virtual18 and Render has moved. NOT
+ *         dual-filled, so index 5 lands on the wrong body -- the ov090 /
+ *         Whomp / Fish / Spiny case (T1).
+ *     The first run of level 22 with the seat in faulted on frame 1 with
+ *     c0000005 accessing 00000000, and the frames resolve exactly through the
+ *     collision: Stump::Render+0x26 -> ModelAnim::Virtual18 ->
+ *     ModelAnim::Virtual10 -> Model::Virtual10. So this host copy names
+ *     ModelAnim::Render outright, the ov090 remedy. Offsets are Stump.h's own:
+ *     mVariant 0x374, unk_0b0 0xb0, mModelAnim 0x300. The scale argument is a
+ *     NULL Vector3, read off the source's literal `m5(0)` -- FWOOSH passes
+ *     none, the way MantaRay, CheepCheep and Shark do and Skeeter does not.
+ *
+ * (3) ONE MSVC FRONT-END REFUSAL. src/func_ov091_021339fc.c is
  *     NONMATCHING-bannered and carries an ARM `asm { ldr ...; mov ... }` hatch.
  *     MSVC's inline assembler is x86 and does not parse it -- measured, eight
  *     errors from C2065 on `asm` to C2181. THE BANNERED src FILE IS UNTOUCHED;
@@ -46,6 +68,7 @@
 #include "decl_Enemy.h"
 #include "decl_Player.h"
 #include "decl_SaveData.h"
+#include "ModelAnim.h"
 
 /* The ROM's pointer-to-member SOURCE record, as bytes rather than as a C++
    pointer-to-member. Nine of these are seated by port_ov091_states_seat(). */
@@ -240,7 +263,27 @@ extern "C" int _ZN5Stump8BehaviorEv(void *self)
 }
 
 /* ==========================================================================
- * (2) func_ov091_021339fc -- FWOOSH's per-frame player interaction.
+ * (2) Stump::Render -- the ModelAnim slot-5 collision, host-copied after the
+ * first level-22 run faulted through it. src/_ZN5Stump6RenderEv.cpp draws with
+ *     struct V { virtual void m0(); ... virtual int m5(int); };
+ *     ((V *)((char *)&mModelAnim))->m5(0);
+ * and index 5 of the host _ZTV9ModelAnim is Virtual18. This names
+ * ModelAnim::Render, the body the ROM's slot 5 holds (arm9 0x020167f8).
+ * ==========================================================================*/
+/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch. */
+extern "C" int _ZN5Stump6RenderEv(void *selfv)
+{
+    char *c = (char *)selfv;
+    if (*(int *)(c + 0x374) == 1)
+        return 1;
+    if ((*(unsigned int *)(c + 0xb0) & 0x40000) != 0)
+        return 1;
+    ((ModelAnim *)(c + 0x300))->ModelAnim::Render((const Vector3 *)0);
+    return 1;
+}
+
+/* ==========================================================================
+ * (3) func_ov091_021339fc -- FWOOSH's per-frame player interaction.
  *
  * src/func_ov091_021339fc.c is NONMATCHING-bannered: "hand-written asm, not a
  * C decompilation. Byte-exact via an asm hatch on a proven mwccarm 1.2

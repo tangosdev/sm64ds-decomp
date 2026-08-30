@@ -72,16 +72,26 @@
  * _ZTV25RotatingUpDownPlatformUtm (0x02134c5c), so the existing single shared
  * fill in hal/actor_classes_l7.cpp is correct and this file leaves it alone.
  *
- * RENDER LINKS PLAIN, WHICH IS THE OPPOSITE RULING FROM A ModelAnim MEMBER.
- * RotatingUpDownPlatform::Render draws through a six-virtual shadow over the
- * MODEL at +0xd4 and so reaches index 5; hal/cxxname_bridge.cpp:507/511
- * DUAL-FILLS _ZTV5Model at [4] AND [5] with Model::Render, so a shadow TU
- * counting in ROM numbering lands on the right body and the src TU serves
- * unchanged. Stump::Render reaches index 5 of a shadow over the ModelAnim at
- * +0x300 -- and that one is ALSO fine, because its shadow's slot 5 is declared
- * `int m5(int)` and dispatches through _ZTV5Model's dual fill by way of
- * ModelBase, the SlidingPlatformWf / ov013 / ov072 reading. Neither Render is
- * a host copy; measured, not assumed -- both compile and both were run.
+ * THE TWO RENDERS SPLIT, AND THE RECON RULED THEM TOGETHER. w3-f banked
+ * "Render LINKS PLAIN because _ZTV5Model is dual-filled -- do not host-copy
+ * it". That is right for ONE of these two classes and wrong for the other, and
+ * which one depends on the MEMBER the shadow sits over, not on the shadow:
+ *   RotatingUpDownPlatform::Render shadows the plain MODEL at +0xd4 -- its D1
+ *     calls _ZN5ModelD1Ev on +0xd4 -- and hal/cxxname_bridge.cpp:507/511
+ *     DUAL-FILLS _ZTV5Model at [4] AND [5] with Model::Render, so a shadow TU
+ *     counting in ROM numbering lands on the right body. It serves from src/
+ *     unchanged, and levels 39 and 37 run 300 frames rc 0 with it doing so.
+ *   Stump::Render shadows the MODELANIM at +0x300 -- Fwoosh_Spawn calls
+ *     _ZN9ModelAnimC1Ev on +0x300 -- and _ZTV9ModelAnim is NOT dual-filled: it
+ *     is filled in MSVC numbering, where slot 5 is Virtual18 and Render has
+ *     moved. Index 5 lands on the wrong body. This is the ov090 / Whomp / Fish
+ *     / Spiny collision (T1) and it is a HOST COPY,
+ *     unmatched/Ov091_HostSites.cpp, naming ModelAnim::Render outright.
+ * FOUND BY RUNNING IT, not by reading it: the first level-22 run with this seat
+ * in faulted on frame 1, c0000005 accessing 00000000, and the frames resolved
+ * Stump::Render+0x26 -> ModelAnim::Virtual18 -> ModelAnim::Virtual10 ->
+ * Model::Virtual10. The lifts' Render was left in the slice on the same
+ * evidence: it was run and it does not fault.
  *
  * THE STATE SEAT, NINE RECORDS, TWO SINITS.
  * Both classes run pointer-to-member state machines whose SOURCE records the
@@ -160,7 +170,7 @@ extern unsigned char SquareMetalNetLift_SpawnInfo[];
 /* ---- FWOOSH (231) -------------------------------------------------------- */
 int _ZN5Stump13InitResourcesEv(void *self);      /* face: below */
 int _ZN5Stump16CleanupResourcesEv(void *self);   /* face: below */
-int _ZN5Stump6RenderEv(void *self);              /* face: below */
+int _ZN5Stump6RenderEv(void *self);              /* unmatched/Ov091_HostSites */
 int _ZN5Stump8BehaviorEv(void *self);            /* unmatched/Ov091_HostSites */
 void _ZN5Stump16OnPendingDestroyEv(void);        /* slot 12, .c body takes void */
 int *_ZN5StumpD1Ev(int *self);                   /* slot 16 */
@@ -506,8 +516,6 @@ int _ZN5Stump13InitResourcesEv(void *self)
 { return ((Stump *)self)->Stump::InitResources(); }
 int _ZN5Stump16CleanupResourcesEv(void *self)
 { return ((Stump *)self)->Stump::CleanupResources(); }
-int _ZN5Stump6RenderEv(void *self)
-{ return ((Stump *)self)->Stump::Render(); }
 }
 
 /* THE TWO RTTI-SPELLING BRIDGES. Each is ONE table under two names; the
