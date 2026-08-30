@@ -142,6 +142,19 @@
 #   143 + 2 NONMATCHING + 2 MISSING = 147, and the seat carries two faces
 #   where it carried nine.
 #
+# SIX OF THE SEVEN LINK, AND THE SEVENTH IS THE FLOOR'S FAULT, not the
+# propagation's. func_ov075_0211a948 byte-matches, is in src/, is in this
+# slice, and /OPT:REF drops its object because NOTHING in the binary references
+# it: config/arm9/overlays/ov075/relocs.txt has exactly one ov075 caller,
+# from:0x0211b01c kind:arm_call to:0x0211a948, and 0x0211b01c is INSIDE
+# func_ov075_0211afb0 (0x0211afb0, 0x21c) -- the body that is still a face
+# returning 0. The face's old note said 0211a948 "also satisfies ov080's
+# cross-window caller", and while it was a face in this always-linked TU that
+# reference was satisfied for free; as a standalone object it needs a real
+# caller. It links the day 0211afb0 does, and the other ov075 reference to
+# 0211a948 (ov060's data word at 0x0211a9ac) is a different overlay's storage
+# at the shared window, not a call.
+#
 # ---- 3. THE MOUNT, ON THE SCENE-5 TEMPLATE --------------------------------
 #
 # dScMiniGm_c (scene 5, ov005) is the working template and its three pieces
