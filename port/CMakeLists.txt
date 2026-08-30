@@ -9364,7 +9364,6 @@ foreach(line IN LISTS SLICE_W8A_LINES)
     list(APPEND SLICE_W8A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-
 # Gate 12: the interactive window (same stack, windowed loop).
 #
 # tests/io_pressure.cpp is the negative control for ntr/io.cpp's fixed-address

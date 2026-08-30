@@ -368,16 +368,39 @@ data_ov026_02113f78
 # Left as it stood, WaterSuction's state-0 tick would have called into mounted
 # data, and an alias would have been defeated silently.
 #
-# ---- THE ONE THING STILL UNPROVEN ------------------------------------------
+# ---- WHY POLE_LIFT_DDD SPAWNS AND THEN LEAVES ------------------------------
 #
-# POLE_LIFT_DDD's seven instances SPAWN and then destroy themselves inside
-# their own byte-matched InitResources: func_ov026_02111598 reads
-# "if ((data_0209caa0[1] & 0x204) == 0) return 0;" and data_0209caa0 is the
-# save/progress block, which is clear on the port's boot save. BowserShutter's
-# InitResources tests the SAME word with the OPPOSITE polarity and survives,
-# which is why the submarine and its shutter are present and the poles are
-# not. Both bodies byte-match at mwccarm 2004/b56 with reloc destinations
-# checked, so the polarity is the ROM's and not a decompilation artifact --
-# but that the DS reaches the same answer on the same save state has NOT been
-# demonstrated here, only argued. It is the one claim in this file a reviewer
-# should not take on trust.
+# The census moves all seven POLE_LIFT_DDD instances from skipped to spawned,
+# and then they destroy themselves inside their own byte-matched
+# InitResources: func_ov026_02111598 reads
+#   if ((data_0209caa0[1] & 0x204) == 0) return 0;
+# and the mask is clear on a fresh save. That is the ROM's behaviour, not a
+# seat defect, and THREE independent byte-matched sites agree on what 0x204
+# means:
+#
+#   1. func_ov026_02111598 (the poles' InitResources) requires it SET.
+#   2. func_ov026_021117d8 (BowserShutter's InitResources) requires it CLEAR
+#      -- the opposite polarity on the same word, which is why the submarine
+#      and its shutter are the ones standing on a fresh save.
+#   3. _ZN7Minimap19UpdateLevelSpecificEv's case 0x12 -- LEVEL 18's own arm --
+#      returns early unless 0x204 is set, so six minimap tiles appear with the
+#      poles and not before.
+#
+# And src/ContinueKuppaScriptIfNecessary.c is what CLEARS 0x204, in the same
+# breath as CollectStarInLevel(7,1) and CollectStarInLevel(8,1) -- course 8 is
+# this level. So 0x204 is Dire Dire Docks' own submarine-era state pair and the
+# poles are its post-submarine configuration.
+#
+# The port reaches the same answer the DS would because it runs the same bodies
+# over the same save block. What has NOT been done is a hardware comparison,
+# and a reviewer who wants one should ask for a play capture with those two
+# stars collected rather than take the reading on trust.
+#
+# ---- ONE TU THIS LANE LINKED THAT IS NOT ov026's ---------------------------
+#
+# Linkage moved 8028 -> 8078, which is 49 ov026 TUs plus ONE: ov002's
+# _ZN6Player14EnterWhirlpoolEv (0x020c5cc8, 16 bytes). It was already compiled
+# through port/slice_w1l5.txt and was being /OPT:REF-stripped because nothing
+# in the binary called it. src/func_ov026_02111d4c.cpp -- the whirlpool's own
+# state-0 tick, the body that pulls the player in -- is its ONLY caller in the
+# tree, so seating the whirlpool is what makes it reachable.
