@@ -1285,25 +1285,31 @@ def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
     with tempfile.TemporaryDirectory() as td:
         root = pathlib.Path(td)
         config = root / "config"
+        rom_inputs = root / "rom-inputs"
         config.mkdir()
+        rom_inputs.mkdir()
         cfg = config / "symbols.txt"
+        (rom_inputs / "header.yaml").write_bytes(b"ROM")
         linked, dsd, linker = root / "base.o", root / "dsd.exe", root / "mwld.exe"
         cfg.write_bytes(b"one")
         linked.write_bytes(b"ELF")
         dsd.write_bytes(b"DSD")
         linker.write_bytes(b"MWL")
         evidence = tubuild.partition_baseline_fingerprints(
-            linked, config, dsd_path=dsd, linker_path=linker)
+            linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs)
         report = {"baselineEvidence": evidence}
         digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs)
         assert error is None and digest == evidence["linkedElfSha256"]
 
         stamp = cfg.stat().st_mtime_ns
         cfg.write_bytes(b"two")
         os.utime(cfg, ns=(stamp, stamp))
         _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs)
         assert "configArm9Sha256" in error
 
         cfg.write_bytes(b"one")
@@ -1311,8 +1317,16 @@ def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
         linked.write_bytes(b"BAD")
         os.utime(linked, ns=(linked_stamp, linked_stamp))
         _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs)
         assert "linkedElfSha256" in error
+
+        linked.write_bytes(b"ELF")
+        (rom_inputs / "header.yaml").write_bytes(b"CHANGED")
+        _digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs)
+        assert "romInputsSha256" in error
 
 
 def test_partitioned_result_gate_requires_every_full_rom_proof():
