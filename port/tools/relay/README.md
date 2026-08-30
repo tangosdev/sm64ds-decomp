@@ -177,6 +177,50 @@ Any `[comms:loopback]` line saying NOT installing is the game refusing before
 it ever reached the relay, and the line names the knob it refused. The whole
 path is asserted end to end by `port/tools/vs_online_proof.py`.
 
+## Why it does not run at a round trip per frame
+
+The match is lockstep: both machines run the same frame from the same pair of
+inputs, which is what keeps two copies of the game telling the same story with
+no guessing and no rewinding. Done the obvious way that means a frame cannot
+finish until the other player's input for that same frame has crossed the wire
+and come back, so **the frame rate is the round trip**. Through this relay that
+is around 90 ms, which is about 11 frames a second against the game's 30, and
+it feels exactly as bad as it sounds.
+
+The fix is an **input delay**. Each machine runs frame R from the inputs that
+were exchanged N frames ago, so the wire has N whole frames to deliver a packet
+instead of a fraction of one. Both machines still play the identical sequence
+of inputs in the identical order -- nothing is predicted, nothing is thrown
+away, and the two games cannot drift apart. The only cost is that a button
+press lands N frames later, and N frames of that is far less noticeable than
+the whole game running at a third speed.
+
+**It is on by default and the recipe above needs no extra knob.** The game
+picks the depth from how it is connected: 4 frames through a relay, 2 on a
+direct connection, 0 on this machine's own loopback where there is no round
+trip to hide.
+
+`SM64DS_COMMS_INPUT_DELAY=<0..8>` overrides it on both machines, and there are
+two reasons to reach for it:
+
+- **Your pair is further apart than 4 frames of cover.** The signal is
+  `starved` in the game's own `[comms:loopback] ... indelay=4 starved=N` line.
+  Zero is healthy. A number that climbs means frames are still waiting on the
+  wire, and each one of those is a stall. Raise the delay by one and look
+  again. The rule is `N >= round trip in ms / 33.3`, plus a frame of headroom;
+  `python3 test_client.py remote-check --host YOUR.SERVER.IP` measures that
+  round trip and prints the N it implies.
+- **You want the old behaviour back to measure it.** `=0` is stop-and-wait
+  exactly as it was.
+
+Both players should set the same number. Different numbers are not a desync --
+both machines still consume the same rounds in the same order, one simply runs
+further behind the other -- but there is no reason to want that.
+
+`port/tools/vs_pace.py` measures the whole thing end to end: solo, a pair
+through a relay on this machine, and a pair through the live relay, with and
+without the input delay, reporting the frame-time distribution for each.
+
 ## Rollback
 
     sudo systemctl disable --now sm64ds-relay

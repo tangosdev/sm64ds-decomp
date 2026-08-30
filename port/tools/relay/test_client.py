@@ -27,6 +27,7 @@ Python 3 standard library only.
 """
 
 import argparse
+import math
 import os
 import select
 import socket
@@ -992,12 +993,18 @@ def remote_check(host, port, code, count=100, pps=50):
             print("rtt ms: min %.1f  p50 %.1f  avg %.1f  p95 %.1f  max %.1f"
                   % (min(rtts), median, sum(rtts) / len(rtts),
                      percentile(rtts, 0.95), max(rtts)))
-            print("note: both endpoints are on this machine, so every one of\n"
-                  "      those round trips reaches the relay and comes back\n"
-                  "      TWICE (child to relay to parent, then the echo\n"
-                  "      back). Two players in different places each see\n"
-                  "      about half of it, so roughly %.1f ms. Use probe\n"
-                  "      for the plain one hop number." % (median / 2.0))
+            print("note: this is FOUR legs -- child to relay, relay to\n"
+                  "      parent, parent to relay, relay to child -- which is\n"
+                  "      exactly the game's own lockstep round trip: a block\n"
+                  "      out, the aggregate back. Quote it as the round trip.\n"
+                  "      Two players in different places walk the SAME four\n"
+                  "      legs at their own distances, so it does not halve;\n"
+                  "      what halves is the ONE WAY delay, roughly %.1f ms.\n"
+                  "      Use probe for the plain one hop number.\n"
+                  "      The number the game needs from this is its input\n"
+                  "      delay: SM64DS_COMMS_INPUT_DELAY >= ceil(rtt / 33.3),\n"
+                  "      here %d frame(s) plus a frame of headroom."
+                  % (median / 2.0, int(math.ceil(median / 33.3))))
         return 0 if lost == 0 else 1
     finally:
         parent.close()
