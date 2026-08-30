@@ -353,10 +353,25 @@ extern "C" {
 /* Addresses only -- the seat below stores them, it never calls them, so the
    arity here is irrelevant to correctness. The three Model faces are DEFINED at
    the foot of this file with their real signatures; these are just the
-   addresses the vtable words get. */
+   addresses the vtable words get.
+
+   EXCEPT THAT "IRRELEVANT TO CORRECTNESS" IS AN ARGUMENT, NOT A GUARANTEE, and
+   Model::Render is the one name here that has a definition elsewhere in this
+   build to disagree with: port/hal/actor_faces_bob.cpp defines it
+   `(void *self, const void *scale)`. Declared void(void) it read as a NEW row
+   in aritycheck's receiver ratchet -- the narrow-decl/wide-decl seam that
+   PR #1539 and #1543 closed, where a caller compiled against the short
+   spelling leaves the callee reading live registers. Nothing in this file
+   calls it (the only use is `&` into g_co_vt below, and an address is an
+   address either way), so this is the declaration catching up with the
+   definition and no call site changes. Run rel0215, lane gatefix.
+
+   The other two stay void(void) deliberately: they are ov002 bodies with no
+   competing prototyped declaration, and the one place this file reaches
+   func_ov002_020f69a8 as code casts it through CoRomD0 first. */
 void func_ov002_020f6a00(void);
 void func_ov002_020f69a8(void);
-void _ZN5Model6RenderEPK7Vector3(void);
+void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale);
 extern unsigned data_ov002_0210bae4[];
 }
 
