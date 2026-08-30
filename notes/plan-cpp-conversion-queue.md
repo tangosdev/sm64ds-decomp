@@ -281,7 +281,9 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 
 ## 3. The pilot — run first, serially
 
-**`src/_ZN10ChillBully14UpdateRunStateEv.cpp`**, chosen deliberately over the smaller candidates.
+**`ChillBully::UpdateRunState`**, chosen deliberately over the smaller candidates.
+It was a one-function file under `src/` then; it is in
+`src/actors/ChillBully.cpp` now.
 
 Why not the 4-byte `src/_ZN9dThIcon_c6RenderEv.cpp` (an empty `bx lr`): a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
@@ -319,7 +321,7 @@ the header first — that is the one judgment call in the pilot.
 **Verification, exactly this, serially:**
 
 ```
-python tools/match.py --c src/_ZN10ChillBully14UpdateRunStateEv.cpp \
+python tools/match.py --c src/actors/ChillBully.cpp \
     --func _ZN10ChillBully14UpdateRunStateEv --addr 0x02111680 --size 0x70 --module ov027
 ```
 
