@@ -33,7 +33,11 @@
 
 struct daObjFl_Fall_Block_c : daObjFallBlock_c {
     /* --- vtable --- */
-    virtual ~daObjFl_Fall_Block_c();       /* slots 16 (D1), 17 (D0) */
+    /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these
+       two are emitted; with the body out of line mwcc emits D0 ahead of D1
+       and the ROM has D1 first (rombuild refuses the object outright). An
+       inline body also drops the D2 variant the cartridge never carried. */
+    virtual ~daObjFl_Fall_Block_c() {}     /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();                /* slot  3 */
     int InitResources();                   /* slot  0 */

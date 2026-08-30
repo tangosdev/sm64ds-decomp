@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFl_Fall_Block_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFl_Fall_Block_c.cpp",
+  "source": "src/actors/daObjFl_Fall_Block_c.cpp",
   "promoted_source": "src/actors/daObjFl_Fall_Block_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2112380..0x211245c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -119,5 +119,98 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov022-daObjFl_Fall_Block_c/link-partial (gitignored)"
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x02114874",
+      "reason": "Vague-linkage typeinfo record for the inherited base daObjFallBlock_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov015:0x02114874, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x0211488c",
+      "reason": "Vague-linkage type-name string for the inherited base daObjFallBlock_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov015:0x0211488c, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114270",
+      "reason": "the class's own __si_class_type_info record -- ABI kind word, name relocation and single-base relocation, all three read out of the cartridge and reproduced here. MEASURED: the cartridge carries this record under this exact name at ov022:0x02114270 -- daObjFl_Fall_Block_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x02114288",
+      "reason": "the class's own length-prefixed type-name string. MEASURED: the cartridge carries this record under this exact name at ov022:0x02114288 -- daObjFl_Fall_Block_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    },
+    {
+      "symbol": "_ZTV20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov022",
+      "canonical_address": "0x021142c4",
+      "reason": "the class's own vtable storage. This TU declares the class, so mwcc emits the table as vague linkage. MEASURED: the cartridge carries this record under this exact name at ov022:0x021142c4 -- daObjFl_Fall_Block_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+    }
+  ]
 }

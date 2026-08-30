@@ -27,7 +27,10 @@ struct daObjCannonShutter_c : dBgActor_c {
     u8 mCannonOpen;                       /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~daObjCannonShutter_c();
+    /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place D1 and
+       D0 are emitted; with the body out of line mwcc emits D0 ahead of D1
+       and the ROM has D1 first (rombuild refuses the object outright). */
+    virtual ~daObjCannonShutter_c() {}
 
     int Behavior();
     int CleanupResources();

@@ -212,21 +212,9 @@ src/LavaPlank_Spawn.c:
     complete
     .text start:0x02112350 end:0x02112380
 
-src/_ZN20daObjFl_Fall_Block_cD1Ev.cpp:
+src/actors/daObjFl_Fall_Block_c.cpp:
     complete
-    .text start:0x02112380 end:0x021123d0
-
-src/_ZN20daObjFl_Fall_Block_cD0Ev.cpp:
-    complete
-    .text start:0x021123d0 end:0x02112434
-
-src/_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112434 end:0x02112448
-
-src/_ZN20daObjFl_Fall_Block_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112448 end:0x0211245c
+    .text start:0x02112380 end:0x0211245c
 
 src/FallBlockLll_Spawn.c:
     complete
