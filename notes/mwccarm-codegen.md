@@ -3961,6 +3961,39 @@ puts the palette in r0 and the counter in r1, and its three wrong registers are 
 r5 -> r3 -> r4 -> r5 rotation in the callee-saved band, a different problem from A's and
 B's caller-saved pin.
 
+C's band is pinned as hard as A's and B's, and reading the identity says so precisely.
+9,648 compiles against C's exact shape - 201 declaration orders x six pragma sets x two
+integer types x `register` on each of the three value names - produce **exactly two**
+colourings, `(r1,r5,r0,r2,r3,r4)` and `(r2,r5,r0,r1,r3,r4)`. Declaration order moves the
+box pointer between r1 and r2 and nothing else; the shift value never leaves r5, the mask
+never leaves r3, the second store's temp never leaves r4. So the callee-saved levers
+(6k reverse decl order, 6y `register` and type rank, 6at two-pass fill) are all exercised
+and all inert on this shape, which is what makes it a rank pin rather than an unexplored
+spelling.
+
+Two more product cells covered after the first pass, both negative and both worth not
+re-running: chain aliasing x pragmas x declaration order (37,800 compiles, 19 colourings,
+no r3 - the original chain sweep had run with no pragma at all, which is why it was worth
+redoing), and the palette's definition point moved to each of the five positions among the
+store sites while staying widely used (`opt_common_subs off` decouples placement from
+colouring entirely - all five positions give the same div 20).
+
+**A div-6 permuter output that must NOT be banked, and what it proves anyway.** The
+permuter arm seeded on family C produced a candidate six words from the ROM - everything
+exact except the first store's block. It got there by *sinking the `<< 0x1c` below the
+four single stores*, so those four write `angle >> 16`, which is zero, instead of the
+palette. Semantically wrong, exactly the failure 6bf warns about; the honest form (shift
+before the stores) re-scores at div 31. It is still the most informative object of the
+session, because it isolates the rule: **r3 goes to the web that the four single stores
+read as a shifter operand, and that web is the one born at +0x4c.** In the ROM those are
+the same web because the `lsl` happens IN PLACE inside it; in every honest source the
+`lsl` starts a new web that is born later, so the singles read the later web and r3 goes
+to whatever was born at +0x4c instead. Every in-place spelling was then tried in the
+permuter's own context - `pal = pal << 0x1c`, `pal <<= 0x1c`, a copy then `<<=`, the fully
+inline `(pal << 0x1c) >> 16`, and `pal * 0x10000000` - and all six land in family C's
+rotation rather than merging the webs.
+
 Banked as a live near-miss, not marked as a floor: what would break it is a lever that
-outranks a call-return-coalesced web against a loop-invariant one, and no rule in
-6k / 6q / 6y / 6ab / 6bf spells that yet.
+keeps a variable's pre-shift and post-shift values in ONE web across an in-place shift,
+or one that outranks a call-return-coalesced web against a loop-invariant one. No rule in
+6k / 6q / 6y / 6ab / 6bf spells either yet.
