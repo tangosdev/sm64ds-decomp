@@ -3705,3 +3705,34 @@ with the mechanism now named and the open angle narrowed from "some unexplored
 spelling" to one specific phase-window intersection. Do not re-run component
 naming, decl order, statement order, inline helpers, barriers, volatile, C++
 form, or the pragma vocabulary on this function; they are measured and closed.
+
+### 6bn addendum: a `u16` PARAMETER is a free narrowing -- and it pins the conflict to the value that crosses the store
+
+The matched sibling `func_ov075_0211a948` recovers this family as NitroSDK G3
+inlines over `volatile u32 *` register macros, so `func_ov075_0211afb0`'s vertex
+loop was re-attacked in that shape. Two results worth keeping:
+
+* **`static inline void G3Vtx(u16 x, u16 y, u16 z)` costs NOTHING.** Passing
+  `(v << 9) >> 16` to a `u16` parameter compiles to the same 540 bytes as the
+  straight-line `(u16)` cast: the argument narrowing IS the `lsl #16 / lsr #16`
+  the ROM already emits, so it is free. This is a genuinely size-neutral
+  narrowing conversion and therefore a usable colouring lever elsewhere -- unlike
+  an `fx16`/`s16` parameter, which costs the +2 words per component that 6bm
+  measured (540 -> 564 for one block, 588 for both).
+* **The flip follows the value that CROSSES the store, and only that value.**
+  With `G3Vtx(u16, u16, int)` -- x and y narrowed at the call, z left wide --
+  the colouring does not move (div 4). With `G3Vtx(u16, u16, u16)` it flips
+  (ROM's first two words) and fuses (div 14). Splitting the helper into
+  `G3VtxXY(u16, u16)` + `G3VtxZ(u16)` so z's narrowing happens AFTER the x|y
+  store loses the flip and returns to div 4.
+
+That is the same conflict from a third independent construct family (after the
+local's type and the placement of a `u16` local assignment): the narrowing must
+sit before the packed store to re-colour the block, and the ROM's z truncation
+must be lowered after it. z is the only value in the block whose live range
+crosses that store, which is exactly why z is the only component that moves the
+colouring -- and exactly why the lever cannot be applied to it for free.
+
+Measured, not argued: holding the flip construct fixed and enumerating all 840
+linear extensions of block B's dependence poset yields 56 windows, best div 14,
+and the truncation never re-splits.
