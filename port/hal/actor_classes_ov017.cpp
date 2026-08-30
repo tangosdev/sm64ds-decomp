@@ -1,8 +1,10 @@
 // RUN REL0215 WAVE 1 (lane cast-sweep1): OV017'S ONE CLASS (level 9, Jolly
 // Roger Bay's sunken ship). Overlay 5 of 6 in this lane.
 //
-// Level 9 spawns 14 actors and skips two: TREASURE_CHEST (13, ov064's, still
-// unregistered) and this one.
+// Level 9 spawned 14 actors and skipped two when this lane ran: TREASURE_CHEST
+// (13, ov064's) and this one. Both are seated now -- run rel0215 wave 3 (lane
+// w3-c) took id 13, and level 9's census reads 16 spawned (9 classes), 0
+// skipped (0 classes).
 //
 //   id  name        x on L9  factory          table                   width
 //   62  SHIP_WATER   1       ShipWater_Spawn  0x02111bf8 _ZTV9ShipWater  32
@@ -62,15 +64,18 @@
 //
 // ---- A BEHAVIOURAL DIVERGENCE THIS SEAT EXPOSES ---------------------------
 //
+// RETIRED by run rel0215 wave 3 (lane w3-c). The divergence was real and this
+// is the record of it, not a live warning.
+//
 // ShipWater::Behavior gates on TREASURE_CHEST: it walks
 // Actor::FindWithActorID(0xd) and only begins draining once EVERY id-13 actor
-// reads state 1 or 2. Level 9 skips TREASURE_CHEST, so the walk finds nothing,
-// the "all opened" test is vacuously true on frame one, and the water starts
-// draining immediately instead of waiting for the player. That is visible and
-// it is NOT this class's bug -- it is the other class being unseated. Seating
-// TREASURE_CHEST (a fresh per-symbol ov064 class mount, the gate
-// level_boot.cpp's level-9 block also describes) retires it. Left unseated,
-// level 9 keeps both the skip AND the wrong water, which is strictly worse.
+// reads state 1 or 2. While level 9 skipped TREASURE_CHEST the walk found
+// nothing, the "all opened" test was vacuously true on frame one, and the water
+// started draining immediately instead of waiting for the player. That was
+// never this class's bug -- it was the other class being unseated. Lane w3-c
+// seated id 13 the way this paragraph asked for (a per-symbol ov064 class
+// mount, port/ov064_syms.txt's wave-3 block), so the walk now finds the level's
+// one chest and the gate is a real test again.
 #include <cstdio>
 #include "dsstate_seg.h"
 #include <cstdlib>

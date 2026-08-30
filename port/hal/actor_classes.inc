@@ -1223,8 +1223,10 @@ void hal_fill_square_path_lift_vtable(void);
 /* ---- run linkw wave 12 (lane w12): CLAM (315), ov064 ----
    Nine instances, five on level 8 and four on level 18. Its Spawn names its
    receiver and stores _ZTV4Clam by a real name, so it registers directly.
-   TREASURE_CHEST (13), the sibling this wave's ranking put beside it, is
-   BLOCKED on an unmatched state body -- see hal/actor_classes_ov064_w12.cpp. */
+   TREASURE_CHEST (13), the sibling this wave's ranking put beside it, was
+   BLOCKED on an unmatched state body (hal/actor_classes_ov064_w12.cpp). Run
+   rel0215 wave 3 (lane w3-c) seated it by transcribing that body; its row is
+   at the end of this file. */
 extern unsigned char Clam_SpawnInfo[];               /* ov064 0x0211c5a4, +4 = 315 */
 void *Clam_Spawn(void);                              /* ov064 0x0211ad70, 64 B */
 void hal_fill_clam_vtable(void);
@@ -1444,10 +1446,11 @@ void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
    today. All three are pinned to the ROM's own literal pool and routed by
    per-source -D. Derivation in port/ov017_syms.txt, fill in
    hal/actor_classes_ov017.cpp, slice in port/slice_sweep1_ov017.txt.
-   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064, still unregistered):
-   with no id-13 actor to find, the "all chests opened" test is vacuously true
-   and the water drains from frame one. Visible, not fatal, and owned by the
-   OTHER class's seat -- see the ov017 syms header. */
+   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064). While that class
+   was unregistered there was no id-13 actor to find, the "all chests opened"
+   test was vacuously true and the water drained from frame one -- visible, not
+   fatal, and owned by the OTHER class's seat. Run rel0215 wave 3 (lane w3-c)
+   registered id 13, so the gate is a real test again. */
 extern unsigned char ShipWater_SpawnInfo[];          /* ov017 0x02111bd4, +4 = 62 */
 void *ShipWater_Spawn(void);                         /* ov017 0x02111480, 56 B */
 void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
