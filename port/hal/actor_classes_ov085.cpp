@@ -390,3 +390,140 @@ extern "C" void hal_fill_toad_vtable(void)
     vt[17] = (void *)td_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }
+
+// ============================================================================
+// PRINCESS_PEACH (actor 186, ov085) -- run rel0215 wave 3, lane w3-f.
+//
+// The sixth and last of ov085's six classes. With this row every class the
+// overlay defines is registered, and the mount that gate 18 wrote for three
+// of them has no unregistered factory left behind it.
+//
+// ---- IDENTITY, BOTH ROUTES -------------------------------------------------
+//
+// PrincessPeach_SpawnInfo (ov085 0x0212ff9c) holds factory 0x0212a684 and the
+// +4 halfword 186; the arm9 spawn table slot at 0x02090864 + 186*4 = 0x02090b4c
+// holds 0x0212ff9c, that same record. PrincessPeach_Spawn's literal pool at
+// +0x4c installs 0x0212ffc0, which the config labels BOTH _ZTV13PrincessPeach
+// and _ZTV9daPeach_c -- the ROM's own RTTI name for the princess. Gate 18's
+// header screened this factory with the rest of the six and reached the same
+// answer from the other direction (slot 0 is her InitResources, slot 16 her
+// D1); this lane re-derived it from the spawn table rather than inheriting it,
+// which is what the wave-2 ov029 review asked every later lane to do.
+//
+// ---- THE WIDTH: 31, AND THE ROUTES DISAGREE THE FAMILIAR WAY ---------------
+//
+// port/tools/vtspan.py on this tree: tail 31, terminator 31, raw run 32, next
+// dsd symbol 15, typeinfo 66. THIRTY-ONE, by the semantic tail, and its reason
+// is the fourth width trap again -- "slot 31 begins a pointer-to-member pair
+// table, not more vtable". That pair table is data_ov085_0212ff34 onward, and
+// this lane can now say whose it is: it is THIS class's state table, ten
+// {function, 0} pairs that __sinit_ov085_0212f3a0 copies into
+// data_ov085_0213055c. The gate-205 header adjudicated the same bytes from
+// TOAD's side and called them "a pointer-to-member SOURCE table"; the sinit
+// names the owner.
+//
+// A plain Actor: no slot 31, the list ends at 30. But slot 12 is NOT
+// ActorBase::OnPendingDestroy the way TOAD's and WALL_SIGN's are -- this class
+// overrides it with its own empty body at 0x0212a504 -- so the shared fill's
+// vt[12] is overwritten below. That is the only slot where this class differs
+// from the two already in this file outside the usual six.
+//
+// ---- TWO BODIES ARE HOSTED, AND ONE MORE IS SPELLED HERE -------------------
+//
+//   slot 6   Behavior dispatches its ModelAnim's ROM SLOT 3 and the matched TU
+//            spells it as MSVC index 3, which is one slot high on an
+//            MSVC-numbered table. port/unmatched/Ov085_PrincessPeach_Behavior.cpp
+//            carries the derivation; it is the wave-19 collision one slot below
+//            where LAKITU_BRO and the RABBIT hit it.
+//   slot 16  D1 is the shadow-class MSVC destructor shape, the same one TOAD's
+//            D1 has, so it is spelled inline below from the ROM D1's own five
+//            relocs (0x02129d18, 0x48 bytes):
+//                0x02129d5c  load -> 0x0212ffc0              the table
+//                0x02129d2c  call -> arm9 0x020373f8         WithMeshClsn::~
+//                0x02129d34  call -> arm9 0x020149a4         MovingCylinderClsn::~
+//                0x02129d3c  call -> arm9 0x02015ff8         ShadowModel::~
+//                0x02129d44  call -> arm9 0x0201691c         ModelAnim::~
+//                0x02129d4c  call -> arm9 0x020112c8         Actor::~Actor (D2)
+//            Reverse declaration order, which is the order the ROM runs. Her
+//            D0 is NOT hosted: it is a flat .c TU under the ROM's C name, it is
+//            on the slice, and it already does that chain plus Deallocate.
+//   both PMF dispatchers (func_ov085_0212a430 / _0212a46c) are host copies in
+//            port/unmatched/Ov085_PrincessPeach_States.cpp, the gate-16 case.
+//
+// ---- RENDER LINKS, AND THAT IS THE OTHER HALF OF THE SAME RULING -----------
+//
+// src/_ZN13PrincessPeach6RenderEv.cpp calls _ZN5Model6RenderEPK7Vector3
+// non-virtually on the member at +0xd4, and the ROM agrees exactly
+// (0x0212a508: `add r0,r0,#0xd4 / mov r1,#0 / bl 0x02016b78`). No vtable
+// numbering comes into a direct call, so unlike Behavior it needs no host copy
+// -- the same split TOAD's Render and Behavior sit on either side of.
+// ============================================================================
+#include "PrincessPeach.h"
+
+extern "C" {
+/* ---- PRINCESS_PEACH (186), _ZTV13PrincessPeach / _ZTV9daPeach_c 0x0212ffc0 */
+int _ZN13PrincessPeach16CleanupResourcesEv(void);   /* slot 3,  takes nothing */
+int _ZN13PrincessPeach8BehaviorEv(void *self);      /* slot 6,  HOST COPY     */
+int _ZN13PrincessPeach6RenderEv(char *self);        /* slot 9                 */
+void _ZN13PrincessPeach16OnPendingDestroyEv(void);  /* slot 12, own override  */
+int *_ZN13PrincessPeachD0Ev(int *self);             /* slot 17                */
+void *PrincessPeach_Spawn(void);                    /* the factory            */
+
+/* what her hosted slot 16 has to spell out by hand, beside the four TOAD's
+   already declares above */
+void *_ZN12WithMeshClsnD1Ev(void *self);
+
+DSSTATE_BEGIN
+void *_ZTV13PrincessPeach[31];
+DSSTATE_END
+}
+/* The LHS is declared extern by include/decl_common.h:835 and DEFINED nowhere
+   in this link -- src/_ZN13PrincessPeachD0Ev.c is the one reader, and it only
+   stores it -- which is what port/tools/alternatename_guard.py requires.
+   port/ov085_syms.txt leaves every _ZTV* out of the mount on purpose, so
+   nothing else can define either name. */
+#pragma comment(linker, "/alternatename:__ZTV9daPeach_c=__ZTV13PrincessPeach")
+
+static int __fastcall pp_init(void *s, void *)
+{ return ((PrincessPeach *)s)->PrincessPeach::InitResources(); }
+static int __fastcall pp_clean(void *, void *)
+{ return _ZN13PrincessPeach16CleanupResourcesEv(); }
+static int __fastcall pp_behavior(void *s, void *)
+{ return _ZN13PrincessPeach8BehaviorEv(s); }
+static int __fastcall pp_render(void *s, void *)
+{ port_actor_render_probe("PRINCESS_PEACH", (char *)s + 0xd4);
+  return _ZN13PrincessPeach6RenderEv((char *)s); }
+static int __fastcall pp_pdes(void *, void *)
+{ _ZN13PrincessPeach16OnPendingDestroyEv(); return 0; }
+/* slot 16, the ROM D1's own five relocs; see this section's header. The vtable
+   store the ROM opens with is kept, as TOAD's is and for the same reason: this
+   class has a host array under that name, so the store has somewhere real to
+   point and costs one instruction. */
+static int __fastcall pp_d1(void *s, void *)
+{
+    ((void **)s)[0] = (void *)_ZTV13PrincessPeach;
+    _ZN12WithMeshClsnD1Ev((char *)s + 0x194);
+    _ZN18MovingCylinderClsnD1Ev((char *)s + 0x160);
+    _ZN11ShadowModelD1Ev((char *)s + 0x138);
+    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
+    _ZN5ActorD2Ev(s);
+    return (int)(size_t)s;
+}
+static int __fastcall pp_d0(void *s, void *)
+{ return (int)(size_t)_ZN13PrincessPeachD0Ev((int *)s); }
+
+extern "C" void hal_fill_princess_peach_vtable(void)
+{
+    void **vt = _ZTV13PrincessPeach;
+    ov85_fill_shared(vt);
+    vt[0]  = (void *)pp_init;
+    vt[3]  = (void *)pp_clean;
+    vt[6]  = (void *)pp_behavior;
+    vt[9]  = (void *)pp_render;
+    /* her own OnPendingDestroy, not ActorBase's -- the one slot this class
+       takes back from ov85_fill_shared */
+    vt[12] = (void *)pp_pdes;
+    vt[16] = (void *)pp_d1;
+    vt[17] = (void *)pp_d0;
+    /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
+}

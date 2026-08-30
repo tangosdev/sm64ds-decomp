@@ -1694,6 +1694,25 @@ void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
 extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
 void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
 void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
+/* run rel0215 wave 3 (lane w3-f): ov085's SIXTH AND LAST class, PRINCESS_PEACH
+   (186, 9daPeach_c). Identity taken both ways rather than inherited: the record
+   at 0x0212ff9c holds factory 0x0212a684 and the +4 halfword 186, and the arm9
+   spawn table slot at 0x02090864 + 186*4 = 0x02090b4c holds that same record.
+   The mount and all six sinits have been in place since gate 18, so this row
+   costs code and nothing else -- the same shape gate 205's two rows had.
+
+   PLACED ON NO LEVEL OF THE FIFTY-TWO, and that was measured on this lane's own
+   baseline rather than assumed: the pre-spawn census over every id in
+   port_level_table[] declines 0xe7, 0x90 and 0x9d and never 0xba. She is a
+   CUTSCENE actor; a level walk does not exercise her. Registered for the SPINY
+   reason four blocks down -- she is the overlay's last class, her seat is as
+   derived as the other five, and an unregistered factory is a ROM-faithful body
+   the port declines for no reason. The width (31), her own slot 12, the hosted
+   slot 6 and the hosted slot 16 are in hal/actor_classes_ov085.cpp; the slice is
+   port/slice_w3f.txt. */
+extern unsigned char PrincessPeach_SpawnInfo[];      /* ov085 0x0212ff9c, +4 = 186 */
+void *PrincessPeach_Spawn(void);                     /* ov085 0x0212a684, 80 B */
+void hal_fill_princess_peach_vtable(void);           /* _ZTV13PrincessPeach, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2549,4 +2568,13 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
        Level 47's whole skip list in one row. ---- */ \
     {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
-     hal_fill_mirror_luigi_vtable},
+     hal_fill_mirror_luigi_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-f): ov085's SIXTH AND LAST class. \
+       PLACED ON NO LEVEL of the fifty-two, measured on this lane's own \
+       baseline census over every id in port_level_table[] -- it declines \
+       0xe7, 0x90 and 0x9d and never 0xba. She is a CUTSCENE actor, so a \
+       level walk does not exercise her; registered for the SPINY reason, \
+       and because this row leaves ov085 with no unregistered factory \
+       standing behind its own mount. ---- */ \
+    {186, "PRINCESS_PEACH", PrincessPeach_SpawnInfo, PrincessPeach_Spawn, \
+     hal_fill_princess_peach_vtable},

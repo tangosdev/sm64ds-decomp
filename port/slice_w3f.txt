@@ -1,0 +1,149 @@
+# run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH (actor 186), the
+# sixth and last of the overlay's six classes.
+#
+# ov085 has been mounted PER SYMBOL since gate 18 (port/ov085_syms.txt) and all
+# six of its sinits have been called since then, so there is no bring-up here:
+# this slice is code only. Gate 18 brought up RABBIT (187), RABBIT_KEY (229) and
+# LAKITU_BRO (235); gate 205 added WALL_SIGN (183) and TOAD (185). PRINCESS_PEACH
+# is what is left, and with it every class ov085 defines is registered.
+#
+# ---- IDENTITY, BOTH ROUTES (PLAN 3.A.2) ------------------------------------
+#
+#   PrincessPeach_SpawnInfo  ov085 0x0212ff9c
+#       word[0] = 0x0212a684  PrincessPeach_Spawn
+#       word[1] = 0x00ac00ba -> id 186
+#   arm9 spawn table 0x02090864 + 186*4 = 0x02090b4c holds 0x0212ff9c, which is
+#       that same record. The two routes agree.
+#   PrincessPeach_Spawn's own literal pool (+0x4c) installs 0x0212ffc0, and the
+#       config carries TWO names on that address -- _ZTV13PrincessPeach and
+#       _ZTV9daPeach_c. daPeach_c is the ROM's RTTI for the princess, so the
+#       recovered name and the ROM's own name agree from both sides.
+#
+# The ROM's own reading of the vtable, port/tools/vtspan.py on this tree:
+#   _ZTV13PrincessPeach 0x0212ffc0, THIRTY-ONE slots, a plain Actor.
+#   routes: tail 31, terminator 31, raw run 32, next dsd symbol 15,
+#           typeinfo 66 (wrong, and wrong in the documented fourth-trap way).
+#   The tail's reason is the one that decides it: slot 31 begins a
+#   pointer-to-member PAIR TABLE, not more vtable. That pair table is this
+#   class's own state table -- see the state seat below -- so the raw-run route
+#   walking one word into it is the same trap ov026 and TOAD both hit.
+#   Slot 12 is this class's OWN OnPendingDestroy (0x0212a504), not ActorBase's,
+#   which is the one slot the shared 1..30 fill has to be overridden on.
+#
+# ---- THE BLOCK IS CONTIGUOUS AND IT IS HERS --------------------------------
+#
+# ov085's .text is laid out one class per block, each ending in that class's
+# factory (Toad_Spawn after Toad's methods, Rabbit_Spawn after Rabbit's, and so
+# on). PRINCESS_PEACH's block runs 0x02129d18 .. 0x0212a6d3: D1, D0, seventeen
+# unnamed helpers, CleanupResources, OnPendingDestroy, Render, Behavior,
+# InitResources, then PrincessPeach_Spawn. Everything below is inside it.
+#
+# ---- FOUR BODIES ARE HELD OUT, AND EACH ONE FOR A NAMED REASON -------------
+#
+#   _ZN13PrincessPeach8BehaviorEv     ROM 0x0212a52c dispatches its ModelAnim's
+#       vtable SLOT 3 (`add r0,r0,#0xd4 / ldr r1,[r0] / ldr r1,[r1,#0xc] /
+#       blx r1`). The matched TU spells that as a four-virtual shadow calling
+#       g3, which is MSVC INDEX 3 -- and hal/cxxname_bridge.cpp fills
+#       _ZTV9ModelAnim in MSVC numbering, where ROM slots 0 and 1 fold into
+#       MSVC 0 and every later ROM slot N is MSVC N-1. MSVC index 3 is
+#       ma2_virtual10, ROM slot 4, which takes a Matrix4x3 reference this call
+#       does not pass. ROM slot 3 is ModelAnim::UpdateVerts and it is MSVC
+#       index 2. This is the wave-19 collision exactly, and it is why
+#       LAKITU_BRO's and the RABBIT's renders are host copies while WALL_SIGN's
+#       links: _ZTV5Model can be dual-filled and _ZTV9ModelAnim cannot.
+#       HOST COPY: port/unmatched/Ov085_PrincessPeach_Behavior.cpp.
+#
+#   _ZN13PrincessPeachD1Ev            the shadow-class MSVC destructor shape,
+#       the same one TOAD's D1 has. The TU declares its own struct Actor /
+#       ModelAnim / ShadowModel / MovingCylinderClsn / WithMeshClsn and defines
+#       ~PrincessPeach, so MSVC emits ??1PrincessPeach@@UAE@XZ calling four
+#       decorated member destructors that exist nowhere in this link. Slot 16
+#       is spelled inline in the fill from the ROM D1's own five relocs; see
+#       hal/actor_classes_ov085.cpp.
+#
+#   func_ov085_0212a430               \  the two mwcc pointer-to-member
+#   func_ov085_0212a46c               /  dispatchers, the gate-16 case for the
+#       sixth time in this port. Both spell `struct C; typedef void (C::*PMF)();`
+#       and MSVC forms a PMF over an INCOMPLETE class as the four-word general
+#       representation, so 0212a430's `c->pp + 1` steps sixteen bytes where the
+#       ROM's pair is eight. HOST COPIES with the {value, adjustment} dispatch
+#       hand-rolled: port/unmatched/Ov085_PrincessPeach_States.cpp.
+#       (func_ov085_0212a430.cpp already carries /vmg;/vmm from the wave-18 R9
+#       sweep, which listed it as INERT because nothing referenced it. It stays
+#       inert: this lane hosts the body rather than compiling it.)
+#
+# ---- T5, ONE MARKER-CARRYING BODY, RULED BEFORE SEATING --------------------
+#
+# src/func_ov085_0212a0b8.c carries `/* daKinopio_c::Kill - recovered from
+# vtable slot identity */`. The NAME is wrong twice over and the BODY is real
+# decomp:
+#   * 0x0212a0b8 is inside PRINCESS_PEACH's block, not TOAD's, and it calls
+#     func_ov085_02129ebc and func_ov085_02129f8c, both hers.
+#   * it is not a vtable slot at all. data_ov085_0212ff34 = {0x0212a0b8, 0} is
+#     a POINTER-TO-MEMBER PAIR, and __sinit_ov085_0212f3a0 copies it into this
+#     class's state table as state 4's MAIN half.
+#   * match.py 2004/b56 --strict-relocs --module ov085 reports MATCHING.
+# Ruled REAL_DECOMP and recorded at the END of
+# port/tools/inferred_stub_adjudicated.txt. Evidence:
+# runs/rel0215/out/w3-f/t5_func_ov085_0212a0b8.txt
+#
+# ---- THE STATE TABLE, ten pairs, five states ------------------------------
+#
+# func_ov085_0212a4a4(c, i) writes `c->0x350 = data_ov085_0213055c + i*0x10`
+# and tail-calls the ENTER dispatcher; 0x0213055c is BSS (ov085's image ends at
+# 0x02130480), so nothing is there until __sinit_ov085_0212f3a0 fills it. That
+# sinit copies TEN eight-byte statics in from 0x0212ff34..0x0212ff7c, two per
+# record. Read out of extracted/overlays/overlay_0085.bin, every adj zero:
+#
+#   record 0  enter data_ov085_0212ff7c {0x0212a3ec,0}  main _0212ff64 {0x0212a37c,0}
+#   record 1  enter data_ov085_0212ff44 {0x0212a328,0}  main _0212ff6c {0x0212a220,0}
+#   record 2  enter data_ov085_0212ff4c {0x0212a1d4,0}  main _0212ff74 {0x0212a19c,0}
+#   record 3  enter data_ov085_0212ff54 {0x0212a150,0}  main _0212ff5c {0x0212a148,0}
+#   record 4  enter data_ov085_0212ff3c {0x0212a0e8,0}  main _0212ff34 {0x0212a0b8,0}
+#
+# The five ENTER bodies each write their own index to +0x354 -- 0212a3ec writes
+# 0, 0212a328 writes 1, 0212a1d4 writes 2, 0212a150 writes 3, 0212a0e8 writes 4
+# -- which is a fifth independent confirmation of the order the sinit's literal
+# pool gives. port_princess_peach_states_seat (hal/actor_overlays.cpp) verifies
+# all ten words against the mount and repoints them at the host bodies BEFORE
+# that sinit runs, the same seat TOAD's four and the RABBIT_KEY's four take.
+#
+# ---- WHAT LINKS -----------------------------------------------------------
+src/PrincessPeach_Spawn.c
+src/_ZN13PrincessPeach13InitResourcesEv.cpp
+src/_ZN13PrincessPeach16CleanupResourcesEv.c
+src/_ZN13PrincessPeach16OnPendingDestroyEv.c
+src/_ZN13PrincessPeach6RenderEv.cpp
+src/_ZN13PrincessPeachD0Ev.c
+# Render is the LINKABLE half of the wave-19 split, unlike Behavior above: the
+# ROM calls _ZN5Model6RenderEPK7Vector3 NON-virtually (`add r0,r0,#0xd4 /
+# mov r1,#0 / bl 0x02016b78` at 0x0212a508) and the matched TU spells exactly
+# that, so no vtable numbering comes into it.
+#
+# The seventeen unnamed helpers, all inside her block. Ten of them are the
+# state bodies above; the rest are the per-frame work those states call.
+src/func_ov085_02129dbc.cpp
+src/func_ov085_02129ebc.cpp
+src/func_ov085_02129f8c.c
+src/func_ov085_02129fdc.cpp
+src/func_ov085_0212a0b8.c
+src/func_ov085_0212a0e8.c
+src/func_ov085_0212a148.c
+src/func_ov085_0212a150.c
+src/func_ov085_0212a19c.c
+src/func_ov085_0212a1d4.c
+src/func_ov085_0212a220.c
+src/func_ov085_0212a328.c
+src/func_ov085_0212a37c.cpp
+src/func_ov085_0212a3ec.c
+src/func_ov085_0212a4a4.c
+#
+# LANGUAGE: the fifteen .c files above were swept comment-stripped for C++
+# tokens and carry none, so none needs LANGUAGE CXX. The six .cpp files carry
+# the tree's own //cpp marker on line 1.
+#
+# func_ov085_02129dbc.cpp calls Actor::ClosestPlayer THROUGH A RECEIVER
+# (`self->ClosestPlayer()` over its own `struct Actor`), not with empty
+# parentheses, so it is not a closestplayer_guard row -- and the MSVC name that
+# shape mangles to, ?ClosestPlayer@Actor@@QAEPAU1@XZ, is already defined by
+# hal/reverse_bridges.cpp.
