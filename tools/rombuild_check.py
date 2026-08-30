@@ -77,30 +77,69 @@ def module_binaries(d, config_root=CONFIG, build_root=None):
     return None, None
 
 
-def complete_entries_text(text):
-    """Return ``[(path, address, end)]`` for entries carrying ``complete``."""
-    out, cur, done, sec = [], None, False, None
+def complete_entry_sections_text(text):
+    """Return every ``(path, section, address, end)`` in complete entries."""
+    out, cur, done, entry_sections = [], None, False, []
+
+    def flush():
+        if cur and done:
+            out.extend((cur, name, start, end)
+                       for name, start, end in entry_sections)
+
     for line in text.splitlines():
         if not line.strip():
             continue
         if not line[0].isspace():
-            if cur and done and sec:
-                out.append((cur, *sec))
-            cur, done, sec = line.strip().rstrip(":"), False, None
+            flush()
+            cur, done, entry_sections = line.strip().rstrip(":"), False, []
         elif cur is not None:
             if line.strip() == "complete":
                 done = True
             else:
                 m = ENTRY_SEC.match(line)
                 if m:
-                    sec = (int(m.group(2), 16), int(m.group(3), 16))
-    if cur and done and sec:
-        out.append((cur, *sec))
+                    entry_sections.append((m.group(1), int(m.group(2), 16),
+                                           int(m.group(3), 16)))
+    flush()
     return out
+
+
+def complete_entries_text(text):
+    """Return complete code contributions as ``[(path, address, end)]``.
+
+    Callers of this historical API measure function/source enrollment. Intact C++
+    entries can also own data; retaining the section name prevents a trailing .data
+    claim from replacing .text and being misreported as source code.
+    """
+    return [(rel, start, end)
+            for rel, name, start, end in complete_entry_sections_text(text)
+            if name in (".text", ".init")]
 
 
 def complete_entries(path):
     return complete_entries_text(path.read_text(encoding="utf-8", errors="ignore"))
+
+
+def complete_entry_sections(path):
+    return complete_entry_sections_text(
+        path.read_text(encoding="utf-8", errors="ignore"))
+
+
+def _covered_bytes(ranges, base, size):
+    """Union length of address ranges clipped to one linked module image."""
+    clipped = sorted((max(0, lo - base), min(size, hi - base))
+                     for lo, hi in ranges if hi > base and lo < base + size)
+    total = end = 0
+    for lo, hi in clipped:
+        if hi <= lo:
+            continue
+        if lo > end:
+            total += hi - lo
+            end = hi
+        elif hi > end:
+            total += hi - end
+            end = hi
+    return total
 
 
 def _code_totals(config_root):
@@ -174,6 +213,7 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     missing_bins = []
     per_module_bad = collections.Counter()
     source_functions = source_bytes = mod_functions = mod_bytes = 0
+    source_data_bytes = 0
     reproducing = reproducing_bytes = bad = bad_function_bytes = differing_source_bytes = 0
 
     for sym in sorted(config_root.rglob("symbols.txt")):
@@ -181,7 +221,9 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
         dl = d / "delinks.txt"
         if not dl.is_file():
             continue
-        entries = complete_entries(dl)
+        entry_sections = complete_entry_sections(dl)
+        entries = [(rel, start, end) for rel, name, start, end in entry_sections
+                   if name in (".text", ".init")]
         built_p, retail_p = module_binaries(d, config_root, build_root)
         label = module_label(d, config_root)
         if not built_p or not built_p.is_file() or not retail_p.is_file():
@@ -193,8 +235,13 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             continue
         base = min(s[1] for s in secs)
         built, retail = built_p.read_bytes(), retail_p.read_bytes()
-        allowed_mod_ranges = [(addr - base, end - base) for rel, addr, end in entries
+        allowed_mod_ranges = [(addr - base, end - base)
+                              for rel, _name, addr, end in entry_sections
                               if rel.startswith("mods/")]
+        source_data_bytes += _covered_bytes(
+            [(addr, end) for rel, name, addr, end in entry_sections
+             if rel.startswith("src/") and name not in (".text", ".init")],
+            base, max(len(built), len(retail)))
         module_diff, unexpected_diff = _diff_counts(built, retail, allowed_mod_ranges)
         module_results.append({
             "module": label,
@@ -283,10 +330,16 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "moduleBytes": compared_module_bytes,
             "codeBytes": module_code_bytes,
             "dataBytes": compared_module_bytes - module_code_bytes,
+            "sourceDataBytes": source_data_bytes,
+            "unownedDataBytes": max(0, compared_module_bytes - module_code_bytes
+                                      - source_data_bytes),
             "sourceBytes": source_bytes,
             "sourceBytesOfModulePercent": (100.0 * source_bytes / compared_module_bytes
                                            if compared_module_bytes else 0.0),
             "dataBytesVerified": 0,
+            "sourceDataBytesOfModulePercent": (
+                100.0 * source_data_bytes / compared_module_bytes
+                if compared_module_bytes else 0.0),
             "dataBytesOfModulePercent": (100.0 * (compared_module_bytes - module_code_bytes)
                                          / compared_module_bytes
                                          if compared_module_bytes else 0.0),
@@ -337,9 +390,10 @@ def print_report(report, show=12):
         # construction for every byte dsd supplies from the ROM and says nothing at all
         # about them. This line is what it is a percentage OF.
         print(f"  of {mc['moduleBytes']:,} module bytes: {mc['sourceBytes']:,} "
-              f"({mc['sourceBytesOfModulePercent']:.1f}%) built from source, "
-              f"{mc['dataBytes']:,} ({mc['dataBytesOfModulePercent']:.1f}%) are data "
-              f"no delink entry reaches ({mc['dataBytesVerified']:,} verified)")
+              f"({mc['sourceBytesOfModulePercent']:.1f}%) source-built code, "
+              f"{mc.get('sourceDataBytes', 0):,} source-owned data, "
+              f"{mc.get('unownedDataBytes', mc['dataBytes']):,} data bytes no complete "
+              f"source entry reaches ({mc['dataBytesVerified']:,} verified)")
     if report["missingModuleBinaries"]:
         print(f"missing module binaries: {report['missingModuleBinaries'][:8]}")
     for f in report["failures"][:show]:

@@ -85,6 +85,52 @@ def _raise(label, reasons):
     raise ProductionTuError(f"{label}: {detail or 'refused without a reason'}")
 
 
+def prepare_intact_link_verification(entries):
+    """Bind supported automatic intact TUs to the current strict stock control.
+
+    Object preparation proves the compiler contribution before the link. This plan
+    carries the remaining facts needed after mwldarm: the content-bound current
+    baseline's symbol-error inventory and each vtable address-point mapping. Automatic
+    intact admission refuses storage aliases until their baseline bootstrap is
+    non-circular, so refreshing this control never depends on the control being kept.
+    """
+    baseline = _strict_baseline()
+    admitted_errors = set()
+    admitted_roms = set()
+    for entry in entries.values():
+        linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
+        errors = linkcheck.get("symbolCheckErrors")
+        rom_sha = (linkcheck.get("rom") or {}).get("sha256")
+        if not isinstance(errors, list) or not isinstance(rom_sha, str):
+            raise ProductionTuError(
+                f"{entry.get('id', '<unknown>')}: admitted intact proof lacks its "
+                "symbol-error inventory or stock ROM SHA-256")
+        admitted_errors.add(tuple(sorted(set(errors))))
+        admitted_roms.add(rom_sha)
+    current_errors = tuple(baseline["symbolErrors"])
+    if admitted_errors != {current_errors}:
+        raise ProductionTuError(
+            "strict post-promotion control symbol errors do not equal the admitted "
+            f"pre-promotion inventory: current={list(current_errors)!r}, "
+            f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}")
+    if admitted_roms != {baseline["romSha256"]}:
+        raise ProductionTuError(
+            "strict post-promotion control ROM SHA-256 does not equal the admitted "
+            f"stock proof: current={baseline['romSha256']}, "
+            f"admitted={sorted(admitted_roms)!r}")
+    prepared = []
+    for source, entry in sorted(entries.items()):
+        claims, reasons = TB.manifest_section_claims(entry)
+        if reasons:
+            _raise(f"{entry.get('id', source)} manifest section claims", reasons)
+        biases, reasons = TB.partition_vtable_rebiases(entry, claims)
+        if reasons:
+            _raise(f"{entry.get('id', source)} vtable address-point policy", reasons)
+        prepared.append({"id": entry.get("id", source), "source": source,
+                         "biases": biases})
+    return {"baseline": baseline, "entries": prepared}
+
+
 def _strict_baseline():
     """Return the content-bound stock baseline or refuse stale/missing evidence."""
     report_path = TB.BASELINE_LINK / "linkcheck.json"
@@ -295,7 +341,7 @@ def verify_link(config_yaml, linked_elf, prepared):
         "dsd check modules")
     ok_symbols, symbols_out, _seconds = TB._run_dsd(
         [str(TB.RB.DSD), "check", "symbols", "-c", str(config_yaml),
-         "-e", str(linked_elf), "-f", "-m", "12"],
+         "-e", str(linked_elf), "-m", "12"],
         "dsd check symbols")
     symbol_errors = sorted({line.strip() for line in symbols_out.splitlines()
                             if "[ERROR]" in line})
@@ -307,7 +353,7 @@ def verify_link(config_yaml, linked_elf, prepared):
         alias_rows.extend(result.get("rows", []))
         alias_errors.extend(result.get("errors", []))
     return {
-        "ok": bool(ok_modules and not new_errors and not alias_errors),
+        "ok": bool(ok_modules and ok_symbols and not new_errors and not alias_errors),
         "modulesOk": bool(ok_modules),
         "modulesOutput": modules_out[-4000:],
         "symbolsCommandOk": bool(ok_symbols),

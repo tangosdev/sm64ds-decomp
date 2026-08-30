@@ -1573,17 +1573,9 @@ def span_entries(delinks_path, span_start, span_end, expected_legacy):
     return header, entries, inside, reasons
 
 
-def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
-                    section_claims=None):
-    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
-
-    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
-    scratch config, because every failure mode here is silent downstream: dsd fills any
-    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
-    links clean and compares green while contributing nothing (see
-    "unbuildable files are invisible to every gate", and layout_check's L1). `span_entries` holds
-    the checks; this adds the rewrite.
-    """
+def validate_tu_entry_splice(delinks_path, span_start, span_end, tu_rel,
+                             expected_legacy, section_claims=None):
+    """Return the fully validated inputs for one destructive TU-entry splice."""
     header, entries, inside, reasons = span_entries(delinks_path, span_start, span_end,
                                                     expected_legacy)
     claims = list(section_claims or
@@ -1598,6 +1590,9 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
     # entry touches one, silently adding the TU would create two owners; deciding how
     # to retire a future data-source entry is promotion policy, not scratch plumbing.
     drop_indices = {i for i, _r, _s in inside}
+    for idx, (rel, _body) in enumerate(entries):
+        if rel == tu_rel and idx not in drop_indices:
+            reasons.append(f"TU destination {tu_rel} is already a delinks entry")
     for claim in (c for c in claims if c["name"] != ".text"):
         for idx, (rel, body) in enumerate(entries):
             for name, start, end in entry_sections(body):
@@ -1606,6 +1601,23 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
                                    f"0x{claim['end']:08x} overlaps existing entry {rel}'s "
                                    f"{name} 0x{start:08x}..0x{end:08x}; it is not pure "
                                    f"gap ownership")
+    return header, entries, inside, claims, reasons
+
+
+def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
+                    section_claims=None):
+    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
+
+    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
+    scratch config, because every failure mode here is silent downstream: dsd fills any
+    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
+    links clean and compares green while contributing nothing (see
+    "unbuildable files are invisible to every gate", and layout_check's L1). The
+    read-only validator above is also the production promotion preflight, so the two
+    paths cannot drift on current delinks ownership rules.
+    """
+    header, entries, inside, claims, reasons = validate_tu_entry_splice(
+        delinks_path, span_start, span_end, tu_rel, expected_legacy, section_claims)
     if reasons:
         return None, reasons
 
@@ -3608,12 +3620,13 @@ def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jo
     normal ROM build accepts and verifies the same objects.
     """
     compiler_only = RB.compiler_only_policies(srcs)
+    intact_tus = RB.intact_tu_policies(srcs)
     failures, outcomes = [], collections.Counter()
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
         for rel, err, outcome in ex.map(
                 lambda s: RB.compile_one(
                     s, vers, cache, init_srcs, syms, build_root=build_root,
-                    compiler_only=compiler_only), srcs):
+                    compiler_only=compiler_only, intact_tus=intact_tus), srcs):
             outcomes[outcome] += 1
             if err:
                 failures.append((rel, err))
@@ -4349,6 +4362,7 @@ def cmd_linkcheck(args):
             for e in symbols_new[:15]:
                 print(f"      NEW | {e}")
     report["symbolsNew"] = symbols_new
+    report["symbolsBaseline"] = base_errors
 
     # ------------------------------------------------------------------- ROM build
     module_ok = bool(analysis["passed"]) and range_ok and not bad_modules
@@ -4626,6 +4640,9 @@ def _partition_attempt_record(report):
                    for key, value in report.get("phases", {}).items()},
         "moduleFidelityPassed": bool((report.get("analysis") or {}).get("passed")),
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "symbolCheckErrors": (((report.get("phases") or {}).get("checkSymbols") or {})
+                              .get("errors")),
+        "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
         "rom": report.get("rom"),
         "strayOutputs": report.get("strayOutputs"),
         "scratch": report.get("scratch", "") + " (gitignored)",
@@ -4683,6 +4700,9 @@ def _record_linkcheck(data, entry, report, baseline):
             "unlicensedSections": audit.get("unlicensedSections"),
         },
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "symbolCheckErrors": (((report.get("phases") or {}).get("checkSymbols") or {})
+                              .get("errors")),
+        "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
         "rom": report.get("rom"),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
     }

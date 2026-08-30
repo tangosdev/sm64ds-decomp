@@ -741,19 +741,23 @@ if __name__ == "__main__":
 import tubuild
 
 
-def test_linkcheck_compile_passes_production_compiler_only_policies():
+def test_linkcheck_compile_passes_all_production_object_policies():
     original_policies = tubuild.RB.compiler_only_policies
+    original_intact = tubuild.RB.intact_tu_policies
     original_compile = tubuild.RB.compile_one
     policy = {"src/actors/Promoted.cpp": {"deadstrip": ["helper"]}}
+    intact = {"src/actors/Promoted.cpp": {"id": "ov047/Promoted"}}
     seen = []
 
     try:
         tubuild.RB.compiler_only_policies = lambda enrolled: (
             policy if list(enrolled) == ["src/actors/Promoted.cpp"] else None)
+        tubuild.RB.intact_tu_policies = lambda enrolled: (
+            intact if list(enrolled) == ["src/actors/Promoted.cpp"] else None)
 
         def fake_compile(rel, vers, cache, init_srcs, syms, build_root=None,
-                         compiler_only=None):
-            seen.append((rel, build_root, compiler_only))
+                         compiler_only=None, intact_tus=None):
+            seen.append((rel, build_root, compiler_only, intact_tus))
             return rel, None, "hit"
 
         tubuild.RB.compile_one = fake_compile
@@ -761,11 +765,13 @@ def test_linkcheck_compile_passes_production_compiler_only_policies():
             ["src/actors/Promoted.cpp"], {}, None, set(), {}, pathlib.Path("scratch"), 1)
     finally:
         tubuild.RB.compiler_only_policies = original_policies
+        tubuild.RB.intact_tu_policies = original_intact
         tubuild.RB.compile_one = original_compile
 
     assert failures == []
     assert outcomes["hit"] == 1
-    assert seen == [("src/actors/Promoted.cpp", pathlib.Path("scratch"), policy)]
+    assert seen == [("src/actors/Promoted.cpp", pathlib.Path("scratch"),
+                     policy, intact)]
 
 
 def test_linkcheck_symbol_verdict_uses_the_stock_failure_inventory():
