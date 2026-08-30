@@ -128,3 +128,170 @@ data_ov035_02112198
 data_ov035_021121b8:0x20
 data_ov035_021121f8
 data_ov035_02112258
+#
+# ============================================================================
+# RUN REL0215 WAVE 1 (lane cast-sweep1): OV035'S OWN CAST joins this mount.
+# ============================================================================
+#
+# The list above is wave 18's: the twelve blocks the ov065 Ttc cluster reads
+# ACROSS overlays. This section adds what ov035's OWN four actor classes reach
+# by name. Nothing above is changed and nothing below overlaps it.
+#
+# FIRST, A CORRECTION TO WAVE 18. Nothing in the tree calls
+# port_ov035_pack_check() or port_ov035_syms_patch() -- grep both across
+# port/*.cpp on tip f77f01169 and the only hit is this file's own header. The
+# mount emitted storage and its pointer pass had never run. It runs now, from
+# port_ov35_bringup() in hal/actor_classes_ov035.cpp (the ov025/ov045
+# lane-ownership shape).
+#
+# ==== THE CAST: FOUR IDS, NOT THREE, both attribution routes ================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory                  +4   x L27
+#   119  0x02090a40  0x02112aa4  0x021116bc  RotatingClockHand_Spawn  119   2
+#   120  0x02090a44  0x02112ba8  0x02111b98  SpinningPlatform_Spawn   120  13
+#   121  0x02090a4c  0x02112ac0  0x0211168c  func_ov035_0211168c      121   2
+#   122  0x02090a4c  0x02112adc  0x0211165c  RotatingCogSmall_Spawn   122   2
+#
+# ROUTE 1: every record's word[0] lands inside ov035's own image
+# [0x021111a0, 0x02112c60) and is one of this overlay's four factory bodies.
+# ROUTE 2: every record reads its own id back at +4 (the halfword the registry
+# re-checks at install). Both routes are required because the level overlays
+# share the load window at 0x021111a0 and the arm9 relocs' candidate lists are
+# over-broad -- slot 119's reads overlays(10,18,22,24,26,29,32,35,36,45,56).
+#
+# ID 121 IS REAL AND IT IS OV035's. symbols/overlay_actors.md lists three
+# classes for ov035, and symbols/actor_renames_report.txt resolves
+# "AMBIG actor 121 ROTATING_COG_BIG: ['ov010','ov035'] -> ov010". That
+# resolution is about the SYMBOL NAME at 0x02112ac0, not about the id. The
+# address holds two different records in two different overlays:
+#     ov010's image  0x02112ac0 = Trap_SpawnInfo, id 36,  factory 0x02111998
+#     ov035's image  0x02112ac0 = (unnamed),      id 121, factory 0x0211168c
+# and arm9 slots 36 AND 121 both point there. Which one is live is decided by
+# which overlay is loaded. On level 27 it is ov035's, and the class's own
+# InitResources proves it: it branches on the actor id, CMP r0,#0x79 at
+# 0x02111280 (0x79 = 121), to pick the id-121 model file. Two instances are
+# placed on level 27 and the baseline census skips them by number.
+#
+# ==== THE DSD CLASS-IDENTITY SHIFT, verified by disassembly =================
+#
+# dsd's two vtable labels are on the wrong tables. Disassembled from
+# extracted/overlays/overlay_0035.bin (T4 -- never the dsd copies):
+#
+#   0x0211165c RotatingCogSmall_Spawn   alloc 0x330  installs 0x02112b00
+#   0x0211168c func_ov035_0211168c      alloc 0x330  installs 0x02112b00
+#   0x021116bc RotatingClockHand_Spawn  alloc 0x330  installs 0x02112b00
+#   0x02111b98 SpinningPlatform_Spawn   alloc 0x380  installs 0x02112bcc
+#                                       + ShadowModel ctor at this+0x328
+#
+# So THREE ids share the table dsd named _ZTV16RotatingCogSmall, and the table
+# dsd named _ZTV17RotatingClockHand belongs to SPINNING_PLATFORM alone. The
+# method bodies agree with the tables they sit in, not with the ids: the
+# _ZN16RotatingCogSmall* bodies serve 119/121/122 and the
+# _ZN17RotatingClockHand* bodies serve 120. Everything downstream is wired BY
+# ADDRESS. The RTTI at vtable[-1] confirms two distinct classes:
+#   0x02112b00 -> typeinfo 0x02112a84 -> name 0x02112a90 "16daObjCtMecha10_c"
+#   0x02112bcc -> typeinfo 0x02112b88 -> name 0x02112b94 "16daObjCtMecha11_c"
+#
+# ==== BOTH WIDTHS ARE 32 AND NEITHER NAIVE READ GETS THERE =================
+#
+# _ZTV16RotatingCogSmall  0x02112b00, 32 slots, ends 0x02112b80.
+#   next dsd symbol 0x02112b08 -- INTERIOR (slot 2). The landing reads TWO.
+# _ZTV17RotatingClockHand 0x02112bcc, 32 slots, ends 0x02112c4c.
+#   next dsd symbol 0x02112bdc -- INTERIOR (slot 4); 0x02112bec, 0x02112c08,
+#   0x02112c18 and 0x02112c44 are interior splits too. The landing reads FOUR.
+# The pin on both is the ROM's own close, read slot by slot out of
+# config/arm9/overlays/ov035/relocs.txt:
+#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+# the 32-slot Platform close ov025's two, ov045's six, ov052's two and ov056's
+# one all end on. Both tables are EXCLUDED from this mount and hosted as
+# arrays hal/actor_classes_ov035.cpp fills.
+#
+# ==== FIVE T3 WIDTH PINS IN .data, and each is a real mis-read =============
+#
+#   RotatingClockHand_SpawnInfo  natural next-symbol delta 0x4 (dsd named
+#     0x02112aa8 INSIDE the record). A record is 0x1c. Unpinned this mounts
+#     FOUR bytes of a twenty-eight byte record -- and the registry's own
+#     "SpawnInfo says id N" check reads +4, inside those four bytes, so it
+#     would have passed while the other six words belonged to somebody else.
+#   RotatingCogSmall_SpawnInfo   natural 0x24: the usual eight bytes of the
+#     next vtable's Itanium prologue past the end. Pinned back to 0x1c.
+#   SpinningPlatform_SpawnInfo   natural 0x24, same over-read, same pin.
+#   data_ov035_02112ac0 (id 121) natural 0x1c already; pinned anyway so all
+#     four records read identically in the diff.
+#   data_ov035_021121d8  natural 0x4 (dsd named 0x021121dc). It is a CLPS
+#     block -- 'CLPS' magic 0x53504c43, entrySize 8, count 1, 0xffffffff fill
+#     out to 0x20 -- handed to MovingMeshCollider::SetFile by id 119's
+#     InitResources. Unpinned: four bytes of a thirty-two byte block, and the
+#     collider reads its entry count out of a second word it does not own.
+#   data_ov035_02112238  natural 0x20 and already correct; the CLPS block id
+#     120's InitResources passes (entrySize 8, count 2). Pinned for symmetry.
+#     This is the block wave 18's ROUTE B analysis names as "the next CLPS
+#     magic" while sizing 0x021121f8 -- it is a real block, it simply was not
+#     in the ov065-driven seed set.
+#   data_ov035_02112b80  natural 0x4 (dsd named 0x02112b84). decl_common.h
+#     declares it `short []` and id 120's Behavior indexes it with
+#     data_0209f2c0[0], the 0..3 selector: FOUR shorts, 0x8. The eight bytes
+#     after that are the typeinfo record at 0x02112b88, which is why the pin
+#     is 0x8 and not more.
+#
+# ==== FOUR MORE T3 PINS IN .bss ============================================
+#
+# .bss is 0x02112c60..0x02112ce0: four SharedFilePtrs and four destructor
+# chain nodes. func_020731dc writes THREE words through its node argument
+# (src/func_020731dc.c: node[0]=head, node[1]=dtor, node[2]=object), so every
+# chain node is 0xc. Four of them read short from the next-symbol delta,
+# because dsd named a word inside each:
+#   data_ov035_02112c80  natural 0x8  (0x02112c88 named inside)  -> pin 0xc
+#   data_ov035_02112ca4  natural 0x4  (0x02112ca8 named inside)  -> pin 0xc
+#   data_ov035_02112cc0  natural 0x8  (0x02112cc8 named inside)  -> pin 0xc
+#   data_ov035_02112ccc  natural 0x4  (0x02112cd0 named inside)  -> pin 0xc
+# data_ov035_02112c8c and _02112c98 already read 0xc and are left bare, so the
+# diff shows exactly which four dsd got wrong. All four SharedFilePtrs are
+# eight bytes and every one reads eight from its neighbour, so none is pinned.
+#
+# WHICH SINIT BUILDS WHAT, read off the two matched bodies:
+#   __sinit_ov035_02111f04   02112c78 file 1486 model  node 02112c80   id 119
+#                            02112c68 file 1487 clsn   node 02112ca4   id 119
+#                            02112c60 file 1491 model  node 02112c98   id 122
+#                            02112c70 file 1490 model  node 02112c8c   id 121
+#   __sinit_ov035_02111fc0   02112cb0 file 1488 model  node 02112cc0   id 120
+#                            02112cb8 file 1489 clsn   node 02112ccc   id 120
+#
+# ==== TWO LIVE ALIAS RACES AT THE SHARED WINDOW (T6) =======================
+#
+# Two of the linked TUs spell ov035's own bytes with a SIBLING OVERLAY's name,
+# because ov017/ov023/ov035/ov045/ov055/ov056 and the rest all link at
+# 0x021111a0 and the decomp was written against whichever export won the race:
+#
+#   src/__sinit_ov035_02111fc0.c              data_ov045_02112cb0
+#   src/_ZN16RotatingCogSmall16Cleanup....cpp data_ov056_02112c68
+#
+# data_ov045_02112cb0 IS DEFINED IN THIS LINK -- port/ov045_syms.txt:123 mounts
+# it -- so an /alternatename with that name on the left is defeated silently,
+# the R3 ov071/ov073 failure. Left alone, ov035's sinit would construct a
+# SharedFilePtr over LEVEL 37's mounted data. Both spellings are routed with a
+# per-source -D instead (port/CMakeLists.txt), which is the remedy T6
+# prescribes. data_ov056_02112c68 happens to be undefined today and is routed
+# the same way so the two cannot drift apart.
+
+# ---- .rodata: the id-119/121/122 tuning tables ----------------------------
+data_ov035_02111ef0 data_ov035_02111ef4
+
+# ---- .data: the two CLPS blocks the InitResources bodies hand the collider -
+data_ov035_021121d8:0x20 data_ov035_02112238:0x20
+
+# ---- .data: the four SpawnInfo records, all pinned to the ROM's 0x1c ------
+RotatingClockHand_SpawnInfo:0x1c data_ov035_02112ac0:0x1c
+RotatingCogSmall_SpawnInfo:0x1c SpinningPlatform_SpawnInfo:0x1c
+
+# ---- .data: id 120's four-short Behavior table ---------------------------
+data_ov035_02112b80:0x8
+
+# ---- .bss: four SharedFilePtrs and their four chain nodes ----------------
+data_ov035_02112c60 data_ov035_02112c68 data_ov035_02112c70 data_ov035_02112c78
+data_ov035_02112c80:0xc data_ov035_02112c8c data_ov035_02112c98
+data_ov035_02112ca4:0xc
+data_ov035_02112cb0 data_ov035_02112cb8
+data_ov035_02112cc0:0xc data_ov035_02112ccc:0xc

@@ -1,0 +1,63 @@
+# run rel0215 wave 1, lane cast-sweep1: OV035's OWN CAST (level 27, Tick Tock
+# Clock, data/stage/clock_tower). Overlay 1 of 6 in this lane.
+#
+# ALL TWENTY of ov035's functions are here. The three-way source inventory the
+# Phase-A recipe asks for comes out clean, which is why this slice is the whole
+# overlay and not a subset:
+#     delinked complete to a src/ TU   20
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                      20  == config/arm9/overlays/ov035/
+#                                             symbols.txt's kind:function count
+#
+# There is nothing to refuse here: no asm-void block, no thread scheduler, no
+# card loader tail, no wireless wrapper. Every body is ordinary actor code.
+#
+# FOUR IDS, TWO TABLES. 119 ROTATING_CLOCK_HAND, 120 SPINNING_PLATFORM,
+# 121 ROTATING_COG_BIG, 122 ROTATING_COG_SMALL. 119/121/122 share the table at
+# 0x02112b00 (dsd _ZTV16RotatingCogSmall, RTTI 16daObjCtMecha10_c) and share
+# every method body with it; 120 alone owns 0x02112bcc (dsd
+# _ZTV17RotatingClockHand == _ZTV16daObjCtMecha11_c, RTTI 16daObjCtMecha11_c).
+# The dsd labels are shifted one class -- the derivation, disassembled from
+# extracted/overlays/overlay_0035.bin, is in port/ov035_syms.txt's second
+# header. Nothing below is wired by a dsd name; the seat in
+# hal/actor_classes_ov035.cpp goes by address.
+#
+# THREE PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt):
+#   __sinit_ov035_02111fc0.c                 data_ov045_02112cb0 -> ov035's
+#   _ZN16RotatingCogSmall16Cleanup....cpp    data_ov056_02112c68 -> ov035's
+#   _ZN17RotatingClockHand16Cleanup....cpp   G0/G1 -> private names this lane
+#                                            owns, aliased onto 02112cb0/b8
+# plus G0 -> data_020a0eac (the game heap) on the two deleting destructors.
+# The first is a LIVE wrong-object bug the moment the sinit links: ov045's
+# 0x02112cb0 is mounted (port/ov045_syms.txt:123), so the name resolves and the
+# ov035 sinit would build its SharedFilePtr over level 37's data.
+#
+# THE MEASURED CLOSURE GAP: none. The first link of this slice resolved with
+# no arm9 TU added -- every non-ov035 callee it reaches (Actor, ActorBase,
+# Platform, Model, MovingMeshCollider, ShadowModel, SharedFilePtr, the
+# Matrix4x3 helpers, RandomIntInternal, ApproachLinear, DecIfAbove0_Short) is
+# already in the walk_window link for other classes. That is measured off the
+# link, not assumed.
+
+src/_ZN16RotatingCogSmallD1Ev.c
+src/_ZN16RotatingCogSmallD0Ev.c
+src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp
+src/_ZN16RotatingCogSmall6RenderEv.cpp
+src/_ZN16RotatingCogSmall8BehaviorEv.cpp
+src/_ZN16RotatingCogSmall13InitResourcesEv.cpp
+src/RotatingCogSmall_Spawn.c
+src/func_ov035_0211168c.c
+src/RotatingClockHand_Spawn.c
+src/_ZN17RotatingClockHandD1Ev.c
+src/_ZN17RotatingClockHandD0Ev.c
+src/func_ov035_02111798.c
+src/func_ov035_021118a8.c
+src/_ZN17RotatingClockHand16CleanupResourcesEv.cpp
+src/_ZN17RotatingClockHand6RenderEv.cpp
+src/_ZN17RotatingClockHand8BehaviorEv.cpp
+src/_ZN17RotatingClockHand13InitResourcesEv.cpp
+src/SpinningPlatform_Spawn.c
+src/__sinit_ov035_02111f04.c
+src/__sinit_ov035_02111fc0.c

@@ -1992,6 +1992,73 @@ list(APPEND PORT_ACTOR_OVERLAYS ov075)
 # puts _ZTV9Submarine on 0x02113d54, whose own typeinfo name string reads
 # 18daWater_Tatumaki_c. See port/ov026_syms.txt and port/slice_ov026cast.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov026)
+# run rel0215 wave 1 (lane cast-sweep1): ov058 (level 50's own overlay, the Rec
+# Room, already whole-mounted in PORT_LEVEL_OVERLAYS) joins the per-symbol
+# mounts for ONE SYMBOL -- REC_ROOM_CUPBOARD's (182) SpawnInfo record. It is
+# the smallest per-symbol mount in the port and it is one line because ov058
+# has no .rodata, no .init, no .ctor and no .bss: zero static initialisers, and
+# the class loads no file of its own. It is also the WHOLE of level 50's skip
+# list, so this seat takes that level to zero skipped. Its vtable is excluded
+# from the mount and hosted as an array hal/actor_classes_ov058.cpp fills, and
+# it is a 31-slot ACTOR table, not a 32-slot Platform one -- the ov024
+# PYRAMID_TAG shape; dsd's landing on it reads TWO. That file also runs the
+# mount bring-up from the registry fill (the ov025/ov045 lane-ownership
+# pattern), with no sinit and no hal_fill_platform_vtable to run.
+# See port/ov058_syms.txt and port/slice_sweep1_ov058.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov058)
+# run rel0215 wave 1 (lane cast-sweep1): ov017 (level 9's own overlay, Jolly
+# Roger Bay's sunken ship, already whole-mounted in PORT_LEVEL_OVERLAYS) joins
+# the per-symbol mounts so SHIP_WATER (62) reaches its SpawnInfo record, its
+# BTA file descriptor, its CLPS block and both sinit-built SharedFilePtrs by
+# name. This is the mount hal/level_boot.cpp's own level-9 block asked for by
+# name and deferred: "hosting it needs a per-symbol ov017 mount
+# (ShipWater_SpawnInfo, _ZTV9ShipWater, data_ov017_02111c88) PLUS an
+# alias-by-address that resolves the ov055/ov056 spellings onto ov017's host
+# bytes". Its vtable is excluded from the mount and hosted as an array
+# hal/actor_classes_ov017.cpp fills; that file also runs the mount bring-up,
+# hal_fill_platform_vtable and the overlay's single sinit from the registry
+# fill (the ov025/ov045 lane-ownership pattern). The block named two raced
+# spellings; there are three, and the third is LIVE on this tip. See
+# port/ov017_syms.txt and port/slice_sweep1_ov017.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov017)
+# run rel0215 wave 1 (lane cast-sweep1): ov023 (level 15's own overlay, Lethal
+# Lava Land's volcano interior, already whole-mounted in PORT_LEVEL_OVERLAYS)
+# joins the per-symbol mounts so SQUASHER (84) reaches its SpawnInfo record and
+# both sinit-built SharedFilePtrs by name. It is the WHOLE of level 15's skip
+# list -- one instance, one class -- so this seat takes that level to zero
+# skipped. Its vtable is excluded from the mount and hosted as an array
+# hal/actor_classes_ov023.cpp fills; dsd's landing on it OVER-reads by seven
+# slots (39 against a real 32), the opposite error to ov024's and ov033's.
+# That file also runs the mount bring-up, hal_fill_platform_vtable and the
+# overlay's single sinit from the registry fill (the ov025/ov045 pattern).
+# The three alias races its InitResources and destructors carry, all pinned to
+# ROM relocations, are in port/ov023_syms.txt. See port/slice_sweep1_ov023.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov023)
+# run rel0215 wave 1 (lane cast-sweep1): ov033 (level 25's own overlay, Tiny-
+# Huge Island's small side, already whole-mounted in PORT_LEVEL_OVERLAYS) joins
+# the per-symbol mounts so TINY_COVER (104) and TINY_WATER (105) reach their
+# SpawnInfo records, their two CLPS blocks, id 105's BTA file descriptor and
+# all four sinit-built SharedFilePtrs by name. Two of level 25's three skipped
+# instances. Both vtables are excluded from the mount and hosted as arrays
+# hal/actor_classes_ov033.cpp fills -- and dsd's ONE vtable name here is on the
+# WRONG table (_ZTV9TinyCover is the WATER class's; the cover's is unnamed),
+# proven three ways in port/ov033_syms.txt. That file also runs the mount
+# bring-up, hal_fill_platform_vtable and both sinits from the registry fill
+# (the ov025/ov045 lane-ownership pattern). See port/slice_sweep1_ov033.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov033)
+# run rel0215 wave 1 (lane cast-sweep1): ov024 (level 16's own overlay,
+# Shifting Sand Land, already whole-mounted in PORT_LEVEL_OVERLAYS) joins the
+# per-symbol mounts so PYRAMID_TOP (85) and PYRAMID_TAG (86) reach their
+# SpawnInfo records, id 85's CLPS block and both sinit-built SharedFilePtrs by
+# name. Same dual-mount shape as ov012/ov013/ov025/ov035/ov045/ov052/ov056.
+# Five of level 16's nineteen skipped instances. Both vtables are excluded from
+# the mount and hosted as arrays hal/actor_classes_ov024.cpp fills -- and they
+# are DIFFERENT LENGTHS, 31 for the Actor-derived tag and 32 for the
+# Platform-derived top, which is the width finding this overlay carries. That
+# file also runs the mount bring-up, hal_fill_platform_vtable and the overlay's
+# single sinit from the registry fill (the ov025/ov045 lane-ownership pattern).
+# See port/ov024_syms.txt and port/slice_sweep1_ov024.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov024)
 # ov084 joins for gate 32: the first ENEMY overlay, GOOMBA and BOB_OMB_BUDDY.
 # ...and ov014, ov062 and ov091 with them. ov014 is a LEVEL overlay (Bob-omb
 # Battlefield's own) and is mounted a second time here, per symbol, because
@@ -8903,6 +8970,285 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "G0=data_ov030_02115c88;G1=data_ov030_02115c80")
 
+
+
+# ============================================================================
+# RUN REL0215 WAVE 1, LANE CAST-SWEEP1 -- the small-cast sweep.
+#
+# Six level overlays whose whole cast is one or two classes with a tiny vtable
+# set: ov035 (27), ov024 (16), ov033 (25), ov023 (15), ov017 (9), ov058 (50).
+# Each lands as its own commit; this region grows by one block per overlay and
+# is the ONLY place in this file the lane appends more than once. The three
+# target source lists take ${SWEEP1_SOURCES} exactly once, so a second overlay
+# costs the coordinator nothing outside this region.
+#
+# Every overlay here is already whole-mounted in PORT_LEVEL_OVERLAYS, so each
+# per-symbol mount is the SECOND mount of the same overlay -- the
+# ov012/ov013/ov025/ov045/ov052/ov056 dual shape. --whole emits
+# port_ovNNN_image/_patch/_at and nothing by name; --from-list --pack emits the
+# named arrays plus port_ovNNN_syms_patch. Every mount bring-up runs from the
+# lane's own hal/actor_classes_ovNNN.cpp behind a DSSTATE-bracketed done-guard
+# (the ov025/ov045/ov052/ov056/ov073 lane-ownership pattern), so this lane
+# appends NOTHING to hal/actor_overlays.cpp.
+set(SWEEP1_SOURCES "")
+
+# ---- 1/6: ov035, level 27 (Tick Tock Clock) --------------------------------
+# ROTATING_CLOCK_HAND (119) x2, SPINNING_PLATFORM (120) x13, ROTATING_COG_BIG
+# (121) x2, ROTATING_COG_SMALL (122) x2 -- nineteen of level 27's 57 skipped
+# instances. All twenty of ov035's TUs, no host copy, no refusal. Two 32-slot
+# Platform tables hosted in hal/actor_classes_ov035.cpp; ov035 is ALREADY in
+# PORT_ACTOR_OVERLAYS (wave 18 landed the list for the ov065 Ttc cluster's
+# cross-overlay reads) and this lane adds the cast's own symbols to that list
+# and, for the first time, a caller for port_ov035_syms_patch(). See
+# port/ov035_syms.txt's second header and port/slice_sweep1_ov035.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov035.txt" SLICE_SWEEP1_OV035_LINES)
+set(SLICE_SWEEP1_OV035_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV035_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV035_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THE TWO SHARED-WINDOW ALIAS RACES (T6). ov017/ov023/ov035/ov045/ov055/ov056
+# all link at 0x021111a0 and the decomp was written against whichever dsd
+# export won the naming race, so two ov035 TUs spell ov035's own bytes with a
+# sibling overlay's name. data_ov045_02112cb0 IS DEFINED in this link
+# (port/ov045_syms.txt:123 mounts it), so an /alternatename with it on the left
+# would be defeated silently -- the R3 ov071/ov073 failure -- and left alone
+# the ov035 sinit would construct a SharedFilePtr over LEVEL 37's mounted data.
+# A -D is the remedy T6 prescribes. The second is routed the same way so the
+# pair cannot drift apart.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov035_02111fc0.c"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov045_02112cb0=data_ov035_02112cb0")
+# ...and this one goes to a PRIVATE name rather than straight to
+# data_ov035_02112c68, for the ov100 path-lift reason: decl_common.h declares
+# BOTH spellings, `extern char data_ov056_02112c68[]` at line 262 and
+# `extern int data_ov035_02112c68[]` at line 1149, so a direct -D makes 262
+# redeclare 1149 with a different element type. C2371, measured on the first
+# build of this seat, not predicted. hal/actor_classes_ov035.cpp binds it.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov056_02112c68=port_ov035_rcs_clsn")
+# G0/G1 in id 120's CleanupResources are the two SharedFilePtrs at 0x02112cb0
+# and 0x02112cb8 (pool order read off the ROM body at 0x0211192c/0x02111930).
+# They go to PRIVATE names this lane owns rather than straight to
+# data_ov035_02112cb0/b8, because that TU includes decl_common.h, which
+# already declares both of those as `extern char` scalars -- a direct -D is a
+# C2040 redeclaration, the ov100 path-lift trap. hal/actor_classes_ov035.cpp
+# binds each private name onto the mounted object, and both LHS are undefined
+# everywhere so neither alias can be defeated.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN17RotatingClockHand16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov035_sp_file0;G1=port_ov035_sp_file1")
+# G0 in the two deleting destructors is the GAME HEAP, 0x020a0eac -- the same
+# name meaning something else in a different TU, which is why every one of
+# these is per-source. Read off the ROM bodies' own literal pools
+# (0x02111238 and 0x02111794).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16RotatingCogSmallD0Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN17RotatingClockHandD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov035.cpp ${SLICE_SWEEP1_OV035_SOURCES})
+
+# ---- 2/6: ov024, level 16 (Shifting Sand Land) -----------------------------
+# PYRAMID_TOP (85) x1 and PYRAMID_TAG (86) x4 -- five of level 16's nineteen
+# skipped instances. SIXTEEN of the overlay's seventeen TUs; the seventeenth,
+# src/_ZN10PyramidTagD1Ev.cpp, is the //cpp real-destructor shape MSVC cannot
+# deliver (it would call ??1Actor@@UAE@XZ and ??1MovingCylinderClsn@@QAE@XZ as
+# thiscall against cdecl C bodies) and is transcribed from the ROM in
+# hal/actor_classes_ov024.cpp -- the gate-199/200 treatment ov013 used on
+# ClockPaintingHandShort's D1. Two host vtables of DIFFERENT lengths, 31 and
+# 32. See port/ov024_syms.txt and port/slice_sweep1_ov024.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov024.txt" SLICE_SWEEP1_OV024_LINES)
+set(SLICE_SWEEP1_OV024_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV024_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV024_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# G0 in id 85's deleting destructor is the GAME HEAP, 0x020a0eac, read off that
+# body's own literal pool at 0x02111240. No alias race in this overlay: every
+# ov024 symbol its TUs name is spelled with ov024's own prefix.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10PyramidTopD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov024.cpp ${SLICE_SWEEP1_OV024_SOURCES})
+
+# ---- 3/6: ov033, level 25 (Tiny-Huge Island, small side) -------------------
+# TINY_COVER (104) x1 and TINY_WATER (105) x1 -- two of level 25's three
+# skipped instances. All seventeen of the overlay's TUs, no host copy and no
+# refusal. Two 32-slot Platform tables, and dsd's one vtable label is on the
+# wrong one. See port/ov033_syms.txt and port/slice_sweep1_ov033.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov033.txt" SLICE_SWEEP1_OV033_LINES)
+set(SLICE_SWEEP1_OV033_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV033_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV033_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# id 104's deleting destructor: VT0 is the OWN table 0x0211237c, VT1 is
+# Platform's base 0x0210ae38, G0 is the game heap -- pool order read off the
+# ROM body at 0x02111230/0x02111234/0x02111238. Private names because VT0/VT1
+# mean different objects in the id-105 pair below.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov033_021111e4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=port_ov033_tc_vt_own;VT1=port_ov033_vt_base;G0=data_020a0eac")
+# id 105's D1/D0: THE RESOLVER'S TWO LABELS ARE INVERTED. The source writes
+# _ZTV10dBgActor_c first and VT1 second; the ROM writes the OWN table first
+# (0x021113e4 stores the word at pool 0x02111418 = 0x02112440) and Platform's
+# base second (0x021113f4 stores pool 0x0211141c = 0x0210ae38). Left alone the
+# destructor would install the base table before the TextureTransformer
+# teardown and leave the OWN table installed after Actor::D2 -- exactly
+# inverted, and invisible to both the byte gate and the linkage count. A direct
+# -D onto _ZTV10dBgActor_c is impossible anyway: that name is a live host array
+# for every Platform in the port.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9TinyCoverD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov033_tw_vt_own;VT1=port_ov033_vt_base")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9TinyCoverD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov033_tw_vt_own;VT1=port_ov033_vt_base;G0=data_020a0eac")
+# THE ALIAS RACE (T6). id 104's InitResources hands the collider a CLPS block
+# it spells data_ov035_02111bfc -- OV035's name for the same shared-window
+# address -- and ov035's 0x02111bfc IS MOUNTED (port/ov035_syms.txt, wave 18's
+# seeds), so the name resolves and the collider would take level 27's data.
+# decl_common.h declares the ov035 spelling and not the ov033 one, so this
+# rename is direct and needs no private name.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov033_02111310.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov035_02111bfc=data_ov033_02111bfc")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov033.cpp ${SLICE_SWEEP1_OV033_SOURCES})
+
+# ---- 4/6: ov023, level 15 (Lethal Lava Land's volcano) ---------------------
+# SQUASHER (84) x1 -- and it is the WHOLE of level 15's skip list, so this seat
+# takes that level to zero skipped classes. All ten of the overlay's TUs, no
+# host copy and no refusal. One 32-slot Platform table; the dsd landing
+# OVER-reads it by seven slots. See port/ov023_syms.txt and
+# port/slice_sweep1_ov023.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov023.txt" SLICE_SWEEP1_OV023_LINES)
+set(SLICE_SWEEP1_OV023_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV023_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV023_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The destructors' two vtable stores are LABELLED BACKWARDS by the resolver:
+# the source writes _ZTV10dBgActor_c first and VT1 second, the ROM writes the
+# OWN table first (pool 0x021111e4 = 0x02111fe4) and Platform's base second
+# (0x021111e8 = 0x0210ae38). Same inversion ov033's id-105 pair carries. A
+# direct -D onto _ZTV10dBgActor_c is impossible: it is a live host array for
+# every Platform in the port.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8SquasherD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov023_vt_own;VT1=port_ov023_vt_base")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8SquasherD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov023_vt_own;VT1=port_ov023_vt_base;G0=data_020a0eac")
+# CleanupResources releases the model file then the collision one, in that
+# order (pool 0x02111380 then 0x02111384). Private names because that TU
+# includes decl_common.h, which already declares 0x02112088 as a scalar.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Squasher16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov023_sq_file0;G1=port_ov023_sq_file1")
+# TWO LIVE ALIAS RACES IN ONE BODY (T6), both pinned to the ROM:
+#   the call at 0x021116a4 relocates to 0x02111308 module ov023 -- the source
+#     calls it func_ov026_02111308, and lane W1-A is seating ov026 in this same
+#     wave, so that name is about to become DEFINED and the call would land in
+#     another level's overlay. A direct -D collides with decl_common.h's own
+#     func_ov023_02111308(char*) declaration, so it goes to a private name.
+#   pool 0x0211171c holds 0x02112080, ov023's collision SharedFilePtr -- the
+#     source spells it &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev, an OV029
+#     FUNCTION name at ov023's data address. Left alone MeshCollider::LoadFile
+#     takes the address of a destructor as a file pointer.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Squasher13InitResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov026_02111308=port_ov023_xform;_ZN32FloatOnWaterPlatformWdwRectangleD1Ev=port_ov023_clsn_file")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov023.cpp ${SLICE_SWEEP1_OV023_SOURCES})
+
+# ---- 5/6: ov017, level 9 (Jolly Roger Bay's sunken ship) -------------------
+# SHIP_WATER (62) x1 -- one of level 9's two skipped instances, and a blocker
+# hal/level_boot.cpp's own level-9 block named and deferred. All eight of the
+# overlay's TUs, no host copy and no refusal. One 32-slot Platform table; dsd's
+# landing reads TEN. See port/ov017_syms.txt and port/slice_sweep1_ov017.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov017.txt" SLICE_SWEEP1_OV017_LINES)
+set(SLICE_SWEEP1_OV017_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV017_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV017_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THREE ALIAS RACES IN ONE FUNCTION (T6), every one pinned to the ROM's own
+# literal pool at 0x02111470..0x0211147c, over which the relocations resolve
+# ALL FOUR of InitResources's objects to OV017 symbols:
+#     pool 0x02111474 -> 0x02111a60  spelled data_ov056_02111a60
+#     pool 0x02111478 -> 0x02111c80  spelled &_ZN16FloatingFloorBfsD0Ev
+#     pool 0x0211147c -> 0x02111a94  spelled data_ov055_02111a94
+# THE MIDDLE ONE IS LIVE ON THIS TIP: src/_ZN16FloatingFloorBfsD0Ev.c is in
+# port/slice_w1l4.txt and the symbol is in build/port/walk_window.map, so
+# without this rename MeshCollider::LoadFile is handed the ADDRESS OF AN OV045
+# DESTRUCTOR as a file pointer -- resolving cleanly, failing nowhere at link.
+# The other two are undefined today and latent, but ov056 IS mounted and a
+# later lane adding either name turns them live silently. The TU includes no
+# headers at all, so all three renames are direct.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWater13InitResourcesEv.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov056_02111a60=data_ov017_02111a60;_ZN16FloatingFloorBfsD0Ev=data_ov017_02111c80;data_ov055_02111a94=data_ov017_02111a94")
+# G0 in the deleting destructor is the game heap. Note this overlay's D1/D0 get
+# their TWO VTABLE STORES IN THE RIGHT ORDER, unlike ov023's and ov033's: pool
+# 0x021111e4 holds the own table and 0x021111e8 Platform's base, which is the
+# order the source writes them, so neither store needs renaming.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWaterD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+# CleanupResources releases the model file then the collision one (pool
+# 0x02111288 then 0x0211128c). Private names because that TU includes
+# decl_common.h, which already declares both.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWater16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov017_sw_file0;G1=port_ov017_sw_file1")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov017.cpp ${SLICE_SWEEP1_OV017_SOURCES})
+
+# ---- 6/6: ov058, level 50 (the Rec Room) -----------------------------------
+# REC_ROOM_CUPBOARD (182) x1 -- and it is the WHOLE of level 50's skip list, so
+# this seat takes that level to zero skipped, the second in this lane after
+# level 15. All six of the overlay's TUs, no host copy, no refusal and NOT ONE
+# per-source -D: no placeholder reaches code, no TU spells a sibling's name,
+# and dsd's vtable label is on the table its own factory installs. One 31-slot
+# ACTOR table (the ov024 PYRAMID_TAG shape, not a Platform one); dsd's landing
+# reads TWO. See port/ov058_syms.txt and port/slice_sweep1_ov058.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov058.txt" SLICE_SWEEP1_OV058_LINES)
+set(SLICE_SWEEP1_OV058_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV058_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV058_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov058.cpp ${SLICE_SWEEP1_OV058_SOURCES}
+    unmatched/RecRoomCupboard_ActorDtorSeam.cpp)
+# ---- end lane cast-sweep1 --------------------------------------------------
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -9529,6 +9875,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -9707,6 +10055,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     # _ZTV5Stage SLOT 12 (run link60, lane L4). src/_ZN5Stage16OnPendingDestroyEv.cpp
     # is named on smoke_player and walk_window_hires above, because those two
     # targets compile hal/stage_bridges.cpp -- which seats the slot -- and do
@@ -9919,6 +10269,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     "${PORT_GITTIP_C}"
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(walk_window_hires PRIVATE

@@ -1,0 +1,59 @@
+# run rel0215 wave 1, lane cast-sweep1: OV017's OWN CAST (level 9, Jolly Roger
+# Bay's sunken ship, data/stage/kaizoku_ship). Overlay 5 of 6.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU    8
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                       8  == config/arm9/overlays/ov017/
+#                                             symbols.txt's kind:function count
+#
+# All eight are here. Nothing to refuse and nothing host-copied.
+#
+# THIS SLICE CLOSES A BLOCKER hal/level_boot.cpp WROTE DOWN. Its level-9 block
+# names SHIP_WATER (62) as "fully decompiled" but deferred, because its
+# InitResources spells its own overlay's statics with ov055/ov056 names and
+# hosting it needed "a per-symbol ov017 mount PLUS an alias-by-address". That
+# block names TWO raced spellings. There are THREE, and the third is the one
+# that matters.
+#
+# FOUR PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt),
+# three of them in one function and all four pinned to the ROM's own literal
+# pool at 0x02111470..0x0211147c:
+#
+#   _ZN9ShipWater13InitResourcesEv.c
+#       data_ov056_02111a60      -> data_ov017_02111a60  (pool 0x02111474)
+#       _ZN16FloatingFloorBfsD0Ev-> data_ov017_02111c80  (pool 0x02111478)
+#       data_ov055_02111a94      -> data_ov017_02111a94  (pool 0x0211147c)
+#   _ZN9ShipWaterD0Ev.c
+#       G0                       -> data_020a0eac, the game heap (pool
+#                                   0x021111ec, and D1's own pool at
+#                                   0x021111e4/e8 confirms the two vtable
+#                                   stores are in the RIGHT order here --
+#                                   unlike ov023's and ov033's)
+#   _ZN9ShipWater16CleanupResourcesEv.cpp
+#       G0/G1                    -> the model and collision SharedFilePtrs
+#                                   0x02111c88 and 0x02111c80, in the pool
+#                                   order the ROM releases them (0x02111288
+#                                   then 0x0211128c). Private names because
+#                                   that TU includes decl_common.h.
+#
+# THE MIDDLE ONE IS LIVE ON THIS TIP. src/_ZN16FloatingFloorBfsD0Ev.c is in
+# port/slice_w1l4.txt and the symbol is in build/port/walk_window.map right
+# now, so linking this slice without the rename hands MeshCollider::LoadFile
+# the ADDRESS OF A DESTRUCTOR as a file pointer -- resolving cleanly, failing
+# nowhere at link, reading a function body as a file header. The other two
+# spellings are undefined today and are latent rather than live, but ov056 IS
+# mounted and a later lane adding either name turns them live silently.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU.
+
+src/_ZN9ShipWaterD1Ev.c
+src/_ZN9ShipWaterD0Ev.c
+src/_ZN9ShipWater16CleanupResourcesEv.cpp
+src/_ZN9ShipWater6RenderEv.cpp
+src/_ZN9ShipWater8BehaviorEv.cpp
+src/_ZN9ShipWater13InitResourcesEv.c
+src/ShipWater_Spawn.c
+src/__sinit_ov017_0211198c.c

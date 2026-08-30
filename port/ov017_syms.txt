@@ -1,0 +1,127 @@
+# run rel0215 wave 1 (lane cast-sweep1): ov017's ONE CLASS, per symbol.
+# Overlay 5 of 6 in this lane.
+#
+# ov017 is a LEVEL overlay (level 9, Jolly Roger Bay's SUNKEN SHIP,
+# data/stage/kaizoku_ship) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol. Same dual-mount
+# shape as ov012/ov013/ov023/ov024/ov025/ov033/ov035/ov045/ov052/ov056.
+#
+# THIS SEAT CLOSES A NAMED, WRITTEN-DOWN BLOCKER. hal/level_boot.cpp's own
+# level-9 block (lines 143-152 on tip f77f01169) says SHIP_WATER is "fully
+# decompiled, but its byte-matched InitResources references its own overlay's
+# statics by the ov055/ov056 symbol SPELLINGS (data_ov056_02111a60,
+# data_ov055_02111a94) ... Hosting it needs a per-symbol ov017 mount
+# (ShipWater_SpawnInfo, _ZTV9ShipWater, data_ov017_02111c88) PLUS an
+# alias-by-address that resolves the ov055/ov056 spellings onto ov017's host
+# bytes -- the 'propagate config renames BY ADDRESS' hazard. Deferred to a
+# dedicated gate." This file and port/slice_sweep1_ov017.txt are that gate.
+# The block named TWO raced spellings; there are THREE.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x021114b8   .rodata 0x021114b8..0x0211198c
+#   .init   0x0211198c..0x021119f8   .ctor   0x021119f8..0x021119fc
+#   .data   0x02111a00..0x02111c80   .bss    0x02111c80..0x02111cc0
+# Every raw byte below came out of extracted/overlays/overlay_0017.bin (T4).
+#
+# ==== THE ONE CLASS, both attribution routes ===============================
+#
+#   id  arm9 slot   SpawnInfo   word[0]     factory          +4  x on L9
+#   62  0x0209095c  0x02111bd4  0x02111480  ShipWater_Spawn  62   1
+#
+# The record's word[0] lands inside ov017 [0x021111a0, 0x02111c80) and is the
+# overlay's only factory; the record reads 62 back at +4. Both routes are
+# required -- slot 62's candidate list reads
+# overlays(8,9,12,13,17,23,24,33,35,41,43,47,53,54,56), fifteen wide.
+#
+# ==== ONE TABLE, 32 SLOTS ==================================================
+#
+# _ZTV9ShipWater == _ZTV14daObjKsWater_c  0x02111bf8, THIRTY-TWO slots, ends
+# 0x02111c78. next dsd symbol 0x02111c20 -- INTERIOR (slot 10), and 0x02111c54
+# (slot 23) is an interior split too, so the landing reads TEN. The pin is the
+# ROM's own close:
+#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+# the 32-slot Platform close every platform table in this lane ends on. dsd's
+# two names are both for this one table and the RTTI string agrees
+# ("14daObjKsWater_c", Ks = Kaizoku Ship), so there is NO class-identity shift
+# here -- unlike ov033 and ov035. The table is EXCLUDED from this mount and
+# hosted as an array hal/actor_classes_ov017.cpp fills.
+#
+# ==== TWO T3 WIDTH PINS ====================================================
+#
+#   ShipWater_SpawnInfo  natural next-symbol delta 0xc (dsd named 0x02111be0
+#     INSIDE the record). A record is 0x1c. Unpinned this mounts twelve bytes
+#     of twenty-eight, and the registry's id check at +4 sits inside those
+#     twelve so it would have passed anyway.
+#   data_ov017_02111c9c  natural 0x24 -- it is the LAST symbol in .bss, so the
+#     landing runs to the section end at 0x02111cc0. It is a destructor chain
+#     node and func_020731dc writes THREE words through its node argument
+#     (src/func_020731dc.c), so it is 0xc. The other 0x18 is padding this mount
+#     has no business owning.
+#
+# The other five symbols read correctly from their neighbours and are left
+# bare, so the diff shows exactly which two dsd got wrong:
+#   data_ov017_02111a60  0x18, the six-word BTA file descriptor
+#                        {0x12c, bmd, bmd, bta, 1, ptr} -- the same shape as
+#                        ov033's 0x02111bc8, and its next symbol lands exactly
+#                        on its end.
+#   data_ov017_02111a94  0x20, a CLPS block by its own header ('CLPS' magic
+#                        0x53504c43, entrySize 8, count 1, 0xffffffff fill),
+#                        with the next 'CLPS' magic at exactly +0x20.
+#   data_ov017_02111c80  0x8, the collision SharedFilePtr
+#   data_ov017_02111c88  0x8, the model SharedFilePtr
+#   data_ov017_02111c90  0xc, the collision chain node
+#
+# WHICH SINIT BUILDS WHAT, read off the one matched body:
+#   __sinit_ov017_0211198c   02111c88 file 1673 model  node 02111c9c
+#                            02111c80 file 1674 clsn   node 02111c90
+#
+# ==== THREE ALIAS RACES IN ONE FUNCTION, AND ONE OF THEM IS LIVE TODAY =====
+#
+# src/_ZN9ShipWater13InitResourcesEv.c reaches four objects. Its own literal
+# pool at 0x02111470..0x0211147c and the relocations over it say what each one
+# is, and every one of the four resolves to an OV017 symbol:
+#
+#   pool 0x02111470 -> 0x02111c88  data_ov017_02111c88.  Spelled correctly.
+#   pool 0x02111474 -> 0x02111a60  data_ov017_02111a60, the BTA descriptor.
+#                      Source spells it data_ov056_02111a60.
+#   pool 0x02111478 -> 0x02111c80  data_ov017_02111c80, the collision
+#                      SharedFilePtr. Source spells it
+#                      &_ZN16FloatingFloorBfsD0Ev -- an OV045 FUNCTION.
+#   pool 0x0211147c -> 0x02111a94  data_ov017_02111a94, the CLPS block.
+#                      Source spells it data_ov055_02111a94.
+#
+# THE THIRD ONE IS LIVE ON THIS TIP AND IT IS THE WORST IN THE LANE.
+# src/_ZN16FloatingFloorBfsD0Ev.c is in port/slice_w1l4.txt and the symbol is
+# IN build/port/walk_window.map right now. Link the ShipWater slice without the
+# rename and MeshCollider::LoadFile is handed the ADDRESS OF A DESTRUCTOR as a
+# file pointer, resolving cleanly, failing nowhere at link, and reading a
+# function body as a file header. The other two spellings are undefined today
+# (ov055 has no per-symbol mount at all and ov056's list does not carry
+# 0x02111a60), so they are latent rather than live -- but ov056 IS mounted, and
+# a later lane adding either name turns both live with no warning. All three
+# are routed by per-source -D, which is the remedy T6 prescribes.
+#
+# ==== ONE BEHAVIOURAL NOTE THE COORDINATOR SHOULD SEE ======================
+#
+# ShipWater::Behavior gates on TREASURE_CHEST. It walks
+# Actor::FindWithActorID(0xd) and only starts draining once EVERY id-13 actor
+# reads state 1 or 2 (opened). Level 9 skips TREASURE_CHEST today -- it is
+# ov064's and unregistered -- so the walk finds nothing, the "all opened" test
+# is vacuously true on frame one, and the water begins draining immediately
+# instead of waiting for the player. That is a VISIBLE divergence and it is
+# caused by the OTHER class being unseated, not by this one. It is not a fault
+# and it does not gate the boot; seating TREASURE_CHEST (a fresh per-symbol
+# ov064 class mount, the gate level_boot.cpp's own level-9 block describes)
+# retires it. Left unseated, level 9 keeps both the skip and the wrong water.
+
+# ---- .data: the SpawnInfo record, pinned to the ROM's 0x1c ----------------
+ShipWater_SpawnInfo:0x1c
+
+# ---- .data: the BTA file descriptor and the CLPS collision block ----------
+data_ov017_02111a60 data_ov017_02111a94
+
+# ---- .bss 0x02111c80..0x02111cc0: two SharedFilePtrs and two chain nodes --
+data_ov017_02111c80 data_ov017_02111c88
+data_ov017_02111c90 data_ov017_02111c9c:0xc

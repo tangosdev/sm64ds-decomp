@@ -1331,6 +1331,108 @@ void hal_fill_ov026_whirlpool_vtable(void);          /* _ZTV18daWater_Tatumaki_c
 extern unsigned char WaterSuction_SpawnInfo[];       /* ov026 0x02113e00, +4 = 247 */
 void *WaterSuction_Spawn(void);                      /* ov026 0x02112450, 64 B     */
 void hal_fill_ov026_water_suction_vtable(void);      /* _ZTV12WaterSuction, 31     */
+/* run rel0215 wave 1 (lane cast-sweep1): OV035's OWN CAST, level 27's Tick
+   Tock Clock furniture -- nineteen of that level's 57 skipped instances, the
+   largest block on it. FOUR ids, TWO 32-slot Platform tables: 119, 121 and 122
+   share 0x02112b00 and every method body with it, 120 owns 0x02112bcc alone.
+   dsd's two vtable labels are shifted one class -- it put _ZTV17RotatingClockHand
+   on SPINNING_PLATFORM's table -- so the rows below are wired by ADDRESS and
+   the dsd spellings survive only as the host array names. The four factories'
+   installs, the RTTI names, both attribution routes, the nine T3 width pins and
+   the two live shared-window alias races are derived in port/ov035_syms.txt's
+   second header; the fills and the 32-slot Platform close are in
+   hal/actor_classes_ov035.cpp; the slice is port/slice_sweep1_ov035.txt.
+   id 121 has no dsd SpawnInfo name: 0x02112ac0 is ov010's Trap_SpawnInfo under
+   the shared window, and ov035's own record there is reached by address. */
+extern unsigned char RotatingClockHand_SpawnInfo[];  /* ov035 0x02112aa4, +4 = 119 */
+void *RotatingClockHand_Spawn(void);                 /* ov035 0x021116bc, 48 B */
+extern unsigned char SpinningPlatform_SpawnInfo[];   /* ov035 0x02112ba8, +4 = 120 */
+void *SpinningPlatform_Spawn(void);                  /* ov035 0x02111b98, 56 B */
+extern unsigned char data_ov035_02112ac0[];          /* ov035 0x02112ac0, +4 = 121 */
+void *func_ov035_0211168c(void);                     /* ov035 0x0211168c, 48 B */
+extern unsigned char RotatingCogSmall_SpawnInfo[];   /* ov035 0x02112adc, +4 = 122 */
+void *RotatingCogSmall_Spawn(void);                  /* ov035 0x0211165c, 48 B */
+void hal_fill_rotating_cog_vtable(void);             /* 0x02112b00, 32 slots */
+void hal_fill_spinning_platform_vtable(void);        /* 0x02112bcc, 32 slots */
+/* run rel0215 wave 1 (lane cast-sweep1): OV024's OWN CAST, level 16's pyramid
+   pair -- five of Shifting Sand Land's nineteen skipped instances. TWO tables
+   of TWO DIFFERENT LENGTHS: PYRAMID_TOP is Platform-derived and its table
+   closes on the slot-31 Platform::Kill (32), PYRAMID_TAG is a plain Actor and
+   its table has no slot 31 at all (31). dsd's landings under-read both, at 4
+   and 25. The widths, both attribution routes, the four T3 pins and the one
+   held-out //cpp destructor are derived in port/ov024_syms.txt and
+   port/slice_sweep1_ov024.txt; the fills are hal/actor_classes_ov024.cpp.
+   PYRAMID_TAG finds PYRAMID_TOP by actor id and destroys itself if it is
+   absent, so the two rows land together or neither is worth anything. */
+extern unsigned char PyramidTop_SpawnInfo[];         /* ov024 0x02113804, +4 = 85 */
+void *PyramidTop_Spawn(void);                        /* ov024 0x02111874, 56 B */
+void hal_fill_pyramid_top_vtable(void);              /* _ZTV10PyramidTop, 32 */
+extern unsigned char PyramidTag_SpawnInfo[];         /* ov024 0x02113820, +4 = 86 */
+void *PyramidTag_Spawn(void);                        /* ov024 0x0211183c, 56 B */
+void hal_fill_pyramid_tag_vtable(void);              /* _ZTV10PyramidTag, 31 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV033's OWN CAST, Tiny-Huge Island's
+   small side -- two of level 25's three skipped instances. dsd names ONE
+   vtable in this overlay and it is on the WRONG class: _ZTV9TinyCover
+   (0x02112440, RTTI 14daObjTtWater_c) is TINY_WATER's, and TINY_COVER's own
+   table is the unnamed data_ov033_0211237c (RTTI 13daObjTtFuta_c, futa = lid).
+   The factory installs, the RTTI strings and the spawn records all three agree,
+   so the rows below go by ADDRESS and every _ZN9TinyCover* body in src/ serves
+   id 105. Both tables are 32-slot Platform; dsd's landings read 26 and THREE.
+   Id 104 carries SEVEN own slots, not six -- slot 21 is a real OnGroundPounded
+   override and pounding the lid is the class's whole purpose. Derivation in
+   port/ov033_syms.txt, fills in hal/actor_classes_ov033.cpp, slice in
+   port/slice_sweep1_ov033.txt. */
+extern unsigned char TinyCover_SpawnInfo[];          /* ov033 0x02112358, +4 = 104 */
+void *TinyCover_Spawn(void);                         /* ov033 0x021113a4, 48 B */
+void hal_fill_tiny_cover_vtable(void);               /* data_ov033_0211237c, 32 */
+extern unsigned char TinyWater_SpawnInfo[];          /* ov033 0x0211241c, +4 = 105 */
+void *TinyWater_Spawn(void);                         /* ov033 0x02111690, 56 B */
+void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV023's ONE CLASS, the volcano
+   squasher -- and it is the WHOLE of level 15's skip list, so this row takes
+   that level to zero skipped classes. Its table is 32-slot Platform; the dsd
+   next-symbol landing OVER-reads it by seven slots because the next symbol is
+   the .bss base. Both attribution routes, the three T3 pins, the three alias
+   races its InitResources and destructors carry (two spelled with ov026 and
+   ov029 names for ov023's own addresses) and the one cross-overlay CLPS block
+   that genuinely lives in ov064 are derived in port/ov023_syms.txt; the fill
+   is hal/actor_classes_ov023.cpp and the slice is
+   port/slice_sweep1_ov023.txt. */
+extern unsigned char Squasher_SpawnInfo[];           /* ov023 0x02111fc0, +4 = 84 */
+void *Squasher_Spawn(void);                          /* ov023 0x02111728, 56 B */
+void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV017's ONE CLASS, the sunken ship's
+   water surface -- one of level 9's two skipped instances, and a blocker
+   hal/level_boot.cpp's level-9 block wrote down and deferred. Its table is
+   32-slot Platform and dsd's landing reads TEN. dsd's two names for it agree
+   with the RTTI ("14daObjKsWater_c"), so unlike ov033 and ov035 there is no
+   class-identity shift here. What there IS is three alias races in one
+   function, one of them live on this tip: the collision SharedFilePtr is
+   spelled &_ZN16FloatingFloorBfsD0Ev, an ov045 FUNCTION that is in the map
+   today. All three are pinned to the ROM's own literal pool and routed by
+   per-source -D. Derivation in port/ov017_syms.txt, fill in
+   hal/actor_classes_ov017.cpp, slice in port/slice_sweep1_ov017.txt.
+   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064, still unregistered):
+   with no id-13 actor to find, the "all chests opened" test is vacuously true
+   and the water drains from frame one. Visible, not fatal, and owned by the
+   OTHER class's seat -- see the ov017 syms header. */
+extern unsigned char ShipWater_SpawnInfo[];          /* ov017 0x02111bd4, +4 = 62 */
+void *ShipWater_Spawn(void);                         /* ov017 0x02111480, 56 B */
+void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV058's ONE CLASS, the Rec Room's
+   cupboard -- and it is the WHOLE of level 50's skip list, so this row takes
+   that level to zero skipped. A 0x21c-byte Actor holding an array of five
+   MovingCylinderClsnWithPos at +0xd4; it loads no file and ov058 has no static
+   initialiser at all. Its table is 31-slot ACTOR, not 32-slot Platform (the
+   word at slot 31 is a literal zero, not a relocation) -- the ov024
+   PYRAMID_TAG shape -- and dsd's next-symbol landing reads TWO. Slot 9 is the
+   BASE Render; the class has none of its own. No alias race, no resolver
+   placeholder and no class-identity shift: the only overlay in this lane that
+   needed no per-source -D. Derivation in port/ov058_syms.txt, fill in
+   hal/actor_classes_ov058.cpp, slice in port/slice_sweep1_ov058.txt. */
+extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
+void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
+void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2035,4 +2137,39 @@ void hal_fill_ov026_water_suction_vtable(void);      /* _ZTV12WaterSuction, 31  
     {246, "WHIRLPOOL", Whirlpool_SpawnInfo, Whirlpool_Spawn, \
      hal_fill_ov026_whirlpool_vtable}, \
     {247, "WATER_SUCTION", WaterSuction_SpawnInfo, WaterSuction_Spawn, \
-     hal_fill_ov026_water_suction_vtable},
+     hal_fill_ov026_water_suction_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov035, level 27's own cast. \
+       Three ids take the SAME fill on purpose -- one table, one idempotent \
+       fill, the ov013 CLOCK_HAND_SHORT/LONG shape. ---- */ \
+    {119, "ROTATING_CLOCK_HAND", RotatingClockHand_SpawnInfo, \
+     RotatingClockHand_Spawn, hal_fill_rotating_cog_vtable}, \
+    {120, "SPINNING_PLATFORM", SpinningPlatform_SpawnInfo, \
+     SpinningPlatform_Spawn, hal_fill_spinning_platform_vtable}, \
+    {121, "ROTATING_COG_BIG", data_ov035_02112ac0, \
+     func_ov035_0211168c, hal_fill_rotating_cog_vtable}, \
+    {122, "ROTATING_COG_SMALL", RotatingCogSmall_SpawnInfo, \
+     RotatingCogSmall_Spawn, hal_fill_rotating_cog_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov024, level 16's pyramid \
+       pair. Two tables, two different widths -- 32 and 31. ---- */ \
+    {85, "PYRAMID_TOP", PyramidTop_SpawnInfo, PyramidTop_Spawn, \
+     hal_fill_pyramid_top_vtable}, \
+    {86, "PYRAMID_TAG", PyramidTag_SpawnInfo, PyramidTag_Spawn, \
+     hal_fill_pyramid_tag_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov033, Tiny-Huge Island's \
+       small side. The dsd vtable label is on the water, not the cover. ---- */ \
+    {104, "TINY_COVER", TinyCover_SpawnInfo, TinyCover_Spawn, \
+     hal_fill_tiny_cover_vtable}, \
+    {105, "TINY_WATER", TinyWater_SpawnInfo, TinyWater_Spawn, \
+     hal_fill_tiny_water_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov023, the volcano \
+       squasher. Level 15's entire skip list, one row. ---- */ \
+    {84, "SQUASHER", Squasher_SpawnInfo, Squasher_Spawn, \
+     hal_fill_squasher_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov017, the sunken ship's \
+       water. The blocker level_boot.cpp's level-9 block deferred. ---- */ \
+    {62, "SHIP_WATER", ShipWater_SpawnInfo, ShipWater_Spawn, \
+     hal_fill_ship_water_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov058, the Rec Room's \
+       cupboard. Level 50's entire skip list, one row. ---- */ \
+    {182, "REC_ROOM_CUPBOARD", RecRoomCupboard_SpawnInfo, \
+     RecRoomCupboard_Spawn, hal_fill_rec_room_cupboard_vtable},

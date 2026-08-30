@@ -1,0 +1,69 @@
+# run rel0215 wave 1, lane cast-sweep1: OV024's OWN CAST (level 16, Shifting
+# Sand Land, data/stage/desert_land). Overlay 2 of 6 in this lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   17
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                      17  == config/arm9/overlays/ov024/
+#                                             symbols.txt's kind:function count
+#
+# SIXTEEN of the seventeen are listed below. There is nothing to refuse in the
+# unmodellable sense -- no asm-void block, no scheduler, no card loader, no
+# wireless wrapper -- but ONE TU cannot be delivered by MSVC as written:
+#
+#   src/_ZN10PyramidTagD1Ev.cpp   HELD OUT, host-thunked
+#
+# It is the //cpp real-destructor shape: it declares its own local `struct
+# Actor` / `struct MovingCylinderClsn` / `struct PyramidTag` and defines
+# `PyramidTag::~PyramidTag() {}`, so MSVC emits ??1PyramidTag@@UAE@XZ and
+# generates the member-destructor chain as THISCALL calls to ??1Actor@@UAE@XZ
+# and ??1MovingCylinderClsn@@QAE@XZ -- two names the port defines only as
+# CDECL C bodies (_ZN5ActorD2Ev, _ZN18MovingCylinderClsnD1Ev). Aliasing across
+# that is a receiver-shape mismatch, not a spelling one: the call site would
+# pass `this` in ecx and the callee would read it off the stack. This is the
+# gate-199/200 treatment ov013 applied to ClockPaintingHandShort's D1 for the
+# same reason.
+#
+# THE THUNK IN hal/actor_classes_ov024.cpp IS INSTRUCTION-VERIFIED against the
+# ROM body (0x0211124c, 0x30 bytes), disassembled from
+# extracted/overlays/overlay_0024.bin:
+#     0211124c  push {r4,lr}
+#     02111250  mov  r4, r0
+#     02111254  ldr  r1, =0x02113844        (pool 0x02111278) the OWN table
+#     02111258  add  r0, r4, #0xd4
+#     0211125c  str  r1, [r4]               install the own table
+#     02111260  bl   0x020149a4             MovingCylinderClsn::~D1
+#     02111264  mov  r0, r4
+#     02111268  bl   0x020112c8             Actor::D2
+#     0211126c  mov  r0, r4  /  return
+# A statement-for-statement transcription, not a re-derivation, and the .cpp
+# above says the same thing in C++. Its sibling _ZN10PyramidTagD0Ev.c is a
+# plain .c with C names and rides from src unchanged.
+#
+# ONE PER-SOURCE -D travels with this slice (port/CMakeLists.txt):
+#   _ZN10PyramidTopD0Ev.c   G0 -> data_020a0eac, the game heap, read off that
+#                           body's own literal pool at 0x02111240.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU -- every
+# non-ov024 callee (Actor, ActorBase, Platform, Model, MovingMeshCollider,
+# MovingCylinderClsn, CylinderClsn, MeshColliderBase, Event, SharedFilePtr) is
+# already in the walk_window link for other classes. Measured off the link.
+
+src/_ZN10PyramidTopD1Ev.c
+src/_ZN10PyramidTopD0Ev.c
+src/_ZN10PyramidTagD0Ev.c
+src/func_ov024_021112c0.c
+src/func_ov024_02111350.c
+src/func_ov024_02111480.cpp
+src/func_ov024_021114c4.c
+src/_ZN10PyramidTop16CleanupResourcesEv.cpp
+src/_ZN10PyramidTop6RenderEv.cpp
+src/_ZN10PyramidTop8BehaviorEv.cpp
+src/_ZN10PyramidTag8BehaviorEv.cpp
+src/_ZN10PyramidTop13InitResourcesEv.cpp
+src/_ZN10PyramidTag13InitResourcesEv.cpp
+src/PyramidTag_Spawn.c
+src/PyramidTop_Spawn.c
+src/__sinit_ov024_02112808.c

@@ -1,0 +1,160 @@
+# run rel0215 wave 1 (lane cast-sweep1): ov033's TWO CLASSES, per symbol.
+# Overlay 3 of 6 in this lane.
+#
+# ov033 is a LEVEL overlay (level 25, Tiny-Huge Island's SMALL side,
+# data/stage/tibi_deka_t) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol; --whole emits
+# port_ov033_image/_patch/_at and nothing by name while --from-list --pack
+# emits the named arrays plus port_ov033_syms_patch. Same dual-mount shape as
+# ov012/ov013/ov024/ov025/ov035/ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x021116c8   .rodata 0x021116c8..0x021119e8
+#   .init   0x021119e8..0x02111ac0   .ctor   0x02111ac0..0x02111ac8
+#   .data   0x02111ae0..0x021124c0   .bss    0x021124c0..0x02112520
+# Every raw byte below was read out of extracted/overlays/overlay_0033.bin,
+# never the dsd export (T4).
+#
+# ==== THE TWO CLASSES, both attribution routes =============================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory          +4   x on L25
+#   104  0x02090a04  0x02112358  0x021113a4  TinyCover_Spawn  104   1
+#   105  0x02090a08  0x0211241c  0x02111690  TinyWater_Spawn  105   1
+#
+# Both records' word[0] lands inside ov033 [0x021111a0, 0x021124c0) and is one
+# of the overlay's own two factories; both read their own id back at +4. Both
+# routes are required -- the level overlays share the load window at
+# 0x021111a0 and slot 104's candidate list reads
+# overlays(9,10,12,24,33,35,43,45,47,52,53,56).
+#
+# Level 25 spawns 87 actors and skips 3 across three ids on tip f77f01169.
+# These two are two of the three; the third is id 239, an unmounted pack's.
+#
+# ==== THE DSD LABEL IS ON THE WRONG TABLE, THREE ROUTES AGREE ==============
+#
+# dsd names ONE vtable in this overlay, _ZTV9TinyCover at 0x02112440, and it is
+# on the WATER class. Disassembled from the overlay image:
+#
+#   0x021113a4 TinyCover_Spawn  alloc 0x320 (800)  installs 0x0211237c
+#   0x02111690 TinyWater_Spawn  alloc 0x340 (832)  installs 0x02112440
+#                               + TextureTransformer ctor at this+0x320
+#
+# and the RTTI at vtable[-1] says the same thing in the ROM's own words:
+#   0x0211237c -> typeinfo 0x0211233c -> name 0x02112348  "13daObjTtFuta_c"
+#   0x02112440 -> typeinfo 0x021123fc -> name 0x02112408  "14daObjTtWater_c"
+# "Futa" is the ROM's own word for the lid/cover. So:
+#
+#   id 104 TINY_COVER  ->  0x0211237c, the table dsd left UNNAMED
+#                          (data_ov033_0211237c), bodies func_ov033_*
+#   id 105 TINY_WATER  ->  0x02112440, the table dsd called _ZTV9TinyCover,
+#                          bodies _ZN9TinyCover*
+#
+# Every _ZN9TinyCover* method in src/ is TINY_WATER's, and every func_ov033_*
+# lifecycle body is TINY_COVER's. Everything downstream is wired BY ADDRESS;
+# the dsd spellings survive only as host array names so the matched TUs link
+# unchanged. This is the ov035 shift again, one overlay along.
+#
+# ==== BOTH WIDTHS ARE 32 AND NEITHER LANDING GETS THERE ====================
+#
+# data_ov033_0211237c  0x0211237c, THIRTY-TWO slots, ends 0x021123fc.
+#   next dsd symbol 0x021123e4 -- INTERIOR (slot 26). Reads 26.
+#   The two words after the close, 0x021123fc/0x02112400, are the NEXT table's
+#   typeinfo record (0x0209a764, name 0x02112408), which pins the end
+#   independently of dsd.
+#   SEVEN own slots, one more than usual: 0 InitResources, 3 CleanupResources,
+#   6 Behavior, 9 Render, 16 D1, 17 D0 -- and 21, an OnGroundPounded OVERRIDE
+#   (func_ov033_0211123c: particle, sound, Event::SetBit(0xe), destroy self).
+#   That is the class's whole point -- ground-pounding the lid opens the well
+#   -- and a fill that took the shared half's slot 21 would have silently
+#   replaced it with Actor's do-nothing.
+#
+# _ZTV9TinyCover  0x02112440, THIRTY-TWO slots, ends 0x021124c0.
+#   next dsd symbol 0x0211244c -- INTERIOR (slot 3). Reads THREE.
+#   0x021124c0 is also the .data/.bss boundary, a second independent pin.
+#   Six own slots, the usual 0/3/6/9/16/17.
+#
+# Both tables close on the Platform word:
+#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+# the same close ov024's top, ov025's two, ov035's two, ov045's six, ov052's
+# two and ov056's one all end on. Both tables are EXCLUDED from this mount and
+# hosted as arrays hal/actor_classes_ov033.cpp fills.
+#
+# ==== SEVEN T3 WIDTH PINS, and six are real under-reads =====================
+#
+# .data
+#   TinyCover_SpawnInfo  natural next-symbol delta 0x10 (dsd named 0x02112368
+#     INSIDE the record). A record is 0x1c. Unpinned this mounts SIXTEEN bytes
+#     of twenty-eight, and the registry's id check at +4 sits inside those
+#     sixteen so it would have passed anyway.
+#   TinyWater_SpawnInfo  natural 0xc, the same shape one word worse.
+#   data_ov033_02111bc8  natural 0xc (dsd named 0x02111bd4 inside it). It is a
+#     six-word file descriptor -- {0x5b, bmd, bmd, bta, 1, ptr} -- that id
+#     105's InitResources hands TextureTransformer::Prepare and ::SetFile as a
+#     BTA_File&. The width is pinned by its IDENTICAL SIBLING at 0x02111bb0,
+#     the same six-word shape starting with the same 0x5b, exactly 0x18 earlier
+#     and ending exactly where this one starts. Unpinned, the mount would host
+#     twelve bytes of a twenty-four byte record and TextureTransformer would
+#     read its last three words off whatever the host linker put next.
+#   data_ov033_02111bfc  natural 0x20 already: id 104's CLPS collision block
+#     ('CLPS' 0x53504c43, entrySize 8, count 1, 0xffffffff fill to 0x20).
+#     Pinned by its own header, the ROUTE C invariant, not by the landing.
+#   data_ov033_02111c1c  natural 0x4 (dsd named 0x02111c20 inside it). Id 105's
+#     CLPS block, same self-describing shape, real width 0x20. Unpinned: four
+#     bytes of a thirty-two byte block, and MovingMeshCollider::SetFile reads
+#     the entry count out of a word the mount does not own.
+#
+# .bss 0x021124c0..0x02112520 -- four SharedFilePtrs and four destructor chain
+# nodes, two of each per class. func_020731dc writes THREE words through its
+# node argument (src/func_020731dc.c), so every node is 0xc; a SharedFilePtr is
+# 8. dsd named a word inside SIX of the eight:
+#   data_ov033_021124c0  natural 0x4  -> pin 0x8   (SharedFilePtr, clsn 1734)
+#   data_ov033_021124d0  natural 0x4  -> pin 0xc   (chain node)
+#   data_ov033_021124e8  natural 0x4  -> pin 0x8   (SharedFilePtr, clsn 1736)
+#   data_ov033_021124f8  natural 0x4  -> pin 0xc   (chain node)
+#   data_ov033_02112504  natural 0x1c -> pin 0xc   (chain node; it is the last
+#                        symbol in .bss so the landing runs to the section end)
+# data_ov033_021124c8, _021124dc and _021124f0 already read 8, 0xc and 8 and
+# are left bare, so the diff shows exactly which ones dsd got wrong.
+#
+# WHICH SINIT BUILDS WHAT, read off the two matched bodies:
+#   __sinit_ov033_021119e8   021124c8 file 1733 model  node 021124dc   id 104
+#                            021124c0 file 1734 clsn   node 021124d0   id 104
+#   __sinit_ov033_02111a54   021124f0 file 1735 model  node 02112504   id 105
+#                            021124e8 file 1736 clsn   node 021124f8   id 105
+#
+# ==== ONE LIVE ALIAS RACE AT THE SHARED WINDOW (T6) ========================
+#
+# src/func_ov033_02111310.cpp -- id 104's InitResources -- hands
+# MovingMeshCollider::SetFile a CLPS block it spells data_ov035_02111bfc.
+# That is OV035's name for the same window address, and ov035's 0x02111bfc IS
+# MOUNTED (port/ov035_syms.txt lists it among wave 18's twelve seeds), so the
+# name resolves and id 104's collider would take LEVEL 27's animation-descriptor
+# closure as its collision block. It is routed by a per-source -D onto ov033's
+# own symbol, which is what T6 prescribes for a defined LHS. decl_common.h
+# declares data_ov035_02111bfc but not the ov033 spelling, so the rename is
+# direct and needs no private name.
+#
+# ==== TWO "recovered from vtable slot identity" MARKERS, BOTH ADJUDICATED ===
+#
+# T5: the marker is overloaded and sits on real decomp as well as on guesses.
+# func_ov033_02111310, func_ov033_021111e4, func_ov033_0211123c and
+# func_ov033_02111280 all carry it, and all four are REAL BODIES -- full
+# statement lists that match the ROM instruction for instruction, whose NAME
+# alone was recovered from the slot. None is a stub and none is de-seated;
+# port/tools/inferred_stub_debt.txt and inferred_stub_baseline.txt name no
+# ov033 symbol at all, and the guard runs clean over this seat.
+
+# ---- .data: the two SpawnInfo records, both pinned to the ROM's 0x1c -------
+TinyCover_SpawnInfo:0x1c TinyWater_SpawnInfo:0x1c
+
+# ---- .data: id 105's BTA file descriptor and the two CLPS blocks -----------
+data_ov033_02111bc8:0x18
+data_ov033_02111bfc:0x20 data_ov033_02111c1c:0x20
+
+# ---- .bss: four SharedFilePtrs and four chain nodes ------------------------
+data_ov033_021124c0:0x8 data_ov033_021124c8
+data_ov033_021124d0:0xc data_ov033_021124dc
+data_ov033_021124e8:0x8 data_ov033_021124f0
+data_ov033_021124f8:0xc data_ov033_02112504:0xc
