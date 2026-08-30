@@ -34,7 +34,7 @@ struct daObjPathLift_c : PathLift {
     s32 mGroundY;                /* 0x4ac */
     u8  mTimer;                /* 0x4b0 */
 
-    virtual ~daObjPathLift_c();
+    virtual ~daObjPathLift_c() {}
 
     int InitResources();
     int CleanupResources();
