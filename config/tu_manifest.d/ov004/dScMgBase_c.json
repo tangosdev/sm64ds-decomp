@@ -1,9 +1,9 @@
 {
   "id": "ov004/dScMgBase_c",
   "module": "ov004",
-  "source": "src_tu/actors/dScMgBase_c.cpp",
+  "source": "src/actors/dScMgBase_c.cpp",
   "promoted_source": "src/actors/dScMgBase_c.cpp",
-  "status": "link-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20b04e8..0x20b0a38, 8 function(s). This is a SUB-RANGE of build/tu_map.json's ov004 unit 9 (0x020b04e8..0x020b2adc), split because #pragma opt_strength_reduction is file-global and the ROM needs it OFF for 0x020b0620 and ON for 0x020b0cac / 0x020b14f0 -- see this file's own header comment",

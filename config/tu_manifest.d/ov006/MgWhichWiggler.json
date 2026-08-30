@@ -1,9 +1,9 @@
 {
   "id": "ov006/MgWhichWiggler",
   "module": "ov006",
-  "source": "src_tu/actors/MgWhichWiggler.cpp",
+  "source": "src/actors/MgWhichWiggler.cpp",
   "promoted_source": "src/actors/MgWhichWiggler.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x020ede18..0x020edec0, 2 function(s), from config/arm9/overlays/ov006/delinks.txt and symbols.txt (hand-built manifest entry -- NOT re-derivable from a fresh build/tu_map.json run)",

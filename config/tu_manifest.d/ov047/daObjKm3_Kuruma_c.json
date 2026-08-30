@@ -1,9 +1,9 @@
 {
   "id": "ov047/daObjKm3_Kuruma_c",
   "module": "ov047",
-  "source": "src_tu/actors/daObjKm3_Kuruma_c.cpp",
+  "source": "src/actors/daObjKm3_Kuruma_c.cpp",
   "promoted_source": "src/actors/daObjKm3_Kuruma_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21113f8..0x21114d4, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -119,5 +119,72 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov047-daObjKm3_Kuruma_c/link-partial (gitignored)"
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638316)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI13daObjKuruma_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34640468)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI17daObjKm3_Kuruma_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov047', 34677756)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34107000)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106736)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638340)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS13daObjKuruma_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34640480)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS17daObjKm3_Kuruma_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov047', 34677780)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTV17daObjKm3_Kuruma_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov047', 34677836)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    }
+  ]
 }

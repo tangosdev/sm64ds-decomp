@@ -291,37 +291,9 @@ src/func_ov004_020b04e0.c:
     complete
     .text start:0x020b04e0 end:0x020b04e8
 
-src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp:
+src/actors/dScMgBase_c.cpp:
     complete
-    .text start:0x020b04e8 end:0x020b04ec
-
-src/_ZN11dScMgBase_c6RenderEv.cpp:
-    complete
-    .text start:0x020b04ec end:0x020b04f4
-
-src/_ZN11dScMgBase_c12BeforeRenderEv.cpp:
-    complete
-    .text start:0x020b04f4 end:0x020b0618
-
-src/_ZN11dScMgBase_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b0618 end:0x020b0620
-
-src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp:
-    complete
-    .text start:0x020b0620 end:0x020b0840
-
-src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp:
-    complete
-    .text start:0x020b0840 end:0x020b08f0
-
-src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp:
-    complete
-    .text start:0x020b08f0 end:0x020b0930
-
-src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp:
-    complete
-    .text start:0x020b0930 end:0x020b0a38
+    .text start:0x020b04e8 end:0x020b0a38
 
 src/func_ov004_020b0a38.c:
     complete
