@@ -1533,8 +1533,20 @@ func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15
 # destinations checked rather than wildcarded (match.py's --strict-relocs
 # default). RESULT: 8 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
 #
-# The base was proven before anything was read off it: six ov030 entry points
-# read e92d4010 (push {r4,lr}) and two read e92d4070 (push {r4,r5,r6,lr}).
+# THE BASE WAS PROVEN BEFORE ANYTHING WAS READ OFF IT, on eight PROBE addresses
+# chosen for having a known prologue -- NOT on the eight adjudicated bodies, and
+# an earlier revision of this paragraph read as though it were. The probes:
+#   0x021111a0 0x0211155c 0x02111524 0x0211164c 0x021145e0 0x02114638
+#       read e92d4010  push {r4,lr}
+#   0x02114378 0x02112578
+#       read e92d4070  push {r4,r5,r6,lr}
+#
+# THE ADJUDICATED BODIES' OWN FIRST WORDS are a different tally, and two of the
+# eight are deliberately not prologues at all:
+#   e92d4010  push {r4,lr}   0x021111ec 0x0211130c 0x02111350 0x02111384
+#                            0x02111410 0x02112a14                    (six)
+#   e3a00007  mov r0,#7      0x0211172c -- a two-instruction body, no frame
+#   e59fc000  ldr ip,[pc]    0x021145d4 -- the tail-call veneer below
 #
 # TWO CORRECTIONS THE DISASSEMBLY FORCED, recorded because neither is something
 # a byte gate can catch:

@@ -60,9 +60,21 @@
  * into the object at +0x3a4, dispatched through on the very next enter.
  *
  * THIS IS THE ONLY DROPPED-ARGUMENT SITE IN THE OVERLAY, and that is a census
- * rather than an impression: func_ov030_021141a8 has 31 arm_call relocations
- * naming it, 30 of the src call sites pass two arguments (values 0..9 and
- * *(int *)(c + 0x3b8)), and this one is the single exception.
+ * rather than an impression. The three counts reconcile exactly:
+ *
+ *   31   arm_call relocations in the ROM name func_ov030_021141a8
+ *   -3   of them lie inside func_ov030_021136b0 (0x02113978, 0x021139bc and
+ *        0x02113a44) -- the one body in this overlay with no src file at all
+ *   ----
+ *   28   call sites a src TU can carry, and src carries exactly 28
+ *   27   of those 28 pass TWO arguments (constants 0..9 and *(int *)(c+0x3b8))
+ *    1   passes one, and it is this one
+ *
+ * An earlier revision of this comment said "30 of the src call sites", which
+ * conflated the 31 ROM relocations with the 28 sites src actually holds. The
+ * figure is 27 of 28, and the difference of three is the missing body rather
+ * than anything unaccounted for. `extern` rows are excluded from the 28: they
+ * spell the two-parameter signature and are declarations, not calls.
  *
  * EVERYTHING ELSE IS TRANSCRIBED STATEMENT FOR STATEMENT. Both DELTAs are
  * marked inline below.

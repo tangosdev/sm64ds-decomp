@@ -138,10 +138,14 @@
 #     8-byte stride, data_ov030_02115ac8 through _02115b70; (3) the semantic
 #     tail says the virtuals stopped two words earlier.
 #     AND THE FOURTH TELL, which ov026 could not use and this overlay can: the
-#     pairs point at 0x02112400..0x02114124, which is inside the MKY class's own
-#     code block, NOT Maruta's -- so this table does not even belong to the class
-#     whose vtable it follows. It is daMky_c's state-machine source, laid out
-#     before daMky_c's own type_info record in the ROM's own emission order.
+#     twenty-two targets span 0x021122b0..0x02114124, which lies inside the MKY
+#     class's own code block, NOT Maruta's -- so this table does not even belong
+#     to the class whose vtable it follows. It is daMky_c's state-machine
+#     source, laid out before daMky_c's own type_info record in the ROM's own
+#     emission order. (The low end is 0x021122b0, the target of the pair at
+#     data_ov030_02115b38; an earlier revision quoted 0x02112400, which is the
+#     target of data_ov030_02115b70 and merely the LAST pair in the sinit's
+#     field order rather than the lowest address.)
 #
 # THE THREE SPANS ARE EXCLUDED FROM THIS MOUNT and are host arrays that
 # port/hal/actor_classes_ov030.cpp fills (the ov015/ov016/ov022/ov045/ov080/

@@ -598,13 +598,38 @@ static int __fastcall mky_render(void *s, void *)
   return _ZN13RollingLogTtm6RenderEv(s); }
 static int __fastcall mky_pdes(void *s, void *)
 { (void)s; _ZN13RollingLogTtm16OnPendingDestroyEv(); return 0; }
-/* Slot 16, D1: src/_ZN13RollingLogTtmD1Ev.cpp is a real MSVC-synthesised
-   destructor over a local shadow class with NO vtable store of its own, so it
-   is kept OUT of the slice (MSVC would mangle it ?1RollingLogTtm@@UAE@XZ and
-   the Itanium name the slot needs would never exist). The MotherPenguin /
-   OneUpLogo / BabyPenguin shape: chain spelled directly, HIGH ADDRESS FIRST,
-   from that file's own member list -- WithMeshClsn +0x194, MovingCylinderClsn
-   +0x160, ShadowModel +0x138, ModelAnim +0xd4, then Actor's own D2. */
+/* Slot 16, D1. src/_ZN13RollingLogTtmD1Ev.cpp is a real MSVC-synthesised
+   destructor over a local shadow class, so it is kept OUT of the slice: MSVC
+   would mangle it ?1RollingLogTtm@@UAE@XZ and the Itanium name the slot needs
+   would never exist. Chain spelled directly, HIGH ADDRESS FIRST, from that
+   file's own member list -- WithMeshClsn +0x194, MovingCylinderClsn +0x160,
+   ShadowModel +0x138, ModelAnim +0xd4, then Actor's own D2.
+
+   THE ROM D1 DOES STORE A VTABLE AND THIS THUNK DOES NOT, so read the omission
+   narrowly. An earlier revision of this comment claimed the body had "no vtable
+   store of its own", copying gate 193's finding about ITS class; that is false
+   here. The ROM at 0x02111688 is:
+
+       02111690  ldr r1, [pc, #0x34]    ; pool 0x021116cc = 0x02115bfc
+       02111694  add r0, r4, #0x194
+       02111698  str r1, [r4]           ; installs its OWN table at +0
+       0211169c  bl  _ZN12WithMeshClsnD1Ev ...
+
+   WHY DROPPING IT IS HARMLESS HERE, AND ONLY HERE. The word it installs is the
+   class's OWN table, 0x02115bfc -- not a base table -- and on the host that is
+   _ZTV13RollingLogTtm, the very array the object's vptr already holds: the
+   factory wrote it, nothing between has swapped it, and this slot is only ever
+   reached AS the most-derived class through that same array. Every call in the
+   chain below is a direct call, not a virtual dispatch, so nothing reads the
+   vptr while the thunk runs. Re-storing the pointer would be a no-op.
+
+   DO NOT REUSE THIS AS A GENERAL RULE. A destructor that installs a DIFFERENT
+   table is doing real work and its stores must be reproduced -- this overlay
+   has three such bodies two slots away: src/_ZN9UkikiCageD1Ev.c and
+   src/_ZN9UkikiCageD0Ev.c (which are RollingLogTtm's, not UkikiCage's) walk
+   0x02115a48 -> data_ov080_02128338 -> _ZTV8Platform, three tables deep, and
+   src/func_ov030_021111a0.c walks two. All three stay in the slice and run
+   their own stores. */
 static int __fastcall mky_d1(void *s, void *)
 {
     char *t = (char *)s;
@@ -652,9 +677,13 @@ extern "C" void hal_fill_ukiki_vtable(void)
 // (?InitResources@RollingLogTtm@@..., not __ZN13RollingLogTtm...), so the
 // Itanium names the vtable slots need are faced here -- the IceSheet /
 // OneUpLogo / BabyPenguin recipe.
-// The Ukiki's Behavior is NOT faced: it is the HOST COPY in
-// port/unmatched/Ukiki_Behavior.cpp, which defines the Itanium name directly
-// (the ModelAnim slot-3 shadow, see that file's header).
+// The Ukiki's Behavior is NOT faced and is NOT exported under its Itanium name
+// either: it is the HOST COPY in port/unmatched/Ukiki_Behavior.cpp, which
+// deliberately exports port_ov030_ukiki_behavior instead, and the slot-6 thunk
+// above calls that name. Two reasons, both in that file's header -- the
+// aritycheck receiver ratchet, and the ov029 sinit that would otherwise bind
+// its own SharedFilePtr destructor callback to this body. The reason the TU is
+// a host copy at all is the ModelAnim slot-3 shadow, also in that header.
 // _ZN13RollingLogTtm16CleanupResourcesEv and _ZN13RollingLogTtm16OnPendingDestroyEv
 // are plain C-linkage .c bodies taking (void) -- no face needed, declared
 // extern "C" above and called directly.
