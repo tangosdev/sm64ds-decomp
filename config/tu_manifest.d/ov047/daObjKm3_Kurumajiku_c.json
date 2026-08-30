@@ -838,6 +838,7 @@
         "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
         "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
       ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
