@@ -66,6 +66,7 @@
 #include <cstring>
 
 #include "dsstate_seg.h"
+#include "comms_loopback.h"   /* lane vsnet: the radio, engaged at the VS start */
 
 extern "C" {
 
@@ -631,9 +632,45 @@ extern "C" void port_scene_fill_vs(void)
 
    The map index is masked to the ROM's own list: data_ov075_0211c6ec is FOUR
    signed bytes (levels 51, 43, 29, 42) and the lobby's own picker never
-   hands func_ov075_02116c8c anything past 3. */
+   hands func_ov075_02116c8c anything past 3.
+
+   ---- AND THE RADIO COMES UP HERE, BECAUSE THIS IS WHERE THE DS'S DOES ------
+   Run rel0215, lane vsnet.
+
+   SM64DS VS IS A WIRELESS MODE. There is no offline VS on the cartridge: the
+   ROM's route into a match is dScEntry_c (scene 6, this file's own seat), and
+   its start conductor func_ov075_02118a84 WAITS OUT THE COMMS HANDSHAKE and a
+   countdown before it calls func_ov075_02116c8c at all (slice_vs.txt section
+   4). So on the DS the radio is already up, the peers are already known, and
+   the start function below runs on a console that is in a session.
+
+   THE PORT'S VS BOOT HAS NO LOBBY. SM64DS_VS_MAP goes straight to this
+   function -- that is the whole point of it, and the debug menu's VS row
+   reaches the same place -- which means the one moment the DS uses to engage
+   its wireless layer does not exist on this path unless it is put here. So the
+   transport install goes at the top of this function, ahead of the ROM's own
+   start, and this function is the ONE funnel: the env boot, the debug row and
+   any later real lobby all come through it.
+
+   IT IS THE INSTALL, NOT A SECOND ONE. comms_loopback_install_from_env is
+   documented safe to call more than once and returns early once a transport is
+   in; tests/walk_window.cpp's own call at process start is untouched and still
+   the one that serves every non-VS path (the level selftests, the minigame MP
+   runs, port/tools/net_proof.py's whole ladder). With no comms env this is a
+   getenv and a return, so a bare VS boot is byte-for-byte the run it was.
+
+   ORDERING, AND IT IS LOAD-BEARING BOTH WAYS. It must be BEFORE
+   func_ov075_02116c8c, because that call ends in LoadLevelNoReturn and the
+   staged level is consumed by hal/level_boot.cpp, which asks
+   port::comms_wait_for_session() who is in the session before it seats a
+   world -- a world seated ahead of the join makes every console believe it is
+   player 0. And it must be AFTER the process has io_init'd, which it is:
+   walk_window's VS section runs past the game-heap init, and the debug row
+   runs from a frame loop. */
 extern "C" void port_vs_stage_and_start(int mapIdx)
 {
+    /* the radio, at the ROM's own moment for it -- see the block above */
+    port::comms_loopback_install_from_env();
     data_0209b2e4[0] = (unsigned char)(mapIdx & 3);
     func_ov075_02116c8c();
 }
