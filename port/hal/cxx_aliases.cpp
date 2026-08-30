@@ -148,6 +148,53 @@ int func_01ff98f4(int a, int b)
 /* float greater-than: the slide friction gate (i2f(speed) > 48.0f) */
 int func_01ff99a4(int a, int b)
 { float x, y; memcpy(&x, &a, 4); memcpy(&y, &b, 4); return x > y; }
+/* ---- THE SINGLE-PRECISION ADD/SUB PAIR ---------------------------------
+   run rel0215 lane prop17, first host callers: src/func_ov074_021204c0.c
+   (the Goomboss scale interpolation) calls both, and it is the only TU in
+   either line that does.
+
+   WHICH IS WHICH WAS READ OFF THE ROM, not off the caller's prose. The two
+   are one routine wearing two hats and they prove each other -- carved the
+   ITCM autoload block out of extracted/arm9_dec.bin (autoload list at
+   file+0x9cf60 says ram 0x01ff8000, size 0x5f40; the block lands at
+   file+0x097000, and config/arm9/itcm/symbols.txt's 46 symbols all fall
+   inside it) and disassembled both heads:
+
+     func_01ff9378        mov r2,#1        <- the operation tag
+       +0x08  eors r2,r0,r1               <- do the signs differ?
+       +0x0c  eormi r1,r1,#0x80000000     <- if so, flip b's sign
+       +0x10  bmi  0x01ffa5a8             <- ...and finish in a594's body
+       +0x14  subs ip,r0,r1               <- same-sign path, no sign fixup
+
+     func_01ffa594        mov r2,#2        <- the other tag
+       +0x08  eors r2,r0,r1
+       +0x0c  eormi r1,r1,#0x80000000
+       +0x10  bmi  0x01ff938c             <- ...and finish in 9378's body
+       +0x14  subs ip,r0,r1
+       +0x18  eorlo ip,ip,#0x80000000     <- THE DISTINGUISHING LINE: the
+                                             |a| < |b| sign fixup only a
+                                             SUBTRACT needs
+
+   So 9378 is ADD and a594 is SUBTRACT, each delegating to the other when the
+   signs disagree. That matches what the caller does with them independently:
+   it takes a594(table[k], table[k+1]) as the GAP between two sizes and feeds
+   9378(table[k+1], step) back as the stepped-toward value.
+
+   Both take and return RAW IEEE-754 SINGLE BIT PATTERNS in r0/r1, the same
+   convention as func_01ff98f4 and func_01ff99a4 above, so the host bodies go
+   through memcpy the same way. The ROM bodies are 0x460 and 0x448 bytes
+   because they carry their own denormal, NaN and round-to-nearest-even tails;
+   the host uses native float, which rounds the same way. That is the standing
+   trade for this whole block, not a new one.
+
+   PORT_HOST_ABI: ARM asm primitives (the ITCM soft-float runtime block),
+   MSVC cannot assemble -- see the block comment above. */
+int func_01ff9378(int a, int b)
+{ float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x + y;
+  { int o; memcpy(&o, &r, 4); return o; } }
+int func_01ffa594(int a, int b)
+{ float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x - y;
+  { int o; memcpy(&o, &r, 4); return o; } }
 /* f2i truncation; one caller's two-arg decl is an r1 ride-through */
 /* PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
    assemble -- see the block comment above. */

@@ -56,54 +56,72 @@
 // hal/actor_overlays.cpp calls it between port_ov074_syms_patch() and
 // __sinit_ov074_02122978(). The ov070/ov077/MrBlizzard/BabyPenguin order.
 //
-// ---- THREE MISSING BODIES, ALL FACED LOUDLY ------------------------------
+// ---- ONE MISSING BODY, FACED LOUDLY (run rel0215 lane prop17) -------------
 //
-// ov074 has 56 function symbols and 53 source TUs. Three symbols have neither
-// a delink block in config/arm9/overlays/ov074/delinks.txt nor a src file
-// anywhere in the tree:
+// ov074 has 56 function symbols. THREE used to have neither a delink block in
+// config/arm9/overlays/ov074/delinks.txt nor a src file anywhere in the tree.
+// Two of them were matched on the decomp line (main 6906f2af5, PR #2006) and
+// lane prop17 propagated them here BY ADDRESS:
 //
-//   func_ov074_021201f0  0x1f0  STATE 0's TICK. Its own relocations name
-//        Camera::SetPos, Camera::SetLookAt, Camera::SetFlag_3,
-//        Actor::ClosestPlayer, Sound::LoadAndSetMusic_Layer3,
-//        Message::PrepareTalk, Player::ShowMessage, Player::StartTalk and
-//        func_ov074_021203e4 (the state ENTER dispatcher) -- the fight's
-//        opening cutscene, which ends by changing state.
-//   func_ov074_021204c0  0x208  called from state 7's tick
-//        (func_ov074_0211f5b8) and state 6's tick (func_ov074_0211fa74). Its
-//        relocations name Particle::System::NewSimple and cstd::fdiv: a
-//        particle-effect helper that returns a flag both callers branch on.
-//   func_ov074_02121380  0x374  called UNCONDITIONALLY from
-//        Goomboss::Behavior, right after func_ov074_02120d74. It calls only
-//        func_ov074_02121270 and loads data_ov074_02122e24.
+//   func_ov074_021201f0  0x1f0  STATE 0's TICK -- SEATED, src/ has it.
+//        The fight's opening cutscene: camera pinned to a fixed look-at/eye
+//        pair off the boss position, the closest player spun to face him, the
+//        boss's own facing snapped, then the Player::StartTalk /
+//        Player::ShowMessage handshake with the music layer latched once
+//        through f_60c. Both calls gate the rest of the tick, so a refused
+//        talk retries next frame; success calls func_ov074_021203e4(c, 1) and
+//        the fight advances to state 1.
+//   func_ov074_021204c0  0x208  the SCALE INTERPOLATION tick -- SEATED, and
+//        it seats plain: its only two references are arm_calls, from
+//        0x0211f860 (inside state 7's tick, func_ov074_0211f5b8) and
+//        0x0211fb44 (inside state 6's tick, func_ov074_0211fa74). Both
+//        callers already declare it `int (char *)`, which is the body's own
+//        shape, so nothing here has to bridge it.
+//   func_ov074_02121380  0x374  STILL MISSING. Called UNCONDITIONALLY from
+//        Goomboss::Behavior (the single arm_call at 0x02121ccc), right after
+//        func_ov074_02120d74. It calls only func_ov074_02121270 and loads
+//        data_ov074_02122e24: the boss's COLLISION-CYLINDER REBUILD, the four
+//        MovingCylinderClsnWithPos members at +0x110 stride 0x40. An honest
+//        div-11 near-miss is banked on the decomp side and a follow-up siege
+//        is queued.
 //
-// Each is faced LOUDLY rather than stubbed, the hal/scene_boot.cpp l2_trap
+// WHAT THAT LAST HOLE COSTS, WRITTEN DOWN BEFORE ANYONE MEASURES IT: the
+// fight may LOOK right and not HIT right. Every frame of Goomboss::Behavior
+// runs the state machine (which is now complete) and then declines the
+// cylinder rebuild, so the boss animates, talks, scales and moves while his
+// collision volumes stay wherever the constructor left them. Reading "the
+// cutscene plays" as "the fight works" is the mistake this paragraph exists
+// to stop. The face below is what makes the hole audible.
+//
+// It is faced LOUDLY rather than stubbed, the hal/scene_boot.cpp l2_trap
 // model and the ov030 func_ov030_021136b0 precedent: a silent stub here would
-// read as "Goomboss is standing still" rather than as a hole.
+// read as "Goomboss is standing still" rather than as a hole. The retiring
+// precedent for the shape is port_ov074_state0_tick_face, which lived in this
+// file until prop17 and is gone now that its body landed -- a face is a
+// tenant, not a fixture.
 //
-// ---- THE PROBE THAT EXERCISES THIS CLASS WITHOUT THE HOLE, AND ITS LEVEL --
+// ---- THE PROBE THAT EXERCISES THE OTHER HALF OF THE CLASS, AND ITS LEVEL --
 //
-// State 0's tick is reached on the FIRST Behavior frame, so on level 45 the
-// placed boss quarantines before anything else of this class runs. The mParam
-// == 0x1111 half takes a different path at all three own slots
+// The mParam == 0x1111 half takes a different path at all three own slots
 // (func_ov074_02122634 for InitResources, func_ov074_021223bc for Behavior,
-// func_ov074_021222e0 for Render) and never touches the state machine, so it
-// is the half that CAN be proven, and the probe for it is:
+// func_ov074_021222e0 for Render) and never touches the state machine at all,
+// so it is a genuinely independent arm of this class and it keeps its own
+// probe:
 //
 //     SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111
 //     SM64DS_FAULTS_FATAL=1 SM64DS_WINDOW_SELFTEST=600 walk_window.exe
 //     -> rc 0, census 189 spawned (43 classes) 0 skipped, + 198 x1 GOOMBOSS,
 //        zero faults and zero quarantine lines over 600 frames.
 //
-// LEVEL 13, NOT 45, AND THE LEVEL IS PART OF THE PROBE. On 45 this cannot run
-// under FAULTS_FATAL at all -- the placed boss reaches the hole first and
-// aborts the run -- and adding SM64DS_SKIP_CLASS=GOOMBOSS to get past it makes
-// the probe vacuous, because the skip matches by SUBSTRING and turns away the
-// forced instance too. Bare (quarantine net) on 45 it does run, but the log
-// then carries a quarantine line for the placed instance that a reader has to
-// attribute by actor address before the clean instance means anything. Level
-// 13 places no Goomboss, so the forced instance is the only one and the run is
-// unambiguous. Both forms were measured; the level-45 one is the weaker
-// evidence and this is the one to cite.
+// LEVEL 13, NOT 45, AND THE LEVEL IS PART OF THE PROBE. Level 13 places no
+// Goomboss, so the forced instance is the only one in the census and the run
+// is unambiguous; on 45 a reader would have to attribute lines by actor
+// address before the forced instance meant anything. That reasoning is
+// unchanged by the state-0 tick landing -- it is about which instance the log
+// is talking about, not about whether 45 faults.
+//
+// WHAT THIS PROBE DOES NOT REACH, and did not before either: the state
+// machine. It is the 0x1111 arm precisely because that arm skips it.
 //
 // WHAT THIS PROBE DOES NOT REACH: the ModelAnim slot-5 dispatch in either host
 // copy. func_ov074_02122634 never writes +0x60a, so func_ov074_021222e0
@@ -209,13 +227,37 @@ extern unsigned char data_ov074_02122e0c[];
 extern unsigned char data_ov074_02122e14[];
 extern unsigned char data_ov074_02122e1c[];
 
-/* ---- THE SEVENTEEN STATE BODIES THAT EXIST -----------------------------
+/* ---- ALL EIGHTEEN STATE BODIES, WHICH NOW ALL EXIST --------------------
    Every one is a mwcc pointer-to-member `void (C::*)()`: `this` in r0, no
    argument. The host bodies are cdecl and four of them (0212007c, 021201ec,
    021203e0, 0211fc34) are written `(void)` in their own recovered source,
    which is harmless -- the dispatcher passes the receiver, the callee ignores
    it, and cdecl leaves the caller to clean. They are declared uniformly here
-   because this file only ever takes their ADDRESS; it never calls one. */
+   because this file only ever takes their ADDRESS; it never calls one.
+
+   THE SEAT IS CDECL, NOT __fastcall, AND THAT IS MEASURED. The two
+   dispatchers are HOST COPIES in port/unmatched/Goomboss_StateDispatch.cpp,
+   which deliberately replaced mwcc's pointer-to-member call with a plain
+   `typedef void (*)(void *)` indirect call so MSVC's generalised 16-byte
+   member-pointer representation never enters the picture. Disassembled out of
+   walk_window.exe (capstone, 32-bit), the two sites are:
+
+     func_ov074_021203e4 (ENTER)      func_ov074_0212042c (TICK)
+       mov eax,[ebp+8]                  mov eax,[ebp+8]
+       mov ecx,[ebp+0xc]                mov ecx,[eax+0x5cc]
+       push eax        <-- receiver     shl ecx,4
+       mov [eax+0x5cc],ecx              mov [ebp+8],eax  <-- receiver stays
+       shl ecx,4                        mov eax,[ecx+0xe6ff5c]
+       mov eax,[ecx+0xe6ff54]           pop ebp
+       call eax                         jmp eax          <-- tail jump
+       add esp,4
+
+   The receiver is a STACK argument at both. At the tick's `jmp eax`, ECX
+   holds state_index*16, not `this`. A __fastcall(self, edx) thunk seated in
+   this table would read that scaled index as its receiver -- the ov075 recipe
+   in hal/scene_vs_menu.cpp is correct THERE because ov075 kept a real MSVC
+   member-pointer call through a matched TU, and it is exactly backwards here.
+   Bare cdecl bodies, all eighteen. */
 void func_ov074_0211f5b8(void *self);
 void func_ov074_0211fa08(void *self);
 void func_ov074_0211fa74(void *self);
@@ -232,6 +274,10 @@ void func_ov074_02120080(void *self);
 void func_ov074_0212016c(void *self);
 void func_ov074_0212018c(void *self);
 void func_ov074_021201ec(void *self);
+/* state 0's tick, propagated from main 6906f2af5 by lane prop17. Its own
+   source spells the receiver `char *`; declared `void *` here with the rest
+   because this file only ever takes its address. */
+void func_ov074_021201f0(void *self);
 void func_ov074_021203e0(void *self);
 
 /* the ov053 whole-image mount's DS-to-host resolver, for the level-file seat
@@ -289,6 +335,47 @@ extern unsigned char data_ov074_02122f38[];   /* the file table's column 1 */
    calling conventions agree and only the decoration differs -- the ov058
    Memory::Deallocate case. */
 #pragma comment(linker, "/alternatename:__ZN5Sound13Func_02048ee4Ev=?Func_02048ee4@Sound@@SAXXZ")
+
+/* ---- THE NAMING DELTA BETWEEN THE TWO LINES, BRIDGED BY ADDRESS ----------
+   run rel0215 lane prop17. src/func_ov074_021201f0.c is taken VERBATIM off
+   the decomp line (main 6906f2af5, blob 91c48100976f13c2f5a464f816ce72d3e6d9d2c1)
+   and that line has taken a C++ rename this branch has not: 1047 of its src
+   files spell `_ZN8dActor_c...`, and this branch has none. Three names in that
+   body therefore have no symbol here. They are the SAME THREE FUNCTIONS, and
+   the join is the ROM ADDRESS, which is the only thing both lines agree on:
+
+     0x02010ad8  _ZN8dActor_c13ClosestPlayerEv
+              -> _ZN5Actor13ClosestPlayerEv
+     0x020c4fa0  _ZN6Player9StartTalkER7fBase_cb
+              -> _ZN6Player9StartTalkER9ActorBaseb
+     0x020c4ec0  _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh
+              -> _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj
+
+   Bridged rather than renamed at the source so the two lines reconcile without
+   a conflict, which is this tree's standing rule for a propagated body.
+
+   THE CALLING CONVENTIONS AGREE, CHECKED RATHER THAN ASSUMED, and this is the
+   half that could have bitten. Actor::ClosestPlayer is the port's canonical
+   receiver-dropping hazard -- port/tools/closestplayer_guard.py fails the
+   build over a ZERO-ARGUMENT call to it, because the ROM rides `this` through
+   r0 and a bare call on the host leaves the register holding anything. That
+   guard cannot see this call, which passes `c`: it scans for empty parens and
+   for the OTHER spelling. So the convention was read off the definitions
+   instead. All three are cdecl C names taking the receiver as their FIRST
+   STACK ARGUMENT -- port/unmatched/Actor_ClosestPlayerWrappers.cpp:25 says so
+   for ClosestPlayer and six port call sites pass `self` that way,
+   hal/message_probe.cpp:28 defines ShowMessage in that shape, and
+   port/unmatched/Ov085_Behaviors.cpp:122 declares StartTalk in it. The
+   propagated body calls all three with the receiver first, so each alias is a
+   pure rename across the seam and drops nothing.
+
+   Every LHS below is DEFINED NOWHERE in this branch -- that is the whole
+   reason the bridge exists -- so no alias here can be defeated by a real
+   definition, and port/tools/alternatename_guard.py fails the build post-link
+   if that ever stops being true. */
+#pragma comment(linker, "/alternatename:__ZN8dActor_c13ClosestPlayerEv=__ZN5Actor13ClosestPlayerEv")
+#pragma comment(linker, "/alternatename:__ZN6Player9StartTalkER7fBase_cb=__ZN6Player9StartTalkER9ActorBaseb")
+#pragma comment(linker, "/alternatename:__ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh=__ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj")
 
 // ============================================================================
 // THE LEVEL-FILE SEAT: TWENTY WORDS THAT POINT INTO ov053
@@ -372,8 +459,21 @@ extern "C" void port_ov074_level_files_seat(void)
 }
 
 // ============================================================================
-// THE THREE MISSING BODIES
+// THE ONE MISSING BODY
 // ============================================================================
+// Two of the three faces this block used to carry RETIRED in run rel0215 lane
+// prop17, when main 6906f2af5 matched their bodies and the lane propagated
+// them here by address:
+//
+//   port_ov074_state0_tick_face  ->  src/func_ov074_021201f0.c, seated by
+//        ADDRESS in g_ov074_seats below (its only reference in ov074's
+//        relocations is the code-pointer record at 0x02122de4, so the seat is
+//        the whole of its coverage).
+//   the func_ov074_021204c0 face ->  src/func_ov074_021204c0.c, which seats
+//        plain under the ROM's own name; its two arm_call sites resolve to it
+//        directly and nothing here has to name it any more.
+//
+// A face is a tenant. What is left is the one body that is still missing.
 namespace {
 unsigned ov74_id_of(void *c)
 { return c ? *(unsigned short *)((char *)c + 0xc) : 0u; }
@@ -386,7 +486,7 @@ void ov74_missing(void *c, const char *sym, const char *what, int *said)
         std::fprintf(stderr,
                      "UNHOSTED: %s (%s) HAS NO MATCHED BODY -- no delink block "
                      "and no src file anywhere in the tree. Actor id %u %s "
-                     "reached it. Three of ov074's 56 function symbols are in "
+                     "reached it. ONE of ov074's 56 function symbols is in "
                      "this state; see port/slice_ov074.txt section 3.\n",
                      sym, what, id, port_actor_class_name(id));
     }
@@ -395,29 +495,28 @@ void ov74_missing(void *c, const char *sym, const char *what, int *said)
                     sym, id, port_actor_class_name(id));
       port_actor_slot_decline_for(c, _m); }
 }
-int g_said_021201f0, g_said_021204c0, g_said_02121380;
+int g_said_02121380;
 }  /* namespace */
 
 extern "C" {
-/* state 0's TICK -- reached only through the PMF table, so it is seated by
-   ADDRESS below rather than under the ROM's own name. */
-void port_ov074_state0_tick_face(void *c)
-{ ov74_missing(c, "func_ov074_021201f0", "ov074 state 0 tick, 0x1f0 bytes",
-               &g_said_021201f0); }
+/* THE COLLISION-CYLINDER REBUILD, and the last hole in this overlay.
+   Called unconditionally from Goomboss::Behavior -- one arm_call, at
+   0x02121ccc, right after func_ov074_02120d74 -- so the face sits at its own
+   dispatch site under the ROM's own name and every frame of the fight that
+   reaches Behavior reaches it. decl_common.h:2825 declares it `void (char *)`;
+   this definition matches that.
 
-/* called from state 6's and state 7's ticks; both branch on its result. The
-   ROM returns a flag, so this face returns 0, which is the branch both callers
-   take when the effect did not complete. */
-int func_ov074_021204c0(void *c)
-{ ov74_missing(c, "func_ov074_021204c0",
-               "ov074 particle-effect helper, 0x208 bytes", &g_said_021204c0);
-  return 0; }
-
-/* called unconditionally from Goomboss::Behavior. decl_common.h:2825 declares
-   it `void (char *)`; this definition matches that. */
+   READ THE QUARANTINE LINE THIS PRINTS AS "THE BOSS DOES NOT HIT", NOT AS
+   "the boss is idle". With the state machine now complete the fight animates,
+   talks, scales and moves; this body is what would move the four
+   MovingCylinderClsnWithPos members at +0x110 stride 0x40 to follow it. While
+   it declines, those volumes stay where the constructor put them. The fight
+   can look right and not hit right, and this line is the only thing that says
+   so. An honest div-11 near-miss is banked on the decomp side. */
 void func_ov074_02121380(char *c)
 { ov74_missing(c, "func_ov074_02121380",
-               "ov074 Behavior step, 0x374 bytes", &g_said_02121380); }
+               "ov074 collision-cylinder rebuild, 0x374 bytes",
+               &g_said_02121380); }
 }  /* extern "C" */
 
 // ============================================================================
@@ -441,7 +540,7 @@ struct Ov074Seat {
 const Ov074Seat g_ov074_seats[] = {
     /* state 0 */
     {data_ov074_02122dbc, 0x021203e0, (void *)func_ov074_021203e0,          "s0.enter/02122dbc"},
-    {data_ov074_02122de4, 0x021201f0, (void *)port_ov074_state0_tick_face,  "s0.tick /02122de4 MISSING"},
+    {data_ov074_02122de4, 0x021201f0, (void *)func_ov074_021201f0,          "s0.tick /02122de4"},
     /* state 1 */
     {data_ov074_02122e0c, 0x021201ec, (void *)func_ov074_021201ec,          "s1.enter/02122e0c"},
     {data_ov074_02122dc4, 0x0212018c, (void *)func_ov074_0212018c,          "s1.tick /02122dc4"},
