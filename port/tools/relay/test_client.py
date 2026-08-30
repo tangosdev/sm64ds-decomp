@@ -77,9 +77,20 @@ class Node(object):
 
     def __init__(self, relay_addr, name):
         self.name = name
-        self.relay = relay_addr
+        # Resolve the relay once, so a hostname works and so received
+        # datagrams can be matched against a real address below.
+        try:
+            info = socket.getaddrinfo(relay_addr[0], relay_addr[1],
+                                      socket.AF_INET, socket.SOCK_DGRAM)
+            self.relay = info[0][4]
+        except socket.gaierror:
+            self.relay = relay_addr
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(("127.0.0.1", 0))
+        # Bind the wildcard address, not loopback. A socket bound to
+        # 127.0.0.1 can only ever talk to this machine, so pointing it at a
+        # public relay fails outright (WinError 10051, network unreachable).
+        # Port 0 still means the OS picks the port.
+        self.sock.bind(("0.0.0.0", 0))
         self.sock.setblocking(False)
         try:
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1 << 20)
@@ -89,6 +100,7 @@ class Node(object):
         self.bytes_in = 0
         self.pkts_out = 0
         self.pkts_in = 0
+        self.foreign_in = 0
         self.pending = []
 
     def send(self, data):
@@ -104,9 +116,16 @@ class Node(object):
         if not ready:
             return None
         try:
-            data, _addr = self.sock.recvfrom(65535)
+            data, addr = self.sock.recvfrom(65535)
         except OSError:
             # Windows reports an earlier unreachable send here. Not our news.
+            return None
+        if addr != self.relay:
+            # The socket is bound to the wildcard address, so anything on this
+            # machine could send to it. Only the relay's own traffic counts,
+            # or a stray packet would corrupt the byte counts the no
+            # amplification check is built on.
+            self.foreign_in += 1
             return None
         self.bytes_in += len(data)
         self.pkts_in += 1
@@ -196,6 +215,10 @@ def free_port():
             continue
         probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
+            # Loopback on purpose, and it has to stay that way: this asks
+            # whether the port is free for a test relay, and test relays are
+            # started with SM64DS_RELAY_BIND=127.0.0.1. The probe has to
+            # match the bind it is testing for.
             probe.bind(("127.0.0.1", port))
         except OSError:
             probe.close()
@@ -965,9 +988,16 @@ def remote_check(host, port, code, count=100, pps=50):
         print("round trips: %d sent, %d returned, %d lost (%.1f%%)"
               % (count, len(seen), lost, 100.0 * lost / count))
         if rtts:
+            median = percentile(rtts, 0.50)
             print("rtt ms: min %.1f  p50 %.1f  avg %.1f  p95 %.1f  max %.1f"
-                  % (min(rtts), percentile(rtts, 0.50), sum(rtts) / len(rtts),
+                  % (min(rtts), median, sum(rtts) / len(rtts),
                      percentile(rtts, 0.95), max(rtts)))
+            print("note: both endpoints are on this machine, so every one of\n"
+                  "      those round trips reaches the relay and comes back\n"
+                  "      TWICE (child to relay to parent, then the echo\n"
+                  "      back). Two players in different places each see\n"
+                  "      about half of it, so roughly %.1f ms. Use probe\n"
+                  "      for the plain one hop number." % (median / 2.0))
         return 0 if lost == 0 else 1
     finally:
         parent.close()
