@@ -684,41 +684,9 @@ src/OneUpMushroomBlockTag_Spawn.c:
     complete
     .text start:0x020b4670 end:0x020b46a0
 
-src/_ZN16daObjKinokoTag_cD1Ev.cpp:
+src/actors/daObjKinokoTag_c.cpp:
     complete
-    .text start:0x020b46a0 end:0x020b46d0
-
-src/_ZN16daObjKinokoTag_cD0Ev.cpp:
-    complete
-    .text start:0x020b46d0 end:0x020b4714
-
-src/_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv.cpp:
-    complete
-    .text start:0x020b4714 end:0x020b47ec
-
-src/_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv.cpp:
-    complete
-    .text start:0x020b47ec end:0x020b482c
-
-src/_ZN16daObjKinokoTag_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b482c end:0x020b4850
-
-src/_ZN16daObjKinokoTag_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b4850 end:0x020b49a8
-
-src/_ZN16daObjKinokoTag_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b49a8 end:0x020b4a00
-
-src/daObjKinokoTag_c_Spawn.c:
-    complete
-    .text start:0x020b4a00 end:0x020b4a38
-
-src/MegaMushroomTag_Spawn.c:
-    complete
-    .text start:0x020b4a38 end:0x020b4a70
+    .text start:0x020b46a0 end:0x020b4a70
 
 src/_ZN13daObjDorifu_cD0Ev.cpp:
     complete
