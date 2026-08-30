@@ -404,6 +404,24 @@ enum : int { kRelayMaxPayload = 700 };
 static_assert(kPacketBytes <= kRelayMaxPayload,
               "the lockstep datagram no longer fits the relay's payload cap");
 
+// AND THE OTHER HALF OF THE RELAY'S CONTRACT, which is a rule about what the
+// GAME may send rather than about what the relay does: a forwarded datagram
+// must never be exactly 16 bytes beginning with "SMRC", because the relay
+// would read it as a HELLO and swallow it instead of forwarding it.
+//
+// Satisfied here without any padding, and worth writing down so it stays
+// satisfied. The lockstep packet is 144 bytes, so it cannot collide on length.
+// The aux channel CAN produce a 16-byte datagram -- a 'SYN1' snapshot carrying
+// zero player entries is exactly its 16-byte header -- but every aux kind
+// begins with its own four-byte tag ('SYN1', 'SYNP', 'SYNQ'), none of which is
+// "SMRC". The collision needs BOTH conditions and no shape in this file meets
+// both. A NEW aux kind whose tag is picked carelessly could, so: the tag
+// space is 'SYN*' and must stay there.
+static_assert(kPacketBytes != kRelayMsgBytes,
+              "the lockstep datagram is now the relay's HELLO length; it would "
+              "have to differ in its first four bytes from \"SMRC\", which is "
+              "true today but is no longer guaranteed by construction");
+
 // ---------------------------------------------------------------------------
 // TIMERS
 //
@@ -492,6 +510,84 @@ bool          g_round_done   = false;   // child: the parent's packet landed
 // has already moved on.
 Packet g_cache[kCacheDepth];
 bool   g_cache_valid[kCacheDepth];
+
+// ===========================================================================
+// INPUT-DELAY PIPELINING (run vsdec, lane NET). OFF BY DEFAULT.
+//
+// THE PROBLEM IS ARITHMETIC, NOT A DEFECT. The ROM's lockstep is STOP AND
+// WAIT: a child publishes its block for round R and cannot leave R until the
+// parent's aggregate for R comes back, and the parent cannot assemble R until
+// every child's R is in. So ONE ROUND COSTS ONE ROUND TRIP. At the 30 fps the
+// game is paced to, a frame has 33 ms; at an 80 ms round trip a round takes
+// 80 ms and the game runs at roughly twelve frames a second. Nothing is
+// broken -- that is what stop-and-wait means, and on the DS's own radio the
+// round trip was small enough that it never showed.
+//
+// THE FIX IS THE STANDARD ONE and it is a HOST-LAYER fix: stop asking the
+// wire to deliver round R inside frame R. With a delay of N, frame R hands the
+// game the records from round R-N, which were sent N frames (N*33 ms) ago and
+// have had that long to cross. Rounds then OVERLAP the wire instead of taking
+// turns with it, and the condition for full speed is
+//
+//     N * 33 ms  >=  round trip
+//
+// so N=2 covers 66 ms, N=3 covers 100 ms, N=4 covers 133 ms. The cost is that
+// the records are N frames old, which is input latency -- the same trade every
+// fighting game on the internet makes, and the reason it is a knob rather than
+// a decision made for the player.
+//
+// WHY THIS IS CONSISTENT AND NOT A DESYNC. Both consoles apply the SAME
+// N to the SAME round indices, so at frame R both are looking at exactly the
+// record set for round R-N. Nobody is guessing and nobody is rolling back;
+// the timeline is the ROM's own, read at a fixed offset. That is what makes
+// this safe to do under a decomp whose determinism is the contract -- and it
+// is the reason the alternative (free-run on the freshest packet that
+// happened to arrive) is NOT what is implemented here, however much simpler
+// it would have been.
+//
+// WHAT IT NEEDED FROM THE PARENT: the aggregate has to go out the moment it is
+// complete, not when the parent's own exchange() next comes round. The parent
+// holds child R at wall (R + one way) and its own R at frame R, so the
+// aggregate is ready at R + one way -- pipe_try_broadcast() is called from
+// service(), which the pump runs constantly, rather than only from exchange().
+//
+// PAST-ROUND HISTORY STAYS REFUSED. The redundancy finding at the bottom of
+// this file killed it because under stop-and-wait a datagram's main payload
+// already IS the round its receiver is stuck on. Pipelining does not revive
+// it: the ring below is a SEND-SIDE and RECEIVE-SIDE ledger of rounds in
+// flight, addressed by round number, and no datagram carries a round other
+// than its own.
+// ===========================================================================
+int g_input_delay = 0;                 // SM64DS_COMMS_INPUT_DELAY, 0 = off
+enum : int { kPipeDepth = 64 };        // rounds in flight; ~2 s at 30 Hz
+enum : int { kInputDelayMax = 8 };
+struct PipeRound {
+    unsigned      round;
+    unsigned char blocks[kCommsMaxPlayers][kCommsBlockBytes];
+    unsigned      mask;
+    bool          valid;
+    bool          sent;                // parent: this aggregate went out
+};
+PipeRound g_pipe[kPipeDepth];
+// Parent: the lowest round not yet broadcast. Child: the lowest round whose
+// aggregate has not come back, and therefore the one to republish.
+unsigned  g_pipe_low = 0;
+unsigned long long g_pipe_starved = 0;  // exchange() had to return 0 anyway
+
+PipeRound *pipe_find(unsigned r) {
+    PipeRound &s = g_pipe[r % kPipeDepth];
+    return (s.valid && s.round == r) ? &s : 0;
+}
+
+PipeRound &pipe_open(unsigned r) {
+    PipeRound &s = g_pipe[r % kPipeDepth];
+    if (!s.valid || s.round != r) {
+        std::memset(&s, 0, sizeof s);
+        s.round = r;
+        s.valid = true;
+    }
+    return s;
+}
 
 unsigned g_last_publish_ms = 0;
 unsigned g_last_join_ms    = 0;
@@ -841,6 +937,41 @@ void relay_on_ack(const RelayHello &h) {
     }
 }
 
+// ---------------------------------------------------------------------------
+// PIPELINED SEND HELPERS. Parent side only; a child publishes one slot and has
+// nothing to assemble.
+// ---------------------------------------------------------------------------
+void pipe_send_aggregate(const PipeRound &s) {
+    Packet b;
+    fill_header(b, kTypeBlocks);
+    b.round = s.round;               // NOT g_round: the parent is ahead of it
+    b.have  = s.mask & g_live;
+    for (int i = 0; i < kCommsMaxPlayers; ++i)
+        if (b.have & (1u << i))
+            std::memcpy(b.blocks[i], s.blocks[i], kCommsBlockBytes);
+    send_to_children(b);
+}
+
+// Close and send every round that has become complete. Called from service(),
+// so it runs on every pump turn rather than once per frame -- the whole point
+// of pipelining is that the aggregate leaves the moment it is assemblable, and
+// waiting for the parent's own next exchange() would put a frame of the
+// parent's own pacing back into the path this exists to shorten.
+void pipe_try_broadcast() {
+    if (g_role != kRoleParent || g_input_delay <= 0) return;
+    if (g_state != kCommsParentConnected) return;
+    for (unsigned q = g_pipe_low; q <= g_round; ++q) {
+        PipeRound *s = pipe_find(q);
+        if (!s) break;                        // a hole: nothing past it is due
+        if (!s->sent) {
+            if ((s->mask & g_live) != g_live) break;   // still waiting on a peer
+            pipe_send_aggregate(*s);
+            s->sent = true;
+        }
+        if (q == g_pipe_low) ++g_pipe_low;
+    }
+}
+
 void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
     (void)from;
     switch (p.type) {
@@ -880,6 +1011,27 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         break;
     }
     case kTypeBlocks:
+        if (g_input_delay > 0) {
+            // PIPELINED. Rounds are in flight rather than one at a time, so a
+            // child's block is filed by ITS OWN round number and the "is this
+            // the round we are on" test does not apply -- being behind the
+            // parent's clock is the normal state here, not a stale packet.
+            if (p.have & (1u << k)) {
+                PipeRound &s = pipe_open(p.round);
+                std::memcpy(s.blocks[k], p.blocks[k], kCommsBlockBytes);
+                s.mask |= (1u << k);
+            }
+            // A republish of a round already closed means the child never saw
+            // the aggregate. Re-serve it from the ledger, same job the
+            // stop-and-wait cache does.
+            PipeRound *done = pipe_find(p.round);
+            if (done && done->sent) {
+                pipe_send_aggregate(*done);
+                ++g_stale_serves;
+            }
+            pipe_try_broadcast();
+            break;
+        }
         if (p.round == g_round) {
             if (p.have & (1u << k)) {
                 std::memcpy(g_stage[k], p.blocks[k], kCommsBlockBytes);
@@ -990,6 +1142,35 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
     }
     case kTypeBlocks:
         if (g_state != kCommsChildConnected) break;
+        if (g_input_delay > 0) {
+            // PIPELINED. File the aggregate under ITS OWN round. A child is
+            // normally several rounds behind the parent's clock here -- that
+            // is the mechanism, not lateness -- so the stop-and-wait test
+            // "is this the round I am on" would throw away every packet.
+            g_live = p.live;
+            PipeRound &s = pipe_open(p.round);
+            for (int i = 0; i < kCommsMaxPlayers; ++i) {
+                if (p.have & (1u << i)) {
+                    std::memcpy(s.blocks[i], p.blocks[i], kCommsBlockBytes);
+                    s.mask |= (1u << i);
+                }
+            }
+            // ADVANCE THE LOW-WATER MARK BY SCANNING, NOT BY JUMPING TO
+            // p.round + 1. Jumping is the obvious version and it is wrong the
+            // moment anything arrives out of order -- which jitter guarantees.
+            // Aggregate 5 landing before aggregate 4 would push the mark to 6,
+            // and round 4's hole would then never be republished: the child
+            // needs 4 to advance, the parent already sent 4 and will not send
+            // it again unasked, and the session stops for good with no error
+            // anywhere. The mark is the lowest round NOT yet complete, so it
+            // is found by walking up from where it was.
+            while (true) {
+                PipeRound *low = pipe_find(g_pipe_low);
+                if (!low || (low->mask & g_live) != g_live) break;
+                ++g_pipe_low;
+            }
+            break;
+        }
         if (p.round != g_round) break;   // a round we already finished
         g_live = p.live;
         for (int i = 0; i < kCommsMaxPlayers; ++i) {
@@ -1270,6 +1451,37 @@ void service() {
         }
     }
 
+    // PIPELINED. The parent closes and ships any round that has become
+    // complete, HERE rather than in its own exchange(): the pump runs this
+    // constantly, and making the aggregate wait for the parent's next frame
+    // would put 33 ms back into the path pipelining exists to shorten.
+    if (g_input_delay > 0) {
+        if (g_role == kRoleParent) {
+            pipe_try_broadcast();
+        } else if (g_state == kCommsChildConnected &&
+                   (unsigned)(t - g_last_publish_ms) >= (unsigned)g_resend_ms) {
+            // Republish the OLDEST round still unanswered. One per tick: a
+            // hole is healed at the resend rate, and a child that dumped its
+            // whole in-flight window on every tick would turn one lost
+            // datagram into a burst exactly when the path is already unhappy.
+            g_last_publish_ms = t;
+            for (unsigned q = g_pipe_low; q < g_round; ++q) {
+                PipeRound *s = pipe_find(q);
+                if (!s || (s->mask & (1u << g_slot)) == 0) continue;
+                Packet b;
+                fill_header(b, kTypeBlocks);
+                b.round = q;
+                b.have  = (1u << g_slot);
+                std::memcpy(b.blocks[g_slot], s->blocks[g_slot],
+                            kCommsBlockBytes);
+                send_to_slot(b, 0);
+                ++g_resends;
+                break;
+            }
+        }
+        return;
+    }
+
     // A child with an open round keeps republishing it until the parent's
     // answer lands. This is the whole of the retransmission story.
     if (g_role == kRoleChild && g_state == kCommsChildConnected &&
@@ -1422,6 +1634,8 @@ void lb_open(unsigned mode) {
     g_round_done = false;
     std::memset(g_cache_valid, 0, sizeof g_cache_valid);
     g_dring_head = g_dring_count = 0;
+    std::memset(g_pipe, 0, sizeof g_pipe);
+    g_pipe_low = 0;
 
     // SEED THE PEER TABLE. In loopback mode every entry is known up front and
     // never changes -- that is the old arithmetic, written down as data. In
@@ -1551,6 +1765,70 @@ int lb_exchange(const void *my_block, uint16_t *status) {
     if (g_state != kCommsParentConnected && g_state != kCommsChildConnected)
         return 0;
     if (!my_block) return 0;
+
+    // =======================================================================
+    // THE PIPELINED PATH. See the banner over the ring for why it exists and
+    // why it is consistent. Nothing below this block changes; with the knob at
+    // 0 the stop-and-wait code underneath is what runs, unaltered.
+    // =======================================================================
+    if (g_input_delay > 0) {
+        PipeRound &mine = pipe_open(g_round);
+        // PUBLISH ONCE PER ROUND, NOT ONCE PER CALL, and the difference is not
+        // cosmetic. The ROM's wait loop calls exchange() over and over inside a
+        // single frame -- that is what the seam's exchanges-vs-rounds counters
+        // have always shown -- so a send on every call is a send on every spin.
+        // Measured on the live relay before this line existed: 1447 datagrams
+        // for 600 rounds, about 2.4x the traffic the protocol needs, at exactly
+        // the moment the path is already the bottleneck. The stop-and-wait path
+        // beneath has always had this guard (`first_publish`); the pipelined
+        // one needs its own because it stages into the ring instead.
+        const bool first_publish = (mine.mask & (1u << g_slot)) == 0;
+        std::memcpy(mine.blocks[g_slot], my_block, kCommsBlockBytes);
+        mine.mask |= (1u << g_slot);
+
+        if (g_role == kRoleChild) {
+            if (first_publish) {
+                Packet b;
+                fill_header(b, kTypeBlocks);
+                b.round = g_round;
+                b.have  = (1u << g_slot);
+                std::memcpy(b.blocks[g_slot], mine.blocks[g_slot],
+                            kCommsBlockBytes);
+                send_to_slot(b, 0);
+                g_last_publish_ms = now_ms();
+            }
+        } else {
+            pipe_try_broadcast();
+        }
+        service();                       // the answer may already be here
+
+        // THE ROUND THE GAME ACTUALLY GETS. Frame R is handed round R-N.
+        //
+        // BEFORE THE PIPELINE HAS FILLED, every frame is handed round 0
+        // instead of nothing. Handing back an EMPTY round would be worse than
+        // slow: the ROM's own record loop clears each slot and only fills the
+        // ones it got, so an empty round tells the game that no player -- not
+        // even this console -- is live, and src/func_0203ea5c.c takes a very
+        // different branch on that. Repeating round 0 for N frames is a held
+        // first frame, which is what the start of a session already looks
+        // like.
+        const unsigned want = (g_round >= (unsigned)g_input_delay)
+                                  ? g_round - (unsigned)g_input_delay
+                                  : 0u;
+        PipeRound *s = pipe_find(want);
+        if (!s || (s->mask & g_live) != g_live) {
+            // The wire is slower than N frames of pipeline. This is the honest
+            // stall, and it is COUNTED rather than hidden: a session running
+            // with a nonzero starve count is one whose input delay is set too
+            // low for its path, and that is a tuning fact somebody needs.
+            ++g_pipe_starved;
+            return 0;
+        }
+        std::memcpy(g_latched, s->blocks, sizeof g_latched);
+        g_latched_mask = s->mask & g_live;
+        ++g_round;
+        return 1;
+    }
 
     // Stage my own block for the open round. Copied, never inspected.
     std::memcpy(g_stage[g_slot], my_block, kCommsBlockBytes);
@@ -1854,10 +2132,32 @@ bool comms_loopback_install_from_env() {
     if (const char *b = std::getenv("SM64DS_COMMS_BIND_ANY"))
         g_bind_any = (std::atoi(b) != 0);
 
-    // THE ONE COMBINATION THAT LOOKS FINE AND CANNOT WORK, so it is loud: a
-    // direct-mode PARENT bound to 127.0.0.1 can send but will never receive a
-    // JOIN from off this machine. Nothing else in the system will say so --
-    // the child knocks into the void and both sides blame the network.
+    // BIND_ANY ON A PARENT IS ITSELF A DIRECT-MODE REQUEST, and this cost a
+    // failed rung to find. SM64DS_COMMS_HOST is a CHILD knob -- a parent has
+    // no peer address to be told, it learns each child from the JOIN -- so a
+    // direct-mode parent has no HOST set and, without this, stayed in loopback
+    // mode. What that looks like from outside is the nastiest kind of
+    // half-working: the parent ACCEPTS the child (the child's source port
+    // still satisfies loopback's port arithmetic) and then answers to
+    // 127.0.0.1, which the child correctly refuses because it is not the
+    // address it dialled. Parent says two players, child says none, and
+    // neither log contains an error.
+    //
+    // Opening the socket to every interface IS the decision that this session
+    // comes from off this machine. Nothing else needs to be said twice.
+    if (g_bind_any && g_net_mode == kNetLoopback && g_role == kRoleParent) {
+        g_net_mode = kNetDirect;
+        std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_BIND_ANY on a "
+                     "parent means DIRECT mode: children are learned from "
+                     "their JOINs and answered at the address they came "
+                     "from\n");
+    }
+
+    // The remaining combination that looks fine and cannot work: a parent that
+    // was given SM64DS_COMMS_HOST (which does nothing for it) and no
+    // BIND_ANY. It binds 127.0.0.1 and no child off this machine can reach it,
+    // and nothing else in the system will say so -- the child knocks into the
+    // void and both sides blame the network.
     if (g_net_mode == kNetDirect && g_role == kRoleParent && !g_bind_any) {
         std::fprintf(stderr,
             "[comms:loopback] DIRECT MODE PARENT WITHOUT SM64DS_COMMS_BIND_ANY=1. "
@@ -1907,6 +2207,44 @@ bool comms_loopback_install_from_env() {
         g_resend_ms = v;
     }
     if (g_net_mode != kNetLoopback) g_join_wait_ms = kJoinBackoffStartMs;
+
+    // INPUT-DELAY PIPELINING. A NUMBER OF FRAMES, and deliberately not an
+    // "auto".
+    //
+    // Auto was written and taken back out, and the reason is worth keeping:
+    // only the CHILD ever measures a round trip here (its JOIN to the parent's
+    // ACCEPT). The parent has no equivalent sample, so an auto would have
+    // resolved to one value on one end and a fallback on the other -- and
+    // while mismatched delays are not a desync (both consoles consume the same
+    // round sequence, one simply lags the other), it would mean a knob whose
+    // effective value nobody could state. A number both launchers set is worth
+    // more than an automation that is right on one side.
+    //
+    // THE FORMULA, so a caller is not guessing: N >= round_trip_ms / 33,
+    // rounded up. N=2 covers 66 ms, N=3 covers 100 ms, N=4 covers 133 ms. Too
+    // low costs stalls (counted as `starved`); too high costs input lag.
+    //
+    // Off by default, and off on loopback even when asked, because loopback's
+    // round trip is microseconds: there is nothing there to hide and it would
+    // only add frames of lag to a session that has none.
+    if (const char *n = std::getenv("SM64DS_COMMS_INPUT_DELAY")) {
+        int v = std::atoi(n);
+        if (v < 0) v = 0;
+        if (v > kInputDelayMax) v = kInputDelayMax;
+        g_input_delay = v;
+        if (g_net_mode == kNetLoopback && g_input_delay > 0) {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_INPUT_DELAY is "
+                         "for a wire with a round trip on it; loopback has "
+                         "none. Ignored.\n");
+            g_input_delay = 0;
+        }
+        if (g_input_delay > 0)
+            std::fprintf(stderr, "[comms:loopback] input delay %d frame(s): "
+                         "frame R is handed the records from round R-%d, so "
+                         "rounds overlap the wire instead of taking turns with "
+                         "it. Both ends should run the same number.\n",
+                         g_input_delay, g_input_delay);
+    }
 
     if (const char *s = std::getenv("SM64DS_COMMS_SLOT")) {
         const int v = std::atoi(s);
@@ -1983,6 +2321,8 @@ CommsLoopbackStats comms_loopback_stats() {
     s.delay_ms        = g_delay_ms;
     s.jitter_ms       = g_jitter_ms;
     s.delay_overflow  = g_delay_overflow;
+    s.input_delay     = g_input_delay;
+    s.starved         = g_pipe_starved;
     return s;
 }
 
@@ -1993,7 +2333,8 @@ void comms_loopback_report(const char *tag) {
         "[loopback:%s] role=%s slot=%d port=%d live=0x%x round=%lu "
         "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu "
         "testdrop=%llu mode=%s paired=%d hsrtt=%d resendms=%d "
-        "delayms=%d jitterms=%d delayovf=%llu dup=%d auxambig=%llu\n",
+        "delayms=%d jitterms=%d delayovf=%llu dup=%d auxambig=%llu "
+        "indelay=%d starved=%llu\n",
         tag ? tag : "-",
         s.role == kRoleParent ? "parent" : (s.role == kRoleChild ? "child"
                                                                  : "none"),
@@ -2002,7 +2343,8 @@ void comms_loopback_report(const char *tag) {
         g_test_drops,
         kModeName[s.net_mode >= 0 && s.net_mode <= 2 ? s.net_mode : 0],
         s.relay_paired ? 1 : 0, s.handshake_rtt_ms, s.resend_ms,
-        s.delay_ms, s.jitter_ms, s.delay_overflow, g_dup, g_aux_ambiguous);
+        s.delay_ms, s.jitter_ms, s.delay_overflow, g_dup, g_aux_ambiguous,
+        s.input_delay, s.starved);
 }
 
 }  // namespace port

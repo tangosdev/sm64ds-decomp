@@ -130,6 +130,10 @@ struct CommsLoopbackStats {
     int jitter_ms;
     unsigned long long delay_overflow;  // datagrams the delay ring could not
                                         // hold. Nonzero invalidates a run.
+    int input_delay;                    // pipelining depth in frames, 0 = off
+    unsigned long long starved;         // pipelined exchange() calls that still
+                                        // had to return 0: the input delay is
+                                        // set too low for the path
 };
 CommsLoopbackStats comms_loopback_stats();
 
