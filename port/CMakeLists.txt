@@ -9171,6 +9171,41 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Snowball8BehaviorEv.cpp"
     PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
 
+# R11, run rel0215 wave 3 (lane w3-d, ov070 FlyGuy): THE PMF CALLING
+# CONVENTION IS A PROPERTY OF THE SITE, NOT THE CLASS. Before seating raw
+# cdecl bodies into a pointer-to-member table, disassemble EVERY live
+# dispatch site from the build's own objects. A site MSVC compiles as a
+# one-call forwarder ends `pop ebp / jmp eax` and reuses the caller's cdecl
+# frame, so the receiver is still at [esp+4] and a raw body is correct. A
+# site that does work after the dispatch cannot be a forwarder: it emits
+# `call eax` with the receiver in ECX and NOTHING PUSHED, and needs a
+# __fastcall thunk (push ecx / call / add esp,4 / ret). The two sets can be
+# disjoint halves of the SAME class's cells -- FlyGuy's enter halves are
+# tail-jumped and its tick halves are not.
+#
+# THIS FAILURE IS SILENT. With the wrong convention live,
+# func_ov070_0211fa80 wrote *(int*)(c+0x3dc)=0 through a stray pointer
+# every FlyGuy frame while the byte gate, the linkage count, all five ABI
+# checkers, the guards, the census and rc stayed green. The only instrument
+# that caught it was a before/after state trace (level 19 player y: 720.1
+# flat with the raw seat vs 800-820 oscillating with the thunks). Enumerate
+# sites by disassembly, never by grepping for a source shape -- FlyGuy's
+# Behavior reads a Holder{char pad[8]; PMF fn;} at +8, which R9's
+# `c->pp + 1` grep could not see.
+#
+# THE MAP GIVES A FAST FIRST READ (run rel0215, lanes prop16/prop17): grep
+# walk_window.map for the DISPATCHER symbol and read the .obj column. A
+# dispatcher from a src/*.cpp.obj is MSVC's own lowering of a real
+# member-pointer call: receiver in ECX, nothing pushed -- seat a
+# __fastcall(self, dummy) thunk. A dispatcher from a port/unmatched/*.obj
+# host copy has usually rewritten the call as void(*)(void*): plain cdecl
+# indirect call, receiver on the stack -- seat the bare cdecl body, and a
+# thunk would MIS-RECEIVE (ov074's state 0 puts state_index*16 = 0 in ECX,
+# so the thunked call hands the body a null this). The .obj column decides
+# the DEFAULT; the per-site disassembly above remains the confirmation,
+# because one class's halves can split (FlyGuy) and a forwarder can hide in
+# a src obj. Fastcall iff no push of the receiver before the call.
+
 # run rel0215 wave 3, lane w3-b: the ONE fall-off-the-end body in this seat.
 # src/func_ov081_02126950.cpp is declared `int` and never returns. mwccarm
 # accepts that; MSVC refuses the TU with `error C4716: must return a value`.
