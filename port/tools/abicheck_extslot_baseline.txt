@@ -91,3 +91,38 @@ _data_ov052_02112520 slot 31 ?ov52_kill@@YIHPAX0@Z
 _data_ov060_0211a9b0 slot 31 ?ov60_kill@@YIHPAX0@Z
 _data_ov079_02127fb8 slot 31 ?blz_kill@@YIHPAX0@Z
 _data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
+
+# ---------------------------------------------------------------------------
+# run rel0215 wave 2 (lane cast-sweep2), 2026-08-30. SIX ROWS, ov032 and ov047.
+#
+# All six are the shape seventy-eight rows above already carry: slot 31 of a
+# 32-slot PLATFORM table filled with the lane's own __fastcall Kill thunk
+# (`int __fastcall ovNN_kill(void *, void *) { _ZN8Platform4KillEv(s);
+# return 0; }`), which the compiler emits as ?ovNN_kill@@YIHPAX0@Z and abicheck
+# reads as `ret 0`. The ROM word at slot 31 is 0x020ee55c _ZN8Platform4KillEv,
+# a this-only method with no extra argument, so a zero pop is the only answer
+# that can be right -- and it is what every one of the seventy-eight
+# does. Recorded here as DEBT rather than as an ACTOR_EXT_SLOT_AUTHORITY row
+# for the reason that table's own two entries state: an authority row needs the
+# DISPATCH SITE read out of the emitted code, and nothing in this binary
+# dispatches slot 31 -- Platform::Kill is reached directly, never through the
+# table -- so there is no site to read. That is the same position the
+# seventy-eight are in.
+#
+# THIS LANE ADDS SIX AND FOUND EIGHTEEN MORE THAT PREDATE IT. Running
+# run_checks.py --disasm-dir on cons tip 3b4863d9a's own build reports
+# TWENTY-FOUR unbaselined rows; eighteen name tables and thunks in
+# hal/actor_classes_ov017/ov023/ov024/ov026/ov030/ov033/ov035/ov036.cpp, files
+# this lane never touched (`git log 3b4863d9a..HEAD -- <those files>` is empty),
+# so they were already unbaselined before this branch existed. They are NOT
+# cleared here: they are eight other lanes' rulings to make. The reason nobody
+# had seen them is that port/build-port.cmd does not pass --disasm-dir and
+# port/tools/battery.py does not run run_checks at all, so abicheck only runs
+# when a lane asks for it by hand -- which the wave-1 cast-sweep1 lane's own
+# run_checks_FINAL.log shows it did not.
+__ZTV9HugeCover slot 31 ?ov32_kill@@YIHPAX0@Z
+_data_ov032_021138e0 slot 31 ?ov32_kill@@YIHPAX0@Z
+__ZTV10RickshawBs slot 31 ?ov47_kill@@YIHPAX0@Z
+__ZTV18RickshawPlatformBs slot 31 ?ov47_kill@@YIHPAX0@Z
+_data_ov047_021122a0 slot 31 ?ov47_kill@@YIHPAX0@Z
+_data_ov047_0211244c slot 31 ?ov47_kill@@YIHPAX0@Z
