@@ -38,7 +38,11 @@
 # unnamed helpers, CleanupResources, OnPendingDestroy, Render, Behavior,
 # InitResources, then PrincessPeach_Spawn. Everything below is inside it.
 #
-# ---- FOUR BODIES ARE HELD OUT, AND EACH ONE FOR A NAMED REASON -------------
+# ---- SIX BODIES ARE HELD OUT, AND EACH ONE FOR A NAMED REASON --------------
+#
+# Nineteen of the twenty-five link. Four are held for ABI or numbering, and
+# two more for MSVC front-end refusals in the matched text itself -- those two
+# are at the bottom, next to the lines they replace.
 #
 #   _ZN13PrincessPeach8BehaviorEv     ROM 0x0212a52c dispatches its ModelAnim's
 #       vtable SLOT 3 (`add r0,r0,#0xd4 / ldr r1,[r0] / ldr r1,[r1,#0xc] /
@@ -122,8 +126,17 @@ src/_ZN13PrincessPeachD0Ev.c
 #
 # The seventeen unnamed helpers, all inside her block. Ten of them are the
 # state bodies above; the rest are the per-frame work those states call.
-src/func_ov085_02129dbc.cpp
-src/func_ov085_02129ebc.cpp
+# func_ov085_02129dbc and func_ov085_02129ebc are HOST COPIES in
+# port/unmatched/Ov085_PrincessPeach_Declshapes.cpp -- two MEASURED MSVC
+# front-end refusals, neither of them a behaviour question:
+#   02129dbc  C2733, decl_common.h:1622 declares it `int (void*)` inside its
+#             extern "C" block and the TU defines it `void (Actor*)`. One
+#             register on the ROM, two C-linkage overloads to MSVC. The
+#             func_ov102_0214b248 / func_ov071_02121ba4 case.
+#   02129ebc  C4716, an int body that falls off the end. mwccarm leaves r0;
+#             MSVC refuses. relocs.txt names both callers and both discard it.
+# hostgen.py's HEADER_SHADOW and FALLS_OFF_RETURN tables are the reclaim
+# route for both; that file's header carries the derivation.
 src/func_ov085_02129f8c.c
 src/func_ov085_02129fdc.cpp
 src/func_ov085_0212a0b8.c
