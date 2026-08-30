@@ -1,0 +1,261 @@
+# run rel0215 wave 2 (lane cast-sweep2): ov032's THREE CLASSES, per symbol.
+# Overlay 1 of 4 in this lane.
+#
+# ov032 is a LEVEL overlay (level 24, Tiny-Huge Island's BIG side,
+# data/stage/tibi_deka_d) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol; --whole emits
+# port_ov032_image/_patch/_at and nothing by name while --from-list --pack
+# emits the named arrays plus port_ov032_syms_patch. Same dual-mount shape as
+# ov012/ov013/ov024/ov025/ov033/ov035/ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x021128f0   .rodata 0x021128f0..0x02112c10
+#   .init   0x02112c10..0x02112e94   .ctor   0x02112e94..0x02112ea0
+#   .data   0x02112ec0..0x02113a40   .bss    0x02113a40..0x02113b20
+# Every raw byte below was read out of extracted/overlays/overlay_0032.bin,
+# never the dsd export (T4). BASE PROOF, the slice_vs.txt opening move: the
+# first word of func_ov032_021111a0, HugeCover_Spawn (0x02112668),
+# HugeWater_Spawn (0x021128b8) and _ZN9HugeCover13InitResourcesEv (0x021127f0)
+# all read e92d4010 = push {r4,lr}.
+#
+# ==== THE CAST IS THREE, NOT TWO. BOTH ATTRIBUTION ROUTES ==================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory              +4   x on L24
+#   106  0x02090a0c  0x021138bc  0x02112668  HugeCover_Spawn      106   1
+#   107  0x02090a10  0x02113980  0x021128b8  HugeWater_Spawn      107   1
+#   228  0x02090bf4  0x02113800  0x0211244c  func_ov032_0211244c  228   2
+#
+# The campaign plan lists ov032 as "HugeCover, HugeWater". There is a THIRD
+# class and it is the bulk of the overlay: id 228, whose factory dsd left as
+# func_ov032_0211244c. It carries twenty-four of the forty-one TUs.
+#
+# Every record's word[0] lands inside ov032 [0x021111a0, 0x02113b20) and
+# relocates to one of the overlay's own functions, and every record reads its
+# own id back at +4. BOTH routes are required -- the level overlays share the
+# load window at 0x021111a0, and id 106's candidate list alone reads
+# overlays(9,14,15,16,18,20,21,22,24,25,26,27,29,32,34,36). Run over every
+# candidate of every id, the two routes together leave exactly ONE owner per
+# id, and ov032 is it for all three.
+#
+# Level 24 spawns 83 actors (86 on the second census) and skips 7 across four
+# ids on tip 3b4863d9a. FOUR of the seven are this overlay's cast (106 x1,
+# 107 x1, 228 x2); the other three are id 232, FlyGuy, whose both-routes owner
+# is ov070 -- a different lane's yield.
+#
+# ==== THE DSD VTABLE LABELS ARE ON THE WRONG CLASS, THREE ROUTES AGREE =====
+#
+# dsd names ONE vtable address in this overlay and gives it TWO names, both at
+# 0x021139a4: _ZTV9HugeCover and _ZTV14daObjTdWater_c. Disassembled from the
+# overlay image:
+#
+#   0x02112668 HugeCover_Spawn      alloc 0x320 (800)  installs 0x021138e0
+#   0x021128b8 HugeWater_Spawn      alloc 0x334 (820)  installs 0x021139a4
+#                                   + TextureTransformer ctor at this+0x320
+#   0x0211244c func_ov032_0211244c  alloc 0x438 (1080) installs 0x02113824
+#                                   Enemy::Enemy, two MovingCylinderClsnWithPos
+#                                   (+0x110, +0x150), a WithMeshClsn (+0x190),
+#                                   a ModelAnim (+0x34c), a ShadowModel (+0x3b4)
+#
+# and the RTTI at vtable[-1] says the same thing in the ROM's own words:
+#   0x02113824 -> typeinfo 0x021137e4 -> name 0x021137f0  "12daBakubaku_c"
+#   0x021138e0 -> typeinfo 0x021138a0 -> name 0x021138ac  "13daObjTdFuta_c"
+#   0x021139a4 -> typeinfo 0x02113960 -> name 0x0211396c  "14daObjTdWater_c"
+# "Futa" is the ROM's own word for the lid/cover, exactly as in ov033's
+# 13daObjTtFuta_c one overlay along ("Td" = tibi_deka_d, the big side; "Tt" =
+# tibi_deka_t, the small one). "Bakubaku" is the ROM's name for the big fish;
+# tools/actor_names.py already reads id 228 as BUBBA and that is the row name.
+#
+# So:
+#   id 106 HUGE_COVER  ->  0x021138e0, the table dsd named only as the data
+#                          symbol data_ov032_021138e0, bodies func_ov032_*
+#   id 107 HUGE_WATER  ->  0x021139a4, the table dsd called _ZTV9HugeCover,
+#                          bodies _ZN9HugeCover*
+#   id 228 BUBBA       ->  0x02113824, the table dsd named only as the data
+#                          symbol data_ov032_02113824, bodies func_ov032_*
+#
+# Every _ZN9HugeCover* method in src/ is HUGE_WATER's. This is the ov033
+# TinyCover/TinyWater shift again, one overlay along, and the ov035 shift
+# before that. Everything downstream is wired BY ADDRESS; the dsd spellings
+# survive only as host array names so the matched TUs link unchanged.
+#
+# ONE EXTRA WRINKLE THIS OVERLAY HAS AND OV033 DID NOT: dsd put TWO names on
+# 0x021139a4. src/HugeWater_Spawn.c spells it _ZTV9HugeCover and
+# src/_ZN9HugeCoverD1Ev.c / D0Ev.c spell it _ZTV14daObjTdWater_c; both are
+# DECLARED in include/decl_common.h (lines 810 and 573) and neither is defined
+# anywhere in the port. hal/actor_classes_ov032.cpp defines _ZTV9HugeCover[32]
+# and aliases _ZTV14daObjTdWater_c onto it, so one storage serves both
+# spellings. Same treatment for _ZTV13daObjTdFuta_c, which decl_common.h
+# declares (line 541) for src/func_ov032_021124a8.c and dsd never put in
+# symbols.txt at all: it is 0x021138e0, aliased onto data_ov032_021138e0.
+#
+# ==== THREE WIDTHS, AND EVERY dsd LANDING IS SHORT ========================
+#
+# data_ov032_02113824  BUBBA, THIRTY-ONE slots, 0x02113824..0x021138a0.
+#   next dsd symbol 0x0211382c -- INTERIOR (slot 2). Reads TWO.
+#   Pinned three ways: slot 30 is 0x020100dc Actor::OnAimedAtWithEggReturnVec,
+#   the last Actor slot, and there is NO slot 31 because an Enemy is a plain
+#   Actor and not a Platform; 0x021138a0 is the NEXT table's typeinfo record
+#   (0x0209a764 / name 0x021138ac / base 0x021089ec); and 0x0211382c's own
+#   next-symbol run ends exactly there.
+#   EIGHT own slots, two more than usual: 0 InitResources (func_ov032_021122dc),
+#   3 CleanupResources (02112124), 6 Behavior (021121b4), 9 Render (02112164),
+#   12 OnPendingDestroy (02112160 -- an EMPTY body that overrides ActorBase's),
+#   16 D1 (021111a0), 17 D0 (021111f0), and 29 OnAimedAtWithEgg (02112444,
+#   `return 0xa0000`). A fill that let the shared half write ActorBase's
+#   OnPendingDestroy into 12 or Actor's OnAimedAtWithEgg into 29 would have
+#   changed both answers silently.
+#
+# data_ov032_021138e0  HUGE_COVER, THIRTY-TWO slots, 0x021138e0..0x02113960.
+#   next dsd symbol 0x021138f0 -- INTERIOR (slot 4). Reads FOUR.
+#   0x02113960 is the next table's typeinfo record, an independent pin.
+#   Six own slots, the usual 0/3/6/9/16/17.
+#
+# _ZTV9HugeCover  0x021139a4, THIRTY-TWO slots, 0x021139a4..0x02113a24.
+#   next dsd symbol 0x021139b0 -- INTERIOR (slot 3). Reads THREE.
+#   Six own slots, the usual 0/3/6/9/16/17.
+#
+# Both Platform tables close on the Platform word:
+#     slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#     slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#     slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+# the same close ov024's top, ov025's two, ov033's two, ov035's two, ov045's
+# six, ov052's two and ov056's one all end on. All three tables are EXCLUDED
+# from this mount and hosted as arrays hal/actor_classes_ov032.cpp fills, which
+# is why none of the eleven dsd data symbols inside their spans is listed
+# below (0x02113824, 0x0211382c; 0x021138e0, 0x021138f0, 0x021138fc,
+# 0x02113934; 0x021139a4, 0x021139b0, 0x021139f4, 0x02113a00).
+#
+# ==== FIVE T3 WIDTH PINS, ALL FIVE REAL UNDER-READS ========================
+#
+# .data
+#   data_ov032_02113800:0x1c   BUBBA's SpawnInfo. Natural next-symbol delta is
+#     FOUR -- dsd named 0x02113804 INSIDE the record, and 0x02113804's own run
+#     covers the rest of it. A record is 0x1c (the ov033 TinyCover/TinyWater
+#     measurement, and 0x02113800+0x1c = 0x0211381c is exactly the vtable's
+#     offset-to-top word). Unpinned this mounts FOUR bytes of twenty-eight and
+#     the registry's id check at +4 would read off the end of its own storage.
+#   HugeCover_SpawnInfo:0x1c   natural 0x8 (dsd named 0x021138c4 inside it,
+#     and 0x021138d8 -- the record's own end -- as a third symbol).
+#   HugeWater_SpawnInfo:0x1c   natural 0x18 (dsd named 0x02113998 inside it).
+#     One word short: the sixth field would be read off whatever the host
+#     linker put next.
+#   data_ov032_02112fb8:0x20   HUGE_WATER's CLPS collision block. Natural 0x18.
+#     Self-describing header ('CLPS' 0x53504c43, entrySize 8, count 1) then
+#     0xffffffff fill to 0x20 -- the ROUTE C invariant ov033's two CLPS blocks
+#     are pinned by, not the landing. HUGE_COVER's block at 0x02112f98 already
+#     reads 0x20 and is left bare so the diff shows which one dsd got wrong.
+# .bss
+#   data_ov032_02113a70:0xc    a destructor chain node. func_020731dc writes
+#     THREE words through its node argument (src/func_020731dc.c), so every
+#     node is 0xc; dsd named 0x02113a74 four bytes in.
+#   data_ov032_02113a9c:0x10   a sixteen-byte PMF state cell (below); dsd named
+#     0x02113aa0 four bytes in.
+# The two interior names 0x02113a74 and 0x02113aa0 are both marked `ambiguous`
+# by dsd and are deliberately NOT in the list -- mounting them alongside the
+# pinned parents is a layout --pack refuses, and nothing in src/ spells either.
+#
+# ==== BUBBA'S FIVE-CELL POINTER-TO-MEMBER STATE MACHINE ====================
+#
+# The Ukiki (ov030) / BabyPenguin (ov072) shape with FIVE cells and the cell
+# pointer at +0x3b0. __sinit_ov032_02112c10 copies TEN 8-byte mwcc PMF pairs
+# out of .data into FIVE 16-byte .bss cells, {lo = enter, hi = tick}:
+#
+#   cell 0x02113a8c  <- 0x0211377c func_ov032_02111f9c / 0x021137ac 02111e24
+#   cell 0x02113a9c  <- 0x021137b4 func_ov032_02111dd8 / 0x021137a4 02111d7c
+#   cell 0x02113aac  <- 0x0211379c func_ov032_02111d58 / 0x021137c4 02111b9c
+#   cell 0x02113abc  <- 0x02113784 func_ov032_02111b50 / 0x0211378c 02111830
+#   cell 0x02113a7c  <- 0x02113794 func_ov032_02111814 / 0x021137bc 02111620
+#
+# Every delta word is zero. func_ov032_02111ff4 stores a cell pointer at +0x3b0
+# and tail-calls the LO half; func_ov032_021121b4 (Behavior) dispatches the HI
+# half at cell+8. Both dispatch sites are host copies (the ROM's
+# {function, delta} pair is not MSVC's PMF representation), and
+# hal/actor_classes_ov032.cpp VERIFIES all ten ROM words in the mounted cells
+# before rewriting the function words with host addresses -- a mount pointing
+# at the wrong bytes aborts instead of calling into DS memory.
+#
+# ==== WHICH SINIT BUILDS WHAT, read off the three matched bodies ===========
+#
+#   __sinit_ov032_02112c10  BUBBA
+#     02113a40 file 0x295=661 model  node 02113a64
+#     02113a50 file 0x297=663 anim   node 02113a70
+#     02113a48 file 0x296=662 anim   node 02113a58
+#     + the five state cells above
+#   __sinit_ov032_02112dbc  HUGE_COVER
+#     02113ad4 file 0x6b5=1717 model node 02113ae8
+#     02113acc file 0x6b6=1718 clsn  node 02113adc
+#   __sinit_ov032_02112e28  HUGE_WATER
+#     02113afc file 0x6b7=1719 model node 02113b10
+#     02113af4 file 0x6b8=1720 clsn  node 02113b04
+#
+# ==== ONE LIVE WRONG-NAME AT THE SHARED WINDOW (T6) =======================
+#
+# src/func_ov032_02111d7c.cpp -- BUBBA's state-2 tick -- calls a function it
+# spells func_ov047_02111254. That is OV047's name for the same window address,
+# and OV047 IS SEATED BY THIS SAME LANE two commits later, so the name would
+# resolve to Bowser-in-the-Sky's body. relocs.txt resolves the ROM's own
+# arm_call at 0x02111d84 to 0x02111254 module:overlay(32) --
+# func_ov032_02111254, ov032's own. Routed by a per-source -D. It is a direct
+# rename, not a private name: decl_common.h declares neither spelling.
+#
+# ==== T2: RELOCATED WORDS IN THIS MOUNT ===================================
+#
+# Fourteen of the symbols below carry a relocated word. Ten are the PMF pairs,
+# whose targets are CODE in ov032's own .text and are NEVER called through the
+# mounted word -- the seat rewrites both halves of every cell with host
+# addresses before anything can dispatch. The remaining four are inside the BTA
+# file descriptor data_ov032_02112f64, and its four targets (0x021128f0,
+# 0x021128fc, 0x0211291c, 0x02112aa4) plus 0x0211291c's own target
+# 0x02112edc are mounted here EXPLICITLY so port_ov032_syms_patch rebases them
+# inside this mount rather than leaving DS addresses for TextureTransformer::
+# Prepare to read. ptr_audit reads zero over the result.
+#
+# ==== FIVE "recovered from vtable slot identity" MARKERS, ALL ADJUDICATED ===
+#
+# T5: the marker is overloaded and sits on real decomp as well as on guesses.
+# func_ov032_021124ec, 02112544, 02112588, 021125b0 and 021125d4 all carry it,
+# and all five are HUGE_COVER's -- the class dsd left unnamed, so every one of
+# its lifecycle slots is a func_ov032_* whose NAME alone came from the slot.
+# All five were disassembled from extracted/overlays/overlay_0032.bin and put
+# through tools/match.py at 2004/b56 with --strict-relocs: five MATCHING, zero
+# guesses. The rulings and their evidence go in inferred_stub_adjudicated.txt,
+# never the baseline. One of them, func_ov032_021124ec, is labelled
+# OnYoshiTryEat by the RTTI recovery and is actually the deleting destructor --
+# the same mislabel class as func_ov033_021111e4 and func_ov005_020bfefc.
+
+# ---- .rodata: the BTA descriptor's own targets (T2, above) -----------------
+data_ov032_021128f0 data_ov032_021128f4
+data_ov032_021128f8 data_ov032_021128fc
+data_ov032_0211291c data_ov032_02112aa4
+
+# ---- .data: the material name 0x0211291c points at ------------------------
+data_ov032_02112edc
+
+# ---- .data: id 107's BTA file descriptor and the two CLPS blocks -----------
+data_ov032_02112f64
+data_ov032_02112f98 data_ov032_02112fb8:0x20
+
+# ---- .data: the ten 8-byte PMF source pairs the sinit copies --------------
+data_ov032_0211377c data_ov032_02113784 data_ov032_0211378c
+data_ov032_02113794 data_ov032_0211379c data_ov032_021137a4
+data_ov032_021137ac data_ov032_021137b4 data_ov032_021137bc
+data_ov032_021137c4
+
+# ---- .data: BUBBA's two Vector3 collider offsets --------------------------
+data_ov032_021137cc data_ov032_021137d8
+
+# ---- .data: the three SpawnInfo records, all pinned to the ROM's 0x1c -----
+data_ov032_02113800:0x1c
+HugeCover_SpawnInfo:0x1c HugeWater_SpawnInfo:0x1c
+
+# ---- .bss: BUBBA's three SharedFilePtrs, three chain nodes, five cells ----
+data_ov032_02113a40 data_ov032_02113a48 data_ov032_02113a50
+data_ov032_02113a58 data_ov032_02113a64 data_ov032_02113a70:0xc
+data_ov032_02113a7c data_ov032_02113a8c data_ov032_02113a9c:0x10
+data_ov032_02113aac data_ov032_02113abc
+
+# ---- .bss: HUGE_COVER's and HUGE_WATER's file pointers and chain nodes ----
+data_ov032_02113acc data_ov032_02113ad4
+data_ov032_02113adc data_ov032_02113ae8
+data_ov032_02113af4 data_ov032_02113afc
+data_ov032_02113b04 data_ov032_02113b10

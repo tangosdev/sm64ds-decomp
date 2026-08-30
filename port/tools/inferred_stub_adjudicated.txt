@@ -1746,3 +1746,39 @@ func_ov036_0211137c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov036_02111494  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 17 D0, addr 0x02111494 size 0x64; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0: three vptr stores (02113b74, ov002 021091d4, ov002 0210ae38) then the same teardown chain as 127's
 func_ov036_021114f8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 3 CleanupResources, addr 0x021114f8 size 0x14; match.py MATCHING at 2004/b56 with reloc destinations checked; a five-word ARM veneer, ldr ip / ldr r1 / bx ip into func_ov002_020b66a8 with data_ov036_02113b2c in r1
 func_ov036_0211150c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 0 InitResources, addr 0x0211150c size 0x38; match.py MATCHING at 2004/b56 with reloc destinations checked; the same veneer shape into func_ov002_020b676c with a third argument selected from 02113b18/02113b1c on the +8 low byte
+
+# ---------------------------------------------------------------------------
+# run rel0215 wave 2 (lane cast-sweep2), 2026-08-30. OV032's FIVE.
+#
+# Seating level 24's HUGE_COVER (106) made five marker-carrying bodies visible
+# to this guard at once, for the ov033 reason one overlay along: dsd left that
+# class unnamed, so EVERY one of its lifecycle slots is a func_ov032_* whose
+# name was recovered from the slot. Nothing about the BODIES was ever in doubt;
+# the marker records how the NAMES were found, which is the confusion this file
+# exists to settle.
+#
+# All five were disassembled from extracted/overlays/overlay_0032.bin -- the
+# shipped image at the delinks base 0x021111a0, deliberately not a dsd export --
+# and compared instruction for instruction with src/. Then all five were put
+# through tools/match.py at 2004/b56 with --strict-relocs (the default), which
+# byte-compares the compiled output AND checks every relocation destination.
+#
+# RESULT: 5 REAL DECOMP, 0 genuine guesses, 0 unverifiable, 5 MATCHING.
+#
+# One thing the disassembly settled that the source alone could not:
+#
+#   func_ov032_021124ec is labelled "daObjTdFuta_c_OnYoshiTryEat" by the RTTI
+#   recovery and it is the DELETING DESTRUCTOR (slot 17). Its literal pool is
+#   {0x021138e0 own table, 0x0210ae38 Platform base, 0x020a0eac game heap} and
+#   its last call is Memory::Deallocate. The ROM parks it at vtable
+#   0x021138e0+0x44, the D0 slot. Same mislabel class as func_ov033_021111e4,
+#   func_ov005_020bfefc and func_ov022_021123d0 above.
+#
+# Full per-body disassembly and the match run:
+#   C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\
+#     t5_disasm.txt and t5_match.txt
+func_ov032_021124ec  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 17 D0, addr 0x021124ec size 0x58; match.py MATCHING at 2004/b56 with --strict-relocs. NAME says OnYoshiTryEat and is wrong, body is the deleting destructor
+func_ov032_02112544  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 3 CleanupResources, addr 0x02112544 size 0x44; match.py MATCHING at 2004/b56 with --strict-relocs. IsEnabled/Disable at +0x124 then Release on 02113ad4 and 02113acc, both reloc-confirmed
+func_ov032_02112588  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 9 Render, addr 0x02112588 size 0x28; match.py MATCHING at 2004/b56 with --strict-relocs. Plain-Model slot-5 bare call over +0xd4 (ldr r2,[r0,#0xd4]; ldr r2,[r2,#0x14]; blx r2), not the ModelAnim collision
+func_ov032_021125b0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 6 Behavior, addr 0x021125b0 size 0x24; match.py MATCHING at 2004/b56 with --strict-relocs. One call, Platform::IsClsnInRange(this,0,0), return 1
+func_ov032_021125d4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 0 InitResources, addr 0x021125d4 size 0x94; match.py MATCHING at 2004/b56 with --strict-relocs. Model 1717 + KCL 1718 + CLPS 0x02112f98 at fix 0x199, returns Event::GetBit(0xe)==0

@@ -1465,6 +1465,32 @@ void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
 extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
 void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
 void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV032'S OWN CAST, Tiny-Huge Island's
+   BIG side -- four of level 24's seven skipped instances. THE CAMPAIGN PLAN
+   LISTS TWO CLASSES HERE AND THE ROM HAS THREE: id 228 (RTTI 12daBakubaku_c,
+   the big fish; tools/actor_names.py reads it as BUBBA) carries twenty-four of
+   the overlay's forty-one TUs and dsd named neither its factory nor its table.
+   dsd names ONE vtable ADDRESS in this overlay and puts TWO names on it, both
+   the WATER class's: _ZTV9HugeCover and _ZTV14daObjTdWater_c are both
+   0x021139a4 (RTTI 14daObjTdWater_c). HUGE_COVER's own table is the unnamed
+   data_ov032_021138e0 (RTTI 13daObjTdFuta_c, futa = lid) and BUBBA's is the
+   unnamed data_ov032_02113824. The factory installs, the RTTI strings and the
+   spawn records all three agree, so the rows below go by ADDRESS and every
+   _ZN9HugeCover* body in src/ serves id 107. Widths 32 / 32 / 31 -- BUBBA is
+   Enemy-derived and ends on slot 30 with no Platform::Kill -- and dsd's
+   next-symbol landings read FOUR, THREE and TWO. BUBBA carries EIGHT own
+   slots: 12 OnPendingDestroy is an empty override and 29 OnAimedAtWithEgg
+   returns 0xa0000. Derivation in port/ov032_syms.txt, fills in
+   hal/actor_classes_ov032.cpp, slice in port/slice_sweep2_ov032.txt. */
+extern unsigned char HugeCover_SpawnInfo[];          /* ov032 0x021138bc, +4 = 106 */
+void *HugeCover_Spawn(void);                         /* ov032 0x02112668, 48 B */
+void hal_fill_huge_cover_vtable(void);               /* data_ov032_021138e0, 32 */
+extern unsigned char HugeWater_SpawnInfo[];          /* ov032 0x02113980, +4 = 107 */
+void *HugeWater_Spawn(void);                         /* ov032 0x021128b8, 56 B */
+void hal_fill_huge_water_vtable(void);               /* _ZTV9HugeCover, 32 */
+extern unsigned char data_ov032_02113800[];          /* ov032 0x02113800, +4 = 228 */
+void *func_ov032_0211244c(void);                     /* ov032 0x0211244c, 92 B */
+void hal_fill_bubba_vtable(void);                    /* data_ov032_02113824, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2224,4 +2250,14 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
     {123, "TRICKY_TRIANGLES", TrickyTriangles_SpawnInfo, \
      TrickyTriangles_Spawn, hal_fill_tricky_triangles_vtable}, \
     {130, "FLYING_CARPET", FlyingCarpet_SpawnInfo, FlyingCarpet_Spawn, \
-     hal_fill_flying_carpet_vtable},
+     hal_fill_flying_carpet_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov032, Tiny-Huge Island's \
+       BIG side. dsd's one vtable label is on the water twice; the cover's \
+       table and BUBBA's are unnamed, so the rows go by address. BUBBA (228) \
+       is a third class the campaign plan's inventory does not list. ---- */ \
+    {106, "HUGE_COVER", HugeCover_SpawnInfo, HugeCover_Spawn, \
+     hal_fill_huge_cover_vtable}, \
+    {107, "HUGE_WATER", HugeWater_SpawnInfo, HugeWater_Spawn, \
+     hal_fill_huge_water_vtable}, \
+    {228, "BUBBA", data_ov032_02113800, func_ov032_0211244c, \
+     hal_fill_bubba_vtable},
