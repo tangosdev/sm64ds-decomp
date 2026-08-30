@@ -1993,10 +1993,16 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         {"symbol": "_ZN1DD2Ev", "disposition": "deadstrip",
          "reason": "compiler-generated D2; no ROM symbol or caller"}
 
-    A policy cannot hide a configured ROM symbol, a licensed function, a non-function,
-    a shared section, or anything a surviving relocation references.  objisolate owns
-    the ELF surgery; this layer owns the manifest/config facts.  With no policy, any
-    unlicensed function is an explicit refusal rather than linker-dependent behaviour.
+    A policy cannot hide a configured ROM symbol, a licensed function, a shared
+    section, or anything a surviving relocation references.  objisolate owns the ELF
+    surgery; this layer owns the manifest/config facts.  With no policy, any unlicensed
+    function is an explicit refusal rather than linker-dependent behaviour.
+
+    Data rows -- the ``_ZTV``/``_ZTI``/``_ZTS`` a key function drags in -- are validated
+    here and stripped by nobody.  This path links ONE TU on its own, where the class's
+    own vtable is the only definition in the link; only the ROM build has a cartridge
+    copy to fall back to, and only it discards them.  That is also exactly what every
+    unpromoted TU already does with its RTTI, so the scratch object is unchanged.
     """
     inv = elf_inventory(obj_bytes)
     licensed = {f["symbol"] for f in entry.get("functions", [])}
@@ -2004,8 +2010,11 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     extras = {s["name"]: s for s in inv["symbols"]
               if s["type"] == "STT_FUNC" and not s["name"].startswith("$")
               and s["name"] not in licensed}
+    emitted_data = {s["name"] for s in inv["symbols"]
+                    if s["type"] == "STT_OBJECT" and not s["name"].startswith("$")
+                    and s["name"] not in licensed}
     policy = entry.get("compiler_only_output", [])
-    reasons, wanted, duplicates = [], [], set()
+    reasons, wanted, duplicates, data_rows = [], [], set(), []
     if policy is None:
         policy = []
     if not isinstance(policy, list):
@@ -2018,10 +2027,29 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         if not sym:
             reasons.append(f"compiler_only_output[{i}] has no symbol")
             continue
-        if row.get("disposition") not in ("deadstrip", "deadstrip-duplicate"):
+        if row.get("disposition") not in ("deadstrip", "deadstrip-duplicate",
+                                          "deadstrip-data"):
             reasons.append(f"compiler_only_output {sym} has unsupported disposition "
-                           f"{row.get('disposition')!r}; expected deadstrip or "
-                           f"deadstrip-duplicate")
+                           f"{row.get('disposition')!r}; expected deadstrip, "
+                           f"deadstrip-duplicate or deadstrip-data")
+            continue
+        if sym in emitted_data:
+            if row.get("disposition") == "deadstrip-duplicate":
+                reasons.append(f"compiler_only_output {sym} is a data object; raw "
+                               f"duplicate-body evidence is function-only, so it takes "
+                               f"deadstrip-data (homed) or deadstrip (homeless)")
+            if not str(row.get("reason", "")).strip():
+                reasons.append(f"compiler_only_output {sym} needs a non-empty reason")
+            if sym in licensed:
+                reasons.append(f"compiler_only_output {sym} is also licensed by the "
+                               f"manifest")
+            if sym in dict(data_rows):
+                reasons.append(f"duplicate compiler_only_output policy for {sym}")
+            data_rows.append((sym, row.get("disposition")))
+            continue
+        if row.get("disposition") == "deadstrip-data":
+            reasons.append(f"compiler_only_output {sym} is declared compiler-only data "
+                           f"but the object emits no such data object")
             continue
         if row.get("disposition") == "deadstrip-duplicate":
             # The vague-linkage case: the symbol MUST have a ROM home that another
@@ -2051,17 +2079,27 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         elif homes.get(sym):
             reasons.append(f"compiler_only_output {sym} has configured ROM home(s) "
                            f"{homes[sym]}; it is not compiler-only")
+    for sym, disposition in data_rows:
+        if disposition == "deadstrip-data":
+            if not homes.get(sym):
+                reasons.append(f"compiler_only_output {sym} is declared compiler-only "
+                               f"data but has no configured ROM home; a homeless "
+                               f"object is a plain deadstrip")
+        elif homes.get(sym):
+            reasons.append(f"compiler_only_output {sym} has configured ROM home(s) "
+                           f"{homes[sym]}; declare it deadstrip-data")
+    data = [sym for sym, _ in data_rows]
     if reasons:
-        return None, {"requested": wanted, "unhandled": unhandled}, reasons
+        return None, {"requested": wanted, "unhandled": unhandled, "data": data}, reasons
     if not wanted:
-        return obj_bytes, {"requested": [], "deadstripped": []}, []
+        return obj_bytes, {"requested": [], "deadstripped": [], "data": data}, []
 
     out, plan = OI.derive_deadstrip(obj_bytes, wanted)
     if out is None:
         return None, {"requested": wanted, "objisolate": plan}, \
             [f"compiler-only deadstrip refused: {plan.get('error')}"]
     return out, {"requested": wanted, "deadstripped": plan.get("dead", []),
-                 "droppedSections": plan.get("drop", [])}, []
+                 "droppedSections": plan.get("drop", []), "data": data}, []
 
 
 def manifest_externalized_output(entry):
