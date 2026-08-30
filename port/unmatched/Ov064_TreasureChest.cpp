@@ -48,14 +48,15 @@
  *     0x0200f97c Actor::SpawnSoundObj       0x02012694 func_02012694
  *     0x020d5a1c Player::Shock              0x0211a6ec (this file, below)
  *
- * WHAT IT IS. The Jolly Roger Bay chest puzzle. Four chests carry an order
- * number in this+0x172 (their spawn parameter's low byte); the player must open
- * them in that order. Each frame in state 0 the tick counts down the chest's
- * own timer, plays sound 14 when it reads 0x58, and once the timer expires and
- * the chest has a linked actor id in +0x15c, finds that actor, requires it to
- * be a PLAYER (id 0xbf), and requires the player to be within a quarter turn of
- * the chest's facing. Then it walks every id-13 actor: r8 counts them all and
- * sb counts the OTHER chests already in state 1 or 2. If (sb + 1) equals this
+ * WHAT IT IS. The chest-order puzzle -- four chests on level 8, three on level
+ * 18, one on level 9. Each chest carries an order number in this+0x172 (the low
+ * byte of its spawn parameter) and the player must open them in that order.
+ * Each frame in state 0 the tick counts the chest's own timer down, plays sound
+ * 14 when it reads 0x58, and once the timer expires and the chest has a linked
+ * actor id in +0x15c, finds that actor, requires it to be a PLAYER (id 0xbf),
+ * and requires the player to be within a quarter turn of the chest's facing.
+ * Then it walks every id-13 actor, counting all of them in `total` and the
+ * OTHER chests already in state 1 or 2 in `opened`. If opened + 1 equals this
  * chest's own order number the open is correct -- if every chest is now open it
  * spawns the sound object and sets +0x173, otherwise it plays sound 0x26 -- and
  * the chest enters state 1. If it does NOT match, the chest re-arms its timer
