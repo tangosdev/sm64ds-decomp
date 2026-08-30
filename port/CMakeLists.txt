@@ -9057,12 +9057,22 @@ endforeach()
 # index is still zero and it still breaks, because the width decides where the
 # FIELDS are, not just the stride. MEASURED, in the obj and then in a crash:
 #
-#   without the option    mov edx,[esi+378h]     ; the cell
+#   without the option, the FULL measured sequence (the out-of-bounds reads
+#   are CONDITIONAL; the fault fires because the garbage "vbindex" word past
+#   the cell is nonzero, which routes the guarded virtual path):
+#                         mov edx,[esi+378h]     ; the cell
 #                         mov edi,[edx+8]        ; fn        -- correct
-#                         mov ebx,[edx+14h]      ; "vbindex" -- ROM garbage
-#                         mov ecx,[edx+10h]      ; "vbptr"   -- ROM garbage
+#                         push ebx
+#                         mov ebx,[edx+14h]      ; "vbindex" -- past the cell
+#                         test ebx,ebx           ; guard: zero would take the
+#                         jne .virt              ;   non-virtual path and live
+#                         mov eax,[edx+0Ch]      ; (not taken here)
+#                         jmp .join
+#                  .virt: mov ecx,[edx+10h]      ; "vbptr"   -- past the cell
 #                         mov eax,[ecx+esi]
-#                         mov eax,[eax+ebx]      <- FAULT
+#                         mov eax,[eax+ebx]      <- FAULT, +0x37
+#                         add eax,ecx
+#                         add eax,[edx+0Ch]
 #   The ROM cell is SIXTEEN bytes TOTAL (enter {fn,delta} then tick {fn,delta}),
 #   so [edx+10h] and [edx+14h] are past the end of the record entirely.
 #   FAULT c0000005 at ?Behavior@Snowball@@QAEHXZ+0x37 accessing 78531c75,
