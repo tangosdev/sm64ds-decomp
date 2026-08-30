@@ -543,6 +543,10 @@ src/_ZN14TTC_MovingBeam6RenderEv.cpp:
     complete
     .text start:0x0211bd64 end:0x0211bd8c
 
+src/_ZN14TTC_MovingBeam8BehaviorEv.cpp:
+    complete
+    .text start:0x0211bd8c end:0x0211bf04
+
 src/_ZN14TTC_MovingBeam13InitResourcesEv.cpp:
     .text start:0x0211bf04 end:0x0211c040
 
