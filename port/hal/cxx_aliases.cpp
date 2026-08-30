@@ -182,10 +182,20 @@ int func_01ff99a4(int a, int b)
 
    Both take and return RAW IEEE-754 SINGLE BIT PATTERNS in r0/r1, the same
    convention as func_01ff98f4 and func_01ff99a4 above, so the host bodies go
-   through memcpy the same way. The ROM bodies are 0x460 and 0x448 bytes
-   because they carry their own denormal, NaN and round-to-nearest-even tails;
-   the host uses native float, which rounds the same way. That is the standing
-   trade for this whole block, not a new one.
+   through memcpy the same way.
+
+   WHAT THE HOST BODIES DO AND DO NOT REPRODUCE, stated rather than implied.
+   The ROM bodies are 0x460 and 0x448 bytes because they carry their own
+   denormal and NaN handling AND their own IEEE STATUS-FLAG bookkeeping -- the
+   tails call out to the per-thread FP status block and OR a bit in (visible at
+   0x01ffa5b8's `bl` and the `ldr r3,[ip] / orr / str` that follows it). The
+   host body is a native `float` add/subtract. This build takes MSVC's x86
+   default, which is /arch:SSE2 (no /arch: or /fp: appears in port/CMakeLists.txt
+   -- only /Oy-), so the arithmetic is single-precision SSE with
+   round-to-nearest-even and agrees with the ROM on every normal value. It does
+   NOT set the ROM's status flags, and NaN payloads are not guaranteed to match.
+   Nothing in this tree reads those flags. That is the standing trade for this
+   whole block, not a new one this pair introduces.
 
    PORT_HOST_ABI: ARM asm primitives (the ITCM soft-float runtime block),
    MSVC cannot assemble -- see the block comment above. */
