@@ -2,6 +2,7 @@
 // @symbol func_ov091_02133254
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 #include "dBgW.h"
 #include "TextureSequence.h"
 struct SharedFilePtr;
@@ -20,18 +21,10 @@ extern "C" BTP_File *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePt
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, BTP_File *f, int a, int fix, unsigned int u);
 extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
 
-
-struct dBgCh_Gnd { char buf[0x44]; int f44; char rest[8]; };
-extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
-extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, Vector3 *v, void *a);
-extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
-extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
-
 extern void *_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 extern "C" int func_ov091_02133254(char *self)
 {
-    dBgCh_Gnd rg;
     Vector3 v;
     BMD_File *bmd;
     KCL_File *kcl;
@@ -74,19 +67,20 @@ extern "C" int func_ov091_02133254(char *self)
     v.y = *(int *)(self + 0x60);
     v.z = *(int *)(self + 0x64);
     v.y = v.y + 0x32000;
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
-    *(int *)(self + 0x394) = v.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
-        *(int *)(self + 0x394) = rg.f44;
+    {
+        dBgCh_Gnd rg;
+        rg.SetObjAndPos(v, 0);
+        *(int *)(self + 0x394) = v.y;
+        if (rg.DetectClsn())
+            *(int *)(self + 0x394) = rg.clsnY;
 
-    *(int *)(self + 0x390) = *(int *)(self + 0x60) + 0x190000;
-    *(int *)(self + 0x60) = *(int *)(self + 0x394);
-    *(unsigned char *)(self + 0x39e) = 0x28;
-    *(int *)(self + 0x9c) = -0x4000;
-    *(int *)(self + 0xa0) = -0x3c000;
-    *(int *)(self + 0x98) = 0xc000;
-    *(unsigned char *)(self + 0x39f) = 0;
-    _ZN9dBgCh_GndD1Ev(&rg);
+        *(int *)(self + 0x390) = *(int *)(self + 0x60) + 0x190000;
+        *(int *)(self + 0x60) = *(int *)(self + 0x394);
+        *(unsigned char *)(self + 0x39e) = 0x28;
+        *(int *)(self + 0x9c) = -0x4000;
+        *(int *)(self + 0xa0) = -0x3c000;
+        *(int *)(self + 0x98) = 0xc000;
+        *(unsigned char *)(self + 0x39f) = 0;
+    }
     return 1;
 }

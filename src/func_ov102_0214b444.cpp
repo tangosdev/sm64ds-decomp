@@ -1,16 +1,7 @@
 //cpp
-struct Vector3;
-struct dActor_c;
+#include "dBgCh_Gnd.h"
 
-struct dBgCh_Gnd {
-    char pad[0x44];
-    int result;       // offset 0x44
-    char pad2[0xc];
-    dBgCh_Gnd();
-    ~dBgCh_Gnd();
-    void SetObjAndPos(const Vector3 &pos, dActor_c *a);
-    int DetectClsn();
-};
+struct dActor_c;
 
 extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(int self);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -28,7 +19,7 @@ extern "C" void func_ov102_0214b444(int c)
         dBgCh_Gnd rg;
         rg.SetObjAndPos(*(const Vector3*)(c + 0x5c), (dActor_c*)0);
         if (rg.DetectClsn() != 0)
-            v = rg.result;
+            v = rg.clsnY;
     }
 
     {

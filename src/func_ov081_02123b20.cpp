@@ -6,7 +6,6 @@ struct ShadowModel;
 
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 
-struct dBgCh_Actr { virtual int v0(); };
 extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);

@@ -1,35 +1,21 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-typedef unsigned int u32;
-
-struct Vector3 { int x, y, z; };
+#include "dBgCh_Lin.h"
 
 struct C; typedef int (C::*PMF)();
 struct C { char pad[0x420]; PMF *pp; };
-
-struct dBgCh_Lin {
-    char pad[0x78];
-};
 
 extern "C" {
 int RandomIntInternal(int *seed);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void func_02012694(int a, void *p);
-void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *self);
 void Matrix4x3_FromRotationY(void *m, s16 angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(const Vector3 *v, const void *m, Vector3 *out);
-void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin *self, const Vector3 *a, const Vector3 *b, void *actor);
-int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin *self);
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 void _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step);
 int func_ov090_021314a0(void *c);
 int func_ov090_02131e00(C *c, PMF *p);
-void _ZN9dBgCh_LinD1Ev(dBgCh_Lin *self);
 }
 
 extern int data_0209e650;
@@ -44,7 +30,6 @@ extern "C" int func_ov090_02131648(C *c)
     u32 rnd;
     int selfY;
     Vector3 a, b, in, out;
-    dBgCh_Lin rc;
     int angleSet;
     s16 *p39a;
     int sh;
@@ -59,7 +44,7 @@ extern "C" int func_ov090_02131648(C *c)
     }
 
     angleSet = 0;
-    _ZN9dBgCh_LinC1Ev(&rc);
+    dBgCh_Lin line;
 
     a.x = 0; a.y = 0; a.z = 0;
     b.x = 0; b.y = 0; b.z = 0;
@@ -85,9 +70,9 @@ extern "C" int func_ov090_02131648(C *c)
     b.y = a.y + out.y;
     b.z = a.z + out.z;
 
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, &a, &b, c);
+    line.SetObjAndLine(a, b, (dActor_c*)c);
 
-    if (_ZN9dBgCh_Lin10DetectClsnEv(&rc) == 0) {
+    if (!line.DetectClsn()) {
         if (*(u8 *)(self + 0x3a0) == 0) {
             ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
             sh = (rnd & 3) << 0xc;
@@ -175,6 +160,5 @@ extern "C" int func_ov090_02131648(C *c)
         func_ov090_02131e00(c, (PMF *)&data_ov090_02134504);
     }
 
-    _ZN9dBgCh_LinD1Ev(&rc);
     return 1;
 }

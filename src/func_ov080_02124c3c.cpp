@@ -2,6 +2,7 @@
 // @symbol func_ov080_02124c3c
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 typedef short s16;
 typedef long long s64;
 
@@ -11,10 +12,6 @@ void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);
 void Vec3_LslInPlace(Vector3* v, int sh);
 void Matrix4x3_FromRotationXYZExt(void* m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void* m, int angle);
-void _ZN9dBgCh_GndC1Ev(void* self);
-void _ZN9dBgCh_GndD1Ev(void* self);
-void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
-int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
 void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* self, void* sm, void* mtx, int r, int t5, int t6, unsigned int u);
 }
@@ -25,7 +22,6 @@ void func_ov080_02124c3c(char* c)
 {
     Vector3 t;
     Vector3 pos;
-    char rg[0x54];
     int flags = *(int*)(c + 0xb0);
     int gb = (flags & 0x40000) != 0;
     if (gb != false) return;
@@ -56,11 +52,11 @@ void func_ov080_02124c3c(char* c)
     pos.y = *(int*)(c + 0x60);
     pos.z = *(int*)(c + 0x64);
     pos.y = pos.y + 0x14000;
-    _ZN9dBgCh_GndC1Ev(rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, 0);
+    dBgCh_Gnd rg;
+    rg.SetObjAndPos(pos, 0);
     int h = pos.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
-        h = *(int*)(rg + 0x44);
+    if (rg.DetectClsn()) {
+        h = rg.clsnY;
     }
     Matrix4x3_FromRotationY(c + 0x33c, *(s16*)(c + 0x8e));
     *(int*)(c + 0x360) = *(int*)(c + 0x5c) >> 3;
@@ -74,5 +70,4 @@ void func_ov080_02124c3c(char* c)
         _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             c, c + 0x124, c + 0x33c, 0x96000, 0x32000, result + 0x96000, 0xf);
     }
-    _ZN9dBgCh_GndD1Ev(rg);
 }

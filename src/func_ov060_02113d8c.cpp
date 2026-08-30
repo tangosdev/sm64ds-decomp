@@ -1,11 +1,7 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
-struct Fix12 { int v; Fix12(int a) : v(a) {} };
+#include "dBgCh_Actr.h"
 
 struct dActor_c { int GetSubtraction(short a, short b); };
-struct dBgCh_Actr { int IsOnGround() const; };
 
 extern "C" {
 void func_ov060_02111cc0(char *c, int idx, int fix);

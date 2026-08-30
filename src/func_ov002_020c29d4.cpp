@@ -1,9 +1,7 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 struct State {};
-struct dBgCh_Actr {
-    int IsOnGround() const;
-    int GetFloorResult() const;
-};
 struct Player {
     int IsState(State &s);
 };
@@ -16,6 +14,7 @@ extern "C" int _ZN6Player7IsStateERNS_5StateE(void *, State &s);
 
 extern "C" int Player_ScaleByCharFactor(void *c, int a);
 extern "C" int func_02037e38(unsigned int *p);
+extern "C" dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(const dBgCh_Actr *self);
 extern State data_ov002_0211013c;
 extern State data_ov002_021101b4;
 
@@ -39,7 +38,7 @@ extern "C" void func_ov002_020c29d4(Player *self)
         *(unsigned char *)(base + 0x6eb) = 0x80;
     } else if (flags & 0x80) {
         if (((dBgCh_Actr *)(base + 0x380))->IsOnGround()) {
-            int r = func_02037e38((unsigned int *)((char *)((dBgCh_Actr *)(base + 0x380))->GetFloorResult() + 4));
+            int r = func_02037e38((unsigned int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv((dBgCh_Actr *)(base + 0x380)) + 4));
             if (r >= 6 && r <= 9) return;
             *(unsigned char *)(base + 0x6eb) = 0;
             *(short *)(base + 0x6bc) = 0;

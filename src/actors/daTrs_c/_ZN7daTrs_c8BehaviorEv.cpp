@@ -69,11 +69,7 @@ void func_ov063_02119274(char *c);
 void func_ov063_02116fac(char *c);
 u16 DecIfAbove0_Short(void *p);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *cyl);
-void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *rc);
-void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *rc, const Vector3 *v, void *actor);
-int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *rc);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char *c, void *w, u32 j);
-void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *rc);
 void _ZN9Animation7AdvanceEv(void *anim);
 void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *cyl, void *v);
 void _ZN5dCc_c6UpdateEv(void *cyl);
@@ -86,14 +82,6 @@ int daTrs_c::Behavior()
     Vector3 v1;
     Vector3 v2;
     Vector3 ve;
-    /* Dumb word storage, not typed locals: rc1/rc2 are CONSTRUCTED
-       MID-FUNCTION, rc2 only on some paths (notes/ctor-migration.md item 9).
-       A typed local of a class with a declared constructor is constructed at
-       its declaration -- the ROM does not do that here. Call sites cast the
-       array's address, which costs exactly the sp-relative add the old POD
-       local spelled. */
-    u32 rc1[sizeof(dBgCh_Gnd) / sizeof(u32)];
-    u32 rc2[sizeof(dBgCh_Gnd) / sizeof(u32)];
     int t;
     void *p;
     char *q;
@@ -307,7 +295,7 @@ block_39:
         func_ov063_02119ab0(c);
         if (((((u32)((*(u16 *)(c + 0x5d4)) << 0x1f)) >> 0x1f) != 0) && ((*(s32 *)(c + 0x64)) < -0x12c000))
             *(s32 *)(c + 0x64) = -0x12c000;
-        _ZN9dBgCh_GndC1Ev((dBgCh_Gnd *)rc1);
+        dBgCh_Gnd rc1;
         y = *(s32 *)(c + 0x60);
         z = *(s32 *)(c + 0x64);
         w = y + 0x32000;
@@ -315,14 +303,14 @@ block_39:
         v1.x = x;
         v1.y = w;
         v1.z = z;
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c((dBgCh_Gnd *)rc1, &v1, c);
-        if (_ZN9dBgCh_Gnd10DetectClsnEv((dBgCh_Gnd *)rc1) != 0) {
-            s32 ground = (*(s32 *)((char *)rc1 + 0x44)) + 0x2000;
+        rc1.SetObjAndPos(v1, (dActor_c*)this);
+        if (rc1.DetectClsn() != 0) {
+            s32 ground = rc1.clsnY + 0x2000;
             if ((*(s32 *)(c + 0x60)) < ground)
                 *(s32 *)(c + 0x60) = ground;
         }
         if (((*(u8 *)(c + 0x5cf)) != 4) && ((*(u8 *)(c + 0x5cf)) != 0xb)) {
-            _ZN9dBgCh_GndC1Ev((dBgCh_Gnd *)rc2);
+            dBgCh_Gnd rc2;
             y = *(s32 *)(c + 0x60);
             z = *(s32 *)(c + 0x64);
             w = y + 0x32000;
@@ -330,13 +318,13 @@ block_39:
             v2.x = x;
             v2.y = w;
             v2.z = z;
-            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c((dBgCh_Gnd *)rc2, &v2, c);
+            rc2.SetObjAndPos(v2, (dActor_c*)this);
             d1 = (int)((*(u16 *)(c + 0xc)) == 0xd1);
             if (d1 != 0) {
                 if ((*(u8 *)(c + 0x5cf)) < 8) {
                     if ((((u32)((*(u16 *)(c + 0x5d4))) << 0x1a) >> 0x1f) != 0) {
-                        if ((_ZN9dBgCh_Gnd10DetectClsnEv((dBgCh_Gnd *)rc2) == 0) ||
-                            (((*(s32 *)(c + 0x60)) - (*(s32 *)((char *)rc2 + 0x44))) > 0x12c000)) {
+                        if ((rc2.DetectClsn() == 0) ||
+                            (((*(s32 *)(c + 0x60)) - rc2.clsnY) > 0x12c000)) {
                             *(s32 *)(c + 0x5c) = *(s32 *)(c + 0x528);
                             *(s32 *)(c + 0x60) = *(s32 *)(c + 0x52c);
                             *(s32 *)(c + 0x64) = *(s32 *)(c + 0x530);
@@ -353,8 +341,8 @@ block_39:
                 }
             } else {
             ray_e:
-                if ((_ZN9dBgCh_Gnd10DetectClsnEv((dBgCh_Gnd *)rc2) != 0) &&
-                    (((*(s32 *)(c + 0x60)) - (*(s32 *)((char *)rc2 + 0x44))) < 0x12c000)) {
+                if ((rc2.DetectClsn() != 0) &&
+                    (((*(s32 *)(c + 0x60)) - rc2.clsnY) < 0x12c000)) {
                     fp = (u16 *)(c + 0x5d4);
                     *fp = (*fp) | 0x20;
                     *(s32 *)(c + 0x528) = *(s32 *)(c + 0x5c);
@@ -363,9 +351,7 @@ block_39:
                 }
             }
             _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x1c4, 0);
-            _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)rc2);
         }
-        _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)rc1);
     }
     if (((((*(u8 *)(c + 0x5cc)) != 3) && ((*(u8 *)(c + 0x5cc)) != 3)) && ((*(u8 *)(c + 0x5cc)) != 3)) && ((*(u8 *)(c + 0x5cc)) != 3))
         _ZN9Animation7AdvanceEv(c + 0x3d0);

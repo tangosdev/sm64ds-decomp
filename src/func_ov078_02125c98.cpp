@@ -2,21 +2,12 @@
 // @symbol func_ov078_02125c98
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 /* func_ov078_02125c98 at 0x02125c98 (ov078), size 0x148
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-struct Vector3;
 struct dActor_c;
-struct dBgCh_Gnd {
-  char pad[0x44];
-  int result;
-  char pad2[8];
-  dBgCh_Gnd();
-  ~dBgCh_Gnd();
-  void SetObjAndPos(const Vector3& pos, dActor_c* a);
-  int DetectClsn();
-};
 
 extern "C" {
 int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
@@ -30,7 +21,7 @@ extern "C" void func_ov078_02125c98(char* c) {
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(const Vector3*)(c+0x5c), 0);
     if (rg.DetectClsn() != 0)
-      h = rg.result;
+      h = rg.clsnY;
   }
   int b = (*(int*)(c+0xb0) & 0x4000) != 0;
   if (b) {

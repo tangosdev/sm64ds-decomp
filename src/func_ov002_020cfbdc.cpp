@@ -4,6 +4,7 @@
 #include "decl_dBgPi.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Lin.h"
 
 
 extern "C" {
@@ -11,10 +12,6 @@ extern "C" {
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN9dBgCh_LinC1Ev(void *self);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
-extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
-extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
 extern short data_02082214[];
 extern int data_ov002_021101b4;
@@ -23,7 +20,6 @@ extern int data_ov002_021101b4;
 extern "C" int func_ov002_020cfbdc(char *self)
 {
     Vector3 pts[3];
-    char rl[0x78];
     int idx = (unsigned short)(short)(*(short *)(self + 0x8e) + 0x8000) >> 4;
     int r6 = data_02082214[idx * 2];
     int r5 = data_02082214[idx * 2 + 1];
@@ -59,16 +55,14 @@ extern "C" int func_ov002_020cfbdc(char *self)
         pts[2].z = bz;
     }
 
-    _ZN9dBgCh_LinC1Ev(rl);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &pts[1], &pts[2], self);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) != 0) {
+    dBgCh_Lin line;
+    line.SetObjAndLine(pts[1], pts[2], (dActor_c*)self);
+    if (line.DetectClsn()) {
         *(int *)((int)(self + 0x5c)) += r5 * 0x60;
         *(int *)((int)(self + 0x60)) -= 0x80000;
         *(int *)((int)(self + 0x64)) += r5 * 0x60;
         _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_021101b4);
-        _ZN9dBgCh_LinD1Ev(rl);
         return 1;
     }
-    _ZN9dBgCh_LinD1Ev(rl);
     return 0;
 }

@@ -206,6 +206,8 @@
     "src/func_ov065_02116364.c": "lunavyqo",
     "src/func_ov065_02116364.cpp": "lunavyqo",
     "src/func_ov071_0211f6f8.cpp": "ruspecial",
+    "src/func_ov075_02117d80.cpp": "andrewboudreau",
+    "src/func_ov075_02117d80.cpp#func_ov075_02117d80": "andrewboudreau",
     "src/func_ov084_021298d0.c": "tangosdev",
     "src/func_ov084_021298d0.cpp": "tangosdev",
     "src/func_ov084_0212d564.c": "ruspecial",
@@ -842,6 +844,14 @@
     "src/_ZN5dBgChD2Ev.cpp": "tangosdev",
     "src/func_020354d0.c": "tangosdev",
     "src/func_020354e0.c": "tangosdev",
-    "src/func_02035504.c": "tangosdev"
+    "src/func_02035504.c": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c6RenderEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD0Ev": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD1Ev": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#func_ov100_02146e70": "aitddlabs",
+    "src/actors/daObjPathLift_c.cpp#func_ov100_0214700c": "tangosdev"
   }
 }

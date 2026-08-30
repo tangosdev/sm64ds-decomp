@@ -2,17 +2,13 @@
 // @symbol func_ov002_020af4ec
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 
-struct dBgCh_Gnd { char buf[0x50]; };
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
-extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd* self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd* self, const struct Vector3* v, void* actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd* self);
-extern void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd* self);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* shadow, void* mtx, int height, int rad, unsigned int x);
 void func_ov002_020af4ec(void* self);
 }
@@ -22,7 +18,6 @@ void func_ov002_020af4ec(void* self)
     int rad;
     char* c = (char*)self;
     int height;
-    struct dBgCh_Gnd rg;
     struct Vector3 v2;
     struct Vector3 v1;
 
@@ -50,18 +45,17 @@ void func_ov002_020af4ec(void* self)
         v2.x = x;
         v2.y = adjustedY;
         v2.z = z;
-        _ZN9dBgCh_GndC1Ev(&rg);
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v2, 0);
+        dBgCh_Gnd rg;
+        rg.SetObjAndPos(v2, 0);
         rad = v2.y;
-        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg)) {
-            rad = *(int*)((char*)&rg + 0x44);
+        if (rg.DetectClsn()) {
+            rad = rg.clsnY;
         }
         rad = *(int*)(c + 0x60) - rad;
         if (rad <= 0x1000) rad = 0x1000;
         height = (*(int*)(c + 0x114) - 0xa000) * 2 - (int)(((long long)rad * 0x180 + 0x800) >> 12);
         if (height < 0xa000) height = 0xa000;
         rad += 0x3c000;
-        _ZN9dBgCh_GndD1Ev(&rg);
     } else {
         rad = 0x3c000;
         height = (*(int*)(c + 0x114) - 0xa000) * 2;

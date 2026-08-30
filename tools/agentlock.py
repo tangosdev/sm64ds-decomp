@@ -18,14 +18,14 @@ each other's locks, since holder is the only ownership check (this is a local
 convenience lock, not an auth system).
 
 CLI:
-  python tools/agentlock.py acquire --files src_tu/actors/Actor.cpp include/dActor_c.h --note "migrating Actor" [--ttl 1800] [--wait 60]
+  python tools/agentlock.py acquire --files src/actors/Actor.cpp include/dActor_c.h --note "migrating Actor" [--ttl 1800] [--wait 60]
   python tools/agentlock.py acquire --range ov006 0x020f0000 0x020f0100 --note "DetectClsn rewrite"
-  python tools/agentlock.py acquire --files src_tu/actors/Actor.cpp --range ov006 0x020f0000 0x020f0100
-  python tools/agentlock.py renew   --files src_tu/actors/Actor.cpp include/dActor_c.h
+  python tools/agentlock.py acquire --files src/actors/Actor.cpp --range ov006 0x020f0000 0x020f0100
+  python tools/agentlock.py renew   --files src/actors/Actor.cpp include/dActor_c.h
   python tools/agentlock.py renew   --range ov006 0x020f0000 0x020f0100
-  python tools/agentlock.py release --files src_tu/actors/Actor.cpp include/dActor_c.h
+  python tools/agentlock.py release --files src/actors/Actor.cpp include/dActor_c.h
   python tools/agentlock.py release --range ov006 0x020f0000 0x020f0100 [--force]
-  python tools/agentlock.py check   --files src_tu/actors/Actor.cpp
+  python tools/agentlock.py check   --files src/actors/Actor.cpp
   python tools/agentlock.py check   --range ov006 0x020f0000 0x020f0100
   python tools/agentlock.py list    [--module ov006]
 """

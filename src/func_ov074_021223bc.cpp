@@ -3,7 +3,7 @@
 // @symbol func_ov074_021223bc
 /* recovered: shared common types */
 #include "common.h"
-struct dBgCh_Gnd { char buf0[0x14]; int floor[12]; char buf1[0x50 - 0x14 - 0x30]; };
+#include "dBgCh_Gnd.h"
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 struct dBgCh_Actr;
 struct dCc_c;
@@ -16,14 +16,7 @@ extern void _ZN8dActor_c8PoofDustEv(void *self);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
 extern void func_02012694(int a, void *b);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
-extern void _ZN5dBgCh19StartDetectingWaterEv(dBgCh_Gnd *self);
-extern void _ZN5dBgCh19StartDetectingToxicEv(dBgCh_Gnd *self);
-extern void _ZN5dBgCh21StopDetectingOrdinaryEv(dBgCh_Gnd *self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, const Vector3 *v, void *actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
 extern int func_02037e20(int *p);
-extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, dCc_c *cc);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -32,7 +25,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int func_ov074_021223bc(char *c)
 {
-    dBgCh_Gnd rg;
     Vector3 pos;
 
     if (*(u8 *)(c + 0x609) == 0) {
@@ -72,19 +64,18 @@ int func_ov074_021223bc(char *c)
         pos.z = zz;
     }
 
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN5dBgCh19StartDetectingWaterEv(&rg);
-    _ZN5dBgCh19StartDetectingToxicEv(&rg);
-    _ZN5dBgCh21StopDetectingOrdinaryEv(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, c);
+    dBgCh_Gnd rg;
+    rg.StartDetectingWater();
+    rg.StartDetectingToxic();
+    rg.StopDetectingOrdinary();
+    rg.SetObjAndPos(pos, (dActor_c*)c);
 
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0
-        && func_02037e20(rg.floor) != 0
-        && rg.floor[(0x44 - 0x14) / 4] != (int)0x80000000
-        && *(int *)(c + 0x60) < rg.floor[(0x44 - 0x14) / 4]) {
+    if (rg.DetectClsn() != 0
+        && func_02037e20((int*)&rg.surface) != 0
+        && rg.clsnY != (int)0x80000000
+        && *(int *)(c + 0x60) < rg.clsnY) {
         _ZN8dActor_c8PoofDustEv(c);
         _ZN7fBase_c18MarkForDestructionEv(c);
-        _ZN9dBgCh_GndD1Ev(&rg);
         return 1;
     }
 
@@ -103,8 +94,6 @@ int func_ov074_021223bc(char *c)
 
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, (ShadowModel *)(c + 0x274), (Matrix4x3 *)(c + 0x2ec), 0x8c000, 0x3e8000, 0xf);
-
-    _ZN9dBgCh_GndD1Ev(&rg);
 
     return 1;
 }

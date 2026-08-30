@@ -7,17 +7,10 @@
 // full closed-axis list). Not byte-matchable without the NITRO V0.5-V0.6.1 compiler.
 // For recomp/port purposes this file is complete: the compiled code is functionally
 // identical to the ROM, differing only in register names and instruction order.
+#include "dBgCh_Gnd.h"
+#include "dBgCh_Lin.h"
+
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-typedef long long s64;
-typedef unsigned long long u64;
-
-struct Vector3 { s32 x, y, z; };
-
 struct CamMode {
     s32 nearDist;   /* 0x00 */
     s32 farDist;    /* 0x04 */
@@ -64,16 +57,7 @@ extern void func_0200c9e0(void *self, s32 *a, s32 *b);
 extern u32 func_02012790(u32 a);
 extern s32 Sound_PlayIfNotActive(s32 a, s32 b, s32 c);
 
-extern void _ZN9dBgCh_LinC1Ev(void *t);
-extern void _ZN9dBgCh_LinD1Ev(void *t);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *t, const struct Vector3 *a, const struct Vector3 *b, void *actor);
-extern s32 _ZN9dBgCh_Lin10DetectClsnEv(void *t);
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, void *t);
-extern void _ZN9dBgCh_GndC1Ev(void *t);
-extern void _ZN9dBgCh_GndD1Ev(void *t);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *p, void *actor);
-extern s32 _ZN9dBgCh_Gnd10DetectClsnEv(void *t);
-extern void _ZN5dBgCh19StartDetectingWaterEv(void *t);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, dBgCh_Lin *line);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *t, struct Vector3 *out);
 
 extern s16 data_02082214[];
@@ -135,8 +119,6 @@ s32 func_02009e70(char *self)
     struct Vector3 spac;
     struct Vector3 spb8;
     struct Vector3 spc4;
-    char spd0[0x78];
-    char sp148[0x54];
     s32 r7;
     s32 r6;
     s32 fl;
@@ -269,11 +251,12 @@ s32 func_02009e70(char *self)
     }
     r4 = 0x7fffffff;
     sb = *(s32 *)(self + 0x9c) + 0x82500;
-    _ZN9dBgCh_LinC1Ev(spd0);
-    func_0200897c(self, spd0);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, (struct Vector3 *)(self + 0x98), &sp4c, 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(spd0) != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&sp94, spd0);
+    {
+    dBgCh_Lin line;
+    func_0200897c(self, &line);
+    line.SetObjAndLine(*(struct Vector3 *)(self + 0x98), sp4c, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&sp94, &line);
         r4 = sp94.y - 0x80000;
         if (r4 < sb) r4 = sb;
     }
@@ -287,10 +270,10 @@ s32 func_02009e70(char *self)
         sp58.z = tz;
     }
     if (sb > r4) goto L_A534;
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, &sp58, (struct Vector3 *)(self + 0x8c), 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(spd0) == 0) goto L_A534;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(spd0 + 0x14, &sp64);
-    _ZN9dBgCh_Lin10GetClsnPosEv(&spa0, spd0);
+    line.SetObjAndLine(sp58, *(struct Vector3 *)(self + 0x8c), 0);
+    if (line.DetectClsn() == 0) goto L_A534;
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&line.surface, &sp64);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&spa0, &line);
     *(s32 *)(self + 0xe0) = spa0.x;
     *(s32 *)(self + 0xe4) = spa0.y;
     *(s32 *)(self + 0xe8) = spa0.z;
@@ -303,7 +286,7 @@ s32 func_02009e70(char *self)
         *(u32 *)L0(self + 0x154) |= 0x80200;
         goto L_A534;
     }
-    _ZN9dBgCh_Lin10GetClsnPosEv(&sp70, spd0);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&sp70, &line);
     sba = (s16)(_ZN4cstd5atan2E5Fix12IiES1_(sp64.x, sp64.z) + 0x8000);
     t1 = *(u8 *)(self + 0x1a6);
     t0 = (s16)(sba - *(s16 *)(self + 0x17c));
@@ -455,9 +438,9 @@ L_AAD0:
         sp4c.y = ty;
         sp4c.z = tz;
     }
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, (struct Vector3 *)(self + 0x8c), &sp4c, 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(spd0) != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&spb8, spd0);
+    line.SetObjAndLine(*(struct Vector3 *)(self + 0x8c), sp4c, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&spb8, &line);
         sp4c.y = spb8.y;
         if (r4 > spb8.y - 0x80000) r4 = spb8.y - 0x80000;
     }
@@ -466,19 +449,19 @@ L_AAD0:
     sp88.x = sp7c.x;
     sp88.y = sp7c.y + 0x100000;
     sp88.z = sp7c.z;
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, &sp7c, &sp88, 0);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(spd0) != 0) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&spc4, spd0);
+    line.SetObjAndLine(sp7c, sp88, 0);
+    if (line.DetectClsn() != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&spc4, &line);
         sp88.y = spc4.y - 0x80000;
         if (r4 > sp88.y) r4 = sp88.y;
     }
     sb = *(s32 *)(self + 0x9c);
-    _ZN9dBgCh_GndC1Ev(sp148);
-    *(s32 *)(sp148 + 0x4c) = 0x5dc000;
-    func_0200897c(self, sp148);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(sp148, &sp4c, 0);
-    if (sp1c > &data_02086fcc) _ZN5dBgCh19StartDetectingWaterEv(sp148);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(sp148) != 0) sb = *(s32 *)(sp148 + 0x44);
+    dBgCh_Gnd ground;
+    ground.mProbeHeight = 0x5dc000;
+    func_0200897c(self, &ground);
+    ground.SetObjAndPos(sp4c, 0);
+    if (sp1c > &data_02086fcc) ground.StartDetectingWater();
+    if (ground.DetectClsn() != 0) sb = ground.clsnY;
     if (sp1c == &data_02086ff4) {
         if (sb < data_0209f32c) sb = data_0209f32c;
         r7h = sb + 0x64000;
@@ -514,8 +497,7 @@ L_AD94:
 L_ADD4:
     Math_Function_0203b14c((s32 *)(self + 0x90), r7h, 0x300, 0x14000, 0x100);
     *(s16 *)(self + 0x17c) = Vec3_HorzAngle((struct Vector3 *)(self + 0x80), (struct Vector3 *)(self + 0x8c));
-    _ZN9dBgCh_GndD1Ev(sp148);
-    _ZN9dBgCh_LinD1Ev(spd0);
+    }
 L_AE14:
     if (r5 != 0) {
         if (data_0209b000 == 0) func_02012790(0xe);
