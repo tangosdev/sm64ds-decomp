@@ -1465,6 +1465,23 @@ void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
 extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
 void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
 void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
+/* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 1 of 2): ov092's ONE
+   class, TOX_BOX, level 16's crushing block. The SpawnInfo record comes from
+   the fresh per-symbol ov092 mount (port/ov092_syms.txt); the fill, the
+   nine-state pointer-to-member seat and the two method faces are in
+   hal/actor_classes_ov092.cpp; the slice is port/slice_ov092.txt. The id is
+   confirmed by BOTH attribution routes -- the arm9 spawn-table relocation at
+   0x02090d38 AND the record's own +4 halfword, which reads 0x0135 = 309 -- and
+   for once the module column is SINGULAR (`module:overlay(92)`, and dsd marks
+   zero ov092 symbols ambiguous), so this row needed no adjudication. The table
+   is a 32-slot PLATFORM close, not the 31-slot Actor close: slot 31 is
+   0x020ee55c _ZN8Platform4KillEv and ToxBox_Spawn calls _ZN8PlatformC2Ev. The
+   mount is brought up from hal_fill_tox_box_vtable's own port_ov92_bringup(),
+   the ov017/ov024/ov035 self-contained shape, so this lane adds NOTHING to
+   hal/actor_overlays.cpp. */
+extern unsigned char ToxBox_SpawnInfo[];             /* ov092 0x021322ac, +4 low = 309 */
+void *ToxBox_Spawn(void);                            /* ov092 0x02132018, 92 B */
+void hal_fill_tox_box_vtable(void);                  /* _ZTV6ToxBox, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2224,4 +2241,9 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
     {123, "TRICKY_TRIANGLES", TrickyTriangles_SpawnInfo, \
      TrickyTriangles_Spawn, hal_fill_tricky_triangles_vtable}, \
     {130, "FLYING_CARPET", FlyingCarpet_SpawnInfo, FlyingCarpet_Spawn, \
-     hal_fill_flying_carpet_vtable},
+     hal_fill_flying_carpet_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 1 of 2): ov092's \
+       one class. Placed instances measured from this tree's own baseline \
+       census, not quoted: TOX_BOX x3 on level 16 and on NO other level of \
+       the fifty-two -- id 309 appears in exactly one level's skip list. ---- */ \
+    {309, "TOX_BOX", ToxBox_SpawnInfo, ToxBox_Spawn, hal_fill_tox_box_vtable},

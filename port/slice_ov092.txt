@@ -1,0 +1,132 @@
+# run rel0215 wave 2, lane cast-lvl16pair (sub-job 1 of 2): ov092, the TOX_BOX
+# pack -- TOX_BOX (309, 8daOnms_c), level 16 (Shifting Sand Land), x3 placed.
+# Fresh per-symbol mount (port/ov092_syms.txt, which carries the whole
+# derivation: the base proof, both attribution routes, the footprint argument
+# against three co-occupant overlays, and the one 32-slot Platform width with
+# three independent routes agreeing). The fill, the PMF state seat and the two
+# method faces are hal/actor_classes_ov092.cpp.
+#
+# ==== THE SOURCE INVENTORY, COUNTED THREE WAYS =============================
+# config/arm9/overlays/ov092/symbols.txt has 24 function rows (23 class bodies
+# + 1 sinit) and config's delinks.txt names 24 src TUs. Counted the three ways
+# slice_vs.txt section 2 asks for:
+#     delinked complete to a src TU ......... 24
+#     present but NONMATCHING-bannered ....... 0
+#     MISSING ................................ 0
+# The sums agree with symbols.txt exactly. THIS OVERLAY IS 100% MATCHED with no
+# bannered bodies at all, so the whole 24-TU ceiling is real rather than a
+# target. 11 TUs are .cpp and 13 are .c, and NONE of the 13 .c files carries a
+# C++ token (comment-stripped sweep over class/template/namespace/virtual/
+# access-specifier/`::`/new/delete and the //cpp marker), so this slice needs no
+# set_source_files_properties(... LANGUAGE CXX) row. All 11 .cpp files already
+# carry //cpp; none of the 13 .c files does.
+#
+# ==== ONE TU IS HOST-COPIED, AND IT IS REFUSED FOR A NAMED REASON ==========
+# The refused TU stays BYTE-LOCKED in src/ as the matched proof; it is simply
+# not listed below. Nothing is refused for being awkward -- the smallest
+# genuinely unmodellable subtree, per the VS lane's correction (it refused
+# twelve wireless wrappers, eleven of which were leaf accessors, and its first
+# boot crashed on a face returning 0 where the real body returns a pointer).
+#
+#  A. THE PMF DISEASE (1 TU). src/_ZN6ToxBox8BehaviorEv.cpp forms a real C++
+#     pointer-to-member on a DELIBERATELY INCOMPLETE class and calls through
+#     it, and its table is an ARRAY of those records:
+#         struct ToxBox;                      <- incomplete at this point
+#         typedef void (ToxBox::*PMF)();
+#         struct TableEnt { PMF pmf; };
+#         extern TableEnt data_ov092_02132568[];
+#         ...
+#         (self->*data_ov092_02132568[idx].pmf)();
+#     MSVC's "unknown inheritance" general form is 16 bytes, not the ROM's
+#     8-byte {function, delta} record, so BOTH halves break: the call goes
+#     through the wrong representation AND `data_ov092_02132568[idx]` strides
+#     by 16 where the ROM strides by 8. Read off the recovered source's own
+#     declarations, not inferred from a crash. The SoundObject/Cap/MrBlizzard/
+#     BabyPenguin/Unagi/HootTheOwl/ov077 shape, eighth instance.
+#       src/_ZN6ToxBox8BehaviorEv.cpp -> port/unmatched/ToxBox_HostSites.cpp
+#
+# ==== WHAT IS **NOT** REFUSED, AND THE ONE THAT LOOKS LIKE IT SHOULD BE ====
+# src/_ZN6ToxBox6RenderEv.cpp RIDES FROM SRC. Its whole body is one
+# `((Sub *)&mModel)->method5(0)` through a SIX-VIRTUAL local shadow reaching
+# index 5, which is the exact silhouette of ov077's three refused Renders --
+# and it is NOT the same case. Those three dispatch on a **ModelAnim**, whose
+# host table hal/cxxname_bridge.cpp fills in MSVC numbering where slot 5 is
+# Virtual18 and cannot be dual-filled. This one dispatches on a plain **Model**
+# at +0xd4 (InitResources calls ModelBase::SetFile(self+0xd4, ...) and D1 calls
+# _ZN5ModelD1Ev(&self->mModel)), and hal/cxxname_bridge.cpp:511 DUAL-FILLS
+# `_ZTV5Model[5] = mv_render` for exactly this shape, with the reason written
+# beside it. The ov017 ShipWater body is the same six-virtual shadow over the
+# same +0xd4 offset and rides from src on this tip. Refusing this TU would have
+# been the VS lane's mistake, and it would have cost a matched TU for nothing.
+#
+# Nothing else in the overlay is refused. In particular:
+#   * NO asm primitive, no DS thread scheduler, no card overlay loader tail, no
+#     wireless manager reaches this overlay -- the comment-stripped sweep found
+#     zero `asm`/`__asm` blocks in all 24 TUs.
+#   * BOTH DESTRUCTORS STAY. src/_ZN6ToxBoxD1Ev.cpp and src/_ZN6ToxBoxD0Ev.cpp
+#     are already plain `extern "C"` bodies that store their table by name and
+#     call flat member destructors -- not the real-C++ `virtual ~X();` shape
+#     that made MSVC unable to name ov077's Lakitu and Spiny destructors. The
+#     asymmetry is the ROM's recovery route, not a choice.
+#   * NO implicit-r1 ride-through: every one of this overlay's internal call
+#     sites passes the full argument list its callee declares (checked call
+#     site by call site against each callee's own definition, the check that
+#     found Lakitu::InitResources's missing state index one overlay over).
+#   * NO Actor::ClosestPlayer() no-argument r0 ride-through. func_ov092_02131010
+#     calls `_ZN5Actor13ClosestPlayerEv(thiz)` WITH its receiver, which is the
+#     correct form; port/tools/closestplayer_guard.py runs before configure and
+#     would refuse the build otherwise.
+#
+# ==== TWO METHOD FACES, NOT REFUSALS =======================================
+# Two TUs define REAL C++ METHODS against the generated class header
+# (include/ToxBox.h declares both). mwccarm mangles those Itanium; MSVC mangles
+# them ?CleanupResources@ToxBox@@QAEHXZ and ?Render@ToxBox@@QAEHXZ, so nothing
+# in the link answers to the flat name the vtable fill uses. Both stay in the
+# slice and get a one-line face in hal/actor_classes_ov092.cpp -- the
+# BabyPenguin/IceSheet/OneUpLogo/HootTheOwl/ShipWater recipe:
+#     src/_ZN6ToxBox16CleanupResourcesEv.cpp -> _ZN6ToxBox16CleanupResourcesEv
+#     src/_ZN6ToxBox6RenderEv.cpp            -> _ZN6ToxBox6RenderEv
+# src/_ZN6ToxBox13InitResourcesEv.c is a .c file defining the FLAT name
+# already, so slot 0 needs no face -- the ov017 asymmetry again.
+#
+# ==== T5 ADJUDICATION: NOTHING TO ADJUDICATE ===============================
+# ZERO of the 24 TUs carries the `recovered from vtable slot identity` marker
+# port/tools/inferred_stub_guard.py exists for. No body in this overlay is a
+# candidate phantom seat, so this lane adds no row to
+# port/tools/inferred_stub_adjudicated.txt for ov092 and leaves the debt list
+# and the baseline untouched.
+#
+# ==== NO FOREIGN SPELLINGS =================================================
+# The wave-1 sweep1 review flagged that ov017's InitResources spells its own
+# overlay's statics with ov055's and ov056's names, so every lane now sweeps.
+# Sweeping all 24 ov092 TUs for `data_ovNNN_*` / `func_ovNNN_*` / `_ZTV*`
+# tokens that are not ov092's yields exactly three, and all three are correct:
+#     func_ov002_020de328   ov002's, mounted and linked today
+#     _ZTV8Platform         the host base table (hal/actor_vtables.cpp)
+#     _ZTV6ToxBox           this class's own, the host array below
+# No -D rename is needed anywhere in this slice.
+#
+# ==== THE SLICE: 23 TUs (24 - 1 host copy) =================================
+src/ToxBox_Spawn.c
+src/_ZN6ToxBox13InitResourcesEv.c
+src/_ZN6ToxBox16CleanupResourcesEv.cpp
+src/_ZN6ToxBox6RenderEv.cpp
+src/_ZN6ToxBoxD0Ev.cpp
+src/_ZN6ToxBoxD1Ev.cpp
+src/__sinit_ov092_021320cc.c
+src/func_ov092_02130fcc.c
+src/func_ov092_02131010.cpp
+src/func_ov092_021311b0.cpp
+src/func_ov092_021313b0.cpp
+src/func_ov092_021314d0.c
+src/func_ov092_02131578.c
+src/func_ov092_021315ac.c
+src/func_ov092_02131620.c
+src/func_ov092_02131650.c
+src/func_ov092_02131680.c
+src/func_ov092_021316b0.c
+src/func_ov092_021316d8.c
+src/func_ov092_02131878.c
+src/func_ov092_021319b0.cpp
+src/func_ov092_02131a88.cpp
+src/func_ov092_02131aec.cpp

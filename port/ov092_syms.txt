@@ -1,0 +1,216 @@
+# run rel0215 wave 2, lane cast-lvl16pair (sub-job 1 of 2): ov092, the TOX_BOX
+# pack -- one class, TOX_BOX (309, 8daOnms_c), placed x3 on level 16 (Shifting
+# Sand Land) and on no other level of the fifty-two.
+#
+# FRESH per-symbol mount, the ov077/ov079/ov080/ov081/ov072/ov094 convention:
+# the overlay's WHOLE .rodata + .data + .bss span MINUS the one vtable (a host
+# array hal/actor_classes_ov092.cpp fills), MINUS dsd's single .p__sinit_*
+# .ctor word (not a C identifier; the port calls the sinit by name).
+# ovdata.py --pack pads the gaps.
+#
+# ov092 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0092.bin at base
+# 0x02130f00, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89 of
+# 103 overlays and dsd never scores better). The base is proved, not assumed --
+# the first word of seven known functions is a plausible prologue:
+#
+#   0x02130f00 _ZN6ToxBoxD1Ev               e92d4010  push {r4,lr}
+#   0x02130f5c _ZN6ToxBoxD0Ev               e92d4010  push {r4,lr}
+#   0x02131010 func_ov092_02131010          e92d4010  push {r4,lr}
+#   0x02131c44 _ZN6ToxBox8BehaviorEv        e92d4030  push {r4,r5,lr}
+#   0x02131da0 _ZN6ToxBox13InitResourcesEv  e92d40f0  push {r4-r7,lr}
+#   0x02132018 ToxBox_Spawn                 e92d4010  push {r4,lr}
+#   0x021320cc __sinit_ov092_021320cc       e92d4010  push {r4,lr}
+#
+# Sections, from config/arm9/overlays/ov092/delinks.txt:
+#   .text   0x02130f00..0x02132074      .rodata 0x02132074..0x021320cc
+#   .init   0x021320cc..0x02132210      .ctor   0x02132210..0x02132214
+#   .data   0x02132220..0x02132540      .bss    0x02132540..0x021325c0
+# The image is 0x1640 bytes and ends at 0x02132540, exactly .bss's start --
+# checked against the file's own length, not assumed.
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES ================================
+# Both routes are run here even though this overlay is the easy half of the
+# lane, because ov092 shares the load window at base 0x02130f00 with ov090 and
+# ov091 (T6) and, less obviously, with ov006 -- see the footprint section.
+# Route 1: the arm9 spawn table word at 0x02090864 + id*4 is a RELOCATION, read
+# out of config/arm9/relocs.txt, and it must land on this overlay's own
+# SpawnInfo. Route 2: that record's own word[1] low halfword must equal the id
+# whose slot reached it, and word[0] must be a spawn function inside ov092's
+# own .text.
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc         idhalf  module
+#   309  0x021322ac  0x02090d38   0x02132018 ToxBox_Spawn   0x0135  overlay(92)
+#
+# 0x0135 = 309, and (0x02090d38 - 0x02090864) / 4 = 309. Both routes agree.
+#
+# THE RECORD IS 0x1c, NOT THE 0x24 THIS LIST MOUNTS, and the difference is
+# recorded rather than papered over. dsd's next-symbol delta from 0x021322ac to
+# the vtable at 0x021322d0 is 0x24, nine words, but only the first SEVEN are
+# the SpawnInfo:
+#     w0 0x021322ac 02132018   ToxBox_Spawn
+#     w1 0x021322b0 01320135   low half 0x0135 = 309
+#     w2..w6                   flags and four Fix12 tuning words
+#     w7 0x021322c8 00000000   PAD to the vtable object's alignment
+#     w8 0x021322cc 021322a0   the TYPEINFO POINTER -- _ZTV6ToxBox's own
+#                              vtable[-1] slot, part of the VTABLE object in
+#                              the Itanium layout, not part of the record
+# ov091's header states the same fact as "every *_SpawnInfo pinned to the
+# record's real 0x1c"; ov077's header calls w8 "the record's word[8]", which is
+# these same two words read one object short. Checked against ov077's own bytes
+# rather than inferred: Lakitu_SpawnInfo 0x02127848 has exactly the same shape,
+# w7 = 0 and w8 = 0x0212783c, its typeinfo.
+#
+# THIS LIST STILL MOUNTS 0x24 UNPINNED, matching ov077's three landed records,
+# and the two extra words are inert rather than merely harmless:
+#   * w7 is zero in the ROM and nothing writes it;
+#   * w8 is a relocated word into data_ov092_021322a0, which this list ALSO
+#     mounts, so ovdata --pack rebases it to the host typeinfo record instead
+#     of leaving a DS address behind (ptr_audit reads 0 after this mount);
+#   * nothing on the host reads it. The host vtable is a separate 32-element
+#     array hal/actor_classes_ov092.cpp fills and the ROM's vtable span is
+#     EXCLUDED from this mount, so there is no host object whose [-1] this word
+#     is, and the port does not use RTTI.
+# Pinning 0x1c would leave 8 bytes of the ROM's own spacing unmounted for no
+# gain and would need a hand-written pack gap where ovdata already makes one.
+# A reviewer re-deriving the width from the bytes will find 0x1c and should not
+# read the 0x24 as an error.
+#
+# THE MODULE COLUMN IS SINGULAR. dsd marks ZERO ov092 symbols `ambiguous`
+# (`grep -c ambiguous config/arm9/overlays/ov092/symbols.txt` = 0) and the arm9
+# relocation reads `module:overlay(92)`, not `module:overlays(...)`. This
+# overlay has no contested id and needs no adjudication. Contrast ov096, the
+# other half of this lane, where all three SpawnInfo rows read
+# `module:overlays(6,96)`.
+#
+# ==== THE FOOTPRINT ARGUMENT, AND THE THIRD OCCUPANT THE PLAN OMITS ========
+# Window extents re-derived from each overlay's own delinks.txt rather than
+# quoted:
+#   ov090  0x02130f00..0x021345e0 (image 0x02134480)
+#   ov091  0x02130f00..0x021356e0 (image 0x02135440)   MOUNTED, the widest
+#   ov092  0x02130f00..0x021325c0 (image 0x02132540)   this one
+# ov092 is STRICTLY INSIDE ov091's already-mounted span, so it adds no new
+# ground and cannot take a resolved --cross target away from another mount
+# (the ov044/ov045/wave-C footprint argument). ov090 is another wave-2 lane's
+# and is not mounted on this tree.
+#
+# THE PLAN'S T6 TABLE OMITS ov006. Its span is 0x020bfec0..0x021430a0, which
+# swallows this window whole, and ov006 IS mounted (1729 of 1888 TUs linked
+# today). Every address ov092 mounts is therefore already inside a second
+# mounted window. That is not a defect and it needs no bridge:
+#   * the two mounts emit DIFFERENT C names -- data_ov092_02132074 versus
+#     ov006's own spellings -- at different host storage, and both the registry
+#     and the sinit reach their records by C NAME, never by DS address (the
+#     ov077/ov080 0x02127848 ruling, applied again);
+#   * the ONE reloc from ov006 that lands inside a symbol this list mounts is
+#     `from:0x021335cc kind:load to:0x021322bc module:overlay(6)`, an ov006
+#     .ctor word pointing at an ov006 .init FUNCTION (ov006's .init spans
+#     0x0212f4c4..0x0213356c, so 0x021322bc is code there). ToxBox_SpawnInfo's
+#     word at that address is 0x002ee000, a Fix12 tuning constant. Two
+#     overlays, one address, two unrelated meanings, never co-resident.
+# Nothing in this lane spells a placeholder cxx_aliases.cpp binds, so there is
+# no G0/G1-class collision to bridge and no /alternatename in the seat file.
+#
+# ==== THE ONE VTABLE WIDTH: 32, AND ALL THREE ROUTES AGREE FOR ONCE ========
+# Read slot by slot out of config/arm9/overlays/ov092/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072 method).
+#
+#   class   table       A reloc run  B next dsd sym  TRUTH  what pins it
+#   ToxBox  0x021322d0      32            32           32   semantic tail
+#
+# The FOURTH-SHAPE trap that lies on two of ov077's three tables does NOT fire
+# here, and the reason is worth recording: ToxBox's pointer-to-member SOURCE
+# table sits BEFORE its name string and its typeinfo, at
+# 0x02132240..0x02132288, so the vtable has nothing behind it but ordinary
+# path data. The per-class .data layout is the ov077 one with the members in a
+# different order:
+#     [CLPS block][PMF source pairs][name string][path table][typeinfo]
+#     [SpawnInfo][vtable][three path blocks]
+#   0x02132220 0x02132240(9 pairs) 0x02132288 0x02132294 0x021322a0
+#   0x021322ac 0x021322d0          0x02132350/0x021323dc/0x0213246c
+#
+# THE SEMANTIC TAIL SAYS PLATFORM, NOT ACTOR. slot 30 == 0x020100dc
+# Actor::OnAimedAtWithEggReturnVec is the last Actor slot, and slot 31 ==
+# 0x020ee55c, which config/arm9/overlays/ov002/symbols.txt:1175 names
+# _ZN8Platform4KillEv. So this is a 32-slot Platform close, the ov017
+# ShipWater shape, not the 31-slot Actor close ov077's three classes take.
+# ToxBox_Spawn confirms it independently: it calls _ZN8PlatformC2Ev before it
+# stores _ZTV6ToxBox, and both destructors restore _ZTV8Platform on the way
+# down. Three independent confirmations of the same width.
+#
+# Own bodies: 0 InitResources, 3 CleanupResources, 6 Behavior, 9 Render,
+# 16 D1, 17 D0. Slot 12 is 0x02043ac0 -- the arm9 ActorBase default, NOT an
+# own OnPendingDestroy; this class has none, unlike all three of ov077's.
+# Slots 18, 19 and 29 are the arm9 Actor defaults (0x02010160 / 0x02010154 /
+# 0x02010124), the HeaveHo pattern rather than the Lakitu/Spiny one.
+#
+# NO CLASS-IDENTITY SHIFT IN THIS OVERLAY, checked the way wave 1 requires --
+# vtable[-1] read through to its own name string, AND both factory routes:
+#   * the typeinfo record at 0x021322a0 is [0x0209a764 __si_class_type_info]
+#     [0x02132288 name][0x021089ec base], and the string at 0x02132288 reads
+#     "8daOnms_c";
+#   * dsd names 0x021322d0 ONE way, _ZTV6ToxBox -- there is no _ZTV9daOnms_c
+#     row to reconcile, so this overlay has no RTTI-spelling pair at all and
+#     needs none of ov077's three /alternatename bridges;
+#   * both destructors AND the factory install the SAME address: the relocs at
+#     0x02130f54 (D1's pool), 0x02130fc0 (D0's pool) and 0x02132068
+#     (ToxBox_Spawn's pool) all read `to:0x021322d0 module:overlay(92)`.
+# One class, one table, one spelling, three agreeing routes.
+#
+# ==== THE VTABLE IS EXCLUDED, AS HOST STORAGE ==============================
+# The ov015/ov016/ov017/ov022/ov045/ov080 rule -- a mounted vtable hands a
+# factory DS code addresses. No dsd symbol falls inside the span, so no
+# interior split has to be excluded with it:
+#   0x021322d0..0x02132350  309  32 slots  _ZTV6ToxBox
+#
+# ==== WHAT IS MOUNTED ======================================================
+# 25 symbols: every ov092 .rodata / .data / .bss symbol that is not the vtable
+# and not the .ctor word. Sized by next-symbol delta (ovdata.py's own rule,
+# clamped to the delinks section) with NO explicit pin anywhere -- and that is
+# a measured result, not an omission.
+#
+# EVERY SIZE WAS AUDITED FOR T3 against what the ROM actually writes:
+#   data_ov092_02132074  0xc   three Fix12 tuning words, read-only
+#   data_ov092_02132080  0xc   three more, read-only
+#   data_ov092_0213208c  0x40  clamped to .rodata's end; eight
+#                              {fefd0102, fe000100} pairs, read-only
+#   data_ov092_02132220  0x20  the CLPS_Block ('CLPS' magic in word 0) handed
+#                              to MovingMeshCollider::SetFile BY CONST REF and
+#                              never written; the next symbol at 0x02132240 is
+#                              the first PMF pair, so 0x20 is also the largest
+#                              span the ROM leaves for it
+#   the nine 0x8 rows (2240 2248 2250 2258 2260 2268 2270 2278 2280) are the
+#                              PMF SOURCE records, {function, 0} pairs, and
+#                              every one is exactly 8 bytes in the ROM
+#   data_ov092_02132288  0xc   the RTTI name string "8daOnms_c", 10 bytes used
+#   data_ov092_02132294  0xc   THREE relocated words (0x0213246c, 0x02132350,
+#                              0x021323dc), indexed [0..2] by InitResources on
+#                              the low two bits of mParam; 0xc is exact
+#   data_ov092_021322a0  0xc   the three-word typeinfo record
+#   ToxBox_SpawnInfo     0x24  the record's own 0x1c plus the vtable object's
+#                              pad word and typeinfo pointer -- derived in full
+#                              above, inert, and the ov077 precedent
+#   data_ov092_02132350  0x8c  } the three path blocks data_ov092_02132294
+#   data_ov092_021323dc  0x90  } points at; the last is clamped to .data's end
+#   data_ov092_0213246c  0xd4  } at 0x02132540, which is also .bss's start
+#   data_ov092_02132540  0x8   SharedFilePtr (model file 0x3c9), 8 bytes
+#   data_ov092_02132548  0x8   SharedFilePtr (collision file 0x3ca), 8 bytes
+#   data_ov092_02132550  0xc   func_020731dc destructor list NODE -- the exact
+#   data_ov092_0213255c  0xc   8d1f9d13b shape, and dsd sized BOTH correctly
+#   data_ov092_02132568  0x58  inferred by clamping to .bss's end; the sinit
+#                              writes [0..8], nine 8-byte pairs = 0x48.
+#                              OVERSIZED BY 0x10 AND HARMLESS -- the T3 failure
+#                              is UNDERsizing, and nothing is mounted after it
+#                              for a run-off to land on.
+# No symbol in this overlay is written past its dsd-inferred gap, so ov092
+# needs none of ov077's `data_ov077_02127c28:0x60` pins.
+data_ov092_02132074 data_ov092_02132080 data_ov092_0213208c data_ov092_02132220
+data_ov092_02132240 data_ov092_02132248 data_ov092_02132250 data_ov092_02132258
+data_ov092_02132260 data_ov092_02132268 data_ov092_02132270 data_ov092_02132278
+data_ov092_02132280 data_ov092_02132288 data_ov092_02132294 data_ov092_021322a0
+ToxBox_SpawnInfo data_ov092_02132350 data_ov092_021323dc data_ov092_0213246c
+data_ov092_02132540 data_ov092_02132548 data_ov092_02132550 data_ov092_0213255c
+data_ov092_02132568
