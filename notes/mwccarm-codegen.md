@@ -3414,7 +3414,7 @@ the layout side rather than the register side.
 
 The frame under 2004/b56 `-O4,p` is ordered regions:
 
-```
+```text
 low  [outgoing args][CHAIN][pool: webs / singles / coalesced band][aggregates]  high
 ```
 
@@ -3944,7 +3944,7 @@ shape twice that ~30,000 hill-climb compiles never reached from any seed.
 
 Three attractors, and only three, over ~60,000 compiles. Roles are
 (p, shiftedValue, palette, i, mask, secondStoreTemp):
-
+```text
     ROM                                   r2  r3  r0  r1  r4  r5
     A  opt_lifetimes off + a two-name
        shift chain, palette named and
@@ -3952,7 +3952,7 @@ Three attractors, and only three, over ~60,000 compiles. Roles are
     B  plain shape, palette implicit      r2  r0  r1  r3  r4  r5   div 24
     C  opt_common_subs off + a copy
        through a second name              r2  r5  r0  r1  r3  r4   div 34
-
+```
 Each is a different rotation and each reproduces a different three of the six roles, and
 **the shifted value never once reaches r3** - it is r0, r1, r2 or r5 in every compile,
 while r3 is always taken by something else (the palette in A, the loop counter in B, the
@@ -4208,10 +4208,10 @@ file as the temp the compiler would have invented. Measured on this body: as a n
 local the web landed in **r4, the TOP of the contended group**; the cartridge has it in
 **r0, the bottom**. Every other web in the group shifted one slot to compensate, so both
 blocks that used it came out as a clean uniform rotation:
-
+```text
     ROM      angbase=r0  round=r1  zero=r2  hx=r3  hz=r4  scale=r5  tbl=r8
     named    round=r0    zero=r1   hx=r2    hz=r3  angbase=r4  scale=r5  tbl=r8
-
+```
 Deleting the local and writing `*(u16 *)(c + 0x446)` inline at both use sites took the
 head block 23 -> 2 and the particle block 48 -> 2, total **105 -> 37**. The same lever
 applied to the row cursor `char *p2 = c + (i << 1)` (spelled inline at its two uses) took
@@ -4246,10 +4246,10 @@ that second reading was carried forward as "the draft has been hauling a dead cr
 was wrong, and the way it was wrong is the transferable part. Every shape in that sweep
 was seeded at or near the div-122 draft - i.e. BEFORE the named-address locals came out.
 Re-measured through the gate on both bodies:
-
+```text
     div-122 draft   with `opt_common_subs off` 122   without 122   -> genuinely inert
     shipped body    with `opt_common_subs off`  20   without  27   -> worth 7 words
-
+```
 So the pragma did not start out dead and stay dead: it **became load-bearing once the
 named-address locals were deleted**. Removing `angbase` and `p2` is exactly what stops the
 source from pre-sharing those addresses by hand, which is what leaves a common
@@ -4315,11 +4315,11 @@ audit can detect.
 
 Measured on `_ZN14TTC_MovingBeam8BehaviorEv` (ov065, 0x0211bd8c, 0x178), lane TTC of run
 vsdec, ~700 compiled variants across 11 product sweeps. The whole body reproduced on the
-first try except one trailing clamp block, which cost the entire session and turned out to
+first try except one trailing clamp block, which cost the entire session nd turned out to
 be a single lever nobody had written down.
 
 THE SHAPE. A range test followed by a clamp:
-
+```c
     int y = *(s32 *)(c + 0x60);
     int lo = *(s32 *)(c + 0x320);
     int hi = *(s32 *)(c + 0x324);
@@ -4330,16 +4330,16 @@ THE SHAPE. A range test followed by a clamp:
         *(s32 *)(c + 0x60) = <clamp>;
         ...
     }
-
+```
 TWO RIGID REGIMES. How you spell `<clamp>` decides the colouring of ALL FOUR values, and
 there are exactly two outcomes. Writing the clamp as open-coded `if`s:
-
+```text
     y = r0   in = r3   hi = r2   lo = r1
-
+```
 Writing it as a single ternary expression:
-
+```text
     y = r2   in = r1   hi = r0   lo = r3
-
+```
 These are not tendencies, they are absolute over every spelling measured. The regime is
 chosen by the clamp, and then nothing else moves it.
 
@@ -4366,19 +4366,19 @@ reached it, and the permuter could not either (two structurally different seeds,
 
 THE LEVER. The bridge is the ARM ORIENTATION of the inner ternary. These are semantically
 identical and compile differently:
-
+```text
     (y <= hi) ? y : hi      ->  movgt <y's reg>, <hi's reg>     select lands in y
     (y >  hi) ? hi : y      ->  movle <hi's reg>, <y's reg>     select lands in hi
-
+```
 mwcc materialises the FIRST arm into the result register and conditionally moves the second
 into it. So the arm you write first decides which operand's register the result occupies,
 and therefore which register is free for everything downstream. Swapping the arms of an
 inner ternary is a free, semantics-preserving colouring move that no other axis reproduces.
 
 The match was:
-
+```c
     *(s32 *)(c + 0x60) = (y < lo) ? lo : ((y > hi) ? hi : y);
-
+```
 with the plain block-scope declarations in order y, lo, hi. Changing `(y > hi) ? hi : y`
 back to `(y <= hi) ? y : hi` and nothing else moves it from a byte match to seven words off (four in the clamp itself plus three range-test loads that recolour with it; reviewer-measured).
 
