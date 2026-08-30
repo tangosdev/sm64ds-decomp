@@ -1482,6 +1482,37 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
 extern unsigned char ToxBox_SpawnInfo[];             /* ov092 0x021322ac, +4 low = 309 */
 void *ToxBox_Spawn(void);                            /* ov092 0x02132018, 92 B */
 void hal_fill_tox_box_vtable(void);                  /* _ZTV6ToxBox, 32 */
+/* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 2 of 2): ov096's cast,
+   the rest of level 16's. THREE IDS, TWO CLASSES -- 240 and 241 are ONE class
+   (9daSanbo_c) under two spawn entry points, so they share one fill. Proved
+   three ways rather than assumed from the name: src/Pokey_Spawn.c and
+   src/PokeySegment_Spawn.c are identical apart from their own names, both
+   factories' pools relocate to the SAME table 0x021379d8 (0x02136d5c and
+   0x02136dac), and PokeySegment's own record's typeinfo word points at POKEY's
+   __si_class_type_info. The ov030 UKIKI_THIEF / UKIKI_STAR shape.
+   All three SpawnInfo records come from the fresh per-symbol ov096 mount
+   (port/ov096_syms.txt); the two vtable fills, the six-state PMF seat and the
+   seven method faces are hal/actor_classes_ov096.cpp; the slice is
+   port/slice_ov096.txt.
+   ALL THREE IDS ARE CONTESTED AND ALL THREE ARE ADJUDICATED. dsd marks every
+   one `ambiguous`, every arm9 relocation reads `module:overlays(6,96)`, and
+   ov006's mount already hosts all three addresses today -- so both attribution
+   routes were mandatory here and both agree on all three. The raw bytes of
+   both claimants are in port/ov096_syms.txt: ov096 has a real prologue in
+   word[0] and the reaching table index in word[1] at every one, ov006 has GX
+   display-list words at all three.
+   BOTH TABLES ARE 31 SLOTS, the plain Actor close -- not ov092's 32-slot
+   Platform close in the other half of this lane. Tornado's next-symbol landing
+   reads 36 and LIES: slots 31..35 are five zero pad words to .bss's align-32
+   boundary and the reloc run stops at 30. */
+extern unsigned char Pokey_SpawnInfo[];              /* ov096 0x02137998, +4 low = 240 */
+void *Pokey_Spawn(void);                             /* ov096 0x02136d60, 80 B */
+extern unsigned char PokeySegment_SpawnInfo[];       /* ov096 0x021379b4, +4 low = 241 */
+void *PokeySegment_Spawn(void);                      /* ov096 0x02136d10, 80 B */
+void hal_fill_pokey_vtable(void);                    /* _ZTV5Pokey == _ZTV9daSanbo_c, 31 */
+extern unsigned char Tornado_SpawnInfo[];            /* ov096 0x02137a6c, +4 low = 308 */
+void *Tornado_Spawn(void);                           /* ov096 0x021376bc, 80 B */
+void hal_fill_tornado_vtable(void);                  /* _ZTV7Tornado == _ZTV7daTor_c, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2246,4 +2277,15 @@ void hal_fill_tox_box_vtable(void);                  /* _ZTV6ToxBox, 32 */
        one class. Placed instances measured from this tree's own baseline \
        census, not quoted: TOX_BOX x3 on level 16 and on NO other level of \
        the fifty-two -- id 309 appears in exactly one level's skip list. ---- */ \
-    {309, "TOX_BOX", ToxBox_SpawnInfo, ToxBox_Spawn, hal_fill_tox_box_vtable},
+    {309, "TOX_BOX", ToxBox_SpawnInfo, ToxBox_Spawn, hal_fill_tox_box_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 2 of 2): ov096, \
+       the rest of level 16's cast. Placed instances measured from this tree's \
+       own baseline census, not quoted: POKEY x4 and TORNADO x3 on level 16, \
+       and neither appears in any other level's skip list. POKEY_SEGMENT (241) \
+       is placed on NO level of the fifty-two -- POKEY spawns its own segments \
+       -- and is registered because it is a real spawn entry point into the \
+       same class, sharing POKEY's fill. ---- */ \
+    {240, "POKEY", Pokey_SpawnInfo, Pokey_Spawn, hal_fill_pokey_vtable}, \
+    {241, "POKEY_SEGMENT", PokeySegment_SpawnInfo, PokeySegment_Spawn, \
+     hal_fill_pokey_vtable}, \
+    {308, "TORNADO", Tornado_SpawnInfo, Tornado_Spawn, hal_fill_tornado_vtable},

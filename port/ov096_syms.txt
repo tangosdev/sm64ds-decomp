@@ -1,0 +1,254 @@
+# run rel0215 wave 2, lane cast-lvl16pair (sub-job 2 of 2): ov096, the POKEY
+# pack -- POKEY (240, 9daSanbo_c), POKEY_SEGMENT (241, THE SAME CLASS) and
+# TORNADO (308, 7daTor_c). Level 16 (Shifting Sand Land) places POKEY x4 and
+# TORNADO x3; POKEY_SEGMENT is placed on no level and is spawned by POKEY.
+#
+# FRESH per-symbol mount, the ov077/ov079/ov080/ov081/ov072/ov094 convention:
+# the overlay's WHOLE .data + .bss span MINUS the two vtables (host arrays
+# hal/actor_classes_ov096.cpp fills), MINUS dsd's two .p__sinit_* .ctor words
+# (not C identifiers; the port calls the sinits by name). ovdata.py --pack pads
+# the gaps. ov096 has NO .rodata section at all.
+#
+# ov096 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0096.bin at base
+# 0x02135700, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89 of
+# 103 overlays and dsd never scores better). The base is proved, not assumed --
+# the first word of ten known functions is a plausible prologue:
+#
+#   0x02135700 _ZN5PokeyD1Ev                e92d4010  push {r4,lr}
+#   0x02135748 _ZN5PokeyD0Ev                e92d4010  push {r4,lr}
+#   0x02136ab0 _ZN5Pokey13InitResourcesEv   e92d4010  push {r4,lr}
+#   0x02136d10 PokeySegment_Spawn           e92d4010  push {r4,lr}
+#   0x02136d60 Pokey_Spawn                  e92d4010  push {r4,lr}
+#   0x02136db0 _ZN7TornadoD1Ev              e92d4010  push {r4,lr}
+#   0x02137564 _ZN7Tornado13InitResourcesEv e92d4010  push {r4,lr}
+#   0x021376bc Tornado_Spawn                e92d4010  push {r4,lr}
+#   0x0213770c __sinit_ov096_0213770c       e92d4010  push {r4,lr}
+#   0x02137894 __sinit_ov096_02137894       e92d4000  push {lr}
+#
+# Sections, from config/arm9/overlays/ov096/delinks.txt:
+#   .text   0x02135700..0x0213770c      .init   0x0213770c..0x02137900
+#   .ctor   0x02137900..0x02137908      .data   0x02137920..0x02137b20
+#   .bss    0x02137b20..0x02137be0
+# The image is 0x2420 bytes and ends at 0x02137b20, exactly .bss's start --
+# checked against the file's own length, not assumed.
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES, AND THREE CONTESTED IDS =======
+# Route 1: the arm9 spawn table word at 0x02090864 + id*4 is a RELOCATION, read
+# out of config/arm9/relocs.txt, and it must land on this overlay's own
+# SpawnInfo. Route 2: that record's own word[1] low halfword must equal the id
+# whose slot reached it, and word[0] must be a spawn function inside ov096's
+# own .text.
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc               idhalf module
+#   240  0x02137998  0x02090c24   0x02136d60 Pokey_Spawn          0x00f0 (6,96)
+#   241  0x021379b4  0x02090c28   0x02136d10 PokeySegment_Spawn   0x00f1 (6,96)
+#   308  0x02137a6c  0x02090d34   0x021376bc Tornado_Spawn        0x0134 (6,96)
+#
+# (0x02090c24 - 0x02090864)/4 = 240, (0x02090c28 - ...)/4 = 241,
+# (0x02090d34 - ...)/4 = 308. Both routes agree on all three.
+#
+# ==== THE ALIAS RACE: THREE CONTESTED ADDRESSES, ALL THREE SETTLED =========
+# This is the lane's defining hazard (T6, the Coffin/Spindrift shape: a
+# silently wrong-object binding that neither the byte gate nor the linkage
+# count can see). dsd marks all three of this overlay's SpawnInfo rows
+# `ambiguous`, every arm9 relocation above reads `module:overlays(6,96)`, and
+# -- unlike ov077's three, two of which were latent -- ALL THREE ARE LIVE IN
+# THE BUILD TODAY: port/ov006_syms.txt already hosts data_ov006_02137998,
+# data_ov006_021379b4 and data_ov006_02137a6c, and ov006 hosts 426 symbols
+# inside ov096's span in total. Each is settled by reading the RAW BYTES of
+# both claimants, not by trusting a label.
+#
+#   0x02137998 (id 240)
+#     ov096: 02136d60 005f00f0 10000002 001f4000 001f4000 01000000 01000000
+#     ov006: 0213799c 81ec44f8 000011da 000c84f8 ffff11de 41f400f8 0000410d
+#   0x021379b4 (id 241)
+#     ov096: 02136d10 006000f1 10000002 001f4000 001f4000 01000000 01000000
+#     ov006: 000480f8 0000410f 000c00f8 00004110 000c0000 00003130 01ec00f8
+#   0x02137a6c (id 308)
+#     ov096: 021376bc 01310134 00000000 00064000 00064000 01000000 01000000
+#     ov006: 02137a70 41f800f8 ffff31d6 02137a7c 41f800f8 ffff111d 81f040f8
+#
+# Every ov096 word[0] is a real e92d4010 prologue inside ov096's own .text and
+# every word[1] low halfword is exactly the table index that reached it. ov006
+# has NO plausible function pointer at any of the three: its words are NITRO GX
+# command data (the repeating ...00f8 / 41xx / ffffxxxx shape), and at
+# 0x02137a6c its word[0] points at the NEXT WORD -- a display-list chain, not a
+# factory. IDS 240, 241 AND 308 ARE ALL ov096's. dsd's `ambiguous` is a window
+# artifact: ov006 spans 0x020bfec0..0x021430a0 and swallows this window whole,
+# the two overlays are alternates at one base and are never co-resident, so
+# both dumps claim every address in the overlap.
+#
+# NO BRIDGE AND NO /alternatename IS NEEDED FOR ANY OF THE THREE: the two
+# mounts emit DIFFERENT C names (Pokey_SpawnInfo vs data_ov006_02137998, and so
+# on) at different host storage, and both the registry and the two sinits reach
+# their records by C NAME, never by DS address. The ov077/ov080 0x02127848
+# ruling, applied to three live contests instead of one. The only aliases this
+# lane does write are the two RTTI-spelling bridges below, which are a
+# different question entirely.
+#
+# ==== POKEY_SEGMENT IS POKEY: ONE CLASS, TWO SPAWN ENTRY POINTS ============
+# The ov030 UKIKI_THIEF/UKIKI_STAR (267/268) shape, and it is proved three
+# ways rather than assumed from the shared name prefix:
+#   * src/Pokey_Spawn.c and src/PokeySegment_Spawn.c are IDENTICAL apart from
+#     their own names -- both allocate 944 bytes, call _ZN5ActorC2Ev, store
+#     _ZTV5Pokey at p[0] and construct the same four members at the same four
+#     offsets (Model 0xd4, ShadowModel 0x124, MovingCylinderClsn 0x14c,
+#     WithMeshClsn 0x180);
+#   * the ROM agrees without the sources: the relocations at 0x02136d5c
+#     (PokeySegment_Spawn's pool) and 0x02136dac (Pokey_Spawn's pool) both read
+#     `to:0x021379d8`, the one table;
+#   * PokeySegment's OWN record's typeinfo word (0x021379d4) is 0x0213798c,
+#     POKEY's __si_class_type_info, whose name string reads "9daSanbo_c".
+# There is no _ZTV12PokeySegment anywhere in config, no PokeySegment method,
+# and no second vtable. ONE fill serves both ids; the two registry rows differ
+# only in their id and their factory.
+#
+# ==== THE TWO VTABLE WIDTHS, AND ROUTE B LIES ON TORNADO ===================
+# Read slot by slot out of config/arm9/overlays/ov096/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072 method).
+#
+#   class    table       A reloc run  B next dsd sym  TRUTH  what pins it
+#   Pokey    0x021379d8      31            31          31    semantic tail
+#   Tornado  0x02137a90      31          36 LIES       31    tail + 5 zero words
+#
+# BOTH ARE 31 SLOTS, the plain Actor layout. The SEMANTIC TAIL pins both: slot
+# 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec is the last Actor slot, and
+# neither class is Platform-derived, so neither carries a 32nd. (Contrast
+# ov092, the other half of this lane, which IS Platform-derived and closes on
+# slot 31 = 0x020ee55c _ZN8Platform4KillEv.)
+#
+# ROUTE B LIES ON TORNADO. Its next dsd symbol is data_ov096_02137b20, the .bss
+# start, giving 0x90 = 36 slots. Slots 31 through 35 (0x02137b0c..0x02137b1c)
+# are ZERO in the raw image -- .data's tail padding up to .bss's align-32
+# boundary, not five null virtuals. The reloc run stops at slot 30 for this
+# table, which is the independent confirmation. The ov077 HeaveHo case with
+# five pad words instead of three.
+#
+# THE FOURTH-SHAPE TRAP (a pointer-to-member SOURCE table read as more vtable)
+# does NOT fire on either table, and the reason is the layout: ov096's TWELVE
+# PMF source records sit at the very TOP of .data, 0x02137920..0x02137980,
+# before either name string, so neither vtable has anything behind it but the
+# next class's name string. The per-overlay .data layout is:
+#     [12 PMF source pairs][Pokey name][Pokey typeinfo][Pokey_SpawnInfo]
+#     [PokeySegment_SpawnInfo][_ZTV5Pokey][Tornado name][Tornado typeinfo]
+#     [Tornado_SpawnInfo][_ZTV7Tornado]
+#
+# Own bodies per class:
+#
+#   slot  Pokey                        Tornado
+#    0    Pokey::InitResources         Tornado::InitResources
+#    3    Pokey::CleanupResources      Tornado::CleanupResources
+#    6    Pokey::Behavior              Tornado::Behavior
+#    9    Pokey::Render                Tornado::Render
+#   12    Pokey::OnPendingDestroy      0x02043ac0  arm9 ActorBase default
+#   16    PokeyD1                      TornadoD1
+#   17    PokeyD0                      TornadoD0
+#   18    func_ov096_021357a4          0x02010160  arm9 Actor default
+#   19    func_ov096_02136cd0          0x02010154  arm9 Actor default
+#   29    func_ov096_021357ac          0x02010124  arm9 Actor default
+# Pokey takes the Lakitu/Spiny pattern (own 18, 19, 29 AND an own slot 12);
+# Tornado takes the HeaveHo pattern (defaults at 18, 19, 29 and at 12). Every
+# other slot is the shared Actor/ActorBase half, byte-identical between the two
+# tables and to ov077's own shared half.
+#
+# ==== THE CLASS IDENTITY: TWO RTTI-SPELLING PAIRS, BOTH CONFIRMED =========
+# Checked the way wave 1 requires -- each table's OWN vtable[-1] read through
+# to its name string, AND both factory routes:
+#   0x021379d4 -> 0x0213798c -> [0x0209a764 __si_class_type_info]
+#                               [0x02137980 name][0x0208e390 base]
+#                               and 0x02137980 reads "9daSanbo_c"
+#   0x02137a8c -> 0x02137a60 -> [0x0209a764][0x02137a54][0x0208e390]
+#                               and 0x02137a54 reads "7daTor_c"
+# So dsd's _ZTV5Pokey / _ZTV9daSanbo_c are two spellings of ONE table, and
+# _ZTV7Tornado / _ZTV7daTor_c likewise. Every install route agrees:
+#   _ZTV5Pokey    from 0x02135744 (D1 pool), 0x0213579c (D0 pool),
+#                      0x02136d5c (PokeySegment_Spawn), 0x02136dac (Pokey_Spawn)
+#   _ZTV7Tornado  from 0x02136df4 (D1 pool), 0x02136e4c (D0 pool),
+#                      0x02137708 (Tornado_Spawn)
+# NO ov026-style identity swap in this overlay, checked table by table.
+# The SOURCES split the two spellings: both factories spell the C++ name, both
+# D0s spell the RTTI name. Two /alternatename bridges in the seat file cover
+# that; each LHS is declared `extern int ...[]` in include/decl_common.h
+# (lines 841 and 771) and DEFINED NOWHERE in the link (both read 0 in
+# walk_window.map), so neither can be silently defeated and neither belongs in
+# port/tools/alternatename_baseline.txt.
+#
+# ==== THE TWO VTABLES ARE EXCLUDED, AS HOST STORAGE ========================
+# The ov015/ov016/ov017/ov022/ov045/ov080 rule -- a mounted vtable hands a
+# factory DS code addresses. No dsd symbol falls inside either span, so no
+# interior split has to be excluded with them:
+#   0x021379d8..0x02137a54  240/241  31 slots  _ZTV5Pokey   / _ZTV9daSanbo_c
+#   0x02137a90..0x02137b20  308      31 slots  _ZTV7Tornado / _ZTV7daTor_c
+# Tornado's five trailing zero pad words (0x02137b0c..0x02137b20) go out with
+# its table: no symbol names them and .bss starts at 0x02137b20.
+#
+# ==== WHAT IS MOUNTED ======================================================
+# 28 symbols: every ov096 .data / .bss symbol that is not a vtable and not a
+# .ctor word. Sized by next-symbol delta (ovdata.py's own rule, clamped to the
+# delinks section) with NO explicit pin anywhere -- a measured result, not an
+# omission. ov077 needed a `:0x60` pin because dsd's next-symbol delta for its
+# state array was 0x18; the identical array HERE (data_ov096_02137b48) is sized
+# 0x60 correctly by dsd, because no foreign relocation invents a boundary
+# inside ov096's bss the way two ov079 SpawnInfos did inside ov077's. Checked
+# rather than assumed: there is no phantom split in this overlay's bss.
+#
+# EVERY SIZE WAS AUDITED FOR T3 against what the two sinits actually write:
+#   the twelve 0x8 rows (7920 7928 7930 7938 7940 7948 7950 7958 7960 7968
+#                        7970 7978) are the PMF SOURCE records, {function, 0}
+#                        pairs, and every one is exactly 8 bytes in the ROM
+#   data_ov096_02137980  0xc   the RTTI name string "9daSanbo_c", 11 used
+#   data_ov096_0213798c  0xc   Pokey's three-word typeinfo record
+#   Pokey_SpawnInfo      0x1c  the record's TRUE width, and for once the
+#                              inferred delta IS it -- PokeySegment's record
+#                              follows immediately, so nothing else folds in
+#   PokeySegment_SpawnInfo 0x24 the record's 0x1c plus the vtable object's pad
+#                              word (0x021379d0, zero) and _ZTV5Pokey's own
+#                              vtable[-1] typeinfo pointer (0x021379d4 ->
+#                              0x0213798c). See the note below.
+#   data_ov096_02137a54  0xc   the RTTI name string "7daTor_c", 9 used
+#   data_ov096_02137a60  0xc   Tornado's three-word typeinfo record
+#   Tornado_SpawnInfo    0x24  the same shape: 0x1c + pad + _ZTV7Tornado's
+#                              vtable[-1] (0x02137a8c -> 0x02137a60)
+#   data_ov096_02137b20  0x8   SharedFilePtr (file 0x41b = 1051)
+#   data_ov096_02137b28  0x8   SharedFilePtr (file 0x41a = 1050)
+#   data_ov096_02137b30  0xc   func_020731dc destructor list NODE
+#   data_ov096_02137b3c  0xc   func_020731dc destructor list NODE
+#   data_ov096_02137b48  0x60  THE STATE TABLE. __sinit_ov096_0213770c writes
+#                              [0..11], twelve 8-byte pairs = 0x60 EXACTLY.
+#                              This is the symbol ov077's twin of had to be
+#                              pinned; here dsd is already right.
+#   data_ov096_02137ba8  0x8   SharedFilePtr (file 1053)
+#   data_ov096_02137bb0  0x8   SharedFilePtr (file 1052, via
+#                              _ZN13SharedFilePtr9ConstructEj)
+#   data_ov096_02137bb8  0xc   func_020731dc destructor list NODE
+#   data_ov096_02137bc4  0x1c  inferred by clamping to .bss's end; the sinit
+#                              writes one 0xc node into it. OVERSIZED BY 0x10
+#                              AND HARMLESS -- the T3 failure is UNDERsizing,
+#                              and nothing is mounted after it for a run-off to
+#                              land on.
+# No symbol in this overlay is written past its dsd-inferred gap, so ov096
+# needs none of ov077's `data_ov077_02127c28:0x60` pins.
+#
+# THE 0x24 SpawnInfo NOTE, the same one port/ov092_syms.txt carries. The record
+# is 0x1c; a next-symbol delta of 0x24 means the following symbol is a VTABLE,
+# and the two extra words are that vtable object's alignment pad and its
+# Itanium vtable[-1] typeinfo pointer, not part of the record. Pokey's record
+# shows the true 0x1c because a second record follows it rather than a table.
+# Both 0x24 rows are mounted UNPINNED, matching ov077's three landed records:
+# the pad word is zero and stays zero, the typeinfo word is a relocation into
+# data_ov096_0213798c / _02137a60 which this list ALSO mounts (so ovdata --pack
+# rebases it and ptr_audit still reads 0), and nothing on the host reads either
+# -- the host vtables are separate 31-element arrays and the ROM's vtable spans
+# are EXCLUDED, so there is no host object whose [-1] those words are.
+data_ov096_02137920 data_ov096_02137928 data_ov096_02137930 data_ov096_02137938
+data_ov096_02137940 data_ov096_02137948 data_ov096_02137950 data_ov096_02137958
+data_ov096_02137960 data_ov096_02137968 data_ov096_02137970 data_ov096_02137978
+data_ov096_02137980 data_ov096_0213798c Pokey_SpawnInfo PokeySegment_SpawnInfo
+data_ov096_02137a54 data_ov096_02137a60 Tornado_SpawnInfo
+data_ov096_02137b20 data_ov096_02137b28 data_ov096_02137b30 data_ov096_02137b3c
+data_ov096_02137b48 data_ov096_02137ba8 data_ov096_02137bb0 data_ov096_02137bb8
+data_ov096_02137bc4
