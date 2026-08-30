@@ -27,6 +27,59 @@ class ProductionTuError(RuntimeError):
     """A partitioned TU cannot safely enter the normal ROM build."""
 
 
+def prepare_intact_object(raw, entry):
+    """Apply and reverify the exact policies for one production intact TU object."""
+    claims, reasons = TB.manifest_section_claims(entry)
+    if reasons:
+        _raise(f"{entry.get('id', '<unknown>')} manifest section claims", reasons)
+    text = [claim for claim in claims if claim["name"] == ".text"]
+    nontext = [claim for claim in claims if claim["name"] != ".text"]
+    if len(text) != 1 or not nontext:
+        raise ProductionTuError(
+            f"{entry.get('id', '<unknown>')}: intact production requires one .text "
+            "claim and at least one non-text claim")
+
+    post_policy, compiler_only, reasons = TB.apply_compiler_only_policy(raw, entry)
+    if reasons:
+        _raise(f"{entry['id']} compiler-only output", reasons)
+    externalized_obj, externalized, reasons = \
+        TB.apply_externalized_output_policy(post_policy, entry)
+    if reasons:
+        _raise(f"{entry['id']} exact RTTI externalization", reasons)
+
+    owned_before = TB.verify_owned_sections(externalized_obj, entry, claims)
+    if not owned_before.get("ok"):
+        _raise(f"{entry['id']} licensed non-text contribution",
+               owned_before.get("errors", []))
+    biases, reasons = TB.partition_vtable_rebiases(entry, claims)
+    if reasons:
+        _raise(f"{entry['id']} vtable address-point policy", reasons)
+    linked_obj, rebias = TB.OI.rebias_object_symbols(
+        externalized_obj, biases, normalize_undefined=True)
+    if linked_obj is None:
+        _raise(f"{entry['id']} vtable address-point rewrite", [rebias.get("error")])
+    owned_after = TB.verify_owned_sections(
+        linked_obj, entry, claims, public_address_points=True)
+    if not owned_after.get("ok"):
+        _raise(f"{entry['id']} production non-text contribution",
+               owned_after.get("errors", []))
+
+    span_start, span_end = text[0]["start"], text[0]["end"]
+    rows, extra, emitted, order_ok = TB.audit_tu_object(
+        linked_obj, entry, span_start, span_end, TB.complete_ranges(TB.CFG_ARM9))
+    audit_errors = TB.object_audit_refusals(rows, extra, order_ok)
+    if audit_errors:
+        _raise(f"{entry['id']} production object audit", audit_errors)
+    return linked_obj, {
+        "compilerOnly": compiler_only, "externalized": externalized,
+        "ownedBefore": owned_before, "ownedAfter": owned_after,
+        "vtableRebias": rebias,
+        "objectAudit": {"rows": rows, "extraSections": extra,
+                        "emitted": emitted, "orderOk": order_ok},
+        "sha256": hashlib.sha256(linked_obj).hexdigest(),
+    }
+
+
 def _raise(label, reasons):
     detail = "; ".join(str(reason) for reason in reasons if reason)
     raise ProductionTuError(f"{label}: {detail or 'refused without a reason'}")

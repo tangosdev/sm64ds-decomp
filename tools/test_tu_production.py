@@ -30,6 +30,35 @@ class ProductionTuAdmission(unittest.TestCase):
 
 
 class ProductionTuObjects(unittest.TestCase):
+    def test_intact_object_runs_all_fail_closed_policy_gates(self):
+        entry = {"id": "ov047/Thing"}
+        claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
+                  {"name": ".data", "start": 0x2000, "end": 0x2010}]
+        owned = {"ok": True, "rows": [], "errors": []}
+        with mock.patch.object(TP.TB, "manifest_section_claims",
+                               return_value=(claims, [])), \
+                mock.patch.object(TP.TB, "apply_compiler_only_policy",
+                                  return_value=(b"compiler", {"deadstripped": []}, [])), \
+                mock.patch.object(TP.TB, "apply_externalized_output_policy",
+                                  return_value=(b"external", {"externalized": []}, [])), \
+                mock.patch.object(TP.TB, "verify_owned_sections",
+                                  side_effect=[owned, owned]) as verify, \
+                mock.patch.object(TP.TB, "partition_vtable_rebiases",
+                                  return_value=({"_ZTV1T": {"bias": 8}}, [])), \
+                mock.patch.object(TP.TB.OI, "rebias_object_symbols",
+                                  return_value=(b"linked", {"error": None})) as rebias, \
+                mock.patch.object(TP.TB, "complete_ranges", return_value={}), \
+                mock.patch.object(TP.TB, "audit_tu_object",
+                                  return_value=([], [], [], True)), \
+                mock.patch.object(TP.TB, "object_audit_refusals", return_value=[]):
+            output, evidence = TP.prepare_intact_object(b"raw", entry)
+        self.assertEqual(output, b"linked")
+        rebias.assert_called_once_with(
+            b"external", {"_ZTV1T": {"bias": 8}}, normalize_undefined=True)
+        self.assertEqual(verify.call_count, 2)
+        self.assertEqual(evidence["sha256"],
+                         __import__("hashlib").sha256(b"linked").hexdigest())
+
     def test_compile_one_installs_prepared_object_without_compiler(self):
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)
