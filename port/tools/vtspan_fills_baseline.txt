@@ -171,7 +171,8 @@ port_scene_fill_flower         # scene 390 flower       seated mg5 lane CCN, com
 # same 8-byte stride. That is vtspan's OWN documented pointer-to-member
 # signature, both of pmf_pairs_at()'s structural tells, and slice_vs.txt
 # section 1 called it a pair run when the seat was built. The corroboration is
-# the count: slice_vs.txt section 8 names THREE PMF dispatch sites in this
+# the count: slice_vs.txt's "THE THREE PMF DISPATCH SITES are OUT of the slice"
+# block (the unnumbered one near the manifest's end) names THREE of them in this
 # scene, and there are exactly three pairs. func_ov075_0211afb0 -- the third
 # pair's target, and one of the two faces this seat still carries -- is
 # reachable through nothing else, which is why nothing else calls it.

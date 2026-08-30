@@ -51,8 +51,9 @@
 #                              d350/d358/d360, no reloc on any of them) at
 #                              8-byte stride, which is vtspan's own pointer-to-
 #                              member signature, and there are exactly three
-#                              pairs for the three PMF dispatch sites section 8
-#                              names. 18 is the width. port/tools/
+#                              pairs for the three PMF dispatch sites the
+#                              "THREE PMF DISPATCH SITES" block near the end of
+#                              this file names. 18 is the width. port/tools/
 #                              vtspan_fills_baseline.txt carries the full
 #                              measurement and the vtspan gap that reads it 19.
 #   factory        0x0211a854  func_ov075_0211a854 (matched src): operator
