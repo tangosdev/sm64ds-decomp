@@ -198,6 +198,12 @@ struct WsTable {
                               int *);
     int    (WSAAPI *closesocket)(SOCKET);
     int    (WSAAPI *WSAGetLastError)(void);
+    // ADDRESS MODE ONLY. Both are looked up with the rest of the table, and
+    // both are allowed to be missing: a build of Windows without them still
+    // runs the loopback carrier, which is the default and must not acquire a
+    // new way to fail. resolve() checks the pointer before it calls.
+    unsigned long (WSAAPI *inet_addr)(const char *);
+    struct hostent *(WSAAPI *gethostbyname)(const char *);
 };
 WsTable WS;
 int g_ws_loaded = 0;        // 0 not tried, 1 loaded, -1 refused
@@ -218,6 +224,12 @@ bool ws_load() {
     WS_GET(WSAIoctl);   WS_GET(bind);     WS_GET(sendto);
     WS_GET(recvfrom);   WS_GET(closesocket); WS_GET(WSAGetLastError);
 #undef WS_GET
+    // OPTIONAL ENTRIES, looked up WITHOUT the g_ws_loaded refusal above: these
+    // two are needed only to turn a typed address into bytes, which only the
+    // address modes ever ask for. A missing one must not take the loopback
+    // carrier down with it.
+    *(FARPROC *)&WS.inet_addr      = ::GetProcAddress(m, "inet_addr");
+    *(FARPROC *)&WS.gethostbyname  = ::GetProcAddress(m, "gethostbyname");
     if (g_ws_loaded < 0) {
         std::fprintf(stderr, "[comms:loopback] ws2_32.dll is missing an entry "
                      "point; staying idle\n");
@@ -293,6 +305,105 @@ static_assert(sizeof(Packet) == kPacketBytes,
 
 const unsigned char kMagic[4] = { 'M', 'P', '2', 'L' };
 
+// ===========================================================================
+// ADDRESS MODES: the same carrier, pointed somewhere other than 127.0.0.1.
+// Run vsdec, lane NET.
+//
+// THE ONE THING that stood between this file and the internet was never the
+// socket -- it was that PEER IDENTITY WAS DERIVED FROM THE SOURCE PORT. Three
+// places did it: slot_addr() built every destination out of `base + slot`,
+// on_parent_packet/on_child_packet refused a datagram whose claimed slot
+// disagreed with the port it came from, and drain()'s aux classifier named its
+// sender `ntoh16(from.sin_port) - g_port_base`. That rule is EXACTLY RIGHT on
+// loopback (four processes on one machine, ports they each bound, no spoofing
+// surface worth the name) and impossible anywhere else, because a peer across
+// the internet binds whatever port it likes and a NAT rewrites it anyway.
+//
+// So the rule becomes MODE-DEPENDENT, and the loopback mode keeps the old
+// arithmetic UNCHANGED -- that is the whole of the "nothing that works today
+// moves" promise on this side:
+//
+//   kNetLoopback  the default, and what runs when none of the new env is set.
+//                 Destinations are 127.0.0.1:base+k; the sender is the source
+//                 port. Byte-for-byte the pre-NET behaviour.
+//   kNetDirect    SM64DS_COMMS_HOST=<ip[:port]>. A child sends to that address
+//                 instead of loopback; a parent LEARNS each child's address
+//                 from the JOIN that arrives. The sender is the SOURCE ADDRESS
+//                 matched against the learned table.
+//   kNetRelay     SM64DS_COMMS_RELAY=<host[:port]> + SM64DS_COMMS_CODE. Every
+//                 datagram goes to the relay, and every datagram arrives FROM
+//                 the relay, so the source address identifies nobody. The
+//                 sender is the packet's own `slot` header field, which the
+//                 wire has carried since MP2 and which nothing needed until
+//                 now.
+// ===========================================================================
+enum : int { kNetLoopback = 0, kNetDirect = 1, kNetRelay = 2 };
+int g_net_mode = kNetLoopback;
+bool g_bind_any = false;         // SM64DS_COMMS_BIND_ANY, plus the cases below
+
+// The default relay port, matching the staging service the RELAY lane deploys.
+enum : int { kRelayDefaultPort = 41234 };
+
+// ---------------------------------------------------------------------------
+// THE RELAY HANDSHAKE -- A FROZEN WIRE CONTRACT, implemented exactly.
+//
+// The relay is a rendezvous, not a peer: it learns which public address each
+// end is really coming from (which neither end can know behind a NAT) and
+// forwards between them. It is the no-port-forwarding path, and it is the only
+// one that works for two ordinary home connections.
+//
+//   HELLO      16 bytes, client -> relay. "SMRC", version 1, role (0 parent,
+//              1 child), 2 reserved zero bytes, then 8 bytes of session code,
+//              ASCII, right-padded with NUL.
+//   HELLO-ACK  16 bytes, relay -> client. "SMRA", version 1, status (0 ok,
+//              1 session full, 2 bad request), 2 reserved, the code echoed.
+//
+// The client repeats HELLO ONCE PER SECOND UNTIL ACKED, which is also what
+// punches and then holds the NAT mapping open before there is any game traffic
+// to do it. After a parent and at least one child share a code the relay
+// forwards every later datagram VERBATIM -- parent to all children, child to
+// parent only. That star is the DS's own parent/child radio model, which is
+// why the game's packets need no envelope and no rewriting: the shape the ROM
+// already assumes is the shape the relay already implements.
+//
+// Endpoints expire after 90 s idle and a re-HELLO is explicitly allowed, so
+// this carrier keeps sending one every kRelayKeepaliveMs forever rather than
+// stopping at the first ACK. Handled idempotently on the game side: an ACK
+// that arrives when already paired is counted and otherwise ignored.
+// ---------------------------------------------------------------------------
+enum : int { kRelayMsgBytes = 16, kRelayCodeBytes = 8 };
+enum : unsigned char { kRelayVersion = 1 };
+enum : unsigned char { kRelayRoleParent = 0, kRelayRoleChild = 1 };
+enum : unsigned char {
+    kRelayStatusOk       = 0,
+    kRelayStatusFull     = 1,
+    kRelayStatusBadReq   = 2,
+};
+
+const unsigned char kRelayHelloMagic[4] = { 'S', 'M', 'R', 'C' };
+const unsigned char kRelayAckMagic[4]   = { 'S', 'M', 'R', 'A' };
+
+#pragma pack(push, 1)
+struct RelayHello {
+    unsigned char magic[4];                 // "SMRC" out, "SMRA" back
+    unsigned char version;                  // 1
+    unsigned char role_or_status;           // role on the way out, status back
+    unsigned char reserved[2];              // zero
+    unsigned char code[kRelayCodeBytes];    // ASCII, NUL right-padded
+};
+#pragma pack(pop)
+static_assert(sizeof(RelayHello) == kRelayMsgBytes,
+              "the relay handshake datagram is a frozen 16 bytes");
+
+// The relay caps a forwarded payload at 700 bytes. Both of this carrier's
+// kinds are far inside that (0x90 lockstep, 256 aux), and the assert is here
+// so a later wire change cannot quietly cross the line and get truncated by a
+// service that has no way to tell the game about it.
+// (kAuxMaxBytes gets the same assert where it is defined, below.)
+enum : int { kRelayMaxPayload = 700 };
+static_assert(kPacketBytes <= kRelayMaxPayload,
+              "the lockstep datagram no longer fits the relay's payload cap");
+
 // ---------------------------------------------------------------------------
 // TIMERS
 //
@@ -350,6 +461,8 @@ int      g_slot       = 0;
 //   by reading the payload, so the bytes stay uninspected beyond the 4-byte
 //   kind tag this file already classified on.
 enum : int { kAuxMaxBytes = 256 };
+static_assert(kAuxMaxBytes <= kRelayMaxPayload,
+              "an aux datagram no longer fits the relay's payload cap");
 enum : int { kAuxKinds = 3 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
                                      // 2 = 'SYNQ' pong -- see the tag note
 struct AuxSlot { int len; unsigned char buf[kAuxMaxBytes]; };
@@ -396,6 +509,54 @@ unsigned long long g_abandons = 0;
 int g_test_drop_pct = 0;              // SM64DS_COMMS_DROP, 0..99
 unsigned long long g_test_drops = 0;
 
+// ---------------------------------------------------------------------------
+// LATENCY INDUCTION (run vsdec, lane NET). The loss knob above could already
+// make the wire lossy; nothing could make it SLOW, and slow is the entire
+// difference between a LAN and the internet. Without this every latency claim
+// about this carrier would be a guess.
+//
+// SM64DS_COMMS_DELAY_MS is ONE WAY. Both instances run it, so the round trip
+// the game feels is 2*N -- RTT 80 ms is DELAY_MS=40 on each end. Said here
+// because getting that factor of two wrong silently halves or doubles every
+// measurement in the report.
+//
+// SM64DS_COMMS_JITTER_MS adds a uniform +/- spread on top, which is what turns
+// a delay line into something resembling a real path: constant delay never
+// REORDERS, and reordering is a distinct failure the protocol should be shown
+// surviving rather than assumed to.
+//
+// Receive-side, exactly like the sync layer's own rig, so the sender stays
+// honest and the hold is indistinguishable from wire time. Applied to EVERY
+// datagram kind including the relay handshake -- a delay line that the
+// handshake tunnelled under would make the handshake's own robustness
+// untestable, which is most of what there is to test here.
+// ---------------------------------------------------------------------------
+int g_delay_ms  = 0;
+int g_jitter_ms = 0;
+enum : int { kDelayRingLen = 192 };   // ~2 s of a 30 Hz session plus resends
+struct DelayedDatagram {
+    unsigned    due;
+    int         len;
+    sockaddr_in from;
+    unsigned char buf[kAuxMaxBytes];
+};
+DelayedDatagram g_dring[kDelayRingLen];
+int g_dring_head = 0, g_dring_count = 0;
+unsigned long long g_delay_overflow = 0;   // ring full: dropped, and COUNTED
+
+// The republish interval, a variable now rather than the kPublishResendMs
+// constant, because the constant is a loopback number. See the redundancy
+// finding at the bottom: a 4 ms republish over the internet is flooding.
+int g_resend_ms = kPublishResendMs;
+// The join backoff. Loopback keeps the flat 50 ms it always had; the address
+// modes start here and double to the cap, so handshake loss costs retries
+// rather than a wedged session, and the ROM's own 20 s bound stays the thing
+// that decides a session never formed.
+int g_join_wait_ms = kJoinResendMs;
+enum : int { kJoinBackoffStartMs = 200, kJoinBackoffCapMs = 1000 };
+unsigned g_join_started_ms = 0;       // for the handshake RTT sample
+int g_handshake_rtt_ms = -1;
+
 bool g_wsa_up = false;
 
 unsigned now_ms() { return (unsigned)GetTickCount(); }
@@ -406,7 +567,79 @@ int popcount4(unsigned m) {
     return n;
 }
 
-sockaddr_in slot_addr(int slot) {
+bool same_addr(const sockaddr_in &a, const sockaddr_in &b) {
+    return a.sin_addr.s_addr == b.sin_addr.s_addr && a.sin_port == b.sin_port;
+}
+
+// A printable address, for the log lines that now have somewhere to point.
+// Built by hand rather than through inet_ntoa: that is one more ws2_32 entry
+// to look up, and it returns a shared static buffer that two arguments to one
+// printf would silently alias.
+const char *addr_text(const sockaddr_in &a, char *buf, int cap) {
+    const unsigned long h = hton32(a.sin_addr.s_addr);   // back to host order
+    std::snprintf(buf, (size_t)cap, "%lu.%lu.%lu.%lu:%u",
+                  (h >> 24) & 0xFF, (h >> 16) & 0xFF, (h >> 8) & 0xFF, h & 0xFF,
+                  (unsigned)ntoh16(a.sin_port));
+    return buf;
+}
+
+// "1.2.3.4", "1.2.3.4:5678", "relay.example:41234", "relay.example" ->
+// sockaddr_in. Returns false and says why on stderr; a knob that cannot be
+// resolved must leave the carrier where it was rather than half-configure it.
+//
+// inet_addr and gethostbyname, not getaddrinfo, and the reason is the banner
+// at the top of this file: every ws2_32 entry point here is looked up by hand
+// because a static import of this DLL maps over the DS's fixed addresses and
+// kills the port. Two hand-resolved entries is the cheapest thing that turns
+// text into an address. IPv4 only, which is what the relay contract is shaped
+// for anyway.
+bool parse_host_port(const char *s, int default_port, sockaddr_in *out) {
+    if (!s || !*s || !out) return false;
+    if (!ws_load()) return false;
+
+    char host[256];
+    int  port = default_port;
+    const char *colon = std::strrchr(s, ':');
+    size_t hlen = colon ? (size_t)(colon - s) : std::strlen(s);
+    if (hlen == 0 || hlen >= sizeof host) {
+        std::fprintf(stderr, "[comms:loopback] '%s' is not a usable address\n", s);
+        return false;
+    }
+    std::memcpy(host, s, hlen);
+    host[hlen] = 0;
+    if (colon) {
+        port = std::atoi(colon + 1);
+        if (port <= 0 || port > 65535) {
+            std::fprintf(stderr, "[comms:loopback] port in '%s' is out of "
+                         "range; using %d\n", s, default_port);
+            port = default_port;
+        }
+    }
+
+    std::memset(out, 0, sizeof *out);
+    out->sin_family = AF_INET;
+    out->sin_port   = hton16((unsigned short)port);
+
+    if (WS.inet_addr) {
+        const unsigned long v = WS.inet_addr(host);
+        if (v != INADDR_NONE) { out->sin_addr.s_addr = v; return true; }
+    }
+    if (WS.gethostbyname) {
+        struct hostent *he = WS.gethostbyname(host);
+        if (he && he->h_addrtype == AF_INET && he->h_addr_list &&
+            he->h_addr_list[0]) {
+            std::memcpy(&out->sin_addr.s_addr, he->h_addr_list[0], 4);
+            return true;
+        }
+    }
+    std::fprintf(stderr, "[comms:loopback] could not resolve '%s'\n", host);
+    return false;
+}
+
+// LOOPBACK'S ADDRESS RULE, unchanged and now explicitly named: slot k lives at
+// 127.0.0.1:base+k. In the address modes this is only a fallback for a peer
+// nothing has been learned about yet.
+sockaddr_in loopback_slot_addr(int slot) {
     sockaddr_in a;
     std::memset(&a, 0, sizeof a);
     a.sin_family = AF_INET;
@@ -415,12 +648,63 @@ sockaddr_in slot_addr(int slot) {
     return a;
 }
 
+// THE PEER TABLE. Loopback fills it from the arithmetic above and never
+// changes it; direct mode learns a child's address from its JOIN and a child
+// is told the parent's by env; relay mode leaves it empty because every
+// destination is the relay.
+sockaddr_in g_peer_addr[kCommsMaxPlayers];
+bool        g_peer_known[kCommsMaxPlayers];
+sockaddr_in g_relay_addr;            // relay mode: where everything goes
+bool        g_relay_paired  = false; // an ACK with status 0 has landed
+unsigned    g_last_hello_ms = 0;
+unsigned long long g_relay_acks = 0;
+unsigned char g_code[kRelayCodeBytes];
+
+// Where a datagram addressed to `slot` actually goes.
+sockaddr_in slot_addr(int slot) {
+    if (g_net_mode == kNetRelay) return g_relay_addr;
+    if (slot >= 0 && slot < kCommsMaxPlayers && g_peer_known[slot])
+        return g_peer_addr[slot];
+    return loopback_slot_addr(slot);
+}
+
+// SEND EACH LOCKSTEP DATAGRAM k TIMES. The redundancy finding at the bottom of
+// this file named this lever and refused the other one: past-round history is
+// structurally dead under stop-and-wait because the main payload already IS
+// the round the receiver is stuck on, but SPATIAL redundancy of the in-flight
+// round is not, and it becomes worth having exactly when the republish
+// interval backs off toward the RTT (a 4 ms republish is fine on loopback and
+// is flooding over the internet). 1 on loopback, so nothing moves there.
+int g_dup = 1;
+unsigned long long g_dup_sends = 0;
+
+void send_raw(const void *buf, int len, const sockaddr_in &to) {
+    if (g_sock == INVALID_SOCKET) return;
+    const int n = WS.sendto(g_sock, (const char *)buf, len, 0,
+                            (const sockaddr *)&to, (int)sizeof to);
+    if (n == len) ++g_sent;
+}
+
 void send_to_slot(const Packet &p, int slot) {
     if (g_sock == INVALID_SOCKET) return;
     const sockaddr_in a = slot_addr(slot);
-    const int n = WS.sendto(g_sock, (const char *)&p, kPacketBytes, 0,
-                            (const sockaddr *)&a, (int)sizeof a);
-    if (n == kPacketBytes) ++g_sent;
+    send_raw(&p, kPacketBytes, a);
+    for (int i = 1; i < g_dup; ++i) { send_raw(&p, kPacketBytes, a); ++g_dup_sends; }
+}
+
+// THE PARENT'S FAN-OUT, and the one place the star topology has to be spelled
+// out rather than looped. On loopback and in direct mode the parent addresses
+// each child in turn, because it holds each child's address. THROUGH THE RELAY
+// IT MUST SEND EXACTLY ONE COPY: the relay is what fans a parent datagram out
+// to every child, so a parent that also looped would multiply its own traffic
+// by the number of children and hand each child that many duplicates.
+void send_to_children(const Packet &p) {
+    if (g_net_mode == kNetRelay) {
+        send_to_slot(p, 1);          // any slot: relay mode ignores it
+        return;
+    }
+    for (int k = 1; k < kCommsMaxPlayers; ++k)
+        if (g_live & (1u << k)) send_to_slot(p, k);
 }
 
 void fill_header(Packet &p, unsigned char type) {
@@ -437,17 +721,128 @@ void fill_header(Packet &p, unsigned char type) {
 // RECEIVE
 // ---------------------------------------------------------------------------
 
-void on_parent_packet(const Packet &p, const sockaddr_in &from) {
-    const int k = p.slot;
-    if (k <= 0 || k >= kCommsMaxPlayers) { ++g_dropped; return; }
-
-    // The slot is the port. A sender whose claimed slot disagrees with the
-    // port it actually arrived from is not a peer of this session.
-    if (ntoh16(from.sin_port) != (unsigned short)(g_port_base + k)) {
-        ++g_dropped;
-        return;
+// ===========================================================================
+// WHO SENT THIS. The one rule that had to become mode-dependent, kept in ONE
+// function so the three answers can be read side by side instead of being
+// rediscovered at three call sites.
+//
+// Returns the sender's slot, or -1 for "not a peer of this session".
+//
+//   LOOPBACK  the slot IS the port, unchanged since MP2. A datagram whose
+//             claimed slot disagrees with the port it arrived from is refused.
+//             There is no weaker check available on one machine and no need
+//             for one.
+//   DIRECT    the slot is whichever table entry the SOURCE ADDRESS matches.
+//             A parent that does not recognise the address will LEARN it, but
+//             only from a JOIN (`learn_ok`) -- a session is joined, never
+//             merely spoken into.
+//   RELAY     every datagram arrives from the relay, so the address answers
+//             nothing and the header's own `slot` field is the answer. It has
+//             been on the wire since MP2 and this is the first thing to read
+//             it. THE TRUST THIS COSTS IS REAL AND WORTH NAMING: anyone who
+//             can reach the relay with the right session code can claim to be
+//             slot 1. That is the security model of a 2-player friend-code
+//             session over an unauthenticated relay, it is what the DS's own
+//             radio offered, and the mitigation (a per-session shared secret)
+//             belongs in the relay contract, not smuggled in here.
+// ===========================================================================
+int classify_sender(const sockaddr_in &from, int claimed, bool learn_ok) {
+    if (g_net_mode == kNetRelay) {
+        if (!same_addr(from, g_relay_addr)) return -1;
+        if (claimed < 0 || claimed >= kCommsMaxPlayers) return -1;
+        return claimed;
     }
 
+    if (g_net_mode == kNetDirect) {
+        for (int k = 0; k < kCommsMaxPlayers; ++k)
+            if (g_peer_known[k] && same_addr(from, g_peer_addr[k])) return k;
+        if (!learn_ok || g_role != kRoleParent) return -1;
+        // A new child. It PROPOSES a slot and the parent is the authority:
+        // take the proposal when it is free, otherwise hand out the lowest
+        // free one. The assignment travels back in the ACCEPT.
+        int want = (claimed >= 1 && claimed < kCommsMaxPlayers) ? claimed : 1;
+        if (g_peer_known[want]) {
+            want = -1;
+            for (int k = 1; k < kCommsMaxPlayers; ++k)
+                if (!g_peer_known[k]) { want = k; break; }
+            if (want < 0) return -1;              // session full
+        }
+        g_peer_addr[want]  = from;
+        g_peer_known[want] = true;
+        char t[32];
+        std::fprintf(stderr, "[comms:loopback] direct: learned slot %d at %s\n",
+                     want, addr_text(from, t, sizeof t));
+        return want;
+    }
+
+    // kNetLoopback: the slot is the port.
+    if (claimed < 0 || claimed >= kCommsMaxPlayers) return -1;
+    if (ntoh16(from.sin_port) != (unsigned short)(g_port_base + claimed))
+        return -1;
+    return claimed;
+}
+
+// ---------------------------------------------------------------------------
+// THE RELAY HANDSHAKE, game side.
+// ---------------------------------------------------------------------------
+enum : unsigned { kRelayHelloMs = 1000, kRelayKeepaliveMs = 20000 };
+
+void relay_send_hello() {
+    RelayHello h;
+    std::memset(&h, 0, sizeof h);
+    std::memcpy(h.magic, kRelayHelloMagic, 4);
+    h.version        = kRelayVersion;
+    h.role_or_status = (g_role == kRoleParent) ? kRelayRoleParent
+                                               : kRelayRoleChild;
+    std::memcpy(h.code, g_code, kRelayCodeBytes);
+    send_raw(&h, kRelayMsgBytes, g_relay_addr);
+    g_last_hello_ms = now_ms();
+}
+
+// Idempotent BY CONTRACT: the relay expires an idle endpoint after 90 s and
+// explicitly allows a re-HELLO, so acks arrive forever and only the first one
+// means anything.
+void relay_on_ack(const RelayHello &h) {
+    ++g_relay_acks;
+    if (h.version != kRelayVersion) {
+        std::fprintf(stderr, "[comms:relay] ACK version %u, expected %u; the "
+                     "relay and this build disagree. Staying unpaired.\n",
+                     (unsigned)h.version, (unsigned)kRelayVersion);
+        return;
+    }
+    if (std::memcmp(h.code, g_code, kRelayCodeBytes) != 0) {
+        std::fprintf(stderr, "[comms:relay] ACK echoed a different session "
+                     "code; ignored\n");
+        return;
+    }
+    switch (h.role_or_status) {
+    case kRelayStatusOk:
+        if (!g_relay_paired) {
+            g_relay_paired = true;
+            std::fprintf(stderr, "[comms:relay] paired as %s on code '%.8s'; "
+                         "the relay will forward from here\n",
+                         g_role == kRoleParent ? "parent" : "child",
+                         (const char *)g_code);
+        }
+        break;
+    case kRelayStatusFull:
+        std::fprintf(stderr, "[comms:relay] session '%.8s' is FULL; staying "
+                     "unpaired so the ROM's own bound drops this to solo\n",
+                     (const char *)g_code);
+        break;
+    case kRelayStatusBadReq:
+        std::fprintf(stderr, "[comms:relay] the relay refused the HELLO as a "
+                     "bad request (code '%.8s')\n", (const char *)g_code);
+        break;
+    default:
+        std::fprintf(stderr, "[comms:relay] ACK status %u is not one this "
+                     "build knows; ignored\n", (unsigned)h.role_or_status);
+        break;
+    }
+}
+
+void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
+    (void)from;
     switch (p.type) {
     case kTypeJoin: {
         const bool fresh = (g_live & (1u << k)) == 0;
@@ -470,6 +865,13 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from) {
         Packet a;
         fill_header(a, kTypeAccept);
         a.live = (unsigned char)g_live;
+        // THE PARENT ASSIGNS THE SLOT AND THE RELAY DOES NOT. A child over the
+        // internet cannot claim a slot by binding a port the way a loopback
+        // child does, so it PROPOSES one in its JOIN and this is the answer.
+        // Carried in `have`, which is meaningless on an ACCEPT and has been
+        // zero on the wire since MP2 -- so an older build simply keeps the slot
+        // it proposed, which is what it did before this field existed.
+        a.have = 0x80000000u | (unsigned)k;
         send_to_slot(a, k);
         if (fresh)
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
@@ -510,26 +912,82 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from) {
     }
 }
 
-void on_child_packet(const Packet &p, const sockaddr_in &from) {
-    if (p.slot != 0) { ++g_dropped; return; }
-    if (ntoh16(from.sin_port) != (unsigned short)g_port_base) {
-        ++g_dropped;
-        return;
-    }
+void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
+    (void)from;
+    if (k != 0) { ++g_dropped; return; }   // only the parent talks to a child
 
     switch (p.type) {
-    case kTypeAccept:
+    case kTypeAccept: {
+        // THE PARENT'S SLOT ASSIGNMENT, in direct mode only. Over the relay an
+        // ACCEPT is unavoidably a broadcast -- the relay fans every parent
+        // datagram to every child, and the ACCEPT carries no field naming its
+        // recipient -- so adopting an assignment there would let child 1's
+        // accept move child 2. Direct mode's ACCEPT is a unicast to the address
+        // the JOIN came from, so it is unambiguous and the assignment stands.
+        //
+        // THE LIMIT THIS LEAVES, stated rather than hidden: a RELAY session of
+        // three or four keeps whatever slots the children were configured with
+        // and the parent cannot resolve a collision. Two players -- the case
+        // this lane exists for -- has exactly one child, which proposes slot 1,
+        // and there is nothing to collide with. Fixing it properly wants a
+        // recipient field in the ACCEPT, and that is a wire change.
+        if (g_net_mode == kNetDirect && (p.have & 0x80000000u)) {
+            const int assigned = (int)(p.have & 0xFF);
+            if (assigned >= 1 && assigned < kCommsMaxPlayers &&
+                assigned != g_slot) {
+                std::fprintf(stderr, "[comms:loopback] the parent assigned slot "
+                             "%d (proposed %d)\n", assigned, g_slot);
+                g_slot = assigned;
+            }
+        }
+        // AN ACCEPT THAT DOES NOT INCLUDE US IS NOT OUR ACCEPT. A no-op on
+        // loopback and in direct mode, where the parent sets our live bit
+        // before it sends and addresses us alone; it earns its keep over the
+        // relay, where every child sees every accept and a child that adopted
+        // one of those would stop knocking while the parent had never heard of
+        // it -- a wedge that no timer recovers from, because both sides think
+        // they are done.
+        if ((p.live & (1u << g_slot)) == 0) { ++g_dropped; break; }
         g_live = p.live;
         if (g_state != kCommsChildConnected) {
+            if (g_join_started_ms != 0) {
+                g_handshake_rtt_ms = (int)(now_ms() - g_join_started_ms);
+                if (g_handshake_rtt_ms < 0) g_handshake_rtt_ms = 0;
+                // TUNE THE REPUBLISH TO THE MEASURED PATH. This is the first
+                // and only round trip this carrier gets to see before the
+                // lockstep starts, and it is enough: republishing faster than
+                // the answer can possibly arrive is pure flooding, so the
+                // floor is the round trip itself. The 20 ms floor keeps a LAN
+                // from spinning; the 250 ms ceiling keeps one slow handshake
+                // (a retransmitted JOIN inflates this sample) from crippling
+                // recovery for the whole session. Only in the address modes:
+                // loopback keeps its 4 ms, which is measured and correct there.
+                //
+                // ENV WINS. A run that set SM64DS_COMMS_RESEND_MS is measuring
+                // something and must not be retuned underneath itself.
+                if (g_net_mode != kNetLoopback &&
+                    std::getenv("SM64DS_COMMS_RESEND_MS") == 0) {
+                    int r = g_handshake_rtt_ms;
+                    if (r < 20)  r = 20;
+                    if (r > 250) r = 250;
+                    g_resend_ms = r;
+                    std::fprintf(stderr, "[comms:loopback] republish interval "
+                                 "set to %d ms from the handshake round trip\n",
+                                 g_resend_ms);
+                }
+            }
             g_round = p.round;          // adopt the parent's clock
             g_stage_mask = 0;
             g_round_done = false;
             g_state = kCommsChildConnected;
             std::fprintf(stderr, "[comms:loopback] accepted as slot %d at "
-                         "round %u; live mask 0x%x, players %d\n",
-                         g_slot, g_round, g_live, popcount4(g_live));
+                         "round %u; live mask 0x%x, players %d"
+                         " (handshake rtt %d ms)\n",
+                         g_slot, g_round, g_live, popcount4(g_live),
+                         g_handshake_rtt_ms);
         }
         break;
+    }
     case kTypeBlocks:
         if (g_state != kCommsChildConnected) break;
         if (p.round != g_round) break;   // a round we already finished
@@ -553,78 +1011,187 @@ void on_child_packet(const Packet &p, const sockaddr_in &from) {
     }
 }
 
+// WHO SENT THIS AUX MESSAGE. Aux has no header of its own past its four-byte
+// kind tag -- the carrier classifies on those bytes and has never read further,
+// which is the property that keeps the payload opaque -- so the sender has to
+// come from the transport.
+//
+//   LOOPBACK / DIRECT  exact: the source address names one peer.
+//   RELAY              every datagram comes from the relay. What the STAR
+//                      still tells us is exact for a CHILD (a child only ever
+//                      receives parent traffic, so the sender is slot 0) and
+//                      exact for a PARENT WITH ONE CHILD, which is the
+//                      two-player session this lane exists for. A parent with
+//                      several children cannot tell two snapshots apart, and
+//                      rather than guess, those land in the lowest live
+//                      child's lane and the ambiguity is COUNTED. The real fix
+//                      is a sender byte in the sync payload -- a wire change,
+//                      named as the next step, not smuggled in behind a
+//                      measurement it would invalidate.
+unsigned long long g_aux_ambiguous = 0;
+
+int classify_aux_sender(const sockaddr_in &from) {
+    if (g_net_mode == kNetRelay) {
+        if (!same_addr(from, g_relay_addr)) return -1;
+        if (g_role == kRoleChild) return 0;
+        int found = -1;
+        for (int k = 1; k < kCommsMaxPlayers; ++k) {
+            if ((g_live & (1u << k)) == 0) continue;
+            if (found < 0) found = k;
+            else { ++g_aux_ambiguous; break; }
+        }
+        return found;
+    }
+    if (g_net_mode == kNetDirect) {
+        for (int k = 0; k < kCommsMaxPlayers; ++k)
+            if (g_peer_known[k] && same_addr(from, g_peer_addr[k])) return k;
+        return -1;
+    }
+    /* The slot-is-the-port rule, unchanged. */
+    return (int)ntoh16(from.sin_port) - g_port_base;
+}
+
+// One received datagram, classified and acted on. Split out of drain() so the
+// delay line has something to call LATER: with induction on, a datagram is
+// read off the socket at once (the OS buffer is not a delay line and letting
+// it fill would model congestion, not latency) and dispatched when due.
+void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
+    /* THE RELAY'S OWN TRAFFIC FIRST. It shares the socket with everything
+       else -- one socket is one NAT mapping, which is the whole reason the
+       relay path works at all -- and it is told apart the same way the aux
+       kinds are, on four bytes. */
+    if (n == kRelayMsgBytes && std::memcmp(raw, kRelayAckMagic, 4) == 0) {
+        RelayHello h;
+        std::memcpy(&h, raw, sizeof h);
+        if (g_net_mode == kNetRelay && same_addr(from, g_relay_addr))
+            relay_on_ack(h);
+        else
+            ++g_dropped;
+        return;
+    }
+
+    int aux_kind = -1;
+    if (n >= 4 && std::memcmp(raw, &kAuxMagicLE, 4) == 0) aux_kind = 0;
+    else if (n >= 4 && std::memcmp(raw, &kAuxPingLE, 4) == 0) aux_kind = 1;
+    else if (n >= 4 && std::memcmp(raw, &kAuxPongLE, 4) == 0) aux_kind = 2;
+    if (aux_kind >= 0) {
+        const int sender = classify_aux_sender(from);
+        if (sender < 0 || sender >= kCommsMaxPlayers || sender == g_slot) {
+            ++g_dropped;
+            return;
+        }
+        /* Newest wins WITHIN one sender's one kind; see the queue's own
+           note for why the slots are split. A superseded message is
+           counted rather than silently forgotten, because "sync looks
+           laggy" and "sync is being outrun by its own send rate" are
+           different problems and the counter is what tells them apart. */
+        AuxSlot &slot = g_aux[sender][aux_kind];
+        if (slot.len != 0) ++g_aux_superseded;
+        const int keep = n < kAuxMaxBytes ? n : kAuxMaxBytes;
+        std::memcpy(slot.buf, raw, (size_t)keep);
+        slot.len = keep;
+        return;
+    }
+
+    Packet p;
+    if (n != kPacketBytes) { ++g_dropped; return; }
+    std::memcpy(&p, raw, sizeof p);
+    if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; return; }
+    if (p.version != kWireVersion)            { ++g_dropped; return; }
+    if (g_test_drop_pct > 0) {
+        /* Deterministic-per-run LCG, same discipline as the sync layer's
+           drop knob: a proof that behaves differently every run is not a
+           proof. */
+        static unsigned r = 0x2468ace1u;
+        r = r * 1664525u + 1013904223u;
+        if ((int)((r >> 16) % 100u) < g_test_drop_pct) {
+            ++g_test_drops;
+            return;
+        }
+    }
+    /* A JOIN is the only kind that may TEACH the parent a new address: a
+       session is joined, never merely spoken into. */
+    const int who = classify_sender(from, (int)p.slot, p.type == kTypeJoin);
+    if (who < 0) { ++g_dropped; return; }
+    /* Nobody may claim to be the parent to a parent. On loopback the port
+       check already implied it; in the address modes it has to be said. */
+    if (g_role == kRoleParent && who == 0) { ++g_dropped; return; }
+    ++g_recvd;
+    // The pump's radio IRQ: a session datagram landed, so a connected
+    // wait turn may end now instead of at its VBlank. Counted for EVERY
+    // accepted lockstep packet (blocks, joins, byes alike -- each one is
+    // proof the peer's radio is alive); aux deliberately does not count,
+    // because sync chatter must not hold the ROM's wait bound open. See
+    // conductor_pump's banner in hal/comms_conductor.cpp.
+    comms_note_wire_activity();
+    if (g_role == kRoleParent) on_parent_packet(p, from, who);
+    else                       on_child_packet(p, from, who);
+}
+
+// Hand every datagram whose hold has expired to dispatch(). A FIFO with a
+// constant delay keeps due times sorted; jitter can invert two neighbours, and
+// that REORDERING IS THE POINT -- a real path reorders and the protocol should
+// be shown surviving it, so the ring is walked from the head and stops at the
+// first entry that is not due rather than scanning for the earliest.
+void pump_delayed() {
+    const unsigned t = now_ms();
+    while (g_dring_count > 0) {
+        DelayedDatagram &d = g_dring[g_dring_head];
+        if ((int)(t - d.due) < 0) break;
+        dispatch(d.buf, d.len, d.from);
+        g_dring_head = (g_dring_head + 1) % kDelayRingLen;
+        --g_dring_count;
+    }
+}
+
 void drain() {
     if (g_sock == INVALID_SOCKET) return;
+    pump_delayed();
     for (;;) {
-        /* ONE BUFFER, TWO MESSAGE KINDS. Run mg16 lane MP4: the aux channel
+        /* ONE BUFFER, EVERY MESSAGE KIND. Run mg16 lane MP4: the aux channel
            shares this socket (one NAT mapping for internet play, ruled at the
-           MP4 gate), so the read has to be big enough for either and the kinds
-           are told apart by their first four bytes AFTER the read.
+           MP4 gate), so the read has to be big enough for any of them and the
+           kinds are told apart by their first four bytes AFTER the read. Lane
+           NET added a third kind to the same socket for the same reason -- the
+           relay handshake, which would defeat its own purpose from a second
+           port.
 
            THE OLD SHAPE WOULD HAVE MISCOUNTED THEM. This read asked for
            exactly kPacketBytes and charged anything else to g_dropped, so every
            aux message would have arrived, been discarded, and shown up in the
            carrier's drop counter -- a channel that works while its own
            instrument says the wire is failing. */
-        union { Packet p; unsigned char raw[kAuxMaxBytes]; } msg;
+        unsigned char raw[kAuxMaxBytes];
         sockaddr_in from;
         int fromlen = (int)sizeof from;
-        const int n = WS.recvfrom(g_sock, (char *)msg.raw, (int)sizeof msg.raw,
+        const int n = WS.recvfrom(g_sock, (char *)raw, (int)sizeof raw,
                                   0, (sockaddr *)&from, &fromlen);
         if (n < 0) break;                       // WSAEWOULDBLOCK, or nothing
 
-        int aux_kind = -1;
-        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) aux_kind = 0;
-        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPingLE, 4) == 0) aux_kind = 1;
-        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPongLE, 4) == 0) aux_kind = 2;
-        if (aux_kind >= 0) {
-            /* The sender is the SOURCE PORT, the same slot-is-the-port rule
-               the input records are verified by. A source port outside our
-               slot range is not a peer of this session. */
-            const int sender = (int)ntoh16(from.sin_port) - g_port_base;
-            if (sender < 0 || sender >= kCommsMaxPlayers || sender == g_slot) {
-                ++g_dropped;
-                continue;
-            }
-            /* Newest wins WITHIN one sender's one kind; see the queue's own
-               note for why the slots are split. A superseded message is
-               counted rather than silently forgotten, because "sync looks
-               laggy" and "sync is being outrun by its own send rate" are
-               different problems and the counter is what tells them apart. */
-            AuxSlot &slot = g_aux[sender][aux_kind];
-            if (slot.len != 0) ++g_aux_superseded;
-            const int keep = n < kAuxMaxBytes ? n : kAuxMaxBytes;
-            std::memcpy(slot.buf, msg.raw, (size_t)keep);
-            slot.len = keep;
+        if (g_delay_ms <= 0 && g_jitter_ms <= 0) {
+            dispatch(raw, n, from);
             continue;
         }
 
-        Packet &p = msg.p;
-        if (n != kPacketBytes) { ++g_dropped; continue; }
-        if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; continue; }
-        if (p.version != kWireVersion)          { ++g_dropped; continue; }
-        if (g_test_drop_pct > 0) {
-            /* Deterministic-per-run LCG, same discipline as the sync layer's
-               drop knob: a proof that behaves differently every run is not a
-               proof. */
-            static unsigned r = 0x2468ace1u;
-            r = r * 1664525u + 1013904223u;
-            if ((int)((r >> 16) % 100u) < g_test_drop_pct) {
-                ++g_test_drops;
-                continue;
-            }
+        /* INDUCTION ON. Read it off the socket now, act on it later. */
+        if (g_dring_count >= kDelayRingLen) { ++g_delay_overflow; continue; }
+        const int tail = (g_dring_head + g_dring_count) % kDelayRingLen;
+        DelayedDatagram &d = g_dring[tail];
+        int hold = g_delay_ms;
+        if (g_jitter_ms > 0) {
+            static unsigned jr = 0x13579bdfu;
+            jr = jr * 1664525u + 1013904223u;
+            hold += (int)((jr >> 16) % (unsigned)(2 * g_jitter_ms + 1))
+                    - g_jitter_ms;
+            if (hold < 0) hold = 0;
         }
-        ++g_recvd;
-        // The pump's radio IRQ: a session datagram landed, so a connected
-        // wait turn may end now instead of at its VBlank. Counted for EVERY
-        // accepted lockstep packet (blocks, joins, byes alike -- each one is
-        // proof the peer's radio is alive); aux deliberately does not count,
-        // because sync chatter must not hold the ROM's wait bound open. See
-        // conductor_pump's banner in hal/comms_conductor.cpp.
-        comms_note_wire_activity();
-        if (g_role == kRoleParent) on_parent_packet(p, from);
-        else                       on_child_packet(p, from);
+        d.due  = now_ms() + (unsigned)hold;
+        d.len  = n < kAuxMaxBytes ? n : kAuxMaxBytes;
+        d.from = from;
+        std::memcpy(d.buf, raw, (size_t)d.len);
+        ++g_dring_count;
     }
+    pump_delayed();
 }
 
 // ---------------------------------------------------------------------------
@@ -659,13 +1226,47 @@ void service() {
 
     const unsigned t = now_ms();
 
-    // A child that has not been accepted keeps knocking.
+    // THE RELAY HANDSHAKE RUNS BEFORE ANY GAME TRAFFIC AND NEVER STOPS.
+    // Once per second until paired, which is the frozen contract's rate and is
+    // also what punches the NAT mapping open before there is anything else to
+    // do it; then once per kRelayKeepaliveMs forever, because an endpoint the
+    // relay has not heard from in 90 s is expired and re-HELLO is explicitly
+    // allowed. A menu with no session in it can easily be quiet for 90 s.
+    if (g_net_mode == kNetRelay) {
+        const unsigned every = g_relay_paired ? kRelayKeepaliveMs
+                                              : kRelayHelloMs;
+        if ((unsigned)(t - g_last_hello_ms) >= every) relay_send_hello();
+        // Game traffic before pairing is traffic the relay has nowhere to put.
+        // Holding it back is not just tidiness: a child hammering JOINs at an
+        // unpaired relay looks exactly like the flood the relay is entitled to
+        // rate-limit, and the ROM's own bound is long enough to wait out a
+        // handshake that takes a few seconds.
+        if (!g_relay_paired) return;
+    }
+
+    // A child that has not been accepted keeps knocking. BACKOFF IN THE
+    // ADDRESS MODES, flat 50 ms on loopback (where it always was and where
+    // there is no wire to flood). A lost JOIN or a lost ACCEPT must cost a
+    // retry, never a wedge -- so this keeps knocking for as long as the game
+    // is willing to wait, and the ROM's own ~20 s bound stays the one thing
+    // that decides a session did not form.
     if (g_role == kRoleChild && g_state == kCommsConnecting) {
-        if ((unsigned)(t - g_last_join_ms) >= kJoinResendMs) {
+        if ((unsigned)(t - g_last_join_ms) >= (unsigned)g_join_wait_ms) {
+            if (g_join_started_ms == 0) g_join_started_ms = t;
             g_last_join_ms = t;
             Packet j;
+            // fill_header puts g_slot in the header. Over loopback that is a
+            // slot this child already OWNS, by having bound its port; in the
+            // address modes the same byte is only a PROPOSAL, and the parent's
+            // ACCEPT is the answer. Same byte, two meanings, decided by mode.
             fill_header(j, kTypeJoin);
             send_to_slot(j, 0);
+            ++g_resends;
+            if (g_net_mode != kNetLoopback) {
+                g_join_wait_ms *= 2;
+                if (g_join_wait_ms > kJoinBackoffCapMs)
+                    g_join_wait_ms = kJoinBackoffCapMs;
+            }
         }
     }
 
@@ -673,7 +1274,7 @@ void service() {
     // answer lands. This is the whole of the retransmission story.
     if (g_role == kRoleChild && g_state == kCommsChildConnected &&
         !g_round_done && (g_stage_mask & (1u << g_slot)) != 0) {
-        if ((unsigned)(t - g_last_publish_ms) >= kPublishResendMs) {
+        if ((unsigned)(t - g_last_publish_ms) >= (unsigned)g_resend_ms) {
             g_last_publish_ms = t;
             Packet b;
             fill_header(b, kTypeBlocks);
@@ -760,7 +1361,32 @@ void lb_open(unsigned mode) {
 
     int bound = -1;
     for (int k = first; k <= last; ++k) {
-        sockaddr_in a = slot_addr(k);
+        // THE BIND ADDRESS IS NOT THE PEER ADDRESS, and conflating them is why
+        // this needed its own line. Loopback binds 127.0.0.1:base+k, which is
+        // also where its peers are. An address-mode parent has to be reachable
+        // from OFF this machine, so it binds 0.0.0.0 -- BUT ONLY WHEN ASKED.
+        //
+        // SM64DS_COMMS_BIND_ANY IS OPT-IN AND STAYS OPT-IN. Binding every
+        // interface by default would silently put a UDP listener that accepts
+        // session traffic on whatever network the machine is attached to, for
+        // every player, including everyone who only ever plays alone. That is
+        // a decision a player makes, not one a default makes for them.
+        //
+        // TWO CASES BIND ANY WITHOUT THE FLAG, because in them a loopback bind
+        // is not "safe", it is BROKEN -- the socket could send but never
+        // receive, which is the most confusing failure a transport has:
+        //   * ANY relay role. Every packet arrives from the relay, which is
+        //     off this machine by definition.
+        //   * A DIRECT-MODE CHILD. It sends to one address it was given and
+        //     the answers come back from off-machine too. Its exposure is not
+        //     the parent's: it is not accepting a session from anyone, it is
+        //     answering the one host it was pointed at.
+        // The direct-mode PARENT is the one that genuinely opens a door -- it
+        // accepts JOINs from strangers -- and that one still needs the flag.
+        sockaddr_in a = loopback_slot_addr(k);
+        const bool any = g_bind_any || g_net_mode == kNetRelay ||
+                         (g_net_mode == kNetDirect && g_role == kRoleChild);
+        if (any) a.sin_addr.s_addr = 0;             // INADDR_ANY
         if (WS.bind(g_sock, (const sockaddr *)&a, (int)sizeof a) == 0) {
             bound = k;
             break;
@@ -795,23 +1421,50 @@ void lb_open(unsigned mode) {
     g_latched_mask = 0;
     g_round_done = false;
     std::memset(g_cache_valid, 0, sizeof g_cache_valid);
+    g_dring_head = g_dring_count = 0;
 
-    std::fprintf(stderr, "[comms:loopback] open(mode=%u) as %s, slot %d, "
-                 "udp 127.0.0.1:%d (parent at :%d)\n",
-                 mode, g_role == kRoleParent ? "parent" : "child",
-                 g_slot, g_my_port, g_port_base);
+    // SEED THE PEER TABLE. In loopback mode every entry is known up front and
+    // never changes -- that is the old arithmetic, written down as data. In
+    // direct mode a CHILD is told the parent's address by env (already parsed)
+    // and the parent knows nothing until a JOIN teaches it. Relay mode fills
+    // nothing: slot_addr() short-circuits to the relay for every slot.
+    if (g_net_mode == kNetLoopback) {
+        for (int k = 0; k < kCommsMaxPlayers; ++k) {
+            g_peer_addr[k]  = loopback_slot_addr(k);
+            g_peer_known[k] = true;
+        }
+    }
+
+    char t[32];
+    if (g_net_mode == kNetRelay) {
+        std::fprintf(stderr, "[comms:loopback] open(mode=%u) as %s, slot %d, "
+                     "udp *:%d via RELAY %s, code '%.8s'\n",
+                     mode, g_role == kRoleParent ? "parent" : "child",
+                     g_slot, g_my_port, addr_text(g_relay_addr, t, sizeof t),
+                     (const char *)g_code);
+    } else if (g_net_mode == kNetDirect) {
+        std::fprintf(stderr, "[comms:loopback] open(mode=%u) as %s, slot %d, "
+                     "udp %s:%d DIRECT (peer %s)\n",
+                     mode, g_role == kRoleParent ? "parent" : "child",
+                     g_slot, g_bind_any || g_role == kRoleChild ? "*"
+                                                                : "127.0.0.1",
+                     g_my_port,
+                     g_peer_known[0] ? addr_text(g_peer_addr[0], t, sizeof t)
+                                     : "learned from the JOIN");
+    } else {
+        std::fprintf(stderr, "[comms:loopback] open(mode=%u) as %s, slot %d, "
+                     "udp 127.0.0.1:%d (parent at :%d)\n",
+                     mode, g_role == kRoleParent ? "parent" : "child",
+                     g_slot, g_my_port, g_port_base);
+    }
 }
 
 void lb_close() {
     if (!g_open) return;             // double close is legal and silent
     Packet b;
     fill_header(b, kTypeBye);
-    if (g_role == kRoleParent) {
-        for (int k = 1; k < kCommsMaxPlayers; ++k)
-            if (g_live & (1u << k)) send_to_slot(b, k);
-    } else {
-        send_to_slot(b, 0);
-    }
+    if (g_role == kRoleParent) send_to_children(b);
+    else                       send_to_slot(b, 0);
     WS.closesocket(g_sock);
     g_sock  = INVALID_SOCKET;
     g_open  = false;
@@ -865,7 +1518,11 @@ void lb_become_child() {
         return;
     }
     g_state = kCommsConnecting;
-    g_last_join_ms = now_ms() - kJoinResendMs;   // knock immediately
+    // Knock IMMEDIATELY. Backed off the interval actually in use, not the
+    // loopback constant: with the address modes' 200 ms start, subtracting 50
+    // would have left the first knock waiting 150 ms for no reason.
+    g_last_join_ms = now_ms() - (unsigned)g_join_wait_ms;
+    g_join_started_ms = 0;
     service();
 }
 
@@ -924,8 +1581,7 @@ int lb_exchange(const void *my_block, uint16_t *status) {
         for (int i = 0; i < kCommsMaxPlayers; ++i)
             if (b.have & (1u << i))
                 std::memcpy(b.blocks[i], g_stage[i], kCommsBlockBytes);
-        for (int k = 1; k < kCommsMaxPlayers; ++k)
-            if (g_live & (1u << k)) send_to_slot(b, k);
+        send_to_children(b);
         const int ci = (int)(g_round % kCacheDepth);
         g_cache[ci] = b;
         g_cache_valid[ci] = true;
@@ -1005,6 +1661,17 @@ int lb_send_aux(const void *buf, int len) {
     if (!buf || len <= 0) return 0;
     if (g_sock == INVALID_SOCKET) return 0;
     if (len > kAuxMaxBytes) return 0;          // one datagram or nothing
+
+    /* THROUGH THE RELAY, ONE COPY. The relay fans a parent's datagram out to
+       every child and sends a child's to the parent, so the loop below would
+       hand each peer as many duplicates as there are peers. Same rule as
+       send_to_children, and it has to be repeated here because aux does not go
+       through that helper -- aux carries opaque bytes, not a Packet. */
+    if (g_net_mode == kNetRelay) {
+        if (!g_relay_paired) return 0;
+        send_raw(buf, len, g_relay_addr);
+        return len;
+    }
 
     int sent = 0;
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
@@ -1118,6 +1785,129 @@ bool comms_loopback_install_from_env() {
                          "(SM64DS_COMMS_DROP)\n", v);
     }
 
+    // =======================================================================
+    // THE ADDRESS MODES. Run vsdec, lane NET.
+    //
+    // ORDER MATTERS AND RELAY WINS: a launcher that sets both was told two
+    // different things and the relay is the one that works without port
+    // forwarding, so it is the safer of the two to honour. Said out loud
+    // because silently preferring one is the kind of thing that costs an hour
+    // of somebody's evening.
+    //
+    // EVERY ONE OF THESE IS OPT-IN. With none of them set the mode stays
+    // kNetLoopback and every line above and below behaves as it did before
+    // this block existed.
+    // =======================================================================
+    const char *relay = std::getenv("SM64DS_COMMS_RELAY");
+    const char *host  = std::getenv("SM64DS_COMMS_HOST");
+
+    if (relay && *relay) {
+        if (!parse_host_port(relay, kRelayDefaultPort, &g_relay_addr)) {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_RELAY='%s' "
+                         "could not be resolved; NOT installing, so the seam "
+                         "keeps its solo answers rather than pretending to "
+                         "have a session\n", relay);
+            return false;
+        }
+        // The session code. Up to 8 ASCII, right-padded with NUL, and the
+        // relay pairs a parent with the children that share it. No default: a
+        // default code would put every player in the world who forgot to set
+        // one into the same session, which is a worse failure than refusing.
+        const char *code = std::getenv("SM64DS_COMMS_CODE");
+        if (!code || !*code) {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_RELAY needs "
+                         "SM64DS_COMMS_CODE too (up to 8 ASCII). NOT "
+                         "installing.\n");
+            return false;
+        }
+        std::memset(g_code, 0, sizeof g_code);
+        size_t cl = std::strlen(code);
+        if (cl > kRelayCodeBytes) {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_CODE '%s' is "
+                         "longer than %d bytes; using the first %d\n",
+                         code, kRelayCodeBytes, kRelayCodeBytes);
+            cl = kRelayCodeBytes;
+        }
+        std::memcpy(g_code, code, cl);
+        g_net_mode = kNetRelay;
+        if (host && *host)
+            std::fprintf(stderr, "[comms:loopback] both SM64DS_COMMS_RELAY and "
+                         "SM64DS_COMMS_HOST are set; using the RELAY\n");
+    } else if (host && *host) {
+        // DIRECT MODE. The child is told where the parent is; the parent is
+        // told nothing and learns each child from its JOIN.
+        if (g_role == kRoleChild) {
+            if (!parse_host_port(host, g_port_base, &g_peer_addr[0])) {
+                std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_HOST='%s' "
+                             "could not be resolved; NOT installing\n", host);
+                return false;
+            }
+            g_peer_known[0] = true;
+        } else {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_HOST is a "
+                         "CHILD knob; the parent learns each child's address "
+                         "from its JOIN. Ignored.\n");
+        }
+        g_net_mode = kNetDirect;
+    }
+
+    if (const char *b = std::getenv("SM64DS_COMMS_BIND_ANY"))
+        g_bind_any = (std::atoi(b) != 0);
+
+    // THE ONE COMBINATION THAT LOOKS FINE AND CANNOT WORK, so it is loud: a
+    // direct-mode PARENT bound to 127.0.0.1 can send but will never receive a
+    // JOIN from off this machine. Nothing else in the system will say so --
+    // the child knocks into the void and both sides blame the network.
+    if (g_net_mode == kNetDirect && g_role == kRoleParent && !g_bind_any) {
+        std::fprintf(stderr,
+            "[comms:loopback] DIRECT MODE PARENT WITHOUT SM64DS_COMMS_BIND_ANY=1. "
+            "The socket will bind 127.0.0.1 and no child off this machine can "
+            "reach it. Set SM64DS_COMMS_BIND_ANY=1 to accept a session on "
+            "every interface.\n");
+    }
+
+    if (const char *d = std::getenv("SM64DS_COMMS_DELAY_MS")) {
+        int v = std::atoi(d);
+        if (v < 0) v = 0;
+        if (v > 2000) v = 2000;
+        g_delay_ms = v;
+    }
+    if (const char *j = std::getenv("SM64DS_COMMS_JITTER_MS")) {
+        int v = std::atoi(j);
+        if (v < 0) v = 0;
+        if (v > 1000) v = 1000;
+        g_jitter_ms = v;
+    }
+    if (g_delay_ms > 0 || g_jitter_ms > 0)
+        std::fprintf(stderr, "[comms:loopback] TEST SCAFFOLDING: holding every "
+                     "received datagram %d ms (+/- %d) before acting on it. "
+                     "THIS IS ONE WAY -- with both ends running it the round "
+                     "trip is %d ms.\n",
+                     g_delay_ms, g_jitter_ms, 2 * g_delay_ms);
+
+    if (const char *k = std::getenv("SM64DS_COMMS_DUP")) {
+        int v = std::atoi(k);
+        if (v < 1) v = 1;
+        if (v > 4) v = 4;
+        g_dup = v;
+        if (v > 1)
+            std::fprintf(stderr, "[comms:loopback] sending each lockstep "
+                         "datagram %d times (SM64DS_COMMS_DUP)\n", v);
+    }
+
+    // THE REPUBLISH INTERVAL. 4 ms is a loopback number and the redundancy
+    // finding at the bottom of this file already called it flooding over the
+    // internet, so the address modes start at a wire-shaped default and the
+    // handshake's own measured round trip tunes it from there.
+    if (g_net_mode != kNetLoopback) g_resend_ms = 50;
+    if (const char *r = std::getenv("SM64DS_COMMS_RESEND_MS")) {
+        int v = std::atoi(r);
+        if (v < 1) v = 1;
+        if (v > 1000) v = 1000;
+        g_resend_ms = v;
+    }
+    if (g_net_mode != kNetLoopback) g_join_wait_ms = kJoinBackoffStartMs;
+
     if (const char *s = std::getenv("SM64DS_COMMS_SLOT")) {
         const int v = std::atoi(s);
         if (g_role != kRoleChild)
@@ -1186,21 +1976,33 @@ CommsLoopbackStats comms_loopback_stats() {
     s.dropped      = g_dropped;
     s.resends      = g_resends;
     s.stale_serves = g_stale_serves;
+    s.net_mode        = g_net_mode;
+    s.relay_paired    = g_relay_paired;
+    s.handshake_rtt_ms= g_handshake_rtt_ms;
+    s.resend_ms       = g_resend_ms;
+    s.delay_ms        = g_delay_ms;
+    s.jitter_ms       = g_jitter_ms;
+    s.delay_overflow  = g_delay_overflow;
     return s;
 }
 
 void comms_loopback_report(const char *tag) {
     const CommsLoopbackStats s = comms_loopback_stats();
+    static const char *const kModeName[3] = { "loopback", "direct", "relay" };
     std::fprintf(stderr,
         "[loopback:%s] role=%s slot=%d port=%d live=0x%x round=%lu "
         "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu "
-        "testdrop=%llu\n",
+        "testdrop=%llu mode=%s paired=%d hsrtt=%d resendms=%d "
+        "delayms=%d jitterms=%d delayovf=%llu dup=%d auxambig=%llu\n",
         tag ? tag : "-",
         s.role == kRoleParent ? "parent" : (s.role == kRoleChild ? "child"
                                                                  : "none"),
         s.slot, s.port, s.live_mask, s.round,
         s.sent, s.recvd, s.dropped, s.resends, s.stale_serves,
-        g_test_drops);
+        g_test_drops,
+        kModeName[s.net_mode >= 0 && s.net_mode <= 2 ? s.net_mode : 0],
+        s.relay_paired ? 1 : 0, s.handshake_rtt_ms, s.resend_ms,
+        s.delay_ms, s.jitter_ms, s.delay_overflow, g_dup, g_aux_ambiguous);
 }
 
 }  // namespace port
