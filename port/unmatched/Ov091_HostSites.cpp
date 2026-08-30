@@ -47,43 +47,16 @@
  *     NULL Vector3, read off the source's literal `m5(0)` -- FWOOSH passes
  *     none, the way MantaRay, CheepCheep and Shark do and Skeeter does not.
  *
- * (3) ONE MSVC FRONT-END REFUSAL ON A NONMATCHING BODY, CARRIED ONLY AFTER ITS
- *     FIDELITY WAS DERIVED. src/func_ov091_021339fc.c is NONMATCHING-bannered
- *     and carries an ARM `asm { ldr ...; mov ... }` hatch. MSVC's inline
- *     assembler is x86 and does not parse it -- measured, eight errors from
- *     C2065 on `asm` to C2181 -- so it cannot ride from src/ at all.
- *
- *     THE BANNER IS A REASON TO CHECK, NOT A REASON TO COMPILE. It says the C
- *     "does NOT count as matched. Reverts to a draft until someone reproduces
- *     the bytes from real C", so nothing certifies that this C is the ROM's
- *     body, and compiling a draft behind FWOOSH's Behavior on that basis would
- *     be putting unknown-fidelity code on a live path. The whole body was
- *     therefore disassembled out of extracted/overlays/overlay_0091.bin at base
- *     0x02130f00 and compared against the draft branch by branch:
- *       155 instructions + ONE literal pool word (0x0000010d, the id it
- *         spawns); between the chest precedent's 135 and the Klepto refusal's
- *         322, so it is transcribed rather than refused.
- *       EXACTLY ONE relocation in the ROM reaches it, from:0x021342cc inside
- *         _ZN5Stump8BehaviorEv's own span. It is in no vtable slot, so it is
- *         gating for FWOOSH and reachable from nothing else.
- *       The draft reproduces the ROM at every branch, every structure offset
- *         and all seventeen calls. Nothing in the ROM is absent from the C and
- *         nothing in the C is absent from the ROM.
- *     The two hatched instructions are `ldr r0,[r5,#8]` and `mov r4,#1`, an
- *     ordinary load and an ordinary immediate. They are hatched for WHERE THE
- *     REGISTERS LAND -- `hat` is loaded into r1 before two unrelated byte
- *     tests, and r4 must still hold 1 at the `orr r1,r4,r2,lsl #8` across the
- *     SetNewHatCharacter / PlayerLoseCap branch -- which is a mwccarm codegen
- *     constraint, and mwccarm is not in this build. So this copy carries no
- *     claim the src file does not: the banner withholds "this C compiles to
- *     these ROM bytes", and what the port needs is "this C has the ROM body's
- *     semantics", which is what was derived.
- *     Derivation, with the full disassembly and the side-by-side:
- *       ...runs/rel0215/out/w3-f2/f021339fc_fidelity.txt
- *     THE BANNERED src FILE IS UNTOUCHED and stays out of the slice. The two
- *     hatch lines are written below as the C they assemble to, and that is the
- *     one place this lane's host copy is not a pure transcription, so the
- *     substitution is spelled out again at the site.
+ * (3) ONE BODY PROPAGATED FROM origin/main BY ADDRESS, and this is the item
+ *     the banked recon, this lane and the coordinator's first two rulings all
+ *     got wrong in the same direction. src/func_ov091_021339fc.c IN THIS TREE
+ *     is NONMATCHING-bannered with an ARM asm hatch MSVC cannot parse, so it
+ *     cannot ride from src/. The first instinct was to transcribe the draft;
+ *     the correct move was to check the address against main, where the body
+ *     is ALREADY MATCHED, with no banner and no hatch. It is re-gated in this
+ *     tree (match.py MATCHING at 2004/b56 --strict-relocs --module ov091) and
+ *     carried with five names bridged by address. The long version is at the
+ *     site. FWOOSH's Behavior calls it every tick and nothing else reaches it.
  */
 #include <cstddef>
 #include "types.h"
@@ -123,7 +96,11 @@ void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned j);
 void _ZN9Animation7AdvanceEv(void *self);                   /* 0x02015c3c */
 
 void *_ZN5Actor10FindWithIDEj(unsigned int id);             /* 0x02010f3c */
-void func_020aea30(void *c, void *a, unsigned int unused);  /* ov002/ov004 0x020aea30 */
+/* 0x020aea30, and the spelling matters -- see the shared-window note at (3).
+   This link defines BOTH _func_ov002_020aea30 and _func_020aea30 from the same
+   object (port/unmatched/Enemy_UpdateDeath.cpp); main's body calls the ov002
+   spelling, so that is the one declared. */
+void func_ov002_020aea30(void *c, void *a, unsigned int unused);
 void _ZN5Actor8PoofDustEv(void *a);                         /* 0x0200fe3c */
 void _ZN9ActorBase18MarkForDestructionEv(void *a);          /* 0x02043824 */
 void _ZN6Player16IncMegaKillCountEv(void *p);               /* ov002 0x020bdc58 */
@@ -315,37 +292,74 @@ extern "C" int _ZN5Stump6RenderEv(void *selfv)
 /* ==========================================================================
  * (3) func_ov091_021339fc -- FWOOSH's per-frame player interaction.
  *
- * src/func_ov091_021339fc.c is NONMATCHING-bannered: "hand-written asm, not a
- * C decompilation. Byte-exact via an asm hatch on a proven mwccarm 1.2
- * register-allocation/scheduling wall". THAT FILE AND ITS BANNER ARE UNTOUCHED
- * and it stays out of port/slice_w3f2.txt.
+ * THIS BODY IS PROPAGATED FROM origin/main BY ADDRESS. It is not a
+ * transcription and not this tree's draft.
  *
- * The hatch is two ARM instructions inside an otherwise ordinary C body:
- *       asm { ldr curHat0, [a, #8]
- *             mov newHat,  #1      }
- * MSVC's inline assembler is x86, so the whole TU is a front-end refusal
- * (C2065 on `asm`, then seven more). This copy is the src body line for line
- * with those two instructions written as the C they assemble to:
- *       curHat0 = *(unsigned int *)(a + 8);
- *       newHat  = 1;
- * -- a load of the word at a+8 and an immediate 1, nothing else in the block.
- * Every other line, including the control flow the hatch was reached through,
- * is unchanged. Since the SOURCE is not byte-matched either, this host copy
- * carries no claim the src file does not already carry.
- * ========================================================================== */
+ * WHAT THIS TREE HAS AT 0x021339fc IS STALE. src/func_ov091_021339fc.c here is
+ * NONMATCHING-bannered ("hand-written asm, not a C decompilation ... Reverts to
+ * a draft until someone reproduces the bytes from real C") and carries an ARM
+ * `asm { ldr curHat0,[a,#8]; mov newHat,#1 }` hatch that MSVC's x86 inline
+ * assembler will not parse -- eight errors, C2065 through C2181 -- so it cannot
+ * ride from src/ at all. THE BANNER IS STALE AGAINST MAIN: checked by address,
+ * origin/main's delinks.txt carries `.text start:0x021339fc end:0x02133c6c` for
+ * src/func_ov091_021339fc.c and its blob (31897fa47d0d96862ba8ea690ed7060a3b80c507,
+ * against this tree's bf322550ca9c83bfcd394344c3ce31e6a784cc77) has NO banner and
+ * NO hatch. Someone cracked the wall by restructuring: main hoists
+ *     u8 capFlag = *(u8 *)(a + 0x6ff);
+ *     u8 hat     = *(u8 *)(a + 0x6d9);
+ * together before the two byte tests, which is exactly the scheduling the draft
+ * needed the hatch to force.
+ *
+ * RE-GATED IN THIS TREE, not taken on main's word. tools/match.py on main's
+ * blob at 0x021339fc size 0x270, 2004/b56, --strict-relocs (default) and
+ * --module ov091, against extracted/overlays/overlay_0091.bin at base
+ * 0x02130f00: MATCHING, every one of the 155 instructions and the one pool
+ * word. Evidence: ...runs/rel0215/out/w3-f2/f021339fc_fidelity.txt.
+ *
+ * FIVE NAMES ARE BRIDGED, EACH SETTLED BY ADDRESS against both trees' config,
+ * because main renamed the actor hierarchy to its ROM RTTI spellings and this
+ * tree has not taken that rename. Left column is main's, right is what THIS
+ * link defines at the same address:
+ *   0x02010f3c  _ZN8dActor_c10FindWithIDEj        -> _ZN5Actor10FindWithIDEj
+ *   0x0200fe3c  _ZN8dActor_c8PoofDustEv           -> _ZN5Actor8PoofDustEv
+ *   0x02043824  _ZN7fBase_c18MarkForDestructionEv -> _ZN9ActorBase18MarkForDestructionEv
+ *   0x020adb40  _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc
+ *                                                 -> _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc
+ *   0x02010e2c  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
+ *                                                 -> _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii
+ * The last pair also disagrees about the LAST TWO PARAMETERS -- main recovered
+ * them `as` (signed char, short) and this tree `ii` -- and under C linkage the
+ * mangled string IS the symbol, so the call must spell this tree's. It is
+ * ABI-identical anyway: cdecl promotes both narrow arguments to int, and the
+ * ROM passes them in a stacked word each (`str r5,[sp,#0]` / `str r4,[sp,#4]`).
+ *
+ * A SIXTH NAME NEEDED NO BRIDGE AND IS THE ONE WORTH WRITING DOWN.
+ * main's TU calls `func_ov002_020aea30`, and 0x020aea30 is a SHARED-WINDOW
+ * address that names two different functions:
+ *     this tree  ov002/symbols.txt:26  func_ov002_020aea30            size 0x8c
+ *     this tree  ov004/symbols.txt:50  _ZN5Enemy12KillByAttackER5Actor size 0x48
+ * and main's config attaches the name `func_ov004_020aea30` to the ov002 body.
+ * The ov091 relocation itself says `to:0x020aea30 module:overlays(2,4)` -- dsd
+ * declining to choose. ov002 is the resident one at level time, and this link
+ * already defines `_func_ov002_020aea30` (port/unmatched/Enemy_UpdateDeath.cpp),
+ * so main's spelling resolves here unchanged and no bridge is written. Reading
+ * the address alone would have picked KillByAttack, which is a different
+ * function of a different size.
+ * ==========================================================================*/
 extern "C" void func_ov091_021339fc(char *c)
 {
     char *a;
-    unsigned int fl;
-    unsigned int id = *(unsigned int *)(c + 0x134);
+    u32 fl;
+    u32 id = *(u32 *)(c + 0x134);
 
-    if (id == 0) return;
+    if (id == 0)
+        return;
     a = (char *)_ZN5Actor10FindWithIDEj(id);
-    if (*(unsigned int *)(c + 0x374) == 0) {
-        fl = *(unsigned int *)(c + 0x130);
+    if (*(u32 *)(c + 0x374) == 0) {
+        fl = *(u32 *)(c + 0x130);
         if ((fl & 0x40000) != 0) {
-            *(unsigned int *)(c + 0x10c) = 4;
-            func_020aea30(c, a, 0);
+            *(u32 *)(c + 0x10c) = 4;
+            func_ov002_020aea30(c, a, 0);
             return;
         }
         if ((fl & 0x2000) != 0) {
@@ -354,15 +368,17 @@ extern "C" void func_ov091_021339fc(char *c)
             return;
         }
         {
-            int b = (int)(*(unsigned short *)(a + 0xc) == 0xbf);
-            if (b == 0) return;
+            int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
+            if (b == 0)
+                return;
         }
-        if (*(unsigned char *)(a + 0x6f9) == 1) {
+        if (*(u8 *)(a + 0x6f9) == 1) {
             _ZN5Actor8PoofDustEv(c);
             _ZN9ActorBase18MarkForDestructionEv(c);
             return;
         }
-        if ((fl & 0x10) == 0) return;
+        if ((fl & 0x10) == 0)
+            return;
         _ZN5Actor8PoofDustEv(c);
         _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(c, a, 0);
         _ZN6Player16IncMegaKillCountEv(a);
@@ -372,45 +388,59 @@ extern "C" void func_ov091_021339fc(char *c)
     }
 
     {
-        int b = (int)(*(unsigned short *)(a + 0xc) == 0xbf);
-        if (b == 0) return;
+        int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
+        if (b == 0)
+            return;
     }
-    if (*(unsigned char *)(a + 0x6f9) != 0) return;
-    if (*(unsigned char *)(a + 0x703) != 0) return;
-    if (_ZN6Player15IsCollectingCapEv(a) != 0) return;
-    _ZN6Player8BlowAwayEs(a, *(short *)(c + 0x94));
+    if (*(u8 *)(a + 0x6f9) != 0)
+        return;
+    if (*(u8 *)(a + 0x703) != 0)
+        return;
+    if (_ZN6Player15IsCollectingCapEv(a) != 0)
+        return;
+    _ZN6Player8BlowAwayEs(a, *(s16 *)(c + 0x94));
     {
-        unsigned char hat = *(unsigned char *)(a + 0x6d9);
-        if (*(unsigned char *)(a + 0x6ff) != 0) return;
-        if (*(unsigned char *)(a + 0x6fd) != 0) return;
+        u8 capFlag = *(u8 *)(a + 0x6ff);
+        u8 hat = *(u8 *)(a + 0x6d9);
+        if (capFlag != 0)
+            return;
+        if (*(u8 *)(a + 0x6fd) != 0)
+            return;
         {
-        unsigned int newHat, curHat0;
-        /* the src TU's two-instruction ARM asm hatch, written as C */
-        curHat0 = *(unsigned int *)(a + 8);   /* ldr curHat0, [a, #8] */
-        newHat = 1;                            /* mov newHat, #1      */
-        if (hat != curHat0) {
-            _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
-        } else {
-            if (_ZN8SaveData16HasPlayerLostCapEv() != 0) return;
-            _ZN8SaveData13PlayerLoseCapEv();
-        }
-        {
-            unsigned int curHat1 = *(unsigned int *)(a + 8);
-            short rot[3];
-            void *spawned;
-            rot[0] = 0;
-            rot[1] = 0;
-            rot[2] = 0;
-            rot[1] = *(short *)(c + 0x94);
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-                0x10d, newHat | (curHat1 << 8), (struct Vector3 *)(c + 0x5c), rot,
-                *(signed char *)(c + 0xcc), -1);
-            if (spawned == 0) return;
-            *(unsigned int *)((char *)spawned + 0x98) = 0x32000;
-            *(unsigned int *)((char *)spawned + 0xa4) = 0;
-            *(unsigned int *)((char *)spawned + 0xa8) = 0x14000;
-            *(unsigned int *)((char *)spawned + 0xac) = 0;
-        }
+            u32 cur = *(u32 *)(a + 8);
+            u32 param = 1;
+            if (hat != cur) {
+                _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
+            } else {
+                if (_ZN8SaveData16HasPlayerLostCapEv() != 0)
+                    return;
+                _ZN8SaveData13PlayerLoseCapEv();
+            }
+            {
+                u32 curHat1 = *(u32 *)(a + 8);
+                Vector3_16 rot;
+                void *spawned;
+                rot.x = 0;
+                rot.y = 0;
+                rot.z = 0;
+                rot.y = *(s16 *)(c + 0x94);
+                param = param | (curHat1 << 8);
+                /* (short *)&rot: this tree recovered Spawn's fourth parameter
+                   as `short *` and main as `Vector3_16 *`, which is the same
+                   three consecutive s16 under two spellings -- the ROM passes
+                   one pointer either way. The narrow fifth and sixth arguments
+                   promote to int under cdecl, which is why this tree's `ii`
+                   mangling is ABI-identical to main's `as`. */
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                    0x10d, param, (Vector3 *)(c + 0x5c), (short *)&rot,
+                    *(s8 *)(c + 0xcc), -1);
+                if (spawned == 0)
+                    return;
+                *(u32 *)((char *)spawned + 0x98) = 0x32000;
+                *(u32 *)((char *)spawned + 0xa4) = 0;
+                *(u32 *)((char *)spawned + 0xa8) = 0x14000;
+                *(u32 *)((char *)spawned + 0xac) = 0;
+            }
         }
     }
 }
