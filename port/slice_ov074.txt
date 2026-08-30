@@ -168,14 +168,26 @@
 #                         r0-ride-through problem does not apply and no host
 #                         copy is needed here.
 #
-# EIGHT C++-MANGLED SPELLINGS were on the same list, the ov025/ov058 class: a
-# //cpp TU declares a global at file scope with no extern "C", so MSVC
-# decorates it with its declared type while the mount emits the one C name.
-# Fourteen of them were in the InitResources host copy and were fixed by moving
-# its declarations INSIDE its extern "C" block. The remaining eight come from
-# two slice TUs this lane does not own and are bridged in
-# hal/actor_classes_ov074.cpp; every LHS is declared-and-never-defined, so
-# alternatename_guard stays clean.
+# The first link named TWENTY-FOUR unresolved externals in all: the three plain
+# C names above and TWENTY-ONE C++-MANGLED SPELLINGS, the ov025/ov058 class (a
+# //cpp TU declares a global, or a static member, at file scope with no
+# extern "C", so MSVC decorates it with its declared type while the mount and
+# the port's own bodies emit the one C name).
+#   TWELVE were in the InitResources host copy and are fixed AT THE SOURCE, not
+#     bridged: ten by moving its declarations INSIDE its extern "C" block, and
+#     two -- func_021123f4 and func_021124ac -- by resolving through
+#     port_ov053_at(). Those two are ov053's own data at a level-window address
+#     and the src TU takes their ADDRESS; ov053 is mounted WHOLE, which offers
+#     no C name for any interior byte, so an alias could not have served them.
+#   NINE come from src/func_ov074_02121a4c.cpp and src/func_ov074_02122634.cpp,
+#     which this lane does not own, and are bridged in
+#     hal/actor_classes_ov074.cpp. Every LHS is declared-and-never-defined, so
+#     alternatename_guard stays clean.
+# A SECOND ROUND followed the first: adding src/func_02011d20.c pulled in
+# __ZN5Sound13Func_02048ee4Ev, whose body (src/_ZN5Sound13Func_02048ee4Ev.cpp,
+# also appended below) declares it a static member of class Sound, so MSVC
+# emits ?Func_02048ee4@Sound@@SAXXZ -- the same shape the other way round,
+# bridged with the rest and confirmed with dumpbin /symbols on the object.
 src/ExplosionGoomba_Spawn.cpp
 src/Goomboss_Spawn.cpp
 src/_ZN8Goomboss16CleanupResourcesEv.cpp

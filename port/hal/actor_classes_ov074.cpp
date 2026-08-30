@@ -215,14 +215,18 @@ extern unsigned char data_ov074_02122f38[];   /* the file table's column 1 */
 }  /* extern "C" */
 
 /* ---- THE MEASURED EXTERNAL GAP, C++-MANGLED SPELLING HALF ----------------
-   Eight unresolved externals off the FIRST link, all the ov025/ov058 class:
-   a //cpp TU declares a global (or a static member) at file scope with no
-   extern "C", so MSVC decorates each with its declared type while the mount,
-   the ov084 mount and the port's own bodies emit the one C name. Fourteen more
-   of the same shape came from src/_ZN8Goomboss13InitResourcesEv.c and were
-   fixed at the source instead, by moving that host copy's declarations INSIDE
-   its extern "C" block; these eight are in two slice TUs this lane does not
-   own, so they are bridged.
+   The first link named TWENTY-FOUR unresolved externals. Twenty-one are the
+   ov025/ov058 class: a //cpp TU declares a global (or a static member) at file
+   scope with no extern "C", so MSVC decorates each with its declared type
+   while the mount, the ov084 mount and the port's own bodies emit the one C
+   name. TWELVE of the twenty-one came from the InitResources host copy and are
+   fixed at the source rather than bridged -- ten by moving its declarations
+   INSIDE its extern "C" block, two (func_021123f4 and func_021124ac) by
+   resolving through port_ov053_at() instead of taking the address of a name
+   that has no host storage. The NINE below are in two slice TUs this lane does
+   not own, so they are bridged. The remaining three were plain C names: two
+   missing bodies now in the slice and the Enemy constructor, renamed per
+   source in port/CMakeLists.txt.
 
    src/func_ov074_02121a4c.cpp declares the three file-table bases `extern char
    data_ov074_02122f34[]` and friends outside any block.
