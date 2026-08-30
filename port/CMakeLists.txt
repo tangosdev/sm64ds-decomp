@@ -9310,6 +9310,86 @@ set_source_files_properties(
 # because one class's halves can split (FlyGuy) and a forwarder can hide in
 # a src obj. Fastcall iff no push of the receiver before the call.
 
+# R12, run rel0215 (lane tagfix): THE PREDICATE MISSES A RUNTIME INDEX, AND
+# THE WIDTH IT LANDS ON IS THE SIXTEEN-BYTE ONE, MEASURED.
+#
+# R9 finds its twenty-one TUs by scanning src/ for "a pointer-to-member of an
+# INCOMPLETE class AND a NONZERO offset applied to it", and every one of those
+# offsets is a LITERAL -- `pp + 1`, `pp[2]`, a `+ 8` in a guard. So the sweep
+# is blind to a site whose index is a RUNTIME VALUE, which is exactly the shape
+# of src/_ZN10BrickBlock8BehaviorEv.cpp:
+#
+#     struct C; typedef void (C::*PMF)();
+#     extern "C" PMF data_ov002_0210dd30[];
+#     ...
+#     int idx = unk_0d7;                     <- 0..3, written by InitResources
+#     (((C*)((char*)this))->*data_ov002_0210dd30[idx])();
+#
+# Nothing in that source spells an offset at all. The index comes from the
+# actor's own id at InitResources time (0x141 -> 0, 0x142 -> 1, 0x143 -> 2,
+# 0x144 -> 3), so three of the four live ids stride, and a grep cannot see it.
+#
+# MEASURED IN THIS LANE'S OWN BASE OBJECT, not derived. R9 says MSVC's default
+# is FOUR bytes and R10 says it is SIXTEEN when the class is never completed.
+# This TU does complete `struct C` -- but only AFTER the array of pointers to
+# members of it has been declared -- and MSVC takes the general form:
+#
+#   base, no option        movzx eax,byte ptr [edi+0D7h]   ; idx
+#                          shl   eax,4                     ; idx * SIXTEEN
+#                          mov   ecx,_data_ov002_0210dd30[eax+4]
+#                          mov   eax,_data_ov002_0210dd30[eax]
+#                          add   ecx,edi
+#                          call  eax
+#
+# `shl eax,4` is the whole defect. data_ov002_0210dd30 is THIRTY-TWO bytes of
+# bss (0x0210dd30..0x0210dd50, four 8-byte records) and the four indices read:
+#
+#     idx 0  ->  +0   record 0, correct by luck
+#     idx 1  ->  +16  record 2's function word -- the WRONG handler
+#     idx 2  ->  +32  PAST THE ARRAY, into whatever the linker put next
+#     idx 3  ->  +48  further past
+#
+# and idx 0 and 1 then CALL what they read, which until this lane's seat is a
+# raw DS text address (0x020b429c / 0x020b41f8), mapped-but-NX on the host.
+# There is no benign index: every one of the four ids is a fault.
+#
+# With /vmg /vmm sizeof(PMF) is 8, the stride is `shl eax,3`, and the two
+# reads are the record's own {fn, delta} -- the ROM's dispatch exactly. Both
+# halves of the fix are needed and neither is sufficient alone: the width puts
+# the read on the right record, and hal/actor_classes_bob_world.cpp's
+# port_itemtag_states_seat() puts a HOST address in that record. The seat
+# verifies the four ROM words before rewriting and aborts on anything else.
+#
+# THE CALL IS NOT A FORWARDER, so R11 applies and the four bodies cannot be
+# seated raw. `call eax` with the receiver in ECX and NOTHING PUSHED -- the
+# TU does real work after the dispatch (MarkForDestruction, then `return 1`),
+# which is R11's own test for a frame that cannot be tail-jumped. The four
+# matched bodies are flat cdecl C names taking `char *`, so the seat points
+# the table at four __fastcall thunks rather than at the bodies themselves.
+# Read off this lane's build, before and after, in the lane's evidence.
+#
+# PER-SOURCE, NEVER GLOBAL, R9's rule unchanged. This TU includes only
+# BrickBlock.h (which declares no `::*`) and its own four-line struct, so
+# nothing crosses a header boundary and no type in it changes size.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10BrickBlock8BehaviorEv.cpp"
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+
+# Run rel0215, lane tagfix: the four item-tag handlers the gate-33 dispatcher
+# has always indexed and nothing ever defined, plus the position helper all
+# four call. Full derivation, the dup screen and the match gate are in the
+# head of slice_tagfix.txt. data_ov002_020ff090 joins port/ov002_syms.txt in
+# the same commit because func_ov002_020b41b8 indexes it.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tagfix.txt" SLICE_TAGFIX_LINES)
+set(SLICE_TAGFIX_SOURCES "")
+foreach(line IN LISTS SLICE_TAGFIX_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_TAGFIX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # run rel0215 wave 3, lane w3-b: the ONE fall-off-the-end body in this seat.
 # src/func_ov081_02126950.cpp is declared `int` and never returns. mwccarm
 # accepts that; MSVC refuses the TU with `error C4716: must return a value`.
@@ -11865,7 +11945,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
+    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -12069,7 +12149,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE33_SOURCES} ${GATE6_GEN}
+    ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
@@ -12308,7 +12388,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE33_SOURCES} ${GATE6_GEN}
+    ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}

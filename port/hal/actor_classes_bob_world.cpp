@@ -567,8 +567,90 @@ static int __fastcall mmbt_d1(void *s, void *)
     _ZN5ActorD2Ev(s);
     return (int)(size_t)s;
 }
+
+// ---- THE FOUR-CELL ITEM-TAG DISPATCH SEAT ----------------------------------
+//
+// BrickBlock::Behavior's last act is to dispatch through
+// data_ov002_0210dd30[unk_0d7] and destroy itself. __sinit_ov002_02100e50
+// fills that bss table from four ROM {fn, adj} records, and the function word
+// of each is a RAW DS TEXT ADDRESS: ovdata.py rebases only words inside its
+// data window (0x02100000 up), and ov002's .text ends at 0x020ff014, so a
+// pointer into .text is outside the window by construction and no pass
+// rewrites it. Calling one on the host is a jump into mapped-but-NX memory.
+//
+// So the table is rewritten here, the Ukiki way (hal/actor_classes_ov030.cpp):
+// {the ROM address the sinit's own source record carries, the host body}, with
+// the ROM column CHECKED against the mounted bytes before anything is written.
+// A mount that ever points at the wrong bytes aborts rather than calling into
+// garbage. The rewrite is idempotent by VALUE rather than by a `done` flag, so
+// a re-run over an already-seated table is a no-op and a re-run after a fresh
+// sinit re-seats.
+//
+// THE THUNKS ARE __fastcall AND THAT IS MEASURED, NOT ASSUMED (R11). The
+// dispatch site in the built object is
+//     mov ecx,_data_ov002_0210dd30[eax+4] / mov eax,_data_ov002_0210dd30[eax]
+//     add ecx,edi / call eax
+// -- a real call with the receiver in ECX and nothing pushed, which is what
+// R11 says needs a thunk. It cannot be a tail-jump forwarder: the TU calls
+// MarkForDestruction after the dispatch and returns 1.
+//
+// The stride the site uses is the other half of the fix and lives in
+// port/CMakeLists.txt (R12): without /vmg /vmm MSVC gives this TU's PMF the
+// sixteen-byte general representation and `shl eax,4` walks off the end of a
+// thirty-two-byte table.
+//
+// The four ids share this one class and pick their cell at InitResources:
+//   idx 0  id 321 ONE_UP_MUSHROOM_BLOCK_TAG   ROM 0x020b429c  spawns 0x114
+//   idx 1  id 322 MEGA_MUSHROOM_BLOCK_TAG     ROM 0x020b4250  spawns 0x115
+//   idx 2  id 323 SILVER_STAR_BLOCK_TAG (JRB) ROM 0x020b41f8  spawns 0x11d
+//   idx 3  id 324 SilverStarBlockTag          ROM 0x020b42e4  star + marker
+extern "C" {
+void func_ov002_020b429c(char *self);
+void func_ov002_020b4250(char *self);
+void func_ov002_020b41f8(char *self);
+void func_ov002_020b42e4(char *self);
+}
+static void __fastcall itemtag_state0(void *s) { func_ov002_020b429c((char *)s); }
+static void __fastcall itemtag_state1(void *s) { func_ov002_020b4250((char *)s); }
+static void __fastcall itemtag_state2(void *s) { func_ov002_020b41f8((char *)s); }
+static void __fastcall itemtag_state3(void *s) { func_ov002_020b42e4((char *)s); }
+
+struct PortItemTagCell { unsigned fn, delta; };
+extern "C" PortItemTagCell data_ov002_0210dd30[4];
+
+typedef void(__fastcall *PortItemTagFn)(void *);
+static const struct { unsigned rom; PortItemTagFn host; } g_itemtag_cells[4] = {
+    { 0x020b429cu, itemtag_state0 },
+    { 0x020b4250u, itemtag_state1 },
+    { 0x020b41f8u, itemtag_state2 },
+    { 0x020b42e4u, itemtag_state3 },
+};
+
+extern "C" void port_itemtag_states_seat(void)
+{
+    for (int i = 0; i < 4; ++i) {
+        PortItemTagCell &cell = data_ov002_0210dd30[i];
+        unsigned host = (unsigned)(size_t)g_itemtag_cells[i].host;
+        if (cell.fn == host && cell.delta == 0)
+            continue;                       /* already seated */
+        if (cell.fn != g_itemtag_cells[i].rom || cell.delta != 0) {
+            std::fprintf(stderr, "FATAL: item-tag state cell %d: the sinit "
+                         "left %08x/%u, the ROM's own record says %08x/0 -- "
+                         "WRONG BYTES\n", i, cell.fn, cell.delta,
+                         g_itemtag_cells[i].rom);
+            std::abort();
+        }
+        cell.fn = host;
+    }
+}
+
 extern "C" void hal_fill_mega_mushroom_block_tag_vtable(void)
 {
+    /* Seat and verify the four cells BEFORE anything can dispatch through
+       them. The registry runs every fill on each level boot, which is after
+       main() has run ov002's constructors, so the ROM words are in place by
+       the time this reads them. */
+    port_itemtag_states_seat();
     void **vt = _ZTV10BrickBlock;
     bw_fill_shared(vt);
     vt[0] = (void *)mmbt_init;
