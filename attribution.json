@@ -842,6 +842,14 @@
     "src/_ZN5dBgChD2Ev.cpp": "tangosdev",
     "src/func_020354d0.c": "tangosdev",
     "src/func_020354e0.c": "tangosdev",
-    "src/func_02035504.c": "tangosdev"
+    "src/func_02035504.c": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c13InitResourcesEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c6RenderEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c8BehaviorEv": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD0Ev": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD1Ev": "tangosdev",
+    "src/actors/daObjPathLift_c.cpp#func_ov100_02146e70": "aitddlabs",
+    "src/actors/daObjPathLift_c.cpp#func_ov100_0214700c": "tangosdev"
   }
 }
