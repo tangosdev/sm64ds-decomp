@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 8028,
-  "matchedTus": 11312,
-  "measuredAt": "2026-08-29",
+  "linkedTus": 8375,
+  "matchedTus": 11322,
+  "measuredAt": "2026-08-30",
   "branch": "port-mount-noseat-cluster",
-  "commit": "f77f01169",
+  "commit": "3b4863d9a",
   "stale": false,
-  "basis": "single lane cons at its pushed tip f77f01169 (the 0.2.15 release tip), measured against the tip's own gate build walk_window.map (tree clean, battery ALL GREEN twice on 2026-08-29, the run that shipped 0.2.15). +310 over the 7718 stamp: the title campaign (menus, file select, doodle canvas), the scene-request carrier, the opening cutscene chain with the intro dispatch, VS mode (ov075 seated as scene 6 with four arenas mounted), the MP conductor and sync batches, and the Rec Room minigame entry. The replacement queue now reads 730 rows across 257 host objects: 301 documented host-ABI exceptions, 243 faces, 170 shadows plus 15 MSVC-name shadows and 1 MSVC-name exception; the shadows remain the replacement backlog and are not counted as linked."
+  "basis": "single lane cons at its pushed tip 3b4863d9a, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, run_checks fully green, the tip that closed cast-campaign wave 1). +347 over the 8028 stamp in one day: seven reviewed merges seating the casts of Dire Dire Docks, Tall Tall Mountain, the water city, Rainbow Cruise, the ov077 enemy pack, six small overlays (Tick Tock Clock, Shifting Sand Land, THI small, LLL volcano, JRB ship, the Rec Room), plus eleven by-address propagated TUs and the VS star-band fix. The replacement queue's shadows shrink accordingly; the remaining frontier is wave 2 of the cast campaign (ov090/ov066/ov027/ov074/ov096/ov032/ov034/ov047/ov092/ov055), then arm9/ov002/ov006."
 }
