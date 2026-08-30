@@ -802,6 +802,32 @@ def test_strict_control_demotes_only_requested_complete_sources():
         assert "src/Other.cpp:\n    complete" in text
 
 
+def test_strict_control_compile_does_not_re_admit_demoted_intact_tus():
+    original_intact = tubuild.RB.intact_tu_policies
+    original_compile = tubuild.RB.compile_one
+    seen = []
+    try:
+        tubuild.RB.intact_tu_policies = lambda _enrolled: (_ for _ in ()).throw(
+            AssertionError("demoted intact policy was recomputed"))
+
+        def fake_compile(rel, vers, cache, init_srcs, syms, build_root=None,
+                         compiler_only=None, intact_tus=None):
+            seen.append(intact_tus)
+            return rel, None, "hit"
+
+        tubuild.RB.compile_one = fake_compile
+        failures, outcomes = tubuild.compile_linkcheck_sources(
+            ["src/Other.cpp"], {}, None, set(), {}, pathlib.Path("scratch"), 1,
+            intact_tus_override={})
+    finally:
+        tubuild.RB.intact_tu_policies = original_intact
+        tubuild.RB.compile_one = original_compile
+
+    assert failures == []
+    assert outcomes["hit"] == 1
+    assert seen == [{}]
+
+
 def test_strict_control_refuses_a_source_that_was_not_complete():
     with tempfile.TemporaryDirectory() as td:
         root = pathlib.Path(td)
