@@ -2140,8 +2140,10 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
        FLAME_CHOMP_FIRE is not level-placed; the chomp spawns it live. ---- */ \
     /* FLY_GUY was the fourth ov070 class wave 5 left unregistered; level 19
        places it and its baseline census skipped 0xe8. Its own slots run past
-       the usual seven -- 18, 19 and 29 are overrides where its three siblings
-       take the shared default -- and slot 9 is a host copy for the ModelAnim
+       the usual seven -- 18, 19 and 29 are its own (at 18 only Amp takes the
+       shared default; FlameChomp 0x021211bc and FlameChompFire 0x02121bdc
+       carry their own, as this branch's T5 row cites for precedent) -- and
+       slot 9 is a host copy for the ModelAnim
        slot-5 collision, the same one Amp and FlameChomp already take. See
        hal/actor_classes_ov070.cpp. */ \
     {232, "FLY_GUY", FlyGuy_SpawnInfo, FlyGuy_Spawn, \
