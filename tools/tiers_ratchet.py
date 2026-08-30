@@ -7,8 +7,9 @@ codegen tricks, no calls through mangled names). This tool banks the SET of sour
 identities that pass all five and fails a PR when an identity LEAVES that set. A
 one-function source keeps its historical path identity. A promoted TU appends
 ``#symbol`` to that path for each enrolled member, matching attribution's ownership unit.
-It reuses tiers.score_file outright -- the classifier has exactly one implementation,
-and a second copy of those regexes would be a second definition of a published percentage.
+It reuses tiers.score_file/score_member outright -- the classifier has exactly one
+implementation, and a second copy of those regexes would be a second definition of a
+published percentage.
 
 WHY BACKSLIDE-ONLY, AND NOT A COUNT. Two reasons, and the second is the important one.
 
@@ -205,13 +206,12 @@ def promoted_moves(root=None):
     return moves
 
 
-def score(rel):
-    """tiers.score_file for one repo-relative path, or None if it is unreadable."""
+def source_text(rel):
+    """Text for one repo-relative path, or None if it is unreadable."""
     try:
-        text = (REPO / rel).read_text(errors="replace")
+        return (REPO / rel).read_text(errors="replace")
     except OSError:
         return None
-    return tiers.score_file(rel, text)
 
 
 def scan(paths=None, ownership=None):
@@ -227,15 +227,17 @@ def scan(paths=None, ownership=None):
     if ownership is None:
         ownership = tiers.srcpath.source_definition_index()
     for rel in (paths if paths is not None else tracked_sources()):
-        file_score = score(rel)
-        if file_score is None:
+        text = source_text(rel)
+        if text is None:
             continue
         members = ownership.get(rel) or [pathlib.PurePosixPath(rel).stem]
         multi = len(members) > 1
         for symbol in members:
             identity = f"{rel}#{symbol}" if multi else rel
-            member_score = dict(file_score)
-            member_score["real_name"] = tiers._real_name_for_symbol(symbol)
+            member_score = (tiers.score_member(rel, text, symbol, REPO)
+                            if multi else tiers.score_file(rel, text))
+            if not multi:
+                member_score["real_name"] = tiers._real_name_for_symbol(symbol)
             scores[identity] = member_score
             if all(member_score[k] for k in tiers.CRITERIA):
                 converted.add(identity)
