@@ -19,6 +19,8 @@ The mechanical steps, all of which this performs and none of which it guesses at
   production path, matching the entries already enrolled;
 * add one ``attribution.json`` override per absorbed symbol, so a many-to-one
   consolidation reads as "consolidated with credit intact" instead of N lost.
+* migrate banked CONVERTED legacy paths to ``promoted-path#symbol`` identities,
+  preserving the readability ratchet at function rather than physical-file granularity.
 
 It deliberately does NOT compile anything. The proof that a promotion is sound is
 ``rombuild.py`` reporting 106/106 with ``mismatching: 0`` afterwards, and running it
@@ -41,6 +43,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
 import tu_manifest as TUM  # noqa: E402
+import tiers_ratchet as TR  # noqa: E402
 
 CONFIG = REPO / "config"
 
@@ -198,6 +201,50 @@ def rewrite_attribution(plans, lineage):
     return added
 
 
+def converted_baseline_update(plans):
+    """Prepare a CONVERTED identity rewrite without changing the worktree.
+
+    The baseline historically keyed one-function intake by path. Consolidation deletes
+    those paths, while ``tiers.py`` continues counting the functions inside the promoted
+    TU. Only already-banked legacy identities move; an unbanked function does not become
+    readable merely because it now shares a file with one that was.
+    """
+    path = CONFIG / "converted-baseline.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PromoteError(f"converted baseline is unreadable: {exc}") from exc
+    rows = data.get("converted")
+    if not isinstance(rows, list) or len(rows) != len(set(rows)):
+        raise PromoteError("converted baseline must contain a unique converted list")
+
+    converted = set(rows)
+    moved = 0
+    for p in plans:
+        for f in p["functions"]:
+            legacy = f["legacy_source"]
+            symbol = f["symbol"]
+            old_keys = (legacy, f"{legacy}#{symbol}")
+            if not any(key in converted for key in old_keys):
+                continue
+            converted.difference_update(old_keys)
+            converted.add(f"{p['dest']}#{symbol}")
+            moved += 1
+
+    data["_note"] = TR.NOTE
+    data["count"] = len(converted)
+    data["converted"] = sorted(converted)
+    return path, data, moved
+
+
+def rewrite_converted_baseline(plans, prepared=None):
+    """Write a preflighted CONVERTED identity rewrite."""
+    path, data, moved = prepared or converted_baseline_update(plans)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n",
+                    encoding="utf-8", newline="")
+    return moved
+
+
 def git(*args):
     subprocess.run(["git", *args], cwd=REPO, check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -234,8 +281,15 @@ def main():
     for p in plans:
         print(f"  promote  {p['id']:38s} {len(p['functions'])} function(s), "
               f"{len(p['legacy'])} legacy source(s) -> {p['dest']}")
+    try:
+        converted_update = converted_baseline_update(plans)
+    except PromoteError as exc:
+        print(f"  refused  {exc}")
+        return 1
     if args.dry_run:
-        print(f"tu_promote: {len(plans)} entry(ies) would be promoted (dry run).")
+        print(f"tu_promote: {len(plans)} entry(ies) would be promoted and "
+              f"{converted_update[2]} CONVERTED member identity/identities retained "
+              "(dry run).")
         return 0
 
     import prepush_attribution as PA
@@ -249,10 +303,12 @@ def main():
         for source in p["legacy"]:
             git("rm", "-q", source)
         rewrite_manifest(entry, p)
+    converted = rewrite_converted_baseline(plans, converted_update)
     added = rewrite_attribution(plans, lineage)
     print(f"tu_promote: {len(plans)} entry(ies) promoted, "
           f"{sum(len(p['functions']) for p in plans)} function(s) consolidated, "
-          f"{added} attribution override(s) added.")
+          f"{added} attribution override(s) added, "
+          f"{converted} CONVERTED member identity/identities retained.")
     print("tu_promote: now run `python tools/rombuild.py -j16 --no-rom` -- "
           "106/106 with mismatching 0 is the proof.")
     return 1 if refused else 0

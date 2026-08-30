@@ -1,3 +1,4 @@
+import json
 import pathlib
 import sys
 import tempfile
@@ -9,6 +10,35 @@ import tu_promote as TP  # noqa: E402
 
 
 class IntactPromotion(unittest.TestCase):
+    def test_converted_baseline_moves_only_banked_members_to_promoted_tu(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td)
+            config = root / "config"
+            config.mkdir()
+            baseline = config / "converted-baseline.json"
+            baseline.write_text(
+                '{"_note":"old","criteria":[],"count":2,"converted":['
+                '"src/First.cpp","src/Unrelated.cpp"]}\n', encoding="utf-8")
+            original = baseline.read_text(encoding="utf-8")
+            plans = [{
+                "dest": "src/actors/TU.cpp",
+                "functions": [
+                    {"symbol": "First", "legacy_source": "src/First.cpp"},
+                    {"symbol": "Second", "legacy_source": "src/Second.cpp"},
+                ],
+            }]
+            with mock.patch.object(TP, "CONFIG", config):
+                prepared = TP.converted_baseline_update(plans)
+                self.assertEqual(baseline.read_text(encoding="utf-8"), original)
+                moved = TP.rewrite_converted_baseline(plans, prepared)
+
+            data = json.loads(baseline.read_text(encoding="utf-8"))
+            self.assertEqual(moved, 1)
+            self.assertEqual(data["count"], 2)
+            self.assertEqual(data["converted"], [
+                "src/Unrelated.cpp", "src/actors/TU.cpp#First"])
+            self.assertEqual(data["_note"], TP.TR.NOTE)
+
     def test_plan_and_rewrite_keep_nontext_claims_for_intact_object(self):
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)
