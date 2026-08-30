@@ -187,15 +187,29 @@ int func_01ff99a4(int a, int b)
    WHAT THE HOST BODIES DO AND DO NOT REPRODUCE, stated rather than implied.
    The ROM bodies are 0x460 and 0x448 bytes because they carry their own
    denormal and NaN handling AND their own IEEE STATUS-FLAG bookkeeping -- the
-   tails call out to the per-thread FP status block and OR a bit in (visible at
-   0x01ffa5b8's `bl` and the `ldr r3,[ip] / orr / str` that follows it). The
-   host body is a native `float` add/subtract. This build takes MSVC's x86
-   default, which is /arch:SSE2 (no /arch: or /fp: appears in port/CMakeLists.txt
-   -- only /Oy-), so the arithmetic is single-precision SSE with
-   round-to-nearest-even and agrees with the ROM on every normal value. It does
-   NOT set the ROM's status flags, and NaN payloads are not guaranteed to match.
-   Nothing in this tree reads those flags. That is the standing trade for this
-   whole block, not a new one this pair introduces.
+   tails call out to an FP status block and OR a bit in (visible at 0x01ffa5b8's
+   `bl` and the `ldr r3,[ip] / orr / str` that follows it). The host bodies are
+   native `float` add/subtract. This build takes MSVC's x86 default, which is
+   /arch:SSE2 (no /arch: or /fp: appears in port/CMakeLists.txt -- only /Oy-),
+   so the arithmetic is single-precision SSE with round-to-nearest-even and
+   agrees with the ROM on every normal value. It does NOT set the status flags,
+   and NaN payloads are not guaranteed to match.
+
+   THAT DIFFERENCE IS NOT OBSERVABLE, and here is the whole chain rather than an
+   assurance. The status block is data_020aa3f4, kind:bss. Across all 106 module
+   reloc files there is EXACTLY ONE reference to that address in the entire game:
+   the literal-pool word at 0x02073234, inside its own getter func_0207322c
+   (`ldr r0,[pc] / bx lr`, twelve bytes). So the only route to it is through that
+   getter -- and the getter has 47 callers game-wide, of which ZERO lie outside
+   0x01ff8000..0x01ffb078. Every caller IS the soft-float block, writing its own
+   flags. No game code reads them.
+   On the host the question does not arise at all: neither _func_0207322c nor
+   _data_020aa3f4 appears in walk_window.map, and src/func_0207322c.c is in no
+   slice and no CMake source list, because the port does not host the ROM's
+   soft-float block -- every primitive in it is a native body like these two.
+   The status word does not exist on the host, so nothing can read it.
+   A documented non-observable difference, and the standing trade for this whole
+   block rather than a new one this pair introduces.
 
    PORT_HOST_ABI: ARM asm primitives (the ITCM soft-float runtime block),
    MSVC cannot assemble -- see the block comment above. */
