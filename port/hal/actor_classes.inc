@@ -1223,8 +1223,10 @@ void hal_fill_square_path_lift_vtable(void);
 /* ---- run linkw wave 12 (lane w12): CLAM (315), ov064 ----
    Nine instances, five on level 8 and four on level 18. Its Spawn names its
    receiver and stores _ZTV4Clam by a real name, so it registers directly.
-   TREASURE_CHEST (13), the sibling this wave's ranking put beside it, is
-   BLOCKED on an unmatched state body -- see hal/actor_classes_ov064_w12.cpp. */
+   TREASURE_CHEST (13), the sibling this wave's ranking put beside it, was
+   BLOCKED on an unmatched state body (hal/actor_classes_ov064_w12.cpp). Run
+   rel0215 wave 3 (lane w3-c) seated it by transcribing that body; its row is
+   at the end of this file. */
 extern unsigned char Clam_SpawnInfo[];               /* ov064 0x0211c5a4, +4 = 315 */
 void *Clam_Spawn(void);                              /* ov064 0x0211ad70, 64 B */
 void hal_fill_clam_vtable(void);
@@ -1444,10 +1446,11 @@ void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
    today. All three are pinned to the ROM's own literal pool and routed by
    per-source -D. Derivation in port/ov017_syms.txt, fill in
    hal/actor_classes_ov017.cpp, slice in port/slice_sweep1_ov017.txt.
-   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064, still unregistered):
-   with no id-13 actor to find, the "all chests opened" test is vacuously true
-   and the water drains from frame one. Visible, not fatal, and owned by the
-   OTHER class's seat -- see the ov017 syms header. */
+   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064). While that class
+   was unregistered there was no id-13 actor to find, the "all chests opened"
+   test was vacuously true and the water drained from frame one -- visible, not
+   fatal, and owned by the OTHER class's seat. Run rel0215 wave 3 (lane w3-c)
+   registered id 13, so the gate is a real test again. */
 extern unsigned char ShipWater_SpawnInfo[];          /* ov017 0x02111bd4, +4 = 62 */
 void *ShipWater_Spawn(void);                         /* ov017 0x02111480, 56 B */
 void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
@@ -1694,6 +1697,40 @@ void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
 extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
 void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
 void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
+/* run rel0215 wave 3 (lane w3-c): OV064'S LAST THREE SPAWN-TABLE CLASSES, the
+   three port/ov064_syms.txt's gate-177 NOT-RUN paragraph named and deferred.
+   After these rows ov064's cast is closed: fifteen spawn-table slots relocate
+   into this overlay's window, twelve of them are ov064's own records and all
+   twelve are registered. (Slots 6, 7 and 346 read `module:overlays(64,75)` and
+   are ov075's -- two of the three records are past ov064's image end at
+   0x0211c660 and the third reads as the interior of Clam's vtable.)
+
+   NO IDENTITY SHIFT ON TWO OF THE THREE: _ZTV9WaterRing (0x0211c420) and
+   _ZTV13TreasureChest (0x0211c50c) are each on the right class, each factory
+   installs it, and the RTTI agrees -- "14daWater_Ring_c" and "11daObjTbox_c".
+   Both are 31 slots: an Enemy and an Actor, no Platform::Kill tail, so slot 30
+   (OnAimedAtWithEggReturnVec) closes each. Both reloc runs overrun -- 32 and 34
+   -- into the class's own pointer-to-member SOURCE pairs, which is the trap
+   hal/actor_classes_ov064_w12.cpp measured on this exact pair of neighbours.
+
+   JET_STREAM IS THE SHIFT, and gate 179 already carries its consequences.
+   dsd's ov064 BowserPuzzle labels are rotated by one class:
+   _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S table (RTTI
+   "18daWater_Hakidasi_c"), JetStream_Spawn is the only unhosted thing that
+   spelled it, and gate 179 filled it with the seven bodies dsd named
+   _ZN17BowserPuzzlePiece* -- which are JetStream's own. hal_fill_jet_stream_-
+   vtable is the correctly-named entry point onto that same fill, not a second
+   one. Derivations in port/ov064_syms.txt's wave-3 block, fills in
+   hal/actor_classes_ov064_w3c.cpp, slice in port/slice_w3c.txt. */
+extern unsigned char JetStream_SpawnInfo[];      /* ov064 0x0211c310, +4 = 245 */
+void *JetStream_Spawn(void);                     /* ov064 0x02119a18, 64 B */
+void hal_fill_jet_stream_vtable(void);           /* gate 179's array, 31 */
+extern unsigned char WaterRing_SpawnInfo[];      /* ov064 0x0211c3fc, +4 = 244 */
+void *WaterRing_Spawn(void);                     /* ov064 0x0211a1b0, 80 B */
+void hal_fill_water_ring_vtable(void);           /* _ZTV9WaterRing, 31 */
+extern unsigned char TreasureChest_SpawnInfo[];  /* ov064 0x0211c4e8, +4 = 13 */
+void *TreasureChest_Spawn(void);                 /* ov064 0x0211a8f0, 64 B */
+void hal_fill_treasure_chest_vtable(void);       /* _ZTV13TreasureChest, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2549,4 +2586,16 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
        Level 47's whole skip list in one row. ---- */ \
     {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
-     hal_fill_mirror_luigi_vtable},
+     hal_fill_mirror_luigi_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-c): ov064's last three. JET_STREAM and \
+       TREASURE_CHEST are level 8's and 18's remaining ov064 skips (and 13 is \
+       level 9's ONLY skip, which also retires the ShipWater divergence \
+       hal/actor_classes_ov017.cpp disclosed). WATER_RING is on no level's \
+       spawn list and is registered because both attribution routes name it. \
+       ---- */ \
+    {245, "JET_STREAM", JetStream_SpawnInfo, JetStream_Spawn, \
+     hal_fill_jet_stream_vtable}, \
+    {244, "WATER_RING", WaterRing_SpawnInfo, WaterRing_Spawn, \
+     hal_fill_water_ring_vtable}, \
+    {13, "TREASURE_CHEST", TreasureChest_SpawnInfo, TreasureChest_Spawn, \
+     hal_fill_treasure_chest_vtable},

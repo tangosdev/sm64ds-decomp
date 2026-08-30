@@ -1,0 +1,133 @@
+# RUN REL0215 WAVE 3, LANE w3-c: ov064's LAST THREE SPAWN-TABLE CLASSES.
+#
+#   245  JET_STREAM      "18daWater_Hakidasi_c"   levels 8, 18
+#   244  WATER_RING      "14daWater_Ring_c"       no level's spawn list
+#    13  TREASURE_CHEST  "11daObjTbox_c"          levels 8, 9, 18
+#
+# ov064 is mounted already (gate 177, port/ov064_syms.txt); this slice adds the
+# three classes' TUs and that file's wave-3 block adds their data. The fills are
+# hal/actor_classes_ov064_w3c.cpp. Every TU below is fully matched -- no
+# asm-hatch anywhere in this list.
+#
+# ---- JET_STREAM IS ONE LINE, AND THAT IS THE WHOLE OF IT -------------------
+#
+# dsd's ov064 BowserPuzzle labels are rotated by one class, so
+# _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S table and the seven
+# bodies dsd named _ZN17BowserPuzzlePiece* are JetStream's own. Gate 179 sliced
+# all seven (port/slice_gate179.txt), filled the array and seated the class's
+# two-record state Obj -- everything except the SpawnInfo, the factory and the
+# registry row. So this slice contributes ONE TU for id 245. Nothing in gate 179
+# is re-listed here; src/func_ov064_02119ea0.c in particular is ALREADY in
+# slice_gate179.txt and must not appear below (it is WaterRing's state-enter
+# body, which is why gate 179 read it as a stray pair behind "the Piece" table).
+src/JetStream_Spawn.c
+#
+# ---- WATER_RING (244) ------------------------------------------------------
+#
+# A 912-byte Enemy. FOUR matched TUs are LEFT OUT ON PURPOSE, host-copied in
+# port/unmatched/Ov064_WaterRing.cpp:
+#   _ZN9WaterRing8BehaviorEv.cpp   mwcc PMF over a forward-declared struct
+#   func_ov064_02119ecc.cpp        the same, the state-enter half
+#   _ZN9WaterRing6RenderEv.cpp     local six-virtual Model slot-5 shadow
+#   func_ov064_02119afc.cpp        a decl_common.h REDECLARATION, MEASURED off
+#     the first link of this slice rather than predicted: the TU declares
+#     `void func_ov064_02119ecc(void*, void*)` inside its own extern "C" block
+#     and include/decl_common.h:2762 already declares
+#     `extern void func_ov064_02119ecc(char*, void*)`, which is
+#     `error C2733: you cannot overload a function with 'extern "C"' linkage`
+#     the moment both are visible. src/ is not edited to fix it. This is the
+#     class the ov096 lane hit on src/func_ov096_02137088.cpp -- "the
+#     decl_common.h redeclaration that forced that one out of the slice"
+#     (port/CMakeLists.txt) -- and it takes that lane's treatment: the body is
+#     copied verbatim into the host file, which includes no decl_common.h, so
+#     the two declarations never meet.
+# Both destructors ARE here: src/_ZN9WaterRingD1Ev.c and D0Ev.c are .c bodies
+# with C linkage that restore _ZTV9WaterRing, so neither needs a host thunk --
+# the gate-179 Piece reading, not the Clam one.
+src/WaterRing_Spawn.c
+src/_ZN9WaterRing13InitResourcesEv.cpp
+src/_ZN9WaterRing16CleanupResourcesEv.c
+src/_ZN9WaterRing16OnPendingDestroyEv.c
+src/_ZN9WaterRingD1Ev.c
+src/_ZN9WaterRingD0Ev.c
+src/func_ov064_02119c60.c
+src/func_ov064_02119ce4.c
+src/func_ov064_02119d28.c
+src/func_ov064_02119f1c.cpp
+src/__sinit_ov064_0211b518.c
+#
+# ---- TREASURE_CHEST (13) ---------------------------------------------------
+#
+# A 376-byte Actor. FOUR matched TUs are left out:
+#   func_ov064_0211a6ec.cpp        mwcc PMF over a forward-declared struct,
+#   func_ov064_0211a734.cpp        indexed -- both host copies in
+#                                  port/unmatched/Ov064_TreasureChest.cpp
+#   _ZN13TreasureChest6RenderEv.cpp   local six-virtual ModelAnim slot-5 shadow,
+#                                  host copy in port/unmatched/Ov064_Clam.cpp
+#                                  (which that file's own header asked for)
+#   _ZN13TreasureChestD1Ev.cpp     a real MSVC destructor over structs declared
+#                                  inside itself: it emits
+#                                  ??1TreasureChest@@UAE@XZ and NEVER the C name
+#                                  _ZN13TreasureChestD1Ev, so there is no face to
+#                                  write. The chain is a host thunk (tc_d1) in
+#                                  hal/actor_classes_ov064_w3c.cpp -- the Clam /
+#                                  gate-199/200/202 / ov045 ExtendingPlatform
+#                                  case. Its sibling D0 IS a C name and stays.
+#
+# AND ONE ROM BODY IS NOT IN src/ AT ALL. func_ov064_0211a4c4 (0x21c bytes,
+# state 0's TICK) has no delink block and no source file anywhere in the tree;
+# it is transcribed instruction by instruction in
+# port/unmatched/Ov064_TreasureChest.cpp. That single body is what wave 12's
+# lane measured and declined this class over, and it is the whole of the extra
+# cost. A loud face is not available for it: the chest's state index is bss zero
+# out of InitResources, so state 0's tick runs on the first Behavior frame of
+# every chest, and the campaign plan's step 15 bars this lane from carrying the
+# result as a battery skip on levels 8, 9 and 18.
+src/TreasureChest_Spawn.c
+src/_ZN13TreasureChest13InitResourcesEv.cpp
+src/_ZN13TreasureChest16CleanupResourcesEv.c
+src/_ZN13TreasureChest8BehaviorEv.cpp
+src/_ZN13TreasureChestD0Ev.c
+src/func_ov064_0211a284.c
+src/func_ov064_0211a2c4.cpp
+src/func_ov064_0211a380.c
+src/func_ov064_0211a39c.cpp
+src/func_ov064_0211a49c.c
+src/func_ov064_0211a6e0.c
+src/__sinit_ov064_0211b59c.c
+#
+# ---- THE MEASURED EXTERNAL CLOSURE -----------------------------------------
+#
+# NO src/ LINE, and that is a result rather than an oversight. All nine bodies
+# func_ov064_0211a4c4 calls (DecIfAbove0_Short, func_02012790,
+# Actor::FindWithID, Vec3_HorzAngle, AngleDiff, Actor::FindWithActorID,
+# Actor::SpawnSoundObj, func_02012694, Player::Shock) were already in
+# build/port/walk_window.map on the base tip, checked symbol by symbol.
+#
+# The first link returned SIX unresolveds and every one is a SPELLING, not a
+# missing body. Taken off the link's own list, never predicted:
+#
+#   _data_ov002_0210d6dc                       WaterRing's BTA descriptor was
+#     not in port/ov002_syms.txt. It and its five-symbol transitive closure now
+#     are; see that file's wave-3 block for the sizes and for why the closure
+#     is mounted rather than just the head (four raw DS words, T2).
+#   ?data_ov002_0210da10@@3PADA                four C++/C data-linkage bridges,
+#   ?data_ov064_0211c3d0@@3PAHA                aliased in
+#   ?data_ov064_0211c964@@3USharedFilePtr@@A   hal/actor_classes_ov064_w3c.cpp.
+#   ?data_ov064_0211c96c@@3USharedFilePtr@@A
+#   ?UntrackAndSpawnStar@Actor@@QAEXAACIABUVector3@@I@Z
+#     NOT an alias -- a RECEIVER FACE in port/unmatched/Ov064_TreasureChest.cpp.
+#     src/func_ov064_0211a2c4.cpp calls it as a __thiscall member returning
+#     void; the tree's definition is the Itanium C name, a __cdecl body taking
+#     self as its first stack argument. Aliasing one onto the other reads every
+#     argument one slot low. The matched arm9 TU
+#     (src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j.c) is ALREADY in
+#     port/slice_gate32.txt, compiles today, and is LINKED AT BASE -- the base
+#     map carries it via the ov034 lane's @@YAXPAXPACIPBUVector3@@I@Z alias
+#     (arm9 stays 1994 linked at base and at this tip). What the base link
+#     lacked was only the MSVC __thiscall member mangle above, a different
+#     symbol from the Itanium C name; this lane's face defines that mangle,
+#     and the TU itself contributes nothing new to the count. The 25th newly
+#     linked TU of this branch is func_ov064_02119ea0, dead-stripped at base
+#     and referenced now by the WaterRing state seat (see its row in
+#     port/tools/inferred_stub_adjudicated.txt).

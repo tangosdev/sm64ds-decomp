@@ -133,14 +133,15 @@ extern const unsigned port_ov011_ds_base, port_ov011_ds_end;
    factory. The other two each need a whole overlay's worth of new mount and
    are documented blockers, not fake-booted:
 
-     - TREASURE_CHEST (13, ov064): fully decompiled (7 methods + two ov064
-       helpers func_ov064_0211a284/_0211a734), self-contained in ov064. BLOCKED
-       on a fresh per-symbol ov064 mount: ov064 is not mounted at all, and the
-       class reaches its SpawnInfo (0x0211c4e8), _ZTV13TreasureChest and two
-       bss SharedFilePtrs (data_ov064_0211c964/_0211c96c) by name. Those file
-       pointers are constructed by ov064's ten static initialisers, so hosting
-       it is the gate-64/gate-95 shape: a per-symbol ov064 mount, its sinits,
-       the vtable fill and the row. A multi-part gate, deferred.
+     - TREASURE_CHEST (13, ov064): SEATED, run rel0215 wave 3 (lane w3-c).
+       This paragraph described the shape correctly and it is kept as the
+       record. ov064 is mounted per symbol (gate 177 first, wave 3 last), the
+       class's SpawnInfo (0x0211c4e8), its two bss SharedFilePtrs
+       (data_ov064_0211c964/_0211c96c) and its six PMF sources are all on that
+       list, and __sinit_ov064_0211b59c runs. What the paragraph could not know
+       is the real block wave 12 later measured: func_ov064_0211a4c4, state 0's
+       tick, has no matched TU anywhere in the tree, and lane w3-c transcribed
+       it from the overlay image. Level 9 now reads 0 skipped.
 
      - SHIP_WATER (62, ov017): fully decompiled, but its byte-matched
        InitResources references its own overlay's statics by the ov055/ov056
@@ -151,8 +152,11 @@ extern const unsigned port_ov011_ds_base, port_ov011_ds_end;
        data_ov017_02111c88) PLUS an alias-by-address that resolves the ov055/
        ov056 spellings onto ov017's host bytes -- the "propagate config renames
        BY ADDRESS" hazard. Its Behavior also gates on TREASURE_CHEST (waits for
-       every id-13 actor to be opened), so it wants that class first. Deferred
-       to a dedicated gate; the level boots and is walkable without it. */
+       every id-13 actor to be opened), so it wanted that class first. BOTH are
+       seated now: run rel0215 wave 1 (lane cast-sweep1) took SHIP_WATER and
+       built exactly the alias-by-address this paragraph specifies, and wave 3
+       (lane w3-c) took TREASURE_CHEST, so the gate it waits on is a real test
+       rather than a vacuous one. */
 void port_ov017_patch(void);
 void *port_ov017_at(unsigned ds);
 extern unsigned char port_ov017_image[];

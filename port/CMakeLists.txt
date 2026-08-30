@@ -11026,6 +11026,48 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov096_021372c0.c"
     PROPERTIES LANGUAGE CXX)
 
+# run rel0215 wave 3 (lane w3-c): ov064's LAST THREE spawn-table classes --
+# JET_STREAM (245, 18daWater_Hakidasi_c), WATER_RING (244, 14daWater_Ring_c) and
+# TREASURE_CHEST (13, 11daObjTbox_c). ov064 is already mounted (gate 177); this
+# lane appends their data to port/ov064_syms.txt and their TUs here. The two
+# 31-slot fills, the TreasureChest D1 host chain and the two sinits' bring-up
+# are in hal/actor_classes_ov064_w3c.cpp; six TUs are host-copied and one ROM
+# body that has no source anywhere in the tree (func_ov064_0211a4c4) is
+# transcribed, each refusal itemised in port/slice_w3c.txt. The cast-ov066 /
+# gate-64 shape: the hal file and the two new host copies ride in the slice's
+# own SOURCES list, so the three target lists take ONE token.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3c.txt" SLICE_W3C_LINES)
+set(SLICE_W3C_SOURCES "")
+foreach(line IN LISTS SLICE_W3C_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_W3C_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov064_w3c.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov064_WaterRing.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov064_TreasureChest.cpp")
+# Both halves of the duplicate-definition guard the cast-ov066 lane wrote. The
+# first set is host-copied in port/unmatched: listing any of them in the slice
+# would define the same symbol twice (LNK2005). The last is
+# src/func_ov064_02119ea0.c, which slice_gate179.txt ALREADY carries -- it is
+# WaterRing's state-enter body, which gate 179 read as a stray pair behind "the
+# Piece" table, so it is correct where it is and must not be listed again here.
+foreach(dup IN ITEMS src/_ZN9WaterRing8BehaviorEv.cpp src/_ZN9WaterRing6RenderEv.cpp
+                     src/func_ov064_02119ecc.cpp src/func_ov064_02119afc.cpp
+                     src/func_ov064_0211a6ec.cpp
+                     src/func_ov064_0211a734.cpp src/_ZN13TreasureChest6RenderEv.cpp
+                     src/_ZN13TreasureChestD1Ev.cpp src/func_ov064_02119ea0.c)
+    if(dup IN_LIST SLICE_W3C_LINES)
+        message(FATAL_ERROR
+            "slice_w3c.txt lists ${dup}, which is already defined elsewhere in "
+            "the link (a port/unmatched host copy, or slice_gate179.txt). Both "
+            "would define the same symbol (LNK2005). Remove the slice line.")
+    endif()
+endforeach()
+
 # The camera slice is on both binaries. The gate-13 State objects carry real
 # DS function addresses, and Player::ChangeState already reaches
 # func_0200d81c -> Camera::ChangeState on every state change, so the smoke
@@ -11116,6 +11158,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    ${SLICE_W3C_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
@@ -11305,6 +11348,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    ${SLICE_W3C_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
@@ -11528,6 +11572,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    ${SLICE_W3C_SOURCES}
     hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}

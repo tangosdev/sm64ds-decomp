@@ -198,3 +198,102 @@ data_ov064_0211c9d4 data_ov064_0211c9e0 data_ov064_0211c9ec
 # CLPS block that another class reaches by name -- and it is the only line this
 # lane adds to a file it does not own.
 data_ov064_0211ba4c:0x20
+
+# ==== RUN REL0215 WAVE 3 (lane w3-c): ov064's LAST THREE SPAWN-TABLE CLASSES =
+# JET_STREAM (245), WATER_RING (244) and TREASURE_CHEST (13). This file's
+# gate-177 block names all three in its NOT-RUN paragraph ("MetalNetLift,
+# LavaBubble, BowserPuzzle{Manager,Piece}, WaterRing, TreasureChest, Clam,
+# JetStream"); the four before them landed in gates 178/179 and wave 12, and
+# these are what is left. After this append ov064's spawn-table cast is closed:
+# fifteen relocated slots at ACTOR_SPAWN_TABLE (arm9 0x02090864) name this
+# overlay, twelve of them are ov064's own and all twelve are registered.
+#
+# THE OTHER THREE ARE NOT OURS. Slots 6, 7 and 346 read `module:overlays(64,75)`
+# and none of the three is an ov064 record: 0x0211c880 and 0x0211c788 are PAST
+# this overlay's image end (0x0211c660, the .bss boundary -- the image is 26496
+# bytes from base 0x02115ee0) and 0x0211c610 reads as a run of arm9 Actor slots,
+# i.e. the interior of Clam's vtable. ov075's base is 0x02113ee0 and all three
+# land inside its image. Both attribution routes fail for ov064 and both succeed
+# for ov075, so the records are ov075's.
+#
+# ---- BOTH ATTRIBUTION ROUTES, PER ID, OFF THE RAW IMAGE --------------------
+# Read out of extracted/overlays/overlay_0064.bin at base 0x02115ee0 (T4 -- ov064
+# is compressed:true and the dsd export is the wrong image for a halfword read).
+# Each record's word[0] is a factory inside this overlay and its +4 halfword
+# reads its own id back; each spawn-table slot relocates to the record.
+#
+#   id   spawn slot   SpawnInfo    word[0] factory        +4 halfword
+#   245  0x02090e18   0x0211c310   0x02119a18 JetStream_Spawn      0x00f5 = 245
+#   244  0x02090e14   0x0211c3fc   0x0211a1b0 WaterRing_Spawn      0x00f4 = 244
+#    13  0x02090898   0x0211c4e8   0x0211a8f0 TreasureChest_Spawn  0x000d = 13
+#
+# ---- IDENTITY FROM vtable[-1], NOT FROM A dsd LABEL ------------------------
+# Each factory's last vptr store names the table; the typeinfo word at table-4
+# names the class. All three are __si_class_type_info (vptr 0x0209a764).
+#
+#   0x0211c334  ti 0x0211c2ec  name 0x0211c2f8 "18daWater_Hakidasi_c"  JET_STREAM
+#   0x0211c420  ti 0x0211c3dc  name 0x0211c3e8 "14daWater_Ring_c"      WATER_RING
+#   0x0211c50c  ti 0x0211c4cc  name 0x0211c4d8 "11daObjTbox_c"         TREASURE_CHEST
+#
+# JET_STREAM'S TABLE IS ALREADY HOSTED, under a name one class off. dsd's ov064
+# BowserPuzzle labels are ROTATED BY ONE: id 78's factory (0x02119300, dsd
+# BowserPuzzlePiece_Spawn) installs _ZTV19BowserPuzzleManager (0x0211c25c,
+# "16daObjFl_Puzzle_c"); id 79's (0x021192d0) installs data_ov064_0211c1d8
+# ("14daObjFl_Coin_c"); and _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S,
+# which is why gate 179's own header says the only things that spell it are "this
+# D0 and JetStream_Spawn, unhosted". Gate 179 filled that array with the seven
+# bodies dsd named _ZN17BowserPuzzlePiece* -- JetStream's own -- and sliced every
+# one of them, so this lane adds JET_STREAM's SpawnInfo, its factory and its
+# registry row and nothing else. NO mount line changes for it beyond the record.
+#
+# ---- THE THREE RECORDS, PINNED ---------------------------------------------
+# All three natural next-symbol deltas are 0x24, which runs 8 bytes past the
+# record into the RTTI header (offset-to-top + typeinfo) of the vtable that
+# follows. The record is 7 words. Pinned so the +4 id halfword the registry
+# cross-checks reads out of the right bytes -- the gate-177 RotatingFirebar
+# treatment, three more times.
+JetStream_SpawnInfo:0x1c
+WaterRing_SpawnInfo:0x1c
+TreasureChest_SpawnInfo:0x1c
+# ---- WATER_RING (244) ------------------------------------------------------
+# Its FOUR pointer-to-member SOURCE records, the four {function, 0} pairs the
+# ROM packs immediately behind JetStream's vtable (0x0211c334 + 31*4 = 0x0211c3b0
+# -- the trap-4 shape gate 179's header already calls out at that address). They
+# are WATER RING'S, not the Piece's: __sinit_ov064_0211b518 is the only thing
+# that reads them and it copies them into 0x0211c944/0x0211c954, which
+# WaterRing::InitResources and func_ov064_02119afc are the only readers of.
+# Natural delta 8 apiece, the exact pair; no pin needed.
+data_ov064_0211c3b0 data_ov064_0211c3b8 data_ov064_0211c3c0 data_ov064_0211c3c8
+# The Vector3 constant {0, 0xfff88000, 0} its InitResources copies onto the
+# stack and hands to MovingCylinderClsnWithPos::Init, and func_ov064_02119afc
+# hands to SetPosRelativeToActor. Natural delta 0xc, the exact three words.
+data_ov064_0211c3d0
+# The two 16-byte bss records __sinit_ov064_0211b518 builds out of those four
+# sources -- each is {enter PMF, tick PMF} at 8 bytes apiece. The store order is
+# read off the sinit's own disassembly, not off the pool order:
+#   0x0211c954  enter func_ov064_02119ea0   tick func_ov064_02119d28  (initial)
+#   0x0211c944  enter func_ov064_02119ce4   tick func_ov064_02119c60
+# InitResources points +0x370 at c954; func_ov064_02119afc switches it to c944.
+# Natural deltas 0x10 apiece; correct.
+data_ov064_0211c944 data_ov064_0211c954
+# ---- TREASURE_CHEST (13) ---------------------------------------------------
+# Its SIX pointer-to-member SOURCE records, packed behind WaterRing's vtable
+# (0x0211c420 + 31*4 = 0x0211c49c) -- the same trap-4 shape. Natural delta 8
+# apiece.
+data_ov064_0211c49c data_ov064_0211c4a4 data_ov064_0211c4ac data_ov064_0211c4b4
+data_ov064_0211c4bc data_ov064_0211c4c4
+# The two SharedFilePtrs __sinit_ov064_0211b59c constructs (0x0211c964 the
+# animation, 0x0211c96c the model -- InitResources reads them in that role) and
+# their two destructor-chain nodes. The SFPs take the natural 8; the nodes take
+# the natural 0xc, which is the three words func_020731dc writes through a chain
+# node (this file's TILTING_PLATFORM_LLL block measures the same shape). No pin
+# is needed on any of the four: every natural delta is already right.
+data_ov064_0211c964 data_ov064_0211c96c data_ov064_0211c974 data_ov064_0211c980
+# The RUNTIME state table that sinit builds: THREE 16-byte Entry records of
+# {enter, tick}, 0x30 by natural delta, which is exactly 3 * 16 -- the width
+# func_ov064_0211a6ec / func_ov064_0211a734 index it at. Store order off the
+# sinit's disassembly:
+#   Entry[0]  enter func_ov064_0211a6e0   tick func_ov064_0211a4c4
+#   Entry[1]  enter func_ov064_0211a49c   tick func_ov064_0211a39c
+#   Entry[2]  enter func_ov064_0211a380   tick func_ov064_0211a2c4
+data_ov064_0211c98c

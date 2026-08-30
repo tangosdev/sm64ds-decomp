@@ -60,6 +60,12 @@
 //
 // ---- WHAT THIS LANE DELIBERATELY DID NOT TAKE -----------------------------
 //
+// SEATED SINCE, by run rel0215 wave 3 (lane w3-c) -- this paragraph is the
+// record of what blocked it and what the block actually cost, not a live
+// refusal. The lane transcribed func_ov064_0211a4c4 from the overlay image
+// (port/unmatched/Ov064_TreasureChest.cpp) because a loud face is not available
+// for a state-0 tick and a battery skip would have landed on three levels.
+//
 // TREASURE_CHEST (id 13, eight instances on the same two levels plus level 9)
 // shares this overlay and this wave's ranking put it beside Clam. It is
 // BLOCKED and the block is measured, not suspected: its Behavior dispatches a
