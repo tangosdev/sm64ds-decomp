@@ -892,7 +892,7 @@ def derive_section_partition(raw, keep_section_names, licensed_symbols,
     return _apply(raw, p, None), p
 
 
-def rebias_object_symbols(raw, symbol_policies):
+def rebias_object_symbols(raw, symbol_policies, normalize_undefined=False):
     """Move exact retained object symbols from storage start to public address point.
 
     C++ vtable definitions are the motivating case.  mwcc's symbol covers the full
@@ -903,11 +903,15 @@ def rebias_object_symbols(raw, symbol_policies):
 
     Content bytes are deliberately untouched.  Surviving RELA/ABS32 references to a
     rebased definition have their addends reduced by the same bias, preserving the
-    resolved address exactly while changing the public symbol convention.  A policy
-    may additionally split the preamble into an exact storage-alias symbol by reusing
-    one explicitly deadstripped compiler-only symbol-table slot.  Reusing a slot keeps
-    every ELF offset stable; it is allowed only when the old name is an unreferenced
-    GLOBAL/FUNC import with enough exclusive string-table storage for the alias.
+    resolved address exactly while changing the public symbol convention.  With
+    ``normalize_undefined``, raw references to undefined ``_ZTV`` imports lose the
+    same ABI preamble from their addend; unlike a rebased local definition this fixes
+    the address the repository's already-public import would otherwise resolve to.
+    A policy may additionally split the preamble into an exact storage-alias symbol by
+    reusing one explicitly deadstripped compiler-only symbol-table slot.  Reusing a
+    slot keeps every ELF offset stable; it is allowed only when the old name is an
+    unreferenced GLOBAL/FUNC import with enough exclusive string-table storage for the
+    alias.
     """
     requested = {}
     for name, policy in dict(symbol_policies).items():
@@ -930,7 +934,7 @@ def rebias_object_symbols(raw, symbol_policies):
             return None, {"rebased": [], "aliases": [],
                           "error": f"{name} needs bias/size/section and valid optional "
                                    "storageAlias fields"}
-    if not requested:
+    if not requested and not normalize_undefined:
         return bytes(raw), {"rebased": [], "aliases": [], "error": None}
     bad_bias = sorted(name for name, policy in requested.items()
                       if policy["bias"] <= 0 or policy["bias"] >= policy["size"])
@@ -995,7 +999,11 @@ def rebias_object_symbols(raw, symbol_policies):
             continue
         for reloc_index, reloc in enumerate(relsec.iter_relocations()):
             target = symtab.get_symbol(reloc["r_info_sym"])
-            if target.name not in requested:
+            target_is_rebased = target.name in requested
+            target_is_undefined = (normalize_undefined
+                                   and target.name.startswith("_ZTV")
+                                   and target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF))
+            if not target_is_rebased and not target_is_undefined:
                 continue
             if relsec.header["sh_type"] != "SHT_RELA" or not reloc.is_RELA():
                 return None, {"rebased": [], "aliases": [],
@@ -1010,8 +1018,13 @@ def rebias_object_symbols(raw, symbol_policies):
                               f"0x{reloc['r_offset']:x} targets rebased symbol "
                               f"{target.name} with unsupported type "
                               f"{reloc['r_info_type']}"}
-            bias = requested[target.name]["bias"]
             old_addend = int(reloc["r_addend"])
+            # An addend-zero undefined import was written explicitly against the
+            # repository's public address-point convention and needs no correction.
+            if target_is_undefined and old_addend == 0:
+                continue
+            bias = (requested[target.name]["bias"] if target_is_rebased
+                    else VTABLE_PREAMBLE)
             if old_addend < bias:
                 return None, {"rebased": [], "aliases": [],
                               "relocations": [],
@@ -1031,6 +1044,8 @@ def rebias_object_symbols(raw, symbol_policies):
                 "relocationSection": relsec.name, "offset": reloc["r_offset"],
                 "symbol": target.name, "type": "R_ARM_ABS32",
                 "oldAddend": old_addend, "newAddend": old_addend - bias,
+                "mode": "rebased-definition" if target_is_rebased
+                        else "undefined-public-import",
                 "entryOffset": entry_offset,
                 "fileOffset": relsec.header["sh_offset"] + entry_offset + 8,
             })

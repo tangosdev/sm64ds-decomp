@@ -4140,7 +4140,8 @@ def cmd_linkcheck(args):
             _write_link_report(scratch, report)
             _record_linkcheck(data, entry, report, baseline)
             return 1
-        rebased_tu, bias_report = OI.rebias_object_symbols(linked_tu, biases)
+        rebased_tu, bias_report = OI.rebias_object_symbols(
+            linked_tu, biases, normalize_undefined=True)
         report["vtableRebias"] = bias_report
         if rebased_tu is None:
             print(f"      REFUSED -- vtable symbol rebias: {bias_report.get('error')}")
