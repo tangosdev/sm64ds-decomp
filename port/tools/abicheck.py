@@ -154,6 +154,93 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # a blanket slot-31 rule is exactly the shortcut this header forbids.
     # Evidence: ...runs/rel0215/out/w2-ov066/slot31_dispatch_sweep.txt
     ('__ZTV6Eyerok', 31): 0,
+    # ------------------------------------------------------------------
+    # run rel0215, lane cleanup-w2. THE NINETEEN ROWS WAVE 1 AND WAVE 2 LEFT
+    # UNJUDGED, retired here on measurement rather than parked as debt.
+    #
+    # THE SWEEP, AND IT IS WIDER THAN THE EYEROK ONE ABOVE. That lane matched
+    # `call dword ptr [reg+7Ch]` and found fourteen sites. Matching indirect
+    # control transfers of BOTH forms over the same binary finds TWENTY-TWO:
+    # fourteen calls and EIGHT TAIL JUMPS, which a call-only pattern cannot
+    # see and which are dispatch sites just the same --
+    #   call: func_ov004_020b0930+0xCB, Platform::UpdateKillByMegaChar+0x130,
+    #         func_ov002_020bbb14+0x126, func_ov098_0213a36c+0x23D,
+    #         func_ov098_0213a284+0x14, IceBlock::Behavior+0x17B,
+    #         func_ov098_021389f8+0x71, func_ov098_02138734+0x6F,
+    #         func_ov098_02138344+0xD1, func_ov098_02138e6c+0x6E and +0xAE,
+    #         func_ov098_021390ec+0xAD, func_ov098_02139228+0xFC,
+    #         func_ov064_02116560+0xB
+    #   jmp:  func_ov002_020b382c+0x20 and +0x26, func_ov002_020bba28+0x86,
+    #         func_ov098_02137d40+0x17, func_ov081_02127ccc+0x14,
+    #         func_ov098_02139e44+0x9, func_ov018_021128e0+0x16,
+    #         func_ov098_021388bc+0x51
+    # NO PUSH IS LIVE AT THE TRANSFER IN ANY OF THE TWENTY-TWO. That is the
+    # claim, and it is narrower than "no window contains a push" -- eight of
+    # the windows DO contain argument pushes, for calls that intervene before
+    # the dispatch, and each of those is consumed by its own call with the
+    # stack retired by an `add esp,N` before the transfer is reached (one
+    # further window straddles a `ret`, so its pushes belong to the previous
+    # function outright). Thirteen windows carry a `push ebp` / `push esi`
+    # prologue save, which is frame and not argument. What stands AT the
+    # transfer is the same in all twenty-two, and that is what the pop contract
+    # turns on. The calls are all
+    # `mov ecx,<reg> / mov eax,dword ptr [<reg>] / call dword ptr [eax+7Ch]`.
+    # The eight jumps are cdecl forwarders that unwind their own frame first
+    # (`mov ecx,dword ptr [ebp+8] / mov eax,dword ptr [ecx] / pop ebp / jmp
+    # dword ptr [eax+7Ch]`), so the frame the slot method inherits holds the
+    # FORWARDER's arguments, which the forwarder's own cdecl caller cleans. A
+    # `ret 4` there would eat one of those and desync that caller.
+    #
+    # So slot 31 is unanimous across both forms, and a zero pop is checked
+    # rather than assumed. THAT ALSO CORRECTS A LOAD-BEARING CLAIM in
+    # abicheck_extslot_baseline.txt's cast-sweep2 paragraph -- "nothing in this
+    # binary dispatches slot 31 ... so there is no site to read". There are
+    # twenty-two sites and they were read. That paragraph's six rows are left
+    # alone, being another lane's file to shrink, but nothing further should be
+    # baselined on the strength of that sentence.
+    #
+    # PER TABLE, NOT PER SLOT, the way this header demands: the word at slot 31
+    # was read out of extracted/overlays/overlay_NNNN.bin for each of the
+    # eighteen, at the table address config/arm9/overlays/ovNN/symbols.txt
+    # gives (or that the _data_ name carries), and all eighteen hold
+    # 0x020ee55c _ZN8Platform4KillEv -- an `Ev` method with no argument past
+    # its receiver. The address of the slot word itself is quoted per row.
+    ('__ZTV9ShipWater', 31): 0,               # ov017  @0x02111c74
+    ('__ZTV8Squasher', 31): 0,                # ov023  @0x02112060
+    ('__ZTV10PyramidTop', 31): 0,             # ov024  @0x02113944
+    ('__ZTV21daObjWlKoopaShutter_c', 31): 0,  # ov026  @0x02113c20
+    ('__ZTV18daObjWlSubmarine_c', 31): 0,     # ov026  @0x02113ce8
+    ('__ZTV13daObjHmBskt_c', 31): 0,          # ov030  @0x021159f0
+    ('__ZTV15daObjHmMaruta_c', 31): 0,        # ov030  @0x02115ac4
+    ('_data_ov033_0211237c', 31): 0,          # ov033  @0x021123f8
+    ('__ZTV9TinyCover', 31): 0,               # ov033  @0x021124bc
+    ('__ZTV16RotatingCogSmall', 31): 0,       # ov035  @0x02112b7c
+    ('__ZTV17RotatingClockHand', 31): 0,      # ov035  @0x02112c48
+    ('_data_ov036_02113a98', 31): 0,          # ov036  @0x02113b14
+    ('_data_ov036_02113b74', 31): 0,          # ov036  @0x02113bf0
+    ('__ZTV8ShipWing', 31): 0,                # ov036  @0x02113d74
+    ('__ZTV10DonutBlock', 31): 0,             # ov036  @0x02113e48
+    ('__ZTV21ArmedRotatingPlatform', 31): 0,  # ov036  @0x02113f48
+    ('_data_ov036_02113f9c', 31): 0,          # ov036  @0x02114018
+    ('__ZTV6ToxBox', 31): 0,                  # ov092  @0x0213234c
+    # THE NINETEENTH IS THE SLOT-32 ONE AND IT IS THE OPPOSITE ANSWER.
+    # FLYING_CARPET (130, ov036, 15daObjRcCarpet_c) owns a THIRTY-THREE slot
+    # table, and its slot 32 word, read at 0x0211401c -- the last word of
+    # ov036's .data -- is 0x020eff18 _ZN8PathLift9AfterClsnEv, the SAME word
+    # _data_ov002_0210af70 slot 32 carries two rows above. Its dispatcher is
+    # the same one too, and that is the half that had to be shown rather than
+    # inferred: src/func_ov036_0211244c.cpp:30 calls func_020efaf0, which the
+    # map resolves to _func_ov002_020efaf0 at 0x0056f7c0 (the alias
+    # hal/actor_classes_ov100pl.cpp:209 declares), and that is the PathLift
+    # base init whose last statement seats func_ov002_020eff90 as the collider
+    # callback on the MovingMeshCollider at +0x124
+    # (src/func_ov002_020efaf0.cpp:41). func_ov002_020eff90+0xB is the ONE of
+    # slot 32's three sites that pushes. So FLYING_CARPET's slot 32 owes a
+    # one-word pop and ?ov36_after_clsn@@YIHPAX00@Z's `ret 4` is right; a
+    # zero-pop thunk here would leave the collider callback's pushed Actor on
+    # the stack, which is report 7447e46c again on a second class.
+    # Evidence: ...runs/rel0215/out/cleanup-w2/
+    ('_data_ov036_02113f9c', 32): 1,
 }
 
 # calls that do not come back: the thunk's own `ret` is unreachable

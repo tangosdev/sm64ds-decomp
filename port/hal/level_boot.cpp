@@ -888,28 +888,54 @@ extern const unsigned port_ov048_ds_base, port_ov048_ds_end;
    LANDED are derived and proven-mountable but held back; see the block after
    this list:
 
-     16 ov062 ov070 ov080 ov084 ov092 ov096 ov098 ov102   NOT LANDED  [unmounted ov092 ov096]
-     17 ov066 ov070 ov084 ov091 ov098 ov102              [unmounted ov066]
-     18 ov064 ov070 ov079 ov084 ov090 ov094 ov098 ov100 ov102  [unmounted ov090]
+   THE ROSTERS ARE THE ROM'S AND DO NOT MOVE. THE BRACKETS ARE THIS BUILD'S AND
+   DO. Every bracket was written once, in e56030bb4, and none was maintained
+   after: run rel0215 (lane cleanup-w2) found TEN of the twenty-three stale, all
+   ten in the same direction -- a pack that has since been mounted still called
+   out as missing. Level 17 still read "unmounted ov066" on the day ov066
+   landed.
+
+   RE-DERIVE RATHER THAN TRUST A BRACKET, AND READ TWO SOURCES, NOT ONE.
+   PORT_ACTOR_OVERLAYS in port/CMakeLists.txt (the initial set plus every
+   list(APPEND)) yields SIXTY-EIGHT packs. A configured build emits one
+   build/port/host-src/ovNN_syms.c per mounted pack and yields SIXTY-NINE. The
+   readings do not agree, and the difference is not an error in either: ov009
+   is mounted WITHOUT being an actor overlay. It is in PORT_LEVEL_OVERLAYS
+   (CMakeLists ~1117) and carries its own explicit emission rule, OV009SYMS_C
+   at CMakeLists ~1487-1495, wired into each target's source list by name
+   beside ${ACTOR_OV_SYMS} rather than through it. So the host-src emission is
+   the COMPLETE reading and PORT_ACTOR_OVERLAYS is a subset of it; a check that
+   consults only the variable will call ov009 unmounted, and any future pack
+   given the same treatment with it.
+
+   ov067 is the ONE overlay any of these rosters still names that this build
+   does not mount, by both readings -- it is in neither PORT_ACTOR_OVERLAYS nor
+   PORT_LEVEL_OVERLAYS, there is no port/ov067_syms.txt, and the name appears
+   nowhere in port/CMakeLists.txt -- so level 45 carries the only live bracket
+   in the list.
+
+     16 ov062 ov070 ov080 ov084 ov092 ov096 ov098 ov102   NOT LANDED  [all mounted]
+     17 ov066 ov070 ov084 ov091 ov098 ov102              [all mounted]
+     18 ov064 ov070 ov079 ov084 ov090 ov094 ov098 ov100 ov102  [all mounted]
      19 ov064 ov070 ov081 ov084 ov094 ov098 ov102        [all mounted]
      20 ov081 ov084 ov098 ov102                          [all mounted]
-     21 ov062 ov070 ov077 ov084 ov090 ov098 ov102   NOT LANDED  [unmounted ov077 ov090]
+     21 ov062 ov070 ov077 ov084 ov090 ov098 ov102   NOT LANDED  [all mounted]
      22 ov062 ov070 ov080 ov084 ov091 ov094 ov098 ov100 ov102  [all mounted]
      23 ov098 ov102                                      [all mounted]
-     24 ov062 ov070 ov077 ov084 ov091 ov094 ov098 ov100 ov102  [unmounted ov077]
+     24 ov062 ov070 ov077 ov084 ov091 ov094 ov098 ov100 ov102  [all mounted]
      25 ov062 ov070 ov084 ov094 ov098 ov100 ov102   NOT LANDED  [all mounted]
      26 ov070 ov084 ov098 ov102                          [all mounted]
-     27 ov065 ov070 ov077 ov084 ov091 ov098 ov102   NOT LANDED  [unmounted ov077]
-     28 ov062 ov070 ov077 ov084 ov091 ov095 ov098 ov102   NOT LANDED  [unmounted ov077]
+     27 ov065 ov070 ov077 ov084 ov091 ov098 ov102   NOT LANDED  [all mounted]
+     28 ov062 ov070 ov077 ov084 ov091 ov095 ov098 ov102   NOT LANDED  [all mounted]
      31 ov084 ov098 ov102   NOT LANDED  [all mounted]
      33 ov065 ov084 ov098 ov102   NOT LANDED  [all mounted]
      35 ov070 ov084 ov091 ov095 ov098 ov102              [all mounted]
      39 ov062 ov070 ov079 ov084 ov091 ov095 ov098 ov102  [all mounted]
-     44 ov064 ov077 ov084 ov091 ov098 ov102              [unmounted ov077]
-     45 ov067 ov074 ov084 ov089 ov098 ov102              [unmounted ov067 ov074]
+     44 ov064 ov077 ov084 ov091 ov098 ov102              [all mounted]
+     45 ov067 ov074 ov084 ov089 ov098 ov102              [unmounted ov067]
      47 ov063 ov085 ov089 ov098 ov102                    [all mounted]
      48 ov064 ov081 ov084 ov091 ov098 ov102              [all mounted]
-     49 ov064 ov073 ov089 ov098 ov102                    [unmounted ov073]
+     49 ov064 ov073 ov089 ov098 ov102                    [all mounted]
      50 ov080 ov085 ov089 ov098 ov100 ov102              [all mounted]
 
    THE SEVEN MARKED "NOT LANDED", and what actually blocks each. Every one of
