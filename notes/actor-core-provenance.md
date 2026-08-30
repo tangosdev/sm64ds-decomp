@@ -126,7 +126,7 @@ D1 body plus those instructions:
     fBase_c::~fBase_c [D0]  0x02043d78  0x44 = D1's 0x30 + 0x14
     dBase_c::~dBase_c [D0]  0x02013ea4  0x38 = D1's 0x24 + 0x14
 
-Compiled without the declaration, `src_tu/actors/ActorDerived.cpp`'s D0 came out the
+Compiled without the declaration, `src/actors/ActorDerived.cpp`'s D0 came out the
 wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH.
 
 Why it is declared on `dActor_c` as well as on `fBase_c`: mwcc inlines
