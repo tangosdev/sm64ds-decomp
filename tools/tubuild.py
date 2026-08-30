@@ -4672,6 +4672,7 @@ def _record_linkcheck(data, entry, report, baseline):
         "scratch": report["scratch"] + " (gitignored)",
         "phases": {k: v.get("ok") for k, v in report["phases"].items()},
         "tuRange": report.get("tuRange"),
+        "tuRanges": report.get("tuRanges"),
         "objectAudit": {
             "counts": audit.get("counts"),
             "emittedTextOrderIsRomAscending": audit.get("orderOk"),
