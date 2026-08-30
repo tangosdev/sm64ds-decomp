@@ -2224,47 +2224,42 @@ static void port_load1(void *t, int a, unsigned b)
        (64 player + 24 scenery), so two players should draw 152. It drew 216 --
        one whole extra player-sized caster.
 
-       Holding the count at 1 makes the ROM's loop spawn exactly the starts the
-       level really has, and port_vs_spawn_extra_players then supplies the rest
-       from player 0's record. Same shape as the local-index hold above, and it
-       retires itself the same way: on a real VS arena whose table carries four
-       consecutive starts, the count should NOT be held, because the loop is
-       then right.
+       THE HOLD IS RETIRED. The orphan caster it hid was never about the
+       entrance records at all: the discard was byte fc5c[i] reading 0 through
+       the int-stride seat (the width bug fixed in hal/scene_vs_menu.cpp's
+       ready-bytes host). With the flags at the ROM's byte stride the loop
+       KEEPS every player it spawns, so the loop is simply right: player i
+       comes from record p3+i, which is the ROM's whole answer for where the
+       other players start. On the four VS arenas those records exist --
+       decoded from the overlays themselves, level 51/ov059 carries exactly
+       four player records at (-1200,254,6800) (-1387,254,6667) (-987,254,6567)
+       (-1587,254,6467), ov051/ov037/ov050 the same shape -- and on castle
+       grounds record p3+1 is another door carrying the SAME raw (measured, the
+       failed class-equality experiment below), so what the loop spawns there
+       is a real second player at that door, kept and rendered, no orphan.
 
-       ##################################################################
-       #  IT IS NOT KEYED ON THAT. IT HOLDS ON EVERY MULTIPLAYER BOOT.  #
-       ##################################################################
+       The two failed conditions this block used to document (total-record
+       count; class equality between records p3 and p3+1) failed because they
+       were both asked to predict which spawn the loop would DISCARD -- and the
+       discard was the width bug, not a property of the records. Kept in the
+       history rather than here; rungS's 216-triangle measurement was the
+       width bug casting its shadow.
 
-       AND THAT IS A KNOWN, FILED LIMITATION rather than an oversight. Two
-       versions of a condition were tried and neither works:
-
-         `port_entrance_count() > 0` is the level's TOTAL record count -- 14 on
-         castle grounds -- so it is true wherever an entrance table exists and
-         the condition collapsed to "multiplayer is on". It only ever LOOKED
-         conditional.
-
-         Comparing entrance records by CLASS (does record p3+1 name the same
-         actor as p3?) is the question this comment wants to ask, and it does
-         not answer it: MEASURED on castle grounds, records p3 and p3+1 carry
-         the SAME raw, so the predicate returned true, the hold stopped
-         happening, and the orphan caster came straight back -- rungS went from
-         152 shadow triangles to 216 in the run that tried it. Class equality
-         does not distinguish a player start from a different door on this
-         level, so it cannot be the test.
-
-       What actually distinguishes them is whether Actor::Spawn PRODUCES a
-       usable player from the record, and that is not knowable until the loop
-       has already run and made the orphan.
-
-       THE ARENA-DAY CONSEQUENCE, filed in port/ov002_frontier.txt: on a real VS
-       arena whose table carries four consecutive player starts, this hold will
-       ignore them and supply three copies of record 0 instead -- every player
-       spawning on top of the first. Correct on every level the port loads
-       today, wrong the day an arena mounts, and written down where the arena
-       lane will find it rather than left as a surprise. */
+       What remains guarded is the one thing the DS data never exercises: a
+       boot that wants more players than the table has records past p3. The
+       ROM reads records p3+i unguarded because on the DS every VS level has
+       them; a port test boot (VS_PLAYERS=4 on a two-record level) is not owed
+       that, so the count is clamped to the records that exist and
+       port_vs_spawn_extra_players supplies the slots past the table, exactly
+       as it always did. Floor of 1 keeps slot 0's unguarded record-p3 read
+       identical to every boot before this one. */
     const int want_players = (int)data_0209f21c;
-    if (want_players > 1)
-        data_0209f21c = 1;
+    {
+        const int have_records = (int)((const unsigned char *)t)[1] - (int)b;
+        int fit = have_records < 1 ? 1 : have_records;
+        if (want_players > fit)
+            data_0209f21c = (unsigned char)fit;
+    }
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
     data_0209f21c = saved_count;
     port_vs_spawn_extra_players(t, b);
@@ -4150,23 +4145,24 @@ const char *port_actor_class_name(unsigned id);
 }
 
 /* ===========================================================================
- * THE SECOND PLAYER'S SPAWN POINT, and why the port has to supply one.
+ * THE SECOND PLAYER'S SPAWN POINT, for slots past the end of the table.
  *
  * _Z19LoadEntranceObjects... spawns player i from ENTRANCE RECORD p3 + i --
- * its `e++` at the bottom of the loop -- so a level whose entrance table
- * carries four consecutive player starts spawns four players and one that does
- * not, does not. SM64DS's VS arenas have those consecutive records. Castle
- * grounds does not: record p3+1 is entrance 1 of 14, a different door, and
- * Actor::Spawn makes whatever that record names, which is not a Player.
+ * its `e++` at the bottom of the loop -- and since the fc5c width fix that
+ * loop KEEPS what it spawns, so wherever record p3+i exists the ROM's own
+ * path fills the slot and this function finds it filled and does nothing.
+ * The VS arenas carry four consecutive player records; castle grounds'
+ * record p3+1 is another door with the SAME raw, so even there the loop
+ * makes a real second player. (This header used to claim that record was
+ * "not a Player" and quote a measured slot1=NULL as proof the level data was
+ * missing -- both readings were the width bug: byte fc5c[1] read 0 through
+ * the int-stride seat, so _Z19LoadEntranceObjects... DISCARDED the player it
+ * had spawned. The measurement was real; the mechanism was not the records.)
  *
- * MEASURED, not assumed, and this is the shape the bug presents in:
- *     [vs] LoadEntranceObjects: count=2 p3=0 live=1,1 chars=0,1
- *     [vs] f0 count=2 me=0 live=1,1,0,0
- *     [vs] f0 slot1 actor=NULL
- * Every input the loop reads is correct and the slot is still empty, because
- * the thing that is wrong is the DATA the loop reads, not the loop.
- *
- * So the port supplies the missing starts, from player 0's OWN record, and
+ * What is left for this function is the case the DS data never exercises: a
+ * boot that wants more players than the table has records past p3 -- the
+ * caller clamps the loop to the records that exist, and this supplies the
+ * slots past the table, from player 0's OWN record, and
  * says so rather than pretending the level had them. Everything else about
  * each spawn is the ROM's: the same Actor::Spawn, the same class id out of
  * data_ov002_0210cbf4, the same flag packing including `(i << 6)` -- which is
@@ -4181,9 +4177,10 @@ const char *port_actor_class_name(unsigned id);
  * characters together, and it is a legitimate arena start: VS arenas spawn
  * players close and the ROM's own solver is what separates them.
  *
- * RETIREMENT: when ov075 (the VS menu) is mounted and a real VS arena is
- * loaded, its entrance table carries the consecutive starts and this function
- * finds every slot already filled and does nothing. It is a stand-in for
+ * RETIREMENT, updated: the arena half already happened -- on the four VS
+ * arenas (and any level whose table reaches record p3+i) the ROM's loop
+ * seats every slot and this function does nothing. It remains only as the
+ * fallback for a test boot that outruns the table. It is a stand-in for
  * missing level data, not a replacement for the ROM's spawn path.
  * =========================================================================== */
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)

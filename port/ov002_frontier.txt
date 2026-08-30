@@ -547,3 +547,16 @@ every slot spawns a real player and the census is 88 + 64*(n-1), the arena needs
 no hold and the condition can finally be written against a level that
 distinguishes the two cases. Until such a level exists the test cannot be
 written, which is why this is filed rather than guessed at.
+
+RESOLVED (port/vs-fc5c-width). The arena day came and the hold was retired --
+but not by the condition this section wanted, because the premise fell first.
+The orphan caster the hold hid was the fc5c stride bug (see the split-symbol
+entry above): the loop's discard of the second player was byte fc5c[1]
+reading 0, not a property of the entrance records. With the flags hosted at
+the ROM's byte stride the loop keeps what it spawns everywhere, so the hold
+is simply gone; the only thing still guarded is a test boot that wants more
+players than the table has records past p3, which is clamped and handed to
+port_vs_spawn_extra_players as before. The four arenas' records, decoded
+from the overlays (ov059/ov051/ov037/ov050): four consecutive player records
+each, raw 0, p3=0 -- level 51's at (-1200,254,6800) (-1387,254,6667)
+(-987,254,6567) (-1587,254,6467).
