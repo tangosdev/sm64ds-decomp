@@ -242,6 +242,32 @@ class Isolate(unittest.TestCase):
         self.assertTrue(all(a < OI.VTABLE_PREAMBLE for a in after), after)
         self.assertEqual(sorted(a + OI.VTABLE_PREAMBLE for a in after), sorted(before))
 
+    def test_deadstrip_accepts_a_vptr_store_already_in_rom_convention(self):
+        """A source that declares the ROM symbol itself needs no preamble correction.
+
+        `extern int _ZTV10dBgActor_c[];` names symbols.txt's slot array, so the store
+        relocates with addend 0.  There is nothing to rebase, and refusing it would
+        reject every promoted TU that inherits a base's vtable rather than owning one.
+        """
+        obj = self.build("extern int _ZTVBase[]; struct Q { virtual ~Q(); }; "
+                         "Q::~Q(){ *(int**)this = _ZTVBase; } "
+                         "int helper(){ return 7; }")
+        raw = obj.read_bytes()
+        self.assertEqual(set(self._reloc_addends(raw, "_ZTVBase")), {0})
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZTV1Q"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["externalise"], ["_ZTV1Q"])
+        self.assertEqual(set(self._reloc_addends(_out, "_ZTVBase")), {0},
+                         "an addend-0 reference is left exactly as it was")
+
+    def test_deadstrip_refuses_a_vptr_store_between_the_two_conventions(self):
+        """Neither spelling, so neither answer is safe; refuse rather than guess."""
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        raw = self._retarget_addend(raw, "_ZTV1B", 4)
+        _out, plan = OI.derive_deadstrip(raw, ["_ZTV1B"])
+        self.assertIn("unexpected reloc", plan["error"])
+
     def test_deadstrip_refuses_a_non_rtti_data_import(self):
         """Only the RTTI trio may be imported; anything else is an unsurveyed shape."""
         obj = self.build("int g_table[4] = {1,2,3,4}; int read(){ return g_table[2]; }")
@@ -254,6 +280,27 @@ class Isolate(unittest.TestCase):
         _out, plan = OI.derive_deadstrip(
             raw, ["_ZTV1B"], {"_ZTV1B": self._section_bytes(raw, "_ZTV1B")})
         self.assertIn("function-only", plan["error"])
+
+    def _retarget_addend(self, raw, target, value):
+        """A copy of `raw` with every code relocation against `target` given `value`."""
+        import io, struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        out = bytearray(raw)
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        endian = "<" if elf.little_endian else ">"
+        for sec in secs:
+            if not isinstance(sec, RelocationSection) or not sec.is_RELA():
+                continue
+            if not (secs[sec.header["sh_info"]].header["sh_flags"] & OI.SHF_EXECINSTR):
+                continue
+            for i, r in enumerate(sec.iter_relocations()):
+                if symtab.get_symbol(r["r_info_sym"]).name == target:
+                    struct.pack_into(endian + "i", out,
+                                     sec.header["sh_offset"] + i * 12 + 8, value)
+        return bytes(out)
 
     def _reloc_addends(self, raw, target):
         """Addends of every relocation against `target` from a surviving code section."""

@@ -560,9 +560,17 @@ def deadstrip_plan(raw, symbol_names, expect=None):
                                      f"{addend} from surviving data section "
                                      f"{source.name}"}
                 continue
-            if r["r_info_type"] != R_ARM_ABS32 or not (
-                    addend >= VTABLE_PREAMBLE if target.name.startswith("_ZTV")
-                    else addend == 0):
+            # Two spellings of a vptr store are legitimate and they differ by one
+            # preamble.  mwcc's `_ZTV<C>` addresses the vtable OBJECT, so a store
+            # against a definition in this object carries `+8` and must lose it once
+            # the definition is externalised.  A source that declares the ROM symbol
+            # itself (`extern int _ZTV10dBgActor_c[];`) is already using symbols.txt's
+            # convention, where the symbol IS the slot array: addend 0, nothing to
+            # correct, and `_apply` leaves it alone.  Anything strictly between the
+            # two is a shape this survey has not seen, and it is not guessed at.
+            shape = ((addend == 0 or addend >= VTABLE_PREAMBLE)
+                     if target.name.startswith("_ZTV") else addend == 0)
+            if r["r_info_type"] != R_ARM_ABS32 or not shape:
                 return {"error": f"{target.name}: unexpected reloc "
                                  f"type={r['r_info_type']} addend={addend}"}
             if addend:
