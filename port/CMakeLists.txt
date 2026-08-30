@@ -2150,6 +2150,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov036)
 # 0x021139a4), while the cover's own table and BUBBA's are unnamed. Proven three
 # ways in port/ov032_syms.txt. See port/slice_sweep2_ov032.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov032)
+# 2/4: ov034 (level 26, Tiny-Huge Island's CAVE) joins the per-symbol mounts so
+# WIGGLER (248) reaches its SpawnInfo record, its seven five-element animation
+# handle rows, its thirty-five sinit-built SharedFilePtrs, its thirty-five
+# destructor chain nodes, its twenty-two PMF source pairs and -- the important
+# one -- its ELEVEN-ENTRY, twenty-byte-per-entry state table at
+# data_ov034_02114538, whose dsd landing reads ONE ENTRY OF ELEVEN. That is
+# level 26's whole skip list, so this mount takes the level to zero skipped.
+# Unlike ov032 and ov033 there is NO class-identity shift here: _ZTV7Wiggler is
+# on the right class (RTTI "12daHanachan_c") and dsd's inferred 31-slot width is
+# right. The table is excluded from the mount and hosted as an array
+# hal/actor_classes_ov034.cpp fills. Derivation in port/ov034_syms.txt, slice in
+# port/slice_sweep2_ov034.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov034)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9524,6 +9537,69 @@ set_source_files_properties(
 list(APPEND SWEEP2_SOURCES hal/actor_classes_ov032.cpp ${SLICE_SWEEP2_OV032_SOURCES}
     unmatched/Bubba_StateEnter.cpp unmatched/Bubba_Behavior.cpp
     unmatched/Bubba_Render.cpp unmatched/Bubba_ChaseGate.cpp)
+
+# ---- 2/4: ov034, level 26 (Tiny-Huge Island's cave) ------------------------
+# WIGGLER (248) x1 -- level 26's WHOLE skip list, so this takes the level to
+# zero skipped. Thirty-two of the overlay's thirty-six TUs: one has no matched
+# body at all (_ZN7Wiggler8BehaviorEv, faced loudly) and three are host copies
+# (the two pointer-to-member state dispatch sites and the five-ModelAnim
+# slot-5 Render). One 31-slot Enemy table, and no identity shift. See
+# port/ov034_syms.txt and port/slice_sweep2_ov034.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov034.txt" SLICE_SWEEP2_OV034_LINES)
+set(SLICE_SWEEP2_OV034_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP2_OV034_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP2_OV034_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THE WRONG-NAME AT THE SHARED WINDOW (T6), the same rename twice. State 9
+# DAMAGE_WAIT's tick and state 6 DAMAGETALK's tick both CALL a function they
+# spell data_ov052_021125b8 -- an OV052 name, and a DATA-kind one, for this
+# overlay's own state setter. The ROM's own arm_calls at 0x021115b0,
+# 0x021119ec and 0x02111a00 all resolve to 0x021125b8 module:overlay(34) =
+# func_ov034_021125b8. OV052 IS MOUNTED (PORT_ACTOR_OVERLAYS), so the ov052
+# spelling resolves and both bodies would call into ov052's DATA -- no link
+# error, no byte-gate signal, a jump into a data array at run time. Renamed
+# straight to the ov034 spelling: decl_common.h declares neither name.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_02111588.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_021119ac.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov052_021125b8=func_ov034_021125b8")
+# AN ALIAS THIS MOUNT DEFEATS, AND ITS ONE LIVE READER (the ov036 (7) shape).
+# ov014, ov015, ov021, ov022 and ov034 share the level-overlay base 0x021111a0,
+# and ov034's dsd export won the naming race at 0x02114538, so
+# src/_ZN14KnockDownPlank13InitResourcesEv.cpp:30 (ov015's KNOCK_DOWN_PLANK,
+# LINKED via port/slice_gate59.txt:93) reaches OV015's OWN collider-file table
+# under ov034's spelling. hal/actor_classes_wf.cpp routed that with
+# `/alternatename:_data_ov034_02114538=_data_ov015_02114538`, and an
+# /alternatename is defeated the moment its LHS is DEFINED -- which is exactly
+# what this lane's mount now does: data_ov034_02114538 is the Wiggler's
+# ELEVEN-ENTRY STATE TABLE. Unfixed, KNOCK_DOWN_PLANK on level 7 would load its
+# collider file out of the Wiggler's state machine: no link error, no byte-gate
+# signal, wrong object at run time -- the Coffin/Spindrift shape, caught here by
+# port/tools/alternatename_guard.py's post-link map check, which is where this
+# lane found it. The now-inert directive is retired at its own site.
+# THE SECOND DEFEATED ALIAS NEEDED NO REPLACEMENT:
+# `/alternatename:_data_ov034_021147ec=__ZTV10ChainChomp` in
+# hal/bob_enemy_bridges.cpp had NO reader left -- src/_ZN10ChainChompD1Ev.c and
+# src/_ZN10ChainChompD0Ev.cpp both spell _ZTV10ChainChomp directly today -- so
+# it is deleted rather than re-routed.
+# A PRIVATE NAME, not a direct rename: include/decl_common.h declares BOTH
+# spellings, at line 224 `extern char data_ov015_02114538[]` and at line 1146
+# `extern int data_ov034_02114538[]`, so a direct -D makes one identifier carry
+# two basic types in one TU and MSVC refuses it (C2371). That is the ov100 C2040
+# reading. The private name is declared and never defined, and
+# hal/actor_classes_ov034.cpp aliases it onto the mounted ov015 symbol.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14KnockDownPlank13InitResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov034_02114538=port_ov015_kdp_clsn_files")
+list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOURCES}
+    unmatched/Wiggler_StateEnter.cpp unmatched/Wiggler_StateTick.cpp
+    unmatched/Wiggler_Render.cpp)
 # ---- end lane cast-sweep2 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

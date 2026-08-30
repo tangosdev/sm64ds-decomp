@@ -1491,6 +1491,28 @@ void hal_fill_huge_water_vtable(void);               /* _ZTV9HugeCover, 32 */
 extern unsigned char data_ov032_02113800[];          /* ov032 0x02113800, +4 = 228 */
 void *func_ov032_0211244c(void);                     /* ov032 0x0211244c, 92 B */
 void hal_fill_bubba_vtable(void);                    /* data_ov032_02113824, 31 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV034'S ONE CLASS, Tiny-Huge Island's
+   CAVE -- and it is the WHOLE of level 26's skip list, so this row takes that
+   level to zero skipped. Unlike ov032 and ov033 there is NO class-identity
+   shift: _ZTV7Wiggler (0x021144bc) is on the right class, its RTTI reads
+   "12daHanachan_c" (Hanachan is the ROM's word for the Wiggler), and dsd's
+   inferred 31-slot width is right -- the state table starts exactly where the
+   vtable ends. A 2280-byte Enemy built out of FIVE of everything (five
+   ModelAnims at +0x110, five MaterialChangers, five TextureSequences, two
+   five-element cylinder arrays), with an eleven-entry pointer-to-member state
+   table at data_ov034_02114538 whose dsd landing reads ONE entry of eleven.
+   ONE SLOT IS UNHOSTED: _ZN7Wiggler8BehaviorEv has no matched body anywhere in
+   the tree and is faced loudly, so the Wiggler renders but holds state
+   DEMOWAIT. Derivation in port/ov034_syms.txt, fill in
+   hal/actor_classes_ov034.cpp, slice in port/slice_sweep2_ov034.txt. */
+extern unsigned char Wiggler_SpawnInfo[];            /* ov034 0x02114498, +4 = 248 */
+void *port_factory_wiggler(void);                    /* ov034 0x021136a4, 380 B */
+void hal_fill_wiggler_vtable(void);                  /* _ZTV7Wiggler, 31 */
+/* src/Wiggler_Spawn.c is HELD OUT of the slice and the factory is spelled by
+   hand: the ROM leaves the object operator new returned in r0 when Enemy::C2 is
+   entered, so the matched TU calls it with NO argument -- the ChiefChilly r0
+   ride-through (port/slice_w12.txt) -- and the name it spells, func_020aed98,
+   is an arm9-style spelling of ov002's _ZN5EnemyC2Ev. */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2260,4 +2282,8 @@ void hal_fill_bubba_vtable(void);                    /* data_ov032_02113824, 31 
     {107, "HUGE_WATER", HugeWater_SpawnInfo, HugeWater_Spawn, \
      hal_fill_huge_water_vtable}, \
     {228, "BUBBA", data_ov032_02113800, func_ov032_0211244c, \
-     hal_fill_bubba_vtable},
+     hal_fill_bubba_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov034, Tiny-Huge Island's \
+       CAVE. Level 26's whole skip list in one row. ---- */ \
+    {248, "WIGGLER", Wiggler_SpawnInfo, port_factory_wiggler, \
+     hal_fill_wiggler_vtable},

@@ -1,0 +1,155 @@
+# run rel0215 wave 2, lane cast-sweep2: OV034'S OWN CAST (level 26, Tiny-Huge
+# Island's CAVE, data/stage/tibi_deka_in). Overlay 2 of 4 in this lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   35
+#     present but NONMATCHING-bannered  0
+#     MISSING                           1   _ZN7Wiggler8BehaviorEv
+#                                      --
+#                                      36  == config/arm9/overlays/ov034/
+#                                             symbols.txt's kind:function count
+#
+# THIRTY-ONE of the thirty-six are listed below.
+#
+# THE ONE MISSING BODY. _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, vtable
+# slot 6) has NO delink block in config/arm9/overlays/ov034/delinks.txt and no
+# src file anywhere in the tree -- the only such symbol in the overlay. It is
+# FACED LOUDLY in hal/actor_classes_ov034.cpp rather than stubbed -- the
+# hal/scene_boot.cpp l2_trap model exactly: both streams, flushed, with a hit
+# counter, and NOT the port_actor_slot_decline quarantine hook the ov030
+# func_ov030_021136b0 face uses. That difference was measured, not assumed:
+# decline hard-aborts under SM64DS_FAULTS_FATAL, which is right for a state tick
+# the ROM reaches rarely and wrong for slot 6, which every actor phase calls
+# EVERY FRAME -- wired that way this lane's first level-26 proof exited
+# 0xC0000409 on frame 1 instead of running, and in play every Wiggler would
+# quarantine itself immediately. A silent stub would still be worse: it would
+# make the Wiggler read as "asleep" rather than as a hole.
+# The face returns 1, which is the ROM body's ONLY return (0x021131dc
+# `mov r0, #1`), so the actor stays alive and inert rather than being torn down
+# by a return value the ROM never produces. WHAT THE PORT LOSES: the Wiggler
+# spawns, initialises all five of its segments, renders and holds state
+# DEMOWAIT, and never advances -- its Behavior is the only thing that calls the
+# state machine's tick half. That is the honest state of the class and the face
+# says it once per run.
+#
+# FOUR MORE TUs are HELD OUT, three host-copied because MSVC cannot deliver
+# their dispatch and one because it cannot deliver its receiver:
+#
+#   src/func_ov034_021125b8.cpp   -> port/unmatched/Wiggler_StateEnter.cpp
+#   src/func_ov034_02112604.cpp   -> port/unmatched/Wiggler_StateTick.cpp
+#   src/_ZN7Wiggler6RenderEv.cpp  -> port/unmatched/Wiggler_Render.cpp
+#   src/Wiggler_Spawn.c           -> port_factory_wiggler in
+#                                    hal/actor_classes_ov034.cpp
+#
+# THE FACTORY IS THE CHIEFCHILLY r0 RIDE-THROUGH, the shape port/slice_w12.txt
+# already holds src/ChiefChilly_Spawn.cpp out for. Wiggler_Spawn calls
+# `func_020aed98();` with NO ARGUMENT because in the ROM the object operator new
+# just returned is still in r0 when Enemy::C2 is entered (0x021136b0 bl
+# ActorBase::operator new / 0x021136b4 movs r4,r0 / 0x021136bc bl 0x020aed98).
+# mwcc reproduced that, so the TU is byte-faithful and unusable under cdecl --
+# and the name it spells is an ARM9-STYLE spelling of an OV002 symbol
+# (relocs.txt: module:overlays(2,7), and ov002's 0x020aed98 is _ZN5EnemyC2Ev)
+# that exists nowhere in the link, so the first build failed at LNK2019 rather
+# than silently. port_factory_wiggler is the ROM's own sequence with the
+# receiver spelled, every offset, count and stride read from the disassembly.
+#
+# The first two are the mwcc pointer-to-member state machine: both form a PMF
+# type on an INCOMPLETE class, where MSVC's representation is the "unknown
+# inheritance" form and not the ROM's 8-byte {function, delta} pair. ELEVEN
+# entries of twenty bytes at data_ov034_02114538, indexed by the state at
+# +0x8c4 -- the Ukiki/BabyPenguin shape with an INDEX instead of a cell pointer.
+# The third is the ModelAnim slot-5 collision, and here it is five of them: the
+# Wiggler array-constructs FIVE ModelAnims at +0x110 (stride 0x64), and Render
+# walks all five through a local six-virtual shadow whose g5 is the ROM's slot
+# 5. The host _ZTV9ModelAnim is MSVC-ordered, so ROM slot 5 lands on Virtual18
+# (the Koopa / Whomp / MontyMole case, port/unmatched/Koopa_Render.cpp).
+# All three matched TUs STAY in src/ as the byte proof.
+#
+# Nothing is refused in the unmodellable sense: no asm-void block, no scheduler,
+# no card loader, no wireless wrapper, and no //cpp real-destructor of the ov024
+# PyramidTag shape -- both destructors are plain .c files with C names and both
+# ride from src.
+#
+# NO IDENTITY SHIFT AND NO RESOLVER PLACEHOLDER. dsd named this class correctly
+# (_ZTV7Wiggler 0x021144bc, RTTI "12daHanachan_c" -- Hanachan is the ROM's word
+# for the Wiggler), the vtable width dsd infers is the right 31, and no ov034 TU
+# spells VT0/VT1/VT2 or G0/G1. It is the cleanest overlay in this lane.
+#
+# TWO PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt), and
+# they are the same rename twice:
+#
+#   func_ov034_02111588.cpp   state 9 DAMAGE_WAIT's tick
+#   func_ov034_021119ac.c     state 6 DAMAGETALK's tick
+#                             Both CALL a function they spell
+#                             data_ov052_021125b8 -- an OV052 name, and a
+#                             DATA-kind one, for this overlay's own state
+#                             setter. The ROM's own arm_calls at 0x021115b0,
+#                             0x021119ec and 0x02111a00 resolve to 0x021125b8
+#                             module:overlay(34). ov052 IS mounted, so the name
+#                             resolves and both bodies would call into ov052's
+#                             data.
+#
+# ONE SLICED TU DOES NOT REACH THE MAP, and the missing body is why.
+# src/func_ov034_02112874.c has exactly ONE caller in the whole ROM: the
+# arm_call at 0x02112eac, which is INSIDE _ZN7Wiggler8BehaviorEv. With Behavior
+# faced, nothing references it and /OPT:REF strips it, so linkage counts 30 of
+# 35 rather than 31. It stays on the slice: it is a matched body, it compiles,
+# and it becomes live the day the Behavior is decompiled. The ov030 lane's
+# Ukiki_StateTick note describes the same shape from the other direction.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU -- Actor,
+# ActorBase, Enemy, Model, ModelAnim, ShadowModel, MaterialChanger,
+# TextureSequence, MovingCylinderClsnWithPos, WithMeshClsn, CylinderClsn,
+# Animation, SharedFilePtr, Event, Memory and the array construct/destroy
+# helpers are all already in the walk_window link for other classes. Measured
+# off the link, not guessed.
+
+# ---- the class: factory, destructors, and the four non-Behavior slots -----
+src/_ZN7WigglerD1Ev.c
+src/_ZN7WigglerD0Ev.c
+src/_ZN7Wiggler13InitResourcesEv.cpp
+src/_ZN7Wiggler16CleanupResourcesEv.c
+
+# ---- the eleven states, twenty-two handlers, in table order ---------------
+# 0 DEMOWAIT
+src/func_ov034_02112484.cpp
+src/func_ov034_02112348.c
+# 1 DEMOCALL
+src/func_ov034_02112330.cpp
+src/func_ov034_02112284.c
+# 2 MOVE_STOP
+src/func_ov034_02112270.c
+src/func_ov034_021120ac.cpp
+# 3 MOVE_START
+src/func_ov034_02112020.c
+src/func_ov034_02111e68.c
+# 4 MOVE
+src/func_ov034_02111e4c.c
+src/func_ov034_02111c48.c
+# 5 DAMAGE
+src/func_ov034_02111bb0.c
+src/func_ov034_02111a64.c
+# 6 DAMAGETALK
+src/func_ov034_02111a0c.cpp
+src/func_ov034_021119ac.c
+# 7 DEAD
+src/func_ov034_02111974.c
+src/func_ov034_02111788.cpp
+# 8 DAMAGE_STOP
+src/func_ov034_02111720.c
+src/func_ov034_021115cc.cpp
+# 9 DAMAGE_WAIT
+src/func_ov034_021115c0.c
+src/func_ov034_02111588.cpp
+# 10 DAMAGE_START
+src/func_ov034_02111520.c
+src/func_ov034_021113d4.c
+
+# ---- the three helpers the states and Behavior share ----------------------
+src/func_ov034_02112650.c
+src/func_ov034_02112688.c
+src/func_ov034_02112874.c
+src/func_ov034_021129ec.c
+
+# ---- the static initialiser ----------------------------------------------
+src/__sinit_ov034_021138ec.c
