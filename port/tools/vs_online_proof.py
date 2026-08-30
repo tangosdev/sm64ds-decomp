@@ -60,7 +60,7 @@ CHILD_KEY = 0x20
 
 
 def run_pair(name, code, relay, frames, vs_map, timeout=900, stagger=0.6,
-             roles=("parent", "child")):
+             roles=("parent", "child"), port_base=0):
     dp = os.path.join(OUT, name + "_p1")
     dc = os.path.join(OUT, name + "_p2")
     for d in (dp, dc):
@@ -81,6 +81,15 @@ def run_pair(name, code, relay, frames, vs_map, timeout=900, stagger=0.6,
         e["SM64DS_VS_PROBE"] = "1"
     ep["SM64DS_COMMS_INJECT"] = "key=0x%02x" % PARENT_KEY
     ec["SM64DS_COMMS_INJECT"] = "key=0x%02x" % CHILD_KEY
+    if port_base:
+        # The loopback's default base is one fixed number, so ANY other
+        # instance of the game on the machine -- another lane's test, a
+        # straggler -- makes the parent's bind fail with winsock 10048 and
+        # the whole proof degrades to two solo boots. Measured, not
+        # theoretical. A caller-picked base keeps proofs out of each
+        # other's way without touching anyone else's process.
+        ep["SM64DS_COMMS_PORT"] = str(port_base)
+        ec["SM64DS_COMMS_PORT"] = str(port_base)
     lp, lc = os.path.join(dp, "run.log"), os.path.join(dc, "run.log")
     t0 = time.time()
     pp = M.spawn(EXE, dp, ep, lp)
@@ -212,6 +221,9 @@ def main():
     ap.add_argument("--code", default="VSPROOF")
     ap.add_argument("--roles", default="parent,child")
     ap.add_argument("--name", default="relay")
+    ap.add_argument("--port-base", type=int, default=0,
+                    help="local UDP base for the two instances; use when "
+                         "another game instance holds the default 51765")
     a = ap.parse_args()
 
     os.makedirs(OUT, exist_ok=True)
@@ -229,7 +241,8 @@ def main():
         print("local relay on " + relay)
     try:
         res = run_pair(a.name, a.code, relay, a.frames, a.map,
-                       roles=tuple(a.roles.split(",")))
+                       roles=tuple(a.roles.split(",")),
+                       port_base=a.port_base)
     finally:
         if proc:
             proc.terminate()
