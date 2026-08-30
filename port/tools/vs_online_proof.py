@@ -18,10 +18,22 @@ and asserts the three things a player would call "it worked":
     INSTALL   both instances say [comms:loopback] installed ... via RELAY
     PAIRING   both instances say the relay ACKed their HELLO, and the ROM's
               own conductor says the session came up with two players
-    STATE     each instance's [vs] probe shows TWO player actors, and the
+    WIRE      each instance's [vs] probe shows TWO player actors, and the
               slot that is NOT mine carries the pad the OTHER process was
-              injecting -- a value that cannot have come from anywhere but
-              the wire.
+              injecting -- a value this process never pressed, so it cannot
+              have come from anywhere but the wire. THESE TWO ASSERTIONS ARE
+              THE PROOF. Everything else here can pass without a transport.
+
+WHICH IS NOT A FIGURE OF SPEECH. A control pair with NO comms env at all --
+zero [comms] lines in either log -- passes every other check in this file,
+including the DETERMINISM one at the bottom, with the identical distinct
+position count a live run scores. Only the two WIRE assertions fail. So the
+determinism result is reported as CORROBORATING, its verdict line states
+whether the WIRE assertions held, and echo_of's docstring carries the numbers.
+
+IF A LATER RUNG IS ADDED HERE, hold it to the same question before believing
+it: WOULD A CONTROL WITH NO TRANSPORT FAIL IT? If not, it is a description of
+a run, not a proof of a session.
 
 Every run is quiet and muted the way mp2_proof.env_base makes them
 (SW_SHOWMINNOACTIVE, CREATE_NO_WINDOW, SM64DS_NO_FOCUS, SM64DS_MINIMIZED,
@@ -147,12 +159,39 @@ def track(t, slot):
 
 
 def echo_of(tp, tc, slot):
-    """Does the NON-owner's world carry the owner's motion, frame for frame?
+    """Do the two processes' worlds agree on this actor, frame for frame?
 
-    The strongest statement the lockstep carrier can make: not that a position
-    arrived, but that the two processes' worlds are the SAME SIMULATION. Both
-    tracks are compared frame by frame, and the track is required to actually
-    MOVE -- a frozen actor agrees with a frozen actor and proves nothing.
+    READ THIS BEFORE QUOTING THE RESULT AS A NETWORKING PROOF.
+
+    THE ASSERTION IS VACUOUS ON ITS OWN, and that is MEASURED rather than
+    argued. A control pair with NO SM64DS_COMMS_* IN THE ENVIRONMENT AT ALL --
+    no role, no relay, no code, no fan-out, zero [comms] lines in either log --
+    passes it:
+
+        600 frames, no transport   DETERMINISM PASS, 569 distinct positions
+        600 frames, live relay     DETERMINISM PASS, 569 distinct positions
+        900 frames, no transport   DETERMINISM PASS, 869 distinct positions
+        900 frames, live relay     DETERMINISM PASS, 809 distinct positions
+
+    The same number, on the same frame count, with the wire unplugged. Of
+    course: both processes run the same deterministic selftest over the same
+    build and the same level, so their worlds agree frame for frame whether or
+    not one datagram is ever exchanged, and the actor moves in both. Neither
+    half of the check -- the agreement or the movement -- discriminates, and
+    the position count is not a tie-breaker either.
+
+    WHAT MAKES IT MEAN ANYTHING is the pair of CROSS-INJECT assertions above
+    it, and nothing else. Each process pins a key the other never presses and
+    must read the OTHER's value on the remote slot; in the no-transport
+    control those two FAIL, and they are what actually catches a dead wire.
+    Once they hold, this adds the second and weaker claim on top: that what
+    crossed produced the SAME SIMULATION on both sides rather than merely
+    arriving. Worth having -- it is the determinism claim, not the
+    connectivity one -- but corroborating, and the verdict says so in words.
+
+    The distinct-position count is printed because it is the tell: a number in
+    the 800s is normal for a live session AND for a dead one, so a reader who
+    sees it cannot mistake a healthy-looking count for evidence.
     """
     a, b = dict(track(tp, slot)), dict(track(tc, slot))
     common = sorted(set(a) & set(b))
@@ -165,7 +204,10 @@ def echo_of(tp, tc, slot):
                               % (len(bad), len(common), bad[0]))
     if moved < 2:
         return False, moved, "the two agree but the actor never moved"
-    return True, moved, ("%d frames identical on both, %d distinct positions"
+    return True, moved, ("%d frames identical on both, %d distinct positions "
+                         "(a no-transport control scores about the same -- "
+                         "this line is only evidence once the two cross-inject "
+                         "assertions above have passed)"
                          % (len(common), moved))
 
 
@@ -255,17 +297,31 @@ def main():
     ok &= M.verdict(two_actors(tp) >= 0 and two_actors(tc) >= 0,
                     "two player actors in each census (last frame %d/%d)"
                     % (two_actors(tp), two_actors(tc)))
+    # THE TWO THAT ACTUALLY PROVE THE WIRE. Everything above them is about a
+    # session having formed; these are the only assertions in this file that a
+    # no-transport pair fails.
     f = remote_pad_seen(tp, mp_, CHILD_KEY)
-    ok &= M.verdict(f >= 0,
-                    "the parent sees the CHILD's injected pad %04x on the "
-                    "remote slot (frame %d)" % (CHILD_KEY, f))
+    wire_p = M.verdict(f >= 0,
+                       "WIRE: the parent reads the CHILD's injected pad %04x "
+                       "on the remote slot, a value it never pressed "
+                       "(frame %d)" % (CHILD_KEY, f))
     g = remote_pad_seen(tc, mc, PARENT_KEY)
-    ok &= M.verdict(g >= 0,
-                    "the child sees the PARENT's injected pad %04x on the "
-                    "remote slot (frame %d)" % (PARENT_KEY, g))
+    wire_c = M.verdict(g >= 0,
+                       "WIRE: the child reads the PARENT's injected pad %04x "
+                       "on the remote slot, a value it never pressed "
+                       "(frame %d)" % (PARENT_KEY, g))
+    ok &= wire_p and wire_c
+    # AND THE CORROBORATING ONE, which is worthless without the two above --
+    # measured, not assumed: a no-transport control passes it. See echo_of.
     good, moved, why = echo_of(tp, tc, 0)
-    ok &= M.verdict(good, "MOVEMENT ECHO: the child's world tracks the "
-                          "parent's player | %s" % why)
+    ok &= M.verdict(good,
+                    "DETERMINISM (corroborating, %s): the two worlds agree on "
+                    "the parent's player | %s"
+                    % ("meaningful -- the WIRE assertions hold"
+                       if (wire_p and wire_c)
+                       else "MEANINGLESS HERE -- a WIRE assertion above "
+                            "FAILED, so this says only that two copies of one "
+                            "deterministic selftest agree", why))
     print("")
     for line in (sp, sc):
         if line:
