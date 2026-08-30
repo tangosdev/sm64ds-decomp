@@ -331,7 +331,16 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov014_02114980@@3DA=_data_ov014_02114980")
 #pragma comment(linker, "/alternatename:?data_ov014_02114970@@3US@@A=_data_ov014_02114970")
 #pragma comment(linker, "/alternatename:?data_ov014_02114980@@3US@@A=_data_ov014_02114980")
-#pragma comment(linker, "/alternatename:_func_ov019_02111f54=_func_ov014_02111f54")
+/* RETIRED, run rel0215 wave 3 lane w3-e: DEFEATED. That lane slices ov019's
+   RACING_PENGUIN, and its sixth pointer-to-member state body IS
+   func_ov019_02111f54, so this LHS is now DEFINED at its own address and the
+   alias is inert -- alternatename_guard caught it on the first link. The
+   routing is still needed, so it moved to a per-source -D on the ONE reader
+   (src/func_ov014_02111af0.c, which declares the name itself and includes no
+   header that declares it too); see the W13 block in port/CMakeLists.txt. Left
+   unrouted, this would have been the silent half of the alias race: the
+   chomp's state-2 main would have called the PENGUIN's body.
+   was: /alternatename:_func_ov019_02111f54=_func_ov014_02111f54 */
 #pragma comment(linker, "/alternatename:?data_ov062_0211e004@@3PADA=_data_ov062_0211e004")
 #pragma comment(linker, "/alternatename:?data_ov062_0211e004@@3USharedFilePtr@@A=_data_ov062_0211e004")
 #pragma comment(linker, "/alternatename:?data_ov062_0211e00c@@3PADA=_data_ov062_0211e00c")

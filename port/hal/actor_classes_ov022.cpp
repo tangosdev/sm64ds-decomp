@@ -115,7 +115,11 @@
 //    TU would Release SignPost's LIVE SharedFilePtrs (or the heap pointer) on
 //    every level-14 teardown, which is not a dying-object write and not
 //    survivable. It is the ONE ov022 body this lane replaces with a host thunk
-//    (lp_clean below) and the one TU held out of the slice.
+//    (lp_clean below) and the one TU held out of the slice. Run rel0215 wave 3
+//    (lane w3-e) tried the per-source -D that works on 73's and 77's
+//    identically-shaped CleanupResources and MEASURED the refusal -- see the
+//    note above lp_clean; the disassembly below is what named the two targets
+//    it would have bound.
 //
 //    THE THUNK IS INSTRUCTION-VERIFIED against the ROM body (0x021121cc,
 //    0x44 bytes), disassembled from extracted/overlays/overlay_0022.bin:
@@ -655,7 +659,17 @@ static int __fastcall lp_init(void *s, void *)
    src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp spells its two
    SharedFilePtrs G0/G1, which hal/cxx_aliases.cpp has bound to the game heap
    pointer and to SignPost's ov002 file pointers. Statement-for-statement
-   transcription of the ROM body at 0x021121cc. */
+   transcription of the ROM body at 0x021121cc.
+   run rel0215 wave 3 (lane w3-e) TRIED to retire this thunk with the
+   per-source -D it used on 73's and 77's identically-shaped CleanupResources,
+   and MEASURED THE REFUSAL instead: both this body's targets are declared in
+   include/decl_common.h (lines 238-239, `extern char data_ov022_02114618[]`
+   and `..._02114620[]`) while G1 is declared there too (line 396,
+   `extern int G1[]`), so -DG1=data_ov022_02114618 rewrites one into a
+   redefinition of the other with a different type -- error C2371, the same
+   wall the ov006 Mg3DEsp block at port/CMakeLists.txt:6295 already records.
+   73's and 77's targets are NOT in that header, which is why the rename works
+   there and not here. The thunk stays and the TU stays out of the slice. */
 static int __fastcall lp_clean(void *s, void *)
 {
     char *t = (char *)s;

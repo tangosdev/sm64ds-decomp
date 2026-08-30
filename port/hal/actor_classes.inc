@@ -1788,6 +1788,59 @@ void hal_fill_snowball_vtable(void);                 /* _ZTV8Snowball, 31 */
 extern unsigned char Moneybag_SpawnInfo[];           /* ov081 0x02128be0, +4 = 261 */
 void *Moneybag_Spawn(void);                          /* ov081 0x02127adc, 88 B */
 void hal_fill_moneybag_vtable(void);                 /* _ZTV8Moneybag, 31 */
+/* run rel0215 wave 3 (lane w3-e): THE REST OF ov022, Lethal Lava Land's cast.
+   Wave 8 seated five ids and wave 16 a sixth; these five close the overlay and
+   take level 14's skip list to zero. 73/77/80 were held back on the
+   inferred-stub ratchet, and all fourteen marker-carrying bodies now rule
+   REAL_DECOMP on a tools/match.py rebuild at 2004/b56 with --strict-relocs
+   (port/tools/inferred_stub_adjudicated.txt); 70 was held back on three ov080
+   bodies that slice_ov030cast.txt has since sliced for the same ROM class in
+   ov030. 243 is on no placement row and is registered because VolcanoRing's
+   Behavior spawns it at run time. Derivation in port/slice_w3e_ov022.txt, fill
+   in hal/actor_classes_ov022_w3e.cpp. */
+extern unsigned char RotatingPlatformLll_SpawnInfo[]; /* ov022 0x02113dc4, +4 = 80 */
+void *RotatingPlatformLll_Spawn(void);                /* ov022 0x02111688, 60 B */
+void hal_fill_rotating_platform_lll_vtable(void);     /* 0x02113de8, 32 */
+extern unsigned char LavaBridge_SpawnInfo[];          /* ov022 0x02113f4c, +4 = 73 */
+void *LavaBridge_Spawn(void);                         /* ov022 0x02111c7c, 48 B */
+void hal_fill_lava_bridge_vtable(void);               /* 0x02113f70, 32 */
+extern unsigned char LavaSeesaw_SpawnInfo[];          /* ov022 0x02114010, +4 = 77 */
+void *LavaSeesaw_Spawn(void);                         /* ov022 0x02111f3c, 48 B */
+void hal_fill_lava_seesaw_vtable(void);               /* 0x02114034, 32 */
+extern unsigned char RollingLogLll_SpawnInfo[];       /* ov022 0x02114380, +4 = 70 */
+void *RollingLogLll_Spawn(void);                      /* ov022 0x021125a4, 60 B */
+void hal_fill_rolling_log_lll_vtable(void);           /* _ZTV12FallBlockLll, 32 */
+extern unsigned char VolcanoFire_SpawnInfo[];         /* ov022 0x02114458, +4 = 243 */
+void *VolcanoFire_Spawn(void);                        /* ov022 0x02112918, 56 B */
+void hal_fill_volcano_fire_vtable(void);              /* _ZTV13RollingLogLll, 31 */
+/* run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, level 17's pyramid
+   interior -- and the last of that overlay's four-id cast. 162 is GRINDEL by
+   the game's own id table (symbols/actor_renames_report.txt, confirmed a
+   second way by Grindel_Spawn's 928-byte allocation matching that file's
+   alloc=0x3a0) and derives from ov091's Thwomp base, taking its slots 3 and 9
+   from bodies already linked for THWOMP. 163 is SPINDEL, and that report
+   resolves it to ov021 -- wrongly: at 0x0211373c ov021's record passes route 1
+   and FAILS route 2 (w1 low halfword 0), while ov025's passes both. Neither
+   record is named <Class>_SpawnInfo by dsd for 163, so its row goes by the
+   mounted address. Derivation in port/slice_w3e_ov025.txt, fill in
+   hal/actor_classes_ov025_w3e.cpp. */
+extern unsigned char Grindel_SpawnInfo[];             /* ov025 0x0211382c, +4 = 162 */
+void *Grindel_Spawn(void);                            /* ov025 0x02111cf4, 76 B */
+void hal_fill_grindel_vtable(void);                   /* 0x02113850, 32 */
+extern unsigned char data_ov025_0211373c[];           /* ov025 0x0211373c, +4 = 163 */
+void *func_ov025_02111898(void);                      /* ov025 0x02111898, 48 B */
+void hal_fill_spindel_vtable(void);                   /* 0x02113760, 32 */
+/* run rel0215 wave 3 (lane w3-e): RACING_PENGUIN (259, ov019), the other class
+   in level 11's own overlay. It is on NO mounted level's object list and
+   nothing spawns it at run time -- level 11's baseline is 84 spawned, ZERO
+   skipped -- so this row is LINKAGE and changes no census. It is registered
+   because both attribution routes name it and its closure is complete; an
+   unseated class in a mounted overlay is a trap waiting for the first roster
+   that reaches it. 31 slots, an Actor and not a Platform. Derivation in
+   port/slice_w3e_ov019.txt, fill in hal/actor_classes_ov019_w3e.cpp. */
+extern unsigned char RacingPenguin_SpawnInfo[];       /* ov019 0x021132ec, +4 = 259 */
+void *RacingPenguin_Spawn(void);                      /* ov019 0x021125bc, 96 B */
+void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2720,4 +2773,32 @@ void hal_fill_moneybag_vtable(void);                 /* _ZTV8Moneybag, 31 */
     {224, "SNOWBALL", Snowball_SpawnInfo, Snowball_Spawn, \
      hal_fill_snowball_vtable}, \
     {261, "MONEYBAG", Moneybag_SpawnInfo, Moneybag_Spawn, \
-     hal_fill_moneybag_vtable},
+     hal_fill_moneybag_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): ov022's LAST FIVE IDS. 70/73/77/80 \
+       are the whole of level 14's baseline skip list (5 instances, 4 classes); \
+       243 is placed nowhere and is spawned at run time by VolcanoRing. All \
+       five Spawns are registered directly -- 80's and 70's write their own \
+       table through a per-source -DVT1 rather than a port_factory wrapper. --- */ \
+    {80, "ROTATING_PLATFORM_LLL", RotatingPlatformLll_SpawnInfo, \
+     RotatingPlatformLll_Spawn, hal_fill_rotating_platform_lll_vtable}, \
+    {73, "LAVA_BRIDGE", LavaBridge_SpawnInfo, LavaBridge_Spawn, \
+     hal_fill_lava_bridge_vtable}, \
+    {77, "LAVA_SEESAW", LavaSeesaw_SpawnInfo, LavaSeesaw_Spawn, \
+     hal_fill_lava_seesaw_vtable}, \
+    {70, "ROLLING_LOG_LLL", RollingLogLll_SpawnInfo, RollingLogLll_Spawn, \
+     hal_fill_rolling_log_lll_vtable}, \
+    {243, "VOLCANO_FIRE", VolcanoFire_SpawnInfo, VolcanoFire_Spawn, \
+     hal_fill_volcano_fire_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, the rest of \
+       level 17's own skip list. 163's row goes by ADDRESS because dsd names no \
+       SpawnInfo for it; 162's factory writes its own table through a \
+       per-source -DVT1 and registers directly. ---- */ \
+    {162, "GRINDEL", Grindel_SpawnInfo, Grindel_Spawn, \
+     hal_fill_grindel_vtable}, \
+    {163, "SPINDEL", data_ov025_0211373c, func_ov025_02111898, \
+     hal_fill_spindel_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): RACING_PENGUIN (259, ov019). Not on \
+       any mounted level's object list and not spawned at run time, so this row \
+       is linkage and moves no census -- see the note above the externs. ---- */ \
+    {259, "RACING_PENGUIN", RacingPenguin_SpawnInfo, RacingPenguin_Spawn, \
+     hal_fill_racing_penguin_vtable},

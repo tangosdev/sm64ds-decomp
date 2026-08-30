@@ -10627,6 +10627,336 @@ list(APPEND SWEEP2_SOURCES hal/actor_classes_ov055.cpp ${SLICE_SWEEP2_OV055_SOUR
     unmatched/MirrorLuigi_StateEnter.cpp unmatched/MirrorLuigi_Behavior.cpp)
 # ---- end lane cast-sweep2 --------------------------------------------------
 
+# ---- run rel0215 wave 3, lane w3-e ----------------------------------------
+#
+# THREE PARTIALLY-SEATED LEVEL OVERLAYS' REMAINING TAILS. Each overlay gets its
+# own slice and its own block; all three feed ONE ${W3E_SOURCES} into the three
+# player targets, the ${SWEEP2_SOURCES} shape, so the target lists move once.
+#
+# The lane's gap census, taken before any edit -- every kind:function row in
+# config/arm9/overlays/ovNNN/symbols.txt joined to its delinks.txt src TU and
+# to walk_window's own object list in build/port/build.ninja:
+#
+#   overlay  fn rows  src TUs  LINKED  UNLINKED
+#   ov019      37       37        5       32
+#   ov022      83       83       40       43
+#   ov025      41       41       19       22
+#
+# ZERO missing bodies, ZERO NONMATCHING banners, ZERO rows without a delink
+# row across all three. The whole 97-row tail was ONE class of gap: UNSLICED.
+set(W3E_SOURCES "")
+
+# ---- w3-e / ov022, level 14 (Lethal Lava Land) ----------------------------
+#
+# The five ids wave 8 and wave 16 left: ROLLING_LOG_LLL (70), LAVA_BRIDGE (73),
+# LAVA_SEESAW (77), ROTATING_PLATFORM_LLL (80) and VOLCANO_FIRE (243). 70/73/
+# 77/80 are the WHOLE of level 14's baseline skip list (5 instances, 4 classes,
+# measured on cons cc10acd4e). The cast map, the widths, the naming shift, the
+# fourteen inferred-stub rulings and the one held-out TU are in
+# port/slice_w3e_ov022.txt and hal/actor_classes_ov022_w3e.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov022.txt" SLICE_W3E_OV022_LINES)
+set(SLICE_W3E_OV022_SOURCES "")
+foreach(line IN LISTS SLICE_W3E_OV022_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3E_OV022_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND W3E_SOURCES hal/actor_classes_ov022_w3e.cpp ${SLICE_W3E_OV022_SOURCES})
+
+# W1, THE TWO INHERITED CROSS-NAME DEBTS, filed by wave 2 and taken here.
+# Both are the alias race in its silent form: the TU spells ANOTHER overlay's
+# name for an object that ov022's own relocs resolve to ov022, and the other
+# overlay's mount DEFINES that name -- so an /alternatename would be defeated
+# without a diagnostic and the reference would bind to the wrong storage. The
+# reloc line is quoted for each, and each is a per-source -D.
+#
+#   src/__sinit_ov022_021130bc.c   (243's two pointer-to-member state records)
+#     from:0x021130ec kind:load to:0x0211442c module:overlay(22)
+#     from:0x021130f4 kind:load to:0x02114690 module:overlay(22)
+#   port/ov034_syms.txt:228 and :255 define data_ov034_0211442c and
+#   data_ov034_02114690 (wave 2's ov034 mount). ov022's own mount already has
+#   both under the right names (ov022_syms.txt:171 and :187).
+#   THE FILED "SECOND SITE" NEEDS NO SECOND -D, and this was checked rather
+#   than carried: 0x02114690's other reference is at 0x02112914, inside
+#   src/_ZN13RollingLogLll13InitResourcesEv.cpp, and that TU already spells
+#   data_ov022_02114690 correctly in its own text.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov022_021130bc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov034_0211442c=data_ov022_0211442c;data_ov034_02114690=data_ov022_02114690")
+#   src/_ZN12FallBlockLll8BehaviorEv.cpp   (70's slot 6)
+#     from:0x0211258c kind:load to:0x02112c98 module:overlay(22)
+#   port/ov035_syms.txt:294 defines data_ov035_02112c98 (wave 1's ov035 mount);
+#   ov022_syms.txt:132 already has data_ov022_02112c98.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN12FallBlockLll8BehaviorEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov035_02112c98=data_ov022_02112c98")
+#
+# W2, A THIRD ONE THIS LANE FOUND, and it is the worse shape of the two -- a
+# CALL through a data name. src/func_ov022_021126ac.c (243's first PMF state)
+# ends in `data_ov025_02112654(c)`, with no declaration, so it compiles as an
+# implicit call. ov022's own relocs say what it is:
+#     from:0x021126fc kind:arm_call to:0x02112654 module:overlay(22)
+# 0x02112654 is func_ov022_02112654, on this lane's slice. No mount defines
+# data_ov025_02112654, so today the reference is simply undefined and the TU
+# could not be seated; left unrenamed with an ov025 mount that did define it,
+# this would have been the ov006 "seating one CALLS INTO A DATA ARRAY" shape.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov022_021126ac.c"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov025_02112654=func_ov022_02112654")
+#
+# W3, THE TWO CleanupResources BODIES THAT SPELL THEIR SharedFilePtrs G0/G1.
+# hal/cxx_aliases.cpp binds _G0 to the game heap pointer and _G1 to SignPost's
+# ov002 collision file, so linking either of these as written would Release a
+# live pointer on every level-14 teardown -- the failure that made wave 8 host
+# -thunk LAVA_PLANK's slot 3. Each pool says what its two really are, and both
+# are already in port/ov022_syms.txt:
+#   73  func_ov022_02111a64: 0x02111aa0 -> 0x02114580, 0x02111aa4 -> 0x02114578
+#   77  func_ov022_02111d90: 0x02111dcc -> 0x021145a8, 0x02111dd0 -> 0x021145a0
+# (Both files are .c, so both names carry C linkage and bind straight onto the
+# mount's plain C symbols -- no decorated-name bridge is needed here.)
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov022_02111a64.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov022_02114580;G1=data_ov022_02114578")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov022_02111d90.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov022_021145a8;G1=data_ov022_021145a0")
+#
+# W4, THE SAME FIX DOES NOT RETIRE WAVE 8's ONE HOST THUNK, AND THE REFUSAL IS
+# MEASURED. LAVA_PLANK (82)'s slot 3,
+# src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp, is the third body of
+# exactly this shape, and the rename is KNOWN: its pool reads
+# 0x02112208 -> 0x02114620 and 0x0211220c -> 0x02114618, both
+# module:overlay(22) and both already mounted. It still cannot be used. This
+# body's two targets are declared in include/decl_common.h (lines 238-239,
+# `extern char data_ov022_02114618[]` and `..._02114620[]`) and so is G1 (line
+# 396, `extern int G1[]`), so -DG1=data_ov022_02114618 rewrites one into a
+# redefinition of the other with a different type. MEASURED, not predicted:
+# error C2371 on decl_common.h(396) and on the .cpp's own line 9. That is the
+# ov006 Mg3DEsp wall recorded at line ~6295 of this file, and the test that
+# separates the two cases is whether the TARGET is in that header --
+# 0x02114580, 0x02114578, 0x021145a8 and 0x021145a0 are not, which is exactly
+# why W3 above works. hal/actor_classes_ov022.cpp therefore KEEPS lp_clean and
+# this one ov022 TU stays unlinked; the way out is a header change, not a slice
+# change, and the owner is wave 8's thunk.
+#
+# W5, THE TWO FACTORIES THAT WRITE THEIR OWN TABLE THROUGH `VT1`. 80's and 70's
+# Spawns end in `str r1,[r4]; str r0,[r4]` -- base table then own table, two
+# stores back to back -- and the recovered source puts the RTTI name on the
+# dead first store and the shared-header VT1 placeholder on the live second
+# one. VT1 is hal/actor_vtables.cpp's zeroed [20], so a raw spawn would leave a
+# live object dispatching through zeros. Binding VT1 per source to the host
+# table makes the ROM's own final store correct and saves a port_factory
+# wrapper; the pool words are 0x021116c0 -> 0x02113de8 and
+# 0x021125dc -> 0x021143a4.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RotatingPlatformLll_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT1=data_ov022_02113de8")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RollingLogLll_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT1=_ZTV12FallBlockLll")
+#
+# W5b, ONE arm9-STYLE PLACEHOLDER NAME, off the first link's own unresolved
+# list. src/_ZN12FallBlockLll16CleanupResourcesEv.cpp (70's slot 3) calls
+# `func_021270dc`, the bare-address spelling, and the reloc says which module
+# owns that address:
+#     from:0x02112558 kind:load to:0x021270dc module:overlays(78,80)
+# ov078 and ov080 share base 0x02123740; level 14's object overlays are
+# ov064/ov071/ov080/ov084/ov095 and ov078 is not among them, and this class's
+# two OTHER cross-overlay slots (9 and 27) are ov080's as well -- so ov080.
+# src/func_ov080_021270dc.c is already on port/slice_ov030cast.txt for
+# RollingLogTtm, this class's ROM twin. Safe as a rename because BOTH names are
+# declared in include/decl_common.h with the IDENTICAL type (lines 1381 and
+# 1601, `extern int f(void*, void*)`), so the rewrite is a duplicate
+# declaration and not the C2371 the W4 block records.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN12FallBlockLll16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "func_021270dc=func_ov080_021270dc")
+#
+# W6, THE TWO POINTER-TO-MEMBER DISPATCHERS, the R9 wave-18 ruling applied to
+# VOLCANO_FIRE. Both take a pointer-to-member of an INCOMPLETE class and apply
+# a NONZERO offset to it, which is the exact predicate R9 measured: without
+# /vmg /vmm MSVC's representation is FOUR bytes and `pp + 1` strides onto the
+# adj word of record 0, which is ROM-zero -- a `jmp 0`. With them it is the
+# ROM's own 8-byte {fn, delta} record. src/func_ov022_02112790.cpp is the
+# `c->pp` setter that calls record 0 (offset 0, correct either way, listed for
+# representation agreement with its sibling) and
+# src/_ZN13RollingLogLll8BehaviorEv.cpp reads the record at BYTE offset 8 --
+# the source's own arithmetic pins sizeof(PMF) at 8, the KingBobOmb proof.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov022_02112790.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13RollingLogLll8BehaviorEv.cpp"
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+# ---- w3-e / ov025, level 17 (SSL, the pyramid interior) -------------------
+#
+# The two ids wave 15 did not take: GRINDEL (162, x3) and SPINDEL (163, x1) --
+# together the whole of level 17's own remaining skip list, and the last of
+# ov025's four-id cast. The both-route derivation, the widths, the nine
+# inferred-stub rulings and the reclaimed host thunk are in
+# port/slice_w3e_ov025.txt and hal/actor_classes_ov025_w3e.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov025.txt" SLICE_W3E_OV025_LINES)
+set(SLICE_W3E_OV025_SOURCES "")
+foreach(line IN LISTS SLICE_W3E_OV025_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3E_OV025_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND W3E_SOURCES hal/actor_classes_ov025_w3e.cpp ${SLICE_W3E_OV025_SOURCES})
+
+# W7, THREE MORE CROSS-NAME RENAMES, the same silent shape as W1/W2. Each TU
+# spells another overlay's name for an object ov025's own relocs resolve to
+# ov025, and those names are DEFINED elsewhere in this link, so an
+# /alternatename would be defeated without a diagnostic. Where, exactly:
+# data_ov027_02113a90 is hal/actor_classes_ov027.cpp:327's 32-slot host
+# vtable array (DA_PG_DFDR's live dispatch table), data_ov036_02113a98 is
+# hal/actor_classes_ov036.cpp:413's (SWINGING_PLATFORM's), and
+# data_ov036_02113a60 is on the ov036 mount (ov036_syms.txt:289). Unrouted,
+# ov025's sinit would write into the first two LIVE dispatch tables:
+#   src/__sinit_ov025_021129dc.c   (162's model/collision pair)
+#     from:0x02112a34 kind:load to:0x02113a90 module:overlay(25)  spelled ov027
+#     from:0x02112a30 kind:load to:0x02113a98 module:overlay(25)  spelled ov036
+#   src/func_ov025_02111384.cpp    (163's CleanupResources)
+#     from:0x021113c4 kind:load to:0x02113a60 module:overlay(25)  spelled ov036
+# All three right-hand names join port/ov025_syms.txt with this lane.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov025_021129dc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov027_02113a90=data_ov025_02113a90;data_ov036_02113a98=data_ov025_02113a98")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov025_02111384.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov036_02113a60=data_ov025_02113a60")
+#
+# W8, GRINDEL'S FACTORY, the same VT1 shape as ov022's 80 and 70. The ROM's two
+# stores are `str r1,[r4]` with the base 0x021351fc (the reloc reads
+# module:overlays(6,91) -- ambiguous between the two base-sharing overlays,
+# and nothing depends on it, being the dead first store) and then, after the
+# TextureSequence and ShadowModel constructors, `str r0,[r4]` with its own
+# 0x02113850 (pool words 0x02111d38 and 0x02111d3c). The recovered source has
+# the RTTI name on the dead first store and VT1 on the live second one.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Grindel_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT1=data_ov025_02113850")
+#
+# W9, THE RECLAIM W4 COULD NOT DO. src/_ZN11PyramidStep16CleanupResourcesEv.cpp
+# (id 87, slot 3) is the same G0/G1 SharedFilePtr shape as ov022's LAVA_PLANK
+# body, and wave 15 host-thunked it for the same reason. Here the rename
+# COMPILES, and the difference is exactly the test W4 records: this body's
+# targets are NOT declared in include/decl_common.h, so -DG1=... rewrites only
+# that header's own `extern int G1[]` and collides with nothing. The pool:
+#   from:0x02111ea0 kind:load to:0x02113ab8 module:overlay(25)   model file
+#   from:0x02111ea4 kind:load to:0x02113ab0 module:overlay(25)   collision file
+# Both are already in port/ov025_syms.txt (0x02113ab8 pinned to 8 there).
+# hal/actor_classes_ov025.cpp's slot-3 fill now calls the method.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11PyramidStep16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov025_02113ab8;G1=data_ov025_02113ab0")
+# ---- w3-e / ov019, level 11 (Cool Cool Mountain's slide) ------------------
+#
+# RACING_PENGUIN (259), the one class gate 142/143 left in level 11's own
+# overlay. It is on NO mounted level's object list and nothing spawns it at run
+# time, so this block moves the LINKAGE count and not the census -- level 11's
+# baseline is already 84 spawned / 0 skipped. Said plainly here because a
+# reviewer reading the battery alone would see nothing move.
+# Also here: ICE_SLIDE_MANAGER's deleting destructor, whose slot 17 gate 143
+# trap-filled, so that class had no hosted D0 at all.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov019.txt" SLICE_W3E_OV019_LINES)
+set(SLICE_W3E_OV019_SOURCES "")
+foreach(line IN LISTS SLICE_W3E_OV019_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3E_OV019_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ONE ov019 TU IS GENERATED RATHER THAN SLICED. src/func_ov019_0211140c.cpp is
+# declared `int` and falls off the end -- legal for mwccarm, C4716 and a hard
+# error for MSVC -- so it goes through tools/hostgen.py's FALLS_OFF_RETURN
+# table, exactly the shape OV70GEN above already uses for
+# func_ov070_0211f0a4, and src/ is not touched. The returned value is dead on
+# both sides: the ROM body ends with r0 holding SurfaceInfo::CopyNormalTo's
+# leftover, and all four call sites discard it.
+set(OV19GEN_SYMS func_ov019_0211140c)
+set(OV19GEN "")
+foreach(sym IN LISTS OV19GEN_SYMS)
+    set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND OV19GEN "${sym_out}")
+endforeach()
+list(APPEND W3E_SOURCES hal/actor_classes_ov019_w3e.cpp
+    ${SLICE_W3E_OV019_SOURCES} ${OV19GEN}
+    unmatched/RacingPenguin_Render.cpp
+    unmatched/RacingPenguin_ShadowFaces.cpp)
+
+# W10, THE ONE DATA CROSS-NAME IN ov019, and it is the worst spelling in this
+# lane: src/_ZN13RacingPenguin16CleanupResourcesEv.cpp declares its seven
+# animation file pointers as `_ZN9HugeCover6RenderEv[7]` -- ov032's
+# HugeCover::Render, a FUNCTION this link DEFINES since wave 2 seated that
+# class. Linked as written it would call SharedFilePtr::Release on seven words
+# read out of ov032's code, and an /alternatename would be defeated without a
+# diagnostic. ov019's own reloc says what the address is:
+#     from:0x02112354 kind:load to:0x02112788 module:overlay(19)
+# The TU includes only types.h, so the rename collides with nothing in
+# decl_common.h (which declares data_ov019_02112788 with a different element
+# type -- the reason this is safe here and would not be if that header were in
+# scope).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13RacingPenguin16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "_ZN9HugeCover6RenderEv=data_ov019_02112788")
+#
+# W11, ICE_SLIDE_MANAGER's DELETING DESTRUCTOR. Its transient base-table
+# restore is spelled `VT`, which hal/cxx_aliases.cpp binds to ov002's
+# data_ov002_021081e4; its own pool says the store is its OWN table:
+#     from:0x02112670 kind:load to:0x021133cc module:overlay(19)
+# `HEAP` needs no row -- cxx_aliases already binds it to _data_020a0eac, which
+# is what the second pool word (0x02112674) holds. Safe as a rename because
+# both names are declared in include/decl_common.h with the IDENTICAL type
+# (`extern int VT[]` at 415, `extern int _ZTV15IceSlideManager[]` at 582), so
+# the rewrite is a duplicate declaration.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN15IceSlideManagerD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=_ZTV15IceSlideManager")
+#
+# W12, THE TWO POINTER-TO-MEMBER DISPATCHERS, the R9 wave-18 ruling again.
+# src/func_ov019_02112268.cpp applies a NONZERO offset (`c->pp + 1`) and is
+# R9's exact predicate; it is ALREADY in R9's `set_source_files_properties`
+# list above as an "ABSENT, inert today" row, and this lane makes that row
+# live. Its sibling src/func_ov019_021122a4.cpp reads record 0 and is listed
+# here so the two agree on the representation -- a TU that keeps MSVC's default
+# 4-byte form while its sibling uses the ROM's 8-byte one is the drift R9's
+# "PER-SOURCE, NEVER GLOBAL" paragraph warns about.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov019_021122a4.cpp"
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+#
+# W13, AN ALIAS THIS LANE DEFEATS, RE-ROUTED. hal/bob_enemy_bridges.cpp carried
+# /alternatename:_func_ov019_02111f54=_func_ov014_02111f54, because ChainChomp's
+# state-2 main (src/func_ov014_02111af0.c) spells an ov014 body with an ov019
+# tag -- dsd's per-overlay naming attaching a reference to the wrong one of the
+# four overlays that share this base -- and ov014's own reloc settles it:
+#     from:0x02111afc kind:arm_call to:0x02111f54 module:overlay(14)
+# RACING_PENGUIN's sixth pointer-to-member state body IS func_ov019_02111f54,
+# so seating it DEFINES that LHS and the alias goes inert. Caught by
+# alternatename_guard on this lane's first link, not reasoned about afterwards.
+# Left unrouted it is a wrong-object bind that never fails the link: the chomp's
+# state-2 main calling the penguin's body. The reader declares the name itself
+# and includes no header that declares it either, so the -D is exact.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov014_02111af0.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov019_02111f54=func_ov014_02111f54")
+# ---- end lane w3-e ---------------------------------------------------------
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -11390,6 +11720,9 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep
     ${SWEEP2_SOURCES}
+    # run rel0215 wave 3 (lane w3-e): three partially-seated level
+    # overlays' remaining tails (ov022, ov019, ov025)
+    ${W3E_SOURCES}
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -11588,6 +11921,9 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep
     ${SWEEP2_SOURCES}
+    # run rel0215 wave 3 (lane w3-e): three partially-seated level
+    # overlays' remaining tails (ov022, ov019, ov025)
+    ${W3E_SOURCES}
     # _ZTV5Stage SLOT 12 (run link60, lane L4). src/_ZN5Stage16OnPendingDestroyEv.cpp
     # is named on smoke_player and walk_window_hires above, because those two
     # targets compile hal/stage_bridges.cpp -- which seats the slot -- and do
@@ -11820,6 +12156,9 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep
     ${SWEEP2_SOURCES}
+    # run rel0215 wave 3 (lane w3-e): three partially-seated level
+    # overlays' remaining tails (ov022, ov019, ov025)
+    ${W3E_SOURCES}
     "${PORT_GITTIP_C}"
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(walk_window_hires PRIVATE

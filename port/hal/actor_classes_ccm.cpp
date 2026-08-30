@@ -85,7 +85,10 @@ static void ccm_trap_report(void *self, int slot)
 }
 static int __fastcall ccm_trap13(void *s, void *) { ccm_trap_report(s, 13); return 0; }
 static int __fastcall ccm_trap14(void *s, void *) { ccm_trap_report(s, 14); return 0; }
-static int __fastcall ccm_trap17(void *s, void *) { ccm_trap_report(s, 17); return 0; }
+/* ccm_trap17 retired by run rel0215 wave 3 (lane w3-e): slot 17 is the matched
+   deleting destructor now. Kept nowhere -- if a future class in this file needs
+   a slot-17 decline, add it back beside its own fill rather than leaving a dead
+   thunk here. */
 static int __fastcall ccm_trap19(void *s, void *) { ccm_trap_report(s, 19); return 0; }
 
 // ---- the shared half -------------------------------------------------------
@@ -165,6 +168,21 @@ static int __fastcall ccm_trap30(void *s, void *) { ccm_trap_report(s, 30); retu
 static int __fastcall ism_d1(void *s, void *)
 { return (int)(size_t)_ZN5ActorD2Ev(s); }
 
+/* Slot 17, the DELETING destructor -- run rel0215 wave 3 (lane w3-e). Until
+   this line slot 17 was ccm_trap17, so the class had no hosted deleting
+   destructor at all and any delete through its vptr declined. Its matched body
+   is src/_ZN15IceSlideManagerD0Ev.c, now on port/slice_w3e_ov019.txt: it
+   restores the vptr, runs Actor::D2 and calls Memory::Deallocate with the game
+   heap. Its transient restore is spelled `VT` in src, which
+   hal/cxx_aliases.cpp binds to ov002's data_ov002_021081e4, while the body's
+   own literal pool holds this class's own table -- from:0x02112670 kind:load
+   to:0x021133cc module:overlay(19) -- so it is bound per source instead (the
+   W11 block in port/CMakeLists.txt). `HEAP` needed no row: cxx_aliases already
+   binds it to _data_020a0eac, which is the second pool word. */
+extern "C" int *_ZN15IceSlideManagerD0Ev(int *self);
+static int __fastcall ism_d0(void *s, void *)
+{ return (int)(size_t)_ZN15IceSlideManagerD0Ev((int *)s); }
+
 // ---- the class's own two slots ---------------------------------------------
 static int __fastcall ism_init(void *s, void *)
 { return _ZN15IceSlideManager13InitResourcesEv(s); }
@@ -212,7 +230,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
     vt[9]  = (void *)ccm_render_base;
     vt[12] = (void *)ccm_pdes;
     vt[16] = (void *)ism_d1;
-    vt[17] = (void *)ccm_trap17;
+    vt[17] = (void *)ism_d0;
     /* 20..30, Actor's own list, which is what the ROM table holds --
        IceSlideManager overrides none of it. Slot 30 declines: its ROM body
        returns a Vector3 by value and the sret contract is unproved. */

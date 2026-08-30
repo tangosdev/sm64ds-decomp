@@ -1958,3 +1958,55 @@ func_ov072_0212001c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov070_02120518  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-d\t5_adjudication_ov070.txt  ov070 FlyGuy(232) vtable slot 18 OnYoshiTryEat, addr 0x02120518 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs, both instructions. Body is `mov r0,#5; bx lr` -- a two-instruction constant return, byte-identical in shape to func_ov070_021211bc and func_ov070_02121bdc, the chomps' slot 18, which hal/actor_classes_ov070.cpp's own header already quotes instruction for instruction. Nothing is guessed: there is no room in eight bytes for a guess to hide
 func_ov070_021204ec  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-d\t5_adjudication_ov070.txt  ov070 FlyGuy(232) vtable slot 19 OnTurnIntoEgg(Player&), addr 0x021204ec size 0x2c; match.py MATCHING at 2004/b56 with --strict-relocs, all 0x2c bytes with both call relocs checked. Body reads the byte at this+0x10a, calls Actor::GivePlayerCoins(player, that+1, 0) then Actor::KillAndTrackInDeathTable() -- a real two-call body with a real argument computation, not a slot-shaped stub
 func_ov070_021204e4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-d\t5_adjudication_ov070.txt  ov070 FlyGuy(232) vtable slot 29 OnAimedAtWithEgg, addr 0x021204e4 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs, both instructions. Body is `mov r0,#0x2b000; bx lr` (returns 176128), the same two-instruction constant-return shape as slot 18's
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 3 (lane w3-e), 2026-08-30. ov022, the rest of Lethal Lava
+# Land's cast.
+#
+# hal/actor_classes_ov022.cpp held LAVA_BRIDGE (73), LAVA_SEESAW (77) and
+# ROTATING_PLATFORM_LLL (80) out of wave 8 because thirteen of their slot
+# bodies carry the marker; VOLCANO_FIRE (243) was held for a fourteenth. All
+# fourteen were rebuilt with tools/match.py at 2004/b56 against
+# extracted/overlays/overlay_0022.bin (base 0x021111a0) with --strict-relocs
+# --module ov022, so the ruling is not "the disassembly looks the same" -- the
+# recovered source REPRODUCES the ROM's bytes AND every relocation
+# destination. RESULT: 14 MATCHING, 0 genuine guesses, 0 unverifiable.
+#
+# Full run: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-e\ov022\
+#   adjudication.txt
+func_ov022_021115f8  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 80 slot 17 D0, addr 0x021115f8 size 0x64; MATCHING at 2004/b56 with --strict-relocs. Pool 0x02113de8 own / 0x021091d4 ov002 intermediate / 0x0210ae38 Platform / 0x020a0eac heap
+func_ov022_0211165c  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 80 slot 3 CleanupResources, addr 0x0211165c size 0x14; MATCHING. One tail call into func_020b66a8 with the three-word resource table data_ov022_02113da4
+func_ov022_02111670  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 80 slot 0 InitResources, addr 0x02111670 size 0x18; MATCHING. One tail call into func_ov002_020b676c with the same table and 0x100
+func_ov022_021119c4  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 73 slot 17 D0, addr 0x021119c4 size 0x58; MATCHING. Pool 0x02113f70 own / 0x0210ae38 Platform / 0x020a0eac heap
+func_ov022_02111a64  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 73 slot 3 CleanupResources, addr 0x02111a64 size 0x44; MATCHING. MeshColliderBase IsEnabled/Disable then two SharedFilePtr::Release on 0x02114580 / 0x02114578 (bound per source, see CMakeLists W3)
+func_ov022_02111aa8  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 73 slot 9 Render, addr 0x02111aa8 size 0x28; MATCHING
+func_ov022_02111ad0  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 73 slot 6 Behavior, addr 0x02111ad0 size 0x10c; MATCHING
+func_ov022_02111bdc  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 73 slot 0 InitResources, addr 0x02111bdc size 0xa0; MATCHING. Reaches ov064's CLPS block 0x0211bb2c, which joins port/ov064_syms.txt with this lane
+func_ov022_02111cf0  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 77 slot 17 D0, addr 0x02111cf0 size 0x58; MATCHING. Pool 0x02114034 own / 0x0210ae38 Platform / 0x020a0eac heap
+func_ov022_02111d90  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 77 slot 3 CleanupResources, addr 0x02111d90 size 0x44; MATCHING. Same shape as 73's, on 0x021145a8 / 0x021145a0
+func_ov022_02111dd4  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 77 slot 9 Render, addr 0x02111dd4 size 0x28; MATCHING
+func_ov022_02111dfc  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 77 slot 6 Behavior, addr 0x02111dfc size 0xa4; MATCHING
+func_ov022_02111ea0  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 77 slot 0 InitResources, addr 0x02111ea0 size 0x9c; MATCHING. Reaches ov064's CLPS block 0x0211bacc, already mounted by wave 8
+func_ov022_021126ac  REAL_DECOMP  out/w3-e/ov022/adjudication.txt  id 243 pointer-to-member state record 0 (.data pair 0x02114424), addr 0x021126ac size 0x64; MATCHING. Its tail is an arm_call to 0x02112654 that the source spells data_ov025_02112654; the reloc says module:overlay(22), so it is func_ov022_02112654 and is renamed per source
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 3 (lane w3-e), 2026-08-30. ov025, GRINDEL (162) and SPINDEL
+# (163) -- the rest of level 17's own skip list.
+#
+# Nine of the twenty-two TUs in this overlay's tail carry the marker. Same
+# method as the ov022 block above: each rebuilt with tools/match.py at 2004/b56
+# against extracted/overlays/overlay_0025.bin (base 0x021111a0) with
+# --strict-relocs --module ov025. RESULT: 9 MATCHING, 0 genuine guesses, 0
+# unverifiable.
+#
+# Full run: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-e\ov025\
+#   adjudication.txt
+func_ov025_021111e4  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 163 slot 17 D0, addr 0x021111e4 size 0x58; MATCHING at 2004/b56 with --strict-relocs. Pool 0x02113760 own / 0x0210ae38 Platform / 0x020a0eac heap. NAME says OnYoshiTryEat and is wrong, body is the deleting destructor
+func_ov025_02111384  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 163 slot 3 CleanupResources, addr 0x02111384 size 0x44; MATCHING. Two SharedFilePtr::Release on 0x02113a68 / 0x02113a60 then MeshColliderBase IsEnabled/Disable; the second is spelled data_ov036_02113a60 and is renamed per source
+func_ov025_021113c8  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 163 slot 9 Render, addr 0x021113c8 size 0x28; MATCHING. The plain-Model slot-5 dispatch through a six-virtual shadow at +0xd4, encoded not guessed
+func_ov025_021113f0  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 163 slot 6 Behavior, addr 0x021113f0 size 0x3ec; MATCHING. The largest body in the overlay
+func_ov025_021117dc  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 163 slot 0 InitResources, addr 0x021117dc size 0xbc; MATCHING. Model::LoadFile/ModelBase::SetFile(1,-1) then MovingMeshCollider::SetFile with the CLPS block 0x02112c28 and the Matrix4x3 at +0x2ec
+func_ov025_02111928  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 17 D0, addr 0x02111928 size 0x74; MATCHING. Pool 0x02113850 own / 0x021351fc ov091 daDsnBase_c / 0x0210ae38 Platform / 0x020a0eac heap; tears down ShadowModel +0x338, TextureSequence +0x324, MovingMeshCollider +0x124, Model +0xd4. NAME says OnYoshiTryEat and is wrong
+func_ov025_0211199c  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 29 OnAimedAtWithEgg, addr 0x0211199c size 0x8; MATCHING. `mov r0, #0xce000; bx lr` -- takes no receiver on the ROM either, which is why the host thunk drops this
+func_ov025_02111b64  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 6 Behavior, addr 0x02111b64 size 0xc0; MATCHING. Seven calls into ov091's Thwomp bodies, all seven already linked
+func_ov025_02111c24  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 0 InitResources, addr 0x02111c24 size 0xd0; MATCHING. Seats the three-word resource table data_ov025_02113814 at +0x320, calls ov091 0x02133254, then a RaycastLine to find the floor

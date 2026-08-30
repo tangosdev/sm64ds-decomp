@@ -24,3 +24,57 @@
 # and this one does not.
 IceSlideManager_SpawnInfo:0x1c
 data_ov019_021135d8 data_ov019_021135cc
+# run rel0215 wave 3 (lane w3-e): RACING PENGUIN's mount. Gate 142's three
+# symbols above are IceSlideManager's; these are 259's, and they are what its
+# static initialiser builds and its bodies read BY NAME. Additive only.
+#
+# THE SpawnInfo IS PINNED TO 0x1c AND THE PIN IS LOAD-BEARING. Its natural
+# next-symbol delta is 0x24, and 0x021132ec + 0x24 = 0x02113310, which is the
+# class's VTABLE -- excluded from this mount on purpose (it is the host array
+# hal/actor_classes_ov019_w3e.cpp fills, the ov015/ov016/ov080 rule). Unpinned,
+# the mount would hand the factory eight bytes of DS code addresses inside its
+# own SpawnInfo record. Same 0x1c IceSlideManager_SpawnInfo is pinned to above.
+RacingPenguin_SpawnInfo:0x1c
+# THE TWO FILE-POINTER TABLES its InitResources and CleanupResources index,
+# both exact by next-symbol delta:
+#   0211277c  three TextureSequence file pointers   0xc
+#   02112788  seven Animation file pointers         0x1c
+# CleanupResources spells the second one `_ZN9HugeCover6RenderEv` -- ov032's
+# HugeCover::Render, a FUNCTION this link DEFINES since wave 2 seated that
+# class, so an /alternatename would be defeated silently and the body would
+# Release through a code address. ov019's own relocs settle it:
+#   from:0x02112354 kind:load to:0x02112788 module:overlay(19)
+# and port/CMakeLists.txt renames it per source.
+data_ov019_0211277c data_ov019_02112788
+# THE TWELVE POINTER-TO-MEMBER SOURCE PAIRS, 0x02113270..0x021132d0, eight
+# bytes each and all twelve deltas exact. Each holds {func_ov019_*, 0}; the
+# fill overwrites the twelve function words with host thunks BEFORE running the
+# sinit that copies them, so nothing here is ever a live DS address (see that
+# file's header for why the source and not the destination).
+data_ov019_02113270 data_ov019_02113278 data_ov019_02113280
+data_ov019_02113288 data_ov019_02113290 data_ov019_02113298
+data_ov019_021132a0 data_ov019_021132a8 data_ov019_021132b0
+data_ov019_021132b8 data_ov019_021132c0 data_ov019_021132c8
+# THE .bss THE STATIC INITIALISER BUILDS: twelve SharedFilePtrs (one model,
+# seven animations, three texture sequences, one collision), their twelve
+# destructor-chain nodes, two Vector3 statics with a chain node each, and the
+# twelve-record state table.
+#
+# T3, AND THERE IS EXACTLY ONE TRAP HERE. Every SharedFilePtr's delta is 8 and
+# every chain node's is 0xc EXCEPT data_ov019_02113530, whose natural delta is
+# FOUR because dsd also named 0x02113534 inside it. func_020731dc writes TWELVE
+# bytes through that pointer, so unpinned the node would run two words off its
+# own host storage and over the Vector3 static at 0x0211353c -- the
+# ov002 0x0210ffbc failure exactly. Pinned. The last of them,
+# data_ov019_0211356c, is the state table: 12 records x 8 bytes = 0x60, which
+# is its delta, so it needs no pin.
+data_ov019_02113460 data_ov019_02113468 data_ov019_02113470
+data_ov019_02113478 data_ov019_02113480 data_ov019_02113488
+data_ov019_02113490 data_ov019_02113498 data_ov019_021134a0
+data_ov019_021134a8 data_ov019_021134b0
+data_ov019_021134b8 data_ov019_021134c4 data_ov019_021134d0
+data_ov019_021134dc data_ov019_021134e8 data_ov019_021134f4
+data_ov019_02113500 data_ov019_0211350c data_ov019_02113518
+data_ov019_02113524 data_ov019_02113530:0xc data_ov019_0211353c
+data_ov019_02113548 data_ov019_02113554 data_ov019_02113560
+data_ov019_0211356c

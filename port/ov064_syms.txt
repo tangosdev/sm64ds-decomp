@@ -103,6 +103,30 @@ data_ov064_0211c7d8 data_ov064_0211c7e0 data_ov064_0211c7e8 data_ov064_0211c7f0 
 # them. See port/ov022_syms.txt and hal/actor_classes_ov022.cpp.
 data_ov064_0211ba6c data_ov064_0211bacc data_ov064_0211baec
 data_ov064_0211bb0c data_ov064_0211bbac
+# run rel0215 wave 3 (lane w3-e): THREE MORE of the same kind, for the three
+# ov022 classes wave 8 did not seat. Additive only -- no existing line is
+# touched, and no byte leaves the mount (see the size note below):
+#   0x0211bb2c  LAVA_BRIDGE 73            from src/func_ov022_02111bdc.cpp
+#   0x0211bb4c  ROTATING_PLATFORM_LLL 80  via the table data_ov022_02113da4
+#   0x0211bbcc  ROLLING_LOG_LLL 70        via the table data_ov022_02112c9c
+# All three read `module:overlay(64)` outright in ov022's own relocs.txt:
+#   from:0x02111c74 kind:load to:0x0211bb2c module:overlay(64)
+#   from:0x02113dac kind:load to:0x0211bb4c module:overlay(64)
+#   from:0x02112ca4 kind:load to:0x0211bbcc module:overlay(64)
+# T3 SIZE NOTE, and it is why none of these carries a `:0x20` pin. Every CLPS
+# block in this run is exactly 0x20 bytes on a 0x20 stride -- read out of
+# extracted/overlays/overlay_0064.bin, the "CLPS" magic lands at 0x0211bb0c,
+# 0x0211bb2c, 0x0211bb4c, 0x0211bb6c and again at 0x0211bbac, 0x0211bbcc,
+# 0x0211bbec. So the ROM record is NARROWER than the next-symbol delta, never
+# wider, and ovdata.py's over-read is the harmless direction. Left unpinned on
+# purpose: data_ov064_0211bb0c then goes 0x60 -> 0x20 and data_ov064_0211bb2c
+# picks up 0x40 (itself plus the unnamed block at 0x0211bb4c... which this line
+# now names, so it goes 0x20 as well and 0x0211bb4c takes 0x20 to 0x0211bb6c);
+# data_ov064_0211bbac goes 0x60 -> 0x20 and data_ov064_0211bbcc takes 0x40,
+# covering itself and the still-unnamed block at 0x0211bbec. Byte coverage of
+# the mount is identical before and after: 0x0211bb0c..0x0211bb6c and
+# 0x0211bbac..0x0211bc0c stay fully emitted either way.
+data_ov064_0211bb2c data_ov064_0211bb4c data_ov064_0211bbcc
 
 # ---- run linkw wave 9, lane w9-reg: TILTING_PLATFORM_LLL (id 72) ----------
 # The class whose bodies dsd spells _ZN12MetalNetLift* -- id 72, NOT the gate-178
