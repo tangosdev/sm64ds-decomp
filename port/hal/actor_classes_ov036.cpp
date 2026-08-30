@@ -403,25 +403,37 @@ static void ov36_fill_shared(void *volatile *vt)
 // so one DSSTATE_BEGIN/END pair covers the set.
 extern "C" {
 DSSTATE_BEGIN
-int data_ov002_021091d4[32];   /* vtspan: daObjKaitendai_c, ov002 0x021091d4 */
-int data_ov002_02108d94[32];   /* vtspan: daObjDorifu_c, ov002 0x02108d94 */
+void *data_ov002_021091d4[32];  /* vtspan: daObjKaitendai_c, ov002 0x021091d4 */
+void *data_ov002_02108d94[32];  /* vtspan: daObjDorifu_c, ov002 0x02108d94 */
 int data_ov036_02113b74[32];   /* vtspan: data_ov036_02113b74, ROTATING_PLATFORM_RR */
 int data_ov036_02113f9c[33];   /* vtspan: data_ov036_02113f9c, FLYING_CARPET */
 DSSTATE_END
 }
 
+/* THE `void **tabs[2]` SHAPE IS LOAD-BEARING, not stylistic. Both tables are
+   filled identically, so any spelling would run the same -- but
+   port/tools/vtspan.py --fills resolves a fill to the table it writes by
+   reading the binding, and it recognises exactly two shapes: one
+   `void **vt = <named array>;` and this `void **tabs[N] = { A, B };` loop
+   (hal_fill_platform_vtable uses the same one for the Platform/dBgActor pair).
+   A helper taking the array as a parameter, or a cast in the initialiser list,
+   reports as "table binding not modelled" -- a GAP IN THE CHECK, not a pass,
+   which would leave these two 32-slot arrays unsized by the one tool that
+   sizes them against the ROM. Measured: the parameterised spelling was tried
+   first and vtspan refused to resolve it. The arrays are declared `void *`
+   above for the same reason -- an `int` array needs a cast here, and a cast
+   defeats MULTIBIND. */
 static void ov36_base_bringup(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
-    void *volatile *tabs[2] = { (void *volatile *)data_ov002_021091d4,
-                                (void *volatile *)data_ov002_02108d94 };
+    void **tabs[2] = { data_ov002_021091d4, data_ov002_02108d94 };
     for (int k = 0; k < 2; ++k) {
-        void *volatile *vt = tabs[k];
+        void *volatile *vt = (void *volatile *)tabs[k];
         ov36_fill_shared(vt);
-        /* the ROM parks ZERO in 0 and 3 on both tables; 6 and 9 are the
+        /* the ROM parks ZERO in slots 0 and 3 on both tables; 6 and 9 are the
            derived class's business on both customers too. */
         vt[0]  = (void *)ov36_base_trap0;
         vt[3]  = (void *)ov36_base_trap3;
