@@ -582,6 +582,42 @@ LEVEL_SKIPS = {
     45: ("GOOMBOSS", "the decomp (func_ov074_021201f0 has no matched body)",
          "quarantines on frame 0 of Goomboss::Behavior, in the state-0 tick "
          "the loud face in hal/actor_classes_ov074.cpp names"),
+    #
+    # THE SECOND ROW OF THE SAME CLASS, AND NO PORT LANE CAN CLOSE IT EITHER.
+    # run rel0215 wave 3, lane w3-a2 seated ov065's whole Tick Tock Clock
+    # cluster -- eleven ids, seven classes, seven tables, seven sinits -- and
+    # TTC_MOVING_BEAM then quarantines on its first behaviour frame because the
+    # DECOMP does not have the body its vtable slot 6 dispatches:
+    #
+    #   _ZN14TtcMovingCubeA8BehaviorEv (0x0211bd8c, 0x178 bytes) is id 118's
+    #   Behavior -- slot 6 of table 0x0211d568. There is no src/ TU for it, no
+    #   delink block in config/arm9/overlays/ov065/delinks.txt and no host copy
+    #   anywhere in the tree. Being unmatched it is invisible to linkage.py and
+    #   to a census of ov065's unlinked rows, which is why the wave-5 mount
+    #   note never listed it.
+    #
+    # WHY IT IS A SKIP AND NOT A STUB. A beam that returns 1 from a quiet stub
+    # is a platform that never moves and never says so, which is exactly the
+    # silent-failure shape this cluster was taken back out over in wave 17. The
+    # face in hal/actor_classes_ov065.cpp announces the missing body by name and
+    # declines through the receiver, so under FAULTS_FATAL the run aborts and
+    # under a real play it quarantines the beam and keeps going.
+    #
+    # THE EVIDENCE, both directions, reproducible from the commands:
+    #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=27, 300 and 600 frames: rc 0, the
+    #       ten other Ttc ids spawn and tick, and the only quarantined actor is
+    #       id 118, named.
+    #   WITH THIS SKIP, FAULTS_FATAL=1, level 27, 300 and 600 frames: rc 0.
+    # SM64DS_SKIP_CLASS matches a registry name as a SUBSTRING OF THE SKIP
+    # STRING, so "TTC_MOVING_BEAM" leaves TTC_MOVING_BAR and the two
+    # TTC_MOVING_CUBE rows registered -- checked, because three of this
+    # cluster's names share a prefix.
+    # The class stays REGISTERED, so the day 0x0211bd8c is matched the bare
+    # re-probe goes green and this row retires itself with no port work.
+    27: ("TTC_MOVING_BEAM",
+         "the decomp (_ZN14TtcMovingCubeA8BehaviorEv has no matched body)",
+         "quarantines on frame 0 of id 118's Behavior, in the vtable slot 6 "
+         "the loud face in hal/actor_classes_ov065.cpp names"),
 }
 # The bare re-probe is expected to FAULT while the debt stands, and a fault
 # under FAULTS_FATAL exits fast. A probe that instead hangs is not evidence of

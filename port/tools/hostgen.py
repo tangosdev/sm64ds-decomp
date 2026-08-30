@@ -418,6 +418,20 @@ HEADER_SHADOW = {
     # src/func_ov071_02121ba4.cpp defines it `(char*)`. One register on the
     # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
     "func_ov071_02121ba4": "decl_common.h",
+    # run rel0215 wave 3, lane w3-a2, TTC_ROTATING_CUBE/PRISM (108/109):
+    # decl_common.h:2777-2778 declare func_ov065_021198a0 and
+    # func_ov065_0211990c `(char*)` inside its extern "C" block, while
+    # src/_ZN15TtcRotatingCube13InitResourcesEv.cpp re-declares both `(void*)`
+    # in its own extern "C" block and calls them with `(void*)this`. One
+    # register on the ROM, two C2733s and two C2664s to MSVC -- the
+    # _ZN5Whomp13InitResourcesEv case exactly, down to the colliding names
+    # being OTHER functions than the emitted symbol. Both are themselves on
+    # this cluster's slice (src/func_ov065_021198a0.cpp defines it `(void*)`
+    # and src/func_ov065_0211990c.c `(void*)`), so the header is the odd one
+    # out and shadowing it is what leaves every definition untouched.
+    "_ZN15TtcRotatingCube13InitResourcesEv": ("decl_common.h",
+                                              ("func_ov065_021198a0",
+                                               "func_ov065_0211990c")),
 }
 
 # ---- REDUNDANT OUT-OF-LINE MEMBER REDECLARATIONS ---------------------------
