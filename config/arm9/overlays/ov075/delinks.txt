@@ -439,6 +439,10 @@ src/func_ov075_02119d78.c:
     complete
     .text start:0x02119d78 end:0x02119dc4
 
+src/func_ov075_02119dc4.cpp:
+    complete
+    .text start:0x02119dc4 end:0x0211a100
+
 src/func_ov075_0211a100.c:
     complete
     .text start:0x0211a100 end:0x0211a148
@@ -490,6 +494,10 @@ src/_ZN10dScEntry_c6icon_cC1Ev.cpp:
 src/func_ov075_0211a854.cpp:
     complete
     .text start:0x0211a854 end:0x0211a948
+
+src/func_ov075_0211a948.c:
+    complete
+    .text start:0x0211a948 end:0x0211aa00
 
 src/func_ov075_0211aa00.c:
     complete
