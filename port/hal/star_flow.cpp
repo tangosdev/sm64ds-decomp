@@ -179,11 +179,79 @@ void seat_player_globals(void)
    data_0208e428 matters concretely: Player_PlaySoundEffect passes it as the
    BANK for every kind-3 sound, and a zero there forces bank 0 on sounds whose
    own SEQARC entry names a different one. */
+/* THE VS ARENAS TAKE THE OTHER BRANCH, AND THE PORT WAS TAKING NEITHER.
+ *
+ * The block above transcribes only the ADVENTURE half of the ROM's sound row.
+ * The ROM's own half it left out is the first thing InitResources does:
+ *
+ *     int soundGroup = 0;
+ *     u8  bank = 0x36;
+ *     if (data_0209f220 == 2) {                       // a VS match
+ *         if (level == 1 || level == 0x33) soundGroup = 0x2B;
+ *         else if (level == 0x1D)          soundGroup = 0x2E;
+ *         else if (level == 0x2A)          soundGroup = 0x2C;
+ *         else if (level == 0x2B)          soundGroup = 0x2D;
+ *     }
+ *     if (soundGroup == 0) {                          // adventure: the table
+ *         soundGroup = GetSoundGroupID(level);
+ *         bank       = data_02075769[level * 3];
+ *     }
+ *     Sound::LoadGroupAndSetBank(soundGroup, bank);
+ *
+ * -- src/_ZN5Stage13InitResourcesEv.cpp:314-327, and those four ids are the
+ * four VS arenas (51, 29, 42, 43). data_0209f220 is 2 in a match because the
+ * VS start stages it that way: func_ov075_02116c8c calls
+ * LoadLevelNoReturn(map, 0, 2, 0), LoadLevel puts that starID in data_0209f1f0
+ * and InitResources copies it to data_0209f220.
+ *
+ * WHY IT IS NOT COSMETIC. `bank` is data_0208e428, which Player_PlaySoundEffect
+ * hands to func_02051e60 as the SBNK every kind-3 sound is looked up in, and
+ * func_02051a98 then resolves each note's PROGRAM in that bank. A program the
+ * bank does not carry is not a wrong instrument, it is NO NOTE -- the note is
+ * dropped where hal/sdat/sseq.cpp's start_note says "program %d has no note
+ * there", without a sound and without an error.
+ *
+ * MEASURED, this branch off versus on: same binary, same 600-frame run, same
+ * staged star, bank the only variable. Arena map 0 (level 51) under the
+ * adventure bank 0x20: sound 0x39 lost 15 notes and sound 0x3a lost 3, all of
+ * them to programs 22 and 23, which bank 0x36 carries and 0x20 does not --
+ * under 0x36 both sounds come back whole. Arena map 3 (level 42) under
+ * adventure bank 0x34: sounds 0x173, 0x40, 0x41 and 0x06 lost 15 notes between
+ * them to programs 22 and 25, and all four come back. That is the reported
+ * "some sounds do not play in the arena", and it is per-NOTE rather than
+ * per-sound, which is why it reads as intermittent rather than as a sound
+ * being missing outright.
+ *
+ * It is not a one-way trade and this comment will not pretend it is. Bank 0x36
+ * has no program 6, so on levels 51 and 29 the coin VARIANT 0x12 loses its
+ * program-6 track where the adventure bank happened to have one. That is what
+ * the DS does with the bank the DS loads. The chime a normal pickup plays is
+ * 0x11, whose program 19 bank 0x36 carries.
+ *
+ * Nothing here is invented: the branch, the four constants, the 0x36 default
+ * and the fall-through to the table are the ROM's, and the adventure path
+ * below is bit-for-bit what it was. */
+static int vs_sound_group(int level)
+{
+    if (data_0209f220 != 2)
+        return 0;
+    if (level == 1 || level == 0x33) return 0x2B;
+    if (level == 0x1D)               return 0x2E;
+    if (level == 0x2A)               return 0x2C;
+    if (level == 0x2B)               return 0x2D;
+    return 0;
+}
+
 void seat_course_sound(int level)
 {
     const unsigned char *row = data_02075768 + level * 3;
-    const int group = GetSoundGroupID(level, 0);
-    const int bank = row[1];
+    int group = vs_sound_group(level);
+    int bank = 0x36;
+    const int vs = (group != 0);
+    if (!vs) {
+        group = GetSoundGroupID(level, 0);
+        bank = row[1];
+    }
     /* SIGNED, and that is the whole meaning of the column: Stage::InitResources
        declares it `extern s8 data_0207576a[]`, and LoadAndSetMusic_Layer1's
        first branch is `if (j < 0) stop`. 0xff is "this sublevel has no layer-1
@@ -220,8 +288,9 @@ void seat_course_sound(int level)
 
     g_course_music = bgm;
     fprintf(stderr, "[course] sublevel %d sound row: group=%d bank=0x%02x "
-            "bgm=%d (%s)\n", level, group, bank, bgm,
-            bgm < 0 ? "no layer-1 track" : "start");
+            "bgm=%d (%s) [%s branch, star=%d]\n", level, group, bank, bgm,
+            bgm < 0 ? "no layer-1 track" : "start",
+            vs ? "VS arena" : "adventure table", (int)data_0209f220);
     _ZN5Sound22LoadAndSetMusic_Layer1Ei(bgm);
     /* Push the START the music call just queued at the ARM9 half through the
        hosted ARM7, so the first frame already has voices allocated rather
