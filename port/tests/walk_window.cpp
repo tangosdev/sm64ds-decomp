@@ -1112,6 +1112,9 @@ void port_fader_start_color(int frames, int toEnd, unsigned short color);
    UpdateMessage dialogue arm); the compositor rasters engine A's 2D box over
    the 3D frame; the probe opens a box headlessly for a visual check. */
 void port_message_pump(void);
+/* the OTHER statement of Stage::Behavior the port hosts (hal/star_flow.cpp):
+   the VS 3-2-1, which ends by starting the arena's own music */
+void port_vs_countdown_tick(void);
 void port_message_composite_engine_a(void *fb);
 int port_probe_message_id(void);
 int port_probe_message_fire(void *player, int id);
@@ -9466,6 +9469,14 @@ int main(void)
            compositor below reads. Stepped here, after the player tick that can
            open the box (St_Talk_Main -> func_0201f32c) and beside the fader. */
         port_message_pump();
+        /* AND ITS OTHER ARM. On the ROM these two are the same statement:
+           Stage::Behavior branches on data_0209f2d8 == 1 and calls
+           UpdateMessage on the adventure side, the VS block on the other. The
+           countdown is the head of that block, and its last act -- after the
+           three beeps and the GO -- is Sound::LoadAndSetMusic_Layer1(0x4d),
+           which is the only music a VS arena has. Self-guarded on the mode, so
+           an adventure frame reaches one load and a compare. */
+        port_vs_countdown_tick();
         port_input_probe_trace_msg(frame);   /* TEMPORARY: SM64DS_TRACE_MSG */
         port_input_probe_trace_cannon(frame);/* TEMPORARY: SM64DS_TRACE_CANNON */
         port_probe_rabbit_key(frame);        /* TEMPORARY: SM64DS_TRACE_RABBITKEY */

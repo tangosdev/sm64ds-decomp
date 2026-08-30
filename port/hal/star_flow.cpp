@@ -94,6 +94,18 @@ extern unsigned char data_0209caa0[];
    separately (data_02075768/69/6a) because the ROM walks them with a stride
    of three; the port emits the run once and does the same arithmetic. */
 extern unsigned char data_02075768[];
+/* The VS half of the stage's state. Spellings are the ones the two ROM
+   functions this file stands in for use: Stage::InitResources declares
+   data_0209f2bc s8 and data_0209f304/f308 s16, Stage::Behavior declares
+   data_0209f2bc u8 and data_0209f304 u16; the host storage is four bytes wide
+   either way (hal/w8a_stage_storage.cpp, hal/auto_bss.cpp). */
+extern unsigned char data_0209f2d8;   /* game mode: 0 adventure, 1 VS, 2 script */
+extern unsigned char data_0209f2bc;   /* VS start countdown: 3, 2, 1, 0 */
+extern unsigned short data_0209f304;  /* frames left in the current count */
+extern short         data_0209f308;
+extern unsigned char data_0209f2c4;   /* pause-screen state; 0 = playing */
+extern unsigned char data_0209fc50;   /* players in the match (SetNumPlayers) */
+extern int           data_0208ee44;   /* vblanks per game tick */
 
 }  // extern "C"
 
@@ -286,16 +298,80 @@ void seat_course_sound(int level)
                 bgm);
     }
 
-    g_course_music = bgm;
+    /* THE LAYER-1 CALL IS NOT PART OF THE VS ROW, AND THE PORT WAS MAKING IT.
+     *
+     * The block above is InitResources' sound-GROUP statement, which the ROM
+     * guards on `data_0209f2d8 != 2`; VS is mode 1, so it runs and the VS
+     * branch above is right to be here. The MUSIC statement forty lines later
+     * is a different statement with a different guard
+     * (src/_ZN5Stage13InitResourcesEv.cpp:365-381):
+     *
+     *     int v0_8 = (data_0209f2d8 == 1) ? 1 : 0;
+     *     if (v0_8 == 0) {
+     *         ... four more preconditions ...
+     *         Sound::LoadAndSetMusic_Layer1(data_0207576a[level * 3]);
+     *
+     * -- so a VS match reaches the table row NEVER. The port called it anyway,
+     * and the arena's row is what came out:
+     *
+     *   level 51 row[2] = -1  ->  LoadAndSetMusic_Layer1's own `if (j < 0)`
+     *                             STOP branch. Silence, and this is Tango's
+     *                             "no music at all" on SM64DS_VS_MAP=0.
+     *   level 42 row[2] = 65  ->  the ADVENTURE track for the Battle Fort,
+     *                             which the DS never plays in a match.
+     *
+     * The arena's real music is Stage::Behavior's, at the end of the 3-2-1 --
+     * see port_vs_countdown_tick below. Only the ROM's VS guard is added here:
+     * the other four preconditions (the cutscene flag, the two same-area
+     * transitions and the level-2 event bit) are separate port gaps and
+     * changing them would move adventure levels, which this does not. */
+    const int vs_mode = (data_0209f2d8 == 1);
+
+    /* g_course_music is only read by port_course_sound_probe, and it means
+       "what this file last asked layer 1 for". In a match nothing is asked for
+       here, and func_ov075_02116c8c's StopLoadedMusic_Layer1 has already run,
+       so -1 is the true state until the countdown starts 0x4d. */
+    g_course_music = vs_mode ? -1 : bgm;
     fprintf(stderr, "[course] sublevel %d sound row: group=%d bank=0x%02x "
             "bgm=%d (%s) [%s branch, star=%d]\n", level, group, bank, bgm,
-            bgm < 0 ? "no layer-1 track" : "start",
+            vs_mode ? "VS: the ROM does not read this column"
+                    : bgm < 0 ? "no layer-1 track" : "start",
             vs ? "VS arena" : "adventure table", (int)data_0209f220);
-    _ZN5Sound22LoadAndSetMusic_Layer1Ei(bgm);
+    if (!vs_mode)
+        _ZN5Sound22LoadAndSetMusic_Layer1Ei(bgm);
     /* Push the START the music call just queued at the ARM9 half through the
        hosted ARM7, so the first frame already has voices allocated rather
        than a batch sitting in the ring. */
     sdat_host_tick();
+}
+
+/* Stage::InitResources' VS COUNTDOWN SEAT, its lines 270-279:
+ *
+ *     if (data_0209f2d8 == 1) { data_0209f2bc = 3;      // 3, 2, 1
+ *                               data_0209f304 = 0x28;   // frames per count
+ *                               data_0209f308 = 0; }
+ *     else                    { data_0209f2bc = 0;
+ *                               data_0209f304 = 0; }
+ *
+ * port/stage_lifecycle_map.txt section 2d lists all three as ABSENT from the
+ * port, with data_0209f2bc flagged as already having a live reader. They are
+ * seated now because a second reader turned up and it is the one Tango
+ * reported: with all three left at their bss zero, Stage::Behavior's countdown
+ * cannot start, and the arena's music is the last thing that countdown does.
+ * Nothing else in this file reads them; the tick below does. */
+void seat_vs_countdown(void)
+{
+    if (data_0209f2d8 == 1) {
+        data_0209f2bc = 3;
+        data_0209f304 = 0x28;
+        data_0209f308 = 0;
+        fprintf(stderr, "[vsgo] VS countdown armed: %d counts of %d frames, "
+                "step %d\n", (int)data_0209f2bc, (int)data_0209f304,
+                data_0208ee44);
+    } else {
+        data_0209f2bc = 0;
+        data_0209f304 = 0;
+    }
 }
 
 }  // namespace
@@ -346,6 +422,126 @@ int func_0203d974(void)
 void port_boot_course_sound(int level)
 {
     seat_course_sound(level);
+    seat_vs_countdown();
+}
+
+/* ---- THE ARENA'S OWN MUSIC ------------------------------------------------
+ *
+ * Stage::Behavior's VS countdown statement, run every frame the way
+ * Stage::Behavior runs it -- the treatment hal/message_pump.cpp gives
+ * Stage::UpdateMessage, and for the same reason: the whole function is not in
+ * the port's link (no slice lists src/_ZN5Stage8BehaviorEv.cpp) and pulling it
+ * in would bring PS_Update, VE_Init, Scene::SetSceneToSpawn and the rest of the
+ * pause/level-change machinery the port does not host. This is ONE statement of
+ * it, calling the real matched functions, and nothing else.
+ *
+ * The body is src/_ZN5Stage8BehaviorEv.cpp:141-170, inside that function's own
+ * `data_0209f2d8 == 1` branch:
+ *
+ *     int cnt = 0;
+ *     for (i = 0; i < 4; i++) {
+ *         char *p = data_0209f394[i];
+ *         if (p && *(u8 *)(p + 0x711)) cnt++;
+ *     }
+ *     if (cnt >= data_0209fc50) {
+ *         if (data_0209f304 == 0x28 && data_0209f2bc == 3) func_02012790(0x2b);
+ *         if (data_0209f2c4 == 0) {
+ *             if (data_0209f304 != 0 || data_0209f2bc != 0) {
+ *                 data_0209f304 -= data_0208ee44;
+ *                 if (data_0209f304 == 0 && data_0209f2bc != 0) {
+ *                     data_0209f2bc -= 1;
+ *                     data_0209f304 = 0x28;
+ *                     if (data_0209f2bc != 0) func_02012790(0x2b);
+ *                     else { func_02012790(0x2a);
+ *                            Sound::LoadAndSetMusic_Layer1(0x4d); }
+ *                 }
+ *             }
+ *         }
+ *     }
+ *
+ * WHY THIS IS THE ARENA'S MUSIC AND NOT A GUESS. Every BL to
+ * Sound::LoadAndSetMusic_Layer1 (0x0201320c) in the image was enumerated over
+ * arm9_dec.bin and all of extracted/overlays -- 19 call sites. Exactly three
+ * are in arm9: ProcessKuppaScript (0x0200eac8), this one (0x0202be08) and
+ * InitResources' (0x0202d36c, guarded off in VS). The other sixteen are in
+ * ov002/3/4/5/6/7 and ov075, and ov075's four are the LOBBY's own tracks
+ * (0x4c/0x51/0x52) -- func_ov075_02118378 and func_ov075_0211a410, both scene
+ * code, neither reachable once the arena is up. The four arena overlays
+ * (ov059/ov051/ov037/ov050, levels 51/43/29/42) contain not one call. So seq
+ * 0x4d, from here, is the only music a VS arena can have.
+ *
+ * The SDAT agrees from the other end. Group 0x2b, NCS_GRP_VS_CASTLE -- the
+ * group Stage::InitResources loads for arena levels 1 and 0x33 -- has FOURTEEN
+ * members, and seq 0x4d is among them: WAVEARC 51/40/44, BANK 0/1/54/9, and
+ * SEQ 76/77/78/79/80/81/82. (An earlier draft of this record said the group
+ * "ships exactly SEQ 77 and BANK 54". It does not; those are two of its
+ * fourteen, and the other five SEQs are the rest of the VS set.) BANK 54 is
+ * 0x36, the bank seat above, and SEQ 77 is 0x4d, NCS_BGM_VSATHRETIC. The
+ * arena's own group carries the arena's own music.
+ *
+ * cnt >= data_0209fc50 is the ROM's own readiness gate: SetNumPlayers writes
+ * data_0209fc50 (SetNumPlayers -> func_020308d0), and +0x711 is set by the
+ * player's own level-enter step func_ov002_020c71e0, which is in the link and
+ * dispatched through hal/player_states.inc:299. That same step then holds the
+ * player where he lands while data_0209f2bc != 0 -- the DS's 3-2-1 freeze --
+ * so seating the counter without ticking it down would stop the match dead.
+ * The two land together for that reason.
+ *
+ * THE FREEZE IS NOT THE SAME LENGTH ON EVERY MAP, AND THE LONG ONE IS NOT A
+ * HITCH. The counter only runs once cnt has caught up with data_0209fc50, so
+ * the hold is 60 frames of countdown plus however long the players take to
+ * reach their level-enter step. Measured at 600 frames on all four maps: three
+ * of them end the countdown around frame 60, and the Battle Fort (map 4, level
+ * 42) around frame 109. That gap is the ROM's own readiness gate answering a
+ * heavier level, not the port stalling.
+ *
+ * func_02012790 is Sound::Play2D(2, id): 0x2b three times for the counts,
+ * 0x2a for the GO. Both are the ROM's ids at the ROM's frames.
+ *
+ * TWO ROM PRECONDITIONS THIS HOSTED STATEMENT DOES NOT CARRY, recorded rather
+ * than faked (and logged as one debt line in port/stage_lifecycle_map.txt).
+ * Stage::Behavior's VS branch has two early returns AHEAD of the countdown
+ * that this function does not reproduce -- the data_0209fc9c arm (the pause
+ * state, which returns after func_02032f54) and the data_0209fc68 == 6 arm
+ * (match end). The port hosts neither piece of state, so both read zero and
+ * the difference is currently unobservable; the day either goes live, this
+ * ticks where the ROM would suppress. Related, and the same debt: the ROM
+ * picks between UpdateMessage and this block on one data_0209f2d8 test, but
+ * port_message_pump does not self-guard on the mode while this arm does, so
+ * the pairing is half-implemented -- in a match the port runs both arms where
+ * the DS runs one. */
+void port_vs_countdown_tick(void)
+{
+    if (data_0209f2d8 != 1)
+        return;
+    int cnt = 0;
+    for (int i = 0; i < 4; i++) {
+        const char *p = (const char *)data_0209f394[i];
+        if (p != 0 && *(const unsigned char *)(p + 0x711) != 0)
+            cnt++;
+    }
+    if (cnt < data_0209fc50)
+        return;
+    if (data_0209f304 == 0x28 && data_0209f2bc == 3)
+        func_02012790(0x2b);
+    if (data_0209f2c4 != 0)
+        return;
+    if (data_0209f304 == 0 && data_0209f2bc == 0)
+        return;
+    data_0209f304 = (unsigned short)(data_0209f304 - data_0208ee44);
+    if (data_0209f304 != 0 || data_0209f2bc == 0)
+        return;
+    data_0209f2bc -= 1;
+    data_0209f304 = 0x28;
+    if (data_0209f2bc != 0) {
+        func_02012790(0x2b);
+    } else {
+        func_02012790(0x2a);
+        fprintf(stderr, "[vsgo] countdown finished: Sound::Play2D(2, 0x2a) and "
+                "Sound::LoadAndSetMusic_Layer1(0x4d), the arena's own track\n");
+        g_course_music = 0x4d;
+        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
+    }
 }
 
 /* Seat what the course loop reads that the boot does NOT: the player globals
