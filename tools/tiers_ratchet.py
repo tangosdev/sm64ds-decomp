@@ -328,8 +328,8 @@ def why(identity, scores, tracked, moves=None):
     return "; ".join(tiers.CRITERION_LABEL[k] for k in failed)
 
 
-def classify_missing(missing, current, tracked, moves):
-    """Split the banked-but-not-CONVERTED paths into (absorbed_clean, backslid).
+def classify_missing(missing, current, tracked, moves, ownership=None):
+    """Split banked identities into clean ownership transitions and backslides.
 
     `absorbed_clean` is a banked path that stopped existing ONLY because a promoted
     TU absorbed it, and whose absorbing file is itself CONVERTED. Nothing left the
@@ -348,8 +348,19 @@ def classify_missing(missing, current, tracked, moves):
     correct outcome and not a thing to "fix" by exempting mangled refs: byte-match
     outranks readability, and the exception log is where that trade gets recorded.
     """
+    if ownership is None:
+        ownership = tiers.srcpath.source_definition_index()
     absorbed_clean, backslid = [], []
     for rel in missing:
+        members = ownership.get(rel) or []
+        member_ids = {f"{rel}#{symbol}" for symbol in members}
+        if len(members) > 1 and member_ids.issubset(current):
+            # The per-member scorer was introduced after some multi-function sources
+            # had already been banked by their physical path. Treat the first path ->
+            # member-identity rewrite as a lossless identity upgrade only when every
+            # enrolled member independently remains CONVERTED.
+            absorbed_clean.append(rel)
+            continue
         moved = moves.get(rel)
         if moved and rel not in tracked:
             _, dest = moved
