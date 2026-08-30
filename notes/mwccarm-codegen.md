@@ -4012,7 +4012,7 @@ homed.** `func_ov074_021201f0` reads the boss's `Vector3_16` facing, bumps the y
 ang.x = *(unsigned short *)(c + 0x8c);   /* ... y, z */
 ```
 
-mwccarm removes `ang` entirely and the body comes out nine instructions (0x24) short of
+mwccarm removes `ang` entirely and the body comes out eight instructions (0x20) short of
 the ROM. Written as one struct copy
 
 ```c
@@ -4077,11 +4077,34 @@ z, y, x) reaches the ROM's map, and it takes the residue from 25 words to 11. Th
 order `0x114, 0x118, 0x144, 0x148, 0x14c` NEVER reaches it, under any of the levers above.
 
 That leaves the two-source-shape conflict this function is currently stuck on, in the
-shape of 6bn: the store order that gives the ROM's registers emits the 0x144 store two
+shape of 6bn: the store order that gives the ROM's registers emits the 0x144 store three
 slots early, and the store order that emits the schedule correctly gives the rotated
 registers. What would break it is a lever that reorders emitted stores without reordering
 them in the source, or one that ranks a base web by something other than its consumer's
 source position.
+
+**One thing this function is still modelled, not proven, on.** Its frame carries 24 bytes
+between the last array and the output vector that no instruction ever touches, and a
+further word above the output vector. mwccarm drops a local that is never referenced --
+verified with unused scalars, unused structs, `volatile` unused locals, arrays whose every
+store is dead, and address-taken-but-folded forms, none of which reserve a byte. The only
+shapes that reproduce the frame are ones where the untouched bytes belong to the SAME
+object as the output vector, which is used: `Vector3 out[3]` with `&out[2]` passed, a
+three-member struct with its last member passed, or `int buf[9]` with the vector at
+`buf[6]`. All three give the identical object, so the bytes are right and the original
+declaration is a guess. Anyone resuming this should treat the array-index-2 spelling as a
+placeholder, not as recovered source.
+
+**The near-miss DB will print a smaller number than the gate, and neither is wrong.**
+This body reads div=9 in `nearmiss/db.jsonl` and 11 under `tools/match.py`. It is not a
+difference in what gets wildcarded -- both sides wildcard the same two reloc slots
+(offsets 0x1c8 and 0x370), checked by comparing the candidate object's own relocations
+against the ones `config/arm9/overlays/ov074/relocs.txt` implies. The gate counts
+differing words PER OFFSET; `nearmiss_db.evaluate` disassembles both sides to mnemonic
+strings and scores a `difflib.SequenceMatcher` alignment over that sequence, so a block
+that is merely REORDERED realigns and is charged once instead of at every offset it
+shifted. Expect the DB to under-report exactly on a residue like this one, whose whole
+remainder is a reordering. Score merges by the gate.
 
 **Cheap diagnostic worth reusing.** For a residue in a loop over several arrays, print the
 `add rN, sp, #imm` instructions from the candidate object and read off the frame-offset ->
