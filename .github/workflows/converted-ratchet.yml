@@ -1,9 +1,11 @@
 # Guards the CONVERTED tier against a silent backslide.
 #
-# `tools/tiers.py` scores every file under src/ against five readability criteria (real
+# `tools/tiers.py` scores every enrolled member under src/ against five readability criteria (real
 # function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, no
-# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of paths that pass
-# all five in `config/converted-baseline.json` and fails when a banked path LEAVES it.
+# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of source/member
+# identities that pass all five in `config/converted-baseline.json` and fails when one
+# leaves it. One-function files use the source path itself; promoted TU members append
+# `#symbol` to that path, matching attribution's ownership granularity.
 #
 # A SET, not a count, on purpose: a count ratchet is satisfied by converting one file
 # while wrecking another, which is the exact trade this gate exists to notice.
@@ -64,7 +66,13 @@ on:
       - "src/**"
       - "tools/tiers.py"
       - "tools/tiers_ratchet.py"
+      - "tools/test_tiers_ratchet.py"
       - "tools/delaunder.py"
+      # Member identities are derived from the enrollment table, so the file that maps a
+      # source to the functions it owns decides how many identities this gate banks. A PR
+      # that only changes srcpath.py touches no other path here and would otherwise
+      # silently redefine the banked set.
+      - "tools/srcpath.py"
       # The checker resolves a GONE path through the TU manifest before it calls that
       # path a deletion, so the manifest reader and the manifest itself are inputs to
       # the verdict now. A promotion PR trips `src/**` anyway (it deletes N files and
@@ -80,7 +88,9 @@ on:
       - "src/**"
       - "tools/tiers.py"
       - "tools/tiers_ratchet.py"
+      - "tools/test_tiers_ratchet.py"
       - "tools/delaunder.py"
+      - "tools/srcpath.py"
       - "tools/tu_manifest.py"
       - "config/tu_manifest.d/**"
       - "config/converted-baseline.json"
@@ -114,6 +124,15 @@ jobs:
         # codegen trick, a volatile match hack still must, a TU promotion must read as a
         # MOVE, and a move into a file that fails a criterion must still fail the gate.
         run: python -m unittest tools.test_tiers -v
+      - name: Ratchet unit tests
+        # tool-tests.yml runs an ENUMERATED module list on purpose and does not include
+        # this one, so this step is the only thing that executes it. It pins the parts of
+        # the gate that decide whether a change is a backslide or an ownership change:
+        # a path banked before member scoring existed is a lossless identity upgrade only
+        # when EVERY enrolled member still passes, one failing member is still a
+        # backslide and names itself, and a member with no marker or inline lifecycle
+        # evidence falls back to whole-file scoring rather than passing speculatively.
+        run: python -m unittest tools.test_tiers_ratchet -v
       - name: Current CONVERTED state
         # Report only, no exit-code meaning: prints the tier percentage and names anything
         # that backslid, so the log says what happened before the gate says whether it passed.
