@@ -741,7 +741,7 @@ class Isolate(unittest.TestCase):
         self.assertTrue(patched)
         refused, why = OI.rebias_object_symbols(bytes(bad), policy)
         self.assertIsNone(refused)
-        self.assertIn("targets rebased symbol", why["error"])
+        self.assertIn("smaller than bias", why["error"])
 
         bad = bytearray(raw)
         patched = False
@@ -760,6 +760,58 @@ class Isolate(unittest.TestCase):
         refused, why = OI.rebias_object_symbols(bytes(bad), policy)
         self.assertIsNone(refused)
         self.assertIn("still referenced", why["error"])
+
+    def test_rebias_vtable_preserves_live_reference_targets(self):
+        """Whole-object vptr stores keep their target while _ZTV moves by eight."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        raw = self.build("struct P { virtual ~P(); virtual int f(); }; "
+                         "P::~P(){} int P::f(){ return 1; }\n").read_bytes()
+
+        def inspect(blob):
+            parsed = ELFFile(io.BytesIO(blob))
+            table = parsed.get_section_by_name(".symtab")
+            symbols = list(table.iter_symbols())
+            vtable = next(s for s in symbols if s.name == "_ZTV1P"
+                          and s["st_shndx"] != "SHN_UNDEF")
+            content = {i: sec.data() for i, sec in enumerate(parsed.iter_sections())
+                       if sec.header["sh_type"] in OI.CONTENT and sec.header["sh_size"]}
+            references = []
+            for sec in parsed.iter_sections():
+                if not isinstance(sec, RelocationSection):
+                    continue
+                source = parsed.get_section(sec.header["sh_info"])
+                for reloc in sec.iter_relocations():
+                    if table.get_symbol(reloc["r_info_sym"]).name != "_ZTV1P":
+                        continue
+                    references.append({
+                        "section": source.name, "offset": reloc["r_offset"],
+                        "type": reloc["r_info_type"], "addend": reloc["r_addend"],
+                        "resolved": vtable["st_value"] + reloc["r_addend"],
+                    })
+            return vtable, content, references
+
+        before_vtable, before_content, before_refs = inspect(raw)
+        self.assertTrue(before_refs)
+        self.assertTrue(all(row["type"] == OI.R_ARM_ABS32 and row["addend"] >= 8
+                            for row in before_refs))
+        policy = {"_ZTV1P": {"bias": 8, "size": before_vtable["st_size"],
+                              "section": ".data"}}
+        out, report = OI.rebias_object_symbols(raw, policy)
+        self.assertIsNone(report["error"])
+        after_vtable, after_content, after_refs = inspect(out)
+        self.assertEqual(after_vtable["st_value"], before_vtable["st_value"] + 8)
+        self.assertEqual(after_vtable["st_size"], before_vtable["st_size"] - 8)
+        self.assertEqual(after_content, before_content)
+        self.assertEqual([(r["section"], r["offset"], r["type"], r["resolved"])
+                          for r in after_refs],
+                         [(r["section"], r["offset"], r["type"], r["resolved"])
+                          for r in before_refs])
+        self.assertEqual([r["addend"] for r in after_refs],
+                         [r["addend"] - 8 for r in before_refs])
+        self.assertEqual(len(report["relocations"]), len(before_refs))
 
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""
