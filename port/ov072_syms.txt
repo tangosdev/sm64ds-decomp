@@ -1,12 +1,13 @@
-# Gate 193: ov072, a 100% matched ACTOR overlay carrying three classes --
-# BABY_PENGUIN (256), the actual SNOWMAN (272, the UNNAMED daBgSnwmn_c
-# block -- see below), and SNOWMAN_HEAD (273, unhosted). A fourth class,
-# SnowmanBody (274), also lives here and is NOT in level 10's census --
-# unhosted, no sinit runs for it. Fresh per-symbol mount, the ov079/ov080/
-# ov081 convention: WHOLE data span MINUS the two classes this gate hosts'
-# own vtables (host arrays hal/actor_classes_ov072.cpp fills) MINUS dsd's
-# four .p__sinit_* pointer entries (not C identifiers; the port calls the
-# two sinits it runs by name directly) MINUS the two __sinit_* FUNCTION
+# Gate 193, EXTENDED by lane w3-d: ov072, a 100% matched ACTOR overlay
+# carrying FOUR classes -- BABY_PENGUIN (256), the actual SNOWMAN (272, the
+# UNNAMED daBgSnwmn_c block -- see below), SNOWMAN_HEAD (273) and
+# SNOWMAN_BODY (274). ALL FOUR ARE HOSTED NOW. The original gate seated the
+# first two only, and everything this header used to say about 273/274 being
+# unhosted with their sinits off is superseded below. Fresh per-symbol mount,
+# the ov079/ov080/ov081 convention: WHOLE data span MINUS all FOUR hosted
+# classes' own vtables (host arrays hal/actor_classes_ov072.cpp fills) MINUS
+# dsd's four .p__sinit_* pointer entries (not C identifiers; the port calls
+# the four sinits it runs by name directly) MINUS the two __sinit_* FUNCTION
 # symbols themselves (code, not data -- called directly, never mounted).
 # ovdata.py's --pack mode pads the resulting address gaps automatically.
 #
@@ -77,20 +78,51 @@
 # IsStarCollectedInLevel(0xa, 5) == 0 (star 5 not yet collected), then
 # IMMEDIATELY calls ActorBase::MarkForDestruction on itself the same frame
 # -- a real, unconditional spawn call, not a null-guarded soft reference.
-# With SnowmanHead unregistered, that Spawn call reaches the registry's own
-# "not registered" skip path (port/hal/actor_registry.cpp) rather than
-# installing a class -- the same graceful-skip contract every other
-# gate's unhosted sibling class already relies on (SnowmanBody/Snowball/
-# Moneybag/etc.), not a crash. Documented here, verified at runtime with
-# the proof bar (see the gate 193 commit message).
+# That was measurable, and lane w3-d measured it: level 10's baseline census
+# on cons cc10acd4e reads "[spawn] actor 0x111 not registered, skipped" -- so
+# every Cool Cool Mountain boot the port has ever done declined this class.
+# SNOWMAN_HEAD IS REGISTERED NOW and that skip is gone.
 #
-# SINIT SPLIT: run __sinit_ov072_02122350 (daBgSnwmn_c's own three
-# SharedFilePtr loads, data_ov072_02122c40/c48/c50) and __sinit_ov072_02122414
-# (BabyPenguin's own five SharedFilePtr loads + the six-cell PMF state
-# table data_ov072_02122d6c + four Vector3 literals). __sinit_ov072_02122018
-# (SnowmanBody) and __sinit_ov072_021221f8 (SnowmanHead) stay OFF.
+# SNOWMAN_BODY (274) is registered too, and its honest status is different:
+# nothing in src/ spawns 0x112, no level in the lane's proof set places it,
+# and it is on no census. Its seat is ROM-derived and complete (identity by
+# both routes, 31-slot table read out of the image) but it is UNEXERCISED by
+# any run this lane made. It is linkage and correctness, not a demonstrated
+# behaviour change -- said plainly here so nobody reads the two seats as
+# equally proved.
 #
-# IDs cross-checked via arm9 relocs (spawn table 0x02090c-range):
-# BabyPenguin SpawnInfo 0x02122a6c / vtable 0x02122a90; daBgSnwmn_c
-# SpawnInfo 0x02122954 / vtable 0x02122978.
-data_ov072_02121ffc data_ov072_02122004 data_ov072_02122720 data_ov072_02122728 data_ov072_02122730 data_ov072_02122738 data_ov072_02122740 data_ov072_02122748 data_ov072_02122750 data_ov072_02122758 data_ov072_02122760 data_ov072_02122768 data_ov072_02122770 data_ov072_02122778 data_ov072_02122780 data_ov072_0212278c SnowmanBody_SpawnInfo _ZTV11SnowmanBody data_ov072_0212283c data_ov072_02122844 data_ov072_0212284c data_ov072_02122854 data_ov072_0212285c data_ov072_02122864 data_ov072_0212286c data_ov072_02122874 data_ov072_0212287c data_ov072_02122888 SnowmanHead_SpawnInfo _ZTV11SnowmanHead data_ov072_02122938 data_ov072_02122944 data_ov072_02122954 data_ov072_021229f4 data_ov072_021229fc data_ov072_02122a04 data_ov072_02122a0c data_ov072_02122a14 data_ov072_02122a1c data_ov072_02122a24 data_ov072_02122a2c data_ov072_02122a34 data_ov072_02122a3c data_ov072_02122a44 data_ov072_02122a4c data_ov072_02122a54 data_ov072_02122a60 BabyPenguin_SpawnInfo data_ov072_02122b20 data_ov072_02122b28 data_ov072_02122b34 data_ov072_02122b40 data_ov072_02122b4c data_ov072_02122b58 data_ov072_02122b64 data_ov072_02122bc4 data_ov072_02122bcc data_ov072_02122bd4 data_ov072_02122bdc data_ov072_02122be8 data_ov072_02122bf4 data_ov072_02122c00 data_ov072_02122c08 data_ov072_02122c40 data_ov072_02122c48 data_ov072_02122c50 data_ov072_02122c58 data_ov072_02122c64 data_ov072_02122c70 data_ov072_02122c7c data_ov072_02122c88 data_ov072_02122c94 data_ov072_02122c9c data_ov072_02122ca4 data_ov072_02122cac data_ov072_02122cb4 data_ov072_02122cbc data_ov072_02122cc4 data_ov072_02122cd0 data_ov072_02122cdc data_ov072_02122ce8 data_ov072_02122cf0 data_ov072_02122cf4 data_ov072_02122d00 data_ov072_02122d0c data_ov072_02122d18 data_ov072_02122d24 data_ov072_02122d30 data_ov072_02122d3c data_ov072_02122d48 data_ov072_02122d54 data_ov072_02122d60 data_ov072_02122d6c data_ov072_02122dc4
+# SINIT SPLIT IS RETIRED: ALL FOUR sinits now run, in ROM address order --
+# __sinit_ov072_02122018 (SnowmanBody: 12 PMF source pairs -> the six cells
+# at data_ov072_02122b64, plus two Vector3 literals), __sinit_ov072_021221f8
+# (SnowmanHead: three SharedFilePtr/TexSeq loads + 8 PMF source pairs -> the
+# four cells at data_ov072_02122c00), __sinit_ov072_02122350 (daBgSnwmn_c's
+# own three SharedFilePtr loads, data_ov072_02122c40/c48/c50) and
+# __sinit_ov072_02122414 (BabyPenguin's own five SharedFilePtr loads + the
+# six-cell PMF state table data_ov072_02122d6c + four Vector3 literals).
+#
+# THE TWO NEW SINITS COPY CODE ADDRESSES, which is why each new class also
+# gets a host state seat. The pair tables they read (0x02122720..0x02122780
+# for SnowmanBody, 0x0212283c..0x0212287c for SnowmanHead) are mounted ROM
+# data holding {DS function address, 0} pairs -- the pointer-to-member SOURCE
+# shape, every other word zero. Copied raw into bss and dispatched through,
+# they jump into unmapped host memory. port_snowman_body_states_seat() and
+# port_snowman_head_states_seat() verify the sinit copied the ROM's own
+# addresses and then overwrite each with the host body's, the MrBlizzard/
+# BabyPenguin treatment.
+#
+# IDs cross-checked BOTH ROUTES (arm9 spawn table base 0x02090864 + id*4, and
+# each SpawnInfo's own word[1] low halfword):
+#   256 BabyPenguin  0x02090c64 -> SpawnInfo 0x02122a6c word[1] 0x00720100
+#   272 daBgSnwmn_c  0x02090ca4 -> SpawnInfo 0x02122954 word[1] 0x00830110
+#   273 SnowmanHead  0x02090ca8 -> SpawnInfo 0x02122898 word[1] 0x00840111
+#   274 SnowmanBody  0x02090cac -> SpawnInfo 0x0212279c word[1] 0x00850112
+# and each vtable's own [-1] typeinfo resolves to the matching name string:
+#   0x021227c0 [-1] -> 0x02122780 -> "12daBgSnmBdy_c"  (SnowmanBody)
+#   0x021228bc [-1] -> 0x0212287c -> "12daBgSnmHed_c"  (SnowmanHead)
+#   0x02122978 [-1] -> 0x02122938 -> "11daBgSnwmn_c"   (the actual SNOWMAN)
+# Vtables: BabyPenguin 0x02122a90, daBgSnwmn_c 0x02122978, SnowmanHead
+# 0x021228bc, SnowmanBody 0x021227c0 -- the last two are 0x7c bytes each
+# (31 words, 0x021227c0..0x0212283c and 0x021228bc..0x02122938), read out of
+# extracted/overlays/overlay_0072.bin, and every one of their shared slots is
+# byte-identical to the two tables ov72_fill_shared already served.
+data_ov072_02121ffc data_ov072_02122004 data_ov072_02122720 data_ov072_02122728 data_ov072_02122730 data_ov072_02122738 data_ov072_02122740 data_ov072_02122748 data_ov072_02122750 data_ov072_02122758 data_ov072_02122760 data_ov072_02122768 data_ov072_02122770 data_ov072_02122778 data_ov072_02122780 data_ov072_0212278c SnowmanBody_SpawnInfo data_ov072_0212283c data_ov072_02122844 data_ov072_0212284c data_ov072_02122854 data_ov072_0212285c data_ov072_02122864 data_ov072_0212286c data_ov072_02122874 data_ov072_0212287c data_ov072_02122888 SnowmanHead_SpawnInfo data_ov072_02122938 data_ov072_02122944 data_ov072_02122954 data_ov072_021229f4 data_ov072_021229fc data_ov072_02122a04 data_ov072_02122a0c data_ov072_02122a14 data_ov072_02122a1c data_ov072_02122a24 data_ov072_02122a2c data_ov072_02122a34 data_ov072_02122a3c data_ov072_02122a44 data_ov072_02122a4c data_ov072_02122a54 data_ov072_02122a60 BabyPenguin_SpawnInfo data_ov072_02122b20 data_ov072_02122b28 data_ov072_02122b34 data_ov072_02122b40 data_ov072_02122b4c data_ov072_02122b58 data_ov072_02122b64 data_ov072_02122bc4 data_ov072_02122bcc data_ov072_02122bd4 data_ov072_02122bdc data_ov072_02122be8 data_ov072_02122bf4 data_ov072_02122c00 data_ov072_02122c08 data_ov072_02122c40 data_ov072_02122c48 data_ov072_02122c50 data_ov072_02122c58 data_ov072_02122c64 data_ov072_02122c70 data_ov072_02122c7c data_ov072_02122c88 data_ov072_02122c94 data_ov072_02122c9c data_ov072_02122ca4 data_ov072_02122cac data_ov072_02122cb4 data_ov072_02122cbc data_ov072_02122cc4 data_ov072_02122cd0 data_ov072_02122cdc data_ov072_02122ce8 data_ov072_02122cf0 data_ov072_02122cf4 data_ov072_02122d00 data_ov072_02122d0c data_ov072_02122d18 data_ov072_02122d24 data_ov072_02122d30 data_ov072_02122d3c data_ov072_02122d48 data_ov072_02122d54 data_ov072_02122d60 data_ov072_02122d6c data_ov072_02122dc4

@@ -151,3 +151,130 @@ src/__sinit_ov072_02122414.c
 # the note above; host copy in port/unmatched/ModelAnim_Renders.cpp).
 # All six stay byte-locked in src/ as the matched proof; none is
 # referenced from CMakeLists' gate-193 source list.
+
+# ============================================================================
+# GATE 193 EXTENSION (lane w3-d): SNOWMAN_HEAD (273) + SNOWMAN_BODY (274),
+# the two ov072 classes gate 193 left unregistered. Both are plain 31-slot
+# Actors whose vtables are 0x7c bytes and whose shared halves are BYTE-
+# IDENTICAL to the two tables ov72_fill_shared already serves, so the fill is
+# reused verbatim rather than re-derived. Full derivation in
+# port/ov072_syms.txt's header; fills in hal/actor_classes_ov072.cpp.
+#
+# WHY THIS IS A REAL SEAT AND NOT A LINKAGE PADDING EXERCISE. Level 10's
+# baseline census on this tip skips actor 0x111 -- that is SNOWMAN_HEAD, and
+# daBgSnwmn_c::InitResources spawns it unconditionally until star 5 is
+# collected. The class the port has been declining every Cool Cool Mountain
+# boot is this one.
+#
+# BOTH RENDERS ARE SAFE AND STAY IN THE SLICE. Each dispatches slot 5 through
+# a local six-virtual ROM-order shadow -- the same idiom that made
+# _ZN11BabyPenguin6RenderEv a host copy -- but the receiver decides the
+# outcome, and here it is a plain Model, not a ModelAnim. Both class
+# destructors name the member type explicitly and both agree with the
+# generated headers: SnowmanBody has Model m0 @0xd4 (0x50) / ShadowModel @0x124
+# / MovingCylinderClsn @0x14c / WithMeshClsn @0x180; SnowmanHead has Model m0
+# @0xd4 (0x50) / TextureSequence @0x124 / MovingCylinderClsn @0x138 /
+# WithMeshClsn @0x16c. _ZTV5Model[5] is dual-filled and serves the shadow
+# call correctly -- this is daBgSnwmn_c's case (whose Render is IN gate 193's
+# own slice above), not BabyPenguin's.
+#
+# THE TWO D1s ARE NOT IN THIS LIST, for the MotherPenguin/OneUpLogo/
+# BabyPenguin reason: each is a real MSVC-synthesised empty destructor over
+# LOCAL shadow classes (Model/ShadowModel/TextureSequence/MovingCylinderClsn/
+# WithMeshClsn declared with no bodies of their own), so MSVC emits calls to
+# ??1Model@@QAE@XZ and friends that nothing in the link defines. Each chain is
+# spelled directly in hal/actor_classes_ov072.cpp (smb_d1 / smh_d1),
+# transcribed from the ROM listing at 0x0211f000 and 0x0211ff34 and
+# cross-checked against the D0 bodies, which carry the identical member order
+# and offsets. UNLIKE BabyPenguin's D1, both of these DO store their own
+# table first (str r1,[r4] with the literal 0x021227c0 / 0x021228bc) -- that
+# is in the host chains too, and it is a no-op re-store of the host array.
+# Both stay byte-locked in src/ as the matched proof.
+#
+# ALL FOUR PMF DISPATCHERS ARE HOST COPIES, the BabyPenguin_StateEnter
+# treatment, in port/unmatched/Snowman_StateDispatch.cpp:
+#   func_ov072_0211fc78  SnowmanBody enter (pp+0)   pad 0x38c
+#   func_ov072_0211fc3c  SnowmanBody tick  (pp+1)   pad 0x38c
+#   func_ov072_0212059c  SnowmanHead enter (pp+0)   pad 0x328
+#   func_ov072_02120560  SnowmanHead tick  (pp+1)   pad 0x328
+# Each matched src declares `struct C; typedef void (C::*PMF)(); struct C {
+# char pad[N]; PMF *pp; };` -- a REAL C++ pointer-to-member on a deliberately
+# INCOMPLETE class. mwcc's PMF there is the ROM's own 8-byte {function,delta}
+# pair; MSVC's representation for an incomplete class is the "unknown
+# inheritance" form and calling through it does not reproduce those
+# semantics. That is measured precedent on this very overlay, not caution:
+# port/unmatched/BabyPenguin_StateEnter.cpp is the same call on the same
+# six-cell shape and its header says exactly this.
+#
+# NOTE the /vmg;/vmm entries port/CMakeLists.txt already carries for
+# func_ov072_0211fc3c.cpp and func_ov072_02120560.cpp. That block's own
+# comment calls them "inert today ... not a fix that has been measured", and
+# they cover only the two TICK dispatchers -- the two ENTER ones
+# (func_ov072_0211fc78, func_ov072_0212059c) are not in the list at all. So
+# the compile option could not have carried this seat even if the
+# representation question went the other way, and this lane did not test it.
+# All four matched TUs stay byte-locked in src/ as proof, out of the list
+# below.
+#
+# ---- SNOWMAN_BODY (daBgSnmBdy_c, 274). Six PMF state cells at
+# data_ov072_02122b64, seated with host addresses by
+# port_snowman_body_states_seat(); func_ov072_0211fcb0 is its ChangeState
+# (pp = &table + state*0x10). D1 and both dispatchers excluded (above).
+src/_ZN11SnowmanBodyD0Ev.c
+src/func_ov072_0211f0a4.c
+src/func_ov072_0211f158.cpp
+src/func_ov072_0211f1dc.cpp
+src/func_ov072_0211f280.c
+src/func_ov072_0211f330.c
+src/func_ov072_0211f3e4.c
+src/func_ov072_0211f48c.cpp
+src/func_ov072_0211f578.c
+src/func_ov072_0211f598.c
+src/func_ov072_0211f63c.c
+src/func_ov072_0211f65c.cpp
+src/func_ov072_0211f804.c
+src/func_ov072_0211f81c.cpp
+src/func_ov072_0211f9c4.c
+src/func_ov072_0211fa08.cpp
+src/func_ov072_0211faf0.c
+src/func_ov072_0211fb14.cpp
+src/func_ov072_0211fb7c.c
+src/func_ov072_0211fcb0.c
+src/_ZN11SnowmanBody16CleanupResourcesEv.c
+src/_ZN11SnowmanBody16OnPendingDestroyEv.c
+src/_ZN11SnowmanBody6RenderEv.cpp
+src/_ZN11SnowmanBody8BehaviorEv.cpp
+src/_ZN11SnowmanBody13InitResourcesEv.cpp
+src/SnowmanBody_Spawn.c
+src/__sinit_ov072_02122018.c
+#
+# ---- SNOWMAN_HEAD (daBgSnmHed_c, 273). Four PMF state cells at
+# data_ov072_02122c00, seated by port_snowman_head_states_seat();
+# func_ov072_021205d4 is its ChangeState. D1 and both dispatchers excluded
+# (above).
+#
+# T5: src/func_ov072_0212001c.c carries "recovered from vtable slot identity"
+# and the recovered name "SnowmanBody_Kill". BOTH are wrong and the body is
+# real decomp -- it is cell 3's ENTER half of SnowmanHead's state table (the
+# source pair at 0x0212283c), reached through func_ov072_0212059c and named
+# by NO vtable slot in either ov072 table; and match.py reproduces all 0x164
+# bytes at 2004/b56 with --strict-relocs. Ruled REAL_DECOMP before seating,
+# row appended to port/tools/inferred_stub_adjudicated.txt with the evidence.
+src/_ZN11SnowmanHeadD0Ev.c
+src/func_ov072_0211ffd8.c
+src/func_ov072_0212001c.c
+src/func_ov072_02120180.c
+src/func_ov072_021201d4.c
+src/func_ov072_02120308.c
+src/func_ov072_02120358.c
+src/func_ov072_02120430.c
+src/func_ov072_02120450.cpp
+src/func_ov072_02120514.c
+src/func_ov072_021205d4.c
+src/_ZN11SnowmanHead16CleanupResourcesEv.c
+src/_ZN11SnowmanHead16OnPendingDestroyEv.c
+src/_ZN11SnowmanHead6RenderEv.cpp
+src/_ZN11SnowmanHead8BehaviorEv.cpp
+src/_ZN11SnowmanHead13InitResourcesEv.cpp
+src/SnowmanHead_Spawn.c
+src/__sinit_ov072_021221f8.c

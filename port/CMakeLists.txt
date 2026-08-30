@@ -888,6 +888,39 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov052_0211123c.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov056_021124d4=data_ov052_021124d4")
+# R-w3d, run rel0215 (lane w3-d): ov072's two newly seated classes each have
+# their vtable spelled TWO ways by their own matched src. SnowmanBody_Spawn.c
+# stores `_ZTV11SnowmanBody`, which is what hal/actor_classes_ov072.cpp
+# defines as the host array; _ZN11SnowmanBodyD0Ev.c stores the SAME ADDRESS
+# (0x021227c0) under dsd's other name for it, `_ZTV12daBgSnmBdy_c`.
+# config/arm9/overlays/ov072/symbols.txt carries both names on that one
+# address, and the pair repeats for SnowmanHead at 0x021228bc
+# (_ZTV11SnowmanHead / _ZTV12daBgSnmHed_c). Left alone the D0s are two
+# LNK2019s.
+#
+# A per-source rename rather than an /alternatename, and NOT because the LHS
+# would be defeated -- neither daBgSnm* name is defined anywhere in this link,
+# so an alias would in fact hold. It is a -D because this is one TU per name
+# reaching for its own class's own table, which is exactly what a per-source
+# rename is for, and because it needs no append to the shared
+# tools/alternatename_baseline.txt. The R3 defeat mode does not apply here and
+# is not being claimed.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11SnowmanBodyD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV12daBgSnmBdy_c=_ZTV11SnowmanBody")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11SnowmanHeadD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV12daBgSnmHed_c=_ZTV11SnowmanHead")
+# Same shape once more, ov070's FlyGuy (lane w3-d): FlyGuy_Spawn.c and
+# _ZN6FlyGuyD1Ev.c both store `_ZTV6FlyGuy`, which is what
+# hal/actor_classes_ov070.cpp defines, while _ZN6FlyGuyD0Ev.c stores the SAME
+# ADDRESS (0x02123168) as `_ZTV19daPropeller_Heyho_c` -- symbols.txt carries
+# both names on it. One TU, one name, so a per-source rename rather than an
+# append to the shared alternatename baseline. As with the two ov072 D0s, the
+# LHS is undefined everywhere in this link, so this is not the R3 defeat case.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6FlyGuyD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV19daPropeller_Heyho_c=_ZTV6FlyGuy")
 
 # R5, run linkw wave 15 (lane w15): THREE ov025 TUs spell ov025's OWN vtable
 # 0x021139d4 (_ZTV11PyramidLift) as `data_ov027_021139d4` -- ov025, ov027,
@@ -1621,10 +1654,20 @@ list(APPEND PORT_ACTOR_OVERLAYS ov081)
 # SharedFilePtr construction statics and (BabyPenguin) its six-cell PMF
 # state-dispatch table by name. Their two vtables (_ZTV11BabyPenguin ==
 # _ZTV9daPgBby_c, and daBgSnwmn_c's own unnamed data_ov072_02122978) are
-# host arrays hal/actor_classes_ov072.cpp fills. SnowmanBody (274, not in
-# level 10's census) and SnowmanHead (273, spawned-then-orphaned by
-# daBgSnwmn_c until star 5 is collected) stay unregistered -- their own
-# sinits do not run. See port/ov072_syms.txt and port/slice_gate193.txt.
+# host arrays hal/actor_classes_ov072.cpp fills.
+#
+# LANE w3-d EXTENDED THIS GATE TO THE WHOLE OVERLAY. SnowmanHead (273) and
+# SnowmanBody (274) used to stay unregistered with their sinits off; both are
+# hosted now, so ALL FOUR of ov072's vtables are host arrays and all four of
+# its class sinits run. The two new classes are plain 31-slot Actors whose
+# shared slots are byte-identical to the two above, so ov72_fill_shared serves
+# all four. Their four pointer-to-member dispatchers are host copies
+# (unmatched/Snowman_StateDispatch.cpp) for the BabyPenguin_StateEnter reason,
+# and their state cells are seated with host addresses. One method face
+# (unmatched/Ov072_MethodFaces.cpp) closes Player::StartTalk, which two of
+# the new state handlers call as a C++ method and no linked TU spells that
+# way -- the Coffin closure addendum's shape.
+# See port/ov072_syms.txt and port/slice_gate193.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov072)
 # gate 194: ov094, HOOT_THE_OWL's (234) own overlay. Fresh per-symbol mount.
 # Its own SpawnInfo record, SharedFilePtr construction statics and its
@@ -11288,6 +11331,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
@@ -11299,7 +11343,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
@@ -11483,6 +11527,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -11496,7 +11541,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
@@ -11714,6 +11759,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
+    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -11727,7 +11773,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp

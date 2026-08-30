@@ -149,6 +149,8 @@
 #include "Actor.h"
 #include "ActorBase.h"
 #include "BabyPenguin.h"
+#include "SnowmanBody.h"
+#include "SnowmanHead.h"
 
 extern "C" {
 int _ZN5Actor19BeforeInitResourcesEv(void *self);
@@ -514,4 +516,317 @@ int _ZN11BabyPenguin13InitResourcesEv(void *self)
 { return ((BabyPenguin *)self)->BabyPenguin::InitResources(); }
 int _ZN11BabyPenguin8BehaviorEv(void *self)
 { return ((BabyPenguin *)self)->BabyPenguin::Behavior(); }
+}
+
+// ============================================================================
+// LANE w3-d: the two classes gate 193 left unregistered.
+//
+// SNOWMAN_HEAD (daBgSnmHed_c, 273) and SNOWMAN_BODY (daBgSnmBdy_c, 274) are
+// both plain 31-slot Actors, and neither has an own slot 18/19 override
+// (unlike BabyPenguin) -- every slot outside the seven own ones is the shared
+// arm9 default, byte for byte. So ov72_fill_shared is reused VERBATIM here
+// rather than re-derived, and that reuse is legitimate for the same reason it
+// was legitimate between daBgSnwmn_c and BabyPenguin: both tables were read
+// out of extracted/overlays/overlay_0072.bin and compared slot for slot
+// against the two this file already served, and all four agree on every
+// shared slot.
+//
+//   slot  SnowmanBody 0x021227c0   SnowmanHead 0x021228bc   what the ROM names
+//    0    0x0211fd54 (own)          0x0212069c (own)         InitResources
+//    3    0x0211fccc (own)          0x021205f0 (own)         CleanupResources
+//    6    0x0211fd24 (own)          0x0212066c (own)         Behavior
+//    9    0x0211fcf4 (own)          0x02120638 (own)         Render
+//   12    0x0211fcf0 (own)          0x02120634 (own)         OnPendingDestroy
+//   16    0x0211f000 (own)          0x0211ff34 (own)         D1
+//   17    0x0211f048 (own)          0x0211ff7c (own)         D0
+//   18    0x02010160                0x02010160               Actor::OnYoshiTryEat
+//   19    0x02010154                0x02010154               Actor::OnTurnIntoEgg
+// (1/2/4/5/7/8/10/11/13/14/15/20..30 identical to the two tables above.)
+//
+// IDENTITY, BOTH ROUTES, for each class:
+//   vtable[-1] -> typeinfo -> name string: 0x021227c0[-1] = 0x02122780 ->
+//     "12daBgSnmBdy_c";  0x021228bc[-1] = 0x0212287c -> "12daBgSnmHed_c".
+//   arm9 spawn table 0x02090864 + id*4: 0x02090cac -> SpawnInfo 0x0212279c
+//     (word[1] 0x00850112, low halfword 0x112 = 274);  0x02090ca8 ->
+//     SpawnInfo 0x02122898 (word[1] 0x00840111, low halfword 0x111 = 273).
+//   The two routes agree for both classes.
+//
+// BOTH RENDERS ARE MATCHED SRC, NOT HOST COPIES, and that is the one
+// judgement in this section that could have gone the other way. Each
+// dispatches slot 5 through a local six-virtual ROM-order shadow -- the idiom
+// that made _ZN11BabyPenguin6RenderEv a host copy and produced the DEP
+// execute-violation this file's header dissects. The RECEIVER decides it, and
+// here the receiver is a plain Model, not a ModelAnim: both D1 bodies name
+// the member type outright (Model m0 at 0xd4, over struct Model with a 0x50
+// pad), both D0 bodies call _ZN5ModelD1Ev on this+0xd4, and both generated
+// headers put a 0x50-stride member there (SnowmanBody 0xd4 Model -> 0x124
+// ShadowModel; SnowmanHead 0xd4 Model -> 0x124 TextureSequence). _ZTV5Model[5]
+// is dual-filled, so the shadow call lands correctly. This is daBgSnwmn_c's
+// case -- whose Render is in gate 193's own slice -- not BabyPenguin's.
+//
+// THE FOUR PMF DISPATCHERS ARE HOST COPIES
+// (port/unmatched/Snowman_StateDispatch.cpp) and the STATE CELLS ARE SEATED
+// WITH HOST ADDRESSES below. Both sinits copy {DS function address, 0} pairs
+// out of mounted ROM data into bss; run raw, a dispatch through them jumps
+// into unmapped host memory. See slice_gate193.txt and port/ov072_syms.txt.
+// ============================================================================
+
+extern "C" {
+/* member destructors the two D1 chains need and this file did not yet name */
+void _ZN5ModelD1Ev(void *self);
+void _ZN15TextureSequenceD1Ev(void *self);
+
+/* ---- SNOWMAN_BODY (274) own slots ---- */
+int _ZN11SnowmanBody13InitResourcesEv(void *self);    /* slot 0, faced below */
+int _ZN11SnowmanBody16CleanupResourcesEv(void);       /* slot 3, .c body takes void */
+int _ZN11SnowmanBody8BehaviorEv(void *self);          /* slot 6, faced below */
+int _ZN11SnowmanBody6RenderEv(void *self);            /* slot 9, faced below */
+void _ZN11SnowmanBody16OnPendingDestroyEv(void);      /* slot 12, own empty body */
+int *_ZN11SnowmanBodyD0Ev(int *self);                 /* slot 17, stores its own table */
+void *SnowmanBody_Spawn(void);
+extern unsigned char SnowmanBody_SpawnInfo[];         /* ov072 0x0212279c */
+int _ZTV11SnowmanBody[31];   /* vtspan: 0x021227c0, 31 words to 0x0212283c */
+
+/* ---- SNOWMAN_HEAD (273) own slots ---- */
+int _ZN11SnowmanHead13InitResourcesEv(void *self);    /* slot 0, faced below */
+int _ZN11SnowmanHead16CleanupResourcesEv(void);       /* slot 3, .c body takes void */
+int _ZN11SnowmanHead8BehaviorEv(void *self);          /* slot 6, faced below */
+int _ZN11SnowmanHead6RenderEv(void *self);            /* slot 9, faced below */
+void _ZN11SnowmanHead16OnPendingDestroyEv(void);      /* slot 12, own empty body */
+int *_ZN11SnowmanHeadD0Ev(int *self);                 /* slot 17, stores its own table */
+void *SnowmanHead_Spawn(void);
+extern unsigned char SnowmanHead_SpawnInfo[];         /* ov072 0x02122898 */
+int _ZTV11SnowmanHead[31];   /* vtspan: 0x021228bc, 31 words to 0x02122938 */
+
+/* the state cells both sinits build: TWO 8-byte {fn,delta} pairs per cell,
+   0x10 bytes/cell -- the same unit PortBabyPenguinPair is above. */
+struct PortSnowmanCell { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
+extern PortSnowmanCell data_ov072_02122b64[6];   /* SnowmanBody, 6 cells */
+extern PortSnowmanCell data_ov072_02122c00[4];   /* SnowmanHead, 4 cells */
+
+/* SnowmanBody's twelve state handlers (six enter/tick pairs) */
+int func_ov072_0211fb7c(char *c);
+int func_ov072_0211fb14(void *self);
+int func_ov072_0211faf0(char *c);
+int func_ov072_0211fa08(char *c);
+int func_ov072_0211f9c4(char *c);
+int func_ov072_0211f81c(char *c);
+int func_ov072_0211f804(char *p);
+int func_ov072_0211f65c(unsigned char *thiz);
+int func_ov072_0211f63c(char *c);
+int func_ov072_0211f598(char *c);
+int func_ov072_0211f578(char *c);
+int func_ov072_0211f48c(char *c);
+
+/* SnowmanHead's eight state handlers (four enter/tick pairs) */
+int func_ov072_02120514(char *c);
+bool func_ov072_02120450(void *self);
+int func_ov072_02120430(char *p);
+int func_ov072_02120358(void *thiz);
+int func_ov072_02120308(char *base);
+int func_ov072_021201d4(char *self);
+int func_ov072_02120180(char *c);
+int func_ov072_0212001c(char *c);
+}
+
+/* One seat row: the ROM addresses the sinit's own source pairs carry, and the
+   host bodies that replace them. The order is the CELL order, which is NOT
+   address order and NOT the source table's own order:
+   __sinit_ov072_02122018 assigns data_ov072_02122b64.p0..p11 from the twelve
+   source pairs at 0x02122720..0x02122778 in a scrambled order, and two
+   consecutive p's make one cell. Every enter_rom/tick_rom below was read out
+   of extracted/overlays/overlay_0072.bin AT THE SOURCE PAIR THE SINIT NAMES
+   for that p, so a mount pointing at the wrong bytes aborts here instead of
+   calling into garbage -- the MrBlizzard/BabyPenguin seat shape. */
+typedef int (*PortSnFn)(void *);
+struct PortSnRow { unsigned enter_rom, tick_rom; PortSnFn enter_host, tick_host; };
+
+static const PortSnRow g_smb_cells[6] = {
+    /* cell 0: p0  <- 0x02122750, p1  <- 0x02122728 */
+    {0x0211fb7c, 0x0211fb14, (PortSnFn)func_ov072_0211fb7c, (PortSnFn)func_ov072_0211fb14},
+    /* cell 1: p2  <- 0x02122720, p3  <- 0x02122730 */
+    {0x0211faf0, 0x0211fa08, (PortSnFn)func_ov072_0211faf0, (PortSnFn)func_ov072_0211fa08},
+    /* cell 2: p4  <- 0x02122748, p5  <- 0x02122738 */
+    {0x0211f9c4, 0x0211f81c, (PortSnFn)func_ov072_0211f9c4, (PortSnFn)func_ov072_0211f81c},
+    /* cell 3: p6  <- 0x02122740, p7  <- 0x02122778 */
+    {0x0211f804, 0x0211f65c, (PortSnFn)func_ov072_0211f804, (PortSnFn)func_ov072_0211f65c},
+    /* cell 4: p8  <- 0x02122770, p9  <- 0x02122758 */
+    {0x0211f63c, 0x0211f598, (PortSnFn)func_ov072_0211f63c, (PortSnFn)func_ov072_0211f598},
+    /* cell 5: p10 <- 0x02122768, p11 <- 0x02122760 */
+    {0x0211f578, 0x0211f48c, (PortSnFn)func_ov072_0211f578, (PortSnFn)func_ov072_0211f48c},
+};
+
+/* SnowmanHead's four, from __sinit_ov072_021221f8's own assignment order into
+   data_ov072_02122c00[0..7]. */
+static const PortSnRow g_smh_cells[4] = {
+    /* cell 0: [0] <- 0x02122874, [1] <- 0x02122854 */
+    {0x02120514, 0x02120450, (PortSnFn)func_ov072_02120514, (PortSnFn)func_ov072_02120450},
+    /* cell 1: [2] <- 0x0212286c, [3] <- 0x02122864 */
+    {0x02120430, 0x02120358, (PortSnFn)func_ov072_02120430, (PortSnFn)func_ov072_02120358},
+    /* cell 2: [4] <- 0x0212285c, [5] <- 0x02122844 */
+    {0x02120308, 0x021201d4, (PortSnFn)func_ov072_02120308, (PortSnFn)func_ov072_021201d4},
+    /* cell 3: [6] <- 0x0212284c, [7] <- 0x0212283c */
+    {0x02120180, 0x0212001c, (PortSnFn)func_ov072_02120180, (PortSnFn)func_ov072_0212001c},
+};
+
+static void ov72_seat_cells(const char *who, PortSnowmanCell *cells,
+                            const PortSnRow *rows, int n)
+{
+    for (int i = 0; i < n; ++i) {
+        PortSnowmanCell &cell = cells[i];
+        if (cell.enter_fn != rows[i].enter_rom || cell.enter_delta != 0 ||
+            cell.tick_fn != rows[i].tick_rom || cell.tick_delta != 0) {
+            std::fprintf(stderr, "FATAL: %s state cell %d: the sinit left "
+                         "%08x/%u %08x/%u, the ROM's own records say "
+                         "%08x/0 %08x/0 -- WRONG BYTES\n", who, i,
+                         cell.enter_fn, cell.enter_delta,
+                         cell.tick_fn, cell.tick_delta,
+                         rows[i].enter_rom, rows[i].tick_rom);
+            std::abort();
+        }
+        cell.enter_fn = (unsigned)(size_t)rows[i].enter_host;
+        cell.tick_fn = (unsigned)(size_t)rows[i].tick_host;
+    }
+}
+
+extern "C" void port_snowman_body_states_seat(void)
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    ov72_seat_cells("SnowmanBody", data_ov072_02122b64, g_smb_cells, 6);
+}
+
+extern "C" void port_snowman_head_states_seat(void)
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    ov72_seat_cells("SnowmanHead", data_ov072_02122c00, g_smh_cells, 4);
+}
+
+// ---- SNOWMAN_BODY (274) ----------------------------------------------------
+static int __fastcall smb_init(void *s, void *)
+{ return _ZN11SnowmanBody13InitResourcesEv(s); }
+static int __fastcall smb_clean(void *s, void *)
+{ (void)s; return _ZN11SnowmanBody16CleanupResourcesEv(); }
+static int __fastcall smb_behavior(void *s, void *)
+{ return _ZN11SnowmanBody8BehaviorEv(s); }
+static int __fastcall smb_render(void *s, void *)
+{ port_actor_render_probe("SNOWMAN_BODY", (char *)s + 0xd4);
+  return _ZN11SnowmanBody6RenderEv(s); }
+static int __fastcall smb_pdes(void *s, void *)
+{ (void)s; _ZN11SnowmanBody16OnPendingDestroyEv(); return 0; }
+/* D1: a real MSVC-synthesised destructor over LOCAL shadow classes (Model /
+   ShadowModel / MovingCylinderClsn / WithMeshClsn declared with no bodies of
+   their own), so the matched TU emits ??1Model@@QAE@XZ and friends nothing in
+   the link defines -- the MotherPenguin/OneUpLogo/BabyPenguin shape, not
+   compiled. Transcribed from the ROM listing at 0x0211f000:
+     push {r4,lr} / mov r4,r0 / ldr r1,[pc,#0x34] (= 0x021227c0) /
+     add r0,r4,#0x180 / str r1,[r4] / bl WithMeshClsn::~ /
+     add r0,r4,#0x14c / bl MovingCylinderClsn::~ /
+     add r0,r4,#0x124 / bl ShadowModel::~ /
+     add r0,r4,#0xd4  / bl Model::~ / mov r0,r4 / bl Actor::~Actor /
+     mov r0,r4 / pop {r4,lr} / bx lr
+   UNLIKE bp_d1 this one DOES store its own table first, exactly as the ROM
+   does; over the host array that is a no-op re-store. The same member set,
+   order and offsets appear independently in _ZN11SnowmanBodyD0Ev.c. */
+static int __fastcall smb_d1(void *s, void *)
+{
+    char *t = (char *)s;
+    ((void **)t)[0] = (void *)_ZTV11SnowmanBody;
+    _ZN12WithMeshClsnD1Ev(t + 0x180);
+    _ZN18MovingCylinderClsnD1Ev(t + 0x14c);
+    _ZN11ShadowModelD1Ev(t + 0x124);
+    _ZN5ModelD1Ev(t + 0xd4);
+    _ZN5ActorD2Ev(t);
+    return (int)(size_t)s;
+}
+static int __fastcall smb_d0(void *s, void *)
+{ return (int)(size_t)_ZN11SnowmanBodyD0Ev((int *)s); }
+
+extern "C" void hal_fill_snowman_body_vtable(void)
+{
+    /* seat the six cells BEFORE anything can dispatch through them */
+    port_snowman_body_states_seat();
+    void **vt = (void **)_ZTV11SnowmanBody;
+    ov72_fill_shared(vt);
+    vt[0]  = (void *)smb_init;
+    vt[3]  = (void *)smb_clean;
+    vt[6]  = (void *)smb_behavior;
+    vt[9]  = (void *)smb_render;
+    vt[12] = (void *)smb_pdes;
+    vt[16] = (void *)smb_d1;
+    vt[17] = (void *)smb_d0;
+    /* no own 18/19 and no slot 31: a plain Actor, 31 slots, ends here */
+}
+
+// ---- SNOWMAN_HEAD (273) ----------------------------------------------------
+static int __fastcall smh_init(void *s, void *)
+{ return _ZN11SnowmanHead13InitResourcesEv(s); }
+static int __fastcall smh_clean(void *s, void *)
+{ (void)s; return _ZN11SnowmanHead16CleanupResourcesEv(); }
+static int __fastcall smh_behavior(void *s, void *)
+{ return _ZN11SnowmanHead8BehaviorEv(s); }
+static int __fastcall smh_render(void *s, void *)
+{ port_actor_render_probe("SNOWMAN_HEAD", (char *)s + 0xd4);
+  return _ZN11SnowmanHead6RenderEv(s); }
+static int __fastcall smh_pdes(void *s, void *)
+{ (void)s; _ZN11SnowmanHead16OnPendingDestroyEv(); return 0; }
+/* D1: same shape as smb_d1, transcribed from the ROM listing at 0x0211ff34
+   (literal 0x021228bc). The member set differs -- TextureSequence at +0x124
+   where SnowmanBody has a ShadowModel, and the two clsn members sit lower,
+   +0x138 and +0x16c -- and _ZN11SnowmanHeadD0Ev.c carries the identical
+   order and offsets. */
+static int __fastcall smh_d1(void *s, void *)
+{
+    char *t = (char *)s;
+    ((void **)t)[0] = (void *)_ZTV11SnowmanHead;
+    _ZN12WithMeshClsnD1Ev(t + 0x16c);
+    _ZN18MovingCylinderClsnD1Ev(t + 0x138);
+    _ZN15TextureSequenceD1Ev(t + 0x124);
+    _ZN5ModelD1Ev(t + 0xd4);
+    _ZN5ActorD2Ev(t);
+    return (int)(size_t)s;
+}
+static int __fastcall smh_d0(void *s, void *)
+{ return (int)(size_t)_ZN11SnowmanHeadD0Ev((int *)s); }
+
+extern "C" void hal_fill_snowman_head_vtable(void)
+{
+    port_snowman_head_states_seat();
+    void **vt = (void **)_ZTV11SnowmanHead;
+    ov72_fill_shared(vt);
+    vt[0]  = (void *)smh_init;
+    vt[3]  = (void *)smh_clean;
+    vt[6]  = (void *)smh_behavior;
+    vt[9]  = (void *)smh_render;
+    vt[12] = (void *)smh_pdes;
+    vt[16] = (void *)smh_d1;
+    vt[17] = (void *)smh_d0;
+    /* no own 18/19 and no slot 31: a plain Actor, 31 slots, ends here */
+}
+
+// ---- method faces for the two new classes -----------------------------------
+// InitResources, Behavior and Render are real MSVC methods against
+// SnowmanBody.h / SnowmanHead.h, so each needs the C-named face the ROM's own
+// callers and tables use -- the IceSheet/OneUpLogo/BabyPenguin recipe.
+// CleanupResources and OnPendingDestroy are plain C-linkage .c bodies taking
+// (void), declared extern "C" above and called directly, no face.
+// Render IS faced here, unlike BabyPenguin's: its receiver is a plain Model
+// and _ZTV5Model[5]'s dual fill serves the shadow dispatch (see the section
+// header for the derivation that settled it).
+extern "C" {
+int _ZN11SnowmanBody13InitResourcesEv(void *self)
+{ return ((SnowmanBody *)self)->SnowmanBody::InitResources(); }
+int _ZN11SnowmanBody8BehaviorEv(void *self)
+{ return ((SnowmanBody *)self)->SnowmanBody::Behavior(); }
+int _ZN11SnowmanBody6RenderEv(void *self)
+{ return ((SnowmanBody *)self)->SnowmanBody::Render(); }
+int _ZN11SnowmanHead13InitResourcesEv(void *self)
+{ return ((SnowmanHead *)self)->SnowmanHead::InitResources(); }
+int _ZN11SnowmanHead8BehaviorEv(void *self)
+{ return ((SnowmanHead *)self)->SnowmanHead::Behavior(); }
+int _ZN11SnowmanHead6RenderEv(void *self)
+{ return ((SnowmanHead *)self)->SnowmanHead::Render(); }
 }

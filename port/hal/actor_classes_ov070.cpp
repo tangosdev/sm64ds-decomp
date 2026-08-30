@@ -436,23 +436,75 @@ static int ov70_fcf_kill(void *self)
 }
 
 // ---- the state PMF seat ----------------------------------------------------
+// ---- FLY_GUY'S SIX TICK HALVES NEED A __fastcall THUNK (lane w3-d) ---------
+//
+// THE SPLIT IS PER SITE, NOT PER CLASS, and FlyGuy is the first class in this
+// overlay where the two halves of a cell are reached by DIFFERENT calling
+// conventions. Measured with dumpbin over this build's own objects, not
+// reasoned about:
+//
+//   FlyGuy_ChangeState.cpp.obj -- the ENTER half, pp[0]
+//     mov eax,[ebp+0Ch] / mov ecx,[ebp+8] / mov [ecx+3BCh],eax
+//     mov eax,[eax] / test eax,eax / ... / pop ebp / JMP EAX
+//   It is a TAIL JUMP. The caller's own cdecl frame survives, so `c` is still
+//   at [esp+4] when the raw body reads it, and ecx happens to hold `c` too.
+//   A raw cdecl body is correct here and stays.
+//
+//   _ZN6FlyGuy8BehaviorEv.cpp.obj -- the TICK half, pp[1]
+//     mov ecx,[esi+3BCh] / mov eax,[ecx+8] / mov ecx,[ecx+0Ch]
+//     add ecx,esi / CALL EAX
+//   It is a REAL CALL inside Behavior's own frame, because Behavior does more
+//   work afterwards and cannot be a forwarder. The receiver goes in ECX and
+//   NOTHING IS PUSHED. A raw cdecl body reads its `c` from [esp+4], which here
+//   is Behavior's own spilled data -- a wrong pointer it then writes through
+//   (func_ov070_0211fa80's first statement is `*(int *)(c + 0x3dc) = 0`).
+//   Silent memory corruption, not a fault, which is why 300 frames of level 19
+//   came back rc 0 with it live.
+//
+// This is NOT the Amp/FlameChomp case and their rows are deliberately
+// untouched: func_ov070_02120d34 and func_ov070_0212180c are one-call
+// forwarders that MSVC compiles as `jmp eax` (verified in the same dumpbin
+// pass), so their tick bodies get the caller's frame and must stay raw cdecl.
+// The R9 sweep in port/unmatched/Ov070_PmfDispatch.cpp enumerated the
+// `c->pp + 1` shape and FlyGuy::Behavior is not in it -- its shape is a
+// `Holder { char pad[8]; PMF fn; }` read at +8, which that grep could not see.
+//
+// The enter and tick sets are DISJOINT (checked body by body against
+// __sinit_ov070_02122afc's own cell assignments), so no body needs both
+// conventions and a thunk on the tick side cannot disturb the enter side:
+//   cell 0x0212358c  enter 0211f5f0   tick 0211f48c
+//   cell 0x0212359c  enter 0211ffa8   tick 0211fd98
+//   cell 0x021235ac  enter 0211fd60   tick 0211fae4
+//   cell 0x021235bc  enter 0211f450   tick 0211f368
+//   cell 0x021235cc  enter 0211fa80   tick 0211f6e0
+//   cell 0x021235dc  enter 0211f694   tick 0211f62c
+//
+// One register argument, so MSVC reads the receiver from ecx and returns with
+// a bare `ret` -- which is what the call site wants, having pushed nothing.
+static int __fastcall fg_tick_f48c(void *s) { return func_ov070_0211f48c(s); }
+static int __fastcall fg_tick_fd98(void *s) { return func_ov070_0211fd98(s); }
+static int __fastcall fg_tick_fae4(void *s) { return func_ov070_0211fae4(s); }
+static int __fastcall fg_tick_f368(void *s) { return func_ov070_0211f368(s); }
+static int __fastcall fg_tick_f6e0(void *s) { return func_ov070_0211f6e0(s); }
+static int __fastcall fg_tick_f62c(void *s) { return func_ov070_0211f62c(s); }
+
 static void ov70_seat_state_pmfs(void)
 {
     struct Row { unsigned char *rec; void *fn; };
     static const Row rows[] = {
         /* FlyGuy's twelve, source order 0x021230c0.. */
         { data_ov070_021230c0, (void *)func_ov070_0211fa80 },
-        { data_ov070_021230c8, (void *)func_ov070_0211fd98 },
-        { data_ov070_021230d0, (void *)func_ov070_0211f62c },
+        { data_ov070_021230c8, (void *)fg_tick_fd98 }   /* TICK: cell 0212359c[1] */,
+        { data_ov070_021230d0, (void *)fg_tick_f62c }   /* TICK: cell 021235dc[1] */,
         { data_ov070_021230d8, (void *)func_ov070_0211fd60 },
-        { data_ov070_021230e0, (void *)func_ov070_0211f48c },
+        { data_ov070_021230e0, (void *)fg_tick_f48c }   /* TICK: cell 0212358c[1] */,
         { data_ov070_021230e8, (void *)func_ov070_0211ffa8 },
-        { data_ov070_021230f0, (void *)func_ov070_0211fae4 },
+        { data_ov070_021230f0, (void *)fg_tick_fae4 }   /* TICK: cell 021235ac[1] */,
         { data_ov070_021230f8, (void *)func_ov070_0211f450 },
-        { data_ov070_02123100, (void *)func_ov070_0211f368 },
+        { data_ov070_02123100, (void *)fg_tick_f368 }   /* TICK: cell 021235bc[1] */,
         { data_ov070_02123108, (void *)func_ov070_0211f694 },
         { data_ov070_02123110, (void *)func_ov070_0211f5f0 },
-        { data_ov070_02123118, (void *)func_ov070_0211f6e0 },
+        { data_ov070_02123118, (void *)fg_tick_f6e0 }   /* TICK: cell 021235cc[1] */,
         /* Amp's six */
         { data_ov070_0212320c, (void *)func_ov070_02120ce4 },
         { data_ov070_02123214, (void *)func_ov070_02120bf8 },
@@ -752,6 +804,7 @@ extern "C" void hal_fill_popping_lava_bubbles_vtable(void)
 // decoration by the .cpp TUs (the defined body is the cdecl C function, so an
 // alias cannot serve -- this defines the real method forwarding into it).
 #include "Amp.h"
+#include "FlyGuy.h"
 #include "FlameChomp.h"
 #include "FlameChompFire.h"
 #include "Player.h"
@@ -781,3 +834,140 @@ void _ZN5Actor15GivePlayerCoinsER6Playerhj(void *self, void *player,
 }
 void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
 { _ZN5Actor15GivePlayerCoinsER6Playerhj(this, &player, count, coinKind); }
+
+// ============================================================================
+// FLY_GUY (id 232) -- table 0x02123168, ov070's fourth class (lane w3-d)
+// ============================================================================
+//
+// This file's own header says FlyGuy "is the one left unregistered: no
+// bootable level spawns it ... so a future FlyGuy lane is a row plus a fill,
+// nothing else." The first half of that has stopped being true and the second
+// half was right. Level 19 (Snowman's Land) places FlyGuy and level 19 is
+// mounted: the baseline census on cons cc10acd4e reads "[spawn] actor 0xe8
+// not registered, skipped", and 0xe8 is 232.
+//
+// The prediction held. _ZTV6FlyGuy was already excluded from
+// port/ov070_syms.txt as host storage, and ov70_seat_state_pmfs already
+// rewrites all TWELVE of FlyGuy's PMF source records with host addresses
+// alongside the other eighteen -- this file's header says so explicitly ("All
+// 30 are rewritten, FlyGuy's included"). One thing the note did not cover:
+// FlyGuy_SpawnInfo was not mounted either, and the registry row needs it. It
+// is mounted now, in the three siblings' own shape.
+//
+// MORE OWN SLOTS THAN ITS SIBLINGS. Read out of
+// extracted/overlays/overlay_0070.bin at 0x02123168..0x021231e4, 31 words:
+//
+//   slot  FlyGuy 0x02123168      what the ROM names
+//    0    0x021203b4 (own)        InitResources
+//    3    0x02120150 (own)        CleanupResources
+//    6    0x02120210 (own)        Behavior
+//    9    0x021201c0 (own)        Render          <- HOST COPY, see below
+//   12    0x021201bc (own)        OnPendingDestroy
+//   16    0x0211f000 (own)        D1
+//   17    0x0211f048 (own)        D0
+//   18    0x02120518 (own)        OnYoshiTryEat
+//   19    0x021204ec (own)        OnTurnIntoEgg(Player&)
+//   29    0x021204e4 (own)        OnAimedAtWithEgg
+//
+// Every other slot is byte-identical to the three tables ov70_fill_shared
+// already serves, so it is reused and the ten above are written over it.
+// 18/19/29 matter: ov70_fill_shared seats the SHARED Actor defaults there and
+// FlyGuy overrides all three, which Amp, FlameChomp and FlameChompFire do not.
+//
+// SLOT 9 IS A HOST COPY, and unlike the ov072 pair this one really is the
+// collision rather than a false alarm on a plain Model.
+// src/_ZN6FlyGuy6RenderEv.cpp takes a LOCAL six-virtual ROM-order shadow off
+// &mModelAnim and calls its slot 5, and the receiver is genuinely a ModelAnim:
+// both destructors call _ZN9ModelAnimD1Ev on this+0x300 and FlyGuy.h puts
+// mModelAnim there. _ZTV9ModelAnim cannot be dual-filled (Virtual18 owns
+// MSVC's slot 5), so this is the Butterfly/Whomp/BabyPenguin case exactly --
+// the same one Amp's and FlameChomp's Renders above already took. The body is
+// at the end of port/unmatched/ModelAnim_Renders.cpp and defines the C name
+// directly, so slot 9 calls it without a face.
+//
+// SLOT 19 TAKES THE PLAYER. func_ov070_021204ec is declared
+// (char *c, void *player) and the caller pushes the player, so the thunk needs
+// the third parameter to pop it -- the bp_egg lesson from
+// hal/actor_classes_ov072.cpp, where a thunk that pushed nothing left the
+// callee reading the thunk's own return address as its argument. Slots 18 and
+// 29 take nothing of their own: both .c bodies are declared (void).
+//
+// FLYGUY DERIVES FROM ENEMY, NOT STRAIGHT FROM ACTOR. Both destructors end in
+// func_ov002_020aed18 rather than _ZN5ActorD2Ev. That is ov002 code the port
+// already links, both destructors are plain .c bodies that name it themselves,
+// and nothing here has to bridge it -- which is also why neither destructor
+// needs the host chain SnowmanBody's and SnowmanHead's got: there are no local
+// shadow classes in either file for MSVC to emit undefined member destructors
+// against.
+// ============================================================================
+extern "C" {
+int _ZN6FlyGuy13InitResourcesEv(void *self);      /* slot 0, faced below */
+int _ZN6FlyGuy16CleanupResourcesEv(void);         /* slot 3, .c body takes void */
+int _ZN6FlyGuy8BehaviorEv(void *self);            /* slot 6, faced below */
+int _ZN6FlyGuy6RenderEv(void *self);              /* slot 9, HOST COPY (ModelAnim_Renders.cpp) */
+void _ZN6FlyGuy16OnPendingDestroyEv(void);        /* slot 12, own empty body */
+int *_ZN6FlyGuyD1Ev(int *t);                      /* slot 16, plain .c, names its own table */
+int *_ZN6FlyGuyD0Ev(int *t);                      /* slot 17, plain .c */
+int func_ov070_02120518(void);                    /* slot 18, own OnYoshiTryEat */
+void func_ov070_021204ec(char *c, void *player);  /* slot 19, own OnTurnIntoEgg(Player&) */
+int func_ov070_021204e4(void);                    /* slot 29, own OnAimedAtWithEgg */
+void *FlyGuy_Spawn(void);                         /* installs _ZTV6FlyGuy */
+extern unsigned char FlyGuy_SpawnInfo[];          /* ov070 0x02123144 */
+int _ZTV6FlyGuy[31];   /* vtspan: 0x02123168, 31 words to 0x021231e4 */
+}
+
+static int __fastcall fg_init(void *s, void *)
+{ return _ZN6FlyGuy13InitResourcesEv(s); }
+static int __fastcall fg_clean(void *s, void *)
+{ (void)s; return _ZN6FlyGuy16CleanupResourcesEv(); }
+static int __fastcall fg_behavior(void *s, void *)
+{ return _ZN6FlyGuy8BehaviorEv(s); }
+static int __fastcall fg_render(void *s, void *)
+{ port_actor_render_probe("FLY_GUY", (char *)s + 0x300);
+  return _ZN6FlyGuy6RenderEv(s); }
+static int __fastcall fg_pdes(void *s, void *)
+{ (void)s; _ZN6FlyGuy16OnPendingDestroyEv(); return 0; }
+static int __fastcall fg_d1(void *s, void *)
+{ return (int)(size_t)_ZN6FlyGuyD1Ev((int *)s); }
+static int __fastcall fg_d0(void *s, void *)
+{ return (int)(size_t)_ZN6FlyGuyD0Ev((int *)s); }
+static int __fastcall fg_yoshi(void *s, void *)
+{ (void)s; return func_ov070_02120518(); }
+/* Third parameter on purpose: the caller of slot 19 pushes the Player and this
+   thunk must pop it. The ov072 bp_egg note has the failure this prevents. */
+static int __fastcall fg_turn_egg(void *s, void *, void *player)
+{ func_ov070_021204ec((char *)s, player); return 0; }
+static int __fastcall fg_egg(void *s, void *)
+{ (void)s; return func_ov070_021204e4(); }
+
+extern "C" void hal_fill_fly_guy_vtable(void)
+{
+    port_ov70_bringup();
+    void *volatile *vt = (void *volatile *)_ZTV6FlyGuy;
+    ov70_fill_shared(vt);
+    vt[0]  = (void *)fg_init;
+    vt[3]  = (void *)fg_clean;
+    vt[6]  = (void *)fg_behavior;
+    vt[9]  = (void *)fg_render;
+    vt[12] = (void *)fg_pdes;
+    vt[16] = (void *)fg_d1;
+    vt[17] = (void *)fg_d0;
+    /* the three ov70_fill_shared seats a default into and FlyGuy overrides */
+    vt[18] = (void *)fg_yoshi;
+    vt[19] = (void *)fg_turn_egg;
+    vt[29] = (void *)fg_egg;
+}
+
+// ---- method faces ----------------------------------------------------------
+// InitResources and Behavior are real MSVC methods against FlyGuy.h, so each
+// needs the C-named face the ROM's own table uses. CleanupResources and
+// OnPendingDestroy are plain C-linkage .c bodies taking (void), declared
+// extern "C" above and called directly. Render is NOT faced here: its body is
+// the host copy in port/unmatched/ModelAnim_Renders.cpp, which defines the C
+// name itself.
+extern "C" {
+int _ZN6FlyGuy13InitResourcesEv(void *self)
+{ return ((FlyGuy *)self)->FlyGuy::InitResources(); }
+int _ZN6FlyGuy8BehaviorEv(void *self)
+{ return ((FlyGuy *)self)->FlyGuy::Behavior(); }
+}
