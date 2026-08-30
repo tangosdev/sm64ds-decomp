@@ -3,25 +3,10 @@
     .ctor       start:0x021119c4 end:0x021119d4 kind:rodata align:4
     .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp:
+src/actors/daObjKm3_Kurumajiku_c.cpp:
     complete
-    .text start:0x021111a0 end:0x021111f0
-
-src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp:
-    complete
-    .text start:0x021111f0 end:0x02111254
-
-src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111254 end:0x02111268
-
-src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111268 end:0x02111280
-
-src/RickshawBs_Spawn.c:
-    complete
-    .text start:0x02111280 end:0x021112bc
+    .text start:0x021111a0 end:0x021112bc
+    .data start:0x02112258 end:0x02112320
 
 src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp:
     complete
