@@ -22,8 +22,10 @@
  * SquareMetalNetLift_Spawn (0x02132394) are byte-identical 0x38-byte factories
  * and each one's single ov091 pool literal is 0x02134ec0. Two ids, one table,
  * one fill; the variant they differ by is read at run time out of the
- * SpawnInfo's own parameter word (InitResources takes mParam >> 8 as
- * mVariant and indexes data_ov091_021344fc / _021344f4 / _02134e5c with it).
+ * INSTANCE's own parameter word, not the SpawnInfo's -- RotatingUpDownPlatform
+ * ::InitResources takes `mParam >> 8` from the object at +0x8 as mVariant and
+ * indexes data_ov091_021344fc / _021344f4 / _02134e5c with it, so the two ids
+ * differ by the spawn parameter the level data hands each instance.
  *
  * BOTH ROUTES AGREE ON ALL THREE IDS. arm9 ACTOR_SPAWN_TABLE[157] at
  * 0x02090ad8 reads 0x02134e80, [144] at 0x02090aa4 reads 0x02134e9c, and [231]
