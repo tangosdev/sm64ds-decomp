@@ -92,6 +92,14 @@
  * scene path is the path it always was, and the default boot -- no
  * environment at all -- still goes straight to the level, never reaching this
  * file. Nothing here is on a path the shipped default takes.
+ *
+ * ^^ THAT LAST PARAGRAPH IS RETIRED. It was true when it was written and the
+ * boot-flow seam at the bottom of this file is what retires it: the shipped
+ * default now DOES reach this file, through the title, and SM64DS_TITLE_ENTRY
+ * has become the developer opt-OUT rather than the opt-in. The paragraph is
+ * kept rather than deleted because the next reader will find it quoted in the
+ * lane records and in port/tools/*.py comments, and a quote whose source has
+ * silently changed is worse than one that says so. See THE BOOT FLOW below.
  */
 
 #include <cstdio>
@@ -143,14 +151,164 @@ enum {
 static int g_armed = -1;   /* -1 = not yet resolved */
 static int g_taken;        /* did a run end by entering the adventure */
 
-/* SM64DS_TITLE_ENTRY=1, and only on the title. Resolved once and cached, the
-   way every other knob on this path is. */
+/* ---- THE BOOT FLOW -------------------------------------------------------
+ *
+ * THE OWNER'S RULING, verbatim: "Boot to title with option in settings to
+ * toggle skip main menu and boot to file and then let them select a file A b
+ * or c and also an option to skip opening cutscene."
+ *
+ * So the shipped default stops being a level and becomes the ROM's own first
+ * screen. Everything that makes that work was already here and already
+ * matched; what was missing was one answer to one question, and this is it.
+ *
+ * ---- THE ROM'S ORDER, MEASURED, AND IT IS NOT WHAT THE BRIEF ASSUMED -----
+ *
+ * The opening cutscene does NOT come before the title. It comes LAST:
+ *
+ *     title -> menu -> file select -> a slot is picked -> CUTSCENE -> adventure
+ *
+ * That is the ROM's own order and it is readable in two independent places.
+ * src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:76-98
+ * computes the opening's gate from game mode 0, flags2 bit 7 clear and
+ * ContinueKuppaScriptIfNecessary()==0 and then calls StartIntroCutscene() --
+ * and Stage::LoadClsnAndObjects runs during the LEVEL boot, which on this path
+ * is the boot StartFile asked for after the file was picked. The landed proof
+ * log agrees: runs/rel0215/out/gatefix/after/intro.log has
+ * "[title-entry] ENTERING THE ADVENTURE" at line 60604 and "[intro] the
+ * opening is ARMED for this entry" at 122066, in that order, in one process.
+ *
+ * IT MATTERS FOR THE KNOBS. SM64DS_SKIP_MENU alone therefore still plays the
+ * cutscene, because the cutscene is downstream of the file pick, not upstream
+ * of the title. A reader expecting "skip the menu, get the cutscene first"
+ * would be reading the wrong machine.
+ *
+ * ---- WHAT NAMES A DESTINATION -------------------------------------------
+ *
+ * The default is only the default when NOTHING else has said where to boot.
+ * Four things say it, and all four keep working exactly as they did:
+ *
+ *   SM64DS_SCENE=<id>   the scene harness. Read before this seam is consulted
+ *                       at all (hal/scene_boot.cpp's port_scene_env_want), so
+ *                       every battery scene row and every lane's scene run is
+ *                       untouched.
+ *   SM64DS_LEVEL=<n>    the level harness. Every battery level row, every
+ *                       selftest and every proof that names a level.
+ *   SM64DS_VS_MAP=<n>   AND THIS ONE IS THE TRAP. tests/walk_window.cpp's
+ *                       port_menu_relaunch_vs clears BOTH SM64DS_SCENE and
+ *                       SM64DS_LEVEL and sets only this, so its child is bare
+ *                       in the two names above and would have booted the title
+ *                       instead of the VS match. It is a destination and it is
+ *                       treated as one.
+ *   SM64DS_BOOT_CLASSIC=1  the opt-out: the direct level boot, as before.
+ *
+ * SM64DS_TITLE_ENTRY=0 is accepted as a second spelling of BOOT_CLASSIC,
+ * because that is the name the tree already documents for "no title bridge"
+ * and a reader who sets it means the old boot.
+ *
+ * RESOLVED ONCE AND CACHED, like every other knob on this path, and it must
+ * not call port_scene_env_want: that function calls THIS one, and the two
+ * would chase each other. It reads SM64DS_SCENE itself instead, which is the
+ * same question asked one layer down. */
+static int g_boot_default = -1;    /* -1 = not yet resolved */
+
+static int bf_flag(const char *name, int missing)
+{
+    const char *e = std::getenv(name);
+    return e ? (std::atoi(e) != 0) : missing;
+}
+
+/* The destination a bare boot takes: SCENE_TITLE, or -1 for "the level path,
+   as before". Called by hal/scene_boot.cpp's port_scene_env_want when and only
+   when SM64DS_SCENE is unset. */
+extern "C" int port_boot_default_scene(void)
+{
+    if (g_boot_default < 0) {
+        g_boot_default =
+            (std::getenv("SM64DS_LEVEL")  == 0 &&
+             std::getenv("SM64DS_VS_MAP") == 0 &&
+             !bf_flag("SM64DS_BOOT_CLASSIC", 0) &&
+             bf_flag("SM64DS_TITLE_ENTRY", 1)) ? 1 : 0;
+    }
+    return g_boot_default ? SCENE_TITLE : -1;
+}
+
+/* Did THIS process boot the title because nothing named a destination? The
+   distinction is load-bearing and it is what keeps the battery's scene-1 row
+   unchanged: an explicit SM64DS_SCENE=1 is a MEASUREMENT of the title scene
+   and still needs SM64DS_TITLE_ENTRY=1 to grow a bridge into the adventure,
+   while the shipped default IS the adventure's front door and arms the bridge
+   by itself. */
+extern "C" int port_boot_is_default_title(void)
+{
+    return std::getenv("SM64DS_SCENE") == 0 &&
+           port_boot_default_scene() == SCENE_TITLE;
+}
+
+/* ---- THE LAUNCHER CONTRACT, AND IT BINDS BOTH SIDES ----------------------
+ *
+ * The launcher expresses a toggle that is OFF as ABSENCE. It sets
+ * SM64DS_SKIP_MENU=1 / SM64DS_SKIP_INTRO=1 when the box is ticked and REMOVES
+ * the name from the child's environment when it is not; it never writes "0".
+ *
+ * So AN ABSENT NAME MUST READ AS OFF, and a reader that needed a
+ * present-but-zero value to mean off would break the pairing silently -- the
+ * player unticks the box, the launcher deletes the variable, and the game
+ * carries on doing the thing he just turned off. bf_flag's second argument is
+ * that rule made explicit: it is the answer for a name that is not there, and
+ * for both skip knobs it is 0. A present "0" is also honoured, because a
+ * developer typing it means off and there is no reason to surprise him.
+ *
+ * ONE KNOWN, ACCEPTED HOLE. The already-shipped launcher neither sets nor
+ * removes these names, so a player who has exported SM64DS_SKIP_MENU=1 in his
+ * own shell has it inherited straight through that launcher into the game.
+ * That is opt-in shaped -- he has to have typed it -- and the new launcher
+ * closes it by removing the name rather than leaving it alone. Recorded here
+ * rather than defended against: scrubbing the environment on the game side
+ * would also scrub the launcher's own legitimate set of it, and the two are
+ * indistinguishable from inside this process.
+ *
+ * SM64DS_SKIP_MENU=1 -- "boot to file". The player lands on the file select
+ * with A, B and C in front of him instead of walking the attract, the
+ * press-start and the menu. HOW it gets there is hal/title_skip.cpp's problem
+ * and the honesty rule lives in that file's banner; this is only the knob. */
+extern "C" int port_boot_skip_menu(void)
+{
+    static int v = -1;
+    if (v < 0) v = bf_flag("SM64DS_SKIP_MENU", 0);
+    return v;
+}
+
+/* SM64DS_SKIP_INTRO=1 -- "skip opening cutscene". Read by
+   hal/level_boot.cpp's port_intro_suppressed, which is the ONE suppression
+   seam and stays the one. SM64DS_INTRO=0 is accepted as the second spelling
+   for the reason SM64DS_TITLE_ENTRY=0 is above: it is the name already in the
+   tree for "not this time". */
+extern "C" int port_boot_skip_intro(void)
+{
+    static int v = -1;
+    if (v < 0)
+        v = (bf_flag("SM64DS_SKIP_INTRO", 0) || !bf_flag("SM64DS_INTRO", 1));
+    return v;
+}
+
+/* SM64DS_TITLE_ENTRY=1, and only on the title -- OR the shipped default boot,
+   which arms itself. Resolved once and cached, the way every other knob on
+   this path is. */
 extern "C" int port_title_entry_armed(void)
 {
     if (g_armed < 0) {
-        const char *e = std::getenv("SM64DS_TITLE_ENTRY");
-        g_armed = (e && std::atoi(e) != 0 &&
-                   port_scene_env_want() == SCENE_TITLE) ? 1 : 0;
+        if (port_scene_env_want() != SCENE_TITLE) {
+            g_armed = 0;
+        } else if (port_boot_is_default_title()) {
+            /* The default boot's whole point is that picking a file plays the
+               game. Requiring a flag here would ship a title screen that
+               cannot be left. */
+            g_armed = 1;
+        } else {
+            /* An explicit SM64DS_SCENE=1 is somebody measuring the title
+               scene. It behaves exactly as it did before this lane. */
+            g_armed = bf_flag("SM64DS_TITLE_ENTRY", 0);
+        }
     }
     return g_armed;
 }

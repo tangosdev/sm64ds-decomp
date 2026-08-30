@@ -4032,13 +4032,29 @@ extern "C" void port_window_copy_count(unsigned long long *copies,
 // SM64DS_SCENE=<id> mirrors SM64DS_LEVEL: it names what to boot and nothing
 // else. port_scene_env_want returns -1 when it is unset, which is the level
 // harness's "not a scene run".
+//
+// AND WHEN NOTHING NAMES A DESTINATION AT ALL, IT IS NO LONGER -1. The owner
+// ruled that the game boots to the title, so a bare launch now resolves to
+// scene 1 through hal/title_entry.cpp's port_boot_default_scene -- which is
+// where the whole of that decision lives, including the four things that DO
+// name a destination and are therefore left alone (SM64DS_SCENE itself,
+// SM64DS_LEVEL, SM64DS_VS_MAP, and the SM64DS_BOOT_CLASSIC opt-out).
+//
+// THE ORDER OF THESE TWO READS IS THE CONTRACT. SM64DS_SCENE is read FIRST and
+// answered without consulting the seam at all, so a harness that names a scene
+// gets exactly the run it named and the default cannot reach it. That is what
+// keeps every battery scene row, every gapproof canary and every lane's scene
+// capture byte-identical across this change.
+extern "C" int port_boot_default_scene(void);      /* hal/title_entry.cpp */
+extern "C" int port_boot_is_default_title(void);   /* hal/title_entry.cpp */
+
 extern "C" int port_scene_env_want(void)
 {
     static int want = -2;
     if (want != -2)
         return want;
     const char *e = std::getenv("SM64DS_SCENE");
-    want = e ? std::atoi(e) : -1;
+    want = e ? std::atoi(e) : port_boot_default_scene();
     return want;
 }
 
@@ -5301,6 +5317,47 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
     scn_bmp = bmp;
     scn_bmp_stacked = bmp_stacked;
     scn_trace = trace;
+
+    /* ---- THE SELFTEST'S FRAME, ON A PATH THAT NEVER HAD TO WRITE ONE -------
+     *
+     * SM64DS_WINDOW_SELFTEST is the harness's "run N frames headless and leave
+     * a picture behind", and until this lane its picture was written by the
+     * LEVEL path only (tests/walk_window.cpp's ppu_write_bmp of
+     * walk_window_selftest.bmp). That was fine while a bare launch was a level
+     * boot. It is not fine now that a bare launch is the title, because two
+     * shipped checks ask for that file by name and would go red on a change
+     * that is working perfectly:
+     *
+     *   port/tools/battery.py     the shipcfg arm, "rc=0 but no
+     *                             walk_window_selftest.bmp was written -- the
+     *                             run exited cleanly without ever reaching the
+     *                             renderer"
+     *   port/tools/kit_smoke.py   the shipped-exe arm, glob *selftest*.bmp
+     *
+     * BOTH OF THOSE ARE LIVENESS CHECKS AND BOTH STAY EXACTLY AS STRONG. Their
+     * own banners say what they are asking -- kit_smoke's is "did this reach
+     * the renderer and write a frame", and it says in so many words that the
+     * pixels are not compared against anything. A title frame answers that
+     * question every bit as well as a castle-grounds frame did, and it answers
+     * it about the screen a player will actually see first. Neither check is
+     * weakened; the artifact they look for is simply produced by whichever
+     * path the run took.
+     *
+     * ONLY WHEN NOBODY ASKED FOR A DIFFERENT FILE. An explicit
+     * SM64DS_SCENE_BMP names where the capture goes and wins, so every lane
+     * capture and every gapproof row keeps writing exactly where it said. And
+     * only on the DEFAULT title boot: an explicit SM64DS_SCENE=1 selftest is
+     * somebody measuring the title scene and has never written this file, so
+     * giving it one now would be this lane inventing an artifact inside a
+     * measurement it does not own. */
+    if (!bmp && !no_render && std::getenv("SM64DS_WINDOW_SELFTEST") &&
+        port_boot_is_default_title()) {
+        scn_bmp = "walk_window_selftest.bmp";
+        std::fprintf(stderr, "[scene] SM64DS_WINDOW_SELFTEST on the default "
+                     "title boot: the last frame goes to %s, which is the file "
+                     "the shipcfg and kit_smoke liveness checks look for\n",
+                     scn_bmp);
+    }
 
     port_scene_layout_propose();
 

@@ -3100,11 +3100,49 @@ static int g_intro_armed;
 
    So the honest state is: the DECISION is solved and hosted, the CAST is not.
    Flipping this default is a one-line change once those four close, and the
-   run above is the worklist. SM64DS_INTRO=1 opts in today for that work. */
+   run above is the worklist. SM64DS_INTRO=1 opts in today for that work.
+
+   ---- THE FLIP HAPPENED, AND THE FOUR CLOSED ------------------------------
+
+   All four are closed and the opening runs end to end. The evidence is one
+   process in runs/rel0215/out/gatefix/after/intro.log:
+
+     122066  [intro] the opening is ARMED for this entry
+     122092  [intro] a cutscene script is running (007A23A0)
+     134543  [intro] boot: flags2 bit7 0 | pending 007a24e8 | running 007a42d8
+     137526  [intro] flags2 bit 7 0 -> 1
+
+   That last line is the whole proof. Nothing in the port writes that bit --
+   src/func_ov085_0212d5dc.cpp:51 does, and it is LakituBro's LAST opening
+   state, the one that hands control back after the camera flight settles. The
+   bit going 0 -> 1 means the opening played to its own end through the ROM's
+   own script, reloaded through its own cmd-0x0b pending word, and gave the
+   player the game. Gap 1 (actor 0x160) is seated, gap 2 and gap 4 are in
+   slices, and gap 3 is called by hand out of port_intro_seat_scripts below.
+
+   SO THE DEFAULT INVERTS: the opening PLAYS unless something says not this
+   time. It is still the ONE suppression seam and it still gates here rather
+   than anywhere else. Two names say not this time and they are the same
+   answer: SM64DS_SKIP_INTRO=1, the owner's "option to skip opening cutscene",
+   and SM64DS_INTRO=0, which is the name the tree already documents. Both are
+   resolved in hal/title_entry.cpp's port_boot_skip_intro so there is one
+   reader of both spellings.
+
+   NOTHING ELSE MOVES, and this is the half worth being precise about, because
+   a default that fires an opening in forty-six level selftests would be a
+   disaster and it cannot happen here. This function is only ever consulted
+   from port_intro_wants_play below, which returns 0 before reaching it unless
+   g_intro_armed is set, and g_intro_armed is set by exactly one caller --
+   port_level_entry_latch in hal/level_change.cpp, which only a title crossing
+   and the VS start reach. A direct SM64DS_LEVEL boot never arms, so it never
+   asks. The VS start does arm, and is then refused by the ROM's own first
+   precondition below (data_0209f2d8 != 0: PrepareVsMode writes mode 1), which
+   is measured rather than reasoned in this lane's proof runs. */
+extern "C" int port_boot_skip_intro(void);   /* hal/title_entry.cpp */
+
 extern "C" int port_intro_suppressed(void)
 {
-    const char *e = std::getenv("SM64DS_INTRO");
-    return (e && std::atoi(e) != 0) ? 0 : 1;
+    return port_boot_skip_intro();
 }
 
 /* Armed by the title bridge's own latch, for the next level boot only. */
