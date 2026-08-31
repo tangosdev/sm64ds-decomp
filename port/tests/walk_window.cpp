@@ -153,11 +153,11 @@
 //      SM64DS_BONE_PROBE=1..3  the per-frame bone rotation dump; =3 checks
 //                           every bone against an independent shortest-path
 //                           reference. See the probe for what it measured.
-//      SM64DS_INPUT_NOFOCUSGATE=1  read the interactive keyboard whether this
-//                           window has focus or not, the way it worked before
-//                           the gate. Nothing in the tree sets it. It is here
-//                           so a harness that genuinely wants background key
-//                           reads has a documented switch instead of a patch.
+//      SM64DS_INPUT_NOFOCUSGATE=1  read the interactive keyboard AND PAD whether
+//                           this window has focus or not, the way it worked
+//                           before the gate. Nothing in the tree sets it. It is
+//                           here so a harness that genuinely wants background
+//                           input reads has a documented switch, not a patch.
 //      SM64DS_NO_FOCUS=1    (=0 turns it off; this one is read with atoi, not
 //                           as a presence test, because it is meant to be set
 //                           broadly and opted out of per run)
@@ -462,20 +462,20 @@ static unsigned short host_btn_to_raw_keys(unsigned short btn)
     return raw;
 }
 
-/* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
-   0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
+/* run mg15 lane MP1. The fan-out runs the ROM's own steps 0x16 and 0x17
+   (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
    TouchInfo[4] and PadData[4] come out of the four comms records the way the
-   DS builds them instead of being written directly by the port. OFF by
-   default: the swap is MP2's, and MP1's byte-identical solo proof depends on
-   the default path being untouched.
+   DS builds them instead of being written directly by the port. The default
+   is decided in ONE place now -- port::comms_fanout_active(), banner in
+   hal/comms_conductor.cpp -- and it is ON whenever a transport is installed,
+   because a session that skips the two steps is two solo sims sharing a wire
+   nobody reads. SM64DS_COMMS_FANOUT still overrides both ways ("0" off, "1"
+   on); with it unset a solo boot has no transport and keeps the direct
+   stores, which is what MP1's byte-identical solo proof depends on.
    SM64DS_COMMS_REPORT=1 additionally prints the four slots each frame
    (port::comms_report), which is the instrument the two-instance stylus proof
    reads its verdict off. */
-static bool comms_fanout_on() {
-    static int v = -1;
-    if (v < 0) v = getenv("SM64DS_COMMS_FANOUT") ? 1 : 0;
-    return v != 0;
-}
+static bool comms_fanout_on() { return port::comms_fanout_active(); }
 static bool comms_fanout_report() {
     static int v = -1;
     if (v < 0) v = getenv("SM64DS_COMMS_REPORT") ? 1 : 0;
@@ -556,6 +556,20 @@ extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
+/* MY COMMS SLOT: 0 solo or parent, 1..3 a child seat. hal/comms_conductor.cpp
+   seats it from func_02040704 when a session joins; the flight recorder below
+   reads it.
+
+   unsigned char AND NOT int, which is not cosmetic. Every ROM-side
+   declaration of this symbol is u8 (src/func_0203da9c.c, func_0203db64.c,
+   func_0203df40.c, func_0203ea5c.c) and hal/comms_conductor.cpp declares and
+   WRITES it as unsigned char, so byte 0 is the whole value and bytes 1..3 are
+   nobody's. An int[] extern here reads all four and only agrees with the byte
+   writer while the high three happen to be zero -- which is exactly the shape
+   that produced the fc5c freeze, where an int[] extern wrote int strides past
+   a byte reader. The host definition (hal/actor_vtables.cpp) is oversized on
+   purpose; the DECLARATION is what has to match the ROM. */
+extern unsigned char data_020a0f10[];
 /* TouchData[4], zero = no touch. DECLARED AS BYTES, not ints: the definition
    in hal/auto_bss.cpp is unsigned char[1] with de9/dea/deb packed at +1/+2/+3,
    the DS layout. An `int[]` here would be a lie about the element type; it is
@@ -2280,6 +2294,76 @@ static int key_live(int vk)
         if (key_stale[vk]) return 0;
     }
     return down;
+}
+
+/* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
+   keyboard's half has existed.
+
+   XInputGetState is machine-global exactly the way GetAsyncKeyState is: it
+   answers about the physical controller, not about who is in front. One
+   window was the whole world when GATE 3 was written, so the keyboard half
+   was the whole fix. Two windows is a different machine. A single pad drove
+   BOTH of them at once -- every stick push walked two Marios, every A press
+   jumped two -- and neither window was wrong to think the input was for it,
+   because nothing had ever told either one otherwise.
+
+   So the pad reads through hal_window_focused() with everything else, which
+   also buys the two behaviours that predicate already carries: the
+   SM64DS_INPUT_NOFOCUSGATE escape hatch for a harness that genuinely wants
+   background reads, and the fail-open on a window-less binary.
+
+   NEUTRAL, NOT FROZEN, on the way out: the struct is zeroed rather than left
+   holding the last frame's stick, so the frame focus goes away is the frame
+   the pad goes to centre, matching the keyboard's release semantics instead
+   of leaving a direction leaning.
+
+   AND THE HELD-OVER PRESS, which is the pad's version of key_stale. A button
+   still physically down when the window comes back would otherwise read as a
+   FRESH press on the return frame and fire an edge latch -- open the debug
+   menu, confirm a row, toggle the freecam -- so every button is marked stale
+   on the way out and a stale bit keeps reading released until that button is
+   seen up. Same policy as memset(key_stale, 1, ...), one word instead of 256
+   bytes because the pad's whole state is a mask.
+
+   Called BEFORE pad_test_apply at both read sites, so SM64DS_PAD_TEST's
+   scripted mask re-arms the pad after the gate and an automated run is
+   unaffected by any of this. */
+static void pad_focus_gate(int *pad_live, XPad *pad)
+{
+    static unsigned stale = 0;
+    static int said_gated = 0;      /* one line per transition, not per frame */
+    if (!hal_window_focused()) {
+        stale = ~0u;
+        if (*pad_live) {
+            memset(pad, 0, sizeof *pad);
+            *pad_live = 0;
+            /* SAID OUT LOUD, because a pad that silently stops working is
+               indistinguishable from a pad that broke. Only when there WAS a
+               live pad to refuse, so a run with no controller plugged in says
+               nothing at all. */
+            if (!said_gated) {
+                said_gated = 1;
+                fprintf(stderr, "[pad] gated: this window is not the "
+                                "foreground one, so the controller drives the "
+                                "window that is\n");
+            }
+        }
+        return;
+    }
+    if (!*pad_live) {
+        /* no pad to observe a release on, so whatever is down when one
+           appears is held-over by the same rule */
+        stale = ~0u;
+        return;
+    }
+    if (said_gated) {
+        said_gated = 0;
+        fprintf(stderr, "[pad] ungated: this window has the foreground again; "
+                        "anything still held reads released until it is let "
+                        "go\n");
+    }
+    stale &= (unsigned)pad->buttons;                 /* released, so no longer stale */
+    pad->buttons = (unsigned short)((unsigned)pad->buttons & ~stale);
 }
 
 /* Keys and pad buttons this program has already spoken for. Binding run to
@@ -5927,6 +6011,7 @@ static int scene_window_run(void)
         }
 
         int pad_live = XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        pad_focus_gate(&pad_live, &pad);
         pad_test_apply(frame, &pad_live, &pad);
 #ifndef PORT_ROM_CLEAN
         /* SM64DS_CLICK_TEST: the scripted stylus, driven BEFORE the tick that
@@ -7457,16 +7542,61 @@ int main(void)
         }
         /* F4 cycles the character with the menu CLOSED, mid-walk. Its own edge
            latch, deliberately outside the menu's held-mask below, so it is not
-           one of the keys the menu swallows while it is open. */
+           one of the keys the menu swallows while it is open.
+
+           REFUSED WHILE THE SESSION IS LIVE. The cycle is local BY
+           CONSTRUCTION: port_player_set_character (hal/player_bridges.cpp)
+           writes this process's player and nothing else, and the sync layer
+           carries no character identity at all -- hal/comms_sync.cpp moves
+           bodies and input, never who the body is. VS seats the pair once per
+           boot, at level_boot.cpp's `port_vs_set_character(i, i)` loop, which
+           runs the same way on BOTH machines, so both sides start out
+           agreeing about who is who. A local cycle breaks that agreement in
+           one direction only: this side simulates a different character for
+           its own slot -- other stats, other collision -- while the peer keeps
+           simulating the one it was seated with, and nothing ever heals it.
+
+           OBSERVED, not only reasoned. In the two-window session of
+           2026-08-31 10:44 (playlog play_20260831_104440 / _104441, both
+           windows already reporting `VS: 2 players` at line 16 before the
+           first press) the parent cycled ONCE and the child cycled FOUR
+           times, and the two consoles finished the session disagreeing about
+           who was who. The SIZE of the gap is one step, not four: the cycle
+           is (g_character + 1) & 3, so the child's four presses wrap it back
+           to where it started and the parent's single press is the whole of
+           the divergence. One press is enough -- the point is that the peer
+           is never told, not how far it drifted. That run is what this gate
+           is written against.
+
+           The predicate is the seam's own -- the same question
+           hal/comms_sync.cpp's gate asks and the [comms:level] line prints:
+           connected, and more than one player. One printed line says why, in
+           the place the player is already looking; solo is untouched.
+
+           NOT PROVEN END TO END. Review checked the predicate on both sides
+           and the refusal is correct for every reading of the seam it was
+           given, but no scripted route in this tree reaches key_live -- the
+           harnesses drive the pad and the probes, never the interactive
+           keyboard -- so the KEYPRESS itself has never been exercised in a
+           live session by anything but a person. What is proven is the gate;
+           what is owed is a hand at the keyboard. */
         {
             static int chr_edge;
             const int now = key_live(VK_F4);
             if (now && !chr_edge) {
-                const int nxt = (g_character + 1) & 3;
-                fprintf(stderr, "[chr] F4 becoming %s\n", CHAR_NAME[nxt]);
-                port_player_set_character(c, nxt);
-                g_character = g_character_pending = nxt;
-                an_pivot_live = 0;   /* do not ease across it */
+                const port::CommsReadout cr = port::comms_readout();
+                if (cr.connected && cr.players > 1) {
+                    fprintf(stderr,
+                            "[chr] F4 refused: the character cycle is local "
+                            "only (link=%d players=%d) and would desync the "
+                            "session\n", cr.link_state, cr.players);
+                } else {
+                    const int nxt = (g_character + 1) & 3;
+                    fprintf(stderr, "[chr] F4 becoming %s\n", CHAR_NAME[nxt]);
+                    port_player_set_character(c, nxt);
+                    g_character = g_character_pending = nxt;
+                    an_pivot_live = 0;   /* do not ease across it */
+                }
             }
             chr_edge = now;
         }
@@ -7838,9 +7968,12 @@ int main(void)
         if (key_live('D') || key_live(VK_RIGHT)) dx += 1;
         /* gamepad: left stick / d-pad walk, right stick orbits + tilts.
            Gated off under a selftest with the keyboard: a drifting stick
-           on a plugged-in pad perturbs a headless run the same way. */
+           on a plugged-in pad perturbs a headless run the same way, and
+           gated off with the keyboard when this window is not the
+           foreground one -- see pad_focus_gate. */
         static XPad pad;
         int pad_live = !selftest && XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        pad_focus_gate(&pad_live, &pad);
         int orbiting = 0;
         /* SM64DS_PAD_TEST: DBG1's scripted pad, at file scope now so the
            windowed scene loop gets the same one. Inert unless the variable is
@@ -9947,21 +10080,33 @@ int main(void)
                PadData[4], which is where every stylus and button read in the
                game comes from.
 
-               OFF BY DEFAULT, and that is not timidity. The port writes those
-               two arrays DIRECTLY today (hal/input_probe.cpp, the scene
-               publish in hal/scene_boot.cpp), so turning this on hands the
-               whole input path to the ROM's four-slot route in one step. That
-               swap is MP2's, because that is the change with a regression
-               surface, and MP1's solo proof is only worth something if the
-               default path is untouched.
+               ON WHENEVER A TRANSPORT IS UP (port::comms_fanout_active, banner
+               in hal/comms_conductor.cpp): a session that skips these two
+               steps is two solo sims sharing a wire nobody reads, which is
+               what the first live two-window test was. With no transport and
+               no override this stays off and the direct stores drive, which
+               is the path MP1's byte-identical solo proof stands on.
 
                It is a REAL call site and not a linker directive, which is the
                standard port/hal/w8a_stage_faces.cpp set after a review found
                eleven TUs of directive-manufactured linkage: something has to
                actually call the body for it to count as linked. */
-            if (comms_fanout_on()) {
-                port::comms_fanout();
+            {
+                const int fan_now = comms_fanout_on();
+                if (fan_now)
+                    port::comms_fanout();
+                /* THE REPORT IS NOT INSIDE THE FAN-OUT GATE, deliberately. It
+                   used to be, which meant the one configuration where the
+                   input exchange is broken -- fanout forced off with a
+                   session up -- was exactly the configuration the instrument
+                   went dark in. The readout prints in both states and names
+                   the state, so a log from the broken shape says so instead
+                   of saying nothing. */
                 if (comms_fanout_report()) {
+                    fprintf(stderr, "[comms:level] fanout=%s\n",
+                            fan_now ? "on"
+                                    : "OFF (direct slot-0 stores driving; "
+                                      "the records below reach no reader)");
                     port::comms_report("level");
                     /* run mg16 lane MP2: the carrier's own half of the same
                        readout. Silent when no transport is installed, so an
@@ -10124,6 +10269,37 @@ int main(void)
                         raw_);
                 rec_btn = btn_;
                 rec_raw = raw_;
+            }
+            /* THE OWN SEAT, when it is not slot 0. The [in] line above reads
+               slot 0 only, which on a session CHILD is the host's record --
+               so a child whose own seat went dead logged a perfectly lively
+               [in] stream, and today's intake chased the wrong console for
+               it. Same change trigger, own slot named.
+
+               HONESTLY: a dead own seat is still an ABSENCE here, not a flat
+               line. This is change-triggered, so a seat that never moves
+               prints once and then nothing, exactly like a seat that was
+               never read. What it buys is that the absence is now ATTRIBUTED
+               -- the [in:own] line names the slot it is about, so a silent
+               child is distinguishable from a child whose host record was
+               lively. A true flat line would need a heartbeat on a timer,
+               which is a bigger change than this one and not made here. */
+            {
+                static unsigned short rec_btn_own, rec_raw_own;
+                const int own = data_020a0f10[0];
+                if (own != 0) {
+                    unsigned short btn_o = *(unsigned short *)
+                        (data_0209f49c + own * 0x18);
+                    unsigned short raw_o = *(unsigned short *)
+                        ((char *)data_020a0e58 + own * 4);
+                    if (btn_o != rec_btn_own || raw_o != rec_raw_own) {
+                        fprintf(stderr,
+                                "[in:own] f%d slot=%d btn=%04x raw=%04x\n",
+                                rec_f, own, btn_o, raw_o);
+                        rec_btn_own = btn_o;
+                        rec_raw_own = raw_o;
+                    }
+                }
             }
             if ((rec_f % 30) == 0)
                 fprintf(stderr, "[fx] f%d pos=(%.1f,%.1f,%.1f) camang=%d\n",

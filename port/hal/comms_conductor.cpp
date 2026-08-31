@@ -587,6 +587,45 @@ bool comms_inject_touch(int *down, int *x, int *y) {
 }
 
 // ===========================================================================
+// THE FAN-OUT DEFAULT, decided in one place. Contract in comms_seam.h.
+//
+// Both frame loops and the scene publisher used to ask getenv for this
+// themselves, present-means-on, DEFAULT OFF -- and every proof harness set the
+// variable, so no proof ever ran the default. A bare VS boot (how a player
+// actually launches) paired, published its pad every frame, and never consumed
+// the wire: the first live two-window session was two solo sims drifting
+// apart. The env override is kept for the harnesses; what changed is that the
+// unset case now answers what the DS answers, which is that a session runs
+// the fan-out.
+// ===========================================================================
+bool comms_fanout_active() {
+    // The override is parsed once; the transport half is asked every time.
+    //
+    // NOT because anything installs a transport mid-run. An earlier version of
+    // this comment said scene_vs_menu.cpp does, and that is contradicted by a
+    // measured banner already in the tree: scene_vs_menu.cpp's install is INERT
+    // on every path that exists today, because main() installs 249 lines before
+    // the VS section reaches it and the call finds g_installed already true.
+    // Read its banner before believing any claim about when a transport arrives.
+    //
+    // Live because LATCHING WOULD BAKE IN THE HARNESS. Where the install
+    // happens today -- main(), on every process, because the process started
+    // rather than because anything asked for a session -- is a property of this
+    // harness and not of the game. When ov075's lobby is driven for real, a
+    // player picks VS and the transport arrives after the frame loop is already
+    // turning. Asking every time costs a pointer load and survives that; a latch
+    // would be correct today and wrong on the day the lobby lands, which is the
+    // kind of thing nobody re-derives when it breaks.
+    static int forced = -2;              // -2 unparsed, -1 absent, else 0/1
+    if (forced == -2) {
+        const char *s = std::getenv("SM64DS_COMMS_FANOUT");
+        forced = s ? (std::atoi(s) != 0) : -1;
+    }
+    if (forced >= 0) return forced != 0;
+    return comms_transport() != nullptr;
+}
+
+// ===========================================================================
 // THE SESSION DROPPED, AND NOBODY WAS GOING TO ASK AGAIN -- HOLE 5, in the
 // shape it actually bites.
 //
