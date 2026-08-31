@@ -257,7 +257,26 @@ bool ws_load() {
 // REAL NETWORK it needs explicit LE accessors on the six header words; the
 // 0x80 payload bytes are opaque and never need swapping at all.
 
-enum : unsigned char { kWireVersion = 1 };
+// VERSION 2 SINCE run rel0215 LANE vslag, and the bump IS the fix rather than
+// bookkeeping that goes with one.
+//
+// Version 1 carried no input delay, so a version-1 build defaults to 0 and a
+// version-2 build defaults to 5 on a relay. Pair the two and NOTHING
+// COMPLAINS: the relay pairs them, the handshake completes, both logs report a
+// healthy session of two players with nothing dropped, 600 rounds exchanged --
+// and the two consoles quietly simulate different matches, because a
+// MISMATCHED INPUT DELAY IS A DESYNC (the mechanism is written out over the
+// ACCEPT's delay field below). Measured old-against-new on the public relay
+// before this bump existed: paired, healthy, diverging.
+//
+// A silent desync that reads healthy in every log is the worst failure this
+// carrier can produce, it survives into a crash report as nothing at all, and
+// it was reachable with no knob touched by anybody. So the two generations
+// must not form a session: the version byte is the cheapest way to say so, the
+// check already existed and only had to become LOUD, and nothing relay-shaped
+// has shipped in any release yet, so refusing every version-1 peer costs
+// exactly nobody.
+enum : unsigned char { kWireVersion = 2 };
 
 enum : unsigned char {
     kTypeJoin   = 1,   // child -> parent: I have bound slot N, let me in
@@ -559,6 +578,12 @@ bool   g_cache_valid[kCacheDepth];
 // than its own.
 // ===========================================================================
 int g_input_delay = 0;                 // SM64DS_COMMS_INPUT_DELAY, 0 = off
+// Whether that value came from the env rather than the mode default. Only
+// used to make the child's "the parent overruled you" line say WHY the number
+// it was asked for did not survive, which is the difference between a knob
+// that looks broken and one that is documented.
+bool g_delay_from_env = false;
+bool delay_from_env() { return g_delay_from_env; }
 enum : int { kPipeDepth = 64 };        // rounds in flight; ~2 s at 30 Hz
 enum : int { kInputDelayMax = 8 };
 struct PipeRound {
@@ -1048,7 +1073,42 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // Carried in `have`, which is meaningless on an ACCEPT and has been
         // zero on the wire since MP2 -- so an older build simply keeps the slot
         // it proposed, which is what it did before this field existed.
-        a.have = 0x80000000u | (unsigned)k;
+        //
+        // AND THE PARENT'S INPUT DELAY, IN BITS 8..15, BECAUSE THE TWO ENDS
+        // MUST RUN THE SAME ONE OR THE MATCH IS NOT THE SAME MATCH.
+        //
+        // THE MECHANISM, because "both ends should run the same number" was
+        // once written here as advice and that was wrong -- it is an
+        // INVARIANT. exchange() hands simulation frame k the records from
+        // round k-N, and it holds round 0 for the first N+1 frames while the
+        // pipeline fills. So the sequence of rounds a console consumes,
+        // indexed by its own frame counter, is:
+        //
+        //   N=0   0, 1, 2, 3, 4, 5, 6, ...
+        //   N=5   0, 0, 0, 0, 0, 0, 1, 2, 3, ...
+        //
+        // Both consoles advance their frame counter by one per completed
+        // exchange, so frame k on this console is frame k on that one. Feed
+        // frame k different rounds on the two machines and the two are
+        // simulating different inputs at the same instant. There is no wall
+        // clock offset that makes them agree again, which is what the old
+        // "mismatched delays are not a desync, one simply lags the other"
+        // reading got wrong: what lags is not the frame index, it is only the
+        // wall time, and the ROM indexes by frame.
+        //
+        // THE ROM AGREES AND SAYS SO. src/func_0203ea5c.c:418 walks the four
+        // player records and compares each live one's frame counter against
+        // the local player's (`var_r1->unk0 != data_020a1154[..].unk0`),
+        // setting error bit 2 in data_020a0f1c when they differ. That compare
+        // is the DS's own statement of this invariant, and a mismatched delay
+        // is precisely what trips it.
+        //
+        // SO THE PARENT DECIDES AND THE CHILD ADOPTS. Not a negotiation: one
+        // authority, carried in the reply the child is already waiting for,
+        // applied before the child has consumed a single round. A child that
+        // was told a different number by its own environment loses, loudly.
+        a.have = 0x80000000u | (unsigned)k |
+                 ((unsigned)(g_input_delay & 0xFF) << 8);
         send_to_slot(a, k);
         if (fresh)
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
@@ -1174,15 +1234,47 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
                                  g_resend_ms);
                 }
             }
+            // ADOPT THE PARENT'S INPUT DELAY. Every mode, unlike the slot
+            // assignment above: a relayed ACCEPT is a broadcast and adopting
+            // a SLOT from it would let one child's accept move another, but
+            // the delay is one number the parent applies to the whole
+            // session, so every child adopting it from any of its accepts is
+            // exactly right.
+            //
+            // ON THE FIRST ACCEPT ONLY, which is what this branch already is,
+            // and that bound is load-bearing. Changing N mid-session moves
+            // `want` (g_round - N) backwards or forwards under a frame
+            // counter that only ever increments, so the console would replay
+            // or skip rounds -- which is the same divergence this field
+            // exists to prevent, arriving by a different door. Before any
+            // round has been consumed there is nothing to replay: exchange()
+            // returns 0 until this line sets kCommsChildConnected.
+            const int parent_delay = (int)((p.have >> 8) & 0xFF);
+            if (parent_delay >= 0 && parent_delay <= kInputDelayMax &&
+                parent_delay != g_input_delay) {
+                std::fprintf(stderr, "[comms:loopback] the parent runs input "
+                             "delay %d and this end had %d; ADOPTING %d. The "
+                             "parent is authoritative because the two ends "
+                             "must run the same depth -- frame k reads round "
+                             "k-N on both consoles or they are not simulating "
+                             "the same match%s\n",
+                             parent_delay, g_input_delay, parent_delay,
+                             delay_from_env()
+                                 ? ". SM64DS_COMMS_INPUT_DELAY was set on this "
+                                   "end and LOST; set it on the parent, which "
+                                   "is the end whose knob decides."
+                                 : ".");
+                g_input_delay = parent_delay;
+            }
             g_round = p.round;          // adopt the parent's clock
             g_stage_mask = 0;
             g_round_done = false;
             g_state = kCommsChildConnected;
             std::fprintf(stderr, "[comms:loopback] accepted as slot %d at "
-                         "round %u; live mask 0x%x, players %d"
+                         "round %u; live mask 0x%x, players %d, input delay %d"
                          " (handshake rtt %d ms)\n",
                          g_slot, g_round, g_live, popcount4(g_live),
-                         g_handshake_rtt_ms);
+                         g_input_delay, g_handshake_rtt_ms);
         }
         break;
     }
@@ -1324,7 +1416,31 @@ void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
     if (n != kPacketBytes) { ++g_dropped; return; }
     std::memcpy(&p, raw, sizeof p);
     if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; return; }
-    if (p.version != kWireVersion)            { ++g_dropped; return; }
+    // A WRONG VERSION IS SAID OUT LOUD, ONCE. It used to be counted and
+    // dropped like a corrupt datagram, which is the right handling and the
+    // wrong report: the two cases a version mismatch actually arises from are
+    // a stale copy of the game on one desk and a half-finished update, and
+    // both look from the outside like "we paired and then nothing happened".
+    // One line naming both numbers turns a silent twenty-second wait into a
+    // diagnosis. Once, because a peer that keeps knocking would otherwise
+    // write this every 200 ms for the whole of the ROM's wait bound.
+    if (p.version != kWireVersion) {
+        static bool said = false;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr, "[comms:loopback] REFUSING a peer speaking "
+                         "wire version %u; this build speaks %u. The two are "
+                         "not compatible and MUST NOT play together: version 1 "
+                         "has no input-delay field, so the ends would run "
+                         "different delays, and a mismatched input delay is a "
+                         "DESYNC that reads healthy in both logs. Update both "
+                         "copies of the game to the same build. No session "
+                         "will form until you do.\n",
+                         (unsigned)p.version, (unsigned)kWireVersion);
+        }
+        ++g_dropped;
+        return;
+    }
     if (g_test_drop_pct > 0) {
         /* Deterministic-per-run LCG, same discipline as the sync layer's
            drop knob: a proof that behaves differently every run is not a
@@ -2284,11 +2400,27 @@ bool comms_loopback_install_from_env() {
     // Auto was written and taken back out, and the reason is worth keeping:
     // only the CHILD ever measures a round trip here (its JOIN to the parent's
     // ACCEPT). The parent has no equivalent sample, so an auto would have
-    // resolved to one value on one end and a fallback on the other -- and
-    // while mismatched delays are not a desync (both consoles consume the same
-    // round sequence, one simply lags the other), it would mean a knob whose
-    // effective value nobody could state. A number both launchers set is worth
-    // more than an automation that is right on one side.
+    // resolved to one value on one end and a fallback on the other.
+    //
+    // THAT SENTENCE USED TO END "-- and while mismatched delays are not a
+    // desync (both consoles consume the same round sequence, one simply lags
+    // the other), it would mean a knob whose effective value nobody could
+    // state". THE PARENTHESIS WAS FALSE, and it is quoted here rather than
+    // deleted because it is the exact wrong idea that nearly shipped a silent
+    // desync. A MISMATCH IS A DESYNC. Both consoles do consume the same round
+    // SEQUENCE, but not at the same FRAME INDEX, and the ROM indexes by frame;
+    // the derivation and the ROM's own compare at src/func_0203ea5c.c:418 are
+    // written out over the ACCEPT's delay field. Measured on the public relay:
+    // 5-against-0, 0-against-5, 5-against-6 and 5-against-4 all diverge from
+    // about frame 65, positions widening, no constant shift explaining them,
+    // while both ends report a perfectly healthy paired session.
+    //
+    // So the value is no longer left to two launchers agreeing about it. THE
+    // PARENT CARRIES IT IN THE ACCEPT AND THE CHILD ADOPTS IT, which makes
+    // "both ends run the same depth" a property of the wire rather than a note
+    // in a README, and the version byte at the top of this file refuses the
+    // generation that cannot do it. What follows picks the number the PARENT
+    // will use; a child's own answer here is provisional until its ACCEPT.
     //
     // THE FORMULA, so a caller is not guessing: N >= round_trip_ms / 33,
     // rounded up. N=2 covers 66 ms, N=3 covers 100 ms, N=4 covers 133 ms. Too
@@ -2331,10 +2463,21 @@ bool comms_loopback_install_from_env() {
     //     N=5   starved  5   30.02 fps   frame p95 46.16 ms
     //     N=6   starved  5   30.05 fps   frame p95 48.31 ms
     //
-    //   5 is the knee: it takes an order of magnitude off the stalls that 4
-    //   leaves on an ordinary bad hour, and 6 buys nothing for the extra frame
-    //   of input lag it charges. An internet path is not one number, and a
-    //   default tuned to its best hour is a default that fails in its worst.
+    //   5 is the knee ON A PATH SHAPED LIKE THIS ONE: it takes an order of
+    //   magnitude off the stalls 4 leaves on an ordinary bad hour, and 6 buys
+    //   nothing more for the extra frame of input lag it charges. An internet
+    //   path is not one number, and a default tuned to its best hour is a
+    //   default that fails in its worst.
+    //
+    //   THE KNEE IS PATH-SHAPED, NOT UNIVERSAL, and the review that scoped
+    //   this measured the counter-case: under induced jitter of +/-45 ms the
+    //   arms keep improving past 5 (23.25 / 26.46 / 29.09 fps, monotone), so
+    //   on a path with that much spread 6 is still buying. A latency that is
+    //   mostly CONSTANT is covered by a depth; a latency that is mostly SPREAD
+    //   needs depth in proportion to the spread, and no one default is right
+    //   for both. 5 is the default for the path this relay actually presents.
+    //   The knob is for the path a given pair actually has, and the paragraph
+    //   below is why no constant can be enough on its own.
     //
     //   NO FIXED N COVERS THE WHOLE TAIL, and pretending otherwise would be
     //   the dishonest version of this. That same measurement's p95 round trip
@@ -2368,13 +2511,12 @@ bool comms_loopback_install_from_env() {
     if (g_net_mode == kNetRelay)       g_input_delay = 5;
     else if (g_net_mode == kNetDirect) g_input_delay = 2;
 
-    bool delay_from_env = false;
     if (const char *n = std::getenv("SM64DS_COMMS_INPUT_DELAY")) {
         int v = std::atoi(n);
         if (v < 0) v = 0;
         if (v > kInputDelayMax) v = kInputDelayMax;
         g_input_delay = v;
-        delay_from_env = true;
+        g_delay_from_env = true;
     }
     // REFUSED ON A BARE LOOPBACK, ALLOWED WHEN THERE IS A ROUND TRIP TO
     // HIDE -- and the second half of that sentence was missing at first,
@@ -2398,12 +2540,19 @@ bool comms_loopback_install_from_env() {
         std::fprintf(stderr, "[comms:loopback] input delay %d frame(s) (%s): "
                      "frame R is handed the records from round R-%d, so "
                      "rounds overlap the wire instead of taking turns with "
-                     "it. Both ends should run the same number.\n",
+                     "it. %s\n",
                      g_input_delay,
-                     delay_from_env ? "SM64DS_COMMS_INPUT_DELAY"
-                                    : "the default for this net mode",
-                     g_input_delay);
-    else if (delay_from_env && g_net_mode != kNetLoopback)
+                     g_delay_from_env ? "SM64DS_COMMS_INPUT_DELAY"
+                                      : "the default for this net mode",
+                     g_input_delay,
+                     g_role == kRoleParent
+                         ? "This end is the PARENT, so this is the number the "
+                           "whole session runs at: it goes out in every ACCEPT "
+                           "and every child adopts it."
+                         : "This end is a CHILD, so this is PROVISIONAL -- the "
+                           "parent's ACCEPT carries the number the session "
+                           "actually runs at, and it is adopted here.");
+    else if (g_delay_from_env && g_net_mode != kNetLoopback)
         std::fprintf(stderr, "[comms:loopback] input delay 0 by request: this "
                      "session is STOP AND WAIT, so a frame costs a whole round "
                      "trip and the frame rate is the round trip.\n");

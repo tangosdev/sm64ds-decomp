@@ -189,22 +189,45 @@ it feels exactly as bad as it sounds.
 
 The fix is an **input delay**. Each machine runs frame R from the inputs that
 were exchanged N frames ago, so the wire has N whole frames to deliver a packet
-instead of a fraction of one. Both machines still play the identical sequence
-of inputs in the identical order -- nothing is predicted, nothing is thrown
-away, and the two games cannot drift apart. The only cost is that a button
+instead of a fraction of one. As long as **both machines use the same N**, they
+still play the identical sequence of inputs in the identical order -- nothing
+is predicted, nothing is thrown away, and the two games cannot drift apart.
+That "same N" is not a suggestion; see the next section for what happens
+otherwise and how the game now guarantees it. The only cost is that a button
 press lands N frames later, and N frames of that is far less noticeable than
 the whole game running at a third speed.
 
 **It is on by default and the recipe above needs no extra knob.** The game
 picks the depth from how it is connected: 5 frames through a relay, 2 on a
 direct connection, 0 on this machine's own loopback where there is no round
-trip to hide. The relay number is measured rather than derived -- 4 is what
-the arithmetic gives on a good hour, and it is the wrong answer on an ordinary
-bad one, where 5 takes the stalls from 44 in 360 frames down to 5 and 6 buys
-nothing more.
+trip to hide. The relay number is measured rather than derived -- 4 is what the
+arithmetic gives on a good hour and it is the wrong answer on an ordinary bad
+one, where 5 takes the stalls from 44 in 360 frames down to 5. On the shape of
+connection this relay presents, going past 5 buys nothing; on a connection that
+swings much more wildly it still can, which is what the knob is for.
 
-`SM64DS_COMMS_INPUT_DELAY=<0..8>` overrides it on both machines, and there are
-two reasons to reach for it:
+### The number is set on the host, and only on the host
+
+**Both machines must run the same depth, and different depths break the game.**
+Not "run out of sync in time" -- actually break it: the two copies start
+playing different matches, positions drift apart after a couple of seconds, and
+**both machines still report a perfectly healthy connection the whole time**.
+Nothing in either log says anything is wrong. It is the nastiest failure this
+thing can produce, so the game no longer lets you cause it by hand:
+
+- **The host decides.** The host's depth travels inside the reply that lets the
+  other player in, and the joining machine adopts it and says so in its log:
+  `the parent runs input delay 5 and this end had 2; ADOPTING 5`.
+- **Setting it on the joining machine does nothing.** The knob is read, then
+  overruled by the host, and the log line says it lost. Set it on the host.
+- **Old copies of the game are refused, loudly.** A build from before this
+  existed has no depth to send and would default to none, so the two would
+  desync. They now will not pair at all, and the log says why:
+  `REFUSING a peer speaking wire version 1; this build speaks 2`. If you see
+  that, one of you is on an older build -- update and try again.
+
+`SM64DS_COMMS_INPUT_DELAY=<0..8>` **on the host** overrides the default, and
+there are two reasons to reach for it:
 
 - **Your pair is further apart than the default covers.** The signal is
   `starved` on the line the game writes when the session ends, in
@@ -215,16 +238,14 @@ two reasons to reach for it:
   A handful over a long session is nothing -- a starved frame waits only for
   the part of the round trip that ran past the budget, not for a whole one. A
   number that climbs steadily means frames are routinely waiting on the wire.
-  Raise the delay by one and look again. The rule is
-  `N >= round trip in ms / 33.3`, plus a frame of headroom;
-  `python3 test_client.py remote-check --host YOUR.SERVER.IP` measures that
-  round trip and prints the N it implies.
-- **You want the old behaviour back to measure it.** `=0` is stop-and-wait
-  exactly as it was.
-
-Both players should set the same number. Different numbers are not a desync --
-both machines still consume the same rounds in the same order, one simply runs
-further behind the other -- but there is no reason to want that.
+  Raise **the host's** number by one and look again; the other machine follows
+  on its own. The rule is `N >= round trip in ms / 33.3`, plus a frame of
+  headroom, and more headroom on a jumpy connection than on a merely slow one --
+  a steady 120 ms is covered by a depth, a connection that swings between 80 and
+  400 ms wants more. `python3 test_client.py remote-check --host YOUR.SERVER.IP`
+  measures the round trip and prints the N it implies.
+- **You want the old behaviour back to measure it.** `=0` on the host is
+  stop-and-wait exactly as it was, on both machines.
 
 `port/tools/vs_pace.py` measures the whole thing end to end: solo, a pair
 through a relay on this machine, and a pair through the live relay, with and

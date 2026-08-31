@@ -24,6 +24,16 @@ and asserts the three things a player would call "it worked":
               have come from anywhere but the wire. THESE TWO ASSERTIONS ARE
               THE PROOF. Everything else here can pass without a transport.
 
+              THEY ARE A CONNECTIVITY PROOF AND NOT A LATENCY ONE, and the
+              distinction is worth stating because the frame number in their
+              verdict lines reads like a latency and is not. The injected keys
+              are constants held for the whole run, and the pipelined path
+              holds round 0 for its first N+1 exchanges, so the remote key
+              shows up on the earliest probed frame at every input delay.
+              Nothing here can tell delay 0 from delay 5, and nothing here
+              measures the ~167 ms press-to-peer time that depth 5 actually
+              costs. For pacing and latency, port/tools/vs_pace.py.
+
 WHICH IS NOT A FIGURE OF SPEECH, AND THE PRECISE CLAIM IS THIS. A control pair
 with NO comms env at all -- zero [comms] lines in either log, plus
 SM64DS_VS_PLAYERS=2 so the census has two actors to compare -- fails INSTALL,
@@ -316,16 +326,27 @@ def main():
     # FORMED -- a no-transport control fails INSTALL and PAIRING too -- but
     # none of them shows a byte of game state crossing. These do, and they are
     # the only ones the DETERMINISM check below can lean on.
+    # AND WHAT THEY DO NOT PROVE, because the frame number on these lines
+    # invited exactly the wrong reading. Both injected keys are CONSTANTS held
+    # for the whole run, and the pipelined path holds round 0 for its first N+1
+    # exchanges, so the remote pad carries the other end's key on the earliest
+    # probed frame at EVERY depth. These assertions therefore cannot tell input
+    # delay 0 from input delay 5; they do not measure press-to-peer latency (at
+    # depth 5 that is about 167 ms and nothing here would notice); and the
+    # frame number is reported as "first seen", never as a latency. They are
+    # CONNECTIVITY assertions, and strong ones -- a dead wire fails both.
     f = remote_pad_seen(tp, mp_, CHILD_KEY)
     wire_p = M.verdict(f >= 0,
                        "WIRE: the parent reads the CHILD's injected pad %04x "
-                       "on the remote slot, a value it never pressed "
-                       "(frame %d)" % (CHILD_KEY, f))
+                       "on the remote slot, a value it never pressed (first "
+                       "seen f%d -- a held key, so this is connectivity and "
+                       "carries no latency claim)" % (CHILD_KEY, f))
     g = remote_pad_seen(tc, mc, PARENT_KEY)
     wire_c = M.verdict(g >= 0,
                        "WIRE: the child reads the PARENT's injected pad %04x "
-                       "on the remote slot, a value it never pressed "
-                       "(frame %d)" % (PARENT_KEY, g))
+                       "on the remote slot, a value it never pressed (first "
+                       "seen f%d -- a held key, so this is connectivity and "
+                       "carries no latency claim)" % (PARENT_KEY, g))
     ok &= wire_p and wire_c
     # AND THE CORROBORATING ONE, which is worthless without the two above --
     # measured, not assumed: a no-transport control passes it. See echo_of.

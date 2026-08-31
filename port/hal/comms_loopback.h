@@ -102,11 +102,23 @@
 //                                   report line: nonzero means frames are
 //                                   still waiting on the wire), or set 0 to
 //                                   get stop-and-wait back for a measurement.
-//                                   Both ends should run the same number.
-//                                   The SIMULATION IS UNTOUCHED either way:
-//                                   both consoles consume the same round
-//                                   sequence in the same order, nothing is
-//                                   predicted and nothing is rolled back.
+//                                   SET IT ON THE PARENT. The parent's value
+//                                   is the session's: it rides in the ACCEPT
+//                                   and every child adopts it, saying so in
+//                                   its log. A child's own setting LOSES, and
+//                                   that is not tidiness -- THE TWO ENDS
+//                                   RUNNING DIFFERENT DEPTHS IS A DESYNC (the
+//                                   derivation, and the ROM's own compare at
+//                                   src/func_0203ea5c.c:418, are over the
+//                                   ACCEPT's delay field in the .cpp), and it
+//                                   is a desync that reads HEALTHY in both
+//                                   logs. The wire carries the number so this
+//                                   cannot be got wrong by hand.
+//                                   The SIMULATION IS UNTOUCHED at any depth
+//                                   both ends share: both consoles consume the
+//                                   same round sequence at the same frame
+//                                   index, nothing is predicted and nothing is
+//                                   rolled back.
 //
 // SLOT ASSIGNMENT OVER THE ADDRESS MODES: on loopback a child owns a slot by
 // BINDING its port, and the parent verifies the two agree. Off this machine a
