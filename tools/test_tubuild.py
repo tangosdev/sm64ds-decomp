@@ -1059,7 +1059,11 @@ def test_manifest_order_handles_rccarpet_owned_subset_after_rtti_externalization
     import io
     from elftools.elf.elffile import ELFFile
 
-    source = REPO / "src_tu/actors/daObjRcCarpet_c.cpp"
+    manifest_entry = tubuild.manifest_entry(
+        tubuild.TUM.load(), "ov036/daObjRcCarpet_c")
+    assert manifest_entry is not None
+    source = REPO / manifest_entry["source"]
+    assert source.is_file(), source
     obj = tubuild.M.compile_c(source, tubuild.RB.VERSION,
                               tubuild.BP.flags_for(source))
     inherited = [
