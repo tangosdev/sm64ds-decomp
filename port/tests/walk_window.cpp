@@ -7548,10 +7548,15 @@ int main(void)
            CONSTRUCTION: port_player_set_character (hal/player_bridges.cpp)
            writes this process's player and nothing else, and the sync layer
            carries no character identity at all -- hal/comms_sync.cpp moves
-           bodies and input, never who the body is. VS seats the pair once per
-           boot, at level_boot.cpp's `port_vs_set_character(i, i)` loop, which
-           runs the same way on BOTH machines, so both sides start out
-           agreeing about who is who. A local cycle breaks that agreement in
+           bodies and input, never who the body is. Both machines start out
+           agreeing about who is who because the ROM's own spawn loop decides
+           it and runs identically on each: _Z19LoadEntranceObjects... gives
+           every slot data_0209caa0[0x41], the save file's one character, or
+           forces 3 on every slot in a VS match. (This used to cite a
+           `port_vs_set_character(i, i)` loop in level_boot.cpp. That loop is
+           gone -- it wrote the slot index into data_02092128, which the spawn
+           loop packs as f1 at Player+0x6da and is not the character at all --
+           and the agreement it was credited with was always the ROM's.) A local cycle breaks that agreement in
            one direction only: this side simulates a different character for
            its own slot -- other stats, other collision -- while the peer keeps
            simulating the one it was seated with, and nothing ever heals it.

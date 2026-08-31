@@ -140,19 +140,38 @@ def rungA():
                     "rungA they are DIFFERENT actors | %s vs %s"
                     % (r0[-1]["actor"], r1[-1]["actor"]))
     # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
-    # On a non-VS multiplayer boot Player::InitResources takes the character
-    # from spawn-flag bits 0..2, and the entrance loop fills those from
-    # data_0209caa0[0x41] -- the SAVE FILE's character, the SAME for every
-    # slot. Two distinguishable characters was never a ROM property on this
-    # path; it was the retired stand-in's choice. (The VS path's contract --
-    # LoadEntranceObjects forces character 3 on every slot -- is asserted by
-    # vs_slot1_solo_check.py and the online proof against a real arena.)
-    ok &= M.verdict(r0[-1]["char"] == r1[-1]["char"],
+    # THIS RUNG BOOTS CASTLE GROUNDS -- mp2_proof.env_base pins
+    # SM64DS_LEVEL = 1 -- which is an ADVENTURE level, not a versus match. The
+    # cartridge only ever enters VS through PrepareVsMode, which is followed
+    # immediately by LoadLevelNoReturn into one of the four arenas, so mode 1
+    # on level 1 is a state the ROM cannot reach. On this boot
+    # _Z19LoadEntranceObjects... therefore takes its NON-VS arm: every slot
+    # gets f2 = data_0209caa0[0x41], the save file's single character, which
+    # the port's own boot seats to 0. One save, one character, every slot.
+    #
+    # ASSERT THE VALUE, NOT THE AGREEMENT. The original form here was
+    # `r0.char == r1.char`, and it passes on 0,0 AND on 3,3 -- so it could not
+    # tell which arm of the ROM's four lines ran, and a revision that wrongly
+    # promoted the mode byte sailed straight through it while its own note
+    # inverted underneath. Both halves are pinned now: the character value,
+    # and the game mode the a2 seat reports, so a future promotion fails here
+    # instead of passing quietly.
+    #
+    # (The VS arm of the same four lines -- character 3 on EVERY slot -- is
+    # asserted by vs_slot1_solo_check.py, which boots a real arena through the
+    # ROM's own start. It belongs there and not here, because only that boot
+    # is genuinely in VS.)
+    ok &= M.verdict(r0[-1]["char"] == 0 and r1[-1]["char"] == 0,
                     "rungA BOTH slots carry the save-file character | slot0 "
                     "char=%d slot1 char=%d, read off each actor's +0x6d9 "
-                    "(the ROM's non-VS contract: one save, one character, "
-                    "every slot)"
+                    "(the ROM's non-VS contract on an adventure level: one "
+                    "save, one character, every slot)"
                     % (r0[-1]["char"], r1[-1]["char"]))
+    ok &= M.verdict("game mode 0" in t,
+                    "rungA AND THE BOOT IS NOT IN VS MODE | the a2 seat "
+                    "reports game mode 0. Mode 1 on an adventure level is a "
+                    "state the cartridge cannot reach, and it would change "
+                    "100 compiled files' behaviour, not just the character.")
 
     ok &= M.verdict("[vsfix]" in t,
                     "rungA the overlap fixture FIRED (SM64DS_VS_OVERLAP_AT=%d)"

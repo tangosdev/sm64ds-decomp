@@ -35,8 +35,14 @@ reported.
       red -- see its own banner, which is the lane's most expensive lesson.
 
   P1  EACH WINDOW IS ITS OWN PLAYER. The parent's local index is 0 and the
-      child's is 1, and each window's local character matches its slot.
-      (his: "P2 shows HIM as Mario, should be Luigi")
+      child's is 1, and every slot carries the character the ROM gives it on
+      THIS boot -- castle grounds, an adventure level, so the save file's one
+      character on both. (his: "P2 shows HIM as Mario, should be Luigi". The
+      IDENTITY half of that report was real and the seat assertions below are
+      what catch it. The CHARACTER half was never the ROM's: Luigi is not what
+      a second slot gets on any path. In a real versus match every slot is
+      Yoshi and they differ by colour, which is asserted where a real versus
+      match is booted -- vs_slot1_solo_check.py -- and not here.)
   P2  INPUT ISOLATION. Input injected on the child moves the child's OWN body
       and NOT the parent's body, in the child's own world.
       (his: "from P2 I can move BOTH Mario and Luigi")
@@ -62,7 +68,7 @@ OUT = os.path.join(ROOT, "runs", "mg16", "out", "MP3", "play")
 VS = re.compile(r"^\[vs\] f(\d+) slot(\d) actor=([0-9A-Fa-f]+) no=(\d) char=(\d) "
                 r"pos=\((-?\d+),(-?\d+),(-?\d+)\) touched=(\d+) "
                 r"pad=([0-9a-f]+) ctrl0=([0-9a-f]+) ang=([0-9a-f]+) "
-                r"state=([0-9a-f]+)", re.M)
+                r"state=([0-9a-f]+)(?: st_timer=\d+ pal=(-?\d+))?", re.M)
 SEAT = re.compile(r"^\s*\[a2\] VS: (\d+) players, I am slot (\d+)", re.M)
 LINK = re.compile(r"^\[comms:level\] transport=loopback.*?slot=(\d+) players=(\d+) role=(\d+)",
                   re.M)
@@ -89,7 +95,14 @@ def rows(t, slot):
                         # on. rungP6 asserts on this because a button press is
                         # a STATE CHANGE and barely moves a body, which is how
                         # three button seams survived a position-only rung.
-                        state=int(m.group(13), 16)))
+                        state=int(m.group(13), 16),
+                        # Player+0x61C, the VS palette base: material[0]'s
+                        # palette plus (playerNo << 1). yoshi_all_16p_pl is
+                        # four stacked 16-colour rows, so consecutive slots
+                        # differ by exactly 2. None on a build whose probe
+                        # predates the column.
+                        pal=(int(m.group(14)) if m.group(14) is not None
+                             else None)))
     return out
 
 
@@ -274,17 +287,68 @@ def rungP1(seconds):
                     "(1 = the second player; 0 means it believes it is the "
                     "host and drives the host's character)" % seat2)
 
-    # And the character each window presents as must be its slot's character.
+    # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
+    # THIS RUNG BOOTS CASTLE GROUNDS: mp2_proof.env_base pins SM64DS_LEVEL = 1,
+    # and an adventure level is not a versus match however many players are in
+    # it. So the ROM's spawn loop takes its NON-VS arm and every slot gets the
+    # save file's one character, which the port's own boot seats to 0.
+    #
+    # WHAT THIS ASSERTION USED TO SAY was "slot0 char=0 slot1 char=1 (0 Mario,
+    # 1 Luigi)", which was never a ROM property on any path. It encoded a
+    # retired port-side stand-in that wrote the slot index into data_02092128
+    # -- which the loop packs as f1, landing at Player+0x6da, NOT the character
+    # at +0x6d9 -- so it could not produce the two characters this line
+    # demanded, and the rung failed here reading char=0 on both.
+    #
+    # It was then briefly changed to demand 3 on every slot. That is the VS
+    # contract, and it was made to pass by a port-side promotion of the mode
+    # byte that has since been reverted: mode 1 on an adventure level is a
+    # state the cartridge cannot reach, and it changed the behaviour of 100
+    # compiled files to buy one character. Character 3 is right for a versus
+    # match and wrong here, and the boot that is genuinely in versus is the
+    # one that carries it -- see vs_slot1_solo_check.py, which enters through
+    # the ROM's own start at a real arena.
+    #
+    # The mode is pinned alongside the value, because a check that reads only
+    # the character cannot tell an adventure boot from an adventure boot
+    # wearing VS mode, and that is exactly what slipped through last time.
     a1, b1 = rows(t1, 0), rows(t1, 1)
     a2, b2 = rows(t2, 0), rows(t2, 1)
     if a1 and b1 and a2 and b2:
-        ok &= M.verdict(a1[-1]["char"] == 0 and b1[-1]["char"] == 1 and
-                        a2[-1]["char"] == 0 and b2[-1]["char"] == 1,
-                        "rungP1 both windows agree on who is who | P1 sees "
-                        "slot0 char=%d slot1 char=%d ;; P2 sees slot0 char=%d "
-                        "slot1 char=%d (0 Mario, 1 Luigi)"
-                        % (a1[-1]["char"], b1[-1]["char"],
-                           a2[-1]["char"], b2[-1]["char"]))
+        seen = (a1[-1]["char"], b1[-1]["char"],
+                a2[-1]["char"], b2[-1]["char"])
+        ok &= M.verdict(all(c == 0 for c in seen),
+                        "rungP1 EVERY SLOT CARRIES THE SAVE-FILE CHARACTER | "
+                        "P1 sees slot0 char=%d slot1 char=%d ;; P2 sees slot0 "
+                        "char=%d slot1 char=%d (the ROM's non-VS contract on "
+                        "an adventure level: one save, one character, every "
+                        "slot)" % seen)
+        ok &= M.verdict("game mode 0" in t1 and "game mode 0" in t2,
+                        "rungP1 AND NEITHER WINDOW IS IN VS MODE | both a2 "
+                        "seats report game mode 0")
+
+        # NO COLOUR ASSERTION HERE, AND THAT IS DELIBERATE. One stood here and
+        # it was VACUOUS. It read Player+0x61C per slot and asserted that
+        # consecutive slots differ by 2, printing "THE TWO YOSHIS ARE DIFFERENT
+        # COLOURS". src/func_ov002_020e5948.c:366 writes
+        # +0x61C = base + (playerNo << 1) UNCONDITIONALLY, six lines above the
+        # data_0209f2d8 == 1 test at :372, so that difference is exactly 2 in
+        # every mode, for every character, always. The arm was measuring
+        # mPlayerNo. It was demonstrated passing on a build carrying two Marios
+        # in adventure mode, where Player::Render's palette re-point never
+        # executes at all.
+        #
+        # A real colour check has to observe the re-point and not its input:
+        # Player::Render copies +0x61C into +0x20 of every body and head
+        # material record, and only when the mode is VS and the character is 3.
+        # Reading a material record back is a measurement this harness does not
+        # have, so the colour half is UNMEASURED here rather than asserted. pal
+        # stays in the probe line for whoever does that work. It is data, not a
+        # verdict.
+        print("      info: pal (+0x61C = base + playerNo<<1, written in every "
+              "mode) P1 slot0=%s slot1=%s ;; P2 slot0=%s slot1=%s -- NOT a "
+              "colour measurement, see the note above"
+              % (a1[-1]["pal"], b1[-1]["pal"], a2[-1]["pal"], b2[-1]["pal"]))
     return ok
 
 
