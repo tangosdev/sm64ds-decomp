@@ -4315,7 +4315,7 @@ audit can detect.
 
 Measured on `_ZN14TTC_MovingBeam8BehaviorEv` (ov065, 0x0211bd8c, 0x178), lane TTC of run
 vsdec, ~700 compiled variants across 11 product sweeps. The whole body reproduced on the
-first try except one trailing clamp block, which cost the entire session nd turned out to
+first try except one trailing clamp block, which cost the entire session and turned out to
 be a single lever nobody had written down.
 
 THE SHAPE. A range test followed by a clamp:
