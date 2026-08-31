@@ -1,14 +1,15 @@
 {
   "id": "ov047/daObjKm3_Kaitendai_c",
   "module": "ov047",
-  "source": "src_tu/actors/daObjKm3_Kaitendai_c.cpp",
+  "source": "src/actors/daObjKm3_Kaitendai_c.cpp",
   "promoted_source": "src/actors/daObjKm3_Kaitendai_c.cpp",
-  "status": "text-verified",
+  "production_mode": "intact-object",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "manually corrected contiguous linker run: 0x021112bc..0x021113f8, five functions; build/tu_map.json stopped at 0x021113bc and omitted the immediately adjacent factory func_ov047_021113bc",
     "func_ov047_021113bc constructs daObjKm3_Kaitendai_c (size 0x320, dBgActor base constructor, then daObjKaitendai and daObjKm3_Kaitendai vptr stores), and the actor descriptor at 0x02112358 relocates directly to it inside this class's RTTI/type-name/vtable data band",
-    "one mwccarm 2004/b56 compile emits all five text contributions plus the measured class data in the retail section order; strict partitioned linkcheck proves 5/5 text contributions, the 0x02112334..0x021123fc data tail, all 106 modules, and the full stock ROM byte-identical"
+    "one mwccarm 2004/b56 compile emits all five text contributions plus the measured class data; strict partitioned linkcheck proved 5/5 text contributions and the 0x02112334..0x021123fc data tail, and ordinary intact-object production extends that ownership through the compiler-emitted RTTI at 0x02112328"
   ],
   "sections": [
     {
@@ -18,7 +19,7 @@
     },
     {
       "name": ".data",
-      "start": "0x02112334",
+      "start": "0x02112328",
       "end": "0x021123fc"
     }
   ],
@@ -61,6 +62,12 @@
   ],
   "data": [
     {
+      "symbol": "_ZTI20daObjKm3_Kaitendai_c",
+      "address": "0x02112328",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI record matches the retail bytes and all three configured relocations"
+    },
+    {
       "symbol": "data_ov047_02112334",
       "address": "0x02112334",
       "size": "0xc",
@@ -84,21 +91,42 @@
       "emitted_storage_address": "0x02112374",
       "address_point_bias": "0x8",
       "size": "0x88",
-      "storage_alias": {
-        "symbol": "data_ov047_02112374",
-        "address": "0x02112374",
-        "size": "0x8",
-        "binding": "STB_GLOBAL",
-        "type": "STT_OBJECT",
-        "visibility": "STV_DEFAULT",
-        "reuse_compiler_only_symbol": "_ZN20daObjKm3_Kaitendai_cD2Ev"
-      },
-      "evidence": "compiler storage includes the two-word vtable preamble at 0x02112374; the configured public address point is eight bytes later and all 32 slot relocations match"
+      "evidence": "compiler storage includes the two-word vtable preamble at 0x02112374; the configured public address point is eight bytes later and all 32 slot relocations match without inventing a second name for the ABI preamble"
     }
   ],
   "rodata": [],
   "bss": [],
   "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02112328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211232c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS20daObjKm3_Kaitendai_c",
+      "addend": 0,
+      "target_module": "ov047",
+      "target_address": "0x02112340"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjKaitendai_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021091ac"
+    },
     {
       "section": ".data",
       "source": "0x02112334",
@@ -711,60 +739,15 @@
       "canonical_address": "0x021091b8",
       "reason": "inherited vague RTTI copy",
       "relocations": []
-    },
-    {
-      "symbol": "_ZTI20daObjKm3_Kaitendai_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "ov047",
-      "canonical_address": "0x02112328",
-      "reason": "own typeinfo remains at its exact separately gap-owned canonical home because this scratch partition claims the contiguous descriptor/type-name/SpawnInfo/vtable tail",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS20daObjKm3_Kaitendai_c",
-          "addend": 0,
-          "target_module": "ov047",
-          "target_address": "0x02112340"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI16daObjKaitendai_c",
-          "addend": 0,
-          "target_module": "ov002",
-          "target_address": "0x021091ac"
-        }
-      ]
     }
   ],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN20daObjKm3_Kaitendai_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
-    }
-  ],
+  "compiler_only_output": [],
   "notes": [
     "The original four-function generated candidate was incomplete. The adjacent unnamed factory and its actor-descriptor relocation establish the corrected five-function boundary; the function keeps its address name because no stronger retail name provenance exists.",
-    "This scratch partition owns the contiguous data tail 0x02112334..0x021123fc: resource descriptor, own type-name string, actor descriptor, and vtable storage. The own typeinfo at 0x02112328 remains at its separately gap-owned canonical home and is exact-symbol externalized, as are inherited vague RTTI copies.",
+    "This TU owns the contiguous data band 0x02112328..0x021123fc: its compiler-emitted RTTI and type-name records, resource descriptor, actor descriptor, and vtable storage. Only inherited vague RTTI copies remain exact-symbol externalized.",
     "The two s16 setup parameters at 0x02112320 and 0x02112324 remain gap-owned. They are referenced by InitResources but are not claimed here because their independent TU ownership and compiler section placement have not been established.",
-    "The compiler-only D2 destructor is exact deadstrip evidence; the vtable is emitted at storage 0x02112374 and rebased to the repository's public address-point symbol 0x0211237c while preserving the baseline's eight-byte storage-prefix alias.",
-    "Partitioned link verification is scratch-only: tracked src/ and config/**/delinks.txt remain authoritative and unchanged. Production promotion remains refused until the build has an equivalent supported partition/externalization/deadstrip enrollment path."
+    "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; the vtable is emitted at storage 0x02112374 and rebased to the repository's public address-point symbol 0x0211237c without inventing a second name for the ABI preamble.",
+    "Production uses the fail-closed intact-object path: manifest-owned non-text ordering, exact inherited-output externalization, and address-point rebias are applied before the ordinary link verifies this source's complete text and data claims."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -777,9 +760,144 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- raw object also emits compiler-only D2 plus 11 exact externalized RTTI/type-name definitions",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov047-daObjKm3_Kaitendai_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021112bc",
+        "end": "0x021113f8",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021112bc",
+          "end": "0x021113f8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02112328",
+          "end": "0x021123fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 10
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              14,
+              20,
+              24,
+              25,
+              27
+            ],
+            "desired": [
+              20,
+              14,
+              24,
+              25,
+              27
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                14,
+                20,
+                24,
+                25,
+                27
+              ],
+              "desired": [
+                20,
+                14,
+                24,
+                25,
+                27
+              ],
+              "slots": [
+                14,
+                20,
+                24,
+                25,
+                27
+              ]
+            }
+          ],
+          "symbolIndices": 5,
+          "sectionLinks": 0,
+          "sectionInfos": 4,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
     }
   },
   "partial_isolation": {
