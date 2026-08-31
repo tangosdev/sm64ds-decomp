@@ -23,7 +23,7 @@ extern "C" void func_ov006_020c1d80(void*);
 extern "C" void func_020733a8(void*, int, int, void*, void*);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV14dScMgMCarlo2_c;
-extern "C" void func_ov006_020f8ff0(void);
+extern "C" void func_ov006_020f8ff0(int *p);
 extern "C" void func_ov006_020fa740(int *);
 extern int data_ov006_0213d728;
 }

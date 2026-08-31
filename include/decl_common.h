@@ -1060,8 +1060,13 @@ extern int data_ov006_021421c4;
    spellings below were the arbitrary winners. Every consumer lives in
    ov006/dScMgMCarlo_c, which now declares all four with the recovered
    pointer type, so no declaration belongs here. */
-extern int data_ov006_02142570;
-extern int data_ov006_02142574;
+/* data_ov006_02142570 / _02142574 are the two halves of the pair being
+   matched in ov006/dScMgMCarlo2_c -- pointers into that minigame's own
+   node list. The six one-function legacy files each declared them in
+   isolation (int, char*, Node*) and a scalar spelling was the arbitrary
+   winner here. Every consumer now lives in that one translation unit,
+   which declares both with the recovered pointer type, so no declaration
+   belongs here either. */
 extern int data_ov006_02142f60;
 extern int data_ov007_02103260;
 extern int data_ov007_02103290;
@@ -1493,9 +1498,12 @@ extern int func_ov006_020e6e78(void*);
 extern int func_ov006_020f7a90(void);
 extern int func_ov006_020f7b10(void);
 extern int func_ov006_020f7b90(void);
-extern int func_ov006_020f95f0(void);
-extern int func_ov006_020f9668(void);
-extern int func_ov006_020f96e0(void);
+/* func_ov006_020f95f0 / _020f9668 / _020f96e0 / _020f9000 / _020f94f4 /
+   _020f9760 are all members of ov006/dScMgMCarlo2_c and every caller is a
+   member of the same translation unit, which declares them with the
+   recovered node-pointer types (_020f9760 took `void*` here because the
+   one-function legacy file could not name the element type). Nothing
+   outside that TU refers to them, so no declaration belongs here. */
 extern void func_ov006_020ff47c(void*);
 extern void func_ov006_02100140(void*);
 extern void func_ov006_02100314(void*);
@@ -2497,10 +2505,9 @@ extern void func_ov006_020f7064(void*);
 extern void func_ov006_020f7730(int *);
 extern void func_ov006_020f7740(void);
 extern void func_ov006_020f7994(void);
-extern void func_ov006_020f8ff0();
-extern void func_ov006_020f9000(void);
-extern void func_ov006_020f94f4(void);
-extern void func_ov006_020f9760(void*);
+/* the element destructor for dScMgMCarlo2_c's 40 x 0x30 array; it writes one
+   word into the element it is handed. Both call sites cast it to void*. */
+extern void func_ov006_020f8ff0(int*);
 extern void func_ov006_020fad90(char*);
 extern void func_ov006_020fadfc(char*);
 extern void func_ov006_020fffec(char*);
