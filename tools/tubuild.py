@@ -1595,10 +1595,17 @@ def span_entries(delinks_path, span_start, span_end, expected_legacy):
     inside, straddling = [], []
     for idx, (rel, body) in enumerate(entries):
         secs = entry_sections(body)
-        if not secs:
+        text_secs = [section for section in secs if section[0] == ".text"]
+        if not text_secs:
             continue
-        lo = min(s[1] for s in secs)
-        hi = max(s[2] for s in secs)
+        # This helper substitutes one text contribution.  A neighbouring intact TU
+        # may own non-text storage at a numerically later address; folding that data
+        # into one min/max envelope makes an adjacent, disjoint .text range look as
+        # though it straddles this TU.  Select entries by their .text contribution,
+        # then retain all sections so the existing fail-closed check below still
+        # rejects non-text carried by an entry that is actually being replaced.
+        lo = min(s[1] for s in text_secs)
+        hi = max(s[2] for s in text_secs)
         if hi <= span_start or lo >= span_end:
             continue
         if lo < span_start or hi > span_end:
