@@ -660,8 +660,9 @@ def scan_casts(body, bases, fieldmap, env, origin, path, base_line, known_types,
                local_structs):
     """`((ModelBase *)((char *)&mModel))->SetFile(...)` -- a cast is a lower bound.
 
-    UNLESS the file declares that struct itself.  `src/_ZN5Stage11RenderModelEv.cpp`
-    writes `struct ModelComponents { void *sub; Component *components; };` -- a local
+    UNLESS the file declares that struct itself.  The migrated `Stage::RenderModel`
+    (`_ZN5Stage11RenderModelEv`) writes
+    `struct ModelComponents { void *sub; Component *components; };` -- a local
     stand-in whose NAME a human chose and whose layout does not match the real class.
     Casting through it proves nothing about the type; it is recorded as `localname`
     and never decides anything.
@@ -900,10 +901,10 @@ def main():
             return sizes[cls][0], sizes[cls][1]
         if cls in layout_sizes:
             n, k = layout_sizes[cls].most_common(1)[0]
-            # UPPER BOUND ONLY.  A revision of `src/_ZN8PoleLiftD1Ev.cpp` padded
-            # Model to 0x80 so the next member landed at 0x158; the real class is
-            # 0x50 and the 0x30 between them is unknown space.  Never let this
-            # override an assertion.
+            # UPPER BOUND ONLY.  A revision of PoleLift's D1 destructor
+            # (`_ZN8PoleLiftD1Ev`) padded Model to 0x80 so the next member landed
+            # at 0x158; the real class is 0x50 and the 0x30 between them is
+            # unknown space.  Never let this override an assertion.
             return n, "inferred (UPPER BOUND) from %d local layout(s)" % k
         return None, None
 
