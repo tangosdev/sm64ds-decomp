@@ -7461,16 +7461,49 @@ int main(void)
         }
         /* F4 cycles the character with the menu CLOSED, mid-walk. Its own edge
            latch, deliberately outside the menu's held-mask below, so it is not
-           one of the keys the menu swallows while it is open. */
+           one of the keys the menu swallows while it is open.
+
+           REFUSED WHILE THE SESSION IS LIVE. The cycle is local BY
+           CONSTRUCTION: port_player_set_character (hal/player_bridges.cpp)
+           writes this process's player and nothing else, and the sync layer
+           carries no character identity at all -- hal/comms_sync.cpp moves
+           bodies and input, never who the body is. VS seats the pair once per
+           boot, at level_boot.cpp's `port_vs_set_character(i, i)` loop, which
+           runs the same way on BOTH machines, so both sides start out
+           agreeing about who is who. A local cycle breaks that agreement in
+           one direction only: this side simulates a different character for
+           its own slot -- other stats, other collision -- while the peer keeps
+           simulating the one it was seated with, and nothing ever heals it.
+
+           OBSERVED, not only reasoned. In the two-window session of
+           2026-08-31 10:44 (playlog play_20260831_104440 / _104441, both
+           windows already reporting `VS: 2 players` at line 16 before the
+           first press) the parent cycled ONCE and the child cycled FOUR
+           times, so the two consoles finished the session simulating
+           different characters for the same pair of slots. That run is what
+           this gate is written against.
+
+           The predicate is the seam's own -- the same question
+           hal/comms_sync.cpp's gate asks and the [comms:level] line prints:
+           connected, and more than one player. One printed line says why, in
+           the place the player is already looking; solo is untouched. */
         {
             static int chr_edge;
             const int now = key_live(VK_F4);
             if (now && !chr_edge) {
-                const int nxt = (g_character + 1) & 3;
-                fprintf(stderr, "[chr] F4 becoming %s\n", CHAR_NAME[nxt]);
-                port_player_set_character(c, nxt);
-                g_character = g_character_pending = nxt;
-                an_pivot_live = 0;   /* do not ease across it */
+                const port::CommsReadout cr = port::comms_readout();
+                if (cr.connected && cr.players > 1) {
+                    fprintf(stderr,
+                            "[chr] F4 refused: the character cycle is local "
+                            "only (link=%d players=%d) and would desync the "
+                            "session\n", cr.link_state, cr.players);
+                } else {
+                    const int nxt = (g_character + 1) & 3;
+                    fprintf(stderr, "[chr] F4 becoming %s\n", CHAR_NAME[nxt]);
+                    port_player_set_character(c, nxt);
+                    g_character = g_character_pending = nxt;
+                    an_pivot_live = 0;   /* do not ease across it */
+                }
             }
             chr_edge = now;
         }
