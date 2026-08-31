@@ -442,26 +442,37 @@ static void __fastcall vs_pmf_grid_render(void *self, void *)
  * it happens to be zero, and a zero receiver reads 0x000000a8. So the defect is
  * the one already named, and scene 7 is simply the path where it is lethal.
  *
- * SM64DS_VS_PMF_ALL=1 installs the two remaining thunks -- the same
+ * SM64DS_VS_PMF_ALL=1 installs the thunk for THAT site -- the same
  * __fastcall(self, edx) shape as vs_pmf_grid_render, on the same first word of
  * the same kind of record, which the block above proves is the reachable entry
- * for all three. It stays OFF because turning it on wakes up two pieces of
- * drawing code nobody has looked at (0211b260's 20x20 vertex grid and
- * 0211b1cc's 400-element walk) and this lane does not judge pictures.
+ * for all three. It stays OFF because turning it on wakes up a piece of drawing
+ * code nobody has looked at, 0211b260's 20x20 vertex-grid initialisation, and
+ * this lane does not judge pictures.
  *
- * THE TWO BODIES ARE CALLED THROUGH A TYPED POINTER, not through a declaration
- * of their own, and that is forced rather than chosen. vs_data_patch.inc is
- * GENERATED and says so at the top -- regenerate, do not hand-edit -- and it
- * already declares both names as `void f(void)` because every row of that table
- * only ever takes an address. Re-declaring either one here with its real
- * `(self)` signature is error C2733 on an extern "C" name. The four bodies that
- * DO have real declarations above are the four the generator was told to skip.
- * A cast at the one call site keeps the generated file generated; both bodies
- * are cdecl and take exactly one pointer (src/func_ov075_0211b260.c,
- * src/func_ov075_0211b1cc.c), which is what the pointer type says. */
+ * AND ONLY THAT SITE. The third pair, 0x0211d34c -> func_ov075_0211b1cc, gets
+ * no thunk here and must not: src/func_ov075_0211b1cc.c carries the "recovered
+ * from vtable slot identity" marker, which makes it a GUESSED body, and
+ * port/tools/inferred_stub_guard's standing ruling is that a guessed body may
+ * not enter a live fill. It caught the first draft of this block doing exactly
+ * that -- "NEW SEAT: func_ov075_0211b1cc" -- and the guard is right. Scene 7
+ * does not need it: the results path reaches 0211b260 through
+ * func_ov075_0211b458, and the only dispatcher for the other pair is
+ * func_ov075_0211b418, which that path never enters. So the lane that takes the
+ * entry record inherits that site along with its precondition -- the body has
+ * to be a real decompilation before anything may point at it.
+ *
+ * THE BODY IS CALLED THROUGH A TYPED POINTER, not through a declaration of its
+ * own, and that is forced rather than chosen. vs_data_patch.inc is GENERATED
+ * and says so at the top -- regenerate, do not hand-edit -- and it already
+ * declares the name as `void f(void)` because every row of that table only ever
+ * takes an address. Re-declaring it here with its real `(self)` signature is
+ * error C2733 on an extern "C" name. The four bodies that DO have real
+ * declarations above are the four the generator was told to skip. A cast at the
+ * one call site keeps the generated file generated; the body is cdecl and takes
+ * exactly one pointer (src/func_ov075_0211b260.c), which is what the pointer
+ * type says. */
 extern "C" {
 extern unsigned char data_ov075_0211d354[];
-extern unsigned char data_ov075_0211d34c[];
 }
 typedef void (*VsPmfBody)(void *self);
 static void __fastcall vs_pmf_grid_init(void *self, void *)
@@ -469,22 +480,18 @@ static void __fastcall vs_pmf_grid_init(void *self, void *)
     /* src/func_ov075_0211b260.c: the 20x20 vertex-grid initialisation */
     ((VsPmfBody)(void *)&func_ov075_0211b260)(self);
 }
-static void __fastcall vs_pmf_grid_step(void *self, void *)
-{
-    /* src/func_ov075_0211b1cc.c: the 400-element walk */
-    ((VsPmfBody)(void *)&func_ov075_0211b1cc)(self);
-}
 static void vs_install_remaining_pmf_thunks(void)
 {
     if (!std::getenv("SM64DS_VS_PMF_ALL"))
         return;
     *(void **)data_ov075_0211d354 = (void *)vs_pmf_grid_init;
-    *(void **)data_ov075_0211d34c = (void *)vs_pmf_grid_step;
-    std::fprintf(stderr, "  [vs] SM64DS_VS_PMF_ALL=1: the other two entry-record "
-                 "member-pointer sites now get their receiver too "
-                 "(0x0211d354 -> func_ov075_0211b260, 0x0211d34c -> "
-                 "func_ov075_0211b1cc). This is a DRAWING change nobody has "
-                 "looked at; the default leaves both records alone.\n");
+    std::fprintf(stderr, "  [vs] SM64DS_VS_PMF_ALL=1: the entry record's "
+                 "0x0211d354 member-pointer site now gets its receiver "
+                 "(-> func_ov075_0211b260). This is a DRAWING change nobody "
+                 "has looked at; the default leaves the record alone. The "
+                 "third site, 0x0211d34c, is NOT touched -- its body is "
+                 "marked as recovered from vtable slot identity and the "
+                 "inferred-stub guard forbids seating a guess.\n");
 }
 
 static void vs_apply_data_patch(void)

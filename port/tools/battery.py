@@ -315,6 +315,36 @@ SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
 # selftest's own, and the bare run is re-probed on every pass so a skip cannot
 # outlive its bug. Empty is the goal.
 SCENE_SKIPS = {
+    # SCENE 7, SCENE_VS_RESULTS, new in lane VSEND. The VS results screen is the
+    # SAME dScEntry_c class as the scene 6 lobby, told apart by its own id, and
+    # the lobby row has passed bare for as long as it has existed. Scene 7 does
+    # not, and the difference is entirely in the branch the id chooses:
+    #
+    #   func_ov075_0211b260 +0x17    FAULT c0000005 accessing 000000a8, eax=0
+    #     <- func_ov075_0211b458 +0x77
+    #     <- UnknownVsEntry::InitResources +0x1bf
+    #     <- func_ov075_02116818 +0x259        the results branch
+    #     <- func_ov075_0211a410 +0x1e7        dScEntry_c::InitResources
+    #
+    # That is the second of three MSVC pointer-to-member dispatch sites
+    # hal/scene_vs_menu.cpp documents at length: the dispatchers pass `this` in
+    # ecx and the bodies are plain cdecl, so the receiver never arrives. Its own
+    # block predicted this exact behaviour -- "0211b260 bails on a non-positive
+    # count, off whatever the stack happened to hold" -- and on the results path
+    # the stack holds zero. SM64DS_VS_PMF_ALL=1 installs the two missing thunks
+    # and the scene then runs its full budget clean, 0 traps.
+    #
+    # THE SKIP RATHER THAN THE FIX, and the reason is the one that file states:
+    # handing those two sites a real receiver wakes up drawing code nobody has
+    # looked at, and the lane that takes the entry record should do all three
+    # together and measure what appears. Lane VSEND measured that the LOBBY's
+    # own frame is byte-identical with the switch on and off, which is one
+    # piece of that evidence and not all of it.
+    #
+    # The bare re-probe runs every battery, so the day those sites are fixed
+    # this prints SKIP RETIRED and the row comes out.
+    7: ("SM64DS_VS_PMF_ALL=1",
+        "lane VSEND / the ov075 entry-record member-pointer sites"),
     # SCENE 390 (0x186), dScMgFlower_c, RETIRED by run mg5 lane Y3D. The row
     # stood from lane FLW, which seated the class and found that it booted and
     # ticked but could not RENDER:
