@@ -62,11 +62,24 @@ struct dScMgBase_c : dScene_c {
            stub proves nothing either way -- an unused argument is simply never
            read -- so only an override that reads a parameter is evidence, and
            that evidence is a LOWER bound on the arity.
-         return type: int. dScMgCoin_c::OnYoshiTryEat is a real member
-           definition ending `return 0;`, so declaring void would have changed
-           its bytes. The 24 free-function bodies are all written void, but
-           the return type is not mangled, so they are unaffected. The base's
-           own ROM body is a lone `bx lr` and sets nothing.
+         return type: void -- AMENDED 2026-08-31; this slot was first
+           declared int on Coin's evidence alone. Three measurements drove
+           the amendment: the 24 free-function bodies are all written void
+           and all match, so their retail originals are void-compiled;
+           BSC's converted member under int shifts its tail registers --
+           mwcc reserves r0 for the return value in any non-void function,
+           and the retail tail uses r0 as scratch (8 bytes differing); and
+           Coin's member recompiled as void matches byte-identically, its
+           `return 0;` exposed as an int-assumption transcription of a
+           `mov r0,#0` that is really the source register of the
+           `unk_51c8 = 0` store doing double duty. The return type is not
+           mangled, but it is codegen-relevant: every real-member
+           conversion of this slot under int walks into the same register
+           shift. The base's own ROM body is a lone `bx lr` and sets
+           nothing, fitting either form. The 28 sibling declarations that
+           mirrored the int were flipped with this change; they are
+           declaration-only (those slot-18 bodies are extern-C shadows),
+           so no bytes moved.
          name: from dActor_c.h:131, corroborated by
            config/arm9/overlays/ov006/symbols.txt, which already named
            dScMgCoin_c's slot-18 override `_ZN11dScMgCoin_c13OnYoshiTryEat*`
@@ -75,7 +88,7 @@ struct dScMgBase_c : dScene_c {
            either side; the name is inherited, not independently proven here.
            Only the signature is measured. dActor_c.h declares it with no
            parameter, which the measurement above contradicts. */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     /* Slot 19 -- MEASURED, and dActor_c.h is wrong here too:
          arity: two of the eleven descendant overrides read r1, and both
@@ -93,7 +106,7 @@ struct dScMgBase_c : dScene_c {
            dScMgBSC_c each carry a `recovered name: <class>_OnTurnIntoEgg`
            comment in their own legacy source, so the name here does not
            rest on dActor_c.h at all. */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
+    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     /* Slot 20 -- and this one has no name.  `Virtual50` is the placeholder
        include/dActor_c.h:133 already uses, spelled from the byte offset
        (slot 20 x 4 = 0x50).  All five bodies carry a

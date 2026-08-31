@@ -130,7 +130,7 @@ struct dScMgSlot1_c : dScMgBase_c {
     /* Overrides dScMgBase_c's slot 18. It must stay FIRST among this class's
        new-slot virtuals: for a new slot the index IS the declaration order,
        so any undeclared-on-the-base virtual placed above it would claim 18. */
-    virtual int  OnYoshiTryEat(int arg);                 /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);                 /* slot 18 */
     virtual void OnHitByMegaChar(Player &player);       /* slot 27 -- void, see include/Stump.h */
     virtual int OnHitFromUnderneath(dActor_c &other);      /* slot 28 */
 

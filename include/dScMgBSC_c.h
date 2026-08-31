@@ -80,17 +80,19 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
        legacy recovered names OnYoshiTryEat / OnTurnIntoEgg /
        OnGroundPounded stand uncontradicted. Slots 18 and 19 became
        overrides when upstream dScMgBase_c.h declared them virtual
-       (2026-08-31, return type int measured from dScMgCoin_c's real
-       member): re-overrides of base-owned slots, adding no table
-       entry, spelled like the base-owned re-overrides above. BSC's
-       OnYoshiTryEat was first lowered as void; the family-measured
-       int form now wins -- s32 is the same type, mangling ignores
-       the return type, and the byte gate on the rebased tree is
-       the proof the changed spelling still reproduces. Slot 21 the
+       (2026-08-31). Both are re-overrides of base-owned slots, adding
+       no table entry, spelled like the base-owned re-overrides above.
+       OnYoshiTryEat is void -- this class's own bytes measured it (an
+       int return reserves r0 and shifts the tail registers; retail uses
+       r0 as scratch), and the base slot's int was amended to void on
+       the same evidence, Coin's `return 0;` proving to be a
+       transcription artifact. OnTurnIntoEgg is s32, matching the
+       base's measured int (its ov004 base body ends `return 1;`).
+       Slot 21 the
        base does not declare yet, so OnGroundPounded stays a plain
        member occupying its slot; it becomes an override the day
        dScMgBase_c.h declares slots 21-35. */
-    virtual s32 OnYoshiTryEat(int mode);  /* slot 18 -- ov006 0x02125364 */
+    virtual void OnYoshiTryEat(int mode);  /* slot 18 -- ov006 0x02125364 */
     virtual s32 OnTurnIntoEgg(int mode);  /* slot 19 -- ov006 0x0212527c */
     s32  OnGroundPounded();        /* slot 21 -- ov006 0x02125248 */
 
