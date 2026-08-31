@@ -509,6 +509,44 @@ about codegen and the cause will be a boundary.
 
 ---
 
+## 7. A byte-true promotion is not a converted one — the goal gate
+
+Everything above keeps the bytes honest. Nothing above asks the question the reconstruction
+is actually for, stated verbatim in the minigame conversion goal: "convert the minigame
+code to period accurate idiomatic, readable, c++ code the original EAD team would have
+written." A TU can pass every gate in this note and still be nothing but a shadow of the
+class shape — mostly `extern "C"` free functions doing `*(int *)(c + 0x51b8)` arithmetic
+over `char *` params. The five ov006 minigame promotions on `main` are exactly that by
+measurement: byte-true, 11–59% named member coverage, 89–202 raw member-offset accesses
+per TU (`tools/check_tu_idioms.py`, report mode; the census over `main`'s tree is
+reproducible by anyone holding the tool). And the failure that made the tool necessary was
+smaller and sharper: pilot 2 shipped a promotion whose comment claimed a function was the
+deleting destructor, vtable slot 17, when `tools/rtti_vtables.py` proved it was slot 18 —
+a mode-dispatched event handler — with every byte gate green
+(notes/tu-reconstruction-pilot2-report.md sec 6.1, gap 1; the comment was fixed on the
+constitution lane, byte-verified 19/19).
+
+**The rule.** A new TU promotion declares a `goal` block in its manifest entry (named
+member coverage target and the free-function share it will not exceed) and the PR shows
+`python tools/check_tu_idioms.py <tu> --strict` passing over it. A promotion that cannot
+meet its own goal block yet ships with the census line printed in the PR and the gap
+named — the gate prices honestly, it does not forbid in-progress work. What it does
+forbid is invisible drift: retired mangled-name identifiers the ratified-forms table
+already names (`_Z14ApproachLinearRiii`, `_ZN5Sound12PlayBank2_2DEj`, ...), and a
+`named` count propped up by `unk_`/`pad_` respellings, which the census prices separately
+(`namedEncoded`) for exactly that reason.
+
+**Status, stated plainly.** The gate and its tests are on the constitution lane, not
+`main`; the census numbers above were measured over `main`'s tree with that tool. This
+section is documentation-first the way the rest of the note is: it records the convention
+the minigame wave is being held to, so the first promotion PR that carries a `goal` block
+has a written rule to cite.
+
+**Reviewer check.** The PR shows the `--strict` line for the promoted TU (or its census
+line with the gap named), and no `unk_`/`pad_` respelling is doing duty as a conversion.
+
+---
+
 ## Reviewer checklist
 
 1. Every coined mangled name that encodes an argument type has its disclosure in the
@@ -526,6 +564,9 @@ about codegen and the cause will be a boundary.
    shared mangled externs sit above the first marker, the destructor is inline in a
    directly included header and unmarked, and no backslide-exception row is covering a
    member a marker would have saved.
+8. The PR shows `check_tu_idioms.py <tu> --strict` passing over the entry's `goal` block,
+   or the census line with the gap named — and no `unk_`/`pad_` respelling is doing duty
+   as a conversion (section 7).
 
 ## Known open items at the time of writing
 
