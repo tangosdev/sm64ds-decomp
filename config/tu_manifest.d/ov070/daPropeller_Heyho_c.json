@@ -1,0 +1,1591 @@
+{
+  "id": "ov070/daPropeller_Heyho_c",
+  "module": "ov070",
+  "source": "src_tu/actors/daPropeller_Heyho_c.cpp",
+  "promoted_source": "src/actors/daPropeller_Heyho_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211f000..0x2120570, 27 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daPropeller_Heyho_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211f000",
+      "end": "0x02120570"
+    },
+    {
+      "name": ".data",
+      "start": "0x02123120",
+      "end": "0x021231e4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN19daPropeller_Heyho_cD1Ev",
+      "address": "0x0211f000",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_cD0Ev",
+      "address": "0x0211f048",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov070_0211f0a4",
+      "address": "0x0211f0a4",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov070_0211f0a4.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov070_0211f100",
+      "address": "0x0211f100",
+      "size": "0x00000268",
+      "legacy_source": "src/func_ov070_0211f100.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov070_0211f368",
+      "address": "0x0211f368",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov070_0211f368.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov070_0211f450",
+      "address": "0x0211f450",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov070_0211f450.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov070_0211f48c",
+      "address": "0x0211f48c",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov070_0211f48c.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov070_0211f5f0",
+      "address": "0x0211f5f0",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov070_0211f5f0.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov070_0211f62c",
+      "address": "0x0211f62c",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov070_0211f62c.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov070_0211f694",
+      "address": "0x0211f694",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov070_0211f694.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov070_0211f6e0",
+      "address": "0x0211f6e0",
+      "size": "0x000003a0",
+      "legacy_source": "src/func_ov070_0211f6e0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov070_0211fa80",
+      "address": "0x0211fa80",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov070_0211fa80.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov070_0211fae4",
+      "address": "0x0211fae4",
+      "size": "0x0000027c",
+      "legacy_source": "src/func_ov070_0211fae4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov070_0211fd60",
+      "address": "0x0211fd60",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov070_0211fd60.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov070_0211fd98",
+      "address": "0x0211fd98",
+      "size": "0x00000210",
+      "legacy_source": "src/func_ov070_0211fd98.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov070_0211ffa8",
+      "address": "0x0211ffa8",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov070_0211ffa8.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "FlyGuy_ChangeState",
+      "address": "0x02120020",
+      "size": "0x00000050",
+      "legacy_source": "src/FlyGuy_ChangeState.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov070_02120070",
+      "address": "0x02120070",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov070_02120070.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+      "address": "0x02120150",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c16CleanupResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+      "address": "0x021201bc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c16OnPendingDestroyEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c6RenderEv",
+      "address": "0x021201c0",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c6RenderEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c8BehaviorEv",
+      "address": "0x02120210",
+      "size": "0x000001a4",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c8BehaviorEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+      "address": "0x021203b4",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c13InitResourcesEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+      "address": "0x021204e4",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+      "address": "0x021204ec",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+      "address": "0x02120518",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "FlyGuy_Spawn",
+      "address": "0x02120520",
+      "size": "0x00000050",
+      "legacy_source": "src/FlyGuy_Spawn.c",
+      "ordinal": 26
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTI19daPropeller_Heyho_c",
+      "address": "0x02123120",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI record matches retail and links the ROM-proven class identity to dEnemyBase_c"
+    },
+    {
+      "symbol": "_ZTS19daPropeller_Heyho_c",
+      "address": "0x0212312c",
+      "size": "0x16",
+      "evidence": "compiler-emitted length-prefixed class type-name string is the exact 22-byte retail object"
+    },
+    {
+      "symbol": "FlyGuy_SpawnInfo",
+      "address": "0x02123144",
+      "size": "0x1c",
+      "evidence": "typed actor descriptor; factory relocation, priorities, flags, ranges, and distances reproduce the complete retail object"
+    },
+    {
+      "symbol": "_ZTV19daPropeller_Heyho_c",
+      "address": "0x02123168",
+      "emitted_storage_address": "0x02123160",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage includes the two-word ABI preamble at 0x02123160; the configured public address point is eight bytes later and all 31 slots match retail"
+    }
+  ],
+  "rodata": [],
+  "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02123120",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123124",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS19daPropeller_Heyho_c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0212312c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123128",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123144",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "FlyGuy_Spawn",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120520"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123164",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI19daPropeller_Heyho_c",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02123120"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123168",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021203b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212316c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123170",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123174",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120150"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123178",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212317c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123180",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120210"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123184",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123188",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212318c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021201c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123190",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123194",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02123198",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021201bc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0212319c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_cD1Ev",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0211f000"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_cD0Ev",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x0211f048"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x02120518"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021204ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "ov070",
+      "target_address": "0x021204e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021231e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The genuine Vector3 locals make mwcc emit the deliberately empty inline destructor as vague linkage. This object's copy is the exact four-byte `bx lr` body at its canonical arm9 home, and no surviving section references the discarded duplicate."
+    }
+  ],
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS12dEnemyBase_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x021081cc"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e390"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xf",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+    "ROM-PROVEN CLASS IDENTITY: _ZTV19daPropeller_Heyho_c at 0x02123168 points through _ZTI19daPropeller_Heyho_c at 0x02123120 to the exact length-prefixed string `19daPropeller_Heyho_c` at 0x0212312c. FlyGuy was a coined decomp class name. FlyGuy_Spawn, FlyGuy_SpawnInfo, and FlyGuy_ChangeState remain explicit semantic C-ABI aliases; the cartridge proves their addresses and relationship to this class, not those exact source spellings.",
+    "Inlining the virtual destructor in the directly included class header makes mwccarm emit only the retail D1 then D0 pair in ROM order. The former out-of-line definition emitted an additional homeless D2 and reversed the D1/D0 section-order check.",
+    "27/27 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled (create refuses extern-C-wrapped bodies). Carries the NEW struct-copy lever: mwccarm's C++ front end scalarizes a plain struct assignment where the C front end emits an ldm/stm block copy; an array-wrapper view (struct V3w { int w[3]; }) restores the block copy -- fixed func_ov070_0211f48c (-4B) and func_ov070_0211f6e0 (+8B) after fdiff proved the idiom byte-exact. Also: two members keep their own int-target ApproachAngle view via BLOCK-SCOPE extern declarations (C++ name hiding), because the TU-wide extern-C declaration cannot serve both signatures and the parameter width is byte-load-bearing. FlyGuy_Spawn stores &_ZTV19daPropeller_Heyho_c[2] (+8 rule)."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov070-daPropeller_Heyho_c/daPropeller_Heyho_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 27,
+    "functions_declared": 27,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        30
+      ],
+      "data": [],
+      "dataExternalized": []
+    }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+    "derivedObjects": 27,
+    "contributionEquivalent": "27/27",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "legacyEntriesComplete": "27/27",
+    "extraInertImports": 144,
+    "extraImportsWithNoHome": [],
+    "artefacts": "build/tu/ov070-daPropeller_Heyho_c/partial/partial.json (gitignored)",
+    "state": "contribution-equivalent",
+    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "partitioned_link": {
+    "lastAttempt": {
+      "result": "failed",
+      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
+      "trackedDelinksChanged": false,
+      "text": {
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "mergedBytes": 20104,
+        "contributionEquivalent": "27/27",
+        "substitutedObjectPaths": [
+          "src/_ZN19daPropeller_Heyho_cD1Ev.cpp",
+          "src/_ZN19daPropeller_Heyho_cD0Ev.cpp",
+          "src/func_ov070_0211f0a4.cpp",
+          "src/func_ov070_0211f100.cpp",
+          "src/func_ov070_0211f368.cpp",
+          "src/func_ov070_0211f450.c",
+          "src/func_ov070_0211f48c.c",
+          "src/func_ov070_0211f5f0.cpp",
+          "src/func_ov070_0211f62c.c",
+          "src/func_ov070_0211f694.cpp",
+          "src/func_ov070_0211f6e0.c",
+          "src/func_ov070_0211fa80.c",
+          "src/func_ov070_0211fae4.c",
+          "src/func_ov070_0211fd60.c",
+          "src/func_ov070_0211fd98.c",
+          "src/func_ov070_0211ffa8.cpp",
+          "src/FlyGuy_ChangeState.cpp",
+          "src/func_ov070_02120070.cpp",
+          "src/_ZN19daPropeller_Heyho_c16CleanupResourcesEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c16OnPendingDestroyEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c6RenderEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c8BehaviorEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c13InitResourcesEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv.cpp",
+          "src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp",
+          "src/_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv.cpp",
+          "src/FlyGuy_Spawn.c"
+        ],
+        "rows": [
+          {
+            "ordinal": 0,
+            "symbol": "_ZN19daPropeller_Heyho_cD1Ev",
+            "identical": true,
+            "relocCount": 6,
+            "differences": []
+          },
+          {
+            "ordinal": 1,
+            "symbol": "_ZN19daPropeller_Heyho_cD0Ev",
+            "identical": true,
+            "relocCount": 8,
+            "differences": []
+          },
+          {
+            "ordinal": 2,
+            "symbol": "func_ov070_0211f0a4",
+            "identical": true,
+            "relocCount": 3,
+            "differences": []
+          },
+          {
+            "ordinal": 3,
+            "symbol": "func_ov070_0211f100",
+            "identical": true,
+            "relocCount": 18,
+            "differences": []
+          },
+          {
+            "ordinal": 4,
+            "symbol": "func_ov070_0211f368",
+            "identical": true,
+            "relocCount": 5,
+            "differences": []
+          },
+          {
+            "ordinal": 5,
+            "symbol": "func_ov070_0211f450",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 6,
+            "symbol": "func_ov070_0211f48c",
+            "identical": true,
+            "relocCount": 10,
+            "differences": []
+          },
+          {
+            "ordinal": 7,
+            "symbol": "func_ov070_0211f5f0",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 8,
+            "symbol": "func_ov070_0211f62c",
+            "identical": true,
+            "relocCount": 4,
+            "differences": []
+          },
+          {
+            "ordinal": 9,
+            "symbol": "func_ov070_0211f694",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 10,
+            "symbol": "func_ov070_0211f6e0",
+            "identical": true,
+            "relocCount": 24,
+            "differences": []
+          },
+          {
+            "ordinal": 11,
+            "symbol": "func_ov070_0211fa80",
+            "identical": true,
+            "relocCount": 3,
+            "differences": []
+          },
+          {
+            "ordinal": 12,
+            "symbol": "func_ov070_0211fae4",
+            "identical": true,
+            "relocCount": 23,
+            "differences": []
+          },
+          {
+            "ordinal": 13,
+            "symbol": "func_ov070_0211fd60",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 14,
+            "symbol": "func_ov070_0211fd98",
+            "identical": true,
+            "relocCount": 21,
+            "differences": []
+          },
+          {
+            "ordinal": 15,
+            "symbol": "func_ov070_0211ffa8",
+            "identical": true,
+            "relocCount": 5,
+            "differences": []
+          },
+          {
+            "ordinal": 16,
+            "symbol": "FlyGuy_ChangeState",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 17,
+            "symbol": "func_ov070_02120070",
+            "identical": true,
+            "relocCount": 6,
+            "differences": []
+          },
+          {
+            "ordinal": 18,
+            "symbol": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+            "identical": true,
+            "relocCount": 14,
+            "differences": []
+          },
+          {
+            "ordinal": 19,
+            "symbol": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 20,
+            "symbol": "_ZN19daPropeller_Heyho_c6RenderEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 21,
+            "symbol": "_ZN19daPropeller_Heyho_c8BehaviorEv",
+            "identical": true,
+            "relocCount": 18,
+            "differences": []
+          },
+          {
+            "ordinal": 22,
+            "symbol": "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+            "identical": true,
+            "relocCount": 20,
+            "differences": []
+          },
+          {
+            "ordinal": 23,
+            "symbol": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 24,
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 25,
+            "symbol": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+            "identical": true,
+            "relocCount": 0,
+            "differences": []
+          },
+          {
+            "ordinal": 26,
+            "symbol": "FlyGuy_Spawn",
+            "identical": true,
+            "relocCount": 7,
+            "differences": []
+          }
+        ]
+      },
+      "compilerOnlyPolicy": {
+        "requested": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "deadstripped": [
+          "_ZN7Vector3D1Ev"
+        ],
+        "droppedSections": [
+          30
+        ],
+        "errors": null
+      },
+      "externalizedPolicy": {
+        "requested": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI12dEnemyBase_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTI8dActor_c"
+        ],
+        "externalized": [
+          "_ZTI12dEnemyBase_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS12dEnemyBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          18
+        ],
+        "verificationOk": true,
+        "errors": []
+      },
+      "nontextPartition": {
+        "requestedSections": [
+          ".data"
+        ],
+        "licensedSymbols": [
+          "FlyGuy_SpawnInfo",
+          "_ZTI19daPropeller_Heyho_c",
+          "_ZTS19daPropeller_Heyho_c",
+          "_ZTV19daPropeller_Heyho_c"
+        ],
+        "deferredOutputs": [
+          {
+            "symbol": "_ZN19daPropeller_Heyho_cD1Ev",
+            "section": ".text",
+            "size": "0x00000048"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_cD0Ev",
+            "section": ".text",
+            "size": "0x0000005c"
+          },
+          {
+            "symbol": "func_ov070_0211f0a4",
+            "section": ".text",
+            "size": "0x0000005c"
+          },
+          {
+            "symbol": "func_ov070_0211f100",
+            "section": ".text",
+            "size": "0x00000268"
+          },
+          {
+            "symbol": "func_ov070_0211f368",
+            "section": ".text",
+            "size": "0x000000e8"
+          },
+          {
+            "symbol": "func_ov070_0211f450",
+            "section": ".text",
+            "size": "0x0000003c"
+          },
+          {
+            "symbol": "func_ov070_0211f48c",
+            "section": ".text",
+            "size": "0x00000164"
+          },
+          {
+            "symbol": "func_ov070_0211f5f0",
+            "section": ".text",
+            "size": "0x0000003c"
+          },
+          {
+            "symbol": "func_ov070_0211f62c",
+            "section": ".text",
+            "size": "0x00000068"
+          },
+          {
+            "symbol": "func_ov070_0211f694",
+            "section": ".text",
+            "size": "0x0000004c"
+          },
+          {
+            "symbol": "func_ov070_0211f6e0",
+            "section": ".text",
+            "size": "0x000003a0"
+          },
+          {
+            "symbol": "func_ov070_0211fa80",
+            "section": ".text",
+            "size": "0x00000064"
+          },
+          {
+            "symbol": "func_ov070_0211fae4",
+            "section": ".text",
+            "size": "0x0000027c"
+          },
+          {
+            "symbol": "func_ov070_0211fd60",
+            "section": ".text",
+            "size": "0x00000038"
+          },
+          {
+            "symbol": "func_ov070_0211fd98",
+            "section": ".text",
+            "size": "0x00000210"
+          },
+          {
+            "symbol": "func_ov070_0211ffa8",
+            "section": ".text",
+            "size": "0x00000078"
+          },
+          {
+            "symbol": "FlyGuy_ChangeState",
+            "section": ".text",
+            "size": "0x00000050"
+          },
+          {
+            "symbol": "func_ov070_02120070",
+            "section": ".text",
+            "size": "0x000000e0"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+            "section": ".text",
+            "size": "0x0000006c"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+            "section": ".text",
+            "size": "0x00000004"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c6RenderEv",
+            "section": ".text",
+            "size": "0x00000050"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c8BehaviorEv",
+            "section": ".text",
+            "size": "0x000001a4"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+            "section": ".text",
+            "size": "0x00000130"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+            "section": ".text",
+            "size": "0x00000008"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+            "section": ".text",
+            "size": "0x0000002c"
+          },
+          {
+            "symbol": "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+            "section": ".text",
+            "size": "0x00000008"
+          },
+          {
+            "symbol": "FlyGuy_Spawn",
+            "section": ".text",
+            "size": "0x00000050"
+          }
+        ],
+        "keptSectionIndices": [
+          16,
+          19,
+          20,
+          22
+        ],
+        "droppedSectionIndices": [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+        ],
+        "externalizedTextSymbols": [
+          "FlyGuy_Spawn",
+          "_ZN19daPropeller_Heyho_c13InitResourcesEv",
+          "_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player",
+          "_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv",
+          "_ZN19daPropeller_Heyho_c16CleanupResourcesEv",
+          "_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv",
+          "_ZN19daPropeller_Heyho_c16OnPendingDestroyEv",
+          "_ZN19daPropeller_Heyho_c6RenderEv",
+          "_ZN19daPropeller_Heyho_c8BehaviorEv",
+          "_ZN19daPropeller_Heyho_cD0Ev",
+          "_ZN19daPropeller_Heyho_cD1Ev"
+        ],
+        "deadTextSymbols": [
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "FlyGuy_ChangeState",
+          "func_ov070_0211f0a4",
+          "func_ov070_0211f100",
+          "func_ov070_0211f368",
+          "func_ov070_0211f450",
+          "func_ov070_0211f48c",
+          "func_ov070_0211f5f0",
+          "func_ov070_0211f62c",
+          "func_ov070_0211f694",
+          "func_ov070_0211f6e0",
+          "func_ov070_0211fa80",
+          "func_ov070_0211fae4",
+          "func_ov070_0211fd60",
+          "func_ov070_0211fd98",
+          "func_ov070_0211ffa8",
+          "func_ov070_02120070"
+        ],
+        "liveSections": [
+          {
+            "index": 16,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 12
+          },
+          {
+            "index": 19,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 22
+          },
+          {
+            "index": 20,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 28
+          },
+          {
+            "index": 22,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 132
+          }
+        ],
+        "error": null
+      },
+      "ownedBeforePartition": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x02123120",
+            "end": "0x021231e4",
+            "emittedBytes": 196,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 36
+          }
+        ],
+        "errors": []
+      },
+      "ownedAfterRebias": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x02123120",
+            "end": "0x021231e4",
+            "emittedBytes": 196,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 36
+          }
+        ],
+        "errors": []
+      },
+      "vtableRebias": {
+        "rebased": [
+          {
+            "symbol": "_ZTV19daPropeller_Heyho_c",
+            "bias": 8,
+            "oldValue": 0,
+            "newValue": 8,
+            "oldSize": 132,
+            "newSize": 124
+          }
+        ],
+        "aliases": [],
+        "relocations": [],
+        "error": null
+      },
+      "linkedStorageAliases": {
+        "ok": true,
+        "rows": [],
+        "errors": []
+      },
+      "objectHashes": {
+        "rawTuSha256": "b9e7892a5cc8d73441ee2c3d85f72b9c2bdc682fa0c63f8ebcd95a7eea81a8ca",
+        "rawTuBytes": 20104,
+        "tuObjectPath": "build/tu/ov070-daPropeller_Heyho_c/link-partitioned/src_tu/actors/daPropeller_Heyho_c.o",
+        "postPolicySha256": "ae4c75f762caf74cb78c98871af660bc5e73ad078ff47f6e0e343f1170864eed",
+        "reducedStorageSha256": "22a1597e246f4dc961265fd8a717816c14eaf5816f7604c3e7818ff2fc96e293",
+        "linkedDataSha256": "72a82168e470dd420b6e6839622e163c6961d59c170c07352ae7de34a64c198b"
+      },
+      "artifactAudit": {
+        "ok": true,
+        "errors": [],
+        "expectedTuSelectors": [
+          "daPropeller_Heyho_c.o(.data)"
+        ],
+        "observedTuSelectors": [
+          "daPropeller_Heyho_c.o(.data)"
+        ],
+        "expectedLegacyCount": 27,
+        "selectorCount": 11354,
+        "objectCount": 11147,
+        "selectorListSha256": "fd97afafb547f3087acc009d6e6ffd09130338014554b8c1f5acd767bd0a3c08",
+        "objectListSha256": "988576de121fee740f07293e6dfd38e44b7964d13329b52d283fb46c4a9fd9c1"
+      },
+      "ranges": [
+        {
+          "section": ".text",
+          "start": "0x0211f000",
+          "end": "0x02120570",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02123120",
+          "end": "0x021231e4",
+          "differingBytes": 1,
+          "firstDiff": "0x02123120"
+        }
+      ],
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": false,
+        "checkSymbols": false
+      },
+      "moduleFidelityPassed": false,
+      "symbolCheckNewVsBaseline": [
+        "[ERROR] Symbol 'data_ov070_02123184' in overlay 70 at 0x02123184 not found in linked binary",
+        "[ERROR] Symbol 'data_ov070_021231a0' in overlay 70 at 0x021231a0 not found in linked binary"
+      ],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'data_ov070_02123184' in overlay 70 at 0x02123184 not found in linked binary",
+        "[ERROR] Symbol 'data_ov070_021231a0' in overlay 70 at 0x021231a0 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "rom": null,
+      "strayOutputs": null,
+      "scratch": "build/tu/ov070-daPropeller_Heyho_c/link-partitioned (gitignored)"
+    },
+    "state": "failed",
+    "stateMeaning": "The latest scratch-only partition attempt did not earn full-ROM verification. It is evidence only and never a production enrollment or promotion state."
+  }
+}

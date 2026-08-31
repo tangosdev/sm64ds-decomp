@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN6FlyGuy8BehaviorEv
+// @symbol _ZN19daPropeller_Heyho_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 
 /* This file used to open with `struct dEnemyBase_c { char pad[0x800]; };` and work a
- * `char *c` through raw offsets. FlyGuy.h now supplies the real chain, so the
+ * `char *c` through raw offsets. daPropeller_Heyho_c.h now supplies the real chain, so the
  * stand-in is gone and every offset is a named field.
  *
  * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
@@ -17,7 +17,7 @@ extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, d
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
-int FlyGuy::Behavior()
+int daPropeller_Heyho_c::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
