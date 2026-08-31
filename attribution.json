@@ -1021,6 +1021,25 @@
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c12BeforeRenderEv": "github-actions[bot]",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv": "github-actions[bot]",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj": "github-actions[bot]",
-    "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a708": "github-actions[bot]"
+    "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a708": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_cD1Ev": "tangosdev",
+    "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_cD0Ev": "tangosdev",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124a04": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124a08": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124ae4": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124b58": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124bb4": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124cb4": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124dc0": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124e1c": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124ec4": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02124fd8": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_021250e4": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02125248": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_0212527c": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#func_ov006_02125364": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c6RenderEv": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c13InitResourcesEv": "github-actions[bot]"
   }
 }

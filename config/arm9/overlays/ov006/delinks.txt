@@ -6913,81 +6913,9 @@ src/actors/MgTrampolineTerror.cpp:
     complete
     .text start:0x0212471c end:0x02124908
 
-src/_ZN10dScMgBSC_cD1Ev.cpp:
+src/actors/dScMgBSC_c.cpp:
     complete
-    .text start:0x02124908 end:0x0212497c
-
-src/_ZN10dScMgBSC_cD0Ev.cpp:
-    complete
-    .text start:0x0212497c end:0x02124a04
-
-src/func_ov006_02124a04.c:
-    complete
-    .text start:0x02124a04 end:0x02124a08
-
-src/func_ov006_02124a08.c:
-    complete
-    .text start:0x02124a08 end:0x02124ae4
-
-src/func_ov006_02124ae4.c:
-    complete
-    .text start:0x02124ae4 end:0x02124b58
-
-src/func_ov006_02124b58.c:
-    complete
-    .text start:0x02124b58 end:0x02124bb4
-
-src/func_ov006_02124bb4.c:
-    complete
-    .text start:0x02124bb4 end:0x02124cb4
-
-src/func_ov006_02124cb4.c:
-    complete
-    .text start:0x02124cb4 end:0x02124dc0
-
-src/func_ov006_02124dc0.c:
-    complete
-    .text start:0x02124dc0 end:0x02124e1c
-
-src/func_ov006_02124e1c.cpp:
-    complete
-    .text start:0x02124e1c end:0x02124ec4
-
-src/func_ov006_02124ec4.c:
-    complete
-    .text start:0x02124ec4 end:0x02124fd8
-
-src/func_ov006_02124fd8.c:
-    complete
-    .text start:0x02124fd8 end:0x021250e4
-
-src/func_ov006_021250e4.c:
-    complete
-    .text start:0x021250e4 end:0x02125248
-
-src/func_ov006_02125248.c:
-    complete
-    .text start:0x02125248 end:0x0212527c
-
-src/func_ov006_0212527c.cpp:
-    complete
-    .text start:0x0212527c end:0x02125364
-
-src/func_ov006_02125364.cpp:
-    complete
-    .text start:0x02125364 end:0x021253bc
-
-src/_ZN10dScMgBSC_c6RenderEv.cpp:
-    complete
-    .text start:0x021253bc end:0x021254c0
-
-src/_ZN10dScMgBSC_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021254c0 end:0x0212551c
-
-src/_ZN10dScMgBSC_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0212551c end:0x021255f8
+    .text start:0x02124908 end:0x021255f8
 
 src/MgLuckyStars_Spawn.cpp:
     complete

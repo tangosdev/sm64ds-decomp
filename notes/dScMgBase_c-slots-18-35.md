@@ -60,3 +60,32 @@ commit, or neither.
 Full 36-slot vtable emission for `dScMgBase_c` and all 32 descendants, which is the
 precondition for `production_mode: "intact-object"` ownership of the minigame family's
 `_ZTV`/`_ZTI`/`_ZTS` instead of the `deadstrip-data` licence they carry today.
+
+## Independent confirmation from a derived class (2026-08-30)
+
+`ov006/dScMgBSC_c`, promoted as a 19-function TU, **overrides three of these slots**,
+and its own bodies confirm the map from a second direction:
+
+| slot | base body (ov004) | base name here | dScMgBSC_c's override |
+|---|---|---|---|
+| 18 | 0x020b299c | `Virtual48` *(no recovered name)* | ov006:0x02125364 |
+| 19 | 0x020b2994 | `OnTurnIntoEgg` | ov006:0x0212527c |
+| 21 | 0x020b298c | `OnGroundPounded` | ov006:0x02125248 |
+
+Two independent sources agree on 19 and 21. This table was built by walking
+`_ZTV11dScMgBase_c`; the override addresses come from walking `_ZTV10dScMgBSC_c`. The
+promoted source carries `// recovered name: dScMgBSC_c_OnTurnIntoEgg` and
+`dScMgBSC_c_OnGroundPounded` comments that were recovered *before* either walk and
+land on exactly those two addresses. Slot 18 stays unnamed on both sides, which is
+consistent rather than a gap in one of them.
+
+**This is also the measurement of what PR B costs.** `dScMgBSC_c`'s emitted
+`_ZTV10dScMgBSC_c` is 0x50 bytes -- an 8-byte preamble plus 18 slots, so slots 0..17,
+stopping exactly one slot short of 18. That is not a coincidence: the class declares
+virtuals only through the destructor pair at 16/17, so the compiler has no name to put
+in slot 18 and truncates. The TU reaches slot 18 today through a cast to a local shim
+struct (`SelfVtblShim`) because no header declares it. Declaring slots 18-35 on
+`dScMgBase_c` widens this table to the full 36 and lets that cast become a real virtual
+call -- but it also means `dScMgBSC_c` starts emitting 18 more slots of vtable data
+that must be licensed and byte-compared, on top of the eighteen ov004 renames. Budget
+for the descendants' tables, not just the base's.

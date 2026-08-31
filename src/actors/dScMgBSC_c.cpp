@@ -31,7 +31,9 @@
  * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
- * Assembled from these legacy one-function sources (ROM address order):
+ * Assembled from these legacy one-function sources (ROM address order).
+ * All 19 were deleted by the promotion that created this file; the paths
+ * are recorded for provenance and no longer resolve in the tree:
  *   [0] 0x02124908  src/_ZN10dScMgBSC_cD1Ev.cpp
  *   [1] 0x0212497c  src/_ZN10dScMgBSC_cD0Ev.cpp
  *   [2] 0x02124a04  src/func_ov006_02124a04.c
@@ -672,19 +674,22 @@ void func_ov006_02124a04(void)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN10dScMgBSC_cD1Ev, 0x02124908, size 0x74 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN10dScMgBSC_cD1Ev
-/* recovered: real C++ destructor. Explicit calls reproduce the ROM's own
-   recovered body (func_ov006_02124908, pre-migration) exactly: destroy
-   the trivial 2-element array first (reverse of construction order),
-   then the shared 0x270-byte table. Everything after -- own vtable
-   store, mSysTracker destruction, chain to ~dScMgBase_c() -- is the
-   compiler's own inlining of dScMgSingle3DBase_c's now-inline destructor
-   (see include/dScMgSingle3DBase_c.h's own note). */
-dScMgBSC_c::~dScMgBSC_c()
-{
-    __destroy_arr(mArray, 2, 8, (void *)NullDestructor_0203d47c);
-    func_ov006_020c1c64((char *)mTable);
-}
+/* --------------------------------------------------------------------------
+ * ROM ordinals 0 and 1 -- _ZN10dScMgBSC_cD1Ev at 0x02124908 (0x74)
+ *                     and _ZN10dScMgBSC_cD0Ev at 0x0212497c (0x88).
+ *
+ * Neither is written out here. ~dScMgBSC_c() is defined inline in the class
+ * body (include/dScMgBSC_c.h), so it cannot be this TU's key function;
+ * InitResources, the next virtual declared and non-inline, is, and this TU
+ * defines it. That emits _ZTV10dScMgBSC_c right here, whose slots 16 and 17
+ * name D1 and D0, odr-using both, and the compiler emits the pair out of
+ * line for us.
+ *
+ * That is not a stylistic choice, it is what the cartridge's own layout
+ * requires. Written out of line instead, the same two bodies still match
+ * byte for byte, but mwcc emits the synthesized D0 ahead of the written D1
+ * -- the reverse of the ROM, where D1 comes first -- and linkcheck's
+ * pre-link audit refuses a TU whose licensed .text is not in ROM address
+ * order. Leaning on the vtable, as dScMgSingle3DBase_c does one level up,
+ * produces D1 then D0 and reproduces the cartridge's order exactly.
+ * -------------------------------------------------------------------------- */
