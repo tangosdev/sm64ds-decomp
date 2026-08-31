@@ -29,6 +29,12 @@ Seven classes across six PRs. When this note says "landed precedent" it means th
 PR #2004 (daObjKm3_Kurumajiku_c) is an open draft. It is a data point, not precedent.
 Do not cite it as settled, and do not copy a pattern that appears only there.
 
+*Update.* #2004 was since closed and that class landed instead through #2057 ("first
+compiler-built vtable — promote ov047/daObjKm3_Kurumajiku_c to intact-object
+production"), so `src/actors/daObjKm3_Kurumajiku_c.cpp` is on `main` and is precedent.
+Section 2's Kurumajiku measurements were written while it was a draft; they still hold,
+and section 6 cites the landed file.
+
 ---
 
 ## 1. A coined mangled name must not assert a parameter type the bytes cannot prove
@@ -286,6 +292,143 @@ the queue as a chain, not a fan.
 
 ---
 
+## 6. Mark every hand-written member with `// @symbol`
+
+A promoted TU is scored **per member**, not per file. The only thing that tells
+`tools/tiers.py` where one member's text ends and the next begins is a marker comment.
+Leave it out and that member is scored against the entire file, so any other member's
+defect becomes its defect. This is the cheapest rule in this note to satisfy and the
+most expensive one to skip.
+
+### The rule
+
+> **Every hand-written member of a promoted TU carries `// @symbol <linker-name>` on its
+> own line, immediately above its definition, spelled exactly as the manifest's
+> `functions[].symbol` spells it.**
+
+`tools/tiers.py:74` is the entire recognizer:
+
+    SYMBOL = re.compile(r"//\s*@symbol\s+(\S+)")
+
+### Why — the fallback is the whole file
+
+`score_member` (`tools/tiers.py:406`) tries three things in order, and its own docstring
+states the last one plainly:
+
+> Hand-written members use exact ``@symbol`` boundaries.  Compiler-generated
+> ctor/dtor variants use the inline lifecycle definition in a directly included
+> class header.  **Anything without either form of evidence is scored against the
+> entire file, preserving the old conservative behavior.**
+
+`_marked_member_fragment` (line 309) slices from the end of this member's marker to the
+start of the next marker, and `score_file` sees only that slice. With no marker and no
+lifecycle fallback, `score_file` is handed the whole TU.
+
+Four of the five CONVERTED criteria read that fragment, so all four are poisonable by
+text belonging to some other member: `no_raw_offset`, `no_unk_field`, `no_codegen_trick`,
+`no_mangled_refs`. The other two readings are not, because `score_member` overwrites them
+after scoring — `real_name` is recomputed from the symbol and `shared_header` from the
+whole file regardless. So one `volatile` object, one `unk_<off>` field or one mangled
+call anywhere in a promoted TU strips the tier from every clean member in it.
+
+### The landed measurement
+
+Scored with `tools/tiers.py` against this tree:
+
+| promoted TU | members | `@symbol` markers | members at 5/5 | banked |
+| --- | --- | --- | --- | --- |
+| `src/actors/daObjKinokoTag_c.cpp` | 9 | 7 | 6 | 6 |
+| `src/actors/daObjFm_Battan_c.cpp` | 9 | 7 | 5 | 5 |
+| `src/actors/daObjKm3_Kurumajiku_c.cpp` | 5 | 3 | 4 | 4 |
+| `src/actors/daEyBm_c.cpp` | 13 | **0** | 2 | 2 |
+
+"banked" is the count of `promoted-path#symbol` identities in
+`config/converted-baseline.json`. In the first three TUs the unmarked members are exactly
+the two destructor variants, which the lifecycle path covers. `daEyBm_c` marks nothing:
+eleven of its thirteen members fall to the whole-file fallback and every one of them
+fails the same two criteria, `no_unk_field` and `no_mangled_refs` — properties of the
+factory and of `Behavior`, not of the members being scored. Inserting the eleven marker
+lines locally and changing nothing else raises the TU from two members at 5/5 to four.
+That promotion also spent five rows in `config/converted-backslide-exceptions.jsonl`.
+
+### The marker must be unique in the file
+
+`_marked_member_fragment` returns `None` unless the symbol appears exactly once:
+
+    matches = [i for i, marker in enumerate(markers)
+               if marker.group(1) == symbol]
+    if len(matches) != 1:
+        return None
+
+A marker copy-pasted from the member above, or repeated on both a forward declaration and
+the definition, silently re-enables the whole-file fallback for that member. Nothing warns
+and nothing goes red; the member simply scores as if it were unmarked.
+
+### Keep shared mangled externs above the first marker
+
+A member's slice runs to the *next* marker, so anything written between two definitions is
+charged to the earlier one, while text above the first marker belongs to no member at all.
+`src/actors/daObjKinokoTag_c.cpp` puts its whole `extern "C" { ... }` block of mangled
+ABI-seam declarations at the top of the file, above the first marker on line 40, and none
+of those spellings costs any member its `no_mangled_refs`. Declaring an ABI seam
+immediately above the one function that calls it — as `src/actors/daEyBm_c.cpp` does —
+hands the mangled spelling to the preceding member instead.
+
+### Constructors and destructors have a second path; mark them anyway
+
+`_lifecycle_member_fragment` (line 378) is why D1 and D0 score without a marker. It
+demangles the symbol, confirms it is a ctor or dtor, walks the TU's `#include "..."` names,
+and looks for a balanced inline definition in one of those headers. `include/daEyBm_c.h`
+line 54 carries `virtual ~daEyBm_c() {}`, and that one line is the entire reason two of
+that TU's thirteen members are banked.
+
+Do not rely on it. `_balanced_lifecycle_fragment` (line 328) needs exactly one occurrence
+of the class-name token followed by `(` in the masked header text and a brace-balanced
+body; a declaration alone returns `None`, and so does a second overload. Moving the
+destructor out of line — which several promotions have needed for key-function reasons —
+removes the fragment and drops both variants back to the whole file. Marking them costs
+two comment lines and removes the dependency.
+
+### Markers cannot move a ROM byte
+
+`_code_only` (line 198) blanks comments before three of the five criteria run, and the
+preprocessor deletes them before mwccarm sees the TU. Adding markers to an already
+byte-proven TU cannot change an instruction and needs no new byte proof. It does change
+the CONVERTED count, so regenerate `config/converted-baseline.json` per rule 5 in the same
+PR.
+
+### The failure mode, concretely
+
+An unmarked promotion is *green*. Every byte gate passes, because the bytes are right. The
+CONVERTED count drops, the author covers the drop with one backslide-exception row per
+lost member, writes a true-sounding reason on each, and the PR merges. What actually
+happened is that comment lines were traded for ledger rows.
+
+- **#2062** (`daObjHatenaSwitch_c`, thirteen functions) adds **zero** markers. Its diff
+  moves `config/converted-baseline.json` from `"count": 2568` to `"count": 2560` and adds
+  **eight** rows to `config/converted-backslide-exceptions.jsonl`, one per lost member.
+  Every row carries the same reason, and that reason names the cause without naming the
+  fix: the TU "needs the volatile stack value to avoid a 17-word codegen mismatch". The
+  `volatile` is in one member. The other eight paid for it.
+- **#2064** (`dScMgSingle3DBase_c`, nine functions) adds **six** markers and **zero**
+  backslide-exception rows. The three it leaves unmarked are the two destructor variants
+  and one member still named `func_ov006_0210a534`, which fails `real_name` on its name
+  and cannot be rescued by a boundary anyway.
+
+Both are open at the time of writing, so neither is landed precedent in the sense section
+1 uses. They are cited here as the worked pair: same operation, same gates, one of them
+paying eight ledger rows for the omission.
+
+### Reviewer check
+
+Count the `@symbol` lines in the promoted TU against the length of the manifest's
+`functions` array. The difference should be the ctor/dtor variants and nothing else, and
+even those are better marked. If a promotion adds backslide-exception rows for members of
+its own destination TU, check for markers before reading the reasons — the reasons will be
+about codegen and the cause will be a boundary.
+
+---
+
 ## Reviewer checklist
 
 1. Every coined mangled name that encodes an argument type has its disclosure in the
@@ -299,6 +442,9 @@ the queue as a chain, not a fan.
 5. No comment in the diff names a file the diff deletes.
 6. The PR is alone in the ledger queue, and the baseline was regenerated rather than
    merged.
+7. Every hand-written member of the promoted TU carries a unique `// @symbol` line, the
+   shared mangled externs sit above the first marker, and no backslide-exception row is
+   covering a member the marker would have saved.
 
 ## Known open items at the time of writing
 
