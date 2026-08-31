@@ -404,6 +404,65 @@ declaration alone returns `None`, and so does a second overload. If a promotion 
 must move the destructor out of line, its two variants fall back to whole-file scoring —
 and only then can they carry markers, above their out-of-line definitions.
 
+### Put the inline structor's opening brace on the signature line
+
+Inlining the destructor to make it scoreable moves a function *body* into a struct that
+`tools/check_header_offsets.py` parses, and that gate recognises the body only when the
+signature line itself carries the `{`:
+
+    if n == 0:
+        depth = line.count("{") - line.count("}")
+        if depth > 0:
+            skip_body = depth
+        continue
+
+Written Allman the signature line has no brace, `skip_body` never arms, and the body's
+lines fall through to declaration parsing and are reported UNPARSED. Measured by
+rewriting nothing but the destructor of `include/dScMgBase_c.h` -- a derived class that
+declares its destructor first, which is the shape every inline-destructor promotion
+produces:
+
+    one line, with body    40 commented fields, 0 mismatched, 0 unparsed, spans 0x4660
+    one line, empty {}     40 commented fields, 0 mismatched, 0 unparsed, spans 0x4660
+    Allman, with body       0 commented fields, 0 mismatched, 2 unparsed, spans 0x50
+    Allman, empty           0 commented fields, 0 mismatched, 1 unparsed, spans 0x50
+
+Two things go wrong and only one of them is loud. The gate exits 1 on the UNPARSED line
+-- and it is green on `origin/main`, so this is a **merge-tree-only** red that
+`tools/premerge_check.py` will show you and your branch's own CI will not. The quiet half
+is the worse one: **one unparsed line suppresses the field walk for the whole header**,
+which is this tool's own documented silent-no-op shape. `0 commented fields` there is not
+a clean pass, it is no check at all -- forty fields stopped being checked and the reported
+span fell back to the base's `0x50`.
+
+Two conditions narrow the hazard, and both hold for precisely the promotions this document
+is about. It needs a **derived** class -- a non-derived one is declared unmodelled at its
+first method line and never reaches the brace -- whose **structor is declared before any
+field**, the key-function convention inherited from `dScene_c.h`. Where the destructor sits
+after the fields, a method line ends the field list and the stray brace is never read;
+`include/ArrowLift.h` measures identically in both styles. Note also that an **empty**
+Allman body breaks it exactly as an empty one-line body does not. It is the newline that
+costs, not the statements.
+
+So write
+
+    virtual ~PoleLift() {
+        ...
+    }
+
+and not the Allman form. Every inline destructor in `include/` today is `virtual ~X() {}`
+on a single line, so nothing has exercised this before; the inline-destructor wave will
+exercise it repeatedly. This is a defect in the gate rather than in the style, and it is
+recorded as one -- but until the gate is fixed, brace position is load-bearing.
+
+### A marker on a still-unnamed member buys nothing
+
+`score_member` recomputes `real_name` from the symbol, not from the fragment, so a member
+still called `func_ov006_0210a534` fails that criterion whichever text it is scored
+against. Marking it is still worth doing, because the boundary it creates is what protects
+its *neighbour* — that is the whole point of the rule above — but do not expect the marker
+to move that member's own score. Renaming it is the thing that does.
+
 ### Markers cannot move a ROM byte
 
 `_code_only` (line 198) blanks comments before three of the five criteria run, and the
