@@ -445,11 +445,17 @@ line. One consequence worth recording: main's promoted entries use
 single-class ids (no `+`), which moots the lcf-grammar blocker for those
 TUs — but the manifest still carries three multi-class `+` ids
 (ov002/EnemySpawner+EnemySwitchTag, ov020/BookShot+BookShotSpawner+Bookend,
-ov062/Koopa+KoopaSmall), each naming its shadow source file for the id so the
-`+` reaches the object basename and aborts mwldarm's selector grammar — the
-EnemySpawner entry's own linkcheck record is "result": "failed", the abort.
-The tubuild scratch-side `+`/MAX_PATH sanitization is still needed before
-any of them linkcheck.
+ov062/Koopa+KoopaSmall), each naming its tracked shadow source file for the id
+so the `+` reaches the object basename and aborts mwldarm's selector grammar
+in a whole-tree link — the abort is measured against the pinned mwldarm, not
+inferred (the new tubuild test re-measures the grammar and the 259-char path
+limit on every run). One correction to the record read: the EnemySpawner
+entry's banked partial-isolation record, "result": "failed", is NOT that
+abort — that run substitutes per-function objects whose basenames carry no
+join, its link phase passed (phases.link: true), and the failing phase is
+checkSymbols, a different defect the sanitization does not touch. The
+tubuild scratch-side `+`/MAX_PATH sanitization is still needed before any of
+them linkcheck.
 
 **Retro-census baseline (the wave's measured starting line).** Run
 2026-08-31 with tools/check_tu_idioms.py at the constitution-lane head
