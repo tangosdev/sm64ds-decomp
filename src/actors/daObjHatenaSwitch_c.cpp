@@ -31,7 +31,7 @@ struct HatenaSwitchSpawnInfo {
     Fix12i rangeOffsetY;
     Fix12i range;
     Fix12i drawDistance;
-    u32 unk_18;
+    u32 reserved;
 };
 
 typedef char HatenaSwitchSpawnInfo_size_must_be_0x1c[
