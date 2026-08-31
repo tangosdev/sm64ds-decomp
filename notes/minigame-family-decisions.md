@@ -1,8 +1,11 @@
 # Minigame family decisions (ov006) — DRAFT for coordinator review
 
-Status: ADJUDICATED 2026-08-30 — the coordinator's rulings are the ADJUDICATION
-section at the end; the four decisions are in force for the mini-wave and the
-fan-out. Prepared on branch `pilot2-ov006-tu-merge`, 2026-08-30, against the two banked
+Status: ADJUDICATED 2026-08-30, AMENDED 2026-08-31 — the coordinator's rulings
+are the ADJUDICATION section at the end; the four decisions are in force for
+the mini-wave and the fan-out. The AMENDMENT section (2026-08-31) records how
+the decisions re-scope now that the upstream wave has promoted five class
+TUs and six factory manifests to main. Prepared on branch
+`pilot2-ov006-tu-merge`, 2026-08-30, against the two banked
 pilot TUs (`src_tu/actors/dScMgBSC_c+dScMgBSC_c.cpp`, 19/19 text-verified;
 `src_tu/actors/dMgMCarloCardObj_c+dScMgMCarlo_c+dScMgMCarlo_c.cpp` — see
 notes/tu-reconstruction-pilot2-report.md), in service of the owner's goal,
@@ -414,3 +417,87 @@ three ranges against ov006 symbols gives 26/48/29 function symbols inclusive
 of each end address — exactly +1 per range over the note's 25/47/28, which is
 the next unit's opening function at each exclusive end; the note's counts
 stand.
+
+## AMENDMENT (coordinator, 2026-08-31) — the upstream wave landed; decisions re-scoped to as-landed reality
+
+This note was prepared against the two banked pilot TUs on branch
+`pilot2-ov006-tu-merge`. Between 2026-08-30 and 2026-08-31 the upstream wave
+promoted minigame TUs directly to src/ and config/tu_manifest.d/ov006/:
+five class TUs (dScMgBSC_c, dScMgCard_c, dScMgMCarlo_c, dScMgMCarlo2_c,
+dScMgSingle3DBase_c) and the six Mg* factory manifests (MgBingoBallSlotsShot,
+MgMushroomRoulette, MgPairAGoneAndOn, MgPicturePoker, MgTrampolineTerror,
+MgWhichWiggler). The banked pilots are superseded; every decision below
+stays in force for what remains.
+
+**D2 — as-landed: factories are separate TUs on main, so the merge is a
+post-wave pass for ALL promoted TUs, not just banked ones.** Main's manifest
+carries MgPairAGoneAndOn.json alongside dScMgMCarlo2_c.json and
+MgPicturePoker.json alongside dScMgCard_c.json — the one-.o-per-minigame
+boundary was NOT applied by the wave. The ruling's substance is unchanged
+(the ROM evidence for it is in DECISION 2 and was not contradicted by any
+landing), but its scoping amendment now reads: every promoted class TU keeps
+its as-landed split shape; the factory merge (Card+MgPicturePoker,
+MCarlo2+MgPairAGoneAndOn, and later BSC+MgLuckyStars_Spawn and
+MCarlo+the unnamed factory at 0x020f8e44, neither of which has a manifest
+entry) is one pass after the class TUs are converted, revising manifests and
+re-verifying. NEW conversions still target the merged shape from the first
+line. One consequence worth recording: main's promoted entries use
+single-class ids (no `+`), which moots the lcf-grammar blocker for those
+TUs — but the manifest still carries 8+ multi-class `+` ids elsewhere, so
+the tubuild scratch-side `+`/MAX_PATH sanitization is still needed before
+any of them linkcheck.
+
+**Retro-census baseline (the wave's measured starting line).** Run
+2026-08-31 with tools/check_tu_idioms.py at the constitution-lane head
+(origin/main + the BSC comment fix), report mode, over the promoted ov006
+entries:
+
+| TU (ov006/) | funcs | member | externC | raw offsets | named coverage |
+| --- | --- | --- | --- | --- | --- |
+| dScMgCard_c | 32 | 4 | 28 | 202 | 15% (36 named) |
+| dScMgBSC_c | 17 | 3 | 14 | 89 | 11% (11 named) |
+| dScMgMCarlo_c | 21 | 3 | 18 | 107 | 30% (46 named) |
+| dScMgMCarlo2_c | 21 | 4 | 17 | 69 | 59% (99 named) |
+| dScMgSingle3DBase_c | 7 | 4 | 3 | 0 | 100% (4 named) |
+| MgPairAGoneAndOn | 2 | 0 | 2 | 3 | n/a (no header) |
+
+dScMgSingle3DBase_c is effectively done — zero raw offsets, full named
+coverage. The other four class TUs carry 89-202 raw member-offset accesses
+each at 11-59% named coverage: by the census's own measure the wave's
+promotions are ~80% shadow idiom, which is exactly what the goal gate exists
+to price. These numbers are the baseline the remaining conversion work is
+measured against.
+
+**D3 — live drift in the promoted tree, the wave's first work items.** The
+2026-08-31 census:
+
+- Retired mangled-name declarations still ship in the promoted TUs:
+  `_Z14ApproachLinearRiii` in dScMgBSC_c (extern "C", int& form),
+  dScMgCard_c (int* form) and dScMgMCarlo_c (void-return int& form);
+  `_Z15ApproachLinear2Rsss` in dScMgCard_c and dScMgMCarlo_c. dScMgMCarlo2_c
+  already declares the true names — `int ApproachLinear(int&, int, int)` and
+  `int ApproachLinear2(s16&, s16, s16)` — so the wave has already produced
+  both dialects, which is the drift the ratified-spellings gate is for.
+- RandomIntInternal: dScMgBSC_c and dScMgCard_c declare the ratified
+  `extern int RandomIntInternal(int *seed)`. dScMgMCarlo2_c:150 and
+  dScMgMCarlo_c:159 declare `int RandomIntInternal(void* seed)` — both inside
+  `extern "C"` blocks (MCarlo2's at line 124), so C linkage discards the
+  variance and the link is safe; the spelling is still not what the
+  definition (src/RandomIntInternal.c: `int RandomIntInternal(int* seed)`)
+  or the ruling says. Fixing these four files' declarations is the first
+  D3 work item of the wave proper.
+- Tree-wide, two more RandomIntInternal dialects exist outside ov006
+  (unsigned-int returns in TTC_MovingBar and Bird/Chuckya/FlyGuy/HeaveHo).
+  They are out of this wave's scope — the gate runs on ov006 — but the
+  canonical-signature table will fail them the day those modules are gated,
+  which is the table doing its job.
+
+**Roster — superseded where the wave already landed.** Roster item 1
+(MCarlo2 + MgPairAGoneAndOn merge) is superseded by main's promotion: the
+class TU and the factory are both promoted, as separate entries, so the
+remaining work on MCarlo2 is goal-side conversion (69 raw offsets, 59%
+coverage, true-name declarations already partly in place), not
+reconstruction. Items 2 (Memory) and 3 (Jump3DMario) stand as written; the
+stretch TU still waits on the span filter. The wave's dispatch order is now
+census-first: Card (202 raw, 15%), BSC (89 raw, 11%), MCarlo (107 raw, 30%),
+then MCarlo2's completion and the factory-merge pass.
