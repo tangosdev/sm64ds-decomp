@@ -443,8 +443,12 @@ entry) is one pass after the class TUs are converted, revising manifests and
 re-verifying. NEW conversions still target the merged shape from the first
 line. One consequence worth recording: main's promoted entries use
 single-class ids (no `+`), which moots the lcf-grammar blocker for those
-TUs — but the manifest still carries 8+ multi-class `+` ids elsewhere, so
-the tubuild scratch-side `+`/MAX_PATH sanitization is still needed before
+TUs — but the manifest still carries three multi-class `+` ids
+(ov002/EnemySpawner+EnemySwitchTag, ov020/BookShot+BookShotSpawner+Bookend,
+ov062/Koopa+KoopaSmall), each naming its shadow source file for the id so the
+`+` reaches the object basename and aborts mwldarm's selector grammar — the
+EnemySpawner entry's own linkcheck record is "result": "failed", the abort.
+The tubuild scratch-side `+`/MAX_PATH sanitization is still needed before
 any of them linkcheck.
 
 **Retro-census baseline (the wave's measured starting line).** Run
