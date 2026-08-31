@@ -556,6 +556,10 @@ extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
+extern int data_020a0f10[];    /* my comms slot: 0 solo or parent, 1..3 a
+                                  child seat (hal/comms_conductor.cpp seats
+                                  it from func_02040704 when a session joins;
+                                  the flight recorder reads it) */
 /* TouchData[4], zero = no touch. DECLARED AS BYTES, not ints: the definition
    in hal/auto_bss.cpp is unsigned char[1] with de9/dea/deb packed at +1/+2/+3,
    the DS layout. An `int[]` here would be a lie about the element type; it is
@@ -10136,6 +10140,29 @@ int main(void)
                         raw_);
                 rec_btn = btn_;
                 rec_raw = raw_;
+            }
+            /* THE OWN SEAT, when it is not slot 0. The [in] line above reads
+               slot 0 only, which on a session CHILD is the host's record --
+               so a child whose own seat went dead logged a perfectly lively
+               [in] stream, and today's intake chased the wrong console for
+               it. Same change trigger, own slot named, so a dead own seat is
+               a visible flat line in the playlog rather than an absence. */
+            {
+                static unsigned short rec_btn_own, rec_raw_own;
+                const int own = data_020a0f10[0];
+                if (own != 0) {
+                    unsigned short btn_o = *(unsigned short *)
+                        (data_0209f49c + own * 0x18);
+                    unsigned short raw_o = *(unsigned short *)
+                        ((char *)data_020a0e58 + own * 4);
+                    if (btn_o != rec_btn_own || raw_o != rec_raw_own) {
+                        fprintf(stderr,
+                                "[in:own] f%d slot=%d btn=%04x raw=%04x\n",
+                                rec_f, own, btn_o, raw_o);
+                        rec_btn_own = btn_o;
+                        rec_raw_own = raw_o;
+                    }
+                }
             }
             if ((rec_f % 30) == 0)
                 fprintf(stderr, "[fx] f%d pos=(%.1f,%.1f,%.1f) camang=%d\n",
