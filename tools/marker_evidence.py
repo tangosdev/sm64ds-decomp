@@ -702,9 +702,9 @@ _SKIP_MEMBER_TY = set(EH._W1) | set(EH._W2) | set(EH._W4) | set(EH._W8) | {"void
 def scan_local_layout(code, cls, origin, path):
     """A migrated file that declares its own layout IS a member-type table.
 
-    A byte-matching revision of `src/_ZN3AmpD1Ev.cpp` declared
-    `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`, so both the offsets
-    and the class names in it are pinned by the ROM's own relocations.
+    A byte-matching migrated file may declare a local class layout with named
+    members at measured offsets. Both those offsets and the class names are then
+    pinned by the ROM's own relocations.
     """
     texts = EH.find_struct_texts(code)
     if cls not in texts:
