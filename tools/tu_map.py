@@ -388,6 +388,23 @@ def _merge_overlapping(spans):
     return sorted(out, key=lambda t: t[1])
 
 
+def _dedupe_labels(labels):
+    """First occurrence wins, order preserved.
+
+    A cluster's label list must never repeat a class: when an RTTI span touches a
+    cluster a mangled name already labelled with that same class, the merge used
+    to record the class twice, and the duplicate then leaked into the `+`-joined
+    TU id (the banked `dMgMCarloCardObj_c+dScMgMCarlo_c+dScMgMCarlo_c` id is that
+    bug, left verbatim on purpose -- banked ids are resolved by manifest lookup,
+    never regenerated, so this fix governs future composition only)."""
+    seen, out = set(), []
+    for label in labels:
+        if label not in seen:
+            seen.add(label)
+            out.append(label)
+    return out
+
+
 def cluster(fns, vt_for_module, factory_for_module, blind):
     """Group the module's classes into TU-clusters, then cut `.text` between them.
 
@@ -427,7 +444,9 @@ def cluster(fns, vt_for_module, factory_for_module, blind):
         if touched:
             i = touched[0]
             names, s, e = sym[i]
-            sym[i] = (sorted(names + [cls]), min(s, lo), max(e, hi))
+            # `cls` may already label this cluster via a mangled name -- the RTTI
+            # span of dScMgMCarlo_c does exactly that -- so dedupe before storing.
+            sym[i] = (sorted(_dedupe_labels(names + [cls])), min(s, lo), max(e, hi))
         else:
             free[cls] = (lo, hi)
 

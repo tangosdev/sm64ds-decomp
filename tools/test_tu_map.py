@@ -107,6 +107,52 @@ class CallerTests(unittest.TestCase):
         self.assertEqual(unit_for(tus, 0x1100)["classes"], [])
 
 
+class LabelDedupeTests(unittest.TestCase):
+    """An RTTI span may re-label a cluster a mangled name already carries.
+
+    cluster() used to merge such a class in verbatim (sorted(names + [cls])),
+    duplicating it; the duplicate then leaked into the "+".join id. The
+    historical casualty was the ov006 MCarlo id, which composed with
+    dScMgMCarlo_c twice. These use synthetic fixtures: the duplicate arises
+    from cluster() alone, so no ROM or build/tu_map.json is needed.
+    """
+
+    def test_rtti_relabel_of_an_already_labelled_class_does_not_duplicate(self):
+        fns = [
+            (0x1000, "_ZN18dMgMCarloCardObj_c4InitEv", 0x10),
+            (0x1008, "_ZN13dScMgMCarlo_c5SetupEv", 0x08),
+            (0x100C, "func_ov006_0212504c", 0x08),   # unnamed: vtable label only
+        ]
+        clusters, unlabelled = TM.cluster(fns, {0x100C: "dScMgMCarlo_c"}, {},
+                                          blind=False)
+        self.assertEqual(len(clusters), 1)
+        self.assertEqual(clusters[0]["classes"],
+                         ["dMgMCarloCardObj_c", "dScMgMCarlo_c"], clusters[0])
+        # The merge must still absorb the RTTI extension and keep every function.
+        self.assertEqual((clusters[0]["start"], clusters[0]["end"]),
+                         (0x1000, 0x1014), clusters[0])
+        self.assertEqual(len(clusters[0]["funcs"]), 3, clusters[0])
+        self.assertEqual(unlabelled, [])
+        self.assertEqual("+".join(sorted(clusters[0]["classes"])),
+                         "dMgMCarloCardObj_c+dScMgMCarlo_c")
+
+    def test_rtti_span_may_introduce_a_new_class_without_duplicates(self):
+        fns = [
+            (0x2000, "_ZN1B1fEv", 0x10),
+            (0x2008, "_ZN1C1fEv", 0x08),
+            (0x200C, "func_ov006_0213000c", 0x04),
+        ]
+        clusters, unlabelled = TM.cluster(fns, {0x200C: "A"}, {}, blind=False)
+        self.assertEqual(len(clusters), 1)
+        self.assertEqual(clusters[0]["classes"], ["A", "B", "C"], clusters[0])
+        self.assertEqual(unlabelled, [])
+
+    def test_dedupe_labels_preserves_first_occurrence_order(self):
+        self.assertEqual(TM._dedupe_labels(["B", "A", "B", "C", "A"]), ["B", "A", "C"])
+        self.assertEqual(TM._dedupe_labels([]), [])
+        self.assertEqual(TM._dedupe_labels(["A", "A", "A"]), ["A"])
+
+
 class InvariantTests(unittest.TestCase):
     def test_every_placed_function_lies_inside_its_own_units_span(self):
         """The property the whole guard exists to hold, over a mixed input."""
