@@ -756,8 +756,11 @@ void port_vs_countdown_tick(void)
 //                           variable is the interface; see the trigger's own
 //                           block below.
 //
-// OUTSIDE VS THIS IS ONE COMPARE AND A RETURN. data_0209f2d8 != 1 leaves before
-// anything else is read, before any getenv, and before any static is written.
+// OUTSIDE VS THIS IS ONE COMPARE, A DISARM AND A RETURN. data_0209f2d8 != 1
+// leaves before anything else is read and before any getenv; the disarm clears
+// the end latch so a second match in one process would arm again, and its own
+// branch is taken at most once per match. Measured: an adventure selftest is
+// byte-identical to the pre-change build at a matched .dsstate base.
 extern "C" {
 extern unsigned char data_0209f204;      /* VS "time is up"                   */
 extern unsigned short data_ov002_02111188; /* UpdateVsTimer's sub-counter     */
@@ -784,11 +787,29 @@ struct Sound { static void StopLoadedMusic_Layer1(unsigned int frames); };
    after the request. */
 enum { PORT_VS_END_SCENE_DEFAULT = 0 };
 
+/* The latch: the frame the end statement ran on, whether the marker has gone
+   out, and which trigger fired. At file scope rather than inside the function
+   so the mode test below can clear them, which is what re-arms this for a
+   SECOND match in one process. Nothing produces one today -- going from a
+   finished match back to the lobby is not something the port can do yet -- but
+   a latch that silently swallows the second match is exactly the bug the lane
+   that adds the lobby return would spend a day chasing. */
+static int g_end_fired = -1;
+static int g_end_announced;
+static int g_end_by_target;
+
 extern "C" int port_vs_match_end_poll(int frame)
 {
-    /* Outside VS: nothing. Before any getenv, before any static. */
-    if (data_0209f2d8 != 1)
+    /* Outside VS: nothing but the disarm, and the disarm is a branch taken at
+       most once per match. No getenv on this path, ever. */
+    if (data_0209f2d8 != 1) {
+        if (g_end_fired >= 0) {
+            g_end_fired = -1;
+            g_end_announced = 0;
+            g_end_by_target = 0;
+        }
         return 0;
+    }
 
     static int on = -1, want_scene = -1, want_exit = -1, grace = -1,
                star_target = -1;
@@ -814,11 +835,7 @@ extern "C" int port_vs_match_end_poll(int frame)
     if (!on)
         return 0;
 
-    static int fired = -1;      /* frame the statement ran on, -1 = not yet */
-    static int announced;       /* the end marker has been printed          */
-    static int g_end_by_target; /* which trigger fired, for the marker       */
-
-    if (fired < 0) {
+    if (g_end_fired < 0) {
         /* ---- TRIGGER ONE: the ROM's own. Stage::Behavior's guard, both
            halves, in its own order. */
         const int timeup = (data_ov002_02111188 == 0 && data_0209f204 != 0);
@@ -848,7 +865,7 @@ extern "C" int port_vs_match_end_poll(int frame)
         }
         if (!timeup && star_winner < 0)
             return 0;
-        fired = frame;
+        g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
         if (star_winner >= 0)
             fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
@@ -899,9 +916,9 @@ extern "C" int port_vs_match_end_poll(int frame)
         return 0;
     }
 
-    if (announced)
+    if (g_end_announced)
         return 0;
-    if (frame - fired < grace) {
+    if (frame - g_end_fired < grace) {
         /* Report what the request is doing while the grace runs, on change
            only, so a scene that DOES come up leaves a trail and one that never
            does leaves one line. */
@@ -916,7 +933,7 @@ extern "C" int port_vs_match_end_poll(int frame)
         return 0;
     }
 
-    announced = 1;
+    g_end_announced = 1;
     /* THE MARKER. One line, fixed shape, in the flight recorder, so a launcher
        can watch for it without parsing the rest of a playlog. The scores are
        the ROM's own per-player array and the total is the ROM's own sum, and
