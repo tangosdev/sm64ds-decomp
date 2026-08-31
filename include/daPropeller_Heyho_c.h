@@ -1,9 +1,9 @@
-#ifndef FLYGUY_H
-#define FLYGUY_H
+#ifndef DAPROPELLER_HEYHO_C_H
+#define DAPROPELLER_HEYHO_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN6FlyGuyD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN19daPropeller_Heyho_cD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
  * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
@@ -19,7 +19,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `FlyGuy_Spawn` calls
- * `fBase_c::operator new(1000)` -- 0x3e8 -- and stores `_ZTV6FlyGuy`,
+ * `fBase_c::operator new(1000)` -- 0x3e8 -- and stores `_ZTV19daPropeller_Heyho_c`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3e4; the difference is trailing space no source reads.
  */
@@ -33,14 +33,14 @@
 #include "TextureTransformer.h"
 #include "dBgCh_Actr.h"
 
-struct FlyGuy : dEnemyBase_c {
+struct daPropeller_Heyho_c : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against two objects in
        ov070's data and calls the handler at +0x08 through it. Both it and the
        timer at 0x3cc were reachable only as raw `c + 0x...`, so the generated
        header never had them. */
     struct State {
         u8  pad_00[0x8];
-        void (FlyGuy::*mMain)();      /* 0x08 */
+        void (daPropeller_Heyho_c::*mMain)();      /* 0x08 */
     };
 
     dCcAc_c           mdCcAc_c;   /* 0x110 */
@@ -58,7 +58,7 @@ struct FlyGuy : dEnemyBase_c {
     u8  pad_3e4[0x4];
 
     /* --- vtable --- */
-    virtual ~FlyGuy();
+    virtual ~daPropeller_Heyho_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -71,6 +71,7 @@ struct FlyGuy : dEnemyBase_c {
     int Render();
 };
 
-typedef char FlyGuy_size_must_be_0x3e8[sizeof(FlyGuy) == 0x3e8 ? 1 : -1];
+typedef char daPropeller_Heyho_c_size_must_be_0x3e8[
+    sizeof(daPropeller_Heyho_c) == 0x3e8 ? 1 : -1];
 
-#endif /* FLYGUY_H */
+#endif /* DAPROPELLER_HEYHO_C_H */
