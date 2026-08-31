@@ -243,10 +243,6 @@
   },
   {
    "file": "notes/src-domain-buckets.md",
-   "ref": "src/game/actors"
-  },
-  {
-   "file": "notes/src-domain-buckets.md",
    "ref": "src/runtime/graphics/fader"
   },
   {
