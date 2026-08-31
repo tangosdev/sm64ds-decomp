@@ -4694,6 +4694,49 @@ static void port_a2_seat_stage(void)
        spawn anything under a null parent. It is a bootstrap for the window
        between process start and the first boot, not a per-entry stand-in. */
     data_0209f5c0[0] = (int)(size_t)stage;
+
+    /* THE FRAME DIVIDER, src/_ZN5Stage13InitResourcesEv.cpp:362. One of the
+       twenty InitResources global writes section 2d of port/stage_lifecycle_map.txt
+       lists as ABSENT from the port, and one of the five it lists as having a
+       live reader. The word is vblanks-per-game-tick: IRQ::VBlankHandler only
+       wakes the main thread once its vblank count reaches it, so 2 is the 3D
+       levels' 30fps and 1 is the minigames' 60. The ROM IMAGE'S STATIC VALUE
+       IS 1, so a level that never ran this line was sitting on a minigame's
+       divider for the whole session.
+
+       Two things read it and both were wrong without this.
+       hal/message_pump.cpp:256 uses it as the STEP a message window's close
+       timer counts down by (`data_0209d67c -= data_0208ee44`), so on a level
+       every message hung on screen for twice its ROM duration. And the host
+       frame pacer in tests/walk_window.cpp takes the loop's budget from it,
+       which is what surfaced this: the level loop asked for the divider and
+       got a minigame's answer.
+
+       IT LIVES HERE, NOT IN port_a2_seat_body, AND THAT IS THE WHOLE FIX
+       (run vsdec, lane PACE). It was written into the shared half of the
+       seat, which the seat's own banner says is "not made idempotent -- it is
+       made SINGLE". Correct while only one call site could ever run. The
+       title-entry bridge made a run take BOTH: the title comes up on the
+       scene path and seats the shared half (divider 2), the title's own
+       matched InitResources then writes divider 1 -- right, a 2D menu runs at
+       60 on the DS -- and the save-file fall-through re-enters the seat,
+       takes its `seat_done` early return, and never reaches the line that
+       puts 2 back. The whole adventure then paced on 16.65ms.
+
+       MEASURED, same binary, same level 1, the two entry paths, 600 paced
+       frames each: env boot 30.06 fps on divider 2, title -> file pick ->
+       adventure 60.15 fps on divider 1. EXACTLY DOUBLE SPEED, which is the
+       owner's "running at like 2 or 3 times speed" report. Every pacing
+       measurement ever taken in this tree used the env boot, which is the
+       arm where this line runs, which is why nothing caught it.
+
+       Seating it here rather than making the shared half idempotent is the
+       ROM's own coupling: the ROM writes this word from Stage::InitResources,
+       so it belongs to the Stage, and port_a2_seat_stage is called on every
+       path that makes one -- including the title-entry second call. Same
+       correction the star-freeze fix made two hundred lines up, and for the
+       same reason: a per-entry statement had been filed as bring-up. */
+    data_0208ee44 = 2;
 }
 
 /* ---- THE SEAT RUNS ITS SHARED HALF ONCE PER PROCESS (run lvled) ------------
@@ -4902,23 +4945,10 @@ static void port_a2_seat_body(int make_stage)
                      (int)(data_0209caf4 - data_0209caa0));
     data_0209cad2[0x41 - 0x32] = 0;
 
-    /* THE FRAME DIVIDER, src/_ZN5Stage13InitResourcesEv.cpp:362. One of the
-       twenty InitResources global writes section 2d of port/stage_lifecycle_map.txt
-       lists as ABSENT from the port, and one of the five it lists as having a
-       live reader. The word is vblanks-per-game-tick: IRQ::VBlankHandler only
-       wakes the main thread once its vblank count reaches it, so 2 is the 3D
-       levels' 30fps and 1 is the minigames' 60. The ROM IMAGE'S STATIC VALUE
-       IS 1, so a level that never ran this line was sitting on a minigame's
-       divider for the whole session.
-
-       Two things read it and both were wrong without this.
-       hal/message_pump.cpp:256 uses it as the STEP a message window's close
-       timer counts down by (`data_0209d67c -= data_0208ee44`), so on a level
-       every message hung on screen for twice its ROM duration. And the host
-       frame pacer in tests/walk_window.cpp now takes the loop's budget from
-       it, which is what surfaced this: the level loop asked for the divider
-       and got a minigame's answer. */
-    data_0208ee44 = 2;
+    /* THE FRAME DIVIDER MOVED, and it moved OUT OF THIS FUNCTION. It is a
+       Stage::InitResources statement, so it belongs with the Stage seat and
+       not with the shared bring-up that runs once per process; see
+       port_a2_seat_stage's banner for the session it cost. */
 
     /* Engine state the CAMERA's own boot reads, which under the entrance
        path runs inside LoadClsnAndObjects rather than after it. The harness
