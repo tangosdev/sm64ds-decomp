@@ -2942,21 +2942,44 @@ def content_files_sha256(paths):
 
 def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
                                     dsd_path=None, linker_path=None,
-                                    rom_inputs=None, control_tools=None):
-    """Content identities that bind a baseline report to its actual inputs/output."""
+                                    rom_inputs=None, control_tools=None,
+                                    tracked_config_root=CFG_ARM9):
+    """Content identities that bind a baseline report to its actual inputs/output.
+
+    TWO config hashes, deliberately, because the baseline link no longer reads the
+    tracked config directly.  ``linkcheck --baseline`` copies ``config/arm9`` into its
+    own scratch and then MUTATES the copy (``demote_complete_sources``), so the tree
+    that produced ``final_link.o`` is the scratch one, and only the scratch hash can
+    answer "were these the inputs to this link?".
+
+    Hashing only the scratch copy, though, silently drops the signal the tracked hash
+    used to carry.  A baseline would stay "current" while ``config/arm9`` -- symbols,
+    delinks, the whole enrollment surface -- moved underneath it, because an edit to
+    the tracked tree cannot touch a preserved scratch copy.  The scratch hash proves
+    the report was not tampered with; the tracked hash proves the world it was derived
+    from has not moved.  Neither implies the other, so both are recorded and both are
+    validated.
+
+    When ``config_root`` is the tracked root -- the default, and every caller that is
+    not the scratch baseline -- the two hashes agree by construction.
+    """
     linked_elf = pathlib.Path(linked_elf)
     dsd_path = pathlib.Path(dsd_path or RB.DSD)
     linker_path = pathlib.Path(linker_path or (RB.MW / RB.LD_VERSION / "mwldarm.exe"))
     rom_inputs = pathlib.Path(rom_inputs or (REPO / "extracted" / "dsd"))
     control_tools = tuple(control_tools or BASELINE_CONTROL_TOOLS)
+    tracked_config_root = pathlib.Path(tracked_config_root or CFG_ARM9)
     required = [linked_elf, dsd_path, linker_path, *control_tools]
     missing = [str(path) for path in required if not path.is_file()]
     if not rom_inputs.is_dir():
         missing.append(str(rom_inputs))
+    if not tracked_config_root.is_dir():
+        missing.append(str(tracked_config_root))
     if missing:
         raise FileNotFoundError(f"baseline fingerprint input(s) missing: {missing}")
     return {
         "configArm9Sha256": content_tree_sha256(config_root),
+        "trackedConfigArm9Sha256": content_tree_sha256(tracked_config_root),
         "romInputsSha256": content_tree_sha256(rom_inputs),
         "controlToolsSha256": content_files_sha256(control_tools),
         "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
@@ -2968,15 +2991,24 @@ def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
 
 def validate_partition_baseline_evidence(report, linked_elf, config_root=CFG_ARM9,
                                          dsd_path=None, linker_path=None,
-                                         rom_inputs=None, control_tools=None):
-    """Refuse a baseline whose report is detached from current bytes or tools."""
+                                         rom_inputs=None, control_tools=None,
+                                         tracked_config_root=CFG_ARM9):
+    """Refuse a baseline whose report is detached from current bytes or tools.
+
+    A report written before ``trackedConfigArm9Sha256`` existed does not carry the key,
+    so it mismatches and is refused as stale.  That is the intended direction: a report
+    that cannot answer "has the tracked config moved?" must not be trusted to say it
+    has not.  Regenerating the baseline is the fix, and it is the same fix the tracked
+    hash demanded before it was dropped.
+    """
     evidence = report.get("baselineEvidence")
     if not isinstance(evidence, dict):
         return None, "baseline report has no content-bound evidence"
     try:
         current = partition_baseline_fingerprints(
             linked_elf, config_root, dsd_path=dsd_path, linker_path=linker_path,
-            rom_inputs=rom_inputs, control_tools=control_tools)
+            rom_inputs=rom_inputs, control_tools=control_tools,
+            tracked_config_root=tracked_config_root)
     except (OSError, ValueError) as exc:
         return None, f"cannot fingerprint baseline: {exc}"
     mismatched = [key for key, value in current.items() if evidence.get(key) != value]
@@ -2999,8 +3031,13 @@ def _baseline_partition_symbols(names):
             or (report.get("phases", {}).get("link") or {}).get("ok") is not True \
             or (report.get("analysis") or {}).get("passed") is not True:
         return None, None, "baseline report does not prove a successful stock module link"
+    # Both bindings, and for different reasons: the scratch config proves the preserved
+    # baseline inputs were not edited after the link, and CFG_ARM9 proves the tracked
+    # config has not drifted since. Validating only the scratch copy would accept a
+    # baseline whose tracked inputs no longer exist in that shape.
     baseline_sha256, error = validate_partition_baseline_evidence(
-        report, elf_path, config_root=BASELINE_LINK / "config" / "arm9")
+        report, elf_path, config_root=BASELINE_LINK / "config" / "arm9",
+        tracked_config_root=CFG_ARM9)
     if error:
         return None, None, error
     rows, error = linked_symbol_rows(elf_path, names)
@@ -4365,8 +4402,14 @@ def cmd_linkcheck(args):
     print(f"      ok ({dt:.1f}s) -> {(scratch / 'final_link.o').relative_to(REPO).as_posix()}")
 
     if baseline:
+        # cfg_root is the scratch copy this link actually consumed (demote_complete_sources
+        # rewrote it), so it is what binds the report to its own inputs. tracked_config_root
+        # stays CFG_ARM9 by default so the report ALSO carries the tracked config it was
+        # derived from -- without that second hash, config/arm9 can move and every
+        # consumer still calls this baseline current.
         report["baselineEvidence"] = partition_baseline_fingerprints(
-            scratch / "final_link.o", config_root=cfg_root)
+            scratch / "final_link.o", config_root=cfg_root,
+            tracked_config_root=CFG_ARM9)
 
     if partitioned:
         linked_aliases = verify_linked_storage_aliases(

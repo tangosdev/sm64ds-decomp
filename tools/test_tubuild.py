@@ -1333,57 +1333,131 @@ def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
     with tempfile.TemporaryDirectory() as td:
         root = pathlib.Path(td)
         config = root / "config"
+        tracked = root / "tracked-config"
         rom_inputs = root / "rom-inputs"
         config.mkdir()
+        tracked.mkdir()
         rom_inputs.mkdir()
         cfg = config / "symbols.txt"
+        tracked_cfg = tracked / "symbols.txt"
         (rom_inputs / "header.yaml").write_bytes(b"ROM")
         linked, dsd, linker = root / "base.o", root / "dsd.exe", root / "mwld.exe"
         control_tool = root / "analysis.py"
         cfg.write_bytes(b"one")
+        tracked_cfg.write_bytes(b"tracked-one")
         linked.write_bytes(b"ELF")
         dsd.write_bytes(b"DSD")
         linker.write_bytes(b"MWL")
         control_tool.write_bytes(b"ANALYZE")
-        evidence = tubuild.partition_baseline_fingerprints(
-            linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+
+        def fingerprint():
+            return tubuild.partition_baseline_fingerprints(
+                linked, config, dsd_path=dsd, linker_path=linker,
+                rom_inputs=rom_inputs, control_tools=[control_tool],
+                tracked_config_root=tracked)
+
+        def validate(report):
+            return tubuild.validate_partition_baseline_evidence(
+                report, linked, config, dsd_path=dsd, linker_path=linker,
+                rom_inputs=rom_inputs, control_tools=[control_tool],
+                tracked_config_root=tracked)
+
+        evidence = fingerprint()
         report = {"baselineEvidence": evidence}
-        digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+        digest, error = validate(report)
         assert error is None and digest == evidence["linkedElfSha256"]
 
         stamp = cfg.stat().st_mtime_ns
         cfg.write_bytes(b"two")
         os.utime(cfg, ns=(stamp, stamp))
-        _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+        _digest, error = validate(report)
         assert "configArm9Sha256" in error
 
         cfg.write_bytes(b"one")
         linked_stamp = linked.stat().st_mtime_ns
         linked.write_bytes(b"BAD")
         os.utime(linked, ns=(linked_stamp, linked_stamp))
-        _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+        _digest, error = validate(report)
         assert "linkedElfSha256" in error
 
         linked.write_bytes(b"ELF")
         (rom_inputs / "header.yaml").write_bytes(b"CHANGED")
-        _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+        _digest, error = validate(report)
         assert "romInputsSha256" in error
 
         (rom_inputs / "header.yaml").write_bytes(b"ROM")
         control_tool.write_bytes(b"CHANGED")
-        _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker,
-            rom_inputs=rom_inputs, control_tools=[control_tool])
+        _digest, error = validate(report)
         assert "controlToolsSha256" in error
+
+        control_tool.write_bytes(b"ANALYZE")
+        _digest, error = validate(report)
+        assert error is None
+
+
+def test_partition_baseline_evidence_binds_the_tracked_config_too():
+    """The scratch copy and config/arm9 are two different facts; both are recorded.
+
+    `linkcheck --baseline` links out of a MUTATED scratch copy of config/arm9, so the
+    scratch tree is what the report has to bind to in order to describe its own inputs.
+    Binding to that alone regresses what the tracked hash used to catch: config/arm9
+    can move afterwards and the preserved scratch copy -- untouched by definition --
+    still matches, so every consumer keeps calling the baseline current. The case below
+    is exactly that: the scratch tree is left byte-identical and ONLY the tracked tree
+    changes.
+    """
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        scratch, tracked, rom_inputs = (root / "scratch-config", root / "tracked-config",
+                                        root / "rom-inputs")
+        for d in (scratch, tracked, rom_inputs):
+            d.mkdir()
+        # Different bytes on purpose: demote_complete_sources rewrites the scratch copy,
+        # so in the real baseline these two trees are NOT equal and the two hashes are
+        # independent values rather than one value written twice.
+        (scratch / "symbols.txt").write_bytes(b"scratch (demoted)")
+        (tracked / "symbols.txt").write_bytes(b"tracked")
+        (rom_inputs / "header.yaml").write_bytes(b"ROM")
+        linked, dsd, linker = root / "base.o", root / "dsd.exe", root / "mwld.exe"
+        control_tool = root / "analysis.py"
+        for path, blob in ((linked, b"ELF"), (dsd, b"DSD"), (linker, b"MWL"),
+                           (control_tool, b"ANALYZE")):
+            path.write_bytes(blob)
+
+        def validate(report):
+            return tubuild.validate_partition_baseline_evidence(
+                report, linked, scratch, dsd_path=dsd, linker_path=linker,
+                rom_inputs=rom_inputs, control_tools=[control_tool],
+                tracked_config_root=tracked)
+
+        evidence = tubuild.partition_baseline_fingerprints(
+            linked, scratch, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool],
+            tracked_config_root=tracked)
+        assert evidence["configArm9Sha256"] != evidence["trackedConfigArm9Sha256"]
+        report = {"baselineEvidence": evidence}
+        assert validate(report)[1] is None
+
+        scratch_before = evidence["configArm9Sha256"]
+        stamp = (tracked / "symbols.txt").stat().st_mtime_ns
+        (tracked / "symbols.txt").write_bytes(b"tracked, but edited")
+        os.utime(tracked / "symbols.txt", ns=(stamp, stamp))
+        _digest, error = validate(report)
+        assert error is not None and "trackedConfigArm9Sha256" in error
+        # The scratch binding is untouched by the drift -- which is why it cannot be the
+        # only signal, and why this is not a test of the scratch hash under another name.
+        assert tubuild.content_tree_sha256(scratch) == scratch_before
+        assert "'configArm9Sha256'" not in error
+
+        (tracked / "symbols.txt").write_bytes(b"tracked")
+        assert validate(report)[1] is None
+
+        # A report banked before this key existed cannot answer the question, so it is
+        # refused rather than given the benefit of the doubt.
+        stale = {"baselineEvidence": {k: v for k, v in evidence.items()
+                                      if k != "trackedConfigArm9Sha256"}}
+        _digest, error = validate(stale)
+        assert error is not None and "trackedConfigArm9Sha256" in error
 
 
 def test_partitioned_result_gate_requires_every_full_rom_proof():

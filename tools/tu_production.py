@@ -238,8 +238,12 @@ def _strict_baseline(expected_intact=None):
     if not expected_demoted and compared is not True:
         raise ProductionTuError(
             "stock control did not prove a ROM identical to build/sm64ds.nds")
+    # config_root is the preserved scratch copy the baseline link consumed; the tracked
+    # config is checked too (tracked_config_root defaults to TB.CFG_ARM9), because a
+    # scratch-only binding cannot see config/arm9 moving after the baseline was banked.
     _sha, error = TB.validate_partition_baseline_evidence(
-        report, linked_elf, config_root=TB.BASELINE_LINK / "config" / "arm9")
+        report, linked_elf, config_root=TB.BASELINE_LINK / "config" / "arm9",
+        tracked_config_root=TB.CFG_ARM9)
     if error:
         raise ProductionTuError(f"stock control is stale: {error}")
     base_errors = (((report.get("phases") or {}).get("checkSymbols") or {})
