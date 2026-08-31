@@ -50,6 +50,7 @@ Usage:
     python tools/romdata_check.py --json build/romdata.json
 """
 import argparse
+import bisect
 import collections
 import concurrent.futures
 import io
@@ -57,6 +58,7 @@ import json
 import os
 import pathlib
 import re
+import struct
 import subprocess
 import sys
 import tempfile
@@ -103,14 +105,65 @@ def name_index():
         return _names
 
 
+def _vtable_preamble_at(label, addr, typeinfo):
+    """True when the two words BELOW a `_ZTV` address really are mwcc's preamble.
+
+    `symbols.txt` points `_ZTV<C>` at the slot array, so the object's offset-to-top and
+    typeinfo words sit at `addr - VTABLE_PREAMBLE` under no symbol at all. They are not
+    the previous symbol's bytes, but distance-to-the-next-symbol sizing hands them to it
+    anyway, and the compare then demands eight bytes the previous object never owned.
+
+    Not every `_ZTV` in this image has a preamble -- 9 of the 414 vtable addresses
+    config names do not -- so this is
+    gated on the cartridge rather than assumed: offset-to-top must be zero and the
+    typeinfo word must be null or an address `symbols.txt` gives to some `_ZTI`, in this
+    module or in arm9. Where the evidence is absent the boundary is not inserted and the
+    old sizing stands, which can only leave an extent too long (a PARTIAL that could
+    have been VERIFIED) and never too short (a VERIFIED that should not be).
+    """
+    m = RV.mod_for(label)
+    if m is None or addr - OI.VTABLE_PREAMBLE < m["base"]:
+        return False
+    head = RV.rom_bytes(label, addr - OI.VTABLE_PREAMBLE, OI.VTABLE_PREAMBLE)
+    if head is None or len(head) < OI.VTABLE_PREAMBLE:
+        return False
+    top, info = struct.unpack("<II", head)
+    return top == 0 and (info == 0 or info in typeinfo)
+
+
+def _module_extents(entries, has_preamble):
+    """{name: extent} for one module's `(addr, name)` list, sorted or not.
+
+    Split out from `rom_data_index` so the boundary arithmetic is testable without a
+    cartridge: `has_preamble(addr)` is the only thing that reads one.
+    """
+    entries = sorted(entries)
+    bounds = sorted({a for a, _ in entries}
+                    | {a - OI.VTABLE_PREAMBLE for a, n in entries
+                       if n.startswith("_ZTV") and has_preamble(a)})
+    out = {}
+    for addr, name in entries:
+        j = bisect.bisect_right(bounds, addr)
+        if j < len(bounds):
+            out[name] = bounds[j] - addr
+    return out
+
+
 def rom_data_index():
     """{(module, name): (addr, extent)} for every symbol the ROM config names.
 
-    `extent` is the distance to the next symbol in the same module, which is the only
+    `extent` is the distance to the next BOUNDARY in the same module, which is the only
     size information available: `symbols.txt` writes data as `kind:data(any)` with no
     size, while functions carry one. It is an upper bound on the object -- a trailing
     alignment gap belongs to nobody -- so a short compare is reported PARTIAL rather
     than being silently rounded up into a pass.
+
+    A boundary is any symbol address, plus the start of each vtable OBJECT whose
+    preamble `_vtable_preamble_at` can see in the cartridge. Without that second kind
+    the symbol preceding a vtable is charged with the vtable's own two preamble words
+    and scores PARTIAL by exactly eight bytes forever. Where `symbols.txt` already names
+    one or both of those words the real symbol is the nearer boundary and wins, so an
+    already-covered preamble is left alone.
     """
     global _index
     with _index_lock:
@@ -122,14 +175,17 @@ def rom_data_index():
                 m = _SYM_RE.match(line.strip())
                 if m:
                     per_module[label].append((int(m.group(3), 16), m.group(1)))
+        arm9_typeinfo = {a for a, n in per_module.get("arm9", ())
+                         if n.startswith("_ZTI")}
         index = {}
         for label, entries in per_module.items():
             entries.sort()
-            for i, (addr, name) in enumerate(entries):
-                nxt = next((entries[j][0] for j in range(i + 1, len(entries))
-                            if entries[j][0] > addr), None)
-                if nxt is not None:
-                    index[(label, name)] = (addr, nxt - addr)
+            typeinfo = {a for a, n in entries if n.startswith("_ZTI")} | arm9_typeinfo
+            extents = _module_extents(
+                entries, lambda a: _vtable_preamble_at(label, a, typeinfo))
+            for addr, name in entries:
+                if name in extents:
+                    index[(label, name)] = (addr, extents[name])
         _index = index
         return _index
 
