@@ -83,17 +83,18 @@ ov002	0x020b4a00	func_ov002_020b4a00	daObjKinokoTag_c_Spawn	spawnfunc; construct
 ov002	0x020b4a38	func_ov002_020b4a38	MegaMushroomTag_Spawn	spawnfunc
 ov002	0x020b4b6c	func_ov002_020b4b6c	_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources	daObjDorifu_c TU helper; direct calls from all three descendant CleanupResources overrides; five 0xc resource rows
 ov002	0x020b4d58	func_ov002_020b4d58	_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources	daObjDorifu_c TU helper; direct calls from all three descendant InitResources overrides; five 0xc resource rows
-ov002	0x020b4ed8	func_ov002_020b4ed8	_ZN14QuestionSwitchD1Ev	vtable slot 16
-ov002	0x020b4f44	func_ov002_020b4f44	_ZN14QuestionSwitchD0Ev	vtable slot 17
-ov002	0x020b4fd0	func_ov002_020b4fd0	_ZN14QuestionSwitch15UpdateClsnStateEv	QuestionSwitch helper; sole caller is Behavior; operates only on this object's active moving-mesh collider; body byte-verified at this address
-ov002	0x020b503c	func_ov002_020b503c	_ZN14QuestionSwitch19UpdateClsnTransformEv	QuestionSwitch helper; both callers are QuestionSwitch methods; rebuilds this object's active moving-mesh transform; body byte-verified at this address
-ov002	0x020b50a0	func_ov002_020b50a0	_ZN14QuestionSwitch20UpdateModelTransformEv	QuestionSwitch helper; both callers are QuestionSwitch methods; rebuilds its ModelAnim matrix into the inherited render model; body byte-verified at this address
-ov002	0x020b512c	func_ov002_020b512c	_ZN14QuestionSwitch16CleanupResourcesEv	vtable slot 3
-ov002	0x020b51ac	func_ov002_020b51ac	_ZN14QuestionSwitch6RenderEv	vtable slot 9
-ov002	0x020b51dc	func_ov002_020b51dc	_ZN14QuestionSwitch8BehaviorEv	vtable slot 6
-ov002	0x020b5500	func_ov002_020b5500	_ZN14QuestionSwitch13InitResourcesEv	vtable slot 0
-ov002	0x020b567c	func_ov002_020b567c	_ZN14QuestionSwitch10HandleClsnER8dActor_c	QuestionSwitch helper; sole caller is AfterClsnCallback, which supplies the collider owner as this; body byte-verified at this address
-ov002	0x020b56c4	func_ov002_020b56c4	_ZN14QuestionSwitch17AfterClsnCallbackEP4dBgWP8dActor_cS3_	QuestionSwitch static callback; func_020393c4 installs it at dBgW+0x1c on this object's own moving-mesh collider; body byte-verified at this address
+ov002	0x020b4ed8	func_ov002_020b4ed8	_ZN19daObjHatenaSwitch_cD1Ev	vtable slot 16; class name from ROM RTTI
+ov002	0x020b4f44	func_ov002_020b4f44	_ZN19daObjHatenaSwitch_cD0Ev	vtable slot 17; class name from ROM RTTI
+ov002	0x020b4fc4	func_ov002_020b4fc4	_ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c	vtable slot 21; class name from ROM RTTI
+ov002	0x020b4fd0	func_ov002_020b4fd0	_ZN19daObjHatenaSwitch_c15UpdateClsnStateEv	inferred private helper on ROM-proven class; active moving-mesh state; body byte-verified
+ov002	0x020b503c	func_ov002_020b503c	_ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv	inferred private helper on ROM-proven class; active collision transform; body byte-verified
+ov002	0x020b50a0	func_ov002_020b50a0	_ZN19daObjHatenaSwitch_c20UpdateModelTransformEv	inferred private helper on ROM-proven class; ModelAnim and inherited model transform; body byte-verified
+ov002	0x020b512c	func_ov002_020b512c	_ZN19daObjHatenaSwitch_c16CleanupResourcesEv	vtable slot 3; class name from ROM RTTI
+ov002	0x020b51ac	func_ov002_020b51ac	_ZN19daObjHatenaSwitch_c6RenderEv	vtable slot 9; class name from ROM RTTI
+ov002	0x020b51dc	func_ov002_020b51dc	_ZN19daObjHatenaSwitch_c8BehaviorEv	vtable slot 6; class name from ROM RTTI
+ov002	0x020b5500	func_ov002_020b5500	_ZN19daObjHatenaSwitch_c13InitResourcesEv	vtable slot 0; class name from ROM RTTI
+ov002	0x020b567c	func_ov002_020b567c	_ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c	inferred private helper on ROM-proven class; player/Yoshi collision handling; body byte-verified
+ov002	0x020b56c4	func_ov002_020b56c4	_ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred static callback on ROM-proven class; registered on the owned collider; body byte-verified
 ov002	0x020b56d8	func_ov002_020b56d8	QuestionSwitch_Spawn	spawnfunc
 ov002	0x020b5734	func_ov002_020b5734	_ZN9BlueFlameD1Ev	vtable slot 16
 ov002	0x020b5764	func_ov002_020b5764	_ZN9BlueFlameD0Ev	vtable slot 17
@@ -286,7 +287,7 @@ ov002	0x02108cb4	data_ov002_02108cb4	MegaMushroomTag_SpawnInfo	spawninfo
 ov002	0x02108cd0	data_ov002_02108cd0	MegaMushroomCreateTag_SpawnInfo	spawninfo
 ov002	0x02108cf4	data_ov002_02108cf4	_ZTV16daObjKinokoTag_c	vtable alloc=0x110; class name from ROM RTTI
 ov002	0x02108e38	data_ov002_02108e38	QuestionSwitch_SpawnInfo	spawninfo
-ov002	0x02108e5c	data_ov002_02108e5c	_ZTV14QuestionSwitch	vtable alloc=?
+ov002	0x02108e5c	data_ov002_02108e5c	_ZTV19daObjHatenaSwitch_c	vtable alloc=0x724; class name from ROM RTTI
 ov002	0x02108ef8	data_ov002_02108ef8	RedFlame_SpawnInfo	spawninfo
 ov002	0x02108f14	data_ov002_02108f14	BlueFlame_SpawnInfo	spawninfo
 ov002	0x02108f38	data_ov002_02108f38	_ZTV9BlueFlame	vtable alloc=0x118

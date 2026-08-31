@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN14QuestionSwitch8BehaviorEv
-/* QuestionSwitch::Behavior -- vtable slot 6. Real C++ method over the shared
+// @symbol _ZN19daObjHatenaSwitch_c8BehaviorEv
+/* daObjHatenaSwitch_c::Behavior -- vtable slot 6. Real C++ method over the shared
  * header. Callees whose ROM symbols carry by-value class parameters keep their
  * literal mangled extern "C" spellings; QSVec3 is a local plain-int triple, a
  * stack temp only. */
@@ -17,12 +17,11 @@ unsigned char DecIfAbove0_Byte(unsigned char* p);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 }
-
 extern u8 data_0209d684;
 extern u8 data_0209d660;
 extern u32 data_0209caa0[];
 
-int QuestionSwitch::Behavior()
+int daObjHatenaSwitch_c::Behavior()
 {
     if (mSoundDelay != 0) {
         if (DecIfAbove0_Short(&mSoundDelay) == 0) {

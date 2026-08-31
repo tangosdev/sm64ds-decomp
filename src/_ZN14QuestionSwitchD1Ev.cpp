@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN14QuestionSwitchD1Ev
+// @symbol _ZN19daObjHatenaSwitch_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Own vptr, then ModelAnim at 0x6b4, then the two dBgW_KcMbg members
@@ -9,6 +9,6 @@
  */
 #include "QuestionSwitch.h"
 
-QuestionSwitch::~QuestionSwitch()
+daObjHatenaSwitch_c::~daObjHatenaSwitch_c()
 {
 }

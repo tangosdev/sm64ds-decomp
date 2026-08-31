@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN14QuestionSwitch15UpdateClsnStateEv
+// @symbol _ZN19daObjHatenaSwitch_c15UpdateClsnStateEv
 /* Inferred descriptive name. The routine is called only by
- * QuestionSwitch::Behavior and operates only on this object's active
+ * daObjHatenaSwitch_c::Behavior and operates only on this object's active
  * moving-mesh collider. */
 #include "QuestionSwitch.h"
 
-int QuestionSwitch::UpdateClsnState()
+int daObjHatenaSwitch_c::UpdateClsnState()
 {
     int shouldDisable = (int)((mFlags & 8) != 0);
 

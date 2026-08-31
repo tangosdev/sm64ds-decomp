@@ -1,17 +1,17 @@
 //cpp
-// @symbol _ZN14QuestionSwitch19UpdateClsnTransformEv
-/* Inferred descriptive name. Both callers are QuestionSwitch methods and the
+// @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
+/* Inferred descriptive name. Both callers are daObjHatenaSwitch_c methods and the
  * body rebuilds only this object's active moving-mesh transform. */
 #include "QuestionSwitch.h"
 
-struct QuestionSwitchMatrixCopy {
+struct daObjHatenaSwitch_cMatrixCopy {
     s32 words[12];
 };
 
-void QuestionSwitch::UpdateClsnTransform()
+void daObjHatenaSwitch_c::UpdateClsnTransform()
 {
-    *(QuestionSwitchMatrixCopy *)&mClsnMat =
-        *(QuestionSwitchMatrixCopy *)&mModelAnim.mat4x3;
+    *(daObjHatenaSwitch_cMatrixCopy *)&mClsnMat =
+        *(daObjHatenaSwitch_cMatrixCopy *)&mModelAnim.mat4x3;
     mClsnMat.t.x = mPosX;
     mClsnMat.t.y = mPosY;
     mClsnMat.t.z = mPosZ;

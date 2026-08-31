@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN14QuestionSwitch10HandleClsnER8dActor_c
+// @symbol _ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c
 /* Inferred descriptive name. The sole caller is AfterClsnCallback, which
  * supplies the collider owner as this and the colliding actor by reference. */
 #include "QuestionSwitch.h"
 
-void QuestionSwitch::HandleClsn(dActor_c &other)
+void daObjHatenaSwitch_c::HandleClsn(dActor_c &other)
 {
     u16 actorID = other.actorID;
     int isPlayer = (int)(actorID == 0xbf);
