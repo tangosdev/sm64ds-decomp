@@ -2181,6 +2181,12 @@ def test_record_linkcheck_preserves_all_owned_ranges():
             {"section": ".data", "differingBytes": 0},
         ],
         "objectAudit": {},
+        "nontextSectionOrder": {
+            "groups": [{"section": ".data", "original": [14, 20],
+                        "desired": [20, 14], "anchors": {}}],
+            "objisolate": {"reordered": [{"section": ".data"}],
+                            "error": None},
+        },
         "linkedStorageAliases": {"ok": True, "rows": [{"exact": True}],
                                   "errors": []},
         "symbolsNew": [],
@@ -2199,6 +2205,12 @@ def test_record_linkcheck_preserves_all_owned_ranges():
     assert recorded["tuRanges"] == report["tuRanges"]
     assert recorded["moduleSetSha256"] == "b" * 64
     assert recorded["linkedStorageAliases"] == report["linkedStorageAliases"]
+    assert recorded["nontextSectionOrder"] == {
+        "groups": [{"section": ".data", "original": [14, 20],
+                    "desired": [20, 14]}],
+        "objisolate": report["nontextSectionOrder"]["objisolate"],
+        "errors": None,
+    }
 
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of
