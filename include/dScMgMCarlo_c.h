@@ -30,32 +30,47 @@
  * below 0x4f38 (0x0a8, 0x0ac) are dropped: both are dScMgBase_c's own and
  * are already declared there.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN13dScMgMCarlo_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * THE DESTRUCTOR IS DEFINED INLINE, in the class body, and the ROM's own
+ * emission order is why. Written out of line, mwcc emits the synthesized D0
+ * AHEAD of the written D1; the cartridge has D1 first (0x020f7634) and D0
+ * second (0x020f76a8), and linkcheck's pre-link audit refuses a TU whose
+ * licensed .text is not in ROM address order. Inline, the destructor cannot
+ * be the key function; InitResources -- the next virtual declared, and
+ * non-inline -- takes that role, and the TU that defines it emits
+ * _ZTV13dScMgMCarlo_c. Slots 16 and 17 name D1 then D0, odr-using both, so
+ * the compiler emits the pair for us in cartridge order. It also removes the
+ * homeless D2 entirely. The two calls below are ordinary reverse-declaration
+ * member destruction, spelled out only because the members are raw bytes.
+ * No separate operator delete is needed -- dScMgBase_c, two levels up,
+ * already provides one. */
 #ifndef DSCMGMCARLO_C_H
 #define DSCMGMCARLO_C_H
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
 extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
-extern "C" void func_ov006_020f7730(void);
+extern "C" void func_ov006_020f7730(int *p); /* mArray's element dtor;
+                                                 signature is the definition's,
+                                                 in this class's own TU */
 
 struct dScMgMCarlo_c : dScMgSingle3DBase_c {
-    virtual ~dScMgMCarlo_c();
+    virtual ~dScMgMCarlo_c() {
+        __destroy_arr(mArray, 0x50, 0x30, (void *)func_ov006_020f7730);
+        func_ov006_020c1c64((char *)this + 0x4f38);
+    }
 
     /* This class's own override, read off the ROM's vtable: the one slot where
        the table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
        keyword, the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h
        spell theirs -- an override of a virtual an ancestor already declares is
        implicitly virtual either way, so it reuses slot 6 rather than adding one
-       and adds no field, and the 0x60b0 assert below still holds. The destructor
-       above is declared first and out of line, so it stays this class's KEY
-       FUNCTION and this translation unit does not emit _ZTV13dScMgMCarlo_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN13dScMgMCarlo_c13InitResourcesEv.cpp */
-    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN13dScMgMCarlo_c6RenderEv.cpp */
+       and adds no field, and the 0x60b0 assert below still holds. InitResources,
+       the first of these and the first non-inline virtual declared after the
+       inline destructor, is this class's KEY FUNCTION -- so the TU that defines
+       it is the one that emits _ZTV13dScMgMCarlo_c. */
+    s32 InitResources();   /* slot  0 -- ov006 0x020f8d08 */
+    s32 Behavior();        /* slot  6 -- ov006 0x020f869c */
+    s32 Render();          /* slot  9 -- ov006 0x020f85b0 */
 
     u8  pad_4f38[0x1a];    /* 0x4f38 -- shared table start, see file banner */
     s16 unk_4f52;          /* 0x4f52 -- within shared table */

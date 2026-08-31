@@ -1,0 +1,457 @@
+{
+  "id": "ov006/dScMgMCarlo_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgMCarlo_c.cpp",
+  "promoted_source": "src/actors/dScMgMCarlo_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20f7634..0x20f8e44, 23 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgMCarlo_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020f7634",
+      "end": "0x020f8e44"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13dScMgMCarlo_cD1Ev",
+      "address": "0x020f7634",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN13dScMgMCarlo_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13dScMgMCarlo_cD0Ev",
+      "address": "0x020f76a8",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN13dScMgMCarlo_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020f7730",
+      "address": "0x020f7730",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_020f7730.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020f7740",
+      "address": "0x020f7740",
+      "size": "0x00000254",
+      "legacy_source": "src/func_ov006_020f7740.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020f7994",
+      "address": "0x020f7994",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020f7994.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020f7a00",
+      "address": "0x020f7a00",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_020f7a00.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020f7a90",
+      "address": "0x020f7a90",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020f7a90.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020f7b10",
+      "address": "0x020f7b10",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020f7b10.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020f7b90",
+      "address": "0x020f7b90",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020f7b90.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020f7c10",
+      "address": "0x020f7c10",
+      "size": "0x0000021c",
+      "legacy_source": "src/func_ov006_020f7c10.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020f7e2c",
+      "address": "0x020f7e2c",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov006_020f7e2c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020f7ee4",
+      "address": "0x020f7ee4",
+      "size": "0x00000270",
+      "legacy_source": "src/func_ov006_020f7ee4.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020f8154",
+      "address": "0x020f8154",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov006_020f8154.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020f8224",
+      "address": "0x020f8224",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov006_020f8224.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020f82d0",
+      "address": "0x020f82d0",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_020f82d0.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020f8320",
+      "address": "0x020f8320",
+      "size": "0x00000188",
+      "legacy_source": "src/func_ov006_020f8320.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020f84a8",
+      "address": "0x020f84a8",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_020f84a8.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020f8540",
+      "address": "0x020f8540",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020f8540.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN13dScMgMCarlo_c6RenderEv",
+      "address": "0x020f85b0",
+      "size": "0x000000ec",
+      "legacy_source": "src/_ZN13dScMgMCarlo_c6RenderEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN13dScMgMCarlo_c8BehaviorEv",
+      "address": "0x020f869c",
+      "size": "0x000003a0",
+      "legacy_source": "src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020f8a3c",
+      "address": "0x020f8a3c",
+      "size": "0x0000022c",
+      "legacy_source": "src/func_ov006_020f8a3c.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020f8c68",
+      "address": "0x020f8c68",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_020f8c68.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN13dScMgMCarlo_c13InitResourcesEv",
+      "address": "0x020f8d08",
+      "size": "0x0000013c",
+      "legacy_source": "src/_ZN13dScMgMCarlo_c13InitResourcesEv.cpp",
+      "ordinal": 22
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov006_020f7ee4.cpp (func_ov006_020f7ee4) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_020f8a3c.c (func_ov006_020f8a3c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_020f8c68.c (func_ov006_020f8c68) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0213d574' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7a90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_021424fc' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142508' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142500' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7c10; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142504' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f8320; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142504' differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f84a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_020c0aa8' differs between the legacy file that used to hold _ZN13dScMgMCarlo_c6RenderEv and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov006_020f7c10 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7994; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held func_ov006_020f7b90; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f8224; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f82d0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f8320; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held _ZN13dScMgMCarlo_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgMCarlo_c/dScMgMCarlo_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 23,
+    "functions_declared": 23,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTI13dScMgMCarlo_c",
+        "_ZTS13dScMgMCarlo_c",
+        "_ZTV13dScMgMCarlo_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI13dScMgMCarlo_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS13dScMgMCarlo_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV13dScMgMCarlo_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgMCarlo_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020f7634",
+        "end": "0x020f8e44",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020f7634",
+          "end": "0x020f8e44",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 23
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "postPromotion": {
+      "round": "tools/rombuild.py -j16 against the REAL tree, after the delinks entry was collapsed to one source -- the production counterpart of the scratch linkcheck above, which cannot run once the TU is enrolled (its substitution model needs the legacy delinks entries it just replaced)",
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "sourceBuiltFunctions": {
+        "total": 11088,
+        "reproducing": 11088,
+        "mismatching": 0
+      },
+      "romSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "romMatchesStockBuild": true,
+      "romDataFromSource": "462 verified, 250 partial, 9 differ, 524 unnamed by config (from 7,610 object records; 7,636 before -- 23 objects collapsed into 1, and the 13 licensed records are unchanged because the legacy per-function files already emitted the same ones)",
+      "licensedRecordVerdicts": "all 13 compiler_only_output symbols are byte-compared against the cartridge by romdata_check: VERIFIED _ZTI7fBase_c, _ZTI7dBase_c, _ZTI8dScene_c, _ZTI11dScMgBase_c, _ZTI19dScMgSingle3DBase_c, _ZTI13dScMgMCarlo_c; PARTIAL (exact prefix, shorter than the ROM extent) _ZTS7fBase_c, _ZTS7dBase_c, _ZTS8dScene_c, _ZTS11dScMgBase_c, _ZTS19dScMgSingle3DBase_c, _ZTS13dScMgMCarlo_c, and _ZTV13dScMgMCarlo_c at 72 of the cartridge's 144 bytes -- 18 of 36 slots, because dScMgBase_c still leaves slots 18-35 undeclared. Nothing DIFFERs."
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at arm9:0x02086d70 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo name string by naming this class's key function; the cartridge's copy lives at arm9:0x02086e60 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo name string by naming this class's key function; the cartridge's copy lives at arm9:0x02086e54 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo name string by naming this class's key function; the cartridge's copy lives at arm9:0x020914b0 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at arm9:0x02086e78 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at ov004:0x020bbf6c and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo name string by naming this class's key function; the cartridge's copy lives at ov004:0x020bbf84 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at arm9:0x020914d4 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo record by naming this class's key function; the cartridge's copy lives at ov006:0x0213bc64 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00",
+      "reason": "dragged in as an ancestor RTTI passenger typeinfo name string by naming this class's key function; the cartridge's copy lives at ov006:0x0213bd00 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI13dScMgMCarlo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d588",
+      "reason": "emitted for this class itself typeinfo record by naming this class's key function; the cartridge's copy lives at ov006:0x0213d588 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS13dScMgMCarlo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d594",
+      "reason": "emitted for this class itself typeinfo name string by naming this class's key function; the cartridge's copy lives at ov006:0x0213d594 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTV13dScMgMCarlo_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d664",
+      "reason": "emitted for this class itself vtable by naming this class's key function; the cartridge's copy lives at ov006:0x0213d664 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    }
+  ]
+}

@@ -1053,8 +1053,13 @@ extern int data_ov006_02140840;
 extern int data_ov006_02141a44;
 extern int data_ov006_021421b4;
 extern int data_ov006_021421c4;
-extern int data_ov006_021424fc;
-extern int data_ov006_02142508;
+/* data_ov006_021424fc / _02142500 / _02142504 / _02142508 are the four
+   globals of one intrusive doubly-linked Node list (two cursors, head,
+   tail). The 19 one-function legacy files each declared them differently
+   in isolation -- int, void*, char*, struct Node* -- and the scalar
+   spellings below were the arbitrary winners. Every consumer lives in
+   ov006/dScMgMCarlo_c, which now declares all four with the recovered
+   pointer type, so no declaration belongs here. */
 extern int data_ov006_02142570;
 extern int data_ov006_02142574;
 extern int data_ov006_02142f60;
@@ -2489,7 +2494,7 @@ extern void func_ov006_020f5620(char*);
 extern void func_ov006_020f565c(char*);
 extern void func_ov006_020f5b98(char*);
 extern void func_ov006_020f7064(void*);
-extern void func_ov006_020f7730();
+extern void func_ov006_020f7730(int *);
 extern void func_ov006_020f7740(void);
 extern void func_ov006_020f7994(void);
 extern void func_ov006_020f8ff0();
@@ -2992,7 +2997,6 @@ extern void*data_ov006_02141e9c;
 extern void*data_ov006_02142184;
 extern void*data_ov006_02142188;
 extern void*data_ov006_02142190;
-extern void*data_ov006_02142500;
 extern void*data_ov006_021428c8;
 extern void*data_ov007_0210342c;
 extern void*data_ov010_021122f8;

@@ -782,7 +782,7 @@
     "src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp",
     "src/_ZN13dScGameOver_cD0Ev.cpp",
     "src/_ZN13dScGameOver_cD1Ev.cpp",
-    "src/_ZN13dScMgMCarlo_c6RenderEv.cpp",
+    "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c6RenderEv",
     "src/_ZN13dScMgMemory_c6RenderEv.cpp",
     "src/_ZN13dScMgTeresa_c6RenderEv.cpp",
     "src/_ZN13dScMgTeresa_cD0Ev.cpp",
