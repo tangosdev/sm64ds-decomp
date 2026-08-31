@@ -1136,6 +1136,7 @@ unsigned short port_input_probe_bits(int frame);
 void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
+void port_input_probe_star_trigger(int frame);  /* TEMPORARY: SM64DS_STAR_TRIGGER */
 void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
@@ -9574,6 +9575,10 @@ int main(void)
             /* TEMPORARY: arm the buddy's talk detection before the actor tick so
                his state-0 main runs the real StartTalk. SM64DS_BUDDY_TRIGGER. */
             port_input_probe_buddy_trigger(frame);
+            /* TEMPORARY: arm the star's touch detection before the actor tick so
+               PowerStar state 4's own gate runs the real collect handler this
+               same frame. SM64DS_STAR_TRIGGER. */
+            port_input_probe_star_trigger(frame);
             port_input_probe_sign_trigger(frame);   /* TEMPORARY: SM64DS_SIGN_TRIGGER */
             port_probe_alcheck();
             port_probe_sign_yaw();
