@@ -556,10 +556,20 @@ extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
-extern int data_020a0f10[];    /* my comms slot: 0 solo or parent, 1..3 a
-                                  child seat (hal/comms_conductor.cpp seats
-                                  it from func_02040704 when a session joins;
-                                  the flight recorder reads it) */
+/* MY COMMS SLOT: 0 solo or parent, 1..3 a child seat. hal/comms_conductor.cpp
+   seats it from func_02040704 when a session joins; the flight recorder below
+   reads it.
+
+   unsigned char AND NOT int, which is not cosmetic. Every ROM-side
+   declaration of this symbol is u8 (src/func_0203da9c.c, func_0203db64.c,
+   func_0203df40.c, func_0203ea5c.c) and hal/comms_conductor.cpp declares and
+   WRITES it as unsigned char, so byte 0 is the whole value and bytes 1..3 are
+   nobody's. An int[] extern here reads all four and only agrees with the byte
+   writer while the high three happen to be zero -- which is exactly the shape
+   that produced the fc5c freeze, where an int[] extern wrote int strides past
+   a byte reader. The host definition (hal/actor_vtables.cpp) is oversized on
+   purpose; the DECLARATION is what has to match the ROM. */
+extern unsigned char data_020a0f10[];
 /* TouchData[4], zero = no touch. DECLARED AS BYTES, not ints: the definition
    in hal/auto_bss.cpp is unsigned char[1] with de9/dea/deb packed at +1/+2/+3,
    the DS layout. An `int[]` here would be a lie about the element type; it is
