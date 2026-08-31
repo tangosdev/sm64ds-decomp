@@ -1523,14 +1523,25 @@ ov070	0x021201c0	func_ov070_021201c0	_ZN6FlyGuy6RenderEv	vtable slot 9
 ov070	0x02120210	func_ov070_02120210	_ZN6FlyGuy8BehaviorEv	vtable slot 6
 ov070	0x021203b4	func_ov070_021203b4	_ZN6FlyGuy13InitResourcesEv	vtable slot 0
 ov070	0x02120520	func_ov070_02120520	FlyGuy_Spawn	spawnfunc
-ov070	0x02120570	func_ov070_02120570	_ZN3AmpD1Ev	vtable slot 16
-ov070	0x021205d0	func_ov070_021205d0	_ZN3AmpD0Ev	vtable slot 17
-ov070	0x02120dc4	func_ov070_02120dc4	_ZN3Amp16CleanupResourcesEv	vtable slot 3
-ov070	0x02120e20	func_ov070_02120e20	_ZN3Amp16OnPendingDestroyEv	vtable slot 12
-ov070	0x02120e24	func_ov070_02120e24	_ZN3Amp6RenderEv	vtable slot 9
-ov070	0x02120e8c	func_ov070_02120e8c	_ZN3Amp8BehaviorEv	vtable slot 6
-ov070	0x02120eec	func_ov070_02120eec	_ZN3Amp13InitResourcesEv	vtable slot 0
-ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc
+ov070	0x02120570	func_ov070_02120570	_ZN7daBrq_cD1Ev	vtable slot 16; class name from ROM RTTI
+ov070	0x021205d0	func_ov070_021205d0	_ZN7daBrq_cD0Ev	vtable slot 17; class name from ROM RTTI
+ov070	0x02120644	func_ov070_02120644	_ZN7daBrq_c21HandlePlayerCollisionEv	inferred private helper on ROM-proven class; resolves the collider owner and handles player shock/defeat; body byte-verified
+ov070	0x02120724	func_ov070_02120724	_ZN7daBrq_c20UpdateModelTransformEv	inferred private helper on ROM-proven class; updates model, shadow, and collision transforms; body byte-verified
+ov070	0x021208a4	func_ov070_021208a4	_ZN7daBrq_c19UpdateDefeatedStateEv	inferred private state update on ROM-proven class; body byte-verified
+ov070	0x02120910	func_ov070_02120910	_ZN7daBrq_c18EnterDefeatedStateEv	inferred private state entry on ROM-proven class; body byte-verified
+ov070	0x021209e4	func_ov070_021209e4	_ZN7daBrq_c17UpdateActiveStateEv	inferred private state update on ROM-proven class; body byte-verified
+ov070	0x02120bf8	func_ov070_02120bf8	_ZN7daBrq_c16EnterActiveStateEv	inferred private state entry on ROM-proven class; body byte-verified
+ov070	0x02120cac	func_ov070_02120cac	_ZN7daBrq_c19UpdateCooldownStateEv	inferred private state update on ROM-proven class; body byte-verified
+ov070	0x02120ce4	func_ov070_02120ce4	_ZN7daBrq_c18EnterCooldownStateEv	inferred private state entry on ROM-proven class; body byte-verified
+ov070	0x02120d34	func_ov070_02120d34	_ZN7daBrq_c11UpdateStateEv	inferred private PMF dispatcher on ROM-proven class; body byte-verified
+ov070	0x02120d70	func_ov070_02120d70	_ZN7daBrq_c10EnterStateEv	inferred private PMF dispatcher on ROM-proven class; body byte-verified
+ov070	0x02120da8	func_ov070_02120da8	_ZN7daBrq_c8SetStateEi	inferred private state setter on ROM-proven class; signed parameter spelling is not distinguishable from other 32-bit forms; body byte-verified
+ov070	0x02120dc4	func_ov070_02120dc4	_ZN7daBrq_c16CleanupResourcesEv	vtable slot 3; class name from ROM RTTI
+ov070	0x02120e20	func_ov070_02120e20	_ZN7daBrq_c16OnPendingDestroyEv	vtable slot 12; class name from ROM RTTI
+ov070	0x02120e24	func_ov070_02120e24	_ZN7daBrq_c6RenderEv	vtable slot 9; class name from ROM RTTI
+ov070	0x02120e8c	func_ov070_02120e8c	_ZN7daBrq_c8BehaviorEv	vtable slot 6; class name from ROM RTTI
+ov070	0x02120eec	func_ov070_02120eec	_ZN7daBrq_c13InitResourcesEv	vtable slot 0; class name from ROM RTTI
+ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc; evidence-bounded factory alias constructs the ROM-proven daBrq_c class
 ov070	0x02121118	func_ov070_02121118	_ZN8daKrpa_cD1Ev	vtable slot 16
 ov070	0x02121160	func_ov070_02121160	_ZN8daKrpa_cD0Ev	vtable slot 17
 ov070	0x0212189c	func_ov070_0212189c	_ZN8daKrpa_c16CleanupResourcesEv	vtable slot 3
@@ -1550,7 +1561,7 @@ ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
 ov070	0x02123168	data_ov070_02123168	_ZTV6FlyGuy	vtable alloc=0x3e8
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
-ov070	0x02123278	data_ov070_02123278	_ZTV3Amp	vtable alloc=?
+ov070	0x02123278	data_ov070_02123278	_ZTV7daBrq_c	vtable alloc=0x434; class name from ROM RTTI
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo
 ov070	0x02123370	data_ov070_02123370	_ZTV8daKrpa_c	vtable alloc=0x3b0
 ov070	0x02123424	data_ov070_02123424	FlameChompFire_SpawnInfo	spawninfo
