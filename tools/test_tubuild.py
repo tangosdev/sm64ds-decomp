@@ -151,12 +151,29 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     # the vtable-addend bug (PoleLift_Spawn's `+2` fix) would show here as a
     # failure even though the byte compare above is a false-green 7/7.
     assert "objisolate check  : clean" in out
-    # The one documented, non-fixable anomaly (pilot report sec 3): the compiler
-    # emits D2/D0/D1 in a fixed order that puts D0 before D1, opposite the ROM.
-    assert "1 ordinal pair(s) NOT in ROM order: [(0, 1)]" in out
+    # THIS ASSERTED THE ANOMALY ITSELF UNTIL #2066 FIXED IT, AND WENT ON ASSERTING
+    # IT AFTERWARDS -- so the test demanded the defect back. The pilot report called
+    # it non-fixable: an out-of-line ~PoleLift() makes mwccarm emit D2/D0/D1 in a
+    # fixed order that puts D0 before D1, opposite the ROM. Defining the destructor
+    # in the class body of PoleLift itself emits exactly the ROM's two variants in
+    # the ROM's order. Measured across 467bde020^ -> 467bde020 with both files
+    # swapped together: 37 sections / D2 present / "1 ordinal pair(s) NOT in ROM
+    # order: [(0, 1)]" before, 35 / no D2 / "ALL MATCH, ROM order" after.
+    #
+    # Asserted as an ABSENCE on purpose, so that reintroducing an out-of-line
+    # definition fails HERE rather than silently restoring a homeless D2 and an
+    # out-of-order pair.
+    assert "NOT in ROM order" not in out, out
+    assert "all 7 function(s) in the expected ROM-ascending section order" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    # 1 unlicensed .text (D2) + 11 unlicensed .data (the vtable + the RTTI records)
-    # = 12 -- present and correctly refusing promotion, not silently dropped.
+    # 11 unlicensed .data (the vtable + the RTTI records) and NO unlicensed .text --
+    # present and correctly refusing promotion, not silently dropped.
+    #
+    # This read 12 until #2066, the twelfth being the unlicensed .text D2 that an
+    # out-of-line destructor emitted. Promotion is still refused, but for a narrower
+    # reason: what remains is _ZTI8PoleLift/_ZTS8PoleLift, for which no
+    # compiler_only_output disposition is admissible while PoleLift carries a coined
+    # name the cartridge contradicts.
     #
     # THE PILOT'S SEC 4 INVENTORY SAID 15, AND SO DID THIS LINE UNTIL IT WAS MEASURED.
     # The extra three were Platform's: two out-of-line vague-linkage destructors and
@@ -167,25 +184,44 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     # and 37 / 12 at dedaa139e -- so this expectation went stale at #1555, 116 pull
     # requests before the collision rename (#1643) that later stopped the file
     # compiling at all and hid the staleness behind a compile error.
-    assert "12 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
-    assert "_ZN8PoleLiftD2Ev" in out and "_ZTV8PoleLift" in out
+    assert "11 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
+    assert "_ZTV8PoleLift" in out
+    assert "_ZN8PoleLiftD2Ev" not in out, "an out-of-line ~PoleLift() is back; see #2066"
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
-    """37 sections, 8 .text, 11 .data, reproduced independently by tubuild.py's own
+    """35 sections, 7 .text, 11 .data, reproduced independently by tubuild.py's own
     ELF walk.
 
-    notes/tu-reconstruction-pilot-report.md sec 4 records 43/10/12, which is what this
-    file emitted until #1555 anchored Platform's vtable and its two out-of-line
-    destructors in Platform's own TU -- three fewer vague-linkage symbols here, and
-    six fewer sections because each brings its own relocation section. The measurement
-    is in test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate above.
+    These numbers have now gone stale TWICE, both times because a vague-linkage
+    symbol stopped being emitted here, and each time the section count fell by two
+    per symbol -- the section itself plus its own relocation section.
+
+      43 / 10 / 12  notes/tu-reconstruction-pilot-report.md sec 4
+      37 /  8 / 11  #1555 anchored Platform's vtable and its two out-of-line
+                    destructors in Platform's own TU by giving Platform a key
+                    function -- three fewer vague-linkage symbols, six fewer sections
+      35 /  7 / 11  #2066 moved ~PoleLift() into the class body, so mwccarm no longer
+                    emits the D2 variant the cartridge does not contain -- one fewer
+                    .text and its .rela.text
+
+    Measured, not inferred: compiling this TU's shadow source together with PoleLift's
+    own class header at 467bde020^ -- both, because the pre-#2066 shadow source does
+    not compile against the post-#2066 header, which is why the staleness surfaced as
+    a failing assert rather than a quietly wrong number -- reads 37 sections with
+    _ZN8PoleLiftD2Ev present; at 467bde020 it reads 35 without.
+
+    Neither file is named by path here on purpose. PoleLift is a coined name the
+    cartridge contradicts (ROM RTTI: 18daObjKm2_Ami_Bou_c), the rename is a
+    prerequisite for promoting this very TU, and check_dead_references resolves any
+    a/b-shaped token in a docstring as a live repo-rooted reference -- so a path
+    naming this class is a dead reference with a scheduled fuse.
     """
     if not _toolchain():
         return
     code, out = _run("compile", "ov045/PoleLift")
     assert code == 0, out
-    assert "sections (37):" in out
+    assert "sections (35):" in out
     # Anchored to the section-LISTING line shape ("[ NN] .text  type=SHT_..."), not
     # a bare substring: "-> section[N] .text  size=..." in the function-mapping
     # block below it also contains the text "] .text ", which a plain count()
@@ -193,9 +229,12 @@ def test_compile_report_matches_the_pilots_object_inventory():
     import re
     n_text = len(re.findall(r"\[\s*\d+\] \.text\s+type=SHT_", out))
     n_data = len(re.findall(r"\[\s*\d+\] \.data\s+type=SHT_", out))
-    assert n_text == 8, f"expected 8 .text sections, counted {n_text}"
+    assert n_text == 7, f"expected 7 .text sections, counted {n_text}"
     assert n_data == 11, f"expected 11 .data sections, counted {n_data}"
-    assert "UNLICENSED function symbols (1)" in out
+    # No unlicensed .text at all since #2066, so tubuild prints no function block --
+    # asserted as an absence rather than a count of zero, because that is what the
+    # tool emits.
+    assert "UNLICENSED function symbols" not in out, out
     assert "UNLICENSED object/data symbols (11)" in out
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "inventory.txt").is_file()
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
