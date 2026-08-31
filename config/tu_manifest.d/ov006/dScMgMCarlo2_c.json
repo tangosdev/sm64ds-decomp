@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgMCarlo2_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgMCarlo2_c.cpp",
+  "source": "src/actors/dScMgMCarlo2_c.cpp",
   "promoted_source": "src/actors/dScMgMCarlo2_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20f8ef4..0x20fa6ac, 23 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -374,6 +374,86 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgMCarlo2_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020f8ef4",
+        "end": "0x020fa6ac",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020f8ef4",
+          "end": "0x020fa6ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 23
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "postPromotion": {
+      "round": "tools/rombuild.py -j 16 against the REAL tree, after the delinks entry was collapsed to one source -- the production counterpart of the scratch linkcheck above, which cannot run once the TU is enrolled (its substitution model needs the legacy delinks entries it just replaced)",
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "sourceBuiltFunctions": {
+        "total": 11088,
+        "reproducing": 11088,
+        "mismatching": 0
+      },
+      "romSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "romMatchesStockBuild": true,
+      "romDataFromSource": "462 verified, 250 partial, 9 differ, 524 unnamed by config -- every count unchanged from origin/main, so no symbol changed verdict. The object-record total falls 7,599 -> 7,586 and sourcesChecked 10,883 -> 10,861 (23 enrolled sources collapsed into 1). The -13 is arithmetic, not a loss: on main the out-of-line destructor was this class's key function, so _ZN14dScMgMCarlo2_cD1Ev.cpp and _ZN14dScMgMCarlo2_cD0Ev.cpp EACH emitted the same 13 licensed records; inlining the destructor moves the key function to InitResources, and the one promoted object emits each record once. Measured on the 23 legacy sources under the new header: 22 of them emit no ROM-named data at all, the 23rd emits exactly these 13.",
+      "licensedRecordVerdicts": "all 13 compiler_only_output symbols are byte-compared against the cartridge by romdata_check, and NOTHING differs. VERIFIED (every byte of the ROM's extent compared and equal) _ZTI7fBase_c, _ZTI7dBase_c, _ZTI8dScene_c, _ZTI11dScMgBase_c, _ZTI19dScMgSingle3DBase_c. PARTIAL (exact prefix, coverage short of the ROM's extent) the five typeinfo-name strings _ZTS7fBase_c, _ZTS7dBase_c, _ZTS8dScene_c, _ZTS11dScMgBase_c, _ZTS19dScMgSingle3DBase_c, this class's own _ZTI14dScMgMCarlo2_c and _ZTS14dScMgMCarlo2_c, and _ZTV14dScMgMCarlo2_c at 72 of the cartridge's 144 bytes -- 18 of 36 slots, because dScMgBase_c still leaves slots 18-35 undeclared. Widening that vtable is a separate change to the base class, not to this TU."
     }
   }
 }

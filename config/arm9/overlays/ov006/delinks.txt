@@ -4069,97 +4069,9 @@ src/func_ov006_020f8ed8.c:
     complete
     .text start:0x020f8ed8 end:0x020f8ef4
 
-src/_ZN14dScMgMCarlo2_cD1Ev.cpp:
+src/actors/dScMgMCarlo2_c.cpp:
     complete
-    .text start:0x020f8ef4 end:0x020f8f68
-
-src/_ZN14dScMgMCarlo2_cD0Ev.cpp:
-    complete
-    .text start:0x020f8f68 end:0x020f8ff0
-
-src/func_ov006_020f8ff0.c:
-    complete
-    .text start:0x020f8ff0 end:0x020f9000
-
-src/func_ov006_020f9000.cpp:
-    complete
-    .text start:0x020f9000 end:0x020f94f4
-
-src/func_ov006_020f94f4.c:
-    complete
-    .text start:0x020f94f4 end:0x020f9560
-
-src/func_ov006_020f9560.c:
-    complete
-    .text start:0x020f9560 end:0x020f95f0
-
-src/func_ov006_020f95f0.c:
-    complete
-    .text start:0x020f95f0 end:0x020f9668
-
-src/func_ov006_020f9668.c:
-    complete
-    .text start:0x020f9668 end:0x020f96e0
-
-src/func_ov006_020f96e0.c:
-    complete
-    .text start:0x020f96e0 end:0x020f9760
-
-src/func_ov006_020f9760.c:
-    complete
-    .text start:0x020f9760 end:0x020f98dc
-
-src/func_ov006_020f98dc.c:
-    complete
-    .text start:0x020f98dc end:0x020f9994
-
-src/func_ov006_020f9994.c:
-    complete
-    .text start:0x020f9994 end:0x020f9bec
-
-src/func_ov006_020f9bec.c:
-    complete
-    .text start:0x020f9bec end:0x020f9cbc
-
-src/func_ov006_020f9cbc.c:
-    complete
-    .text start:0x020f9cbc end:0x020f9d68
-
-src/func_ov006_020f9d68.c:
-    complete
-    .text start:0x020f9d68 end:0x020f9db8
-
-src/func_ov006_020f9db8.c:
-    complete
-    .text start:0x020f9db8 end:0x020f9f40
-
-src/func_ov006_020f9f40.c:
-    complete
-    .text start:0x020f9f40 end:0x020f9fe0
-
-src/_ZN14dScMgMCarlo2_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f9fe0 end:0x020f9ffc
-
-src/_ZN14dScMgMCarlo2_c6RenderEv.cpp:
-    complete
-    .text start:0x020f9ffc end:0x020fa13c
-
-src/_ZN14dScMgMCarlo2_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020fa13c end:0x020fa3d0
-
-src/func_ov006_020fa3d0.c:
-    complete
-    .text start:0x020fa3d0 end:0x020fa4d4
-
-src/func_ov006_020fa4d4.cpp:
-    complete
-    .text start:0x020fa4d4 end:0x020fa56c
-
-src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020fa56c end:0x020fa6ac
+    .text start:0x020f8ef4 end:0x020fa6ac
 
 src/actors/MgPairAGoneAndOn.cpp:
     complete

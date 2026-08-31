@@ -879,7 +879,7 @@
     "src/_ZN14dScMgCurling_cD1Ev.cpp",
     "src/_ZN14dScMgD3DBase_cD0Ev.cpp",
     "src/_ZN14dScMgD3DBase_cD1Ev.cpp",
-    "src/_ZN14dScMgMCarlo2_c16CleanupResourcesEv.cpp",
+    "src/actors/dScMgMCarlo2_c.cpp#_ZN14dScMgMCarlo2_c16CleanupResourcesEv",
     "src/_ZN14dScMgMemory2_c6RenderEv.cpp",
     "src/_ZN14daObjUkiyuka_c6RenderEv.cpp",
     "src/_ZN14daObjUkiyuka_cD0Ev.cpp",
