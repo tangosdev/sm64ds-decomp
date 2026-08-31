@@ -5515,7 +5515,7 @@ static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what
            cases -- the mode was already what this scene wants, and the mode has
            not been handed out yet so the proposal is all there is -- and a line
            that named neither would be unreadable on the run where it matters. */
-        fprintf(stderr, "[layout] %s presents %s; nothing to re-shape\n", what,
+        fprintf(stderr, "[present] %s shows %s; nothing to re-shape\n", what,
                 hal_sub_screen_stacked() ? "STACKED, both DS screens full size"
                                          : "the corner inset panel");
         fflush(stderr);
@@ -5536,12 +5536,12 @@ static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what
         W.SetWindowPos_(hwnd, 0, 0, 0, want.right - want.left,
                         want.bottom - want.top,
                         0x0002u | 0x0004u | (nofocus_mode() ? 0x0010u : 0u));
-        fprintf(stderr, "[layout] %s presents %s; the window client area "
+        fprintf(stderr, "[present] %s shows %s; the window client area "
                 "follows (%dx%d)\n", what,
                 stacked ? "STACKED, both DS screens full size"
                         : "the corner inset panel", cw, ch);
     } else {
-        fprintf(stderr, "[layout] %s presents %s; the window keeps the size it "
+        fprintf(stderr, "[present] %s shows %s; the window keeps the size it "
                 "has (%s)\n", what,
                 stacked ? "STACKED, both DS screens full size"
                         : "the corner inset panel",
