@@ -10,7 +10,7 @@
 # gate's FAILURE branch is the one path a green run never exercises: no ROM build can
 # reach it, because these tools are not compiled into the ROM. src-tu-refs.yml exists
 # because #1643 broke 26 translation units while every byte gate stayed green, and the
-# only thing that noticed was a test suite a human had to run. This job runs 498 of
+# only thing that noticed was a test suite a human had to run. This job runs 504 of
 # those assertions on every PR that touches `tools/` or `nearmiss/`, so the next one is
 # noticed by CI.
 #
@@ -86,7 +86,7 @@
 # none of the three inputs present); that module adds 87, timed at 9.7s on Windows.
 # The three modules added below cost no measurable wall time at all: on one Windows tree,
 # 435 tests in 46.5s before and 498 in 45.7s after -- inside the noise. On the runner
-# itself the whole 498 take 11.5s, plus about 1s for the two wheels (both are prebuilt;
+# itself those 498 took 11.5s, plus about 1s for the two wheels (both are prebuilt;
 # nothing compiles). They are mock- and tempdir-based and touch neither the network nor
 # the tree.
 # The whole-suite timings are dominated by Windows filesystem overhead and do not
@@ -100,8 +100,9 @@
 # present" -- its Retarget class, and only that class, compiles a real object). All nine
 # are @skipUnless with a stated reason, so `-v` shows them; none is a bare `return`.
 # test_premerge_check adds none on a runner with git installed, and test_symrecords,
-# test_nearmiss_db, test_tu_promote and test_tu_production add none anywhere.
-# 489 of the 498 assert something.
+# test_nearmiss_db, test_tu_promote, test_tu_production and
+# test_tubuild_owned_relocs add none anywhere.
+# 495 of the 504 assert something.
 name: tool tests
 
 on:
@@ -151,12 +152,13 @@ jobs:
           python-version: "3.12"
 
       - name: Pinned tool dependencies
-        # Every module but the last three in the list below is stdlib-only and would run
-        # without this step. test_rombuild, test_tu_promote and test_tu_production import
+        # Every module in the list below except four is stdlib-only and would run without
+        # this step. test_rombuild, test_tu_promote and test_tu_production import
         # rombuild.py, which reaches elftools (via objisolate) and capstone (via
-        # romdata_check -> linkcheck -> match); without both they do not fail a test, they
-        # fail COLLECTION, which under `python -m unittest` is a loud error and not a
-        # silent zero. Versions live in tools/requirements.txt, not in this line, so a
+        # romdata_check -> linkcheck -> match); test_tubuild_owned_relocs imports
+        # tubuild.py, which reaches the same two by its own path. Without both wheels
+        # none of the four fails a test, they fail COLLECTION, which under
+        # `python -m unittest` is a loud error and not a silent zero. Versions live in tools/requirements.txt, not in this line, so a
         # bump is a reviewable diff. `tools/**` already triggers this workflow, so editing
         # that file re-runs the job that depends on it.
         run: pip install -r tools/requirements.txt
@@ -299,14 +301,16 @@ jobs:
 #                                      contributes zero tests to `python -m unittest`,
 #                                      and the assertions it already has for this code
 #                                      sit behind `if not _toolchain(): return`.
-#                                      Mutation-checked, all five against the whole of
+#                                      Mutation-checked, all six against the whole of
 #                                      test_tubuild.py running WITH the pinned compiler
 #                                      present: `else None` -> `else 0` and
 #                                      -> `else expected_addend` and dropping
 #                                      `expected["target_address"] != cfg[1]` each leave
 #                                      46/46 of that suite green and are each caught
-#                                      here; `>=` -> `>` and disabling the normalized
-#                                      bias are caught by both.
+#                                      here; dropping the candidate-side
+#                                      `cand_addr != expected["target_address"]` is
+#                                      likewise caught here alone; `>=` -> `>` and
+#                                      disabling the normalized bias are caught by both.
 #   test_validate_merge         (35)   validate_merge.py -- builds the machine-readable
 #                                      PR validation report the validator comment renders.
 #
