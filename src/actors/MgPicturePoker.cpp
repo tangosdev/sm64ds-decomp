@@ -24,19 +24,19 @@ extern "C" void func_ov006_020c1d80(void*);
 extern "C" void func_020733a8(void*, int, int, void*, void*);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV11dScMgCard_c;
-extern "C" void func_ov006_020d96e0(void);
+extern "C" void _ZN12dMgCardObj_cD1Ev(void);
 extern "C" void func_ov006_020dbe30(int *);   /* reconciled: this TU defines it with a real signature */
-extern "C" void func_ov006_020d96f0(void);
+extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void);
 extern "C" void func_ov006_020dbe14(int *);   /* reconciled: this TU defines it with a real signature */
-extern int data_ov006_0213bccc[];
-extern int data_ov006_0213bcf4[];
+extern int _ZTV12dMgCardObj_c[];
+extern int _ZTV17dMgDilarCardObj_c[];
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov006_020dbe30, 0x020dbe30, size 0x10 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020dbe30(int *p) { p[0] = (int)data_ov006_0213bccc; }
+void func_ov006_020dbe30(int *p) { p[0] = (int)_ZTV12dMgCardObj_c; }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -44,8 +44,8 @@ void func_ov006_020dbe30(int *p) { p[0] = (int)data_ov006_0213bccc; }
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020dbe14(int *c){
-  *c=(int)data_ov006_0213bccc;
-  *c=(int)data_ov006_0213bcf4;
+  *c=(int)_ZTV12dMgCardObj_c;
+  *c=(int)_ZTV17dMgDilarCardObj_c;
 }
 }
 
@@ -60,8 +60,8 @@ extern "C" void* MgPicturePoker_Spawn(void){
     _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
     *(int*)p = (int)&_ZTV11dScMgCard_c;
     func_ov006_020c1d80(p + 0x4f38);
-    func_020733a8(p + 0x51a8, 5, 0x30, (void*)func_ov006_020dbe30, (void*)func_ov006_020d96e0);
-    func_020733a8(p + 0x5298, 5, 0x30, (void*)func_ov006_020dbe14, (void*)func_ov006_020d96f0);
+    func_020733a8(p + 0x51a8, 5, 0x30, (void*)func_ov006_020dbe30, (void*)_ZN12dMgCardObj_cD1Ev);
+    func_020733a8(p + 0x5298, 5, 0x30, (void*)func_ov006_020dbe14, (void*)_ZN17dMgDilarCardObj_cD1Ev);
   }
   return p;
 }
