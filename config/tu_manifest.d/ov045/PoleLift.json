@@ -85,10 +85,10 @@
       "every_declared_function_correct_size": "PASS",
       "every_declared_function_bytes_match": "PASS",
       "no_pragma_opt_workarounds": "PASS -- no #pragma of any kind in the seven legacy sources or in the consolidated file",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s); see unlicensed_output_observed",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
-      "no_constructor_or_destructor_variants": "WAIVED -- not tested. This TU is the key-function TU of a class with a virtual destructor and does emit D0/D1/D2.",
-      "no_unexpected_vtable_rtti_or_data_emission": "WAIVED -- not tested. Vtable, RTTI and Platform's out-of-line destructors are emitted and inventoried below; their correctness is explicitly NOT verified this round.",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed data section/symbol(s) and ZERO unlicensed text; see unlicensed_output_observed",
+      "functions_occur_in_expected_order": "PASS -- tools/tu_order_check.py ov045/PoleLift reports ALL MATCH, ROM order, nothing unlicensed in .text",
+      "no_constructor_or_destructor_variants": "PASS -- the destructor is defined in include/PoleLift.h's class body, so mwccarm emits D1 and D0 only. No D2 is produced, which is what the cartridge shows.",
+      "no_unexpected_vtable_rtti_or_data_emission": "WAIVED -- not tested. The vtable and RTTI chain are emitted and inventoried below; nine of the eleven resolve to a configured ROM home, two do not.",
       "all_content_sections_licensed": "WAIVED -- deferred to the data phase (plan section 11 difficulty 6 of 7)",
       "relocation_destinations_verified": "PASS",
       "symbol_addresses_match": "NOT RUN",
@@ -183,99 +183,82 @@
         ]
       },
       "symbolCheckNewVsBaseline": null,
-      "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for PoleLift\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov045_3.o\nmwldarm.exe: Multiply-defined: \"virtual table for Platform\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov002_13.o\n\nErrors caused tool to abort."
+      "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for PoleLift\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov045_3.o\nmwldarm.exe: Multiply-defined: \"virtual table for Platform\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov002_13.o\n\nErrors caused tool to abort.",
+      "supersededBy": "This round predates the in-class destructor. Its 'Multiply-defined: virtual table for Platform' half came from dBgActor_c's vague-linkage copy, which is no longer emitted. Not re-run; promotion is blocked earlier, at the isolator."
     }
   },
   "unlicensed_output_observed": {
-    "note": "Present in the compiled object as a side effect of compiling the class's key function in one TU. Inventoried, not licensed, not verified. Promotion is refused on this alone.",
-    "text": [
-      {
-        "symbol": "_ZN8PoleLiftD2Ev",
-        "size": "0x4c",
-        "binding": "STB_GLOBAL",
-        "in_rom": false,
-        "note": "byte-identical to _ZN8PoleLiftD1Ev; no ROM symbol and no caller"
-      },
-      {
-        "symbol": "_ZN10dBgActor_cD1Ev",
-        "size": "0x38",
-        "binding": "STB_LOPROC",
-        "in_rom": true,
-        "rom_address": "0x020ee42c",
-        "note": "lives in ov002, not in this range; vague-linkage copy"
-      },
-      {
-        "symbol": "_ZN10dBgActor_cD0Ev",
-        "size": "0x4c",
-        "binding": "STB_LOPROC",
-        "in_rom": true,
-        "note": "vague-linkage copy"
-      }
-    ],
+    "note": "Re-measured after the destructor was moved into the class body. One compile of src_tu/actors/PoleLift.cpp, tools/tubuild.py elf_inventory. The .text list is now EMPTY: an in-class destructor makes mwccarm emit D1 and D0 only -- the cartridge's two variants, in the cartridge's order -- and dBgActor_c's own destructor is inlined rather than emitted as a vague-linkage copy. What remains is the data the key function drags in. Inventoried, not licensed, not verified.",
+    "text": [],
     "data": [
       {
-        "symbol": "_ZTV8PoleLift",
-        "size": "0x84",
-        "binding": "STB_GLOBAL",
-        "rom_symbol_address": "0x02112dbc",
-        "note": "the ROM symbol names the slot array; the compiler's symbol names the vtable object, which starts 8 bytes earlier at 0x02112db4"
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x02086d70"
       },
       {
-        "symbol": "_ZTV10dBgActor_c",
-        "size": "0x84",
-        "binding": "STB_LOPROC"
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x02086e54"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x02086e60"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x0208e384"
+      },
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC",
+        "rom_home": "ov002:0x021089ec"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x02086e78"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC",
+        "rom_home": "arm9:0x0208e390"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC",
+        "rom_home": "ov002:0x02108a04"
+      },
+      {
+        "symbol": "_ZTV8PoleLift",
+        "size": "0x88",
+        "binding": "STB_GLOBAL",
+        "rom_home": "ov045:0x02112dbc",
+        "note": "the ROM symbol names the slot array; the compiler's symbol names the vtable object, which starts 8 bytes earlier at 0x02112db4"
       },
       {
         "symbol": "_ZTI8PoleLift",
         "size": "0xc",
         "binding": "STB_LOPROC",
-        "rom_symbol": "_ZTI18daObjKm2_Ami_Bou_c",
-        "rom_symbol_address": "0x02112d74"
+        "rom_home": null,
+        "note": "HOMELESS UNDER THE COINED NAME. The cartridge's record is _ZTI18daObjKm2_Ami_Bou_c at ov045:0x02112d74; the vtable's own typeinfo word at 0x02112db8 reads 0x02112d74, and that record's base pointer is 0x021089ec = _ZTI10dBgActor_c, which is the base this header already declares."
       },
       {
         "symbol": "_ZTS8PoleLift",
         "size": "0xa",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTI10dBgActor_c",
-        "size": "0xc",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTS10dBgActor_c",
-        "size": "0xa",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTI8dActor_c",
-        "size": "0xc",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTS8dActor_c",
-        "size": "0x7",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTI7dBase_c",
-        "size": "0xc",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTS7dBase_c",
-        "size": "0xf",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTI7fBase_c",
-        "size": "0x8",
-        "binding": "STB_LOPROC"
-      },
-      {
-        "symbol": "_ZTS7fBase_c",
-        "size": "0xb",
-        "binding": "STB_LOPROC"
+        "binding": "STB_LOPROC",
+        "rom_home": null,
+        "note": "HOMELESS UNDER THE COINED NAME. The cartridge holds the ASCII '18daObjKm2_Ami_Bou_c' at ov045:0x02112d80. An _ZTS record is a length-prefixed mangled string, so a coined name misses on both the prefix and the body and can never byte-match."
       }
     ],
     "bss": [],
@@ -331,7 +314,7 @@
     "All seven functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
     "One source-level change was forced by consolidation and one relocation-convention conflict was found by it: PoleLift_Spawn's vptr store had to become (int)(_ZTV8PoleLift + 2). See the report's 'What consolidation forced' section.",
     "PoleLift_ClsnFile (0x021131d0) and PoleLift_ModelFile (0x021131d8) carry this class's name but are referenced by none of these seven functions, and __sinit_ov045_02112280 rather than this TU's initialiser touches them. Those names are probably misattributed; that is a data-phase question and nothing here depends on it.",
-    "Promotion is refused. Requires: a licensed home for _ZN8PoleLiftD2Ev, a scratch link proving the whole 0x0211150c..0x02111840 range, and the vtable/RTTI/init/bss phases."
+    "Promotion is still refused, but for a different and now-measured reason. The _ZN8PoleLiftD2Ev blocker is DISCHARGED: with the destructor in the class body the TU emits D1 and D0 only, in ROM order, and tools/tu_order_check.py returns ALL MATCH. What blocks promotion now is the class's own RTTI. A consolidated object takes objisolate's derive_deadstrip, which admits no unlicensed non-.text content; the TU emits eleven such records because it defines the key function. Nine take a compiler_only_output 'deadstrip-data' row and are accepted. _ZTI8PoleLift and _ZTS8PoleLift do not: measured against tools/tubuild.py, omitting their rows leaves objisolate refusing \"unlicensed content in text-only multi-symbol object\", 'deadstrip-data' is refused for having no configured ROM home, and plain 'deadstrip' is refused as an RTTI record that is never compared against the cartridge. production_mode 'intact-object' cannot help either: the cartridge's string is '18daObjKm2_Ami_Bou_c' (21 bytes) where the compiler emits '8PoleLift' (10 bytes), so no byte-identical emission exists under the coined name. The single remaining prerequisite is renaming this class to daObjKm2_Ami_Bou_c, which the ROM already evidences at 0x02112d74/0x02112d80 and which is deliberately NOT done here."
   ],
   "partial_isolation": {
     "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",

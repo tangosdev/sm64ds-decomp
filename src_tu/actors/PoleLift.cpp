@@ -186,27 +186,21 @@ int PoleLift::CleanupResources()
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinals 1 and 0 -- one definition, two ROM-visible variants:          */
+/* ROM ordinals 1 and 0 -- one inline definition, two ROM-visible variants:   */
 /*   _ZN8PoleLiftD1Ev  0x0211150c  size 0x4c   (complete-object destructor)   */
 /*   _ZN8PoleLiftD0Ev  0x02111558  size 0x60   (deleting destructor)          */
 /* ------------------------------------------------------------------------- */
-/* recovered: real C++ destructor -- the compiler emits the whole body.
+/* The destructor is defined in the class body in include/PoleLift.h, and is
+ * deliberately NOT repeated out of line here. An out-of-line definition makes
+ * mwccarm emit D2, D0, D1 -- and the cartridge holds D1, D0 with no D2 at all.
+ * Defined inline, the compiler emits exactly the ROM's two variants, in the
+ * ROM's order, from this translation unit.
  *
- * Two vtable stores and three destructor calls, every one a consequence of
- * `struct PoleLift : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
- * because dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
- * Model and dBgW_KcMbg, then dActor_c. This class adds no member with a
- * destructor of its own. D0 additionally returns the object to its heap through
- * the inline operator delete it inherits, which is why nothing here mentions a
- * heap.
- *
- * In the one-function tree these were two files, each carrying this same empty
- * body and each having objisolate keep the variant its filename named. In TU
- * context one definition produces both -- and a third, _ZN8PoleLiftD2Ev, which
- * is byte-identical to D1 and which the ROM does not contain. See the report:
- * that third section is the one thing standing between this file and a
- * whole-range link.
+ * The body itself is two vtable stores and three destructor calls, every one a
+ * consequence of `struct PoleLift : dBgActor_c`: its own vptr, then
+ * dBgActor_c's -- inlined, because dBgActor_c's destructor is defined in its
+ * class body -- then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This
+ * class adds no member with a destructor of its own. D0 additionally returns
+ * the object to its heap through the inline operator delete it inherits, which
+ * is why nothing mentions a heap.
  */
-PoleLift::~PoleLift()
-{
-}

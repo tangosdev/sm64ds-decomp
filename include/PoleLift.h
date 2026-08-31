@@ -25,7 +25,9 @@ struct PoleLift : dBgActor_c {
     u16 mHeightAng;                      /* 0x354 */
 
     /* --- vtable --- */
-    virtual ~PoleLift();
+    /* Inline is load-bearing: when forced from the two destructor source
+     * files, mwccarm emits the ROM's D1/D0 bodies without a homeless D2. */
+    virtual ~PoleLift() {}
 
     int Behavior();
     int CleanupResources();
@@ -37,9 +39,14 @@ typedef char PoleLift_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/ShadowModel.h. */
+/* The C spelling of the same object, flat. The justification recorded here used
+   to be that the D0 file was a C translation unit reading these fields; that is
+   no longer true -- D0 is C++, and now forces the compiler-generated body from a
+   delete-expression rather than naming any field. Every file that includes this
+   header is C++ today, so this branch is currently unreached. Left in place, and
+   left aligned with the C++ branch above, because removing a flat twin is a
+   separate change with its own gate exposure. Same arrangement as
+   include/ShadowModel.h. */
 struct PoleLift {
     u8  pad_000[0x8];
     s32 param1;            /* 0x008 */
