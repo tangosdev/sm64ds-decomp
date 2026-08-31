@@ -194,6 +194,7 @@ jobs:
             tools.test_symrecords \
             tools.test_tu_production \
             tools.test_tu_promote \
+            tools.test_tubuild_owned_relocs \
             tools.test_validate_merge
 
 # What each module protects, in the order it runs above:
@@ -281,6 +282,31 @@ jobs:
 #                                      dilutes the CONVERTED tier, so a scoring bug here
 #                                      moves a published number with nothing else
 #                                      noticing. Pure mock; 9 of 9 run in CI.
+#   test_tubuild_owned_relocs    (6)   tubuild.verify_owned_sections' non-text
+#                                      relocation verdict ladder -- specifically the
+#                                      fail-closed `else None` #2059 added for a
+#                                      normalized undefined `_ZTV` import whose manifest
+#                                      addend is BELOW the two-word ABI preamble, and
+#                                      both clauses of the WRONG-DEST conjunction. It
+#                                      stubs `section_contribution` (the only part of
+#                                      that function that parses ELF) and drives the
+#                                      real verifier over a hand-written layout of the
+#                                      documented shape, so it needs no compiler, no
+#                                      ROM, no config/ and no build/. 6 of 6 run in CI,
+#                                      none skips. It exists as its own module rather
+#                                      than as more of test_tubuild.py for the reason
+#                                      spelled out in group 3 of the header: that file
+#                                      contributes zero tests to `python -m unittest`,
+#                                      and the assertions it already has for this code
+#                                      sit behind `if not _toolchain(): return`.
+#                                      Mutation-checked, all five against the whole of
+#                                      test_tubuild.py running WITH the pinned compiler
+#                                      present: `else None` -> `else 0` and
+#                                      -> `else expected_addend` and dropping
+#                                      `expected["target_address"] != cfg[1]` each leave
+#                                      46/46 of that suite green and are each caught
+#                                      here; `>=` -> `>` and disabling the normalized
+#                                      bias are caught by both.
 #   test_validate_merge         (35)   validate_merge.py -- builds the machine-readable
 #                                      PR validation report the validator comment renders.
 #
@@ -288,4 +314,6 @@ jobs:
 # `git archive origin/main` tree with no toolchain: test_objisolate 0 pass / 34 skip
 # (every test in it compiles), test_tubuild 28 real pass / 15 vacuous / 2 fail. Neither
 # is a candidate until objisolate's fixtures stop needing mwcc and tubuild's bare
-# `return` guards become skips. See group 1 in the header.
+# `return` guards become skips. See group 1 in the header. test_tubuild_owned_relocs
+# above is NOT a step toward wiring test_tubuild: it is a separate module precisely so
+# that adding it did not require relaxing that refusal.
