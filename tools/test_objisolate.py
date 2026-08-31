@@ -598,6 +598,114 @@ class Isolate(unittest.TestCase):
         self.assertIsNone(plan["error"])
         self.assertEqual(abi_addends(out), before)
 
+    def test_same_named_nontext_reorder_preserves_payloads_and_index_references(self):
+        """Only headers/section indices move; data and RELA records stay untouched."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            'extern "C" int external_first;\n'
+            'extern "C" int external_second;\n'
+            'extern "C" int *first_ptr = &external_first + 1;\n'
+            'extern "C" int *second_ptr = &external_second + 2;\n')
+        raw = obj.read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        syms = list(symtab.iter_symbols())
+        first = next(s for s in syms if s.name == "first_ptr")
+        second = next(s for s in syms if s.name == "second_ptr")
+        self.assertNotEqual(first["st_shndx"], second["st_shndx"])
+        original = sorted((first["st_shndx"], second["st_shndx"]))
+        desired = [second["st_shndx"], first["st_shndx"]]
+        if desired == original:
+            desired.reverse()
+
+        content_regions = {(s.header["sh_offset"], s.header["sh_size"]): s.data()
+                           for s in secs if s.header["sh_type"] in OI.CONTENT
+                           and s.header["sh_size"]}
+        relocation_regions = {
+            (s.header["sh_offset"], s.header["sh_size"]): s.data()
+            for s in secs if isinstance(s, RelocationSection) and s.header["sh_size"]}
+
+        out, report = OI.reorder_same_named_nontext_sections(
+            raw, [{"section": ".data", "indices": desired}])
+        self.assertIsNotNone(out, report)
+        self.assertIsNone(report["error"])
+        self.assertEqual(obj.read_bytes(), raw, "ordering must be a pure operation")
+        self.assertEqual(len(out), len(raw))
+        self.assertGreaterEqual(report["symbolIndices"], 2)
+        self.assertEqual(report["sectionInfos"], 2)
+
+        reordered = ELFFile(io.BytesIO(out))
+        out_secs = list(reordered.iter_sections())
+        out_syms = list(reordered.get_section_by_name(".symtab").iter_symbols())
+        occupants = []
+        for shndx, sec in enumerate(out_secs):
+            if sec.name != ".data" or not sec.header["sh_size"]:
+                continue
+            names = [s.name for s in out_syms if s.name in ("first_ptr", "second_ptr")
+                     and s["st_shndx"] == shndx]
+            if names:
+                occupants.extend(names)
+        wanted_names = [next(s.name for s in syms if s["st_shndx"] == old
+                             and s.name in ("first_ptr", "second_ptr"))
+                        for old in desired]
+        self.assertEqual(occupants, wanted_names)
+
+        def relocation_for(symbol_name):
+            symbol = next(s for s in out_syms if s.name == symbol_name)
+            relsec = next(s for s in out_secs if isinstance(s, RelocationSection)
+                          and s.header["sh_info"] == symbol["st_shndx"])
+            reloc = next(relsec.iter_relocations())
+            target = reordered.get_section_by_name(".symtab").get_symbol(
+                reloc["r_info_sym"])
+            return target.name, reloc["r_addend"]
+
+        self.assertEqual(relocation_for("first_ptr"), ("external_first", 4))
+        self.assertEqual(relocation_for("second_ptr"), ("external_second", 8))
+        for (offset, size), payload in content_regions.items():
+            self.assertEqual(out[offset:offset + size], payload)
+        for (offset, size), payload in relocation_regions.items():
+            self.assertEqual(out[offset:offset + size], payload)
+
+    def test_same_named_nontext_reorder_refuses_incomplete_and_indexed_elf_shapes(self):
+        """No partial group, GROUP, or extended-index object is normalized."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        raw = self.build('extern "C" int first = 1;\n'
+                         'extern "C" int second = 2;\n').read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        indices = [i for i, sec in enumerate(elf.iter_sections())
+                   if sec.name == ".data" and sec.header["sh_size"]]
+        self.assertEqual(len(indices), 2)
+        out, report = OI.reorder_same_named_nontext_sections(
+            raw, [{"section": ".data", "indices": indices[:1]}])
+        self.assertIsNone(out)
+        self.assertIn("exact permutation", report["error"])
+
+        comment = next(i for i, sec in enumerate(elf.iter_sections())
+                       if sec.name == ".comment")
+        endian = "<" if elf.little_endian else ">"
+        grouped = bytearray(raw)
+        struct.pack_into(endian + "I", grouped, OI._shdr_offset(elf, comment) + 4,
+                         17)  # SHT_GROUP
+        out, report = OI.reorder_same_named_nontext_sections(
+            bytes(grouped), [{"section": ".data", "indices": list(reversed(indices))}])
+        self.assertIsNone(out)
+        self.assertIn("section groups", report["error"])
+
+        extended = bytearray(raw)
+        struct.pack_into(endian + "I", extended, OI._shdr_offset(elf, comment) + 4,
+                         18)  # SHT_SYMTAB_SHNDX
+        out, report = OI.reorder_same_named_nontext_sections(
+            bytes(extended), [{"section": ".data", "indices": list(reversed(indices))}])
+        self.assertIsNone(out)
+        self.assertIn("extended symbol section indices", report["error"])
+
     def test_rebias_vtable_requires_one_exact_dedicated_global_object(self):
         """Only a whole dedicated _ZTV storage object may move to its public point."""
         import io

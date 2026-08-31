@@ -2613,6 +2613,140 @@ def section_contribution(obj_bytes, section_name, start):
             "inputSections": [i for i, _s in selected]}, None
 
 
+def prepare_owned_nontext_section_order(obj_bytes, entry, claims):
+    """Put repeated owned input sections in exact manifest-emitted address order.
+
+    mwldarm concatenates repeated ``file.o(.data)`` sections in ELF section-header
+    order.  A reconstructed source can emit independent globals in a different order
+    from retail even when every individual compiler section is exact.  The manifest's
+    emitted addresses provide a strict ordering license: every retained input section
+    must have an owned symbol anchor, every anchor in one section must imply the same
+    section base, and the resulting aligned layout must tile the claimed range.
+
+    The mechanical rewrite is delegated to objisolate and is followed by the ordinary
+    byte/symbol/relocation verifier.  This helper never guesses from symbol spelling or
+    payload bytes and never changes content or relocation records.
+    """
+    nontext = [claim for claim in claims if claim["name"] != ".text"]
+    if not nontext:
+        return obj_bytes, {"groups": [], "objisolate": None}, []
+
+    elf = ELFFile(io.BytesIO(obj_bytes))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None, {"groups": [], "objisolate": None}, ["no .symtab"]
+    syms = list(symtab.iter_symbols())
+    owned_rows = manifest_owned_symbol_rows(entry)
+    owned_names = {row["symbol"] for _section, row in owned_rows}
+    reasons, groups, requested = [], [], []
+    seen_claim_names = set()
+
+    for claim in nontext:
+        name = claim["name"]
+        if name in seen_claim_names:
+            reasons.append(f"duplicate non-text claim for input section {name}")
+            continue
+        seen_claim_names.add(name)
+        selected = [index for index, sec in enumerate(secs)
+                    if sec.name == name and sec.header["sh_type"] in OI.CONTENT
+                    and sec.header["sh_size"]]
+        if not selected:
+            reasons.append(f"object emits no non-empty {name} section")
+            continue
+
+        rows = [row for section, row in owned_rows if section == name]
+        anchors = {index: [] for index in selected}
+        for row in rows:
+            symbol = row["symbol"]
+            matches = [sym for sym in syms if sym.name == symbol
+                       and sym["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")]
+            if len(matches) != 1:
+                reasons.append(f"owned {name} ordering anchor {symbol} has "
+                               f"{len(matches)} definitions, expected one")
+                continue
+            sym = matches[0]
+            shndx = sym["st_shndx"]
+            if shndx not in anchors:
+                reasons.append(f"owned {name} ordering anchor {symbol} is in "
+                               f"section[{shndx}], outside the retained group")
+                continue
+            emitted, error = _manifest_emitted_addr(row)
+            if error or emitted is None:
+                reasons.append(f"owned {name} ordering anchor {symbol}: "
+                               f"{error or 'no valid emitted address'}")
+                continue
+            anchors[shndx].append({"symbol": symbol, "address": emitted,
+                                   "sectionBase": emitted - sym["st_value"]})
+
+        occupants = {sym.name for sym in syms
+                     if sym.name and not sym.name.startswith("$")
+                     and sym["st_info"]["type"] != "STT_SECTION"
+                     and sym["st_shndx"] in set(selected)}
+        foreign = sorted(occupants - owned_names)
+        if foreign:
+            reasons.append(f"retained {name} ordering group defines unlicensed "
+                           f"symbol(s): {foreign}")
+
+        bases = {}
+        for shndx in selected:
+            rows_here = anchors[shndx]
+            if not rows_here:
+                reasons.append(f"retained {name} section[{shndx}] has no manifest "
+                               "emitted-address anchor")
+                continue
+            candidates = {row["sectionBase"] for row in rows_here}
+            if len(candidates) != 1:
+                detail = {row["symbol"]: f"0x{row['sectionBase']:08x}"
+                          for row in rows_here}
+                reasons.append(f"retained {name} section[{shndx}] anchors disagree "
+                               f"on its base: {detail}")
+                continue
+            bases[shndx] = next(iter(candidates))
+
+        if len(bases) != len(selected):
+            groups.append({"section": name, "original": selected,
+                           "desired": None, "anchors": anchors})
+            continue
+        if len(set(bases.values())) != len(bases):
+            reasons.append(f"retained {name} sections do not have unique manifest "
+                           "emitted bases")
+            groups.append({"section": name, "original": selected,
+                           "desired": None, "anchors": anchors})
+            continue
+
+        desired = sorted(selected, key=lambda index: bases[index])
+        cursor = claim["start"]
+        for shndx in desired:
+            sec = secs[shndx]
+            cursor = _align_up(cursor, sec.header["sh_addralign"])
+            if cursor != bases[shndx]:
+                reasons.append(f"retained {name} section[{shndx}] aligns at "
+                               f"0x{cursor:08x}, manifest anchors require "
+                               f"0x{bases[shndx]:08x}")
+            cursor += sec.header["sh_size"]
+        if cursor != claim["end"]:
+            reasons.append(f"manifest-ordered {name} contribution ends at "
+                           f"0x{cursor:08x}, claim ends at 0x{claim['end']:08x}")
+
+        groups.append({"section": name, "original": selected,
+                       "desired": desired, "anchors": anchors})
+        if desired != selected:
+            requested.append({"section": name, "indices": desired})
+
+    report = {"groups": groups, "objisolate": None}
+    if reasons:
+        return None, report, reasons
+    if not requested:
+        return obj_bytes, report, []
+    out, plan = OI.reorder_same_named_nontext_sections(obj_bytes, requested)
+    report["objisolate"] = plan
+    if out is None:
+        return None, report, [f"non-text section ordering refused: "
+                              f"{plan.get('error')}"]
+    return out, report, []
+
+
 _NON_TEXT_RELOC_KIND = {
     1: "arm_call",  # R_ARM_PC24
     2: "load",  # R_ARM_ABS32
@@ -4506,6 +4640,28 @@ def cmd_linkcheck(args):
                 print(f"      externalized {externalized['externalized']} to exact "
                       "configured canonical homes")
 
+            ordered_tu, section_order, order_reasons = \
+                prepare_owned_nontext_section_order(linked_tu, entry, claims)
+            report["nontextSectionOrder"] = section_order
+            if order_reasons:
+                print("      REFUSED -- manifest-licensed non-text section order:")
+                for reason in order_reasons:
+                    print(f"        {reason}")
+                report["nontextSectionOrder"]["errors"] = order_reasons
+                report["result"] = "section-order-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            linked_tu = ordered_tu
+            report["partitionedObjects"]["postOrderSha256"] = \
+                hashlib.sha256(linked_tu).hexdigest()
+            if linked_tu != externalized_tu:
+                scratch_rewrite = True
+                changed = [row["section"] for row in section_order.get("groups", [])
+                           if row.get("desired") != row.get("original")]
+                print(f"      reordered exact repeated non-text section group(s) "
+                      f"from manifest emitted addresses: {changed}")
+
             owned_before = verify_owned_sections(linked_tu, entry, claims)
             report["ownedSectionsBeforePartition"] = owned_before
             if not owned_before["ok"]:
@@ -5094,6 +5250,7 @@ def _partition_attempt_record(report):
     compiler = report.get("compilerOnlyOutput") or {}
     externalized = report.get("externalizedOutput") or {}
     external_verify = externalized.get("verification") or {}
+    section_order = report.get("nontextSectionOrder") or {}
     return {
         "result": report.get("result", "failed"),
         "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive "
@@ -5123,6 +5280,13 @@ def _partition_attempt_record(report):
             "droppedSections": externalized.get("droppedSections"),
             "verificationOk": external_verify.get("ok"),
             "errors": externalized.get("errors") or external_verify.get("errors"),
+        },
+        "nontextSectionOrder": {
+            "groups": [{key: row.get(key) for key in
+                        ("section", "original", "desired")}
+                       for row in section_order.get("groups", [])],
+            "objisolate": section_order.get("objisolate"),
+            "errors": section_order.get("errors"),
         },
         "nontextPartition": {
             "requestedSections": partition.get("requestedSections"),
