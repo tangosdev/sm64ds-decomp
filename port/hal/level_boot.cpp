@@ -4916,59 +4916,54 @@ static void port_a2_seat_body(int make_stage)
        wrote int strides, and the ROM's byte readers saw fc5c[1] == 0:
        Player::Behavior's VS gate returned before a single tick, so player 2
        stood in St_LevelEnter_Main forever on every VS map. */
-    /* ---- THE VS MODE BYTE, THE PORT'S WHOLE STAND-IN FOR THE MENU --------
+    /* ---- WHY THE MODE BYTE IS NOT SEATED HERE ---------------------------
      *
-     * data_0209f2d8 == 1 IS VS MODE, and a multiplayer session is the only
-     * thing that wants it: the cartridge offers exactly ONE multiplayer mode,
-     * the VS star battle, and "two players in the adventure" is not a state
-     * the ROM can be in. So when the seam says a session with more than one
-     * player is up, the mode the ROM would be in is 1, and the port seats it
-     * here for the same reason it seats data_0209fc68 above -- standing in for
-     * the menu (ov075) that has no other way to run yet.
+     * data_0209f2d8 == 1 is VS mode, and an earlier revision of this block
+     * promoted it from the player count -- `if (vs_players > 1 && mode == 0)
+     * mode = 1;` -- so that _Z19LoadEntranceObjects...'s VS arm would run and
+     * every slot would come up Yoshi. It was wrong, it was reviewed out, and
+     * the reasons are worth keeping at the site so it does not come back a
+     * third time.
      *
-     * WHAT SEATING IT BUYS is the entire answer to "in VS the players should
-     * all be Yoshi, in different colours". Both halves are already in this
-     * tree as matched ROM code, and both are gated on this one byte:
+     * hal/level_change.cpp:1502-1524 had already rejected exactly this, in
+     * writing, one layer up: "an earlier revision of this line set it from
+     * the player count -- which is wrong for a reason that is not obvious...
+     * Turning it on to get two players is paying for the entire VS feature
+     * set to get one of its preconditions, and every one of those branches is
+     * then live and unproven." Doing it lower down did not make it a
+     * different change; it only made the two lines contradict each other
+     * inside one binary.
      *
-     *   THE CHARACTER. _Z19LoadEntranceObjects...'s spawn loop reads
-     *   `if (data_0209f2d8 == 1) { f2 = 3; f1 = 3; }` -- character 3, Yoshi,
-     *   for EVERY slot, instead of f2 = data_0209caa0[0x41], the save file's
-     *   single character. Player::InitResources unpacks f2 from flag bits
-     *   0..2 into Player+0x6d9.
+     * AND THE COST IS NOT FOUR FILES. 100 of the files compiled into this
+     * binary read data_0209f2d8. Measured on a castle-grounds boot with the
+     * promotion in: a VS 3-2-1 countdown fires, the VS arena's music replaces
+     * the level's own, the level's sound row is discarded and seven live
+     * actors sit about 980 units lower. Statically, SetNextStar stops
+     * advancing, collected stars and star markers stop despawning,
+     * SaveData::CanPlayerHaveCap returns 0, and Player::SetAnim silently
+     * drops every animation outside [0x11,0x72). Every one of those is the
+     * ROM's own code running faithfully -- faithfully to a mode the cartridge
+     * is never in on an adventure map. "The port must BE the decomp" does not
+     * license putting the ROM in a state the ROM cannot reach.
      *
-     *   THE COLOUR. src/func_ov002_020e5948.c:366 sets Player+0x61C to the
-     *   Yoshi BODY model's material[0] palette base plus (playerNo << 1), and
-     *   src/_ZN6Player6RenderEv.cpp:65-73 and :106-114 write that value into
-     *   +0x20 of every material record of the body model and again of the
-     *   head model -- but only when data_0209f2d8 == 1 and the character is
-     *   3. yoshi_model.bmd's yoshi_all_16p_pl is 128 bytes: four stacked
-     *   16-colour rows, greens, reds, blues, yellows. One step of playerNo is
-     *   exactly one row, so slot i renders in colour i and the head follows
-     *   the body because Render re-points both. hal/fs_mods.cpp's built-in
-     *   Yoshi colours note derives that arrangement from the extraction.
+     * THE PORT WAS NEVER BROKEN AT VERSUS. A real VS map already produces
+     * four Yoshis with no port-side help at all: the ROM's own start
+     * (func_ov075_02116c8c -> PrepareVsMode) writes the byte, and the spawn
+     * loop's VS arm does the rest. Measured on an unmodified build at arena
+     * 51: both slots char=3. What is not a versus match is a two-window
+     * session that boots castle grounds, and no amount of character seating
+     * turns an adventure level into one -- the fix for that is to boot a VS
+     * map, which port/tools/mp2_two_windows.ps1 -VsMap now does.
      *
-     * So the port chooses no character, chooses no colour and owns no table
-     * of either. It seats the one byte the menu would seat, and the ROM's own
-     * code does the rest of the work in its own words.
-     *
-     * PROMOTED FROM ADVENTURE ONLY, and the guard is doing real work in both
-     * directions. If the ROM's own VS start already ran -- SM64DS_VS_MAP goes
-     * through func_ov075_02116c8c -> PrepareVsMode, which writes 1 itself --
-     * this is a no-op and the ROM's write stands. And mode 2, the kuppa
-     * script, is left alone rather than being overwritten by a session count.
-     * One player never reaches the line at all, so every single-player
-     * baseline in this tree stays byte-for-byte what it was.
-     *
-     * data_02092128 IS NO LONGER SEATED HERE. What stood here wrote the slot
+     * data_02092128 IS STILL NOT SEATED HERE, and that half stands on its own
+     * reasoning rather than on the promotion. What stood here wrote the slot
      * index into it and called that the character. It is not one: the loop
      * packs it as f1 at flag bits 3..5, which Player::InitResources unpacks
      * into Player+0x6da as `sub`, a different field from the character at
-     * +0x6d9 -- and :83-87 then writes the table BACK from the character
-     * whenever the two disagree, which is the mid-boot rewrite this block's
-     * old comment had measured and misread as the table being unreliable. The
-     * table is the ROM's, and the ROM fills it. */
-    if (vs_players > 1 && data_0209f2d8 == 0)
-        data_0209f2d8 = 1;
+     * +0x6d9. (:83-87 does write the table back from the character when the
+     * two disagree, but only inside `data_0209f2d8 != 1` AND
+     * `SublevelToLevel(data_0209f2f8) == 0x1d`, so on castle grounds it never
+     * fires either way.) The table is the ROM's, and the ROM fills it. */
     if (vs_players > 1) {
         std::fprintf(stderr,
                      "  [a2] VS: %d players, I am slot %d, game mode %d",
