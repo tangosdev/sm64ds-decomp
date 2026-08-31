@@ -61,7 +61,8 @@ def prepare_intact_object(raw, entry):
     if linked_obj is None:
         _raise(f"{entry['id']} vtable address-point rewrite", [rebias.get("error")])
     owned_after = TB.verify_owned_sections(
-        linked_obj, entry, claims, public_address_points=True)
+        linked_obj, entry, claims, public_address_points=True,
+        normalized_undefined_vtables=True)
     if not owned_after.get("ok"):
         _raise(f"{entry['id']} production non-text contribution",
                owned_after.get("errors", []))

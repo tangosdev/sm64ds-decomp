@@ -234,7 +234,11 @@ class ProductionTuObjects(unittest.TestCase):
         self.assertEqual(output, b"linked")
         rebias.assert_called_once_with(
             b"external", {"_ZTV1T": {"bias": 8}}, normalize_undefined=True)
-        self.assertEqual(verify.call_count, 2)
+        self.assertEqual(verify.call_args_list, [
+            mock.call(b"external", entry, claims),
+            mock.call(b"linked", entry, claims, public_address_points=True,
+                      normalized_undefined_vtables=True),
+        ])
         self.assertEqual(evidence["sha256"],
                          __import__("hashlib").sha256(b"linked").hexdigest())
 

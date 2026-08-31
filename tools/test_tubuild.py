@@ -534,6 +534,190 @@ def _vague_externalization_fixture():
     return obj, entry, homes, config, targets, target_reader, name_index
 
 
+def _owned_rtti_external_vtable_fixture():
+    """Real mwcc RTTI whose ABI-vtable imports use raw addend eight."""
+    obj = _compile_tu_fixture(
+        "struct B { virtual ~B(); };\n"
+        "struct D : B { virtual void f(); }; void D::f() {}\n")
+    data_start = 0x2000
+    data, error = tubuild.section_contribution(obj, ".data", data_start)
+    assert error is None
+
+    rows = []
+    for name, emitted in data["symbols"].items():
+        row = {"symbol": name, "address": hex(emitted["address"]),
+               "size": hex(emitted["size"])}
+        if name.startswith("_ZTV"):
+            row.update({"address": hex(emitted["address"] + 8),
+                        "emitted_storage_address": hex(emitted["address"]),
+                        "address_point_bias": "0x8"})
+        rows.append(row)
+
+    entry = {"module": "ov999", "functions": [], "data": rows,
+             "rodata": [], "bss": [], "relocations": []}
+    claims = [{"name": ".data", "start": data_start,
+               "end": data_start + len(data["bytes"])}]
+    config = {"ov999": {}}
+    name_index = {
+        "_ZTVN3abi17__class_type_infoE": ("arm9", 0x6000),
+        "_ZTVN3abi20__si_class_type_infoE": ("arm9", 0x6100),
+    }
+    function_addresses = {}
+    for reloc in data["relocs"]:
+        symbol = reloc["symbol"]
+        addend = reloc["addend"]
+        if symbol in data["symbols"]:
+            module = "ov999"
+            destination = data["symbols"][symbol]["address"] + addend
+        elif symbol in name_index:
+            module = "arm9"
+            assert addend == tubuild.OI.VTABLE_PREAMBLE
+            # name_index/symbols.txt already names the public address point.
+            destination = name_index[symbol][1]
+        else:
+            module = "ov999"
+            if symbol not in function_addresses:
+                function_addresses[symbol] = 0x7000 + 0x100 * len(function_addresses)
+                entry["functions"].append(
+                    {"symbol": symbol, "address": hex(function_addresses[symbol])})
+            destination = function_addresses[symbol] + addend
+        source = data_start + reloc["offset"]
+        config["ov999"][source] = ("load", destination, module)
+        entry["relocations"].append({
+            "section": ".data", "source": hex(source),
+            "type": "R_ARM_ABS32", "kind": "load", "symbol": symbol,
+            "addend": addend, "target_module": module,
+            "target_address": hex(destination),
+        })
+
+    def target_reader(module, address, size):
+        assert (module, address, size) == ("ov999", data_start, len(data["bytes"]))
+        return data["bytes"]
+
+    return obj, entry, claims, config, name_index, target_reader
+
+
+def test_owned_rtti_raw_external_vtable_address_point_is_not_double_counted():
+    if not _toolchain():
+        return
+    import copy
+
+    obj, entry, claims, config, name_index, target_reader = \
+        _owned_rtti_external_vtable_fixture()
+
+    def verify(candidate=entry, names=name_index, candidate_obj=obj, configs=config,
+               public_address_points=False, normalized_undefined_vtables=False):
+        return tubuild.verify_owned_sections(
+            candidate_obj, candidate, claims, name_index=names, config_relocs=configs,
+            sym_index={}, target_reader=target_reader, symbol_homes={},
+            bss_boundaries=set(), public_address_points=public_address_points,
+            normalized_undefined_vtables=normalized_undefined_vtables)
+
+    result = verify()
+    assert result["ok"], result["errors"]
+    si_symbol = "_ZTVN3abi20__si_class_type_infoE"
+    si_claim = next(row for row in entry["relocations"]
+                    if row["symbol"] == si_symbol)
+    si_source = int(si_claim["source"], 0)
+    si_row = next(row for row in result["relocations"]
+                  if int(row["source"], 0) == si_source)
+    assert si_row["addend"] == tubuild.OI.VTABLE_PREAMBLE
+    assert si_row["candidate"] == "0x00006100"
+    assert si_row["verdict"] == "OK"
+
+    biases = {}
+    for row in entry["data"]:
+        if row["symbol"].startswith("_ZTV"):
+            biases[row["symbol"]] = {
+                "bias": 8, "size": int(row["size"], 0), "section": ".data"}
+    rebased, rebias_report = tubuild.OI.rebias_object_symbols(
+        obj, biases, normalize_undefined=True)
+    assert rebased is not None, rebias_report
+    assert any(row["symbol"] == si_symbol and row["oldAddend"] == 8
+               and row["newAddend"] == 0
+               and row["mode"] == "undefined-public-import"
+               for row in rebias_report["relocations"])
+    post_rebias = verify(candidate_obj=rebased, public_address_points=True,
+                         normalized_undefined_vtables=True)
+    assert post_rebias["ok"], post_rebias["errors"]
+    post_si = next(row for row in post_rebias["relocations"]
+                   if int(row["source"], 0) == si_source)
+    assert post_si["addend"] == 0
+    assert post_si["expectedAddend"] == 8
+    assert post_si["expectedEmittedAddend"] == 0
+    assert post_si["verdict"] == "OK"
+
+    # A pointer farther into the same imported vtable must retain its offset
+    # after normalization: raw public+16 becomes emitted public+8, not public+0.
+    import io
+    import struct
+    from elftools.elf.elffile import ELFFile
+    from elftools.elf.relocation import RelocationSection
+
+    wide_raw = bytearray(obj)
+    wide_elf = ELFFile(io.BytesIO(obj))
+    wide_symtab = wide_elf.get_section_by_name(".symtab")
+    wide_rewrite = None
+    for relsec in wide_elf.iter_sections():
+        if not isinstance(relsec, RelocationSection):
+            continue
+        for index, reloc in enumerate(relsec.iter_relocations()):
+            target = wide_symtab.get_symbol(reloc["r_info_sym"])
+            if target.name == si_symbol and reloc["r_addend"] == 8:
+                wide_rewrite = (relsec.header["sh_offset"]
+                                + index * relsec.header["sh_entsize"] + 8)
+                break
+        if wide_rewrite is not None:
+            break
+    assert wide_rewrite is not None
+    struct.pack_into("<i" if wide_elf.little_endian else ">i",
+                     wide_raw, wide_rewrite, 16)
+    wide_obj = bytes(wide_raw)
+    wide_entry = copy.deepcopy(entry)
+    wide_claim = next(row for row in wide_entry["relocations"]
+                      if row["symbol"] == si_symbol)
+    wide_claim["addend"] = 16
+    wide_claim["target_address"] = "0x6108"
+    wide_config = copy.deepcopy(config)
+    wide_config["ov999"][si_source] = ("load", 0x6108, "arm9")
+    wide_before = verify(wide_entry, candidate_obj=wide_obj, configs=wide_config)
+    assert wide_before["ok"], wide_before["errors"]
+
+    wide_rebased, wide_report = tubuild.OI.rebias_object_symbols(
+        wide_obj, biases, normalize_undefined=True)
+    assert wide_rebased is not None, wide_report
+    wide_after = verify(
+        wide_entry, candidate_obj=wide_rebased, configs=wide_config,
+        public_address_points=True, normalized_undefined_vtables=True)
+    assert wide_after["ok"], wide_after["errors"]
+    wide_si = next(row for row in wide_after["relocations"]
+                   if int(row["source"], 0) == si_source)
+    assert wide_si["addend"] == 8
+    assert wide_si["expectedAddend"] == 16
+    assert wide_si["expectedEmittedAddend"] == 8
+    assert wide_si["candidate"] == "0x00006108"
+    assert wide_si["verdict"] == "OK"
+
+    wrong_addend = copy.deepcopy(entry)
+    next(row for row in wrong_addend["relocations"]
+         if row["symbol"] == si_symbol)["addend"] += 4
+    result = verify(wrong_addend, candidate_obj=rebased,
+                    public_address_points=True,
+                    normalized_undefined_vtables=True)
+    assert not result["ok"]
+    assert next(row for row in result["relocations"]
+                if int(row["source"], 0) == si_source)["verdict"] == "WRONG-ADDEND"
+
+    wrong_destination = dict(name_index)
+    wrong_destination[si_symbol] = ("arm9", name_index[si_symbol][1] + 4)
+    result = verify(names=wrong_destination, candidate_obj=rebased,
+                    public_address_points=True,
+                    normalized_undefined_vtables=True)
+    assert not result["ok"]
+    assert next(row for row in result["relocations"]
+                if int(row["source"], 0) == si_source)["verdict"] == "WRONG-DEST"
+
+
 def test_nontext_verifier_checks_layout_bytes_symbols_and_reloc_destinations():
     if not _toolchain():
         return
@@ -916,7 +1100,7 @@ def test_vtable_storage_address_requires_an_explicit_consistent_bias():
     claims = [{"name": ".data", "start": start,
                "end": start + len(data["bytes"])}]
 
-    def run(row):
+    def run(row, candidate_obj=obj, public_address_points=False):
         entry = {"module": "ov999", "functions": [], "data": [row, {
                      "symbol": "vptr", "address": hex(pointer["address"]),
                      "size": hex(pointer["size"])}],
@@ -926,20 +1110,35 @@ def test_vtable_storage_address_requires_an_explicit_consistent_bias():
                      "addend": reloc["addend"], "target_module": "ov999",
                      "target_address": hex(public)}]}
         return tubuild.verify_owned_sections(
-            obj, entry, claims, name_index={},
+            candidate_obj, entry, claims, name_index={},
             config_relocs={"ov999": {source: ("load", public, "ov999")}},
             sym_index={}, target_reader=lambda _m, _s, _n: data["bytes"],
-            symbol_homes={}, bss_boundaries=set())
+            symbol_homes={}, bss_boundaries=set(),
+            public_address_points=public_address_points)
 
     implicit = run({"symbol": "_ZTV1V", "address": hex(public),
                     "size": hex(emitted["size"])})
     assert not implicit["ok"]
     assert any("emitted address" in reason for reason in implicit["errors"])
 
-    explicit = run({"symbol": "_ZTV1V", "address": hex(public),
+    explicit_row = {"symbol": "_ZTV1V", "address": hex(public),
                     "emitted_storage_address": hex(emitted["address"]),
-                    "address_point_bias": "0x8", "size": hex(emitted["size"])})
+                    "address_point_bias": "0x8", "size": hex(emitted["size"])}
+    explicit = run(explicit_row)
     assert explicit["ok"], explicit["errors"]
+
+    rebased, report = tubuild.OI.rebias_object_symbols(obj, {
+        "_ZTV1V": {"bias": 8, "size": emitted["size"], "section": ".data"}})
+    assert rebased is not None, report
+    post_rebias = run(explicit_row, candidate_obj=rebased,
+                      public_address_points=True)
+    assert post_rebias["ok"], post_rebias["errors"]
+    post_pointer = next(row for row in post_rebias["relocations"]
+                        if int(row["source"], 0) == source)
+    assert post_pointer["addend"] == 0
+    assert post_pointer["expectedAddend"] == 8
+    assert post_pointer["expectedEmittedAddend"] == 0
+    assert post_pointer["verdict"] == "OK"
 
     inconsistent = run({"symbol": "_ZTV1V", "address": hex(public),
                         "emitted_storage_address": hex(emitted["address"]),

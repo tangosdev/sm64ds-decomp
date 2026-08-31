@@ -1997,6 +1997,21 @@ def _manifest_emitted_addr(row):
     return storage, None
 
 
+def _raw_configured_symbol_address(symbol, public_address, addend):
+    """Resolve a raw relocation against a configured/public symbol address.
+
+    Ordinary configured symbols use ``base + addend``.  A raw mwcc ``_ZTV``
+    relocation is different: its addend still includes the two-word ABI preamble,
+    while ``symbols.txt`` already names the public slot-array address after that
+    preamble.  Subtract it exactly once.  Addend-zero references were written
+    directly against the public convention and remain unchanged.
+    """
+    address = public_address + addend
+    if symbol.startswith("_ZTV") and addend >= OI.VTABLE_PREAMBLE:
+        address -= OI.VTABLE_PREAMBLE
+    return address
+
+
 def apply_compiler_only_policy(obj_bytes, entry, homes=None):
     """Apply exact-symbol historical dead stripping, or refuse with named reasons.
 
@@ -2385,17 +2400,8 @@ def verify_externalized_output(obj_bytes, entry, policies=None, homes=None,
                 else:
                     candidate_module = (RL.normalize_module(resolved[0])
                                         if resolved[0] is not None else None)
-                    candidate_address = resolved[1] + emitted["addend"]
-                    # mwcc's raw `_ZTV` relocation is relative to the storage
-                    # object, while symbols.txt names the public slot-array address
-                    # after the two-word ABI preamble.  This is the same raw-object
-                    # convention used by reloc_audit.object_reloc_dests: addend 8
-                    # resolves to the configured address point, not eight bytes past
-                    # it.  Explicit addend-zero references already use the public
-                    # convention and remain unchanged.
-                    if emitted["symbol"].startswith("_ZTV") \
-                            and emitted["addend"] >= OI.VTABLE_PREAMBLE:
-                        candidate_address -= OI.VTABLE_PREAMBLE
+                    candidate_address = _raw_configured_symbol_address(
+                        emitted["symbol"], resolved[1], emitted["addend"])
                     if (candidate_module, candidate_address) != \
                             (expected["target_module"], expected["target_address"]):
                         row_reasons.append(f"relocation +0x{offset:x} resolves to "
@@ -2602,7 +2608,8 @@ def _configured_bss_boundaries(module, homes):
 def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                           config_relocs=None, sym_index=None, target_reader=None,
                           symbol_homes=None, bss_boundaries=None,
-                          public_address_points=False):
+                          public_address_points=False,
+                          normalized_undefined_vtables=False):
     """Verify licensed non-text layout, bytes, symbols, and relocation destinations.
 
     Relocated words are wildcarded only after every relocation is independently tied
@@ -2610,7 +2617,10 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
     in the destination address; this is stricter than the historical function helper,
     which compares only a symbol's base address.  BSS has no ROM bytes, so its proof is
     exact contribution size plus symbol addresses here and the scratch ELF symbol/module
-    checks later in ``linkcheck``.
+    checks later in ``linkcheck``.  After ``rebias_object_symbols``, relocation
+    addends targeting retained vtables are reduced by their declared bias.  The
+    ordinary intact-object path also normalizes undefined vtable imports; callers
+    must opt into that second representation explicitly.
     """
     nontext = [c for c in claims if c["name"] != ".text"]
     if not nontext:
@@ -2668,6 +2678,7 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
     for name in sorted(emitted_names - expected_names):
         reasons.append(f"emitted non-text symbol {name} is not licensed by data/bss/"
                        f"rodata/init/ctor")
+    retained_vtable_biases = {}
     for section, expected in expected_rows:
         name = expected["symbol"]
         got = layouts.get(section, {}).get("symbols", {}).get(name)
@@ -2684,6 +2695,7 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                 address_error = "public-address-point verification needs a valid bias"
             else:
                 want_addr = public_addr
+                retained_vtable_biases[name] = address_bias
         if got is None:
             reasons.append(f"licensed {section} symbol {name} is not emitted there")
             continue
@@ -2745,6 +2757,7 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
             candidate_offsets.add(source)
             base = None
             candidate_module = None
+            configured_public_base = False
             if rel["symbol"] in linked_symbols:
                 base = linked_symbols[rel["symbol"]]["address"]
                 candidate_module = owner_module
@@ -2757,9 +2770,26 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                     candidate_module = (RL.normalize_module(resolved[0])
                                         if resolved[0] is not None else None)
                     base = resolved[1]
-            cand_addr = base + rel["addend"] if base is not None else None
+                    configured_public_base = True
+            cand_addr = None
+            if base is not None:
+                if configured_public_base and not normalized_undefined_vtables:
+                    cand_addr = _raw_configured_symbol_address(
+                        rel["symbol"], base, rel["addend"])
+                else:
+                    cand_addr = base + rel["addend"]
             cfg = cfgmap.get(source)
             expected = expected_relocs.get(source)
+            expected_addend = expected.get("addend") if expected else None
+            if public_address_points and expected is not None:
+                bias = retained_vtable_biases.get(expected["symbol"])
+                if bias is None and normalized_undefined_vtables \
+                        and expected["symbol"].startswith("_ZTV") \
+                        and expected_addend:
+                    bias = OI.VTABLE_PREAMBLE
+                if bias is not None:
+                    expected_addend = (expected_addend - bias
+                                       if expected_addend >= bias else None)
             configured_module = RL.normalize_module(cfg[2]) if cfg else None
             candidate_kind = _NON_TEXT_RELOC_KIND.get(rel["type"])
             if cfg is None:
@@ -2774,7 +2804,7 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                 verdict = "WRONG-TYPE"
             elif rel["symbol"] != expected["symbol"]:
                 verdict = "WRONG-SYMBOL"
-            elif rel["addend"] != expected["addend"]:
+            elif rel["addend"] != expected_addend:
                 verdict = "WRONG-ADDEND"
             elif candidate_kind != expected["kind"] or expected["kind"] != cfg[0]:
                 verdict = "WRONG-KIND"
@@ -2792,6 +2822,7 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                                "expectedType": expected.get("type") if expected else None,
                                "expectedSymbol": expected.get("symbol") if expected else None,
                                "expectedAddend": expected.get("addend") if expected else None,
+                               "expectedEmittedAddend": expected_addend,
                                "candidateModule": candidate_module,
                                "candidate": f"0x{cand_addr:08x}" if cand_addr is not None else None,
                                "configuredKind": cfg[0] if cfg else None,
@@ -4329,7 +4360,8 @@ def cmd_linkcheck(args):
                   "in the SCRATCH object only")
 
         owned = verify_owned_sections(linked_tu, entry, claims,
-                                       public_address_points=True)
+                                       public_address_points=True,
+                                       normalized_undefined_vtables=True)
         report["ownedSections"] = owned
         for row in owned["rows"]:
             print(f"      {row['section']:8} {row.get('start', '-')}..{row.get('end', '-')} "
