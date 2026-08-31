@@ -566,6 +566,7 @@ s32 dScMgMCarlo_c::Render()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov006_020f8540, 0x020f8540, size 0x70 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f8540
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* The caller passes `this`; the ROM body never reads r0.  Spelling the
  * parameter keeps the call site honest and costs no code. */
@@ -581,6 +582,7 @@ void func_ov006_020f8540(char* p)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov006_020f84a8, 0x020f84a8, size 0x98 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f84a8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f84a8(char* o, int n) {
   *(short*)(o + 0x2a) = (short)n;
@@ -603,6 +605,7 @@ void func_ov006_020f84a8(char* o, int n) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov006_020f8320, 0x020f8320, size 0x188 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f8320
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f8320(Node* o, int m)
 {
@@ -648,6 +651,7 @@ void func_ov006_020f8320(Node* o, int m)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov006_020f82d0, 0x020f82d0, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f82d0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f82d0(Node *o, int n) {
     *(short*)((char*)o + 0x28) = (short)((4 - n % 5) * 2);
@@ -658,6 +662,7 @@ void func_ov006_020f82d0(Node *o, int n) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov006_020f8224, 0x020f8224, size 0xac */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f8224
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f8224(Node *a, Node *b)
 {
@@ -685,6 +690,7 @@ fail:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov006_020f8154, 0x020f8154, size 0xd0 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f8154
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f8154(Node *c)
 {
@@ -715,6 +721,7 @@ fail:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov006_020f7ee4, 0x020f7ee4, size 0x270 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7ee4
 /* func_ov006_020f7ee4 at 0x020f7ee4 (ov006), size 0x270
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  * Note: event must be passed through to func_ov006_020f8320 (zero-cost, r1 already
@@ -817,6 +824,7 @@ void func_ov006_020f7ee4(char *c, int event)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov006_020f7e2c, 0x020f7e2c, size 0xb8 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7e2c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
@@ -846,6 +854,7 @@ void func_ov006_020f7e2c(char *thiz)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov006_020f7c10, 0x020f7c10, size 0x21c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7c10
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f7c10(char *c)
 {
@@ -934,6 +943,7 @@ void func_ov006_020f7c10(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov006_020f7b90, 0x020f7b90, size 0x80 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7b90
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f7b90(void)
 {
@@ -954,6 +964,7 @@ int func_ov006_020f7b90(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov006_020f7b10, 0x020f7b10, size 0x80 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7b10
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f7b10(void)
 {
@@ -979,6 +990,7 @@ int func_ov006_020f7b10(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov006_020f7a90, 0x020f7a90, size 0x80 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7a90
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f7a90(void)
 {
@@ -1004,6 +1016,7 @@ int func_ov006_020f7a90(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov006_020f7a00, 0x020f7a00, size 0x90 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7a00
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_020f7a00(void){
     unsigned char pick = 0;
@@ -1028,6 +1041,7 @@ int func_ov006_020f7a00(void){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov006_020f7994, 0x020f7994, size 0x6c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7994
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f7994(void){
     struct Node* node = data_ov006_02142500;
@@ -1045,6 +1059,7 @@ void func_ov006_020f7994(void){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov006_020f7740, 0x020f7740, size 0x254 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7740
 extern "C" void func_ov006_020f7740(void) {
     Node* head = data_ov006_02142500;
     Node* n;
@@ -1107,6 +1122,7 @@ extern "C" void func_ov006_020f7740(void) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov006_020f7730, 0x020f7730, size 0x10 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov006_020f7730
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov006_020f7730(int *p) { p[0] = (int)data_ov006_0213d5ac; }
 }
