@@ -4,7 +4,10 @@ Status: ADJUDICATED 2026-08-30, AMENDED 2026-08-31 — the coordinator's rulings
 are the ADJUDICATION section at the end; the four decisions are in force for
 the mini-wave and the fan-out. The AMENDMENT section (2026-08-31) records how
 the decisions re-scope now that the upstream wave has promoted five class
-TUs and six factory manifests to main. Prepared on branch
+TUs and six factory manifests to main; the REVIEW #2 FOLD-IN section (same
+day, after it) folds the second outside-perspective review in — the extended
+D3 drift list, the re-priced coverage, and the re-adjudicated wave order.
+Prepared on branch
 `pilot2-ov006-tu-merge`, 2026-08-30, against the two banked
 pilot TUs (`src_tu/actors/dScMgBSC_c+dScMgBSC_c.cpp`, 19/19 text-verified;
 `src_tu/actors/dMgMCarloCardObj_c+dScMgMCarlo_c+dScMgMCarlo_c.cpp` — see
@@ -511,3 +514,75 @@ reconstruction. Items 2 (Memory) and 3 (Jump3DMario) stand as written; the
 stretch TU still waits on the span filter. The wave's dispatch order is now
 census-first: Card (202 raw, 15%), BSC (89 raw, 11%), MCarlo (107 raw, 30%),
 then MCarlo2's completion and the factory-merge pass.
+
+## REVIEW #2 FOLD-IN (coordinator, 2026-08-31) — outside perspective, seven findings
+
+The second outside-perspective review (fresh-context agent, the standing
+cadence) returned ON TRACK with seven findings; all seven are folded here,
+two of them into the gate itself (commit `4e8a2d2a8`, tools only, 52/52
+tests).
+
+**D3, extended — four more retired mangled-name identifiers ship in the very
+files the wave converts next, and no split machinery could ever see them**
+(single-TU declarations form no signature group):
+`_ZN5Sound12PlayBank2_2DEj` (Sound::PlayBank2_2D — declared in ALL FOUR
+promoted ov006 class TUs; 23 occurrences across them, 12 in dScMgCard_c.cpp
+alone), `_ZN2GX11LoadOBJPlttEPKvjj` (Card, MCarlo2, Single3DBase,
+ov004/unit020b0a38), `_ZN3GXS11LoadOBJPlttEPKvjj` (BSC, Card, MCarlo2,
+Single3DBase, unit020b0a38), `_ZN3G2x13SetBlendAlphaEPVttttj` (Card only).
+All four are now in the gate's RATIFIED_TRUE_NAMES table, the forms read off
+the mangle and the repo's own headers: G2x.h already carries SetBlendAlpha's
+measured EPVttttj shape (a shadow int cost one ROM-build failure once);
+Sound.h's namespace-plus-u32 is PlayBank3's precedent; PKv is
+`const void*`, so Card's `(void*, u32, u32)` spelling for LoadOBJPltt is the
+drift and BSC/MCarlo2 carry the ratified one — the census's split entry now
+shows both spellings side by side, the only type-level variance in the
+family (the u32 vs unsigned int rows inside a split entry are same-type
+respellings, and PlayBank2_2D forms no split at all — all four TUs agree on
+its shape). Gated runs now FAIL on all four names with their ratified forms;
+report mode lists which TUs carry each.
+
+**Coverage, re-priced — the census counted unk_/pad_ respellings as named
+hits.** `->unk_51b8` raises named and lowers rawOffsets, both metrics moving
+the "right" way while adding no name the EAD team would have written; the
+family base header alone carries 26 unk_/pad_ fields. The gate keeps `named`
+as the total (the table above stays comparable) and adds `namedEncoded` for
+the respelled share (report schema 2). Re-census at the gate commit: BSC
+11 named = 5 real + 6 unk/pad; Card 36 = 23 + 13; MCarlo 46 = 34 + 12;
+MCarlo2 99 = 78 + 21; Single3DBase 4 = 4 + 0. On the re-priced numbers BSC
+is the least-named TU in the family, not merely the smallest.
+
+**Wave order, re-adjudicated — BSC first, then Card, MCarlo, MCarlo2's
+completion; dScMgBase_c deferred; the merge pass composes from converted
+sources.** This supersedes the census-first dispatch order above. BSC first
+because it is the family's calibration unit: the smallest class TU (17
+functions), the one whose shipped false deleting-destructor comment became
+the goal gate's founding bug, so its remaining conversion is where the
+byte gate and goal gate are proven together on a surface whose every
+landmine is already known. dScMgBase_c is DEFERRED to after the four
+children, and the reason is recorded here: renaming its base-header members
+fans out into every promoted child's re-verification, so it runs once,
+last, against children that are already re-verified. The factory-merge
+pass stays last for all promoted TUs and must COMPOSE from the converted
+sources — never re-derive from the legacy per-function files.
+
+**Comment-per-member — prose is the review cadence's job, not the gate's.**
+Pilot 2 §7 required a comment on every re-typed member; that requirement
+never landed in any gate, and the goal gate's justification field accepts
+any non-empty string. The honest statement: comment quality is enforced by
+the review cadence, not by check_tu_idioms.py. Every conversion's diff gets
+a reviewer pass that reads the comments against the ROM evidence — the BSC
+slot-18 catch was exactly this kind of find.
+
+**PR-body disclosure — the lane carries one src/ change.** `0f62aff48`
+(dScMgBSC_c: correct the false deleting-destructor comment on
+func_ov006_02125364, byte-verified 19/19) crossed the tools/notes-only
+boundary deliberately: this note documents that bug and cites the fix, and a
+lane that documents a false comment while continuing to ship it would be
+worse. The PR body names the commit explicitly with its evidence so the
+reviewer can strike it from the batch if they disagree.
+
+**origin/main moved during the fold-in.** PR #2084 promoted daBrq_c as a
+genuine TU; PR #2085 dropped an orphaned _ZTV3Amp declaration. The lane was
+rebased onto the current tip (`90763c379`) before the fold-in commits, so
+every claim above rides current main, not a stale tree.
