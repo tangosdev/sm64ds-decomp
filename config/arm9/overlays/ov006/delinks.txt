@@ -5257,41 +5257,9 @@ src/actors/MgMushroomRoulette.cpp:
     complete
     .text start:0x0210a400 end:0x0210a4b0
 
-src/_ZN19dScMgSingle3DBase_cD1Ev.cpp:
+src/actors/dScMgSingle3DBase_c.cpp:
     complete
-    .text start:0x0210a4b0 end:0x0210a4e8
-
-src/_ZN19dScMgSingle3DBase_cD0Ev.cpp:
-    complete
-    .text start:0x0210a4e8 end:0x0210a534
-
-src/func_ov006_0210a534.cpp:
-    complete
-    .text start:0x0210a534 end:0x0210a600
-
-src/func_ov006_0210a600.c:
-    complete
-    .text start:0x0210a600 end:0x0210a608
-
-src/_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj.cpp:
-    complete
-    .text start:0x0210a608 end:0x0210a664
-
-src/_ZN19dScMgSingle3DBase_c12BeforeRenderEv.cpp:
-    complete
-    .text start:0x0210a664 end:0x0210a698
-
-src/_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv.cpp:
-    complete
-    .text start:0x0210a698 end:0x0210a6e4
-
-src/_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj.cpp:
-    complete
-    .text start:0x0210a6e4 end:0x0210a708
-
-src/func_ov006_0210a708.c:
-    complete
-    .text start:0x0210a708 end:0x0210a8c0
+    .text start:0x0210a4b0 end:0x0210a8c0
 
 src/_ZN12dScMgSlot1_cD1Ev.cpp:
     complete

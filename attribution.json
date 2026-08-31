@@ -1012,6 +1012,15 @@
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv": "lunavyqo",
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv": "lunavyqo",
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD1Ev": "tangosdev",
-    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD0Ev": "tangosdev"
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD0Ev": "tangosdev",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_cD1Ev": "tangosdev",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_cD0Ev": "tangosdev",
+    "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a534": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a600": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c12BeforeRenderEv": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj": "github-actions[bot]",
+    "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a708": "github-actions[bot]"
   }
 }
