@@ -372,6 +372,20 @@ ov006	0x0211cb70	func_ov006_0211cb70	MgBoomBox_Spawn	spawnfunc
 ov006	0x021207a8	func_ov006_021207a8	MgHideAndBooSeek_Spawn	spawnfunc
 ov006	0x02122490	func_ov006_02122490	MgTrampolineTime_Spawn	spawnfunc
 ov006	0x0212471c	func_ov006_0212471c	MgTrampolineTerror_Spawn	spawnfunc
+ov006	0x02124a04	func_ov006_02124a04	_ZN10dScMgBSC_c9StateDoneEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 12 and 13
+ov006	0x02124a08	func_ov006_02124a08	_ZN10dScMgBSC_c16StateReturnCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 11
+ov006	0x02124ae4	func_ov006_02124ae4	_ZN10dScMgBSC_c14StateWaitTableEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 9 and 10
+ov006	0x02124b58	func_ov006_02124b58	_ZN10dScMgBSC_c18StateTableReactionEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 7 and 8
+ov006	0x02124bb4	func_ov006_02124bb4	_ZN10dScMgBSC_c15StateJudgeCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 6
+ov006	0x02124cb4	func_ov006_02124cb4	_ZN10dScMgBSC_c16StateRevealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 5
+ov006	0x02124dc0	func_ov006_02124dc0	_ZN10dScMgBSC_c13StateWaitMoveEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 4
+ov006	0x02124e1c	func_ov006_02124e1c	_ZN10dScMgBSC_c14StateMoveCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 3
+ov006	0x02124ec4	func_ov006_02124ec4	_ZN10dScMgBSC_c15StateChooseCardEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 2
+ov006	0x02124fd8	func_ov006_02124fd8	_ZN10dScMgBSC_c13StateWaitDealEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 1
+ov006	0x021250e4	func_ov006_021250e4	_ZN10dScMgBSC_c14StateDealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 0
+ov006	0x02125248	func_ov006_02125248	_ZN10dScMgBSC_c15OnGroundPoundedEv	legacy recovered name stands uncontradicted; vtable slot 21 of dScMgBSC_c
+ov006	0x0212527c	func_ov006_0212527c	_ZN10dScMgBSC_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgBSC_c
+ov006	0x02125364	func_ov006_02125364	_ZN10dScMgBSC_c13OnYoshiTryEatEi	legacy recovered name stands uncontradicted; vtable slot 18 of dScMgBSC_c
 ov006	0x021255f8	func_ov006_021255f8	MgLuckyStars_Spawn	spawnfunc
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
