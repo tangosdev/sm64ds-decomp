@@ -2198,7 +2198,7 @@ static void port_load1(void *t, int a, unsigned b)
     if (std::getenv("SM64DS_VS_PROBE"))
         std::fprintf(stderr,
                      "[vs] LoadEntranceObjects: count=%d p3=%u live=%d,%d "
-                     "chars=%d,%d\n",
+                     "f1=%d,%d\n",
                      (int)data_0209f21c, b, data_0209fc5c[0], data_0209fc5c[1],
                      (int)data_02092128[0], (int)data_02092128[1]);
     /* THE LOCAL SLOT IS HELD AT 0 ACROSS THE ENTRANCE LOAD, and restored the
@@ -4965,7 +4965,10 @@ static void port_a2_seat_body(int make_stage)
      * 51: both slots char=3. What is not a versus match is a two-window
      * session that boots castle grounds, and no amount of character seating
      * turns an adventure level into one -- the fix for that is to boot a VS
-     * map, which port/tools/mp2_two_windows.ps1 -VsMap now does.
+     * map, which SM64DS_VS_MAP does. NOT WIRED INTO THE TWO-WINDOW SCRIPT:
+     * port/tools/mp2_two_windows.ps1 takes no such switch today, and an
+     * earlier revision of this comment claimed it did. Whoever adds it
+     * should make this sentence true rather than delete it.
      *
      * data_02092128 IS STILL NOT SEATED HERE, and that half stands on its own
      * reasoning rather than on the promotion. What stood here wrote the slot

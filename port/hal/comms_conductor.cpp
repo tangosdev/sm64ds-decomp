@@ -837,9 +837,18 @@ void vs_probe(int frame) {
         // (playerNo << 1), and Player::Render writes it into every body and
         // head material record when the mode is VS and the character is 3.
         // yoshi_all_16p_pl is four stacked 16-colour rows, so consecutive
-        // slots must differ by exactly 2 -- one row. That difference IS the
-        // colour half of "everyone is Yoshi, told apart by colour", and it is
-        // measurable here rather than only in a screenshot.
+        // slots differ by exactly 2 -- one row.
+        //
+        // THIS COLUMN DOES NOT PROVE THE COLOUR HALF, and an earlier revision
+        // of this comment said it did. The +0x61C write at :366 is
+        // UNCONDITIONAL -- six lines above the VS test -- so it is base +
+        // (playerNo << 1) in every mode for every character, and the
+        // difference of 2 appears between two MARIOS just as readily. Review
+        // demonstrated exactly that, and mp3_play_proof.py retired the arm
+        // that asserted it. What this column shows is the SOURCE value; what
+        // is unproven is whether Player::Render copied it into the material
+        // records, which needs a probe that reads one back. The colour half
+        // is UNMEASURED, not green.
         std::fprintf(stderr,
                      "[vs] f%d slot%d actor=%p no=%d char=%d pos=(%d,%d,%d) "
                      "touched=%u pad=%04x ctrl0=%08x ang=%04x state=%08x "
