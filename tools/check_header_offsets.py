@@ -9,7 +9,7 @@ the byte gate cannot see a field no source file happens to read.
 This walks the declarations, applies natural alignment, and compares. Used as the
 first gate on any header edit; see notes/archive/plan-scalar-markers.md 4.
 
-    python tools/check_header_offsets.py include/Amp.h include/Camera.h
+    python tools/check_header_offsets.py include/dActor_c.h include/dScMgBase_c.h
     python tools/check_header_offsets.py --changed              # vs origin/main
     python tools/check_header_offsets.py --changed main
     python tools/check_header_offsets.py --changed --committed-only   # what CI sees

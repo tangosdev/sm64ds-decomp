@@ -10,7 +10,10 @@ Every test here is a PLANTED REGRESSION: `_resolve_the_old_way` below is the pre
 resolution, verbatim, and each case asserts that it says "pass" while the current code
 says "fail". A test that only exercised the new code would not prove a hole was closed.
 """
+import contextlib
+import io
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -289,8 +292,22 @@ class GateStillWorksTests(unittest.TestCase):
 
     def test_a_real_tree_header_still_parses(self):
         """Guards the repo-root resolution added here: a relative path from --changed
-        must be read against the repository, not the process cwd."""
-        self.assertEqual(C.main(["include/Amp.h"]), 0)
+        must be read against the repository, not the process cwd.
+
+        The header is `include/dActor_c.h` because the cartridge's own RTTI spells
+        that class `8dActor_c` -- it is not a coined name awaiting a rename, so the
+        path cannot go dead under check_dead_references. And rc == 0 alone would be
+        satisfied by a header the parser SKIPPED, which is the failure mode this
+        whole file exists to catch, so assert the gate did real work as well.
+        """
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = C.main(["include/dActor_c.h"])
+        out = buf.getvalue()
+        self.assertEqual(rc, 0, out)
+        self.assertRegex(out, r"(\d+) commented fields, 0 mismatched")
+        self.assertGreater(int(re.search(r"(\d+) commented fields", out).group(1)), 0,
+                           "a header the parser checked zero fields in proves nothing")
 
     def test_the_cli_entry_point_still_returns_the_gates_verdict(self):
         r = subprocess.run([sys.executable, str(TOOLS / "check_header_offsets.py")],
