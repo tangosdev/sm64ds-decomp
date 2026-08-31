@@ -220,12 +220,32 @@ from a mode the port never entered.
 
 2c. WHAT THE ROM'S InitResources DOES THAT THE PORT DOES NOT DO AT ALL
 
-  ResetInput, ResetKuppaScript, LoadDebugFont, func_02039218, func_020308a8,
+  ResetInput, LoadDebugFont, func_02039218, func_020308a8,
   Stage::SetVramBanks, Stage::LoadFog, LoadLevelOverlays, UnloadArchive /
   LoadArchive / the archive index selection, the 12 Model::LoadFile over
   data_020756f0, the seven FaderWipe constructions, the three sublevel clear
   loops (data_0209f4f8, data_0209f30c, data_0209f310, data_0209f358), and the
   raw register writes to DISPCNT / 0x04000304 / 0x0400000A / 0x04000008.
+
+  ResetKuppaScript LEFT THIS LIST on 2026-08-31. It is called from the per-boot
+  body (hal/level_boot.cpp's port_stage_boot_body) at InitResources:268's own
+  point, together with InitResources:266's `data_0209b454 = 0` two lines above
+  it. Both had been in port_a2_seat_body, which runs ONCE PER PROCESS, so
+  neither ran on a warp -- and that pair is the star freeze: the star's collect
+  handler and its camera script raise data_0209b454's 0x4000000 and 0x20000000,
+  an ordinary course star never reaches func_ov002_020e8618 or EndKuppaScript
+  to lower them (PowerStar state 7 takes that arm only for +0x444 == 9 or star
+  index 8), and the ROM relies on this boot to reset both. With the mask still
+  up, Actor::BeforeBehavior skipped the next level's fresh player every frame;
+  with data_0209fc48 still set, Stage::CheckInput published no stick. Evidence:
+  runs/vsdec/out/STAR.
+
+  func_02039218 -- the third statement of that same ROM block, which zeroes the
+  0x18-entry collider-actor list data_020a0c80 that SphereClsn, RaycastLine and
+  RaycastGround read -- STAYS on this list. Nothing in port/ clears that list
+  per boot, so it holds pointers into the previous level's actors. That is its
+  own dangling-pointer question with its own measurement to do, and it was not
+  changed on the strength of a star repro.
 
   The register writes are the reason this section is not simply "work to do":
   five of them are read-modify-write against DS I/O the ntr layer models and

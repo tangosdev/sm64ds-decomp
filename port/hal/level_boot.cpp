@@ -2935,6 +2935,13 @@ extern "C" void port_scene_canary(const char *where);
 extern "C" void port_particle_boot(void);   /* hal/particle_bridges.cpp */
 extern "C" void port_boot_course_sound(int level);   /* hal/star_flow.cpp:
                                             the InitResources sound-row block */
+/* The persistent actor-run mask Stage::InitResources:266 zeroes. Declared here
+   as well as in the a2 seat's own block below because the per-boot body above
+   that block hosts the same ROM line; both spell the host storage
+   (hal/auto_bss.cpp) the same four-byte way. */
+extern "C" int data_0209b454[];
+/* src/ResetKuppaScript.c, InitResources:268's own call. Matched, linked. */
+extern "C" void ResetKuppaScript(void);
 
 /* THE MESSAGE BOX DATA LAYER IS HOSTED now (hal/message_boot.cpp). func_0201f32c
    opens a message and its first line is
@@ -3519,6 +3526,87 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        under a level that never reads them. */
     if (spawn && port_level_has_own_sinits())
         port_ov009_sinits();
+
+    /* THE FREEZE WORD, CLEARED WHERE Stage::InitResources CLEARS IT:
+       src/_ZN5Stage13InitResourcesEv.cpp:266, `data_0209b454 = 0`, four lines
+       below the entry-reason latch this function already hosts and immediately
+       above the countdown seat hal/star_flow.cpp's seat_vs_countdown hosts
+       (InitResources:270-279). Its ROM neighbours read
+
+           data_0209d4a8 = &data_0209f3c4;
+           data_0209b454 = 0;
+           func_02039218();
+           ResetKuppaScript();
+
+       so this is that statement at that point, and the order 266 -> 270-279 ->
+       the sound row at 311+ is the ROM's own.
+
+       WHY IT MATTERS, and it is the star freeze. data_0209b454 is the
+       persistent actor-run mask: Stage::Behavior latches it into
+       data_0209b464 every frame (hosted at hal/actor_registry.cpp:893) and
+       Actor::BeforeBehavior runs an actor only if the mask is zero or the
+       actor's own +0xb0 intersects it (src/_ZN5Actor14BeforeBehaviorEv.cpp:74).
+       The star's collect handler ORs 0x4000000 into it and into the player's
+       and the star's flags (src/func_ov002_020e8ef0.cpp:151-155), and the star
+       camera script ORs 0x20000000 (src/RunKuppaScript.c:21). On the ROM the
+       only in-level clear is the star's own teardown func_ov002_020e8618, and
+       on the course-clear path the star NEVER REACHES IT: PowerStar state 7
+       (src/func_ov002_020e9d18.c) only calls it when the star's +0x444 is 9 or
+       its index is 8, so an ordinary course star is simply destroyed by the
+       level change with the mask still up. The ROM does not care, because the
+       next Stage::InitResources zeroes the word. The port hosted that zero only
+       in port_a2_seat_body, which runs ONCE PER PROCESS -- so after the first
+       star the mask stayed 0x24000000 for the rest of the session, the fresh
+       player spawned with clean flags (+0xb0 = 0x3a, no intersection), and
+       Actor::BeforeBehavior skipped his Behavior every frame from then on. That
+       is the field report: collect a star, land in the castle, and stand there
+       unable to move until the game is restarted. Measured before and after in
+       runs/vsdec/out/STAR.
+
+       Unconditional, as the ROM's line is: a boot that spawns nothing still
+       gets a world with no stale freeze request in it. */
+    data_0209b454[0] = 0;
+
+    /* AND ITS NEIGHBOUR TWO LINES DOWN, src/ResetKuppaScript.c, which
+       Stage::InitResources calls at :268 -- the second half of the same freeze
+       and the reason the first half alone still left the player unable to move.
+
+       ResetKuppaScript's own body is four statements: zero data_0209b284[4],
+       data_0209b270 = data_0209f21c (the kuppa script's player count),
+       zero data_0209b2a4[0x10], and data_0209fc48 = data_0209fc4c -- the last
+       being the CUTSCENE FLAG, restored from the queued-script word (0 unless
+       ContinueKuppaScriptIfNecessary has one pending).
+
+       data_0209fc48 is the second gate on the player's input.
+       Stage::CheckInput (src/_ZN5Stage10CheckInputEv.cpp:50-58) only reaches
+       its stick block when data_0209fc48 == 0; with it set the Ctrl block's
+       magnitude stays 0 and the walk states get no deflection, so the player
+       stands in a fully controllable state and still cannot be moved. The
+       star-get camera script sets it (func_ov002_020c7ff8 -> func_0200d4b0 ->
+       RunKuppaScript), and the in-level clear is EndKuppaScript, which
+       PowerStar state 7 calls only on the arm that hands off to state 11
+       (src/func_ov002_020e9d18.c:118). An ordinary course star does not take
+       that arm -- the same branch analysis as the freeze mask above -- so on
+       the ROM too the flag survives the level change and it is this call that
+       clears it.
+
+       The port hosted neither line per boot, so the two failures arrived
+       together and looked like one: the mask stopped the player's Behavior
+       from running at all, and behind it the cutscene flag would have stopped
+       his stick even once it did. Both are one statement each, both from this
+       block, both measured in runs/vsdec/out/STAR.
+
+       ResetKuppaScript is matched src and already in the link (slice_gate36,
+       slice_s4_slot0). port/stage_lifecycle_map.txt section 2c listed it as
+       ABSENT FROM THE PORT ENTIRELY; that entry is now half retired -- this is
+       the InitResources call site. The third statement of the same ROM block,
+       func_02039218 (which zeroes the 0x18-entry collider-actor list
+       data_020a0c80 that SphereClsn/RaycastLine/RaycastGround read), is still
+       absent and is NOT added here: it is a collision-lifetime question with
+       its own dangling-pointer argument, it is not part of this freeze, and it
+       is not something to change on the strength of a star repro. It stays on
+       section 2c's list. */
+    ResetKuppaScript();
 
     /* THE SOUND ROW, where Stage::InitResources seats it: after the overlay is
        up and the level is current, before LoadClsnAndObjects. This is the block

@@ -43,6 +43,19 @@ extern unsigned char data_020a0e40;      /* the local player index */
 extern unsigned char data_0209d6bc;      /* the Message box state (Message::Update) */
 extern unsigned char data_0209d660;      /* nonzero while a message is active */
 extern unsigned char data_0209d684;      /* the choice box's answer (0 = unanswered) */
+/* the rest of the words the star's post-collect sequence gates on, for the
+   SM64DS_TRACE_STAR readout below */
+extern unsigned char data_0209d654;      /* save-screen arm flag */
+extern unsigned char data_0209d67c;      /* save-screen close countdown */
+extern unsigned char data_0209d664;      /* Message's in-talk flag */
+extern short data_0209d6d4;              /* current message id (-1 = none) */
+extern int _ZN6Player12GetTalkStateEv(void *p);
+/* the pause triple Actor::BeforeBehavior and IsButtonInputValid both read */
+extern int data_0209f20c[], data_0209f294[], data_0209f2c4[];
+/* the Ctrl block's analog magnitude and X deflection, which the walk states
+   read: mag 0 means the input layer published no stick this frame */
+extern char data_0209f4a0[];
+extern int data_0209f4a2[];
 extern int data_0209b454[];              /* persistent freeze-request word */
 extern unsigned int data_0209b464;       /* this frame's copy of it (the mask) */
 extern int data_0208e430;                /* the track id Sound::PlaySub latched */
@@ -51,10 +64,90 @@ extern int data_0209b49c[];              /* music state fade word */
 
 }  /* extern "C" */
 
+static void *find_actor_by_class(unsigned short cls);
+
+/* TEMPORARY star-sequence trace: SM64DS_TRACE_STAR=1 logs, every frame a
+   PowerStar (class 178) is alive, the whole set of words the post-collect
+   sequence gates on, so a freeze says WHICH gate it is sitting on instead of
+   just being still.
+
+   The sequence is func_ov002_020e9af4 (the star's state 11) switching on the
+   star's own +0x49b, and every one of its arms waits on something printed
+   here:
+     case 2  Player::GetTalkState(player) == -1, then the choice bits
+             (+0x4a2 >> 10) & 3: 1 = save, 2 = do not save, 0/3 = NO ARM,
+             which is a permanent spin
+     case 3  data_0209d660 == 0   (the box fully closed)
+     case 4  func_ov002_020c6e14
+     case 5  data_0209d660 == 0
+     case 6  func_ov002_020e8618, and control comes back
+   d654/d67c are the save-screen arm's own flag and countdown
+   (hal/message_pump.cpp), d664 is Message's in-talk flag, d684 the choice
+   box's answer that +0x4a2 latches from. Reads only. */
+extern "C" void port_input_probe_trace_star(int frame)
+{
+    if (!std::getenv("SM64DS_TRACE_STAR")) return;
+    char *st = (char *)find_actor_by_class(178);
+    char *pl = (char *)find_actor_by_class(0xbf);
+    static int was_alive, after;
+    if (!st && !was_alive && !after)
+        return;                     /* nothing to say before the star exists */
+    if (!st && was_alive) {
+        std::fprintf(stderr, "[star] f%d the PowerStar is gone (killed or "
+                     "destroyed)\n", frame);
+        was_alive = 0;
+        after = 1;
+    }
+    if (st) {
+        was_alive = 1;
+    } else if (after) {
+        /* keep reporting for a while past the star's death: the freeze this
+           trace exists for shows up AFTER the level change, in the mask and
+           the fresh player's flags, long after the star itself is gone. */
+        if (++after > 600)
+            return;
+    }
+    unsigned short a2 = st ? *(unsigned short *)(st + 0x4a2) : 0;
+    /* THE FREEZE WORD IS THE POINT. data_0209b454 is the persistent
+       freeze-REQUEST word the collect handler ORs 0x4000000 into
+       (src/func_ov002_020e8ef0.cpp:151-155); data_0209b464 is this frame's
+       latched copy, and Actor::BeforeBehavior skips every actor whose own
+       +0xb0 does not intersect it. func_ov002_020e8618 is the only clear.
+       Printed with the player's own +0xb0 so a freeze says whether the
+       player is INSIDE or OUTSIDE the mask that is still up. */
+    std::fprintf(stderr,
+                 "[star] f%d %s sub49b=%d choice=%u a2=%04x x43c=%d x440=%d "
+                 "x490=%u x49d=%u | pl step6e3=%u kind70a=%u msg688=%d "
+                 "noctl709=%u talk=%d plb0=%08x | b454=%08x b464=%08x | "
+                 "pause(f20c=%u f294=%u f2c4=%u) stick(mag=%d nx=%d) | "
+                 "d660=%u d654=%u d67c=%u d664=%u d684=%u msgid=%d\n",
+                 frame, st ? "star" : "STAR-GONE",
+                 st ? (int)*(unsigned char *)(st + 0x49b) : -1,
+                 (unsigned)((a2 >> 10) & 3), (unsigned)a2,
+                 st ? *(int *)(st + 0x43c) : -1,
+                 st ? *(int *)(st + 0x440) : -1,
+                 st ? (unsigned)*(unsigned short *)(st + 0x490) : 0u,
+                 st ? (unsigned)*(unsigned char *)(st + 0x49d) : 0u,
+                 pl ? (unsigned)*(unsigned char *)(pl + 0x6e3) : 99u,
+                 pl ? (unsigned)*(unsigned char *)(pl + 0x70a) : 99u,
+                 pl ? *(int *)(pl + 0x688) : -99,
+                 pl ? (unsigned)*(unsigned char *)(pl + 0x709) : 99u,
+                 pl ? _ZN6Player12GetTalkStateEv(pl) : -99,
+                 pl ? (unsigned)*(unsigned int *)(pl + 0xb0) : 0u,
+                 (unsigned)data_0209b454[0], data_0209b464,
+                 (unsigned)data_0209f20c[0], (unsigned)data_0209f294[0],
+                 (unsigned)data_0209f2c4[0],
+                 (int)*(short *)data_0209f4a0, (int)*(short *)data_0209f4a2,
+                 (unsigned)data_0209d660, (unsigned)data_0209d654,
+                 (unsigned)data_0209d67c, (unsigned)data_0209d664,
+                 (unsigned)data_0209d684, (int)data_0209d6d4);
+}
+
 /* TEMPORARY message-state trace: SM64DS_TRACE_MSG=1 logs the box state each
    frame it is active, so a headless close can be watched frame by frame. */
 extern "C" void port_input_probe_trace_msg(int frame)
 {
+    port_input_probe_trace_star(frame);
     if (!std::getenv("SM64DS_TRACE_MSG")) return;
     static int was_active;
     int active = data_0209d660 != 0;
@@ -121,6 +214,90 @@ static void *find_actor_by_class(unsigned short cls)
     }
     return 0;
 }
+/* TEMPORARY star-touch trigger, the STAR half of the same seam the buddy, the
+ * sign and the rabbit already stand in for.
+ *
+ * PowerStar state 4 (func_ov002_020ea420) ends every frame by calling the real
+ * touch gate func_ov002_020e930c, which reads the star's own two collision
+ * fields -- +0x134, the unique id of the actor on its cylinder, and +0x130 bit
+ * 0x400000, the touch flag -- finds that actor, checks it is not already in a
+ * no-control state and that Event 0x1e is clear, and then runs the REAL
+ * func_ov002_020e8ef0. The port does not drive that cylinder overlap for a
+ * headless run (the player walks a scripted line, not into a spawned star), so
+ * this stands in for JUST the detection. Everything from func_ov002_020e930c
+ * down -- the collect handler, SetNoControlState, PrepareTalk, the star's own
+ * state machine, the message box -- is the matched code in the ROM's own order.
+ *
+ *   SM64DS_STAR_TRIGGER=<frame>[,<frame>...]   collect a star on each frame
+ *
+ * A frame with no live PowerStar puts one there first, through the level's own
+ * debug spawn (port_debug_spawn, the same entry SM64DS_SPAWN_ACTOR uses), and
+ * arms it two frames later once its InitResources has run. That is what makes a
+ * SECOND star in one session testable: the env spawn fires once at the process
+ * boot, so a star collected before a level change leaves nothing to collect
+ * after one.
+ *
+ * Each arm is ONE frame only: the gate is edge-shaped (Event 0x1e latches after
+ * the first collect) and re-arming would re-detect a star already inside its
+ * collect sequence. Delete with the probe when the star's cylinder overlap is
+ * driven headlessly.
+ */
+extern "C" void *port_debug_spawn(unsigned id, unsigned param);
+
+static int star_trigger_wants(int frame)
+{
+    const char *e = std::getenv("SM64DS_STAR_TRIGGER");
+    if (!e) return 0;
+    for (;;) {
+        char *end;
+        long at = std::strtol(e, &end, 0);
+        if (end == e) break;
+        if (at <= 0) at = 120;
+        if (frame == (int)at) return 1;
+        e = end;
+        if (*e == ',') ++e; else break;
+    }
+    return 0;
+}
+
+extern "C" void port_input_probe_star_trigger(int frame)
+{
+    static int arm_at = -1;
+    int want = star_trigger_wants(frame);
+    if (!want && frame != arm_at) return;
+
+    char *player = (char *)find_actor_by_class(0xbf);
+    char *star = (char *)find_actor_by_class(178);
+    if (!player) {
+        std::fprintf(stderr, "  [startrig] f%d no player to collect with\n",
+                     frame);
+        return;
+    }
+    if (!star) {
+        if (frame == arm_at) {
+            std::fprintf(stderr, "  [startrig] f%d the spawned star is not on "
+                         "the list; nothing armed\n", frame);
+            arm_at = -1;
+            return;
+        }
+        void *made = port_debug_spawn(178, 0);
+        arm_at = frame + 2;
+        std::fprintf(stderr, "  [startrig] f%d no live PowerStar: spawned one "
+                     "(%p) through the level's own debug spawn; arming its "
+                     "touch at f%d\n", frame, made, arm_at);
+        return;
+    }
+    if (frame == arm_at)
+        arm_at = -1;
+    unsigned int pid = *(unsigned int *)(player + 0x4);   /* player's unique id */
+    *(unsigned int *)(star + 0x134) = pid;
+    *(unsigned int *)(star + 0x130) |= 0x400000;
+    std::fprintf(stderr, "  [startrig] f%d armed the touch: star %p +0x134 = "
+                 "player uid 0x%x, +0x130 |= 0x400000; func_ov002_020e930c "
+                 "runs the real collect handler this frame\n",
+                 frame, (void *)star, pid);
+}
+
 extern "C" void port_input_probe_buddy_trigger(int frame)
 {
     if (!std::getenv("SM64DS_BUDDY_TRIGGER")) return;
