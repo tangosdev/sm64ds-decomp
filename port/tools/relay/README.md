@@ -196,18 +196,27 @@ press lands N frames later, and N frames of that is far less noticeable than
 the whole game running at a third speed.
 
 **It is on by default and the recipe above needs no extra knob.** The game
-picks the depth from how it is connected: 4 frames through a relay, 2 on a
+picks the depth from how it is connected: 5 frames through a relay, 2 on a
 direct connection, 0 on this machine's own loopback where there is no round
-trip to hide.
+trip to hide. The relay number is measured rather than derived -- 4 is what
+the arithmetic gives on a good hour, and it is the wrong answer on an ordinary
+bad one, where 5 takes the stalls from 44 in 360 frames down to 5 and 6 buys
+nothing more.
 
 `SM64DS_COMMS_INPUT_DELAY=<0..8>` overrides it on both machines, and there are
 two reasons to reach for it:
 
-- **Your pair is further apart than 4 frames of cover.** The signal is
-  `starved` in the game's own `[comms:loopback] ... indelay=4 starved=N` line.
-  Zero is healthy. A number that climbs means frames are still waiting on the
-  wire, and each one of those is a stall. Raise the delay by one and look
-  again. The rule is `N >= round trip in ms / 33.3`, plus a frame of headroom;
+- **Your pair is further apart than the default covers.** The signal is
+  `starved` on the line the game writes when the session ends, in
+  `playlog/play_*.log`:
+
+      [comms:loopback] closed after 600 rounds; indelay=5 starved=8 sent=...
+
+  A handful over a long session is nothing -- a starved frame waits only for
+  the part of the round trip that ran past the budget, not for a whole one. A
+  number that climbs steadily means frames are routinely waiting on the wire.
+  Raise the delay by one and look again. The rule is
+  `N >= round trip in ms / 33.3`, plus a frame of headroom;
   `python3 test_client.py remote-check --host YOUR.SERVER.IP` measures that
   round trip and prints the N it implies.
 - **You want the old behaviour back to measure it.** `=0` is stop-and-wait

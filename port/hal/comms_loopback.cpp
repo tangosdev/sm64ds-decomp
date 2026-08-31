@@ -1724,7 +1724,20 @@ void lb_close() {
     g_latched_mask = 0;
     g_stage_mask   = 0;
     std::memset(g_aux, 0, sizeof g_aux);   // pending aux dies with the session
-    std::fprintf(stderr, "[comms:loopback] closed after %u rounds\n", g_round);
+    // THE PACING VERDICT, ONCE, ON EVERY SESSION. Run rel0215 lane vslag.
+    //
+    // `starved` is what tells a pair their input delay is too shallow for
+    // their path, and the relay README now tells players to read it -- but the
+    // only thing that printed it was comms_loopback_report, which walk_window
+    // calls from inside the SM64DS_COMMS_FANOUT block. So the number the
+    // documentation sends a player to look for did not exist in an ordinary
+    // playlog, and the two knobs that produce it are per-frame work nobody
+    // should run while playing. One line at close costs a session nothing and
+    // lands in playlog/play_*.log where a bug report will carry it.
+    std::fprintf(stderr, "[comms:loopback] closed after %u rounds; indelay=%d "
+                 "starved=%llu sent=%llu recvd=%llu resends=%llu\n",
+                 g_round, g_input_delay, g_pipe_starved, g_sent, g_recvd,
+                 g_resends);
 }
 
 void lb_become_parent() {
@@ -2307,13 +2320,38 @@ bool comms_loopback_install_from_env() {
     //   "a knob whose effective value nobody could state" objection that
     //   killed auto does not reach a constant, and the report line states it.
     //
-    //   RELAY 4, from the measurement above: ceil(98.8 / 33.3) is 3, plus one
-    //   frame of headroom, because a starved frame falls all the way back to a
-    //   round trip and a mixed pace feels worse than a consistent one.
-    //   DIRECT 2, which covers 66 ms. Direct mode is either a LAN
-    //   (microseconds, where two frames costs almost nothing) or a forwarded
-    //   port between two houses (tens of ms), and 2 is defensible for both
-    //   without charging a LAN four frames of lag it has no use for.
+    //   RELAY 5, and the 5 was MEASURED rather than derived. The formula off
+    //   a good hour gives 4 (ceil(98.8 / 33.3) plus a frame of headroom), and
+    //   4 is enough while the path stays that good -- 4 to 8 starved frames
+    //   in 360. But the same desk an hour later measured p50 131 ms, and the
+    //   three depths run back to back on THAT path separate cleanly
+    //   (port/tools/vs_pace.py --arms live --delay N, 360 frames each):
+    //
+    //     N=4   starved 44   29.87 fps   frame p95 51.45 ms
+    //     N=5   starved  5   30.02 fps   frame p95 46.16 ms
+    //     N=6   starved  5   30.05 fps   frame p95 48.31 ms
+    //
+    //   5 is the knee: it takes an order of magnitude off the stalls that 4
+    //   leaves on an ordinary bad hour, and 6 buys nothing for the extra frame
+    //   of input lag it charges. An internet path is not one number, and a
+    //   default tuned to its best hour is a default that fails in its worst.
+    //
+    //   NO FIXED N COVERS THE WHOLE TAIL, and pretending otherwise would be
+    //   the dishonest version of this. That same measurement's p95 round trip
+    //   was 410 ms, which is 13 frames -- past kInputDelayMax and far past
+    //   what anyone would accept as input lag. The design answer is that a
+    //   starve is CHEAP under pipelining: the frame waits only for the part of
+    //   the round trip that ran past the budget, not for a whole one, which is
+    //   why 44 starved frames still measured 29.87 fps.
+    //
+    //   DIRECT 2, which covers 66 ms, AND IT IS NOT MEASURED -- said plainly
+    //   because the relay number above is. Direct mode is two different
+    //   things: a LAN (microseconds, where two frames costs almost nothing)
+    //   and a forwarded port between two houses (tens of ms). 2 is the
+    //   smallest depth that covers the second without charging the first five
+    //   frames of lag it has no use for. A direct pair that sees `starved`
+    //   climb should raise it, and if that mode is ever measured the way relay
+    //   was, this number should move to whatever the knee turns out to be.
     //   LOOPBACK 0, unchanged.
     //
     //   IT IS STILL A KNOB, in both directions. SM64DS_COMMS_INPUT_DELAY=0
@@ -2327,7 +2365,7 @@ bool comms_loopback_install_from_env() {
     //   untouched, both ends still consume the SAME round sequence in the same
     //   order, and nothing is predicted, rolled back or discarded. Only the
     //   offset between the frame being drawn and the round being read moves.
-    if (g_net_mode == kNetRelay)       g_input_delay = 4;
+    if (g_net_mode == kNetRelay)       g_input_delay = 5;
     else if (g_net_mode == kNetDirect) g_input_delay = 2;
 
     bool delay_from_env = false;

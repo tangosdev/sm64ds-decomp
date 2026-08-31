@@ -183,6 +183,11 @@ def report_line(text):
     m = None
     for m in re.finditer(r"^\[loopback:\w+\] .*indelay=.*$", text, re.M):
         pass
+    if m:
+        return m.group(0)
+    # The close line carries indelay and starved too, on every session and
+    # with no per-frame cost, so a run without --counters still reports them.
+    m = re.search(r"^\[comms:loopback\] closed after .*indelay=.*$", text, re.M)
     return m.group(0) if m else ""
 
 
@@ -253,6 +258,13 @@ def main():
     ap.add_argument("--code", default="VSPACE")
     ap.add_argument("--timeout", type=int, default=900,
                     help="per-instance wall limit")
+    ap.add_argument("--delay", type=int, default=None,
+                    help="pin the input delay on the pipelined arms instead "
+                         "of taking the build's default for the mode. This is "
+                         "how the default itself gets chosen: run the same arm "
+                         "at N and N+1 on the same path and compare `starved` "
+                         "and the p95, rather than arguing about a frame of "
+                         "input lag")
     ap.add_argument("--counters", action="store_true",
                     help="turn the ROM fan-out and the transport's counter "
                          "line on, so `starved` reaches the log. It is real "
@@ -286,11 +298,11 @@ def main():
                     local_relay = "127.0.0.1:%d" % port
                     print("   local relay on " + local_relay)
                 r = arm_pair(name, a, local_relay,
-                             0 if name.endswith("0") else None,
+                             0 if name.endswith("0") else a.delay,
                              (a.code + "L" + name[-1])[:8])
             elif name in ("live0", "live"):
                 r = arm_pair(name, a, a.relay,
-                             0 if name.endswith("0") else None,
+                             0 if name.endswith("0") else a.delay,
                              (a.code + "W" + name[-1])[:8])
             else:
                 print("   unknown arm, skipped")

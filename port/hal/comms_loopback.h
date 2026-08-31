@@ -95,7 +95,7 @@
 //                                   with it. Without it a session is
 //                                   STOP AND WAIT and the frame rate IS the
 //                                   round trip -- 90 ms of relay is 11 fps.
-//                                   Defaults: loopback 0, direct 2, relay 4;
+//                                   Defaults: loopback 0, direct 2, relay 5;
 //                                   the derivation is over the parse in
 //                                   comms_loopback.cpp. Raise it on a worse
 //                                   path (the signal is `starved` in the
