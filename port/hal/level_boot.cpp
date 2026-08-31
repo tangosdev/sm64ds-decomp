@@ -2161,8 +2161,17 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
        *(u8 *)(c + 0x6d9) =  a       & 7;   CHARACTER   <- f2
 
    so f1 lands at +0x6da as `sub`, a different field from the character at
-   +0x6d9. The override could not have changed a character on any path, and
-   it did not.
+   +0x6d9. Through data_02092128 the table therefore could not move a
+   character at all, which is why every capture showed the save file's one
+   character on both slots.
+
+   ONE HONEST QUALIFIER. The table did also feed the stand-in spawn below,
+   and THAT path assigned it to f2, which IS the character. So the mechanism
+   was not "the table can never reach a character" -- it was that the stand-in
+   only runs for a slot the level's entrance table cannot seat, and on the
+   levels these proofs boot it never runs at all (grep the run logs for
+   "port-supplied start": zero hits, solo and two-player). The outcome was the
+   same; the reason is narrower than "no path".
 
    AND THE ROM ALREADY DECIDES. _Z19LoadEntranceObjects...'s loop is four
    lines: f2 = data_0209caa0[0x41], the save file's one character, unless
@@ -4335,8 +4344,8 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
            reason the save-block section gives: the dsd symbol data_0209caa0
            is 0x14 bytes, so the literal index is a compile-time range check
            and a fast-fail. */
-        unsigned f2 = (unsigned)(data_0209cad2[0x41 - 0x32] & 7);
-        unsigned f1 = (unsigned)(data_02092128[i] & 7);
+        unsigned f2 = (unsigned)data_0209cad2[0x41 - 0x32];
+        unsigned f1 = (unsigned)data_02092128[i];
         if (data_0209f2d8 == 1) {
             f2 = 3;                     /* VS: every slot is Yoshi */
             f1 = 3;

@@ -35,13 +35,14 @@ reported.
       red -- see its own banner, which is the lane's most expensive lesson.
 
   P1  EACH WINDOW IS ITS OWN PLAYER. The parent's local index is 0 and the
-      child's is 1, and every slot carries the character the ROM's VS arm
-      gives it: 3, Yoshi, on both, told apart by palette row rather than by
-      model. (his: "P2 shows HIM as Mario, should be Luigi". The IDENTITY half
-      of that report was real and the seat assertions below are what catch it.
-      The CHARACTER half was not the ROM's -- Luigi was never the right answer
-      for a VS slot -- and the assertion that encoded it is corrected below,
-      with the reasoning at the character check.)
+      child's is 1, and every slot carries the character the ROM gives it on
+      THIS boot -- castle grounds, an adventure level, so the save file's one
+      character on both. (his: "P2 shows HIM as Mario, should be Luigi". The
+      IDENTITY half of that report was real and the seat assertions below are
+      what catch it. The CHARACTER half was never the ROM's: Luigi is not what
+      a second slot gets on any path. In a real versus match every slot is
+      Yoshi and they differ by colour, which is asserted where a real versus
+      match is booted -- vs_slot1_solo_check.py -- and not here.)
   P2  INPUT ISOLATION. Input injected on the child moves the child's OWN body
       and NOT the parent's body, in the child's own world.
       (his: "from P2 I can move BOTH Mario and Luigi")
@@ -287,58 +288,67 @@ def rungP1(seconds):
                     "host and drives the host's character)" % seat2)
 
     # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
-    # A two-player session IS a VS match -- the cartridge has exactly one
-    # multiplayer mode, the star battle -- so the port seats data_0209f2d8 = 1
-    # the way the VS menu would (hal/level_boot.cpp's a2 seat), and
-    # _Z19LoadEntranceObjects...'s loop then runs its VS arm: f2 = 3 for EVERY
-    # slot. Four Yoshis, told apart by COLOUR and not by model -- Player::Render
-    # re-points every Yoshi material at the body palette row (playerNo << 1)
-    # picks, on the same data_0209f2d8 == 1 test.
+    # THIS RUNG BOOTS CASTLE GROUNDS: mp2_proof.env_base pins SM64DS_LEVEL = 1,
+    # and an adventure level is not a versus match however many players are in
+    # it. So the ROM's spawn loop takes its NON-VS arm and every slot gets the
+    # save file's one character, which the port's own boot seats to 0.
     #
     # WHAT THIS ASSERTION USED TO SAY was "slot0 char=0 slot1 char=1 (0 Mario,
-    # 1 Luigi)", and that was never a ROM property on any path. It encoded a
-    # retired port-side stand-in that wrote slot index into data_02092128 --
-    # which the loop packs as f1, landing at Player+0x6da, NOT the character at
-    # +0x6d9. So the stand-in could not have produced the two characters this
-    # line demanded, and it did not: the rung failed here reading char=0 on
-    # every slot, which was the save file's character arriving through f2
-    # exactly as the ROM's non-VS arm says it should.
+    # 1 Luigi)", which was never a ROM property on any path. It encoded a
+    # retired port-side stand-in that wrote the slot index into data_02092128
+    # -- which the loop packs as f1, landing at Player+0x6da, NOT the character
+    # at +0x6d9 -- so it could not produce the two characters this line
+    # demanded, and the rung failed here reading char=0 on both.
     #
-    # (rungA in mp3_proof.py asserts the OTHER arm of the same four lines -- a
-    # non-VS boot, where every slot carries the save file's one character --
-    # and vs_slot1_solo_check.py asserts this arm against a real arena.)
+    # It was then briefly changed to demand 3 on every slot. That is the VS
+    # contract, and it was made to pass by a port-side promotion of the mode
+    # byte that has since been reverted: mode 1 on an adventure level is a
+    # state the cartridge cannot reach, and it changed the behaviour of 100
+    # compiled files to buy one character. Character 3 is right for a versus
+    # match and wrong here, and the boot that is genuinely in versus is the
+    # one that carries it -- see vs_slot1_solo_check.py, which enters through
+    # the ROM's own start at a real arena.
+    #
+    # The mode is pinned alongside the value, because a check that reads only
+    # the character cannot tell an adventure boot from an adventure boot
+    # wearing VS mode, and that is exactly what slipped through last time.
     a1, b1 = rows(t1, 0), rows(t1, 1)
     a2, b2 = rows(t2, 0), rows(t2, 1)
     if a1 and b1 and a2 and b2:
         seen = (a1[-1]["char"], b1[-1]["char"],
                 a2[-1]["char"], b2[-1]["char"])
-        ok &= M.verdict(all(c == 3 for c in seen),
-                        "rungP1 EVERY SLOT IS YOSHI IN BOTH WINDOWS | P1 sees "
-                        "slot0 char=%d slot1 char=%d ;; P2 sees slot0 char=%d "
-                        "slot1 char=%d (the ROM's VS contract: character 3 on "
-                        "every slot, told apart by colour)" % seen)
+        ok &= M.verdict(all(c == 0 for c in seen),
+                        "rungP1 EVERY SLOT CARRIES THE SAVE-FILE CHARACTER | "
+                        "P1 sees slot0 char=%d slot1 char=%d ;; P2 sees slot0 "
+                        "char=%d slot1 char=%d (the ROM's non-VS contract on "
+                        "an adventure level: one save, one character, every "
+                        "slot)" % seen)
+        ok &= M.verdict("game mode 0" in t1 and "game mode 0" in t2,
+                        "rungP1 AND NEITHER WINDOW IS IN VS MODE | both a2 "
+                        "seats report game mode 0")
 
-        # AND THE COLOUR, which is the half that makes four Yoshis playable.
-        # func_ov002_020e5948 sets Player+0x61C to the Yoshi body model's
-        # material[0] palette base plus (playerNo << 1), and Player::Render
-        # writes it into every body and head material record on the same
-        # data_0209f2d8 == 1 and character 3 test. yoshi_all_16p_pl is 128
-        # bytes -- four stacked 16-colour rows, greens, reds, blues, yellows
-        # -- so one step of playerNo is exactly one row and consecutive slots
-        # must differ by 2. Asserting the DIFFERENCE rather than the absolute
-        # value, because the base is wherever the model got loaded.
-        pals = (a1[-1]["pal"], b1[-1]["pal"], a2[-1]["pal"], b2[-1]["pal"])
-        if any(v is None for v in pals):
-            M.verdict(False, "rungP1 the probe reported no pal column -- this "
-                             "build predates it, so the colour half is "
-                             "UNMEASURED here, not passing")
-            ok = False
-        else:
-            ok &= M.verdict(pals[1] - pals[0] == 2 and pals[3] - pals[2] == 2,
-                            "rungP1 THE TWO YOSHIS ARE DIFFERENT COLOURS | "
-                            "P1 pal slot0=%d slot1=%d ;; P2 pal slot0=%d "
-                            "slot1=%d -- consecutive slots must differ by 2, "
-                            "one 16-colour row of yoshi_all_16p_pl" % pals)
+        # NO COLOUR ASSERTION HERE, AND THAT IS DELIBERATE. One stood here and
+        # it was VACUOUS. It read Player+0x61C per slot and asserted that
+        # consecutive slots differ by 2, printing "THE TWO YOSHIS ARE DIFFERENT
+        # COLOURS". src/func_ov002_020e5948.c:366 writes
+        # +0x61C = base + (playerNo << 1) UNCONDITIONALLY, six lines above the
+        # data_0209f2d8 == 1 test at :372, so that difference is exactly 2 in
+        # every mode, for every character, always. The arm was measuring
+        # mPlayerNo. It was demonstrated passing on a build carrying two Marios
+        # in adventure mode, where Player::Render's palette re-point never
+        # executes at all.
+        #
+        # A real colour check has to observe the re-point and not its input:
+        # Player::Render copies +0x61C into +0x20 of every body and head
+        # material record, and only when the mode is VS and the character is 3.
+        # Reading a material record back is a measurement this harness does not
+        # have, so the colour half is UNMEASURED here rather than asserted. pal
+        # stays in the probe line for whoever does that work. It is data, not a
+        # verdict.
+        print("      info: pal (+0x61C = base + playerNo<<1, written in every "
+              "mode) P1 slot0=%s slot1=%s ;; P2 slot0=%s slot1=%s -- NOT a "
+              "colour measurement, see the note above"
+              % (a1[-1]["pal"], b1[-1]["pal"], a2[-1]["pal"], b2[-1]["pal"]))
     return ok
 
 

@@ -140,30 +140,38 @@ def rungA():
                     "rungA they are DIFFERENT actors | %s vs %s"
                     % (r0[-1]["actor"], r1[-1]["actor"]))
     # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
-    # THIS RUNG'S BOOT IS A VS BOOT: it asks for two players, and a session
-    # with more than one player IS a VS match -- the cartridge has exactly one
-    # multiplayer mode, the star battle -- so hal/level_boot.cpp's a2 seat
-    # writes data_0209f2d8 = 1 the way the VS menu would, and
-    # _Z19LoadEntranceObjects...'s loop then takes its VS arm: f2 = 3 on EVERY
-    # slot. Both bodies come up Yoshi, told apart by palette row rather than
-    # by model (rungP1 in mp3_play_proof.py asserts that colour half).
+    # THIS RUNG BOOTS CASTLE GROUNDS -- mp2_proof.env_base pins
+    # SM64DS_LEVEL = 1 -- which is an ADVENTURE level, not a versus match. The
+    # cartridge only ever enters VS through PrepareVsMode, which is followed
+    # immediately by LoadLevelNoReturn into one of the four arenas, so mode 1
+    # on level 1 is a state the ROM cannot reach. On this boot
+    # _Z19LoadEntranceObjects... therefore takes its NON-VS arm: every slot
+    # gets f2 = data_0209caa0[0x41], the save file's single character, which
+    # the port's own boot seats to 0. One save, one character, every slot.
     #
-    # WHAT THIS NOTE USED TO SAY, and why it is replaced rather than left
-    # alone. It read the same equality as "both slots carry the SAVE FILE's
-    # character, the ROM's non-VS contract". That was a true description of
-    # the boot at the time -- nothing seated the mode byte, so the loop always
-    # took its non-VS arm -- and it stopped being true of this boot the moment
-    # the seat landed. The equality kept passing straight across that change
-    # while the REASON for it inverted, which is the exact failure this file
-    # exists to catch. So assert the VALUE, not the agreement: a check that
-    # cannot tell 0,0 from 3,3 cannot tell which arm of the ROM's four lines
-    # ran, and its note will drift again.
-    ok &= M.verdict(r0[-1]["char"] == 3 and r1[-1]["char"] == 3,
-                    "rungA BOTH slots are YOSHI | slot0 char=%d slot1 "
-                    "char=%d, read off each actor's +0x6d9 (the ROM's VS "
-                    "contract: character 3 on every slot, told apart by "
-                    "colour)"
+    # ASSERT THE VALUE, NOT THE AGREEMENT. The original form here was
+    # `r0.char == r1.char`, and it passes on 0,0 AND on 3,3 -- so it could not
+    # tell which arm of the ROM's four lines ran, and a revision that wrongly
+    # promoted the mode byte sailed straight through it while its own note
+    # inverted underneath. Both halves are pinned now: the character value,
+    # and the game mode the a2 seat reports, so a future promotion fails here
+    # instead of passing quietly.
+    #
+    # (The VS arm of the same four lines -- character 3 on EVERY slot -- is
+    # asserted by vs_slot1_solo_check.py, which boots a real arena through the
+    # ROM's own start. It belongs there and not here, because only that boot
+    # is genuinely in VS.)
+    ok &= M.verdict(r0[-1]["char"] == 0 and r1[-1]["char"] == 0,
+                    "rungA BOTH slots carry the save-file character | slot0 "
+                    "char=%d slot1 char=%d, read off each actor's +0x6d9 "
+                    "(the ROM's non-VS contract on an adventure level: one "
+                    "save, one character, every slot)"
                     % (r0[-1]["char"], r1[-1]["char"]))
+    ok &= M.verdict("game mode 0" in t,
+                    "rungA AND THE BOOT IS NOT IN VS MODE | the a2 seat "
+                    "reports game mode 0. Mode 1 on an adventure level is a "
+                    "state the cartridge cannot reach, and it would change "
+                    "100 compiled files' behaviour, not just the character.")
 
     ok &= M.verdict("[vsfix]" in t,
                     "rungA the overlap fixture FIRED (SM64DS_VS_OVERLAP_AT=%d)"

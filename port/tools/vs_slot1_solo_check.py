@@ -100,10 +100,40 @@ def check(name, rc, t, log, expect_first_pos, expect_char):
                   % (first[1], expect_first_pos))
             ok = False
     if expect_char is not None:
-        if first[3] == expect_char:
-            print("  ok: slot1 char=%d" % first[3])
+        # THE VS CHARACTER CONTRACT LIVES HERE, and it lives here because this
+        # is the only check in the tree that boots a REAL versus match: the
+        # ROM's own start (func_ov075_02116c8c -> PrepareVsMode) writes
+        # data_0209f2d8 = 1 and then loads one of the four arenas, which is the
+        # only way the cartridge ever enters VS.
+        #
+        # _Z19LoadEntranceObjects... then takes its VS arm --
+        # `if (data_0209f2d8 == 1) { f2 = 3; f1 = 3; }` -- so EVERY slot is
+        # character 3, Yoshi, and the players are told apart by COLOUR rather
+        # than by model. Both slots are asserted, not just slot 1: "every slot"
+        # is the contract, and checking one of two cannot see a loop that seats
+        # the local player differently from the remote one.
+        #
+        # This assertion does NOT belong on an adventure boot. rungA and rungP1
+        # boot castle grounds, where the non-VS arm runs and every slot gets
+        # the save file's one character; a revision that moved character 3 onto
+        # those rungs had to promote the mode byte on an adventure level to do
+        # it, which changed the behaviour of 100 compiled files and was
+        # reverted.
+        rows0 = [r for r in slot_rows(t, 0) if r[1] is not None]
+        if not rows0:
+            print("  FAIL: no live slot0 probe rows -- cannot check the "
+                  "contract on every slot")
+            ok = False
+        elif rows0[0][3] == expect_char and first[3] == expect_char:
+            which = ("EVERY SLOT IS YOSHI (the ROM's VS arm forces 3)"
+                     if expect_char == 3 else
+                     "EVERY SLOT CARRIES THE SAVE-FILE CHARACTER "
+                     "(the ROM's non-VS arm)")
+            print("  ok: %s -- slot0 char=%d slot1 char=%d"
+                  % (which, rows0[0][3], first[3]))
         else:
-            print("  FAIL: slot1 char=%d, wanted %d" % (first[3], expect_char))
+            print("  FAIL: slot0 char=%d slot1 char=%d, wanted %d on both"
+                  % (rows0[0][3], first[3], expect_char))
             ok = False
     states = sorted({r[2] for r in live})
     npos = len({r[1] for r in live})
@@ -131,8 +161,15 @@ def main():
     rc, t, log = run_one("arena51", frames, {"SM64DS_VS_MAP": "0"})
     ok = check("arena51 (level 51, VS mode)", rc, t, log,
                REC1_LVL51, 3)
+    # THE CONTROL IS ALSO THE NON-VS ARM'S WITNESS. Level 1 is castle grounds,
+    # an adventure level, so the mode byte stays 0 and the spawn loop takes the
+    # other arm: every slot gets data_0209caa0[0x41], the save file's one
+    # character, which the port's boot seats to 0. Asserting that here as well
+    # makes this file carry BOTH arms of the ROM's four lines, and makes the
+    # arena assertion above non-vacuous -- the two runs differ only in which
+    # arm ran, and they must read differently.
     rc2, t2, log2 = run_one("control1", frames, {"SM64DS_LEVEL": "1"})
-    ok2 = check("control1 (level 1, no VS flag)", rc2, t2, log2, None, None)
+    ok2 = check("control1 (level 1, no VS flag)", rc2, t2, log2, None, 0)
     print("VERDICT: %s" % ("PASS" if (ok and ok2) else "FAIL"))
     return 0 if (ok and ok2) else 1
 
