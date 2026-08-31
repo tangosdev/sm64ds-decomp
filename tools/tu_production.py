@@ -49,7 +49,12 @@ def prepare_intact_object(raw, entry):
     if reasons:
         _raise(f"{entry['id']} exact RTTI externalization", reasons)
 
-    owned_before = TB.verify_owned_sections(externalized_obj, entry, claims)
+    ordered_obj, section_order, reasons = \
+        TB.prepare_owned_nontext_section_order(externalized_obj, entry, claims)
+    if reasons:
+        _raise(f"{entry['id']} manifest non-text section order", reasons)
+
+    owned_before = TB.verify_owned_sections(ordered_obj, entry, claims)
     if not owned_before.get("ok"):
         _raise(f"{entry['id']} licensed non-text contribution",
                owned_before.get("errors", []))
@@ -57,7 +62,7 @@ def prepare_intact_object(raw, entry):
     if reasons:
         _raise(f"{entry['id']} vtable address-point policy", reasons)
     linked_obj, rebias = TB.OI.rebias_object_symbols(
-        externalized_obj, biases, normalize_undefined=True)
+        ordered_obj, biases, normalize_undefined=True)
     if linked_obj is None:
         _raise(f"{entry['id']} vtable address-point rewrite", [rebias.get("error")])
     owned_after = TB.verify_owned_sections(
@@ -76,6 +81,7 @@ def prepare_intact_object(raw, entry):
         _raise(f"{entry['id']} production object audit", audit_errors)
     return linked_obj, {
         "compilerOnly": compiler_only, "externalized": externalized,
+        "sectionOrder": section_order,
         "ownedBefore": owned_before, "ownedAfter": owned_after,
         "vtableRebias": rebias,
         "objectAudit": {"rows": rows, "extraSections": extra,
@@ -332,12 +338,17 @@ def _prepare_one(entry, config_root, work_root, jobs):
     if reasons:
         _raise(f"{entry['id']} exact RTTI externalization", reasons)
 
-    owned_before = TB.verify_owned_sections(externalized_obj, entry, claims)
+    ordered_obj, section_order, reasons = \
+        TB.prepare_owned_nontext_section_order(externalized_obj, entry, claims)
+    if reasons:
+        _raise(f"{entry['id']} manifest non-text section order", reasons)
+
+    owned_before = TB.verify_owned_sections(ordered_obj, entry, claims)
     if not owned_before.get("ok"):
         _raise(f"{entry['id']} licensed non-text contribution",
                owned_before.get("errors", []))
     storage_obj, partition, reasons = \
-        TB.derive_owned_nontext_object(externalized_obj, entry, claims)
+        TB.derive_owned_nontext_object(ordered_obj, entry, claims)
     if reasons:
         _raise(f"{entry['id']} non-text partition", reasons)
     biases, reasons = TB.partition_vtable_rebiases(entry, claims)
@@ -383,6 +394,7 @@ def _prepare_one(entry, config_root, work_root, jobs):
         "nontextClaims": [dict(claim) for claim in nontext],
         "compilerOnly": compiler_only,
         "externalized": externalized,
+        "sectionOrder": section_order,
         "partition": partition,
         "ownedBefore": owned_before,
         "ownedAfter": owned_after,

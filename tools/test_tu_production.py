@@ -214,12 +214,16 @@ class ProductionTuObjects(unittest.TestCase):
         claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
                   {"name": ".data", "start": 0x2000, "end": 0x2010}]
         owned = {"ok": True, "rows": [], "errors": []}
+        section_order = {"groups": [{"section": ".data", "original": [5, 7],
+                                      "desired": [7, 5]}], "objisolate": {}}
         with mock.patch.object(TP.TB, "manifest_section_claims",
                                return_value=(claims, [])), \
                 mock.patch.object(TP.TB, "apply_compiler_only_policy",
                                   return_value=(b"compiler", {"deadstripped": []}, [])), \
                 mock.patch.object(TP.TB, "apply_externalized_output_policy",
                                   return_value=(b"external", {"externalized": []}, [])), \
+                mock.patch.object(TP.TB, "prepare_owned_nontext_section_order",
+                                  return_value=(b"ordered", section_order, [])) as order, \
                 mock.patch.object(TP.TB, "verify_owned_sections",
                                   side_effect=[owned, owned]) as verify, \
                 mock.patch.object(TP.TB, "partition_vtable_rebiases",
@@ -232,18 +236,75 @@ class ProductionTuObjects(unittest.TestCase):
                 mock.patch.object(TP.TB, "object_audit_refusals", return_value=[]):
             output, evidence = TP.prepare_intact_object(b"raw", entry)
         self.assertEqual(output, b"linked")
+        order.assert_called_once_with(b"external", entry, claims)
         rebias.assert_called_once_with(
-            b"external", {"_ZTV1T": {"bias": 8}}, normalize_undefined=True)
+            b"ordered", {"_ZTV1T": {"bias": 8}}, normalize_undefined=True)
         audit.assert_called_once_with(
             b"linked", entry, 0x1000, 0x1010, {},
             validated_vtable_policies={"_ZTV1T": {"bias": 8}})
         self.assertEqual(verify.call_args_list, [
-            mock.call(b"external", entry, claims),
+            mock.call(b"ordered", entry, claims),
             mock.call(b"linked", entry, claims, public_address_points=True,
                       normalized_undefined_vtables=True),
         ])
+        self.assertIs(evidence["sectionOrder"], section_order)
         self.assertEqual(evidence["sha256"],
                          __import__("hashlib").sha256(b"linked").hexdigest())
+
+    def test_intact_object_keeps_an_already_ordered_external_object(self):
+        """FlyGuy-shaped no-op order still flows through every production gate."""
+        entry = {"id": "ov070/FlyGuy"}
+        claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
+                  {"name": ".data", "start": 0x2000, "end": 0x2010}]
+        owned = {"ok": True, "rows": [], "errors": []}
+        section_order = {"groups": [{"section": ".data", "original": [5, 7],
+                                      "desired": [5, 7]}], "objisolate": None}
+        with mock.patch.object(TP.TB, "manifest_section_claims",
+                               return_value=(claims, [])), \
+                mock.patch.object(TP.TB, "apply_compiler_only_policy",
+                                  return_value=(b"compiler", {}, [])), \
+                mock.patch.object(TP.TB, "apply_externalized_output_policy",
+                                  return_value=(b"external", {}, [])), \
+                mock.patch.object(TP.TB, "prepare_owned_nontext_section_order",
+                                  return_value=(b"external", section_order, [])) as order, \
+                mock.patch.object(TP.TB, "verify_owned_sections",
+                                  side_effect=[owned, owned]) as verify, \
+                mock.patch.object(TP.TB, "partition_vtable_rebiases",
+                                  return_value=({}, [])), \
+                mock.patch.object(TP.TB.OI, "rebias_object_symbols",
+                                  return_value=(b"external", {"error": None})) as rebias, \
+                mock.patch.object(TP.TB, "complete_ranges", return_value={}), \
+                mock.patch.object(TP.TB, "audit_tu_object",
+                                  return_value=([], [], [], True)), \
+                mock.patch.object(TP.TB, "object_audit_refusals", return_value=[]):
+            output, evidence = TP.prepare_intact_object(b"raw", entry)
+        self.assertEqual(output, b"external")
+        order.assert_called_once_with(b"external", entry, claims)
+        rebias.assert_called_once_with(b"external", {}, normalize_undefined=True)
+        self.assertEqual(verify.call_args_list, [
+            mock.call(b"external", entry, claims),
+            mock.call(b"external", entry, claims, public_address_points=True,
+                      normalized_undefined_vtables=True),
+        ])
+        self.assertIs(evidence["sectionOrder"], section_order)
+
+    def test_intact_object_refuses_section_order_before_owned_verification(self):
+        entry = {"id": "ov047/Thing"}
+        claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
+                  {"name": ".data", "start": 0x2000, "end": 0x2010}]
+        with mock.patch.object(TP.TB, "manifest_section_claims",
+                               return_value=(claims, [])), \
+                mock.patch.object(TP.TB, "apply_compiler_only_policy",
+                                  return_value=(b"compiler", {}, [])), \
+                mock.patch.object(TP.TB, "apply_externalized_output_policy",
+                                  return_value=(b"external", {}, [])), \
+                mock.patch.object(TP.TB, "prepare_owned_nontext_section_order",
+                                  return_value=(None, {}, ["ambiguous order"])), \
+                mock.patch.object(TP.TB, "verify_owned_sections") as verify:
+            with self.assertRaisesRegex(TP.ProductionTuError,
+                                        "manifest non-text section order"):
+                TP.prepare_intact_object(b"raw", entry)
+        verify.assert_not_called()
 
     def test_partitioned_object_normalizes_undefined_vtable_imports(self):
         entry = {
@@ -256,6 +317,8 @@ class ProductionTuObjects(unittest.TestCase):
                   {"name": ".data", "start": 0x2000, "end": 0x2010}]
         owned = {"ok": True, "rows": [], "errors": []}
         biases = {"_ZTV1T": {"bias": 8}}
+        section_order = {"groups": [{"section": ".data", "original": [5, 7],
+                                      "desired": [7, 5]}], "objisolate": {}}
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)
             config = root / "config"
@@ -279,10 +342,12 @@ class ProductionTuObjects(unittest.TestCase):
                                       return_value=(b"compiler", {}, [])), \
                     mock.patch.object(TP.TB, "apply_externalized_output_policy",
                                       return_value=(b"external", {}, [])), \
+                    mock.patch.object(TP.TB, "prepare_owned_nontext_section_order",
+                                      return_value=(b"ordered", section_order, [])) as order, \
                     mock.patch.object(TP.TB, "verify_owned_sections",
                                       side_effect=[owned, owned]) as verify, \
                     mock.patch.object(TP.TB, "derive_owned_nontext_object",
-                                      return_value=(b"storage", {}, [])), \
+                                      return_value=(b"storage", {}, [])) as derive, \
                     mock.patch.object(TP.TB, "partition_vtable_rebiases",
                                       return_value=(biases, [])), \
                     mock.patch.object(TP.TB.OI, "rebias_object_symbols",
@@ -291,11 +356,14 @@ class ProductionTuObjects(unittest.TestCase):
 
         rebias.assert_called_once_with(
             b"storage", biases, normalize_undefined=True)
+        order.assert_called_once_with(b"external", entry, claims)
+        derive.assert_called_once_with(b"ordered", entry, claims)
         self.assertEqual(verify.call_args_list, [
-            mock.call(b"external", entry, claims),
+            mock.call(b"ordered", entry, claims),
             mock.call(b"linked", entry, claims, public_address_points=True,
                       normalized_undefined_vtables=True),
         ])
+        self.assertIs(result["sectionOrder"], section_order)
         self.assertEqual(result["storageSha256"],
                          __import__("hashlib").sha256(b"linked").hexdigest())
 

@@ -4803,6 +4803,27 @@ def cmd_linkcheck(args):
             print(f"      externalized {externalized['externalized']} to their exact "
                   "configured canonical homes in the SCRATCH object only")
 
+        ordered_tu, section_order, order_reasons = \
+            prepare_owned_nontext_section_order(linked_tu, entry, claims)
+        report["nontextSectionOrder"] = section_order
+        if order_reasons:
+            print("      REFUSED -- manifest-licensed non-text section order:")
+            for reason in order_reasons:
+                print(f"        {reason}")
+            report["nontextSectionOrder"]["errors"] = order_reasons
+            report["result"] = "section-order-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if ordered_tu != linked_tu:
+            linked_tu = ordered_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            changed = [row["section"] for row in section_order.get("groups", [])
+                       if row.get("desired") != row.get("original")]
+            print(f"      reordered exact repeated non-text section group(s) from "
+                  f"manifest emitted addresses in the SCRATCH object only: {changed}")
+
         owned_before = verify_owned_sections(linked_tu, entry, claims)
         report["ownedSectionsBeforeRebias"] = owned_before
         if not owned_before["ok"]:
@@ -5382,6 +5403,7 @@ def _record_linkcheck(data, entry, report, baseline):
     if baseline or entry is None:
         return
     audit = report.get("objectAudit") or {}
+    section_order = report.get("nontextSectionOrder") or {}
     entry.setdefault("verification", {})["linkcheck"] = {
         "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, "
                  "mwldarm link, linked-range and module byte comparison, dsd check symbols "
@@ -5399,6 +5421,13 @@ def _record_linkcheck(data, entry, report, baseline):
                 + (f" already at {', '.join(r['homes'])}" if r["homes"] else "")
                 for r in audit.get("nonLicensed", [])],
             "unlicensedSections": audit.get("unlicensedSections"),
+        },
+        "nontextSectionOrder": {
+            "groups": [{key: row.get(key) for key in
+                        ("section", "original", "desired")}
+                       for row in section_order.get("groups", [])],
+            "objisolate": section_order.get("objisolate"),
+            "errors": section_order.get("errors"),
         },
         "linkedStorageAliases": report.get("linkedStorageAliases"),
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
