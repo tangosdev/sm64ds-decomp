@@ -2759,6 +2759,24 @@ _ELF_RELOC_NAME = {
     28: "R_ARM_CALL", 29: "R_ARM_JUMP24",
 }
 
+_MULTI_OVERLAY_MODULE = re.compile(r"overlays\((\d+(?:,\d+)*)\)")
+
+
+def _relocation_module_set(field):
+    """Exact normalized destination-module set for one config/manifest field.
+
+    dsd uses ``overlays(2,7)`` when the same destination address is valid in a
+    known set of mutually exclusive overlays.  That is an ambiguity license, not a
+    wildcard: manifest and config must name the same set, and a resolved candidate
+    still has to identify one member.  All ordinary spellings remain singleton sets.
+    """
+    raw = str(field).strip()
+    multi = _MULTI_OVERLAY_MODULE.fullmatch(raw)
+    if multi:
+        return {RL.normalize_module(f"overlay({number})")
+                for number in multi.group(1).split(",")}
+    return {RL.normalize_module(raw)}
+
 
 def manifest_relocation_claims(entry):
     """Exact per-word non-text relocation licenses keyed by absolute source address."""
@@ -2792,7 +2810,9 @@ def manifest_relocation_claims(entry):
         normalized = dict(row)
         normalized.update({"source": source, "addend": addend,
                            "target_address": target,
-                           "target_module": RL.normalize_module(row["target_module"])})
+                           "target_module": RL.normalize_module(row["target_module"]),
+                           "target_modules": sorted(_relocation_module_set(
+                               row["target_module"]))})
         out[source] = normalized
     return out, reasons
 
@@ -3010,6 +3030,9 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                     expected_addend = (expected_addend - bias
                                        if expected_addend >= bias else None)
             configured_module = RL.normalize_module(cfg[2]) if cfg else None
+            configured_modules = _relocation_module_set(cfg[2]) if cfg else set()
+            expected_modules = (set(expected["target_modules"])
+                                if expected is not None else set())
             candidate_kind = _NON_TEXT_RELOC_KIND.get(rel["type"])
             if cfg is None:
                 verdict = "EXTRA"
@@ -3027,8 +3050,8 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                 verdict = "WRONG-ADDEND"
             elif candidate_kind != expected["kind"] or expected["kind"] != cfg[0]:
                 verdict = "WRONG-KIND"
-            elif candidate_module != expected["target_module"] \
-                    or expected["target_module"] != configured_module:
+            elif expected_modules != configured_modules \
+                    or candidate_module not in expected_modules:
                 verdict = "WRONG-MODULE"
             elif cand_addr != expected["target_address"] \
                     or expected["target_address"] != cfg[1]:
@@ -3042,10 +3065,12 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                                "expectedSymbol": expected.get("symbol") if expected else None,
                                "expectedAddend": expected.get("addend") if expected else None,
                                "expectedEmittedAddend": expected_addend,
+                               "expectedModules": sorted(expected_modules),
                                "candidateModule": candidate_module,
                                "candidate": f"0x{cand_addr:08x}" if cand_addr is not None else None,
                                "configuredKind": cfg[0] if cfg else None,
                                "configuredModule": configured_module,
+                               "configuredModules": sorted(configured_modules),
                                "configured": f"0x{cfg[1]:08x}" if cfg else None,
                                "verdict": verdict})
         for source in sorted(a for a in cfgmap
