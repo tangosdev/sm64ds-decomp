@@ -226,6 +226,13 @@ thing can produce, so the game no longer lets you cause it by hand:
   `REFUSING a peer speaking wire version 1; this build speaks 2`. If you see
   that, one of you is on an older build -- update and try again.
 
+  That version number is the **game's** own, carried inside the packets this
+  relay forwards without looking at them. It is not the HELLO version in the
+  wire contract above, which is still 1 and unchanged. **Nothing about this
+  needs the relay redeployed** -- an unmodified relay carries both generations
+  perfectly well, which is precisely why the two games have to refuse each
+  other themselves.
+
 `SM64DS_COMMS_INPUT_DELAY=<0..8>` **on the host** overrides the default, and
 there are two reasons to reach for it:
 
