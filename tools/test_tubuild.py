@@ -1152,6 +1152,76 @@ def test_manifest_order_is_a_noop_when_emitted_addresses_already_match():
     assert report["groups"][0]["desired"] == report["groups"][0]["original"]
 
 
+def _verify_grouped_owned_relocation(manifest_module, configured_module,
+                                     candidate_module):
+    """Drive the real owned-relocation verdict with one injected data layout."""
+    from unittest import mock
+
+    start, end, destination = 0x02000000, 0x02000010, 0x02120000
+    owned, imported = "owned_data", "imported_data"
+    layout = {
+        "bytes": bytes(range(end - start)),
+        "relocs": [{"offset": 0, "type": 2, "symbol": imported,
+                    "addend": 0, "targetSection": "SHN_UNDEF"}],
+        "symbols": {owned: {"address": start, "size": end - start,
+                             "bind": "STB_GLOBAL", "type": "STT_OBJECT",
+                             "sectionIndex": 1}},
+        "inputSections": [1],
+    }
+    entry = {
+        "module": "ov999", "functions": [],
+        "data": [{"symbol": owned, "address": hex(start),
+                  "size": hex(end - start)}],
+        "relocations": [{"section": ".data", "source": hex(start),
+                         "type": "R_ARM_ABS32", "kind": "load",
+                         "symbol": imported, "addend": 0,
+                         "target_module": manifest_module,
+                         "target_address": hex(destination)}],
+    }
+    claims = [{"name": ".data", "start": start, "end": end}]
+    config = {"ov999": {start: ("load", destination, configured_module)}}
+    with mock.patch.object(tubuild, "section_contribution",
+                           lambda _obj, _name, _start: (layout, None)):
+        return tubuild.verify_owned_sections(
+            b"", entry, claims,
+            name_index={imported: (candidate_module, destination)},
+            config_relocs=config, sym_index={},
+            target_reader=lambda _module, _start, size: layout["bytes"][:size],
+            symbol_homes={}, bss_boundaries=set())
+
+
+def test_owned_relocation_accepts_exact_group_and_member_candidate():
+    result = _verify_grouped_owned_relocation(
+        "overlays(2,7)", "overlays(2,7)", "ov002")
+    assert result["ok"], result["errors"]
+    row = result["relocations"][0]
+    assert row["verdict"] == "OK"
+    assert row["expectedModules"] == ["ov002", "ov007"]
+    assert row["configuredModules"] == ["ov002", "ov007"]
+    assert row["candidateModule"] == "ov002"
+
+
+def test_owned_relocation_rejects_a_different_configured_group():
+    result = _verify_grouped_owned_relocation(
+        "overlays(2,7)", "overlays(2,9)", "ov002")
+    assert not result["ok"]
+    row = result["relocations"][0]
+    assert row["verdict"] == "WRONG-MODULE"
+    assert row["expectedModules"] == ["ov002", "ov007"]
+    assert row["configuredModules"] == ["ov002", "ov009"]
+
+
+def test_owned_relocation_rejects_candidate_outside_the_exact_group():
+    result = _verify_grouped_owned_relocation(
+        "overlays(2,7)", "overlays(2,7)", "ov009")
+    assert not result["ok"]
+    row = result["relocations"][0]
+    assert row["verdict"] == "WRONG-MODULE"
+    assert row["expectedModules"] == row["configuredModules"] \
+        == ["ov002", "ov007"]
+    assert row["candidateModule"] == "ov009"
+
+
 def test_linkcheck_compile_passes_all_production_object_policies():
     original_policies = tubuild.RB.compiler_only_policies
     original_intact = tubuild.RB.intact_tu_policies
