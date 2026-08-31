@@ -42,15 +42,15 @@
       "method": {
         "draft": 11,
         "migrated": 2618,
-        "unmigrated": 122
+        "unmigrated": 126
       }
     },
     "cpp_still_handspelled": 59,
-    "mangled_c": 64,
+    "mangled_c": 68,
     "mangled_cpp": 3575,
-    "mangled_total": 3639,
+    "mangled_total": 3643,
     "nonmatching_drafts": 11,
-    "unmigrated_total": 123
+    "unmigrated_total": 127
   },
   "shadow_decls": {
     "local_body_no_include": 1082,
