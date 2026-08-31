@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 TOOLS = pathlib.Path(__file__).resolve().parent
 REPO = TOOLS.parent
@@ -353,3 +354,195 @@ class RealHistoryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ------------------------------------------------- defect 3: the root-vptr bail-out
+#
+# The pre-fix code refused to model any ROOT struct the moment its body reached a
+# method declaration, on the grounds that a polymorphic root carries an implicit vptr
+# that no declaration mentions. The offset IS derivable, and the tree writes the model
+# down by hand -- verbatim, in include/Animation.h and include/dCc_c.h:
+#
+#   /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
+#
+# The bail-out also fired for structs with no `virtual` anywhere, because its third
+# alternative matches ANY member-function declaration. Eighteen headers were skipped
+# whole: no summary, no mismatch, no non-zero exit. Nine of them check clean now; the
+# other nine are enumerated in config/header-offset-known-issues.txt with the parser
+# limit that stops each one.
+
+# The predicate of the deleted arm, VERBATIM, so the cases below stay planted
+# regressions rather than tests of the new code alone.
+_OLD_BAILOUT = re.compile(
+    r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)")
+
+
+def _skipped_the_old_way(body):
+    """True when the pre-fix code declared this ROOT struct unmodelled and skipped it."""
+    started = False
+    for line in body.splitlines():
+        if not started:
+            started = bool(re.match(r"^\s*struct \w+\s*\{", line))
+            continue
+        if _OLD_BAILOUT.match(line):
+            return True
+    return False
+
+
+# A polymorphic root. Every offset counts the implicit vptr, so the first field is
+# 0x004 -- which is what the eight headers in this shape already say.
+POLY_GOOD = """\
+struct Widget {
+\tvirtual void Update();
+\tu32 first;   /* 0x004 */
+\tu32 second;  /* 0x008 */
+};
+"""
+# The same class with its comments written as though there were no vptr.
+POLY_BROKEN = POLY_GOOD.replace("0x004", "0x000").replace("0x008", "0x004")
+
+# A flat view that declares the vptr as a REAL field; include/ArrowSignRight.h is the
+# live instance. Its comments already count that field, so the walk must start at 0 --
+# adding 4 unconditionally would report every field of every such header 4 bytes late.
+FLAT_GOOD = """\
+struct Widget {
+\tvoid *vtable;  /* 0x000 */
+\tu32 first;     /* 0x004 */
+\tu32 second;    /* 0x008 */
+\tvirtual void Update();
+};
+"""
+FLAT_BROKEN = """\
+struct Widget {
+\tvoid *vtable;  /* 0x000 */
+\tu32 first;     /* 0x008 */
+\tu32 second;    /* 0x00c */
+\tvirtual void Update();
+};
+"""
+
+# No `virtual` anywhere. The bail-out's third alternative matches any member function,
+# so a struct that merely DECLARES a method was skipped -- include/dMgState_c.h and
+# include/dMg3DEspAnimSet_c.h are that shape, and neither is polymorphic.
+NONPOLY_GOOD = """\
+struct Widget {
+\tu32 first;   /* 0x000 */
+\tu32 second;  /* 0x004 */
+\tvoid Reset();
+};
+"""
+NONPOLY_BROKEN = NONPOLY_GOOD.replace("0x004", "0x008")
+
+
+class RootVptrTests(unittest.TestCase):
+    def test_every_fixture_below_was_skipped_whole_by_the_old_code(self):
+        """The precondition for all of it. If these were not skipped there was no hole."""
+        for name, body in (("POLY_GOOD", POLY_GOOD), ("POLY_BROKEN", POLY_BROKEN),
+                           ("FLAT_GOOD", FLAT_GOOD), ("FLAT_BROKEN", FLAT_BROKEN),
+                           ("NONPOLY_GOOD", NONPOLY_GOOD),
+                           ("NONPOLY_BROKEN", NONPOLY_BROKEN)):
+            self.assertTrue(_skipped_the_old_way(body),
+                            f"{name}: precondition failed, the old code checked this")
+
+    def test_a_polymorphic_root_is_modelled_and_a_wrong_offset_is_caught(self):
+        with Repo() as r:
+            r.write("include/Widget.h", POLY_GOOD)
+            self.assertEqual(r.run("include/Widget.h"), 0)
+        with Repo() as r:
+            r.write("include/Widget.h", POLY_BROKEN)
+            self.assertEqual(r.run("include/Widget.h"), 1,
+                             "a root whose comments ignore its vptr must not pass")
+
+    def test_an_explicitly_declared_vtable_field_is_not_double_counted(self):
+        with Repo() as r:
+            r.write("include/Widget.h", FLAT_GOOD)
+            self.assertEqual(r.run("include/Widget.h"), 0,
+                             "the vptr was counted twice for a header that spells it out")
+        with Repo() as r:
+            r.write("include/Widget.h", FLAT_BROKEN)
+            self.assertEqual(r.run("include/Widget.h"), 1)
+
+    def test_a_non_polymorphic_struct_gets_no_vptr_for_declaring_a_method(self):
+        with Repo() as r:
+            r.write("include/Widget.h", NONPOLY_GOOD)
+            self.assertEqual(r.run("include/Widget.h"), 0)
+        with Repo() as r:
+            r.write("include/Widget.h", NONPOLY_BROKEN)
+            self.assertEqual(r.run("include/Widget.h"), 1)
+
+    def test_the_vptr_decision_is_scoped_to_this_struct_not_the_whole_file(self):
+        """A twin header carries a flat C view of the same class below an `#else`, and
+        that half routinely spells `void **vtable;` even where the C++ half above it
+        does not -- include/Animation.h is exactly that shape. A file-wide search for
+        either marker reads the wrong half and shifts every field of the right one.
+
+        Not a planted regression, and it cannot be one: the old code skipped this
+        header whole, so it "passed" here for the wrong reason. What this guards is the
+        obvious WRONG way to write the new code -- grep the file for `virtual` and for
+        a vtable field -- which would read 0 here and report `first` at 0x000."""
+        twin = POLY_GOOD + """
+#else
+struct Widget {
+\tvoid **vtable;  /* 0x000 */
+\tu32 first;      /* 0x004 */
+};
+#endif
+"""
+        with Repo() as r:
+            r.write("include/Widget.h", twin)
+            self.assertEqual(r.run("include/Widget.h"), 0,
+                             "the C++ half's implicit vptr was cancelled by the flat "
+                             "half's vtable field")
+
+
+class NestedTagShadowTests(unittest.TestCase):
+    """CLASS_SIZES is keyed by the bare tag, so a class NESTED in the struct under test
+    silently borrows the size of any unrelated top-level class sharing that tag.
+
+    One instance in the tree, and unskipping fBase_c.h is what exposed it:
+    `fBase_c::Manager` is SceneNode(0x14) + 2 * fLiNdBaPr_c(0x10) = 0x34, but
+    `Manager_size_must_be_0x3c` in include/Particle__Manager.h describes an unrelated
+    Particle::Manager. The checker took 0x3c and reported the two fields after it 8
+    bytes late -- against a header whose own `fBase_c_size_must_be_0x50` assertion
+    proves the comments right and the checker wrong.
+
+    Refuse rather than guess: a wrong size shifts every later field, and each one still
+    "matches" if the comments were written from the same wrong model. An honest
+    UNPARSED is recoverable; a confident wrong number is not.
+    """
+
+    SHADOWED = """\
+struct Widget {
+\tstruct Manager {
+\t\tu32 a;
+\t\tu32 b;
+\t};
+
+\tu32 first;         /* 0x000 */
+\tManager manager;   /* 0x004 */
+\tu32 last;          /* 0x00c */
+};
+"""
+
+    def test_a_nested_tag_does_not_borrow_an_unrelated_headers_size(self):
+        with Repo() as r:
+            r.write("include/Widget.h", self.SHADOWED)
+            elsewhere = pathlib.Path(REPO) / "include" / "Elsewhere.h"
+            with unittest.mock.patch.dict(C.SZ, {"Manager": 0x3c}), \
+                    unittest.mock.patch.dict(C.CLASS_SIZE_SRC, {"Manager": elsewhere}):
+                self.assertEqual(r.run("include/Widget.h"), 1,
+                                 "an unrelated class's size was used silently")
+
+    def test_a_tag_asserted_in_its_OWN_header_is_still_used(self):
+        """Bounding the refusal. include/dScEntry_c.h nests `icon_c` and asserts
+        `icon_c_size_must_be_0x24` nine lines below it; comparing the two paths
+        unresolved -- CLASS_SIZE_SRC holds absolute rglob paths, `fp` arrives from
+        argv -- made that look like a shadow and turned a header that checked nine
+        fields clean into an UNPARSED failure."""
+        with Repo() as r:
+            r.write("include/Widget.h", self.SHADOWED)
+            own = r.dir / "include" / "Widget.h"
+            with unittest.mock.patch.dict(C.SZ, {"Manager": 8}), \
+                    unittest.mock.patch.dict(C.CLASS_SIZE_SRC, {"Manager": own}):
+                self.assertEqual(r.run("include/Widget.h"), 0,
+                                 "a size asserted in this very header must still count")

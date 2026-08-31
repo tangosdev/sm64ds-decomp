@@ -33,3 +33,55 @@ include/math/Fix12.h
 # Whichever it is, it is a pre-existing question about this header and not something the
 # validator work that wired this gate up should have been deciding.
 include/dScMgSlot1_c.h
+
+# --- unskipped by the root-vptr change; each is a PARSER limit, not a layout defect ---
+# Until this batch landed, tools/check_header_offsets.py bailed out of any ROOT struct
+# the moment it saw a method declaration, on the grounds that a polymorphic root's
+# implicit vptr made the running offset underivable. It is derivable -- the tree writes
+# the model down by hand in Animation.h and dCc_c.h -- so the bail-out is gone and nine
+# of the eighteen headers it was hiding now check clean. These nine still do not, each
+# for a reason that is about the tool's textual walk and not about the header. Every
+# offset comment below is believed correct; none of these is a known layout question.
+
+# `Manager manager;` is fBase_c::Manager -- SceneNode(0x14) + 2 * fLiNdBaPr_c(0x10) =
+# 0x34. CLASS_SIZES is keyed by the bare tag, so it answered with
+# `Manager_size_must_be_0x3c` from include/Particle__Manager.h, an unrelated
+# Particle::Manager, and reported the two fields after it 8 bytes late -- against a
+# header whose own `fBase_c_size_must_be_0x50` proves the comments right. The gate now
+# refuses instead of guessing (see _shadowed_by_nested). Deriving a local size for a
+# nested body that carries inline method definitions retires this entry.
+include/fBase_c.h
+
+# A pointer to MEMBER function -- `typedef void (dMgState_c::*Callback)();` -- is 8
+# bytes on this ABI, not 4, and DECL has no notion of one. Three members each.
+include/dMgState_c.h
+include/dMg3DEspModel_c.h
+
+# `TouchIcon_c mIcons[8];`. The type DOES assert its size, as
+# `dMgPsOpt_TouchIcon_c_size_must_be_0x24` -- the tree already invented an
+# outer-qualified assert name to keep a nested tag from colliding with a top-level one,
+# which is the very collision fBase_c::Manager fell into. The tool only ever looks up
+# the bare tag, so it never finds it. Teaching the lookup that convention retires this.
+include/dMgPsOpt_c.h
+
+# `class X : public Y {` nested inside dPa_c. The nested-type consumer matches `struct`
+# only, so the body is not consumed and its `public:` falls through as a declaration.
+include/dPa_c.h
+
+# `struct anmModel_c : ModelAnim, virtual ScaleHolder {` nested inside daDemo_c. The
+# nested-type consumer allows exactly one base and no `virtual`, so it does not match.
+include/daDemo_c.h
+
+# `CLPS_BlockRef &operator=(CLPS_Block &block);`. The method-declaration pattern's type
+# character class has no `=` in it, so an assignment operator is not recognised as a
+# method and is read as a field.
+include/CLPS_BlockRef.h
+
+# A function-POINTER member split across three lines (`void (*beforeClsnCallback)(...)`
+# with its parameter list wrapped). DECL is line-at-a-time.
+include/dBgW.h
+
+# Inline-DEFINED structors -- `dThIcon_c() {}`. The method-declaration pattern requires
+# a trailing `;`, which a defined-in-place body does not have, so both lines fall
+# through to DECL. Note the field list here is empty, so nothing is left unchecked.
+include/dThIcon_c.h

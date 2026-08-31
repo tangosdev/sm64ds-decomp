@@ -119,10 +119,15 @@ IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 # rglob, not glob: Matrix4x3 and Matrix3x3 assert their sizes in include/math/,
 # so a non-recursive scan missed exactly the two that Model.h and friends embed.
 CLASS_SIZES = {}
+# ...and WHERE each one came from. The table is keyed by the bare tag, so two
+# classes of the same name in different headers are one entry -- see
+# _shadowed_by_nested below, which needs the origin to tell them apart.
+CLASS_SIZE_SRC = {}
 for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob("*.h"):
     for _m in re.finditer(r"(\w+)_size_must_be_(0x[0-9a-fA-F]+)",
                           _h.read_text(errors="replace")):
         CLASS_SIZES[_m.group(1)] = int(_m.group(2), 16)
+        CLASS_SIZE_SRC[_m.group(1)] = _h
 SZ.update(CLASS_SIZES)
 
 # A derived class's own fields start at the base's DATA SIZE, not its sizeof.
@@ -391,6 +396,78 @@ def _resolve_paths(argv, repo=None):
     return argv, 0
 
 
+def _nested_names(all_lines):
+    """Tags defined as a NESTED type somewhere in this file.
+
+    Indentation is the test, which is what the field walk below already uses to
+    tell a nested definition from the outer one, so the two agree by construction.
+    """
+    out = set()
+    for line in all_lines:
+        m = re.match(r"^[ \t]+(?:struct|union|class) (\w+)\s*(?::\s*(?:public\s+)?\w+\s*)?\{", line)
+        if m:
+            out.add(m.group(1))
+    return out
+
+
+def _shadowed_by_nested(typ, nested_names, fp):
+    """True when SZ[typ] is about a DIFFERENT class than the one `typ` names here.
+
+    CLASS_SIZES is keyed by the bare tag -- it has no way to record a qualified
+    name -- so a class nested inside the struct under test silently borrows the
+    size of any unrelated top-level class that happens to share its tag.
+
+    Measured, one instance in the tree and it is not a small one:
+    `fBase_c::Manager` is SceneNode(0x14) + 2 * fLiNdBaPr_c(0x10) = 0x34, but
+    `Manager_size_must_be_0x3c` in include/Particle__Manager.h describes
+    Particle::Manager. The checker took 0x3c and reported the two fields after it
+    8 bytes late -- against a header whose own `fBase_c_size_must_be_0x50`
+    assertion proves the comments right and the checker wrong. This was invisible
+    while fBase_c.h was skipped wholesale; unskipping it is what exposed it.
+
+    Refuse rather than guess. A local size is derivable in principle, but a nested
+    body carries inline method bodies that the narrow learner above will not walk,
+    and a WRONG size here is worse than an honest UNPARSED: it shifts every later
+    field and each one still "matches" if the comments were written from the same
+    wrong model.
+    """
+    if typ not in nested_names or typ not in CLASS_SIZE_SRC:
+        return False
+    # Compare RESOLVED paths. CLASS_SIZE_SRC is built by rglob from an absolute repo
+    # root while `fp` arrives from the command line, so `include/dScEntry_c.h` and
+    # `C:/...
+    # /include/dScEntry_c.h` are the same file and unequal as Path objects. Comparing
+    # them raw made a type asserted in its OWN header -- dScEntry_c::icon_c, whose
+    # `icon_c_size_must_be_0x24` sits nine lines below the struct -- look shadowed,
+    # turning a header that checked 9 fields clean into an UNPARSED failure.
+    try:
+        return CLASS_SIZE_SRC[typ].resolve() != pathlib.Path(fp).resolve()
+    except OSError:
+        return CLASS_SIZE_SRC[typ] != fp
+
+
+def _root_offset(all_lines, open_lineno):
+    """Offset of the first field of a ROOT struct whose body opens at `open_lineno`.
+
+    4 when the struct is polymorphic and leaves its vptr implicit, 0 otherwise.
+
+    Scoped to THIS struct's body on purpose. A twin header carries a flat C view of
+    the same class below an `#else`, and that half routinely spells `void *vtable;`
+    even when the C++ half above it does not -- Animation.h is exactly that shape. A
+    file-wide search for either marker reads the wrong half and silently shifts every
+    field of the right one by 4.
+    """
+    virtual = vtable_field = False
+    for line in all_lines[open_lineno:]:
+        if re.match(r"^\};", line):
+            break
+        if re.match(r"^\s*virtual\s", line):
+            virtual = True
+        elif re.match(r"^\s*[A-Za-z_][^;]*[ *]vtable\s*;", line):
+            vtable_field = True
+    return 4 if (virtual and not vtable_field) else 0
+
+
 def main(argv, repo=None):
     """Check every header `argv` resolves to. Exit code is the gate's verdict."""
     root = pathlib.Path(repo) if repo else REPO
@@ -416,7 +493,9 @@ def main(argv, repo=None):
         skip_body = 0
         unknown_base = derived_from = None
         expected = fp.stem
-        for lineno, line in enumerate(txt.splitlines(), 1):
+        all_lines = txt.splitlines()
+        nested_names = _nested_names(all_lines)
+        for lineno, line in enumerate(all_lines, 1):
             if not started:
                 # A struct-with-body BEFORE the file's own class is a helper type
                 # (ActorBase_SceneNode in fBase_c.h, KCL_Tri in dBgW_Kc.h,
@@ -452,6 +531,23 @@ def main(argv, repo=None):
                         continue
                     started = True
                     base = m0.group(2)
+                    if base is None:
+                        # A ROOT class has no base sub-object, but it is not therefore
+                        # at offset 0: a POLYMORPHIC root places one implicit 4-byte
+                        # vptr at 0x00. That is not a guess -- the tree already writes
+                        # the model down by hand, verbatim in Animation.h and dCc_c.h:
+                        #
+                        #   /* 0x00 is the vptr, placed implicitly by the first
+                        #      virtual declaration. */
+                        #
+                        # ...UNLESS the struct declares the vptr as a REAL field. The
+                        # flat port-side headers do exactly that -- ArrowSignRight.h
+                        # opens `void *vtable;  /* 0x000 */` -- and there the comments
+                        # already count it, so starting at 4 double-counts and every
+                        # field after it reads 4 bytes late. Ten-plus headers in this
+                        # tree declare a literal vtable field, so this is a real fork,
+                        # not a special case for one file.
+                        off = _root_offset(all_lines, lineno)
                     if base is not None:
                         # A derived struct's own fields do NOT start at 0 -- the base
                         # sub-object is there. Guessing 0 would mismatch every field,
@@ -528,9 +624,6 @@ def main(argv, repo=None):
                 # class places no vptr of its own -- it inherits the base's, and the
                 # base's asserted size already counts it. The running offset is sound,
                 # so the member functions merely end the field list.
-                if derived_from is None:
-                    unmodelled = True
-                    break
                 # A derived class can ALSO declare its destructor/overrides FIRST
                 # (dScene_c.h's KEY FUNCTION convention -- "the destructor is declared
                 # first, which is safe for a derived class"). Before any real field
@@ -557,7 +650,10 @@ def main(argv, repo=None):
                 in_comment = True
             m = DECL.match(line)
             typ = m.group(1).rsplit("::", 1)[-1] if m else None
-            w = 4 if (m and m.group(2)) else SZ.get(typ)
+            if m and not m.group(2) and _shadowed_by_nested(typ, nested_names, fp):
+                w = None
+            else:
+                w = 4 if (m and m.group(2)) else SZ.get(typ)
             if w is None:
                 # An unrecognised declaration is NOT harmless: skipping it leaves the
                 # running offset short, so every later field silently "matches" at the
