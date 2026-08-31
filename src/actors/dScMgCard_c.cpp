@@ -139,12 +139,6 @@ typedef struct
   s32 v[5];
 } Five;
 
-/* shadow struct 'Node' */
-struct Node {
-    virtual void m0();
-    char pad[0x2c];
-};
-
 /* shadow typedef 'OamAttrTmpl' */
 typedef struct OamAttrTmpl {
     u32 attr0; /* 0x0 */
@@ -384,9 +378,11 @@ s32 dScMgCard_c::InitResources()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13OnYoshiTryEatEi
 /* dScMgCard_c::OnYoshiTryEat -- vtable slot 18, the eat handler: reset the
- * whole round. The adjudicated family decision gave slot 18 this name
- * (notes/minigame-family-decisions.md territory; see the report), and the
- * body agrees: it clears the card-marked counter and both highlight pairs
+ * whole round. The name is the legacy recovered vtable name
+ * (dActor_c.h:131, corroborated by ov006's symbols.txt), standing
+ * uncontradicted; what the family adjudication of 2026-08-31 settled is the
+ * slot's RETURN TYPE, void (notes/minigame-family-decisions.md). The body
+ * agrees: it clears the card-marked counter and both highlight pairs
  * (6 means "none"), re-arms the shared-table pair the round readout uses,
  * refills the six-face weights, redeals both hands, resets the chip
  * globals, sets the round counter to 1 and restarts the state machine at
@@ -936,18 +932,16 @@ s32 dScMgCard_c::Render()
 
     {
         /* The player's five cards, element 4 first: a card outside the marked
-         * pair always draws, a marked one draws on the blink phase only. The
-         * face-value walk keeps the original's raw byte-pointer shape -- a
-         * base at 0xc0 with the face byte read at +0x51d2 off it, stepping
-         * back 0x30 a card -- because that two-walker emission is what the
-         * cartridge carries: spelling the same reads as member access folds
-         * the addresses into one walker and moves bytes. */
-        Node *bank = (Node *)mArray1;
-        int cnt = 4;
-        char *cfgp = c + 0xc0;
-        Node *node = &bank[4];
-        do {
-            unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x1d2);
+         * pair always draws, a marked one draws on the blink phase only.
+         * Spelled as indexed member access -- mValue read, Render() called
+         * through the element's own vtable, k walking 4 down to 0 -- which
+         * matches the cartridge byte-identically (0x228/0x228). The folded
+         * one-walker member form (a typed pointer stepping back 0x30 a
+         * card) is the spelling that measurably moves bytes (0x210), and is
+         * not used. */
+        int k;
+        for (k = 4; k >= 0; k--) {
+            unsigned char cfg = mArray1[k].mValue;
             if (this->unk_538e == cfg)
                 goto chk1;
             if (this->unk_5390 != cfg)
@@ -956,22 +950,16 @@ s32 dScMgCard_c::Render()
             if (!(this->mFrameCounter & 8))
                 goto skip1;
         docall1:
-            node->m0();
-        skip1:
-            cfgp -= 0x30;
-            node--;
-        } while (--cnt >= 0);
+            mArray1[k].Render();
+        skip1: ;
+        }
     }
 
     {
-        /* the dealer's five: same walk, the dealer's pair, face byte at
-         * +0x52c2 */
-        Node *bank = (Node *)mArray2;
-        int cnt = 4;
-        char *cfgp = c + 0xc0;
-        Node *node = &bank[4];
-        do {
-            unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x2c2);
+        /* the dealer's five: same walk, the dealer's pair */
+        int k;
+        for (k = 4; k >= 0; k--) {
+            unsigned char cfg = mArray2[k].mValue;
             if (this->unk_5392 == cfg)
                 goto chk2;
             if (this->unk_5394 != cfg)
@@ -980,11 +968,9 @@ s32 dScMgCard_c::Render()
             if (!(this->mFrameCounter & 8))
                 goto skip2;
         docall2:
-            node->m0();
-        skip2:
-            cfgp -= 0x30;
-            node--;
-        } while (--cnt >= 0);
+            mArray2[k].Render();
+        skip2: ;
+        }
     }
 
     func_ov006_020c1804(pad_4f38);

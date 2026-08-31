@@ -608,10 +608,88 @@ too. The return type is not mangled, but it is codegen-relevant, and every
 real-member conversion of this slot under int walks into the same register
 shift — Card's and MCarlo's shadows are void, so their conversions inherit
 this adjudication. The amendment touches dScMgBase_c.h (slot 18 int→void,
-measurement paragraph rewritten), the 28 sibling declarations that mirrored
-the int (declaration-only — their slot-18 bodies are extern-C shadows, no
+measurement paragraph rewritten), the 29 sibling declarations that mirrored
+the int (28 flipped by the fan-out script, Coin's own by hand;
+declaration-only — their slot-18 bodies are extern-C shadows, no
 bytes moved), Coin's member (void, `return 0;` retired), and BSC's member
 (void, its own original measured form). Slots 19 and 20 are untouched:
 slot 19's int is real evidence (the ov004 base body ends `return 1;`, and
 BSC's s32 override is byte-verified), slot 20's int is dActor_c.h:133's
 borrowed placeholder, its return type explicitly undetermined there.
+
+**Card landed (cd398b500 + b307838c5, 2026-08-31; review #3's fold-in same
+day) — second goal block, and four adjudications.** ov006/dScMgCard_c: 202
+raw/15% → 4 raw/99% at the landing, 0 raw/100% after the fold-in, member
+4→30, externC 28→2, named 36→374 then 380; goal gate PASS (zero-or-justified:
+claimed {externC:2, rawOffsets:4} at the landing, {externC:2, rawOffsets:0}
+after the fold-in, both equal to measured), byte gate green in
+preserve-state (106/106 exact, 0 mismatching, ROM sha256 d1506e90..., same 9
+tree-owned errors). The :406 false deleting-destructor comment (the founding
+bug class) was fixed; slot 18 landed as the adjudicated `virtual void
+OnYoshiTryEat(int)`. The fold-in re-spelled Render's two bank loops as the
+indexed member form (measured MATCH 0x228/0x228 — only the folded form moves
+bytes, 0x210), retired the Node shadow struct with them, retired BSC's
+SelfVtblShim for the measured direct `this->OnYoshiTryEat(3)` dispatch
+(byte-identical; mwcc does not devirtualize; BSC still genuinely zero), and
+corrected adjudication (a)'s inline-arm mechanism below. The four decisions,
+settled here so MCarlo inherits them:
+
+(a) THE D1 STUBS ARE THE FAMILY IDIOM. The two remaining externC are
+_ZN12dMgCardObj_cD1Ev / _ZN17dMgDilarCardObj_cD1Ev, hand-written extern-C
+mangled stubs spelling the cartridge's destructor prologues, needed because
+__destroy_arr takes the destructor as a plain function pointer and C++ cannot
+name one. The conversion measured every member spelling and none lands the
+pair in the cartridge's own shape and order: out of line, mwcc -O4 never
+inlines an unmarked callee, so the derived D1 goes out 0x24 bytes as a bl
+against the cartridge's 0x1c two-store form and drags in both classes' D0
+and D2 — six destructor symbols where the cartridge carries two; both
+marked inline, the two D1s ARE emitted, byte-matching the pair, with no
+D0/D2 anywhere — but the element pair is emitted between the scene D1
+(0x020d95a4) and the scene D0 (0x020d9638), the scene D0 sliding behind
+the element pair, off the cartridge's ROM address order, which rombuild's
+fail-closed isolate refuses (the enumeration lives in include/dScMgCard_c.h;
+both arms corrected 2026-08-31 by review #3's probes — the first draft's
+"never emitted / dangling" inline-arm story was wrong). Ratified: the stub
+form is the byte-true TU-level spelling and carries as a justified census
+exception, and the stubs' file-end placement is load-bearing — it is what
+puts the pair after the scene pair in emission order. Open for
+future evidence, recorded not settled: what the ORIGINAL EAD source wrote
+to name that address (a CW dtor-address extension is the leading candidate
+— real inline destructors plus such an extension would produce exactly
+these bytes; the vtable odr-uses D1 regardless, so the symbol exists
+either way). An asm-label definition form remains a candidate family carve
+if one is ever measured byte-true.
+
+(b) RAW STAYS RAW ONLY ON A SPECIFIC MEASURED FAILURE, AND BOTH MEMBER FORMS
+ARE MEASURED BEFORE ANY SUCH CLAIM — corrected 2026-08-31 by review #3.
+Card's Render was the lesson: its two bank loops stayed raw at first (a
+node walker for the virtual draw plus a separate face-value byte walker
+based at this+0xc0, face byte at +0x51d2/+0x52c2) on the claim that a
+member spelling "folds both address chains into one walker and measurably
+moves bytes" — but only the FOLDED member form had been measured, and it
+does move bytes (0x210 vs 0x228). The INDEXED form (mArray1[k].mValue read,
+mArray1[k].Render() drawn, k from 4 down to 0) matches the cartridge
+byte-identically, and the fold-in re-spelled both loops with it and
+retired the Node shadow struct (rawOffsets 4 → 0). The goal is byte-true
+readable C++, not zero-at-any-cost — but the burden runs both ways: keep
+raw only where a specific spelling is proven to move bytes, and measure
+both forms (folded and indexed) before writing either claim. Same
+discipline as BSC's mTable (raw, documented, kept — its own measured
+case).
+
+(c) SHARED C-LINKAGE SPELLINGS ARE FAMILY PROPERTY. func_ov006_020c0aa8/
+020c1804 keep the void* spellings and func_ov006_020c1a88 the extern int
+(char*) form shared with the sibling minigame TUs; Sound::PlayBank2_2D,
+GX::LoadOBJPltt, GXS::LoadOBJPltt, G2x::SetBlendAlpha, ApproachLinear(2)
+already carry their RATIFIED_TRUE_NAMES forms. Per-TU re-spelling of a
+C-linkage symbol is illegal overloading, and divergent spellings across TUs
+would need a family carve to reconcile — a true-type pass is a family carve,
+never a TU edit.
+
+(d) LOCAL SHADOW TYPES RETIRE VIA FAMILY CARVE, MEASURED PER TU. Card's file
+still walks hands through local shadow structs (Five, Struct30,
+OamAttrTmpl, Slot6, Obj6 and kin; Node retired with Render's indexed
+respell); the typed mArray1/mArray2 DealIn spelling
+(`self->mArray1[i]->DealIn(v)`) is the named readability candidate and needs
+its own measured pass. Deferred to the family carve pass alongside
+dScMgBase_c — never a per-TU improvisation.
