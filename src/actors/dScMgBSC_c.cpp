@@ -280,10 +280,15 @@ s32 dScMgBSC_c::Render()
 /* recovered: renamed to Class_Method, RTTI class fields named */
 // recovered name: dScMgBSC_c_OnYoshiTryEat_02125364
 /* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
+/* Vtable slot 18 per tools/rtti_vtables.py --own dScMgBSC_c. The deleting
+   destructor is slot 17 at 0x0212497c (D1 is slot 16) -- this function is
+   neither; the reconciliation pass wrongly claimed it was, citing the same
+   oracle that disproves the claim, and the goal-side review pass caught it.
+   Body: a mode-dispatched event handler -- when the mode argument is 3 it
+   reads the HUD score into mHudScore (func_ov004_020ad878) and forwards it
+   (func_ov004_020adb1c); unconditionally it calls func_ov004_020b66d4, sets
+   data_ov004_020bc7d4, and zeroes the state field at 0x51b8. The legacy
+   recovered name for this slot, OnYoshiTryEat, stands uncontradicted. */
 extern "C" void _ZN10dScMgBSC_c13OnYoshiTryEatEi(char* c, int mode){
     dScMgBSC_c *self = (dScMgBSC_c *)(void *)c;
   if(mode != 4 && mode != 5 && mode == 3){
