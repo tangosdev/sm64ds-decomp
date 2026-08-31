@@ -87,7 +87,12 @@ void RenderAll();
 }
 
 struct dScMgSingle3DBase_c : dScMgBase_c {
-    /* Declared first (key function); overrides slots 16 (D1) and 17 (D0).
+    /* Declared first, so it takes slots 16 (D1) and 17 (D0) -- but it is NOT
+       this class's key function.  An inline destructor is emitted in every
+       TU that needs it, so it anchors nothing; the key function is
+       AfterInitResources, the first DECLARED non-inline virtual, which is
+       why the vtable and typeinfo land in src/actors/dScMgSingle3DBase_c.cpp
+       (see that class's rows in config/tu_manifest.d/ov006/).
        MUST STAY DEFINED INLINE -- all 13 children inline this body, and
        _ZN19dScMgSingle3DBase_cD2Ev exists nowhere in the ROM, so an
        out-of-line definition leaves every child with an undefined external.
@@ -102,7 +107,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
            dScMgBase_c leaves slots 18-35 undeclared -- a derived class cannot
            override a base slot the base has not spelled. Their ov006 bodies do
            exist and byte-verify, as func_ov006_0210a600 and
-           func_ov006_0210a708 in src_tu/actors/dScMgSingle3DBase_c.cpp.
+           func_ov006_0210a708 in src/actors/dScMgSingle3DBase_c.cpp.
            Declaring dScMgBase_c's eighteen is the follow-up that lets this
            class emit its full 36-slot vtable instead of an 18-slot prefix. --- */
     virtual void AfterInitResources(u32 vfSuccess); /* slot  2 */

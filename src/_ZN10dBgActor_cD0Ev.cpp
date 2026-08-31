@@ -18,7 +18,7 @@
  * compiled to D1 plus the forcing function, two .text sections, and dropped
  * out of the build with every byte gate still green. `delete p` asks for the
  * deleting half by name and brings it back. Same shape, same fix, same
- * sentence in src/_ZN19dScMgSingle3DBase_cD0Ev.cpp, which has had a key
+ * sentence in src/actors/dScMgSingle3DBase_c.cpp, which has had a key
  * function since #1544.
  *
  * D0 is the deleting half: destroy through dBgActor_c and dActor_c, then hand the
