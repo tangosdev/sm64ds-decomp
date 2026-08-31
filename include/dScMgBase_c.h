@@ -65,10 +65,13 @@ struct dScMgBase_c : dScene_c {
          return type: void -- AMENDED 2026-08-31; this slot was first
            declared int on Coin's evidence alone. Three measurements drove
            the amendment: the 24 free-function bodies are all written void
-           and all match, so their retail originals are void-compiled;
-           BSC's converted member under int shifts its tail registers --
-           mwcc reserves r0 for the return value in any non-void function,
-           and the retail tail uses r0 as scratch (8 bytes differing); and
+           and all match -- consistent with void, though these are our own
+           spellings, so that leg is consistent-not-probative on its own
+           and the two that follow are the decisive ones; BSC's converted
+           member under int shifts its tail registers -- measured at BSC's
+           tail: mwcc reserves r0 for the return value in any non-void
+           function, and the retail tail uses r0 as scratch (8 bytes
+           differing); and
            Coin's member recompiled as void matches byte-identically, its
            `return 0;` exposed as an int-assumption transcription of a
            `mov r0,#0` that is really the source register of the
@@ -76,8 +79,9 @@ struct dScMgBase_c : dScene_c {
            mangled, but it is codegen-relevant: every real-member
            conversion of this slot under int walks into the same register
            shift. The base's own ROM body is a lone `bx lr` and sets
-           nothing, fitting either form. The 28 sibling declarations that
-           mirrored the int were flipped with this change; they are
+           nothing, fitting either form. The 29 sibling declarations that
+           mirrored the int were flipped with this change (28 by the
+           fan-out script, Coin's own by hand); they are
            declaration-only (those slot-18 bodies are extern-C shadows),
            so no bytes moved.
          name: from dActor_c.h:131, corroborated by

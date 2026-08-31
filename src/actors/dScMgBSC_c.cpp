@@ -73,35 +73,13 @@
  * already owns a symbol's spelling, that spelling is kept (redeclaring
  * a C-linkage function with different parameter types here would be an
  * illegal overloading). */
-/* shadow struct 'SelfVtblShim' -- kept below; the v18 shim is the
- * byte-verified spelling of the slot-18 self-dispatch in InitResources.
- * A direct virtual call is now spellable (dScMgBase_c.h declares slot 18
- * upstream) but unmeasured -- a followup to try under the byte gate, not
- * a free refactor. *//* The state table data_ov006_02142f94 is an array of pointers to this
+/* The state table data_ov006_02142f94 is an array of pointers to this
  * class's state handlers -- the ROM's 8-byte entries are exactly the PMF
  * layout (__sinit_ov006_0213326c copies them from the pair globals at
  * 0x0213fd0c..0x0213fd84). A variable of C++ type at global scope keeps
  * its plain name, so the table still links against the C symbol. */
 typedef void (dScMgBSC_c::*StateHandler)();
 extern StateHandler data_ov006_02142f94[];
-
-/* Second shadow view of `this`, distinct from the `Obj` layout typedef above:
- * two legacy files each spelled their own `struct Obj` for different purposes
- * and tubuild carried both in verbatim. This one reaches vtable slot 18; when
- * it was written neither dScMgBase_c.h nor this class's header declared the
- * slot, so a self-dispatch could not be spelled as a real virtual call.
- * dScMgBase_c.h now declares it (upstream, 2026-08-31), but the shim's
- * cast-and-call is the byte-verified spelling -- kept; a direct
- * this->OnYoshiTryEat(...) dispatch is the measured followup. Named for
- * what it is rather than left colliding. */
-struct SelfVtblShim {
-    virtual void v0();virtual void v1();virtual void v2();virtual void v3();
-    virtual void v4();virtual void v5();virtual void v6();virtual void v7();
-    virtual void v8();virtual void v9();virtual void v10();virtual void v11();
-    virtual void v12();virtual void v13();virtual void v14();virtual void v15();
-    virtual void v16();virtual void v17();virtual void v18(int x);
-    char pad[0x10000];
-};
 
 extern "C" {
 extern short data_ov004_020bf9e4;
@@ -184,16 +162,12 @@ int ApproachLinear(int& value, int target, int step);
  * agreed.
  *
  * The final call is a self-dispatch through this class's own vtable slot 18
- * (_ZN10dScMgBSC_c13OnYoshiTryEatEi, per the same rtti dump). When this
- * conversion was written neither dScMgBase_c.h nor this header named the
- * slot, so it stayed a raw vtable-shim call exactly as the pre-migration
- * file spelled it, just through `this` instead of a `void *self`
- * parameter. dScMgBase_c.h now declares the slot (upstream, 2026-08-31),
- * but the shim's cast-and-call is the byte-verified spelling -- kept; a
- * direct this->OnYoshiTryEat(...) dispatch is the measured followup. */
+ * (_ZN10dScMgBSC_c13OnYoshiTryEatEi, per the same rtti dump), spelled as
+ * the direct virtual call this->OnYoshiTryEat(3) -- measured
+ * byte-identical under the byte gate (mwcc does not devirtualize it),
+ * which retired the pre-migration file's raw vtable-shim cast. */
 s32 dScMgBSC_c::InitResources()
 {
-    SelfVtblShim *o = (SelfVtblShim *)this;
     int fh;
     data_0209d45c[0] = 0x11;
     func_ov006_0210a534();
@@ -209,7 +183,7 @@ s32 dScMgBSC_c::InitResources()
     data_0208ee44[0] = 1;
     unk_0a8 = func_ov004_020ad8b8();
     unk_0ac = unk_0a8;
-    o->v18(3);
+    this->OnYoshiTryEat(3);
     return 1;
 }
 

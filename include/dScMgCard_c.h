@@ -66,23 +66,29 @@ extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
    definitions of these two names -- the destroy-side twin of this hand's
    hand-written ctor stubs in src/actors/MgPicturePoker.cpp -- and the two
    classes below declare NO destructor at all, because no member-destructor
-   spelling reproduces this cartridge pair, measured across every form:
+   spelling lands the pair in the cartridge's own shape and order,
+   measured across every form:
      both written out of line
         -> mwcc never -O4 auto-inlines a callee that is not marked inline:
            the derived D1 goes out as a bl to the base D2 (0x24 bytes with a
            push/blr frame; the cartridge carries 0x1c -- two vptr stores and
-           no bl), and the base D0/D2 pair is dragged in with it; and
+           no bl), and both classes' D0 and D2 come with it -- six
+           destructor symbols emitted where the cartridge carries two; and
            reordering the source cannot help, because the section groups
            follow reverse source order -- the one order that puts the base
            body ahead of the derived definition (so an inline mark could
            bite) is exactly the order that flips the groups off the
            cartridge layout;
-     base marked inline (in class, on the definition, any source order)
-        -> the derived D1 comes out right (0x1c, the base store inlined into
-           it) but the base D1 is never emitted at all -- its only use was
-           the inlined one -- so the __destroy_arr reference above would
-           dangle; #pragma force_inline / #pragma inline change neither
-           outcome.
+     both marked inline (in class, on the definition, any source order)
+        -> the two D1s ARE emitted, byte-matching the cartridge pair, with
+           no D0/D2 anywhere -- the bodies are right. The failure is
+           emission ORDER: the element pair is emitted between the scene
+           class's D1 (0x020d95a4) and its D0 (0x020d9638) -- the scene D0
+           slides behind the element pair -- while the cartridge carries
+           the scene pair adjacent with the element pair after it, and
+           rombuild's fail-closed isolate refuses a TU whose licensed
+           .text is not in ROM address order. #pragma force_inline /
+           #pragma inline change neither outcome.
    The vtable/RTTI records do not follow the destructor: this header
    declares Render -- each class's key function -- non-inline, and
    src/actors/dScMgCard_c.cpp defines it, so the key-function TU keeps
