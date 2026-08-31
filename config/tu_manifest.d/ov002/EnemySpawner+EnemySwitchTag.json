@@ -126,6 +126,79 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s); see unlicensed_output_observed",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1), (2, 3)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "object-audit-refused",
+      "scratch": "build/tu/ov002-EnemySpawner+EnemySwitchTag/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": {
+          "HOMELESS": 4,
+          "COLLIDES-GAP": 2,
+          "LICENSED": 12
+        },
+        "emittedTextOrderIsRomAscending": false,
+        "nonLicensedSymbols": [
+          "HOMELESS _ZTI12EnemySpawner STB_LOPROC .data size=0xc",
+          "HOMELESS _ZTS12EnemySpawner STB_LOPROC .data size=0xf",
+          "HOMELESS _ZTI14EnemySwitchTag STB_LOPROC .data size=0xc",
+          "HOMELESS _ZTS14EnemySwitchTag STB_LOPROC .data size=0x11",
+          "COLLIDES-GAP _ZTV14EnemySwitchTag STB_GLOBAL .data size=0x84 already at ov002:0x0210b3e8",
+          "COLLIDES-GAP _ZTV12EnemySpawner STB_GLOBAL .data size=0x84 already at ov002:0x0210b364"
+        ],
+        "unlicensedSections": [
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 12
+          },
+          {
+            "name": ".data",
+            "size": 15
+          },
+          {
+            "name": ".data",
+            "size": 17
+          },
+          {
+            "name": ".data",
+            "size": 132
+          },
+          {
+            "name": ".data",
+            "size": 132
+          }
+        ]
+      },
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null,
+      "scratchAliases": {
+        "why": "mwldarm 1.2/sp2p3, measured: '+' aborts the lcf selector grammar (the TU id join) and object paths over 259 chars cannot be opened ('file name is too long'). The aliases are scratch-side copies only; the manifest id, src_tu/ filenames and every tracked path keep the real spelling. Full mapping: scratch_object_aliases.json beside the link.",
+        "pathLimit": 259,
+        "objects": [
+          {
+            "from": "EnemySpawner+EnemySwitchTag.o",
+            "to": "EnemySpawner@EnemySwitchTag.o",
+            "reasons": [
+              "lcf-grammar '+' is mwldarm's section-list operator"
+            ]
+          }
+        ]
+      }
     }
   },
   "partial_isolation": {
