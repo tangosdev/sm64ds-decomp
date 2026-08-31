@@ -96,18 +96,55 @@ void  func_ov075_0211a268(void);                 /* slot 12  OnPendingDestroy */
 int   func_ov075_02115ab8(void *c);              /* slot 16  D2               */
 int  *func_ov075_02115b28(int *t);               /* slot 17  D0               */
 void *func_ov075_0211a854(void);                 /* the factory (matched src) */
-/* SCENE 7, the VS RESULTS screen. Its own factory and its own SpawnInfo, both
-   in the same ov075 .data run the mount already carries, and BOTH point at the
-   class this file already seats: func_ov075_0211a740 is func_ov075_0211a854
-   with a different pair of element-array constructors -- same
-   ActorBase::operator new(0x288), same data_ov075_0211d304 vtable. The class
-   tells the two scenes apart by its own id, in one branch:
-   src/func_ov075_0211a410.cpp does `if (self->unk_00c == 6)` the lobby, else
-   func_ov075_02116818 -- the results background, the winner calculation
-   (func_ov075_021165b0) and the ranking. So scene 7 needs no vtable of its own
-   and no fill of its own; it needs a row. */
-void *func_ov075_0211a740(void);
-extern unsigned char data_ov075_0211c788[];      /* dScEntry_c SpawnInfo, id 7 */
+/* ---- SCENE 7, THE VS RESULTS SCREEN: measured, and deliberately NOT seated --
+ *
+ * Lane VSEND. It is the SAME dScEntry_c this file seats. Its factory,
+ * func_ov075_0211a740, is func_ov075_0211a854 with a different pair of
+ * element-array constructors -- same ActorBase::operator new(0x288), same
+ * data_ov075_0211d304 vtable -- and its SpawnInfo is one record along in the
+ * same .data run the mount already carries (slice_vs.txt section 1:
+ * "Slot 7 one table over: from:0x02090880 -> 0x0211c788, SpawnInfo
+ * {0x0211a740, 0x000a0007}"). The class tells the two scenes apart in one
+ * branch: src/func_ov075_0211a410.cpp does `if (self->unk_00c == 6)` for the
+ * lobby and hands everything else to func_ov075_02116818, the results
+ * background with the winner calculation (func_ov075_021165b0) behind it.
+ *
+ * SO REGISTERING IT IS SIX LINES, and this lane wrote them, ran them and took
+ * them back out. The row that was tried, verbatim, for whoever lands it:
+ *
+ *     extern unsigned char data_ov075_0211c788[];
+ *     extern "C" void *port_vs_results_spawn(void)
+ *         { return func_ov075_0211a740(); }
+ *     extern "C" void port_scene_fill_vs_results(void) { }
+ *     ... and in hal/scene_boot.cpp's port_scene_classes[], AFTER the
+ *         SCENE_VS_MENU row so the shared class is already filled:
+ *     {7, "SCENE_VS_RESULTS", data_ov075_0211c788, port_vs_results_spawn,
+ *      port_scene_fill_vs_results, 0},
+ *
+ * WHAT IT MEASURED, which is the point of having tried it. With the row in and
+ * SM64DS_VS_PMF_ALL=1, SM64DS_SCENE=7 boots the real results branch: the scene
+ * spawns, func_ov075_02116818 runs, its background and sprites load (BG VRAM
+ * 20108 bytes nonzero, OBJ VRAM 16312, 128 OAM bytes), and it runs 3600 frames
+ * with zero unmatched-body traps. With no input it never asks to leave; its own
+ * exit is src/func_ov075_02117e84.c, which does Scene::StartSceneFade(6, 2, 0)
+ * -- back to the VS lobby, which is where the owner says a finished match
+ * belongs. Captures: C:\tmp\vsend-out\scene7_pmf, scene7_pmf_long.
+ *
+ * WHY IT IS NOT SEATED. It cannot complete a battery scene row and the gate has
+ * no honest way to record that. Bare it faults at the member-pointer site
+ * below; with the switch on it gets past InitResources and faults on the THIRD
+ * site, whose body may not be seated at all (see the block over
+ * vs_install_remaining_pmf_thunks). port/tools/battery.py's SCENE_BLOCKED needs
+ * a marker string in the run's captured output, and the fault line goes to the
+ * flight recorder's playlog instead -- so a blocked row could not be told from
+ * a different crash, and a SCENE_SKIPS row would be a claim that some env makes
+ * it pass, which is false. Meanwhile the row buys no linkage: the class's TUs
+ * are already held by the SCENE_VS_MENU row above.
+ *
+ * IT BELONGS TO THE LANE THAT CROSSES FROM A LEVEL INTO A SCENE, which is the
+ * only way anything can request it in play (hal/star_flow.cpp's match-end block
+ * measures why the port cannot make that crossing today). That lane fixes the
+ * receiver sites, seats the row and re-takes the gate in one piece. */
 
 /* the entry actor's flat pieces */
 char *UnknownVsEntry_Spawn(void);
@@ -586,25 +623,7 @@ static void __fastcall ent_pdes(void *s, void *)
    The registry's factory column is void *(*)(void); both matched factories
    already are. The forwarders exist so the rows name symbols this file owns. */
 extern "C" void *port_vs_spawn(void)       { return func_ov075_0211a854(); }
-extern "C" void *port_vs_results_spawn(void) { return func_ov075_0211a740(); }
 extern "C" void *port_vs_entry_spawn(void) { return UnknownVsEntry_Spawn(); }
-
-/* Scene 7's fill, and it is deliberately empty. The results screen is the SAME
-   dScEntry_c the lobby row above seats -- same vtable at data_ov075_0211d304,
-   same eighteen slots, same ov075 mount and the same three static initialisers
-   -- so everything a scene 7 needs is already standing by the time this runs.
-   The row exists to register the factory and the SpawnInfo record, which
-   port_scene_registry_install does itself from the row's own columns.
-
-   THE ORDER IS WHY THIS CAN BE EMPTY, and it is the same append rule every
-   later row in that table states: the registry walks the table in order, and
-   this row is appended after the SCENE_VS_MENU row, so port_scene_fill_vs has
-   already run when this is reached. Doing the work twice would be harmless
-   (its heavy half is behind a once-per-process gate) but not free: the vtable
-   pass reports how many raw DS words the keyed fill left, and on a second pass
-   there are none left to leave, so a real second call would print a shape
-   warning about a table that is perfectly correct. */
-extern "C" void port_scene_fill_vs_results(void) { }
 
 /* ---- the fill -------------------------------------------------------------
    Called by port_scene_registry_install on every boot, table order. The gate
