@@ -140,18 +140,29 @@ def rungA():
                     "rungA they are DIFFERENT actors | %s vs %s"
                     % (r0[-1]["actor"], r1[-1]["actor"]))
     # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
-    # On a non-VS multiplayer boot Player::InitResources takes the character
-    # from spawn-flag bits 0..2, and the entrance loop fills those from
-    # data_0209caa0[0x41] -- the SAVE FILE's character, the SAME for every
-    # slot. Two distinguishable characters was never a ROM property on this
-    # path; it was the retired stand-in's choice. (The VS path's contract --
-    # LoadEntranceObjects forces character 3 on every slot -- is asserted by
-    # vs_slot1_solo_check.py and the online proof against a real arena.)
-    ok &= M.verdict(r0[-1]["char"] == r1[-1]["char"],
-                    "rungA BOTH slots carry the save-file character | slot0 "
-                    "char=%d slot1 char=%d, read off each actor's +0x6d9 "
-                    "(the ROM's non-VS contract: one save, one character, "
-                    "every slot)"
+    # THIS RUNG'S BOOT IS A VS BOOT: it asks for two players, and a session
+    # with more than one player IS a VS match -- the cartridge has exactly one
+    # multiplayer mode, the star battle -- so hal/level_boot.cpp's a2 seat
+    # writes data_0209f2d8 = 1 the way the VS menu would, and
+    # _Z19LoadEntranceObjects...'s loop then takes its VS arm: f2 = 3 on EVERY
+    # slot. Both bodies come up Yoshi, told apart by palette row rather than
+    # by model (rungP1 in mp3_play_proof.py asserts that colour half).
+    #
+    # WHAT THIS NOTE USED TO SAY, and why it is replaced rather than left
+    # alone. It read the same equality as "both slots carry the SAVE FILE's
+    # character, the ROM's non-VS contract". That was a true description of
+    # the boot at the time -- nothing seated the mode byte, so the loop always
+    # took its non-VS arm -- and it stopped being true of this boot the moment
+    # the seat landed. The equality kept passing straight across that change
+    # while the REASON for it inverted, which is the exact failure this file
+    # exists to catch. So assert the VALUE, not the agreement: a check that
+    # cannot tell 0,0 from 3,3 cannot tell which arm of the ROM's four lines
+    # ran, and its note will drift again.
+    ok &= M.verdict(r0[-1]["char"] == 3 and r1[-1]["char"] == 3,
+                    "rungA BOTH slots are YOSHI | slot0 char=%d slot1 "
+                    "char=%d, read off each actor's +0x6d9 (the ROM's VS "
+                    "contract: character 3 on every slot, told apart by "
+                    "colour)"
                     % (r0[-1]["char"], r1[-1]["char"]))
 
     ok &= M.verdict("[vsfix]" in t,
