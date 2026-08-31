@@ -317,6 +317,80 @@ extern "C" void port_stage0_vs_timer(int frame)
                  (unsigned)data_ov002_02111188, (unsigned)data_0209f204,
                  data_0209fc68, (unsigned)data_0209f2bc);
 }
+/* SM64DS_VS_HUD=1: WHERE THE VS HUD GOES, AND WHETHER IT ARRIVES.
+ *
+ * The VS scoreboard and the match clock are the HUD's, and the HUD draws them
+ * on the MAIN screen, not the bottom one: every OAM::Render call in
+ * src/_ZN3HUD13RenderVsTimerEv.cpp and src/_ZN3HUD15RenderStarCountEv.cpp's VS
+ * arm passes sub=0. So the census that matters is engine A's OAM (0x07000000)
+ * and engine A's DISPCNT (0x04000000) OBJ enable, and neither is what
+ * hal/sub_screen.cpp's boot probe reports about.
+ *
+ * Three buckets, the same ones hal/sub_screen.cpp uses so the numbers compare:
+ * all-zero (never written), parked at y=192 (OAM::Reset's off-screen value),
+ * and placed (a sprite the game actually put somewhere). Prints on change.
+ *
+ * The one-time class dump answers a separate question the stage-0 vstimer probe
+ * left open: it reported hud=0 because find_actor_by_class did not find class
+ * 0x14e, yet the match clock demonstrably ran. Printing every class in the list
+ * settles whether the HUD is in this list at all. Reads only. */
+extern "C" {
+extern unsigned char data_0209d45c;   /* engine A's layer mask */
+extern unsigned char data_0209d454;   /* engine B's layer mask */
+}
+extern "C" void port_vs_hud_probe(int frame)
+{
+    if (!std::getenv("SM64DS_VS_HUD")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+
+    static int dumped;
+    if (!dumped) {
+        dumped = 1;
+        char buf[1600];
+        int w = 0;
+        buf[0] = 0;
+        int n = 0;
+        for (Node *nd = *(Node **)&data_0209b468; nd && w < 1400; nd = nd->next) {
+            char *a = (char *)nd->x8;
+            if (!a) continue;
+            ++n;
+            w += std::snprintf(buf + w, sizeof buf - (unsigned)w, " %03x",
+                               (unsigned)*(unsigned short *)(a + 0xc));
+        }
+        std::fprintf(stderr, "[vshud] f%d the live list holds %d actor(s), "
+                     "classes:%s\n", frame, n, w ? buf : " (none)");
+    }
+
+    const unsigned dispcnt = *(volatile unsigned *)0x04000000;
+    /* AND THE SOFTWARE MASK BEHIND IT, which is the answer when the register
+       reads zero. On the DS nothing writes DISPCNT's layer enables directly:
+       code sets data_0209d45c (engine A) / data_0209d454 (engine B) and
+       func_02019144 copies the mask into bits 8-12 once a frame. The port does
+       that copy inside hal/message_compositor.cpp's engine-A path, which runs
+       in the RENDER phase -- after this probe. So a zero register here is not
+       evidence of anything and the mask is. Bit 4 (0x10) is OBJ. */
+    const unsigned maskA = data_0209d45c, maskB = data_0209d454;
+    unsigned zero = 0, parked = 0, placed = 0;
+    for (int i = 0; i < 128; ++i) {
+        const volatile unsigned short *a =
+            (const volatile unsigned short *)(0x07000000u + i * 8);
+        const unsigned short a0 = a[0], a1 = a[1], a2 = a[2];
+        if (!a0 && !a1 && !a2) { ++zero; continue; }
+        if ((a0 & 0xff) == 192) ++parked; else ++placed;
+    }
+    static unsigned last = 0xffffffffu;
+    const unsigned key = (dispcnt & 0x1f000u) | (placed << 24) | (parked << 16) |
+                         (maskA << 8) | maskB;
+    if (key == last) return;
+    last = key;
+    std::fprintf(stderr, "[vshud] f%d DISPCNT_A %08x OBJ %s | mask d45c=%02x "
+                 "(engine A, OBJ %s) d454=%02x | engine A OAM: %u all-zero, "
+                 "%u parked, %u PLACED\n", frame, dispcnt,
+                 (dispcnt & 0x1000u) ? "ON" : "OFF", maskA,
+                 (maskA & 0x10u) ? "asked for" : "NOT asked for", maskB,
+                 zero, parked, placed);
+}
+
 /* walk the list (Node{void*x0; Node*next@4; int*x8@8}) for the first actor
    whose class word (+0xc) equals `cls`; return the actor (node+8) or 0. */
 static void *find_actor_by_class(unsigned short cls)

@@ -1159,6 +1159,7 @@ void port_vs_stars_probe(int frame);            /* TEMPORARY: SM64DS_VS_STARS */
 void port_stage0_vs_score(int frame);           /* STAGE 0: SM64DS_VS_SCORE */
 void port_stage0_vs_timer(int frame);           /* STAGE 0: SM64DS_VS_SCORE */
 void port_stage0_vs_breakall(int frame);        /* STAGE 0: SM64DS_VS_BREAKALL */
+void port_vs_hud_probe(int frame);              /* TEMPORARY: SM64DS_VS_HUD */
 void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
@@ -9866,6 +9867,7 @@ int main(void)
             port_stage0_vs_score(frame);       /* STAGE 0: SM64DS_VS_SCORE */
             port_stage0_vs_timer(frame);       /* STAGE 0: SM64DS_VS_SCORE */
             port_stage0_vs_breakall(frame);    /* STAGE 0: SM64DS_VS_BREAKALL */
+            port_vs_hud_probe(frame);          /* TEMPORARY: SM64DS_VS_HUD */
             port_input_probe_sign_trigger(frame);   /* TEMPORARY: SM64DS_SIGN_TRIGGER */
             port_probe_alcheck();
             port_probe_sign_yaw();
