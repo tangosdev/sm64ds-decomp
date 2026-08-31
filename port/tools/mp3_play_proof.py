@@ -274,17 +274,37 @@ def rungP1(seconds):
                     "(1 = the second player; 0 means it believes it is the "
                     "host and drives the host's character)" % seat2)
 
-    # And the character each window presents as must be its slot's character.
+    # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
+    # A two-player session IS a VS match -- the cartridge has exactly one
+    # multiplayer mode, the star battle -- so the port seats data_0209f2d8 = 1
+    # the way the VS menu would (hal/level_boot.cpp's a2 seat), and
+    # _Z19LoadEntranceObjects...'s loop then runs its VS arm: f2 = 3 for EVERY
+    # slot. Four Yoshis, told apart by COLOUR and not by model -- Player::Render
+    # re-points every Yoshi material at the body palette row (playerNo << 1)
+    # picks, on the same data_0209f2d8 == 1 test.
+    #
+    # WHAT THIS ASSERTION USED TO SAY was "slot0 char=0 slot1 char=1 (0 Mario,
+    # 1 Luigi)", and that was never a ROM property on any path. It encoded a
+    # retired port-side stand-in that wrote slot index into data_02092128 --
+    # which the loop packs as f1, landing at Player+0x6da, NOT the character at
+    # +0x6d9. So the stand-in could not have produced the two characters this
+    # line demanded, and it did not: the rung failed here reading char=0 on
+    # every slot, which was the save file's character arriving through f2
+    # exactly as the ROM's non-VS arm says it should.
+    #
+    # (rungA in mp3_proof.py asserts the OTHER arm of the same four lines -- a
+    # non-VS boot, where every slot carries the save file's one character --
+    # and vs_slot1_solo_check.py asserts this arm against a real arena.)
     a1, b1 = rows(t1, 0), rows(t1, 1)
     a2, b2 = rows(t2, 0), rows(t2, 1)
     if a1 and b1 and a2 and b2:
-        ok &= M.verdict(a1[-1]["char"] == 0 and b1[-1]["char"] == 1 and
-                        a2[-1]["char"] == 0 and b2[-1]["char"] == 1,
-                        "rungP1 both windows agree on who is who | P1 sees "
+        seen = (a1[-1]["char"], b1[-1]["char"],
+                a2[-1]["char"], b2[-1]["char"])
+        ok &= M.verdict(all(c == 3 for c in seen),
+                        "rungP1 EVERY SLOT IS YOSHI IN BOTH WINDOWS | P1 sees "
                         "slot0 char=%d slot1 char=%d ;; P2 sees slot0 char=%d "
-                        "slot1 char=%d (0 Mario, 1 Luigi)"
-                        % (a1[-1]["char"], b1[-1]["char"],
-                           a2[-1]["char"], b2[-1]["char"]))
+                        "slot1 char=%d (the ROM's VS contract: character 3 on "
+                        "every slot, told apart by colour)" % seen)
     return ok
 
 

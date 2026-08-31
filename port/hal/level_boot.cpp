@@ -2145,24 +2145,34 @@ extern void *data_0209f394[];
 
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
 
-/* THE PORT'S OWN PER-SLOT CHARACTER CHOICE. See the note at the a2 seat: the
-   ROM's data_02092128 is rewritten during the level boot, so the choice the
-   port makes for the extra players cannot live there. Four slots, defaulting
-   to slot-index order (0 Mario, 1 Luigi, 2 Wario, 3 Yoshi), which is the order
-   the VS menu offers and what makes two players tellable apart in a capture. */
-static unsigned char g_vs_character[4] = {0, 1, 2, 3};
-extern "C" void port_vs_set_character(int slot, int ch) {
-    /* & 7, not & 3: src/_ZN6Player13InitResourcesEv.cpp:76 reads the
-       character as `b & 7`, so the field is THREE bits. Masking to two
-       costs nothing for the four characters the game ships and would
-       silently fold any value above 3 onto a different character, which
-       is exactly the kind of narrowing that survives review because the
-       test data never exercises it. Match the ROM's width. */
-    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 7);
-}
-extern "C" int port_vs_character(int slot) {
-    return (slot >= 0 && slot < 4) ? (int)g_vs_character[slot] : 0;
-}
+/* THE PORT NO LONGER HOLDS A CHARACTER CHOICE. What stood here was a
+   four-slot table defaulting to slot-index order (0 Mario, 1 Luigi, 2 Wario,
+   3 Yoshi), on the theory that this is the order the VS menu offers and what
+   makes two players tellable apart in a capture. Both halves were wrong, and
+   the second one is why every capture the lane banked showed two Marios.
+
+   IT NEVER REACHED A CHARACTER. The table was fed to data_02092128, which the
+   spawn loop packs as f1 at flag bits 3..5. src/_ZN6Player13InitResourcesEv.cpp
+   :71-77 unpacks the flags:
+
+       a = *(u32 *)(c + 8);                 the spawn flags
+       *(u8 *)(c + 0x6d8) = (a >> 6) & 3;   mPlayerNo   <- (i << 6)
+       sub                = (a >> 3) & 7;   +0x6da      <- f1
+       *(u8 *)(c + 0x6d9) =  a       & 7;   CHARACTER   <- f2
+
+   so f1 lands at +0x6da as `sub`, a different field from the character at
+   +0x6d9. The override could not have changed a character on any path, and
+   it did not.
+
+   AND THE ROM ALREADY DECIDES. _Z19LoadEntranceObjects...'s loop is four
+   lines: f2 = data_0209caa0[0x41], the save file's one character, unless
+   data_0209f2d8 == 1 -- VS -- in which case f2 and f1 are both forced to 3,
+   Yoshi, for EVERY slot, and the players are told apart by COLOUR (see the VS
+   mode seat further down this file, and hal/fs_mods.cpp's built-in Yoshi
+   colours note). The rule is the ROM's, it is four lines long, and the one
+   place the port has to reproduce it -- the stand-in spawn for slots the
+   level's entrance table cannot seat -- now spells it inline rather than
+   consulting a table of the port's own. */
 
 static void port_load1(void *t, int a, unsigned b)
 {
@@ -4311,14 +4321,26 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
            then writes data_02092128[playerNo] BACK from the character whenever
            the two disagree, which is the table rewrite measured mid-boot.
 
-           So both halves carry the port's choice: f2 so the actor comes up as
-           that character, f1 so `sub` agrees with it and the ROM's own
-           reconciliation has nothing to correct. The ROM's table is re-seated
-           to match for anything downstream that reads it. */
-        const unsigned ch = (unsigned)port_vs_character(i);
-        const unsigned f2 = ch;
-        const unsigned f1 = ch;
-        data_02092128[i] = (unsigned char)ch;
+           SO THE RULE IS THE ROM'S, AND THIS PACKS IT VERBATIM. What stood
+           here took f2 from a table of the port's own (slot index: 0 Mario,
+           1 Luigi, 2 Wario, 3 Yoshi) and called that a stand-in for the VS
+           menu's selection. It is not one. The VS menu does not select four
+           different characters -- it starts a match, and in a match the loop
+           above forces character 3 on every slot. A slot this function
+           supplies is a slot the level's entrance table could not seat, so it
+           must be packed exactly as the ROM's own loop would have packed it
+           had the record existed, which is these four lines and nothing else.
+
+           data_0209caa0[0x41] is spelled at its owner, data_0209cad2, for the
+           reason the save-block section gives: the dsd symbol data_0209caa0
+           is 0x14 bytes, so the literal index is a compile-time range check
+           and a fast-fail. */
+        unsigned f2 = (unsigned)(data_0209cad2[0x41 - 0x32] & 7);
+        unsigned f1 = (unsigned)(data_02092128[i] & 7);
+        if (data_0209f2d8 == 1) {
+            f2 = 3;                     /* VS: every slot is Yoshi */
+            f1 = 3;
+        }
         const unsigned flags = f2 | (f1 << 3) | ((unsigned)i << 6) | (sl << 8);
 
         void *a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
@@ -4329,7 +4351,7 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
                      "[vs] port-supplied start for slot %d: actor=%p "
                      "char=%u pos=(%d,%d,%d) (the level's entrance table has "
                      "no player start at record %u)\n",
-                     i, a, f1, pos[0], pos[1], pos[2], p3 + i);
+                     i, a, f2, pos[0], pos[1], pos[2], p3 + i);
     }
 }
 
@@ -4506,10 +4528,6 @@ int func_0203da9c(void);
    Stage::InitResources:153 copies data_0208a0e0 into data_0209f21c, so this is
    the write that actually survives into the spawn loop. */
 void SetNumPlayers(int n);
-/* run mg16 lane MP3: the port's own per-slot character choice, defined above
-   port_load1. It exists because the ROM rewrites data_02092128 during the boot. */
-void port_vs_set_character(int slot, int ch);
-int  port_vs_character(int slot);
 extern signed char data_02092120;      /* currently shown area, -1 = none */
 extern int data_0209f32c[];            /* water level */
 /* data_0209fc48 (the running cutscene) is DEFINED above, in the retirement
@@ -4898,33 +4916,67 @@ static void port_a2_seat_body(int make_stage)
        wrote int strides, and the ROM's byte readers saw fc5c[1] == 0:
        Player::Behavior's VS gate returned before a single tick, so player 2
        stood in St_LevelEnter_Main forever on every VS map. */
-    for (int i = 0; i < vs_players; ++i) {
-        data_02092128[i] = (unsigned char)i;   /* character: see below */
-        port_vs_set_character(i, i);   /* and the port's own copy: see below */
-    }
-    /* THE PORT KEEPS ITS OWN COPY OF THE CHARACTER CHOICE, and that is not
-     * belt-and-braces -- data_02092128 IS REWRITTEN DURING THE LEVEL BOOT.
-     * Measured: the loader witness prints chars=0,1 on the way into
-     * LoadEntranceObjects and port_vs_spawn_extra_players, which runs
-     * immediately after it, reads 0 for slot 1. Something inside the spawn
-     * (Player::InitResources seats the array from the save block) puts player
-     * 0's character back across every slot.
+    /* ---- THE VS MODE BYTE, THE PORT'S WHOLE STAND-IN FOR THE MENU --------
      *
-     * That is the ROM's table and the ROM's business. What is NOT the ROM's is
-     * the choice for the EXTRA players, because the port is standing in for the
-     * VS menu that would make it, so the port holds that decision in its own
-     * storage instead of leaving it in a table the ROM owns and overwrites. */
-    /* CHARACTER PER SLOT, and it is a placeholder with a reason rather than a
-     * decision. The ROM picks these in the VS menu (ov075), which is not
-     * mounted yet, so slot i gets character i -- 0 Mario, 1 Luigi, 2 Wario,
-     * 3 Yoshi -- which is the character ORDER the VS menu offers and makes the
-     * two players visually distinguishable in a proof capture, which is the
-     * point at this stage. When ov075 lands, its own selection replaces this. */
-    if (vs_players > 1)
-        std::fprintf(stderr,
-                     "  [a2] VS: %d players, I am slot %d, characters",
-                     vs_players, (int)data_0209f250);
+     * data_0209f2d8 == 1 IS VS MODE, and a multiplayer session is the only
+     * thing that wants it: the cartridge offers exactly ONE multiplayer mode,
+     * the VS star battle, and "two players in the adventure" is not a state
+     * the ROM can be in. So when the seam says a session with more than one
+     * player is up, the mode the ROM would be in is 1, and the port seats it
+     * here for the same reason it seats data_0209fc68 above -- standing in for
+     * the menu (ov075) that has no other way to run yet.
+     *
+     * WHAT SEATING IT BUYS is the entire answer to "in VS the players should
+     * all be Yoshi, in different colours". Both halves are already in this
+     * tree as matched ROM code, and both are gated on this one byte:
+     *
+     *   THE CHARACTER. _Z19LoadEntranceObjects...'s spawn loop reads
+     *   `if (data_0209f2d8 == 1) { f2 = 3; f1 = 3; }` -- character 3, Yoshi,
+     *   for EVERY slot, instead of f2 = data_0209caa0[0x41], the save file's
+     *   single character. Player::InitResources unpacks f2 from flag bits
+     *   0..2 into Player+0x6d9.
+     *
+     *   THE COLOUR. src/func_ov002_020e5948.c:366 sets Player+0x61C to the
+     *   Yoshi BODY model's material[0] palette base plus (playerNo << 1), and
+     *   src/_ZN6Player6RenderEv.cpp:65-73 and :106-114 write that value into
+     *   +0x20 of every material record of the body model and again of the
+     *   head model -- but only when data_0209f2d8 == 1 and the character is
+     *   3. yoshi_model.bmd's yoshi_all_16p_pl is 128 bytes: four stacked
+     *   16-colour rows, greens, reds, blues, yellows. One step of playerNo is
+     *   exactly one row, so slot i renders in colour i and the head follows
+     *   the body because Render re-points both. hal/fs_mods.cpp's built-in
+     *   Yoshi colours note derives that arrangement from the extraction.
+     *
+     * So the port chooses no character, chooses no colour and owns no table
+     * of either. It seats the one byte the menu would seat, and the ROM's own
+     * code does the rest of the work in its own words.
+     *
+     * PROMOTED FROM ADVENTURE ONLY, and the guard is doing real work in both
+     * directions. If the ROM's own VS start already ran -- SM64DS_VS_MAP goes
+     * through func_ov075_02116c8c -> PrepareVsMode, which writes 1 itself --
+     * this is a no-op and the ROM's write stands. And mode 2, the kuppa
+     * script, is left alone rather than being overwritten by a session count.
+     * One player never reaches the line at all, so every single-player
+     * baseline in this tree stays byte-for-byte what it was.
+     *
+     * data_02092128 IS NO LONGER SEATED HERE. What stood here wrote the slot
+     * index into it and called that the character. It is not one: the loop
+     * packs it as f1 at flag bits 3..5, which Player::InitResources unpacks
+     * into Player+0x6da as `sub`, a different field from the character at
+     * +0x6d9 -- and :83-87 then writes the table BACK from the character
+     * whenever the two disagree, which is the mid-boot rewrite this block's
+     * old comment had measured and misread as the table being unreliable. The
+     * table is the ROM's, and the ROM fills it. */
+    if (vs_players > 1 && data_0209f2d8 == 0)
+        data_0209f2d8 = 1;
     if (vs_players > 1) {
+        std::fprintf(stderr,
+                     "  [a2] VS: %d players, I am slot %d, game mode %d",
+                     vs_players, (int)data_0209f250, (int)data_0209f2d8);
+        /* data_02092128 printed as WHAT IT IS -- the spawn loop's f1, landing
+           at Player+0x6da. It is not the character. The character is f2, and
+           in VS the loop forces it to 3 for every slot regardless of this. */
+        std::fprintf(stderr, ", f1/+0x6da");
         for (int i = 0; i < vs_players; ++i)
             std::fprintf(stderr, " %d", (int)data_02092128[i]);
         std::fprintf(stderr, "\n");
