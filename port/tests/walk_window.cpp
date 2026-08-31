@@ -9947,21 +9947,33 @@ int main(void)
                PadData[4], which is where every stylus and button read in the
                game comes from.
 
-               OFF BY DEFAULT, and that is not timidity. The port writes those
-               two arrays DIRECTLY today (hal/input_probe.cpp, the scene
-               publish in hal/scene_boot.cpp), so turning this on hands the
-               whole input path to the ROM's four-slot route in one step. That
-               swap is MP2's, because that is the change with a regression
-               surface, and MP1's solo proof is only worth something if the
-               default path is untouched.
+               ON WHENEVER A TRANSPORT IS UP (port::comms_fanout_active, banner
+               in hal/comms_conductor.cpp): a session that skips these two
+               steps is two solo sims sharing a wire nobody reads, which is
+               what the first live two-window test was. With no transport and
+               no override this stays off and the direct stores drive, which
+               is the path MP1's byte-identical solo proof stands on.
 
                It is a REAL call site and not a linker directive, which is the
                standard port/hal/w8a_stage_faces.cpp set after a review found
                eleven TUs of directive-manufactured linkage: something has to
                actually call the body for it to count as linked. */
-            if (comms_fanout_on()) {
-                port::comms_fanout();
+            {
+                const int fan_now = comms_fanout_on();
+                if (fan_now)
+                    port::comms_fanout();
+                /* THE REPORT IS NOT INSIDE THE FAN-OUT GATE, deliberately. It
+                   used to be, which meant the one configuration where the
+                   input exchange is broken -- fanout forced off with a
+                   session up -- was exactly the configuration the instrument
+                   went dark in. The readout prints in both states and names
+                   the state, so a log from the broken shape says so instead
+                   of saying nothing. */
                 if (comms_fanout_report()) {
+                    fprintf(stderr, "[comms:level] fanout=%s\n",
+                            fan_now ? "on"
+                                    : "OFF (direct slot-0 stores driving; "
+                                      "the records below reach no reader)");
                     port::comms_report("level");
                     /* run mg16 lane MP2: the carrier's own half of the same
                        readout. Silent when no transport is installed, so an
