@@ -84,9 +84,11 @@
 # price of the three intact-TU modules. Measured at 5.3s for the 312 tests that predate
 # tools.test_premerge_check, on a runner-equivalent container (python:3.12, Linux,
 # none of the three inputs present); that module adds 87, timed at 9.7s on Windows.
-# The three modules added below cost no measurable wall time at all: 435 tests in 46.5s
-# and 498 tests in 45.7s on the same `git archive` tree, i.e. inside the noise. They are
-# mock- and tempdir-based and touch neither the network nor the tree.
+# The three modules added below cost no measurable wall time at all: on one Windows tree,
+# 435 tests in 46.5s before and 498 in 45.7s after -- inside the noise. On the runner
+# itself the whole 498 take 11.5s, plus about 1s for the two wheels (both are prebuilt;
+# nothing compiles). They are mock- and tempdir-based and touch neither the network nor
+# the tree.
 # The whole-suite timings are dominated by Windows filesystem overhead and do not
 # apply here -- test_tiers alone takes 71s on a Windows checkout and 1.3s on Linux.
 # test_symrecords needs none of the three inputs either: it reads only tracked text
