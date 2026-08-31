@@ -3438,6 +3438,41 @@ static void menu_input(int pad_live, const XPad *pad)
     }
     edge = held & ~menu_prev;
     menu_prev = held;
+    /* ---- AND IT DOES NOT OPEN IN MULTIPLAYER (Tango's ask, lane VSEND) ------
+     *
+     * "make sure f5 doesnt work in multiplayer." Every row behind this key is a
+     * single-console action -- warp to a level, relaunch into a scene or a VS
+     * map, load a save state, quit and start a replacement process -- and every
+     * one of them is a divergence the instant a second console is in the
+     * session, because the other console did none of it. The two worlds are
+     * lockstep on the frame; one of them warping is the end of that.
+     *
+     * THE TEST IS THE TRANSPORT, not a pairing handshake. comms_loopback_stats
+     * reports installed=false whenever no role was set, which is every solo run
+     * and is the whole of the "solo stays byte-identical" promise on this path;
+     * with a role set the process is in a session or trying to be, and either
+     * way it is not a console that should be warping alone. Reading a struct
+     * field costs nothing and it is read only on the press edge.
+     *
+     * THE OPEN IS REFUSED AND THE CLOSE IS NOT. A menu that somehow got open
+     * must always be closable, whatever the mode; refusing both would be a way
+     * to trap a player behind it. In practice the open is the only reachable
+     * half in a session, so the close arm is a safety property and not a
+     * feature.
+     *
+     * SM64DS_MP_DEBUG_MENU=1 for a developer who wants it anyway, off by
+     * default, named so it cannot be reached by accident. */
+    if ((edge & (1u << 0)) && !menu_on) {
+        static int allow = -1;
+        if (allow < 0) allow = getenv("SM64DS_MP_DEBUG_MENU") != 0;
+        if (!allow && port::comms_loopback_stats().installed) {
+            fprintf(stderr, "[menu] REFUSED: this process is in a multiplayer "
+                            "session, and every row behind this key is a "
+                            "single-console action the other console would not "
+                            "take. SM64DS_MP_DEBUG_MENU=1 overrides.\n");
+            edge &= ~(1u << 0);
+        }
+    }
     if (edge & (1u << 0)) {
         menu_on = !menu_on;
         fprintf(stderr, "[menu] %s\n", menu_on ? "open" : "closed");
