@@ -5479,8 +5479,11 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
  * InitResources statements that never re-ran), and the frame pacer is a third.
  * They share one shape: state that is correct once per PROCESS, on a path that
  * now changes scene without one. Anything on the WINDOW side that has to be
- * re-derived when the scene under it is replaced belongs in this function;
- * anything on the game side belongs in its own hal file, called from the one
+ * re-derived when the scene under it is replaced belongs in this function.
+ * Game-side state usually has a truer home: a statement the ROM runs per boot
+ * or per stage belongs at that seat (the frame-pacer fix moved its divider
+ * write into the per-stage seat in level_boot.cpp for exactly this reason);
+ * only game-side state with no ROM seat of its own should ride the one call
  * site below. One named place beats three scattered fix-ups.
  *
  * WHAT IT DOES, in the order it has to be done:
