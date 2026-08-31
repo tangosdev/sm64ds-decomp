@@ -56,8 +56,11 @@ CONTENT = ("SHT_PROGBITS", "SHT_NOBITS")
 IGNORE = (".comment", ".debug", ".line", ".note")
 
 SHN_UNDEF = 0
+SHN_XINDEX = 0xffff
 R_ARM_ABS32 = 2
 SHF_EXECINSTR = 0x4
+SHF_INFO_LINK = 0x40
+SHF_GROUP = 0x200
 
 # "There is nothing here to reduce" -- not a failure. An object whose enrolled symbol
 # is not a defined function in it (an assembly stub, a data entry) simply has no
@@ -890,6 +893,155 @@ def derive_section_partition(raw, keep_section_names, licensed_symbols,
     if p.get("error"):
         return None, p
     return _apply(raw, p, None), p
+
+
+def reorder_same_named_nontext_sections(raw, ordered_groups):
+    """Permute exact repeated non-text section headers without moving payloads.
+
+    ``ordered_groups`` is a list of ``{"section": name, "indices": [...]}``
+    rows.  Each index list must be an exact permutation of every non-empty content
+    section carrying that name; its order is the desired linker contribution order.
+    Only the section headers move.  Symbol ``st_shndx`` values and every ELF
+    section-index reference are remapped to follow their original sections, while
+    section payload bytes and relocation records remain at their original offsets.
+
+    This is intentionally not a general ELF rewriter.  Extended section indices and
+    section groups have secondary index tables/payloads, so their presence is a
+    refusal rather than an invitation to guess.  Callers own the semantic proof for
+    the requested order; this helper supplies only the fail-closed mechanical
+    permutation.
+    """
+    if not isinstance(ordered_groups, list) or not ordered_groups:
+        return None, {"reordered": [], "error":
+                      "at least one ordered non-text section group is required"}
+
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    if elf.elfclass != 32 or elf["e_type"] != "ET_REL" or elf["e_phnum"]:
+        return None, {"reordered": [], "error":
+                      "section ordering supports only 32-bit ET_REL objects "
+                      "without program headers"}
+    if not elf["e_shnum"] or elf["e_shstrndx"] in ("SHN_XINDEX", SHN_XINDEX) \
+            or elf["e_shentsize"] != 40:
+        return None, {"reordered": [], "error":
+                      "extended ELF section indices or non-standard section "
+                      "headers are unsupported"}
+
+    secs = list(elf.iter_sections())
+    if any(sec.header["sh_type"] in ("SHT_GROUP", "SHT_SYMTAB_SHNDX")
+           or sec.header["sh_flags"] & SHF_GROUP for sec in secs):
+        return None, {"reordered": [], "error":
+                      "ELF section groups and extended symbol section indices are "
+                      "unsupported"}
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None, {"reordered": [], "error": "no .symtab"}
+    if symtab.header["sh_entsize"] != 16:
+        return None, {"reordered": [], "error":
+                      "non-standard Elf32_Sym entries are unsupported"}
+    syms = list(symtab.iter_symbols())
+    if any(sym["st_shndx"] in ("SHN_XINDEX", SHN_XINDEX) for sym in syms):
+        return None, {"reordered": [], "error":
+                      "extended symbol section indices are unsupported"}
+
+    parsed, moved, seen_names = [], {}, set()
+    for ordinal, row in enumerate(ordered_groups):
+        label = f"ordered_groups[{ordinal}]"
+        if not isinstance(row, dict) or not row.get("section") \
+                or not isinstance(row.get("indices"), list):
+            return None, {"reordered": [], "error":
+                          f"{label} needs section and indices"}
+        name = str(row["section"])
+        if name == ".text":
+            return None, {"reordered": [], "error":
+                          f"{label} may not reorder .text"}
+        if name in seen_names:
+            return None, {"reordered": [], "error":
+                          f"duplicate ordered section group {name}"}
+        seen_names.add(name)
+        try:
+            desired = [int(index) for index in row["indices"]]
+        except (TypeError, ValueError):
+            return None, {"reordered": [], "error":
+                          f"{label} indices must be integers"}
+        actual = [index for index, sec in enumerate(secs)
+                  if sec.name == name and sec.header["sh_type"] in CONTENT
+                  and sec.header["sh_size"]]
+        if not actual:
+            return None, {"reordered": [], "error":
+                          f"{label} names no non-empty content sections"}
+        if len(desired) != len(set(desired)) or set(desired) != set(actual):
+            return None, {"reordered": [], "error":
+                          f"{label} indices {desired} are not an exact permutation "
+                          f"of {actual}"}
+        types = {secs[index].header["sh_type"] for index in actual}
+        if len(types) != 1:
+            return None, {"reordered": [], "error":
+                          f"{label} mixes content section types {sorted(types)}"}
+        slots = sorted(actual)
+        for old, new in zip(desired, slots):
+            if old in moved or new in moved.values():
+                return None, {"reordered": [], "error":
+                              "ordered section groups overlap"}
+            moved[old] = new
+        parsed.append({"section": name, "original": actual,
+                       "desired": desired, "slots": slots})
+
+    # A permutation must map the selected set onto itself.  Checking both sides is
+    # useful even though every group above already checks its own exact set: it keeps
+    # this low-level rewrite honest if group construction changes later.
+    if set(moved) != set(moved.values()):
+        return None, {"reordered": [], "error":
+                      "section permutation does not preserve its exact index set"}
+    if all(old == new for old, new in moved.items()):
+        return bytes(raw), {"reordered": parsed, "symbolIndices": 0,
+                            "sectionLinks": 0, "sectionInfos": 0, "error": None}
+
+    import struct
+    endian = "<" if elf.little_endian else ">"
+    out = bytearray(raw)
+    headers = {index: bytes(raw[_shdr_offset(elf, index):
+                                     _shdr_offset(elf, index) + elf["e_shentsize"]])
+               for index in moved}
+    for old, new in moved.items():
+        offset = _shdr_offset(elf, new)
+        out[offset:offset + elf["e_shentsize"]] = headers[old]
+
+    # Symbols continue to describe the same section header/payload after that header
+    # moves to its new slot.  The symbol table itself cannot be one of the permuted
+    # content sections, so its file offset remains stable.
+    symbol_indices = 0
+    symbase = symtab.header["sh_offset"]
+    for index, sym in enumerate(syms):
+        old = sym["st_shndx"]
+        if old not in moved:
+            continue
+        struct.pack_into(endian + "H", out,
+                         symbase + index * symtab.header["sh_entsize"] + 14,
+                         moved[old])
+        symbol_indices += 1
+
+    # Parse the copied headers before fixing their own references.  sh_link is an
+    # ELF section index whenever non-zero.  sh_info is a section index for REL/RELA
+    # and for types carrying SHF_INFO_LINK; other sh_info meanings (notably the
+    # symtab local-symbol count) must not be reinterpreted.
+    copied = ELFFile(io.BytesIO(bytes(out)))
+    section_links = section_infos = 0
+    for index, sec in enumerate(copied.iter_sections()):
+        header = _shdr_offset(copied, index)
+        link = sec.header["sh_link"]
+        if link in moved:
+            struct.pack_into(endian + "I", out, header + 0x18, moved[link])
+            section_links += 1
+        info = sec.header["sh_info"]
+        info_is_section = (isinstance(sec, RelocationSection)
+                           or bool(sec.header["sh_flags"] & SHF_INFO_LINK))
+        if info_is_section and info in moved:
+            struct.pack_into(endian + "I", out, header + 0x1c, moved[info])
+            section_infos += 1
+
+    return bytes(out), {"reordered": parsed, "symbolIndices": symbol_indices,
+                        "sectionLinks": section_links,
+                        "sectionInfos": section_infos, "error": None}
 
 
 def rebias_object_symbols(raw, symbol_policies, normalize_undefined=False):
