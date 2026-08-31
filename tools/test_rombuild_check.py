@@ -90,7 +90,8 @@ class RomBuildCheck(unittest.TestCase):
         self.assertEqual(report["moduleComposition"]["unownedDataBytes"], 0)
 
     def write_intact_entry(self):
-        """One src/-owned entry that claims BOTH .text and .data, as an intact TU does."""
+        """One source-owned entry claiming BOTH .text and .data, as an intact TU
+        does."""
         (self.config / "delinks.txt").write_text(
             "    .text start:0x00001000 end:0x00001008 kind:code\n"
             "    .data start:0x00001008 end:0x0000100c kind:data\n\n"
@@ -103,10 +104,10 @@ class RomBuildCheck(unittest.TestCase):
         (self.built / "arm9.bin").write_bytes(b"ABCDEFGHIJKL")
 
     def test_nontext_source_claim_mismatch_produces_a_diagnostic_row(self):
-        """A differing byte in a src/-owned .data claim must NAME itself.
+        """A differing byte in a source-owned .data claim must NAME itself.
 
         The per-entry loop that builds `failures` walks .text/.init only, because every
-        counter in it is a function counter. A src/-owned .data claim therefore produced
+        counter in it is a function counter. A source-owned .data claim therefore produced
         no row at all: the verdict was still red (the byte is outside every mods/ range,
         so unexpectedDifferingBytes catches it), but `failures` was empty and
         mismatchingFunctions was 0 -- a red verdict that says "somewhere" and nothing
@@ -129,7 +130,7 @@ class RomBuildCheck(unittest.TestCase):
         self.assertEqual(report["sourceBuild"]["mismatchingDataClaims"], 0)
         self.assertEqual(report["failures"], [])
 
-        # B -- one differing byte inside the src/-owned .data claim (offset 0x8).
+        # B -- one differing byte inside the source-owned .data claim (offset 0x8).
         self.write_intact_entry()
         (self.built / "arm9.bin").write_bytes(b"ABCDEFGHXJKL")
         report = RBC.analyze(self.config, "stock")

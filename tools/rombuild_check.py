@@ -306,7 +306,7 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
                 reproducing_bytes += size
 
         # The loop above walks .text/.init only, because those are the entries that own
-        # FUNCTIONS and every counter in it is a function counter. A src/-owned .data,
+        # FUNCTIONS and every counter in it is a function counter. A source-owned .data,
         # .rodata or .bss claim is a byte claim with no function in it, so it fell out
         # of that loop entirely and produced no diagnostic row at all.
         #
@@ -414,7 +414,7 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "mismatchingFunctions": bad,
             "mismatchingFunctionBytes": bad_function_bytes,
             "differingSourceBytes": differing_source_bytes,
-            # Non-text src/-owned claims, kept as their own counters: they carry no
+            # Non-text source-owned claims, kept as their own counters: they carry no
             # functions, so folding them into mismatchingFunctions would report a
             # function count that no function is behind. differingSourceBytes is
             # shared, because a differing byte is a differing byte either way.

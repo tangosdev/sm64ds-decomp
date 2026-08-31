@@ -198,7 +198,7 @@ jobs:
 #                                      WRONG object into a byte-gate run.
 #   test_rombuild_check          (9)   rombuild_check.py -- turns a source-built ROM into
 #                                      the fidelity metrics every gate quotes, including
-#                                      the diagnostic row a src/-owned NON-.text claim
+#                                      the diagnostic row a source-owned NON-.text claim
 #                                      gets when it mismatches. That case is why this
 #                                      module gained 3 tests; it is also the only one of
 #                                      the intact-TU suites a bare runner can execute,
