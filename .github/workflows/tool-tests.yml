@@ -10,30 +10,49 @@
 # gate's FAILURE branch is the one path a green run never exercises: no ROM build can
 # reach it, because these tools are not compiled into the ROM. src-tu-refs.yml exists
 # because #1643 broke 26 translation units while every byte gate stayed green, and the
-# only thing that noticed was a test suite a human had to run. This job runs 435 of
+# only thing that noticed was a test suite a human had to run. This job runs 498 of
 # those assertions on every PR that touches `tools/` or `nearmiss/`, so the next one is
 # noticed by CI.
 #
 # WHAT THIS DOES NOT COVER, and why. Three groups are deliberately absent.
 #
 #   1. NEEDS THE TOOLCHAIN. mwccarm and the extracted ROM are not on a GitHub runner;
-#      they live on the private build box pr-validate.yml relays to. Measured in a
-#      checkout with `extracted/`, `tools/mwccarm/` and `tools/bin/` absent:
-#      test_objisolate skips all 32 of its tests, test_rombuild skips 3 of 32, and
-#      test_check_src_tu_compiles FAILS 8. Wiring those here would buy a green that
+#      they live on the private build box pr-validate.yml relays to. Re-measured against
+#      8f554bce3 in a tree exported with `git archive origin/main` -- no `extracted/`, no
+#      `tools/mwccarm/`, no `tools/bin/`, which is exactly what this job's checkout is:
+#      test_objisolate skips ALL 34 of its tests (the older note here said 32; the suite
+#      grew), and test_check_src_tu_compiles FAILS 8. Wiring those would buy a green that
 #      means nothing. Also absent for the same reason: test_build_pin, test_dtor_members,
 #      test_fdiff_version, test_gen_header, test_opnew_sizes, test_tubuild.
 #
-#   2. NEEDS A PIP DEPENDENCY. A bare runner has no pyelftools, capstone or ndspy, and
-#      this repo has no requirements file to pin them from. That import wall -- not the
-#      compiler -- is what actually stops most of `tools/` on a runner: 24 modules die
-#      on `No module named 'elftools'` alone (test_rombuild, test_romdata_check,
-#      test_check_references, test_tu_config, test_tu_production, test_reloc_audit_*,
-#      test_mangle, test_name_roundtrip, test_pr_linkcheck_*, test_tu_promote,
-#      test_objisolate, and more), test_swarm and
-#      test_worklist on capstone, test_bmg on ndspy. Pinning those is a fair follow-up;
-#      it is a different change from this one, and it should come with a requirements
-#      file rather than a version invented in a `run:` line.
+#      test_tubuild deserves its own sentence, because it is the worst of the shapes and
+#      it is easy to look at its numbers and conclude the opposite. Run under pytest in
+#      that toolchain-free tree it reports "2 failed, 43 passed" -- which reads like a
+#      suite that is 95% wirable. It is not. Fifteen of its tests open with
+#      `if not _toolchain(): return`, and fourteen of those returns are bare, so those
+#      tests report PASS having asserted nothing. The honest split is 28 real passes, 15
+#      vacuous passes, 2 failures (`tubuild list` needs build/tu_map.json, which
+#      regenerates from the ROM and comes back empty without it). A bare `return` guard
+#      is strictly worse than a skip: `pytest -rs` cannot see it and neither can a
+#      reviewer reading a green log.
+#
+#   2. NEEDS A PIP DEPENDENCY -- RESOLVED for the three modules added below, and that is
+#      what tools/requirements.txt now exists for. A bare runner has no pyelftools,
+#      capstone or ndspy. That import wall -- not the compiler -- is what stops most of
+#      `tools/` on a runner: 24 modules die on `No module named 'elftools'` alone
+#      (test_romdata_check, test_check_references, test_tu_config, test_reloc_audit_*,
+#      test_mangle, test_name_roundtrip, test_pr_linkcheck_*, test_objisolate, and more),
+#      test_swarm and test_worklist on capstone, test_bmg on ndspy.
+#
+#      The wall is TWO packages deep, not one, which is the part that had been guessed
+#      rather than measured. test_rombuild, test_tu_promote and test_tu_production reach
+#      elftools through objisolate.py; satisfying that alone only moves the failure to
+#      rombuild -> romdata_check -> linkcheck -> match -> capstone, and all three still
+#      die at collection. They need both, so requirements.txt pins both.
+#
+#      This does NOT generalise. The other 21 elftools modules were not re-measured with
+#      capstone installed and are not known to be wirable; several of them are in group 1
+#      as well. Adding one is a fresh measurement, not a corollary of this one.
 #
 #   3. PYTEST-ONLY, SO UNITTEST CANNOT SEE THEM. test_dead_references (24 tests) and
 #      test_pr_monitor (4) used to fail on a clean origin/main with ImportError -- they
@@ -60,20 +79,27 @@
 # bare-`return` toolchain guard that reports PASS rather than SKIP when the compiler is
 # missing. An explicit list makes adding a module a reviewed decision.
 #
-# Costs nothing: stdlib unittest over the working tree, no compiler, no ROM, no pip step
-# and no network. Measured at 5.3s for the 312 tests that predate
+# Nearly free: unittest over the working tree, no compiler, no ROM. It now costs one pip
+# step (two wheels, no build) and the network access that implies -- that is the whole
+# price of the three intact-TU modules. Measured at 5.3s for the 312 tests that predate
 # tools.test_premerge_check, on a runner-equivalent container (python:3.12, Linux,
 # none of the three inputs present); that module adds 87, timed at 9.7s on Windows.
+# The three modules added below cost no measurable wall time at all: 435 tests in 46.5s
+# and 498 tests in 45.7s on the same `git archive` tree, i.e. inside the noise. They are
+# mock- and tempdir-based and touch neither the network nor the tree.
 # The whole-suite timings are dominated by Windows filesystem overhead and do not
 # apply here -- test_tiers alone takes 71s on a Windows checkout and 1.3s on Linux.
 # test_symrecords needs none of the three inputs either: it reads only tracked text
 # (config/**/symbols.txt, symbols/verified.tsv) and imports nothing outside the stdlib.
 #
-# SIX SKIPS ARE EXPECTED and are honest ones that name their own reason: four in
-# test_stamp_provenance_verify ("needs extracted/ (ROM dump)", a real @skipUnless) and
-# two in test_match_provenance ("no src samples"). test_premerge_check adds none on a
-# runner with git installed, and test_symrecords and test_nearmiss_db add none anywhere.
-# 429 of the 435 assert something.
+# NINE SKIPS ARE EXPECTED and are honest ones that name their own reason: four in
+# test_stamp_provenance_verify ("needs extracted/ (ROM dump)", a real @skipUnless), two
+# in test_match_provenance ("no src samples"), and three in test_rombuild ("mwccarm not
+# present" -- its Retarget class, and only that class, compiles a real object). All nine
+# are @skipUnless with a stated reason, so `-v` shows them; none is a bare `return`.
+# test_premerge_check adds none on a runner with git installed, and test_symrecords,
+# test_nearmiss_db, test_tu_promote and test_tu_production add none anywhere.
+# 489 of the 498 assert something.
 name: tool tests
 
 on:
@@ -116,11 +142,22 @@ jobs:
           # checkout makes those assert against a one-commit repository.
           fetch-depth: 0
       - uses: actions/setup-python@v5
-        # Stdlib only, no pip step. Pinned for the same reason python-names.yml pins
-        # pyflakes: a runner's default python moving under a gate that touched no Python
-        # is indistinguishable from a regression.
+        # Pinned for the same reason python-names.yml pins pyflakes: a runner's default
+        # python moving under a gate that touched no Python is indistinguishable from a
+        # regression.
         with:
           python-version: "3.12"
+
+      - name: Pinned tool dependencies
+        # Every module but the last three in the list below is stdlib-only and would run
+        # without this step. test_rombuild, test_tu_promote and test_tu_production import
+        # rombuild.py, which reaches elftools (via objisolate) and capstone (via
+        # romdata_check -> linkcheck -> match); without both they do not fail a test, they
+        # fail COLLECTION, which under `python -m unittest` is a loud error and not a
+        # silent zero. Versions live in tools/requirements.txt, not in this line, so a
+        # bump is a reviewable diff. `tools/**` already triggers this workflow, so editing
+        # that file re-runs the job that depends on it.
+        run: pip install -r tools/requirements.txt
 
       - name: The tools' own tests
         # ONE unittest invocation, so a single "Ran N tests" line in the log is the
@@ -145,6 +182,7 @@ jobs:
             tools.test_nearmiss_db \
             tools.test_premerge_check \
             tools.test_progress \
+            tools.test_rombuild \
             tools.test_rombuild_cache \
             tools.test_rombuild_check \
             tools.test_rombuild_profile \
@@ -152,6 +190,8 @@ jobs:
             tools.test_srcpath \
             tools.test_stamp_provenance_verify \
             tools.test_symrecords \
+            tools.test_tu_production \
+            tools.test_tu_promote \
             tools.test_validate_merge
 
 # What each module protects, in the order it runs above:
@@ -193,6 +233,14 @@ jobs:
 #                                      skipTests need a git binary.
 #   test_progress                (4)   progress.py -- matched functions/bytes vs the
 #                                      whole game; the number the README reports.
+#   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:
+#                                      intact-TU policy resolution, per-file verdicts and
+#                                      the `.init` retargeting that decides which `.text`
+#                                      section dsd's `File.o(.init)` selector lands on.
+#                                      34 of the 37 are mock/tempdir tests that need no
+#                                      compiler; the other 3 are the Retarget class, which
+#                                      compiles a real object and @skipUnless-es itself
+#                                      with "mwccarm not present". CI gets 34. (3 skip)
 #   test_rombuild_cache         (19)   rombuild_cache.py -- the content-addressed object
 #                                      cache. A stale-key bug here silently serves the
 #                                      WRONG object into a byte-gate run.
@@ -200,10 +248,11 @@ jobs:
 #                                      the fidelity metrics every gate quotes, including
 #                                      the diagnostic row a source-owned NON-.text claim
 #                                      gets when it mismatches. That case is why this
-#                                      module gained 3 tests; it is also the only one of
-#                                      the intact-TU suites a bare runner can execute,
+#                                      module gained 3 tests. It used to be the only
+#                                      intact-TU suite a bare runner could execute,
 #                                      because it imports enroll and srcpath and nothing
-#                                      that reaches elftools.
+#                                      that reaches elftools; with tools/requirements.txt
+#                                      installed it is one of four.
 #   test_rombuild_profile        (6)   rombuild_profile.py -- isolated stock and
 #                                      intentional-mod build configs.
 #   test_sinit_owners            (9)   sinit_owners.py -- ranks the likely original TU
@@ -219,5 +268,22 @@ jobs:
 #                                      may be restamped. A verdict wrongly called
 #                                      mechanical would launder a wrong-identity pair
 #                                      straight into the mirror.
+#   test_tu_production          (17)   tu_production.py -- the intact-object production
+#                                      route added by #2054, and the stock/ROM-gap control
+#                                      that decides whether a produced object may stand in
+#                                      for the cartridge's. Pure mock and tempdir; needs no
+#                                      compiler, no ROM and no git. 17 of 17 run in CI.
+#   test_tu_promote              (9)   tu_promote.py -- TU promotion, including the
+#                                      per-member scoring #2052 changed and the baseline
+#                                      self-contradiction check #2053 added. Promotion
+#                                      dilutes the CONVERTED tier, so a scoring bug here
+#                                      moves a published number with nothing else
+#                                      noticing. Pure mock; 9 of 9 run in CI.
 #   test_validate_merge         (35)   validate_merge.py -- builds the machine-readable
 #                                      PR validation report the validator comment renders.
+#
+# The two suites this list still refuses, and the number that says why, measured on a
+# `git archive origin/main` tree with no toolchain: test_objisolate 0 pass / 34 skip
+# (every test in it compiles), test_tubuild 28 real pass / 15 vacuous / 2 fail. Neither
+# is a candidate until objisolate's fixtures stop needing mwcc and tubuild's bare
+# `return` guards become skips. See group 1 in the header.
