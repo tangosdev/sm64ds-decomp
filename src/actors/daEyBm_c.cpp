@@ -48,7 +48,6 @@ extern void _ZN8dActor_cC2Ev(dActor_c *actor);
 extern void _ZN11ShadowModelC1Ev(ShadowModel *shadow);
 extern void _ZN10dCcAcPos_cC1Ev(dCcAcPos_c *collision);
 extern void _ZN10dBgCh_ActrC1Ev(dBgCh_Actr *collision);
-extern int _ZTV8daEyBm_c[];
 
 daEyBm_c *MrI_Projectile_Spawn()
 {
