@@ -220,3 +220,4 @@ Do not open the PR with near-misses in `src/` expecting the maintainer to split 
   class name are well attested; **parameter types are not**, and roughly half of all
   mangled symbols have never been checked by a compiler. Read it before you contort a
   body to satisfy a signature — the name is sometimes the thing that's wrong.
+- [`notes/tu-promotion-conventions.md`](notes/tu-promotion-conventions.md) — the conventions a genuine-TU promotion PR must satisfy; read it before opening or reviewing one.
