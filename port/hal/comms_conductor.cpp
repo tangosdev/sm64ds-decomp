@@ -815,17 +815,37 @@ void vs_probe(int frame) {
         int cheld = 0, cang = 0;
         std::memcpy(&cheld, ctrl + 0x00, 4);
         std::memcpy(&cang, ctrl + 0x0e, 2);
+        int pal61c = 0;
+        std::memcpy(&pal61c, a + 0x61c, 4);
         // +0x6d9 is the CHARACTER the actor actually came up as, read off the
         // actor rather than off the table that was supposed to seat it --
         // tests/walk_window.cpp reads the same byte into g_character for the
         // same reason. Two claims disagreed about whether player 1 is Luigi;
-        // this is the one that settles it.
+        // this is the one that settles it. (It is neither: in VS every slot is
+        // character 3, Yoshi, and the players differ by palette row -- see pal
+        // below.)
+        //
+        // MASKED & 7, NOT & 3. src/_ZN6Player13InitResourcesEv.cpp:76 seats
+        // this byte as `b & 7`, so the field is three bits wide. Two bits is
+        // enough for the four characters the game ships and would silently
+        // fold anything above 3 onto a different character -- the exact
+        // narrowing that survives review because the test data never
+        // exercises it. Report the ROM's width.
+        //
+        // pal is Player+0x61C, the VS colour. src/func_ov002_020e5948.c:366
+        // sets it to the Yoshi body model's material[0] palette base plus
+        // (playerNo << 1), and Player::Render writes it into every body and
+        // head material record when the mode is VS and the character is 3.
+        // yoshi_all_16p_pl is four stacked 16-colour rows, so consecutive
+        // slots must differ by exactly 2 -- one row. That difference IS the
+        // colour half of "everyone is Yoshi, told apart by colour", and it is
+        // measurable here rather than only in a screenshot.
         std::fprintf(stderr,
                      "[vs] f%d slot%d actor=%p no=%d char=%d pos=(%d,%d,%d) "
                      "touched=%u pad=%04x ctrl0=%08x ang=%04x state=%08x "
-                     "st_timer=%u\n",
+                     "st_timer=%u pal=%d\n",
                      frame, i, (const void *)a, (int)a[0x6d8],
-                     (int)(a[0x6d9] & 3), px, py, pz,
+                     (int)(a[0x6d9] & 7), px, py, pz,
                      other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff),
                      port::player::state_id(a),
                      /* mp-sync-coopdx item 7: mStateTimer, the 0x384-frame
@@ -835,7 +855,8 @@ void vs_probe(int frame) {
                         determinism leak, and this column diffed between the
                         two instances' logs is what locates the first frame
                         the sims fork. */
-                     (unsigned)port::player::state_timer(a));
+                     (unsigned)port::player::state_timer(a),
+                     pal61c);
     }
 }
 

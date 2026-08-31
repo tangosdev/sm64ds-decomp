@@ -35,8 +35,13 @@ reported.
       red -- see its own banner, which is the lane's most expensive lesson.
 
   P1  EACH WINDOW IS ITS OWN PLAYER. The parent's local index is 0 and the
-      child's is 1, and each window's local character matches its slot.
-      (his: "P2 shows HIM as Mario, should be Luigi")
+      child's is 1, and every slot carries the character the ROM's VS arm
+      gives it: 3, Yoshi, on both, told apart by palette row rather than by
+      model. (his: "P2 shows HIM as Mario, should be Luigi". The IDENTITY half
+      of that report was real and the seat assertions below are what catch it.
+      The CHARACTER half was not the ROM's -- Luigi was never the right answer
+      for a VS slot -- and the assertion that encoded it is corrected below,
+      with the reasoning at the character check.)
   P2  INPUT ISOLATION. Input injected on the child moves the child's OWN body
       and NOT the parent's body, in the child's own world.
       (his: "from P2 I can move BOTH Mario and Luigi")
@@ -62,7 +67,7 @@ OUT = os.path.join(ROOT, "runs", "mg16", "out", "MP3", "play")
 VS = re.compile(r"^\[vs\] f(\d+) slot(\d) actor=([0-9A-Fa-f]+) no=(\d) char=(\d) "
                 r"pos=\((-?\d+),(-?\d+),(-?\d+)\) touched=(\d+) "
                 r"pad=([0-9a-f]+) ctrl0=([0-9a-f]+) ang=([0-9a-f]+) "
-                r"state=([0-9a-f]+)", re.M)
+                r"state=([0-9a-f]+)(?: st_timer=\d+ pal=(-?\d+))?", re.M)
 SEAT = re.compile(r"^\s*\[a2\] VS: (\d+) players, I am slot (\d+)", re.M)
 LINK = re.compile(r"^\[comms:level\] transport=loopback.*?slot=(\d+) players=(\d+) role=(\d+)",
                   re.M)
@@ -89,7 +94,14 @@ def rows(t, slot):
                         # on. rungP6 asserts on this because a button press is
                         # a STATE CHANGE and barely moves a body, which is how
                         # three button seams survived a position-only rung.
-                        state=int(m.group(13), 16)))
+                        state=int(m.group(13), 16),
+                        # Player+0x61C, the VS palette base: material[0]'s
+                        # palette plus (playerNo << 1). yoshi_all_16p_pl is
+                        # four stacked 16-colour rows, so consecutive slots
+                        # differ by exactly 2. None on a build whose probe
+                        # predates the column.
+                        pal=(int(m.group(14)) if m.group(14) is not None
+                             else None)))
     return out
 
 
@@ -305,6 +317,28 @@ def rungP1(seconds):
                         "slot0 char=%d slot1 char=%d ;; P2 sees slot0 char=%d "
                         "slot1 char=%d (the ROM's VS contract: character 3 on "
                         "every slot, told apart by colour)" % seen)
+
+        # AND THE COLOUR, which is the half that makes four Yoshis playable.
+        # func_ov002_020e5948 sets Player+0x61C to the Yoshi body model's
+        # material[0] palette base plus (playerNo << 1), and Player::Render
+        # writes it into every body and head material record on the same
+        # data_0209f2d8 == 1 and character 3 test. yoshi_all_16p_pl is 128
+        # bytes -- four stacked 16-colour rows, greens, reds, blues, yellows
+        # -- so one step of playerNo is exactly one row and consecutive slots
+        # must differ by 2. Asserting the DIFFERENCE rather than the absolute
+        # value, because the base is wherever the model got loaded.
+        pals = (a1[-1]["pal"], b1[-1]["pal"], a2[-1]["pal"], b2[-1]["pal"])
+        if any(v is None for v in pals):
+            M.verdict(False, "rungP1 the probe reported no pal column -- this "
+                             "build predates it, so the colour half is "
+                             "UNMEASURED here, not passing")
+            ok = False
+        else:
+            ok &= M.verdict(pals[1] - pals[0] == 2 and pals[3] - pals[2] == 2,
+                            "rungP1 THE TWO YOSHIS ARE DIFFERENT COLOURS | "
+                            "P1 pal slot0=%d slot1=%d ;; P2 pal slot0=%d "
+                            "slot1=%d -- consecutive slots must differ by 2, "
+                            "one 16-colour row of yoshi_all_16p_pl" % pals)
     return ok
 
 
