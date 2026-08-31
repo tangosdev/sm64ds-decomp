@@ -390,6 +390,46 @@ def test_splice_refuses_a_span_it_cannot_tile_exactly():
         assert wrong.read_bytes() == real.read_bytes()
 
 
+def test_span_entries_ignores_nontext_owned_by_adjacent_text_entry():
+    """An intact neighbouring TU's later data is not part of this text span.
+
+    The selected legacy entries must remain text-only: the second half proves the
+    existing refusal still fires when an entry that is actually being replaced owns
+    non-text storage itself.
+    """
+    text = (
+        "    .text start:0x00000f00 end:0x00001100 kind:code align:4\n"
+        "    .data start:0x00002000 end:0x00002100 kind:data align:4\n"
+        "src/neighbor.cpp:\n"
+        "    complete\n"
+        "    .text start:0x00000f00 end:0x00001000\n"
+        "    .data start:0x00002000 end:0x00002010\n\n"
+        "src/one.c:\n"
+        "    complete\n"
+        "    .text start:0x00001000 end:0x00001010\n\n"
+        "src/two.c:\n"
+        "    complete\n"
+        "    .text start:0x00001010 end:0x00001020\n"
+    )
+    with tempfile.TemporaryDirectory() as td:
+        path = pathlib.Path(td) / "delinks.txt"
+        path.write_text(text, encoding="utf-8")
+        _header, _entries, inside, reasons = tubuild.span_entries(
+            path, 0x1000, 0x1020, ["src/one.c", "src/two.c"])
+        assert reasons == [], reasons
+        assert [rel for _idx, rel, _secs in inside] == ["src/one.c", "src/two.c"]
+
+        candidate_data = text.replace(
+            "    .text start:0x00001000 end:0x00001010\n\n",
+            "    .text start:0x00001000 end:0x00001010\n"
+            "    .data start:0x00002010 end:0x00002020\n\n")
+        path.write_text(candidate_data, encoding="utf-8")
+        _header, _entries, _inside, reasons = tubuild.span_entries(
+            path, 0x1000, 0x1020, ["src/one.c", "src/two.c"])
+        assert any("declares a non-.text section .data" in reason
+                   for reason in reasons), reasons
+
+
 def test_manifest_section_claims_are_explicit_and_unambiguous():
     claims, reasons = tubuild.manifest_section_claims({"sections": [
         {"name": ".text", "start": "0x1000", "end": "0x1010"},
