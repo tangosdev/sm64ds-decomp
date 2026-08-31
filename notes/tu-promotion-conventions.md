@@ -374,7 +374,7 @@ of those spellings costs any member its `no_mangled_refs`. Declaring an ABI seam
 immediately above the one function that calls it — as `src/actors/daEyBm_c.cpp` does —
 hands the mangled spelling to the preceding member instead.
 
-### Constructors and destructors have a second path; mark them anyway
+### Constructors and destructors take the second path, and usually cannot be marked
 
 `_lifecycle_member_fragment` (line 378) is why D1 and D0 score without a marker. It
 demangles the symbol, confirms it is a ctor or dtor, walks the TU's `#include "..."` names,
@@ -382,12 +382,27 @@ and looks for a balanced inline definition in one of those headers. `include/daE
 line 54 carries `virtual ~daEyBm_c() {}`, and that one line is the entire reason two of
 that TU's thirteen members are banked.
 
-Do not rely on it. `_balanced_lifecycle_fragment` (line 328) needs exactly one occurrence
-of the class-name token followed by `(` in the masked header text and a brace-balanced
-body; a declaration alone returns `None`, and so does a second overload. Moving the
-destructor out of line — which several promotions have needed for key-function reasons —
-removes the fragment and drops both variants back to the whole file. Marking them costs
-two comment lines and removes the dependency.
+**This is the intended path for them, not a fallback to be worked around.** All four
+landed promoted TUs mark zero structors, and in an inline-destructor TU there is nothing
+to mark: the D1 and D0 symbols have no definition text in the `.cpp` at all, so there is
+no line for a marker to sit above. A bare marker written somewhere else is worse than
+none — the slice runs from it to the next marker, so it would charge the following
+member's text to the destructor.
+
+Inlining the destructor is usually deliberate rather than incidental. Written out of
+line, mwcc emits the synthesized D0 *ahead* of the written D1, which is the reverse of
+the cartridge, and `tubuild.py linkcheck` refuses a TU whose licensed `.text` is not in
+ROM address order. Inlining moves the key function to the first other declared virtual,
+lets the vtable's slots 16 and 17 odr-use D1 then D0 in ROM order, and deletes the
+homeless D2.
+
+So the rule for structors is: **do not mark them, and do keep the inline definition in a
+directly included header.** What to check is that the fragment still exists.
+`_balanced_lifecycle_fragment` (line 328) needs exactly one occurrence of the class-name
+token followed by `(` in the masked header text, plus a brace-balanced body; a
+declaration alone returns `None`, and so does a second overload. If a promotion genuinely
+must move the destructor out of line, its two variants fall back to whole-file scoring —
+and only then can they carry markers, above their out-of-line definitions.
 
 ### Markers cannot move a ROM byte
 
@@ -411,9 +426,15 @@ happened is that comment lines were traded for ledger rows.
   fix: the TU "needs the volatile stack value to avoid a 17-word codegen mismatch". The
   `volatile` is in one member. The other eight paid for it.
 - **#2064** (`dScMgSingle3DBase_c`, nine functions) adds **six** markers and **zero**
-  backslide-exception rows. The three it leaves unmarked are the two destructor variants
-  and one member still named `func_ov006_0210a534`, which fails `real_name` on its name
-  and cannot be rescued by a boundary anyway.
+  backslide-exception rows. The three it leaves unmarked are the two destructor variants,
+  which is right, and one member still named `func_ov006_0210a534`, which is not.
+  Nothing backslides — neither it nor its neighbour was CONVERTED before — but the
+  omission still costs, and it costs the *other* member: with no marker after it, the
+  preceding `func_ov006_0210a600` fragment runs from its own marker to end of file and
+  swallows a534's `volatile` body and raw addresses. `func_ov006_0210a600` is an
+  eight-byte `return 1;` that can never score readable while that is true. This is the
+  general shape of the omission — the member that pays is rarely the member you left
+  unmarked.
 
 Both are open at the time of writing, so neither is landed precedent in the sense section
 1 uses. They are cited here as the worked pair: same operation, same gates, one of them
@@ -422,8 +443,8 @@ paying eight ledger rows for the omission.
 ### Reviewer check
 
 Count the `@symbol` lines in the promoted TU against the length of the manifest's
-`functions` array. The difference should be the ctor/dtor variants and nothing else, and
-even those are better marked. If a promotion adds backslide-exception rows for members of
+`functions` array. The difference should be the ctor/dtor variants and nothing else. If a
+promotion adds backslide-exception rows for members of
 its own destination TU, check for markers before reading the reasons — the reasons will be
 about codegen and the cause will be a boundary.
 
@@ -443,8 +464,9 @@ about codegen and the cause will be a boundary.
 6. The PR is alone in the ledger queue, and the baseline was regenerated rather than
    merged.
 7. Every hand-written member of the promoted TU carries a unique `// @symbol` line, the
-   shared mangled externs sit above the first marker, and no backslide-exception row is
-   covering a member the marker would have saved.
+   shared mangled externs sit above the first marker, the destructor is inline in a
+   directly included header and unmarked, and no backslide-exception row is covering a
+   member a marker would have saved.
 
 ## Known open items at the time of writing
 
