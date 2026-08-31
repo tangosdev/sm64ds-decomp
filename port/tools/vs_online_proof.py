@@ -24,6 +24,16 @@ and asserts the three things a player would call "it worked":
               have come from anywhere but the wire. THESE TWO ASSERTIONS ARE
               THE PROOF. Everything else here can pass without a transport.
 
+              THEY ARE A CONNECTIVITY PROOF AND NOT A LATENCY ONE, and the
+              distinction is worth stating because the frame number in their
+              verdict lines reads like a latency and is not. The injected keys
+              are constants held for the whole run, and the pipelined path
+              holds round 0 for its first N+1 exchanges, so the remote key
+              shows up on the earliest probed frame at every input delay.
+              Nothing here can tell delay 0 from delay 5, and nothing here
+              measures the ~167 ms press-to-peer time that depth 5 actually
+              costs. For pacing and latency, port/tools/vs_pace.py.
+
 WHICH IS NOT A FIGURE OF SPEECH, AND THE PRECISE CLAIM IS THIS. A control pair
 with NO comms env at all -- zero [comms] lines in either log, plus
 SM64DS_VS_PLAYERS=2 so the census has two actors to compare -- fails INSTALL,
@@ -74,7 +84,8 @@ CHILD_KEY = 0x20
 
 
 def run_pair(name, code, relay, frames, vs_map, timeout=900, stagger=0.6,
-             roles=("parent", "child"), port_base=0):
+             roles=("parent", "child"), port_base=0, extra_p=None,
+             extra_c=None):
     dp = os.path.join(OUT, name + "_p1")
     dc = os.path.join(OUT, name + "_p2")
     for d in (dp, dc):
@@ -95,6 +106,11 @@ def run_pair(name, code, relay, frames, vs_map, timeout=900, stagger=0.6,
         e["SM64DS_VS_PROBE"] = "1"
     ep["SM64DS_COMMS_INJECT"] = "key=0x%02x" % PARENT_KEY
     ec["SM64DS_COMMS_INJECT"] = "key=0x%02x" % CHILD_KEY
+    # Per-end overrides, applied LAST so an arm can deliberately disagree with
+    # its peer. The depth-adoption arm is the only caller and the whole point
+    # there is that the two ends are told different things.
+    ep.update(extra_p or {})
+    ec.update(extra_c or {})
     if port_base:
         # The loopback's default base is one fixed number, so ANY other
         # instance of the game on the machine -- another lane's test, a
@@ -169,7 +185,7 @@ def track(t, slot):
             for (f, s), r in sorted(rows.items()) if s == slot]
 
 
-def echo_of(tp, tc, slot):
+def echo_of(tp, tc, slot, ignore_tail=0):
     """Do the two processes' worlds agree on this actor, frame for frame?
 
     READ THIS BEFORE QUOTING THE RESULT AS A NETWORKING PROOF.
@@ -206,6 +222,19 @@ def echo_of(tp, tc, slot):
     """
     a, b = dict(track(tp, slot)), dict(track(tc, slot))
     common = sorted(set(a) & set(b))
+    # THE LAST FEW FRAMES OF A BOUNDED RUN ARE NOT A FAIR COMPARISON when the
+    # session is pipelined, and this is a real race rather than noise: frame k
+    # needs round k-N, so when one process finishes its frame budget and exits,
+    # the other's final N frames are waiting on records that will never arrive.
+    # The ROM's own wait bound then gives up and those frames run without the
+    # peer -- correctly, that is what it does when a player leaves -- and they
+    # differ. Measured once as "3 of 300 disagree, first at f297".
+    #
+    # Callers that pipeline pass ignore_tail=N. Zero (the default, and what the
+    # standing ten use) compares every common frame.
+    if ignore_tail and common:
+        cut = common[-1] - ignore_tail
+        common = [f for f in common if f <= cut]
     if not common:
         return False, 0, "no frame is in both censuses"
     bad = [f for f in common if a[f] != b[f]]
@@ -265,6 +294,13 @@ def main():
     ap.add_argument("--code", default="VSPROOF")
     ap.add_argument("--roles", default="parent,child")
     ap.add_argument("--name", default="relay")
+    ap.add_argument("--adoption", action="store_true",
+                    help="also run the DEPTH ADOPTION arm: a second pair whose "
+                         "child is told a different input delay than the "
+                         "parent, asserting the parent's number wins and the "
+                         "two worlds still agree. Opt-in because it doubles "
+                         "the run; the ten assertions above are the standing "
+                         "gate and their count does not move")
     ap.add_argument("--port-base", type=int, default=0,
                     help="local UDP base for the two instances; use when "
                          "another game instance holds the default 51765")
@@ -283,10 +319,28 @@ def main():
         proc = start_local_relay(port)
         relay = "127.0.0.1:%d" % port
         print("local relay on " + relay)
+    res_ad = None
     try:
         res = run_pair(a.name, a.code, relay, a.frames, a.map,
                        roles=tuple(a.roles.split(",")),
                        port_base=a.port_base)
+        # THE SECOND PAIR RUNS HERE, while the relay is still up, and is
+        # asserted at the bottom with everything else -- so the standing ten
+        # verdicts stay where a reader (and the gate) expects them.
+        if a.adoption:
+            # LET THE RELAY SETTLE between the two pairs. Measured once: the
+            # second pair's HELLOs never reached a relay that had just finished
+            # servicing 900 frames of the first, and both ends fell to solo --
+            # which this arm would otherwise have reported as two worlds
+            # disagreeing, the exact shape of the bug it exists to catch. A
+            # pairing failure must never be able to masquerade as a desync,
+            # which is also why the arm asserts the session formed before it
+            # compares anything.
+            time.sleep(2.0)
+            res_ad = run_pair(
+                "adoption", (a.code + "AD")[:8], relay, a.frames, a.map,
+                port_base=(a.port_base + 8) if a.port_base else 0,
+                extra_c={"SM64DS_COMMS_INPUT_DELAY": str(ADOPTION_CHILD_ASKS)})
     finally:
         if proc:
             proc.terminate()
@@ -316,16 +370,27 @@ def main():
     # FORMED -- a no-transport control fails INSTALL and PAIRING too -- but
     # none of them shows a byte of game state crossing. These do, and they are
     # the only ones the DETERMINISM check below can lean on.
+    # AND WHAT THEY DO NOT PROVE, because the frame number on these lines
+    # invited exactly the wrong reading. Both injected keys are CONSTANTS held
+    # for the whole run, and the pipelined path holds round 0 for its first N+1
+    # exchanges, so the remote pad carries the other end's key on the earliest
+    # probed frame at EVERY depth. These assertions therefore cannot tell input
+    # delay 0 from input delay 5; they do not measure press-to-peer latency (at
+    # depth 5 that is about 167 ms and nothing here would notice); and the
+    # frame number is reported as "first seen", never as a latency. They are
+    # CONNECTIVITY assertions, and strong ones -- a dead wire fails both.
     f = remote_pad_seen(tp, mp_, CHILD_KEY)
     wire_p = M.verdict(f >= 0,
                        "WIRE: the parent reads the CHILD's injected pad %04x "
-                       "on the remote slot, a value it never pressed "
-                       "(frame %d)" % (CHILD_KEY, f))
+                       "on the remote slot, a value it never pressed (first "
+                       "seen f%d -- a held key, so this is connectivity and "
+                       "carries no latency claim)" % (CHILD_KEY, f))
     g = remote_pad_seen(tc, mc, PARENT_KEY)
     wire_c = M.verdict(g >= 0,
                        "WIRE: the child reads the PARENT's injected pad %04x "
-                       "on the remote slot, a value it never pressed "
-                       "(frame %d)" % (PARENT_KEY, g))
+                       "on the remote slot, a value it never pressed (first "
+                       "seen f%d -- a held key, so this is connectivity and "
+                       "carries no latency claim)" % (PARENT_KEY, g))
     ok &= wire_p and wire_c
     # AND THE CORROBORATING ONE, which is worthless without the two above --
     # measured, not assumed: a no-transport control passes it. See echo_of.
@@ -344,8 +409,92 @@ def main():
             print("  " + line)
     print("")
     print("logs: %s\n      %s" % (res["log_p"], res["log_c"]))
+
+    if res_ad is not None:
+        print("\n-- DEPTH ADOPTION ARM --")
+        ok &= adoption_arm(res_ad)
+
     print("ALL GREEN" if ok else "FAILED")
     return 0 if ok else 1
+
+
+ADOPTION_CHILD_ASKS = 2
+
+
+def adoption_arm(res):
+    """THE TWO ENDS ARE TOLD DIFFERENT DEPTHS. The parent's must win.
+
+    This is the regression guard for the worst bug this carrier has had. Two
+    ends running different input delays do not "lag each other" -- they
+    SIMULATE DIFFERENT MATCHES, because exchange() hands frame k the records
+    from round k-N and holds round 0 for the first N+1 frames, so a different
+    N is different inputs at the same frame index. Measured before the fix:
+    5-against-0, 0-against-5, 5-against-6 and 5-against-4 all diverge from
+    about frame 65 while both ends report a perfectly healthy session. A
+    desync that reads healthy in every log is the one failure nobody can debug
+    from a crash report.
+
+    So the parent now carries its depth in the ACCEPT and the child adopts it.
+    This arm tells the child something else on purpose and asserts three
+    things: the child SAYS it adopted, both ends END at the parent's number,
+    and the two worlds still agree frame for frame.
+
+    WOULD A CONTROL FAIL IT? Yes, and that is the point -- this is exactly the
+    configuration that failed before the ACCEPT carried the number.
+    """
+    child_asks = ADOPTION_CHILD_ASKS
+    tp, tc = res["tp"], res["tc"]
+    ok = M.verdict(res["rc_p"] == 0 and res["rc_c"] == 0,
+                   "adoption: both instances exited 0 (%d/%d)"
+                   % (res["rc_p"], res["rc_c"]))
+    # PRECONDITION, AND IT IS NOT CEREMONY. Everything below compares two
+    # worlds; two worlds that never joined a session disagree for a reason
+    # that has nothing to do with input delay, and reporting that as a desync
+    # would be worse than reporting nothing.
+    formed = (session_line(tp) != "" and session_line(tc) != "")
+    ok &= M.verdict(formed,
+                    "adoption: the pair actually formed a session | %s"
+                    % (session_line(tc) or "NO SESSION -- the verdicts below "
+                       "are about a pairing failure, not about depth"))
+    ad = re.search(r"^\[comms:loopback\] the parent runs input delay (\d+) and "
+                   r"this end had (\d+); ADOPTING (\d+)\.(.*)$", tc, re.M)
+    ok &= M.verdict(ad is not None,
+                    "ADOPTION: the child says it took the parent's depth | %s"
+                    % (ad.group(0)[:120] if ad else "NO ADOPTION LINE -- the "
+                       "ACCEPT is not carrying the depth"))
+    if ad:
+        ok &= M.verdict(ad.group(2) == str(child_asks)
+                        and ad.group(1) == ad.group(3),
+                        "and the numbers are right | child was told %s, parent "
+                        "runs %s, adopted %s"
+                        % (ad.group(2), ad.group(1), ad.group(3)))
+        ok &= M.verdict("LOST" in ad.group(4),
+                        "and the line names SM64DS_COMMS_INPUT_DELAY as the "
+                        "setting that lost, so the knob is not silently ignored")
+
+    def closed_depth(t):
+        m = re.search(r"^\[comms:loopback\] closed after \d+ rounds; "
+                      r"indelay=(\d+)", t, re.M)
+        return int(m.group(1)) if m else -1
+    dp_, dc_ = closed_depth(tp), closed_depth(tc)
+    ok &= M.verdict(dp_ >= 0 and dp_ == dc_,
+                    "BOTH ENDS RAN THE SAME DEPTH | parent indelay=%d child "
+                    "indelay=%d (the child's env asked for %d and lost)"
+                    % (dp_, dc_, child_asks))
+    # The tail trim is the pipeline depth: this arm runs at the parent's
+    # depth, and the peer's exit strands exactly that many frames. See echo_of.
+    good, moved, why = echo_of(tp, tc, 0, ignore_tail=max(dp_, 0) + 2)
+    ok &= M.verdict(good,
+                    "AND THE TWO WORLDS AGREE FRAME FOR FRAME -- the mismatch "
+                    "that used to desync here cannot form | %s" % why)
+    mp_, mc = my_slot(tp)[1], my_slot(tc)[1]
+    f, g = remote_pad_seen(tp, mp_, CHILD_KEY), remote_pad_seen(tc, mc,
+                                                                PARENT_KEY)
+    ok &= M.verdict(f >= 0 and g >= 0,
+                    "and input still crosses under the adoption | parent first "
+                    "saw the child's key at f%d, child saw the parent's at f%d"
+                    % (f, g))
+    return ok
 
 
 if __name__ == "__main__":

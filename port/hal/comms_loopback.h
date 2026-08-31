@@ -87,6 +87,39 @@
 //                                   4 ms republish is right on loopback and is
 //                                   flooding over the internet.
 //
+//   SM64DS_COMMS_INPUT_DELAY=<0..8> HOW MANY FRAMES AHEAD THE INPUT PIPELINE
+//                                   RUNS, and the one knob in this block that
+//                                   is NOT off by default. Frame R is handed
+//                                   the records from round R-N, so rounds
+//                                   overlap the wire instead of taking turns
+//                                   with it. Without it a session is
+//                                   STOP AND WAIT and the frame rate IS the
+//                                   round trip -- 90 ms of relay is 11 fps.
+//                                   Defaults: loopback 0, direct 2, relay 5;
+//                                   the derivation is over the parse in
+//                                   comms_loopback.cpp. Raise it on a worse
+//                                   path (the signal is `starved` in the
+//                                   report line: nonzero means frames are
+//                                   still waiting on the wire), or set 0 to
+//                                   get stop-and-wait back for a measurement.
+//                                   SET IT ON THE PARENT. The parent's value
+//                                   is the session's: it rides in the ACCEPT
+//                                   and every child adopts it, saying so in
+//                                   its log. A child's own setting LOSES, and
+//                                   that is not tidiness -- THE TWO ENDS
+//                                   RUNNING DIFFERENT DEPTHS IS A DESYNC (the
+//                                   derivation, and the ROM's own compare at
+//                                   src/func_0203ea5c.c:418, are over the
+//                                   ACCEPT's delay field in the .cpp), and it
+//                                   is a desync that reads HEALTHY in both
+//                                   logs. The wire carries the number so this
+//                                   cannot be got wrong by hand.
+//                                   The SIMULATION IS UNTOUCHED at any depth
+//                                   both ends share: both consoles consume the
+//                                   same round sequence at the same frame
+//                                   index, nothing is predicted and nothing is
+//                                   rolled back.
+//
 // SLOT ASSIGNMENT OVER THE ADDRESS MODES: on loopback a child owns a slot by
 // BINDING its port, and the parent verifies the two agree. Off this machine a
 // peer binds whatever port it likes and a NAT rewrites it, so the child's slot
