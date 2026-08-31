@@ -199,6 +199,123 @@ extern void func_ov084_0212c8b0(void *buddy);   /* buddy state-0 main */
 extern void func_ov084_0212c960(void *buddy, int i);  /* buddy ChangeState */
 extern unsigned char data_0209f49e[];        /* per-player pressed word, stride 0x18 */
 extern int _ZN6Player12GetTalkStateEv(void *p);
+/* STAGE 0 (temporary, investigation only): the VS carried-star array and the
+   ROM's own sum of it. Read only, never written here. */
+extern signed char data_0209f310[];
+extern signed char NumVsStarsObtained(void);
+extern unsigned char data_0209f2d8;          /* game mode: 1 = VS            */
+extern unsigned char data_0209f204;          /* VS "time is up" flag         */
+extern unsigned short data_ov002_02111188;   /* VS timer sub-counter         */
+extern int data_0209fc68;                    /* wireless session state       */
+extern unsigned char data_0209f2bc;          /* the 3-2-1 countdown          */
+extern void func_ov002_020e7d84(char *m);    /* StarMarker's own ball break  */
+}
+
+/* STAGE 0 (temporary): walk EVERY class-178 PowerStar in the live list and
+   report the ones the five-star test actually looks at, plus the score array.
+   A VS arena carries five of them and only one is awake at a time -- the
+   harness's own find_actor_by_class takes the FIRST, which in every arena
+   measured is a caged one parked in state 9, so the touch words it writes are
+   read by nobody. Nothing here writes game state. */
+extern "C" void port_stage0_vs_score(int frame)
+{
+    if (!std::getenv("SM64DS_VS_SCORE")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+    static int last_sum = -999, last_shape = -1;
+    int sum = (int)NumVsStarsObtained();
+    char shape[512];
+    int n = 0, w = 0;
+    shape[0] = 0;
+    Node *nd = *(Node **)&data_0209b468;
+    while (nd && n < 16) {
+        char *a = (char *)nd->x8;
+        if (a && *(unsigned short *)(a + 0xc) == 178) {
+            w += std::snprintf(shape + w, sizeof shape - (unsigned)w,
+                               " [%p kind=%d st=%d idx=%u a2=%04x]",
+                               (void *)a, *(int *)(a + 0x43c),
+                               *(int *)(a + 0x440),
+                               (unsigned)*(unsigned char *)(a + 0x49d),
+                               (unsigned)*(unsigned short *)(a + 0x4a2));
+            ++n;
+            if (w > 400) break;
+        }
+        nd = nd->next;
+    }
+    int hash = n * 7919 + w;
+    for (int i = 0; i < w; ++i) hash = hash * 31 + shape[i];
+    if (sum == last_sum && hash == last_shape) return;
+    last_sum = sum; last_shape = hash;
+    std::fprintf(stderr, "[vsscore] f%d mode=%u stars=%d,%d,%d,%d sum=%d "
+                 "| %d PowerStar(s):%s\n", frame, (unsigned)data_0209f2d8,
+                 (int)data_0209f310[0], (int)data_0209f310[1],
+                 (int)data_0209f310[2], (int)data_0209f310[3], sum, n,
+                 w ? shape : " none");
+}
+
+/* STAGE 0 (temporary): SM64DS_VS_BREAKALL=<frame>. Correction from Tango: a
+   VS star comes out when a player BREAKS THE BALL around it; the marker's own
+   break, func_ov002_020e7d84, is that release, and the earlier runs proved
+   only that robot players who never swing leave every ball intact. At the
+   armed frame this dumps every star<->marker ID link, then runs the ROM's own
+   break on EVERY container marker, so the picked star's own marker is
+   guaranteed to be among them. Fires identically in both lockstep processes
+   (same env, same list) so the worlds stay in step. */
+extern "C" void port_stage0_vs_breakall(int frame)
+{
+    static int at = -2;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_VS_BREAKALL");
+        at = e ? std::atoi(e) : -1;
+    }
+    if (at < 0 || frame != at) return;
+
+    struct Node { void *x0; Node *next; char **x8; };
+    for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
+        char *a = (char *)nd->x8;
+        if (!a) continue;
+        unsigned short cls = *(unsigned short *)(a + 0xc);
+        if (cls == 178)
+            std::fprintf(stderr, "[breakall] f%d star %p uid=%08x "
+                         "marker-uid=%08x idx=%u st=%d a2=%04x\n", frame,
+                         (void *)a, *(unsigned int *)(a + 4),
+                         *(unsigned int *)(a + 0x434),
+                         (unsigned)*(unsigned char *)(a + 0x49d),
+                         *(int *)(a + 0x440),
+                         (unsigned)*(unsigned short *)(a + 0x4a2));
+        else if (cls == 180)
+            std::fprintf(stderr, "[breakall] f%d marker %p uid=%08x state=%d "
+                         "flags=%02x countdown=%u\n", frame, (void *)a,
+                         *(unsigned int *)(a + 4),
+                         (int)*(unsigned char *)(a + 0x1d8),
+                         (unsigned)*(unsigned char *)(a + 0x1db),
+                         (unsigned)*(unsigned short *)(a + 0x1d4));
+    }
+    for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
+        char *a = (char *)nd->x8;
+        if (!a || *(unsigned short *)(a + 0xc) != 180) continue;
+        if (*(unsigned char *)(a + 0x1d8) == 0) continue;
+        std::fprintf(stderr, "[breakall] f%d breaking marker %p (uid %08x)\n",
+                     frame, (void *)a, *(unsigned int *)(a + 4));
+        func_ov002_020e7d84(a);
+    }
+}
+
+/* STAGE 0 (temporary): the VS MATCH CLOCK, which is what actually ends a
+   versus match on the DS. HUD::UpdateVsTimer counts this+0x60 down and sets
+   data_0209f204 when it reaches zero; Stage::Behavior then does
+   Scene::StartSceneFade(7, 0, 0) -- the results screen. Reads only. */
+extern "C" void port_stage0_vs_timer(int frame)
+{
+    if (!std::getenv("SM64DS_VS_SCORE")) return;
+    char *hud = (char *)find_actor_by_class(0x14e);
+    static int last = -1;
+    int clock = hud ? (int)*(unsigned short *)(hud + 0x60) : -1;
+    if (clock == last && frame % 600 != 0) return;
+    last = clock;
+    std::fprintf(stderr, "[vstimer] f%d hud=%p clock=%d sub=%u timeup=%u "
+                 "wireless_state=%d countdown=%u\n", frame, (void *)hud, clock,
+                 (unsigned)data_ov002_02111188, (unsigned)data_0209f204,
+                 data_0209fc68, (unsigned)data_0209f2bc);
 }
 /* walk the list (Node{void*x0; Node*next@4; int*x8@8}) for the first actor
    whose class word (+0xc) equals `cls`; return the actor (node+8) or 0. */
@@ -336,7 +453,27 @@ extern "C" void port_input_probe_star_trigger(int frame)
     if (!want && frame != arm_at) return;
 
     char *player = (char *)find_actor_by_class(0xbf);
-    char *star = (char *)find_actor_by_class(178);
+    /* STAGE 0: prefer a star the touch gate is actually reachable from. The
+       gate func_ov002_020e930c is only called out of PowerStar state 4
+       (func_ov002_020ea420) and state 8 (func_ov002_020e99e8); a VS arena's
+       four table stars are type 3 and park in state 9, where nothing reads
+       the words written below, and one of them is what find_actor_by_class
+       hands back. Fall back to the first star so single-player behaviour is
+       unchanged. */
+    char *star = 0;
+    {
+        struct Node { void *x0; Node *next; char **x8; };
+        Node *nd = *(Node **)&data_0209b468;
+        while (nd) {
+            char *a = (char *)nd->x8;
+            if (a && *(unsigned short *)(a + 0xc) == 178) {
+                const int st = *(int *)(a + 0x440);
+                if (st == 4 || st == 8) { star = a; break; }
+            }
+            nd = nd->next;
+        }
+    }
+    if (!star) star = (char *)find_actor_by_class(178);
     if (!player) {
         std::fprintf(stderr, "  [startrig] f%d no player to collect with\n",
                      frame);
@@ -361,10 +498,13 @@ extern "C" void port_input_probe_star_trigger(int frame)
     unsigned int pid = *(unsigned int *)(player + 0x4);   /* player's unique id */
     *(unsigned int *)(star + 0x134) = pid;
     *(unsigned int *)(star + 0x130) |= 0x400000;
-    std::fprintf(stderr, "  [startrig] f%d armed the touch: star %p +0x134 = "
+    std::fprintf(stderr, "  [startrig] f%d armed the touch: star %p (kind=%d "
+                 "state=%d idx=%u) +0x134 = "
                  "player uid 0x%x, +0x130 |= 0x400000; func_ov002_020e930c "
                  "runs the real collect handler this frame\n",
-                 frame, (void *)star, pid);
+                 frame, (void *)star, *(int *)(star + 0x43c),
+                 *(int *)(star + 0x440),
+                 (unsigned)*(unsigned char *)(star + 0x49d), pid);
 }
 
 extern "C" void port_input_probe_buddy_trigger(int frame)
