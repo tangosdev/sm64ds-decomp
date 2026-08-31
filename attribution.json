@@ -1012,6 +1012,24 @@
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv": "lunavyqo",
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv": "lunavyqo",
     "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD1Ev": "tangosdev",
-    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD0Ev": "tangosdev"
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD0Ev": "tangosdev",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_cD1Ev": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_cD0Ev": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c21HandlePlayerCollisionEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c20UpdateModelTransformEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c19UpdateDefeatedStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c18EnterDefeatedStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c17UpdateActiveStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c16EnterActiveStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c19UpdateCooldownStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c18EnterCooldownStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c11UpdateStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c10EnterStateEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c8SetStateEi": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c16OnPendingDestroyEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c6RenderEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daBrq_c.cpp#_ZN7daBrq_c13InitResourcesEv": "github-actions[bot]"
   }
 }
