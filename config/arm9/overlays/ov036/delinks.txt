@@ -175,41 +175,10 @@ src/TrickyTriangles_Spawn.cpp:
     complete
     .text start:0x021120c8 end:0x02112158
 
-src/_ZN15daObjRcCarpet_cD1Ev.cpp:
+src/actors/daObjRcCarpet_c.cpp:
     complete
-    .text start:0x02112158 end:0x021121c8
-
-src/_ZN15daObjRcCarpet_cD0Ev.cpp:
-    complete
-    .text start:0x021121c8 end:0x0211224c
-
-src/func_ov036_0211224c.cpp:
-    complete
-    .text start:0x0211224c end:0x021122c0
-
-src/func_ov036_021122c0.cpp:
-    complete
-    .text start:0x021122c0 end:0x02112318
-
-src/_ZN15daObjRcCarpet_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112318 end:0x02112378
-
-src/_ZN15daObjRcCarpet_c6RenderEv.cpp:
-    complete
-    .text start:0x02112378 end:0x021123c8
-
-src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021123c8 end:0x0211244c
-
-src/_ZN15daObjRcCarpet_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211244c end:0x02112538
-
-src/FlyingCarpet_Spawn.cpp:
-    complete
-    .text start:0x02112538 end:0x021125b0
+    .text start:0x02112158 end:0x021125b0
+    .data start:0x02113f4c end:0x02114020
 
 src/__sinit_ov036_021125b0.c:
     complete

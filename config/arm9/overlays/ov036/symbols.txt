@@ -206,8 +206,8 @@ data_ov036_02113f58 kind:data(any) addr:0x02113f58
 _ZTS15daObjRcCarpet_c kind:data(any) addr:0x02113f64
 FlyingCarpet_SpawnInfo kind:data(any) addr:0x02113f78 ambiguous
 _ZTV15daObjRcCarpet_c kind:data(any) addr:0x02113f9c
-data_ov036_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
-data_ov036_02114010 kind:data(any) addr:0x02114010 ambiguous
+RcCarpet_VT22 kind:data(any) addr:0x02113ff4 ambiguous
+RcCarpet_VT29 kind:data(any) addr:0x02114010 ambiguous
 data_ov036_02114020 kind:bss addr:0x02114020
 data_ov036_02114028 kind:bss addr:0x02114028
 data_ov036_02114030 kind:bss addr:0x02114030
