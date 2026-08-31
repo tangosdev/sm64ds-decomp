@@ -1718,6 +1718,66 @@ void hal_sub_screen_set_stacked(int on)
     g_stacked_default = on ? 1 : 0;
 }
 
+/* ---- THE SCENE-BOUNDARY RE-LATCH (run vsdec, lane LAY) ---------------------
+ *
+ * THE LATCH ABOVE IS RIGHT AND IT IS NOT ENOUGH ANY MORE, and the reason is a
+ * change in the boot rather than a defect in it.
+ *
+ * When the latch was written every crossing from one kind of scene to another
+ * was a RELAUNCH -- tests/walk_window.cpp's port_menu_relaunch and its VS
+ * sibling start a fresh process with a fresh environment -- so "the process
+ * shows one kind of scene" was true by construction and a mode that could
+ * change under a live window was a bug and nothing else. The boot-to-title
+ * ruling added the first crossing that does NOT relaunch: hal/title_entry.cpp
+ * carries the title into the adventure IN THIS PROCESS, deliberately, because a
+ * child process would lose the save the player just picked. The title is a
+ * two-screen scene and the adventure is not, and with only the setter above the
+ * adventure inherited the title's stacked window and kept it for the whole
+ * session. That is the report this exists to answer.
+ *
+ * SO THE MODE FOLLOWS THE LIVE SCENE, AND ONLY AT A SCENE BOUNDARY. This is
+ * not a relaxation of the latch: hal_sub_screen_set_stacked still refuses a
+ * late write, because a late write is still a call-order mistake. What this is
+ * is a SECOND, NAMED DOOR, taken by exactly the code that knows the scene under
+ * the window has just been replaced, and the caller is required to re-shape the
+ * window to the answer -- which is why it returns whether the answer moved.
+ *
+ * THE ENV STILL DISPOSES. SM64DS_DUAL_SCREEN is read once for the run, above,
+ * and a forced value survives every boundary: a player or a harness that pinned
+ * the layout pinned it for the process. `on` is a PROPOSAL here for the same
+ * reason it is one in the setter.
+ *
+ * NOTHING HAS BEEN HANDED OUT YET is not a change. Before the first reader the
+ * mode is still open and this is just a proposal, so it returns 0 and there is
+ * nothing for a caller to re-shape.
+ */
+int hal_sub_screen_relatch(int on)
+{
+    g_stacked_default = on ? 1 : 0;
+    if (g_stacked < 0)
+        return 0;                 /* still open; the first reader will decide */
+    const int e = stacked_env();
+    const int want = e >= 0 ? e : (on ? 1 : 0);
+    if (want == g_stacked) {
+        std::printf("[sub] layout: the scene changed and the answer did not "
+                    "(%s, %s)\n",
+                    g_stacked ? "STACKED" : "corner inset panel",
+                    e < 0 ? "proposed" : "SM64DS_DUAL_SCREEN forces it");
+        std::fflush(stdout);
+        return 0;
+    }
+    std::printf("[sub] layout: the scene changed and so does the presentation: "
+                "%s -> %s (proposal %s)\n",
+                g_stacked ? "STACKED, both DS screens full size"
+                          : "corner inset panel",
+                want ? "STACKED, both DS screens full size"
+                     : "corner inset panel",
+                on ? "stacked" : "inset");
+    std::fflush(stdout);
+    g_stacked = want;
+    return 1;
+}
+
 /* Build the stacked image and hand back a pointer to it. `top` is the FINISHED
  * framebuffer -- faded, overlaid, everything -- and the return is
  * ntr::STACK_W x ntr::STACK_H, or null when the mode is off or the bottom
