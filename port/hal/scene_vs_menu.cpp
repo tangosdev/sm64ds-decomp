@@ -96,6 +96,18 @@ void  func_ov075_0211a268(void);                 /* slot 12  OnPendingDestroy */
 int   func_ov075_02115ab8(void *c);              /* slot 16  D2               */
 int  *func_ov075_02115b28(int *t);               /* slot 17  D0               */
 void *func_ov075_0211a854(void);                 /* the factory (matched src) */
+/* SCENE 7, the VS RESULTS screen. Its own factory and its own SpawnInfo, both
+   in the same ov075 .data run the mount already carries, and BOTH point at the
+   class this file already seats: func_ov075_0211a740 is func_ov075_0211a854
+   with a different pair of element-array constructors -- same
+   ActorBase::operator new(0x288), same data_ov075_0211d304 vtable. The class
+   tells the two scenes apart by its own id, in one branch:
+   src/func_ov075_0211a410.cpp does `if (self->unk_00c == 6)` the lobby, else
+   func_ov075_02116818 -- the results background, the winner calculation
+   (func_ov075_021165b0) and the ranking. So scene 7 needs no vtable of its own
+   and no fill of its own; it needs a row. */
+void *func_ov075_0211a740(void);
+extern unsigned char data_ov075_0211c788[];      /* dScEntry_c SpawnInfo, id 7 */
 
 /* the entry actor's flat pieces */
 char *UnknownVsEntry_Spawn(void);
@@ -402,6 +414,79 @@ static void __fastcall vs_pmf_grid_render(void *self, void *)
     func_ov075_0211afb0((char *)self);
 }
 
+/* ---- AND THE OTHER TWO, BEHIND A SWITCH -----------------------------------
+ *
+ * Lane VSEND. The block above says the other two sites are left alone for
+ * SCOPE and that the lane which takes the entry record should do all three
+ * together. This is not that lane and this does not take them: the default is
+ * unchanged, both records keep the base's word, and nothing about a shipped
+ * boot moves. What this adds is the INSTRUMENT that block asks for, so the
+ * measurement can be reproduced from a branch rather than from a build
+ * somebody threw away.
+ *
+ * WHY IT CAME UP HERE. Booting scene 7 -- the VS results screen, the same
+ * dScEntry_c the lobby is -- faults, and the fault is at the FIRST of those two
+ * sites. Measured, C:\tmp\vsend-out\scene7:
+ *
+ *     FAULT code c0000005 accessing 000000a8, eax=0
+ *     func_ov075_0211b260 +0x17
+ *       <- func_ov075_0211b458 +0x77
+ *       <- UnknownVsEntry::InitResources +0x1bf
+ *       <- func_ov075_02116818 +0x259        the RESULTS branch
+ *       <- func_ov075_0211a410 +0x1e7        dScEntry_c::InitResources
+ *       <- vs_init <- Scene::SpawnIfNecessary <- port_scene_begin
+ *
+ * The block above predicted this exactly: "0211b260 bails on a non-positive
+ * count, both off whatever the stack happened to hold". On the LOBBY path the
+ * stack garbage happens to be a value that makes it bail. On the RESULTS path
+ * it happens to be zero, and a zero receiver reads 0x000000a8. So the defect is
+ * the one already named, and scene 7 is simply the path where it is lethal.
+ *
+ * SM64DS_VS_PMF_ALL=1 installs the two remaining thunks -- the same
+ * __fastcall(self, edx) shape as vs_pmf_grid_render, on the same first word of
+ * the same kind of record, which the block above proves is the reachable entry
+ * for all three. It stays OFF because turning it on wakes up two pieces of
+ * drawing code nobody has looked at (0211b260's 20x20 vertex grid and
+ * 0211b1cc's 400-element walk) and this lane does not judge pictures.
+ *
+ * THE TWO BODIES ARE CALLED THROUGH A TYPED POINTER, not through a declaration
+ * of their own, and that is forced rather than chosen. vs_data_patch.inc is
+ * GENERATED and says so at the top -- regenerate, do not hand-edit -- and it
+ * already declares both names as `void f(void)` because every row of that table
+ * only ever takes an address. Re-declaring either one here with its real
+ * `(self)` signature is error C2733 on an extern "C" name. The four bodies that
+ * DO have real declarations above are the four the generator was told to skip.
+ * A cast at the one call site keeps the generated file generated; both bodies
+ * are cdecl and take exactly one pointer (src/func_ov075_0211b260.c,
+ * src/func_ov075_0211b1cc.c), which is what the pointer type says. */
+extern "C" {
+extern unsigned char data_ov075_0211d354[];
+extern unsigned char data_ov075_0211d34c[];
+}
+typedef void (*VsPmfBody)(void *self);
+static void __fastcall vs_pmf_grid_init(void *self, void *)
+{
+    /* src/func_ov075_0211b260.c: the 20x20 vertex-grid initialisation */
+    ((VsPmfBody)(void *)&func_ov075_0211b260)(self);
+}
+static void __fastcall vs_pmf_grid_step(void *self, void *)
+{
+    /* src/func_ov075_0211b1cc.c: the 400-element walk */
+    ((VsPmfBody)(void *)&func_ov075_0211b1cc)(self);
+}
+static void vs_install_remaining_pmf_thunks(void)
+{
+    if (!std::getenv("SM64DS_VS_PMF_ALL"))
+        return;
+    *(void **)data_ov075_0211d354 = (void *)vs_pmf_grid_init;
+    *(void **)data_ov075_0211d34c = (void *)vs_pmf_grid_step;
+    std::fprintf(stderr, "  [vs] SM64DS_VS_PMF_ALL=1: the other two entry-record "
+                 "member-pointer sites now get their receiver too "
+                 "(0x0211d354 -> func_ov075_0211b260, 0x0211d34c -> "
+                 "func_ov075_0211b1cc). This is a DRAWING change nobody has "
+                 "looked at; the default leaves both records alone.\n");
+}
+
 static void vs_apply_data_patch(void)
 {
     const unsigned n = sizeof vs_data_patch / sizeof vs_data_patch[0];
@@ -494,7 +579,25 @@ static void __fastcall ent_pdes(void *s, void *)
    The registry's factory column is void *(*)(void); both matched factories
    already are. The forwarders exist so the rows name symbols this file owns. */
 extern "C" void *port_vs_spawn(void)       { return func_ov075_0211a854(); }
+extern "C" void *port_vs_results_spawn(void) { return func_ov075_0211a740(); }
 extern "C" void *port_vs_entry_spawn(void) { return UnknownVsEntry_Spawn(); }
+
+/* Scene 7's fill, and it is deliberately empty. The results screen is the SAME
+   dScEntry_c the lobby row above seats -- same vtable at data_ov075_0211d304,
+   same eighteen slots, same ov075 mount and the same three static initialisers
+   -- so everything a scene 7 needs is already standing by the time this runs.
+   The row exists to register the factory and the SpawnInfo record, which
+   port_scene_registry_install does itself from the row's own columns.
+
+   THE ORDER IS WHY THIS CAN BE EMPTY, and it is the same append rule every
+   later row in that table states: the registry walks the table in order, and
+   this row is appended after the SCENE_VS_MENU row, so port_scene_fill_vs has
+   already run when this is reached. Doing the work twice would be harmless
+   (its heavy half is behind a once-per-process gate) but not free: the vtable
+   pass reports how many raw DS words the keyed fill left, and on a second pass
+   there are none left to leave, so a real second call would print a shape
+   warning about a table that is perfectly correct. */
+extern "C" void port_scene_fill_vs_results(void) { }
 
 /* ---- the fill -------------------------------------------------------------
    Called by port_scene_registry_install on every boot, table order. The gate
@@ -527,6 +630,11 @@ extern "C" void port_scene_fill_vs(void)
            alone on purpose -- it is the ROM's own mapping and says to
            regenerate rather than hand-edit; the convention seam is the seat's. */
         *(void **)data_ov075_0211d35c = (void *)vs_pmf_grid_render;
+        /* the other two records, only if a run asked for them; same position in
+           the order and for the same reason -- the sinit below copies all three
+           pairs and everything downstream reads the copies. A no-op without the
+           variable, which is every run but a lane's own. */
+        vs_install_remaining_pmf_thunks();
         /* the excluded c800 record, rebuilt from the pinned mount extent --
            one code pointer (patched above) and a zero */
         std::memcpy(&port_vs_data_0211c800, data_ov075_0211c7f8 + 8, 8);

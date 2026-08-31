@@ -3231,6 +3231,15 @@ void port_scene_fill_mgm(void);
 extern unsigned char data_ov075_0211c880[];
 void *port_vs_spawn(void);
 void port_scene_fill_vs(void);
+/* and the VS RESULTS screen, scene 7: the same dScEntry_c class told apart by
+   its own id, with its own factory and its own SpawnInfo record in the same
+   ov075 .data run. port/slice_vs.txt section 1 read both out of the spawn
+   table: "Slot 7 one table over: from:0x02090880 -> 0x0211c788, SpawnInfo
+   {0x0211a740, 0x000a0007}". reads_sublevel is 0 for the lobby row's reason,
+   which is the same reason: no relocation in ov075 lands on data_02092110. */
+extern unsigned char data_ov075_0211c788[];
+void *port_vs_results_spawn(void);
+void port_scene_fill_vs_results(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3979,6 +3988,13 @@ static const PortSceneClass port_scene_classes[] = {
        6 is scene id 6, the VS / wireless entry menu; see the extern block. */
     {6, "SCENE_VS_MENU", data_ov075_0211c880, port_vs_spawn,
      port_scene_fill_vs, 0},
+    /* APPENDED AFTER THE ROW IT DEPENDS ON, which is the strongest form the
+       append rule has taken in this table so far: this row's fill is EMPTY
+       precisely because the SCENE_VS_MENU row above it has already seated the
+       class the two scenes share. Moving it ahead of that row would register a
+       factory for a vtable nothing had filled yet. */
+    {7, "SCENE_VS_RESULTS", data_ov075_0211c788, port_vs_results_spawn,
+     port_scene_fill_vs_results, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
