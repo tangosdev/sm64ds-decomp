@@ -1126,6 +1126,15 @@
     "src/actors/daPropeller_Heyho_c.cpp#_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv": "github-actions[bot]",
     "src/actors/daPropeller_Heyho_c.cpp#_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player": "tangosdev",
     "src/actors/daPropeller_Heyho_c.cpp#_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv": "github-actions[bot]",
-    "src/actors/daPropeller_Heyho_c.cpp#FlyGuy_Spawn": "github-actions[bot]"
+    "src/actors/daPropeller_Heyho_c.cpp#FlyGuy_Spawn": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_cD1Ev": "tangosdev",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#func_ov036_0211224c": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#func_ov036_021122c0": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#_ZN15daObjRcCarpet_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjRcCarpet_c.cpp#FlyingCarpet_Spawn": "github-actions[bot]"
   }
 }
