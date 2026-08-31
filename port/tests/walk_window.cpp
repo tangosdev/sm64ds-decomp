@@ -1138,6 +1138,10 @@ void port_message_pump(void);
 /* the OTHER statement of Stage::Behavior the port hosts (hal/star_flow.cpp):
    the VS 3-2-1, which ends by starting the arena's own music */
 void port_vs_countdown_tick(void);
+/* and the tail of that same VS block: the match clock running out, the results
+   request the ROM makes when it does, and the end marker. Returns nonzero when
+   the run has asked to quit (SM64DS_VS_EXIT_ON_END). */
+int  port_vs_match_end_poll(int frame);
 void port_message_composite_engine_a(void *fb);
 int port_probe_message_id(void);
 int port_probe_message_fire(void *player, int id);
@@ -9947,6 +9951,17 @@ int main(void)
            which is the only music a VS arena has. Self-guarded on the mode, so
            an adventure frame reaches one load and a compare. */
         port_vs_countdown_tick();
+        /* AND THE TAIL OF THAT SAME BLOCK. Stage::Behavior's countdown and its
+           end-of-match test are statements of one function, so they are ticked
+           from one place, in the ROM's own order -- the countdown first, which
+           is what the ROM's line numbers say. Self-guarded on the mode the same
+           way, so an adventure frame reaches one compare and returns. The quit
+           goes out through the window's own WM_QUIT escape rather than an
+           exit() from inside the frame, so the run ends the way closing the
+           window ends it: the pump returns 0 from main and every atexit the
+           process installed still runs. */
+        if (port_vs_match_end_poll(frame))
+            W.PostQuitMessage_(0);
         port_input_probe_trace_msg(frame);   /* TEMPORARY: SM64DS_TRACE_MSG */
         port_input_probe_trace_cannon(frame);/* TEMPORARY: SM64DS_TRACE_CANNON */
         port_probe_rabbit_key(frame);        /* TEMPORARY: SM64DS_TRACE_RABBITKEY */

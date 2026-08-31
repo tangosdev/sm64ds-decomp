@@ -544,6 +544,256 @@ void port_vs_countdown_tick(void)
     }
 }
 
+// =============================================================================
+// THE OTHER END OF THE SAME STATEMENT: what happens when the VS clock runs out
+// =============================================================================
+//
+// port_vs_countdown_tick above is the HEAD of Stage::Behavior's VS block. This
+// is its TAIL, hosted here for the identical reason and in the identical shape:
+// the whole function is not in the port's link, and this is one statement of
+// it calling the ROM's own functions.
+//
+// The statement, src/_ZN5Stage8BehaviorEv.cpp:173-186, verbatim:
+//
+//     if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
+//         if (data_0209fc68 == 0) {
+//             ... the single-console VE_Init/VE_Update arm ...
+//         } else {
+//             Scene::StartSceneFade(7, 0, 0);
+//             data_02092778 = 1;
+//             data_0209d4b0 = 0;
+//         }
+//         Sound::StopLoadedMusic_Layer1(0x3c);
+//     }
+//
+// data_0209f204 is the match clock's own "time is up" flag and HUD::UpdateVsTimer
+// is what raises it -- the port hosts the HUD as a sub-screen actor
+// (hal/sub_actors.cpp) and its Behavior slot dispatches UpdateVsTimer every
+// frame, so the clock the port runs is the ROM's clock. data_ov002_02111188 is
+// the same function's sub-counter, which UpdateVsTimer reloads to 0x3c at the
+// moment it raises the flag: the ROM therefore waits SIXTY FRAMES after time-up
+// before it asks for the results, and the wait is part of the statement, not
+// padding this could skip.
+//
+// data_0209fc68 is the wireless session state. It is nonzero in every VS run
+// this port can produce -- VS is a wireless mode and there is no offline VS on
+// the cartridge -- so the else arm is the live one and VE_Init is not reachable
+// from here. Scene 7 is the VS results screen: the same dScEntry_c class as the
+// scene 6 lobby, told apart by its own id (src/func_ov075_0211a410.cpp branches
+// on self->unk_00c == 6 and hands everything else to func_ov075_02116818, the
+// results screen with the winner calculation behind it).
+//
+// ---- WHAT THE PORT CAN AND CANNOT DO WITH THAT REQUEST ----------------------
+//
+// Scene::StartSceneFade is matched src and the port links it: it parks the
+// pending scene id in data_02092664 and writes the fade colour. What consumes a
+// pending id is Scene::SpawnIfNecessary, and the port runs that ONLY on the
+// scene path (hal/scene_boot.cpp's carrier inside port_scene_tick). On the LEVEL
+// path -- which is where a VS arena runs -- there is no scene spawner, because
+// crossing from a live level into a scene means tearing the Stage down first and
+// port/stage_lifecycle_map.txt section 5 measures that teardown blocked on seven
+// pieces. So the request is real, the ROM makes it, the port records it, and
+// nothing consumes it. That is the honest state and this function reports it
+// rather than papering over it.
+//
+// ---- AND IT IS WORSE THAN "NOTHING CONSUMES IT". MEASURED. ------------------
+//
+// Run R2 of this lane, both windows, from this tip with the request armed:
+//
+//     [vs] f2791 TIME UP: ... scores 3,0,0,0, stars taken 3
+//       [vs] Scene::StartSceneFade(7, 0, 0): the VS RESULTS screen requested,
+//            pending scene id now 7
+//       [vs] f2792 pending scene id is now 7
+//     [fx] f2820 ...
+//     FATAL: Stage vtable slot 3 (CleanupResources) is not hosted
+//
+// Both processes, ~28 frames after the request, exit 127. Something DOES
+// consume it, and what consumes it is the ROM's own Scene::BeforeBehavior,
+// correctly seated in _ZTV5Stage slot 7 and dispatched on the Stage every
+// frame. Its body -- quoted in full in hal/level_change.cpp's pending-scene
+// block -- is: a pending id that is not the 0x187 sentinel means run the fader,
+// and once the fader is AT THE END, ActorBase::MarkForDestruction(self). `self`
+// is the Stage. So the ROM asks for the Stage to be torn down before the scene
+// comes up, which is exactly right on the DS and is the one thing this port
+// cannot do: port/stage_lifecycle_map.txt section 5 measures the teardown
+// blocked on seven pieces, and slot 3 is the first of them.
+//
+// THAT IS THE SAME ABORT hal/level_change.cpp's port_scene_request_release was
+// written to prevent -- port/exitlevel_seat.txt reproduces it, word for word
+// and exit code for exit code, from a latched pending id on the level path.
+// A ROM-faithful match-end request is simply another way to latch one.
+//
+// SO THE SCENE REQUEST IS OFF BY DEFAULT and the reason is not timidity. A
+// default that turns "the match ends and both windows stand in the arena" into
+// "the match ends and both windows abort" is a regression, whatever the ROM
+// does. The switch stays because the next lane -- the one that hosts the Stage
+// teardown and puts a scene carrier on the level path -- needs to be able to
+// arm the request and watch where it stops, and this is that instrument.
+//
+// ---- THE ENVIRONMENT --------------------------------------------------------
+//
+//   SM64DS_VS_MATCH_END=0   the whole watcher off. Default ON: the time-up
+//                           report and the ROM's own music stop are the ROM's
+//                           behaviour at the ROM's own moment, and the marker
+//                           costs a line in the flight recorder.
+//   SM64DS_VS_END_SCENE=1   ALSO make the ROM's Scene::StartSceneFade(7,0,0)
+//                           request. Default OFF. IT ABORTS THE PROCESS about
+//                           thirty frames later, by the measurement above; it
+//                           is a diagnostic for the lane that will fix that,
+//                           not something to leave on.
+//   SM64DS_VS_EXIT_ON_END=1 quit the process once the end state is reached.
+//                           Default OFF -- see the note over the exit.
+//   SM64DS_VS_END_GRACE=<n> frames between the time-up statement and the
+//                           marker. Default 240 (four seconds at 60fps), which
+//                           is eight times the ROM's own 0x3c wait and long
+//                           enough for a fade plus a scene bring-up to be
+//                           visible if one ever happens.
+//
+// OUTSIDE VS THIS IS ONE COMPARE AND A RETURN. data_0209f2d8 != 1 leaves before
+// anything else is read, before any getenv, and before any static is written.
+extern "C" {
+extern unsigned char data_0209f204;      /* VS "time is up"                   */
+extern unsigned short data_ov002_02111188; /* UpdateVsTimer's sub-counter     */
+extern int           data_0209fc68;      /* wireless session state            */
+extern unsigned char data_02092778;      /* Stage::Behavior sets this with the
+                                            results request                   */
+extern int           data_0209d4b0;      /* and clears this                   */
+extern unsigned short data_02092664;     /* Scene::SetSceneToSpawn's pending id,
+                                            0x187 = nothing pending           */
+extern signed char   data_0209f310[];    /* the four players' VS star counts  */
+signed char NumVsStarsObtained(void);
+}
+/* src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp spells the C++ method out rather
+   than an extern "C" face, so the MSVC-mangled name is what is in the link and
+   no reverse bridge is needed -- hal/reverse_bridges.cpp's sound block names
+   this function as its one exception for exactly that reason. Declaring the
+   class here and calling the method is therefore how this TU reaches it. A
+   member function's linkage is not affected by the enclosing extern "C". */
+struct Sound { static void StopLoadedMusic_Layer1(unsigned int frames); };
+
+/* Does the port ask for scene 7 by default? NO, and the measurement that says
+   so is quoted in the block above: with it on, both windows abort on
+   "Stage vtable slot 3 (CleanupResources) is not hosted" about thirty frames
+   after the request. */
+enum { PORT_VS_END_SCENE_DEFAULT = 0 };
+
+extern "C" int port_vs_match_end_poll(int frame)
+{
+    /* Outside VS: nothing. Before any getenv, before any static. */
+    if (data_0209f2d8 != 1)
+        return 0;
+
+    static int on = -1, want_scene = -1, want_exit = -1, grace = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_MATCH_END");
+        on = (e && e[0] == '0') ? 0 : 1;
+        e = std::getenv("SM64DS_VS_END_SCENE");
+        want_scene = e ? (e[0] != '0') : (int)PORT_VS_END_SCENE_DEFAULT;
+        e = std::getenv("SM64DS_VS_EXIT_ON_END");
+        want_exit = (e && e[0] != '0') ? 1 : 0;
+        e = std::getenv("SM64DS_VS_END_GRACE");
+        grace = e ? std::atoi(e) : 240;
+        if (grace < 0) grace = 0;
+    }
+    if (!on)
+        return 0;
+
+    static int fired = -1;      /* frame the statement ran on, -1 = not yet */
+    static int announced;       /* the end marker has been printed          */
+
+    if (fired < 0) {
+        /* Stage::Behavior's own guard, both halves, in its own order. */
+        if (data_ov002_02111188 != 0 || data_0209f204 == 0)
+            return 0;
+        fired = frame;
+        fprintf(stderr, "[vs] f%d TIME UP: the match clock reached zero and "
+                "Stage::Behavior's own end-of-match guard is open "
+                "(data_0209f204=%u, sub-counter=%u, wireless state=%d, "
+                "scores %d,%d,%d,%d, stars taken %d)\n",
+                frame, (unsigned)data_0209f204,
+                (unsigned)data_ov002_02111188, data_0209fc68,
+                (int)data_0209f310[0], (int)data_0209f310[1],
+                (int)data_0209f310[2], (int)data_0209f310[3],
+                (int)NumVsStarsObtained());
+
+        if (data_0209fc68 == 0) {
+            /* The single-console arm. Not reachable from a VS arena on this
+               port -- VS is a wireless mode and the session state is nonzero
+               whenever one is up -- so it is REPORTED rather than hosted, the
+               way port_vs_countdown_tick records the two preconditions it does
+               not carry. Hosting VE_Init/VE_Update off a path that cannot be
+               reached would be untested code with no way to test it. */
+            fprintf(stderr, "  [vs] wireless session state is 0, so the ROM "
+                    "would take the VE_Init arm here, not the results screen. "
+                    "That arm is not hosted; nothing requested.\n");
+        } else if (want_scene) {
+            /* THE ROM'S OWN THREE STATEMENTS, in the ROM's own order. */
+            _ZN5Scene14StartSceneFadeEjjt(7, 0, 0);
+            data_02092778 = 1;
+            data_0209d4b0 = 0;
+            fprintf(stderr, "  [vs] Scene::StartSceneFade(7, 0, 0): the VS "
+                    "RESULTS screen requested, pending scene id now %u\n",
+                    (unsigned)data_02092664);
+        } else {
+            fprintf(stderr, "  [vs] the results-screen request is NOT made "
+                    "(SM64DS_VS_END_SCENE is off, which is the default): the "
+                    "port cannot tear the Stage down, so asking would abort "
+                    "the process. Pending scene id left at %u.\n",
+                    (unsigned)data_02092664);
+        }
+        /* Outside the if/else on the ROM too -- both arms stop the music. */
+        Sound::StopLoadedMusic_Layer1(0x3c);
+        return 0;
+    }
+
+    if (announced)
+        return 0;
+    if (frame - fired < grace) {
+        /* Report what the request is doing while the grace runs, on change
+           only, so a scene that DOES come up leaves a trail and one that never
+           does leaves one line. */
+        static unsigned last_pending = 0xffff;
+        if (data_02092664 != last_pending) {
+            last_pending = data_02092664;
+            fprintf(stderr, "  [vs] f%d pending scene id is now %u%s\n", frame,
+                    (unsigned)data_02092664,
+                    data_02092664 == 0x187 ? " (the nothing-pending sentinel)"
+                                           : "");
+        }
+        return 0;
+    }
+
+    announced = 1;
+    /* THE MARKER. One line, fixed shape, in the flight recorder, so a launcher
+       can watch for it without parsing the rest of a playlog. The scores are
+       the ROM's own per-player array and the total is the ROM's own sum. */
+    fprintf(stderr, "[vs] MATCH OVER f%d scores=%d,%d,%d,%d total=%d "
+            "pending_scene=%u results_screen=%s\n", frame,
+            (int)data_0209f310[0], (int)data_0209f310[1],
+            (int)data_0209f310[2], (int)data_0209f310[3],
+            (int)NumVsStarsObtained(), (unsigned)data_02092664,
+            data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
+                               : (data_02092664 == 0x187 ? "none" : "other"));
+    fflush(stderr);
+
+    /* THE EXIT IS OFF BY DEFAULT AND THAT IS A DELIBERATE CHOICE, not an
+       oversight. Quitting is not what the DS does -- the DS shows a results
+       screen and goes back to the lobby -- and a player whose window vanished
+       the instant the clock ran out would be worse off than one left standing
+       in the arena, which is what happens today. The thing that WANTS a
+       process exit is the launcher, which needs a detectable end, and the
+       launcher can set the variable itself. So the MARKER is default-on
+       (harmless, and it is the machine-readable end state) and the QUIT is
+       opt-in. Flip PORT_VS_EXIT_DEFAULT nowhere: change the getenv default
+       here if the owner rules the other way. */
+    if (!want_exit)
+        return 0;
+    fprintf(stderr, "  [vs] SM64DS_VS_EXIT_ON_END=1: quitting through the "
+            "window's own WM_QUIT path, exit code 0\n");
+    fflush(stderr);
+    return 1;
+}
+
 /* Seat what the course loop reads that the boot does NOT: the player globals
    (SetPlayerGlobals, which InitResources does not call -- the handoff and the
    title path do). The sound row moved into the boot (port_boot_course_sound),
