@@ -2059,3 +2059,210 @@ def test_forward_decl_folds_into_the_definition_either_order():
         "a later forward decl must fold into the kept definition silently"
     live, dead, w = run(rider, full)
     assert dead and w, "a forward decl with piggybacked text must still flag"
+
+
+def _mini_link_surface(link, tu="Class+Two", long_object=True):
+    """A miniature of dsd's real [3/8] output, same shapes as the pilot trees: a
+    CRLF arm9.lcf whose selectors include the '+'-joined TU, and an LF objects.txt
+    naming the same objects by absolute path (with one path over mwldarm's
+    measured open limit when `long_object`)."""
+    src_tu = link / "src_tu" / "actors"
+    src = link / "src" / ("d" * 90)
+    src_tu.mkdir(parents=True, exist_ok=True)
+    src.mkdir(parents=True, exist_ok=True)
+    (src_tu / f"{tu}.o").write_bytes(b"tu-bytes")
+    (src / "func_x.o").write_bytes(b"plain-bytes")
+    lcf_lines = ["MEMORY {", f"        {tu}.o(.text)",
+                 "        _dsd_gap@ov006_37.o(.text)", "        func_x.o(.text)"]
+    objects = [str(src_tu / f"{tu}.o"), str(src / "func_x.o")]
+    if long_object:
+        room = tubuild.WIN_PATH_LIMIT + 1 - (len(str(src)) + 1) - len(".o")
+        assert room > 0, "temp dir too long for the over-limit fixture"
+        long_obj = src / f"{'L' * room}.o"
+        assert len(str(long_obj)) > tubuild.WIN_PATH_LIMIT
+        long_obj.write_bytes(b"long-bytes")
+        lcf_lines.append(f"        {long_obj.name}(.text)")
+        objects.append(str(long_obj))
+    lcf_lines.append("}")
+    (link / "arm9.lcf").write_bytes(("\r\n".join(lcf_lines) + "\r\n").encode())
+    (link / "objects.txt").write_bytes(("\n".join(objects) + "\n").encode())
+    return src_tu, src
+
+
+def _expect_refusal(fn, needle):
+    try:
+        fn()
+    except SystemExit as exc:
+        assert needle in str(exc), f"refusal {exc!r} does not mention {needle!r}"
+        return
+    raise AssertionError(f"expected a refusal mentioning {needle!r}, got none")
+
+
+def test_scratch_aliasing_rewrites_only_the_link_surface_and_fails_closed():
+    """The [3/8]-time alias plan and the pre-link byte copies, on a miniature of
+    dsd's real surface. No toolchain needed: this pins that the rewrite is
+    surgical (CRLF selectors by exact basename, objects.txt by exact line, both
+    measured limits applied, nothing else touched), that the copies carry the
+    original bytes, and that every ambiguity refuses instead of half-renaming."""
+    import json
+    import re as _re
+    with tempfile.TemporaryDirectory() as td:
+        link = pathlib.Path(td) / "link"
+        src_tu, src = _mini_link_surface(link)
+        entry = {"source": "src_tu/actors/Class+Two.cpp"}
+        crlf_before = (link / "arm9.lcf").read_bytes().count(b"\r\n")
+
+        plan = tubuild._plan_object_aliases(link / "arm9.lcf",
+                                            link / "objects.txt", entry)
+        assert plan and len(plan["renames"]) == 2, plan["renames"]
+        grammar = next(r for r in plan["renames"] if "grammar" in r["reasons"][0])
+        assert pathlib.Path(grammar["from"]).name == "Class+Two.o"
+        assert pathlib.Path(grammar["to"]).name == "Class@Two.o"
+
+        # The lcf: both offending selectors renamed, everything else -- including
+        # dsd's own '@'-bearing synthetic and the line endings of untouched
+        # lines -- byte-identical.
+        lcf_after = (link / "arm9.lcf").read_bytes()
+        assert b"        Class@Two.o(.text)\r\n" in lcf_after
+        assert b"Class+Two.o(" not in lcf_after
+        assert b"        _dsd_gap@ov006_37.o(.text)\r\n" in lcf_after
+        assert b"        func_x.o(.text)\r\n" in lcf_after
+        assert lcf_after.count(b"\r\n") == crlf_before, "line endings must not churn"
+
+        # The objects list: renamed lines rewritten in place, others intact, no
+        # line over the measured limit, and the guarded alias's basename is
+        # exactly the one the lcf now selects.
+        objs_after = (link / "objects.txt").read_text(encoding="utf-8").splitlines()
+        assert str(src_tu / "Class@Two.o") in objs_after
+        assert all(len(line) <= tubuild.WIN_PATH_LIMIT for line in objs_after)
+        guard_line = next(line for line in objs_after if "_dsd_alias@" in line)
+        assert _re.fullmatch(r".*_dsd_alias@[0-9a-f]{16}\.o", guard_line), guard_line
+        assert pathlib.Path(guard_line).parent == src
+        assert f"{pathlib.Path(guard_line).name}(.text)" in \
+            lcf_after.decode(), "lcf and objects must name one alias"
+
+        # Byte copies: the aliases hold the original objects' bytes, the
+        # originals stay on disk untouched, and the sidecar records the mapping.
+        tubuild._materialize_object_aliases(link, plan)
+        assert (src_tu / "Class@Two.o").read_bytes() == b"tu-bytes"
+        assert (src_tu / "Class+Two.o").read_bytes() == b"tu-bytes"
+        assert pathlib.Path(guard_line).read_bytes() == b"long-bytes"
+        sidecar = json.loads((link / "scratch_object_aliases.json")
+                             .read_text(encoding="utf-8"))
+        assert len(sidecar["renames"]) == 2 and sidecar["pathLimit"] == 259
+
+        # Idempotent: the aliased surface itself needs no second aliasing.
+        assert tubuild._plan_object_aliases(link / "arm9.lcf",
+                                             link / "objects.txt", entry) is None
+
+        # A single-class TU with a short path is not renamed at all -- a from==to
+        # rename would make the copy step copy a file onto itself.
+        link2 = pathlib.Path(td) / "link2"
+        _mini_link_surface(link2, tu="Plain", long_object=False)
+        assert tubuild._plan_object_aliases(link2 / "arm9.lcf", link2 / "objects.txt",
+                                            {"source": "src_tu/actors/Plain.cpp"}) is None
+
+        # Refusal: an alias that would land on another object's name.
+        link3 = pathlib.Path(td) / "link3"
+        _mini_link_surface(link3)
+        clash_dir = link3 / "src" / "other"
+        clash_dir.mkdir(parents=True)
+        (clash_dir / "Class@Two.o").write_bytes(b"clash")
+        objs = (link3 / "objects.txt").read_text(encoding="utf-8").splitlines()
+        objs.append(str(clash_dir / "Class@Two.o"))
+        # byte-exact rewrite: text mode's newline translation would smuggle CR
+        # into every path and the basename checks would measure the fixture, not
+        # the planner
+        (link3 / "objects.txt").write_bytes(("\n".join(objs) + "\n").encode())
+        _expect_refusal(
+            lambda: tubuild._plan_object_aliases(link3 / "arm9.lcf",
+                                                  link3 / "objects.txt", entry),
+            "collides with an existing object")
+
+        # Refusal: a basename shared by two objects (the selector rewrite is
+        # basename-keyed, so aliasing a shared name would be ambiguous).
+        link4 = pathlib.Path(td) / "link4"
+        _mini_link_surface(link4)
+        dup_dir = link4 / "src" / "twin"
+        dup_dir.mkdir(parents=True)
+        room = tubuild.WIN_PATH_LIMIT + 1 - (len(str(dup_dir)) + 1) - len(".o")
+        assert room > 0, "temp dir too long for the shared-basename fixture"
+        long_line = next(line for line in
+                         (link4 / "objects.txt").read_text(encoding="utf-8").splitlines()
+                         if "L" * 8 in pathlib.Path(line).name)
+        twin = dup_dir / pathlib.Path(long_line).name
+        twin.write_bytes(b"twin")
+        objs = (link4 / "objects.txt").read_text(encoding="utf-8").splitlines()
+        objs.append(str(twin))
+        (link4 / "objects.txt").write_bytes(("\n".join(objs) + "\n").encode())
+        _expect_refusal(
+            lambda: tubuild._plan_object_aliases(link4 / "arm9.lcf",
+                                                  link4 / "objects.txt", entry),
+            "share the basename")
+
+        # Refusal: an aliased basename in a selector line the parser does not
+        # recognize must not survive the rewrite into mwldarm's grammar error.
+        link5 = pathlib.Path(td) / "link5"
+        _mini_link_surface(link5)
+        with open(link5 / "arm9.lcf", encoding="utf-8", newline="") as f:
+            lcf = f.read()
+        with open(link5 / "arm9.lcf", "w", encoding="utf-8", newline="") as f:
+            f.write(lcf.replace("        Class+Two.o(.text)",
+                                "        Class+Two.o (.text)"))
+        _expect_refusal(
+            lambda: tubuild._plan_object_aliases(link5 / "arm9.lcf",
+                                                  link5 / "objects.txt", entry),
+            "selector shape this parser does not recognize")
+
+
+def test_the_mwldarm_join_and_path_limits_are_measured_not_guessed():
+    """WIN_PATH_LIMIT and LCF_SAFE_JOIN are facts about the pinned mwldarm, and
+    this re-measures both against the real linker so a toolchain swap cannot
+    silently invalidate the scratch aliasing that rests on them: '+' must abort
+    the selector grammar (why a joined TU id can never appear verbatim in a
+    scratch lcf), '@' must parse (why it is the join), and the object-open limit
+    must sit at exactly 259, not 260."""
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture('extern "C" int Entry() { return 0; }\n')
+    mwldarm = tubuild.RB.MW / tubuild.RB.LD_VERSION / "mwldarm.exe"
+
+    def link(tag, name, pad_to=None):
+        sub = pathlib.Path(tempfile.mkdtemp(prefix=f"mwldarm_{tag}_"))
+        if pad_to is None:
+            obj_path = sub / f"{name}.o"
+        else:
+            room = pad_to - (len(str(sub)) + 1) - len(".o")
+            assert room > 0, "temp dir too long for the path-limit probe"
+            obj_path = sub / f"{'L' * room}.o"
+            assert len(str(obj_path)) == pad_to
+        obj_path.write_bytes(obj)
+        objects = sub / "objects.txt"
+        objects.write_text(f"{obj_path}\n", encoding="utf-8")
+        lcf = sub / "probe.lcf"
+        lcf.write_text("MEMORY { TEST : ORIGIN = 0x02000000 > out.bin }\n"
+                       "SECTIONS {\n.test : {\n"
+                       f"        {obj_path.name}(.text)\n"
+                       "} > TEST }\n", encoding="utf-8")
+        cmd = [*tubuild.RB.launcher(), str(mwldarm), *tubuild.RB.LDFLAGS.split(),
+               f"@{objects}", str(lcf), "-o", str(sub / "out.o")]
+        r = subprocess.run(cmd, capture_output=True, text=True, cwd=sub)
+        shutil.rmtree(sub, ignore_errors=True)
+        return r.returncode, r.stdout + r.stderr
+
+    rc, out = link("join_plus", "ClassA+ClassB")
+    assert rc != 0 and ("Linker command file error" in out or "Expecting" in out)
+    assert "File not found" in out and "ClassA" in out, out
+
+    rc, out = link("join_at", "ClassA@ClassB")
+    assert rc == 0, out
+
+    rc, out = link("len259", None, pad_to=259)
+    assert rc == 0, out
+    rc, out = link("len260", None, pad_to=260)
+    assert rc != 0 and "too long" in out, out
+
+    # The constants the scratch aliasing rests on, tied to the measurements above.
+    assert tubuild.WIN_PATH_LIMIT == 259
+    assert tubuild.LCF_SAFE_JOIN == "@"
+    assert tubuild.lcf_safe_basename("A+B.o") == "A@B.o"

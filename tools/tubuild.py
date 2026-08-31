@@ -3885,6 +3885,274 @@ def linkcheck_symbol_verdict(baseline, command_ok, new_errors):
     return command_ok
 
 
+# ================ scratch link-surface sanitation (measured mwldarm limits) ================
+#
+# WHY this exists: mwldarm 1.2/sp2p3 has two limits that abort a scratch link
+# before it can measure anything real, and a linkcheck verdict that dies on tool
+# surface rather than link content is worthless as evidence:
+#
+#   1. Grammar. The lcf resolves objects by BASENAME, and '+' -- the join in a
+#      multi-class TU id such as `EnemySpawner+EnemySwitchTag` -- is the lcf
+#      grammar's own section-list operator. `ClassA+ClassB.o(.text)` parses as
+#      selector `ClassA` plus file `ClassB.o(...)`, and the link aborts with
+#      "File not found"/"Expecting: (" before emitting one real diagnostic.
+#      On this tree it is not hypothetical: every multi-class shadow source is
+#      tracked named for its id (src_tu/actors/EnemySpawner+EnemySwitchTag.cpp),
+#      so a whole-tree compile puts the join in an lcf selector and the link
+#      dies there -- measured against the pinned mwldarm by the test below, not
+#      inferred. (The ov002/EnemySpawner+EnemySwitchTag manifest record also
+#      reads "result": "failed", but that is its PARTIAL run: the substituted
+#      per-function objects carry no join in their basenames, its link phase
+#      passed, and the failure is checkSymbols -- a different, real defect this
+#      fix does not touch.)
+#   2. Path length. mwldarm is a 2004 tool that is not long-path aware: it opens
+#      object paths up to WIN_PATH_LIMIT total chars and fails above that with
+#      "Operating system error: The file name is too long". Python is long-path
+#      aware, so the object exists on disk and the link still cannot read it
+#      (the MCarlo pilot hit this at 263 chars on a symbol-named derived object).
+#
+# Both constants are MEASURED against the pinned toolchain, never guessed: the
+# tests in tools/test_tubuild.py link tiny synthetic objects through every
+# candidate join character and through exact path lengths, so a toolchain change
+# that moves either limit fails CI instead of silently mislinking.
+#
+# LIMIT: the aliases live only in the scratch tree. dsd still emits, and the
+# partitioned artifact audit at [3/8] still validates, the manifest-pinned
+# spelling verbatim; only afterwards does this layer rewrite the scratch
+# arm9.lcf/objects.txt and copy the object bytes (in their final, post-audit
+# state) under alias names next to the originals. TU ids, src_tu/ filenames,
+# config paths and every banked path keep the real spelling -- the manifest
+# linkcheck block records the alias explicitly in scratchAliases.
+
+WIN_PATH_LIMIT = 259   # mwldarm opens object paths up to 259 chars; 260 fails (measured)
+LCF_SAFE_JOIN = "@"    # measured: of + @ - _ . $ only "@ - _ . $" parse in a selector
+                       # basename. '@' cannot occur in a C++ identifier, so a joined
+                       # stem can never collide with a real one, and it matches the
+                       # `_dsd_gap@...` naming dsd's own scratch objects already use.
+_SELECTOR_RE = re.compile(r"^(\s*)([^\s()]+\.o)\(([^()]*)\)(\r?)$")
+# Every selector basename must reduce to this class before mwldarm sees it. The
+# probed aborters (+ ~ % = ^ ! # &) fail closed here, named, instead of aborting
+# the link with a misleading grammar error. '=' and '+' occur legally in lcf
+# EXPRESSION lines (`ORIGIN = ...`, `ADDR(ITCM) + SIZEOF(ITCM)`), so this assert
+# is deliberately scoped to selector lines only.
+_SELECTOR_SAFE_RE = re.compile(r"^[A-Za-z0-9_.$@-]+\.o$")
+
+
+def lcf_safe_basename(basename):
+    """Map one object basename onto the selector grammar mwldarm actually parses.
+
+    LIMIT: only the id join '+' is rewritten. Corpus stems are C++ identifiers
+    and mangled symbol names ([A-Za-z0-9_]), which the grammar takes; if a future
+    stem carries some other probed-unsafe character, extend this mapping and
+    re-run the grammar test -- the linker aborts, it does not warn."""
+    if "+" not in basename:
+        return basename
+    return basename.replace("+", LCF_SAFE_JOIN)
+
+
+def _path_guard_alias(final_path):
+    """Deterministic, collision-proof short name for one over-limit object path.
+
+    Keyed on the object's full path string, so the same TU id always yields the
+    same alias across runs; '_dsd_alias@' matches the `_dsd_gap@` scratch naming
+    convention and, like the join alias, cannot collide with a real stem."""
+    digest = hashlib.sha1(str(final_path).encode("utf-8")).hexdigest()[:16]
+    return final_path.with_name(f"_dsd_alias@{digest}.o")
+
+
+def _read_scratch_lines(path):
+    """Read dsd's link file verbatim: newline='' keeps CRLF lcf lines CRLF, so the
+    rewrite below stays surgical (renamed lines only) instead of converting the
+    whole file's line endings behind the audit's back."""
+    with open(path, encoding="utf-8", newline="") as f:
+        return f.read().split("\n")
+
+
+def _write_scratch_lines(path, lines):
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write("\n".join(lines))
+
+
+def _plan_object_aliases(lcf_path, objects_path, entry):
+    """Plan scratch-only aliases for the two measured mwldarm limits above.
+
+    Rewrites the two scratch link files dsd just emitted (arm9.lcf selectors by
+    basename, objects.txt by exact line) and returns the rename plan whose byte
+    copies _materialize_object_aliases drops beside the originals right before
+    the link. Returns None when dsd's surface already links as written.
+
+    Fails closed (SystemExit) on any collision, any selector shape the parser
+    does not recognize, or any alias still over the measured path limit: a
+    silently half-rewritten link surface would measure exactly as little as the
+    abort it replaces."""
+    lcf_lines = _read_scratch_lines(lcf_path)
+    obj_lines = _read_scratch_lines(objects_path)
+
+    # objects.txt is the authority on what the link will open; the lcf only names
+    # basenames resolved against it.
+    obj_rows = [(i, line, pathlib.Path(line))
+                for i, line in enumerate(obj_lines) if line.strip()]
+
+    renames = {}  # index into obj_lines -> {"from","to","reasons"}
+
+    def refuse(msg):
+        raise SystemExit(f"REFUSED -- scratch link-surface aliasing: {msg}")
+
+    # --- grammar: the TU's own object, when the lcf actually names it (whole-TU
+    # splice and partitioned modes; partial mode never splices the TU into
+    # delinks, so no selector references it and nothing fires).
+    tu_selector_count = 0
+    tu_name = None
+    if entry is not None:
+        tu_name = pathlib.Path(entry["source"]).with_suffix(".o").name
+        tu_rows = [row for row in obj_rows if row[2].name == tu_name]
+        if len(tu_rows) > 1:
+            refuse(f"objects.txt names {len(tu_rows)} objects {tu_name}; "
+                   f"the alias would be ambiguous")
+        # The TU is in the link surface, so the lcf must name it in a shape this
+        # parser recognizes -- a '+' stem in a line that does not parse would
+        # survive aliasing and abort the link with mwldarm's grammar error.
+        if tu_rows and any(tu_name in line and not _SELECTOR_RE.match(line)
+                           for line in lcf_lines):
+            refuse(f"the lcf names the TU object {tu_name} in a selector shape "
+                   f"this parser does not recognize")
+        tu_selector_count = sum(
+            1 for line in lcf_lines
+            if (m := _SELECTOR_RE.match(line)) and m.group(2) == tu_name)
+        # Only when the join actually offends the grammar: a single-class stem
+        # must not get a from==to rename (the copy step would choke on it), and
+        # an over-limit TU path is the path guard's business, below.
+        if tu_rows and tu_selector_count and lcf_safe_basename(tu_name) != tu_name:
+            alias_path = tu_rows[0][2].with_name(lcf_safe_basename(tu_name))
+            renames[tu_rows[0][0]] = {
+                "from": tu_rows[0][1], "to": str(alias_path),
+                "reasons": ["lcf-grammar '+' is mwldarm's section-list operator"]}
+
+    # --- path length: every listed object, measured on its post-grammar path.
+    for i, line, _path in obj_rows:
+        final = pathlib.Path(renames[i]["to"]) if i in renames else pathlib.Path(line)
+        if len(str(final)) <= WIN_PATH_LIMIT:
+            continue
+        alias = _path_guard_alias(final)
+        if len(str(alias)) > WIN_PATH_LIMIT:
+            refuse(f"even {alias.name} is over the {WIN_PATH_LIMIT}-char limit inside "
+                   f"{final.parent}; the scratch tree is too deep for mwldarm")
+        row = renames.setdefault(i, {"from": line, "to": "", "reasons": []})
+        row["to"] = str(alias)
+        row["reasons"].append(f"object path {len(str(final))} chars exceeds "
+                              f"mwldarm's {WIN_PATH_LIMIT}-char open limit")
+
+    if not renames:
+        return None
+
+    # --- one basename map for the lcf, collision-checked against everything else.
+    # The selector rewrite is keyed by basename, so a basename shared by two
+    # objects (possible only outside the audited partitioned surface) must not be
+    # aliased at all: it would fan two objects out to two names while every
+    # selector picks one. Aliases must not land on a name any other object keeps
+    # or takes; their '@' join and hash suffix make that near-impossible by
+    # construction, and this is where it is proven rather than assumed.
+    name_counts = collections.Counter(row[2].name for row in obj_rows)
+    aliased = {pathlib.Path(row["from"]).name for row in renames.values()}
+    for name in aliased:
+        if name_counts[name] > 1:
+            refuse(f"{name_counts[name]} objects share the basename {name}; a "
+                   f"selector-keyed alias would be ambiguous")
+    by_name = {pathlib.Path(row["from"]).name: pathlib.Path(row["to"]).name
+               for row in renames.values()}
+    kept = {row[2].name for row in obj_rows} - aliased
+    for name, count in collections.Counter(by_name.values()).items():
+        if count > 1:
+            refuse(f"alias {name} would be claimed by two objects")
+        if name in kept:
+            refuse(f"alias {name} collides with an existing object")
+    # ...and rewrite every selector line that names one of them. A line that names
+    # an aliased basename in a shape the selector parser does not recognize would
+    # survive the rewrite and abort the link with a misleading grammar error, so
+    # it refuses instead -- dsd's real surface has none (every one of the 11,598
+    # `.o(` lines in the pilot trees parses), and a future shape change must be
+    # measured here, not discovered in mwldarm's output.
+    for old in by_name:
+        loose = [line for line in lcf_lines
+                 if old in line and not _SELECTOR_RE.match(line)]
+        if loose:
+            refuse(f"the lcf names {old} in a selector shape this parser does not "
+                   f"recognize: {loose[0].strip()[:80]!r}")
+    rewritten = collections.Counter()
+    for i, line in enumerate(lcf_lines):
+        m = _SELECTOR_RE.match(line)
+        if not m or m.group(2) not in by_name or by_name[m.group(2)] == m.group(2):
+            continue
+        lcf_lines[i] = f"{m.group(1)}{by_name[m.group(2)]}({m.group(3)}){m.group(4)}"
+        rewritten[m.group(2)] += 1
+    # A renamed TU must have every one of its selector lines rewritten; other
+    # aliased objects may legitimately have none (closure-deadstripped), but the
+    # TU under test carries claimed functions, so its selectors are never absent.
+    if tu_name is not None and tu_name in by_name \
+            and rewritten[tu_name] != tu_selector_count:
+        refuse(f"only {rewritten[tu_name]}/{tu_selector_count} {tu_name} selector "
+               f"line(s) rewritten; the lcf grammar has shapes this parser misses")
+
+    # --- rewrite objects.txt by index, then verify the whole surface.
+    for i, row in renames.items():
+        obj_lines[i] = row["to"]
+    for line in lcf_lines:
+        m = _SELECTOR_RE.match(line)
+        if m and not _SELECTOR_SAFE_RE.match(m.group(2)):
+            refuse(f"selector basename {m.group(2)} still carries a character outside "
+                   f"the measured-safe class; extend lcf_safe_basename and re-probe")
+    for line in obj_lines:
+        if line.strip() and len(line) > WIN_PATH_LIMIT:
+            refuse(f"objects.txt still lists a {len(line)}-char path after aliasing")
+
+    _write_scratch_lines(lcf_path, lcf_lines)
+    _write_scratch_lines(objects_path, obj_lines)
+    rows = [dict(renames[i], index=i) for i in sorted(renames)]
+    summary = {
+        "why": "mwldarm 1.2/sp2p3, measured: '+' aborts the lcf selector grammar "
+               "(the TU id join) and object paths over "
+               f"{WIN_PATH_LIMIT} chars cannot be opened ('file name is too long'). "
+               "The aliases are scratch-side copies only; the manifest id, src_tu/ "
+               "filenames and every tracked path keep the real spelling. Full "
+               "mapping: scratch_object_aliases.json beside the link.",
+        "pathLimit": WIN_PATH_LIMIT,
+        "objects": [{"from": pathlib.Path(r["from"]).name,
+                     "to": pathlib.Path(r["to"]).name,
+                     "reasons": r["reasons"]} for r in rows],
+    }
+    return {"renames": rows, "summary": summary}
+
+
+def _materialize_object_aliases(scratch, aliases):
+    """Copy each aliased object's FINAL scratch bytes to its alias name, and
+    write the sidecar mapping next to the link.
+
+    Runs after every in-place scratch rewrite ([4b]/[4c] deadstrip,
+    externalization, per-function substitution) so the alias holds exactly the
+    bytes the link would otherwise have read from the original path. The
+    original files stay on disk, inert: only the rewritten objects.txt names
+    them, and nothing else reads it."""
+    sidecar = scratch / "scratch_object_aliases.json"
+    sidecar.write_text(json.dumps(
+        {"why": aliases["summary"]["why"], "pathLimit": aliases["summary"]["pathLimit"],
+         "lcfSafeJoin": LCF_SAFE_JOIN,
+         "renames": [{"from": r["from"], "to": r["to"], "reasons": r["reasons"]}
+                     for r in aliases["renames"]]},
+        indent=2) + "\n", encoding="utf-8", newline="\n")
+    for row in aliases["renames"]:
+        src, dst = pathlib.Path(row["from"]), pathlib.Path(row["to"])
+        if not src.is_file():
+            raise SystemExit(f"REFUSED -- scratch link-surface aliasing: cannot copy "
+                             f"{src} (missing) to {dst}")
+        shutil.copyfile(src, dst)
+    try:
+        shown = sidecar.relative_to(REPO).as_posix()
+    except ValueError:      # a scratch outside REPO (test fixtures) still maps
+        shown = str(sidecar)
+    print(f"      {len(aliases['renames'])} aliased object copy(ies) materialized; "
+          f"mapping -> {shown} (gitignored)")
+
+
 def cmd_linkcheck(args):
     data = load_manifest()
     entry = manifest_entry(data, args.id) if args.id else None
@@ -4087,6 +4355,25 @@ def cmd_linkcheck(args):
             return 1
         print("      partitioned LCF/object audit: exactly N legacy .text selectors, "
               "one TU non-text selector/object, no TU .text selector")
+
+    # dsd wrote the link surface for the manifest-pinned spelling of every object,
+    # which mwldarm cannot always consume: the measured lcf grammar rejects the
+    # '+' TU-id join, and its 259-char object-open limit bites on symbol-named
+    # paths in deep scratch trees. Alias ONLY inside the scratch lcf/objects.txt
+    # (the audit above already validated dsd's verbatim surface); the byte copies
+    # land right before the link. Ids, src_tu/ filenames and tracked paths keep
+    # the real spelling, and the manifest block records the alias.
+    aliases = _plan_object_aliases(scratch / "arm9.lcf", scratch / "objects.txt",
+                                   None if baseline else entry)
+    if aliases is None:
+        print("      scratch surface ok as dsd wrote it -- no mwldarm aliases needed")
+    else:
+        report["scratchAliases"] = aliases["summary"]
+        print(f"      scratch link-surface aliasing: {len(aliases['renames'])} "
+              f"object(s) (mwldarm measured limits; scratch-only, manifest id unchanged)")
+        for row in aliases["renames"]:
+            print(f"        {pathlib.Path(row['from']).name} -> "
+                  f"{pathlib.Path(row['to']).name}  [{'; '.join(row['reasons'])}]")
 
     # ------------------------------------------------------------------------ compile
     srcs = RB.enrolled(cfg_root, extra_roots=("src_tu",))
@@ -4483,6 +4770,10 @@ def cmd_linkcheck(args):
                   "were resolved.")
 
     # -------------------------------------------------------------------------- link
+    if aliases:
+        # After every in-place scratch rewrite above, so the aliases carry the
+        # exact bytes the link would otherwise read from the original paths.
+        _materialize_object_aliases(scratch, aliases)
     print("[5/8] mwldarm (scratch module link)")
     ok, out, dt = _run_dsd([*RB.launcher(), str(RB.MW / RB.LD_VERSION / "mwldarm.exe"),
                             *RB.LDFLAGS.split(), f"@{scratch / 'objects.txt'}",
@@ -4909,6 +5200,7 @@ def _partition_attempt_record(report):
         "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
         "rom": report.get("rom"),
         "strayOutputs": report.get("strayOutputs"),
+        "scratchAliases": report.get("scratchAliases"),
         "scratch": report.get("scratch", "") + " (gitignored)",
     }
 
@@ -4972,6 +5264,11 @@ def _record_linkcheck(data, entry, report, baseline):
                              .get("moduleSetSha256")),
         "rom": report.get("rom"),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
+        # Present only when the scratch lcf/objects.txt were aliased for mwldarm's
+        # measured limits ('+' selector grammar; 259-char path opens). The id and
+        # every tracked path above keep the real spelling; this field is the
+        # scratch-only mapping, with the full sidecar in the scratch tree.
+        "scratchAliases": report.get("scratchAliases"),
     }
     if report["result"] == "link-verified" and entry.get("status") == "text-verified":
         entry["status"] = "link-verified"
