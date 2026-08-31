@@ -10,7 +10,7 @@
 # gate's FAILURE branch is the one path a green run never exercises: no ROM build can
 # reach it, because these tools are not compiled into the ROM. src-tu-refs.yml exists
 # because #1643 broke 26 translation units while every byte gate stayed green, and the
-# only thing that noticed was a test suite a human had to run. This job runs 432 of
+# only thing that noticed was a test suite a human had to run. This job runs 435 of
 # those assertions on every PR that touches `tools/` or `nearmiss/`, so the next one is
 # noticed by CI.
 #
@@ -29,7 +29,8 @@
 #      compiler -- is what actually stops most of `tools/` on a runner: 24 modules die
 #      on `No module named 'elftools'` alone (test_rombuild, test_romdata_check,
 #      test_check_references, test_tu_config, test_tu_production, test_reloc_audit_*,
-#      test_mangle, test_name_roundtrip, test_pr_linkcheck_*, and more), test_swarm and
+#      test_mangle, test_name_roundtrip, test_pr_linkcheck_*, test_tu_promote,
+#      test_objisolate, and more), test_swarm and
 #      test_worklist on capstone, test_bmg on ndspy. Pinning those is a fair follow-up;
 #      it is a different change from this one, and it should come with a requirements
 #      file rather than a version invented in a `run:` line.
@@ -72,7 +73,7 @@
 # test_stamp_provenance_verify ("needs extracted/ (ROM dump)", a real @skipUnless) and
 # two in test_match_provenance ("no src samples"). test_premerge_check adds none on a
 # runner with git installed, and test_symrecords and test_nearmiss_db add none anywhere.
-# 426 of the 432 assert something.
+# 429 of the 435 assert something.
 name: tool tests
 
 on:
@@ -195,8 +196,14 @@ jobs:
 #   test_rombuild_cache         (19)   rombuild_cache.py -- the content-addressed object
 #                                      cache. A stale-key bug here silently serves the
 #                                      WRONG object into a byte-gate run.
-#   test_rombuild_check          (6)   rombuild_check.py -- turns a source-built ROM into
-#                                      the fidelity metrics every gate quotes.
+#   test_rombuild_check          (9)   rombuild_check.py -- turns a source-built ROM into
+#                                      the fidelity metrics every gate quotes, including
+#                                      the diagnostic row a src/-owned NON-.text claim
+#                                      gets when it mismatches. That case is why this
+#                                      module gained 3 tests; it is also the only one of
+#                                      the intact-TU suites a bare runner can execute,
+#                                      because it imports enroll and srcpath and nothing
+#                                      that reaches elftools.
 #   test_rombuild_profile        (6)   rombuild_profile.py -- isolated stock and
 #                                      intentional-mod build configs.
 #   test_sinit_owners            (9)   sinit_owners.py -- ranks the likely original TU
