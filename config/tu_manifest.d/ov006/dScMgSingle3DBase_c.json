@@ -1,0 +1,293 @@
+{
+  "id": "ov006/dScMgSingle3DBase_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgSingle3DBase_c.cpp",
+  "promoted_source": "src/actors/dScMgSingle3DBase_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x210a4b0..0x210a708, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgSingle3DBase_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210a4b0",
+      "end": "0x0210a708"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_cD1Ev",
+      "address": "0x0210a4b0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_cD0Ev",
+      "address": "0x0210a4e8",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_0210a534",
+      "address": "0x0210a534",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov006_0210a534.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_0210a600",
+      "address": "0x0210a600",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov006_0210a600.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj",
+      "address": "0x0210a608",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_c12BeforeRenderEv",
+      "address": "0x0210a664",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_c12BeforeRenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv",
+      "address": "0x0210a698",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj",
+      "address": "0x0210a6e4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj.cpp",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091430, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02091430"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b512c, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020b512c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b5144, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020b5144"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091454, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02091454"
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo record, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bc64, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64"
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own typeinfo name, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bd00, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00"
+    },
+    {
+      "symbol": "_ZTV19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "This class's own vtable, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e448, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. NOT YET OWNABLE: dScMgBase_c leaves vtable slots 18-35 undeclared (see its header), so mwcc emits an 18-slot table where the cartridge has 36. romdata_check therefore reports PARTIAL -- the emitted table is a verified byte-exact PREFIX of the ROM's, not a disagreement. Owning it outright needs those eighteen base virtuals declared and their ov004 bodies named; tracked as the follow-up in notes/minigame-provenance.md.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e448"
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgSingle3DBase_c/dScMgSingle3DBase_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTV19dScMgSingle3DBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV19dScMgSingle3DBase_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgSingle3DBase_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0210a4b0",
+        "end": "0x0210a708",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0210a4b0",
+          "end": "0x0210a708",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      },
+      "linkerOutput": null
+    }
+  }
+}
