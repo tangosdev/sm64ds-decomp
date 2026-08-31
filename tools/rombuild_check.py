@@ -215,6 +215,8 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     per_module_bad = collections.Counter()
     source_functions = source_bytes = mod_functions = mod_bytes = 0
     source_data_bytes = 0
+    source_data_claims = bad_data_claims = bad_data_bytes = 0
+    reproducing_data_claims = reproducing_data_bytes = 0
     reproducing = reproducing_bytes = bad = bad_function_bytes = differing_source_bytes = 0
     module_set_digest = hashlib.sha256()
 
@@ -296,11 +298,54 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
                 bad_function_bytes += size
                 differing_source_bytes += nd
                 failures.append({"module": label, "name": pathlib.Path(rel).stem,
-                                 "addr": addr, "size": size, "differingBytes": nd})
+                                 "addr": addr, "size": size, "kind": "code",
+                                 "section": None, "differingBytes": nd})
                 per_module_bad[label] += 1
             else:
                 reproducing += function_count
                 reproducing_bytes += size
+
+        # The loop above walks .text/.init only, because those are the entries that own
+        # FUNCTIONS and every counter in it is a function counter. A src/-owned .data,
+        # .rodata or .bss claim is a byte claim with no function in it, so it fell out
+        # of that loop entirely and produced no diagnostic row at all.
+        #
+        # The verdict was still correctly red -- _diff_counts above sees the differing
+        # byte, it is outside every mods/ range, so unexpectedDifferingBytes is non-zero
+        # and `passed` is False. But a red verdict with an empty `failures` list and
+        # mismatchingFunctions == 0 says only "something, somewhere". That is the least
+        # useful shape exactly when a data claim first goes wrong, so these claims get
+        # their own rows here.
+        #
+        # They are counted separately rather than folded into `bad`: `bad` is reported
+        # as "mismatching functions" and a data claim contributes no function to it.
+        # `passed` gains the new counter explicitly rather than leaning on the module
+        # diff to stay red on its behalf -- one fact, one gate.
+        for rel, name, addr, end in entry_sections:
+            if not rel.startswith("src/") or name in (".text", ".init"):
+                continue
+            size = end - addr
+            source_data_claims += 1
+            lo, hi = addr - base, end - base
+            row = {"module": label, "name": pathlib.Path(rel).stem, "addr": addr,
+                   "size": size, "kind": "data", "section": name}
+            if lo < 0 or hi > len(retail) or hi > len(built):
+                bad_data_claims += 1
+                bad_data_bytes += size
+                failures.append({**row,
+                                 "reason": "range outside built or retail module"})
+                per_module_bad[label] += 1
+                continue
+            nd = sum(1 for x, y in zip(built[lo:hi], retail[lo:hi]) if x != y)
+            if nd:
+                bad_data_claims += 1
+                bad_data_bytes += size
+                differing_source_bytes += nd
+                failures.append({**row, "differingBytes": nd})
+                per_module_bad[label] += 1
+            else:
+                reproducing_data_claims += 1
+                reproducing_data_bytes += size
 
     total_functions, total_code_bytes = _code_totals(config_root)
     compared_module_bytes = sum(m["comparedBytes"] for m in module_results)
@@ -310,7 +355,8 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     compiled_functions = source_functions + mod_functions
     compiled_bytes = source_bytes + mod_bytes
     mods_applied = all(m["differingBytes"] > 0 for m in intentional) if intentional else True
-    passed = bool(module_results) and not bad and not missing_bins and not unexpected_module_bytes \
+    passed = bool(module_results) and not bad and not bad_data_claims \
+        and not missing_bins and not unexpected_module_bytes \
         and (profile != "mods" or mods_applied)
 
     return {
@@ -368,6 +414,15 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "mismatchingFunctions": bad,
             "mismatchingFunctionBytes": bad_function_bytes,
             "differingSourceBytes": differing_source_bytes,
+            # Non-text src/-owned claims, kept as their own counters: they carry no
+            # functions, so folding them into mismatchingFunctions would report a
+            # function count that no function is behind. differingSourceBytes is
+            # shared, because a differing byte is a differing byte either way.
+            "sourceDataClaims": source_data_claims,
+            "reproducingDataClaims": reproducing_data_claims,
+            "reproducingDataClaimBytes": reproducing_data_bytes,
+            "mismatchingDataClaims": bad_data_claims,
+            "mismatchingDataClaimBytes": bad_data_bytes,
         },
         "intentionalMods": intentional,
         "modsApplied": mods_applied,
@@ -391,6 +446,13 @@ def print_report(report, show=12):
           f"{sf['sourceBytesPercent']:.2f}%)")
     print(f"  reproducing: {sf['reproducingFunctions']:,}")
     print(f"  mismatching: {sf['mismatchingFunctions']:,}")
+    if sf.get("sourceDataClaims"):
+        # Only printed when such a claim exists, so the stock line is unchanged while
+        # the count is zero -- but once one exists, a mismatch in it must be as visible
+        # as a mismatching function, not buried in the module byte delta.
+        print(f"source-owned data claims: {sf['sourceDataClaims']:,}  "
+              f"(reproducing {sf.get('reproducingDataClaims', 0):,}, "
+              f"mismatching {sf.get('mismatchingDataClaims', 0):,})")
     print(f"module fidelity: {mf['modulesExact']}/{mf['modulesChecked']} exact, "
           f"{mf['percent']:.6f}% of compared bytes")
     mc = report.get("moduleComposition")
@@ -406,7 +468,8 @@ def print_report(report, show=12):
     if report["missingModuleBinaries"]:
         print(f"missing module binaries: {report['missingModuleBinaries'][:8]}")
     for f in report["failures"][:show]:
-        print(f"  {f['module']:26s} {f['name']:44s} 0x{f['addr']:08x} "
+        tag = f" {f['section']}" if f.get("kind") == "data" and f.get("section") else ""
+        print(f"  {f['module']:26s} {f['name'] + tag:44s} 0x{f['addr']:08x} "
               f"size 0x{f['size']:<5x} {f.get('differingBytes', f.get('reason'))}")
     print(f"ROM-build analysis: {'PASS' if report['passed'] else 'FAIL'}")
 
@@ -425,8 +488,14 @@ def main():
     report = analyze(args.config_root, args.profile, args.build_root)
     print_report(report, args.show)
     if args.out:
+        # Code rows only. This file is a list of FUNCTION names -- rombuild_versions.py
+        # feeds it straight into a per-function compiler-version sweep -- and a data
+        # claim's path stem names no function, so putting one here would send the sweep
+        # after a symbol that does not exist. The data rows are not lost: they are in
+        # the printed report, in --json, and they make `passed` False on their own.
         pathlib.Path(args.out).write_text(
-            "\n".join(sorted(f["name"] for f in report["failures"])) + "\n",
+            "\n".join(sorted(f["name"] for f in report["failures"]
+                             if f.get("kind", "code") != "data")) + "\n",
             encoding="utf-8", newline="\n")
     if args.json:
         pathlib.Path(args.json).write_text(
