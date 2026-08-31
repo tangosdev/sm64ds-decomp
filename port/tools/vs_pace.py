@@ -243,7 +243,83 @@ def arm_pair(name, a, relay, input_delay, code):
                 report_p=report_line(tp), report_c=report_line(tc))
 
 
-ARMS = ["solo1", "solo2", "local0", "local", "live0", "live"]
+# ---------------------------------------------------------------------------
+# THE ENTRY-PATH ARMS (run vsdec, lane PACE)
+# ---------------------------------------------------------------------------
+# WHY A SOLO ARM IN A VS PACING FILE, and it is not filler. Every arm above
+# boots by ENVIRONMENT -- SM64DS_VS_MAP, or SM64DS_LEVEL through env_base --
+# and so does every other pacing measurement in this tree. A player's boot
+# does not. Since the boot-to-title ruling a bare launch comes up on the TITLE,
+# and reaching the adventure means picking a save file, which hands the game to
+# the level boot IN-PROCESS through hal/title_entry.cpp. That is a different
+# path through the port's bring-up and NOTHING HAD EVER MEASURED IT.
+#
+# What was hiding there: the frame divider (data_0208ee44, the ROM's own
+# vblanks-per-tick word the pacer takes its budget from) was written from the
+# shared half of hal/level_boot.cpp's port_a2_seat_body, which runs ONCE PER
+# PROCESS. On the title path the title seats it first and then writes 1 for
+# itself -- correct, a 2D menu runs at 60 on the DS -- and the fall-through
+# takes the seat's early return and never puts 2 back. The adventure paced at
+# 60 fps: EXACTLY DOUBLE SPEED, reported from the owner's own session, invisible
+# to all six arms above because they boot by environment.
+#
+# So these two arms are a matched pair and only mean anything together: the
+# SAME binary and the SAME destination (level 1, castle grounds -- which is
+# where StartFile's own LoadLevelNoReturn(1, 0, 1, 0) sends a save-file pick),
+# reached two ways. If they ever disagree on `divider` again, a per-entry
+# statement has been filed as once-per-process bring-up for the third time.
+#
+#     entry_env     SM64DS_LEVEL=1, the boot every other arm here uses
+#     entry_title   the owner's: title -> file select -> save file -> adventure
+#
+# THE TAPS ARE THE ROM'S OWN MENU, not a shortcut around it. SM64DS_SKIP_MENU
+# drives the title screen and the menu row through the ROM's own gates
+# (hal/title_entry.cpp's port_title_skip_tick), and A/B/C are deliberately left
+# to the player there -- so the two taps below are the file box and the confirm,
+# at DS pixels read out of the ROM's own element boxes with SM64DS_TITLE_ELEMS.
+# The frames are late rather than tight on purpose: the file select arrives on
+# the chain's own transition around f494 and a tap into a page that is still
+# building is a search, not a measurement.
+TITLE_TAPS = "720-722:128:114,800-802:128:168"
+TITLE_SCENE_FRAMES = 1200
+
+
+def entry_env(run_dir, tag, frames):
+    """A paced, traced, quiet, muted SOLO selftest on the level path."""
+    e = M.env_base(ROOT, run_dir, tag)     # names SM64DS_LEVEL=1
+    e["SM64DS_WINDOW_SELFTEST"] = str(frames)
+    e["SM64DS_PACE_SELFTEST"] = "1"
+    e["SM64DS_TRACE_PACE"] = "1"
+    return e
+
+
+def arm_entry(name, a, title):
+    d = os.path.join(OUT, name)
+    os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+    e = entry_env(d, name, a.frames)
+    if title:
+        # The ROM's own StartFile names the level; carrying a second one would
+        # make the arm prove less than it looks like it proves.
+        e.pop("SM64DS_LEVEL", None)
+        e["SM64DS_SCENE"] = "1"
+        e["SM64DS_TITLE_ENTRY"] = "1"
+        e["SM64DS_SCENE_FRAMES"] = str(TITLE_SCENE_FRAMES)
+        e["SM64DS_SKIP_MENU"] = "1"
+        e["SM64DS_TOUCH_PROBE"] = TITLE_TAPS
+    log = os.path.join(d, "run.log")
+    rc = M.finish(M.spawn(EXE, d, e, log), a.timeout)
+    t = M.text(log)
+    entered = "ENTERING THE ADVENTURE" in t
+    if title and not entered:
+        print("   the title never handed over -- the taps missed, so this arm "
+              "measured the TITLE and not the adventure. Re-read the boxes "
+              "with SM64DS_TITLE_ELEMS rather than trusting the number.")
+    return dict(rcs=[rc], rows=windows(t), texts=[t], dirs=[d],
+                entered=entered)
+
+
+ARMS = ["solo1", "solo2", "local0", "local", "live0", "live",
+        "entry_env", "entry_title"]
 
 
 def main():
@@ -304,6 +380,8 @@ def main():
                 r = arm_pair(name, a, a.relay,
                              0 if name.endswith("0") else a.delay,
                              (a.code + "W" + name[-1])[:8])
+            elif name in ("entry_env", "entry_title"):
+                r = arm_entry(name, a, name == "entry_title")
             else:
                 print("   unknown arm, skipped")
                 continue
@@ -326,18 +404,18 @@ def main():
             proc._logfile.close()
 
     # ---- the table -------------------------------------------------------
-    hdr = ("%-8s %7s %7s %8s %8s %8s %8s %8s %7s"
+    hdr = ("%-12s %7s %7s %8s %8s %8s %8s %8s %7s"
            % ("arm", "fps", "avg", "p50", "p95", "p95wst", "max", "budget",
               "starved"))
     lines = [hdr, "-" * len(hdr)]
     for name in want:
         r = results.get(name)
         if not r or not r["s"]:
-            lines.append("%-8s  no [fps] windows" % name)
+            lines.append("%-12s  no [fps] windows" % name)
             continue
         s = r["s"]
         st = num(r.get("report_c", ""), "starved", int, -1)
-        lines.append("%-8s %7.2f %7.2f %8.2f %8.2f %8.2f %8.2f %8.2f %7s"
+        lines.append("%-12s %7.2f %7.2f %8.2f %8.2f %8.2f %8.2f %8.2f %7s"
                      % (name, s["fps"], s["avg"], s["p50"], s["p95"],
                         s["p95_worst"], s["max"], s["budget"],
                         st if st >= 0 else "-"))
