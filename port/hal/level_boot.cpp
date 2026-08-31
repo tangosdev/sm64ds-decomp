@@ -2176,9 +2176,12 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
    AND THE ROM ALREADY DECIDES. _Z19LoadEntranceObjects...'s loop is four
    lines: f2 = data_0209caa0[0x41], the save file's one character, unless
    data_0209f2d8 == 1 -- VS -- in which case f2 and f1 are both forced to 3,
-   Yoshi, for EVERY slot, and the players are told apart by COLOUR (see the VS
-   mode seat further down this file, and hal/fs_mods.cpp's built-in Yoshi
-   colours note). The rule is the ROM's, it is four lines long, and the one
+   Yoshi, for EVERY slot, and the players are told apart by COLOUR (see
+   hal/fs_mods.cpp's built-in Yoshi colours note). That arm is reached the way
+   the cartridge reaches it -- PrepareVsMode, then one of the four arenas --
+   and NOT by the port setting the mode byte on an adventure level; see the
+   retirement note at the a2 seat further down this file for why that was
+   tried and reverted. The rule is the ROM's, it is four lines long, and the
    place the port has to reproduce it -- the stand-in spawn for slots the
    level's entrance table cannot seat -- now spells it inline rather than
    consulting a table of the port's own. */
