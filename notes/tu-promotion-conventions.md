@@ -165,18 +165,51 @@ ground truth to meet it:
    address point. Changing it to make an addend resolve reinterprets the symbol table.
 2. **Do not widen or shift the promoted `complete` range in `delinks.txt`** so a data
    symbol falls inside or outside it.
-3. **Do not delete a neighbouring `data_<module>_<addr>` entry** because a gate complains
-   about overlap.
+3. **Do not delete a neighbouring `data_<module>_<addr>` entry _to silence a gate_.**
+   Deleting one is sometimes *required* — see the second nuance below. The test is not
+   "was an entry dropped" but "is the entry unkeepable".
 
 A green gate does not distinguish the right approach from the wrong one here. A reviewer
 must check three facts directly: (a) the `symbols.txt` `_ZTV` address is unchanged; (b)
 the promoted `complete` span in `delinks.txt` covers exactly the promoted functions;
-(c) no neighbouring data or bss entry was dropped.
+(c) any dropped neighbouring data or bss entry is *unkeepable* — proven by restoring it and
+watching the link fail, not by argument.
 
 **One nuance, because the census contradicts the blunt form of rule 1.** *Renaming* a
 `_ZTV` symbol at an unchanged address is legitimate and has landed: #2045 changed
 `_ZTV13InvisiblePole` to `_ZTV7daBar_c` at `0x02108480`. The anti-pattern is moving the
 address, not renaming the symbol.
+
+**Second nuance, and it inverts rule 3 in one specific case.** A promotion that makes the TU
+supply the vtable *storage* will find a delinker-invented placeholder sitting 8 bytes below
+the address point — at the offset-to-top word. That entry is not merely droppable, it is
+**unkeepable**, and the promotion cannot link while it exists.
+
+Measured on `ov047/daObjKm3_Kurumajiku_c`, whose `_ZTV21daObjKm3_Kurumajiku_c` address point
+is `0x021122a0` and whose placeholder `data_ov047_02112298` sits at the storage start.
+Restoring the placeholder on top of the promotion and rebuilding produces a **new** symbol
+error, beyond the pre-existing baseline set:
+
+    [ERROR] Symbol 'data_ov047_02112298' in overlay 47
+            at 0x02112298 not found in linked binary
+
+Once the TU supplies those 8 bytes, `0x02112298` is the storage start of the
+compiler-emitted vtable, and no symbol of that name exists in the linked binary at all.
+`dsd check symbols --fail` rejects it. The placeholder was a delinker-invented name for
+cartridge bytes that are no longer cartridge bytes.
+
+**How to tell the two cases apart, without trusting a gate.** An entry deleted to silence a
+gate makes some metric *better*. An unkeepable entry usually makes one *worse*, because the
+dropped name was doing real work as a span boundary. In this promotion, keeping the entry
+would bound `RickshawBs_SpawnInfo` at `0x02112298 - 0x0211227c = 28`, exactly its emitted
+size, scoring it VERIFIED; dropping it pushes the next configured symbol out to the `_ZTV`
+at `0x021122a0`, giving `romExtent 36 > emitted 28` and scoring it PARTIAL. The verified
+count falls by one. Nobody deletes a line to make a metric worse — so a drop that *costs* a
+verified symbol is evidence for legitimacy, not against it.
+
+So the reviewer's question is not "was an entry dropped". It is: **restore it and rebuild.**
+If the link fails with a new symbol error, the drop was required. If the build still passes,
+the entry was keepable and the drop needs a different justification.
 
 ---
 
@@ -260,7 +293,8 @@ the queue as a chain, not a fan.
 2. Exactly one `extern int _ZTV<C>[];`, in the TU source at namespace scope, no
    `extern "C"` block, and the store spelled `*(int *)p = (int)&_ZTV<C>[2];`.
 3. The `_ZTV` address in `symbols.txt` is unchanged; the `complete` span covers exactly
-   the promoted functions; no neighbouring data or bss entry was dropped.
+   the promoted functions; and any dropped neighbouring data or bss entry was shown to be
+   unkeepable by the restore test.
 4. Every renamed `func_<module>_<addr>` declaration is gone from `include/decl_common.h`.
 5. No comment in the diff names a file the diff deletes.
 6. The PR is alone in the ledger queue, and the baseline was regenerated rather than
