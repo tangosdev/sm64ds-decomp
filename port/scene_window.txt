@@ -130,6 +130,21 @@ the windowed path has to size a window before begin() runs) and
 port_scene_framebuffer (the finished frame, const, so the windowed loop can
 present it without becoming a second writer of it).
 
+AND A THIRD SINCE, run vsdec lane LAY. The paragraph above rests on a premise
+that was true when it was written and stopped being true with the boot-to-title
+ruling: that a process shows ONE KIND OF SCENE, because every crossing from one
+to another was a relaunch. hal/title_entry.cpp carries the title into the
+adventure in place, and with only the setter above, the adventure inherited the
+title's STACKED window and kept it for the whole session -- the owner's report,
+"the game never swapped from top bottom to the full screen minimap style".
+
+hal_sub_screen_relatch is the second door: a scene-boundary re-decide, taken by
+walk_window.cpp's host_layout_follow_scene and by nothing else, which also drops
+the stale stacked present source, re-arms the DIB generation watch and re-shapes
+the window. SM64DS_DUAL_SCREEN still disposes in both directions, and
+hal_sub_screen_set_stacked still refuses a late write, because a late write is
+still a call-order mistake. Nothing below this line changed.
+
 2b. THE HOST'S FRAME BELONGS TO walk_window.cpp
 
 That is the division the level path already has, and the windowed scene loop

@@ -1238,6 +1238,12 @@ void hal_sub_screen_stacked_size(int *w, int *h);
    overlay painted into engine A's buffer moves with the engine. */
 int hal_sub_screen_stacked_top_y(void);
 unsigned hal_sub_screen_stacked_generation(void);
+/* THE SCENE-BOUNDARY RE-LATCH (hal/sub_screen.cpp). The mode latches on its
+   first reader, which is right for a process that shows one kind of scene, and
+   this process no longer always does: the title carries into the adventure in
+   place. Called by host_layout_follow_scene below and by nothing else; returns
+   1 when the answer moved and the window has to be re-shaped to it. */
+int hal_sub_screen_relatch(int on);
 /* the focus gate (hal/sub_screen.cpp): 1 when this window is the foreground
    one, so an interactive key read can be trusted to be meant for this program */
 int hal_window_focused(void);
@@ -5458,6 +5464,109 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
     g_present_stack_bi = &g_bi_stack;
 }
 
+/* ---- THE IN-PROCESS HANDOVER'S RE-DERIVE POINT (run vsdec, lane LAY) -------
+ *
+ * THE PRESENTATION FOLLOWS THE LIVE SCENE, and until the boot-to-title ruling
+ * it did not have to: every crossing from one kind of scene to another was a
+ * RELAUNCH (port_menu_relaunch and port_menu_relaunch_vs above), so the window
+ * and the mode were chosen together at process start and could not disagree
+ * with what was on screen. hal/title_entry.cpp added the first crossing that
+ * stays in the process, on purpose -- a child would lose the save the player
+ * just picked -- and everything the old flow got free from process creation had
+ * to be found and re-derived by hand. This is the presentation's share of that.
+ *
+ * IT IS A FAMILY AND THIS IS ONE MEMBER. The star freeze was another (per-boot
+ * InitResources statements that never re-ran), and the frame pacer is a third.
+ * They share one shape: state that is correct once per PROCESS, on a path that
+ * now changes scene without one. Anything on the WINDOW side that has to be
+ * re-derived when the scene under it is replaced belongs in this function.
+ * Game-side state usually has a truer home: a statement the ROM runs per boot
+ * or per stage belongs at that seat (the frame-pacer fix moved its divider
+ * write into the per-stage seat in level_boot.cpp for exactly this reason);
+ * only game-side state with no ROM seat of its own should ride the one call
+ * site below. One named place beats three scattered fix-ups.
+ *
+ * WHAT IT DOES, in the order it has to be done:
+ *
+ *   1. RE-DECIDE. hal_sub_screen_relatch takes the new scene's proposal and
+ *      answers whether the mode moved; SM64DS_DUAL_SCREEN still overrides, so
+ *      a pinned run is pinned across the boundary too.
+ *   2. DROP THE OLD SOURCE. present() reads g_present_stack whenever it is set,
+ *      including from a WM_PAINT during the next scene's bring-up, and in the
+ *      inset layout nothing ever calls stack_present_arm to clear it -- the
+ *      loops gate that call on their own `stacked`. Left standing it is a
+ *      frozen picture of the last title frame, presented forever.
+ *   3. RE-ARM THE SHAPE WATCH. g_stack_gen remembers which generation the DIB
+ *      header was built for. A run that goes back to stacked later must see the
+ *      first arm as a change, which is the same reasoning stack_present_arm's
+ *      own was_h note carries.
+ *   4. RE-SHAPE THE WINDOW, to the client size host_window_open would have
+ *      opened for this mode. Same three refusals as the grow path above: a
+ *      window the player sized, a fullscreen window and a run with no window
+ *      keep what they have, and the fit letterboxes rather than snapping a
+ *      hand-chosen size back to this program's idea of correct.
+ *
+ * THE TOP-LEFT STAYS PUT (SWP_NOMOVE), which is the grow path's rule and is
+ * kept here rather than re-centring, for its reason: a window is where the
+ * player left it, and a program that re-centres on a scene change moves a
+ * window somebody put somewhere.
+ *
+ * AND WINDOWS DROPS THE RESIZE WHILE THE WINDOW IS MINIMIZED. Measured on a
+ * throwaway window rather than reasoned about: SetWindowPos with these three
+ * flags on a SW_SHOWMINNOACTIVE window leaves both the current rect and the
+ * restored rect exactly as they were, so a swap that happens while the window
+ * is in the taskbar comes back at the old shape. It is left that way on
+ * purpose. Nobody can pick a save file in a minimized window, so the swap
+ * arrives minimized only if somebody minimized it during the level bring-up;
+ * the cost is a window the wrong shape and NOT a picture the wrong shape,
+ * because present() fits whatever image is live into whatever client area
+ * exists and letterboxes the rest. The existing grow path above has the same
+ * property and has had it since it landed. Written down so the next reader
+ * meets it as a known edge rather than as a fresh bug.
+ */
+static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what)
+{
+    if (!hal_sub_screen_relatch(two_screen)) {
+        /* Says the LIVE answer rather than "no change", because 0 covers two
+           cases -- the mode was already what this scene wants, and the mode has
+           not been handed out yet so the proposal is all there is -- and a line
+           that named neither would be unreadable on the run where it matters. */
+        fprintf(stderr, "[present] %s shows %s; nothing to re-shape\n", what,
+                hal_sub_screen_stacked() ? "STACKED, both DS screens full size"
+                                         : "the corner inset panel");
+        fflush(stderr);
+        return;
+    }
+    const int stacked = hal_sub_screen_stacked();
+    g_present_stack = 0;
+    g_present_stack_bi = 0;
+    g_stack_gen = ~0u;
+
+    int cw = ntr::SCREEN_W * ZOOM, ch = ntr::SCREEN_H * ZOOM;
+    if (stacked) hal_sub_screen_stacked_size(&cw, &ch);
+    if (hwnd && !g_user_sized && !g_fullscreen && W.AdjustWindowRect_ &&
+        W.SetWindowPos_ && W.GetWindowLongA_) {
+        RECT want = {0, 0, cw, ch};
+        const LONG style = W.GetWindowLongA_(hwnd, GWL_STYLE);
+        W.AdjustWindowRect_(&want, (DWORD)style, FALSE);
+        W.SetWindowPos_(hwnd, 0, 0, 0, want.right - want.left,
+                        want.bottom - want.top,
+                        0x0002u | 0x0004u | (nofocus_mode() ? 0x0010u : 0u));
+        fprintf(stderr, "[present] %s shows %s; the window client area "
+                "follows (%dx%d)\n", what,
+                stacked ? "STACKED, both DS screens full size"
+                        : "the corner inset panel", cw, ch);
+    } else {
+        fprintf(stderr, "[present] %s shows %s; the window keeps the size it "
+                "has (%s)\n", what,
+                stacked ? "STACKED, both DS screens full size"
+                        : "the corner inset panel",
+                !hwnd ? "no window" : g_user_sized ? "the player chose it"
+                                                   : "fullscreen");
+    }
+    fflush(stderr);
+}
+
 /* camera folded into the GX projection matrix: P(perspective) * V(lookAt),
    built in floats and pushed as 4096-fixed.
    ITS CALLERS THINK IN WORLD UNITS and the frame is drawn in SCENE units
@@ -5690,9 +5799,16 @@ static int port_scene_want_window(void)
 
    Recorded unconditionally and read only when port_title_entry_taken() says
    the fall-through happened, so an ordinary scene session sets two statics
-   nobody reads. The layout was latched by the scene runner (it is the one that
-   proposes), which is why main's own latch comment still holds: the window is
-   created once and the mode with it. */
+   nobody reads.
+
+   THE LAYOUT NO LONGER RIDES ALONG WITH IT, and the sentence that stood here
+   said it did: "the layout was latched by the scene runner, which is why main's
+   own latch comment still holds -- the window is created once and the mode with
+   it". The first half is still true and the conclusion was the defect. The
+   title is a two-screen scene and the adventure is not, so a window handed
+   forward unchanged handed the adventure the title's stacked shape and kept it
+   for the session. main re-derives the mode at the fall-through now and
+   re-shapes THIS window to it; see host_layout_follow_scene. */
 static HWND g_entry_hwnd;
 static HDC  g_entry_hdc;
 
@@ -6254,6 +6370,20 @@ int main(void)
             return scene_rc;
         fprintf(stderr, "[title-entry] scene run over; falling through to the "
                         "level boot in this process\n");
+        /* AND THE PRESENTATION FOLLOWS IT. The title is a two-screen scene and
+           says so (hal/scene_boot.cpp's port_scene_layout_propose names it
+           beside the minigames, on the owner's ruling); an adventure is the
+           corner inset panel, which is what a level has always been and what
+           every relaunching crossing gets by starting a process. This crossing
+           does not start one, so the swap is made here, by hand, at the one
+           point where the scene under the window is replaced. See
+           host_layout_follow_scene's banner for the family this belongs to.
+
+           g_entry_hwnd is the title's own window when there was one and null on
+           a headless title run, which is the right argument either way: with no
+           window there is nothing to re-shape and the mode still has to move,
+           because the level path reads it below. */
+        host_layout_follow_scene(g_entry_hwnd, 0, "the adventure");
     }
 
     /* THE GAME'S OWN LEVEL BOOT: ov009 mounted,
@@ -6981,7 +7111,15 @@ int main(void)
        and the frame permanently out of step. On the LEVEL path the answer can
        only ever come from SM64DS_DUAL_SCREEN, because nothing proposes on a
        level; a minigame's own default is proposed in the scene runner, which
-       main hands over to well above this line. */
+       main hands over to well above this line.
+
+       ONE ROUTE REACHES THIS LINE WITH THE MODE ALREADY DECIDED BY A SCENE, and
+       it is the title-entry fall-through: the title proposed stacked, a window
+       was opened to it, and the adventure is arriving in that window. That
+       route re-derives the mode and re-shapes the window at the fall-through,
+       above, and by this line the answer is the level's own again. Nothing in
+       this block changed; what changed is that the value it reads is no longer
+       necessarily the first one anybody asked for. */
     const int stacked = hal_sub_screen_stacked();
     HDC hdc = 0;
     HWND hwnd = 0;
