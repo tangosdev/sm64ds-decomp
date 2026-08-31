@@ -86,6 +86,7 @@ extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self);
 /* -------------------------------------------------------------------------- */
 /* Natural new targets the global allocator and cannot reproduce the actor
  * allocation/construction relocations. Keep this typed C-ABI factory seam. */
+// @symbol FlyingCarpet_Spawn
 extern "C" daObjRcCarpet_c *FlyingCarpet_Spawn()
 {
     daObjRcCarpet_c *actor =
@@ -117,6 +118,7 @@ extern "C" FlyingCarpetSpawnInfo FlyingCarpet_SpawnInfo = {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- InitResources, 0x0211244c, size 0xec */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjRcCarpet_c13InitResourcesEv
 int daObjRcCarpet_c::InitResources()
 {
     Model::LoadFile(data_ov002_0210d9f0);
@@ -147,6 +149,7 @@ int daObjRcCarpet_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- Behavior, 0x021123c8, size 0x84 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjRcCarpet_c8BehaviorEv
 int daObjRcCarpet_c::Behavior()
 {
     if (mAfterClsnRan)
@@ -164,6 +167,7 @@ int daObjRcCarpet_c::Behavior()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- Render, 0x02112378, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjRcCarpet_c6RenderEv
 int daObjRcCarpet_c::Render()
 {
     if (mWaitTimer < 0x5a && (mWaitTimer & 1))
@@ -175,6 +179,7 @@ int daObjRcCarpet_c::Render()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- CleanupResources, 0x02112318, size 0x60 */
 /* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjRcCarpet_c16CleanupResourcesEv
 int daObjRcCarpet_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -189,6 +194,7 @@ int daObjRcCarpet_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov036_021122c0, 0x021122c0, size 0x58 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov036_021122c0
 extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self)
 {
     Matrix4x3_FromRotationXYZExt(
@@ -206,6 +212,7 @@ extern "C" void func_ov036_021122c0(daObjRcCarpet_c *self)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov036_0211224c, 0x0211224c, size 0x74 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov036_0211224c
 extern "C" void func_ov036_0211224c(daObjRcCarpet_c *self)
 {
     *(M4x3Flat *)&self->mClsnMat =
