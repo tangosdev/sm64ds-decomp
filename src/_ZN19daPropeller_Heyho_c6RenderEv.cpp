@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN6FlyGuy6RenderEv
+// @symbol _ZN19daPropeller_Heyho_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 struct Obj {
     virtual void m0();
     virtual void m1();
@@ -11,7 +11,7 @@ struct Obj {
     virtual void Target(int);
 };
 
-int FlyGuy::Render()
+int daPropeller_Heyho_c::Render()
 {
     int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;

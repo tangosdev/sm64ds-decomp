@@ -1,5 +1,5 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov070/FlyGuy (27 function(s)).
+/* HAND-ASSEMBLED translation unit -- ov070/daPropeller_Heyho_c (27 function(s)).
  * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
  * so this is a raw concatenation of the complete legacy files in REVERSE
  * ROM order (mwccarm emits one .text section per function in the reverse
@@ -7,8 +7,8 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211f000  src/_ZN6FlyGuyD1Ev.cpp
- *   [1] 0x0211f048  src/_ZN6FlyGuyD0Ev.cpp
+ *   [0] 0x0211f000  src/_ZN19daPropeller_Heyho_cD1Ev.cpp
+ *   [1] 0x0211f048  src/_ZN19daPropeller_Heyho_cD0Ev.cpp
  *   [2] 0x0211f0a4  src/func_ov070_0211f0a4.cpp
  *   [3] 0x0211f100  src/func_ov070_0211f100.cpp
  *   [4] 0x0211f368  src/func_ov070_0211f368.cpp
@@ -25,16 +25,47 @@
  *   [15] 0x0211ffa8  src/func_ov070_0211ffa8.cpp
  *   [16] 0x02120020  src/FlyGuy_ChangeState.cpp
  *   [17] 0x02120070  src/func_ov070_02120070.cpp
- *   [18] 0x02120150  src/_ZN6FlyGuy16CleanupResourcesEv.cpp
- *   [19] 0x021201bc  src/_ZN6FlyGuy16OnPendingDestroyEv.cpp
- *   [20] 0x021201c0  src/_ZN6FlyGuy6RenderEv.cpp
- *   [21] 0x02120210  src/_ZN6FlyGuy8BehaviorEv.cpp
- *   [22] 0x021203b4  src/_ZN6FlyGuy13InitResourcesEv.cpp
- *   [23] 0x021204e4  src/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp
- *   [24] 0x021204ec  src/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp
- *   [25] 0x02120518  src/_ZN6FlyGuy13OnYoshiTryEatEv.cpp
+ *   [18] 0x02120150  src/_ZN19daPropeller_Heyho_c16CleanupResourcesEv.cpp
+ *   [19] 0x021201bc  src/_ZN19daPropeller_Heyho_c16OnPendingDestroyEv.cpp
+ *   [20] 0x021201c0  src/_ZN19daPropeller_Heyho_c6RenderEv.cpp
+ *   [21] 0x02120210  src/_ZN19daPropeller_Heyho_c8BehaviorEv.cpp
+ *   [22] 0x021203b4  src/_ZN19daPropeller_Heyho_c13InitResourcesEv.cpp
+ *   [23] 0x021204e4  src/_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv.cpp
+ *   [24] 0x021204ec  src/_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player.cpp
+ *   [25] 0x02120518  src/_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv.cpp
  *   [26] 0x02120520  src/FlyGuy_Spawn.c
  */
+
+/* The cartridge preserves this descriptor's C-ABI symbol but not its source
+ * spelling.  Keep that evidence-bounded alias while giving the table its real
+ * field layout; all seven scalar words and the factory relocation are covered
+ * by the TU's data claim. */
+extern "C" int *FlyGuy_Spawn(void);
+
+struct PropellerHeyhoSpawnInfo {
+    int *(*spawn)();
+    short behaviorPriority;
+    short renderPriority;
+    unsigned flags;
+    int rangeOffsetY;
+    int range;
+    int drawDistance;
+    int untrackDistance;
+};
+
+typedef char PropellerHeyhoSpawnInfo_size_must_be_0x1c[
+    sizeof(PropellerHeyhoSpawnInfo) == 0x1c ? 1 : -1];
+
+extern "C" PropellerHeyhoSpawnInfo FlyGuy_SpawnInfo = {
+    FlyGuy_Spawn,
+    0x00e8,
+    0x0057,
+    0x10000003,
+    0x00064000,
+    0x000c8000,
+    0x01000000,
+    0x01000000
+};
 
 struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy; this form keeps the C front end's ldm/stm block copy */
 struct V3h { short h[3]; };
@@ -53,13 +84,13 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV6FlyGuy */
+/* resolved: VT0 = _ZTV19daPropeller_Heyho_c */
 int *FlyGuy_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1000);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)&_ZTV6FlyGuy[2]; /* +8: this TU defines the vtable */
+        p[0] = (int)&_ZTV19daPropeller_Heyho_c[2]; /* +8: this TU defines the vtable */
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);
@@ -70,52 +101,52 @@ int *FlyGuy_Spawn(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN6FlyGuy13OnYoshiTryEatEv, 0x02120518, size 0x8 */
+/* ROM ordinal 25 -- _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv, 0x02120518, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy13OnYoshiTryEatEv
-#include "FlyGuy.h"
+// @symbol _ZN19daPropeller_Heyho_c13OnYoshiTryEatEv
+#include "daPropeller_Heyho_c.h"
 /* recovered: renamed to Class_Method */
-s32 FlyGuy::OnYoshiTryEat() {
+s32 daPropeller_Heyho_c::OnYoshiTryEat() {
     return 5;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN6FlyGuy13OnTurnIntoEggER6Player, 0x021204ec, size 0x2c */
+/* ROM ordinal 24 -- _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player, 0x021204ec, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy13OnTurnIntoEggER6Player
+// @symbol _ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player
 // recovered name: FlyGuy_OnTurnIntoEgg
 /* daPropeller_Heyho_c::OnTurnIntoEgg -- vtable slot 19, verified against ov070
- * relocs.txt: _ZTV6FlyGuy (0x02123168) + 0x4c -> 0x021204ec, exactly this
+ * relocs.txt: _ZTV19daPropeller_Heyho_c (0x02123168) + 0x4c -> 0x021204ec, exactly this
  * placeholder's former address (former name func_ov070_021204ec).
  * Matched byte-for-byte with mwccarm 2004/b56 (ov070).
  */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 #include "Player.h"
 
-int FlyGuy::OnTurnIntoEgg(Player &player)
+int daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN6FlyGuy16OnAimedAtWithEggEv, 0x021204e4, size 0x8 */
+/* ROM ordinal 23 -- _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv, 0x021204e4, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy16OnAimedAtWithEggEv
-#include "FlyGuy.h"
+// @symbol _ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv
+#include "daPropeller_Heyho_c.h"
 // recovered name: FlyGuy_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daPropeller_Heyho_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-s32 FlyGuy::OnAimedAtWithEgg() {
+s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
     return 176128;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN6FlyGuy13InitResourcesEv, 0x021203b4, size 0x130 */
+/* ROM ordinal 22 -- _ZN19daPropeller_Heyho_c13InitResourcesEv, 0x021203b4, size 0x130 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy13InitResourcesEv
+// @symbol _ZN19daPropeller_Heyho_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 extern SharedFilePtr data_ov070_02123530;
 extern SharedFilePtr data_ov070_02123520;
@@ -135,7 +166,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* se
 extern int FlyGuy_ChangeState(void* c, void* p);
 }
 
-int FlyGuy::InitResources()
+int daPropeller_Heyho_c::InitResources()
 {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov070_02123530), 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
@@ -160,16 +191,16 @@ int FlyGuy::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN6FlyGuy8BehaviorEv, 0x02120210, size 0x1a4 */
+/* ROM ordinal 21 -- _ZN19daPropeller_Heyho_c8BehaviorEv, 0x02120210, size 0x1a4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy8BehaviorEv
+// @symbol _ZN19daPropeller_Heyho_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 
 /* This file used to open with `struct dEnemyBase_c { char pad[0x800]; };` and work a
- * `char *c` through raw offsets. FlyGuy.h now supplies the real chain, so the
+ * `char *c` through raw offsets. daPropeller_Heyho_c.h now supplies the real chain, so the
  * stand-in is gone and every offset is a named field.
  *
  * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
@@ -180,7 +211,7 @@ extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, d
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
-int FlyGuy::Behavior()
+int daPropeller_Heyho_c::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
@@ -255,11 +286,11 @@ int FlyGuy::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN6FlyGuy6RenderEv, 0x021201c0, size 0x50 */
+/* ROM ordinal 20 -- _ZN19daPropeller_Heyho_c6RenderEv, 0x021201c0, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy6RenderEv
+// @symbol _ZN19daPropeller_Heyho_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 struct Obj {
     virtual void m0();
     virtual void m1();
@@ -269,7 +300,7 @@ struct Obj {
     virtual void Target(int);
 };
 
-int FlyGuy::Render()
+int daPropeller_Heyho_c::Render()
 {
     int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
@@ -279,23 +310,23 @@ int FlyGuy::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN6FlyGuy16OnPendingDestroyEv, 0x021201bc, size 0x4 */
+/* ROM ordinal 19 -- _ZN19daPropeller_Heyho_c16OnPendingDestroyEv, 0x021201bc, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy16OnPendingDestroyEv
+// @symbol _ZN19daPropeller_Heyho_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 
-void FlyGuy::OnPendingDestroy()
+void daPropeller_Heyho_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN6FlyGuy16CleanupResourcesEv, 0x02120150, size 0x6c */
+/* ROM ordinal 18 -- _ZN19daPropeller_Heyho_c16CleanupResourcesEv, 0x02120150, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuy16CleanupResourcesEv
+// @symbol _ZN19daPropeller_Heyho_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases the 7 shared file(s) InitResources claimed.
@@ -303,13 +334,13 @@ void FlyGuy::OnPendingDestroy()
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
 }
 
-int FlyGuy::CleanupResources()
+int daPropeller_Heyho_c::CleanupResources()
 {
     ((SharedFilePtr *)&data_ov070_02123530)->Release();
     ((SharedFilePtr *)&data_ov070_02123520)->Release();
@@ -1032,41 +1063,3 @@ extern "C" int func_ov070_0211f0a4(void *c) {
     _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(a, pos, coins, 0xa000, 0);
     a->KillAndTrackInDeathTable();
 }
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN6FlyGuyD0Ev, 0x0211f048, size 0x5c */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuyD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * D0 is the DELETING destructor: destroy through this class and its bases, then
- * return the object to its heap. Declaring `~FlyGuy()` is enough -- mwcc emits
- * D2, D0 and D1 together and objisolate keeps the one this file is bound to.
- *
- * The deallocation is an inline operator delete -- dEnemyBase_c's, reachable because
- * dEnemyBase_c is this class's IMMEDIATE base.
- */
-#include "FlyGuy.h"
-
-/* (no separate definition: the single ~FlyGuy() below emits the D0 and
- * D1 variants together; mwccarm orders the variant group itself.) */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN6FlyGuyD1Ev, 0x0211f000, size 0x48 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN6FlyGuyD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * One vtable store and a destructor call per member, every one a consequence of
- * `struct FlyGuy : dEnemyBase_c` and the members that declaration types, destroyed in
- * reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
- *
- * This body is the evidence for the header: each member's size closes exactly
- * on the next one's offset.
- */
-#include "FlyGuy.h"
-
-FlyGuy::~FlyGuy()
-{
-}
-

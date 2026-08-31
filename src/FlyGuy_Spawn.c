@@ -8,13 +8,13 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV6FlyGuy */
+/* resolved: VT0 = _ZTV19daPropeller_Heyho_c */
 int *FlyGuy_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1000);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV6FlyGuy;
+        p[0] = (int)_ZTV19daPropeller_Heyho_c;
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);

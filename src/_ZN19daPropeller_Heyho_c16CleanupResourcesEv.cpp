@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6FlyGuy16CleanupResourcesEv
+// @symbol _ZN19daPropeller_Heyho_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases the 7 shared file(s) InitResources claimed.
@@ -7,7 +7,7 @@
  * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
  * one and ignores it, which measured byte-free.
  */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -20,7 +20,7 @@ extern int data_ov070_02123508[];
 extern int data_ov070_02123500[];
 }
 
-int FlyGuy::CleanupResources()
+int daPropeller_Heyho_c::CleanupResources()
 {
     ((SharedFilePtr *)data_ov070_02123530)->Release();
     ((SharedFilePtr *)data_ov070_02123520)->Release();

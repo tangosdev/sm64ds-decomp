@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN6FlyGuy13InitResourcesEv
+// @symbol _ZN19daPropeller_Heyho_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlyGuy.h"
+#include "daPropeller_Heyho_c.h"
 #include "SharedFilePtr.h"
 typedef struct PMF PMF;
 extern SharedFilePtr data_ov070_02123530;
@@ -22,7 +22,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* se
 extern int FlyGuy_ChangeState(void* c, PMF* p);
 }
 
-int FlyGuy::InitResources()
+int daPropeller_Heyho_c::InitResources()
 {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov070_02123530), 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
