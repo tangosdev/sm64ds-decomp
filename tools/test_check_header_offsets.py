@@ -290,7 +290,7 @@ class GateStillWorksTests(unittest.TestCase):
     def test_a_real_tree_header_still_parses(self):
         """Guards the repo-root resolution added here: a relative path from --changed
         must be read against the repository, not the process cwd."""
-        self.assertEqual(C.main(["include/Amp.h"]), 0)
+        self.assertEqual(C.main(["include/Camera.h"]), 0)
 
     def test_the_cli_entry_point_still_returns_the_gates_verdict(self):
         r = subprocess.run([sys.executable, str(TOOLS / "check_header_offsets.py")],
