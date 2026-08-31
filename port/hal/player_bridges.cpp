@@ -406,6 +406,72 @@ static void yhd_probe(char *c, const int *scene, const char *head)
            yhd_sqrt(dtr), drot);
 }
 
+/* ---- THE VS COLOUR, AND WHY EVERY YOSHI WAS GREEN --------------------------
+
+   In VS every player is Yoshi -- the spawn loop forces character 3 into every
+   slot (src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.c:68-71) --
+   and they are told apart by COLOUR. That is the ROM's own arrangement, not a
+   mod: yoshi_model.bmd carries ONE palette, yoshi_all_16p_pl, 128 bytes = four
+   stacked 16-colour rows, and a player selects his row by shifting the palette
+   base the material records point at.
+
+   The ROM does it in two steps, and this port ran the first and not the second.
+
+     STEP 1, at resource load. func_ov002_020e5948 ends with
+         Player+0x61C = body material[0]'s palette base + (mPlayerNo << 1)
+     -- one 16-colour row per step of the player number. The port runs this: it
+     is port/unmatched/TexSeq_Caller_ov002_020e5948.cpp:408, same line.
+
+     STEP 2, at render. Player::Render (src/_ZN6Player6RenderEv.cpp:66-76 and
+     :112-122) writes that one value into +0x20 of EVERY runtime material
+     record, once over the body model's materials and once over the head
+     model's, gated on data_0209f2d8 == 1 (VS) and param1 == 3 (Yoshi).
+     +0x20 is the material's TEXPLTT_BASE: func_02044b30
+     (src/func_02044b30.c:14) stores it straight to 0x040004AC on the way into
+     each display list, and ntr binds the palette at PLTT_SLOT_BASE + base*16.
+
+   src/_ZN6Player6RenderEv.cpp IS NOT IN THIS PORT'S LINK -- port/slice_w1l5.txt
+   line 202, blocked by func_ov002_020e3e00's C2733 -- and the Player vtable's
+   Render slot is a no-op (hal/level_boot.cpp's ps_render). Every draw a player
+   gets comes from THIS function instead, and until now it reproduced the four
+   gates, the body draw, the head group, the three texture sequences and the
+   wings, but not step 2. So nothing in the port ever wrote a material record,
+   every Yoshi kept the base his BMD was authored with -- row 0 -- and the owner
+   saw two green Yoshis in a live two-window match.
+
+   MEASURED, at 65bae498d with SM64DS_VS_COLOR_PROBE=1, arena 51, two windows,
+   2201 frames x 2 players: Player+0x61C read 5539 for slot 0 and 5541 for slot
+   1 (the ROM's selector, working), while the body material base read 5539 for
+   BOTH and the bound colours were byte-identical -- 0d83,1224,1a86,2eab, which
+   is row 0, the greens. The selector was right the whole time and nothing
+   spent it.
+
+   WHY IT IS SAFE TO WRITE THE HEAD'S RECORDS TOO, which looks like it should
+   corrupt them: the value is the BODY's palette base, and the head files'
+   own 16-colour palette is byte-identical to the body's row 0. Player 0
+   shifts by nothing, so VS-green Yoshi samples the body's row 0 and looks
+   exactly like adventure Yoshi -- which is only true because one step of
+   mPlayerNo is exactly one 16-colour row. The head is not reloaded or
+   resized; its own palette is simply never sampled in VS.
+
+   THE GATES ARE THE ROM'S AND NOTHING MORE. Outside VS, or on a character
+   that is not Yoshi, this writes nothing at all. */
+static void hal_player_vs_palette(char *c, char *mdl)
+{
+    if (data_0209f2d8 != 1) return;         /* VS mode only */
+    if (*(int *)(c + 0x8) != 3) return;     /* param1 == 3, Yoshi */
+    if (!mdl) return;
+    const int *p = (const int *)(mdl + 8);  /* ModelComponents at +0x8 */
+    const unsigned char *hdr = (const unsigned char *)p[0];  /* BMD_File */
+    char *rec = (char *)p[1];                                /* materials */
+    if (!hdr || !rec) return;               /* port hygiene; the ROM faults */
+    unsigned n = 0;
+    std::memcpy(&n, hdr + 0x24, 4);         /* BMD_File::numMaterials */
+    const int pal = *(const int *)(c + 0x61c);
+    for (unsigned i = 0; i < n; ++i, rec += 0x30)
+        *(int *)(rec + 0x20) = pal;
+}
+
 /* ---- SM64DS_VS_COLOR_PROBE=1: reading the BOUND palette back ----------------
    The VS colour question cannot be answered from Player+0x61C. That word is
    written UNCONDITIONALLY by the resource load (base + (mPlayerNo << 1), six
@@ -634,6 +700,7 @@ void hal_render_player_world(void *player)
     int scene[12];
     for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
     ma->ModelAnim::UpdateVerts();
+    hal_player_vs_palette(c, (char *)ma);
     ma->ModelAnim::Render(0);
     hal_player_texseq_body(c);
 
@@ -642,6 +709,7 @@ void hal_render_player_world(void *player)
         char *head = ((char **)(c + 0x154))[hid];
         if (head) {
             yhd_probe(c, scene, head);
+            hal_player_vs_palette(c, head);
             hal_render_head_group(c, head, hid, ma, scene);
             hal_player_texseq_head(c, hid);
         }
