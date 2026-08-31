@@ -616,6 +616,13 @@ PipeRound &pipe_open(unsigned r) {
 
 unsigned g_last_publish_ms = 0;
 unsigned g_last_join_ms    = 0;
+// JOINs this child has sent while connecting, for the "nobody is answering,
+// and one reason is a build mismatch" hint in service(). Six is past the
+// backoff's first second and well short of the ROM's twenty, so the hint
+// lands while a player is still watching and long before the session is
+// declared dead.
+unsigned g_joins_sent = 0;
+enum : unsigned { kJoinsBeforeHint = 6 };
 
 unsigned long long g_sent = 0, g_recvd = 0, g_dropped = 0;
 unsigned long long g_resends = 0, g_stale_serves = 0;
@@ -1605,6 +1612,31 @@ void service() {
             fill_header(j, kTypeJoin);
             send_to_slot(j, 0);
             ++g_resends;
+            ++g_joins_sent;
+            // THE OTHER HALF OF THE VERSION REFUSAL, and it exists because the
+            // loud line above can only fire on the end that RECEIVES the wrong
+            // version. Pair an OLD parent with a NEW child and the old one
+            // drops our JOIN in silence -- it is the generation that cannot
+            // say anything, and no change here can teach a binary that already
+            // shipped. So the new end infers it instead: many JOINs sent, not
+            // one datagram back, while the transport otherwise looks fine
+            // (relay paired, socket open). That is either nobody there or a
+            // peer that cannot understand us, and both are worth saying once,
+            // because from the outside they are the same twenty seconds of
+            // nothing happening.
+            if (g_joins_sent == kJoinsBeforeHint && g_recvd == 0) {
+                std::fprintf(stderr, "[comms:loopback] %d JOINs sent and NOT "
+                             "ONE datagram back from the other player. Either "
+                             "nothing is listening on that session code, or "
+                             "the other copy of the game is a DIFFERENT BUILD "
+                             "-- this one speaks wire version %u and refuses "
+                             "anything else, which is deliberate: two builds "
+                             "that disagree would run different input delays "
+                             "and silently simulate different matches. Check "
+                             "the code, then check both are on the same "
+                             "build.\n",
+                             kJoinsBeforeHint, (unsigned)kWireVersion);
+            }
             if (g_net_mode != kNetLoopback) {
                 g_join_wait_ms *= 2;
                 if (g_join_wait_ms > kJoinBackoffCapMs)
@@ -1787,6 +1819,7 @@ void lb_open(unsigned mode) {
     g_dring_head = g_dring_count = 0;
     std::memset(g_pipe, 0, sizeof g_pipe);
     g_pipe_low = 0;
+    g_joins_sent = 0;
 
     // SEED THE PEER TABLE. In loopback mode every entry is known up front and
     // never changes -- that is the old arithmetic, written down as data. In
