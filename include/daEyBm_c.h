@@ -72,4 +72,10 @@ private:
 typedef char daEyBm_c_size_must_be_0x334[
     sizeof(daEyBm_c) == 0x334 ? 1 : -1];
 
+/* InitResources owns the compiler-emitted definition of this vtable. The
+ * measured factory must store its public address point directly because
+ * natural new selects the wrong allocator; this declaration only exposes
+ * that compiler-owned address to the factory seam. */
+extern int _ZTV8daEyBm_c[];
+
 #endif /* DAEYBM_C_H */
