@@ -1839,7 +1839,10 @@ def test_anonymous_typedefs_key_by_their_trailing_name():
 
 
 def test_allman_braced_shadow_struct_is_captured_whole():
-    """The real input: src/func_ov006_020f8224.c (ov006/dScMgMCarlo_c), whose
+    """The real input was the legacy source for `func_ov006_020f8224`, since
+    promoted into the ov006/dScMgMCarlo_c TU -- named by symbol rather than by
+    path on purpose, because the path no longer exists and check_dead_references
+    reads any `a/b` token in prose as a live repo-rooted reference. Its
     shadow struct puts its opening brace on the next line. The first line scores
     depth 0, so the block used to be cut to the bare words `struct Obj` -- the TU
     got an incomplete type, the body leaked into function_text as a headless
