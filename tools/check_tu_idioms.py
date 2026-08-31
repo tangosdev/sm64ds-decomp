@@ -168,6 +168,23 @@ RATIFIED_TRUE_NAMES: dict = {
     "_Z14ApproachLinearRsss": "int ApproachLinear(s16&, s16, s16)",
     "_Z15ApproachLinear2Riii": "int ApproachLinear2(int&, int, int)",
     "_Z15ApproachLinear2Rsss": "int ApproachLinear2(s16&, s16, s16)",
+    # 2026-08-31, outside review #2: these four ship in the very ov006 files
+    # the wave converts next -- Sound::PlayBank2_2D is called a dozen times
+    # in dScMgCard_c.cpp alone -- and no split machinery could ever see them
+    # (single-TU declarations form no signature group). The forms are read
+    # off the mangle and the repo's own headers: G2x.h already carries
+    # SetBlendAlpha's measured shape (EPVttttj -- the trailing j is unsigned
+    # because the ROM loads it with ldr; a shadow int cost one ROM-build
+    # failure once), Sound.h's namespace-plus-u32 is PlayBank3's precedent.
+    # LoadOBJPltt has no header yet; PKv is `const void*`, so Card's
+    # `(void *, u32, u32)` spelling is the drift and BSC/MCarlo2 carry the
+    # ratified one.
+    "_ZN5Sound12PlayBank2_2DEj": "void Sound::PlayBank2_2D(u32)",
+    "_ZN2GX11LoadOBJPlttEPKvjj": "void GX::LoadOBJPltt(const void*, u32, u32)",
+    "_ZN3GXS11LoadOBJPlttEPKvjj": "void GXS::LoadOBJPltt(const void*, u32, u32)",
+    "_ZN3G2x13SetBlendAlphaEPVttttj":
+        "void G2x::SetBlendAlpha(volatile unsigned short*, unsigned short, "
+        "unsigned short, unsigned short, unsigned int)",
 }
 
 HEX_RE = re.compile(r"0[xX][0-9a-fA-F]+")
@@ -669,7 +686,16 @@ def census_tu(root: pathlib.Path, entry: dict):
     coverage = {"header": header}
     if header:
         by_name, by_offset = header_member_map(root, header)
+        # named counts every header-member hit; named_encoded is the unk_/pad_
+        # share of it. Respelling `*(int *)(c + 0x51b8)` as `->unk_51b8` raises
+        # named and lowers rawOffsets -- both move the "right" way while adding
+        # no name the EAD team would have written -- so the two are priced
+        # separately (outside review #2, 2026-08-31: the family base header
+        # alone carries 26 unk_/pad_ fields, meaning much of the named-coverage
+        # headroom is respellings, and a conversion could satisfy the metrics
+        # without containing one real name).
         named = 0
+        named_encoded = 0
         for fr in frames:
             if fr["kind"] != KIND_FUNC:
                 continue
@@ -677,9 +703,13 @@ def census_tu(root: pathlib.Path, entry: dict):
             for m in ARROW_RE.finditer(body):
                 if m.group(1) in by_name:
                     named += 1
+                    if _NAME_ENCODED_RE.fullmatch(m.group(1)):
+                        named_encoded += 1
             for m in DOT_RE.finditer(body):
                 if m.group(1) in by_name:
                     named += 1
+                    if _NAME_ENCODED_RE.fullmatch(m.group(1)):
+                        named_encoded += 1
             for m in BARE_RE.finditer(body):
                 n = m.group(1)
                 # A call, not a field access; and only offset-bearing field
@@ -694,7 +724,10 @@ def census_tu(root: pathlib.Path, entry: dict):
                 if body[:m.start()].rstrip().endswith(("->", ".", "::")):
                     continue
                 named += 1
+                if _NAME_ENCODED_RE.fullmatch(n):
+                    named_encoded += 1
         coverage["named"] = named
+        coverage["namedEncoded"] = named_encoded
         coverage["raw"] = rec["rawOffsets"]
         denom = named + rec["rawOffsets"]
         coverage["fraction"] = (round(named / denom, 3) if denom else None)
@@ -951,7 +984,10 @@ def main(argv=None):
                       if any(tu in focus for v in g["variants"] for tu in v["tus"])]
 
     report = {
-        "schemaVersion": 1,
+        # 2 (2026-08-31): coverage gains namedEncoded, and retiredNames
+        # gains the Sound/GX/GXS/G2x family; a 1-reader that treats unknown
+        # keys as errors should re-check.
+        "schemaVersion": 2,
         "ok": not failures,
         "gated": gated,
         "checked": len(census),
@@ -994,6 +1030,8 @@ def print_report(report, census, shown, sig_report, gated):
             frac = cov["fraction"]
             pct = f"{frac * 100:.0f}%" if frac is not None else "n/a"
             cover = (f"header={cov['header']}.h named={cov['named']} "
+                    f"(real {cov['named'] - cov['namedEncoded']}, "
+                    f"unk/pad {cov['namedEncoded']}) "
                     f"coverage={pct}")
         else:
             cover = "no-header"
