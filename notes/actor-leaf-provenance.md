@@ -249,8 +249,7 @@ Source: `src/actors/daObjAbuku_c.cpp`.
 | 0x32c | `mParticle2` | same, effect 0x47. |
 | 0x330 | `mLifeTimer` | 0x96 (150 frames) at init, `DecIfAbove0_Short` in `Behavior`. |
 
-Sources: `src/_ZN8daEyBm_c13InitResourcesEv.cpp`,
-`src/_ZN8daEyBm_c6RenderEv.cpp`, `src/_ZN8daEyBm_c8BehaviorEv.cpp`.
+Source: `src/actors/daEyBm_c.cpp`.
 
 ## daKpFr_c -- include/daKpFr_c.h
 

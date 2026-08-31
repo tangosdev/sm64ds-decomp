@@ -295,7 +295,6 @@ src/MotherPenguin_Spawn.c	WEAK-refs-only	ov018				1		None		-
 src/MovingBarBig_Spawn.c	WEAK-refs-only	ov015				1		None		-
 src/MovingBarSmall_Spawn.c	WEAK-refs-only	ov015				1		None		-
 src/MrBlizzard_Spawn.c	WEAK-refs-only	ov081				1		None		-
-src/MrI_Projectile_Spawn.c	WEAK-refs-only	ov071				1		None		-
 src/MrI_Spawn.c	WEAK-refs-only	ov071				1		None		-
 src/MugenBgm_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/MulMat3x3Mat3x3.c	PURE-C	arm9				1		None		-
@@ -6384,8 +6383,6 @@ src/func_ov071_021214f4.c	PURE-C	ov071				1		None		-
 src/func_ov071_0212152c.c	WEAK-refs-only	ov071				1		None		-
 src/func_ov071_02121570.c	PURE-C	ov071				1		None		-
 src/func_ov071_02121634.c	PURE-C	ov071				1		None		-
-src/func_ov071_02121b08.c	WEAK-refs-only	ov071				1		None		-
-src/func_ov071_02121b50.c	WEAK-refs-only	ov071				1		None		-
 src/func_ov071_02122080.c	PURE-C	ov071				1		None		-
 src/func_ov071_02122194.c	WEAK-refs-only	ov071				1		None		-
 src/func_ov071_021221bc.c	WEAK-refs-only	ov071				1		None		-
