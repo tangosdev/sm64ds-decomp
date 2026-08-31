@@ -1007,6 +1007,9 @@
     "src/func_ov084_021298d0.cpp": "tangosdev",
     "src/func_ov084_0212d564.c": "ruspecial",
     "src/func_ov084_0212d564.cpp": "ruspecial",
-    "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp": "tangosdev"
+    "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp": "tangosdev",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#RickshawBs_Spawn": "github-actions[bot]",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv": "github-actions[bot]"
   }
 }

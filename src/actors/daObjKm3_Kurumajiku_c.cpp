@@ -1,24 +1,24 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Reconstructed production translation unit.
  * ov047/daObjKm3_Kurumajiku_c  (5 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL. The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the five legacy
- * production sources remain authoritative.
+ * This one compiler invocation owns the retail D1/D0 pair, both resource
+ * methods, the factory, resource descriptor, type-name string, SpawnInfo, and
+ * vtable storage. Exact per-member authorship remains in attribution.json.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
  * the highest-address ROM function is written FIRST here. Do not reorder;
  * see notes/tu-reconstruction-pilot-report.md sec 3 for the one documented
- * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
+ * exception (destructor variants have compiler-chosen order). The destructor
+ * lives inline in the class definition so mwccarm emits only the retail D1/D0
+ * pair, in retail order.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp
- *   [1] 0x021111f0  src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c
- *   [2] 0x02111254  src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp
- *   [3] 0x02111268  src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp
- *   [4] 0x02111280  src/RickshawBs_Spawn.c
+ * The manifest records the five absorbed intake sources and the exact text/data
+ * ownership proof; do not recreate per-function production files for this class.
  */
+
+#include "daObjKm3_Kurumajiku_c.h"
 
 struct ResourceDescriptor {
     void *entries[3];
@@ -30,16 +30,13 @@ extern char data_ov047_021125e0[];
 extern char data_ov047_02111b54[];
 }
 
-/* Keep this definition before the class header. mwcc emits these dedicated
- * data sections in declaration order, and retail places this descriptor
- * before the class type name, SpawnInfo, and vtable storage. */
+/* Keep this definition before the SpawnInfo and method definitions. Retail
+ * places the descriptor between the class typeinfo and type-name records. */
 extern "C" ResourceDescriptor data_ov047_02112258 = {
     data_ov047_021125e8,
     data_ov047_021125e0,
     data_ov047_02111b54
 };
-
-#include "daObjKm3_Kurumajiku_c.h"
 
 struct Km3SpawnInfo {
     daObjKm3_Kurumajiku_c *(*spawn)();
@@ -114,13 +111,4 @@ int daObjKm3_Kurumajiku_c::InitResources()
 int daObjKm3_Kurumajiku_c::CleanupResources()
 {
     return func_ov002_020b6ac8(this, &data_ov047_02112258);
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN21daObjKm3_Kurumajiku_cD1Ev, 0x021111a0, size 0x50 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN21daObjKm3_Kurumajiku_cD1Ev
-/* The compiler emits D2, D0 and D1 from this one class definition. */
-daObjKm3_Kurumajiku_c::~daObjKm3_Kurumajiku_c()
-{
 }

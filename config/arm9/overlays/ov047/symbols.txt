@@ -87,7 +87,6 @@ _ZTI21daObjKm3_Kurumajiku_c kind:data(any) addr:0x0211224c
 data_ov047_02112258 kind:data(any) addr:0x02112258
 _ZTS21daObjKm3_Kurumajiku_c kind:data(any) addr:0x02112264
 RickshawBs_SpawnInfo kind:data(any) addr:0x0211227c ambiguous
-data_ov047_02112298 kind:data(any) addr:0x02112298
 _ZTV21daObjKm3_Kurumajiku_c kind:data(any) addr:0x021122a0
 data_ov047_02112320 kind:data(any) addr:0x02112320
 data_ov047_02112324 kind:data(any) addr:0x02112324
