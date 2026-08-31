@@ -153,11 +153,11 @@
 //      SM64DS_BONE_PROBE=1..3  the per-frame bone rotation dump; =3 checks
 //                           every bone against an independent shortest-path
 //                           reference. See the probe for what it measured.
-//      SM64DS_INPUT_NOFOCUSGATE=1  read the interactive keyboard whether this
-//                           window has focus or not, the way it worked before
-//                           the gate. Nothing in the tree sets it. It is here
-//                           so a harness that genuinely wants background key
-//                           reads has a documented switch instead of a patch.
+//      SM64DS_INPUT_NOFOCUSGATE=1  read the interactive keyboard AND PAD whether
+//                           this window has focus or not, the way it worked
+//                           before the gate. Nothing in the tree sets it. It is
+//                           here so a harness that genuinely wants background
+//                           input reads has a documented switch, not a patch.
 //      SM64DS_NO_FOCUS=1    (=0 turns it off; this one is read with atoi, not
 //                           as a presence test, because it is meant to be set
 //                           broadly and opted out of per run)
@@ -2294,6 +2294,76 @@ static int key_live(int vk)
         if (key_stale[vk]) return 0;
     }
     return down;
+}
+
+/* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
+   keyboard's half has existed.
+
+   XInputGetState is machine-global exactly the way GetAsyncKeyState is: it
+   answers about the physical controller, not about who is in front. One
+   window was the whole world when GATE 3 was written, so the keyboard half
+   was the whole fix. Two windows is a different machine. A single pad drove
+   BOTH of them at once -- every stick push walked two Marios, every A press
+   jumped two -- and neither window was wrong to think the input was for it,
+   because nothing had ever told either one otherwise.
+
+   So the pad reads through hal_window_focused() with everything else, which
+   also buys the two behaviours that predicate already carries: the
+   SM64DS_INPUT_NOFOCUSGATE escape hatch for a harness that genuinely wants
+   background reads, and the fail-open on a window-less binary.
+
+   NEUTRAL, NOT FROZEN, on the way out: the struct is zeroed rather than left
+   holding the last frame's stick, so the frame focus goes away is the frame
+   the pad goes to centre, matching the keyboard's release semantics instead
+   of leaving a direction leaning.
+
+   AND THE HELD-OVER PRESS, which is the pad's version of key_stale. A button
+   still physically down when the window comes back would otherwise read as a
+   FRESH press on the return frame and fire an edge latch -- open the debug
+   menu, confirm a row, toggle the freecam -- so every button is marked stale
+   on the way out and a stale bit keeps reading released until that button is
+   seen up. Same policy as memset(key_stale, 1, ...), one word instead of 256
+   bytes because the pad's whole state is a mask.
+
+   Called BEFORE pad_test_apply at both read sites, so SM64DS_PAD_TEST's
+   scripted mask re-arms the pad after the gate and an automated run is
+   unaffected by any of this. */
+static void pad_focus_gate(int *pad_live, XPad *pad)
+{
+    static unsigned stale = 0;
+    static int said_gated = 0;      /* one line per transition, not per frame */
+    if (!hal_window_focused()) {
+        stale = ~0u;
+        if (*pad_live) {
+            memset(pad, 0, sizeof *pad);
+            *pad_live = 0;
+            /* SAID OUT LOUD, because a pad that silently stops working is
+               indistinguishable from a pad that broke. Only when there WAS a
+               live pad to refuse, so a run with no controller plugged in says
+               nothing at all. */
+            if (!said_gated) {
+                said_gated = 1;
+                fprintf(stderr, "[pad] gated: this window is not the "
+                                "foreground one, so the controller drives the "
+                                "window that is\n");
+            }
+        }
+        return;
+    }
+    if (!*pad_live) {
+        /* no pad to observe a release on, so whatever is down when one
+           appears is held-over by the same rule */
+        stale = ~0u;
+        return;
+    }
+    if (said_gated) {
+        said_gated = 0;
+        fprintf(stderr, "[pad] ungated: this window has the foreground again; "
+                        "anything still held reads released until it is let "
+                        "go\n");
+    }
+    stale &= (unsigned)pad->buttons;                 /* released, so no longer stale */
+    pad->buttons = (unsigned short)((unsigned)pad->buttons & ~stale);
 }
 
 /* Keys and pad buttons this program has already spoken for. Binding run to
@@ -5941,6 +6011,7 @@ static int scene_window_run(void)
         }
 
         int pad_live = XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        pad_focus_gate(&pad_live, &pad);
         pad_test_apply(frame, &pad_live, &pad);
 #ifndef PORT_ROM_CLEAN
         /* SM64DS_CLICK_TEST: the scripted stylus, driven BEFORE the tick that
@@ -7885,9 +7956,12 @@ int main(void)
         if (key_live('D') || key_live(VK_RIGHT)) dx += 1;
         /* gamepad: left stick / d-pad walk, right stick orbits + tilts.
            Gated off under a selftest with the keyboard: a drifting stick
-           on a plugged-in pad perturbs a headless run the same way. */
+           on a plugged-in pad perturbs a headless run the same way, and
+           gated off with the keyboard when this window is not the
+           foreground one -- see pad_focus_gate. */
         static XPad pad;
         int pad_live = !selftest && XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        pad_focus_gate(&pad_live, &pad);
         int orbiting = 0;
         /* SM64DS_PAD_TEST: DBG1's scripted pad, at file scope now so the
            windowed scene loop gets the same one. Inert unless the variable is
