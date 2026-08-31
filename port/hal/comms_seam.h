@@ -442,8 +442,12 @@ void comms_fanout();
 // to a wire nobody consumed). The absent-and-solo case answers no only
 // because the port's single-player path writes the two arrays directly and
 // MP1's byte-identical solo proof depends on that path staying untouched.
-// The transport half is read live rather than latched: scene_vs_menu.cpp
-// installs the loopback mid-run, and the default must follow it up.
+// The transport half is read live rather than latched -- not because anything
+// installs a transport mid-run today (scene_vs_menu.cpp's install is INERT, see
+// its own banner and the one on comms_fanout_active), but because WHERE the
+// install happens is a property of this harness: main() does it on every
+// process. A real in-game lobby installs after the frame loop is turning, and a
+// latch that is correct today would be wrong on that day.
 bool comms_fanout_active();
 
 // One line per player: the four 0x24-byte records at data_020a1154 as the

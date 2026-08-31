@@ -4320,7 +4320,9 @@ extern unsigned char data_020a104e[2];   /* 0x020a104e  key word        */
 extern unsigned char data_020a0de8[4];   /* TouchInfo[0], poll_touch's  */
 extern unsigned char data_020a1154[];    /* the four per-player records */
 extern unsigned short data_020a0e58[];   /* PadData[4]: [i*2] held, [i*2+1] pressed */
-extern int data_020a0f10[];              /* the comms slot index        */
+extern unsigned char data_020a0f10[];    /* the comms slot index: a BYTE,
+                                            the width every ROM-side reader
+                                            and comms_conductor.cpp use */
 void func_0203e0ac(void);
 int func_ov007_020c1da0(int i);
 }

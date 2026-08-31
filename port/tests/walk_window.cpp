@@ -7560,14 +7560,26 @@ int main(void)
            2026-08-31 10:44 (playlog play_20260831_104440 / _104441, both
            windows already reporting `VS: 2 players` at line 16 before the
            first press) the parent cycled ONCE and the child cycled FOUR
-           times, so the two consoles finished the session simulating
-           different characters for the same pair of slots. That run is what
-           this gate is written against.
+           times, and the two consoles finished the session disagreeing about
+           who was who. The SIZE of the gap is one step, not four: the cycle
+           is (g_character + 1) & 3, so the child's four presses wrap it back
+           to where it started and the parent's single press is the whole of
+           the divergence. One press is enough -- the point is that the peer
+           is never told, not how far it drifted. That run is what this gate
+           is written against.
 
            The predicate is the seam's own -- the same question
            hal/comms_sync.cpp's gate asks and the [comms:level] line prints:
            connected, and more than one player. One printed line says why, in
-           the place the player is already looking; solo is untouched. */
+           the place the player is already looking; solo is untouched.
+
+           NOT PROVEN END TO END. Review checked the predicate on both sides
+           and the refusal is correct for every reading of the seam it was
+           given, but no scripted route in this tree reaches key_live -- the
+           harnesses drive the pad and the probes, never the interactive
+           keyboard -- so the KEYPRESS itself has never been exercised in a
+           live session by anything but a person. What is proven is the gate;
+           what is owed is a hand at the keyboard. */
         {
             static int chr_edge;
             const int now = key_live(VK_F4);
@@ -10262,8 +10274,16 @@ int main(void)
                slot 0 only, which on a session CHILD is the host's record --
                so a child whose own seat went dead logged a perfectly lively
                [in] stream, and today's intake chased the wrong console for
-               it. Same change trigger, own slot named, so a dead own seat is
-               a visible flat line in the playlog rather than an absence. */
+               it. Same change trigger, own slot named.
+
+               HONESTLY: a dead own seat is still an ABSENCE here, not a flat
+               line. This is change-triggered, so a seat that never moves
+               prints once and then nothing, exactly like a seat that was
+               never read. What it buys is that the absence is now ATTRIBUTED
+               -- the [in:own] line names the slot it is about, so a silent
+               child is distinguishable from a child whose host record was
+               lively. A true flat line would need a heartbeat on a timer,
+               which is a bigger change than this one and not made here. */
             {
                 static unsigned short rec_btn_own, rec_raw_own;
                 const int own = data_020a0f10[0];
