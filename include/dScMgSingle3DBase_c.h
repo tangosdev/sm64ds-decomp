@@ -94,9 +94,17 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
        MEASURED on dScMgMemory_c; do not move the body out. */
     virtual ~dScMgSingle3DBase_c() {}
 
-    /* --- re-overrides of dScMgBase_c's virtuals, in _ZTV order. Slots 26
-           and 33 are new at this class; their signatures are not
-           reconstructed yet, so they stay undeclared. --- */
+    /* --- re-overrides of dScMgBase_c's virtuals, in _ZTV order.
+           Slots 26 and 33 are ALSO re-overrides, not new virtuals: this class
+           was previously annotated as introducing them, but dScMgBase_c's own
+           vtable already carries bodies at both (ov004:0x020b04e0 for slot 26,
+           ov004:0x020b265c for slot 33). They stay undeclared here only because
+           dScMgBase_c leaves slots 18-35 undeclared -- a derived class cannot
+           override a base slot the base has not spelled. Their ov006 bodies do
+           exist and byte-verify, as func_ov006_0210a600 and
+           func_ov006_0210a708 in src_tu/actors/dScMgSingle3DBase_c.cpp.
+           Declaring dScMgBase_c's eighteen is the follow-up that lets this
+           class emit its full 36-slot vtable instead of an 18-slot prefix. --- */
     virtual void AfterInitResources(u32 vfSuccess); /* slot  2 */
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
     virtual int  BeforeBehavior();                  /* slot  7 */

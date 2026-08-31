@@ -4,17 +4,18 @@
   "source": "src_tu/actors/dScMgSingle3DBase_c.cpp",
   "promoted_source": "src/actors/dScMgSingle3DBase_c.cpp",
   "status": "text-verified",
-  "boundary_confidence": "medium",
+  "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x210a4b0..0x210a708, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): dScMgSingle3DBase_c",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "VTABLE-CORROBORATED boundary extension: tools/tu_map.py cut this unit at 0x210a708 and put func_ov006_0210a708 in its own unit with no class label, because the symbol is still func_<module>_<address>. It is in fact slot 33 of _ZTV19dScMgSingle3DBase_c. Scanning every _ZTV in ov006, exactly 14 vtables reference 0x0210a708 at slot 33 -- dScMgSingle3DBase_c and all 13 of its children -- and the SAME 14 reference 0x0210a600 at slot 26, which tu_map already placed inside this unit. Identical reference sets, so both are this class's own overrides and the true boundary is 0x0210a4b0..0x0210a8c0, 9 functions."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0210a4b0",
-      "end": "0x0210a708"
+      "end": "0x0210a8c0"
     }
   ],
   "functions": [
@@ -73,6 +74,13 @@
       "size": "0x00000024",
       "legacy_source": "src/_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_0210a708",
+      "address": "0x0210a708",
+      "size": "0x000001b8",
+      "legacy_source": "src/func_ov006_0210a708.c",
+      "ordinal": 8
     }
   ],
   "data": [],
@@ -81,77 +89,77 @@
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086d70"
     },
     {
       "symbol": "_ZTS7fBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60"
     },
     {
       "symbol": "_ZTS7dBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e54"
     },
     {
       "symbol": "_ZTS8dScene_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091430, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091430, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02091430"
     },
     {
       "symbol": "_ZTI7dBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02086e78"
     },
     {
       "symbol": "_ZTI11dScMgBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b512c, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b512c, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov004",
       "canonical_address": "0x020b512c"
     },
     {
       "symbol": "_ZTS11dScMgBase_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b5144, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo name as vague linkage. The cartridge keeps its canonical copy at ov004:0x020b5144, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov004",
       "canonical_address": "0x020b5144"
     },
     {
       "symbol": "_ZTI8dScene_c",
       "disposition": "deadstrip-data",
-      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091454, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "Ancestor passenger. This TU defines dScMgSingle3DBase_c's key function (AfterInitResources, the first DECLARED non-inline virtual), so mwcc emits the whole inheritance chain's typeinfo record as vague linkage. The cartridge keeps its canonical copy at arm9:0x02091454, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "arm9",
       "canonical_address": "0x02091454"
     },
     {
       "symbol": "_ZTI19dScMgSingle3DBase_c",
       "disposition": "deadstrip-data",
-      "reason": "This class's own typeinfo record, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bc64, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "This class's own typeinfo record, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bc64, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213bc64"
     },
     {
       "symbol": "_ZTS19dScMgSingle3DBase_c",
       "disposition": "deadstrip-data",
-      "reason": "This class's own typeinfo name, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bd00, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "reason": "This class's own typeinfo name, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213bd00, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213bd00"
     },
     {
       "symbol": "_ZTV19dScMgSingle3DBase_c",
       "disposition": "deadstrip-data",
-      "reason": "This class's own vtable, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e448, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a708), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. NOT YET OWNABLE: dScMgBase_c leaves vtable slots 18-35 undeclared (see its header), so mwcc emits an 18-slot table where the cartridge has 36. romdata_check therefore reports PARTIAL -- the emitted table is a verified byte-exact PREFIX of the ROM's, not a disagreement. Owning it outright needs those eighteen base virtuals declared and their ov004 bodies named; tracked as the follow-up in notes/minigame-provenance.md.",
+      "reason": "This class's own vtable, emitted here because this TU defines its key function -- which is the point: the emission is real, compiler-generated, and byte-compared against retail. The cartridge keeps its canonical copy at ov006:0x0213e448, outside this TU's only licensed range (.text 0x0210a4b0-0x0210a8c0), so discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. NOT YET OWNABLE: dScMgBase_c leaves vtable slots 18-35 undeclared (see its header), so mwcc emits an 18-slot table where the cartridge has 36. romdata_check therefore reports PARTIAL -- the emitted table is a verified byte-exact PREFIX of the ROM's, not a disagreement. Owning it outright needs those eighteen base virtuals declared and their ov004 bodies named; the eighteen are mapped out, with their existing recovered names and two measured hazards, in notes/dScMgBase_c-slots-18-35.md.",
       "canonical_module": "ov006",
       "canonical_address": "0x0213e448"
     }
@@ -165,8 +173,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgSingle3DBase_c/dScMgSingle3DBase_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 9,
+    "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
@@ -238,7 +246,7 @@
       },
       "tuRange": {
         "start": "0x0210a4b0",
-        "end": "0x0210a708",
+        "end": "0x0210a8c0",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -246,14 +254,14 @@
         {
           "section": ".text",
           "start": "0x0210a4b0",
-          "end": "0x0210a708",
+          "end": "0x0210a8c0",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 8
+          "LICENSED": 9
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],

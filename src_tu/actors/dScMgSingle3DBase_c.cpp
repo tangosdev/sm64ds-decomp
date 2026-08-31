@@ -51,16 +51,124 @@
  * LoadFile is NOT the LoadFile in Animation.h / Model.h / SharedFilePtr.h --
  * those are static members taking SharedFilePtr&. This is a distinct free
  * function taking a file id. DecompressLZ16 and data_0209d454 appear in
- * include/ only inside comments, never as declarations. */
+ * include/ only inside comments, never as declarations.
+ *
+ * RECONCILED SIGNATURES: the two legacy sources merged here disagreed --
+ * src/func_ov006_0210a534.cpp typed the loaded file buffer as `int`, while
+ * src/func_ov006_0210a708.c typed the same buffer as `void *` and passed it
+ * straight to the same DecompressLZ16 / Ov004_Deallocate. One TU cannot hold
+ * both, and the pointer form is the true one -- it is a buffer address, and the
+ * `int` spelling forced four casts back to `void*` at the call sites. The
+ * pointer typing is byte-neutral (both are one r0-width value) and verify
+ * re-confirms all nine functions. */
 namespace G2S { void* GetBG3CharPtr(); }
 namespace GXS { void LoadBGPltt(const void*, u32, u32); }
 
 extern "C" {
-int LoadFile(int handle);
-void DecompressLZ16(int src, void* dst);
-void Ov004_Deallocate(int handle);
+void *LoadFile(int fileId);
+void DecompressLZ16(const void *src, void *dst);
+void Ov004_Deallocate(void *p);
 extern u8 data_0209d454;
 extern unsigned int data_020a0db0;
+}
+
+/* Additional externs reached only by the slot-33 override below. The GX/GXS/G3X
+ * entry points are spelled here as their raw mangled names, the way the legacy
+ * one-function source did, because writing them as real `GX::SetBankForBG(2)`
+ * calls would require a GX.h this tree does not have -- and inventing one is a
+ * separate change with its own byte risk. Left as-is deliberately; the call
+ * sites read as mangled names, not as idiomatic C++, and that is a known debt. */
+extern "C" {
+void func_ov004_020b290c(void);
+void func_ov004_020b2980(void);
+void _ZN2GX12SetBankForBGEt(u16 a);
+void _ZN2GX13SetBankForOBJEt(u16 a);
+void _ZN2GX13SetBankForTexEt(u16 a);
+void _ZN2GX17SetBankForTexPlttEt(u16 a);
+void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
+void _ZN2GX15SetBankForSubBGEt(u16 a);
+void _ZN2GX16SetBankForSubOBJEt(u16 a);
+s32  GetGameLanguage(void);
+void *func_ov004_020adc68(int id);
+void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 len);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void func_ov004_020b0d30(void);
+void _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
+void InitialiseVramGlobals(void);
+void FreeGfxSlotsById(int arg);
+extern int data_ov004_020beb6c;
+extern u8 data_0209d45c;
+extern int data_ov006_0213e42c[];
+extern int data_0208ee44;
+extern int data_ov000_020beb74[];
+extern void **data_0209d4a8;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 8 -- func_ov006_0210a708, 0x0210a708, size 0x1b8 */
+/* -------------------------------------------------------------------------- */
+// @symbol func_ov006_0210a708
+/* dScMgSingle3DBase_c's vtable slot 33 (offset +0x84).
+ *
+ * tools/tu_map.py did NOT put this function in this unit: it carries no class
+ * label, still being spelled func_<module>_<address>, so tu_map split it into a
+ * single-function unit of its own. The vtable says otherwise. Scanning every
+ * _ZTV in ov006, exactly fourteen reference 0x0210a708 at slot 33 --
+ * dScMgSingle3DBase_c and all thirteen of its children -- and the SAME fourteen
+ * reference 0x0210a600 at slot 26, which tu_map did place inside this unit.
+ * Identical reference sets: both are this class's own overrides, inherited
+ * unchanged by every child, and the true TU boundary is 0x0210a4b0..0x0210a8c0.
+ *
+ * It stays a free function for now rather than becoming
+ * dScMgSingle3DBase_c::Virtual84 -- a derived class cannot declare an override
+ * of a base slot the base itself has not declared, and dScMgBase_c leaves slots
+ * 18-35 undeclared. Declaring those eighteen is the follow-up that also lets
+ * this class emit its full 36-slot vtable instead of an 18-slot prefix. */
+extern "C" void func_ov006_0210a708(char *obj)
+{
+    void *p;
+
+    *(vu32 *)0x4001000u |= 0x10000u;
+    data_ov004_020beb6c = 0;
+    func_ov004_020b290c();
+    func_ov004_020b2980();
+    data_0209d45c = 0x10;
+    data_0209d454 = 0x10;
+    *(vu32 *)0x4000000u &= ~0x7000000u;
+    *(vu32 *)0x4000000u &= ~0x38000000u;
+    _ZN2GX12SetBankForBGEt(2);
+    _ZN2GX13SetBankForOBJEt(0x10);
+    _ZN2GX13SetBankForTexEt(1);
+    _ZN2GX17SetBankForTexPlttEt(0x20);
+    _ZN2GX15SetGraphicsModeEiii(1, 0, 1);
+    *(vu32 *)0x4000000u &= 0xffcfffefu;
+    _ZN2GX15SetBankForSubBGEt(4);
+    _ZN2GX16SetBankForSubOBJEt(8);
+    p = func_ov004_020adc68(data_ov006_0213e42c[GetGameLanguage()]);
+    {
+        char *dst = (char *)0x6400000; dst += 0x4000;
+        DecompressLZ16(p, dst);
+    }
+    {
+        char *dst = (char *)0x6600000; dst += 0x4000;
+        DecompressLZ16(p, dst);
+    }
+    Ov004_Deallocate(p);
+    p = func_ov004_020adc68(0xc3);
+    _ZN4CP1527FlushAndInvalidateDataCacheEjj(p, 0x100u);
+    _ZN2GX11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
+    _ZN3GXS11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
+    Ov004_Deallocate(p);
+    func_ov004_020b0d30();
+    data_0208ee44 = 1;
+    _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
+    InitialiseVramGlobals();
+    FreeGfxSlotsById(0x1d);
+    data_ov000_020beb74[1] = (int)obj;
+    data_0209d4a8 = (void **)data_ov000_020beb74;
+    *(vu32 *)0x40004ccu = 0x7fff;
+    *(vu32 *)0x40004ccu = 0x40007fff;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -147,9 +255,19 @@ void dScMgSingle3DBase_c::AfterCleanupResources(u32 vfSuccess)
 /* ROM ordinal 3 -- func_ov006_0210a600, 0x0210a600, size 0x8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0210a600
-// recovered name: dScMgFlower_c_OnHitByCannonBlastedChar
-/* recovered: renamed to Class_Method */
-/* dScMgFlower_c::OnHitByCannonBlastedChar - recovered from vtable slot identity */
+/* dScMgSingle3DBase_c's vtable slot 26 (offset +0x68), an override of
+ * dScMgBase_c::OnHitByCannonBlastedChar (whose own body is at ov004:0x020b04e0).
+ *
+ * CORRECTED: src/func_ov006_0210a600.c carried `recovered name:
+ * dScMgFlower_c_OnHitByCannonBlastedChar`, one level too deep -- the same
+ * off-by-one-class error already documented for AfterInitResources. Fourteen
+ * vtables in ov006 reference this address at slot 26: dScMgSingle3DBase_c and
+ * all thirteen of its children, dScMgFlower_c merely being one of them. A body
+ * that every sibling shares belongs to the common ancestor, not to whichever
+ * child happened to be looked at first.
+ *
+ * Left as a free function for the same reason as slot 33 below: dScMgBase_c has
+ * not declared slots 18-35, so a derived class cannot yet spell the override. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov006_0210a600(void)
 {
@@ -161,17 +279,17 @@ int func_ov006_0210a600(void)
 /* ROM ordinal 2 -- func_ov006_0210a534, 0x0210a534, size 0xcc */
 /* -------------------------------------------------------------------------- */
 extern "C" void func_ov006_0210a534(void){
-  int h = LoadFile(0x26);
+  void *h = LoadFile(0x26);
   data_0209d454 |= 8;
   *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x214;
   DecompressLZ16(h, G2S::GetBG3CharPtr());
   Ov004_Deallocate(h);
   h = LoadFile(0x27);
-  GXS::LoadBGPltt((void*)h, 0xa0, 0x160);
-  Deallocate((void*)h);
+  GXS::LoadBGPltt(h, 0xa0, 0x160);
+  Deallocate(h);
   h = LoadFile(0x28);
-  func_020562b4((void*)h, 0, 0x800);
-  Deallocate((void*)h);
+  func_020562b4(h, 0, 0x800);
+  Deallocate(h);
   *(volatile u16*)0x400100e &= ~0x40;
   *(volatile u32*)0x400101c = 0;
   *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 1;
