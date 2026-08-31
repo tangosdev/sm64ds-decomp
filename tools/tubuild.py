@@ -536,6 +536,24 @@ _LONG_CALLS_ON_RE = re.compile(r'^\s*#\s*pragma\s+long_calls\s+on\b')
 _INCLUDE_RE = re.compile(r'^\s*#\s*include\s*.+$')
 _DEFINE_RE = re.compile(r'^\s*#\s*define\b.*$')
 _DECL_KEYWORDS = ("struct", "class", "enum", "typedef", "namespace")
+
+
+def _is_elaborated_return_type(stripped, first_word):
+    """True when a line opening with a _DECL_KEYWORD is really a function."""
+    # `struct dActor_c *dCapEnemy_c::RespawnIfHasCap()` opens with `struct`, but
+    # it declares no record -- the keyword is an elaborated type specifier on the
+    # RETURN type, a spelling the flat-C sources use constantly. Treating it as a
+    # declaration filed the function's own signature under `shadow struct
+    # dActor_c` and left its body headless below.  A record head (`struct Obj`,
+    # `class A : public B`) never carries a `(`; a function's parameter list
+    # always does. Test only the text BEFORE the opening brace, so a record whose
+    # body holds a function-pointer member (`struct S { void (*fn)(void); };`)
+    # still reads as a record. typedef and namespace are exempt: a function-
+    # pointer typedef is parenthesised and a namespace never is.
+    if first_word not in ("struct", "class", "enum", "union"):
+        return False
+    return "(" in stripped.split("{", 1)[0]
+
 _EXTERN_C_BLOCK_RE = re.compile(r'^\s*extern\s+"C"\s*\{\s*$')
 
 
@@ -558,12 +576,36 @@ def split_legacy_source(text):
     includes, pragmas, macros, externs, notes = [], [], [], [], []
     shadow_decls = []          # (kind, name, text)
     body_start = None
+    wrapper = None             # a block that swallowed the definition
 
     def consume_block(start_i):
-        """From a line that opens a brace, the index of the line balancing it back
-        to depth 0 (absorbing a lone trailing ';' on the next line, if any)."""
-        depth = lines[start_i].count("{") - lines[start_i].count("}")
+        """From a declaration's first line, the index of the line that ends it
+        (absorbing a lone trailing ';' on the next line, if any).
+
+        The opening brace does NOT have to be on `start_i`. An Allman-braced
+        declaration --
+
+            struct Obj
+            {
+                char pad[0x2a];
+            };
+
+        -- used to score depth 0 on its first line, so the block was cut to the
+        bare words `struct Obj` and the body below it fell through to the
+        function split. The TU then carried an incomplete type AND a headless
+        `{ ... };` at file scope, and the conflict comment quoted `struct Obj`
+        as if that were the whole alternate body. Walk forward for the brace,
+        stopping at a `;`: `struct C;` is a forward declaration and owns
+        nothing but its own line. Stopping there also keeps a declaration that
+        merely wraps across lines (`typedef void (*Fn)(int,` / `int);`) whole,
+        which the old first-line-only cut split in half."""
         j = start_i
+        if "{" not in lines[j]:
+            while "{" not in lines[j]:
+                if ";" in lines[j] or j + 1 >= n:
+                    return j
+                j += 1
+        depth = lines[j].count("{") - lines[j].count("}")
         while depth > 0 and j + 1 < n:
             j += 1
             depth += lines[j].count("{") - lines[j].count("}")
@@ -607,6 +649,10 @@ def split_legacy_source(text):
                 s = lines[k].strip()
                 if s and s != "}":
                     externs.append(s)
+                if "{" in s:
+                    # A brace inside means this block holds a DEFINITION, and
+                    # every line of it has just been filed as a declaration.
+                    wrapper = wrapper or ('extern "C"', i)
             i = j + 1
             continue
         if stripped.startswith("extern "):
@@ -621,7 +667,7 @@ def split_legacy_source(text):
             i = j + 1
             continue
         first_word = (stripped.split()[0] if stripped.split() else "").strip("*&")
-        if first_word in _DECL_KEYWORDS:
+        if first_word in _DECL_KEYWORDS and not _is_elaborated_return_type(stripped, first_word):
             j = consume_block(i)
             block = "\n".join(lines[i:j + 1])
             nm = re.match(rf'{first_word}\s+(\w+)', stripped)
@@ -635,6 +681,8 @@ def split_legacy_source(text):
                 tail = re.search(r'(\w+)\s*;\s*$', block)
                 if tail:
                     dname = tail.group(1)
+            if first_word == "namespace" and block.count("{") > 1:
+                wrapper = wrapper or (f"namespace {dname}", i)
             shadow_decls.append((first_word, dname, block))
             i = j + 1
             continue
@@ -642,8 +690,29 @@ def split_legacy_source(text):
         body_start = i
         break
 
+    if body_start is not None and lines[body_start].strip() in ("{", "};", "}"):
+        # A function body never starts on a bare brace -- the signature is on the
+        # same line or the line above. Reaching one means a declaration above was
+        # cut short and its body leaked down here. Refuse rather than emit a TU
+        # with a headless block in it; sec 7.3 says an unfitting shape is a
+        # "assemble this one by hand", not something to guess past.
+        return {"error": (f"line {body_start + 1} is a bare {lines[body_start].strip()!r} "
+                          "where a function signature was expected -- a declaration "
+                          "above it was split mid-body"),
+                "cpp": cpp, "includes": includes, "pragmas": pragmas, "macros": macros,
+                "externs": externs, "shadow_decls": shadow_decls, "notes": notes,
+                "function_text": None}
+
     if body_start is None:
-        return {"error": "scanned to end of file without finding a function body",
+        if wrapper is not None:
+            # Naming the block is the whole value of the message: the fix is to
+            # unwrap the definition by hand, not to hunt for a missing function.
+            msg = (f"the definition is inside the {wrapper[0]} block opened on "
+                   f"line {wrapper[1] + 1}, so it was consumed as a declaration -- "
+                   "tubuild cannot place a block-scoped member in a TU")
+        else:
+            msg = "scanned to end of file without finding a function body"
+        return {"error": msg,
                 "cpp": cpp, "includes": includes, "pragmas": pragmas, "macros": macros,
                 "externs": externs, "shadow_decls": shadow_decls, "notes": notes,
                 "function_text": None}

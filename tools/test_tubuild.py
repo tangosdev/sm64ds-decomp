@@ -1838,6 +1838,160 @@ def test_anonymous_typedefs_key_by_their_trailing_name():
     assert (ka, na) != (kb, nb), "distinct unnamed types must not share a merge key"
 
 
+def test_allman_braced_shadow_struct_is_captured_whole():
+    """The real input: src/func_ov006_020f8224.c (ov006/dScMgMCarlo_c), whose
+    shadow struct puts its opening brace on the next line. The first line scores
+    depth 0, so the block used to be cut to the bare words `struct Obj` -- the TU
+    got an incomplete type, the body leaked into function_text as a headless
+    `{ ... };` at file scope, and the conflict comment quoted `struct Obj` as
+    though that were the alternate body a reviewer should judge."""
+    src = ("struct Obj\n"
+           "{\n"
+           "    char pad[0x2a];\n"
+           "    short f2a;\n"
+           "    unsigned char f2c;\n"
+           "};\n"
+           "\n"
+           "int func_ov006_020f8224(struct Obj *a, struct Obj *b)\n"
+           "{\n"
+           "    return a->f2a - b->f2a;\n"
+           "}\n")
+    got = tubuild.split_legacy_source(src)
+    assert got["error"] is None, got["error"]
+    (kind, name, text), = got["shadow_decls"]
+    assert (kind, name) == ("struct", "Obj")
+    assert "char pad[0x2a];" in text and text.rstrip().endswith("};"), \
+        "the Allman body belongs to the declaration, not to the function"
+    assert "char pad[0x2a];" not in got["function_text"], \
+        "a headless struct body must never leak into the member body"
+    assert got["function_text"].startswith("int func_ov006_020f8224(")
+
+
+def test_same_name_allman_and_k_and_r_structs_conflict_with_real_bodies():
+    """Both spellings of the same name must reach _merge_field carrying their
+    OWN body, or the conflict comment asks a reviewer to compare a full struct
+    against the two words `struct Obj`."""
+    allman = tubuild.split_legacy_source(
+        "struct Obj\n{\n    char pad[0x2a];\n};\n\nint f(void)\n{\n    return 0;\n}\n")
+    kandr = tubuild.split_legacy_source(
+        "struct Obj { char pad[1]; };\n\nint g(void)\n{\n    return 0;\n}\n")
+    w = []
+    parsed = {"f": allman, "g": kandr}
+    rows = [(0, "f", 0, 4), (1, "g", 4, 4)]
+    live, dead = tubuild._merge_field(rows, parsed, lambda p: p["shadow_decls"],
+                                      lambda i: (i[0], i[1]), "local declaration", w)
+    assert len(live) == 1 and len(dead) == 1 and w
+    assert "char pad[0x2a];" in live[0][1][2]
+    assert "char pad[1];" in dead[0][1][2]
+
+
+def test_forward_declaration_still_owns_only_its_own_line():
+    """The Allman walk must stop at a `;`. `struct C;` followed by a definition
+    of something else must not swallow the next block."""
+    got = tubuild.split_legacy_source(
+        "struct C;\nstruct D { int x; };\n\nint f(void)\n{\n    return 0;\n}\n")
+    assert got["error"] is None, got["error"]
+    assert got["shadow_decls"] == [("struct", "C", "struct C;"),
+                                   ("struct", "D", "struct D { int x; };")]
+
+
+def test_declaration_wrapped_across_lines_is_kept_whole():
+    """A declaration with no brace at all that wraps to a second line used to be
+    cut after its first line, silently dropping the rest."""
+    got = tubuild.split_legacy_source(
+        "typedef void (*Fn)(int,\n                   int);\n\nint f(void)\n{\n    return 0;\n}\n")
+    assert got["error"] is None, got["error"]
+    (kind, _name, text), = got["shadow_decls"]
+    assert kind == "typedef"
+    assert text.count("int") == 2, text   # both parameter lines survived
+    assert "int);" not in got["function_text"], "the wrapped tail must not leak"
+
+
+def test_bare_brace_where_a_signature_belongs_is_refused_not_emitted():
+    """The fail-loud backstop for any residual mis-split: a function body never
+    starts on a bare `{`, so reaching one means a declaration above leaked. The
+    caller must be told to assemble by hand, not handed a TU with a headless
+    block in it."""
+    got = tubuild.split_legacy_source("#pragma once\n{\n    int x;\n};\n")
+    assert got["error"] and "bare" in got["error"], got["error"]
+    assert got["function_text"] is None
+
+
+def test_elaborated_return_type_is_not_a_shadow_declaration():
+    """Real inputs: src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp and
+    src/func_02041b60.c. Both open on the word `struct`, but as an elaborated
+    type specifier on the RETURN type -- the flat-C sources spell it that way
+    constantly. Filing the line as a declaration put the function's own
+    signature under `shadow struct dActor_c` and left its body headless below;
+    with the Allman walk it swallowed the whole function instead."""
+    method = tubuild.split_legacy_source(
+        "struct dActor_c;\n"
+        "\n"
+        "struct dActor_c * dCapEnemy_c::RespawnIfHasCap()\n"
+        "{\n"
+        "    return 0;\n"
+        "}\n")
+    assert method["error"] is None, method["error"]
+    assert method["shadow_decls"] == [("struct", "dActor_c", "struct dActor_c;")]
+    assert method["function_text"].startswith("struct dActor_c * dCapEnemy_c::")
+
+    freefn = tubuild.split_legacy_source(
+        "struct ListNode *func_02041b60(char *base)\n"
+        "{\n"
+        "    return 0;\n"
+        "}\n")
+    assert freefn["error"] is None, freefn["error"]
+    assert freefn["shadow_decls"] == []
+    assert freefn["function_text"].startswith("struct ListNode *func_02041b60(")
+
+
+def test_record_with_a_function_pointer_member_still_reads_as_a_record():
+    """The elaborated-return-type test is `(` before the opening brace, not `(`
+    anywhere: a one-line record whose member is a function pointer must stay a
+    record, and a function-pointer typedef must stay a typedef."""
+    got = tubuild.split_legacy_source(
+        "struct S { void (*fn)(void); int x; };\n"
+        "\n"
+        "int f(void)\n"
+        "{\n"
+        "    return 0;\n"
+        "}\n")
+    assert got["error"] is None, got["error"]
+    (kind, name, _text), = got["shadow_decls"]
+    assert (kind, name) == ("struct", "S")
+    assert got["function_text"].startswith("int f(void)")
+
+
+def test_definition_inside_a_namespace_or_extern_c_block_names_the_block():
+    """Real inputs: src/_ZN6Memory8AllocateEj.cpp (an Allman `namespace Memory`
+    whose body IS the member) and src/func_ov006_021063a0.cpp (the definition
+    inside `extern "C" {`). tubuild has nowhere to put a block-scoped member, so
+    it must refuse -- but the refusal has to name the block, or the message
+    reads as "your file has no function in it" and sends a reader hunting."""
+    ns = tubuild.split_legacy_source(
+        "namespace Memory\n"
+        "{\n"
+        "    void* Allocate(u32 size, int align, Heap* heap);\n"
+        "\n"
+        "    void* Allocate(u32 size)\n"
+        "    {\n"
+        "        return Allocate(size, 4, 0);\n"
+        "    }\n"
+        "}\n")
+    assert ns["function_text"] is None
+    assert "namespace Memory" in ns["error"] and "line 1" in ns["error"], ns["error"]
+
+    ec = tubuild.split_legacy_source(
+        'extern "C" {\n'
+        "int func_ov006_021063a0(void)\n"
+        "{\n"
+        "    return 0;\n"
+        "}\n"
+        "}\n")
+    assert ec["function_text"] is None
+    assert 'extern "C"' in ec["error"] and "line 1" in ec["error"], ec["error"]
+
+
 def test_forward_decl_folds_into_the_definition_either_order():
     """A bare `struct C;` forward declaration must never oust or conflict with a
     full `struct C { ... };` definition of the same name (RacingPenguin, ov019).
