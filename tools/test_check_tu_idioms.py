@@ -25,11 +25,14 @@ sys.path.insert(0, str(TOOLS))
 import check_tu_idioms as I  # noqa: E402
 import tu_manifest  # noqa: E402  (the manifest reader under test's default)
 
-# The two banked pilot TUs -- the calibration contract lives against these.
-BSC_ID = "ov006/dScMgBSC_c+dScMgBSC_c"
-MCARLO_ID = "ov006/dMgMCarloCardObj_c+dScMgMCarlo_c+dScMgMCarlo_c"
-# A landed real-class TU, for the coverage contrast the pilots are measured
-# against (member-majority, named access beating raw offsets).
+# The two promoted-but-still-shadow minigame TUs -- the calibration contract
+# lives against these. The wave promoted them on main straight from the same
+# per-function sources the pilots were merged from, so the census numbers below
+# are what proves the goal is NOT met by the byte gates alone.
+BSC_ID = "ov006/dScMgBSC_c"
+MCARLO_ID = "ov006/dScMgMCarlo_c"
+# A landed real-class TU, for the coverage contrast the shadow TUs are
+# measured against (member-majority, named access beating raw offsets).
 POLELIFT_ID = "ov045/PoleLift"
 
 
@@ -638,40 +641,44 @@ class TreeTests(unittest.TestCase):
 
     def test_the_bsc_pilot_measures_the_shadow_baseline(self):
         rec = I.census_tu(REPO, banked_entry(BSC_ID))
-        # 18 function definitions: 14 extern "C", 4 class members, no C++
-        # free functions. 89 raw sites inside bodies: 94 whole-file matches
-        # minus the 5 class-member array brackets outside any body.
+        # Pins re-measured on main's promoted BSC (2026-08-31): the promotion
+        # reshaped the file (the pilot-era banked TU measured 18/4/named=13),
+        # the census follows the tree. Still the shadow shape: 17 function
+        # definitions, 14 of them extern "C", no C++ free functions, and 89
+        # raw offset sites inside bodies against 11 named accesses (11%).
         self.assertEqual((rec["functions"], rec["memberDefs"], rec["externC"],
                           rec["freeDefs"], rec["rawOffsets"]),
-                         (18, 4, 14, 0, 89))
-        # Named=13: 9 arrow/dot hits plus 4 bare member names, hand-counted.
-        self.assertEqual(rec["coverage"]["named"], 13)
+                         (17, 3, 14, 0, 89))
+        self.assertEqual(rec["coverage"]["named"], 11)
 
     def test_the_mcarlo_pilot_measures_the_shadow_baseline(self):
         rec = I.census_tu(REPO, banked_entry(MCARLO_ID))
+        # As above, re-measured on the promoted file (pilot-era: 22/4/108).
         self.assertEqual((rec["functions"], rec["memberDefs"], rec["externC"],
                           rec["freeDefs"], rec["rawOffsets"]),
-                         (22, 4, 18, 0, 108))
-        self.assertEqual(rec["coverage"]["named"], 47)
+                         (21, 3, 18, 0, 107))
+        self.assertEqual(rec["coverage"]["named"], 46)
 
     def test_a_landed_real_class_tu_is_the_coverage_contrast(self):
         """What the goal looks like when it is met: PoleLift is member-
         majority, nearly free of extern "C", and spells more member accesses
-        through names than through offsets -- against BSC's 13% coverage."""
+        through names than through offsets -- against BSC's 11% coverage.
+        Pins re-measured after PoleLift evolved on main (was 6/5/13 named=11,
+        still member-majority at the same named count)."""
         rec = I.census_tu(REPO, banked_entry(POLELIFT_ID))
         self.assertEqual((rec["functions"], rec["memberDefs"], rec["externC"],
-                          rec["rawOffsets"]), (6, 5, 1, 13))
+                          rec["rawOffsets"]), (5, 4, 1, 13))
         self.assertEqual(rec["coverage"]["named"], 11)
         self.assertGreater(rec["coverage"]["fraction"], 0.4)
 
     def test_gating_the_banked_pilot_goes_red_until_justified(self):
-        """The banked manifest carries no goal blocks yet, so the promotion
-        prerequisite bites: gating a pilot fails it. When a pilot is
-        converted or a justification lands, this flips and gets updated.
-        The banked entry file is READ and wrapped into a scratch single-file
-        manifest -- config/ is never written."""
+        """Main's promoted manifest carries no goal blocks yet, so the
+        promotion prerequisite bites: gating a promoted-but-shadow TU fails
+        it. When the TU is converted or a justification lands, this flips
+        and gets updated. The manifest entry file is READ and wrapped into a
+        scratch single-file manifest -- config/ is never written."""
         banked = pathlib.Path(
-            "config/tu_manifest.d/ov006/dScMgBSC_c+dScMgBSC_c.json")
+            "config/tu_manifest.d/ov006/dScMgBSC_c.json")
         entry = json.loads(banked.read_text(encoding="utf-8"))
         with Scratch() as s:
             scratch_manifest = s.dir / "manifest.json"
