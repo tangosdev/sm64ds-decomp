@@ -693,3 +693,82 @@ respell); the typed mArray1/mArray2 DealIn spelling
 (`self->mArray1[i]->DealIn(v)`) is the named readability candidate and needs
 its own measured pass. Deferred to the family carve pass alongside
 dScMgBase_c — never a per-TU improvisation.
+
+**MCarlo landed (235e47897, 2026-08-31) — third goal block, first zero-raw
+conversion, no new adjudications.** ov006/dScMgMCarlo_c: 107 raw/30% →
+0 raw/100% at the landing, member 3 → 20, externC 18 → 1, named 46 → 208
+(real 153); goal gate PASS (zero-or-justified: claimed {externC:1,
+rawOffsets:0}, equal to measured); byte gate green in preserve-state
+(106/106 exact, 0 mismatching, ROM sha256 d1506e90..., same 9 tree-owned
+errors). Seventeen of the eighteen extern-C free functions became real
+members (the static board family, RenderHud, the adjudicated slot events,
+and the element motion members over the RTTI-confirmed
+dMgMCarloCardObj_c); the eighteenth is the element destroy stub
+`_ZN18dMgMCarloCardObj_cD1Ev`, decision (a) applied unchanged — the
+header's inline `__destroy_arr` passes the destructor as a plain function
+pointer, and the stub form is the measured one. Decision (b) is satisfied
+at zero cost: NO raw spelling is kept, every natural member form
+reproduced the cartridge on the FIRST measurement, both member forms
+(folded and indexed) were measured per the rule, and the last three
+census chains — the +0x12 lift-table limit and the two +0x18
+screen-quotient constants — are additive constants, decimalized to
++18/+24 with the bytes unchanged. Decision (c) held (the family C-linkage
+spellings kept, GXS::LoadOBJPltt / Sound::PlayBank2_2D / ApproachLinear(2)
+declared at their RATIFIED_TRUE_NAMES forms) and decision (d) held (the
+one live local shadow is the Fix12 typedef; the unk_/pad_ fields wait for
+the header carve). The header's typed mArray keys the element class's
+_ZTI/_ZTS/_ZTV in the TU, licensed as three compiler_only_output
+deadstrip-data rows measured against the cartridge (0x0213d578/0x0213d5c8/
+0x0213d5ac), and the factory pair outside the TU
+(src/func_ov006_020f8e44.cpp, src/func_ov006_020f8ed8.c) respells its
+references and re-verifies MATCH. Data files: 17 symbols.txt renames,
+19 actor_renames.tsv rows, 18 attribution.json lineage keys,
+converted-baseline 2604 → 2619 (+15 banked; 16/23 members pass all five
+tier criteria — the 4 no_unk_field fails are the not-yet-carved
+base-header fields, the 3 no_mangled_refs are structural on the lifecycle
+pair and the stub).
+
+**NEW FOR THE FAMILY RECORD — the per-function verify audit and the
+production audit disagree on the stub's reloc shape, and MCarlo is the
+first conversion to re-run the per-function round.** The conversion-day
+`tubuild.py verify` measured 22/23: the one DIFF is the destroy stub's
+addend-0 vtable store, which `objisolate.plan()` — the single-function
+model the verify audit runs per function — refuses fail-closed
+(`unexpected reloc type=2 addend=0`) because it treats every store
+against a `_ZTV` defined in the same object as mwcc's own +8 form so
+that its -8 externalisation rewrite applies. The stub's bytes matched and
+its relocation destinations verified. The production path for an enrolled
+consolidated source — `rombuild.check_object`'s `derive_deadstrip` then
+`plan_many` — accepts and, once the deadstrip rebinds the vtable to the
+ROM address, REQUIRES the addend-0 ROM-symbol form (deadstrip_plan
+documents addend 0 as the legitimate spelling where the source declares
+the symbol itself, `extern int _ZTV...[]`; plan_many refuses nonzero
+addends on undefined RTTI targets). Both spellings land the same linked
+value, the vtable address point, which is why bytes, destinations, and
+the production link all agree while the single-function model alone
+refuses. dScMgCard_c's committed stubs are form-identical and would draw
+the same refusal — Card's manifest records its promotion-era round only
+because its conversion never re-ran the per-function audit. MCarlo's
+manifest keeps the round as measured (22/23, one criteria FAIL) with the
+full diagnosis in a dated note; the family consequence to remember: any
+future per-function verify re-run on a stub-carrying TU will show this
+one DIFF, it is expected, and the production linkcheck is the authority
+that settles it (MCarlo's baseline run is the exact preserve-state above).
+
+**Two signature splits opened by MCarlo, reported for adjudication, not
+settled here.** `func_ov004_020b66d4`: MCarlo declares `(char*)` where
+BSC/Card declare `(void)` — OnYoshiTryEat's ROM site demonstrably
+materializes this+0x6000 into r0, a dead argument the callee never reads
+(Card calls the same routine bare), and 0x51a8+0x4c*0x30+0x18 = 0x6000 is
+mArray[76].mTargetY, so the source spells the member address the
+cartridge computes. `func_ov004_020b56c8`: MCarlo declares `(char*)` where
+BSC/Card declare `(int)` — OnTurnIntoEgg's site passes the face-tier
+table pointer data_ov006_0213d568. Both splits are read off this TU's own
+ROM call sites and stay split until the family reconciles them (per (c),
+a true-type pass is a family carve, never a TU edit). Family-carve
+candidates from this TU: none — every board global and element symbol
+MCarlo touches is MCarlo-private by reloc evidence.
+
+Next per the roster: MCarlo2 (raw 69, 59%, 99 named) is the direct
+continuation — same family, same helpers, one element class plus the
+scene, and its factory merge target.
