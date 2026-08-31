@@ -1573,17 +1573,9 @@ def span_entries(delinks_path, span_start, span_end, expected_legacy):
     return header, entries, inside, reasons
 
 
-def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
-                    section_claims=None):
-    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
-
-    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
-    scratch config, because every failure mode here is silent downstream: dsd fills any
-    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
-    links clean and compares green while contributing nothing (see
-    "unbuildable files are invisible to every gate", and layout_check's L1). `span_entries` holds
-    the checks; this adds the rewrite.
-    """
+def validate_tu_entry_splice(delinks_path, span_start, span_end, tu_rel,
+                             expected_legacy, section_claims=None):
+    """Return the fully validated inputs for one destructive TU-entry splice."""
     header, entries, inside, reasons = span_entries(delinks_path, span_start, span_end,
                                                     expected_legacy)
     claims = list(section_claims or
@@ -1598,6 +1590,9 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
     # entry touches one, silently adding the TU would create two owners; deciding how
     # to retire a future data-source entry is promotion policy, not scratch plumbing.
     drop_indices = {i for i, _r, _s in inside}
+    for idx, (rel, _body) in enumerate(entries):
+        if rel == tu_rel and idx not in drop_indices:
+            reasons.append(f"TU destination {tu_rel} is already a delinks entry")
     for claim in (c for c in claims if c["name"] != ".text"):
         for idx, (rel, body) in enumerate(entries):
             for name, start, end in entry_sections(body):
@@ -1606,6 +1601,23 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
                                    f"0x{claim['end']:08x} overlaps existing entry {rel}'s "
                                    f"{name} 0x{start:08x}..0x{end:08x}; it is not pure "
                                    f"gap ownership")
+    return header, entries, inside, claims, reasons
+
+
+def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
+                    section_claims=None):
+    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
+
+    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
+    scratch config, because every failure mode here is silent downstream: dsd fills any
+    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
+    links clean and compares green while contributing nothing (see
+    "unbuildable files are invisible to every gate", and layout_check's L1). The
+    read-only validator above is also the production promotion preflight, so the two
+    paths cannot drift on current delinks ownership rules.
+    """
+    header, entries, inside, claims, reasons = validate_tu_entry_splice(
+        delinks_path, span_start, span_end, tu_rel, expected_legacy, section_claims)
     if reasons:
         return None, reasons
 
@@ -2374,6 +2386,16 @@ def verify_externalized_output(obj_bytes, entry, policies=None, homes=None,
                     candidate_module = (RL.normalize_module(resolved[0])
                                         if resolved[0] is not None else None)
                     candidate_address = resolved[1] + emitted["addend"]
+                    # mwcc's raw `_ZTV` relocation is relative to the storage
+                    # object, while symbols.txt names the public slot-array address
+                    # after the two-word ABI preamble.  This is the same raw-object
+                    # convention used by reloc_audit.object_reloc_dests: addend 8
+                    # resolves to the configured address point, not eight bytes past
+                    # it.  Explicit addend-zero references already use the public
+                    # convention and remain unchanged.
+                    if emitted["symbol"].startswith("_ZTV") \
+                            and emitted["addend"] >= OI.VTABLE_PREAMBLE:
+                        candidate_address -= OI.VTABLE_PREAMBLE
                     if (candidate_module, candidate_address) != \
                             (expected["target_module"], expected["target_address"]):
                         row_reasons.append(f"relocation +0x{offset:x} resolves to "
@@ -2891,18 +2913,52 @@ def content_tree_sha256(root):
     return digest.hexdigest()
 
 
+BASELINE_CONTROL_TOOLS = tuple(
+    REPO / "tools" / name for name in (
+        "objisolate.py", "reloc_audit.py", "rombuild.py", "rombuild_cache.py",
+        "rombuild_check.py", "rombuild_profile.py", "tu_manifest.py",
+        "tu_production.py", "tubuild.py"))
+
+
+def content_files_sha256(paths):
+    """Hash an ordered set of tool paths and bytes without timestamps."""
+    rows = []
+    for path in map(pathlib.Path, paths):
+        try:
+            label = path.resolve().relative_to(REPO.resolve()).as_posix()
+        except ValueError:
+            label = path.name
+        rows.append((label, path))
+    digest = hashlib.sha256()
+    for label, path in sorted(rows):
+        raw_label = label.encode("utf-8")
+        raw = path.read_bytes()
+        digest.update(len(raw_label).to_bytes(4, "big"))
+        digest.update(raw_label)
+        digest.update(len(raw).to_bytes(8, "big"))
+        digest.update(raw)
+    return digest.hexdigest()
+
+
 def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
-                                    dsd_path=None, linker_path=None):
+                                    dsd_path=None, linker_path=None,
+                                    rom_inputs=None, control_tools=None):
     """Content identities that bind a baseline report to its actual inputs/output."""
     linked_elf = pathlib.Path(linked_elf)
     dsd_path = pathlib.Path(dsd_path or RB.DSD)
     linker_path = pathlib.Path(linker_path or (RB.MW / RB.LD_VERSION / "mwldarm.exe"))
-    required = [linked_elf, dsd_path, linker_path]
+    rom_inputs = pathlib.Path(rom_inputs or (REPO / "extracted" / "dsd"))
+    control_tools = tuple(control_tools or BASELINE_CONTROL_TOOLS)
+    required = [linked_elf, dsd_path, linker_path, *control_tools]
     missing = [str(path) for path in required if not path.is_file()]
+    if not rom_inputs.is_dir():
+        missing.append(str(rom_inputs))
     if missing:
         raise FileNotFoundError(f"baseline fingerprint input(s) missing: {missing}")
     return {
         "configArm9Sha256": content_tree_sha256(config_root),
+        "romInputsSha256": content_tree_sha256(rom_inputs),
+        "controlToolsSha256": content_files_sha256(control_tools),
         "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
         "linkedElfBytes": linked_elf.stat().st_size,
         "dsdSha256": hashlib.sha256(dsd_path.read_bytes()).hexdigest(),
@@ -2911,14 +2967,16 @@ def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
 
 
 def validate_partition_baseline_evidence(report, linked_elf, config_root=CFG_ARM9,
-                                         dsd_path=None, linker_path=None):
+                                         dsd_path=None, linker_path=None,
+                                         rom_inputs=None, control_tools=None):
     """Refuse a baseline whose report is detached from current bytes or tools."""
     evidence = report.get("baselineEvidence")
     if not isinstance(evidence, dict):
         return None, "baseline report has no content-bound evidence"
     try:
         current = partition_baseline_fingerprints(
-            linked_elf, config_root, dsd_path=dsd_path, linker_path=linker_path)
+            linked_elf, config_root, dsd_path=dsd_path, linker_path=linker_path,
+            rom_inputs=rom_inputs, control_tools=control_tools)
     except (OSError, ValueError) as exc:
         return None, f"cannot fingerprint baseline: {exc}"
     mismatched = [key for key, value in current.items() if evidence.get(key) != value]
@@ -2941,7 +2999,8 @@ def _baseline_partition_symbols(names):
             or (report.get("phases", {}).get("link") or {}).get("ok") is not True \
             or (report.get("analysis") or {}).get("passed") is not True:
         return None, None, "baseline report does not prove a successful stock module link"
-    baseline_sha256, error = validate_partition_baseline_evidence(report, elf_path)
+    baseline_sha256, error = validate_partition_baseline_evidence(
+        report, elf_path, config_root=BASELINE_LINK / "config" / "arm9")
     if error:
         return None, None, error
     rows, error = linked_symbol_rows(elf_path, names)
@@ -3614,6 +3673,81 @@ def shared_build_bin_snapshot():
             for path in sorted((REPO / "build").glob("*.bin")) if path.is_file()}
 
 
+def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jobs,
+                              intact_tus_override=None):
+    """Compile a scratch linkcheck with the normal production object policies.
+
+    A baseline substitutes no candidate TU, but it still compiles production's
+    already-promoted multi-symbol objects. Those objects rely on manifest-backed
+    compiler-only policies for exact duplicate functions and data. Omitting the
+    policies makes the control fail before it reaches the candidate, even though the
+    normal ROM build accepts and verifies the same objects.
+    """
+    compiler_only = RB.compiler_only_policies(srcs)
+    intact_tus = (RB.intact_tu_policies(srcs) if intact_tus_override is None
+                  else intact_tus_override)
+    failures, outcomes = [], collections.Counter()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
+        for rel, err, outcome in ex.map(
+                lambda s: RB.compile_one(
+                    s, vers, cache, init_srcs, syms, build_root=build_root,
+                    compiler_only=compiler_only, intact_tus=intact_tus), srcs):
+            outcomes[outcome] += 1
+            if err:
+                failures.append((rel, err))
+    return failures, outcomes
+
+
+def demote_complete_sources(config_root, sources):
+    """Make exact enrolled sources ROM-gap-owned in a disposable config tree.
+
+    The section claims remain unchanged; only the indented ``complete`` marker is
+    removed. dsd then supplies those ranges from the extracted retail binaries.
+    Every requested path must name exactly one complete entry or the control build
+    is refused rather than silently compiling the source it was meant to exclude.
+    """
+    wanted = {str(source).replace("\\", "/") for source in sources}
+    found, demoted = set(), set()
+    for path in sorted(pathlib.Path(config_root).rglob("delinks.txt")):
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        out, current, changed = [], None, False
+        for line in lines:
+            stripped = line.strip()
+            if line and not line[0].isspace() and stripped.endswith(":"):
+                current = stripped[:-1].replace("\\", "/")
+                if current in wanted:
+                    found.add(current)
+            elif line and not line[0].isspace():
+                current = None
+            if current in wanted and stripped == "complete":
+                if current in demoted:
+                    return [], [f"{current}: duplicate complete marker"]
+                demoted.add(current)
+                changed = True
+                continue
+            out.append(line)
+        if changed:
+            path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    errors = [f"{source}: no delinks entry" for source in sorted(wanted - found)]
+    errors.extend(f"{source}: delinks entry is not complete"
+                  for source in sorted(found - demoted))
+    return sorted(demoted), errors
+
+
+def linkcheck_symbol_verdict(baseline, command_ok, new_errors):
+    """Whether the symbol phase is attributable-clean for this linkcheck.
+
+    The stock control's job is to inventory the tree's existing dsd errors. A
+    candidate is clean only when it adds none to that inventory; without a control it
+    must make the command itself pass.
+    """
+    if baseline:
+        return True
+    if new_errors is not None:
+        return not new_errors
+    return command_ok
+
+
 def cmd_linkcheck(args):
     data = load_manifest()
     entry = manifest_entry(data, args.id) if args.id else None
@@ -3669,6 +3803,24 @@ def cmd_linkcheck(args):
           f"({len(profile['modReplacements'])} mod entr(y/ies) redirected to src/, "
           f"{len(profile['modGapFallbacks'])} demoted to ROM gap bytes -- "
           f"rombuild_profile.prepare_profile, the same stock semantics as a real build)")
+
+    if baseline:
+        enrolled_before = RB.enrolled(cfg_root)
+        intact_before = RB.intact_tu_policies(enrolled_before)
+        demoted, reasons = demote_complete_sources(cfg_root, intact_before)
+        if reasons:
+            print("\nREFUSED -- strict control could not exclude every intact TU:")
+            for reason in reasons:
+                print(f"  {reason}")
+            return 1
+        report["intactTusDemoted"] = [
+            {"id": intact_before[source].get("id", source), "source": source}
+            for source in demoted]
+        if demoted:
+            print(f"      strict control demoted {len(demoted)} intact TU source(s) "
+                  "to independently extracted ROM gap bytes:")
+            for source in demoted:
+                print(f"        {source}")
 
     span_start = span_end = None
     claims = []
@@ -3830,14 +3982,9 @@ def cmd_linkcheck(args):
     init_srcs = RB.init_section_sources()
     syms = RB.enrolled_symbols()
     t0 = time.time()
-    failures, outcomes = [], collections.Counter()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        for rel, err, outcome in ex.map(
-                lambda s: RB.compile_one(s, vers, cache, init_srcs, syms, build_root=scratch),
-                srcs):
-            outcomes[outcome] += 1
-            if err:
-                failures.append((rel, err))
+    failures, outcomes = compile_linkcheck_sources(
+        srcs, vers, cache, init_srcs, syms, scratch, args.jobs,
+        intact_tus_override={} if baseline else None)
     dt = time.time() - t0
     report["phases"]["compile"] = {"ok": not failures, "seconds": round(dt, 1),
                                    "outcomes": dict(outcomes)}
@@ -4103,7 +4250,49 @@ def cmd_linkcheck(args):
             print(f"      externalized {externalized['externalized']} to their exact "
                   "configured canonical homes in the SCRATCH object only")
 
-        owned = verify_owned_sections(linked_tu, entry, claims)
+        owned_before = verify_owned_sections(linked_tu, entry, claims)
+        report["ownedSectionsBeforeRebias"] = owned_before
+        if not owned_before["ok"]:
+            print("      REFUSED -- licensed non-text contribution is not exact:")
+            for reason in owned_before.get("errors", []):
+                print(f"        {reason}")
+            report["result"] = "data-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+
+        biases, bias_reasons = partition_vtable_rebiases(entry, claims)
+        vtable_policies = biases
+        if bias_reasons:
+            print("      REFUSED -- retained vtable address point is not explicit:")
+            for reason in bias_reasons:
+                print(f"        {reason}")
+            report["result"] = "vtable-rebias-refused"
+            report["vtableRebias"] = {"requested": biases,
+                                       "errors": bias_reasons}
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        rebased_tu, bias_report = OI.rebias_object_symbols(
+            linked_tu, biases, normalize_undefined=True)
+        report["vtableRebias"] = bias_report
+        if rebased_tu is None:
+            print(f"      REFUSED -- vtable symbol rebias: {bias_report.get('error')}")
+            report["result"] = "vtable-rebias-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if rebased_tu != linked_tu:
+            linked_tu = rebased_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      rebased {len(bias_report.get('rebased', []))} retained vtable "
+                  f"symbol(s) and compensated "
+                  f"{len(bias_report.get('relocations', []))} live relocation addend(s) "
+                  "in the SCRATCH object only")
+
+        owned = verify_owned_sections(linked_tu, entry, claims,
+                                       public_address_points=True)
         report["ownedSections"] = owned
         for row in owned["rows"]:
             print(f"      {row['section']:8} {row.get('start', '-')}..{row.get('end', '-')} "
@@ -4177,7 +4366,7 @@ def cmd_linkcheck(args):
 
     if baseline:
         report["baselineEvidence"] = partition_baseline_fingerprints(
-            scratch / "final_link.o")
+            scratch / "final_link.o", config_root=cfg_root)
 
     if partitioned:
         linked_aliases = verify_linked_storage_aliases(
@@ -4293,6 +4482,7 @@ def cmd_linkcheck(args):
             for e in symbols_new[:15]:
                 print(f"      NEW | {e}")
     report["symbolsNew"] = symbols_new
+    report["symbolsBaseline"] = base_errors
 
     # ------------------------------------------------------------------- ROM build
     module_ok = bool(analysis["passed"]) and range_ok and not bad_modules
@@ -4346,12 +4536,7 @@ def cmd_linkcheck(args):
             report["strayOutputs"] = changed_shared
 
     # ------------------------------------------------------------------------ verdict
-    if baseline:
-        symbols_verdict = symbols_ok
-    elif symbols_new is not None:
-        symbols_verdict = not symbols_new
-    else:
-        symbols_verdict = symbols_ok
+    symbols_verdict = linkcheck_symbol_verdict(baseline, symbols_ok, symbols_new)
     equivalent = all(v["identical"] for _o, _s, v in partial_rows) if partial_rows else False
     verified = bool(module_ok and symbols_verdict and (rom_ok is not False))
     if partitioned:
@@ -4575,6 +4760,9 @@ def _partition_attempt_record(report):
                    for key, value in report.get("phases", {}).items()},
         "moduleFidelityPassed": bool((report.get("analysis") or {}).get("passed")),
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "symbolCheckErrors": (((report.get("phases") or {}).get("checkSymbols") or {})
+                              .get("errors")),
+        "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
         "rom": report.get("rom"),
         "strayOutputs": report.get("strayOutputs"),
         "scratch": report.get("scratch", "") + " (gitignored)",
@@ -4621,6 +4809,7 @@ def _record_linkcheck(data, entry, report, baseline):
         "scratch": report["scratch"] + " (gitignored)",
         "phases": {k: v.get("ok") for k, v in report["phases"].items()},
         "tuRange": report.get("tuRange"),
+        "tuRanges": report.get("tuRanges"),
         "objectAudit": {
             "counts": audit.get("counts"),
             "emittedTextOrderIsRomAscending": audit.get("orderOk"),
@@ -4631,6 +4820,12 @@ def _record_linkcheck(data, entry, report, baseline):
             "unlicensedSections": audit.get("unlicensedSections"),
         },
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "symbolCheckErrors": (((report.get("phases") or {}).get("checkSymbols") or {})
+                              .get("errors")),
+        "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
+        "moduleSetSha256": (((report.get("analysis") or {})
+                              .get("moduleFidelity") or {})
+                             .get("moduleSetSha256")),
         "rom": report.get("rom"),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
     }

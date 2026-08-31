@@ -509,7 +509,11 @@ def _vague_externalization_fixture():
                 })
                 config["arm9"][address + reloc["r_offset"]] = (
                     "load", next_destination, "arm9")
-                name_index[target.name] = ("arm9", next_destination - reloc["r_addend"])
+                raw_bias = (reloc["r_addend"] - tubuild.OI.VTABLE_PREAMBLE
+                            if target.name.startswith("_ZTV")
+                            and reloc["r_addend"] >= tubuild.OI.VTABLE_PREAMBLE
+                            else reloc["r_addend"])
+                name_index[target.name] = ("arm9", next_destination - raw_bias)
                 next_destination += 4
         policies.append({
             "symbol": name, "disposition": "canonical-import",
@@ -783,6 +787,116 @@ if __name__ == "__main__":
 
 
 import tubuild
+
+
+def test_linkcheck_compile_passes_all_production_object_policies():
+    original_policies = tubuild.RB.compiler_only_policies
+    original_intact = tubuild.RB.intact_tu_policies
+    original_compile = tubuild.RB.compile_one
+    policy = {"src/actors/Promoted.cpp": {"deadstrip": ["helper"]}}
+    intact = {"src/actors/Promoted.cpp": {"id": "ov047/Promoted"}}
+    seen = []
+
+    try:
+        tubuild.RB.compiler_only_policies = lambda enrolled: (
+            policy if list(enrolled) == ["src/actors/Promoted.cpp"] else None)
+        tubuild.RB.intact_tu_policies = lambda enrolled: (
+            intact if list(enrolled) == ["src/actors/Promoted.cpp"] else None)
+
+        def fake_compile(rel, vers, cache, init_srcs, syms, build_root=None,
+                         compiler_only=None, intact_tus=None):
+            seen.append((rel, build_root, compiler_only, intact_tus))
+            return rel, None, "hit"
+
+        tubuild.RB.compile_one = fake_compile
+        failures, outcomes = tubuild.compile_linkcheck_sources(
+            ["src/actors/Promoted.cpp"], {}, None, set(), {}, pathlib.Path("scratch"), 1)
+    finally:
+        tubuild.RB.compiler_only_policies = original_policies
+        tubuild.RB.intact_tu_policies = original_intact
+        tubuild.RB.compile_one = original_compile
+
+    assert failures == []
+    assert outcomes["hit"] == 1
+    assert seen == [("src/actors/Promoted.cpp", pathlib.Path("scratch"),
+                     policy, intact)]
+
+
+def test_strict_control_demotes_only_requested_complete_sources():
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        path = root / "overlays/ov047/delinks.txt"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            "src/actors/Promoted.cpp:\n"
+            "    complete\n"
+            "    .text start:0x1000 end:0x1010\n"
+            "    .data start:0x2000 end:0x2010\n\n"
+            "src/Other.cpp:\n"
+            "    complete\n"
+            "    .text start:0x1010 end:0x1020\n",
+            encoding="utf-8")
+
+        demoted, errors = tubuild.demote_complete_sources(
+            root, ["src/actors/Promoted.cpp"])
+
+        assert errors == []
+        assert demoted == ["src/actors/Promoted.cpp"]
+        text = path.read_text(encoding="utf-8")
+        promoted = text.split("src/Other.cpp:", 1)[0]
+        assert "complete" not in promoted
+        assert ".text start:0x1000 end:0x1010" in promoted
+        assert ".data start:0x2000 end:0x2010" in promoted
+        assert "src/Other.cpp:\n    complete" in text
+
+
+def test_strict_control_compile_does_not_re_admit_demoted_intact_tus():
+    original_intact = tubuild.RB.intact_tu_policies
+    original_compile = tubuild.RB.compile_one
+    seen = []
+    try:
+        tubuild.RB.intact_tu_policies = lambda _enrolled: (_ for _ in ()).throw(
+            AssertionError("demoted intact policy was recomputed"))
+
+        def fake_compile(rel, vers, cache, init_srcs, syms, build_root=None,
+                         compiler_only=None, intact_tus=None):
+            seen.append(intact_tus)
+            return rel, None, "hit"
+
+        tubuild.RB.compile_one = fake_compile
+        failures, outcomes = tubuild.compile_linkcheck_sources(
+            ["src/Other.cpp"], {}, None, set(), {}, pathlib.Path("scratch"), 1,
+            intact_tus_override={})
+    finally:
+        tubuild.RB.intact_tu_policies = original_intact
+        tubuild.RB.compile_one = original_compile
+
+    assert failures == []
+    assert outcomes["hit"] == 1
+    assert seen == [{}]
+
+
+def test_strict_control_refuses_a_source_that_was_not_complete():
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        path = root / "delinks.txt"
+        path.write_text(
+            "src/actors/Promoted.cpp:\n"
+            "    .text start:0x1000 end:0x1010\n",
+            encoding="utf-8")
+        demoted, errors = tubuild.demote_complete_sources(
+            root, ["src/actors/Promoted.cpp"])
+        assert demoted == []
+        assert errors == [
+            "src/actors/Promoted.cpp: delinks entry is not complete"]
+
+
+def test_linkcheck_symbol_verdict_uses_the_stock_failure_inventory():
+    assert tubuild.linkcheck_symbol_verdict(True, False, None)
+    assert tubuild.linkcheck_symbol_verdict(False, False, [])
+    assert not tubuild.linkcheck_symbol_verdict(False, False, ["new error"])
+    assert tubuild.linkcheck_symbol_verdict(False, True, None)
+    assert not tubuild.linkcheck_symbol_verdict(False, False, None)
 
 
 def test_vtable_storage_address_requires_an_explicit_consistent_bias():
@@ -1219,25 +1333,33 @@ def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
     with tempfile.TemporaryDirectory() as td:
         root = pathlib.Path(td)
         config = root / "config"
+        rom_inputs = root / "rom-inputs"
         config.mkdir()
+        rom_inputs.mkdir()
         cfg = config / "symbols.txt"
+        (rom_inputs / "header.yaml").write_bytes(b"ROM")
         linked, dsd, linker = root / "base.o", root / "dsd.exe", root / "mwld.exe"
+        control_tool = root / "analysis.py"
         cfg.write_bytes(b"one")
         linked.write_bytes(b"ELF")
         dsd.write_bytes(b"DSD")
         linker.write_bytes(b"MWL")
+        control_tool.write_bytes(b"ANALYZE")
         evidence = tubuild.partition_baseline_fingerprints(
-            linked, config, dsd_path=dsd, linker_path=linker)
+            linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
         report = {"baselineEvidence": evidence}
         digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
         assert error is None and digest == evidence["linkedElfSha256"]
 
         stamp = cfg.stat().st_mtime_ns
         cfg.write_bytes(b"two")
         os.utime(cfg, ns=(stamp, stamp))
         _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
         assert "configArm9Sha256" in error
 
         cfg.write_bytes(b"one")
@@ -1245,8 +1367,23 @@ def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
         linked.write_bytes(b"BAD")
         os.utime(linked, ns=(linked_stamp, linked_stamp))
         _digest, error = tubuild.validate_partition_baseline_evidence(
-            report, linked, config, dsd_path=dsd, linker_path=linker)
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
         assert "linkedElfSha256" in error
+
+        linked.write_bytes(b"ELF")
+        (rom_inputs / "header.yaml").write_bytes(b"CHANGED")
+        _digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
+        assert "romInputsSha256" in error
+
+        (rom_inputs / "header.yaml").write_bytes(b"ROM")
+        control_tool.write_bytes(b"CHANGED")
+        _digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker,
+            rom_inputs=rom_inputs, control_tools=[control_tool])
+        assert "controlToolsSha256" in error
 
 
 def test_partitioned_result_gate_requires_every_full_rom_proof():
@@ -1326,6 +1463,35 @@ def test_partitioned_cli_modes_are_mutually_exclusive_before_any_build():
     code, out = _run("linkcheck", "ov045/PoleLift", "--partial", "--partitioned")
     assert code != 0
     assert "not allowed with argument" in out or "mutually exclusive" in out
+
+
+def test_record_linkcheck_preserves_all_owned_ranges():
+    entry = {"status": "text-verified"}
+    report = {
+        "result": "scratch-data-verified",
+        "scratch": "scratch/path",
+        "phases": {"link": {"ok": True}, "rom": {"ok": True}},
+        "tuRange": {"section": ".text", "differingBytes": 0},
+        "tuRanges": [
+            {"section": ".text", "differingBytes": 0},
+            {"section": ".data", "differingBytes": 0},
+        ],
+        "objectAudit": {},
+        "symbolsNew": [],
+        "analysis": {"moduleFidelity": {"moduleSetSha256": "b" * 64}},
+        "rom": {"matchesStockRom": True, "sha256": "a" * 64},
+    }
+    original = tubuild.save_manifest
+    try:
+        tubuild.save_manifest = lambda _data: None
+        tubuild._record_linkcheck({"entries": [entry]}, entry, report, False)
+    finally:
+        tubuild.save_manifest = original
+
+    recorded = entry["verification"]["linkcheck"]
+    assert recorded["tuRange"] == report["tuRange"]
+    assert recorded["tuRanges"] == report["tuRanges"]
+    assert recorded["moduleSetSha256"] == "b" * 64
 
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of

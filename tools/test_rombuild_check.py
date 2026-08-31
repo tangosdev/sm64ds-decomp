@@ -44,17 +44,50 @@ class RomBuildCheck(unittest.TestCase):
         report = RBC.analyze(self.config, "stock")
         self.assertTrue(report["passed"])
         self.assertEqual(report["moduleFidelity"]["percent"], 100.0)
+        digest = report["moduleFidelity"]["moduleSetSha256"]
+        self.assertEqual(len(digest), 64)
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 1)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 4)
         self.assertEqual(report["sourceBuild"]["sourceBytesPercent"], 50.0)
+        self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
+        consolidated = RBC.analyze(self.config, "stock")
+        self.assertEqual(consolidated["moduleFidelity"]["moduleSetSha256"], digest)
 
     def test_shared_source_counts_every_owned_function(self):
         self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
         report = RBC.analyze(self.config, "stock")
         self.assertTrue(report["passed"])
+        self.assertEqual(len(report["moduleFidelity"]["moduleSetSha256"]), 64)
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 2)
         self.assertEqual(report["sourceBuild"]["reproducingFunctions"], 2)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 8)
+
+    def test_intact_entry_counts_code_members_and_nontext_separately(self):
+        (self.config / "delinks.txt").write_text(
+            "    .text start:0x00001000 end:0x00001008 kind:code\n"
+            "    .data start:0x00001008 end:0x0000100c kind:data\n\n"
+            "src/actors/Pair.cpp:\n"
+            "    complete\n"
+            "    .text start:0x00001000 end:0x00001008\n"
+            "    .data start:0x00001008 end:0x0000100c\n",
+            encoding="utf-8")
+        (self.retail / "arm9" / "arm9.bin").write_bytes(b"ABCDEFGHIJKL")
+        (self.built / "arm9.bin").write_bytes(b"ABCDEFGHIJKL")
+
+        text = (self.config / "delinks.txt").read_text(encoding="utf-8")
+        self.assertEqual(RBC.complete_entries_text(text),
+                         [("src/actors/Pair.cpp", 0x1000, 0x1008)])
+        self.assertEqual(RBC.complete_entry_sections_text(text), [
+            ("src/actors/Pair.cpp", ".text", 0x1000, 0x1008),
+            ("src/actors/Pair.cpp", ".data", 0x1008, 0x100c),
+        ])
+
+        report = RBC.analyze(self.config, "stock")
+        self.assertTrue(report["passed"])
+        self.assertEqual(report["sourceBuild"]["sourceFunctions"], 2)
+        self.assertEqual(report["sourceBuild"]["sourceBytes"], 8)
+        self.assertEqual(report["moduleComposition"]["sourceDataBytes"], 4)
+        self.assertEqual(report["moduleComposition"]["unownedDataBytes"], 0)
 
     def test_module_paths_accept_config_or_arm9_as_the_root(self):
         self.assertEqual(RBC.module_label(self.config, self.config), "arm9")

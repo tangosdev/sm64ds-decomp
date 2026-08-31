@@ -19,6 +19,8 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import subprocess
+import sys
 
 import tubuild as TB
 
@@ -27,12 +29,185 @@ class ProductionTuError(RuntimeError):
     """A partitioned TU cannot safely enter the normal ROM build."""
 
 
+def prepare_intact_object(raw, entry):
+    """Apply and reverify the exact policies for one production intact TU object."""
+    claims, reasons = TB.manifest_section_claims(entry)
+    if reasons:
+        _raise(f"{entry.get('id', '<unknown>')} manifest section claims", reasons)
+    text = [claim for claim in claims if claim["name"] == ".text"]
+    nontext = [claim for claim in claims if claim["name"] != ".text"]
+    if len(text) != 1 or not nontext:
+        raise ProductionTuError(
+            f"{entry.get('id', '<unknown>')}: intact production requires one .text "
+            "claim and at least one non-text claim")
+
+    post_policy, compiler_only, reasons = TB.apply_compiler_only_policy(raw, entry)
+    if reasons:
+        _raise(f"{entry['id']} compiler-only output", reasons)
+    externalized_obj, externalized, reasons = \
+        TB.apply_externalized_output_policy(post_policy, entry)
+    if reasons:
+        _raise(f"{entry['id']} exact RTTI externalization", reasons)
+
+    owned_before = TB.verify_owned_sections(externalized_obj, entry, claims)
+    if not owned_before.get("ok"):
+        _raise(f"{entry['id']} licensed non-text contribution",
+               owned_before.get("errors", []))
+    biases, reasons = TB.partition_vtable_rebiases(entry, claims)
+    if reasons:
+        _raise(f"{entry['id']} vtable address-point policy", reasons)
+    linked_obj, rebias = TB.OI.rebias_object_symbols(
+        externalized_obj, biases, normalize_undefined=True)
+    if linked_obj is None:
+        _raise(f"{entry['id']} vtable address-point rewrite", [rebias.get("error")])
+    owned_after = TB.verify_owned_sections(
+        linked_obj, entry, claims, public_address_points=True)
+    if not owned_after.get("ok"):
+        _raise(f"{entry['id']} production non-text contribution",
+               owned_after.get("errors", []))
+
+    span_start, span_end = text[0]["start"], text[0]["end"]
+    rows, extra, emitted, order_ok = TB.audit_tu_object(
+        linked_obj, entry, span_start, span_end, TB.complete_ranges(TB.CFG_ARM9))
+    audit_errors = TB.object_audit_refusals(rows, extra, order_ok)
+    if audit_errors:
+        _raise(f"{entry['id']} production object audit", audit_errors)
+    return linked_obj, {
+        "compilerOnly": compiler_only, "externalized": externalized,
+        "ownedBefore": owned_before, "ownedAfter": owned_after,
+        "vtableRebias": rebias,
+        "objectAudit": {"rows": rows, "extraSections": extra,
+                        "emitted": emitted, "orderOk": order_ok},
+        "sha256": hashlib.sha256(linked_obj).hexdigest(),
+    }
+
+
 def _raise(label, reasons):
     detail = "; ".join(str(reason) for reason in reasons if reason)
     raise ProductionTuError(f"{label}: {detail or 'refused without a reason'}")
 
 
-def _strict_baseline():
+def _demoted_inventory(entries):
+    return sorted(({"id": entry.get("id", source), "source": source}
+                   for source, entry in entries.items()),
+                  key=lambda row: row["source"])
+
+
+def _current_or_bootstrapped_intact_baseline(entries, jobs):
+    """Return a current source-independent control, building it if necessary.
+
+    The baseline command removes every promoted intact source's ``complete`` marker
+    in its disposable config, so those ranges come directly from extracted retail
+    gap bytes. This makes the control independent of the C++ objects it will judge
+    and safe to create on a clean CI worker with no gitignored build artifacts.
+    """
+    try:
+        return _strict_baseline(entries)
+    except ProductionTuError as first_error:
+        modules = sorted({entry.get("module") for entry in entries.values()
+                          if entry.get("module")})
+        module = modules[0] if modules else "ov002"
+        print("strict stock control is missing or stale; generating a fresh "
+              f"ROM-gap control for {module}")
+        command = [
+            sys.executable, str(TB.REPO / "tools" / "tubuild.py"),
+            "linkcheck", "--baseline", "--module", module,
+            "-j", str(jobs), "--clean",
+        ]
+        result = subprocess.run(command, check=False)
+        if result.returncode:
+            raise ProductionTuError(
+                "could not bootstrap strict stock control: "
+                f"{first_error}; baseline command exited {result.returncode}")
+        try:
+            return _strict_baseline(entries)
+        except ProductionTuError as fresh_error:
+            raise ProductionTuError(
+                f"fresh strict stock control is invalid: {fresh_error}") from fresh_error
+
+
+def prepare_intact_link_verification(entries, jobs=4):
+    """Bind supported automatic intact TUs to the current strict stock control.
+
+    Object preparation proves the compiler contribution before the link. This plan
+    carries the remaining facts needed after mwldarm: the content-bound current
+    baseline's symbol-error inventory and each vtable address-point mapping. Automatic
+    intact admission refuses storage aliases until their baseline bootstrap is
+    non-circular, so refreshing this control never depends on the control being kept.
+    """
+    admitted_errors = set()
+    admitted_roms = set()
+    admitted_module_sets = set()
+    for entry in entries.values():
+        linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
+        errors = linkcheck.get("symbolCheckErrors")
+        rom_sha = (linkcheck.get("rom") or {}).get("sha256")
+        module_set_sha = linkcheck.get("moduleSetSha256")
+        if (not isinstance(errors, list) or not isinstance(rom_sha, str)
+                or not _is_sha256(module_set_sha)):
+            raise ProductionTuError(
+                f"{entry.get('id', '<unknown>')}: admitted intact proof lacks its "
+                "symbol-error inventory, stock ROM SHA-256, or complete executable-"
+                "module fingerprint")
+        admitted_errors.add(tuple(sorted(set(errors))))
+        admitted_roms.add(rom_sha)
+        admitted_module_sets.add(module_set_sha)
+    baseline = _current_or_bootstrapped_intact_baseline(entries, jobs)
+    current_errors = tuple(baseline["symbolErrors"])
+    if admitted_errors != {current_errors}:
+        raise ProductionTuError(
+            "strict post-promotion control symbol errors do not equal the admitted "
+            f"pre-promotion inventory: current={list(current_errors)!r}, "
+            f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}")
+    if admitted_module_sets != {baseline["moduleSetSha256"]}:
+        report = baseline.get("report") or {}
+        diagnostics = {
+            "rom": report.get("rom"),
+            "baselineEvidence": report.get("baselineEvidence"),
+            "moduleSetSha256": baseline["moduleSetSha256"],
+            "intactTusDemoted": report.get("intactTusDemoted"),
+            "scratch": report.get("scratch"),
+        }
+        raise ProductionTuError(
+            "strict post-promotion control executable-module fingerprint does not "
+            f"equal the admitted proof: current={baseline['moduleSetSha256']}, "
+            f"admitted={sorted(admitted_module_sets)!r}, "
+            f"control={json.dumps(diagnostics, sort_keys=True)}")
+    if baseline["matchesStockRom"] is not True \
+            and admitted_roms != {baseline["romSha256"]}:
+        raise ProductionTuError(
+            "strict post-promotion control has no same-worker stock-ROM comparison "
+            "and its ROM SHA-256 does not equal the admitted bootstrap proof: "
+            f"current={baseline['romSha256']}, admitted={sorted(admitted_roms)!r}")
+    prepared = []
+    for source, entry in sorted(entries.items()):
+        claims, reasons = TB.manifest_section_claims(entry)
+        if reasons:
+            _raise(f"{entry.get('id', source)} manifest section claims", reasons)
+        biases, reasons = TB.partition_vtable_rebiases(entry, claims)
+        if reasons:
+            _raise(f"{entry.get('id', source)} vtable address-point policy", reasons)
+        prepared.append({"id": entry.get("id", source), "source": source,
+                         "biases": biases})
+    return {
+        "baseline": baseline,
+        "entries": prepared,
+        "admittedRomSha256": sorted(admitted_roms),
+        "admittedModuleSetSha256": next(iter(admitted_module_sets)),
+    }
+
+
+def _is_sha256(value):
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    try:
+        int(value, 16)
+    except ValueError:
+        return False
+    return True
+
+
+def _strict_baseline(expected_intact=None):
     """Return the content-bound stock baseline or refuse stale/missing evidence."""
     report_path = TB.BASELINE_LINK / "linkcheck.json"
     linked_elf = TB.BASELINE_LINK / "final_link.o"
@@ -48,16 +223,34 @@ def _strict_baseline():
             or (report.get("analysis") or {}).get("passed") is not True \
             or ((report.get("phases") or {}).get("checkModules") or {}).get("ok") is not True:
         raise ProductionTuError("stock control did not pass module fidelity")
+    expected_demoted = _demoted_inventory(expected_intact or {})
+    actual_demoted = report.get("intactTusDemoted")
+    if actual_demoted != expected_demoted:
+        raise ProductionTuError(
+            "stock control did not exclude the current intact TU inventory: "
+            f"expected={expected_demoted!r}, actual={actual_demoted!r}")
     rom = report.get("rom") or {}
-    if rom.get("matchesStockRom") is not True or not rom.get("sha256"):
-        raise ProductionTuError("stock control did not prove a ROM identical to build/sm64ds.nds")
-    _sha, error = TB.validate_partition_baseline_evidence(report, linked_elf)
+    if not rom.get("sha256"):
+        raise ProductionTuError("stock control did not produce a ROM SHA-256")
+    compared = rom.get("matchesStockRom")
+    if compared is False:
+        raise ProductionTuError("stock control ROM differs from build/sm64ds.nds")
+    if not expected_demoted and compared is not True:
+        raise ProductionTuError(
+            "stock control did not prove a ROM identical to build/sm64ds.nds")
+    _sha, error = TB.validate_partition_baseline_evidence(
+        report, linked_elf, config_root=TB.BASELINE_LINK / "config" / "arm9")
     if error:
         raise ProductionTuError(f"stock control is stale: {error}")
     base_errors = (((report.get("phases") or {}).get("checkSymbols") or {})
                    .get("errors"))
     if not isinstance(base_errors, list):
         raise ProductionTuError("stock control has no baseline symbol-error inventory")
+    module_set_sha = (((report.get("analysis") or {}).get("moduleFidelity") or {})
+                      .get("moduleSetSha256"))
+    if not _is_sha256(module_set_sha):
+        raise ProductionTuError(
+            "stock control has no complete executable-module fingerprint")
     return {
         "report": report,
         "reportPath": report_path,
@@ -65,6 +258,8 @@ def _strict_baseline():
         "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
         "symbolErrors": sorted(set(base_errors)),
         "romSha256": rom["sha256"],
+        "matchesStockRom": compared,
+        "moduleSetSha256": module_set_sha,
     }
 
 
@@ -198,7 +393,8 @@ def prepare(tu_ids, config_root, work_root, jobs=1):
         return {"entries": [], "overrides": {}, "baseline": None}
     if len(ids) != len(set(ids)):
         raise ProductionTuError("duplicate --partitioned-tu id")
-    baseline = _strict_baseline()
+    enrolled = TB.RB.enrolled(TB.CFG_ARM9)
+    baseline = _strict_baseline(TB.RB.intact_tu_policies(enrolled))
     data = TB.load_manifest()
     config_root = pathlib.Path(config_root)
     work_root = pathlib.Path(work_root)
@@ -242,7 +438,7 @@ def verify_link(config_yaml, linked_elf, prepared):
         "dsd check modules")
     ok_symbols, symbols_out, _seconds = TB._run_dsd(
         [str(TB.RB.DSD), "check", "symbols", "-c", str(config_yaml),
-         "-e", str(linked_elf), "-f", "-m", "12"],
+         "-e", str(linked_elf), "-m", "12"],
         "dsd check symbols")
     symbol_errors = sorted({line.strip() for line in symbols_out.splitlines()
                             if "[ERROR]" in line})
@@ -254,7 +450,7 @@ def verify_link(config_yaml, linked_elf, prepared):
         alias_rows.extend(result.get("rows", []))
         alias_errors.extend(result.get("errors", []))
     return {
-        "ok": bool(ok_modules and not new_errors and not alias_errors),
+        "ok": bool(ok_modules and ok_symbols and not new_errors and not alias_errors),
         "modulesOk": bool(ok_modules),
         "modulesOutput": modules_out[-4000:],
         "symbolsCommandOk": bool(ok_symbols),
