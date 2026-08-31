@@ -41,7 +41,7 @@
  * Behavior rewrites every frame before dCc_c::Clear/Update.
  *
  * Field NAMES cannot change codegen. mTalkingPlayer and mMessageID are spelled
- * as include/QuestionSwitch.h, include/Rabbit.h and include/Toad.h already
+ * as include/daObjHatenaSwitch_c.h, include/Rabbit.h and include/Toad.h already
  * spell the same two roles; none of the three shadows a name in fBase_c,
  * dBase_c or dActor_c.
  */

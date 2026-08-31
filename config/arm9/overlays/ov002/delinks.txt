@@ -712,57 +712,10 @@ src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp:
     complete
     .text start:0x020b4d58 end:0x020b4ed8
 
-src/_ZN14QuestionSwitchD1Ev.cpp:
+src/actors/daObjHatenaSwitch_c.cpp:
     complete
-    .text start:0x020b4ed8 end:0x020b4f44
-
-src/_ZN14QuestionSwitchD0Ev.cpp:
-    complete
-    .text start:0x020b4f44 end:0x020b4fc4
-
-src/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x020b4fc4 end:0x020b4fd0
-
-src/_ZN14QuestionSwitch15UpdateClsnStateEv.cpp:
-    complete
-    .text start:0x020b4fd0 end:0x020b503c
-
-src/_ZN14QuestionSwitch19UpdateClsnTransformEv.cpp:
-    complete
-    .text start:0x020b503c end:0x020b50a0
-
-src/_ZN14QuestionSwitch20UpdateModelTransformEv.cpp:
-    complete
-    .text start:0x020b50a0 end:0x020b512c
-
-src/_ZN14QuestionSwitch16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b512c end:0x020b51ac
-
-src/_ZN14QuestionSwitch6RenderEv.cpp:
-    complete
-    .text start:0x020b51ac end:0x020b51dc
-
-src/_ZN14QuestionSwitch8BehaviorEv.cpp:
-    complete
-    .text start:0x020b51dc end:0x020b5500
-
-src/_ZN14QuestionSwitch13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b5500 end:0x020b567c
-
-src/_ZN14QuestionSwitch10HandleClsnER8dActor_c.cpp:
-    complete
-    .text start:0x020b567c end:0x020b56c4
-
-src/_ZN14QuestionSwitch17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp:
-    complete
-    .text start:0x020b56c4 end:0x020b56d8
-
-src/QuestionSwitch_Spawn.c:
-    complete
-    .text start:0x020b56d8 end:0x020b5734
+    .text start:0x020b4ed8 end:0x020b5734
+    .data start:0x02108e14 end:0x02108edc
 
 src/_ZN9BlueFlameD1Ev.cpp:
     complete

@@ -1,9 +1,9 @@
 {
   "id": "ov002/daObjHatenaSwitch_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjHatenaSwitch_c.cpp",
+  "source": "src/actors/daObjHatenaSwitch_c.cpp",
   "promoted_source": "src/actors/daObjHatenaSwitch_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -152,7 +152,7 @@
     "UpdateClsnState, UpdateClsnTransform, UpdateModelTransform, HandleClsn, and AfterClsnCallback are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations, and codegen are proven; the exact original English names are not.",
     "QuestionSwitch_Spawn and QuestionSwitch_SpawnInfo remain evidence-bounded C ABI aliases. The typed factory retains retail's measured allocator, base/member constructors, and vptr seam because natural new targets _Znwm.",
     "The intact-object proof licenses the compiler-owned class RTTI, type name, typed SpawnInfo, and complete vtable at their natural retail data addresses while externalizing only exact inherited vague-linkage RTTI copies.",
-    "Promotion is fail-closed on the current #2054 owned-data verifier: the compiler-owned _ZTI19daObjHatenaSwitch_c relocation is the exact raw _ZTVN3abi20__si_class_type_infoE + 8 form targeting 0x0209a764, but verify_owned_sections resolves the configured public address point and adds 8 again (0x0209a76c). The inherited-RTTI verifier already compensates for this ABI preamble; the owned-data verifier does not. No manifest workaround or source hack is used.",
+    "The owned-data verifier checks the raw _ZTVN3abi20__si_class_type_infoE + 8 RTTI relocation against the configured public address point, then separately checks its exact +0 post-rebias form. The ordinary intact-object link is scratch-data-verified with no manifest workaround or source hack.",
     "The CLPS blocks, retained initializer at 0x02100ec4, ctor word, and resource BSS at 0x0210dd50..0x0210dda0 remain separately enrolled and are not claimed by this class TU.",
     "Legacy per-function contribution comparison is inapplicable across this atomic class-identity correction because the old objects define coined QuestionSwitch mangles. Production readiness requires the ordinary intact-object scratch link, exact owned data, and dry-run promotion in addition to the already-proven 13/13 text and direct blind:0 checks."
   ],
@@ -744,26 +744,76 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "data-refused",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov002-daObjHatenaSwitch_c/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
-        "compile": true
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
       },
-      "tuRange": null,
-      "tuRanges": null,
+      "tuRange": {
+        "start": "0x020b4ed8",
+        "end": "0x020b5734",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b4ed8",
+          "end": "0x020b5734",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02108e14",
+          "end": "0x02108edc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
       "objectAudit": {
-        "counts": null,
-        "emittedTextOrderIsRomAscending": null,
+        "counts": {
+          "LICENSED": 17
+        },
+        "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
-        "unlicensedSections": null
+        "unlicensedSections": []
       },
-      "symbolCheckNewVsBaseline": null,
-      "symbolCheckErrors": null,
-      "symbolCheckBaselineErrors": null,
-      "moduleSetSha256": null,
-      "rom": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
       "linkerOutput": null
     }
   }

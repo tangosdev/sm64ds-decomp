@@ -354,7 +354,6 @@ src/Quaternion_FromVector3.c	WEAK-refs-only	arm9				1		None		-
 src/Quaternion_Normalize.c	PURE-C	arm9				1		None		-
 src/Quaternion_SLerp.c	PURE-C	arm9				1		None		-
 src/QuestionBlock_Spawn.c	WEAK-refs-only	ov102				1		None		-
-src/QuestionSwitch_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV14QuestionSwitch	1		None	_ZTV14QuestionSwitch	-
 src/RLUnCompReadByCallbackWrite16bit.c	PURE-C					0		None		not-in-delinks
 src/RLUnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
 src/RabbitKey_Spawn.c	WEAK-refs-only	ov085				1		None		-

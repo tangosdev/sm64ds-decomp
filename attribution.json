@@ -1086,6 +1086,19 @@
     "src/actors/daObjKm3_Kaitendai_c.cpp#_ZN20daObjKm3_Kaitendai_cD0Ev": "tangosdev",
     "src/actors/daObjKm3_Kaitendai_c.cpp#_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/daObjKm3_Kaitendai_c.cpp#_ZN20daObjKm3_Kaitendai_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/daObjKm3_Kaitendai_c.cpp#func_ov047_021113bc": "github-actions[bot]"
+    "src/actors/daObjKm3_Kaitendai_c.cpp#func_ov047_021113bc": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c": "tangosdev",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c15UpdateClsnStateEv": "tangosdev",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv": "tangosdev",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c20UpdateModelTransformEv": "tangosdev",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c": "tangosdev",
+    "src/actors/daObjHatenaSwitch_c.cpp#_ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_": "ruspecial",
+    "src/actors/daObjHatenaSwitch_c.cpp#QuestionSwitch_Spawn": "github-actions[bot]"
   }
 }

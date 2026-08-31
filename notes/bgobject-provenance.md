@@ -477,12 +477,12 @@ In the `#else` C twin, ten offsets already named at exactly those offsets in
 
 ---
 
-## QuestionSwitch (`include/QuestionSwitch.h`, ov002, size 0x724)
+## daObjHatenaSwitch_c (`include/daObjHatenaSwitch_c.h`, ov002, size 0x724)
 
-Bodies read: `src/_ZN14QuestionSwitch13InitResourcesEv.cpp`,
-`src/_ZN14QuestionSwitch8BehaviorEv.cpp`,
-`src/_ZN14QuestionSwitch16CleanupResourcesEv.cpp`,
-`src/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp`.
+Bodies read in the promoted class TU: `daObjHatenaSwitch_c::InitResources`,
+`daObjHatenaSwitch_c::Behavior`, `daObjHatenaSwitch_c::CleanupResources`, and
+`daObjHatenaSwitch_c::OnGroundPounded` in
+`src/actors/daObjHatenaSwitch_c.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -492,8 +492,8 @@ Bodies read: `src/_ZN14QuestionSwitch13InitResourcesEv.cpp`,
 | 0x71b | `mTalking` | set to `1` on the frame the switch fires, immediately after the four `Particle::System::NewSimple` calls; gates the whole `Player::GetTalkState` / `Message::PrepareTalk` / `Player::ShowMessage` / `Message::EndTalk` block, and is cleared together with `mTalkingPlayer` when `Player::HasFinishedTalking` returns nonzero. |
 | 0x71c | `mSoundDelay` | armed with `0x4b` on the frame the talk starts and run down by `DecIfAbove0_Short`; on the frame it reaches zero `Behavior` calls `Sound::PlaySub(0x20, 0x7f, 0, 0x8777, 0)`. |
 
-In the C twin, `unk_124` became `mMeshCollider`, the name `include/dBgActor_c.h`
-gives that offset.
+The promoted header derives from `dBgActor_c` directly and owns two complete
+`dBgW_KcMbg` members plus `ModelAnim`; the obsolete flat C twin has been removed.
 
 ---
 
