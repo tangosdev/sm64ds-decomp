@@ -46,7 +46,7 @@ extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {
     virtual ~dScMgTrampoline2_c();
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
 
     /* 0x5004 -- the state callback, a pointer-to-member of this class, which

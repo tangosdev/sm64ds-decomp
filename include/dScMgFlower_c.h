@@ -63,7 +63,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        this class's KEY FUNCTION and none of these translation units emits
        _ZTV13dScMgFlower_c. */
     s32 InitResources();   /* slot  0 -- src/_ZN13dScMgFlower_c13InitResourcesEv.cpp */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     s32 Behavior();        /* slot  6 -- src/_ZN13dScMgFlower_c8BehaviorEv.cpp */
     s32 Render();          /* slot  9 -- src/_ZN13dScMgFlower_c6RenderEv.cpp */
 

@@ -293,15 +293,18 @@ s32 dScMgBSC_c::Render()
    The condition is spelled verbatim with its three compares (4, 5, 3): the
    ROM code carries all three, redundant as the first two are, and only the
    full spelling reproduces its bytes.
-   An override now: dScMgBase_c.h upstream (2026-08-31) declares slot 18
-   virtual int OnYoshiTryEat(int), its return type measured from
-   dScMgCoin_c's own real member -- the family form is int, and this
-   definition follows it (spelled s32; mangling ignores the return type,
-   so the emitted symbol stays _ZN10dScMgBSC_c13OnYoshiTryEatEi). No
-   return statement is spelled -- mwcc emits no return-value code for a
-   missing return, so the function's bytes stay the void-spelling's
-   bytes; the byte gate re-run on the rebased tree is the proof. */
-s32 dScMgBSC_c::OnYoshiTryEat(int mode)
+   An override of dScMgBase_c.h's slot 18, and the very conversion that
+   measured its return type: spelled s32 the tail registers shift (mwcc
+   reserves r0 for the return value in any non-void function; the retail
+   tail uses r0 as scratch -- 8 bytes differing), and mwcc rejects a void
+   override of an int base outright, so the s32 form was both wrong and
+   forced. The rebase first took s32 here on Coin's `return 0;` evidence,
+   the byte gate disproved it, and the base slot was amended to void the
+   same day -- see dScMgBase_c.h and notes/minigame-family-decisions.md.
+   void is this function's own measured form: byte-verified as void before
+   the base ever declared the slot, re-verified against the amended base
+   (match.py, 2004/b56). */
+void dScMgBSC_c::OnYoshiTryEat(int mode)
 {
     if (mode != 4 && mode != 5 && mode == 3) {
         mHudScore = func_ov004_020ad878();

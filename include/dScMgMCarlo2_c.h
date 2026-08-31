@@ -75,7 +75,7 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     s32 InitResources();      /* slot 0 -- src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp */
     s32 Behavior();           /* slot 6 -- ov006 0x020fa13c */
     s32 Render();             /* slot 9 -- src/_ZN14dScMgMCarlo2_c6RenderEv.cpp */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020f9fe0 */
 };

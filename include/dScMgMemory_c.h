@@ -53,7 +53,7 @@ extern "C" int func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
 
 struct dScMgMemory_c : dScMgSingle3DBase_c {
     virtual ~dScMgMemory_c();
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
 
     u8  pad_4f38[0x270];   /* 0x4f38 -- shared table, opaque here; see banner */

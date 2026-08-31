@@ -16,7 +16,7 @@ struct dScMgPanel_c : dScMgBase_c {
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     u8  pad_4660[0x648];
     s32 unk_4ca8;            /* 0x4ca8 */

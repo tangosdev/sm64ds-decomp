@@ -586,3 +586,32 @@ reviewer can strike it from the batch if they disagree.
 genuine TU; PR #2085 dropped an orphaned _ZTV3Amp declaration. The lane was
 rebased onto the current tip (`90763c379`) before the fold-in commits, so
 every claim above rides current main, not a stale tree.
+
+**Slot 18's return type is void — AMENDED 2026-08-31, measured three ways.**
+dScMgBase_c.h first declared slot 18 `virtual int OnYoshiTryEat(int)` on
+Coin's evidence alone: Coin's recovered member ended `return 0;`, and the
+reasoning ran "declaring void would have changed its bytes." That reasoning
+was never measured, and the BSC conversion disproved it twice over. First,
+mwcc rejects a void override of an int base outright ("differs from virtual
+base function in return type only"), so BSC's byte-verified void spelling
+could not compile against the declared base — the rebase forced s32, and the
+byte gate went RED by 8 bytes: mwcc reserves r0 for the return value in any
+non-void function, and BSC's retail tail uses r0 as scratch (`ldr r0,[pc,#0x18]`
+/ `mov r1,#1; str r1,[r0]` ... `add r0,r4,#0x5000`), so the int form shifts
+the whole tail up one register. Second, Coin's member recompiled as void —
+`return 0;` deleted — matches byte-identically (match.py, 2004/b56): the
+`mov r0,#0` the transcription read as a return was really the source
+register of the `unk_51c8 = 0` store, doing double duty only under an int
+reading. The 24 extern-C free-function bodies main itself cited are all
+written void and all match, so their retail originals are void-compiled
+too. The return type is not mangled, but it is codegen-relevant, and every
+real-member conversion of this slot under int walks into the same register
+shift — Card's and MCarlo's shadows are void, so their conversions inherit
+this adjudication. The amendment touches dScMgBase_c.h (slot 18 int→void,
+measurement paragraph rewritten), the 28 sibling declarations that mirrored
+the int (declaration-only — their slot-18 bodies are extern-C shadows, no
+bytes moved), Coin's member (void, `return 0;` retired), and BSC's member
+(void, its own original measured form). Slots 19 and 20 are untouched:
+slot 19's int is real evidence (the ov004 base body ends `return 1;`, and
+BSC's s32 override is byte-verified), slot 20's int is dActor_c.h:133's
+borrowed placeholder, its return type explicitly undetermined there.

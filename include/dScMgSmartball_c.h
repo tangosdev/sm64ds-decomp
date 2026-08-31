@@ -72,7 +72,7 @@ struct dScMgSmartball_c : dScMgBase_c {
        holds 0x02118b70 -- romdata_check scored _ZTV16dScMgSmartball_c DIFFERS on
        that one word. Naming the ROM body in ov006/symbols.txt gives the slot a
        symbol to point at; the bytes behind it are unchanged either way. */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     s32  InitResources();  /* slot  0 -- ov006 0x02118b70, not decompiled */
     void AfterCleanupResources(u32 vfSuccess);
                            /* slot  5 -- src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
