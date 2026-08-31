@@ -749,6 +749,12 @@ void port_vs_countdown_tick(void)
 //                           is eight times the ROM's own 0x3c wait and long
 //                           enough for a fade plus a scene bring-up to be
 //                           visible if one ever happens.
+//   SM64DS_VS_STAR_TARGET=<n>  the SECOND win condition: first player to n
+//                           stars ends the match through this same path.
+//                           Unset or 0 is off and off is the pure cartridge
+//                           behaviour. The launcher lobby sets it, so the
+//                           variable is the interface; see the trigger's own
+//                           block below.
 //
 // OUTSIDE VS THIS IS ONE COMPARE AND A RETURN. data_0209f2d8 != 1 leaves before
 // anything else is read, before any getenv, and before any static is written.
@@ -784,7 +790,8 @@ extern "C" int port_vs_match_end_poll(int frame)
     if (data_0209f2d8 != 1)
         return 0;
 
-    static int on = -1, want_scene = -1, want_exit = -1, grace = -1;
+    static int on = -1, want_scene = -1, want_exit = -1, grace = -1,
+               star_target = -1;
     if (on < 0) {
         const char *e = std::getenv("SM64DS_VS_MATCH_END");
         on = (e && e[0] == '0') ? 0 : 1;
@@ -795,27 +802,72 @@ extern "C" int port_vs_match_end_poll(int frame)
         e = std::getenv("SM64DS_VS_END_GRACE");
         grace = e ? std::atoi(e) : 240;
         if (grace < 0) grace = 0;
+        e = std::getenv("SM64DS_VS_STAR_TARGET");
+        star_target = e ? std::atoi(e) : 0;
+        if (star_target < 0) star_target = 0;
+        if (star_target > 0)
+            fprintf(stderr, "[vs] win condition: FIRST TO %d STAR(S). The ROM's "
+                    "own condition -- most stars when the clock runs out -- "
+                    "still stands underneath and whichever happens first ends "
+                    "the match (SM64DS_VS_STAR_TARGET)\n", star_target);
     }
     if (!on)
         return 0;
 
     static int fired = -1;      /* frame the statement ran on, -1 = not yet */
     static int announced;       /* the end marker has been printed          */
+    static int g_end_by_target; /* which trigger fired, for the marker       */
 
     if (fired < 0) {
-        /* Stage::Behavior's own guard, both halves, in its own order. */
-        if (data_ov002_02111188 != 0 || data_0209f204 == 0)
+        /* ---- TRIGGER ONE: the ROM's own. Stage::Behavior's guard, both
+           halves, in its own order. */
+        const int timeup = (data_ov002_02111188 == 0 && data_0209f204 != 0);
+        /* ---- TRIGGER TWO: FIRST TO N STARS, the host-layer alternative.
+         *
+         * The owner's ruling: online VS is a host-layer opt-in and already a
+         * mod, so the win condition is selectable -- the cartridge's "most
+         * stars when time runs out", or "first to X stars". This is the second
+         * one, and it is a WATCHER, never an editor. It reads data_0209f310,
+         * the ROM's own per-player carried-star array that GiveVsStars writes
+         * and NumVsStarsObtained sums, and it writes nothing anywhere: the
+         * ROM's five-star final-star behaviour underneath is untouched and so
+         * is the clock.
+         *
+         * UNSET OR 0 IS OFF, and off means the pure ROM behaviour -- one
+         * compare against a constant per frame and nothing else. The launcher
+         * lobby will set the variable, so the env IS the interface.
+         *
+         * BOTH TRIGGERS FEED ONE END PATH on purpose. Whichever fires first
+         * runs the same statement, prints the same marker and takes the same
+         * exit, so there is one match-over mechanism to reason about and not
+         * two that drift. */
+        int star_winner = -1;
+        if (star_target > 0) {
+            for (int i = 0; i < 4; ++i)
+                if ((int)data_0209f310[i] >= star_target) { star_winner = i; break; }
+        }
+        if (!timeup && star_winner < 0)
             return 0;
         fired = frame;
-        fprintf(stderr, "[vs] f%d TIME UP: the match clock reached zero and "
-                "Stage::Behavior's own end-of-match guard is open "
-                "(data_0209f204=%u, sub-counter=%u, wireless state=%d, "
-                "scores %d,%d,%d,%d, stars taken %d)\n",
-                frame, (unsigned)data_0209f204,
-                (unsigned)data_ov002_02111188, data_0209fc68,
-                (int)data_0209f310[0], (int)data_0209f310[1],
-                (int)data_0209f310[2], (int)data_0209f310[3],
-                (int)NumVsStarsObtained());
+        g_end_by_target = (star_winner >= 0);
+        if (star_winner >= 0)
+            fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
+                    "the target is %d (wireless state=%d, scores %d,%d,%d,%d, "
+                    "stars taken %d)\n", frame, star_winner,
+                    (int)data_0209f310[star_winner], star_target, data_0209fc68,
+                    (int)data_0209f310[0], (int)data_0209f310[1],
+                    (int)data_0209f310[2], (int)data_0209f310[3],
+                    (int)NumVsStarsObtained());
+        else
+            fprintf(stderr, "[vs] f%d TIME UP: the match clock reached zero and "
+                    "Stage::Behavior's own end-of-match guard is open "
+                    "(data_0209f204=%u, sub-counter=%u, wireless state=%d, "
+                    "scores %d,%d,%d,%d, stars taken %d)\n",
+                    frame, (unsigned)data_0209f204,
+                    (unsigned)data_ov002_02111188, data_0209fc68,
+                    (int)data_0209f310[0], (int)data_0209f310[1],
+                    (int)data_0209f310[2], (int)data_0209f310[3],
+                    (int)NumVsStarsObtained());
 
         if (data_0209fc68 == 0) {
             /* The single-console arm. Not reachable from a VS arena on this
@@ -867,9 +919,12 @@ extern "C" int port_vs_match_end_poll(int frame)
     announced = 1;
     /* THE MARKER. One line, fixed shape, in the flight recorder, so a launcher
        can watch for it without parsing the rest of a playlog. The scores are
-       the ROM's own per-player array and the total is the ROM's own sum. */
-    fprintf(stderr, "[vs] MATCH OVER f%d scores=%d,%d,%d,%d total=%d "
+       the ROM's own per-player array and the total is the ROM's own sum, and
+       `win=` says which of the two conditions ended it -- the launcher that
+       chose the condition is the thing that wants to know it was honoured. */
+    fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%d,%d,%d,%d total=%d "
             "pending_scene=%u results_screen=%s\n", frame,
+            g_end_by_target ? "star-target" : "time-up",
             (int)data_0209f310[0], (int)data_0209f310[1],
             (int)data_0209f310[2], (int)data_0209f310[3],
             (int)NumVsStarsObtained(), (unsigned)data_02092664,
