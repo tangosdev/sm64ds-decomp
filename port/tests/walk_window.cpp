@@ -5507,6 +5507,19 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
  * kept here rather than re-centring, for its reason: a window is where the
  * player left it, and a program that re-centres on a scene change moves a
  * window somebody put somewhere.
+ *
+ * AND WINDOWS DROPS THE RESIZE WHILE THE WINDOW IS MINIMIZED. Measured on a
+ * throwaway window rather than reasoned about: SetWindowPos with these three
+ * flags on a SW_SHOWMINNOACTIVE window leaves both the current rect and the
+ * restored rect exactly as they were, so a swap that happens while the window
+ * is in the taskbar comes back at the old shape. It is left that way on
+ * purpose. Nobody can pick a save file in a minimized window, so the swap
+ * arrives minimized only if somebody minimized it during the level bring-up;
+ * the cost is a window the wrong shape and NOT a picture the wrong shape,
+ * because present() fits whatever image is live into whatever client area
+ * exists and letterboxes the rest. The existing grow path above has the same
+ * property and has had it since it landed. Written down so the next reader
+ * meets it as a known edge rather than as a fresh bug.
  */
 static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what)
 {
