@@ -377,6 +377,34 @@ class RatifiedGateTests(unittest.TestCase):
             self.assertEqual(r.returncode, 1)
             self.assertIn("_Z14ApproachLinearRsss", r.stdout)
 
+    def test_the_sdk_mangled_family_fails_gated_with_their_ratified_forms(self):
+        """Outside review #2 (2026-08-31): Sound::PlayBank2_2D, GX/GXS::
+        LoadOBJPltt and G2x::SetBlendAlpha ship as mangled-name identifiers
+        in all four promoted ov006 files -- PlayBank2_2D alone has a dozen
+        call sites in dScMgCard_c.cpp -- and single-TU declarations form no
+        signature group, so the split machinery could never see them. The
+        ratified forms read off the mangle and the repo's own headers: G2x.h
+        carries SetBlendAlpha's measured EPVttttj shape, and PKv is
+        `const void*`, which is why Card's `(void*, u32, u32)` spelling is
+        the drift this ratification exists to catch."""
+        decls = ('extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);\n'
+                 "extern \"C\" void _ZN2GX11LoadOBJPlttEPKvjj(void *, u32, u32);\n"
+                 "extern \"C\" void _ZN3GXS11LoadOBJPlttEPKvjj(const void *, u32, u32);\n"
+                 "extern \"C\" void _ZN3G2x13SetBlendAlphaEPVttttj"
+                 "(volatile u16 *, int, int, int, int);\n")
+        with Scratch() as s:
+            s.src("a.cpp", decls + "void aFn(void) { }\n")
+            s.entry("m/a", "src_tu/a.cpp")
+            r = s.run("m/a")
+            self.assertEqual(r.returncode, 1)
+            for name in ("_ZN5Sound12PlayBank2_2DEj", "_ZN2GX11LoadOBJPlttEPKvjj",
+                         "_ZN3GXS11LoadOBJPlttEPKvjj", "_ZN3G2x13SetBlendAlphaEPVttttj"):
+                self.assertIn(f"retired mangled-name identifier {name}", r.stdout)
+            self.assertIn("ratified form: void Sound::PlayBank2_2D(u32)", r.stdout)
+            self.assertIn("ratified form: void G2x::SetBlendAlpha(volatile "
+                          "unsigned short*, unsigned short, unsigned short, "
+                          "unsigned short, unsigned int)", r.stdout)
+
     def test_retired_names_are_visible_in_report_mode(self):
         """Census mode stays report-only, but a retired name with no split
         never reaches the signature groups -- if the report did not surface
@@ -436,6 +464,30 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual([(w["offset"], w["member"], w["count"])
                           for w in cov["worklist"]],
                          [("0x20", "mState", 1), ("0x24", "mTimer", 1)])
+
+    def test_unk_and_pad_respellings_count_named_but_price_separately(self):
+        """The blind spot outside review #2 priced (2026-08-31): unk_/pad_
+        members are header members, so `->unk_28` raises named coverage and
+        lowers rawOffsets -- both metrics moving the "right" way while adding
+        no name the EAD team would have written. `named` stays the total so
+        old numbers remain comparable; `namedEncoded` isolates the respelled
+        share so a goal pass cannot ride on it."""
+        with Scratch() as s:
+            s.header("CovBase_c", COV_BASE_H).header("CovA_c", COV_A_H)
+            s.src("CovA_c.cpp",
+                  '#include "CovA_c.h"\n'
+                  'extern "C" void covA_unk(void *selfPtr) {\n'
+                  "    CovA_c *self = (CovA_c *)selfPtr;\n"
+                  "    self->mState = 1;\n"
+                  "    self->unk_28[0] = 2;\n"
+                  "}\n")
+            entry = s.entry("m/CovA_c", "src_tu/CovA_c.cpp")
+            rec = I.census_tu(s.dir, entry)
+        cov = rec["coverage"]
+        self.assertEqual(cov["named"], 2)
+        self.assertEqual(cov["namedEncoded"], 1)
+        self.assertEqual(cov["raw"], 0)
+        self.assertEqual(cov["fraction"], 1.0)
 
     def test_bare_method_names_and_spaced_access_do_not_inflate(self):
         with Scratch() as s:
