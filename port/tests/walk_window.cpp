@@ -462,20 +462,20 @@ static unsigned short host_btn_to_raw_keys(unsigned short btn)
     return raw;
 }
 
-/* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
-   0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
+/* run mg15 lane MP1. The fan-out runs the ROM's own steps 0x16 and 0x17
+   (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
    TouchInfo[4] and PadData[4] come out of the four comms records the way the
-   DS builds them instead of being written directly by the port. OFF by
-   default: the swap is MP2's, and MP1's byte-identical solo proof depends on
-   the default path being untouched.
+   DS builds them instead of being written directly by the port. The default
+   is decided in ONE place now -- port::comms_fanout_active(), banner in
+   hal/comms_conductor.cpp -- and it is ON whenever a transport is installed,
+   because a session that skips the two steps is two solo sims sharing a wire
+   nobody reads. SM64DS_COMMS_FANOUT still overrides both ways ("0" off, "1"
+   on); with it unset a solo boot has no transport and keeps the direct
+   stores, which is what MP1's byte-identical solo proof depends on.
    SM64DS_COMMS_REPORT=1 additionally prints the four slots each frame
    (port::comms_report), which is the instrument the two-instance stylus proof
    reads its verdict off. */
-static bool comms_fanout_on() {
-    static int v = -1;
-    if (v < 0) v = getenv("SM64DS_COMMS_FANOUT") ? 1 : 0;
-    return v != 0;
-}
+static bool comms_fanout_on() { return port::comms_fanout_active(); }
 static bool comms_fanout_report() {
     static int v = -1;
     if (v < 0) v = getenv("SM64DS_COMMS_REPORT") ? 1 : 0;

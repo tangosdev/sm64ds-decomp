@@ -4457,7 +4457,7 @@ static void port_scene_comms_publish(void)
            transport is up. Either source can only add held keys the host
            actually saw; neither can invent one. */
         unsigned short held = g_host_key_bits;
-        if (!(port::comms_transport() && std::getenv("SM64DS_COMMS_FANOUT")))
+        if (!(port::comms_transport() && port::comms_fanout_active()))
             held |= data_020a0e58[0];
         *(unsigned short *)data_020a104e = (unsigned short)(held & 0x2fff);
     }

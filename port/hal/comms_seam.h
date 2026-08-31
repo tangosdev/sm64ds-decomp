@@ -425,12 +425,26 @@ CommsReadout comms_readout();
 // data_020a0e58 plus the per-player edge masks. Both are the ROM's, linked
 // through port/slice_comms.txt.
 //
-// NOT CALLED FROM ANY FRAME LOOP YET. The port still writes TouchInfo and
-// PadData directly, and replacing that is MP2's change because that is the
-// one with a regression surface. This entry point exists so the closure can
-// be exercised and proven now.
+// Called from the level loop (tests/walk_window.cpp) right where
+// func_020197b8 runs the two steps on the DS, gated on comms_fanout_active
+// below; the same predicate stands the port's direct TouchInfo/PadData
+// stores down while the fan-out drives.
 // ---------------------------------------------------------------------------
 void comms_fanout();
+
+// Whether the fan-out should be driving. Explicit SM64DS_COMMS_FANOUT wins in
+// both directions -- atoi semantics, so "0" forces it off where the old
+// present-means-on read could not -- and with the variable ABSENT the answer
+// is ON exactly when a transport is installed. On the DS there is no other
+// mode: func_020197b8 runs steps 0x16 and 0x17 on every frame of every boot,
+// so a session that skips them is not a configuration, it is the defect the
+// first live two-window test found (each window simulating alone, publishing
+// to a wire nobody consumed). The absent-and-solo case answers no only
+// because the port's single-player path writes the two arrays directly and
+// MP1's byte-identical solo proof depends on that path staying untouched.
+// The transport half is read live rather than latched: scene_vs_menu.cpp
+// installs the loopback mid-run, and the default must follow it up.
+bool comms_fanout_active();
 
 // One line per player: the four 0x24-byte records at data_020a1154 as the
 // game will actually read them, plus the local record at data_020a1040.
