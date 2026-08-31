@@ -2763,7 +2763,7 @@ _MULTI_OVERLAY_MODULE = re.compile(r"overlays\((\d+(?:,\d+)*)\)")
 
 
 def _relocation_module_set(field):
-    """Exact normalized destination-module set for one config/manifest field.
+    """Exact normalized destination-module set for one configuration or manifest field.
 
     dsd uses ``overlays(2,7)`` when the same destination address is valid in a
     known set of mutually exclusive overlays.  That is an ambiguity license, not a
