@@ -1151,6 +1151,7 @@ void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
 void port_input_probe_star_trigger(int frame);  /* TEMPORARY: SM64DS_STAR_TRIGGER */
+void port_vs_stars_probe(int frame);            /* TEMPORARY: SM64DS_VS_STARS */
 void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
@@ -9863,6 +9864,7 @@ int main(void)
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
             port_actor_tick();
+            port_vs_stars_probe(frame);        /* TEMPORARY: SM64DS_VS_STARS */
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
         } else {

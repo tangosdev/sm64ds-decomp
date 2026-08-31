@@ -260,6 +260,75 @@ static int star_trigger_wants(int frame)
     return 0;
 }
 
+/* TEMPORARY read-only readout for the VS scoring investigation.
+ *
+ *   SM64DS_VS_STARS=1
+ *
+ * Walks the live actor list and prints every PowerStar (class 178/0xb2 and the
+ * silver 0xb3) and every StarMarker (class 180/0xb4) with the exact fields the
+ * state-9 wake-up path reads, plus the arena's running star order. Prints only
+ * when something changes, so a stalled arena prints once and then goes quiet.
+ * Writes nothing. */
+extern "C" {
+extern unsigned char *data_0209f344;    /* the arena's star running order */
+extern unsigned char data_0209f208;     /* how far into that order we are */
+extern unsigned char data_0209f2d8;     /* 1 = VS mode */
+extern signed char data_0209f310[];     /* per-player VS star counts */
+extern signed char NumVsStarsObtained(void);
+}
+
+extern "C" void port_vs_stars_probe(int frame)
+{
+    if (!std::getenv("SM64DS_VS_STARS")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+    char buf[1400];
+    int w = 0;
+    buf[0] = 0;
+    Node *n = *(Node **)&data_0209b468;
+    while (n && w < 1100) {
+        char *a = (char *)n->x8;
+        if (a) {
+            unsigned cls = *(unsigned short *)(a + 0xc);
+            if (cls == 0xb2 || cls == 0xb3) {
+                w += std::snprintf(buf + w, sizeof buf - (unsigned)w,
+                    " STAR{p=%p uid=%08x cls=%03x kind=%d st=%d st444=%d "
+                    "idx=%u a2=%04x mk=%08x}",
+                    (void *)a, *(unsigned *)(a + 4), cls,
+                    *(int *)(a + 0x43c), *(int *)(a + 0x440),
+                    *(int *)(a + 0x444), (unsigned)*(unsigned char *)(a + 0x49d),
+                    (unsigned)*(unsigned short *)(a + 0x4a2),
+                    *(unsigned *)(a + 0x434));
+            } else if (cls == 0xb4) {
+                w += std::snprintf(buf + w, sizeof buf - (unsigned)w,
+                    " MARK{p=%p uid=%08x par=%08x mState=%u mStarID=%u "
+                    "mFlags=%02x timer=%u spawnedID=%08x ec=%08x}",
+                    (void *)a, *(unsigned *)(a + 4), *(unsigned *)(a + 8),
+                    (unsigned)*(unsigned char *)(a + 0x1d8),
+                    (unsigned)*(unsigned char *)(a + 0x1d9),
+                    (unsigned)*(unsigned char *)(a + 0x1db),
+                    (unsigned)*(unsigned short *)(a + 0x1d4),
+                    *(unsigned *)(a + 0x1cc), *(unsigned *)(a + 0xec));
+            }
+        }
+        n = n->next;
+    }
+    unsigned ordv = 0;
+    if (data_0209f344)
+        for (int i = 0; i < 5; ++i) ordv = ordv * 16 + (data_0209f344[i] & 0xf);
+    static unsigned last_hash = 0xffffffffu;
+    unsigned h = (unsigned)w * 2654435761u + ordv;
+    for (int i = 0; i < w; ++i) h = h * 31u + (unsigned char)buf[i];
+    if (h == last_hash) return;
+    last_hash = h;
+    std::fprintf(stderr, "[vsstar] f%d mode=%u ordptr=%p ordidx=%u order=%05x "
+                 "scores=%d,%d,%d,%d sum=%d |%s\n",
+                 frame, (unsigned)data_0209f2d8, (void *)data_0209f344,
+                 (unsigned)data_0209f208, ordv,
+                 (int)data_0209f310[0], (int)data_0209f310[1],
+                 (int)data_0209f310[2], (int)data_0209f310[3],
+                 (int)NumVsStarsObtained(), w ? buf : " (no stars, no markers)");
+}
+
 extern "C" void port_input_probe_star_trigger(int frame)
 {
     static int arm_at = -1;
