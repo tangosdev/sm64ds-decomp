@@ -106,6 +106,8 @@ extern short         data_0209f308;
 extern unsigned char data_0209f2c4;   /* pause-screen state; 0 = playing */
 extern unsigned char data_0209fc50;   /* players in the match (SetNumPlayers) */
 extern int           data_0208ee44;   /* vblanks per game tick */
+extern unsigned char data_0209d45c;   /* engine A's software layer mask; the
+                                         frame's DISPCNT publish copies it */
 
 }  // extern "C"
 
@@ -374,6 +376,101 @@ void seat_vs_countdown(void)
     }
 }
 
+/* ---- WHY THERE IS NO VS SCOREBOARD AND NO MATCH CLOCK ON SCREEN -----------
+ *
+ * Reported from real play: no star count and no countdown anywhere, on either
+ * screen, for the whole match. The HUD is NOT missing and this is worth saying
+ * first, because "the HUD actor never spawns" was the reasonable guess and it
+ * is wrong. Measured, SM64DS_VS_HUD=1 (hal/input_probe.cpp) on a live arena:
+ *
+ *     [vshud] f3 DISPCNT_A 00000000 OBJ OFF | mask d45c=00 (engine A, OBJ NOT
+ *             asked for) d454=18 | engine A OAM: 0 all-zero, 122 parked,
+ *             6 PLACED
+ *
+ * Six sprites PLACED in engine A's OAM on frame 3 and every frame after. The
+ * HUD is alive, HUD::Behavior runs (it is what counts the match clock down --
+ * that is the same object), HUD::Render takes its VS arm, and RenderVsTimer
+ * and RenderStarCount put their digits exactly where the ROM puts them: engine
+ * A, the TOP screen, sub=0 on every OAM::Render call in both.
+ *
+ * WHAT IS MISSING IS ONE ASSIGNMENT. On the DS nothing writes DISPCNT's layer
+ * enables directly. Code sets a software mask -- data_0209d45c for engine A --
+ * and func_02019144 copies it into bits 8-12 once a frame. The port does that
+ * copy (hal/message_compositor.cpp's engine-A publish, every frame, and it
+ * works). What the port never does is SET the mask, because the line that sets
+ * it is Stage::InitResources line 402:
+ *
+ *     data_0209d45c = 0x11;          BG0 and OBJ
+ *
+ * and Stage::InitResources is not run by the port. port/stage_lifecycle_map.txt
+ * section 2d lists that exact statement with "none" in its seat column and
+ * notes hal/auto_bss.cpp leaves the word zero. So the mask is 0, the publish
+ * copies 0, and the engine-A compositor's `!any_bg && !obj_on` exit returns
+ * before it draws -- with the HUD's sprites sitting in OAM the whole time.
+ *
+ * ---- WHY THIS SEAT IS GATED ON VS, WHEN THE ROM'S IS NOT -------------------
+ *
+ * The ROM's line has no condition and neither should the port's, eventually.
+ * It is gated here because the SAME assignment turns on the ADVENTURE HUD --
+ * the health meter, the coin counter, the star count, every one of them a
+ * matched HUD leaf already in the link and already writing OAM into the same
+ * dark register. That is a picture appearing on every adventure screen in the
+ * game, which retakes every BMP baseline the battery holds and is not this
+ * lane's to spend. Gating on the mode keeps an adventure frame byte-identical
+ * and gives the VS arena the two things it was asked for.
+ *
+ * SM64DS_ENGINE_A_LAYERS=always is the ROM's own unconditional form, on this
+ * same binary, so the lane that takes the adventure HUD can see what wakes up
+ * before it commits to re-taking the baselines. =off restores the pre-seat
+ * behaviour the same way. */
+void seat_engine_a_layers(void)
+{
+    static int mode = -1;   /* 0 off, 1 VS only (default), 2 always */
+    if (mode < 0) {
+        const char *e = std::getenv("SM64DS_ENGINE_A_LAYERS");
+        mode = 1;
+        if (e && std::strcmp(e, "off") == 0) mode = 0;
+        else if (e && std::strcmp(e, "always") == 0) mode = 2;
+    }
+    if (mode == 0)
+        return;
+    if (mode == 1 && data_0209f2d8 != 1)
+        return;
+    data_0209d45c = 0x11;
+    /* AND BG0 IS THE 3D LAYER, WHICH HAS TO BE SAID OR THE MASK MAKES IT WORSE.
+     *
+     * DISPCNT bit 3 selects whether engine A's BG0 shows the 3D engine's output
+     * or an ordinary tiled background. On the DS a 3D level always has it set,
+     * through GX::SetGraphicsMode's `c << 3` (src/_ZN2GX15SetGraphicsModeEiii.c)
+     * -- which is why the ROM's mask can name BG0 at all. The port never calls
+     * it: it renders 3D through its own path and leaves engine A's DISPCNT
+     * alone, so the register's low byte is zero for the whole run.
+     *
+     * hal/message_compositor.cpp keys on that bit by name: BG0 with bit 3 set
+     * is "the 3D LAYER, not composited here (the 3D frame is already in the
+     * framebuffer)", and without it an ordinary 2D text background. So seating
+     * the mask ALONE would enable a BG0 the DS never composites as 2D, and the
+     * compositor would draw whatever happens to be in that tilemap over the
+     * whole top screen. Measured, before this line was added: 34638 changed
+     * pixels spread over every band of the top screen instead of the HUD's own
+     * rows. With it, the compositor skips BG0 exactly as the hardware does and
+     * only OBJ -- the timer and the star count -- reaches the picture.
+     *
+     * A raw register write in a host file is not the shape this tree likes, and
+     * the alternative is worse: GX::SetGraphicsMode would also set the BG mode
+     * and the display mode, two fields the port deliberately leaves at zero
+     * because it does not drive engine A. One bit, stating a fact about this
+     * port that is permanently true on the level path. */
+    *(volatile unsigned int *)0x04000000 |= 8;
+    fprintf(stderr, "[vshud] engine A layer mask seated: data_0209d45c = 0x11 "
+            "(BG0 + OBJ) and DISPCNT bit 3 (BG0 is the 3D layer), "
+            "Stage::InitResources line 402. %s\n",
+            mode == 2 ? "SM64DS_ENGINE_A_LAYERS=always: every mode, the ROM's "
+                        "own unconditional form"
+                      : "VS only by default; SM64DS_ENGINE_A_LAYERS=always for "
+                        "the adventure HUD too");
+}
+
 }  // namespace
 
 extern "C" {
@@ -423,6 +520,10 @@ void port_boot_course_sound(int level)
 {
     seat_course_sound(level);
     seat_vs_countdown();
+    /* the third statement of Stage::InitResources this file seats, and the one
+       that puts the VS scoreboard and the match clock on screen; see its own
+       block above for why it is the mask and not the HUD that was missing */
+    seat_engine_a_layers();
 }
 
 /* ---- THE ARENA'S OWN MUSIC ------------------------------------------------
