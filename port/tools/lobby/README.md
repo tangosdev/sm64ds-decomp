@@ -47,13 +47,14 @@ The tests spawn their own server on a pid-derived port and need no arguments:
 python3 test_units.py                       # no sockets at all
 python3 test_client.py selftest             # spawns a server, proves the wire
 python3 test_client.py negatives --out DIR  # writes one file per refusal
+python3 test_client.py dial                 # the dial, on the DEPLOYED knobs
 python3 test_client.py soak --seconds 60
 python3 test_client.py selftest --url https://tangos.dev/port/lobby
 ```
 
 ---
 
-## THE WIRE CONTRACT, v1
+## THE WIRE CONTRACT, v1–v2
 
 ### Rules that apply to every request
 
@@ -65,7 +66,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 | `Content-Length` | REQUIRED, and parsed **before any rejection** | missing -> 411 `length_required`, close |
 | request body | <= 4096 bytes | 413 `too_large`, connection closed (body not read) |
 | JSON shape | one object; no arrays at the top level | 400 `bad_shape` |
-| `v` | REQUIRED, integer, must be `1` | 400 `bad_version` |
+| `v` | REQUIRED, integer, `1` to `2` (see below) | 400 `bad_version` |
 | unknown top-level key | rejected | 400 `bad_field` |
 | missing required key | rejected | 400 `bad_field` |
 | wrong type for a key | rejected | 400, the field's own code |
@@ -78,6 +79,20 @@ Error bodies are `{"v":1,"error":"<code>"}`. Codes are written with underscores
 launcher and the server ship together and are versioned together, so a field
 that appears without a version bump is a bug or an attack and there is no third
 option. Adding a field is a `v` bump.
+
+**The version is a RANGE, and the answer echoes what the request claimed.**
+`v` may be anything from `contract_min` (1) to `contract_v` (2), both reported
+by `/health`. A hard pin would have turned "adding a field is a `v` bump" into
+"every restart refuses every launcher already in the wild", which is the
+opposite of what the rule protects. The strictness stays where it belongs:
+**each verb offers a v1 client exactly the v1 field set**, so a request that
+says `"v":1` and then carries a v2 field is `bad_field`, exactly as it would be
+for a field nobody has ever defined. A v1 request gets a v1 answer.
+
+| version | what it adds |
+|---|---|
+| v1 | everything through launcher 0.3.0 |
+| v2 | `params` may carry `match_players` — the host's player-count dial |
 
 **The keep-alive drain trap, and why a refusal closes the connection.** With
 `HTTP/1.1` keep-alive, returning a rejection *without reading the body the
@@ -103,7 +118,7 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 
 | field | type | rule | reject code |
 |---|---|---|---|
-| `v` | int | `== 1` | `bad_version` |
+| `v` | int | `1..2` (the contract range `/health` reports) | `bad_version` |
 | `room` | string | exactly 6 chars from `ABCDEFGHJKMNPQRSTUVWXYZ23456789` | `bad_room` |
 | `token` | string | exactly 32 chars from `0-9a-f` | `bad_token` |
 | `nick` | string | 1..16 **bytes**, every byte `0x20..0x7E` **except `,`**, not all spaces, no leading/trailing space | `bad_nick` |
@@ -114,6 +129,7 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 | `win_mode` | string | exactly `"time"` or `"stars"` | `bad_win_mode` |
 | `star_target` | int | 1..`STAR_TARGET_MAX`; required iff `win_mode == "stars"`, forbidden otherwise | `bad_star_target` |
 | `seat` | int | 1..`MAX_SEATS`, an occupied seat that is not the host's | `bad_seat` |
+| `match_players` | int | 2..`dial_max`; optional on `params`, and **v2 only** | `bad_match_players` |
 | `pre_ok` | bool | `true`/`false`; optional on `create` and `join` | `bad_field` |
 
 A string longer than its cap answers `too_long` rather than the field's own
@@ -276,7 +292,7 @@ resynced past its `go` event still has its plan and can spawn.
 {"seq":8,"kind":"joined","seat":2,"display":"opie"}
 {"seq":9,"kind":"left","seat":3,"display":"nn","why":"quit"|"timeout"|"kicked"}
 {"seq":10,"kind":"chat","seat":2,"display":"opie","text":"gg"}
-{"seq":11,"kind":"params","map":2,"win_mode":"stars","star_target":3}
+{"seq":11,"kind":"params","map":2,"win_mode":"stars","star_target":3,"match_players":4}
 {"seq":12,"kind":"arming","match":"<16 hex>","deadline_ms":20000}
 {"seq":13,"kind":"go","match":"<16 hex>","plan":{...}}
 {"seq":15,"kind":"failed","match":"<16 hex>","reason":"no_pairing"}
@@ -310,11 +326,46 @@ launcher greys its Send button rather than showing an error.
 ```
 -> {"v":1, "room":"...", "token":"...", "map":2, "win_mode":"stars", "star_target":3}
 <- 200 {"v":1, "cursor":11}
+
+v2 adds the player-count dial, which is OPTIONAL:
+-> {"v":2, "room":"...", "token":"...", "map":2, "win_mode":"time", "match_players":4}
+<- 200 {"v":2, "cursor":11}
 ```
 
 403 `not_host`; 409 `not_in_lobby` once a match is arming or running. All three
-fields are sent together every time, so two in-flight edits have no ordering
+v1 fields are sent together every time, so two in-flight edits have no ordering
 hazard. The star target is the host's to pick, from 1 to `STAR_TARGET_MAX`.
+
+**`match_players` — the dial.** How many of the room's seats play. The first
+that many people in the room play; everybody past them watches. It is a room
+parameter like the arena and the win condition: host-only, lobby-only, frozen
+from Start until the room comes back.
+
+- **Range `2` to `dial_max`**, where `dial_max = min(16, MAX_SEATS,
+  GAME_MAX_PLAYERS)` and is advertised in every room `view` and by `/health`.
+  Anything outside it is `400 bad_match_players` — **refused, never clamped**.
+  A host who asks for eight and silently gets four has been lied to and would
+  only find out by counting heads.
+- **Optional, and v2-only.** Omitting it leaves the room's dial alone, which is
+  what launcher 0.3.0 does on every settings edit it makes. Sending it at
+  `"v":1` is `bad_field`.
+- **A room that nobody dials** sits at `GAME_MAX_PLAYERS`, so seating is
+  byte-for-byte what it was before the dial existed.
+- **Moving it moves as few people as possible.** Raising it promotes the
+  lowest-numbered watchers; lowering it demotes the highest-numbered players.
+  The host (seat 1) is never demoted — the host is the session's parent.
+- **`view` gains `match_players` and `dial_max`.** `max_players` is unchanged
+  and still means `GAME_MAX_PLAYERS`; the dial does not get to redefine a field
+  a shipped launcher already reads.
+- **The `go` plan gains `match_players`** beside `players`. `players` is what
+  actually turned up and is what rides into `SM64DS_VS_PLAYERS`;
+  `match_players` is what the host asked for. They differ when the room did not
+  fill, and the launcher can then say "3 of the 4 you picked" without guessing.
+
+**The dial reaches 16 and the game does not.** See the ceiling map at the end
+of this file. Sixteen is what the control expresses; four is what the game has
+been proved at, and `GAME_MAX_PLAYERS` in `docker-compose.yml` is the one place
+that truth is configured.
 
 #### `preflight`
 
@@ -502,7 +553,8 @@ seat opened.
 
 ```
 GET /port/lobby/health
-<- 200 {"ok":true,"ts":"...","revision":"lobby-1","rooms":3,"members":7,"waiters":5}
+<- 200 {"ok":true,"ts":"...","revision":"lobby-1","contract_min":1,"contract_v":2,
+        "dial_max":4,"rooms":3,"members":7,"waiters":5}
 ```
 
 `rooms` visible from outside is the difference between a detectable outage and

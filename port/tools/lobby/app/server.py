@@ -58,6 +58,29 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 REVISION = "lobby-1"
 
+# ------------------------------------------------------- the contract version
+#
+# The contract is versioned, and the version is NEGOTIATED rather than pinned,
+# because section 3.0 makes an unknown key a 400 and says "adding a field is a
+# `v` bump". A hard bump would refuse every shipped launcher on the next
+# restart, which is the opposite of what the rule is for. So:
+#
+#   * a request may carry any `v` from CONTRACT_MIN to CONTRACT_V,
+#   * the answer echoes the version the request used,
+#   * a field introduced at v2 is a `bad_field` at v1, exactly as strict as
+#     before for a client that claims to speak v1.
+#
+# v1: create/join/poll/chat/params/preflight/start/ready/result/failed/kick/
+#     leave, as shipped in launcher 0.3.0.
+# v2: `params` may carry `match_players` - the host's player-count dial.
+CONTRACT_MIN = 1
+CONTRACT_V = 2
+
+# The version a request must claim before `params` will take `match_players`.
+# Named rather than spelled 2 at the check, so that the next bump does not
+# accidentally lock v2 clients out of the field v2 introduced.
+V_DIAL = 2
+
 # ------------------------------------------------------------------ config
 #
 # Everything tunable comes from the environment so the box can be retuned with
@@ -80,9 +103,53 @@ LISTEN_PORT = env_int("LISTEN_PORT", 8091, 1, 65535)
 LISTEN_ADDR = env_str("LISTEN_ADDR", "0.0.0.0")
 
 MAX_ROOMS = env_int("MAX_ROOMS", 64, 1, 4096)
-MAX_SEATS = env_int("MAX_SEATS", 4, 2, 4)
-GAME_MAX_PLAYERS = env_int("GAME_MAX_PLAYERS", 2, 1, 4)
+
+# THE HARD CEILING ON THE DIAL. Sixteen is the number the owner asked the dial
+# to reach, and it is written here once so that every other bound in this file
+# is derived from it rather than typed again. It is a bound on what the LOBBY
+# will express, not a claim about what the GAME can run: see the ceiling map in
+# README.md. The game's proven ceiling today is four.
+DIAL_HARD_MAX = 16
+
+# How many seats a room holds, and how many of them the deployment's game build
+# can actually play. Both clamps now reach DIAL_HARD_MAX so that raising the
+# ceiling is a compose edit, and both DEFAULTS are unchanged, so a deployment
+# that edits nothing behaves exactly as it did.
+MAX_SEATS = env_int("MAX_SEATS", 4, 2, DIAL_HARD_MAX)
+GAME_MAX_PLAYERS = env_int("GAME_MAX_PLAYERS", 2, 1, DIAL_HARD_MAX)
 MAX_WAITERS = env_int("MAX_WAITERS", 96, 1, 4096)
+
+# THE DIAL'S SERVER-ENFORCED UPPER BOUND, derived, never configured directly.
+# A host cannot pick a number bigger than the room holds, and cannot pick a
+# number bigger than the deployment says the game can run. Advertised in every
+# room view as `dial_max` so the launcher greys the rest of the control instead
+# of finding out by being refused.
+#
+# NOT floored at 2. A deployment that sets GAME_MAX_PLAYERS=1 gets DIAL_MAX=1
+# and every dial value is refused, which is honest: `start` already needs two
+# playing seats, so such a deployment could never start a match anyway, and
+# flooring the dial at 2 would have quietly made its joiners playing members.
+DIAL_MAX = 0
+
+# What a room's dial reads before the host touches it: the deployment's own
+# capability, so a room that nobody configures plays the way it always did.
+# With the compose file's GAME_MAX_PLAYERS=4 this is 4, which is byte-for-byte
+# the seating rule this service had before the dial existed.
+DIAL_DEFAULT = 0
+
+
+def recompute_dial():
+    """Derive the dial's bounds from the two knobs. Called at import, and by
+    the unit tests after they move a knob -- which is exactly what a compose
+    edit plus a restart does. A function rather than two module-level
+    expressions so a test cannot restate the derivation and then drift from
+    it."""
+    global DIAL_MAX, DIAL_DEFAULT
+    DIAL_MAX = min(DIAL_HARD_MAX, MAX_SEATS, GAME_MAX_PLAYERS)
+    DIAL_DEFAULT = DIAL_MAX
+
+
+recompute_dial()
 
 # The largest "first to N stars" a host may pick. FIVE TODAY BECAUSE AN ARENA
 # HOLDS FIVE STARS, not because the number five is special: the owner picks the
@@ -361,6 +428,12 @@ class Room(object):
         self.map = 0
         self.win_mode = "time"
         self.star_target = None
+        # THE HOST'S PLAYER-COUNT DIAL. How many of this room's seats play;
+        # everybody past it watches. A room parameter like map and win_mode,
+        # set through `params`, frozen from Start until the room is back in
+        # lobby. It starts at the deployment's own capability so a host who
+        # never opens the settings dialog gets the old behaviour exactly.
+        self.match_players = DIAL_DEFAULT
         self.match = None
         # STAGE B/C match state, all None/empty in lobby and reset by
         # _reset_match. Frozen at the arming instant so a join, a leave or a
@@ -370,6 +443,7 @@ class Room(object):
         self.match_map = 0          # params frozen into the plan at arm
         self.match_win_mode = "time"
         self.match_star_target = None
+        self.match_dial = 0         # the dial the host had set at arm
         self.names = ""             # SM64DS_VS_NAMES, built once, slot order
         self.slot_of = {}           # seat -> slot (0..3), packed among playing
         self.arm_deadline = None    # monotonic; arming must complete by here
@@ -445,6 +519,48 @@ class Room(object):
     def playing_count(self):
         return sum(1 for m in self.members.values() if m.playing)
 
+    def apply_dial(self):
+        """Make the roster agree with `match_players` after the host moves the
+        dial, moving as few people as possible.
+
+        MINIMAL CHURN IS THE WHOLE DESIGN. Raising the dial PROMOTES the
+        lowest-numbered watchers until the playing count reaches the new
+        number; lowering it DEMOTES the highest-numbered players until it does.
+        Nobody who can stay in their role is moved, so a host nudging the dial
+        from 3 to 4 and back does not shuffle the three people who were already
+        playing.
+
+        WHY NOT "the N lowest seats play", which would be one line: because
+        seat numbers are REUSED (see free_seat). Seats 1,3,4 with the dial at 2
+        play {1,3}; a fifth person joining takes the freed seat 2, and the
+        rank rule would then throw seat 3 out of a match they were already in
+        to make room for somebody who just walked in. Promotion-on-vacancy and
+        this function are the same rule stated twice, and both move a member
+        only when a seat actually opened or closed.
+
+        THE HOST IS NEVER DEMOTED. Seat 1 is the host and the host is the
+        parent of the game session; a spectating host would hand out a go plan
+        with no parent in it. Demoting from the highest seat down cannot reach
+        seat 1 while the dial is at least 1, and the loop refuses it anyway
+        rather than relying on that.
+        """
+        want = self.match_players
+        seats = sorted(self.members)
+        while self.playing_count() < want:
+            for s in seats:
+                if not self.members[s].playing:
+                    self.members[s].playing = True
+                    break
+            else:
+                break
+        while self.playing_count() > want:
+            for s in reversed(seats):
+                if self.members[s].playing and s != self.host_seat:
+                    self.members[s].playing = False
+                    break
+            else:
+                break
+
     def refresh_displays(self):
         """Disambiguate duplicate nicknames, once, here.
 
@@ -500,7 +616,17 @@ class Room(object):
             "host": self.host_seat,
             "you": you,
             "slots": len(self.members),
+            # UNCHANGED MEANING, deliberately. Launcher 0.3.0 reads
+            # `max_players` and the dial does not get to redefine a field a
+            # shipped binary already understands. It is still the deployment's
+            # capability. The two new fields below are additive: an older
+            # launcher's JSON reader drops what it has no property for.
             "max_players": GAME_MAX_PLAYERS,
+            # The host's dial, and the largest value the server will accept for
+            # it. `dial_max` is what lets the launcher grey out the rest of the
+            # control instead of discovering the bound by being refused.
+            "match_players": self.match_players,
+            "dial_max": DIAL_MAX,
             "map": self.map,
             "win_mode": self.win_mode,
             "star_target": self.star_target,
@@ -821,7 +947,10 @@ def do_create(body, who, now):
 
     room = Room(code, now)
     token = new_token()
-    m = Member(1, token, nick, GAME_MAX_PLAYERS >= 1, pre_ok, now, who)
+    # The host plays if the dial has room for anybody at all. The host is also
+    # the session's parent, so a host who is not playing is not a thing any
+    # later code has to handle: `apply_dial` refuses to demote seat 1.
+    m = Member(1, token, nick, room.match_players >= 1, pre_ok, now, who)
     room.members[1] = m
     room.by_token[token] = 1
     room.host_seat = 1
@@ -866,7 +995,10 @@ def do_join(body, who, now):
     if seat is None:
         return 409, {"error": "room_full"}
     token = new_token()
-    playing = room.playing_count() < GAME_MAX_PLAYERS
+    # The dial decides, not the deployment knob. Same rule as before -- the
+    # first N in the room play -- with N now chosen by the host instead of
+    # fixed for the whole server.
+    playing = room.playing_count() < room.match_players
     room.members[seat] = Member(seat, token, nick, playing, pre_ok, now, who)
     room.by_token[token] = seat
     room.refresh_displays()
@@ -918,11 +1050,20 @@ def do_chat(body, who, now):
 
 
 def do_params(body, who, now):
-    """Host only. In stage A this exists for one reason beyond completeness:
-    it is the host-only verb the stage's own negative proof exercises with
-    another member's token."""
-    err = shape(body, ("v", "room", "token", "map", "win_mode"),
-                ("star_target",))
+    """Host only. The room's settings: arena, win condition, and -- from
+    contract v2 -- how many of the room's seats play.
+
+    `match_players` IS OPTIONAL AND IS v2-ONLY. Optional so that launcher
+    0.3.0, which does not know the field exists, keeps setting the arena and
+    the win condition with no change of behaviour at all. v2-only so that
+    section 3.0's strictness still means something: a client that says it
+    speaks v1 and then sends a v2 field is refused `bad_field`, exactly as it
+    would be for a field nobody has ever defined.
+    """
+    speaks_dial = body.get("v", 0) >= V_DIAL
+    optional = (("star_target", "match_players") if speaks_dial
+                else ("star_target",))
+    err = shape(body, ("v", "room", "token", "map", "win_mode"), optional)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -951,6 +1092,19 @@ def do_params(body, who, now):
         # Required iff stars, forbidden otherwise. One shape, not two.
         return 400, {"error": "bad_star_target"}
 
+    # THE DIAL. Refused, not clamped, and refused with its own code so the
+    # launcher can say a true sentence about it. Clamping was the other option
+    # and it is the wrong one: a host who asks for eight and silently gets four
+    # has been lied to, and would only find out by counting heads in the room.
+    # The bound the refusal enforces is advertised as `dial_max` in every view,
+    # so a launcher that reads the view never has to be refused at all.
+    match_players = None
+    if "match_players" in body:
+        match_players, err = v_int(body, "match_players", 2, DIAL_MAX,
+                                   "bad_match_players")
+        if err:
+            return 400, {"error": err}
+
     room = ROOMS.get(code)
     if room is None or room.state == "closed":
         return 404, {"error": "no_such_room"}
@@ -966,9 +1120,22 @@ def do_params(body, who, now):
     room.map = mp
     room.win_mode = win_mode
     room.star_target = star_target
-    room.push("params", map=mp, win_mode=win_mode, star_target=star_target)
-    log("room %s params map=%d win=%s target=%s"
-        % (code, mp, win_mode, star_target if star_target else "-"))
+    # A v1 client sends no dial, and a room whose host uses one keeps whatever
+    # it had rather than being reset by an old launcher's ordinary settings
+    # edit. That is the whole of the "0.3.0 is unaffected" story on this verb.
+    if match_players is not None:
+        room.match_players = match_players
+        room.apply_dial()
+    # `match_players` rides the event as well as the view. Older launchers
+    # ignore an extra field on an event they already know (section 3.5 is about
+    # unknown KINDS; the field tolerance is what JSON readers do by default and
+    # is pinned by a test), and the roster change is visible in the view every
+    # poll carries regardless.
+    room.push("params", map=mp, win_mode=win_mode, star_target=star_target,
+              match_players=room.match_players)
+    log("room %s params map=%d win=%s target=%s players=%d/%d"
+        % (code, mp, win_mode, star_target if star_target else "-",
+           room.playing_count(), room.match_players))
     return 200, {"cursor": room.seq}
 
 
@@ -1010,14 +1177,19 @@ def drop_member(room, seat, why):
     log("room %s leave seat %d (%s) (%d/%d)"
         % (room.code, seat, why, len(room.members), MAX_SEATS))
     if was_playing:
-        for s in sorted(room.members):
-            if not room.members[s].playing:
-                room.members[s].playing = True
-                # No new event kind: section 3.5's `kind` list is closed, and
-                # the `left` event above already moved the cursor. The promotion
-                # reaches both windows in the `view` every poll answer carries.
-                log("room %s promote seat %d" % (room.code, s))
-                break
+        before = {s for s in room.members if room.members[s].playing}
+        # ONE RULE, STATED ONCE. Promotion-on-vacancy and the host's dial are
+        # the same thing -- "bring the playing count up to what the room is set
+        # to" -- so this calls the dial rather than restating it. It is exactly
+        # equivalent to the loop it replaces: a playing seat just freed, so the
+        # count is one under the dial and one watcher moves up.
+        room.apply_dial()
+        now_playing = {s for s in room.members if room.members[s].playing}
+        for s in sorted(now_playing - before):
+            # No new event kind: section 3.5's `kind` list is closed, and the
+            # `left` event above already moved the cursor. The promotion
+            # reaches both windows in the `view` every poll answer carries.
+            log("room %s promote seat %d" % (room.code, s))
 
 
 def do_kick(body, who, now):
@@ -1141,6 +1313,10 @@ def member_plan(room, seat):
         "spawn_delay_ms": 0 if role == "parent" else 1500,
         "playing": True,
         "names": room.names,
+        # What the host ASKED for, beside `players`, which is what actually
+        # turned up. The launcher exports `players`; `match_players` exists so
+        # a launcher can say "3 of the 4 you picked" without guessing.
+        "match_players": room.match_dial,
     }
     if room.match_win_mode == "stars":
         plan["star_target"] = room.match_star_target
@@ -1155,6 +1331,7 @@ def _reset_match(room):
     room.comms_code = None
     room.agreed_players = 0
     room.match_star_target = None
+    room.match_dial = 0
     room.names = ""
     room.slot_of = {}
     room.arm_deadline = None
@@ -1253,6 +1430,7 @@ def do_start(body, who, now):
     room.match_map = room.map
     room.match_win_mode = room.win_mode
     room.match_star_target = room.star_target
+    room.match_dial = room.match_players
     room.slot_of = assign_slots(room)
     room.names = build_names(room)
     for m in room.members.values():
@@ -1767,6 +1945,12 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 "revision": REVISION,
+                # What this build speaks and what its dial will accept, so an
+                # operator can answer "why did my launcher get refused" from
+                # outside the container.
+                "contract_min": CONTRACT_MIN,
+                "contract_v": CONTRACT_V,
+                "dial_max": DIAL_MAX,
                 "rooms": len(ROOMS),
                 "members": sum(len(r.members) for r in ROOMS.values()),
                 "waiters": WAITERS,
@@ -1901,15 +2085,23 @@ class Handler(BaseHTTPRequestHandler):
 
         # 6. THE VERSION. A field that appears without a version bump is a bug
         #    or an attack, so the version is checked before the fields are.
+        #    A RANGE, not a single number, and the answer echoes what the
+        #    request claimed. A hard pin would have made "adding a field is a
+        #    `v` bump" mean "every restart refuses every shipped launcher",
+        #    which is not what the rule is for. The strictness the rule is
+        #    protecting is kept where it belongs: each verb offers a v1 client
+        #    exactly the v1 field set, so a v1 request carrying a v2 field is
+        #    still `bad_field`.
         ver = body.get("v")
-        if isinstance(ver, bool) or not isinstance(ver, int) or ver != 1:
+        if (isinstance(ver, bool) or not isinstance(ver, int)
+                or ver < CONTRACT_MIN or ver > CONTRACT_V):
             self._reject(400, "bad_version", 0)
             return
 
         with LOCK:
             status, payload = fn(body, host_key, time.monotonic())
         payload = dict(payload)
-        payload["v"] = 1
+        payload["v"] = ver
         if status != 200:
             kind = "auth" if status in (403, 409) else (
                 "rate" if status == 429 else "shape")
@@ -1968,6 +2160,8 @@ class Server(ThreadingHTTPServer):
 def main():
     Handler.timeout = HANDLER_TIMEOUT_S
     log("sm64ds-lobby %s starting on %s:%d" % (REVISION, LISTEN_ADDR, LISTEN_PORT))
+    log("contract v%d..v%d, player dial 2..%d (seats=%d, game=%d)"
+        % (CONTRACT_MIN, CONTRACT_V, DIAL_MAX, MAX_SEATS, GAME_MAX_PLAYERS))
     log("limits rooms=%d seats=%d players=%d waiters=%d body=%d read_timeout=%ds "
         "req=%d/s burst=%d create=%d/h join=%d/min star_max=%d kick_cool=%ds"
         % (MAX_ROOMS, MAX_SEATS, GAME_MAX_PLAYERS, MAX_WAITERS, BODY_MAX,

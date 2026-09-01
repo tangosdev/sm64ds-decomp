@@ -22,17 +22,26 @@ services:
     environment:
       LISTEN_PORT: "8091"
       MAX_ROOMS: "64"
+      # THESE TWO NUMBERS ARE THE PLAYER-COUNT DIAL'S CEILING.
+      #
+      # The host picks how many of a room's seats play (`match_players`, the
+      # dial). The server refuses anything above min(16, MAX_SEATS,
+      # GAME_MAX_PLAYERS) and advertises that bound to every launcher as
+      # `dial_max`, so the launcher greys out the rest of the control instead
+      # of letting a host be refused.
+      #
+      # MAX_SEATS is how many people a room HOLDS. GAME_MAX_PLAYERS is how many
+      # of them THE GAME BUILD THIS DEPLOYMENT LAUNCHES can actually play.
+      #
+      # BOTH ARE 4, AND 4 IS WHAT THE GAME DOES. Four is not a placeholder and
+      # it is not a limit of this service: it is the number the port has been
+      # proved at, four real windows on one arena, four distinct actors, four
+      # entrance records. The lobby's code reaches 16 and the launcher's control
+      # reaches 16; everything between 4 and 16 is game-side work and is
+      # enumerated, with evidence, in README.md under "the ceilings between 4
+      # and 16". RAISING EITHER NUMBER HERE DOES NOT MAKE THE GAME DO IT. Raise
+      # them when a lane has proved the rung, not before.
       MAX_SEATS: "4"
-      # 4 since 0.3.0 (the seat-order caveat below was RESOLVED: the lobby now
-      # assigns every child its slot in the go plan, proven by the four-window
-      # lobby proof). Historical caveat kept for the record: DO NOT raise beyond
-      # what the go plan assigns; the original warning read:
-      # SPEC section 4.7's 3-4 player caveat -- above two players the lobby's
-      # seat order stops being the game's slot order, because the parent
-      # ASSIGNS child slots in the order their JOINs arrive on the wire, and
-      # SM64DS_VS_NAMES would then name the wrong winner. Rooms already hold
-      # four seats and the names string already carries four fields; this one
-      # number is the only thing that says how many of them play.
       GAME_MAX_PLAYERS: "4"
       MAX_WAITERS: "96"
       # The largest "first to N stars" the host may pick. Five because an

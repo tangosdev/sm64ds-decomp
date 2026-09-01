@@ -423,7 +423,64 @@ def selftest(c, quick=False):
     selftest_match(c)
     selftest_rematch(c)
     selftest_kick(c)
+    selftest_dial(c)
     return code
+
+
+def selftest_dial(c):
+    """The player-count dial over the wire, on the DEFAULT knobs.
+
+    This server was spawned with the file defaults (GAME_MAX_PLAYERS 2), so
+    what it proves is the contract and the refusal. `python test_client.py
+    dial` spawns a second server on the knobs that actually deploy and proves
+    the 2/3/4 side.
+    """
+    print("\n-- the player-count dial (contract, and the refusal)")
+    status, health = c.get("health")
+    check("health names the contract range and the dial's ceiling",
+          health.get("contract_min") == 1 and health.get("contract_v") == 2
+          and "dial_max" in health, health)
+    dial_max = health["dial_max"]
+
+    status, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+    code, token = host["room"], host["token"]
+    view = host["view"]
+    check("a fresh room's view carries match_players and dial_max",
+          view.get("match_players") == dial_max
+          and view.get("dial_max") == dial_max, view)
+    check("and max_players still means what it always meant, untouched",
+          view.get("max_players") == dial_max, view)
+
+    base = {"room": code, "token": token, "map": 0, "win_mode": "time"}
+    status, body = c.post("params", dict(base, v=1))
+    check("a v1 params is answered at v1", status == 200 and body.get("v") == 1,
+          (status, body))
+    status, body = c.post("params", dict(base, v=2, match_players=dial_max))
+    check("a v2 params carrying the dial is answered at v2",
+          status == 200 and body.get("v") == 2, (status, body))
+
+    expect("the dial at v1 is bad_field, as strict as an undefined field",
+           c.post("params", dict(base, v=1, match_players=2)),
+           400, "bad_field")
+
+    # THE OWNER'S ASK, and the honest half of the answer: the control reaches
+    # 16, and the server refuses every value the deployment cannot run.
+    refused = []
+    for n in range(2, 17):
+        status, body = c.post("params", dict(base, v=2, match_players=n))
+        if n <= dial_max:
+            check("dial %d accepted" % n, status == 200, (status, body))
+        else:
+            ok = status == 400 and body.get("error") == "bad_match_players"
+            refused.append(n if ok else ("BAD", n, status, body))
+    check("every dial value above the deployment's ceiling (%d) is refused "
+          "with bad_match_players, one clean reason each" % dial_max,
+          refused == list(range(dial_max + 1, 17)), refused)
+
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": token,
+                                   "cursor": 0, "wait": 0})
+    check("and after all of that the room still reads the last GOOD value",
+          seen["view"]["match_players"] == dial_max, seen["view"])
 
 
 def selftest_match(c):
@@ -768,6 +825,127 @@ def selftest_kick(c):
 # The stage A proof list, each one a real request and its real answer.
 
 
+def dial_deployed(c):
+    """The dial on the knobs that actually deploy (MAX_SEATS 4,
+    GAME_MAX_PLAYERS 4), end to end over the wire, plus the compatibility
+    claim stated as a test rather than as a paragraph.
+    """
+    print("\n-- the dial on the deployed knobs (4 seats, 4-player game)")
+    status, health = c.get("health")
+    check("this server's dial tops out at 4", health.get("dial_max") == 4,
+          health)
+
+    # 1. A HOST WHO NEVER TOUCHES THE DIAL. This is launcher 0.3.0's whole
+    #    behaviour, byte for byte: v1 everywhere, no match_players, ever.
+    status, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+    code, token = host["room"], host["token"]
+    guests = []
+    for nick in ("opie", "cee", "dee"):
+        st, g = c.post("join", {"v": 1, "room": code, "nick": nick,
+                                "pre_ok": True})
+        guests.append(g)
+    st, seen = c.post("poll", {"v": 1, "room": code, "token": token,
+                               "cursor": 0, "wait": 0})
+    playing = [m["seat"] for m in seen["view"]["members"] if m["playing"]]
+    check("a 0.3.0-shaped host (v1, never sends the dial) still seats all "
+          "four as players -- the dial is inert until somebody turns it",
+          playing == [1, 2, 3, 4], seen["view"]["members"])
+    check("and every answer it got was stamped v1",
+          seen.get("v") == 1 and host.get("v") == 1, (host.get("v"),
+                                                      seen.get("v")))
+
+    # 2. THE DIAL DOING SOMETHING A HOST CAN FEEL.
+    base = {"room": code, "token": token, "map": 0, "win_mode": "time"}
+    st, body = c.post("params", dict(base, v=2, match_players=2))
+    check("the host dials it down to 2", st == 200, (st, body))
+    st, seen = c.post("poll", {"v": 1, "room": code, "token": token,
+                               "cursor": 0, "wait": 0})
+    playing = [m["seat"] for m in seen["view"]["members"] if m["playing"]]
+    check("seats 3 and 4 become spectators, and the two who were playing "
+          "stay playing", playing == [1, 2], seen["view"]["members"])
+    st, body = c.post("params", dict(base, v=2, match_players=3))
+    st, seen = c.post("poll", {"v": 1, "room": code, "token": token,
+                               "cursor": 0, "wait": 0})
+    playing = [m["seat"] for m in seen["view"]["members"] if m["playing"]]
+    check("dialling back to 3 promotes the lowest watcher, not a reshuffle",
+          playing == [1, 2, 3], seen["view"]["members"])
+
+    # 3. A SPECTATOR SEES ITSELF AS ONE, and its go plan is empty.
+    st, seen4 = c.post("poll", {"v": 1, "room": code,
+                                "token": guests[2]["token"],
+                                "cursor": 0, "wait": 0})
+    me = [m for m in seen4["view"]["members"]
+          if m["seat"] == seen4["view"]["you"]][0]
+    check("the fourth player's own view says it is watching",
+          me["playing"] is False, me)
+
+    # 4. THE REFUSALS, on the deployment that can run four.
+    bad = []
+    for n in range(5, 17):
+        st, body = c.post("params", dict(base, v=2, match_players=n))
+        if not (st == 400 and body.get("error") == "bad_match_players"):
+            bad.append((n, st, body))
+    check("5 through 16 are all refused with bad_match_players", not bad, bad)
+
+    # 5. A REAL MATCH, STARTED THROUGH THE DIAL, at 2 / 3 / 4.
+    for want in (2, 3, 4):
+        st, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+        rc, rt = host["room"], host["token"]
+        toks = [rt]
+        for i in range(want - 1):
+            st, g = c.post("join", {"v": 1, "room": rc, "nick": "p%d" % (i + 2),
+                                    "pre_ok": True})
+            toks.append(g["token"])
+        # Fill the rest of the room with watchers, so the dial is the only
+        # thing deciding who plays.
+        for i in range(4 - want):
+            c.post("join", {"v": 1, "room": rc, "nick": "w%d" % (i + 1),
+                            "pre_ok": True})
+        st, body = c.post("params", {"v": 2, "room": rc, "token": rt,
+                                     "map": 1, "win_mode": "time",
+                                     "match_players": want})
+        check("[%dP] the dial is set to %d" % (want, want), st == 200,
+              (st, body))
+        st, body = c.post("start", {"v": 1, "room": rc, "token": rt})
+        check("[%dP] start is accepted" % want, st == 200, (st, body))
+        match = body.get("match", "")
+        for t in toks:
+            c.post("ready", {"v": 1, "room": rc, "token": t, "match": match})
+        plans = []
+        for t in toks:
+            st, seen = c.post("poll", {"v": 1, "room": rc, "token": t,
+                                       "cursor": 0, "wait": 0})
+            plans.append(seen.get("plan") or next(
+                (e["plan"] for e in seen["events"]
+                 if e["kind"] == "go" and e.get("plan")), None))
+        check("[%dP] every playing seat got a plan" % want,
+              all(p is not None for p in plans), plans)
+        check("[%dP] all of them say players=%d" % (want, want),
+              all(p["players"] == want for p in plans),
+              [p["players"] for p in plans])
+        check("[%dP] and match_players=%d, the number the host picked"
+              % (want, want),
+              all(p["match_players"] == want for p in plans),
+              [p["match_players"] for p in plans])
+        check("[%dP] slots are 0..%d, distinct, host first"
+              % (want, want - 1),
+              sorted(p["slot"] for p in plans) == list(range(want))
+              and plans[0]["slot"] == 0 and plans[0]["role"] == "parent",
+              [(p["role"], p["slot"]) for p in plans])
+        check("[%dP] SM64DS_VS_NAMES still has exactly three commas, "
+              "byte-identical on every seat" % want,
+              len(set(p["names"] for p in plans)) == 1
+              and plans[0]["names"].count(",") == 3, plans[0]["names"])
+        # The watchers, if any, got nothing to launch.
+        st, seen = c.post("poll", {"v": 1, "room": rc, "token": rt,
+                                   "cursor": 0, "wait": 0})
+        watchers = [m for m in seen["view"]["members"] if not m["playing"]]
+        check("[%dP] the other %d in the room are spectators"
+              % (want, 4 - want), len(watchers) == 4 - want, watchers)
+        c.post("failed", {"v": 1, "room": rc, "token": rt, "match": match,
+                          "reason": "spawn_failed"})
+
+
 def negatives(c, out_dir=None):
     """Every refusal the stage A proof list names, plus the rest of the
     transport law, each one a real request and its real answer.
@@ -913,10 +1091,17 @@ def negatives(c, out_dir=None):
         400, "bad_shape", "one object, never an array, never a bare value.",
         raw_body=b'[{"v":1}]')
 
-    rej("a version that is not 1 -> 400 bad_version", "create",
-        {"v": 2, "nick": "x"}, 400, "bad_version",
+    # The contract is a RANGE now (v1..v2), so the refusal is for a version
+    # outside it, not for "anything but 1". A version above what the server
+    # speaks is the case that matters: a newer launcher against an older
+    # server has to be told plainly rather than half-served.
+    rej("a version above what the server speaks -> 400 bad_version", "create",
+        {"v": 3, "nick": "x"}, 400, "bad_version",
         "adding a field is a version bump, so the version is checked before "
         "the fields are.")
+
+    rej("a version below the contract floor -> 400 bad_version", "create",
+        {"v": 0, "nick": "x"}, 400, "bad_version", "")
 
     rej("a missing version -> 400 bad_version", "create", {"nick": "x"},
         400, "bad_version", "")
@@ -1107,7 +1292,7 @@ def parse_url(url):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=("selftest", "soak", "negatives"))
+    ap.add_argument("mode", choices=("selftest", "soak", "negatives", "dial"))
     ap.add_argument("--url", default=None,
                     help="a server already running; default is to spawn one")
     ap.add_argument("--seconds", type=int, default=30)
@@ -1138,6 +1323,16 @@ def main():
             extra["BAD_LIMIT"] = "1000000"
             print("  (rate limits lifted on the selftest's own server; "
                   "`negatives` and `test_security` prove them at shipped values)")
+        if args.mode == "dial":
+            # THE KNOBS THAT ACTUALLY DEPLOY, taken from docker-compose.yml
+            # rather than from the file defaults, because the dial's whole
+            # point is that its ceiling comes from the deployment.
+            extra["MAX_SEATS"] = "4"
+            extra["GAME_MAX_PLAYERS"] = "4"
+            extra["RATE_REQ_PER_S"] = "1000000"
+            extra["RATE_BURST"] = "1000000"
+            extra["BAD_LIMIT"] = "1000000"
+            print("  (MAX_SEATS=4 GAME_MAX_PLAYERS=4, the deployed values)")
         spawned = Spawned(port, extra)
         c = spawned.wait_ready()
 
@@ -1146,6 +1341,8 @@ def main():
             selftest(c, quick=args.quick)
         elif args.mode == "negatives":
             negatives(c, args.out)
+        elif args.mode == "dial":
+            dial_deployed(c)
         else:
             soak(c, args.seconds, args.members)
     finally:

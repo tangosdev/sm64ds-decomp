@@ -609,6 +609,311 @@ def test_server_caps():
     reset()
 
 
+def _params(code, token, who="10.0.0.1", now=1000.0, **extra):
+    body = {"v": 1, "room": code, "token": token, "map": 0,
+            "win_mode": "time"}
+    body.update(extra)
+    return S.do_params(body, who, now)
+
+
+def _dial(code, token, n, v=2, **kw):
+    return _params(code, token, v=v, match_players=n, **kw)
+
+
+class game_max(object):
+    """Run a block with the deployment knob at a given value.
+
+    The unit tests import the module with the FILE defaults (GAME_MAX_PLAYERS
+    2), while the compose file that actually deploys sets 4. Anything that
+    exercises the dial past two has to say which deployment it is talking
+    about, so it says so here instead of quietly depending on an import-time
+    default. Setting the knob and re-deriving is exactly a compose edit plus a
+    restart.
+    """
+
+    def __init__(self, n):
+        self.n = n
+
+    def __enter__(self):
+        self.was = S.GAME_MAX_PLAYERS
+        S.GAME_MAX_PLAYERS = self.n
+        S.recompute_dial()
+        reset()
+        return self
+
+    def __exit__(self, *exc):
+        S.GAME_MAX_PLAYERS = self.was
+        S.recompute_dial()
+        reset()
+        return False
+
+
+def test_dial_defaults_are_inert():
+    """The dial must cost a deployment that does not use it NOTHING.
+
+    This is the whole backward-compatibility claim, asserted rather than
+    asserted-in-prose: at the shipped knobs, with no client ever sending
+    `match_players`, the seating a room ends up with is the seating it had
+    before the dial existed.
+    """
+    print("\n-- the dial is inert at the defaults")
+    original = S.GAME_MAX_PLAYERS
+    try:
+        for game_max in (2, 3, 4):
+            S.GAME_MAX_PLAYERS = game_max
+            S.recompute_dial()
+            reset()
+            st, host = create()
+            code = host["room"]
+            for nick in ("b", "c", "d"):
+                join(code, nick)
+            room = S.ROOMS[code]
+            # The old rule, restated here independently: the first
+            # GAME_MAX_PLAYERS seats in join order play.
+            want = [s <= game_max for s in (1, 2, 3, 4)]
+            got = [room.members[s].playing for s in (1, 2, 3, 4)]
+            check("with GAME_MAX_PLAYERS=%d and nobody touching the dial, "
+                  "seating is exactly the old rule" % game_max,
+                  got == want, (got, want))
+            check("and the room's dial reads the deployment's own capability "
+                  "(%d)" % game_max, room.match_players == game_max,
+                  room.match_players)
+    finally:
+        S.GAME_MAX_PLAYERS = original
+        S.recompute_dial()
+        reset()
+
+    # A v1 `params` -- the only kind launcher 0.3.0 sends -- leaves the dial
+    # alone rather than resetting it.
+    reset()
+    st, host = create()
+    code = host["room"]
+    room = S.ROOMS[code]
+    _dial(code, host["token"], 2)
+    check("the host sets the dial to 2", room.match_players == 2)
+    st, out = _params(code, host["token"], map=3)
+    check("a v1 params (an old launcher changing the arena) is accepted",
+          st == 200, (st, out))
+    check("and does NOT reset the dial the host set",
+          room.match_players == 2 and room.map == 3,
+          (room.match_players, room.map))
+
+
+def test_dial_range_is_server_enforced():
+    print("\n-- the dial's range, enforced by the server")
+    reset()
+    st, host = create()
+    code = host["room"]
+    token = host["token"]
+    room = S.ROOMS[code]
+
+    check("DIAL_MAX is derived, never configured directly: "
+          "min(16, MAX_SEATS, GAME_MAX_PLAYERS)",
+          S.DIAL_MAX == min(16, S.MAX_SEATS, S.GAME_MAX_PLAYERS), S.DIAL_MAX)
+    check("and the view advertises it, so a launcher never has to be refused "
+          "to learn the bound", room.view(1)["dial_max"] == S.DIAL_MAX)
+    check("the hard ceiling the owner named is written once",
+          S.DIAL_HARD_MAX == 16, S.DIAL_HARD_MAX)
+
+    for n in (S.DIAL_MAX + 1, 5, 8, 16):
+        if n <= S.DIAL_MAX:
+            continue
+        st, out = _dial(code, token, n)
+        check("a dial of %d is refused with its own code, not clamped" % n,
+              st == 400 and out["error"] == "bad_match_players", (st, out))
+        check("and the room keeps the value it had", room.match_players != n)
+
+    for n in (0, 1, -1, 17, 999):
+        st, out = _dial(code, token, n)
+        check("a dial of %d is refused" % n,
+              st == 400 and out["error"] == "bad_match_players", (st, out))
+
+    for bad in (True, 2.0, "2", None, [2]):
+        st, out = _dial(code, token, bad)
+        check("a dial of %r is refused on type" % (bad,),
+              st == 400 and out["error"] == "bad_match_players", (st, out))
+
+    for n in range(2, S.DIAL_MAX + 1):
+        st, out = _dial(code, token, n)
+        check("a dial of %d is accepted" % n, st == 200, (st, out))
+        check("and lands in the room and its view",
+              room.match_players == n and room.view(1)["match_players"] == n)
+
+    # Only the host.
+    st, guest = join(code, "b")
+    st, out = _dial(code, guest["token"], 2, who="10.0.0.2")
+    check("a guest cannot move the dial",
+          st == 403 and out["error"] == "not_host", (st, out))
+    # And not during a match.
+    S.ROOMS[code].state = "arming"
+    st, out = _dial(code, token, 2)
+    check("and nobody can move it once the room has left the lobby",
+          st == 409 and out["error"] == "not_in_lobby", (st, out))
+
+    # THE ONE THE OWNER ASKED FOR, on the config that actually deploys: the
+    # control offers 2..16 and the server refuses everything above what the
+    # game can run, one value at a time, with the room untouched afterwards.
+    with game_max(4):
+        st, host = create()
+        code, token = host["room"], host["token"]
+        room = S.ROOMS[code]
+        check("on the deployed config the dial tops out at 4",
+              S.DIAL_MAX == 4, S.DIAL_MAX)
+        for n in (2, 3, 4):
+            st, out = _dial(code, token, n)
+            check("deployed: dial %d accepted" % n, st == 200, (st, out))
+        for n in range(5, 17):
+            st, out = _dial(code, token, n)
+            check("deployed: dial %d refused, cleanly, and the room keeps 4"
+                  % n,
+                  st == 400 and out["error"] == "bad_match_players"
+                  and room.match_players == 4, (st, out, room.match_players))
+
+
+def test_dial_is_v2_only():
+    """Section 3.0's strictness, kept: a client claiming v1 gets the v1 field
+    set and nothing else."""
+    print("\n-- the dial is a v2 field, and v1 stays as strict as it was")
+    reset()
+    st, host = create()
+    code, token = host["room"], host["token"]
+
+    st, out = _params(code, token, v=1, match_players=2)
+    check("a v1 request carrying the v2 field is bad_field, exactly as an "
+          "undefined field would be",
+          st == 400 and out["error"] == "bad_field", (st, out))
+    st, out = _params(code, token, v=2, match_players=2)
+    check("the same body at v2 is accepted", st == 200, (st, out))
+    check("the version range is a range, and it is 1..2",
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 2))
+    check("and the gate on the field is named, not spelled 2 at the check",
+          S.V_DIAL == 2)
+
+
+def test_dial_moves_the_fewest_people():
+    print("\n-- moving the dial moves as few people as it can")
+    with game_max(4):
+        _dial_churn()
+
+
+def _dial_churn():
+    st, host = create(nick="host")
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    for nick in ("b", "c", "d"):
+        join(code, nick)
+
+    _dial(code, token, 2)
+    check("dial 2: seats 1 and 2 play, 3 and 4 watch",
+          [room.members[s].playing for s in (1, 2, 3, 4)]
+          == [True, True, False, False],
+          [room.members[s].playing for s in (1, 2, 3, 4)])
+    _dial(code, token, 4)
+    check("dial 4: everybody plays",
+          all(m.playing for m in room.members.values()))
+    _dial(code, token, 3)
+    check("dial 3: the HIGHEST seat is the one dropped, so the three who were "
+          "already playing keep playing",
+          [room.members[s].playing for s in (1, 2, 3, 4)]
+          == [True, True, True, False],
+          [room.members[s].playing for s in (1, 2, 3, 4)])
+    _dial(code, token, 2)
+    _dial(code, token, 3)
+    check("down and back up returns the same person, not a different one",
+          [room.members[s].playing for s in (1, 2, 3, 4)]
+          == [True, True, True, False])
+
+    # The host is the parent of the session; a spectating host would hand out
+    # a go plan with no parent in it.
+    for n in range(2, S.DIAL_MAX + 1):
+        _dial(code, token, n)
+        check("at dial %d the host is still playing" % n,
+              room.members[1].playing, n)
+
+
+def test_dial_and_seat_reuse():
+    """Why the dial promotes and demotes instead of "the N lowest seats play":
+    seat numbers are REUSED, and the rank rule would throw a seated player out
+    of a match to make room for somebody who just walked in."""
+    print("\n-- the dial versus seat reuse")
+    with game_max(4):
+        _dial_seat_reuse()
+
+
+def _dial_seat_reuse():
+    st, host = create(nick="host")
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    b = join(code, "b", who="10.0.0.2")[1]
+    join(code, "c", who="10.0.0.3")
+    join(code, "d", who="10.0.0.4")
+    _dial(code, token, 2)
+    check("dial 2 with four in the room: 1 and 2 play",
+          [s for s in (1, 2, 3, 4) if room.members[s].playing] == [1, 2])
+
+    S.do_leave({"v": 1, "room": code, "token": b["token"]}, "10.0.0.2", 1000.0)
+    check("seat 2 leaves and seat 3 is promoted into the gap",
+          [s for s in sorted(room.members) if room.members[s].playing]
+          == [1, 3],
+          [(s, room.members[s].playing) for s in sorted(room.members)])
+
+    join(code, "e", who="10.0.0.5")
+    check("seat 2 is handed to the new arrival (numbers are reused)",
+          2 in room.members and room.members[2].nick == "e")
+    check("and the promoted seat 3 is NOT thrown out of the match to make "
+          "room for them",
+          [s for s in sorted(room.members) if room.members[s].playing]
+          == [1, 3],
+          [(s, room.members[s].playing) for s in sorted(room.members)])
+
+
+def test_dial_reaches_the_plan():
+    print("\n-- the dial reaches the go plan and the frozen match state")
+    with game_max(4):
+        _dial_plan()
+
+
+def _dial_plan():
+    st, host = create(nick="host", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    guest = join(code, "b", pre_ok=True)[1]
+    third = join(code, "c", who="10.0.0.3", pre_ok=True)[1]
+    _dial(code, token, 3)
+
+    st, out = S.do_start({"v": 1, "room": code, "token": token},
+                         "10.0.0.1", 1000.0)
+    check("start is accepted with three playing seats", st == 200, (st, out))
+    check("agreed_players is what actually turned up", room.agreed_players == 3)
+    check("and the dial is frozen alongside the other params",
+          room.match_dial == 3)
+    plan = S.member_plan(room, 1)
+    check("the plan carries both: players=3 (what launched) and "
+          "match_players=3 (what the host asked for)",
+          plan["players"] == 3 and plan["match_players"] == 3, plan)
+
+    # Fewer people than the dial: the plan tells the truth about both numbers
+    # rather than pretending the room was full.
+    reset()
+    st, host = create(nick="host", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    join(code, "b", pre_ok=True)
+    _dial(code, token, 4)
+    S.do_start({"v": 1, "room": code, "token": token}, "10.0.0.1", 1000.0)
+    plan = S.member_plan(room, 1)
+    check("with 2 of a 4-player dial filled, the plan says players=2 and "
+          "match_players=4 -- no pretending",
+          plan["players"] == 2 and plan["match_players"] == 4, plan)
+    check("and SM64DS_VS_PLAYERS therefore rides the REAL count",
+          plan["players"] == room.agreed_players)
+    _r = S.do_failed({"v": 1, "room": code, "token": token,
+                      "match": room.match, "reason": "spawn_failed"},
+                     "10.0.0.1", 1000.0)
+    check("and the frozen dial is cleared with the rest of the match state",
+          room.match_dial == 0, (_r, room.match_dial))
+
+
 def test_opacity():
     print("\n-- chat and nicknames are opaque, end to end")
     reset()
@@ -738,7 +1043,11 @@ def test_no_two_player_assumption():
 
     original = S.GAME_MAX_PLAYERS
     try:
+        # Moving the knob and re-deriving is exactly what a compose edit plus a
+        # restart does. The dial's bounds come off GAME_MAX_PLAYERS, so the
+        # re-derivation is part of the change, not an extra step.
         S.GAME_MAX_PLAYERS = 4
+        S.recompute_dial()
         reset()
         st, host = create()
         code = host["room"]
@@ -752,6 +1061,7 @@ def test_no_two_player_assumption():
               room.view(1)["max_players"] == 4, room.view(1)["max_players"])
 
         S.GAME_MAX_PLAYERS = 3
+        S.recompute_dial()
         reset()
         st, host = create()
         code = host["room"]
@@ -763,6 +1073,7 @@ def test_no_two_player_assumption():
               == [True, True, True, False])
     finally:
         S.GAME_MAX_PLAYERS = original
+        S.recompute_dial()
         reset()
 
 
@@ -1396,6 +1707,12 @@ def main():
     test_chat_limits()
     test_kick()
     test_no_two_player_assumption()
+    test_dial_defaults_are_inert()
+    test_dial_range_is_server_enforced()
+    test_dial_is_v2_only()
+    test_dial_moves_the_fewest_people()
+    test_dial_and_seat_reuse()
+    test_dial_reaches_the_plan()
     test_seat_stability()
     test_start()
     test_ready_and_go()
