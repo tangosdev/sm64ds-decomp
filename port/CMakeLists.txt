@@ -172,6 +172,13 @@ foreach(line IN LISTS SLICE3B_LINES)
 endforeach()
 
 get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+# What the binary EMBEDS, distinct from what the build USES. A ROM-clean build
+# compiles out the only reader of this path (hal/asset_root_refuse.cpp), so the
+# shipped exe must not carry the build machine's directory in its strings.
+set(PORT_REPO_ROOT_EMBED "${PORT_REPO_ROOT_ABS}")
+if(PORT_ROM_CLEAN)
+    set(PORT_REPO_ROOT_EMBED "")
+endif()
 
 # Build-time git tip embed (fault_probe.h's rich dump reports which build
 # crashed). Resolved at configure time via `git rev-parse`; a re-configure on a
@@ -223,7 +230,7 @@ target_include_directories(smoke_gx PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_gx PRIVATE ntr)
 target_compile_definitions(smoke_gx PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_gx PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -296,7 +303,7 @@ target_include_directories(smoke_model PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_model PRIVATE ntr)
 target_compile_definitions(smoke_model PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_model PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -312,7 +319,7 @@ target_include_directories(smoke_frames PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_frames PRIVATE ntr)
 target_compile_definitions(smoke_frames PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_frames PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -328,7 +335,7 @@ target_include_directories(smoke_soak PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_soak PRIVATE ntr)
 target_compile_definitions(smoke_soak PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_soak PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -385,7 +392,7 @@ target_include_directories(smoke_clsn PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_clsn PRIVATE ntr)
 target_compile_definitions(smoke_clsn PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_clsn PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -429,7 +436,7 @@ target_include_directories(smoke_modelanim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_modelanim PRIVATE ntr)
 target_compile_definitions(smoke_modelanim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_modelanim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -476,7 +483,7 @@ target_include_directories(smoke_oam PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_oam PRIVATE ntr)
 target_compile_definitions(smoke_oam PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_oam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -500,7 +507,7 @@ target_include_directories(smoke_soak_anim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_soak_anim PRIVATE ntr)
 target_compile_definitions(smoke_soak_anim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_soak_anim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -517,7 +524,7 @@ target_include_directories(smoke_anim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_anim PRIVATE ntr)
 target_compile_definitions(smoke_anim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_anim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -529,7 +536,7 @@ target_include_directories(smoke_fs PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_compile_definitions(smoke_fs PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_fs PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -639,7 +646,7 @@ target_include_directories(smoke_actor PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_actor PRIVATE ntr)
 target_compile_definitions(smoke_actor PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -661,7 +668,7 @@ target_include_directories(smoke_savestate PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_savestate PRIVATE ntr)
 target_compile_definitions(smoke_savestate PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_savestate PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -694,7 +701,7 @@ target_include_directories(smoke_persist PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_persist PRIVATE ntr)
 target_compile_definitions(smoke_persist PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_persist PRIVATE /wd4311 /wd4312 /wd4068)
     # A disk state stores absolute pointers into the exe image (every actor's
@@ -12016,7 +12023,7 @@ target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_player PRIVATE ntr)
 target_compile_definitions(smoke_player PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}"
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -12247,7 +12254,7 @@ target_include_directories(walk_window PRIVATE
 # 256x192 reads too chunky. 2x is ~12ms -> 60fps with frame pacing.
 target_link_libraries(walk_window PRIVATE ntr_2x)
 target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}"
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -12461,7 +12468,7 @@ target_include_directories(walk_window_hires PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(walk_window_hires PRIVATE ntr_hires)
 target_compile_definitions(walk_window_hires PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}"
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -12492,7 +12499,7 @@ target_include_directories(smoke_sdat PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_compile_definitions(smoke_sdat PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(smoke_sdat PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -12614,7 +12621,7 @@ target_include_directories(mp_sleepwake PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(mp_sleepwake PRIVATE ntr)
 target_compile_definitions(mp_sleepwake PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(mp_sleepwake PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -12632,7 +12639,7 @@ target_include_directories(mp_sleepwake_rom PRIVATE
 target_link_libraries(mp_sleepwake_rom PRIVATE ntr)
 target_compile_definitions(mp_sleepwake_rom PRIVATE SM64DS_PLATFORM_PC
     MP_PROBE_ROM_THREADS
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(mp_sleepwake_rom PRIVATE /wd4311 /wd4312 /wd4068 /EHa)
 endif()
@@ -12654,7 +12661,7 @@ target_include_directories(mp_comms_seam PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(mp_comms_seam PRIVATE ntr)
 target_compile_definitions(mp_comms_seam PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
 if(MSVC)
     target_compile_options(mp_comms_seam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
