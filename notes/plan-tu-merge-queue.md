@@ -178,7 +178,7 @@ ov044 0x21111a0  n=7  L=88   OrangeBallBillboard   WHOLEMOD (module-edge both en
 ov045 0x2111b14  n=5  L=99   FloatingFloorBfs
 ov045 0x2111c30  n=5  L=74   TiltingPlatformBfs    pcov=3
 ov047 0x21111a0  n=4  L=68   daObjKm3_Kurumajiku_c pcov=2
-ov047 0x21114d4  n=5  L=96   RickshawPlatformBs
+ov047 0x21114d4  n=5  L=96   daObjKm3_Dorifu_c
 ov085 0x212edac  n=7  L=226  WallSign
 ```
 B4 completes ov045: with B0's two, all four ov045 safe TUs are done, making ov045 the
@@ -857,7 +857,7 @@ Run because they were the cheapest, not because the others were blocked.
 | `ov036/daObjRcCarpet_c` | 8 | in progress — one vtable declared twice (`int[]` vs `void*[]`), then `data_ov002_0210af70` redeclared |
 | `ov036/daObjRc_Dorifu_c` | 4 | blocked on `mMovingMeshCollider` — the class header does not declare the member. **Header work, not merge work.** |
 | `ov043/daObjKm1_Dorifu_c` | 4 | same |
-| `ov047/RickshawPlatformBs` | 5 | same, plus an ambiguous overload |
+| `ov047/daObjKm3_Dorifu_c` | 5 | same, plus an ambiguous overload |
 | `ov065/TTC_MovingBar` | 8 | `class 'TTC_MovingBar' redefined` — the loud form of the local-struct collision |
 | `ov065/daObjCtMecha05_c` | 8 | `data_ov065_0211c0c8` redeclared, `short` vs other |
 | `ov006/MgTrampolineTerror` | 2 | overload conflict at the extern block |

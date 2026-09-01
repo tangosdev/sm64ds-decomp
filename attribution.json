@@ -1148,6 +1148,11 @@
     "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_cD0Ev": "github-actions[bot]",
     "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_km2_fall_block.cpp#daObjKm2_Fall_Block_c_Spawn": "github-actions[bot]"
+    "src/actors/d_a_obj_km2_fall_block.cpp#daObjKm2_Fall_Block_c_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_km3_dorifu.cpp#_ZN17daObjKm3_Dorifu_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km3_dorifu.cpp#_ZN17daObjKm3_Dorifu_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km3_dorifu.cpp#_ZN17daObjKm3_Dorifu_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km3_dorifu.cpp#_ZN17daObjKm3_Dorifu_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km3_dorifu.cpp#StairsBs_Spawn": "github-actions[bot]"
   }
 }

@@ -10340,16 +10340,16 @@
    "start": "0x21114d4",
    "end": "0x211164c",
    "classes": [
-    "RickshawPlatformBs"
+    "daObjKm3_Dorifu_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/RickshawPlatformBs_Spawn.c",
-    "src/_ZN18RickshawPlatformBsD1Ev.cpp",
-    "src/_ZN18RickshawPlatformBsD0Ev.c",
-    "src/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp",
-    "src/_ZN18RickshawPlatformBs13InitResourcesEv.cpp"
+    "src/daObjKm3_Dorifu_c_Spawn.c",
+    "src/_ZN17daObjKm3_Dorifu_cD1Ev.cpp",
+    "src/_ZN17daObjKm3_Dorifu_cD0Ev.c",
+    "src/_ZN17daObjKm3_Dorifu_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjKm3_Dorifu_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".c": 2,

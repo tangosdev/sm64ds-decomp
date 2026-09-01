@@ -366,7 +366,7 @@ the wrong fields: this class's two methods are cross-overlay veneers that pass
 The general rule: **pair a class to its factory by vtable address, never by
 filename.**
 
-## `include/RickshawPlatformBs.h` — the crossed names
+## `include/daObjKm3_Dorifu_c.h` — the crossed names
 
 The Bowser-in-the-Sky drifting platform. ROM name `daObjKm3_Dorifu_c`. It does
 not derive from `dBgActor_c`; it derives from `daObjDorifu_c`, which does. The
@@ -375,14 +375,14 @@ destructor stores three vptrs and destroys `daObjDorifu_c`'s `Model[5]` and
 
     _ZTI17daObjKm3_Dorifu_c  ov047 0x021124cc
     _ZTS17daObjKm3_Dorifu_c  ov047 0x021124d8
-    _ZTV18RickshawPlatformBs ov047 0x0211254c   (its record sits at V-4)
+    _ZTV17daObjKm3_Dorifu_c ov047 0x0211254c   (its record sits at V-4)
     kind  __si_class_type_info, ONE base, offset 0
     base  daObjDorifu_c, ov002 0x02108d70
 
 **The tree's "Bs" names are crossed**, and the header does not try to fix it. The
 factory that builds *this* class is `StairsBs_Spawn` (0xdcc, this class's
 vtable), mirroring `StairsBdw_Spawn` in ov043. The function called
-`RickshawPlatformBs_Spawn` builds something else — 800 = 0x320,
+`daObjKm3_Dorifu_c_Spawn` builds something else — 800 = 0x320,
 `daObjKuruma_c`'s vtable then ov047 0x0211244c, which is `daObjKm3_Kuruma_c`, a
 class the tree has never named. Untangling the two names is a config change and
 belongs in its own piece of work; the class modelled here is the one the vtable

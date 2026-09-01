@@ -25,7 +25,7 @@
  * every other slot holds the base's word and is inherited.
  *
  * THREE DESCENDANTS: daObjKm1_Dorifu_c, daObjRc_Dorifu_c and daObjKm3_Dorifu_c
- * (the tree calls the last one RickshawPlatformBs). Each one's destructor stores
+ * (the tree calls the last one daObjKm3_Dorifu_c). Each one's destructor stores
  * this class's vtable between its own and _ZTV10dBgActor_c, which is the same fact
  * the RTTI records, arrived at from the other direction.
  *

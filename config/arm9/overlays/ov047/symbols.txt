@@ -12,11 +12,11 @@ _ZN17daObjKm3_Kuruma_cD1Ev kind:function(arm,size=0x50) addr:0x021113f8
 _ZN17daObjKm3_Kuruma_cD0Ev kind:function(arm,size=0x64) addr:0x02111448
 _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114ac
 _ZN17daObjKm3_Kuruma_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x021114c0
-RickshawPlatformBs_Spawn kind:function(arm,size=0x3c) addr:0x021114d4
-_ZN18RickshawPlatformBsD1Ev kind:function(arm,size=0x80) addr:0x02111510
-_ZN18RickshawPlatformBsD0Ev kind:function(arm,size=0x94) addr:0x02111590
-_ZN18RickshawPlatformBs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111624
-_ZN18RickshawPlatformBs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
+daObjKm3_Dorifu_c_Spawn kind:function(arm,size=0x3c) addr:0x021114d4
+_ZN17daObjKm3_Dorifu_cD1Ev kind:function(arm,size=0x80) addr:0x02111510
+_ZN17daObjKm3_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x02111590
+_ZN17daObjKm3_Dorifu_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111624
+_ZN17daObjKm3_Dorifu_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
 StairsBs_Spawn kind:function(arm,size=0x90) addr:0x0211164c
 __sinit_ov047_021116dc kind:function(arm,size=0x6c) addr:0x021116dc
 __sinit_ov047_02111748 kind:function(arm,size=0x6c) addr:0x02111748
@@ -98,7 +98,7 @@ _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
 data_ov047_02112408 kind:data(any) addr:0x02112408
 _ZTS17daObjKm3_Kuruma_c kind:data(any) addr:0x02112414
-RickshawPlatformBs_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
+daObjKm3_Dorifu_c_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
 _ZTV17daObjKm3_Kuruma_c kind:data(any) addr:0x0211244c
 _ZTI17daObjKm3_Dorifu_c kind:data(any) addr:0x021124cc
 data_ov047_021124d4 kind:data(any) addr:0x021124d4 ambiguous
@@ -108,7 +108,7 @@ data_ov047_021124f8 kind:data(any) addr:0x021124f8 ambiguous
 data_ov047_021124fc kind:data(any) addr:0x021124fc ambiguous
 data_ov047_02112508 kind:data(any) addr:0x02112508
 data_ov047_02112530 kind:data(any) addr:0x02112530 ambiguous
-_ZTV18RickshawPlatformBs kind:data(any) addr:0x0211254c
+_ZTV17daObjKm3_Dorifu_c kind:data(any) addr:0x0211254c
 data_ov047_02112570 kind:data(any) addr:0x02112570 ambiguous
 data_ov047_02112590 kind:data(any) addr:0x02112590 ambiguous
 data_ov047_021125cc kind:data(any) addr:0x021125cc ambiguous

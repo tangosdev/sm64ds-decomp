@@ -4,7 +4,7 @@
  *
  * ~daObjDorifu_c is defined in the class body, not here, and that is
  * load-bearing: this class's three descendants (daObjKm1_Dorifu_c,
- * daObjRc_Dorifu_c, daObjKm3_Dorifu_c/RickshawPlatformBs) inline this
+ * daObjRc_Dorifu_c, daObjKm3_Dorifu_c/daObjKm3_Dorifu_c) inline this
  * destructor's vptr store rather than calling it, which the compiler can
  * only do from a visible body. include/daObjDorifu_c.h records the
  * measurement.

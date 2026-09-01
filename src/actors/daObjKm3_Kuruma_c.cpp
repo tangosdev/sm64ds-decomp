@@ -14,7 +14,7 @@
  *   [1] 0x02111448  src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp
  *   [2] 0x021114ac  src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp
  *   [3] 0x021114c0  src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp
- *   [4] 0x021114d4  src/RickshawPlatformBs_Spawn.c
+ *   [4] 0x021114d4  src/daObjKm3_Dorifu_c_Spawn.c
  */
 
 struct ResourceDescriptor {
@@ -62,9 +62,9 @@ int func_ov002_020b6958(daObjKm3_Kuruma_c *self,
                         ResourceDescriptor *descriptor);
 }
 
-/* ROM ordinal 4 -- RickshawPlatformBs_Spawn */
-// @symbol RickshawPlatformBs_Spawn
-extern "C" daObjKm3_Kuruma_c *RickshawPlatformBs_Spawn()
+/* ROM ordinal 4 -- daObjKm3_Dorifu_c_Spawn */
+// @symbol daObjKm3_Dorifu_c_Spawn
+extern "C" daObjKm3_Kuruma_c *daObjKm3_Dorifu_c_Spawn()
 {
     daObjKm3_Kuruma_c *actor =
         static_cast<daObjKm3_Kuruma_c *>(_ZN7fBase_cnwEj(0x320));
@@ -79,8 +79,8 @@ extern "C" daObjKm3_Kuruma_c *RickshawPlatformBs_Spawn()
     return actor;
 }
 
-extern "C" KurumaSpawnInfo RickshawPlatformBs_SpawnInfo = {
-    RickshawPlatformBs_Spawn,
+extern "C" KurumaSpawnInfo daObjKm3_Dorifu_c_SpawnInfo = {
+    daObjKm3_Dorifu_c_Spawn,
     0x0097,
     0x00de,
     2,
