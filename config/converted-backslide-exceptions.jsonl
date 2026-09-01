@@ -88,3 +88,15 @@
 {"path": "src/_ZN4Tree16OnPendingDestroyEv.cpp", "reason": "regenerated after restacking cpp/c0switch-rtti-rename-snake-tu onto current main"}
 {"path": "src/_ZN4TreeD0Ev.cpp", "reason": "regenerated after restacking cpp/c0switch-rtti-rename-snake-tu onto current main"}
 {"path": "src/_ZN4TreeD1Ev.cpp", "reason": "regenerated after restacking cpp/c0switch-rtti-rename-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_c13InitResourcesEv.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_cD0Ev.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_cD1Ev.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN4Tree16OnPendingDestroyEv.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN4TreeD0Ev.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN4TreeD1Ev.cpp", "reason": "regenerated after restacking cpp/ov002-tree-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_c13InitResourcesEv.cpp", "reason": "regenerated after restacking cpp/waterfall-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_cD0Ev.cpp", "reason": "regenerated after restacking cpp/waterfall-snake-tu onto current main"}
+{"path": "src/_ZN16daObjWaterfall_cD1Ev.cpp", "reason": "regenerated after restacking cpp/waterfall-snake-tu onto current main"}
+{"path": "src/_ZN4Tree16OnPendingDestroyEv.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
+{"path": "src/_ZN4TreeD0Ev.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
+{"path": "src/_ZN4TreeD1Ev.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
