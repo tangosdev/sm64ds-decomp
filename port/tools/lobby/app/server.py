@@ -894,6 +894,66 @@ def shape(body, required, optional=()):
     return None
 
 
+# --------------------------------------------------- the field table, by verb
+#
+# EVERY FIELD EVERY VERB TAKES, AND THE CONTRACT VERSION IT ARRIVED IN. This
+# table is the only place a verb's field set is written down, and `shape_for`
+# below is the only thing that reads it, so a handler cannot accept a field the
+# table does not list and cannot list a field it does not gate.
+#
+# WHY IT IS A TABLE AND NOT A LINE IN EACH HANDLER. The dial's gate started as
+# one hand-written expression inside do_params -- "if the request says v2, add
+# match_players to the optional set" -- with one test aimed at it. That shape
+# has a specific and nasty failure mode: the NEXT lane adds a v2-only field,
+# forgets to write the same expression, and the field becomes silently
+# acceptable at v1. No test fails, because the test that exists names the one
+# field somebody remembered to gate. A forgotten gate has to be IMPOSSIBLE
+# rather than merely untested, so the version a field arrived in is data, and
+# test_units.py walks this table and proves every versioned field is refused
+# below its own version -- including fields nobody has written yet.
+#
+# THE SHAPE. `(required, optional)`; `optional` maps a field name to the
+# FIRST contract version that accepts it. Required fields are v1 by
+# construction: a later version cannot make a field mandatory without breaking
+# every earlier client, so adding one is a new verb, not a new field.
+VERB_FIELDS = {
+    "create":    (("v", "nick"), {"pre_ok": 1}),
+    "join":      (("v", "room", "nick"), {"pre_ok": 1}),
+    "poll":      (("v", "room", "token", "cursor"), {"wait": 1}),
+    "chat":      (("v", "room", "token", "text"), {}),
+    "params":    (("v", "room", "token", "map", "win_mode"),
+                  # star_target is required-iff-stars and forbidden otherwise;
+                  # do_params enforces that pairing. Here it is only "a key
+                  # this verb may carry, since v1".
+                  {"star_target": 1, "match_players": V_DIAL}),
+    "preflight": (("v", "room", "token", "pre_ok"), {}),
+    "start":     (("v", "room", "token"), {}),
+    "ready":     (("v", "room", "token", "match"), {}),
+    "result":    (("v", "room", "token", "match", "win", "scores"), {}),
+    "failed":    (("v", "room", "token", "match", "reason"), {}),
+    "kick":      (("v", "room", "token", "seat"), {}),
+    "leave":     (("v", "room", "token"), {}),
+}
+
+
+def shape_for(verb, body):
+    """Validate a body against the verb's row of the table, at the version the
+    body claims. A key the table does not list at this version is `bad_field`,
+    exactly as an undefined key is -- which is what keeps section 3.0's
+    strictness true for a v1 client after v2 exists.
+    """
+    required, optional = VERB_FIELDS[verb]
+    # The transport refuses a version outside CONTRACT_MIN..CONTRACT_V before
+    # any handler runs, so by here `v` is a good integer. Falling back to the
+    # floor rather than trusting it keeps this function safe to call directly
+    # from a test.
+    ver = body.get("v")
+    if isinstance(ver, bool) or not isinstance(ver, int):
+        ver = CONTRACT_MIN
+    allowed = [name for name, since in optional.items() if ver >= since]
+    return shape(body, required, allowed)
+
+
 # ------------------------------------------------------------------- verbs
 #
 # Each handler runs with LOCK already held and answers (status, payload).
@@ -919,7 +979,7 @@ def refuse_member(room, token, now):
 
 
 def do_create(body, who, now):
-    err = shape(body, ("v", "nick"), ("pre_ok",))
+    err = shape_for("create", body)
     if err:
         return 400, {"error": err}
     nick, err = v_nick(body)
@@ -962,7 +1022,7 @@ def do_create(body, who, now):
 
 
 def do_join(body, who, now):
-    err = shape(body, ("v", "room", "nick"), ("pre_ok",))
+    err = shape_for("join", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1011,7 +1071,7 @@ def do_join(body, who, now):
 
 
 def do_chat(body, who, now):
-    err = shape(body, ("v", "room", "token", "text"))
+    err = shape_for("chat", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1060,10 +1120,7 @@ def do_params(body, who, now):
     speaks v1 and then sends a v2 field is refused `bad_field`, exactly as it
     would be for a field nobody has ever defined.
     """
-    speaks_dial = body.get("v", 0) >= V_DIAL
-    optional = (("star_target", "match_players") if speaks_dial
-                else ("star_target",))
-    err = shape(body, ("v", "room", "token", "map", "win_mode"), optional)
+    err = shape_for("params", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1140,7 +1197,7 @@ def do_params(body, who, now):
 
 
 def do_leave(body, who, now):
-    err = shape(body, ("v", "room", "token"))
+    err = shape_for("leave", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1200,7 +1257,7 @@ def do_kick(body, who, now):
     event, same promotion -- and differs only in the `why` and in the two
     records that keep the kicked client out for a while.
     """
-    err = shape(body, ("v", "room", "token", "seat"))
+    err = shape_for("kick", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1395,7 +1452,7 @@ def do_start(body, who, now):
     the params/roster/slot map/names, and moves the room to `arming`. Every
     playing launcher must then POST `ready` before anybody gets a `go` plan.
     """
-    err = shape(body, ("v", "room", "token"))
+    err = shape_for("start", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1446,7 +1503,7 @@ def do_start(body, who, now):
 def do_ready(body, who, now):
     """A playing member: "my launcher can spawn this match." When the last
     playing seat says so, the room moves to `go` (spec 3.9, 4.1)."""
-    err = shape(body, ("v", "room", "token", "match"))
+    err = shape_for("ready", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1488,7 +1545,7 @@ def do_ready(body, who, now):
 def do_failed(body, who, now):
     """A playing member reporting a match that could not run. ANY playing
     member's `failed` returns the whole room to lobby (spec 4.4/4.6)."""
-    err = shape(body, ("v", "room", "token", "match", "reason"))
+    err = shape_for("failed", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1535,7 +1592,7 @@ def do_result(body, who, now):
     """A playing member reporting a finished match. The FIRST valid result for
     the current match returns the room to lobby; later ones are idempotent
     (spec 3.9, 5.4)."""
-    err = shape(body, ("v", "room", "token", "match", "win", "scores"))
+    err = shape_for("result", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1603,7 +1660,7 @@ def do_preflight(body, who, now):
     through is harmless, and it means a player who finishes unpacking while a
     match runs is already ready for the rematch instead of blocking it.
     """
-    err = shape(body, ("v", "room", "token", "pre_ok"))
+    err = shape_for("preflight", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1655,7 +1712,7 @@ def do_poll(body, who, now):
     request is held until there is something newer than the cursor or `wait`
     seconds pass, and it stamps the member's heartbeat on the way in.
     """
-    err = shape(body, ("v", "room", "token", "cursor"), ("wait",))
+    err = shape_for("poll", body)
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -1759,6 +1816,14 @@ VERBS = {
     "kick": do_kick,
     "leave": do_leave,
 }
+
+# EVERY VERB HAS A ROW, AND EVERY ROW HAS A VERB. Checked at import rather than
+# on the first request that needs it: a verb added to VERBS with no row in
+# VERB_FIELDS would otherwise be a KeyError inside a handler -- a 500 on a live
+# box instead of a service that refuses to start.
+assert set(VERBS) == set(VERB_FIELDS), (
+    "VERBS and VERB_FIELDS disagree: %s"
+    % sorted(set(VERBS) ^ set(VERB_FIELDS)))
 
 # ------------------------------------------------------------------ reaper
 

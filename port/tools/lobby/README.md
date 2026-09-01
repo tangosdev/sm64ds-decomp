@@ -94,6 +94,39 @@ for a field nobody has ever defined. A v1 request gets a v1 answer.
 | v1 | everything through launcher 0.3.0 |
 | v2 | `params` may carry `match_players` — the host's player-count dial |
 
+**Where a version lives, and why you cannot forget to gate a field.**
+`app/server.py`'s `VERB_FIELDS` is the one place a verb's field set is written
+down: `(required, {optional_field: the version it arrived in})`. `shape_for`
+is the only thing that reads it, so a handler cannot accept a field the table
+does not list, and cannot list a field it does not gate. `test_units.py`'s
+`test_every_versioned_field_is_gated` **walks the table** and proves every
+field above the floor is refused below its own version — it names no field, so
+a field added tomorrow is covered by it the day it is added. Adding a versioned
+field is therefore two edits and no new test: the table row, and a sample value
+in the walk's `_FIELD_SAMPLES` (omit the sample and the walk fails and says so,
+rather than quietly skipping the field).
+
+Required fields are v1 by construction. A later version cannot make a field
+mandatory without breaking every earlier client, so a new required field is a
+new verb, not a new field.
+
+**SUNSETTING `CONTRACT_MIN`.** The floor exists to keep launchers already in
+the wild working, not forever. Raise it only when all three are true, and say
+so in the commit that raises it:
+
+1. The launcher that needed the old floor is **no longer in circulation** — the
+   auto-updater has carried everyone past it, and the release it shipped in is
+   at least two releases back.
+2. The old floor's fields are **not the only way to express something**. A
+   version is retired, never a capability.
+3. Raising it is **its own commit**, with nothing else in it, because it is the
+   one change here that can lock a real player out of a room.
+
+The cost of leaving the floor low is a few lines in a table and one extra
+column in the walk above — deliberately cheap, so nobody is ever tempted to
+raise it early. `/health` reports `contract_min` so an operator can see what a
+box still accepts without reading the source.
+
 **The keep-alive drain trap, and why a refusal closes the connection.** With
 `HTTP/1.1` keep-alive, returning a rejection *without reading the body the
 client announced* leaves those bytes in the socket, and the next read parses
@@ -811,14 +844,22 @@ any string without **exactly three commas** (`:1059`), and it logs four fields
 order). At sixteen the string is fifteen commas and up to 16x17 bytes, which
 brushes the 4096-byte body cap far less than it sounds (272 bytes).
 
-**This is the cheapest ceiling in the list** and the only one that is purely a
-format the two sides agree on - no ROM, no wire. A v2 names shape (a count
-prefix, or "as many fields as commas + 1") is an afternoon.
+It is the only ceiling here that is purely a format the two sides agree on -
+no ROM, no wire. That does **not** make it independently movable, and the
+coordinator has ruled on exactly that, because lane VSCOLOR-UI's
+`SM64DS_VS_COLORS` would otherwise have frozen a field count of its own.
 
-**Flagged to the coordinator, NOT decided here:** lane VSCOLOR-UI is adding
-`SM64DS_VS_COLORS` tonight and would freeze a field count of its own. The two
-strings should answer the field-count question **the same way, once**. I have
-not touched their files.
+**THE COORDINATOR'S FIELD-COUNT RULING, verbatim:**
+
+> NAMES + COLORS exactly-4 today; future = 16 fields together in one
+> coordinated version change when the wire moves; never independently.
+
+So both strings stay at exactly four fields, and neither grows on its own. When
+the wire moves (section 1), the two go to sixteen **together**, in one version
+change. The reason is the failure this avoids: a sixteen-field names string
+against a four-field colours string is two readers disagreeing about who slot 5
+is, and the symptom would be a wrong name under a wrong colour on a results
+screen, which is the hardest kind of bug to trace back to a format.
 
 ### 4. Arena entrance records, and what the ROM does when it runs out
 
@@ -916,7 +957,13 @@ proving that costs a build for no benefit yet), `kCommsMaxPlayers` and the live
 mask (a wire break every peer takes at once, useless alone), and everything in
 section 6 (MOD territory, the owner's call).
 
-**If someone picks this up, the order is:** the names shape (cheapest, and
-already needs coordinating with the colours string) -> the wire (live mask,
-packet, port span) -> the Ctrl band -> the port's own scoring and marker -> and
-only then the conversation about the ROM.
+**If someone picks this up, the order is:** the wire first (live mask, packet,
+port span) -> then the Ctrl band -> then `SM64DS_VS_NAMES` and
+`SM64DS_VS_COLORS` to sixteen fields **together**, per the ruling in section 3
+-> then the port's own scoring and marker -> and only then the conversation
+about the ROM.
+
+The names string is the smallest piece of work on that list and it is
+deliberately **not** first: the ruling gates it on the wire moving, because a
+format that grows before anything can use it is two readers waiting to
+disagree.

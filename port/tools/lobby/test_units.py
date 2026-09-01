@@ -790,6 +790,102 @@ def test_dial_is_v2_only():
           S.V_DIAL == 2)
 
 
+# A body that satisfies each verb's REQUIRED fields, so the generic walk below
+# can add one optional key to it and be sure that key is the only thing under
+# test. The values need only be well-formed enough to reach the shape check,
+# which runs before any of them is validated.
+_FIELD_SAMPLES = {
+    "v": 1,
+    "room": "K7QMR3",
+    "token": "0" * 32,
+    "nick": "tango",
+    "text": "gg",
+    "cursor": 0,
+    "wait": 0,
+    "map": 0,
+    "win_mode": "time",
+    "star_target": 3,
+    "match_players": 2,
+    "seat": 2,
+    "match": "0" * 16,
+    "reason": "spawn_failed",
+    "win": "slot",
+    "scores": [0, 0, 0, 0],
+    "pre_ok": True,
+}
+
+
+def test_every_versioned_field_is_gated():
+    """THE GATE IS STRUCTURAL, NOT REMEMBERED.
+
+    Walks VERB_FIELDS and, for every field that arrived after the contract
+    floor, proves it is refused by a request claiming an earlier version --
+    and accepted at its own. It names no field, so a field added tomorrow with
+    a version and no gate FAILS HERE rather than going quietly through as a v1
+    key. That is the whole point: the dial's first gate was one hand-written
+    expression in one function with one test aimed at it, and the next lane to
+    add a v2 field would have had nothing telling it the expression existed.
+    """
+    print("\n-- every versioned field is gated, by construction")
+
+    check("every verb the server routes has a row in the field table, and "
+          "every row has a verb", set(S.VERBS) == set(S.VERB_FIELDS),
+          sorted(set(S.VERBS) ^ set(S.VERB_FIELDS)))
+
+    known = set(_FIELD_SAMPLES)
+    missing = set()
+    versioned = []
+    for verb, (required, optional) in sorted(S.VERB_FIELDS.items()):
+        missing |= (set(required) | set(optional)) - known
+        for name, since in sorted(optional.items()):
+            if since > S.CONTRACT_MIN:
+                versioned.append((verb, name, since))
+
+    # If this fires, a field was added to the table and this test cannot build
+    # a body for it -- which would silently reduce the walk's coverage.
+    check("the walk knows a sample value for every field in the table, so it "
+          "cannot skip one by accident", not missing, sorted(missing))
+
+    check("there is at least one versioned field to check (the walk is not "
+          "vacuously passing)", bool(versioned), versioned)
+
+    for verb, name, since in versioned:
+        required, _ = S.VERB_FIELDS[verb]
+        for ver in range(S.CONTRACT_MIN, since):
+            body = {k: _FIELD_SAMPLES[k] for k in required}
+            body["v"] = ver
+            body[name] = _FIELD_SAMPLES[name]
+            check("%s: '%s' arrived in v%d, so a v%d request carrying it is "
+                  "bad_field" % (verb, name, since, ver),
+                  S.shape_for(verb, body) == "bad_field",
+                  S.shape_for(verb, body))
+        # And it is genuinely accepted at its own version, so the gate is a
+        # gate and not a permanent refusal.
+        body = {k: _FIELD_SAMPLES[k] for k in required}
+        body["v"] = since
+        body[name] = _FIELD_SAMPLES[name]
+        check("%s: and a v%d request carrying '%s' passes the shape check"
+              % (verb, since, name), S.shape_for(verb, body) is None,
+              S.shape_for(verb, body))
+
+    # The other half of the same guarantee: a key NO version defines is
+    # refused at every version, including the newest.
+    for ver in range(S.CONTRACT_MIN, S.CONTRACT_V + 1):
+        body = {"v": ver, "nick": "tango", "colour": "red"}
+        check("a key no version defines is bad_field at v%d too" % ver,
+              S.shape_for("create", body) == "bad_field")
+
+    # Required fields are v1 by construction. A later version cannot make a
+    # field mandatory without breaking every earlier client, so the table's
+    # required tuples carry no versions and this pins that reading.
+    for verb, (required, _) in sorted(S.VERB_FIELDS.items()):
+        body = {k: _FIELD_SAMPLES[k] for k in required}
+        body["v"] = S.CONTRACT_MIN
+        check("%s: its required fields are all satisfiable at the contract "
+              "floor (v%d)" % (verb, S.CONTRACT_MIN),
+              S.shape_for(verb, body) is None, S.shape_for(verb, body))
+
+
 def test_dial_moves_the_fewest_people():
     print("\n-- moving the dial moves as few people as it can")
     with game_max(4):
@@ -1710,6 +1806,7 @@ def main():
     test_dial_defaults_are_inert()
     test_dial_range_is_server_enforced()
     test_dial_is_v2_only()
+    test_every_versioned_field_is_gated()
     test_dial_moves_the_fewest_people()
     test_dial_and_seat_reuse()
     test_dial_reaches_the_plan()
