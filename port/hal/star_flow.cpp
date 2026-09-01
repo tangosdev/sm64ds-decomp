@@ -411,18 +411,25 @@ void seat_vs_countdown(void)
  * ---- WHY THIS SEAT IS GATED ON VS, WHEN THE ROM'S IS NOT -------------------
  *
  * The ROM's line has no condition and neither should the port's, eventually.
- * It is gated here because the SAME assignment turns on the ADVENTURE HUD --
- * the health meter, the coin counter, the star count, every one of them a
- * matched HUD leaf already in the link and already writing OAM into the same
- * dark register. That is a picture appearing on every adventure screen in the
- * game, which retakes every BMP baseline the battery holds and is not this
- * lane's to spend. Gating on the mode keeps an adventure frame byte-identical
- * and gives the VS arena the two things it was asked for.
  *
- * SM64DS_HUD_LAYER_SEAT=always is the ROM's own unconditional form, on this
- * same binary, so the lane that takes the adventure HUD can see what wakes up
- * before it commits to re-taking the baselines. =off restores the pre-seat
- * behaviour the same way.
+ * THE REASON THIS FILE FIRST GAVE FOR THE GATE IS RETRACTED. It said the same
+ * assignment "turns on the ADVENTURE HUD" and would retake every BMP baseline.
+ * That was measured false: with the seat forced on, adventure levels 1 and 5
+ * are BYTE-IDENTICAL, because engine A's OAM holds ZERO placed sprites there --
+ * the adventure HUD reaches the player through engine B, not this register.
+ * Nothing wakes up, so there was never a baseline to spend.
+ *
+ * THE REAL REASON IS CONSERVATISM, and it is smaller and honest. The seat is
+ * PROVEN NEEDED in VS: it is what puts the match clock, the star count and the
+ * moved coin counter on screen, each measured to the pixel. Outside VS it is
+ * proven to buy NOTHING on the levels measured. A register write that changes
+ * nothing observable is still a register write on every adventure boot in the
+ * game, on a path this lane did not investigate and cannot speak for, so it
+ * stays behind the mode test until somebody has a reason to want it there.
+ * Un-gating is a one-word change for the lane that finds one.
+ *
+ * SM64DS_HUD_LAYER_SEAT=always is that unconditional form on this same binary;
+ * =off restores the pre-seat behaviour the same way.
  *
  * THE NAME IS THE SECOND ONE THIS KNOB HAS HAD, and the first was a bug I
  * shipped. It was SM64DS_ENGINE_A_LAYERS, which is ALREADY a live variable:
@@ -519,31 +526,41 @@ void seat_engine_a_layers(void)
      * the 3D layer, and the compositor drops it. The rule is right; the input
      * to it was never seated.
      *
-     * THE ROM'S OWN VALUE IS 1, and it is not a guess: src/func_02005a58.c, the
-     * ROM's engine-A 2D setup, does
+     * THE VALUE IS 2, FROM THE LEVEL PATH'S OWN Stage::InitResources:330:
      *
-     *     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;   // priority 1
-     *     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & 0x43) | 0x1710;
+     *     *(vu16 *)0x04000008 = (*(vu16 *)0x04000008 & ~3) | 2;
      *
-     * -- and the second line's 0x43 mask preserves bits 0-1, so the ROM leaves
-     * the 3D layer at priority 1 for the whole run. That is exactly what lets a
-     * priority-1 HUD sprite sit in front of the arena on hardware. func_02005a58
-     * is in no slice and no build list; the port has never run it.
+     * in the same unconditional block as line 251's GX::SetGraphicsMode(1, 0, 1)
+     * and line 402's layer mask -- the two statements this seat already hosts.
+     * Nothing on the level path writes engine A's BG0CNT after it:
+     * Stage::LoadGraphics2D, which runs two lines later, touches BG0CNT_SUB
+     * (0x04001008) only. So all three lines are one statement of the ROM's,
+     * split across the function, and this seats the third.
+     *
+     * AN EARLIER REVISION WROTE 1 AND CITED src/func_02005a58.c FOR IT, calling
+     * that "not a guess". Both halves were wrong and review caught them.
+     * func_02005a58 is dScBoot_c::InitResources -- a BOOT scene, not the level
+     * path -- and its header carries "recovered from vtable slot identity",
+     * which is the GUESSED-BODY marker. This lane dropped a body in round 1 for
+     * carrying exactly that marker and then quoted another one as authority in
+     * the same breath. It cost no pixels (a sprite clears `prio > p3d` at either
+     * value, so every measurement taken under the wrong one still stands) and it
+     * was still a seated hardware statement with a wrong value and a false
+     * provenance: it diverges for BACKGROUNDS, whose rule is `prio >= p3d`, and
+     * it printed into every VS playlog.
      *
      * Seating the two priority bits, and nothing else in that register, is the
      * smallest statement of the ROM's own fact. It is what makes the star count
      * appear, and it is the precondition for the coin move in
      * hal/sub_actors.cpp -- the coins are priority 1 too. */
     *(volatile unsigned short *)0x04000008 =
-        (unsigned short)((*(volatile unsigned short *)0x04000008 & ~3) | 1);
+        (unsigned short)((*(volatile unsigned short *)0x04000008 & ~3) | 2);
     fprintf(stderr, "[vshud] engine A layer mask seated: data_0209d45c = 0x11 "
             "(BG0 + OBJ), DISPCNT bit 3 (BG0 is the 3D layer) and BG0CNT "
-            "priority 1 (func_02005a58's own value, which is what lets a "
-            "priority-1 HUD sprite draw over the arena). %s\n",
-            mode == 2 ? "SM64DS_HUD_LAYER_SEAT=always: every mode, the ROM's "
-                        "own unconditional form"
-                      : "VS only by default; SM64DS_HUD_LAYER_SEAT=always for "
-                        "the adventure HUD too");
+            "priority 2 (Stage::InitResources:330's own value, which is what "
+            "lets a priority-1 HUD sprite draw over the arena). %s\n",
+            mode == 2 ? "SM64DS_HUD_LAYER_SEAT=always: every mode, unconditional"
+                      : "VS only by default (see the gate note above)");
 }
 
 }  // namespace

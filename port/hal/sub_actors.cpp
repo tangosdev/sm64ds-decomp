@@ -501,14 +501,29 @@ void sa_fill_shared(void **vt)
 //     B OAM[0] y=2 x=240 tile=192 pal=1     B OAM[2] y=2 x=207 tile=154 pal=0
 //
 // -- engine A is the star count, engine B is the coin count, same three slots.
-// So flipping the boolean and nothing else puts the coins EXACTLY underneath
-// the star count: with the move on, engine A went from 6 placed sprites to 9,
-// every one of them with real tile data, and the top screen came out
-// BYTE-IDENTICAL. Three sprites drawn perfectly behind three others.
+// So flipping the boolean and nothing else lands the coins on top of the star
+// count: engine A went from 6 placed sprites to 9, every one with real tile
+// data.
 //
-// So the coins go to the top screen at the ROM's own x and one sprite row
-// DOWN, stacked under the star count on the same right edge, which is the only
-// free slot that keeps "where they are on the bottom screen" true horizontally.
+// AN EARLIER REVISION SAID THE TOP SCREEN CAME OUT "BYTE-IDENTICAL" AND READ
+// THAT AS THE COINS HIDING BEHIND THE STARS. The observation was real and the
+// explanation was wrong, and the difference matters now that it is fixed. That
+// capture was taken BEFORE the BG0CNT priority seat existed, when NO
+// priority-1 sprite rendered at all -- neither the coins nor the star count
+// they were supposedly hiding behind. The screen was identical because nothing
+// at that priority reached it, not because three sprites lined up.
+//
+// RE-MEASURED with the priority seat in, SM64DS_VS_COINS_TOP_Y=0 against the
+// ROM's bottom-screen draw: 268 px on the top screen (p1), 220 px (p2), in the
+// coin block's own rows. The two triples share their coordinates but not their
+// pixels -- the third glyph differs (tile 154 pal 0 against tile 158 pal 6),
+// and the digits differ whenever the two counts do. So a dy of 0 does not hide
+// the coins, it draws them ON the star count, which is worse than either.
+//
+// The coins therefore go to the top screen at the ROM's own x and one sprite
+// row DOWN, stacked under the star count on the same right edge, which is the
+// only free slot that keeps "where they are on the bottom screen" true
+// horizontally.
 // SM64DS_VS_COINS_TOP_Y sets the offset; 18 is the default and the number is
 // the one thing here that is a judgement rather than a measurement, so it is a
 // variable and it is going to the owner with a capture rather than being
@@ -529,8 +544,8 @@ void sa_fill_shared(void **vt)
 //
 // SM64DS_VS_COINS_TOP=0 puts the coins back on the bottom screen on the same
 // binary, which is also how the before/after capture pair is taken.
-// SM64DS_VS_COINS_TOP_Y=<n> moves the stack; 0 reproduces the exact overlap
-// above, which is what makes that measurement reproducible.
+// SM64DS_VS_COINS_TOP_Y=<n> moves the stack; 0 puts the coins back on the star
+// count's own coordinates, which is how the 268 px overlap above is reproduced.
 extern "C" {
 void _ZN3HUD13RenderVsTimerEv(void *self);
 void _ZN3HUD15RenderStarCountEv(void *self);
