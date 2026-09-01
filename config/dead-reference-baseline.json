@@ -198,6 +198,10 @@
    "ref": "src/func_ov007_020cc2cc.c"
   },
   {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "src/_ZN10ChillBully14UpdateRunStateEv.cpp"
+  },
+  {
    "file": "notes/plan-cpp-language-mode.md",
    "ref": "src/_ZN9ActorBaseC1Ev.cpp"
   },

@@ -50,7 +50,7 @@ typedef char daObjCannonShutter_c_size_must_be_0x330[sizeof(daObjCannonShutter_c
    build sees the C++ declaration above. The previous note here -- "kept because
    the D0 file is a C translation unit that reads these fields" -- was not true even
    before the promotion. The D0 file was src/_ZN20daObjCannonShutter_cD0Ev.cpp, a C++
-   TU, and the one .c file in the family, src/daObjCannonShutter_c_Spawn.c, declared
+   TU, and the historical one-function intake source for the factory declared
    what it needed from decl_ActorBase.h / decl_common.h and never included this
    header at all.
 

@@ -177,7 +177,7 @@
     "All nine functions are genuine daObjPushblock_c members over the real shared header.",
     "The inline virtual destructor and InitResources key function make mwcc emit the retail D1/D0 pair in ROM order with no D2, together with the class RTTI and vtable.",
     "Behavior's previous eight-byte wall disappears in the whole TU when the home-coordinate declarations remain beside their first uses, reproducing the retail load/register order.",
-    "PushBlock_Spawn is the tenth function of this entry's one mapped run and is deferred, not a separate TU. Its typed C++ source hand-spells the fBase_c actor-heap allocator because a natural new expression produces the wrong allocator relocation -- a constraint it would be under inside this TU as well, as the promoted ov002/daObjAbuku_c entry shows by licensing daObjAbuku_c_Spawn as a member function.",
+    "PushBlock_Spawn is the tenth function of this entry's one mapped run and is deferred, not a separate TU. Its typed C++ source hand-spells the fBase_c actor-heap allocator because a natural new expression produces the wrong allocator relocation -- a constraint it would be under inside this TU as well, as the promoted ov002/daObjAbuku_c entry shows through daObjAbuku_c_classInit (historical alias daObjAbuku_c_Spawn).",
     "PushBlock_SpawnInfo remains outside this manifest because data adjacency alone does not establish ownership."
   ],
   "verification": {

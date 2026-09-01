@@ -11,7 +11,8 @@
  * FlameChomp): the typeinfo at ov070
  * 0x02123340 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123370 (31 slots, same count as dActor_c's) is what pairs it
- * to daKrpa_c_Spawn (renamed with the class; was FlameChomp_Spawn). A natural
+ * to daKrpa_c_classInit (historical aliases daKrpa_c_Spawn and
+ * FlameChomp_Spawn). A natural
  * `new daKrpa_c` is not retail-accurate: it targets the unresolved global
  * `_Znwm`, while the ROM calls fBase_c::operator new. The actor-table factory
  * therefore keeps an explicit typed construction seam for the allocator,

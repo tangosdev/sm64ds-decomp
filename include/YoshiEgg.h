@@ -59,7 +59,7 @@ struct YoshiEgg : dEnemyBase_c {
     u8  unk_421[5];                             /* 0x421 */
     u8  pad_426[0x1];
     u8  mStarSlot;                              /* 0x427 -- dActor_c::TrackStar's answer,
-                                                   the same shape as ChillBully's */
+                                                   the same shape as daIDonketu_c's */
     u8  unk_428;                                /* 0x428 -- param1 >> 4 */
     u8  pad_429[0x3];
 

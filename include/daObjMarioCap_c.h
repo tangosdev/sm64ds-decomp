@@ -35,8 +35,8 @@
  * tree was calling _ZTV13WaterfallMist. The circumstantial evidence all points the same
  * way: the factory is Cap_Spawn, and the class holds a CapIcon.
  *
- * WaterfallMist_Spawn and WaterfallMist_SpawnInfo are NOT renamed, and that is not an
- * oversight. They belong to a different actor: WaterfallMist_Spawn allocates 220 bytes
+ * The historical WaterfallMist_Spawn and WaterfallMist_SpawnInfo aliases belong
+ * to a different actor: daObjWaterfall_c_classInit allocates 220 bytes
  * and stores the vtable at 0x021094a0, whose RTTI record is daObjWaterfall_c. For that
  * class the name is apt, so it stays. The defect was one name serving two classes.
  *

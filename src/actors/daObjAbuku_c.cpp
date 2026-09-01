@@ -43,20 +43,19 @@
  * has no licensed range in this production TU. */
 struct AbukuVector3 { int x, y, z; };
 
-/* Actor factory descriptor at ov002:0x02108940.  The ROM stores one of these
- * behind each actor-table entry: a factory, two scheduling priorities, flags,
- * and three fixed-point culling ranges.  Kept TU-local until the common actor
- * headers recover the shared type without widening this TU's dependency
- * surface. */
+/* Actor/process profile descriptor at ov002:0x02108940. Field roles are
+ * recovered from fBase_c/dActor_c consumers; exact original member spellings
+ * are not preserved. Kept TU-local until the common actor headers recover the
+ * shared type without widening this TU's dependency surface. */
 struct AbukuSpawnInfo {
-    daObjAbuku_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daObjAbuku_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char AbukuSpawnInfo_size_must_be_0x1c[
@@ -89,18 +88,18 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
     unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, const Vector3_16 *, void *);
 }
 
-extern "C" daObjAbuku_c *daObjAbuku_c_Spawn();
+extern "C" daObjAbuku_c *daObjAbuku_c_classInit();
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daObjAbuku_c_Spawn, 0x020b3568, size 0x38 */
+/* ROM ordinal 6 -- class initializer, 0x020b3568, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjAbuku_c_Spawn
+// @symbol daObjAbuku_c_classInit
 /* recovered: vtable identified, declarations from a shared header. Was
  * Bubble_Spawn -- renamed to match the RTTI class name
  * (_ZTS12daObjAbuku_c), see include/daObjAbuku_c.h. */
 /* vtable identified: VT0 = _ZTV12daObjAbuku_c */
 extern "C" {  /* Actor-table factory: genuine C ABI boundary. */
-daObjAbuku_c *daObjAbuku_c_Spawn(void)
+daObjAbuku_c *daObjAbuku_c_classInit(void)
 {
     daObjAbuku_c *p = (daObjAbuku_c *)_ZN7fBase_cnwEj(sizeof(daObjAbuku_c));
     if (p) {
@@ -114,8 +113,13 @@ daObjAbuku_c *daObjAbuku_c_Spawn(void)
 }
 }
 /* 0x02108940..0x0210895c, immediately before the vtable object. */
-extern "C" AbukuSpawnInfo Bubble_SpawnInfo = {
-    daObjAbuku_c_Spawn,
+/* Reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI
+ * identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and
+ * object shape; later EAD lineage supplies the spelling prior. Exact original
+ * SM64DS spellings are not preserved. Historical aliases: daObjAbuku_c_Spawn
+ * (originally Bubble_Spawn) and Bubble_SpawnInfo. */
+extern "C" AbukuSpawnInfo g_profile_OBJ_ABUKU = {
+    daObjAbuku_c_classInit,
     0x0123,
     0x00a1,
     0,

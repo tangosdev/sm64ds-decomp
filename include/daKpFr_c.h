@@ -10,7 +10,8 @@
  * FlameChompFire): the typeinfo at ov070
  * 0x02123418 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123448 (31 slots, same count as dActor_c's) is what pairs it
- * to daKpFr_c_Spawn (renamed with the class; was FlameChompFire_Spawn).
+ * to daKpFr_c_classInit (historical aliases daKpFr_c_Spawn and
+ * FlameChompFire_Spawn).
  * A natural `new daKpFr_c` was measured and rejected: its instruction bytes
  * match after relocation masking, but it targets the unresolved global
  * `_Znwm` rather than retail's fBase_c::operator new. The actor-table factory

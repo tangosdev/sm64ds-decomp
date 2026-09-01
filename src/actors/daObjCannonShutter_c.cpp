@@ -73,10 +73,27 @@ extern SharedFilePtr data_ov002_0210e124;   /* the KCL collision mesh */
 extern CLPS_Block    data_ov002_0210d7f4;
 }
 
+/* Runtime actor/process profile descriptor at ov002:0x02109d14. The field
+ * roles are established by the recovered fBase_c/dActor_c consumers; their
+ * exact original SM64DS member spellings are not preserved. */
+struct CannonShutterSpawnInfo {
+    int *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
+};
+
+typedef char CannonShutterSpawnInfo_size_must_be_0x1c[
+    sizeof(CannonShutterSpawnInfo) == 0x1c ? 1 : -1];
+
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjCannonShutter_c_Spawn, 0x020bcccc, size 0x30          */
+/* ROM ordinal 7 -- class initializer, 0x020bcccc, size 0x30                   */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjCannonShutter_c_Spawn
+// @symbol daObjCannonShutter_c_classInit
 /* The actor factory the level tables call. It allocates through
    fBase_c::operator new, runs dBgActor_c's base-subobject constructor over the
    storage and then stamps this class's vtable address point over the vptr --
@@ -85,7 +102,7 @@ extern CLPS_Block    data_ov002_0210d7f4;
    vptr store because the ROM's own code is the base C2 variant, which C++ has
    no spelling for. */
 extern "C" {
-int *daObjCannonShutter_c_Spawn(void)
+int *daObjCannonShutter_c_classInit(void)
 {
     int *self = (int *)_ZN7fBase_cnwEj(sizeof(daObjCannonShutter_c));  /* 0x330 */
     if (self) {
@@ -95,6 +112,22 @@ int *daObjCannonShutter_c_Spawn(void)
     return self;
 }
 }
+
+/* Reconstructed source-style names: SM64DS proves the RTTI class,
+ * CANNON_SHUTTER registry ID, descriptor/factory relationship, and object
+ * shape; later EAD lineage supplies the classInit/g_profile spelling prior.
+ * Exact original SM64DS spellings are not preserved. Historical project
+ * aliases: daObjCannonShutter_c_Spawn and daObjCannonShutter_c_SpawnInfo. */
+extern "C" CannonShutterSpawnInfo g_profile_CANNON_SHUTTER = {
+    daObjCannonShutter_c_classInit,
+    0x000e,
+    0x009e,
+    0x00800002,
+    0x00000000,
+    0x00100000,
+    0x01000000,
+    0x00000000
+};
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- _ZN20daObjCannonShutter_c13InitResourcesEv, 0x020bcc20, 0xac */

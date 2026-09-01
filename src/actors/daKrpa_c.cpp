@@ -4,16 +4,18 @@
 #include "Player.h"
 #include "SharedFilePtr.h"
 
-/* Actor-table descriptor at ov070:0x0212334c. */
+/* Actor/process profile descriptor at ov070:0x0212334c. Field roles are
+ * recovered from fBase_c/dActor_c consumers; exact original member spellings
+ * are not preserved. */
 struct daKrpaSpawnInfo {
-    daKrpa_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daKrpa_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char daKrpaSpawnInfo_size_must_be_0x1c[
@@ -56,7 +58,7 @@ typedef char daKrpaSpawnInfo_size_must_be_0x1c[
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- daKrpa_c_Spawn, 0x02121af8, size 0x50 */
+/* ROM ordinal 24 -- class initializer, 0x02121af8, size 0x50 */
 /* -------------------------------------------------------------------------- */
 /* Natural `new daKrpa_c` targets `_Znwm`, not the retail actor allocator.
  * Keep this one typed C-ABI construction seam at the actor-table boundary. */
@@ -69,7 +71,8 @@ extern void _ZN10dCcAcPos_cC1Ev(dCcAcPos_c *clsn);
 extern void _ZN10dBgCh_ActrC1Ev(dBgCh_Actr *clsn);
 extern int _ZTV8daKrpa_c[];
 
-daKrpa_c *daKrpa_c_Spawn(void)
+// @symbol daKrpa_c_classInit
+daKrpa_c *daKrpa_c_classInit(void)
 {
     daKrpa_c *actor = (daKrpa_c *)_ZN7fBase_cnwEj(sizeof(daKrpa_c));
     if (actor) {
@@ -84,8 +87,13 @@ daKrpa_c *daKrpa_c_Spawn(void)
 }
 }
 
-extern "C" daKrpaSpawnInfo daKrpa_c_SpawnInfo = {
-    daKrpa_c_Spawn,
+/* Reconstructed source-style names: SM64DS proves the daKrpa_c RTTI identity,
+ * KERONPA registry ID, descriptor/factory relationship, and object shape;
+ * later EAD lineage supplies the spelling prior. Exact original SM64DS
+ * spellings are not preserved. Historical aliases: daKrpa_c_Spawn and
+ * daKrpa_c_SpawnInfo. */
+extern "C" daKrpaSpawnInfo g_profile_KERONPA = {
+    daKrpa_c_classInit,
     0x010e,
     0x0081,
     0x00000003,

@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjAbuku_c_Spawn",
+      "symbol": "daObjAbuku_c_classInit",
       "address": "0x020b3568",
       "size": "0x00000038",
       "legacy_source": "src/daObjAbuku_c_Spawn.c",
@@ -135,7 +135,7 @@
       "reason": "InitResources is the key function and emits the complete daObjAbuku_c vtable with its ABI preamble. The configured public address point is outside this text-only entry; romdata_check applies the measured eight-byte address-point convention and proves every emitted slot before isolation discards the copy."
     },
     {
-      "symbol": "Bubble_SpawnInfo",
+      "symbol": "g_profile_OBJ_ABUKU",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x02108940",
@@ -145,7 +145,7 @@
   "notes": [
     "Genuine lifecycle source form: daObjAbuku_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU. The emitted vtable naturally requires D1 then D0 in retail order; mwcc emits no D2 and the source contains no hand-spelled destructor body or forcing helper.",
     "The actor-table factory remains the one genuine C ABI construction boundary. Plain `new daObjAbuku_c` was measured and rejected because mwccarm calls unresolved `_Znwm`, while retail calls the actor-specific `_ZN7fBase_cnwEj`; the exact manual allocator/base/member-constructor sequence is retained rather than hiding a wrong relocation.",
-    "The manifest is deliberately text-only. All ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes, including Bubble_SpawnInfo and daObjAbuku_c's own RTTI, type name, and vtable. This lets ordinary production promotion preserve gap ownership while still making romdata_check binding evidence.",
+    "daObjAbuku_c_classInit and g_profile_OBJ_ABUKU are reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were Bubble_Spawn, daObjAbuku_c_Spawn, and Bubble_SpawnInfo. The manifest is deliberately text-only; all ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes.",
     "The older partitioned-link record described an out-of-line destructor source form that emitted D0, D1 and D2 in the wrong order. It was removed rather than carried forward as stale evidence after the inline/key-function form eliminated D2 and corrected section order."
   ],
   "verification": {
@@ -187,10 +187,9 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV12daObjAbuku_c",
-        "Bubble_SpawnInfo"
+        "g_profile_OBJ_ABUKU"
       ],
       "dataExternalized": [
-        "Bubble_SpawnInfo",
         "_ZTI12daObjAbuku_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
@@ -199,7 +198,8 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV12daObjAbuku_c"
+        "_ZTV12daObjAbuku_c",
+        "g_profile_OBJ_ABUKU"
       ]
     },
     "criteria": {

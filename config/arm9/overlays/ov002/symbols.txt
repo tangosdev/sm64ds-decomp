@@ -148,7 +148,7 @@ func_ov002_020b330c kind:function(arm,size=0x38) addr:0x020b330c
 func_ov002_020b3344 kind:function(arm,size=0x98) addr:0x020b3344
 _ZN12daObjAbuku_c8BehaviorEv kind:function(arm,size=0x13c) addr:0x020b33dc
 _ZN12daObjAbuku_c13InitResourcesEv kind:function(arm,size=0x50) addr:0x020b3518
-daObjAbuku_c_Spawn kind:function(arm,size=0x38) addr:0x020b3568
+daObjAbuku_c_classInit kind:function(arm,size=0x38) addr:0x020b3568
 _ZN13BigBrickBlockD1Ev kind:function(arm,size=0x44) addr:0x020b35a0
 _ZN13BigBrickBlockD0Ev kind:function(arm,size=0x58) addr:0x020b35e4
 _ZN13BigBrickBlock17NotifyLinkedActorEv kind:function(arm,size=0x64) addr:0x020b363c
@@ -271,7 +271,7 @@ _ZN16daObjWaterfall_cD1Ev kind:function(arm,size=0x24) addr:0x020b6e08
 _ZN16daObjWaterfall_cD0Ev kind:function(arm,size=0x38) addr:0x020b6e2c
 _ZN16daObjWaterfall_c8BehaviorEv kind:function(arm,size=0x48) addr:0x020b6e64
 _ZN16daObjWaterfall_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x020b6eac
-WaterfallMist_Spawn kind:function(arm,size=0x30) addr:0x020b6ee8
+daObjWaterfall_c_classInit kind:function(arm,size=0x30) addr:0x020b6ee8
 _ZN15daObjMarioCap_cD1Ev kind:function(arm,size=0x50) addr:0x020b6f18
 _ZN15daObjMarioCap_cD0Ev kind:function(arm,size=0x64) addr:0x020b6f68
 func_ov002_020b6fcc kind:function(arm,size=0x21c) addr:0x020b6fcc
@@ -414,7 +414,7 @@ _ZN20daObjCannonShutter_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:
 _ZN20daObjCannonShutter_c6RenderEv kind:function(arm,size=0x84) addr:0x020bc9f4
 _ZN20daObjCannonShutter_c8BehaviorEv kind:function(arm,size=0x1a8) addr:0x020bca78
 _ZN20daObjCannonShutter_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x020bcc20
-daObjCannonShutter_c_Spawn kind:function(arm,size=0x30) addr:0x020bcccc
+daObjCannonShutter_c_classInit kind:function(arm,size=0x30) addr:0x020bcccc
 func_ov002_020bccfc kind:function(arm,size=0x1c) addr:0x020bccfc
 func_ov002_020bcd18 kind:function(arm,size=0x20) addr:0x020bcd18
 func_ov002_020bcd38 kind:function(arm,size=0xb8) addr:0x020bcd38
@@ -1731,7 +1731,7 @@ _ZTV11WingFeather kind:data(any) addr:0x021088a8
 _ZTV11daFeather_c kind:data(any) addr:0x021088a8
 _ZTI12daObjAbuku_c kind:data(any) addr:0x02108924
 _ZTS12daObjAbuku_c kind:data(any) addr:0x02108930
-Bubble_SpawnInfo kind:data(any) addr:0x02108940
+g_profile_OBJ_ABUKU kind:data(any) addr:0x02108940
 data_ov002_0210895c kind:data(any) addr:0x0210895c
 _ZTV12daObjAbuku_c kind:data(any) addr:0x02108964
 data_ov002_021089e0 kind:data(any) addr:0x021089e0
@@ -1802,7 +1802,7 @@ PoppingLavaBubbles_SpawnInfo kind:data(any) addr:0x021093bc
 _ZTV18PoppingLavaBubbles kind:data(any) addr:0x021093e0
 _ZTI16daObjWaterfall_c kind:data(any) addr:0x0210945c
 _ZTS16daObjWaterfall_c kind:data(any) addr:0x02109468
-WaterfallMist_SpawnInfo kind:data(any) addr:0x0210947c
+g_profile_WATERFALL kind:data(any) addr:0x0210947c
 _ZTV16daObjWaterfall_c kind:data(any) addr:0x021094a0
 data_ov002_0210951c kind:data(any) addr:0x0210951c
 data_ov002_02109524 kind:data(any) addr:0x02109524
@@ -1892,7 +1892,7 @@ _ZTV12HealingHeart kind:data(any) addr:0x02109c74
 _ZTV12daObjHeart_c kind:data(any) addr:0x02109c74
 _ZTI20daObjCannonShutter_c kind:data(any) addr:0x02109cf0
 _ZTS20daObjCannonShutter_c kind:data(any) addr:0x02109cfc
-daObjCannonShutter_c_SpawnInfo kind:data(any) addr:0x02109d14
+g_profile_CANNON_SHUTTER kind:data(any) addr:0x02109d14
 _ZTV20daObjCannonShutter_c kind:data(any) addr:0x02109d38
 data_ov002_02109db8 kind:data(any) addr:0x02109db8
 data_ov002_02109dbc kind:data(any) addr:0x02109dbc

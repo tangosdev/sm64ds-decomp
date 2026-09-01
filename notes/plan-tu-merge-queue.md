@@ -319,7 +319,7 @@ python tools/tubuild.py linkcheck <ID> --no-rom
 ```
 
 `<ID>` is `<module>/<tail>` where `tail` is the single class name, `"+".join(sorted(classes))`
-for a multi-class TU (`ov027/ChillBully+daIDonketu_c`), or `@<start>-<end>` for an
+for a multi-class TU (`ov027/daIDonketu_c+daIDonketu_c`), or `@<start>-<end>` for an
 unattributed run. If the tail is not unique in the module it becomes `Class@<start8hex>`.
 Quote the multi-class ones in the shell.
 
@@ -569,13 +569,13 @@ vtable-anchor / class-form; go to `decomp-cpp-class-form` before touching the me
 
 Then run `python tools/rombuild.py` once, serially. It is the final verdict.
 
-### Pilot 2 — `ov027/ChillBully+daIDonketu_c` (multi-class + normalizer)
+### Pilot 2 — `ov027/daIDonketu_c+daIDonketu_c` (multi-class + normalizer)
 
 `.text 0x021115c4..0x021118c8` · 7 files · 193 lines · high/high · `corroborated:false` ·
 1 file needs the normalizer.
 
 New mechanisms: (a) **two class labels in one TU** — `inspect` reports `_ZTI12daIDonketu_c`,
-`_ZTS12daIDonketu_c`, `_ZTV10ChillBully`, i.e. RTTI for one class and a vtable for the
+`_ZTS12daIDonketu_c`, `_ZTV12daIDonketu_c`, i.e. RTTI for one class and a vtable for the
 other, the sharpest available test that the grouping is real; (b) the `+`-joined ID path;
 (c) the normalizer in isolation; (d) an *inferred* high/high boundary; (e) `corroborated:false`.
 
@@ -746,7 +746,7 @@ See `notes/plan-cpp-conversion-queue.md`. Sequencing rules: §8 of
    independently proven only 75. The merge reaches 166 files the per-file evidence cannot.
 2. **The class → key-function-TU mapping** from `inspect`, for every TU touched.
    Notable multi-class case: ov027 carries `_ZTI/_ZTS 12daIDonketu_c` **and**
-   `_ZTV10ChillBully` in one TU.
+   `_ZTV12daIDonketu_c` in one TU.
 3. **Every RTTI-vs-coined-name contradiction hit.** `ov070/FlameChomp` is Tier-2 rank 1,
    and FlameChomp is already known to sit in `daKrpa_c`'s vtable. The ROM name wins.
 4. **Findings §0.1–0.5**, which invalidate three census fields the conversion side may

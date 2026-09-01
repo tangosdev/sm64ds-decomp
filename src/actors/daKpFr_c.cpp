@@ -5,16 +5,18 @@
 #include "Player.h"
 #include "SurfaceInfo.h"
 
-/* Actor-table descriptor at ov070:0x02123424. */
+/* Actor/process profile descriptor at ov070:0x02123424. Field roles are
+ * recovered from fBase_c/dActor_c consumers; exact original member spellings
+ * are not preserved. */
 struct daKpFrSpawnInfo {
-    daKpFr_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daKpFr_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char daKpFrSpawnInfo_size_must_be_0x1c[
@@ -53,7 +55,7 @@ typedef char daKpFrSpawnInfo_size_must_be_0x1c[
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- daKpFr_c_Spawn, 0x021221fc, size 0x48 */
+/* ROM ordinal 20 -- class initializer, 0x021221fc, size 0x48 */
 /* -------------------------------------------------------------------------- */
 /* Natural `new daKpFr_c` targets `_Znwm`, not the retail actor allocator.
  * Keep this one typed C-ABI construction seam at the actor-table boundary. */
@@ -65,7 +67,8 @@ extern void _ZN7dCcAc_cC1Ev(dCcAc_c *clsn);
 extern void _ZN10dBgCh_ActrC1Ev(dBgCh_Actr *clsn);
 extern int _ZTV8daKpFr_c[];
 
-daKpFr_c *daKpFr_c_Spawn(void)
+// @symbol daKpFr_c_classInit
+daKpFr_c *daKpFr_c_classInit(void)
 {
     daKpFr_c *actor = (daKpFr_c *)_ZN7fBase_cnwEj(sizeof(daKpFr_c));
     if (actor) {
@@ -79,8 +82,13 @@ daKpFr_c *daKpFr_c_Spawn(void)
 }
 }
 
-extern "C" daKpFrSpawnInfo daKpFr_c_SpawnInfo = {
-    daKpFr_c_Spawn,
+/* Reconstructed source-style names: SM64DS proves the daKpFr_c RTTI identity,
+ * KERONPA_FIRE registry ID, descriptor/factory relationship, and object shape;
+ * later EAD lineage supplies the spelling prior. Exact original SM64DS
+ * spellings are not preserved. Historical aliases: daKpFr_c_Spawn and
+ * daKpFr_c_SpawnInfo. */
+extern "C" daKpFrSpawnInfo g_profile_KERONPA_FIRE = {
+    daKpFr_c_classInit,
     0x010f,
     0x0082,
     0x00000006,
