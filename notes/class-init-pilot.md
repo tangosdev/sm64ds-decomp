@@ -14,7 +14,7 @@ not classify every non-vptr field store.  `STAR_CAMERA` remains uncertain and
 is deliberately not forced into the model.
 
 The exact global name `<Class>_classInit` does **not** pass as a universal rename
-rule.  The full 391-entry inventory yields 310 distinct class-based proposals,
+rule.  The complete candidate-level inventory yields 314 distinct class-based proposals,
 and 42 of those proposals map to more than one factory address.  In the pilot,
 five rows have a spelling collision.  Only 13 of 20 factory renames are marked
 `apply_recommended=yes` in the dry-run map.

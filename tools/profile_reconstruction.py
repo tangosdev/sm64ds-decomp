@@ -20,6 +20,8 @@ Outputs:
     symbols/profile_reconstruction_pilot.tsv
     symbols/profile_reconstruction_pilot.json
     symbols/profile_reconstruction_renames.tsv
+    symbols/profile_reconstruction_registry.tsv
+    symbols/profile_reconstruction_registry.json
 """
 
 from __future__ import annotations
@@ -48,6 +50,8 @@ ARM9_BASE = AN.ARM9_BASE
 OUT_TSV = REPO / "symbols" / "profile_reconstruction_pilot.tsv"
 OUT_JSON = REPO / "symbols" / "profile_reconstruction_pilot.json"
 OUT_RENAMES = REPO / "symbols" / "profile_reconstruction_renames.tsv"
+OUT_FULL_TSV = REPO / "symbols" / "profile_reconstruction_registry.tsv"
+OUT_FULL_JSON = REPO / "symbols" / "profile_reconstruction_registry.json"
 
 RTTI = REPO / "build" / "rtti.json"
 RTTI_VTABLES = REPO / "build" / "rtti_vtables.json"
@@ -185,6 +189,49 @@ RENAME_COLUMNS = [
     "confidence",
     "evidence",
     "apply_recommended",
+]
+
+FULL_COLUMNS = [
+    "actor_id",
+    "profile_id",
+    "profile_id_source",
+    "debug_string_address",
+    "candidate_ordinal",
+    "registry_candidate_count",
+    "overlay_ambiguous",
+    "overlay",
+    "profile_address",
+    "current_profile_name",
+    "proposed_profile_name",
+    "descriptor_layout",
+    "profile_index",
+    "profile_index_matches_actor_id",
+    "execute_order",
+    "draw_order",
+    "group_flags",
+    "group_flags_evidence",
+    "actor_flags",
+    "clip_offset_y",
+    "clip_radius",
+    "clip_distance",
+    "far_distance",
+    "factory_module",
+    "factory_address",
+    "current_factory_name",
+    "current_factory_file",
+    "proposed_factory_name",
+    "factory_shape",
+    "alloc_size",
+    "installed_vtable",
+    "class_name",
+    "class_name_source",
+    "proposed_factory_collision",
+    "class_filename_candidate",
+    "tu_start",
+    "tu_end",
+    "profile_rename_recommended",
+    "factory_rename_recommended",
+    "recommendation_evidence",
 ]
 
 
@@ -644,12 +691,19 @@ def make_observations(refresh: bool, no_refresh: bool):
     # A candidate filename/factory name cannot be reviewed in isolation from every
     # other registry entry.  Detect classInit collisions over the full inventory.
     factory_proposals = collections.defaultdict(set)
-    for _actor_id, chosen in all_chosen:
-        site = site_by_factory.get((chosen["factory_module"], chosen["factory_address"]))
-        if site and site.get("class") and not is_base_vtable_only(site, rtti, opnew["classes"]):
-            factory_proposals[f"{site['class']}_classInit"].add(
+    for candidates in all_candidates.values():
+        for chosen in candidates:
+            site = site_by_factory.get(
                 (chosen["factory_module"], chosen["factory_address"])
             )
+            if (
+                site
+                and site.get("class")
+                and not is_base_vtable_only(site, rtti, opnew["classes"])
+            ):
+                factory_proposals[f"{site['class']}_classInit"].add(
+                    (chosen["factory_module"], chosen["factory_address"])
+                )
 
     factory_registry_refs = collections.defaultdict(list)
     for actor_id, candidates in sorted(all_candidates.items()):
@@ -663,6 +717,173 @@ def make_observations(refresh: bool, no_refresh: bool):
                     "profile_id": profile_id,
                     "overlay": candidate["module"],
                     "profile_address": hx(candidate["profile_address"]),
+                }
+            )
+
+    full_rows = []
+    for actor_id, candidates in sorted(all_candidates.items()):
+        profile_id, debug_addr = debug_names[actor_id]
+        for ordinal, candidate in enumerate(candidates, 1):
+            fkey = (candidate["factory_module"], candidate["factory_address"])
+            site = site_by_factory.get(fkey)
+            base_only = is_base_vtable_only(site, rtti, opnew["classes"])
+            shape, _shape_evidence = factory_shape(site, base_only)
+            class_name = "" if base_only or not site else site.get("class") or ""
+            vtable = int(site["vtable"], 16) if site and site.get("vtable") else None
+            rtti_matches = (
+                by_vtable.get((candidate["factory_module"], vtable), [])
+                if vtable
+                else []
+            )
+            if not rtti_matches and site and site.get("resolved_by") == "arm9" and vtable:
+                rtti_matches = by_vtable.get(("arm9", vtable), [])
+            rtti_key, rtti_record = (
+                rtti_matches[0] if len(rtti_matches) == 1 else ("", None)
+            )
+            if rtti_record and class_name and rtti_record["name"] != class_name:
+                raise SystemExit(
+                    f"{profile_id}: opnew class {class_name} != RTTI {rtti_record['name']}"
+                )
+            if not class_name:
+                rtti_key, rtti_record = "", None
+
+            chain = (
+                inheritance_chain(rtti_key, rtti["records"], edges)
+                if rtti_key
+                else ""
+            )
+            descriptor_layout = candidate["descriptor_layout"]
+            if "dScene_c" in chain:
+                descriptor_layout = "base_profile_0x08"
+            elif "dActor_c" in chain or base_only:
+                descriptor_layout = "actor_profile_0x1c"
+
+            proposed_factory = f"{class_name}_classInit" if class_name else ""
+            collisions = sorted(
+                factory_proposals.get(proposed_factory, set())
+            ) if proposed_factory else []
+            collision_text = (
+                ";".join(f"{m}:{hx(a)}" for m, a in collisions)
+                if len(collisions) > 1
+                else ""
+            )
+            unit, _left_conf, _right_conf = unit_for(
+                tu_map, candidate["factory_module"], candidate["factory_address"]
+            )
+            tu_name = tu_names.get("classes", {}).get(class_name, {}) if class_name else {}
+            filename_candidate = (
+                f"{tu_name['stem']}.cpp" if tu_name.get("stem") else ""
+            )
+
+            recommendation_reasons = []
+            if len(candidates) > 1:
+                recommendation_reasons.append("overlay_multiplexed_registry_pointer")
+            if base_only or not class_name:
+                recommendation_reasons.append("most_derived_class_unresolved")
+            if collision_text:
+                recommendation_reasons.append("global_classinit_name_collision")
+            if not candidate["current_factory_name"]:
+                recommendation_reasons.append("current_factory_symbol_unresolved")
+            if not candidate["current_profile_name"]:
+                recommendation_reasons.append("current_profile_symbol_unresolved")
+
+            profile_recommended = (
+                len(candidates) == 1 and bool(candidate["current_profile_name"])
+            )
+            factory_recommended = (
+                len(candidates) == 1
+                and bool(candidate["current_factory_name"])
+                and bool(class_name)
+                and not collision_text
+            )
+            full_rows.append(
+                {
+                    "actor_id": actor_id,
+                    "profile_id": profile_id,
+                    "profile_id_source": (
+                        "symbols/actor_debug_names.tsv (literal ROM string table)"
+                    ),
+                    "debug_string_address": hx(debug_addr),
+                    "candidate_ordinal": ordinal,
+                    "registry_candidate_count": len(candidates),
+                    "overlay_ambiguous": len(candidates) > 1,
+                    "overlay": candidate["module"],
+                    "profile_address": hx(candidate["profile_address"]),
+                    "current_profile_name": candidate["current_profile_name"],
+                    "proposed_profile_name": f"g_profile_{profile_id}",
+                    "descriptor_layout": descriptor_layout,
+                    "profile_index": candidate["execute_order"],
+                    "profile_index_matches_actor_id": (
+                        candidate["execute_order"] == actor_id
+                    ),
+                    "execute_order": candidate["execute_order"],
+                    "draw_order": candidate["draw_order"],
+                    "group_flags": "",
+                    "group_flags_evidence": (
+                        "unlocated: no separate group-flags field is read from this "
+                        "descriptor by the recovered fBase_c/dActor_c constructors"
+                    ),
+                    "actor_flags": (
+                        hx(candidate["actor_flags"])
+                        if descriptor_layout == "actor_profile_0x1c"
+                        else ""
+                    ),
+                    "clip_offset_y": (
+                        hx(candidate["clip_offset_y"])
+                        if descriptor_layout == "actor_profile_0x1c"
+                        else ""
+                    ),
+                    "clip_radius": (
+                        hx(candidate["clip_radius"])
+                        if descriptor_layout == "actor_profile_0x1c"
+                        else ""
+                    ),
+                    "clip_distance": (
+                        hx(candidate["clip_distance"])
+                        if descriptor_layout == "actor_profile_0x1c"
+                        else ""
+                    ),
+                    "far_distance": (
+                        hx(candidate["far_distance"])
+                        if descriptor_layout == "actor_profile_0x1c"
+                        else ""
+                    ),
+                    "factory_module": candidate["factory_module"],
+                    "factory_address": hx(candidate["factory_address"]),
+                    "current_factory_name": candidate["current_factory_name"],
+                    "current_factory_file": source_for(
+                        candidate["current_factory_name"]
+                    ),
+                    "proposed_factory_name": proposed_factory,
+                    "factory_shape": shape,
+                    "alloc_size": hx(site["size"]) if site else "",
+                    "installed_vtable": hx(vtable),
+                    "class_name": class_name,
+                    "class_name_source": (
+                        f"SM64DS RTTI {rtti_record['module']}:{rtti_record['addr']}"
+                        if rtti_record
+                        else ""
+                    ),
+                    "proposed_factory_collision": collision_text,
+                    "class_filename_candidate": filename_candidate,
+                    "tu_start": unit["start"] if unit else "",
+                    "tu_end": unit["end"] if unit else "",
+                    "profile_rename_recommended": (
+                        "yes" if profile_recommended else "no"
+                    ),
+                    "factory_rename_recommended": (
+                        "yes" if factory_recommended else "no"
+                    ),
+                    "recommendation_evidence": (
+                        "eligible=unique_registry_context+rom_profile_id"
+                        + (
+                            "+unique_class_factory"
+                            if factory_recommended
+                            else ""
+                        )
+                        if not recommendation_reasons
+                        else "not_apply=" + "+".join(recommendation_reasons)
+                    ),
                 }
             )
 
@@ -953,7 +1174,7 @@ def make_observations(refresh: bool, no_refresh: bool):
             if not any(c["execute_order"] == actor_id for c in candidates)
         ],
     }
-    return rows, opnew, inventory_context
+    return rows, full_rows, opnew, inventory_context
 
 
 def tsv_value(value):
@@ -1049,6 +1270,33 @@ def check_rows(rows) -> None:
     print(f"CHECK OK: {len(rows)} pilot rows; required edge cases retained")
 
 
+def check_full_rows(rows) -> None:
+    actor_ids = {row["actor_id"] for row in rows}
+    if actor_ids != set(range(N_ACTORS)):
+        raise SystemExit(
+            f"CHECK FAIL: full registry covers {len(actor_ids)}/{N_ACTORS} actor IDs"
+        )
+    keys = {
+        (row["actor_id"], row["overlay"], row["profile_address"])
+        for row in rows
+    }
+    if len(keys) != len(rows):
+        raise SystemExit("CHECK FAIL: duplicate full-registry candidate rows")
+    matched_ids = {
+        row["actor_id"]
+        for row in rows
+        if row["profile_index_matches_actor_id"]
+    }
+    if matched_ids != set(range(N_ACTORS)):
+        raise SystemExit(
+            "CHECK FAIL: not every registry ID has a candidate whose +0x04 "
+            "halfword equals the ID"
+        )
+    print(
+        f"CHECK OK: {len(rows)} candidate rows cover all {N_ACTORS} registry IDs"
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--refresh-derived", action="store_true")
@@ -1057,15 +1305,18 @@ def main() -> int:
     ap.add_argument("--tsv", default=str(OUT_TSV))
     ap.add_argument("--json", default=str(OUT_JSON))
     ap.add_argument("--renames", default=str(OUT_RENAMES))
+    ap.add_argument("--full-tsv", default=str(OUT_FULL_TSV))
+    ap.add_argument("--full-json", default=str(OUT_FULL_JSON))
     args = ap.parse_args()
 
-    rows, opnew, inventory_context = make_observations(
+    rows, full_rows, opnew, inventory_context = make_observations(
         args.refresh_derived, args.no_refresh
     )
     rename_rows = build_rename_rows(rows)
 
     write_tsv(pathlib.Path(args.tsv), TSV_COLUMNS, rows)
     write_tsv(pathlib.Path(args.renames), RENAME_COLUMNS, rename_rows)
+    write_tsv(pathlib.Path(args.full_tsv), FULL_COLUMNS, full_rows)
     payload = {
         "schema_version": 2,
         "generated_by": "tools/profile_reconstruction.py",
@@ -1116,11 +1367,33 @@ def main() -> int:
         newline="\n",
     )
 
+    full_payload = {
+        "schema_version": 1,
+        "generated_by": "tools/profile_reconstruction.py",
+        "row_granularity": (
+            "one row per valid overlay-local interpretation of each registry pointer"
+        ),
+        "logical_registry_entries": N_ACTORS,
+        "candidate_rows": len(full_rows),
+        "lineage_snapshot": payload["lineage_snapshot"],
+        "population_context": payload["population_context"],
+        "rows": full_rows,
+    }
+    pathlib.Path(args.full_json).parent.mkdir(parents=True, exist_ok=True)
+    pathlib.Path(args.full_json).write_text(
+        json.dumps(full_payload, indent=2, sort_keys=False) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+
     if args.check:
         check_rows(rows)
+        check_full_rows(full_rows)
     print(f"wrote {args.tsv}: {len(rows)} rows")
     print(f"wrote {args.json}: {len(rows)} rows")
     print(f"wrote {args.renames}: {len(rename_rows)} dry-run renames")
+    print(f"wrote {args.full_tsv}: {len(full_rows)} registry candidate rows")
+    print(f"wrote {args.full_json}: {len(full_rows)} registry candidate rows")
     return 0
 
 

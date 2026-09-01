@@ -254,7 +254,7 @@ jobs:
 #                                      job ever builds. Pure functions over verdict
 #                                      dicts and a stubbed main(); four honest
 #                                      skipTests need a git binary.
-#   test_profile_reconstruction (11)   profile_reconstruction.py -- preserves the
+#   test_profile_reconstruction (14)   profile_reconstruction.py -- preserves the
 #                                      profile/class namespace split, actor/base layout
 #                                      distinction, overlay-address rejection, and the
 #                                      dry-run-only policy for ambiguous factory names.

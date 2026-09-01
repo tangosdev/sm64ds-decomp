@@ -146,7 +146,7 @@ provides a reconstruction prior.
 ## Why the exact `classInit` macro remains unresolved
 
 The full registry creates a contradiction for naive global token concatenation:
-42 of 310 distinct `<Class>_classInit` proposals have multiple factory
+42 of 314 distinct `<Class>_classInit` proposals have multiple factory
 addresses.  The pilot includes same-class multi-profile cases in the same TU,
 notably `TERESA` and `BOSS_TERESA`, where two functions would both become
 `daTrs_c_classInit`.

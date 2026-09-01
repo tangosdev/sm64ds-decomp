@@ -28,7 +28,7 @@
       "1": 381,
       "2": 10
     },
-    "distinct_classinit_proposals": 310,
+    "distinct_classinit_proposals": 314,
     "classinit_proposals_with_multiple_factory_addresses": 42,
     "registry_entries_with_multiple_candidates": [
       {

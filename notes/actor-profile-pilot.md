@@ -3,6 +3,11 @@
 Status: evidence pilot complete; no symbols were renamed and no source files were
 moved.  The machine-readable authority for the 20 sampled rows is
 [`symbols/profile_reconstruction_pilot.tsv`](../symbols/profile_reconstruction_pilot.tsv).
+The follow-up full inventory is
+[`symbols/profile_reconstruction_registry.tsv`](../symbols/profile_reconstruction_registry.tsv):
+one row per valid overlay-local interpretation, so 391 logical registry IDs become
+401 candidate rows rather than forcing the ten overlay-multiplexed pointers into a
+false one-to-one map.
 
 ## Verdict
 

@@ -35,6 +35,8 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
         cls.payload = json.loads(PR.OUT_JSON.read_text(encoding="utf-8"))
         cls.rows = {row["profile_id"]: row for row in cls.payload["rows"]}
         cls.population = cls.payload["population_context"]
+        cls.full_payload = json.loads(PR.OUT_FULL_JSON.read_text(encoding="utf-8"))
+        cls.full_rows = cls.full_payload["rows"]
         with PR.OUT_RENAMES.open(encoding="utf-8", newline="") as fh:
             cls.renames = list(csv.DictReader(fh, delimiter="\t"))
 
@@ -110,6 +112,51 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
             )
             self.assertEqual(rename["apply_recommended"], "no")
             self.assertIn("not_apply=global_name_collision", rename["evidence"])
+
+    def test_full_registry_export_preserves_overlay_candidates(self):
+        self.assertEqual(self.full_payload["logical_registry_entries"], 391)
+        self.assertEqual(self.full_payload["candidate_rows"], 401)
+        self.assertEqual({row["actor_id"] for row in self.full_rows}, set(range(391)))
+        ambiguous = {
+            row["actor_id"]
+            for row in self.full_rows
+            if row["overlay_ambiguous"]
+        }
+        self.assertEqual(len(ambiguous), 10)
+        for actor_id in ambiguous:
+            rows = [row for row in self.full_rows if row["actor_id"] == actor_id]
+            self.assertEqual(len(rows), 2)
+            self.assertTrue(all(row["registry_candidate_count"] == 2 for row in rows))
+
+    def test_full_registry_has_an_index_matching_candidate_for_every_id(self):
+        matching = {
+            row["actor_id"]
+            for row in self.full_rows
+            if row["profile_index_matches_actor_id"]
+        }
+        self.assertEqual(matching, set(range(391)))
+
+    def test_first_source_wave_candidates_are_collision_free(self):
+        expected = {
+            "FM_BATTAN": "daObjFm_Battan_c",
+            "KM3_KURUMAJIKU": "daObjKm3_Kurumajiku_c",
+            "EYEKUN_BEAM": "daEyBm_c",
+            "BIRIKYU": "daBrq_c",
+            "BAR": "daBar_c",
+        }
+        by_profile = {
+            row["profile_id"]: row
+            for row in self.full_rows
+            if row["profile_id"] in expected
+        }
+        self.assertEqual(set(by_profile), set(expected))
+        for profile_id, class_name in expected.items():
+            row = by_profile[profile_id]
+            self.assertEqual(row["class_name"], class_name)
+            self.assertEqual(row["registry_candidate_count"], 1)
+            self.assertEqual(row["proposed_factory_collision"], "")
+            self.assertEqual(row["factory_rename_recommended"], "yes")
+            self.assertEqual(row["profile_rename_recommended"], "yes")
 
 
 if __name__ == "__main__":
