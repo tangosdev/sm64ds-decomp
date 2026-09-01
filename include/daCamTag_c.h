@@ -52,7 +52,15 @@
 struct daCamTag_c : dActor_c {
     u8 unk_0d0[0x4];                  /* 0x0d0 */
 
-    virtual ~daCamTag_c();             /* slots 16 (D1), 17 (D0) */
+    /* Defined inline on purpose. InitResources is the first out-of-line
+     * virtual/key function, so together with this inline destructor mwcc owns the
+     * retail D1/D0 pair in the cartridge's own order and the complete class
+     * RTTI/vtable group, without retaining a D2 base-object body that has no ROM
+     * home. Written out-of-line, mwcc emits D0 before D1 and objisolate refuses
+     * the translation unit. The body is empty in the ROM too: D1 at 0x020b0748
+     * stores the vtable and tail-calls the base destructor, with no member
+     * teardown. */
+    virtual ~daCamTag_c() {}           /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();     /* slot  0 */
     virtual s32  CleanupResources();  /* slot  3 */

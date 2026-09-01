@@ -20,8 +20,13 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11249 / 11402 (98.66%) |
 | MATCHED code bytes | 2122268 / 2238108 (94.82%) |
+<<<<<<< HEAD
 | Strict CONVERTED source functions | 2591 / 11314 (22.90%) |
 | Physical production source files | 10941 |
+=======
+| Strict CONVERTED source functions | 2570 / 11314 (22.72%) |
+| Physical production source files | 10997 |
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,9 +37,15 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
+<<<<<<< HEAD
 | Tracked production source files | 10941 |
 | Tracked `.c` files | 6188 |
 | Tracked `.cpp` files | 4753 |
+=======
+| Tracked production source files | 10997 |
+| Tracked `.c` files | 6267 |
+| Tracked `.cpp` files | 4730 |
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 | `.cpp` files missing first-line `//cpp` | 0 |
 | Mangled-symbol source files | 3683 |
 | Genuinely migrated C++ symbol files | 3608 |
@@ -44,9 +55,15 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | Delinks path-owned function-symbol records | 11213 |
 | Path-owned records still supplied from ROM bytes | 121 |
 | Source-built (`complete`) function-symbol records | 11092 |
+<<<<<<< HEAD
 | Source-built (`complete`) source files | 10714 |
 | Complete sources owning more than one function | 43 |
 | Source-built records inside multi-function sources | 421 |
+=======
+| Source-built (`complete`) source files | 10770 |
+| Complete sources owning more than one function | 36 |
+| Source-built records inside multi-function sources | 358 |
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 | Largest function-symbol-records-per-source count | 34 |
 | Complete source paths missing from git | 0 |
 
@@ -56,7 +73,11 @@ require the delinks entry's `complete` marker; entries without it are ROM-byte
 placeholders and are not reported as decompiled. The join remains correct when a
 source owns two functions; filenames are not treated as the authority.
 
+<<<<<<< HEAD
 Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/MgBingoBallSlotsShot.cpp` (2 function-symbol records), `src/actors/MgMushroomRoulette.cpp` (2 function-symbol records), `src/actors/MgPairAGoneAndOn.cpp` (2 function-symbol records), `src/actors/MgPicturePoker.cpp` (3 function-symbol records), `src/actors/MgTrampolineTerror.cpp` (2 function-symbol records), `src/actors/MgWhichWiggler.cpp` (2 function-symbol records), `src/actors/dScMgBSC_c.cpp` (19 function-symbol records), `src/actors/dScMgBase_c.cpp` (8 function-symbol records), and 33 more in `--json`.
+=======
+Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/MgBingoBallSlotsShot.cpp` (2 function-symbol records), `src/actors/MgMushroomRoulette.cpp` (2 function-symbol records), `src/actors/MgPairAGoneAndOn.cpp` (2 function-symbol records), `src/actors/MgPicturePoker.cpp` (3 function-symbol records), `src/actors/MgTrampolineTerror.cpp` (2 function-symbol records), `src/actors/MgWhichWiggler.cpp` (2 function-symbol records), `src/actors/dScMgBSC_c.cpp` (19 function-symbol records), `src/actors/dScMgBase_c.cpp` (8 function-symbol records), and 26 more in `--json`.
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 
 A `.cpp` extension alone proves nothing about compiler language mode; this build
 selects C++ only when the first line is exactly `//cpp`. The marker-missing count
@@ -71,17 +92,29 @@ partition to add to the migrated and unmigrated rows.
 
 | Measure | Live value |
 | --- | ---: |
+<<<<<<< HEAD
 | Tracked `src_tu/` source files | 56 |
+=======
+| Tracked `src_tu/` source files | 63 |
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 | Manifest entries | 98 |
 | Functions named by manifest entries | 1260 |
 | Unique functions named by the manifest | 1260 |
 | Modules represented | 28 |
 | Manifest shadow sources present in git | 98 |
+<<<<<<< HEAD
 | Entries licensing non-text sections | 8 |
 | Entries actually production-enrolled at `promoted_source` | 38 |
 | Existing promotion paths that disagree with delinks | 4 |
 
 Manifest statuses: `link-verified` 3, `promoted` 42, `text-verified` 53.
+=======
+| Entries licensing non-text sections | 4 |
+| Entries actually production-enrolled at `promoted_source` | 31 |
+| Existing promotion paths that disagree with delinks | 4 |
+
+Manifest statuses: `link-verified` 3, `promoted` 35, `text-verified` 60.
+>>>>>>> f0b65823d (Promote ov002/daCamTag_c to a genuine TU as src/actors/d_a_cam_tag.cpp)
 
 `config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every

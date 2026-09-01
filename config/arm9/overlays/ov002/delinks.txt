@@ -292,37 +292,9 @@ src/actors/daBar_c.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
 
-src/_ZN10daCamTag_cD1Ev.cpp:
+src/actors/d_a_cam_tag.cpp:
     complete
-    .text start:0x020b0748 end:0x020b076c
-
-src/_ZN10daCamTag_cD0Ev.cpp:
-    complete
-    .text start:0x020b076c end:0x020b07a4
-
-src/_ZN10daCamTag_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b07a4 end:0x020b07ac
-
-src/_ZN10daCamTag_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020b07ac end:0x020b07b0
-
-src/_ZN10daCamTag_c6RenderEv.cpp:
-    complete
-    .text start:0x020b07b0 end:0x020b07b8
-
-src/_ZN10daCamTag_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b07b8 end:0x020b07c0
-
-src/_ZN10daCamTag_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b07c0 end:0x020b07c8
-
-src/daCamTag_c_Spawn.c:
-    complete
-    .text start:0x020b07c8 end:0x020b07f8
+    .text start:0x020b0748 end:0x020b07f8
 
 src/_ZN11VirtualDoorD1Ev.cpp:
     complete
