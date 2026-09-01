@@ -7895,6 +7895,18 @@ foreach(line IN LISTS SLICE_MP3_LINES)
     endif()
     list(APPEND SLICE_COMMS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# Run vs16, hosted-conductor follow-up: src/func_0203ea5c.c carries the ROM's
+# nine `< 4` bounds, which is what stopped slots 4..15 entering world lockstep.
+# The TU STAYS IN THE LINK, byte for byte, renamed to the narrow arm; the
+# symbol the game calls is hal/comms_conductor_wide.cpp's dispatcher, which
+# runs this TU for every session of four or fewer and the sixteen-record host
+# copy above four. Same per-source rename mechanism as R1/R2 above. Appended
+# to SLICE_COMMS_SOURCES like the conductor itself, so every consumer of the
+# comms slice sees one and the same func_0203ea5c (FINDING 5 shape).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203ea5c.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_0203ea5c=func_0203ea5c_narrow")
+list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor_wide.cpp)
 
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES

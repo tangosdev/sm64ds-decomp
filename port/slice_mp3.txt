@@ -17,6 +17,14 @@
 #                         ROM's own wait bound, unpack every live peer's block
 #                         into the four 0x24 records, and drop the session back
 #                         to solo when the bound runs out.
+#                         Run vs16, hosted-conductor follow-up: this TU now
+#                         links under the rename func_0203ea5c_narrow (see
+#                         CMakeLists.txt next to the R1/R2 renames). It is
+#                         still every narrow session's conductor, unchanged;
+#                         the symbol the game calls is the dispatcher in
+#                         hal/comms_conductor_wide.cpp, which runs the
+#                         sixteen-record host copy when the session is wider
+#                         than the cartridge's four.
 #
 # WHAT MP2 MEASURED, AND WHAT IS ACTUALLY TRUE. The handover priced this lane as
 # possible decompilation work: three of the eight non-seam callees "have no

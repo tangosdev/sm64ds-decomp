@@ -146,6 +146,13 @@ enum : int { kCommsLoopbackPortBase = 51765 };
 // Safe to call more than once; only the first call with a role installs.
 bool comms_loopback_install_from_env();
 
+// Run vs16, hosted-conductor follow-up: the number of players this session was
+// opened for -- the clamped SM64DS_VS_PLAYERS the installer read, 0 when no
+// session was installed. This is the SAME number that chooses between the two
+// wires, exported so the conductor dispatch in hal/comms_conductor_wide.cpp
+// and the wire can never disagree about whether the session is wide.
+int comms_session_players();
+
 // The carrier's own counters, for a log line and for the proof ladder. These
 // are the transport's view; port::comms_readout() is the seam's.
 struct CommsLoopbackStats {

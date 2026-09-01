@@ -2513,6 +2513,18 @@ const CommsTransport kLoopback = {
 }  // namespace
 
 // ---------------------------------------------------------------------------
+// THE SESSION'S WIDTH, exported. Run vs16, hosted-conductor follow-up.
+//
+// One caller: hal/comms_conductor_wide.cpp's dispatcher, which decides whether
+// src/func_0203ea5c.c (the DS-faithful four-record conductor) or the wide host
+// copy runs this session. It gates on the SAME g_want_players that picks the
+// wire above, so the record bounds and the datagram layout cannot disagree --
+// there is no second opinion to get out of step. 0 means no setter ran, which
+// is every solo boot, every local-play boot, and every narrow deployment.
+// ---------------------------------------------------------------------------
+int comms_session_players() { return g_want_players; }
+
+// ---------------------------------------------------------------------------
 // INSTALL
 // ---------------------------------------------------------------------------
 

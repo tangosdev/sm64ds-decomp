@@ -183,7 +183,19 @@ COMM(".dsstate$camcomm0005", data_020a104e, 2);
 COMM(".dsstate$camcomm0006", data_020a1050, 2);
 COMM(".dsstate$camcomm0007", data_020a1052, 0x12);
 
-/* 0x020a1154 .. 0x020a11e4: four per-player records (0x24 each) */
+/* 0x020a1154 .. 0x020a11e4: four per-player records (0x24 each) on the DS.
+   THE HOST GIVES THE RUN SIXTEEN RECORDS -- run vs16, hosted-conductor
+   follow-up. The ROM's readers index these records BY SLOT with no bound of
+   their own (func_0203d950(i) reads +0xC*, GetAngleToCamera(i) reads +0x10,
+   func_0203dabc(i) hands out +0x04 -- all at data_020a1154 + i*0x24), so a
+   session whose slots go past 3 needs records 4..15 to exist CONTIGUOUSLY at
+   the same stride; a side array would satisfy the wide conductor and leave
+   every one of those readers reading garbage. Grown the only legal way for a
+   grouped band: the TAIL member, so every interior offset the layout check
+   asserts is exactly where it was. The cartridge's own extent stays what the
+   comment above says it is; bytes 0x90..0x240 are the port's, zeroed at
+   session-open by the seam (hal/comms_seam.cpp, func_020408b0) the same way
+   src/func_0203db64.c:64 zeroes the first 0x90 at session start. */
 COMM(".dsstate$camrec0000", data_020a1154, 0xc);
 COMM(".dsstate$camrec0001", data_020a1160, 2);
 COMM(".dsstate$camrec0002", data_020a1162, 2);
@@ -192,7 +204,7 @@ COMM(".dsstate$camrec0004", data_020a1166, 0x12);
 COMM(".dsstate$camrec0005", data_020a1178, 4);
 COMM(".dsstate$camrec0006", data_020a117c, 0x24);
 COMM(".dsstate$camrec0007", data_020a11a0, 0x24);
-COMM(".dsstate$camrec0008", data_020a11c4, 0x20);
+COMM(".dsstate$camrec0008", data_020a11c4, 0x20 + 12 * 0x24);
 
 #undef COMM
 
@@ -227,6 +239,16 @@ int hal_camera_check_layout(void)
         data_020a11c4 - data_020a1154 != 0x70 ||
         data_020a1050 - data_020a1040 != 0x10) {
         std::fprintf(stderr, "  [cam] COMMS BLOCKS NOT CONTIGUOUS\n");
+        ok = 0;
+    }
+    /* Run vs16: the record run must reach sixteen 0x24 records, because the
+       wide conductor and the ROM's own slot-indexed readers walk that far.
+       The tail member's own size is a compile-time fact in this TU, so this
+       is really checking that nobody shrank it back without reading the
+       band comment above. */
+    if ((data_020a11c4 - data_020a1154) + (long)sizeof(data_020a11c4)
+            != 16 * 0x24) {
+        std::fprintf(stderr, "  [cam] COMMS RECORD RUN IS NOT SIXTEEN WIDE\n");
         ok = 0;
     }
     return ok;

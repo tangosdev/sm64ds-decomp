@@ -160,6 +160,17 @@ extern "C" {
 // the boot indicator to pick an init branch, and starts the SDK. A transport
 // needs none of that; it needs to know it is being opened.
 void func_020408b0(unsigned short mode) {
+    // Run vs16, hosted-conductor follow-up. The ROM clears its four records at
+    // session start (src/func_0203db64.c:64 zeroes 0x90 at data_020a1154); the
+    // host run behind them is sixteen records (hal/camera_bridges.cpp), and
+    // records 4..15 are the port's, so the port clears them at the same moment
+    // in the lifecycle -- this face runs exactly once per session-arm, off the
+    // one-shot at src/func_0203ea5c.c:137-140. Without this, a wide session
+    // formed after an earlier one in the same process would read the dead
+    // session's live bits out of slots 4..15 and wait on ghosts. Done for
+    // narrow sessions too: nothing narrow reads past 0x90, and the seam's own
+    // per-slot report prints the full run, which should not show stale rows.
+    std::memset(data_020a1154 + 4 * 0x24, 0, 12 * 0x24);
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->open(mode); return; }
     port::g_solo_state = port::kCommsIdle;
