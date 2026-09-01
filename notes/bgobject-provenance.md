@@ -709,10 +709,10 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `ChainChompFence` (ov060) | 0x31e | `mDisabled` | both `Behavior` and `Render` return immediately while it is nonzero, and nothing else in a matched body touches it. |
 | `LavaPlank` (ov022) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
-`PathLift::mAfterClsnRan` also carried into `src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp`,
-a subclass that reads the inherited field — the kind of cross-file breakage a header
-rename in this family causes, and which `tools/rombuild.py` catches while
-`build_pin.verify` on the renamed class alone does not.
+`PathLift::mAfterClsnRan` also carried into the `daObjRcCarpet_c::Behavior` member
+in `src/actors/daObjRcCarpet_c.cpp`, a subclass that reads the inherited field — the
+kind of cross-file breakage a header rename in this family causes, and which
+`tools/rombuild.py` catches while `build_pin.verify` on the renamed class alone does not.
 
 ---
 

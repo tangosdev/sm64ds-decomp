@@ -1,24 +1,34 @@
 //cpp
-/* Genuine production translation unit for ov002/Tree (8 function(s)),
+/* Genuine production translation unit for ov002/daTree_c (8 function(s)),
  * enrolled as one `complete` delinks span.
  *
  * The file stem follows the snake_case scheme in
- * notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py). The class
- * name is unchanged by this promotion. NOTE the open discrepancy recorded in
- * Tree.h: the compiler spells this class `Tree` (`_ZTI4Tree`) while the
- * cartridge's own RTTI string is `daTree_c`. Re-spelling the class to the
- * ROM's name is a separate change -- it moves every mangled symbol in the
- * delinks span -- and is deliberately NOT bundled here.
+ * notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py):
+ * daTree_c -> d_a_tree.
  *
- * The two destructor bodies below stay in their extern "C" mangled-shim form
- * on purpose. A real `Tree::~Tree()` is this class's key function, so it
- * would make this TU emit the complete `_ZTV4Tree`/`_ZTI4Tree`/`_ZTS4Tree`
- * group; those records cannot be word-compared against the cartridge while
- * the class carries the coined name (see tools/tubuild.py
- * apply_compiler_only_policy). The shims keep `_ZTV4Tree` an UNDEFINED
- * import, so this entry needs neither compiler_only_output nor
- * externalized_output. The cost is that D0/D1 drop out of the CONVERTED
- * tier; both are logged in config/converted-backslide-exceptions.jsonl.
+ * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
+ * `Tree`, a coined name. MEASURED in extracted/overlays/overlay_0002.bin
+ * (ov002 base 0x020ad660, the `.text start:` on line 1 of
+ * config/arm9/overlays/ov002/delinks.txt): the vtable object's preamble at
+ * 0x0210abf8 is [offset-to-top 0, 0x0210abd0], and _ZTI8daTree_c at
+ * 0x0210abd0 reads [0x0209a764, 0x0210abc4, 0x0208e390] --
+ * _ZTVN3abi20__si_class_type_infoE (config/arm9/symbols.txt), a typeinfo name
+ * at 0x0210abc4 whose bytes are the string "8daTree_c", and _ZTI8dActor_c, so
+ * the ROM states the direct base too. tools/class_rename.py performed the
+ * rename, and it is what makes this promotion honest: ov002's symbols.txt
+ * already carried _ZTS8daTree_c and _ZTI8daTree_c at those addresses, so under
+ * the coined name the compiler's own _ZTS4Tree/_ZTI4Tree reached no symbol
+ * home and could never be word-compared against the cartridge
+ * (tools/tubuild.py apply_compiler_only_policy).
+ *
+ * That is why this TU now emits and licenses the whole RTTI/vtable group
+ * rather than importing it. The first promotion of this entry kept the
+ * destructors as extern "C" mangled shims precisely to force the vtable
+ * symbol -- `_ZTV4Tree` at the time, the class still being coined -- to stay
+ * an UNDEFINED import, and the cost was measurable: the eight legacy
+ * per-function objects between them PROVED `_ZTV4Tree` against the ROM,
+ * the shimmed TU proved nothing, and the tree's romdata-verified count fell by
+ * one -- which is what the merge validator rejected.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -41,13 +51,13 @@
 /* Includes: union of the legacy files', first-seen in ROM-ascending
  * processing order. NOT verified for header ordering constraints (e.g. a
  * common.h-before-X rule) -- watch for new compile errors after this. */
-#include "Tree.h"
+#include "daTree_c.h"
 
 /* Local shadow declarations carried from the legacy files verbatim.
  * NOT reconciled against real project headers -- check include/*.h for
  * each of these before compiling; a real header should usually win.
  * Model/Vector3 shadow structs dropped: real definitions come from
- * Tree.h's own includes. dCcPos_c stays an incomplete forward
+ * daTree_c.h's own includes. dCcPos_c stays an incomplete forward
  * declaration -- Init() is called through the extern "C" mangled form
  * below, not the real member, because the real signature takes two
  * Fix12<int> by value and this call site only has literal ints (same
@@ -56,7 +66,7 @@ struct dCcPos_c;
 
 /* shadow struct 'ModelBase' -- a vtable-slot probe reaching past the real
  * ModelBase.h's own 3 slots into Model's own extension, renamed from
- * 'ModelBase' to avoid colliding with the real class Tree.h now pulls in
+ * 'ModelBase' to avoid colliding with the real class daTree_c.h now pulls in
  * transitively via Model.h. */
 struct ModelBaseVProbe {
     virtual void v0();
@@ -88,19 +98,19 @@ extern unsigned short data_ov002_0210abb8[];
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- Tree_Spawn, 0x020ec32c, size 0x5c */
 /* -------------------------------------------------------------------------- */
-#include "Tree.h"
+#include "daTree_c.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ModelC1Ev(void*);
 extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
-extern void* _ZTV4Tree[];
+extern void* _ZTV8daTree_c[];
 int* Tree_Spawn(void){
-  int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct Tree));
+  int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct daTree_c));
   if(p){
     _ZN8dActor_cC2Ev(p);
-    *(void***)p = (void**)_ZTV4Tree;
+    *(void***)p = (void**)&_ZTV8daTree_c[2]; /* +8: this TU defines the vtable */
     func_020733a8((char*)p+0xd4, 5, 0x50, _ZN5ModelC1Ev, _ZN5ModelD1Ev);
   }
   return p;
@@ -108,13 +118,29 @@ int* Tree_Spawn(void){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN4Tree13InitResourcesEv, 0x020ec22c, size 0x100 */
+/* ROM ordinal 6 -- _ZN8daTree_c13InitResourcesEv, 0x020ec22c, size 0x100 */
 /* -------------------------------------------------------------------------- */
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int _ZN4Tree13InitResourcesEv(char* self) {
+// @symbol _ZN8daTree_c13InitResourcesEv
+/* daTree_c::InitResources -- vtable slot 0, ov002 0x020ec22c.
+ *
+ * A REAL MEMBER ON PURPOSE, and it has to be. The destructor is defined
+ * inline in include/daTree_c.h, so the class's key function is its first
+ * DECLARED non-inline virtual -- this one (notes/, and the key-function rule:
+ * first declared, not first slot). While this body was a hand-mangled
+ * `extern "C"` free function, no TU anywhere defined the key function, so
+ * mwccarm emitted neither the _ZTV/_ZTI/_ZTS group nor the inline
+ * destructor's D1/D0 pair, and objisolate refused the whole TU with
+ * `_ZN8daTree_cD1Ev has 0 defined symbols`. Written as a member it emits
+ * both, and this entry's compiler_only_output licenses the RTTI group
+ * record by record against the cartridge.
+ *
+ * Only the CALLEE declarations stay hand-spelled: dCcPos_c::Init's ROM name
+ * carries by-value class parameters (Fix12<int>), which mwccarm passes
+ * differently at the call site, so declaring the true types breaks the byte
+ * match. See notes/mwccarm-codegen.md 6az. That exception is about the
+ * callee signature, not daTree_c method ownership. */
+int daTree_c::InitResources() {
+    char* self = (char*)this;
     int idx = ((unsigned int)*(int*)(self + 8) >> 4) & 7;
     char** slot;
     char* p;
@@ -144,13 +170,13 @@ extern "C" int _ZN4Tree13InitResourcesEv(char* self) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN4Tree8BehaviorEv, 0x020ec1d8, size 0x54 */
+/* ROM ordinal 5 -- _ZN8daTree_c8BehaviorEv, 0x020ec1d8, size 0x54 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
 extern int _ZN5dCc_c5ClearEv(void*);
 extern int _ZN5dCc_c6UpdateEv(void*);
 extern char* data_ov002_02110a48[5];
-int _ZN4Tree8BehaviorEv(void){
+int _ZN8daTree_c8BehaviorEv(void){
   char** pp = data_ov002_02110a48;
   int i;
   for(i=0;i<5;i++){
@@ -167,11 +193,11 @@ int _ZN4Tree8BehaviorEv(void){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN4Tree6RenderEv, 0x020ec0a4, size 0x134 */
+/* ROM ordinal 4 -- _ZN8daTree_c6RenderEv, 0x020ec0a4, size 0x134 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN4Tree6RenderEv
+// @symbol _ZN8daTree_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-int Tree::Render()
+int daTree_c::Render()
 {
     char *base = (char *)data_0209f318;
     char **iter = data_ov002_02110a48;
@@ -215,21 +241,21 @@ int Tree::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN4Tree16OnPendingDestroyEv, 0x020ec0a0, size 0x4 */
+/* ROM ordinal 3 -- _ZN8daTree_c16OnPendingDestroyEv, 0x020ec0a0, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN4Tree16OnPendingDestroyEv
-/* Tree::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
+// @symbol _ZN8daTree_c16OnPendingDestroyEv
+/* daTree_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-void Tree::OnPendingDestroy()
+void daTree_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN4Tree16CleanupResourcesEv, 0x020ec020, size 0x80 */
+/* ROM ordinal 2 -- _ZN8daTree_c16CleanupResourcesEv, 0x020ec020, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN4Tree16CleanupResourcesEv
+// @symbol _ZN8daTree_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-int Tree::CleanupResources()
+int daTree_c::CleanupResources()
 {
   char* r7 = ((char*)this) + 0xd4;
   char** r6 = data_ov002_02110a48;
@@ -252,37 +278,23 @@ int Tree::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN4TreeD0Ev, 0x020ebfcc, size 0x54 */
+/* ROM ordinals 0 and 1 -- _ZN8daTree_cD1Ev 0x020ebf8c size 0x40 and          */
+/* _ZN8daTree_cD0Ev 0x020ebfcc size 0x54 -- are NOT written here.             */
+/*                                                                            */
+/* The destructor is defined INLINE in include/daTree_c.h. Written out-of-line*/
+/* here the real destructor makes mwccarm emit D0 BEFORE D1, the reverse of the*/
+/* cartridge's order, which objisolate refuses for the whole TU, and it emits a*/
+/* third D2 body with no ROM home. The inline definition gives the retail D1/D0*/
+/* pair in ROM order and no D2, and it replaces the two hand-written extern "C"*/
+/* mangled shims this file used to carry: those existed only to keep          */
+/* _ZTV8daTree_c an UNDEFINED import while the class still had its coined name,*/
+/* and they cost D0 and D1 their place in the CONVERTED tier. Both are real   */
+/* compiler-emitted C++ member bodies again, and the two entries in           */
+/* config/converted-backslide-exceptions.jsonl that recorded the loss are gone.*/
+/*                                                                            */
+/* This TU therefore emits the class's complete _ZTV/_ZTI/_ZTS group, which is*/
+/* the point: every record is licensed in this entry's compiler_only_output as*/
+/* `deadstrip-data` with a canonical module and address, so romdata_check     */
+/* word-compares each against the cartridge. Under the coined name _ZTS4Tree and*/
+/* _ZTI4Tree reached no symbol home and the group could not be licensed at all.*/
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN4TreeD0Ev
-/* recovered: named members + shared header */
-#include "Tree.h"
-extern "C" {
-void __destroy_arr(void*, int, int, void*);
-void _ZN8dActor_cD2Ev(void*);
-void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
-extern void *data_020a0eac;
-void* _ZN4TreeD0Ev(char* c){
-  *(int*)c = (int)_ZTV4Tree;
-  __destroy_arr(c+0xd4, 5, 0x50, (void*)_ZN5ModelD1Ev);
-  _ZN8dActor_cD2Ev(c);
-  _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
-  return c;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN4TreeD1Ev, 0x020ebf8c, size 0x40 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN4TreeD1Ev
-/* recovered: named members + shared header */
-#include "Tree.h"
-extern "C" {
-extern void _ZN8dActor_cD2Ev(void*);
-int _ZN4TreeD1Ev(char* c){
-    *(void**)c = (void*)_ZTV4Tree;
-    __destroy_arr((char*)c+0xd4, 5, 0x50, (void*)_ZN5ModelD1Ev);
-    _ZN8dActor_cD2Ev(c);
-    return (int)c;
-}
-}

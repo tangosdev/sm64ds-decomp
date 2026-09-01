@@ -1105,6 +1105,7 @@
     "src/actors/d_a_obj_waterfall.cpp#_ZN16daObjWaterfall_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_waterfall.cpp#_ZN16daObjWaterfall_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_waterfall.cpp#WaterfallMist_Spawn": "github-actions[bot]",
+<<<<<<< HEAD
     "src/actors/tree.cpp#_ZN4TreeD1Ev": "github-actions[bot]",
     "src/actors/tree.cpp#_ZN4TreeD0Ev": "github-actions[bot]",
     "src/actors/tree.cpp#_ZN4Tree16CleanupResourcesEv": "github-actions[bot]",
@@ -1121,5 +1122,20 @@
     "src/actors/d_a_obj_c0_switch.cpp#_ZN16daObjC0_Switch_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_c0_switch.cpp#_ZN16daObjC0_Switch_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_c0_switch.cpp#daObjC0_Switch_c_Spawn": "andrewboudreau"
+=======
+    "src/actors/d_a_tree.cpp#_ZN8daTree_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_c16OnPendingDestroyEv": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#_ZN8daTree_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_tree.cpp#Tree_Spawn": "github-actions[bot]",
+    "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD1Ev": "tangosdev",
+    "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD0Ev": "tangosdev",
+    "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm3_Kuruma_c.cpp#RickshawPlatformBs_Spawn": "github-actions[bot]"
+>>>>>>> origin/cpp/ov002-tree-snake-tu
   }
 }
