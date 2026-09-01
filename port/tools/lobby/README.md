@@ -53,7 +53,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 
 ---
 
-## THE WIRE CONTRACT, v1
+## THE WIRE CONTRACT, v1 and v2
 
 ### Rules that apply to every request
 
@@ -65,7 +65,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 | `Content-Length` | REQUIRED, and parsed **before any rejection** | missing -> 411 `length_required`, close |
 | request body | <= 4096 bytes | 413 `too_large`, connection closed (body not read) |
 | JSON shape | one object; no arrays at the top level | 400 `bad_shape` |
-| `v` | REQUIRED, integer, must be `1` | 400 `bad_version` |
+| `v` | REQUIRED, integer, `1` or `2` | 400 `bad_version` |
 | unknown top-level key | rejected | 400 `bad_field` |
 | missing required key | rejected | 400 `bad_field` |
 | wrong type for a key | rejected | 400, the field's own code |
@@ -78,6 +78,39 @@ Error bodies are `{"v":1,"error":"<code>"}`. Codes are written with underscores
 launcher and the server ship together and are versioned together, so a field
 that appears without a version bump is a bug or an attack and there is no third
 option. Adding a field is a `v` bump.
+
+### v2, and why a v1 launcher is untouched by it
+
+v2 adds one thing: two picked colours per player, the owner's *"the ability
+to choose a hex color to make your yoshi and its shoes so two [colors], and
+the main color shows next to your name in lobby so people can identify you."*
+
+| what | where |
+|---|---|
+| `color` and `shoes` | optional on `create` and `join`, required on the new `color` verb |
+| `color` and `shoes` | on every roster row in every `view` |
+| a `color` event kind | pushed when a seat changes its pair |
+| `colors` | in every playing member's go plan: `SM64DS_VS_COLORS` |
+
+**Both versions are answered, and the rule is asymmetric on purpose.** What a
+client may SEND is versioned strictly: a `v:1` request carrying `color` is
+refused `bad_field`, because a bump that a server honours anyway is
+decorative. What a client RECEIVES is not: the new keys appear in every
+`view` and every plan whatever version asked, because an answer is JSON and
+the launcher's reader ignores a property it has no field for -- the same
+leniency the event `kind` set already relies on. Versioning the send side is
+what protects the server; versioning the receive side would only mean two
+code paths that have to be kept in step forever.
+
+An answer echoes back **the version the caller sent**, so a v1 launcher never
+starts seeing `"v":2`.
+
+So the shipped 0.3.0 launcher, which speaks v1: creates and joins as it
+always did, reads a roster that has two extra strings per row and ignores
+them, gets a plan with one extra string and ignores it, never sets
+`SM64DS_VS_COLORS`, and plays with the ROM's built-in Yoshi in a room where
+everybody else is wearing a colour. Proved over real HTTP in
+`test_client.py::selftest_colors`.
 
 **The keep-alive drain trap, and why a refusal closes the connection.** With
 `HTTP/1.1` keep-alive, returning a rejection *without reading the body the
@@ -103,7 +136,7 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 
 | field | type | rule | reject code |
 |---|---|---|---|
-| `v` | int | `== 1` | `bad_version` |
+| `v` | int | `1` or `2` | `bad_version` |
 | `room` | string | exactly 6 chars from `ABCDEFGHJKMNPQRSTUVWXYZ23456789` | `bad_room` |
 | `token` | string | exactly 32 chars from `0-9a-f` | `bad_token` |
 | `nick` | string | 1..16 **bytes**, every byte `0x20..0x7E` **except `,`**, not all spaces, no leading/trailing space | `bad_nick` |
@@ -115,6 +148,8 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 | `star_target` | int | 1..`STAR_TARGET_MAX`; required iff `win_mode == "stars"`, forbidden otherwise | `bad_star_target` |
 | `seat` | int | 1..`MAX_SEATS`, an occupied seat that is not the host's | `bad_seat` |
 | `pre_ok` | bool | `true`/`false`; optional on `create` and `join` | `bad_field` |
+| `color` | string | **v2 only.** exactly 6 hex digits, either case in, stored lower case. The BODY colour, and the swatch beside the name in the roster | `bad_color` |
+| `shoes` | string | **v2 only.** the same grammar. Travels with `color`: both or neither | `bad_color` |
 
 A string longer than its cap answers `too_long` rather than the field's own
 code, because the length check runs first and never lets an oversized field
@@ -142,6 +177,7 @@ never leaves the lobby and keeps its commas.
 | `POST /port/lobby/chat` | a seated member | say one line |
 | `POST /port/lobby/params` | **host only** | set map / win condition |
 | `POST /port/lobby/preflight` | a seated member | correct its OWN `pre_ok` in place |
+| `POST /port/lobby/color` | a seated member | set its OWN two colours (**v2**, lobby state only) |
 | `POST /port/lobby/start` | **host only** | arm a match (stage B) |
 | `POST /port/lobby/ready` | a playing member | "my launcher can spawn this match" (stage B) |
 | `POST /port/lobby/failed` | a playing member | report a match that could not run (stage B) |
@@ -156,6 +192,7 @@ line.
 
 ```
 -> {"v":1, "nick":"tango", "pre_ok":true}
+-> {"v":2, "nick":"tango", "pre_ok":true, "color":"8a2be2", "shoes":"ffd700"}
 <- 200 {"v":1, "room":"K7QMR3", "token":"<32 hex>", "member":1,
         "cursor":1, "view":{...}}
 ```
@@ -509,6 +546,59 @@ GET /port/lobby/health
 a quiet one.
 
 ---
+
+#### `color` (v2)
+
+```
+-> {"v":2, "room":"K7QMR3", "token":"<32 hex>",
+    "color":"8a2be2", "shoes":"ffd700"}
+<- 200 {"v":2, "cursor":19}
+```
+
+Sets the caller's own two colours. `"color":"", "shoes":""` puts that player
+back on the ROM's built-in Yoshi.
+
+* **Own seat only.** There is no seat argument, and a `seat` key is refused
+  `bad_field`, so the verb adds no authority anywhere.
+* **Unchanged is a no-op** — 200, no event, no cursor movement. A launcher can
+  re-send on every keystroke or on window focus and it costs the room nothing.
+* **A real change pushes a `color` event**, so a member holding a 25-second long
+  poll sees the swatch move now rather than when its wait expires.
+* **`lobby` state only.** Refused `not_in_lobby` (409) once a match is armed.
+  This is where it differs from `preflight`: a colour is SPENT at the arming
+  freeze, and a swatch that no running game is wearing is worse than a swatch
+  that cannot be changed for ninety seconds. Change it before the rematch.
+
+#### `SM64DS_VS_COLORS`, the string the games actually read
+
+Built once, by the server, at the arming freeze, and copied byte-identical into
+every playing member's plan — the same discipline `SM64DS_VS_NAMES` gets, for
+the same reason: no launcher assembles it, so two launchers cannot disagree.
+
+```
+colors := field "," field "," field "," field      exactly three commas
+field  := "" | 6*HEXDIG ":" 6*HEXDIG               slot order, 0..3
+```
+
+`"8a2be2:ffd700,ff0000:00ff00,,"` is a two-player room where both picked;
+`",,,"` is a room where nobody did. Longest legal string is 4x13 + 3 = 55 bytes.
+
+**No palette ever goes on the wire.** Every copy of the game is told the same
+four hex pairs and generates all four sixteen-colour palette rows for itself,
+through the arithmetic in `port/hal/vs_palette_gen.h` — which is the tangOS
+SM64DS Edition palette editor's own shading maths, transcribed and diffed
+bit-for-bit against it. Identical inputs through identical arithmetic give
+identical bytes, so there is nothing to relay, nothing to trust, and nothing a
+hostile client can inject past six hex digits per colour. A colour also cannot
+desync a match: it is decided before the level loads and the simulation never
+reads it.
+
+The game refuses the whole variable on any grammar violation, so it is worth
+saying what this server can emit: `test_units.py::test_colors` runs 361 hostile
+colour pairs through `create`/`join` and every one is refused before it can
+reach the frozen string, which is therefore always hex, colons and exactly
+three commas.
+
 
 ## Failure semantics
 

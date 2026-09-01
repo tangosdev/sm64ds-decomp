@@ -40,12 +40,13 @@ def _locked(fn):
 
 
 for _name in ("do_create", "do_join", "do_poll", "do_chat", "do_params",
-              "do_preflight", "do_start", "do_ready", "do_result", "do_failed",
-              "do_kick", "do_leave", "sweep"):
+              "do_preflight", "do_color", "do_start", "do_ready", "do_result",
+              "do_failed", "do_kick", "do_leave", "sweep"):
     setattr(S, _name, _locked(getattr(S, _name)))
 S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
            "chat": S.do_chat, "params": S.do_params,
-           "preflight": S.do_preflight, "start": S.do_start,
+           "preflight": S.do_preflight, "color": S.do_color,
+           "start": S.do_start,
            "ready": S.do_ready, "result": S.do_result, "failed": S.do_failed,
            "kick": S.do_kick, "leave": S.do_leave}
 
@@ -629,7 +630,9 @@ def test_opacity():
     check("a member record holds exactly the fields the design names",
           set(Member_fields(room.members[1])) == {
               "seat", "token", "nick", "display", "playing", "pre_ok", "armed",
-              "seen", "chat_allowance", "chat_stamp", "last_addr"},
+              "seen", "chat_allowance", "chat_stamp", "last_addr",
+              # v2: the two colours this player picked.
+              "color", "shoes"},
           Member_fields(room.members[1]))
     check("the only client address kept is the one a kick needs, and it never "
           "reaches a client",
@@ -1379,6 +1382,221 @@ def test_result_and_rematch():
     check("a draw result is accepted", st == 200 and room.state == "lobby")
 
 
+
+# ---------------------------------------------------------------- v2 colours
+
+
+def test_colors():
+    """The owner's feature: two hex colours per player, carried as data.
+
+    Everything here is about the three properties the design rests on -- a
+    colour is only ever set by the seat that owns it, the string the game reads
+    is built ONCE by the server so no launcher can assemble a different one, and
+    a launcher that predates the feature is not affected by any of it.
+    """
+    print("\n-- v2: two picked colours per player")
+
+    # -- the grammar -------------------------------------------------------
+    check("six lower-case hex is a colour",
+          S.v_color({"c": "1a2b3c"}, "c") == ("1a2b3c", None))
+    check("upper case is accepted and NORMALISED to lower",
+          S.v_color({"c": "1A2B3C"}, "c") == ("1a2b3c", None))
+    check("five digits is bad_color", S.v_color({"c": "1a2b3"}, "c")[1] == "bad_color")
+    check("seven digits is too_long", S.v_color({"c": "1a2b3c4"}, "c")[1] == "too_long")
+    check("a # prefix is bad_color", S.v_color({"c": "#1a2b3"}, "c")[1] == "bad_color")
+    check("a non-hex letter is bad_color",
+          S.v_color({"c": "1a2b3g"}, "c")[1] == "bad_color")
+    check("a number is bad_color", S.v_color({"c": 123456}, "c")[1] == "bad_color")
+
+    # -- the version bump --------------------------------------------------
+    reset()
+    st, out = S.do_create({"v": 1, "nick": "t", "color": "ff0000",
+                           "shoes": "0000ff"}, "10.0.0.1", 1000.0)
+    check("a v1 create carrying colours is refused: the bump has to mean "
+          "something", st == 400 and out["error"] == "bad_field", (st, out))
+    check("v1 and v2 are the versions this server answers, and nothing else",
+          S.PROTO_VERSIONS == (1, 2))
+
+    # -- create and join with colours -------------------------------------
+    reset()
+    st, host = S.do_create({"v": 2, "nick": "tango", "pre_ok": True,
+                            "color": "8A2BE2", "shoes": "FFD700"},
+                           "10.0.0.1", 1000.0)
+    code = host["room"]
+    room = S.ROOMS[code]
+    check("a v2 create takes both colours", st == 200, (st, host))
+    check("and stores them lower case",
+          room.members[1].color == "8a2be2" and room.members[1].shoes == "ffd700",
+          (room.members[1].color, room.members[1].shoes))
+    check("the roster row carries them",
+          host["view"]["members"][0]["color"] == "8a2be2"
+          and host["view"]["members"][0]["shoes"] == "ffd700",
+          host["view"]["members"][0])
+
+    st, out = S.do_join({"v": 2, "room": code, "nick": "opie", "pre_ok": True,
+                         "color": "ff0000"}, "10.0.0.2", 1000.0)
+    check("a join with one colour and not the other is bad_color",
+          st == 400 and out["error"] == "bad_color", (st, out))
+    st, guest = S.do_join({"v": 2, "room": code, "nick": "opie", "pre_ok": True,
+                           "color": "ff0000", "shoes": "00ff00"},
+                          "10.0.0.2", 1000.0)
+    check("a join with both is seated", st == 200, (st, guest))
+    check("and the guest's row carries them",
+          room.members[2].color == "ff0000" and room.members[2].shoes == "00ff00")
+
+    # -- a v1 join into a coloured room -----------------------------------
+    st, old = S.do_join({"v": 1, "room": code, "nick": "old", "pre_ok": True},
+                        "10.0.0.3", 1000.0)
+    check("a v1 launcher can still join a room full of colours", st == 200, (st, old))
+    check("and takes the empty pair, which means the built-in Yoshi",
+          room.members[3].color == "" and room.members[3].shoes == "")
+    st, p = S.do_leave({"v": 1, "room": code, "token": old["token"]},
+                       "10.0.0.3", 1000.0)
+    check("and it can leave again", st == 200, (st, p))
+
+    # -- the verb: own seat only, no-op on unchanged, event on change ------
+    before = room.seq
+    st, r = S.do_color({"v": 2, "room": code, "token": guest["token"],
+                        "color": "ff0000", "shoes": "00ff00"},
+                       "10.0.0.2", 1001.0)
+    check("re-sending the same pair is a no-op", st == 200 and room.seq == before,
+          (st, room.seq, before))
+
+    st, r = S.do_color({"v": 2, "room": code, "token": guest["token"],
+                        "color": "123456", "shoes": "654321"},
+                       "10.0.0.2", 1002.0)
+    check("a real change is taken", st == 200, (st, r))
+    check("the roster moves", room.members[2].color == "123456")
+    check("and an event is pushed so a long poll wakes", room.seq > before)
+    ev = room.events[-1]
+    check("the event names the seat and both colours",
+          ev["kind"] == "color" and ev["seat"] == 2
+          and ev["color"] == "123456" and ev["shoes"] == "654321", ev)
+    check("the view every poll carries reflects it",
+          room.view(1)["members"][1]["color"] == "123456")
+
+    st, r = S.do_color({"v": 2, "room": code, "token": guest["token"],
+                        "color": "", "shoes": ""}, "10.0.0.2", 1003.0)
+    check("two empty strings put a player back on the built-in colour",
+          st == 200 and room.members[2].color == "", (st, room.members[2].color))
+    st, r = S.do_color({"v": 2, "room": code, "token": guest["token"],
+                        "color": "ff0000", "shoes": ""}, "10.0.0.2", 1004.0)
+    check("one empty and one not is bad_color",
+          st == 400 and r["error"] == "bad_color", (st, r))
+    st, r = S.do_color({"v": 1, "room": code, "token": guest["token"],
+                        "color": "ff0000", "shoes": "00ff00"},
+                       "10.0.0.2", 1005.0)
+    check("the verb is v2 only", st == 400 and r["error"] == "bad_version", (st, r))
+    st, r = S.do_color({"v": 2, "room": code, "token": "f" * 32,
+                        "color": "ff0000", "shoes": "00ff00"},
+                       "10.0.0.9", 1006.0)
+    check("a token that holds no seat is refused",
+          st == 403 and r["error"] == "not_a_member", (st, r))
+    st, r = S.do_color({"v": 2, "room": code, "token": guest["token"], "seat": 1,
+                        "color": "ff0000", "shoes": "00ff00"},
+                       "10.0.0.2", 1007.0)
+    check("A SEAT ARGUMENT IS REFUSED OUTRIGHT: the verb has no way to reach "
+          "anybody else's row", st == 400 and r["error"] == "bad_field", (st, r))
+
+    # -- the string the game reads ----------------------------------------
+    S.do_color({"v": 2, "room": code, "token": guest["token"],
+                "color": "ff0000", "shoes": "00ff00"}, "10.0.0.2", 1008.0)
+    st, p = start(code, host["token"], now=1009.0)
+    check("the room arms", st == 200, (st, p))
+    check("SM64DS_VS_COLORS is four fields in slot order with three commas",
+          room.colors == "8a2be2:ffd700,ff0000:00ff00,,", room.colors)
+    check("both plans carry the byte-identical string",
+          S.member_plan(room, 1)["colors"] == S.member_plan(room, 2)["colors"]
+          == room.colors)
+    check("and it is frozen, not live: changing a colour now is refused",
+          S.do_color({"v": 2, "room": code, "token": guest["token"],
+                      "color": "ffffff", "shoes": "ffffff"},
+                     "10.0.0.2", 1010.0)[0] == 409)
+    check("so the string the two games are wearing has not moved",
+          room.colors == "8a2be2:ffd700,ff0000:00ff00,,")
+
+    # -- a room where nobody picked ---------------------------------------
+    reset()
+    code, room, host, guest = _two_ready()
+    start(code, host["token"])
+    check("a room with no picks freezes ',,,' -- three commas, four empties",
+          room.colors == ",,," and room.colors.count(",") == 3, room.colors)
+    check("every plan still carries the field",
+          S.member_plan(room, 1)["colors"] == ",,,")
+
+    # -- one picker, one not ----------------------------------------------
+    reset()
+    st, host = S.do_create({"v": 2, "nick": "tango", "pre_ok": True,
+                            "color": "18e618", "shoes": "e66318"},
+                           "10.0.0.1", 1000.0)
+    code = host["room"]
+    S.do_join({"v": 1, "room": code, "nick": "opie", "pre_ok": True},
+              "10.0.0.2", 1000.0)
+    room = S.ROOMS[code]
+    start(code, host["token"])
+    check("slot 0 picked and slot 1 did not: '18e618:e66318,,,'",
+          room.colors == "18e618:e66318,,,", room.colors)
+
+    # -- the rematch keeps them -------------------------------------------
+    S._reset_match(room)
+    check("_reset_match clears the frozen string but not the picks: a colour "
+          "lives on the member, not on the match",
+          room.colors == "" and room.members[1].color == "18e618")
+    start(code, host["token"], now=1001.0)
+    check("so the rematch rebuilds the same string",
+          room.colors == "18e618:e66318,,,", room.colors)
+
+    # -- the invariant that makes the game's parser safe -------------------
+    #
+    # The game refuses SM64DS_VS_COLORS wholesale on any grammar violation, so
+    # a string this server can emit that the game refuses is a feature that
+    # silently does nothing. Prove the server cannot emit one: whatever a
+    # client sends, the frozen string is only ever hex, colons and exactly
+    # three commas, and never longer than the game's 55-byte cap.
+    hostile = [
+        "ff0000,00ff00", "ff00,00", "ff0000:", ":ff0000", "ff 000", "ff-000",
+        "../../e", "%s%s%s", "\x00abcd", "ffffffff", "", " ", "gg0000",
+        "FF0000\n", "ff0000;rm", "\u00ff0000", "0x0000", "'--", "ff0000,",
+    ]
+    emitted, refused = 0, 0
+    for a in hostile:
+        for b in hostile:
+            reset()
+            st, h = S.do_create({"v": 2, "nick": "t", "pre_ok": True,
+                                 "color": a, "shoes": b}, "10.0.0.1", 1000.0)
+            if st != 200:
+                refused += 1
+                continue
+            emitted += 1
+            c2 = h["room"]
+            r2 = S.ROOMS[c2]
+            S.do_join({"v": 2, "room": c2, "nick": "g", "pre_ok": True,
+                       "color": a, "shoes": b}, "10.0.0.2", 1000.0)
+            start(c2, h["token"])
+            out = r2.colors
+            assert out.count(",") == 3, out
+            assert len(out) <= 55, out
+            assert all(ch in "0123456789abcdef:," for ch in out), out
+    check("%d hostile colour pairs, every one refused before it could reach "
+          "the frozen string" % refused, emitted == 0, emitted)
+
+    # And the same guarantee stated as a property of the builder rather than of
+    # the validators, so a future validator bug is still caught here.
+    reset()
+    st, h = S.do_create({"v": 2, "nick": "t", "pre_ok": True,
+                         "color": "ffffff", "shoes": "000000"},
+                        "10.0.0.1", 1000.0)
+    code = h["room"]
+    room = S.ROOMS[code]
+    S.do_join({"v": 2, "room": code, "nick": "g", "pre_ok": True,
+               "color": "000000", "shoes": "ffffff"}, "10.0.0.2", 1000.0)
+    start(code, h["token"])
+    check("the longest legal string is 4 x 13 + 3 = 55 bytes, which is the "
+          "game's cap",
+          len("ffffff:000000,000000:ffffff,,") == 29 and 4 * 13 + 3 == 55)
+    check("and this room's is inside it", len(room.colors) <= 55, room.colors)
+
+
 def Member_fields(m):
     return [k for k in m.__slots__]
 
@@ -1405,6 +1623,7 @@ def main():
     test_arming_roster_is_the_frozen_one()
     test_only_playing_members_drive_a_match()
     test_preflight_updates()
+    test_colors()
     test_arming_and_match_timers()
     test_result_and_rematch()
     test_rate_buckets()

@@ -178,6 +178,29 @@ GAME_NAME_MAX = 16
 
 MATCH_LEN = 16             # a match id, 16 lowercase hex, minted per arm
 
+COLOR_LEN = 6              # a picked colour, "rrggbb", stored lower case
+
+# THE PROTOCOL VERSIONS THIS SERVER ANSWERS. The contract's own rule (section
+# 3.0) is that adding a field is a `v` bump, and v2 adds three: `color` and
+# `shoes` on create/join and the new `color` verb, `color`/`shoes` on every
+# roster row, and `colors` in a go plan.
+#
+# BOTH ARE ACCEPTED, and that is the whole compatibility story. A v1 launcher
+# never sends a colour and never reads one, so it plays in a coloured room with
+# a built-in Yoshi and nothing else about it changes. A v1 REQUEST that carries
+# a colour field is refused as `bad_field` -- the version is what says whether a
+# field may appear, so honouring a v2 field under a v1 header would make the
+# bump decorative. Answers echo back the version the caller sent.
+#
+# The new keys DO appear in every `view` and every plan regardless of version,
+# and that is safe rather than sloppy: an answer is JSON and the launcher's
+# reader ignores a property it has no field for -- the same leniency the event
+# `kind` set already relies on (LobbyClient.cs, "the launcher IGNORES A KIND IT
+# DOES NOT KNOW"). Versioning what a client may SEND is what protects the
+# server; versioning what it may RECEIVE would only mean two code paths.
+PROTO_VERSIONS = (1, 2)
+PROTO_COLOR_V = 2          # the version a colour field is legal in
+
 # The reason a match could not run, a CLOSED enum and never free text
 # (spec 3.9). "timeout" also covers the 20-minute match watchdog (spec 5.8).
 FAIL_REASONS = ("spawn_failed", "no_pairing", "wrong_player_count",
@@ -315,15 +338,23 @@ REJ_AUTH = 0
 
 class Member(object):
     __slots__ = ("seat", "token", "nick", "display", "playing", "pre_ok",
-                 "armed", "seen", "chat_allowance", "chat_stamp", "last_addr")
+                 "armed", "seen", "chat_allowance", "chat_stamp", "last_addr",
+                 "color", "shoes")
 
-    def __init__(self, seat, token, nick, playing, pre_ok, now, addr=""):
+    def __init__(self, seat, token, nick, playing, pre_ok, now, addr="",
+                 color="", shoes=""):
         self.seat = seat
         self.token = token
         self.nick = nick            # exactly as sent, never rewritten
         self.display = nick         # recomputed whenever the roster changes
         self.playing = playing
         self.pre_ok = pre_ok
+        # The two colours this player picked, six lower-case hex each, or ""
+        # for "I did not pick, give me the built-in". Always BOTH or NEITHER:
+        # a Yoshi with a custom body and ROM boots is not a thing the owner
+        # asked for and not a state worth having two of.
+        self.color = color          # the body colour, and the lobby swatch
+        self.shoes = shoes
         self.armed = False
         self.seen = now
         self.chat_allowance = float(CHAT_BURST)
@@ -344,10 +375,22 @@ class Member(object):
         """
         return self.display[:GAME_NAME_MAX]
 
+    @property
+    def game_colors(self):
+        """This seat's field of SM64DS_VS_COLORS: "bbbbbb:ssssss" or "".
+
+        Derived HERE, like `game_name`, so no launcher ever assembles it and
+        two launchers cannot disagree about a colour the way they could about a
+        duplicate nickname.
+        """
+        if not self.color or not self.shoes:
+            return ""
+        return "%s:%s" % (self.color, self.shoes)
+
     def view(self):
         return {"seat": self.seat, "display": self.display,
                 "playing": self.playing, "pre_ok": self.pre_ok,
-                "armed": self.armed}
+                "armed": self.armed, "color": self.color, "shoes": self.shoes}
 
 
 class Room(object):
@@ -371,6 +414,7 @@ class Room(object):
         self.match_win_mode = "time"
         self.match_star_target = None
         self.names = ""             # SM64DS_VS_NAMES, built once, slot order
+        self.colors = ""            # SM64DS_VS_COLORS, likewise
         self.slot_of = {}           # seat -> slot (0..3), packed among playing
         self.arm_deadline = None    # monotonic; arming must complete by here
         self.go_at = None           # monotonic; go->in_match after GO_GRACE
@@ -709,6 +753,56 @@ def v_bool(body, key):
     return v, None
 
 
+def v_color(body, key):
+    """Six hex digits, either case in, LOWER CASE out.
+
+    Normalised here rather than echoed verbatim so that "FF0000" and "ff0000"
+    are the same colour everywhere downstream: the same roster row, the same
+    no-op test in the `color` verb, and the same byte in SM64DS_VS_COLORS. The
+    game parses either case, so this buys nothing there -- it buys the property
+    that two launchers cannot produce two different strings for one colour.
+    """
+    s, err = want_str(body, key, "bad_color")
+    if err:
+        return None, err
+    n = byte_len(s)
+    if n > COLOR_LEN:
+        return None, "too_long"
+    if n != COLOR_LEN:
+        return None, "bad_color"
+    for ch in s:
+        if ch not in "0123456789abcdefABCDEF":
+            return None, "bad_color"
+    return s.lower(), None
+
+
+def v_color_pair(body, ver):
+    """The two colour keys, which travel together or not at all.
+
+    Returns (color, shoes, error). ("", "") means the caller picked nothing,
+    which is the default and is not an error. One of the two alone IS an error:
+    the alternative is a half-recoloured Yoshi and a rule about which half wins.
+
+    A COLOUR IS A v2 FIELD. Under v1 the keys are not part of the contract, so
+    they are refused as `bad_field` exactly like any other unknown key -- see
+    PROTO_VERSIONS for why the bump has to mean something.
+    """
+    has = ("color" in body, "shoes" in body)
+    if not any(has):
+        return "", "", None
+    if ver < PROTO_COLOR_V:
+        return None, None, "bad_field"
+    if not all(has):
+        return None, None, "bad_color"
+    color, err = v_color(body, "color")
+    if err:
+        return None, None, err
+    shoes, err = v_color(body, "shoes")
+    if err:
+        return None, None, err
+    return color, shoes, None
+
+
 def v_match(body):
     s, err = want_str(body, "match", "bad_match")
     if err:
@@ -793,7 +887,7 @@ def refuse_member(room, token, now):
 
 
 def do_create(body, who, now):
-    err = shape(body, ("v", "nick"), ("pre_ok",))
+    err = shape(body, ("v", "nick"), ("pre_ok", "color", "shoes"))
     if err:
         return 400, {"error": err}
     nick, err = v_nick(body)
@@ -804,6 +898,9 @@ def do_create(body, who, now):
         pre_ok, err = v_bool(body, "pre_ok")
         if err:
             return 400, {"error": err}
+    color, shoes, err = v_color_pair(body, body.get("v", 1))
+    if err:
+        return 400, {"error": err}
 
     if not BUCKETS.allow_create(who, now):
         return 429, {"error": "too_fast"}
@@ -821,7 +918,8 @@ def do_create(body, who, now):
 
     room = Room(code, now)
     token = new_token()
-    m = Member(1, token, nick, GAME_MAX_PLAYERS >= 1, pre_ok, now, who)
+    m = Member(1, token, nick, GAME_MAX_PLAYERS >= 1, pre_ok, now, who,
+               color, shoes)
     room.members[1] = m
     room.by_token[token] = 1
     room.host_seat = 1
@@ -833,7 +931,7 @@ def do_create(body, who, now):
 
 
 def do_join(body, who, now):
-    err = shape(body, ("v", "room", "nick"), ("pre_ok",))
+    err = shape(body, ("v", "room", "nick"), ("pre_ok", "color", "shoes"))
     if err:
         return 400, {"error": err}
     code, err = v_room(body)
@@ -847,6 +945,9 @@ def do_join(body, who, now):
         pre_ok, err = v_bool(body, "pre_ok")
         if err:
             return 400, {"error": err}
+    color, shoes, err = v_color_pair(body, body.get("v", 1))
+    if err:
+        return 400, {"error": err}
 
     if not BUCKETS.allow_join(who, now):
         return 429, {"error": "too_fast"}
@@ -867,7 +968,8 @@ def do_join(body, who, now):
         return 409, {"error": "room_full"}
     token = new_token()
     playing = room.playing_count() < GAME_MAX_PLAYERS
-    room.members[seat] = Member(seat, token, nick, playing, pre_ok, now, who)
+    room.members[seat] = Member(seat, token, nick, playing, pre_ok, now, who,
+                                color, shoes)
     room.by_token[token] = seat
     room.refresh_displays()
     room.push("joined", seat=seat, display=room.members[seat].display)
@@ -1119,6 +1221,29 @@ def build_names(room):
     return ",".join(fields)
 
 
+def build_colors(room):
+    """SM64DS_VS_COLORS: four comma-separated fields in SLOT order, always with
+    exactly three commas, each field either empty or "bbbbbb:ssssss".
+
+    Built ONCE here, by the server, for the same reason `names` is: every
+    member's plan then carries the byte-identical string, so every copy of the
+    game generates every player's palette row from the same input and arrives at
+    the same bytes. That is the whole design -- no palette on the wire, nothing
+    to trust past six hex digits per colour, and no way for two clients to
+    disagree about what somebody looks like.
+
+    An empty field is a slot that picked nothing, and the game leaves that
+    player on the ROM's built-in colour. All four empty is a legal string and
+    the game says so and moves on; the launcher drops the variable in that case
+    anyway, which is cheaper.
+    """
+    fields = ["", "", "", ""]
+    for seat, slot in room.slot_of.items():
+        if 0 <= slot < 4:
+            fields[slot] = room.members[seat].game_colors
+    return ",".join(fields)
+
+
 def member_plan(room, seat):
     """The per-member go plan (spec 4.3). Spectators get an empty plan and spawn
     nothing; playing members get the whole launch instruction. Every field a
@@ -1141,6 +1266,10 @@ def member_plan(room, seat):
         "spawn_delay_ms": 0 if role == "parent" else 1500,
         "playing": True,
         "names": room.names,
+        # Every playing plan carries EVERY slot's colours, not just this
+        # seat's: each client draws all four Yoshis, so each client needs
+        # all four rows.
+        "colors": room.colors,
     }
     if room.match_win_mode == "stars":
         plan["star_target"] = room.match_star_target
@@ -1156,6 +1285,7 @@ def _reset_match(room):
     room.agreed_players = 0
     room.match_star_target = None
     room.names = ""
+    room.colors = ""
     room.slot_of = {}
     room.arm_deadline = None
     room.go_at = None
@@ -1255,6 +1385,7 @@ def do_start(body, who, now):
     room.match_star_target = room.star_target
     room.slot_of = assign_slots(room)
     room.names = build_names(room)
+    room.colors = build_colors(room)
     for m in room.members.values():
         m.armed = False
     room.state = "arming"
@@ -1469,6 +1600,78 @@ def do_preflight(body, who, now):
     return 200, {"cursor": room.seq}
 
 
+def do_color(body, who, now):
+    """A seated member changing its own two colours.
+
+    The owner's order: "the ability to choose a hex color to make your yoshi
+    and its shoes so two [colors]. and the main color shows next to your name in
+    lobby so people can identify you."
+
+    Modelled on `preflight` and for the same reasons. IT ONLY EVER SETS THE
+    CALLER'S OWN SEAT -- there is no seat argument, so a member speaks for
+    itself and for nobody else and this adds no authority anywhere. UNCHANGED IS
+    A NO-OP, so a launcher that re-sends on every keystroke or on window focus
+    costs the room nothing; only a real change pushes an event, which is what
+    makes the other players' swatches move NOW rather than when their long poll
+    expires.
+
+    BOTH COLOURS OR NEITHER, and both are required here rather than optional:
+    this verb's whole job is to set a pair, and a caller who wants to go back to
+    the built-in Yoshi says so with two empty strings.
+
+    LEGAL ONLY IN `lobby`, and this is the one place it differs from
+    `preflight`. A colour is spent at the arming freeze, exactly like a
+    nickname: once the room has frozen SM64DS_VS_COLORS into everybody's plan,
+    letting a seat change its colour would put a swatch on screen that no
+    running game is wearing. Changing it during a match is refused with
+    `not_in_lobby` and the player simply changes it before the rematch.
+    """
+    err = shape(body, ("v", "room", "token", "color", "shoes"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    if body.get("v", 1) < PROTO_COLOR_V:
+        return 400, {"error": "bad_version"}
+
+    # "" and "" is how a player goes back to the built-in colour, so the empty
+    # pair is spelled out here rather than reached through v_color_pair.
+    if body["color"] == "" and body["shoes"] == "":
+        color, shoes = "", ""
+    else:
+        color, err = v_color(body, "color")
+        if err:
+            return 400, {"error": err}
+        shoes, err = v_color(body, "shoes")
+        if err:
+            return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    m = room.members[seat]
+    m.seen = now
+    m.last_addr = who
+    if room.state != "lobby":
+        return 409, {"error": "not_in_lobby"}
+
+    if m.color == color and m.shoes == shoes:
+        return 200, {"cursor": room.seq}
+    m.color = color
+    m.shoes = shoes
+    room.push("color", seat=seat, display=m.display, color=color, shoes=shoes)
+    log("room %s color seat %d %s"
+        % (code, seat, ("%s/%s" % (color, shoes)) if color else "built-in"))
+    return 200, {"cursor": room.seq}
+
+
 def do_poll(body, who, now):
     """The only push channel, and the entire reliability story.
 
@@ -1574,6 +1777,7 @@ VERBS = {
     "chat": do_chat,
     "params": do_params,
     "preflight": do_preflight,
+    "color": do_color,
     "start": do_start,
     "ready": do_ready,
     "result": do_result,
@@ -1902,14 +2106,17 @@ class Handler(BaseHTTPRequestHandler):
         # 6. THE VERSION. A field that appears without a version bump is a bug
         #    or an attack, so the version is checked before the fields are.
         ver = body.get("v")
-        if isinstance(ver, bool) or not isinstance(ver, int) or ver != 1:
+        if (isinstance(ver, bool) or not isinstance(ver, int)
+                or ver not in PROTO_VERSIONS):
             self._reject(400, "bad_version", 0)
             return
 
         with LOCK:
             status, payload = fn(body, host_key, time.monotonic())
         payload = dict(payload)
-        payload["v"] = 1
+        # Echo the version the caller SENT. A v1 launcher must not start
+        # seeing v2 in its answers just because the server grew.
+        payload["v"] = ver
         if status != 200:
             kind = "auth" if status in (403, 409) else (
                 "rate" if status == 429 else "shape")

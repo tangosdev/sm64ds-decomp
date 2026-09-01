@@ -525,6 +525,137 @@ def selftest_match(c):
     selftest_arming_roster(c)
     selftest_only_playing(c)
     selftest_preflight(c)
+    selftest_colors(c)
+
+
+
+def selftest_colors(c):
+    """The owner's two picked colours, over the wire.
+
+    The point of doing this over HTTP as well as in the unit tests is the
+    version boundary: the shipped 0.3.0 launcher speaks v1 and the reviewer will
+    run it against this server, so "a v1 client is untouched" has to be a fact
+    about real requests and not about a function call.
+    """
+    status, host = c.post("create", {"v": 2, "nick": "ch", "pre_ok": True,
+                                     "color": "8A2BE2", "shoes": "FFD700"})
+    code = host["room"]
+    check("a v2 create with two colours is accepted", status == 200, host)
+    check("the answer echoes v2", host.get("v") == 2, host)
+    check("the roster row carries them, normalised to lower case",
+          host["view"]["members"][0]["color"] == "8a2be2"
+          and host["view"]["members"][0]["shoes"] == "ffd700",
+          host["view"]["members"][0])
+
+    expect("a v1 create carrying a colour is refused",
+           c.post("create", {"v": 1, "nick": "cx", "color": "ff0000",
+                             "shoes": "00ff00"}), 400, "bad_field")
+    expect("a five-digit colour is refused",
+           c.post("join", {"v": 2, "room": code, "nick": "cg",
+                           "color": "ff000", "shoes": "00ff00"}),
+           400, "bad_color")
+    expect("one colour without the other is refused",
+           c.post("join", {"v": 2, "room": code, "nick": "cg",
+                           "color": "ff0000"}), 400, "bad_color")
+
+    status, guest = c.post("join", {"v": 2, "room": code, "nick": "cg",
+                                    "pre_ok": True, "color": "ff0000",
+                                    "shoes": "00ff00"})
+    check("a v2 join with both colours is seated", status == 200, guest)
+
+    # THE V1 LAUNCHER. Everything the shipped 0.3.0 build does, against a
+    # server that now speaks v2, and none of it may change.
+    status, old = c.post("join", {"v": 1, "room": code, "nick": "cold",
+                                  "pre_ok": True})
+    check("a v1 join into a coloured room still works", status == 200, old)
+    check("and its answer still says v1", old.get("v") == 1, old)
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": old["token"],
+                                   "cursor": old["cursor"], "wait": 0})
+    check("a v1 poll still reads the whole room", status == 200, seen)
+    check("the extra keys on a roster row are simply extra: every field a v1 "
+          "launcher reads is still there",
+          all(k in seen["view"]["members"][0]
+              for k in ("seat", "display", "playing", "pre_ok", "armed")),
+          seen["view"]["members"][0])
+    status, _ = c.post("chat", {"v": 1, "room": code, "token": old["token"],
+                                "text": "still here"})
+    check("a v1 chat still lands", status == 200)
+    status, _ = c.post("leave", {"v": 1, "room": code, "token": old["token"]})
+    check("and a v1 leave still gives the seat back", status == 200)
+
+    # The verb.
+    status, r0 = c.post("color", {"v": 2, "room": code, "token": guest["token"],
+                                  "color": "ff0000", "shoes": "00ff00"})
+    before = r0["cursor"]
+    status, r = c.post("color", {"v": 2, "room": code, "token": guest["token"],
+                                 "color": "ff0000", "shoes": "00ff00"})
+    check("re-sending the same pair is a no-op: the cursor does not move",
+          status == 200 and r["cursor"] == before, (r, before))
+    status, r = c.post("color", {"v": 2, "room": code, "token": guest["token"],
+                                 "color": "123456", "shoes": "654321"})
+    check("a real change moves the cursor", status == 200 and r["cursor"] > before,
+          (r, before))
+    status, seen = c.post("poll", {"v": 2, "room": code, "token": host["token"],
+                                   "cursor": host["cursor"], "wait": 0})
+    check("the HOST sees the new swatch without asking for it",
+          seen["view"]["members"][1]["color"] == "123456",
+          seen["view"]["members"])
+    check("and a color event carried it, so a long poll would have woken",
+          any(e["kind"] == "color" and e["seat"] == 2
+              and e["color"] == "123456" for e in seen["events"]),
+          seen["events"])
+
+    expect("there is no seat argument: a member colours only itself",
+           c.post("color", {"v": 2, "room": code, "token": guest["token"],
+                            "seat": 1, "color": "ff0000", "shoes": "00ff00"}),
+           400, "bad_field")
+    expect("the verb is v2 only",
+           c.post("color", {"v": 1, "room": code, "token": guest["token"],
+                            "color": "ff0000", "shoes": "00ff00"}),
+           400, "bad_version")
+    expect("a stranger's token cannot colour a seat",
+           c.post("color", {"v": 2, "room": code, "token": "f" * 32,
+                            "color": "ff0000", "shoes": "00ff00"}),
+           403, "not_a_member")
+
+    # The string that reaches the games.
+    c.post("color", {"v": 2, "room": code, "token": guest["token"],
+                     "color": "ff0000", "shoes": "00ff00"})
+    status, _ = c.post("start", {"v": 2, "room": code, "token": host["token"]})
+    check("the host can arm a coloured room", status == 200)
+    c.post("ready", {"v": 2, "room": code, "token": host["token"],
+                     "match": _last_match(c, code, host)})
+    plans = {}
+    for who in (host, guest):
+        m = _last_match(c, code, who)
+        c.post("ready", {"v": 2, "room": code, "token": who["token"], "match": m})
+    for who, name in ((host, "host"), (guest, "guest")):
+        status, seen = c.post("poll", {"v": 2, "room": code,
+                                       "token": who["token"],
+                                       "cursor": 0, "wait": 0})
+        for e in seen.get("events", []):
+            if e["kind"] == "go" and e.get("plan", {}).get("playing"):
+                plans[name] = e["plan"]
+        if name not in plans and seen.get("plan", {}).get("playing"):
+            plans[name] = seen["plan"]
+    check("both plans arrived", set(plans) == {"host", "guest"}, list(plans))
+    if set(plans) == {"host", "guest"}:
+        check("SM64DS_VS_COLORS is four fields in slot order",
+              plans["host"]["colors"] == "8a2be2:ffd700,ff0000:00ff00,,",
+              plans["host"]["colors"])
+        check("and BOTH launchers were handed the byte-identical string",
+              plans["host"]["colors"] == plans["guest"]["colors"],
+              (plans["host"]["colors"], plans["guest"]["colors"]))
+    c.post("failed", {"v": 2, "room": code, "token": host["token"],
+                      "match": _last_match(c, code, host),
+                      "reason": "user_cancelled"})
+    c.post("leave", {"v": 2, "room": code, "token": host["token"]})
+
+
+def _last_match(c, code, who):
+    status, seen = c.post("poll", {"v": 2, "room": code, "token": who["token"],
+                                   "cursor": 0, "wait": 0})
+    return seen["view"].get("match") or ""
 
 
 def selftest_preflight(c):
