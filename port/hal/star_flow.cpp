@@ -885,7 +885,44 @@ enum { PORT_VS_END_SCENE_DEFAULT = 0 };
    SECOND match in one process. Nothing produces one today -- going from a
    finished match back to the lobby is not something the port can do yet -- but
    a latch that silently swallows the second match is exactly the bug the lane
-   that adds the lobby return would spend a day chasing. */
+   that adds the lobby return would spend a day chasing.
+
+   ---- AND THE RE-ARM IS A TRAP UNTIL SOMEBODY CLEARS THE SCORES -------------
+
+   READ THIS BEFORE MAKING AN IN-PROCESS SECOND MATCH WORK. This latch re-arms,
+   but data_0209f310 -- the ROM's per-player carried-star array, the thing every
+   trigger and both markers read -- IS NEVER CLEARED IN THIS PORT. A second
+   match in the same process would therefore start with the first match's
+   scores: the star target would fire on frame one against stale values, and the
+   marker would report a winner nobody played for.
+
+   IT IS DORMANT TODAY AND THAT IS THE ONLY REASON IT IS A NOTE. The lobby's
+   rematch spawns a FRESH PROCESS (C:	mp\lobbyd-out\SPEC.md section 5: the
+   launcher waits for exit, then the room re-arms and the next match is a new
+   launch), so nothing in the shipped flow reaches a second match in one
+   process. The day something does, this is where it breaks.
+
+   THE ROM DOES CLEAR IT, and the loop is already written -- in
+   src/_ZN5Stage13InitResourcesEv.cpp:181-197, which this port does not run
+   (port/stage_lifecycle_map.txt section 2d lists data_0209f310 among the
+   per-player clears with seat "none"):
+
+       if ((s32)data_0209f21c > 0) {
+           ... for idx in 0 .. data_0209f21c-1:
+                   if (sl || (v1 == 0 && f26c != 1)) data_0209f358[idx] = 0;
+                   data_0209f30c[idx] = 0;
+                   data_0209f310[idx] = 0;
+       }
+
+   NOT SEATED HERE, deliberately. It sits inside a guard three conditions deep
+   (`b1 || data_0209f26c == 2 || v1 || temp_r4 == 0x1D || temp_r4 != temp_r0`,
+   line 169) over state this file does not carry, and it clears two more arrays
+   besides -- the coin counts and data_0209f30c. Hosting a partial copy of a
+   guarded ROM block on a path nobody can exercise is how a wrong clear gets
+   shipped and stays invisible; the honest move is to name the block, the file
+   and the line so the lane that needs it seats the whole thing with its guard.
+   That lane also owns deciding whether the port's f21c is the count the ROM
+   means here. */
 static int g_end_fired = -1;
 static int g_end_announced;
 static int g_end_by_target;
@@ -959,6 +996,114 @@ extern unsigned char data_0209f4ac[];  /* touching */
  * by an invented rule.
  *
  * Text only, one line, and the caller draws it: hal/ has no framebuffer. */
+/* ---- SM64DS_VS_NAMES: the lobby's nicknames, for the winner banner ---------
+ *
+ * Tango: "make the winning thing at the end say the nickname of who won." The
+ * lobby server builds the string; this reads it. The contract is
+ * C:	mp\lobbyd-out\SPEC.md section 4.7 and every rule below is theirs, not
+ * this file's invention:
+ *
+ *     four fields, comma separated, EXACTLY three commas, slot order 0..3
+ *     whole variable 1..67 bytes (4 x 16 + 3)
+ *     each field 0..16 bytes
+ *     bytes 0x20..0x7E only; comma is the separator and barred from a name
+ *     an empty field means that slot has no name
+ *
+ * IGNORED WHOLESALE ON ANY VIOLATION, which is the spec's word and the rule
+ * that protects every existing proof: a malformed variable is not partially
+ * salvaged, it is dropped, and the banner falls back to PLAYER n+1. show.sh and
+ * every proof tool never set it, so they keep producing exactly the banner they
+ * produce today.
+ *
+ * THE GAME DOES NOT TRUST THE ENVIRONMENT even though the server sanitizes and
+ * the launcher re-validates. This is a string arriving from another process,
+ * built from text a stranger typed into a lobby; it is checked here as if
+ * neither of those steps existed. Read once, cached, never written back.
+ *
+ * The 3-4 player caveat is the spec's and is not this reader's to solve: field
+ * n is slot n, and above two players the parent assigns child slots from JOIN
+ * arrival order, which need not match lobby seat order. GAME_MAX_PLAYERS is 2
+ * today and the mapping is a fact; the lane that raises it inherits 4.7's
+ * paragraph on it. */
+static char g_vs_names[4][17];
+static int  g_vs_names_read;
+
+static void vs_names_load(void)
+{
+    if (g_vs_names_read)
+        return;
+    g_vs_names_read = 1;
+    for (int i = 0; i < 4; ++i) g_vs_names[i][0] = 0;
+
+    const char *e = std::getenv("SM64DS_VS_NAMES");
+    if (!e)
+        return;                      /* absent: the common case, and silent */
+
+    const size_t len = std::strlen(e);
+    if (len < 1 || len > 67) {
+        fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: %u bytes, the contract "
+                "allows 1..67\n", (unsigned)len);
+        return;
+    }
+    int commas = 0;
+    for (size_t i = 0; i < len; ++i) {
+        const unsigned char c = (unsigned char)e[i];
+        if (c == ',') { ++commas; continue; }
+        if (c < 0x20 || c > 0x7E) {
+            fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: byte %02x at %u is "
+                    "outside 0x20..0x7E\n", (unsigned)c, (unsigned)i);
+            return;
+        }
+    }
+    if (commas != 3) {
+        fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: %d comma(s), the "
+                "contract requires exactly 3\n", commas);
+        return;
+    }
+    /* Split. Every field is already known to be printable and comma-free. */
+    char tmp[4][17];
+    int slot = 0, w = 0;
+    for (size_t i = 0; i <= len; ++i) {
+        const char c = (i < len) ? e[i] : ',';
+        if (c == ',') {
+            if (slot < 4) { tmp[slot][w] = 0; }
+            ++slot; w = 0;
+            if (slot > 4) break;
+            continue;
+        }
+        if (w >= 16) {
+            fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: field %d is longer "
+                    "than 16 bytes\n", slot);
+            return;
+        }
+        if (slot < 4) tmp[slot][w] = c;
+        ++w;
+    }
+    for (int i = 0; i < 4; ++i) {
+        /* the spec says upstream already stripped edge spaces and says the
+           reader may trim again harmlessly; harmless is worth having */
+        char *b = tmp[i];
+        size_t a = 0, z = std::strlen(b);
+        while (a < z && b[a] == ' ') ++a;
+        while (z > a && b[z - 1] == ' ') --z;
+        const size_t m = z - a;
+        std::memcpy(g_vs_names[i], b + a, m);
+        g_vs_names[i][m] = 0;
+    }
+    fprintf(stderr, "[vs] SM64DS_VS_NAMES accepted: [%s] [%s] [%s] [%s]\n",
+            g_vs_names[0], g_vs_names[1], g_vs_names[2], g_vs_names[3]);
+}
+
+/* The name for a slot, or 0 when that slot has none (empty field, or the whole
+   variable was rejected). Callers fall back to PLAYER n+1. */
+static const char *vs_name_for(int slot)
+{
+    if (slot < 0 || slot > 3)
+        return 0;
+    vs_names_load();
+    return g_vs_names[slot][0] ? g_vs_names[slot] : 0;
+}
+
 extern "C" int port_vs_match_end_banner(char *out, int n)
 {
     /* SM64DS_VS_END_BANNER=0 keeps the end flow and drops the presentation, so
@@ -976,15 +1121,24 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
         if (g_end_scores[i] > g_end_scores[best]) best = i;
     for (int i = 0; i < 4; ++i)
         if (i != best && g_end_scores[i] == g_end_scores[best]) ++ties;
-    if (ties)
+    if (ties) {
         std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  %d - %d - %d - %d",
                       g_end_scores[0], g_end_scores[1], g_end_scores[2],
                       g_end_scores[3]);
-    else
-        std::snprintf(out, (size_t)n,
-                      "MATCH OVER  -  PLAYER %d WINS  %d - %d - %d - %d",
-                      best + 1, g_end_scores[0], g_end_scores[1],
-                      g_end_scores[2], g_end_scores[3]);
+    } else {
+        /* the nickname if the lobby gave us one for THIS slot, the ROM-shaped
+           PLAYER n+1 otherwise -- per slot, because a room can have one named
+           seat and one unnamed */
+        const char *nick = vs_name_for(best);
+        char who[24];
+        if (nick)
+            std::snprintf(who, sizeof who, "%s", nick);
+        else
+            std::snprintf(who, sizeof who, "PLAYER %d", best + 1);
+        std::snprintf(out, (size_t)n, "MATCH OVER  -  %s WINS  %d - %d - %d - %d",
+                      who, g_end_scores[0], g_end_scores[1], g_end_scores[2],
+                      g_end_scores[3]);
+    }
     return 1;
 }
 
@@ -1152,13 +1306,43 @@ extern "C" int port_vs_match_end_poll(int frame)
        the ROM's own per-player array and the total is the ROM's own sum, and
        `win=` says which of the two conditions ended it -- the launcher that
        chose the condition is the thing that wants to know it was honoured. */
+    /* ---- v2 OF THIS LINE, AND THE APPEND IS THE CONTRACT --------------------
+     *
+     * The lobby spec (section 5) says the launcher parses ONLY `win=` and
+     * `scores=` and bounds them, so new fields are safe -- but only while they
+     * are APPENDED. Nothing before the end moves, nothing is renamed, nothing
+     * changes shape, so a reader written against v1 keeps working untouched.
+     * That is what makes this additive rather than a version the launcher has
+     * to chase.
+     *
+     * v2 appends, in this order:
+     *   winner=<0..3|-1>    the winning slot, -1 on a draw. Same numbering as
+     *                       scores= and as SM64DS_VS_NAMES field order.
+     *   winner_name=<s>     ONLY when the lobby named that slot; omitted
+     *                       entirely otherwise, so an unnamed match's marker is
+     *                       v1 plus winner= and nothing else.
+     *
+     * The name is printed raw because it has already passed the 4.7 grammar
+     * check on read: printable ASCII, no comma, at most 16 bytes. It therefore
+     * cannot break the field grammar of this line. */
+    int win_slot = -1;
+    {
+        int b = 0, t = 0;
+        for (int i = 1; i < 4; ++i)
+            if (g_end_scores[i] > g_end_scores[b]) b = i;
+        for (int i = 0; i < 4; ++i)
+            if (i != b && g_end_scores[i] == g_end_scores[b]) ++t;
+        if (!t) win_slot = b;
+    }
+    const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%d,%d,%d,%d total=%d "
-            "pending_scene=%u results_screen=%s\n", frame,
+            "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
             g_end_by_target ? "star-target" : "time-up",
             g_end_scores[0], g_end_scores[1], g_end_scores[2], g_end_scores[3],
             g_end_total, (unsigned)data_02092664,
             data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
-                               : (data_02092664 == 0x187 ? "none" : "other"));
+                               : (data_02092664 == 0x187 ? "none" : "other"),
+            win_slot, win_name ? " winner_name=" : "", win_name ? win_name : "");
     fflush(stderr);
 
     /* THE EXIT IS ON BY DEFAULT NOW, and round 1 had it the other way round.
