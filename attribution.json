@@ -1109,6 +1109,11 @@
     "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD0Ev": "tangosdev",
     "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/daObjKm3_Kuruma_c.cpp#RickshawPlatformBs_Spawn": "github-actions[bot]"
+    "src/actors/daObjKm3_Kuruma_c.cpp#RickshawPlatformBs_Spawn": "github-actions[bot]",
+    "src/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Dorifu_c.cpp#StairsBdw_Spawn": "github-actions[bot]"
   }
 }

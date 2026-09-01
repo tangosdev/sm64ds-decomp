@@ -108,15 +108,10 @@ data_ov043_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 data_ov043_021124d4 kind:data(any) addr:0x021124d4 ambiguous
 _ZTI17daObjKm1_Dorifu_c kind:data(any) addr:0x021124dc
 _ZTS17daObjKm1_Dorifu_c kind:data(any) addr:0x021124e8
-data_ov043_021124ec kind:data(any) addr:0x021124ec ambiguous
-data_ov043_021124f8 kind:data(any) addr:0x021124f8 ambiguous
-StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc ambiguous
+StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc
 data_ov043_02112518 kind:data(any) addr:0x02112518
-data_ov043_02112530 kind:data(any) addr:0x02112530 ambiguous
 _ZTV17daObjKm1_Dorifu_c kind:data(any) addr:0x0211255c
-data_ov043_02112570 kind:data(any) addr:0x02112570 ambiguous
-data_ov043_02112590 kind:data(any) addr:0x02112590 ambiguous
-data_ov043_021125cc kind:data(any) addr:0x021125cc ambiguous
+data_ov043_021125dc kind:data(any) addr:0x021125dc ambiguous
 data_ov043_021125e0 kind:bss addr:0x021125e0
 data_ov043_021125e8 kind:bss addr:0x021125e8
 data_ov043_021125f0 kind:bss addr:0x021125f0
