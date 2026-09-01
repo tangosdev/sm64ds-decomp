@@ -15,7 +15,7 @@
 # makes a run that forgets it look like a bug.
 #
 #   $1  how many windows (2..16)
-#   $2  frames of selftest per window (default 900)
+#   $2  frames of selftest per CHILD (default 900)
 #   $3  VS map index 0..3 (default 0 = level 51)
 ROOT="C:/tmp/vs16"
 EXE="$ROOT/build/port/walk_window.exe"
@@ -31,7 +31,21 @@ fi
 # PID-derived base in 42000..49900, stepped by 20 so slot k = base+k is clear
 # for sixteen slots and two neighbouring bases cannot interleave.
 BASE=$(( 42000 + ($$ % 390) * 20 ))
-echo "windows $N  port base $BASE..$((BASE + N - 1))  frames $FRAMES  map $VSMAP  out $OUT"
+
+# THE PARENT OUTLIVES EVERYONE, and this was learned the hard way at the
+# five-window rung. four.sh gave every window the same budget and slept a whole
+# second between children -- fine at four windows, and at five and up it
+# MANUFACTURES A FALSE DESYNC: the parent spends its own budget WAITING for the
+# last joiner, so by the time that window's world boots the parent is at the end
+# of its run and about to send BYE. The symptom is a last window whose round
+# counter is pinned and whose world hash diverges, which reads exactly like a
+# real desync and is not one.
+#
+# So the stagger is short (enough for the parent to bind before the first JOIN,
+# no more) and the parent's budget is the children's plus the whole join window.
+PBUDGET=$(( FRAMES + 60 * (N + 8) ))
+
+echo "windows $N  ports $BASE..$((BASE + N - 1))  child frames $FRAMES  parent $PBUDGET  map $VSMAP  out $OUT"
 
 rm -rf "$OUT"
 k=0
@@ -48,12 +62,11 @@ export SM64DS_NO_FOCUS=1
 export SM64DS_MINIMIZED=1
 export SM64DS_VOLUME=0
 export SM64DS_NO_DIALOG=1
-export SM64DS_WINDOW_SELFTEST="$FRAMES"
 
 # One held direction per window so every player walks a different way and a
 # capture can tell them apart. Sixteen windows and four directions, so the
-# directions repeat -- which is fine for telling bodies apart on screen and is
-# NOT what the desync tracker reads (it hashes world state, not input).
+# directions repeat -- fine for telling bodies apart on screen, and NOT what
+# the desync tracker reads (it hashes world state, not input).
 key_for() {
   case $(( $1 % 4 )) in
     0) echo 0x0040 ;;   # up
@@ -65,18 +78,20 @@ key_for() {
 
 cd "$OUT/p0"
 TEMP="$OUT/p0/tmp" TMP="$OUT/p0/tmp" SM64DS_INSTANCE=p0 \
+  SM64DS_WINDOW_SELFTEST="$PBUDGET" \
   SM64DS_COMMS_INJECT="key=$(key_for 0)" \
   SM64DS_COMMS_ROLE=parent "$EXE" > run.log 2>&1 &
-echo "parent pid $!" > "$OUT/pids.txt"
-sleep 2
+echo "parent pid $! budget $PBUDGET" > "$OUT/pids.txt"
+sleep 1
 k=1
 while [ "$k" -lt "$N" ]; do
   cd "$OUT/p$k"
   TEMP="$OUT/p$k/tmp" TMP="$OUT/p$k/tmp" SM64DS_INSTANCE="p$k" \
+    SM64DS_WINDOW_SELFTEST="$FRAMES" \
     SM64DS_COMMS_INJECT="key=$(key_for $k)" \
     SM64DS_COMMS_ROLE=child SM64DS_COMMS_SLOT="$k" "$EXE" > run.log 2>&1 &
   echo "child$k pid $!" >> "$OUT/pids.txt"
-  sleep 1
+  : # no stagger: every window boots and joins together (see the note above)
   k=$((k + 1))
 done
 wait

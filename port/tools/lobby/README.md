@@ -1077,3 +1077,92 @@ The names string is the smallest piece of work on that list and it is
 deliberately **not** first: the ruling gates it on the wire moving, because a
 format that grows before anything can use it is two readers waiting to
 disagree.
+
+---
+
+## WHAT RUN vs16 DID TO THAT LIST, AND THE ONE WALL LEFT
+
+The section above is SEAT16's map, measured at cons `339db6bb3`, and it is kept
+as written rather than edited in place -- it is the reasoning the next lane
+started from, and a map quietly rewritten to match the territory teaches
+nobody anything. This section says what changed.
+
+**Three of its conclusions were wrong, all in the same direction.** Run vs16
+re-derived every item before moving it:
+
+1. **`data_0209f310` was never a four-byte ceiling in the port.** The host
+   already gives that band 32 bytes as a guarded contiguous pair
+   (`hal/actor_classes_star.cpp`), and the ROM's own summing reader
+   (`src/NumVsStarsObtained.c`) already walks `data_0209f21c` rather than a
+   literal four. Sixteen scores needed no change at all.
+2. **The four-column star band is the RESULTS SCREEN and it does not bind.**
+   `4 - count` / `data_ov075_0211c6e8[d]` is `src/func_ov075_0211621c.c`,
+   reached only from scene 7 -- which `hal/scene_boot.cpp` does not register
+   and `hal/scene_vs_menu.cpp` explicitly leaves out. The port's match end is
+   its own winner banner. The `d == -1` read is real and is a standing reason
+   not to register scene 7; it is not on any path the port runs.
+3. **Most of the ROM's per-player loops were already generic.**
+   `NumVsStarsObtained`, `NumRedCoins`, `NumCoins`, `ResetInput`,
+   `SetTouchScreenDelay`, `Actor::ClosestPlayer`,
+   `Actor::ClosestNonVanishPlayer`, `LoadEntranceObjects` and
+   `Stage::CheckInput`'s main loop all walk `data_0209f21c`. Even
+   `func_020308d0` (SetNumPlayers) is generic upward.
+
+**And the wall it named as the deepest was narrower than it looked.**
+`mPlayerNo` is two bits *where the spawn flags pack it*. The destination at
+`Player + 0x6d8` is a whole byte, and every ROM reader that identifies a player
+reads that byte. So the port packs the flag word with a value the ROM's
+arithmetic can carry, lets `Player::InitResources` run exactly as it always
+has, and writes the true slot over the truncated one the instant `Actor::Spawn`
+returns. No `src/` edit, and 2P/3P/4P pack the identical flag word they always
+did.
+
+### What is built and proved
+
+- **A second wire.** Four players or fewer is version 2 at 0x90 bytes, byte for
+  byte what every shipped build sends. Five or more is version 3 at 0x214
+  bytes, sixteen blocks and a 32-bit live mask. A peer on the wrong wire is
+  refused, and the refusal is SENT rather than only logged -- as a
+  narrow-length packet carrying the new version, so the old build's own version
+  check prints the diagnosis in the log of the person holding the stale build.
+- **Sixteen-wide hosting** for every per-slot global the port hosts, with the
+  two placed grouped-section bands grown by their TAIL member only, so every
+  offset `gxband_guard.py` checks is untouched.
+- **Deterministic spawns** for slots past the level's own records: concentric
+  rings of five at 96, 192 and 288 units, half-step rotated, identical on every
+  peer with nothing on the wire.
+- **Names and colours at sixteen fields**, moved together with the wire exactly
+  as the ruling in section 3 requires, across the game's two readers, the
+  service's two builders and the launcher's two validators -- one commit set,
+  none of the five alone. The grammar is exactly 3 commas or exactly 15,
+  nothing between, so one shape cannot be mis-parsed as the other.
+- **Contract v3** on the service, gating the dial's RANGE rather than the
+  field: a v2 caller is capped at four, a room is never wider than its host can
+  drive, and a v2 client joining a wide room is refused `needs_newer_client` at
+  the door rather than at spawn time.
+
+### THE ONE WALL LEFT, and it is section 6 after all
+
+**`src/func_0203ea5c.c` -- the ROM's own wireless exchange and unpack loop --
+is the thing that stops a fifth player actually playing.** It carries nine
+hard-coded `< 4` bounds (`:310, 326, 347, 352, 367, 403, 428, 471, 499`), and
+the effect is precise and reproducible: a peer at slot 4 or above pairs, is
+accepted into the session, exchanges rounds correctly, spawns its own body and
+every other player's body in the right place with the right identity -- and
+then its WORLD never enters lockstep. It sits in the ROM's own wait until that
+wait's bound expires and then runs on alone.
+
+Measured, not inferred, at five and at eight windows: slots 0..3 are in exact
+lockstep with zero divergence over every pairing; slots 4 and above report
+their first world frame at the session's LAST round, with the transport having
+completed the entire run's worth of exchanges underneath them.
+
+That function is byte-matched ROM code, so it cannot be edited under the port's
+own north star. Moving it means HOSTING it -- replacing that one function in
+the port's host layer the way the port already hosts many others -- which is a
+deliberate deviation of exactly the kind the owner has already approved for
+online play, and is the next lane's whole job rather than a line at the end of
+this one.
+
+**So the honest sentence: sixteen players pair, spawn, and are correctly named,
+coloured, scored and identified. Four of them play.**
