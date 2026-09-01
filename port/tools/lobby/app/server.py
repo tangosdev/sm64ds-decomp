@@ -1406,6 +1406,69 @@ def do_result(body, who, now):
     return 409, {"error": "stale_match"}
 
 
+def do_preflight(body, who, now):
+    """A seated member updating its own pre-flight answer.
+
+    WHY THIS VERB EXISTS, from a live match. `pre_ok` was measured once when the
+    Multiplayer window opened and sent once at create/join, so a player who
+    unpacked their ROM while that window sat open kept a stale "not ready" on
+    their seat with no way to shift it. The recovery a real pair actually had to
+    find was: close the window, reopen it, check it went green, make a NEW room
+    and rejoin. Nobody discovers that alone. A launcher can now re-run its own
+    pre-flight and say so.
+
+    IT ONLY EVER SETS THE CALLER'S OWN SEAT. There is no seat argument: a member
+    can speak for itself and for nobody else, so this adds no authority anywhere.
+
+    ALLOWED IN EVERY LIVE STATE, not just lobby, and that is deliberate. During a
+    match the flag feeds nothing -- the roster froze at `start` -- so letting it
+    through is harmless, and it means a player who finishes unpacking while a
+    match runs is already ready for the rematch instead of blocking it.
+    """
+    err = shape(body, ("v", "room", "token", "pre_ok"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    pre_ok, err = v_bool(body, "pre_ok")
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    m = room.members[seat]
+    m.seen = now
+    m.last_addr = who
+
+    # UNCHANGED IS A NO-OP, and that is what bounds this verb. A launcher re-runs
+    # its pre-flight on a timer and on window focus, so the common case by far is
+    # "still the same answer": no event, no cursor movement, no work for anybody
+    # else. Only a real change costs a push.
+    if m.pre_ok == pre_ok:
+        return 200, {"cursor": room.seq}
+    m.pre_ok = pre_ok
+
+    # A NEW EVENT KIND, and it is safe by the contract's own design: section 3.5
+    # says a launcher that meets an unknown `kind` ignores it and keeps its
+    # cursor moving, which is exactly the leniency that lets a server gain a kind
+    # without bricking an older launcher. It is pushed rather than left to the
+    # `view` alone so that a member holding a 25-second long poll learns now
+    # rather than when its wait expires -- the whole complaint was a roster that
+    # would not refresh.
+    room.push("preflight", seat=seat, display=m.display, pre_ok=pre_ok)
+    log("room %s preflight seat %d %s"
+        % (code, seat, "ready" if pre_ok else "not-ready"))
+    return 200, {"cursor": room.seq}
+
+
 def do_poll(body, who, now):
     """The only push channel, and the entire reliability story.
 
@@ -1510,6 +1573,7 @@ VERBS = {
     "poll": do_poll,
     "chat": do_chat,
     "params": do_params,
+    "preflight": do_preflight,
     "start": do_start,
     "ready": do_ready,
     "result": do_result,

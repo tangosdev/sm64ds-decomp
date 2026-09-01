@@ -141,6 +141,7 @@ never leaves the lobby and keeps its commas.
 | `POST /port/lobby/poll` | a seated member | read the room; the only push channel |
 | `POST /port/lobby/chat` | a seated member | say one line |
 | `POST /port/lobby/params` | **host only** | set map / win condition |
+| `POST /port/lobby/preflight` | a seated member | correct its OWN `pre_ok` in place |
 | `POST /port/lobby/start` | **host only** | arm a match (stage B) |
 | `POST /port/lobby/ready` | a playing member | "my launcher can spawn this match" (stage B) |
 | `POST /port/lobby/failed` | a playing member | report a match that could not run (stage B) |
@@ -314,6 +315,35 @@ launcher greys its Send button rather than showing an error.
 403 `not_host`; 409 `not_in_lobby` once a match is arming or running. All three
 fields are sent together every time, so two in-flight edits have no ordering
 hazard. The star target is the host's to pick, from 1 to `STAR_TARGET_MAX`.
+
+#### `preflight`
+
+```
+-> {"v":1, "room":"...", "token":"...", "pre_ok":true}
+<- 200 {"v":1, "cursor":13}
+```
+
+A seated member correcting **its own** `pre_ok`. There is no seat argument, so
+this grants no authority over anybody else.
+
+**Why it exists,** from a live match: `pre_ok` was measured once when the
+Multiplayer window opened and sent once at create/join, so a player who unpacked
+their ROM while that window sat open kept a stale "not ready" on their seat. The
+recovery a real pair had to find was close the window, reopen it, check it went
+green, make a new room and rejoin. Nobody discovers that alone.
+
+- **Unchanged is a no-op.** A launcher re-runs its pre-flight on a timer and on
+  window focus, so "still the same answer" is the common case by far: it pushes
+  no event and moves no cursor. Only a real change costs a push.
+- **A change pushes a `preflight` event** (`{seat, display, pre_ok}`) as well as
+  landing in the `view`, so a member holding a 25-second long poll learns now
+  rather than when its wait expires. The event `kind` set gained one member;
+  section 3.5's rule that a launcher ignores an unknown `kind` and keeps its
+  cursor moving is exactly what makes that safe for an older launcher.
+- **Legal in every live state**, not only `lobby`. During a match the flag feeds
+  nothing (the roster froze at `start`), so allowing it is harmless -- and it
+  means a player who finishes unpacking mid-match is ready for the rematch
+  instead of blocking it.
 
 #### `start` (host only) — stage B
 

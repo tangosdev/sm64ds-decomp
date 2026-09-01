@@ -524,6 +524,53 @@ def selftest_match(c):
 
     selftest_arming_roster(c)
     selftest_only_playing(c)
+    selftest_preflight(c)
+
+
+def selftest_preflight(c):
+    """A member correcting its own pre-flight in place, over the wire.
+
+    The live failure: a player who unpacked their ROM with the Multiplayer
+    window open was stuck "not ready" until they closed it, reopened it, made a
+    new room and rejoined.
+    """
+    status, host = c.post("create", {"v": 1, "nick": "fh", "pre_ok": True})
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "fg",
+                                    "pre_ok": False})
+    check("the guest joins not-ready",
+          guest["view"]["members"][1]["pre_ok"] is False,
+          guest["view"]["members"])
+    expect("so the host cannot start",
+           c.post("start", {"v": 1, "room": code, "token": host["token"]}),
+           409, "member_not_ready")
+
+    status, up = c.post("preflight", {"v": 1, "room": code,
+                                      "token": guest["token"], "pre_ok": True})
+    check("the guest can say it is ready now, in place", status == 200, up)
+
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                   "cursor": host["cursor"], "wait": 0})
+    check("the HOST's roster shows the guest ready, with no rejoin",
+          seen["view"]["members"][1]["pre_ok"] is True, seen["view"]["members"])
+    check("and an event carried it, so a long poll would have woken",
+          any(e["kind"] == "preflight" and e["seat"] == 2
+              and e["pre_ok"] is True for e in seen["events"]), seen["events"])
+
+    status, _ = c.post("start", {"v": 1, "room": code, "token": host["token"]})
+    check("NOW the host can start, no new room needed", status == 200)
+
+    # Grammar and authority.
+    expect("a non-boolean pre_ok is refused",
+           c.post("preflight", {"v": 1, "room": code, "token": host["token"],
+                                "pre_ok": "yes"}), 400, "bad_field")
+    expect("there is no seat argument: a member speaks only for itself",
+           c.post("preflight", {"v": 1, "room": code, "token": host["token"],
+                                "pre_ok": True, "seat": 2}), 400, "bad_field")
+    expect("a token holding no seat is refused",
+           c.post("preflight", {"v": 1, "room": code, "token": "0" * 32,
+                                "pre_ok": True}), 403, "not_a_member")
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
 
 
 def selftest_arming_roster(c):

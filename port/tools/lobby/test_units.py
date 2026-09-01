@@ -40,11 +40,12 @@ def _locked(fn):
 
 
 for _name in ("do_create", "do_join", "do_poll", "do_chat", "do_params",
-              "do_start", "do_ready", "do_result", "do_failed",
+              "do_preflight", "do_start", "do_ready", "do_result", "do_failed",
               "do_kick", "do_leave", "sweep"):
     setattr(S, _name, _locked(getattr(S, _name)))
 S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
-           "chat": S.do_chat, "params": S.do_params, "start": S.do_start,
+           "chat": S.do_chat, "params": S.do_params,
+           "preflight": S.do_preflight, "start": S.do_start,
            "ready": S.do_ready, "result": S.do_result, "failed": S.do_failed,
            "kick": S.do_kick, "leave": S.do_leave}
 
@@ -1178,6 +1179,90 @@ def test_only_playing_members_drive_a_match():
     check("a PLAYING member's result still works", st == 200 and room.state == "lobby")
 
 
+def test_preflight_updates():
+    """A member can correct its own pre-flight answer without leaving.
+
+    The live failure this closes: pre_ok was sent once at join, so a player who
+    unpacked their ROM with the window open was stuck "not ready" until they
+    closed the window, reopened it, made a new room and rejoined.
+    """
+    print("\n-- a member can refresh its own pre_ok in place")
+    reset()
+    st, host = create(nick="h", pre_ok=True)
+    code = host["room"]
+    st, g = join(code, "g", who="10.0.0.2", pre_ok=False)
+    room = S.ROOMS[code]
+    check("the guest is seated not-ready", room.members[2].pre_ok is False)
+    st, p = start(code, host["token"])
+    check("so the host cannot start", st == 409 and p["error"] == "member_not_ready")
+
+    before = room.seq
+    st, r = S.do_preflight({"v": 1, "room": code, "token": g["token"],
+                            "pre_ok": True}, "10.0.0.2", 1001.0)
+    check("the guest can say it is ready now", st == 200, (st, r))
+    check("the roster shows it", room.members[2].pre_ok is True)
+    check("an event was pushed so a long poll wakes", room.seq > before)
+    ev = room.events[-1]
+    check("the event names the seat and the new value",
+          ev["kind"] == "preflight" and ev["seat"] == 2 and ev["pre_ok"] is True, ev)
+    check("and the view every poll carries reflects it",
+          room.view(1)["members"][1]["pre_ok"] is True)
+    st, p = start(code, host["token"], now=1002.0)
+    check("NOW the host can start, with no rejoin and no new room", st == 200, (st, p))
+
+    # Unchanged is a no-op: a launcher re-runs this on a timer.
+    reset()
+    st, host = create(nick="h", pre_ok=True)
+    code = host["room"]
+    room = S.ROOMS[code]
+    seq = room.seq
+    for _ in range(5):
+        st, _ = S.do_preflight({"v": 1, "room": code, "token": host["token"],
+                                "pre_ok": True}, "10.0.0.1", 1001.0)
+        check("repeating the same answer is accepted", st == 200)
+    check("...and pushes NOTHING, so a polling launcher costs the room nothing",
+          room.seq == seq, (seq, room.seq))
+
+    # It can go the other way too (a ROM that went missing).
+    st, _ = S.do_preflight({"v": 1, "room": code, "token": host["token"],
+                            "pre_ok": False}, "10.0.0.1", 1002.0)
+    check("a member can also go back to not-ready",
+          room.members[1].pre_ok is False and room.seq > seq)
+
+    # Authority and grammar.
+    st, r = S.do_preflight({"v": 1, "room": code, "token": "0" * 32,
+                            "pre_ok": True}, "10.0.0.9", 1003.0)
+    check("a token that holds no seat is refused",
+          st == 403 and r["error"] == "not_a_member", (st, r))
+    st, r = S.do_preflight({"v": 1, "room": code, "token": host["token"],
+                            "pre_ok": "yes"}, "10.0.0.1", 1003.0)
+    check("a non-boolean pre_ok is 400 bad_field",
+          st == 400 and r["error"] == "bad_field", (st, r))
+    st, r = S.do_preflight({"v": 1, "room": code, "token": host["token"]},
+                           "10.0.0.1", 1003.0)
+    check("a missing pre_ok is 400 bad_field",
+          st == 400 and r["error"] == "bad_field", (st, r))
+    st, r = S.do_preflight({"v": 1, "room": code, "token": host["token"],
+                            "pre_ok": True, "seat": 2}, "10.0.0.1", 1003.0)
+    check("there is NO seat argument: a member speaks only for itself",
+          st == 400 and r["error"] == "bad_field", (st, r))
+
+    # It stays legal during a match, so a player who unpacks mid-match is ready
+    # for the rematch rather than blocking it.
+    reset()
+    code, room, host, guest = _two_ready(now=1000.0)
+    st, p = start(code, host["token"], now=1000.0)
+    ready(code, host["token"], p["match"], now=1000.0)
+    ready(code, guest["token"], p["match"], who="10.0.0.2", now=1000.0)
+    S.sweep(1000.0 + S.GO_GRACE_S + 0.1)
+    check("a match is running", room.state == "in_match")
+    st, _ = S.do_preflight({"v": 1, "room": code, "token": guest["token"],
+                            "pre_ok": False}, "10.0.0.2", 1010.0)
+    check("preflight is still accepted mid-match", st == 200)
+    check("and it does NOT disturb the running match",
+          room.state == "in_match" and room.match == p["match"])
+
+
 def test_arming_and_match_timers():
     print("\n-- the reaper's match timers")
     # Arming deadline: nobody readies, the deadline passes -> lobby + failed.
@@ -1319,6 +1404,7 @@ def main():
     test_failed()
     test_arming_roster_is_the_frozen_one()
     test_only_playing_members_drive_a_match()
+    test_preflight_updates()
     test_arming_and_match_timers()
     test_result_and_rematch()
     test_rate_buckets()
