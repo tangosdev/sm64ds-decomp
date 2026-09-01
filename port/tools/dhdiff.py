@@ -24,6 +24,8 @@ import re
 import sys
 
 DH = re.compile(r'^\[dh\] f(\d+) n=(\d+) w=([0-9a-f]+) o=([0-9a-f]+)')
+# [dh=] f123 1:aabbccdd 5:11223344 ...   -- the level-2 compact digest
+DHD = re.compile(r'^\[dh=\] f(\d+)((?: \d+:[0-9a-f]+)*)\s*$')
 DHP = re.compile(
     r'^\[dh\+\] f(\d+) uid=(\d+) id=(\d+) al=(\d+) pos=(-?\d+),(-?\d+),(-?\d+) '
     r'ang=(-?\d+),(-?\d+),(-?\d+) spd=(-?\d+),(-?\d+) fl=([0-9a-f]+) '
@@ -34,14 +36,21 @@ FIELDS = ("uid", "id", "alive", "posx", "posy", "posz",
 
 
 def load(path):
-    """-> (frames: {f: (n, w, o)}, detail: {f: {uid: dict}})"""
-    frames, detail = {}, {}
+    """-> (frames: {f: (n, w, o)}, detail: {f: {uid: dict}}, digest: {f: {uid: hash}})"""
+    frames, detail, digest = {}, {}, {}
     with open(path, "r", errors="replace") as fh:
         for line in fh:
             m = DH.match(line)
             if m:
                 f = int(m.group(1))
                 frames[f] = (int(m.group(2)), m.group(3), m.group(4))
+                continue
+            m = DHD.match(line)
+            if m:
+                f = int(m.group(1))
+                digest[f] = dict(
+                    (int(p.split(":")[0]), p.split(":")[1])
+                    for p in m.group(2).split() if ":" in p)
                 continue
             m = DHP.match(line)
             if m:
@@ -53,7 +62,7 @@ def load(path):
                     int(g[7]), int(g[8]), int(g[9]),
                     int(g[10]), int(g[11]), g[12], g[13], g[14] or "")))
                 detail.setdefault(f, {})[rec["uid"]] = rec
-    return frames, detail
+    return frames, detail, digest
 
 
 def describe_actor(fr, a, b):
@@ -80,13 +89,13 @@ def main():
                          "divergence (default 2)")
     args = ap.parse_args()
 
-    f1, d1 = load(args.log1)
-    f2, d2 = load(args.log2)
+    f1, d1, g1 = load(args.log1)
+    f2, d2, g2 = load(args.log2)
 
-    print("p1 %s: %d hashed frames, %d with detail" %
-          (args.log1, len(f1), len(d1)))
-    print("p2 %s: %d hashed frames, %d with detail" %
-          (args.log2, len(f2), len(d2)))
+    print("p1 %s: %d hashed frames, %d digest, %d verbose" %
+          (args.log1, len(f1), len(g1), len(d1)))
+    print("p2 %s: %d hashed frames, %d digest, %d verbose" %
+          (args.log2, len(f2), len(g2), len(d2)))
     if not f1 or not f2:
         print("NOTHING TO COMPARE: no [dh] lines. Was the detector armed "
               "(SM64DS_VS_STATE_HASH=1) on both windows?")
@@ -134,12 +143,37 @@ def main():
               "in a different order. Look at spawn/kill ordering, not at "
               "behaviour.")
 
+    # THE DIGEST NAMES THE ACTOR, the verbose lines name the FIELD. A live
+    # capture runs at level 2 and only has the digest, which is enough to say
+    # "uid 5, the chomp" -- the field then comes from a level-3 re-run at the
+    # frame this just identified.
+    e1, e2 = g1.get(first, {}), g2.get(first, {})
+    if e1 and e2:
+        moved = [u for u in sorted(set(e1) | set(e2))
+                 if e1.get(u) != e2.get(u)]
+        if moved:
+            print("  DIGEST: %d actor(s) differ at f%d:" % (len(moved), first))
+            for u in moved:
+                if u not in e1:
+                    print("    uid=%d ONLY IN p2" % u)
+                elif u not in e2:
+                    print("    uid=%d ONLY IN p1" % u)
+                else:
+                    print("    uid=%d  p1=%s  p2=%s" % (u, e1[u], e2[u]))
+            print()
+
     a1 = d1.get(first, {})
     a2 = d2.get(first, {})
     if not a1 or not a2:
-        print("  No per-actor detail at this frame. Re-run with "
-              "SM64DS_VS_STATE_HASH=2 (or SM64DS_VS_STATE_HASH_ID=<actorID>) "
-              "to name the actor.")
+        if e1 and e2:
+            print("  No VERBOSE detail at this frame, so the field that moved "
+                  "is not named above. Re-run at SM64DS_VS_STATE_HASH=3 (or "
+                  "=1 with SM64DS_VS_STATE_HASH_ID=<actorID> for just the "
+                  "suspect) to get it.")
+        else:
+            print("  No per-actor detail at this frame. Re-run with "
+                  "SM64DS_VS_STATE_HASH=2 to name the actor, or =3 to name "
+                  "the field.")
         return 1
 
     culprits = []

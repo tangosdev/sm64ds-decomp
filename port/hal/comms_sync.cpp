@@ -1125,9 +1125,19 @@ bool g_gated_now = false;
 // COST WHEN OFF: one compare of an int that is resolved on the first call.
 //
 // KNOBS
-//   SM64DS_VS_STATE_HASH=1        per-frame world hash line only
-//   SM64DS_VS_STATE_HASH=2        plus one detail line per actor per frame
-//   SM64DS_VS_STATE_HASH_ID=<n>   detail lines only for this actorID (decimal)
+//   SM64DS_VS_STATE_HASH=1        per-frame world hash line only. Names the
+//                                 FRAME. ~60 bytes/frame.
+//   SM64DS_VS_STATE_HASH=2        plus a compact one-line digest of every
+//                                 actor's uid:hash. Names the frame AND THE
+//                                 ACTOR. ~630 bytes/frame. THIS IS THE LEVEL
+//                                 A LIVE CAPTURE SHOULD RUN AT -- see the
+//                                 note at the digest for the arithmetic.
+//   SM64DS_VS_STATE_HASH=3        plus a verbose line per actor per frame,
+//                                 which additionally names the FIELD that
+//                                 moved. ~3800 bytes/frame; the lab level.
+//   SM64DS_VS_STATE_HASH_ID=<n>   verbose lines for this actorID (decimal) at
+//                                 any level -- the cheap way to watch one
+//                                 suspect class in full detail
 //   SM64DS_VS_STATE_HASH_FROM=<n> start at frame n (skips boot churn)
 //   SM64DS_VS_STATE_HASH_WIN=<off>:<len>
 //                                 also hash, and print, <len> raw bytes at
@@ -1219,6 +1229,13 @@ void dh_frame() {
     unsigned world = 0;              // order-independent: a SUM
     unsigned order = 2166136261u;    // order-dependent: a chain
     int n = 0;
+    // The level-2 digest, built as we walk. Sized for the biggest actor list
+    // this port mounts with room to spare, and the append is bounds-checked
+    // rather than trusted: a level with more actors than fit must truncate the
+    // digest, never the stack.
+    char dig[64 * 24];
+    int dig_len = 0;
+    dig[0] = 0;
 
     for (const char *a = (const char *)_ZN5Actor4NextEPKS_(0); a;
          a = (const char *)_ZN5Actor4NextEPKS_(a)) {
@@ -1280,7 +1297,20 @@ void dh_frame() {
         dh_mix(order, uid);
         ++n;
 
-        if (g_dh.level >= 2 || named) {
+        // LEVEL 2: the compact digest, accumulated here and emitted as ONE
+        // line below. This is the level a LIVE capture should run at, and the
+        // reason it exists is bytes. Level 3 prints a verbose line per actor
+        // per frame, which measured 3787 bytes/frame in this arena -- 54 MB
+        // per window over a session the length of the owner's, on top of the
+        // 1259 bytes/frame the comms dump already writes. The digest carries
+        // the same "which actor moved" answer in about 630 bytes/frame,
+        // because a uid and a hash is all the comparator needs to name the
+        // culprit; only the FIELD that moved needs the verbose form, and by
+        // then you have the frame and can re-run at level 3.
+        if (g_dh.level >= 2 && dig_len < (int)sizeof dig - 24)
+            dig_len += std::sprintf(dig + dig_len, " %u:%08x", uid, h);
+
+        if (g_dh.level >= 3 || named) {
             char win[64 * 2 + 1];
             win[0] = 0;
             for (int k = 0; k < wlen; ++k)
@@ -1298,6 +1328,8 @@ void dh_frame() {
     std::fprintf(stderr, "[dh] f%d n=%d w=%08x o=%08x rounds=%llu slot=%d\n",
                  frame, n, world, order, (unsigned long long)rr.rounds,
                  rr.slot);
+    if (g_dh.level >= 2)
+        std::fprintf(stderr, "[dh=] f%d%s\n", frame, dig);
 }
 
 }  // namespace
