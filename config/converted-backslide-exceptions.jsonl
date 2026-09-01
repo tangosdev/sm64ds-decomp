@@ -100,3 +100,7 @@
 {"path": "src/_ZN4Tree16OnPendingDestroyEv.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
 {"path": "src/_ZN4TreeD0Ev.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
 {"path": "src/_ZN4TreeD1Ev.cpp", "reason": "regenerated on cpp/ov002-tree-snake-tu after restacking onto cpp/waterfall-snake-tu"}
+{"path": "src/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
+{"path": "src/_ZN12SwitchPillar6RenderEv.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
+{"path": "src/_ZN12SwitchPillarD0Ev.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
+{"path": "src/_ZN12SwitchPillarD1Ev.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
