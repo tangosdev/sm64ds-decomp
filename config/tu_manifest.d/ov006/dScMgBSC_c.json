@@ -4,6 +4,13 @@
   "source": "src/actors/dScMgBSC_c.cpp",
   "promoted_source": "src/actors/dScMgBSC_c.cpp",
   "status": "promoted",
+  "goal": {
+    "idiomCensus": {
+      "externC": 0,
+      "rawOffsets": 0
+    },
+    "justification": "Converted from the tubuild shadow 2026-08-31: the fourteen extern \"C\" free functions over dScMgBSC_c (three vtable-slot event members, eleven PMF state handlers) are now real member functions and every raw self+0xoffset access is a named header member access, each function byte-verified against the retail ROM before the next moved. Zero is the measured end state, not a target relaxed to fit: what is deliberately not named lives in the headers as members (the shared mTable raw byte array, this TU's base-class unk_/pad_ fields), so the census counts them as named coverage rather than raw offsets -- the coinage disclosure for the state-handler names is below."
+  },
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2124908..0x21255f8, 19 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -33,98 +40,98 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_02124a04",
+      "symbol": "_ZN10dScMgBSC_c9StateDoneEv",
       "address": "0x02124a04",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_02124a04.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_02124a08",
+      "symbol": "_ZN10dScMgBSC_c16StateReturnCardsEv",
       "address": "0x02124a08",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov006_02124a08.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_02124ae4",
+      "symbol": "_ZN10dScMgBSC_c14StateWaitTableEv",
       "address": "0x02124ae4",
       "size": "0x00000074",
       "legacy_source": "src/func_ov006_02124ae4.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_02124b58",
+      "symbol": "_ZN10dScMgBSC_c18StateTableReactionEv",
       "address": "0x02124b58",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_02124b58.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_02124bb4",
+      "symbol": "_ZN10dScMgBSC_c15StateJudgeCardsEv",
       "address": "0x02124bb4",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_02124bb4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_02124cb4",
+      "symbol": "_ZN10dScMgBSC_c16StateRevealCardsEv",
       "address": "0x02124cb4",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_02124cb4.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_02124dc0",
+      "symbol": "_ZN10dScMgBSC_c13StateWaitMoveEv",
       "address": "0x02124dc0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_02124dc0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_02124e1c",
+      "symbol": "_ZN10dScMgBSC_c14StateMoveCardsEv",
       "address": "0x02124e1c",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov006_02124e1c.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_02124ec4",
+      "symbol": "_ZN10dScMgBSC_c15StateChooseCardEv",
       "address": "0x02124ec4",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_02124ec4.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_02124fd8",
+      "symbol": "_ZN10dScMgBSC_c13StateWaitDealEv",
       "address": "0x02124fd8",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_02124fd8.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_021250e4",
+      "symbol": "_ZN10dScMgBSC_c14StateDealCardsEv",
       "address": "0x021250e4",
       "size": "0x00000164",
       "legacy_source": "src/func_ov006_021250e4.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_02125248",
+      "symbol": "_ZN10dScMgBSC_c15OnGroundPoundedEv",
       "address": "0x02125248",
       "size": "0x00000034",
       "legacy_source": "src/func_ov006_02125248.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_0212527c",
+      "symbol": "_ZN10dScMgBSC_c13OnTurnIntoEggEi",
       "address": "0x0212527c",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_0212527c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_02125364",
+      "symbol": "_ZN10dScMgBSC_c13OnYoshiTryEatEi",
       "address": "0x02125364",
       "size": "0x00000058",
       "legacy_source": "src/func_ov006_02125364.cpp",
@@ -161,6 +168,9 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02124dc0 and the one that held func_ov006_02124ec4; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c1718' differs between the legacy file that used to hold func_ov006_02124ae4 and the one that held func_ov006_0212527c; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c0aa8' differs between the legacy file that used to hold _ZN10dScMgBSC_c6RenderEv and the one that held _ZN10dScMgBSC_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "2026-08-31 conversion to real members: all fourteen extern \"C\" free functions became dScMgBSC_c member functions -- OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded (vtable slots 18/19/21) and the eleven state handlers (mState indexes the PMF table data_ov006_02142f94, filled by __sinit_ov006_0213326c). Each was byte-verified with tools/match.py as it converted; the compiler-emitted mangled names in functions[] are those match runs resolved.",
+    "COINED NAMES, the one thing not provable: the state handlers' ROM symbols are address-only (func_ov006_02124a04..), so no recovered spelling exists to confirm or contradict StateDone/StateReturnCards/StateWaitTable/StateTableReaction/StateJudgeCards/StateRevealCards/StateWaitMove/StateMoveCards/StateChooseCard/StateWaitDeal/StateDealCards. The coinage is disclosed here, in include/dScMgBSC_c.h's state-machine comment, and in symbols/actor_renames.tsv's why column; the three event names (OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded) are legacy recovered names that stand uncontradicted. Table entries 7/8 (StateTableReaction) have no mState writer anywhere in the recovered code -- kept byte-exact, see the source comment.",
+    "D3 declarations: Math_Function_0203b14c, func_ov006_020c1718, func_ov006_020c1a88, func_ov006_020c19d0 and func_ov006_020c0d68 are declared at the definition's own signatures where this TU alone owns the declaration (the first four); func_ov006_020c0d68 and func_ov006_020c0c80 keep decl_common.h's void* spellings because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. Sound::PlayBank2_2D, GXS::LoadOBJPltt and ApproachLinear are declared in their RATIFIED_TRUE_NAMES forms with C++ linkage.",
     "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/actors/dScMgBSC_c.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
   ],
   "verification": {
