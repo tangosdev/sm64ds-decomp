@@ -522,6 +522,83 @@ def selftest_match(c):
     c.post("leave", {"v": 1, "room": fcode, "token": fh["token"]})
     c.post("leave", {"v": 1, "room": code, "token": host["token"]})
 
+    selftest_arming_roster(c)
+    selftest_only_playing(c)
+
+
+def selftest_arming_roster(c):
+    """A roster that moves during arming must not reach go, over the wire.
+
+    The plan freezes at start, so "everybody said they can" has to mean the seats
+    that were frozen. A guest closing its launcher during the twenty-second
+    countdown is ordinary behaviour.
+    """
+    status, host = c.post("create", {"v": 1, "nick": "ah", "pre_ok": True})
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "ag",
+                                    "pre_ok": True})
+    status, armed = c.post("start", {"v": 1, "room": code, "token": host["token"]})
+    match = armed["match"]
+    status, _ = c.post("leave", {"v": 1, "room": code, "token": guest["token"]})
+    check("a guest can leave during the arming window", status == 200)
+    status, _ = c.post("ready", {"v": 1, "room": code, "token": host["token"],
+                                 "match": match})
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                   "cursor": armed["cursor"], "wait": 0})
+    check("the host's own ready does NOT send the depleted room to go",
+          seen["view"]["state"] == "arming", seen["view"]["state"])
+    check("and no go event was ever pushed",
+          not any(e["kind"] == "go" for e in seen.get("events", [])),
+          seen.get("events"))
+    check("the room holds one member, so no plan for a departed player exists",
+          len(seen["view"]["members"]) == 1, seen["view"]["members"])
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
+
+
+def selftest_only_playing(c):
+    """ready / failed / result are restricted to a seated PLAYING member."""
+    status, host = c.post("create", {"v": 1, "nick": "ph", "pre_ok": True})
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "pg",
+                                    "pre_ok": True})
+    status, spec = c.post("join", {"v": 1, "room": code, "nick": "ps",
+                                   "pre_ok": True})
+    check("the third seat is a spectator",
+          spec["view"]["members"][2]["playing"] is False,
+          spec["view"]["members"])
+    status, armed = c.post("start", {"v": 1, "room": code, "token": host["token"]})
+    match = armed["match"]
+
+    expect("a spectator cannot ready",
+           c.post("ready", {"v": 1, "room": code, "token": spec["token"],
+                            "match": match}), 403, "not_playing")
+    expect("a spectator cannot abort the match with failed",
+           c.post("failed", {"v": 1, "room": code, "token": spec["token"],
+                             "match": match, "reason": "no_pairing"}),
+           403, "not_playing")
+
+    # Take it live, then try to end it as the spectator.
+    c.post("ready", {"v": 1, "room": code, "token": host["token"], "match": match})
+    c.post("ready", {"v": 1, "room": code, "token": guest["token"], "match": match})
+    expect("a spectator cannot end the match with result, nor write the scoreline",
+           c.post("result", {"v": 1, "room": code, "token": spec["token"],
+                             "match": match, "win": "star-target",
+                             "scores": [9, 0, 0, 0]}), 403, "not_playing")
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                   "cursor": armed["cursor"], "wait": 0})
+    check("the match is still the room's own, unaborted and unresolved",
+          seen["view"]["state"] in ("go", "in_match")
+          and seen["view"]["match"] == match, seen["view"])
+    check("no result event was pushed by the spectator",
+          not any(e["kind"] == "result" for e in seen.get("events", [])),
+          seen.get("events"))
+
+    status, _ = c.post("result", {"v": 1, "room": code, "token": guest["token"],
+                                  "match": match, "win": "time-up",
+                                  "scores": [1, 2, 0, 0]})
+    check("a PLAYING member's result still ends it", status == 200)
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
+
 
 def selftest_rematch(c):
     """Stage C over the wire: a match plays to a result, the room comes back to

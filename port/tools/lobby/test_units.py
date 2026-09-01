@@ -1071,6 +1071,113 @@ def test_failed():
           st == 409 and f["error"] == "stale_match", (st, f))
 
 
+def test_arming_roster_is_the_frozen_one():
+    """A roster that moves during arming must NOT reach go.
+
+    The plan (players, names, slot_of) freezes at start, so "everybody is ready"
+    has to mean the seats that were frozen -- not whoever happens to be playing
+    when the last ready lands.
+    """
+    print("\n-- arming tests the FROZEN roster, not the live one")
+
+    # (a) the other playing seat LEAVES during arming.
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    match = p["match"]
+    st, _ = S.do_leave({"v": 1, "room": code, "token": guest["token"]},
+                       "10.0.0.2", 1001.0)
+    check("the guest can leave during arming", st == 200)
+    check("the live roster is down to the host alone",
+          [s for s in room.members if room.members[s].playing] == [1])
+    ready(code, host["token"], match, now=1002.0)
+    check("the host's own ready does NOT send a one-member room to go",
+          room.state == "arming", room.state)
+    S.sweep(1000.0 + S.ARM_DEADLINE_S + 0.1)
+    check("the arming deadline returns it to lobby instead",
+          room.state == "lobby" and room.events[-1]["kind"] == "failed"
+          and room.events[-1]["reason"] == "member_not_ready")
+
+    # (b) a PROMOTION during arming keeps the count but changes the seats. This
+    # is the shape a bare len(ps) == agreed_players check would still let through.
+    reset()
+    st, host = create(nick="h", pre_ok=True)
+    code = host["room"]
+    st, g2 = join(code, "g2", who="10.0.0.2", pre_ok=True)
+    st, g3 = join(code, "g3", who="10.0.0.3", pre_ok=True)
+    room = S.ROOMS[code]
+    check("seat 3 starts as a spectator", room.members[3].playing is False)
+    st, p = start(code, host["token"])
+    match = p["match"]
+    frozen_names = room.names
+    check("the frozen slot map is seats 1 and 2", sorted(room.slot_of) == [1, 2],
+          room.slot_of)
+    S.do_leave({"v": 1, "room": code, "token": g2["token"]}, "10.0.0.2", 1001.0)
+    check("seat 3 was promoted, so the COUNT still matches agreed_players",
+          room.members[3].playing is True
+          and len([s for s in room.members if room.members[s].playing])
+              == room.agreed_players)
+    ready(code, host["token"], match, now=1002.0)
+    ready(code, g3["token"], match, who="10.0.0.3", now=1002.0)
+    check("but the SEATS differ, so the room still does not go",
+          room.state == "arming", room.state)
+    check("no plan was ever issued crediting the departed player",
+          frozen_names.startswith("h,g2,"), frozen_names)
+
+
+def test_only_playing_members_drive_a_match():
+    """ready / failed / result are all restricted to a seated PLAYING member.
+
+    A room code is not a secret by design, so a spectator is anyone who walked
+    in. None of the three may touch a live match.
+    """
+    print("\n-- a spectator cannot arm, abort or end a match")
+    reset()
+    st, host = create(nick="h", pre_ok=True)
+    code = host["room"]
+    st, g = join(code, "g", who="10.0.0.2", pre_ok=True)
+    st, spec = join(code, "spec", who="10.0.0.3", pre_ok=True)
+    room = S.ROOMS[code]
+    check("the third seat is a spectator", room.members[3].playing is False)
+    st, p = start(code, host["token"])
+    match = p["match"]
+
+    st, r = ready(code, spec["token"], match, who="10.0.0.3")
+    check("a spectator's ready is 403 not_playing",
+          st == 403 and r["error"] == "not_playing", (st, r))
+    check("and it did not arm the spectator's seat", room.members[3].armed is False)
+
+    st, f = S.do_failed({"v": 1, "room": code, "token": spec["token"],
+                         "match": match, "reason": "no_pairing"}, "10.0.0.3", 1001.0)
+    check("a spectator's failed is 403 not_playing",
+          st == 403 and f["error"] == "not_playing", (st, f))
+    check("the match is still armed, not aborted", room.state == "arming"
+          and room.match == match, room.state)
+
+    # Take the room into a live match, then try to end it as the spectator.
+    ready(code, host["token"], match, now=1002.0)
+    ready(code, g["token"], match, who="10.0.0.2", now=1002.0)
+    check("the two playing seats sent the room to go", room.state == "go", room.state)
+    S.sweep(1002.0 + S.GO_GRACE_S + 0.1)
+    check("the two playing seats got the match running", room.state == "in_match",
+          room.state)
+    st, rr = S.do_result({"v": 1, "room": code, "token": spec["token"],
+                          "match": match, "win": "star-target",
+                          "scores": [9, 0, 0, 0]}, "10.0.0.3", 1010.0)
+    check("a spectator's result is 403 not_playing",
+          st == 403 and rr["error"] == "not_playing", (st, rr))
+    check("the match is STILL running and no scoreline was written",
+          room.state == "in_match" and room.match == match, room.state)
+    check("no result event was pushed by the spectator",
+          not any(e["kind"] == "result" for e in room.events))
+
+    # A playing member still can, so the gate is not simply refusing everybody.
+    st, rr = S.do_result({"v": 1, "room": code, "token": g["token"],
+                          "match": match, "win": "time-up",
+                          "scores": [1, 2, 0, 0]}, "10.0.0.2", 1011.0)
+    check("a PLAYING member's result still works", st == 200 and room.state == "lobby")
+
+
 def test_arming_and_match_timers():
     print("\n-- the reaper's match timers")
     # Arming deadline: nobody readies, the deadline passes -> lobby + failed.
@@ -1210,6 +1317,8 @@ def main():
     test_go_plan()
     test_names()
     test_failed()
+    test_arming_roster_is_the_frozen_one()
+    test_only_playing_members_drive_a_match()
     test_arming_and_match_timers()
     test_result_and_rematch()
     test_rate_buckets()

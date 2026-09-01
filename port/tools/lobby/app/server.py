@@ -1177,9 +1177,34 @@ def match_to_lobby(room, reason):
 
 def try_go(room, now):
     """arming -> go once every playing seat has POSTed ready. Pushes the `go`
-    event, whose plan do_poll injects per member."""
+    event, whose plan do_poll injects per member.
+
+    THE ROSTER THIS TESTS IS THE FROZEN ONE, NOT THE LIVE ONE, and that is the
+    whole of the fix for the arming-roster hole. `agreed_players`, `names` and
+    `slot_of` are all frozen at `start`; testing "every playing seat is armed"
+    against the LIVE roster meant that if the only other playing seat left inside
+    the arming window, `playing_seats` shrank to one, the host's own `ready`
+    satisfied all(...), and the room went to `go` carrying a plan that still said
+    players=2 and still credited a departed player in `names`. The host then
+    spawned, forced SM64DS_VS_PLAYERS=2, waited for a child that could not come,
+    and was rescued 20 s later by its own watchdog -- self-healing, but the room
+    knowingly issued a plan for a match it could not run. Closing a launcher
+    during a twenty-second countdown is ordinary behaviour, not an exotic input.
+
+    COMPARED AS A SET OF SEATS, not as a count, and that is deliberate: a count
+    alone still lets the promotion case through. Seats 1(host), 2, 3(spectator)
+    freeze at agreed_players=2 with slot_of={1:0, 2:1}; seat 2 leaving during
+    arming PROMOTES seat 3, so the live playing seats are {1,3} and the count is
+    still 2 -- but seat 3 holds no frozen slot, so member_plan would hand it the
+    default slot 0 and collide with the parent, on a `names` string that credits
+    the player who left. `slot_of`'s keys ARE the seats frozen at `start`, so
+    comparing against them costs nothing and closes both shapes at once. A room
+    whose roster moved simply stalls here and the arming deadline returns it to
+    lobby with `member_not_ready`, which is the honest outcome.
+    """
     ps = playing_seats(room)
-    if ps and all(room.members[s].armed for s in ps):
+    frozen = sorted(room.slot_of)
+    if ps and ps == frozen and all(room.members[s].armed for s in ps):
         room.state = "go"
         room.go_at = now
         room.push("go", match=room.match)
@@ -1268,7 +1293,13 @@ def do_ready(body, who, now):
     # that single check makes them idempotent and un-replayable across matches.
     if room.match is None or match != room.match:
         return 409, {"error": "stale_match"}
-    if room.state == "arming" and m.playing:
+    # SPECTATORS DO NOT ARM A MATCH, and they are refused rather than silently
+    # ignored, so that `ready`, `failed` and `result` -- the three verbs spec 3.2
+    # restricts to "a seated PLAYING member" -- all answer the same way. This one
+    # used to be a silent no-op, which was harmless but made the trio disagree.
+    if not m.playing:
+        return 403, {"error": "not_playing"}
+    if room.state == "arming":
         m.armed = True
         try_go(room, now)
     # A ready that arrives after the room already went to `go`/`in_match` for the
@@ -1301,9 +1332,19 @@ def do_failed(body, who, now):
     seat = seat_of(room, token)
     if seat is None:
         return refuse_member(room, token, now)
-    room.members[seat].seen = now
+    m = room.members[seat]
+    m.seen = now
     if room.match is None or match != room.match:
         return 409, {"error": "stale_match"}
+    # ONLY A PLAYING MEMBER MAY ABORT A MATCH (spec 3.2: "a seated PLAYING
+    # member"). Without this a spectator -- which is anyone who walked in with a
+    # room code, and the design says a room code is not a secret -- could return
+    # the room to lobby mid-match, and every launcher that had not yet seen
+    # `session up` would kill its own game. The host's only remedy, `kick`, is
+    # refused while the room is not in lobby, so the same client could do it to
+    # match after match.
+    if not m.playing:
+        return 403, {"error": "not_playing"}
     # Only a real pre-result phase can be failed. If a result already landed the
     # match id was cleared, so this is stale_match above; here the room is still
     # arming/go/in_match and the reporter turns it back to lobby for everybody.
@@ -1341,7 +1382,13 @@ def do_result(body, who, now):
     seat = seat_of(room, token)
     if seat is None:
         return refuse_member(room, token, now)
-    room.members[seat].seen = now
+    m = room.members[seat]
+    m.seen = now
+    # ONLY A PLAYING MEMBER MAY REPORT A RESULT (spec 3.2), the same gap as
+    # `failed` above and closed the same way. A spectator could otherwise end any
+    # live match AND write the scoreline every member sees in the room.
+    if not m.playing:
+        return 403, {"error": "not_playing"}
 
     if room.match is not None and match == room.match:
         # The first result for the current match. Append the event, discard the

@@ -366,9 +366,26 @@ goes first). A spectator gets `{"playing": false}` and spawns nothing.
 
 A playing member: "my launcher can spawn this match." 409 `stale_match` if the
 match id is not the room's current one, which makes it un-replayable across
-matches. When the last playing seat readies, the room moves to `go` and the `go`
-event (with each member's plan) is pushed. A `ready` that arrives after `go` for
-the same match is a harmless idempotent duplicate.
+matches; 403 `not_playing` from a spectator. When the last playing seat readies,
+the room moves to `go` and the `go` event (with each member's plan) is pushed. A
+`ready` that arrives after `go` for the same match is a harmless idempotent
+duplicate.
+
+**The roster that has to be ready is the FROZEN one.** `agreed_players`, `names`
+and `slot_of` all froze at `start`, so the go gate compares the live playing
+seats against the seats frozen there -- as a SET, not as a count. Two shapes this
+closes, both ordinary behaviour rather than exotic input:
+
+- the only other playing seat **leaves during arming**: the live roster shrinks
+  to one, and without this the host's own `ready` would satisfy "everybody is
+  ready" and send the room to `go` with a plan still saying `players: 2` and
+  still crediting the departed player in `names`;
+- a **spectator is promoted** when a playing seat leaves during arming: the count
+  still matches `agreed_players`, but the promoted seat holds no frozen slot, so
+  it would take the default slot 0 and collide with the parent.
+
+A room whose roster moved simply stalls, and the arming deadline returns it to
+lobby with `failed` reason `member_not_ready`.
 
 #### `failed` — stage B
 
@@ -380,7 +397,10 @@ the same match is a harmless idempotent duplicate.
 Any playing member reporting a match that could not run. `reason` is a fixed
 enum: `spawn_failed`, `no_pairing`, `wrong_player_count`, `startup_error`,
 `user_cancelled`, `timeout` (`member_not_ready` is server-minted only and is
-refused from a client). 409 `stale_match` guards the match id. Any `failed`
+refused from a client). 409 `stale_match` guards the match id, and a spectator is
+refused with **403 `not_playing`** -- a room code is not a secret, so without that
+gate anyone who walked in could return the room to lobby mid-match, repeatedly,
+and the host could not even `kick` them (kick is refused outside lobby). Any `failed`
 returns the whole room to lobby with a `failed` event, so every other launcher
 learns why. The `go`->`in_match` transition happens `GO_GRACE_S` after `go`, and
 a match with no result is returned to lobby with `failed` reason `timeout` after
@@ -402,7 +422,11 @@ comms code, clears the match id and every `armed` flag, and returns the room to
 `lobby` -- while the room code, seats, nicknames, tokens, chat AND the params all
 survive, so "same again" is one Start press. A later result for the same match id
 is accepted and ignored (both players reporting is normal). 409 `stale_match` for
-any other match id.
+any other match id, and **403 `not_playing`** from a spectator -- the same gate as
+`failed`, and it also stops a spectator writing the scoreline every member sees.
+
+`ready`, `failed` and `result` are the three verbs spec 3.2 restricts to "a
+seated **playing** member", and all three answer 403 `not_playing` the same way.
 
 **A different comms code every match.** Because `start` mints a fresh one and
 `result` discards the old, a rematch is a brand-new relay session and the
