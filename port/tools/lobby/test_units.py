@@ -630,20 +630,31 @@ class game_max(object):
     about, so it says so here instead of quietly depending on an import-time
     default. Setting the knob and re-deriving is exactly a compose edit plus a
     restart.
+
+    run vs16 added `seats`, for the same reason the class exists: DIAL_MAX is
+    min(DIAL_HARD_MAX, MAX_SEATS, GAME_MAX_PLAYERS), so a test about sixteen
+    players has to say that the ROOM holds sixteen as well as that the game
+    plays sixteen. Leaving it out silently capped every wide test at four --
+    which would still have passed, and would have proved nothing.
     """
 
-    def __init__(self, n):
+    def __init__(self, n, seats=None):
         self.n = n
+        self.seats = seats
 
     def __enter__(self):
         self.was = S.GAME_MAX_PLAYERS
+        self.was_seats = S.MAX_SEATS
         S.GAME_MAX_PLAYERS = self.n
+        if self.seats is not None:
+            S.MAX_SEATS = self.seats
         S.recompute_dial()
         reset()
         return self
 
     def __exit__(self, *exc):
         S.GAME_MAX_PLAYERS = self.was
+        S.MAX_SEATS = self.was_seats
         S.recompute_dial()
         reset()
         return False
@@ -785,10 +796,16 @@ def test_dial_is_v2_only():
           st == 400 and out["error"] == "bad_field", (st, out))
     st, out = _params(code, token, v=2, match_players=2)
     check("the same body at v2 is accepted", st == 200, (st, out))
-    check("the version range is a range, and it is 1..2",
-          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 2))
+    check("the version range is a range, and it is 1..3",
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 3))
     check("and the gate on the field is named, not spelled 2 at the check",
           S.V_DIAL == 2)
+    # run vs16: the DIAL ARRIVED in v2 and stays gated at v2 forever -- a field
+    # does not move to the newest version just because a newer one exists. What
+    # v3 changed is the RANGE the field may carry, which is a different rule
+    # with its own gate below.
+    st, out = _params(code, token, v=2, match_players=2)
+    check("the dial is still a v2 field after v3 exists", st == 200, (st, out))
 
 
 # A body that satisfies each verb's REQUIRED fields, so the generic walk below
@@ -927,9 +944,20 @@ def test_every_versioned_field_is_gated():
           "PROTO_VERSIONS, no PROTO_COLOR_V",
           not hasattr(S, "PROTO_VERSIONS") and not hasattr(S, "PROTO_COLOR_V"),
           [n for n in ("PROTO_VERSIONS", "PROTO_COLOR_V") if hasattr(S, n)])
-    check("the two named v2 gates agree with the contract version",
-          S.V_DIAL == S.CONTRACT_V and S.V_COLOR == S.CONTRACT_V,
-          (S.V_DIAL, S.V_COLOR, S.CONTRACT_V))
+    # THIS CHECK USED TO SAY "agree with the contract version", and that was
+    # only ever true while v2 WAS the newest version -- it read as a statement
+    # about the gates and was really a statement about there being exactly two
+    # versions. run vs16 added v3 and the sentence stopped being about
+    # anything. What it should always have said is that a named gate names the
+    # version its field ARRIVED IN, and that no gate names a version this
+    # server does not answer.
+    check("the two named v2 gates both name v2, the version their fields "
+          "arrived in -- a field does not follow the contract version upward",
+          S.V_DIAL == 2 and S.V_COLOR == 2, (S.V_DIAL, S.V_COLOR))
+    check("and no named gate is outside the range this server answers",
+          all(S.CONTRACT_MIN <= g <= S.CONTRACT_V
+              for g in (S.V_DIAL, S.V_COLOR)),
+          (S.V_DIAL, S.V_COLOR, S.CONTRACT_MIN, S.CONTRACT_V))
 
     # The other half of the same guarantee: a key NO version defines is
     # refused at every version, including the newest.
@@ -1886,8 +1914,9 @@ def test_colors():
                            "shoes": "0000ff"}, "10.0.0.1", 1000.0)
     check("a v1 create carrying colours is refused: the bump has to mean "
           "something", st == 400 and out["error"] == "bad_field", (st, out))
-    check("v1 and v2 are the versions this server answers, and nothing else",
-          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 2),
+    check("v1, v2 and v3 are the versions this server answers, and nothing "
+          "else",
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 3),
           (S.CONTRACT_MIN, S.CONTRACT_V))
 
     # -- create and join with colours -------------------------------------
@@ -2078,6 +2107,167 @@ def test_colors():
     check("and this room's is inside it", len(room.colors) <= 55, room.colors)
 
 
+
+def test_wide_is_v3_only():
+    """run vs16. Above four players the game speaks a different wire and the
+    two name/colour strings carry sixteen fields, so the RANGE the dial may
+    carry is gated on the caller's version -- not the field, which arrived in
+    v2 and stays there."""
+    print("\n-- five players and up need v3, and the shape follows the dial")
+    reset()
+    with game_max(16, seats=16):
+        st, host = create()
+        code, token = host["room"], host["token"]
+
+        # A v2 caller may still dial anything up to four.
+        for n in (2, 3, 4):
+            st, out = _dial(code, token, n, v=2)
+            check("a v2 caller may dial %d" % n, st == 200, (n, st, out))
+
+        # And nothing above it, even on a deployment that could run it.
+        for n in (5, 8, 16):
+            st, out = _dial(code, token, n, v=2)
+            check("a v2 caller asking for %d is refused bad_match_players, "
+                  "because its own build validates four name fields and would "
+                  "have joined a room it could not play" % n,
+                  st == 400 and out["error"] == "bad_match_players",
+                  (n, st, out))
+
+        # The same numbers at v3 are accepted.
+        for n in (5, 8, 16):
+            st, out = _dial(code, token, n, v=3)
+            check("a v3 caller may dial %d" % n, st == 200, (n, st, out))
+
+        # THE BOUND IS DERIVED, not restated. dial_max_for is the only reader
+        # of the rule and it answers both halves.
+        check("dial_max_for caps a v2 caller at four and lets v3 through",
+              S.dial_max_for(2) == 4 and S.dial_max_for(3) == S.DIAL_MAX,
+              (S.dial_max_for(2), S.dial_max_for(3), S.DIAL_MAX))
+    check("and on a four-player deployment the two answers are identical, "
+          "so the gate is invisible where nothing can use it",
+          S.dial_max_for(2) == S.dial_max_for(3) == S.DIAL_MAX,
+          (S.dial_max_for(2), S.dial_max_for(3), S.DIAL_MAX))
+    reset()
+
+
+def test_name_and_colour_shapes_move_together():
+    """run vs16, and this is the coordinator's ruling as a test rather than a
+    paragraph: NAMES and COLORS carry the same field count, always, and the
+    count is decided by the dial and by nothing else."""
+    print("\n-- names and colours are one grammar, four fields or sixteen")
+    reset()
+    with game_max(16, seats=16):
+        # A room nobody dials wide: four fields, exactly as before.
+        st, h = S.do_create({"v": 3, "nick": "tango", "pre_ok": True,
+                             "color": "8A2BE2", "shoes": "FFD700"},
+                            "10.0.0.1", 1000.0)
+        code = h["room"]
+        S.do_join({"v": 3, "room": code, "nick": "opie", "pre_ok": True,
+                   "color": "FF0000", "shoes": "00FF00"}, "10.0.0.2", 1000.0)
+        room = S.ROOMS[code]
+
+        # THROUGH THE REAL START PATH, not by calling build_names by hand.
+        # `match_dial` is frozen at arm, one statement before the strings are
+        # built, so a test that built them directly would be testing a room
+        # state that never exists in production -- and would have read a dial
+        # of 0 and passed for the wrong reason.
+        _params(code, h["token"], v=3, match_players=4)
+        start(code, h["token"])
+        names, colors = room.names, room.colors
+        check("a four-player room's names carry exactly three commas",
+              names.count(",") == 3, names)
+        check("and its colours carry exactly three too",
+              colors.count(",") == 3, colors)
+        check("the two field counts are equal, which is the ruling's point",
+              len(names.split(",")) == len(colors.split(",")))
+
+        # Dial it wide and both strings grow, in the same start.
+        S.ROOMS[code].state = "lobby"
+        st, out = _params(code, h["token"], v=3, match_players=8)
+        check("the room dials to eight", st == 200, (st, out))
+        start(code, h["token"])
+        names, colors = room.names, room.colors
+        check("a wide room's names carry exactly fifteen commas",
+              names.count(",") == 15, names)
+        check("and its colours carry exactly fifteen too",
+              colors.count(",") == 15, colors)
+        check("the two field counts are still equal",
+              len(names.split(",")) == len(colors.split(",")))
+        check("and the real players are still in slot order at the front",
+              names.split(",")[0] == "tango" and names.split(",")[1] == "opie",
+              names)
+        check("every slot past the room is empty, not missing",
+              all(f == "" for f in names.split(",")[2:]), names)
+
+        # AND THE COUNT COMES FROM ONE FUNCTION, so the two cannot diverge.
+        check("name_field_count is the single decider and it is the dial",
+              S.name_field_count(room) == 16
+              and room.match_dial > S.NARROW_PLAYERS,
+              (S.name_field_count(room), room.match_dial))
+
+        # Back down and the shape goes back with it.
+        S.ROOMS[code].state = "lobby"
+        st, out = _params(code, h["token"], v=3, match_players=4)
+        check("the room dials back to four", st == 200, (st, out))
+        start(code, h["token"])
+        check("and the string is four fields again, byte for byte the shape "
+              "the shipped launcher validates",
+              room.names.count(",") == 3 and room.colors.count(",") == 3,
+              (room.names, room.colors))
+
+        # The game's own caps, checked here so the service cannot emit a
+        # string the reader in hal/star_flow.cpp would throw away.
+        S.ROOMS[code].state = "lobby"
+        _params(code, h["token"], v=3, match_players=16)
+        start(code, h["token"])
+        check("the widest legal names string is inside the game's 271-byte cap",
+              len(room.names) <= 271, len(room.names))
+        check("and the widest legal colours string is inside its 223-byte cap",
+              len(room.colors) <= 223, len(room.colors))
+    reset()
+
+
+
+def test_a_room_is_never_wider_than_its_host_can_drive():
+    """run vs16. The hole this closes is not the dial -- a v2 host cannot move
+    the dial past four -- it is the DEFAULT. On a sixteen-player deployment a
+    room defaults to the deployment's capability, and a v2 host would have got
+    a sixteen-wide room without touching anything, then been handed a
+    sixteen-field name string its own build refuses."""
+    print("\n-- a room's default width is bounded by its host's version")
+    reset()
+    with game_max(16, seats=16):
+        st, h2 = S.do_create({"v": 2, "nick": "old", "pre_ok": True},
+                             "10.0.0.1", 1000.0)
+        check("a v2 host's room defaults to four, not to the deployment's 16",
+              S.ROOMS[h2["room"]].match_players == 4,
+              S.ROOMS[h2["room"]].match_players)
+        st, h3 = S.do_create({"v": 3, "nick": "new", "pre_ok": True},
+                             "10.0.0.2", 1000.0)
+        check("a v3 host's room defaults to the deployment's 16",
+              S.ROOMS[h3["room"]].match_players == 16,
+              S.ROOMS[h3["room"]].match_players)
+
+        # And a narrow client cannot join the wide room at all.
+        code = h3["room"]
+        st, out = S.do_join({"v": 2, "room": code, "nick": "old2",
+                             "pre_ok": True}, "10.0.0.3", 1000.0)
+        check("a v2 client joining a wide room is refused needs_newer_client, "
+              "at the door rather than at spawn time",
+              st == 409 and out["error"] == "needs_newer_client", (st, out))
+        st, out = S.do_join({"v": 3, "room": code, "nick": "new2",
+                             "pre_ok": True}, "10.0.0.4", 1000.0)
+        check("and a v3 client joins it", st == 200, (st, out))
+
+        # The same v2 client joins the NARROW room without complaint, which is
+        # the half that proves the refusal is about width and not about age.
+        st, out = S.do_join({"v": 2, "room": h2["room"], "nick": "old3",
+                             "pre_ok": True}, "10.0.0.5", 1000.0)
+        check("the same v2 client joins a four-player room fine",
+              st == 200, (st, out))
+    reset()
+
+
 def Member_fields(m):
     return [k for k in m.__slots__]
 
@@ -2098,6 +2288,9 @@ def main():
     test_dial_defaults_are_inert()
     test_dial_range_is_server_enforced()
     test_dial_is_v2_only()
+    test_wide_is_v3_only()
+    test_name_and_colour_shapes_move_together()
+    test_a_room_is_never_wider_than_its_host_can_drive()
     test_every_versioned_field_is_gated()
     test_dial_moves_the_fewest_people()
     test_dial_and_seat_reuse()

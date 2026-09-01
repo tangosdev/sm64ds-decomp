@@ -276,7 +276,15 @@ bool ws_load() {
 // check already existed and only had to become LOUD, and nothing relay-shaped
 // has shipped in any release yet, so refusing every version-1 peer costs
 // exactly nobody.
-enum : unsigned char { kWireVersion = 2 };
+// AND THE SECOND BUMP, run vs16, for the same reason and with the same rule:
+// a wide session's datagram is a different length with a different live mask,
+// and a peer that speaks only version 2 must not half-understand it. The
+// difference from the bump above is that BOTH versions stay supported here,
+// because they describe different sessions rather than different generations
+// of the same one -- see THE TWO WIRES over `struct Packet`. Four or fewer
+// players is still version 2, on the byte, forever.
+enum : unsigned char { kWireVersionNarrow = 2 };
+enum : unsigned char { kWireVersionWide   = 3 };
 
 enum : unsigned char {
     kTypeJoin   = 1,   // child -> parent: I have bound slot N, let me in
@@ -287,21 +295,64 @@ enum : unsigned char {
     kTypeBye    = 4,   // either way: I am leaving
 };
 
+// ===========================================================================
+// THE TWO WIRES. Run vs16.
+//
+// This build speaks version 2 and version 3, and WHICH ONE A SESSION SPEAKS IS
+// DECIDED BY HOW MANY PEOPLE ARE IN IT, once, before the first datagram:
+//
+//   four or fewer -> VERSION 2, 0x90 bytes on the wire, byte-for-byte what
+//                    this port has always sent. The `live_wide` word below is
+//                    NOT transmitted and the datagram ends at the fourth
+//                    block. A 2P or 4P match is unchanged by this file's
+//                    growth, and that is a property of the LENGTH, not of a
+//                    branch anyone has to remember to take.
+//   five or more  -> VERSION 3, 0x214 bytes, sixteen blocks and a 32-bit live
+//                    mask in the tail word. This is the MOD.
+//
+// The header is IDENTICAL in both, on purpose: magic, version and type sit at
+// the same three offsets in every datagram this carrier has ever sent, so a
+// receiver can classify before it assumes a layout. `live` keeps its v2
+// meaning (slots 0..7) in both, and a wide session ALSO writes the full mask
+// into `live_wide`. Everything downstream of dispatch() reads `live_wide`,
+// which dispatch fills in from `live` for a narrow datagram -- one
+// normalisation point, so no reader has to know which wire it came off.
+//
+// WHY THE WIDE BITS ARE AT THE END AND NOT IN `have`. `have` is not spare: an
+// ACCEPT carries 0x80000000|slot in it (the parent's slot assignment) and the
+// input delay in bits 8..15. Stealing bits from it would have put the slot
+// assignment and the live mask in one word, which is how a broadcast accept
+// collapses two players onto one seat.
+// ===========================================================================
 struct Packet {
     unsigned char magic[4];      // 0x00  'M','P','2','L'
     unsigned char version;       // 0x04
     unsigned char type;          // 0x05
     unsigned char slot;          // 0x06  the sender's slot
-    unsigned char live;          // 0x07  live-slot bitmask; only slot 0's is
-                                 //       authoritative, which is the contract's
-                                 //       own "+0x0D player count honoured only
-                                 //       from slot 0" rule kept at the header
+    unsigned char live;          // 0x07  live-slot bitmask, slots 0..7; only
+                                 //       slot 0's is authoritative, which is
+                                 //       the contract's own "+0x0D player
+                                 //       count honoured only from slot 0" rule
+                                 //       kept at the header
     unsigned int  round;         // 0x08  the transport's round, not the ROM's
-    unsigned int  have;          // 0x0C  which of the four payloads are valid
-    unsigned char blocks[kCommsMaxPlayers][kCommsBlockBytes];   // 0x10 .. 0x90
+    unsigned int  have;          // 0x0C  which payloads are valid (32 bits,
+                                 //       so it already named sixteen slots
+                                 //       before this port did)
+    unsigned char blocks[kCommsMaxPlayers][kCommsBlockBytes];   // 0x10 .. 0x210
+    unsigned int  live_wide;     // 0x210 all sixteen live bits. WIDE ONLY --
+                                 //       a narrow datagram stops at 0x90 and
+                                 //       never carries this word.
 };
 
-enum : int { kPacketBytes = 0x90 };
+// 0x10 + 4 * 0x20. THE FROZEN v2 LENGTH: this number is on the wire of every
+// shipped build and must never move.
+enum : int { kPacketNarrowBytes = 0x10 + kCommsNarrowPlayers * kCommsBlockBytes };
+// 0x10 + 16 * 0x20 + 4 = 0x214.
+enum : int { kPacketWideBytes   = 0x10 + kCommsMaxPlayers * kCommsBlockBytes + 4 };
+
+static_assert(kPacketNarrowBytes == 0x90,
+              "wire version 2 is 0x90 bytes on every shipped build; this "
+              "number is not ours to change");
 // run mg16 lane MP4: the aux channel's tags as they sit on the wire, distinct
 // from kMagic so one socket can carry every kind. The carrier CLASSIFIES on
 // these four bytes and never reads past them -- classification is not
@@ -318,9 +369,20 @@ const unsigned kAuxMagicLE = 0x314e5953u;   // 'S','Y','N','1'
 const unsigned kAuxPingLE  = 0x504e5953u;   // 'S','Y','N','P'
 const unsigned kAuxPongLE  = 0x514e5953u;   // 'S','Y','N','Q'
 
-static_assert(sizeof(Packet) == kPacketBytes,
+static_assert(sizeof(Packet) == kPacketWideBytes,
               "the loopback wire packet grew padding; the length check is the "
               "frame check and it must stay exact");
+// AND THE HALF THAT MATTERS MORE, because the narrow wire is the one already
+// in the field: the first 0x90 bytes of this struct must still be exactly what
+// version 2 puts on the wire. Padding anywhere before `blocks`, or a stride
+// other than kCommsBlockBytes, would silently break every shipped build.
+static_assert(offsetof(Packet, blocks) == 0x10,
+              "the v2 header is four fixed offsets and this is one of them");
+static_assert(offsetof(Packet, live) == 0x07,
+              "the v2 live byte moved; every shipped build reads it here");
+static_assert(offsetof(Packet, live_wide) == 0x210,
+              "the wide live word is the tail of the wide datagram and its "
+              "offset IS kPacketWideBytes - 4");
 
 const unsigned char kMagic[4] = { 'M', 'P', '2', 'L' };
 
@@ -414,14 +476,21 @@ struct RelayHello {
 static_assert(sizeof(RelayHello) == kRelayMsgBytes,
               "the relay handshake datagram is a frozen 16 bytes");
 
-// The relay caps a forwarded payload at 700 bytes. Both of this carrier's
-// kinds are far inside that (0x90 lockstep, 256 aux), and the assert is here
-// so a later wire change cannot quietly cross the line and get truncated by a
-// service that has no way to tell the game about it.
+// The relay caps a forwarded payload at 700 bytes. Every one of this carrier's
+// kinds is inside that -- 0x90 narrow lockstep, 0x214 WIDE lockstep, 256 aux
+// -- and the assert is here so a wire change cannot quietly cross the line and
+// get truncated by a service that has no way to tell the game about it.
 // (kAuxMaxBytes gets the same assert where it is defined, below.)
+//
+// run vs16 measured the wide one rather than trusting it: 0x214 is 532 bytes
+// against a 700-byte cap, 168 to spare. That is the whole reason sixteen was
+// reachable without also changing the relay's own contract.
 enum : int { kRelayMaxPayload = 700 };
-static_assert(kPacketBytes <= kRelayMaxPayload,
+static_assert(kPacketNarrowBytes <= kRelayMaxPayload,
               "the lockstep datagram no longer fits the relay's payload cap");
+static_assert(kPacketWideBytes <= kRelayMaxPayload,
+              "the WIDE lockstep datagram no longer fits the relay's payload "
+              "cap; sixteen players would be silently truncated");
 
 // AND THE OTHER HALF OF THE RELAY'S CONTRACT, which is a rule about what the
 // GAME may send rather than about what the relay does: a forwarded datagram
@@ -436,10 +505,12 @@ static_assert(kPacketBytes <= kRelayMaxPayload,
 // "SMRC". The collision needs BOTH conditions and no shape in this file meets
 // both. A NEW aux kind whose tag is picked carelessly could, so: the tag
 // space is 'SYN*' and must stay there.
-static_assert(kPacketBytes != kRelayMsgBytes,
+static_assert(kPacketNarrowBytes != kRelayMsgBytes,
               "the lockstep datagram is now the relay's HELLO length; it would "
               "have to differ in its first four bytes from \"SMRC\", which is "
               "true today but is no longer guaranteed by construction");
+static_assert(kPacketWideBytes != kRelayMsgBytes,
+              "the WIDE lockstep datagram is now the relay's HELLO length");
 
 // ---------------------------------------------------------------------------
 // TIMERS
@@ -498,6 +569,13 @@ int      g_slot       = 0;
 //   by reading the payload, so the bytes stay uninspected beyond the 4-byte
 //   kind tag this file already classified on.
 enum : int { kAuxMaxBytes = 256 };
+// The socket carries three kinds and the read buffer must hold the largest.
+// run vs16 made that the WIDE lockstep datagram, not the aux message.
+enum : int { kRawMaxBytes =
+    kAuxMaxBytes > kPacketWideBytes ? kAuxMaxBytes : kPacketWideBytes };
+static_assert(kRawMaxBytes >= kPacketWideBytes,
+              "the read buffer cannot hold a wide lockstep datagram; every "
+              "sixteen-player packet would be lost to WSAEMSGSIZE");
 static_assert(kAuxMaxBytes <= kRelayMaxPayload,
               "an aux datagram no longer fits the relay's payload cap");
 enum : int { kAuxKinds = 3 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
@@ -515,6 +593,47 @@ int      g_pinned     = -1;          // SM64DS_COMMS_SLOT, or -1
 bool     g_parent_requested = false;
 int      g_state      = kCommsIdle;
 unsigned g_live       = 0;           // bit k set when slot k is live
+
+// ---------------------------------------------------------------------------
+// THE SESSION'S WIDTH, and the ONE place the two wires are chosen between.
+// Run vs16.
+//
+// g_want_players is what the session was opened for -- the conductor's clamped
+// SM64DS_VS_PLAYERS, handed down by comms_set_session_width() before open().
+// Everything else here is derived from it and nothing else, so there is no
+// second opinion about which wire a datagram belongs to.
+//
+// DEFAULT 0 MEANS NARROW. A build that never calls the setter -- every solo
+// boot, every local-play boot, every test that predates this -- speaks
+// version 2 at 0x90 bytes, exactly as before.
+// ---------------------------------------------------------------------------
+int g_want_players = 0;
+
+inline bool wire_wide() { return g_want_players > kCommsNarrowPlayers; }
+inline unsigned char wire_version() {
+    return wire_wide() ? kWireVersionWide : kWireVersionNarrow;
+}
+inline int packet_bytes() {
+    return wire_wide() ? kPacketWideBytes : kPacketNarrowBytes;
+}
+// A received datagram's wire, decided by its LENGTH -- which is the frame
+// check this carrier has always used, so the classification costs nothing new.
+inline bool len_is_wide(int n)   { return n == kPacketWideBytes; }
+inline bool len_is_ours(int n)   { return n == kPacketNarrowBytes || n == kPacketWideBytes; }
+inline unsigned char len_version(int n) {
+    return len_is_wide(n) ? kWireVersionWide : kWireVersionNarrow;
+}
+
+// WRITE THE LIVE MASK IN BOTH PLACES, ALWAYS. `live` keeps its version-2
+// meaning on every wire (slots 0..7) so a narrow datagram is byte-identical to
+// what this port has always sent, and `live_wide` carries the whole mask --
+// transmitted only when the datagram is the wide length, but always correct in
+// memory, which is what lets dispatch() normalise a received narrow packet into
+// the same field and give every reader downstream ONE field to read.
+inline void set_live(Packet &p, unsigned mask) {
+    p.live      = (unsigned char)(mask & 0xffu);
+    p.live_wide = mask;
+}
 unsigned g_round      = 0;
 
 // The round being assembled, and the round already handed to the game.
@@ -668,6 +787,10 @@ unsigned g_joins_sent = 0;
 enum : unsigned { kJoinsBeforeHint = 6 };
 
 unsigned long long g_sent = 0, g_recvd = 0, g_dropped = 0;
+// run vs16: how many narrow (version 2) joiners this wide session turned away.
+// Counted so "nobody could join my sixteen-player room" is a number in the
+// readout rather than an inference from silence.
+unsigned long long g_refused_narrow = 0;
 unsigned long long g_resends = 0, g_stale_serves = 0;
 // run mg16 lane MP3: how many rounds the game walked away from (HOLE 5).
 unsigned long long g_abandons = 0;
@@ -709,7 +832,12 @@ struct DelayedDatagram {
     unsigned    due;
     int         len;
     sockaddr_in from;
-    unsigned char buf[kAuxMaxBytes];
+    // kRawMaxBytes, not kAuxMaxBytes: the induction ring holds whatever came
+    // off the socket, and since run vs16 that can be a wide lockstep datagram.
+    // Holding it at the aux size would have made induced latency silently drop
+    // every sixteen-player packet -- and induced latency is exactly the rig the
+    // desync proofs run under, so the bug would have hidden inside its own test.
+    unsigned char buf[kRawMaxBytes];
 };
 DelayedDatagram g_dring[kDelayRingLen];
 int g_dring_head = 0, g_dring_count = 0;
@@ -774,7 +902,7 @@ bool ws_start() {
 
 unsigned now_ms() { return (unsigned)GetTickCount(); }
 
-int popcount4(unsigned m) {
+int popcount_live(unsigned m) {
     int n = 0;
     for (int i = 0; i < kCommsMaxPlayers; ++i) if (m & (1u << i)) ++n;
     return n;
@@ -905,8 +1033,9 @@ void send_raw(const void *buf, int len, const sockaddr_in &to) {
 void send_to_slot(const Packet &p, int slot) {
     if (g_sock == INVALID_SOCKET) return;
     const sockaddr_in a = slot_addr(slot);
-    send_raw(&p, kPacketBytes, a);
-    for (int i = 1; i < g_dup; ++i) { send_raw(&p, kPacketBytes, a); ++g_dup_sends; }
+    const int len = packet_bytes();
+    send_raw(&p, len, a);
+    for (int i = 1; i < g_dup; ++i) { send_raw(&p, len, a); ++g_dup_sends; }
 }
 
 // THE PARENT'S FAN-OUT, and the one place the star topology has to be spelled
@@ -927,10 +1056,10 @@ void send_to_children(const Packet &p) {
 void fill_header(Packet &p, unsigned char type) {
     std::memset(&p, 0, sizeof p);
     std::memcpy(p.magic, kMagic, 4);
-    p.version = kWireVersion;
+    p.version = wire_version();
     p.type    = type;
     p.slot    = (unsigned char)g_slot;
-    p.live    = (unsigned char)g_live;
+    set_live(p, g_live);
     p.round   = g_round;
 }
 
@@ -955,7 +1084,7 @@ void announce_roster() {
     if ((g_live & ~1u) == 0) return;          // no children to tell
     Packet a;
     fill_header(a, kTypeAccept);
-    a.live = (unsigned char)g_live;
+    set_live(a, g_live);
     a.have = ((unsigned)(g_input_delay & 0xFF) << 8);
     send_to_children(a);
 }
@@ -1142,7 +1271,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // asking for a round the cache retired long ago.
         Packet a;
         fill_header(a, kTypeAccept);
-        a.live = (unsigned char)g_live;
+        set_live(a, g_live);
         // THE PARENT ASSIGNS THE SLOT AND THE RELAY DOES NOT. A child over the
         // internet cannot claim a slot by binding a port the way a loopback
         // child does, so it PROPOSES one in its JOIN and this is the answer.
@@ -1189,7 +1318,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         if (fresh) {
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
                          "live mask 0x%x, players %d\n",
-                         k, g_round, g_live, popcount4(g_live));
+                         k, g_round, g_live, popcount_live(g_live));
             // THE ROSTER GREW, SO EVERYBODY HEARS ABOUT IT. Only on a FRESH
             // join: a re-knock from a slot already live changes nothing and
             // must not put a burst on the wire. See kRosterAnnounceMs.
@@ -1248,7 +1377,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
     case kTypeBye:
         g_live &= ~(1u << k);
         g_stage_mask &= ~(1u << k);
-        if (popcount4(g_live) <= 1) g_state = kCommsConnecting;
+        if (popcount_live(g_live) <= 1) g_state = kCommsConnecting;
         std::fprintf(stderr, "[comms:loopback] slot %d left; live mask 0x%x\n",
                      k, g_live);
         break;
@@ -1293,8 +1422,8 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
         // one of those would stop knocking while the parent had never heard of
         // it -- a wedge that no timer recovers from, because both sides think
         // they are done.
-        if ((p.live & (1u << g_slot)) == 0) { ++g_dropped; break; }
-        g_live = p.live;
+        if ((p.live_wide & (1u << g_slot)) == 0) { ++g_dropped; break; }
+        g_live = p.live_wide;
         if (g_state != kCommsChildConnected) {
             if (g_join_started_ms != 0) {
                 g_handshake_rtt_ms = (int)(now_ms() - g_join_started_ms);
@@ -1361,7 +1490,7 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             std::fprintf(stderr, "[comms:loopback] accepted as slot %d at "
                          "round %u; live mask 0x%x, players %d, input delay %d"
                          " (handshake rtt %d ms)\n",
-                         g_slot, g_round, g_live, popcount4(g_live),
+                         g_slot, g_round, g_live, popcount_live(g_live),
                          g_input_delay, g_handshake_rtt_ms);
         }
         break;
@@ -1373,7 +1502,7 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             // normally several rounds behind the parent's clock here -- that
             // is the mechanism, not lateness -- so the stop-and-wait test
             // "is this the round I am on" would throw away every packet.
-            g_live = p.live;
+            g_live = p.live_wide;
             PipeRound &s = pipe_open(p.round);
             for (int i = 0; i < kCommsMaxPlayers; ++i) {
                 if (p.have & (1u << i)) {
@@ -1398,7 +1527,7 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             break;
         }
         if (p.round != g_round) break;   // a round we already finished
-        g_live = p.live;
+        g_live = p.live_wide;
         for (int i = 0; i < kCommsMaxPlayers; ++i) {
             if (p.have & (1u << i)) {
                 std::memcpy(g_stage[i], p.blocks[i], kCommsBlockBytes);
@@ -1501,9 +1630,20 @@ void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
     }
 
     Packet p;
-    if (n != kPacketBytes) { ++g_dropped; return; }
-    std::memcpy(&p, raw, sizeof p);
+    // THE LENGTH IS STILL THE FRAME CHECK, it just names TWO frames now. A
+    // datagram is ours iff it is exactly the narrow length or exactly the wide
+    // one, and which one it is decides the wire it came off before a single
+    // field past the magic is believed.
+    if (!len_is_ours(n)) { ++g_dropped; return; }
+    const bool rx_wide = len_is_wide(n);
+    std::memset(&p, 0, sizeof p);
+    std::memcpy(&p, raw, (size_t)n);
     if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; return; }
+    // NORMALISE THE LIVE MASK ONCE, HERE. A narrow datagram never carried
+    // live_wide, so fill it in from the byte it did carry. Past this line no
+    // reader in the file has to know which wire the packet came off, which is
+    // the whole reason there is exactly one of these lines.
+    if (!rx_wide) p.live_wide = p.live;
     // A WRONG VERSION IS SAID OUT LOUD, ONCE. It used to be counted and
     // dropped like a corrupt datagram, which is the right handling and the
     // wrong report: the two cases a version mismatch actually arises from are
@@ -1512,19 +1652,62 @@ void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
     // One line naming both numbers turns a silent twenty-second wait into a
     // diagnosis. Once, because a peer that keeps knocking would otherwise
     // write this every 200 ms for the whole of the ROM's wait bound.
-    if (p.version != kWireVersion) {
+    //
+    // TWO CHECKS NOW, AND THEY ARE DIFFERENT QUESTIONS. Run vs16:
+    //   (a) does the version byte agree with the LENGTH the datagram arrived
+    //       at? A version-3 byte in a 0x90 datagram is not a wide packet, it
+    //       is the deliberate refusal a wide parent sends back to a narrow
+    //       joiner (see the kTypeJoin arm) -- and on THIS side of that
+    //       exchange it means we are the narrow one being turned away.
+    //   (b) is it the wire THIS session speaks? A four-player build and a
+    //       sixteen-player session must not form a session together for the
+    //       same reason version 1 and version 2 must not: the ends would
+    //       simulate different matches and every log would read healthy.
+    if (p.version != len_version(n) || p.version != wire_version()) {
         static bool said = false;
         if (!said) {
             said = true;
             std::fprintf(stderr, "[comms:loopback] REFUSING a peer speaking "
-                         "wire version %u; this build speaks %u. The two are "
-                         "not compatible and MUST NOT play together: version 1 "
+                         "wire version %u; this session speaks %u. The two are "
+                         "not compatible and MUST NOT play together. Version 1 "
                          "has no input-delay field, so the ends would run "
-                         "different delays, and a mismatched input delay is a "
-                         "DESYNC that reads healthy in both logs. Update both "
-                         "copies of the game to the same build. No session "
-                         "will form until you do.\n",
-                         (unsigned)p.version, (unsigned)kWireVersion);
+                         "different delays; version 2 carries four player "
+                         "slots and version 3 carries sixteen, so the ends "
+                         "would not even agree who is in the match. Either way "
+                         "it is a DESYNC that reads healthy in both logs. Make "
+                         "both copies of the game the same build, and make the "
+                         "room the same size. No session will form until you "
+                         "do.\n",
+                         (unsigned)p.version, (unsigned)wire_version());
+        }
+        // AND SAY IT TO THE PEER, NOT ONLY TO OUR OWN LOG. This is the whole
+        // "design the refusal cleanly" half of the wide wire, and it costs
+        // four lines because the shipped narrow build ALREADY knows how to
+        // read it.
+        //
+        // A narrow build cannot receive a wide datagram at all -- its recv
+        // buffer is 256 bytes and a 532-byte datagram fails at the socket, so
+        // it would sit in silence for the whole of the ROM's twenty-second
+        // wait and report nothing. So a wide parent answers a narrow JOIN with
+        // a NARROW-LENGTH packet carrying OUR version byte. The narrow build's
+        // own version check -- the one that has been in this file since the
+        // version-1 bump, unchanged and already loud -- then fires on its side
+        // and prints the whole diagnosis in the log of the person who is
+        // actually holding the stale build.
+        //
+        // It is deliberately NOT a new packet type: a new type is a thing an
+        // older build has to already know about, and this one does not have to
+        // know about anything.
+        if (g_role == kRoleParent && p.type == kTypeJoin &&
+            n == kPacketNarrowBytes && p.version < wire_version()) {
+            Packet r;
+            std::memset(&r, 0, sizeof r);
+            std::memcpy(r.magic, kMagic, 4);
+            r.version = wire_version();
+            r.type    = kTypeBye;
+            r.slot    = 0;
+            send_raw(&r, kPacketNarrowBytes, from);
+            ++g_refused_narrow;
         }
         ++g_dropped;
         return;
@@ -1592,7 +1775,12 @@ void drain() {
            aux message would have arrived, been discarded, and shown up in the
            carrier's drop counter -- a channel that works while its own
            instrument says the wire is failing. */
-        unsigned char raw[kAuxMaxBytes];
+        // BIG ENOUGH FOR THE WIDEST KIND ON THIS SOCKET, which since run
+        // vs16 is the wide lockstep datagram (0x214) rather than an aux
+        // message (256). recvfrom into a buffer smaller than the datagram is
+        // not a truncation on Windows, it is WSAEMSGSIZE and a LOST packet,
+        // so this number is a correctness bound and not a convenience.
+        unsigned char raw[kRawMaxBytes];
         sockaddr_in from;
         int fromlen = (int)sizeof from;
         const int n = WS.recvfrom(g_sock, (char *)raw, (int)sizeof raw,
@@ -1617,7 +1805,7 @@ void drain() {
             if (hold < 0) hold = 0;
         }
         d.due  = now_ms() + (unsigned)hold;
-        d.len  = n < kAuxMaxBytes ? n : kAuxMaxBytes;
+        d.len  = n < kRawMaxBytes ? n : kRawMaxBytes;
         d.from = from;
         std::memcpy(d.buf, raw, (size_t)d.len);
         ++g_dring_count;
@@ -1716,7 +1904,7 @@ void service() {
                              "and silently simulate different matches. Check "
                              "the code, then check both are on the same "
                              "build.\n",
-                             kJoinsBeforeHint, (unsigned)kWireVersion);
+                             kJoinsBeforeHint, (unsigned)wire_version());
             }
             if (g_net_mode != kNetLoopback) {
                 g_join_wait_ms *= 2;
@@ -2044,7 +2232,7 @@ int lb_slot() {
 
 int lb_player_count() {
     service();
-    const int n = popcount4(g_live);
+    const int n = popcount_live(g_live);
     return n < 1 ? 1 : n;
 }
 
@@ -2359,6 +2547,39 @@ bool comms_loopback_install_from_env() {
                      "seam keeps its solo answers\n", role);
         return false;
     }
+
+    // ---------------------------------------------------------------------
+    // THE SESSION'S WIDTH, read here and nowhere else. Run vs16.
+    //
+    // SM64DS_VS_PLAYERS is the conductor's knob and the lobby's plan already
+    // exports it on every seat, byte-identical across the session -- which is
+    // what makes it safe to derive the WIRE from it: every peer in a room
+    // reads the same number, so every peer picks the same wire, with nothing
+    // negotiated and nothing to get out of step.
+    //
+    // ABSENT OR <= 4 IS NARROW, and that is the default in every existing
+    // deployment. A 2P or 4P session speaks version 2 at 0x90 bytes exactly as
+    // it always has; this block simply does not fire.
+    //
+    // OUT OF RANGE IS IGNORED AND SAID OUT LOUD, matching the conductor's own
+    // handling of the same knob, because a mistyped width would otherwise
+    // become a session that never forms and never says why.
+    if (const char *w = std::getenv("SM64DS_VS_PLAYERS")) {
+        const int v = std::atoi(w);
+        if (v >= 1 && v <= kCommsMaxPlayers) {
+            g_want_players = v;
+        } else {
+            std::fprintf(stderr, "[comms:loopback] SM64DS_VS_PLAYERS=%s out of "
+                         "range 1..%d; this session stays on the four-player "
+                         "wire\n", w, (int)kCommsMaxPlayers);
+        }
+    }
+    if (wire_wide())
+        std::fprintf(stderr, "[comms:loopback] WIDE SESSION: %d players, wire "
+                     "version %u, %d-byte datagram. This is a MOD of the "
+                     "cartridge's four-player protocol and a peer speaking the "
+                     "four-player wire will be refused.\n",
+                     g_want_players, (unsigned)wire_version(), packet_bytes());
 
     if (const char *p = std::getenv("SM64DS_COMMS_PORT")) {
         const int v = std::atoi(p);

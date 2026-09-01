@@ -69,6 +69,7 @@
 // port_ovNNN_at(), so several can be mounted at once and the table below
 // picks the one the boot walks.
 #include <cstdio>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
 
@@ -2275,6 +2276,22 @@ static void port_load1(void *t, int a, unsigned b)
     {
         const int have_records = (int)((const unsigned char *)t)[1] - (int)b;
         int fit = have_records < 1 ? 1 : have_records;
+        /* AND THE SECOND CLAMP, run vs16, which is a property of the ROM's
+           ARITHMETIC rather than of the level's data.
+
+           The ROM's loop packs the slot as `(i << 6)` into the spawn-flag word
+           and Player::InitResources unpacks it as `(a >> 6) & 3`
+           (src/_ZN6Player13InitResourcesEv.cpp:72). That is TWO BITS. At i == 4
+           the shift lands on bit 8, which is where the sublevel lives -- so a
+           fifth pass through the ROM's loop does not merely mis-number a
+           player, it spawns him into the wrong sublevel and numbers him zero.
+
+           So the ROM's own loop seats AT MOST FOUR, always, and the slots past
+           four are port_vs_spawn_extra_players' to seat. This is not a
+           limitation being worked around; it is the exact boundary between the
+           cartridge's protocol and the port's mod, and it is enforced here in
+           one line so no other code has to remember where it runs. */
+        if (fit > kPortNarrowPlayers) fit = kPortNarrowPlayers;
         if (want_players > fit)
             data_0209f21c = (unsigned char)fit;
     }
@@ -4290,7 +4307,77 @@ const char *port_actor_class_name(unsigned id);
  * seats every slot and this function does nothing. It remains only as the
  * fallback for a test boot that outruns the table. It is a stand-in for
  * missing level data, not a replacement for the ROM's spawn path.
+ *
+ * RUN vs16 UN-RETIRES IT, and changes what it is. The ROM's own loop can seat
+ * FOUR and no more -- not because a level runs out of records but because the
+ * flag word's slot field is two bits (port_load1's second clamp says why). So
+ * on a five-to-sixteen player match this function is not a fallback any more,
+ * it is THE spawn path for slots 4..15, and it is the port's, and it is a MOD.
+ *
+ * THE POSITIONS ARE GENERATED, NOT AUTHORED, and that is deliberate. Sixteen
+ * hand-placed starts per arena across four arenas is sixty-four numbers nobody
+ * can check; a rule is one thing that can be read and argued with. The rule is
+ * port_vs_extra_start() below.
  * =========================================================================== */
+/* ---------------------------------------------------------------------------
+ * DETERMINISTIC EXTRA STARTS: concentric rings around player 0's own record.
+ *
+ * Slots 1..15 are placed on rings of 5 around the level's real start for slot
+ * 0: slots 1..5 on the inner ring, 6..10 on the middle, 11..15 on the outer.
+ * Radii are 96, 192 and 288 world units. Each ring is rotated half a step
+ * against the one inside it so no two slots share a bearing and nobody spawns
+ * inside somebody else's back.
+ *
+ * WHY A RING AND NOT A LINE. What stood here placed extras 40.0 units apart
+ * along +x, its own comment said OVERLAP, and it was RIGHT to: two players 40
+ * apart with 40-unit body cylinders overlap by 40, which made the collision
+ * solver do real work on frame 1 and turned a two-player boot into a decisive
+ * collision proof. That is a good property for two bodies and a terrible one
+ * for sixteen -- fifteen players strung out over 600 units in a straight line
+ * is not an arena start, it is a queue, and the ones at the far end would be
+ * outside the level.
+ *
+ * 96 UNITS IS NOT ARBITRARY: it is 2.4 body cylinders, so adjacent slots on the
+ * inner ring start clear of one another (the chord between neighbours at 96
+ * radius and 72 degrees is about 113 units, against a combined radius of 80).
+ * Nobody is spawned overlapping and the solver has nothing to untangle.
+ *
+ * IT IS DETERMINISTIC AND IT IS THE SAME ON EVERY PEER, which is the property
+ * that actually matters: every client runs this same function with the same
+ * slot index against the same level record, so sixteen machines put sixteen
+ * bodies in sixteen identical places with nothing on the wire. A random or
+ * clock-seeded placement would be an instant desync.
+ *
+ * WHAT IT IS NOT. It is not level data and it does not know about geometry: a
+ * ring of 288 units on a small arena can put a body inside a wall, and the
+ * ROM's own ground raycast is what has to catch that. The honest statement is
+ * in status/VS16.md and it is that authored sixteen-player starts are still
+ * owed, per arena, and this is what the port does until they exist.
+ * ------------------------------------------------------------------------- */
+static void port_vs_extra_start(int bx, int by, int bz, int slot, int *out)
+{
+    /* Integer sines/cosines at 1/4096, five bearings a ring, half-step offset
+       per ring. Written as a table rather than computed so the numbers are
+       readable and identical on every compiler. Bearings are 0, 72, 144, 216,
+       288 degrees; the odd rings are offset 36. */
+    static const short kCos[10] = {  4096,  1266, -3313, -3313,  1266,   /* +0  */
+                                     3313, -1266, -4096, -1266,  3313 }; /* +36 */
+    static const short kSin[10] = {     0,  3895,  2408, -2408, -3895,
+                                     2408,  3895,     0, -3895, -2408 };
+    const int ring = (slot - 1) / 5;              /* 0, 1, 2 */
+    const int step = (slot - 1) % 5;
+    const int idx  = (ring & 1) ? 5 + step : step;
+    const int r    = 96 * (ring + 1);             /* 96, 192, 288 world units */
+
+    /* kCos/kSin are cosine and sine scaled by 4096, and the game's positions
+       are 20.12 fixed point -- also a factor of 4096. So `r * kCos` IS the
+       offset in the game's own units with no shift at all, which is why there
+       is no rounding step here to get wrong. 288 * 4096 is 1179648, nowhere
+       near an int. */
+    out[0] = (bx << 12) + r * (int)kCos[idx];
+    out[1] =  by << 12;
+    out[2] = (bz << 12) + r * (int)kSin[idx];
+}
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
 {
     struct Entry { unsigned short raw; short x, y, z; short rx, ry, rz;
@@ -4306,14 +4393,12 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
     const unsigned sl = (unsigned)((base->param >> 7) & 0xf);
     const int area = (int)(signed char)(base->param & 7);
 
-    for (int i = 1; i < n && i < 4; ++i) {
+    for (int i = 1; i < n && i < kPortMaxPlayers; ++i) {
         if (data_0209f394[i]) continue;             /* the level had a start */
         if (data_0209fc5c[i] == 0) continue;        /* slot not live */
 
         int pos[3];
-        pos[0] = (base->x << 12) + i * (40 << 12);  /* 40.0 units apart: OVERLAP */
-        pos[1] = base->y << 12;
-        pos[2] = base->z << 12;
+        port_vs_extra_start(base->x, base->y, base->z, i, pos);
 
         /* THE CHARACTER IS FLAG BITS 0..2, NOT BITS 3..5, and getting that
            backwards is why both players came up Mario in every capture this
@@ -4353,17 +4438,61 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
             f2 = 3;                     /* VS: every slot is Yoshi */
             f1 = 3;
         }
-        const unsigned flags = f2 | (f1 << 3) | ((unsigned)i << 6) | (sl << 8);
+        /* THE SLOT IN THE FLAG WORD IS TWO BITS, AND THE SLOT IN THE ACTOR IS
+           A WHOLE BYTE. Run vs16, and this is the hinge the whole
+           sixteen-player mod turns on, so it is spelled out rather than
+           written cleverly.
+
+           src/_ZN6Player13InitResourcesEv.cpp:72 is
+           `*(u8 *)(c + 0x6d8) = (a >> 6) & 3;`. The SOURCE is two bits, boxed
+           between f1 at bits 3..5 and the sublevel at bit 8. The DESTINATION is
+           an unsigned char and holds 0..255 perfectly well, and every ROM
+           reader that indexes by a player -- GiveVsStars, the drop test at
+           func_ov002_020d94cc, Player::Behavior's VS gate -- reads that byte,
+           not the flag word. So slot 5 cannot be EXPRESSED in a spawn, but it
+           can be stored and indexed by, and the port's job is exactly the two
+           lines that turn one into the other.
+
+           WHAT GOES IN THE FLAG WORD. `(i << 6)` would set bit 8 at i == 4 and
+           corrupt the sublevel, so the packed value cycles 1,2,3 instead. That
+           is chosen, not arbitrary, and it satisfies TWO conditions at once:
+
+             1. For i in 1..3 it is EXACTLY i, so a two-, three- or four-player
+                match packs the identical flag word it has always packed. The
+                narrow path is byte-identical here as well as on the wire.
+             2. It is NEVER 0. port_load1 holds data_0209f250 at 0 across the
+                whole entrance load (see its own note -- Camera::InitResources
+                needs a body to follow), and InitResources' one in-VS use of
+                the truncated value is `if (*(u8 *)(c + 0x6d8) == data_0209f250)`
+                at :105, the local-player binding. Packing 0 for slot 4 would
+                have handed the camera and the HUD to the fifth player on every
+                wide boot. Cycling 1..3 makes that test false for every
+                port-supplied slot, which is the answer it has always given for
+                slots 1..3 and the answer it must keep giving.
+
+           THEN THE IDENTITY IS REPAIRED, immediately, before anything can run.
+           Actor::Spawn calls InitResources synchronously, so between the call
+           returning and the store below there is no frame, no tick and no
+           other reader. */
+        const unsigned wire_slot = (unsigned)(((i - 1) % (kPortNarrowPlayers - 1)) + 1);
+        const unsigned flags = f2 | (f1 << 3) | (wire_slot << 6) | (sl << 8);
 
         void *a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
             data_ov002_0210cbf4[base->raw], flags,
             (const PortVec3 *)pos, (const PortVec3_16 *)&base->rx, area, -1);
+        /* mPlayerNo is Player + 0x6d8. Written here as the TRUE slot, over the
+           two-bit value InitResources just unpacked. Guarded on `a` because
+           Actor::Spawn answers null when the heap is out, and a null store
+           here would be a fault instead of a missing player. */
+        if (a) *((unsigned char *)a + 0x6d8) = (unsigned char)i;
         data_0209f394[i] = a;
         std::fprintf(stderr,
                      "[vs] port-supplied start for slot %d: actor=%p "
-                     "char=%u pos=(%d,%d,%d) (the level's entrance table has "
-                     "no player start at record %u)\n",
-                     i, a, f2, pos[0], pos[1], pos[2], p3 + i);
+                     "char=%u pos=(%d,%d,%d) wire_slot=%u mPlayerNo=%d (the "
+                     "level's entrance table has no player start at record "
+                     "%u)\n",
+                     i, a, f2, pos[0], pos[1], pos[2], wire_slot,
+                     a ? (int)*((unsigned char *)a + 0x6d8) : -1, p3 + i);
     }
 }
 

@@ -91,7 +91,18 @@ REVISION = "lobby-1"
 #       * the `color` verb exists at all      - a v2-ONLY VERB
 #     A client claiming v2 is claiming all three. There is no half of v2.
 CONTRACT_MIN = 1
-CONTRACT_V = 2
+# v3, run vs16: the sixteen-player wire. The version itself gains no new FIELD
+# -- `match_players` has been a v2 optional since SEAT16 -- but it gains a new
+# legal RANGE for that field, and the two are not the same kind of change:
+#
+#   a new field  a v2 client cannot send it, so it cannot be hurt by it
+#   a new range  a v2 client CAN send 8, and would then be handed a
+#                sixteen-field SM64DS_VS_NAMES its own validator refuses,
+#                spawn nothing, and have no idea why
+#
+# So the range is gated on the version too (see wide_ok / dial_max_for), and
+# that is what makes v3 a real version rather than a number that went up.
+CONTRACT_V = 3
 
 # The version each v2 addition arrived in. All three are 2 and all three say so
 # by name rather than by the digit, so a later bump cannot accidentally lock v2
@@ -169,6 +180,34 @@ def recompute_dial():
 
 
 recompute_dial()
+
+# THE WIDTH AT WHICH THE GAME'S WIRE CHANGES, and therefore the width at which
+# SM64DS_VS_NAMES and SM64DS_VS_COLORS change shape. Four or fewer is wire
+# version 2 and four fields; five or more is wire version 3 and sixteen fields.
+# The game derives the same boundary from the same number
+# (port/hal/comms_loopback.cpp, THE TWO WIRES), which is what stops the service
+# and the game from having two opinions about one match.
+NARROW_PLAYERS = 4
+
+# The version a caller must speak before the server will accept a dial above
+# NARROW_PLAYERS. Derived, one expression, one reader -- the same discipline
+# recompute_dial() has, and for the same reason: a bound restated anywhere else
+# is a bound that will drift.
+WIDE_MIN_V = 3
+
+
+def dial_max_for(ver):
+    """The largest match_players THIS CALLER may ask for.
+
+    The deployment's own bound (DIAL_MAX) capped by what the caller's contract
+    version can survive being told. A v2 launcher validates
+    SM64DS_VS_NAMES at exactly four fields and refuses to spawn on anything
+    else, so handing it a wide room would be a room it can join and cannot
+    play -- worse than a refusal, because the refusal at least says why.
+    """
+    if ver >= WIDE_MIN_V:
+        return DIAL_MAX
+    return min(DIAL_MAX, NARROW_PLAYERS)
 
 # The largest "first to N stars" a host may pick. FIVE TODAY BECAUSE AN ARENA
 # HOLDS FIVE STARS, not because the number five is special: the owner picks the
@@ -480,7 +519,7 @@ class Member(object):
 
 
 class Room(object):
-    def __init__(self, code, now):
+    def __init__(self, code, now, host_v=CONTRACT_MIN):
         self.code = code
         self.cond = threading.Condition(LOCK)
         self.members = {}       # seat -> Member
@@ -495,7 +534,17 @@ class Room(object):
         # set through `params`, frozen from Start until the room is back in
         # lobby. It starts at the deployment's own capability so a host who
         # never opens the settings dialog gets the old behaviour exactly.
-        self.match_players = DIAL_DEFAULT
+        # RUN vs16: bounded by the HOST'S contract version, not only by the
+        # deployment's. On a sixteen-player deployment a v2 host would
+        # otherwise get a room that defaults to sixteen, be handed a
+        # sixteen-field SM64DS_VS_NAMES its own build validates at four, and
+        # spawn nothing -- without ever touching the dial it is not allowed to
+        # move. The room's default capability cannot exceed what its host is
+        # able to drive.
+        #
+        # On every deployment that exists today the two answers are the same
+        # number, so this is invisible where nothing can use it.
+        self.match_players = dial_max_for(host_v)
         self.match = None
         # STAGE B/C match state, all None/empty in lobby and reset by
         # _reset_match. Frozen at the arming instant so a join, a leave or a
@@ -1074,6 +1123,22 @@ def verb_since(verb):
     return row[2] if len(row) > 2 else CONTRACT_MIN
 
 
+def request_version(body):
+    """The contract version a request CLAIMS, floored.
+
+    The transport refuses anything outside CONTRACT_MIN..CONTRACT_V before a
+    handler runs, so by the time this is called `v` is a good integer. Falling
+    back to the floor rather than trusting that keeps it safe to call directly
+    from a test, which is how shape_for has always read it -- this is the same
+    three lines, named once, so a handler that needs the version reads the
+    SAME number the shape gate read rather than its own copy of the rule.
+    """
+    ver = body.get("v")
+    if isinstance(ver, bool) or not isinstance(ver, int):
+        return CONTRACT_MIN
+    return ver
+
+
 def shape_for(verb, body):
     """Validate a body against the verb's row of the table, at the version the
     body claims. A key the table does not list at this version is `bad_field`,
@@ -1086,9 +1151,7 @@ def shape_for(verb, body):
     # any handler runs, so by here `v` is a good integer. Falling back to the
     # floor rather than trusting it keeps this function safe to call directly
     # from a test.
-    ver = body.get("v")
-    if isinstance(ver, bool) or not isinstance(ver, int):
-        ver = CONTRACT_MIN
+    ver = request_version(body)
     # THE VERB ITSELF FIRST. A verb that does not exist at the caller's version
     # is refused before its fields are looked at, so a v1 caller cannot learn
     # anything about a v2 verb from the shape of its refusal.
@@ -1152,7 +1215,10 @@ def do_create(body, who, now):
     if code is None:
         return 503, {"error": "busy"}
 
-    room = Room(code, now)
+    # The host's own contract version bounds the room's default width; see
+    # Room.__init__. Defaulted at the floor so a direct Room() in a test is
+    # narrow unless it says otherwise.
+    room = Room(code, now, request_version(body))
     token = new_token()
     # The host plays if the dial has room for anybody at all. The host is also
     # the session's parent, so a host who is not playing is not a thing any
@@ -1201,6 +1267,18 @@ def do_join(body, who, now):
         return 409, {"error": "room_full"}
     if room.state != "lobby":
         return 409, {"error": "in_match"}
+    # RUN vs16: A NARROW CLIENT CANNOT JOIN A WIDE ROOM, and it is turned away
+    # here rather than seated and then handed a plan it cannot use.
+    #
+    # Above four players the game speaks wire version 3 and both name strings
+    # carry sixteen fields. A v2 build validates them at four and refuses to
+    # spawn, so without this it would sit in the room, be counted as playing,
+    # arm, and then fail at launch -- taking the whole match with it, because
+    # `failed` returns the room to lobby. A refusal at the door is the same
+    # answer given early enough to be actionable.
+    if (room.match_players > NARROW_PLAYERS
+            and request_version(body) < WIDE_MIN_V):
+        return 409, {"error": "needs_newer_client"}
 
     seat = room.free_seat()
     if seat is None:
@@ -1307,9 +1385,19 @@ def do_params(body, who, now):
     # has been lied to, and would only find out by counting heads in the room.
     # The bound the refusal enforces is advertised as `dial_max` in every view,
     # so a launcher that reads the view never has to be refused at all.
+    #
+    # AND THE UPPER BOUND IS THE CALLER'S, NOT THE DEPLOYMENT'S ALONE. Run
+    # vs16: above four players the game speaks a different wire and the two
+    # name/colour strings carry sixteen fields, so a v2 caller asking for eight
+    # is refused with the same code and for a better reason than the
+    # deployment's capability -- its own build could not play the room it was
+    # asking for. `dial_max` in the room view is still the DEPLOYMENT's number,
+    # unchanged in meaning for launcher 0.3.0, and a v3 launcher greys against
+    # it correctly because for a v3 caller the two bounds are the same.
     match_players = None
     if "match_players" in body:
-        match_players, err = v_int(body, "match_players", 2, DIAL_MAX,
+        match_players, err = v_int(body, "match_players", 2,
+                                   dial_max_for(request_version(body)),
                                    "bad_match_players")
         if err:
             return 400, {"error": err}
@@ -1487,15 +1575,32 @@ def assign_slots(room):
     return {seat: slot for slot, seat in enumerate(playing_seats(room))}
 
 
-def build_names(room):
-    """SM64DS_VS_NAMES: four comma-separated fields in SLOT order, always with
-    exactly three commas (spec 4.7). Built ONCE here, by the server, so every
-    member's plan carries the byte-identical string and no launcher assembles
-    it -- which is what makes "identical env on every launcher" structural.
+def name_field_count(room):
+    """FOUR FIELDS OR SIXTEEN, decided by the same number that decides the
+    game's wire, and by nothing else.
+
+    run vs16, and the coordinator's ruling carried in README.md section 3:
+    NAMES and COLORS move together, in one coordinated version change, when the
+    wire moves. The wire moves at NARROW_PLAYERS, so this does too, and both
+    strings read this one function so they cannot come out different lengths.
+
+    A room nobody dialled above four gets FOUR, which is what every existing
+    deployment, every shipped launcher and every existing proof gets.
     """
-    fields = ["", "", "", ""]
+    return DIAL_HARD_MAX if room.match_dial > NARROW_PLAYERS else NARROW_PLAYERS
+
+
+def build_names(room):
+    """SM64DS_VS_NAMES: comma-separated fields in SLOT order, with exactly
+    three commas (four fields) or exactly fifteen (sixteen). Built ONCE here,
+    by the server, so every member's plan carries the byte-identical string and
+    no launcher assembles it -- which is what makes "identical env on every
+    launcher" structural.
+    """
+    n = name_field_count(room)
+    fields = [""] * n
     for seat, slot in room.slot_of.items():
-        if 0 <= slot < 4:
+        if 0 <= slot < n:
             fields[slot] = room.members[seat].game_name
     return ",".join(fields)
 
@@ -1516,9 +1621,10 @@ def build_colors(room):
     the game says so and moves on; the launcher drops the variable in that case
     anyway, which is cheaper.
     """
-    fields = ["", "", "", ""]
+    n = name_field_count(room)
+    fields = [""] * n
     for seat, slot in room.slot_of.items():
-        if 0 <= slot < 4:
+        if 0 <= slot < n:
             fields[slot] = room.members[seat].game_colors
     return ",".join(fields)
 
