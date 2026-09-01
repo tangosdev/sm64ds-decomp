@@ -172,13 +172,13 @@ ov002	0x020ebe5c	func_ov002_020ebe5c	StarCamera_Spawn	spawnfunc
 ov002	0x020ebe8c	func_ov002_020ebe8c	StarMarker_Spawn	spawnfunc
 ov002	0x020ebed4	func_ov002_020ebed4	SilverStar_Spawn	spawnfunc
 ov002	0x020ebf30	func_ov002_020ebf30	PowerStar_Spawn	spawnfunc
-ov002	0x020ebf8c	func_ov002_020ebf8c	_ZN4TreeD1Ev	vtable slot 16
-ov002	0x020ebfcc	func_ov002_020ebfcc	_ZN4TreeD0Ev	vtable slot 17
-ov002	0x020ec020	func_ov002_020ec020	_ZN4Tree16CleanupResourcesEv	vtable slot 3
-ov002	0x020ec0a0	func_ov002_020ec0a0	_ZN4Tree16OnPendingDestroyEv	vtable slot 12
-ov002	0x020ec0a4	func_ov002_020ec0a4	_ZN4Tree6RenderEv	vtable slot 9
-ov002	0x020ec1d8	func_ov002_020ec1d8	_ZN4Tree8BehaviorEv	vtable slot 6
-ov002	0x020ec22c	func_ov002_020ec22c	_ZN4Tree13InitResourcesEv	vtable slot 0
+ov002	0x020ebf8c	func_ov002_020ebf8c	_ZN8daTree_cD1Ev	vtable slot 16
+ov002	0x020ebfcc	func_ov002_020ebfcc	_ZN8daTree_cD0Ev	vtable slot 17
+ov002	0x020ec020	func_ov002_020ec020	_ZN8daTree_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020ec0a0	func_ov002_020ec0a0	_ZN8daTree_c16OnPendingDestroyEv	vtable slot 12
+ov002	0x020ec0a4	func_ov002_020ec0a4	_ZN8daTree_c6RenderEv	vtable slot 9
+ov002	0x020ec1d8	func_ov002_020ec1d8	_ZN8daTree_c8BehaviorEv	vtable slot 6
+ov002	0x020ec22c	func_ov002_020ec22c	_ZN8daTree_c13InitResourcesEv	vtable slot 0
 ov002	0x020ec32c	func_ov002_020ec32c	Tree_Spawn	spawnfunc
 ov002	0x020ec534	func_ov002_020ec534	Warp_Spawn	spawnfunc
 ov002	0x020ec56c	func_ov002_020ec56c	_ZN8YoshiEggD1Ev	vtable slot 16
@@ -317,7 +317,7 @@ ov002	0x0210aa94	data_ov002_0210aa94	StarCamera_SpawnInfo	spawninfo
 ov002	0x0210aab8	data_ov002_0210aab8	_ZTV10StarMarker	vtable alloc=0x1dc
 ov002	0x0210ab3c	data_ov002_0210ab3c	_ZTV9PowerStar	vtable alloc=?
 ov002	0x0210abdc	data_ov002_0210abdc	Tree_SpawnInfo	spawninfo
-ov002	0x0210ac00	data_ov002_0210ac00	_ZTV4Tree	vtable alloc=0x264
+ov002	0x0210ac00	data_ov002_0210ac00	_ZTV8daTree_c	vtable alloc=0x264
 ov002	0x0210ac98	data_ov002_0210ac98	Warp_SpawnInfo	spawninfo
 ov002	0x0210ad90	data_ov002_0210ad90	YoshiEgg_SpawnInfo	spawninfo
 ov002	0x0210adb4	data_ov002_0210adb4	_ZTV8YoshiEgg	vtable alloc=?

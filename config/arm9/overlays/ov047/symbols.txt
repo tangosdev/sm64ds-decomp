@@ -96,18 +96,10 @@ _ZTS20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112340
 data_ov047_02112358 kind:data(any) addr:0x02112358
 _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
-data_ov047_02112404 kind:data(any) addr:0x02112404 ambiguous
 data_ov047_02112408 kind:data(any) addr:0x02112408
 _ZTS17daObjKm3_Kuruma_c kind:data(any) addr:0x02112414
-data_ov047_0211241c kind:data(any) addr:0x0211241c ambiguous
 RickshawPlatformBs_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
-data_ov047_02112434 kind:data(any) addr:0x02112434 ambiguous
-data_ov047_02112438 kind:data(any) addr:0x02112438 ambiguous
 _ZTV17daObjKm3_Kuruma_c kind:data(any) addr:0x0211244c
-data_ov047_02112464 kind:data(any) addr:0x02112464 ambiguous
-data_ov047_02112494 kind:data(any) addr:0x02112494 ambiguous
-data_ov047_021124ac kind:data(any) addr:0x021124ac ambiguous
-data_ov047_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 _ZTI17daObjKm3_Dorifu_c kind:data(any) addr:0x021124cc
 data_ov047_021124d4 kind:data(any) addr:0x021124d4 ambiguous
 _ZTS17daObjKm3_Dorifu_c kind:data(any) addr:0x021124d8

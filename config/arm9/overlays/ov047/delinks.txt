@@ -13,25 +13,10 @@ src/actors/daObjKm3_Kaitendai_c.cpp:
     .text start:0x021112bc end:0x021113f8
     .data start:0x02112328 end:0x021123fc
 
-src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp:
+src/actors/daObjKm3_Kuruma_c.cpp:
     complete
-    .text start:0x021113f8 end:0x02111448
-
-src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp:
-    complete
-    .text start:0x02111448 end:0x021114ac
-
-src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021114ac end:0x021114c0
-
-src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021114c0 end:0x021114d4
-
-src/RickshawPlatformBs_Spawn.c:
-    complete
-    .text start:0x021114d4 end:0x02111510
+    .text start:0x021113f8 end:0x02111510
+    .data start:0x021123fc end:0x021124cc
 
 src/_ZN18RickshawPlatformBsD1Ev.cpp:
     complete

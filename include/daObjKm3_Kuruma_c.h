@@ -10,12 +10,12 @@
  * here by vtable ADDRESS per the recovery recipe, and it agrees with the name.
  *
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKuruma_c, which derives
- * from dBgActor_c. Its destructor stores THREE vptrs (func_ov047_021113f8 /
- * func_ov047_02111448, both `complete` today under placeholder names).
+ * from dBgActor_c. Its destructor stores THREE vptrs as it tears down this
+ * class, daObjKuruma_c, and dBgActor_c in order.
  *
  *   _ZTI17daObjKm3_Kuruma_c  ov047 0x021123fc
  *   _ZTS17daObjKm3_Kuruma_c  ov047 0x02112414
- *   _ZTV17daObjKm3_Kuruma_c  ov047 0x0211244c  (its record sits at V-4)
+ *   _ZTV17daObjKm3_Kuruma_c  ov047 0x0211244c  (storage starts at 0x02112444)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKuruma_c, ov002 0x02109254
  *
@@ -28,7 +28,9 @@
 
 struct daObjKm3_Kuruma_c : daObjKuruma_c {
     /* --- vtable --- */
-    virtual ~daObjKm3_Kuruma_c();      /* slots 16 (D1), 17 (D0) */
+    /* The inline empty body is codegen-significant: mwccarm emits the retail
+     * D1/D0 pair in that order without materializing a homeless D2 body. */
+    virtual ~daObjKm3_Kuruma_c() {}    /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
