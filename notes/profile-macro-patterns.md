@@ -37,14 +37,21 @@ For dActor-derived entries, the registry target has seven words:
 
 ```text
 +0x00  factory
-+0x04  s16 behavior priority
-+0x06  s16 render priority
-+0x08  flags
-+0x0c  vertical range offset
-+0x10  range
-+0x14  draw distance
-+0x18  trailing/unknown word
++0x04  s16 profile index and behavior/execute order
++0x06  s16 render/draw order
++0x08  actor flags/properties
++0x0c  vertical clip-volume centre offset
++0x10  clip radius
++0x14  clip distance
++0x18  far distance
 ```
+
+These labels come from direct constructor and culling consumers.  Every one of the
+391 registry indices has a valid descriptor interpretation whose `+0x04` halfword
+equals the index.  The same halfword is copied into the behavior-list priority, so
+the binary does not provide separate profile-ID and execute-order storage.  A
+distinct group-flags descriptor field has not been located; see
+[`profile-lifecycle-crosswalk.md`](profile-lifecycle-crosswalk.md).
 
 The existing project type `SpawnInfo` remains the evidence-bounded C++ name.
 Architecturally this object functions as an actor profile descriptor.  The

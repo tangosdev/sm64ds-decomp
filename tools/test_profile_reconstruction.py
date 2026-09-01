@@ -44,6 +44,12 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
             self.assertIn(profile, self.rows)
         self.assertEqual(self.population["distinct_rom_profile_ids"], 391)
         self.assertEqual(self.population["rom_profile_id_collisions"], [])
+        self.assertEqual(
+            self.population["registry_entries_with_profile_index_match"], 391
+        )
+        self.assertEqual(
+            self.population["registry_entries_without_profile_index_match"], []
+        )
 
     def test_profile_proposals_derive_only_from_rom_id(self):
         for profile_id, row in self.rows.items():
@@ -56,6 +62,16 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
         self.assertEqual(row["class_size"], "0x000000dc")
         self.assertEqual(row["installed_vtable"], "0x021094a0")
         self.assertEqual(row["factory_shape"], "new_plus_inlined_ctor")
+        self.assertEqual(row["profile_index"], 197)
+        self.assertTrue(row["profile_index_matches_actor_id"])
+        self.assertEqual(row["execute_order"], 197)
+        self.assertEqual(row["draw_order"], 21)
+        self.assertEqual(row["group_flags"], "")
+        self.assertEqual(row["actor_flags"], "0x00800003")
+        self.assertEqual(row["clip_offset_y"], "0x00060000")
+        self.assertEqual(row["clip_radius"], "0x00300000")
+        self.assertEqual(row["clip_distance"], "0x02000000")
+        self.assertEqual(row["far_distance"], "0x00000000")
 
     def test_scene_and_actor_profile_layouts_stay_distinct(self):
         self.assertEqual(self.rows["BOOT"]["descriptor_layout"], "base_profile_0x08")

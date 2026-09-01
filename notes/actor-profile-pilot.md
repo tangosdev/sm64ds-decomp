@@ -13,6 +13,13 @@ system, but it is not the only descriptor layout.  The pilot contains:
 - 6 scene/process profiles with an 0x08 `{factory, execute priority, draw priority}`
   layout.
 
+The field follow-up found that the first priority halfword has a dual role: for all
+391 registry indices, at least one valid descriptor interpretation stores the index
+itself at `+0x04`, and `fBase_c::fBase_c` copies that same halfword into the
+behavior/execute-list priority.  `+0x06` supplies render/draw order.  The complete
+consumer crosswalk, lifecycle comparison, and unresolved group-flags question are in
+[`profile-lifecycle-crosswalk.md`](profile-lifecycle-crosswalk.md).
+
 The class and profile namespaces are demonstrably independent.  Examples include
 `WATERFALL -> daObjWaterfall_c`, `KURIBO -> daKrb_c`,
 `PROPELLER_HEYHO -> daPropeller_Heyho_c`, and the required pair
@@ -105,9 +112,9 @@ Tier-A observations:
 - actor/process index `197` has literal debug ID `WATERFALL` at `0x0208fd08`;
 - its ov002 descriptor is `0x0210947c`, currently
   `WaterfallMist_SpawnInfo`;
-- the 0x1c descriptor contains factory `0x020b6ee8`, priorities `197/21`,
-  flags `0x00800003`, range words `0x00060000`, `0x00300000`,
-  `0x02000000`, and trailing zero;
+- the 0x1c descriptor contains factory `0x020b6ee8`, profile-index/execute-order
+  `197`, draw order `21`, actor flags `0x00800003`, clip offset/radius
+  `0x00060000`/`0x00300000`, clip distance `0x02000000`, and far distance zero;
 - the factory passes `0xdc` to `_ZN7fBase_cnwEj` at `0x02043444`, calls
   `_ZN8dActor_cC2Ev` at `0x0201150c`, stores vtable address point
   `0x021094a0`, and returns the object;
@@ -126,8 +133,13 @@ daObjWaterfall_c* daObjWaterfall_c_classInit()
 
 const SpawnInfo g_profile_WATERFALL = {
     daObjWaterfall_c_classInit,
-    197, 21, 0x00800003,
-    0x00060000, 0x00300000, 0x02000000, 0
+    197,        // profile index and execute order
+    21,         // draw order
+    0x00800003, // actor flags/properties
+    0x00060000, // clip-volume Y offset
+    0x00300000, // clip radius
+    0x02000000, // clip distance
+    0            // far distance
 };
 ```
 
@@ -159,5 +171,9 @@ the sole class-initializing candidate for `MG_CURLING_J`.
 4. **Can the original type be called `ActorProfile`?** Not as a recovered SM64DS
    spelling.  Documentation should say “actor/process profile descriptor” and retain
    `SpawnInfo` where the 0x1c project type is required.
+5. **How do the lifecycle methods relate to NSMBW?** SM64DS's four do/pre/post
+   triplets align structurally with NSMBW create/delete/execute/draw.  The role
+   mapping is high-confidence lineage evidence; it does not by itself prove either
+   codebase's exact source spellings for SM64DS.
 
 No profile rename was applied by this pilot.

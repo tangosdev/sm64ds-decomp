@@ -61,6 +61,10 @@ NSMBW_PROFILE_URL = (
     "https://github.com/NSMBW-Community/NSMBW-Decomp/blob/"
     f"{NSMBW_REV}/include/game/framework/f_profile.hpp"
 )
+NSMBW_BASE_URL = (
+    "https://github.com/NSMBW-Community/NSMBW-Decomp/blob/"
+    f"{NSMBW_REV}/include/game/framework/f_base.hpp"
+)
 NSMBW_FILENAME_URL = (
     "https://github.com/NSMBW-Community/NSMBW-Decomp/blob/"
     f"{NSMBW_REV}/source/d_basesNP/bases/d_a_obj_fruit_tree.cpp"
@@ -139,13 +143,17 @@ TSV_COLUMNS = [
     "current_profile_name",
     "proposed_profile_name",
     "descriptor_layout",
-    "behavior_priority",
-    "render_priority",
-    "flags",
-    "range_offset_y",
-    "range",
-    "draw_distance",
-    "descriptor_tail",
+    "profile_index",
+    "profile_index_matches_actor_id",
+    "execute_order",
+    "draw_order",
+    "group_flags",
+    "group_flags_evidence",
+    "actor_flags",
+    "clip_offset_y",
+    "clip_radius",
+    "clip_distance",
+    "far_distance",
     "alloc_size",
     "class_size",
     "installed_vtable",
@@ -331,16 +339,22 @@ def descriptor_candidates(
         if not (-2000 <= bp <= 2000 and -2000 <= rp <= 2000):
             continue
 
-        flags = yoff = rng = draw = tail = None
+        flags = yoff = rng = clip_distance = far_distance = None
         layout = "base_profile_0x08"
         if off <= len(blob) - 0x1C:
             full = struct.unpack_from("<IhhIiiii", blob, off)
-            _fn, _bp, _rp, flags0, yoff0, rng0, draw0, tail0 = full
+            _fn, _bp, _rp, flags0, yoff0, rng0, clip0, far0 = full
             if all(
                 v == 0 or 0x100 <= v <= 0x10000000
-                for v in (yoff0, rng0, draw0, tail0)
+                for v in (yoff0, rng0, clip0, far0)
             ):
-                flags, yoff, rng, draw, tail = flags0, yoff0, rng0, draw0, tail0
+                flags, yoff, rng, clip_distance, far_distance = (
+                    flags0,
+                    yoff0,
+                    rng0,
+                    clip0,
+                    far0,
+                )
                 layout = "actor_profile_0x1c"
 
         # The short layout has no range words to validate, so require a configured
@@ -368,13 +382,13 @@ def descriptor_candidates(
                 "profile_address": ptr,
                 "factory_address": fn,
                 "descriptor_layout": layout,
-                "behavior_priority": bp,
-                "render_priority": rp,
-                "flags": flags,
-                "range_offset_y": yoff,
-                "range": rng,
-                "draw_distance": draw,
-                "descriptor_tail": tail,
+                "execute_order": bp,
+                "draw_order": rp,
+                "actor_flags": flags,
+                "clip_offset_y": yoff,
+                "clip_radius": rng,
+                "clip_distance": clip_distance,
+                "far_distance": far_distance,
                 "current_profile_name": best_symbol(aliases.get((mod, ptr), []), "profile"),
                 "current_factory_name": best_symbol(aliases.get((fmod, fn), []), "factory"),
             }
@@ -829,18 +843,35 @@ def make_observations(refresh: bool, no_refresh: bool):
             "current_profile_name": chosen["current_profile_name"],
             "proposed_profile_name": f"g_profile_{chosen['profile_id']}",
             "descriptor_layout": descriptor_layout,
-            "behavior_priority": chosen["behavior_priority"],
-            "render_priority": chosen["render_priority"],
-            "flags": hx(chosen["flags"]) if descriptor_layout == "actor_profile_0x1c" else "",
-            "range_offset_y": (
-                hx(chosen["range_offset_y"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            # SM64DS uses the +0x04 halfword as its behavior/execute-list order,
+            # and every selected row also stores the registry index there.  Emit
+            # both interpretations so the dual use is visible rather than silently
+            # choosing one source member name.
+            "profile_index": chosen["execute_order"],
+            "profile_index_matches_actor_id": (
+                chosen["execute_order"] == chosen["actor_id"]
             ),
-            "range": hx(chosen["range"]) if descriptor_layout == "actor_profile_0x1c" else "",
-            "draw_distance": (
-                hx(chosen["draw_distance"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            "execute_order": chosen["execute_order"],
+            "draw_order": chosen["draw_order"],
+            "group_flags": "",
+            "group_flags_evidence": (
+                "unlocated: no separate group-flags field is read from this descriptor "
+                "by the recovered fBase_c/dActor_c constructors"
             ),
-            "descriptor_tail": (
-                hx(chosen["descriptor_tail"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            "actor_flags": (
+                hx(chosen["actor_flags"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            ),
+            "clip_offset_y": (
+                hx(chosen["clip_offset_y"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            ),
+            "clip_radius": (
+                hx(chosen["clip_radius"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            ),
+            "clip_distance": (
+                hx(chosen["clip_distance"]) if descriptor_layout == "actor_profile_0x1c" else ""
+            ),
+            "far_distance": (
+                hx(chosen["far_distance"]) if descriptor_layout == "actor_profile_0x1c" else ""
             ),
             "alloc_size": hx(site["size"]) if site else "",
             "class_size": hx(class_size),
@@ -905,6 +936,21 @@ def make_observations(refresh: bool, no_refresh: bool):
             }
             for actor_id, candidates in sorted(all_candidates.items())
             if len(candidates) > 1
+        ],
+        "registry_entries_with_profile_index_match": sum(
+            any(c["execute_order"] == actor_id for c in candidates)
+            for actor_id, candidates in all_candidates.items()
+        ),
+        "registry_entries_without_profile_index_match": [
+            {
+                "actor_id": actor_id,
+                "profile_id": debug_names[actor_id][0],
+                "candidate_execute_orders": sorted(
+                    {c["execute_order"] for c in candidates}
+                ),
+            }
+            for actor_id, candidates in sorted(all_candidates.items())
+            if not any(c["execute_order"] == actor_id for c in candidates)
         ],
     }
     return rows, opnew, inventory_context
@@ -1021,7 +1067,7 @@ def main() -> int:
     write_tsv(pathlib.Path(args.tsv), TSV_COLUMNS, rows)
     write_tsv(pathlib.Path(args.renames), RENAME_COLUMNS, rename_rows)
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_by": "tools/profile_reconstruction.py",
         "evidence_tiers": {
             "A": "direct SM64DS ROM or deterministic ROM-derived relationship",
@@ -1032,6 +1078,7 @@ def main() -> int:
             "repository": "NSMBW-Community/NSMBW-Decomp",
             "revision": NSMBW_REV,
             "profile_macro_source": NSMBW_PROFILE_URL,
+            "lifecycle_source": NSMBW_BASE_URL,
             "filename_example": NSMBW_FILENAME_URL,
             "caveat": "public decomp source is lineage evidence, not direct SM64DS name proof",
         },
