@@ -1,10 +1,9 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Manually curated production translation unit.
  * ov047/daObjKm3_Kaitendai_c  (5 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL. The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the five legacy
- * production sources remain authoritative.
+ * One intact mwccarm object owns the five retail text contributions together
+ * with this class's RTTI, type-name string, descriptors, and vtable storage.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function in reverse source order. The destructor
@@ -12,7 +11,7 @@
  *
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x021112bc  src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp
- *   [1] 0x0211130c  src/_ZN20daObjKm3_Kaitendai_cD0Ev.c
+ *   [1] 0x0211130c  src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp
  *   [2] 0x02111370  src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp
  *   [3] 0x02111384  src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp
  *   [4] 0x021113bc  src/func_ov047_021113bc.c
@@ -116,11 +115,4 @@ int daObjKm3_Kaitendai_c::InitResources()
 int daObjKm3_Kaitendai_c::CleanupResources()
 {
     return func_ov002_020b66a8(this, &data_ov047_02112334);
-}
-
-/* ROM ordinal 0 -- _ZN20daObjKm3_Kaitendai_cD1Ev */
-// @symbol _ZN20daObjKm3_Kaitendai_cD1Ev
-/* The compiler emits D2, D0 and D1 from this one class definition. */
-daObjKm3_Kaitendai_c::~daObjKm3_Kaitendai_c()
-{
 }

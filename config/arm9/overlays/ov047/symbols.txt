@@ -94,7 +94,6 @@ _ZTI20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112328
 data_ov047_02112334 kind:data(any) addr:0x02112334
 _ZTS20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112340
 data_ov047_02112358 kind:data(any) addr:0x02112358
-data_ov047_02112374 kind:data(any) addr:0x02112374
 _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
 data_ov047_02112404 kind:data(any) addr:0x02112404 ambiguous
