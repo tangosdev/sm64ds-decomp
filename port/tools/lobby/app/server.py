@@ -323,6 +323,40 @@ class Room(object):
                     del table[key]
 
     def free_seat(self):
+        """The lowest seat number nobody holds, or None if the room is full.
+
+        THE SEAT NUMBER IS THE BASIS FOR THE GAME'S SLOT, so three properties of
+        it are load-bearing and are asserted in test_units.py rather than left
+        to be true by accident:
+
+          1. A member's seat number NEVER CHANGES while they hold it. Nothing
+             here renumbers anybody: a member keeps the number they were given
+             until they leave, through other people joining, leaving, being
+             removed and being promoted.
+          2. THE HOST IS ALWAYS SEAT 1. The creator takes seat 1, and a host
+             leaving closes the room rather than handing the room to anybody
+             else, so no live room ever has a host at another number.
+          3. Seat numbers are distinct and always inside 1..MAX_SEATS, so the
+             slots derived from them are distinct and always inside 0..3.
+
+        Reusing a freed number rather than counting ever upward is deliberate:
+        the numbers have to stay inside the game's four slots, and property 1
+        means reuse can never renumber a member who is still in the room.
+
+        WHY ANY OF THIS MATTERS OFF THIS FILE. Over the relay the parent's
+        ACCEPT is a broadcast with no recipient field, so two children claiming
+        the same slot cannot be told apart by the game. The LOBBY is the only
+        place a slot can be handed out uniquely, and stage B's start plan does
+        exactly that from these numbers: host = seat 1 = slot 0.
+
+        ONE THING STAGE B STILL HAS TO DECIDE, flagged here so it is not
+        discovered late. With GAME_MAX_PLAYERS below MAX_SEATS the playing seats
+        need not be contiguous: seats 1, 2 and 3 with 2 leaving promotes 3, and
+        the playing seats are then 1 and 3. `slot = seat - 1` gives slots 0 and
+        2, with a hole at 1; `slot = rank among the playing seats` gives 0 and
+        1, packed. Both are computable from this model and neither needs a
+        change here. The packed reading is very probably the one the game wants.
+        """
         for n in range(1, MAX_SEATS + 1):
             if n not in self.members:
                 return n

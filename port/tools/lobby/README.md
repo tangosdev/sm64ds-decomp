@@ -181,6 +181,39 @@ builds it and two launchers cannot disambiguate a duplicate differently.
 **A nickname is set once and cannot be changed from inside a room.** There is
 no `rename` verb. A player who mistyped leaves and rejoins.
 
+#### The seat number is what becomes the game's slot
+
+Stage B hands each playing member a slot in the match, and it derives that slot
+from the seat number, so three properties of a seat number are load-bearing.
+All three are asserted in `test_units.py`, in `test_seat_stability`.
+
+1. **A member's seat number never changes while they hold it.** Nothing
+   renumbers anybody, through other people joining, leaving, being removed and
+   being promoted.
+2. **The host is always seat 1.** The creator takes seat 1, and a host leaving
+   closes the room rather than handing it on, so no live room has a host at any
+   other number.
+3. **Seat numbers are distinct and always inside 1..`MAX_SEATS`**, so the slots
+   derived from them are distinct and always inside 0..3.
+
+A freed number is reused rather than counting ever upward, because the numbers
+have to stay inside the game's four slots. Property 1 is what makes that safe.
+
+**Why this matters outside this service.** Over the relay the parent's ACCEPT is
+a broadcast with no recipient field, so two children claiming the same slot
+cannot be told apart by the game. The lobby is the only place a slot can be
+handed out uniquely. That is what resolves the spec's 4.7 caveat, which said
+the seat-to-slot mapping was only guaranteed at two players: it is guaranteed at
+any number once the lobby, rather than the wire, decides it.
+
+**One thing stage B still has to choose,** flagged here rather than discovered
+late. With `GAME_MAX_PLAYERS` below `MAX_SEATS` the playing seats need not be
+contiguous: with seats 1, 2 and 3, seat 2 leaving promotes seat 3, and the
+playing seats are then 1 and 3. `slot = seat - 1` gives slots 0 and 2 with a
+hole at 1; `slot = rank among the playing seats` gives 0 and 1, packed. Both are
+computable from this model and neither needs a change here. The packed reading
+is very probably the one the game wants.
+
 #### `poll` — the only push channel
 
 ```

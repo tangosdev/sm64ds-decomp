@@ -763,6 +763,80 @@ def test_no_two_player_assumption():
         reset()
 
 
+
+def test_seat_stability():
+    """The three properties stage B's slot assignment rests on.
+
+    Over the relay the parent's ACCEPT is a broadcast with no recipient field,
+    so two children claiming the same slot cannot be told apart by the game.
+    The lobby is the only place a slot can be handed out uniquely, and it hands
+    it out from the seat number. So the seat number has to be stable, the host
+    has to be seat 1, and the numbers have to stay inside the game's four
+    slots. Asserted here rather than left true by accident.
+    """
+    print("\n-- seat numbers, which are what stage B turns into game slots")
+    reset()
+
+    st, host = create(nick="host")
+    code = host["room"]
+    room = S.ROOMS[code]
+    seats = {"host": host["member"]}
+    for nick in ("b", "c", "d"):
+        seats[nick] = join(code, nick)[1]["member"]
+    check("seats are handed out in join order, starting at 1",
+          [seats[n] for n in ("host", "b", "c", "d")] == [1, 2, 3, 4], seats)
+    check("the creator is seat 1", seats["host"] == 1)
+    check("the host is seat 1", room.host_seat == 1)
+
+    tokens = {m.seat: m.token for m in room.members.values()}
+
+    # Everything that can happen to a room, short of it closing.
+    S.do_leave({"v": 1, "room": code, "token": tokens[3]}, "10.0.0.3", 1001.0)
+    S.do_kick({"v": 1, "room": code, "token": host["token"], "seat": 4},
+              "10.0.0.1", 1002.0)
+    st, e = join(code, "e", who="10.0.0.5", now=1003.0)
+    check("a new joiner takes the lowest FREE number, not the next one up",
+          e["member"] == 3, e.get("member"))
+    st, f = join(code, "f", who="10.0.0.6", now=1004.0)
+    check("and then the next one", f["member"] == 4, f.get("member"))
+
+    check("nobody who stayed was renumbered",
+          room.by_token[tokens[1]] == 1 and room.by_token[tokens[2]] == 2,
+          {t[:6]: v for t, v in room.by_token.items()})
+    check("the host is still seat 1 through all of it", room.host_seat == 1)
+    check("every seat number is distinct",
+          len(set(room.members)) == len(room.members))
+    check("every seat number is inside 1..MAX_SEATS",
+          all(1 <= n <= S.MAX_SEATS for n in room.members), sorted(room.members))
+
+    slots = sorted(n - 1 for n in room.members)
+    check("the slots derived from them are distinct and inside 0..3",
+          slots == sorted(set(slots)) and all(0 <= x <= 3 for x in slots), slots)
+    check("the host's slot is 0", room.host_seat - 1 == 0)
+
+    # A promotion must not renumber anybody either.
+    reset()
+    st, host = create(nick="host")
+    code = host["room"]
+    room = S.ROOMS[code]
+    join(code, "b")
+    join(code, "c")
+    before = {m.token: m.seat for m in room.members.values()}
+    guest2 = [m for m in room.members.values() if m.seat == 2][0]
+    S.do_leave({"v": 1, "room": code, "token": guest2.token}, "10.0.0.2", 1001.0)
+    check("the promoted spectator keeps the number it already had",
+          room.members[3].playing is True and 3 in room.members,
+          sorted(room.members))
+    check("and nobody else moved either",
+          all(room.by_token[t] == n for t, n in before.items()
+              if t in room.by_token))
+
+    # The gap this leaves is the one thing stage B has to choose about.
+    playing = sorted(m.seat for m in room.members.values() if m.playing)
+    check("with a spectator promoted, the playing seats need NOT be contiguous "
+          "-- stage B chooses between slot=seat-1 and slot=rank",
+          playing == [1, 3], playing)
+
 def Member_fields(m):
     return [k for k in m.__slots__]
 
@@ -780,6 +854,7 @@ def main():
     test_chat_limits()
     test_kick()
     test_no_two_player_assumption()
+    test_seat_stability()
     test_rate_buckets()
     test_server_caps()
     test_opacity()
