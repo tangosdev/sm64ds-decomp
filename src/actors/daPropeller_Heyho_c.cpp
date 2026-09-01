@@ -385,6 +385,7 @@ void func_ov070_02120070(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- FlyGuy_ChangeState, 0x02120020, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol FlyGuy_ChangeState
 struct C; typedef int (C::*PMF)();
 struct C { char pad[0x3bc]; PMF *pp; };
 extern "C" int FlyGuy_ChangeState(void *vc, void *vp) { C *c = (C *)vc; PMF *p = (PMF *)vp; c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
@@ -392,6 +393,7 @@ extern "C" int FlyGuy_ChangeState(void *vc, void *vp) { C *c = (C *)vc; PMF *p =
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov070_0211ffa8, 0x0211ffa8, size 0x78 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211ffa8
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern unsigned int RandomIntInternal(void* s);
@@ -407,6 +409,7 @@ int func_ov070_0211ffa8(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov070_0211fd98, 0x0211fd98, size 0x210 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211fd98
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 typedef short s16;
 
@@ -484,6 +487,7 @@ int func_ov070_0211fd98(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov070_0211fd60, 0x0211fd60, size 0x38 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211fd60
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 /* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
@@ -496,6 +500,7 @@ int func_ov070_0211fd60(char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov070_0211fae4, 0x0211fae4, size 0x27c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211fae4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 
 extern void *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *self);
@@ -605,6 +610,7 @@ int func_ov070_0211fae4(void *arg)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov070_0211fa80, 0x0211fa80, size 0x64 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211fa80
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern int _ZN8dActor_c23HorzAngleToCPlayerOrAngEv(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
@@ -621,6 +627,7 @@ int func_ov070_0211fa80(char *c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov070_0211f6e0, 0x0211f6e0, size 0x3a0 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f6e0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 typedef int s32;
 typedef short s16;
@@ -762,6 +769,7 @@ int func_ov070_0211f6e0(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov070_0211f694, 0x0211f694, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f694
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 int func_ov070_0211f694(char *c) {
@@ -776,6 +784,7 @@ int func_ov070_0211f694(char *c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov070_0211f62c, 0x0211f62c, size 0x68 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f62c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern int _ZN9Animation8FinishedEv(void *p);
 extern signed char data_0209f2f8;
@@ -798,6 +807,7 @@ int func_ov070_0211f62c(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov070_0211f5f0, 0x0211f5f0, size 0x3c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f5f0
 struct BCA_File;
 /* (ModelAnim: real header type in scope) */
 /* Signature deliberately copied from the local declaration above: the
@@ -882,6 +892,7 @@ hitframe:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov070_0211f450, 0x0211f450, size 0x3c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f450
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 short func_ov070_0211f450(char *c) {
     *(int *)(c + 0xa4) = 0;
@@ -936,6 +947,7 @@ extern "C" int func_ov070_0211f368(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov070_0211f100, 0x0211f100, size 0x268 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov070_0211f100
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
