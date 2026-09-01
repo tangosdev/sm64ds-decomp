@@ -34,6 +34,8 @@ Configuration (environment):
   SM64DS_RELAY_BIND     address to bind           (default 0.0.0.0)
   SM64DS_RELAY_IDLE_S   per endpoint idle expiry  (default 90)
   SM64DS_RELAY_STATS_S  stats line interval       (default 60)
+  SM64DS_RELAY_MAX_CHILDREN
+                        children one session holds (default 3, so four people)
 
 Python 3 standard library only. No dependencies, no state on disk.
 """
@@ -43,6 +45,16 @@ import os
 import socket
 import sys
 import time
+
+
+def clamp_int(raw, default, lo, hi):
+    """An integer knob, clamped. A junk value is the default, never a crash --
+    the same rule the lobby service uses, so the two read alike."""
+    try:
+        return max(lo, min(hi, int(raw)))
+    except (TypeError, ValueError):
+        return default
+
 
 # ---------------------------------------------------------------- protocol
 
@@ -64,8 +76,30 @@ MAX_PAYLOAD = 700           # bytes; larger datagrams are dropped in silence
 RATE_PPS = 120              # sustained packets per second, per endpoint
 RATE_BURST = 120            # token bucket depth, same units
 MAX_SESSIONS = 64
-MAX_CHILDREN = 3
-MAX_ENDPOINTS_PER_SESSION = 4
+
+# HOW MANY PEOPLE ONE SESSION HOLDS. A knob since the player-count dial landed,
+# and the DEFAULT IS UNCHANGED, so a relay nobody reconfigures behaves exactly
+# as it did: one parent and three children.
+#
+# WHY THIS IS SAFE TO MAKE A KNOB AT ALL. The relay does not read the game's
+# packets. It checks a 16-byte HELLO, then forwards opaque bytes from the
+# parent to every child and from a child to the parent. It has no opinion about
+# slots, no per-player state, and no fixed-width field that counts players. So
+# the number of children really is a number here, unlike everywhere else the
+# four shows up.
+#
+# WHAT RAISING IT DOES NOT DO. It does not make the GAME play more than four.
+# The game's own wire packet carries an 8-bit live mask, one byte of slot
+# numbering, and a fixed four-block payload; the ROM's own code counts to four
+# in a dozen places. This knob removes the relay from that list and nothing
+# else. See the ceiling map in the lobby's README.
+#
+# The two numbers are DERIVED FROM ONE so they can never disagree: one parent
+# plus this many children is what a session holds. The old file carried them
+# separately (3 and 4) and a raise would have had to remember both.
+MAX_CHILDREN = clamp_int(
+    os.environ.get("SM64DS_RELAY_MAX_CHILDREN"), 3, 1, 15)
+MAX_ENDPOINTS_PER_SESSION = MAX_CHILDREN + 1
 BAD_ACK_INTERVAL_S = 1.0    # at most one status 2 per second per endpoint
 BAD_IGNORE_S = 10.0         # then that endpoint is ignored for this long
 BUCKET_IDLE_S = 30.0        # forget a rate bucket after this much quiet
@@ -503,8 +537,9 @@ async def run():
             pass
 
     log("relay listening on %s:%d idle=%.0fs max_sessions=%d "
-        "max_payload=%d rate_pps=%d"
-        % (bind, port, idle_s, MAX_SESSIONS, MAX_PAYLOAD, RATE_PPS))
+        "max_payload=%d rate_pps=%d seats=%d (1 parent + %d children)"
+        % (bind, port, idle_s, MAX_SESSIONS, MAX_PAYLOAD, RATE_PPS,
+           MAX_ENDPOINTS_PER_SESSION, MAX_CHILDREN))
     log(protocol.stats_line())
 
     stop = asyncio.Event()

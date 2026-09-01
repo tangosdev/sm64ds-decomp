@@ -9,7 +9,8 @@ so it doubles as a reference for the game side and as the acceptance suite.
       run the whole suite: pairing and throughput, routing, mid session join,
       wrong code isolation, the 700 byte drop, the rate cap, idle expiry and
       recovery, malformed HELLO handling and the no amplification property,
-      re-HELLO idempotence, and the session and endpoint caps.
+      re-HELLO idempotence, the session and endpoint caps, and the
+      per-session seat knob.
 
   python test_client.py soak [--minutes 10] [--pps 30]
       Two paired endpoints trading packets for the given time. Prints loss
@@ -232,7 +233,8 @@ def free_port():
 class Relay(object):
     """A relay subprocess bound to loopback, with its stdout on disk."""
 
-    def __init__(self, idle_s=None, stats_s=None, tag="relay"):
+    def __init__(self, idle_s=None, stats_s=None, tag="relay",
+                 max_children=None):
         self.port = free_port()
         self.addr = ("127.0.0.1", self.port)
         self.tag = tag
@@ -244,6 +246,12 @@ class Relay(object):
             self.env["SM64DS_RELAY_IDLE_S"] = str(idle_s)
         if stats_s is not None:
             self.env["SM64DS_RELAY_STATS_S"] = str(stats_s)
+        if max_children is not None:
+            self.env["SM64DS_RELAY_MAX_CHILDREN"] = str(max_children)
+        else:
+            # An inherited value from the shell must not silently change what
+            # the default-behaviour tests are testing.
+            self.env.pop("SM64DS_RELAY_MAX_CHILDREN", None)
         fd, self.log_path = tempfile.mkstemp(
             prefix="relay_%s_%d_" % (tag, self.port), suffix=".log")
         os.close(fd)
@@ -810,6 +818,74 @@ def t_caps():
     return res
 
 
+def t_seat_knob():
+    """The session's seat count is a knob, and its default did not move.
+
+    THIS PROVES A RUNG OF THE 16-PLAYER CLIMB AND NOTHING MORE. The relay does
+    not read the game's packets -- it pairs by code and forwards opaque bytes --
+    so the number of children it holds really is a number. Raising it does not
+    make the GAME play sixteen; the game's own wire packet has an 8-bit live
+    mask and a four-block payload, and the ROM counts to four in a dozen places.
+    What this removes is the relay from that list.
+    """
+    res = Result("the per-session seat knob")
+
+    # 1. THE DEFAULT IS UNTOUCHED. t_caps already proves four seats on a relay
+    #    started with no knob; this proves the knob's absence is what the log
+    #    reports, so a raise cannot happen by accident on the live box.
+    with Relay(tag="seat-default") as relay:
+        line = [l for l in relay.log_text().splitlines()
+                if "relay listening" in l]
+        res.check(bool(line) and "seats=4 (1 parent + 3 children)" in line[0],
+                  "with no knob set the relay says seats=4 (1 parent + 3 "
+                  "children)")
+
+    # 2. RAISED, IT REALLY SEATS SIXTEEN, and refuses the seventeenth.
+    with Relay(tag="seat-16", max_children=15) as relay:
+        nodes = []
+        try:
+            line = [l for l in relay.log_text().splitlines()
+                    if "relay listening" in l]
+            res.check(bool(line) and "seats=16 (1 parent + 15 children)" in line[0],
+                      "raised to 15 children the relay says seats=16")
+            code = "SEAT0016"
+            seats = []
+            for i in range(16):
+                node = Node(relay.addr, "seat%d" % i)
+                nodes.append(node)
+                seats.append(node.join(code,
+                                       ROLE_PARENT if i == 0 else ROLE_CHILD))
+            res.check(all(s == STATUS_OK for s in seats),
+                      "one parent and fifteen children all pair (%d ok)"
+                      % sum(1 for s in seats if s == STATUS_OK))
+            over = Node(relay.addr, "seat17")
+            nodes.append(over)
+            res.check(over.join(code, ROLE_CHILD, tries=2) == STATUS_FULL,
+                      "and the seventeenth is still refused")
+
+            # 3. THE PARENT STILL SENDS ONE COPY. The relay fans out, so a
+            #    parent's outbound rate does not grow with the room -- which
+            #    is what keeps the 120 packets/second limiter off the path at
+            #    sixteen as much as at four.
+            payload = b"MP2L" + bytes(524)   # a 16-slot game packet's size
+            res.check(len(payload) == 0x10 + 16 * 0x20,
+                      "a 16-slot game packet is %d bytes" % len(payload))
+            res.check(len(payload) <= 700,
+                      "and fits the relay's 700-byte payload cap with %d to "
+                      "spare" % (700 - len(payload)))
+            for n in nodes[1:16]:
+                n.drain()
+            nodes[0].send(payload)
+            got = sum(1 for n in nodes[1:16] if n.recv_data(0.7) == payload)
+            res.check(got == 15,
+                      "ONE datagram from the parent reached all 15 children "
+                      "(%d) -- the relay fans out, the parent does not" % got)
+        finally:
+            for node in nodes:
+                node.close()
+    return res
+
+
 # ------------------------------------------------------------------- soak
 
 
@@ -1038,7 +1114,7 @@ def selftest():
     if stats:
         print("  main relay last stats line: %s"
               % stats[-1].split("stats ", 1)[1])
-    for test in (t_idle_expiry, t_caps):
+    for test in (t_idle_expiry, t_caps, t_seat_knob):
         res = test()
         res.report()
         results.append(res)
