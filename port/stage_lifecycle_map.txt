@@ -296,9 +296,28 @@ name; "none" means no writer exists anywhere in the port.
                                     the ROM image instead of the boot default.
   data_0208ee44 = 2                 none. hal/message_pump.cpp:256 decrements
                                     it every frame; storage is romdata.c.obj.
-  data_0209d45c = 0x11              none. hal/message_pump.cpp:200 publishes
-                                    engine A's layer mask from it and
-                                    hal/auto_bss.cpp:25 leaves it zero.
+  data_0209d45c = 0x11              SEATED, lane VSEND, hal/star_flow.cpp's
+                                    seat_engine_a_layers, called from
+                                    port_boot_course_sound once per boot. It is
+                                    the third statement of Stage::InitResources
+                                    that file stands in for, beside the VS
+                                    countdown. VS-only by default because the
+                                    same assignment turns on the adventure HUD
+                                    and retakes every BMP baseline;
+                                    SM64DS_HUD_LAYER_SEAT=always is the ROM's
+                                    unconditional form.
+                                    (This row read "none" until then, and the
+                                    seat is what put the VS match clock and the
+                                    star count on screen at all: the mask being
+                                    zero is why the engine-A compositor returned
+                                    before drawing with the HUD's sprites
+                                    already sitting in OAM. The row is corrected
+                                    here rather than left for a third review to
+                                    catch, the way the data_0209d45c row two
+                                    sections down already had to be.)
+                                    hal/message_pump.cpp:200 publishes engine
+                                    A's layer mask from it; hal/auto_bss.cpp:25
+                                    is what left it zero before the seat.
   data_0209cef0 = 1                 none.
   data_0209f21c = data_0208a0e0     hardcoded 1 (level_boot.cpp:2974), once
                                     per process.

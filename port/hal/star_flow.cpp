@@ -419,15 +419,39 @@ void seat_vs_countdown(void)
  * lane's to spend. Gating on the mode keeps an adventure frame byte-identical
  * and gives the VS arena the two things it was asked for.
  *
- * SM64DS_VS_HUD_SEAT=always is the ROM's own unconditional form, on this
+ * SM64DS_HUD_LAYER_SEAT=always is the ROM's own unconditional form, on this
  * same binary, so the lane that takes the adventure HUD can see what wakes up
  * before it commits to re-taking the baselines. =off restores the pre-seat
- * behaviour the same way. */
+ * behaviour the same way.
+ *
+ * THE NAME IS THE SECOND ONE THIS KNOB HAS HAD, and the first was a bug I
+ * shipped. It was SM64DS_ENGINE_A_LAYERS, which is ALREADY a live variable:
+ * hal/message_compositor.cpp reads it as a HEX LAYER SUBSET
+ * (strtoul(e, 0, 16) & 0x1F, default 0x1f), port/tools/headroom.py sets it, and
+ * port/ppu_gap_audit.txt documents it. Under that grammar the documented value
+ * "always" parses as 0x0a -- BG1 and BG3, with OBJ DROPPED, which is the layer
+ * the entire HUD lives on -- and "off" parses as 0x00. Review measured both
+ * rendering byte-identical while this seat's own log line said the mask had
+ * been seated: the mask was seated and then thrown away downstream. Renamed,
+ * and the compositor's variable is untouched.
+ *
+ * AND THE PREVIEW =always PROMISES IS EMPTY ON THE LEVELS MEASURED, which is a
+ * correction to this lane's own round-1 open question rather than a defect in
+ * the knob. Re-measured after the rename, adventure selftests on levels 1 and
+ * 5, SM64DS_HUD_LAYER_SEAT=always against =off: the seat fires (its log line
+ * prints, DISPCNT_A goes 0x00000008 -> 0x00001108, OBJ ON) and the frame is
+ * still BYTE-IDENTICAL -- because engine A's OAM holds 0 PLACED sprites on both
+ * levels. The adventure HUD draws to the SUB screen: HUD::Render's adventure
+ * arm runs (measured, sub OAM 237 nonzero bytes) and every leaf it reaches
+ * there goes to engine B. So "the adventure HUD is one statement away" was
+ * WRONG. This seat is necessary for it and nowhere near sufficient, and the
+ * lane that takes it inherits finding out what actually submits to engine A on
+ * an adventure screen. */
 void seat_engine_a_layers(void)
 {
     static int mode = -1;   /* 0 off, 1 VS only (default), 2 always */
     if (mode < 0) {
-        const char *e = std::getenv("SM64DS_VS_HUD_SEAT");
+        const char *e = std::getenv("SM64DS_HUD_LAYER_SEAT");
         mode = 1;
         if (e && std::strcmp(e, "off") == 0) mode = 0;
         else if (e && std::strcmp(e, "always") == 0) mode = 2;
@@ -440,11 +464,26 @@ void seat_engine_a_layers(void)
     /* AND BG0 IS THE 3D LAYER, WHICH HAS TO BE SAID OR THE MASK MAKES IT WORSE.
      *
      * DISPCNT bit 3 selects whether engine A's BG0 shows the 3D engine's output
-     * or an ordinary tiled background. On the DS a 3D level always has it set,
-     * through GX::SetGraphicsMode's `c << 3` (src/_ZN2GX15SetGraphicsModeEiii.c)
-     * -- which is why the ROM's mask can name BG0 at all. The port never calls
-     * it: it renders 3D through its own path and leaves engine A's DISPCNT
-     * alone, so the register's low byte is zero for the whole run.
+     * or an ordinary tiled background.
+     *
+     * AND THE ROM SETS IT IN THIS VERY FUNCTION, 151 lines above the mask
+     * statement and in the same unconditional block (found in review; an
+     * earlier draft argued this from hardware behaviour, which was true and
+     * weaker):
+     *
+     *     src/_ZN5Stage13InitResourcesEv.cpp:251
+     *         int one = 1;
+     *         GX::SetGraphicsMode(one, 0, one);      // c = 1
+     *
+     * and GX::SetGraphicsMode's body is `reg = (c << 3) | reg`
+     * (src/_ZN2GX15SetGraphicsModeEiii.c), so c = 1 IS bit 3. The two lines are
+     * one statement of the ROM's, split across the function: turn BG0 into the
+     * 3D layer, then name BG0 in the layer mask. Seating the mask without the
+     * bit takes half of it.
+     *
+     * The port never calls SetGraphicsMode: it renders 3D through its own path
+     * and leaves engine A's DISPCNT alone, so the register's low byte is zero
+     * for the whole run.
      *
      * hal/message_compositor.cpp keys on that bit by name: BG0 with bit 3 set
      * is "the 3D LAYER, not composited here (the 3D frame is already in the
@@ -459,10 +498,10 @@ void seat_engine_a_layers(void)
      * block is why.)
      *
      * A raw register write in a host file is not the shape this tree likes, and
-     * the alternative is worse: GX::SetGraphicsMode would also set the BG mode
-     * and the display mode, two fields the port deliberately leaves at zero
-     * because it does not drive engine A. One bit, stating a fact about this
-     * port that is permanently true on the level path. */
+     * calling the ROM's own SetGraphicsMode instead is worse: its `a` and `b`
+     * arguments also set the display mode and the BG mode, two fields the port
+     * deliberately leaves at zero because it does not drive engine A. One bit,
+     * which is the one bit of that call the port can honour. */
     *(volatile unsigned int *)0x04000000 |= 8;
     /* AND THE 3D LAYER'S PRIORITY, WHICH IS WHY HALF THE VS HUD WAS INVISIBLE.
      *
@@ -501,9 +540,9 @@ void seat_engine_a_layers(void)
             "(BG0 + OBJ), DISPCNT bit 3 (BG0 is the 3D layer) and BG0CNT "
             "priority 1 (func_02005a58's own value, which is what lets a "
             "priority-1 HUD sprite draw over the arena). %s\n",
-            mode == 2 ? "SM64DS_VS_HUD_SEAT=always: every mode, the ROM's "
+            mode == 2 ? "SM64DS_HUD_LAYER_SEAT=always: every mode, the ROM's "
                         "own unconditional form"
-                      : "VS only by default; SM64DS_VS_HUD_SEAT=always for "
+                      : "VS only by default; SM64DS_HUD_LAYER_SEAT=always for "
                         "the adventure HUD too");
 }
 
