@@ -1,7 +1,12 @@
-// @symbol Amp_Spawn
+// @symbol daBrq_c_classInit
 /* The pinned compiler has no source spelling for placement construction with
  * retail's fBase_c allocator. Keep this measured factory seam in C while the
- * real daBrq_c TU owns its methods, destructor, RTTI, and vtable. */
+ * real daBrq_c TU owns its methods, destructor, RTTI, and vtable.
+ *
+ * Reconstructed source-style name: SM64DS proves the daBrq_c RTTI identity,
+ * BIRIKYU registry ID, descriptor relationship, and object shape; later EAD
+ * lineage supplies the classInit spelling prior. Exact original SM64DS
+ * spelling is not preserved. Historical project alias: Amp_Spawn. */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
@@ -14,7 +19,7 @@
 #include "decl_common.h"
 
 /* resolved: retail class identity is _ZTV7daBrq_c */
-int *Amp_Spawn(void)
+int *daBrq_c_classInit(void)
 {
     int *actor = (int *)_ZN7fBase_cnwEj(0x434);
     if (actor) {

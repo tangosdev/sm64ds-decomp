@@ -4,8 +4,9 @@
 #include "types.h"
 #include "daObjKurumajiku_c.h"
 
-/* Bowser in the Sky's rickshaw axle. Its factory is named RickshawBs_Spawn --
- * "Bs" for Bowser in the Sky -- but that name is crossed with its sibling's
+/* Bowser in the Sky's rickshaw axle. Its factory is reconstructed as
+ * daObjKm3_Kurumajiku_c_classInit (historical alias RickshawBs_Spawn). The
+ * old "Bs" name was crossed with its sibling's
  * (include/daObjKm3_Kaitendai_c.h documents the mixup: the ov047 "Bs"-named
  * C++ class actually reproduces daObjKm3_Kaitendai_c, not this one -- it was
  * misnamed RickshawBs until that header's rename). This class stays unnamed
@@ -24,7 +25,7 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKurumajiku_c, ov002 0x021092f8
  *
- * NO FIELDS OF ITS OWN: RickshawBs_Spawn passes 816 = 0x330, which
+ * NO FIELDS OF ITS OWN: daObjKm3_Kurumajiku_c_classInit passes 816 = 0x330, which
  * daObjKurumajiku_c already fills exactly. It overrides slots 0 and 3, which
  * the base leaves null.
  */

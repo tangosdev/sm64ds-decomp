@@ -105,3 +105,6 @@
 {"path": "src/_ZN12SwitchPillarD0Ev.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
 {"path": "src/_ZN12SwitchPillarD1Ev.cpp", "reason": "regenerated on cpp/c0switch-rtti-rename-snake-tu after restacking onto cpp/ov002-tree-snake-tu"}
 {"path": "src/actors/tree.cpp#_ZN4Tree16OnPendingDestroyEv", "reason": "ov002/daTree_c snake_case TU promotion: renamed, not lost -- the class takes its cartridge RTTI name and the TU takes the snake_case stem, so the same member banks as src/actors/d_a_tree.cpp#_ZN8daTree_c16OnPendingDestroyEv"}
+{"path": "src/_ZN15IceSlideManager13InitResourcesEv.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}
+{"path": "src/_ZN15IceSlideManagerD0Ev.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}
+{"path": "src/_ZN15IceSlideManagerD1Ev.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}

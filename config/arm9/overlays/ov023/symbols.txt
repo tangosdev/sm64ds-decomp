@@ -6,7 +6,7 @@ _ZN16daObjFm_Battan_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02
 _ZN16daObjFm_Battan_c6RenderEv kind:function(arm,size=0x28) addr:0x02111388
 _ZN16daObjFm_Battan_c8BehaviorEv kind:function(arm,size=0x2c0) addr:0x021113b0
 _ZN16daObjFm_Battan_c13InitResourcesEv kind:function(arm,size=0xb8) addr:0x02111670
-Squasher_Spawn kind:function(arm,size=0x38) addr:0x02111728
+daObjFm_Battan_c_classInit kind:function(arm,size=0x38) addr:0x02111728
 data_ov023_02111760 kind:data(any) addr:0x02111760
 data_ov023_02111764 kind:data(any) addr:0x02111764
 data_ov023_02111768 kind:data(any) addr:0x02111768
@@ -55,7 +55,7 @@ data_ov023_02111d30 kind:data(any) addr:0x02111d30
 data_ov023_02111e10 kind:data(any) addr:0x02111e10
 _ZTI16daObjFm_Battan_c kind:data(any) addr:0x02111fa0
 _ZTS16daObjFm_Battan_c kind:data(any) addr:0x02111fac
-Squasher_SpawnInfo kind:data(any) addr:0x02111fc0 ambiguous
+g_profile_FM_BATTAN kind:data(any) addr:0x02111fc0 ambiguous
 _ZTV16daObjFm_Battan_c kind:data(any) addr:0x02111fe4
 data_ov023_02112080 kind:bss addr:0x02112080
 data_ov023_02112088 kind:bss addr:0x02112088

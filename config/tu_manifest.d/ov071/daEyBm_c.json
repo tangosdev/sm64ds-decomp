@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "MrI_Projectile_Spawn",
+      "symbol": "daEyBm_c_classInit",
       "address": "0x02121f9c",
       "size": "0x00000048",
       "legacy_source": "src/MrI_Projectile_Spawn.c",
@@ -170,7 +170,7 @@
       "reason": "Inherited vague-linkage RTTI; romdata_check proves the canonical arm9 object and relocations before text isolation."
     },
     {
-      "symbol": "MrI_Projectile_SpawnInfo",
+      "symbol": "g_profile_EYEKUN_BEAM",
       "disposition": "deadstrip-data",
       "canonical_module": "ov071",
       "canonical_address": "0x02122dc4",
@@ -187,7 +187,7 @@
   "notes": [
     "Genuine lifecycle source form: the real header defines the virtual destructor inline and the TU defines InitResources as the key function. mwccarm owns retail D1/D0 and class data with no D2, manual metadata or forcing output.",
     "SpawnDestroyEffect, UpdateCollision, HurtPlayer and UpdateShadow are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations and codegen are proven; the exact original English names and UpdateCollision reference spelling are not.",
-    "MrI_Projectile_Spawn and MrI_Projectile_SpawnInfo remain evidence-bounded C ABI aliases. The typed factory retains retail's measured allocator, base/member constructors and vptr seam because natural new selects the wrong allocator.",
+    "daEyBm_c_classInit and g_profile_EYEKUN_BEAM are reconstructed source-style names: SM64DS proves the daEyBm_c RTTI identity, EYEKUN_BEAM registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were MrI_Projectile_Spawn and MrI_Projectile_SpawnInfo. The typed factory retains retail's measured allocator, base/member constructors and vptr seam because natural new selects the wrong allocator.",
     "The retained __sinit_ov071_02122a1c, ctor table entry, and BSS at 0x021230b8..0x021230d0 remain separately enrolled and are not claimed by this class TU."
   ],
   "verification": {
@@ -228,11 +228,11 @@
         "_ZTI8daEyBm_c",
         "_ZTI8dActor_c",
         "_ZTI7dBase_c",
-        "MrI_Projectile_SpawnInfo",
+        "g_profile_EYEKUN_BEAM",
         "_ZTV8daEyBm_c"
       ],
       "dataExternalized": [
-        "MrI_Projectile_SpawnInfo",
+        "g_profile_EYEKUN_BEAM",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",

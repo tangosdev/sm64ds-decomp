@@ -36,7 +36,8 @@
  *
  * SIZE 0x330 closes on that: dBgActor_c ends at 0x31e, the array is 4-aligned so it
  * starts at 0x320, and 0x320 + 4*4 = 0x330 is the literal both factories pass to
- * fBase_c::operator new -- RickshawBdw_Spawn and RickshawBs_Spawn, one per
+ * fBase_c::operator new -- RickshawBdw_Spawn and
+ * daObjKm3_Kurumajiku_c_classInit (historical alias RickshawBs_Spawn), one per
  * descendant, agreeing.
  */
 

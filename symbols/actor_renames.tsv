@@ -18,6 +18,7 @@ ov002	0x020b0650	func_ov002_020b0650	_ZN7daBar_c6RenderEv	vtable slot 9
 ov002	0x020b0658	func_ov002_020b0658	_ZN7daBar_c8BehaviorEv	vtable slot 6
 ov002	0x020b067c	func_ov002_020b067c	_ZN7daBar_c13InitResourcesEv	vtable slot 0
 ov002	0x020b0710	func_ov002_020b0710	InvisiblePole_Spawn	spawnfunc
+ov002	0x020b0710	InvisiblePole_Spawn	daBar_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020b07c8	func_ov002_020b07c8	CameraTag_Spawn	spawnfunc
 ov002	0x020b07f8	func_ov002_020b07f8	_ZN9CameraTagD1Ev	vtable slot 16
 ov002	0x020b081c	func_ov002_020b081c	_ZN9CameraTagD0Ev	vtable slot 17
@@ -259,6 +260,7 @@ ov002	0x02108388	data_ov002_02108388	OneUpMushroom_SpawnInfo	spawninfo
 ov002	0x021083a4	data_ov002_021083a4	MegaMushroom_SpawnInfo	spawninfo
 ov002	0x021083c8	data_ov002_021083c8	_ZTV13OneUpMushroom	vtable alloc=0x398
 ov002	0x0210845c	data_ov002_0210845c	InvisiblePole_SpawnInfo	spawninfo
+ov002	0x0210845c	InvisiblePole_SpawnInfo	g_profile_BAR	reconstructed profile global; literal ROM ID BAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02108480	data_ov002_02108480	_ZTV7daBar_c	vtable alloc=0x108
 ov002	0x02108518	data_ov002_02108518	CameraTag_SpawnInfo	spawninfo
 ov002	0x021085d4	data_ov002_021085d4	VirtualDoor_SpawnInfo	spawninfo
@@ -626,15 +628,15 @@ ov019	0x02112360	func_ov019_02112360	_ZN13RacingPenguin6RenderEv	vtable slot 9
 ov019	0x02112394	func_ov019_02112394	_ZN13RacingPenguin8BehaviorEv	vtable slot 6
 ov019	0x021123d4	func_ov019_021123d4	_ZN13RacingPenguin13InitResourcesEv	vtable slot 0
 ov019	0x021125bc	func_ov019_021125bc	RacingPenguin_Spawn	spawnfunc
-ov019	0x0211261c	func_ov019_0211261c	_ZN15IceSlideManagerD1Ev	vtable slot 16
-ov019	0x02112640	func_ov019_02112640	_ZN15IceSlideManagerD0Ev	vtable slot 17
-ov019	0x02112678	func_ov019_02112678	_ZN15IceSlideManager8BehaviorEv	vtable slot 6
-ov019	0x0211271c	func_ov019_0211271c	_ZN15IceSlideManager13InitResourcesEv	vtable slot 0
-ov019	0x0211274c	func_ov019_0211274c	IceSlideManager_Spawn	spawnfunc
+ov019	0x0211261c	func_ov019_0211261c	_ZN10daSldMng_cD1Ev	vtable slot 16
+ov019	0x02112640	func_ov019_02112640	_ZN10daSldMng_cD0Ev	vtable slot 17
+ov019	0x02112678	func_ov019_02112678	_ZN10daSldMng_c8BehaviorEv	vtable slot 6
+ov019	0x0211271c	func_ov019_0211271c	_ZN10daSldMng_c13InitResourcesEv	vtable slot 0
+ov019	0x0211274c	func_ov019_0211274c	daSldMng_c_Spawn	spawnfunc
 ov019	0x021132ec	data_ov019_021132ec	RacingPenguin_SpawnInfo	spawninfo
 ov019	0x02113310	data_ov019_02113310	_ZTV13RacingPenguin	vtable alloc=0x398
-ov019	0x021133a8	data_ov019_021133a8	IceSlideManager_SpawnInfo	spawninfo
-ov019	0x021133cc	data_ov019_021133cc	_ZTV15IceSlideManager	vtable alloc=0xd8
+ov019	0x021133a8	data_ov019_021133a8	daSldMng_c_SpawnInfo	spawninfo
+ov019	0x021133cc	data_ov019_021133cc	_ZTV10daSldMng_c	vtable alloc=0xd8
 ov020	0x021111a0	func_ov020_021111a0	_ZN8BookShotD1Ev	vtable slot 16
 ov020	0x021111f0	func_ov020_021111f0	_ZN8BookShotD0Ev	vtable slot 17
 ov020	0x02111254	func_ov020_02111254	_ZN15BookShotSpawnerD1Ev	vtable slot 16
@@ -751,7 +753,9 @@ ov023	0x02111388	func_ov023_02111388	_ZN16daObjFm_Battan_c6RenderEv	vtable slot 
 ov023	0x021113b0	func_ov023_021113b0	_ZN16daObjFm_Battan_c8BehaviorEv	vtable slot 6; class identity proven by ov023 RTTI/ZTS
 ov023	0x02111670	func_ov023_02111670	_ZN16daObjFm_Battan_c13InitResourcesEv	vtable slot 0; class identity proven by ov023 RTTI/ZTS
 ov023	0x02111728	func_ov023_02111728	Squasher_Spawn	spawnfunc; evidence-bounded C ABI alias
+ov023	0x02111728	Squasher_Spawn	daObjFm_Battan_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov023	0x02111fc0	data_ov023_02111fc0	Squasher_SpawnInfo	spawninfo; evidence-bounded C ABI alias
+ov023	0x02111fc0	Squasher_SpawnInfo	g_profile_FM_BATTAN	reconstructed profile global; literal ROM ID FM_BATTAN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov023	0x02111fe4	data_ov023_02111fe4	_ZTV16daObjFm_Battan_c	vtable alloc=0x37c; class identity proven by RTTI/ZTS
 ov024	0x021111a0	func_ov024_021111a0	_ZN10PyramidTopD1Ev	vtable slot 16
 ov024	0x021111ec	func_ov024_021111ec	_ZN10PyramidTopD0Ev	vtable slot 17
@@ -1094,6 +1098,7 @@ ov045	0x02113020	data_ov045_02113020	_ZTV16FloatingFloorBfs	vtable alloc=0x32c
 ov045	0x021130d0	data_ov045_021130d0	FallBlockBfs_SpawnInfo	spawninfo
 ov045	0x021130f4	data_ov045_021130f4	_ZTV12FallBlockBfs	vtable alloc=0x34c
 ov047	0x02111280	func_ov047_02111280	RickshawBs_Spawn	spawnfunc
+ov047	0x02111280	RickshawBs_Spawn	daObjKm3_Kurumajiku_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov047	0x021112bc	func_ov047_021112bc	_ZN10RickshawBsD1Ev	vtable slot 16
 ov047	0x0211130c	func_ov047_0211130c	_ZN10RickshawBsD0Ev	vtable slot 17
 ov047	0x02111370	func_ov047_02111370	_ZN10RickshawBs16CleanupResourcesEv	vtable slot 3
@@ -1105,6 +1110,7 @@ ov047	0x02111624	func_ov047_02111624	_ZN18RickshawPlatformBs16CleanupResourcesEv
 ov047	0x02111638	func_ov047_02111638	_ZN18RickshawPlatformBs13InitResourcesEv	vtable slot 0
 ov047	0x0211164c	func_ov047_0211164c	StairsBs_Spawn	spawnfunc
 ov047	0x0211227c	data_ov047_0211227c	RickshawBs_SpawnInfo	spawninfo
+ov047	0x0211227c	RickshawBs_SpawnInfo	g_profile_KM3_KURUMAJIKU	reconstructed profile global; literal ROM ID KM3_KURUMAJIKU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov047	0x0211237c	data_ov047_0211237c	_ZTV10RickshawBs	vtable alloc=0x330
 ov047	0x02112428	data_ov047_02112428	RickshawPlatformBs_SpawnInfo	spawninfo
 ov047	0x021124ec	data_ov047_021124ec	StairsBs_SpawnInfo	spawninfo
@@ -1543,6 +1549,7 @@ ov070	0x02120e24	func_ov070_02120e24	_ZN7daBrq_c6RenderEv	vtable slot 9; class n
 ov070	0x02120e8c	func_ov070_02120e8c	_ZN7daBrq_c8BehaviorEv	vtable slot 6; class name from ROM RTTI
 ov070	0x02120eec	func_ov070_02120eec	_ZN7daBrq_c13InitResourcesEv	vtable slot 0; class name from ROM RTTI
 ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc; evidence-bounded factory alias constructs the ROM-proven daBrq_c class
+ov070	0x021210ac	Amp_Spawn	daBrq_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov070	0x02121118	func_ov070_02121118	_ZN8daKrpa_cD1Ev	vtable slot 16
 ov070	0x02121160	func_ov070_02121160	_ZN8daKrpa_cD0Ev	vtable slot 17
 ov070	0x0212189c	func_ov070_0212189c	_ZN8daKrpa_c16CleanupResourcesEv	vtable slot 3
@@ -1562,6 +1569,7 @@ ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
 ov070	0x02123168	data_ov070_02123168	_ZTV19daPropeller_Heyho_c	vtable alloc=0x3e8
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
+ov070	0x02123254	Amp_SpawnInfo	g_profile_BIRIKYU	reconstructed profile global; literal ROM ID BIRIKYU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov070	0x02123278	data_ov070_02123278	_ZTV7daBrq_c	vtable alloc=0x434; class name from ROM RTTI
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo
 ov070	0x02123370	data_ov070_02123370	_ZTV8daKrpa_c	vtable alloc=0x3b0
@@ -1596,6 +1604,7 @@ ov071	0x02121d14	func_ov071_02121d14	_ZN8daEyBm_c6RenderEv	vtable slot 9
 ov071	0x02121d80	func_ov071_02121d80	_ZN8daEyBm_c8BehaviorEv	vtable slot 6
 ov071	0x02121eb4	func_ov071_02121eb4	_ZN8daEyBm_c13InitResourcesEv	vtable slot 0
 ov071	0x02121f9c	func_ov071_02121f9c	MrI_Projectile_Spawn	spawnfunc
+ov071	0x02121f9c	MrI_Projectile_Spawn	daEyBm_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02121fe4	func_ov071_02121fe4	_ZN6CoffinD1Ev	vtable slot 16
 ov071	0x02122028	func_ov071_02122028	_ZN6CoffinD0Ev	vtable slot 17
 ov071	0x02122460	func_ov071_02122460	_ZN6Coffin16CleanupResourcesEv	vtable slot 3
@@ -1609,6 +1618,7 @@ ov071	0x02122cf0	data_ov071_02122cf0	MrI_SpawnInfo	spawninfo
 ov071	0x02122d0c	data_ov071_02122d0c	BigMrI_SpawnInfo	spawninfo
 ov071	0x02122d30	data_ov071_02122d30	_ZTV3MrI	vtable alloc=0x218
 ov071	0x02122dc4	data_ov071_02122dc4	MrI_Projectile_SpawnInfo	spawninfo
+ov071	0x02122dc4	MrI_Projectile_SpawnInfo	g_profile_EYEKUN_BEAM	reconstructed profile global; literal ROM ID EYEKUN_BEAM+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02122de8	data_ov071_02122de8	_ZTV8daEyBm_c	vtable alloc=0x334
 ov071	0x02122eb0	data_ov071_02122eb0	Coffin_SpawnInfo	spawninfo
 ov071	0x02122efc	data_ov071_02122efc	_ZTV6Coffin	vtable alloc=0x32c

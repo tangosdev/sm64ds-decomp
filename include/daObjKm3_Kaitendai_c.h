@@ -18,12 +18,13 @@
  *
  * NO FIELDS OF ITS OWN, and the factory that says so is NOT the one named after this
  * class. `func_ov047_021113bc`, still unnamed, is the function that allocates 800 =
- * 0x320 and stores this class's vtable second. RickshawBs_Spawn allocates 816 and
+ * 0x320 and stores this class's vtable second. daObjKm3_Kurumajiku_c_classInit
+ * (historical alias RickshawBs_Spawn) allocates 816 and
  * builds daObjKm3_Kurumajiku_c: the ov047 "Bs" names were crossed -- this class was
  * misnamed RickshawBs (a #1521-era mixup) until the rename below, resolved by vtable
- * evidence rather than by either factory's own name. RickshawBs_Spawn keeps its own
- * name: factory names come from the game's own object table, independent of which
- * C++ class they build (see include/daObjKm3_Kurumajiku_c.h). It overrides slots 0
+ * evidence rather than by either factory's own name. The Kurumajiku factory is
+ * paired independently from the C++ class it builds (see
+ * include/daObjKm3_Kurumajiku_c.h). It overrides slots 0
  * and 3, which the base leaves null.
  */
 

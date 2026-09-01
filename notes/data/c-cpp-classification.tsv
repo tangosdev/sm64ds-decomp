@@ -7,7 +7,7 @@ src/ARMSaveContext.c	PURE-C	arm9				1		None		-
 src/AddSpikeBomb.c	PURE-C	arm9				1		None		-
 src/AddVec3.c	PURE-C	arm9				1		None		-
 src/AmbientSoundEffects_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/Amp_Spawn.c	WEAK-refs-only	ov070				1		None		-
+src/daBrq_c_classInit.c	WEAK-refs-only	ov070				1		None		-
 src/AngleDiff.c	PURE-C	arm9				1		None		-
 src/ApproachAngle.c	PURE-C	arm9				1		None		-
 src/ArmedRotatingPlatform_Spawn.c	WEAK-refs-only	ov036				1		None		-

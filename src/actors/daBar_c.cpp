@@ -6,9 +6,11 @@
  * key function; its vtable references the inline destructor in daBar_c.h, so
  * the compiler owns retail's D1/D0 pair and the complete RTTI/vtable group.
  *
- * InvisiblePole_Spawn and InvisiblePole_SpawnInfo remain evidence-bounded C
- * ABI aliases. The ROM proves daBar_c's identity, not their original source
- * spelling.
+ * daBar_c_classInit and g_profile_BAR are reconstructed source-style names.
+ * SM64DS proves the daBar_c RTTI identity, BAR registry ID, descriptor/factory
+ * relationship, and object shape; later EAD lineage supplies the spelling
+ * prior. Exact original SM64DS symbols are not preserved. Historical project
+ * aliases: InvisiblePole_Spawn and InvisiblePole_SpawnInfo.
  */
 
 #include "daBar_c.h"
@@ -29,11 +31,11 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     u32 flags, u32 vulnFlags);
 }
 
-extern "C" daBar_c *InvisiblePole_Spawn();
+extern "C" daBar_c *daBar_c_classInit();
 
 /* ROM ordinal 7 -- actor-table C ABI factory. */
-// @symbol InvisiblePole_Spawn
-extern "C" daBar_c *InvisiblePole_Spawn()
+// @symbol daBar_c_classInit
+extern "C" daBar_c *daBar_c_classInit()
 {
     daBar_c *bar = (daBar_c *)_ZN7fBase_cnwEj(sizeof(daBar_c));
     if (bar) {
@@ -44,8 +46,8 @@ extern "C" daBar_c *InvisiblePole_Spawn()
     return bar;
 }
 
-extern "C" DaBarSpawnInfo InvisiblePole_SpawnInfo = {
-    InvisiblePole_Spawn,
+extern "C" DaBarSpawnInfo g_profile_BAR = {
+    daBar_c_classInit,
     0x011f,
     0x0099,
     0x00000003,

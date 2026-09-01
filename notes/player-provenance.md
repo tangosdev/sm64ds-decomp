@@ -338,28 +338,38 @@ Three more, all found while chasing the arrays.
 | 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
 | 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after `func_ov002_020bd928(this, 0x33)` and clears it immediately after `func_ov002_020bd8c0(this, 0x33)`; `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls `func_ov002_020bd8c0(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
 
-## IceSlideManager
+## daSldMng_c
 
 All fourteen `unk_` are gone, but the split between them is worth stating plainly,
 because they are two different kinds of naming and only one of them is evidence.
 
-`0x000..0x0d4` is `dActor_c`'s layout written out FLAT -- `IceSlideManager` does
-not derive from `dActor_c`, it mirrors it. So `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
+`0x000..0x0d4` USED to be `dActor_c`'s layout written out FLAT -- the class
+mirrored its base instead of deriving from it, so `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
 `mClipOffsetY`, `mClipRadius`, `mClipDistance`, `mFarDistance`, `mClipResult` and
-`mDeathTableID` are **copied from `include/dActor_c.h` at the matching offset**,
-not independently evidenced here. That is a weaker claim than the rest of this
-file and the header now says so. It is also why none of them can shadow anything:
-there is no base class to shadow.
+`mDeathTableID` were **copied from `include/dActor_c.h` at the matching offset**,
+not independently evidenced here. That weaker claim is now moot:
+`include/daSldMng_c.h` declares `struct daSldMng_c : dActor_c`, so those fields
+are the base's own and this section makes no claim about them at all. The
+cartridge agrees -- `_ZTI10daSldMng_c` (ov019 `0x0211338c`) is an
+`__si_class_type_info` naming `_ZTI8dActor_c` as its one base at subobject
+offset zero.
 
 Only two slots are the actor's own, and both are witnessed:
 
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x0d4 | `mKillTimer` | `InitResources` seeds it with 0x78 (120 frames) and nothing else arms it; `Behavior`'s state 1 runs it down with `DecIfAbove0_Short` and, at zero, plays one more sound and calls `dActor_c::KillAndTrackInDeathTable`. Armed once, expires once, and its expiry IS the kill. |
-| 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the increment is spelt through a byte pointer at `this + 0xd6`, which is why the slot is `u8`. |
+| 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the ROM's own store is a `strb` of the loaded byte plus one, which is why the slot is `u8`. |
 
-The rename carried into `src_tu/actors/IceSlideManager.cpp`, which keeps its own
-TU-local shadow `dActor_c`; `check_src_tu_compiles` is green on all 72.
+Both methods, the compiler-generated D1/D0 pair and the spawn veneer now live in
+one genuine translation unit, `src/actors/d_a_sld_mng.cpp` (manifest entry
+`ov019/daSldMng_c`, `.text 0x0211261c..0x0211277c`). The shadow that entry used
+to carry under `src_tu/actors/` and the five per-function sources it was built
+from are deleted; that entry's `legacy_source` fields still name each of them. Because that TU defines `InitResources` -- the first declared
+non-inline virtual, so this class's key function -- it emits the whole
+`_ZTV/_ZTI/_ZTS` group, and `tools/romdata_check.py` word-compares
+`_ZTV10daSldMng_c` (ov019 `0x021133cc`, 124 bytes) against the cartridge:
+VERIFIED. Under the coined name that comparison was impossible.
 
 ## UpDownLiftBbh
 

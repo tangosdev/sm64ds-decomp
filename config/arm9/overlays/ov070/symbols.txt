@@ -43,7 +43,7 @@ _ZN7daBrq_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02120e20
 _ZN7daBrq_c6RenderEv kind:function(arm,size=0x68) addr:0x02120e24
 _ZN7daBrq_c8BehaviorEv kind:function(arm,size=0x60) addr:0x02120e8c
 _ZN7daBrq_c13InitResourcesEv kind:function(arm,size=0x1c0) addr:0x02120eec
-Amp_Spawn kind:function(arm,size=0x6c) addr:0x021210ac
+daBrq_c_classInit kind:function(arm,size=0x6c) addr:0x021210ac
 _ZN8daKrpa_cD1Ev kind:function(arm,size=0x48) addr:0x02121118
 _ZN8daKrpa_cD0Ev kind:function(arm,size=0x5c) addr:0x02121160
 _ZN8daKrpa_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021211bc
@@ -145,7 +145,7 @@ data_ov070_0212322c kind:data(any) addr:0x0212322c
 data_ov070_02123234 kind:data(any) addr:0x02123234
 _ZTS7daBrq_c kind:data(any) addr:0x0212323c
 _ZTI7daBrq_c kind:data(any) addr:0x02123248
-Amp_SpawnInfo kind:data(any) addr:0x02123254 ambiguous
+g_profile_BIRIKYU kind:data(any) addr:0x02123254 ambiguous
 _ZTV7daBrq_c kind:data(any) addr:0x02123278
 data_ov070_021232f4 kind:data(any) addr:0x021232f4
 data_ov070_021232fc kind:data(any) addr:0x021232fc

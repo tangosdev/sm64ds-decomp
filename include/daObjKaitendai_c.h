@@ -40,7 +40,8 @@
  * fBase_c::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
  * a field anywhere in this class or in any of the five leaves.
  *
- * NOT RickshawBs_Spawn. That function allocates 816 and builds
+ * NOT daObjKm3_Kurumajiku_c_classInit (historical alias RickshawBs_Spawn).
+ * That function allocates 816 and builds
  * daObjKm3_Kurumajiku_c; the ov047 "Bs" names were crossed -- daObjKm3_Kaitendai_c
  * itself was misnamed RickshawBs until the rename in include/daObjKm3_Kaitendai_c.h,
  * settled by vtable evidence rather than by either factory's own name.

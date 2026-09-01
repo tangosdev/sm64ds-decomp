@@ -1,11 +1,13 @@
 //cpp
 /* Genuine production translation unit for ov023/daObjFm_Battan_c.
  *
- * The class identity is carried by retail RTTI. Squasher_Spawn and
- * Squasher_SpawnInfo remain evidence-bounded C ABI aliases because the ROM
- * does not preserve their original source spellings. Private helper spellings
- * are likewise inferred; their class ownership, bodies, calls, and ordering
- * are byte/relocation proven.
+ * daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed
+ * source-style names. SM64DS proves the RTTI class, FM_BATTAN registry ID,
+ * descriptor/factory relationship, and object shape; later EAD lineage
+ * supplies the spelling prior. Exact original SM64DS symbols are not
+ * preserved. Historical project aliases: Squasher_Spawn and
+ * Squasher_SpawnInfo. Private helper spellings are likewise inferred; their
+ * class ownership, bodies, calls, and ordering are byte/relocation proven.
  *
  * mwccarm emits function sections in reverse source order. Keep the ROM-high
  * factory first and the ROM-low helper last. InitResources is the key function;
@@ -22,14 +24,14 @@
 struct BattanVector3 { s32 x, y, z; };
 
 struct BattanSpawnInfo {
-    daObjFm_Battan_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daObjFm_Battan_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char BattanSpawnInfo_size_must_be_0x1c[
@@ -63,11 +65,11 @@ extern void func_020393d4(int *, int);
 extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
-extern "C" daObjFm_Battan_c *Squasher_Spawn();
+extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit();
 
-/* ROM ordinal 8 -- Squasher_Spawn, 0x02111728, size 0x38. */
-// @symbol Squasher_Spawn
-extern "C" daObjFm_Battan_c *Squasher_Spawn()
+/* ROM ordinal 8 -- class initializer, 0x02111728, size 0x38. */
+// @symbol daObjFm_Battan_c_classInit
+extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit()
 {
     daObjFm_Battan_c *actor =
         (daObjFm_Battan_c *)_ZN7fBase_cnwEj(sizeof(daObjFm_Battan_c));
@@ -79,8 +81,8 @@ extern "C" daObjFm_Battan_c *Squasher_Spawn()
     return actor;
 }
 
-extern "C" BattanSpawnInfo Squasher_SpawnInfo = {
-    Squasher_Spawn,
+extern "C" BattanSpawnInfo g_profile_FM_BATTAN = {
+    daObjFm_Battan_c_classInit,
     0x0054,
     0x0124,
     0x02000000,

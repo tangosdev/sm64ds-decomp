@@ -77,7 +77,7 @@ _ZN7daBar_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020b064c
 _ZN7daBar_c6RenderEv kind:function(arm,size=0x8) addr:0x020b0650
 _ZN7daBar_c8BehaviorEv kind:function(arm,size=0x24) addr:0x020b0658
 _ZN7daBar_c13InitResourcesEv kind:function(arm,size=0x94) addr:0x020b067c
-InvisiblePole_Spawn kind:function(arm,size=0x38) addr:0x020b0710
+daBar_c_classInit kind:function(arm,size=0x38) addr:0x020b0710
 _ZN9CameraTagD1Ev kind:function(arm,size=0x24) addr:0x020b0748
 _ZN9CameraTagD0Ev kind:function(arm,size=0x38) addr:0x020b076c
 _ZN9CameraTag16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020b07a4
@@ -1694,7 +1694,7 @@ _ZTV13OneUpMushroom kind:data(any) addr:0x021083c8
 _ZTV7da1up_c kind:data(any) addr:0x021083c8
 _ZTS7daBar_c kind:data(any) addr:0x02108444
 _ZTI7daBar_c kind:data(any) addr:0x02108450
-InvisiblePole_SpawnInfo kind:data(any) addr:0x0210845c
+g_profile_BAR kind:data(any) addr:0x0210845c
 _ZTV7daBar_c kind:data(any) addr:0x02108480
 _ZTI10daCamTag_c kind:data(any) addr:0x021084fc
 _ZTS10daCamTag_c kind:data(any) addr:0x02108508

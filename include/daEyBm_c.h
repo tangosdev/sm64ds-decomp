@@ -11,7 +11,8 @@
  * MrI_Projectile): the typeinfo at ov071
  * 0x02122db8 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02122de8 (31 slots, same count as dActor_c's) is what pairs it
- * to MrI_Projectile_Spawn, which stores that address after allocating 0x334
+ * to daEyBm_c_classInit (historical alias MrI_Projectile_Spawn), which stores
+ * that address after allocating 0x334
  * bytes via fBase_c::operator new.
  *
  * The Spawn constructs the three owned subobjects below at 0xd4..0x13c in

@@ -75,7 +75,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "Squasher_Spawn",
+      "symbol": "daObjFm_Battan_c_classInit",
       "address": "0x02111728",
       "size": "0x00000038",
       "legacy_source": "src/Squasher_Spawn.c",
@@ -156,7 +156,7 @@
       "reason": "InitResources naturally emits the ROM-proven class type-name string. romdata_check proves the exact payload before text-only isolation discards the copy."
     },
     {
-      "symbol": "Squasher_SpawnInfo",
+      "symbol": "g_profile_FM_BATTAN",
       "disposition": "deadstrip-data",
       "canonical_module": "ov023",
       "canonical_address": "0x02111fc0",
@@ -173,7 +173,7 @@
   "notes": [
     "Genuine lifecycle source form: daObjFm_Battan_c defines its virtual destructor inline and InitResources as the key function. The compiler, not hand-written RTTI/vtable or a forcing object, owns the class destructor variants and class data.",
     "UpdateShadow and UpdateModelTransform are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations, and codegen are proven; the exact original English names are not.",
-    "Squasher_Spawn and Squasher_SpawnInfo remain evidence-bounded C ABI aliases. Natural new was measured elsewhere in this actor family to target the wrong global allocator, so the factory retains retail's narrow allocator/base/member-constructor/vptr seam.",
+    "daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed source-style names: SM64DS proves the RTTI class, FM_BATTAN registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Squasher_Spawn and Squasher_SpawnInfo. Natural new was measured elsewhere in this actor family to target the wrong global allocator, so the factory retains retail's narrow allocator/base/member-constructor/vptr seam.",
     "The ov023 SharedFilePtr at 0x02112080 is the collision resource proved by retained __sinit_ov023_02111aa8. The old RotatingPlatformWdw symbol at the same virtual address in ov029 was a cross-overlay collision and is not used here.",
     "The retained initializer, ctor word, resource BSS, and unrelated read-only data remain separately enrolled and are not claimed by this text-only class TU.",
     "Legacy per-function contribution comparison is intentionally inapplicable across this atomic identity correction: those objects define the old Squasher mangles while this genuine object defines ROM-proven daObjFm_Battan_c mangles. Production evidence is the 9/9 byte+relocation+order proof, nine blind:0 linked-function checks, fail-closed derived eligibility, and exact normal 106/106 ROM link."
@@ -221,11 +221,11 @@
         "_ZTI8dActor_c",
         "_ZTI16daObjFm_Battan_c",
         "_ZTS16daObjFm_Battan_c",
-        "Squasher_SpawnInfo",
+        "g_profile_FM_BATTAN",
         "_ZTV16daObjFm_Battan_c"
       ],
       "dataExternalized": [
-        "Squasher_SpawnInfo",
+        "g_profile_FM_BATTAN",
         "_ZTI10dBgActor_c",
         "_ZTI16daObjFm_Battan_c",
         "_ZTI7dBase_c",

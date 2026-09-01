@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "InvisiblePole_Spawn",
+      "symbol": "daBar_c_classInit",
       "address": "0x020b0710",
       "size": "0x00000038",
       "legacy_source": "src/InvisiblePole_Spawn.c",
@@ -135,7 +135,7 @@
       "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
     },
     {
-      "symbol": "InvisiblePole_SpawnInfo",
+      "symbol": "g_profile_BAR",
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x0210845c",
@@ -151,7 +151,7 @@
   ],
   "notes": [
     "Genuine lifecycle source form: daBar_c defines its virtual destructor inline and InitResources as the key function. The compiler owns D1/D0 and the complete RTTI/vtable group; the source contains no hand-mangled member definition, forcing object, or shadow actor layout.",
-    "InvisiblePole_Spawn and InvisiblePole_SpawnInfo remain evidence-bounded C ABI aliases. The ROM proves the daBar_c identity through RTTI but does not preserve the factory or descriptor's original English spelling.",
+    "daBar_c_classInit and g_profile_BAR are reconstructed source-style names: SM64DS proves the daBar_c RTTI identity, BAR registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were InvisiblePole_Spawn and InvisiblePole_SpawnInfo.",
     "The factory retains retail's measured fBase_c allocator, dActor_c base construction, dCcAc_c member construction, and vptr sequence. Natural actor new targets the wrong global allocator relocation in this compiler family.",
     "dActor_c::SetRanges and dCcAc_c::Init retain narrow ABI-equivalent declarations because their Fix12<int> by-value parameters trigger the documented mwccarm stack-homing wall when their definitions are expressed naturally.",
     "The manifest is text-only. Natural class RTTI/type-name, typed SpawnInfo, vtable, and inherited vague-linkage RTTI copies are verified at canonical homes before production isolation discards them; no initializer, ctor, or BSS ownership is claimed.",
@@ -195,11 +195,10 @@
         "_ZTI7daBar_c",
         "_ZTI8dActor_c",
         "_ZTI7dBase_c",
-        "InvisiblePole_SpawnInfo",
+        "g_profile_BAR",
         "_ZTV7daBar_c"
       ],
       "dataExternalized": [
-        "InvisiblePole_SpawnInfo",
         "_ZTI7dBase_c",
         "_ZTI7daBar_c",
         "_ZTI7fBase_c",
@@ -208,7 +207,8 @@
         "_ZTS7daBar_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
-        "_ZTV7daBar_c"
+        "_ZTV7daBar_c",
+        "g_profile_BAR"
       ]
     },
     "criteria": {

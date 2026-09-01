@@ -149,7 +149,7 @@ ov013 0x21113bc  n=8  L=153  ClockPaintingHandShort   uncorrob
 ov014 0x2112e0c  n=8  L=197  ChainChompFence
 ov015 0x21111a0  n=7  L=106  PoleBillboard            uncorrob
 ov018 0x21126d4  n=4  L=60   PowerStarCreate          uncorrob
-ov019 0x211261c  n=5  L=93   IceSlideManager
+ov019 0x211261c  n=5  L=93   daSldMng_c
 ov021 0x2112db4  n=6  L=105  ShutterHmc
 ov022 0x2111980  n=8  L=181  LavaBridge               uncorrob
 ov022 0x2111cac  n=8  L=170  LavaSeesaw               uncorrob

@@ -1192,7 +1192,7 @@
     "src/_ZN3Amp6RenderEv.cpp",
     "src/_ZN3Amp8BehaviorEv.cpp",
     "src/_ZN3Amp13InitResourcesEv.cpp",
-    "src/Amp_Spawn.c"
+    "src/daBrq_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -37866,7 +37866,7 @@
     "src/_ZN3Amp6RenderEv.cpp",
     "src/_ZN3Amp8BehaviorEv.cpp",
     "src/_ZN3Amp13InitResourcesEv.cpp",
-    "src/Amp_Spawn.c"
+    "src/daBrq_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 11,

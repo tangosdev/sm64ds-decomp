@@ -1,10 +1,13 @@
 //cpp
 /* Genuine production translation unit for ov070/daBrq_c.
  *
- * The class identity comes from retail RTTI. Amp_Spawn and Amp_SpawnInfo
- * remain evidence-bounded C ABI aliases because their original source names
- * do not survive. The private state-machine spellings are inferred; their
- * class ownership, bodies, calls, PMF layout, and ordering are proven.
+ * daBrq_c_classInit and g_profile_BIRIKYU are reconstructed source-style
+ * names. SM64DS proves the daBrq_c RTTI identity, BIRIKYU registry ID,
+ * descriptor/factory relationship, and object shape; later EAD lineage
+ * supplies the spelling prior. Exact original SM64DS symbols are not
+ * preserved. Historical project aliases: Amp_Spawn and Amp_SpawnInfo. The
+ * private state-machine spellings are inferred; their class ownership,
+ * bodies, calls, PMF layout, and ordering are proven.
  *
  * mwccarm emits ordinary function sections in reverse source order. Keep the
  * ROM-high InitResources method first and the destructor group last.
@@ -19,24 +22,24 @@
 /* mwccarm cannot express placement construction against retail's fBase_c
  * allocator. Keep that measured factory in its exact C source; this genuine
  * class TU owns the descriptor, members, destructor, RTTI, and vtable. */
-extern "C" int *Amp_Spawn(void);
+extern "C" int *daBrq_c_classInit(void);
 
 struct BrqSpawnInfo {
-    int *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    Fix12i untrackDistance;
+    int *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char BrqSpawnInfo_size_must_be_0x1c[
     sizeof(BrqSpawnInfo) == 0x1c ? 1 : -1];
 
-extern "C" BrqSpawnInfo Amp_SpawnInfo = {
-    Amp_Spawn,
+extern "C" BrqSpawnInfo g_profile_BIRIKYU = {
+    daBrq_c_classInit,
     0x010a,
     0x007d,
     0x00000003,
