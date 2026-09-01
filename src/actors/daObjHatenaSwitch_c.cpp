@@ -110,6 +110,7 @@ extern "C" HatenaSwitchSpawnInfo QuestionSwitch_SpawnInfo = {
 };
 
 /* ROM ordinal 11 -- inferred static callback, 0x020b56c4, size 0x14. */
+// @symbol _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 void daObjHatenaSwitch_c::AfterClsnCallback(
     dBgW *collider, dActor_c *owner, dActor_c *other)
 {
@@ -117,6 +118,7 @@ void daObjHatenaSwitch_c::AfterClsnCallback(
 }
 
 /* ROM ordinal 10 -- inferred collision handler, 0x020b567c, size 0x48. */
+// @symbol _ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c
 void daObjHatenaSwitch_c::HandleClsn(dActor_c &other)
 {
     u16 actorID = other.actorID;
@@ -132,6 +134,7 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other)
 }
 
 /* ROM ordinal 9 -- key function, 0x020b5500, size 0x17c. */
+// @symbol _ZN19daObjHatenaSwitch_c13InitResourcesEv
 s32 daObjHatenaSwitch_c::InitResources()
 {
     void *file;
@@ -176,6 +179,7 @@ s32 daObjHatenaSwitch_c::InitResources()
 }
 
 /* ROM ordinal 8 -- Behavior, 0x020b51dc, size 0x324. */
+// @symbol _ZN19daObjHatenaSwitch_c8BehaviorEv
 s32 daObjHatenaSwitch_c::Behavior()
 {
     if (mSoundDelay != 0) {
@@ -278,6 +282,7 @@ s32 daObjHatenaSwitch_c::Behavior()
 }
 
 /* ROM ordinal 7 -- Render, 0x020b51ac, size 0x30. */
+// @symbol _ZN19daObjHatenaSwitch_c6RenderEv
 s32 daObjHatenaSwitch_c::Render()
 {
     mModelAnim.Render(0);
@@ -285,6 +290,7 @@ s32 daObjHatenaSwitch_c::Render()
 }
 
 /* ROM ordinal 6 -- CleanupResources, 0x020b512c, size 0x80. */
+// @symbol _ZN19daObjHatenaSwitch_c16CleanupResourcesEv
 s32 daObjHatenaSwitch_c::CleanupResources()
 {
     if (mStaticMeshCollider.IsEnabled())
@@ -299,6 +305,7 @@ s32 daObjHatenaSwitch_c::CleanupResources()
 }
 
 /* ROM ordinal 5 -- inferred model transform, 0x020b50a0, size 0x8c. */
+// @symbol _ZN19daObjHatenaSwitch_c20UpdateModelTransformEv
 void daObjHatenaSwitch_c::UpdateModelTransform()
 {
     s32 shifted[4];
@@ -313,6 +320,7 @@ void daObjHatenaSwitch_c::UpdateModelTransform()
 }
 
 /* ROM ordinal 4 -- inferred collision transform, 0x020b503c, size 0x64. */
+// @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform()
 {
     *(HatenaMatrixWords *)&mClsnMat =
@@ -324,6 +332,7 @@ void daObjHatenaSwitch_c::UpdateClsnTransform()
 }
 
 /* ROM ordinal 3 -- inferred collision state, 0x020b4fd0, size 0x6c. */
+// @symbol _ZN19daObjHatenaSwitch_c15UpdateClsnStateEv
 s32 daObjHatenaSwitch_c::UpdateClsnState()
 {
     int shouldDisable = (int)((mFlags & 8) != 0);
@@ -340,6 +349,7 @@ s32 daObjHatenaSwitch_c::UpdateClsnState()
 }
 
 /* ROM ordinal 2 -- vtable slot 21, 0x020b4fc4, size 0x0c. */
+// @symbol _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c
 void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other)
 {
     mPressTimer = 0;

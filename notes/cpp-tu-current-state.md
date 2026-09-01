@@ -20,7 +20,7 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11249 / 11402 (98.66%) |
 | MATCHED code bytes | 2122268 / 2238108 (94.82%) |
-| Strict CONVERTED source functions | 2564 / 11314 (22.66%) |
+| Strict CONVERTED source functions | 2572 / 11314 (22.73%) |
 | Physical production source files | 11022 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
