@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN12SwitchPillar13InitResourcesEv
-#include "SwitchPillar.h"
+// @symbol _ZN16daObjC0_Switch_c13InitResourcesEv
+#include "daObjC0_Switch_c.h"
 
-/* SwitchPillar::InitResources -- vtable slot 0, ov012 0x02111370.
+/* daObjC0_Switch_c::InitResources -- vtable slot 0, ov012 0x02111370.
  *
  * Real member function on real fields, same idiom as
  * src/_ZN11VolcanoRing13InitResourcesEv.cpp (#1583): mModel/mMeshCollider/
@@ -30,7 +30,7 @@ extern int data_ov012_021124a0[];
 extern int data_ov012_02111cd0[];
 }
 
-int SwitchPillar::InitResources()
+int daObjC0_Switch_c::InitResources()
 {
     void *mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124a8);
     mModel.SetFile((BMD_File *)mdl, 1, -1);

@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN12SwitchPillar15OnGroundPoundedER8dActor_c
-#include "SwitchPillar.h"
+// @symbol _ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c
+#include "daObjC0_Switch_c.h"
 
-/* SwitchPillar::OnGroundPounded -- vtable slot 21, ov012 0x0211123c.
+/* daObjC0_Switch_c::OnGroundPounded -- vtable slot 21, ov012 0x0211123c.
  *
  * mPosY and mPressed are the same fields InitResources touches.
  * dActor_c::FindWithActorID walks every actor of a given actorID (0x22, this
@@ -14,7 +14,7 @@ extern "C" {
 extern int data_0209caa0[];
 }
 
-void SwitchPillar::OnGroundPounded(dActor_c &other)
+void daObjC0_Switch_c::OnGroundPounded(dActor_c &other)
 {
     if (mPressed) return;
     mPosY -= 0x64000;
@@ -25,7 +25,7 @@ void SwitchPillar::OnGroundPounded(dActor_c &other)
     if (p == 0) return;
 check:
     if (p != (dActor_c *)this) {
-        if (((SwitchPillar *)p)->mPressed) {
+        if (((daObjC0_Switch_c *)p)->mPressed) {
             data_0209caa0[2] |= 0x80000;
         }
         return;

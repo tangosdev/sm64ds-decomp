@@ -4080,19 +4080,19 @@
    "start": "0x21111a0",
    "end": "0x2111450",
    "classes": [
-    "SwitchPillar"
+    "daObjC0_Switch_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN12SwitchPillarD1Ev.cpp",
-    "src/_ZN12SwitchPillarD0Ev.c",
-    "src/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp",
-    "src/_ZN12SwitchPillar16CleanupResourcesEv.cpp",
-    "src/_ZN12SwitchPillar6RenderEv.cpp",
-    "src/_ZN12SwitchPillar8BehaviorEv.cpp",
-    "src/_ZN12SwitchPillar13InitResourcesEv.cpp",
-    "src/SwitchPillar_Spawn.c"
+    "src/_ZN16daObjC0_Switch_cD1Ev.cpp",
+    "src/_ZN16daObjC0_Switch_cD0Ev.c",
+    "src/_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN16daObjC0_Switch_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjC0_Switch_c6RenderEv.cpp",
+    "src/_ZN16daObjC0_Switch_c8BehaviorEv.cpp",
+    "src/_ZN16daObjC0_Switch_c13InitResourcesEv.cpp",
+    "src/daObjC0_Switch_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 6,

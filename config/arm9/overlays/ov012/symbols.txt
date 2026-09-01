@@ -1,11 +1,11 @@
-_ZN12SwitchPillarD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN12SwitchPillarD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN12SwitchPillar15OnGroundPoundedER8dActor_c kind:function(arm,size=0xb0) addr:0x0211123c
-_ZN12SwitchPillar16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021112ec
-_ZN12SwitchPillar6RenderEv kind:function(arm,size=0x28) addr:0x02111324
-_ZN12SwitchPillar8BehaviorEv kind:function(arm,size=0x24) addr:0x0211134c
-_ZN12SwitchPillar13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111370
-SwitchPillar_Spawn kind:function(arm,size=0x30) addr:0x02111420
+_ZN16daObjC0_Switch_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN16daObjC0_Switch_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c kind:function(arm,size=0xb0) addr:0x0211123c
+_ZN16daObjC0_Switch_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021112ec
+_ZN16daObjC0_Switch_c6RenderEv kind:function(arm,size=0x28) addr:0x02111324
+_ZN16daObjC0_Switch_c8BehaviorEv kind:function(arm,size=0x24) addr:0x0211134c
+_ZN16daObjC0_Switch_c13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111370
+daObjC0_Switch_c_Spawn kind:function(arm,size=0x30) addr:0x02111420
 _ZN13BasementWaterD1Ev kind:function(arm,size=0x4c) addr:0x02111450
 _ZN13BasementWaterD0Ev kind:function(arm,size=0x60) addr:0x0211149c
 _ZN13BasementWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021114fc
@@ -95,8 +95,8 @@ data_ov012_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov012_0211229c kind:data(any) addr:0x0211229c ambiguous
 _ZTI16daObjC0_Switch_c kind:data(any) addr:0x02112300
 _ZTS16daObjC0_Switch_c kind:data(any) addr:0x0211230c
-SwitchPillar_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
-_ZTV12SwitchPillar kind:data(any) addr:0x02112344
+daObjC0_Switch_c_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
+_ZTV16daObjC0_Switch_c kind:data(any) addr:0x02112344
 data_ov012_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous
 _ZTI14daObjC0Water_c kind:data(any) addr:0x021123c4

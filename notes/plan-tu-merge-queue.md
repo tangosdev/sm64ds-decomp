@@ -144,7 +144,7 @@ cheapest possible probe of post-regeneration ov006.
 **B2 — R0, one TU per module · 10 TUs / 69 files / net −59 / 1,356 lines**
 ```
 ov009 0x2112078  n=7  L=116  Flag                     pcov=2
-ov012 0x21111a0  n=8  L=175  SwitchPillar
+ov012 0x21111a0  n=8  L=175  daObjC0_Switch_c
 ov013 0x21113bc  n=8  L=153  ClockPaintingHandShort   uncorrob
 ov014 0x2112e0c  n=8  L=197  ChainChompFence
 ov015 0x21111a0  n=7  L=106  PoleBillboard            uncorrob
