@@ -8,25 +8,10 @@ src/actors/daObjKm3_Kurumajiku_c.cpp:
     .text start:0x021111a0 end:0x021112bc
     .data start:0x02112258 end:0x02112320
 
-src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp:
+src/actors/daObjKm3_Kaitendai_c.cpp:
     complete
-    .text start:0x021112bc end:0x0211130c
-
-src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp:
-    complete
-    .text start:0x0211130c end:0x02111370
-
-src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111370 end:0x02111384
-
-src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111384 end:0x021113bc
-
-src/func_ov047_021113bc.c:
-    complete
-    .text start:0x021113bc end:0x021113f8
+    .text start:0x021112bc end:0x021113f8
+    .data start:0x02112328 end:0x021123fc
 
 src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp:
     complete

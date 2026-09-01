@@ -33,7 +33,9 @@
 
 struct daObjKm3_Kaitendai_c : daObjKaitendai_c {
     /* --- vtable --- */
-    virtual ~daObjKm3_Kaitendai_c();    /* slots 16 (D1), 17 (D0) */
+    /* The inline empty body is codegen-significant: mwccarm emits the retail
+     * D1/D0 pair in that order without materializing a homeless D2 body. */
+    virtual ~daObjKm3_Kaitendai_c() {}  /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
