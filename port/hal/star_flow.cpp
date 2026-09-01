@@ -922,6 +922,55 @@ extern char data_0209f4a4[];
 extern char data_0209f4a6[];
 extern unsigned char data_0209f4ac[];  /* touching */
 }
+/* ---- THE WINNER, SHOWN ------------------------------------------------------
+ *
+ * Tango: "when the match is over and it says who wins and would normally end it
+ * closes and goes to the lobby." The launcher is the lobby until Stage 1 builds
+ * a real one, so the port's half is: say who won, then close.
+ *
+ * THIS IS THE FALLBACK AND IT SAYS SO. The real answer is the ROM's own results
+ * screen -- scene 7, which boots and renders and whose own exit asks for the
+ * lobby -- and this lane measured exactly why it cannot be reached from inside a
+ * match (the block over port_vs_match_end_poll). Rather than half-fake it with
+ * ROM sprites, the port says who won in the port's own voice, through the host
+ * overlay, where nobody can mistake it for the cartridge's results screen.
+ *
+ * THE WINNER IS COMPUTED FROM THE LATCHED SCORES, not from the ROM's own
+ * func_ov075_021165b0. That function is linked and it is the right one, and it
+ * takes the results SCENE as its receiver -- there is no scene here to give it.
+ * Most stars wins; equal top scores are reported as a draw rather than broken
+ * by an invented rule.
+ *
+ * Text only, one line, and the caller draws it: hal/ has no framebuffer. */
+extern "C" int port_vs_match_end_banner(char *out, int n)
+{
+    /* SM64DS_VS_END_BANNER=0 keeps the end flow and drops the presentation, so
+       a capture pair can isolate exactly this line's pixels with the freeze,
+       the latch and the close all still running. */
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_END_BANNER");
+        on = (e && e[0] == '0') ? 0 : 1;
+    }
+    if (!on || g_end_fired < 0 || data_0209f2d8 != 1 || n < 64)
+        return 0;
+    int best = 0, ties = 0;
+    for (int i = 1; i < 4; ++i)
+        if (g_end_scores[i] > g_end_scores[best]) best = i;
+    for (int i = 0; i < 4; ++i)
+        if (i != best && g_end_scores[i] == g_end_scores[best]) ++ties;
+    if (ties)
+        std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  %d - %d - %d - %d",
+                      g_end_scores[0], g_end_scores[1], g_end_scores[2],
+                      g_end_scores[3]);
+    else
+        std::snprintf(out, (size_t)n,
+                      "MATCH OVER  -  PLAYER %d WINS  %d - %d - %d - %d",
+                      best + 1, g_end_scores[0], g_end_scores[1],
+                      g_end_scores[2], g_end_scores[3]);
+    return 1;
+}
+
 extern "C" void port_vs_match_end_hold(void)
 {
     static int on = -1;
@@ -964,7 +1013,7 @@ extern "C" int port_vs_match_end_poll(int frame)
         e = std::getenv("SM64DS_VS_END_SCENE");
         want_scene = e ? (e[0] != '0') : (int)PORT_VS_END_SCENE_DEFAULT;
         e = std::getenv("SM64DS_VS_EXIT_ON_END");
-        want_exit = (e && e[0] != '0') ? 1 : 0;
+        want_exit = (e && e[0] == '0') ? 0 : 1;
         e = std::getenv("SM64DS_VS_END_GRACE");
         grace = e ? std::atoi(e) : 240;
         if (grace < 0) grace = 0;
@@ -1095,20 +1144,21 @@ extern "C" int port_vs_match_end_poll(int frame)
                                : (data_02092664 == 0x187 ? "none" : "other"));
     fflush(stderr);
 
-    /* THE EXIT IS OFF BY DEFAULT AND THAT IS A DELIBERATE CHOICE, not an
-       oversight. Quitting is not what the DS does -- the DS shows a results
-       screen and goes back to the lobby -- and a player whose window vanished
-       the instant the clock ran out would be worse off than one left standing
-       in the arena, which is what happens today. The thing that WANTS a
-       process exit is the launcher, which needs a detectable end, and the
-       launcher can set the variable itself. So the MARKER is default-on
-       (harmless, and it is the machine-readable end state) and the QUIT is
-       opt-in. Flip PORT_VS_EXIT_DEFAULT nowhere: change the getenv default
-       here if the owner rules the other way. */
+    /* THE EXIT IS ON BY DEFAULT NOW, and round 1 had it the other way round.
+       That was this lane's choice and the owner has overruled it: "when the
+       match is over and it says who wins and would normally end it closes and
+       goes to the lobby." The launcher is the lobby until there is a real one,
+       so closing IS going to the lobby, and the objection round 1 raised -- a
+       window vanishing the instant the clock runs out -- is answered by the
+       thing that changed with it: the winner is on screen for the whole grace
+       window before this runs. Nobody's window disappears without being told
+       who won. SM64DS_VS_EXIT_ON_END=0 still opts out. */
     if (!want_exit)
         return 0;
-    fprintf(stderr, "  [vs] SM64DS_VS_EXIT_ON_END=1: quitting through the "
-            "window's own WM_QUIT path, exit code 0\n");
+    fprintf(stderr, "  [vs] closing: the winner has been on screen for the "
+            "whole grace window, so the match ends the way the owner asked -- "
+            "out through the window's own WM_QUIT path, exit code 0. "
+            "SM64DS_VS_EXIT_ON_END=0 opts out.\n");
     fflush(stderr);
     return 1;
 }

@@ -1147,6 +1147,9 @@ int  port_vs_match_end_poll(int frame);
    grace window runs. Inert until the match ends. */
 void port_vs_match_end_hold(void);
 int  port_vs_match_end_frozen(void);
+/* the winner line, once the match is over: hal/ has no framebuffer, so it
+   builds the text and the loop below draws it */
+int  port_vs_match_end_banner(char *out, int n);
 void port_message_composite_engine_a(void *fb);
 int port_probe_message_id(void);
 int port_probe_message_fire(void *player, int id);
@@ -11188,6 +11191,24 @@ int main(void)
             ovl_draw(surf, os);
         }
         if (menu_on) menu_draw(surf);
+        /* THE WINNER, once a VS match is over. Centred, over everything, for
+           the whole grace window before the process closes -- which is what
+           makes closing acceptable: nobody's window disappears without being
+           told who won. Host overlay on purpose: this is the port's own voice
+           and must not be mistakable for the cartridge's results screen
+           (hal/star_flow.cpp says why that screen is out of reach from inside
+           a match). */
+        {
+            char wb[96];
+            if (port_vs_match_end_banner(wb, (int)sizeof wb)) {
+                const int tw = (int)strlen(wb) * OVL_ADVANCE * OVL_SCALE;
+                const int wx = (ntr::SCREEN_W - tw) / 2;
+                const int wy = ntr::SCREEN_H / 2 - OVL_LINE;
+                ovl_shade(surf, wx - 6 * OVL_SCALE, wy - 4 * OVL_SCALE,
+                          tw + 12 * OVL_SCALE, OVL_LINE + 8 * OVL_SCALE);
+                ovl_text(surf, wx, wy, wb, 0xFFFFE060u);
+            }
+        }
         /* the save-state toast, over everything, bottom-left; at file scope
            now so the windowed scene loop can show the menu's refusals too */
         toast_draw(surf);
