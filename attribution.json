@@ -1160,7 +1160,7 @@
     "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_fall_block.cpp#daObjKm2_Fall_Block_c_Spawn": "github-actions[bot]",
-    "src/actors/d_a_cam_tag.cpp#_ZN10daCamTag_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_cam_tag.cpp#_ZN10daCamTag_cD1Ev": "tangosdev",
     "src/actors/d_a_cam_tag.cpp#_ZN10daCamTag_cD0Ev": "github-actions[bot]",
     "src/actors/d_a_cam_tag.cpp#_ZN10daCamTag_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_cam_tag.cpp#_ZN10daCamTag_c16OnPendingDestroyEv": "andrewboudreau",
