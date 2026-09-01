@@ -10,8 +10,9 @@
  * `SwitchPillar`, a coined name. _ZTS16daObjC0_Switch_c at ov012:0x0211230c is
  * the byte string "16daObjC0_Switch_c" in extracted/overlays/overlay_0012.bin,
  * and _ZTI16daObjC0_Switch_c at 0x02112300 reads [0x0209a764, 0x0211230c,
- * 0x021089ec] -- __si_class_type_info's vtable+8, that same typeinfo name, and
- * _ZTI10dBgActor_c, so the ROM itself states the direct base too.
+ * 0x021089ec] -- _ZTVN3abi20__si_class_type_infoE (config/arm9/symbols.txt),
+ * that same typeinfo name, and _ZTI10dBgActor_c, so the ROM itself states the
+ * direct base too.
  * tools/class_rename.py performed the rename, and it is what makes this
  * promotion possible at all: a coined class reaches no symbol home, so its
  * _ZTI/_ZTS/_ZTV records can never be word-compared against the cartridge and
@@ -29,7 +30,7 @@
  * Assembled from these legacy one-function sources, all now deleted (ROM
  * address order):
  *   [0] 0x021111a0  src/_ZN16daObjC0_Switch_cD1Ev.cpp
- *   [1] 0x021111e4  src/_ZN16daObjC0_Switch_cD0Ev.c
+ *   [1] 0x021111e4  src/_ZN16daObjC0_Switch_cD0Ev.cpp
  *   [2] 0x0211123c  src/_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c.cpp
  *   [3] 0x021112ec  src/_ZN16daObjC0_Switch_c16CleanupResourcesEv.cpp
  *   [4] 0x02111324  src/_ZN16daObjC0_Switch_c6RenderEv.cpp

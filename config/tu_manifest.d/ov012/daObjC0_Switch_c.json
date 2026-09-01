@@ -82,18 +82,18 @@
     "Promoted filename uses the snake_case scheme in notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py): daObjC0_Switch_c -> d_a_obj_c0_switch. The class was renamed from the coined `SwitchPillar` to the cartridge RTTI spelling first (tools/class_rename.py), which is what lets this TU emitted _ZTI/_ZTS/_ZTV records be word-compared against the ROM."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "round": "tools/rombuild.py -j16 -- the promoted TU compiled and isolated in the production build, 106/106 exact, 100.000000%, mismatching 0",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov012-daObjC0_Switch_c/daObjC0_Switch_c.o (gitignored)",
+    "object": "build/ (gitignored) -- produced from src/actors/d_a_obj_c0_switch.cpp, the enrolled production source; the src_tu/ shadow object this field used to name no longer exists.",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 8,
     "functions_declared": 8,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s); see unlicensed_output_observed",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 compiler-owned symbol(s) outside the licensed span (.text 0x021111a0-0x02111450). This TU defines the class's key function, so mwcc emits the whole vtable/RTTI group as vague linkage. Every one of them is enumerated in this entry's compiler_only_output with a canonical module and address, and romdata_check word-compares each against the cartridge before production isolation discards it.",
+      "functions_occur_in_expected_order": "PASS -- ordinals 0 and 1 are the destructor pair, and defining the destructor inline in the class header is what puts them in the cartridge's own D1-then-D0 order. Written out-of-line mwcc emits D0 before D1 and objisolate refuses the TU outright; this criterion read PARTIAL for exactly that reason before the promotion.",
       "relocation_destinations_verified": "PASS"
     }
   },
@@ -116,7 +116,8 @@
     "artefacts": "build/tu/ov012-daObjC0_Switch_c/partial/partial.json (gitignored)",
     "state": "contribution-equivalent",
     "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "supersededBy": "SUPERSEDED by promotion. This block records the pre-promotion round, when the consolidated source was a src_tu/ shadow whose linker contribution stayed per-function and config/**/delinks.txt was untouched. The entry is now `promoted`: the source is enrolled at .text 0x021111a0-0x02111450 as a single `complete` delinks span, so any statement below about per-function contribution or unchanged delinks describes the superseded state, not this tree."
   },
   "compiler_only_output": [
     {
