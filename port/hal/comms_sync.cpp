@@ -1095,7 +1095,273 @@ namespace {
 bool g_gated_now = false;
 }
 
+// ===========================================================================
+// THE DIVERGENCE DETECTOR (lane VCHOMP). DEAD BY DEFAULT.
+// ===========================================================================
+//
+// WHY IT EXISTS. Two-window VS runs in INPUT LOCKSTEP: the windows trade
+// controller records and each simulates the whole world from them. So the two
+// worlds are supposed to be bit-identical every frame, and the FIRST frame on
+// which they are not is the crime scene -- everything after it is that one
+// difference compounding. Nothing in the port could name that frame, so every
+// desync report ("the chomp drifted") had to be chased by reading code.
+//
+// This walks the ROM's own live-actor list once a frame and prints a hash of
+// every actor's physical state. Run both windows with it on, diff the two
+// logs, and the first differing frame plus the actor that owns the difference
+// falls out of port/tools/dhdiff.py.
+//
+// PLACED IN sync_tick's FILE, CALLED FROM ITS FIRST LINE, on purpose:
+// tests/walk_window.cpp already calls sync_tick() once per frame of the level
+// loop, right after func_0203df40 has put this frame's input record on the
+// wire and before the fan-out. That is the sampling point a lockstep detector
+// wants -- a fixed spot in the frame, the same spot in both windows -- and
+// using it means this instrument adds no call site to any file another lane
+// owns and no source file to CMake. sync_tick's own body still early-returns
+// on !g_enabled; the detector runs AHEAD of that gate because it must work
+// with the sync layer OFF, which is the shipped configuration and the one
+// every desync report comes from.
+//
+// THAT CALL IS NOT UNCONDITIONAL, and an earlier version of this banner said
+// it was. It sits inside `if (real_camera)` (walk_window.cpp:10023; the flag
+// is on unless SM64DS_OLD_CAMERA is set), inside the level loop. So the frame
+// counter below counts FRAMES ON WHICH THIS RAN, which is not the same thing
+// as the game's frame number and not guaranteed to mean the same thing in two
+// windows: a session with menus and level loads can enter and leave that path
+// at different wall-clock moments on the two consoles.
+//
+// WHICH IS WHY EVERY [dh] LINE CARRIES rounds=. That is the comms round
+// counter, the exchanged one both consoles agree on, and it -- not the local
+// frame index -- is the sound key for lining two logs up. dhdiff.py checks it
+// before comparing anything and refuses rather than guess. Comparing two logs
+// on a frame index that has silently drifted is the one way this instrument
+// could report a FALSE divergence, and a false positive on the owner's single
+// live capture is worse than no capture at all.
+//
+// COST WHEN OFF: one compare of an int that is resolved on the first call.
+//
+// KNOBS
+//   SM64DS_VS_STATE_HASH=1        per-frame world hash line only. Names the
+//                                 FRAME. ~60 bytes/frame.
+//   SM64DS_VS_STATE_HASH=2        plus a compact one-line digest of every
+//                                 actor's uid:hash. Names the frame AND THE
+//                                 ACTOR. ~630 bytes/frame. THIS IS THE LEVEL
+//                                 A LIVE CAPTURE SHOULD RUN AT -- see the
+//                                 note at the digest for the arithmetic.
+//   SM64DS_VS_STATE_HASH=3        plus a verbose line per actor per frame,
+//                                 which additionally names the FIELD that
+//                                 moved. ~3800 bytes/frame; the lab level.
+//   SM64DS_VS_STATE_HASH_ID=<n>   verbose lines for this actorID (decimal) at
+//                                 any level -- the cheap way to watch one
+//                                 suspect class in full detail
+//   SM64DS_VS_STATE_HASH_FROM=<n> start at frame n (skips boot churn)
+//   SM64DS_VS_STATE_HASH_WIN=<off>:<len>
+//                                 also hash, and print, <len> raw bytes at
+//                                 <off> in the actor named by _ID. This is
+//                                 what turns "the chomp diverged" into "the
+//                                 chomp's path-node index diverged": subclass
+//                                 fields live past Actor's 0xd0 and no generic
+//                                 dump can know their names. REQUIRES _ID --
+//                                 see the note at the read. Both numbers
+//                                 accept 0x; len is capped at 64.
+//
+// THE WORLD HASH IS ORDER-INDEPENDENT (a sum of per-actor hashes, each seeded
+// with that actor's uniqueID) and the ORDER hash beside it is not. Two numbers
+// rather than one so that "the list came out in a different order" and "an
+// actor's state differs" are distinguishable at a glance; a single
+// order-dependent hash would report a reordering as a state change and send
+// the next reader after the wrong thing.
+//
+// WHAT IT READS. Raw offsets off the real Actor object, per include/Actor.h:
+// +0x04 uniqueID, +0x0c actorID, +0x0e aliveState, +0x5c..0x64 position,
+// +0x8c..0x90 angles, +0x98 horz speed, +0xa8 vert speed, +0xb0 flags. Raw
+// reads rather than the C++ header are the established convention in port/hal
+// -- see the banner on hal/editor_channel.cpp, which walks this same list the
+// same way. It never writes anything.
+//
+// Actor::Next is src/_ZN5Actor4NextEPKS_.cpp, a byte-matched ROM TU already
+// linked into walk_window -- the same traversal the game's own Behavior loops
+// use, so the set this reports is the set that is actually being ticked.
+// ---------------------------------------------------------------------------
+extern "C" void *_ZN5Actor4NextEPKS_(const void *prev);
+
+namespace {
+
+struct DhCfg {
+    int level;        // 0 = off, -1 = not parsed yet
+    int only_id;      // -1 = every actor
+    int from_frame;
+    int win_off;
+    int win_len;
+};
+DhCfg g_dh = {-1, -1, 0, 0, 0};
+int g_dh_frame = 0;
+
+int dh_env_int(const char *name, int dflt) {
+    const char *v = std::getenv(name);
+    if (!v || !*v) return dflt;
+    return (int)std::strtol(v, 0, 0);
+}
+
+void dh_init() {
+    g_dh.level = dh_env_int("SM64DS_VS_STATE_HASH", 0);
+    g_dh.only_id = dh_env_int("SM64DS_VS_STATE_HASH_ID", -1);
+    g_dh.from_frame = dh_env_int("SM64DS_VS_STATE_HASH_FROM", 0);
+    g_dh.win_off = 0;
+    g_dh.win_len = 0;
+    const char *w = std::getenv("SM64DS_VS_STATE_HASH_WIN");
+    if (w && *w) {
+        char *end = 0;
+        long off = std::strtol(w, &end, 0);
+        if (end && *end == ':') {
+            long len = std::strtol(end + 1, 0, 0);
+            if (off >= 0 && len > 0) {
+                if (len > 64) len = 64;
+                g_dh.win_off = (int)off;
+                g_dh.win_len = (int)len;
+            }
+        }
+    }
+    if (g_dh.level > 0)
+        std::fprintf(stderr,
+                     "[dh] detector armed: level=%d only_id=%d from=%d "
+                     "win=0x%x:%d\n",
+                     g_dh.level, g_dh.only_id, g_dh.from_frame, g_dh.win_off,
+                     g_dh.win_len);
+}
+
+inline void dh_mix(unsigned &h, unsigned v) {
+    h ^= v;
+    h *= 16777619u;   // FNV-1a
+}
+
+void dh_frame() {
+    if (g_dh.level < 0) dh_init();
+    if (g_dh.level <= 0) return;
+
+    const int frame = g_dh_frame++;
+    if (frame < g_dh.from_frame) return;
+
+    unsigned world = 0;              // order-independent: a SUM
+    unsigned order = 2166136261u;    // order-dependent: a chain
+    int n = 0;
+    // The level-2 digest, built as we walk. Sized for the biggest actor list
+    // this port mounts with room to spare, and the append is bounds-checked
+    // rather than trusted: a level with more actors than fit must truncate the
+    // digest, never the stack.
+    char dig[64 * 32];
+    int dig_len = 0;
+    dig[0] = 0;
+
+    for (const char *a = (const char *)_ZN5Actor4NextEPKS_(0); a;
+         a = (const char *)_ZN5Actor4NextEPKS_(a)) {
+        const unsigned uid = *(const unsigned *)(a + 0x04);
+        const unsigned id = *(const unsigned short *)(a + 0x0c);
+        const unsigned alive = *(const unsigned char *)(a + 0x0e);
+        const int px = *(const int *)(a + 0x5c);
+        const int py = *(const int *)(a + 0x60);
+        const int pz = *(const int *)(a + 0x64);
+        const int ax = *(const short *)(a + 0x8c);
+        const int ay = *(const short *)(a + 0x8e);
+        const int az = *(const short *)(a + 0x90);
+        const int sh = *(const int *)(a + 0x98);
+        const int sv = *(const int *)(a + 0xa8);
+        const unsigned fl = *(const unsigned *)(a + 0xb0);
+
+        // THE RAW WINDOW IS ONLY EVER READ OFF THE NAMED CLASS. Actors are not
+        // all the same size -- a plain Actor is 0xd0 bytes and the chomp is
+        // 0x7a4 -- so a window aimed at one class's subclass fields is an
+        // over-read on every smaller actor in the list, which would both risk
+        // a fault and manufacture a divergence out of whatever heap bytes
+        // happened to follow. Requiring SM64DS_VS_STATE_HASH_ID to name the
+        // class makes the window exactly as wide as the thing that asked for
+        // it. It costs nothing: a window over a class you have not named has
+        // no meaning anyway.
+        const bool named = (g_dh.only_id >= 0 && (int)id == g_dh.only_id);
+        const int wlen = named ? g_dh.win_len : 0;
+
+        unsigned h = 2166136261u;
+        dh_mix(h, uid);
+        dh_mix(h, id);
+        dh_mix(h, alive);
+        dh_mix(h, (unsigned)px);
+        dh_mix(h, (unsigned)py);
+        dh_mix(h, (unsigned)pz);
+        dh_mix(h, (unsigned)(ax & 0xffff) | ((unsigned)(ay & 0xffff) << 16));
+        dh_mix(h, (unsigned)(az & 0xffff));
+        dh_mix(h, (unsigned)sh);
+        dh_mix(h, (unsigned)sv);
+        // THE CULL BITS ARE MASKED OUT OF THE HASH, AND THIS IS NOT A
+        // CONVENIENCE. Actor::BeforeBehavior (src/_ZN5Actor14BeforeBehaviorEv
+        // .cpp) transforms the actor by data_0209b3ec -- THE CAMERA'S view
+        // matrix -- runs a Clipper distance test on the result and then writes
+        // bits 0x08/0x10/0x20 of this very word from the answer (|= 0x38,
+        // |= 0x18, |= 0x10, &= ~0x38). Every window has its own camera, so
+        // those three bits are per-window BY DESIGN and differ constantly
+        // between two correctly-synchronised consoles. Hashing them raw would
+        // make every actor in the arena report a divergence on the first
+        // frame and bury the one that matters.
+        //
+        // The rest of the word IS hashed, including bit 0x10000 -- the bit
+        // that turns a cull into a SKIPPED Behavior, which is a real
+        // divergence and must not be masked away with the cosmetic ones.
+        dh_mix(h, fl & ~0x38u);
+        for (int k = 0; k < wlen; ++k)
+            dh_mix(h, *(const unsigned char *)(a + g_dh.win_off + k));
+
+        world += h;
+        dh_mix(order, uid);
+        ++n;
+
+        // LEVEL 2: the compact digest, accumulated here and emitted as ONE
+        // line below. This is the level a LIVE capture should run at, and the
+        // reason it exists is bytes. Level 3 prints a verbose line per actor
+        // per frame, which measured 3787 bytes/frame in this arena -- on the
+        // order of 400 MB per window over a session the length of the owner's,
+        // against the ~179 bytes/frame the comms dump already writes. The
+        // digest carries the same "which actor moved" answer in about 610
+        // bytes/frame; only the FIELD that moved needs the verbose form, and
+        // by then you have the frame and can re-run at level 3.
+        //
+        // THE actorID IS IN THE LINE, not just the uid, and it is not
+        // optional. uid is a per-console allocation counter: it identifies
+        // the object but names nothing. NOTHING ELSE IN A PLAYLOG MAPS A uid
+        // TO A CLASS, so a digest of uid:hash alone would hand a live capture
+        // "frame N, uid 5" and no way to turn that into "the chain chomp"
+        // except by re-running a session that by definition did not
+        // reproduce. The id costs about ten characters a row and it is the
+        // difference between a capture that answers the question and one that
+        // only proves there was a question.
+        if (g_dh.level >= 2 && dig_len < (int)sizeof dig - 32)
+            dig_len += std::sprintf(dig + dig_len, " %u:%u:%08x", uid, id, h);
+
+        if (g_dh.level >= 3 || named) {
+            char win[64 * 2 + 1];
+            win[0] = 0;
+            for (int k = 0; k < wlen; ++k)
+                std::sprintf(win + k * 2, "%02x",
+                             *(const unsigned char *)(a + g_dh.win_off + k));
+            std::fprintf(stderr,
+                         "[dh+] f%d uid=%u id=%u al=%u pos=%d,%d,%d "
+                         "ang=%d,%d,%d spd=%d,%d fl=%08x h=%08x%s%s\n",
+                         frame, uid, id, alive, px, py, pz, ax, ay, az, sh, sv,
+                         fl, h, wlen ? " w=" : "", win);
+        }
+    }
+
+    const CommsReadout rr = comms_readout();
+    std::fprintf(stderr, "[dh] f%d n=%d w=%08x o=%08x rounds=%llu slot=%d\n",
+                 frame, n, world, order, (unsigned long long)rr.rounds,
+                 rr.slot);
+    if (g_dh.level >= 2)
+        std::fprintf(stderr, "[dh=] f%d%s\n", frame, dig);
+}
+
+}  // namespace
+
 void sync_tick() {
+    dh_frame();      // VCHOMP detector: ahead of the gate on purpose -- it has
+                     // to work with the sync layer off. No-op unless armed.
     if (!g_enabled) return;
     const CommsReadout r = comms_readout();
     if (!r.connected || r.players <= 1) {
