@@ -419,7 +419,7 @@ void seat_vs_countdown(void)
  * lane's to spend. Gating on the mode keeps an adventure frame byte-identical
  * and gives the VS arena the two things it was asked for.
  *
- * SM64DS_ENGINE_A_LAYERS=always is the ROM's own unconditional form, on this
+ * SM64DS_VS_HUD_SEAT=always is the ROM's own unconditional form, on this
  * same binary, so the lane that takes the adventure HUD can see what wakes up
  * before it commits to re-taking the baselines. =off restores the pre-seat
  * behaviour the same way. */
@@ -427,7 +427,7 @@ void seat_engine_a_layers(void)
 {
     static int mode = -1;   /* 0 off, 1 VS only (default), 2 always */
     if (mode < 0) {
-        const char *e = std::getenv("SM64DS_ENGINE_A_LAYERS");
+        const char *e = std::getenv("SM64DS_VS_HUD_SEAT");
         mode = 1;
         if (e && std::strcmp(e, "off") == 0) mode = 0;
         else if (e && std::strcmp(e, "always") == 0) mode = 2;
@@ -454,7 +454,9 @@ void seat_engine_a_layers(void)
      * whole top screen. Measured, before this line was added: 34638 changed
      * pixels spread over every band of the top screen instead of the HUD's own
      * rows. With it, the compositor skips BG0 exactly as the hardware does and
-     * only OBJ -- the timer and the star count -- reaches the picture.
+     * only OBJ reaches the picture. (An earlier revision of this line said
+     * "the timer and the star count". It was the timer alone, and the next
+     * block is why.)
      *
      * A raw register write in a host file is not the shape this tree likes, and
      * the alternative is worse: GX::SetGraphicsMode would also set the BG mode
@@ -462,12 +464,46 @@ void seat_engine_a_layers(void)
      * because it does not drive engine A. One bit, stating a fact about this
      * port that is permanently true on the level path. */
     *(volatile unsigned int *)0x04000000 |= 8;
+    /* AND THE 3D LAYER'S PRIORITY, WHICH IS WHY HALF THE VS HUD WAS INVISIBLE.
+     *
+     * Found chasing the coin move (round 2, order 1) and it is a bigger bug
+     * than the thing that found it: THE VS STAR COUNT HAS NEVER RENDERED in
+     * this port. Measured with the OAM census, engine A, a live arena:
+     *
+     *   OAM[0..2]  the timer      prio 0   -> drawn
+     *   OAM[3..5]  the star count prio 1   -> placed, real tiles, NOT drawn
+     *
+     * hal/message_compositor.cpp's layer_behind_3d is the ROM's own rule --
+     * a sprite loses to the 3D layer only when `prio > p3d` -- and p3d is read
+     * straight out of BG0CNT (0x04000008 bits 0-1). The port never writes that
+     * register, so it reads 0, every priority-1 sprite is strictly worse than
+     * the 3D layer, and the compositor drops it. The rule is right; the input
+     * to it was never seated.
+     *
+     * THE ROM'S OWN VALUE IS 1, and it is not a guess: src/func_02005a58.c, the
+     * ROM's engine-A 2D setup, does
+     *
+     *     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;   // priority 1
+     *     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & 0x43) | 0x1710;
+     *
+     * -- and the second line's 0x43 mask preserves bits 0-1, so the ROM leaves
+     * the 3D layer at priority 1 for the whole run. That is exactly what lets a
+     * priority-1 HUD sprite sit in front of the arena on hardware. func_02005a58
+     * is in no slice and no build list; the port has never run it.
+     *
+     * Seating the two priority bits, and nothing else in that register, is the
+     * smallest statement of the ROM's own fact. It is what makes the star count
+     * appear, and it is the precondition for the coin move in
+     * hal/sub_actors.cpp -- the coins are priority 1 too. */
+    *(volatile unsigned short *)0x04000008 =
+        (unsigned short)((*(volatile unsigned short *)0x04000008 & ~3) | 1);
     fprintf(stderr, "[vshud] engine A layer mask seated: data_0209d45c = 0x11 "
-            "(BG0 + OBJ) and DISPCNT bit 3 (BG0 is the 3D layer), "
-            "Stage::InitResources line 402. %s\n",
-            mode == 2 ? "SM64DS_ENGINE_A_LAYERS=always: every mode, the ROM's "
+            "(BG0 + OBJ), DISPCNT bit 3 (BG0 is the 3D layer) and BG0CNT "
+            "priority 1 (func_02005a58's own value, which is what lets a "
+            "priority-1 HUD sprite draw over the arena). %s\n",
+            mode == 2 ? "SM64DS_VS_HUD_SEAT=always: every mode, the ROM's "
                         "own unconditional form"
-                      : "VS only by default; SM64DS_ENGINE_A_LAYERS=always for "
+                      : "VS only by default; SM64DS_VS_HUD_SEAT=always for "
                         "the adventure HUD too");
 }
 
