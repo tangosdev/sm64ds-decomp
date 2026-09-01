@@ -87,6 +87,25 @@ enum : unsigned {
     // mIsAirborne. 0 == ON THE GROUND -- INVERTED. Not Actor::mFlags & 0x10,
     // which is a draw-distance cull bit and was in an earlier design sketch.
     kIsAirborne = 0x6de,
+
+    // mIsNoControl -- "the game has taken this body and is playing a scripted
+    // sequence on it". include/Player.h:384 names it at 0x709 and the ROM has
+    // exactly two writers, both three instructions long and both found by
+    // scanning ov002 for a byte store at that displacement:
+    // Player_DisableInteraction (0x020c9e40) sets it to 1 and raises bit 2 of
+    // the body collider's flags at +0x2ec; func_ov002_020c9e18 clears both,
+    // and Player::ChangeState calls it on every transition. Its readers are
+    // the ROM's damage gate func_ov002_020d82f0 (which refuses every hit while
+    // it is set), the star's touch gate func_ov002_020e930c, Player::CanPause
+    // and a dozen more.
+    //
+    // THE SYNC LAYER NEEDS IT because a no-control state owns the body's pose
+    // and, for the scripted sequences, ENDS ON THAT POSE: a VS star collect
+    // sits in St_NoControl step 2 until Player::FinishedAnim says the star-get
+    // animation is done (func_ov002_020c92fc). See the refusal in
+    // hal/comms_sync.cpp's apply_pose for what applying a stale wire animation
+    // over one of those does.
+    kIsNoControl = 0x709,
 };
 
 // The Player::State table. NOT an array symbol -- 78 individually named .bss
