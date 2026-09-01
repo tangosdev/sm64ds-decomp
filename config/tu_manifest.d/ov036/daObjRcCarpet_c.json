@@ -121,7 +121,7 @@
       "size": "0x8c",
       "partition_symbols": [
         {
-          "symbol": "RcCarpet_VT22",
+          "symbol": "data_ov036_02113ff4",
           "address": "0x02113ff4",
           "size": "0x1c",
           "binding": "STB_GLOBAL",
@@ -130,7 +130,7 @@
           "reuse_policy_symbol": "_ZTS16dPathLiftActor_c"
         },
         {
-          "symbol": "RcCarpet_VT29",
+          "symbol": "data_ov036_02114010",
           "address": "0x02114010",
           "size": "0x10",
           "binding": "STB_GLOBAL",
@@ -735,7 +735,7 @@
               "section": "OV036"
             },
             "splitSymbols": {
-              "RcCarpet_VT22": {
+              "data_ov036_02113ff4": {
                 "address": 34684916,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -744,7 +744,7 @@
                 "sectionIndex": 77,
                 "section": "OV036"
               },
-              "RcCarpet_VT29": {
+              "data_ov036_02114010": {
                 "address": 34684944,
                 "size": 16,
                 "binding": "STB_GLOBAL",
@@ -1422,14 +1422,14 @@
         "aliases": [],
         "partitions": [
           {
-            "symbol": "RcCarpet_VT22",
+            "symbol": "data_ov036_02113ff4",
             "donor": "_ZTS16dPathLiftActor_c",
             "value": 96,
             "size": 28,
             "section": ".data"
           },
           {
-            "symbol": "RcCarpet_VT29",
+            "symbol": "data_ov036_02114010",
             "donor": "_ZTS10dBgActor_c",
             "value": 124,
             "size": 16,
@@ -1465,7 +1465,7 @@
               "section": "OV036"
             },
             "splitSymbols": {
-              "RcCarpet_VT22": {
+              "data_ov036_02113ff4": {
                 "address": 34684916,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -1474,7 +1474,7 @@
                 "sectionIndex": 77,
                 "section": "OV036"
               },
-              "RcCarpet_VT29": {
+              "data_ov036_02114010": {
                 "address": 34684944,
                 "size": 16,
                 "binding": "STB_GLOBAL",
@@ -1958,14 +1958,14 @@
         "aliases": [],
         "partitions": [
           {
-            "symbol": "RcCarpet_VT22",
+            "symbol": "data_ov036_02113ff4",
             "donor": "_ZTS16dPathLiftActor_c",
             "value": 96,
             "size": 28,
             "section": ".data"
           },
           {
-            "symbol": "RcCarpet_VT29",
+            "symbol": "data_ov036_02114010",
             "donor": "_ZTS10dBgActor_c",
             "value": 124,
             "size": 16,
@@ -2001,7 +2001,7 @@
               "section": "OV036"
             },
             "splitSymbols": {
-              "RcCarpet_VT22": {
+              "data_ov036_02113ff4": {
                 "address": 34684916,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -2010,7 +2010,7 @@
                 "sectionIndex": 77,
                 "section": "OV036"
               },
-              "RcCarpet_VT29": {
+              "data_ov036_02114010": {
                 "address": 34684944,
                 "size": 16,
                 "binding": "STB_GLOBAL",
