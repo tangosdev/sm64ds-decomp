@@ -1561,8 +1561,6 @@ ov070	0x02122124	func_ov070_02122124	_ZN8daKpFr_c13InitResourcesEv	vtable slot 0
 ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
 ov070	0x02123168	data_ov070_02123168	_ZTV19daPropeller_Heyho_c	vtable alloc=0x3e8
-ov070	0x02123184	data_ov070_02123184	FlyGuy_VT7	inferred compatibility alias for the ROM relocation target at vtable slot 7; exact source spelling is not preserved
-ov070	0x021231a0	data_ov070_021231a0	FlyGuy_VT14	inferred compatibility alias for the ROM relocation target at vtable slot 14; exact source spelling is not preserved
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
 ov070	0x02123278	data_ov070_02123278	_ZTV7daBrq_c	vtable alloc=0x434; class name from ROM RTTI
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo

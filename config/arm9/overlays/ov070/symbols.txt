@@ -133,8 +133,8 @@ _ZTI19daPropeller_Heyho_c kind:data(any) addr:0x02123120
 _ZTS19daPropeller_Heyho_c kind:data(any) addr:0x0212312c
 FlyGuy_SpawnInfo kind:data(any) addr:0x02123144 ambiguous
 _ZTV19daPropeller_Heyho_c kind:data(any) addr:0x02123168
-FlyGuy_VT7 kind:data(any) addr:0x02123184 ambiguous
-FlyGuy_VT14 kind:data(any) addr:0x021231a0 ambiguous
+data_ov070_02123184 kind:data(any) addr:0x02123184 ambiguous
+data_ov070_021231a0 kind:data(any) addr:0x021231a0 ambiguous
 data_ov070_021231e4 kind:data(any) addr:0x021231e4
 data_ov070_021231f4 kind:data(any) addr:0x021231f4
 data_ov070_0212320c kind:data(any) addr:0x0212320c

@@ -241,7 +241,7 @@
       "size": "0x84",
       "partition_symbols": [
         {
-          "symbol": "FlyGuy_VT7",
+          "symbol": "data_ov070_02123184",
           "address": "0x02123184",
           "size": "0x1c",
           "binding": "STB_GLOBAL",
@@ -250,7 +250,7 @@
           "reuse_policy_symbol": "_ZTS12dEnemyBase_c"
         },
         {
-          "symbol": "FlyGuy_VT14",
+          "symbol": "data_ov070_021231a0",
           "address": "0x021231a0",
           "size": "0x44",
           "binding": "STB_GLOBAL",
@@ -921,7 +921,7 @@
               "section": "OV070"
             },
             "splitSymbols": {
-              "FlyGuy_VT7": {
+              "data_ov070_02123184": {
                 "address": 34746756,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -930,7 +930,7 @@
                 "sectionIndex": 147,
                 "section": "OV070"
               },
-              "FlyGuy_VT14": {
+              "data_ov070_021231a0": {
                 "address": 34746784,
                 "size": 68,
                 "binding": "STB_GLOBAL",
@@ -1634,14 +1634,14 @@
         "aliases": [],
         "partitions": [
           {
-            "symbol": "FlyGuy_VT7",
+            "symbol": "data_ov070_02123184",
             "donor": "_ZTS12dEnemyBase_c",
             "value": 36,
             "size": 28,
             "section": ".data"
           },
           {
-            "symbol": "FlyGuy_VT14",
+            "symbol": "data_ov070_021231a0",
             "donor": "_ZTS8dActor_c",
             "value": 64,
             "size": 68,
@@ -1677,7 +1677,7 @@
               "section": "OV070"
             },
             "splitSymbols": {
-              "FlyGuy_VT7": {
+              "data_ov070_02123184": {
                 "address": 34746756,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -1686,7 +1686,7 @@
                 "sectionIndex": 147,
                 "section": "OV070"
               },
-              "FlyGuy_VT14": {
+              "data_ov070_021231a0": {
                 "address": 34746784,
                 "size": 68,
                 "binding": "STB_GLOBAL",
@@ -2418,14 +2418,14 @@
         "aliases": [],
         "partitions": [
           {
-            "symbol": "FlyGuy_VT7",
+            "symbol": "data_ov070_02123184",
             "donor": "_ZTS12dEnemyBase_c",
             "value": 36,
             "size": 28,
             "section": ".data"
           },
           {
-            "symbol": "FlyGuy_VT14",
+            "symbol": "data_ov070_021231a0",
             "donor": "_ZTS8dActor_c",
             "value": 64,
             "size": 68,
@@ -2461,7 +2461,7 @@
               "section": "OV070"
             },
             "splitSymbols": {
-              "FlyGuy_VT7": {
+              "data_ov070_02123184": {
                 "address": 34746756,
                 "size": 28,
                 "binding": "STB_GLOBAL",
@@ -2470,7 +2470,7 @@
                 "sectionIndex": 147,
                 "section": "OV070"
               },
-              "FlyGuy_VT14": {
+              "data_ov070_021231a0": {
                 "address": 34746784,
                 "size": 68,
                 "binding": "STB_GLOBAL",
