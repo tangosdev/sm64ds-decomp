@@ -10,8 +10,9 @@
  * `CameraTag`, a coined name. MEASURED in extracted/overlays/overlay_0002.bin
  * (ov002 base 0x020ad660): _ZTS10daCamTag_c at 0x02108508 is the byte string
  * "10daCamTag_c", and _ZTI10daCamTag_c at 0x021084fc reads [0x0209a764,
- * 0x02108508, 0x0208e390] -- __si_class_type_info's vtable+8, that same
- * typeinfo name, and _ZTI8dActor_c, so the ROM states the direct base too.
+ * 0x02108508, 0x0208e390] -- _ZTVN3abi20__si_class_type_infoE
+ * (config/arm9/symbols.txt), that same typeinfo name, and _ZTI8dActor_c, so
+ * the ROM states the direct base too.
  * tools/class_rename.py performed the rename, and it is what makes this
  * promotion possible at all: a coined class reaches no symbol home, so its
  * _ZTI/_ZTS/_ZTV records can never be word-compared against the cartridge and
@@ -27,7 +28,7 @@
  * Assembled from these legacy one-function sources, all now deleted (ROM
  * address order):
  *   [0] 0x020b0748  src/_ZN10daCamTag_cD1Ev.cpp
- *   [1] 0x020b076c  src/_ZN10daCamTag_cD0Ev.c
+ *   [1] 0x020b076c  src/_ZN10daCamTag_cD0Ev.cpp
  *   [2] 0x020b07a4  src/_ZN10daCamTag_c16CleanupResourcesEv.cpp
  *   [3] 0x020b07ac  src/_ZN10daCamTag_c16OnPendingDestroyEv.cpp
  *   [4] 0x020b07b0  src/_ZN10daCamTag_c6RenderEv.cpp

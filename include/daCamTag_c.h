@@ -1,6 +1,11 @@
 /* Hand-written from matched-function evidence:
- * class daCamTag_c, ov002 0x020b0710-0x020b07c8 (8 functions, no other class
- * in the TU -- tu_map.py).
+ * class daCamTag_c, ov002 0x020b0748-0x020b07f8 (8 functions, no other class
+ * in the TU -- tu_map.py). That range is the entry's licensed `complete`
+ * delinks span and it is exact: the eight functions chain contiguously from
+ * 0x020b0748 up to daCamTag_c_Spawn at 0x020b07c8 + 0x30. An earlier version
+ * of this line said 0x020b0710-0x020b07c8, which started one function too
+ * early -- 0x020b0710 is InvisiblePole_Spawn, the same off-by-one factory
+ * that produced the retracted layout described below.
  *
  * ALL FIVE of its virtual overrides are STUBS -- InitResources, Behavior,
  * Render and CleanupResources are `return 1`, OnPendingDestroy is empty, and
@@ -34,11 +39,18 @@
  * -- plus the destructor at 16/17. Every other slot holds dActor_c's own word
  * and is inherited, so it is deliberately NOT redeclared here.
  *
- * ROM RTTI calls this class daCamTag_c (_ZTS10daCamTag_c /
- * config/arm9/overlays/ov002/symbols.txt) -- a different length than the
- * decomp's daCamTag_c, so this class's own _ZTI/_ZTS objects are not
- * byte-verifiable against the ROM's; left unlicensed, deferred to Phase F /
- * attribution work like every other class in this position.
+ * THE CLASS NAME IS THE CARTRIDGE'S OWN, and that is what makes this class's
+ * RTTI byte-verifiable. The decomp used to coin it `CameraTag`, whose
+ * _ZTI/_ZTS records could never be compared against the ROM -- a typeinfo
+ * record is a length-prefixed mangled string, so a coined name misses on both
+ * the prefix and the body. Renamed to daCamTag_c, they compare exactly:
+ * _ZTS10daCamTag_c at ov002:0x02108508 is the byte string "10daCamTag_c" in
+ * extracted/overlays/overlay_0002.bin, and _ZTI10daCamTag_c at 0x021084fc
+ * reads [0x0209a764, 0x02108508, 0x0208e390] -- __si_class_type_info's
+ * vtable, that typeinfo name, and _ZTI8dActor_c, so the cartridge states the
+ * direct base as well. All three records are licensed as `deadstrip-data`
+ * rows in config/tu_manifest.d/ov002/daCamTag_c.json and romdata_check
+ * word-compares them against the cartridge.
  *
  * Field NAMES are placeholders - renaming cannot change codegen.
  */
