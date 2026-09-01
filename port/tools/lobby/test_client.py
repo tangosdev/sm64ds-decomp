@@ -1,0 +1,838 @@
+#!/usr/bin/env python3
+"""Test client for sm64ds-lobby. No dependencies beyond the standard library.
+
+    python3 test_client.py selftest              spawn a server, prove every
+                                                 verb and every refusal
+    python3 test_client.py selftest --url URL    run against a server already
+                                                 up (e.g. the deployed one)
+    python3 test_client.py soak [--seconds N]    hold a room open under load
+    python3 test_client.py negatives --out DIR   write one file per captured
+                                                 refusal, for the proof folder
+
+WHY IT SPEAKS HTTP BY HAND. Most of what is worth proving here is a MALFORMED
+request: a body with no Content-Length, a Content-Length that lies, a 5 KB
+body, the wrong content type. A convenience wrapper fixes all of those on the
+way out, so this file builds each request header by header through
+http.client's low level API and never lets anything be corrected for it.
+
+THE PORT IT BINDS. Derived from this process's pid and then verified by
+binding, the way the port harnesses in this tree do it. It stays inside
+20000..39999, which keeps it clear of 51765 (the comms loopback base, the
+owner's own desk pair) and of 58434..58733.
+"""
+
+import argparse
+import http.client
+import json
+import os
+import random
+import socket
+import subprocess
+import sys
+import threading
+import time
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+SERVER = os.path.join(HERE, "app", "server.py")
+PREFIX = "/port/lobby"
+
+ROOM_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+
+
+# ------------------------------------------------------------------- plumbing
+
+
+def pick_port():
+    """A base port derived from our own pid, then proven free by binding it."""
+    base = 20000 + (os.getpid() * 7) % 20000
+    for step in range(64):
+        port = 20000 + ((base - 20000 + step) % 20000)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.bind(("127.0.0.1", port))
+            return port
+        except OSError:
+            continue
+        finally:
+            s.close()
+    raise SystemExit("no free port in 20000..39999")
+
+
+class Client(object):
+    """One HTTP conversation with the lobby, with nothing corrected for us."""
+
+    def __init__(self, host, port, prefix=PREFIX, tls=False):
+        self.host = host
+        self.port = port
+        self.prefix = prefix
+        self.tls = tls
+
+    def _conn(self):
+        if self.tls:
+            import ssl
+            return http.client.HTTPSConnection(
+                self.host, self.port, timeout=60, context=ssl.create_default_context())
+        return http.client.HTTPConnection(self.host, self.port, timeout=60)
+
+    def raw(self, method, path, body=None, ctype="application/json",
+            content_length="auto", extra=()):
+        """Send exactly the request described and return (status, text).
+
+        content_length: "auto" for the real length, "omit" for no header at
+        all, or an integer to announce a length that is not the truth.
+        """
+        conn = self._conn()
+        try:
+            conn.putrequest(method, path, skip_accept_encoding=True)
+            if ctype is not None:
+                conn.putheader("Content-Type", ctype)
+            if content_length == "auto":
+                if body is not None:
+                    conn.putheader("Content-Length", str(len(body)))
+            elif content_length == "omit":
+                pass
+            else:
+                conn.putheader("Content-Length", str(content_length))
+            for k, v in extra:
+                conn.putheader(k, v)
+            conn.endheaders()
+            if body:
+                conn.send(body)
+            resp = conn.getresponse()
+            return resp.status, resp.read().decode("utf-8", "replace")
+        finally:
+            conn.close()
+
+    def post(self, verb, obj, **kw):
+        body = json.dumps(obj).encode("utf-8")
+        status, text = self.raw("POST", self.prefix + "/" + verb, body, **kw)
+        try:
+            return status, json.loads(text)
+        except ValueError:
+            return status, {"_raw": text}
+
+    def get(self, verb):
+        status, text = self.raw("GET", self.prefix + "/" + verb, None, ctype=None)
+        try:
+            return status, json.loads(text)
+        except ValueError:
+            return status, {"_raw": text}
+
+
+class Spawned(object):
+    """A server of our own, on a pid-derived port, torn down on the way out."""
+
+    def __init__(self, port, env_extra=None):
+        self.port = port
+        env = dict(os.environ)
+        env["LISTEN_PORT"] = str(port)
+        env["LISTEN_ADDR"] = "127.0.0.1"
+        env.update(env_extra or {})
+        self.log_path = os.environ.get("LOBBY_TEST_LOG")
+        self.logfile = open(self.log_path, "ab") if self.log_path else None
+        self.proc = subprocess.Popen(
+            [sys.executable, "-u", SERVER],
+            env=env,
+            stdout=self.logfile or subprocess.DEVNULL,
+            stderr=subprocess.STDOUT)
+
+    def wait_ready(self, timeout=15.0):
+        c = Client("127.0.0.1", self.port)
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            if self.proc.poll() is not None:
+                raise SystemExit("server exited early, rc=%s" % self.proc.returncode)
+            try:
+                status, body = c.get("health")
+                if status == 200 and body.get("ok"):
+                    return c
+            except OSError:
+                pass
+            time.sleep(0.15)
+        raise SystemExit("server never became healthy on port %d" % self.port)
+
+    def stop(self):
+        try:
+            self.proc.terminate()
+            self.proc.wait(timeout=10)
+        except Exception:
+            try:
+                self.proc.kill()
+            except Exception:
+                pass
+        if self.logfile:
+            self.logfile.close()
+
+
+# ---------------------------------------------------------------- assertions
+
+PASSED = []
+FAILED = []
+
+
+def check(name, ok, detail=""):
+    (PASSED if ok else FAILED).append(name)
+    print("%-5s %s%s" % ("ok" if ok else "FAIL", name,
+                         "" if ok else "   <- " + str(detail)))
+    return ok
+
+
+def expect(name, got, want_status, want_err=None):
+    status, body = got
+    ok = status == want_status
+    if ok and want_err is not None:
+        ok = body.get("error") == want_err
+    return check(name, ok, "got %s %s, wanted %s %s"
+                 % (status, body, want_status, want_err))
+
+
+# ------------------------------------------------------------------ selftest
+
+
+def selftest(c, quick=False):
+    # -- health ----------------------------------------------------------
+    status, health = c.get("health")
+    check("health answers 200", status == 200, status)
+    check("health carries rooms/members/waiters/revision",
+          all(k in health for k in ("rooms", "members", "waiters", "revision")),
+          health)
+    rooms_before = health.get("rooms", 0)
+
+    # -- create ----------------------------------------------------------
+    status, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+    check("create answers 200", status == 200, host)
+    code = host.get("room", "")
+    check("room code is 6 chars of the room alphabet",
+          len(code) == 6 and all(ch in ROOM_ALPHABET for ch in code), code)
+    check("token is 32 lowercase hex",
+          len(host.get("token", "")) == 32
+          and all(ch in "0123456789abcdef" for ch in host.get("token", "")),
+          host.get("token"))
+    check("creator is seat 1 and the host",
+          host.get("member") == 1 and host["view"]["host"] == 1, host.get("view"))
+    check("a new room is in the lobby state with map 0 / time",
+          host["view"]["state"] == "lobby" and host["view"]["map"] == 0
+          and host["view"]["win_mode"] == "time"
+          and host["view"]["star_target"] is None, host["view"])
+    check("health now shows one more room",
+          c.get("health")[1]["rooms"] == rooms_before + 1)
+
+    # -- join ------------------------------------------------------------
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "opie"})
+    check("join answers 200", status == 200, guest)
+    check("joiner is seat 2 and playing",
+          guest.get("member") == 2
+          and guest["view"]["members"][1]["playing"] is True, guest.get("view"))
+    check("both seats are in the roster",
+          [m["display"] for m in guest["view"]["members"]] == ["tango", "opie"],
+          guest["view"]["members"])
+
+    # -- the roster reaches the host through a poll -----------------------
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                   "cursor": host["cursor"], "wait": 0})
+    check("host's poll carries the joined event",
+          any(e["kind"] == "joined" and e["seat"] == 2 for e in seen["events"]),
+          seen.get("events"))
+    check("host's poll view shows two seats",
+          len(seen["view"]["members"]) == 2, seen["view"])
+    check("the host's own view says you=1", seen["view"]["you"] == 1)
+
+    # -- chat, both ways --------------------------------------------------
+    status, sent = c.post("chat", {"v": 1, "room": code, "token": host["token"],
+                                   "text": "hey"})
+    check("host can chat", status == 200, sent)
+    status, seen2 = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                    "cursor": guest["cursor"], "wait": 0})
+    chats = [e for e in seen2["events"] if e["kind"] == "chat"]
+    check("the guest sees the host's line verbatim",
+          len(chats) == 1 and chats[0]["text"] == "hey"
+          and chats[0]["display"] == "tango", seen2.get("events"))
+
+    status, _ = c.post("chat", {"v": 1, "room": code, "token": guest["token"],
+                                "text": "gg"})
+    check("guest can chat", status == 200)
+    # From the cursor the host's OWN chat handed back, so the only thing this
+    # poll can carry is what happened after it.
+    status, seen3 = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                    "cursor": sent["cursor"], "wait": 0})
+    chats = [e for e in seen3["events"] if e["kind"] == "chat"]
+    check("the host sees the guest's line verbatim",
+          len(chats) == 1 and chats[0]["text"] == "gg"
+          and chats[0]["display"] == "opie", seen3.get("events"))
+
+    # -- the long poll actually holds, and returns early on an event ------
+    hold = {}
+
+    def hold_poll():
+        t0 = time.time()
+        hold["r"] = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                    "cursor": seen3["cursor"], "wait": 20})
+        hold["dt"] = time.time() - t0
+
+    t = threading.Thread(target=hold_poll)
+    t.start()
+    time.sleep(1.0)
+    c.post("chat", {"v": 1, "room": code, "token": guest["token"], "text": "wake"})
+    t.join(timeout=25)
+    check("a long poll returns as soon as there is something to say",
+          hold.get("dt", 99) < 5.0, hold.get("dt"))
+    check("and it returns the event that woke it",
+          any(e["kind"] == "chat" and e["text"] == "wake"
+              for e in hold["r"][1]["events"]), hold["r"][1].get("events"))
+
+    if not quick:
+        t0 = time.time()
+        status, idle = c.post("poll", {"v": 1, "room": code,
+                                       "token": host["token"],
+                                       "cursor": hold["r"][1]["cursor"],
+                                       "wait": 3})
+        dt = time.time() - t0
+        check("a long poll with nothing to say holds for its full wait",
+              2.5 <= dt <= 4.5 and status == 200, dt)
+        check("and answers with no events", idle["events"] == [], idle)
+
+    # The host's cursor from here on. Polling from 0 would ask for a resync,
+    # which by contract answers with the view and the retained CHAT rather
+    # than with the event list, so it is the wrong instrument for the
+    # roster-event assertions below.
+    hcur = hold["r"][1]["cursor"] if not quick else seen3["cursor"]
+
+    # -- params, and who may set them -------------------------------------
+    expect("a guest cannot set params",
+           c.post("params", {"v": 1, "room": code, "token": guest["token"],
+                             "map": 2, "win_mode": "stars", "star_target": 3}),
+           403, "not_host")
+    status, _ = c.post("params", {"v": 1, "room": code, "token": host["token"],
+                                  "map": 2, "win_mode": "stars", "star_target": 3})
+    check("the host can set params", status == 200)
+    status, after = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                    "cursor": hcur, "wait": 0})
+    check("a params event reaches the other window",
+          any(e["kind"] == "params" and e["map"] == 2
+              and e["win_mode"] == "stars" and e["star_target"] == 3
+              for e in after["events"]), after.get("events"))
+    check("the params reach the room's view",
+          after["view"]["map"] == 2 and after["view"]["win_mode"] == "stars"
+          and after["view"]["star_target"] == 3, after["view"])
+    expect("star_target is forbidden under win_mode time",
+           c.post("params", {"v": 1, "room": code, "token": host["token"],
+                             "map": 0, "win_mode": "time", "star_target": 3}),
+           400, "bad_star_target")
+    expect("star_target is required under win_mode stars",
+           c.post("params", {"v": 1, "room": code, "token": host["token"],
+                             "map": 0, "win_mode": "stars"}),
+           400, "bad_star_target")
+    expect("star_target is capped at 5",
+           c.post("params", {"v": 1, "room": code, "token": host["token"],
+                             "map": 0, "win_mode": "stars", "star_target": 6}),
+           400, "bad_star_target")
+    expect("map is 0..3",
+           c.post("params", {"v": 1, "room": code, "token": host["token"],
+                             "map": 4, "win_mode": "time"}),
+           400, "bad_map")
+
+    # -- duplicate nicknames are disambiguated once, by the server --------
+    status, dup = c.post("join", {"v": 1, "room": code, "nick": "opie"})
+    check("a third seat may join", status == 200, dup)
+    check("the third seat is a spectator", dup["view"]["members"][2]["playing"] is False,
+          dup["view"]["members"])
+    check("the duplicate nickname is suffixed with its seat, once",
+          [m["display"] for m in dup["view"]["members"]] == ["tango", "opie", "opie (3)"],
+          dup["view"]["members"])
+
+    # -- seats are capped --------------------------------------------------
+    status, four = c.post("join", {"v": 1, "room": code, "nick": "ace"})
+    check("a fourth seat may join", status == 200, four)
+    expect("a fifth may not", c.post("join", {"v": 1, "room": code, "nick": "nn"}),
+           409, "room_full")
+
+    # -- leaving -----------------------------------------------------------
+    hcur = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                           "cursor": hcur, "wait": 0})[1]["cursor"]
+    status, _ = c.post("leave", {"v": 1, "room": code, "token": dup["token"]})
+    check("a member can leave", status == 200)
+    status, gone = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                   "cursor": hcur, "wait": 0})
+    check("the room drops to three seats", len(gone["view"]["members"]) == 3,
+          gone["view"]["members"])
+    check("and a left event says who and why",
+          any(e["kind"] == "left" and e["seat"] == 3 and e["why"] == "quit"
+              for e in gone["events"]), gone["events"])
+    hcur = gone["cursor"]
+
+    # A playing seat leaving promotes the lowest spectator, and the promotion
+    # arrives in the view rather than as a new event kind.
+    status, _ = c.post("leave", {"v": 1, "room": code, "token": guest["token"]})
+    check("a playing member can leave", status == 200)
+    status, promoted = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                       "cursor": hcur, "wait": 0})
+    seats = {m["seat"]: m for m in promoted["view"]["members"]}
+    check("the lowest spectator is promoted into the free playing seat",
+          seats.get(4, {}).get("playing") is True, promoted["view"]["members"])
+
+    # -- resync ------------------------------------------------------------
+    status, resync = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                     "cursor": 0, "wait": 0})
+    check("a cursor of 0 on a busy room asks the client to replace its state",
+          resync.get("resync") is True, resync)
+    check("and the answer carries the retained chat",
+          all(e["kind"] == "chat" for e in resync["events"])
+          and len(resync["events"]) >= 3, resync["events"])
+
+    # -- the host leaving closes the room ----------------------------------
+    last = c.post("join", {"v": 1, "room": code, "nick": "watcher"})[1]
+    status, _ = c.post("leave", {"v": 1, "room": code, "token": host["token"]})
+    check("the host can leave", status == 200)
+    status, closed = c.post("poll", {"v": 1, "room": code, "token": last["token"],
+                                     "cursor": last["cursor"], "wait": 0})
+    check("the room is closed, and the reason survives for the members",
+          status == 200 and closed["view"]["state"] == "closed"
+          and any(e["kind"] == "closed" and e["why"] == "host_left"
+                  for e in closed["events"]), (status, closed))
+    expect("a closed room refuses a new join",
+           c.post("join", {"v": 1, "room": code, "nick": "late"}),
+           404, "no_such_room")
+
+    selftest_kick(c)
+    return code
+
+
+def selftest_kick(c):
+    """The host removing somebody, over the wire.
+
+    LAST, and in a room of its own. The kick cooldown is keyed on the client
+    address, and every client in this harness is 127.0.0.1, so a kick anywhere
+    earlier would lock this process out of the room it was testing. Kick
+    records are per room, so a fresh room contains the damage.
+    """
+    status, host = c.post("create", {"v": 1, "nick": "hostk"})
+    check("a room for the kick test", status == 200, host)
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "rude"})
+    check("somebody to remove", status == 200, guest)
+
+    expect("a member cannot kick",
+           c.post("kick", {"v": 1, "room": code, "token": guest["token"],
+                           "seat": 1}), 403, "not_host")
+    expect("the host cannot kick itself",
+           c.post("kick", {"v": 1, "room": code, "token": host["token"],
+                           "seat": 1}), 400, "bad_seat")
+    expect("an empty seat cannot be kicked",
+           c.post("kick", {"v": 1, "room": code, "token": host["token"],
+                           "seat": 4}), 400, "bad_seat")
+
+    status, out = c.post("kick", {"v": 1, "room": code,
+                                  "token": host["token"], "seat": 2})
+    check("the host can remove a member", status == 200, out)
+    status, seen = c.post("poll", {"v": 1, "room": code,
+                                   "token": host["token"],
+                                   "cursor": host["cursor"], "wait": 0})
+    check("the roster drops to one seat", len(seen["view"]["members"]) == 1,
+          seen["view"]["members"])
+    check("and a left event says it was a kick",
+          any(e["kind"] == "left" and e["seat"] == 2 and e["why"] == "kicked"
+              for e in seen["events"]), seen["events"])
+
+    expect("the removed launcher is told why, not just refused",
+           c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                           "cursor": 0, "wait": 0}), 403, "kicked")
+    expect("and it cannot walk straight back in with the same code",
+           c.post("join", {"v": 1, "room": code, "nick": "rude"}),
+           403, "kicked")
+
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
+
+
+# ----------------------------------------------------------------- negatives
+#
+# The stage A proof list, each one a real request and its real answer.
+
+
+def negatives(c, out_dir=None):
+    """Every refusal the stage A proof list names, plus the rest of the
+    transport law, each one a real request and its real answer.
+
+    IT PACES ITSELF ON PURPOSE. The shipped configuration refuses a sender
+    outright for ten seconds once it has been refused ten times inside ten
+    seconds, which is exactly what a suite of nothing but refusals looks like.
+    So each refusal below waits a beat first, and the bad-sender rule gets its
+    own capture rather than corrupting every other one.
+    """
+    captures = []
+    PACE = 1.3
+
+    st, host = c.post("create", {"v": 1, "nick": "tango"})
+    if st != 200:
+        raise SystemExit("could not create a room for the negatives: %s" % host)
+    room = host["room"]
+    st, guest = c.post("join", {"v": 1, "room": room, "nick": "opie"})
+    if st != 200:
+        raise SystemExit("could not join: %s" % guest)
+
+    def cap(name, req, sent, status, answer, note=""):
+        captures.append({"name": name, "request": req, "sent": sent,
+                         "status": status, "answer": answer, "note": note})
+
+    def rej(name, verb, obj, want_status, want_err, note, raw_body=None,
+            method="POST", path=None, **kw):
+        """One paced refusal: send it, assert it, capture it."""
+        time.sleep(PACE)
+        body = raw_body if raw_body is not None else json.dumps(obj).encode()
+        target = path or (PREFIX + "/" + verb)
+        status, text = c.raw(method, target, body, **kw)
+        try:
+            parsed = json.loads(text)
+        except ValueError:
+            parsed = {"_raw": text}
+        ok = status == want_status and (want_err is None
+                                        or parsed.get("error") == want_err)
+        check(name, ok, "got %s %s, wanted %s %s"
+              % (status, parsed, want_status, want_err))
+        shown = body.decode("utf-8", "replace") if body else ""
+        if len(shown) > 300:
+            shown = "<%d bytes>" % len(body)
+        cap(name, "%s %s" % (method, target), shown, status, text, note)
+        return status, parsed
+
+    # ---- the seven the stage A proof list names --------------------------
+
+    rej("unknown key -> 400 bad_field", "chat",
+        {"v": 1, "room": room, "token": host["token"], "text": "hi",
+         "colour": "red"}, 400, "bad_field",
+        "strictness is deliberate. The launcher and the server ship together "
+        "and are versioned together, so a field that appears without a version "
+        "bump is a bug or an attack and there is no third option.")
+
+    big = json.dumps({"v": 1, "room": room, "token": host["token"],
+                      "text": "x" * 5000}).encode()
+    rej("a 5 KB body -> 413", "chat", None, 413, "too_large",
+        "refused on the announced Content-Length, before a byte of the body is "
+        "read. The announced body is still drained off the socket first, or "
+        "the next request on this keep-alive connection would parse the middle "
+        "of it as a request line.", raw_body=big)
+
+    rej("POST /port/lobby/xyz -> 404 unknown_verb", "xyz", {"v": 1},
+        404, "unknown_verb",
+        "the verb list is closed. The server writes one log line for this and "
+        "nothing else.")
+
+    rej("a 17 byte nickname -> 400", "create", {"v": 1, "nick": "a" * 17},
+        400, "too_long",
+        "a string field's LENGTH IN BYTES is checked before its content, so an "
+        "oversized field never reaches a grammar loop at all. Section 3.0 of "
+        "the spec gives that rule its own code, too_long, rather than the "
+        "field's own bad_nick.")
+
+    rej("a chat line with a 0x07 byte in it -> 400 bad_text", "chat",
+        {"v": 1, "room": room, "token": host["token"],
+         "text": "bell" + chr(7) + "here"}, 400, "bad_text",
+        "chat is 0x20..0x7E and nothing else, so the launcher can render it "
+        "into a read-only TextBox as plain text with no control characters, no "
+        "markup and no link detection to consider.")
+
+    rej("a member's token on params -> 403 not_host", "params",
+        {"v": 1, "room": room, "token": guest["token"], "map": 2,
+         "win_mode": "time"}, 403, "not_host",
+        "the room code is only permission to walk in. The 128 bit member token "
+        "is what proves which seat you are and whether you are the host.")
+
+    # The rate limit, and the bad-sender rule behind it. Deliberately last of
+    # the seven, because it leaves this address in the penalty box.
+    codes = {}
+    t0 = time.time()
+    for _ in range(200):
+        st, _tx = c.raw("POST", PREFIX + "/poll",
+                        json.dumps({"v": 1, "room": room,
+                                    "token": host["token"],
+                                    "cursor": 0, "wait": 0}).encode())
+        codes[st] = codes.get(st, 0) + 1
+        if time.time() - t0 > 10:
+            break
+    dt = time.time() - t0
+    check("200 requests in 10 s from one address -> 429", codes.get(429, 0) > 0,
+          codes)
+    check("and the bad-sender rule then refuses that address outright",
+          codes.get(429, 0) >= 10, codes)
+    cap("rate limit and the bad-sender rule",
+        "POST %s/poll x%d" % (PREFIX, sum(codes.values())),
+        "%d polls in %.1f s" % (sum(codes.values()), dt),
+        429, json.dumps(codes),
+        "status counts across the burst. The limiter is a token bucket at 20 "
+        "requests a second with a burst of 40; on top of it, a sender refused "
+        "ten times inside ten seconds is refused outright for the next ten, "
+        "the same shape relay.py uses.")
+    print("   (waiting out the bad-sender window)")
+    time.sleep(12)
+
+    # ---- the rest of the transport law -----------------------------------
+
+    rej("no Content-Length -> 411", "create", {"v": 1, "nick": "x"},
+        411, "length_required",
+        "the length is parsed before any rejection is written. A rejection "
+        "that does not know how many bytes are owed cannot drain them, and an "
+        "undrained body makes one rejected request appear twice.",
+        content_length="omit")
+
+    rej("the wrong content type -> 415", "create", {"v": 1, "nick": "x"},
+        415, "bad_content_type", "application/json, or nothing.",
+        ctype="text/plain")
+
+    rej("GET on a POST verb -> 404", "create", None, 404, "unknown_verb",
+        "GET is served for /port/lobby/health and for nothing else.",
+        raw_body=None, method="GET", ctype=None)
+
+    rej("a query string -> 404", "poll", {"v": 1}, 404, "unknown_verb",
+        "the URL is exactly /port/lobby/<verb>, never with a query string, so "
+        "nothing a client sends can end up in Caddy's access log.",
+        path=PREFIX + "/poll?room=X")
+
+    rej("a body that is not JSON -> 400 bad_shape", "create", None,
+        400, "bad_shape", "", raw_body=b"{not json")
+
+    rej("an array at the top level -> 400 bad_shape", "create", None,
+        400, "bad_shape", "one object, never an array, never a bare value.",
+        raw_body=b'[{"v":1}]')
+
+    rej("a version that is not 1 -> 400 bad_version", "create",
+        {"v": 2, "nick": "x"}, 400, "bad_version",
+        "adding a field is a version bump, so the version is checked before "
+        "the fields are.")
+
+    rej("a missing version -> 400 bad_version", "create", {"nick": "x"},
+        400, "bad_version", "")
+
+    rej("a lowercase room code -> 400 bad_room", "join",
+        {"v": 1, "room": "abc123", "nick": "x"}, 400, "bad_room",
+        "six characters of ABCDEFGHJKMNPQRSTUVWXYZ23456789, which carries no "
+        "I, no L, no O, no 0 and no 1, because the code is read aloud.")
+
+    rej("an unused room code -> 404 no_such_room", "join",
+        {"v": 1, "room": "ZZZZZZ", "nick": "x"}, 404, "no_such_room", "")
+
+    rej("a well formed token nobody holds -> 403", "chat",
+        {"v": 1, "room": room, "token": "f" * 32, "text": "hi"},
+        403, "not_a_member",
+        "the token is 128 bits of system randomness; guessing one is not a "
+        "thing that happens.")
+
+    rej("a comma in a nickname -> 400 bad_nick", "create",
+        {"v": 1, "nick": "ta,ngo"}, 400, "bad_nick",
+        "comma separates the four nicknames in the one environment variable "
+        "that carries them into the game, so it is barred from a nickname and "
+        "from nowhere else. Chat keeps its commas.")
+
+    rej("a leading space in a nickname -> 400 bad_nick", "create",
+        {"v": 1, "nick": " tango"}, 400, "bad_nick", "")
+
+    rej("a nickname that is not a string -> 400 bad_nick", "create",
+        {"v": 1, "nick": 7}, 400, "bad_nick", "")
+
+    rej("a missing required key -> 400 bad_field", "chat",
+        {"v": 1, "room": room, "token": host["token"]}, 400, "bad_field", "")
+
+    rej("a 201 byte chat line -> 400 too_long", "chat",
+        {"v": 1, "room": room, "token": host["token"], "text": "y" * 201},
+        400, "too_long", "200 bytes, counted as bytes and not as characters.")
+
+    rej("star_target under win_mode time -> 400", "params",
+        {"v": 1, "room": room, "token": host["token"], "map": 0,
+         "win_mode": "time", "star_target": 3}, 400, "bad_star_target",
+        "required if and only if the win mode is stars. One shape, not two.")
+
+    rej("a map outside 0..3 -> 400 bad_map", "params",
+        {"v": 1, "room": room, "token": host["token"], "map": 9,
+         "win_mode": "time"}, 400, "bad_map", "the ROM has four VS maps.")
+
+    rej("a member's token on kick -> 403 not_host", "kick",
+        {"v": 1, "room": room, "token": guest["token"], "seat": 1},
+        403, "not_host",
+        "kick is host-only, the same way params is. Removing somebody is the "
+        "owner's answer to the spec's open question 4.")
+
+    rej("the host kicking itself -> 400 bad_seat", "kick",
+        {"v": 1, "room": room, "token": host["token"], "seat": 1},
+        400, "bad_seat",
+        "the host closes the room instead; there is no way to leave a room "
+        "hostless.")
+
+    # ---- the chat limiter, which is per MEMBER rather than per address ----
+    print("   (letting the chat allowance refill)")
+    time.sleep(8)
+    got = []
+    for i in range(6):
+        st, _ = c.raw("POST", PREFIX + "/chat",
+                      json.dumps({"v": 1, "room": room, "token": host["token"],
+                                  "text": "flood %d" % i}).encode())
+        got.append(st)
+    check("chat flooding is refused once the burst is spent",
+          got.count(200) <= 4 and 429 in got, got)
+    cap("chat flood", "POST %s/chat x6" % PREFIX, "six lines with no pause",
+        429, json.dumps(got),
+        "one line per two seconds per MEMBER with three saved up. The launcher "
+        "greys its Send button for two seconds rather than ever showing this "
+        "to a player.")
+
+    c.post("leave", {"v": 1, "room": room, "token": host["token"]})
+
+    if out_dir:
+        write_captures(captures, out_dir)
+    return captures
+
+
+def write_captures(captures, out_dir):
+    os.makedirs(out_dir, exist_ok=True)
+    index = []
+    for i, capture in enumerate(captures, 1):
+        safe = "".join(ch if ch.isalnum() else "_" for ch in capture["name"])
+        name = "%02d_%s.txt" % (i, safe[:60])
+        with open(os.path.join(out_dir, name), "w", encoding="utf-8") as f:
+            f.write("NEGATIVE PROOF: %s\n" % capture["name"])
+            f.write("=" * 70 + "\n\n")
+            f.write("REQUEST\n  %s\n" % capture["request"])
+            f.write("  body: %s\n\n" % capture["sent"])
+            f.write("ANSWER\n  HTTP %s\n  %s\n" % (capture["status"],
+                                                      capture["answer"]))
+            if capture["note"]:
+                f.write("\nWHY\n  %s\n" % capture["note"])
+        index.append("%-52s HTTP %s" % (capture["name"], capture["status"]))
+    with open(os.path.join(out_dir, "00_index.txt"), "w", encoding="utf-8") as f:
+        f.write("sm64ds-lobby stage A negative proofs\n")
+        f.write("captured %s\n\n"
+                % time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+        f.write("\n".join(index) + "\n")
+    print("\nwrote %d files to %s" % (len(captures) + 1, out_dir))
+
+
+# ---------------------------------------------------------------------- soak
+
+
+def soak(c, seconds, members):
+    status, host = c.post("create", {"v": 1, "nick": "soakhost"})
+    if status != 200:
+        raise SystemExit("could not create a room: %s" % host)
+    room = host["room"]
+    people = [host]
+    for i in range(members - 1):
+        st, m = c.post("join", {"v": 1, "room": room, "nick": "soak%d" % (i + 2)})
+        if st != 200:
+            raise SystemExit("could not join: %s" % m)
+        people.append(m)
+
+    stop = threading.Event()
+    counts = {"poll": 0, "chat": 0, "err": 0}
+    lock = threading.Lock()
+
+    def worker(me):
+        cursor = me["cursor"]
+        while not stop.is_set():
+            try:
+                st, body = c.post("poll", {"v": 1, "room": room,
+                                           "token": me["token"],
+                                           "cursor": cursor, "wait": 5})
+                if st == 200:
+                    cursor = body["cursor"]
+                    with lock:
+                        counts["poll"] += 1
+                else:
+                    with lock:
+                        counts["err"] += 1
+                if random.random() < 0.25:
+                    st, _ = c.post("chat", {"v": 1, "room": room,
+                                            "token": me["token"],
+                                            "text": "soak %.3f" % time.time()})
+                    with lock:
+                        if st == 200:
+                            counts["chat"] += 1
+                time.sleep(random.uniform(0.5, 2.5))
+            except OSError:
+                with lock:
+                    counts["err"] += 1
+                time.sleep(0.5)
+
+    threads = [threading.Thread(target=worker, args=(m,)) for m in people]
+    for t in threads:
+        t.start()
+    t0 = time.time()
+    while time.time() - t0 < seconds:
+        time.sleep(2)
+        print("  %5.0fs  %s  health=%s" % (time.time() - t0, counts,
+                                           c.get("health")[1]))
+    stop.set()
+    for t in threads:
+        t.join(timeout=15)
+    c.post("leave", {"v": 1, "room": room, "token": host["token"]})
+    print("soak done: %s" % counts)
+    return counts["err"] == 0
+
+
+# ---------------------------------------------------------------------- main
+
+
+def parse_url(url):
+    """http[s]://host[:port][/prefix] -> (host, port, prefix, tls)."""
+    tls = url.startswith("https://")
+    rest = url.split("://", 1)[1] if "://" in url else url
+    if "/" in rest:
+        hostport, path = rest.split("/", 1)
+        prefix = "/" + path.rstrip("/")
+    else:
+        hostport, prefix = rest, PREFIX
+    if ":" in hostport:
+        host, port = hostport.rsplit(":", 1)
+        port = int(port)
+    else:
+        host, port = hostport, 443 if tls else 80
+    return host, port, prefix, tls
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("mode", choices=("selftest", "soak", "negatives"))
+    ap.add_argument("--url", default=None,
+                    help="a server already running; default is to spawn one")
+    ap.add_argument("--seconds", type=int, default=30)
+    ap.add_argument("--members", type=int, default=3)
+    ap.add_argument("--out", default=None, help="where to write captures")
+    ap.add_argument("--quick", action="store_true")
+    args = ap.parse_args()
+
+    spawned = None
+    if args.url:
+        host, port, prefix, tls = parse_url(args.url)
+        c = Client(host, port, prefix, tls)
+    else:
+        port = pick_port()
+        print("spawning a server on 127.0.0.1:%d" % port)
+        extra = {}
+        if args.mode == "selftest":
+            # The selftest is mostly a list of deliberate refusals, which is
+            # exactly the shape the bad-sender rule exists to punish. It is
+            # lifted HERE and nowhere else: the negatives run below uses the
+            # shipped defaults and proves the rule fires.
+            extra["BAD_LIMIT"] = "1000000"
+            print("  (BAD_LIMIT lifted for the selftest; `negatives` proves it "
+                  "at its shipped value)")
+        spawned = Spawned(port, extra)
+        c = spawned.wait_ready()
+
+    try:
+        if args.mode == "selftest":
+            selftest(c, quick=args.quick)
+        elif args.mode == "negatives":
+            negatives(c, args.out)
+        else:
+            soak(c, args.seconds, args.members)
+    finally:
+        if spawned:
+            spawned.stop()
+
+    print("\n%d passed, %d failed" % (len(PASSED), len(FAILED)))
+    if FAILED:
+        for name in FAILED:
+            print("  FAILED: %s" % name)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

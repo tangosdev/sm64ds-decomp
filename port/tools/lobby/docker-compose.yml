@@ -1,0 +1,72 @@
+# sm64ds-lobby. Room state and chat for the port's Multiplayer button.
+#
+# NOT APPLIED BY THIS LANE. This file and the Caddy block in README.md are
+# written as deploy artifacts; the deploy itself is the coordinator's step,
+# after review.
+#
+# House convention, from port-ingest/docker-compose.yml: ONLY CADDY PUBLISHES
+# HOST PORTS. This joins the existing external `web` network and is reached at
+# sm64ds_lobby:8091 from inside it.
+#
+# There is no env_file, no .env and NO SECRET OF ANY KIND, because this service
+# has no credential to hold. There is no `volumes:` either: nothing is
+# persisted, the container is read_only, and every room lives in memory and
+# dies with the process. That is the whole recovery story.
+services:
+  sm64ds-lobby:
+    build: .
+    image: sm64ds-lobby:local
+    container_name: sm64ds_lobby
+    restart: unless-stopped
+    user: "1002:1002"
+    environment:
+      LISTEN_PORT: "8091"
+      MAX_ROOMS: "64"
+      MAX_SEATS: "4"
+      # 2 today: the GAME's cap, not the room's. DO NOT raise without reading
+      # SPEC section 4.7's 3-4 player caveat -- above two players the lobby's
+      # seat order stops being the game's slot order, because the parent
+      # ASSIGNS child slots in the order their JOINs arrive on the wire, and
+      # SM64DS_VS_NAMES would then name the wrong winner. Rooms already hold
+      # four seats and the names string already carries four fields; this one
+      # number is the only thing that says how many of them play.
+      GAME_MAX_PLAYERS: "2"
+      MAX_WAITERS: "96"
+      # The largest "first to N stars" the host may pick. Five because an
+      # arena holds five stars; past that the game would have to respawn them.
+      STAR_TARGET_MAX: "5"
+      # How long a kicked address is refused by the room that kicked it. It is
+      # a cooldown rather than a ban because the address is the only handle an
+      # accountless lobby has, and a whole house shares one. See the note on
+      # KICK_COOLDOWN_S in app/server.py.
+      KICK_COOLDOWN_S: "120"
+      ARM_DEADLINE_S: "20"
+      GO_GRACE_S: "5"
+      MEMBER_TIMEOUT_S: "45"
+      ROOM_IDLE_S: "1800"
+      MATCH_TIMEOUT_S: "1200"
+      RELAY_ADDR: "135.148.26.201:41234"
+      RATE_REQ_PER_S: "20"
+      RATE_BURST: "40"
+      RATE_CREATE_PER_HOUR: "30"
+      RATE_JOIN_PER_MIN: "60"
+      # A sender refused this many times inside this many seconds is refused
+      # outright for this many more. Same shape relay.py uses.
+      BAD_LIMIT: "10"
+      BAD_WINDOW_S: "10"
+      BAD_IGNORE_S: "10"
+      # Behind Caddy the socket peer is always Caddy, so without this every
+      # per-IP limit would be a per-SERVER limit and two launchers on one desk
+      # would share one budget with the whole internet. Set this to "0" for any
+      # deployment where clients can reach the container directly.
+      TRUST_XFF: "1"
+    read_only: true
+    tmpfs:
+      - /tmp:size=8m
+    networks: [web]
+    cpus: 0.5
+    mem_limit: 128m
+    pids_limit: 256
+networks:
+  web:
+    external: true
