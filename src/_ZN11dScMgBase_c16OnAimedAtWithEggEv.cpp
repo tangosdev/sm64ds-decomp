@@ -44,8 +44,10 @@ extern "C" unsigned char data_0209d454;
 
 /* The parameter is spelled void* to agree with decl_common.h, which the two
    overrides reach this symbol through; `this` is recovered on the first line. */
-extern "C" void _ZN11dScMgBase_c16OnAimedAtWithEggEv(void *cv)
+int dScMgBase_c::OnAimedAtWithEgg()
 {
+    void *cv = (void *)this;
+
     struct dScMgBase_c *self = (struct dScMgBase_c *)cv;
     char *c = (char *)cv;
 

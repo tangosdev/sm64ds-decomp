@@ -107,17 +107,21 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
            dScMgBase_c has named it, and its ov006 body is a real member
            definition in src/actors/dScMgSingle3DBase_c.cpp rather than the
            mangled free function it had to be while the base was silent.
-           Slot 33 stays undeclared until dScMgBase_c reaches it -- a derived
-           class cannot override a base slot the base has not spelled -- and
-           its body byte-verifies in that same file as func_ov006_0210a708.
-           Declaring dScMgBase_c's remaining three (33-35) is what lets
+           Slot 33 is declared below now as well, and its ov006 body is a
+           real member definition in the same file, where it byte-verified for
+           three commits as the mangled free function func_ov006_0210a708.  It
+           was the LAST vtable slot in that unit still spelled that way; the
+           one function left there under a func_<module>_<address> name,
+           0x0210a534, is in no vtable at all.
+           Declaring dScMgBase_c's remaining two (34-35) is what lets
            this class emit its full 36-slot vtable; today it emits a byte-exact
-           33-slot prefix. --- */
+           34-slot prefix. --- */
     virtual void AfterInitResources(u32 vfSuccess); /* slot  2 */
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
     virtual int  BeforeBehavior();                  /* slot  7 */
     virtual int  BeforeRender();                    /* slot 10 */
     virtual int  OnHitByCannonBlastedChar();      /* slot 26 */
+    virtual void Virtual84();                          /* slot 33 */
 
     /* DO NOT restyle the seven `offset 0xNN` comments below into this
      * tree's usual hex-comment form: check_header_offsets.py's DATA_SIZE

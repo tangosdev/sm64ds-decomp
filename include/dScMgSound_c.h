@@ -33,8 +33,8 @@
 extern "C" int func_ov006_020c3288(char *t); /* decl_common.h's own signature */
 
 struct dScMgSound_c : dScMgSingle3DBase_c {
-    virtual ~dScMgSound_c();
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual ~dScMgSound_c();
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  Virtual50();                          /* slot 20 */
 
     u8  mTable[0x6f4]; /* 0x4f38 -- ctor func_ov006_020c33dc, dtor func_ov006_020c3288 */

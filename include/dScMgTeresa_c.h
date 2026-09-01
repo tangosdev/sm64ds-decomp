@@ -12,10 +12,14 @@
    `this` arrives in r0 and is immediately overwritten with 8 either way, so
    the bytes are the same whether it is spelled as a member or not.
    "Virtual50" is a placeholder, not a recovered name; see
-   include/dScMgBase_c.h.  Slot 34 takes four extra parameters and barely
-   touches `this` (draws a HUD digit/glyph), same multi-arg shape as
-   dScMgAmida_c's own slot 34 -- both point at dScMgBase_c's slot 34 being a
-   multi-argument virtual, not reconstructed tree-wide yet. Fields below
+   include/dScMgBase_c.h.  Slot 34 IS that multi-argument virtual, and it is
+   declared and reconstructed tree-wide now -- `Virtual88(int, int, int, int)`,
+   the family's pixel brush.  The guess recorded here, "draws a HUD
+   digit/glyph", was right: this class's override stamps a shape by testing
+   data_ov006_0213f9e4[row] one bit per column, so it paints a stipple pattern
+   rather than a solid square, and it really does barely touch `this` -- the
+   object pointer arrives and is never read, because unlike the base it always
+   draws into sub BG0 instead of consulting the layer index at +0x6c.  Fields below
    dScMgBase_c's own 0x4660 are INHERITED, not this class's own -- accessed
    via raw offsets on a char* cast of `this` (0xb4 touched here, already
    dScMgBase_c's own). */
@@ -23,9 +27,10 @@ struct dScMgTeresa_c : dScMgBase_c {
     virtual ~dScMgTeresa_c();
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
-    virtual s32 Render();         /* slot 9 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();         /* slot 9 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  Virtual50();                          /* slot 20 */
+    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
     u8  pad_4660[0x588];
     s32 unk_4be8;            /* 0x4be8 -- state index for Behavior's pmf dispatch */

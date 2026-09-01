@@ -153,7 +153,7 @@ struct dScMgSlot1_c : dScMgBase_c {
        fixes every index below and declaration order no longer decides any of
        them.  It decided 27 and 28 until the base declared them; see the banner
        for what that cost and how it was closed. */
-    virtual int  OnYoshiTryEat(int arg);                 /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);                 /* slot 18 */
     virtual void OnHitByMegaChar();                     /* slot 27 */
     virtual int  OnHitFromUnderneath();                 /* slot 28 */
 

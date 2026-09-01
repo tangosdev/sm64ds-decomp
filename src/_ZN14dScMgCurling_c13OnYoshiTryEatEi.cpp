@@ -15,7 +15,10 @@ void func_ov006_020e3388(void*);
 void func_ov006_020e3250(void*);
 void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void*,unsigned short,unsigned short,unsigned short,unsigned short);
 int func_ov004_020adc1c(void);
-void _ZN14dScMgCurling_c13OnYoshiTryEatEi(unsigned char* c){
+void dScMgCurling_c::OnYoshiTryEat(int /* arg */)
+{
+    unsigned char *c = (unsigned char *)this;
+
     struct dScMgCurling_c *self = (struct dScMgCurling_c *)(void *)c;
   self->unk_4eac=0;
   func_ov006_020e3388(c);

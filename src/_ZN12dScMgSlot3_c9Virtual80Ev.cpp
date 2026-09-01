@@ -3,6 +3,7 @@
 // recovered name: dScMgSlot3_c_AfterClsn  -- WRONG, see below
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
+#include "dScMgSlot3_c.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSlot3_c::Virtual80 - slot 32, the only override of it in the family.
 
@@ -24,9 +25,11 @@ extern "C" {
     unsigned int LoadCompressedFileAt(int fileID, void* target);
 }
 
+extern "C" {
 extern unsigned char data_0209d45c;
+}
 
-extern "C" void _ZN12dScMgSlot3_c9Virtual80Ev(void)
+void dScMgSlot3_c::Virtual80()
 {
     int idx;
 

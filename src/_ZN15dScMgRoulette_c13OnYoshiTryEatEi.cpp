@@ -15,8 +15,10 @@
 extern "C" void func_ov004_020b66d4(void);
 /* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site. */
 
-extern "C" void _ZN15dScMgRoulette_c13OnYoshiTryEatEi(char *c)
+void dScMgRoulette_c::OnYoshiTryEat(int /* arg */)
 {
+    char *c = (char *)this;
+
     dScMgRoulette_c *self = (dScMgRoulette_c *)(void *)c;
     int i;
     int *e;

@@ -1,5 +1,6 @@
 //cpp
 // @symbol _ZN17dScMgTrampoline_c8OnKickedEv
+#include "dScMgTrampoline_c.h"
 // recovered name: dScMgTrampoline_c_OnKicked
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline_c::OnKicked - recovered from vtable slot identity */
@@ -10,8 +11,10 @@ int func_ov004_020b04c0(void);
 }
 extern "C" unsigned char data_0209d45c;
 
-extern "C" int _ZN17dScMgTrampoline_c8OnKickedEv(char* self)
+int dScMgTrampoline_c::OnKicked()
 {
+    char *self = (char *)this;
+
     if (!_ZN14dScMgD3DBase_c8OnKickedEv(self))
         return 0;
     if (*(int*)(self + 0x4628) == 0) {

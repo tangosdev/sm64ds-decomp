@@ -71,8 +71,8 @@ struct dScMgSmartball_c : dScMgBase_c {
        _ZN7fBase_c13InitResourcesEv (0x02043c80), into slot 0 while the cartridge
        holds 0x02118b70 -- romdata_check scored _ZTV16dScMgSmartball_c DIFFERS on
        that one word. Naming the ROM body in ov006/symbols.txt gives the slot a
-       symbol to point at; the bytes behind it are unchanged either way. */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+       symbol to point at; the bytes behind it are unchanged either way. */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnPushed();                           /* slot 25 */
     virtual int  Virtual7C();                          /* slot 31 */
     s32  InitResources();  /* slot  0 -- ov006 0x02118b70, not decompiled */

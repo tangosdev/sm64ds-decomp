@@ -143,7 +143,6 @@ extern int data_ov004_020bf9ec;
 extern int RandomIntInternal(int* seed);
 extern void func_ov006_020c1604(char* c, int unused, short a2, int a3);
 extern int data_0209e650;
-extern "C" void _ZN10dScMgBSC_c15OnGroundPoundedEv(void *thisPtr);
 extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void func_ov004_020b66d4(void);
 void func_ov006_020c0aa8(void *camera);
@@ -284,7 +283,10 @@ s32 dScMgBSC_c::Render()
    OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
-extern "C" void _ZN10dScMgBSC_c13OnYoshiTryEatEi(char* c, int mode){
+void dScMgBSC_c::OnYoshiTryEat(int mode)
+{
+    char *c = (char *)this;
+
     dScMgBSC_c *self = (dScMgBSC_c *)(void *)c;
   if(mode != 4 && mode != 5 && mode == 3){
     self->mHudScore = func_ov004_020ad878();
@@ -304,8 +306,10 @@ extern "C" void _ZN10dScMgBSC_c13OnYoshiTryEatEi(char* c, int mode){
 // recovered name: dScMgBSC_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::OnTurnIntoEgg - recovered from vtable slot identity */
-extern "C" int _ZN10dScMgBSC_c13OnTurnIntoEggEi(char* c, int mode)
+int dScMgBSC_c::OnTurnIntoEgg(int mode)
 {
+    char *c = (char *)this;
+
     struct dScMgBSC_c *self = (struct dScMgBSC_c *)(void *)c;
     int st;
     short fl;
@@ -344,7 +348,10 @@ do1:
 // recovered name: dScMgBSC_c_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::OnGroundPounded - recovered from vtable slot identity */
-void _ZN10dScMgBSC_c15OnGroundPoundedEv(void *thisPtr) {
+void dScMgBSC_c::OnGroundPounded()
+{
+    void *thisPtr = (void *)this;
+
     struct dScMgBSC_c *self = (struct dScMgBSC_c *)(void *)thisPtr;
     int x = self->mHudScore;
     int v = x / 5;

@@ -17,8 +17,8 @@ struct dScMgPachinko2_c : dScMgBase_c {
     virtual ~dScMgPachinko2_c();
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
-    virtual s32 Render();         /* slot 9 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();         /* slot 9 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     u8  pad_4660[0x1000];
     s32 unk_5660;            /* 0x5660 */

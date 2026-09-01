@@ -1,5 +1,5 @@
-_ZN6FlyGuyD1Ev kind:function(arm,size=0x48) addr:0x0211f000
-_ZN6FlyGuyD0Ev kind:function(arm,size=0x5c) addr:0x0211f048
+_ZN19daPropeller_Heyho_cD1Ev kind:function(arm,size=0x48) addr:0x0211f000
+_ZN19daPropeller_Heyho_cD0Ev kind:function(arm,size=0x5c) addr:0x0211f048
 func_ov070_0211f0a4 kind:function(arm,size=0x5c) addr:0x0211f0a4
 func_ov070_0211f100 kind:function(arm,size=0x268) addr:0x0211f100
 func_ov070_0211f368 kind:function(arm,size=0xe8) addr:0x0211f368
@@ -16,14 +16,14 @@ func_ov070_0211fd98 kind:function(arm,size=0x210) addr:0x0211fd98
 func_ov070_0211ffa8 kind:function(arm,size=0x78) addr:0x0211ffa8
 FlyGuy_ChangeState kind:function(arm,size=0x50) addr:0x02120020
 func_ov070_02120070 kind:function(arm,size=0xe0) addr:0x02120070
-_ZN6FlyGuy16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02120150
-_ZN6FlyGuy16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021201bc
-_ZN6FlyGuy6RenderEv kind:function(arm,size=0x50) addr:0x021201c0
-_ZN6FlyGuy8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02120210
-_ZN6FlyGuy13InitResourcesEv kind:function(arm,size=0x130) addr:0x021203b4
-_ZN6FlyGuy16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021204e4
-_ZN6FlyGuy13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x021204ec
-_ZN6FlyGuy13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02120518
+_ZN19daPropeller_Heyho_c16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02120150
+_ZN19daPropeller_Heyho_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021201bc
+_ZN19daPropeller_Heyho_c6RenderEv kind:function(arm,size=0x50) addr:0x021201c0
+_ZN19daPropeller_Heyho_c8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02120210
+_ZN19daPropeller_Heyho_c13InitResourcesEv kind:function(arm,size=0x130) addr:0x021203b4
+_ZN19daPropeller_Heyho_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021204e4
+_ZN19daPropeller_Heyho_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x021204ec
+_ZN19daPropeller_Heyho_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02120518
 FlyGuy_Spawn kind:function(arm,size=0x50) addr:0x02120520
 _ZN7daBrq_cD1Ev kind:function(arm,size=0x60) addr:0x02120570
 _ZN7daBrq_cD0Ev kind:function(arm,size=0x74) addr:0x021205d0
@@ -132,7 +132,6 @@ data_ov070_02123118 kind:data(any) addr:0x02123118
 _ZTI19daPropeller_Heyho_c kind:data(any) addr:0x02123120
 _ZTS19daPropeller_Heyho_c kind:data(any) addr:0x0212312c
 FlyGuy_SpawnInfo kind:data(any) addr:0x02123144 ambiguous
-_ZTV6FlyGuy kind:data(any) addr:0x02123168
 _ZTV19daPropeller_Heyho_c kind:data(any) addr:0x02123168
 data_ov070_02123184 kind:data(any) addr:0x02123184 ambiguous
 data_ov070_021231a0 kind:data(any) addr:0x021231a0 ambiguous

@@ -261,7 +261,7 @@ dScMgBase_c.h override returns void, so this now calls the base method as
 a plain statement instead of returning it, same fix dScMgLuigi_c's own
 slot 5 needed), 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18
 (dScMgBase_c::OnYoshiTryEat, declared on the base and overridden here;
-the body is src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.c, still a raw
+the body is src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp, still a raw
 extern "C" helper rather than a member definition, same precedent as
 every other dScMgBase_c leaf's slot 18; it no longer includes this
 header at all -- its one
@@ -271,18 +271,35 @@ idiom dScMgPachinko_c's own slot 18 helper already uses), 31 (now
 `Virtual7C`, src/_ZN12dScMgAmida_c9Virtual7CEv.cpp -- takes no parameters
 and never touches `this` at all, pure hardware-register/global reset; it
 was left as a raw helper by THIS migration and picked up later, when the
-slot-31 keystone commit named the base slot), 34 (src/func_ov006_020d14c0.c -- takes
-three extra parameters (y, x, arg3) beyond `this` and draws a HUD
-digit/glyph into its own private Ctx-shaped state; same multi-argument
-shape dScMgTeresa_c's own slot 34 documents, left as a raw helper,
-untouched by this migration -- it never includes this header either).
+slot-31 keystone commit named the base slot), 34 (now `Virtual88`,
+src/_ZN12dScMgAmida_c9Virtual88Eiiii.cpp -- the slot's signature is
+`void(int, int, int, int)`, measured from the seven call sites in
+ov004:0x020ae5c4, and this body reads only three of the four because the
+fourth arrives on the stack and it supplies its own size instead; it is
+the collision half of the ghost-leg rule, probing the 0x158-stride
+occupancy grid at +0x4710 and then delegating the drawing to
+dScMgBase_c's brush, which it is the only override in the family to
+call.  The guess recorded here -- "draws a HUD digit/glyph" -- and the
+matching one in include/dScMgTeresa_c.h were both pointing at
+dScMgBase_c's slot 34 being a multi-argument virtual; it is declared and
+reconstructed tree-wide now.  Left as a raw helper by THIS migration and
+picked up later, when the slot-34 keystone commit named the base slot --
+it never includes this header either).
 
-rtti_vtables.py --own ALSO reports slot 35 (func_ov006_020d1170, a
-one-line `((*(int*)((char*)c+8))&0xff)==1` check, same shape as slot 36
-below but for a different constant) -- unlike slot 36, nothing in
-InitResources/AfterCleanupResources/Behavior/Render/D1/D0 calls it (no
-cross-reference anywhere in src/ besides its own file), so it is left
-completely alone: not declared, not renamed, not even touched.
+rtti_vtables.py --own ALSO reports slot 35, now `Virtual8C`
+(src/_ZN12dScMgAmida_c9Virtual8CEv.cpp, a one-line
+`((*(int*)((char*)c+8))&0xff)==1` check, same shape as slot 36 below but
+for a different constant).  The observation recorded here -- that nothing
+in InitResources/AfterCleanupResources/Behavior/Render/D1/D0 calls it, and
+that there is no cross-reference anywhere in src/ besides its own file --
+is correct and is why it was left alone through this migration.  It is
+also why "nothing calls it" was the wrong conclusion to draw: the slot is
+dispatched thirteen times in ov006, virtually, so no call site names the
+symbol.  All thirteen are in FOUR OTHER leaf classes (dScMgCoin_c,
+dScMgPanel_c, dScMgSound_c, dScMgSnowball_c), each asking the question of
+itself.  The word being tested is fBase_c::param1 at +0x08; the base
+answers `!= 0` and this class narrows it to `== 1`.  Declared and renamed
+by the slot-35 keystone commit, which closed the 18-35 range.
 
 SLOT 36 IS DIFFERENT FROM EVERY SIBLING'S SLOT 18+: it is a brand-new
 own slot (dScMgBase_c's own vtable is 36 slots, 0-35; Amida's is 37,
@@ -447,7 +464,7 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 | 0xab50 | `mSoundPosX` / `mSoundPosY` (0xab54) | Behavior fires a rolling sound whenever the position has moved 0x30000 from these two, then copies the position in. |
 | 0xab60 | `mVelX` / `mVelY` (0xab64) | `Vec2_Len` of the pair is the speed, `atan2` of it is the heading, and it is added into `mPos` each tick. Capped at 0x8000. |
 | 0xab68 | `mScrollX` | Subtracted from every world X before drawing; src/func_ov006_021279b0.cpp zeroes it. |
-| 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in src/_ZN15dScMgSnowball_c8OnKickedEv.c. |
+| 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in src/_ZN15dScMgSnowball_c8OnKickedEv.cpp. |
 | 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample (`data_020a0dea` / `data_020a0deb`) here and steers off the difference from the previous one. |
 | 0xab78 | `mRollAngle` | u16. `+= speed * 0x2710 / mBallSize` -- an angle that advances faster the smaller the ball. |
 | 0xab7c | `mHeadingAngle` | u16. `atan2(mVelX, mVelY)`, approached linearly while rolling and set outright while crashing. |
@@ -464,7 +481,7 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 | 0xb9dc | `mTimeLeft` | Frames. Seeded 0x960 or 0x4b0 by variant; Behavior counts it down and plays a tick sound at 60/30/15-frame intervals as it shortens; Render formats it as seconds and centiseconds; 0 ends the run. |
 | 0xb9e0 | `mScore` | Zeroed by the reset, +1 a tick while rolling, handed to the HUD counter `func_ov004_020adb1c` at the crash -- the same sink dScMgAmida_c's score uses. |
 | 0xb9f4 | `mState` | Behavior's `switch`: 0 count-in, 1 rolling, 2/3 crash, 4 melt, 5 over. |
-| 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; src/_ZN15dScMgSnowball_c8OnKickedEv.c uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
+| 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; src/_ZN15dScMgSnowball_c8OnKickedEv.cpp uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
 | 0xb9fc | `mCountdownTimer` | Seeded 0xf1; state 0 counts it down, plays a beep at 0xf0/0xb4/0x78 and starts the run at 0x3c; Render draws the 3-2-1 banner from `n / 60`. |
 | 0xba00 | `mStartY` | 0x2dc0 or 0x1740 by variant; `mPosY` starts at `mStartY << 12` and the progress bar uses it as one end. |
 | 0xba04 | `mGoalY` | The other end of that bar, and the line `mPosY - mBallSize` must cross to end the run. |
@@ -516,7 +533,7 @@ into it by raw offset).
 | 0x5fd8 | `mPetalsLeft` | Decremented once per pull, gates every "still playing" branch on `>= 1`, and is the bound of the loop that finishes off the remaining petals when the round times out. |
 | 0x5fdc | `mWinStreak` | Incremented on the `mPetalToggle == 1` outcome and zeroed by the other; at 3 it swaps in banner 0x12 and adds 3 to `mScore` instead of 1. |
 | 0x5fe0 | `mLoseStreak` | The mirror counter on the other outcome; at 3 it swaps in banner 0x11. It never touches the score. |
-| 0x5fe4 | `mHoldTimer` | src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.c increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
+| 0x5fe4 | `mHoldTimer` | src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
 | 0x5fe8 | `mState` | Behavior's `switch`: 0 plays, 1 is over (it stops the prompt and only ticks the 0x51f8 object). |
 | 0x5fec | `mFaceSprite` | Render's only use is `data_ov006_0213ab94[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
 | 0x5ff0 | `mScore` | Incremented by 1 or 3 per winning pull and clamped to 0x270f -- the same 9999 cap dScMgAmida_c and dScMgSnowball_c use. |
@@ -539,10 +556,10 @@ four vtable methods; the citations below name those files.
 | 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
 | 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | src/func_ov006_021218fc.c drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
 | 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | src/func_ov006_0212157c.c refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
-| 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.c measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
+| 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.cpp measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
 | 0x5db8 | `mInputEnabled` | s16. src/func_ov006_0212157c.c clears `mTouching` and returns immediately while it is 0. |
 | 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |
-| 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.c is the only reader and clears it after scoring the swipe. |
+| 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.cpp is the only reader and clears it after scoring the swipe. |
 
 Left `unk_`: 0x5dba (an s16 with its own getter/setter pair,
 src/func_ov006_02121750.c and _02121768.c, but no reader that says what it

@@ -54,11 +54,11 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
        destructor above is declared first and out of line, so it stays this
        class's KEY FUNCTION and neither of these translation units emits
        _ZTV12dScMgSlot3_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    s32 InitResources();   /* slot  0 -- src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
-    virtual int  OnAimedAtWithEggReturnVec();          /* slot 30 */
-    virtual int  Virtual80();                          /* slot 32 */
+    virtual void OnAimedAtWithEggReturnVec();          /* slot 30 */
+    virtual void Virtual80();                          /* slot 32 */
     s32 Behavior();        /* slot  6 -- src/_ZN12dScMgSlot3_c8BehaviorEv.cpp */
     s32 Render();          /* slot  9 -- src/_ZN12dScMgSlot3_c6RenderEv.cpp */
 

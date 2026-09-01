@@ -37,8 +37,8 @@ extern "C" void func_ov006_020c6f3c(void);
 extern "C" void func_ov006_020eed64(void);
 
 struct dScMgJump2_c : dScMgD3DBase_c {
-    virtual ~dScMgJump2_c();
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual ~dScMgJump2_c();
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
 
     /* 0x5004 -- the state callback, a pointer-to-member of this class, which

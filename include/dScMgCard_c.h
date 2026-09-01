@@ -65,8 +65,8 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual s32 InitResources();     /* slot 0 -- ov006 0x020dbaf0 */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x020da994 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x020dabec */
-    virtual s32 Render();            /* slot 9 -- ov006 0x020da9c4 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x020da9c4 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual void OnGroundPounded();                    /* slot 21 */
 

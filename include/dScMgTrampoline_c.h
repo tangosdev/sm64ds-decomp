@@ -36,12 +36,13 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     virtual s32 InitResources();     /* slot 0 -- src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
-    virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual int  OnAttacked2();                        /* slot 23 */
     virtual int  OnKicked();                           /* slot 24 */
     virtual int  OnPushed();                           /* slot 25 */
+    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
     u8  pad_5004[0x8];    /* 0x5004 -- no matched access in this class's methods */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */

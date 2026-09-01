@@ -4,7 +4,7 @@
     .ctor       start:0x020b9de4 end:0x020b9df4 kind:rodata align:4
     .data       start:0x020b9e00 end:0x020beb60 kind:data align:32
     .bss        start:0x020beb60 end:0x020bfec0 kind:bss align:32
-src/func_ov004_020ad660.c:
+src/_ZN11dScMgBase_c9Virtual8CEv.cpp:
     complete
     .text start:0x020ad660 end:0x020ad674
 
@@ -147,11 +147,11 @@ src/_ZN11dScMgBase_c8OnKickedEv.cpp:
     complete
     .text start:0x020ae140 end:0x020ae198
 
-src/_ZN11dScMgBase_c11OnAttacked1Ev.c:
+src/_ZN11dScMgBase_c11OnAttacked1Ev.cpp:
     complete
     .text start:0x020ae198 end:0x020ae1a0
 
-src/_ZN11dScMgBase_c11OnAttacked2Ev.c:
+src/_ZN11dScMgBase_c11OnAttacked2Ev.cpp:
     complete
     .text start:0x020ae1a0 end:0x020ae1a8
 
@@ -183,7 +183,7 @@ src/func_ov004_020ae330.c:
     complete
     .text start:0x020ae330 end:0x020ae3b4
 
-src/func_ov004_020ae3b4.c:
+src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp:
     complete
     .text start:0x020ae3b4 end:0x020ae5c4
 
@@ -287,7 +287,7 @@ src/func_ov004_020b04d0.c:
     complete
     .text start:0x020b04d0 end:0x020b04e0
 
-src/_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv.c:
+src/_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv.cpp:
     complete
     .text start:0x020b04e0 end:0x020b04e8
 
@@ -406,15 +406,15 @@ src/func_ov004_020b2574.c:
     complete
     .text start:0x020b2574 end:0x020b265c
 
-src/func_ov004_020b265c.c:
+src/_ZN11dScMgBase_c9Virtual84Ev.cpp:
     complete
     .text start:0x020b265c end:0x020b27f4
 
-src/_ZN11dScMgBase_c9Virtual80Ev.c:
+src/_ZN11dScMgBase_c9Virtual80Ev.cpp:
     complete
     .text start:0x020b27f4 end:0x020b2880
 
-src/_ZN11dScMgBase_c9Virtual7CEv.c:
+src/_ZN11dScMgBase_c9Virtual7CEv.cpp:
     complete
     .text start:0x020b2880 end:0x020b290c
 
@@ -426,19 +426,19 @@ src/func_ov004_020b2980.c:
     complete
     .text start:0x020b2980 end:0x020b298c
 
-src/_ZN11dScMgBase_c15OnGroundPoundedEv.c:
+src/_ZN11dScMgBase_c15OnGroundPoundedEv.cpp:
     complete
     .text start:0x020b298c end:0x020b2990
 
-src/_ZN11dScMgBase_c9Virtual50Ev.c:
+src/_ZN11dScMgBase_c9Virtual50Ev.cpp:
     complete
     .text start:0x020b2990 end:0x020b2994
 
-src/_ZN11dScMgBase_c13OnTurnIntoEggEi.c:
+src/_ZN11dScMgBase_c13OnTurnIntoEggEi.cpp:
     complete
     .text start:0x020b2994 end:0x020b299c
 
-src/_ZN11dScMgBase_c13OnYoshiTryEatEi.c:
+src/_ZN11dScMgBase_c13OnYoshiTryEatEi.cpp:
     complete
     .text start:0x020b299c end:0x020b29a0
 
