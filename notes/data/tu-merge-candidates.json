@@ -7947,19 +7947,19 @@
    "start": "0x21115c4",
    "end": "0x21118c8",
    "classes": [
-    "ChillBully",
+    "daIDonketu_c",
     "daIDonketu_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN10ChillBullyD1Ev.cpp",
-    "src/_ZN10ChillBullyD0Ev.c",
+    "src/_ZN12daIDonketu_cD1Ev.cpp",
+    "src/_ZN12daIDonketu_cD0Ev.c",
     "src/func_ov027_02111680.c",
     "src/func_ov027_021116f0.cpp",
-    "src/_ZN10ChillBully8BehaviorEv.cpp",
-    "src/_ZN10ChillBully13InitResourcesEv.cpp",
-    "src/ChillBully_Spawn.c"
+    "src/_ZN12daIDonketu_c8BehaviorEv.cpp",
+    "src/_ZN12daIDonketu_c13InitResourcesEv.cpp",
+    "src/daIDonketu_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 4,

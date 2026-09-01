@@ -23,8 +23,10 @@
  *
  * daObjWaterfall_c is the ROM-proven identity: the adjacent retail RTTI and
  * type-name records at 0x0210945c/0x02109468 spell it and point at this class's
- * vtable. The C ABI factory name remains WaterfallMist_Spawn because no ROM
- * evidence recovers its original source spelling.
+ * vtable. daObjWaterfall_c_classInit and g_profile_WATERFALL are reconstructed
+ * source-style names: the exact original SM64DS spellings do not survive.
+ * Historical project aliases were WaterfallMist_Spawn and
+ * WaterfallMist_SpawnInfo.
  */
 
 #include "daObjWaterfall_c.h"
@@ -38,24 +40,24 @@ extern signed char data_0209f2f8;
 }
 
 struct daObjWaterfallSpawnInfo {
-    daObjWaterfall_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daObjWaterfall_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char daObjWaterfallSpawnInfo_size_must_be_0x1c[
     sizeof(daObjWaterfallSpawnInfo) == 0x1c ? 1 : -1];
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- WaterfallMist_Spawn, 0x020b6ee8, size 0x30 */
+/* ROM ordinal 4 -- class initializer, 0x020b6ee8, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol WaterfallMist_Spawn
-extern "C" daObjWaterfall_c *WaterfallMist_Spawn(void)
+// @symbol daObjWaterfall_c_classInit
+extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit(void)
 {
     daObjWaterfall_c *p =
         (daObjWaterfall_c *)_ZN7fBase_cnwEj(sizeof(daObjWaterfall_c));
@@ -67,8 +69,8 @@ extern "C" daObjWaterfall_c *WaterfallMist_Spawn(void)
 }
 
 /* 0x0210947c..0x02109498, immediately before vtable storage. */
-extern "C" daObjWaterfallSpawnInfo WaterfallMist_SpawnInfo = {
-    WaterfallMist_Spawn,
+extern "C" daObjWaterfallSpawnInfo g_profile_WATERFALL = {
+    daObjWaterfall_c_classInit,
     0x00c5,
     0x0015,
     0x00800003,

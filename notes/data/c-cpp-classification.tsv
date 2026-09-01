@@ -66,7 +66,7 @@ src/CgStairs_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/ChainChompFence_Spawn.c	WEAK-refs-only	ov014				1		None		-
 src/ChangeArea.c	PURE-C	arm9				1		None		-
 src/CheepCheep_Spawn.c	WEAK-refs-only	ov090				1		None		-
-src/ChillBully_Spawn.c	WEAK-refs-only	ov027				1		None		-
+src/daIDonketu_c_Spawn.c	WEAK-refs-only	ov027				1		None		-
 src/Chuckya_Spawn.c	WEAK-refs-only	ov062				1		None		-
 src/CleanCommonModelDataArr.c	WEAK-refs-only					0		None		not-in-delinks
 src/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
@@ -571,7 +571,7 @@ src/YoshiEgg_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/_Z19UnloadLevelOverlaysi.c	P4-mangled-freefn	arm9			_Z19UnloadLevelOverlaysi	1	active	None		-
 src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c	P4-mangled-freefn	arm9			_Z23LoadMinimapChangeObjecti5Fix12IiEh	1		None		by-value-class-param
 src/_ZN10BrickBlockD0Ev.c	DTOR-ONLY	ov002	daObjBlockItemTag_c	BrickBlock/daObjBlockItemTag_c	_ZN10BrickBlockD0Ev	1		True	_ZTV10BrickBlock	-
-src/_ZN10ChillBullyD0Ev.c	DTOR-ONLY	ov027	daIDonketu_c	ChillBully/daIDonketu_c	_ZN10ChillBullyD0Ev	1		True	_ZTV10ChillBully/_ZTV7daOts_c	-
+src/_ZN12daIDonketu_cD0Ev.c	DTOR-ONLY	ov027	daIDonketu_c	daIDonketu_c/daIDonketu_c	_ZN12daIDonketu_cD0Ev	1		True	_ZTV12daIDonketu_c/_ZTV7daOts_c	-
 src/_ZN10ClsnResultC1Ev.c	P3-mangled-method-only	arm9		ClsnResult	_ZN10ClsnResultC1Ev	1		True		-
 src/_ZN10ClsnResultD1Ev.c	DTOR-ONLY	arm9	dBgPi	ClsnResult/dBgPi	_ZN10ClsnResultD1Ev	1		True		-
 src/_ZN10ClsnResultD2Ev.c	DTOR-ONLY	arm9		ClsnResult	_ZN10ClsnResultD2Ev	1		True		-

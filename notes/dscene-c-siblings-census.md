@@ -290,8 +290,11 @@ into the object and calls `Memory::Deallocate`):
 
 So the D0-labelled-as-OnYoshiTryEat defect no longer has a single instance in
 `src/`. The seven survivors §3 counted were fixed as their classes were named,
-each one settled by reading the body; `src/_ZN10ChillBullyD0Ev.cpp` and
-`src/_ZN10LavaSeesawD0Ev.cpp` carry the reasoning in their headers. All 31
+each one settled by reading the body. Two still carry that reasoning in their own
+headers: the deleting destructor of `daIDonketu_c`, whose seven per-function
+sources have since been folded into the source-owned `actors/d_a_i_donketu.cpp`
+(the destructor pair is inline in `include/daIDonketu_c.h` now, and the TU's
+closing comment says why), and `src/_ZN10LavaSeesawD0Ev.cpp`. All 31
 remaining `OnYoshiTryEat` claims sit on genuine slot-18 bodies. The standing
 advice is still right and still cheap: don't trust a slot-17 "recovered name"
 without checking the body.

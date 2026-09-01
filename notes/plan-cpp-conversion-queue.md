@@ -291,6 +291,13 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 
 **`src/_ZN10ChillBully14UpdateRunStateEv.cpp`**, chosen deliberately over the smaller candidates.
 
+> HISTORICAL. What follows is a captured transcript of a pilot that ran while this class
+> was still going by its coined name. `ChillBully` is `daIDonketu_c` — the cartridge's own
+> name, measured at the top of `include/daIDonketu_c.h` — and all seven of its
+> per-function sources have since been folded into one translation unit, source-owned as
+> `actors/d_a_i_donketu.cpp`. The paths and symbols below are left as the pilot spelled
+> them, so none of them is in the tree any more.
+
 Why not the 4-byte `src/_ZN9dThIcon_c6RenderEv.cpp` (an empty `bx lr`): a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
 is the smallest candidate that puts **real code** through the C→C++ front end while
@@ -303,7 +310,7 @@ holding every other variable fixed:
 * Zero lexical hazards, so a failure is unambiguously codegen, not hygiene.
 * Enrolled; no entry in `config/rombuild-versions.txt`, so `match.py`'s default
   `CANONICAL` **is** the build's pin.
-* Sits in a **safe-pool** TU (ov027 @`0x21115c4`, 7 members, `ChillBully`+`daIDonketu_c`),
+* Sits in a **safe-pool** TU (ov027 @`0x21115c4`, 7 members, all `ChillBully`'s),
   so a green result immediately feeds the merge workstream.
 * Includes `decl_common.h`, so it also exercises the one include known to be sometimes wrong.
 

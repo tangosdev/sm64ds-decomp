@@ -108,3 +108,8 @@
 {"path": "src/_ZN15IceSlideManager13InitResourcesEv.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}
 {"path": "src/_ZN15IceSlideManagerD0Ev.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}
 {"path": "src/_ZN15IceSlideManagerD1Ev.cpp", "reason": "Consolidate daSldMng_c into one snake_case TU (#2148); restack on main after #2130"}
+{"path": "src/_ZN10ChillBully14UpdateRunStateEv.cpp", "reason": "restack cpp/donketu-snake-tu onto main after 2151 landed"}
+{"path": "src/_ZN10ChillBully16UpdateDeathStateEv.cpp", "reason": "restack cpp/donketu-snake-tu onto main after 2151 landed"}
+{"path": "src/_ZN10ChillBully8BehaviorEv.cpp", "reason": "restack cpp/donketu-snake-tu onto main after 2151 landed"}
+{"path": "src/_ZN10ChillBullyD0Ev.cpp", "reason": "restack cpp/donketu-snake-tu onto main after 2151 landed"}
+{"path": "src/_ZN10ChillBullyD1Ev.cpp", "reason": "restack cpp/donketu-snake-tu onto main after 2151 landed"}

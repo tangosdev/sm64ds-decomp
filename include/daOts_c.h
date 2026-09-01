@@ -10,7 +10,9 @@
 
 /* The shared base of the three Bully variants. The ROM's RTTI names it daOts_c and
  * gives it exactly three children: daDonketu_c (Bully), daBDonketu_c (BigBully) and
- * daIDonketu_c (ChillBully). The production name is kept, as #1400 did for
+ * daIDonketu_c. All three ROM names are the tree's names too now; the coined
+ * `ChillBully` this file used to gloss daIDonketu_c with is gone. The production name
+ * daOts_c is kept, as #1400 did for
  * dScMgBase_c -- it also makes the compiler's _ZTV7daOts_c agree with the RTTI
  * string for free.
  *
@@ -26,7 +28,7 @@
  *   out-of-line copy for the vtable to point at. The children inline it (no `bl`
  *   anywhere), and slots 16/17 of _ZTV7daOts_c hold these two addresses.
  *
- *   Bully_Spawn, BigBully_Spawn and ChillBully_Spawn are the SAME function apart
+ *   Bully_Spawn, BigBully_Spawn and daIDonketu_c_Spawn are the SAME function apart
  *   from the allocation size and the last instruction. Each stores TWO vtables --
  *   this class's, from the inlined base constructor, and then its own -- with the
  *   four members constructed between them at those same four offsets.
@@ -50,7 +52,7 @@
  *   slot 0  InitResources    LITERAL ZERO here -- pure virtual. All three children
  *   slot 6  Behavior         override both, which is why they must.
  *   slot 3  CleanupResources 0x02116ca0 in ALL FOUR tables, so it is this class's.
- *   slot 9  Render           0x02116cf0 here, in Bully and in ChillBully; BigBully
+ *   slot 9  Render           0x02116cf0 here, in Bully and in daIDonketu_c; BigBully
  *                            is the only one that overrides it.
  *   slot 29 OnAimedAtWithEgg 0x02115f84 in all four, so also this class's.
  *   slot 16/17               the destructor pair, one per class.

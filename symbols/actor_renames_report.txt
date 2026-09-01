@@ -479,7 +479,7 @@ SKIP BigBoo: ov063:0x2115f48 already claimed by daTrs_c (vtable slot 17)
 AMBIG actor 213 BOOK_SWITCH: ['ov016', 'ov020', 'ov021'] -> ov016
 NOVTABLE actor 213 BookSwitch (alloc=0x1)
 SKIP BigBully: ov064:0x2116ca0 already claimed by Bully (vtable slot 3)
-NOVTABLE actor 217 ChillBully (alloc=0x3fc)
+NOVTABLE actor 217 daIDonketu_c (alloc=0x3fc)
 AMBIG actor 228 BUBBA: ['ov027', 'ov032', 'ov034'] -> ov027
 SKIP Bubba: ov027:0x2113800 already claimed by SlidingIce (spawninfo)
 SKIP Bubba: ov027:0x2111564 already claimed by SlidingIce (spawnfunc)

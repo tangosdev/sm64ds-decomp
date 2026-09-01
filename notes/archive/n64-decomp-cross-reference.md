@@ -342,7 +342,7 @@ Combined with N64's field vocabulary (`oPosX`/`oAction`/…) and the hitbox cons
 `sm64/src/game/behaviors/*.inc.c`, this is directly usable when drafting DS `Behavior()` /
 `InitResources()` or renaming `func_ov###_########` placeholders for these actors.
 
-DS-only / EAD additions, not chased: `KoopaTheQuick`, `ChillBully`/`ChiefChilly` (Snowman's Land
+DS-only / EAD additions, not chased: `KoopaTheQuick`, `daIDonketu_c` (then called `ChillBully` here)/`ChiefChilly` (Snowman's Land
 reskins — N64 doesn't reuse Bully there), `Toad`, `Dorrie`.
 
 ---

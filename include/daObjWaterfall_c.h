@@ -9,9 +9,10 @@
 extern "C" int _ZTV16daObjWaterfall_c[];
 
 /* The retail RTTI record at ov002:0x0210945c spells daObjWaterfall_c and
- * points to the vtable whose address point is 0x021094a0. WaterfallMist_Spawn
- * allocates 0xdc bytes and installs that table; its C ABI name is retained
- * because the ROM proves the class identity, not the original factory spelling.
+ * points to the vtable whose address point is 0x021094a0.
+ * daObjWaterfall_c_classInit (historical alias WaterfallMist_Spawn) allocates
+ * 0xdc bytes and installs that table. The source-style classInit spelling is
+ * a lineage-supported reconstruction, not a ROM-preserved symbol.
  * The D1 chains directly to dActor_c::~dActor_c, proving the inheritance below.
  * Behavior reads 0xd4 as a particle ID and both reads and writes a pointer at
  * 0xd8, correcting the generated one-byte marker.

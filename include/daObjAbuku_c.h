@@ -6,7 +6,8 @@
 
 /* TWO WITNESSES:
  *
- *   daObjAbuku_c_Spawn  fBase_c::operator new(276 = 0x114),
+ *   daObjAbuku_c_classInit (historical alias daObjAbuku_c_Spawn)
+ *       fBase_c::operator new(276 = 0x114),
  *       dActor_c::dActor_c(), stores the class vtable, then the
  *       dCcAc_c member below.
  *   _ZN12daObjAbuku_cD0Ev  the same member destroyed, then ~dActor_c.
@@ -45,7 +46,7 @@
  */
 struct daObjAbuku_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* dCcAc_c member, named by daObjAbuku_c_Spawn's own C1 call
+    /* dCcAc_c member, named by daObjAbuku_c_classInit's own C1 call
        and the class's own destructors' D1 call at +0xd4.
        [src/actors/daObjAbuku_c.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
