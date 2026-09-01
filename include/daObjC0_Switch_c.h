@@ -25,7 +25,14 @@
 struct daObjC0_Switch_c : dBgActor_c {
     u8  mPressed;            /* 0x31e */
 
-    virtual ~daObjC0_Switch_c();            /* slots 16 (D1), 17 (D0) */
+    /* Defined inline on purpose. InitResources is the first out-of-line
+     * virtual/key function, so together with this inline destructor mwcc owns the
+     * retail D1/D0 pair in the cartridge's own order and the complete class
+     * RTTI/vtable group, without retaining a D2 base-object body that has no ROM
+     * home. Written out-of-line, mwcc emits D0 before D1 and objisolate refuses
+     * the translation unit. The body is empty in the ROM too: D1 at 0x021111a0
+     * stores the vtable and tail-calls ~dBgActor_c, with no member teardown. */
+    virtual ~daObjC0_Switch_c() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
