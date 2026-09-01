@@ -641,13 +641,22 @@ unsigned g_last_join_ms    = 0;
 // already does `g_live = p.live` unconditionally for an accept that names its
 // own slot, so nothing on the child side has to change.
 //
-// REPEATED FOR A SHORT WINDOW rather than sent once, because a lost announce
-// would strand exactly the console the announce exists to inform, and there is
-// no other traffic on this path to heal it. The window is wall-clock and the
-// rate is the republish interval already tuned for the mode, so this costs a
-// handful of 144-byte datagrams per join and nothing at all once a session is
-// formed.
-enum : unsigned { kRosterAnnounceMs = 750 };
+// REPEATED FOR A WINDOW rather than sent once, because a lost announce would
+// strand exactly the console the announce exists to inform, and there is no
+// other traffic on this path to heal it -- nobody is exchanging anything yet.
+//
+// TWO SECONDS, AND A 50 ms FLOOR UNDER THE RATE. The rate wants to follow the
+// republish interval, which is already tuned per mode, but that interval is
+// 4 ms on loopback and up to 250 ms over the relay, and taking it neat gives
+// 500 announces in the window at one end and three at the other -- spam at one
+// end and thin cover at the other. The floor cuts loopback to 40 and the
+// window gives the relay 8. Either way it is a handful of 144-byte datagrams
+// per join and nothing at all once the session is formed.
+//
+// EVERY FRESH JOIN RE-ARMS THE WINDOW, so a launcher that spaces its consoles
+// out by more than the window is still covered: the announce that matters is
+// the one after the LAST join, and that one is always sent.
+enum : unsigned { kRosterAnnounceMs = 2000, kRosterAnnounceEveryMs = 50 };
 unsigned g_roster_until   = 0;    // announce while now_ms() is below this
 unsigned g_last_roster_ms = 0;
 // JOINs this child has sent while connecting, for the "nobody is answering,
@@ -1186,6 +1195,10 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
             // must not put a burst on the wire. See kRosterAnnounceMs.
             const unsigned now = now_ms();
             g_roster_until   = now + kRosterAnnounceMs;
+            // 0 is this field's "no window open" sentinel, and the clock wraps
+            // once every 49 days, so the one deadline that would land on it is
+            // nudged by a millisecond rather than silently skipping a window.
+            if (!g_roster_until) g_roster_until = 1;
             g_last_roster_ms = now;
             announce_roster();
         }
@@ -1719,9 +1732,11 @@ void service() {
     // arms. Bounded by wall clock, paced at the republish interval, and dead
     // the instant the window closes -- a formed session pays nothing.
     if (g_role == kRoleParent && g_roster_until != 0) {
+        unsigned every = (unsigned)g_resend_ms;
+        if (every < kRosterAnnounceEveryMs) every = kRosterAnnounceEveryMs;
         if ((int)(t - g_roster_until) >= 0) {
             g_roster_until = 0;
-        } else if ((unsigned)(t - g_last_roster_ms) >= (unsigned)g_resend_ms) {
+        } else if ((unsigned)(t - g_last_roster_ms) >= every) {
             g_last_roster_ms = t;
             announce_roster();
         }

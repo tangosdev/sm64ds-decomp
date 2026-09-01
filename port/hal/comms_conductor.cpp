@@ -1070,11 +1070,12 @@ bool comms_wait_for_session(int frames) {
         std::fprintf(stderr,
                      "[comms:conductor] this world wants %d players "
                      "(SM64DS_VS_PLAYERS), so the seat waits for all %d to be "
-                     "in the session and not merely for the first one. A "
-                     "console that seats early spawns a world with no room for "
-                     "the late arrivals, and it also starts on a different "
-                     "round, which is a second way to end up simulating a "
-                     "different match.\n", want, want);
+                     "in the session and not merely for the first one, and the "
+                     "budget restarts each time somebody arrives. A console "
+                     "that seats early spawns a world with no room for the "
+                     "late arrivals, and it also starts on a different round, "
+                     "which is a second way to end up simulating a different "
+                     "match.\n", want, want);
     std::fprintf(stderr,
                  "[comms:conductor] holding the world seat until the session "
                  "joins, because data_020a0f10 (my comms slot) is not written "
@@ -1098,6 +1099,35 @@ bool comms_wait_for_session(int frames) {
     if (data_020a0f04[0] == kCommsRoleParent)      func_02040820();
     else if (data_020a0f04[0] == kCommsRoleChild)  func_02040790();
 
+    // ONE DEADLINE, SCALED BY HOW MANY ARE EXPECTED. A turn is one poll and a
+    // 4 ms sleep, so the caller's 600 is about two and a half seconds. That is
+    // right for a PAIR -- the one peer boots alongside and is usually knocking
+    // before the wait even starts -- and it is nowhere near enough for four,
+    // where three more launchers are still loading assets when the parent gets
+    // here. Measured: at a one-second launcher stagger the parent released at
+    // turn 454 of 600, so a pair's whole budget had 24% left with two consoles
+    // still to come; at a three-second stagger a flat 600 expired before the
+    // FIRST child arrived.
+    //
+    // SIX TIMES THE PAIR'S NUMBER, so about fifteen seconds. It covers a
+    // three-second launcher stagger with room to spare -- the last of four
+    // consoles is in around ten seconds on that shape -- and it BOUNDS THE
+    // FAILURE, which matters as much: four players who never all turn up cost
+    // fifteen seconds and then a line saying who is missing. Fifteen seconds to
+    // learn a friend never joined beats silently playing a match the other
+    // consoles are not in.
+    //
+    // AN EARLIER REVISION MADE THIS A BUDGET PER ARRIVAL that restarted every
+    // time the roster grew. It was strictly more code and it still failed the
+    // three-second stagger, because the gap it had to cover was between
+    // arrivals and the per-arrival number was the same 600. One deadline is
+    // easier to reason about and easier to review, and it is the number that
+    // actually has to be big enough.
+    //
+    // A TWO-PLAYER SESSION IS UNTOUCHED: want <= 2 leaves the deadline at
+    // exactly what the caller passed, so every existing measurement in this
+    // tree still describes the run it was taken from.
+    if (want > 2) frames *= 6;
     for (int i = 0; i < frames; ++i) {
         t->poll();                         // service the carrier
         const int st = t->state();

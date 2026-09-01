@@ -235,6 +235,27 @@ def main():
                     "to different frames, which is a different match even when "
                     "the count agrees." % (starts,))
 
+    # ---- rung 2b: the wait ACTUALLY waited ---------------------------------
+    # AND THIS RUNG EXISTS BECAUSE RUNG 1 CANNOT SEE THE FAILURE IT IS NAMED
+    # AFTER. SM64DS_VS_PLAYERS forces the count, so a console whose wait EXPIRED
+    # still seats four actors and still reports count=4 -- rung 1 passes while
+    # the very mechanism under test did nothing. Found by running this proof at
+    # a three-second stagger and reading the parent's log after it had already
+    # said ALL GREEN: "the session reached 3 of the 4 players it was told to
+    # expect", one line above slot 3 joining.
+    #
+    # The shortfall line is the conductor's own, so this reads the mechanism
+    # rather than its side effect.
+    short = [k for k, t in enumerate(texts) if "of the 4 players it was told "
+             "to expect" in t or "players it was told to expect" in t]
+    ok &= M.verdict(not short,
+                    "rung2b no console's seat TIMED OUT waiting for the roster "
+                    "| %s. A timeout here still passes rung 1, because the "
+                    "forced count seats four actors either way -- which is "
+                    "exactly why this rung is separate."
+                    % ("none did" if not short
+                       else "windows %s gave up short" % short))
+
     # ---- rungs 3/4/5: bodies, colours, pads --------------------------------
     cf = common_frame(all_rows)
     if cf is None:
