@@ -3,7 +3,13 @@
 #include "decl_common.h"
 #include "dScMgCoin_c.h"
 
-/* dScMgCoin_c::OnYoshiTryEat - recovered from ROM RTTI and vtable slot identity. */
+/* dScMgCoin_c::OnYoshiTryEat - recovered from ROM RTTI and vtable slot identity.
+   void, amended 2026-08-31: recompiled as void this matches byte-identically
+   (match.py, 2004/b56), which retires the old `return 0;` -- it was an
+   int-assumption transcription of the `mov r0,#0` that is really the source
+   register of the unk_51c8 store at the tail, doing double duty only under
+   an int reading. Slot 18's family form is void; see dScMgBase_c.h and
+   notes/minigame-family-decisions.md. */
 extern "C" {
 extern void FreeGfxSlotsById(int n);
 extern int func_ov004_020adc1c(void);

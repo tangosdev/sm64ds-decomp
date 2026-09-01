@@ -373,6 +373,20 @@ ov006	0x0211cb70	func_ov006_0211cb70	MgBoomBox_Spawn	spawnfunc
 ov006	0x021207a8	func_ov006_021207a8	MgHideAndBooSeek_Spawn	spawnfunc
 ov006	0x02122490	func_ov006_02122490	MgTrampolineTime_Spawn	spawnfunc
 ov006	0x0212471c	func_ov006_0212471c	MgTrampolineTerror_Spawn	spawnfunc
+ov006	0x02124a04	func_ov006_02124a04	_ZN10dScMgBSC_c9StateDoneEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 12 and 13
+ov006	0x02124a08	func_ov006_02124a08	_ZN10dScMgBSC_c16StateReturnCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 11
+ov006	0x02124ae4	func_ov006_02124ae4	_ZN10dScMgBSC_c14StateWaitTableEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 9 and 10
+ov006	0x02124b58	func_ov006_02124b58	_ZN10dScMgBSC_c18StateTableReactionEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 7 and 8
+ov006	0x02124bb4	func_ov006_02124bb4	_ZN10dScMgBSC_c15StateJudgeCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 6
+ov006	0x02124cb4	func_ov006_02124cb4	_ZN10dScMgBSC_c16StateRevealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 5
+ov006	0x02124dc0	func_ov006_02124dc0	_ZN10dScMgBSC_c13StateWaitMoveEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 4
+ov006	0x02124e1c	func_ov006_02124e1c	_ZN10dScMgBSC_c14StateMoveCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 3
+ov006	0x02124ec4	func_ov006_02124ec4	_ZN10dScMgBSC_c15StateChooseCardEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 2
+ov006	0x02124fd8	func_ov006_02124fd8	_ZN10dScMgBSC_c13StateWaitDealEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 1
+ov006	0x021250e4	func_ov006_021250e4	_ZN10dScMgBSC_c14StateDealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 0
+ov006	0x02125248	func_ov006_02125248	_ZN10dScMgBSC_c15OnGroundPoundedEv	legacy recovered name stands uncontradicted; vtable slot 21 of dScMgBSC_c
+ov006	0x0212527c	func_ov006_0212527c	_ZN10dScMgBSC_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgBSC_c
+ov006	0x02125364	func_ov006_02125364	_ZN10dScMgBSC_c13OnYoshiTryEatEi	legacy recovered name stands uncontradicted; vtable slot 18 of dScMgBSC_c
 ov006	0x021255f8	func_ov006_021255f8	MgLuckyStars_Spawn	spawnfunc
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
@@ -2361,3 +2375,52 @@ ov002	0x020b47ec	func_ov002_020b47ec	_ZN16daObjKinokoTag_c20TrySpawnMegaMushroom
 ov065	0x0211a550	func_ov065_0211a550	_ZN16daObjCtMecha04_c12UpdateShadowEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller, owned shadow fields, and dActor_c shadow call
 ov065	0x0211aa38	func_ov065_0211aa38	_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c	inferred helper name and dActor_c reference parameter; callback forwarding and conveyor/actor field ABI prove ownership and call shape
 ov065	0x0211aacc	func_ov065_0211aacc	_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred helper name and callback types; installed as the collider callback and observed forwarding owner and colliding actor
+ov006	0x020d96e0	func_ov006_020d96e0	_ZN12dMgCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
+ov006	0x020d96f0	func_ov006_020d96f0	_ZN17dMgDilarCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
+ov006	0x020d970c	func_ov006_020d970c	_ZN17dMgDilarCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d978c	func_ov006_020d978c	_ZN17dMgDilarCardObj_c6UpdateEv	coined: vtable slot 1 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d9998	func_ov006_020d9998	_ZN17dMgDilarCardObj_c13GetOffscreenYEv	coined: vtable slot 2 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d99a4	func_ov006_020d99a4	_ZN12dMgCardObj_c6FlyOffEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d99ec	func_ov006_020d99ec	_ZN12dMgCardObj_c7SetHomeEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d9a14	func_ov006_020d9a14	_ZN11dScMgCard_c9RenderHudEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d9bd0	func_ov006_020d9bd0	_ZN12dMgCardObj_c13GetOffscreenYEv	coined: vtable slot 2 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020d9bdc	func_ov006_020d9bdc	_ZN12dMgCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020d9c5c	func_ov006_020d9c5c	_ZN12dMgCardObj_c6UpdateEv	coined: vtable slot 1 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020da00c	func_ov006_020da00c	_ZN12dMgCardObj_c6RedealEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da0ac	func_ov006_020da0ac	_ZN12dMgCardObj_c6DealInEPKi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da154	func_ov006_020da154	_ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da174	func_ov006_020da174	_ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da420	func_ov006_020da420	_ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da4ac	func_ov006_020da4ac	_ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da5e8	func_ov006_020da5e8	_ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da834	func_ov006_020da834	_ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da860	func_ov006_020da860	_ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da88c	func_ov006_020da88c	_ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da8b8	func_ov006_020da8b8	_ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da8e4	func_ov006_020da8e4	_ZN11dScMgCard_c13DrawCardValueEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da974	func_ov006_020da974	_ZN11dScMgCard_c11FillWeightsEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020dac34	func_ov006_020dac34	_ZN11dScMgCard_c11UpdateStateEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020db6ec	func_ov006_020db6ec	_ZN11dScMgCard_c15OnGroundPoundedEv	legacy recovered name stands uncontradicted; vtable slot 21 of dScMgCard_c
+ov006	0x020db720	func_ov006_020db720	_ZN11dScMgCard_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgCard_c
+ov006	0x020db9dc	func_ov006_020db9dc	_ZN11dScMgCard_c13OnYoshiTryEatEi	family-adjudicated slot-18 name (notes/minigame-family-decisions.md); vtable slot 18 of dScMgCard_c
+ov006	0x0213bccc	data_ov006_0213bccc	_ZTV12dMgCardObj_c	vtable alloc=0x30
+ov006	0x0213bcf4	data_ov006_0213bcf4	_ZTV17dMgDilarCardObj_c	vtable alloc=0x30
+ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
+ov006	0x020f7740	func_ov006_020f7740	_ZN13dScMgMCarlo_c11UpdateBoardEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7994	func_ov006_020f7994	_ZN13dScMgMCarlo_c14FlipDealtCardsEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7a00	func_ov006_020f7a00	_ZN13dScMgMCarlo_c13DrawCardValueEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7a90	func_ov006_020f7a90	_ZN13dScMgMCarlo_c10BoardReadyEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7b10	func_ov006_020f7b10	_ZN13dScMgMCarlo_c9BoardBusyEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7b90	func_ov006_020f7b90	_ZN13dScMgMCarlo_c16HasRemovablePairEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7c10	func_ov006_020f7c10	_ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7e2c	func_ov006_020f7e2c	_ZN18dMgMCarloCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgMCarloCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020f7ee4	func_ov006_020f7ee4	_ZN18dMgMCarloCardObj_c6UpdateEi	coined: vtable slot 1 of the RTTI-proven dMgMCarloCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020f8154	func_ov006_020f8154	_ZN18dMgMCarloCardObj_c7HitTestEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8224	func_ov006_020f8224	_ZN18dMgMCarloCardObj_c10IsPairWithEPS_	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f82d0	func_ov006_020f82d0	_ZN18dMgMCarloCardObj_c8FlipAwayEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8320	func_ov006_020f8320	_ZN18dMgMCarloCardObj_c6DealInEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f84a8	func_ov006_020f84a8	_ZN18dMgMCarloCardObj_c4InitEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8540	func_ov006_020f8540	_ZN13dScMgMCarlo_c9RenderHudEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8a3c	func_ov006_020f8a3c	_ZN13dScMgMCarlo_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgMCarlo_c
+ov006	0x020f8c68	func_ov006_020f8c68	_ZN13dScMgMCarlo_c13OnYoshiTryEatEi	family-adjudicated slot-18 name (notes/minigame-family-decisions.md); vtable slot 18 of dScMgMCarlo_c
+ov006	0x0213d5ac	data_ov006_0213d5ac	_ZTV18dMgMCarloCardObj_c	vtable alloc=0x30
