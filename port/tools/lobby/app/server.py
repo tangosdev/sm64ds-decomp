@@ -132,11 +132,20 @@ MAX_BUCKETS = 8192          # hard ceiling on tracked source addresses
 SWEEP_INTERVAL_S = 1.0
 STATS_INTERVAL_S = 60.0
 
-# Bodies larger than this are refused unread. DRAIN_CAP is how much of an
-# over-long body we are still willing to read off the socket to keep the
-# connection usable; past that the connection is closed instead.
+# Bodies larger than this are refused unread.
 BODY_MAX = 4096
-DRAIN_CAP = 65536
+
+# The deadline on every blocking socket read for one connection: reading the
+# request line, reading the headers, reading the body. Without it a client that
+# announces a body and then sends it one byte a decade holds its worker thread
+# forever, and enough such clients from one host take the whole container down
+# (a thread is a pid, and the compose caps pids). socketserver applies this to
+# the connection in setup(), and handle_error already swallows the TimeoutError
+# it raises, so a stalled connection is dropped in silence. A long poll does
+# NOT ride this deadline: it blocks on a Condition, not on a socket read, and it
+# is capped by WAIT_MAX and MAX_WAITERS instead. Env-overridable only so the
+# security test can drive it low; 20 s is the production value.
+HANDLER_TIMEOUT_S = env_int("HANDLER_TIMEOUT_S", 20, 1, 3600)
 
 EVENT_RING = 100            # events a room remembers
 CHAT_RING = 40              # chat lines a room remembers, for a resync
@@ -194,6 +203,29 @@ def blunt_host(host):
     if len(octets) == 4:
         return "%s.%s.x.x" % (octets[0], octets[1])
     return "x"
+
+
+PATH_LOG_MAX = 80
+
+
+def safe_path(path):
+    """A request path made safe to write into a log line.
+
+    The path is client-supplied and reaches the log on every reject. Two
+    things it must not carry into a terminal an operator reads: length -- an
+    8 KB path wrote an 8 KB log line, a 2000x amplification against a 4 KB body
+    cap -- and control bytes, which is how a raw ANSI escape reached the log
+    intact. So it is truncated and every byte outside 0x20..0x7E is shown as
+    '?'. This is a log-hygiene measure, not the routing decision: do_POST still
+    matches the real, untruncated path.
+    """
+    if not path:
+        return "-"
+    out = "".join(ch if 0x20 <= ord(ch) <= 0x7E else "?"
+                  for ch in path[:PATH_LOG_MAX])
+    if len(path) > PATH_LOG_MAX:
+        out += "...(%d)" % len(path)
+    return out
 
 
 def byte_len(s):
@@ -1100,6 +1132,13 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "sm64ds-lobby"
     sys_version = ""
 
+    # The per-connection read deadline. StreamRequestHandler.setup() reads this
+    # and calls settimeout() with it, so every rfile read on this connection --
+    # the request line, the headers, the body -- is bounded. main() overrides it
+    # from HANDLER_TIMEOUT_S; this default is the floor if main is bypassed (the
+    # security test imports the module and constructs handlers directly).
+    timeout = HANDLER_TIMEOUT_S
+
     # The default handler logs every request to stderr with the full client
     # address in it. We log what we choose to log and nothing else.
     def log_message(self, fmt, *args):
@@ -1111,38 +1150,30 @@ class Handler(BaseHTTPRequestHandler):
         """The client's address, blunted for logging and keyed for limits.
 
         Behind Caddy the socket peer is always Caddy, so per-IP limits would
-        be per-SERVER limits without this. X-Forwarded-For's FIRST entry is
-        the original client; the header is capped and sanity-checked because
-        it is client-supplied on any direct deployment.
+        be per-SERVER limits without this.
+
+        THE LAST ENTRY OF X-FORWARDED-FOR, NEVER THE FIRST. The header is a
+        comma-separated trail, oldest first, and the FIRST entry is the one
+        furthest from the server -- the one a client can write itself. Reading
+        it let a client forge a fresh address per request and walk straight
+        through every per-address limit: 120 joins from 120 forged addresses
+        with the join cap never engaging, on the review's own measurement.
+        The LAST entry is the one the nearest proxy wrote, and it is correct
+        under both of Caddy's conventions: if Caddy REPLACES the header the
+        trail is one entry and first and last are the same, and if Caddy
+        APPENDS the real peer the last entry is the one Caddy itself added.
+        Either way the client cannot control it -- as long as Caddy is in
+        front, which is what TRUST_XFF asserts.
         """
         peer = self.client_address[0] if self.client_address else ""
         if TRUST_XFF:
             xff = self.headers.get("X-Forwarded-For", "")
             if xff and len(xff) <= 256:
-                first = xff.split(",")[0].strip()
-                if first and len(first) <= 45 and all(
-                        c in "0123456789abcdefABCDEF.:" for c in first):
-                    return first
+                near = xff.split(",")[-1].strip()
+                if near and len(near) <= 45 and all(
+                        c in "0123456789abcdefABCDEF.:" for c in near):
+                    return near
         return peer
-
-    def _drain(self, announced):
-        """Read the body the client announced so the next request on this
-        keep-alive connection parses a request line and not the middle of this
-        one. Past DRAIN_CAP we close instead of reading."""
-        if announced <= 0:
-            return
-        if announced > DRAIN_CAP:
-            self.close_connection = True
-            return
-        left = announced
-        try:
-            while left > 0:
-                chunk = self.rfile.read(min(left, 8192))
-                if not chunk:
-                    break
-                left -= len(chunk)
-        except OSError:
-            self.close_connection = True
 
     def _send(self, status, payload):
         body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
@@ -1159,9 +1190,23 @@ class Handler(BaseHTTPRequestHandler):
             self.close_connection = True
 
     def _reject(self, status, code, announced, verb="?", kind="shape"):
-        """The ONE way this server refuses anything. Drains first, always."""
+        """The ONE way this server refuses anything.
+
+        A REFUSAL NEVER READS THE BODY IT IS REFUSING. The earlier version
+        drained the announced body first, to keep the connection alive, and that
+        was a hole: an over-budget sender opened one slow-body connection and
+        the 429 that was meant to shed it blocked on the very bytes it was
+        refusing, so the limiter charged the request and could not deliver its
+        verdict. A refusal has to be instant or it is not a defence.
+
+        So a refusal closes the connection instead. The drain trap it used to
+        work around is a KEEP-ALIVE problem -- an unread body being misparsed as
+        the next request -- and a closed connection has no next request, so the
+        undrained bytes die with the socket. `announced` is kept in the
+        signature (callers still pass it) but is deliberately unused now.
+        """
         global REJ_RATE, REJ_SHAPE, REJ_AUTH
-        self._drain(announced)
+        self.close_connection = True
         host = blunt_host(self.client_host())
         with LOCK:
             if kind == "rate":
@@ -1173,7 +1218,7 @@ class Handler(BaseHTTPRequestHandler):
             BUCKETS.note_reject(self.client_host(), time.monotonic())
         self._send(status, {"v": 1, "error": code})
         log("reject %s %s %s %d %s"
-            % (host, self.command, self.path, status, code))
+            % (host, self.command, safe_path(self.path), status, code))
 
     # -- GET -------------------------------------------------------------
 
@@ -1239,16 +1284,16 @@ class Handler(BaseHTTPRequestHandler):
             self._reject(411, "length_required", 0)
             return
         if announced > BODY_MAX:
-            # Drained if we can afford to, then closed either way: a client
-            # that sends a body this big is not one we want to keep a
-            # connection open for.
-            self._drain(announced)
+            # Answered and closed WITHOUT reading the body, for the same reason
+            # _reject no longer drains: a client that announces a giant body is
+            # not one to wait on, and refusing must not block on the bytes being
+            # refused. Closing discards the unsent body with the socket.
             self.close_connection = True
             self._send(413, {"v": 1, "error": "too_large"})
             with LOCK:
                 BUCKETS.note_reject(self.client_host(), time.monotonic())
             log("reject %s POST %s 413 too_large"
-                % (blunt_host(self.client_host()), self.path))
+                % (blunt_host(self.client_host()), safe_path(self.path)))
             return
 
         host_key = self.client_host()
@@ -1305,7 +1350,13 @@ class Handler(BaseHTTPRequestHandler):
 
         try:
             body = json.loads(raw.decode("utf-8"))
-        except (ValueError, UnicodeDecodeError):
+        except (ValueError, UnicodeDecodeError, RecursionError):
+            # RecursionError, not just ValueError: a body of deeply nested
+            # brackets makes json.loads recurse, and on a low recursion limit
+            # (python:3.12-alpine sits lower than the CPython the tests run on)
+            # it raises RecursionError, which is a RuntimeError and not a
+            # ValueError. Without it here the request would drop with no answer
+            # and a stray handler-error line. It is a bad body either way.
             self._reject(400, "bad_shape", 0)
             return
         if not isinstance(body, dict):
@@ -1335,7 +1386,7 @@ class Handler(BaseHTTPRequestHandler):
                     REJ_SHAPE += 1
                 BUCKETS.note_reject(host_key, time.monotonic())
             log("reject %s POST %s %d %s"
-                % (blunt_host(host_key), self.path, status,
+                % (blunt_host(host_key), safe_path(self.path), status,
                    payload.get("error", "?")))
         self._send(status, payload)
 
@@ -1379,12 +1430,13 @@ class Server(ThreadingHTTPServer):
 
 
 def main():
+    Handler.timeout = HANDLER_TIMEOUT_S
     log("sm64ds-lobby %s starting on %s:%d" % (REVISION, LISTEN_ADDR, LISTEN_PORT))
-    log("limits rooms=%d seats=%d players=%d waiters=%d body=%d "
+    log("limits rooms=%d seats=%d players=%d waiters=%d body=%d read_timeout=%ds "
         "req=%d/s burst=%d create=%d/h join=%d/min star_max=%d kick_cool=%ds"
         % (MAX_ROOMS, MAX_SEATS, GAME_MAX_PLAYERS, MAX_WAITERS, BODY_MAX,
-           RATE_REQ_PER_S, RATE_BURST, RATE_CREATE_PER_HOUR, RATE_JOIN_PER_MIN,
-           STAR_TARGET_MAX, KICK_COOLDOWN_S))
+           HANDLER_TIMEOUT_S, RATE_REQ_PER_S, RATE_BURST, RATE_CREATE_PER_HOUR,
+           RATE_JOIN_PER_MIN, STAR_TARGET_MAX, KICK_COOLDOWN_S))
     threading.Thread(target=reaper, daemon=True).start()
     httpd = Server((LISTEN_ADDR, LISTEN_PORT), Handler)
     try:

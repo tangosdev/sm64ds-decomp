@@ -55,10 +55,18 @@ services:
       BAD_LIMIT: "10"
       BAD_WINDOW_S: "10"
       BAD_IGNORE_S: "10"
+      # The deadline on every blocking socket read. A client that announces a
+      # body and never sends it would otherwise hold a worker thread forever,
+      # and a thread is a pid against pids_limit below. A long poll does not
+      # ride this -- it waits on a condition, not on a read.
+      HANDLER_TIMEOUT_S: "20"
       # Behind Caddy the socket peer is always Caddy, so without this every
       # per-IP limit would be a per-SERVER limit and two launchers on one desk
-      # would share one budget with the whole internet. Set this to "0" for any
-      # deployment where clients can reach the container directly.
+      # would share one budget with the whole internet. The service reads the
+      # LAST X-Forwarded-For entry, which Caddy controls, not the first, which
+      # the client controls. Set this to "0" for any deployment where clients
+      # can reach the container directly -- with no proxy in front there is no
+      # trustworthy entry and the header becomes a limiter bypass.
       TRUST_XFF: "1"
     read_only: true
     tmpfs:

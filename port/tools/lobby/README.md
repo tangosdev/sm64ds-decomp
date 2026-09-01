@@ -59,7 +59,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 | URL | exactly `/port/lobby/<verb>`, no query string ever | 404 `unknown_verb` + one log line |
 | content type | `application/json` | 415 `bad_content_type` |
 | `Content-Length` | REQUIRED, and parsed **before any rejection** | missing -> 411 `length_required`, close |
-| request body | <= 4096 bytes | 413 `too_large`, body drained then close |
+| request body | <= 4096 bytes | 413 `too_large`, connection closed (body not read) |
 | JSON shape | one object; no arrays at the top level | 400 `bad_shape` |
 | `v` | REQUIRED, integer, must be `1` | 400 `bad_version` |
 | unknown top-level key | rejected | 400 `bad_field` |
@@ -75,15 +75,25 @@ launcher and the server ship together and are versioned together, so a field
 that appears without a version bump is a bug or an attack and there is no third
 option. Adding a field is a `v` bump.
 
-**The keep-alive drain trap.** With `HTTP/1.1` keep-alive, returning a
-rejection *without reading the body the client announced* leaves those bytes in
-the socket, and the next read parses the middle of that body as a request line
-— so one rejected request appears twice, once as its real status and once as a
-phantom 400. `port_ingest` carries a long comment about this and this service
-copies its structure exactly: `Content-Length` is parsed first, every refusal
-goes through one `_reject()` helper that drains the announced body (bounded by
-`DRAIN_CAP`) before it answers, and the connection is closed when the length is
-missing or larger than that cap.
+**The keep-alive drain trap, and why a refusal closes the connection.** With
+`HTTP/1.1` keep-alive, returning a rejection *without reading the body the
+client announced* leaves those bytes in the socket, and the next read parses
+the middle of that body as a request line — so one rejected request could
+appear twice, once as its real status and once as a phantom 400. `port_ingest`
+handles this by draining the announced body before answering. This service does
+**not** drain: a refusal closes the connection instead. Draining is a hole here
+— an over-budget sender could open one slow body and the 429 meant to shed it
+would block on the very bytes it was refusing — so every refusal sets
+`Connection: close` and answers at once, and the unread body dies with the
+socket. `Content-Length` is still parsed first, before any rejection is
+written, so the refusal path always knows there is a body to walk away from.
+
+**Every blocking socket read is bounded.** `HANDLER_TIMEOUT_S` (20 s) is set on
+the connection, so a client that announces a body and then sends it one byte a
+decade is dropped rather than holding its worker thread forever — the failure
+the review took from 2 to 202 threads. A long poll does not ride this deadline:
+it blocks on a condition variable, not on a socket read, and is capped by the
+`wait` clamp and `MAX_WAITERS` instead.
 
 ### Field grammar
 
@@ -367,6 +377,7 @@ match keeps playing and does not notice.**
 | players in a match | 2 | per room | `GAME_MAX_PLAYERS` |
 | long-poll holders | 96 | server | `MAX_WAITERS` |
 | bad-sender ignore | 10 refusals in 10 s -> 10 s | per address | `BAD_LIMIT`, `BAD_WINDOW_S`, `BAD_IGNORE_S` |
+| read timeout | 20 s per connection | per connection | `HANDLER_TIMEOUT_S` |
 
 Generosity is deliberate: two launchers on one desk and four players in one
 house share an address, and the owner will create dozens of rooms while
@@ -374,11 +385,14 @@ testing.
 
 **`TRUST_XFF`.** Behind Caddy the socket peer is always Caddy, so without
 reading `X-Forwarded-For` every per-address limit above would be a per-SERVER
-limit and thirty creates an hour would be thirty for the whole internet. The
-first entry of that header is used when the knob is on, which is right for a
-deployment where the only proxy is our own. **Set `TRUST_XFF=0` for any
-deployment where clients can reach the container directly**, or the header
-becomes a client-supplied limiter bypass.
+limit and thirty creates an hour would be thirty for the whole internet. **The
+LAST entry of that header is used**, never the first: the first entry is the one
+a client can write itself, and reading it let a client forge a fresh address
+per request and walk through every limit. The last entry is the one the nearest
+proxy wrote, and it is correct whether Caddy replaces the header (one entry) or
+appends the real peer (last entry). **Set `TRUST_XFF=0` for any deployment
+where clients can reach the container directly** — with no proxy in front there
+is no trustworthy entry, and any value the client sends is read as its address.
 
 ---
 
