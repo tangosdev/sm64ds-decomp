@@ -23,9 +23,11 @@ import argparse
 import re
 import sys
 
-DH = re.compile(r'^\[dh\] f(\d+) n=(\d+) w=([0-9a-f]+) o=([0-9a-f]+)')
-# [dh=] f123 1:aabbccdd 5:11223344 ...   -- the level-2 compact digest
-DHD = re.compile(r'^\[dh=\] f(\d+)((?: \d+:[0-9a-f]+)*)\s*$')
+DH = re.compile(r'^\[dh\] f(\d+) n=(\d+) w=([0-9a-f]+) o=([0-9a-f]+)'
+                r'(?: rounds=(\d+))?')
+# [dh=] f123 1:191:aabbccdd 5:337:11223344 ...  -- the level-2 compact digest
+# (uid:actorID:hash). The older uid:hash shape is still accepted.
+DHD = re.compile(r'^\[dh=\] f(\d+)((?: \d+(?::\d+)?:[0-9a-f]+)*)\s*$')
 DHP = re.compile(
     r'^\[dh\+\] f(\d+) uid=(\d+) id=(\d+) al=(\d+) pos=(-?\d+),(-?\d+),(-?\d+) '
     r'ang=(-?\d+),(-?\d+),(-?\d+) spd=(-?\d+),(-?\d+) fl=([0-9a-f]+) '
@@ -36,21 +38,29 @@ FIELDS = ("uid", "id", "alive", "posx", "posy", "posz",
 
 
 def load(path):
-    """-> (frames: {f: (n, w, o)}, detail: {f: {uid: dict}}, digest: {f: {uid: hash}})"""
-    frames, detail, digest = {}, {}, {}
+    """-> (frames{f:(n,w,o)}, detail{f:{uid:rec}}, digest{f:{uid:(id,hash)}},
+           rounds{f:int})"""
+    frames, detail, digest, rounds = {}, {}, {}, {}
     with open(path, "r", errors="replace") as fh:
         for line in fh:
             m = DH.match(line)
             if m:
                 f = int(m.group(1))
                 frames[f] = (int(m.group(2)), m.group(3), m.group(4))
+                if m.group(5) is not None:
+                    rounds[f] = int(m.group(5))
                 continue
             m = DHD.match(line)
             if m:
                 f = int(m.group(1))
-                digest[f] = dict(
-                    (int(p.split(":")[0]), p.split(":")[1])
-                    for p in m.group(2).split() if ":" in p)
+                d = {}
+                for p in m.group(2).split():
+                    bits = p.split(":")
+                    if len(bits) == 3:      # uid:actorID:hash
+                        d[int(bits[0])] = (int(bits[1]), bits[2])
+                    elif len(bits) == 2:    # legacy uid:hash
+                        d[int(bits[0])] = (None, bits[1])
+                digest[f] = d
                 continue
             m = DHP.match(line)
             if m:
@@ -62,7 +72,53 @@ def load(path):
                     int(g[7]), int(g[8]), int(g[9]),
                     int(g[10]), int(g[11]), g[12], g[13], g[14] or "")))
                 detail.setdefault(f, {})[rec["uid"]] = rec
-    return frames, detail, digest
+    return frames, detail, digest, rounds
+
+
+def check_alignment(r1, r2, common):
+    """Is frame N in one log the SAME GAME FRAME as frame N in the other?
+
+    It is not safe to assume so. The detector is called from inside
+    `if (real_camera)` in walk_window's LEVEL loop, so its frame counter counts
+    frames on which it ran -- not the game's frame number -- and two windows
+    that spend different amounts of time in menus or level loads can end up
+    with the same index meaning different moments. Comparing on a drifted index
+    would report a divergence that is not there, and a false positive on a
+    single live capture is worse than no capture.
+
+    rounds= is the comms round counter, the exchanged one both consoles agree
+    on. Returns (ok, message). ok False means REFUSE rather than guess.
+    """
+    if not r1 or not r2:
+        return True, ("rounds= absent from at least one log (older detector "
+                      "build). ALIGNMENT UNVERIFIED -- comparing on the raw "
+                      "frame index; treat a reported divergence as needing "
+                      "confirmation.")
+    shared = [f for f in common if f in r1 and f in r2]
+    if not shared:
+        return False, "no frame carries rounds= in both logs; cannot align."
+    bad = [f for f in shared if r1[f] != r2[f]]
+    if not bad:
+        return True, ("aligned: rounds= agrees on all %d shared frames."
+                      % len(shared))
+    # A uniform offset means the two logs are the same run, just indexed from
+    # different starts -- recoverable, and worth saying exactly.
+    offs = set(r1[f] - r2[f] for f in shared)
+    if len(offs) == 1:
+        off = offs.pop()
+        return False, (
+            "MISALIGNED BY A CONSTANT: p1 rounds runs %+d against p2 on all "
+            "%d shared frames. The two logs are the same session indexed from "
+            "different starting points, so a frame-index comparison would be "
+            "comparing different game frames. Re-run the capture, or trim the "
+            "leading frames off one log so the rounds= columns line up."
+            % (off, len(shared)))
+    return False, (
+        "MISALIGNED: rounds= disagrees on %d of %d shared frames with no "
+        "constant offset (%d distinct offsets seen). The two windows were not "
+        "at the same point in the session at the same frame index, which is "
+        "exactly the condition that manufactures a false divergence. REFUSING "
+        "to compare." % (len(bad), len(shared), len(offs)))
 
 
 def describe_actor(fr, a, b):
@@ -87,10 +143,15 @@ def main():
     ap.add_argument("--context", type=int, default=2,
                     help="frames of agreeing history to print before the "
                          "divergence (default 2)")
+    ap.add_argument("--ignore-alignment", action="store_true",
+                    help="compare even when the rounds= check says the two "
+                         "logs are not at the same point in the session. This "
+                         "makes a false divergence possible; only pass it if "
+                         "you know why the columns differ.")
     args = ap.parse_args()
 
-    f1, d1, g1 = load(args.log1)
-    f2, d2, g2 = load(args.log2)
+    f1, d1, g1, r1 = load(args.log1)
+    f2, d2, g2, r2 = load(args.log2)
 
     print("p1 %s: %d hashed frames, %d digest, %d verbose" %
           (args.log1, len(f1), len(g1), len(d1)))
@@ -108,6 +169,23 @@ def main():
     if not common:
         print("NOTHING TO COMPARE: the two logs share no frame number.")
         return 2
+
+    # ALIGNMENT BEFORE COMPARISON, always. See check_alignment's docstring:
+    # the frame index is not guaranteed to mean the same moment in two logs,
+    # and comparing a drifted index is the one way this tool invents a
+    # divergence that never happened.
+    aligned, why = check_alignment(r1, r2, common)
+    print("alignment: %s" % why)
+    if not aligned:
+        if not args.ignore_alignment:
+            print()
+            print("REFUSING TO COMPARE. A divergence reported off misaligned "
+                  "logs would be an artefact of the indexing, not a defect in "
+                  "the game. Pass --ignore-alignment only if you know why the "
+                  "rounds= columns differ.")
+            return 2
+        print("  --ignore-alignment given: comparing anyway, results suspect.")
+    print()
 
     first = None
     for fr in common:
@@ -154,12 +232,16 @@ def main():
         if moved:
             print("  DIGEST: %d actor(s) differ at f%d:" % (len(moved), first))
             for u in moved:
+                rec = e1.get(u) or e2.get(u)
+                aid = rec[0]
+                who = "uid=%d actorID=%s" % (u, aid if aid is not None
+                                             else "? (legacy uid:hash log)")
                 if u not in e1:
-                    print("    uid=%d ONLY IN p2" % u)
+                    print("    %s ONLY IN p2" % who)
                 elif u not in e2:
-                    print("    uid=%d ONLY IN p1" % u)
+                    print("    %s ONLY IN p1" % who)
                 else:
-                    print("    uid=%d  p1=%s  p2=%s" % (u, e1[u], e2[u]))
+                    print("    %s  p1=%s  p2=%s" % (who, e1[u][1], e2[u][1]))
             print()
 
     a1 = d1.get(first, {})
