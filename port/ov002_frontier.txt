@@ -297,20 +297,52 @@ status file, because this is where the next person will look.
    PORT-SIDE FOLLOW-UP, DONE: run rel0215 lane prop15 span-checked how this
    tree hosts data_0209f310. See section "THE data_0209f310 SPAN CHECK" below.
 
-2. THE PER-PLAYER Ctrl SPLIT SYMBOLS CAP THE GAME AT TWO PLAYERS, and the cap
-   is in the PORT, not in ov002. On the DS data_0209f4a0/a2/a4/a6/ac are
-   interior addresses of the Ctrl block (data_0209f498 + 8/0xa/0xc/0xe/0x14,
-   stride 0x18), which is why Player::Behavior reads its stick angle as
-   `&data_0209f4a6 + data_020a0e40 * 0x18`. hal/auto_bss.cpp hosts them as five
-   separate int[8] arrays, so that walk only lands correctly for slot 0 (offset
-   zero) and slot 1 (+0x18, still inside 32 bytes). Slot 2 would write at +0x30,
-   off the end. tests/walk_window.cpp REFUSES above two players loudly rather
-   than corrupting a neighbour.
-   THE FIX is to host the five as interior addresses of data_0209f498 the way
-   hal/camera_bridges.cpp hosts the comms records. It is a band migration with a
-   real regression surface: those symbols sit INTERIOR to .dsstate$mmm, so
-   growing or moving them shifts every hosted global above them and retires
-   every BMP baseline in the tree.
+2. THE PER-PLAYER Ctrl SPLIT SYMBOLS DO NOT CAP THE GAME AT TWO PLAYERS. THEY
+   DID, and this entry is the record of the cap being lifted -- by run mg16
+   lane MP3 -- and then of this entry itself being wrong for a while afterwards.
+   Read the correction before quoting the diagnosis.
+
+   WHAT IS TRUE. data_0209f498 is Ctrl[4], stride 0x18, and dsd names several
+   interior addresses of it as separate symbols: f49c held (+4), f49e pressed
+   (+6), f4a0 mag (+8), f4a2 nx (+0xa), f4a4 ny (+0xc), f4a6 ang (+0xe), f4a8
+   tx (+0x10), f4ac touching (+0x14), f4ae mode (+0x16). That is why
+   Player::Behavior reads its stick angle as
+   `&data_0209f4a6 + data_020a0e40 * 0x18`.
+
+   WHAT WAS THE CAP. The port hosted the split names as int[8] -- 32 bytes --
+   so that walk landed correctly for slot 0 (offset zero) and slot 1 (+0x18,
+   still inside 32) and ran off the end at slot 2's +0x30.
+
+   WHAT FIXED IT, and it is NOT the migration this entry used to prescribe.
+   Every one of the names is now hosted at the FULL 0x18 * 4 extent as its own
+   array -- hal/auto_bss.cpp (f4a2/f4a4/f4a6), hal/actor_vtables.cpp
+   (f49c/f49e/f4a0/f4ac/f4ae), hal/sub_actors.cpp (f4a8, spelled 0x60) -- and
+   tests/walk_window.cpp copies all seven CheckInput-written fields out of the
+   real data_0209f498 record at the DS's own 0x18 stride for every player,
+   bounded 1..4. A full-extent array puts player N's value at offset N * 0x18
+   of its own storage, which is exactly where the ROM's walk looks. The two
+   names the copy does not carry are the two CheckInput does not write: f4a8
+   tx/ty, and f4ae mode, whose only writers (src/InitControllerMode.c's own
+   4-player loop and src/SetControllerMode.c) go through the split name that
+   its readers read.
+
+   SO THERE IS NO BAND MIGRATION TO DO. Nothing was made interior to
+   .dsstate$mmm, nothing shifted, and the "retires every BMP baseline in the
+   tree" regression surface this entry used to promise belongs to a change that
+   does not need making. Do not do it.
+
+   AND THE REFUSAL IS GONE. This entry said "tests/walk_window.cpp REFUSES
+   above two players loudly"; run vs4p grepped for it and there is no such
+   refusal. hal/auto_bss.cpp's own note at the sizing has said so since MP3.
+
+   WHAT ACTUALLY CAPPED FOUR-PLAYER PLAY, measured by run vs4p at 577b48832
+   with four windows on one loopback session, is nothing in this band: it was
+   SESSION FORMATION. Every console seated its world on the FIRST peer, so the
+   parent booted a two-player world while slots 2 and 3 were still joining, and
+   the four windows ran four different matches (counts 2/2/3/4). Closed in
+   hal/comms_loopback.cpp (the parent announces a grown roster to every live
+   child) and hal/comms_conductor.cpp (the seat waits for SM64DS_VS_PLAYERS).
+   See the four-window section at the bottom of this file.
 
 3. THE VS MODE FLAG IS DELIBERATELY OFF. data_0209f2d8 == 1 is not "two players
    are present", it is DS VS MODE, and eleven attack-cylinder wrappers in ov002
@@ -546,3 +578,74 @@ THE HONEST TEST the original entry wanted now runs green for real reasons:
 port/tools/mp3_proof.py rungS's census reads 88 + 64*(n-1) with the loop
 unheld, and the collision rungs measure the solver against a forced overlap
 fixture (SM64DS_VS_OVERLAP_AT) instead of the retired stand-in spawn.
+
+
+================================================================================
+FOUR PLAYERS: THE BLOCKER WAS SESSION FORMATION, NOT THE Ctrl BAND (run vs4p)
+================================================================================
+The campaign record said three or four players needed the Ctrl split band
+migrated, and item 2 above used to say the same thing. Both were stale. Run
+vs4p measured the whole surface at cons 577b48832 before changing a line, and
+the band turned out to be finished work while the actual cap was somewhere
+nobody had looked.
+
+WHAT ALREADY WORKED, unmodified, at 577b48832. One process, a real arena,
+SM64DS_VS_MAP=0 with SM64DS_VS_PLAYERS=4:
+
+    [a2] VS: 4 players, I am slot 0, game mode 1, f1/+0x6da 0 0 0 0
+    [vs] entrance records on this level: 4 (player i spawns from record p3+i)
+    [vs] f5 count=4 me=0 live=1,1,1,1
+    [vs] f5 slot0 ... no=0 char=3 pos=(-4915200,1040384,27852800) pal=5539
+    [vs] f5 slot1 ... no=1 char=3 pos=(-5681152,1040384,27308032) pal=5541
+    [vs] f5 slot2 ... no=2 char=3 pos=(-4042752,1040384,26898432) pal=5543
+    [vs] f5 slot3 ... no=3 char=3 pos=(-6500352,1040384,26488832) pal=5545
+
+Four distinct actors; the (i << 6) spawn flag unpacks to mPlayerNo 0..3; char 3
+on every slot, which is the ROM's VS arm; the four positions are level 51's own
+four entrance records and NO "port-supplied start" line appears, so the ROM's
+loop seated all four; and pal 5539/5541/5543/5545 is four distinct 16-colour
+rows, so `Player+0x61C = base + (mPlayerNo << 1)` already paints four different
+Yoshis. The spawn work this campaign expected to owe does not exist.
+
+WHAT DID NOT WORK, and it is one sentence: EVERY CONSOLE SEATED ITS WORLD ON
+THE FIRST PEER. lb_become_parent and on_parent_packet both reach
+kCommsParentConnected as soon as one child is live, comms_wait_for_session
+released on that, and vs_player_count() was read once. Four windows on one
+loopback session:
+
+    slot 1 joined at round 0;   live mask 0x3, players 2
+    [a2] VS: 2 players       <- the parent seated a TWO-player world
+    slot 2 joined at round 62;  live mask 0x7, players 3
+    slot 3 joined at round 109; live mask 0xf, players 4
+
+At frame 500 the four windows reported counts 2/2/3/4 and slots 2 and 3 were
+NULL in the windows that had already seated. Forcing SM64DS_VS_PLAYERS=4 on all
+four fixed the count everywhere and proved the rest of the stack -- all four
+pads read correctly (0040/0080/0020/0010) in all four windows -- but the
+windows still disagreed, because they had seated at rounds 0, 0, 54 and 99 and
+so gave slot 3 a different number of input-less frames each. Player 3 was on
+the arena in two windows and fallen out of it in the other two.
+
+THE FIX, both halves in the host layer with src/ untouched:
+  * hal/comms_loopback.cpp announces a GROWN ROSTER to every live child. A
+    child stops knocking once accepted, so slot 1 would otherwise never hear
+    that slots 2 and 3 arrived. Reuses the ACCEPT packet with the slot
+    ASSIGNMENT BIT CLEARED, or a direct-mode child would adopt another child's
+    slot; repeated for a short window so one lost datagram cannot strand the
+    console it was meant to inform.
+  * hal/comms_conductor.cpp holds the world seat until player_count() reaches
+    SM64DS_VS_PLAYERS. Unset is 0 and 0 reduces to the old test exactly, so
+    solo and two-window runs are byte-for-byte what they were. Waiting also
+    keeps the parent's round at 0 while the others knock, which is what makes
+    all four start on the same round.
+
+The lobby's arming freeze already forces SM64DS_VS_PLAYERS, so the number that
+decides how many Player actors spawn and the number that decides how long to
+wait are the same number.
+
+STILL OPEN, and it is the LOBBY's to close, not the port's: over the relay the
+ACCEPT is unavoidably a broadcast with no recipient field, so the parent cannot
+resolve two children that both claim slot 1 (the limit is stated at
+hal/comms_loopback.cpp's kTypeAccept arm). A four-player relay session needs
+the lobby to hand each seat a distinct SM64DS_COMMS_SLOT. Fixing it in the port
+means a recipient field and a wire-version bump.

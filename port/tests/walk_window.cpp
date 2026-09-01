@@ -3036,6 +3036,24 @@ static int port_menu_relaunch(int scene_id, int level_id)
    and already survive. ROLE, PORT and SLOT are carried here because they name
    WHO THIS CONSOLE IS in the session.
 
+   SM64DS_VS_PLAYERS IS NOT CARRIED HERE AND MUST NOT NEED TO BE, which is
+   worth a sentence because run vs4p checked and got it wrong the first time.
+   It names HOW MANY OF US THERE ARE and it is now load-bearing -- since this
+   lane, hal/comms_conductor.cpp's comms_wait_for_session holds the world seat
+   until the roster reaches it, so a relaunched VS child that lost the count
+   would stop waiting for the others, seat early and spend the match on a
+   different round from everybody else. It survives anyway, for the same reason
+   RELAY and CODE do: IT IS NOT IN PORT_RELAUNCH_CLEAR, so the clear loop never
+   removes it and the child inherits it with the rest of the block. Adding it
+   to this table would be a no-op that reads like a fix.
+
+   SO THE RULE IS ON THE OTHER TABLE: whoever adds SM64DS_VS_PLAYERS to
+   PORT_RELAUNCH_CLEAR must add it here in the same edit, or the debug-menu
+   route into VS becomes the one route that seats a short world. No proof in
+   this tree can catch that: every harness sets the count itself on every
+   instance, so no rung has ever run the relaunch path without it. Exactly the
+   shape of the FANOUT omission below, and found the same way, by reading.
+
    AND SM64DS_COMMS_FANOUT WITH THEM, which is the one that turns a paired
    session into a played one. It is not a diagnostic: walk_window.cpp:456 and
    hal/scene_boot.cpp:4460 make it the switch that hands TouchInfo[4] and

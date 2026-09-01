@@ -616,6 +616,49 @@ PipeRound &pipe_open(unsigned r) {
 
 unsigned g_last_publish_ms = 0;
 unsigned g_last_join_ms    = 0;
+// ===========================================================================
+// THE ROSTER ANNOUNCE (run vs4p). PARENT ONLY, and it exists because a session
+// of THREE OR FOUR cannot form without it.
+//
+// A child stops knocking the moment it is accepted: service()'s JOIN retry is
+// gated on kCommsConnecting. The parent answers each JOIN with a UNICAST
+// ACCEPT to the joiner alone. So slot 1, accepted while it was the only child,
+// is told live mask 0x3 and is then never told anything again until the
+// lockstep starts carrying blocks -- and the lockstep does not start until
+// every console has seated a world, which is precisely what they are all
+// waiting to be allowed to do.
+//
+// MEASURED, four windows on one loopback session at 577b48832:
+//
+//     slot 1 joined at round 0;   live mask 0x3, players 2
+//     [a2] VS: 2 players       <- slot 0 and slot 1 seated a TWO-player world
+//     slot 2 joined at round 62;  live mask 0x7, players 3
+//     slot 3 joined at round 109; live mask 0xf, players 4
+//
+// Slots 2 and 3 reached the wire and never reached the world. So when the
+// roster GROWS, the parent tells everybody, and a child that is already
+// connected updates its live mask from it -- on_child_packet's kTypeAccept arm
+// already does `g_live = p.live` unconditionally for an accept that names its
+// own slot, so nothing on the child side has to change.
+//
+// REPEATED FOR A WINDOW rather than sent once, because a lost announce would
+// strand exactly the console the announce exists to inform, and there is no
+// other traffic on this path to heal it -- nobody is exchanging anything yet.
+//
+// TWO SECONDS, AND A 50 ms FLOOR UNDER THE RATE. The rate wants to follow the
+// republish interval, which is already tuned per mode, but that interval is
+// 4 ms on loopback and up to 250 ms over the relay, and taking it neat gives
+// 500 announces in the window at one end and three at the other -- spam at one
+// end and thin cover at the other. The floor cuts loopback to 40 and the
+// window gives the relay 8. Either way it is a handful of 144-byte datagrams
+// per join and nothing at all once the session is formed.
+//
+// EVERY FRESH JOIN RE-ARMS THE WINDOW, so a launcher that spaces its consoles
+// out by more than the window is still covered: the announce that matters is
+// the one after the LAST join, and that one is always sent.
+enum : unsigned { kRosterAnnounceMs = 2000, kRosterAnnounceEveryMs = 50 };
+unsigned g_roster_until   = 0;    // announce while now_ms() is below this
+unsigned g_last_roster_ms = 0;
 // JOINs this child has sent while connecting, for the "nobody is answering,
 // and one reason is a build mismatch" hint in service(). Six is past the
 // backoff's first second and well short of the ROM's twenty, so the hint
@@ -891,6 +934,32 @@ void fill_header(Packet &p, unsigned char type) {
     p.round   = g_round;
 }
 
+// THE ROSTER, SENT TO EVERYONE. See the banner over kRosterAnnounceMs for why
+// a three- or four-player session cannot form without this.
+//
+// It is an ACCEPT because that is the packet a child already reads its live
+// mask out of, and reusing it means NO WIRE CHANGE and no new type for an
+// older build to choke on -- an ACCEPT is what a peer of this generation
+// already expects to see.
+//
+// THE ASSIGNMENT BIT IS CLEARED, and that is the one thing this must not get
+// wrong. A JOIN's own accept carries 0x80000000 | slot, and a DIRECT-MODE
+// child adopts that slot whenever it differs from its own. Broadcast with the
+// bit set, the accept that welcomes slot 3 would move slot 1 to slot 3 and
+// collapse two players onto one seat. So `have` carries the input delay and
+// nothing else: the delay is one number the parent applies to the whole
+// session, every child may safely read it, and an already-connected child
+// ignores it anyway (the adoption sits inside the not-yet-connected arm).
+void announce_roster() {
+    if (g_role != kRoleParent) return;
+    if ((g_live & ~1u) == 0) return;          // no children to tell
+    Packet a;
+    fill_header(a, kTypeAccept);
+    a.live = (unsigned char)g_live;
+    a.have = ((unsigned)(g_input_delay & 0xFF) << 8);
+    send_to_children(a);
+}
+
 // ---------------------------------------------------------------------------
 // RECEIVE
 // ---------------------------------------------------------------------------
@@ -1117,10 +1186,22 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         a.have = 0x80000000u | (unsigned)k |
                  ((unsigned)(g_input_delay & 0xFF) << 8);
         send_to_slot(a, k);
-        if (fresh)
+        if (fresh) {
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
                          "live mask 0x%x, players %d\n",
                          k, g_round, g_live, popcount4(g_live));
+            // THE ROSTER GREW, SO EVERYBODY HEARS ABOUT IT. Only on a FRESH
+            // join: a re-knock from a slot already live changes nothing and
+            // must not put a burst on the wire. See kRosterAnnounceMs.
+            const unsigned now = now_ms();
+            g_roster_until   = now + kRosterAnnounceMs;
+            // 0 is this field's "no window open" sentinel, and the clock wraps
+            // once every 49 days, so the one deadline that would land on it is
+            // nudged by a millisecond rather than silently skipping a window.
+            if (!g_roster_until) g_roster_until = 1;
+            g_last_roster_ms = now;
+            announce_roster();
+        }
         break;
     }
     case kTypeBlocks:
@@ -1642,6 +1723,22 @@ void service() {
                 if (g_join_wait_ms > kJoinBackoffCapMs)
                     g_join_wait_ms = kJoinBackoffCapMs;
             }
+        }
+    }
+
+    // THE ROSTER ANNOUNCE'S REPEAT, and it sits ABOVE the pipelining branch on
+    // purpose: a session forming is a session that has not started exchanging
+    // anything yet, so it must run in both the pipelined and the stop-and-wait
+    // arms. Bounded by wall clock, paced at the republish interval, and dead
+    // the instant the window closes -- a formed session pays nothing.
+    if (g_role == kRoleParent && g_roster_until != 0) {
+        unsigned every = (unsigned)g_resend_ms;
+        if (every < kRosterAnnounceEveryMs) every = kRosterAnnounceEveryMs;
+        if ((int)(t - g_roster_until) >= 0) {
+            g_roster_until = 0;
+        } else if ((unsigned)(t - g_last_roster_ms) >= every) {
+            g_last_roster_ms = t;
+            announce_roster();
         }
     }
 
