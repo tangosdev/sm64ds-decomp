@@ -578,6 +578,15 @@ struct SyncStats {
     // ticking against two solo sims. On the report line as gated=N so a
     // playlog shows the gate holding; see sync_tick's own banner.
     unsigned long long gated;
+    // Snapshot entries whose POSE was left to the receiving console's own
+    // state machine because the body was in a no-control state (lane VSMERCY).
+    // Those states end ON their animation -- a VS star collect leaves
+    // St_NoControl only when Player::FinishedAnim says the star-get pose is
+    // done -- so applying a latency-old remote animation over one breaks the
+    // exit condition and the body never leaves the state. Position and facing
+    // are still applied; only the pose is held. Nonzero whenever a remote
+    // player is mid-cutscene, mid-door or mid-star, which is normal.
+    unsigned long long pose_held;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an

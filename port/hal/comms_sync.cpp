@@ -525,6 +525,47 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
     // The animation below is what the owner actually sees, and it applies
     // safely because SetAnim takes an ID and validates it itself.
 
+    // ---- BUT NOT OVER A SCRIPTED SEQUENCE. Lane VSMERCY, MEASURED.
+    //
+    // A no-control state does not merely play a pose, it ENDS ON ONE. A VS
+    // star collect parks the body in St_NoControl step 2 and
+    // func_ov002_020c92fc leaves it only when Player::FinishedAnim says the
+    // star-get animation (0x19, 42 frames in the cartridge's own file) has
+    // run out. Player::ChangeState is what then clears mIsNoControl and puts
+    // the body collider back, so that animation IS the mercy window the ROM
+    // gives a collector.
+    //
+    // Applying the wire's animation on top of it breaks the exit condition,
+    // and at any real latency it breaks it PERMANENTLY. Measured on the
+    // two-console fixture (port/tools/vsmercy_probe.py, evidence in
+    // C:\tmp\vsmercy-out): the non-collecting console enters the collect on
+    // the right frame, the id-change branch below then yanks the pose back to
+    // the stale walk animation on the very next frame, the wire's own 0x19
+    // arrives a latency later and RESTARTS the pose, and by the time it
+    // finishes the wire is already saying "walk" again -- so SetAnim installs
+    // a LOOPING animation, whose Animation::Finished
+    // (`currFrame >= (numFrames << 12) - 1`) is never true because Advance
+    // wraps modulo the length and the cursor never lands on that value. The
+    // state machine never leaves. At 264 ms round trip the collector's body
+    // was still in no-control 458 frames later, and it reproduced at 132 ms
+    // and at 71 ms; only the ~15 ms loopback pair was clean. What the other
+    // player sees is a body that walks and animates but can neither be hit
+    // nor land a hit for the rest of the match, because mIsNoControl and
+    // mIsBodyClsnEnabled both stay stuck.
+    //
+    // THE REFUSAL IS THE FIX AND IT IS ALSO THE MORE FAITHFUL ANSWER. This
+    // console is running the ROM's own collect on its own copy -- the same
+    // matched state machine, the same animation file, the same 42 frames --
+    // so its LOCAL pose is better information than a latency-old remote one.
+    // Position and facing are still applied by the caller; only the pose is
+    // left to the state machine that owns it. It re-arms by itself: the next
+    // ChangeState clears mIsNoControl and the id-change branch takes over
+    // again on the following snapshot.
+    if (*(const unsigned char *)((const char *)a + player::kIsNoControl)) {
+        ++g_stats.pose_held;
+        return;
+    }
+
     // ---- ANIMATION. On an id CHANGE, seeded through SetAnim's own
     // startFrame; on a SAME-ID PHASE FORK past a threshold, RESEEDED through
     // the same face (mp-sync-coopdx item 4).
@@ -1403,7 +1444,8 @@ void sync_report(const char *tag) {
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
                  "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
                  "own_claims=%llu local_writes=%llu evsends=%llu "
-                 "reseeds=%llu phase_worst=%d avg_err=%d gated=%llu\n",
+                 "reseeds=%llu phase_worst=%d avg_err=%d gated=%llu "
+                 "pose_held=%llu\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -1423,7 +1465,8 @@ void sync_report(const char *tag) {
                  (int)(g_stats.err_n ? g_stats.err_sum /
                                            (long long)g_stats.err_n
                                      : 0),
-                 (unsigned long long)g_stats.gated);
+                 (unsigned long long)g_stats.gated,
+                 (unsigned long long)g_stats.pose_held);
 }
 
 }  // namespace port
