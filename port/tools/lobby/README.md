@@ -47,13 +47,14 @@ The tests spawn their own server on a pid-derived port and need no arguments:
 python3 test_units.py                       # no sockets at all
 python3 test_client.py selftest             # spawns a server, proves the wire
 python3 test_client.py negatives --out DIR  # writes one file per refusal
+python3 test_client.py dial                 # the dial, on the DEPLOYED knobs
 python3 test_client.py soak --seconds 60
 python3 test_client.py selftest --url https://tangos.dev/port/lobby
 ```
 
 ---
 
-## THE WIRE CONTRACT, v1
+## THE WIRE CONTRACT, v1–v2
 
 ### Rules that apply to every request
 
@@ -65,7 +66,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 | `Content-Length` | REQUIRED, and parsed **before any rejection** | missing -> 411 `length_required`, close |
 | request body | <= 4096 bytes | 413 `too_large`, connection closed (body not read) |
 | JSON shape | one object; no arrays at the top level | 400 `bad_shape` |
-| `v` | REQUIRED, integer, must be `1` | 400 `bad_version` |
+| `v` | REQUIRED, integer, `1` to `2` (see below) | 400 `bad_version` |
 | unknown top-level key | rejected | 400 `bad_field` |
 | missing required key | rejected | 400 `bad_field` |
 | wrong type for a key | rejected | 400, the field's own code |
@@ -78,6 +79,53 @@ Error bodies are `{"v":1,"error":"<code>"}`. Codes are written with underscores
 launcher and the server ship together and are versioned together, so a field
 that appears without a version bump is a bug or an attack and there is no third
 option. Adding a field is a `v` bump.
+
+**The version is a RANGE, and the answer echoes what the request claimed.**
+`v` may be anything from `contract_min` (1) to `contract_v` (2), both reported
+by `/health`. A hard pin would have turned "adding a field is a `v` bump" into
+"every restart refuses every launcher already in the wild", which is the
+opposite of what the rule protects. The strictness stays where it belongs:
+**each verb offers a v1 client exactly the v1 field set**, so a request that
+says `"v":1` and then carries a v2 field is `bad_field`, exactly as it would be
+for a field nobody has ever defined. A v1 request gets a v1 answer.
+
+| version | what it adds |
+|---|---|
+| v1 | everything through launcher 0.3.0 |
+| v2 | `params` may carry `match_players` — the host's player-count dial |
+
+**Where a version lives, and why you cannot forget to gate a field.**
+`app/server.py`'s `VERB_FIELDS` is the one place a verb's field set is written
+down: `(required, {optional_field: the version it arrived in})`. `shape_for`
+is the only thing that reads it, so a handler cannot accept a field the table
+does not list, and cannot list a field it does not gate. `test_units.py`'s
+`test_every_versioned_field_is_gated` **walks the table** and proves every
+field above the floor is refused below its own version — it names no field, so
+a field added tomorrow is covered by it the day it is added. Adding a versioned
+field is therefore two edits and no new test: the table row, and a sample value
+in the walk's `_FIELD_SAMPLES` (omit the sample and the walk fails and says so,
+rather than quietly skipping the field).
+
+Required fields are v1 by construction. A later version cannot make a field
+mandatory without breaking every earlier client, so a new required field is a
+new verb, not a new field.
+
+**SUNSETTING `CONTRACT_MIN`.** The floor exists to keep launchers already in
+the wild working, not forever. Raise it only when all three are true, and say
+so in the commit that raises it:
+
+1. The launcher that needed the old floor is **no longer in circulation** — the
+   auto-updater has carried everyone past it, and the release it shipped in is
+   at least two releases back.
+2. The old floor's fields are **not the only way to express something**. A
+   version is retired, never a capability.
+3. Raising it is **its own commit**, with nothing else in it, because it is the
+   one change here that can lock a real player out of a room.
+
+The cost of leaving the floor low is a few lines in a table and one extra
+column in the walk above — deliberately cheap, so nobody is ever tempted to
+raise it early. `/health` reports `contract_min` so an operator can see what a
+box still accepts without reading the source.
 
 **The keep-alive drain trap, and why a refusal closes the connection.** With
 `HTTP/1.1` keep-alive, returning a rejection *without reading the body the
@@ -103,7 +151,7 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 
 | field | type | rule | reject code |
 |---|---|---|---|
-| `v` | int | `== 1` | `bad_version` |
+| `v` | int | `1..2` (the contract range `/health` reports) | `bad_version` |
 | `room` | string | exactly 6 chars from `ABCDEFGHJKMNPQRSTUVWXYZ23456789` | `bad_room` |
 | `token` | string | exactly 32 chars from `0-9a-f` | `bad_token` |
 | `nick` | string | 1..16 **bytes**, every byte `0x20..0x7E` **except `,`**, not all spaces, no leading/trailing space | `bad_nick` |
@@ -114,6 +162,7 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 | `win_mode` | string | exactly `"time"` or `"stars"` | `bad_win_mode` |
 | `star_target` | int | 1..`STAR_TARGET_MAX`; required iff `win_mode == "stars"`, forbidden otherwise | `bad_star_target` |
 | `seat` | int | 1..`MAX_SEATS`, an occupied seat that is not the host's | `bad_seat` |
+| `match_players` | int | 2..`dial_max`; optional on `params`, and **v2 only** | `bad_match_players` |
 | `pre_ok` | bool | `true`/`false`; optional on `create` and `join` | `bad_field` |
 
 A string longer than its cap answers `too_long` rather than the field's own
@@ -276,7 +325,7 @@ resynced past its `go` event still has its plan and can spawn.
 {"seq":8,"kind":"joined","seat":2,"display":"opie"}
 {"seq":9,"kind":"left","seat":3,"display":"nn","why":"quit"|"timeout"|"kicked"}
 {"seq":10,"kind":"chat","seat":2,"display":"opie","text":"gg"}
-{"seq":11,"kind":"params","map":2,"win_mode":"stars","star_target":3}
+{"seq":11,"kind":"params","map":2,"win_mode":"stars","star_target":3,"match_players":4}
 {"seq":12,"kind":"arming","match":"<16 hex>","deadline_ms":20000}
 {"seq":13,"kind":"go","match":"<16 hex>","plan":{...}}
 {"seq":15,"kind":"failed","match":"<16 hex>","reason":"no_pairing"}
@@ -310,11 +359,46 @@ launcher greys its Send button rather than showing an error.
 ```
 -> {"v":1, "room":"...", "token":"...", "map":2, "win_mode":"stars", "star_target":3}
 <- 200 {"v":1, "cursor":11}
+
+v2 adds the player-count dial, which is OPTIONAL:
+-> {"v":2, "room":"...", "token":"...", "map":2, "win_mode":"time", "match_players":4}
+<- 200 {"v":2, "cursor":11}
 ```
 
 403 `not_host`; 409 `not_in_lobby` once a match is arming or running. All three
-fields are sent together every time, so two in-flight edits have no ordering
+v1 fields are sent together every time, so two in-flight edits have no ordering
 hazard. The star target is the host's to pick, from 1 to `STAR_TARGET_MAX`.
+
+**`match_players` — the dial.** How many of the room's seats play. The first
+that many people in the room play; everybody past them watches. It is a room
+parameter like the arena and the win condition: host-only, lobby-only, frozen
+from Start until the room comes back.
+
+- **Range `2` to `dial_max`**, where `dial_max = min(16, MAX_SEATS,
+  GAME_MAX_PLAYERS)` and is advertised in every room `view` and by `/health`.
+  Anything outside it is `400 bad_match_players` — **refused, never clamped**.
+  A host who asks for eight and silently gets four has been lied to and would
+  only find out by counting heads.
+- **Optional, and v2-only.** Omitting it leaves the room's dial alone, which is
+  what launcher 0.3.0 does on every settings edit it makes. Sending it at
+  `"v":1` is `bad_field`.
+- **A room that nobody dials** sits at `GAME_MAX_PLAYERS`, so seating is
+  byte-for-byte what it was before the dial existed.
+- **Moving it moves as few people as possible.** Raising it promotes the
+  lowest-numbered watchers; lowering it demotes the highest-numbered players.
+  The host (seat 1) is never demoted — the host is the session's parent.
+- **`view` gains `match_players` and `dial_max`.** `max_players` is unchanged
+  and still means `GAME_MAX_PLAYERS`; the dial does not get to redefine a field
+  a shipped launcher already reads.
+- **The `go` plan gains `match_players`** beside `players`. `players` is what
+  actually turned up and is what rides into `SM64DS_VS_PLAYERS`;
+  `match_players` is what the host asked for. They differ when the room did not
+  fill, and the launcher can then say "3 of the 4 you picked" without guessing.
+
+**The dial reaches 16 and the game does not.** See the ceiling map at the end
+of this file. Sixteen is what the control expresses; four is what the game has
+been proved at, and `GAME_MAX_PLAYERS` in `docker-compose.yml` is the one place
+that truth is configured.
 
 #### `preflight`
 
@@ -502,7 +586,8 @@ seat opened.
 
 ```
 GET /port/lobby/health
-<- 200 {"ok":true,"ts":"...","revision":"lobby-1","rooms":3,"members":7,"waiters":5}
+<- 200 {"ok":true,"ts":"...","revision":"lobby-1","contract_min":1,"contract_v":2,
+        "dial_max":4,"rooms":3,"members":7,"waiters":5}
 ```
 
 `rooms` visible from outside is the difference between a detectable outage and
@@ -669,3 +754,216 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 If a 25-second hold is cut short there, lower `LobbyPollWaitSeconds` in the
 launcher. **That is a client-side constant, not a protocol change** — a `wait`
 of 0 is a plain short poll with an identical contract.
+
+---
+
+## THE CEILINGS BETWEEN 4 AND 16
+
+The dial reaches sixteen. **The game does four.** This is the list of what
+stands between them, measured at cons `339db6bb3` rather than estimated, so the
+next lane starts from evidence instead of from a guess. Every address below is
+from `config/arm9/relocs.txt` and `config/arm9/**/symbols.txt`; every file:line
+is from this tree.
+
+**The shape of the answer, before the detail.** Four is not one wall, it is
+three different kinds of wall, and only the first kind is cheap:
+
+| kind | examples | cost |
+|---|---|---|
+| **A knob** - a number with nothing structural behind it | the lobby dial, the relay's seats | done, or one line |
+| **A wire format** - a field too narrow, shared by every build | the 8-bit live mask, the 4-block payload | a versioned wire break; every peer must update together |
+| **The ROM itself** - byte-matched decompiled code, or a symbol with another symbol immediately after it | the 2-bit player number, the 4-byte score array, `4 - count` | MOD territory under the port's own north star |
+
+**The one number that decides most of it: `mPlayerNo` is TWO BITS.**
+`src/_ZN6Player13InitResourcesEv.cpp:72` is `*(u8*)(c + 0x6d8) = (a >> 6) & 3;`
+- the ROM unpacks a spawned player's identity from bits 6..7 of the spawn-flag
+word, boxed between `f1` at bits 3..5 and the sublevel at bit 8. Slots 4..15
+cannot be *expressed*, never mind stored. Everything else in this list is
+downstream of that.
+
+### 1. Comms - the wire
+
+| what | where | today | 16 needs |
+|---|---|---|---|
+| `kCommsMaxPlayers` | `port/hal/comms_seam.h:237` | `4` | 16 - and it sizes the packet |
+| live-slot bitmask | `comms_loopback.cpp:295` `unsigned char live` | **8 bits** | 16 bits: a wire break |
+| block payload | `comms_loopback.cpp:300`, `kPacketBytes = 0x90` | `0x10 + 4*0x20` = 144 B | `0x10 + 16*0x20` = **528 B** |
+| slot assignment | `comms_loopback.cpp:1281-1282` `assigned < kCommsMaxPlayers` | 0..3 | a bound, not a format |
+| per-slot ports | `comms_loopback.cpp:856-865` slot k at `base+k` | 4-port span | 16-port span, **loopback/direct only** |
+| relay session seats | `relay.py` `MAX_CHILDREN` | 3 | **CLIMBED - now a knob** |
+| relay payload cap | `relay.py` `MAX_PAYLOAD` | 700 B | **already fits 528, 172 to spare** |
+| relay rate cap | `relay.py` `RATE_PPS` 120 | | **not a ceiling** - see below |
+
+**The packet budget at 16 is fine, and that is the good news in this section.**
+A sixteen-slot packet is 528 bytes against a 700-byte cap. And the rate limiter
+never comes into it: `send_to_children` (`comms_loopback.cpp:918-925`) sends
+**exactly one copy** in relay mode because the relay fans out, so a parent's
+outbound rate is one packet per frame - 60/s against a 120/s limit - at sixteen
+players exactly as at four. Both measured, in the relay's own `t_seat_knob`.
+What the relay does pay is egress: 15 copies x 60/s x 528 B is about 3.8 Mbit/s
+per full session.
+
+**The real comms wall is one byte.** `Packet.live` is an `unsigned char`, and
+it is on the wire, in the ACCEPT that tells a child who else is in the session.
+Widening it is a version break every peer has to take at once. The port math is
+the second one, and it is smaller than it looks: it only binds `base+k` in
+loopback and direct mode; over the relay every peer holds **one** socket
+(`comms_loopback.cpp:882`), so the launcher's four-port span
+(`LobbyLaunch.cs:195-230`) is a local-play concern only.
+
+**Estimate:** the wire change is a day, mostly in keeping old and new peers from
+half-understanding each other. It is worthless on its own - nothing above it
+can use sixteen slots yet.
+
+### 2. The Ctrl input band at `0x18 * 4`
+
+**Re-derived, and the VS4P finding holds: on the host this is sizes.** Every
+one of the ten split names is the port's own array at the full four-record
+extent - `hal/auto_bss.cpp:167-174`, `hal/actor_vtables.cpp:505-521`,
+`hal/sub_actors.cpp:270` - and none is `__declspec(allocate(".dsstate..."))`, so
+none is address-pinned and widening one shifts nothing. `CheckInput`'s own loop
+runs to `data_0209f21c`, a byte, so the ROM's reader is already generic.
+
+**But the ROM's address space is not.** The relocs say the Ctrl block starts at
+`0x0209f498` and the next referenced symbol is **`0x0209f4f8`** - exactly
+`0x60`, exactly `0x18 * 4`, not a byte spare. Sixteen records need `0x180`
+(`f498..f617`), which in the ROM's own map would run straight through *fifteen*
+separately-referenced symbols: `f4f8`, `f5b8`, `f5bc`, `f5c0`, `f5c4`, `f5d0`,
+`f5dc`, `f5e8`, `f5f8`, `f5fc`, `f600`, `f604`, `f608`, `f60c`, `f610`.
+
+**Estimate:** small on the host, and **not climbed tonight on purpose** - the
+change is free only if it shifts nothing, and proving *that* costs a full build
+plus the BMP baselines, for a benefit of zero until the wire moves. It is the
+right first rung the day the wire does.
+
+### 3. `SM64DS_VS_NAMES`, and the colours question
+
+`hal/star_flow.cpp:1028` is `static char g_vs_names[4][17]`, the reader refuses
+any string without **exactly three commas** (`:1059`), and it logs four fields
+(`:1093`). The lobby builds the same shape (`build_names`, four fields, slot
+order). At sixteen the string is fifteen commas and up to 16x17 bytes, which
+brushes the 4096-byte body cap far less than it sounds (272 bytes).
+
+It is the only ceiling here that is purely a format the two sides agree on -
+no ROM, no wire. That does **not** make it independently movable, and the
+coordinator has ruled on exactly that, because lane VSCOLOR-UI's
+`SM64DS_VS_COLORS` would otherwise have frozen a field count of its own.
+
+**THE COORDINATOR'S FIELD-COUNT RULING, verbatim:**
+
+> NAMES + COLORS exactly-4 today; future = 16 fields together in one
+> coordinated version change when the wire moves; never independently.
+
+So both strings stay at exactly four fields, and neither grows on its own. When
+the wire moves (section 1), the two go to sixteen **together**, in one version
+change. The reason is the failure this avoids: a sixteen-field names string
+against a four-field colours string is two readers disagreeing about who slot 5
+is, and the symptom would be a wrong name under a wrong colour on a results
+screen, which is the hardest kind of bug to trace back to a format.
+
+### 4. Arena entrance records, and what the ROM does when it runs out
+
+The count is data, not code: `hal/level_boot.cpp:2101` reads
+`g_entrance_count = ((const unsigned char *)tbl)[1]` from the level's own
+table. VS4P measured **4** on arena 0 (level 51), and all four players spawned
+from the ROM's own records with no port stand-in - the four positions were the
+level's four entrance records exactly.
+
+When players exceed the starts, `port_vs_spawn_extra_players`
+(`hal/level_boot.cpp:4294-4368`) supplies a body. Its behaviour, plainly:
+
+- It is bounded `for (int i = 1; i < n && i < 4; ++i)` - **hard 4** at `:4309`.
+- It places extras `40.0` units apart on X from player 0's record, and its own
+  comment says `OVERLAP` (`:4315`) - a stand-in, not a spawn point.
+- It packs `((unsigned)i << 6)` into the flag word (`:4358`), which is the
+  2-bit `mPlayerNo` field. Slot 4 would write bit 8 and land in the sublevel.
+
+**Estimate:** the arenas would need real start data authored - sixteen bodies
+40 units apart in a line is not a match. This is level-data work, not code, and
+it is the one item on this list that no amount of C can finish.
+
+### 5. Scoring, the HUD band, and the winner
+
+**The score array has four bytes and the fifth belongs to something else.**
+`data_0209f310`'s ROM run is `f310..f313`; the relocs' next referenced symbol is
+`0x0209f314`, loaded from five separate sites (`0x0202aa28`, `0x0202aa48`,
+`0x0202aa68`, `0x0202aa84`, `0x0202b038`). Sixteen scores would overwrite
+`f314`, `f318` and `f31c`. The host already gives 32 bytes
+(`hal/actor_classes_star.cpp:237-241`) so nothing would *crash* - the ROM's
+readers simply cannot index past 3.
+
+The readers, and how each one is bounded:
+
+| reader | bound |
+|---|---|
+| `NumVsStarsObtained` | `data_0209f21c` - **already generic** |
+| `func_ov075_021165b0` (the winner) | **eight** literal `< 4` loops, byte-matched ROM |
+| `func_ov002_020d94cc:30` | `(&data_0209f310)[*(u8*)(self+0x6d8)]` - the 2-bit player number |
+| `HUD::RenderStarCount:39` | `data_0209f310[data_0209f250]` - local player only, generic |
+| `star_flow.cpp:934,1120-1140,1338` | `g_end_scores[4]`, `scores=%d,%d,%d,%d` - **the port's own, cheap** |
+
+**The HUD star band is the sharpest one, and it is not "four columns
+hard-coded".** `src/func_ov075_0211621c.c:56-64` is:
+
+```c
+int count = data_0209fc50;
+int d = 4 - count;
+xbase = data_ov075_0211c6e8[d];
+stride = (d * 16) + 0x38;
+```
+
+The layout table is indexed by **how many fewer than four** are playing, and
+`data_ov075_0211c6e8` is a **4-byte symbol** - `data_ov075_0211c6ec` is the next
+one, four bytes on. At five players `d` is `-1` and the ROM reads *before* its
+own table; the stride goes negative and the columns march off the left of the
+screen. This is byte-matched ROM code, so the literal cannot move without the
+match moving with it.
+
+**Estimate:** the port's own half (`g_end_scores`, the marker, the banner) is an
+hour. The ROM's half is the whole MOD question.
+
+### 6. The ROM's own wireless ceiling - the honest bottom line
+
+The DS did four, and the decompiled code says so in the places that count:
+
+- `src/func_0203ea5c.c` - the ROM's own wireless exchange and unpack loop -
+  carries **ten** hard-coded `< 4` bounds (`:310, 326, 347, 352, 367, 403, 428,
+  471, 499`).
+- `data_0209f394`, the per-player `Actor*` table: ROM run `f394`, next
+  referenced symbol **`f3a4`** - `0x10`, four pointers.
+- `data_0209fc5c`, the per-slot live flags: `fc5c`, next referenced `fc5d` then
+  **`fc60`** - four bytes.
+- `data_0209f310` / `data_0209f358` / `data_0209f30c`: four each, as above.
+- `mPlayerNo`: two bits.
+
+**So anything past four is a MOD, and this file says so rather than burying
+it.** Under the port's own north star - *the port must BE the decomp* - every
+item in section 6, and the ROM half of sections 4 and 5, changes bytes the gate
+checks. That is the owner's call to make, not a lane's, and it should be made
+knowing it is a fork of the ROM's behaviour rather than a port bug being fixed.
+
+### What was climbed, and what was left alone
+
+**Climbed, with proof:**
+
+- **The lobby dial to 16**, server-enforced against the deployment's real
+  capability, refusing 5..16 today with a reason a player can read.
+- **The relay's session seats to a knob**, default unchanged at 3 children.
+  Proven at 15: sixteen pair, the seventeenth is refused, and one parent
+  datagram still reaches all fifteen.
+
+**Left alone on purpose:** the Ctrl band (free only if it shifts nothing, and
+proving that costs a build for no benefit yet), `kCommsMaxPlayers` and the live
+mask (a wire break every peer takes at once, useless alone), and everything in
+section 6 (MOD territory, the owner's call).
+
+**If someone picks this up, the order is:** the wire first (live mask, packet,
+port span) -> then the Ctrl band -> then `SM64DS_VS_NAMES` and
+`SM64DS_VS_COLORS` to sixteen fields **together**, per the ruling in section 3
+-> then the port's own scoring and marker -> and only then the conversation
+about the ROM.
+
+The names string is the smallest piece of work on that list and it is
+deliberately **not** first: the ruling gates it on the wire moving, because a
+format that grows before anything can use it is two readers waiting to
+disagree.
