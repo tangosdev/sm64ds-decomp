@@ -244,7 +244,7 @@ ov002 0x20bc414  n=8  L=130  Seaweed                NORM1
 ov002 0x20ebf8c  n=8  L=228  daTree_c               NORM4
 ov006 0x20ede18  n=2  L=30   MgWhichWiggler         NORM1
 ov006 0x2119824  n=2  L=29   MgBingoBallSlotsShot   NORM1
-ov013 0x21111a0  n=8  L=150  ClockPaintingPendulum  NORM1 pcov=4
+ov013 0x21111a0  n=8  L=150  daObjClockHuriko_c  NORM1 pcov=4
 ov027 0x21111a0  n=8  L=204  SlidingIce             NORM1
 ov029 0x21121a4  n=9  L=245  WDW_Water              NORM1
 ov030 0x21111a0  n=8  L=236  daObjHmBskt_c              NORM2 pcov=2

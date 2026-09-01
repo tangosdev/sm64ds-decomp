@@ -5341,19 +5341,19 @@
    "start": "0x21111a0",
    "end": "0x21113bc",
    "classes": [
-    "ClockPaintingPendulum"
+    "daObjClockHuriko_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN21ClockPaintingPendulumD1Ev.c",
-    "src/_ZN21ClockPaintingPendulumD0Ev.c",
-    "src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.c",
+    "src/_ZN18daObjClockHuriko_cD1Ev.c",
+    "src/_ZN18daObjClockHuriko_cD0Ev.c",
+    "src/_ZN18daObjClockHuriko_c16CleanupResourcesEv.c",
     "src/func_ov013_02111238.c",
-    "src/_ZN21ClockPaintingPendulum6RenderEv.cpp",
-    "src/_ZN21ClockPaintingPendulum8BehaviorEv.c",
-    "src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp",
-    "src/ClockPaintingPendulum_Spawn.c"
+    "src/_ZN18daObjClockHuriko_c6RenderEv.cpp",
+    "src/_ZN18daObjClockHuriko_c8BehaviorEv.c",
+    "src/_ZN18daObjClockHuriko_c13InitResourcesEv.cpp",
+    "src/daObjClockHuriko_c_Spawn.c"
    ],
    "ext_mix": {
     ".c": 6,

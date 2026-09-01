@@ -477,7 +477,7 @@ source is perfectly correct, while every per-file gate keeps calling it exact, b
 `build_pin.verify`, `pr_linkcheck` and `eligible.py` all read this same table and
 compile *with* the pin. Only the whole-module compare disagrees, by a handful of bytes,
 in one module. #1607 spent a day on that shape before
-`_ZN21ClockPaintingPendulum8BehaviorEv` -- the first mangled pin key a ROM build had
+`_ZN18daObjClockHuriko_c8BehaviorEv` -- the first mangled pin key a ROM build had
 ever exercised -- was identified as the cause. With the pins gone that route is closed
 for now, but it reopens the moment a new pin is recorded.
 
