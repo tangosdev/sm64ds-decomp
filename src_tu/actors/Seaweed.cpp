@@ -154,7 +154,7 @@ void func_ov002_020bc488(char *t)
  * destructor; the compiler emits D0 itself from it plus dActor_c's inline
  * operator delete, byte-identical to the ROM. A hand-written D0 free
  * function next to a real D1 in the same TU is an mwcc ICE (ELFgen.c:483) --
- * confirmed on InvisiblePole/#1722, CameraTag/#1724, VirtualDoor/#1725,
+ * confirmed on InvisiblePole/#1722, daCamTag_c/#1724, VirtualDoor/#1725,
  * Exit/#1726, and WingFeather/#1727 before this pilot. */
 
 /* -------------------------------------------------------------------------- */

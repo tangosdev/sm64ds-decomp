@@ -360,7 +360,7 @@ void func_ov002_020b0a0c(void *c)
 /* NOT hand-written: a real, already out-of-line Exit::~Exit() (D1, below)
  * coexisting with a hand-written mangled-name D0 free function in the SAME
  * translation unit is an mwcc internal compiler error (ELFgen.c:483) --
- * confirmed on InvisiblePole/CameraTag/VirtualDoor. Deleting the hand-written
+ * confirmed on InvisiblePole/daCamTag_c/VirtualDoor. Deleting the hand-written
  * body and letting the compiler emit D0 itself from the real destructor plus
  * dActor_c's inline `operator delete` reproduces the ROM's bytes
  * byte-for-byte; see include/dActor_c.h's operator delete note. */

@@ -323,7 +323,7 @@ Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
 
 - `BobOmbBuddy` 0x198: zeroed in `src/_ZN11BobOmbBuddy13InitResourcesEv.cpp`,
   never read.
-- `CameraTag` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
+- `daCamTag_c` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
   no enrolled body. `daBgSnwmn_c` already carries a note saying its 0x0cc read
   is the inherited `mAreaId`, not a field of its own.
 - `SoundObject` 0x0e0: filled from `data_ov002_0210c08a + param1 * 0xc`, the

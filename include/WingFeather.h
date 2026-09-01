@@ -27,7 +27,7 @@
  * THE VTABLE, at ov002 0x021088a8, diffs four slots against _ZTV8dActor_c --
  * InitResources(0), CleanupResources(3), Behavior(6), Render(9) -- plus the
  * destructor at 16/17; every other slot is inherited and not redeclared here.
- * No OnPendingDestroy override, unlike InvisiblePole/CameraTag/VirtualDoor.
+ * No OnPendingDestroy override, unlike InvisiblePole/daCamTag_c/VirtualDoor.
  */
 struct WingFeather : dActor_c {
     u8 pad_0d0[0x4];

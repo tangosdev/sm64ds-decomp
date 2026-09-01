@@ -1,5 +1,5 @@
 /* Hand-written from matched-function evidence:
- * class CameraTag, ov002 0x020b0710-0x020b07c8 (8 functions, no other class
+ * class daCamTag_c, ov002 0x020b0710-0x020b07c8 (8 functions, no other class
  * in the TU -- tu_map.py).
  *
  * ALL FIVE of its virtual overrides are STUBS -- InitResources, Behavior,
@@ -8,14 +8,14 @@
  * dActor_c and nothing more functionally, marking a position other code
  * queries.
  *
- * SIZE 0xd4 (212), tools/opnew_sizes.py's own literal from CameraTag_Spawn's
+ * SIZE 0xd4 (212), tools/opnew_sizes.py's own literal from daCamTag_c_Spawn's
  * `operator new` call -- independent ROM evidence, not the header's own
  * sizeof() echoed back. dActor_c itself is 0xd0 (include/dActor_c.h), so
- * CameraTag adds exactly FOUR bytes on top of it: one unknown/unused field,
+ * daCamTag_c adds exactly FOUR bytes on top of it: one unknown/unused field,
  * not zero as an earlier version of this header claimed.
  *
- *   CameraTag_Spawn  0x020b07c8  new(212 == 0xd4), dActor_c::dActor_c(),
- *                                stores _ZTV9CameraTag.
+ *   daCamTag_c_Spawn  0x020b07c8  new(212 == 0xd4), dActor_c::dActor_c(),
+ *                                stores _ZTV10daCamTag_c.
  *
  * THIS HEADER USED TO SAY 0x108, with a dCcAc_c at 0xd4. That was
  * daBar_c's layout, read off daBar_c_classInit (0x020b0710; historical alias
@@ -36,23 +36,23 @@
  *
  * ROM RTTI calls this class daCamTag_c (_ZTS10daCamTag_c /
  * config/arm9/overlays/ov002/symbols.txt) -- a different length than the
- * decomp's CameraTag, so this class's own _ZTI/_ZTS objects are not
+ * decomp's daCamTag_c, so this class's own _ZTI/_ZTS objects are not
  * byte-verifiable against the ROM's; left unlicensed, deferred to Phase F /
  * attribution work like every other class in this position.
  *
  * Field NAMES are placeholders - renaming cannot change codegen.
  */
-#ifndef CAMERATAG_H
-#define CAMERATAG_H
+#ifndef DACAMTAG_C_H
+#define DACAMTAG_C_H
 #include "types.h"
 
 #ifdef __cplusplus
 #include "dActor_c.h"
 
-struct CameraTag : dActor_c {
+struct daCamTag_c : dActor_c {
     u8 unk_0d0[0x4];                  /* 0x0d0 */
 
-    virtual ~CameraTag();             /* slots 16 (D1), 17 (D0) */
+    virtual ~daCamTag_c();             /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();     /* slot  0 */
     virtual s32  CleanupResources();  /* slot  3 */
@@ -61,13 +61,13 @@ struct CameraTag : dActor_c {
     virtual void OnPendingDestroy();  /* slot 12 */
 };
 
-typedef char CameraTag_size_must_be_0xd4[sizeof(CameraTag) == 0xd4 ? 1 : -1];
+typedef char daCamTag_c_size_must_be_0xd4[sizeof(daCamTag_c) == 0xd4 ? 1 : -1];
 
 #else
 
 /* Flat layout for the C translation units, which can express neither the
    base class nor the virtual functions. */
-struct CameraTag {
+struct daCamTag_c {
     u8  pad_000[0xd4];
 };
 

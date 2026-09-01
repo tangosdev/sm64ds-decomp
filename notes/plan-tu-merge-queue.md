@@ -127,7 +127,7 @@ spent. **Run first; 10 minutes, and it de-risks every later "is it me or is it t
 **B1 — R0, ov002 + ov006 · 10 TUs / 59 files / net −49 / 1,011 lines**
 ```
 ov002 0x20b05d0  n=8  L=126  InvisiblePole            uncorrob
-ov002 0x20b0748  n=8  L=111  CameraTag                uncorrob
+ov002 0x20b0748  n=8  L=111  daCamTag_c                uncorrob
 ov002 0x20b07f8  n=8  L=121  VirtualDoor              uncorrob
 ov002 0x20b5734  n=7  L=164  BlueFlame                uncorrob
 ov002 0x20b6e08  n=5  L=67   WaterfallMist            uncorrob

@@ -4663,19 +4663,19 @@
    "start": "0x20b0748",
    "end": "0x20b07f8",
    "classes": [
-    "CameraTag"
+    "daCamTag_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9CameraTagD1Ev.cpp",
-    "src/_ZN9CameraTagD0Ev.c",
-    "src/_ZN9CameraTag16CleanupResourcesEv.cpp",
-    "src/_ZN9CameraTag16OnPendingDestroyEv.cpp",
-    "src/_ZN9CameraTag6RenderEv.cpp",
-    "src/_ZN9CameraTag8BehaviorEv.cpp",
-    "src/_ZN9CameraTag13InitResourcesEv.cpp",
-    "src/CameraTag_Spawn.c"
+    "src/_ZN10daCamTag_cD1Ev.cpp",
+    "src/_ZN10daCamTag_cD0Ev.c",
+    "src/_ZN10daCamTag_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daCamTag_c16OnPendingDestroyEv.cpp",
+    "src/_ZN10daCamTag_c6RenderEv.cpp",
+    "src/_ZN10daCamTag_c8BehaviorEv.cpp",
+    "src/_ZN10daCamTag_c13InitResourcesEv.cpp",
+    "src/daCamTag_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 6,

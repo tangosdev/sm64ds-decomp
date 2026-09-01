@@ -19,14 +19,14 @@ ov002	0x020b0658	func_ov002_020b0658	_ZN7daBar_c8BehaviorEv	vtable slot 6
 ov002	0x020b067c	func_ov002_020b067c	_ZN7daBar_c13InitResourcesEv	vtable slot 0
 ov002	0x020b0710	func_ov002_020b0710	InvisiblePole_Spawn	spawnfunc
 ov002	0x020b0710	InvisiblePole_Spawn	daBar_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x020b07c8	func_ov002_020b07c8	CameraTag_Spawn	spawnfunc
-ov002	0x020b07f8	func_ov002_020b07f8	_ZN9CameraTagD1Ev	vtable slot 16
-ov002	0x020b081c	func_ov002_020b081c	_ZN9CameraTagD0Ev	vtable slot 17
-ov002	0x020b0854	func_ov002_020b0854	_ZN9CameraTag16CleanupResourcesEv	vtable slot 3
-ov002	0x020b085c	func_ov002_020b085c	_ZN9CameraTag16OnPendingDestroyEv	vtable slot 12
-ov002	0x020b0860	func_ov002_020b0860	_ZN9CameraTag6RenderEv	vtable slot 9
-ov002	0x020b0868	func_ov002_020b0868	_ZN9CameraTag8BehaviorEv	vtable slot 6
-ov002	0x020b0938	func_ov002_020b0938	_ZN9CameraTag13InitResourcesEv	vtable slot 0
+ov002	0x020b07c8	func_ov002_020b07c8	daCamTag_c_Spawn	spawnfunc
+ov002	0x020b07f8	func_ov002_020b07f8	_ZN10daCamTag_cD1Ev	vtable slot 16
+ov002	0x020b081c	func_ov002_020b081c	_ZN10daCamTag_cD0Ev	vtable slot 17
+ov002	0x020b0854	func_ov002_020b0854	_ZN10daCamTag_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020b085c	func_ov002_020b085c	_ZN10daCamTag_c16OnPendingDestroyEv	vtable slot 12
+ov002	0x020b0860	func_ov002_020b0860	_ZN10daCamTag_c6RenderEv	vtable slot 9
+ov002	0x020b0868	func_ov002_020b0868	_ZN10daCamTag_c8BehaviorEv	vtable slot 6
+ov002	0x020b0938	func_ov002_020b0938	_ZN10daCamTag_c13InitResourcesEv	vtable slot 0
 ov002	0x020b0980	func_ov002_020b0980	VirtualDoor_Spawn	spawnfunc
 ov002	0x020b09b0	func_ov002_020b09b0	_ZN11VirtualDoorD1Ev	vtable slot 16
 ov002	0x020b09d4	func_ov002_020b09d4	_ZN11VirtualDoorD0Ev	vtable slot 17
@@ -266,9 +266,9 @@ ov002	0x021083c8	data_ov002_021083c8	_ZTV13OneUpMushroom	vtable alloc=0x398
 ov002	0x0210845c	data_ov002_0210845c	InvisiblePole_SpawnInfo	spawninfo
 ov002	0x0210845c	InvisiblePole_SpawnInfo	g_profile_BAR	reconstructed profile global; literal ROM ID BAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02108480	data_ov002_02108480	_ZTV7daBar_c	vtable alloc=0x108
-ov002	0x02108518	data_ov002_02108518	CameraTag_SpawnInfo	spawninfo
+ov002	0x02108518	data_ov002_02108518	daCamTag_c_SpawnInfo	spawninfo
 ov002	0x021085d4	data_ov002_021085d4	VirtualDoor_SpawnInfo	spawninfo
-ov002	0x021085f8	data_ov002_021085f8	_ZTV9CameraTag	vtable alloc=0xd4
+ov002	0x021085f8	data_ov002_021085f8	_ZTV10daCamTag_c	vtable alloc=0xd4
 ov002	0x02108690	data_ov002_02108690	Exit_SpawnInfo	spawninfo
 ov002	0x021086b4	data_ov002_021086b4	_ZTV11VirtualDoor	vtable alloc=0xd4
 ov002	0x02108790	data_ov002_02108790	Coin_SpawnInfo	spawninfo

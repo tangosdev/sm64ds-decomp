@@ -131,7 +131,7 @@ sm64ds-decomp/
 │   └── tu_manifest.d/           # Recovered TU membership and licensed ranges;
 │       ├── _meta.json           #   one file per entry, under its module, so
 │       └── ov002/               #   two TU PRs never touch the same file
-│           └── CameraTag.json
+│           └── daCamTag_c.json
 ├── tools/
 │   ├── tu_manifest.py           # The manifest's only on-disk-shape reader/writer
 │   └── tubuild.py               # TU create/compile/verify/link/promote entry point

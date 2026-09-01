@@ -55,7 +55,7 @@ the byte compare could see it:
 
 ```c
 Coin::~Coin       +0x4c   rom 021087ec   built 021087f4
-CameraTag::~...   +0x20   rom 021085f8   built 02108600
+daCamTag_c::~...   +0x20   rom 021085f8   built 02108600
 ```
 
 Two conventions for the same name. mwcc's `_ZTV4Coin` addresses the **start** of the

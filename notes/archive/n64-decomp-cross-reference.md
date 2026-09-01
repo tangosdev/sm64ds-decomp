@@ -130,7 +130,7 @@ cross-check. Low confidence on its own (round numbers), but useful.
 | Floor threshold | `normal.y > 0.01` | `normal.y > 0` (`cmp r0,#0; ble` @ 0x01ffd5cc) |
 | Point-in-triangle | 3× 2D XZ cross products, no tolerance | KCL 3D edge-plane dots + prism `length`, ±0x20000 tolerance |
 | Surface types | `SURFACE_*` 0x0000–0x00FD | 8-byte CLPS bitfield, **5-bit** type field (bits 19-23) — physically cannot hold N64's ID space |
-| Warps / camera triggers | static per-level C structs, `WARP_NODE_*` 0xF0–0xFA | instanced `Actor` objects with collision cylinders (`Warp_Spawn` = 264-byte actor, `CameraTag`) |
+| Warps / camera triggers | static per-level C structs, `WARP_NODE_*` 0xF0–0xFA | instanced `Actor` objects with collision cylinders (`Warp_Spawn` = 264-byte actor, `daCamTag_c`) |
 | Matrices | 4×4 f32 | 4×3 Fix12 (NitroSDK G3) |
 | sqrt / divide / sin / cos | software tables | DS hardware DIV/SQRT MMIO, BIOS `swi 0x0d`, `FX_SinCosTable_` |
 
