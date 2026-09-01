@@ -10,9 +10,13 @@ dependency is the relay. That separation is the whole reason this is its own
 container instead of a handler bolted into `port_ingest`, which has write
 access to the release zips every launcher downloads and runs.
 
-This is **stage A**: create, join, poll, chat, params, kick, leave, health.
-There is no match arming and nothing spawns a game. `start`, `ready`,
-`result` and `failed` arrive in stage B and answer `404 unknown_verb` today.
+**Stage A** was create, join, poll, chat, params, kick, leave, health.
+**Stage B** adds `start` (host arms a match), `ready` (a launcher confirms it can
+spawn it), and `failed` (any playing member aborts it back to lobby). NOTHING
+spawns a game until every playing seat has readied, and the seat count is frozen
+at `start` and forced into every launch plan as `SM64DS_VS_PLAYERS` -- the
+join-race guarantee. `result` arrives in stage C and answers `404 unknown_verb`
+today.
 
 ---
 
@@ -137,12 +141,15 @@ never leaves the lobby and keeps its commas.
 | `POST /port/lobby/poll` | a seated member | read the room; the only push channel |
 | `POST /port/lobby/chat` | a seated member | say one line |
 | `POST /port/lobby/params` | **host only** | set map / win condition |
+| `POST /port/lobby/start` | **host only** | arm a match (stage B) |
+| `POST /port/lobby/ready` | a playing member | "my launcher can spawn this match" (stage B) |
+| `POST /port/lobby/failed` | a playing member | report a match that could not run (stage B) |
 | `POST /port/lobby/kick` | **host only** | remove a member |
 | `POST /port/lobby/leave` | a seated member | give up the seat (host: close the room) |
 | `GET  /port/lobby/health` | anyone | liveness, counts, revision |
 
-Stage B adds `start`, `ready`, `result` and `failed`. Any other path under
-`/port/lobby/` is a 404 and one log line.
+Stage C adds `result`. Any other path under `/port/lobby/` is a 404 and one log
+line.
 
 #### `create`
 
@@ -258,8 +265,9 @@ pass, and stamps the member's heartbeat. `wait` is optional and defaults to 0;
  "match":null}
 ```
 
-`state` is one of `lobby`, `arming`, `go`, `in_match`, `closed`. Stage A only
-ever produces `lobby` and `closed`.
+`state` is one of `lobby`, `arming`, `go`, `in_match`, `closed`. A poll answer
+also carries a top-level `"plan"` whenever `state == "go"`, so a client that
+resynced past its `go` event still has its plan and can spawn.
 
 `events` entries carry a `seq` and a `kind`:
 
@@ -268,14 +276,23 @@ ever produces `lobby` and `closed`.
 {"seq":9,"kind":"left","seat":3,"display":"nn","why":"quit"|"timeout"|"kicked"}
 {"seq":10,"kind":"chat","seat":2,"display":"opie","text":"gg"}
 {"seq":11,"kind":"params","map":2,"win_mode":"stars","star_target":3}
+{"seq":12,"kind":"arming","match":"<16 hex>","deadline_ms":20000}
+{"seq":13,"kind":"go","match":"<16 hex>","plan":{...}}
+{"seq":15,"kind":"failed","match":"<16 hex>","reason":"no_pairing"}
 {"seq":16,"kind":"closed","why":"host_left"|"idle"|"shutdown"}
 ```
 
-`kind` is a closed set, and stage B adds `arming`, `go`, `result` and `failed`
-to it. **A launcher that meets an unknown `kind` ignores that event and keeps
-its cursor moving** — the one place the client is deliberately lenient, so that
-a server which gains an event kind in a patch release cannot brick an older
-launcher that does not need it.
+Stage C adds one more, `{"seq":14,"kind":"result","match":"...","win":"...","scores":[3,1,0,0]}`.
+
+The `go` event's `plan` is PER MEMBER: each member's poll carries its own plan
+(parent vs child, its slot, its spawn delay), injected at poll time from the
+frozen match state; everything else in the plan is identical across members. See
+`start` below.
+
+`kind` is a closed set. **A launcher that meets an unknown `kind` ignores that
+event and keeps its cursor moving** — the one place the client is deliberately
+lenient, so that a server which gains an event kind in a patch release cannot
+brick an older launcher that does not need it.
 
 #### `chat`
 
@@ -297,6 +314,123 @@ launcher greys its Send button rather than showing an error.
 403 `not_host`; 409 `not_in_lobby` once a match is arming or running. All three
 fields are sent together every time, so two in-flight edits have no ordering
 hazard. The star target is the host's to pick, from 1 to `STAR_TARGET_MAX`.
+
+#### `start` (host only) — stage B
+
+```
+-> {"v":1, "room":"...", "token":"..."}
+<- 200 {"v":1, "cursor":12, "match":"<16 hex>"}
+```
+
+Refusals, each with its own code: 403 `not_host`; 409 `not_in_lobby` if a match
+is already arming or running; 409 `not_enough_players` if fewer than 2 seats are
+playing; 409 `member_not_ready` if a playing seat is not `pre_ok`.
+
+On success NOTHING SPAWNS. The room moves to `arming` and, at one frozen instant,
+the server mints a 16-hex match id and a fresh 8-char comms code (from the room
+alphabet, **never shown to any client** except inside a launch plan), freezes the
+params, the roster, the slot map and the `SM64DS_VS_NAMES` string, and records
+`agreed_players` = the playing-seat count. An `arming` event carries the match id
+and `deadline_ms`. Every playing launcher must then POST `ready` within
+`ARM_DEADLINE_S`, or the deadline returns the room to lobby with a `failed`
+event, reason `member_not_ready`. This is the join-race guarantee's front half:
+`agreed_players` rides every plan as `SM64DS_VS_PLAYERS`, so both games seat the
+same number of players regardless of wire timing.
+
+**The slot map.** Playing seats are packed into slots 0..3 in seat order, so the
+host (seat 1) is always slot 0 and the plan hands each child a distinct slot. The
+launcher exports a child's slot as `SM64DS_COMMS_SLOT`; the parent's slot 0 is
+implicit (the game ignores `SM64DS_COMMS_SLOT` for the parent). This is what lets
+the lobby, rather than the wire, decide slots -- the relay ACCEPT is a
+recipientless broadcast and cannot tell two children apart.
+
+**The go plan** (delivered inside each member's `go` event, and at the poll's
+top level while `state == "go"`):
+
+```json
+{"role":"parent", "code":"M7KQ2PXR", "relay":"135.148.26.201:41234",
+ "map":2, "players":2, "slot":0, "spawn_delay_ms":0, "playing":true,
+ "names":"tango,opie,,", "star_target":3}
+```
+
+`names` is byte-identical in every member's plan. `star_target` is present only
+in stars mode. The host gets `spawn_delay_ms: 0`; children get `1500` (the parent
+goes first). A spectator gets `{"playing": false}` and spawns nothing.
+
+#### `ready` — stage B
+
+```
+-> {"v":1, "room":"...", "token":"...", "match":"<16 hex>"}
+<- 200 {"v":1, "cursor":13}
+```
+
+A playing member: "my launcher can spawn this match." 409 `stale_match` if the
+match id is not the room's current one, which makes it un-replayable across
+matches; 403 `not_playing` from a spectator. When the last playing seat readies,
+the room moves to `go` and the `go` event (with each member's plan) is pushed. A
+`ready` that arrives after `go` for the same match is a harmless idempotent
+duplicate.
+
+**The roster that has to be ready is the FROZEN one.** `agreed_players`, `names`
+and `slot_of` all froze at `start`, so the go gate compares the live playing
+seats against the seats frozen there -- as a SET, not as a count. Two shapes this
+closes, both ordinary behaviour rather than exotic input:
+
+- the only other playing seat **leaves during arming**: the live roster shrinks
+  to one, and without this the host's own `ready` would satisfy "everybody is
+  ready" and send the room to `go` with a plan still saying `players: 2` and
+  still crediting the departed player in `names`;
+- a **spectator is promoted** when a playing seat leaves during arming: the count
+  still matches `agreed_players`, but the promoted seat holds no frozen slot, so
+  it would take the default slot 0 and collide with the parent.
+
+A room whose roster moved simply stalls, and the arming deadline returns it to
+lobby with `failed` reason `member_not_ready`.
+
+#### `failed` — stage B
+
+```
+-> {"v":1, "room":"...", "token":"...", "match":"<16 hex>", "reason":"no_pairing"}
+<- 200 {"v":1, "cursor":15}
+```
+
+Any playing member reporting a match that could not run. `reason` is a fixed
+enum: `spawn_failed`, `no_pairing`, `wrong_player_count`, `startup_error`,
+`user_cancelled`, `timeout` (`member_not_ready` is server-minted only and is
+refused from a client). 409 `stale_match` guards the match id, and a spectator is
+refused with **403 `not_playing`** -- a room code is not a secret, so without that
+gate anyone who walked in could return the room to lobby mid-match, repeatedly,
+and the host could not even `kick` them (kick is refused outside lobby). Any `failed`
+returns the whole room to lobby with a `failed` event, so every other launcher
+learns why. The `go`->`in_match` transition happens `GO_GRACE_S` after `go`, and
+a match with no result is returned to lobby with `failed` reason `timeout` after
+`MATCH_TIMEOUT_S`.
+
+#### `result` — stage C
+
+```
+-> {"v":1, "room":"...", "token":"...", "match":"<16 hex>",
+    "win":"star-target", "scores":[3,1,0,0]}
+<- 200 {"v":1, "cursor":14}
+```
+
+A playing member reporting a finished match. `win` is `time-up`, `star-target`
+or `draw` (the launcher posts `draw` with all-zero scores for a `MATCH OVER`
+marker it could not parse). `scores` is four ints, 0..99, in slot order. The
+FIRST valid result for the current match appends a `result` event, discards the
+comms code, clears the match id and every `armed` flag, and returns the room to
+`lobby` -- while the room code, seats, nicknames, tokens, chat AND the params all
+survive, so "same again" is one Start press. A later result for the same match id
+is accepted and ignored (both players reporting is normal). 409 `stale_match` for
+any other match id, and **403 `not_playing`** from a spectator -- the same gate as
+`failed`, and it also stops a spectator writing the scoreline every member sees.
+
+`ready`, `failed` and `result` are the three verbs spec 3.2 restricts to "a
+seated **playing** member", and all three answer 403 `not_playing` the same way.
+
+**A different comms code every match.** Because `start` mints a fresh one and
+`result` discards the old, a rematch is a brand-new relay session and the
+previous match's 90-second held seats cannot refuse it.
 
 #### `kick` (host only)
 
