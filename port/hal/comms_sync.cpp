@@ -1112,15 +1112,31 @@ bool g_gated_now = false;
 // falls out of port/tools/dhdiff.py.
 //
 // PLACED IN sync_tick's FILE, CALLED FROM ITS FIRST LINE, on purpose:
-// tests/walk_window.cpp already calls sync_tick() unconditionally once per
-// frame, right after func_0203df40 has put this frame's input record on the
-// wire and before the fan-out. That is exactly the sampling point a lockstep
-// detector wants -- a fixed spot in the frame, the same spot in both windows
-// -- and using it means this instrument adds no call site to any file another
-// lane owns and no source file to CMake. sync_tick's own body still
-// early-returns on !g_enabled; the detector runs AHEAD of that gate because
-// it must work with the sync layer OFF, which is the shipped configuration
-// and the one every desync report comes from.
+// tests/walk_window.cpp already calls sync_tick() once per frame of the level
+// loop, right after func_0203df40 has put this frame's input record on the
+// wire and before the fan-out. That is the sampling point a lockstep detector
+// wants -- a fixed spot in the frame, the same spot in both windows -- and
+// using it means this instrument adds no call site to any file another lane
+// owns and no source file to CMake. sync_tick's own body still early-returns
+// on !g_enabled; the detector runs AHEAD of that gate because it must work
+// with the sync layer OFF, which is the shipped configuration and the one
+// every desync report comes from.
+//
+// THAT CALL IS NOT UNCONDITIONAL, and an earlier version of this banner said
+// it was. It sits inside `if (real_camera)` (walk_window.cpp:10023; the flag
+// is on unless SM64DS_OLD_CAMERA is set), inside the level loop. So the frame
+// counter below counts FRAMES ON WHICH THIS RAN, which is not the same thing
+// as the game's frame number and not guaranteed to mean the same thing in two
+// windows: a session with menus and level loads can enter and leave that path
+// at different wall-clock moments on the two consoles.
+//
+// WHICH IS WHY EVERY [dh] LINE CARRIES rounds=. That is the comms round
+// counter, the exchanged one both consoles agree on, and it -- not the local
+// frame index -- is the sound key for lining two logs up. dhdiff.py checks it
+// before comparing anything and refuses rather than guess. Comparing two logs
+// on a frame index that has silently drifted is the one way this instrument
+// could report a FALSE divergence, and a false positive on the owner's single
+// live capture is worse than no capture at all.
 //
 // COST WHEN OFF: one compare of an int that is resolved on the first call.
 //
@@ -1233,7 +1249,7 @@ void dh_frame() {
     // this port mounts with room to spare, and the append is bounds-checked
     // rather than trusted: a level with more actors than fit must truncate the
     // digest, never the stack.
-    char dig[64 * 24];
+    char dig[64 * 32];
     int dig_len = 0;
     dig[0] = 0;
 
@@ -1300,15 +1316,24 @@ void dh_frame() {
         // LEVEL 2: the compact digest, accumulated here and emitted as ONE
         // line below. This is the level a LIVE capture should run at, and the
         // reason it exists is bytes. Level 3 prints a verbose line per actor
-        // per frame, which measured 3787 bytes/frame in this arena -- 54 MB
-        // per window over a session the length of the owner's, on top of the
-        // 1259 bytes/frame the comms dump already writes. The digest carries
-        // the same "which actor moved" answer in about 630 bytes/frame,
-        // because a uid and a hash is all the comparator needs to name the
-        // culprit; only the FIELD that moved needs the verbose form, and by
-        // then you have the frame and can re-run at level 3.
-        if (g_dh.level >= 2 && dig_len < (int)sizeof dig - 24)
-            dig_len += std::sprintf(dig + dig_len, " %u:%08x", uid, h);
+        // per frame, which measured 3787 bytes/frame in this arena -- on the
+        // order of 400 MB per window over a session the length of the owner's,
+        // against the ~179 bytes/frame the comms dump already writes. The
+        // digest carries the same "which actor moved" answer in about 610
+        // bytes/frame; only the FIELD that moved needs the verbose form, and
+        // by then you have the frame and can re-run at level 3.
+        //
+        // THE actorID IS IN THE LINE, not just the uid, and it is not
+        // optional. uid is a per-console allocation counter: it identifies
+        // the object but names nothing. NOTHING ELSE IN A PLAYLOG MAPS A uid
+        // TO A CLASS, so a digest of uid:hash alone would hand a live capture
+        // "frame N, uid 5" and no way to turn that into "the chain chomp"
+        // except by re-running a session that by definition did not
+        // reproduce. The id costs about ten characters a row and it is the
+        // difference between a capture that answers the question and one that
+        // only proves there was a question.
+        if (g_dh.level >= 2 && dig_len < (int)sizeof dig - 32)
+            dig_len += std::sprintf(dig + dig_len, " %u:%u:%08x", uid, id, h);
 
         if (g_dh.level >= 3 || named) {
             char win[64 * 2 + 1];
