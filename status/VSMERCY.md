@@ -4,11 +4,20 @@ Lane worker: VSMERCY. Coordinator: sm64ds-decomp-6c.
 Branch `port/vs-mercy` off `339db6bb3`. Worktree `C:\tmp\vsmercy`.
 Evidence `C:\tmp\vsmercy-out`.
 
-**DELIVERY. VERDICT: AUTHENTIC.** The DS gives a star collector exactly the
-length of the star-get pose and not one frame more, and the port reproduces
-that exactly -- same code, same data, same frame count, on both consoles of a
-live two-console session. Nothing to fix. There is one honest online caveat
-and one one-sentence scope for a MOD-ruling option, both below.
+**DELIVERY. VERDICT: THE MERCY RULE IS AUTHENTIC, AND A SEPARATE DEFECT ON
+THE SAME PATH IS FIXED.**
+
+1. The literal question closes as authentic. The DS gives a star collector
+   exactly the length of the star-get pose -- 42 frames -- and not one frame
+   more; no timer, no post-animation grace. The port reproduces that exactly,
+   from the same code and the same animation file.
+2. Hunting it found a real online defect one layer over, at internet latency
+   only, which the owner's live 0.3.0 session would have hit every time
+   somebody grabbed a star: **on the console that is NOT collecting, the
+   collector's body got stuck in the no-control state permanently** -- still
+   walking and animating, but unable to be hit or to land a hit for the rest
+   of the match. Root-caused, fixed in the port's own host layer, proven at
+   three latencies. Section 3a.
 
 ---
 
@@ -161,37 +170,169 @@ Parent + child over the loopback carrier, `SM64DS_SYNC=1`, both seated
     window 1  transitions after f200: (241, 0->1, kind 2, anim 25), (283, 1->0)
 
 Both consoles open and close the collector's window on the same frames, same
-kind, same pose. The pose-sync layer does **not** cut the star-get animation
-short on the non-collecting console, and does not bypass the local immunity:
+kind, same pose. And the sync layer was genuinely live across it, not idle --
+its own end-of-level counters:
+
+    p0  sent=353 recvd=350 applied=350 lerps=22 snaps=0 reseeds=0 phase_worst=6468 rtt_avg=15
+    p1  sent=351 recvd=353 applied=353 lerps=15 snaps=0 reseeds=0 phase_worst=6468 rtt_avg=13
+
+350+ snapshots applied per side, anim events crossing, and **reseeds=0** with
+`phase_worst=6468` in 20.12 = 1.58 frames, far under the 8-frame reseed
+threshold. The sync layer does not bypass the local immunity either:
 `comms_sync.cpp` carries position, yaw, anim id, anim cursor and velocity
 only, applies the animation through `Player::SetAnim`, and never applies state
-or damage. Evidence `C:\tmp\vsmercy-out\pass3.txt` and
+or damage -- grepped: no damage, score or `data_0209f310` field exists
+anywhere in `comms_sync.cpp`, `comms_seam.h` or `comms_conductor.cpp`.
+Evidence `C:\tmp\vsmercy-out\pass3.txt` and
 `build/vsmercy/pair/p{0,1}/run.log`.
+
+**AND THIS IS WHERE A CLEAN RUN WOULD HAVE LIED.** Loopback is ~15 ms, and at
+15 ms the wire's animation is never stale long enough to matter. Re-running
+the same fixture with `SM64DS_SYNC_DELAY_MS` -- the latency rig the
+mp-sync-coopdx lane built for exactly this -- broke it at the first setting
+tried. Section 3a.
+
+### 2d. The kInvincibleTimer history the brief pointed at
+
+`port/hal/player_fields.h` `kInvincibleTimer = 0x6a0`, `u16`, and its comment
+carries the 2026-08-28 fix: the port had been reading **0x6a6**, which is
+`mStateWaitTimer` -- a different field that ticks constantly -- and
+`hal/player_bridges.cpp`'s body-draw gate was culling a player's body on bit 0
+of it. Six bytes off, and the shadow path kept drawing: a shadow with no body,
+from the fix meant to stop shadows without bodies. The offset is right in this
+tree, `include/Player.h`:297 agrees, and the probe reads the same word: the
+`inv=` column above counts 0x24 down cleanly after a hit and stays 0 across
+the whole collect, which is exactly what the ROM does.
 
 ---
 
-## 3. VERDICT AND THE HONEST CAVEAT
+## 3. VERDICT
 
-**AUTHENTIC.** "Attackable right out of the star collection animation" is what
-the cartridge does. 42 frames -- 0.7 s -- of the collect dance, and then the
-collector is fair game with no blink. The port arms the same three layers off
-the same matched code, ends on the same animation, and behaves identically on
-both consoles of a session.
+**THE RULE ITSELF IS AUTHENTIC.** "Attackable right out of the star collection
+animation" is what the cartridge does. 42 frames -- 0.7 s -- of the collect
+dance, and then the collector is fair game with no blink. The port arms the
+same three layers off the same matched code and ends on the same animation.
+The contrast the owner is feeling is real and it is the DS's: **60 frames of
+mercy after being hit, 42 after collecting a star, and none at all once the
+dance ends**, because `mInvincibleTimer` belongs to the hurt states and a
+collect never touches it. If he wants more, that is a product choice, not a
+bug -- see the one-sentence MOD scope in 3b.
 
-**The one caveat, and it is architectural, not a defect in this path.** The
-port's online VS is not the DS's lockstep: `comms_sync.cpp` syncs bodies and
-each console computes collisions, damage and scores on its own copy. Each
-console therefore runs the collect the frame ITS copy of the bodies overlaps
-the star, so the two consoles' windows open and close a few frames apart --
-roughly the one-way latency plus the corrector's lag. A hit thrown in those
-boundary frames can be accepted on the attacker's console and refused on the
-victim's, and the two would then disagree about a star. This is a REAL but
-NARROW effect (a handful of frames at internet latency), it is not what the
-report describes, and closing it means making damage authoritative on one
-console rather than lengthening any window. **NAMED GAP, not measured**: the
-fixture pins the collect to the same frame on both consoles, so this run
-cannot show the offset, and the harness cannot drive a natural cylinder
-overlap headlessly.
+**BUT the run that proved it also found a real defect on the same path**, and
+that one is a bug, latency-only, and now fixed. Section 3a. Note the direction:
+before the fix, at internet latency a collector became PERMANENTLY un-hittable
+on the other player's screen -- so what the owner remembers as inconsistent
+combat around star collection is more likely to have been this than the mercy
+window being short.
+
+### 3a. THE DEFECT THIS LANE FOUND AND FIXED
+
+**MEASURED, at ordinary internet latency, on the two-console fixture with
+`SM64DS_SYNC_DELAY_MS`. Before the fix:**
+
+| induced delay | measured RTT | collector's own console | the OTHER console |
+|---|---|---|---|
+| 0 (loopback) | 15 ms | f241..f282, 42 frames | f241..f282, 42 frames |
+| 20 ms | 76 ms | f241..f282, 42 frames | **opens f241, NEVER CLOSES** |
+| 50 ms | 135 ms | f241..f282, 42 frames | **opens f241, NEVER CLOSES** |
+| 120 ms | 264 ms | f241..f282, 42 frames | **opens f241, NEVER CLOSES** |
+
+At f699 -- 458 frames after the collect -- the non-collecting console still
+had `noctl=1 bodyclsn=0 canhurt=0 step=2 state=020c816c` on the collector's
+body. So after ANY star collect, on the other player's screen that player
+becomes a body that walks and animates but can neither be hit nor land a hit,
+for the rest of the match. Both flags the ROM uses are stuck.
+
+**Root cause.** A no-control state does not merely play a pose, it ENDS ON
+one: `func_ov002_020c92fc` leaves the collect only when
+`Player::FinishedAnim` says the star-get animation has run out, and
+`Player::ChangeState` is what then clears `mIsNoControl` and puts the collider
+back. `comms_sync.cpp`'s `apply_pose` was overwriting that animation with the
+wire's, which at real latency is one animation behind. The frame-by-frame
+trace at 264 ms (`build/vsmercy/latpair120/p1/run.log`):
+
+    f241  anim=25 animlen=42 animcur=1     the collect starts, correctly
+    f242  anim=72 animlen=30 animcur=10    the wire's STALE walk yanks the pose
+    f250  anim=25 animlen=42 animcur=1     the wire's own 0x19 RESTARTS it
+    f290  anim=25 animlen=42 animcur=41    it finally reaches the end...
+    f291  anim=72 animlen=30 animcur=11    ...and the wire has already moved on
+
+Anim 72 is a LOOPING animation, and `Animation::Finished` is
+`currFrame >= (numFrames << 12) - 1` while `Animation::Advance`'s loop branch
+wraps modulo the length -- so the cursor never lands on that value and
+`FinishedAnim` is never true again. The state machine has no other exit.
+
+**The fix** (commit `e62b179a4`, `port/hal/comms_sync.cpp`): `apply_pose`
+holds the pose while the receiving body is in a no-control state, and counts
+the holds as `pose_held` on the `[sync:level]` line. Position and facing still
+apply; only the pose is left to the state machine that owns it. It re-arms by
+itself on the next `ChangeState`. This is also the more faithful answer -- the
+receiving console is running the ROM's own collect on its own copy, the same
+42 frames, so its local pose is better information than a latency-old remote
+one. `player_fields.h` gains `kIsNoControl = 0x709` with its evidence (two
+writers found by scanning ov002 for a byte store at that displacement:
+`Player_DisableInteraction` 0x020c9e40 sets, `func_ov002_020c9e18` clears).
+
+**After the fix, every latency agrees with the ROM:**
+
+| induced delay | measured RTT | console 0 | console 1 | pose_held |
+|---|---|---|---|---|
+| 0 (loopback) | 12-14 ms | f241..f282 | f241..f282 | 31 / 54 |
+| 20 ms | 76 ms | f241..f282 | f241..f282 | 28 / 52 |
+| 50 ms | 135-141 ms | f241..f282 | f241..f282 | 28 / 50 |
+| 120 ms | 257-263 ms | f241..f282 | f241..f282 | 26 / 48 |
+
+42 frames on both consoles at every latency, with `animlen=42` at both
+transitions -- the star-get pose runs to its own end on the remote copy now.
+Evidence: the evidence bundle's `latpair{20,50,120}.txt` (before) and
+`fix_latpair{20,50,120}.txt` (after).
+
+**No regression.** Solo and the loopback pair are unchanged after the fix:
+same f241..f282 collect window, same 63-frame level-entry window, same hit
+verdicts (`gate=0 Hurt=0` inside, `gate=1 Hurt=1` after, refused again two
+frames later) -- the bundle's `fix_pass123.txt`. `SM64DS_SYNC` is off
+by default, so single-player and adventure never reach the changed line at
+all.
+
+---
+
+### 3b. WHAT IS STILL OPEN
+
+**The one caveat, and it is the only thing here that could still be worth
+acting on.** The port's online VS is not the DS's lockstep. `comms_sync.cpp`
+syncs bodies; each console computes collisions, damage and scores on its own
+copy, and nothing about damage or score ever crosses the wire. So each console
+enters the collect the frame ITS OWN copy of the bodies overlaps the star, and
+the remote copy of a moving player is one-way-latency behind. Concretely, on
+the attacker's console the collector's proxy reaches the star LATER than the
+collector's own console does, and inside that gap:
+
+* the collector's console has already armed the window and refuses everything;
+* the attacker's console still sees an ordinary body, accepts the punch, runs
+  `Player::Hurt` on the proxy and takes a star off the collector **locally**.
+
+The attacker sees the hit land on someone who is starting the star animation;
+the collector sees nothing; the two consoles then disagree about the score
+permanently, because scores are never reconciled. That is asymmetric in
+exactly the way that produces a "we could hit each other during the star" feel
+even though both consoles are running faithful ROM code.
+
+What THIS lane proved about it: the full collect chain **does** run on a
+remote proxy -- console 1's copy of player 0 armed all 42 frames, kind 2 and
+all -- so the mechanism is not missing on the remote side. What is NOT
+measured is the size of the detection-frame offset at internet latency: the
+fixture pins the collect to the same frame on both consoles, and the harness
+cannot drive a natural cylinder overlap headlessly. The way to measure it is a
+star at a FIXED world position with the players walked into it by held
+directions, run under `SM64DS_SYNC_DELAY_MS`; the loopback pair here was at
+rtt_avg 15 ms with `avg_err` 4508 and `worst_err` 33793 in 20.12 (1.1 and 8.25
+units), which is the number that would grow. At 120 ms induced delay the same
+figures were `avg_err` 24275 / 67689 and `worst_err` 256914 / 383729, so the
+error the offset is made of grows roughly with latency as expected. Closing it
+means making damage authoritative on one console -- not lengthening any
+window, and it is a bigger change than this lane. **NOT a blocker for 0.3.1:**
+the 3a fix removes the large, permanent divergence; what is left is a
+boundary-frame disagreement measured in single frames.
 
 **The MOD-ruling option, scoped in one sentence, NOT built:** a lobby toggle
 would, when the collect's no-control ends, write the ROM's own
@@ -204,17 +345,47 @@ consoles agree on it.
 
 ## 4. WHAT THIS BRANCH CONTAINS
 
-Diagnosis only. **No fix, because there is no defect.** Zero changes under
-`src/`, `include/` or `config/`, so the byte gate is untouched by
-construction; solo and adventure are unchanged because both probes return on
-their first line when their env knob is unset.
+Two commits. **Zero changes under `src/`, `include/` or `config/`**, so the
+byte gate is untouched by construction and the DS side is bit-for-bit the base
+commit's (`git diff --stat 339db6bb3 HEAD -- src/ include/ config/ symbols/`
+is empty). Solo and adventure are unaffected: both probes return on their
+first line when their env knob is unset, and `SM64DS_SYNC` is off by default
+so the changed line in `apply_pose` is never reached outside an online
+session.
+
+`b7f5c0468` -- the readout and the measurement:
 
 * `port/hal/input_probe.cpp` -- `port_probe_vs_mercy` and
   `port_probe_mercy_hit`, plus `mercy_anim_clock`; read-only, env-gated.
 * `port/tests/walk_window.cpp` -- two calls in the per-frame probe block,
   before the actor tick.
 * `port/tools/vsmercy_probe.py` -- the three-pass driver.
-* `status/VSMERCY.md` -- this file.
 
-Proofs: battery, and abicheck over the rebuilt objects -- results recorded
-below on completion. Evidence bundle `C:\tmp\vsmercy-out\`.
+`e62b179a4` -- the fix:
+
+* `port/hal/comms_sync.cpp` -- `apply_pose` holds the pose while the receiving
+  body is in a no-control state.
+* `port/hal/comms_seam.h` -- `SyncStats::pose_held`, appended after `gated` so
+  the `[sync:level]` prefix the SY rungs parse is unchanged.
+* `port/hal/player_fields.h` -- `kIsNoControl = 0x709`, with its two ROM
+  writers cited.
+
+Branch tip `e62b179a4` on `port/vs-mercy`.
+
+### Proofs
+
+| gate | result |
+|---|---|
+| battery, before the fix | **ALL GREEN** (50 levels, 34 scenes, default boot to title, linkage 9126 = 80.6%, ptr_audit 0, shipcfg build + selftest ok) |
+| abicheck, before the fix | 6417 OK, **EXTENSION RATCHET PASSED**, 0 new unjudged slots |
+| battery, after the fix | see `battery_fix.log` in the bundle |
+| abicheck, after the fix | see `abicheck_fix.txt` in the bundle |
+| solo collect window | f241..f282, 42 frames, `canhurt=0` on 42/42, unchanged by the fix |
+| real `Player::Hurt` | refused inside (`gate=0 Hurt=0`), lands after (`gate=1 Hurt=1`), refused again 2 frames later |
+| DS side | no diff under `src/`, `include/`, `config/`, `symbols/` |
+
+Evidence bundle `C:\tmp\vsmercy-out\`: `pass12.txt`, `pass12b.txt`,
+`pass3.txt`, `latpair{20,50,120}.txt`, `fix_latpair{20,50,120}.txt`,
+`fix_pass123.txt`, `battery.log`, `battery_fix.log`, `abicheck_base.txt`,
+`abicheck_fix.txt`, plus every run log under
+`C:\tmp\vsmercy\build\vsmercy\`.
