@@ -1544,3 +1544,144 @@ extern "C" void port_probe_rabbit_key(int frame)
                  (int)data_0208e430, (unsigned)data_0209b490[0],
                  (unsigned)data_0209b49c[0]);
 }
+
+/* ===========================================================================
+ * THE VS MERCY WINDOW READOUT AND ITS HIT PROBE. Lane VSMERCY.
+ *
+ * The field report is "we were able to attack each other too soon, right out
+ * of the star collection animation". Whether that is a defect or the DS being
+ * the DS is a question about ONE predicate, so this prints that predicate and
+ * everything that feeds it, per player, per frame.
+ *
+ * WHAT THE ROM DOES, so the numbers below mean something. func_ov002_020d82f0
+ * is the gate every damage entry asks first (Player::Hurt, Player::Shock,
+ * Player::Burn, and func_ov002_020d8360, the player-vs-player hit handler
+ * Player::Behavior reaches through func_ov002_020d869c). It refuses on any of
+ * mInvincibleTimer +0x6a0, mIsMega +0x703, mCapFlags +0x73c, mIsVanish +0x6fb,
+ * mIsTakingDamage +0x708 and mIsNoControl +0x709. A VS star collect arms the
+ * LAST of those: func_ov002_020e8ef0 calls SetNoControlState with kind 2, whose
+ * St_NoControl_Init runs Player_DisableInteraction (mIsNoControl = 1, collider
+ * flags +0x2ec |= 4) and whose step function func_ov002_020c7ff8 also clears
+ * mIsBodyClsnEnabled +0x713. It ends at Player::FinishedAnim, and
+ * Player::ChangeState puts all three back. There is no timer.
+ *
+ *   SM64DS_VS_MERCY=1        one change-driven line per player
+ *   SM64DS_VS_MERCY=every    every frame, for counting an exact window
+ *
+ * READ-ONLY, and it says nothing when the knob is unset.
+ *
+ *   SM64DS_MERCY_HIT=<frame>[,<frame>...]
+ *
+ * Asks the REAL Player::Hurt to land a hit on slot 0 on each named frame, from
+ * a point one body-length in front of him, and prints what it returned next to
+ * the gate's own answer. That is the difference between "the timer says he is
+ * protected" and "a hit was actually refused".
+ * =========================================================================== */
+extern "C" {
+extern void *data_0209f394[];             /* the per-slot Player pointers */
+extern int  func_ov002_020d82f0(void *player);
+extern int  _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *v,
+        unsigned a, int knock, unsigned d, unsigned e, unsigned f);
+}
+
+/* The playing animation's LENGTH AND CURSOR, both in whole frames.
+ *
+ * This is here because the window's length is the whole question. The star-get
+ * pose is not a port constant and not a timer: func_ov002_020c92fc leaves the
+ * no-control state on Player::FinishedAnim, which is
+ * `currFrame >= (numFramesAndFlags & 0x3fffffff) - 1`, and
+ * Animation::SetAnimation stores BOTH as 20.12 -- `flags | (numFrames << 12)`.
+ * So the frame count printed here is the count in the cartridge's own .bca for
+ * that pose, read back off the live object, and the measured window has to
+ * equal it or something in the port is doing the counting instead of the ROM.
+ *
+ * ModelAnim carries the Animation as a second base at +0x50, so the count is
+ * +0x54 and the cursor +0x58; hal/player_fields.h names the same two. */
+static void mercy_anim_clock(char *p, unsigned *len, unsigned *cur)
+{
+    *len = *cur = 0;
+    const unsigned id = _ZNK6Player14GetBodyModelIDEjb(
+            (void *)p, (unsigned)(*(int *)(p + 8) & 0xff), 0);
+    char *m = *(char **)(p + 0xdc + id * 4);
+    if (!m) return;
+    *len = (*(unsigned *)(m + 0x54) & 0x3fffffffu) >> 12;
+    *cur = (unsigned)(*(int *)(m + 0x58) >> 12);
+}
+
+/* The state's identity WITHIN THIS BUILD: the address of its Main function,
+   the same word Player::Behavior dispatches through. hal/player_fields.h's
+   banner explains why this is an observation id and never an applicable one. */
+static unsigned mercy_state_id(const char *p)
+{
+    const char *st = *(char *const *)(p + 0x370);
+    return st ? *(const unsigned *)(st + 8) : 0u;
+}
+
+extern "C" void port_probe_vs_mercy(int frame)
+{
+    const char *e = std::getenv("SM64DS_VS_MERCY");
+    if (!e) return;
+    const int every = (e[0] == 'e');
+    static unsigned prev[4];
+    static int seen[4];
+
+    for (int i = 0; i < 4; ++i) {
+        char *p = (char *)data_0209f394[i];
+        if (!p) continue;
+        const unsigned noctl = *(unsigned char *)(p + 0x709);
+        const unsigned kind  = *(unsigned char *)(p + 0x70a);
+        const unsigned bcl   = *(unsigned char *)(p + 0x713);
+        const unsigned cflag = *(unsigned *)(p + 0x2ec);
+        const unsigned inv   = *(unsigned short *)(p + 0x6a0);
+        const unsigned dmg   = *(unsigned char *)(p + 0x708);
+        const unsigned anim  = (unsigned)(*(unsigned *)(p + 0x63c) >> 2);
+        const unsigned step  = *(unsigned char *)(p + 0x6e3);
+        const int      hurt  = func_ov002_020d82f0(p);
+        /* the fingerprint the change filter compares: everything that can move
+           the verdict, plus the verdict, plus the pose that ends the window. */
+        const unsigned sig = (noctl << 0) | (kind << 1) | (bcl << 9) |
+                             ((cflag & 4) << 8) | ((inv != 0) << 14) |
+                             (dmg << 15) | (anim << 16) | ((unsigned)hurt << 30);
+        if (!every && seen[i] && sig == prev[i]) continue;
+        seen[i] = 1;
+        prev[i] = sig;
+        unsigned alen = 0, acur = 0;
+        mercy_anim_clock(p, &alen, &acur);
+        std::fprintf(stderr, "[mercy] f%d p%d canhurt=%d noctl=%u kind=%u "
+                     "bodyclsn=%u cflag4=%u inv=%u takingdmg=%u anim=%u "
+                     "step=%u state=%08x animlen=%u animcur=%u\n",
+                     frame, i, hurt, noctl, kind, bcl, (cflag & 4) ? 1u : 0u,
+                     inv, dmg, anim, step, mercy_state_id(p), alen, acur);
+    }
+}
+
+extern "C" void port_probe_mercy_hit(int frame)
+{
+    const char *e = std::getenv("SM64DS_MERCY_HIT");
+    if (!e) return;
+    int want = 0;
+    for (;;) {
+        char *end;
+        long at = std::strtol(e, &end, 0);
+        if (end == e) break;
+        if (frame == (int)at) { want = 1; break; }
+        e = end;
+        if (*e == ',') ++e; else break;
+    }
+    if (!want) return;
+    char *p = (char *)data_0209f394[0];
+    if (!p) {
+        std::fprintf(stderr, "[mercyhit] f%d no slot-0 player\n", frame);
+        return;
+    }
+    const int gate = func_ov002_020d82f0(p);
+    int src[3];
+    src[0] = *(int *)(p + 0x5c) + 0x8000;   /* 8 units in +X, as an attacker */
+    src[1] = *(int *)(p + 0x60);
+    src[2] = *(int *)(p + 0x64);
+    const int r = _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, src, 1u, 0x8000,
+                                                          0u, 0u, 1u);
+    std::fprintf(stderr, "[mercyhit] f%d gate=%d Hurt=%d noctl=%u anim=%u\n",
+                 frame, gate, r, (unsigned)*(unsigned char *)(p + 0x709),
+                 (unsigned)(*(unsigned *)(p + 0x63c) >> 2));
+}

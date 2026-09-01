@@ -1176,6 +1176,8 @@ void port_probe_rabbit_key(int frame);   /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
 void port_probe_rabbit_trigger(int frame); /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
 void port_probe_key_spawn(int frame);      /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
 void port_probe_vs_overlap(int frame);     /* test fixture: SM64DS_VS_OVERLAP_AT */
+void port_probe_vs_mercy(int frame);       /* TEMPORARY: SM64DS_VS_MERCY */
+void port_probe_mercy_hit(int frame);      /* TEMPORARY: SM64DS_MERCY_HIT */
 /* the scene-fade request the title-select hands off with. Recorded by the port
    in hal/level_change.cpp and acted on by this frame loop. */
 int port_scene_fade_pending(int *sceneId);
@@ -9936,6 +9938,11 @@ int main(void)
             port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
+            /* THE MERCY WINDOW, read before the actor tick so the line for
+               frame N is the state the tick is about to make its hit decision
+               on. SM64DS_VS_MERCY / SM64DS_MERCY_HIT. */
+            port_probe_vs_mercy(frame);        /* TEMPORARY: SM64DS_VS_MERCY */
+            port_probe_mercy_hit(frame);       /* TEMPORARY: SM64DS_MERCY_HIT */
             /* THE MATCH-OVER PLAY HOLD, immediately before the actor phases so
                the pads the tick is about to read are the held ones. Inert until
                a VS match has been won; see hal/star_flow.cpp for why this holds
