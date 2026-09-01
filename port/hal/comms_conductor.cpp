@@ -1013,14 +1013,68 @@ void touch_ring_advance() {
 // would have seated anyway, and the log says the wait expired.
 // ===========================================================================
 
+// ===========================================================================
+// HOW MANY PLAYERS THIS WORLD IS SUPPOSED TO HAVE -- or 0 for "do not care".
+//
+// The wait below releases on the first peer, which is correct for two and
+// WRONG FOR THREE OR FOUR: the world is seated at whatever the roster happened
+// to be at that instant, and a console that joins afterwards never gets an
+// actor. Measured at 577b48832 with four windows on one loopback session --
+// the parent reported "2 players" and slots 2 and 3 joined the wire 62 and 109
+// rounds later, into a world with no room for them.
+//
+// SM64DS_VS_PLAYERS IS THE EXPECTATION and it is not a new knob: it is the
+// same variable hal/comms_conductor.cpp's vs_player_count() already honours,
+// and the lobby's arming freeze already forces it to the seat count. So the
+// number that decides how many Player actors the level spawns and the number
+// that decides how long to wait are ONE number, which is the property that
+// makes this impossible to get half-right.
+//
+// UNSET IS 0 AND 0 MEANS TODAY. Not "wait for one peer" spelled a longer way
+// -- the arithmetic below reduces to the exact statement that was there
+// before, so every solo baseline and every two-window run in this tree is
+// byte-for-byte what it was. That is deliberate and it is what makes this
+// change cheap to review: the new behaviour is reachable only from a run that
+// names a count.
+//
+// OUT OF RANGE IS IGNORED, loudly, the same way vs_player_count() ignores it,
+// because a mistyped knob must not turn into a session that never forms.
+// ===========================================================================
+namespace {
+int expected_players() {
+    const char *s = std::getenv("SM64DS_VS_PLAYERS");
+    if (!s) return 0;
+    const int v = std::atoi(s);
+    if (v >= 1 && v <= kCommsMaxPlayers) return v;
+    return 0;                              // vs_player_count() does the warning
+}
+
+// Is the session as big as it is going to need to be? `want <= 1` is the
+// unset case and every connected state satisfies it, which is the old test.
+bool session_is_whole(const CommsTransport *t, int want) {
+    return want <= 1 || t->player_count() >= want;
+}
+}  // namespace
+
 bool comms_wait_for_session(int frames) {
     const CommsTransport *t = comms_transport();
     if (!t) return false;                  // solo: nothing to wait for
 
+    const int want = expected_players();
     const int st0 = t->state();
-    if (st0 == kCommsParentConnected || st0 == kCommsChildConnected)
-        return true;                       // already in
+    if ((st0 == kCommsParentConnected || st0 == kCommsChildConnected) &&
+        session_is_whole(t, want))
+        return true;                       // already in, and everybody is here
 
+    if (want > 1)
+        std::fprintf(stderr,
+                     "[comms:conductor] this world wants %d players "
+                     "(SM64DS_VS_PLAYERS), so the seat waits for all %d to be "
+                     "in the session and not merely for the first one. A "
+                     "console that seats early spawns a world with no room for "
+                     "the late arrivals, and it also starts on a different "
+                     "round, which is a second way to end up simulating a "
+                     "different match.\n", want, want);
     std::fprintf(stderr,
                  "[comms:conductor] holding the world seat until the session "
                  "joins, because data_020a0f10 (my comms slot) is not written "
@@ -1047,7 +1101,8 @@ bool comms_wait_for_session(int frames) {
     for (int i = 0; i < frames; ++i) {
         t->poll();                         // service the carrier
         const int st = t->state();
-        if (st == kCommsParentConnected || st == kCommsChildConnected) {
+        if ((st == kCommsParentConnected || st == kCommsChildConnected) &&
+            session_is_whole(t, want)) {
             // AND SEAT THE SLOT, or the wait accomplishes nothing. Bringing the
             // link up is not the same as knowing my slot: data_020a0f10 is
             // written by src/func_0203ea5c.c:252, and the conductor has not run
@@ -1108,11 +1163,26 @@ bool comms_wait_for_session(int frames) {
         }
         ::Sleep(4);
     }
-    std::fprintf(stderr,
-                 "[comms:conductor] the session did not come up within %d "
-                 "turns; seating a single-player world. THIS IS NOT A HANG: "
-                 "the level boots normally and the ROM's own solo arm runs.\n",
-                 frames);
+    // AND SAY WHICH KIND OF EXPIRY IT WAS. "Nobody came" and "three of the four
+    // came" are different failures with the same old sentence, and the second
+    // one is the one a four-player session actually hits -- a launcher that
+    // spawned three windows, or one that died on its way up. Naming it is what
+    // stops the next lane debugging the wire when the answer is a missing
+    // window.
+    const int got = t->player_count();
+    if (want > 1 && got < want)
+        std::fprintf(stderr,
+                     "[comms:conductor] the session reached %d of the %d "
+                     "players it was told to expect within %d turns. Seating "
+                     "the world with what turned up: slots past %d will have "
+                     "no console driving them. THIS IS NOT A HANG.\n",
+                     got, want, frames, got - 1);
+    else
+        std::fprintf(stderr,
+                     "[comms:conductor] the session did not come up within %d "
+                     "turns; seating a single-player world. THIS IS NOT A HANG: "
+                     "the level boots normally and the ROM's own solo arm runs.\n",
+                     frames);
     return false;
 }
 
