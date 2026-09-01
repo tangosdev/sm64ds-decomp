@@ -2081,6 +2081,15 @@ u32 lovesme_filter(unsigned fileID, u8 **data, u32 size)
    either empty or "bbbbbb:ssssss" -- a body colour and a shoe colour, six hex
    digits each. Empty field: that slot keeps the ROM's built-in colour.
 
+   FOUR FIELDS TODAY, AND THE SHAPE PAST FOUR PLAYERS IS ALREADY DECIDED.
+   Coordinator's cross-lane ruling of 2026-09-01, raised by SEAT16 and answered
+   once for both variables: this mirrors SM64DS_VS_NAMES exactly -- four fields,
+   exactly three commas, same discipline. When the wire itself supports more
+   than four slots, BOTH variables move together, in one coordinated version
+   change, to SIXTEEN comma-separated fields (exactly fifteen commas, same
+   per-field grammar). Neither ever moves on its own. So a reader that grows to
+   sixteen without SM64DS_VS_NAMES growing with it is a bug, not a head start.
+
    THE OWNER'S ORDER, his words: "the ability to choose a hex color to make
    your yoshi and its shoes so two [colors]. and the main color shows next to
    your name in lobby so people can identify you. It needs to go through the

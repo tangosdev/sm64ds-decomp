@@ -583,6 +583,14 @@ field  := "" | 6*HEXDIG ":" 6*HEXDIG               slot order, 0..3
 `"8a2be2:ffd700,ff0000:00ff00,,"` is a two-player room where both picked;
 `",,,"` is a room where nobody did. Longest legal string is 4x13 + 3 = 55 bytes.
 
+**Four fields today, sixteen later, and never on its own.** Coordinator's
+cross-lane ruling of 2026-09-01 (raised by lane SEAT16, answered once for both
+variables): `SM64DS_VS_COLORS` mirrors `SM64DS_VS_NAMES` exactly at four fields
+and three commas. When the wire supports more than four slots, BOTH move
+together in one coordinated version change to sixteen comma-separated fields
+(exactly fifteen commas, same per-field grammar). Neither variable ever changes
+shape independently of the other.
+
 **No palette ever goes on the wire.** Every copy of the game is told the same
 four hex pairs and generates all four sixteen-colour palette rows for itself,
 through the arithmetic in `port/hal/vs_palette_gen.h` — which is the tangOS
