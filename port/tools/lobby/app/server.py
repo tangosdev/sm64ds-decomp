@@ -45,6 +45,7 @@ announced body (bounded) before it answers.
 import json
 import os
 import random
+import socket
 import sys
 import threading
 import time
@@ -974,8 +975,18 @@ def do_poll(body, who, now):
                 WAITERS -= 1
         # Over MAX_WAITERS the answer is immediate, exactly as if wait were 0.
 
-    if seat in room.members:
-        room.members[seat].seen = time.monotonic()
+    # THE HEARTBEAT IS NOT RE-STAMPED HERE, and that is deliberate.
+    #
+    # It was, once. The stamp went in again after the wait, which credits a
+    # member for the whole time it spent asleep in a hold it may not have been
+    # alive for: a launcher killed one second into a twenty second hold still
+    # looked healthy for twenty seconds after it died, and the seat then took
+    # MEMBER_TIMEOUT_S plus the whole hold to come free. Measured at 63 seconds
+    # against a 45 second timeout, in the two-window end-to-end.
+    #
+    # A member proves it is there by SENDING a request. The stamp at the top of
+    # this function is that proof and it is the only one. A client polling with
+    # a 20 second wait still stamps every 20 seconds, comfortably inside 45.
 
     out = {"cursor": room.seq, "view": room.view(seat)}
     if room.needs_resync(cursor):
@@ -1297,9 +1308,40 @@ class Handler(BaseHTTPRequestHandler):
 
 class Server(ThreadingHTTPServer):
     daemon_threads = True
+    # Correct on Linux, where it only lets a restarted process rebind a port
+    # still in TIME_WAIT. On WINDOWS the same flag lets a SECOND process bind a
+    # port that is already being listened on, and connections are then split
+    # between the two at random -- which is a genuinely baffling half hour if
+    # you meet it during local testing. server_bind below closes that.
     allow_reuse_address = True
+
+    def server_bind(self):
+        if sys.platform == "win32":
+            try:
+                self.socket.setsockopt(socket.SOL_SOCKET,
+                                       socket.SO_EXCLUSIVEADDRUSE, 1)
+                self.allow_reuse_address = False
+            except OSError:
+                pass
+        ThreadingHTTPServer.server_bind(self)
     # One thread per open connection, and long polls hold theirs. The cap is
     # MAX_WAITERS on the lobby side and pids_limit on the container side.
+
+    def handle_error(self, request, client_address):
+        """A client that goes away is normal, not an incident.
+
+        socketserver's default prints a full traceback for every dropped
+        connection, and a launcher being closed mid-poll drops one every time.
+        A log full of tracebacks for the ordinary case is a log nobody reads
+        when something is actually wrong, so the ordinary case gets one line
+        and anything else keeps its traceback.
+        """
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (ConnectionResetError, ConnectionAbortedError,
+                            BrokenPipeError, TimeoutError)):
+            return
+        log("handler error from %s: %r"
+            % (blunt_host(client_address[0] if client_address else ""), exc))
 
 
 def main():
