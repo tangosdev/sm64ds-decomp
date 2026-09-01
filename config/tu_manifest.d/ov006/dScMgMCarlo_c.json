@@ -4,6 +4,13 @@
   "source": "src/actors/dScMgMCarlo_c.cpp",
   "promoted_source": "src/actors/dScMgMCarlo_c.cpp",
   "status": "promoted",
+  "goal": {
+    "idiomCensus": {
+      "externC": 1,
+      "rawOffsets": 0
+    },
+    "justification": "Converted from the tubuild shadow 2026-08-31: the twenty-one written functions are twenty real member functions of dScMgMCarlo_c or of the RTTI-confirmed element class dMgMCarloCardObj_c plus ONE extern \"C\" definition -- the element destroy stub _ZN18dMgMCarloCardObj_cD1Ev, a hand-written block spelling the ROM's mangled name literally because the header's inline __destroy_arr call passes the destructor as a plain function pointer (the family-ratified destroy-side twin of the factory's ctor stub, the same idiom dScMgCard_c landed as its element stub pair -- and the form the family measured exhaustively there: real member destructors in every spelling fail the byte or the ROM-order gate, the out-of-line form dragging in D0/D2 destructor symbols the cartridge does not carry and the inline form emitting the pair between the scene D1 and scene D0, sliding the scene D0 off ROM address order, notes/minigame-family-decisions.md); free definitions are 0, and the manifest's other two functions are the compiler-emitted destructor pair _ZN13dScMgMCarlo_cD1Ev/D0Ev from the header's inline destructor. All 23 ROM functions match byte-for-byte -- each verified with tools/match.py as it converted, the whole sweep re-verified after the final declaration changes. rawOffsets=0: every raw this+0xoffset chain is now a named header member spelling, and before any raw spelling could be called load-bearing BOTH member forms -- folded and indexed -- were measured; none was needed, every natural member form reproduced the cartridge bytes on the first try, so zero raw spellings are kept (the last three census chains -- the +0x12 lift-table limit and the two +0x18 screen-quotient constants -- are additive constants rather than struct offsets, and decimalized to +18/+24 with the bytes unchanged). externC=1 is the census's only nonzero and is that destroy stub. The renamed functions' ROM symbols were address-only, so their behavioral names are coined from what each function does -- disclosed in the COINED NAMES note below, the per-function banner comments, and symbols/actor_renames.tsv's why column."
+  },
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20f7634..0x20f8e44, 23 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -33,112 +40,112 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov006_020f7730",
+      "symbol": "_ZN18dMgMCarloCardObj_cD1Ev",
       "address": "0x020f7730",
       "size": "0x00000010",
       "legacy_source": "src/func_ov006_020f7730.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov006_020f7740",
+      "symbol": "_ZN13dScMgMCarlo_c11UpdateBoardEv",
       "address": "0x020f7740",
       "size": "0x00000254",
       "legacy_source": "src/func_ov006_020f7740.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020f7994",
+      "symbol": "_ZN13dScMgMCarlo_c14FlipDealtCardsEv",
       "address": "0x020f7994",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020f7994.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov006_020f7a00",
+      "symbol": "_ZN13dScMgMCarlo_c13DrawCardValueEv",
       "address": "0x020f7a00",
       "size": "0x00000090",
       "legacy_source": "src/func_ov006_020f7a00.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov006_020f7a90",
+      "symbol": "_ZN13dScMgMCarlo_c10BoardReadyEv",
       "address": "0x020f7a90",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020f7a90.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020f7b10",
+      "symbol": "_ZN13dScMgMCarlo_c9BoardBusyEv",
       "address": "0x020f7b10",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020f7b10.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020f7b90",
+      "symbol": "_ZN13dScMgMCarlo_c16HasRemovablePairEv",
       "address": "0x020f7b90",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020f7b90.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020f7c10",
+      "symbol": "_ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c",
       "address": "0x020f7c10",
       "size": "0x0000021c",
       "legacy_source": "src/func_ov006_020f7c10.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020f7e2c",
+      "symbol": "_ZN18dMgMCarloCardObj_c6RenderEv",
       "address": "0x020f7e2c",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov006_020f7e2c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020f7ee4",
+      "symbol": "_ZN18dMgMCarloCardObj_c6UpdateEi",
       "address": "0x020f7ee4",
       "size": "0x00000270",
       "legacy_source": "src/func_ov006_020f7ee4.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020f8154",
+      "symbol": "_ZN18dMgMCarloCardObj_c7HitTestEv",
       "address": "0x020f8154",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020f8154.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020f8224",
+      "symbol": "_ZN18dMgMCarloCardObj_c10IsPairWithEPS_",
       "address": "0x020f8224",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov006_020f8224.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020f82d0",
+      "symbol": "_ZN18dMgMCarloCardObj_c8FlipAwayEi",
       "address": "0x020f82d0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020f82d0.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020f8320",
+      "symbol": "_ZN18dMgMCarloCardObj_c6DealInEi",
       "address": "0x020f8320",
       "size": "0x00000188",
       "legacy_source": "src/func_ov006_020f8320.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020f84a8",
+      "symbol": "_ZN18dMgMCarloCardObj_c4InitEi",
       "address": "0x020f84a8",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020f84a8.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020f8540",
+      "symbol": "_ZN13dScMgMCarlo_c9RenderHudEv",
       "address": "0x020f8540",
       "size": "0x00000070",
       "legacy_source": "src/func_ov006_020f8540.c",
@@ -159,14 +166,14 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020f8a3c",
+      "symbol": "_ZN13dScMgMCarlo_c13OnTurnIntoEggEi",
       "address": "0x020f8a3c",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov006_020f8a3c.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov006_020f8c68",
+      "symbol": "_ZN13dScMgMCarlo_c13OnYoshiTryEatEi",
       "address": "0x020f8c68",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov006_020f8c68.c",
@@ -207,7 +214,11 @@
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f82d0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held func_ov006_020f8320; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f7740 and the one that held _ZN13dScMgMCarlo_c6RenderEv; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review"
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f8154 and the one that held _ZN13dScMgMCarlo_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "2026-08-31 conversion to real members: seventeen of the eighteen tubuild extern \"C\" free functions became real member functions -- dScMgMCarlo_c's own scene logic (the static board family UpdateBoard/FlipDealtCards/DrawCardValue/BoardReady/BoardBusy/HasRemovablePair/SetupBoard, the member RenderHud, and the adjudicated vtable-slot events OnYoshiTryEat/OnTurnIntoEgg) and the element motion members Render/Update/HitTest/IsPairWith/FlipAway/DealIn/Init over the RTTI-confirmed element class dMgMCarloCardObj_c; the eighteenth, func_ov006_020f7730, is the element destroy stub, renamed to the compiler's own mangling _ZN18dMgMCarloCardObj_cD1Ev and kept as the family-ratified extern \"C\" spelling because the header's inline __destroy_arr call (in place since the TU's creation, the same recipe as dScMgCard_c/dScMgMCarlo2_c) passes the destructor as a plain function pointer -- the destroy-side twin of the factory's ctor stub in src/func_ov006_020f8ed8.c. Defining the element class and its key function Render in this TU keys the class's _ZTI/_ZTS/_ZTV here as well. Each function was byte-verified with tools/match.py as it converted, and the full 23-function sweep re-verified after the final declaration changes.",
+    "COINED NAMES, the one thing not provable: the eighteen renamed functions' ROM symbols were address-only (func_ov006_020f7730..func_ov006_020f8c68), so no recovered spelling exists to confirm or contradict the behavioral names. UpdateBoard, FlipDealtCards, DrawCardValue, BoardReady, BoardBusy, HasRemovablePair, SetupBoard, RenderHud and the element Render/Update/HitTest/IsPairWith/FlipAway/DealIn/Init are coined from what each function does; OnYoshiTryEat/OnTurnIntoEgg are the family's adjudicated legacy recovered names (vtable slots 18/19, notes/minigame-family-decisions.md); the element D1 symbol is the compiler's own mangling of the class this TU's _ZTI/_ZTS proves, and the renamed vtable row is that same class's _ZTV. The coinage is disclosed here, in the per-function banner comments, and in symbols/actor_renames.tsv's why column.",
+    "D3 declarations: GXS::LoadOBJPltt, Sound::PlayBank2_2D, ApproachLinear and ApproachLinear2 are declared at their RATIFIED_TRUE_NAMES forms (parameter types read off the mangled names, see the engine-helpers banner in the source); func_ov006_020c0aa8 and func_ov006_020c1804 keep the void* spellings and func_ov006_020c1a88 the char* spelling shared with dScMgBSC_c/dScMgCard_c, because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. Two more C-linkage engine routines split against the siblings and stay split, read off this TU's own ROM call sites: func_ov004_020b66d4 is declared (char*) here because OnYoshiTryEat's ROM site materializes this+0x6000 into r0 -- a dead argument the callee never reads (Card calls the same routine bare) but one the cartridge demonstrably computes, spelled as the member address it is, mArray[76].mTargetY, 0x51a8+0x4c*0x30+0x18=0x6000 -- where dScMgBSC_c/dScMgCard_c spell it (void); and func_ov004_020b56c8 is declared (char*) here because OnTurnIntoEgg's site passes the face-tier table pointer where the siblings spell it (int). Both splits are the family's open question, recorded in notes/minigame-family-decisions.md. The one live local shadow is the Fix12 typedef -- the legacy files' partial Node/Obj shadows are gone with the raw chains they modelled, preserved only in the TUBUILD CONFLICT comments -- and the remaining unk_/pad_ fields (the shared-table reaches unk_4f52/unk_511e, the own-tail board state unk_60a8/unk_60aa/unk_60ae, the base pads pad_4660/pad_4f38) are byte-exact spellings of raw-offset object headers the family has not yet carved; retiring them belongs to a header carve, not this TU.",
+    "2026-08-31 verification round, recorded as measured: the conversion-day re-compile under tools/tubuild.py verify re-ran the per-function audit and this block records its round honestly -- functions_matched 22 of 23, relocation_destinations_verified FAIL. The one DIFF row is _ZN18dMgMCarloCardObj_cD1Ev (0x020f7730, the element destroy stub): its bytes matched and its relocation destinations verified, but objisolate.plan() -- the single-function model the verify audit runs per function -- refused the stub's store with 'objisolate: _ZTV18dMgMCarloCardObj_c: unexpected reloc type=2 addend=0'. plan() treats every relocation against a _ZTV defined in the same object as mwcc's own +8 form (the vtable object's offset-to-top/typeinfo preamble) so that its -8 externalisation rewrite applies; addend 0 is refused fail-closed because the single-function model cannot distinguish a hand-written ROM-symbol-convention store from a broken compiler store (objisolate.py:207-212). The production audits for this enrolled consolidated source accept -- and after deadstripping, require -- exactly the stub's form: rombuild.check_object runs derive_deadstrip, whose deadstrip_plan documents both legitimate spellings of a _ZTV store (addend 0 where the source declares the ROM symbol itself, extern int _ZTV18dMgMCarloCardObj_c[] -- symbols.txt's symbol IS the slot array; addend 0 left alone, nonzero addends rebased by 8) and which rebinds _ZTV18dMgMCarloCardObj_c to the ROM address, and then plan_many, which on the now-undefined reference requires addend 0 and refuses nonzero. The linked value is identical either way (both spellings land the vtable address point 0x0213d5ac), which is why the byte comparison, the relocation-destination audit, and the production link all agree while the single-function model alone refuses. dScMgCard_c's committed element stubs (cd398b500) are form-identical -- the same extern int _ZTV...[] declaration plus the (int)_ZTV... store -- and would draw the same per-function refusal; that TU's block records its promotion-era round because its conversion never re-ran the per-function audit. The production authority for this TU is the linkcheck baseline build recorded in the linkcheck block."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -215,7 +226,7 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov006-dScMgMCarlo_c/dScMgMCarlo_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 23,
+    "functions_matched": 22,
     "functions_declared": 23,
     "compilerOnlyOutput": {
       "requested": [],
@@ -240,7 +251,12 @@
         21,
         22,
         23,
-        24
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -255,22 +271,28 @@
         "_ZTS19dScMgSingle3DBase_c",
         "_ZTI13dScMgMCarlo_c",
         "_ZTS13dScMgMCarlo_c",
-        "_ZTV13dScMgMCarlo_c"
+        "_ZTV13dScMgMCarlo_c",
+        "_ZTI18dMgMCarloCardObj_c",
+        "_ZTS18dMgMCarloCardObj_c",
+        "_ZTV18dMgMCarloCardObj_c"
       ],
       "dataExternalized": [
         "_ZTI11dScMgBase_c",
         "_ZTI13dScMgMCarlo_c",
+        "_ZTI18dMgMCarloCardObj_c",
         "_ZTI19dScMgSingle3DBase_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dScene_c",
         "_ZTS11dScMgBase_c",
         "_ZTS13dScMgMCarlo_c",
+        "_ZTS18dMgMCarloCardObj_c",
         "_ZTS19dScMgSingle3DBase_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dScene_c",
-        "_ZTV13dScMgMCarlo_c"
+        "_ZTV13dScMgMCarlo_c",
+        "_ZTV18dMgMCarloCardObj_c"
       ]
     },
     "criteria": {
@@ -278,7 +300,7 @@
       "every_declared_function_bytes_match": "PASS",
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
+      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
@@ -452,6 +474,27 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213d664",
       "reason": "emitted for this class itself vtable by naming this class's key function; the cartridge's copy lives at ov006:0x0213d664 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTI18dMgMCarloCardObj_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d578",
+      "reason": "emitted for the element class itself typeinfo record by defining the class and its key function in this TU (the header's typed mArray member); the cartridge's copy lives at ov006:0x0213d578 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTS18dMgMCarloCardObj_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d5c8",
+      "reason": "emitted for the element class itself typeinfo name string by defining the class and its key function in this TU (the header's typed mArray member); the cartridge's copy lives at ov006:0x0213d5c8 and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
+    },
+    {
+      "symbol": "_ZTV18dMgMCarloCardObj_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d5ac",
+      "reason": "emitted for the element class itself vtable by defining the class and its key function in this TU (the header's typed mArray member); the cartridge's copy lives at ov006:0x0213d5ac and an enrolled source already reaches it, so romdata_check compares this object's bytes against the cartridge before the duplicate is discarded"
     }
   ]
 }

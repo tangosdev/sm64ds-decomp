@@ -23,34 +23,34 @@
  * "functions" array keeps the old path beside every address.
  *   [1] 0x020d95a4  _ZN11dScMgCard_cD1Ev
  *   [2] 0x020d9638  _ZN11dScMgCard_cD0Ev
- *   [3] 0x020d96e0  func_ov006_020d96e0
- *   [4] 0x020d96f0  func_ov006_020d96f0
- *   [5] 0x020d970c  func_ov006_020d970c
- *   [6] 0x020d978c  func_ov006_020d978c
- *   [7] 0x020d9998  func_ov006_020d9998
- *   [8] 0x020d99a4  func_ov006_020d99a4
- *   [9] 0x020d99ec  func_ov006_020d99ec
- *   [10] 0x020d9a14  func_ov006_020d9a14
- *   [11] 0x020d9bd0  func_ov006_020d9bd0
- *   [12] 0x020d9bdc  func_ov006_020d9bdc
- *   [13] 0x020d9c5c  func_ov006_020d9c5c
- *   [14] 0x020da00c  func_ov006_020da00c
- *   [15] 0x020da0ac  func_ov006_020da0ac
- *   [16] 0x020da154  func_ov006_020da154
- *   [17] 0x020da174  func_ov006_020da174
- *   [18] 0x020da420  func_ov006_020da420
- *   [19] 0x020da4ac  func_ov006_020da4ac
- *   [20] 0x020da5e8  func_ov006_020da5e8
- *   [21] 0x020da834  func_ov006_020da834
- *   [22] 0x020da860  func_ov006_020da860
- *   [23] 0x020da88c  func_ov006_020da88c
- *   [24] 0x020da8b8  func_ov006_020da8b8
- *   [25] 0x020da8e4  func_ov006_020da8e4
- *   [26] 0x020da974  func_ov006_020da974
+ *   [3] 0x020d96e0  _ZN12dMgCardObj_cD1Ev
+ *   [4] 0x020d96f0  _ZN17dMgDilarCardObj_cD1Ev
+ *   [5] 0x020d970c  _ZN17dMgDilarCardObj_c6RenderEv
+ *   [6] 0x020d978c  _ZN17dMgDilarCardObj_c6UpdateEv
+ *   [7] 0x020d9998  _ZN17dMgDilarCardObj_c13GetOffscreenYEv
+ *   [8] 0x020d99a4  _ZN12dMgCardObj_c6FlyOffEv
+ *   [9] 0x020d99ec  _ZN12dMgCardObj_c7SetHomeEi
+ *   [10] 0x020d9a14  _ZN11dScMgCard_c9RenderHudEv
+ *   [11] 0x020d9bd0  _ZN12dMgCardObj_c13GetOffscreenYEv
+ *   [12] 0x020d9bdc  _ZN12dMgCardObj_c6RenderEv
+ *   [13] 0x020d9c5c  _ZN12dMgCardObj_c6UpdateEv
+ *   [14] 0x020da00c  _ZN12dMgCardObj_c6RedealEv
+ *   [15] 0x020da0ac  _ZN12dMgCardObj_c6DealInEPKi
+ *   [16] 0x020da154  _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c
+ *   [17] 0x020da174  _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c
+ *   [18] 0x020da420  _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c
+ *   [19] 0x020da4ac  _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs
+ *   [20] 0x020da5e8  _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_
+ *   [21] 0x020da834  _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c
+ *   [22] 0x020da860  _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci
+ *   [23] 0x020da88c  _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci
+ *   [24] 0x020da8b8  _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci
+ *   [25] 0x020da8e4  _ZN11dScMgCard_c13DrawCardValueEv
+ *   [26] 0x020da974  _ZN11dScMgCard_c11FillWeightsEi
  *   [27] 0x020da994  _ZN11dScMgCard_c16CleanupResourcesEv
  *   [28] 0x020da9c4  _ZN11dScMgCard_c6RenderEv
  *   [29] 0x020dabec  _ZN11dScMgCard_c8BehaviorEv
- *   [30] 0x020dac34  func_ov006_020dac34
+ *   [30] 0x020dac34  _ZN11dScMgCard_c11UpdateStateEv
  *   [31] 0x020db6ec  _ZN11dScMgCard_c15OnGroundPoundedEv
  *   [32] 0x020db720  _ZN11dScMgCard_c13OnTurnIntoEggEi
  *   [33] 0x020db9dc  _ZN11dScMgCard_c13OnYoshiTryEatEi
@@ -139,12 +139,6 @@ typedef struct
   s32 v[5];
 } Five;
 
-/* shadow struct 'Node' */
-struct Node {
-    virtual void m0();
-    char pad[0x2c];
-};
-
 /* shadow typedef 'OamAttrTmpl' */
 typedef struct OamAttrTmpl {
     u32 attr0; /* 0x0 */
@@ -164,30 +158,6 @@ typedef struct Obj6 {
     Slot6 rowB[5]; /* 0x5298 */
 } Obj6;
 
-/* shadow struct 'VtObj' */
-struct VtObj {
-    virtual void d0();
-    virtual void d1();
-    virtual void d2();
-    virtual void d3();
-    virtual void d4();
-    virtual void d5();
-    virtual void d6();
-    virtual void d7();
-    virtual void d8();
-    virtual void d9();
-    virtual void d10();
-    virtual void d11();
-    virtual void d12();
-    virtual void d13();
-    virtual void d14();
-    virtual void d15();
-    virtual void d16();
-    virtual void d17();
-    virtual void m18(int);
-};
-
-
 /* TUBUILD CONFLICT -- alternate body of typedef 's32', from the legacy file for func_ov006_020da174, NOT applied:
 typedef signed int s32;
 */
@@ -196,23 +166,21 @@ typedef signed int s32;
 typedef short s16;
 */
 
-#define S16(off) (*(s16 *)(c + (off)))
-
 extern "C" {
 extern int data_ov006_0213acb0[2];
 extern int data_ov006_0213aca8[2];
-extern int data_ov006_0213bccc[];
+/* the two element vtables, by the symbols.txt rows (0x0213bccc / 0x0213bcf4):
+   this same TU emits them (Render -- each class's key function -- is defined
+   below), and the hand-written destroy stubs near the file's end reference
+   them. The names are already the mangled Itanium names in symbols.txt, so
+   extern "C" here means "use literally" */
+extern int _ZTV12dMgCardObj_c[];
+extern int _ZTV17dMgDilarCardObj_c[];
 extern unsigned short data_ov006_0213bd64[];
 extern void *data_ov006_02141774[];
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
-extern int _Z14ApproachLinearRiii(int *a, int b, int c);
-extern int _Z15ApproachLinear2Rsss(s16 *a, s16 b, s16 c);
-extern int func_ov006_020da8e4(void);
-extern int func_ov006_020da834(char *p);
-extern int func_ov006_020da860(char *p, int v);
 extern void **data_ov006_0213bd30[];
 extern void *data_ov006_0213406c[];
-void _ZN5Sound12PlayBank2_2DEj(unsigned int n);
 unsigned int func_02012790(unsigned int a);
 extern int data_ov006_02141768;
 extern int data_ov006_0214176c;
@@ -224,7 +192,6 @@ extern unsigned char data_020a0dea[][4];
 extern unsigned char data_020a0deb[][4];
 extern "C" void Vec2_Sub(int* o, int* a, int* b);
 extern "C" void func_0203d680(int* out, int* in, int scale);
-extern void func_ov006_020d99ec(char *c, int n);
 extern const Five data_ov006_0213bcd8;
 extern int RandomIntInternal(int *seed);
 extern int data_ov006_0213bd18[];
@@ -239,12 +206,7 @@ void func_ov006_020c19d0(void *table);
 void func_ov004_020b65e4(void);
 extern int func_ov006_020c0f0c(void *p);
 extern int func_ov006_020c1718(void *p);
-extern int func_ov006_020da88c(char *p, int v);
-extern int func_ov006_020da8b8(char *p, int v);
 extern void func_ov006_020c1420(void *c, s16 arg1, void *arg2);
-extern void func_ov006_020da420(char *c);
-extern int func_ov006_020da174(Struct30 *base);
-extern void func_ov006_020da154(char *p);
 extern void func_ov006_020c0d68(void *c);
 extern void func_ov006_020c0c80(void *c);
 extern void func_ov004_020ad79c(int a0, int a1);
@@ -273,12 +235,7 @@ extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, u32);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, u32, u32);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, u32, u32);
-extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *, int, int, int, int);
 extern int func_ov006_020c1a88(char *);
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_020d9c5c, NOT applied: int _Z14ApproachLinearRiii(int* a, int b, int c); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z15ApproachLinear2Rsss, from the legacy file for func_ov006_020d9c5c, NOT applied: int _Z15ApproachLinear2Rsss(short* a, short b, short c); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da8e4, from the legacy file for func_ov006_020d9c5c, NOT applied: int func_ov006_020da8e4(void); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da8e4, from the legacy file for func_ov006_020da00c, NOT applied: extern "C" int func_ov006_020da8e4(void); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec2_Sub, from the legacy file for func_ov006_020da0ac, NOT applied: extern "C" void Vec2_Sub(int *o, int *a, int *b); */
@@ -286,12 +243,35 @@ extern int func_ov006_020c1a88(char *);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da8e4, from the legacy file for func_ov006_020da0ac, NOT applied: extern "C" int func_ov006_020da8e4(void); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da834, from the legacy file for func_ov006_020dac34, NOT applied: extern int func_ov006_020da834(void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da860, from the legacy file for func_ov006_020dac34, NOT applied: extern int func_ov006_020da860(void *p, int v); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound12PlayBank2_2DEj, from the legacy file for func_ov006_020dac34, NOT applied: extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c1718, from the legacy file for _ZN11dScMgCard_c13OnTurnIntoEggEi, NOT applied: extern int func_ov006_020c1718(void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z15ApproachLinear2Rsss, from the legacy file for _ZN11dScMgCard_c13OnTurnIntoEggEi, NOT applied: extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_02134028, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern u32 *data_ov006_02134028; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c0aa8, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern void func_ov006_020c0aa8(char *); */
 }
+
+/* --- the engine helpers, by their true names -------------------------------
+   These six calls used to be spelled by their mangled ROM names, declared
+   in the extern "C" block above. They are the real C++ names now -- plain
+   file-scope declarations, never extern "C", the idiom dScMgBSC_c's
+   conversion established -- and each one's mwcc mangling IS that same ROM
+   symbol, so every call below compiles to the same bl target as before:
+     Sound::PlayBank2_2D        _ZN5Sound12PlayBank2_2DEj
+     GX::LoadOBJPltt            _ZN2GX11LoadOBJPlttEPKvjj
+     GXS::LoadOBJPltt           _ZN3GXS11LoadOBJPlttEPKvjj
+     G2x::SetBlendAlpha         _ZN3G2x13SetBlendAlphaEPVttttj
+     ApproachLinear             _Z14ApproachLinearRiii
+     ApproachLinear2            _Z15ApproachLinear2Rsss
+   The parameter types are read off the mangled names, not chosen (see
+   include/G2x.h's own banner for why that matters): `j` unsigned int,
+   `t` unsigned short, `s` short, `Riii` int&, `Rsss` short&. Sound is a
+   namespace per include/Sound.h; GX/GXS are spelled as namespaces the same
+   way, since a namespace and a class-only-statics mangle identically and
+   the calls here are static either way. */
+namespace Sound { void PlayBank2_2D(u32 id); }
+namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
+namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
+namespace G2x { void SetBlendAlpha(volatile u16 *reg, u16 a, u16 b, u16 c, u32 d); }
+int  ApproachLinear(int &value, int target, int step);
+int  ApproachLinear2(s16 &value, s16 target, s16 step);
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- _ZN11dScMgCard_c13InitResourcesEv, 0x020dbaf0, size 0x264 */
@@ -307,9 +287,9 @@ extern int func_ov006_020c1a88(char *);
  * engines, sets blending, patches the OAM attr template list, spawns the two
  * rows of 5 slot sprites, and resets the shared counters.
  *
- * The final `((VtObj *)c)->m18(-1)` is a self-dispatch through this class's own
- * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
- * file used, just through `this` instead of a `char *c` parameter. */
+ * The final `OnYoshiTryEat(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- the adjudicated eat handler whose body sits below; the
+ * reload needs the whole round reset it does. */
 /* One OAM attribute-template entry: the list is a u32 attr word, then the two
  * 16-bit attrs, then an 8-byte stride. Spelled as a struct rather than as casts
  * off a u32* because the ROM addresses all three off ONE base register at
@@ -331,14 +311,14 @@ s32 dScMgCard_c::InitResources()
     f5 = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
     f4 = LoadFile(0xbb);
     DecompressLZ16(f7, 0x6400000);
-    _ZN2GX11LoadOBJPlttEPKvjj(f6, 0, 0x20);
+    GX::LoadOBJPltt(f6, 0, 0x20);
     DecompressLZ16(f5, 0x6600000);
-    _ZN3GXS11LoadOBJPlttEPKvjj(f4, 0, 0x100);
+    GXS::LoadOBJPltt(f4, 0, 0x100);
     Deallocate(f7);
     Deallocate(f6);
     Deallocate(f5);
     Deallocate(f4);
-    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
+    G2x::SetBlendAlpha((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
     *(volatile u16 *)0x04001050 = 0;
 
     {
@@ -361,8 +341,8 @@ s32 dScMgCard_c::InitResources()
 
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
-    func_ov006_020c0aa8(c + 0x4660);
-    if (func_ov006_020c1a88(c + 0x4f38) == 0)
+    func_ov006_020c0aa8(pad_4660);
+    if (func_ov006_020c1a88((char *)pad_4f38) == 0)
         return 0;
 
     {
@@ -371,25 +351,25 @@ s32 dScMgCard_c::InitResources()
         for (i = 0; i < 5; i++) {
             v[0] = y << 12;
             v[1] = 0x80000;
-            func_ov006_020da0ac(((Obj6 *)c)->rowA[i].b, v);
+            ((dMgCardObj_c *)((Obj6 *)c)->rowA[i].b)->DealIn(v);
             v[1] = 0x10000;
-            func_ov006_020da0ac(((Obj6 *)c)->rowB[i].b, v);
+            ((dMgCardObj_c *)((Obj6 *)c)->rowB[i].b)->DealIn(v);
             y += 0x28;
         }
     }
 
     self->mState = 0;
     self->mStateTimer = 0;
-    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
-    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
+    unk_0a8 = func_ov004_020ad8b8();
+    unk_0ac = unk_0a8;
     {
         int r = func_ov004_020ad878();
         if (data_ov004_020beb68 != 0)
-            *(int *)((char *)data_ov004_020beb68 + 0xb4) = r;
+            ((dScMgBase_c *)data_ov004_020beb68)->mHudScore = r;
     }
     self->mScore = 0;
     func_ov004_020b682c();
-    ((VtObj *)c)->m18(-1);
+    OnYoshiTryEat(-1);
     return 1;
 }
 
@@ -397,38 +377,37 @@ s32 dScMgCard_c::InitResources()
 /* ROM ordinal 33 -- _ZN11dScMgCard_c13OnYoshiTryEatEi, 0x020db9dc, size 0x114 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13OnYoshiTryEatEi
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-/* recovered: renamed to Class_Method, RTTI class fields named */
-// recovered name: dScMgCard_c_OnYoshiTryEat_020db9dc
-/* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
-void dScMgCard_c::OnYoshiTryEat(int /* arg */)
+/* dScMgCard_c::OnYoshiTryEat -- vtable slot 18, the eat handler: reset the
+ * whole round. The name is the legacy recovered vtable name
+ * (dActor_c.h:131, corroborated by ov006's symbols.txt), standing
+ * uncontradicted; what the family adjudication of 2026-08-31 settled is the
+ * slot's RETURN TYPE, void (notes/minigame-family-decisions.md). The body
+ * agrees: it clears the card-marked counter and both highlight pairs
+ * (6 means "none"), re-arms the shared-table pair the round readout uses,
+ * refills the six-face weights, redeals both hands, resets the chip
+ * globals, sets the round counter to 1 and restarts the state machine at
+ * step 1. No destructor does any of that. */
+void dScMgCard_c::OnYoshiTryEat(int mode)
 {
-    char *c = (char *)this;
-
-    dScMgCard_c *self = (dScMgCard_c *)(void *)c;
     int i;
     char *p1, *p2;
 
-    self->unk_538c = 0;
-    self->unk_538e = 6;
-    self->unk_5390 = 6;
-    self->unk_5392 = 6;
-    self->unk_5394 = 6;
-    func_ov006_020c1604(c + 0x4f38, 4, 5, (int)(c + 0x538c));
+    unk_538c = 0;
+    unk_538e = 6;
+    unk_5390 = 6;
+    unk_5392 = 6;
+    unk_5394 = 6;
+    func_ov006_020c1604((char *)pad_4f38, 4, 5, (int)&unk_538c);
 
-    self->unk_511e = 1;
-    self->unk_4f52 = 2;
-    func_ov006_020da974(5);
+    unk_511e = 1;
+    unk_4f52 = 2;
+    dScMgCard_c::FillWeights(5);
 
-    p1 = c + 0x51a8;
-    p2 = c + 0x5298;
+    p1 = (char *)mArray1;
+    p2 = (char *)mArray2;
     for (i = 0; i < 5; i++) {
-        func_ov006_020da00c(p1);
-        func_ov006_020da00c(p2);
+        ((dMgCardObj_c *)p1)->Redeal();
+        ((dMgCardObj_c *)p2)->Redeal();
         p1 += 0x30;
         p2 += 0x30;
     }
@@ -439,64 +418,64 @@ void dScMgCard_c::OnYoshiTryEat(int /* arg */)
     data_ov006_0214176c = 0;
     data_ov006_02141768 = 0;
     data_ov006_02141770 = 0;
-    self->unk_539a = 0;
+    unk_539a = 0;
     data_ov006_0213bc44 = 1;
-    self->mState = 1;
+    mState = 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- _ZN11dScMgCard_c13OnTurnIntoEggEi, 0x020db720, size 0x2bc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c13OnTurnIntoEggEi
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-/* recovered: renamed to Class_Method, RTTI class fields named */
-// recovered name: dScMgCard_c_OnTurnIntoEgg
-/* recovered: renamed to Class_Method */
-/* dScMgCard_c::OnTurnIntoEgg - recovered from vtable slot identity */
-int dScMgCard_c::OnTurnIntoEgg(int /* mode */)
+/* dScMgCard_c::OnTurnIntoEgg -- vtable slot 19, the eaten exit: the round
+ * ends because the player was swallowed, and these steps walk the scene
+ * out. 0xe frees the result sprite the comparison picks; 0xf waits for the
+ * touch poll, plays the result sound (win scales by the hand's payout
+ * row), and steps on; 0x10 settles a forced result or waits the timer out
+ * and frees slot 0x1d; 0x11 waits for the player object to leave, flies
+ * both hands off, and arms the last timer; 0x12 runs that timer down and
+ * reports the exit done. Returns 1 the moment the exit finishes. */
+int dScMgCard_c::OnTurnIntoEgg(int mode)
 {
-    char *c = (char *)this;
-
-    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
-    switch (self->mState) {
+    switch (mState) {
     case 0xe: {
-        int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
+        int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
         if (r == -1)
             FreeGfxSlotsById(0xa);
         else if (r == 1)
             FreeGfxSlotsById(9);
-        self->mStateTimer = 0;
-        *(s16*)(((int)c + 0x5388)) += 1;
+        mStateTimer = 0;
+        mState += 1;
         break;
     }
     case 0xf:
-        if (func_ov006_020c1718(c + 0x4f38) != 0) {
-            int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
+        if (func_ov006_020c1718(pad_4f38) != 0) {
+            int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
                 func_ov004_020b5ed0();
-                self->mStateTimer = 0;
+                mStateTimer = 0;
             } else if (r == 1) {
-                int v = data_ov006_0213bd48[func_ov006_020da4ac(c + 0x51a8, 0)];
+                int v = data_ov006_0213bd48[dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0)];
                 func_ov004_020b56c8(v * data_ov004_020bfa18);
-                self->mStateTimer = 0;
+                mStateTimer = 0;
             } else {
                 func_ov004_020b5d74();
-                self->mStateTimer = 0x1e;
+                mStateTimer = 0x1e;
             }
-            *(s16*)(((int)c + 0x5388)) += 1;
+            mState += 1;
         }
         break;
     case 0x10:
         if (data_ov004_020bf9e4 == 1) {
-            int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
-            func_ov006_020da4ac(c + 0x51a8, 0);
+            int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
+            dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
             if (r == -1) {
-                *(s16*)(((int)c + 0x5388)) += 1;
+                mState += 1;
             } else {
                 return 1;
             }
         } else {
-            if (_Z15ApproachLinear2Rsss((s16*)(c + 0x538a), 0, 1) != 0)
+            if (ApproachLinear2(mStateTimer, 0, 1) != 0)
                 FreeGfxSlotsById(0x1d);
         }
         break;
@@ -505,22 +484,22 @@ int dScMgCard_c::OnTurnIntoEgg(int /* mode */)
         char* a;
         char* b;
         void* p = data_ov004_020beb68;
-        if ((p != 0 ? *(int*)((char*)p + 0xa8) : 0) != 0)
+        if ((p != 0 ? ((dScMgBase_c *)p)->unk_0a8 : 0) != 0)
             return 1;
-        a = c + 0x51a8;
-        b = c + 0x5298;
+        a = (char *)mArray1;
+        b = (char *)mArray2;
         for (i = 0; i < 5; i++) {
-            func_ov006_020d99a4(a);
-            func_ov006_020d99a4(b);
+            ((dMgCardObj_c *)a)->FlyOff();
+            ((dMgCardObj_c *)b)->FlyOff();
             a += 0x30;
             b += 0x30;
         }
-        self->mStateTimer = 0x3c;
-        *(s16*)(((int)c + 0x5388)) += 1;
+        mStateTimer = 0x3c;
+        mState += 1;
         break;
     }
     case 0x12:
-        if (_Z15ApproachLinear2Rsss((s16*)(c + 0x538a), 0, 1) != 0)
+        if (ApproachLinear2(mStateTimer, 0, 1) != 0)
             return 1;
         break;
     }
@@ -531,17 +510,12 @@ int dScMgCard_c::OnTurnIntoEgg(int /* mode */)
 /* ROM ordinal 31 -- _ZN11dScMgCard_c15OnGroundPoundedEv, 0x020db6ec, size 0x34 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11dScMgCard_c15OnGroundPoundedEv
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-/* recovered: renamed to Class_Method, RTTI class fields named */
-// recovered name: dScMgCard_c_OnGroundPounded
-/* recovered: renamed to Class_Method */
-/* dScMgCard_c::OnGroundPounded - recovered from vtable slot identity */
-void dScMgCard_c::OnGroundPounded()
-{
-    void *thisPtr = (void *)this;
-
-    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)thisPtr;
-    int x = self->mHudScore;
+/* dScMgCard_c::OnGroundPounded -- vtable slot 21, the ground-pound reaction:
+ * the base family's coin-drop call, fed by this scene's HUD score -- the
+ * prize tier rises with the score (1..4). This overrides the void slot
+ * declared by dScMgBase_c. Recovered from the vtable slot identity. */
+void dScMgCard_c::OnGroundPounded() {
+    int x = mHudScore;
     int v;
     if (x < 5) {
         v = 1;
@@ -556,11 +530,24 @@ void dScMgCard_c::OnGroundPounded()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov006_020dac34, 0x020dac34, size 0xab8 */
+/* ROM ordinal 30 -- _ZN11dScMgCard_c11UpdateStateEv, 0x020dac34, size 0xab8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020dac34
-/* dScMgCard_c Behavior @ 0x020dac34 */
-extern "C" void func_ov006_020dac34(unsigned char *c)
+// @symbol _ZN11dScMgCard_c11UpdateStateEv
+/* dScMgCard_c::UpdateState -- the round's own state machine, one long
+ * switch on mState that Behavior drives every frame; the tail past the
+ * switch Updates all ten cards, both hands, every frame. Steps 1-5 arm
+ * the prompt and read the touched slot, mirroring the pick onto the
+ * matching card of BOTH hands and waiting for the lift; 6-8 run the
+ * dealer's reveal the same way; 9-13 settle the round -- arrange both
+ * hands, flip and lift them, evaluate and compare them, then pay the
+ * win out or take the loss's chip. mState mostly just `++`s and
+ * mStateTimer carries each step's countdown; the two highlight pairs
+ * and the card states carry the rest. The singleton
+ * data_ov004_020beb68 is the active dScMgBase_c (see its own note in
+ * notes/minigame-provenance.md): unk_0a8 is the coin counter,
+ * mHudScore the chip tally, unk_0b8 its high-water mark. Coined name;
+ * the ROM's symbol is address-only. */
+void dScMgCard_c::UpdateState()
 {
     int cnt3;
     int i;
@@ -584,49 +571,49 @@ extern "C" void func_ov006_020dac34(unsigned char *c)
     int a1;
     s16 cnt;
 
-    switch (S16(0x5388)) {
+    switch (mState) {
     case 1:
-        if (c[0xc4] == 0) {
-            c[0xc3] = 1;
-            c[0xc4] = 1;
-            S16(0xc0) = 0;
+        if (mPromptBlinkCount == 0) {
+            mPromptEnabled = 1;
+            mPromptBlinkCount = 1;
+            mPromptBlinkTimer = 0;
         }
-        if (func_ov006_020c0f0c(c + 0x4f38) != 0)
-            S16(0x5388)++;
+        if (func_ov006_020c0f0c(pad_4f38) != 0)
+            mState++;
         break;
     case 2:
-        if (func_ov006_020c1718(c + 0x4f38) != 0) {
-            S16(0x538a) = 0x10;
-            S16(0x5388)++;
+        if (func_ov006_020c1718(pad_4f38) != 0) {
+            mStateTimer = 0x10;
+            mState++;
         } else {
-            cnt = S16(0x538c);
+            cnt = unk_538c;
             if (cnt > 0) {
                 idx = cnt - 1;
                 if (cnt != 0) {
                     idx = idx * 0x30;
-                    p = c + 0x51d3;
-                    if ((u8)p[idx] == 0) {
+                    p = &mArray1[0].mState;
+                    if (p[idx] == 0) {
                         p[idx] = 1;
-                        (c + idx + 0x5000)[0x2c3] = 1;
+                        ((dMgCardObj_c *)((char *)mArray2 + idx))->mState = 1;
                     }
                 }
             }
         }
         break;
     case 3:
-        S16(0x538a)--;
-        if (S16(0x538a) == 0)
-            S16(0x5388)++;
+        mStateTimer--;
+        if (mStateTimer == 0)
+            mState++;
         break;
     case 4:
         ok = 0;
         idx = data_020a0e40 * 4;
         if (data_020a0de8[idx] != 0 && data_020a0de9[idx] != 0)
             ok = 1;
-        if (ok != 0 && func_ov006_020da834((char *)(c + 0x51a8)) != 0 && data_ov006_02141768 == 0) {
+        if (ok != 0 && dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) != 0 && data_ov006_02141768 == 0) {
             v5 = data_020a0dea[data_020a0e40][0];
             v4 = data_020a0deb[data_020a0e40][0];
-            if (func_ov006_020da860((char *)(c + 0x51a8), 2) != 0) {
+            if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0) {
                 r = v5 - 0x80;
                 if (r < 0)
                     r = -r;
@@ -637,12 +624,12 @@ extern "C" void func_ov006_020dac34(unsigned char *c)
                     if (r < 0x14) {
                         data_ov006_0214176c = 1;
                         data_ov006_02141768 = 1;
-                        S16(0x5388)++;
+                        mState++;
                         data_ov004_020bf9ec = 1;
-                        _ZN5Sound12PlayBank2_2DEj(0x151);
+                        Sound::PlayBank2_2D(0x151);
                         g = data_ov004_020beb68;
-                        a0 = g ? *(int *)((char *)g + 0xa8) : 0;
-                        a1 = g ? *(int *)((char *)g + 0xb4) : 0;
+                        a0 = g ? ((dScMgBase_c *)g)->unk_0a8 : 0;
+                        a1 = g ? ((dScMgBase_c *)g)->mHudScore : 0;
                         func_ov004_020ad79c(a0, a1);
                     }
                 }
@@ -657,210 +644,205 @@ extern "C" void func_ov006_020dac34(unsigned char *c)
                     if (r < 0x14) {
                         data_ov006_0214176c = 1;
                         data_ov006_02141768 = 1;
-                        S16(0x5388)++;
+                        mState++;
                         data_ov004_020bf9ec = 1;
-                        _ZN5Sound12PlayBank2_2DEj(0x151);
+                        Sound::PlayBank2_2D(0x151);
                         g = data_ov004_020beb68;
-                        a0 = g ? *(int *)((char *)g + 0xa8) : 0;
-                        a1 = g ? *(int *)((char *)g + 0xb4) : 0;
+                        a0 = g ? ((dScMgBase_c *)g)->unk_0a8 : 0;
+                        a1 = g ? ((dScMgBase_c *)g)->mHudScore : 0;
                         func_ov004_020ad79c(a0, a1);
                         cnt3 = 0;
                         i = cnt3;
-                        p = c;
                         do {
-                            r = (u8)(p + 0x5000)[0x1d3];
+                            r = mArray1[i].mState;
                             i++;
-                            p += 0x30;
                             if (r == 3)
                                 cnt3++;
                         } while (i < 5);
                         if (cnt3 < 2)
-                            _ZN5Sound12PlayBank2_2DEj(0x144);
+                            Sound::PlayBank2_2D(0x144);
                         else
-                            _ZN5Sound12PlayBank2_2DEj(0x145);
+                            Sound::PlayBank2_2D(0x145);
                     }
                 }
             }
         }
         break;
     case 5:
-        if (data_ov006_02141768 != 0 && func_ov006_020da860((char *)(c + 0x51a8), 2) != 0
-            && func_ov006_020c1718(c + 0x4f38) != 0) {
-            S16(0x5388)++;
-        } else if (func_ov006_020c1718(c + 0x4f38) != 0) {
-            r = func_ov006_020da88c((char *)(c + 0x51a8), 6);
+        if (data_ov006_02141768 != 0 && dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0
+            && func_ov006_020c1718(pad_4f38) != 0) {
+            mState++;
+        } else if (func_ov006_020c1718(pad_4f38) != 0) {
+            r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray1, 6);
             if (r != 0) {
-                S16(0x538c) = 0;
-                S16(0x511e) = 0;
-                func_ov006_020c1420(c + 0x4f38, (s16)r, c + 0x538c);
+                unk_538c = 0;
+                unk_511e = 0;
+                func_ov006_020c1420(pad_4f38, (s16)r, &unk_538c);
             }
         } else {
-            r = func_ov006_020da8b8((char *)(c + 0x51a8), 6);
-            if (r > -1 && S16(0x538c) != 0) {
-                (c + r * 0x30 + 0x5000)[0x1d3] = 5;
-                S16(0x538c)--;
+            r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray1, 6);
+            if (r > -1 && unk_538c != 0) {
+                ((dMgCardObj_c *)mArray1)[r].mState = 5;
+                unk_538c--;
             }
         }
         break;
     case 6:
-        func_ov006_020da420((char *)(c + 0x5298));
-        S16(0x5388)++;
+        dScMgCard_c::MarkSingles((dMgCardObj_c *)mArray2);
+        mState++;
         break;
     case 7:
-        if (func_ov006_020da860((char *)(c + 0x5298), 1) != 0 && func_ov006_020c1718(c + 0x4f38) != 0) {
+        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 && func_ov006_020c1718(pad_4f38) != 0) {
             r = data_ov006_0213bc44 - 1;
             data_ov006_0213bc44 = r;
             if (r == 0) {
-                S16(0x5388)++;
+                mState++;
             } else {
-                S16(0x5388) = 4;
+                mState = 4;
                 data_ov006_0214176c = 0;
                 data_ov006_02141768 = 0;
                 data_ov006_02141770 = 0;
             }
-        } else if (func_ov006_020c1718(c + 0x4f38) != 0) {
-            r = func_ov006_020da88c((char *)(c + 0x5298), 6);
+        } else if (func_ov006_020c1718(pad_4f38) != 0) {
+            r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray2, 6);
             if (r != 0) {
-                S16(0x538c) = 0;
-                S16(0x511e) = 0;
-                func_ov006_020c1420(c + 0x4f38, (s16)r, c + 0x538c);
+                unk_538c = 0;
+                unk_511e = 0;
+                func_ov006_020c1420(pad_4f38, (s16)r, &unk_538c);
             }
         } else {
-            r = func_ov006_020da8b8((char *)(c + 0x5298), 6);
-            if (r > -1 && S16(0x538c) != 0) {
-                (c + r * 0x30 + 0x5000)[0x2c3] = 5;
-                S16(0x538c)--;
+            r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray2, 6);
+            if (r > -1 && unk_538c != 0) {
+                ((dMgCardObj_c *)mArray2)[r].mState = 5;
+                unk_538c--;
             }
         }
         break;
     case 8:
         j = 0;
-        p = c;
-        c[0xc3] = (unsigned char)j;
+        mPromptEnabled = (unsigned char)j;
         do {
+            mArray2[j].mState = 2;
             j++;
-            (p + 0x5000)[0x2c3] = 2;
-            p += 0x30;
         } while (j < 5);
-        S16(0x5388)++;
+        mState++;
         break;
     case 9:
-        a = func_ov006_020da174((Struct30 *)(c + 0x51a8));
-        b = func_ov006_020da174((Struct30 *)(c + 0x5298));
+        a = dScMgCard_c::ArrangeHand((dMgCardObj_c *)mArray1);
+        b = dScMgCard_c::ArrangeHand((dMgCardObj_c *)mArray2);
         if (a != 0 || b != 0)
-            _ZN5Sound12PlayBank2_2DEj(0x152);
-        S16(0x5388)++;
+            Sound::PlayBank2_2D(0x152);
+        mState++;
         break;
     case 10:
-        if (func_ov006_020da860((char *)(c + 0x51a8), 8) != 0 && func_ov006_020da860((char *)(c + 0x5298), 8) != 0) {
-            S16(0x538a) = 0x14;
-            S16(0x5388)++;
+        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 8) != 0 && dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 8) != 0) {
+            mStateTimer = 0x14;
+            mState++;
         }
         break;
     case 11:
-        S16(0x538a)--;
-        if (S16(0x538a) == 0) {
-            p = c;
+        mStateTimer--;
+        if (mStateTimer == 0) {
             k = 0;
             do {
-                (p + 0x5000)[0x1d4] = 1;
+                mArray1[k].mLiftFlag = 1;
+                mArray2[k].mLiftFlag = 1;
                 k++;
-                (p + 0x5000)[0x2c4] = 1;
-                p += 0x30;
             } while (k < 5);
-            func_ov006_020da154((char *)(c + 0x51a8));
-            func_ov006_020da154((char *)(c + 0x5298));
-            _ZN5Sound12PlayBank2_2DEj(0x147);
-            S16(0x538a) = 0x3c;
-            S16(0x5388)++;
+            dScMgCard_c::SettleHand((dMgCardObj_c *)mArray1);
+            dScMgCard_c::SettleHand((dMgCardObj_c *)mArray2);
+            Sound::PlayBank2_2D(0x147);
+            mStateTimer = 0x3c;
+            mState++;
         }
         break;
     case 12:
-        S16(0x538a)--;
-        if (S16(0x538a) == 0) {
-            t4 = func_ov006_020da4ac((char *)(c + 0x5298), (s16 *)(c + 0x5392));
-            t5 = func_ov006_020da4ac((char *)(c + 0x51a8), (s16 *)(c + 0x538e));
+        mStateTimer--;
+        if (mStateTimer == 0) {
+            t4 = dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray2, &unk_5392);
+            t5 = dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, &unk_538e);
             if (data_ov006_02141768 != 0 && data_ov006_02141768 != 0) {
-                func_ov004_020b0cac(t4 + 0x16, 0x80, 0x48, 0, -1, 1);
-                func_ov004_020b0cac(t5 + 0x16, 0x80, 0x78, 0, -1, 2);
+                /* the hand-value fanfares sit at sound bank 22 up */
+                func_ov004_020b0cac(t4 + 22, 0x80, 0x48, 0, -1, 1);
+                func_ov004_020b0cac(t5 + 22, 0x80, 0x78, 0, -1, 2);
                 if (t4 != t5) {
-                    S16(0x5392) = 6;
-                    S16(0x5394) = 6;
-                    S16(0x538e) = 6;
-                    S16(0x5390) = 6;
-                } else if (S16(0x5392) != S16(0x538e)) {
-                    S16(0x5394) = 6;
-                    S16(0x5390) = 6;
+                    unk_5392 = 6;
+                    unk_5394 = 6;
+                    unk_538e = 6;
+                    unk_5390 = 6;
+                } else if (unk_5392 != unk_538e) {
+                    unk_5394 = 6;
+                    unk_5390 = 6;
                 }
             }
-            r = func_ov006_020da5e8((char *)(c + 0x51a8), (char *)(c + 0x5298));
+            r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
                 g = data_ov004_020beb68;
-                a0 = g ? *(int *)((char *)g + 0xa8) : 0;
-                a1 = g ? *(int *)((char *)g + 0xb4) : 0;
+                a0 = g ? ((dScMgBase_c *)g)->unk_0a8 : 0;
+                a1 = g ? ((dScMgBase_c *)g)->mHudScore : 0;
                 func_ov004_020ad79c(a0, a1 - 1);
-                S16(0x538a) = 0x5a;
+                mStateTimer = 0x5a;
             } else if (r == 1) {
                 g = data_ov004_020beb68;
                 {
                     int *tbl = data_ov006_0213bd48;
                     int scale;
                     int prod;
-                    a0 = g ? *(int *)((char *)g + 0xa8) : 0;
+                    a0 = g ? ((dScMgBase_c *)g)->unk_0a8 : 0;
                     r = tbl[t5];
                     scale = data_ov004_020bfa18;
                     prod = r * scale + a0;
-                    r = g ? *(int *)((char *)g + 0xb4) : 0;
+                    r = g ? ((dScMgBase_c *)g)->mHudScore : 0;
                     func_ov004_020ad79c(prod, r + 1);
                 }
-                S16(0x538a) = 0x1e;
+                mStateTimer = 0x1e;
             } else {
-                S16(0x538a) = 0x5a;
+                mStateTimer = 0x5a;
             }
-            S16(0x5388)++;
+            mState++;
         }
         break;
     case 13:
-        S16(0x538a)--;
-        if (S16(0x538a) == 0) {
-            r = func_ov006_020da5e8((char *)(c + 0x51a8), (char *)(c + 0x5298));
+        mStateTimer--;
+        if (mStateTimer == 0) {
+            r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
-                func_ov006_020c0d68(c + 0x4f38);
+                func_ov006_020c0d68(pad_4f38);
                 g = data_ov004_020beb68;
                 if (g != 0) {
-                    if (*(int *)((char *)g + 0xb4) > 0) {
-                        *(int *)((char *)g + 0xb4) = *(int *)((char *)g + 0xb4) - 1;
+                    if (((dScMgBase_c *)g)->mHudScore > 0) {
+                        ((dScMgBase_c *)g)->mHudScore = ((dScMgBase_c *)g)->mHudScore - 1;
                     }
                 }
                 func_ov004_020b0a54(5);
             } else if (r == 1) {
-                func_ov006_020c0c80(c + 0x4f38);
+                func_ov006_020c0c80(pad_4f38);
                 g = data_ov004_020beb68;
                 if (g != 0) {
-                    if (*(int *)((char *)g + 0xb4) < 0x270f) {
-                        int *fld = (int *)((char *)g + 0xb4);
+                    if (((dScMgBase_c *)g)->mHudScore < 0x270f) {
+                        int *fld = &((dScMgBase_c *)g)->mHudScore;
                         *fld = *fld + 1;
                     }
-                    a1 = *(int *)((char *)g + 0xb4);
-                    if (a1 > *(int *)((char *)g + 0xb8))
-                        *(int *)((char *)g + 0xb8) = a1;
+                    a1 = ((dScMgBase_c *)g)->mHudScore;
+                    if (a1 > ((dScMgBase_c *)g)->unk_0b8)
+                        ((dScMgBase_c *)g)->unk_0b8 = a1;
                 }
-                func_ov004_020adb1c(*(int *)(c + 0xb4));
+                func_ov004_020adb1c(mHudScore);
                 func_ov004_020b0a54(4);
             } else {
                 func_ov004_020b0a54(7);
-                _ZN5Sound12PlayBank2_2DEj(0x140);
-                _ZN5Sound12PlayBank2_2DEj(0x138);
+                Sound::PlayBank2_2D(0x140);
+                Sound::PlayBank2_2D(0x138);
             }
-            c[0xc3] = 0;
-            S16(0x538a) = 0;
-            S16(0x5388)++;
+            mPromptEnabled = 0;
+            mStateTimer = 0;
+            mState++;
         }
         break;
     }
 
-    p1 = c + 0x51a8;
-    p2 = c + 0x5298;
+    p1 = (unsigned char *)mArray1;
+    p2 = (unsigned char *)mArray2;
     n = 0;
     do {
         ((cMgSmartball_object_c *)p1)->Update();
@@ -890,7 +872,7 @@ s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
     func_ov006_020c19d0(pad_4f38);
-    func_ov006_020dac34((unsigned char *)this);
+    UpdateState();
     func_ov004_020b65e4();
     return 1;
 }
@@ -911,15 +893,15 @@ s32 dScMgCard_c::Render()
     int i;
     int sb;
 
-    func_ov006_020c0aa8(c + 0x4660);
+    func_ov006_020c0aa8(pad_4660);
 
     v = this->mState;
     if (v > 3 && v < 0x11) {
         skip = -1;
         if (v > 0xe) {
             if (this->mFrameCounter & 8) {
-                if (func_ov006_020da5e8(c + 0x51a8, c + 0x5298) == 1) {
-                    skip = 6 - func_ov006_020da4ac(c + 0x51a8, 0);
+                if (dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2) == 1) {
+                    skip = 6 - dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
                 }
             }
         }
@@ -944,15 +926,20 @@ s32 dScMgCard_c::Render()
 
     func_ov004_020b6430();
 
-    func_ov006_020d9a14(c);
+    RenderHud();
 
     {
-        Node *bank = (Node *)(c + 0x51a8);
-        int cnt = 4;
-        char *cfgp = c + 0xc0;
-        Node *node = &bank[4];
-        do {
-            unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x1d2);
+        /* The player's five cards, element 4 first: a card outside the marked
+         * pair always draws, a marked one draws on the blink phase only.
+         * Spelled as indexed member access -- mValue read, Render() called
+         * through the element's own vtable, k walking 4 down to 0 -- which
+         * matches the cartridge byte-identically (0x228/0x228). The folded
+         * one-walker member form (a typed pointer stepping back 0x30 a
+         * card) is the spelling that measurably moves bytes (0x210), and is
+         * not used. */
+        int k;
+        for (k = 4; k >= 0; k--) {
+            unsigned char cfg = mArray1[k].mValue;
             if (this->unk_538e == cfg)
                 goto chk1;
             if (this->unk_5390 != cfg)
@@ -961,20 +948,16 @@ s32 dScMgCard_c::Render()
             if (!(this->mFrameCounter & 8))
                 goto skip1;
         docall1:
-            node->m0();
-        skip1:
-            cfgp -= 0x30;
-            node--;
-        } while (--cnt >= 0);
+            mArray1[k].Render();
+        skip1: ;
+        }
     }
 
     {
-        Node *bank = (Node *)(c + 0x5298);
-        int cnt = 4;
-        char *cfgp = c + 0xc0;
-        Node *node = &bank[4];
-        do {
-            unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x2c2);
+        /* the dealer's five: same walk, the dealer's pair */
+        int k;
+        for (k = 4; k >= 0; k--) {
+            unsigned char cfg = mArray2[k].mValue;
             if (this->unk_5392 == cfg)
                 goto chk2;
             if (this->unk_5394 != cfg)
@@ -983,14 +966,12 @@ s32 dScMgCard_c::Render()
             if (!(this->mFrameCounter & 8))
                 goto skip2;
         docall2:
-            node->m0();
-        skip2:
-            cfgp -= 0x30;
-            node--;
-        } while (--cnt >= 0);
+            mArray2[k].Render();
+        skip2: ;
+        }
     }
 
-    func_ov006_020c1804(c + 0x4f38);
+    func_ov006_020c1804(pad_4f38);
     return 1;
 }
 
@@ -1016,24 +997,29 @@ s32 dScMgCard_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_020da974, 0x020da974, size 0x20 */
+/* ROM ordinal 26 -- _ZN11dScMgCard_c11FillWeightsEi, 0x020da974, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da974
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020da974(int v) {
+// @symbol _ZN11dScMgCard_c11FillWeightsEi
+/* dScMgCard_c::FillWeights -- sets every one of the six card-face weights to
+ * the same value: the deal code passes 5 ("all six faces equally likely"),
+ * the win/lose branches pass 0 (the deck goes dead). Coined name; the ROM's
+ * symbol is address-only. */
+void dScMgCard_c::FillWeights(int v) {
     int i;
     for (i = 0; i < 6; i++) {
         data_ov006_0213bd18[i] = v;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov006_020da8e4, 0x020da8e4, size 0x90 */
+/* ROM ordinal 25 -- _ZN11dScMgCard_c13DrawCardValueEv, 0x020da8e4, size 0x90 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da8e4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da8e4(void)
+// @symbol _ZN11dScMgCard_c13DrawCardValueEv
+/* dScMgCard_c::DrawCardValue -- one weighted draw from the six-face deck:
+ * roll the seeded RNG scaled by the weight total, then walk the weights
+ * subtracting until the running sum goes negative -- that face is the draw,
+ * and its weight is spent. Coined name; the ROM's symbol is address-only. */
+int dScMgCard_c::DrawCardValue(void)
 {
   int r5 = 0;
   int sum = 0;
@@ -1057,84 +1043,88 @@ int func_ov006_020da8e4(void)
 
   return r5;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov006_020da8b8, 0x020da8b8, size 0x2c */
+/* ROM ordinal 24 -- _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci, 0x020da8b8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da8b8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da8b8(char *p, int v)
+// @symbol _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci
+/* dScMgCard_c::FindInState -- index of the first card in the hand sitting in
+ * the given state, or -1 when no card is. Coined name; the ROM's symbol is
+ * address-only. */
+int dScMgCard_c::FindInState(const dMgCardObj_c *hand, int state)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        if (v == *(unsigned char *)(p + 0x2b))
+        if (state == hand->mState)
             return i;
-        p += 0x30;
+        hand++;
     }
     return -1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov006_020da88c, 0x020da88c, size 0x2c */
+/* ROM ordinal 23 -- _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci, 0x020da88c, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da88c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da88c(char *p, int v)
+// @symbol _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci
+/* dScMgCard_c::CountInState -- how many of the hand's five cards sit in the
+ * given state. Coined name; the ROM's symbol is address-only. */
+int dScMgCard_c::CountInState(const dMgCardObj_c *hand, int state)
 {
     int count = 0;
     int i;
     for (i = 0; i < 5; i++) {
-        if (v == *(unsigned char *)(p + 0x2b))
+        if (state == hand->mState)
             count++;
-        p += 0x30;
+        hand++;
     }
     return count;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov006_020da860, 0x020da860, size 0x2c */
+/* ROM ordinal 22 -- _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci, 0x020da860, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da860
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da860(char *p, int v)
+// @symbol _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci
+/* dScMgCard_c::AllInState -- true only when every card of the hand sits in
+ * the given state. Coined name; the ROM's symbol is address-only. */
+int dScMgCard_c::AllInState(const dMgCardObj_c *hand, int state)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        if (v != *(unsigned char *)(p + 0x2b))
+        if (state != hand->mState)
             return 0;
-        p += 0x30;
+        hand++;
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov006_020da834, 0x020da834, size 0x2c */
+/* ROM ordinal 21 -- _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c, 0x020da834, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da834
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da834(char *p)
+// @symbol _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c
+/* dScMgCard_c::AllLifted -- true only when every card of the hand is raised
+ * to the full 0x4000 lift. Coined name; the ROM's symbol is address-only. */
+int dScMgCard_c::AllLifted(const dMgCardObj_c *hand)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        if (*(int *)(p + 0x24) < 0x4000)
+        if (hand->mLift < 0x4000)
             return 0;
-        p += 0x30;
+        hand++;
     }
     return 1;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov006_020da5e8, 0x020da5e8, size 0x24c */
+/* ROM ordinal 20 -- _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_, 0x020da5e8, size 0x24c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da5e8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da5e8(char *a, char *b);
-int func_ov006_020da5e8(char *a, char *b) {
+// @symbol _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_
+/* dScMgCard_c::CompareHands -- poker comparison of the two five-card hands:
+ * histogram each hand's face counts, find each hand's strongest count and
+ * its runner-up (keeping each one's face as the tiebreak, the earlier card
+ * winning an equal pair), then compare strongest count, runner-up count,
+ * strongest face, runner-up face, in that order. Coined name; the ROM's
+ * symbol is address-only. */
+int dScMgCard_c::CompareHands(const dMgCardObj_c *a, const dMgCardObj_c *b) {
     short arr1[6];
     short arr2[6];
     short *p1 = (short *)(((int)arr1));
@@ -1153,10 +1143,10 @@ int func_ov006_020da5e8(char *a, char *b) {
     max2 = 0; sec2 = 0; max2i = 6; sec2i = 6;
 
     for (i = 0; i < 5; i++) {
-        arr1[*(unsigned char *)(a + 0x2a)]++;
-        a += 0x30;
-        arr2[*(unsigned char *)(b + 0x2a)]++;
-        b += 0x30;
+        arr1[a->mValue]++;
+        a++;
+        arr2[b->mValue]++;
+        b++;
     }
 
     for (i = 0; i < 6; i++) {
@@ -1181,14 +1171,16 @@ int func_ov006_020da5e8(char *a, char *b) {
     if (sec1i < sec2i) return -1;
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov006_020da4ac, 0x020da4ac, size 0x13c */
+/* ROM ordinal 19 -- _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs, 0x020da4ac, size 0x13c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da4ac
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da4ac(char *self, s16 *out)
+// @symbol _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs
+/* dScMgCard_c::EvaluateHand -- score one hand on the poker scale (nothing,
+ * one pair, two pair, three of a kind, full house, four, five), and when out
+ * is non-null, name the faces of the winning combination into it. Coined
+ * name; the ROM's symbol is address-only. */
+int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
 {
     s16 counts[6] = {0};
     int i;
@@ -1200,8 +1192,8 @@ int func_ov006_020da4ac(char *self, s16 *out)
     s16 secIdx = maxIdx;
 
     for (i = 0; i < 5; i++) {
-        counts[*(u8 *)(self + 0x2a)]++;
-        self += 0x30;
+        counts[hand->mValue]++;
+        hand++;
     }
 
     for (j = 0; j < 6; j++) {
@@ -1248,17 +1240,17 @@ int func_ov006_020da4ac(char *self, s16 *out)
     }
     return result;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov006_020da420, 0x020da420, size 0x8c */
+/* ROM ordinal 18 -- _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c, 0x020da420, size 0x8c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da420
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020da420(char *c);
-void func_ov006_020da420(char *c){
+// @symbol _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c
+/* dScMgCard_c::MarkSingles -- stamp every card whose face appears exactly
+ * once in the hand to state 4: the settle step for the cards left out of
+ * the winning combination. Coined name; the ROM's symbol is address-only. */
+void dScMgCard_c::MarkSingles(dMgCardObj_c *hand){
     int i;
-    char *p;
+    dMgCardObj_c *p;
     short arr[6];
     short *a = (short *)(((int)arr));
     a[0] = 0;
@@ -1267,25 +1259,30 @@ void func_ov006_020da420(char *c){
     a[3] = 0;
     a[4] = 0;
     a[5] = 0;
-    p = c;
+    p = hand;
     for (i = 0; i < 5; i++) {
-        arr[*(unsigned char*)(p + 0x2a)]++;
-        p += 0x30;
+        arr[p->mValue]++;
+        p++;
     }
     for (i = 0; i < 5; i++) {
-        if (arr[*(unsigned char*)(c + 0x2a)] == 1)
-            *(unsigned char*)(c + 0x2b) = 4;
-        c += 0x30;
+        if (arr[hand->mValue] == 1)
+            hand->mState = 4;
+        hand++;
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov006_020da174, 0x020da174, size 0x2ac */
+/* ROM ordinal 17 -- _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c, 0x020da174, size 0x2ac */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da174
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020da174(Struct30 *base)
+// @symbol _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c
+/* dScMgCard_c::ArrangeHand -- the sort that pulls a scored hand together:
+ * histogram the faces, decide the winning combination's two faces (the
+ * stronger face first), then bubble the five cards by combination rank
+ * through the order table at data_ov006_0213bcd8, stamp the combination
+ * cards' mComboFlag, and SetHome every card to its sorted slot. Returns
+ * whether the order changed at all. Coined name; the ROM's symbol is
+ * address-only. */
+int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
 {
   s16 hist[6];
   Five order;
@@ -1296,7 +1293,7 @@ int func_ov006_020da174(Struct30 *base)
   s32 neg1;
   s32 neg2;
   s32 zero;
-  Struct30 *p;
+  dMgCardObj_c *p;
   s16 *h;
   s32 max_val;
   s32 second_val;
@@ -1317,10 +1314,10 @@ int func_ov006_020da174(Struct30 *base)
   zero = max_val;
   for (i = 0; i < 5; i++)
   {
-    s32 idx = base[i].unk_2A;
+    s32 idx = hand[i].mValue;
     hist[idx] = (s16) (hist[idx] + 1);
   }
-  p = base;
+  p = hand;
 
   for (i = 0; i < 6; i++)
   {
@@ -1346,10 +1343,10 @@ int func_ov006_020da174(Struct30 *base)
     {
       if (second_val > 1)
       {
-        p = base;
+        p = hand;
         for (t = 0; t < 5; t++)
         {
-          s32 c = p->unk_2A;
+          s32 c = p->mValue;
           if (max_idx == c)
           {
             break;
@@ -1361,7 +1358,7 @@ int func_ov006_020da174(Struct30 *base)
             max_idx = tmp;
             break;
           }
-          p = (Struct30 *) (((u32) p) + 0x30);
+          p++;
         }
 
       }
@@ -1381,12 +1378,12 @@ int func_ov006_020da174(Struct30 *base)
       {
         s32 v1 = order.v[k];
         s32 stride = 0x30;
-        Struct30 *ptr1 = (Struct30 *) (((u32) base) + (v1 * stride));
-        s32 u1 = ptr1->unk_2A;
+        dMgCardObj_c *ptr1 = (dMgCardObj_c *) (((u32) hand) + (v1 * stride));
+        s32 u1 = ptr1->mValue;
         s32 next = k + 1;
         s32 v2;
-        Struct30 *ptr2 = (Struct30 *) (((u32) base) + (order.v[next] * stride));
-        s32 u2 = ptr2->unk_2A;
+        dMgCardObj_c *ptr2 = (dMgCardObj_c *) (((u32) hand) + (order.v[next] * stride));
+        s32 u2 = ptr2->mValue;
         if (u1 == max_idx)
         {
           if (max_val > 1)
@@ -1439,14 +1436,14 @@ int func_ov006_020da174(Struct30 *base)
   }
 
   {
-    Struct30 *q = base;
+    dMgCardObj_c *q = hand;
     s32 one = 1;
     s32 z;
     j = 0;
     z = j;
     for (; j < 5; j++)
     {
-      s32 c = q->unk_2A;
+      s32 c = q->mValue;
       if (max_idx == c)
       {
         if (max_val > 1)
@@ -1466,14 +1463,14 @@ int func_ov006_020da174(Struct30 *base)
         goto store0c;
       }
       store1c:
-      q->unk_2D = one;
+      q->mComboFlag = one;
 
       goto flag_nextc;
       store0c:
-      q->unk_2D = z;
+      q->mComboFlag = z;
 
       flag_nextc:
-      q = (Struct30 *) (((u32) q) + 0x30);
+      q++;
 
     }
 
@@ -1481,8 +1478,8 @@ int func_ov006_020da174(Struct30 *base)
   for (j = 0; j < 5; j++)
   {
     s32 v = order.v[j];
-    Struct30 *ptr = (Struct30 *) (((u32) base) + (v * 0x30));
-    func_ov006_020d99ec((char *) ptr, j);
+    dMgCardObj_c *ptr = (dMgCardObj_c *) (((u32) hand) + (v * 0x30));
+    ptr->SetHome(j);
   }
 
   for (j = 0; j < 5; j++)
@@ -1495,143 +1492,160 @@ int func_ov006_020da174(Struct30 *base)
 
   return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov006_020da154, 0x020da154, size 0x20 */
+/* ROM ordinal 16 -- _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c, 0x020da154, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da154
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020da154(char *p) {
+// @symbol _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c
+/* dScMgCard_c::SettleHand -- the round's settle step: stamp all five cards
+ * of one hand to state 9. Coined name; the ROM's symbol is address-only. */
+void dScMgCard_c::SettleHand(dMgCardObj_c *hand) {
     int i;
     for (i = 0; i < 5; i++) {
-        *(unsigned char *)(p + 0x2b) = 9;
-        p += 0x30;
+        hand->mState = 9;
+        hand++;
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov006_020da0ac, 0x020da0ac, size 0xa8 */
+/* ROM ordinal 15 -- _ZN12dMgCardObj_c6DealInEPKi, 0x020da0ac, size 0xa8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da0ac
-// Copy a 4-word source block into the object, refresh two fields from a virtual call
-// and a fixed-point transform pair, take the absolute value of one result, then reset a
-// few trailing fields. Sibling of func_ov006_020da00c.
-extern "C" void func_ov006_020da0ac(char *p, int *src)
+// @symbol _ZN12dMgCardObj_c6DealInEPKi
+/* dMgCardObj_c::DealIn -- deal one fresh card in: park it at the {x, y} the
+ * source pair names, then retarget the approach steps off GetOffscreenY's
+ * start height through the Vec2_Sub/func_0203d680 transform pair (the same
+ * 1:256 fixed-point rounding both hands use), reset the raise state, and
+ * draw its face. The mid-body alias reads the just-stored {x, y} back out
+ * through memory into the target pair -- spelled exactly so, because a
+ * plain `mTargetX = mX` would let the registers be reused and the reloads
+ * would vanish. Coined name; the ROM's symbol is address-only. */
+void dMgCardObj_c::DealIn(const s32 *src)
 {
-    C *c = (C *)p;
-    Src *s = (Src *)src;
     int buf[4];
-    c->f4 = s->f0;
-    c->f8 = s->f4;
+    mX = src[0];
+    mY = src[1];
     {
-        int *b = (int *)(((int)c + 4));
-        c->fc = b[0];
-        c->f10 = b[1];
+        int *b = (int *)(((int)this + 4));
+        mTargetX = b[0];
+        mTargetY = b[1];
     }
-    c->f8 = c->m2();
-    c->f4 = 0x80000;
-    Vec2_Sub(&buf[0], &c->fc, &c->f4);
+    mY = GetOffscreenY();
+    mX = 0x80000;
+    Vec2_Sub(&buf[0], &mTargetX, &mX);
     func_0203d680(&buf[2], &buf[0], 0x100);
-    c->f14 = buf[2];
-    c->f18 = buf[3];
-    if (c->f14 < 0) c->f14 = -c->f14;
-    c->f24 = 0;
-    c->f2c = 0;
-    c->f2a = (unsigned char)func_ov006_020da8e4();
+    mXStep = buf[2];
+    mYStep = buf[3];
+    if (mXStep < 0) mXStep = -mXStep;
+    mLift = 0;
+    mLiftFlag = 0;
+    mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_020da00c, 0x020da00c, size 0xa0 */
+/* ROM ordinal 14 -- _ZN12dMgCardObj_c6RedealEv, 0x020da00c, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020da00c
-extern "C" void func_ov006_020da00c(char *p)
+// @symbol _ZN12dMgCardObj_c6RedealEv
+/* dMgCardObj_c::Redeal -- re-fly the card from its own target: the same
+ * retarget off GetOffscreenY's start height as DealIn, but from the target
+ * pair already on the card, and a wider reset -- the state, the raise
+ * amount and its flag, the fly-away stagger, the combo marker -- before
+ * drawing a fresh face. Coined name; the ROM's symbol is address-only. */
+void dMgCardObj_c::Redeal()
 {
-    C *c = (C *)p;
     int buf[4];
-    c->f4 = c->fc;
-    c->f8 = c->f10;
-    c->f8 = c->m2();
-    c->f4 = 0x80000;
-    Vec2_Sub(&buf[0], &c->fc, &c->f4);
+    mX = mTargetX;
+    mY = mTargetY;
+    mY = GetOffscreenY();
+    mX = 0x80000;
+    Vec2_Sub(&buf[0], &mTargetX, &mX);
     func_0203d680(&buf[2], &buf[0], 0x100);
-    c->f14 = buf[2];
-    c->f18 = buf[3];
-    if (c->f14 < 0) c->f14 = -c->f14;
-    c->f2b = 0;
-    c->f24 = 0;
-    c->f2c = 0;
-    c->f28 = 0;
-    c->f2d = 0;
-    c->f2a = (unsigned char)func_ov006_020da8e4();
+    mXStep = buf[2];
+    mYStep = buf[3];
+    if (mXStep < 0) mXStep = -mXStep;
+    mState = 0;
+    mLift = 0;
+    mLiftFlag = 0;
+    mFlyDelay = 0;
+    mComboFlag = 0;
+    mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_020d9c5c, 0x020d9c5c, size 0x3b0 */
+/* ROM ordinal 13 -- _ZN12dMgCardObj_c6UpdateEv, 0x020d9c5c, size 0x3b0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d9c5c
-extern "C" void func_ov006_020d9c5c(void* self)
+// @symbol _ZN12dMgCardObj_c6UpdateEv
+/* dMgCardObj_c::Update -- vtable slot 1, the player's card motion state
+ * machine. mState: 1 fly in from off-screen and settle (2, lift raising, on
+ * both axes arriving -- the one card sound); 3 retreat a row (the touched
+ * card dodging); 4 deal a fresh card at the deck position (6) after asking
+ * GetOffscreenY for the start height; 7 fly home to the mHomeX slot (8);
+ * 9 settle into the dealt row; 0xa fly off home after the mFlyDelay stagger.
+ * The lift runs every frame below the state block (raised toward 0x4000 =
+ * one flip frame per 0x1000 of mLift when mLiftFlag is set). The tail is
+ * the touch hit-test: the engine globals gate it, then the card must be
+ * mid-lift (state 2 or 3, via the st + 254 (0xfe) wrap trick), fully raised (mLift
+ * 0x4000), and inside the touch's on-screen window, with 0x14f picking the
+ * card up (state 3) and 0x150 putting it back (state 2). */
+void dMgCardObj_c::Update()
 {
-    char* c = (char*)self;
     int r5;
 
-    if (*(unsigned char*)(c + 0x2b) == 0)
+    if (mState == 0)
         return;
 
-    if (*(unsigned char*)(c + 0x2b) == 1) {
-        if (*(short*)(c + 0x28) != 0) {
-            _Z15ApproachLinear2Rsss((short*)(c + 0x28), 0, 1);
+    if (mState == 1) {
+        if (mFlyDelay != 0) {
+            ApproachLinear2(mFlyDelay, 0, 1);
             return;
         }
-        r5 = _Z14ApproachLinearRiii((int*)(c + 8), *(int*)(c + 0x10), *(int*)(c + 0x18));
-        if (_Z14ApproachLinearRiii((int*)(c + 4), *(int*)(c + 0xc), *(int*)(c + 0x14)) != 0 && r5 != 0) {
-            _ZN5Sound12PlayBank2_2DEj(0x144);
-            *(unsigned char*)(c + 0x2b) = 2;
-            *(unsigned char*)(c + 0x2c) = 1;
+        r5 = ApproachLinear(mY, mTargetY, mYStep);
+        if (ApproachLinear(mX, mTargetX, mXStep) != 0 && r5 != 0) {
+            Sound::PlayBank2_2D(0x144);
+            mState = 2;
+            mLiftFlag = 1;
         }
     }
 
-    if (*(unsigned char*)(c + 0x2c) != 0)
-        _Z14ApproachLinearRiii((int*)(c + 0x24), 0x4000, 0x200);
+    if (mLiftFlag != 0)
+        ApproachLinear(mLift, 0x4000, 0x200);
     else
-        _Z14ApproachLinearRiii((int*)(c + 0x24), 0, 0x200);
+        ApproachLinear(mLift, 0, 0x200);
 
     {
-        int st = *(unsigned char*)(c + 0x2b);
+        int st = mState;
         if (st == 3) {
-            _Z14ApproachLinearRiii((int*)(c + 8), *(int*)(c + 0x10) - 0x10000, 0x2000);
+            ApproachLinear(mY, mTargetY - 0x10000, 0x2000);
         } else if (st == 5) {
-            r5 = _Z14ApproachLinearRiii((int*)(c + 8), *(int*)(c + 0x10), *(int*)(c + 0x18));
-            if (_Z14ApproachLinearRiii((int*)(c + 4), *(int*)(c + 0xc), *(int*)(c + 0x14)) != 0 && r5 != 0) {
-                _ZN5Sound12PlayBank2_2DEj(0x144);
-                *(unsigned char*)(c + 0x2b) = 2;
-                *(unsigned char*)(c + 0x2c) = 1;
+            r5 = ApproachLinear(mY, mTargetY, mYStep);
+            if (ApproachLinear(mX, mTargetX, mXStep) != 0 && r5 != 0) {
+                Sound::PlayBank2_2D(0x144);
+                mState = 2;
+                mLiftFlag = 1;
             }
         } else if (st == 2) {
-            _Z14ApproachLinearRiii((int*)(c + 8), *(int*)(c + 0x10), 0x4000);
-        } else if (st == 4 && *(int*)(c + 0x24) == 0) {
-            int result = ((VObj*)c)->f2();
-            if (_Z14ApproachLinearRiii((int*)(c + 8), result, 0x8000) != 0) {
-                *(int*)(c + 4) = 0x80000;
-                *(unsigned char*)(c + 0x2b) = 6;
-                *(unsigned char*)(c + 0x2a) = (unsigned char)func_ov006_020da8e4();
+            ApproachLinear(mY, mTargetY, 0x4000);
+        } else if (st == 4 && mLift == 0) {
+            int result = GetOffscreenY();
+            if (ApproachLinear(mY, result, 0x8000) != 0) {
+                mX = 0x80000;
+                mState = 6;
+                mValue = (unsigned char)dScMgCard_c::DrawCardValue();
             }
         } else if (st == 7) {
-            if (_Z14ApproachLinearRiii((int*)(c + 4), *(int*)(c + 0x1c), 0x6000) != 0)
-                *(unsigned char*)(c + 0x2b) = 8;
+            if (ApproachLinear(mX, mHomeX, 0x6000) != 0)
+                mState = 8;
         } else if (st == 9) {
-            _Z14ApproachLinearRiii((int*)(c + 8), 0x80000, 0x6000);
+            ApproachLinear(mY, 0x80000, 0x6000);
         } else if (st == 0xa) {
-            if (_Z15ApproachLinear2Rsss((short*)(c + 0x28), 0, 1) != 0)
-                _Z14ApproachLinearRiii((int*)(c + 4), *(int*)(c + 0x1c), *(int*)(c + 0x14));
+            if (ApproachLinear2(mFlyDelay, 0, 1) != 0)
+                ApproachLinear(mX, mHomeX, mXStep);
         }
     }
 
     if (data_ov006_0214176c != 0) {
-        if (*(unsigned char*)(c + 0x2b) == 3) {
-            *(unsigned char*)(c + 0x2b) = 4;
-            *(unsigned char*)(c + 0x2c) = 0;
+        if (mState == 3) {
+            mState = 4;
+            mLiftFlag = 0;
         }
         return;
     }
@@ -1648,14 +1662,14 @@ extern "C" void func_ov006_020d9c5c(void* self)
         if (flag == 0)
             return;
         {
-            unsigned char st = *(unsigned char*)(c + 0x2b);
-            if ((unsigned char)(st + 0xfe) > 1)
+            unsigned char st = mState;
+            if ((unsigned char)(st + 254) > 1)
                 return;
-            if (*(int*)(c + 0x24) != 0x4000)
+            if (mLift != 0x4000)
                 return;
             {
-                int a = (int)data_020a0dea[idx][0] - (*(int*)(c + 4) >> 12);
-                int b = (int)data_020a0deb[idx][0] - (*(int*)(c + 8) >> 12);
+                int a = (int)data_020a0dea[idx][0] - (mX >> 12);
+                int b = (int)data_020a0deb[idx][0] - (mY >> 12);
                 if (a <= 7)
                     return;
                 if (a >= 0x29)
@@ -1666,10 +1680,10 @@ extern "C" void func_ov006_020d9c5c(void* self)
                     return;
                 if (st == 2) {
                     func_02012790(0x14f);
-                    *(unsigned char*)(c + 0x2b) = 3;
+                    mState = 3;
                 } else {
                     func_02012790(0x150);
-                    *(unsigned char*)(c + 0x2b) = 2;
+                    mState = 2;
                 }
             }
         }
@@ -1677,221 +1691,256 @@ extern "C" void func_ov006_020d9c5c(void* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_020d9bdc, 0x020d9bdc, size 0x80 */
+/* ROM ordinal 12 -- _ZN12dMgCardObj_c6RenderEv, 0x020d9bdc, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d9bdc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d9bdc(char *c)
+// @symbol _ZN12dMgCardObj_c6RenderEv
+/* dMgCardObj_c::Render -- vtable slot 0, the player's card. Same table and
+ * same index math as the dealer's Render above; the temporaries are spelled
+ * out (idx, then e) where the dealer's stay one, because the two bodies'
+ * register allocations differ and each spelling is the one its own bytes
+ * need. */
+void dMgCardObj_c::Render()
 {
     int idx;
     unsigned short e;
-    if (*(unsigned char *)(c + 0x2b) == 0) return;
-    idx = (*(unsigned char *)(c + 0x2a) + 1) * 5 + (*(int *)(c + 0x24) >> 12);
+    if (mState == 0) return;
+    idx = (mValue + 1) * 5 + (mLift >> 12);
     e = data_ov006_0213bd64[idx];
     Hud_RenderSprite(
         data_ov006_02141774[e],
-        (*(int *)(c + 4) >> 12) + 0x18,
-        (*(int *)(c + 8) >> 12) + 0x18,
+        (mX >> 12) + 24,
+        (mY >> 12) + 24,
         -1, -1);
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_020d9bd0, 0x020d9bd0, size 0xc */
+/* ROM ordinal 11 -- _ZN12dMgCardObj_c13GetOffscreenYEv, 0x020d9bd0, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d9bd0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020d9bd0(void)
+// @symbol _ZN12dMgCardObj_c13GetOffscreenYEv
+/* dMgCardObj_c::GetOffscreenY -- vtable slot 2. The y the card starts flying
+ * in from: 6 screens above the table in 1:4096 fixed point. DealIn reads it
+ * through the virtual slot, so the dealer's override carries the same value. */
+s32 dMgCardObj_c::GetOffscreenY()
 {
     return -0x60000;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_020d9a14, 0x020d9a14, size 0x1bc */
+/* ROM ordinal 10 -- _ZN11dScMgCard_c9RenderHudEv, 0x020d9a14, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d9a14
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-/* The nine-field tail the header names from 0x5388 on, reached by raw offset because this member kept C linkage. */
-#define F(off) (*(short *)(c + 0x5300 + (off)))
-void func_ov006_020d9a14(char *c)
+// @symbol _ZN11dScMgCard_c9RenderHudEv
+/* dScMgCard_c::RenderHud -- the HUD column and the hold prompt. States 4
+ * through 0x10 stack six face sprites at x=0x14 from y=0xb0 down; the two
+ * hands' highlight pairs (unk_538e/unk_5390 for the player's hand,
+ * unk_5392/unk_5394 for the dealer's) name the rows drawn in a highlight
+ * variant -- 1 for the player's values, 2 for the dealer's, and when both
+ * hands name the same row the two variants alternate on mFrameCounter bit
+ * 4. State 4, once the whole player hand is lifted, adds the prompt
+ * sprite at (0x80, 0x58), its variant picking whether every card has
+ * reached state 2. Coined name; the ROM's symbol is address-only. */
+void dScMgCard_c::RenderHud()
 {
-    short v = F(0x88);
+    short v = mState;
     if (v > 3 && v < 0x11) {
         int sb = 0xb0;
         int i;
         for (i = 0; i < 6; i++) {
             int sel = 0;
-            if ((i == F(0x92) && i == F(0x8e)) || (i == F(0x94) && i == F(0x90))) {
-                if (F(0x96) & 0x10) sel = 1; else sel = 2;
-            } else if (i == F(0x92) || i == F(0x94)) {
-                if (F(0x96) & 0x10) sel = 2;
-            } else if (i == F(0x8e) || i == F(0x90)) {
-                if (F(0x96) & 0x10) sel = 1;
+            if ((i == unk_5392 && i == unk_538e) || (i == unk_5394 && i == unk_5390)) {
+                if (mFrameCounter & 0x10) sel = 1; else sel = 2;
+            } else if (i == unk_5392 || i == unk_5394) {
+                if (mFrameCounter & 0x10) sel = 2;
+            } else if (i == unk_538e || i == unk_5390) {
+                if (mFrameCounter & 0x10) sel = 1;
             }
             Hud_RenderSprite(data_ov006_0213bd30[i][sel], 0x14, sb, -1, -1);
             sb -= 0x10;
         }
     }
-    if (F(0x88) != 4) return;
-    if (func_ov006_020da834(c + 0x51a8) == 0) return;
-    if (func_ov006_020da860(c + 0x51a8, 2) == 0)
+    if (mState != 4) return;
+    if (dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) == 0) return;
+    if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) == 0)
         Hud_RenderSprite(data_ov006_0213406c[0], 0x80, 0x58, -1, -1);
     else
         Hud_RenderSprite(data_ov006_0213406c[1], 0x80, 0x58, -1, -1);
 }
-}
-
-#undef F
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_020d99ec, 0x020d99ec, size 0x28 */
+/* ROM ordinal 9 -- _ZN12dMgCardObj_c7SetHomeEi, 0x020d99ec, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d99ec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d99ec(char *c, int n){
-  *(int*)(c+0x1c) = (n*0x28+0x2c)<<0xc;
-  *(int*)(c+0x20) = 0x80000;
-  *(char*)(c+0x2b) = 7;
-}
+// @symbol _ZN12dMgCardObj_c7SetHomeEi
+/* dMgCardObj_c::SetHome -- aim the card at home slot n (the row pitch is
+ * 0x28, the first slot sits at 0x2c) and put it into state 7, the fly-home
+ * step. Coined name; the ROM's symbol is address-only. */
+void dMgCardObj_c::SetHome(s32 n){
+  mHomeX = (n*0x28+0x2c)<<0xc;
+  mHomeY = 0x80000;
+  mState = 7;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_020d99a4, 0x020d99a4, size 0x48 */
+/* ROM ordinal 8 -- _ZN12dMgCardObj_c6FlyOffEv, 0x020d99a4, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d99a4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d99a4(void* c){
-  char* p=(char*)c;
-  *(int*)(p+0x1c)=-0x28000;
-  *(int*)(p+0x20)=*(int*)(p+8);
-  int t=*(int*)(p+4);
-  unsigned ip=0x80000-t;
-  *(short*)(p+0x28)=(short)((int)ip/0x10000);
-  *(int*)(p+0x14)=0x10000;
-  *(int*)(p+0x18)=0;
-  p[0x2b]=0xa;
-}
+// @symbol _ZN12dMgCardObj_c6FlyOffEv
+/* dMgCardObj_c::FlyOff -- the end-of-round fly-away: home becomes the
+ * off-screen left, the y step tracks the card's own height, and the
+ * x step's frame count becomes the stagger -- one card leaves per frame,
+ * counted down from how high the card sits. State 0xa is the fly-away
+ * step. Coined name; the ROM's symbol is address-only. */
+void dMgCardObj_c::FlyOff(){
+  mHomeX = -0x28000;
+  mHomeY = mY;
+  int t = mX;
+  unsigned ip = 0x80000 - t;
+  mFlyDelay = (s16)((int)ip / 0x10000);
+  mXStep = 0x10000;
+  mYStep = 0;
+  mState = 0xa;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_020d9998, 0x020d9998, size 0xc */
+/* ROM ordinal 7 -- _ZN17dMgDilarCardObj_c13GetOffscreenYEv, 0x020d9998, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d9998
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020d9998(void)
+// @symbol _ZN17dMgDilarCardObj_c13GetOffscreenYEv
+/* dMgDilarCardObj_c::GetOffscreenY -- vtable slot 2, the same answer the base
+ * gives: both hands' cards fly in from 6 screens above the table (-0x60000
+ * in 1:4096 fixed point), and the override exists so the dealer's class
+ * carries the full set of its own slots. */
+s32 dMgDilarCardObj_c::GetOffscreenY()
 {
     return -0x60000;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_020d978c, 0x020d978c, size 0x20c */
+/* ROM ordinal 6 -- _ZN17dMgDilarCardObj_c6UpdateEv, 0x020d978c, size 0x20c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d978c
-extern "C" void func_ov006_020d978c(void *arg0)
+// @symbol _ZN17dMgDilarCardObj_c6UpdateEv
+/* dMgDilarCardObj_c::Update -- vtable slot 1, the dealer's card motion.
+ * Same states as the player's card (see dMgCardObj_c::Update below) minus
+ * the touch handling -- the dealer's card is never touched -- with state 9
+ * approaching the row the card was dealt into (0x10000, the dealer's row,
+ * where the base flies its player's cards to 0x80000) and the early-return
+ * chain kept in exactly this order for the register allocation. */
+void dMgDilarCardObj_c::Update()
 {
-    char *c = (char *)arg0;
-
-    if (*(u8 *)(c + 0x2b) == 0)
+    if (mState == 0)
         return;
 
-    if (*(u8 *)(c + 0x2c) != 0)
-        _Z14ApproachLinearRiii((int *)(c + 0x24), 0x4000, 0x200);
+    if (mLiftFlag != 0)
+        ApproachLinear(mLift, 0x4000, 0x200);
     else
-        _Z14ApproachLinearRiii((int *)(c + 0x24), 0, 0x200);
+        ApproachLinear(mLift, 0, 0x200);
 
-    u8 state = *(u8 *)(c + 0x2b);
+    u8 state = mState;
 
     if (state == 5) {
-        int r5 = _Z14ApproachLinearRiii((int *)(c + 8), *(s32 *)(c + 0x10), *(s32 *)(c + 0x18));
-        int r0 = _Z14ApproachLinearRiii((int *)(c + 4), *(s32 *)(c + 0xc), *(s32 *)(c + 0x14));
+        int r5 = ApproachLinear(mY, mTargetY, mYStep);
+        int r0 = ApproachLinear(mX, mTargetX, mXStep);
         if (r5 == 0)
             return;
         if (r0 != 0)
-            *(u8 *)(c + 0x2b) = 1;
+            mState = 1;
         return;
     }
 
-    if (state == 4 && *(s32 *)(c + 0x24) == 0) {
-        int v = ((struct Obj *)c)->m08();
-        int r0 = _Z14ApproachLinearRiii((int *)(c + 8), v, 0x8000);
+    if (state == 4 && mLift == 0) {
+        int v = GetOffscreenY();
+        int r0 = ApproachLinear(mY, v, 0x8000);
         if (r0 == 0)
             return;
-        *(s32 *)(c + 4) = 0x80000;
-        *(u8 *)(c + 0x2b) = 6;
-        *(u8 *)(c + 0x2a) = func_ov006_020da8e4();
+        mX = 0x80000;
+        mState = 6;
+        mValue = dScMgCard_c::DrawCardValue();
         return;
     }
 
     if (state == 7) {
-        int r0 = _Z14ApproachLinearRiii((int *)(c + 4), *(s32 *)(c + 0x1c), 0x6000);
+        int r0 = ApproachLinear(mX, mHomeX, 0x6000);
         if (r0 != 0)
-            *(u8 *)(c + 0x2b) = 8;
+            mState = 8;
         return;
     }
 
     if (state == 9) {
-        _Z14ApproachLinearRiii((int *)(c + 8), 0x10000, 0x6000);
+        ApproachLinear(mY, 0x10000, 0x6000);
         return;
     }
 
     if (state == 1) {
-        if (*(s16 *)(c + 0x28) != 0) {
-            _Z15ApproachLinear2Rsss((s16 *)(c + 0x28), 0, 1);
+        if (mFlyDelay != 0) {
+            ApproachLinear2(mFlyDelay, 0, 1);
             return;
         }
-        _Z14ApproachLinearRiii((int *)(c + 8), *(s32 *)(c + 0x10), *(s32 *)(c + 0x18));
-        _Z14ApproachLinearRiii((int *)(c + 4), *(s32 *)(c + 0xc), *(s32 *)(c + 0x14));
+        ApproachLinear(mY, mTargetY, mYStep);
+        ApproachLinear(mX, mTargetX, mXStep);
         return;
     }
 
     if (state != 0xa)
         return;
 
-    if (_Z15ApproachLinear2Rsss((s16 *)(c + 0x28), 0, 1) == 0)
+    if (ApproachLinear2(mFlyDelay, 0, 1) == 0)
         return;
 
-    _Z14ApproachLinearRiii((int *)(c + 4), *(s32 *)(c + 0x1c), *(s32 *)(c + 0x14));
+    ApproachLinear(mX, mHomeX, mXStep);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_020d970c, 0x020d970c, size 0x80 */
+/* ROM ordinal 5 -- _ZN17dMgDilarCardObj_c6RenderEv, 0x020d970c, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d970c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d970c(unsigned char* c){
+// @symbol _ZN17dMgDilarCardObj_c6RenderEv
+/* dMgDilarCardObj_c::Render -- vtable slot 0, the dealer's card face down.
+ * The sprite bank table data_ov006_0213bd64 is indexed by the card's face
+ * (mValue + 1, the +1 skipping the card-back row) and its flip frame
+ * (mLift >> 12), and Hud_RenderSprite takes the 1:4096 fixed-point mX/mY
+ * back down to pixels, plus the 24-pixel hand margin. Kept compact -- one index
+ * temporary -- because that is the register shape the cartridge carries;
+ * the base class's Render below spells its temporaries out instead, and
+ * the two spellings are not interchangeable. */
+void dMgDilarCardObj_c::Render()
+{
   int k;
-  if(*(unsigned char*)(c+0x2b)==0) return;
-  k=data_ov006_0213bd64[(*(unsigned char*)(c+0x2a)+1)*5+(*(int*)(c+0x24)>>12)];
+  if(mState==0) return;
+  k=data_ov006_0213bd64[(mValue+1)*5+(mLift>>12)];
   Hud_RenderSprite(
     data_ov006_02141774[k],
-    (*(int*)(c+4)>>12)+0x18,
-    (*(int*)(c+8)>>12)+0x18,
+    (mX>>12)+24,
+    (mY>>12)+24,
     -1,-1);
 }
-}
 
+/* ROM ordinal 4 -- _ZN17dMgDilarCardObj_cD1Ev, 0x020d96f0, size 0x1c */
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_020d96f0, 0x020d96f0, size 0x1c */
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d96f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d96f0(void *c)
+// @symbol _ZN17dMgDilarCardObj_cD1Ev
+extern "C" {  /* the mangled name is the ROM's own symbol, used literally */
+/* The dealer's card, destroyed one element at a time through __destroy_arr
+ * (the mangled-name extern "C" declaration in the header -- C++ cannot take
+ * a destructor's address). HAND-WRITTEN, not a member destructor: this is
+ * the destroy-side twin of this hand's hand-written ctor stubs in
+ * src/actors/MgPicturePoker.cpp, and no member-destructor spelling
+ * reproduces the cartridge pair -- include/dScMgCard_c.h's note above the
+ * two class definitions carries the measurement. Two vptr stores and no
+ * bl: the derived class's own address point 0x0213bcf4 as the routine
+ * enters the class, then the base class's 0x0213bccc beneath it, exactly
+ * as a destructor walks down the chain. */
+void _ZN17dMgDilarCardObj_cD1Ev(void *elem)
 {
-  extern int data_ov006_0213bcf4[];
-  extern int data_ov006_0213bccc[];
-  *(int*)c=(int)data_ov006_0213bcf4;
-  *(int*)c=(int)data_ov006_0213bccc;
+  *(int *)elem = (int)_ZTV17dMgDilarCardObj_c;
+  *(int *)elem = (int)_ZTV12dMgCardObj_c;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_020d96e0, 0x020d96e0, size 0x10 */
+/* ROM ordinal 3 -- _ZN12dMgCardObj_cD1Ev, 0x020d96e0, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020d96e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020d96e0(void *p) { *(int *)p = (int)data_ov006_0213bccc; }
+// @symbol _ZN12dMgCardObj_cD1Ev
+extern "C" {  /* the mangled name is the ROM's own symbol, used literally */
+/* The player's card, same reach, same idiom: one vptr store -- this class's
+ * own address point 0x0213bccc -- and nothing else. */
+void _ZN12dMgCardObj_cD1Ev(void *elem)
+{
+  *(int *)elem = (int)_ZTV12dMgCardObj_c;
+}
 }
 
 /* The destructor is DEFINED INLINE in include/dScMgCard_c.h. mwcc emits the
