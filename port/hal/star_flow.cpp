@@ -833,6 +833,76 @@ enum { PORT_VS_END_SCENE_DEFAULT = 0 };
 static int g_end_fired = -1;
 static int g_end_announced;
 static int g_end_by_target;
+/* THE SCORES AS THEY WERE AT THE MOMENT THE MATCH WAS WON, latched at the
+   trigger and reported by the marker. Without this the marker reports whatever
+   the array holds `grace` frames LATER, which on a first-to-2 match measured
+   3,0,0,0 -- the third star landed inside the grace window. The launcher reads
+   the marker, so the marker has to carry the scores the match was decided on. */
+static int g_end_scores[4];
+static int g_end_total;
+
+/* THE PLAY HOLD. Nonzero once the match is over, which is what
+   port_vs_match_end_hold below reads to stop the pads and what the harness's
+   own collect trigger reads to stop scoring. */
+extern "C" int port_vs_match_end_frozen(void) { return g_end_fired >= 0; }
+
+/* ---- THE FREEZE ------------------------------------------------------------
+ *
+ * Tango: first-to-N must stop play AT the target. Two halves, and only the
+ * first is load-bearing for the marker:
+ *
+ *   THE SCORES ARE LATCHED at the trigger (above), so the marker reports the
+ *   moment the match was decided whatever happens afterwards. That alone kills
+ *   the 3,0,0,0 quirk and it cannot fail.
+ *
+ *   THE PADS ARE HELD from the frame after, so nothing can be played. All four
+ *   slots, every button and stick word the ROM's readers use -- the same seven
+ *   fields walk_window's own comms fan-out writes. With no input no player can
+ *   swing at a ball, so no star can be released and none collected: "no
+ *   scoring" falls out of "no play" rather than being a second mechanism.
+ *
+ * WHY NOT SKIP THE TICK, which is the debug menu's freeze and the obvious move.
+ * The menu's `game_ticked = 0` skips the whole else-branch of the level loop,
+ * and the comms exchange lives inside it. Two windows that stop exchanging --
+ * even in perfect step -- are two windows whose transport is no longer being
+ * pumped, and this lane is not going to find out what that does to a live
+ * session at the one moment the match is trying to end cleanly. Holding the
+ * pads leaves every frame doing exactly what it did, minus the input.
+ *
+ * LOCKSTEP-SAFE BY CONSTRUCTION: the hold is derived from the end latch, the
+ * end latch is set by a test on state both consoles share, and both measured
+ * setting it on the same frame. Neither window is told anything by the other.
+ *
+ * SM64DS_VS_END_FREEZE=0 leaves the pads live and keeps only the latch. */
+extern "C" {
+extern char data_0209f49c[];   /* held        */
+extern char data_0209f49e[];   /* pressed     */
+extern char data_0209f4a0[];   /* stick / etc */
+extern char data_0209f4a2[];
+extern char data_0209f4a4[];
+extern char data_0209f4a6[];
+extern unsigned char data_0209f4ac[];  /* touching */
+}
+extern "C" void port_vs_match_end_hold(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_END_FREEZE");
+        on = (e && e[0] == '0') ? 0 : 1;
+    }
+    if (!on || g_end_fired < 0 || data_0209f2d8 != 1)
+        return;
+    for (int i = 0; i < 4; ++i) {
+        const int o = i * 0x18;
+        *(short *)(data_0209f49c + o) = 0;
+        *(short *)(data_0209f49e + o) = 0;
+        *(short *)(data_0209f4a0 + o) = 0;
+        *(short *)(data_0209f4a2 + o) = 0;
+        *(short *)(data_0209f4a4 + o) = 0;
+        *(short *)(data_0209f4a6 + o) = 0;
+        data_0209f4ac[o] = 0;
+    }
+}
 
 extern "C" int port_vs_match_end_poll(int frame)
 {
@@ -903,6 +973,8 @@ extern "C" int port_vs_match_end_poll(int frame)
             return 0;
         g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
+        for (int i = 0; i < 4; ++i) g_end_scores[i] = (int)data_0209f310[i];
+        g_end_total = (int)NumVsStarsObtained();
         if (star_winner >= 0)
             fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
                     "the target is %d (wireless state=%d, scores %d,%d,%d,%d, "
@@ -978,9 +1050,8 @@ extern "C" int port_vs_match_end_poll(int frame)
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%d,%d,%d,%d total=%d "
             "pending_scene=%u results_screen=%s\n", frame,
             g_end_by_target ? "star-target" : "time-up",
-            (int)data_0209f310[0], (int)data_0209f310[1],
-            (int)data_0209f310[2], (int)data_0209f310[3],
-            (int)NumVsStarsObtained(), (unsigned)data_02092664,
+            g_end_scores[0], g_end_scores[1], g_end_scores[2], g_end_scores[3],
+            g_end_total, (unsigned)data_02092664,
             data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
                                : (data_02092664 == 0x187 ? "none" : "other"));
     fflush(stderr);

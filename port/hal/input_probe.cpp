@@ -553,8 +553,17 @@ extern "C" void port_vs_stars_probe(int frame)
                  (int)NumVsStarsObtained(), w ? buf : " (no stars, no markers)");
 }
 
+extern "C" int port_vs_match_end_frozen(void);
+
 extern "C" void port_input_probe_star_trigger(int frame)
 {
+    /* THE MATCH IS OVER: the harness does not get to score either. The play
+       hold empties the pads, so no PLAYER can take a star once the match has
+       been won -- but this probe writes the touch words directly and would sail
+       straight past that. A fixture that keeps scoring after the end is exactly
+       how the first-to-2 run came to log 3,0,0,0. */
+    if (port_vs_match_end_frozen())
+        return;
     static int arm_at = -1;
     int want = star_trigger_wants(frame);
     if (!want && frame != arm_at) return;

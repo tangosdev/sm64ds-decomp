@@ -1142,6 +1142,11 @@ void port_vs_countdown_tick(void);
    request the ROM makes when it does, and the end marker. Returns nonzero when
    the run has asked to quit (SM64DS_VS_EXIT_ON_END). */
 int  port_vs_match_end_poll(int frame);
+/* and its play hold: once the match is over the four pad slots are held empty
+   so nothing can be played (and so nothing can be scored) while the marker's
+   grace window runs. Inert until the match ends. */
+void port_vs_match_end_hold(void);
+int  port_vs_match_end_frozen(void);
 void port_message_composite_engine_a(void *fb);
 int port_probe_message_id(void);
 int port_probe_message_fire(void *player, int id);
@@ -9910,6 +9915,12 @@ int main(void)
             port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
+            /* THE MATCH-OVER PLAY HOLD, immediately before the actor phases so
+               the pads the tick is about to read are the held ones. Inert until
+               a VS match has been won; see hal/star_flow.cpp for why this holds
+               the input rather than skipping the tick the way the debug menu
+               does (the comms exchange lives inside the tick). */
+            port_vs_match_end_hold();
             port_actor_tick();
             port_vs_stars_probe(frame);        /* TEMPORARY: SM64DS_VS_STARS */
         } else if (*(void **)(c + 0x370)) {
