@@ -34,11 +34,11 @@ _ZN18TiltingPlatformBfsD0Ev kind:function(arm,size=0x64) addr:0x02111c80
 _ZN18TiltingPlatformBfs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111ce4
 _ZN18TiltingPlatformBfs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111cf8
 TiltingPlatformBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111d0c
-_ZN12FallBlockBfsD1Ev kind:function(arm,size=0x50) addr:0x02111d48
-_ZN12FallBlockBfsD0Ev kind:function(arm,size=0x64) addr:0x02111d98
-_ZN12FallBlockBfs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111dfc
-_ZN12FallBlockBfs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111e10
-FallBlockBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111e24
+_ZN21daObjKm2_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02111d48
+_ZN21daObjKm2_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x02111d98
+_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111dfc
+_ZN21daObjKm2_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111e10
+daObjKm2_Fall_Block_c_Spawn kind:function(arm,size=0x3c) addr:0x02111e24
 data_ov045_02111e60 kind:data(any) addr:0x02111e60
 data_ov045_02111e64 kind:data(any) addr:0x02111e64
 data_ov045_02111e68 kind:data(any) addr:0x02111e68
@@ -154,8 +154,8 @@ _ZTI21daObjKm2_Fall_Block_c kind:data(any) addr:0x021130a0
 data_ov045_021130ac kind:data(any) addr:0x021130ac
 _ZTS21daObjKm2_Fall_Block_c kind:data(any) addr:0x021130b8
 data_ov045_021130cc kind:data(any) addr:0x021130cc ambiguous
-FallBlockBfs_SpawnInfo kind:data(any) addr:0x021130d0 ambiguous
-_ZTV12FallBlockBfs kind:data(any) addr:0x021130f4
+daObjKm2_Fall_Block_c_SpawnInfo kind:data(any) addr:0x021130d0 ambiguous
+_ZTV21daObjKm2_Fall_Block_c kind:data(any) addr:0x021130f4
 data_ov045_02113180 kind:bss addr:0x02113180
 data_ov045_02113188 kind:bss addr:0x02113188
 data_ov045_02113190 kind:bss addr:0x02113190

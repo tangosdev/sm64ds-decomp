@@ -33,7 +33,7 @@
  *
  * FOUR DESCENDANTS, one per level overlay: daObjBk_Fall_Block_c (FallBlockWf,
  * ov015), daObjFl_Fall_Block_c (ov022, only ever named by its factory
- * FallBlockLll_Spawn), daObjKm2_Fall_Block_c (FallBlockBfs, ov045) and
+ * FallBlockLll_Spawn), daObjKm2_Fall_Block_c (ov045) and
  * daObjTh_Fall_Block_c (FallBlockBbh, ov063). Each one's destructor stores this
  * class's vtable between its own and _ZTV10dBgActor_c.
  *

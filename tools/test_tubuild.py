@@ -313,7 +313,8 @@ def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
     step, and a green result would not say which change earned it. The substitution has
     to refuse before anything links.
 
-    This used to run `linkcheck ov045/FallBlockBfs` and assert the refusal, because none
+    This used to run `linkcheck` on ov045/daObjKm2_Fall_Block_c (then coined FallBlockBfs)
+    and assert the refusal, because none
     of that TU's five entries carried `complete`. #1527 ("Phantom references: find the
     cause, clear two seams, +98 functions") marked all five, so the premise is gone: the
     command now gets past the splice and spends ninety seconds reaching a link that
@@ -326,7 +327,7 @@ def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
     import tubuild as T
 
     manifest = T.load_manifest()
-    entry = next(e for e in manifest["entries"] if e["id"] == "ov045/FallBlockBfs")
+    entry = next(e for e in manifest["entries"] if e["id"] == "ov045/daObjKm2_Fall_Block_c")
     sec = next(s for s in entry["sections"] if s["name"] == ".text")
     start, end = int(sec["start"], 16), int(sec["end"], 16)
     legacy = [f["legacy_source"] for f in entry["functions"]]
