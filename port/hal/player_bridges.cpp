@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include "Animation.h"
 #include "BgCh.h"
@@ -405,9 +406,183 @@ static void yhd_probe(char *c, const int *scene, const char *head)
            yhd_sqrt(dtr), drot);
 }
 
+/* ---- THE VS COLOUR, AND WHY EVERY YOSHI WAS GREEN --------------------------
+
+   In VS every player is Yoshi -- the spawn loop forces character 3 into every
+   slot (src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.c:68-71) --
+   and they are told apart by COLOUR. That is the ROM's own arrangement, not a
+   mod: yoshi_model.bmd carries ONE palette, yoshi_all_16p_pl, 128 bytes = four
+   stacked 16-colour rows, and a player selects his row by shifting the palette
+   base the material records point at.
+
+   The ROM does it in two steps, and this port ran the first and not the second.
+
+     STEP 1, at resource load. func_ov002_020e5948 ends with
+         Player+0x61C = body material[0]'s palette base + (mPlayerNo << 1)
+     -- one 16-colour row per step of the player number. The port runs this: it
+     is port/unmatched/TexSeq_Caller_ov002_020e5948.cpp:408, same line.
+
+     STEP 2, at render. Player::Render (src/_ZN6Player6RenderEv.cpp:66-76 and
+     :112-122) writes that one value into +0x20 of EVERY runtime material
+     record, once over the body model's materials and once over the head
+     model's, gated on data_0209f2d8 == 1 (VS) and param1 == 3 (Yoshi).
+     +0x20 is the material's TEXPLTT_BASE: func_02044b30
+     (src/func_02044b30.c:14) stores it straight to 0x040004AC on the way into
+     each display list, and ntr binds the palette at PLTT_SLOT_BASE + base*16.
+
+   src/_ZN6Player6RenderEv.cpp IS NOT IN THIS PORT'S LINK -- port/slice_w1l5.txt
+   line 202, blocked by func_ov002_020e3e00's C2733 -- and the Player vtable's
+   Render slot is a no-op (hal/level_boot.cpp's ps_render). Every draw a player
+   gets comes from THIS function instead, and until now it reproduced the four
+   gates, the body draw, the head group, the three texture sequences and the
+   wings, but not step 2. So nothing in the port ever wrote a material record,
+   every Yoshi kept the base his BMD was authored with -- row 0 -- and the owner
+   saw two green Yoshis in a live two-window match.
+
+   MEASURED, at 65bae498d with SM64DS_VS_COLOR_PROBE=1, arena 51, two windows,
+   2201 frames x 2 players: Player+0x61C read 5539 for slot 0 and 5541 for slot
+   1 (the ROM's selector, working), while the body material base read 5539 for
+   BOTH and the bound colours were byte-identical -- 0d83,1224,1a86,2eab, which
+   is row 0, the greens. The selector was right the whole time and nothing
+   spent it.
+
+   WHY IT IS SAFE TO WRITE THE HEAD'S RECORDS TOO, which looks like it should
+   corrupt them: the value is the BODY's palette base, and the head files'
+   own 16-colour palette is byte-identical to the body's row 0. Player 0
+   shifts by nothing, so VS-green Yoshi samples the body's row 0 and looks
+   exactly like adventure Yoshi -- which is only true because one step of
+   mPlayerNo is exactly one 16-colour row. The head is not reloaded or
+   resized; its own palette is simply never sampled in VS.
+
+   THE GATES ARE THE ROM'S AND NOTHING MORE. Outside VS, or on a character
+   that is not Yoshi, this writes nothing at all. */
+static void hal_player_vs_palette(char *c, char *mdl)
+{
+    if (data_0209f2d8 != 1) return;         /* VS mode only */
+    if (*(int *)(c + 0x8) != 3) return;     /* param1 == 3, Yoshi */
+    if (!mdl) return;
+    const int *p = (const int *)(mdl + 8);  /* ModelComponents at +0x8 */
+    const unsigned char *hdr = (const unsigned char *)p[0];  /* BMD_File */
+    char *rec = (char *)p[1];                                /* materials */
+    if (!hdr || !rec) return;               /* port hygiene; the ROM faults */
+    unsigned n = 0;
+    std::memcpy(&n, hdr + 0x24, 4);         /* BMD_File::numMaterials */
+    const int pal = *(const int *)(c + 0x61c);
+    for (unsigned i = 0; i < n; ++i, rec += 0x30)
+        *(int *)(rec + 0x20) = pal;
+}
+
+/* ---- SM64DS_VS_COLOR_PROBE=1: reading the BOUND palette back ----------------
+   The VS colour question cannot be answered from Player+0x61C. That word is
+   written UNCONDITIONALLY by the resource load (base + (mPlayerNo << 1), six
+   lines above the VS test in port/unmatched/TexSeq_Caller_ov002_020e5948.cpp),
+   so two MARIOS differ by 2 there and it says nothing about what got drawn.
+   Review retired the arm that read it as proof, and the bar it left is a probe
+   that reads a BOUND record back. This is that probe, in three layers, each
+   one further down the pipe than the last:
+
+     source   Player+0x61C          what the resource load computed
+     record   material[i] + 0x20    the runtime material record the render
+                                    walk spends -- what Player::Render writes
+                                    and what this port did not
+     bound    TEXPLTT_BASE latch    read back out of the mapped I/O window at
+                                    0x040004AC AFTER the draw. func_02044b30
+                                    (src/func_02044b30.c:14) stores material
+                                    +0x20 there per material, and ntr's
+                                    io_write mirrors every store into the
+                                    window before dispatching it to the
+                                    geometry engine (port/ntr/io.cpp:655), so
+                                    this is the last palette the engine was
+                                    actually handed during this player's draw.
+
+   And the colours themselves: ntr/gx.cpp samples a 16-colour material at
+   PLTT_SLOT_BASE + base*16 (bind_from_vram), so the same arithmetic here reads
+   the exact BGR555 entries the decoder will use. Two players whose entries
+   differ are two players painted different colours; two players whose entries
+   match are the defect.
+
+   The polygon delta rides along because a bind with no geometry behind it
+   proves nothing -- a palette latched for a player who submitted zero
+   triangles is not a colour. */
+static int vscol_on()
+{
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_VS_COLOR_PROBE") ? 1 : 0;
+    return on;
+}
+
+/* The port's texture-palette window base; the same constant ntr/gx.cpp calls
+   PLTT_SLOT_BASE and hal/model_host.cpp points data_020a60b0 at. */
+static const unsigned kVsColPlttWindow = 0x06880000u;
+
+static void vscol_model(const char *what, int frame, int no, char *mdl)
+{
+    if (!mdl) {
+        std::fprintf(stderr, "[vscol] f%d slot%d %s model=NULL\n",
+                     frame, no, what);
+        return;
+    }
+    const int *p = (const int *)(mdl + 8);      /* ModelComponents at +0x8 */
+    const unsigned char *hdr = (const unsigned char *)p[0];  /* BMD_File */
+    const unsigned char *rec = (const unsigned char *)p[1];  /* materials */
+    if (!hdr || !rec) {
+        std::fprintf(stderr, "[vscol] f%d slot%d %s hdr=%p rec=%p\n",
+                     frame, no, what, (const void *)hdr, (const void *)rec);
+        return;
+    }
+    unsigned n = 0;
+    std::memcpy(&n, hdr + 0x24, 4);             /* BMD_File::numMaterials */
+    if (n > 8) n = 8;
+    for (unsigned i = 0; i < n; ++i) {
+        int base = 0;
+        std::memcpy(&base, rec + i * 0x30 + 0x20, 4);
+        const unsigned short *pal =
+            (const unsigned short *)(kVsColPlttWindow + (unsigned)base * 16u);
+        std::fprintf(stderr,
+                     "[vscol] f%d slot%d %s mat%u base=%d "
+                     "col=%04x,%04x,%04x,%04x\n",
+                     frame, no, what, i, base,
+                     pal[0], pal[1], pal[2], pal[3]);
+    }
+}
+
+static void vscol_probe(char *c, int frame, std::size_t tris_before)
+{
+    const int no = (int)*(unsigned char *)(c + 0x6d8);
+    std::size_t tris_after = 0;
+    ntr::gx_polygons(tris_after);
+    /* the latch, read back out of the mapped window rather than assumed */
+    const unsigned latched = *(volatile unsigned *)0x040004ACu;
+    const unsigned short *lpal =
+        (const unsigned short *)(kVsColPlttWindow + latched * 16u);
+    std::fprintf(stderr,
+                 "[vscol] f%d slot%d char=%d param1=%d pal61c=%d "
+                 "TEXPLTT_BASE=%u col=%04x,%04x,%04x,%04x tris=%d\n",
+                 frame, no, (int)(*(unsigned char *)(c + 0x6d9) & 7),
+                 *(int *)(c + 8), *(int *)(c + 0x61c), latched,
+                 lpal[0], lpal[1], lpal[2], lpal[3],
+                 (int)(tris_after - tris_before));
+
+    const unsigned id =
+        _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
+    vscol_model("body", frame, no, (char *)((ModelAnim **)(c + 0xdc))[id]);
+    const unsigned hid =
+        func_ov002_020becf4(c, *(unsigned char *)(c + 0x6db), 1);
+    if (hid != 8 && hid != 9)
+        vscol_model("head", frame, no, ((char **)(c + 0x154))[hid]);
+}
+
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
+    std::size_t vscol_tris0 = 0;
+    static int vscol_frame = -1;
+    if (vscol_on()) {
+        ntr::gx_polygons(vscol_tris0);
+        /* one frame counter for the function, bumped by slot 0 so both
+           players' lines in the same frame carry the same number */
+        if (*(unsigned char *)(c + 0x6d8) == 0) ++vscol_frame;
+    }
 
     /* ---- THE GATES Player::Render KEEPS, AND THIS DID NOT ------------------
      *
@@ -525,6 +700,7 @@ void hal_render_player_world(void *player)
     int scene[12];
     for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
     ma->ModelAnim::UpdateVerts();
+    hal_player_vs_palette(c, (char *)ma);
     ma->ModelAnim::Render(0);
     hal_player_texseq_body(c);
 
@@ -533,6 +709,7 @@ void hal_render_player_world(void *player)
         char *head = ((char **)(c + 0x154))[hid];
         if (head) {
             yhd_probe(c, scene, head);
+            hal_player_vs_palette(c, head);
             hal_render_head_group(c, head, hid, ma, scene);
             hal_player_texseq_head(c, hid);
         }
@@ -625,6 +802,10 @@ void hal_render_player_world(void *player)
                 ((void ***)m4)[0][5]))(m4, composed, c + 0x80);
         }
     }
+
+    /* LAST, after every draw this function makes, so the latch it reads is the
+       one this player's geometry was submitted under. */
+    if (vscol_on()) vscol_probe(c, vscol_frame, vscol_tris0);
 }
 
 void hal_render_player_body_ex(void *player, int with_head)
