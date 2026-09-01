@@ -1,13 +1,13 @@
 {
-  "id": "ov012/SwitchPillar",
+  "id": "ov012/daObjC0_Switch_c",
   "module": "ov012",
-  "source": "src_tu/actors/SwitchPillar.cpp",
-  "promoted_source": "src/actors/SwitchPillar.cpp",
+  "source": "src_tu/actors/daObjC0_Switch_c.cpp",
+  "promoted_source": "src/actors/daObjC0_Switch_c.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111450, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): SwitchPillar",
+    "class label(s): daObjC0_Switch_c",
     "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
   "sections": [
@@ -19,59 +19,59 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN12SwitchPillarD1Ev",
+      "symbol": "_ZN16daObjC0_Switch_cD1Ev",
       "address": "0x021111a0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN12SwitchPillarD1Ev.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_cD1Ev.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN12SwitchPillarD0Ev",
+      "symbol": "_ZN16daObjC0_Switch_cD0Ev",
       "address": "0x021111e4",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN12SwitchPillarD0Ev.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_cD0Ev.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN12SwitchPillar15OnGroundPoundedER8dActor_c",
+      "symbol": "_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c",
       "address": "0x0211123c",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12SwitchPillar16CleanupResourcesEv",
+      "symbol": "_ZN16daObjC0_Switch_c16CleanupResourcesEv",
       "address": "0x021112ec",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN12SwitchPillar16CleanupResourcesEv.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_c16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12SwitchPillar6RenderEv",
+      "symbol": "_ZN16daObjC0_Switch_c6RenderEv",
       "address": "0x02111324",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN12SwitchPillar6RenderEv.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_c6RenderEv.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12SwitchPillar8BehaviorEv",
+      "symbol": "_ZN16daObjC0_Switch_c8BehaviorEv",
       "address": "0x0211134c",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12SwitchPillar8BehaviorEv.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_c8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12SwitchPillar13InitResourcesEv",
+      "symbol": "_ZN16daObjC0_Switch_c13InitResourcesEv",
       "address": "0x02111370",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN12SwitchPillar13InitResourcesEv.cpp",
+      "legacy_source": "src/_ZN16daObjC0_Switch_c13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "SwitchPillar_Spawn",
+      "symbol": "daObjC0_Switch_c_Spawn",
       "address": "0x02111420",
       "size": "0x00000030",
-      "legacy_source": "src/SwitchPillar_Spawn.c",
+      "legacy_source": "src/daObjC0_Switch_c_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -84,7 +84,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov012-SwitchPillar/SwitchPillar.o (gitignored)",
+    "object": "build/tu/ov012-daObjC0_Switch_c/daObjC0_Switch_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 8,
     "functions_declared": 8,
@@ -112,7 +112,7 @@
     "legacyEntriesComplete": "8/8",
     "extraInertImports": 69,
     "extraImportsWithNoHome": [],
-    "artefacts": "build/tu/ov012-SwitchPillar/partial/partial.json (gitignored)",
+    "artefacts": "build/tu/ov012-daObjC0_Switch_c/partial/partial.json (gitignored)",
     "state": "contribution-equivalent",
     "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."

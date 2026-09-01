@@ -1,14 +1,14 @@
-#ifndef SWITCHPILLAR_H
-#define SWITCHPILLAR_H
+#ifndef DAOBJC0_SWITCH_C_H
+#define DAOBJC0_SWITCH_C_H
 
 #include "types.h"
 #include "dBgActor_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   SwitchPillar_Spawn  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV12SwitchPillar,
+ *   daObjC0_Switch_c_Spawn  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV16daObjC0_Switch_c,
  *                 then the members below in this order.
- *   ~SwitchPillar   the same members destroyed in reverse, then ~dBgActor_c.
+ *   ~daObjC0_Switch_c   the same members destroyed in reverse, then ~dBgActor_c.
  *
  * SIZE 0x320 is the factory's own literal, and the last member closes exactly on it.
  *
@@ -22,10 +22,10 @@
  * actorID-0x22 instance and, on finding one already pressed, sets a shared flag in
  * data_0209caa0[2]. It is this switch pillar's own "pressed" state.
  */
-struct SwitchPillar : dBgActor_c {
+struct daObjC0_Switch_c : dBgActor_c {
     u8  mPressed;            /* 0x31e */
 
-    virtual ~SwitchPillar();            /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjC0_Switch_c();            /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
@@ -34,6 +34,6 @@ struct SwitchPillar : dBgActor_c {
     virtual void  OnGroundPounded(dActor_c &other); /* slot 21 */
 };
 
-typedef char SwitchPillar_size_must_be_0x320[sizeof(SwitchPillar) == 0x320 ? 1 : -1];
+typedef char daObjC0_Switch_c_size_must_be_0x320[sizeof(daObjC0_Switch_c) == 0x320 ? 1 : -1];
 
-#endif /* SWITCHPILLAR_H */
+#endif /* DAOBJC0_SWITCH_C_H */

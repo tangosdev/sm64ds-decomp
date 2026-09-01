@@ -66,13 +66,13 @@ SKIP UpDownLiftHmc: ov095:0x2135ff4 already claimed by UpDownLiftBbh (vtable slo
 SKIP UpDownLiftHmc: ov095:0x2136038 already claimed by UpDownLiftBbh (vtable slot 17)
 AMBIG actor 34 SWITCH_PILLAR: ['ov012', 'ov043'] -> ov012
 AMBIG actor 35 BASEMENT_WATER: ['ov012', 'ov033', 'ov043', 'ov047'] -> ov012
-SKIP BasementWater: ov012:0x2112408 already claimed by SwitchPillar (vtable alloc=0x340)
-SKIP BasementWater: ov012:0x211164c already claimed by SwitchPillar (vtable slot 0)
-SKIP BasementWater: ov012:0x21114fc already claimed by SwitchPillar (vtable slot 3)
-SKIP BasementWater: ov012:0x2111574 already claimed by SwitchPillar (vtable slot 6)
-SKIP BasementWater: ov012:0x2111540 already claimed by SwitchPillar (vtable slot 9)
-SKIP BasementWater: ov012:0x2111450 already claimed by SwitchPillar (vtable slot 16)
-SKIP BasementWater: ov012:0x211149c already claimed by SwitchPillar (vtable slot 17)
+SKIP BasementWater: ov012:0x2112408 already claimed by daObjC0_Switch_c (vtable alloc=0x340)
+SKIP BasementWater: ov012:0x211164c already claimed by daObjC0_Switch_c (vtable slot 0)
+SKIP BasementWater: ov012:0x21114fc already claimed by daObjC0_Switch_c (vtable slot 3)
+SKIP BasementWater: ov012:0x2111574 already claimed by daObjC0_Switch_c (vtable slot 6)
+SKIP BasementWater: ov012:0x2111540 already claimed by daObjC0_Switch_c (vtable slot 9)
+SKIP BasementWater: ov012:0x2111450 already claimed by daObjC0_Switch_c (vtable slot 16)
+SKIP BasementWater: ov012:0x211149c already claimed by daObjC0_Switch_c (vtable slot 17)
 AMBIG actor 36 TRAP: ['ov010', 'ov035'] -> ov010
 SKIP LightBeam: ov010:0x2112ba8 already claimed by daObjC1_Trap_c (vtable alloc=0x16c)
 SKIP LightBeam: ov010:0x2111d20 already claimed by daObjC1_Trap_c (vtable slot 0)
