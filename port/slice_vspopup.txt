@@ -1,0 +1,71 @@
+# Lane VSPOPUP: NUMBER (330) and WING_FEATHER (345), both ov002, both already
+# mounted overlay. The fill is hal/actor_classes_vspopup.cpp; the mount adds
+# two SpawnInfo lines to port/ov002_syms.txt and nothing else (every file
+# pointer either class loads was already mounted).
+#
+# ---- why these two, and why now --------------------------------------------
+#
+# Lane VSARENA2 read seven of the owner's own live VS playlogs. Every one of
+# them carried
+#
+#     [spawn-declined] actor 0x14a not registered
+#
+# and maps 1 and 3 carried 0x159 as well. Resolved against the ROM's own
+# SpawnInfo records in ov002, 0x14a is Number -- the floating score number that
+# pops when a player takes a star -- and 0x159 is WingFeather, the wing-cap
+# feather. Neither id appears in ANY level's object table, on any of the 44
+# levels whose overlay decodes: both are spawned at run time, which is exactly
+# why no boot census ever asked for them and no earlier gate noticed they were
+# missing. In a star battle the score number simply never appeared.
+#
+# ---- NUMBER (daObjNumber_c) -------------------------------------------------
+#
+# THE CONFIG'S CLASS NAMES ARE SHIFTED HERE, and hal/actor_classes_bob_world.cpp
+# already said so when it seated INVISIBLE_SECRET (329): the six src files
+# spelled _ZN15InvisibleSecret* are NUMBER'S methods and _ZTV15InvisibleSecret
+# (0x0210b0ec, RTTI 13daObjNumber_c) is NUMBER'S table. 329's real class is the
+# unnamed func_ov002_020f0* family at data_ov002_0210b030, seated separately and
+# untouched by this slice.
+#
+# D1 (src/_ZN15InvisibleSecretD1Ev.cpp) is NOT here: a real MSVC-synthesised
+# member destructor over a LOCAL shadow Actor/Model/TextureSequence hierarchy
+# with no bodies of its own -- the gate-31 / ONE_UP_LOGO recipe spells the chain
+# directly in the fill instead of compiling the shadow-class TU. The ROM body
+# has no vptr store at all (its whole relocation span is the three dtor calls),
+# so the host chain is the complete body. The file stays in src/ as the matched
+# proof; it is not part of the port build.
+src/Number_Spawn.c
+src/_ZN15InvisibleSecret13InitResourcesEv.cpp
+src/_ZN15InvisibleSecret16CleanupResourcesEv.cpp
+src/_ZN15InvisibleSecret8BehaviorEv.cpp
+src/_ZN15InvisibleSecret6RenderEv.cpp
+src/_ZN15InvisibleSecretD0Ev.c
+#
+# ---- WING_FEATHER (daFeather_c) --------------------------------------------
+#
+# No name shift on this one: _ZTV11WingFeather (0x021088a8) carries the
+# _ZN11WingFeather* bodies and RTTI 11daFeather_c, and WingFeather_Spawn
+# installs it by name.
+#
+# D1 (src/_ZN11WingFeatherD1Ev.cpp) is NOT here either, the same shape with
+# four members instead of two. This one's ROM body DOES store its own table
+# into the vptr first; writing _ZTV11WingFeather back over a WingFeather's own
+# vptr has no effect (nothing derives from the class), so the host thunk spells
+# only the four member destructors and Actor::D2, in the ROM's own order.
+src/WingFeather_Spawn.c
+src/_ZN11WingFeather13InitResourcesEv.cpp
+src/_ZN11WingFeather16CleanupResourcesEv.c
+src/_ZN11WingFeather8BehaviorEv.cpp
+src/_ZN11WingFeather6RenderEv.cpp
+src/_ZN11WingFeatherD0Ev.c
+# The shared matrix/shadow helper both WingFeather::InitResources and
+# WingFeather::Behavior call on their last line. A plain extern "C" body, no
+# face needed.
+src/func_ov002_020b2c44.cpp
+#
+# NOT here, because they are already in the build: the CALLER,
+# src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.c, and the little parent-link
+# setter it finishes with, src/func_ov002_020f0918.c -- both in slice_gate10.
+# That is the whole reason this seat is a registry row rather than a subsystem:
+# everything that ASKS for the popup has been live all along, and the class it
+# asked for was the only thing missing.

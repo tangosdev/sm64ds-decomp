@@ -391,3 +391,28 @@ data_ov002_02110e18
 # six was checked against it rather than assumed -- no pin is needed here.
 data_ov002_0210d6dc data_ov002_0210035c data_ov002_02100360
 data_ov002_02100364 data_ov002_0210d6d0 data_ov002_02100380
+
+# ---- lane VSPOPUP: the two records every live VS match asks for ------------
+# NUMBER (330, the floating score popup) and WING_FEATHER (345). Neither id is
+# placed by any level's object table -- both are spawned at RUN TIME
+# (Actor::SpawnNumber for the first, the wing cap for the second) -- which is
+# why a boot census never asked for them and no earlier gate mounted them.
+#
+# Sizes pinned to the record's real 0x1c rather than the next-symbol delta,
+# the ov098/ov100 convention, and CHECKED against the overlay's own bytes
+# rather than assumed. Both records' next neighbour is their class's vtable,
+# 0x24 away, and the eight bytes in between are the Itanium vtable prefix:
+#
+#   0x0210b0c8 +0x00 020f0d90 (Number_Spawn)  +0x04 014c014a (id 330)
+#              +0x1c 00000000 offset-to-top   +0x20 0210b0ac (_ZTI13daObjNumber_c)
+#   0x02108884 +0x00 020b3248 (WingFeather_Spawn) +0x04 01590159 (id 345)
+#              +0x1c 00000000 offset-to-top   +0x20 02108868 (_ZTI11daFeather_c)
+#
+# so 0x1c ends the record exactly where the prefix begins, and the registry's
+# +4 id cross-check reads 330 and 345 back out.
+#
+# The five SharedFilePtrs the two InitResources load (data_ov002_0210d9a8,
+# 0210d9e8, 0210da08, 0210da28 for Number's two model/texture pairs and
+# 0210da58 for the feather's model) are ALREADY mounted above -- nothing to
+# add for either class's resources.
+Number_SpawnInfo:0x1c WingFeather_SpawnInfo:0x1c
