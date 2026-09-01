@@ -86,6 +86,8 @@
 #include <windows.h>
 #endif
 
+#include "vs_palette_gen.h"
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -2074,17 +2076,274 @@ u32 lovesme_filter(unsigned fileID, u8 **data, u32 size)
     return size;
 }
 
+/* ---- THE FOURTH MOD: the lobby's per-player Yoshi colours -----------------
+   SM64DS_VS_COLORS, four comma-separated fields in SLOT order, each field
+   either empty or "bbbbbb:ssssss" -- a body colour and a shoe colour, six hex
+   digits each. Empty field: that slot keeps the ROM's built-in colour.
+
+   FOUR FIELDS TODAY, AND THE SHAPE PAST FOUR PLAYERS IS ALREADY DECIDED.
+   Coordinator's cross-lane ruling of 2026-09-01, raised by SEAT16 and answered
+   once for both variables: this mirrors SM64DS_VS_NAMES exactly -- four fields,
+   exactly three commas, same discipline. When the wire itself supports more
+   than four slots, BOTH variables move together, in one coordinated version
+   change, to SIXTEEN comma-separated fields (exactly fifteen commas, same
+   per-field grammar). Neither ever moves on its own. So a reader that grows to
+   sixteen without SM64DS_VS_NAMES growing with it is a bug, not a head start.
+
+   THE OWNER'S ORDER, his words: "the ability to choose a hex color to make
+   your yoshi and its shoes so two [colors]. and the main color shows next to
+   your name in lobby so people can identify you. It needs to go through the
+   tangos sm64ds editions texture palette section, it will show you what parts
+   of the texture you need to change and how the blending and shading works."
+   The last sentence is the reason hal/vs_palette_gen.h exists and is the
+   Studio's arithmetic rather than something quicker; this block only spends it.
+
+   WHY THIS IS A FILE MOD AND NOT A RENDER HOOK. VS already picks a Yoshi's
+   colour by pointing every one of his materials at a different SIXTEEN-COLOUR
+   ROW of the same palette -- the ROM does it, and the port reproduces it in
+   hal_player_vs_palette. So there is nothing to intercept at draw time: the
+   four rows ARE the four players' colours, and the only thing a custom colour
+   has to do is arrive in the file before the palette is uploaded. That is this
+   seam, and it is the seam PaletteYoshi already uses for the built-ins.
+
+   NOTHING ABOUT A COLOUR TRAVELS AS DATA. The lobby hands every launcher the
+   same four hex pairs and every copy of the game builds all four rows for
+   itself out of them. Identical inputs through identical arithmetic give
+   identical bytes, so there is no palette on the wire to trust and nothing a
+   hostile client can inject past six hex digits. It also cannot desync a
+   match: this is a palette, it is decided before the level loads, and the
+   simulation never reads it.
+
+   THE VARIABLE IS NOT TRUSTED even though the lobby validates it and the
+   launcher re-validates it. It is a string from another process, built from
+   text a stranger typed into a room; every rule below is checked here as if
+   neither of those steps had happened. A whole-variable grammar violation
+   drops the variable WHOLESALE and every Yoshi keeps his built-in colour,
+   which is the same contract SM64DS_VS_NAMES keeps (hal/star_flow.cpp:1012)
+   and the reason every existing proof is unaffected: nothing that does not set
+   the name can be moved by this. */
+
+struct VsColorSpec {
+    int set;
+    u8  body[3];
+    u8  shoes[3];
+};
+
+VsColorSpec g_vsc[4];
+int g_vsc_state;        /* 0 not read, 1 read */
+int g_vsc_any;
+u8 *g_vsc_blob;
+struct PalPatch *g_vsc_patch;
+unsigned g_vsc_npatch;
+
+/* Parse one field. "" is a slot with no colour and is not an error; anything
+   else must be exactly "bbbbbb:ssssss". 0 means the WHOLE variable is bad. */
+int vsc_field(const char *f, unsigned n, VsColorSpec *out)
+{
+    out->set = 0;
+    if (n == 0)
+        return 1;
+    if (n != 13 || f[6] != ':')
+        return 0;
+    if (!vspal::parse_hex6(f, out->body) || !vspal::parse_hex6(f + 7, out->shoes))
+        return 0;
+    out->set = 1;
+    return 1;
+}
+
+void vsc_parse(void)
+{
+    const char *e = getenv("SM64DS_VS_COLORS");
+    unsigned len, start, slot, commas;
+
+    if (!e)
+        return;                     /* absent: the common case, and silent */
+    len = (unsigned)strlen(e);
+    if (len < 3 || len > 55) {      /* 4 x 13 + 3 commas */
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: %u bytes, the "
+                        "contract allows 3..55\n", len);
+        return;
+    }
+    commas = 0;
+    for (unsigned i = 0; i < len; ++i) {
+        unsigned char c = (unsigned char)e[i];
+        if (c == ',') { ++commas; continue; }
+        if (c != ':' && !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')
+                          || (c >= 'A' && c <= 'F'))) {
+            fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: byte %02x at %u "
+                            "is not a hex digit, a colon or a comma\n",
+                    (unsigned)c, i);
+            return;
+        }
+    }
+    if (commas != 3) {
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: %u comma(s), the "
+                        "contract requires exactly 3\n", commas);
+        return;
+    }
+    start = 0;
+    slot = 0;
+    for (unsigned i = 0; i <= len; ++i) {
+        if (i == len || e[i] == ',') {
+            VsColorSpec s;
+            if (!vsc_field(e + start, i - start, &s)) {
+                fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: field %u is "
+                                "neither empty nor bbbbbb:ssssss\n", slot);
+                for (int k = 0; k < 4; ++k) g_vsc[k].set = 0;
+                return;
+            }
+            g_vsc[slot++] = s;
+            start = i + 1;
+        }
+    }
+    for (int k = 0; k < 4; ++k)
+        if (g_vsc[k].set)
+            g_vsc_any = 1;
+    if (!g_vsc_any) {
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS: every field is empty; every "
+                        "Yoshi keeps his built-in colour\n");
+        return;
+    }
+    for (int k = 0; k < 4; ++k) {
+        if (!g_vsc[k].set)
+            continue;
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS slot %d: body %02x%02x%02x "
+                        "shoes %02x%02x%02x\n", k,
+                g_vsc[k].body[0], g_vsc[k].body[1], g_vsc[k].body[2],
+                g_vsc[k].shoes[0], g_vsc[k].shoes[1], g_vsc[k].shoes[2]);
+    }
+}
+
+/* Build the patch records. The body file gets all SIXTY-FOUR words -- every
+   slot's row, generated or ROM -- because VS reads one row per player out of
+   that one palette. Both head files get slot 0's SIXTEEN, for the same reason
+   PaletteYoshi gives them one: the heads carry their own copy of row 0, and
+   although VS re-points every head material at the body palette so the copy is
+   never sampled in a match, keeping them in step costs 32 bytes and means a
+   custom colour cannot half-apply if a head is ever drawn from its own. */
+void vsc_build(void)
+{
+    static const u16 kCount[3] = { 64, 16, 16 };
+    static const u32 kOff[3] = { 0, 128, 160 };
+    const char *kPath[3];
+    u32 blen = 0, dp = 0, sz = 0;
+    u8 *body;
+    u8 *syn;
+    struct PalPatch *pp;
+    u16 rows[4][16];
+
+    kPath[0] = YOSHI_BODY;
+    kPath[1] = YOSHI_HEAD;
+    kPath[2] = YOSHI_FILL;
+
+    body = file_by_name(YOSHI_BODY, &blen);
+    if (!body) {
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS off: yoshi_model.bmd is not "
+                        "in this dump; every Yoshi keeps his built-in colour\n");
+        return;
+    }
+    if (!palette_named(body, blen, YOSHI_PAL, &dp, &sz) || sz != 128) {
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS off: yoshi_all_16p_pl is not "
+                        "the four stacked rows this build knows; every Yoshi "
+                        "keeps his built-in colour\n");
+        free(body);
+        return;
+    }
+    for (int r = 0; r < 4; ++r)
+        for (int i = 0; i < 16; ++i)
+            rows[r][i] = rd16(body, dp + (u32)r * 32 + (u32)i * 2);
+    free(body);
+
+    syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
+    pp = (struct PalPatch *)calloc(3, sizeof *pp);
+    if (!syn || !pp) {
+        free(syn);
+        free(pp);
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS off: out of host memory\n");
+        return;
+    }
+    for (int r = 0; r < 4; ++r) {
+        u16 out[16];
+        if (g_vsc[r].set)
+            vspal::vs_palette_row(rows[r], g_vsc[r].body, g_vsc[r].shoes, out);
+        else
+            memcpy(out, rows[r], 32);
+        memcpy(syn + (u32)r * 32, out, 32);
+    }
+    memcpy(syn + 128, syn, 32);     /* both heads take slot 0's row */
+    memcpy(syn + 160, syn, 32);
+    for (int i = 0; i < 3; ++i) {
+        snprintf(pp[i].path, sizeof pp[i].path, "%s", kPath[i]);
+        snprintf(pp[i].name, sizeof pp[i].name, "%s", YOSHI_PAL);
+        pp[i].count = kCount[i];
+        pp[i].colors = syn + kOff[i];
+        pp[i].file_id = resolve_file_by_name(pp[i].path);
+    }
+    g_vsc_blob = syn;
+    g_vsc_patch = pp;
+    g_vsc_npatch = 3;
+}
+
+void vsc_load(void)
+{
+    if (g_vsc_state)
+        return;
+    g_vsc_state = 1;
+    vsc_parse();
+    if (!g_vsc_any)
+        return;
+    if (host_setting_character_palette_any()
+        && *host_setting_character_palette(PC_YOSHI))
+        fprintf(stderr, "[mods] PaletteYoshi is set and so is "
+                        "SM64DS_VS_COLORS; the lobby's colours win for this "
+                        "run, because they are what the other players in the "
+                        "room are drawing\n");
+    vsc_build();
+}
+
+/* Runs LAST in the chain, so a room's colours are the last word on Yoshi's
+   palette whatever else is switched on. Every rule palette_try enforces still
+   applies: the palette is found by its own name in the served file, the colour
+   count must equal the BMD's exactly, nothing moves and nothing is
+   reallocated, and a disagreement refuses out loud and serves the ROM. */
+u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
+{
+    if (!getenv("SM64DS_VS_COLORS"))
+        return size;                /* the byte-inert path, one getenv wide */
+    vsc_load();
+    for (unsigned i = 0; i < g_vsc_npatch; ++i) {
+        struct PalPatch *p = &g_vsc_patch[i];
+        const char *why;
+        if (p->file_id != fileID)
+            continue;
+        why = palette_try(p, *data, size);
+        if (p->said++)
+            continue;
+        if (why)
+            fprintf(stderr, "[mods] SM64DS_VS_COLORS: %s '%s' REFUSED: %s; "
+                            "that file keeps the ROM's colours\n",
+                    p->path, p->name, why);
+        else
+            fprintf(stderr, "[mods] SM64DS_VS_COLORS: %s '%s' recoloured, "
+                            "%u colours\n", p->path, p->name, p->count);
+    }
+    return size;
+}
+
 /* The installed filter is a chain, each mod deciding for itself whether the
    file is its business. Loves Me first because it can REPLACE the buffer;
    the palette patches then edit whatever bytes are actually being served.
-   The two palette mods are mutually exclusive by construction -- each one
-   returns untouched when the other's keys are the ones set -- so their order
-   here decides nothing, and neither can write over the other. */
+   The two settings-driven palette mods are mutually exclusive by construction
+   -- each one returns untouched when the other's keys are the ones set -- so
+   their order decides nothing and neither can write over the other. The
+   lobby's colours go last on purpose: a room full of people has to agree about
+   what everyone looks like, so nothing on one player's disk may overrule it. */
 u32 mod_filter(unsigned fileID, u8 **data, u32 size)
 {
     size = lovesme_filter(fileID, data, size);
     size = palette_filter(fileID, data, size);
     size = character_palette_filter(fileID, data, size);
+    size = vs_colors_filter(fileID, data, size);
     return size;
 }
 

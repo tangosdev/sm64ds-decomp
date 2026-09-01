@@ -54,7 +54,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 
 ---
 
-## THE WIRE CONTRACT, v1–v2
+## THE WIRE CONTRACT, v1 and v2
 
 ### Rules that apply to every request
 
@@ -66,7 +66,7 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 | `Content-Length` | REQUIRED, and parsed **before any rejection** | missing -> 411 `length_required`, close |
 | request body | <= 4096 bytes | 413 `too_large`, connection closed (body not read) |
 | JSON shape | one object; no arrays at the top level | 400 `bad_shape` |
-| `v` | REQUIRED, integer, `1` to `2` (see below) | 400 `bad_version` |
+| `v` | REQUIRED, integer, `1` or `2` (see below) | 400 `bad_version` |
 | unknown top-level key | rejected | 400 `bad_field` |
 | missing required key | rejected | 400 `bad_field` |
 | wrong type for a key | rejected | 400, the field's own code |
@@ -89,22 +89,63 @@ opposite of what the rule protects. The strictness stays where it belongs:
 says `"v":1` and then carries a v2 field is `bad_field`, exactly as it would be
 for a field nobody has ever defined. A v1 request gets a v1 answer.
 
+### v2 IS THE UNION, and there is no half of it
+
+Two lanes grew the contract on the same night over fields that did not
+overlap — the host's player-count dial and the colour picker — and each
+called its own addition "v2". Merged unchanged, that would have shipped a
+number meaning two different things: a launcher built against either lane
+would announce `"v":2` and support half of what v2 is. **A version is a
+promise about a whole field set**, so it has exactly one definition, and it
+is `VERB_FIELDS` in `app/server.py`.
+
 | version | what it adds |
 |---|---|
 | v1 | everything through launcher 0.3.0 |
 | v2 | `params` may carry `match_players` — the host's player-count dial |
+| v2 | `create` and `join` may carry `color` + `shoes` |
+| v2 | the **`color` verb exists at all** — a v2-only verb |
+| v2 | (answer side, unversioned) `color`/`shoes` on every roster row, a `color` event kind, and `colors` in every playing go plan |
+
+A client claiming v2 is claiming all of it.
+
+**Both versions are answered, and the rule is asymmetric on purpose.** What a
+client may SEND is versioned strictly: a `v:1` request carrying `color` or
+`match_players` is refused `bad_field`, because a bump a server honours anyway
+is decorative. What a client RECEIVES is not: the new keys appear in every
+`view` and every plan whatever version asked, because an answer is JSON and the
+launcher's reader ignores a property it has no field for — the same leniency
+the event `kind` set already relies on, and now pinned by the launcher's own
+unknown-field test rather than left to a library default. Versioning the send
+side is what protects the server; versioning the receive side would only mean
+two code paths that have to be kept in step forever.
+
+So the shipped 0.3.0 launcher, which speaks v1: creates and joins as it always
+did, reads a roster with extra strings per row and ignores them, gets a plan
+with extra keys and ignores them, never sets `SM64DS_VS_COLORS`, plays with the
+ROM's built-in Yoshi in a room where everybody else is wearing a colour, and
+seats people by the room's dial without ever knowing there is one. Proved over
+real HTTP in `test_client.py`'s `selftest_colors` and `dial`.
 
 **Where a version lives, and why you cannot forget to gate a field.**
-`app/server.py`'s `VERB_FIELDS` is the one place a verb's field set is written
-down: `(required, {optional_field: the version it arrived in})`. `shape_for`
-is the only thing that reads it, so a handler cannot accept a field the table
-does not list, and cannot list a field it does not gate. `test_units.py`'s
+`VERB_FIELDS` is the one place a verb's field set is written down:
+`(required, {optional_field: the version it arrived in})`, and optionally a
+third element — **the version the VERB ITSELF arrived in**, for a verb like
+`color` that did not exist at v1 at all. `shape_for` is the only thing that
+reads it, so a handler cannot accept a field the table does not list, and
+cannot list a field it does not gate. `test_units.py`'s
 `test_every_versioned_field_is_gated` **walks the table** and proves every
-field above the floor is refused below its own version — it names no field, so
-a field added tomorrow is covered by it the day it is added. Adding a versioned
-field is therefore two edits and no new test: the table row, and a sample value
-in the walk's `_FIELD_SAMPLES` (omit the sample and the walk fails and says so,
-rather than quietly skipping the field).
+field above the floor is refused below its own version, and every late verb is
+refused to an earlier caller — it names no field and no verb, so anything added
+tomorrow is covered by it the day it is added. Adding a versioned field is
+therefore two edits and no new test: the table row, and a sample value in the
+walk's `_FIELD_SAMPLES` (omit the sample and the walk fails and says so, rather
+than quietly skipping the field).
+
+A verb out of the caller's version is refused `bad_field`, not `bad_version`,
+and deliberately: a v1 caller cannot tell a v2 verb apart from a misspelled
+one, so the refusal gives away nothing about what the server grew. The player
+sees the same sentence either way.
 
 Required fields are v1 by construction. A later version cannot make a field
 mandatory without breaking every earlier client, so a new required field is a
@@ -164,6 +205,8 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 | `seat` | int | 1..`MAX_SEATS`, an occupied seat that is not the host's | `bad_seat` |
 | `match_players` | int | 2..`dial_max`; optional on `params`, and **v2 only** | `bad_match_players` |
 | `pre_ok` | bool | `true`/`false`; optional on `create` and `join` | `bad_field` |
+| `color` | string | **v2 only.** exactly 6 hex digits, either case in, stored lower case. The BODY colour, and the swatch beside the name in the roster | `bad_color` |
+| `shoes` | string | **v2 only.** the same grammar. Travels with `color`: both or neither | `bad_color` |
 
 A string longer than its cap answers `too_long` rather than the field's own
 code, because the length check runs first and never lets an oversized field
@@ -191,6 +234,7 @@ never leaves the lobby and keeps its commas.
 | `POST /port/lobby/chat` | a seated member | say one line |
 | `POST /port/lobby/params` | **host only** | set map / win condition |
 | `POST /port/lobby/preflight` | a seated member | correct its OWN `pre_ok` in place |
+| `POST /port/lobby/color` | a seated member | set its OWN two colours (**v2**, lobby state only) |
 | `POST /port/lobby/start` | **host only** | arm a match (stage B) |
 | `POST /port/lobby/ready` | a playing member | "my launcher can spawn this match" (stage B) |
 | `POST /port/lobby/failed` | a playing member | report a match that could not run (stage B) |
@@ -205,6 +249,7 @@ line.
 
 ```
 -> {"v":1, "nick":"tango", "pre_ok":true}
+-> {"v":2, "nick":"tango", "pre_ok":true, "color":"8a2be2", "shoes":"ffd700"}
 <- 200 {"v":1, "room":"K7QMR3", "token":"<32 hex>", "member":1,
         "cursor":1, "view":{...}}
 ```
@@ -595,6 +640,67 @@ a quiet one.
 
 ---
 
+#### `color` (v2)
+
+```
+-> {"v":2, "room":"K7QMR3", "token":"<32 hex>",
+    "color":"8a2be2", "shoes":"ffd700"}
+<- 200 {"v":2, "cursor":19}
+```
+
+Sets the caller's own two colours. `"color":"", "shoes":""` puts that player
+back on the ROM's built-in Yoshi.
+
+* **Own seat only.** There is no seat argument, and a `seat` key is refused
+  `bad_field`, so the verb adds no authority anywhere.
+* **Unchanged is a no-op** — 200, no event, no cursor movement. A launcher can
+  re-send on every keystroke or on window focus and it costs the room nothing.
+* **A real change pushes a `color` event**, so a member holding a 25-second long
+  poll sees the swatch move now rather than when its wait expires.
+* **`lobby` state only.** Refused `not_in_lobby` (409) once a match is armed.
+  This is where it differs from `preflight`: a colour is SPENT at the arming
+  freeze, and a swatch that no running game is wearing is worse than a swatch
+  that cannot be changed for ninety seconds. Change it before the rematch.
+
+#### `SM64DS_VS_COLORS`, the string the games actually read
+
+Built once, by the server, at the arming freeze, and copied byte-identical into
+every playing member's plan — the same discipline `SM64DS_VS_NAMES` gets, for
+the same reason: no launcher assembles it, so two launchers cannot disagree.
+
+```
+colors := field "," field "," field "," field      exactly three commas
+field  := "" | 6*HEXDIG ":" 6*HEXDIG               slot order, 0..3
+```
+
+`"8a2be2:ffd700,ff0000:00ff00,,"` is a two-player room where both picked;
+`",,,"` is a room where nobody did. Longest legal string is 4x13 + 3 = 55 bytes.
+
+**Four fields today, sixteen later, and never on its own.** Coordinator's
+cross-lane ruling of 2026-09-01 (raised by lane SEAT16, answered once for both
+variables): `SM64DS_VS_COLORS` mirrors `SM64DS_VS_NAMES` exactly at four fields
+and three commas. When the wire supports more than four slots, BOTH move
+together in one coordinated version change to sixteen comma-separated fields
+(exactly fifteen commas, same per-field grammar). Neither variable ever changes
+shape independently of the other.
+
+**No palette ever goes on the wire.** Every copy of the game is told the same
+four hex pairs and generates all four sixteen-colour palette rows for itself,
+through the arithmetic in `port/hal/vs_palette_gen.h` — which is the tangOS
+SM64DS Edition palette editor's own shading maths, transcribed and diffed
+bit-for-bit against it. Identical inputs through identical arithmetic give
+identical bytes, so there is nothing to relay, nothing to trust, and nothing a
+hostile client can inject past six hex digits per colour. A colour also cannot
+desync a match: it is decided before the level loads and the simulation never
+reads it.
+
+The game refuses the whole variable on any grammar violation, so it is worth
+saying what this server can emit: `test_units.py::test_colors` runs 361 hostile
+colour pairs through `create`/`join` and every one is refused before it can
+reach the frozen string, which is therefore always hex, colons and exactly
+three commas.
+
+
 ## Failure semantics
 
 | event | what the server does | what players see |
@@ -851,10 +957,14 @@ coordinator has ruled on exactly that, because lane VSCOLOR-UI's
 
 **THE COORDINATOR'S FIELD-COUNT RULING, verbatim:**
 
-> NAMES + COLORS exactly-4 today; future = 16 fields together in one
-> coordinated version change when the wire moves; never independently.
+> NAMES + COLORS exactly-4 today, with the same per-field grammar (exactly 15
+> commas); future = 16 fields together in one coordinated version change when
+> the wire moves; never independently.
 
-So both strings stay at exactly four fields, and neither grows on its own. When
+So both strings stay at exactly four fields **and share one per-field
+grammar** — the sixteen-field form is exactly 15 commas, the same shape read
+the same way by both readers, which is the half of the ruling that stops the
+two strings from being parsed by two slightly different splitters. When
 the wire moves (section 1), the two go to sixteen **together**, in one version
 change. The reason is the failure this avoids: a sixteen-field names string
 against a four-field colours string is two readers disagreeing about who slot 5
