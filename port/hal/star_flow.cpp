@@ -713,7 +713,9 @@ void port_vs_countdown_tick(void)
        four. The gate below already compares against that same number, so a
        census that stopped at four could never satisfy it above four players
        and the countdown would have hung forever at the fifth seat. */
-    for (int i = 0; i < (int)data_0209fc50 && i < kPortMaxPlayers; i++) {
+    const int np_ready = (int)data_0209fc50 < kPortNarrowPlayers
+                         ? kPortNarrowPlayers : (int)data_0209fc50;
+    for (int i = 0; i < np_ready && i < kPortMaxPlayers; i++) {
         const char *p = (const char *)data_0209f394[i];
         if (p != 0 && *(const unsigned char *)(p + 0x711) != 0)
             cnt++;
@@ -953,7 +955,19 @@ static int vs_players(void)
     g_vs_players_cache = kPortNarrowPlayers;
     if (const char *e = std::getenv("SM64DS_VS_PLAYERS")) {
         const int v = std::atoi(e);
-        if (v >= 1 && v <= kPortMaxPlayers) g_vs_players_cache = v;
+        /* FLOORED AT FOUR, and the floor is the whole reason this lane can
+           claim a two- or four-player match is unchanged.
+
+           Every loop below that used to be a literal `< 4` now runs to this
+           number. Without the floor, a two-player session would run those loops
+           to TWO -- which happens to produce the same answers today (the slots
+           it skips have no actor and a zero score) but is a different amount of
+           work over different memory, and "it comes out the same" is not the
+           same claim as "it does the same thing". With the floor, four or fewer
+           players is arithmetically identical to the code before this lane, and
+           only a fifth player changes anything. */
+        if (v > kPortNarrowPlayers && v <= kPortMaxPlayers)
+            g_vs_players_cache = v;
     }
     return g_vs_players_cache;
 }
@@ -1232,10 +1246,23 @@ static int vs_score_list(char *out, int cap, int np, int best)
     const int me = (int)data_0209f250;
     switch (vs_banner_mode()) {
     case 2: {                                /* all */
+        /* snprintf RETURNS THE LENGTH IT WANTED, not the length it wrote, so
+           an accumulating `w += snprintf(...)` walks PAST the buffer the moment
+           one call truncates -- and the next iteration then writes at
+           out + w, outside it. The loop guard alone does not save it: it is
+           checked before the call that overruns, not after. So clamp on every
+           step. Sixteen scores at up to two digits plus commas is 47 bytes
+           against a caller that guarantees at least 64, so this cannot fire
+           today; it is here because "cannot fire today" is a property of the
+           caller and this function does not get to assume it. */
         int w = 0;
-        for (int i = 0; i < np && w < cap - 1; ++i)
-            w += std::snprintf(out + w, (size_t)(cap - w), "%s%d",
-                               i ? "," : "", g_end_scores[i]);
+        for (int i = 0; i < np && w < cap - 1; ++i) {
+            const int k = std::snprintf(out + w, (size_t)(cap - w), "%s%d",
+                                        i ? "," : "", g_end_scores[i]);
+            if (k < 0) break;
+            w += k;
+            if (w > cap - 1) { w = cap - 1; break; }
+        }
         return w;
     }
     case 1: {                                /* top4 */
@@ -1291,8 +1318,9 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
         if (i != best && g_end_scores[i] == g_end_scores[best]) ++ties;
     if (ties) {
         int w = std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  ");
-        w += vs_score_list(out + w, n - w, np, best);
-        (void)w;
+        if (w < 0) w = 0;
+        if (w > n - 1) w = n - 1;
+        vs_score_list(out + w, n - w, np, best);
     } else {
         /* the nickname if the lobby gave us one for THIS slot, the ROM-shaped
            PLAYER n+1 otherwise -- per slot, because a room can have one named
@@ -1304,8 +1332,9 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
         else
             std::snprintf(who, sizeof who, "PLAYER %d", best + 1);
         int w = std::snprintf(out, (size_t)n, "MATCH OVER  -  %s WINS  ", who);
-        w += vs_score_list(out + w, n - w, np, best);
-        (void)w;
+        if (w < 0) w = 0;
+        if (w > n - 1) w = n - 1;
+        vs_score_list(out + w, n - w, np, best);
     }
     return 1;
 }
@@ -1518,12 +1547,17 @@ extern "C" int port_vs_match_end_poll(int frame)
     char scores_field[kPortMaxPlayers * 6];
     {
         int w = 0;
+        const int cap = (int)sizeof scores_field;
         const int nprint = np_marker < kPortNarrowPlayers
                            ? kPortNarrowPlayers : np_marker;
-        for (int i = 0; i < nprint; ++i)
-            w += std::snprintf(scores_field + w,
-                               sizeof scores_field - (size_t)w,
-                               "%s%d", i ? "," : "", g_end_scores[i]);
+        for (int i = 0; i < nprint && w < cap - 1; ++i) {
+            const int k = std::snprintf(scores_field + w, (size_t)(cap - w),
+                                        "%s%d", i ? "," : "",
+                                        g_end_scores[i]);
+            if (k < 0) break;
+            w += k;
+            if (w > cap - 1) { w = cap - 1; break; }
+        }
     }
     const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%s players=%d total=%d "
