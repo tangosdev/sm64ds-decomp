@@ -6,6 +6,9 @@ STAGE B (params/start/race): `start` arms a match, `ready` confirms a launcher
 can spawn it, `failed` aborts it back to lobby -- and NOTHING spawns until every
 playing seat has readied. The seat count is frozen at `start` and forced into
 every plan (SM64DS_VS_PLAYERS), which is the join-race guarantee (section 4).
+STAGE C (rematch): `result` reports a finished match, returns the room to lobby
+with the params intact, and discards the per-match comms code so the next match
+is a fresh relay session.
 
 `kick` is the spec's own open question 4, which the owner answered yes to. It
 is the twelfth verb rather than one of the eleven the spec froze, and it needs
@@ -182,6 +185,10 @@ FAIL_REASONS = ("spawn_failed", "no_pairing", "wrong_player_count",
                 # server-minted, never sent by a client: the arming deadline
                 # passed with some playing seat not ready.
                 "member_not_ready")
+
+# What the game reports as the win condition, plus "draw" for an unparseable
+# marker (spec 5.3). The server never interprets it; it echoes it in the event.
+WIN_VALUES = ("time-up", "star-target", "draw")
 
 STATES = ("lobby", "arming", "go", "in_match", "closed")
 
@@ -368,6 +375,9 @@ class Room(object):
         self.arm_deadline = None    # monotonic; arming must complete by here
         self.go_at = None           # monotonic; go->in_match after GO_GRACE
         self.match_start = None     # monotonic; in_match->lobby after timeout
+        # The last match id a result was accepted for, so a SECOND result for a
+        # match already resolved is idempotent (200) rather than stale (409).
+        self.last_result_match = None
         # A fresh room starts at cursor 1 with nothing behind it, so the very
         # first real event is seq 2 and a client that polls from the cursor it
         # was handed at create sees everything that happened after it arrived.
@@ -712,6 +722,27 @@ def v_match(body):
         if ch not in HEX_ALPHABET:
             return None, "bad_match"
     return s, None
+
+
+def v_win(body):
+    s, err = want_str(body, "win", "bad_win")
+    if err:
+        return None, err
+    if s not in WIN_VALUES:
+        return None, "bad_win"
+    return s, None
+
+
+def v_scores(body):
+    v = body.get("scores")
+    if not isinstance(v, list) or len(v) != 4:
+        return None, "bad_scores"
+    out = []
+    for x in v:
+        if isinstance(x, bool) or not isinstance(x, int) or x < 0 or x > 99:
+            return None, "bad_scores"
+        out.append(x)
+    return out, None
 
 
 def v_reason(body):
@@ -1281,6 +1312,53 @@ def do_failed(body, who, now):
     return 200, {"cursor": room.seq}
 
 
+def do_result(body, who, now):
+    """A playing member reporting a finished match. The FIRST valid result for
+    the current match returns the room to lobby; later ones are idempotent
+    (spec 3.9, 5.4)."""
+    err = shape(body, ("v", "room", "token", "match", "win", "scores"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    match, err = v_match(body)
+    if err:
+        return 400, {"error": err}
+    win, err = v_win(body)
+    if err:
+        return 400, {"error": err}
+    scores, err = v_scores(body)
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    room.members[seat].seen = now
+
+    if room.match is not None and match == room.match:
+        # The first result for the current match. Append the event, discard the
+        # comms code, clear the match, drop back to lobby. Params, seats, nicks,
+        # tokens and chat all survive (spec 5.6): "same again" is one button.
+        mid = room.match
+        room.last_result_match = mid
+        _reset_match(room)
+        room.push("result", match=mid, win=win, scores=scores)
+        log("room %s result match=%s win=%s" % (code, mid, win))
+        return 200, {"cursor": room.seq}
+    if match == room.last_result_match:
+        # Both players reporting is normal and harmless: the second is ignored.
+        return 200, {"cursor": room.seq}
+    return 409, {"error": "stale_match"}
+
+
 def do_poll(body, who, now):
     """The only push channel, and the entire reliability story.
 
@@ -1387,6 +1465,7 @@ VERBS = {
     "params": do_params,
     "start": do_start,
     "ready": do_ready,
+    "result": do_result,
     "failed": do_failed,
     "kick": do_kick,
     "leave": do_leave,

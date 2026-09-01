@@ -40,12 +40,12 @@ def _locked(fn):
 
 
 for _name in ("do_create", "do_join", "do_poll", "do_chat", "do_params",
-              "do_start", "do_ready", "do_failed",
+              "do_start", "do_ready", "do_result", "do_failed",
               "do_kick", "do_leave", "sweep"):
     setattr(S, _name, _locked(getattr(S, _name)))
 S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
            "chat": S.do_chat, "params": S.do_params, "start": S.do_start,
-           "ready": S.do_ready, "failed": S.do_failed,
+           "ready": S.do_ready, "result": S.do_result, "failed": S.do_failed,
            "kick": S.do_kick, "leave": S.do_leave}
 
 PASSED = []
@@ -1118,6 +1118,75 @@ def test_arming_and_match_timers():
           and room.events[-1]["reason"] == "timeout")
 
 
+# -------------------------------------------------- stage C: the rematch loop
+
+
+def test_result_and_rematch():
+    print("\n-- result: the rematch loop, and a fresh comms code each match")
+    reset()
+    code, room, host, guest = _two_ready(now=1000.0)
+    S.do_params({"v": 1, "room": code, "token": host["token"],
+                 "map": 3, "win_mode": "stars", "star_target": 3},
+                "10.0.0.1", 1000.0)
+    st, p = start(code, host["token"], now=1000.0)
+    match1 = p["match"]
+    code1 = room.comms_code
+    ready(code, host["token"], match1, now=1000.0)
+    ready(code, guest["token"], match1, who="10.0.0.2", now=1000.0)
+    S.sweep(1000.0 + S.GO_GRACE_S + 0.1)
+    check("match one is running", room.state == "in_match")
+
+    # A result validates its fields.
+    st, rr = S.do_result({"v": 1, "room": code, "token": host["token"],
+                          "match": match1, "win": "nope",
+                          "scores": [3, 1, 0, 0]}, "10.0.0.1", 1010.0)
+    check("a bad win is 400 bad_win", st == 400 and rr["error"] == "bad_win")
+    st, rr = S.do_result({"v": 1, "room": code, "token": host["token"],
+                          "match": match1, "win": "star-target",
+                          "scores": [3, 1, 0]}, "10.0.0.1", 1010.0)
+    check("scores that are not four ints is 400 bad_scores",
+          st == 400 and rr["error"] == "bad_scores")
+
+    # The real result.
+    st, rr = S.do_result({"v": 1, "room": code, "token": host["token"],
+                          "match": match1, "win": "star-target",
+                          "scores": [3, 1, 0, 0]}, "10.0.0.1", 1010.0)
+    check("the result returns the room to lobby", room.state == "lobby")
+    check("the match id was cleared and the comms code discarded",
+          room.match is None and room.comms_code is None)
+    ev = room.events[-1]
+    check("a result event carries win and the four scores",
+          ev["kind"] == "result" and ev["win"] == "star-target"
+          and ev["scores"] == [3, 1, 0, 0], ev)
+    check("the params survived the match (same again is one button)",
+          room.map == 3 and room.win_mode == "stars" and room.star_target == 3)
+    check("the roster survived", set(room.members) == {1, 2})
+
+    # The SECOND result for the same match is idempotent, not an error.
+    st, rr = S.do_result({"v": 1, "room": code, "token": guest["token"],
+                          "match": match1, "win": "star-target",
+                          "scores": [3, 1, 0, 0]}, "10.0.0.2", 1011.0)
+    check("both players reporting is normal: the second is idempotent 200",
+          st == 200, (st, rr))
+
+    # A rematch: start again, and it gets a DIFFERENT comms code.
+    st, p2 = start(code, host["token"], now=1012.0)
+    match2 = p2["match"]
+    code2 = room.comms_code
+    check("the rematch has a different match id", match2 != match1)
+    check("THE REMATCH HAS A DIFFERENT COMMS CODE -- a fresh relay session so "
+          "the previous match's held seats cannot refuse it",
+          code2 != code1 and code2 is not None, (code1, code2))
+    # A draw is accepted (the launcher posts it for an unparseable marker).
+    ready(code, host["token"], match2, now=1012.0)
+    ready(code, guest["token"], match2, who="10.0.0.2", now=1012.0)
+    S.sweep(1012.0 + S.GO_GRACE_S + 0.1)
+    st, rr = S.do_result({"v": 1, "room": code, "token": host["token"],
+                          "match": match2, "win": "draw",
+                          "scores": [0, 0, 0, 0]}, "10.0.0.1", 1020.0)
+    check("a draw result is accepted", st == 200 and room.state == "lobby")
+
+
 def Member_fields(m):
     return [k for k in m.__slots__]
 
@@ -1142,6 +1211,7 @@ def main():
     test_names()
     test_failed()
     test_arming_and_match_timers()
+    test_result_and_rematch()
     test_rate_buckets()
     test_server_caps()
     test_opacity()

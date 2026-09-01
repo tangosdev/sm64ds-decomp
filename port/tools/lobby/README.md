@@ -386,6 +386,28 @@ learns why. The `go`->`in_match` transition happens `GO_GRACE_S` after `go`, and
 a match with no result is returned to lobby with `failed` reason `timeout` after
 `MATCH_TIMEOUT_S`.
 
+#### `result` — stage C
+
+```
+-> {"v":1, "room":"...", "token":"...", "match":"<16 hex>",
+    "win":"star-target", "scores":[3,1,0,0]}
+<- 200 {"v":1, "cursor":14}
+```
+
+A playing member reporting a finished match. `win` is `time-up`, `star-target`
+or `draw` (the launcher posts `draw` with all-zero scores for a `MATCH OVER`
+marker it could not parse). `scores` is four ints, 0..99, in slot order. The
+FIRST valid result for the current match appends a `result` event, discards the
+comms code, clears the match id and every `armed` flag, and returns the room to
+`lobby` -- while the room code, seats, nicknames, tokens, chat AND the params all
+survive, so "same again" is one Start press. A later result for the same match id
+is accepted and ignored (both players reporting is normal). 409 `stale_match` for
+any other match id.
+
+**A different comms code every match.** Because `start` mints a fresh one and
+`result` discards the old, a rematch is a brand-new relay session and the
+previous match's 90-second held seats cannot refuse it.
+
 #### `kick` (host only)
 
 ```

@@ -421,6 +421,7 @@ def selftest(c, quick=False):
            404, "no_such_room")
 
     selftest_match(c)
+    selftest_rematch(c)
     selftest_kick(c)
     return code
 
@@ -519,6 +520,76 @@ def selftest_match(c):
           and any(e["kind"] == "failed" and e["reason"] == "no_pairing"
                   for e in fp["events"]), fp.get("events"))
     c.post("leave", {"v": 1, "room": fcode, "token": fh["token"]})
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
+
+
+def selftest_rematch(c):
+    """Stage C over the wire: a match plays to a result, the room comes back to
+    lobby with the params intact, and a rematch uses a FRESH comms code."""
+    status, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "opie",
+                                    "pre_ok": True})
+    c.post("params", {"v": 1, "room": code, "token": host["token"],
+                      "map": 3, "win_mode": "stars", "star_target": 3})
+    status, armed = c.post("start", {"v": 1, "room": code, "token": host["token"]})
+    match1 = armed["match"]
+    c.post("ready", {"v": 1, "room": code, "token": host["token"], "match": match1})
+    c.post("ready", {"v": 1, "room": code, "token": guest["token"], "match": match1})
+    status, gp = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                 "cursor": guest["cursor"], "wait": 0})
+    go = [e for e in gp["events"] if e["kind"] == "go"]
+    code1 = go[0]["plan"]["code"]
+
+    # A result validates its fields.
+    expect("a bad win value is refused",
+           c.post("result", {"v": 1, "room": code, "token": host["token"],
+                             "match": match1, "win": "nope",
+                             "scores": [3, 0, 0, 0]}), 400, "bad_win")
+    expect("scores that are not four ints are refused",
+           c.post("result", {"v": 1, "room": code, "token": host["token"],
+                             "match": match1, "win": "time-up",
+                             "scores": [3, 0, 0]}), 400, "bad_scores")
+
+    # The real result.
+    status, res = c.post("result", {"v": 1, "room": code, "token": host["token"],
+                                    "match": match1, "win": "star-target",
+                                    "scores": [3, 1, 0, 0]})
+    check("a result is accepted", status == 200, res)
+    status, back = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                   "cursor": gp["cursor"], "wait": 0})
+    res_ev = [e for e in back["events"] if e["kind"] == "result"]
+    check("a result event reaches the room with win and scores",
+          len(res_ev) == 1 and res_ev[0]["win"] == "star-target"
+          and res_ev[0]["scores"] == [3, 1, 0, 0], back.get("events"))
+    check("the room is back in lobby, roster intact, params intact",
+          back["view"]["state"] == "lobby"
+          and len(back["view"]["members"]) == 2
+          and back["view"]["map"] == 3
+          and back["view"]["star_target"] == 3, back["view"])
+    expect("a second result for the finished match is idempotent, not stale",
+           c.post("result", {"v": 1, "room": code, "token": guest["token"],
+                             "match": match1, "win": "star-target",
+                             "scores": [3, 1, 0, 0]}), 200)
+
+    # The rematch, and THE FRESH COMMS CODE.
+    status, armed2 = c.post("start", {"v": 1, "room": code, "token": host["token"]})
+    match2 = armed2["match"]
+    check("a rematch arms with a different match id", match2 != match1, match2)
+    c.post("ready", {"v": 1, "room": code, "token": host["token"], "match": match2})
+    c.post("ready", {"v": 1, "room": code, "token": guest["token"], "match": match2})
+    status, gp2 = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                  "cursor": back["cursor"], "wait": 0})
+    go2 = [e for e in gp2["events"] if e["kind"] == "go"]
+    check("THE REMATCH USES A DIFFERENT COMMS CODE than the first match",
+          go2 and go2[0]["plan"]["code"] != code1,
+          (code1, go2[0]["plan"]["code"] if go2 else None))
+    # A draw result is accepted (the launcher posts it for an unparseable marker).
+    status, dr = c.post("result", {"v": 1, "room": code, "token": host["token"],
+                                   "match": match2, "win": "draw",
+                                   "scores": [0, 0, 0, 0]})
+    check("a draw result is accepted and returns to lobby",
+          status == 200, dr)
     c.post("leave", {"v": 1, "room": code, "token": host["token"]})
 
 
