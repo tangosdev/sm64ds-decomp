@@ -389,6 +389,39 @@ extern "C" void port_vs_hud_probe(int frame)
                  (dispcnt & 0x1000u) ? "ON" : "OFF", maskA,
                  (maskA & 0x10u) ? "asked for" : "NOT asked for", maskB,
                  zero, parked, placed);
+
+    /* AND THE PLACED ENTRIES THEMSELVES, both engines, because a count cannot
+       tell "the sprite was submitted" from "the sprite was submitted and points
+       at tiles that are not on this engine". attr2 bits 0-9 are the TILE index
+       and bits 12-15 the palette row; those two are what differ when a sprite
+       is drawn on the engine its graphics were never uploaded to. Also counts
+       the nonzero bytes in each engine's OBJ VRAM at the tile the entry names,
+       which is the direct read of "are the tiles even there". */
+    for (int e = 0; e < 2; ++e) {
+        const unsigned oam = e ? 0x07000400u : 0x07000000u;
+        const unsigned vram = e ? 0x06600000u : 0x06400000u;
+        for (int i = 0; i < 128; ++i) {
+            const volatile unsigned short *a =
+                (const volatile unsigned short *)(oam + i * 8);
+            const unsigned short a0 = a[0], a1 = a[1], a2 = a[2];
+            if ((!a0 && !a1 && !a2) || (a0 & 0xff) == 192) continue;
+            const unsigned tile = a2 & 0x3ff;
+            /* 4bpp boundary is 32 bytes per tile, which is what every HUD
+               sprite in this path uses (the OBJ mapping bit reads 1D). */
+            const unsigned char *t = (const unsigned char *)(vram + tile * 32);
+            unsigned nz = 0;
+            for (int k = 0; k < 128; ++k) nz += t[k] != 0;
+            std::fprintf(stderr, "  [vshud]   %s OAM[%3d] a0=%04x a1=%04x "
+                         "a2=%04x | y=%3u x=%3u tile=%3u pal=%u prio=%u "
+                         "mode=%u shape=%u size=%u dis=%u  tiledata %u/128 %s\n",
+                         e ? "B" : "A", i, a0, a1, a2, (unsigned)(a0 & 0xff),
+                         (unsigned)(a1 & 0x1ff), tile, (unsigned)(a2 >> 12),
+                         (unsigned)((a2 >> 10) & 3), (unsigned)((a0 >> 10) & 3),
+                         (unsigned)((a0 >> 14) & 3), (unsigned)((a1 >> 14) & 3),
+                         (unsigned)((a0 >> 9) & 1),
+                         nz, nz ? "" : "<-- NO TILES ON THIS ENGINE");
+        }
+    }
 }
 
 /* walk the list (Node{void*x0; Node*next@4; int*x8@8}) for the first actor
