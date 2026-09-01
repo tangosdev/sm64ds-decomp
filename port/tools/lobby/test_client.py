@@ -103,13 +103,28 @@ class Client(object):
         finally:
             conn.close()
 
-    def post(self, verb, obj, **kw):
+    # A rate-shed 429 is not a functional failure -- it is the limiter doing its
+    # job -- and this functional client is not the limiter's test (test_security
+    # and the negatives are, and they drive 429s through raw() on purpose). So
+    # post() rides past a 429 with a bounded backoff instead of returning it,
+    # which keeps a caller like the selftest deterministic whether it runs
+    # against its own spawned server or, at full tilt, against the shipped
+    # 20 req/s limit on the deployed URL. The backoff total (~23 s) clears even
+    # the 10 s bad-sender ignore window. raw() deliberately does none of this.
+    def post(self, verb, obj, retry_429=True, **kw):
         body = json.dumps(obj).encode("utf-8")
-        status, text = self.raw("POST", self.prefix + "/" + verb, body, **kw)
-        try:
-            return status, json.loads(text)
-        except ValueError:
-            return status, {"_raw": text}
+        backoff = 0.5
+        for attempt in range(7):
+            status, text = self.raw("POST", self.prefix + "/" + verb, body, **kw)
+            try:
+                parsed = json.loads(text)
+            except ValueError:
+                parsed = {"_raw": text}
+            if status == 429 and retry_429 and attempt < 6:
+                time.sleep(backoff)
+                backoff = min(8.0, backoff * 2)
+                continue
+            return status, parsed
 
     def get(self, verb):
         status, text = self.raw("GET", self.prefix + "/" + verb, None, ctype=None)
@@ -190,6 +205,18 @@ def expect(name, got, want_status, want_err=None):
 
 
 def selftest(c, quick=False):
+    # REGRESSION NOTE (2026-09-01). This runs the happy path at full speed from
+    # one address, and near the end (selftest_kick's create/join/kick/poll
+    # burst) that outruns the server's shipped 20 req/s limit. A rate-shed poll
+    # returns 429 {"v":1,"error":...} with no "view", and a bare seen["view"]
+    # then KeyErrors -- which made this test pass or fail on TIMING, not on
+    # correctness (both the author's and the reviewer's 55/0 runs happened to
+    # stay under 20/s; a fresh deploy check did not). THE SERVER IS CORRECT:
+    # shedding a flooding client is the limiter working. Two things keep this
+    # test honest about that instead of racing it: its own spawned server lifts
+    # the rate limits (see main), and c.post() rides past a 429 with a bounded
+    # backoff (see Client.post), which is what carries a `selftest --url` run
+    # against the real, un-liftable limit on the deployed server.
     # -- health ----------------------------------------------------------
     status, health = c.get("health")
     check("health answers 200", status == 200, status)
@@ -805,13 +832,19 @@ def main():
         print("spawning a server on 127.0.0.1:%d" % port)
         extra = {}
         if args.mode == "selftest":
-            # The selftest is mostly a list of deliberate refusals, which is
-            # exactly the shape the bad-sender rule exists to punish. It is
-            # lifted HERE and nowhere else: the negatives run below uses the
-            # shipped defaults and proves the rule fires.
+            # The selftest exercises the HAPPY PATH at full speed from one
+            # address, which is exactly what the request rate limiter and the
+            # bad-sender rule exist to shed. Neither is what the selftest tests
+            # (the negatives and test_security cover them at shipped values), so
+            # both are lifted on the selftest's OWN spawned server. This keeps
+            # the primary run fast and deterministic; a `selftest --url` run
+            # against a real server cannot set these and leans on post()'s 429
+            # backoff instead.
+            extra["RATE_REQ_PER_S"] = "1000000"
+            extra["RATE_BURST"] = "1000000"
             extra["BAD_LIMIT"] = "1000000"
-            print("  (BAD_LIMIT lifted for the selftest; `negatives` proves it "
-                  "at its shipped value)")
+            print("  (rate limits lifted on the selftest's own server; "
+                  "`negatives` and `test_security` prove them at shipped values)")
         spawned = Spawned(port, extra)
         c = spawned.wait_ready()
 
