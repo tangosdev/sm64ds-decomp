@@ -1913,6 +1913,20 @@ void hal_fill_spindel_vtable(void);                   /* 0x02113760, 32 */
 extern unsigned char RacingPenguin_SpawnInfo[];       /* ov019 0x021132ec, +4 = 259 */
 void *RacingPenguin_Spawn(void);                      /* ov019 0x021125bc, 96 B */
 void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31 */
+/* lane VSPOPUP: NUMBER (330) and WING_FEATHER (345), both ov002 -- the two ids
+   every live VS match declines. Neither is placed by a level's object table;
+   both are spawned at RUN TIME (Actor::SpawnNumber, already in slice_gate10,
+   and the wing cap), which is why no boot census ever asked for them. Number's
+   methods and table are the ones the config spells _ZN15InvisibleSecret* /
+   _ZTV15InvisibleSecret -- the name shift hal/actor_classes_bob_world.cpp
+   documented when it seated the REAL 329. Derivation in port/slice_vspopup.txt,
+   fills in hal/actor_classes_vspopup.cpp. */
+extern unsigned char Number_SpawnInfo[];              /* ov002 0x0210b0c8, +4 = 330 */
+void *Number_Spawn(void);                             /* ov002 0x020f0d90, 64 B */
+void hal_fill_number_vtable(void);                    /* _ZTV15InvisibleSecret, 31 */
+extern unsigned char WingFeather_SpawnInfo[];         /* ov002 0x02108884, +4 = 345 */
+void *WingFeather_Spawn(void);                        /* ov002 0x020b3248, 80 B */
+void hal_fill_wing_feather_vtable(void);              /* _ZTV11WingFeather, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2920,4 +2934,14 @@ void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31
      hal_fill_rotating_up_down_platform_lift_vtable}, \
     {144, "SQUARE_METAL_NET_LIFT", SquareMetalNetLift_SpawnInfo, \
      SquareMetalNetLift_Spawn, hal_fill_rotating_up_down_platform_lift_vtable}, \
-    {231, "FWOOSH", Fwoosh_SpawnInfo, Fwoosh_Spawn, hal_fill_fwoosh_vtable},
+    {231, "FWOOSH", Fwoosh_SpawnInfo, Fwoosh_Spawn, hal_fill_fwoosh_vtable}, \
+    /* ---- lane VSPOPUP: the two ids every live VS match declines ---- */ \
+    /* NUMBER is the floating score popup: Actor::SpawnNumber (arm9 0x02010044, \
+       live in the build since gate 10) asks for 0x14a every time a player \
+       takes a star, banks red coins, or reads a count, and until now the gate \
+       turned it away. WING_FEATHER is the wing-cap feather. Both are run-time \
+       spawns, on no level's object table, so both rows move a boot census by \
+       zero and only change what a PLAYED frame can build. */ \
+    {330, "NUMBER", Number_SpawnInfo, Number_Spawn, hal_fill_number_vtable}, \
+    {345, "WING_FEATHER", WingFeather_SpawnInfo, WingFeather_Spawn, \
+     hal_fill_wing_feather_vtable},
