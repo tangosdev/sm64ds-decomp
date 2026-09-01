@@ -1082,11 +1082,11 @@ ov045	0x02111c80	func_ov045_02111c80	_ZN16FloatingFloorBfsD0Ev	vtable slot 17
 ov045	0x02111ce4	func_ov045_02111ce4	_ZN16FloatingFloorBfs16CleanupResourcesEv	vtable slot 3
 ov045	0x02111cf8	func_ov045_02111cf8	_ZN16FloatingFloorBfs13InitResourcesEv	vtable slot 0
 ov045	0x02111d0c	func_ov045_02111d0c	TiltingPlatformBfs_Spawn	spawnfunc
-ov045	0x02111d48	func_ov045_02111d48	_ZN12FallBlockBfsD1Ev	vtable slot 16
-ov045	0x02111d98	func_ov045_02111d98	_ZN12FallBlockBfsD0Ev	vtable slot 17
-ov045	0x02111dfc	func_ov045_02111dfc	_ZN12FallBlockBfs16CleanupResourcesEv	vtable slot 3
-ov045	0x02111e10	func_ov045_02111e10	_ZN12FallBlockBfs13InitResourcesEv	vtable slot 0
-ov045	0x02111e24	func_ov045_02111e24	FallBlockBfs_Spawn	spawnfunc
+ov045	0x02111d48	func_ov045_02111d48	_ZN21daObjKm2_Fall_Block_cD1Ev	vtable slot 16
+ov045	0x02111d98	func_ov045_02111d98	_ZN21daObjKm2_Fall_Block_cD0Ev	vtable slot 17
+ov045	0x02111dfc	func_ov045_02111dfc	_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv	vtable slot 3
+ov045	0x02111e10	func_ov045_02111e10	_ZN21daObjKm2_Fall_Block_c13InitResourcesEv	vtable slot 0
+ov045	0x02111e24	func_ov045_02111e24	daObjKm2_Fall_Block_c_Spawn	spawnfunc
 ov045	0x02112cd0	data_ov045_02112cd0	FireSeaElevator_SpawnInfo	spawninfo
 ov045	0x02112d98	data_ov045_02112d98	PoleLift_SpawnInfo	spawninfo
 ov045	0x02112dbc	data_ov045_02112dbc	_ZTV15FireSeaElevator	vtable alloc=0x328
@@ -1095,8 +1095,8 @@ ov045	0x02112e80	data_ov045_02112e80	_ZTV17ExtendingPlatform	vtable alloc=0x328
 ov045	0x02112f2c	data_ov045_02112f2c	FloatingFloorBfs_SpawnInfo	spawninfo
 ov045	0x02112ffc	data_ov045_02112ffc	TiltingPlatformBfs_SpawnInfo	spawninfo
 ov045	0x02113020	data_ov045_02113020	_ZTV16FloatingFloorBfs	vtable alloc=0x32c
-ov045	0x021130d0	data_ov045_021130d0	FallBlockBfs_SpawnInfo	spawninfo
-ov045	0x021130f4	data_ov045_021130f4	_ZTV12FallBlockBfs	vtable alloc=0x34c
+ov045	0x021130d0	data_ov045_021130d0	daObjKm2_Fall_Block_c_SpawnInfo	spawninfo
+ov045	0x021130f4	data_ov045_021130f4	_ZTV21daObjKm2_Fall_Block_c	vtable alloc=0x34c
 ov047	0x02111280	func_ov047_02111280	RickshawBs_Spawn	spawnfunc
 ov047	0x02111280	RickshawBs_Spawn	daObjKm3_Kurumajiku_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov047	0x021112bc	func_ov047_021112bc	_ZN10RickshawBsD1Ev	vtable slot 16

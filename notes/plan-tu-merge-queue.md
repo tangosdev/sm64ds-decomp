@@ -30,7 +30,7 @@ is `False` for all 173 because the census joined on the wrong key. The real key 
 `entries[*].functions[*].legacy_source`. Joining on it:
 
 * `ov045/PoleLift` (7 files, text-verified + linkcheck record) — **in the safe pool**
-* `ov045/FallBlockBfs` (5 files, text-verified) — **in the safe pool**
+* `ov045/daObjKm2_Fall_Block_c` (5 files, text-verified) — **in the safe pool**
 * `ov002/Enemy` → `ov002 @0x20ad838 dEnemyBase_c` (30 files) — blocked pool
 * `ov002/Platform` → `ov002 @0x20ee42c dBgActor_c` (11) — blocked pool
 * `ov002/LevelObjects` → `ov002 @0x20fe3cc` (17) — blocked pool, **and it disagrees with the map**
@@ -119,7 +119,7 @@ unavailable, not failed). `pcov` = how many of the TU's `.c` members the C++ cen
 independently proved C++.
 
 **B0 — calibration / regression control (no new source).**
-`ov045/PoleLift` (7 files), `ov045/FallBlockBfs` (5 files), both already `text-verified`.
+`ov045/PoleLift` (7 files), `ov045/daObjKm2_Fall_Block_c` (5 files), both already `text-verified`.
 Re-run `compile` + `verify` only. Proves the pinned toolchain, the ROM dump and the
 serial-build assumption reproduce a *known-green* transcript before a real pilot is
 spent. **Run first; 10 minutes, and it de-risks every later "is it me or is it the TU?"**
@@ -521,7 +521,7 @@ python tu_preflight.py --batch B3
 | **P2** | **local-struct + extern collision scan** — replay `tubuild._merge_field`, print both texts side by side; flag same-key/same-text `struct` decls in ≥3 members as advisory | silent layout divergence (§2.5) | **WARN**; count must equal the batch's `CONFn`, all resolved before `verify` |
 | **P3** | **`decl_common.h` usage** — count members including it, print what each actually consumes | it sometimes declares a TU's own functions as **data** → silent mismatch | **WARN**. Policy: drop it and restate the 3–17 lines. Median distinct includes is 6–7; usage 0–6 members/TU (highest `ov016/ShipUp` 6/8) |
 | **P4** | **sinit accounting** — module `sinits` / `ctor_entries` / `sinit_vs_tu` / `corroborated`, plus this TU's share | two merged TUs that each carried a sinit must produce **one** | **FAIL** if `sinit_vs_tu != "ok"`. **WARN** on `corroborated:false` (67 of 100 Tier-1 — *unavailable*, not *failed*). Corroboration is module-wide, **not narrowed to this TU** |
-| **P5** | **manifest dedupe** — join on `entries[*].functions[*].legacy_source`, **not** the census flag | redoing PoleLift/FallBlockBfs, or fighting an entry that already claims a member (§0.2) | **FAIL** on partial overlap; route whole-TU overlap to B0 as a re-verify |
+| **P5** | **manifest dedupe** — join on `entries[*].functions[*].legacy_source`, **not** the census flag | redoing PoleLift/daObjKm2_Fall_Block_c, or fighting an entry that already claims a member (§0.2) | **FAIL** on partial overlap; route whole-TU overlap to B0 as a re-verify |
 | **P6** | **completeness re-derived** — `SP.path_for(sym)` not `None`, `is_complete(module, path)`, assert `len(unit_functions) == len(census files)` | the census drops sourceless functions (§0.5). Without `complete`, dsd supplies the range from ROM bytes and **your source is never compiled** | **FAIL** on any missing or incomplete. All 100 Tier-1 pass today; 3 Tier-2 fail |
 | **P7** | **`create`-ability probe** — `split_legacy_source`, on error retry `tu_create.normalize` | discovering mid-batch that `create` aborts; the `struct`-return misparse (§2.2) | **INFO**: clean / normalizer-required / HAND-ASSEMBLE. FAIL only on the third |
 | **P8** | **inert-marker + blocker cross-check** — `text.startswith("//cpp")` vs `"//cpp" in text[:400]`; assert no member is in the by-value / not-in-delinks / extra-sections / NONMATCHING sets | a file that looks C++ and compiles as C99; a member invisible to the byte gates | **REPORT ONLY, do not tidy.** All four blocker sets currently have 0 safe-pool hits |
@@ -804,9 +804,9 @@ where noted.**
 | control | result |
 |---|---|
 | `ov045/PoleLift` | **7/7 MATCH, objisolate clean, reloc-destinations clean → TEXT-VERIFIED.** The one out-of-order pair is the D1/D0 group, the precedented exception. |
-| `ov045/FallBlockBfs` | **3/5 — NOT verified.** Both destructors `999 word(s) differ` with wrong reloc destinations (`_ZTV10dBgActor_c != 0x021130f4:ov045`). |
+| `ov045/daObjKm2_Fall_Block_c` | **3/5 — NOT verified.** Both destructors `999 word(s) differ` with wrong reloc destinations (`_ZTV10dBgActor_c != 0x021130f4:ov045`). |
 
-`FallBlockBfs` is banked in `config/tu_manifest.d/` as `text-verified` and does not
+`daObjKm2_Fall_Block_c` is banked in `config/tu_manifest.d/` as `text-verified` and does not
 reproduce today. **A banked status is not evidence.** Re-verify before trusting any entry.
 
 ### Pilot 1 `ov023/Squasher`: 9/9 MATCH → TEXT-VERIFIED

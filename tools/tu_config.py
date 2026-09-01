@@ -281,7 +281,7 @@ def attribute_bss(att, secs, syms, rl, tus, self_mod, owner_of):
     uses it (TU k's `.text`), by the static initialiser that constructs it (TU k's
     `__sinit_*` block, attributed above) and sometimes only by a `.data` record
     that the `.data` rule has already tied to TU k -- ov045's FloatingFloorBfs,
-    TiltingPlatformBfs and FallBlockBfs each reach two of their four `.bss`
+    TiltingPlatformBfs and daObjKm2_Fall_Block_c each reach two of their four `.bss`
     objects that way and no other. Running this rule after the pointer rule turns
     those from unowned into owned; running it before leaves 48 bytes on the floor."""
     if ".bss" not in secs or secs[".bss"][0] >= secs[".bss"][1]:

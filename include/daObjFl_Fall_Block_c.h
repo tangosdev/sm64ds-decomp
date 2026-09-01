@@ -15,7 +15,7 @@
  * daObjFallBlock_c's, then dBgActor_c's (func_ov022_02112380 /
  * func_ov022_021123d0, both `complete` today under placeholder names). A
  * one-level chain emits two. Its siblings include/FallBlockWf.h (ov015),
- * FallBlockBfs.h (ov045) and FallBlockBbh.h (ov063) already document the
+ * daObjKm2_Fall_Block_c.h (ov045) and FallBlockBbh.h (ov063) already document the
  * identical shape.
  *
  *   _ZTI20daObjFl_Fall_Block_c  ov022 0x02114270

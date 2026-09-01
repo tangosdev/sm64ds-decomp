@@ -163,7 +163,7 @@ Against the three `config/tu_manifest.d/` entries:
 | entry | status | result |
 | --- | --- | --- |
 | `ov045/PoleLift` | text-verified | `0x211150c..0x2111840` — **exact match** |
-| `ov045/FallBlockBfs` | text-verified | `0x2111d48..0x2111e60` — **exact match** |
+| `ov045/daObjKm2_Fall_Block_c` | text-verified | `0x2111d48..0x2111e60` — **exact match** |
 | `ov002/LevelObjects` | link-verified | manifest `0x20fe190..0x20fea4c`, map `0x20fe190..0x20fe33c` — **start agrees, end short by 0x710** |
 
 The two text-verified pilots reproduce exactly. The one **link-verified** pilot — the

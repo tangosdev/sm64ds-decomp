@@ -607,8 +607,9 @@ order, no data, no vtable, and 8 bytes of surplus.
 
 While this pilot ran, **another session was working in the same worktree** and
 added, as untracked files, `tools/tubuild.py` (a real implementation of plan §7),
-`tools/test_tubuild.py`, and `src_tu/actors/FallBlockBfs.c` — and appended an
-`ov045/FallBlockBfs` entry to `config/tu_manifest.d/`.
+`tools/test_tubuild.py`, and the ov045 falling-block shadow under `src_tu/actors/`
+(then spelled FallBlockBfs.c, since renamed to the cartridge's own class name) —
+and appended an `ov045/FallBlockBfs` entry to `config/tu_manifest.d/`.
 
 This pilot's manifest entry was therefore **spliced in textually** ahead of the
 closing bracket rather than written by re-serialising the file, so that entry and

@@ -1147,6 +1147,11 @@
     "src/actors/d_a_sld_mng.cpp#_ZN10daSldMng_cD0Ev": "andrewboudreau",
     "src/actors/d_a_sld_mng.cpp#_ZN10daSldMng_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_sld_mng.cpp#_ZN10daSldMng_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_sld_mng.cpp#daSldMng_c_Spawn": "github-actions[bot]"
+    "src/actors/d_a_sld_mng.cpp#daSldMng_c_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_fall_block.cpp#_ZN21daObjKm2_Fall_Block_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_fall_block.cpp#daObjKm2_Fall_Block_c_Spawn": "github-actions[bot]"
   }
 }

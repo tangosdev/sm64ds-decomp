@@ -9326,16 +9326,16 @@
    "start": "0x2111d48",
    "end": "0x2111e60",
    "classes": [
-    "FallBlockBfs"
+    "daObjKm2_Fall_Block_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN12FallBlockBfsD1Ev.cpp",
-    "src/_ZN12FallBlockBfsD0Ev.c",
-    "src/_ZN12FallBlockBfs16CleanupResourcesEv.c",
-    "src/_ZN12FallBlockBfs13InitResourcesEv.c",
-    "src/FallBlockBfs_Spawn.c"
+    "src/_ZN21daObjKm2_Fall_Block_cD1Ev.cpp",
+    "src/_ZN21daObjKm2_Fall_Block_cD0Ev.c",
+    "src/_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv.c",
+    "src/_ZN21daObjKm2_Fall_Block_c13InitResourcesEv.c",
+    "src/daObjKm2_Fall_Block_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 1,
