@@ -4,37 +4,9 @@
     .ctor       start:0x02111760 end:0x02111768 kind:rodata align:4
     .data       start:0x02111780 end:0x02112280 kind:data align:32
     .bss        start:0x02112280 end:0x021122c0 kind:bss align:32
-src/_ZN21ClockPaintingPendulumD1Ev.cpp:
+src/actors/d_a_obj_clock_huriko.cpp:
     complete
-    .text start:0x021111a0 end:0x021111d0
-
-src/_ZN21ClockPaintingPendulumD0Ev.cpp:
-    complete
-    .text start:0x021111d0 end:0x02111214
-
-src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111214 end:0x02111238
-
-src/func_ov013_02111238.c:
-    complete
-    .text start:0x02111238 end:0x02111280
-
-src/_ZN21ClockPaintingPendulum6RenderEv.cpp:
-    complete
-    .text start:0x02111280 end:0x021112a8
-
-src/_ZN21ClockPaintingPendulum8BehaviorEv.cpp:
-    complete
-    .text start:0x021112a8 end:0x0211133c
-
-src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211133c end:0x02111384
-
-src/ClockPaintingPendulum_Spawn.c:
-    complete
-    .text start:0x02111384 end:0x021113bc
+    .text start:0x021111a0 end:0x021113bc
 
 src/_ZN22ClockPaintingHandShortD1Ev.cpp:
     complete

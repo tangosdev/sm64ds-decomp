@@ -1,11 +1,11 @@
-_ZN21ClockPaintingPendulumD1Ev kind:function(arm,size=0x30) addr:0x021111a0
-_ZN21ClockPaintingPendulumD0Ev kind:function(arm,size=0x44) addr:0x021111d0
-_ZN21ClockPaintingPendulum16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111214
+_ZN18daObjClockHuriko_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN18daObjClockHuriko_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
+_ZN18daObjClockHuriko_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111214
 func_ov013_02111238 kind:function(arm,size=0x48) addr:0x02111238
-_ZN21ClockPaintingPendulum6RenderEv kind:function(arm,size=0x28) addr:0x02111280
-_ZN21ClockPaintingPendulum8BehaviorEv kind:function(arm,size=0x94) addr:0x021112a8
-_ZN21ClockPaintingPendulum13InitResourcesEv kind:function(arm,size=0x48) addr:0x0211133c
-ClockPaintingPendulum_Spawn kind:function(arm,size=0x38) addr:0x02111384
+_ZN18daObjClockHuriko_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
+_ZN18daObjClockHuriko_c8BehaviorEv kind:function(arm,size=0x94) addr:0x021112a8
+_ZN18daObjClockHuriko_c13InitResourcesEv kind:function(arm,size=0x48) addr:0x0211133c
+daObjClockHuriko_c_Spawn kind:function(arm,size=0x38) addr:0x02111384
 _ZN22ClockPaintingHandShortD1Ev kind:function(arm,size=0x30) addr:0x021113bc
 _ZN22ClockPaintingHandShortD0Ev kind:function(arm,size=0x44) addr:0x021113ec
 func_ov013_02111430 kind:function(arm,size=0x48) addr:0x02111430
@@ -87,9 +87,9 @@ data_ov013_021120d8 kind:data(any) addr:0x021120d8 ambiguous
 _ZTI18daObjClockHuriko_c kind:data(any) addr:0x021120e0
 _ZTS18daObjClockHuriko_c kind:data(any) addr:0x021120ec
 data_ov013_021120f8 kind:data(any) addr:0x021120f8 ambiguous
-ClockPaintingPendulum_SpawnInfo kind:data(any) addr:0x02112104 ambiguous
+daObjClockHuriko_c_SpawnInfo kind:data(any) addr:0x02112104 ambiguous
 data_ov013_02112118 kind:data(any) addr:0x02112118 ambiguous
-_ZTV21ClockPaintingPendulum kind:data(any) addr:0x02112128
+_ZTV18daObjClockHuriko_c kind:data(any) addr:0x02112128
 data_ov013_02112138 kind:data(any) addr:0x02112138 ambiguous
 data_ov013_02112158 kind:data(any) addr:0x02112158 ambiguous
 data_ov013_02112178 kind:data(any) addr:0x02112178 ambiguous
