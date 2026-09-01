@@ -378,8 +378,8 @@ Branch tip `e62b179a4` on `port/vs-mercy`.
 |---|---|
 | battery, before the fix | **ALL GREEN** (50 levels, 34 scenes, default boot to title, linkage 9126 = 80.6%, ptr_audit 0, shipcfg build + selftest ok) |
 | abicheck, before the fix | 6417 OK, **EXTENSION RATCHET PASSED**, 0 new unjudged slots |
-| battery, after the fix | see `battery_fix.log` in the bundle |
-| abicheck, after the fix | see `abicheck_fix.txt` in the bundle |
+| battery, after the fix | **ALL GREEN** (same 50 levels, 34 scenes, default boot, linkage 9126 = 80.6%, ptr_audit 0, shipcfg build + selftest ok) |
+| abicheck, after the fix | 6417 OK, **EXTENSION RATCHET PASSED**, 92 baselined / 92 live / 0 NEW / 0 retired |
 | solo collect window | f241..f282, 42 frames, `canhurt=0` on 42/42, unchanged by the fix |
 | real `Player::Hurt` | refused inside (`gate=0 Hurt=0`), lands after (`gate=1 Hurt=1`), refused again 2 frames later |
 | DS side | no diff under `src/`, `include/`, `config/`, `symbols/` |
