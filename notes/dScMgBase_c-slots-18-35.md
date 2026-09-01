@@ -1,12 +1,60 @@
 # dScMgBase_c slots 18-35 — the keystone map
 
-`include/dScMgBase_c.h` says: *"Slots 18-35 are eighteen further virtuals new at this
-class; their signatures are not reconstructed yet, so they stay undeclared."*
+**THE RANGE IS COMPLETE (2026-08-31).** All eighteen slots, 18 through 35, are
+declared on `dScMgBase_c` together with every descendant override, one slot per commit.
+`_ZTV11dScMgBase_c` and the tables of all 32 descendants are emitted from source at
+their full length; nothing in the family is a prefix any more. What follows is the map
+that got us here, kept because the measurements in it are still the evidence.
 
-That single sentence is what caps every minigame class's emitted vtable. mwcc emits a
-table only as long as the slots it has been told about, so `dScMgSingle3DBase_c` emits
+`include/dScMgBase_c.h` used to say: *"Slots 18-35 are eighteen further virtuals new at
+this class; their signatures are not reconstructed yet, so they stay undeclared."*
+
+That single sentence was what capped every minigame class's emitted vtable. mwcc emits a
+table only as long as the slots it has been told about, so `dScMgSingle3DBase_c` emitted
 18 slots where the cartridge has 36 — a byte-exact **prefix**, not a disagreement, but
-not ownable either. The same cap applies to all 32 descendants of `dScMgBase_c`.
+not ownable either. The same cap applied to all 32 descendants of `dScMgBase_c`.
+
+## What finishing it actually bought (measured 2026-08-31, at slot 35)
+
+`romdata_check` before slot 35 vs after — the whole-tree counters, not just this family:
+
+| | slot 34 | slot 35 | delta |
+|---|---|---|---|
+| verified symbols | 465 | 496 | **+31** |
+| verified bytes | 35,428 | 39,900 | **+4,472** |
+| partial symbols | 253 | 223 | −30 |
+| partial bytes | 12,120 | 7,924 | −4,196 |
+| differing symbols | 6 | 5 | −1 |
+
+Every slot from 18 to 34 moved exactly 128 bytes: `+4` verified and `+124` partial,
+one word into each of the 32 tables. **Slot 35 does not**, and that is the point of it.
+Completing a table does not add a word to it — it moves the *whole table* from PARTIAL
+to VERIFIED. Thirty of them flipped PARTIAL → VERIFIED and `_ZTV12dScMgAmida_c` flipped
+DIFFERS → VERIFIED, which is where the +31 and the last of the six DIFFERS come from.
+
+Per-table, straight from `romdata_check.check_object` (the `--json` report carries
+counts and a `differing` list only, so a PARTIAL → VERIFIED flip is invisible in it):
+
+```
+_ZTV11dScMgBase_c  emitted 144  romExtent 144  blindWords 0  VERIFIED
+```
+
+Thirty-two of the thirty-three family tables read exactly like that — 144 bytes,
+36 slots, emitted length equal to the cartridge's extent — except
+`_ZTV12dScMgAmida_c`, which is 148 because slot 36 is genuinely its own.
+
+**The one exception is not a missing virtual.** `_ZTV12dScMgSlot3_c` still scores
+PARTIAL: emitted 144, `romExtent` **152**. The eight bytes past the end read
+`{0x00000000, 0x0213e5a0}`, and 0x0213e5a0 is `_ZTI12dScMgSlot1_c` — that is the
+offset-to-top / typeinfo header of the *next* vtable in the image.
+`_ZTV12dScMgSlot3_c` is at 0x0213eaa8 and `_ZTV12dScMgSlot1_c` at 0x0213eb40, exactly
+152 apart, and dsd points a `_ZTV` symbol at slot 0 rather than at the header, so the
+two header words in between belong to no symbol and dsd's "extends to the next symbol"
+sizing swallows them. So the class model is right and the config extent is eight bytes
+long. Fixing it is a `config/arm9/overlays/ov006/symbols.txt` change with its own
+gates, not part of a keystone commit. This is the mirror image of the standing
+`verified-vtable-is-not-a-complete-vtable` hazard: there dsd cuts a table short, here
+it runs one past.
 
 ## The map (read out of `_ZTV11dScMgBase_c`, ov004:0x020bc0c0)
 
@@ -226,13 +274,14 @@ The widened-table **count** is the only check that distinguishes the two.
 
 ## Three hazards, all measured
 
-**1. Slot 35 is a cross-overlay address collision.** `func_ov002_020ad660` and
-`func_ov004_020ad660` both exist, at the same address 0x020ad660, in different overlays.
-Only ov002's is decompiled (`src/func_ov002_020ad660.cpp`) — and it is a *different
-function*. The slot-35 body is ov004's, which has no source file. Any rename must be
-scoped to the ov004 symbol alone; a filename- or address-keyed rename hits ov002's
-unrelated function and every byte gate still passes. See the standing
-`cross-overlay-symbol-collision` note.
+**1. Slot 35 is a cross-overlay address collision.** 0x020ad660 is an overlay LOAD
+BASE, so ov000, ov002, ov003, ov004 and ov007 each have a different, unrelated symbol
+there — ov003's is `dScTitle_c`'s D1. The slot-35 body is ov004's. The rename was
+scoped to the module-qualified symbol `func_ov004_020ad660` alone, which is what
+`apply_rename` takes; a filename- or address-keyed rename would have hit four unrelated
+overlays and every byte gate would still have passed. See the standing
+`cross-overlay-symbol-collision` note. (Handled — recorded here because the hazard is
+a property of the address, not of this campaign.)
 
 **2. Each slot has to be atomic.** Declaring a virtual makes mwcc emit a vtable slot
 referencing a `_ZN11dScMgBase_c*` mangled name. That symbol does not exist until the
@@ -256,8 +305,8 @@ only once every intervening slot is declared.
 
 ## The per-slot worklist (measured 2026-08-31)
 
-How large each of the remaining seventeen PRs is. Counts are descendant overrides;
-every slot also carries the base declaration and the ov004 base-body rename.
+How large each PR was. Counts are descendant overrides; every slot also carried the
+base declaration and the ov004 base-body rename. All eighteen are landed or open.
 
 | slot | name | base body (ov004) | descendant overrides |
 |---|---|---|---|
@@ -276,9 +325,9 @@ every slot also carries the base declaration and the ov004 base-body rename.
 | 30 | `OnAimedAtWithEggReturnVec` | 0x020aeed8 | 6 - **DONE**, 2 declarations; the slot that settles 29 (it restores, word for word, what 29 saves) and the first whose name the ROM refutes in BOTH halves |
 | 31 | `Virtual7C` | 0x020b2880 | 7 - **DONE**, 3 declarations; the first slot ABOVE `dActor_c`'s table, which is what proves the borrowed names never applied -- `dScMgBase_c` is a SCENE, a sibling branch, not an actor |
 | 32 | `Virtual80` | 0x020b27f4 | 1 - **DONE**, 1 declaration; the MAIN-engine twin of 31, and the cheapest slot in the campaign after 22 |
-| 33 | `Virtual84` | 0x020b265c | 19 |
-| 34 | `Virtual88` | 0x020ae3b4 | 4 |
-| 35 | `Virtual8C` | 0x020ad660 | 1 |
+| 33 | `Virtual84` | 0x020b265c | 19 - **DONE**, 2 declarations; structurally slot 26 again (same 19 tables, same two owning classes, 17 inherited) and the first slot whose override lives inside a PROMOTED intact-object TU |
+| 34 | `Virtual88` | 0x020ae3b4 | 4 - **DONE**, 5 declarations; the first slot that takes ARGUMENTS (four, unanimous across seven call sites), the first whose purpose is legible from the body alone (a 4bpp pixel brush), and the first whose rename breaks a cross-file reference -- dScMgAmida_c's override calls the base body directly |
+| 35 | `Virtual8C` | 0x020ad660 | 1 - **DONE**, 2 declarations; the LAST slot of the range, the smallest, and the best-evidenced -- 13 dispatch sites across four leaf classes, all 13 of which consume the return with `cmp r0,#0` |
 
 **One deferred cleanup, from slot 31 onward.** The base bodies for slots 31, 32 and
 33 (0x020b2880, 0x020b27f4, 0x020b265c -- ROM ordinals 47, 46 and 45) all live inside
@@ -290,7 +339,13 @@ defines them under their old `func_ov004_*` names and whose manifest
 gates that read it -- `check_src_tu_compiles.py` and `tiers_ratchet.promoted_moves()`,
 the latter only looking at `"status": "promoted"` entries -- are green.  But the
 unit is stale, and it will be stale again after 32 and after 33.  Regenerate it ONCE,
-through `tools/tubuild.py`, after slot 33 lands, rather than three times.
+through `tools/tubuild.py`, rather than three times.
+
+**That regeneration is DUE as of slot 33** -- all three base bodies carry their
+mangled names now.  It is deliberately NOT folded into the slot-33 commit: one slot
+per change is the whole safety argument for this campaign, and regenerating a
+`src_tu/` unit touches a different tree read by a different gate.  It is a follow-up
+PR of its own.
 
 
 134 descendant overrides plus the base's 18 declarations. Slot 18 was the outlier;

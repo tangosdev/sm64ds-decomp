@@ -278,8 +278,10 @@ void func_ov006_020c1604(char* c, int unused, short a2, int a3);
 void func_ov004_020b66d4(char* p);
 
 
-void _ZN13dScMgMCarlo_c13OnYoshiTryEatEi(char* c)
+void dScMgMCarlo_c::OnYoshiTryEat(int /* arg */)
 {
+    char *c = (char *)this;
+
     struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
     func_ov006_020f7c10(c + 0x51a8);
     data_ov006_0213d564 = 0;
@@ -315,8 +317,10 @@ extern int _Z15ApproachLinear2Rsss(s16& r, s16 t, s16 s);
 extern unsigned short data_ov004_020bf9e4;
 extern void* data_ov004_020beb68;
 
-int _ZN13dScMgMCarlo_c13OnTurnIntoEggEi(char* c)
+int dScMgMCarlo_c::OnTurnIntoEgg(int /* mode */)
 {
+    char *c = (char *)this;
+
     struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
     switch (self->unk_60a8) {
     case 4:

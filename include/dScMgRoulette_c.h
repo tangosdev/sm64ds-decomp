@@ -61,8 +61,8 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual s32 InitResources();     /* slot 0 -- src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x0210980c */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x02109aac */
-    virtual s32 Render();            /* slot 9 -- ov006 0x02109834 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x02109834 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
 
     u8    mTable[0x270];  /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */

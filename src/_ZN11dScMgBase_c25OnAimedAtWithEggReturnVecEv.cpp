@@ -37,12 +37,23 @@ extern "C" u8 data_0209d458;
 extern "C" int _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern "C" int _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 
-/* The parameter is spelled void* to agree with decl_common.h, which the two
-   overrides reach this symbol through; `this` is recovered on the first line. */
-extern "C" void _ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv(void* cv)
+/* RETURN TYPE, MEASURED -- and it corrects the header's earlier `int`, which
+   that slot's own evidence block called "a HINT".  Declaring this member `int`
+   and letting control fall off the end does not cost an instruction, but it
+   does reserve r0 as the result register, and the closing block wants four
+   scratch registers.  mwcc then allocates r1-r4 where the ROM allocates
+   r0-r3, and fourteen of the function's ninety-three words differ with no
+   other change:
+
+       ROM   ldr r0,[pc,#0x38] / mov r3,#0x4000000 / ldr r1,[r3] / ...
+       int   ldr r1,[pc,#0x38] / mov r4,#0x4000000 / ldr r2,[r4] / ...
+
+   Spelled `void` it is byte-exact.  Both overrides and decl_common.h:2321
+   already said void; the retail source did too. */
+void dScMgBase_c::OnAimedAtWithEggReturnVec()
 {
-    struct dScMgBase_c *self = (struct dScMgBase_c *)cv;
-    char *c = (char *)cv;
+    struct dScMgBase_c *self = this;
+    char *c = (char *)this;
 
     data_0209d45c = 0;
     data_0209d454 = 0;

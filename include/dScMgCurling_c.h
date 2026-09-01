@@ -20,8 +20,8 @@ struct dScMgCurling_c : dScMgBase_c {
 
     virtual s32 InitResources();  /* slot 0 */
     virtual s32 Behavior();       /* slot 6 */
-    virtual s32 Render();         /* slot 9 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();         /* slot 9 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     /* Slot 18 (one of dScMgBase_c's own undeclared new slots 18-35) is
        left unnamed here too, same reasoning as dScMgBase_c.h's own -- its

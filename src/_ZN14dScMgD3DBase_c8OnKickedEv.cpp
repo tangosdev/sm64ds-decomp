@@ -1,4 +1,5 @@
 //cpp
+#include "dScMgD3DBase_c.h"
 extern "C" {
     extern unsigned char data_0209d464;
     extern int data_ov006_02141a44;
@@ -25,10 +26,14 @@ extern "C" {
 extern "C" int _ZN11dScMgBase_c8OnKickedEv(void* self);
 extern "C" void Camera_UpdateMatrices(int arg);
 
+extern "C" {
 extern unsigned char data_0209f5f8;
+}
 
-extern "C" int _ZN14dScMgD3DBase_c8OnKickedEv(char* self)
+int dScMgD3DBase_c::OnKicked()
 {
+    char *self = (char *)this;
+
     if (_ZN11dScMgBase_c8OnKickedEv(self) == 0) return 0;
     if (*(int*)(self + 0x4628) == 0) {
         if (data_0209d464 == 0) return 0;

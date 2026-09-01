@@ -52,8 +52,8 @@ struct dScMgJump_c : dScMgD3DBase_c {
        field, and the 0x5834 assert below still holds. The destructor above is
        declared first and out of line, so it stays this class's KEY FUNCTION and
        none of these translation units emits _ZTV11dScMgJump_c. */
-    s32 InitResources();    /* slot  0 -- src/_ZN11dScMgJump_c13InitResourcesEv.cpp */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    s32 InitResources();    /* slot  0 -- src/_ZN11dScMgJump_c13InitResourcesEv.cpp */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     s32 CleanupResources(); /* slot  3 -- src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp */
     s32 Behavior();         /* slot  6 -- src/_ZN11dScMgJump_c8BehaviorEv.cpp */

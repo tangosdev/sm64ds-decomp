@@ -7,6 +7,7 @@
    Not a Kill: see the slot-31 block in include/dScMgBase_c.h for why the base
    slot has no ROM name at all.  Same shape as the base, with 4 for the BG1CNT
    base bits and this class's own language table. */
+#include "dScMgAmida_c.h"
 extern "C" {
 extern void SetSubBg1Offset(int a, int b);
 extern int GetGameLanguage(void);
@@ -16,8 +17,9 @@ extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern unsigned char data_0209d454;
 extern int data_ov006_0213b838[];
 }
-extern "C" void _ZN12dScMgAmida_c9Virtual7CEv(void);
-extern "C" void _ZN12dScMgAmida_c9Virtual7CEv(void) {
+
+int dScMgAmida_c::Virtual7C()
+{
     volatile unsigned short *reg = (volatile unsigned short*)0x400100a;
     int id;
     void *t;

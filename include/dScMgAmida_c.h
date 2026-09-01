@@ -27,19 +27,29 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    TWO CONSTRAINTS HERE ARE MEASURED, NOT STYLE:
 
    1. Unk36 (slot 36) is declared below as a real virtual, but its three
-      call sites in InitResources/Behavior/Render MUST keep the
-      pre-migration vtable-shim dispatch. Calling it as a plain
-      `this->Unk36()` compiles Render 0xc bytes larger (0x2ac vs 0x2a0),
-      because mwcc lands its own slot for Unk36 right after dScMgBase_c's
-      compiler-visible virtuals -- dScMgBase_c leaves slots 18-35
-      undeclared -- not on true ROM slot 36. That one delta cascaded into
-      ~1400 unrelated-looking mismatches; traced via final_link.o.xMAP.
+      call sites in InitResources/Behavior/Render still use the
+      pre-migration vtable-shim dispatch, and THE REASON THEY HAD TO IS
+      GONE. Calling it as a plain `this->Unk36()` used to compile Render
+      0xc bytes larger (0x2ac vs 0x2a0) because mwcc landed its own slot
+      for Unk36 right after dScMgBase_c's compiler-visible virtuals --
+      dScMgBase_c left slots 18-35 undeclared -- rather than on true ROM
+      slot 36. That one delta cascaded into ~1400 unrelated-looking
+      mismatches; traced via final_link.o.xMAP. The base declares all
+      eighteen now and Unk36 sits on 36, so the shim may well be
+      removable. That is a MEASUREMENT nobody has taken, not a conclusion:
+      the shims are kept here because they match today, and replacing
+      them is its own commit with its own rombuild behind it. Do not
+      remove them on the strength of this paragraph.
 
    2. AfterCleanupResources returns early when vfSuccess != 2, which skips
       the base-class call as well. That is what the ROM does. Keep it.
 
-   Slot 35 (func_ov006_020d1170) is deliberately not declared, renamed or
-   touched: nothing in this class calls it. */
+   Slot 35 is declared and renamed now -- `Virtual8C`, this class's override
+   at ov006:0x020d1170.  Nothing in THIS class calls it, which is why it was
+   left alone for so long; the thirteen call sites are in four other leaves
+   (dScMgCoin_c, dScMgPanel_c, dScMgSound_c, dScMgSnowball_c), each asking the
+   question of itself.  This class narrows the base's `(param1 & 0xff) != 0`
+   to `== 1`. */
 struct dScMgAmida_c : dScMgBase_c {
     virtual ~dScMgAmida_c();
     virtual s32  InitResources();                       /* slot  0 */
@@ -47,15 +57,17 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual s32  Behavior();                             /* slot  6 */
     virtual s32  Render();                               /* slot  9 */
     /* Overrides dScMgBase_c's slot 18, so the base fixes its index.  Unk36
-       below is NOT an override: dScMgBase_c declares through 32 today, so mwcc
-       lands Unk36 on 33 and _ZTV12dScMgAmida_c scores DIFFERS on that one
-       word.  That is the last DIFFERS left in the minigame family, and it
-       needs no fix local to this header -- every keystone slot declared on the
-       base moves Unk36 one index closer, and declaring slot 35 puts it on 36.
-       Until then, keep Unk36 LAST: anything else undeclared-on-the-base
-       inserted above it would take 33 and push it further out. */
-    virtual int  OnYoshiTryEat(int arg);                 /* slot 18 */
+       below is NOT an override: it is this class's own brand-new slot.
+       dScMgBase_c declares all eighteen of 18-35 now, so mwcc lands Unk36 on
+       36, which is where the ROM puts it.  That was the last DIFFERS in the
+       minigame family and it is closed -- not by anything local to this
+       header, but by the base finally spelling the slots underneath it.
+       Keep Unk36 LAST all the same: any further virtual added to dScMgBase_c
+       would take 36 and push it out again. */
+    virtual void OnYoshiTryEat(int arg);                 /* slot 18 */
     virtual int  Virtual7C();                            /* slot 31 */
+    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
+    virtual int  Virtual8C();                          /* slot 35 */
     virtual int  Unk36();                                /* slot 36 */
 
     u8  unk_4660[4][8];      /* 0x4660 -- only ever passed around whole */

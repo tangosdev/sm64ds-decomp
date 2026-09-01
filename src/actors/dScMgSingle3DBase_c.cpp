@@ -114,9 +114,9 @@ extern void **data_0209d4a8;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_0210a708, 0x0210a708, size 0x1b8 */
+/* ROM ordinal 8 -- _ZN19dScMgSingle3DBase_c9Virtual84Ev, 0x0210a708, size 0x1b8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0210a708
+// @symbol _ZN19dScMgSingle3DBase_c9Virtual84Ev
 /* dScMgSingle3DBase_c's vtable slot 33 (offset +0x84).
  *
  * tools/tu_map.py did NOT put this function in this unit: it carries no class
@@ -128,12 +128,26 @@ extern void **data_0209d4a8;
  * Identical reference sets: both are this class's own overrides, inherited
  * unchanged by every child, and the true TU boundary is 0x0210a4b0..0x0210a8c0.
  *
- * It stays a free function for now rather than becoming
- * dScMgSingle3DBase_c::Virtual84 -- a derived class cannot declare an override
- * of a base slot the base itself has not declared, and dScMgBase_c leaves slots
- * 18-35 undeclared. Declaring those eighteen is the follow-up that also lets
- * this class emit its full 36-slot vtable instead of an 18-slot prefix. */
-extern "C" void func_ov006_0210a708(char *obj)
+ * NO LONGER A FREE FUNCTION.  This was written as one only because dScMgBase_c
+ * left slots 18-35 undeclared and a derived class cannot override a slot its
+ * base has not spelled.  dScMgBase_c::Virtual84 is declared now, so this is a
+ * real member definition -- mwccarm mangles it to the same symbol the free
+ * function was hand-named, and rombuild verifies the 0x1b8 bytes are unchanged.
+ * It was the last vtable slot in this unit still spelled that way; the one
+ * function left under a func_<module>_<address> name, 0x0210a534 above, is in
+ * no vtable at all.  The class emits a byte-exact 34-slot prefix now, and
+ * reaches its full 36 when dScMgBase_c declares 34 and 35.
+ *
+ * WHAT IT DOES: engine bring-up, the FIRST thing dScMgBase_c::BeforeInitResources
+ * dispatches (the +0x84 call at ov004:0x020b09d0, ahead of slot 31's at the end
+ * of the same function).  Graphics modes for both engines, VRAM banks assigned,
+ * both BG-enable shadows initialised to 0x10, a language-indexed character file
+ * decompressed into both engines' BG char VRAM, OBJ palette file 0xc3 loaded
+ * into both, and the scene object published into the global registry at
+ * data_ov000_020beb74 -- which is what fixes `this` as the incoming argument.
+ * It is dScMgBase_c's own 2D sequence (ov004:0x020b265c) with the 3D texture
+ * banks and G3X fog setup folded in. */
+void dScMgSingle3DBase_c::Virtual84()
 {
     void *p;
 
@@ -173,7 +187,7 @@ extern "C" void func_ov006_0210a708(char *obj)
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
-    data_ov000_020beb74[1] = (int)obj;
+    data_ov000_020beb74[1] = (int)this;
     data_0209d4a8 = (void **)data_ov000_020beb74;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
@@ -279,7 +293,7 @@ void dScMgSingle3DBase_c::AfterCleanupResources(u32 vfSuccess)
  * base has not spelled.  dScMgBase_c::OnHitByCannonBlastedChar is declared now,
  * so this is a real member definition -- mwccarm mangles it to the same symbol
  * the free function was hand-named, and rombuild verifies the eight bytes are
- * unchanged.  Slot 33 below is still waiting on the same declaration. */
+ * unchanged.  Slot 33 below is a real member definition now too. */
 int dScMgSingle3DBase_c::OnHitByCannonBlastedChar()
 {
     return 1;

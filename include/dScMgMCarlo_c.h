@@ -68,9 +68,9 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
        the first of these and the first non-inline virtual declared after the
        inline destructor, is this class's KEY FUNCTION -- so the TU that defines
        it is the one that emits _ZTV13dScMgMCarlo_c. */
-    s32 InitResources();   /* slot  0 -- ov006 0x020f8d08 */
-    s32 Render();          /* slot  9 -- ov006 0x020f85b0 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    s32 InitResources();   /* slot  0 -- ov006 0x020f8d08 */
+    s32 Render();          /* slot  9 -- ov006 0x020f85b0 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     s32 Behavior();        /* slot  6 -- ov006 0x020f869c */
 

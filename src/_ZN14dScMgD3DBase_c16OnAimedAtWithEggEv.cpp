@@ -31,9 +31,11 @@ void _ZN2GX16SetBankForSubOBJEt(unsigned short x);
 void _ZN11dScMgBase_c16OnAimedAtWithEggEv(void *c);
 extern void *data_ov006_02141a48[];
 extern unsigned char data_0209e660;
-void _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv(char *c);
 }
-void _ZN14dScMgD3DBase_c16OnAimedAtWithEggEv(char *c) {
+int dScMgD3DBase_c::OnAimedAtWithEgg()
+{
+    char *c = (char *)this;
+
     struct dScMgD3DBase_c *self = (struct dScMgD3DBase_c *)(void *)c;
     func_ov006_020e73c4();
     _ZN3GXS11LoadOBJPlttEPKvjj(data_ov006_02141a48[0], 0x100, 0x100);

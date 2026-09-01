@@ -250,7 +250,10 @@ s32 dScMgMCarlo2_c::InitResources()
 /* Resets the whole board: rebuild the 40 pieces, clear the match latch,
  * re-arm the shared table, then hand the score display a zero. */
 extern "C" {
-void _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi(char* c) {
+void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
+{
+    char *c = (char *)this;
+
     struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
   func_ov006_020f9760((Node *)(c + 0x51a8));
   data_ov006_0213d6fc = 0;
@@ -269,8 +272,10 @@ void _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi(char* c) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi(char *self)
+int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
 {
+    char *self = (char *)this;
+
     short st = *(short *)(self + 0x5928);
     switch (st) {
     case 4:

@@ -1,5 +1,6 @@
 //cpp
 // @symbol _ZN13dScMgTeresa_c13OnYoshiTryEatEi
+#include "dScMgTeresa_c.h"
 // recovered name: dScMgTeresa_c_OnYoshiTryEat_02120248
 /* recovered: renamed to Class_Method, vtable slot 18 -- an override of
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
@@ -18,8 +19,10 @@ void Deallocate(void* ptr);
 }
 struct G2S { static char* GetBG0CharPtr(); };
 
-extern "C" void _ZN13dScMgTeresa_c13OnYoshiTryEatEi(char* self, int reset)
+void dScMgTeresa_c::OnYoshiTryEat(int reset)
 {
+    char *self = (char *)this;
+
     volatile unsigned short val;
     if (reset == 0) {
         unsigned int v = *(unsigned int*)(self + 0xbc) + 1;

@@ -255,7 +255,6 @@ extern int data_ov004_020bf9ec;
 extern int data_ov006_0213bc44;
 extern int data_ov004_020bfa18;
 extern int data_ov006_0213bd48[];
-extern "C" void _ZN11dScMgCard_c15OnGroundPoundedEv(void *thisPtr);
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b56c8(int a);
 /* already the mangled Itanium name in the ROM's own symbols.txt --
@@ -264,7 +263,6 @@ double-mangling-defect memory note: a C++ TU re-mangles a bare
 `extern` unless told not to, and this name is already the target). */
 extern s16 data_ov004_020bf9e4;
 extern void* data_ov004_020beb68;
-extern "C" int _ZN11dScMgCard_c13OnTurnIntoEggEi(char* c);
 extern "C" void func_ov006_020c1604(char *c, int unused, short a2, int a3);
 extern "C" void func_ov004_020b66d4(void);
 extern u8 data_0209d45c;
@@ -407,8 +405,10 @@ s32 dScMgCard_c::InitResources()
    OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
-extern "C" void _ZN11dScMgCard_c13OnYoshiTryEatEi(char *c)
+void dScMgCard_c::OnYoshiTryEat(int /* arg */)
 {
+    char *c = (char *)this;
+
     dScMgCard_c *self = (dScMgCard_c *)(void *)c;
     int i;
     char *p1, *p2;
@@ -453,8 +453,10 @@ extern "C" void _ZN11dScMgCard_c13OnYoshiTryEatEi(char *c)
 // recovered name: dScMgCard_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::OnTurnIntoEgg - recovered from vtable slot identity */
-int _ZN11dScMgCard_c13OnTurnIntoEggEi(char* c)
+int dScMgCard_c::OnTurnIntoEgg(int /* mode */)
 {
+    char *c = (char *)this;
+
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     switch (self->mState) {
     case 0xe: {
@@ -534,7 +536,10 @@ int _ZN11dScMgCard_c13OnTurnIntoEggEi(char* c)
 // recovered name: dScMgCard_c_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::OnGroundPounded - recovered from vtable slot identity */
-void _ZN11dScMgCard_c15OnGroundPoundedEv(void *thisPtr) {
+void dScMgCard_c::OnGroundPounded()
+{
+    void *thisPtr = (void *)this;
+
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)thisPtr;
     int x = self->mHudScore;
     int v;

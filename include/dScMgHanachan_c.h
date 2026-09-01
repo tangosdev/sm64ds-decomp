@@ -41,8 +41,8 @@ struct dScMgHanachan_c : dScMgBase_c {
     virtual s32 InitResources();      /* slot  0 */
     virtual s32 CleanupResources();   /* slot  3 */
     virtual s32 Behavior();           /* slot  6 */
-    virtual s32 Render();             /* slot  9 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();             /* slot  9 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     u32 unk_4660;            /* 0x4660 -- Behavior calls through it as a
                                  pointer-to-member-function; Render reads it

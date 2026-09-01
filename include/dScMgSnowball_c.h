@@ -79,8 +79,8 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual s32 InitResources();     /* slot 0 -- ov006 0x02129268 */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021291f8 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021283a4 */
-    virtual s32 Render();            /* slot 9 -- ov006 0x02127d10 */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x02127d10 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnAttacked2();                        /* slot 23 */
     virtual int  OnKicked();                           /* slot 24 */
     virtual int  OnPushed();                           /* slot 25 */

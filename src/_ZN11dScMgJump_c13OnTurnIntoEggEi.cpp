@@ -10,8 +10,10 @@
 extern "C" short _Z15ApproachLinear2Rsss(short &r, short b, short c);
 extern "C" void func_02012790(int a0);
 
-extern "C" int _ZN11dScMgJump_c13OnTurnIntoEggEi(char *thiz, int sel)
+int dScMgJump_c::OnTurnIntoEgg(int sel)
 {
+    char *thiz = (char *)this;
+
     struct dScMgJump_c *self = (struct dScMgJump_c *)(void *)thiz;
     if (sel == 0) {
         if (self->unk_0bc % 5 == 4) {

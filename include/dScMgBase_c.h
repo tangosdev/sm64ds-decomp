@@ -47,12 +47,19 @@ struct dScMgBase_c : dScene_c {
        agree, so include/dActor_c.h is a useful NAMING hint -- never a
        signature authority. Where the two disagree, the ROM wins.
 
-       Declared one slot at a time, lowest first. mwcc emits a vtable only as
-       long as the slots it has been told about, so after declaring 18..k every
-       descendant emits k+1 slots -- a byte-exact PREFIX of the cartridge table,
-       never a disagreement. Declaring all eighteen at once would instead write
-       the BASE body into every slot a descendant has not yet declared an
-       override for, turning PARTIAL into DIFFERS across the whole family.
+ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
+       its descendants emit their full 36-slot vtables from source; none of
+       them is a prefix any more.
+
+       They were declared one slot at a time, lowest first, and that ordering
+       is why it worked. mwcc emits a vtable only as long as the slots it has
+       been told about, so after declaring 18..k every descendant emitted k+1
+       slots -- a byte-exact PREFIX of the cartridge table, never a
+       disagreement, so every intermediate commit was shippable. Declaring all
+       eighteen at once would instead have written the BASE body into every
+       slot a descendant had not yet declared an override for, turning PARTIAL
+       into DIFFERS across the whole family. Anything ADDED here from now on
+       is past the cartridge's own table and has no such safety net.
 
        Slot 18 -- MEASURED, not inferred:
          arity: 13 of the 24 independently decompiled descendant overrides read
@@ -62,11 +69,40 @@ struct dScMgBase_c : dScene_c {
            stub proves nothing either way -- an unused argument is simply never
            read -- so only an override that reads a parameter is evidence, and
            that evidence is a LOWER bound on the arity.
-         return type: int. dScMgCoin_c::OnYoshiTryEat is a real member
-           definition ending `return 0;`, so declaring void would have changed
-           its bytes. The 24 free-function bodies are all written void, but
-           the return type is not mangled, so they are unaffected. The base's
-           own ROM body is a lone `bx lr` and sets nothing.
+         return type: void, MEASURED -- and it corrects the `int` this block
+           used to carry, which rested entirely on dScMgCoin_c::OnYoshiTryEat
+           ending `return 0;`.  That reasoning does not survive the bytes.
+           Coin's tail is
+
+               bl <func_ov004_020adc1c>      ; result lands in r0
+               add r1, r4, #0x5000           ; r0 is LIVE, so the address is r1
+               str r0, [r1, #0x1d4]
+               mov r0, #0                    ; r0 now free -- the constant 0
+               str r0, [r1, #0x1c8]
+
+           The address goes to r1 because r0 still held the call's result, not
+           because r0 was reserved for a return value, and the trailing
+           `mov r0,#0` is the constant being stored to unk_51c8.  A `return 0;`
+           written after it costs nothing, so Coin is byte-identical under
+           BOTH spellings and pins neither.
+
+           Six overrides do pin it, and they pin void.  Converting the
+           free-function bodies to real members forces the declaration on them,
+           and as `int` mwcc reserves r0 and shifts every register at their
+           exits by one -- dScMgSlot1_c 3 words of 19, dScMgMemory_c and
+           dScMgMemory2_c 5 of 24 each, dScMgRoulette_c 3 of 63,
+           dScMgPanel_c 4 of 68, dScMgSlot3_c 84 of 205:
+
+               ROM   add r0, r4, #0x4000 / mov r1, #0 / str r1,[r0,#0x6b4]
+               int   add r1, r4, #0x4000 / mov r2, #0 / str r2,[r1,#0x6b4]
+
+           Spelled void all six are byte-exact and the whole 106/106 holds.
+           mwcc rejects the halfway position outright -- a void override of an
+           int virtual is `differs from virtual base function ... in return
+           type only`, an error, not a warning -- so the base and all 31
+           declarations move together.  The return type is not part of the
+           Itanium mangled name, so no symbol, vtable or config entry moves.
+           The base's own ROM body is a lone `bx lr` and sets nothing.
          name: from dActor_c.h:131, corroborated by
            config/arm9/overlays/ov006/symbols.txt, which already named
            dScMgCoin_c's slot-18 override `_ZN11dScMgCoin_c13OnYoshiTryEat*`
@@ -75,7 +111,7 @@ struct dScMgBase_c : dScene_c {
            either side; the name is inherited, not independently proven here.
            Only the signature is measured. dActor_c.h declares it with no
            parameter, which the measurement above contradicts. */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
     /* Slot 19 -- MEASURED, and dActor_c.h is wrong here too:
          arity: two of the eleven descendant overrides read r1, and both
@@ -93,7 +129,7 @@ struct dScMgBase_c : dScene_c {
            dScMgBSC_c each carry a `recovered name: <class>_OnTurnIntoEgg`
            comment in their own legacy source, so the name here does not
            rest on dActor_c.h at all. */
-    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
+    virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     /* Slot 20 -- and this one has no name.  `Virtual50` is the placeholder
        include/dActor_c.h:133 already uses, spelled from the byte offset
        (slot 20 x 4 = 0x50).  All five bodies carry a
@@ -507,10 +543,26 @@ struct dScMgBase_c : dScene_c {
        time rather than a second witness.  Both halves of it are wrong here and
        both are MEASURED wrong; it is kept as a label, for the reasons under
        slot 29.
-         return type: int, A HINT, and the THIRD consecutive slot no body pins.
+         return type: void, and this is the one slot in the whole 18-35 range
+           whose return type the BYTES settle rather than merely permit.  It
+           was declared `int` here as a hint until the base body became a real
+           member definition; that spelling is now refuted.
            ov004:0x020aeed8 sets no result on either exit -- the early one is a
            bare return after `cmp r0,#2` and the fall-through ends in a
-           read-modify-write of DISPCNT.  Neither dispatch site reads a result
+           read-modify-write of DISPCNT.  Declaring the member `int` and
+           letting control fall off the end costs no instruction, but it does
+           reserve r0 as the result register, and the closing block wants four
+           scratch registers.  mwcc then allocates r1-r4 where the ROM
+           allocates r0-r3 -- fourteen of ninety-three words differ, with no
+           other change to the source:
+               ROM   ldr r0,[pc,#0x38] / mov r3,#0x4000000 / ldr r1,[r3]
+               int   ldr r1,[pc,#0x38] / mov r4,#0x4000000 / ldr r2,[r4]
+           Spelled `void` the function is byte-exact.  Contrast slots 31, 32,
+           35 and the OnXxx slots, where `int` costs nothing because r0 is not
+           contended at the exit -- there the hint stands unrefuted, which is
+           NOT the same as confirmed.  decl_common.h:2321 and both overrides
+           already said void.
+           Neither dispatch site reads a result
            either, and that is measured, not assumed: dScMgBase_c::OnKicked
            (slot 21) is the only caller of this slot anywhere in ov004 or ov006
            -- see the whole-image `ldr rN,[rM,#0x78]` + `blx rN` scan under slot
@@ -574,7 +626,7 @@ struct dScMgBase_c : dScene_c {
            unk_462c is that edge latch and nothing else.  Slot 29 is the
            three-item overlay menu going up and slot 30 is it coming back down;
            neither has anything to do with a Yoshi egg or with a vector. */
-    virtual int  OnAimedAtWithEggReturnVec();          /* slot 30 */
+    virtual void OnAimedAtWithEggReturnVec();          /* slot 30 */
     /* Slot 31 -- Virtual7C, and the name is a deliberate NON-name.  This is the
        first slot above dActor_c's table, and reaching it settles what the
        thirteen slots below it only hinted at.
@@ -690,27 +742,209 @@ struct dScMgBase_c : dScene_c {
            into r4 BECAUSE the call clobbers it and handed to
            0x0203188c afterwards.  A callee that consumed r1 would not need it
            parked first.
-         return type: int, A HINT, and the FOURTH consecutive slot no body pins.
-           The base's last statement is the LoadCompressedFileAt call, so
-           whatever it returns falls out in r0; the caller overwrites r0 with a
-           literal 2 on the very next instruction.
+         return type: void, MEASURED -- and it corrects the `int` this block
+           used to carry, which it called "A HINT ... no body pins".  A body
+           pins it now.  dScMgSlot3_c's override was converted to a real member
+           definition, and as `int` mwcc reserves r0 for the result: its closing
+           read-modify-write on BG1CNT then allocates r1-r3 where the ROM
+           allocates r0-r2, six of forty-two words differing with no other
+           source change.
+
+               ROM   ldr r2,[pc,#0x18] / ldr r0,[pc,#0x20] / ldrh r1,[r2]
+               int   ldr r3,[pc,#0x18] / ldr r1,[pc,#0x20] / ldrh r2,[r3]
+
+           Spelled void both bodies are byte-exact.  The base's own body was
+           byte-exact either way -- its last statement is the
+           LoadCompressedFileAt call, so r0 is already the call's result and
+           nothing contends for it -- which is exactly why the hint survived
+           unrefuted for so long.  Unrefuted is not confirmed.  The return type
+           is not part of the Itanium mangled name, so nothing moved: no
+           symbol, no vtable, no config entry.  Same adjudication as slot 30.
          overrides: ONE table, one declaration -- dScMgSlot3_c
            (ov006:0x0210aa60), which repeats the base body verbatim and then
            writes BG1CNT once more, to 0x1118 instead of the base's 0x1000:
            same layer, this minigame's own character and screen base blocks.
            No reconciliation, no misattribution: the smallest slot in the
            campaign after 22's zero. */
-    virtual int  Virtual80();                          /* slot 32 */
+    virtual void Virtual80();                          /* slot 32 */
+    /* Slot 33 -- Virtual84, the display bring-up, and the quietest slot in this
+       campaign: it is the first one with nothing to correct.
+         WHY THE NAME.  Neither override body carries a `recovered name:` line
+           and neither does the base, so unlike slots 26, 29, 30, 31 and 32 there
+           is no borrowed dActor_c label here to retire -- there was never one to
+           borrow, because dActor_c's table ends at slot 30 and dScMgBase_c is on
+           the sibling branch anyway (fBase_c -> dBase_c -> dScene_c ->
+           dScMgBase_c; see the slot-31 block above).  Nothing in the cartridge
+           names this method -- RTTI carries class names only -- so it takes the
+           offset spelling fBase_c already uses for Virtual34/Virtual38, which is
+           also how notes/dScMgBase_c-slots-18-35.md has recorded it all along.
+         return type: void, and here that is the reading of the bodies rather
+           than a default.  All three fall off the end without setting a result,
+           the one call site discards whatever is in r0, and -- unlike slots
+           28-32 -- one of the three is about to become a real member definition
+           (see below), where a declared `int` with no return statement would be
+           a lie the compiler has to paper over.  notes/dScMgBase_c-slots-18-35.md
+           records the signature as void(char *obj) and this agrees with it.
+         arity: no explicit parameters, MEASURED.  Scanning arm9 and all 103
+           overlays for the dispatch pair -- `ldr rD,[rN,#0x84]` with rN != 15,
+           followed within three instructions by `blx rD` -- finds TWO sites in
+           the whole image, of which exactly one is in ov004 or ov006:
+           ov004:0x020b09d0, inside dScMgBase_c::BeforeInitResources.  It reads
+           `mov r0,r4; ldr r1,[r0]; ldr r1,[r1,#0x84]; blx r1`, so r1 holds the
+           loaded pointer and cannot also be a second argument, and r0 is `this`.
+           The scan was validated against a known answer first: the same run at
+           +0x80 reproduces slot 32's site (ov004:0x020b0900) and nothing else in
+           the family.  The other +0x84 hit is in ov064, outside this hierarchy.
+         `this` IS carried, and for once the base body proves it on its own.
+           Slots 26-32 all had base bodies that never touched the object; this
+           one writes obj[0x68] and obj[0x6c] on its second and third statements
+           and then publishes obj itself into the scene registry.
+         WHAT IT DOES.  This is the engine bring-up, and it runs BEFORE anything
+           else the family does.  Both engines get a graphics mode, VRAM banks
+           are assigned, both BG-enable shadows are initialised to 0x10 --
+           data_0209d45c for main and data_0209d454 for sub, the same pair slot
+           30 restores the DISPCNTs from and slots 31 and 32 clear BG1 out of --
+           a language-indexed compressed character file is decompressed into BG
+           character VRAM, OBJ palette file 0xc3 is loaded into both engines, and
+           the scene object is published into the global registry at
+           data_ov004_020beb74[1] / data_0209d4a8.  The three bodies differ
+           exactly where the classes differ: the base is 2D (GX mode (1,0,0),
+           GXS mode 0, BG bank 3), dScMgD3DBase_c is 3D (DisableAllBanks first,
+           texture and texture-palette banks, GX mode (1,0,1), GXS mode 5, BG
+           bank 2, InitialiseVramGlobals, and it keeps the decompressed file
+           pointers in globals), and dScMgSingle3DBase_c is the base's 2D
+           sequence with the 3D banks folded in.
+         WHEN IT RUNS.  BeforeInitResources (ov004:0x020b0930) dispatches this
+           slot at 0x020b09d0, near the top, and dispatches slot 31 at
+           0x020b0a0c, last.  With slot 32 called first out of
+           AfterInitResources, the whole sequence reads: bring the engines up
+           (33), dress the sub screen (31), then dress the main screen (32).
+         overrides: NINETEEN tables, TWO declarations -- structurally slot 26
+           over again, and the same two classes own the bodies.  Thirteen
+           children of dScMgSingle3DBase_c and four of dScMgD3DBase_c point at an
+           ancestor's body and declare nothing; declaring the slot on any of
+           those seventeen would invent an override the cartridge does not have.
+         FIRST OVERRIDE INSIDE A PROMOTED TU.  dScMgSingle3DBase_c's body is not
+           a one-function file -- it lives inside the intact-object unit
+           src/actors/dScMgSingle3DBase_c.cpp (promoted in #2064), where it has
+           been waiting on this declaration by name since then: the slot-26
+           member in that file ends "Slot 33 below is still waiting on the same
+           declaration."  It was the last vtable slot in that unit still spelled
+           as a mangled free function (0x0210a534, the only other one left, is in
+           no vtable at all), so this turns it into a real member definition and
+           takes the class from a byte-exact 33-slot vtable prefix to 34. */
+    virtual void Virtual84();                          /* slot 33 */
+    /* Slot 34 -- Virtual88, the first slot in this family that takes arguments,
+       and the first whose job is legible from the body without any naming help.
+       IT IS THE BRUSH.  ov004:0x020ae3b4 walks a size x size square centred on
+         (cx, cy), and for each cell inside it computes the address of one
+         4-bit pixel in BG character VRAM -- `(x/8 + (y/8)*32)*32 + (y&7)*4`,
+         the standard DS 4bpp char layout -- reads the containing word, splices
+         `colour` into the nibble at `(x&7)*4`, and writes it back.  Sixteen
+         colours, one palette index per pixel.  It clips on all four sides.
+       THE TWO FIELDS SLOT 33 INITIALISES ARE THE ONES IT READS.  Slot 33
+         (Virtual84, engine bring-up) sets `obj+0x68` to 0 and `obj+0x6c` to -1.
+         Here `obj+0x6c` selects WHICH background layer to draw into -- 0..3
+         index G2S::GetBG0CharPtr through GetBG3CharPtr, anything else returns
+         without drawing, which is what -1 buys -- and `obj+0x68` gates the
+         wrapped region above the touch screen, where the main engine's
+         G2::GetBG*CharPtr are used instead and y is folded by
+         `+ data_ov004_020beb6c + 0xc0`.  So slot 33 leaves the brush disabled
+         and a minigame arms it by picking a layer.  Two slots, one mechanism.
+       WHO CALLS IT: ov004:0x020ae5c4, a line rasteriser sitting immediately
+         after the brush in the image, which dispatches through +0x88 at seven
+         separate sites as it steps along a segment.  That is the whole of the
+         in-family call graph for this slot -- every one of the seven is inside
+         that one function.  A line-drawing minigame is exactly the set that
+         overrides it (dScMgAmida_c is the ghost-leg/stylus one).
+       arity: FOUR explicit parameters, MEASURED and unanimous.  Every one of
+         the seven sites sets up r1, r2, r3 AND one stack word before the call
+         -- e.g. at 0x020ae690, `mov r1,sb; mov r2,r8` with r3 loaded from
+         [sp,#0x3c] and [sp] already holding r7 -- so the callee takes this plus
+         four.  Image-wide the +0x88 dispatch pair appears 14 times, 7 in
+         ov004/ov006 and 7 in ov064; the scanner is the one validated at slot 33
+         by reproducing slot 32's site at +0x80.
+       return type: void, and here the ROM says so rather than merely permitting
+         it.  Two of the seven sites (0x020ae7e4, 0x020ae83c) overwrite r0 on
+         the very next instruction with `ldr r0,[sp,#0xc]`; the rest tail-return
+         without reading it.  All five bodies fall off the end without setting a
+         result.
+       NOTHING TO CORRECT, as at slot 33: no `recovered name:` line exists on
+         the base body or on any of the four overrides, so no borrowed label is
+         being retired.  Virtual88 is this tree's own no-name spelling after the
+         +0x88 vtable offset.
+       overrides: FOUR tables, FOUR declarations, nothing inherited and nothing
+         shared -- dScMgAmida_c (ov006:0x020d14c0), dScMgTeresa_c (0x021200dc),
+         dScMgTrampoline_c (0x02120da8) and dScMgTrampoline2_c (0x02122cb0) each
+         have a body of their own.  dScMgD3DBase_c does NOT override this slot,
+         so its two trampoline children declare it themselves rather than
+         inheriting a shared body the way they do at 26-31 and 33.
+       dScMgAmida_c's body decompiles with only THREE explicit parameters.  That
+         is not a contradiction: the fourth arrives on the stack and that body
+         never reads it, so the reconstruction had nothing to name.  The slot's
+         signature is fixed by the call sites, which are unanimous, and an
+         ignored stack argument costs the callee nothing. */
+    virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
+    /* Slot 35 -- Virtual8C, the LAST slot of dScMgBase_c's own eighteen and the
+       end of the 18-35 range.  With this declared the class emits its full
+       36-slot vtable from source, and dScMgAmida_c's Unk36 finally lands on 36
+       where the ROM puts it.
+       WHAT IT IS: a predicate on the scene's own spawn parameter.  The base
+         body (ov004:0x020ad660, twenty bytes) is `return (param1 & 0xff) != 0`
+         -- fBase_c::param1 at +0x08, the word every fBase_c is constructed
+         with.  dScMgAmida_c's override (ov006:0x020d1170, twenty-four bytes)
+         asks the narrower question, `== 1`.  Nothing else in the family
+         overrides it, so thirty-one of the thirty-two tables carry the base's
+         answer.
+       WHO CALLS IT, and this is the strongest call-site evidence in the whole
+         campaign: THIRTEEN dispatch sites, spread across FOUR different leaf
+         classes' code regions -- dScMgCoin_c (2), dScMgPanel_c (4),
+         dScMgSound_c (3) and dScMgSnowball_c (4).  Each is the same shape,
+         `mov r0,<this>; ldr r1,[r0]; ldr r1,[r1,#0x8c]; blx r1`, a class asking
+         the question of ITSELF.  They use the answer to pick between two
+         variants of the same minigame: two asset tables at ov006:0x02105488,
+         a different field path at 0x0211b9e0, a whole block skipped at
+         0x02126f58.
+       arity: no explicit parameters, MEASURED.  r1 is the loaded function
+         pointer at every one of the thirteen sites and so cannot also be an
+         argument, and r2/r3 are never set up for the call.  `this` only.
+       return type: int, and this is the first slot in the campaign where the
+         ROM does not merely permit a return value but is SEEN TO CONSUME ONE.
+         All 13 sites follow the call with `cmp r0, #0` and branch on the
+         result.  Both bodies compute a comparison and return it, so the value
+         is 0 or 1; `int` is the spelling slots 29-32 already use for the same
+         shape.
+       NOTHING TO CORRECT, as at slots 33 and 34: no `recovered name:` line on
+         the base body or on the one override.  Virtual8C is this tree's own
+         no-name spelling after the +0x8c vtable offset.
+       the rename is SCOPED.  0x020ad660 is an overlay load base, so ov000,
+         ov002, ov003, ov004 and ov007 each have a different, unrelated symbol
+         at that address -- ov003's was dScTitle_c's D1.  Only
+         func_ov004_020ad660 was this one, so the rename was keyed on that
+         module-qualified symbol; keying it on the address would have hit
+         five files in four unrelated overlays and every byte gate would
+         still have passed. */
+    virtual int  Virtual8C();                          /* slot 35 */
 
-    /* Slots 33-35 are added the same way: one slot per change, together with
-       every descendant override of that slot. Until then they stay undeclared
-       and the emitted tables stop at slot 32.
+    /* THAT IS ALL EIGHTEEN.  Slots 18-35 are declared, each in its own
+       commit together with every descendant override of that slot, and this
+       class emits its full 36-slot vtable from source.  Nothing in the family
+       is a prefix any more.
+
+       Slots 18-30 carry names borrowed from dActor_c by INDEX, which is a
+       coincidence and not evidence: dScMgBase_c is a scene
+       (fBase_c -> dBase_c -> dScene_c -> dScMgBase_c), a sibling branch that
+       happens to start appending its own virtuals at the same index dActor_c
+       does.  Slot 31 is the first one above dActor_c's table and is what
+       proved it.  Retiring those thirteen borrowed names is a separate
+       question from this range being declared, and is deliberately left open.
 
        THE OCCUPIED-SLOT TRAP IS NO LONGER LOADED IN dScMgSlot1_c -- slots 27
        and 28 were both of its early declarations and both are reconciled --
        but it is a property of the FAMILY, not of that one class.  Before
-       declaring slot N, check every descendant header for a virtual that
-       already lands on N by arithmetic.  Declaring the base's while a
+       adding any FURTHER virtual to this class, check every descendant
+       header for a virtual that already lands on the new index by
+       arithmetic.  Declaring the base's while a
        descendant keeps a different signature makes them two different
        functions, pushes the descendant's own down one index, and regresses its
        table to DIFFERS with rombuild still green -- only romdata_check sees

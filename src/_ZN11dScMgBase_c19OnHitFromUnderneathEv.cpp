@@ -29,8 +29,10 @@
 extern "C" void func_02012e1c(char *c);
 extern "C" void Enable3dEngines();
 
-extern "C" void _ZN11dScMgBase_c19OnHitFromUnderneathEv(void *c)
+int dScMgBase_c::OnHitFromUnderneath()
 {
+    void *c = (void *)this;
+
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     func_02012e1c((char *)self);
     self->mMenuOpen = 0;

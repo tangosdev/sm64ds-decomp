@@ -9,7 +9,7 @@ extern void FreeGfxSlotsById(int n);
 extern int func_ov004_020adc1c(void);
 }
 
-int dScMgCoin_c::OnYoshiTryEat(int arg)
+void dScMgCoin_c::OnYoshiTryEat(int arg)
 {
     dScMgCoin_c *self = this;
 
@@ -27,5 +27,4 @@ int dScMgCoin_c::OnYoshiTryEat(int arg)
     func_ov006_020dc2f8((char *)self);
     self->unk_51d4 = func_ov004_020adc1c();
     self->unk_51c8 = 0;
-    return 0;
 }

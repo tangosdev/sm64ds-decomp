@@ -12,8 +12,10 @@
 /* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site
    rather than redeclaring it with a different pointer type. */
 
-extern "C" void _ZN12dScMg3DEsp_c13OnYoshiTryEatEi(char* c, int a)
+void dScMg3DEsp_c::OnYoshiTryEat(int a)
 {
+    char *c = (char *)this;
+
     dScMg3DEsp_c *self = (dScMg3DEsp_c *)(void *)c;
     func_ov006_020e984c(c);
     self->unk_553c = 0;

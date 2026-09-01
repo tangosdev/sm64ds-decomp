@@ -10,8 +10,10 @@
    Converted from .c to .cpp -- see the banner on
    src/_ZN11dScMgBase_c8OnPushedEv.cpp. */
 
-extern "C" void _ZN11dScMgBase_c15OnHitByMegaCharEv(void *c)
+void dScMgBase_c::OnHitByMegaChar()
 {
+    void *c = (void *)this;
+
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     if (self->unk_4630 != 0) return;
     func_02012e78();

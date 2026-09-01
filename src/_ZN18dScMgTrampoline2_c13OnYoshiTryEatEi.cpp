@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "dScMgTrampoline2_c.h"
 // @symbol _ZN18dScMgTrampoline2_c13OnYoshiTryEatEi
 // recovered name: dScMgTrampoline2_c_OnYoshiTryEat_021242cc
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -32,10 +33,14 @@ extern "C" s32 GetGameLanguage(void);
 extern "C" void MultiStore16(u16 val, char *dst, int nbytes);
 extern "C" void func_ov006_02124228(T *self);
 
+extern "C" {
 extern volatile s16 data_020a0dbc[];
+}
 
-extern "C" void _ZN18dScMgTrampoline2_c13OnYoshiTryEatEi(T *self)
+void dScMgTrampoline2_c::OnYoshiTryEat(int /* arg */)
 {
+    T *self = (T *)this;
+
     _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
 
     self->unk7BA0 = data_020a0dbc[0];

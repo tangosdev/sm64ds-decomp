@@ -60,8 +60,8 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
        destructor so the destructor is still the first virtual declared. */
     virtual s32 InitResources(); /* slot 0 -- ov006 0x0212551c */
     virtual s32 Behavior();   /* slot 6 -- ov006 0x021254c0 */
-    virtual s32 Render();     /* slot 9 -- ov006 0x021253bc */
-    virtual int  OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual s32 Render();     /* slot 9 -- ov006 0x021253bc */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual void OnGroundPounded();                    /* slot 21 */
 
