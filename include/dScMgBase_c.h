@@ -363,10 +363,12 @@ struct dScMgBase_c : dScene_c {
        `recovered name: dScMgBase_c_OnHitFromUnderneath` comment, agreeing with
        include/dActor_c.h:145 on the parallel branch and with dScMgSlot1_c's
        independently recovered override.
-         return type: int, A HINT -- and slot 28 is the first in this campaign
-           whose return type NO body pins, which is why it gets no row in the
-           table above: that table is the eight slots whose own bodies DO pin
-           one.  ov004:0x020af04c leaves r0 holding whatever it last tested or
+         return type: void, and slot 28 is the first in this campaign whose
+           return type NO body pins, which is why it gets no row in the table
+           above: that table is the eight slots whose own bodies DO pin one.
+           void is chosen because nothing contradicts it and because it is the
+           only spelling both definitions can honour without inventing a result
+           neither body computes.  ov004:0x020af04c leaves r0 holding whatever it last tested or
            last called: the early exit at
            `cmp r0,#0; popeq {r4,lr}; bxeq lr` returns the zero it has just
            compared, and the fall-through returns whatever Enable3dEngines
@@ -379,9 +381,16 @@ struct dScMgBase_c : dScene_c {
            to their own caller without ever reading it, and the third branches
            to a shared epilogue that overwrites r0 with `add r0,r4,#0x4000`
            before anything can use it.  Three sites, three discarded results.
-           `int` is include/dActor_c.h's, and its RETURN types have held up
-           where its parameter lists have not; `void` compiles to the same
-           bytes.
+           include/dActor_c.h:145 spells `int`, and its RETURN types have held
+           up where its parameter lists have not -- but a hint from a parallel
+           hierarchy is not a reason to declare a type no body here produces.
+           `void` compiles to the same bytes, and unlike `int` it is a type
+           both definitions can actually satisfy: dScMgSlot1_c's override
+           computes no result and would otherwise fall off the end of a
+           non-void function, which is undefined behaviour whatever the
+           cartridge happens to leave in r0.  If a caller is ever found
+           consuming this slot, that measurement -- not dActor_c.h -- is what
+           should change it back.
          arity: no explicit parameters, MEASURED ONCE rather than twice.  The
            base body opens `mov r4, r0` and then writes r1 with
            `add r1, r4, #0x4000` before ever reading it, and reads no other
@@ -417,7 +426,7 @@ struct dScMgBase_c : dScene_c {
            compiles to from ov006; the vtable word is NOT a linker artifact,
            because the twenty-six tables that do not override this slot hold
            0x020af04c directly. */
-    virtual int  OnHitFromUnderneath();                /* slot 28 */
+    virtual void OnHitFromUnderneath();                /* slot 28 */
 
     /* Slots 29-35 are added the same way: one slot per change, together with
        every descendant override of that slot. Until then they stay undeclared

@@ -94,7 +94,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
     virtual int  OnPushed();                           /* slot 25 */
     virtual int  OnHitByCannonBlastedChar();           /* slot 26 */
     virtual void OnHitByMegaChar();                    /* slot 27 */
-    virtual int  OnHitFromUnderneath();                /* slot 28 */
+    virtual void OnHitFromUnderneath();                /* slot 28 */
 
     /* Four more of dScMgBase_c's own 18 new slots (18-35) are overridden
        here too (slots 29-31, 33 per tools/rtti_vtables.py --own
