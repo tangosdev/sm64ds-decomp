@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """sm64ds-lobby - room state and chat for the PC port's Multiplayer button.
 
-STAGE A: create, join, poll, chat, params, kick, leave, health. No match
-arming, no game spawn; `start`, `ready`, `result` and `failed` are not served
-yet and answer 404 unknown_verb like any other unknown verb.
+STAGE A: create, join, poll, chat, params, kick, leave, health.
+STAGE B (params/start/race): `start` arms a match, `ready` confirms a launcher
+can spawn it, `failed` aborts it back to lobby -- and NOTHING spawns until every
+playing seat has readied. The seat count is frozen at `start` and forced into
+every plan (SM64DS_VS_PLAYERS), which is the join-race guarantee (section 4).
 
 `kick` is the spec's own open question 4, which the owner answered yes to. It
 is the twelfth verb rather than one of the eleven the spec froze, and it needs
@@ -171,6 +173,16 @@ TEXT_MAX = 200
 DISPLAY_MAX = 20            # NICK_MAX + " (n)"
 GAME_NAME_MAX = 16
 
+MATCH_LEN = 16             # a match id, 16 lowercase hex, minted per arm
+
+# The reason a match could not run, a CLOSED enum and never free text
+# (spec 3.9). "timeout" also covers the 20-minute match watchdog (spec 5.8).
+FAIL_REASONS = ("spawn_failed", "no_pairing", "wrong_player_count",
+                "startup_error", "user_cancelled", "timeout",
+                # server-minted, never sent by a client: the arming deadline
+                # passed with some playing seat not ready.
+                "member_not_ready")
+
 STATES = ("lobby", "arming", "go", "in_match", "closed")
 
 _RNG = random.SystemRandom()
@@ -265,6 +277,19 @@ def new_room_code():
     return "".join(_RNG.choice(ROOM_ALPHABET) for _ in range(ROOM_LEN))
 
 
+def new_match_id():
+    return "".join(_RNG.choice(HEX_ALPHABET) for _ in range(MATCH_LEN))
+
+
+def new_comms_code():
+    # 8 chars from the SAME alphabet as the room code, but MINTED FRESH PER
+    # MATCH and never shown in any UI. Separating it from the room code is the
+    # whole of section 2.1: reading your invite code out loud must not hand a
+    # stranger a relay child seat. A fresh code per match also sidesteps the
+    # relay's 90-second held-seat trap on a rematch (spec 5).
+    return "".join(_RNG.choice(ROOM_ALPHABET) for _ in range(COMMS_LEN))
+
+
 # --------------------------------------------------------------- room state
 #
 # ONE module-level lock guards every room, every member and every counter
@@ -330,6 +355,19 @@ class Room(object):
         self.win_mode = "time"
         self.star_target = None
         self.match = None
+        # STAGE B/C match state, all None/empty in lobby and reset by
+        # _reset_match. Frozen at the arming instant so a join, a leave or a
+        # params edit that races the freeze cannot make two members disagree.
+        self.comms_code = None      # 8-char, minted per match, discarded at end
+        self.agreed_players = 0     # playing-seat count frozen at arm
+        self.match_map = 0          # params frozen into the plan at arm
+        self.match_win_mode = "time"
+        self.match_star_target = None
+        self.names = ""             # SM64DS_VS_NAMES, built once, slot order
+        self.slot_of = {}           # seat -> slot (0..3), packed among playing
+        self.arm_deadline = None    # monotonic; arming must complete by here
+        self.go_at = None           # monotonic; go->in_match after GO_GRACE
+        self.match_start = None     # monotonic; in_match->lobby after timeout
         # A fresh room starts at cursor 1 with nothing behind it, so the very
         # first real event is seq 2 and a client that polls from the cursor it
         # was handed at create sees everything that happened after it arrived.
@@ -661,6 +699,32 @@ def v_bool(body, key):
     return v, None
 
 
+def v_match(body):
+    s, err = want_str(body, "match", "bad_match")
+    if err:
+        return None, err
+    n = byte_len(s)
+    if n > MATCH_LEN:
+        return None, "too_long"
+    if n != MATCH_LEN:
+        return None, "bad_match"
+    for ch in s:
+        if ch not in HEX_ALPHABET:
+            return None, "bad_match"
+    return s, None
+
+
+def v_reason(body):
+    s, err = want_str(body, "reason", "bad_reason")
+    if err:
+        return None, err
+    # A fixed enum, never free text. member_not_ready is server-minted only,
+    # so a client that sends it is refused like any other unknown reason.
+    if s not in FAIL_REASONS or s == "member_not_ready":
+        return None, "bad_reason"
+    return s, None
+
+
 def shape(body, required, optional=()):
     """Unknown key, missing key: both are a 400. Deliberately strict."""
     allowed = set(required) | set(optional)
@@ -979,6 +1043,244 @@ def do_kick(body, who, now):
     return 200, {"cursor": room.seq, "ok": True}
 
 
+# ---------------------------------------------------------- the match, B + C
+#
+# THE ARMING HANDSHAKE, and why nothing spawns until everybody says it can.
+# start -> arming -> (all ready) -> go -> in_match -> (result) -> lobby, or at
+# any arming/go/in_match step a `failed`/deadline/timeout returns the room to
+# lobby WITHOUT any game having spawned earlier than `go`. This is the front
+# half of the join-race guarantee (spec section 4): the seat count is frozen at
+# `start` and forced into every plan as SM64DS_VS_PLAYERS, and no plan reaches
+# any launcher until every playing seat has POSTed `ready`.
+
+
+def playing_seats(room):
+    return sorted(s for s in room.members if room.members[s].playing)
+
+
+def assign_slots(room):
+    """seat -> slot, PACKED among the playing seats in seat order.
+
+    Host is seat 1 and is always slot 0 (spec 4.2, and the game makes the parent
+    slot 0 unconditionally). The rest take 1,2,3 in seat order. Packed rather
+    than slot=seat-1 so a promoted spectator (seats 1 and 3 playing, say) still
+    maps to slots 0 and 1 with no hole -- the reading stage A recommended and
+    the game's own contiguous player_count expects.
+
+    DISTINCT PER SEAT BY CONSTRUCTION, which is the whole point off this machine:
+    the relay ACCEPT is a recipientless broadcast, so two children on the same
+    slot cannot be told apart, and the lobby is the only place a slot is handed
+    out uniquely.
+    """
+    return {seat: slot for slot, seat in enumerate(playing_seats(room))}
+
+
+def build_names(room):
+    """SM64DS_VS_NAMES: four comma-separated fields in SLOT order, always with
+    exactly three commas (spec 4.7). Built ONCE here, by the server, so every
+    member's plan carries the byte-identical string and no launcher assembles
+    it -- which is what makes "identical env on every launcher" structural.
+    """
+    fields = ["", "", "", ""]
+    for seat, slot in room.slot_of.items():
+        if 0 <= slot < 4:
+            fields[slot] = room.members[seat].game_name
+    return ",".join(fields)
+
+
+def member_plan(room, seat):
+    """The per-member go plan (spec 4.3). Spectators get an empty plan and spawn
+    nothing; playing members get the whole launch instruction. Every field a
+    playing member gets is the frozen match state, so all playing plans are
+    identical except role/slot/spawn_delay.
+    """
+    m = room.members.get(seat)
+    if m is None or not m.playing:
+        return {"playing": False}
+    role = "parent" if seat == room.host_seat else "child"
+    plan = {
+        "role": role,
+        "code": room.comms_code,
+        "relay": RELAY_ADDR,
+        "map": room.match_map,
+        "players": room.agreed_players,
+        "slot": room.slot_of.get(seat, 0),
+        # The parent goes first; children wait 1.5 s (spec 4.3). It is an
+        # optimisation, not the guarantee -- the child's JOIN retries anyway.
+        "spawn_delay_ms": 0 if role == "parent" else 1500,
+        "playing": True,
+        "names": room.names,
+    }
+    if room.match_win_mode == "stars":
+        plan["star_target"] = room.match_star_target
+    return plan
+
+
+def _reset_match(room):
+    """Back to a clean lobby: clear the frozen match state and every armed
+    flag. Does NOT push an event; the caller pushes result/failed."""
+    room.state = "lobby"
+    room.match = None
+    room.comms_code = None
+    room.agreed_players = 0
+    room.match_star_target = None
+    room.names = ""
+    room.slot_of = {}
+    room.arm_deadline = None
+    room.go_at = None
+    room.match_start = None
+    for m in room.members.values():
+        m.armed = False
+
+
+def match_to_lobby(room, reason):
+    """A match that could not run returns to lobby with a `failed` event.
+    Shared by an explicit `failed`, the arming deadline and the match timeout.
+    """
+    mid = room.match
+    _reset_match(room)
+    if mid:
+        room.push("failed", match=mid, reason=reason)
+    log("room %s failed match=%s reason=%s" % (room.code, mid, reason))
+
+
+def try_go(room, now):
+    """arming -> go once every playing seat has POSTed ready. Pushes the `go`
+    event, whose plan do_poll injects per member."""
+    ps = playing_seats(room)
+    if ps and all(room.members[s].armed for s in ps):
+        room.state = "go"
+        room.go_at = now
+        room.push("go", match=room.match)
+        log("room %s go match=%s" % (room.code, room.match))
+
+
+def do_start(body, who, now):
+    """Host only. Freeze the match and open the arming window (spec 3.8, 4.1).
+
+    NOTHING SPAWNS HERE. This mints the match id and a fresh comms code, freezes
+    the params/roster/slot map/names, and moves the room to `arming`. Every
+    playing launcher must then POST `ready` before anybody gets a `go` plan.
+    """
+    err = shape(body, ("v", "room", "token"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    room.members[seat].seen = now
+    if seat != room.host_seat:
+        return 403, {"error": "not_host"}
+    if room.state != "lobby":
+        return 409, {"error": "not_in_lobby"}
+    ps = playing_seats(room)
+    if len(ps) < 2:
+        return 409, {"error": "not_enough_players"}
+    if any(not room.members[s].pre_ok for s in ps):
+        return 409, {"error": "member_not_ready"}
+
+    # Freeze everything, at one instant, so a join/leave/params during arming
+    # cannot make two members disagree (spec 4.7 "where in the start sequence").
+    room.match = new_match_id()
+    room.comms_code = new_comms_code()
+    room.agreed_players = len(ps)
+    room.match_map = room.map
+    room.match_win_mode = room.win_mode
+    room.match_star_target = room.star_target
+    room.slot_of = assign_slots(room)
+    room.names = build_names(room)
+    for m in room.members.values():
+        m.armed = False
+    room.state = "arming"
+    room.arm_deadline = now + ARM_DEADLINE_S
+    room.push("arming", match=room.match, deadline_ms=ARM_DEADLINE_S * 1000)
+    log("room %s arm match=%s players=%d deadline=%ds"
+        % (code, room.match, room.agreed_players, ARM_DEADLINE_S))
+    return 200, {"cursor": room.seq, "match": room.match}
+
+
+def do_ready(body, who, now):
+    """A playing member: "my launcher can spawn this match." When the last
+    playing seat says so, the room moves to `go` (spec 3.9, 4.1)."""
+    err = shape(body, ("v", "room", "token", "match"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    match, err = v_match(body)
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    m = room.members[seat]
+    m.seen = now
+    # Every ready/result/failed carries the match id, and a stale one is 409:
+    # that single check makes them idempotent and un-replayable across matches.
+    if room.match is None or match != room.match:
+        return 409, {"error": "stale_match"}
+    if room.state == "arming" and m.playing:
+        m.armed = True
+        try_go(room, now)
+    # A ready that arrives after the room already went to `go`/`in_match` for the
+    # same match is a harmless late duplicate: accepted, idempotent.
+    return 200, {"cursor": room.seq}
+
+
+def do_failed(body, who, now):
+    """A playing member reporting a match that could not run. ANY playing
+    member's `failed` returns the whole room to lobby (spec 4.4/4.6)."""
+    err = shape(body, ("v", "room", "token", "match", "reason"))
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    match, err = v_match(body)
+    if err:
+        return 400, {"error": err}
+    reason, err = v_reason(body)
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now)
+    room.members[seat].seen = now
+    if room.match is None or match != room.match:
+        return 409, {"error": "stale_match"}
+    # Only a real pre-result phase can be failed. If a result already landed the
+    # match id was cleared, so this is stale_match above; here the room is still
+    # arming/go/in_match and the reporter turns it back to lobby for everybody.
+    if room.state in ("arming", "go", "in_match"):
+        match_to_lobby(room, reason)
+    return 200, {"cursor": room.seq}
+
+
 def do_poll(body, who, now):
     """The only push channel, and the entire reliability story.
 
@@ -1057,9 +1359,23 @@ def do_poll(body, who, now):
     out = {"cursor": room.seq, "view": room.view(seat)}
     if room.needs_resync(cursor):
         out["resync"] = True
-        out["events"] = list(room.chat)
+        events = list(room.chat)
     else:
-        out["events"] = room.since(cursor)
+        events = room.since(cursor)
+    # THE GO PLAN IS PER-MEMBER, injected here rather than stored per member in
+    # the shared event ring. Each member's `go` event carries its own plan
+    # (parent vs child, its slot, its spawn delay); everything else is the
+    # frozen match state and is identical across members.
+    if any(e.get("kind") == "go" for e in events):
+        events = [dict(e, plan=member_plan(room, seat))
+                  if e.get("kind") == "go" else e for e in events]
+    out["events"] = events
+    # AND a top-level plan whenever the room is in `go`, so a client that fell
+    # behind the ring and resynced (getting chat only, no `go` event) still has
+    # its plan and can spawn. Belt and suspenders; the launcher prefers the
+    # event's plan and falls back to this.
+    if room.state == "go":
+        out["plan"] = member_plan(room, seat)
     return 200, out
 
 
@@ -1069,6 +1385,9 @@ VERBS = {
     "poll": do_poll,
     "chat": do_chat,
     "params": do_params,
+    "start": do_start,
+    "ready": do_ready,
+    "failed": do_failed,
     "kick": do_kick,
     "leave": do_leave,
 }
@@ -1091,16 +1410,43 @@ def sweep(now):
                 room.cond.notify_all()
             continue
 
-        for seat in sorted(room.members):
-            if now - room.members[seat].seen > MEMBER_TIMEOUT_S:
-                drop_member(room, seat, "timeout")
-                if room.state == "closed":
-                    break
+        # THE MATCH STATE MACHINE'S TIMERS.
+        #   arming, deadline passed  -> lobby + failed member_not_ready (spec 4.1)
+        #   go, GO_GRACE elapsed     -> in_match (spec 4.1); a quiet transition,
+        #                               no event: every launcher already spawned
+        #                               on the `go` event.
+        #   in_match, MATCH_TIMEOUT  -> lobby + failed timeout (spec 5.8), so a
+        #                               crashed pair cannot strand the room.
+        if room.state == "arming" and room.arm_deadline is not None \
+                and now >= room.arm_deadline:
+            match_to_lobby(room, "member_not_ready")
+        elif room.state == "go" and room.go_at is not None \
+                and now - room.go_at >= GO_GRACE_S:
+            room.state = "in_match"
+            room.match_start = now
+            room.cond.notify_all()
+        elif room.state == "in_match" and room.match_start is not None \
+                and now - room.match_start >= MATCH_TIMEOUT_S:
+            match_to_lobby(room, "timeout")
 
-        if room.state != "closed" and now - room.touched > ROOM_IDLE_S:
-            room.close("idle")
-        if room.state != "closed" and not room.members:
-            room.close("idle")
+        # HEARTBEAT AND IDLE TIMEOUTS APPLY ONLY IN LOBBY. During a match a
+        # member disconnecting is nothing (spec 6): the ROM copes, and the room
+        # holds until a result or the 20-minute match timeout above. Dropping a
+        # member -- worse, the host, which closes the room -- because a busy game
+        # starved the poll loop for 45 s would kill a live match. Arming (<=20 s)
+        # and go (<=5 s) are too short to trip the 45 s timeout, and their own
+        # deadlines already catch a launcher that went away, so this guard is
+        # about in_match and is expressed for the whole non-lobby span.
+        if room.state == "lobby":
+            for seat in sorted(room.members):
+                if now - room.members[seat].seen > MEMBER_TIMEOUT_S:
+                    drop_member(room, seat, "timeout")
+                    if room.state == "closed":
+                        break
+            if room.state != "closed" and now - room.touched > ROOM_IDLE_S:
+                room.close("idle")
+            if room.state != "closed" and not room.members:
+                room.close("idle")
         room.forget_old_kicks(now)
 
     BUCKETS.sweep(now)

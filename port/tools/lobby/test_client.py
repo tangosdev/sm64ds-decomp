@@ -420,8 +420,106 @@ def selftest(c, quick=False):
            c.post("join", {"v": 1, "room": code, "nick": "late"}),
            404, "no_such_room")
 
+    selftest_match(c)
     selftest_kick(c)
     return code
+
+
+def selftest_match(c):
+    """Stage B + C over the wire: arm, ready, the per-member go plan, result,
+    and a rematch with a fresh comms code."""
+    # -- start refusals, each in its own fresh room ----------------------
+    status, host = c.post("create", {"v": 1, "nick": "tango", "pre_ok": True})
+    code = host["room"]
+    status, guest = c.post("join", {"v": 1, "room": code, "nick": "opie",
+                                    "pre_ok": True})
+    expect("a non-host cannot start",
+           c.post("start", {"v": 1, "room": code, "token": guest["token"]}),
+           403, "not_host")
+
+    status, solo = c.post("create", {"v": 1, "nick": "alone", "pre_ok": True})
+    expect("start with one playing seat is refused",
+           c.post("start", {"v": 1, "room": solo["room"],
+                            "token": solo["token"]}), 409, "not_enough_players")
+    c.post("leave", {"v": 1, "room": solo["room"], "token": solo["token"]})
+
+    status, h2 = c.post("create", {"v": 1, "nick": "h", "pre_ok": True})
+    c.post("join", {"v": 1, "room": h2["room"], "nick": "g", "pre_ok": False})
+    expect("start with a playing seat not pre_ok is refused",
+           c.post("start", {"v": 1, "room": h2["room"], "token": h2["token"]}),
+           409, "member_not_ready")
+    c.post("leave", {"v": 1, "room": h2["room"], "token": h2["token"]})
+
+    # -- the happy arm ---------------------------------------------------
+    status, armed = c.post("start", {"v": 1, "room": code,
+                                     "token": host["token"]})
+    check("start arms the match", status == 200 and len(armed.get("match", "")) == 16,
+          armed)
+    match1 = armed["match"]
+    status, seen = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                   "cursor": guest["cursor"], "wait": 0})
+    arm_ev = [e for e in seen["events"] if e["kind"] == "arming"]
+    check("the guest is told the room is arming, with a deadline",
+          len(arm_ev) == 1 and arm_ev[0]["match"] == match1
+          and arm_ev[0]["deadline_ms"] > 0, seen.get("events"))
+    check("the view says state=arming", seen["view"]["state"] == "arming")
+
+    # -- ready, and the per-member go plan -------------------------------
+    status, _ = c.post("ready", {"v": 1, "room": code, "token": host["token"],
+                                 "match": match1})
+    check("the host readies", status == 200)
+    status, hostpoll = c.post("poll", {"v": 1, "room": code,
+                                       "token": host["token"],
+                                       "cursor": armed["cursor"], "wait": 0})
+    check("one ready is not enough: still arming",
+          hostpoll["view"]["state"] == "arming", hostpoll["view"])
+    status, _ = c.post("ready", {"v": 1, "room": code, "token": guest["token"],
+                                 "match": match1})
+    check("the guest readies -> go", status == 200)
+
+    status, gp = c.post("poll", {"v": 1, "room": code, "token": guest["token"],
+                                 "cursor": seen["cursor"], "wait": 0})
+    go = [e for e in gp["events"] if e["kind"] == "go"]
+    check("the guest's go event carries a child plan: slot 1, 1500 ms delay",
+          len(go) == 1 and go[0]["plan"]["role"] == "child"
+          and go[0]["plan"]["slot"] == 1
+          and go[0]["plan"]["spawn_delay_ms"] == 1500, go)
+    gplan = go[0]["plan"]
+    status, hp = c.post("poll", {"v": 1, "room": code, "token": host["token"],
+                                 "cursor": hostpoll["cursor"], "wait": 0})
+    hgo = [e for e in hp["events"] if e["kind"] == "go"]
+    hplan = hgo[0]["plan"]
+    check("the host's go event carries a parent plan: slot 0, no delay",
+          hplan["role"] == "parent" and hplan["slot"] == 0
+          and hplan["spawn_delay_ms"] == 0, hplan)
+    check("both plans carry an 8-char comms code from the room alphabet, "
+          "never a room code",
+          len(gplan["code"]) == 8 and gplan["code"] == hplan["code"]
+          and all(ch in ROOM_ALPHABET for ch in gplan["code"]), gplan["code"])
+    check("both plans force players=2 (the join-race guarantee)",
+          gplan["players"] == 2 and hplan["players"] == 2)
+    check("both plans carry the byte-identical names 'tango,opie,,'",
+          gplan["names"] == hplan["names"] == "tango,opie,,", gplan["names"])
+    check("both plans carry the same relay address",
+          gplan["relay"] == hplan["relay"] and ":" in gplan["relay"])
+
+    # -- failed, in a fresh room -----------------------------------------
+    status, fh = c.post("create", {"v": 1, "nick": "fh", "pre_ok": True})
+    fcode = fh["room"]
+    status, fg = c.post("join", {"v": 1, "room": fcode, "nick": "fg",
+                                 "pre_ok": True})
+    status, fa = c.post("start", {"v": 1, "room": fcode, "token": fh["token"]})
+    status, ff = c.post("failed", {"v": 1, "room": fcode, "token": fg["token"],
+                                   "match": fa["match"], "reason": "no_pairing"})
+    check("a failed is accepted", status == 200, ff)
+    status, fp = c.post("poll", {"v": 1, "room": fcode, "token": fh["token"],
+                                 "cursor": fa["cursor"], "wait": 0})
+    check("a failed event returns the room to lobby with the reason",
+          fp["view"]["state"] == "lobby"
+          and any(e["kind"] == "failed" and e["reason"] == "no_pairing"
+                  for e in fp["events"]), fp.get("events"))
+    c.post("leave", {"v": 1, "room": fcode, "token": fh["token"]})
+    c.post("leave", {"v": 1, "room": code, "token": host["token"]})
 
 
 def selftest_kick(c):

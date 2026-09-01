@@ -40,11 +40,13 @@ def _locked(fn):
 
 
 for _name in ("do_create", "do_join", "do_poll", "do_chat", "do_params",
+              "do_start", "do_ready", "do_failed",
               "do_kick", "do_leave", "sweep"):
     setattr(S, _name, _locked(getattr(S, _name)))
 S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
-           "chat": S.do_chat, "params": S.do_params, "kick": S.do_kick,
-           "leave": S.do_leave}
+           "chat": S.do_chat, "params": S.do_params, "start": S.do_start,
+           "ready": S.do_ready, "failed": S.do_failed,
+           "kick": S.do_kick, "leave": S.do_leave}
 
 PASSED = []
 FAILED = []
@@ -837,6 +839,285 @@ def test_seat_stability():
           "-- stage B chooses between slot=seat-1 and slot=rank",
           playing == [1, 3], playing)
 
+# ---------------------------------------------------- stage B: start + race
+#
+# The arming handshake, the frozen plan, the seat-count force, and the slot and
+# names the plan carries. These are what stand between "press start" and a match
+# smaller than the room agreed on.
+
+
+def _two_ready(now=1000.0, guest_pre_ok=True, host_pre_ok=True):
+    """A room with a host and a guest, both playing, ready to arm."""
+    st, host = create(nick="tango", now=now, pre_ok=host_pre_ok)
+    code = host["room"]
+    st, guest = join(code, "opie", now=now, pre_ok=guest_pre_ok)
+    return code, S.ROOMS[code], host, guest
+
+
+def start(code, token, who="10.0.0.1", now=1000.0):
+    return S.do_start({"v": 1, "room": code, "token": token}, who, now)
+
+
+def ready(code, token, match, who="10.0.0.1", now=1000.0):
+    return S.do_ready({"v": 1, "room": code, "token": token, "match": match},
+                      who, now)
+
+
+def poll(code, token, cursor, who="10.0.0.1", now=1000.0, wait=0):
+    return S.do_poll({"v": 1, "room": code, "token": token, "cursor": cursor,
+                      "wait": wait}, who, now)
+
+
+def test_start():
+    print("\n-- start: freeze the match, open the arming window")
+    reset()
+    code, room, host, guest = _two_ready()
+
+    # Refusals first, each with its own code.
+    st, p = start(code, guest["token"])
+    check("a non-host start is 403 not_host",
+          st == 403 and p["error"] == "not_host", (st, p))
+
+    reset()
+    st, host = create(nick="solo", pre_ok=True)
+    st, p = start(host["room"], host["token"])
+    check("start with one playing seat is 409 not_enough_players",
+          st == 409 and p["error"] == "not_enough_players", (st, p))
+
+    reset()
+    code, room, host, guest = _two_ready(guest_pre_ok=False)
+    st, p = start(code, host["token"])
+    check("start with a playing seat not pre_ok is 409 member_not_ready",
+          st == 409 and p["error"] == "member_not_ready", (st, p))
+
+    # The happy arm.
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    check("start arms the room", st == 200, (st, p))
+    check("state is arming", room.state == "arming", room.state)
+    check("a 16-hex match id was minted",
+          isinstance(p.get("match"), str) and len(p["match"]) == 16
+          and all(c in S.HEX_ALPHABET for c in p["match"]), p.get("match"))
+    check("an 8-char comms code was minted from the room alphabet, NOT shown "
+          "to any client",
+          room.comms_code is not None and len(room.comms_code) == 8
+          and all(c in S.ROOM_ALPHABET for c in room.comms_code)
+          and "code" not in p, room.comms_code)
+    check("the comms code is not the room code", room.comms_code != code)
+    check("agreed_players froze at 2", room.agreed_players == 2)
+    check("no seat is armed yet -- even the host must POST ready",
+          all(not m.armed for m in room.members.values()))
+    ev = room.events[-1]
+    check("an arming event carries the match and the deadline in ms",
+          ev["kind"] == "arming" and ev["match"] == p["match"]
+          and ev["deadline_ms"] == S.ARM_DEADLINE_S * 1000, ev)
+
+    # Frozen: params, join, kick, and a second start are all refused now.
+    st, pp = S.do_params({"v": 1, "room": code, "token": host["token"],
+                          "map": 2, "win_mode": "time"}, "10.0.0.1", 1001.0)
+    check("params is 409 not_in_lobby while arming",
+          st == 409 and pp["error"] == "not_in_lobby", (st, pp))
+    st, jj = join(code, "ace", who="10.0.0.9", now=1001.0)
+    check("a join is 409 in_match while arming",
+          st == 409 and jj["error"] == "in_match", (st, jj))
+    st, ss = start(code, host["token"], now=1001.0)
+    check("a second start is 409 not_in_lobby",
+          st == 409 and ss["error"] == "not_in_lobby", (st, ss))
+
+
+def test_ready_and_go():
+    print("\n-- ready: nobody spawns until everybody says they can")
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    match = p["match"]
+
+    st, r = ready(code, "0" * 32, match)
+    check("ready from a token that holds no seat is 403 not_a_member",
+          st == 403 and r["error"] == "not_a_member", (st, r))
+    st, r = ready(code, host["token"], "f" * 16)
+    check("ready with the wrong match id is 409 stale_match",
+          st == 409 and r["error"] == "stale_match", (st, r))
+
+    st, r = ready(code, host["token"], match)
+    check("the host readies", st == 200 and room.members[1].armed)
+    check("one ready is not enough: still arming", room.state == "arming")
+    st, r = ready(code, guest["token"], match, who="10.0.0.2")
+    check("the last playing seat readies -> go", room.state == "go", room.state)
+    ev = room.events[-1]
+    check("a go event carries the match", ev["kind"] == "go" and ev["match"] == match)
+
+    # A late duplicate ready, after go, is idempotent rather than an error.
+    st, r = ready(code, host["token"], match)
+    check("a duplicate ready after go is idempotent 200", st == 200, (st, r))
+
+
+def test_go_plan():
+    print("\n-- the go plan: per member, identical where it must be")
+    reset()
+    code, room, host, guest = _two_ready()
+    # A third seat: a spectator, since GAME_MAX_PLAYERS is 2.
+    st, spec = join(code, "watch", who="10.0.0.3")
+    check("the third seat is a spectator", room.members[3].playing is False)
+    S.do_params({"v": 1, "room": code, "token": host["token"],
+                 "map": 2, "win_mode": "stars", "star_target": 3},
+                "10.0.0.1", 1000.0)
+    st, p = start(code, host["token"])
+    match = p["match"]
+    ready(code, host["token"], match)
+    ready(code, guest["token"], match, who="10.0.0.2")
+
+    hp = S.member_plan(room, 1)
+    gp = S.member_plan(room, 2)
+    sp = S.member_plan(room, 3)
+    check("the host plan is parent, slot 0, no spawn delay",
+          hp["role"] == "parent" and hp["slot"] == 0
+          and hp["spawn_delay_ms"] == 0, hp)
+    check("the guest plan is child, slot 1, 1500 ms delay",
+          gp["role"] == "child" and gp["slot"] == 1
+          and gp["spawn_delay_ms"] == 1500, gp)
+    check("both plans carry the SAME comms code, relay, map, players, names",
+          hp["code"] == gp["code"] == room.comms_code
+          and hp["relay"] == gp["relay"] == S.RELAY_ADDR
+          and hp["map"] == gp["map"] == 2
+          and hp["players"] == gp["players"] == 2
+          and hp["names"] == gp["names"], (hp, gp))
+    check("the star target rides the plan in stars mode",
+          hp.get("star_target") == 3 and gp.get("star_target") == 3, hp)
+    check("the spectator plan is empty and spawns nothing",
+          sp == {"playing": False}, sp)
+
+    # A poll injects the right plan per member and also carries a top-level plan.
+    st, out = poll(code, guest["token"], guest["cursor"], who="10.0.0.2")
+    go_evs = [e for e in out.get("events", []) if e.get("kind") == "go"]
+    check("the guest's poll carries a go event with the guest's own plan",
+          len(go_evs) == 1 and go_evs[0]["plan"]["role"] == "child"
+          and go_evs[0]["plan"]["slot"] == 1, go_evs)
+    check("and a top-level plan too, for a resync client",
+          out.get("plan", {}).get("role") == "child", out.get("plan"))
+
+    # In time mode the star target is absent, not zero.
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    check("time mode: the plan has no star_target key",
+          "star_target" not in S.member_plan(room, 1), S.member_plan(room, 1))
+
+
+def test_names():
+    print("\n-- SM64DS_VS_NAMES, built once by the server in slot order")
+    reset()
+    code, room, host, guest = _two_ready()
+    start(code, host["token"])
+    check("two seats: names is 'tango,opie,,' with exactly three commas",
+          room.names == "tango,opie,," and room.names.count(",") == 3, room.names)
+    check("the two plans carry the byte-identical names string",
+          S.member_plan(room, 1)["names"] == S.member_plan(room, 2)["names"]
+          == "tango,opie,,")
+
+    # A duplicate nickname is disambiguated ONCE, by the server, so both windows
+    # get the same string.
+    reset()
+    st, host = create(nick="opie", pre_ok=True)
+    code = host["room"]
+    st, guest = join(code, "opie", pre_ok=True)
+    room = S.ROOMS[code]
+    start(code, host["token"])
+    check("a duplicate nickname is 'opie,opie (2),,' identical on both sides",
+          room.names == "opie,opie (2),,"
+          and S.member_plan(room, 1)["names"] == S.member_plan(room, 2)["names"],
+          room.names)
+
+
+def test_failed():
+    print("\n-- failed: any playing member aborts the whole room to lobby")
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    match = p["match"]
+
+    st, f = S.do_failed({"v": 1, "room": code, "token": guest["token"],
+                         "match": match, "reason": "spawn_failed"},
+                        "10.0.0.2", 1001.0)
+    check("a failed returns 200", st == 200, (st, f))
+    check("the room is back in lobby", room.state == "lobby", room.state)
+    check("the match id was cleared", room.match is None)
+    check("the comms code was discarded", room.comms_code is None)
+    check("every armed flag was cleared",
+          all(not m.armed for m in room.members.values()))
+    ev = room.events[-1]
+    check("a failed event names the match and the reason",
+          ev["kind"] == "failed" and ev["match"] == match
+          and ev["reason"] == "spawn_failed", ev)
+
+    # reason is a fixed enum; a client cannot mint member_not_ready.
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    st, f = S.do_failed({"v": 1, "room": code, "token": host["token"],
+                         "match": p["match"], "reason": "nope"}, "10.0.0.1", 1001.0)
+    check("an unknown reason is 400 bad_reason",
+          st == 400 and f["error"] == "bad_reason", (st, f))
+    st, f = S.do_failed({"v": 1, "room": code, "token": host["token"],
+                         "match": p["match"], "reason": "member_not_ready"},
+                        "10.0.0.1", 1001.0)
+    check("member_not_ready is server-minted only, refused from a client",
+          st == 400 and f["error"] == "bad_reason", (st, f))
+    st, f = S.do_failed({"v": 1, "room": code, "token": host["token"],
+                         "match": "a" * 16, "reason": "no_pairing"},
+                        "10.0.0.1", 1001.0)
+    check("a failed for a stale match is 409 stale_match",
+          st == 409 and f["error"] == "stale_match", (st, f))
+
+
+def test_arming_and_match_timers():
+    print("\n-- the reaper's match timers")
+    # Arming deadline: nobody readies, the deadline passes -> lobby + failed.
+    reset()
+    code, room, host, guest = _two_ready(now=1000.0)
+    st, p = start(code, host["token"], now=1000.0)
+    S.sweep(1000.0 + S.ARM_DEADLINE_S - 1)
+    check("before the deadline the room is still arming", room.state == "arming")
+    S.sweep(1000.0 + S.ARM_DEADLINE_S + 0.1)
+    check("the arming deadline returns the room to lobby", room.state == "lobby")
+    check("with a failed member_not_ready event",
+          room.events[-1]["kind"] == "failed"
+          and room.events[-1]["reason"] == "member_not_ready")
+
+    # Go grace: both ready, sweep past GO_GRACE -> in_match.
+    reset()
+    code, room, host, guest = _two_ready(now=1000.0)
+    st, p = start(code, host["token"], now=1000.0)
+    match = p["match"]
+    ready(code, host["token"], match, now=1000.0)
+    ready(code, guest["token"], match, who="10.0.0.2", now=1000.0)
+    check("both ready -> go", room.state == "go")
+    S.sweep(1000.0 + S.GO_GRACE_S + 0.1)
+    check("go grace elapses -> in_match", room.state == "in_match", room.state)
+
+    # In match, a member that stops heart-beating is NOT dropped (spec 6):
+    # the seen stamps are stale and the timeout would normally fire, but the
+    # guard holds them because the room is not in lobby.
+    room.members[1].seen = 1000.0
+    room.members[2].seen = 1000.0
+    S.sweep(1000.0 + S.MEMBER_TIMEOUT_S + 5)
+    check("a silent member is NOT dropped mid-match", 2 in room.members)
+    check("and the room did not close mid-match", room.state == "in_match")
+
+    # Match timeout returns the room to lobby with failed timeout. Heartbeats
+    # are fresh at this instant (a real launcher polls throughout), so the
+    # lobby heartbeat sweep in the same pass does not then drop anybody.
+    when = room.match_start + S.MATCH_TIMEOUT_S + 0.1
+    room.members[1].seen = when
+    room.members[2].seen = when
+    S.sweep(when)
+    check("the match timeout returns the room to lobby", room.state == "lobby")
+    check("with a failed timeout event",
+          room.events[-1]["kind"] == "failed"
+          and room.events[-1]["reason"] == "timeout")
+
+
 def Member_fields(m):
     return [k for k in m.__slots__]
 
@@ -855,6 +1136,12 @@ def main():
     test_kick()
     test_no_two_player_assumption()
     test_seat_stability()
+    test_start()
+    test_ready_and_go()
+    test_go_plan()
+    test_names()
+    test_failed()
+    test_arming_and_match_timers()
     test_rate_buckets()
     test_server_caps()
     test_opacity()
