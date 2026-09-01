@@ -4485,6 +4485,21 @@ extern "C" void *port_debug_spawn(unsigned id, unsigned param)
    his own -- the headless probe for the mAreaId read: spawn one @2 and the
    [dbgspawn] line must report area 2 (it prints the spawned actor's readback,
    and port_debug_spawn_at cries REGRESSION on a mismatch). */
+/* Some classes have NO spawn with param 0 anywhere in the ROM, and read the
+   param as a value 0 underflows. The measured case is ONE_UP_LOGO (331):
+   its InitResources takes `param - 1` as the TextureSequence start frame
+   (src/_ZN9OneUpLogo13InitResourcesEv.cpp), so param 0 becomes frame 0xffff
+   of an 8-frame BTP and the first Render walks off the file into Crash() --
+   rc 127 one frame after a bare SM64DS_SPAWN_ACTOR=331. Both ROM spawners
+   pass a live value: the slide's proximity spawn hard-codes 8
+   (src/func_ov002_020b76ec.c:45) and IncMegaKillCount passes the running
+   kill count. So a bare id here gets that class's own ROM value, an
+   explicit :param is always honoured verbatim, and the substitution says
+   so on stderr. A list of measured ids, not a mechanism. */
+static const struct { unsigned id; unsigned param; } port_dbgspawn_rom_param[] = {
+    {331, 8},    /* ONE_UP_LOGO: the slide spawner's own value */
+};
+
 extern "C" void port_debug_spawn_env(void)
 {
     const char *s = std::getenv("SM64DS_SPAWN_ACTOR");
@@ -4494,19 +4509,32 @@ extern "C" void port_debug_spawn_env(void)
         char *end;
         unsigned id = (unsigned)std::strtoul(s, &end, 0);
         unsigned param = 0;
-        int area = 0, has_area = 0;
+        int area = 0, has_area = 0, has_param = 0;
         if (end == s) {
             std::fprintf(stderr, "  [dbgspawn] SM64DS_SPAWN_ACTOR: cannot read "
                          "an id at \"%s\"\n", s);
             return;
         }
         s = end;
-        if (*s == ':')
+        if (*s == ':') {
             param = (unsigned)std::strtoul(s + 1, (char **)&s, 0);
+            has_param = 1;
+        }
         if (*s == '@') {
             area = (int)std::strtol(s + 1, (char **)&s, 0);
             has_area = 1;
         }
+        if (!has_param)
+            for (unsigned i = 0; i < sizeof port_dbgspawn_rom_param /
+                                     sizeof port_dbgspawn_rom_param[0]; ++i)
+                if (port_dbgspawn_rom_param[i].id == id) {
+                    param = port_dbgspawn_rom_param[i].param;
+                    std::fprintf(stderr, "  [dbgspawn] actor %u: no :param "
+                                 "given, using the ROM's own %u (param 0 is "
+                                 "outside this class's domain; spell :0 to "
+                                 "force it)\n", id, param);
+                    break;
+                }
         port_debug_spawn_area(id, param, area, has_area);
         if (*s == ',')
             ++s;

@@ -623,6 +623,62 @@ extern "C" void port_input_probe_star_trigger(int frame)
                  (unsigned)*(unsigned char *)(star + 0x49d), pid);
 }
 
+/* TEMPORARY, the star trigger's wing-feather sibling.
+ *
+ *   SM64DS_FEATHER_TRIGGER=<frame>[,<frame>...]   collect the feather then
+ *
+ * On each named frame, write the local player's unique id into the live
+ * WingFeather's own collision-detect word: otherOwner (+0x24) of the
+ * MovingCylinderClsn at +0x124, so feather+0x148 -- the exact word
+ * CylinderClsn::Process writes on a real cylinder overlap and the ONE word
+ * WingFeather::Behavior reads before it hands out wings. Everything
+ * downstream is the ROM's: Actor::FindWithID, the class==0xbf check,
+ * Player::InitWingFeathers, the feather's own particle-and-destruction, and
+ * the next frame's WINGED player render (the arity seam
+ * hal/player_bridges.cpp's wing block documents; this trigger exists so a
+ * two-window match can prove that render on the block's own feather).
+ *
+ * Spawns NOTHING, on purpose: the real path puts the feather in the world
+ * through the exclamation block's content table (SM64DS_POUND_PROBE=22:...),
+ * and a trigger that quietly debug-spawned one would prove the debug path
+ * twice while claiming to prove the block's. No live feather = one line and
+ * nothing armed. */
+static int feather_trigger_wants(int frame)
+{
+    const char *e = std::getenv("SM64DS_FEATHER_TRIGGER");
+    if (!e) return 0;
+    for (;;) {
+        char *end;
+        long at = std::strtol(e, &end, 0);
+        if (end == e) break;
+        if (at <= 0) at = 120;
+        if (frame == (int)at) return 1;
+        e = end;
+        if (*e == ',') ++e; else break;
+    }
+    return 0;
+}
+
+extern "C" void port_input_probe_feather_trigger(int frame)
+{
+    if (!feather_trigger_wants(frame)) return;
+    if (port_vs_match_end_frozen()) return;
+    char *player = (char *)find_actor_by_class(0xbf);
+    char *feather = (char *)find_actor_by_class(345);
+    if (!player || !feather) {
+        std::fprintf(stderr, "  [feathertrig] f%d nothing armed (player=%p "
+                     "feather=%p) -- the block's feather must already be "
+                     "live\n", frame, (void *)player, (void *)feather);
+        return;
+    }
+    unsigned int pid = *(unsigned int *)(player + 0x4);   /* player's unique id */
+    *(unsigned int *)(feather + 0x148) = pid;
+    std::fprintf(stderr, "  [feathertrig] f%d armed the collect: feather %p "
+                 "+0x148 = player uid 0x%x; WingFeather::Behavior runs the "
+                 "real InitWingFeathers this frame\n",
+                 frame, (void *)feather, pid);
+}
+
 extern "C" void port_input_probe_buddy_trigger(int frame)
 {
     if (!std::getenv("SM64DS_BUDDY_TRIGGER")) return;

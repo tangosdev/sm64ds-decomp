@@ -798,8 +798,21 @@ void hal_render_player_world(void *player)
                 src = (const int *)(bones + 0x2d0);
             }
             m43_mul(src, scene, composed);
-            ((void(__fastcall *)(void *, void *, const void *))(
-                ((void ***)m4)[0][5]))(m4, composed, c + 0x80);
+            /* Slot 5 holds hal/cxxname_bridge.cpp's ma2_virtual18, a
+               __fastcall face with a DEAD edx parameter and TWO stack
+               arguments: (self, dummy, unsigned mat, const void *scale).
+               This call used to borrow the head's three-parameter render
+               shape, which put `composed` in the dead edx and left the
+               scale to an unwritten stack slot -- so the first time the
+               gate ever opened (a wing-feather collect, or entering level
+               31 winged) the callee rendered off a garbage scale pointer
+               and popped 8 stack bytes where the caller pushed 4. The
+               fault that pointed here read address 0x9 inside the model
+               walk, three frames after SM64DS_SPAWN_ACTOR=345's feather
+               was collected at the player's feet. */
+            ((void(__fastcall *)(void *, void *, unsigned, const void *))(
+                ((void ***)m4)[0][5]))(m4, 0, (unsigned)(uintptr_t)composed,
+                                       c + 0x80);
         }
     }
 
