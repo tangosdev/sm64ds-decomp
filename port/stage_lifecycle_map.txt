@@ -296,9 +296,42 @@ name; "none" means no writer exists anywhere in the port.
                                     the ROM image instead of the boot default.
   data_0208ee44 = 2                 none. hal/message_pump.cpp:256 decrements
                                     it every frame; storage is romdata.c.obj.
-  data_0209d45c = 0x11              none. hal/message_pump.cpp:200 publishes
-                                    engine A's layer mask from it and
-                                    hal/auto_bss.cpp:25 leaves it zero.
+  data_0209d45c = 0x11              SEATED, lane VSEND, hal/star_flow.cpp's
+                                    seat_engine_a_layers, called from
+                                    port_boot_course_sound once per boot. It is
+                                    the third statement of Stage::InitResources
+                                    that file stands in for, beside the VS
+                                    countdown, and Stage::InitResources:330's
+                                    BG0CNT priority 2 rides with it (the 3D
+                                    layer's priority, which is what lets a
+                                    priority-1 HUD sprite draw over the arena).
+                                    VS-only by default out of CONSERVATISM, and
+                                    an earlier draft of this row gave a reason
+                                    that is RETRACTED: it claimed the same
+                                    assignment turns on the adventure HUD and
+                                    retakes every BMP baseline. Measured false --
+                                    forced on, adventure levels 1 and 5 are
+                                    byte-identical, because engine A's OAM holds
+                                    zero placed sprites there and the adventure
+                                    HUD reaches the screen through engine B. The
+                                    seat is proven needed in VS and proven to
+                                    buy nothing outside it on the levels
+                                    measured, so it stays behind the mode test
+                                    until somebody has a reason to want it
+                                    wider. SM64DS_HUD_LAYER_SEAT=always is that
+                                    unconditional form.
+                                    (This row read "none" until then, and the
+                                    seat is what put the VS match clock and the
+                                    star count on screen at all: the mask being
+                                    zero is why the engine-A compositor returned
+                                    before drawing with the HUD's sprites
+                                    already sitting in OAM. The row is corrected
+                                    here rather than left for a third review to
+                                    catch, the way the data_0209d45c row two
+                                    sections down already had to be.)
+                                    hal/message_pump.cpp:200 publishes engine
+                                    A's layer mask from it; hal/auto_bss.cpp:25
+                                    is what left it zero before the seat.
   data_0209cef0 = 1                 none.
   data_0209f21c = data_0208a0e0     hardcoded 1 (level_boot.cpp:2974), once
                                     per process.
@@ -650,8 +683,39 @@ change their input the moment it did. Closing the twenty-one buys the right to
 run the experiment, not the result of it.
 
 
-5. SLOT 3 -- Stage::CleanupResources, THE SEVEN
-------------------------------------------------
+5. SLOT 3 -- Stage::CleanupResources, THE SEVEN (NOW TWO)
+----------------------------------------------------------
+
+MEASURED AGAIN 2026-09-01, lane VSEND, and FIVE OF THE SEVEN NOW RESOLVE. This
+is the tree moving under the section, not a mistake in it: everything below was
+true when it was written, and this section already named the two that are left.
+What is new is only that the other five link today.
+
+    Added src/_ZN5Stage16CleanupResourcesEv.cpp to walk_window. link.exe
+    reported exactly TWO unresolved:
+
+        __ZN5Sound21ResetPlayerVoiceGroupEv
+        __ZN7Message15ResetAllGlobalsEv
+
+    -- the same two this section's own paragraph below predicts ("leaves
+    CleanupResources exactly TWO of its own"). Both are matched src bodies of
+    four lines. Adding them, THE LINK CLOSES CLEAN, dsstate_guard OK, zero
+    unresolved. data_020756f0, FaderWipe::~FaderWipe, UnloadLevelOverlays,
+    UnloadArchive and the ITCM func_01ffb0c8 all resolve now.
+    Probe logs: C:\tmp\vsend-out\probe-slot3.log, probe-slot3b.log. The
+    CMakeLists change was a probe and was reverted.
+
+DO NOT READ THAT AS "SLOT 3 IS READY". The link was never the hard half, and
+the paragraph after this one is still the whole story: slot 3 is dispatched by
+the CLEANUP Process, nothing marks the port's Stage for destruction in normal
+play, and a Stage teardown is what would let slots 12, 16 and 17 be seated
+honestly too. Lane VSEND additionally measured that a VS match-end scene
+request DOES reach the dispatch -- and that the frame loop behind it would then
+be holding a destroyed world, with no level-to-scene crossing to hand off to.
+Three TUs of linking, then the same four-slot job this section already
+describes.
+
+The original reading follows, unchanged.
 
 SEVEN, not six, and the seventh is the module-universe trap this repo has
 been caught by before. func_01ffb0c8 is ITCM, not arm9; it is compiled

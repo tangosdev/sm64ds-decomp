@@ -96,6 +96,55 @@ void  func_ov075_0211a268(void);                 /* slot 12  OnPendingDestroy */
 int   func_ov075_02115ab8(void *c);              /* slot 16  D2               */
 int  *func_ov075_02115b28(int *t);               /* slot 17  D0               */
 void *func_ov075_0211a854(void);                 /* the factory (matched src) */
+/* ---- SCENE 7, THE VS RESULTS SCREEN: measured, and deliberately NOT seated --
+ *
+ * Lane VSEND. It is the SAME dScEntry_c this file seats. Its factory,
+ * func_ov075_0211a740, is func_ov075_0211a854 with a different pair of
+ * element-array constructors -- same ActorBase::operator new(0x288), same
+ * data_ov075_0211d304 vtable -- and its SpawnInfo is one record along in the
+ * same .data run the mount already carries (slice_vs.txt section 1:
+ * "Slot 7 one table over: from:0x02090880 -> 0x0211c788, SpawnInfo
+ * {0x0211a740, 0x000a0007}"). The class tells the two scenes apart in one
+ * branch: src/func_ov075_0211a410.cpp does `if (self->unk_00c == 6)` for the
+ * lobby and hands everything else to func_ov075_02116818, the results
+ * background with the winner calculation (func_ov075_021165b0) behind it.
+ *
+ * SO REGISTERING IT IS SIX LINES, and this lane wrote them, ran them and took
+ * them back out. The row that was tried, verbatim, for whoever lands it:
+ *
+ *     extern unsigned char data_ov075_0211c788[];
+ *     extern "C" void *port_vs_results_spawn(void)
+ *         { return func_ov075_0211a740(); }
+ *     extern "C" void port_scene_fill_vs_results(void) { }
+ *     ... and in hal/scene_boot.cpp's port_scene_classes[], AFTER the
+ *         SCENE_VS_MENU row so the shared class is already filled:
+ *     {7, "SCENE_VS_RESULTS", data_ov075_0211c788, port_vs_results_spawn,
+ *      port_scene_fill_vs_results, 0},
+ *
+ * WHAT IT MEASURED, which is the point of having tried it. With the row in and
+ * SM64DS_VS_PMF_ALL=1, SM64DS_SCENE=7 boots the real results branch: the scene
+ * spawns, func_ov075_02116818 runs, its background and sprites load (BG VRAM
+ * 20108 bytes nonzero, OBJ VRAM 16312, 128 OAM bytes), and it runs 3600 frames
+ * with zero unmatched-body traps. With no input it never asks to leave; its own
+ * exit is src/func_ov075_02117e84.c, which does Scene::StartSceneFade(6, 2, 0)
+ * -- back to the VS lobby, which is where the owner says a finished match
+ * belongs. Captures: C:\tmp\vsend-out\scene7_pmf, scene7_pmf_long.
+ *
+ * WHY IT IS NOT SEATED. It cannot complete a battery scene row and the gate has
+ * no honest way to record that. Bare it faults at the member-pointer site
+ * below; with the switch on it gets past InitResources and faults on the THIRD
+ * site, whose body may not be seated at all (see the block over
+ * vs_install_remaining_pmf_thunks). port/tools/battery.py's SCENE_BLOCKED needs
+ * a marker string in the run's captured output, and the fault line goes to the
+ * flight recorder's playlog instead -- so a blocked row could not be told from
+ * a different crash, and a SCENE_SKIPS row would be a claim that some env makes
+ * it pass, which is false. Meanwhile the row buys no linkage: the class's TUs
+ * are already held by the SCENE_VS_MENU row above.
+ *
+ * IT BELONGS TO THE LANE THAT CROSSES FROM A LEVEL INTO A SCENE, which is the
+ * only way anything can request it in play (hal/star_flow.cpp's match-end block
+ * measures why the port cannot make that crossing today). That lane fixes the
+ * receiver sites, seats the row and re-takes the gate in one piece. */
 
 /* the entry actor's flat pieces */
 char *UnknownVsEntry_Spawn(void);
@@ -402,6 +451,86 @@ static void __fastcall vs_pmf_grid_render(void *self, void *)
     func_ov075_0211afb0((char *)self);
 }
 
+/* ---- AND THE OTHER TWO, BEHIND A SWITCH -----------------------------------
+ *
+ * Lane VSEND. The block above says the other two sites are left alone for
+ * SCOPE and that the lane which takes the entry record should do all three
+ * together. This is not that lane and this does not take them: the default is
+ * unchanged, both records keep the base's word, and nothing about a shipped
+ * boot moves. What this adds is the INSTRUMENT that block asks for, so the
+ * measurement can be reproduced from a branch rather than from a build
+ * somebody threw away.
+ *
+ * WHY IT CAME UP HERE. Booting scene 7 -- the VS results screen, the same
+ * dScEntry_c the lobby is -- faults, and the fault is at the FIRST of those two
+ * sites. Measured, C:\tmp\vsend-out\scene7:
+ *
+ *     FAULT code c0000005 accessing 000000a8, eax=0
+ *     func_ov075_0211b260 +0x17
+ *       <- func_ov075_0211b458 +0x77
+ *       <- UnknownVsEntry::InitResources +0x1bf
+ *       <- func_ov075_02116818 +0x259        the RESULTS branch
+ *       <- func_ov075_0211a410 +0x1e7        dScEntry_c::InitResources
+ *       <- vs_init <- Scene::SpawnIfNecessary <- port_scene_begin
+ *
+ * The block above predicted this exactly: "0211b260 bails on a non-positive
+ * count, both off whatever the stack happened to hold". On the LOBBY path the
+ * stack garbage happens to be a value that makes it bail. On the RESULTS path
+ * it happens to be zero, and a zero receiver reads 0x000000a8. So the defect is
+ * the one already named, and scene 7 is simply the path where it is lethal.
+ *
+ * SM64DS_VS_PMF_ALL=1 installs the thunk for THAT site -- the same
+ * __fastcall(self, edx) shape as vs_pmf_grid_render, on the same first word of
+ * the same kind of record, which the block above proves is the reachable entry
+ * for all three. It stays OFF because turning it on wakes up a piece of drawing
+ * code nobody has looked at, 0211b260's 20x20 vertex-grid initialisation, and
+ * this lane does not judge pictures.
+ *
+ * AND ONLY THAT SITE. The third pair, 0x0211d34c -> func_ov075_0211b1cc, gets
+ * no thunk here and must not: src/func_ov075_0211b1cc.c carries the "recovered
+ * from vtable slot identity" marker, which makes it a GUESSED body, and
+ * port/tools/inferred_stub_guard's standing ruling is that a guessed body may
+ * not enter a live fill. It caught the first draft of this block doing exactly
+ * that -- "NEW SEAT: func_ov075_0211b1cc" -- and the guard is right. Scene 7
+ * does not need it: the results path reaches 0211b260 through
+ * func_ov075_0211b458, and the only dispatcher for the other pair is
+ * func_ov075_0211b418, which that path never enters. So the lane that takes the
+ * entry record inherits that site along with its precondition -- the body has
+ * to be a real decompilation before anything may point at it.
+ *
+ * THE BODY IS CALLED THROUGH A TYPED POINTER, not through a declaration of its
+ * own, and that is forced rather than chosen. vs_data_patch.inc is GENERATED
+ * and says so at the top -- regenerate, do not hand-edit -- and it already
+ * declares the name as `void f(void)` because every row of that table only ever
+ * takes an address. Re-declaring it here with its real `(self)` signature is
+ * error C2733 on an extern "C" name. The four bodies that DO have real
+ * declarations above are the four the generator was told to skip. A cast at the
+ * one call site keeps the generated file generated; the body is cdecl and takes
+ * exactly one pointer (src/func_ov075_0211b260.c), which is what the pointer
+ * type says. */
+extern "C" {
+extern unsigned char data_ov075_0211d354[];
+}
+typedef void (*VsPmfBody)(void *self);
+static void __fastcall vs_pmf_grid_init(void *self, void *)
+{
+    /* src/func_ov075_0211b260.c: the 20x20 vertex-grid initialisation */
+    ((VsPmfBody)(void *)&func_ov075_0211b260)(self);
+}
+static void vs_install_remaining_pmf_thunks(void)
+{
+    if (!std::getenv("SM64DS_VS_PMF_ALL"))
+        return;
+    *(void **)data_ov075_0211d354 = (void *)vs_pmf_grid_init;
+    std::fprintf(stderr, "  [vs] SM64DS_VS_PMF_ALL=1: the entry record's "
+                 "0x0211d354 member-pointer site now gets its receiver "
+                 "(-> func_ov075_0211b260). This is a DRAWING change nobody "
+                 "has looked at; the default leaves the record alone. The "
+                 "third site, 0x0211d34c, is NOT touched -- its body is "
+                 "marked as recovered from vtable slot identity and the "
+                 "inferred-stub guard forbids seating a guess.\n");
+}
+
 static void vs_apply_data_patch(void)
 {
     const unsigned n = sizeof vs_data_patch / sizeof vs_data_patch[0];
@@ -527,6 +656,11 @@ extern "C" void port_scene_fill_vs(void)
            alone on purpose -- it is the ROM's own mapping and says to
            regenerate rather than hand-edit; the convention seam is the seat's. */
         *(void **)data_ov075_0211d35c = (void *)vs_pmf_grid_render;
+        /* the other two records, only if a run asked for them; same position in
+           the order and for the same reason -- the sinit below copies all three
+           pairs and everything downstream reads the copies. A no-op without the
+           variable, which is every run but a lane's own. */
+        vs_install_remaining_pmf_thunks();
         /* the excluded c800 record, rebuilt from the pinned mount extent --
            one code pointer (patched above) and a zero */
         std::memcpy(&port_vs_data_0211c800, data_ov075_0211c7f8 + 8, 8);

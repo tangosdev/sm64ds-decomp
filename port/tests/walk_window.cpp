@@ -1138,6 +1138,18 @@ void port_message_pump(void);
 /* the OTHER statement of Stage::Behavior the port hosts (hal/star_flow.cpp):
    the VS 3-2-1, which ends by starting the arena's own music */
 void port_vs_countdown_tick(void);
+/* and the tail of that same VS block: the match clock running out, the results
+   request the ROM makes when it does, and the end marker. Returns nonzero when
+   the run has asked to quit (SM64DS_VS_EXIT_ON_END). */
+int  port_vs_match_end_poll(int frame);
+/* and its play hold: once the match is over the four pad slots are held empty
+   so nothing can be played (and so nothing can be scored) while the marker's
+   grace window runs. Inert until the match ends. */
+void port_vs_match_end_hold(void);
+int  port_vs_match_end_frozen(void);
+/* the winner line, once the match is over: hal/ has no framebuffer, so it
+   builds the text and the loop below draws it */
+int  port_vs_match_end_banner(char *out, int n);
 void port_message_composite_engine_a(void *fb);
 int port_probe_message_id(void);
 int port_probe_message_fire(void *player, int id);
@@ -1151,6 +1163,11 @@ void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
 void port_input_probe_star_trigger(int frame);  /* TEMPORARY: SM64DS_STAR_TRIGGER */
+void port_vs_stars_probe(int frame);            /* TEMPORARY: SM64DS_VS_STARS */
+void port_stage0_vs_score(int frame);           /* STAGE 0: SM64DS_VS_SCORE */
+void port_stage0_vs_timer(int frame);           /* STAGE 0: SM64DS_VS_SCORE */
+void port_stage0_vs_breakall(int frame);        /* STAGE 0: SM64DS_VS_BREAKALL */
+void port_vs_hud_probe(int frame);              /* TEMPORARY: SM64DS_VS_HUD */
 void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
@@ -3429,6 +3446,41 @@ static void menu_input(int pad_live, const XPad *pad)
     }
     edge = held & ~menu_prev;
     menu_prev = held;
+    /* ---- AND IT DOES NOT OPEN IN MULTIPLAYER (Tango's ask, lane VSEND) ------
+     *
+     * "make sure f5 doesnt work in multiplayer." Every row behind this key is a
+     * single-console action -- warp to a level, relaunch into a scene or a VS
+     * map, load a save state, quit and start a replacement process -- and every
+     * one of them is a divergence the instant a second console is in the
+     * session, because the other console did none of it. The two worlds are
+     * lockstep on the frame; one of them warping is the end of that.
+     *
+     * THE TEST IS THE TRANSPORT, not a pairing handshake. comms_loopback_stats
+     * reports installed=false whenever no role was set, which is every solo run
+     * and is the whole of the "solo stays byte-identical" promise on this path;
+     * with a role set the process is in a session or trying to be, and either
+     * way it is not a console that should be warping alone. Reading a struct
+     * field costs nothing and it is read only on the press edge.
+     *
+     * THE OPEN IS REFUSED AND THE CLOSE IS NOT. A menu that somehow got open
+     * must always be closable, whatever the mode; refusing both would be a way
+     * to trap a player behind it. In practice the open is the only reachable
+     * half in a session, so the close arm is a safety property and not a
+     * feature.
+     *
+     * SM64DS_MP_DEBUG_MENU=1 for a developer who wants it anyway, off by
+     * default, named so it cannot be reached by accident. */
+    if ((edge & (1u << 0)) && !menu_on) {
+        static int allow = -1;
+        if (allow < 0) allow = getenv("SM64DS_MP_DEBUG_MENU") != 0;
+        if (!allow && port::comms_loopback_stats().installed) {
+            fprintf(stderr, "[menu] REFUSED: this process is in a multiplayer "
+                            "session, and every row behind this key is a "
+                            "single-console action the other console would not "
+                            "take. SM64DS_MP_DEBUG_MENU=1 overrides.\n");
+            edge &= ~(1u << 0);
+        }
+    }
     if (edge & (1u << 0)) {
         menu_on = !menu_on;
         fprintf(stderr, "[menu] %s\n", menu_on ? "open" : "closed");
@@ -9855,6 +9907,10 @@ int main(void)
                PowerStar state 4's own gate runs the real collect handler this
                same frame. SM64DS_STAR_TRIGGER. */
             port_input_probe_star_trigger(frame);
+            port_stage0_vs_score(frame);       /* STAGE 0: SM64DS_VS_SCORE */
+            port_stage0_vs_timer(frame);       /* STAGE 0: SM64DS_VS_SCORE */
+            port_stage0_vs_breakall(frame);    /* STAGE 0: SM64DS_VS_BREAKALL */
+            port_vs_hud_probe(frame);          /* TEMPORARY: SM64DS_VS_HUD */
             port_input_probe_sign_trigger(frame);   /* TEMPORARY: SM64DS_SIGN_TRIGGER */
             port_probe_alcheck();
             port_probe_sign_yaw();
@@ -9862,7 +9918,14 @@ int main(void)
             port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
+            /* THE MATCH-OVER PLAY HOLD, immediately before the actor phases so
+               the pads the tick is about to read are the held ones. Inert until
+               a VS match has been won; see hal/star_flow.cpp for why this holds
+               the input rather than skipping the tick the way the debug menu
+               does (the comms exchange lives inside the tick). */
+            port_vs_match_end_hold();
             port_actor_tick();
+            port_vs_stars_probe(frame);        /* TEMPORARY: SM64DS_VS_STARS */
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
         } else {
@@ -9939,6 +10002,17 @@ int main(void)
            which is the only music a VS arena has. Self-guarded on the mode, so
            an adventure frame reaches one load and a compare. */
         port_vs_countdown_tick();
+        /* AND THE TAIL OF THAT SAME BLOCK. Stage::Behavior's countdown and its
+           end-of-match test are statements of one function, so they are ticked
+           from one place, in the ROM's own order -- the countdown first, which
+           is what the ROM's line numbers say. Self-guarded on the mode the same
+           way, so an adventure frame reaches one compare and returns. The quit
+           goes out through the window's own WM_QUIT escape rather than an
+           exit() from inside the frame, so the run ends the way closing the
+           window ends it: the pump returns 0 from main and every atexit the
+           process installed still runs. */
+        if (port_vs_match_end_poll(frame))
+            W.PostQuitMessage_(0);
         port_input_probe_trace_msg(frame);   /* TEMPORARY: SM64DS_TRACE_MSG */
         port_input_probe_trace_cannon(frame);/* TEMPORARY: SM64DS_TRACE_CANNON */
         port_probe_rabbit_key(frame);        /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
@@ -11117,6 +11191,24 @@ int main(void)
             ovl_draw(surf, os);
         }
         if (menu_on) menu_draw(surf);
+        /* THE WINNER, once a VS match is over. Centred, over everything, for
+           the whole grace window before the process closes -- which is what
+           makes closing acceptable: nobody's window disappears without being
+           told who won. Host overlay on purpose: this is the port's own voice
+           and must not be mistakable for the cartridge's results screen
+           (hal/star_flow.cpp says why that screen is out of reach from inside
+           a match). */
+        {
+            char wb[96];
+            if (port_vs_match_end_banner(wb, (int)sizeof wb)) {
+                const int tw = (int)strlen(wb) * OVL_ADVANCE * OVL_SCALE;
+                const int wx = (ntr::SCREEN_W - tw) / 2;
+                const int wy = ntr::SCREEN_H / 2 - OVL_LINE;
+                ovl_shade(surf, wx - 6 * OVL_SCALE, wy - 4 * OVL_SCALE,
+                          tw + 12 * OVL_SCALE, OVL_LINE + 8 * OVL_SCALE);
+                ovl_text(surf, wx, wy, wb, 0xFFFFE060u);
+            }
+        }
         /* the save-state toast, over everything, bottom-left; at file scope
            now so the windowed scene loop can show the menu's refusals too */
         toast_draw(surf);

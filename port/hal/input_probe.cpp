@@ -199,7 +199,231 @@ extern void func_ov084_0212c8b0(void *buddy);   /* buddy state-0 main */
 extern void func_ov084_0212c960(void *buddy, int i);  /* buddy ChangeState */
 extern unsigned char data_0209f49e[];        /* per-player pressed word, stride 0x18 */
 extern int _ZN6Player12GetTalkStateEv(void *p);
+/* STAGE 0 (temporary, investigation only): the VS carried-star array and the
+   ROM's own sum of it. Read only, never written here. */
+extern signed char data_0209f310[];
+extern signed char NumVsStarsObtained(void);
+extern unsigned char data_0209f2d8;          /* game mode: 1 = VS            */
+extern unsigned char data_0209f204;          /* VS "time is up" flag         */
+extern unsigned short data_ov002_02111188;   /* VS timer sub-counter         */
+extern int data_0209fc68;                    /* wireless session state       */
+extern unsigned char data_0209f2bc;          /* the 3-2-1 countdown          */
+extern void func_ov002_020e7d84(char *m);    /* StarMarker's own ball break  */
 }
+
+/* STAGE 0 (temporary): walk EVERY class-178 PowerStar in the live list and
+   report the ones the five-star test actually looks at, plus the score array.
+   A VS arena carries five of them and only one is awake at a time -- the
+   harness's own find_actor_by_class takes the FIRST, which in every arena
+   measured is a caged one parked in state 9, so the touch words it writes are
+   read by nobody. Nothing here writes game state. */
+extern "C" void port_stage0_vs_score(int frame)
+{
+    if (!std::getenv("SM64DS_VS_SCORE")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+    static int last_sum = -999, last_shape = -1;
+    int sum = (int)NumVsStarsObtained();
+    char shape[512];
+    int n = 0, w = 0;
+    shape[0] = 0;
+    Node *nd = *(Node **)&data_0209b468;
+    while (nd && n < 16) {
+        char *a = (char *)nd->x8;
+        if (a && *(unsigned short *)(a + 0xc) == 178) {
+            w += std::snprintf(shape + w, sizeof shape - (unsigned)w,
+                               " [%p kind=%d st=%d idx=%u a2=%04x]",
+                               (void *)a, *(int *)(a + 0x43c),
+                               *(int *)(a + 0x440),
+                               (unsigned)*(unsigned char *)(a + 0x49d),
+                               (unsigned)*(unsigned short *)(a + 0x4a2));
+            ++n;
+            if (w > 400) break;
+        }
+        nd = nd->next;
+    }
+    int hash = n * 7919 + w;
+    for (int i = 0; i < w; ++i) hash = hash * 31 + shape[i];
+    if (sum == last_sum && hash == last_shape) return;
+    last_sum = sum; last_shape = hash;
+    std::fprintf(stderr, "[vsscore] f%d mode=%u stars=%d,%d,%d,%d sum=%d "
+                 "| %d PowerStar(s):%s\n", frame, (unsigned)data_0209f2d8,
+                 (int)data_0209f310[0], (int)data_0209f310[1],
+                 (int)data_0209f310[2], (int)data_0209f310[3], sum, n,
+                 w ? shape : " none");
+}
+
+/* STAGE 0 (temporary): SM64DS_VS_BREAKALL=<frame>. Correction from Tango: a
+   VS star comes out when a player BREAKS THE BALL around it; the marker's own
+   break, func_ov002_020e7d84, is that release, and the earlier runs proved
+   only that robot players who never swing leave every ball intact. At the
+   armed frame this dumps every star<->marker ID link, then runs the ROM's own
+   break on EVERY container marker, so the picked star's own marker is
+   guaranteed to be among them. Fires identically in both lockstep processes
+   (same env, same list) so the worlds stay in step. */
+extern "C" void port_stage0_vs_breakall(int frame)
+{
+    static int at = -2;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_VS_BREAKALL");
+        at = e ? std::atoi(e) : -1;
+    }
+    if (at < 0 || frame != at) return;
+
+    struct Node { void *x0; Node *next; char **x8; };
+    for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
+        char *a = (char *)nd->x8;
+        if (!a) continue;
+        unsigned short cls = *(unsigned short *)(a + 0xc);
+        if (cls == 178)
+            std::fprintf(stderr, "[breakall] f%d star %p uid=%08x "
+                         "marker-uid=%08x idx=%u st=%d a2=%04x\n", frame,
+                         (void *)a, *(unsigned int *)(a + 4),
+                         *(unsigned int *)(a + 0x434),
+                         (unsigned)*(unsigned char *)(a + 0x49d),
+                         *(int *)(a + 0x440),
+                         (unsigned)*(unsigned short *)(a + 0x4a2));
+        else if (cls == 180)
+            std::fprintf(stderr, "[breakall] f%d marker %p uid=%08x state=%d "
+                         "flags=%02x countdown=%u\n", frame, (void *)a,
+                         *(unsigned int *)(a + 4),
+                         (int)*(unsigned char *)(a + 0x1d8),
+                         (unsigned)*(unsigned char *)(a + 0x1db),
+                         (unsigned)*(unsigned short *)(a + 0x1d4));
+    }
+    for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
+        char *a = (char *)nd->x8;
+        if (!a || *(unsigned short *)(a + 0xc) != 180) continue;
+        if (*(unsigned char *)(a + 0x1d8) == 0) continue;
+        std::fprintf(stderr, "[breakall] f%d breaking marker %p (uid %08x)\n",
+                     frame, (void *)a, *(unsigned int *)(a + 4));
+        func_ov002_020e7d84(a);
+    }
+}
+
+/* STAGE 0 (temporary): the VS MATCH CLOCK, which is what actually ends a
+   versus match on the DS. HUD::UpdateVsTimer counts this+0x60 down and sets
+   data_0209f204 when it reaches zero; Stage::Behavior then does
+   Scene::StartSceneFade(7, 0, 0) -- the results screen. Reads only. */
+extern "C" void port_stage0_vs_timer(int frame)
+{
+    if (!std::getenv("SM64DS_VS_SCORE")) return;
+    char *hud = (char *)find_actor_by_class(0x14e);
+    static int last = -1;
+    int clock = hud ? (int)*(unsigned short *)(hud + 0x60) : -1;
+    if (clock == last && frame % 600 != 0) return;
+    last = clock;
+    std::fprintf(stderr, "[vstimer] f%d hud=%p clock=%d sub=%u timeup=%u "
+                 "wireless_state=%d countdown=%u\n", frame, (void *)hud, clock,
+                 (unsigned)data_ov002_02111188, (unsigned)data_0209f204,
+                 data_0209fc68, (unsigned)data_0209f2bc);
+}
+/* SM64DS_VS_HUD=1: WHERE THE VS HUD GOES, AND WHETHER IT ARRIVES.
+ *
+ * The VS scoreboard and the match clock are the HUD's, and the HUD draws them
+ * on the MAIN screen, not the bottom one: every OAM::Render call in
+ * src/_ZN3HUD13RenderVsTimerEv.cpp and src/_ZN3HUD15RenderStarCountEv.cpp's VS
+ * arm passes sub=0. So the census that matters is engine A's OAM (0x07000000)
+ * and engine A's DISPCNT (0x04000000) OBJ enable, and neither is what
+ * hal/sub_screen.cpp's boot probe reports about.
+ *
+ * Three buckets, the same ones hal/sub_screen.cpp uses so the numbers compare:
+ * all-zero (never written), parked at y=192 (OAM::Reset's off-screen value),
+ * and placed (a sprite the game actually put somewhere). Prints on change.
+ *
+ * The one-time class dump answers a separate question the stage-0 vstimer probe
+ * left open: it reported hud=0 because find_actor_by_class did not find class
+ * 0x14e, yet the match clock demonstrably ran. Printing every class in the list
+ * settles whether the HUD is in this list at all. Reads only. */
+extern "C" {
+extern unsigned char data_0209d45c;   /* engine A's layer mask */
+extern unsigned char data_0209d454;   /* engine B's layer mask */
+}
+extern "C" void port_vs_hud_probe(int frame)
+{
+    if (!std::getenv("SM64DS_VS_HUD")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+
+    static int dumped;
+    if (!dumped) {
+        dumped = 1;
+        char buf[1600];
+        int w = 0;
+        buf[0] = 0;
+        int n = 0;
+        for (Node *nd = *(Node **)&data_0209b468; nd && w < 1400; nd = nd->next) {
+            char *a = (char *)nd->x8;
+            if (!a) continue;
+            ++n;
+            w += std::snprintf(buf + w, sizeof buf - (unsigned)w, " %03x",
+                               (unsigned)*(unsigned short *)(a + 0xc));
+        }
+        std::fprintf(stderr, "[vshud] f%d the live list holds %d actor(s), "
+                     "classes:%s\n", frame, n, w ? buf : " (none)");
+    }
+
+    const unsigned dispcnt = *(volatile unsigned *)0x04000000;
+    /* AND THE SOFTWARE MASK BEHIND IT, which is the answer when the register
+       reads zero. On the DS nothing writes DISPCNT's layer enables directly:
+       code sets data_0209d45c (engine A) / data_0209d454 (engine B) and
+       func_02019144 copies the mask into bits 8-12 once a frame. The port does
+       that copy inside hal/message_compositor.cpp's engine-A path, which runs
+       in the RENDER phase -- after this probe. So a zero register here is not
+       evidence of anything and the mask is. Bit 4 (0x10) is OBJ. */
+    const unsigned maskA = data_0209d45c, maskB = data_0209d454;
+    unsigned zero = 0, parked = 0, placed = 0;
+    for (int i = 0; i < 128; ++i) {
+        const volatile unsigned short *a =
+            (const volatile unsigned short *)(0x07000000u + i * 8);
+        const unsigned short a0 = a[0], a1 = a[1], a2 = a[2];
+        if (!a0 && !a1 && !a2) { ++zero; continue; }
+        if ((a0 & 0xff) == 192) ++parked; else ++placed;
+    }
+    static unsigned last = 0xffffffffu;
+    const unsigned key = (dispcnt & 0x1f000u) | (placed << 24) | (parked << 16) |
+                         (maskA << 8) | maskB;
+    if (key == last) return;
+    last = key;
+    std::fprintf(stderr, "[vshud] f%d DISPCNT_A %08x OBJ %s | mask d45c=%02x "
+                 "(engine A, OBJ %s) d454=%02x | engine A OAM: %u all-zero, "
+                 "%u parked, %u PLACED\n", frame, dispcnt,
+                 (dispcnt & 0x1000u) ? "ON" : "OFF", maskA,
+                 (maskA & 0x10u) ? "asked for" : "NOT asked for", maskB,
+                 zero, parked, placed);
+
+    /* AND THE PLACED ENTRIES THEMSELVES, both engines, because a count cannot
+       tell "the sprite was submitted" from "the sprite was submitted and points
+       at tiles that are not on this engine". attr2 bits 0-9 are the TILE index
+       and bits 12-15 the palette row; those two are what differ when a sprite
+       is drawn on the engine its graphics were never uploaded to. Also counts
+       the nonzero bytes in each engine's OBJ VRAM at the tile the entry names,
+       which is the direct read of "are the tiles even there". */
+    for (int e = 0; e < 2; ++e) {
+        const unsigned oam = e ? 0x07000400u : 0x07000000u;
+        const unsigned vram = e ? 0x06600000u : 0x06400000u;
+        for (int i = 0; i < 128; ++i) {
+            const volatile unsigned short *a =
+                (const volatile unsigned short *)(oam + i * 8);
+            const unsigned short a0 = a[0], a1 = a[1], a2 = a[2];
+            if ((!a0 && !a1 && !a2) || (a0 & 0xff) == 192) continue;
+            const unsigned tile = a2 & 0x3ff;
+            /* 4bpp boundary is 32 bytes per tile, which is what every HUD
+               sprite in this path uses (the OBJ mapping bit reads 1D). */
+            const unsigned char *t = (const unsigned char *)(vram + tile * 32);
+            unsigned nz = 0;
+            for (int k = 0; k < 128; ++k) nz += t[k] != 0;
+            std::fprintf(stderr, "  [vshud]   %s OAM[%3d] a0=%04x a1=%04x "
+                         "a2=%04x | y=%3u x=%3u tile=%3u pal=%u prio=%u "
+                         "mode=%u shape=%u size=%u dis=%u  tiledata %u/128 %s\n",
+                         e ? "B" : "A", i, a0, a1, a2, (unsigned)(a0 & 0xff),
+                         (unsigned)(a1 & 0x1ff), tile, (unsigned)(a2 >> 12),
+                         (unsigned)((a2 >> 10) & 3), (unsigned)((a0 >> 10) & 3),
+                         (unsigned)((a0 >> 14) & 3), (unsigned)((a1 >> 14) & 3),
+                         (unsigned)((a0 >> 9) & 1),
+                         nz, nz ? "" : "<-- NO TILES ON THIS ENGINE");
+        }
+    }
+}
+
 /* walk the list (Node{void*x0; Node*next@4; int*x8@8}) for the first actor
    whose class word (+0xc) equals `cls`; return the actor (node+8) or 0. */
 static void *find_actor_by_class(unsigned short cls)
@@ -260,14 +484,112 @@ static int star_trigger_wants(int frame)
     return 0;
 }
 
+/* TEMPORARY read-only readout for the VS scoring investigation.
+ *
+ *   SM64DS_VS_STARS=1
+ *
+ * Walks the live actor list and prints every PowerStar (class 178/0xb2 and the
+ * silver 0xb3) and every StarMarker (class 180/0xb4) with the exact fields the
+ * state-9 wake-up path reads, plus the arena's running star order. Prints only
+ * when something changes, so a stalled arena prints once and then goes quiet.
+ * Writes nothing. */
+extern "C" {
+extern unsigned char *data_0209f344;    /* the arena's star running order */
+extern unsigned char data_0209f208;     /* how far into that order we are */
+extern unsigned char data_0209f2d8;     /* 1 = VS mode */
+extern signed char data_0209f310[];     /* per-player VS star counts */
+extern signed char NumVsStarsObtained(void);
+}
+
+extern "C" void port_vs_stars_probe(int frame)
+{
+    if (!std::getenv("SM64DS_VS_STARS")) return;
+    struct Node { void *x0; Node *next; char **x8; };
+    char buf[1400];
+    int w = 0;
+    buf[0] = 0;
+    Node *n = *(Node **)&data_0209b468;
+    while (n && w < 1100) {
+        char *a = (char *)n->x8;
+        if (a) {
+            unsigned cls = *(unsigned short *)(a + 0xc);
+            if (cls == 0xb2 || cls == 0xb3) {
+                w += std::snprintf(buf + w, sizeof buf - (unsigned)w,
+                    " STAR{p=%p uid=%08x cls=%03x kind=%d st=%d st444=%d "
+                    "idx=%u a2=%04x mk=%08x}",
+                    (void *)a, *(unsigned *)(a + 4), cls,
+                    *(int *)(a + 0x43c), *(int *)(a + 0x440),
+                    *(int *)(a + 0x444), (unsigned)*(unsigned char *)(a + 0x49d),
+                    (unsigned)*(unsigned short *)(a + 0x4a2),
+                    *(unsigned *)(a + 0x434));
+            } else if (cls == 0xb4) {
+                w += std::snprintf(buf + w, sizeof buf - (unsigned)w,
+                    " MARK{p=%p uid=%08x par=%08x mState=%u mStarID=%u "
+                    "mFlags=%02x timer=%u spawnedID=%08x ec=%08x}",
+                    (void *)a, *(unsigned *)(a + 4), *(unsigned *)(a + 8),
+                    (unsigned)*(unsigned char *)(a + 0x1d8),
+                    (unsigned)*(unsigned char *)(a + 0x1d9),
+                    (unsigned)*(unsigned char *)(a + 0x1db),
+                    (unsigned)*(unsigned short *)(a + 0x1d4),
+                    *(unsigned *)(a + 0x1cc), *(unsigned *)(a + 0xec));
+            }
+        }
+        n = n->next;
+    }
+    unsigned ordv = 0;
+    if (data_0209f344)
+        for (int i = 0; i < 5; ++i) ordv = ordv * 16 + (data_0209f344[i] & 0xf);
+    static unsigned last_hash = 0xffffffffu;
+    unsigned h = (unsigned)w * 2654435761u + ordv;
+    for (int i = 0; i < w; ++i) h = h * 31u + (unsigned char)buf[i];
+    if (h == last_hash) return;
+    last_hash = h;
+    std::fprintf(stderr, "[vsstar] f%d mode=%u ordptr=%p ordidx=%u order=%05x "
+                 "scores=%d,%d,%d,%d sum=%d |%s\n",
+                 frame, (unsigned)data_0209f2d8, (void *)data_0209f344,
+                 (unsigned)data_0209f208, ordv,
+                 (int)data_0209f310[0], (int)data_0209f310[1],
+                 (int)data_0209f310[2], (int)data_0209f310[3],
+                 (int)NumVsStarsObtained(), w ? buf : " (no stars, no markers)");
+}
+
+extern "C" int port_vs_match_end_frozen(void);
+
 extern "C" void port_input_probe_star_trigger(int frame)
 {
+    /* THE MATCH IS OVER: the harness does not get to score either. The play
+       hold empties the pads, so no PLAYER can take a star once the match has
+       been won -- but this probe writes the touch words directly and would sail
+       straight past that. A fixture that keeps scoring after the end is exactly
+       how the first-to-2 run came to log 3,0,0,0. */
+    if (port_vs_match_end_frozen())
+        return;
     static int arm_at = -1;
     int want = star_trigger_wants(frame);
     if (!want && frame != arm_at) return;
 
     char *player = (char *)find_actor_by_class(0xbf);
-    char *star = (char *)find_actor_by_class(178);
+    /* STAGE 0: prefer a star the touch gate is actually reachable from. The
+       gate func_ov002_020e930c is only called out of PowerStar state 4
+       (func_ov002_020ea420) and state 8 (func_ov002_020e99e8); a VS arena's
+       four table stars are type 3 and park in state 9, where nothing reads
+       the words written below, and one of them is what find_actor_by_class
+       hands back. Fall back to the first star so single-player behaviour is
+       unchanged. */
+    char *star = 0;
+    {
+        struct Node { void *x0; Node *next; char **x8; };
+        Node *nd = *(Node **)&data_0209b468;
+        while (nd) {
+            char *a = (char *)nd->x8;
+            if (a && *(unsigned short *)(a + 0xc) == 178) {
+                const int st = *(int *)(a + 0x440);
+                if (st == 4 || st == 8) { star = a; break; }
+            }
+            nd = nd->next;
+        }
+    }
+    if (!star) star = (char *)find_actor_by_class(178);
     if (!player) {
         std::fprintf(stderr, "  [startrig] f%d no player to collect with\n",
                      frame);
@@ -292,10 +614,13 @@ extern "C" void port_input_probe_star_trigger(int frame)
     unsigned int pid = *(unsigned int *)(player + 0x4);   /* player's unique id */
     *(unsigned int *)(star + 0x134) = pid;
     *(unsigned int *)(star + 0x130) |= 0x400000;
-    std::fprintf(stderr, "  [startrig] f%d armed the touch: star %p +0x134 = "
+    std::fprintf(stderr, "  [startrig] f%d armed the touch: star %p (kind=%d "
+                 "state=%d idx=%u) +0x134 = "
                  "player uid 0x%x, +0x130 |= 0x400000; func_ov002_020e930c "
                  "runs the real collect handler this frame\n",
-                 frame, (void *)star, pid);
+                 frame, (void *)star, *(int *)(star + 0x43c),
+                 *(int *)(star + 0x440),
+                 (unsigned)*(unsigned char *)(star + 0x49d), pid);
 }
 
 extern "C" void port_input_probe_buddy_trigger(int frame)

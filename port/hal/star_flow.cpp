@@ -106,6 +106,8 @@ extern short         data_0209f308;
 extern unsigned char data_0209f2c4;   /* pause-screen state; 0 = playing */
 extern unsigned char data_0209fc50;   /* players in the match (SetNumPlayers) */
 extern int           data_0208ee44;   /* vblanks per game tick */
+extern unsigned char data_0209d45c;   /* engine A's software layer mask; the
+                                         frame's DISPCNT publish copies it */
 
 }  // extern "C"
 
@@ -374,6 +376,193 @@ void seat_vs_countdown(void)
     }
 }
 
+/* ---- WHY THERE IS NO VS SCOREBOARD AND NO MATCH CLOCK ON SCREEN -----------
+ *
+ * Reported from real play: no star count and no countdown anywhere, on either
+ * screen, for the whole match. The HUD is NOT missing and this is worth saying
+ * first, because "the HUD actor never spawns" was the reasonable guess and it
+ * is wrong. Measured, SM64DS_VS_HUD=1 (hal/input_probe.cpp) on a live arena:
+ *
+ *     [vshud] f3 DISPCNT_A 00000000 OBJ OFF | mask d45c=00 (engine A, OBJ NOT
+ *             asked for) d454=18 | engine A OAM: 0 all-zero, 122 parked,
+ *             6 PLACED
+ *
+ * Six sprites PLACED in engine A's OAM on frame 3 and every frame after. The
+ * HUD is alive, HUD::Behavior runs (it is what counts the match clock down --
+ * that is the same object), HUD::Render takes its VS arm, and RenderVsTimer
+ * and RenderStarCount put their digits exactly where the ROM puts them: engine
+ * A, the TOP screen, sub=0 on every OAM::Render call in both.
+ *
+ * WHAT IS MISSING IS ONE ASSIGNMENT. On the DS nothing writes DISPCNT's layer
+ * enables directly. Code sets a software mask -- data_0209d45c for engine A --
+ * and func_02019144 copies it into bits 8-12 once a frame. The port does that
+ * copy (hal/message_compositor.cpp's engine-A publish, every frame, and it
+ * works). What the port never does is SET the mask, because the line that sets
+ * it is Stage::InitResources line 402:
+ *
+ *     data_0209d45c = 0x11;          BG0 and OBJ
+ *
+ * and Stage::InitResources is not run by the port. port/stage_lifecycle_map.txt
+ * section 2d lists that exact statement with "none" in its seat column and
+ * notes hal/auto_bss.cpp leaves the word zero. So the mask is 0, the publish
+ * copies 0, and the engine-A compositor's `!any_bg && !obj_on` exit returns
+ * before it draws -- with the HUD's sprites sitting in OAM the whole time.
+ *
+ * ---- WHY THIS SEAT IS GATED ON VS, WHEN THE ROM'S IS NOT -------------------
+ *
+ * The ROM's line has no condition and neither should the port's, eventually.
+ *
+ * THE REASON THIS FILE FIRST GAVE FOR THE GATE IS RETRACTED. It said the same
+ * assignment "turns on the ADVENTURE HUD" and would retake every BMP baseline.
+ * That was measured false: with the seat forced on, adventure levels 1 and 5
+ * are BYTE-IDENTICAL, because engine A's OAM holds ZERO placed sprites there --
+ * the adventure HUD reaches the player through engine B, not this register.
+ * Nothing wakes up, so there was never a baseline to spend.
+ *
+ * THE REAL REASON IS CONSERVATISM, and it is smaller and honest. The seat is
+ * PROVEN NEEDED in VS: it is what puts the match clock, the star count and the
+ * moved coin counter on screen, each measured to the pixel. Outside VS it is
+ * proven to buy NOTHING on the levels measured. A register write that changes
+ * nothing observable is still a register write on every adventure boot in the
+ * game, on a path this lane did not investigate and cannot speak for, so it
+ * stays behind the mode test until somebody has a reason to want it there.
+ * Un-gating is a one-word change for the lane that finds one.
+ *
+ * SM64DS_HUD_LAYER_SEAT=always is that unconditional form on this same binary;
+ * =off restores the pre-seat behaviour the same way.
+ *
+ * THE NAME IS THE SECOND ONE THIS KNOB HAS HAD, and the first was a bug I
+ * shipped. It was SM64DS_ENGINE_A_LAYERS, which is ALREADY a live variable:
+ * hal/message_compositor.cpp reads it as a HEX LAYER SUBSET
+ * (strtoul(e, 0, 16) & 0x1F, default 0x1f), port/tools/headroom.py sets it, and
+ * port/ppu_gap_audit.txt documents it. Under that grammar the documented value
+ * "always" parses as 0x0a -- BG1 and BG3, with OBJ DROPPED, which is the layer
+ * the entire HUD lives on -- and "off" parses as 0x00. Review measured both
+ * rendering byte-identical while this seat's own log line said the mask had
+ * been seated: the mask was seated and then thrown away downstream. Renamed,
+ * and the compositor's variable is untouched.
+ *
+ * AND THE PREVIEW =always PROMISES IS EMPTY ON THE LEVELS MEASURED, which is a
+ * correction to this lane's own round-1 open question rather than a defect in
+ * the knob. Re-measured after the rename, adventure selftests on levels 1 and
+ * 5, SM64DS_HUD_LAYER_SEAT=always against =off: the seat fires (its log line
+ * prints, DISPCNT_A goes 0x00000008 -> 0x00001108, OBJ ON) and the frame is
+ * still BYTE-IDENTICAL -- because engine A's OAM holds 0 PLACED sprites on both
+ * levels. The adventure HUD draws to the SUB screen: HUD::Render's adventure
+ * arm runs (measured, sub OAM 237 nonzero bytes) and every leaf it reaches
+ * there goes to engine B. So "the adventure HUD is one statement away" was
+ * WRONG. This seat is necessary for it and nowhere near sufficient, and the
+ * lane that takes it inherits finding out what actually submits to engine A on
+ * an adventure screen. */
+void seat_engine_a_layers(void)
+{
+    static int mode = -1;   /* 0 off, 1 VS only (default), 2 always */
+    if (mode < 0) {
+        const char *e = std::getenv("SM64DS_HUD_LAYER_SEAT");
+        mode = 1;
+        if (e && std::strcmp(e, "off") == 0) mode = 0;
+        else if (e && std::strcmp(e, "always") == 0) mode = 2;
+    }
+    if (mode == 0)
+        return;
+    if (mode == 1 && data_0209f2d8 != 1)
+        return;
+    data_0209d45c = 0x11;
+    /* AND BG0 IS THE 3D LAYER, WHICH HAS TO BE SAID OR THE MASK MAKES IT WORSE.
+     *
+     * DISPCNT bit 3 selects whether engine A's BG0 shows the 3D engine's output
+     * or an ordinary tiled background.
+     *
+     * AND THE ROM SETS IT IN THIS VERY FUNCTION, 151 lines above the mask
+     * statement and in the same unconditional block (found in review; an
+     * earlier draft argued this from hardware behaviour, which was true and
+     * weaker):
+     *
+     *     src/_ZN5Stage13InitResourcesEv.cpp:251
+     *         int one = 1;
+     *         GX::SetGraphicsMode(one, 0, one);      // c = 1
+     *
+     * and GX::SetGraphicsMode's body is `reg = (c << 3) | reg`
+     * (src/_ZN2GX15SetGraphicsModeEiii.c), so c = 1 IS bit 3. The two lines are
+     * one statement of the ROM's, split across the function: turn BG0 into the
+     * 3D layer, then name BG0 in the layer mask. Seating the mask without the
+     * bit takes half of it.
+     *
+     * The port never calls SetGraphicsMode: it renders 3D through its own path
+     * and leaves engine A's DISPCNT alone, so the register's low byte is zero
+     * for the whole run.
+     *
+     * hal/message_compositor.cpp keys on that bit by name: BG0 with bit 3 set
+     * is "the 3D LAYER, not composited here (the 3D frame is already in the
+     * framebuffer)", and without it an ordinary 2D text background. So seating
+     * the mask ALONE would enable a BG0 the DS never composites as 2D, and the
+     * compositor would draw whatever happens to be in that tilemap over the
+     * whole top screen. Measured, before this line was added: 34638 changed
+     * pixels spread over every band of the top screen instead of the HUD's own
+     * rows. With it, the compositor skips BG0 exactly as the hardware does and
+     * only OBJ reaches the picture. (An earlier revision of this line said
+     * "the timer and the star count". It was the timer alone, and the next
+     * block is why.)
+     *
+     * A raw register write in a host file is not the shape this tree likes, and
+     * calling the ROM's own SetGraphicsMode instead is worse: its `a` and `b`
+     * arguments also set the display mode and the BG mode, two fields the port
+     * deliberately leaves at zero because it does not drive engine A. One bit,
+     * which is the one bit of that call the port can honour. */
+    *(volatile unsigned int *)0x04000000 |= 8;
+    /* AND THE 3D LAYER'S PRIORITY, WHICH IS WHY HALF THE VS HUD WAS INVISIBLE.
+     *
+     * Found chasing the coin move (round 2, order 1) and it is a bigger bug
+     * than the thing that found it: THE VS STAR COUNT HAS NEVER RENDERED in
+     * this port. Measured with the OAM census, engine A, a live arena:
+     *
+     *   OAM[0..2]  the timer      prio 0   -> drawn
+     *   OAM[3..5]  the star count prio 1   -> placed, real tiles, NOT drawn
+     *
+     * hal/message_compositor.cpp's layer_behind_3d is the ROM's own rule --
+     * a sprite loses to the 3D layer only when `prio > p3d` -- and p3d is read
+     * straight out of BG0CNT (0x04000008 bits 0-1). The port never writes that
+     * register, so it reads 0, every priority-1 sprite is strictly worse than
+     * the 3D layer, and the compositor drops it. The rule is right; the input
+     * to it was never seated.
+     *
+     * THE VALUE IS 2, FROM THE LEVEL PATH'S OWN Stage::InitResources:330:
+     *
+     *     *(vu16 *)0x04000008 = (*(vu16 *)0x04000008 & ~3) | 2;
+     *
+     * in the same unconditional block as line 251's GX::SetGraphicsMode(1, 0, 1)
+     * and line 402's layer mask -- the two statements this seat already hosts.
+     * Nothing on the level path writes engine A's BG0CNT after it:
+     * Stage::LoadGraphics2D, which runs two lines later, touches BG0CNT_SUB
+     * (0x04001008) only. So all three lines are one statement of the ROM's,
+     * split across the function, and this seats the third.
+     *
+     * AN EARLIER REVISION WROTE 1 AND CITED src/func_02005a58.c FOR IT, calling
+     * that "not a guess". Both halves were wrong and review caught them.
+     * func_02005a58 is dScBoot_c::InitResources -- a BOOT scene, not the level
+     * path -- and its header carries "recovered from vtable slot identity",
+     * which is the GUESSED-BODY marker. This lane dropped a body in round 1 for
+     * carrying exactly that marker and then quoted another one as authority in
+     * the same breath. It cost no pixels (a sprite clears `prio > p3d` at either
+     * value, so every measurement taken under the wrong one still stands) and it
+     * was still a seated hardware statement with a wrong value and a false
+     * provenance: it diverges for BACKGROUNDS, whose rule is `prio >= p3d`, and
+     * it printed into every VS playlog.
+     *
+     * Seating the two priority bits, and nothing else in that register, is the
+     * smallest statement of the ROM's own fact. It is what makes the star count
+     * appear, and it is the precondition for the coin move in
+     * hal/sub_actors.cpp -- the coins are priority 1 too. */
+    *(volatile unsigned short *)0x04000008 =
+        (unsigned short)((*(volatile unsigned short *)0x04000008 & ~3) | 2);
+    fprintf(stderr, "[vshud] engine A layer mask seated: data_0209d45c = 0x11 "
+            "(BG0 + OBJ), DISPCNT bit 3 (BG0 is the 3D layer) and BG0CNT "
+            "priority 2 (Stage::InitResources:330's own value, which is what "
+            "lets a priority-1 HUD sprite draw over the arena). %s\n",
+            mode == 2 ? "SM64DS_HUD_LAYER_SEAT=always: every mode, unconditional"
+                      : "VS only by default (see the gate note above)");
+}
+
 }  // namespace
 
 extern "C" {
@@ -423,6 +612,10 @@ void port_boot_course_sound(int level)
 {
     seat_course_sound(level);
     seat_vs_countdown();
+    /* the third statement of Stage::InitResources this file seats, and the one
+       that puts the VS scoreboard and the match clock on screen; see its own
+       block above for why it is the mask and not the HUD that was missing */
+    seat_engine_a_layers();
 }
 
 /* ---- THE ARENA'S OWN MUSIC ------------------------------------------------
@@ -542,6 +735,449 @@ void port_vs_countdown_tick(void)
         g_course_music = 0x4d;
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
     }
+}
+
+// =============================================================================
+// THE OTHER END OF THE SAME STATEMENT: what happens when the VS clock runs out
+// =============================================================================
+//
+// port_vs_countdown_tick above is the HEAD of Stage::Behavior's VS block. This
+// is its TAIL, hosted here for the identical reason and in the identical shape:
+// the whole function is not in the port's link, and this is one statement of
+// it calling the ROM's own functions.
+//
+// The statement, src/_ZN5Stage8BehaviorEv.cpp:173-186, verbatim:
+//
+//     if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
+//         if (data_0209fc68 == 0) {
+//             ... the single-console VE_Init/VE_Update arm ...
+//         } else {
+//             Scene::StartSceneFade(7, 0, 0);
+//             data_02092778 = 1;
+//             data_0209d4b0 = 0;
+//         }
+//         Sound::StopLoadedMusic_Layer1(0x3c);
+//     }
+//
+// data_0209f204 is the match clock's own "time is up" flag and HUD::UpdateVsTimer
+// is what raises it -- the port hosts the HUD as a sub-screen actor
+// (hal/sub_actors.cpp) and its Behavior slot dispatches UpdateVsTimer every
+// frame, so the clock the port runs is the ROM's clock. data_ov002_02111188 is
+// the same function's sub-counter, which UpdateVsTimer reloads to 0x3c at the
+// moment it raises the flag: the ROM therefore waits SIXTY FRAMES after time-up
+// before it asks for the results, and the wait is part of the statement, not
+// padding this could skip.
+//
+// data_0209fc68 is the wireless session state. It is nonzero in every VS run
+// this port can produce -- VS is a wireless mode and there is no offline VS on
+// the cartridge -- so the else arm is the live one and VE_Init is not reachable
+// from here. Scene 7 is the VS results screen: the same dScEntry_c class as the
+// scene 6 lobby, told apart by its own id (src/func_ov075_0211a410.cpp branches
+// on self->unk_00c == 6 and hands everything else to func_ov075_02116818, the
+// results screen with the winner calculation behind it).
+//
+// ---- WHAT THE PORT CAN AND CANNOT DO WITH THAT REQUEST ----------------------
+//
+// Scene::StartSceneFade is matched src and the port links it: it parks the
+// pending scene id in data_02092664 and writes the fade colour. What consumes a
+// pending id is Scene::SpawnIfNecessary, and the port runs that ONLY on the
+// scene path (hal/scene_boot.cpp's carrier inside port_scene_tick). On the LEVEL
+// path -- which is where a VS arena runs -- there is no scene spawner, because
+// crossing from a live level into a scene means tearing the Stage down first and
+// port/stage_lifecycle_map.txt section 5 measures that teardown blocked on seven
+// pieces. So the request is real, the ROM makes it, the port records it, and
+// nothing consumes it. That is the honest state and this function reports it
+// rather than papering over it.
+//
+// ---- AND IT IS WORSE THAN "NOTHING CONSUMES IT". MEASURED. ------------------
+//
+// Run R2 of this lane, both windows, from this tip with the request armed:
+//
+//     [vs] f2791 TIME UP: ... scores 3,0,0,0, stars taken 3
+//       [vs] Scene::StartSceneFade(7, 0, 0): the VS RESULTS screen requested,
+//            pending scene id now 7
+//       [vs] f2792 pending scene id is now 7
+//     [fx] f2820 ...
+//     FATAL: Stage vtable slot 3 (CleanupResources) is not hosted
+//
+// Both processes, ~28 frames after the request, exit 127. Something DOES
+// consume it, and what consumes it is the ROM's own Scene::BeforeBehavior,
+// correctly seated in _ZTV5Stage slot 7 and dispatched on the Stage every
+// frame. Its body -- quoted in full in hal/level_change.cpp's pending-scene
+// block -- is: a pending id that is not the 0x187 sentinel means run the fader,
+// and once the fader is AT THE END, ActorBase::MarkForDestruction(self). `self`
+// is the Stage. So the ROM asks for the Stage to be torn down before the scene
+// comes up, which is exactly right on the DS and is the one thing this port
+// cannot do: port/stage_lifecycle_map.txt section 5 measures the teardown
+// blocked on seven pieces, and slot 3 is the first of them.
+//
+// THAT IS THE SAME ABORT hal/level_change.cpp's port_scene_request_release was
+// written to prevent -- port/exitlevel_seat.txt reproduces it, word for word
+// and exit code for exit code, from a latched pending id on the level path.
+// A ROM-faithful match-end request is simply another way to latch one.
+//
+// SO THE SCENE REQUEST IS OFF BY DEFAULT and the reason is not timidity. A
+// default that turns "the match ends and both windows stand in the arena" into
+// "the match ends and both windows abort" is a regression, whatever the ROM
+// does. The switch stays because the next lane -- the one that hosts the Stage
+// teardown and puts a scene carrier on the level path -- needs to be able to
+// arm the request and watch where it stops, and this is that instrument.
+//
+// ---- THE ENVIRONMENT --------------------------------------------------------
+//
+//   SM64DS_VS_MATCH_END=0   the whole watcher off. Default ON: the time-up
+//                           report and the ROM's own music stop are the ROM's
+//                           behaviour at the ROM's own moment, and the marker
+//                           costs a line in the flight recorder.
+//   SM64DS_VS_END_SCENE=1   ALSO make the ROM's Scene::StartSceneFade(7,0,0)
+//                           request. Default OFF. IT ABORTS THE PROCESS about
+//                           thirty frames later, by the measurement above; it
+//                           is a diagnostic for the lane that will fix that,
+//                           not something to leave on.
+//   SM64DS_VS_EXIT_ON_END=1 quit the process once the end state is reached.
+//                           Default OFF -- see the note over the exit.
+//   SM64DS_VS_END_GRACE=<n> frames between the time-up statement and the
+//                           marker. Default 240 (four seconds at 60fps), which
+//                           is eight times the ROM's own 0x3c wait and long
+//                           enough for a fade plus a scene bring-up to be
+//                           visible if one ever happens.
+//   SM64DS_VS_STAR_TARGET=<n>  the SECOND win condition: first player to n
+//                           stars ends the match through this same path.
+//                           Unset or 0 is off and off is the pure cartridge
+//                           behaviour. The launcher lobby sets it, so the
+//                           variable is the interface; see the trigger's own
+//                           block below.
+//
+// OUTSIDE VS THIS IS ONE COMPARE, A DISARM AND A RETURN. data_0209f2d8 != 1
+// leaves before anything else is read and before any getenv; the disarm clears
+// the end latch so a second match in one process would arm again, and its own
+// branch is taken at most once per match. Measured: an adventure selftest is
+// byte-identical to the pre-change build at a matched .dsstate base.
+extern "C" {
+extern unsigned char data_0209f204;      /* VS "time is up"                   */
+extern unsigned short data_ov002_02111188; /* UpdateVsTimer's sub-counter     */
+extern int           data_0209fc68;      /* wireless session state            */
+extern unsigned char data_02092778;      /* Stage::Behavior sets this with the
+                                            results request                   */
+extern int           data_0209d4b0;      /* and clears this                   */
+extern unsigned short data_02092664;     /* Scene::SetSceneToSpawn's pending id,
+                                            0x187 = nothing pending           */
+extern signed char   data_0209f310[];    /* the four players' VS star counts  */
+signed char NumVsStarsObtained(void);
+}
+/* src/_ZN5Sound22StopLoadedMusic_Layer1Ej.cpp spells the C++ method out rather
+   than an extern "C" face, so the MSVC-mangled name is what is in the link and
+   no reverse bridge is needed -- hal/reverse_bridges.cpp's sound block names
+   this function as its one exception for exactly that reason. Declaring the
+   class here and calling the method is therefore how this TU reaches it. A
+   member function's linkage is not affected by the enclosing extern "C". */
+struct Sound { static void StopLoadedMusic_Layer1(unsigned int frames); };
+
+/* Does the port ask for scene 7 by default? NO, and the measurement that says
+   so is quoted in the block above: with it on, both windows abort on
+   "Stage vtable slot 3 (CleanupResources) is not hosted" about thirty frames
+   after the request. */
+enum { PORT_VS_END_SCENE_DEFAULT = 0 };
+
+/* The latch: the frame the end statement ran on, whether the marker has gone
+   out, and which trigger fired. At file scope rather than inside the function
+   so the mode test below can clear them, which is what re-arms this for a
+   SECOND match in one process. Nothing produces one today -- going from a
+   finished match back to the lobby is not something the port can do yet -- but
+   a latch that silently swallows the second match is exactly the bug the lane
+   that adds the lobby return would spend a day chasing. */
+static int g_end_fired = -1;
+static int g_end_announced;
+static int g_end_by_target;
+/* THE SCORES AS THEY WERE AT THE MOMENT THE MATCH WAS WON, latched at the
+   trigger and reported by the marker. Without this the marker reports whatever
+   the array holds `grace` frames LATER, which on a first-to-2 match measured
+   3,0,0,0 -- the third star landed inside the grace window. The launcher reads
+   the marker, so the marker has to carry the scores the match was decided on. */
+static int g_end_scores[4];
+static int g_end_total;
+
+/* THE PLAY HOLD. Nonzero once the match is over, which is what
+   port_vs_match_end_hold below reads to stop the pads and what the harness's
+   own collect trigger reads to stop scoring. */
+extern "C" int port_vs_match_end_frozen(void) { return g_end_fired >= 0; }
+
+/* ---- THE FREEZE ------------------------------------------------------------
+ *
+ * Tango: first-to-N must stop play AT the target. Two halves, and only the
+ * first is load-bearing for the marker:
+ *
+ *   THE SCORES ARE LATCHED at the trigger (above), so the marker reports the
+ *   moment the match was decided whatever happens afterwards. That alone kills
+ *   the 3,0,0,0 quirk and it cannot fail.
+ *
+ *   THE PADS ARE HELD from the frame after, so nothing can be played. All four
+ *   slots, every button and stick word the ROM's readers use -- the same seven
+ *   fields walk_window's own comms fan-out writes. With no input no player can
+ *   swing at a ball, so no star can be released and none collected: "no
+ *   scoring" falls out of "no play" rather than being a second mechanism.
+ *
+ * WHY NOT SKIP THE TICK, which is the debug menu's freeze and the obvious move.
+ * The menu's `game_ticked = 0` skips the whole else-branch of the level loop,
+ * and the comms exchange lives inside it. Two windows that stop exchanging --
+ * even in perfect step -- are two windows whose transport is no longer being
+ * pumped, and this lane is not going to find out what that does to a live
+ * session at the one moment the match is trying to end cleanly. Holding the
+ * pads leaves every frame doing exactly what it did, minus the input.
+ *
+ * LOCKSTEP-SAFE BY CONSTRUCTION: the hold is derived from the end latch, the
+ * end latch is set by a test on state both consoles share, and both measured
+ * setting it on the same frame. Neither window is told anything by the other.
+ *
+ * SM64DS_VS_END_FREEZE=0 leaves the pads live and keeps only the latch. */
+extern "C" {
+extern char data_0209f49c[];   /* held        */
+extern char data_0209f49e[];   /* pressed     */
+extern char data_0209f4a0[];   /* stick / etc */
+extern char data_0209f4a2[];
+extern char data_0209f4a4[];
+extern char data_0209f4a6[];
+extern unsigned char data_0209f4ac[];  /* touching */
+}
+/* ---- THE WINNER, SHOWN ------------------------------------------------------
+ *
+ * Tango: "when the match is over and it says who wins and would normally end it
+ * closes and goes to the lobby." The launcher is the lobby until Stage 1 builds
+ * a real one, so the port's half is: say who won, then close.
+ *
+ * THIS IS THE FALLBACK AND IT SAYS SO. The real answer is the ROM's own results
+ * screen -- scene 7, which boots and renders and whose own exit asks for the
+ * lobby -- and this lane measured exactly why it cannot be reached from inside a
+ * match (the block over port_vs_match_end_poll). Rather than half-fake it with
+ * ROM sprites, the port says who won in the port's own voice, through the host
+ * overlay, where nobody can mistake it for the cartridge's results screen.
+ *
+ * THE WINNER IS COMPUTED FROM THE LATCHED SCORES, not from the ROM's own
+ * func_ov075_021165b0. That function is linked and it is the right one, and it
+ * takes the results SCENE as its receiver -- there is no scene here to give it.
+ * Most stars wins; equal top scores are reported as a draw rather than broken
+ * by an invented rule.
+ *
+ * Text only, one line, and the caller draws it: hal/ has no framebuffer. */
+extern "C" int port_vs_match_end_banner(char *out, int n)
+{
+    /* SM64DS_VS_END_BANNER=0 keeps the end flow and drops the presentation, so
+       a capture pair can isolate exactly this line's pixels with the freeze,
+       the latch and the close all still running. */
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_END_BANNER");
+        on = (e && e[0] == '0') ? 0 : 1;
+    }
+    if (!on || g_end_fired < 0 || data_0209f2d8 != 1 || n < 64)
+        return 0;
+    int best = 0, ties = 0;
+    for (int i = 1; i < 4; ++i)
+        if (g_end_scores[i] > g_end_scores[best]) best = i;
+    for (int i = 0; i < 4; ++i)
+        if (i != best && g_end_scores[i] == g_end_scores[best]) ++ties;
+    if (ties)
+        std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  %d - %d - %d - %d",
+                      g_end_scores[0], g_end_scores[1], g_end_scores[2],
+                      g_end_scores[3]);
+    else
+        std::snprintf(out, (size_t)n,
+                      "MATCH OVER  -  PLAYER %d WINS  %d - %d - %d - %d",
+                      best + 1, g_end_scores[0], g_end_scores[1],
+                      g_end_scores[2], g_end_scores[3]);
+    return 1;
+}
+
+extern "C" void port_vs_match_end_hold(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_END_FREEZE");
+        on = (e && e[0] == '0') ? 0 : 1;
+    }
+    if (!on || g_end_fired < 0 || data_0209f2d8 != 1)
+        return;
+    for (int i = 0; i < 4; ++i) {
+        const int o = i * 0x18;
+        *(short *)(data_0209f49c + o) = 0;
+        *(short *)(data_0209f49e + o) = 0;
+        *(short *)(data_0209f4a0 + o) = 0;
+        *(short *)(data_0209f4a2 + o) = 0;
+        *(short *)(data_0209f4a4 + o) = 0;
+        *(short *)(data_0209f4a6 + o) = 0;
+        data_0209f4ac[o] = 0;
+    }
+}
+
+extern "C" int port_vs_match_end_poll(int frame)
+{
+    /* Outside VS: nothing but the disarm, and the disarm is a branch taken at
+       most once per match. No getenv on this path, ever. */
+    if (data_0209f2d8 != 1) {
+        if (g_end_fired >= 0) {
+            g_end_fired = -1;
+            g_end_announced = 0;
+            g_end_by_target = 0;
+        }
+        return 0;
+    }
+
+    static int on = -1, want_scene = -1, want_exit = -1, grace = -1,
+               star_target = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_VS_MATCH_END");
+        on = (e && e[0] == '0') ? 0 : 1;
+        e = std::getenv("SM64DS_VS_END_SCENE");
+        want_scene = e ? (e[0] != '0') : (int)PORT_VS_END_SCENE_DEFAULT;
+        e = std::getenv("SM64DS_VS_EXIT_ON_END");
+        want_exit = (e && e[0] == '0') ? 0 : 1;
+        e = std::getenv("SM64DS_VS_END_GRACE");
+        grace = e ? std::atoi(e) : 240;
+        if (grace < 0) grace = 0;
+        e = std::getenv("SM64DS_VS_STAR_TARGET");
+        star_target = e ? std::atoi(e) : 0;
+        if (star_target < 0) star_target = 0;
+        if (star_target > 0)
+            fprintf(stderr, "[vs] win condition: FIRST TO %d STAR(S). The ROM's "
+                    "own condition -- most stars when the clock runs out -- "
+                    "still stands underneath and whichever happens first ends "
+                    "the match (SM64DS_VS_STAR_TARGET)\n", star_target);
+    }
+    if (!on)
+        return 0;
+
+    if (g_end_fired < 0) {
+        /* ---- TRIGGER ONE: the ROM's own. Stage::Behavior's guard, both
+           halves, in its own order. */
+        const int timeup = (data_ov002_02111188 == 0 && data_0209f204 != 0);
+        /* ---- TRIGGER TWO: FIRST TO N STARS, the host-layer alternative.
+         *
+         * The owner's ruling: online VS is a host-layer opt-in and already a
+         * mod, so the win condition is selectable -- the cartridge's "most
+         * stars when time runs out", or "first to X stars". This is the second
+         * one, and it is a WATCHER, never an editor. It reads data_0209f310,
+         * the ROM's own per-player carried-star array that GiveVsStars writes
+         * and NumVsStarsObtained sums, and it writes nothing anywhere: the
+         * ROM's five-star final-star behaviour underneath is untouched and so
+         * is the clock.
+         *
+         * UNSET OR 0 IS OFF, and off means the pure ROM behaviour -- one
+         * compare against a constant per frame and nothing else. The launcher
+         * lobby will set the variable, so the env IS the interface.
+         *
+         * BOTH TRIGGERS FEED ONE END PATH on purpose. Whichever fires first
+         * runs the same statement, prints the same marker and takes the same
+         * exit, so there is one match-over mechanism to reason about and not
+         * two that drift. */
+        int star_winner = -1;
+        if (star_target > 0) {
+            for (int i = 0; i < 4; ++i)
+                if ((int)data_0209f310[i] >= star_target) { star_winner = i; break; }
+        }
+        if (!timeup && star_winner < 0)
+            return 0;
+        g_end_fired = frame;
+        g_end_by_target = (star_winner >= 0);
+        for (int i = 0; i < 4; ++i) g_end_scores[i] = (int)data_0209f310[i];
+        g_end_total = (int)NumVsStarsObtained();
+        if (star_winner >= 0)
+            fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
+                    "the target is %d (wireless state=%d, scores %d,%d,%d,%d, "
+                    "stars taken %d)\n", frame, star_winner,
+                    (int)data_0209f310[star_winner], star_target, data_0209fc68,
+                    (int)data_0209f310[0], (int)data_0209f310[1],
+                    (int)data_0209f310[2], (int)data_0209f310[3],
+                    (int)NumVsStarsObtained());
+        else
+            fprintf(stderr, "[vs] f%d TIME UP: the match clock reached zero and "
+                    "Stage::Behavior's own end-of-match guard is open "
+                    "(data_0209f204=%u, sub-counter=%u, wireless state=%d, "
+                    "scores %d,%d,%d,%d, stars taken %d)\n",
+                    frame, (unsigned)data_0209f204,
+                    (unsigned)data_ov002_02111188, data_0209fc68,
+                    (int)data_0209f310[0], (int)data_0209f310[1],
+                    (int)data_0209f310[2], (int)data_0209f310[3],
+                    (int)NumVsStarsObtained());
+
+        if (data_0209fc68 == 0) {
+            /* The single-console arm. Not reachable from a VS arena on this
+               port -- VS is a wireless mode and the session state is nonzero
+               whenever one is up -- so it is REPORTED rather than hosted, the
+               way port_vs_countdown_tick records the two preconditions it does
+               not carry. Hosting VE_Init/VE_Update off a path that cannot be
+               reached would be untested code with no way to test it. */
+            fprintf(stderr, "  [vs] wireless session state is 0, so the ROM "
+                    "would take the VE_Init arm here, not the results screen. "
+                    "That arm is not hosted; nothing requested.\n");
+        } else if (want_scene) {
+            /* THE ROM'S OWN THREE STATEMENTS, in the ROM's own order. */
+            _ZN5Scene14StartSceneFadeEjjt(7, 0, 0);
+            data_02092778 = 1;
+            data_0209d4b0 = 0;
+            fprintf(stderr, "  [vs] Scene::StartSceneFade(7, 0, 0): the VS "
+                    "RESULTS screen requested, pending scene id now %u\n",
+                    (unsigned)data_02092664);
+        } else {
+            fprintf(stderr, "  [vs] the results-screen request is NOT made "
+                    "(SM64DS_VS_END_SCENE is off, which is the default): the "
+                    "port cannot tear the Stage down, so asking would abort "
+                    "the process. Pending scene id left at %u.\n",
+                    (unsigned)data_02092664);
+        }
+        /* Outside the if/else on the ROM too -- both arms stop the music. */
+        Sound::StopLoadedMusic_Layer1(0x3c);
+        return 0;
+    }
+
+    if (g_end_announced)
+        return 0;
+    if (frame - g_end_fired < grace) {
+        /* Report what the request is doing while the grace runs, on change
+           only, so a scene that DOES come up leaves a trail and one that never
+           does leaves one line. */
+        static unsigned last_pending = 0xffff;
+        if (data_02092664 != last_pending) {
+            last_pending = data_02092664;
+            fprintf(stderr, "  [vs] f%d pending scene id is now %u%s\n", frame,
+                    (unsigned)data_02092664,
+                    data_02092664 == 0x187 ? " (the nothing-pending sentinel)"
+                                           : "");
+        }
+        return 0;
+    }
+
+    g_end_announced = 1;
+    /* THE MARKER. One line, fixed shape, in the flight recorder, so a launcher
+       can watch for it without parsing the rest of a playlog. The scores are
+       the ROM's own per-player array and the total is the ROM's own sum, and
+       `win=` says which of the two conditions ended it -- the launcher that
+       chose the condition is the thing that wants to know it was honoured. */
+    fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%d,%d,%d,%d total=%d "
+            "pending_scene=%u results_screen=%s\n", frame,
+            g_end_by_target ? "star-target" : "time-up",
+            g_end_scores[0], g_end_scores[1], g_end_scores[2], g_end_scores[3],
+            g_end_total, (unsigned)data_02092664,
+            data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
+                               : (data_02092664 == 0x187 ? "none" : "other"));
+    fflush(stderr);
+
+    /* THE EXIT IS ON BY DEFAULT NOW, and round 1 had it the other way round.
+       That was this lane's choice and the owner has overruled it: "when the
+       match is over and it says who wins and would normally end it closes and
+       goes to the lobby." The launcher is the lobby until there is a real one,
+       so closing IS going to the lobby, and the objection round 1 raised -- a
+       window vanishing the instant the clock runs out -- is answered by the
+       thing that changed with it: the winner is on screen for the whole grace
+       window before this runs. Nobody's window disappears without being told
+       who won. SM64DS_VS_EXIT_ON_END=0 still opts out. */
+    if (!want_exit)
+        return 0;
+    fprintf(stderr, "  [vs] closing: the winner has been on screen for the "
+            "whole grace window, so the match ends the way the owner asked -- "
+            "out through the window's own WM_QUIT path, exit code 0. "
+            "SM64DS_VS_EXIT_ON_END=0 opts out.\n");
+    fflush(stderr);
+    return 1;
 }
 
 /* Seat what the course loop reads that the boot does NOT: the player globals
