@@ -822,7 +822,7 @@ SKIP StarDoor: ov100:0x2146b04 already claimed by Fish (vtable slot 9)
 SKIP StarDoor: ov100:0x2146b00 already claimed by Fish (vtable slot 12)
 SKIP StarDoor: ov100:0x214620c already claimed by Fish (vtable slot 16)
 SKIP StarDoor: ov100:0x214623c already claimed by Fish (vtable slot 17)
-NOVTABLE actor 355 PowerStarCreate (alloc=0xd4)
+NOVTABLE actor 355 daSCre_c (alloc=0xd4)
 NOVTABLE actor 359 SoundObject (alloc=0xe4)
 UNRESOLVED actor 360 MULTIBOOT_SCENE: spawninfo 0x209435c
 UNRESOLVED actor 361 MG_TOX_BOX_SHUFFLE: spawninfo 0x213c020

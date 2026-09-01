@@ -32,10 +32,10 @@ _ZN10daPgMthr_c6RenderEv kind:function(arm,size=0x2c) addr:0x02112454
 _ZN10daPgMthr_c8BehaviorEv kind:function(arm,size=0x50) addr:0x02112480
 _ZN10daPgMthr_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x021124d0
 MotherPenguin_Spawn kind:function(arm,size=0x58) addr:0x0211267c
-_ZN15PowerStarCreateD1Ev kind:function(arm,size=0x24) addr:0x021126d4
-_ZN15PowerStarCreateD0Ev kind:function(arm,size=0x38) addr:0x021126f8
-_ZN15PowerStarCreate8BehaviorEv kind:function(arm,size=0x5c) addr:0x02112730
-PowerStarCreate_Spawn kind:function(arm,size=0x30) addr:0x0211278c
+_ZN8daSCre_cD1Ev kind:function(arm,size=0x24) addr:0x021126d4
+_ZN8daSCre_cD0Ev kind:function(arm,size=0x38) addr:0x021126f8
+_ZN8daSCre_c8BehaviorEv kind:function(arm,size=0x5c) addr:0x02112730
+daSCre_c_Spawn kind:function(arm,size=0x30) addr:0x0211278c
 _ZN8IceSheetD1Ev kind:function(arm,size=0x44) addr:0x021127bc
 _ZN8IceSheetD0Ev kind:function(arm,size=0x58) addr:0x02112800
 _ZN8IceSheet15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02112858
@@ -149,8 +149,8 @@ data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 BridgePenguin_SpawnInfo kind:data(any) addr:0x02113a00 ambiguous
 _ZTS8daSCre_c kind:data(any) addr:0x02113a38
 _ZTI8daSCre_c kind:data(any) addr:0x02113a44
-PowerStarCreate_SpawnInfo kind:data(any) addr:0x02113a50 ambiguous
-_ZTV15PowerStarCreate kind:data(any) addr:0x02113a74
+daSCre_c_SpawnInfo kind:data(any) addr:0x02113a50 ambiguous
+_ZTV8daSCre_c kind:data(any) addr:0x02113a74
 data_ov018_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov018_02113abc kind:data(any) addr:0x02113abc ambiguous
 _ZTI15daObjIceBoard_c kind:data(any) addr:0x02113af0

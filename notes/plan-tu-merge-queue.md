@@ -148,7 +148,7 @@ ov012 0x21111a0  n=8  L=175  daObjC0_Switch_c
 ov013 0x21113bc  n=8  L=153  ClockPaintingHandShort   uncorrob
 ov014 0x2112e0c  n=8  L=197  ChainChompFence
 ov015 0x21111a0  n=7  L=106  PoleBillboard            uncorrob
-ov018 0x21126d4  n=4  L=60   PowerStarCreate          uncorrob
+ov018 0x21126d4  n=4  L=60   daSCre_c                 uncorrob
 ov019 0x211261c  n=5  L=93   daSldMng_c
 ov021 0x2112db4  n=6  L=105  ShutterHmc
 ov022 0x2111980  n=8  L=181  LavaBridge               uncorrob
@@ -161,15 +161,17 @@ ov022 0x2111f6c  n=5  L=86   FloatingFloorLllSmall            pcov=3
 ov022 0x2112380  n=4  L=60   daObjFl_Fall_Block_c             pcov=2
 ov022 0x2112498  n=6  L=100  RollingLogLll
 ov026 0x21118b8  n=6  L=115  Submarine
-ov029 0x21111a0  n=4  L=135  FloatOnWaterPlatformWdwSquare
-ov029 0x2111ea4  n=4  L=124  FloatOnWaterPlatformWdwRectangle
+ov029 0x21111a0  n=4  L=135  daObjWcObj01_c
+ov029 0x2111ea4  n=4  L=124  daObjWcObj06_c
 ov036 0x2111580  n=8  L=146  ShipWing
 ov036 0x2111d14  n=7  L=155  ArmedRotatingPlatform
 ov036 0x2111f8c  n=4  L=75   daObjRc_Dorifu_c
 ov043 0x2111518  n=5  L=80   RickshawPlatformBdw              pcov=3
 ```
-`FloatOnWaterPlatformWdwSquare`/`Rectangle` are adjacent and near-identical — this batch
-is where shape-family amortization first pays.
+`daObjWcObj01_c` and `daObjWcObj06_c` — the Wdw square and rectangle floating
+platforms, coined `FloatOnWaterPlatformWdwSquare`/`...Rectangle` before the
+cartridge's own names were adopted — are adjacent and near-identical, so this
+batch is where shape-family amortization first pays.
 
 **B4 — R0 tail · 7 TUs / 37 files / net −30 / 726 lines**
 ```
@@ -538,7 +540,7 @@ Chosen over the smaller candidates because:
 
 * **Boundary confidence is not inferred at all.** ov023 has exactly one TU; `inspect`
   reports `left=edge, right=edge`. There is no cut to be wrong about. Contrast the
-  4-file `ov018/PowerStarCreate`, smaller but sitting on two inferred `high` boundaries.
+  4-file `ov018/daSCre_c`, smaller but sitting on two inferred `high` boundaries.
 * **Sinit accounting is exactly satisfied**: 1 sinit / 1 `.ctor` entry, `sinit_vs_tu=ok`,
   `corroborated=True`, 1 TU. The tightest corroboration available anywhere in the pool.
 * **The language variable is pre-settled**: all 4 `.c` members are census-proven C++

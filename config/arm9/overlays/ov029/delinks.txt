@@ -4,21 +4,9 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
-src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp:
+src/actors/d_a_obj_wc_obj01.cpp:
     complete
-    .text start:0x021111a0 end:0x021111f0
-
-src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.cpp:
-    complete
-    .text start:0x021111f0 end:0x02111254
-
-src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111254 end:0x02111340
-
-src/FloatOnWaterPlatformWdwSquare_Spawn.c:
-    complete
-    .text start:0x02111340 end:0x0211137c
+    .text start:0x021111a0 end:0x0211137c
 
 src/_ZN9ArrowLiftD1Ev.cpp:
     complete
@@ -132,21 +120,9 @@ src/CageLift_Spawn.c:
     complete
     .text start:0x02111e74 end:0x02111ea4
 
-src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.cpp:
+src/actors/d_a_obj_wc_obj06.cpp:
     complete
-    .text start:0x02111ea4 end:0x02111ef4
-
-src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.cpp:
-    complete
-    .text start:0x02111ef4 end:0x02111f58
-
-src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111f58 end:0x02112044
-
-src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
-    complete
-    .text start:0x02112044 end:0x02112080
+    .text start:0x02111ea4 end:0x02112080
 
 src/_ZN19RotatingPlatformWdwD1Ev.cpp:
     complete

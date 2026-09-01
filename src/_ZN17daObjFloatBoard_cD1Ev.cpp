@@ -4,7 +4,7 @@
  *
  * ~daObjFloatBoard_c is defined in the class body, not here, and that is
  * load-bearing: this class's three descendants (FloatOnWaterPlatformJrb,
- * FloatOnWaterPlatformWdwSquare, FloatOnWaterPlatformWdwRectangle) inline this
+ * daObjWcObj01_c, daObjWcObj06_c) inline this
  * destructor's vptr store rather than calling it, which the compiler can only
  * do from a visible body. include/daObjFloatBoard_c.h records the
  * measurement.

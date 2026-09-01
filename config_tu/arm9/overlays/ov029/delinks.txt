@@ -4,7 +4,7 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
-src_tu/actors/FloatOnWaterPlatformWdwSquare.cpp:
+src/actors/d_a_obj_wc_obj01.cpp:
     .text start:0x021111a0 end:0x0211137c
     .init start:0x02112b38 end:0x02112ba4
     .ctor start:0x02112e68 end:0x02112e6c
@@ -32,7 +32,7 @@ src_tu/actors/CageLift.cpp:
     .data start:0x02113e50 end:0x02113ef4
     .bss start:0x02114284 end:0x021142ac
 
-src_tu/actors/FloatOnWaterPlatformWdwRectangle.cpp:
+src/actors/d_a_obj_wc_obj06.cpp:
     .text start:0x02111ea4 end:0x02112080
     .init start:0x02112cb8 end:0x02112d24
     .ctor start:0x02112e78 end:0x02112e7c

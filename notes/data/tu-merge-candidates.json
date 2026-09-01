@@ -9609,15 +9609,15 @@
    "start": "0x21111a0",
    "end": "0x211137c",
    "classes": [
-    "FloatOnWaterPlatformWdwSquare"
+    "daObjWcObj01_c"
    ],
    "n_functions_map": 4,
    "n_files": 4,
    "files": [
-    "src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp",
-    "src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c",
-    "src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp",
-    "src/FloatOnWaterPlatformWdwSquare_Spawn.c"
+    "src/_ZN14daObjWcObj01_cD1Ev.cpp",
+    "src/_ZN14daObjWcObj01_cD0Ev.c",
+    "src/_ZN14daObjWcObj01_c13InitResourcesEv.cpp",
+    "src/daObjWcObj01_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 2,
@@ -9664,15 +9664,15 @@
    "start": "0x2111ea4",
    "end": "0x2112080",
    "classes": [
-    "FloatOnWaterPlatformWdwRectangle"
+    "daObjWcObj06_c"
    ],
    "n_functions_map": 4,
    "n_files": 4,
    "files": [
-    "src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.cpp",
-    "src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c",
-    "src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.cpp",
-    "src/FloatOnWaterPlatformWdwRectangle_Spawn.c"
+    "src/_ZN14daObjWcObj06_cD1Ev.cpp",
+    "src/_ZN14daObjWcObj06_cD0Ev.c",
+    "src/_ZN14daObjWcObj06_c13InitResourcesEv.cpp",
+    "src/daObjWcObj06_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 2,
@@ -9945,15 +9945,15 @@
    "start": "0x21126d4",
    "end": "0x21127bc",
    "classes": [
-    "PowerStarCreate"
+    "daSCre_c"
    ],
    "n_functions_map": 4,
    "n_files": 4,
    "files": [
-    "src/_ZN15PowerStarCreateD1Ev.cpp",
-    "src/_ZN15PowerStarCreateD0Ev.c",
-    "src/_ZN15PowerStarCreate8BehaviorEv.cpp",
-    "src/PowerStarCreate_Spawn.c"
+    "src/_ZN8daSCre_cD1Ev.cpp",
+    "src/_ZN8daSCre_cD0Ev.c",
+    "src/_ZN8daSCre_c8BehaviorEv.cpp",
+    "src/daSCre_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 2,

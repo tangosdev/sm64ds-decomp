@@ -22,10 +22,10 @@
  * all three leaves inherit that word. Its other own overrides are slots 6
  * (Behavior), 9 (Render), 16 (D1) and 17 (D0).
  *
- * THREE DESCENDANTS: daObjKi_Ita_c (FloatOnWaterPlatformJrb), daObjWcObj01_c
- * (FloatOnWaterPlatformWdwSquare) and daObjWcObj06_c
- * (FloatOnWaterPlatformWdwRectangle). Each destructor stores this class's vtable
- * between its own and _ZTV10dBgActor_c.
+ * THREE DESCENDANTS: daObjKi_Ita_c (coined FloatOnWaterPlatformJrb),
+ * daObjWcObj01_c (coined FloatOnWaterPlatformWdwSquare) and daObjWcObj06_c
+ * (coined FloatOnWaterPlatformWdwRectangle). Each destructor stores this
+ * class's vtable between its own and _ZTV10dBgActor_c.
  *
  * SIZE 0x348, the literal all three factories pass to fBase_c::operator new.
  *
