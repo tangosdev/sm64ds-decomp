@@ -470,6 +470,131 @@ void sa_fill_shared(void **vt)
     vt[15] = (void *)sa_heap;
 }
 
+// ---- THE VS COIN COUNTER, MOVED TO THE TOP SCREEN --------------------------
+//
+// A DELIBERATE PORT-SIDE DEVIATION, and the only one in this file. Tango, on
+// the round-1 HUD captures: "HUD looks good but coins needs to be on the top
+// screen not bottom. basically where they are on the bottom screen they need to
+// be on the top." It lands under his standing ruling that online VS is a
+// host-layer opt-in and already a mod; it is VS-only, it has a kill switch, and
+// everything it draws is the ROM's own sprite through the ROM's own OAM::Render.
+//
+// WHAT THE ROM DOES, and it is one boolean. src/_ZN3HUD15RenderCoinCountEv.cpp
+// has two arms and they differ in exactly that argument:
+//
+//     VS  (data_0209f2d8 == 1)   OAM::Render(TRUE,  ...)   the BOTTOM screen
+//     adventure                  OAM::Render(FALSE, ...)   the TOP screen
+//
+// Every coordinate is shared between the two arms, so "where they are on the
+// bottom screen" and "where they need to be on the top" are the SAME numbers,
+// and moving them is passing the adventure arm's boolean on the VS arm's path.
+//
+// ---- AND THAT ALONE IS INVISIBLE, BECAUSE THE SPOT IS TAKEN -----------------
+//
+// Measured, and it is the whole reason this function has a Y offset. In VS the
+// ROM draws the STAR count on the TOP screen and the COIN count on the BOTTOM
+// screen AT THE SAME COORDINATES. Both are three sprites at y=2, x 240 / 223 /
+// 207, and they differ only in the third glyph. The engine OAM census
+// (SM64DS_VS_HUD=1) with the move off:
+//
+//     A OAM[3] y=2 x=240 tile=192 pal=1     A OAM[5] y=2 x=207 tile=158 pal=6
+//     B OAM[0] y=2 x=240 tile=192 pal=1     B OAM[2] y=2 x=207 tile=154 pal=0
+//
+// -- engine A is the star count, engine B is the coin count, same three slots.
+// So flipping the boolean and nothing else puts the coins EXACTLY underneath
+// the star count: with the move on, engine A went from 6 placed sprites to 9,
+// every one of them with real tile data, and the top screen came out
+// BYTE-IDENTICAL. Three sprites drawn perfectly behind three others.
+//
+// So the coins go to the top screen at the ROM's own x and one sprite row
+// DOWN, stacked under the star count on the same right edge, which is the only
+// free slot that keeps "where they are on the bottom screen" true horizontally.
+// SM64DS_VS_COINS_TOP_Y sets the offset; 18 is the default and the number is
+// the one thing here that is a judgement rather than a measurement, so it is a
+// variable and it is going to the owner with a capture rather than being
+// asserted.
+//
+// WHY IT IS HOSTED HERE RATHER THAN PATCHED. RenderCoinCount is not a vtable
+// slot; it is a direct call from inside HUD::Render, which is matched src this
+// lane may not touch. So the port stands in for HUD::Render's VS ARM ONLY --
+// the ROM's own four leaves in the ROM's own order behind the ROM's own two
+// guards -- and substitutes a copy of the coin leaf. RenderVsTimer,
+// RenderStarCount and RenderCameraButtons are the ROM's, called unchanged.
+// Anything that is not the VS arm (adventure, the paused branch, the
+// data_0209fc9c early-out) falls through to HUD::Render untouched.
+//
+// THE ROM'S BOTTOM-SCREEN DRAW IS SUPPRESSED, and that is not an overreach: the
+// ask is a MOVE, and leaving the sub-screen copy standing would be a duplicate
+// rather than a move.
+//
+// SM64DS_VS_COINS_TOP=0 puts the coins back on the bottom screen on the same
+// binary, which is also how the before/after capture pair is taken.
+// SM64DS_VS_COINS_TOP_Y=<n> moves the stack; 0 reproduces the exact overlap
+// above, which is what makes that measurement reproducible.
+extern "C" {
+void _ZN3HUD13RenderVsTimerEv(void *self);
+void _ZN3HUD15RenderStarCountEv(void *self);
+void _ZN3HUD19RenderCameraButtonsEv(void *self);
+void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, void *attr, int x, int y,
+                                              int a, int b, void *m);
+extern void *func_020aba70[];    /* the ten digit sprites          */
+extern char func_020ab9c8;       /* the glyph at the running x     */
+extern char func_020abad8;       /* the coin glyph, x - 0x10       */
+extern unsigned short data_0209f358[];   /* per-player coin counts */
+extern unsigned char data_0209fc9c;      /* HUD::Render's VS early-out */
+}
+
+/* Returns 1 when it has drawn the whole VS arm itself and the caller must NOT
+   also run HUD::Render; 0 means "not my case, run the ROM's". */
+static int port_vs_hud_render_coins_on_top(HUD *self)
+{
+    static int want = -1, dy = 0;
+    if (want < 0) {
+        const char *e = std::getenv("SM64DS_VS_COINS_TOP");
+        want = (e && e[0] == '0') ? 0 : 1;
+        e = std::getenv("SM64DS_VS_COINS_TOP_Y");
+        dy = e ? std::atoi(e) : 18;
+        if (dy < 0) dy = 0;
+        if (dy > 160) dy = 160;
+    }
+    if (!want || data_0209f2d8 != 1)
+        return 0;
+    /* HUD::Render's own two VS guards, in its own order. Neither is reproduced
+       loosely: the first is its `goto end` and the second picks the full arm
+       over the time-up-only arm. Anything but the full arm is the ROM's job. */
+    if (data_0209fc9c != 0)
+        return 0;
+    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0)
+        return 0;
+
+    _ZN3HUD13RenderVsTimerEv((void *)self);
+    _ZN3HUD15RenderStarCountEv((void *)self);
+
+    /* src/_ZN3HUD15RenderCoinCountEv.cpp's VS arm, verbatim except for the
+       leading argument of the three OAM::Render calls. digits[3] is at HUD+0x74
+       and CalculateDigits is the ROM's own. */
+    {
+        int sb = 0xf0;
+        self->CalculateDigits(data_0209f358[data_0209f250]);
+        const signed char *digits = (const signed char *)((char *)self + 0x74);
+        for (int i = 2; i >= 0; i--) {
+            const signed char d = digits[i];
+            if (d >= 0) {
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[d],
+                                                         sb, 2 + dy, -1, 1, 0);
+                sb -= 9;
+            }
+        }
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, sb, 0xa + dy,
+                                                 -1, 1, 0);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad8, sb - 0x10,
+                                                 2 + dy, -1, 1, 0);
+    }
+
+    _ZN3HUD19RenderCameraButtonsEv((void *)self);
+    return 1;
+}
+
 // ---- HUD -------------------------------------------------------------------
 int __fastcall hud_init(void *s, void *) { return ((HUD *)s)->HUD::InitResources(); }
 int __fastcall hud_clean(void *s, void *) { return ((HUD *)s)->HUD::CleanupResources(); }
@@ -495,6 +620,10 @@ int __fastcall hud_render(void *s, void *)
                         port_sub_oam_nonzero());
         }
     }
+    /* the VS coin move, above; it answers 0 on every path that is not the VS
+       full-render arm, and the ROM's own Render runs then exactly as before */
+    if (port_vs_hud_render_coins_on_top((HUD *)s))
+        return 1;
     return ((HUD *)s)->HUD::Render();
 }
 void __fastcall hud_pdes(void *s, void *) { ((HUD *)s)->HUD::OnPendingDestroy(); }
