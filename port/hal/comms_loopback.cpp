@@ -1708,6 +1708,11 @@ void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
             r.slot    = 0;
             send_raw(&r, kPacketNarrowBytes, from);
             ++g_refused_narrow;
+            std::fprintf(stderr, "[comms:loopback] refused a four-player peer "
+                         "on port %u: it spoke wire version %u into a "
+                         "%d-player session\n",
+                         (unsigned)ntoh16(from.sin_port), (unsigned)p.version,
+                         g_want_players);
         }
         ++g_dropped;
         return;
