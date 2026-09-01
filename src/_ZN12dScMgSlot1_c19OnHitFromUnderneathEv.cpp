@@ -21,15 +21,22 @@
    and put _ZTV12dScMgSlot1_c back into DIFFERS -- with rombuild green the
    whole time.
 
-   THE RETURN TYPE IS THE ONE THING HERE THAT IS NOT MEASURED, and slot 28 is
-   the first in this campaign where that is true.  Neither body sets r0
-   deliberately: the base falls out of a virtual call it has just compared
-   against zero, and this one returns whatever SetSubBg1Offset left behind.  No
-   caller loads vtable+0x70 anywhere in ov004 or ov006, so nothing consumes a
-   result either.  `int` is include/dActor_c.h's, kept because it is what this
-   file already carried and because dActor_c.h's RETURN types have held up
-   where its parameter lists have not -- a hint, not a measurement.  `void`
-   compiles to the same bytes.
+   THE RETURN TYPE IS NOT MEASURED, and slot 28 is the first in this campaign
+   where that is true.  Neither body sets r0 deliberately: the base falls out of
+   a virtual call it has just compared against zero, and this one falls out of
+   SetSubBg1Offset.  Nor does any caller settle it -- ov004 and ov006 hold
+   exactly three `ldr rN,[rM,#0x70]; blx rN` dispatch sites and all three
+   discard the result, written out site by site in dScMgBase_c.h.  (An earlier
+   draft of this comment said no caller loads vtable+0x70 at all.  That was
+   reasoning from an absence never scanned for, and it was wrong: a bare `ldr`
+   at +0x70 is an ordinary field read, and only the load/`blx` PAIR is a
+   dispatch.)
+     So the slot is unpinned, and it is spelled `void` -- the only type both
+   definitions can honour.  `int` is include/dActor_c.h's hint from a parallel
+   hierarchy, and declaring it would leave this body falling off the end of a
+   non-void function, which is undefined behaviour that byte-matches only by
+   accident of what SetSubBg1Offset happens to leave in r0.  `void` compiles to
+   the same bytes.
 
    The forwarding call is written qualified, dScMgBase_c::OnHitFromUnderneath(),
    which suppresses the virtual dispatch and emits the same direct `bl` the ROM
@@ -40,7 +47,7 @@
 #include "decl_common.h"
 #include "dScMgSlot1_c.h"
 
-int dScMgSlot1_c::OnHitFromUnderneath()
+void dScMgSlot1_c::OnHitFromUnderneath()
 {
     dScMgBase_c::OnHitFromUnderneath();
     SetSubBg1Offset(0x100, 0);

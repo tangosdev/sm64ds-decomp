@@ -155,7 +155,7 @@ struct dScMgSlot1_c : dScMgBase_c {
        for what that cost and how it was closed. */
     virtual int  OnYoshiTryEat(int arg);                 /* slot 18 */
     virtual void OnHitByMegaChar();                     /* slot 27 */
-    virtual int  OnHitFromUnderneath();                 /* slot 28 */
+    virtual void OnHitFromUnderneath();                 /* slot 28 */
 
     betIcon_c mBetIcon;      /* 0x4660 -- RTTI-proven nested touch icon */
     u8  pad_4684[0xc];      /* 0x4684 -- embedded object, own type unknown */
