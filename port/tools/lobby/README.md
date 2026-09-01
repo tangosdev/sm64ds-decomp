@@ -721,3 +721,202 @@ python3 test_client.py selftest --url https://tangos.dev/port/lobby
 If a 25-second hold is cut short there, lower `LobbyPollWaitSeconds` in the
 launcher. **That is a client-side constant, not a protocol change** — a `wait`
 of 0 is a plain short poll with an identical contract.
+
+---
+
+## THE CEILINGS BETWEEN 4 AND 16
+
+The dial reaches sixteen. **The game does four.** This is the list of what
+stands between them, measured at cons `339db6bb3` rather than estimated, so the
+next lane starts from evidence instead of from a guess. Every address below is
+from `config/arm9/relocs.txt` and `config/arm9/**/symbols.txt`; every file:line
+is from this tree.
+
+**The shape of the answer, before the detail.** Four is not one wall, it is
+three different kinds of wall, and only the first kind is cheap:
+
+| kind | examples | cost |
+|---|---|---|
+| **A knob** - a number with nothing structural behind it | the lobby dial, the relay's seats | done, or one line |
+| **A wire format** - a field too narrow, shared by every build | the 8-bit live mask, the 4-block payload | a versioned wire break; every peer must update together |
+| **The ROM itself** - byte-matched decompiled code, or a symbol with another symbol immediately after it | the 2-bit player number, the 4-byte score array, `4 - count` | MOD territory under the port's own north star |
+
+**The one number that decides most of it: `mPlayerNo` is TWO BITS.**
+`src/_ZN6Player13InitResourcesEv.cpp:72` is `*(u8*)(c + 0x6d8) = (a >> 6) & 3;`
+- the ROM unpacks a spawned player's identity from bits 6..7 of the spawn-flag
+word, boxed between `f1` at bits 3..5 and the sublevel at bit 8. Slots 4..15
+cannot be *expressed*, never mind stored. Everything else in this list is
+downstream of that.
+
+### 1. Comms - the wire
+
+| what | where | today | 16 needs |
+|---|---|---|---|
+| `kCommsMaxPlayers` | `port/hal/comms_seam.h:237` | `4` | 16 - and it sizes the packet |
+| live-slot bitmask | `comms_loopback.cpp:295` `unsigned char live` | **8 bits** | 16 bits: a wire break |
+| block payload | `comms_loopback.cpp:300`, `kPacketBytes = 0x90` | `0x10 + 4*0x20` = 144 B | `0x10 + 16*0x20` = **528 B** |
+| slot assignment | `comms_loopback.cpp:1281-1282` `assigned < kCommsMaxPlayers` | 0..3 | a bound, not a format |
+| per-slot ports | `comms_loopback.cpp:856-865` slot k at `base+k` | 4-port span | 16-port span, **loopback/direct only** |
+| relay session seats | `relay.py` `MAX_CHILDREN` | 3 | **CLIMBED - now a knob** |
+| relay payload cap | `relay.py` `MAX_PAYLOAD` | 700 B | **already fits 528, 172 to spare** |
+| relay rate cap | `relay.py` `RATE_PPS` 120 | | **not a ceiling** - see below |
+
+**The packet budget at 16 is fine, and that is the good news in this section.**
+A sixteen-slot packet is 528 bytes against a 700-byte cap. And the rate limiter
+never comes into it: `send_to_children` (`comms_loopback.cpp:918-925`) sends
+**exactly one copy** in relay mode because the relay fans out, so a parent's
+outbound rate is one packet per frame - 60/s against a 120/s limit - at sixteen
+players exactly as at four. Both measured, in the relay's own `t_seat_knob`.
+What the relay does pay is egress: 15 copies x 60/s x 528 B is about 3.8 Mbit/s
+per full session.
+
+**The real comms wall is one byte.** `Packet.live` is an `unsigned char`, and
+it is on the wire, in the ACCEPT that tells a child who else is in the session.
+Widening it is a version break every peer has to take at once. The port math is
+the second one, and it is smaller than it looks: it only binds `base+k` in
+loopback and direct mode; over the relay every peer holds **one** socket
+(`comms_loopback.cpp:882`), so the launcher's four-port span
+(`LobbyLaunch.cs:195-230`) is a local-play concern only.
+
+**Estimate:** the wire change is a day, mostly in keeping old and new peers from
+half-understanding each other. It is worthless on its own - nothing above it
+can use sixteen slots yet.
+
+### 2. The Ctrl input band at `0x18 * 4`
+
+**Re-derived, and the VS4P finding holds: on the host this is sizes.** Every
+one of the ten split names is the port's own array at the full four-record
+extent - `hal/auto_bss.cpp:167-174`, `hal/actor_vtables.cpp:505-521`,
+`hal/sub_actors.cpp:270` - and none is `__declspec(allocate(".dsstate..."))`, so
+none is address-pinned and widening one shifts nothing. `CheckInput`'s own loop
+runs to `data_0209f21c`, a byte, so the ROM's reader is already generic.
+
+**But the ROM's address space is not.** The relocs say the Ctrl block starts at
+`0x0209f498` and the next referenced symbol is **`0x0209f4f8`** - exactly
+`0x60`, exactly `0x18 * 4`, not a byte spare. Sixteen records need `0x180`
+(`f498..f617`), which in the ROM's own map would run straight through *fifteen*
+separately-referenced symbols: `f4f8`, `f5b8`, `f5bc`, `f5c0`, `f5c4`, `f5d0`,
+`f5dc`, `f5e8`, `f5f8`, `f5fc`, `f600`, `f604`, `f608`, `f60c`, `f610`.
+
+**Estimate:** small on the host, and **not climbed tonight on purpose** - the
+change is free only if it shifts nothing, and proving *that* costs a full build
+plus the BMP baselines, for a benefit of zero until the wire moves. It is the
+right first rung the day the wire does.
+
+### 3. `SM64DS_VS_NAMES`, and the colours question
+
+`hal/star_flow.cpp:1028` is `static char g_vs_names[4][17]`, the reader refuses
+any string without **exactly three commas** (`:1059`), and it logs four fields
+(`:1093`). The lobby builds the same shape (`build_names`, four fields, slot
+order). At sixteen the string is fifteen commas and up to 16x17 bytes, which
+brushes the 4096-byte body cap far less than it sounds (272 bytes).
+
+**This is the cheapest ceiling in the list** and the only one that is purely a
+format the two sides agree on - no ROM, no wire. A v2 names shape (a count
+prefix, or "as many fields as commas + 1") is an afternoon.
+
+**Flagged to the coordinator, NOT decided here:** lane VSCOLOR-UI is adding
+`SM64DS_VS_COLORS` tonight and would freeze a field count of its own. The two
+strings should answer the field-count question **the same way, once**. I have
+not touched their files.
+
+### 4. Arena entrance records, and what the ROM does when it runs out
+
+The count is data, not code: `hal/level_boot.cpp:2101` reads
+`g_entrance_count = ((const unsigned char *)tbl)[1]` from the level's own
+table. VS4P measured **4** on arena 0 (level 51), and all four players spawned
+from the ROM's own records with no port stand-in - the four positions were the
+level's four entrance records exactly.
+
+When players exceed the starts, `port_vs_spawn_extra_players`
+(`hal/level_boot.cpp:4294-4368`) supplies a body. Its behaviour, plainly:
+
+- It is bounded `for (int i = 1; i < n && i < 4; ++i)` - **hard 4** at `:4309`.
+- It places extras `40.0` units apart on X from player 0's record, and its own
+  comment says `OVERLAP` (`:4315`) - a stand-in, not a spawn point.
+- It packs `((unsigned)i << 6)` into the flag word (`:4358`), which is the
+  2-bit `mPlayerNo` field. Slot 4 would write bit 8 and land in the sublevel.
+
+**Estimate:** the arenas would need real start data authored - sixteen bodies
+40 units apart in a line is not a match. This is level-data work, not code, and
+it is the one item on this list that no amount of C can finish.
+
+### 5. Scoring, the HUD band, and the winner
+
+**The score array has four bytes and the fifth belongs to something else.**
+`data_0209f310`'s ROM run is `f310..f313`; the relocs' next referenced symbol is
+`0x0209f314`, loaded from five separate sites (`0x0202aa28`, `0x0202aa48`,
+`0x0202aa68`, `0x0202aa84`, `0x0202b038`). Sixteen scores would overwrite
+`f314`, `f318` and `f31c`. The host already gives 32 bytes
+(`hal/actor_classes_star.cpp:237-241`) so nothing would *crash* - the ROM's
+readers simply cannot index past 3.
+
+The readers, and how each one is bounded:
+
+| reader | bound |
+|---|---|
+| `NumVsStarsObtained` | `data_0209f21c` - **already generic** |
+| `func_ov075_021165b0` (the winner) | **eight** literal `< 4` loops, byte-matched ROM |
+| `func_ov002_020d94cc:30` | `(&data_0209f310)[*(u8*)(self+0x6d8)]` - the 2-bit player number |
+| `HUD::RenderStarCount:39` | `data_0209f310[data_0209f250]` - local player only, generic |
+| `star_flow.cpp:934,1120-1140,1338` | `g_end_scores[4]`, `scores=%d,%d,%d,%d` - **the port's own, cheap** |
+
+**The HUD star band is the sharpest one, and it is not "four columns
+hard-coded".** `src/func_ov075_0211621c.c:56-64` is:
+
+```c
+int count = data_0209fc50;
+int d = 4 - count;
+xbase = data_ov075_0211c6e8[d];
+stride = (d * 16) + 0x38;
+```
+
+The layout table is indexed by **how many fewer than four** are playing, and
+`data_ov075_0211c6e8` is a **4-byte symbol** - `data_ov075_0211c6ec` is the next
+one, four bytes on. At five players `d` is `-1` and the ROM reads *before* its
+own table; the stride goes negative and the columns march off the left of the
+screen. This is byte-matched ROM code, so the literal cannot move without the
+match moving with it.
+
+**Estimate:** the port's own half (`g_end_scores`, the marker, the banner) is an
+hour. The ROM's half is the whole MOD question.
+
+### 6. The ROM's own wireless ceiling - the honest bottom line
+
+The DS did four, and the decompiled code says so in the places that count:
+
+- `src/func_0203ea5c.c` - the ROM's own wireless exchange and unpack loop -
+  carries **ten** hard-coded `< 4` bounds (`:310, 326, 347, 352, 367, 403, 428,
+  471, 499`).
+- `data_0209f394`, the per-player `Actor*` table: ROM run `f394`, next
+  referenced symbol **`f3a4`** - `0x10`, four pointers.
+- `data_0209fc5c`, the per-slot live flags: `fc5c`, next referenced `fc5d` then
+  **`fc60`** - four bytes.
+- `data_0209f310` / `data_0209f358` / `data_0209f30c`: four each, as above.
+- `mPlayerNo`: two bits.
+
+**So anything past four is a MOD, and this file says so rather than burying
+it.** Under the port's own north star - *the port must BE the decomp* - every
+item in section 6, and the ROM half of sections 4 and 5, changes bytes the gate
+checks. That is the owner's call to make, not a lane's, and it should be made
+knowing it is a fork of the ROM's behaviour rather than a port bug being fixed.
+
+### What was climbed, and what was left alone
+
+**Climbed, with proof:**
+
+- **The lobby dial to 16**, server-enforced against the deployment's real
+  capability, refusing 5..16 today with a reason a player can read.
+- **The relay's session seats to a knob**, default unchanged at 3 children.
+  Proven at 15: sixteen pair, the seventeenth is refused, and one parent
+  datagram still reaches all fifteen.
+
+**Left alone on purpose:** the Ctrl band (free only if it shifts nothing, and
+proving that costs a build for no benefit yet), `kCommsMaxPlayers` and the live
+mask (a wire break every peer takes at once, useless alone), and everything in
+section 6 (MOD territory, the owner's call).
+
+**If someone picks this up, the order is:** the names shape (cheapest, and
+already needs coordinating with the colours string) -> the wire (live mask,
+packet, port span) -> the Ctrl band -> the port's own scoring and marker -> and
+only then the conversation about the ROM.
