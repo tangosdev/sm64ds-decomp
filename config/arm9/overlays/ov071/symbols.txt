@@ -72,7 +72,7 @@ _ZN8daEyBm_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121d10
 _ZN8daEyBm_c6RenderEv kind:function(arm,size=0x6c) addr:0x02121d14
 _ZN8daEyBm_c8BehaviorEv kind:function(arm,size=0x134) addr:0x02121d80
 _ZN8daEyBm_c13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02121eb4
-MrI_Projectile_Spawn kind:function(arm,size=0x48) addr:0x02121f9c
+daEyBm_c_classInit kind:function(arm,size=0x48) addr:0x02121f9c
 _ZN6CoffinD1Ev kind:function(arm,size=0x44) addr:0x02121fe4
 _ZN6CoffinD0Ev kind:function(arm,size=0x58) addr:0x02122028
 func_ov071_02122080 kind:function(arm,size=0x48) addr:0x02122080
@@ -134,7 +134,7 @@ _ZTV3MrI kind:data(any) addr:0x02122d30
 _ZTV8daEykn_c kind:data(any) addr:0x02122d30
 _ZTS8daEyBm_c kind:data(any) addr:0x02122dac
 _ZTI8daEyBm_c kind:data(any) addr:0x02122db8
-MrI_Projectile_SpawnInfo kind:data(any) addr:0x02122dc4 ambiguous
+g_profile_EYEKUN_BEAM kind:data(any) addr:0x02122dc4 ambiguous
 _ZTV8daEyBm_c kind:data(any) addr:0x02122de8
 data_ov071_02122e64 kind:data(any) addr:0x02122e64
 data_ov071_02122e6c kind:data(any) addr:0x02122e6c

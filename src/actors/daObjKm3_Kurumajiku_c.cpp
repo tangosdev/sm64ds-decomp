@@ -39,14 +39,14 @@ extern "C" ResourceDescriptor data_ov047_02112258 = {
 };
 
 struct Km3SpawnInfo {
-    daObjKm3_Kurumajiku_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daObjKm3_Kurumajiku_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char Km3SpawnInfo_size_must_be_0x1c[
@@ -63,11 +63,14 @@ int func_ov002_020b6c54(daObjKm3_Kurumajiku_c *self,
                         ResourceDescriptor *descriptor, unsigned actorID);
 }
 
-/* ROM ordinal 4 -- RickshawBs_Spawn, 0x02111280, size 0x3c */
-// @symbol RickshawBs_Spawn
-/* The object table calls this historical name, but its two vptr stores prove
- * that it constructs daObjKm3_Kurumajiku_c. */
-extern "C" daObjKm3_Kurumajiku_c *RickshawBs_Spawn()
+/* Reconstructed source-style names: SM64DS proves the RTTI class,
+ * KM3_KURUMAJIKU registry ID, descriptor/factory relationship, and object
+ * shape; later EAD lineage supplies the spelling prior. Exact original
+ * SM64DS symbols are not preserved. Historical project aliases:
+ * RickshawBs_Spawn and RickshawBs_SpawnInfo. */
+/* ROM ordinal 4 -- class initializer, 0x02111280, size 0x3c */
+// @symbol daObjKm3_Kurumajiku_c_classInit
+extern "C" daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit()
 {
     daObjKm3_Kurumajiku_c *actor =
         static_cast<daObjKm3_Kurumajiku_c *>(_ZN7fBase_cnwEj(0x330));
@@ -82,8 +85,8 @@ extern "C" daObjKm3_Kurumajiku_c *RickshawBs_Spawn()
     return actor;
 }
 
-extern "C" Km3SpawnInfo RickshawBs_SpawnInfo = {
-    RickshawBs_Spawn,
+extern "C" Km3SpawnInfo g_profile_KM3_KURUMAJIKU = {
+    daObjKm3_Kurumajiku_c_classInit,
     0x0098,
     0x00df,
     2,

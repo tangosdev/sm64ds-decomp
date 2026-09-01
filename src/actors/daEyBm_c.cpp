@@ -1,10 +1,13 @@
 //cpp
 /* Genuine production translation unit for ov071/daEyBm_c.
  *
- * daEyBm_c is the ROM-proven class identity. MrI_Projectile_Spawn and
- * MrI_Projectile_SpawnInfo remain evidence-bounded C ABI aliases because the
- * original factory spellings do not survive. The private helper spellings are
- * inferred; their class ownership, bodies, calls and ordering are proven.
+ * daEyBm_c_classInit and g_profile_EYEKUN_BEAM are reconstructed source-style
+ * names. SM64DS proves the daEyBm_c RTTI identity, EYEKUN_BEAM registry ID,
+ * descriptor/factory relationship, and object shape; later EAD lineage
+ * supplies the spelling prior. Exact original SM64DS symbols are not
+ * preserved. Historical project aliases: MrI_Projectile_Spawn and
+ * MrI_Projectile_SpawnInfo. The private helper spellings are inferred; their
+ * class ownership, bodies, calls and ordering are proven.
  *
  * mwccarm emits ordinary function sections in reverse source order. Keep the
  * ROM-high factory first and OnYoshiTryEat last. InitResources is the key
@@ -27,20 +30,20 @@ struct DaEyBmVector3Words { Fix12i x, y, z; };
 
 /* Typed reconstruction of the actor-table descriptor at ov071:0x02122dc4. */
 struct DaEyBmSpawnInfo {
-    daEyBm_c *(*spawn)();
-    s16 behaviorPriority;
-    s16 renderPriority;
-    u32 flags;
-    Fix12i rangeOffsetY;
-    Fix12i range;
-    Fix12i drawDistance;
-    u32 unk_18;
+    daEyBm_c *(*classInit)();
+    s16 profileIDAndExecuteOrder;
+    s16 drawOrder;
+    u32 actorFlags;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
 typedef char DaEyBmSpawnInfo_size_must_be_0x1c[
     sizeof(DaEyBmSpawnInfo) == 0x1c ? 1 : -1];
 
-/* ROM ordinal 12 -- MrI_Projectile_Spawn, 0x02121f9c, size 0x48. Natural new
+/* ROM ordinal 12 -- class initializer, 0x02121f9c, size 0x48. Natural new
  * targets the wrong allocator; retain the measured actor construction seam. */
 extern "C" {
 extern void *_ZN7fBase_cnwEj(u32 size);
@@ -49,7 +52,8 @@ extern void _ZN11ShadowModelC1Ev(ShadowModel *shadow);
 extern void _ZN10dCcAcPos_cC1Ev(dCcAcPos_c *collision);
 extern void _ZN10dBgCh_ActrC1Ev(dBgCh_Actr *collision);
 
-daEyBm_c *MrI_Projectile_Spawn()
+// @symbol daEyBm_c_classInit
+daEyBm_c *daEyBm_c_classInit()
 {
     daEyBm_c *actor = (daEyBm_c *)_ZN7fBase_cnwEj(sizeof(daEyBm_c));
     if (actor) {
@@ -63,8 +67,8 @@ daEyBm_c *MrI_Projectile_Spawn()
 }
 }
 
-extern "C" DaEyBmSpawnInfo MrI_Projectile_SpawnInfo = {
-    MrI_Projectile_Spawn,
+extern "C" DaEyBmSpawnInfo g_profile_EYEKUN_BEAM = {
+    daEyBm_c_classInit,
     0x0108,
     0x007a,
     0x00000002,

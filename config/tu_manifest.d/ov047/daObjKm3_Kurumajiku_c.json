@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "manually corrected contiguous linker run: 0x021111a0..0x021112bc, five functions; build/tu_map.json stopped at 0x02111280 and omitted the immediately adjacent factory RickshawBs_Spawn",
-    "RickshawBs_Spawn constructs daObjKm3_Kurumajiku_c (size 0x330, dBgActor base constructor, then daObjKurumajiku and daObjKm3_Kurumajiku vptr stores), and RickshawBs_SpawnInfo at 0x0211227c relocates directly to it inside this class's RTTI/type-name/vtable data band",
+    "manually corrected contiguous linker run: 0x021111a0..0x021112bc, five functions; build/tu_map.json stopped at 0x02111280 and omitted the immediately adjacent factory now reconstructed as daObjKm3_Kurumajiku_c_classInit (historical alias RickshawBs_Spawn)",
+    "daObjKm3_Kurumajiku_c_classInit constructs daObjKm3_Kurumajiku_c (size 0x330, dBgActor base constructor, then daObjKurumajiku and daObjKm3_Kurumajiku vptr stores), and g_profile_KM3_KURUMAJIKU at 0x0211227c relocates directly to it inside this class's RTTI/type-name/vtable data band; both source-style spellings are lineage-supported reconstructions, not ROM-preserved names",
     "one mwccarm 2004/b56 compile emits all five text contributions plus the measured class data in retail section order; ordinary intact-object scratch linkcheck proves the text and 0x02112258..0x02112320 data ranges, all 106 modules, and the full stock ROM byte-identical"
   ],
   "sections": [
@@ -52,7 +52,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "RickshawBs_Spawn",
+      "symbol": "daObjKm3_Kurumajiku_c_classInit",
       "address": "0x02111280",
       "size": "0x0000003c",
       "legacy_source": "src/RickshawBs_Spawn.c",
@@ -73,7 +73,7 @@
       "evidence": "compiler-emitted type-name string matches the retail bytes"
     },
     {
-      "symbol": "RickshawBs_SpawnInfo",
+      "symbol": "g_profile_KM3_KURUMAJIKU",
       "address": "0x0211227c",
       "size": "0x1c",
       "evidence": "typed actor descriptor; factory relocation and all priority, flag, and range words match retail"
@@ -125,7 +125,7 @@
       "source": "0x0211227c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "RickshawBs_Spawn",
+      "symbol": "daObjKm3_Kurumajiku_c_classInit",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x02111280"
@@ -745,8 +745,8 @@
   ],
   "compiler_only_output": [],
   "notes": [
-    "The original four-function generated candidate was incomplete. The adjacent RickshawBs_Spawn factory and its SpawnInfo data establish the corrected five-function boundary.",
-    "This intact TU owns the contiguous data tail 0x02112258..0x02112320: resource descriptor, own type-name string, RickshawBs_SpawnInfo, and vtable storage. The own typeinfo at 0x0211224c remains at its separately gap-owned canonical home and is exact-symbol externalized, as are inherited vague RTTI copies.",
+    "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Kurumajiku_c_classInit factory (historical alias RickshawBs_Spawn) and its profile data establish the corrected five-function boundary.",
+    "This intact TU owns the contiguous data tail 0x02112258..0x02112320: resource descriptor, own type-name string, g_profile_KM3_KURUMAJIKU (historical alias RickshawBs_SpawnInfo), and vtable storage. The own typeinfo at 0x0211224c remains at its separately gap-owned canonical home and is exact-symbol externalized, as are inherited vague RTTI copies.",
     "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; there is no compiler-only D2 body.",
     "The compiler emits _ZTV at storage 0x02112298 while the repository names its public address point at 0x021122a0; whole-object linking must rebias the symbol and compensate every surviving +8 relocation, without inventing or recycling a storage-prefix alias.",
     "Older derived-object and partitioned scratch records were removed after the inline destructor changed D1/D0 ELF binding; the recorded ordinary intact-object linkcheck is the current promotion evidence."

@@ -116,6 +116,8 @@
 # halves of that -- all four assert and none skips -- but the 514 was measured in the
 # container and the +4 is arithmetic on it, not a re-measurement. On a Windows tree
 # WITH the toolchain the same 29 modules report 519 and three skips.
+# test_profile_reconstruction adds 11 assertions and no skips to that historical
+# baseline; its fixtures are the tracked pilot outputs and need no private inputs.
 name: tool tests
 
 on:
@@ -198,6 +200,7 @@ jobs:
             tools.test_message_bank \
             tools.test_nearmiss_db \
             tools.test_premerge_check \
+            tools.test_profile_reconstruction \
             tools.test_progress \
             tools.test_rombuild \
             tools.test_rombuild_cache \
@@ -251,6 +254,10 @@ jobs:
 #                                      job ever builds. Pure functions over verdict
 #                                      dicts and a stubbed main(); four honest
 #                                      skipTests need a git binary.
+#   test_profile_reconstruction (14)   profile_reconstruction.py -- preserves the
+#                                      profile/class namespace split, actor/base layout
+#                                      distinction, overlay-address rejection, and the
+#                                      dry-run-only policy for ambiguous factory names.
 #   test_progress                (4)   progress.py -- matched functions/bytes vs the
 #                                      whole game; the number the README reports.
 #   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:

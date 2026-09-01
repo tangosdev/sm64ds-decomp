@@ -28,11 +28,11 @@ _ZN13RacingPenguin6RenderEv kind:function(arm,size=0x34) addr:0x02112360
 _ZN13RacingPenguin8BehaviorEv kind:function(arm,size=0x40) addr:0x02112394
 _ZN13RacingPenguin13InitResourcesEv kind:function(arm,size=0x1e8) addr:0x021123d4
 RacingPenguin_Spawn kind:function(arm,size=0x60) addr:0x021125bc
-_ZN15IceSlideManagerD1Ev kind:function(arm,size=0x24) addr:0x0211261c
-_ZN15IceSlideManagerD0Ev kind:function(arm,size=0x38) addr:0x02112640
-_ZN15IceSlideManager8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
-_ZN15IceSlideManager13InitResourcesEv kind:function(arm,size=0x30) addr:0x0211271c
-IceSlideManager_Spawn kind:function(arm,size=0x30) addr:0x0211274c
+_ZN10daSldMng_cD1Ev kind:function(arm,size=0x24) addr:0x0211261c
+_ZN10daSldMng_cD0Ev kind:function(arm,size=0x38) addr:0x02112640
+_ZN10daSldMng_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
+_ZN10daSldMng_c13InitResourcesEv kind:function(arm,size=0x30) addr:0x0211271c
+daSldMng_c_Spawn kind:function(arm,size=0x30) addr:0x0211274c
 data_ov019_0211277c kind:data(any) addr:0x0211277c
 data_ov019_02112788 kind:data(any) addr:0x02112788
 __sinit_ov019_021127a4 kind:function(arm,size=0x370) addr:0x021127a4
@@ -106,8 +106,8 @@ _ZTV10daPgRcer_c kind:data(any) addr:0x02113310
 data_ov019_02113344 kind:data(any) addr:0x02113344 ambiguous
 _ZTI10daSldMng_c kind:data(any) addr:0x0211338c
 _ZTS10daSldMng_c kind:data(any) addr:0x02113398
-IceSlideManager_SpawnInfo kind:data(any) addr:0x021133a8 ambiguous
-_ZTV15IceSlideManager kind:data(any) addr:0x021133cc
+daSldMng_c_SpawnInfo kind:data(any) addr:0x021133a8 ambiguous
+_ZTV10daSldMng_c kind:data(any) addr:0x021133cc
 data_ov019_02113434 kind:data(any) addr:0x02113434 ambiguous
 data_ov019_02113460 kind:bss addr:0x02113460
 data_ov019_02113468 kind:bss addr:0x02113468

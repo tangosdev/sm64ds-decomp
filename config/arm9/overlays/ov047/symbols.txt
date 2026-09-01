@@ -2,7 +2,7 @@ _ZN21daObjKm3_Kurumajiku_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
 _ZN21daObjKm3_Kurumajiku_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111254
 _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111268
-RickshawBs_Spawn kind:function(arm,size=0x3c) addr:0x02111280
+daObjKm3_Kurumajiku_c_classInit kind:function(arm,size=0x3c) addr:0x02111280
 _ZN20daObjKm3_Kaitendai_cD1Ev kind:function(arm,size=0x50) addr:0x021112bc
 _ZN20daObjKm3_Kaitendai_cD0Ev kind:function(arm,size=0x64) addr:0x0211130c
 _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111370
@@ -86,7 +86,7 @@ data_ov047_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 _ZTI21daObjKm3_Kurumajiku_c kind:data(any) addr:0x0211224c
 data_ov047_02112258 kind:data(any) addr:0x02112258
 _ZTS21daObjKm3_Kurumajiku_c kind:data(any) addr:0x02112264
-RickshawBs_SpawnInfo kind:data(any) addr:0x0211227c ambiguous
+g_profile_KM3_KURUMAJIKU kind:data(any) addr:0x0211227c ambiguous
 _ZTV21daObjKm3_Kurumajiku_c kind:data(any) addr:0x021122a0
 data_ov047_02112320 kind:data(any) addr:0x02112320
 data_ov047_02112324 kind:data(any) addr:0x02112324

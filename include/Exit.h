@@ -42,7 +42,8 @@
 #include "dActor_c.h"
 
 /* Exit is a real dActor_c, like every other actor in this family
- * (VirtualDoor_Spawn's neighbor, InvisiblePole_Spawn, CameraTag_Spawn) --
+ * (VirtualDoor_Spawn's neighbor, daBar_c_classInit, and CameraTag_Spawn; the
+ * bar factory's historical alias was InvisiblePole_Spawn) --
  * mParam/mPosX/mScaleX/mAngleX/mHorzSpeed above are dActor_c's own fields
  * (param1 at 0x008 via fBase_c, the rest at 0x05c..0x098), inherited rather
  * than re-declared flat as they were before. Only the offsets and inherited

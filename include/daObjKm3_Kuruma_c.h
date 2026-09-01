@@ -6,7 +6,8 @@
 
 /* Bowser in the Sky's rickshaw platform -- the cart on the axle. Its factory is
  * named RickshawPlatformBs_Spawn, and that name is trustworthy for pairing (unlike
- * its sibling RickshawBs_Spawn, see include/daObjKm3_Kurumajiku_c.h); still paired
+ * its sibling daObjKm3_Kurumajiku_c_classInit (historical alias
+ * RickshawBs_Spawn; see include/daObjKm3_Kurumajiku_c.h); still paired
  * here by vtable ADDRESS per the recovery recipe, and it agrees with the name.
  *
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKuruma_c, which derives

@@ -24,7 +24,8 @@ typedef char BrqStateHandlers_size_must_be_0x10[
 
 /* daBrq_c is the ROM-proven class identity: ov070 owns _ZTS7daBrq_c at
  * 0x0212323c, _ZTI7daBrq_c at 0x02123248, and the public vtable address point
- * at 0x02123278. Amp_Spawn allocates 0x434 bytes, constructs dActor_c, then
+ * at 0x02123278. daBrq_c_classInit (historical alias Amp_Spawn) allocates
+ * 0x434 bytes, constructs dActor_c, then
  * constructs the seven owned subobjects below at 0xd4..0x218. D1 destroys
  * those subobjects in reverse order before chaining to dActor_c. Behavior
  * identifies the Vector3 at 0x410 as the moving cylinder's actor-relative

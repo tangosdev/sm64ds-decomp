@@ -18,7 +18,8 @@
  *                                stores _ZTV9CameraTag.
  *
  * THIS HEADER USED TO SAY 0x108, with a dCcAc_c at 0xd4. That was
- * daBar_c's layout, read off InvisiblePole_Spawn (0x020b0710) -- the
+ * daBar_c's layout, read off daBar_c_classInit (0x020b0710; historical alias
+ * InvisiblePole_Spawn) -- the
  * function immediately BEFORE this class's own factory, whose story the old
  * comment reproduced verbatim, down to naming it. daBar_c is a different
  * class with a different vtable (0x02108480, RTTI daBar_c), and it is already

@@ -7,7 +7,7 @@
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous class linker run: 0x2120570..0x21210ac, 18 function(s); the adjacent Amp_Spawn factory remains separately enrolled because mwccarm cannot express placement construction with the retail fBase_c allocator",
+    "contiguous class linker run: 0x2120570..0x21210ac, 18 function(s); the adjacent daBrq_c_classInit factory (historical alias Amp_Spawn) remains separately enrolled because mwccarm cannot express placement construction with the retail fBase_c allocator",
     "ROM class identity: _ZTS7daBrq_c at 0x0212323c, _ZTI7daBrq_c at 0x02123248, and _ZTV7daBrq_c public address point at 0x02123278",
     "the adjacent deferred initializer at 0x02122d80 constructs daBrq_c resource globals and its PMF state table, but the initializer, .ctor word, read-only input tables, and resource BSS remain separately enrolled until their source types are reconstructed"
   ],
@@ -165,7 +165,7 @@
       "evidence": "compiler-emitted single-inheritance RTTI record matches retail and points to the ROM-proven dActor_c base identity"
     },
     {
-      "symbol": "Amp_SpawnInfo",
+      "symbol": "g_profile_BIRIKYU",
       "address": "0x02123254",
       "size": "0x1c",
       "evidence": "typed actor descriptor; factory relocation and all priority, flag, range, and distance words match retail"
@@ -217,7 +217,7 @@
       "source": "0x02123254",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "Amp_Spawn",
+      "symbol": "daBrq_c_classInit",
       "addend": 0,
       "target_module": "ov070",
       "target_address": "0x021210ac"
@@ -688,9 +688,9 @@
   ],
   "notes": [
     "Retail RTTI proves daBrq_c and dActor_c as its sole base. The class layout is corroborated by the factory's seven member constructors, reverse-order destructor calls, and member offsets used throughout the 18-function class run.",
-    "The legacy Amp spellings and readable private state-handler names are inferred aliases. Amp_Spawn and Amp_SpawnInfo remain evidence-bounded C ABI aliases.",
+    "daBrq_c_classInit and g_profile_BIRIKYU are reconstructed source-style names: SM64DS proves the daBrq_c RTTI identity, BIRIKYU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Amp_Spawn and Amp_SpawnInfo; readable private state-handler names remain inferred aliases.",
     "The inline destructor and InitResources key function naturally emit retail D1 then D0, type name, RTTI, vtable, and SpawnInfo without a retained D2 or forcing helper.",
-    "The pinned compiler cannot express placement construction against retail's fBase_c allocator, so Amp_Spawn remains separately enrolled in its exact C source while this genuine class TU owns the descriptor, members, destructor, RTTI, and vtable.",
+    "The pinned compiler cannot express placement construction against retail's fBase_c allocator, so daBrq_c_classInit remains separately enrolled in its exact C source while this genuine class TU owns the descriptor, members, destructor, RTTI, and vtable.",
     "The deferred initializer at 0x02122d80, its .ctor word, PMF input table, resource globals, and state-table BSS remain separately enrolled for the next reconstruction phase."
   ],
   "verification": {
