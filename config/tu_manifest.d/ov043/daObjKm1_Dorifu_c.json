@@ -1,12 +1,13 @@
 {
   "id": "ov043/daObjKm1_Dorifu_c",
   "module": "ov043",
-  "source": "src_tu/actors/daObjKm1_Dorifu_c.cpp",
+  "source": "src/actors/daObjKm1_Dorifu_c.cpp",
   "promoted_source": "src/actors/daObjKm1_Dorifu_c.cpp",
-  "status": "text-verified",
+  "production_mode": "intact-object",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x2111630..0x211176c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "contiguous original TU run: 0x2111630..0x21117fc, five functions ending immediately before __sinit_ov043_021117fc",
     "class label(s): daObjKm1_Dorifu_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +15,12 @@
     {
       "name": ".text",
       "start": "0x02111630",
-      "end": "0x0211176c"
+      "end": "0x021117fc"
+    },
+    {
+      "name": ".data",
+      "start": "0x021124dc",
+      "end": "0x021125dc"
     }
   ],
   "functions": [
@@ -45,34 +51,945 @@
       "size": "0x00000014",
       "legacy_source": "src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp",
       "ordinal": 3
+    },
+    {
+      "symbol": "StairsBdw_Spawn",
+      "address": "0x0211176c",
+      "size": "0x00000090",
+      "legacy_source": "src/StairsBdw_Spawn.cpp",
+      "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI17daObjKm1_Dorifu_c",
+      "address": "0x021124dc",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI record matches the retail bytes and all three configured relocations"
+    },
+    {
+      "symbol": "_ZTS17daObjKm1_Dorifu_c",
+      "address": "0x021124e8",
+      "size": "0x14",
+      "evidence": "compiler-emitted type-name string matches the retail bytes"
+    },
+    {
+      "symbol": "StairsBdw_SpawnInfo",
+      "address": "0x021124fc",
+      "size": "0x1c",
+      "evidence": "typed actor descriptor; factory relocation and all priority, flag, and range words match retail"
+    },
+    {
+      "symbol": "data_ov043_02112518",
+      "address": "0x02112518",
+      "size": "0x3c",
+      "evidence": "five typed daObjDorifuResources records; all fifteen compiler relocations match the configured ov043 destinations"
+    },
+    {
+      "symbol": "_ZTV17daObjKm1_Dorifu_c",
+      "address": "0x0211255c",
+      "emitted_storage_address": "0x02112554",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble at 0x02112554; the configured public address point is eight bytes later and all 32 slot relocations match without split aliases"
+    }
+  ],
   "bss": [],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021124dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021124e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS17daObjKm1_Dorifu_c",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x021124e8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021124e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI13daObjDorifu_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02108d70"
+    },
+    {
+      "section": ".data",
+      "source": "0x021124fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "StairsBdw_Spawn",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x0211176c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_021126a0",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x021126a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211251c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112678",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112678"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111c40",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111c40"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112524",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112680",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112680"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112658",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112658"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211252c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111b60",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111b60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112668",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112668"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112670",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112670"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112538",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111ba0",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111ba0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211253c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112688",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112688"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112540",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112698",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112698"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112544",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111c80",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111c80"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112548",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112690",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112690"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211254c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02112660",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02112660"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112550",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov043_02111c60",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111c60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112558",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI17daObjKm1_Dorifu_c",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x021124dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211255c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111758"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112560",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112564",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112568",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111744"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211256c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112570",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112574",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjDorifu_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlays(0,2)",
+      "target_address": "0x020b4bfc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112578",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211257c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112580",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjDorifu_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlays(0,2)",
+      "target_address": "0x020b4bc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112584",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112588",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211258c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112590",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112594",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112598",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211259c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjKm1_Dorifu_cD1Ev",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x02111630"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
+      "addend": 0,
+      "target_module": "ov043",
+      "target_address": "0x021116b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021125d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    }
+  ],
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS10dBgActor_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x02108a04"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e390"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xd",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI13daObjDorifu_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108d70",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS13daObjDorifu_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x02108d7c"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI10dBgActor_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x021089ec"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS13daObjDorifu_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x10",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108d7c",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    }
+  ],
+  "compiler_only_output": [],
   "notes": [
-    "Manually curated against include/daObjKm1_Dorifu_c.h; the class TU contains real member definitions and one empty destructor definition rather than the legacy C D0 body.",
-    "STRICT PARTIAL-ISOLATION BOUNDARY: D1, InitResources, and CleanupResources are contribution-identical. Compiler-generated D0 calls __cxa_vec_cleanup while the legacy C object names the configured same-address alias __destroy_arr (both arm9 0x0207328c), so symbolic object equivalence is conservatively 3/4 and no partial-link claim is made."
+    "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order without a D2 body.",
+    "StairsBdw_Spawn is the adjacent fifth function: it allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
+    "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __destroy_arr remains the sized owner at the same ROM address and is not renamed."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "round": "tools/tubuild.py verify -- text-only, whole class TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov043-daObjKm1_Dorifu_c/daObjKm1_Dorifu_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
+    "functions_matched": 5,
+    "functions_declared": 5,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- raw object also emits compiler-only D2 plus 13 unlicensed RTTI/type-name/vtable definitions",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "PASS -- the inline destructor emits D1/D0 without a D2 body; all remaining object definitions are licensed data or exact inherited RTTI imports",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov043-daObjKm1_Dorifu_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111630",
+        "end": "0x021117fc",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111630",
+          "end": "0x021117fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021124dc",
+          "end": "0x021125dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 10
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ],
+            "desired": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "partial_isolation": {
     "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
-    "derivedObjects": 4,
-    "contributionEquivalent": "3/4",
+    "derivedObjects": 5,
+    "contributionEquivalent": "5/5",
     "comparedFields": [
       "keptSection",
       "keptBytes",
@@ -82,12 +999,788 @@
       "live",
       "undefReferenced"
     ],
-    "legacyEntriesComplete": "4/4",
-    "extraInertImports": 59,
+    "legacyEntriesComplete": "5/5",
+    "extraInertImports": 81,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov043-daObjKm1_Dorifu_c/partial/partial.json (gitignored)",
-    "state": "derived",
-    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "state": "contribution-equivalent",
+    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "partitioned_link": {
+    "lastAttempt": {
+      "result": "partitioned-link-verified",
+      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
+      "trackedDelinksChanged": false,
+      "text": {
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "mergedBytes": 8232,
+        "contributionEquivalent": "5/5",
+        "substitutedObjectPaths": [
+          "src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp",
+          "src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp",
+          "src/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp",
+          "src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp",
+          "src/StairsBdw_Spawn.cpp"
+        ],
+        "rows": [
+          {
+            "ordinal": 0,
+            "symbol": "_ZN17daObjKm1_Dorifu_cD1Ev",
+            "identical": true,
+            "relocCount": 10,
+            "differences": []
+          },
+          {
+            "ordinal": 1,
+            "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
+            "identical": true,
+            "relocCount": 12,
+            "differences": []
+          },
+          {
+            "ordinal": 2,
+            "symbol": "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 3,
+            "symbol": "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 4,
+            "symbol": "StairsBdw_Spawn",
+            "identical": true,
+            "relocCount": 10,
+            "differences": []
+          }
+        ]
+      },
+      "compilerOnlyPolicy": {
+        "requested": [
+          "_ZN17daObjKm1_Dorifu_cD2Ev"
+        ],
+        "deadstripped": [
+          "_ZN17daObjKm1_Dorifu_cD2Ev"
+        ],
+        "droppedSections": [
+          29,
+          30
+        ],
+        "errors": null
+      },
+      "externalizedPolicy": {
+        "requested": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI10dBgActor_c",
+          "_ZTS10dBgActor_c",
+          "_ZTI8dActor_c",
+          "_ZTI13daObjDorifu_c",
+          "_ZTS13daObjDorifu_c"
+        ],
+        "externalized": [
+          "_ZTI10dBgActor_c",
+          "_ZTI13daObjDorifu_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS10dBgActor_c",
+          "_ZTS13daObjDorifu_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          20,
+          21
+        ],
+        "verificationOk": true,
+        "errors": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ],
+            "desired": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "nontextPartition": {
+        "requestedSections": [
+          ".data"
+        ],
+        "licensedSymbols": [
+          "StairsBdw_SpawnInfo",
+          "_ZTI17daObjKm1_Dorifu_c",
+          "_ZTS17daObjKm1_Dorifu_c",
+          "_ZTV17daObjKm1_Dorifu_c",
+          "data_ov043_02112518"
+        ],
+        "deferredOutputs": [
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_cD1Ev",
+            "section": ".text",
+            "size": "0x00000080"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
+            "section": ".text",
+            "size": "0x00000094"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+            "section": ".text",
+            "size": "0x00000014"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+            "section": ".text",
+            "size": "0x00000014"
+          },
+          {
+            "symbol": "StairsBdw_Spawn",
+            "section": ".text",
+            "size": "0x00000090"
+          }
+        ],
+        "keptSectionIndices": [
+          18,
+          22,
+          23,
+          25,
+          27
+        ],
+        "droppedSectionIndices": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "externalizedTextSymbols": [
+          "StairsBdw_Spawn",
+          "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+          "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+          "_ZN17daObjKm1_Dorifu_cD0Ev",
+          "_ZN17daObjKm1_Dorifu_cD1Ev"
+        ],
+        "deadTextSymbols": [
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d"
+        ],
+        "liveSections": [
+          {
+            "index": 18,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 12
+          },
+          {
+            "index": 22,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 20
+          },
+          {
+            "index": 23,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 28
+          },
+          {
+            "index": 25,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 60
+          },
+          {
+            "index": 27,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 136
+          }
+        ],
+        "error": null
+      },
+      "ownedBeforePartition": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x021124dc",
+            "end": "0x021125dc",
+            "emittedBytes": 256,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 52
+          }
+        ],
+        "errors": []
+      },
+      "ownedAfterRebias": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x021124dc",
+            "end": "0x021125dc",
+            "emittedBytes": 256,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 52
+          }
+        ],
+        "errors": []
+      },
+      "vtableRebias": {
+        "rebased": [
+          {
+            "symbol": "_ZTV17daObjKm1_Dorifu_c",
+            "bias": 8,
+            "oldValue": 0,
+            "newValue": 8,
+            "oldSize": 136,
+            "newSize": 128
+          }
+        ],
+        "aliases": [],
+        "partitions": [],
+        "relocations": [
+          {
+            "section": ".data",
+            "relocationSection": ".rela.data",
+            "offset": 0,
+            "symbol": "_ZTVN3abi20__si_class_type_infoE",
+            "type": "R_ARM_ABS32",
+            "oldAddend": 8,
+            "newAddend": 0,
+            "mode": "undefined-public-import"
+          }
+        ],
+        "error": null
+      },
+      "linkedStorageAliases": null,
+      "objectHashes": {
+        "rawTuSha256": "21001ac8076db7c3bb9f8a97e766a145972d1c4edda3c3c5e150c30eefd48c4e",
+        "rawTuBytes": 8232,
+        "tuObjectPath": "build/tu/ov043-daObjKm1_Dorifu_c/link-partitioned/src_tu/actors/daObjKm1_Dorifu_c.o",
+        "postPolicySha256": "70ea28b07d014d073e009ff928f2fab898c2624345b367b23b69fee7d7f10098",
+        "postOrderSha256": "70ea28b07d014d073e009ff928f2fab898c2624345b367b23b69fee7d7f10098",
+        "reducedStorageSha256": "f735dacfeb51c29c71d4eb2de46eb3b98aa6cc6a9dc811e0ec9359b74cace2b1",
+        "linkedDataSha256": "4270ac5eb06394bbf47d6feee6428e9feda56038c8b701b2db52422465cd2e3b"
+      },
+      "artifactAudit": {
+        "ok": true,
+        "errors": [],
+        "expectedTuSelectors": [
+          "daObjKm1_Dorifu_c.o(.data)"
+        ],
+        "observedTuSelectors": [
+          "daObjKm1_Dorifu_c.o(.data)"
+        ],
+        "expectedLegacyCount": 5,
+        "selectorCount": 11318,
+        "objectCount": 11107,
+        "selectorListSha256": "b245ac259dd79c789aebfbac9a998598e94a051b86eb086d17c9e640fa740401",
+        "objectListSha256": "2b634885f0e4e4b927ba433d3558a5fa17af26a9af5646aa8d29b882ac86b53e"
+      },
+      "ranges": [
+        {
+          "section": ".text",
+          "start": "0x02111630",
+          "end": "0x021117fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021124dc",
+          "end": "0x021125dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "moduleFidelityPassed": true,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "strayOutputs": null,
+      "scratch": "build/tu/ov043-daObjKm1_Dorifu_c/link-partitioned (gitignored)"
+    },
+    "state": "partitioned-link-verified",
+    "stateMeaning": "At least one scratch-only attempt compiled one shadow TU into exact ROM-ordered text partitions plus exact owned non-text data and reproduced the stock ROM. The latest attempt is recorded separately; this is never a production enrollment or promotion state.",
+    "lastVerified": {
+      "result": "partitioned-link-verified",
+      "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",
+      "trackedDelinksChanged": false,
+      "text": {
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "mergedBytes": 8232,
+        "contributionEquivalent": "5/5",
+        "substitutedObjectPaths": [
+          "src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp",
+          "src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp",
+          "src/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp",
+          "src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp",
+          "src/StairsBdw_Spawn.cpp"
+        ],
+        "rows": [
+          {
+            "ordinal": 0,
+            "symbol": "_ZN17daObjKm1_Dorifu_cD1Ev",
+            "identical": true,
+            "relocCount": 10,
+            "differences": []
+          },
+          {
+            "ordinal": 1,
+            "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
+            "identical": true,
+            "relocCount": 12,
+            "differences": []
+          },
+          {
+            "ordinal": 2,
+            "symbol": "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 3,
+            "symbol": "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+            "identical": true,
+            "relocCount": 2,
+            "differences": []
+          },
+          {
+            "ordinal": 4,
+            "symbol": "StairsBdw_Spawn",
+            "identical": true,
+            "relocCount": 10,
+            "differences": []
+          }
+        ]
+      },
+      "compilerOnlyPolicy": {
+        "requested": [
+          "_ZN17daObjKm1_Dorifu_cD2Ev"
+        ],
+        "deadstripped": [
+          "_ZN17daObjKm1_Dorifu_cD2Ev"
+        ],
+        "droppedSections": [
+          29,
+          30
+        ],
+        "errors": null
+      },
+      "externalizedPolicy": {
+        "requested": [
+          "_ZTI7fBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS7dBase_c",
+          "_ZTS8dActor_c",
+          "_ZTI7dBase_c",
+          "_ZTI10dBgActor_c",
+          "_ZTS10dBgActor_c",
+          "_ZTI8dActor_c",
+          "_ZTI13daObjDorifu_c",
+          "_ZTS13daObjDorifu_c"
+        ],
+        "externalized": [
+          "_ZTI10dBgActor_c",
+          "_ZTI13daObjDorifu_c",
+          "_ZTI7dBase_c",
+          "_ZTI7fBase_c",
+          "_ZTI8dActor_c",
+          "_ZTS10dBgActor_c",
+          "_ZTS13daObjDorifu_c",
+          "_ZTS7dBase_c",
+          "_ZTS7fBase_c",
+          "_ZTS8dActor_c"
+        ],
+        "droppedSections": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          20,
+          21
+        ],
+        "verificationOk": true,
+        "errors": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ],
+            "desired": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "nontextPartition": {
+        "requestedSections": [
+          ".data"
+        ],
+        "licensedSymbols": [
+          "StairsBdw_SpawnInfo",
+          "_ZTI17daObjKm1_Dorifu_c",
+          "_ZTS17daObjKm1_Dorifu_c",
+          "_ZTV17daObjKm1_Dorifu_c",
+          "data_ov043_02112518"
+        ],
+        "deferredOutputs": [
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_cD1Ev",
+            "section": ".text",
+            "size": "0x00000080"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
+            "section": ".text",
+            "size": "0x00000094"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+            "section": ".text",
+            "size": "0x00000014"
+          },
+          {
+            "symbol": "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+            "section": ".text",
+            "size": "0x00000014"
+          },
+          {
+            "symbol": "StairsBdw_Spawn",
+            "section": ".text",
+            "size": "0x00000090"
+          }
+        ],
+        "keptSectionIndices": [
+          18,
+          22,
+          23,
+          25,
+          27
+        ],
+        "droppedSectionIndices": [
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "externalizedTextSymbols": [
+          "StairsBdw_Spawn",
+          "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
+          "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
+          "_ZN17daObjKm1_Dorifu_cD0Ev",
+          "_ZN17daObjKm1_Dorifu_cD1Ev"
+        ],
+        "deadTextSymbols": [
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$a",
+          "$d",
+          "$d",
+          "$d",
+          "$d",
+          "$d"
+        ],
+        "liveSections": [
+          {
+            "index": 18,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 12
+          },
+          {
+            "index": 22,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 20
+          },
+          {
+            "index": 23,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 28
+          },
+          {
+            "index": 25,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 60
+          },
+          {
+            "index": 27,
+            "name": ".data",
+            "type": "SHT_PROGBITS",
+            "size": 136
+          }
+        ],
+        "error": null
+      },
+      "ownedBeforePartition": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x021124dc",
+            "end": "0x021125dc",
+            "emittedBytes": 256,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 52
+          }
+        ],
+        "errors": []
+      },
+      "ownedAfterRebias": {
+        "ok": true,
+        "rows": [
+          {
+            "section": ".data",
+            "start": "0x021124dc",
+            "end": "0x021125dc",
+            "emittedBytes": 256,
+            "sizeOk": true,
+            "bytesOk": true,
+            "differingWords": 0,
+            "relocCount": 52
+          }
+        ],
+        "errors": []
+      },
+      "vtableRebias": {
+        "rebased": [
+          {
+            "symbol": "_ZTV17daObjKm1_Dorifu_c",
+            "bias": 8,
+            "oldValue": 0,
+            "newValue": 8,
+            "oldSize": 136,
+            "newSize": 128
+          }
+        ],
+        "aliases": [],
+        "partitions": [],
+        "relocations": [
+          {
+            "section": ".data",
+            "relocationSection": ".rela.data",
+            "offset": 0,
+            "symbol": "_ZTVN3abi20__si_class_type_infoE",
+            "type": "R_ARM_ABS32",
+            "oldAddend": 8,
+            "newAddend": 0,
+            "mode": "undefined-public-import"
+          }
+        ],
+        "error": null
+      },
+      "linkedStorageAliases": null,
+      "objectHashes": {
+        "rawTuSha256": "21001ac8076db7c3bb9f8a97e766a145972d1c4edda3c3c5e150c30eefd48c4e",
+        "rawTuBytes": 8232,
+        "tuObjectPath": "build/tu/ov043-daObjKm1_Dorifu_c/link-partitioned/src_tu/actors/daObjKm1_Dorifu_c.o",
+        "postPolicySha256": "70ea28b07d014d073e009ff928f2fab898c2624345b367b23b69fee7d7f10098",
+        "postOrderSha256": "70ea28b07d014d073e009ff928f2fab898c2624345b367b23b69fee7d7f10098",
+        "reducedStorageSha256": "f735dacfeb51c29c71d4eb2de46eb3b98aa6cc6a9dc811e0ec9359b74cace2b1",
+        "linkedDataSha256": "4270ac5eb06394bbf47d6feee6428e9feda56038c8b701b2db52422465cd2e3b"
+      },
+      "artifactAudit": {
+        "ok": true,
+        "errors": [],
+        "expectedTuSelectors": [
+          "daObjKm1_Dorifu_c.o(.data)"
+        ],
+        "observedTuSelectors": [
+          "daObjKm1_Dorifu_c.o(.data)"
+        ],
+        "expectedLegacyCount": 5,
+        "selectorCount": 11318,
+        "objectCount": 11107,
+        "selectorListSha256": "b245ac259dd79c789aebfbac9a998598e94a051b86eb086d17c9e640fa740401",
+        "objectListSha256": "2b634885f0e4e4b927ba433d3558a5fa17af26a9af5646aa8d29b882ac86b53e"
+      },
+      "ranges": [
+        {
+          "section": ".text",
+          "start": "0x02111630",
+          "end": "0x021117fc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021124dc",
+          "end": "0x021125dc",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "moduleFidelityPassed": true,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "strayOutputs": null,
+      "scratch": "build/tu/ov043-daObjKm1_Dorifu_c/link-partitioned (gitignored)"
+    }
   }
 }
