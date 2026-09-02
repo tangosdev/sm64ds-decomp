@@ -181,6 +181,33 @@ int host_setting_lovesme_character(void);
    turn it on and off with the game already running. */
 int host_setting_mouse_capture(void);
 
+/* ---- NameTags: WHO THAT IS, AND HOW THEY ARE DOING ----------------------
+   Default 1, and the default is ON, which is the one key here that is on by
+   default and needs its reason stated.
+
+   In an online VS match every other body on screen is a stranger, and the
+   cartridge has nothing to say about which one is which: the DS's own VS mode
+   was four people in a room who could look up. The port's is not, so each
+   REMOTE player carries a tag over his head with the lobby nickname the room
+   gave that seat and, above it, that seat's carried-star count.
+
+   IT IS A HOST OVERLAY AND NOT A MOD, which is why it does not ride the Mods
+   panel's rules. It draws into the framebuffer after the frame is composed,
+   reads game state and writes none of it, and runs only while data_0209f2d8
+   says a VS match. Nothing about the simulation changes with it on or off,
+   which is the line GaplessMinigames and LovesMeCharacter are on the other
+   side of.
+
+   THE GLYPHS ARE THE CARTRIDGE'S. The tag is drawn with the ROM's own message
+   font, decoded out of the tiles LoadFont3D uploaded, not with the debug
+   overlay's ASCII font -- see tests/nametag.h for the decode and for what the
+   font does and does not contain.
+
+   Reloads live, like the gap keys and MouseCapture. SM64DS_NAME_TAGS=0 forces
+   it off for a proof run and any other value forces it on; unset is the
+   file's answer. */
+int host_setting_name_tags(void);
+
 /* ---- CustomPalette: the third Mods key ---------------------------------
    Default 0, and the default is the only setting that is the ROM. 1..3
    pick a palette combo file, palettes/combo<N>.pal in the same folder

@@ -1802,6 +1802,11 @@ static int ovl_text(const OvlSurface &fb, int x0, int y0, const char *s,
     return x - x0;
 }
 
+/* THE VS NAME TAGS. Included here rather than earlier because it draws through
+   OvlSurface and sizes itself off OVL_SCALE, both of which are above; its own
+   banner carries the font decode, the projection and the slot rules. */
+#include "nametag.h"
+
 /* the per-phase clock. One QueryPerformanceCounter pair per phase and a
    1-second exponential average, so the numbers are readable instead of
    flickering with whatever the OS did to that one frame. */
@@ -10968,6 +10973,12 @@ int main(void)
             ntr::gx_enable_lights(0x1);
             push_camera(dbg_eye, dbg_at);
         }
+        /* THE NAME TAGS' TRANSFORM, taken HERE and not at draw time. Both
+           camera arms above have pushed by now and nothing has drawn a 2D
+           layer yet, so this is the last moment the live projection is the
+           frame's 3D one. See the banner in tests/nametag.h. */
+        nt_stash_view();
+
         static int no_level = -1;
         if (no_level < 0) no_level = getenv("SM64DS_NO_LEVEL") ? 1 : 0;
         if (!no_level) {
@@ -11236,6 +11247,10 @@ int main(void)
             os.menu_paused = !game_ticked;
             ovl_draw(surf, os);
         }
+        /* THE NAME TAGS, before the menu and the banner so a menu the player
+           opened still sits over them. Returns immediately outside a VS match,
+           which is why no adventure selftest BMP moves. */
+        nt_draw(surf);
         if (menu_on) menu_draw(surf);
         /* THE WINNER, once a VS match is over. Centred, over everything, for
            the whole grace window before the process closes -- which is what

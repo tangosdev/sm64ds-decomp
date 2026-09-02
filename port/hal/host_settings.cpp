@@ -576,6 +576,12 @@ int g_volume = -1;
    about the window and not about this file. */
 int g_mouse_capture;
 
+/* NameTags: 1 when the VS name-and-star tag over a remote player's head is
+   drawn. Default 1, and unlike the Mods keys the default is ON -- see the
+   header for why a host overlay that reads no game state is a preference
+   rather than a mod. */
+int g_name_tags = 1;
+
 /* Steps once per live re-read that changed an answer. hal/screen_gap.cpp
    latches on it. */
 int g_setgen;
@@ -619,6 +625,7 @@ void load_once(void)
     g_lovesme_character = 0;
     g_mouse_capture = 0;
     g_custom_palette = 0;
+    g_name_tags = 1;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
 
@@ -661,6 +668,10 @@ void load_once(void)
            written before this key existed reads as a file that turned it
            off -- which is the ROM */
         g_gapless_minigames = json_bool(text, "GaplessMinigames", 0);
+        /* defaulted ON, on its own line for the gap keys' reason: a file
+           written before this key existed reads as a file that left it on,
+           which is what a player who never opened the dialog expects. */
+        g_name_tags = json_bool(text, "NameTags", 1);
         {
             char who[24];
             if (json_str(text, "LovesMeCharacter", who, sizeof who))
@@ -813,6 +824,10 @@ int reload_live(const char *text)
     const int gap = json_bool(text, "MinigameGap", g_gap_on);
     const int peek = json_bool(text, "GapPeek", g_gap_peek);
     const int mcap = json_bool(text, "MouseCapture", g_mouse_capture);
+    /* reloads live for the same reason MouseCapture does: it is presentation,
+       it costs nothing to change mid-run, and the launcher's dialog promises a
+       restart only for the Mods panel. */
+    const int tags = json_bool(text, "NameTags", g_name_tags);
     int fill = g_gap_fill;
     unsigned color = g_gap_color;
     int vol = g_volume;
@@ -832,22 +847,25 @@ int reload_live(const char *text)
         if (v >= 0) vol = v > 100 ? 100 : v;
     }
     if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
-        color != g_gap_color || vol != g_volume || mcap != g_mouse_capture) {
+        color != g_gap_color || vol != g_volume || mcap != g_mouse_capture ||
+        tags != g_name_tags) {
         g_gap_on = gap;
         g_gap_peek = peek;
         g_gap_fill = fill;
         g_gap_color = color;
         g_volume = vol;
         g_mouse_capture = mcap;
+        g_name_tags = tags;
         changed = 1;
         fprintf(stderr, "[settings] live re-read: MinigameGap %s, fill %s "
-                "#%06x, peek %s, volume %d, mouse capture %s\n",
+                "#%06x, peek %s, volume %d, mouse capture %s, "
+                "name tags %s\n",
                 g_gap_on ? "on" : "OFF",
                 g_gap_fill == 0   ? "solid"
                 : g_gap_fill == 2 ? "custom"
                                   : "ambient",
                 g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", g_volume,
-                g_mouse_capture ? "ON" : "off");
+                g_mouse_capture ? "ON" : "off", g_name_tags ? "on" : "OFF");
     }
     return changed;
 }
@@ -983,6 +1001,23 @@ extern "C" int host_setting_mouse_capture(void)
 {
     load_once();
     return g_mouse_capture;
+}
+
+/* NameTags, plus the debug env override every host overlay in this port has.
+   SM64DS_NAME_TAGS=0 forces them off and any other value forces them on, so a
+   proof run can pin the answer without editing a player's file; unset is the
+   file's answer, live re-read included. Read once, like every other env in
+   this file's neighbourhood. */
+extern "C" int host_setting_name_tags(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_NAME_TAGS");
+        env = e ? ((e[0] == '0' && e[1] == 0) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_name_tags;
 }
 
 extern "C" int host_settings_gen(void)

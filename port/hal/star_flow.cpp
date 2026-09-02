@@ -1191,6 +1191,42 @@ static const char *vs_name_for(int slot)
     return g_vs_names[slot][0] ? g_vs_names[slot] : 0;
 }
 
+/* ---- WHAT THE NAME TAGS READ ----------------------------------------------
+ *
+ * tests/nametag.h draws a tag over every REMOTE player's head, and the two
+ * things it puts in the tag are this file's already: the lobby nickname for a
+ * seat and that seat's carried-star count. Rather than let the window grow a
+ * second reader of SM64DS_VS_NAMES and a second opinion about the star band,
+ * the two facts leave here through one face each.
+ *
+ * THE SLOT IS THE FIELD INDEX, and that is the SAME rule the end banner
+ * already follows (port_vs_match_end_banner calls vs_name_for(best) with a
+ * data_0209f310 index). It carries the same caveat vs_names_load's banner
+ * states in the lobby spec's words: above two players the parent assigns child
+ * slots from JOIN arrival order, which need not match lobby seat order. That
+ * is a property of the lobby contract, not of this reader, and a tag that
+ * disagreed with the winner banner would be worse than one that shares its
+ * caveat -- so it shares it, deliberately, and both move on the day the lobby
+ * sends a seat map.
+ *
+ * NEITHER FACE WRITES ANYTHING. */
+extern "C" const char *port_vs_slot_name(int slot)
+{
+    return vs_name_for(slot);
+}
+
+/* That slot's carried VS stars. The read is data_0209f310[slot] -- the same
+ * expression the end latch above uses, over the same guarded 32-byte band
+ * (hal/actor_classes_star.cpp's .dsstate$hvsstar pair, checked by
+ * port/tools/gxband_guard.py), so sixteen slots are inside the storage the
+ * port already has. Out of range answers 0 rather than reading past it. */
+extern "C" int port_vs_slot_stars(int slot)
+{
+    if (slot < 0 || slot >= kPortMaxPlayers)
+        return 0;
+    return (int)data_0209f310[slot];
+}
+
 
 /* ---- THE SCOREBOARD LINE, at four players and at sixteen -------------------
  *
