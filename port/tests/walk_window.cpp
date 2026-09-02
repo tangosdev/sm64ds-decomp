@@ -1978,8 +1978,12 @@ static const int CAM_STEP = 0x400;       /* the ROM's quantum, 0x0200a6a8 */
                  runs, the harness writes the rotate bits, and the frame is
                  whatever func_02009e70 makes of them.
 
-   F1 cycles analog -> freecam -> DS. SM64DS_DS_CAMERA=1 boots DS-exact and
-   SM64DS_FREECAM=1 boots the freecam.
+   F1 cycles analog -> freecam -> DS. settings.json's CameraMode ("analog",
+   "freecam" or "ds"; hal/host_settings.h) picks the mode an interactive run
+   boots into, analog when the key is absent, and the F5 menu's camera row
+   writes it back. SM64DS_DS_CAMERA=1 boots DS-exact and SM64DS_FREECAM=1
+   boots the freecam, and both win over the file: an environment knob is a
+   per-run request, the file is a standing one.
 
    THE SELFTEST DEFAULTS TO CAM_DS, deliberately. It is the regression harness:
    its BMP is a byte-comparison against the hardware's framing and its camera
@@ -2244,6 +2248,34 @@ static int g_run_mode;                /* settings.json RunMode */
 static int g_run_key = 0x10;          /* settings.json RunButtonKey, VK_SHIFT */
 static int g_run_pad = 0x4000;        /* settings.json RunButtonPad, pad X */
 
+/* ---- THE CONTROL BINDINGS (settings.json Key* / Pad*) --------------------
+   Every gameplay key and pad button this window reads, one slot per action,
+   indexed by hal/host_settings.h's HOST_KEY_ / HOST_PAD_ enums. The header
+   carries the key list, the defaults and why they are the defaults; this
+   file only READS the bound codes where it used to read literals, so a
+   settings.json with none of the keys is byte for byte the program before
+   they existed.
+
+   Loaded lazily on first use rather than at one place in main, because there
+   are two frame loops (main's level loop and scene_window_run's) and the
+   scene branch leaves main before the level loop's boot block runs. One
+   idempotent load serves both and the menu's reserved-key test as well.
+
+   The run action is NOT read out of this table by host_ds_buttons; it keeps
+   reading g_run_key / g_run_pad, which the rebind row writes live. The
+   loader guarantees the two agree at boot (KeyRun and RunButtonKey are one
+   value there), and the rebind row's save writes both spellings. */
+static int g_key[HOST_KEY_COUNT];
+static int g_pad[HOST_PAD_COUNT];
+static int g_bindings_loaded;
+static void bindings_load(void)
+{
+    if (g_bindings_loaded) return;
+    g_bindings_loaded = 1;
+    for (int i = 0; i < HOST_KEY_COUNT; ++i) g_key[i] = host_setting_key(i);
+    for (int i = 0; i < HOST_PAD_COUNT; ++i) g_pad[i] = host_setting_pad(i);
+}
+
 /* THE REBIND CAPTURE, armed from the menu's rebind row and read by the window
    procedure. A capture has to swallow the press it is capturing, or binding
    run to F3 would also toggle the overlay on the way past. So the capture
@@ -2320,6 +2352,23 @@ static int key_live(int vk)
         if (key_stale[vk]) return 0;
     }
     return down;
+}
+
+/* The bound key for an action, through key_live and so behind all three
+   gates; 0 (unbound) never reads down. pad_act is the pad half: the bound
+   mask against the buttons word, and 0 never matches. Both load the tables
+   on first use, see bindings_load. */
+static int key_act(int action)
+{
+    bindings_load();
+    const int vk = g_key[action];
+    return vk && key_live(vk);
+}
+static int pad_act(const XPad *pad, int action)
+{
+    bindings_load();
+    const int m = g_pad[action];
+    return m && (pad->buttons & (unsigned)m) != 0;
 }
 
 /* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
@@ -2405,14 +2454,15 @@ static int run_key_reserved(int vk)
        menu on every step; F11 and F12 are the fullscreen toggle. */
     if (vk >= VK_F1 && vk <= VK_F12) return 1;
     if (vk >= VK_LEFT && vk <= VK_DOWN) return 1;       /* menu navigation */
-    /* and the WASD aliases of those four, since the same change that made
-       them menu navigation. CONSISTENCY RATHER THAN A BUG FIX, and labelled
-       as such: run is zeroed with everything else while the menu is open
-       (`if (menu_on) btn = 0`), so a run bound to D would not actually fight
-       the cursor. But this list is meant to read as "the keys this program
-       has spoken for", and leaving the walk keys out of it after handing them
-       a second job is how the list stops being true. */
-    if (vk == 'W' || vk == 'A' || vk == 'S' || vk == 'D') return 1;
+    /* and every key bound to another action -- the walk keys (which are also
+       menu navigation), jump, attack, crouch, start, select. A run that is
+       also a jump is not a conflict a player could see and undo from here,
+       and the same key doing two things is settings.json's to say, not the
+       capture's. The run slot itself is skipped: rebinding run to the key it
+       already is must not be refused. */
+    bindings_load();
+    for (int i = 0; i < HOST_KEY_COUNT; ++i)
+        if (i != HOST_KEY_RUN && g_key[i] && g_key[i] == vk) return 1;
     /* the bottom-screen panel, and it is read in hal/sub_screen.cpp rather
        than through this file's key_live -- so a binding on it would fire the
        panel from outside every gate here */
@@ -2424,7 +2474,13 @@ static int run_pad_reserved(unsigned mask)
     /* the d-pad (0x000f) and A (0x1000) drive the menu, BACK (0x0020) opens
        it and B (0x2000) closes it, and the right stick's click (0x0080) is
        the freecam toggle */
-    return (mask & 0x30afu) != 0;
+    if (mask & 0x30afu) return 1;
+    /* and, like the keyboard half, any button bound to another action */
+    bindings_load();
+    for (int i = 0; i < HOST_PAD_COUNT; ++i)
+        if (i != HOST_PAD_RUN && g_pad[i] && (mask & (unsigned)g_pad[i]))
+            return 1;
+    return 0;
 }
 
 /* A printable name for a binding. The letters and digits are their own ASCII
@@ -2445,11 +2501,34 @@ static const char *run_key_name(int vk, char *buf, size_t cap)
         { VK_OEM_1,    "semicolon" }, { VK_OEM_7,   "quote"     },
         { VK_OEM_4,    "["         }, { VK_OEM_6,   "]"         },
         { VK_OEM_MINUS,"-"         }, { VK_OEM_PLUS,"="         },
+        /* everything a binding can now be, so the boot line and the menu
+           read as words: the arrows and the rest of the navigation cluster,
+           enter and escape, the numpad, the function row */
+        { VK_UP,       "up"        }, { VK_DOWN,    "down"      },
+        { VK_LEFT,     "left"      }, { VK_RIGHT,   "right"     },
+        { VK_RETURN,   "enter"     }, { VK_ESCAPE,  "escape"    },
+        { VK_INSERT,   "insert"    }, { VK_DELETE,  "delete"    },
+        { VK_HOME,     "home"      }, { VK_END,     "end"       },
+        { VK_PRIOR,    "page up"   }, { VK_NEXT,    "page down" },
+        { VK_LMENU,    "left alt"  }, { VK_RMENU,   "right alt" },
+        { VK_NUMPAD0,  "numpad 0"  }, { VK_NUMPAD1, "numpad 1"  },
+        { VK_NUMPAD2,  "numpad 2"  }, { VK_NUMPAD3, "numpad 3"  },
+        { VK_NUMPAD4,  "numpad 4"  }, { VK_NUMPAD5, "numpad 5"  },
+        { VK_NUMPAD6,  "numpad 6"  }, { VK_NUMPAD7, "numpad 7"  },
+        { VK_NUMPAD8,  "numpad 8"  }, { VK_NUMPAD9, "numpad 9"  },
+        { VK_MULTIPLY, "numpad *"  }, { VK_ADD,     "numpad +"  },
+        { VK_SUBTRACT, "numpad -"  }, { VK_DECIMAL, "numpad ."  },
+        { VK_DIVIDE,   "numpad /"  },
+        { VK_OEM_5,    "backslash" },
     };
     for (unsigned i = 0; i < sizeof NAMED / sizeof NAMED[0]; ++i)
         if (NAMED[i].vk == vk) return NAMED[i].name;
     if ((vk >= 'A' && vk <= 'Z') || (vk >= '0' && vk <= '9')) {
         snprintf(buf, cap, "%c", (char)vk);
+        return buf;
+    }
+    if (vk >= VK_F1 && vk <= VK_F24) {
+        snprintf(buf, cap, "F%d", vk - VK_F1 + 1);
         return buf;
     }
     snprintf(buf, cap, "key 0x%02x", (unsigned)vk);
@@ -2466,7 +2545,13 @@ static const char *run_pad_name(int mask, char *buf, size_t cap)
     case 0x0100: return "pad LB";
     case 0x0200: return "pad RB";
     case 0x0010: return "pad start";
+    case 0x0020: return "pad back";
     case 0x0040: return "left stick click";
+    case 0x0080: return "right stick click";
+    case 0x0001: return "d-pad up";
+    case 0x0002: return "d-pad down";
+    case 0x0004: return "d-pad left";
+    case 0x0008: return "d-pad right";
     default: break;
     }
     snprintf(buf, cap, "pad 0x%04x", (unsigned)mask);
@@ -3441,10 +3526,13 @@ static void menu_input(int pad_live, const XPad *pad)
        The zeroing is on the VARIABLE, not on the key, so it has always
        covered both halves of each of these four lines. The arrows were never
        leaking and WASD does not start. */
-    if (key_live(VK_UP)    || key_live('W')) held |= 1u << 1;
-    if (key_live(VK_DOWN)  || key_live('S')) held |= 1u << 2;
-    if (key_live(VK_LEFT)  || key_live('A')) held |= 1u << 3;
-    if (key_live(VK_RIGHT) || key_live('D')) held |= 1u << 4;
+    /* THE ARROWS ARE FIXED and the aliases are whatever the walk keys are
+       BOUND to (settings.json KeyUp..KeyRight; W/A/S/D unless moved), so a
+       player who walks on IJKL reads the menu with the same hand. */
+    if (key_live(VK_UP)    || key_act(HOST_KEY_UP))    held |= 1u << 1;
+    if (key_live(VK_DOWN)  || key_act(HOST_KEY_DOWN))  held |= 1u << 2;
+    if (key_live(VK_LEFT)  || key_act(HOST_KEY_LEFT))  held |= 1u << 3;
+    if (key_live(VK_RIGHT) || key_act(HOST_KEY_RIGHT)) held |= 1u << 4;
     if (key_live(VK_RETURN)) held |= 1u << 5;
     if (pad_live) {
         if (pad->buttons & 0x0001) held |= 1u << 1;   /* d-pad up    */
@@ -3822,6 +3910,12 @@ static void menu_input(int pad_live, const XPad *pad)
                                    : (cam_mode + 1) % 3;
                     if (cam_mode != CAM_DS) fc_seed(g_menu_host.cam);
                     if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
+                    /* persisted on the spot like the run row, and for the
+                       same reason: settings.json's CameraMode is what a
+                       lobby match boots with, and this row is the one place
+                       in the game a player can set it. F1 does not write it;
+                       F1 is a look, this is a choice. */
+                    host_setting_save_camera_mode(cam_mode);
                     fprintf(stderr, "[menu] camera %s\n",
                             cam_mode_name(cam_mode));
                 }
@@ -4305,20 +4399,26 @@ static void click_test_finish(void)
 static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
 {
     unsigned short btn = 0;
-    if (key_live(VK_SPACE)) btn |= 2;
+    /* EVERY KEY HERE IS A BINDING (settings.json KeyJump, KeyAttack,
+       KeyCrouch; hal/host_settings.h), read through key_act so 0 is unbound.
+       The defaults are the literals that used to be on these lines -- space,
+       X, ctrl -- so a file without the keys is the old program. */
+    if (key_act(HOST_KEY_JUMP)) btn |= 2;
     /* THE RUN BUTTON, from wherever the player put it. Shift by default, so an
        untouched settings.json is the line that was here before; zero means
        they unbound the keyboard half. */
     if (g_run_key && key_live(g_run_key)) btn |= 0x800;
-    if (key_live(VK_CONTROL)) btn |= 0x400;
-    if (key_live('X')) btn |= 1;
+    if (key_act(HOST_KEY_CROUCH)) btn |= 0x400;
+    if (key_act(HOST_KEY_ATTACK)) btn |= 1;
     if (pad_live) {
-        if (pad->buttons & 0x1000) btn |= 2;      /* A  -> jump  */
+        if (pad_act(pad, HOST_PAD_JUMP)) btn |= 2;       /* A by default  */
         /* X by default; the rebind row moves it (0 = unbound) */
         if (g_run_pad && (pad->buttons & (unsigned)g_run_pad))
             btn |= 0x800;
-        if (pad->buttons & 0x2000) btn |= 1;      /* B  -> punch */
-        if (pad->rt > 100) btn |= 0x400;          /* RT -> crouch */
+        if (pad_act(pad, HOST_PAD_ATTACK)) btn |= 1;     /* B by default  */
+        if (pad->rt > 100) btn |= 0x400;          /* RT -> crouch, fixed: an
+                                                     axis has no button mask */
+        if (pad_act(pad, HOST_PAD_CROUCH)) btn |= 0x400; /* unbound by default */
         /* the bumpers are camera-rotate and go in with the rest of the rotate
            input at the level loop's own call site, where the freecam gate is */
     }
@@ -6124,18 +6224,31 @@ static int scene_window_run(void)
             unsigned short btn = 0;
             if (!menu_on) {
                 btn = host_ds_buttons(pad_live, &pad);
-                if (key_live(VK_RIGHT))  btn |= 0x10;
-                if (key_live(VK_LEFT))   btn |= 0x20;
-                if (key_live(VK_UP))     btn |= 0x40;
-                if (key_live(VK_DOWN))   btn |= 0x80;
-                if (key_live(VK_RETURN)) btn |= 0x08;   /* Start  */
-                if (key_live(VK_BACK))   btn |= 0x04;   /* Select */
+                /* the DS d-pad off the bound walk keys, either half of each
+                   pair (settings.json KeyRight / KeyRightAlt and siblings).
+                   ONE DELIBERATE CHANGE FROM THE LITERALS THIS REPLACED: the
+                   arrows alone used to drive a minigame's d-pad and W/A/S/D
+                   did not. Now both defaults do, because "the walk keys" is
+                   one binding with two halves and a player who moved it to
+                   IJKL should not find the minigames still want the arrows. */
+                if (key_act(HOST_KEY_RIGHT) || key_act(HOST_KEY_RIGHT_ALT))
+                    btn |= 0x10;
+                if (key_act(HOST_KEY_LEFT)  || key_act(HOST_KEY_LEFT_ALT))
+                    btn |= 0x20;
+                if (key_act(HOST_KEY_UP)    || key_act(HOST_KEY_UP_ALT))
+                    btn |= 0x40;
+                if (key_act(HOST_KEY_DOWN)  || key_act(HOST_KEY_DOWN_ALT))
+                    btn |= 0x80;
+                if (key_act(HOST_KEY_START))  btn |= 0x08;   /* enter     */
+                if (key_act(HOST_KEY_SELECT)) btn |= 0x04;   /* backspace */
                 if (pad_live) {
                     if (pad.buttons & 0x0008) btn |= 0x10;   /* d-pad right */
                     if (pad.buttons & 0x0004) btn |= 0x20;   /* d-pad left  */
                     if (pad.buttons & 0x0001) btn |= 0x40;   /* d-pad up    */
                     if (pad.buttons & 0x0002) btn |= 0x80;   /* d-pad down  */
-                    if (pad.buttons & 0x0010) btn |= 0x08;   /* START       */
+                    if (pad_act(&pad, HOST_PAD_START))  btn |= 0x08; /* START */
+                    if (pad_act(&pad, HOST_PAD_SELECT)) btn |= 0x04; /* none
+                                                     by default; see header */
                 }
             }
             /* run mg16 lane MPBTN: the host key word for the scene path's
@@ -7384,6 +7497,37 @@ int main(void)
                 selftest && g_run_mode != RUN_BUTTON
                     ? "   (selftest: pinned to button)" : "");
     }
+    /* THE BINDINGS, said once at boot for the same reason the run line is,
+       and in the same words the menu uses. This is also the line a headless
+       check reads: a settings.json that moves jump must show up here even in
+       a run that never reads a live key. */
+    bindings_load();
+    {
+        char b[HOST_KEY_COUNT][20];
+        fprintf(stderr, "[keys] walk %s%s%s%s (alt %s%s%s%s) jump %s attack %s "
+                        "crouch %s start %s select %s\n",
+                run_key_name(g_key[HOST_KEY_UP], b[0], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_LEFT], b[1], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_DOWN], b[2], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_RIGHT], b[3], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_UP_ALT], b[4], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_LEFT_ALT], b[5], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_DOWN_ALT], b[6], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_RIGHT_ALT], b[7], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_JUMP], b[8], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_ATTACK], b[9], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_CROUCH], b[10], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_START], b[11], sizeof b[0]),
+                run_key_name(g_key[HOST_KEY_SELECT], b[12], sizeof b[0]));
+        char pb[HOST_PAD_COUNT][20];
+        fprintf(stderr, "[keys] pad jump %s attack %s crouch %s (and the right "
+                        "trigger) start %s select %s\n",
+                run_pad_name(g_pad[HOST_PAD_JUMP], pb[0], sizeof pb[0]),
+                run_pad_name(g_pad[HOST_PAD_ATTACK], pb[1], sizeof pb[0]),
+                run_pad_name(g_pad[HOST_PAD_CROUCH], pb[2], sizeof pb[0]),
+                run_pad_name(g_pad[HOST_PAD_START], pb[3], sizeof pb[0]),
+                run_pad_name(g_pad[HOST_PAD_SELECT], pb[4], sizeof pb[0]));
+    }
     /* SM64DS_DECEL_PROBE=1 (under a selftest): hold the stick and the dash
        button until DECEL_RELEASE, then let go of both and log the horizontal
        speed every frame until it reaches zero. The point is the SHAPE of the
@@ -8054,10 +8198,12 @@ int main(void)
                is why every other probe here looked clean. */
             if (decel_probe == 4 && frame < DASH_CHARGE_UNTIL) dz = 0;
         }
-        if (key_live('W') || key_live(VK_UP)) dz += 1;
-        if (key_live('S') || key_live(VK_DOWN)) dz -= 1;
-        if (key_live('A') || key_live(VK_LEFT)) dx -= 1;
-        if (key_live('D') || key_live(VK_RIGHT)) dx += 1;
+        /* the walk keys, both halves of each pair (settings.json KeyUp and
+           KeyUpAlt and their siblings; W/A/S/D and the arrows by default) */
+        if (key_act(HOST_KEY_UP)    || key_act(HOST_KEY_UP_ALT))    dz += 1;
+        if (key_act(HOST_KEY_DOWN)  || key_act(HOST_KEY_DOWN_ALT))  dz -= 1;
+        if (key_act(HOST_KEY_LEFT)  || key_act(HOST_KEY_LEFT_ALT))  dx -= 1;
+        if (key_act(HOST_KEY_RIGHT) || key_act(HOST_KEY_RIGHT_ALT)) dx += 1;
         /* gamepad: left stick / d-pad walk, right stick orbits + tilts.
            Gated off under a selftest with the keyboard: a drifting stick
            on a plugged-in pad perturbs a headless run the same way, and
@@ -8187,9 +8333,14 @@ int main(void)
             static int fc_edge, fc_boot;
             if (!fc_boot) {
                 fc_boot = 1;
-                /* the window plays in analog; the selftest stays DS-exact
-                   unless it is asked otherwise (see the mode block above) */
-                cam_mode = selftest ? CAM_DS : CAM_ANALOG;
+                /* the window plays in the mode settings.json's CameraMode
+                   names (analog when it names none, which is what this line
+                   always did); the selftest stays DS-exact unless it is asked
+                   otherwise (see the mode block above). host_settings'
+                   numbering IS the CAM_ numbering: 0 analog, 1 freecam, 2 ds.
+                   The three environment knobs below still win over the file. */
+                cam_mode = selftest ? CAM_DS : host_setting_camera_mode();
+                if (cam_mode < CAM_ANALOG || cam_mode > CAM_DS) cam_mode = CAM_ANALOG;
                 if (getenv("SM64DS_ANALOG_CAMERA")) cam_mode = CAM_ANALOG;
                 if (getenv("SM64DS_DS_CAMERA")) cam_mode = CAM_DS;
                 if (getenv("SM64DS_FREECAM")) cam_mode = CAM_FREE;
