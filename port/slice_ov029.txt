@@ -9,7 +9,6 @@
 # is bound to data_ov029_02114278 per source there too.
 #
 src/ArrowLift_Spawn.c
-src/CageLift_Spawn.c
 src/FloatOnWaterPlatformWdwRectangle_Spawn.c
 src/FloatOnWaterPlatformWdwSquare_Spawn.c
 src/RotatingPlatformWdw_Spawn.c
@@ -53,25 +52,23 @@ src/__sinit_ov029_02112d24.c
 src/__sinit_ov029_02112d90.c
 src/__sinit_ov029_02112dfc.c
 src/func_ov029_021111a0.c
-src/func_ov029_021111f0.c
 src/func_ov029_02111254.c
 src/func_ov029_021116c4.cpp
 src/func_ov029_021116e4.c
 src/func_ov029_021117ac.cpp
 src/func_ov029_02111850.cpp
 src/func_ov029_021118c8.c
-src/func_ov029_02111ac4.c
-src/func_ov029_02111b08.c
-src/func_ov029_02111b60.c
-src/func_ov029_02111ba4.cpp
-src/func_ov029_02111bcc.c
-src/func_ov029_02111d6c.cpp
 src/func_ov029_02111e40.cpp
 src/func_ov029_02111e60.c
 src/func_ov029_02111ea4.c
-src/func_ov029_02111ef4.c
 src/func_ov029_02111f58.c
 src/func_ov029_02112250.cpp
 src/func_ov029_021122b4.c
 src/func_ov029_021126dc.c
 src/func_ov029_02112710.c
+# EXCLUDED (guessed/inferred-stub bodies, not seated): the Square and Rectangle
+# deleting destructors func_ov029_021111f0.c / func_ov029_02111ef4.c (slot 17,
+# trapped in the fill), and all of CageLift's TUs -- CageLift_Spawn.c and
+# func_ov029_02111d6c/02111b60/02111bcc/02111ba4/02111ac4/02111b08 -- since five
+# of its six lifecycle bodies carry the vtable-slot-identity marker. CageLift
+# (id 99) is left unregistered until those bodies get a faithful decomp.

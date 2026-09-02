@@ -1949,9 +1949,8 @@ void hal_fill_water_diamond_vtable(void);                        /* _ZTV9ArrowLi
 extern unsigned char SwitchActivatedPlank_SpawnInfo[];             /* ov029 0x0211417c, +4 = 98  */
 void *SwitchActivatedPlank_Spawn(void);                          /* ov029 0x02112964 */
 void hal_fill_switch_activated_plank_vtable(void);               /* _ZTV20SwitchActivatedPlank 0x021141a0, 32 */
-extern unsigned char CageLift_SpawnInfo[];                         /* ov029 0x02113e50, +4 = 99  */
-void *CageLift_Spawn(void);                                      /* ov029 0x02111e74 */
-void hal_fill_cage_lift_vtable(void);                            /* data_ov029_02113e74, 32 */
+/* id 99 CageLift is NOT registered: five of its six lifecycle bodies are
+   guess-marked (inferred stubs), so it cannot be seated faithfully. */
 extern unsigned char FloatOnWaterPlatformWdwRectangle_SpawnInfo[]; /* ov029 0x02113f20, +4 = 100 */
 void *FloatOnWaterPlatformWdwRectangle_Spawn(void);              /* ov029 0x02112044 */
 void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void);/* data_ov029_02113f44, 32 */
@@ -2990,8 +2989,7 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
      hal_fill_water_diamond_vtable}, \
     {98,  "SWITCH_ACTIVATED_PLANK", SwitchActivatedPlank_SpawnInfo, \
      SwitchActivatedPlank_Spawn, hal_fill_switch_activated_plank_vtable}, \
-    {99,  "CAGE_LIFT", CageLift_SpawnInfo, CageLift_Spawn, \
-     hal_fill_cage_lift_vtable}, \
+    /* id 99 CAGE_LIFT omitted: guessed lifecycle bodies (inferred stubs). */ \
     {100, "FLOAT_ON_WATER_PLATFORM_WDW_RECTANGLE", FloatOnWaterPlatformWdwRectangle_SpawnInfo, \
      FloatOnWaterPlatformWdwRectangle_Spawn, hal_fill_float_on_water_platform_wdw_rectangle_vtable}, \
     {101, "WDW_WATER", WDW_Water_SpawnInfo, WDW_Water_Spawn, \

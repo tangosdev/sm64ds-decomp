@@ -76,10 +76,10 @@ int func_ov002_020b5c24(void *self);
 int func_ov002_020b6718(void *self);
 int func_ov002_020b66f0(void *self);
 
-/* id 95 FloatOnWaterPlatformWdwSquare own bodies (unnamed) */
+/* id 95 FloatOnWaterPlatformWdwSquare own bodies (unnamed; s17 D0 is a guessed
+   body, trapped not seated -- no extern) */
 int  func_ov029_02111254(char *self);   /* s0 InitResources */
 int *func_ov029_021111a0(int *self);    /* s16 D1 */
-int *func_ov029_021111f0(int *self);    /* s17 D0 */
 /* id 96 ArrowLift, live table _ZTV29FloatOnWaterPlatformWdwSquare (mangled bodies) */
 int _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv(void *self);
 int _ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv(void *self);
@@ -94,17 +94,11 @@ int _ZN9ArrowLift8BehaviorEv(void *self);
 int _ZN9ArrowLift6RenderEv(void *self);
 int *_ZN9ArrowLiftD1Ev(int *self);
 int *_ZN9ArrowLiftD0Ev(int *self);
-/* id 99 CageLift own bodies (unnamed) */
-int  func_ov029_02111d6c(char *self);   /* s0 */
-int  func_ov029_02111b60(char *self);   /* s3 */
-int  func_ov029_02111bcc(void *self);   /* s6 */
-int  func_ov029_02111ba4(void *self);   /* s9 */
-int *func_ov029_02111ac4(int *self);    /* s16 */
-int *func_ov029_02111b08(int *self);    /* s17 */
-/* id 100 FloatOnWaterPlatformWdwRectangle own bodies (unnamed s0/16/17) */
+/* id 99 CageLift is not mounted (guessed bodies) -- no externs. */
+/* id 100 FloatOnWaterPlatformWdwRectangle own bodies (unnamed; s17 D0 guessed,
+   trapped not seated) */
 int  func_ov029_02111f58(char *self);   /* s0 */
 int *func_ov029_02111ea4(int *self);    /* s16 */
-int *func_ov029_02111ef4(int *self);    /* s17 */
 /* id 94 RotatingPlatformWdw, live table _ZTV32FloatOnWaterPlatformWdwRectangle */
 int _ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv(void *self);
 int _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv(void *self);
@@ -133,7 +127,7 @@ DSSTATE_BEGIN
 void *data_ov029_02113c2c[32];                    /* id 95  Square       */
 void *_ZTV29FloatOnWaterPlatformWdwSquare[32];    /* id 96  ArrowLift     */
 void *_ZTV9ArrowLift[31];                          /* id 97  WaterDiamond  */
-void *data_ov029_02113e74[32];                    /* id 99  CageLift      */
+/* id 99 CageLift: not mounted (guessed bodies), no host table */
 void *data_ov029_02113f44[32];                    /* id 100 Rectangle     */
 void *_ZTV32FloatOnWaterPlatformWdwRectangle[32]; /* id 94  RotatingWdw   */
 void *_ZTV20SwitchActivatedPlank[32];             /* id 98  SwitchPlank   */
@@ -160,7 +154,7 @@ static void ov29_trap_report(void *self, int slot)
 #define OV29_TRAP(n) \
     static int __fastcall ov29_trap##n(void *s, void *) \
     { ov29_trap_report(s, n); return 0; }
-OV29_TRAP(13) OV29_TRAP(14) OV29_TRAP(30)
+OV29_TRAP(13) OV29_TRAP(14) OV29_TRAP(17) OV29_TRAP(30)
 #undef OV29_TRAP
 
 // ---- the shared slots 1..30 (own 0/3/6/9/16/17 and 31 written by the caller) -
@@ -238,14 +232,18 @@ static int __fastcall sq_clean(void *s, void *) { return func_ov002_020b5be0(s);
 static int __fastcall sq_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
 static int __fastcall sq_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
 static int __fastcall sq_d1(void *s, void *)    { return (int)(size_t)func_ov029_021111a0((int *)s); }
-static int __fastcall sq_d0(void *s, void *)    { return (int)(size_t)func_ov029_021111f0((int *)s); }
+/* slot 17 (D0, the deleting destructor) is func_ov029_021111f0, which carries
+   the "recovered from vtable slot identity" marker -- a guessed body, not a ROM
+   decompilation, so it is TRAPPED rather than seated. D0 is not called across a
+   level selftest (actors are freed at teardown), and the real D1 at slot 16 is
+   seated. */
 extern "C" void hal_fill_float_on_water_platform_wdw_square_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)data_ov029_02113c2c;
     ov29_fill_shared(vt);
     vt[0]=(void *)sq_init; vt[3]=(void *)sq_clean; vt[6]=(void *)sq_beh;
-    vt[9]=(void *)sq_ren;  vt[16]=(void *)sq_d1;   vt[17]=(void *)sq_d0;
+    vt[9]=(void *)sq_ren;  vt[16]=(void *)sq_d1;   vt[17]=(void *)ov29_trap17;
     vt[31]=(void *)ov29_kill;
 }
 
@@ -283,22 +281,15 @@ extern "C" void hal_fill_water_diamond_vtable(void)
     /* no slot 31: a plain Actor, 31 slots, ends at 30 */
 }
 
-/* id 99 CageLift (data_ov029_02113e74, Platform 32, all overrides overlay-local) */
-static int __fastcall cl_init(void *s, void *)  { return func_ov029_02111d6c((char *)s); }
-static int __fastcall cl_clean(void *s, void *) { return func_ov029_02111b60((char *)s); }
-static int __fastcall cl_beh(void *s, void *)   { return func_ov029_02111bcc(s); }
-static int __fastcall cl_ren(void *s, void *)   { return func_ov029_02111ba4(s); }
-static int __fastcall cl_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ac4((int *)s); }
-static int __fastcall cl_d0(void *s, void *)    { return (int)(size_t)func_ov029_02111b08((int *)s); }
-extern "C" void hal_fill_cage_lift_vtable(void)
-{
-    port_ov29_bringup();
-    void *volatile *vt = (void *volatile *)data_ov029_02113e74;
-    ov29_fill_shared(vt);
-    vt[0]=(void *)cl_init; vt[3]=(void *)cl_clean; vt[6]=(void *)cl_beh;
-    vt[9]=(void *)cl_ren;  vt[16]=(void *)cl_d1;   vt[17]=(void *)cl_d0;
-    vt[31]=(void *)ov29_kill;
-}
+/* id 99 CageLift is NOT mounted. Five of its six lifecycle bodies
+   (func_ov029_02111d6c InitResources, _02111b60 CleanupResources, _02111bcc
+   Behavior, _02111ba4 Render, _02111b08 D0) carry the "recovered from vtable
+   slot identity" marker -- they are guessed, not ROM decompilations, so seating
+   them would fail inferred_stub_guard and put fabricated code behind a live
+   vtable. Only its D1 (func_ov029_02111ac4) is real. With InitResources unable
+   to be seated the class cannot load its model or collision, so it is left
+   unregistered (id 99 stays skipped, as on baseline) rather than trap-mounted
+   into a likely fault. It waits on a faithful decomp of those five bodies. */
 
 /* id 100 FloatOnWaterPlatformWdwRectangle (data_ov029_02113f44, Platform 32;
    inherited s3/6/9 = ov002 base, same as Square) */
@@ -307,14 +298,15 @@ static int __fastcall rc_clean(void *s, void *) { return func_ov002_020b5be0(s);
 static int __fastcall rc_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
 static int __fastcall rc_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
 static int __fastcall rc_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ea4((int *)s); }
-static int __fastcall rc_d0(void *s, void *)    { return (int)(size_t)func_ov029_02111ef4((int *)s); }
+/* slot 17 (D0) is func_ov029_02111ef4, a guess-marked body -- TRAPPED, like the
+   Square D0. Real D1 at slot 16 is seated. */
 extern "C" void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)data_ov029_02113f44;
     ov29_fill_shared(vt);
     vt[0]=(void *)rc_init; vt[3]=(void *)rc_clean; vt[6]=(void *)rc_beh;
-    vt[9]=(void *)rc_ren;  vt[16]=(void *)rc_d1;   vt[17]=(void *)rc_d0;
+    vt[9]=(void *)rc_ren;  vt[16]=(void *)rc_d1;   vt[17]=(void *)ov29_trap17;
     vt[31]=(void *)ov29_kill;
 }
 
