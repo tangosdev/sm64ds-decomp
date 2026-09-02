@@ -881,6 +881,29 @@ MG_PMF_CALL = {
         ("        fn(thisp, i);",
          "        port_mg_panel_call1(thisp, (unsigned)e->off, adj, i);"),
     ],
+    # Lane shadow-A: the camera half of the kuppa script's command dispatch.
+    # The matched source seeds data_0209b138[39] from 39 static
+    # pointer-to-member records and calls
+    #
+    #     (obj->*data_0209b138[msg[6]])(msg + 7, a2, a3)
+    #
+    # On the host those 39 records are hal/ptr_tables.cpp's {host handler,
+    # 0} pairs (real host function pointers, the ROM's two-word record
+    # layout), data_0209b138 is hal/auto_bss.cpp's 0x138-byte span, and the
+    # handlers are C-linkage cdecl functions that take the camera as an
+    # ordinary first argument. `Obj` is a complete single-inheritance struct,
+    # so MSVC's PMF for it is one code word and every one of the 39 seeding
+    # assignments copies word 0 of a record -- the host handler -- into the
+    # table at the host stride. The ONE line that cannot behave is the call:
+    # MSVC would dispatch it __thiscall. The patch reads the seeded word back
+    # and calls it cdecl with the receiver first, which is what the ROM's own
+    # call sequence does in r0. Retires port/unmatched/func_02008550_hostcopy.cpp,
+    # which was the same body with the 39 assignments spelled as a loop.
+    "func_02008550": [
+        ("    return (obj->*data_0209b138[msg[6]])(msg + 7, a2, a3);",
+         "    return ((int (*)(void *, unsigned char *, int, int))"
+         "*(void **)&data_0209b138[msg[6]])(obj, msg + 7, a2, a3);"),
+    ],
 }
 
 

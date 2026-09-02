@@ -57,10 +57,11 @@
 // The dispatch itself cannot survive the ABI: MSVC's PMF for a complete
 // single-inheritance class is a 4-byte __thiscall address, and the callees are
 // C-linkage cdecl functions taking the camera as their first stack argument.
-// So the consumer is host-copied in port/unmatched/func_02008550_hostcopy.cpp, which
-// reads word 0 out of each record exactly as the ROM's copy does and calls it
-// as a plain function. Same hop hal/camera_states.cpp already makes for the
-// state machine next door.
+// So the consumer, src/func_02008550.cpp, goes through hostgen's MG_PMF_CALL
+// patch (lane shadow-A retired the host copy that used to stand in for it):
+// the 39 seeding assignments copy word 0 out of each record exactly as the
+// ROM's copy does, and the one call reads it back as a plain function. Same
+// hop hal/camera_states.cpp already makes for the state machine next door.
 //
 // ---- how to re-derive this file --------------------------------------------
 //
