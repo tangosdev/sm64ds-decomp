@@ -561,6 +561,10 @@ void *WhompKing_Spawn(void);                      /* ov079 0x02126588 */
 extern unsigned char BulletBill_SpawnInfo[];      /* ov079 0x02127ec4, id 222 */
 void *BulletBill_Spawn(void);                     /* ov079 0x02126d64 */
 void hal_fill_bullet_bill_vtable_c(void);
+/* BULLET (233), Snufit's ov002 projectile: ov002 mounted, HAL + one-PMF host copy */
+extern unsigned char Bullet_SpawnInfo[];          /* ov002 0x0210d630, +4 reads 233 */
+void *Bullet_Spawn(void);                         /* ov002 0x020fefcc, installs _ZTV6Bullet */
+void hal_fill_bullet_vtable(void);
 extern unsigned char BillBlaster_SpawnInfo[];     /* ov079 0x02127f94, id 43 */
 void *BillBlaster_Spawn(void);                    /* ov079 0x021271b4 */
 void hal_fill_bill_blaster_vtable_c(void);
@@ -2138,6 +2142,8 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     {165, "WHOMP_KING", WhompKing_SpawnInfo, WhompKing_Spawn, 0}, \
     {222, "BULLET_BILL", BulletBill_SpawnInfo, BulletBill_Spawn, \
      hal_fill_bullet_bill_vtable_c}, \
+    /* ---- gate BULLET: ov002's Snufit-fired projectile ---- */ \
+    {233, "BULLET", Bullet_SpawnInfo, Bullet_Spawn, hal_fill_bullet_vtable}, \
     {43, "BILL_BLASTER", BillBlaster_SpawnInfo, BillBlaster_Spawn, \
      hal_fill_bill_blaster_vtable_c}, \
     {47, "FORTRESS_WALL", FortressWall_SpawnInfo, FortressWall_Spawn, \

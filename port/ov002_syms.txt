@@ -30,6 +30,7 @@ BlackBrickBlock_SpawnInfo data_ov002_02108ab0:0x2c data_ov002_02108ab4:0x28 data
 # gate 16, SIGN_POST: its SpawnInfo and the CLPS block its own KCL resolves
 # surface types through.
 SignPost_SpawnInfo data_ov002_0210d714
+Bullet_SpawnInfo:0x1c
 # gate 16, ONE_UP_MUSHROOM: its SpawnInfo and the two per-type flag tables
 # InitResources reads (both 14 entries, indexed by mushroom type).
 OneUpMushroom_SpawnInfo data_ov002_020ff040 data_ov002_020ff050
