@@ -409,28 +409,41 @@ void seat_vs_countdown(void)
  * copies 0, and the engine-A compositor's `!any_bg && !obj_on` exit returns
  * before it draws -- with the HUD's sprites sitting in OAM the whole time.
  *
- * ---- WHY THIS SEAT IS GATED ON VS, WHEN THE ROM'S IS NOT -------------------
+ * ---- THE ADVENTURE POWER METER NEEDS THIS SEAT, AND SO IT IS UNGATED --------
  *
- * The ROM's line has no condition and neither should the port's, eventually.
+ * The ROM's line has no condition and neither does the port's now. The gate was
+ * VS-only for a while on a measurement that was right and a conclusion that was
+ * wrong, and this is the lane the old note invited ("un-gating is a one-word
+ * change for the lane that finds one").
  *
- * THE REASON THIS FILE FIRST GAVE FOR THE GATE IS RETRACTED. It said the same
- * assignment "turns on the ADVENTURE HUD" and would retake every BMP baseline.
- * That was measured false: with the seat forced on, adventure levels 1 and 5
- * are BYTE-IDENTICAL, because engine A's OAM holds ZERO placed sprites there --
- * the adventure HUD reaches the player through engine B, not this register.
- * Nothing wakes up, so there was never a baseline to spend.
+ * THE MEASUREMENT: with the seat forced on, adventure levels 1 and 5 render
+ * BYTE-IDENTICAL to the un-seated frame, because engine A's OAM holds ZERO
+ * placed sprites on those frames. THE WRONG CONCLUSION drawn from it was that
+ * the adventure HUD "reaches the player through engine B, not this register"
+ * and that the seat "is necessary for it and nowhere near sufficient". Both are
+ * false. Engine A's OAM was empty because the POWER METER is the one adventure
+ * HUD leaf that draws to engine A (HUD::RenderHealthMeter calls OAM::Render with
+ * sub=0, main engine, and GX::LoadOBJPltt on the main palette), and the power
+ * meter is RETRACTED off-screen until Mario takes damage -- mHealthMeterY sits
+ * negative, so OAM::Render culls every one of its nine sprites and places
+ * nothing. A boot selftest that never gets hurt is measuring a HUD element that
+ * is deliberately hidden.
  *
- * THE REAL REASON IS CONSERVATISM, and it is smaller and honest. The seat is
- * PROVEN NEEDED in VS: it is what puts the match clock, the star count and the
- * moved coin counter on screen, each measured to the pixel. Outside VS it is
- * proven to buy NOTHING on the levels measured. A register write that changes
- * nothing observable is still a register write on every adventure boot in the
- * game, on a path this lane did not investigate and cannot speak for, so it
- * stays behind the mode test until somebody has a reason to want it there.
- * Un-gating is a one-word change for the lane that finds one.
+ * DEPLOY IT AND THE SEAT IS EXACTLY SUFFICIENT. Drive one Player::Hurt on level
+ * 1 (SM64DS_COURSE_PROBE=hurt) and the meter slides in at x=0x80, top centre:
+ * with the seat its nine sprites are PLACED in engine A's OAM and the engine-A
+ * compositor draws the "POWER" word and the segmented pie over the 3D frame,
+ * exactly where the DS puts it and one wedge down; without the seat the same
+ * hit still drops HP (the game logic is untouched by this register) but the
+ * meter never reaches the picture, because the OBJ-layer bit the compositor
+ * gates on is never set. Coins, stars and the map still reach engine B and the
+ * bottom-screen inset as before -- this changes only the one leaf the ROM
+ * itself routes to the main engine.
  *
- * SM64DS_HUD_LAYER_SEAT=always is that unconditional form on this same binary;
- * =off restores the pre-seat behaviour the same way.
+ * SO THE SEAT IS UNCONDITIONAL BY DEFAULT. It is the ROM's own statement and it
+ * is what makes the health meter visible in ordinary play. The env knob keeps
+ * the older behaviours for A/B: SM64DS_HUD_LAYER_SEAT=off restores the pre-seat
+ * frame, =vs restores the VS-only gate, =always is the default spelled out.
  *
  * THE NAME IS THE SECOND ONE THIS KNOB HAS HAD, and the first was a bug I
  * shipped. It was SM64DS_ENGINE_A_LAYERS, which is ALREADY a live variable:
@@ -457,11 +470,12 @@ void seat_vs_countdown(void)
  * an adventure screen. */
 void seat_engine_a_layers(void)
 {
-    static int mode = -1;   /* 0 off, 1 VS only (default), 2 always */
+    static int mode = -1;   /* 0 off, 1 VS only, 2 unconditional (default) */
     if (mode < 0) {
         const char *e = std::getenv("SM64DS_HUD_LAYER_SEAT");
-        mode = 1;
+        mode = 2;
         if (e && std::strcmp(e, "off") == 0) mode = 0;
+        else if (e && std::strcmp(e, "vs") == 0) mode = 1;
         else if (e && std::strcmp(e, "always") == 0) mode = 2;
     }
     if (mode == 0)
@@ -560,8 +574,8 @@ void seat_engine_a_layers(void)
             "(BG0 + OBJ), DISPCNT bit 3 (BG0 is the 3D layer) and BG0CNT "
             "priority 2 (Stage::InitResources:330's own value, which is what "
             "lets a priority-1 HUD sprite draw over the arena). %s\n",
-            mode == 2 ? "SM64DS_HUD_LAYER_SEAT=always: every mode, unconditional"
-                      : "VS only by default (see the gate note above)");
+            mode == 2 ? "unconditional: every mode (default; SM64DS_HUD_LAYER_SEAT=off/vs to change)"
+                      : "VS only (SM64DS_HUD_LAYER_SEAT=vs)");
 }
 
 }  // namespace
