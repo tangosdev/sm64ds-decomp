@@ -2188,6 +2188,7 @@ enum {
     MENU_CAMERA,
     MENU_RUNMODE,       /* left/right: how running works (the block below) */
     MENU_RUNBIND,       /* enter: capture the next press as the run button */
+    MENU_PADLAYOUT,     /* enter: teach the game a DirectInput pad, one press each */
     MENU_RECORDER,
     MENU_SAVESTATE,     /* enter: snapshot the game into the in-memory slot */
     MENU_LOADSTATE,     /* enter: restore the in-memory slot (F9's twin) */
@@ -2291,6 +2292,13 @@ static void bindings_load(void)
 static int g_rebind_capture;          /* armed: swallow presses, report them */
 static int g_rebind_key;              /* the virtual-key the proc last saw */
 
+/* THE PAD LAYOUT LEARN FLOW (port/hal/pad_backend.h), the rebind capture's
+   bigger sibling: while it runs the window is deaf the same way (key_live,
+   the window procedure and the mouse capture all test this flag beside
+   g_rebind_capture), the frame sees no pad, and padlearn_frame below walks
+   the player through one press per control. 0 idle, else 1 + the step. */
+static int g_padlearn;
+
 /* ---- LIVE KEYBOARD, GATED (port mod) --------------------------------------
    File scope, and a function rather than main's lambda, because there are TWO
    frame loops now -- the level loop in main and scene_window_run's -- and
@@ -2340,6 +2348,7 @@ static int key_live(int vk)
 {
     if (g_selftest) return 0;
     if (g_rebind_capture) return 0;
+    if (g_padlearn) return 0;           /* a pad is being taught */
     if (!hal_window_focused()) return 0;
     const int down = W.GetAsyncKeyState_(vk) < 0;
     if ((unsigned)vk < 256) {
@@ -2575,6 +2584,258 @@ static const char *run_pad_name(int mask, char *buf, size_t cap)
     }
     snprintf(buf, cap, "pad 0x%04x", (unsigned)mask);
     return buf;
+}
+
+/* ---- THE PAD LAYOUT LEARN FLOW (port mod, input shaping only) --------------
+   A player with a controller XInput does not see reported that only the
+   d-pad worked and the face buttons came out rotated ("x is a, b is x and a
+   is b ... would have preferred if you had to press a button to choose").
+   Their pad hit hal/pad_backend.cpp's generic guess, which assumes buttons
+   0..3 are A B X Y and the left stick is on X/Y, and the pad disagreed. So
+   this is that: the game asks for each control by name, reads the FIRST
+   fresh DirectInput button index (or, for a stick, the axis that moved the
+   most and which way), and builds a PadLayout row the backend applies at
+   once and settings.json's PadLayouts array keeps (hal/host_settings.h).
+
+   FOURTEEN STEPS, in the order below. Face buttons are asked by POSITION
+   (bottom, right, left, top), which is what the mask means everywhere else
+   in the port. The stick clicks are not asked for: they keep the generic
+   guess unless a learned button took their index. The d-pad is not asked
+   for either; it stays the hat, which every pad seen so far reports it on.
+
+   A trigger step takes a button, or, if none comes and an axis that rested
+   at its minimum swings up, that axis (a DualShock's L2/R2 are both).
+   Backspace skips a step (the pad has no such control; it reads unbound);
+   escape cancels the whole thing and nothing is saved. A press that repeats
+   an earlier answer is refused in words, because a layout with one index on
+   two buttons is the bug this exists to fix.
+
+   STICK STEPS WAIT FOR QUIET. The baseline the deflection is measured from
+   is taken only after the axes have held still for a few frames, so a stick
+   still being released from the previous step cannot answer this one with
+   its return travel, and a trigger that rests at its minimum is not read as
+   a push. Only a swing past half travel counts.
+
+   Only offered when port_pad_raw says a DirectInput pad is the live one: an
+   XInput pad's layout is XInput's own and there is nothing to teach. */
+enum { PADLEARN_STEPS = 14 };
+struct PadLearnStep {
+    const char *prompt;
+    int HostPadLayout::*btn;        /* the button field, or 0 */
+    int HostPadLayout::*axis;       /* the axis field (sticks; trigger fallback) */
+    int HostPadLayout::*sign;       /* the stick's sign field, or 0 */
+};
+static const PadLearnStep PADLEARN[PADLEARN_STEPS] = {
+    { "press the BOTTOM face button",  &HostPadLayout::a,      0, 0 },
+    { "press the RIGHT face button",   &HostPadLayout::b,      0, 0 },
+    { "press the LEFT face button",    &HostPadLayout::x,      0, 0 },
+    { "press the TOP face button",     &HostPadLayout::y,      0, 0 },
+    { "press LB (left bumper)",        &HostPadLayout::lb,     0, 0 },
+    { "press RB (right bumper)",       &HostPadLayout::rb,     0, 0 },
+    { "press LT (left trigger)",       &HostPadLayout::lt_btn, &HostPadLayout::lt_axis, 0 },
+    { "press RT (right trigger)",      &HostPadLayout::rt_btn, &HostPadLayout::rt_axis, 0 },
+    { "press Back / Select / Minus",   &HostPadLayout::back,   0, 0 },
+    { "press Start / Options / Plus",  &HostPadLayout::start,  0, 0 },
+    { "push the LEFT stick RIGHT",  0, &HostPadLayout::lx_axis, &HostPadLayout::lx_sign },
+    { "push the LEFT stick UP",     0, &HostPadLayout::ly_axis, &HostPadLayout::ly_sign },
+    { "push the RIGHT stick RIGHT", 0, &HostPadLayout::rx_axis, &HostPadLayout::rx_sign },
+    { "push the RIGHT stick UP",    0, &HostPadLayout::ry_axis, &HostPadLayout::ry_sign },
+};
+static HostPadLayout padlearn_out;
+static unsigned padlearn_prev_btn;      /* last frame's raw button mask */
+static short padlearn_last[6];          /* last frame's axes, for the quiet test */
+static short padlearn_base[6];          /* the rest position once quiet */
+static int padlearn_quiet, padlearn_armed;
+static int padlearn_hold;               /* frames a refusal toast stays up */
+
+static void padlearn_prompt(void)
+{
+    char msg[64];
+    snprintf(msg, sizeof msg, "%d/%d %s (esc quits, bksp skips)",
+             g_padlearn, PADLEARN_STEPS, PADLEARN[g_padlearn - 1].prompt);
+    ss_note(msg);
+}
+
+static void padlearn_step_begin(void)
+{
+    padlearn_quiet = 0;
+    padlearn_armed = 0;
+    padlearn_hold = 0;
+    padlearn_prompt();
+}
+
+static void padlearn_start(const PortPadRaw *r)
+{
+    host_pad_layout_default(&padlearn_out);
+    padlearn_out.vid = (int)r->vid;
+    padlearn_out.pid = (int)r->pid;
+    snprintf(padlearn_out.name, sizeof padlearn_out.name, "%s", r->name);
+    /* everything the flow asks for starts UNBOUND, so a skipped step reads
+       as "no such control" rather than as the guess that was wrong */
+    for (int i = 0; i < PADLEARN_STEPS; ++i) {
+        if (PADLEARN[i].btn) padlearn_out.*PADLEARN[i].btn = -1;
+        if (PADLEARN[i].axis) padlearn_out.*PADLEARN[i].axis = -1;
+    }
+    padlearn_prev_btn = r->buttons;
+    memcpy(padlearn_last, r->axis, sizeof padlearn_last);
+    g_padlearn = 1;
+    g_rebind_key = 0;
+    /* enter is still physically down, the rebind row's trick */
+    memset(key_stale, 1, sizeof key_stale);
+    padlearn_step_begin();
+    fprintf(stderr, "[pad] learning a layout for %s (%04x:%04x)\n", r->name,
+            r->vid, r->pid);
+}
+
+static int padlearn_button_used(int idx)
+{
+    for (int i = 0; i < PADLEARN_STEPS; ++i)
+        if (PADLEARN[i].btn && padlearn_out.*PADLEARN[i].btn == idx) return 1;
+    return 0;
+}
+
+static int padlearn_axis_used(int a)
+{
+    for (int i = 0; i < PADLEARN_STEPS; ++i)
+        if (PADLEARN[i].axis && padlearn_out.*PADLEARN[i].axis == a) return 1;
+    return 0;
+}
+
+static void padlearn_refuse(const char *msg)
+{
+    ss_note(msg);
+    padlearn_hold = 90;
+}
+
+static void padlearn_finish(void)
+{
+    HostPadLayout *o = &padlearn_out;
+    /* the stick clicks keep the guess unless a learned button took it */
+    if (padlearn_button_used(o->lthumb)) o->lthumb = -1;
+    if (padlearn_button_used(o->rthumb)) o->rthumb = -1;
+    const int live = port_pad_set_layout(o);
+    const int saved = host_setting_save_pad_layout(o);
+    ss_note(!live   ? "layout NOT applied (too many learned pads)"
+            : saved ? "pad layout learned and saved"
+                    : "pad layout learned for THIS RUN (save failed, see log)");
+    fprintf(stderr, "[pad] learned layout %04x:%04x: a %d b %d x %d y %d lb %d "
+            "rb %d lt %d/%d rt %d/%d back %d start %d ls %d rs %d "
+            "lstick %d%c %d%c rstick %d%c %d%c%s\n",
+            (unsigned)o->vid, (unsigned)o->pid, o->a, o->b, o->x, o->y, o->lb,
+            o->rb, o->lt_btn, o->lt_axis, o->rt_btn, o->rt_axis, o->back,
+            o->start, o->lthumb, o->rthumb,
+            o->lx_axis, o->lx_sign < 0 ? '-' : '+',
+            o->ly_axis, o->ly_sign < 0 ? '-' : '+',
+            o->rx_axis, o->rx_sign < 0 ? '-' : '+',
+            o->ry_axis, o->ry_sign < 0 ? '-' : '+',
+            saved ? " (saved to settings.json)" : " (NOT saved)");
+    g_padlearn = 0;
+    memset(key_stale, 1, sizeof key_stale);
+}
+
+static void padlearn_advance(void)
+{
+    if (g_padlearn >= PADLEARN_STEPS) { padlearn_finish(); return; }
+    ++g_padlearn;
+    padlearn_step_begin();
+}
+
+/* Once a frame from both loops, ahead of the menu: the whole of the flow.
+   Leaves *pad_live cleared so nothing downstream reads the press. */
+static void padlearn_frame(int *pad_live)
+{
+    if (!g_padlearn) return;
+    *pad_live = 0;
+    /* the keyboard half arrived through the window procedure */
+    if (g_rebind_key) {
+        const int vk = g_rebind_key;
+        g_rebind_key = 0;
+        if (vk == VK_ESCAPE) {
+            ss_note("pad layout learning cancelled, nothing saved");
+            fprintf(stderr, "[pad] layout learning cancelled\n");
+            g_padlearn = 0;
+            memset(key_stale, 1, sizeof key_stale);
+            return;
+        }
+        if (vk == VK_BACK) {
+            padlearn_advance();
+            return;
+        }
+    }
+    PortPadRaw r;
+    if (!port_pad_raw(&r)) {
+        ss_note("the pad went away; layout learning cancelled");
+        fprintf(stderr, "[pad] layout learning cancelled: pad not live\n");
+        g_padlearn = 0;
+        return;
+    }
+    const PadLearnStep &st = PADLEARN[g_padlearn - 1];
+    const unsigned fresh = r.buttons & ~padlearn_prev_btn;
+    padlearn_prev_btn = r.buttons;
+    /* the quiet test: arm the axis baseline after six still frames */
+    {
+        int moved = 0;
+        for (int a = 0; a < 6; ++a) {
+            const int d = (int)r.axis[a] - (int)padlearn_last[a];
+            if (d > 3000 || d < -3000) moved = 1;
+            padlearn_last[a] = r.axis[a];
+        }
+        padlearn_quiet = moved ? 0 : padlearn_quiet + 1;
+        if (!padlearn_armed && padlearn_quiet >= 6) {
+            padlearn_armed = 1;
+            memcpy(padlearn_base, r.axis, sizeof padlearn_base);
+        }
+    }
+    /* the largest swing from the baseline, once armed */
+    int best = -1, best_d = 0;
+    if (padlearn_armed)
+        for (int a = 0; a < 6; ++a) {
+            if (!r.present[a]) continue;
+            const int d = (int)r.axis[a] - (int)padlearn_base[a];
+            const int m = d < 0 ? -d : d;
+            if (m > 16000 && m > (best_d < 0 ? -best_d : best_d)) {
+                best = a;
+                best_d = d;
+            }
+        }
+    if (padlearn_hold > 0) --padlearn_hold;
+    else padlearn_prompt();
+
+    if (st.btn) {
+        if (fresh) {
+            /* one button per press: the lowest set bit, the rebind row's
+               rule, so a thumb on two at once binds one */
+            int idx = 0;
+            while (!(fresh & (1u << idx))) ++idx;
+            if (padlearn_button_used(idx)) {
+                padlearn_refuse("that button is already taken, press another");
+            } else {
+                padlearn_out.*st.btn = idx;
+                fprintf(stderr, "[pad] learn %d: button %d\n", g_padlearn, idx);
+                padlearn_advance();
+            }
+        } else if (st.axis && best >= 0 && best_d > 0 &&
+                   padlearn_base[best] < -20000) {
+            /* an analog trigger: rested at its minimum and swung up */
+            if (padlearn_axis_used(best)) {
+                padlearn_refuse("that axis is already taken, try another");
+            } else {
+                padlearn_out.*st.axis = best;
+                fprintf(stderr, "[pad] learn %d: trigger axis %d\n", g_padlearn, best);
+                padlearn_advance();
+            }
+        }
+    } else if (best >= 0) {
+        if (padlearn_axis_used(best)) {
+            padlearn_refuse("that axis is already taken, push the other stick");
+        } else {
+            padlearn_out.*st.axis = best;
+            padlearn_out.*st.sign = best_d > 0 ? 1 : -1;
+            fprintf(stderr, "[pad] learn %d: axis %d sign %c\n", g_padlearn, best,
+                    best_d > 0 ? '+' : '-');
+            padlearn_advance();
+        }
+    }
 }
 
 /* ---- CHARACTER SWITCH (port mod, driven through the game's own save byte) --
@@ -3401,6 +3662,24 @@ static void menu_draw(const OvlSurface &fb)
                      run_key_name(g_run_key, kb, sizeof kb),
                      run_pad_name(g_run_pad, pb, sizeof pb));
     }
+    /* the learn row: what the live pad is and whether its layout is the
+       table's guess or a learned one; refused in words on an XInput pad */
+    {
+        PortPadRaw r;
+        if (g_padlearn)
+            snprintf(ln[MENU_PADLAYOUT], sizeof ln[0],
+                     "pad layout        learning, step %d of %d   (esc cancels, "
+                     "backspace skips)", g_padlearn, PADLEARN_STEPS);
+        else if (port_pad_raw(&r))
+            snprintf(ln[MENU_PADLAYOUT], sizeof ln[0],
+                     "pad layout        %.24s %04x:%04x %s   enter to learn",
+                     r.name[0] ? r.name : "controller", r.vid, r.pid,
+                     r.learned ? "(learned)" : "(built-in guess)");
+        else
+            snprintf(ln[MENU_PADLAYOUT], sizeof ln[0],
+                     "pad layout        needs a DirectInput pad (XInput pads "
+                     "are already right)");
+    }
     snprintf(ln[MENU_RECORDER], sizeof ln[0], "recorder          %s", g_playlog);
     /* the disk suffix tells the player whether a save will outlive the run: it
        does only when the arena is at its fixed base, which is what lets a disk
@@ -3968,6 +4247,16 @@ static void menu_input(int pad_live, const XPad *pad)
                        reason. */
                     memset(key_stale, 1, sizeof key_stale);
                     ss_note("press the new run button (esc cancels)");
+                }
+                break;
+            case MENU_PADLAYOUT:
+                /* enter/right only, and only with a DirectInput pad live:
+                   arm the learn flow (padlearn_frame runs it) */
+                if (edge & (1u << 5)) {
+                    PortPadRaw r;
+                    if (port_pad_raw(&r)) padlearn_start(&r);
+                    else ss_note("no DirectInput pad live (XInput pads need "
+                                 "no learning)");
                 }
                 break;
             case MENU_SAVESTATE:
@@ -4921,6 +5210,7 @@ static int mo_capture_want(int selftest, int stacked)
     if (cam_mode == CAM_DS) return 0;   /* the mouse steers nothing there */
     if (menu_on) return 0;              /* escape is the release */
     if (g_rebind_capture) return 0;     /* a key is being chosen */
+    if (g_padlearn) return 0;           /* a pad is being taught */
     if (!hal_window_focused()) return 0;/* alt-tab hands it back */
     return 1;
 }
@@ -4949,7 +5239,8 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
        only a fresh press counts. WM_SYSKEYDOWN as well as WM_KEYDOWN, or alt
        would be the one key on the board a player could not bind and would
        open the system menu behind the capture instead. */
-    if ((m == WM_KEYDOWN || m == WM_SYSKEYDOWN) && g_rebind_capture) {
+    if ((m == WM_KEYDOWN || m == WM_SYSKEYDOWN) &&
+        (g_rebind_capture || g_padlearn)) {
         if (!(l & (1 << 30))) g_rebind_key = (int)w;
         return 0;
     }
@@ -6218,6 +6509,9 @@ static int scene_window_run(void)
         int pad_live = port_pad_poll(&pad);
         pad_focus_gate(&pad_live, &pad);
         pad_test_apply(frame, &pad_live, &pad);
+        /* the pad layout learn flow, the same call the level loop makes;
+           inert unless the menu's row armed it */
+        padlearn_frame(&pad_live);
 #ifndef PORT_ROM_CLEAN
         /* SM64DS_CLICK_TEST: the scripted stylus, driven BEFORE the tick that
            polls it, so a press is in the OS's button state by the time
@@ -8312,6 +8606,9 @@ int main(void)
             }
             pad_live = 0;
         }
+        /* the pad layout learn flow (the menu's "pad layout" row), the same
+           shape: it eats the frame's pad while it runs */
+        padlearn_frame(&pad_live);
         /* ---- THE DEBUG MENU, and the close that must not also be a punch.
            Both live at file scope now (menu_input / menu_b_swallow_spend
            above) so the windowed scene loop runs the same menu rather than a
