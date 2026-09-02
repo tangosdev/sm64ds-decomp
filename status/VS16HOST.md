@@ -125,3 +125,81 @@ nothing recommended here.
   a proof of unreachability.
 - **Sixteen palette rows** (yoshi_all_16p_pl) and **authored sixteen-player
   arena starts** stay owed exactly as the VS16 delivery recorded them.
+
+---
+
+## 2026-09-01 -- RELEASE 0.3.2: the review that made sixteen play
+
+The owner's word: release. The VS16 review's reviewer session had died, so
+the merged diff (VS16 + VS16HOST, 952b3c135..1e0a437ff) went through an
+eight-angle review here (three correctness, reuse, simplification,
+efficiency, altitude, conventions). It found what the lockstep proofs could
+not: motionless bodies are perfectly deterministic.
+
+### What the review found and what shipped for it
+
+1. **Players 5..16 could not move.** Five per-player controller split
+   arrays were still four wide (hal/actor_vtables.cpp), so the harness
+   capped its per-frame fan-out at four, and the match-end hold loop wrote
+   past those arrays after every wide match. Widened; cap gone.
+2. **Under that, the ROM's own per-frame fan-out** (src/func_0203bb60.c and
+   func_0203bc7c.c, comms records -> TouchInfo/PadData) loops to four.
+   Hosted like the conductor: ROM TUs linked under a rename, sixteen-wide
+   copies in hal/comms_fanout_wide.cpp chosen by the session's width.
+3. **Under that, the ROM seats health for four** (src/SetPlayerGlobals.c),
+   and the health table was four wide. A wide slot read dead the frame
+   interaction came on and hung in St_Respawn (exit armed only for the
+   local player): eleven of twelve wide bodies, frame 60, every run. Table
+   widened; the port seats health and controller mode for the slots it
+   spawns.
+4. **The carrier admitted slots a narrow wire cannot carry.** Slot admission,
+   binding and pinning now follow the wire (slot_cap()).
+5. **The lobby let a host dial wide over a seated old client.** Members
+   record their contract version; the dial and the start refuse with
+   seated_client_too_old; unit test added; launcher shows a sentence for it
+   and for needs_newer_client.
+6. Level teardown, the editor channel's player guard, the player render
+   gate and the seam probe's private band all reach sixteen.
+
+Evidence of each, before and after, in C:\tmp\vs16host-out\release\ and
+the cons-rung*/cons-match16 directories: pre-fix slot 4/9/15 had 4/25/26
+distinct positions over 900 frames (slot 0: 2280); post-fix every slot at
+16 windows has 901..2280 and ends in a walking state.
+
+### Proofs on the shipped build (cons tip)
+
+| rung | dhdiff | every slot moves | wide lines | live |
+|---|---|---|---|---|
+| 2 | 1/1 NO DIVERGENCE | min 805 positions | 0 | 0x3 |
+| 4 | 6/6 | min 1516 | 0 | 0xf |
+| 5 | 7/7 | min 1564 | 5 | 0x1f |
+| 8 | 11/11 | min 884 | 8 | 0xff |
+| 16 | 23/23 | min 901 | 16 | 0xffff |
+
+Sixteen-player match: all 16 windows print the identical MATCH OVER marker
+at f320 with sixteen scores. Seam probe mp_comms_seam: OK. Lobby
+test_units 479/0, test_security 8/0; launcher LobbyUnit 203/0, ExtractFail
+86/0, DpiLayout 6590/0, ReviewHarness 359/0 (its five Y-series
+expectations predated the Multiplayer button and were brought up to date).
+
+### Deployed with the release
+
+- Relay (systemd sm64ds-relay on tangos): repo relay.py with
+  SM64DS_RELAY_MAX_CHILDREN=15 as a unit drop-in; log says
+  `seats=16 (1 parent + 15 children)`. Backup at ~/relay-backup-*.
+- Lobby (~/sm64ds-lobby, docker compose): contract_v 3, dial_max 16.
+
+### Debt, said plainly
+
+- test_client.py's `selftest` against the deployed URL assumes a four-seat
+  deployment (23 of 149 checks red on a sixteen-seat one); the unit suite
+  and the `dial`/`negatives` wire suites are the honest gates until it is
+  reshaped.
+- Review cleanups not taken for the release (kept the battery-tested tree):
+  vs_width.h's drift static_assert never compiles (include order); three
+  parsers of SM64DS_VS_PLAYERS; the 3-or-15 grammar in five readers; the
+  banner mode knob; 532-byte memsets on the narrow send path; the refusal
+  log unthrottled; the palette row for slots 4+ follows the truncated slot
+  (cosmetic, deterministic); ring spawn slot 14 overlaps record 1 on arena
+  0 by geometry; data_0209fc5c[4..15] not cleared across sessions in one
+  process (one session per process today).
