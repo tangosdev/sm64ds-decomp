@@ -12191,6 +12191,7 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111254.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111f58.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Actor17GetWaterHeightWDWEv.c"
     PROPERTIES LANGUAGE CXX)
 
 set(OV029_SOURCES hal/actor_classes_ov029.cpp unmatched/Ov029_MethodFaces.cpp ${SLICE_OV029_SOURCES})

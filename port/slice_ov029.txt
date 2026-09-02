@@ -14,7 +14,7 @@ src/FloatOnWaterPlatformWdwSquare_Spawn.c
 src/RotatingPlatformWdw_Spawn.c
 src/SwitchActivatedPlank_Spawn.c
 src/WDW_Water_Spawn.c
-src/_ZN5Actor17GetWaterHeightWDWEv.c  # arm9 Actor helper Square::InitResources calls, unlinked until now
+src/_ZN5Actor17GetWaterHeightWDWEv.c
 src/WaterDiamond_Spawn.c
 src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp
 src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp
