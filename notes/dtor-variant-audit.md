@@ -36,10 +36,10 @@ That last row is structural, not a heuristic. A D2 exists to destroy a base
 
 And "is this function's address taken" is already in the tree, in the authority
 `notes/runbook-reference-repair.md` §2 names — dsd's analysis of the real ROM:
-
+```sh
     kind:load     the value is data      -> the address was taken
     kind:arm_call the value is a call    -> it was not
-
+```
 So for any symbol named `...D2Ev`, a single `kind:load` reloc pointing at it is a
 disproof. No disassembly, no compiler, no heuristic.
 
@@ -50,10 +50,10 @@ called, and no vtable for it to sit in. The polymorphism test is also read from
 the ROM rather than from a name — a destructor of a polymorphic class always
 writes its class's vptr, which shows up as a load-reloc *from* inside the
 function *to* a vtable VA that `build/rtti.json` knows:
-
+```text
     named D2, a load-reloc points at it                        -> not a D2
     named D1, nothing points at it, AND it stores a vtable VA   -> not a D1
-
+```
 ## 2. The result
 
     destructor-variant symbols: D0 261   D1 260   D2 17
@@ -86,9 +86,9 @@ there is no collision to resolve — the rename is one-for-one.
 Invert the rule and it must find the other error: a `D1` of a polymorphic class
 that **no** load-reloc points at cannot be a D1. Run over the same 260 D1
 symbols, that returns exactly **one**:
-
+```c
     _ZN5ColorD1Ev   0x02017574   arm9   ->  _ZN10FaderColorD2Ev
-
+```
 which was **independently** proven in the same session by a completely unrelated
 argument — it writes `data_0208eb2c`, which is `dFdColor_c`'s vtable, and six
 derived-class destructors across three classes call it as their base-subobject
@@ -182,16 +182,16 @@ the right *class* — `_ZN5SceneD2Ev` was caught on the variant, and its wrong c
 fell out of the correction rather than being tested for.
 
 ## 7. The other direction: D2s the tree never named at all
-
+```sh
     python tools/dtor_variant_audit.py --discover
-
+```
 A base-object destructor has a signature nothing else shares: no `load` reloc
 points at it, it stores a vtable address, and every caller reaches it by `bl`. And
 **the vtable it stores names the owning class**, because a D2 writes its own
 class's vptr.
-
+```text
     11 D2 candidates    9 C2 candidates    33 undecided
-
+```
 It reproduces both of `include/dBgW.h`'s hand-derived claims exactly —
 `func_02039658` is `MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s —
 and the tree-name join gets `dBgW_Kc` → `MeshCollider` on its own. Nine more D2s
@@ -238,18 +238,18 @@ revision of this section named only the first and drew the wrong conclusion from
 
 **Cause 1 — the key function.** Defining a class's key function (the first non-inline
 virtual declared) makes mwccarm emit the vtable group into that TU:
-
+```c
     Fader::~Fader() {}   ->  .data x3 + .text x3,  defines _ZTV5Fader _ZTI5Fader _ZTS5Fader
-
+```
 **Cause 2 — one definition, three functions.** A `~Class()` definition always emits
 **D2, D0 and D1**, vtable or not, so the object has three `.text` sections.
 `eligible.py:132-136` rejects that on its own:
-
+```sh
     ActorBase::~ActorBase() {}  ->  .text x3, defines NO vtable
                                     (ActorBase declares its dtor LAST, so it is not
                                      the key function -- cause 1 does not apply)
                                     still rejected: "3 .text sections (multi-function TU)"
-
+```
 So the two causes are separable, and **neither alone is the whole story**:
 
 | | cause 1 (vtable) | cause 2 (3 functions) |
@@ -282,11 +282,11 @@ which nominates pilots on the assumption that destructors are the tractable part
 
 Confirmed empirically on `2004/b56` (dActor_c.h cites CW 1.2), by compiling three probes
 against the real `Fader.h`:
-
+```c
     Fader::~Fader() {}          (declared first)  -> emits _ZTV5Fader _ZTI5Fader _ZTS5Fader
     void Fader::AdvanceFade(){} (not first)       -> emits nothing
     int Fader::IsAtEnd(){...}   (not first)       -> emits nothing
-
+```
 **Phase 3 is therefore unaffected** — every non-key virtual can be migrated to a real
 method today. It is Phase 2 specifically that is blocked, which inverts the plan's
 stated ordering.
@@ -301,12 +301,12 @@ both exact. What blocks it is how the object is *shaped*, not what it computes.
 An earlier revision of this note said those 72 dodge the vtable with a **shadow struct**
 whose destructor is declared and never defined. **Both claims are false**, and a compile
 settles it:
-
+```sh
     src/_ZN6CannonD1Ev.cpp     -> .data x5 + .text x3
                                   DEFINES _ZTV6Cannon, _ZTI6Cannon, _ZTS6Cannon,
                                           _ZTI5Actor, _ZTS5Actor
                                   DEFINES _ZN6CannonD0Ev, D1Ev, D2Ev
-
+```
 Its shadow `struct Cannon : Actor { virtual ~Cannon(); }` declares the destructor
 first, so it *is* the key function. `eligible.py` gives every one of them
 `extra sections: .data`, and none appears in `build/eligible-names.txt`. Their

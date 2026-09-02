@@ -119,12 +119,8 @@ signal -- `daPeach_c`'s tail reads `{fn, 0}` and `daObjSwdoor_c`'s reads `{0, fn
 
 **Under-read, 124 classes.** "Is this word code" was asked of the vtable's own module plus
 arm9. Too narrow twice: ITCM is its own module and was never loaded (`dBgW_Kc` slots 3-7
-are `0x01ffd920`…), and a slot may point into a **different overlay** (`dScMgAmida_c`'s
-table is in ov006 while slot 1 is ov004's code). Asking *every* module fails the other way
--- `dScStage_c` ran to 70 slots against a base of 18. The bound is residency
-(`overlay_residency.conflict`, rule E2, the game's own `LoadOverlay` panic), applied
-**one-directionally**: arm9 conflicts with nothing, so an arm9-hosted table gets no
-cross-overlay allowance or the rule bounds nothing.
+are `0x01ffd920`…), and a slot may point into a **different overlay** (`dScMgAmida_c`'s table is in [ov006](../config/arm9/overlays/ov006/symbols.txt) while slot 1 is [ov004](../config/arm9/overlays/ov004/symbols.txt)'s code). Asking *every* module fails the other way -- `dScStage_c` ran to 70 slots against a base of 18. The bound is residency (`overlay_residency.conflict`, rule E2, the game's own `LoadOverlay` panic), applied
+**one-directionally**: arm9 conflicts with nothing, so an arm9-hosted table gets no cross-overlay allowance or the rule bounds nothing.
 
 **The invariant is now a gate.** A derived table is never shorter than its base's -- every
 base slot is inherited or overridden and neither removes one. `rtti_vtables.py` fails the
