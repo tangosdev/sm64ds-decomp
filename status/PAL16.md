@@ -180,6 +180,26 @@ treated it as per-player, but it is not a body edge -- putting it in the body
 group would tint the saddle rim to the body hue. That is the one judgement call
 the header already documented, and this measurement supports the choice made.
 
+**And index 11 has a second, independent answer.** `status/VSCOLORUI.md` (an
+untracked local document in the main checkout, since `status/` is gitignored)
+had already flashed index 11 magenta in all four rows through the shipped
+PaletteYoshi mod and re-run a two-window match: **zero pixels of 393216
+differed**, in both windows, against a control that flashed index 0 and moved
+54 and 75 pixels. So index 11 is not merely off the body edge -- the drawn
+Yoshi geometry does not sample it at all. That is exactly the evidence a texel
+histogram cannot produce, because a histogram reads the ATLAS and not the
+display lists, and it is why the two measurements are cited together rather
+than either being taken as sufficient on its own.
+
+**The belly ramp decision stands, and it is a decision, not a finding.**
+Indices 12..15 are what actually borders the body, and they are identical in
+all four ROM rows. Leaving them alone keeps every VS Yoshi's belly the white
+the cartridge gives it. Tinting them is a look change the owner should make
+knowingly; it is a two-line edit to `kBodyIdx` in `hal/vs_palette_gen.h` plus a
+re-run of the identity test, which would then no longer hold against the ROM's
+own rows. Recorded here per the coordinator's instruction to keep the call as
+made and say so.
+
 **What actually borders the body is 12, 13, 14 and 15** -- the white belly and
 highlight ramp, at adjacencies of 0.23 to 0.33 -- and all four are
 **byte-identical in every one of the cartridge's four rows**. All four retail VS

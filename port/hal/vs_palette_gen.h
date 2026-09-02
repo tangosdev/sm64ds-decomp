@@ -123,6 +123,16 @@
  * at a body adjacency of 3/504. Both are refused, which is the judgement the
  * paragraph above had already made on the weaker evidence.
  *
+ * AND INDEX 11 HAS A SECOND, INDEPENDENT ANSWER that arrives from the other
+ * direction. status/VSCOLORUI.md flashed index 11 magenta in all four rows
+ * through the shipped PaletteYoshi mod and re-ran a two-window match: ZERO
+ * pixels of 393216 differed, in both windows, against a control that flashed
+ * index 0 and moved 54 and 75 pixels. So index 11 is not merely off the body
+ * edge -- the drawn Yoshi geometry does not sample it at all. That is the
+ * evidence this count cannot produce, because a texel histogram reads the
+ * ATLAS and not the display lists, and it is why the two measurements are
+ * cited together rather than one being taken as sufficient.
+ *
  * WHAT ACTUALLY BORDERS THE BODY is 12, 13, 14 and 15 -- the white belly and
  * highlight ramp, at adjacencies of 0.23 to 0.33 -- and all four are
  * BYTE-IDENTICAL in every one of the ROM's four rows. All four retail VS Yoshis
