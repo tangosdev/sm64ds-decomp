@@ -2383,10 +2383,14 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
  * REPLACE the buffer it is handed and return a new size, which lovesme_filter
  * has always done. Growing the file is therefore the port's to do.
  *
- * HOW, exactly, and why it is the smallest edit that works. The 384 new bytes
- * are APPENDED at the end of the file and the palette record is repointed at
- * them (record +4 = offset, +8 = size). Nothing else in the BMD moves, so every
- * other offset in the file -- bones, display lists, textures, materials, the
+ * HOW, exactly, and why it is the smallest edit that works. A whole 512-byte
+ * palette is APPENDED at the end of the file and the record is repointed at it
+ * (record +4 = offset, +8 = size). Five hundred and twelve and not three
+ * hundred and eighty-four: the cartridge's own 128 bytes cannot serve as the
+ * first quarter of the new palette, because the bytes that follow them belong
+ * to other records, so the four ROM rows are copied up with the twelve new ones
+ * and the old 128 are left where they are. Nothing else in the BMD moves, so
+ * every other offset in the file -- bones, display lists, textures, materials, the
  * bone-slot table -- still means what it meant, and bmd_parse's and
  * palette_named's bounds checks (`dp + sz <= len`) hold against the new length.
  * Rewriting the palette in place would have shifted every offset after it.

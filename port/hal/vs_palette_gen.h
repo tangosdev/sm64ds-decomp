@@ -89,6 +89,58 @@
  * and shading -- and the group membership is taken from the stronger evidence
  * for this particular question: which slots the ROM's own artists moved when
  * they authored the four players.
+ *
+ * ---- run pal16: THE COVERAGE COUNT, MEASURED --------------------------------
+ *
+ * The paragraph above is now backed by the count it said had not been done. The
+ * owner's third report from the seven-player match was "pixels around the edges
+ * of the Yoshi texture did not get the colour treatment", which reads as a
+ * missing outline or anti-alias index. It was measured rather than guessed:
+ * every 16-colour texture in the three Yoshi BMDs (arc0 members 194, 195, 196)
+ * was decoded and each palette index counted, together with the fraction of its
+ * texels having a four-neighbour that uses a BODY index 0..3, which is what an
+ * outline sitting on the body boundary would look like. The parse was checked
+ * against kVsRomRows below before any number was believed.
+ *
+ *   idx  texels   adj to body   rows        idx  texels   adj to body   rows
+ *     0     305      1.000      MOVES         8     441      0.000      MOVES
+ *     1    1349      1.000      MOVES         9     890      0.072      SAME
+ *     2   11060      1.000      MOVES        10     921      0.000      SAME
+ *     3     356      1.000      MOVES        11     504      0.006      MOVES
+ *     4     252      0.000      SAME         12     631      0.258      SAME
+ *     5     372      0.000      SAME         13     858      0.326      SAME
+ *     6     423      0.000      SAME         14     987      0.226      SAME
+ *     7     558      0.048      MOVES        15    8765      0.054      SAME
+ *
+ * THE BODY RAMP IS ITS OWN ANTI-ALIAS. Index 0, the darkest green, has a body
+ * adjacency of 1.000 and a neighbour profile of 67% itself and 25% index 1: it
+ * IS the dark shading edge, and it is already in the group. There is no
+ * separate outline index between the body and the background.
+ *
+ * INDEX 4 IS THE EYE PUPIL, not an edge. All 252 of its texels are inside the
+ * eye sprites in the two head files, none at all in the 128x64 body atlas, and
+ * its body adjacency is 0/252. INDEX 11 sits with the saddle colours (5, 6, 10)
+ * at a body adjacency of 3/504. Both are refused, which is the judgement the
+ * paragraph above had already made on the weaker evidence.
+ *
+ * WHAT ACTUALLY BORDERS THE BODY is 12, 13, 14 and 15 -- the white belly and
+ * highlight ramp, at adjacencies of 0.23 to 0.33 -- and all four are
+ * BYTE-IDENTICAL in every one of the ROM's four rows. All four retail VS Yoshis
+ * have the same white belly. Recolouring them is what the owner's report asks
+ * for on its face, and it is a deliberate departure from the cartridge, so it
+ * is not taken here: the recolour set is unchanged. status/PAL16.md records the
+ * full numbers and says this is the one part of the three reports that is
+ * ROM-faithful behaviour rather than a defect.
+ *
+ * AND THERE ARE NO FORMAT-5 TEXTURES in the Yoshi set. All nine are format 3,
+ * plain 16-colour 4bpp, so the 4x4-compressed decoder's two-word blend at a
+ * 14-bit palette offset (port/ntr/texture.cpp case 5) -- which could in
+ * principle straddle a row boundary -- never runs on a Yoshi at all.
+ *
+ * ONE STATED LIMIT: adjacency is measured in texture space, so two UV islands
+ * packed next to each other in the atlas count as adjacent. That bias inflates
+ * adjacency and never deflates it, and the case against 4 and 11 rests on their
+ * adjacency being near zero, so the bias runs against them.
  */
 
 #ifndef PORT_HAL_VS_PALETTE_GEN_H
