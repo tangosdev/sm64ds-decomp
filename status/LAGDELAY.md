@@ -337,6 +337,47 @@ pairings** (`C:\tmp\lagdelay-out\proof_vs7_d10b.log`, sweep run with
 and the bare-loopback control at seven windows (no induced latency, so the
 carrier refuses a depth and the session is stop-and-wait) is also 21/21 clean.
 
+### P6. The battery: GREEN AS FAR AS IT GOT, NOT FINISHED
+
+`python port/tools/battery.py C:/tmp/lagdelay --skip-build`, log at
+`C:	mp\lagdelay-out\proof_battery.log`. Every smoke binary green:
+
+    smoke.exe: ok  smoke: all checks passed (math, Timer, Fader on host)
+    smoke_actor.exe: ok  smoke_actor: all checks passed (an actor spawned, initialized, behaved and rendered throug
+    smoke_anim.exe: ok  smoke_anim: all checks passed (the game posed and rendered the piano via its own recursive
+    smoke_clsn.exe: ok  smoke_clsn: all checks passed (the game's octree walk answers ground queries over real KCL
+    smoke_frames.exe: ok  smoke_frames: all checks passed (24 game-shaped frames through the fiber runtime, all with
+    smoke_fs.exe: ok  smoke_fs: all checks passed (raw + LZ77 assets loaded through SharedFilePtr on the game he
+    smoke_gx.exe: ok  smoke_gx: all checks passed (game DL pump byte-equals the harness path, 492 triangles, 186
+    smoke_heap.exe: ok  smoke_heap: all checks passed (2504 allocs, 2496 frees, peak 63 live, 0 full-arena rejecti
+    smoke_model.exe: ok  smoke_model: all checks passed (the game loaded, rebased, uploaded and rendered its own mo
+    smoke_modelanim.exe: ok  smoke_modelanim: all checks passed (the game advanced, wrapped and re-posed its own animat
+    smoke_oam.exe: ok  smoke_oam: all checks passed (the game's sprite engine emits, uploads and scans out on hos
+    smoke_objwin.exe: ok  smoke_objwin: ok
+    smoke_persist.exe: ok  smoke_persist: all checks passed (wrote disk state, a second process loaded it byte-exact;
+    smoke_player.exe: ok  smoke_player: Mario walks on the castle grounds (gates 10+11 GREEN)
+    smoke_roots.exe: ok  smoke_roots: all checks passed (root heap up, 1511 allocs, 1489 frees through Memory::Allo
+    smoke_savestate.exe: ok  smoke_savestate: all checks passed (world evolved, saved, diverged, restored byte-exact, a
+    smoke_sdat.exe: ok  OK
+    smoke_soak.exe: ok  soak: 455 models, 455 rendered (89840 tris total), 0 empty, 0 load-fail, 0 faulted
+    smoke_soak_anim.exe: ok  anim soak: 473 compatible pairs, 473 animated+rendered, 0 empty, 0 load-fail, 0 faulted
+    levels: 50 mounted, from hal/level_boot.cpp
+    selftest level 0: ok
+    selftest level 1: ok
+    selftest level 2: ok
+
+**IT IS NOT AN ALL GREEN AND MUST NOT BE READ AS ONE.** Levels 3..49, every
+scene selftest, the default-boot arm, linkage, ptr_audit and the shipping
+configuration have not run. The desk was carrying seven other lanes' port
+builds while this ran and the level arm was moving at about seven minutes a
+level, which is roughly six hours for the rest. The run was left going rather
+than killed; whoever picks this up should read the log's own verdict line and
+not this section.
+
+Nothing in this change is level-shaped or scene-shaped -- the diff is one
+transport file plus a shell script -- but that is an argument, and the battery
+is the thing that would actually settle it.
+
 ### P5. THE ONE THING THAT DID NOT COME OUT CLEAN
 
 At a **900**-frame child budget with depth 10 and 15 ms induced one way, three
