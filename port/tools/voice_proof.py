@@ -162,6 +162,14 @@ def run_pair(name, near, far, frames, port):
         e["SM64DS_COMMS_PORT"] = str(port)
         e["SM64DS_COMMS_FANOUT"] = "1"
         e["SM64DS_COMMS_REPORT"] = "1"
+        # A VS MATCH, NOT A LEVEL. env_base sets SM64DS_LEVEL=1 (castle
+        # grounds) because every rung that inherits it reads level-path
+        # output; this run needs the arena, because the arena is where more
+        # than one Player body exists and a distance between two bodies is the
+        # whole measurement. The boot chain reads LEVEL, so LEVEL has to go
+        # rather than be overridden.
+        e.pop("SM64DS_LEVEL", None)
+        e.pop("SM64DS_SCENE", None)
         e["SM64DS_VS_MAP"] = VS_MAP
         e["SM64DS_VS_PLAYERS"] = "2"
         e["SM64DS_VS_PROBE"] = "1"
@@ -172,7 +180,18 @@ def run_pair(name, near, far, frames, port):
         # measurement reproducible: nothing here depends on the machine having
         # a working speaker or a working microphone.
         e["SM64DS_NO_AUDIO"] = "1"
+    # THE TONE GOES ON BOTH WINDOWS, and the second one is not decoration.
+    # Window B has VoiceEnabled on because it has to be listening, and a
+    # listening window with no tone hook would open this machine's real
+    # microphone -- which breaks the standing quiet rule (a test launch may not
+    # touch the owner's hardware) and would put whatever is in the room into
+    # window A's mix. With the tone on both, NO recording device is opened by
+    # either window, and the assertions below check exactly that.
+    #
+    # B's own tone never reaches B's own measurement: a console does not
+    # receive its own datagrams, and update_gains zeroes the local slot.
     ea["SM64DS_VOICE_TEST_TONE"] = "1"
+    eb["SM64DS_VOICE_TEST_TONE"] = "1"
     eb["SM64DS_WAV_DUMP"] = wav
 
     la, lb = os.path.join(da, "run.log"), os.path.join(db, "run.log")
@@ -225,6 +244,21 @@ def main():
     if not os.path.exists(EXE):
         print("no walk_window.exe at %s -- build first" % EXE)
         return 1
+
+    # THE SETTINGS FILE THIS HARNESS WRITES HAS TO BE THE ONE THE GAME READS,
+    # and host_settings.cpp's find_settings tries beside-the-exe FIRST, then
+    # SM64DS_ASSET_ROOT, then the working directory. This harness writes into
+    # the working directory, which is the third candidate. A settings.json
+    # sitting in either of the first two would win silently and every arm below
+    # would measure the wrong radii while reporting the ones it wrote. So the
+    # run refuses rather than measures.
+    for shadow in (os.path.join(os.path.dirname(EXE), "settings.json"),
+                   os.path.join(ROOT, "settings.json")):
+        if os.path.exists(shadow):
+            print("refusing to run: %s would shadow the per-window "
+                  "settings.json this harness writes" % shadow)
+            return 1
+
     os.makedirs(OUT, exist_ok=True)
 
     if a.devices:
@@ -262,13 +296,24 @@ def main():
     ok &= M.verdict(cb is not None and cb["rx"] > 0 and cb["bad"] == 0,
                     "voice the listener received them, none malformed | %s"
                     % (cb,))
+    ok &= M.verdict(cb is not None and cb["dev"] == 0,
+                    "voice NEITHER window opened a recording device | "
+                    "listener dev=%s" % (cb["dev"] if cb else None,))
     ok &= M.verdict(d is not None,
                     "voice the listener measured a real separation | d=%s" % d)
     ok &= M.verdict(mn is not None and mn["tone"] > 0.02,
                     "voice NEAR the 440 Hz tone is present in the listener's "
                     "own mixer output | tone=%.5f rms=%.5f"
                     % (mn["tone"] if mn else -1, mn["rms"] if mn else -1))
-    if d is None or mn is None:
+    # THE BRACKETING ARMS NEED A REAL SEPARATION TO BRACKET. Two bodies that
+    # spawned on top of each other would make the FAR arm's radii degenerate
+    # (near=0, far=1, d=0 is inside near) and it would fail for a reason that
+    # has nothing to do with the falloff. Said out loud rather than worked
+    # around, because a proof that quietly rescales its own inputs is not one.
+    ok &= M.verdict(d is not None and d >= 8,
+                    "voice the two bodies are actually apart in the arena, so "
+                    "the bracketing arms below mean something | d=%s" % d)
+    if d is None or mn is None or d < 8:
         print("\n".join(M.VERDICTS))
         return 1
 
