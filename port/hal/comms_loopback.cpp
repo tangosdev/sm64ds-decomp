@@ -852,6 +852,16 @@ int  g_child_ack_delay[kCommsMaxPlayers];    // last number it said it runs
 // to, and it is the reason a fallback is safe: every build that has ever
 // shipped can express it, because it is the number they all already used.
 int  g_delay_presize = -1;
+// AND THE SAME VALUE, KEPT ACROSS THE PER-SESSION RESET. The install step
+// captured g_delay_presize and lb_open() then ran delay_state_reset(), which
+// wiped it to -1 -- so the withdrawal in recompute_adaptive_delay() and the
+// one in the grace stand-down were both guarded by a value that was never
+// there, and no session in this tree's logs ever printed a WITHDRAWN line.
+// The stand-down then reported "the mode default of 11" while leaving 11 in
+// force, and an old build handed 11 in its first accept dropped it and kept
+// its own number: two depths in one session. The reset restores the mode
+// default from here instead of forgetting it.
+int  g_delay_mode_default = -1;
 // THE DEPTH EVERY SHIPPED BUILD CAN EXPRESS. 0.3.2 and earlier clamp an
 // adopted delay at 8 (`parent_delay <= kInputDelayMax` against their own
 // smaller cap), so a published 11 does not raise them -- it is DROPPED, in
@@ -901,7 +911,12 @@ void delay_state_reset() {
     g_adopt_refuse_last_ms   = 0;
     g_delay_gate_holds       = 0;
     g_sizing_holds           = 0;
-    g_delay_presize          = -1;
+    // The fallback value survives the reset (see g_delay_mode_default), and
+    // a session that starts while the sizing is armed starts from it, not
+    // from whatever an earlier session in this launch was sized to.
+    g_delay_presize          = g_delay_mode_default;
+    if (g_adaptive_delay && g_delay_mode_default >= 0)
+        g_input_delay = g_delay_mode_default;
     g_delay_frozen        = false;
     g_frames_produced     = false;
     g_report_acked        = false;
@@ -3739,7 +3754,7 @@ bool comms_loopback_install_from_env() {
     // THE VALUE TO FALL BACK TO, captured before anything can raise it. It is
     // the mode default, which is the number every build that has ever shipped
     // already runs, and that is precisely what makes a fallback safe.
-    if (g_adaptive_delay) g_delay_presize = g_input_delay;
+    if (g_adaptive_delay) g_delay_presize = g_delay_mode_default = g_input_delay;
     if (g_adaptive_delay)
         std::fprintf(stderr, "[comms:loopback] adaptive input delay ARMED: "
                      "this end is the parent and will size the session's depth "
