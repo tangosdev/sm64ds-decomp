@@ -31,6 +31,7 @@
 #include <cstdint>
 
 extern "C" {
+int rb_owns_det(void);       /* hal/rollback.cpp */
 void *port_arena_base(void);
 void *port_arena_end(void);
 unsigned port_hw_regions_size(void);
@@ -97,6 +98,10 @@ void read_env()
     if (n) g_det_n = atoi(n);
     if (g_det_n < 1) g_det_n = 1;
     g_det_skip = getenv("SM64DS_ROLLBACK_DET_SKIP") != 0;
+    // In NetMode rollback the same knob drives hal/rollback.cpp's check,
+    // which rewinds through the live rollback path with the transport in
+    // step; this probe's own rewind would fight it.
+    if (g_det_frame >= 0 && rb_owns_det()) g_det_frame = -1;
 }
 
 double now_ms()
