@@ -139,28 +139,31 @@ All in `port/hal/comms_loopback.cpp` unless noted. Line numbers are at
 
 | Where | What |
 |---|---|
-| :714 | `kInputDelayMax` 8 -> 15, with a `static_assert` tying it to `kPipeDepth` |
-| :731 | `kRoundPeriodMs100 = 1667`, the 16.67 ms the formula divides by |
-| :793 | starve attribution state: `g_starve_by_slot[]`, last round, rate limiter |
-| :812 | the adaptive-delay banner and its state (rtt, told, ack, moved, frozen) |
-| :855 | `delay_state_reset()`, called from `lb_open` and `lb_become_child` |
-| :1189 | `announce_roster` records that every live child was retold |
-| :1204 | `recompute_adaptive_delay()` -- the formula, the one log line, the publish |
-| :1265 | `delay_gate_open()` -- rule 3 as one predicate |
-| :1479 | `pipe_try_broadcast` holds round 0 behind the gate, re-announces, logs |
-| :1595 | the parent's JOIN arm reads a report, measures the path itself, sizes |
-| :1665 | the unicast ACCEPT carries the rtt ack (bit 16) and stamps the send |
-| :1700 | `child_send_report()` -- the report JOIN |
-| :1720 | `child_adopt_delay()` -- rule 2, adopt before frame 0 or refuse loudly |
-| :1880 | the connected child reads the ack and a re-sized delay from an ACCEPT |
-| :2020 | `service()` repeats an unacked report, capped at `kMaxReportTries` |
-| :2760 | `lb_exchange` freezes the depth above the path split |
-| :2830 | the starve branch: per-slot counters and the rate-limited line |
-| :2870 | `g_frames_produced` on the pipelined success path |
-| :3010 | `g_frames_produced` on the stop-and-wait success path |
-| :3400 | the sizing's env knobs and its arming rule |
-| :3560 | the close summary carries `starvedby=` |
-| `port/tools/vs16_ladder.sh:20` | `VS16_ROOT` so a lane can run the ladder against its own tree |
+| :727 | `kInputDelayMax` 8 -> 15, with a `static_assert` tying it to `kPipeDepth` |
+| :737 | `kRoundPeriodMs100 = 1667`, the 16.67 ms the formula divides by |
+| :766 | starve attribution state: `g_starve_by_slot[]`, last round, rate limiter |
+| :781 | the adaptive-delay banner and its three rules |
+| :823 | its state: per-child rtt, told, ack, moved, frozen, frames-produced |
+| :858 | `delay_state_reset()`, called from `lb_open` and `lb_become_child` |
+| :1246 | `announce_roster` records that every live child was retold |
+| :1263 | `recompute_adaptive_delay()` -- the formula, the one log line, the publish |
+| :1311 | `delay_gate_open()` -- rule 3 as one predicate |
+| :1465 | `pipe_try_broadcast` holds round 0 behind the gate, re-announces, logs |
+| :1533 | the parent's JOIN arm reads a report and measures the path itself |
+| :1625 | the unicast ACCEPT carries the rtt ack (bit 16) and stamps the send |
+| :1651 | the sizing runs after the accept went out |
+| :1717 | `child_send_report()` -- the report JOIN |
+| :1738 | `child_adopt_delay()` -- rule 2, adopt before frame 0 or refuse loudly |
+| :1883 | the connected child reads the ack and a re-sized delay from an ACCEPT |
+| :2287 | `service()` repeats an unacked report, floored at 50 ms, capped at 12 |
+| :2604 | the close summary carries `starvedby=` |
+| :2705 | `lb_exchange` gives the sizing one round trip (400 ms ceiling) |
+| :2748 | and freezes the depth above the path split |
+| :2819 | the starve branch: per-slot counters and the rate-limited line |
+| :2858, :2911 | `g_frames_produced` on both success paths |
+| :3437 | the sizing's env knobs |
+| :3481 | its arming rule (parent, not env-pinned, not loopback, pipeline on) |
+| `port/tools/vs16_ladder.sh:20` | `VS16_ROOT`, `VS16_OUT`, `VS16_ASSET_ROOT` so a lane can run the ladder against its own tree |
 
 ## Proofs
 
