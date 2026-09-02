@@ -243,3 +243,8 @@ src/func_ov002_020f6870.cpp
 #   vtable word at ROM slot 1, which MSVC folds to slot 0 and which
 #   hal/model_dtor_seat.cpp therefore seats at 0 and leaves NULL at 1. The
 #   call convention moves with the index (texseq_d0 is __fastcall).
+
+# Lane shadow-A: the static FaderColor's D1, which the sinit registers with
+# func_020731dc. hal/intro_script_records.cpp carried a no-op for it under a
+# stale "no matched src TU" banner; the TU is matched and this is it.
+src/engine/fader/_ZN10FaderColorD1Ev.c
