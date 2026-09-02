@@ -23,6 +23,20 @@ constexpr int SCREEN_H = 768;
 #elif defined(NTR_HIRES2)
 constexpr int SCREEN_W = 512;    /* 2x: the interactive window's tier */
 constexpr int SCREEN_H = 384;
+#elif defined(NTR_WIDE169)
+/* THE FIRST NON-4:3 TIER: 16:9 widescreen, 1024x576. Unlike NTR_HIRES/HIRES2
+   -- both 4:3, sharper but not wider -- this is a genuinely wider frame. The
+   HEIGHT is the anchor and stays a whole DS multiple (192 * 3 = 576); the
+   WIDTH is its exact 16:9 partner (576 * 16/9 = 1024), which is also 4 * 256,
+   so the sub-screen scale (SCREEN_W / SUB_W) is still a whole number. The 3D
+   view widens by a Hor+ field expansion (ntr/gx.cpp, gated on NTR_WIDE169) and
+   the top HUD reanchors instead of stretching (hal/message_compositor.cpp).
+   Note the tier is the first where SCREEN_W/256 (4) != SCREEN_H/192 (3): the
+   scale is non-uniform, which the compositor already keeps as separate sx/sy.
+   The stacked (minigame) presentation still assumes a uniform scale and is NOT
+   covered by this first pass -- levels use the corner-panel presentation. */
+constexpr int SCREEN_W = 1024;
+constexpr int SCREEN_H = 576;
 #else
 constexpr int SCREEN_W = 256;
 constexpr int SCREEN_H = 192;

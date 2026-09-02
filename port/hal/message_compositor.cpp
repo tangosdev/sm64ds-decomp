@@ -1770,6 +1770,28 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     // pixels are already where they belong.
     const int sx = ntr::SCREEN_W / 256;
     const int sy = ntr::SCREEN_H / 192;
+#ifdef NTR_WIDE169
+    /* WIDESCREEN HUD REANCHOR (16:9). The DS composes the top HUD in its own
+       256x192 space. On the 4:3 tiers sx == sy, so one integer scale fills the
+       screen with no distortion. At 1024x576 sx (4) != sy (3): the old x*sx
+       mapping would stretch the HUD 33% wider than tall AND smear it across the
+       whole 1024, hugging the left. Instead scale UNIFORMLY by sy (no stretch,
+       square blocks) and ANCHOR each source-x band horizontally -- sides out,
+       middle stays:
+         - left band  (source x <  band_l): rides the LEFT edge   (hx = x*uni)
+         - right band (source x >= band_r): rides the RIGHT edge   (+ margin)
+         - centre band                     : stays centred          (+ margin/2)
+       `margin` is the spare width the un-stretched HUD leaves (1024-768 = 256).
+       The band splits are by SOURCE X because the composited buffer has lost
+       per-element identity; in SM64DS the top-screen HUD (power meter, coin and
+       star counts, lives) clusters top-left, so it rides left at native size,
+       and the radar/minimap lives on the bottom (engine B) screen and is not
+       touched here at all. See the report for the bands Tango may want to
+       adjust per element. The 4:3 tiers keep the exact x*sx block. */
+    const int uni = sy;                            /* uniform native scale (3) */
+    const int margin = ntr::SCREEN_W - 256 * uni;  /* spare width (256) */
+    const int band_l = 96, band_r = 160;           /* source-x band splits */
+#endif
     /* TWO QUESTIONS, KEPT APART SO THE A/B ARM STILL MEASURES. `shown3d` is
        whether the 3D layer is in the picture at all, which decides whether the
        coverage mask means anything; `honour3d` is whether this run obeys its
@@ -1785,13 +1807,23 @@ extern "C" void port_message_composite_engine_a(void *fbp)
         for (int x = 0; x < 256; ++x) {
             if (!g_a[y][x].hit) continue;
             const uint32_t c = g_a[y][x].color;
+            /* horizontal placement of this DS column's block */
+#ifdef NTR_WIDE169
+            const int bw = uni;
+            const int hx0 = (x < band_l) ? x * uni
+                          : (x >= band_r) ? x * uni + margin
+                                          : x * uni + margin / 2;
+#else
+            const int bw = sx;
+            const int hx0 = x * sx;
+#endif
             if (!honour3d
                 || !layer_behind_3d(g_a[y][x].owner, g_a[y][x].prio, p3d)) {
                 /* the owning 2D layer is in FRONT of the 3D layer (or there is
                    no 3D layer in the picture): the old unconditional write */
                 for (int dy = 0; dy < sy; ++dy)
-                    for (int dx = 0; dx < sx; ++dx) {
-                        const int hy = y * sy + dy, hx = x * sx + dx;
+                    for (int dx = 0; dx < bw; ++dx) {
+                        const int hy = y * sy + dy, hx = hx0 + dx;
                         if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
                         fb.px[hy][hx] = c;
                     }
@@ -1799,8 +1831,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             }
             /* BEHIND the 3D layer: it may only fill where 3D drew nothing */
             for (int dy = 0; dy < sy; ++dy)
-                for (int dx = 0; dx < sx; ++dx) {
-                    const int hy = y * sy + dy, hx = x * sx + dx;
+                for (int dx = 0; dx < bw; ++dx) {
+                    const int hy = y * sy + dy, hx = hx0 + dx;
                     if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
                     fb.px[hy][hx] = c;
                 }
