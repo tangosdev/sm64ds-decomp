@@ -904,6 +904,25 @@ MG_PMF_CALL = {
          "    return ((int (*)(void *, unsigned char *, int, int))"
          "*(void **)&data_0209b138[msg[6]])(obj, msg + 7, a2, a3);"),
     ],
+    # Lane shadow-A: the camera state machine's two dispatchers. The State
+    # objects at 0x0209b008.. are mwcc member-function pairs {code address,
+    # this-delta} that __sinit_02073a24 copies from relocated data; on the
+    # host the code word is a DS address and hal/camera_states.cpp's
+    # hal_call_camera_state_fn translates it through the address switch in
+    # camera_states.inc (every delta in the ROM's pairs is 0). Each entry
+    # swaps the one PMF call for that seam, reading the same word the src
+    # reads, and adds the seam's declaration at file scope (the sources are
+    # C++, so a block-scope declaration would take C++ linkage). onEnter is
+    # word 0 of the State (func_0200cae4); main is word 2 (func_0200ca50,
+    # the src's `obj + 8`). Retires port/unmatched/func_0200cae4_hostcopy.cpp
+    # and func_0200ca50_hostcopy.cpp.
+    "func_0200cae4": [
+        ("extern \"C\" int func_0200cae4(C* c){",
+         "extern \"C\" int hal_call_camera_state_fn(void *self, unsigned ds_addr);\n"
+         "extern \"C\" int func_0200cae4(C* c){"),
+        ("  return (c->**p)();",
+         "  return hal_call_camera_state_fn(c, *(unsigned *)p);"),
+    ],
 }
 
 
