@@ -1,0 +1,71 @@
+# Gate KLEPTO: actor 239 (0xef), ov062 -- the cap-stealing bird of the outdoor
+# levels. It swoops in, lifts Mario's hat (or a carried item), and flies a path;
+# recovering the cap means catching Klepto.
+#
+# ---- what it is ------------------------------------------------------------
+#
+# _ZTV6Klepto / _ZTV9daJango_c, ov062 0x0211dd5c -- one address, two names (the
+# dsd emits both; D0 and D1 both store 0x0211dd5c). An Enemy subclass, 31-slot
+# table, overriding the six lifecycle slots (0/3/6/9/12/16/17). Slot 29
+# (OnAimedAtWithEgg) has a ROM body of its own, func_ov062_0211ce78, but that
+# body carries the "recovered from vtable slot identity" GUESS marker, so it is
+# NOT enrolled and the fill keeps the shared Actor default there
+# (inferred_stub_guard stays green). Its object is 1168 bytes (Klepto_Spawn
+# ov062 0x0211ce80): MovingCylinderClsn at 0x110 and 0x144, WithMeshClsn at
+# 0x178, BlendModelAnim at 0x334, ShadowModel at 0x3a4.
+#
+# ---- the id, and the live spawn edge ---------------------------------------
+#
+# Klepto_SpawnInfo (ov062 0x0211dd38) has +4 halfword 0xef (239); ACTOR_SPAWN_
+# TABLE[239] (arm9 0x02090c20, table base 0x02090864) points at it. It is
+# STATICALLY PLACED: the object table of level 16 (Shifting Sand Land, ov024)
+# places id 239 at (1749,1284,102); levels 25 and 43 place it too. ov062's
+# object overlay is loaded on levels 16/21/22/25/28. Reachability proof:
+# SM64DS_LEVEL=16, or SM64DS_SPAWN_ACTOR=239 in any ov062-loaded level.
+#
+# ---- the PMF state machine -------------------------------------------------
+#
+# Klepto dispatches a five-state pointer-to-member machine (descriptors
+# data_ov062_0211e14c/15c/16c/17c/18c, ten handler halves). func_ov062_0211c658
+# (the setter) and Klepto::Behavior (the per-frame tick) both form the PMF over
+# a forward-declared struct, so both are host copies in
+# port/unmatched/Klepto_StateDispatch.cpp, which also seats the ten template
+# records over the mounted DS addresses BEFORE __sinit_ov062_0211d6fc copies
+# them. Nine of the ten handlers are matched src and enrolled here; the tenth,
+# func_ov062_0211bd10 (e17c.main, the cap-steal per-frame logic), is UNMATCHED
+# and gets a name-and-abort stub in that file.
+#
+# ---- this slice's new symbols ----------------------------------------------
+#
+# The seven class TUs that link (Behavior is the host copy, not enrolled), the
+# nine matched state handlers, and the two Behavior helpers. ov062 is whole-
+# mounted (gate 32), so every data symbol these reach is already in the pack.
+# The vtable fill hal_fill_klepto_vtable and the method faces are in
+# hal/actor_classes_koopa_chuckya.cpp; the registry row is in
+# hal/actor_classes.inc.
+src/Klepto_Spawn.c
+src/_ZN6Klepto13InitResourcesEv.cpp
+# _ZN6Klepto6RenderEv.cpp is NOT here: it dispatches BlendModelAnim at +0x334
+# through a slot-5 LOCAL SHADOW, which the MSVC-ordered _ZTV14BlendModelAnim
+# routes to Virtual18 (a Model::Virtual10 fault). Host-copied in
+# port/unmatched/Klepto_Render.cpp, the ModelAnim_Renders / Whomp recipe.
+src/_ZN6Klepto16CleanupResourcesEv.c
+src/_ZN6Klepto16OnPendingDestroyEv.c
+src/_ZN6KleptoD0Ev.c
+src/_ZN6KleptoD1Ev.c
+# the nine matched state handlers the class dispatches through (reached only via
+# the seated template table, so no link edge names them):
+src/func_ov062_0211ba84.c
+src/func_ov062_0211c594.c
+src/func_ov062_0211b880.cpp
+src/func_ov062_0211c2f4.cpp
+src/func_ov062_0211bc54.cpp
+src/func_ov062_0211b8d8.cpp
+src/func_ov062_0211b800.c
+src/func_ov062_0211c218.c
+src/func_ov062_0211b930.cpp
+# the two Behavior helpers (the matrix/shadow step and the path-follow step):
+src/func_ov062_0211c6a8.c
+src/func_ov062_0211b51c.c
+# closure of func_ov062_0211c2f4 (its path-node helper):
+src/func_ov062_0211b3ac.cpp
