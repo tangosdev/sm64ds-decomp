@@ -233,15 +233,17 @@ Round 0 was held for 156 ms while the gate waited for the child to confirm, and
 
 ### P2. The stall ladder (`C:\tmp\lagdelay-out\proof_stall.log`)
 
-    PASS  s1_sync: session survives a 2.5s peer stall -- stall 2.51s rounds 31->154 dead_p=False dead_c=False p1='[comms:level] transport=loopback (udp 127.0.0.1) link=3 connected=yes slot=0 players=2 role=1 boot=0x0000 exchanges=2496 rounds=900'
-    PASS  s2_nosync: session survives a 2.5s peer stall -- stall 2.58s rounds 31->152 dead_p=False dead_c=False p1='[comms:level] transport=loopback (udp 127.0.0.1) link=3 connected=yes slot=0 players=2 role=1 boot=0x0000 exchanges=1923 rounds=900'
-    PASS  s3: a killed peer still ends the session by the ROM's own bound (solo after 30.6 s, window 45s)
-    PASS  s3: the sync liveness gate held on the dead session (gated=866, transition line present)
+    PASS  s1_sync: session survives a 2.5s peer stall -- stall 2.50s rounds 37->165 dead_p=False dead_c=False p1='[comms:level] transport=loopback (udp 127.0.0.1) link=3 connected=yes slot=0 players=2 role=1 boot=0x0000 exchanges=1735 rounds=900'
+    PASS  s2_nosync: session survives a 2.5s peer stall -- stall 2.50s rounds 35->162 dead_p=False dead_c=False p1='[comms:level] transport=loopback (udp 127.0.0.1) link=3 connected=yes slot=0 players=2 role=1 boot=0x0000 exchanges=1735 rounds=900'
+    PASS  s3: a killed peer still ends the session by the ROM's own bound (solo after 30.1 s, window 45s)
+    PASS  s3: the sync liveness gate held on the dead session (gated=857, transition line present)
     stall ladder: ALL GREEN
 
 ### P3. net_proof, seven rungs (`C:\tmp\lagdelay-out\proof_net.log`)
 
-    net_proof: exe 7E837CDA1317F41A  ports 59408.. relay 59440
+27 PASS, 0 FAIL.
+
+    net_proof: exe 51E5B0674DFD8B10  ports 57104.. relay 57136
 
     === N0 ===
     PASS  rungN0 SOLO IS BYTE-IDENTICAL | pos=(-4915200, 2929633, 11141348), expected (-4915200, 2929633, 11141348). The address work is in the link; with none of its env set it may not move the game one unit.
@@ -250,58 +252,53 @@ Round 0 was held for 156 ms while the gate waited for the child to confirm, and
     === N1 ===
     PASS  rungN1 LOOPBACK SESSION STILL FORMS | live=0x3 both, rounds 600/600
     PASS  rungN1 and it is still LOOPBACK MODE | modes=['loopback', 'loopback'] (the new code paths must not activate without their env)
-          loopback: 600 rounds over 25.5s of process wall time
+          loopback: 600 rounds over 21.9s of process wall time
 
     === N2 ===
-          direct mode over 192.168.1.240:59408
+          direct mode over 192.168.1.240:57104
     PASS  rungN2 DIRECT SESSION OVER THE LAN ADDRESS | live=0x3 both, rounds 600/600
     PASS  rungN2 and both ends are in DIRECT mode | modes=['direct', 'direct']
     PASS  rungN2 and the parent LEARNED the child's address off the wire | expected 'direct: learned slot 1 at 192.168.1.240' in the parent log (the loopback port-arithmetic rule cannot produce this)
-          direct: 600 rounds over 19.8s of process wall time
+          direct: 600 rounds over 21.8s of process wall time
 
     === N3 ===
-          local reference relay on 127.0.0.1:59440
+          local reference relay on 127.0.0.1:57136
     PASS  rungN3 RELAY SESSION FORMS | live=0x3 both, rounds 600/600
     PASS  rungN3 and both ends are in RELAY mode | modes=['relay', 'relay']
     PASS  rungN3 and both ends PAIRED with the relay | paired=[True, True] (a status-0 HELLO-ACK landed on each)
     PASS  rungN3 and NEITHER END KNEW THE OTHER'S ADDRESS | the parent never learned a peer address; every byte went through the relay
-          relay: 600 rounds over 22.4s of process wall time
+          relay: 600 rounds over 24.2s of process wall time
 
     === N4 ===
-          RTT   0 ms:   600 rounds  wall   41.2s   1.00x the zero-latency arm  session ok
+          RTT   0 ms:   600 rounds  wall   17.8s   1.00x the zero-latency arm  session ok
     PASS  rungN4 RTT 0 ms still forms a session | live=0x3 both, rounds 600/600
     PASS  rungN4 RTT 0 ms delay ring never overflowed | delayovf=[0, 0] (a nonzero value means the induction dropped datagrams and the number above is not a latency measurement)
-          RTT  40 ms:   600 rounds  wall   78.0s   1.89x the zero-latency arm  session ok
+          RTT  40 ms:   600 rounds  wall   50.7s   2.85x the zero-latency arm  session ok
     PASS  rungN4 RTT 40 ms still forms a session | live=0x3 both, rounds 600/600
     PASS  rungN4 RTT 40 ms delay ring never overflowed | delayovf=[0, 0] (a nonzero value means the induction dropped datagrams and the number above is not a latency measurement)
-          RTT  80 ms:   600 rounds  wall   96.6s   2.34x the zero-latency arm  session ok
+          RTT  80 ms:   600 rounds  wall   71.1s   3.99x the zero-latency arm  session ok
     PASS  rungN4 RTT 80 ms still forms a session | live=0x3 both, rounds 600/600
     PASS  rungN4 RTT 80 ms delay ring never overflowed | delayovf=[0, 0] (a nonzero value means the induction dropped datagrams and the number above is not a latency measurement)
-          RTT 120 ms:   600 rounds  wall  115.7s   2.81x the zero-latency arm  session ok
+          RTT 120 ms:   600 rounds  wall   88.2s   4.95x the zero-latency arm  session ok
     PASS  rungN4 RTT 120 ms still forms a session | live=0x3 both, rounds 600/600
     PASS  rungN4 RTT 120 ms delay ring never overflowed | delayovf=[0, 0] (a nonzero value means the induction dropped datagrams and the number above is not a latency measurement)
 
     === N5 ===
-          80 ms + 5% loss + 10 ms jitter: 600 rounds, wall 104.0s, 2.26x the clean-wire arm
+          80 ms + 5% loss + 10 ms jitter: 600 rounds, wall 69.2s, 3.42x the clean-wire arm
     PASS  rungN5 SURVIVES 80 ms + 5% LOSS | live=0x3 both, rounds 600/600
     PASS  rungN5 delay ring never overflowed | delayovf=[0, 0]
 
     === N7 ===
     PASS  rungN7 RTT 80 ms the input-delay knob ACTUALLY TOOK | indelay=[3, 3], wanted [3, 3]. Anything else means the comparison below is measuring two identical arms.
-          RTT  80 ms: stop-and-wait  112.5s  ->  input delay 3   59.9s   1.88x   starved=[300, 352]
+          RTT  80 ms: stop-and-wait   78.4s  ->  input delay 3   30.8s   2.55x   starved=[272, 298]
     PASS  rungN7 RTT 80 ms forms a session both ways | off: live=0x3 both, rounds 600/600 | on: live=0x3 both, rounds 600/600
-    PASS  rungN7 RTT 80 ms INPUT DELAY 3 BUYS THE PACE BACK | 112.5s -> 59.9s, 1.88x. Under 1.5x is not a mitigation worth the input lag it costs.
+    PASS  rungN7 RTT 80 ms INPUT DELAY 3 BUYS THE PACE BACK | 78.4s -> 30.8s, 2.55x. Under 1.5x is not a mitigation worth the input lag it costs.
     PASS  rungN7 RTT 120 ms the input-delay knob ACTUALLY TOOK | indelay=[4, 4], wanted [4, 4]. Anything else means the comparison below is measuring two identical arms.
-          RTT 120 ms: stop-and-wait  139.9s  ->  input delay 4   33.2s   4.21x   starved=[307, 304]
+          RTT 120 ms: stop-and-wait   96.3s  ->  input delay 4   25.5s   3.77x   starved=[384, 349]
     PASS  rungN7 RTT 120 ms forms a session both ways | off: live=0x3 both, rounds 600/600 | on: live=0x3 both, rounds 600/600
-    PASS  rungN7 RTT 120 ms INPUT DELAY 4 BUYS THE PACE BACK | 139.9s -> 33.2s, 4.21x. Under 1.5x is not a mitigation worth the input lag it costs.
+    PASS  rungN7 RTT 120 ms INPUT DELAY 4 BUYS THE PACE BACK | 96.3s -> 25.5s, 3.77x. Under 1.5x is not a mitigation worth the input lag it costs.
 
     ALL GREEN
-
-N7 is the rung that made this lane revert its first arming rule. Its
-stop-and-wait baseline arm is an induced-latency LOOPBACK with no input-delay
-env, and an earlier draft sized that arm -- which would have turned the
-comparison into two identical arms while every assertion still passed.
 
 ### P4. The wide session at a depth the old cap could not express
 
