@@ -832,6 +832,16 @@ void port_stage_a2_seat(void);
 int lk6_savestate_save(void);
 int lk6_savestate_load(void);
 int lk6_savestate_has(void);
+/* the rollback feasibility probe (hal/rollback_probe.cpp). Inert unless
+   SM64DS_ROLLBACK_PROBE / SM64DS_ROLLBACK_DET is set; see its banner. */
+int rb_probe_mode(void);
+double rb_now_ms(void);
+void rb_note(int what, double ms);
+int rb_resim_skip_render(void);
+void rb_probe_frame_end(int *frame, int selftest);
+enum { RB_ACTOR_TICK = 0, RB_ANIMS, RB_PARTICLE, RB_CYL, RB_SCENEPASS,
+       RB_PH_INPUT, RB_PH_CAMERA, RB_PH_SUBMIT, RB_PH_RASTER, RB_PH_BLIT,
+       RB_PH_FRAME };
 /* bit 0 the .dsstate section, bit 1 the arena, 0 = not captured at all */
 int lk6_savestate_covers(const void *p);
 /* how many captured words point at THIS process's heap or stack, and so are
@@ -10536,7 +10546,11 @@ int main(void)
                the input rather than skipping the tick the way the debug menu
                does (the comms exchange lives inside the tick). */
             port_vs_match_end_hold();
-            port_actor_tick();
+            {
+                const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
+                port_actor_tick();
+                if (rb_probe_mode()) rb_note(RB_ACTOR_TICK, rb_now_ms() - rb_t);
+            }
             port_vs_stars_probe(frame);        /* TEMPORARY: SM64DS_VS_STARS */
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
@@ -11595,7 +11609,11 @@ int main(void)
                 /* Stage::Render's first block, in its place in the order:
                    advance the shown areas' BTA texture animations (the
                    waterfall), which RenderModel below then applies. */
-                port_stage_advance_anims(stage);
+                {
+                    const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
+                    port_stage_advance_anims(stage);
+                    if (rb_probe_mode()) rb_note(RB_ANIMS, rb_now_ms() - rb_t);
+                }
                 port_stage_render_model(stage);
                 /* ShadowModel::RenderAll, in its place in Stage::Render's own
                    order: after the opaque model pass, before the transparent
@@ -11648,8 +11666,11 @@ int main(void)
            the behaviour phase threaded onto data_0209cee8 -- the overlap
            pushbacks, and the notify chain that hands a grabbable cylinder to
            the Player (slice_gate10, the tree-grab block). */
-        if (boot_spawns)
+        if (boot_spawns) {
+            const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
             port_cylinder_clsn_process();
+            if (rb_probe_mode()) rb_note(RB_CYL, rb_now_ms() - rb_t);
+        }
         /* Stage::Render:125, the very next statement: the cap-visibility
            manager. func_ov001_020aaf40 walks the three cap registries and
            decides which cap of each type is currently showing -- it is the
@@ -11682,8 +11703,11 @@ int main(void)
         /* phase 1, which is where func_02044120 ends: the scene tree's own
            housekeeping -- priority re-sorts, parent flag propagation, and the
            deferred list insertions for anything that spawned mid-phase. */
-        if (boot_spawns)
+        if (boot_spawns) {
+            const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
             port_actor_scene_pass();
+            if (rb_probe_mode()) rb_note(RB_SCENEPASS, rb_now_ms() - rb_t);
+        }
         size_t tris_before = 0;
         if (selftest) ntr::gx_polygons(tris_before);
         /* run mg16 lane MP3: DRAW EVERY PLAYER, not just the local one.
@@ -11721,7 +11745,11 @@ int main(void)
             static int fx_tr = -1;
             if (fx_tr < 0) fx_tr = getenv("SM64DS_FX_TRACE") ? 1 : 0;
             if (fx_tr) ntr::gx_polygons(fx_before);
-            port_particle_render();
+            {
+                const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
+                port_particle_render();
+                if (rb_probe_mode()) rb_note(RB_PARTICLE, rb_now_ms() - rb_t);
+            }
             if (fx_tr) {
                 const ntr::GxTriangle *ft = ntr::gx_polygons(fx_after);
                 if (fx_after != fx_before) {
@@ -11776,6 +11804,8 @@ int main(void)
         for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[0][x] = 0xFF101820u;
         for (int y = 1; y < ntr::SCREEN_H; ++y)
             memcpy(fb.px[y], fb.px[0], ntr::SCREEN_W * sizeof(fb.px[0][0]));
+        /* the rollback probe's re-run skips the rasteriser (SM64DS_ROLLBACK_DET_SKIP) */
+        if (!rb_resim_skip_render())
         ntr::gx_render(fb);
         /* ENGINE-A 2D OVER 3D. The top screen is engine A: its 2D BGs and OBJ
            layer composite over the 3D frame in hardware. The dialogue box lives
@@ -11916,9 +11946,18 @@ int main(void)
             stack_present_arm(stack_img, hwnd);
 
         ph_begin(&t_phase);
+        if (!rb_resim_skip_render())
         present();
         ph_end(PH_BLIT, t_phase);
         ph_end(PH_FRAME, t_frame);
+        if (rb_probe_mode()) {
+            rb_note(RB_PH_INPUT,  g_clk.raw[PH_INPUT]);
+            rb_note(RB_PH_CAMERA, g_clk.raw[PH_CAMERA]);
+            rb_note(RB_PH_SUBMIT, g_clk.raw[PH_SUBMIT]);
+            rb_note(RB_PH_RASTER, g_clk.raw[PH_RASTER]);
+            rb_note(RB_PH_BLIT,   g_clk.raw[PH_BLIT]);
+            rb_note(RB_PH_FRAME,  g_clk.raw[PH_FRAME]);
+        }
         /* present-to-present rate, and the GAME TICK rate beside it -- the two
            diverge whenever a tick is skipped, which is what the debug menu's
            pause does. Both smoothed the same way the phase times are. */
@@ -12145,6 +12184,10 @@ int main(void)
            object move or staged warp lands on a world that is not half-updated.
            A no-op when the channel is not armed. */
         editor_channel_drain();
+        /* the rollback feasibility probe: snapshot timing and the restore-and-
+           re-run determinism check, at the same boundary. It may rewind
+           `frame` for the re-run. Inert without its env knobs. */
+        rb_probe_frame_end(&frame, selftest);
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */

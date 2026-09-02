@@ -12557,7 +12557,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/gap_art.cpp hal/gap_continuity.cpp
     # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
     # DS arena plus the out-of-arena game globals.
-    hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
+    hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp hal/rollback_probe.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
     hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
@@ -12803,7 +12803,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/gap_art.cpp hal/gap_continuity.cpp
     # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
     # DS arena plus the out-of-arena game globals.
-    hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
+    hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp hal/rollback_probe.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
     hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
