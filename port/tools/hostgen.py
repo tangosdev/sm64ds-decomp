@@ -690,6 +690,68 @@ VIRTUAL_CALL = {
 }
 
 
+# ---- OPEN-CODED mwcc MEMBER-POINTER CALLS -----------------------------------
+#
+# Lane LINKMG. Six minigame TUs spell the mwcc pointer-to-member pair as two
+# plain ints (`struct Ent { int a; int b; }`, `int e[2]`) and decode it by hand:
+# obj = this + (adj >> 1), virtual bit in adj & 1, code word either an address
+# or a vtable byte offset. That is the ROM's five-instruction sequence
+# transcribed, and MSVC compiles every line of it as it stands -- there is no
+# member-pointer TYPE anywhere, so the 4-byte-vs-8-byte stride problem the
+# host-copied dispatchers exist for does not arise. The ONE line MSVC cannot
+# make behave is the call through the decoded word, because the word is a DS
+# code address. The port already owns the answer to that: the per-class
+# address switches in port/unmatched/Mg*_StateDispatch.cpp, entered through
+# port_mg_<class>_call0/1, which apply the ROM's null-code guard, refuse a
+# nonzero adjustment nobody has measured, and report an unknown address.
+#
+# So each entry swaps exactly that call line for a call into the seam and
+# leaves the src decode (and the by-hand adjustment arithmetic, which the seam
+# re-checks) untouched. The receiver is the src's own adjusted `obj`/`thisp`,
+# the code word is the src's own `e->a`/`e[0]`/`e->off`, and the argument is
+# the src's own loop counter. Exact-string, like VIRTUAL_CALL: a src edit that
+# moves the line is a hard error here, not a silent fall-through to the DS
+# address. The declarations ride in front of the text; a .c source gets them
+# inside hostgen's extern "C" wrap and a .cpp source already spells its own,
+# so both are extern "C" explicitly.
+MG_PMF_CALL_DECL = """extern "C" void port_mg_pachinko_call1(void *, unsigned, int, int);
+extern "C" void port_mg_bomroom_opencoded_call0(void *, unsigned, int);
+extern "C" void port_mg_panel_call0(void *, unsigned, int);
+extern "C" void port_mg_panel_call1(void *, unsigned, int, int);
+"""
+MG_PMF_CALL = {
+    # dScMgPachinko_c, tables 02142624 / 02142644 / 02142694, arity 1
+    "func_ov006_020fc7d0": [
+        ("      ((void(*)(void*,int))fn)(obj,i);",
+         "      port_mg_pachinko_call1(obj, (unsigned)e->a, adj, i);"),
+    ],
+    "func_ov006_020fe248": [
+        ("      ((void(*)(void*,int))fn)(obj,i);",
+         "      port_mg_pachinko_call1(obj, (unsigned)e->a, adj, i);"),
+    ],
+    "func_ov006_020fda7c": [
+        ("      ((void(*)(void*,int))fn)(obj,i);",
+         "      port_mg_pachinko_call1(obj, (unsigned)e->a, adj, i);"),
+    ],
+    # dScMgBomroom_c, table 021416a0, arity 0 -- the counting entry, so
+    # hal/scene_mg_bomroom.cpp's census still says how often this shape ran
+    "func_ov006_020d8f98": [
+        ("  f(obj);",
+         "  port_mg_bomroom_opencoded_call0(obj, (unsigned)e[0], off);"),
+    ],
+    # dScMgPanel_c: slot 6 Behavior over 02142888 (arity 0) and the round-end
+    # state over 02142840 (arity 1)
+    "func_ov006_02107358": [
+        ("  ((void(*)(void*))fn)(obj);",
+         "  port_mg_panel_call0(obj, (unsigned)e->a, adj);"),
+    ],
+    "func_ov006_02106ca4": [
+        ("        fn(thisp, i);",
+         "        port_mg_panel_call1(thisp, (unsigned)e->off, adj, i);"),
+    ],
+}
+
+
 def apply_patches(text, sym, table, what, decl=""):
     """Exact-string patches, with a hard error if one stops matching."""
     pats = table.get(sym)
@@ -715,6 +777,11 @@ def ds_div_patch(text, sym):
 def virtual_call_patch(text, sym):
     """Make a C++ virtual call on a C vtable dispatch cdecl, like its peers."""
     return apply_patches(text, sym, VIRTUAL_CALL, "VIRTUAL_CALL")
+
+
+def mg_pmf_call_patch(text, sym):
+    """Route an open-coded mwcc member-pointer call through the class seam."""
+    return apply_patches(text, sym, MG_PMF_CALL, "MG_PMF_CALL", MG_PMF_CALL_DECL)
 
 
 def member_redecl_patch(text, sym):
@@ -751,6 +818,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = mmio_extern_patch(text, sym)
     text, _ = falls_off_return_patch(text, sym)
     text, _ = virtual_call_patch(text, sym)
+    text, _ = mg_pmf_call_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot

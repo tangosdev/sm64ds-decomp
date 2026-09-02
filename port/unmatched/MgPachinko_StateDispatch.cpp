@@ -263,13 +263,30 @@ static void pch_call1(void *self, unsigned code, int adj, int a)
     port_mg_call1(self, code, adj, a);
 }
 
+/* Lane LINKMG: the C-name face on pch_call1 for the three dispatchers that now
+   compile FROM src (func_ov006_020fc7d0, _020fe248, _020fda7c). Their src TUs
+   open-code the {code,adj} decode in plain ints and compile under MSVC as
+   they stand; the one thing MSVC cannot do is call the DS code address the
+   decode produces, so tools/hostgen.py's MG_PMF_CALL table swaps exactly that
+   one call line for a call to this face. Same order as pch_call1: this class's
+   switch first, then the framework's. */
+extern "C" void port_mg_pachinko_call1(void *self, unsigned code, int adj, int a)
+{
+    pch_call1(self, code, adj, a);
+}
+
 extern "C" void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing)
 {
     if (hits)    *hits    = g_pachinko_state_hits;
     if (missing) *missing = g_pachinko_state_missing;
 }
 
-// ---- the five host copies --------------------------------------------------
+// ---- the two host copies ----------------------------------------------------
+//
+// (Five until lane LINKMG. func_ov006_020fc7d0, _020fe248 and _020fda7c
+// open-code the pair decode in plain ints and compile FROM src now, with the
+// one call line routed to port_mg_pachinko_call1 by tools/hostgen.py's
+// MG_PMF_CALL table; see the CMake block after SCENE_MG_SOURCES.)
 //
 // Each is its src TU verbatim with the member-pointer or raw-address call site
 // replaced by pch_call1, and with each src's private struct spelled as the
@@ -321,59 +338,4 @@ extern "C" void func_ov006_020fb60c(void *self)
         pch_call1(c, p->code, p->adj, 0);
     }
     func_ov006_020faf6c(c, 0);
-}
-
-/* src/func_ov006_020fc7d0.cpp, table data_ov006_02142624. Two entries of
-   stride 0x1c; live flag at +0x4eb7 of the entry, state index at +0x4eb3. The
-   src spells those as 0x4000+0xeb7 and 0x4000+0xeb3 and they are the same
-   addresses. The adjustment arithmetic the src performs by hand -- obj =
-   c + (adj>>1), virtual bit in adj&1 -- is what pch_call1 and port_mg_call1
-   now own between them, and both refuse a nonzero adjustment rather than
-   implement a shape nobody has measured. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fc7d0(void *self)
-{
-    char *c = (char *)self;
-    char *e = c;
-    for (int i = 0; i < 2; ++i, e += 0x1c) {
-        if (*(unsigned char *)(e + 0x4eb7) != 0) {
-            unsigned char k = *(unsigned char *)(e + 0x4eb3);
-            const MgPmf *p = &data_ov006_02142624[k];
-            pch_call1(c, p->code, p->adj, i);
-        }
-    }
-}
-
-/* src/func_ov006_020fe248.cpp, table data_ov006_02142644. Forty-eight entries
-   of stride 0x38; live flag at +0x4f0c, state index at +0x4f0d. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fe248(void *self)
-{
-    char *c = (char *)self;
-    char *e = c;
-    for (int i = 0; i < 48; ++i, e += 0x38) {
-        if (*(unsigned char *)(e + 0x4f0c) != 0) {
-            unsigned char k = *(unsigned char *)(e + 0x4f0d);
-            const MgPmf *p = &data_ov006_02142644[k];
-            pch_call1(c, p->code, p->adj, i);
-        }
-    }
-}
-
-/* src/func_ov006_020fda7c.cpp, table data_ov006_02142694. Thirty entries of
-   stride 0x38; live flag at +0x468c, state index at +0x468f. The three-byte
-   gap between the two is the src's own and is left alone. */
-
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fda7c(void *self)
-{
-    char *c = (char *)self;
-    char *e = c;
-    for (int i = 0; i < 30; ++i, e += 0x38) {
-        if (*(unsigned char *)(e + 0x468c) != 0) {
-            unsigned char k = *(unsigned char *)(e + 0x468f);
-            const MgPmf *p = &data_ov006_02142694[k];
-            pch_call1(c, p->code, p->adj, i);
-        }
-    }
 }

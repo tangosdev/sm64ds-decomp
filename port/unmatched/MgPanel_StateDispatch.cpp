@@ -329,98 +329,19 @@ extern "C" void port_mg_panel_counts(unsigned *hits, unsigned *floor,
     if (unknown) *unknown = g_panel_unknown;
 }
 
-// ---- the eleven host copies ------------------------------------------------
+// ---- the nine host copies ---------------------------------------------------
+//
+// (Eleven until lane LINKMG. func_ov006_02107358, the Behavior, and
+// func_ov006_02106ca4, the round-end state, open-code the pair decode in
+// plain ints and compile FROM src now, with the one call line routed to
+// port_mg_panel_call0/1 by tools/hostgen.py's MG_PMF_CALL table; see the
+// CMake block after SCENE_MG_SOURCES. func_ov006_02106bc0 is the same shape;
+// it stays here for now because MSVC folds it into the switch that calls it,
+// so it never shows in the map and was not on the review's list. The same
+// route is open to it, and its tag below says what its wall actually is.)
 //
 // Each is its src TU with the pair declaration replaced by MgPmf and the
 // dispatch replaced by port_mg_panel_call0/1. Everything else is verbatim.
-
-/* src/func_ov006_02107358.cpp -- VTABLE SLOT 6, the Behavior. Table 02142888,
-   arity 0. THE THIRD SHAPE: the src reads the pair as two ints and open-codes
-   the decode, so neither a link nor a `::*` sweep sees it.
-   ROM 0x02107358: add r0,r4,#0x4000; ldr r0,[r0,#0xca8] (the state index, a
-   WORD at +0x4ca8); pool 0x021073ac = 02142888; add r3,r1,r0,lsl#3 -- an
-   EIGHT-byte stride; then the five-instruction Itanium sequence; then
-   func_ov006_02104ac4 and func_ov006_02104354 off r4; mov r0,#1; return. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_02107358(char *c)
-{
-    const unsigned j = (unsigned)*(int *)(c + 0x4ca8);
-    const MgPmf *e = &data_ov006_02142888[j];
-    port_mg_panel_call0(c, e->code, e->adj);
-    func_ov006_02104ac4(c);
-    func_ov006_02104354(c);
-    return 1;
-}
-
-/* src/func_ov006_02106ca4.c, table 02142840, arity 1, AND A STATE AS WELL --
-   slot 6 of data_ov006_02142888, the ROUND-END state. Run mg7 lane L380.
-   THE THIRD THIRD-SHAPE TU, and the first one this class gained by decompiling
-   a floor rather than by inheriting a src file. ROM 0x02106ca4, 0x214 bytes:
-   bl 0x021050bc; sl = self+0x4000; count = [sl,#0xcb8]; the per-panel index
-   byte at self+i+0x4efa held in r5 ACROSS the dispatch and re-read at
-   0x02106d04, which is what the `busy` counter below is; mov r1,r6 -- the
-   loop counter is the argument.
-   The tail is the round-over decision and it is transcribed one branch at a
-   time: the u16 at +0x4ec0 is the hold-off timer; the byte at +0x4fe6 says
-   whether this was the LAST round; 0x020a0de8[touch*4] and 0x020a0de9[touch*4]
-   are the stylus record's held/edge bytes, and a touch cancels the hold-off.
-   On the last round it plays the finish (0x02104870), clears the two flags and
-   bumps the score at +0xb4 of the ov004 singleton under a 9999 clamp, keeping
-   +0xb8 as its high-water mark; otherwise it re-arms for 0x10 frames, drops
-   the outer state to 7 and re-seeds every panel through 0x021068d8. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_02106ca4(char *c)
-{
-    int busy = 0;
-    int i;
-    char *g;
-
-    func_ov006_021050bc(c);
-    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
-        unsigned char *slot = (unsigned char *)(c + i + 0x4efa);
-        const MgPmf *e = &data_ov006_02142840[*slot];
-        port_mg_panel_call1(c, e->code, e->adj, i);
-        if (*slot != 0)
-            busy++;
-    }
-    if (busy != 0)
-        return;
-    if (*(unsigned short *)(c + 0x4ec0) == 0) {
-        func_ov006_02104580(c);
-        *(unsigned short *)(c + 0x4ec6) += 1;
-        return;
-    }
-    *(unsigned short *)(c + 0x4ec0) -= 1;
-    if (*(unsigned char *)(c + 0x4fe6) == 0) {
-        if (data_020a0de8[data_020a0e40 * 4] != 0
-            && data_020a0de9[data_020a0e40 * 4] != 0)
-            *(unsigned short *)(c + 0x4ec0) = 0;
-    }
-    if (*(short *)(c + 0x4ec0) > 0)
-        return;
-    *(unsigned short *)(c + 0x4ec0) = 0;
-    if (*(unsigned char *)(c + 0x4fe6) == 0) {
-        *(unsigned short *)(c + 0x4ec0) = 0x10;
-        *(int *)(c + 0x4ca8) = 7;
-        func_ov006_021068d8(c);
-        return;
-    }
-    func_ov006_02104870(c);
-    func_ov004_020b0a54(0);
-    func_ov006_02104ea8(c);
-    *(unsigned char *)(c + 0x4fe3) = 0;
-    *(unsigned char *)(c + 0xc3) = 0;
-    g = data_ov004_020beb68;
-    if (g != 0) {
-        if (*(int *)(g + 0xb4) < 9999)
-            *(int *)(g + 0xb4) += 1;
-        if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
-            *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
-    }
-    func_ov004_020adb1c(data_ov004_020beb68 != 0
-                            ? *(int *)(data_ov004_020beb68 + 0xb4)
-                            : 0);
-}
 
 /* src/func_ov006_02106bc0.c, table 02142840, arity 1. THE SECOND THIRD-SHAPE
    TU. ROM 0x02106bc0: r7 = self+0x4000; count = [r7,#0xcb8]; loop index r5;
@@ -428,7 +349,7 @@ extern "C" void func_ov006_02106ca4(char *c)
    sequence; mov r1,r5 -- the loop counter is the argument; then the +0x4ec0
    halfword countdown, func_ov004_020b0a54(0x12), the two flag bytes and
    func_ov006_02104ea8. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
+/* PORT_HOST_ABI: open-coded mwcc member-pointer decode in plain ints; the src compiles under MSVC as it stands, but the decoded code word is a DS address and the call through it is routed to the class's address switch */
 extern "C" void func_ov006_02106bc0(char *c)
 {
     int i;

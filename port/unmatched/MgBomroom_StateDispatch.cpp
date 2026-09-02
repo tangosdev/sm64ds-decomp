@@ -328,6 +328,19 @@ extern "C" unsigned port_mg_bomroom_flight_calls(void)
     return g_bomroom_flight_calls;
 }
 
+/* Lane LINKMG: the entry func_ov006_020d8f98 reaches now that it compiles
+   FROM src. Its src TU decodes the pair as two plain ints, which MSVC
+   compiles as it stands; only the call through the resulting DS code address
+   is impossible, and tools/hostgen.py's MG_PMF_CALL table swaps that one line
+   for a call here. This wrapper exists so the census line in
+   hal/scene_mg_bomroom.cpp keeps counting the open-coded dispatcher
+   separately, which is the only evidence a run has that the shape is served. */
+extern "C" void port_mg_bomroom_opencoded_call0(void *self, unsigned code, int adj)
+{
+    ++g_bomroom_opencoded_calls;
+    port_mg_bomroom_call0(self, code, adj);
+}
+
 extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
 {
     return g_bomroom_opencoded_calls;
@@ -362,26 +375,6 @@ extern "C" int func_ov006_020d91b0(char *c)
         func_ov006_020d5b10(c);
     }
     return 1;
-}
-
-/* src/func_ov006_020d8f98.cpp -- THE OPEN-CODED ONE, and the whole reason this
-   class needed a run and not only a link. Its src decodes the pair as two
-   plain ints and calls through the result, which is the ROM's five
-   instructions transcribed faithfully and is fatal on the host. The index is
-   at +0x62d4 -- a DIFFERENT word from slot 6's +0x62d0 -- and the arity is 0:
-   the ROM sets no argument register before its blx. It is also STATE SLOT 3 of
-   data_ov006_021416e0, so the switch above reaches this copy and not the src.
-   Its three tail calls are the other three dispatchers, in the ROM's order. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020d8f98(unsigned char *c)
-{
-    char *self = (char *)c;
-    const MgPmf *e = &data_ov006_021416a0[*(int *)(self + 0x6000 + 0x2d4)];
-    ++g_bomroom_opencoded_calls;
-    port_mg_bomroom_call0(self, e->code, e->adj);
-    func_ov006_020d65c8(self);
-    func_ov006_020d6278(self);
-    func_ov006_020d5fec(self);
 }
 
 /* src/func_ov006_020d836c.cpp -- 0x70 elements of stride 0x40, the live flag

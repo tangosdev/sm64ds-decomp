@@ -11,17 +11,25 @@ which carried 46 of the 194 SHADOW rows on that tip. Nothing under
 Both readings from `python port/tools/linkage.py --queue` in this worktree,
 saved as `build/linkage_before.txt` and `build/linkage_after.txt`.
 
-| | before | after | delta |
-|---|---|---|---|
-| matched TUs in src/ | 11327 | 11327 | |
-| linked into walk_window | 9139 (80.7%) | 9142 (80.7%) | +3 |
-| SHADOWS, repo-wide | 194 | 148 | -46 |
-| in-scope SHADOWS (the 14 objects) | 46 | 0 | -46 |
-| documented host-ABI exceptions | 364 | 407 | +43 |
-| FACES | 248 | 248 | |
-| MSVC-name shadows | 17 | 17 | |
+| | before | after round 1 | after review F1 | net |
+|---|---|---|---|---|
+| matched TUs in src/ | 11327 | 11327 | 11327 | |
+| linked into walk_window | 9139 (80.7%) | 9142 | 9148 (80.8%) | +9 |
+| SHADOWS, repo-wide | 194 | 148 | 148 | -46 |
+| in-scope SHADOWS (the 14 objects) | 46 | 0 | 0 | -46 |
+| documented host-ABI exceptions | 364 | 407 | 404 | +40 |
+| FACES | 248 | 248 | 248 | |
+| MSVC-name shadows | 17 | 17 | 17 | |
 
-`port/tools/objsrc_check.py`: HOSTGEN 191 (was 189), HOST 0.
+`port/tools/objsrc_check.py`: HOSTGEN 189 -> 191 -> 197, HOST 0.
+
+Documented reads 404 rather than the 401 the review projected, and the three
+are accounted for: deleting the six dispatcher bodies un-folded three sibling
+bodies MSVC had been inlining into them (Bomroom's `020d5fec` and `020d6278`,
+called only from `020d8f98`; Panel's `02104ac4`, called from `02107358`), so
+those three now have map rows of their own. They were tagged in round 1, so
+they land in documented and not in SHADOWS, which is why SHADOWS holds at 148.
+Per file: Pachinko 5 -> 2, Bomroom 4 -> 5, Panel 3 -> 2; 407 - 3 + 1 - 1 = 404.
 
 Battery: ALL GREEN (`build/battery.log`, run with `--skip-build` on the guarded build above, TEMP redirected as noted): 14/14 smoke binaries ok, 50 level selftests ok, 34 scene selftests ok including every minigame scene 361-389, default title boot ok, ptr_audit 0, shipping config (PORT_ROM_CLEAN, static CRT) built and its selftest rc=0. First attempt failed on smoke_player with `NitroFS table index missing: build/assets/nitrofs.tsv`: the fresh-worktree asset-catalog trap from the decomp-worktree skill, not a code fault; `python tools/asset_catalog.py generate <rom>` into a real build/assets fixed it and the regenerated files.tsv sha256 matches the main checkout's.
 
@@ -44,7 +52,7 @@ stated reason was not load-bearing on the host at all.
 REPLACED = the matched src TU is in the binary and the host body is gone.
 KEPT = the host body stays and is now tagged at its definition with the reason.
 
-### Replaced (3 symbols, +3 linked TUs, 2 files retired or shrunk)
+### Replaced in round 1 (3 symbols, +3 linked TUs); six more in the review section below
 
 **MgHud_HighScore.cpp / `func_ov004_020b19f0`: REPLACED.** The minigame HUD's
 HIGH SCORE drawer. The host copy was `src/func_ov004_020b19f0.c` with its
@@ -81,22 +89,25 @@ construction, and the emitted files were diffed against src before wiring
 
 All of these are the mwcc POINTER-TO-MEMBER WALL. An mwcc member pointer is an
 8-byte `{code, adjustment}` pair called through a five-instruction sequence
-(disassembled in `unmatched/MgBase_StateDispatch.cpp` section 1). MSVC's is 4
-bytes with an incompatible call shape, so the src TUs cannot compile and
-behave; each host copy is the src body with the one PMF call replaced by the
-address switch. The tag text names the class and the mechanism. The siblings
+(disassembled in `unmatched/MgBase_StateDispatch.cpp` section 1). The src TUs
+COMPILE under MSVC; they cannot BEHAVE: MSVC's member pointer is 4 bytes for
+both the plain and the struct-wrapped spelling, so a table the constructors
+filled at the ROM's 8-byte stride is walked at the wrong stride, and the call
+shape through it is MSVC's own. Each host copy is the src body with the pair
+type respelled as two ints and the one PMF call replaced by the address
+switch. (Review F2 corrected the earlier wording here.) The tag text names the class and the mechanism. The siblings
 in parentheses are bodies of the same shape whose symbol MSVC folded into the
 switch that calls them, so no map row exists and they were never SHADOWS; they
 are tagged for consistency, exactly as the arm9 lane did for `func_02042ffc`.
 
 - MgBase_StateDispatch (7): 020add88 020adf2c 020b31b4 020b321c 020b3278 020b8714 020b8778
-- MgPachinko_StateDispatch (5): 020fad34 020fb60c 020fc7d0 020fda7c 020fe248
+- MgPachinko_StateDispatch (2): 020fad34 020fb60c (020fc7d0 020fda7c 020fe248 moved to REPLACED, below)
 - MgLuigi_StateDispatch (4, +2): 020f0d58 020f1e90 020f300c 020f3414 (+ 020f0044 020f0ba0)
-- MgBomroom_StateDispatch (4, +3): 020d65c8 020d836c 020d8f98 020d91b0 (+ 020d7c00 020d6278 020d5fec)
+- MgBomroom_StateDispatch (3, +3): 020d65c8 020d836c 020d91b0 (+ 020d7c00 020d6278 020d5fec; 020d8f98 moved to REPLACED)
 - MgTeresa_StateDispatch (4): 0211d5a8 0211dd0c 0211f6fc 021203ac
 - MgPachinko2_StateDispatch (3): 020fff84 0210246c 02102e8c
 - MgCoin_StateDispatch (3, +4): 020dd2cc 020de26c 020de69c (+ 020dc298 020dc754 020ddd6c 020de440)
-- MgPanel_StateDispatch (3, +8): 021050bc 02106ca4 02107358 (+ 02106bc0 02106eb8 02106f44 02106fdc 0210709c 02104ac4 02104c60 021057f0)
+- MgPanel_StateDispatch (1, +8): 021050bc (+ 02106bc0 02106eb8 02106f44 02106fdc 0210709c 02104ac4 02104c60 021057f0; 02106ca4 02107358 moved to REPLACED)
 - Mg3DEsp_StateDispatch (3, +4): 020e8d08 020e9374 020e9e00 (+ 020e9b70 020e8a44 020e8830 020e82fc)
 - MgCurling_StateDispatch (2, +3): 020e3078 020e3528 (+ 020e12d0 020e0d84 020e1214)
 - MgMemory2_StateDispatch (2, +2): 020f5c40 020f7458 (+ 020f7234 020f71c8)
@@ -114,6 +125,36 @@ Three carry a reason of their own:
   declares the 32-bit score `s8` at both ends and invents a parameter the ROM
   does not take; MSVC writes one byte of the outgoing slot and passes four
   (dumpbin evidence in the file banner). This is the body that painted 999999.
+
+### Review round 1 (F1): six more replaced, the open-coded dispatchers
+
+The independent review found six of the 43 tags FALSE: `func_ov006_020fc7d0`,
+`_020fe248`, `_020fda7c` (Pachinko), `_020d8f98` (Bomroom), `_02107358` and
+`_02106ca4` (Panel) have no member-pointer TYPE anywhere. Their src spells the
+pair as two plain ints (`struct Ent { int a; int b; }`, `int e[2]`) and
+decodes it by hand, so the stride problem does not arise and MSVC compiles
+each TU as it stands (the reviewer proved it). The one wall is the call
+through the decoded word, which is a DS code address, and the port already
+owns the answer: the per-class address switches, entered through
+`port_mg_<class>_call0/1`.
+
+So, per the review, they are REPLACED rather than retagged: a
+`MG_PMF_CALL` exact-string table in `tools/hostgen.py` (the VIRTUAL_CALL /
+DS_DIV / MMIO_EXTERN mechanism) swaps exactly the one call line per TU for the
+class seam, keeping the src's own adjusted receiver, code word and loop
+counter; the six are added to `SCENE_MG_HOSTGEN_SYMS`; the six host bodies
+are deleted. Two small entry points were added so the swap has something to
+call: `port_mg_pachinko_call1` is the `extern "C"` face on the file-static
+`pch_call1` (the framework's `port_mg_call1` knows only curling's tables and
+would report Pachinko's states UNHANDLED), and
+`port_mg_bomroom_opencoded_call0` bumps the open-coded census counter before
+forwarding, so `hal/scene_mg_bomroom.cpp`'s "only a run can say" line keeps
+convicting the shape. The three sibling bodies of the same shape that were
+never in the map (`02106bc0`, `020e8830`, `020e82fc`) keep their host copies
+but their tags now say what the wall actually is (open-coded decode, DS
+address call), not the member-pointer text.
+
+Numbers after this round are in the table at the top (linked 9142 -> 9148, documented 407 -> 404, SHADOWS 148 -> 148). Battery re-run after it: ALL GREEN, `build/battery2.log`, every minigame scene 361-389 ok, ptr_audit 0, shipping config built and its selftest rc=0.
 
 ## Not done, and why
 

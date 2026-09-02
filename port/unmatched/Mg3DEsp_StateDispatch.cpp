@@ -476,7 +476,7 @@ extern "C" void func_ov006_020e8a44(void *self)
    clean on a link and on a `::*` sweep.  ONLY THE DECODE MOVES; everything
    below the call is the src's own arithmetic, kept line for line, and it is
    what the ROM does at 0x020e8878..0x020e8918. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
+/* PORT_HOST_ABI: open-coded mwcc member-pointer decode in plain ints; the src compiles under MSVC as it stands, but the decoded code word is a DS address and the call through it is routed to the class's address switch */
 extern "C" void func_ov006_020e8830(char *base, int idx)
 {
     char *e = base + idx * 0x20;
@@ -503,7 +503,7 @@ extern "C" void func_ov006_020e8830(char *base, int idx)
    ROM'S OWN: `cmp r2,#3 / bxhs lr` at 0x020e830c, and it is kept rather than
    dropped because it is the only place in the class that states a table
    length in code. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
+/* PORT_HOST_ABI: open-coded mwcc member-pointer decode in plain ints; the src compiles under MSVC as it stands, but the decoded code word is a DS address and the call through it is routed to the class's address switch */
 extern "C" void func_ov006_020e82fc(char *c)
 {
     unsigned char idx = *(unsigned char *)(c + 0x5552);

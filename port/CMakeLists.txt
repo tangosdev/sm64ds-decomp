@@ -5077,9 +5077,25 @@ set(SCENE_MG_SOURCES
 # out as NTR_MMIO proxies, which for DISPCNT/POWCNT1 land on the same mapped
 # register page the raw writes did (ntr/io.cpp models no side effect for either).
 # src/ is untouched; the host-copy file is deleted rather than left inert.
-set(SCENE_MG_HOSTGEN_SYMS func_ov004_020aeed8 func_ov004_020af094)
+#
+# SIX MORE, the OPEN-CODED dispatchers (lane LINKMG, review F1). Their src TUs
+# spell the mwcc pair as two plain ints and decode it by hand, so MSVC compiles
+# them as they stand; the only wall is the call through the decoded DS code
+# address, and tools/hostgen.py's MG_PMF_CALL table swaps exactly that one
+# line for the class's own seam (port_mg_pachinko_call1,
+# port_mg_bomroom_opencoded_call0, port_mg_panel_call0/1). Their host copies
+# are deleted from the three Mg*_StateDispatch.cpp files; the address switches
+# those files keep are what the seam dispatches through. func_ov006_02106ca4
+# is the one .c of the six, hence the EXISTS test.
+set(SCENE_MG_HOSTGEN_SYMS func_ov004_020aeed8 func_ov004_020af094
+    func_ov006_020fc7d0 func_ov006_020fe248 func_ov006_020fda7c
+    func_ov006_020d8f98 func_ov006_02107358 func_ov006_02106ca4)
 foreach(sym IN LISTS SCENE_MG_HOSTGEN_SYMS)
-    set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
     set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
     add_custom_command(OUTPUT "${sym_out}"
         COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
