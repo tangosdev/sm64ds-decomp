@@ -398,6 +398,21 @@ if(MSVC)
 endif()
 
 # Gate 7: ModelAnim -- the game owns frame progression.
+#
+# Animation::Advance goes through hostgen (lane shadow-A): its looping arm is
+# `% len` with len 0 on a ModelAnim that carries a model and no animation (the
+# VS cap), which the ROM's ITCM divider answers with 0 and x86 idiv faults on.
+# hostgen's DS_DIV table reroutes that one modulus through ds_imod; the src
+# line is skipped in the gate-7 and gate-10 loops below and the generated file
+# is appended to both. Retires port/unmatched/Animation_AdvanceDivGuard.cpp.
+set(ANIM_ADVANCE_SYM _ZN9Animation7AdvanceEv)
+set(ANIM_ADVANCE_GEN "${CMAKE_BINARY_DIR}/host-src/src/${ANIM_ADVANCE_SYM}.cpp")
+add_custom_command(OUTPUT "${ANIM_ADVANCE_GEN}"
+    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            --out "${CMAKE_BINARY_DIR}/host-src" ${ANIM_ADVANCE_SYM}
+    DEPENDS "${PORT_REPO_ROOT_ABS}/src/${ANIM_ADVANCE_SYM}.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+    COMMENT "hostgen ${ANIM_ADVANCE_SYM}")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
 set(SLICE7_SOURCES "")
 foreach(line IN LISTS SLICE7_LINES)
@@ -405,18 +420,15 @@ foreach(line IN LISTS SLICE7_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    # Lane CAPSHOW: Animation::Advance is substituted by
-    # port/unmatched/Animation_AdvanceDivGuard.cpp -- its `% len` needs the
-    # ARM divider's n % 0 = 0, and a ModelAnim with a model and no animation
-    # (the VS cap, once the cap-visibility manager lets it show) makes len 0
-    # (measured: c0000094 on VS map 2). The manifest line is skipped HERE so
-    # slice_gate7.txt stays another lane's file, the VS_PathDivGuard shape.
+    # Animation::Advance comes from hostgen (ANIM_ADVANCE_GEN above); the
+    # manifest line is skipped HERE so slice_gate7.txt stays another lane's
+    # file, the VS_PathDivGuard shape.
     if(line STREQUAL "src/_ZN9Animation7AdvanceEv.cpp")
         continue()
     endif()
     list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Animation_AdvanceDivGuard.cpp")
+list(APPEND SLICE7_SOURCES "${ANIM_ADVANCE_GEN}")
 
 # Gate 24: BlendModelAnim -- the cross-fading ModelAnim. Rides on gate 7's
 # stack and is proven by the same smoke; see slice_gate24.txt.
@@ -728,14 +740,14 @@ foreach(line IN LISTS SLICE10_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    # Lane CAPSHOW: same substitution as the slice_gate7 loop above --
-    # Animation::Advance comes from unmatched/Animation_AdvanceDivGuard.cpp.
+    # same substitution as the slice_gate7 loop above -- Animation::Advance
+    # comes from hostgen (ANIM_ADVANCE_GEN).
     if(line STREQUAL "src/_ZN9Animation7AdvanceEv.cpp")
         continue()
     endif()
     list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Animation_AdvanceDivGuard.cpp")
+list(APPEND SLICE10_SOURCES "${ANIM_ADVANCE_GEN}")
 # fix round: func_ov002_020e5948's HOST COPY (the TexSeq Prepare SHORT-1
 # caller behind the L11 ONE_UP_MUSHROOM quarantine; Brain A's handoff,
 # re-verified against the byte-locked src -- exactly the Prepare arity

@@ -561,6 +561,18 @@ DS_DIV = {
         ("ad2 / dv", "ds_idiv(ad2, dv)"),
         ("ad1 / dv", "ds_idiv(ad1, dv)"),
     ],
+    # Lane shadow-A: Animation::Advance's looping arm, `(frame + speed + len)
+    # % len`, and len is ZERO on a ModelAnim that carries a model and no
+    # animation (the VS cap: WaterfallMist seats only the BMD for mType 4 and
+    # calls Advance every visible frame). The ROM's `bl 0x01ffabe4` answers
+    # n % 0 = 0 and parks the frame at 0; x86 idiv faults (measured:
+    # c0000094 at Advance+0x1e, VS map 2 level 43, lane CAPSHOW). This entry
+    # retires port/unmatched/Animation_AdvanceDivGuard.cpp, which was the
+    # matched source with exactly this one modulus rerouted.
+    "_ZN9Animation7AdvanceEv": [
+        ("currFrame = (currFrame + speed + (int)len) % (int)len;",
+         "currFrame = ds_imod(currFrame + speed + (int)len, (int)len);"),
+    ],
 }
 
 DS_DIV_DECL = """/* hostgen: DS integer-division semantics, see hal/cstd_div.c */
