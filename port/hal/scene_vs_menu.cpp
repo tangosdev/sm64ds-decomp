@@ -62,6 +62,7 @@
  */
 
 #include <cstdio>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
 
@@ -244,7 +245,13 @@ extern "C" {
 __declspec(allocate(".dsstate$hready0000")) __declspec(align(4))
 unsigned char data_0209fc5c[1];
 __declspec(allocate(".dsstate$hready0001")) __declspec(align(1))
-unsigned char data_0209fc5d[3];
+/* run vs16: THE TAIL MEMBER GROWS AND THE HEAD DOES NOT, which is what keeps
+   gxband_guard's 'ready' band green -- it checks that data_0209fc5d sits at
+   data_0209fc5c + 1, an offset this change does not touch. Sixteen ready
+   bytes, one per seat: func_020308d0 writes fc5c[i] = 1 for i < n and its
+   first loop was always generic upward, so the ROM's own seat fills all
+   sixteen the moment SetNumPlayers is called with sixteen. */
+unsigned char data_0209fc5d[kPortMaxPlayers - 1];
 }
 
 /* The ROM's NULL pointer-to-member pair at 0x02086b58 (kind:data(any), 8 bytes

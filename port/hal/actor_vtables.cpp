@@ -8,6 +8,7 @@
 // Base-class vtable symbols the ctor chain installs and then overwrites
 // (never dispatched between installs) are plain storage.
 #include <stdio.h>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <stdlib.h>
 
 #include "ActorBase.h"
@@ -413,7 +414,9 @@ int VT2[20];    /* ...and its sibling: SphereClsn's D1 spells its three
                    here. A slot that is actually dispatched must never come
                    through one of them. */
 void *data_02099204[20];   /* WithMeshClsn's own vtable, same treatment */
-short data_0209f358[4];    /* the coin counter GiveCoins increments */
+/* the coin counter GiveCoins increments, PER PLAYER -- HUD::Behavior reads
+   data_0209f358[data_0209f250]. run vs16: sixteen. */
+short data_0209f358[kPortMaxPlayers];
 unsigned char data_0209f208; /* the current-star index PowerStar reads */
 short data_0209f308;         /* the star-marker timer FUN_0202a130 arms */
 unsigned char data_0209f1f4; /* ...and the flag it clears with it */

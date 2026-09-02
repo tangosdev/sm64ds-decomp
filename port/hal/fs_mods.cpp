@@ -80,6 +80,7 @@
 // indices point backward into pools that do not move, so removing one row
 // and decrementing the count leaves every surviving reference intact.
 #include <stdio.h>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <stdlib.h>
 #include <string.h>
 #ifdef _WIN32
@@ -2129,7 +2130,13 @@ struct VsColorSpec {
     u8  shoes[3];
 };
 
-VsColorSpec g_vsc[4];
+/* run vs16: sixteen, moving in the same commit set as SM64DS_VS_NAMES per the
+   coordinator's ruling. See the banner above and hal/star_flow.cpp's copy of
+   the same grammar note -- the two strings share one per-field grammar and one
+   comma-count rule, which is the half of the ruling that stops two readers
+   from splitting them slightly differently. */
+VsColorSpec g_vsc[kPortMaxPlayers];
+int g_vsc_fields;       /* 4 or 16, whichever the string carried */
 int g_vsc_state;        /* 0 not read, 1 read */
 int g_vsc_any;
 u8 *g_vsc_blob;
@@ -2159,9 +2166,12 @@ void vsc_parse(void)
     if (!e)
         return;                     /* absent: the common case, and silent */
     len = (unsigned)strlen(e);
-    if (len < 3 || len > 55) {      /* 4 x 13 + 3 commas */
+    /* 16 x 13 + 15 = 223 at the wide shape, 55 at the narrow one. The comma
+       count below decides which; this only has to not reject a legal one. */
+    if (len < 3 || len > 223) {
         fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: %u bytes, the "
-                        "contract allows 3..55\n", len);
+                        "contract allows 3..55 (four fields) or 3..223 "
+                        "(sixteen)\n", len);
         return;
     }
     commas = 0;
@@ -2176,9 +2186,14 @@ void vsc_parse(void)
             return;
         }
     }
-    if (commas != 3) {
+    if (commas == kPortNarrowPlayers - 1) {
+        g_vsc_fields = kPortNarrowPlayers;
+    } else if (commas == kPortMaxPlayers - 1) {
+        g_vsc_fields = kPortMaxPlayers;
+    } else {
         fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: %u comma(s), the "
-                        "contract requires exactly 3\n", commas);
+                        "contract requires exactly 3 (four fields) or exactly "
+                        "15 (sixteen)\n", commas);
         return;
     }
     start = 0;
@@ -2189,14 +2204,14 @@ void vsc_parse(void)
             if (!vsc_field(e + start, i - start, &s)) {
                 fprintf(stderr, "[mods] SM64DS_VS_COLORS ignored: field %u is "
                                 "neither empty nor bbbbbb:ssssss\n", slot);
-                for (int k = 0; k < 4; ++k) g_vsc[k].set = 0;
+                for (int k = 0; k < kPortMaxPlayers; ++k) g_vsc[k].set = 0;
                 return;
             }
             g_vsc[slot++] = s;
             start = i + 1;
         }
     }
-    for (int k = 0; k < 4; ++k)
+    for (int k = 0; k < g_vsc_fields; ++k)
         if (g_vsc[k].set)
             g_vsc_any = 1;
     if (!g_vsc_any) {
@@ -2204,13 +2219,38 @@ void vsc_parse(void)
                         "Yoshi keeps his built-in colour\n");
         return;
     }
-    for (int k = 0; k < 4; ++k) {
+    for (int k = 0; k < g_vsc_fields; ++k) {
         if (!g_vsc[k].set)
             continue;
         fprintf(stderr, "[mods] SM64DS_VS_COLORS slot %d: body %02x%02x%02x "
                         "shoes %02x%02x%02x\n", k,
                 g_vsc[k].body[0], g_vsc[k].body[1], g_vsc[k].body[2],
                 g_vsc[k].shoes[0], g_vsc[k].shoes[1], g_vsc[k].shoes[2]);
+    }
+    /* AND THE ONE CEILING THIS LANE COULD NOT MOVE, said plainly rather than
+       left to be discovered on screen.
+
+       yoshi_all_16p_pl is 128 bytes: FOUR rows of sixteen colours, and the
+       size is checked exactly (`sz != 128`) because the whole patch is built
+       against that shape. The game reads one row per player out of that one
+       palette. So above four players the rows are REUSED -- slot 4 wears slot
+       0's colours, slot 5 wears slot 1's, and so on -- and there is nothing
+       this file can do about it, because growing the palette means growing an
+       asset the game allocates from its own data rather than a host array the
+       port hosts.
+
+       Sixteen authored palette rows are OWED, per status/VS16.md. Until they
+       exist this is a cosmetic collision at five or more players, not a
+       correctness one: identity is mPlayerNo and the name string, never the
+       colour. */
+    if (g_vsc_fields > kPortNarrowPlayers) {
+        fprintf(stderr, "[mods] SM64DS_VS_COLORS: %d fields read, but the "
+                        "ROM's Yoshi palette has only %d rows -- slot n wears "
+                        "slot (n %% %d)'s colours above %d players. Sixteen "
+                        "authored rows are owed; identity is the name and the "
+                        "slot, never the colour.\n",
+                g_vsc_fields, kPortNarrowPlayers, kPortNarrowPlayers,
+                kPortNarrowPlayers);
     }
 }
 

@@ -438,7 +438,7 @@ def selftest_dial(c):
     print("\n-- the player-count dial (contract, and the refusal)")
     status, health = c.get("health")
     check("health names the contract range and the dial's ceiling",
-          health.get("contract_min") == 1 and health.get("contract_v") == 2
+          health.get("contract_min") == 1 and health.get("contract_v") == 3
           and "dial_max" in health, health)
     dial_max = health["dial_max"]
 
@@ -1227,12 +1227,17 @@ def negatives(c, out_dir=None):
         400, "bad_shape", "one object, never an array, never a bare value.",
         raw_body=b'[{"v":1}]')
 
-    # The contract is a RANGE now (v1..v2), so the refusal is for a version
-    # outside it, not for "anything but 1". A version above what the server
-    # speaks is the case that matters: a newer launcher against an older
+    # The contract is a RANGE (v1..v3 since run vs16), so the refusal is for a
+    # version outside it, not for "anything but 1". A version above what the
+    # server speaks is the case that matters: a newer launcher against an older
     # server has to be told plainly rather than half-served.
+    #
+    # The number here MUST track CONTRACT_V, and pinning it at a literal is why
+    # this check had to be edited twice now. It reads the server's own answer
+    # and asks for one past it, so the next bump does not touch this line.
+    _st, _h = c.get("health")
     rej("a version above what the server speaks -> 400 bad_version", "create",
-        {"v": 3, "nick": "x"}, 400, "bad_version",
+        {"v": _h["contract_v"] + 1, "nick": "x"}, 400, "bad_version",
         "adding a field is a version bump, so the version is checked before "
         "the fields are.")
 

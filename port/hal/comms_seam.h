@@ -234,7 +234,28 @@ enum CommsRole {
     kCommsRoleDownloadHost = 3,
 };
 
-enum : int { kCommsMaxPlayers = 4 };
+// THE CARTRIDGE DID FOUR. THIS PORT HOSTS SIXTEEN, AND THAT IS A MOD.
+//
+// Run vs16. The owner's ruling stands over this line: online multiplayer is a
+// host-layer opt-in and is already a mod, while the DS-faithful local path
+// stays the default. So there are TWO numbers here and they are not the same
+// question:
+//
+//   kCommsNarrowPlayers  -- what the DS did, and what wire version 2 carries.
+//                           A session of four or fewer speaks exactly the
+//                           bytes this port has always spoken. Nothing about
+//                           a 2P or 4P match changes because this file grew.
+//   kCommsMaxPlayers     -- what this port's own storage is sized for. Every
+//                           per-slot array in the carrier, the conductor and
+//                           the sync layer is this wide. Sessions above four
+//                           speak wire version 3, whose datagram is longer and
+//                           whose live mask is 16 bits.
+//
+// The narrow number is NOT "the old value left behind for compatibility". It
+// is the width of a real, still-supported wire, and a build that speaks 3 also
+// speaks 2 -- see THE TWO WIRES in hal/comms_loopback.cpp.
+enum : int { kCommsNarrowPlayers = 4 };
+enum : int { kCommsMaxPlayers = 16 };
 enum : int { kCommsBlockBytes = 0x20 };
 
 // ---------------------------------------------------------------------------

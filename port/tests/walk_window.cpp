@@ -406,6 +406,7 @@ static bool winapi_load(void)
    external seams (port_rich_dump_ex, port_crash_dir_get) the quarantine walker
    in port/unmatched/func_02043fdc_hostcopy.cpp weak-links against. */
 #define PORT_FAULT_PROBE_DEFINE_EXPORTS
+#include "hal/vs_width.h"   /* run vs16: the port's player width */
 #include "fault_probe.h"
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
@@ -6804,7 +6805,15 @@ int main(void)
            so. */
         {
             int me = (int)data_0209f250;
-            if (me < 0 || me >= 4 || !data_0209f394[me]) {
+            /* run vs16: kPortMaxPlayers, not 4. This literal was the ONE thing
+               standing between a five-player session and a five-player match:
+               the wire paired, the fifth body spawned, data_0209f394[4] held a
+               real actor -- and the harness threw all of it away and followed
+               slot 0's body instead, because its range check still believed
+               the roster was four wide. It said so in its own log line every
+               run, which is the only reason it took minutes rather than
+               hours. */
+            if (me < 0 || me >= kPortMaxPlayers || !data_0209f394[me]) {
                 if (me != 0)
                     fprintf(stderr,
                             "[vs] local player index %d has no actor; the "
@@ -9427,7 +9436,8 @@ int main(void)
                    at all. */
                 {
                     int me2 = (int)data_0209f250;
-                    if (me2 < 0 || me2 >= 4 || !data_0209f394[me2]) me2 = 0;
+                    if (me2 < 0 || me2 >= kPortMaxPlayers
+                            || !data_0209f394[me2]) me2 = 0;   /* run vs16 */
                     player = data_0209f394[me2];
                 }
                 if (!player) {

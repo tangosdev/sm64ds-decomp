@@ -23,6 +23,7 @@
 // plus a probe surface (port_course_probe_*) the harnesses drive so every
 // one of those paths can be shown moving with a log rather than asserted.
 #include <cstdio>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
 
@@ -708,7 +709,13 @@ void port_vs_countdown_tick(void)
     if (data_0209f2d8 != 1)
         return;
     int cnt = 0;
-    for (int i = 0; i < 4; i++) {
+    /* run vs16: over data_0209fc50 -- what SetNumPlayers seated -- rather than
+       four. The gate below already compares against that same number, so a
+       census that stopped at four could never satisfy it above four players
+       and the countdown would have hung forever at the fifth seat. */
+    const int np_ready = (int)data_0209fc50 < kPortNarrowPlayers
+                         ? kPortNarrowPlayers : (int)data_0209fc50;
+    for (int i = 0; i < np_ready && i < kPortMaxPlayers; i++) {
         const char *p = (const char *)data_0209f394[i];
         if (p != 0 && *(const unsigned char *)(p + 0x711) != 0)
             cnt++;
@@ -931,7 +938,39 @@ static int g_end_by_target;
    the array holds `grace` frames LATER, which on a first-to-2 match measured
    3,0,0,0 -- the third star landed inside the grace window. The launcher reads
    the marker, so the marker has to carry the scores the match was decided on. */
-static int g_end_scores[4];
+/* run vs16: sixteen. g_vs_players below is how many of them a given match
+   actually has, so nothing here has to guess. */
+static int g_end_scores[kPortMaxPlayers];
+
+/* HOW MANY PEOPLE ARE IN THIS MATCH, read once from the same knob that decides
+   the wire and the names grammar (hal/comms_loopback.cpp, THE TWO WIRES). One
+   number, one source: if this disagreed with the wire the scoreboard would
+   describe a different match than the one being played. Absent or out of
+   range is FOUR, which is what every existing deployment and every existing
+   proof gets. */
+static int g_vs_players_cache;
+static int vs_players(void)
+{
+    if (g_vs_players_cache) return g_vs_players_cache;
+    g_vs_players_cache = kPortNarrowPlayers;
+    if (const char *e = std::getenv("SM64DS_VS_PLAYERS")) {
+        const int v = std::atoi(e);
+        /* FLOORED AT FOUR, and the floor is the whole reason this lane can
+           claim a two- or four-player match is unchanged.
+
+           Every loop below that used to be a literal `< 4` now runs to this
+           number. Without the floor, a two-player session would run those loops
+           to TWO -- which happens to produce the same answers today (the slots
+           it skips have no actor and a zero score) but is a different amount of
+           work over different memory, and "it comes out the same" is not the
+           same claim as "it does the same thing". With the floor, four or fewer
+           players is arithmetically identical to the code before this lane, and
+           only a fifth player changes anything. */
+        if (v > kPortNarrowPlayers && v <= kPortMaxPlayers)
+            g_vs_players_cache = v;
+    }
+    return g_vs_players_cache;
+}
 static int g_end_total;
 
 /* THE PLAY HOLD. Nonzero once the match is over, which is what
@@ -1025,24 +1064,54 @@ extern unsigned char data_0209f4ac[];  /* touching */
  * arrival order, which need not match lobby seat order. GAME_MAX_PLAYERS is 2
  * today and the mapping is a fact; the lane that raises it inherits 4.7's
  * paragraph on it. */
-static char g_vs_names[4][17];
+/* RUN vs16: TWO LEGAL SHAPES, AND THE SAME NUMBER DECIDES BOTH THE SHAPE AND
+ * THE WIRE.
+ *
+ * The coordinator's cross-lane ruling, carried in
+ * port/tools/lobby/README.md section 3:
+ *
+ *     NAMES + COLORS exactly-4 today, with the same per-field grammar
+ *     (exactly 15 commas); future = 16 fields together in one coordinated
+ *     version change when the wire moves; never independently.
+ *
+ * The wire has now moved (hal/comms_loopback.cpp, THE TWO WIRES), so this IS
+ * that coordinated change, and it lands in one commit set with the colours
+ * reader in hal/fs_mods.cpp, the lobby's build_names/build_colors and the
+ * launcher's two validators. Not one of the five moved on its own.
+ *
+ * THE GRAMMAR: exactly 3 commas (four fields, a narrow session) OR exactly 15
+ * commas (sixteen fields, a wide one). Nothing between, nothing else. That
+ * keeps the property the ruling exists to protect -- one variant cannot be
+ * mis-parsed as the other, because the comma count settles it in one pass with
+ * no count prefix for two readers to disagree about.
+ *
+ * A FOUR-FIELD STRING IS READ EXACTLY AS IT ALWAYS WAS, down to the log line,
+ * so every existing proof and every 2P/4P match is untouched. */
+static char g_vs_names[kPortMaxPlayers][17];
 static int  g_vs_names_read;
+static int  g_vs_names_fields;   /* 4 or 16, whichever the string carried */
 
 static void vs_names_load(void)
 {
     if (g_vs_names_read)
         return;
     g_vs_names_read = 1;
-    for (int i = 0; i < 4; ++i) g_vs_names[i][0] = 0;
+    g_vs_names_fields = kPortNarrowPlayers;
+    for (int i = 0; i < kPortMaxPlayers; ++i) g_vs_names[i][0] = 0;
 
     const char *e = std::getenv("SM64DS_VS_NAMES");
     if (!e)
         return;                      /* absent: the common case, and silent */
 
     const size_t len = std::strlen(e);
-    if (len < 1 || len > 67) {
+    /* 16 x 16 + 15 = 271 at the wide shape, 67 at the narrow one. The cap is
+       the wide one because the COMMA COUNT below is what decides the shape,
+       and a length check that rejected a legal wide string before reaching it
+       would be a second opinion about the grammar. */
+    if (len < 1 || len > 271) {
         fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: %u bytes, the contract "
-                "allows 1..67\n", (unsigned)len);
+                "allows 1..67 (four fields) or 1..271 (sixteen)\n",
+                (unsigned)len);
         return;
     }
     int commas = 0;
@@ -1055,20 +1124,26 @@ static void vs_names_load(void)
             return;
         }
     }
-    if (commas != 3) {
+    if (commas == kPortNarrowPlayers - 1) {
+        g_vs_names_fields = kPortNarrowPlayers;
+    } else if (commas == kPortMaxPlayers - 1) {
+        g_vs_names_fields = kPortMaxPlayers;
+    } else {
         fprintf(stderr, "[vs] SM64DS_VS_NAMES ignored: %d comma(s), the "
-                "contract requires exactly 3\n", commas);
+                "contract requires exactly 3 (four fields) or exactly 15 "
+                "(sixteen)\n", commas);
         return;
     }
+    const int nf = g_vs_names_fields;
     /* Split. Every field is already known to be printable and comma-free. */
-    char tmp[4][17];
+    char tmp[kPortMaxPlayers][17];
     int slot = 0, w = 0;
     for (size_t i = 0; i <= len; ++i) {
         const char c = (i < len) ? e[i] : ',';
         if (c == ',') {
-            if (slot < 4) { tmp[slot][w] = 0; }
+            if (slot < nf) { tmp[slot][w] = 0; }
             ++slot; w = 0;
-            if (slot > 4) break;
+            if (slot > nf) break;
             continue;
         }
         if (w >= 16) {
@@ -1076,10 +1151,10 @@ static void vs_names_load(void)
                     "than 16 bytes\n", slot);
             return;
         }
-        if (slot < 4) tmp[slot][w] = c;
+        if (slot < nf) tmp[slot][w] = c;
         ++w;
     }
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < nf; ++i) {
         /* the spec says upstream already stripped edge spaces and says the
            reader may trim again harmlessly; harmless is worth having */
         char *b = tmp[i];
@@ -1090,18 +1165,133 @@ static void vs_names_load(void)
         std::memcpy(g_vs_names[i], b + a, m);
         g_vs_names[i][m] = 0;
     }
-    fprintf(stderr, "[vs] SM64DS_VS_NAMES accepted: [%s] [%s] [%s] [%s]\n",
-            g_vs_names[0], g_vs_names[1], g_vs_names[2], g_vs_names[3]);
+    if (nf == kPortNarrowPlayers) {
+        /* the four-field line, unchanged to the byte, because every existing
+           proof greps for exactly this shape */
+        fprintf(stderr, "[vs] SM64DS_VS_NAMES accepted: [%s] [%s] [%s] [%s]\n",
+                g_vs_names[0], g_vs_names[1], g_vs_names[2], g_vs_names[3]);
+    } else {
+        fprintf(stderr, "[vs] SM64DS_VS_NAMES accepted, %d fields:", nf);
+        for (int i = 0; i < nf; ++i) fprintf(stderr, " [%s]", g_vs_names[i]);
+        fprintf(stderr, "\n");
+    }
 }
 
 /* The name for a slot, or 0 when that slot has none (empty field, or the whole
    variable was rejected). Callers fall back to PLAYER n+1. */
 static const char *vs_name_for(int slot)
 {
-    if (slot < 0 || slot > 3)
+    if (slot < 0 || slot >= kPortMaxPlayers)
         return 0;
     vs_names_load();
+    /* A slot past what the string carried has no name, the same answer an
+       empty field gives -- the caller falls back to PLAYER n+1. */
+    if (slot >= g_vs_names_fields)
+        return 0;
     return g_vs_names[slot][0] ? g_vs_names[slot] : 0;
+}
+
+
+/* ---- THE SCOREBOARD LINE, at four players and at sixteen -------------------
+ *
+ * THE MECHANICAL PART IS EXACT AND THE DISPLAY IS DELIBERATELY BASIC, which is
+ * the owner's standing rule for UI a lane was not asked to design. The winner,
+ * the draw test and the marker below all run over every player in the match.
+ * What the BANNER shows is a layout question, and a layout question belongs to
+ * the owner's eyes, not to this file's judgement.
+ *
+ * AT FOUR OR FEWER: exactly "%d - %d - %d - %d", four numbers, always, even at
+ * two players. Byte-identical to what this banner has printed since VSEND, so
+ * every capture, every proof and the launcher's own marker parser see what
+ * they have always seen.
+ *
+ * ABOVE FOUR: sixteen scores in one line at this font is a wall of digits, and
+ * the honest simple thing is to show the two that a player actually wants --
+ * the leader's and his own -- plus how many people are playing. So the default
+ * is:
+ *
+ *     MATCH OVER  -  tango WINS  9   you 4   (16 players)
+ *
+ * TWO ALTERNATIVES ARE BUILT AND SELECTABLE so the owner can look at all three
+ * rather than at a description of them. SM64DS_VS_BANNER picks:
+ *
+ *     basic  (default)  leader + you + the count, as above
+ *     top4              the four highest scores, "9 - 7 - 4 - 2  (16 players)"
+ *     all               every score in slot order, comma separated
+ *
+ * None of the three is chosen here as the right one. Captures of all three are
+ * banked for the owner in C:\tmp\vs16-out; the default is `basic` only because
+ * it is the least.
+ * ------------------------------------------------------------------------- */
+static int vs_banner_mode(void)
+{
+    static int m = -1;
+    if (m >= 0) return m;
+    m = 0;                                   /* basic */
+    if (const char *e = std::getenv("SM64DS_VS_BANNER")) {
+        if (std::strcmp(e, "top4") == 0)     m = 1;
+        else if (std::strcmp(e, "all") == 0) m = 2;
+    }
+    return m;
+}
+
+static int vs_score_list(char *out, int cap, int np, int best)
+{
+    if (cap <= 1) return 0;
+    if (np <= kPortNarrowPlayers) {
+        return std::snprintf(out, (size_t)cap, "%d - %d - %d - %d",
+                             g_end_scores[0], g_end_scores[1],
+                             g_end_scores[2], g_end_scores[3]);
+    }
+    const int me = (int)data_0209f250;
+    switch (vs_banner_mode()) {
+    case 2: {                                /* all */
+        /* snprintf RETURNS THE LENGTH IT WANTED, not the length it wrote, so
+           an accumulating `w += snprintf(...)` walks PAST the buffer the moment
+           one call truncates -- and the next iteration then writes at
+           out + w, outside it. The loop guard alone does not save it: it is
+           checked before the call that overruns, not after. So clamp on every
+           step. Sixteen scores at up to two digits plus commas is 47 bytes
+           against a caller that guarantees at least 64, so this cannot fire
+           today; it is here because "cannot fire today" is a property of the
+           caller and this function does not get to assume it. */
+        int w = 0;
+        for (int i = 0; i < np && w < cap - 1; ++i) {
+            const int k = std::snprintf(out + w, (size_t)(cap - w), "%s%d",
+                                        i ? "," : "", g_end_scores[i]);
+            if (k < 0) break;
+            w += k;
+            if (w > cap - 1) { w = cap - 1; break; }
+        }
+        return w;
+    }
+    case 1: {                                /* top4 */
+        /* the four highest, by value, without sorting the array itself --
+           selection over a copy of the indices, sixteen elements, four passes */
+        int pick[kPortNarrowPlayers];
+        int used = 0;
+        for (int k = 0; k < kPortNarrowPlayers; ++k) {
+            int bi = -1;
+            for (int i = 0; i < np; ++i) {
+                if (used & (1 << i)) continue;
+                if (bi < 0 || g_end_scores[i] > g_end_scores[bi]) bi = i;
+            }
+            if (bi < 0) { pick[k] = 0; continue; }
+            used |= 1 << bi;
+            pick[k] = g_end_scores[bi];
+        }
+        return std::snprintf(out, (size_t)cap, "%d - %d - %d - %d  (%d players)",
+                             pick[0], pick[1], pick[2], pick[3], np);
+    }
+    default: {                               /* basic */
+        const int mine = (me >= 0 && me < np) ? g_end_scores[me] : 0;
+        if (me == best)
+            return std::snprintf(out, (size_t)cap, "%d   (%d players)",
+                                 g_end_scores[best], np);
+        return std::snprintf(out, (size_t)cap, "%d   you %d   (%d players)",
+                             g_end_scores[best], mine, np);
+    }
+    }
 }
 
 extern "C" int port_vs_match_end_banner(char *out, int n)
@@ -1116,15 +1306,21 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
     }
     if (!on || g_end_fired < 0 || data_0209f2d8 != 1 || n < 64)
         return 0;
+    /* THE MECHANICAL HALF IS EXACT AT EVERY N. The winner, the draw test and
+       the score list all run over the players who are actually in the match,
+       not over four. What the DISPLAY does with sixteen scores is a separate
+       question and is answered below. */
+    const int np = vs_players();
     int best = 0, ties = 0;
-    for (int i = 1; i < 4; ++i)
+    for (int i = 1; i < np; ++i)
         if (g_end_scores[i] > g_end_scores[best]) best = i;
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < np; ++i)
         if (i != best && g_end_scores[i] == g_end_scores[best]) ++ties;
     if (ties) {
-        std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  %d - %d - %d - %d",
-                      g_end_scores[0], g_end_scores[1], g_end_scores[2],
-                      g_end_scores[3]);
+        int w = std::snprintf(out, (size_t)n, "MATCH OVER  -  DRAW  ");
+        if (w < 0) w = 0;
+        if (w > n - 1) w = n - 1;
+        vs_score_list(out + w, n - w, np, best);
     } else {
         /* the nickname if the lobby gave us one for THIS slot, the ROM-shaped
            PLAYER n+1 otherwise -- per slot, because a room can have one named
@@ -1135,9 +1331,10 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
             std::snprintf(who, sizeof who, "%s", nick);
         else
             std::snprintf(who, sizeof who, "PLAYER %d", best + 1);
-        std::snprintf(out, (size_t)n, "MATCH OVER  -  %s WINS  %d - %d - %d - %d",
-                      who, g_end_scores[0], g_end_scores[1], g_end_scores[2],
-                      g_end_scores[3]);
+        int w = std::snprintf(out, (size_t)n, "MATCH OVER  -  %s WINS  ", who);
+        if (w < 0) w = 0;
+        if (w > n - 1) w = n - 1;
+        vs_score_list(out + w, n - w, np, best);
     }
     return 1;
 }
@@ -1151,7 +1348,7 @@ extern "C" void port_vs_match_end_hold(void)
     }
     if (!on || g_end_fired < 0 || data_0209f2d8 != 1)
         return;
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < vs_players(); ++i) {
         const int o = i * 0x18;
         *(short *)(data_0209f49c + o) = 0;
         *(short *)(data_0209f49e + o) = 0;
@@ -1224,15 +1421,20 @@ extern "C" int port_vs_match_end_poll(int frame)
          * exit, so there is one match-over mechanism to reason about and not
          * two that drift. */
         int star_winner = -1;
+        const int np_end = vs_players();
         if (star_target > 0) {
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < np_end; ++i)
                 if ((int)data_0209f310[i] >= star_target) { star_winner = i; break; }
         }
         if (!timeup && star_winner < 0)
             return 0;
         g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
-        for (int i = 0; i < 4; ++i) g_end_scores[i] = (int)data_0209f310[i];
+        /* run vs16: latch every player's score. data_0209f310 is hosted 32
+           bytes wide as a guarded contiguous band (hal/actor_classes_star.cpp),
+           so sixteen is inside the storage the port already had -- this loop
+           was the only thing stopping at four. */
+        for (int i = 0; i < np_end; ++i) g_end_scores[i] = (int)data_0209f310[i];
         g_end_total = (int)NumVsStarsObtained();
         if (star_winner >= 0)
             fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
@@ -1325,20 +1527,43 @@ extern "C" int port_vs_match_end_poll(int frame)
      * The name is printed raw because it has already passed the 4.7 grammar
      * check on read: printable ASCII, no comma, at most 16 bytes. It therefore
      * cannot break the field grammar of this line. */
+    const int np_marker = vs_players();
     int win_slot = -1;
     {
         int b = 0, t = 0;
-        for (int i = 1; i < 4; ++i)
+        for (int i = 1; i < np_marker; ++i)
             if (g_end_scores[i] > g_end_scores[b]) b = i;
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < np_marker; ++i)
             if (i != b && g_end_scores[i] == g_end_scores[b]) ++t;
         if (!t) win_slot = b;
     }
+    /* THE MARKER'S SCORE FIELD CARRIES EVERY PLAYER, always, whatever the
+       banner chose to draw -- it is the machine-readable record the launcher
+       and the crash pipeline parse, and it must not be a summary. At four or
+       fewer it is the exact four-number field it has always been, so the
+       shipped launcher's parser is untouched; above four it is np numbers in
+       the same comma-separated shape, which is the one extension a parser
+       written for "split on comma" reads for free. */
+    char scores_field[kPortMaxPlayers * 6];
+    {
+        int w = 0;
+        const int cap = (int)sizeof scores_field;
+        const int nprint = np_marker < kPortNarrowPlayers
+                           ? kPortNarrowPlayers : np_marker;
+        for (int i = 0; i < nprint && w < cap - 1; ++i) {
+            const int k = std::snprintf(scores_field + w, (size_t)(cap - w),
+                                        "%s%d", i ? "," : "",
+                                        g_end_scores[i]);
+            if (k < 0) break;
+            w += k;
+            if (w > cap - 1) { w = cap - 1; break; }
+        }
+    }
     const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
-    fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%d,%d,%d,%d total=%d "
+    fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%s players=%d total=%d "
             "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
             g_end_by_target ? "star-target" : "time-up",
-            g_end_scores[0], g_end_scores[1], g_end_scores[2], g_end_scores[3],
+            scores_field, np_marker,
             g_end_total, (unsigned)data_02092664,
             data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
                                : (data_02092664 == 0x187 ? "none" : "other"),

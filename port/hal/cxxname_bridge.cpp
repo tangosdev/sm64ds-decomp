@@ -5,6 +5,7 @@
 // extern "C" helper because one TU cannot name both linkages of the same
 // identifier.
 #include <cstdio>
+#include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
 #include "MeshColliderBase.h"
@@ -314,7 +315,10 @@ int data_0208e380[2];
 int data_0209b450[2];
 int data_0209b458[2];
 int data_0209f21c[8];
-int data_0209f394[8];
+/* THE PER-SLOT Player* TABLE, and the one array in this list every VS path
+   walks: the entrance loader writes it, the sync layer reads it by slot, the
+   conductor censuses it. run vs16: sixteen seats. */
+int data_0209f394[kPortMaxPlayers];
 DSSTATE_END
 }
 
