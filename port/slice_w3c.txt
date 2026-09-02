@@ -24,11 +24,10 @@ src/JetStream_Spawn.c
 #
 # ---- WATER_RING (244) ------------------------------------------------------
 #
-# A 912-byte Enemy. FOUR matched TUs are LEFT OUT ON PURPOSE, host-copied in
+# A 912-byte Enemy. THREE matched TUs are LEFT OUT ON PURPOSE, host-copied in
 # port/unmatched/Ov064_WaterRing.cpp:
 #   _ZN9WaterRing8BehaviorEv.cpp   mwcc PMF over a forward-declared struct
 #   func_ov064_02119ecc.cpp        the same, the state-enter half
-#   _ZN9WaterRing6RenderEv.cpp     local six-virtual Model slot-5 shadow
 #   func_ov064_02119afc.cpp        a decl_common.h REDECLARATION, MEASURED off
 #     the first link of this slice rather than predicted: the TU declares
 #     `void func_ov064_02119ecc(void*, void*)` inside its own extern "C" block
@@ -44,6 +43,15 @@ src/JetStream_Spawn.c
 # Both destructors ARE here: src/_ZN9WaterRingD1Ev.c and D0Ev.c are .c bodies
 # with C linkage that restore _ZTV9WaterRing, so neither needs a host thunk --
 # the gate-179 Piece reading, not the Clam one.
+#
+# WaterRing::Render RETIRED to its matched TU. It dispatches its plain Model at
+# +0x30c through a local six-virtual shadow (slot 5 in ROM/Itanium numbering),
+# and hal/cxxname_bridge.cpp dual-fills _ZTV5Model[5] with mv_render, so the
+# shadow call reaches Model::Render. The host copy it replaced passed a NULL
+# scale where the ROM (overlay_0064.bin 0x02119fc8: add r1, r4, #0x80 before the
+# blx through slot 5) and the matched TU both pass this+0x80, so this also fixes
+# that null.
+src/_ZN9WaterRing6RenderEv.cpp
 src/WaterRing_Spawn.c
 src/_ZN9WaterRing13InitResourcesEv.cpp
 src/_ZN9WaterRing16CleanupResourcesEv.c

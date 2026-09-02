@@ -65,18 +65,17 @@ src/func_ov018_02112730.cpp
 # the shadow-class TU. src/_ZN9OneUpLogoD1Ev.cpp stays in src/ as the matched
 # proof; it is not part of the port build.
 src/OneUpLogo_Spawn.c
-# InitResources: HOST COPY at unmatched/OneUpLogo_InitResources.cpp (wired in
-# CMakeLists). Calls TextureSequence::Prepare through the SHORT-1 seam
-# (FINAL_TABLE.csv's row for this callee): the Prepare veneer is a pure
-# passthrough tail-call into func_02046d50, whose matched body reads only
+# InitResources: RETIRED PLAIN to the matched TU. It calls
+# TextureSequence::Prepare through the SHORT-1 seam: the Prepare veneer is a
+# pure passthrough tail-call into func_02046d50, whose matched body reads only
 # r0 = the BMD model file (name table SEARCHED) and r1 = the BTP anim file
-# (name table WALKED) -- the gate-191 MotherPenguin register-level
-# derivation. The host fix is therefore (model.file, anim.file, anim.file)
-# against the port's three-argument bridge; the third slot is arity
-# padding func_02046d50 never reads. (An earlier revision of the host copy
-# passed this+0x124 first on a pre-derivation "missing this register"
-# reading -- corrected in the review fix round; see the host copy's own
-# header.)
+# (name table WALKED). The matched src declares Prepare 2-arg (bmd, btp) and
+# calls Prepare(model.file, anim.file), so against the port's 3-arg bridge
+# (self, bmd, btp) cdecl argument aliasing lands self=model, bmd=animFile,
+# btp=dead -- exactly the (model, animFile) order the retired host copy passed
+# by hand, and func_02046d50 never reads the third value. The host copy
+# unmatched/OneUpLogo_InitResources.cpp is dropped from CMakeLists.
+src/_ZN9OneUpLogo13InitResourcesEv.cpp
 src/_ZN9OneUpLogo16CleanupResourcesEv.c
 src/_ZN9OneUpLogo8BehaviorEv.c
 src/_ZN9OneUpLogo6RenderEv.cpp

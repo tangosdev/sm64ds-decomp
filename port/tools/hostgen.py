@@ -464,6 +464,31 @@ MEMBER_REDECL = {
 }
 
 
+# ---- EXTERNAL DATA LEFT OUTSIDE THE TU'S OWN extern "C" BLOCK -----------------
+#
+# A recovered TU can declare its external data symbols ABOVE its own
+# `extern "C"` block, so MSVC gives them C++ linkage and asks the linker for
+# ?data_ov070_02123530@@3USharedFilePtr@@A and its siblings, while the port's
+# mount emits those names with C linkage as every other consumer spells them --
+# so each such declaration is an LNK2019. mwccarm did not care: the ROM carries
+# these names under a C++ mangling of its own, and the decomp author's placement
+# was a matched-source detail, not a linkage decision. The fix moves the
+# `extern "C" {` opener up so the data declarations fall inside it and take C
+# linkage. The body is untouched; this is purely the declaration-linkage
+# spelling that unmatched/FlyGuy_InitResources.cpp used to carry by hand (the
+# Coffin_InitResources.cpp shape). Exact strings, hard-errored by apply_patches
+# if the source moves.
+EXTERN_C_DATA = {
+    "_ZN6FlyGuy13InitResourcesEv": [
+        ("typedef struct PMF PMF;\nextern SharedFilePtr data_ov070_02123530;",
+         'typedef struct PMF PMF;\nextern "C" {\n'
+         "extern SharedFilePtr data_ov070_02123530;"),
+        ('extern PMF data_ov070_0212359c;\nextern "C" {\n',
+         "extern PMF data_ov070_0212359c;\n"),
+    ],
+}
+
+
 # ---- DS INTEGER DIVISION -----------------------------------------------------
 #
 # mwccarm compiles `/` and `%` on ints to a call to __aeabi_idiv (ITCM
@@ -521,6 +546,16 @@ DS_DIV = {
     "_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3": [
         ("(int)*(u16*)(p + 0x2e) % (int)self->unk_006",
          "ds_imod((int)*(u16*)(p + 0x2e), (int)self->unk_006)"),
+    ],
+    # PathLift's path-follow tick: dv = cstd::fdiv(len2, speed) / 0x1000 is 0
+    # whenever a path segment is shorter than one frame of travel, and the two
+    # angle-step divisions below then divide by it. The ROM's AEABI idiv answers
+    # x/0 = 0, x86 idiv faults c0000094 (measured on the VS castle grounds,
+    # level 51, actor 0x1f, reproduced with SM64DS_LEVEL=51). `/ 0x1000` above
+    # is a constant divisor and stays. This retires unmatched/VS_PathDivGuard.cpp.
+    "func_ov002_020ef670": [
+        ("ad2 / dv", "ds_idiv(ad2, dv)"),
+        ("ad1 / dv", "ds_idiv(ad1, dv)"),
     ],
 }
 
@@ -752,6 +787,66 @@ MG_PMF_CALL = {
 }
 
 
+# ---- PLAYER STATE-MACHINE mwcc MEMBER-POINTER DISPATCH ----------------------
+#
+# Three Player state functions read a per-character/per-kind row that the ROM's
+# sinit copied out of a code-pointer table, and dispatch it as an mwcc member
+# pointer: obj = this + (word1 >> 1), the virtual bit is word1 & 1, and the code
+# word (word0) is either a DS code address or a DS vtable BYTE OFFSET. Hosted
+# raw, the non-virtual branch calls a ROM code address that on the host lands
+# inside the mounted ov002 DATA image and jumps into mapped data -- that is the
+# walljump crash St_WallJump_Main used to take (row0 = 0x020e200c for Mario).
+# The port owns the answer: hal_call_state_fn(self, ds_addr) maps the DS code
+# word to the hosted body, applies the ROM's null guard, and reports an unhosted
+# address as a loud no-op instead of a wild jump. Each entry swaps exactly the
+# dispatch for that seam call, the Player_St_*.cpp host copies' treatment, and
+# leaves the row decode untouched. Exact-string, like VIRTUAL_CALL / MG_PMF_CALL.
+#
+# St_Jump_Main keeps its VIRTUAL branch a raw host-vtable walk (its table's ptr
+# words are filled and the host vtables are runtime-filled with host bodies).
+# St_NoControl_Init and St_WallJump_Main route the virtual branch through the
+# seam too: their ptr words are all zero, so the branch is dead in the ROM's own
+# data and word0 there would be a DS vtable byte offset, meaningless against a
+# host vtable pointer.
+CALL_STATE_FN_DECL = 'extern "C" int hal_call_state_fn(void *, unsigned);\n'
+CALL_STATE_FN = {
+    "_ZN6Player12St_Jump_MainEv": [
+        ("      int (*f)(void*);\n      if (v & 1) {\n"
+         "        f = *(int (**)(void*))((char*)(*(int**)p2) + row[0]);\n"
+         "      } else {\n        f = (int (*)(void*))row[0];\n      }\n"
+         "      f(p2);",
+         "      if (v & 1) {\n        int (*f)(void*) =\n"
+         "            *(int (**)(void*))((char*)(*(int**)p2) + row[0]);\n"
+         "        f(p2);\n      } else {\n"
+         "        /* PORT: row[0] is a DS code address (mwcc PMF); route through the\n"
+         "           state-fn mapper instead of calling it raw */\n"
+         "        hal_call_state_fn(p2, (unsigned)row[0]);\n      }"),
+    ],
+    "_ZN6Player16St_WallJump_MainEv": [
+        ("      int (*f)(void*);\n      if (v & 1) {\n"
+         "        f = *(int(**)(void*))((char*)(*(int**)p) + row[0]);\n"
+         "      } else {\n        f = (int(*)(void*))row[0];\n      }\n"
+         "      f(p);",
+         "      if (v & 1) {\n"
+         "        /* PORT: row[0] is a DS vtable byte offset; route it, do not walk a\n"
+         "           host vtable with it */\n"
+         "        hal_call_state_fn(p, (unsigned)(*(int*)p + row[0]));\n"
+         "      } else {\n"
+         "        /* PORT: row[0] is a DS code address (mwcc PMF); route through the\n"
+         "           state-fn mapper instead of calling it raw */\n"
+         "        hal_call_state_fn(p, (unsigned)row[0]);\n      }"),
+    ],
+    "_ZN6Player17St_NoControl_InitEv": [
+        ("  void (*f)(void*);\n  if(fn & 1){\n"
+         "    f=*(void(**)(void*))(*(int*)obj + m->adj);\n"
+         "  } else {\n    f=(void(*)(void*))m->adj;\n  }\n  f(obj);",
+         "  if(fn & 1){\n"
+         "    hal_call_state_fn(obj, (unsigned)(*(int*)obj + m->adj));\n"
+         "  } else {\n    hal_call_state_fn(obj, (unsigned)m->adj);\n  }"),
+    ],
+}
+
+
 def apply_patches(text, sym, table, what, decl=""):
     """Exact-string patches, with a hard error if one stops matching."""
     pats = table.get(sym)
@@ -790,6 +885,19 @@ def member_redecl_patch(text, sym):
     return apply_patches(text, sym, MEMBER_REDECL, "MEMBER_REDECL")
 
 
+def extern_c_data_patch(text, sym):
+    """Bring external data declarations a TU left above its own extern "C"
+    block into C linkage, so the mount's C-linkage symbols resolve them."""
+    return apply_patches(text, sym, EXTERN_C_DATA, "EXTERN_C_DATA")
+
+
+def call_state_fn_patch(text, sym):
+    """Route a Player state row's mwcc member-pointer dispatch through
+    hal_call_state_fn on the DS code word, instead of calling it raw."""
+    return apply_patches(text, sym, CALL_STATE_FN, "CALL_STATE_FN",
+                         CALL_STATE_FN_DECL)
+
+
 def shadow_header_decl(text, sym, spec):
     """Hide the shared header's declaration of one or more names across its
     include. `spec` is a header name, or (header, names)."""
@@ -820,6 +928,8 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = virtual_call_patch(text, sym)
     text, _ = mg_pmf_call_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
+    text, _ = extern_c_data_patch(text, sym)
+    text, _ = call_state_fn_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise

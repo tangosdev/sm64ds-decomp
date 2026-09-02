@@ -1,6 +1,6 @@
 /* HOST COPIES for WATER_RING (244, ov064, "14daWater_Ring_c"), run rel0215
- * wave 3, lane w3-c -- the two pointer-to-member dispatchers and the Model
- * slot-5 Render, plus the seat of the four SOURCE records the sinit copies.
+ * wave 3, lane w3-c -- the two pointer-to-member dispatchers, plus the seat
+ * of the four SOURCE records the sinit copies.
  *
  * WHY EACH ONE IS HERE
  *
@@ -29,15 +29,17 @@
  *    pointer-to-member of its own; it only passes &data_ov064_0211c944 to the
  *    dispatcher above.
  *
- * 2. WaterRing::Render dispatches its plain Model at +0x30c through a LOCAL
- *    six-virtual shadow (`struct Sub { ... virtual int g5(void*); }`), which
- *    counts in ROM/Itanium numbering, so its slot 5 is Render; the host
- *    _ZTV5Model is MSVC-numbered and its slot 5 is Virtual18, which takes two
- *    arguments where the shadow passes one. The measured Butterfly / Fish /
- *    QuestionBlock / Whomp / BabyPenguin fault. Spelled here as the qualified
- *    Model::Render, the BowserPuzzle_Render.cpp / Ov064_Clam.cpp treatment.
- *    WaterRing_Spawn constructs a Model (not a ModelAnim) at +0x30c, which is
- *    why the qualified call is Model's.
+ * 2. WaterRing::Render is NO LONGER here -- it retired to its matched TU
+ *    src/_ZN9WaterRing6RenderEv.cpp (slice_w3c.txt). That TU dispatches its
+ *    plain Model at +0x30c through a LOCAL six-virtual shadow
+ *    (`struct Sub { ... virtual int g5(void*); }`), which counts in ROM/Itanium
+ *    numbering, so its slot 5 is Render; hal/cxxname_bridge.cpp dual-fills
+ *    _ZTV5Model[5] with mv_render, so the shadow's one-argument slot-5 call
+ *    lands on Model::Render. This host copy passed a NULL Vector3 * as the scale
+ *    where the ROM (overlay_0064.bin 0x02119fc8: `add r1, r4, #0x80` before the
+ *    `blx` through slot 5) and the matched TU both pass this+0x80, so retiring
+ *    the host body also fixes that null. The stale reasoning this replaced --
+ *    that slot 5 was Virtual18's MSVC slot -- predates the dual fill.
  *
  * THE STATE MACHINE IS TWO RECORDS, NOT FOUR. __sinit_ov064_0211b518 reads four
  * eight-byte SOURCE pairs and writes two SIXTEEN-byte bss records, each
@@ -59,8 +61,6 @@
  */
 #include <cstdio>
 #include <cstdlib>
-
-#include "Model.h"
 
 extern "C" {
 
@@ -183,22 +183,6 @@ Lpassed:
 Lkeep:
     *(short *)(c + 0x388) = _ZN5Actor18HorzAngleToCPlayerEv(c);
     return;
-}
-
-/* PORT_HOST_ABI: ROM-order Model slot-5 dispatch, the Whomp/Fish case. The
-   matched TU's shadow passes literal 0 as the scale, so the qualified call
-   passes a null Vector3 * -- the ROM's own argument. */
-extern "C" {
-int _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *);
-
-// PORT_HOST_ABI: ROM-order Model slot-5 dispatch, the Whomp/Fish case.
-int _ZN9WaterRing6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    _ZN18TextureTransformer6UpdateER15ModelComponents(c + 0x35c, c + 0x314);
-    ((Model *)(c + 0x30c))->Model::Render((const Vector3 *)0);
-    return 1;
-}
 }
 
 /* ---- the seat ------------------------------------------------------------ */

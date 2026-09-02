@@ -672,6 +672,11 @@ unsigned char *NestedHeapIterator::Next(HeapAllocator *h)
 #pragma comment(linker, "/alternatename:?data_0209ee8c@@3HA=_data_0209ee8c")
 #pragma comment(linker, "/alternatename:?data_020a0ea0@@3PAXA=_data_020a0ea0")
 #pragma comment(linker, "/alternatename:?PlayBank0@Sound@@SAXIABUVector3@@@Z=__ZN5Sound9PlayBank0EjRK7Vector3")
+/* The intro voice command (src/func_ov002_020bd480.cpp) declares its callee as
+   `namespace Sound { void PlayCharVoice(...); }`, which MSVC mangles YA (a free
+   function), while the one real definition carries the Itanium C name with C
+   linkage. Same three-argument cdecl shape, so a link alias bridges it. */
+#pragma comment(linker, "/alternatename:?PlayCharVoice@Sound@@YAXIIABUVector3@@@Z=__ZN5Sound13PlayCharVoiceEjjRK7Vector3")
 #pragma comment(linker, "/alternatename:?data_02082214@@3PAFA=_data_02082214")
 #pragma comment(linker, "/alternatename:?data_0209f264@@3EA=_data_0209f264")
 #pragma comment(linker, "/alternatename:?data_0209f2f8@@3CA=_data_0209f2f8")
