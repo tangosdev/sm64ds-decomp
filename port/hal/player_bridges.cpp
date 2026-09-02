@@ -15,6 +15,7 @@
 #include "NestedHeapIterator.h"
 #include "Player.h"
 #include "player_fields.h"   /* run mg16 lane MP4: the one place field offsets live */
+#include "host_settings.h"   /* port::adventure_ghost_mode() for the ghost pass */
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "Heap.h"
@@ -290,11 +291,66 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
         ((void ***)head)[0][4]))(head, 0, 0);
 }
 
-/* run mg16 lane MP3: the two globals Player::Render's own gates read. */
+/* run mg16 lane MP3: the two globals Player::Render's own gates read. The
+   per-slot Player table and the local-player index are read by the adventure
+   ghost pass below (declared here so hal_render_player_world can tell a remote
+   body from the local one; also declared later at their first non-ghost use). */
 extern "C" {
 extern unsigned char data_0209f2d8;   /* VS mode flag */
 extern unsigned char data_0209fc5c[]; /* per-slot "this slot is live"; BYTE
                                          stride, the ROM's own width */
+extern void *data_0209f394[];         /* per-slot Player* */
+extern unsigned char data_0209f250;   /* local player index */
+}
+
+/* ---- THE GHOST ALPHA -------------------------------------------------------
+   The DS polygon alpha is 5 bits (0..31); func_02046208 writes it into the
+   0x1f0000 field of every material's polygon attribute. 31 is fully opaque and
+   1 is nearly gone; 0 is NOT invisible, it is the DS's wireframe mode, so the
+   floor here is 1. The default is a ghostly ~40%. SM64DS_ADVENTURE_ALPHA tunes
+   it for the visual check without a rebuild. */
+static unsigned ghost_alpha()
+{
+    static int a = -1;
+    if (a < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_ALPHA");
+        a = e ? std::atoi(e) : 12;
+        if (a < 1) a = 1;
+        if (a > 31) a = 31;
+    }
+    return (unsigned)a;
+}
+
+/* ModelBase::ApplyOpacity, the ROM's own one-argument body (method_faces.cpp
+   forwards to the matched src/_ZN9ModelBase12ApplyOpacityEj.cpp). It walks the
+   model's components and stamps the alpha into each material, the same call
+   Player::Render makes on the wings. Re-applied every frame because the
+   material flags are rebuilt by the per-frame update. */
+extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned a);
+static void ghost_opacity(void *model)
+{
+    if (model) _ZN9ModelBase12ApplyOpacityEj(model, ghost_alpha());
+}
+
+/* ---- THE NO-COLLISION HALF OF THE GHOST PASS ------------------------------
+   Once per frame, over every REMOTE live slot, re-assert the disable-
+   interaction state (status/VSMERCY.md, player_fields::disable_interaction) so
+   a ghost body cannot collide with, damage, or be damaged by the local player.
+   RE-ASSERTED every frame because Player::ChangeState re-arms all three fields
+   on every transition; a single set does not stick. The LOCAL body
+   (data_0209f250) is never touched, so the player stays fully solid and fully
+   interactive. Gated on the mode, so VS and solo are byte-unaffected. Called
+   from the per-frame tick in tests/walk_window.cpp, beside sync_tick. */
+extern "C" void port_adventure_ghost_hold()
+{
+    if (!port::adventure_ghost_mode()) return;
+    const int me = (int)data_0209f250;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0) continue;   /* slot not live */
+        if (void *a = data_0209f394[i])
+            port::player::disable_interaction(a);
+    }
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------
@@ -576,6 +632,14 @@ static void vscol_probe(char *c, int frame, std::size_t tris_before)
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
+    /* ADVENTURE GHOSTS: a REMOTE body drawn see-through. This is the render
+       half of the ghost pass; the no-collision half is port_adventure_ghost_hold
+       below. Remote means "not the body at the local player's slot" -- the same
+       body the per-slot render loop in tests/walk_window.cpp draws last and never
+       ghosts. The mode gate keeps VS and solo byte-unaffected: adventure mode is
+       its own flag, never data_0209f2d8. */
+    const bool ghost = port::adventure_ghost_mode() &&
+                       player != data_0209f394[data_0209f250];
     std::size_t vscol_tris0 = 0;
     static int vscol_frame = -1;
     if (vscol_on()) {
@@ -702,6 +766,10 @@ void hal_render_player_world(void *player)
     for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
     ma->ModelAnim::UpdateVerts();
     hal_player_vs_palette(c, (char *)ma);
+    /* see-through, last before the draw so the per-frame material rebuild
+       (UpdateVerts, the palette stamp) is already done and the alpha is what
+       the raster reads. */
+    if (ghost) ghost_opacity(ma);
     ma->ModelAnim::Render(0);
     hal_player_texseq_body(c);
 
@@ -711,6 +779,7 @@ void hal_render_player_world(void *player)
         if (head) {
             yhd_probe(c, scene, head);
             hal_player_vs_palette(c, head);
+            if (ghost) ghost_opacity(head);
             hal_render_head_group(c, head, hid, ma, scene);
             hal_player_texseq_head(c, hid);
         }

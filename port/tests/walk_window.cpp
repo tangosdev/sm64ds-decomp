@@ -535,6 +535,9 @@ int hal_player_behavior(void *p);
 int hal_player_process(void *p);   /* gate 15: BeforeBehavior/Behavior/After */
 void sdat_host_tick(void);         /* hosted ARM7: hal/sdat/ */
 void hal_render_player_world(void *p);
+/* ADVENTURE GHOSTS: the per-frame no-collision hold over remote slots
+   (hal/player_bridges.cpp). No-op unless adventure-ghost mode is on. */
+void port_adventure_ghost_hold(void);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -9982,6 +9985,14 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
+        /* ADVENTURE GHOSTS: hold every remote body in the disable-interaction
+           state, HERE because it must land AFTER the actor phases above --
+           Player::ChangeState re-arms all three fields on every transition, so
+           the hold is re-asserted each frame right after the behaviour that
+           could have cleared it and before the collision the next frame reads
+           it. No-op unless adventure-ghost mode is on; the local body is never
+           touched. */
+        port_adventure_ghost_hold();
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
