@@ -3,8 +3,8 @@
   "codegen_hacks": {
     "cv_launder": 3,
     "cv_launder_sites": 6,
-    "extern_vtable": 157,
-    "extern_vtable_classes": 162,
+    "extern_vtable": 158,
+    "extern_vtable_classes": 163,
     "inline_asm": 13,
     "launder_or_forced": 211,
     "launder_sites": 441
@@ -60,8 +60,8 @@
     "pad_layout": 479
   },
   "totals": {
-    "c_extension": 6180,
-    "cpp_extension": 4726,
-    "src_files": 10906
+    "c_extension": 6179,
+    "cpp_extension": 4720,
+    "src_files": 10899
   }
 }
