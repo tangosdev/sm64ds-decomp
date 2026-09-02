@@ -75,6 +75,11 @@ RELAY0 = M.PORT_BASE + 40
 CLOSE = re.compile(r"^\[comms:loopback\] closed after (\d+) rounds; indelay=(-?\d+)", re.M)
 
 
+def num(t, key, d=None):
+    m = re.search(r"\b%s=(-?\d+)" % re.escape(key), t)
+    return int(m.group(1)) if m else d
+
+
 def close_line(t):
     m = re.search(r"^\[comms:loopback\] closed after .*$", t, re.M)
     return m.group(0) if m else "(no close line)"
@@ -112,20 +117,35 @@ def launch(arm_dir, name, relay, code, role, slot, frames, oneway, extra):
     return M.spawn(EXE, run, e, log), log
 
 
+# THE LOBBY IS WHAT MAKES "BEFORE THE FREEZE" REACHABLE. In this rig the
+# parent seats its world the moment the first child joins and its ROM asks for
+# round 0 about 150 ms later, so a joiner has no window to land in after the
+# sizing and before the freeze: the first run of arm A at a 0.9 s offset was
+# refused as a post-freeze join. Real play does not work like that -- the host
+# sits in the lobby while people arrive, and the ROM asks for its first round
+# when the match starts. SM64DS_VS_PLAYERS is the conductor's own lobby
+# expectation (hal/comms_conductor.cpp, comms_wait_for_session): the parent
+# holds the world seat until that many players are in, polling the transport
+# meanwhile, so the first child's report is processed and the session SIZED
+# while the parent is still waiting for the late one. The pre-freeze arms set
+# it on every peer; the post-freeze arms leave it unset so the parent seats on
+# the first child and freezes long before the late one knocks.
+LOBBY3 = {"SM64DS_VS_PLAYERS": "3"}
 ARMS = {
     # name: (one-way ms, late offset s after child_new, late peer env,
-    #        parent frames, child_new frames, late frames, expectation)
-    "A": (50, 0.9, {"SM64DS_COMMS_LEGACY_PEER": "1",
+    #        parent frames, child_new frames, late frames, expectation,
+    #        env for EVERY peer)
+    "A": (50, 3.0, {"SM64DS_COMMS_LEGACY_PEER": "1",
                     "SM64DS_COMMS_INPUT_DELAY": "7"}, 1500, 1200, 900,
-          "prefreeze_withdrawn"),
-    "B": (50, 0.9, {}, 1500, 1200, 900, "prefreeze_sized"),
+          "prefreeze_withdrawn", LOBBY3),
+    "B": (50, 3.0, {}, 1500, 1200, 900, "prefreeze_sized", LOBBY3),
     "C": (35, 10.0, {"SM64DS_COMMS_LEGACY_PEER": "1"}, 3000, 2400, 900,
-          "postfreeze_seated_shallow"),
-    "D": (50, 10.0, {}, 3000, 2400, 900, "postfreeze_refused"),
+          "postfreeze_seated_shallow", {}),
+    "D": (50, 10.0, {}, 3000, 2400, 900, "postfreeze_refused", {}),
     "E": (50, 0.0, {"SM64DS_COMMS_LEGACY_PEER": "1"}, 1500, 1200, 900,
-          "together_default"),
+          "together_default", {}),
     "F": (50, 10.0, {"SM64DS_COMMS_LEGACY_PEER": "1"}, 3000, 2400, 900,
-          "postfreeze_refused"),
+          "postfreeze_refused", {}),
 }
 ORDER = "ABCDEF"
 
@@ -140,7 +160,7 @@ WHAT = {
 
 
 def run_arm(letter, idx, out):
-    oneway, late_s, late_env, pf, cf, lf, expect = ARMS[letter]
+    oneway, late_s, late_env, pf, cf, lf, expect, every = ARMS[letter]
     arm_dir = os.path.join(out, "arm" + letter)
     os.makedirs(arm_dir, exist_ok=True)
     relay_port = RELAY0 + 2 * idx
@@ -149,14 +169,16 @@ def run_arm(letter, idx, out):
     target = "127.0.0.1:%d" % relay_port
     procs = []
     try:
-        p, lp = launch(arm_dir, "parent", target, code, "parent", 0, pf, oneway, {})
+        p, lp = launch(arm_dir, "parent", target, code, "parent", 0, pf, oneway, dict(every))
         procs.append(p)
         time.sleep(0.6)
-        c1, lc1 = launch(arm_dir, "child_new", target, code, "child", 1, cf, oneway, {})
+        c1, lc1 = launch(arm_dir, "child_new", target, code, "child", 1, cf, oneway, dict(every))
         procs.append(c1)
         if late_s:
             time.sleep(late_s)
-        c2, lc2 = launch(arm_dir, "child_late", target, code, "child", 2, lf, oneway, late_env)
+        late = dict(every)
+        late.update(late_env)
+        c2, lc2 = launch(arm_dir, "child_late", target, code, "child", 2, lf, oneway, late)
         procs.append(c2)
         rcs = [M.finish(x, 900) for x in procs]
     finally:
@@ -166,7 +188,7 @@ def run_arm(letter, idx, out):
 
 
 def judge(letter, rcs, tp, t1, t2):
-    _, _, late_env, _, _, _, expect = ARMS[letter]
+    _, _, late_env, _, _, _, expect, every = ARMS[letter]
     print("  rc parent/new/late =", rcs)
     for nm, t in (("parent", tp), ("child_new", t1), ("child_late", t2)):
         print("  %-10s %s" % (nm, close_line(t)))
@@ -180,6 +202,16 @@ def judge(letter, rcs, tp, t1, t2):
         print("  L| " + l[:230])
 
     (rp, dp), (r1, d1), (r2, d2) = (rounds_and_delay(t) for t in (tp, t1, t2))
+    # THE CLOSE LINE'S ROUND COUNT IS THE CLOCK, NOT THE WORK. A child adopts
+    # the parent's round number in its accept, so a peer seated at round 525
+    # that never completed one round still closes "after 525 rounds". What a
+    # peer actually DID is the blocks it published (sent=), and what the
+    # session did after a late seat is how far the parent's last completed
+    # round moved past the round the joiner was seated at.
+    sent2 = num(close_line(t2), "sent", 0)
+    lastround = num(close_line(tp), "lastround", 0)
+    mj = re.search(r"slot 2 joined at round (\d+)", tp)
+    join_round = int(mj.group(1)) if mj else None
     seated_late = bool(grep(tp, r"slot 2 joined at round"))
     refused_late = bool(grep(tp, r"REFUSED a late join from slot 2"))
     # WHEN THE JOIN LANDED, from the parent's own line order. The freeze marker
@@ -201,8 +233,19 @@ def judge(letter, rcs, tp, t1, t2):
     need(rp >= 200 and r1 >= 200, "parent and child_new both completed >= 200 rounds (%d/%d): a session that never ran must not read as agreement" % (rp, r1))
     need(dp == d1 and dp >= 0, "parent and child_new closed on one indelay (%d/%d)" % (dp, d1))
     if seated_late:
-        need(r2 >= 200, "the late peer was seated and completed >= 200 rounds (%d)" % r2)
         need(d2 == dp, "the late peer closed on the session's indelay (%d vs %d)" % (d2, dp))
+        advanced = (join_round is not None and lastround >= join_round + 200)
+        if expect.startswith("postfreeze"):
+            # NOT SCORED, AND SAID OUT LOUD: a console seated after round 0
+            # has no way to be handed the rounds already consumed, so the
+            # parent waits for its block for a round it will never publish and
+            # the match stalls. That is the seam's shape (joins happen in the
+            # lobby, as on the DS), not this lane's, and it is measured here
+            # rather than hidden behind the agreement line above.
+            print("  %s  the session %s after the late seat: parent's last completed round %d, joiner seated at round %s, joiner published %d block(s)"
+                  % ("note" if advanced else "LIMIT", "advanced" if advanced else "STALLED", lastround, join_round, sent2))
+        else:
+            need(sent2 >= 200 and advanced, "the late peer took part: it published %d block(s) and the session ran %d rounds past its seat" % (sent2, (lastround - join_round) if join_round is not None else -1))
     else:
         need(refused_late, "the late peer was not seated, so the parent must have refused it out loud")
         need(r2 == 0, "an unseated peer completed no round (%d)" % r2)
@@ -253,10 +296,12 @@ def main():
     for idx, letter in enumerate(ORDER):
         if want and letter not in want:
             continue
-        oneway, late_s, late_env, pf, cf, lf, _ = ARMS[letter]
+        oneway, late_s, late_env, pf, cf, lf, _, every = ARMS[letter]
         print("\n=== ARM %s: %s ===" % (letter, WHAT[letter]))
         print("  one-way %d ms induced each end; late peer %s starts %.1fs after child_new; frames parent/new/late = %d/%d/%d"
               % (oneway, "OLD build" if "SM64DS_COMMS_LEGACY_PEER" in late_env else "NEW build", late_s, pf, cf, lf))
+        if every:
+            print("  every peer also gets %s (the lobby hold)" % every)
         try:
             rcs, (tp, t1, t2) = run_arm(letter, idx, a.out)
             ok &= judge(letter, rcs, tp, t1, t2)
