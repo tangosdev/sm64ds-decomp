@@ -3538,17 +3538,19 @@ bool comms_loopback_install_from_env() {
     //     experiment stops being one. The override still wins, as promised.
     //   NOT WITH THE PIPELINE OFF, which is stop-and-wait by request and has
     //     no depth to size.
-    //   AND ON AN INDUCED-LATENCY LOOPBACK, which is the controlled
-    //     experiment this lane is measured by. Loopback's mode default is 0
-    //     because a bare loopback has no round trip to hide; with the delay and
-    //     jitter knobs on it has one, and the sizing has something real to
-    //     size. This is the same correction the refusal below already had to
-    //     make -- the right question is not which mode this is, it is whether
-    //     there is any latency here at all.
-    const bool induced_latency = (g_delay_ms > 0 || g_jitter_ms > 0);
+    //   NOT ON A LOOPBACK CARRIER, EVEN AN INDUCED-LATENCY ONE, and this was
+    //     tried the other way first. An induced-latency loopback is the
+    //     controlled experiment for pipelining and net_proof rungs N4, N5 and
+    //     N7 are built on it: N7 in particular runs one arm with NO input-delay
+    //     env as its STOP-AND-WAIT baseline and compares a pipelined arm
+    //     against it. Sizing that baseline arm turns the comparison into two
+    //     identical arms and the rung measures nothing while still passing its
+    //     session checks -- the exact failure its own banner warns about. The
+    //     mode default of 0 on loopback is the rig contract, so the sizing
+    //     leaves it alone and is measured over a RELAY instead, which is the
+    //     mode that actually has the problem.
     g_adaptive_delay = (g_role == kRoleParent) && !g_delay_from_env &&
-                       (g_input_delay > 0 ||
-                        (g_net_mode == kNetLoopback && induced_latency));
+                       g_net_mode != kNetLoopback && g_input_delay > 0;
     if (const char *v = std::getenv("SM64DS_COMMS_ADAPTIVE_DELAY"))
         if (std::atoi(v) == 0) g_adaptive_delay = false;
     if (g_adaptive_delay)
