@@ -440,7 +440,7 @@ int _ZN5Koopa8BehaviorEv(void *self)
 extern "C" {
 int _ZN6Klepto13InitResourcesEv(void *self);      /* face below */
 int _ZN6Klepto8BehaviorEv(void *self);            /* host copy (StateDispatch) */
-int _ZN6Klepto6RenderEv(void *self);              /* face below */
+int _ZN6Klepto6RenderEv(void *self);              /* host copy (Klepto_Render) */
 int _ZN6Klepto16CleanupResourcesEv(void);         /* C-named in its own .c TU */
 void _ZN6Klepto16OnPendingDestroyEv(void);        /* empty body, its own .c TU */
 int *_ZN6KleptoD1Ev(int *self);
@@ -467,8 +467,13 @@ void port_klepto_states_seat(void);               /* port/unmatched */
 #pragma comment(linker, "/alternatename:?data_ov062_0211e17c@@3DA=_data_ov062_0211e17c")
 #pragma comment(linker, "/alternatename:?data_ov062_0211e17c@@3PAXA=_data_ov062_0211e17c")
 #pragma comment(linker, "/alternatename:?data_0209f394@@3PAXA=_data_0209f394")
-#pragma comment(linker, "/alternatename:??0PathPtr@@QAE@XZ=__ZN7PathPtrC1Ev")
-#pragma comment(linker, "/alternatename:?FromID@PathPtr@@QAEXI@Z=__ZN7PathPtr6FromIDEj")
+/* PathPtr's default constructor (??0PathPtr@@QAE@XZ) and FromID
+   (?FromID@PathPtr@@QAEXI@Z) are __thiscall members c2f4 calls; they are wired
+   as REAL FORWARDERS in unmatched/Klepto_PathPtrFaces.cpp, NOT /alternatename,
+   because a thiscall receiver rides in ECX and the flat cdecl body reads it off
+   the stack -- aliasing crashes (the ToxBox_ShadowFaces door-open failure mode,
+   the level-16 c0000005 the first seat took). GetNode's member forwarder already
+   lives in unmatched/RacingPenguin_ShadowFaces.cpp. */
 #pragma comment(linker, "/alternatename:?Spawn@Actor@@SAIIIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
 
 static int __fastcall klp_init(void *s, void *)
@@ -506,14 +511,16 @@ extern "C" void hal_fill_klepto_vtable(void)
 }
 
 // ---- Klepto method faces ---------------------------------------------------
-// InitResources and Render are .cpp methods against include/Klepto.h; the
-// vtable thunks reference the Itanium C name, so face each onto the MSVC method.
+// InitResources is a .cpp method against include/Klepto.h; the vtable thunk
+// references the Itanium C name, so face it onto the MSVC method.
 // CleanupResources, OnPendingDestroy, D0, D1 are .c C-linkage in their own TUs;
-// Behavior is the host copy. Render is faced, not host-copied (see the note).
+// Behavior is the host copy. RENDER is host-copied, NOT faced: it dispatches
+// its BlendModelAnim at +0x334 through a slot-5 LOCAL SHADOW, and the host
+// _ZTV14BlendModelAnim is MSVC-ordered (Render 4, Virtual18 5), so a shadow
+// slot-5 lands on Virtual18 and faults in Model::Virtual10 (the ModelAnim_
+// Renders / blend_vtable trap). It lives in unmatched/Klepto_Render.cpp.
 #include "Klepto.h"
 extern "C" {
 int _ZN6Klepto13InitResourcesEv(void *self)
 { return ((Klepto *)self)->Klepto::InitResources(); }
-int _ZN6Klepto6RenderEv(void *self)
-{ return ((Klepto *)self)->Klepto::Render(); }
 }

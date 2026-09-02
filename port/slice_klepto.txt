@@ -45,7 +45,10 @@
 # hal/actor_classes.inc.
 src/Klepto_Spawn.c
 src/_ZN6Klepto13InitResourcesEv.cpp
-src/_ZN6Klepto6RenderEv.cpp
+# _ZN6Klepto6RenderEv.cpp is NOT here: it dispatches BlendModelAnim at +0x334
+# through a slot-5 LOCAL SHADOW, which the MSVC-ordered _ZTV14BlendModelAnim
+# routes to Virtual18 (a Model::Virtual10 fault). Host-copied in
+# port/unmatched/Klepto_Render.cpp, the ModelAnim_Renders / Whomp recipe.
 src/_ZN6Klepto16CleanupResourcesEv.c
 src/_ZN6Klepto16OnPendingDestroyEv.c
 src/_ZN6KleptoD0Ev.c
