@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "dsstate_seg.h"
+#include "vs_width.h"   /* 0.3.2: the port's player width */
 #include "ntr/ppu_audit.h"
 
 #pragma comment(linker, "/alternatename:?FUN_02029a68@@YAXXZ=_FUN_02029a68")
@@ -66,7 +67,7 @@
 extern "C" {
 /* BSS the aliased data references land on (non-ov002 ring) */
 DSSTATE_BEGIN
-int data_0208e6ec[4]; short data_02092144[4];
+int data_0208e6ec[4]; short data_02092144[kPortMaxPlayers];   /* 0.3.2: per-player health, sixteen; the ROM seats 0..3, hal/level_boot.cpp seats 4..15 */
 void *data_020992a4[4], *data_020992b4[4];
 DSSTATE_END
 /* data_0209b0c8 moved to hal/camera_states.cpp (camera State object 12) */

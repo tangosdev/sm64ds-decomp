@@ -2139,6 +2139,8 @@ extern unsigned char data_0209f250;
 extern unsigned char data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
+extern short data_02092144[];              /* per-player health, high byte = HP (0.3.2: sixteen wide) */
+extern void InitControllerMode(int idx, unsigned char val);
 extern unsigned char data_0209f2d8;      /* game mode: 0 single file, 1 VS, 2 script */
 extern unsigned short data_ov002_0210cbf4[];
 extern void *data_0209f394[];
@@ -4486,6 +4488,20 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
            here would be a fault instead of a missing player. */
         if (a) *((unsigned char *)a + 0x6d8) = (unsigned char)i;
         data_0209f394[i] = a;
+        /* 0.3.2: THE GLOBALS THE ROM SEATS FOR FOUR. src/SetPlayerGlobals.c
+           gives players 0..3 their health word (0x880 = 8 of 8) and their
+           controller mode, and stops at four. A slot past that started with
+           whatever lay beyond a four-wide health table -- usually zero, which
+           the game reads as dead the frame interaction comes on: eleven of
+           twelve wide bodies went St_DeadHit -> St_Respawn at frame 60 and
+           hung there, because the respawn exit is armed only for the local
+           player. The two that lived read a nonzero neighbour by luck. So the
+           port seats the same two values for the slots it spawns, from the
+           same save byte the ROM reads, at the moment the body exists. */
+        if (a) {
+            data_02092144[i] = 0x880;
+            InitControllerMode(i, data_0209caa0[0x42]);
+        }
         std::fprintf(stderr,
                      "[vs] port-supplied start for slot %d: actor=%p "
                      "char=%u pos=(%d,%d,%d) wire_slot=%u mPlayerNo=%d (the "

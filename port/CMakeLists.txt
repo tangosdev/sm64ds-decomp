@@ -7907,6 +7907,18 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203ea5c.c"
     PROPERTIES COMPILE_DEFINITIONS "func_0203ea5c=func_0203ea5c_narrow")
 list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor_wide.cpp)
+# 0.3.2: the same wall one layer down. src/func_0203bb60.c and
+# src/func_0203bc7c.c (the ROM's per-frame comms-record -> TouchInfo/PadData
+# fan-out, steps 0x16/0x17 of the main loop) loop to four. Same shape as the
+# conductor: the ROM TUs stay linked under a rename and hal/comms_fanout_wide.cpp
+# owns the two symbols, dispatching on the session's width.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bb60.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_0203bb60=func_0203bb60_narrow")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bc7c.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_0203bc7c=func_0203bc7c_narrow")
+list(APPEND SLICE_COMMS_SOURCES hal/comms_fanout_wide.cpp)
 
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
@@ -12696,6 +12708,7 @@ endif()
 # and the hosted seam faces. Console-only, no window, no BMP.
 add_executable(mp_comms_seam tests/mp_comms_seam.cpp
     hal/comms_seam.cpp hal/os_thread.cpp
+    hal/comms_fanout_wide.cpp
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203e0ac.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bb60.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bc7c.c"

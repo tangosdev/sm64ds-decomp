@@ -25,6 +25,12 @@
 
 #include "comms_seam.h"
 
+// 0.3.2: hal/comms_fanout_wide.cpp dispatches the two fan-out steps on the
+// session's width, which the loopback carrier owns. This probe links no
+// carrier and exercises the ROM's own four-slot fan-out, so it answers the
+// width question the way a solo boot does: no session, narrow.
+namespace port { int comms_session_players() { return 0; } }
+
 // ---------------------------------------------------------------------------
 // THE HOSTED RECORDS.
 //
@@ -66,8 +72,8 @@ extern "C" {
 // TouchInfo[4] (4-byte records) and PadData[4] (stride 4). In the shipped
 // binaries hal/auto_bss.cpp hosts data_020a0de8 as four ROM-spaced slots and
 // data_020a0e58 as int[8].
-unsigned char data_020a0de8[kCommsMaxPlayers * 4];   /* 0.3.2: sixteen, as hal/auto_bss.cpp */
-int data_020a0e58[kCommsMaxPlayers];
+unsigned char data_020a0de8[port::kCommsMaxPlayers * 4];   /* 0.3.2: sixteen, as hal/auto_bss.cpp */
+int data_020a0e58[port::kCommsMaxPlayers];
 // The comms ROLE byte. hal/stage_slot0.cpp hosts it in the shipped binaries.
 unsigned char data_020a0f04[4];
 

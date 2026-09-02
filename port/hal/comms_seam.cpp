@@ -329,7 +329,7 @@ extern "C" {
 __declspec(allocate(".dsstate$wcomms")) __declspec(align(4))
 unsigned char data_020a0e44[4] = {0};       // 0x020a0e44 .. 0x020a0e48
 __declspec(allocate(".dsstate$wcomms")) __declspec(align(2))
-unsigned short data_020a0e48[4] = {0};      // 0x020a0e48 .. 0x020a0e50
+unsigned short data_020a0e48[port::kCommsMaxPlayers] = {0};   // 0x020a0e48 .. 0x020a0e50 on the DS; sixteen here (0.3.2, the wide fan-out walks it)
 __declspec(allocate(".dsstate$wcomms")) __declspec(align(2))
-unsigned short data_020a0e50[4] = {0};      // 0x020a0e50 .. 0x020a0e58
+unsigned short data_020a0e50[port::kCommsMaxPlayers] = {0};   // 0x020a0e50 .. 0x020a0e58 on the DS; sixteen here (0.3.2)
 }
