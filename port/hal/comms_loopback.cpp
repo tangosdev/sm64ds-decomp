@@ -2358,7 +2358,8 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             child_adopt_delay((int)((p.have >> 8) & 0xFF), true);
             // ROLLBACK IS THE PARENT'S CALL TOO, for the same reason the
             // delay is: one end predicting while the other waits is two
-            // different timelines. Bit 16 of the accept carries it.
+            // different timelines. Bit 17 of the accept carries it (bit 16 is the
+            // adaptive delay's report ack).
             {
                 const bool parent_rb = (p.have & kAcceptRollbackBit) != 0;
                 if (parent_rb != g_rollback) {

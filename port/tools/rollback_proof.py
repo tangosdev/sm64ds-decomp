@@ -206,7 +206,10 @@ def rung_pair(frames, relay=None):
             extra["SM64DS_COMMS_DELAY_MS"] = str(rtt // 2)
         if relay:
             extra["SM64DS_COMMS_RELAY"] = relay
-            extra["SM64DS_COMMS_CODE"] = "RB%06d" % (os.getpid() % 1000000)
+            # one code PER RTT: the relay keeps an endpoint for its idle
+            # expiry (90 s) after a window exits, so a second session on the
+            # same code inside that window is told FULL and never seats
+            extra["SM64DS_COMMS_CODE"] = "RB%03d%03d" % (os.getpid() % 1000, rtt)
         name = "%s_rtt%d" % ("relay" if relay else "pair", rtt)
         r = launch(name, 2, frames, per={0: extra, 1: extra}, base=BASE + (rtt // 8) * 2)
         ok &= mode_took(name, r)
@@ -227,7 +230,7 @@ def rung_vs(name, n, vsmap, frames, rtts=(0, 40, 80, 160), relay=None):
         extra = {"SM64DS_COMMS_DELAY_MS": str(rtt // 2)} if rtt else {}
         if relay:
             extra["SM64DS_COMMS_RELAY"] = relay
-            extra["SM64DS_COMMS_CODE"] = "R%d%05d" % (n, os.getpid() % 100000)
+            extra["SM64DS_COMMS_CODE"] = "R%d%02d%04d" % (n, rtt // 10, os.getpid() % 10000)
         per = dict((k, dict(extra)) for k in range(n))
         rn = "%s_rtt%d" % (name, rtt)
         r = launch(rn, n, frames, vsmap=vsmap, per=per,
