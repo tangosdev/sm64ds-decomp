@@ -62,6 +62,7 @@ static unsigned clsn_owner(CylClsn *c)    /* ROM slot 3 */
 
 extern "C" {
 extern CylClsn *data_0209cee8;
+extern int port_vs_king_target(void);   /* >0 == a King of the Star match */
 Fix12i Vec3_HorzLen(const Fix12i *v);
 void func_02014f44(unsigned id, CylClsn *clsn);
 int _ZN4cstd4fdivEii(int a, int b);
@@ -158,6 +159,18 @@ extern "C" void port_cylinder_clsn_process(void)
         pos0 = clsn_pos(data_0209cee8);
         owner0 = clsn_owner(data_0209cee8);
 
+        /* KING OF THE STAR dupe hardening: an EXPLICIT deterministic tiebreak
+           for a same-frame multi-touch. The ROM records the LAST colliding
+           partner in otherOwner (last-writer-wins over the list). That is
+           already deterministic because the list order is, but here we make the
+           winner provable: this head keeps the LOWEST owner id (lowest player
+           slot) of everyone it overlaps this frame, so every console resolves a
+           tie to the same slot regardless of list order. Off (king_target==0)
+           leaves the ROM's write byte-for-byte unchanged. */
+        const int king = port_vs_king_target() > 0;
+        unsigned head_low = 0;
+        int head_set = 0;
+
         for (other = data_0209cee8->next; other != 0; other = other->next)
         {
             sharedFlags = (data_0209cee8->flags & other->vulnFlags) |
@@ -191,7 +204,18 @@ extern "C" void port_cylinder_clsn_process(void)
 
             data_0209cee8->hitFlags = other->flags;
             other->hitFlags = data_0209cee8->flags;
-            data_0209cee8->otherOwner = clsn_owner(other);
+            {
+                const unsigned cand = clsn_owner(other);
+                if (king) {
+                    if (!head_set || cand < head_low) {
+                        head_low = cand;
+                        head_set = 1;
+                    }
+                    data_0209cee8->otherOwner = head_low;
+                } else {
+                    data_0209cee8->otherOwner = cand;
+                }
+            }
             other->otherOwner = clsn_owner(data_0209cee8);
 
             if (sharedFlags & 0x4000000)

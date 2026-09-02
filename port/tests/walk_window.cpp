@@ -1868,6 +1868,10 @@ struct OvlStats {
     int menu_paused;
 };
 
+/* KING OF THE STAR live points line, filled by hal/star_flow.cpp; returns 0
+   (draws nothing) outside a king match. */
+extern "C" int port_vs_king_hud(char *out, int cap);
+
 static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
 {
     char ln[10][96];
@@ -1905,6 +1909,16 @@ static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
     }
     snprintf(ln[n], sizeof ln[0], "ram %6u KB", s.mem_kb);
     col[n++] = WHITE;
+
+    /* KING OF THE STAR live points, only during a king match (returns 0 and
+       draws nothing otherwise). Holder is tagged with '*'. */
+    {
+        char kb[96];
+        if (n < 10 && port_vs_king_hud(kb, (int)sizeof kb)) {
+            snprintf(ln[n], sizeof ln[0], "%s", kb);
+            col[n++] = AMBER;
+        }
+    }
 
     {
         int w = 0;

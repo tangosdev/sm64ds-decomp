@@ -56,6 +56,12 @@ void func_ov002_020ea410(void *); void func_ov002_020e9840(void *);
 void func_ov002_020ea100(void *); void func_ov002_020ea7ac(void *);
 void func_ov002_020ea824(void *); void func_ov002_020ea90c(void *);
 
+/* KING OF THE STAR dupe guards (port/unmatched/PowerStar_KingGuards.cpp). They
+   seat in place of the src bodies for dispatch states 5 (collect confirm/revoke)
+   and 13 (toss-landing +1); off king mode they run the ROM behaviour exactly. */
+void port_king_power_star_state5(void *);
+void port_king_power_star_state13(void *);
+
 /* the matched-src calls PowerStar::Behavior makes around the dispatch */
 int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(char *c, char *clsn);
 void func_ov002_020d718c(void *p);
@@ -88,7 +94,7 @@ g_power_star_states[14] = {
     {0x020ea824, func_ov002_020ea824},   /* [2]  */
     {0x020ea7ac, func_ov002_020ea7ac},   /* [3]  */
     {0x020ea420, func_ov002_020ea420},   /* [4]  */
-    {0x020ea100, func_ov002_020ea100},   /* [5]  */
+    {0x020ea100, port_king_power_star_state5},   /* [5]  king guard wraps src */
     {0x020ea06c, func_ov002_020ea06c},   /* [6]  */
     {0x020e9d18, func_ov002_020e9d18},   /* [7]  */
     {0x020e99e8, func_ov002_020e99e8},   /* [8]  */
@@ -96,7 +102,7 @@ g_power_star_states[14] = {
     {0x020ea410, func_ov002_020ea410},   /* [10] */
     {0x020e9af4, func_ov002_020e9af4},   /* [11] */
     {0x020e9804, func_ov002_020e9804},   /* [12] */
-    {0x020e96a0, func_ov002_020e96a0},   /* [13] */
+    {0x020e96a0, port_king_power_star_state13},   /* [13] king guard (host copy) */
 };
 
 extern "C" void port_power_star_states_seat(void)

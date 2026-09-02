@@ -972,6 +972,76 @@ static int vs_players(void)
     return g_vs_players_cache;
 }
 static int g_end_total;
+static int g_end_by_king;
+
+/* ===================== KING OF THE STAR (host win mode) =====================
+ *
+ * SM64DS_VS_KING_TARGET=<n>: exactly one star for the whole match, whoever
+ * holds it scores +1 point per real second, first to <n> points wins. 0 or
+ * unset is OFF, and off means one compare against a cached constant per frame
+ * and nothing else -- time and stars VS are byte-for-byte unchanged.
+ *
+ * The points are a SEPARATE host array, NEVER data_0209f310. That array is the
+ * ROM's per-player carried-star count the HUD and NumVsStarsObtained read, and
+ * it is not cleared between in-process matches (the re-arm trap documented
+ * above). g_king_points is ours and is zeroed when a king match arms.
+ *
+ * Holder detection still READS data_0209f310, which is legitimate because king
+ * mode holds a ONE-STAR invariant: level_boot seats a king star-order so only
+ * the first marker ever wakes (every later rotation slot names a star-id no
+ * marker carries), and the two dupe guards keep a collect worth exactly one.
+ * So at most one slot carries the star and its nonzero count IS the holder.
+ * Everything here is shared lockstep state, so every console agrees frame for
+ * frame on holder and points. */
+static int g_king_target = -1;      /* <0 unread, 0 off, >0 the point target  */
+static int g_king_points[kPortMaxPlayers];  /* seconds of possession, ours     */
+static int g_king_tick;             /* 0..59, the deterministic per-second gate */
+static int g_king_armed;            /* zeroed on disarm; arms the match reset   */
+static int g_king_holder = -1;      /* current holder slot, for the live HUD    */
+
+/* The king target, read once from the launcher-exported env and cached. This
+   is the single source of truth every king-mode path (this file, level_boot's
+   star-order seat, the CylinderClsn tiebreak and the PowerStar dupe guards)
+   asks, so "is this a king match" is one answer, not several that can drift. */
+extern "C" int port_vs_king_target(void)
+{
+    if (g_king_target < 0) {
+        const char *e = std::getenv("SM64DS_VS_KING_TARGET");
+        g_king_target = e ? std::atoi(e) : 0;
+        if (g_king_target < 0) g_king_target = 0;
+    }
+    return g_king_target;
+}
+
+/* The current holder of the one star: the LOWEST slot carrying a star. With the
+   one-star invariant only one slot can be nonzero, but scanning low-to-high is
+   an explicit deterministic tiebreak, so even a stray double-count can never
+   make two consoles pick different holders. */
+static int king_holder(int np)
+{
+    for (int i = 0; i < np && i < kPortMaxPlayers; ++i)
+        if ((int)data_0209f310[i] >= 1) return i;
+    return -1;
+}
+
+/* The live points line for the host overlay. Returns 0 (draws nothing) outside
+   a king match. Marks the current holder with a '*'. */
+extern "C" int port_vs_king_hud(char *out, int cap)
+{
+    if (port_vs_king_target() <= 0 || data_0209f2d8 != 1 || cap < 16)
+        return 0;
+    const int np = vs_players();
+    int w = std::snprintf(out, (size_t)cap, "KING/%d", g_king_target);
+    if (w < 0) w = 0;
+    for (int i = 0; i < np && w < cap - 1; ++i) {
+        const int k = std::snprintf(out + w, (size_t)(cap - w), " P%d:%d%s",
+                                    i + 1, g_king_points[i],
+                                    i == g_king_holder ? "*" : "");
+        if (k < 0) break;
+        w += k;
+    }
+    return 1;
+}
 
 /* THE PLAY HOLD. Nonzero once the match is over, which is what
    port_vs_match_end_hold below reads to stop the pads and what the harness's
@@ -1405,7 +1475,12 @@ extern "C" int port_vs_match_end_poll(int frame)
             g_end_fired = -1;
             g_end_announced = 0;
             g_end_by_target = 0;
+            g_end_by_king = 0;
         }
+        /* Outside VS the king match is disarmed, so the next VS entry re-zeroes
+           the points. This is the only reset point, so a king match always
+           starts from zero however it was reached. */
+        g_king_armed = 0;
         return 0;
     }
 
@@ -1432,6 +1507,37 @@ extern "C" int port_vs_match_end_poll(int frame)
     }
     if (!on)
         return 0;
+
+    /* ---- KING OF THE STAR: arm-time reset, then per-second accrual --------
+     * All of this is a single compare against a cached constant when king mode
+     * is off, so time and stars VS run exactly as before. */
+    const int king_target = port_vs_king_target();
+    if (king_target > 0 && !g_king_armed) {
+        /* First live VS frame of a king match: our points to zero, and the
+           ROM's carried-star array too so a stale in-process count cannot read
+           as a holder on frame one (the re-arm trap above). King only. */
+        const int np = vs_players();
+        for (int i = 0; i < kPortMaxPlayers; ++i) g_king_points[i] = 0;
+        for (int i = 0; i < np && i < kPortMaxPlayers; ++i) data_0209f310[i] = 0;
+        g_king_tick = 0;
+        g_king_holder = -1;
+        g_king_armed = 1;
+        fprintf(stderr, "[vs] KING OF THE STAR: one star all match, the holder "
+                "scores +1/sec, first to %d wins (SM64DS_VS_KING_TARGET)\n",
+                king_target);
+    }
+    if (king_target > 0 && g_end_fired < 0) {
+        /* The holder this frame, and a deterministic 60-frame gate so exactly
+           one point per real second is credited to whoever holds the star.
+           Both the holder and the counter are shared lockstep state, so every
+           console credits the same slot on the same frame. */
+        const int holder = king_holder(vs_players());
+        g_king_holder = holder;
+        if (++g_king_tick >= 60) {
+            g_king_tick = 0;
+            if (holder >= 0) ++g_king_points[holder];
+        }
+    }
 
     if (g_end_fired < 0) {
         /* ---- TRIGGER ONE: the ROM's own. Stage::Behavior's guard, both
@@ -1462,17 +1568,39 @@ extern "C" int port_vs_match_end_poll(int frame)
             for (int i = 0; i < np_end; ++i)
                 if ((int)data_0209f310[i] >= star_target) { star_winner = i; break; }
         }
-        if (!timeup && star_winner < 0)
+        /* ---- TRIGGER THREE: KING OF THE STAR, first to N points. Lowest slot
+         * first, so if two ever crossed on one frame (they cannot, only the
+         * holder accrues) it resolves deterministically. Feeds the same one
+         * end path as the other two triggers. */
+        int king_winner = -1;
+        if (king_target > 0) {
+            for (int i = 0; i < np_end; ++i)
+                if (g_king_points[i] >= king_target) { king_winner = i; break; }
+        }
+        if (!timeup && star_winner < 0 && king_winner < 0)
             return 0;
         g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
+        g_end_by_king = (king_winner >= 0);
         /* run vs16: latch every player's score. data_0209f310 is hosted 32
            bytes wide as a guarded contiguous band (hal/actor_classes_star.cpp),
            so sixteen is inside the storage the port already had -- this loop
            was the only thing stopping at four. */
-        for (int i = 0; i < np_end; ++i) g_end_scores[i] = (int)data_0209f310[i];
+        /* King mode is scored by POINTS, not carried stars: latch g_king_points
+           so the banner, the winner pick and the marker all read the score the
+           king match was actually decided on (this also makes a king time-up
+           pick the points leader, not the carried-star leader). */
+        for (int i = 0; i < np_end; ++i)
+            g_end_scores[i] = (king_target > 0) ? g_king_points[i]
+                                                : (int)data_0209f310[i];
         g_end_total = (int)NumVsStarsObtained();
-        if (star_winner >= 0)
+        if (king_winner >= 0)
+            fprintf(stderr, "[vs] f%d KING TARGET REACHED: player %d has %d "
+                    "point(s), the target is %d (points %d,%d,%d,%d)\n", frame,
+                    king_winner, g_king_points[king_winner], king_target,
+                    g_king_points[0], g_king_points[1],
+                    g_king_points[2], g_king_points[3]);
+        else if (star_winner >= 0)
             fprintf(stderr, "[vs] f%d TARGET REACHED: player %d has %d star(s), "
                     "the target is %d (wireless state=%d, scores %d,%d,%d,%d, "
                     "stars taken %d)\n", frame, star_winner,
@@ -1598,7 +1726,8 @@ extern "C" int port_vs_match_end_poll(int frame)
     const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%s players=%d total=%d "
             "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
-            g_end_by_target ? "star-target" : "time-up",
+            g_end_by_king ? "king-target"
+                          : (g_end_by_target ? "star-target" : "time-up"),
             scores_field, np_marker,
             g_end_total, (unsigned)data_02092664,
             data_02092664 == 7 ? "REQUESTED-BUT-UNSERVICED"
