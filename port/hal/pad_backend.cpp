@@ -122,9 +122,14 @@ static BOOL(WINAPI *EnumWindows_)(WNDENUMPROC, LPARAM);
 static DWORD(WINAPI *GetWindowThreadProcessId_)(HWND, DWORD *);
 
 /* One layout: which DirectInput button feeds each XInput bit, which buttons
-   (or axes) are the triggers, and which axes are the right stick. Button
+   (or axes) are the triggers, and which axes are the two sticks. Button
    numbers are the HID usage minus one, which is how DirectInput counts them.
-   Axis indices: 0 X, 1 Y, 2 Z, 3 Rx, 4 Ry, 5 Rz. -1 means "not on this pad". */
+   Axis indices: 0 X, 1 Y, 2 Z, 3 Rx, 4 Ry, 5 Rz. -1 means "not on this pad".
+   The four signs say which way the raw axis moves for a rightward or upward
+   push: DirectInput's Y grows downward, so the built-in rows carry -1 on
+   both Y signs, and a learned row carries whatever the pad did when asked.
+   The field names are settings.json's PadLayouts spelling (HostPadLayout in
+   hal/host_settings.h) so the two cannot drift. */
 struct PadLayout {
     unsigned short vid, pid;    /* 0,0 = the generic fallback */
     const char *name;
@@ -132,6 +137,8 @@ struct PadLayout {
     signed char lt_btn, rt_btn;
     signed char lt_axis, rt_axis;
     signed char rx_axis, ry_axis;
+    signed char lx_axis, ly_axis;
+    signed char lx_sign, ly_sign, rx_sign, ry_sign;
 };
 
 /* Face buttons are mapped by POSITION, not by the letter printed on them: the
@@ -145,24 +152,79 @@ static const PadLayout PAD_LAYOUTS[] = {
     {0x057e, 0x2009, "Switch Pro Controller",
      /* a b x y */ 1, 2, 0, 3, /* lb rb */ 4, 5, /* back start */ 8, 9,
      /* thumbs */ 10, 11, /* lt rt btn */ 6, 7, /* lt rt axis */ -1, -1,
-     /* right stick */ 2, 5},
+     /* right stick */ 2, 5, /* left stick */ 0, 1, /* signs */ 1, -1, 1, -1},
     /* Sony DualShock 4, both revisions. HID order: Square Cross Circle
        Triangle L1 R1 L2 R2 Share Options L3 R3 PS Touchpad. Cross is bottom.
        L2/R2 are also analog on Rx/Ry. Right stick on Z/Rz. Hat d-pad. */
     {0x054c, 0x05c4, "DualShock 4",
-     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5},
+     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5, 0, 1, 1, -1, 1, -1},
     {0x054c, 0x09cc, "DualShock 4",
-     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5},
+     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5, 0, 1, 1, -1, 1, -1},
     /* Sony DualSense: the DualShock 4's report layout. */
     {0x054c, 0x0ce6, "DualSense",
-     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5},
+     1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5, 0, 1, 1, -1, 1, -1},
     /* Everything else: buttons 0..3 as A B X Y, then LB RB LT RT Back Start
        LS RS in the order most HID pads report them, X/Y left stick, Z/Rz
-       right stick, hat d-pad. An axis the pad does not have reads 0. */
+       right stick, hat d-pad. An axis the pad does not have reads 0. A pad
+       this guess is wrong for is what the learn flow is for. */
     {0, 0, "generic",
-     0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 6, 7, -1, -1, 2, 5},
+     0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 6, 7, -1, -1, 2, 5, 0, 1, 1, -1, 1, -1},
 };
 static const PadLayout *di_layout = &PAD_LAYOUTS[4];
+
+/* ---- THE LEARNED LAYOUTS, keyed by vid:pid, beating the table ------------
+   g_over is written by the game thread (port_pad_set_layout, and the seed
+   from settings.json in port_pad_init) and read by the worker under g_lock.
+   The worker keeps its own copy of the row in effect (di_over_row) so
+   di_layout never points into memory another thread rewrites. g_relayout
+   asks the worker to look again. */
+static HostPadLayout g_over[HOST_PAD_LAYOUT_MAX];   /* under g_lock */
+static int g_over_n;                                /* under g_lock */
+static volatile LONG g_relayout;
+static PadLayout di_over_row;                       /* worker only */
+static int di_learned;                              /* worker only */
+static PortPadRaw di_pub_raw;                       /* under g_lock */
+
+static signed char sc(int v) { return (signed char)v; }
+
+/* Pick the layout for the bound pad: the learned one if there is one, else
+   the table row, else the generic guess. Worker only. */
+static void di_resolve_layout(void)
+{
+    di_layout = &PAD_LAYOUTS[sizeof PAD_LAYOUTS / sizeof PAD_LAYOUTS[0] - 1];
+    di_learned = 0;
+    for (size_t i = 0; i + 1 < sizeof PAD_LAYOUTS / sizeof PAD_LAYOUTS[0]; ++i)
+        if (PAD_LAYOUTS[i].vid == di_vid && PAD_LAYOUTS[i].pid == di_pid) {
+            di_layout = &PAD_LAYOUTS[i];
+            break;
+        }
+    EnterCriticalSection(&g_lock);
+    for (int i = 0; i < g_over_n; ++i) {
+        const HostPadLayout *h = &g_over[i];
+        if ((unsigned)h->vid != di_vid || (unsigned)h->pid != di_pid) continue;
+        PadLayout &r = di_over_row;
+        r.vid = (unsigned short)h->vid;
+        r.pid = (unsigned short)h->pid;
+        r.name = "learned";
+        r.a = sc(h->a); r.b = sc(h->b); r.x = sc(h->x); r.y = sc(h->y);
+        r.lb = sc(h->lb); r.rb = sc(h->rb);
+        r.back = sc(h->back); r.start = sc(h->start);
+        r.lthumb = sc(h->lthumb); r.rthumb = sc(h->rthumb);
+        r.lt_btn = sc(h->lt_btn); r.rt_btn = sc(h->rt_btn);
+        r.lt_axis = sc(h->lt_axis); r.rt_axis = sc(h->rt_axis);
+        r.rx_axis = sc(h->rx_axis); r.ry_axis = sc(h->ry_axis);
+        r.lx_axis = sc(h->lx_axis); r.ly_axis = sc(h->ly_axis);
+        r.lx_sign = sc(h->lx_sign < 0 ? -1 : 1);
+        r.ly_sign = sc(h->ly_sign < 0 ? -1 : 1);
+        r.rx_sign = sc(h->rx_sign < 0 ? -1 : 1);
+        r.ry_sign = sc(h->ry_sign < 0 ? -1 : 1);
+        di_layout = &di_over_row;
+        di_learned = 1;
+        break;
+    }
+    di_pub_raw.learned = di_learned;
+    LeaveCriticalSection(&g_lock);
+}
 
 /* The DIJOYSTATE2 data format, by hand (see the file banner). Every object
    is OPTIONAL so a pad with fewer axes or buttons still binds. */
@@ -242,6 +304,7 @@ static void di_release_device(void)
     di_acquired = 0;
     EnterCriticalSection(&g_lock);
     di_pub_live = 0;
+    di_pub_raw.live = 0;
     LeaveCriticalSection(&g_lock);
 }
 
@@ -272,12 +335,7 @@ static BOOL CALLBACK di_enum_cb(const DIDEVICEINSTANCEA *inst, void *)
     /* strip a trailing space or two some drivers leave on the name */
     for (size_t n = strlen(di_name); n && di_name[n - 1] == ' '; --n)
         di_name[n - 1] = 0;
-    di_layout = &PAD_LAYOUTS[sizeof PAD_LAYOUTS / sizeof PAD_LAYOUTS[0] - 1];
-    for (size_t i = 0; i + 1 < sizeof PAD_LAYOUTS / sizeof PAD_LAYOUTS[0]; ++i)
-        if (PAD_LAYOUTS[i].vid == di_vid && PAD_LAYOUTS[i].pid == di_pid) {
-            di_layout = &PAD_LAYOUTS[i];
-            break;
-        }
+    di_resolve_layout();
     /* which axes exist, then ask for +-32767 on each and read back what it
        really has. An axis whose range cannot be read is treated as absent. */
     memset(di_axis_present, 0, sizeof di_axis_present);
@@ -427,11 +485,13 @@ static void di_translate(const DIJOYSTATE2 *js, PortPadState *out)
     out->buttons = (unsigned short)m;
     out->lt = di_trigger(js, L->lt_btn, L->lt_axis);
     out->rt = di_trigger(js, L->rt_btn, L->rt_axis);
-    /* DirectInput's Y grows downward; XInput's grows upward */
-    out->lx = di_axis(js, 0);
-    out->ly = (short)-di_axis(js, 1);
-    out->rx = di_axis(js, L->rx_axis);
-    out->ry = (short)-di_axis(js, L->ry_axis);
+    /* DirectInput's Y grows downward and XInput's upward, which is what the
+       built-in rows' -1 Y signs undo; a learned row's signs are whatever the
+       pad did when it was asked to push right and up */
+    out->lx = (short)(L->lx_sign * di_axis(js, L->lx_axis));
+    out->ly = (short)(L->ly_sign * di_axis(js, L->ly_axis));
+    out->rx = (short)(L->rx_sign * di_axis(js, L->rx_axis));
+    out->ry = (short)(L->ry_sign * di_axis(js, L->ry_axis));
     /* a packet number that changes when the state does, which is all the
        callers ever ask of XInput's. Worker only, so plain statics. */
     static unsigned long pkt;
@@ -442,11 +502,30 @@ static void di_translate(const DIJOYSTATE2 *js, PortPadState *out)
     last = *out;
 }
 
+/* The learn flow's view: button indices and axes before the layout. Worker
+   only; published beside the translated state. */
+static void di_raw(const DIJOYSTATE2 *js, PortPadRaw *out)
+{
+    out->live = 1;
+    out->learned = di_learned;
+    out->vid = di_vid;
+    out->pid = di_pid;
+    out->buttons = 0;
+    for (int b = 0; b < 32; ++b)
+        if (js->rgbButtons[b] & 0x80) out->buttons |= 1u << b;
+    for (int a = 0; a < 6; ++a) {
+        out->axis[a] = di_axis(js, a);
+        out->present[a] = (unsigned char)(di_axis_present[a] != 0);
+    }
+    strncpy(out->name, di_name, sizeof out->name - 1);
+    out->name[sizeof out->name - 1] = 0;
+}
+
 /* One read of the bound device. 0 means "treat the device as lost": the
    caller releases it and the next scan finds it again if it is still there.
    One re-acquire is tried when input was lost; a second loss in the same
    pass returns rather than repeating the dance against GetDeviceState. */
-static int di_read(PortPadState *out)
+static int di_read(PortPadState *out, PortPadRaw *raw)
 {
     if (!di_acquire()) return 0;
     HRESULT hr = di_dev->Poll();
@@ -461,6 +540,7 @@ static int di_read(PortPadState *out)
     DIJOYSTATE2 js;
     if (FAILED(di_dev->GetDeviceState(sizeof js, &js))) return 0;
     di_translate(&js, out);
+    di_raw(&js, raw);
     return 1;
 }
 
@@ -479,6 +559,8 @@ static void announce(void)
     if (xi_slot >= 0) {
         snprintf(b, sizeof b, "XInput slot %d", (int)xi_slot);
     } else if (di_dev) {
+        /* "learned layout" when a PadLayouts row is in effect, else the
+           table row's name */
         snprintf(b, sizeof b, "DirectInput: %s (%04x:%04x, %s layout)",
                  di_name[0] ? di_name : "unnamed controller", di_vid, di_pid,
                  di_layout->name);
@@ -524,12 +606,18 @@ static DWORD WINAPI pad_worker(void *)
                 dinput_scan();
                 last_di = now;
             }
+            /* a learned layout arrived (port_pad_set_layout): look again,
+               so the pad answers with it on this very pass */
+            if (InterlockedExchange(&g_relayout, 0) && di_dev)
+                di_resolve_layout();
             if (di_dev) {
                 PortPadState s;
-                if (di_read(&s)) {
+                PortPadRaw r;
+                if (di_read(&s, &r)) {
                     EnterCriticalSection(&g_lock);
                     di_pub_live = 1;
                     di_pub_state = s;
+                    di_pub_raw = r;
                     LeaveCriticalSection(&g_lock);
                 } else {
                     /* unplugged, or taken exclusively by someone else */
@@ -572,6 +660,15 @@ int port_pad_init(void)
         describe_set("none (forced)");
         return 0;
     }
+    /* the layouts settings.json remembers, before the worker exists so its
+       first bind already sees them */
+    {
+        const int n = host_setting_pad_layout_count();
+        for (int i = 0; i < n; ++i) {
+            HostPadLayout h;
+            if (host_setting_pad_layout_at(i, &h)) port_pad_set_layout(&h);
+        }
+    }
     /* everything slow happens on the worker; see the file banner */
     HANDLE t = CreateThread(0, 64 * 1024, pad_worker, 0, 0, 0);
     if (!t) {
@@ -612,4 +709,106 @@ const char *port_pad_describe(void)
     strcpy(describe_out, describe_buf);
     LeaveCriticalSection(&g_lock);
     return describe_out;
+}
+
+int port_pad_raw(PortPadRaw *out)
+{
+    memset(out, 0, sizeof *out);
+    if (!inited || g_mode == MODE_NONE) return 0;
+    /* an XInput slot that answers is the pad the game hears, and its layout
+       is XInput's own; there is nothing to learn on it */
+    if (xi_slot >= 0) return 0;
+    EnterCriticalSection(&g_lock);
+    if (di_pub_live && di_pub_raw.live) *out = di_pub_raw;
+    LeaveCriticalSection(&g_lock);
+    return out->live;
+}
+
+int port_pad_set_layout(const HostPadLayout *layout)
+{
+    if (!layout || layout->vid <= 0 || layout->pid <= 0) return 0;
+    if (!inited) port_pad_init();   /* the lock, and the seed from the file */
+    int ok = 1;
+    EnterCriticalSection(&g_lock);
+    int slot = g_over_n;
+    for (int i = 0; i < g_over_n; ++i)
+        if (g_over[i].vid == layout->vid && g_over[i].pid == layout->pid) slot = i;
+    if (slot >= HOST_PAD_LAYOUT_MAX) {
+        ok = 0;
+    } else {
+        g_over[slot] = *layout;
+        if (slot == g_over_n) ++g_over_n;
+    }
+    LeaveCriticalSection(&g_lock);
+    if (ok) InterlockedExchange(&g_relayout, 1);
+    return ok;
+}
+
+/* ---- the translation on a synthetic report ------------------------------
+   A made-up pad whose buttons are scrambled relative to the generic guess
+   and whose sticks sit on odd axes with the X mirrored: exactly the kind of
+   pad the learn flow exists for. The joystick state is built by hand, the
+   learned row is installed through the same port_pad_set_layout the menu
+   uses, and di_translate is run as the worker would run it. */
+int port_pad_selftest(void)
+{
+    if (!inited) {
+        InitializeCriticalSection(&g_lock);
+        inited = 1;
+        g_mode = MODE_NONE;         /* no worker: this process owns the statics */
+    }
+    int bad = 0;
+    HostPadLayout h;
+    host_pad_layout_default(&h);
+    h.vid = 0x1234; h.pid = 0x5678;
+    h.a = 2; h.b = 1; h.x = 3; h.y = 0;          /* the reporter's rotation */
+    h.lb = 6; h.rb = 7; h.lt_btn = 4; h.rt_btn = 5;
+    h.back = 10; h.start = 11; h.lthumb = 12; h.rthumb = 13;
+    h.lt_axis = -1; h.rt_axis = 3;                /* RT also analog on Rx */
+    h.lx_axis = 2; h.lx_sign = -1;                /* left stick on Z, mirrored */
+    h.ly_axis = 5; h.ly_sign = 1;                 /* and Rz, up is positive */
+    h.rx_axis = 0; h.rx_sign = 1;
+    h.ry_axis = 1; h.ry_sign = -1;
+    if (!port_pad_set_layout(&h)) { fprintf(stderr, "[pad] selftest: set_layout refused\n"); return 0; }
+    di_vid = 0x1234; di_pid = 0x5678;
+    for (int a = 0; a < 6; ++a) { di_axis_present[a] = 1; di_axis_min[a] = -32767; di_axis_max[a] = 32767; }
+    di_resolve_layout();
+    if (!di_learned || di_layout != &di_over_row) { fprintf(stderr, "[pad] selftest: learned row not chosen\n"); ++bad; }
+
+    DIJOYSTATE2 js;
+    memset(&js, 0, sizeof js);
+    js.rgdwPOV[0] = 0xFFFF;
+    PortPadState o;
+    /* press what the learned row calls A, X, LB, Start and click the right
+       stick; push the left stick right (Z goes NEGATIVE on this pad) and up
+       (Rz positive); pull RT on Rx */
+    js.rgbButtons[2] = 0x80; js.rgbButtons[3] = 0x80; js.rgbButtons[6] = 0x80;
+    js.rgbButtons[11] = 0x80; js.rgbButtons[13] = 0x80;
+    js.lZ = -32767; js.lRz = 32767; js.lRx = 32767; js.lX = 16383; js.lY = -32767;
+    js.rgdwPOV[0] = 9000;
+    di_translate(&js, &o);
+    const unsigned want = XB_A | XB_X | XB_LB | XB_START | XB_RTHUMB | XB_RIGHT;
+    if (o.buttons != want) { fprintf(stderr, "[pad] selftest: buttons 0x%04x want 0x%04x\n", o.buttons, want); ++bad; }
+    if (o.lx < 32000) { fprintf(stderr, "[pad] selftest: lx %d (mirrored Z should read right)\n", o.lx); ++bad; }
+    if (o.ly < 32000) { fprintf(stderr, "[pad] selftest: ly %d\n", o.ly); ++bad; }
+    if (o.rx < 16000 || o.rx > 16500) { fprintf(stderr, "[pad] selftest: rx %d\n", o.rx); ++bad; }
+    if (o.ry < 32000) { fprintf(stderr, "[pad] selftest: ry %d (Y up, sign -1)\n", o.ry); ++bad; }
+    if (o.rt != 255 || o.lt != 0) { fprintf(stderr, "[pad] selftest: lt %d rt %d\n", o.lt, o.rt); ++bad; }
+    /* the same report on the generic guess reads the reporter's bug: the
+       button at index 2 is X there, not A */
+    di_layout = &PAD_LAYOUTS[sizeof PAD_LAYOUTS / sizeof PAD_LAYOUTS[0] - 1];
+    di_translate(&js, &o);
+    if (!(o.buttons & XB_X) || (o.buttons & XB_A)) { fprintf(stderr, "[pad] selftest: generic guess did not rotate as expected 0x%04x\n", o.buttons); ++bad; }
+    /* and the raw view sees indices, not the mask */
+    PortPadRaw r;
+    di_raw(&js, &r);
+    if (r.buttons != ((1u << 2) | (1u << 3) | (1u << 6) | (1u << 11) | (1u << 13))) { fprintf(stderr, "[pad] selftest: raw buttons 0x%08x\n", r.buttons); ++bad; }
+    if (r.axis[2] != -32767 || r.axis[5] != 32767) { fprintf(stderr, "[pad] selftest: raw axes %d %d\n", r.axis[2], r.axis[5]); ++bad; }
+    /* an absent axis reads 0 through a learned row too */
+    di_axis_present[2] = 0;
+    di_layout = &di_over_row;
+    di_translate(&js, &o);
+    if (o.lx != 0) { fprintf(stderr, "[pad] selftest: absent axis read %d\n", o.lx); ++bad; }
+    fprintf(stderr, "[pad] selftest: %s\n", bad ? "FAIL" : "ok (learned row beats the table, sticks and signs through it)");
+    return bad == 0;
 }

@@ -60,6 +60,17 @@
  * This is how the DirectInput arm is exercised on a machine whose pad XInput
  * already sees.
  *
+ * A LEARNED LAYOUT BEATS THE TABLE. A DirectInput pad the table does not know
+ * gets the positional guess, and a player reported the guess wrong on theirs
+ * (only the d-pad worked, the face buttons came out rotated). The debug
+ * menu's "pad layout" row walks the player through one press per control and
+ * hands the result to port_pad_set_layout, keyed by the pad's vid:pid; it is
+ * applied on the worker's next pass with no restart, and the "[pad]" line
+ * then says "(learned layout)". settings.json's PadLayouts array
+ * (hal/host_settings.h) carries it between runs; port_pad_init seeds the
+ * override table from there. port_pad_raw is the learn flow's window onto
+ * the raw button indices and axes, before any layout is applied.
+ *
  * SELFTEST. port_pad_poll is never called by a headless selftest -- the
  * caller gates it, as it always did -- so a drifting stick cannot perturb the
  * battery. port_pad_init runs regardless and the worker prints the one line a
@@ -71,6 +82,8 @@
  */
 #ifndef PORT_PAD_BACKEND_H
 #define PORT_PAD_BACKEND_H
+
+#include "hal/host_settings.h"   /* HostPadLayout, the learned layout's shape */
 
 /* Identical in layout to XINPUT_GAMEPAD behind a packet number, i.e. to the
    XINPUT_STATE XInputGetState fills, and to walk_window.cpp's XPad. */
@@ -100,5 +113,38 @@ int port_pad_poll(PortPadState *out);
 /* The backend and device the last successful discovery named, for a log or
    an overlay. "none" until something answers. */
 const char *port_pad_describe(void);
+
+/* ---- the learn flow's raw view ------------------------------------------
+   The DirectInput pad's state BEFORE any layout: which button indices are
+   down and where each of the six axes sits, plus what the pad is. live is 1
+   only when a DirectInput pad is bound AND it is the pad port_pad_poll
+   answers with (an XInput slot that answers wins, and XInput layouts need no
+   learning). Axes are scaled to +-32767 in DirectInput's own sense (Y grows
+   downward), 0 when the pad lacks the axis. Cheap: one copy under the lock. */
+struct PortPadRaw {
+    int live;
+    int learned;                /* the layout in effect is a learned one */
+    unsigned vid, pid;
+    unsigned buttons;           /* bit i: DirectInput button i is down, i < 32 */
+    short axis[6];              /* X Y Z Rx Ry Rz */
+    unsigned char present[6];   /* the pad has that axis */
+    char name[96];              /* the product name DirectInput gave */
+};
+int port_pad_raw(PortPadRaw *out);
+
+/* Install (or replace) the layout for one vid:pid. Beats the built-in table
+   from the worker's next pass on, so a pad already bound answers with it at
+   once. Does not touch settings.json; the caller saves through
+   host_setting_save_pad_layout if it wants the layout back next run. At most
+   HOST_PAD_LAYOUT_MAX pads; a further one is refused (returns 0). */
+int port_pad_set_layout(const HostPadLayout *layout);
+
+/* The translation checked on a synthetic report: a learned layout is
+   installed for a made-up vid:pid, a hand-built joystick state is pushed
+   through the same code the worker runs, and the XInput-shaped answer is
+   compared bit for bit. Returns 1 on pass and says what failed on stderr.
+   FOR A TEST PROCESS ONLY, before port_pad_init: it writes the worker's own
+   statics. */
+int port_pad_selftest(void);
 
 #endif /* PORT_PAD_BACKEND_H */
