@@ -49,7 +49,11 @@
  * the connected XInput slot and the translated DirectInput state; the game
  * thread's port_pad_poll makes one XInputGetState on a slot already known to
  * be connected and copies one snapshot, and never blocks. Init itself only
- * reads the environment and starts the thread. See the banner in the .cpp.
+ * reads the environment and starts the thread, so it is NON-BLOCKING: a pad
+ * reads not-live until the worker's first pass has finished (about half a
+ * second, the DLL loads and the first enumeration), and the "[pad]" line can
+ * trail the boot by that one pass. The DirectInput scan is skipped while an
+ * XInput slot answers. See the banner in the .cpp.
  *
  * SM64DS_PAD_BACKEND=xinput|dinput|none forces one arm (or no pad at all),
  * read once in port_pad_init and announced with a "[pad] forced: ..." line.

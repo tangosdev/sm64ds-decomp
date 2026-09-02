@@ -512,9 +512,15 @@ static DWORD WINAPI pad_worker(void *)
                 last_xi = now;
             }
         }
-        /* DirectInput: bind, read, publish */
+        /* DirectInput: bind, read, publish. NOT SCANNED WHILE XINPUT ANSWERS:
+           the game thread takes the XInput slot first anyway, and an
+           enumeration every two seconds is hundreds of milliseconds of CPU
+           and HID traffic that every XInput user would pay forever. A swap
+           to a non-XInput pad still arrives at once through the
+           WM_DEVICECHANGE kick, and the cadence resumes when the slot goes. */
         if (di8) {
-            if (!di_dev && (first || kick || now - last_di >= DI_RESCAN_MS)) {
+            if (!di_dev && (xi_slot < 0 || kick) &&
+                (first || kick || now - last_di >= DI_RESCAN_MS)) {
                 dinput_scan();
                 last_di = now;
             }
