@@ -698,6 +698,9 @@ void *hal_camera_new(void);
 int hal_camera_init_resources(void *cam);
 int hal_camera_behavior(void *cam);
 int hal_camera_render(void *cam);
+#ifdef NTR_WIDE169
+void hal_camera_widen_frustum(void);   /* 16:9 object-cull frustum widen */
+#endif
 void func_0203e0ac(void);
 /* run mg16 lane MP3: the ROM's own comms dispatcher, linked through
    port/slice_mp3.txt. It owns the switch that used to be hosted at the call
@@ -11334,6 +11337,15 @@ int main(void)
                 fc_eye(pivot, fceye);
                 fc_push_view(cam, fceye, pivot);
             }
+#ifdef NTR_WIDE169
+            /* WIDESCREEN: widen the object-cull frustum to match the Hor+ 3D
+               field, AFTER the camera Render just seeded the global Clipper
+               (func_0200d954 -> Func_020156DC) and BEFORE the actor buckets test
+               it, so ambient actors at the new side margins are no longer culled
+               as off-screen. Host-side, gated on the tier; see
+               hal_camera_widen_frustum in hal/camera_bridges.cpp. */
+            hal_camera_widen_frustum();
+#endif
             /* THE ACTOR RENDER BUCKET GOES HERE, and the reason is the shim
                immediately below. Processing list 5 is the game's own render
                pass -- func_0204322c over slots 9/10/11, in render-priority

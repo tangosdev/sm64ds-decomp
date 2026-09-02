@@ -4232,6 +4232,14 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        existed and is still right for every game whose G is the band's
        height. */
     l.game_g_ds = 0;
+    /* THE BOTTOM PANEL'S PILLARBOX. Drawn at the UNIFORM vertical scale so it is
+       never stretched sideways, and centred in the image with black margins. On
+       a square tier scale == STACK_W / SUB_W, so pan_w == STACK_W and pan_x0 ==
+       0 -- the panel fills the width exactly as it did before this field, and the
+       compose's wide branch (gated on pan_x0 > 0) never fires. The first tier
+       where they differ is NTR_WIDE169: scale 3, pan_w 768, pan_x0 128. */
+    l.pan_w = SUB_W * l.scale;
+    l.pan_x0 = (STACK_W - l.pan_w) / 2;
     return l;
 }
 
@@ -4425,6 +4433,94 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
      * along and the port was showing that panel's engine in the wrong half. */
     const int a_y = lay.main_lower ? lay.bottom_y : lay.top_y;
     const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
+
+#ifdef NTR_WIDE169
+    /* ---- THE WIDESCREEN STACKED PRESENTATION (16:9) -----------------------
+     *
+     * On a square tier SCREEN_W/SUB_W == SCREEN_H/SUB_H, so scaling the 256x192
+     * bottom panel to fill the width is the same whole number both ways and is
+     * undistorted. NTR_WIDE169 is the first tier where they differ (4 across, 3
+     * down): filling the width would stretch the panel a third wider than tall.
+     * So the panel is PILLARBOXED -- drawn at the uniform vertical scale, native
+     * 4:3, centred in [pan_x0, pan_x0 + pan_w) with black margins either side --
+     * and the gap band under it (the ambient wash, the art, the hinge and the
+     * seam mods) is composed on that same centred column so it stays aligned with
+     * the panel, off a lay whose width IS the panel's. dst2 = dst + pan_x0 gives
+     * every band pass its horizontal origin for free: it walks 0..lay2.w and the
+     * pointer base carries it to the centre.
+     *
+     * THE TOP HALF IS LEFT FULL WIDTH. Whether a minigame's upper screen is the
+     * widened Hor+ 3D field (which should keep the extra width) or a 2D DS raster
+     * (which would want the same pillarbox) is a per-scene fact this compose
+     * cannot read, and stretching it here would be wrong for the 3D case, so the
+     * safe move is to touch only the panel that is unambiguously a 256x192 raster.
+     * Flagged for Tango. Gated on pan_x0 > 0, which is false on every 4:3 tier,
+     * so those build and compose byte-for-byte unchanged. */
+    if (lay.pan_x0 > 0) {
+        const int px0 = lay.pan_x0, pw = lay.pan_w;
+        const int ry = SCREEN_H / SUB_H;   /* uniform scale, both axes */
+
+        /* Engine A verbatim and full width, exactly as the square path does it. */
+        std::memcpy(dst + (size_t)a_y * dst_w, top,
+                    (size_t)SCREEN_W * SCREEN_H * 4);
+
+        /* Engine B, pillarboxed: black margins, uniform-scaled centred panel. */
+        for (int y = 0; y < SCREEN_H; ++y) {
+            const int sy = y / ry;
+            const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
+            uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
+            for (int x = 0; x < px0; ++x) out[x] = 0xFF000000u;
+            for (int x = px0 + pw; x < SCREEN_W; ++x) out[x] = 0xFF000000u;
+            for (int x = 0; x < pw; ++x) {
+                const int sx = x / ry;
+                uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
+                if (evy) {
+                    int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
+                    if (to_white) {
+                        r += ((255 - r) * evy) >> 4;
+                        g += ((255 - g) * evy) >> 4;
+                        b += ((255 - b) * evy) >> 4;
+                    } else {
+                        r -= (r * evy) >> 4;
+                        g -= (g * evy) >> 4;
+                        b -= (b * evy) >> 4;
+                    }
+                    p = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
+                        (uint32_t)b;
+                }
+                out[px0 + x] = p;
+            }
+        }
+
+        /* The headroom reads only the upper screen's own rows (full width) and is
+           0 for every minigame anyway; left on the full image. */
+        head_paint(dst, dst_w, lay);
+
+        /* Black the band's own pillar margins before the decorations land in the
+           centre: the band passes below write only [pan_x0, pan_x0 + pan_w). */
+        for (int y = lay.band_y; y < lay.bottom_y; ++y) {
+            uint32_t *row = dst + (size_t)y * dst_w;
+            for (int x = 0; x < px0; ++x) row[x] = 0xFF000000u;
+            for (int x = px0 + pw; x < SCREEN_W; ++x) row[x] = 0xFF000000u;
+        }
+
+        /* The band and seam passes on the centred column. lay2.w IS the panel
+           width, so their rx = lay2.w / SUB_W is the uniform scale and every
+           x-write lands in [pan_x0, pan_x0 + pan_w) through the shifted base. */
+        StackLayout lay2 = lay;
+        lay2.w = pw;
+        uint32_t *dst2 = dst + px0;
+        band_fill(dst2, dst_w, lay2);
+        if ((lay2.peek || lay2.world_band) && !lay2.obj_shift_ds)
+            band_peek(dst2, dst_w, lay2);
+        if (!lay2.peek && !lay2.world_band && !lay2.obj_shift_ds)
+            band_ghost(dst2, dst_w, lay2);
+        hinge_paint(dst2, dst_w, lay2);
+        seam_straddle(dst2, dst_w, lay2, evy, to_white);
+        seam_snow(dst2, dst_w, lay2, evy, to_white);
+        return;
+    }
+#endif
 
     // ENGINE A, verbatim: it is already faded and already carries the F3
     // overlay, because it is the framebuffer the caller finished with.

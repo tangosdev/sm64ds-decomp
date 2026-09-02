@@ -264,7 +264,28 @@ Mat &current_pos() { return g.pos; }
 // did the moment a perspective camera walked into geometry.
 GxVertex project(int16_t x, int16_t y, int16_t z) {
     const Vec4 v{x * FX12, y * FX12, z * FX12, 1.0f};
-    const Vec4 c = mul(mul(v, current_pos()), g.proj);
+    Vec4 c = mul(mul(v, current_pos()), g.proj);
+
+#ifdef NTR_WIDE169
+    /* WIDESCREEN 3D FIELD (16:9 Hor+). The ROM builds its projection with a
+       4:3 aspect (G3i::PerspectiveW_ divides the x scale by 0x1555). Presented
+       on the 1024x576 framebuffer that 4:3 image would be stretched sideways;
+       instead WIDEN THE HORIZONTAL FIELD so the extra width shows more of the
+       world and nothing is squashed. This is done at the point of use rather
+       than by rewriting g.proj: it is naturally idempotent (no risk of
+       double-applying across a load+multiply) and it never touches clip.y --
+       Hor+, never a vertical squish. It fires ONLY for a perspective load;
+       an ortho / 2D projection carries no vertex-dependent w (m[3]/m[7]/m[11]
+       all zero) and is left exactly as it was, so the HUD's own 2D geometry is
+       untouched here. clip.x scales by native/target =
+       (4/3) / (SCREEN_W/SCREEN_H) = 0.75, so what sat at the old screen edge
+       moves inward and the new margins reveal world that was off-screen. */
+    if (g.proj.m[3] != 0.0f || g.proj.m[7] != 0.0f || g.proj.m[11] != 0.0f) {
+        const float widen =
+            (4.0f / 3.0f) * ((float)SCREEN_H / (float)SCREEN_W);
+        c.x *= widen;
+    }
+#endif
 
     GxVertex out{};
     out.x = c.x;
