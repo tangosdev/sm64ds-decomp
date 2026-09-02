@@ -421,3 +421,15 @@ data_ov002_02100364 data_ov002_0210d6d0 data_ov002_02100380
 # 0210da58 for the feather's model) are ALREADY mounted above -- nothing to
 # add for either class's resources.
 Number_SpawnInfo:0x1c WingFeather_SpawnInfo:0x1c
+#
+# ---- gate 210 (lane SEAT-OV002-RUNTIME): FIREBALL (254) ---------------------
+# Fireball_SpawnInfo 0x0210bf70 (+4 reads 254; pinned :0x1c so the record ends
+# where the table's RTTI prefix begins, the VSPOPUP rule) and its table
+# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots (:0x7c; the next dsd
+# symbol data_ov002_0210c010 pins it exactly). The table is mounted raw and
+# overwritten slot for slot by hal_fill_fireball_vtable before any spawn
+# (the gate-200 _ZTV9PushBlock shape). data_ov002_02100320/334/348 are the
+# three five-word particle tables func_ov002_020f8b24 indexes by the
+# fireball's variant byte (+0x36d); sizes pin to the next symbols (0x14 each).
+Fireball_SpawnInfo:0x1c _ZTV8Fireball:0x7c
+data_ov002_02100320 data_ov002_02100334 data_ov002_02100348

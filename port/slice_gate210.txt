@@ -1,0 +1,28 @@
+# Gate 210 (lane SEAT-OV002-RUNTIME): four run-time spawns from code already
+# linked. None is on any level's object table; each is asked for by a linked
+# caller in a played frame. The fills and the derivation are in
+# hal/actor_classes_runtime_spawns.cpp; the per-body byte-match table is
+# status/SEATOV002.md.
+#
+# ---- FIREBALL (254, ov002) ------------------------------------------------
+# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots. Fireball_SpawnInfo
+# (0x0210bf70, +4 reads 254) and the table joined port/ov002_syms.txt, with the
+# three particle tables Behavior's helper indexes (data_ov002_02100320/334/348).
+# Spawned by Actor::SpawnFireball (arm9, linked; asks for 0xfe), whose callers
+# func_ov084_0212ddbc (fire piranha, gate 71), func_ov070_0211f48c and
+# func_ov063_02118458 are all in the link.
+# Slot 18 func_ov002_020f92e4 carries the name marker (dsd called it
+# daFPknBall_c::OnYoshiTryEat, which is what it is) and byte-matches under
+# tools/match.py with strict relocs; ruled REAL_DECOMP in
+# tools/inferred_stub_adjudicated.txt before seating.
+src/Fireball_Spawn.c
+src/_ZN8Fireball13InitResourcesEv.cpp
+src/_ZN8Fireball8BehaviorEv.cpp
+src/_ZN8Fireball6RenderEv.c
+src/_ZN8FireballD1Ev.c
+src/_ZN8FireballD0Ev.c
+src/func_ov002_020f92e4.c
+# Behavior's three helpers
+src/func_ov002_020f8b24.c
+src/func_ov002_020f88ec.c
+src/func_ov002_020f897c.c
