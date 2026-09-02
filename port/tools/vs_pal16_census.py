@@ -94,9 +94,18 @@ def main():
         log = os.path.join(wdir, "run.log")
         if not (name.startswith("p") and os.path.isfile(log)):
             continue
-        bmp = os.path.join(wdir, "window_%s.bmp" % name)
-        if not os.path.isfile(bmp):
-            print("%s: no window_%s.bmp" % (name, name))
+        # SM64DS_WINDOW_SELFTEST is a HEADLESS run, so the presented-image
+        # capture (SM64DS_STACK_BMP, stack_present_arm) never fires: there is
+        # no window to present. The selftest writes its own BMP instead, and
+        # that is the picture for a selftest run. Either name is accepted so
+        # the same census reads a windowed capture too.
+        bmp = None
+        for cand in ("window_%s.bmp" % name, "walk_window_selftest.bmp"):
+            if os.path.isfile(os.path.join(wdir, cand)):
+                bmp = os.path.join(wdir, cand)
+                break
+        if not bmp:
+            print("%s: no BMP" % name)
             continue
         any_bmp = True
         seats = seats_from_log(log)

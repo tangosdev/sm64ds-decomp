@@ -24,16 +24,25 @@ SM64DS_WINDOW_SELFTEST="$FRAMES" \
 echo "rc=$?  lines=$(wc -l < texlog.txt)"
 python - "$OUT/texlog.txt" <<'PY'
 import re, sys
-offs = [int(m, 16) for m in
-        re.findall(r"paloff=([0-9a-f]+)", open(sys.argv[1], errors="replace").read())]
+offs = sorted(set(int(m, 16) for m in
+      re.findall(r"paloff=([0-9a-f]+)", open(sys.argv[1], errors="replace").read())))
 if not offs:
     print("no [texbind] paloff lines; is SM64DS_TEX_LOG reaching a bind?")
     raise SystemExit(1)
-lo, hi = min(offs), max(offs)
-print("distinct palette offsets seen: %d" % len(set(offs)))
-print("lowest  paloff 0x%05x  (the falling arena's floor this run)" % lo)
-print("highest paloff 0x%05x" % hi)
-print("ceiling        0x18000")
-print("headroom below the falling arena: 0x%05x bytes (%d)" % (lo, lo))
-print("the sixteen-row palette costs 384 (0x180) more than the ROM's four")
+# THE TWO ARENAS ARE READ APART BY THE GAP, not by a threshold typed here.
+# Small palettes rise from 0 and large ones fall from 0x18000, so the offsets
+# come out as two clusters with one wide gap between them; the widest gap IS
+# the free space, and that is the number this probe exists to print.
+gaps = [(offs[i+1] - offs[i], i) for i in range(len(offs) - 1)]
+width, at = max(gaps) if gaps else (0, -1)
+rising_top = offs[at] if at >= 0 else offs[-1]
+falling_floor = offs[at+1] if at >= 0 else 0x18000
+print("distinct palette offsets: %d, from 0x%05x to 0x%05x" %
+      (len(offs), offs[0], offs[-1]))
+print("rising arena (small palettes, up from 0)   tops out at 0x%05x" % rising_top)
+print("falling arena (large palettes, down from 0x18000) floors at 0x%05x"
+      % falling_floor)
+print("FREE SPACE BETWEEN THEM: 0x%05x bytes (%d)" % (width, width))
+print("the sixteen-row palette costs 0x180 (384) more than the ROM's four,")
+print("which is %.2f%% of that gap" % (100.0 * 384 / width if width else 0))
 PY

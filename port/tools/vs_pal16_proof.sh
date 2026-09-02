@@ -79,7 +79,16 @@ export SM64DS_NO_DIALOG=1
 export SM64DS_DUAL_SCREEN=1
 SHOTFRAME="${PAL16_SHOT_FRAME:-600}"
 
+# PAL16_STILL=1: DO NOT hold a direction. The default run walks every window a
+# different way, which is what tells bodies apart in a capture and what the
+# ladder wants; but it also scatters seven players across an arena, so a
+# single camera sees three of them. For the OWNER'S picture the opposite is
+# wanted: nobody moves, everybody stays in the spawn ring, and one camera sees
+# the whole field. The colours are identical either way -- a palette row is
+# decided at load and no input touches it -- so this changes what is in frame
+# and nothing about what is being proved.
 key_for() {
+  if [ -n "$PAL16_STILL" ]; then echo 0x0000; return; fi
   case $(( $1 % 4 )) in
     0) echo 0x0040 ;;   # up
     1) echo 0x0080 ;;   # down

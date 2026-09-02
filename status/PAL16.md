@@ -287,7 +287,48 @@ main defect.
 Verbatim, rc=0. The first six blocks are the pre-existing suite including the
 identity; `rows16` is this lane's:
 
-<!-- PROOF: vs_palette_test -->
+    identity: picking the ROM's own colours changes nothing
+      ok   ROM row 0 regenerates itself
+      ok   ROM row 1 regenerates itself
+      ok   ROM row 2 regenerates itself
+      ok   ROM row 3 regenerates itself
+    determinism: same input, same bytes, twice
+      ok   64 colour pairs, forwards then backwards, byte-identical
+    fixed slots: 4,5,6,9,10,11,12,13,14,15 never move
+      ok   240 colour pairs leave every fixed slot alone
+    shading: the body ramp keeps its order and stays distinct
+           208 picks tried
+      ok   no pick inverts the ramp
+      ok   no pick flattens it below three distinct shades
+    hex parsing
+      ok   lower case
+      ok   upper case
+      ok   a non-hex byte is refused
+      ok   a space is refused
+    golden: body 8a2be2 shoes ffd700 -> 4c8c 6cb1 7573 69d3 0022 075d 084e 12da 035f 107c 1093 1a99 56d7 675a 77bd 7fff
+      ok   golden row
+    rows16: the ROM's four rows survive a build with no picks
+      ok   row 0 is the cartridge's, byte for byte
+      ok   row 1 is the cartridge's, byte for byte
+      ok   row 2 is the cartridge's, byte for byte
+      ok   row 3 is the cartridge's, byte for byte
+    rows16: all sixteen body ramps are distinct
+      ok   no two seats wear the same body
+    rows16: the shoe pairs are distinct as well
+      ok   no two seats wear the same boots
+    rows16: the fixed slots are fixed in all sixteen rows
+      ok   ten fixed slots x sixteen rows all untouched
+    rows16: a pick reaches its own seat and only its own seat
+      ok   seat 9 wears its pick, anchored on ROM row 1
+      ok   no other seat moved
+    rows16: one pick, two seats on the same base row, same bytes
+      ok   seats 0, 4, 8 and 12 are byte-identical
+
+    all green
+
+(rc 0. The identity block at the top is the pre-existing suite: picking each
+ROM row's own colours reproduces that row exactly, which is what keeps a
+no-custom-colour match byte-identical to the cartridge.)
 
 ### File shape: `port/tools/vs_rows16_bmd_check.py`
 
@@ -300,15 +341,109 @@ upload).
 
     python port/tools/vs_rows16_bmd_check.py
 
-<!-- PROOF: bmd_check -->
+    source: C:\tmp\pal16\extracted\dsd\files\ARCHIVE\arc0.narc member 196, 14296 bytes
+    the cartridge's own shape
+      ok   yoshi_all_16p_pl is 128 bytes
+      ok   its four rows are kVsRomRows
+    the grown file
+      ok   grew by exactly 512 bytes plus alignment padding
+      ok   the appended block starts at or after the old end
+      ok   nothing below the old length changed except the palette record's own offset and size words: ['0x26f8', '0x26fc', '0x26fd']
+      ok   the record still has the same name and place
+      ok   it now says 512 bytes
+      ok   at the appended offset
+      ok   and 512 bytes are really there
+      ok   the palette is four-byte aligned
+      ok   rows 0..3 are the cartridge's, byte for byte
+      ok   rows 4..15 are all present and all distinct
+    every other record still points where it pointed
+      ok   the same set of records
+      ok   nothing but the Yoshi palette moved or resized: -
+      ok   every record lies inside the grown file: -
+    it still parses
+      ok   parse_bmd accepts the grown file
+      ok   and reads the palette back as 512 bytes
+      ok   with the same texture, material and bone counts as before
+
+    all green
+
+(rc 0.)
 
 ### Build
 
-<!-- PROOF: build -->
+`port/build-port.cmd`, 32-bit MSVC + ninja, into `build/port`, private TEMP
+`C:\tmp\pal16tmp`. **BUILD_OK**, all post-link guards green:
+
+    alternatename_guard ... OK
+    gxband_guard: gxbank 3/24 maps (floor 3), 13 members, 36 deltas; dtcm 3/24
+      maps (floor 3), 1 members, 0 deltas; vsrank 3/24 maps (floor 3), 2
+      members, 3 deltas; vsstar 3/24 maps (floor 3), 2 members, 3 deltas;
+      ready 3/24 maps (floor 3), 2 members, 3 deltas -- layout OK
+    tailjump_guard: 35 frames (7 A, 8 C, 22 veneer derived, 2 overlap), 97
+      assertions over 24 map(s) -- forms OK
+
+    walk_window.exe  5,470,720 bytes
+      sha256 6ec49672af9569ed37263108d74d862c9883284cbde187d704545cf480d44c58
+    smoke_player.exe 4,701,696 bytes
+
+TWO BUILDS WERE KILLED BEFORE THIS ONE AND NEITHER WAS A COMPILE FAILURE, said
+plainly because their logs look like failures and are not. `FAILED:` lines with
+no diagnostic under them are processes being killed, not code being rejected.
+The first died when a ten-minute foreground wait loop timed out and took the
+build's process tree with it; the second when `start /b` left the build on a
+console that then went away. The third ran under `start` with its own console
+and completed. Nothing in the tree changed between them.
 
 ### Battery
 
-<!-- PROOF: battery -->
+`python port/tools/battery.py --skip-build` (the build above is the one it
+would otherwise make), log `C:\tmp\pal16bld\battery.log`.
+
+    smoke_fs.exe: ok        smoke_gx.exe: ok        smoke_heap.exe: ok
+    smoke_model.exe: ok     smoke_modelanim.exe: ok smoke_oam.exe: ok
+    smoke_objwin.exe: ok    smoke_persist.exe: ok   smoke_player.exe: ok
+    smoke_roots.exe: ok     smoke_savestate.exe: ok smoke_sdat.exe: ok
+    smoke_soak.exe: ok  soak: 455 models, 455 rendered (89840 tris total),
+                            0 empty, 0 load-fail, 0 faulted
+    smoke_soak_anim.exe: ok  anim soak: 473 compatible pairs, 473
+                            animated+rendered, 0 empty, 0 load-fail, 0 faulted
+    levels: 50 mounted, from hal/level_boot.cpp
+    scenes: 34 hosted, from hal/scene_boot.cpp
+    default boot: ok -- a bare launch reaches the TITLE, 300 frames clean
+    linkage: 9139 (80.7%)
+    ptr_audit: 0 unhosted code pointers
+    battery: ALL GREEN
+    BATTERY_RC=0
+
+Linkage 9139 (80.7%) is **unchanged** from the base, which is the honest
+reading rather than a win: nothing in this lane adds or removes a linked
+matched function. Pre-existing skips, re-probed bare on every run and not this
+lane's: level 27 without TTC_MOVING_BEAM, level 45 without GOOMBOSS.
+
+### Palette VRAM headroom
+
+`sh port/tools/vs_pal16_headroom.sh`, a solo VS arena boot with
+`SM64DS_TEX_LOG=1`, 400 frames. Large palettes fall from `data_020a4bd8` =
+0x18000 and small ones rise from `data_020a4bcc` = 0, and each bind's `paloff`
+is a palette's own VRAM byte offset, so the widest gap in the sorted offsets IS
+the free space between the two arenas.
+
+    distinct palette offsets: 46, from 0x00000 to 0x17ed0
+    rising arena (small palettes, up from 0)            tops out at 0x00000
+    falling arena (large palettes, down from 0x18000)   floors at 0x113e0
+    FREE SPACE BETWEEN THEM: 0x113e0 bytes (70624)
+    the sixteen-row palette costs 0x180 (384) more than the ROM's four,
+    which is 0.54% of that gap
+
+So the change spends 384 bytes out of roughly 70 KB of daylight. And the growth
+was confirmed to actually happen, from the same run:
+
+    [mods] yoshi_all_16p_pl grown to 16 rows (128 -> 512 bytes at +14296);
+           every VS seat has its own colours
+
+Measured on a SOLO boot. Seven players do not multiply it: the Yoshi model is
+loaded once and shared, and every seat indexes rows inside that one palette,
+which is the entire design.
 
 ### The wide session, with colours read back from inside the game
 
@@ -323,14 +458,203 @@ blind to colour by construction: sixteen perfectly-agreeing peers can all draw
 the same green Yoshi, and the ladder calls that clean. It did, for the whole of
 0.3.2.
 
-<!-- PROOF: wide -->
+**The run.** `sh port/tools/vs_pal16_proof.sh 7 900 0`, seven windows, one
+loopback session, arena 0 (level 51), ports 42940..42946, 900 frames per child
+and 1800 for the parent. Every window muted (`SM64DS_VOLUME=0`), minimized and
+never activated (`SM64DS_MINIMIZED=1`, `SM64DS_NO_FOCUS=1`). Output
+`C:\tmp\pal16-out\pal7`.
+
+Sixteen-field `SM64DS_VS_COLORS`, **slot 5 = `000000:000000`**, with seats 3,
+7, 11 and 15 left empty so a defaulted seat is exercised in the same session:
+
+    ff0000:0000ff,00ff00:ff00ff,0000ff:ffff00,,ff8800:004488,000000:000000,
+    00ffff:880000,,ff00ff:00ff88,8800ff:ffcc00,ffffff:cc0000,,00ff88:660066,
+    ff99cc:330066,999999:0044cc,
+
+**The colour verdict**, `python port/tools/vs_pal16_check.py
+C:/tmp/pal16-out/pal7 --expect "5=0000,0000,0000,0000"`, rc 0:
+
+    windows: p0, p1, p2, p3, p4, p5, p6
+      p0 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p1 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p2 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p3 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p4 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p5 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+      p6 sees 7 seats: 0=0457/001f/2dbf/425c, 1=1ec7/2362/03e0/37b4, 2=1c43/2845/3066/7c00, 3=167c/22de/033f/579e, 4=09b8/023f/3ebf/531d, 5=0000/0000/0000/0000, 6=41c7/5228/5e89/7fe0
+
+    1. every seat wears a different body ramp
+      ok   seat 0 never changed colour mid-run
+      ok   seat 1 never changed colour mid-run
+      ok   seat 2 never changed colour mid-run
+      ok   seat 3 never changed colour mid-run
+      ok   seat 4 never changed colour mid-run
+      ok   seat 5 never changed colour mid-run
+      ok   seat 6 never changed colour mid-run
+      ok   no two seats share a ramp: -
+
+    2. the row index is the TRUE slot
+      ok   seat 0 has one stable palette base
+      ok   seat 1 has one stable palette base
+      ok   seat 2 has one stable palette base
+      ok   seat 3 has one stable palette base
+      ok   seat 4 has one stable palette base
+      ok   seat 5 has one stable palette base
+      ok   seat 6 has one stable palette base
+      ok   base(slot k) - base(slot 0) == 2k for every seat: -
+
+    3. the latch agrees with the selector, and geometry was drawn
+      ok   seat 0 TEXPLTT_BASE == Player+0x61C ([5515] vs [5515])
+      ok   seat 1 TEXPLTT_BASE == Player+0x61C ([5517] vs [5517])
+      ok   seat 2 TEXPLTT_BASE == Player+0x61C ([5519] vs [5519])
+      ok   seat 3 TEXPLTT_BASE == Player+0x61C ([5521] vs [5521])
+      ok   seat 4 TEXPLTT_BASE == Player+0x61C ([5523] vs [5523])
+      ok   seat 5 TEXPLTT_BASE == Player+0x61C ([5525] vs [5525])
+      ok   seat 6 TEXPLTT_BASE == Player+0x61C ([5527] vs [5527])
+      ok   every seat submitted triangles behind its palette: -
+
+    4. every window agrees about every seat
+      ok   p1 drew all 7 seats: missing -
+      ok   p1 paints every seat the same colour p0 does: -
+      ok   p2 drew all 7 seats: missing -
+      ok   p2 paints every seat the same colour p0 does: -
+      ok   p3 drew all 7 seats: missing -
+      ok   p3 paints every seat the same colour p0 does: -
+      ok   p4 drew all 7 seats: missing -
+      ok   p4 paints every seat the same colour p0 does: -
+      ok   p5 drew all 7 seats: missing -
+      ok   p5 paints every seat the same colour p0 does: -
+      ok   p6 drew all 7 seats: missing -
+      ok   p6 paints every seat the same colour p0 does: -
+
+    5. a named pick lands on its own seat
+      ok   seat 5 wears 0000,0000,0000,0000 (got 0000,0000,0000,0000)
+
+    all green
+
+**The bases are the whole fix in one line:** 5515, 5517, 5519, 5521, 5523,
+5525, 5527 -- exactly +2 per seat, all the way through seats 4, 5 and 6, which
+before this lane collapsed back onto 5517, 5519 and 5521. Seat 3 comes out
+`167c 22de 033f 579e`, which is ROM row 3 verbatim: the defaulted path below
+four is the cartridge's own bytes.
+
+**No divergence.** `port/tools/dhdiff.py` over all 21 pairings of the seven
+windows, on both the walking run and the still capture run:
+
+    C:/tmp/pal16-out/pal7        pairings NO DIVERGENCE: 21   other: 0
+    C:/tmp/pal16-out/still/pal7  pairings NO DIVERGENCE: 21   other: 0
+
+**And the lockstep result is not vacuous**, which is the trap the standing rule
+names: lockstep is blind to motionless players. Per-actor state-hash churn over
+the walking run, actorID 191 (PLAYER), from p0's log:
+
+    uid 1=1739  2=1739  3=1733  4=1699  6=1739  7=1739  8=1514
+    MINIMUM across the seven player actors: 1514 distinct states
+
+Every seat moved through 1500+ distinct states. Seven agreeing statues would
+have produced exactly the same NO DIVERGENCE and this number would have been 1.
+
+**Pixels, not just palettes.** `port/tools/vs_pal16_census.py` counts, against
+the exact words the game reported binding, how many pixels each seat painted in
+the captured frame. From the still run's parent window:
+
+    seat 0  556 px   seat 1  980 px   seat 2  294 px   seat 3  318 px
+    seat 4  484 px   seat 5  (below)  seat 6  617 px
+    seats with pixels on screen: [0, 1, 2, 3, 4, 6]
+
+SEAT 5 COUNTS ZERO AND IS NOT MISSING. Its whole body ramp is
+`0000,0000,0000,0000`, and 0000 is also the background and the outline in a
+great many places, so counting it would count the sky. What says seat 5 is
+really there is the engine-side probe: base 5525 (row 5), **456 triangles per
+frame over 1300 frames, the same as seat 0**. It is a fully drawn Yoshi that is
+black, which is what was asked for.
 
 ### Screenshots
 
-<!-- PROOF: shots -->
+`C:\tmp\pal16\status_shots\`, with a `README.txt` beside them carrying the
+colour assignment and the census. Five 512x384 captures:
+
+    still_p0_parent.bmp     the still run, parent window -- six of seven seats
+                            in one frame, seat 5 black
+    still_p1_child.bmp      the still run, a child window
+    still_p4_child.bmp      the still run, another child
+    walking_p0_parent.bmp   the walking run, parent
+    walking_p1_child.bmp    the walking run, a child
+
+The still run is `PAL16_STILL=1`: nobody holds a direction, so all seven stay in
+the spawn ring and one camera sees the field. The walking run scatters them and
+a single camera sees three or four, which is why both are kept -- the walking
+run is where the lockstep sweep and the movement assertion come from.
+
+I have not judged these beyond "distinct", which is the census above and a count
+rather than an opinion. The look is the owner's call.
+
+ONE HONEST NOTE. Every CHILD window's capture is byte-identical to every other
+child's; only the parent's differs. Children all render the same camera in a
+headless selftest run. That is a harness property and not this change -- the
+same pattern is in the walking run and in the baseline -- and it does not weaken
+the colour result, which was read independently inside all seven processes and
+agreed in all seven. But it does mean "two windows" here is the parent and a
+child, not seven genuinely different viewpoints.
 
 ---
 
 ## GAPS, said plainly
 
-<!-- GAPS -->
+**Everything below is stated because it is NOT proven, not because it failed.**
+
+1. **Loopback only.** Every run here is seven processes on one box through the
+   comms loopback. Nothing was taken over the relay, which is the same limit
+   every VS proof in this tree has had.
+
+2. **Every child window renders the same camera** in a headless selftest, so
+   the seven captures are two distinct images, not seven. Pre-existing, not
+   this lane's, and it does not touch the colour result (read independently in
+   all seven processes, agreed in all seven). Worth a lane of its own if the
+   owner wants seven real viewpoints in a capture.
+
+3. **Seat 5's blackness is proven by the probe, not by the census.** A pure
+   black body ramp cannot be told from the background by counting pixels. The
+   engine-side evidence is strong (base 5525, 456 tris/frame over 1300 frames)
+   but the picture is the owner's to confirm.
+
+4. **The twelve default colours are authored, not derived.** There is nothing
+   in the cartridge to derive a fifth VS Yoshi from. They are checked to be
+   pairwise distinct in body ramp and shoe pair (`test_rows16`), and that is a
+   different claim from "they look good together at speed on a small screen".
+   Changing one is a one-line edit to `kVsDefaultBody` / `kVsDefaultShoes`.
+
+5. **The belly ramp 12..15 is untouched by decision.** See the measurement
+   section: those four indices are what actually borders the body, and they are
+   byte-identical in all four ROM rows, so every retail VS Yoshi shares a white
+   belly. Report (c) asks for them to be tinted on its face. That is a
+   deliberate departure from the cartridge and is the owner's call, not mine;
+   the edit is two lines in `kBodyIdx` plus accepting that the identity test
+   would no longer hold against the ROM's own rows.
+
+6. **A spawn past the fourth entrance record is still packed wrong upstream.**
+   The repair pass fixes the palette row and the player number for any slot
+   whose `mPlayerNo` disagrees with its index, but the ROM's own loop packs
+   `i << 6`, and at `i == 4` that sets bit 8 and corrupts the SUBLEVEL field
+   before anything downstream can see it. The four VS arenas carry exactly four
+   player records so the path does not arm today, and it did not arm in any run
+   here (zero "came up with mPlayerNo=" lines). It is a real edge and it is not
+   this lane's to fix.
+
+7. **The palette VRAM headroom is measured on one arena.** 70,624 bytes free on
+   arena 0. Arenas 1..3 and the adventure levels were not measured, and a level
+   already near the ceiling gets 384 bytes closer to `LoadTexAndPal`'s
+   `Crash()`. The battery boots all 50 mounted levels and all 34 scenes clean on
+   this build, which is the broad evidence that nothing was pushed over, but it
+   is not the same as a per-level headroom number.
+
+8. **`SM64DS_VS_COLORS` above four fields has never been driven by the lobby.**
+   The sixteen-field grammar was already parsed before this lane; what changed
+   is that fields 4..15 now reach a real row instead of being dropped. Whether
+   the lobby and launcher actually send sixteen fields is a different lane's
+   question.
+
+9. **Head models were reasoned about, not separately captured.** Heads sample
+   the BODY palette at the body's own base, so they follow the seat for free and
+   the captures show heads on all six visible seats. No probe was pointed at a
+   head material specifically to confirm the row index there.
