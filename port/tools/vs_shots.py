@@ -148,13 +148,27 @@ def best_frame(text, pos):
 
 def cap_verdicts(text):
     """{(x,y,z): 'draws' | 'RETURNS EARLY...'} -- the LAST [cap] verdict per
-    cap position. The manager runs in Stage::Render and its flag is read by
-    the next frame's Behavior, so every cap's first line is always the early
-    return; the last line is the one that says what the level settled on."""
-    v = {}
-    for m in re.finditer(r"\[cap\] uid \d+ pos\((-?\d+),(-?\d+),(-?\d+)\)"
+    cap, keyed on the position of its FIRST line. The probe's uid is the actor
+    itself; a showing cap drops to the floor and its later lines carry the
+    moved position, and two records can share a position (map 4 puts a 0x1004
+    and a 0x0004 record both at (-300,0,-300)), so neither the current
+    position nor the position alone is a key. The manager runs in
+    Stage::Render and its flag is read by the next frame's Behavior, so every
+    cap's first line is the early return; the last line is what the level
+    settled on. A position with two records reports "draws" if either does."""
+    first = {}
+    last = {}
+    for m in re.finditer(r"\[cap\] uid (\d+) pos\((-?\d+),(-?\d+),(-?\d+)\)"
                          r".*?-> Render (draws|RETURNS EARLY[^\n]*)", text):
-        v[(int(m.group(1)), int(m.group(2)), int(m.group(3)))] = m.group(4)
+        uid = m.group(1)
+        if uid not in first:
+            first[uid] = (int(m.group(2)), int(m.group(3)), int(m.group(4)))
+        last[uid] = m.group(5)
+    v = {}
+    for uid, pos in first.items():
+        if v.get(pos) == "draws":
+            continue
+        v[pos] = last[uid]
     return v
 
 

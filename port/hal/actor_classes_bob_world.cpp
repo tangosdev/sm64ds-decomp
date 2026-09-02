@@ -1017,7 +1017,10 @@ static int __fastcall cap_render(void *s, void *)
         if (on < 0) on = std::getenv("SM64DS_CAP_PROBE") != 0;
         if (on) {
             const char *cc = (const char *)s;
-            const unsigned uid = *(const unsigned *)(cc + 0x10);
+            /* keyed on the actor itself: +0x10 is not a per-actor id (every
+               VS cap reads 0x20000 there), and a shared key made six caps
+               look like one cap changing its mind every frame. */
+            const unsigned uid = (unsigned)(size_t)cc;
             const int early = (*(const unsigned char *)(cc + 0x3ff) == 1 ||
                                *(const int *)(cc + 0x80) < 0x100) ? 1 : 0;
             int slot = -1;
@@ -1040,7 +1043,7 @@ static int __fastcall cap_render(void *s, void *)
             std::printf("[cap] uid %u pos(%d,%d,%d) type %d model %d "
                         "unk_400 %02x unk_3ff %02x flags3eb %02x scaleX %d "
                         "-> Render %s\n",
-                        *(const unsigned *)(c + 0x10),
+                        uid,
                         *(const int *)(c + 0x5c) >> 12,
                         *(const int *)(c + 0x60) >> 12,
                         *(const int *)(c + 0x64) >> 12,
