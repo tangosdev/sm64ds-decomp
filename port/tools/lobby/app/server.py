@@ -232,6 +232,16 @@ def dial_max_for(ver):
 # day the game side lands, and so no reader has to hunt for a scattered 5.
 STAR_TARGET_MAX = env_int("STAR_TARGET_MAX", 5, 1, 99)
 
+# KING OF THE STAR: the largest "first to N points" a host may pick, and the
+# default a launcher pre-fills. One star spawns for the whole match; whoever
+# holds it earns +1 point per real second, and the first to `king_target`
+# points wins. Points are seconds-of-possession, so the target reads as
+# "seconds you must hold in total". 30 is a brisk round; the ceiling is a knob
+# rather than a literal so raising it is a compose edit. Unlike star_target
+# this needs no arena respawn -- the single star is transferable, not consumed.
+KING_TARGET_MAX = env_int("KING_TARGET_MAX", 999, 1, 9999)
+KING_TARGET_DEFAULT = env_int("KING_TARGET_DEFAULT", 30, 1, 9999)
+
 # How long a kicked address is refused by the room that kicked it.
 #
 # KEYED ON THE CLIENT ADDRESS, WHICH IS THE ONLY HANDLE THIS DESIGN HAS. There
@@ -557,6 +567,9 @@ class Room(object):
         self.map = 0
         self.win_mode = "time"
         self.star_target = None
+        # KING OF THE STAR target, meaningful only when win_mode == "king".
+        # None in every other mode, exactly like star_target.
+        self.king_target = None
         # THE HOST'S PLAYER-COUNT DIAL. How many of this room's seats play;
         # everybody past it watches. A room parameter like map and win_mode,
         # set through `params`, frozen from Start until the room is back in
@@ -582,6 +595,7 @@ class Room(object):
         self.match_map = 0          # params frozen into the plan at arm
         self.match_win_mode = "time"
         self.match_star_target = None
+        self.match_king_target = None
         self.match_dial = 0         # the dial the host had set at arm
         self.names = ""             # SM64DS_VS_NAMES, built once, slot order
         self.colors = ""            # SM64DS_VS_COLORS, likewise
@@ -774,6 +788,7 @@ class Room(object):
             "map": self.map,
             "win_mode": self.win_mode,
             "star_target": self.star_target,
+            "king_target": self.king_target,
             "members": [self.members[s].view() for s in sorted(self.members)],
             "match": self.match,
         }
@@ -1142,7 +1157,7 @@ VERB_FIELDS = {
                   # star_target is required-iff-stars and forbidden otherwise;
                   # do_params enforces that pairing. Here it is only "a key
                   # this verb may carry, since v1".
-                  {"star_target": 1, "match_players": V_DIAL}),
+                  {"star_target": 1, "king_target": 1, "match_players": V_DIAL}),
     # THE WHOLE VERB IS v2. Its fields are required, so they carry no version
     # of their own -- the verb's own `since` is what refuses a v1 caller.
     "color":     (("v", "room", "token", "color", "shoes"), {}, V_COLOR),
@@ -1414,7 +1429,7 @@ def do_params(body, who, now):
     win_mode, err = want_str(body, "win_mode", "bad_win_mode")
     if err:
         return 400, {"error": err}
-    if win_mode not in ("time", "stars"):
+    if win_mode not in ("time", "stars", "king"):
         return 400, {"error": "bad_win_mode"}
     star_target = None
     if win_mode == "stars":
@@ -1427,6 +1442,19 @@ def do_params(body, who, now):
     elif "star_target" in body:
         # Required iff stars, forbidden otherwise. One shape, not two.
         return 400, {"error": "bad_star_target"}
+    # KING OF THE STAR target, the same required-iff/forbidden-otherwise shape
+    # as star_target, refused with its own code so the launcher can say a true
+    # sentence about it. Only carried, and only accepted, when win_mode=="king".
+    king_target = None
+    if win_mode == "king":
+        if "king_target" not in body:
+            return 400, {"error": "bad_king_target"}
+        king_target, err = v_int(body, "king_target", 1, KING_TARGET_MAX,
+                                 "bad_king_target")
+        if err:
+            return 400, {"error": err}
+    elif "king_target" in body:
+        return 400, {"error": "bad_king_target"}
 
     # THE DIAL. Refused, not clamped, and refused with its own code so the
     # launcher can say a true sentence about it. Clamping was the other option
@@ -1466,6 +1494,7 @@ def do_params(body, who, now):
     room.map = mp
     room.win_mode = win_mode
     room.star_target = star_target
+    room.king_target = king_target
     # A v1 client sends no dial, and a room whose host uses one keeps whatever
     # it had rather than being reset by an old launcher's ordinary settings
     # edit. That is the whole of the "0.3.0 is unaffected" story on this verb.
@@ -1485,9 +1514,10 @@ def do_params(body, who, now):
     # is pinned by a test), and the roster change is visible in the view every
     # poll carries regardless.
     room.push("params", map=mp, win_mode=win_mode, star_target=star_target,
-              match_players=room.match_players)
-    log("room %s params map=%d win=%s target=%s players=%d/%d"
+              king_target=king_target, match_players=room.match_players)
+    log("room %s params map=%d win=%s target=%s king=%s players=%d/%d"
         % (code, mp, win_mode, star_target if star_target else "-",
+           king_target if king_target else "-",
            room.playing_count(), room.match_players))
     return 200, {"cursor": room.seq}
 
@@ -1727,6 +1757,10 @@ def member_plan(room, seat):
     }
     if room.match_win_mode == "stars":
         plan["star_target"] = room.match_star_target
+    # KING OF THE STAR: the launcher exports SM64DS_VS_KING_TARGET=<n> so the
+    # host enforces one star all match and the first-to-N-points win.
+    if room.match_win_mode == "king":
+        plan["king_target"] = room.match_king_target
     return plan
 
 
@@ -1738,6 +1772,7 @@ def _reset_match(room):
     room.comms_code = None
     room.agreed_players = 0
     room.match_star_target = None
+    room.match_king_target = None
     room.match_dial = 0
     room.names = ""
     room.colors = ""
@@ -1843,6 +1878,7 @@ def do_start(body, who, now):
     room.match_map = room.map
     room.match_win_mode = room.win_mode
     room.match_star_target = room.star_target
+    room.match_king_target = room.king_target
     room.match_dial = room.match_players
     room.slot_of = assign_slots(room)
     room.names = build_names(room)
@@ -2686,10 +2722,11 @@ def main():
     log("contract v%d..v%d, player dial 2..%d (seats=%d, game=%d)"
         % (CONTRACT_MIN, CONTRACT_V, DIAL_MAX, MAX_SEATS, GAME_MAX_PLAYERS))
     log("limits rooms=%d seats=%d players=%d waiters=%d body=%d read_timeout=%ds "
-        "req=%d/s burst=%d create=%d/h join=%d/min star_max=%d kick_cool=%ds"
+        "req=%d/s burst=%d create=%d/h join=%d/min star_max=%d king_max=%d "
+        "kick_cool=%ds"
         % (MAX_ROOMS, MAX_SEATS, GAME_MAX_PLAYERS, MAX_WAITERS, BODY_MAX,
            HANDLER_TIMEOUT_S, RATE_REQ_PER_S, RATE_BURST, RATE_CREATE_PER_HOUR,
-           RATE_JOIN_PER_MIN, STAR_TARGET_MAX, KICK_COOLDOWN_S))
+           RATE_JOIN_PER_MIN, STAR_TARGET_MAX, KING_TARGET_MAX, KICK_COOLDOWN_S))
     threading.Thread(target=reaper, daemon=True).start()
     httpd = Server((LISTEN_ADDR, LISTEN_PORT), Handler)
     try:

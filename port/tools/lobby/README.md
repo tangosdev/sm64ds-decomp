@@ -200,8 +200,9 @@ it blocks on a condition variable, not on a socket read, and is capped by the
 | `cursor` | int | 0 .. 2^31-1 | `bad_cursor` |
 | `wait` | int | 0..25 seconds; **clamped, not rejected** | - |
 | `map` | int | 0..3 | `bad_map` |
-| `win_mode` | string | exactly `"time"` or `"stars"` | `bad_win_mode` |
+| `win_mode` | string | exactly `"time"`, `"stars"`, or `"king"` | `bad_win_mode` |
 | `star_target` | int | 1..`STAR_TARGET_MAX`; required iff `win_mode == "stars"`, forbidden otherwise | `bad_star_target` |
+| `king_target` | int | 1..`KING_TARGET_MAX`; required iff `win_mode == "king"`, forbidden otherwise. Launcher default `KING_TARGET_DEFAULT` (30) | `bad_king_target` |
 | `seat` | int | 1..`MAX_SEATS`, an occupied seat that is not the host's | `bad_seat` |
 | `match_players` | int | 2..`dial_max`; optional on `params`, and **v2 only** | `bad_match_players` |
 | `pre_ok` | bool | `true`/`false`; optional on `create` and `join` | `bad_field` |
@@ -513,8 +514,10 @@ top level while `state == "go"`):
 ```
 
 `names` is byte-identical in every member's plan. `star_target` is present only
-in stars mode. The host gets `spawn_delay_ms: 0`; children get `1500` (the parent
-goes first). A spectator gets `{"playing": false}` and spawns nothing.
+in stars mode; `king_target` is present only in king mode, and the launcher
+exports it as `SM64DS_VS_KING_TARGET=<n>` so the host enforces the one-star,
+first-to-N-points rules. The host gets `spawn_delay_ms: 0`; children get `1500`
+(the parent goes first). A spectator gets `{"playing": false}` and spawns nothing.
 
 #### `ready` — stage B
 
