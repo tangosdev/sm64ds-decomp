@@ -7731,7 +7731,8 @@ endforeach()
 # wrappers func_0204335c / func_02043288 (VIRTUAL_CALL). Their src lines stay
 # skipped where the slices list them (func_0204335c in the gate-10 camera
 # filter below).
-set(GATE35_SYMS func_02049018 CollectStar func_02016ff4 func_0204335c)
+set(GATE35_SYMS func_02049018 CollectStar func_02016ff4 func_0204335c
+    func_02043288)
 set(GATE35_GEN "")
 foreach(sym IN LISTS GATE35_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -8085,11 +8086,10 @@ set(SOUND_HOST_SOURCES
 set(LEVELBOOT_HOST_SOURCES
     unmatched/ActorDerived_Spawn.cpp
     unmatched/PathPtr_FromID.cpp
-    # func_0204335c_hostcopy.cpp RETIRED (lane shadow-A): the init Process
-    # wrapper comes from hostgen's VIRTUAL_CALL table now (GATE35_SYMS), the
-    # three static {slot, 1} records resolved to the vtable slots they name
-    # at the caller.
-    unmatched/func_02043288_hostcopy.cpp
+    # func_0204335c_hostcopy.cpp and func_02043288_hostcopy.cpp RETIRED (lane
+    # shadow-A): the init and behaviour Process wrappers come from hostgen's
+    # VIRTUAL_CALL table now (GATE35_SYMS), the three static {slot, 1} records
+    # resolved to the vtable slots they name at the caller.
     unmatched/func_0204322c_hostcopy.cpp
     unmatched/func_02043fdc_hostcopy.cpp
     # ...and a fourth, dormant one: LoadEntranceObjects ends in

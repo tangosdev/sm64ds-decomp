@@ -803,6 +803,22 @@ VIRTUAL_CALL = {
          "    ((void (__fastcall *)(void *, void *, unsigned))vt[2])(self, 0, code);\n"
          "    return r;"),
     ],
+    "func_02043288": [
+        ("    return _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ea4, data_02099eac, data_02099eb4);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 7/6/8, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[7])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[6])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[8])(self, 0, code);\n"
+         "    return r;"),
+    ],
 }
 
 
