@@ -910,7 +910,10 @@ src/func_ov002_020c0688.cpp
 src/func_ov002_020dc560.c
 src/func_ov002_020dd2f4.c
 src/func_ov002_020e0ccc.cpp
-port/unmatched/Player_St_Jump_Main.cpp
+# _ZN6Player12St_Jump_MainEv RETIRED to its matched TU via hostgen's
+# CALL_STATE_FN table (GATE10_SYMS): its non-virtual PMF branch routes through
+# hal_call_state_fn on the DS code word, the virtual branch stays a raw host
+# vtable walk. Was port/unmatched/Player_St_Jump_Main.cpp.
 src/func_ov002_020e200c.c
 # Luigi's and Yoshi's rows of the same airborne-gravity table
 # data_ov002_0211073c (Wario shares Mario's 020e200c). func_02012120 is
@@ -1123,9 +1126,11 @@ src/_ZN6Player21St_WaitQuicksand_InitEv.cpp
 # St_WallJump_Main dispatches the per-character airborne-gravity function
 # out of the sinit-built table data_ov002_0211073c and called row[0] RAW --
 # a DS code address, so on the host it jumped into the mounted ov002 data
-# image and killed the process. HOST COPY routes it through
-# hal_call_state_fn, same as Player_St_Jump_Main.cpp on the same table.
-port/unmatched/Player_St_WallJump_Main.cpp
+# image and killed the process (the walljump crash). RETIRED to its matched TU
+# via hostgen's CALL_STATE_FN table (GATE10_SYMS): both branches route through
+# hal_call_state_fn, following St_NoControl_Init (the table's ptr words are all
+# zero, so the virtual branch is dead and row[0] would be a DS vtable byte
+# offset). Was port/unmatched/Player_St_WallJump_Main.cpp.
 src/func_ov002_020e17f8.c
 src/_ZN6Player17St_WallSlide_MainEv.cpp
 src/_ZN6Player17St_WallSlide_InitEv.cpp
@@ -1350,7 +1355,11 @@ src/HitDeathPlane.c
 src/FUN_020299f4.cpp
 src/_ZN5Scene15SetSceneToSpawnEjj.c
 src/_ZN6Player17St_NoControl_MainEv.cpp
-port/unmatched/Player_St_NoControl_Init.cpp
+# _ZN6Player17St_NoControl_InitEv RETIRED to its matched TU via hostgen's
+# CALL_STATE_FN table (GATE10_SYMS): both branches route through
+# hal_call_state_fn (the table's ptr words are all zero, so the virtual branch
+# is dead and m->adj would be a DS vtable byte offset). Was
+# port/unmatched/Player_St_NoControl_Init.cpp.
 src/_ZN6Player20St_NoControl_CleanupEv.cpp
 src/func_ov002_020c965c.c
 src/func_ov002_020c94a4.c

@@ -144,3 +144,36 @@ compiled into all three targets; guards + dsstate + inferred_stub +
 closestplayer green; linkage 9241 -> 9242 (+1), MSVC-NAME SHADOWS 16 -> 15,
 `_ZN6FlyGuy13InitResourcesEv` out of the queue and in `walk_window.map`;
 `git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass.
+
+Commit `2de1180ae`.
+
+## 5. Player St_Jump_Main, St_NoControl_Init, St_WallJump_Main -- RETIRED via hal_call_state_fn HOSTGEN patches
+
+Each of these three Player state functions reads a per-character/per-kind row
+the ROM's sinit copied out of a code-pointer table and dispatches it as an mwcc
+member pointer: `obj = this + (word1 >> 1)`, virtual bit `word1 & 1`, and the
+code word (`word0`) is a DS code address or a DS vtable BYTE OFFSET. Called raw,
+the non-virtual branch jumps to a ROM code address that on the host lands inside
+the mounted ov002 DATA image -- that is the walljump crash St_WallJump_Main took
+(row0 = 0x020e200c for Mario). The port owns `hal_call_state_fn(self, ds_addr)`
+(`hal/player_bridges.cpp:1286`), which maps the DS code word to the hosted body,
+applies the ROM null guard, and reports an unhosted address as a loud no-op.
+
+New hostgen mechanism `CALL_STATE_FN` in `port/tools/hostgen.py` (decl-prepend
+like DS_DIV/MG_PMF_CALL, wired into `emit()`) swaps each function's dispatch for
+the seam call, exactly reproducing the retired `Player_St_*.cpp` host copies:
+St_Jump_Main routes only the non-virtual branch (its table's ptr words are
+filled and the host vtables are runtime-filled), while St_NoControl_Init and
+St_WallJump_Main route BOTH branches (their ptr words are all zero, so the
+virtual branch is dead and word0 would be a DS vtable byte offset). The three
+symbols are enrolled in `GATE10_SYMS` (whose GATE10_GEN feeds the same three
+targets as slice_gate10), the three host copies are removed from
+`slice_gate10.txt` and `git rm`'d. Each hostgen output's dispatch site was
+diffed against its host copy: identical.
+
+Verification: `python port/tools/hostgen.py` on each emits the exact host-copy
+dispatch (Jump 1 seam call, WallJump/NoControl 2 each, decl prepended); build
+exit 0, all three generated objects compiled into the three targets; guards +
+dsstate + inferred_stub + closestplayer green; linkage 9242 -> 9245 (+3),
+MSVC-NAME SHADOWS 15 -> 12, all three out of the queue and in `walk_window.map`;
+`git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass.

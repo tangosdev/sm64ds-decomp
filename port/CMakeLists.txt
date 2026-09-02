@@ -1121,7 +1121,13 @@ set_source_files_properties(
 set(GATE10_SYMS func_ov002_020dec70 func_ov002_020d708c
     engine/fader/StartExitFaderWipe func_ov002_020c897c
     engine/fader/StartEntranceFaderWipe func_ov002_020cfbdc
-    func_ov002_020d6c60)
+    func_ov002_020d6c60
+    # Three Player state functions whose mwcc member-pointer dispatch calls a DS
+    # code word raw (St_WallJump_Main's was the walljump crash): hostgen's
+    # CALL_STATE_FN table routes each through hal_call_state_fn, retiring the
+    # Player_St_*.cpp host copies these three used to be.
+    _ZN6Player12St_Jump_MainEv _ZN6Player16St_WallJump_MainEv
+    _ZN6Player17St_NoControl_InitEv)
 set(GATE10_GEN "")
 foreach(sym IN LISTS GATE10_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
