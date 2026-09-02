@@ -12167,6 +12167,11 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # the controller backend: XInput slots 0..3, then a DirectInput pad
+    # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
+    # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
+    # both targets that compile tests/walk_window.cpp, which is its caller.
+    hal/pad_backend.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
@@ -12406,6 +12411,11 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # the controller backend: XInput slots 0..3, then a DirectInput pad
+    # (Switch Pro, DualShock, DualSense, generic HID) mapped onto the XInput
+    # mask. Both DLLs loaded dynamically; no xinput/dinput8/dxguid lib. On
+    # both targets that compile tests/walk_window.cpp, which is its caller.
+    hal/pad_backend.cpp
     # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
     # the Studio's editor talks to. Compiled in unconditionally but INERT unless
     # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.

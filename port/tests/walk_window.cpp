@@ -299,14 +299,14 @@ struct PortMemCounters {
     SIZE_T PagefileUsage, PeakPagefileUsage;
 };
 
-/* XInput, loaded dynamically like user32 (no static import chain) */
-struct XPad {
-    unsigned long packet;
-    unsigned short buttons;
-    unsigned char lt, rt;
-    short lx, ly, rx, ry;
-};
-static DWORD(WINAPI *XInputGetState_)(DWORD, XPad *);
+/* The pad. Since the controller backend landed this is hal/pad_backend.cpp's
+   normalized state, which is XInput's own shape (mask, sticks, triggers) and
+   what every reader below was written against; the backend fills it from
+   XInput slots 0..3 or, failing those, from a DirectInput pad (Switch Pro,
+   DualShock, DualSense, generic HID). Both DLLs are loaded dynamically there,
+   like user32 here. */
+#include "hal/pad_backend.h"
+typedef PortPadState XPad;
 
 static bool winapi_load(void)
 {
@@ -385,14 +385,9 @@ static bool winapi_load(void)
         W.SetProcessInformation_ = (decltype(W.SetProcessInformation_))
             GetProcAddress(k, "SetProcessInformation");
     }
-    {
-        const char *dlls[] = {"xinput1_4.dll", "xinput1_3.dll",
-                              "xinput9_1_0.dll"};
-        for (int i = 0; i < 3 && !XInputGetState_; ++i)
-            if (HMODULE x = LoadLibraryA(dlls[i]))
-                XInputGetState_ = (decltype(XInputGetState_))GetProcAddress(
-                    x, "XInputGetState");
-    }
+    /* the controller backend: XInput slots 0..3, then DirectInput. Prints
+       its one "[pad] ..." line here, so a log says what was found at boot. */
+    port_pad_init();
     return W.RegisterClassA_ && W.CreateWindowExA_ && W.DefWindowProcA_ &&
            W.PeekMessageA_ && W.StretchDIBits_ && W.GetAsyncKeyState_;
 }
@@ -6189,7 +6184,7 @@ static int scene_window_run(void)
             fs_edge = now;
         }
 
-        int pad_live = XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        int pad_live = port_pad_poll(&pad);
         pad_focus_gate(&pad_live, &pad);
         pad_test_apply(frame, &pad_live, &pad);
 #ifndef PORT_ROM_CLEAN
@@ -8212,7 +8207,7 @@ int main(void)
            gated off with the keyboard when this window is not the
            foreground one -- see pad_focus_gate. */
         static XPad pad;
-        int pad_live = !selftest && XInputGetState_ && XInputGetState_(0, &pad) == 0;
+        int pad_live = !selftest && port_pad_poll(&pad);
         pad_focus_gate(&pad_live, &pad);
         int orbiting = 0;
         /* SM64DS_PAD_TEST: DBG1's scripted pad, at file scope now so the
