@@ -88,3 +88,33 @@ green; linkage 9239 -> 9240 (+1), MSVC-NAME SHADOWS 18 -> 17,
 `_ZN7SkiLift13InitResourcesEv` out of the queue and in `walk_window.map`;
 `git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass. Level selftests
 (the CCM/MotherPenguin fault check) validated in the battery run recorded below.
+
+Commit `6855aa6ce`.
+
+## 3. OneUpLogo::InitResources -- RETIRED PLAIN
+
+The same TextureSequence::Prepare seam as item 2, one gate earlier (gate 190,
+the first caller this seam was solved for). `src/_ZN9OneUpLogo13InitResourcesEv.cpp`
+enrolled in `port/slice_gate190.txt`; host copy
+`port/unmatched/OneUpLogo_InitResources.cpp` removed from the three CMake
+target lists and `git rm`'d. The matched src declares Prepare 2-arg and calls
+`Prepare(model.file, anim.file)`; against the 3-arg bridge, cdecl aliasing lands
+self=model, bmd=animFile, btp=dead -- the same order the host copy passed by
+hand as `(model.file, anim.file, anim.file)`, with func_02046d50 never reading
+the third value. Behaviourally identical, so it retires plain.
+
+Verification: build exit 0; guards + dsstate + inferred_stub + closestplayer
+green; linkage 9240 -> 9241 (+1), MSVC-NAME SHADOWS 17 -> 16,
+`_ZN9OneUpLogo13InitResourcesEv` out of the queue and in `walk_window.map`;
+`git diff --stat d63b92a09 -- src/` empty.
+
+## Battery after items 1-3 -- ALL GREEN
+
+`python port/tools/battery.py --skip-build` (`build/tmp/battery_1_3.log`):
+20/20 smoke binaries ok, every level selftest ok (including CCM/MotherPenguin
+and the ov002 OneUpLogo path that exercise the retired Prepare callers), every
+scene selftest 361-390 ok, default boot reaches TITLE 300 frames clean, linkage
+9241 (81.6%), ptr_audit 0 unhosted code pointers, shipping config
+(PORT_ROM_CLEAN, static CRT) built and its selftest rc=0. Pre-existing skips
+unrelated to this lane: level 27 (TtcMovingCube has no matched body), level 45
+(Goomboss func_ov074_02121380 has no matched body).
