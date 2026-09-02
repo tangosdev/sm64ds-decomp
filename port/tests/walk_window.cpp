@@ -7504,7 +7504,7 @@ int main(void)
     bindings_load();
     {
         char b[HOST_KEY_COUNT][20];
-        fprintf(stderr, "[keys] walk %s%s%s%s (alt %s%s%s%s) jump %s attack %s "
+        fprintf(stderr, "[keys] walk %s %s %s %s (alt %s %s %s %s) jump %s attack %s "
                         "crouch %s start %s select %s\n",
                 run_key_name(g_key[HOST_KEY_UP], b[0], sizeof b[0]),
                 run_key_name(g_key[HOST_KEY_LEFT], b[1], sizeof b[0]),
