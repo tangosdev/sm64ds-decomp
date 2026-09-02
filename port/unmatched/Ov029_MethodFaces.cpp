@@ -15,6 +15,8 @@
  * the .c-matched ones (ArrowLift::CleanupResources, every D0, class-32's whole
  * set) are already C-linkage and are called directly by the fill.
  */
+#include "dsstate_seg.h"
+
 struct FloatOnWaterPlatformWdwSquare { int InitResources(); int CleanupResources(); int Behavior(); int Render(); };
 struct ArrowLift { int InitResources(); int Behavior(); int Render(); };
 struct SwitchActivatedPlank { int InitResources(); int CleanupResources(); int Render(); };
@@ -82,8 +84,12 @@ int _ZN19RotatingPlatformWdw6RenderEv(void *s)
 /* the Actor water-height face + the 3-entry WDW height table it indexes. The
    table is arm9 0x02075244, three non-relocated Fix12 heights read verbatim from
    extracted/arm9_dec.bin (0002d000, 003e8000, 00abe000); it is unmounted arm9
-   data nothing else in the port had reached, so this TU carries the ROM bytes. */
+   data nothing else in the port had reached, so this TU carries the ROM bytes.
+   It sits at a DS address, so it rides .dsstate like every hosted DS global
+   (constant, so a restore rewrites the same three words). */
+DSSTATE_BEGIN
 int data_02075244[3] = { 0x0002d000, 0x003e8000, 0x00abe000 };
+DSSTATE_END
 int _ZN5Actor17GetWaterHeightWDWEv(void *s)
 { return ((Actor *)s)->GetWaterHeightWDW(); }
 
