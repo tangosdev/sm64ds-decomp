@@ -8085,7 +8085,9 @@ set(LEVELBOOT_HOST_SOURCES
     # as the four-word general representation, which doubles the stride of the
     # table it indexes; see each file's header.
     unmatched/OneUpMushroom_Behavior.cpp
-    unmatched/NumStars_hostcopy.cpp
+    # NumStars_hostcopy.cpp RETIRED (lane shadow-A): src/IsStarCollected.c
+    # takes the course id as s8 now, so src/NumStars.c links as it stands
+    # (slice_gate10.txt).
     # gate 35: the WRITE half of the same s8/int argument-width disagreement
     unmatched/CollectStar_hostcopy.cpp
     unmatched/SignPost_StateDispatch.cpp

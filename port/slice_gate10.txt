@@ -689,9 +689,10 @@ src/IsButtonInputValid.c
 src/Matrix4x3_ApplyInPlaceToRotationXYZExt.c
 src/Matrix4x3_FromRotationX.c
 src/Matrix4x3_FromRotationZ.c
-# NumStars is a HOST COPY in port/unmatched/: it and IsStarCollected.c
-# disagree about the width of the course id, which rides through on ARM and
-# does not on x86 cdecl. See the file header.
+# NumStars: retired plain (lane shadow-A). The host copy existed because this
+# TU and IsStarCollected.c once disagreed about the width of the course id;
+# both spell it s8 now, and an s8 callee extends the byte itself under cdecl.
+src/NumStars.c
 src/Player_ReleaseHeldActor.c
 src/Vec3_Add.c
 src/Vec3_Asr.c
