@@ -12070,6 +12070,124 @@ foreach(dup IN ITEMS src/func_ov001_020aa6b0.c src/func_ov001_020aa6cc.c
     endif()
 endforeach()
 
+# ============================================================================
+# ov029: level 21's own eight actors (water_city, Dire Dire Docks city).
+# The fill is hal/actor_classes_ov029.cpp; the matched src closure is
+# port/slice_ov029.txt; the SpawnInfo/resource/bss mount is port/ov029_syms.txt
+# (ov029 is on PORT_ACTOR_OVERLAYS). Every consumer target gets ${OV029_SOURCES}.
+# ============================================================================
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov029.txt" SLICE_OV029_LINES)
+set(SLICE_OV029_SOURCES "")
+foreach(line IN LISTS SLICE_OV029_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV029_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# The per-source vtable-store bindings. Each _Spawn/dtor stores its object's
+# vptr through recovered names (VT0/VT1/VT2 and _ZTV<recovered>) whose ADDRESS
+# is per source: the SAME recovered name is a different table in a different TU
+# (_ZTV15daObjWc_Obj07_c is 0x021091d4 in RotatingPlatformWdw_Spawn but the own
+# table 0x02114018 in the RectangleD1 TU -- the ov065 disease). Read off each
+# body's own literal pool. Rule applied: the LIVE (last) store gets its true
+# target (the own host array for a spawn; _ZTV8Platform for a destructor, the
+# base reached at the bottom of the dtor chain); every DEAD earlier store is
+# pointed at a guaranteed-defined host symbol (the class's own array), because
+# it is immediately overwritten and its value never reaches a virtual call. The
+# ROM's own ov002 base tables (data_ov002_02108fdc/021091d4) are NOT host arrays,
+# so a dead store is never bound to them.
+#
+# Spawns -- live store is the own table:
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/FloatOnWaterPlatformWdwSquare_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWcObj01_c=data_ov029_02113c2c;VT1=data_ov029_02113c2c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/FloatOnWaterPlatformWdwRectangle_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWcObj06_c=data_ov029_02113f44;VT1=data_ov029_02113f44")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RotatingPlatformWdw_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj07_c=_ZTV32FloatOnWaterPlatformWdwRectangle;VT1=_ZTV32FloatOnWaterPlatformWdwRectangle")
+# (ArrowLift/WaterDiamond/CageLift/SwitchActivatedPlank/WDW_Water spawns store
+#  their own already-defined host symbol and need no binding.)
+#
+# Destructors -- live (last) store is _ZTV8Platform; dead stores to the own array:
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWcObj01_c=data_ov029_02113c2c;_ZTV10dBgActor_c=data_ov029_02113c2c;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_021111f0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov029_02113c2c;VT1=data_ov029_02113c2c;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ac4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj05_c=data_ov029_02113e74;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111b08.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov029_02113e74;VT1=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ea4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWcObj06_c=data_ov029_02113f44;_ZTV10dBgActor_c=data_ov029_02113f44;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ef4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov029_02113f44;VT1=data_ov029_02113f44;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj02_c=_ZTV29FloatOnWaterPlatformWdwSquare;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj02_c=_ZTV29FloatOnWaterPlatformWdwSquare;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj07_c=_ZTV32FloatOnWaterPlatformWdwRectangle;_ZTV10dBgActor_c=_ZTV32FloatOnWaterPlatformWdwRectangle;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj07_c=_ZTV32FloatOnWaterPlatformWdwRectangle;_ZTV10dBgActor_c=_ZTV32FloatOnWaterPlatformWdwRectangle;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN19RotatingPlatformWdwD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWc_Mizu_c=_ZTV19RotatingPlatformWdw;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN19RotatingPlatformWdwD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjWc_Mizu_c=_ZTV19RotatingPlatformWdw;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN20SwitchActivatedPlankD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj04_c=_ZTV20SwitchActivatedPlank;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN20SwitchActivatedPlankD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj04_c=_ZTV20SwitchActivatedPlank;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ArrowLiftD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV15daObjWc_Obj03_c=_ZTV9ArrowLift")
+# __sinit_ov029_02112c10.c (ArrowLift's SharedFilePtr) writes its destruct-node
+# cell through dsd's cross-overlay name _ZN13RollingLogTtm8BehaviorEv, which is a
+# real ov030 FUNCTION this link may define. Bind it to ov029's own bss cell at
+# 0x02114278, the W10/RacingPenguin remedy. The reloc says the address:
+#   from:0x02112c34 kind:load to:0x02114278 module:overlay(29)
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov029_02112c10.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZN13RollingLogTtm8BehaviorEv=data_ov029_02114278")
+
+set(OV029_SOURCES hal/actor_classes_ov029.cpp ${SLICE_OV029_SOURCES})
+
 # The camera slice is on both binaries. The gate-13 State objects carry real
 # DS function addresses, and Player::ChangeState already reaches
 # func_0200d81c -> Camera::ChangeState on every state change, so the smoke
@@ -12207,6 +12325,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 3 (lane w3-e): three partially-seated level
     # overlays' remaining tails (ov022, ov019, ov025)
     ${W3E_SOURCES}
+    # ov029: level 21's water_city actors, ids 94..101
+    ${OV029_SOURCES}
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -12417,6 +12537,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 3 (lane w3-e): three partially-seated level
     # overlays' remaining tails (ov022, ov019, ov025)
     ${W3E_SOURCES}
+    # ov029: level 21's water_city actors, ids 94..101
+    ${OV029_SOURCES}
     # _ZTV5Stage SLOT 12 (run link60, lane L4). src/_ZN5Stage16OnPendingDestroyEv.cpp
     # is named on smoke_player and walk_window_hires above, because those two
     # targets compile hal/stage_bridges.cpp -- which seats the slot -- and do
@@ -12661,6 +12783,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 3 (lane w3-e): three partially-seated level
     # overlays' remaining tails (ov022, ov019, ov025)
     ${W3E_SOURCES}
+    # ov029: level 21's water_city actors, ids 94..101
+    ${OV029_SOURCES}
     "${PORT_GITTIP_C}"
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(walk_window_hires PRIVATE

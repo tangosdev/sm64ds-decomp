@@ -1,0 +1,77 @@
+# slice_ov029.txt -- the matched src closure for level 21's water_city
+# actors (ids 94..101). Every ov029 translation unit, enrolled into the
+# three walk_window targets. The eight _Spawn files and the destructors
+# store vtables through recovered VT0/VT1/VT2/_ZTV names bound per source
+# in port/CMakeLists.txt (the live table is the LAST store; see
+# hal/actor_classes_ov029.cpp). __sinit_ov029_02112c10.c writes its
+# destruct-node cell through the cross-overlay name _ZN13RollingLogTtm8
+# BehaviorEv (dsd's collision on the shared load window at 0x02114278) and
+# is bound to data_ov029_02114278 per source there too.
+#
+src/ArrowLift_Spawn.c
+src/CageLift_Spawn.c
+src/FloatOnWaterPlatformWdwRectangle_Spawn.c
+src/FloatOnWaterPlatformWdwSquare_Spawn.c
+src/RotatingPlatformWdw_Spawn.c
+src/SwitchActivatedPlank_Spawn.c
+src/WDW_Water_Spawn.c
+src/WaterDiamond_Spawn.c
+src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp
+src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp
+src/_ZN19RotatingPlatformWdw6RenderEv.cpp
+src/_ZN19RotatingPlatformWdw8BehaviorEv.cpp
+src/_ZN19RotatingPlatformWdwD0Ev.c
+src/_ZN19RotatingPlatformWdwD1Ev.c
+src/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp
+src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp
+src/_ZN20SwitchActivatedPlank6RenderEv.cpp
+src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp
+src/_ZN20SwitchActivatedPlankD0Ev.c
+src/_ZN20SwitchActivatedPlankD1Ev.c
+src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp
+src/_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv.cpp
+src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp
+src/_ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv.cpp
+src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c
+src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c
+src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.c
+src/_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv.c
+src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c
+src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c
+src/_ZN9ArrowLift13InitResourcesEv.cpp
+src/_ZN9ArrowLift16CleanupResourcesEv.c
+src/_ZN9ArrowLift6RenderEv.cpp
+src/_ZN9ArrowLift8BehaviorEv.cpp
+src/_ZN9ArrowLiftD0Ev.c
+src/_ZN9ArrowLiftD1Ev.cpp
+src/__sinit_ov029_02112b38.c
+src/__sinit_ov029_02112ba4.c
+src/__sinit_ov029_02112c10.c
+src/__sinit_ov029_02112c4c.c
+src/__sinit_ov029_02112cb8.c
+src/__sinit_ov029_02112d24.c
+src/__sinit_ov029_02112d90.c
+src/__sinit_ov029_02112dfc.c
+src/func_ov029_021111a0.c
+src/func_ov029_021111f0.c
+src/func_ov029_02111254.c
+src/func_ov029_021116c4.cpp
+src/func_ov029_021116e4.c
+src/func_ov029_021117ac.cpp
+src/func_ov029_02111850.cpp
+src/func_ov029_021118c8.c
+src/func_ov029_02111ac4.c
+src/func_ov029_02111b08.c
+src/func_ov029_02111b60.c
+src/func_ov029_02111ba4.cpp
+src/func_ov029_02111bcc.c
+src/func_ov029_02111d6c.cpp
+src/func_ov029_02111e40.cpp
+src/func_ov029_02111e60.c
+src/func_ov029_02111ea4.c
+src/func_ov029_02111ef4.c
+src/func_ov029_02111f58.c
+src/func_ov029_02112250.cpp
+src/func_ov029_021122b4.c
+src/func_ov029_021126dc.c
+src/func_ov029_02112710.c

@@ -1207,6 +1207,7 @@ void port_ov63_bringup(void);   /* hal/actor_classes_ov063.cpp */
 void port_bk_bringup(void);     /* hal/actor_classes_ov063.cpp, the ov020 half */
 void port_ov65_bringup(void);   /* hal/actor_classes_ov065.cpp */
 void port_ov70_bringup(void);   /* hal/actor_classes_ov070.cpp */
+void port_ov29_bringup(void);   /* hal/actor_classes_ov029.cpp */
 }
 
 /* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
@@ -1692,4 +1693,5 @@ extern "C" void port_actor_overlays_sinits(void)
     port_bk_bringup();
     port_ov65_bringup();
     port_ov70_bringup();
+    port_ov29_bringup();   /* level 21's water_city actors, ids 94..101 */
 }

@@ -1927,6 +1927,37 @@ void hal_fill_number_vtable(void);                    /* _ZTV15InvisibleSecret, 
 extern unsigned char WingFeather_SpawnInfo[];         /* ov002 0x02108884, +4 = 345 */
 void *WingFeather_Spawn(void);                        /* ov002 0x020b3248, 80 B */
 void hal_fill_wing_feather_vtable(void);              /* _ZTV11WingFeather, 31 */
+/* ov029: level 21's own overlay (water_city, Dire Dire Docks city). Eight
+   actors, ids 94..101, every one placed by the level-21 boot census. The live
+   tables are keyed by the last vtable store in each _Spawn (the dsd _ZTV names
+   are shifted by one; see hal/actor_classes_ov029.cpp). Six are 32-slot
+   Platforms, WaterDiamond's is a 31-slot Actor. Derivation in
+   port/ov029_syms.txt / port/slice_ov029.txt, fills in
+   hal/actor_classes_ov029.cpp. */
+extern unsigned char RotatingPlatformWdw_SpawnInfo[];              /* ov029 0x02113ff4, +4 = 94  */
+void *RotatingPlatformWdw_Spawn(void);                            /* ov029 0x02112168 */
+void hal_fill_rotating_platform_wdw_vtable(void);                 /* _ZTV32FloatOnWaterPlatformWdwRectangle 0x02114018, 32 */
+extern unsigned char FloatOnWaterPlatformWdwSquare_SpawnInfo[];    /* ov029 0x02113c08, +4 = 95  */
+void *FloatOnWaterPlatformWdwSquare_Spawn(void);                  /* ov029 0x02111340 */
+void hal_fill_float_on_water_platform_wdw_square_vtable(void);    /* data_ov029_02113c2c, 32 */
+extern unsigned char ArrowLift_SpawnInfo[];                        /* ov029 0x02113ccc, +4 = 96  */
+void *ArrowLift_Spawn(void);                                      /* ov029 0x021116f8 */
+void hal_fill_arrow_lift_vtable(void);                            /* _ZTV29FloatOnWaterPlatformWdwSquare 0x02113cf0, 32 */
+extern unsigned char WaterDiamond_SpawnInfo[];                     /* ov029 0x02113d90, +4 = 97  */
+void *WaterDiamond_Spawn(void);                                  /* ov029 0x02111a84 */
+void hal_fill_water_diamond_vtable(void);                        /* _ZTV9ArrowLift 0x02113db4, 31 (Actor) */
+extern unsigned char SwitchActivatedPlank_SpawnInfo[];             /* ov029 0x0211417c, +4 = 98  */
+void *SwitchActivatedPlank_Spawn(void);                          /* ov029 0x02112964 */
+void hal_fill_switch_activated_plank_vtable(void);               /* _ZTV20SwitchActivatedPlank 0x021141a0, 32 */
+extern unsigned char CageLift_SpawnInfo[];                         /* ov029 0x02113e50, +4 = 99  */
+void *CageLift_Spawn(void);                                      /* ov029 0x02111e74 */
+void hal_fill_cage_lift_vtable(void);                            /* data_ov029_02113e74, 32 */
+extern unsigned char FloatOnWaterPlatformWdwRectangle_SpawnInfo[]; /* ov029 0x02113f20, +4 = 100 */
+void *FloatOnWaterPlatformWdwRectangle_Spawn(void);              /* ov029 0x02112044 */
+void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void);/* data_ov029_02113f44, 32 */
+extern unsigned char WDW_Water_SpawnInfo[];                        /* ov029 0x021140b8, +4 = 101 */
+void *WDW_Water_Spawn(void);                                     /* ov029 0x021125f8 */
+void hal_fill_wdw_water_vtable(void);                            /* _ZTV19RotatingPlatformWdw 0x021140dc, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2944,4 +2975,24 @@ void hal_fill_wing_feather_vtable(void);              /* _ZTV11WingFeather, 31 *
        zero and only change what a PLAYED frame can build. */ \
     {330, "NUMBER", Number_SpawnInfo, Number_Spawn, hal_fill_number_vtable}, \
     {345, "WING_FEATHER", WingFeather_SpawnInfo, WingFeather_Spawn, \
-     hal_fill_wing_feather_vtable},
+     hal_fill_wing_feather_vtable}, \
+    /* ---- ov029: level 21's own eight actors (water_city, Dire Dire Docks \
+       city). All eight are on the level-21 object table -- the boot census \
+       skips ids 94..101 unregistered today, so every row lands a live spawn. \
+       Fills in hal/actor_classes_ov029.cpp, keyed by the last _Spawn store. */ \
+    {94,  "ROTATING_PLATFORM_WDW", RotatingPlatformWdw_SpawnInfo, \
+     RotatingPlatformWdw_Spawn, hal_fill_rotating_platform_wdw_vtable}, \
+    {95,  "FLOAT_ON_WATER_PLATFORM_WDW_SQUARE", FloatOnWaterPlatformWdwSquare_SpawnInfo, \
+     FloatOnWaterPlatformWdwSquare_Spawn, hal_fill_float_on_water_platform_wdw_square_vtable}, \
+    {96,  "ARROW_LIFT", ArrowLift_SpawnInfo, ArrowLift_Spawn, \
+     hal_fill_arrow_lift_vtable}, \
+    {97,  "WATER_DIAMOND", WaterDiamond_SpawnInfo, WaterDiamond_Spawn, \
+     hal_fill_water_diamond_vtable}, \
+    {98,  "SWITCH_ACTIVATED_PLANK", SwitchActivatedPlank_SpawnInfo, \
+     SwitchActivatedPlank_Spawn, hal_fill_switch_activated_plank_vtable}, \
+    {99,  "CAGE_LIFT", CageLift_SpawnInfo, CageLift_Spawn, \
+     hal_fill_cage_lift_vtable}, \
+    {100, "FLOAT_ON_WATER_PLATFORM_WDW_RECTANGLE", FloatOnWaterPlatformWdwRectangle_SpawnInfo, \
+     FloatOnWaterPlatformWdwRectangle_Spawn, hal_fill_float_on_water_platform_wdw_rectangle_vtable}, \
+    {101, "WDW_WATER", WDW_Water_SpawnInfo, WDW_Water_Spawn, \
+     hal_fill_wdw_water_vtable},
