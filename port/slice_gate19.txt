@@ -19,6 +19,7 @@
 # opens it. Nothing here chases the cannon-entry path.
 src/Cannon_Spawn.c
 src/_ZN6Cannon13InitResourcesEv.cpp
+src/_ZN6CannonD0Ev.c
 # _ZN6Cannon8BehaviorEv is NOT here either: it dispatches an mwcc
 # pointer-to-member out of a four-entry state table, the gate-16 case for the
 # fourth time. The dispatch frame and the state seat stay host

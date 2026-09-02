@@ -26,6 +26,7 @@
 # copies out of the overlay's own statics. Host copy, see port/unmatched/.
 src/Bird_Spawn.c
 src/_ZN4Bird13InitResourcesEv.cpp
+src/_ZN4BirdD0Ev.c
 src/_ZN4Bird16CleanupResourcesEv.c
 src/_ZN4Bird16OnPendingDestroyEv.c
 src/func_ov009_02111224.c
@@ -66,6 +67,7 @@ src/_ZN8MetalNet16OnPendingDestroyEv.c
 # matrix -- the flag waves.
 src/Flag_Spawn.c
 src/_ZN4Flag13InitResourcesEv.cpp
+src/_ZN4FlagD0Ev.c
 src/_ZN4Flag8BehaviorEv.cpp
 src/_ZN4Flag16CleanupResourcesEv.c
 

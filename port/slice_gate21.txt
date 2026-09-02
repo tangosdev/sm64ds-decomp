@@ -37,6 +37,7 @@
 # statics need seating, and that is in hal/actor_overlays.cpp with the rest.
 src/Butterfly_Spawn.c
 src/_ZN9Butterfly13InitResourcesEv.cpp
+src/_ZN9ButterflyD0Ev.c
 src/_ZN9Butterfly8BehaviorEv.cpp
 # _ZN9Butterfly6RenderEv IS NOT HERE: it dispatches ModelAnim slot 5
 # through a local shadow class, which is ROM numbering, and _ZTV9ModelAnim
@@ -70,6 +71,7 @@ src/func_ov100_02141848.c
 # are matched src, so that file carries no trap.
 src/Fish_Spawn.cpp
 src/_ZN4Fish13InitResourcesEv.cpp
+src/_ZN4FishD0Ev.c
 # _ZN4Fish6RenderEv IS NOT HERE either, the same ModelAnim slot-5 case.
 src/_ZN4Fish16CleanupResourcesEv.cpp
 src/_ZN4Fish16OnPendingDestroyEv.c
