@@ -94,27 +94,27 @@ extern "C" int func_ov002_020f6618(char* self, SharedFilePtr* mdl, int nAnims,
         void *const p = v->filePtr;
         void *bmd = _ZN5Model8LoadFileER13SharedFilePtr(*fp);
         trace("Model::LoadFile", self, fp, r, id, p);
-        /* THE RETURN-VALUE PROBE. ModelBase::SetFile is declared and DEFINED
-           void in src, but this caller tests its result. On ARM that works by
-           accident -- SetFile tail-calls DoSetFile and DoSetFile's r0 is still
-           live -- and on x86 the value is whatever the last call left in eax.
-           An early bail here leaves the object HALF-BUILT: no crash now, an
-           unpopulated ModelComponents later, and a renderer walking garbage.
+        /* ModelBase::SetFile is declared and DEFINED void in src
+           (src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp tail-calls DoSetFile).
+           The matched src tests its result only because on ARM the branch
+           reads r0 straight out of the tail-called DoSetFile, which is live
+           and non-zero for every cast object, so the bail never runs. On x86
+           the returned value is garbage, so a copied `if (sf == 0) return 0`
+           bails at random and leaves the object HALF-BUILT: an unpopulated
+           ModelComponents and a renderer walking garbage. The faithful host
+           behavior is to call SetFile and proceed, which is what the ROM does.
            `data` is Model+0x08 (include/Model.h:44), so info is *(void**)(self+8)
            and the Entry table func_0204488c walks is *(void**)(info + 0x10). */
-        const int sf = _ZN9ModelBase7SetFileEP8BMD_Fileii(self, bmd, 1, tsData);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(self, bmd, 1, tsData);
         if (watch_on()) {
             void *info = *(void **)(self + 8);
             void *entries = info ? *(void **)((char *)info + 0x10) : 0;
             std::fprintf(stderr,
-                         "  [load] obj#%u SetFile returned %d | info %p | "
-                         "entries(info+0x10) %p%s%s\n",
-                         g_obj, sf, info, entries,
-                         sf == 0 ? "   <- BAILS, object left HALF-BUILT" : "",
-                         (sf != 0 && !entries) ? "   <- VIEW NOT POPULATED" : "");
+                         "  [load] obj#%u SetFile done | info %p | "
+                         "entries(info+0x10) %p%s\n",
+                         g_obj, info, entries,
+                         !entries ? "   <- VIEW NOT POPULATED" : "   <- BUILT");
         }
-        if (sf == 0)
-            return 0;
     }
 
     self[0x80] = (char)nAnims;
