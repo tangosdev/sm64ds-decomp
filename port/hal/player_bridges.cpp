@@ -259,11 +259,13 @@ static void m43_mul(const int *a, const int *b, int *out)
    ROM's own base Model::Render, and leaving every other head on the neck-bone
    compose, is the fix.
 
-   SCOPE: this draws Yoshi's HEAD in the right place every frame. It does not on
-   its own make the tongue reach: the head ModelAnim's currFrame does not advance
-   in the port (St_YoshiPower_Main's Animation::Advance on +0x160 leaves it at 0
-   here), so the mouth/tongue animation stays at frame 0. Extending the tongue is
-   a separate open gap (the head anim never being advanced/posed), not this fork. */
+   SCOPE: this draws Yoshi's HEAD in the right place every frame, and the hid==3
+   arm below now also POSES it. The head ModelAnim's currFrame used to stay at 0
+   in the port (St_YoshiPower_Main's advance on +0x160 and Player_AdvanceAnims's
+   UpdateVerts do not reach the head here), so the head mesh was frozen at the
+   frame-0 bind pose and sank into the body on a long fall. The hid==3 arm now
+   advances the head's jaw/tongue Animation on +0x160 and UpdateVerts's the head
+   before rendering it, the same pose-then-draw the body gets at :~703. */
 static void hal_render_head_group(char *c, char *head, unsigned hid,
                                   ModelAnim *ma, const int *scene)
 {
@@ -273,7 +275,20 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
            ROM's i==3 arm. Base, not the object's own slot 4: index 3 is a
            ModelAnim, whose virtual Render would re-run UpdateVerts, and the ROM
            calls Model::Render directly to render the head at the pose the anim
-           system already produced. */
+           system ALREADY PRODUCED.
+
+           On the ROM that pose is produced during the tick: St_YoshiPower_Main
+           advances the head anim on +0x160 and Player_AdvanceAnims UpdateVerts's
+           it, so by render time the head mesh is already at the current frame.
+           In this port neither reaches the head (the head model at +0x160 is the
+           same pointer as head here), so the head sat frozen at the frame-0 bind
+           pose and sank into the body on a long fall. Produce the pose here, at
+           render time, the same two steps the body gets at :~703: advance the
+           head's own jaw/tongue Animation at head+0x50 (St_YoshiPower_Main's
+           +0x160 advance), then ModelAnim::UpdateVerts to sample the frame into
+           the mesh, BEFORE the base Model::Render draws it at the seated matrix. */
+        ((Animation *)(head + 0x50))->Animation::Advance();
+        ((ModelAnim *)head)->ModelAnim::UpdateVerts();
         _ZN5Model6RenderEPK7Vector3(head, c + 0x80);
         return;
     }
