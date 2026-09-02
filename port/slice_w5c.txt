@@ -13,14 +13,13 @@
 #                          the hostgen emission instead (OV70GEN in
 #                          port/CMakeLists.txt, FALLS_OFF_RETURN table)
 #   func_ov070_021211bc    \  the seven "recovered from vtable slot identity"
-#   func_ov070_02121bdc    |  GUESS bodies in the pack. No matched TU calls
-#   func_ov070_02121438    |  any of them by name (swept); they were reached
-#   func_ov070_02121fb0    |  only through ROM vtable slots and PMF records.
-#   func_ov070_021204e4    |  The two slot-18 bodies and the two Kill state
-#   func_ov070_02120518    |  roots the fills DO need are inline host
-#   func_ov070_021204ec    /  transcriptions in actor_classes_ov070.cpp
-#                             (per-instruction, listings quoted there), so the
-#                             inferred-stub baseline stays at two.
+#   func_ov070_02121bdc    |  marker bodies in the pack. Wave 5 kept all seven
+#   func_ov070_02121438    |  out and inlined the four it needed. Lane w3-d
+#   func_ov070_02121fb0    |  byte-matched and adjudicated FlyGuy's three
+#   func_ov070_021204e4    |  (below); lane mount-ov070 did the same for the
+#   func_ov070_02120518    |  other four (end of file), so ALL SEVEN now link
+#   func_ov070_021204ec    /  from src and no transcription remains in
+#                             actor_classes_ov070.cpp.
 #
 # The four class D1Ev.cpp TUs are also deliberately absent: real MSVC
 # destructors over TU-local shadow structs (??1Amp@@UAE@XZ against member
@@ -218,3 +217,18 @@ src/func_ov070_021204e4.c
 src/func_ov070_021204ec.cpp
 src/func_ov070_02120518.c
 src/FlyGuy_Spawn.c
+
+# ============================================================================
+# LANE mount-ov070: the last four marker bodies, byte-matched and adjudicated.
+# All four were run through match.py against extracted/overlays/
+# overlay_0070.bin (base 0x0211f000, --module ov070, --strict-relocs) and
+# MATCH at 2004/b56: 021211bc and 02121bdc are `mov r0,#5; bx lr` (0x8 each),
+# 02121438 is FlameChomp's 0xc0-byte state-0 Kill root (Sound::PlayBank0,
+# the velocity block, ModelAnim::SetAnim on data_ov070_021234c4, two
+# Particle::System::NewSimple), 02121fb0 is FlameChompFire's 0x20-byte one.
+# Rulings in port/tools/inferred_stub_adjudicated.txt; the fill's inline
+# transcriptions were retired in favour of these.
+src/func_ov070_021211bc.c
+src/func_ov070_02121bdc.c
+src/func_ov070_02121438.cpp
+src/func_ov070_02121fb0.c

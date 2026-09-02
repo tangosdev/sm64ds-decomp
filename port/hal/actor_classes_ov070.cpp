@@ -44,22 +44,22 @@
 // included (13/14 the ActorBase Virtual34/38 traps, 30 declines: the ROM body
 // returns a Vector3 by value and the sret contract is unproved).
 //
-// ---- TWO SLOT BODIES ARE INLINE HOST COPIES (the stub-guard rule) ---------
+// ---- FOUR SLOT BODIES LINK FROM THE MATCHED TUs (lane mount-ov070) --------
 //
 // src's func_ov070_021211bc / func_ov070_02121bdc (the chomps' slot 18,
 // OnYoshiTryEat) and func_ov070_02121438 / func_ov070_02121fb0 (both packs'
 // state-0 Kill handlers) carry the "recovered from vtable slot identity"
-// marker: behavioral guesses, and port/tools/inferred_stub_guard.py rightly
-// fails any build that seats a NEW one from port/hal. The four were
-// disassembled here and the two that this file must reference are inlined
-// from the ROM listing instead (ov70_chomp_yoshi below, and the two Kill
-// transcriptions in the seat section); the slot-18 pair is two instructions:
+// marker, so wave 5 kept them out of every port/hal reference and inlined
+// the ROM listings here instead. Lane mount-ov070 byte-matched all four
+// against extracted/overlays/overlay_0070.bin (match.py, 2004/b56,
+// --strict-relocs, --module ov070: MATCH on 0x8, 0x8, 0xc0 and 0x20 bytes)
+// and adjudicated them REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt
+// -- the w3-d treatment FlyGuy's three own slots got. The four matched TUs
+// are on port/slice_w5c.txt and the thunks below call them by name; the
+// inline transcriptions are gone. The slot-18 pair is two instructions:
 //
 //   021211bc  mov r0, #5          02121bdc  mov r0, #5
 //   021211c0  bx  lr              02121be0  bx  lr
-//
-// The marked TUs stay OUT of every port/hal reference; the guard baseline
-// (two symbols) is untouched.
 //
 // ---- THE D1 DESTRUCTORS ARE HOST CHAINS (the gate-199/200/202 treatment) --
 //
@@ -232,6 +232,12 @@ int func_ov070_02121710(void *); int func_ov070_021213cc(void *);
 int func_ov070_021217ac(void *);
 int func_ov070_02121ef8(void *); int func_ov070_02121f18(void *);
 int func_ov070_02121eb0(void *);
+/* the four bodies lane mount-ov070 adjudicated REAL_DECOMP (byte-matched):
+   the two state-0 Kill roots and the two slot-18 OnYoshiTryEat returns */
+int func_ov070_02121438(void *);                  /* FlameChomp state 0 */
+int func_ov070_02121fb0(void *);                  /* FlameChompFire state 0 */
+int func_ov070_021211bc(void);                    /* FlameChomp slot 18 */
+int func_ov070_02121bdc(void);                    /* FlameChompFire slot 18 */
 }
 
 /* The D0 .c TUs restore each table by its RTTI spelling; the recovered names
@@ -392,48 +398,12 @@ static void ov70_fill_shared(void *volatile *vt)
     vt[30] = (void *)ov70_trap30;
 }
 
-// ---- the two Kill roots, transcribed from the ROM (stub-guard rule) --------
-//
-// FlameChomp state 0, ROM 0x02121438 (0xc0 bytes), every line against the
-// listing: Sound::PlayBank0(9, pos+0x74); clear bit 0 of [self+0xb0]; the
-// velocity/accel block -0x2000 -> +0x9c, -0x3c000 -> +0xa0, 0xa000 -> +0x98,
-// 0x28000 -> +0xa8; scale 0x1000 -> +0x80/84/88; byte 0x2d -> +0x3ac;
-// ModelAnim::SetAnim(this+0xd4, data_ov070_021234c4, 0, 0x1000, 0) -- r3
-// still holds the 0x1000 written to the scale, the listing's own trick;
-// Particle::System::NewSimple(0x43 then 0x44, pos 0x5c/60/64); state word 3
-// -> +0x3a0; return 1.
-static int ov70_flamechomp_kill(void *self)
-{
-    char *c = (char *)self;
-    _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
-    *(int *)(c + 0xb0) &= ~1;
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
-    *(int *)(c + 0x98) = 0xa000;
-    *(int *)(c + 0xa8) = 0x28000;
-    *(int *)(c + 0x80) = 0x1000;
-    *(int *)(c + 0x84) = 0x1000;
-    *(int *)(c + 0x88) = 0x1000;
-    *(unsigned char *)(c + 0x3ac) = 0x2d;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov070_021234c4,
-                                                0, 0x1000, 0);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x43, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-        0x44, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    *(int *)(c + 0x3a0) = 3;
-    return 1;
-}
-// FlameChompFire state 0, ROM 0x02121fb0 (0x20 bytes): 0xa000 -> +0x98,
-// byte 0x69 -> +0x32c, 0 -> +0x320, return 1.
-static int ov70_fcf_kill(void *self)
-{
-    char *c = (char *)self;
-    *(int *)(c + 0x98) = 0xa000;
-    *(unsigned char *)(c + 0x32c) = 0x69;
-    *(int *)(c + 0x320) = 0;
-    return 1;
-}
+// ---- the two Kill roots are the matched TUs -------------------------------
+// FlameChomp state 0 is func_ov070_02121438 (ROM 0x02121438, 0xc0 bytes) and
+// FlameChompFire state 0 is func_ov070_02121fb0 (ROM 0x02121fb0, 0x20 bytes);
+// both byte-match the ROM under the pin and are seated directly below. The
+// per-instruction transcriptions that stood here while the marker kept the
+// TUs out of port/hal were retired by lane mount-ov070.
 
 // ---- the state PMF seat ----------------------------------------------------
 // ---- FLY_GUY'S SIX TICK HALVES NEED A __fastcall THUNK (lane w3-d) ---------
@@ -512,8 +482,8 @@ static void ov70_seat_state_pmfs(void)
         { data_ov070_02123224, (void *)func_ov070_02120cac },
         { data_ov070_0212322c, (void *)func_ov070_021208a4 },
         { data_ov070_02123234, (void *)func_ov070_021209e4 },
-        /* FlameChomp's eight; state 0 is the transcription above */
-        { data_ov070_021232f4, (void *)ov70_flamechomp_kill },
+        /* FlameChomp's eight; state 0 is the matched Kill root */
+        { data_ov070_021232f4, (void *)func_ov070_02121438 },
         { data_ov070_021232fc, (void *)func_ov070_02121548 },
         { data_ov070_02123304, (void *)func_ov070_0212156c },
         { data_ov070_0212330c, (void *)func_ov070_021214f8 },
@@ -522,7 +492,7 @@ static void ov70_seat_state_pmfs(void)
         { data_ov070_02123324, (void *)func_ov070_021213cc },
         { data_ov070_0212332c, (void *)func_ov070_021217ac },
         /* FlameChompFire's four; state 0 likewise */
-        { data_ov070_021233ec, (void *)ov70_fcf_kill },
+        { data_ov070_021233ec, (void *)func_ov070_02121fb0 },
         { data_ov070_021233f4, (void *)func_ov070_02121ef8 },
         { data_ov070_021233fc, (void *)func_ov070_02121f18 },
         { data_ov070_02123404, (void *)func_ov070_02121eb0 },
@@ -636,9 +606,9 @@ static int __fastcall fc_render(void *s, void *)
 static int __fastcall fc_pdes(void *s, void *)
 { (void)s; _ZN10FlameChomp16OnPendingDestroyEv(); return 0; }
 /* slot 18: the ROM body is `mov r0, #5; bx lr` (0x021211bc, quoted in the
-   header) -- "I am fire, spit me out". Inlined, stub-guard rule. */
+   header) -- "I am fire, spit me out". The matched TU, adjudicated. */
 static int __fastcall fc_yoshi(void *, void *)
-{ return 5; }
+{ return func_ov070_021211bc(); }
 /* slot 16, HOST CHAIN -- the listing at 0x02121118. */
 static int __fastcall fc_d1(void *s, void *)
 {
@@ -675,7 +645,7 @@ extern "C" void hal_fill_flame_chomp_vtable(void)
 // ShadowModel +0xd4, MovingCylinderClsn +0xfc (NOT the WithPos variant -- the
 // D1 listing at 0x02121b48 calls 0x020149a4), WithMeshClsn +0x130. No Model
 // subobject, so no render probe. Slot 18 is the same two-instruction
-// OnYoshiTryEat as the chomp's (0x02121bdc).
+// OnYoshiTryEat as the chomp's (0x02121bdc), the matched TU.
 static int __fastcall fcf_init(void *s, void *)
 { return _ZN14FlameChompFire13InitResourcesEv(s); }
 static int __fastcall fcf_clean(void *s, void *)
@@ -687,7 +657,7 @@ static int __fastcall fcf_render(void *s, void *)
 static int __fastcall fcf_pdes(void *s, void *)
 { (void)s; _ZN14FlameChompFire16OnPendingDestroyEv(); return 0; }
 static int __fastcall fcf_yoshi(void *, void *)
-{ return 5; }
+{ return func_ov070_02121bdc(); }
 static int __fastcall fcf_d1(void *s, void *)
 {
     char *t = (char *)s;
