@@ -287,6 +287,7 @@ extern "C" void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing)
    port/mg_fanout_costs.txt section 10 records as tool finding 1. The dispatch
    argument is the literal 0, not the loop index -- this table is dispatched
    once per call, not per entry. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fad34(void *self)
 {
     char *c = (char *)self;
@@ -308,6 +309,7 @@ extern "C" void func_ov006_020fad34(void *self)
    own. THE ONLY ONE OF THE FIVE A LINK WOULD HAVE NAMED: its table is declared
    at file scope outside extern "C", so MSVC mangles the member-pointer type
    into the symbol. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fb60c(void *self)
 {
     char *c = (char *)self;
@@ -328,6 +330,7 @@ extern "C" void func_ov006_020fb60c(void *self)
    c + (adj>>1), virtual bit in adj&1 -- is what pch_call1 and port_mg_call1
    now own between them, and both refuse a nonzero adjustment rather than
    implement a shape nobody has measured. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fc7d0(void *self)
 {
     char *c = (char *)self;
@@ -343,6 +346,7 @@ extern "C" void func_ov006_020fc7d0(void *self)
 
 /* src/func_ov006_020fe248.cpp, table data_ov006_02142644. Forty-eight entries
    of stride 0x38; live flag at +0x4f0c, state index at +0x4f0d. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fe248(void *self)
 {
     char *c = (char *)self;
@@ -360,6 +364,7 @@ extern "C" void func_ov006_020fe248(void *self)
    stride 0x38; live flag at +0x468c, state index at +0x468f. The three-byte
    gap between the two is the src's own and is left alone. */
 
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fda7c(void *self)
 {
     char *c = (char *)self;

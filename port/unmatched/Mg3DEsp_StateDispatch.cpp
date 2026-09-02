@@ -372,6 +372,7 @@ extern "C" void port_mg_esp3d_table_counts(unsigned *out7)
    satisfied while MSVC strides the eight-byte table by four.  port/
    mg_fanout_costs.txt section 14's practical rule -- read the src before wiring
    slot 6 by name -- is what caught it here. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020e9e00(void *self)
 {
     char *c = (char *)self;
@@ -398,6 +399,7 @@ extern "C" int func_ov006_020e9e00(void *self)
    pointer, which is `void (C::*)()`.  Two host copies cannot carry a value
    through a routed call anyway -- port_mg_esp3d_call0 is void -- so this is
    recorded rather than reproduced. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e9b70(void *c)
 {
     char *p = (char *)c;
@@ -412,6 +414,7 @@ extern "C" void func_ov006_020e9b70(void *c)
    mangle.  Five records at +0x5218, stride 0x18; the gate is the record's own
    byte and the index is the byte after it; `this` is the CLASS BASE at every
    iteration and the argument is the loop counter. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e9374(void *c)
 {
     char *base = (char *)c;
@@ -427,6 +430,7 @@ extern "C" void func_ov006_020e9374(void *c)
 
 /* src/func_ov006_020e8d08.cpp.  The same shape one table over: three records at
    +0x5290, stride 0x14. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e8d08(void *c)
 {
     char *base = (char *)c;
@@ -444,6 +448,7 @@ extern "C" void func_ov006_020e8d08(void *c)
    second SILENT one, and the Behavior calls it unconditionally on every frame.
    Twenty records, stride 0x20 (the ROM's `lsl #5`), gate at +0x52d4 and index
    at +0x52d9 of each. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e8a44(void *self)
 {
     char *base = (char *)self;
@@ -471,6 +476,7 @@ extern "C" void func_ov006_020e8a44(void *self)
    clean on a link and on a `::*` sweep.  ONLY THE DECODE MOVES; everything
    below the call is the src's own arithmetic, kept line for line, and it is
    what the ROM does at 0x020e8878..0x020e8918. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e8830(char *base, int idx)
 {
     char *e = base + idx * 0x20;
@@ -497,6 +503,7 @@ extern "C" void func_ov006_020e8830(char *base, int idx)
    ROM'S OWN: `cmp r2,#3 / bxhs lr` at 0x020e830c, and it is kept rather than
    dropped because it is the only place in the class that states a table
    length in code. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e82fc(char *c)
 {
     unsigned char idx = *(unsigned char *)(c + 0x5552);

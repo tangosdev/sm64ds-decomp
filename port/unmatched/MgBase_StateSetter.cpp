@@ -458,6 +458,7 @@ void port_mg_call0(void *self, unsigned code, int adj);
 /* HOST COPY of src/func_ov004_020b7460.c, which is off port/slice_mg1.txt for
    this file. The ROM is `ldr ip,[pc]; bx ip; .word 0x020b743c`, a tail jump that
    preserves r0. One parameter added, forwarded. */
+/* PORT_HOST_ABI: ARM r0 ride-through; src spells the tail-jump veneer (void) and drops the object pointer its callers pass in r0 */
 extern "C" void func_ov004_020b7460(void *c)
 {
     func_ov004_020b743c((char *)c);
@@ -623,6 +624,7 @@ static void mgbase_build_table(void)
     g_table[19] = data_ov004_020bca0c;
 }
 
+/* PORT_HOST_ABI: mwcc pointer-to-member state setter (dScMgBase_c); builds and indexes an 8-byte {code,adj} table and dispatches through it, host-copied as an address switch */
 extern "C" void func_ov004_020b87e0(void *cv, int idx)
 {
     SetterObj *self = (SetterObj *)cv;

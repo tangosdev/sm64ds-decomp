@@ -331,6 +331,7 @@ extern "C" unsigned port_mg_coin_touch_calls(void)
    The state index is at +0x51c8, which the ROM reads as
    `add r0,r4,#0x5000 / ldr r0,[r0,#0x1c8]` and which slot 18
    (func_ov006_020de5b0) zeroes at the same offset. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020de69c(void *self)
 {
     char *c = (char *)self;
@@ -348,6 +349,7 @@ extern "C" int func_ov006_020de69c(void *self)
    extern "C", so the link never named it. The guard byte is +0x51bc and the
    index +0x51bf, which is what its src struct's pad/guard/pad2/idx layout
    spells. The slot is a ONE-argument one and the ROM passes a constant zero. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020dc298(void *self)
 {
     char *c = (char *)self;
@@ -360,6 +362,7 @@ extern "C" void func_ov006_020dc298(void *self)
 
 /* src/func_ov006_020dc754.cpp. SILENT for the same reason. Guard +0x51a0,
    index +0x51a1. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020dc754(void *self)
 {
     char *c = (char *)self;
@@ -372,6 +375,7 @@ extern "C" void func_ov006_020dc754(void *self)
 
 /* src/func_ov006_020dd2cc.cpp. Twenty-four elements of stride 0x18, the state
    byte at +0x4ad0 of each. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020dd2cc(void *self)
 {
     char *c = (char *)self;
@@ -386,6 +390,7 @@ extern "C" void func_ov006_020dd2cc(void *self)
 /* src/func_ov006_020ddd6c.cpp. SILENT: `extern "C" Entry data_ov006_02141840[]`.
    Forty elements of stride 0x1c; the live flag at +0x4677, the state byte at
    +0x4675. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020ddd6c(char *thiz)
 {
     int n = 0;
@@ -424,6 +429,7 @@ extern "C" void func_020ddd6c(void *c)
    data_ov006_02141810. Its src declares `extern PMF data_ov006_02141840[];`
    with PMF a pointer-to-member-of-Obj, which is one of the two link-visible
    spellings of that one table. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020de26c(char *self)
 {
     int count = 0;
@@ -473,6 +479,7 @@ extern "C" void func_ov006_020de26c(char *self)
    emits a DIFFERENT unresolved symbol for the same storage than the TU above
    does -- which is the clearest evidence in this class that the link names
    spellings and not tables. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020de440(char *c)
 {
     char *p = c;

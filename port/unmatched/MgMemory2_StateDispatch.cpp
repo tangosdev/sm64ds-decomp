@@ -315,6 +315,7 @@ extern "C" unsigned port_mg_memory2_nonmatching(void)    { return g_mem2_nonmatc
    satisfied while MSVC strides the eight-byte table by four.  It is one of the
    two silent shapes port/mg_fanout_costs.txt section 4 names, and only the
    `::*` sweep finds it. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020f7458(void *self)
 {
     char *c = (char *)self;
@@ -338,6 +339,7 @@ extern "C" int func_ov006_020f7458(void *self)
    TU, and the value is dead in every case -- this function is reached only as
    slot 1 of an arity-0 (void) table -- so it is DROPPED rather than invented.
    Nothing reads it. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f7234(void *self)
 {
     char *c = (char *)self;
@@ -350,6 +352,7 @@ extern "C" void func_ov006_020f7234(void *self)
 /* src/func_ov006_020f71c8.cpp.  Table declared inside extern "C", so SILENT.
    The index is at +0x53d8, which is the neighbour of slot 6's +0x53d4 and not
    the same field; both offsets are read off the ROM in section 2. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f71c8(void *self)
 {
     char *c = (char *)self;
@@ -366,6 +369,7 @@ extern "C" void func_ov006_020f71c8(void *self)
    The loop, the two byte offsets, the 0x18 stride, the twenty iterations and
    the argument are src's, and every one of them is confirmed against the
    disassembly in section 2. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f5c40(void *self)
 {
     char *base = (char *)self;

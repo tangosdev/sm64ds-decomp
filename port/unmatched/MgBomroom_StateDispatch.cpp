@@ -347,6 +347,7 @@ extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
    arm (decrement, then a SIGNED re-read clamped at 0); zero takes the dispatch
    arm, over data_ov006_021416e0 at index *(int *)(c + 0x62d0), which is the
    index slot 0 sets to 1 and slot 18 zeroes. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020d91b0(char *c)
 {
     if (*(unsigned short *)(c + 0x6200 + 0xf0) != 0) {
@@ -371,6 +372,7 @@ extern "C" int func_ov006_020d91b0(char *c)
    the ROM sets no argument register before its blx. It is also STATE SLOT 3 of
    data_ov006_021416e0, so the switch above reaches this copy and not the src.
    Its three tail calls are the other three dispatchers, in the ROM's order. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d8f98(unsigned char *c)
 {
     char *self = (char *)c;
@@ -410,6 +412,7 @@ extern "C" void func_ov006_020d8f98(unsigned char *c)
    pointed at. On the build that shipped they landed somewhere harmless and
    the symptom was a freeze; nothing about the defect guaranteed that, and the
    same source would have been a fault on a different frame layout. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d836c(char *c)
 {
     if (*(unsigned char *)(data_020a0de8 + data_020a0e40) == 0)
@@ -429,6 +432,7 @@ extern "C" void func_ov006_020d836c(char *c)
    +0x469b. `this` is the class base, the argument is the same index it was
    given. It is ALSO state slot 6 of data_ov006_02141730, which is why the
    switch above routes to this copy. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d7c00(char *c, int i)
 {
     unsigned char *e = (unsigned char *)c + i * 0x40 + 0x4000;
@@ -438,6 +442,7 @@ extern "C" void func_ov006_020d7c00(char *c, int i)
 
 /* src/func_ov006_020d65c8.cpp -- two elements of stride 0x10, the live flag at
    +0x626d of each and the state byte at +0x626c, loop counter as argument. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d65c8(void *self)
 {
     char *c = (char *)self;
@@ -452,6 +457,7 @@ extern "C" void func_ov006_020d65c8(void *self)
 
 /* src/func_ov006_020d6278.cpp -- the same shape as 020d65c8 with the pair of
    bytes 0x20 further on: flag at +0x628d, state at +0x628c. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d6278(void *self)
 {
     char *c = (char *)self;
@@ -467,6 +473,7 @@ extern "C" void func_ov006_020d6278(void *self)
 /* src/func_ov006_020d5fec.cpp -- no loop and no element cursor: one guard byte
    at +0x62ad, one index byte at +0x62ac, and a ONE-argument slot the ROM calls
    with a constant zero (`mov r1, #0` immediately before the blx). */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020d5fec(void *self)
 {
     char *c = (char *)self;

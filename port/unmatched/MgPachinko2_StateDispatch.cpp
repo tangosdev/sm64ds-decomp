@@ -357,6 +357,7 @@ extern "C" void port_mg_pachinko2_state_counts(unsigned *hits, unsigned *missing
        }
    Note the receiver: the guard and the index are read off the PER-ENTRY base
    b, and the call is made on c. The ROM agrees -- r6 is never reassigned. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020fff84(void *self)
 {
     char *c = (char *)self;
@@ -382,6 +383,7 @@ extern "C" void func_ov006_020fff84(void *self)
    already defines. The trailing call is kept because the ROM makes it
    unconditionally after every dispatch (bl 0x210076c at 0x021024c4, inside the
    guarded arm), and its callee has no body -- see the trap file. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_0210246c(void *self)
 {
     char *c = (char *)self;
@@ -404,6 +406,7 @@ extern "C" void func_ov006_0210246c(void *self)
            }
    Forty-eight entries at a 0x40 stride, which is the widest of the three and
    the one that carries this class's per-object cast. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02102e8c(void *self)
 {
     char *c = (char *)self;

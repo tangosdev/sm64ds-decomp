@@ -341,6 +341,7 @@ extern "C" void port_mg_panel_counts(unsigned *hits, unsigned *floor,
    WORD at +0x4ca8); pool 0x021073ac = 02142888; add r3,r1,r0,lsl#3 -- an
    EIGHT-byte stride; then the five-instruction Itanium sequence; then
    func_ov006_02104ac4 and func_ov006_02104354 off r4; mov r0,#1; return. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_02107358(char *c)
 {
     const unsigned j = (unsigned)*(int *)(c + 0x4ca8);
@@ -367,6 +368,7 @@ extern "C" int func_ov006_02107358(char *c)
    bumps the score at +0xb4 of the ov004 singleton under a 9999 clamp, keeping
    +0xb8 as its high-water mark; otherwise it re-arms for 0x10 frames, drops
    the outer state to 7 and re-seeds every panel through 0x021068d8. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02106ca4(char *c)
 {
     int busy = 0;
@@ -426,6 +428,7 @@ extern "C" void func_ov006_02106ca4(char *c)
    sequence; mov r1,r5 -- the loop counter is the argument; then the +0x4ec0
    halfword countdown, func_ov004_020b0a54(0x12), the two flag bytes and
    func_ov006_02104ea8. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02106bc0(char *c)
 {
     int i;
@@ -450,6 +453,7 @@ extern "C" void func_ov006_02106bc0(char *c)
    ROM 0x02106eb8: func_ov006_021050bc(self), func_ov006_021057f0(self), then
    the same count/index loop as 02106bc0 -- [r7,#0xcb8] and ldrb +0xefa -- with
    mov r1,r5. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02106eb8(char *c)
 {
     int i;
@@ -464,6 +468,7 @@ extern "C" void func_ov006_02106eb8(char *c)
 
 /* src/func_ov006_02106f44.cpp, table 02142840, arity 1. Same loop, with the
    +0x4fe9 flag set to 1 and func_ov006_02105854 between the two calls. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02106f44(char *c)
 {
     int i;
@@ -483,6 +488,7 @@ extern "C" void func_ov006_02106f44(char *c)
    it as a delinks-join miss rather than a floor. The `found` counter is the
    part the banner is about: the ROM counts nonzero indices and, if none was
    seen, drops the outer state to 4 and sets the two flags. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02106fdc(void *p)
 {
     char *c = (char *)p;
@@ -508,6 +514,7 @@ extern "C" void func_ov006_02106fdc(void *p)
 }
 
 /* src/func_ov006_0210709c.cpp, table 02142840, arity 1. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_0210709c(void *p)
 {
     char *c = (char *)p;
@@ -530,6 +537,7 @@ extern "C" void func_ov006_0210709c(void *p)
    r1,[r1,#0x693] the index; pool 0x02104b20 = 021427BC; and `mov r1,#0`
    between the two arms of the Itanium sequence, so the argument is the
    LITERAL ZERO and not a loop counter. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02104ac4(void *p)
 {
     char *c = (char *)p;
@@ -545,6 +553,7 @@ extern "C" void func_ov006_02104ac4(void *p)
    to self is the halfword decremented; the s16 at +0x4680 tested <= 0 zeroes
    that halfword and the bytes at +0x4684 and +0x4685 and returns; otherwise
    the index is the byte at +0x4686 and the pool at 0x02104cf8 is 021427EC. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_02104c60(void *p)
 {
     char *c = (char *)p;
@@ -565,6 +574,7 @@ extern "C" void func_ov006_02104c60(void *p)
 /* src/func_ov006_021050bc.cpp, table 02142860, arity 0.
    ROM 0x021050bc: add r1,r0,#0x4000; ldrb r2,[r1,#0x674] guard; ldrb
    r1,[r1,#0x675] index; pool 0x02105114 = 02142860. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_021050bc(void *p)
 {
     char *c = (char *)p;
@@ -585,6 +595,7 @@ extern "C" void func_ov006_021050bc(void *p)
    any state runs, port_scene_fill_panel has replaced slot 35's raw DS word
    with hal/scene_mg.cpp's mb_v35 thunk, so this dispatch reaches the ROM body
    through the same path every other slot does. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_021057f0(void *p)
 {
     char *c = (char *)p;

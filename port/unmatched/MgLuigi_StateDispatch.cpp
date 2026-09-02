@@ -258,6 +258,7 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
    ROM 0x020f0044: add r1,r0,#0x4000; ldrb r2,[r1,#0x7f4] guard; ldrb
    r1,[r1,#0x7f5] index; pool 0x020f00a0 = 021421EC; the dispatch passes
    r1 = 0, which is the src's literal (0). */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f0044(void *p)
 {
     char *c = (char *)p;
@@ -273,6 +274,7 @@ extern "C" void func_ov006_020f0044(void *p)
    ROM 0x020f0ba0: mov r2,#0x18; mla r2,r1,r2,r0; add r2,#0x4000; ldrb
    r2,[r2,#0x7b7]; pool 0x020f0bec = 0214221C. The ROM never writes r1 before
    the blx, so the incoming index rides through; this copy passes it. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f0ba0(void *p, int i)
 {
     char *c = (char *)p;
@@ -285,6 +287,7 @@ extern "C" void func_ov006_020f0ba0(void *p, int i)
    ROM 0x020f0d58: two iterations, stride 0x18, guard at +0x47b4, index at
    +0x47b6, r1 = the loop counter, pool 0x020f0dd4 = 02142204; returns
    (count == 0). */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020f0d58(void *p)
 {
     char *base = (char *)p;
@@ -304,6 +307,7 @@ extern "C" int func_ov006_020f0d58(void *p)
 /* src/func_ov006_020f1e90.cpp, table data_ov006_02142254, one argument.
    ROM 0x020f1e90: 0x78 iterations at stride 1, guard at +0x52ed + i, index at
    +0x51fd + i, r1 = i, pool 0x020f1ef4 = 02142254. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f1e90(void *p)
 {
     char *base = (char *)p;
@@ -346,6 +350,7 @@ struct LuigiVt {
 };
 }
 
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020f300c(char *o)
 {
     func_ov006_020f0044(o);
@@ -401,6 +406,7 @@ extern "C" void func_ov006_020f300c(char *o)
    (func_ov006_020f3294) zeroes at the same offset, so the two cross-confirm
    each other -- then the five-instruction ARM Itanium sequence, pool
    0x020f345c = 02142234. Returns 1. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020f3414(void *p)
 {
     char *c = (char *)p;

@@ -515,6 +515,7 @@ extern MgPmf data_ov004_020beb98[];
    inside this object, so nothing shifts. */
 namespace { struct CIdx1e { char pad[0x1e]; short idx; }; }
 
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020add88(void *p)
 {
     CIdx1e *c = (CIdx1e *)p;
@@ -523,6 +524,7 @@ extern "C" void func_ov004_020add88(void *p)
 }
 
 /* src/func_ov004_020adf2c.cpp, the same shape on the other table. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020adf2c(void *p)
 {
     CIdx1e *c = (CIdx1e *)p;
@@ -551,6 +553,7 @@ static inline const MgPmf *mg_self_pmf(void *self, unsigned off)
 }
 
 /* src/func_ov004_020b31b4.cpp */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020b31b4(void *self)
 {
     char *c = (char *)self;
@@ -567,6 +570,7 @@ extern "C" void func_ov004_020b31b4(void *self)
 /* src/func_ov004_020b321c.cpp. The ROM moves `this` to the adjusted pointer
    before the call (mov r0, r3); with every measured adjustment zero that is
    the object itself, and port_mg_call0 refuses any nonzero one. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020b321c(void *self)
 {
     char *c = (char *)self;
@@ -579,6 +583,7 @@ extern "C" void func_ov004_020b321c(void *self)
 }
 
 /* src/func_ov004_020b8714.cpp */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020b8714(void *self)
 {
     char *c = (char *)self;
@@ -591,6 +596,7 @@ extern "C" void func_ov004_020b8714(void *self)
 }
 
 /* src/func_ov004_020b8778.cpp */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020b8778(void *self)
 {
     char *c = (char *)self;
@@ -647,6 +653,7 @@ extern Pair data_ov004_020bf428[];
 extern Pair data_ov004_020bf4f8[];
 extern "C" MgPmf data_ov004_020bf490[];
 
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
 extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3, int arg4, int arg5, short arg6)
 {
     int a, b;

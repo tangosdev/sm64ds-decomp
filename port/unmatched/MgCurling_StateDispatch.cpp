@@ -238,6 +238,7 @@ extern "C" unsigned port_mg_curling_state_hits(void)
    and the struct wrapper is what hid the member pointer from facegen's WALL
    test; see hal/scene_mg_faces.cpp section 2b. `c->idx` is at 0x4eac, which is
    what func_ov006_020e3078 also writes (*(int*)(c + 0x4eac) = 2). */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_020e3528(void *self)
 {
     char *c = (char *)self;
@@ -250,6 +251,7 @@ extern "C" int func_ov006_020e3528(void *self)
 
 /* src/func_ov006_020e12d0.cpp. data_0209d4b8 keeps its C++ spelling so the
    generated alias for ?data_0209d4b8@@3HA still has its reference. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e12d0(char *o)
 {
     int i;
@@ -272,6 +274,7 @@ extern "C" void func_ov006_020e12d0(char *o)
 }
 
 /* src/func_ov006_020e0d84.cpp. Two dispatches, two tables, both one-argument. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e0d84(char *c, int i)
 {
     int idx = i * 0x24;
@@ -287,6 +290,7 @@ extern "C" void func_ov006_020e0d84(char *c, int i)
    extern "C", so the link never named it. */
 #define F1E(b, i) (*(unsigned char *)((char *)(b) + 0x47aa + (i) * 0x24))
 
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e1214(char *base, int idx)
 {
     unsigned char state = F1E(base, idx);
@@ -301,6 +305,7 @@ extern "C" void func_ov006_020e1214(char *base, int idx)
    rendering of a sign-extended address computation and are dropped here: they
    are a no-op on a 32-bit host pointer and a truncation hazard on a 64-bit
    one, and this file is compiled for the host, not matched. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_020e3078(char *c)
 {
     if (*(unsigned short *)(c + 0x4ee2) != 0) {

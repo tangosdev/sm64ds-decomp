@@ -337,6 +337,7 @@ extern "C" void port_mg_teresa_state_index(int *l1)
        mov r0,#1
    r1 holds the CODE WORD at the blx and no argument register is set, which is
    the arity-0 reading; stategen agrees. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" int func_ov006_021203ac(char *c)
 {
     const unsigned j = (unsigned)*(int *)(c + 0x4be8);
@@ -358,6 +359,7 @@ extern "C" int func_ov006_021203ac(char *c)
    The gate byte is at +0x4bbc and the index byte at +0x4bba, both off
    this+0x4000, which is what the src's `char pad[0x4bba]; idx; gap; g;`
    spells and what this copy reads directly. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_0211dd0c(char *c)
 {
     if (*(unsigned char *)(c + 0x4bbc) == 0)
@@ -378,6 +380,7 @@ extern "C" void func_ov006_0211dd0c(char *c)
    NOTE THE ORDER: the gate is at +0x4be0 and the index at +0x4be1, which is
    the opposite way round from 0211dd0c's pair. The src spells it that way too
    (`char pad[0x4be0]; g; idx;`) and both were re-read off the ROM. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_0211d5a8(char *c)
 {
     if (*(unsigned char *)(c + 0x4be0) == 0)
@@ -405,6 +408,7 @@ extern "C" void func_ov006_0211d5a8(char *c)
    that backwards would hand every state a pointer 0x24 bytes into the record
    array. The increments are outside the gate's skip, so a gated-off record
    still advances the counter. */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
 extern "C" void func_ov006_0211f6fc(char *c)
 {
     int i;
