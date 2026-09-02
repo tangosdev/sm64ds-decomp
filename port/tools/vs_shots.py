@@ -98,6 +98,10 @@ def run(mapi, cls, pos, idx, frames):
                                         pos[2] + off)
     env["SM64DS_SELFTEST_ORBIT"] = "1"
     env["SM64DS_ACTOR_PROBE"] = "1"
+    # Lane CAPSHOW: the cap render probe (hal/actor_classes_bob_world.cpp,
+    # cap_render) prints one [cap] line per cap per verdict change, so a run
+    # log says which caps the manager func_ov001_020aa420 turned on.
+    env["SM64DS_CAP_PROBE"] = "1"
     env["SM64DS_DUMP_FROM"] = str(DUMP_FROM)
     env["SM64DS_DUMP_TO"] = str(DUMP_TO)
     log = os.path.join(d, "run.log")
@@ -142,29 +146,55 @@ def best_frame(text, pos):
     return best[:3] if best else None
 
 
-def one_class(mapi, cls, frames, out):
-    """Boot once per candidate placement and keep the closest-framed shot."""
+def cap_verdicts(text):
+    """{(x,y,z): 'draws' | 'RETURNS EARLY...'} -- the LAST [cap] verdict per
+    cap position. The manager runs in Stage::Render and its flag is read by
+    the next frame's Behavior, so every cap's first line is always the early
+    return; the last line is the one that says what the level settled on."""
+    v = {}
+    for m in re.finditer(r"\[cap\] uid \d+ pos\((-?\d+),(-?\d+),(-?\d+)\)"
+                         r".*?-> Render (draws|RETURNS EARLY[^\n]*)", text):
+        v[(int(m.group(1)), int(m.group(2)), int(m.group(3)))] = m.group(4)
+    return v
+
+
+def one_class(mapi, cls, frames, out, cands=None):
+    """Boot once per candidate placement and keep the closest-framed shot.
+
+    A candidate whose own [cap] verdict is "draws" beats one whose cap the
+    manager left hidden, whatever the angle: a well-framed picture of a hidden
+    cap is the empty-grass picture this tool exists to avoid."""
     from PIL import Image
     probe = PROBE_NAME[cls]
     best = None
     for idx, pos in enumerate(TARGETS[(mapi, cls)]):
+        if cands is not None and idx not in cands:
+            continue
         rc, t, d = run(mapi, cls, pos, idx, frames)
         rendered = [ln for ln in t.splitlines()
                     if ln.startswith("[actor] " + probe)]
         alive = [ln for ln in t.splitlines() if ln.startswith("[pos] " + cls)]
         b = best_frame(t, pos)
-        print("    candidate %d at (%d,%d,%d): rc %d, %s, %s"
+        verdicts = cap_verdicts(t)
+        mine = verdicts.get(tuple(pos), "no [cap] line")
+        ndraw = sum(1 for x in verdicts.values() if x == "draws")
+        print("    candidate %d at (%d,%d,%d): rc %d, %s, %s, cap %s "
+              "(%d of %d caps draw)"
               % (idx, pos[0], pos[1], pos[2], rc,
                  "render path reached" if rendered else "NO RENDER LINE",
                  ("closest %.1f deg at f%03d" % (b[1], b[0])) if b
-                  else "no [cam] frame"))
+                  else "no [cam] frame",
+                 mine, ndraw, len(verdicts)))
         if b is None:
             continue
-        if best is None or abs(b[1] - AIM_DEG) < abs(best[1][1] - AIM_DEG):
-            best = (pos, b, d, rendered, alive, rc)
+        draws = 1 if mine == "draws" else 0
+        key = (draws, -abs(b[1] - AIM_DEG))
+        if best is None or key > best[6]:
+            best = (pos, b, d, rendered, alive, rc, key, mine, ndraw,
+                    len(verdicts))
     if best is None:
         return None
-    pos, (f, ang, dist), d, rendered, alive, rc = best
+    pos, (f, ang, dist), d, rendered, alive, rc, _, mine, ndraw, ncap = best
     src = os.path.join(d, "walk_frame_%03d.bmp" % f)
     name = "map%d_level%d_%s_f%03d.png" % (mapi + 1, MAP_LEVEL[mapi],
                                            cls.lower(), f)
@@ -173,7 +203,8 @@ def one_class(mapi, cls, frames, out):
         return None
     Image.open(src).save(dst)
     return dict(pos=pos, frame=f, angle=ang, dist=dist, file=dst,
-                rendered=rendered, alive=alive, rc=rc)
+                rendered=rendered, alive=alive, rc=rc, verdict=mine,
+                ndraw=ndraw, ncap=ncap)
 
 
 def main():
@@ -182,7 +213,12 @@ def main():
     ap.add_argument("--frames", type=int, default=470)
     ap.add_argument("--map", type=int)
     ap.add_argument("--class", dest="cls")
+    ap.add_argument("--cand", default=None,
+                    help="comma list of candidate indices to boot (default all)")
     args = ap.parse_args()
+    cands = None
+    if args.cand:
+        cands = set(int(x) for x in args.cand.split(","))
 
     keys = sorted(TARGETS)
     if args.map is not None:
@@ -195,7 +231,7 @@ def main():
     for mapi, cls in keys:
         print("VS map %d (level %d), %s: %d candidate placements"
               % (mapi + 1, MAP_LEVEL[mapi], cls, len(TARGETS[(mapi, cls)])))
-        r = one_class(mapi, cls, args.frames, args.out)
+        r = one_class(mapi, cls, args.frames, args.out, cands)
         results.append((mapi, cls, r))
 
     print("")
@@ -212,6 +248,9 @@ def main():
         print("  render path reached         : %s"
               % (r["rendered"][0] if r["rendered"] else
                  "NO [actor] LINE -- Render never ran for this class"))
+        if cls == "CAP":
+            print("  cap probe verdict           : this cap %s; %d of %d caps "
+                  "on the arena draw" % (r["verdict"], r["ndraw"], r["ncap"]))
         print("  frame chosen                : f%03d, %.1f degrees off the "
               "camera axis, %.0f units from the eye"
               % (r["frame"], r["angle"], r["dist"]))
