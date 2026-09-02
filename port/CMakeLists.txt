@@ -12562,6 +12562,18 @@ if(MSVC)
     target_compile_options(smoke_sdat PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# settings.json's control bindings and camera mode (hal/host_settings.cpp),
+# proved on the file alone: one child process per case because the loader
+# reads once, no ROM, no window. tests/smoke_settings.cpp carries the cases.
+add_executable(smoke_settings tests/smoke_settings.cpp hal/host_settings.cpp)
+target_include_directories(smoke_settings PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_compile_definitions(smoke_settings PRIVATE SM64DS_PLATFORM_PC)
+if(MSVC)
+    target_compile_options(smoke_settings PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
 # ---------------------------------------------------------------------------
 # THE ABI DEFECT DETECTORS
 #
