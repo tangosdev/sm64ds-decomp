@@ -40,6 +40,7 @@ int hal_player_st_walk_main(void *p);
 int hal_player_behavior(void *p);
 void hal_render_player_body(void *p);
 void hal_render_player_body_only(void *p);
+extern "C" int port_player_render_hidden(const void *p);  /* the render gate */
 extern char data_0209f4a0[];                 /* per-player pad blocks, 0x18 */
 extern unsigned char data_020a0e40[];        /* current player index */
 extern unsigned char data_ov002_0211013c[];  /* St_Walk state object */
@@ -246,6 +247,39 @@ int main(void)
     for (int f = 0; f < 4; ++f) {
         int wm = hal_player_st_wait_main(player);
         printf("  St_Wait_Main frame %d -> %d\n", f, wm);
+    }
+
+    /* eaten-gate proof: exercise the REAL port_player_render_hidden on this
+       constructed player, the predicate hal_render_player_world early-returns
+       on. Not VS mode and no invincibility here, so a visible opaque player
+       must read shown (0); setting Actor mFlags&0x10 (+0xb0, the ROM's
+       held/eaten hide, _ZN6Player6RenderEv.cpp:58) or mOpacity==0 (+0x6f5,
+       :56) must flip it to hidden. This is the St_InYoshiMouth victim's case
+       the port used to draw riding the eater. State is saved and restored. */
+    {
+        char *pc = (char *)player;
+        unsigned  saved_flags = *(unsigned *)(pc + 0xb0);
+        unsigned char saved_op = *(unsigned char *)(pc + 0x6f5);
+
+        *(unsigned char *)(pc + 0x6f5) = 0x1f;              /* opaque */
+        *(unsigned *)(pc + 0xb0) = saved_flags & ~0x10u;    /* not held */
+        int shown = port_player_render_hidden(player);
+
+        *(unsigned *)(pc + 0xb0) = (saved_flags & ~0x10u) | 0x10u;  /* eaten */
+        int hidden_flag = port_player_render_hidden(player);
+
+        *(unsigned *)(pc + 0xb0) = saved_flags & ~0x10u;
+        *(unsigned char *)(pc + 0x6f5) = 0;                 /* transparent */
+        int hidden_op = port_player_render_hidden(player);
+
+        *(unsigned *)(pc + 0xb0) = saved_flags;             /* restore */
+        *(unsigned char *)(pc + 0x6f5) = saved_op;
+
+        printf("  eaten-gate: opaque+unheld shown=%d, mFlags&0x10 hidden=%d, "
+               "mOpacity==0 hidden=%d\n", shown, hidden_flag, hidden_op);
+        CHECK(shown == 0);
+        CHECK(hidden_flag != 0);
+        CHECK(hidden_op != 0);
     }
 
     /* gate 11: a real floor first -- the castle grounds KCL through the
