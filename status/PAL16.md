@@ -114,6 +114,37 @@ a flat colour. Every generated row, custom or default, is anchored on ROM row
 `s % 4`, which keeps slots 0..3 doing precisely what they already did and means
 seats 0, 4, 8 and 12 give byte-identical output for the same pick.
 
+**The 512 bytes reach VRAM whole, and this was traced rather than assumed.**
+The upload walk is `src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp`, reached once
+per unique BMD from `Model::DoSetFile`, and one `sz` read out of the record
+drives the bounds test, the reservation and the copy length:
+
+    sz = p->size;
+    if (data_020a4bcc + sz > data_020a4bd8) Crash();
+    ...
+    data_020a4bd8 -= ((sz + 0xf) & 0xfff0);
+    GX::LoadTexPltt(p->data, data_020a4bd8, sz);
+    p->vramOffset = data_020a4bd8;
+
+`Model::UpdateFileOffsets` rebases the record's pointers on load and leaves the
+size at +0x08 alone, so the grown size survives the rebase. 512 is over the
+`sz <= 8` threshold so it takes the falling arena from the 0x18000 ceiling, and
+512 is already 16-aligned. **There is no 128, no 0x80, and no assumption of 16
+or 64 colours anywhere between the BMD record and the host memcpy**, and no
+fixed-length palette copy in `port/ntr/` or `port/hal/`.
+
+The row then falls out of the units. `src/func_020462d0.c` sets a runtime
+material's +0x20 to `vramOffset >> 4` for a sixteen-colour format, and ntr binds
+at `PLTT_SLOT_BASE + base*16`, so a material base is a palette address in
+sixteen-byte units. `Player+0x61C` is `base + (mPlayerNo << 1)`, and +2 in those
+units is +32 bytes -- exactly one row. **Slot 15 lands at +480 of 512, inside.**
+
+(An earlier draft of the `fs_mods.cpp` note cited `src/func_0204a028.c` as the
+upload walk. That is the PARTICLE archive's palette walk -- its only callers are
+`Particle::SysTracker::Initialise` and one ov007 site -- and no BMD goes through
+it. It is size-driven in the same way, which is how the wrong citation survived
+reading. Corrected in the source.)
+
 It runs **last** in `mod_filter`, after `PaletteYoshi`, `CustomPalette` and the
 lobby's own four rows, so whatever those wrote is the baseline the wide rows are
 generated from rather than something they get to overwrite. And it is

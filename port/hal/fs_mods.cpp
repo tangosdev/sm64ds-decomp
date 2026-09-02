@@ -2395,15 +2395,37 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
  * palette_named's bounds checks (`dp + sz <= len`) hold against the new length.
  * Rewriting the palette in place would have shifted every offset after it.
  *
- * AND THE RUNTIME FOLLOWS THE SIZE FIELD. src/func_0204a028.c is the upload
- * walk: for each entry it asks the allocator for `p->field_10` bytes, gets a
- * slot address back, and calls GX::LoadTexPltt with that same size. So the
- * record's size is what is reserved AND what is copied, and the two cannot
- * disagree. The material's palette base then names the row: ntr binds a
- * sixteen-colour format at PLTT_SLOT_BASE + base*16 (port/ntr/gx.cpp
- * bind_from_vram), and Player+0x61C is base + (mPlayerNo << 1), so one step of
- * mPlayerNo is +32 bytes, which is exactly one row. Slot 15 lands at +480 of
- * 512.
+ * AND THE RUNTIME FOLLOWS THE SIZE FIELD, end to end, with no clamp and no
+ * fixed 128 anywhere between the record and the host memcpy. The upload walk is
+ * src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp, reached once per unique BMD from
+ * Model::DoSetFile via Model::AddToCommonModelDataArr, and ONE `sz` read out of
+ * the record drives the bounds test, the reservation and the copy length:
+ *
+ *     sz = p->size;
+ *     if (data_020a4bcc + sz > data_020a4bd8) Crash();
+ *     ...
+ *     data_020a4bd8 -= ((sz + 0xf) & 0xfff0);
+ *     GX::LoadTexPltt(p->data, data_020a4bd8, sz);
+ *     p->vramOffset = data_020a4bd8;
+ *
+ * (Model::UpdateFileOffsets rebases the record's POINTERS on load and leaves
+ * the size at +0x08 alone, so the grown size survives the rebase. 512 is over
+ * the `sz <= 8` threshold, so it takes the falling arena from the 0x18000
+ * ceiling, and 512 is already 16-aligned.)
+ *
+ * THE ROW THEN FALLS OUT OF THE UNITS. src/func_020462d0.c builds the runtime
+ * material record and sets its +0x20 to `vramOffset >> 4` for a sixteen-colour
+ * format, and ntr binds at PLTT_SLOT_BASE + base*16 (port/ntr/gx.cpp
+ * bind_from_vram), so a material base is a palette address in sixteen-byte
+ * units. Player+0x61C is base + (mPlayerNo << 1), and +2 in those units is +32
+ * bytes, which is exactly one sixteen-colour row. Slot 15 lands at +480 of 512,
+ * inside.
+ *
+ * NOT src/func_0204a028.c, which an earlier draft of this note cited: that is
+ * the PARTICLE archive's palette walk (its only callers are
+ * Particle::SysTracker::Initialise and one ov007 site) and no BMD goes through
+ * it. It happens to be size-driven in the same way, which is how the wrong
+ * citation survived reading.
  *
  * WHY IT IS UNCONDITIONAL rather than gated on the session width or on
  * SM64DS_VS_COLORS. Every peer has to agree about what everyone looks like, and
