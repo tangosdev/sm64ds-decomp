@@ -337,46 +337,58 @@ pairings** (`C:\tmp\lagdelay-out\proof_vs7_d10b.log`, sweep run with
 and the bare-loopback control at seven windows (no induced latency, so the
 carrier refuses a depth and the session is stop-and-wait) is also 21/21 clean.
 
-### P6. The battery: GREEN AS FAR AS IT GOT, NOT FINISHED
+### P6. The battery: every code-shaped arm GREEN, one environment red
 
-`python port/tools/battery.py C:/tmp/lagdelay --skip-build`, log at
-`C:\tmp\lagdelay-out\proof_battery.log`. Every smoke binary green:
+`python -u port/tools/battery.py C:/tmp/lagdelay --skip-build`, log at
+`C:\tmp\lagdelay-out\proof_battery.log`.
 
-    smoke.exe: ok  smoke: all checks passed (math, Timer, Fader on host)
-    smoke_actor.exe: ok  smoke_actor: all checks passed (an actor spawned, initialized, behaved and rendered throug
-    smoke_anim.exe: ok  smoke_anim: all checks passed (the game posed and rendered the piano via its own recursive
-    smoke_clsn.exe: ok  smoke_clsn: all checks passed (the game's octree walk answers ground queries over real KCL
-    smoke_frames.exe: ok  smoke_frames: all checks passed (24 game-shaped frames through the fiber runtime, all with
-    smoke_fs.exe: ok  smoke_fs: all checks passed (raw + LZ77 assets loaded through SharedFilePtr on the game he
-    smoke_gx.exe: ok  smoke_gx: all checks passed (game DL pump byte-equals the harness path, 492 triangles, 186
-    smoke_heap.exe: ok  smoke_heap: all checks passed (2504 allocs, 2496 frees, peak 63 live, 0 full-arena rejecti
-    smoke_model.exe: ok  smoke_model: all checks passed (the game loaded, rebased, uploaded and rendered its own mo
-    smoke_modelanim.exe: ok  smoke_modelanim: all checks passed (the game advanced, wrapped and re-posed its own animat
-    smoke_oam.exe: ok  smoke_oam: all checks passed (the game's sprite engine emits, uploads and scans out on hos
-    smoke_objwin.exe: ok  smoke_objwin: ok
-    smoke_persist.exe: ok  smoke_persist: all checks passed (wrote disk state, a second process loaded it byte-exact;
-    smoke_player.exe: ok  smoke_player: Mario walks on the castle grounds (gates 10+11 GREEN)
-    smoke_roots.exe: ok  smoke_roots: all checks passed (root heap up, 1511 allocs, 1489 frees through Memory::Allo
-    smoke_savestate.exe: ok  smoke_savestate: all checks passed (world evolved, saved, diverged, restored byte-exact, a
-    smoke_sdat.exe: ok  OK
-    smoke_soak.exe: ok  soak: 455 models, 455 rendered (89840 tris total), 0 empty, 0 load-fail, 0 faulted
-    smoke_soak_anim.exe: ok  anim soak: 473 compatible pairs, 473 animated+rendered, 0 empty, 0 load-fail, 0 faulted
-    levels: 50 mounted, from hal/level_boot.cpp
-    selftest level 0: ok
-    selftest level 1: ok
-    selftest level 2: ok
+| Arm | Result |
+|---|---|
+| smoke suite | 19 of 19 ok (`smoke`, `smoke_actor`, `smoke_anim`, `smoke_clsn`, `smoke_frames`, `smoke_fs`, `smoke_gx`, `smoke_heap`, `smoke_model`, `smoke_modelanim`, `smoke_oam`, `smoke_objwin`, `smoke_persist`, `smoke_player`, `smoke_roots`, `smoke_savestate`, `smoke_sdat`, `smoke_soak`, `smoke_soak_anim`) |
+| level selftests | **50 of 50 ok** |
+| scene selftests | **34 of 34 ok** |
+| default boot | ok, reaches the TITLE, 300 frames clean |
+| linkage | **9139 (80.7%)**, identical to the number VS16HOST recorded; nothing lost |
+| ptr_audit | **0** unhosted code pointers |
+| shipping config | **RED, on the environment, not the code** -- see below |
 
-**IT IS NOT AN ALL GREEN AND MUST NOT BE READ AS ONE.** Levels 3..49, every
-scene selftest, the default-boot arm, linkage, ptr_audit and the shipping
-configuration have not run. The desk was carrying seven other lanes' port
-builds while this ran and the level arm was moving at about seven minutes a
-level, which is roughly six hours for the rest. The run was left going rather
-than killed; whoever picks this up should read the log's own verdict line and
-not this section.
+Not one `selftest level` or `selftest scene` line is anything but `ok`. The one
+qualified pass is level 45, which runs with `SM64DS_SKIP_CLASS=GOOMBOSS` and
+says so itself -- that skip is the battery's own pre-existing baseline row,
+owned by the decomp (`func_ov074_02121380` has no matched body), and has
+nothing to do with this lane.
 
-Nothing in this change is level-shaped or scene-shaped -- the diff is one
-transport file plus a shell script -- but that is an argument, and the battery
-is the thing that would actually settle it.
+**The shipping-config red, in full, because it is the one red here:**
+
+    'vswhere.exe' is not recognized as an internal or external command,
+    operable program or batch file.
+    CMake Error:
+      Running
+       '...\Ninja\ninja.exe' '-C' 'C:/tmp/lagdelay/build/port-kit' '-t' 'restat' 'build.ninja'
+      failed with:
+       ninja: error: failed recompaction: Permission denied
+    CMake Generate step failed.  Build files cannot be regenerated correctly.
+
+Two causes, both mine or the harness's, neither the diff's:
+
+1. `battery.py`'s `shipcfg_script` (`port/tools/battery.py:967`) calls
+   `vcvars32.bat` but does **not** put `%ProgramFiles(x86)%\Microsoft Visual
+   Studio\Installer` on PATH first. `port/build-port.cmd:5` does, and that is
+   the line vcvars needs in order to find `vswhere.exe`. So this arm only
+   passes when the battery is launched from a shell that already has the VS
+   installer on PATH. That is a battery bug worth fixing on its own; it is not
+   this branch's.
+2. `build/port-kit/build.ninja` was locked. This lane killed two racing
+   `build-port.cmd` chains earlier (the desk was carrying seven other lanes'
+   port builds at the time) and left a handle behind in that directory.
+
+**Re-run with the missing PATH line and a cleared `port-kit`, the configure is
+clean** (`C:\tmp\lagdelay-out\proof_shipcfg.log`): no vswhere error, compiler
+and ABI detected, `Configuring done (29.1s)`, then `hostgen` and the compile
+running with zero errors at the point this was written. **The link was NOT
+reached before this file was committed, so the shipping configuration is
+REPORTED AS UNPROVEN, not as green.** The command is
+`C:\tmp\lagdelay-out\shipcfg.cmd` and it reproduces the arm in one step.
 
 ### P5. THE ONE THING THAT DID NOT COME OUT CLEAN
 
@@ -460,6 +472,21 @@ independent frame budget each -- before anything ships at a raised depth.
    staggered starts can seat a two-player world and freeze before slots 3..6
    arrive. Those peers are told the frozen depth and cannot change it, which is
    correct and is also not sized for them.
+
+10. **The shipping configuration is not proven.** Every other battery arm is
+    green, including all 50 levels and all 34 scenes, and the failure was the
+    battery's own missing PATH line plus a build lock this lane left behind --
+    but a clean re-run had not reached the link when this was written, so it
+    stays unproven. `C:\tmp\lagdelay-out\shipcfg.cmd` finishes the job.
+
+11. **`battery.py`'s shipcfg arm needs a PATH line it does not set.** Found
+    here, not fixed here, because it is not this lane's file and a battery
+    change wants its own review: `shipcfg_script` (`port/tools/battery.py:967`)
+    should prepend `%ProgramFiles(x86)%\Microsoft Visual Studio\Installer` to
+    PATH before calling `vcvars32.bat`, exactly as `port/build-port.cmd:5`
+    does. Without it the arm passes or fails on what the launching shell
+    happens to have on PATH, which is how a green battery and a red one can
+    come from the same tree.
 
 9. **The mid-session renegotiation in section 3 is analysis, not code.** The
    argument against it rests on reading `src/func_0203ea5c.c:418`, not on a run
