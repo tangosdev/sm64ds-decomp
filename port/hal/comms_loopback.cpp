@@ -727,7 +727,30 @@ int g_input_delay = 0;                 // SM64DS_COMMS_INPUT_DELAY, 0 = off
 bool g_delay_from_env = false;
 bool delay_from_env() { return g_delay_from_env; }
 enum : int { kPipeDepth = 64 };        // rounds in flight; ~2 s at 30 Hz
-enum : int { kInputDelayMax = 8 };
+// RAISED FROM 8 TO 15 (run rel0215 lane LAGDELAY). 8 frames is 133 ms of
+// cover at the 16.67 ms this seam's rounds are paced to, and the field logs
+// this lane was given carry handshake round trips of 94..172 ms -- so the old
+// ceiling could not cover the worst path the relay actually sees, and a
+// session on that path starves on most frames no matter what anyone sets. 15
+// covers 250 ms.
+//
+// NOTHING SIZED BY IT NEEDS TO GROW. The ring is kPipeDepth=64 rounds and the
+// only requirement on it is that a round stays in the ring for the whole time
+// it is in flight -- exchange() reads round R-N while the newest opened round
+// is R, so the live span is N+1 entries, and the static_assert below is that
+// statement rather than a comment about it. The wire carries the number in
+// ACCEPT bits 8..15, which held 255 before this file existed.
+enum : int { kInputDelayMax = 15 };
+static_assert(kInputDelayMax + 1 < kPipeDepth,
+              "the pipeline ring must hold every round in flight: frame R "
+              "reads round R-N while round R is open, so N+1 entries are "
+              "live at once and the ring has to be strictly larger");
+// THE ROUND PERIOD, in hundredths of a millisecond. The seam's rounds are
+// paced at 60 Hz, which is what makes the shipped relay default of 5 frames
+// the 83 ms it was measured to be worth (p50 lockstep round trip 90.6 ms).
+// The 33 ms in the pipelining banner above is the older 30 fps framing and is
+// left standing because the argument it makes does not depend on the number.
+enum : int { kRoundPeriodMs100 = 1667 };
 struct PipeRound {
     unsigned      round;
     unsigned char blocks[kCommsMaxPlayers][kCommsBlockBytes];
@@ -740,6 +763,128 @@ PipeRound g_pipe[kPipeDepth];
 // aggregate has not come back, and therefore the one to republish.
 unsigned  g_pipe_low = 0;
 unsigned long long g_pipe_starved = 0;  // exchange() had to return 0 anyway
+
+// ===========================================================================
+// STARVATION ATTRIBUTION (run rel0215 lane LAGDELAY).
+//
+// `starved` says a session's input delay is too shallow for its path. It does
+// not say WHOSE path, and in a session of seven that is most of the question:
+// one peer on a bad connection starves every frame for all six others, and the
+// close line as it stood named nobody. These counters are the answer -- one
+// per slot, incremented for every slot whose record was missing from the round
+// the frame wanted, so the summary at close reads "starvedby=3:1974" and the
+// field log names the laggy peer instead of implying the session was.
+//
+// A starve is a PER-FRAME event on a bad path (1976 of them in 3032 rounds, in
+// the logs this lane was given), so the per-event line is rate limited to one
+// a second. The counters are not: they are counters.
+// ===========================================================================
+unsigned long long g_starve_by_slot[kCommsMaxPlayers] = { 0 };
+unsigned  g_starve_last_round   = 0;
+unsigned  g_starve_last_log_ms  = 0;
+bool      g_starve_ever         = false;
+enum : unsigned { kStarveLogMs = 1000 };
+
+// ===========================================================================
+// ADAPTIVE INPUT DELAY (run rel0215 lane LAGDELAY). PARENT SIDE.
+//
+// THE NUMBER WAS A CONSTANT AND THE PATH IS NOT. The relay default of 5 frames
+// was measured on ONE path (p50 90.6 ms, p95 98.8 ms) and shipped as the whole
+// world's answer. The field logs carry handshake round trips of 94, 118, 141
+// and 172 ms in the same week, and 5 frames is 83 ms of cover -- so on the
+// slower halves of that spread the pipeline is short by design and exchange()
+// starves on the majority of frames. That is what starved=1976 in 3032 rounds
+// is: not a defect, an under-sized constant.
+//
+// SO THE PARENT SIZES IT FROM WHAT IT MEASURED. Every child reports the round
+// trip it measured across its own handshake; the parent takes the WORST of
+// them, because one number has to cover every peer, and turns it into frames:
+//
+//     N = ceil(worst_rtt_ms * safety / 16.67) + jitter_margin
+//
+// clamped to [floor, kInputDelayMax]. safety (125 percent) is headroom for a
+// path that is worse under load than it was at handshake; jitter_margin (1
+// frame) is for the variance a single handshake sample cannot see; the floor
+// (5) keeps a session that measured suspiciously well from shipping less cover
+// than the constant it replaced.
+//
+// EVERY PEER STILL RUNS THE SAME NUMBER. That invariant is not weakened here
+// and could not be: it is published through the ACCEPT field exactly as
+// before, and the three rules below are what keep it true while the number is
+// allowed to move at all.
+//
+//   1. IT ONLY MOVES BEFORE FRAME 0. g_delay_frozen goes true the first time
+//      the parent enters the pipelined path in exchange(), which is the frame
+//      the ROM's wait loop first asks for a round. Every join happens in the
+//      lobby, before that. After the freeze the number is a constant again.
+//   2. A CHILD ONLY ADOPTS A CHANGE BEFORE ITS OWN FRAME 0. Same reason,
+//      stated locally: a peer that has handed the game no round cannot have
+//      handed it a round under the old N, so there is no frame index whose N
+//      disagrees. A change arriving after that is REFUSED, loudly.
+//   3. THE PARENT WILL NOT SERVE ROUND 0 UNTIL EVERY CHILD IT RETOLD HAS SAID
+//      BACK WHAT IT IS RUNNING. This is the one that makes it sound rather
+//      than merely likely. A child cannot produce frame 0 without the
+//      parent's aggregate, so withholding the aggregate withholds frame 0
+//      from the whole session -- and the parent's own exchange() starves in
+//      the meantime, which is an already-defined, already-counted, harmless
+//      state. Only children whose told number CHANGED after their accept are
+//      gated, so a session whose delay never moved behaves exactly as before.
+//
+// AND IT ONLY ENGAGES WHEN EVERY LIVE CHILD HAS REPORTED. A peer of an older
+// generation never sends a report, so it would never adopt a raised number and
+// never ack one -- the mixed-build desync. Requiring a report from everybody
+// means the sizing is off in exactly the sessions where it would be unsafe,
+// and those sessions keep the shipped constant they always had.
+// ===========================================================================
+bool g_adaptive_delay  = false;         // sizing is in effect on this end
+bool g_delay_frozen    = false;         // parent: frame 0 has been asked for
+bool g_frames_produced = false;         // this end handed the game a round
+int  g_delay_floor       = 5;           // SM64DS_COMMS_DELAY_FLOOR
+int  g_delay_margin      = 1;           // SM64DS_COMMS_DELAY_MARGIN, frames
+int  g_delay_safety_pct  = 125;         // SM64DS_COMMS_DELAY_SAFETY, percent
+// Parent, per child slot. rtt is the worst of the child's own handshake sample
+// and the parent's own accept-to-report measurement of the same path.
+int  g_child_rtt_ms[kCommsMaxPlayers];
+int  g_child_told_delay[kCommsMaxPlayers];   // last number sent to this slot
+int  g_child_ack_delay[kCommsMaxPlayers];    // last number it said it runs
+bool g_child_delay_moved[kCommsMaxPlayers];  // it was retold; it owes an ack
+unsigned g_accept_sent_ms[kCommsMaxPlayers]; // when the last unicast went out
+unsigned g_delay_gate_since_ms = 0;          // 0 = the gate is open
+unsigned g_delay_gate_last_log_ms = 0;
+unsigned long long g_delay_gate_holds = 0;
+enum : unsigned { kDelayGateLogMs = 3000 };
+// Child. The report is a JOIN with bit 30 set in `have`; it is repeated at the
+// republish interval until the parent's next unicast ACCEPT acknowledges it,
+// because a lost report leaves the parent sizing off one fewer peer.
+bool     g_report_acked   = false;
+unsigned g_last_report_ms = 0;
+int      g_report_tries   = 0;
+enum : int { kMaxReportTries = 12 };
+// JOIN `have` has been zero on the wire since MP2, which makes it the one free
+// word in the handshake. Bit 30 tags a REPORT; an older parent reads `have` on
+// a JOIN nowhere at all and answers a report exactly as it answers a re-knock.
+enum : unsigned { kJoinReportBit = 0x40000000u };
+// ACCEPT `have`: bit 31 is the slot assignment and 8..15 the delay, both
+// frozen. Bit 16 is new and says "your report was recorded".
+enum : unsigned { kAcceptRttAckBit = 0x00010000u };
+
+void delay_state_reset() {
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        g_child_rtt_ms[i]      = -1;
+        g_child_told_delay[i]  = -1;
+        g_child_ack_delay[i]   = -1;
+        g_child_delay_moved[i] = false;
+        g_accept_sent_ms[i]    = 0;
+        g_starve_by_slot[i]    = 0;
+    }
+    g_delay_frozen        = false;
+    g_frames_produced     = false;
+    g_report_acked        = false;
+    g_last_report_ms      = 0;
+    g_report_tries        = 0;
+    g_delay_gate_since_ms = 0;
+    g_starve_ever         = false;
+}
 
 PipeRound *pipe_find(unsigned r) {
     PipeRound &s = g_pipe[r % kPipeDepth];
@@ -1110,6 +1255,79 @@ void announce_roster() {
     set_live(a, g_live);
     a.have = ((unsigned)(g_input_delay & 0xFF) << 8);
     send_to_children(a);
+    // A BROADCAST RETELL IS STILL A RETELL. Every live child has now been sent
+    // this number, so any child that was previously told a different one owes
+    // an ack before round 0 goes out. Recording it here and not only in the
+    // unicast arm is what keeps rule 3 honest when the number moved during a
+    // roster window rather than during a join.
+    for (int k = 1; k < kCommsMaxPlayers; ++k) {
+        if ((g_live & (1u << k)) == 0) continue;
+        if (g_child_told_delay[k] >= 0 && g_child_told_delay[k] != g_input_delay)
+            g_child_delay_moved[k] = true;
+        g_child_told_delay[k] = g_input_delay;
+    }
+}
+
+// SIZE THE SESSION'S INPUT DELAY FROM WHAT THE PATHS MEASURED. See the banner
+// over g_adaptive_delay for the rules that keep this from breaking the
+// same-number-everywhere invariant; this function is only the arithmetic and
+// the publish.
+void recompute_adaptive_delay(const char *why) {
+    if (g_role != kRoleParent) return;
+    if (!g_adaptive_delay || g_delay_frozen) return;
+
+    // EVERY LIVE CHILD, OR NOTHING. A child that has not reported is either
+    // still handshaking (wait for it) or an older build that never will (and
+    // would never adopt a raised number either). Both answers are "not yet".
+    int worst = -1, worst_slot = -1;
+    for (int k = 1; k < kCommsMaxPlayers; ++k) {
+        if ((g_live & (1u << k)) == 0) continue;
+        if (g_child_rtt_ms[k] < 0) return;
+        if (g_child_rtt_ms[k] > worst) { worst = g_child_rtt_ms[k]; worst_slot = k; }
+    }
+    if (worst < 0) return;                       // no children yet
+
+    // ceil(worst * safety_pct/100 / (kRoundPeriodMs100/100)) in integers.
+    const long long num = (long long)worst * g_delay_safety_pct * 100;
+    const long long den = 100LL * (long long)kRoundPeriodMs100;
+    int frames = (int)((num + den - 1) / den) + g_delay_margin;
+    if (frames < g_delay_floor)   frames = g_delay_floor;
+    if (frames > kInputDelayMax)  frames = kInputDelayMax;
+    if (frames == g_input_delay) return;
+
+    // ONE LINE, AND IT CARRIES THE EVIDENCE. A playlog that says only "delay
+    // 14" leaves the next reader unable to tell a measured 14 from a typo, so
+    // the round trips it was derived from go on the same line.
+    char rtts[256];
+    int  w = 0;
+    rtts[0] = 0;
+    for (int k = 1; k < kCommsMaxPlayers && w < (int)sizeof rtts - 16; ++k) {
+        if ((g_live & (1u << k)) == 0) continue;
+        w += std::snprintf(rtts + w, sizeof rtts - (size_t)w, "%ss%d=%dms",
+                           w ? " " : "", k, g_child_rtt_ms[k]);
+    }
+    std::fprintf(stderr, "[comms:loopback] adaptive input delay %d frame(s) "
+                 "(was %d): ceil(%d ms worst * %d%% / %d.%02d ms) + %d, floor "
+                 "%d cap %d; worst is slot %d; per-child rtt %s [%s]\n",
+                 frames, g_input_delay, worst, g_delay_safety_pct,
+                 kRoundPeriodMs100 / 100, kRoundPeriodMs100 % 100,
+                 g_delay_margin, g_delay_floor, kInputDelayMax, worst_slot,
+                 rtts, why ? why : "-");
+    g_input_delay = frames;
+    announce_roster();
+}
+
+// RULE 3, ONE PREDICATE. False means round 0 is held back because a child that
+// was retold the delay has not yet said back what it is running -- and a child
+// running the wrong N is a divergence, where a held round is a stall.
+bool delay_gate_open() {
+    if (g_role != kRoleParent || !g_adaptive_delay) return true;
+    for (int k = 1; k < kCommsMaxPlayers; ++k) {
+        if ((g_live & (1u << k)) == 0) continue;
+        if (!g_child_delay_moved[k]) continue;
+        if (g_child_ack_delay[k] != g_input_delay) return false;
+    }
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -1259,6 +1477,53 @@ void pipe_send_aggregate(const PipeRound &s) {
 void pipe_try_broadcast() {
     if (g_role != kRoleParent || g_input_delay <= 0) return;
     if (g_state != kCommsParentConnected) return;
+    // RULE 3. A child that was retold the delay and has not said back what it
+    // is running may still be on the old number, and serving it round 0 would
+    // start it simulating at a depth nobody else is at. Hold instead: a child
+    // cannot produce a frame without an aggregate, so holding holds the whole
+    // session, and the parent's own exchange() starves in the meantime, which
+    // is a state this file already defines and counts.
+    if (!delay_gate_open()) {
+        ++g_delay_gate_holds;
+        const unsigned t = now_ms();
+        if (g_delay_gate_since_ms == 0) g_delay_gate_since_ms = t ? t : 1;
+        if (g_delay_gate_last_log_ms == 0 ||
+            (unsigned)(t - g_delay_gate_last_log_ms) >= kDelayGateLogMs) {
+            g_delay_gate_last_log_ms = t ? t : 1;
+            char who[128];
+            int w = 0;
+            who[0] = 0;
+            for (int q = 1; q < kCommsMaxPlayers && w < (int)sizeof who - 12; ++q) {
+                if ((g_live & (1u << q)) == 0) continue;
+                if (!g_child_delay_moved[q]) continue;
+                if (g_child_ack_delay[q] == g_input_delay) continue;
+                w += std::snprintf(who + w, sizeof who - (size_t)w, "%s%d(runs %d)",
+                                   w ? "," : "", q, g_child_ack_delay[q]);
+            }
+            std::fprintf(stderr, "[comms:loopback] holding round %u: input "
+                         "delay is %d and slot(s) %s have not confirmed it. "
+                         "The roster announce repeats; this clears itself in "
+                         "one round trip, and holding is a stall where "
+                         "serving would be a desync. Held %ums.\n",
+                         g_pipe_low, g_input_delay, who,
+                         (unsigned)(t - g_delay_gate_since_ms));
+        }
+        // Keep telling them. announce_roster() is the same packet the accept
+        // arm sends and is what a child adopts from.
+        if ((unsigned)(t - g_last_roster_ms) >= (unsigned)g_resend_ms) {
+            g_last_roster_ms = t;
+            announce_roster();
+        }
+        return;
+    }
+    if (g_delay_gate_since_ms != 0) {
+        std::fprintf(stderr, "[comms:loopback] every peer has confirmed input "
+                     "delay %d; the session runs (held %ums, %llu turns)\n",
+                     g_input_delay,
+                     (unsigned)(now_ms() - g_delay_gate_since_ms),
+                     g_delay_gate_holds);
+        g_delay_gate_since_ms = 0;
+    }
     for (unsigned q = g_pipe_low; q <= g_round; ++q) {
         PipeRound *s = pipe_find(q);
         if (!s) break;                        // a hole: nothing past it is due
@@ -1277,6 +1542,38 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
     case kTypeJoin: {
         const bool fresh = (g_live & (1u << k)) == 0;
         g_live |= (1u << k);
+        // A REPORT RATHER THAN A KNOCK. Bit 30 of a JOIN's `have` means the
+        // child is telling the parent what its path measured and what number
+        // it is currently running. Everything below this block treats it as
+        // an ordinary re-knock, which is exactly right: a report gets the same
+        // unicast ACCEPT a re-knock gets, and that ACCEPT is what acks it.
+        bool report_now = false;
+        if (p.have & kJoinReportBit) {
+            const int child_rtt   = (int)(p.have & 0xFFFFu);
+            const int child_delay = (int)((p.have >> 16) & 0xFFu);
+            // THE PARENT'S OWN MEASURE OF THE SAME PATH, free: the report is
+            // sent the moment the ACCEPT lands, so accept-out to report-in is
+            // a round trip this end timed with its own clock and owes nothing
+            // to the child's. Take the WORSE of the two -- one number has to
+            // cover the path and neither sample is entitled to be the small
+            // one.
+            int measured = -1;
+            if (g_accept_sent_ms[k] != 0) {
+                measured = (int)(now_ms() - g_accept_sent_ms[k]);
+                if (measured < 0 || measured > 5000) measured = -1;
+            }
+            int rtt = child_rtt > measured ? child_rtt : measured;
+            if (rtt < 0) rtt = 0;
+            if (rtt != g_child_rtt_ms[k]) {
+                std::fprintf(stderr, "[comms:loopback] slot %d reports "
+                             "handshake rtt %d ms (this end measured %d ms) "
+                             "and runs input delay %d\n",
+                             k, child_rtt, measured, child_delay);
+            }
+            g_child_rtt_ms[k]    = rtt;
+            g_child_ack_delay[k] = child_delay;
+            report_now = true;
+        }
         // ACCEPT IT EVEN IF THE GAME HAS NOT ASKED TO BE PARENT YET, but do not
         // fake the state. open() binds the socket and become_parent() is a few
         // statements later in the SAME first tick, with the drain() that
@@ -1337,6 +1634,15 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // was told a different number by its own environment loses, loudly.
         a.have = 0x80000000u | (unsigned)k |
                  ((unsigned)(g_input_delay & 0xFF) << 8);
+        // BIT 16: "your report was recorded". Only the unicast accept can say
+        // this, because only the unicast accept has one recipient -- the
+        // roster broadcast reaches every child and an ack in it would tell
+        // six peers something true of one.
+        if (g_child_rtt_ms[k] >= 0) a.have |= kAcceptRttAckBit;
+        if (g_child_told_delay[k] >= 0 && g_child_told_delay[k] != g_input_delay)
+            g_child_delay_moved[k] = true;
+        g_child_told_delay[k] = g_input_delay;
+        g_accept_sent_ms[k]   = now_ms();
         send_to_slot(a, k);
         if (fresh) {
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
@@ -1354,6 +1660,11 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
             g_last_roster_ms = now;
             announce_roster();
         }
+        // SIZE IT AFTER THE ACCEPT WENT OUT, not before: this join may be the
+        // last peer the parent was waiting on, and recompute publishes through
+        // announce_roster(), which needs the joiner already live to reach it.
+        if (report_now || fresh) recompute_adaptive_delay(report_now ? "report"
+                                                                    : "join");
         break;
     }
     case kTypeBlocks:
@@ -1408,6 +1719,79 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         ++g_dropped;
         break;
     }
+}
+
+// THE CHILD'S RTT REPORT. A JOIN with bit 30 set in `have`, carrying the round
+// trip this end measured across its own handshake and the input delay it is
+// currently running. It is a JOIN and not a new type on purpose: an older
+// parent answers any JOIN from a live slot with a unicast ACCEPT and changes
+// nothing else, so this costs a build that predates it exactly one datagram.
+void child_send_report() {
+    if (g_role != kRoleChild) return;
+    int r = g_handshake_rtt_ms;
+    if (r < 0)      r = 0;
+    if (r > 0xFFFF) r = 0xFFFF;
+    Packet j;
+    fill_header(j, kTypeJoin);
+    j.have = kJoinReportBit | (unsigned)r |
+             ((unsigned)(g_input_delay & 0xFF) << 16);
+    send_to_slot(j, 0);
+    g_last_report_ms = now_ms();
+    ++g_report_tries;
+}
+
+// ADOPT A DELAY THE PARENT PUBLISHED. Split out of the accept arm because the
+// parent may now publish a SECOND number -- it sizes the session from every
+// child's path, and the last child to join can move it -- so an
+// already-connected child has to read the field too. The bound that keeps this
+// safe is not "the first accept" any more, it is "before this end has handed
+// the game a round", which is the property the first-accept bound was standing
+// in for. See rule 2 in the banner over g_adaptive_delay.
+void child_adopt_delay(int parent_delay, bool at_accept) {
+    if (parent_delay < 0 || parent_delay > kInputDelayMax) return;
+    if (parent_delay == g_input_delay) return;
+
+    if (g_frames_produced) {
+        // REFUSED, AND LOUD. Moving N under a frame counter that only
+        // increments makes `want` (g_round - N) jump, so the console replays or
+        // skips rounds -- the divergence this whole field exists to prevent,
+        // arriving by a different door. Rate limited: if the parent is going to
+        // say this it will say it every roster announce.
+        static unsigned last_ms = 0;
+        const unsigned t = now_ms();
+        if (last_ms == 0 || (unsigned)(t - last_ms) >= kDelayGateLogMs) {
+            last_ms = t ? t : 1;
+            std::fprintf(stderr, "[comms:loopback] the parent published input "
+                         "delay %d and this end is running %d, but this end "
+                         "has already handed the game %u round(s). REFUSED: "
+                         "changing the depth now would replay or skip rounds, "
+                         "which is the desync the shared depth exists to "
+                         "prevent. The parent freezes the number before round "
+                         "0, so seeing this means a peer joined late.\n",
+                         parent_delay, g_input_delay, g_round);
+        }
+        return;
+    }
+
+    std::fprintf(stderr, "[comms:loopback] the parent runs input delay %d and "
+                 "this end had %d; ADOPTING %d%s. The parent is authoritative "
+                 "because the two ends must run the same depth -- frame k "
+                 "reads round k-N on both consoles or they are not simulating "
+                 "the same match%s\n",
+                 parent_delay, g_input_delay, parent_delay,
+                 at_accept ? "" : " (the parent re-sized the session)",
+                 delay_from_env()
+                     ? ". SM64DS_COMMS_INPUT_DELAY was set on this end and "
+                       "LOST; set it on the parent, which is the end whose "
+                       "knob decides."
+                     : ".");
+    g_input_delay = parent_delay;
+    // SAY IT BACK. The parent will not serve round 0 until every child it
+    // retold has acked, so this is not politeness, it is the thing that lets
+    // the session start.
+    g_report_acked  = false;
+    g_report_tries  = 0;
+    child_send_report();
 }
 
 void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
@@ -1489,23 +1873,7 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             // exists to prevent, arriving by a different door. Before any
             // round has been consumed there is nothing to replay: exchange()
             // returns 0 until this line sets kCommsChildConnected.
-            const int parent_delay = (int)((p.have >> 8) & 0xFF);
-            if (parent_delay >= 0 && parent_delay <= kInputDelayMax &&
-                parent_delay != g_input_delay) {
-                std::fprintf(stderr, "[comms:loopback] the parent runs input "
-                             "delay %d and this end had %d; ADOPTING %d. The "
-                             "parent is authoritative because the two ends "
-                             "must run the same depth -- frame k reads round "
-                             "k-N on both consoles or they are not simulating "
-                             "the same match%s\n",
-                             parent_delay, g_input_delay, parent_delay,
-                             delay_from_env()
-                                 ? ". SM64DS_COMMS_INPUT_DELAY was set on this "
-                                   "end and LOST; set it on the parent, which "
-                                   "is the end whose knob decides."
-                                 : ".");
-                g_input_delay = parent_delay;
-            }
+            child_adopt_delay((int)((p.have >> 8) & 0xFF), true);
             g_round = p.round;          // adopt the parent's clock
             g_stage_mask = 0;
             g_round_done = false;
@@ -1515,7 +1883,20 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
                          " (handshake rtt %d ms)\n",
                          g_slot, g_round, g_live, popcount_live(g_live),
                          g_input_delay, g_handshake_rtt_ms);
+            // TELL THE PARENT WHAT THIS PATH MEASURED. It sizes the session's
+            // delay off the worst round trip among its children and cannot
+            // measure a child's path from its own side until the child answers
+            // one of its datagrams, so this is the sample.
+            g_report_acked = false;
+            g_report_tries = 0;
+            child_send_report();
+            break;
         }
+        // ALREADY CONNECTED. Two things can still be in this accept: the ack
+        // for this end's report, and a delay the parent re-sized after some
+        // later child joined.
+        if (p.have & kAcceptRttAckBit) g_report_acked = true;
+        child_adopt_delay((int)((p.have >> 8) & 0xFF), false);
         break;
     }
     case kTypeBlocks:
@@ -1899,6 +2280,18 @@ void service() {
     // retry, never a wedge -- so this keeps knocking for as long as the game
     // is willing to wait, and the ROM's own ~20 s bound stays the one thing
     // that decides a session did not form.
+    // AN UNACKED REPORT IS A PEER THE PARENT IS SIZING WITHOUT. The report is
+    // one datagram on a lossy path and losing it silently costs the session
+    // the very measurement the delay is derived from, so it repeats at the
+    // republish interval until the parent's unicast ACCEPT says it landed --
+    // and it STOPS after kMaxReportTries, because a parent that never acks is
+    // an older build and this must not become a permanent trickle.
+    if (g_role == kRoleChild && g_state == kCommsChildConnected &&
+        !g_report_acked && g_report_tries < kMaxReportTries &&
+        (unsigned)(t - g_last_report_ms) >= (unsigned)g_resend_ms) {
+        child_send_report();
+    }
+
     if (g_role == kRoleChild && g_state == kCommsConnecting) {
         if ((unsigned)(t - g_last_join_ms) >= (unsigned)g_join_wait_ms) {
             if (g_join_started_ms == 0) g_join_started_ms = t;
@@ -2036,6 +2429,11 @@ void lb_open(unsigned mode) {
                      mode, g_my_port);
         return;
     }
+
+    // Every per-session adaptive-delay and starve-attribution counter starts
+    // at the session, not at the process: a second session in one launch must
+    // not inherit the first one's round trips or its blame.
+    delay_state_reset();
 
     // ws_start is ws_load plus the one-shot WSAStartup this block used to do
     // inline; the sequence and the failure message are unchanged.
@@ -2198,10 +2596,30 @@ void lb_close() {
     // playlog, and the two knobs that produce it are per-frame work nobody
     // should run while playing. One line at close costs a session nothing and
     // lands in playlog/play_*.log where a bug report will carry it.
+    // WHOSE PATH WAS SHORT. `starved` was always the tuning fact; without the
+    // per-slot breakdown a seven-player session's field log said the session
+    // was slow and named nobody, which is the difference between a bug report
+    // that can be acted on and one that cannot. Omitted entirely when nothing
+    // starved, so a healthy session's line is byte-identical to what it was.
+    char by[192];
+    by[0] = 0;
+    if (g_starve_ever) {
+        int w = std::snprintf(by, sizeof by, " starvedby=");
+        bool any = false;
+        for (int i = 0; i < kCommsMaxPlayers && w < (int)sizeof by - 24; ++i) {
+            if (!g_starve_by_slot[i]) continue;
+            w += std::snprintf(by + w, sizeof by - (size_t)w, "%s%d:%llu",
+                               any ? "," : "", i, g_starve_by_slot[i]);
+            any = true;
+        }
+        if (!any) by[0] = 0;
+        else std::snprintf(by + w, sizeof by - (size_t)w, " lastround=%u",
+                           g_starve_last_round);
+    }
     std::fprintf(stderr, "[comms:loopback] closed after %u rounds; indelay=%d "
-                 "starved=%llu sent=%llu recvd=%llu resends=%llu\n",
+                 "starved=%llu sent=%llu recvd=%llu resends=%llu%s\n",
                  g_round, g_input_delay, g_pipe_starved, g_sent, g_recvd,
-                 g_resends);
+                 g_resends, by);
 }
 
 void lb_become_parent() {
@@ -2249,6 +2667,7 @@ void lb_become_child() {
     // would have left the first knock waiting 150 ms for no reason.
     g_last_join_ms = now_ms() - (unsigned)g_join_wait_ms;
     g_join_started_ms = 0;
+    delay_state_reset();
     service();
 }
 
@@ -2284,6 +2703,17 @@ int lb_exchange(const void *my_block, uint16_t *status) {
     // 0 the stop-and-wait code underneath is what runs, unaltered.
     // =======================================================================
     if (g_input_delay > 0) {
+        // FREEZE. The ROM's wait loop is asking for a round, so frame 0 is
+        // imminent and the number stops moving here. Every join happens in the
+        // lobby, which is upstream of this call; a peer that joins after it
+        // gets the number as a constant, exactly as before this lane.
+        if (g_role == kRoleParent && !g_delay_frozen) {
+            g_delay_frozen = true;
+            if (g_adaptive_delay)
+                std::fprintf(stderr, "[comms:loopback] input delay FROZEN at "
+                             "%d for the rest of this session; the ROM asked "
+                             "for its first round\n", g_input_delay);
+        }
         PipeRound &mine = pipe_open(g_round);
         // PUBLISH ONCE PER ROUND, NOT ONCE PER CALL, and the difference is not
         // cosmetic. The ROM's wait loop calls exchange() over and over inside a
@@ -2333,12 +2763,47 @@ int lb_exchange(const void *my_block, uint16_t *status) {
             // stall, and it is COUNTED rather than hidden: a session running
             // with a nonzero starve count is one whose input delay is set too
             // low for its path, and that is a tuning fact somebody needs.
+            //
+            // AND IT IS COUNTED PER SLOT. `starved` alone says the session is
+            // short of cover; it does not say whose path is short, and in a
+            // seven-player match that is the whole question. A round known to
+            // the ring is missing whatever `mask` does not hold; a round the
+            // ring does not hold at all is missing everyone but this end,
+            // which is the honest reading of "nothing for that round arrived".
             ++g_pipe_starved;
+            g_starve_ever = true;
+            g_starve_last_round = want;
+            const unsigned have_mask = s ? (s->mask & g_live) : (1u << g_slot);
+            const unsigned missing   = g_live & ~have_mask;
+            for (int i = 0; i < kCommsMaxPlayers; ++i)
+                if (missing & (1u << i)) ++g_starve_by_slot[i];
+            // RATE LIMITED TO ONE LINE A SECOND. On a path this delay does not
+            // cover, a starve is a per-frame event -- 1976 of them in 3032
+            // rounds in the field logs -- and a line each would be the flood,
+            // not the diagnosis. The counters below carry the totals.
+            const unsigned tnow = now_ms();
+            if (g_starve_last_log_ms == 0 ||
+                (unsigned)(tnow - g_starve_last_log_ms) >= kStarveLogMs) {
+                g_starve_last_log_ms = tnow ? tnow : 1;
+                char who[128];
+                int  w = 0;
+                who[0] = 0;
+                for (int i = 0; i < kCommsMaxPlayers && w < (int)sizeof who - 8; ++i)
+                    if (missing & (1u << i))
+                        w += std::snprintf(who + w, sizeof who - (size_t)w,
+                                           "%s%d", w ? "," : "", i);
+                std::fprintf(stderr, "[comms:loopback] starved at round %u "
+                             "(indelay=%d): no record yet from slot(s) %s\n",
+                             want, g_input_delay, w ? who : "-");
+            }
             return 0;
         }
         std::memcpy(g_latched, s->blocks, sizeof g_latched);
         g_latched_mask = s->mask & g_live;
         ++g_round;
+        // A ROUND HAS REACHED THE GAME. Rule 2's bound: from here the depth is
+        // part of this end's history and cannot move.
+        g_frames_produced = true;
         return 1;
     }
 
@@ -2964,6 +3429,53 @@ bool comms_loopback_install_from_env() {
         g_input_delay = v;
         g_delay_from_env = true;
     }
+
+    // THE ADAPTIVE SIZING'S OWN KNOBS. All three are tuning, none of them is a
+    // decision a player makes, and the defaults are the shipped behaviour's
+    // own numbers: floor 5 is the relay constant this replaces, so a session
+    // whose paths all measure well keeps exactly the cover it had.
+    if (const char *v = std::getenv("SM64DS_COMMS_DELAY_SAFETY")) {
+        const int q = std::atoi(v);
+        if (q >= 100 && q <= 400) g_delay_safety_pct = q;
+        else std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_DELAY_SAFETY="
+                          "%s is outside 100..400 percent; keeping %d\n",
+                          v, g_delay_safety_pct);
+    }
+    if (const char *v = std::getenv("SM64DS_COMMS_DELAY_MARGIN")) {
+        const int q = std::atoi(v);
+        if (q >= 0 && q <= 8) g_delay_margin = q;
+        else std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_DELAY_MARGIN="
+                          "%s is outside 0..8 frames; keeping %d\n",
+                          v, g_delay_margin);
+    }
+    if (const char *v = std::getenv("SM64DS_COMMS_DELAY_FLOOR")) {
+        const int q = std::atoi(v);
+        if (q >= 0 && q <= kInputDelayMax) g_delay_floor = q;
+        else std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_DELAY_FLOOR="
+                          "%s is outside 0..%d frames; keeping %d\n",
+                          v, kInputDelayMax, g_delay_floor);
+    }
+    // ARMED ONLY WHERE IT CAN HELP AND ONLY WHERE IT IS ALLOWED TO DECIDE.
+    //   THE PARENT, because the delay is published parent to child and a child
+    //     that sized its own would be sizing a number it is about to lose.
+    //   NOT UNDER THE ENV OVERRIDE: a run that set SM64DS_COMMS_INPUT_DELAY is
+    //     measuring something, and retuning it underneath is how a controlled
+    //     experiment stops being one. The override still wins, as promised.
+    //   NOT WITH THE PIPELINE OFF, which is stop-and-wait by request and has
+    //     no depth to size.
+    g_adaptive_delay = (g_role == kRoleParent) && !g_delay_from_env &&
+                       g_input_delay > 0;
+    if (const char *v = std::getenv("SM64DS_COMMS_ADAPTIVE_DELAY"))
+        if (std::atoi(v) == 0) g_adaptive_delay = false;
+    if (g_adaptive_delay)
+        std::fprintf(stderr, "[comms:loopback] adaptive input delay ARMED: "
+                     "this end is the parent and will size the session's depth "
+                     "from the worst round trip its children report "
+                     "(safety %d%%, margin %d, floor %d, cap %d). It is frozen "
+                     "before the first round and published in every ACCEPT, so "
+                     "every peer still runs one number.\n",
+                     g_delay_safety_pct, g_delay_margin, g_delay_floor,
+                     kInputDelayMax);
     // REFUSED ON A BARE LOOPBACK, ALLOWED WHEN THERE IS A ROUND TRIP TO
     // HIDE -- and the second half of that sentence was missing at first,
     // which broke the one rig that most needed it. The guard keyed off the
