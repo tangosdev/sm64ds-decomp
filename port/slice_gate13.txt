@@ -102,6 +102,15 @@ src/func_02008b08.c
 src/func_02009138.c
 src/func_020091f8.c
 src/_ZN9ActorBaseD2Ev.c
+# Lane DTOR-PAIRS-C: the three root tables' own D1/D0 pairs, seated into
+# words 16/17 of the host arrays by hal/dtor_seats_base.cpp (ROM relocs named
+# there). Nothing dispatches them; the seat is the ROM's word and the edge.
+src/_ZN9ActorBaseD1Ev.c
+src/_ZN9ActorBaseD0Ev.c
+src/_ZN12ActorDerivedD1Ev.c
+src/_ZN12ActorDerivedD0Ev.c
+src/_ZN4ViewD1Ev.c
+src/_ZN4ViewD0Ev.c
 src/_ZNK7PathPtr5LoopsEv.cpp
 src/_ZN6Camera25SaveCameraStateBeforeTalkEv.cpp
 src/_ZN3G2x13SetBlendAlphaEPVttttt.cpp

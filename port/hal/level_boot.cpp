@@ -3864,6 +3864,7 @@ void hal_seat_platform_dtors(void);
 void hal_fill_enemy_base_vtable(void);
 void hal_seat_expandingheap_dtors(void);
 void hal_seat_model_family_dtors(void);
+void hal_seat_base_actor_dtors(void);
 void hal_seat_solidheap(void);
 void port_ov009_sinits(void);
 void port_actor_overlays_sinits(void);
@@ -5361,6 +5362,11 @@ static void port_a2_seat_body(int make_stage)
        family only (hal/model_dtor_seat.cpp rides the same targets as the
        MeshCollider dtor seat). */
     hal_seat_model_family_dtors();
+
+    /* Lane DTOR-PAIRS-C: the three root actor tables' own D1/D0 pairs
+       (ActorBase, ActorDerived, View) into words 16/17 of the host arrays,
+       which no fill ever wrote. hal/dtor_seats_base.cpp. */
+    hal_seat_base_actor_dtors();
 
     /* Lane-lk4 linkage seat: the solid-heap face. SolidHeap's own sixteen
        slot table filled with its matched bodies, and ActorBase::Virtual34/38
