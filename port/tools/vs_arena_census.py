@@ -32,6 +32,64 @@ OUT = os.path.join(ROOT, "build", "vs_arena_census")
 # map index -> level id, the ROM's data_ov075_0211c6ec
 MAP_LEVEL = {0: 51, 1: 43, 2: 29, 3: 42}
 
+SDAT = os.path.join(ROOT, "extracted", "dsd", "files", "data", "sound_data.sdat")
+
+
+def sdat_sequences():
+    """[(start, end, id, name, bank)] for every SSEQ, out of the ROM's SDAT.
+
+    PORT_SSEQ_TRACE names a started stream by its offset into the SDAT and by
+    nothing else, so this is what turns '[sseq] start player 0 ... (sdat+0x...)'
+    into 'NCS_BGM_VSATHRETIC'. Worth having rather than trusting the id the
+    game ASKED for: 0x4d and 0x41 (NCS_BGM_ATHRETIC) are the same SSEQ file
+    byte for byte and differ only in the bank their INFO record names, so
+    'the right song is playing' and 'the right entry was started' are two
+    different questions."""
+    import struct
+    d = open(SDAT, "rb").read()
+    nblk = struct.unpack("<H", d[0xE:0x10])[0]
+    blocks = [struct.unpack("<II", d[0x10 + i * 8:0x18 + i * 8])[0]
+              for i in range(nblk)]
+    symb, info, fat = blocks[0], blocks[1], blocks[2]
+
+    def recs(base):
+        return [struct.unpack("<I", d[base + 8 + i * 4:base + 12 + i * 4])[0]
+                for i in range(8)]
+
+    seq_info = info + recs(info)[0]
+    seq_sym = symb + recs(symb)[0]
+    count = struct.unpack("<I", d[seq_info:seq_info + 4])[0]
+    fat_n = struct.unpack("<I", d[fat + 8:fat + 12])[0]
+    out = []
+    for i in range(count):
+        p = struct.unpack("<I", d[seq_info + 4 + i * 4:seq_info + 8 + i * 4])[0]
+        if not p:
+            continue
+        fid, _unk, bank = struct.unpack("<HHH", d[info + p:info + p + 6])
+        if fid >= fat_n:
+            continue
+        off, size = struct.unpack("<II", d[fat + 12 + fid * 16:fat + 20 + fid * 16])
+        sp = struct.unpack("<I", d[seq_sym + 4 + i * 4:seq_sym + 8 + i * 4])[0]
+        name = "?"
+        if sp:
+            end = d.index(b"\0", symb + sp)
+            name = d[symb + sp:end].decode()
+        out.append((off, off + size, i, name, bank))
+    return sorted(out)
+
+
+def which_sequence(seqs, rel):
+    """The SSEQ whose FILE the trace's offset lands in.
+
+    A range lookup and not an equality one: PORT_SSEQ_TRACE prints
+    seqBase + startOff, which is inside the SSEQ file past its own header,
+    never the FAT offset itself."""
+    for start, end, i, name, bank in seqs:
+        if start <= rel < end:
+            return "0x%02x %s bank %d (sdat+0x%x, +0x%x into the file)" % (
+                i, name, bank, rel, rel - start)
+    return "sdat+0x%x (inside no SSEQ file)" % rel
+
 
 def rom_placement(star=2):
     """{level: Counter(actor id)} from vs_objcensus's own roll-up.
@@ -72,6 +130,8 @@ def run_map(mi, frames):
     env.pop("SM64DS_LEVEL", None)          # the VS start stages the level
     env["SM64DS_VS_MAP"] = str(mi)
     env["SM64DS_WINDOW_SELFTEST"] = str(frames)
+    # names every sequence the sequencer actually STARTS, by its SDAT offset
+    env["PORT_SSEQ_TRACE"] = "1"
     log = os.path.join(d, "run.log")
     rc = M.run_one(EXE, d, env, log)
     return rc, M.text(log)
@@ -126,6 +186,7 @@ def main():
 
     want = rom_placement(2)
     names = class_names()
+    seqs = sdat_sequences()
     fails = 0
     for mi in [int(x) for x in args.maps.split(",")]:
         lvl = MAP_LEVEL[mi]
@@ -143,6 +204,11 @@ def main():
               % (grp.group(1), grp.group(2), grp.group(3)) if grp
               else "  sound group : MISSING")
         print("  layer-1 seq : %s" % (", ".join(seq) if seq else "none issued"))
+        started = [which_sequence(seqs, int(o, 16)) for o in
+                   re.findall(r"\[sseq\] start player \d+ .*\(sdat\+0x([0-9a-f]+)\)", t)]
+        print("  sequences actually started, in order:")
+        for s in started or ["      none"]:
+            print("      %s" % s)
         print("  ROM places / port spawns / port keeps alive, by class:")
         for aid in sorted(set(want.get(lvl, {})) | set(got)):
             w = want.get(lvl, {}).get(aid, 0)
