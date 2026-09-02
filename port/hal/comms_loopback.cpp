@@ -1900,6 +1900,17 @@ void child_adopt_delay(int parent_delay, bool at_accept) {
     // That silence is the whole blocker.
     const int cap = g_legacy_peer_sim ? kLegacyInputDelayMax : kInputDelayMax;
     if (parent_delay < 0 || parent_delay > cap) return;
+    // AND AN OLD BUILD READS THE FIELD ON ITS FIRST ACCEPT ONLY. That is the
+    // third behaviour of a pre-0.3.3 peer, and the one the stand-in was
+    // missing: its adopt sat inside the branch that sets kCommsChildConnected
+    // ("ON THE FIRST ACCEPT ONLY, which is what this branch already is"), and
+    // every later accept and every roster announce was a no-op. Without this
+    // line the stand-in adopted a WITHDRAWAL off the roster broadcast, so a
+    // late-join proof passed on either ordering of the accept and the sizing
+    // -- the ordering commit 99c86bba2 exists to fix. With it, a joiner handed
+    // a raised number in its first accept keeps its own forever, which is
+    // what a real old build does, and the proof can tell the orderings apart.
+    if (g_legacy_peer_sim && !at_accept) return;
     if (parent_delay == g_input_delay) return;
 
     if (g_frames_produced) {

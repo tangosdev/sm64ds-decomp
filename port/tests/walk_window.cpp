@@ -7811,6 +7811,11 @@ int main(void)
        framebuffer next to the exe, exit -- CI-checkable without a user */
     const char *st = getenv("SM64DS_WINDOW_SELFTEST");
     const int selftest = st ? atoi(st) : 0;
+    /* The agreed stop round for a lockstep selftest; see the check at the
+       end of the frame loop. Selftest only, and 0 means "frame budget". */
+    const char *sr = getenv("SM64DS_COMMS_STOP_ROUND");
+    const unsigned long long stop_round =
+        (selftest && sr) ? (unsigned long long)atoll(sr) : 0ull;
     /* Live input, gated. key_live and its stale-key table are at file scope
        now (see their banner up there): the three gates inside them -- the
        selftest, the rebind capture and the window focus -- have two frame
@@ -12133,7 +12138,29 @@ int main(void)
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
         /* the frame's stdout, one write; the setvbuf note above is why */
         fflush(stdout);
-        if (selftest && frame >= selftest) {
+        /* SM64DS_COMMS_STOP_ROUND=R (run rel0215 lane LAGDELAY): under a
+           selftest, end the run once this window has COMPLETED R lockstep
+           rounds, whichever comes first with the frame budget. A wide session
+           whose windows each stop on their own frame budget tears down at
+           different rounds, and the last one to four hashed frames of the
+           window that stops first can carry state no other window ever
+           computed (status/LAGDELAY.md, P5). Stopping every window at one
+           agreed round removes that question instead of trimming around it.
+           Solo runs never complete a round, so the knob is inert there. */
+        int stop_round_hit = 0;
+        if (selftest && stop_round) {
+            const port::CommsReadout cr = port::comms_readout();
+            if (cr.rounds >= stop_round) {
+                stop_round_hit = 1;
+                fprintf(stderr, "[comms:level] SM64DS_COMMS_STOP_ROUND: "
+                        "completed round %llu (agreed stop %llu) at frame %d; "
+                        "ending the selftest at the agreed round rather than "
+                        "this window's own frame budget\n",
+                        (unsigned long long)cr.rounds,
+                        (unsigned long long)stop_round, frame);
+            }
+        }
+        if (selftest && (frame >= selftest || stop_round_hit)) {
             for (int k = 0; k < g_amb_n; ++k) {
                 char *o = (char *)g_amb[k].o;
                 int moved = *(int *)(o + 0x5c) != g_amb[k].p0[0] ||
