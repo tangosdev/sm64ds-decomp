@@ -2966,14 +2966,23 @@ foreach(line IN LISTS SLICE_W6D_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    # VS wiring lane: the PathLift path-follow body is substituted by
-    # port/unmatched/VS_PathDivGuard.cpp (in SLICE_VS_SOURCES) -- its two
-    # `x / dv` sites need the ARM divider's x/0 = 0, and a short-or-slow
-    # path segment makes dv 0 (measured: c0000094 in the VS castle grounds,
-    # reproduced with plain SM64DS_LEVEL=51). The manifest line is skipped
-    # HERE so slice_w6d.txt itself stays another lane's file, the TTE
-    # hostgen-skip shape.
+    # VS wiring lane: the PathLift path-follow body's two `x / dv` sites need
+    # the ARM divider's x/0 = 0, and a short-or-slow path segment makes dv 0
+    # (measured: c0000094 in the VS castle grounds, reproduced with plain
+    # SM64DS_LEVEL=51). RETIRED to the matched TU through hostgen's DS_DIV table,
+    # which routes both sites through ds_idiv. The plain manifest line is
+    # replaced HERE by the hostgen output so slice_w6d.txt itself stays another
+    # lane's file (the TTE hostgen-skip shape); this retires the old
+    # port/unmatched/VS_PathDivGuard.cpp host copy.
     if(line STREQUAL "src/func_ov002_020ef670.c")
+        set(_pathdiv_out "${CMAKE_BINARY_DIR}/host-src/src/func_ov002_020ef670.cpp")
+        add_custom_command(OUTPUT "${_pathdiv_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" func_ov002_020ef670
+            DEPENDS "${PORT_REPO_ROOT_ABS}/src/func_ov002_020ef670.c"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen func_ov002_020ef670")
+        list(APPEND SLICE_W6D_SOURCES "${_pathdiv_out}")
         continue()
     endif()
     list(APPEND SLICE_W6D_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
@@ -7404,11 +7413,7 @@ set(SLICE_VS_SOURCES hal/scene_vs_menu.cpp
                      # the three PMF dispatch sites, host copies; their
                      # matched src TUs are out of the slice (see the
                      # manifest's dispatch note and the file's banner)
-                     unmatched/VS_EntryDispatch.cpp
-                     # PathLift's path-follow body with ARM division
-                     # semantics; substitutes slice_w6d's src line (the skip
-                     # in that loop names it)
-                     unmatched/VS_PathDivGuard.cpp)
+                     unmatched/VS_EntryDispatch.cpp)
 foreach(line IN LISTS SLICE_VS_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

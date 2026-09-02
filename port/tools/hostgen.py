@@ -547,6 +547,16 @@ DS_DIV = {
         ("(int)*(u16*)(p + 0x2e) % (int)self->unk_006",
          "ds_imod((int)*(u16*)(p + 0x2e), (int)self->unk_006)"),
     ],
+    # PathLift's path-follow tick: dv = cstd::fdiv(len2, speed) / 0x1000 is 0
+    # whenever a path segment is shorter than one frame of travel, and the two
+    # angle-step divisions below then divide by it. The ROM's AEABI idiv answers
+    # x/0 = 0, x86 idiv faults c0000094 (measured on the VS castle grounds,
+    # level 51, actor 0x1f, reproduced with SM64DS_LEVEL=51). `/ 0x1000` above
+    # is a constant divisor and stays. This retires unmatched/VS_PathDivGuard.cpp.
+    "func_ov002_020ef670": [
+        ("ad2 / dv", "ds_idiv(ad2, dv)"),
+        ("ad1 / dv", "ds_idiv(ad1, dv)"),
+    ],
 }
 
 DS_DIV_DECL = """/* hostgen: DS integer-division semantics, see hal/cstd_div.c */

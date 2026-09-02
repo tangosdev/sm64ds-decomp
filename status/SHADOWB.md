@@ -177,3 +177,37 @@ exit 0, all three generated objects compiled into the three targets; guards +
 dsstate + inferred_stub + closestplayer green; linkage 9242 -> 9245 (+3),
 MSVC-NAME SHADOWS 15 -> 12, all three out of the queue and in `walk_window.map`;
 `git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass.
+
+Commit `bf5977ba5`.
+
+## Battery after item 5 -- ALL GREEN
+
+`python port/tools/battery.py --skip-build` (`build/tmp/battery_5.log`): 20/20
+smokes ok, every level selftest ok, every scene selftest 361-390 ok, default
+boot reaches TITLE 300 frames clean, linkage 9245 (81.6%), ptr_audit 0, shipping
+config built and selftest rc=0. Same two pre-existing skips (level 27
+TtcMovingCube, level 45 Goomboss). This run exercises the retired walljump path.
+
+## 6. func_ov002_020ef670 -- RETIRED via DS_DIV
+
+PathLift's path-follow tick. `dv = cstd::fdiv(len2, speed) / 0x1000` is zero
+whenever a path segment is shorter than one frame of travel, and the two
+angle-step divisions `ad2 / dv` and `ad1 / dv` then divide by zero. The ROM's
+AEABI idiv answers x/0 = 0; x86 idiv faults c0000094 (measured on the VS castle
+grounds, level 51, actor 0x1f, reproduced with SM64DS_LEVEL=51). The host copy
+`unmatched/VS_PathDivGuard.cpp` routed both sites through a local
+`arm_sdiv(a,b) = b ? a/b : 0`.
+
+Retired through hostgen's DS_DIV table: two exact-string entries route
+`ad2 / dv` and `ad1 / dv` to `ds_idiv(...)` (`hal/cstd_div.c`, same `b ? a/b : 0`
+semantics); `/ 0x1000` is a constant divisor and is left raw, as the mechanism
+requires. The slice_w6d CMake loop already skipped the plain src line; that skip
+now generates the hostgen'd `.cpp` into `SLICE_W6D_SOURCES` (same three targets
+as the retired host copy's `SLICE_VS_SOURCES`), and `VS_PathDivGuard.cpp` is
+removed from `SLICE_VS_SOURCES` and `git rm`'d. The hostgen output's two
+division sites were confirmed to route through ds_idiv, matching the host copy.
+
+Verification: build exit 0; guards + dsstate + inferred_stub + closestplayer
+green; linkage 9245 -> 9246 (+1), SHADOWS 148 -> 147, `func_ov002_020ef670` out
+of the queue and in `walk_window.map`; `git diff --stat d63b92a09 -- src/`
+empty; all 20 smokes pass.
