@@ -766,6 +766,43 @@ VIRTUAL_CALL = {
         ("if (ret) func_02017060(file);",
          "if (ret && port_model_shrink_enabled()) func_02017060(file);"),
     ],
+    # Lane shadow-A: two of the four ActorBase::Process wrappers. Each passes
+    # three mwcc pointer-to-member-functions, static {vtable byte offset, 1}
+    # records at 0x02099e74..0x02099ecc, into
+    #
+    #     ActorBase::Process(self, <main>, <before>, <after>)
+    #
+    # and on the host those three globals are zeroed storage
+    # (hal/player_bridges.cpp) because MSVC has no representation for the
+    # mwcc pair. The records are static and the ROM's bytes name the slots:
+    # 0x02099ebc/ec4/e94 = {0x00,1} {0x04,1} {0x08,1} -> InitResources,
+    # BeforeInitResources, AfterInitResources (func_0204335c, the init
+    # Process); 0x02099ea4/eac/eb4 = {0x18,1} {0x1c,1} {0x20,1} -> Behavior,
+    # BeforeBehavior, AfterBehavior (func_02043288, the per-frame tick). The
+    # patch inlines Process's own control flow over those slots (the body of
+    # src/_ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp, unchanged: before,
+    # then main, then after(code)), through the same __fastcall thunk
+    # convention as func_02016ff4 above. Retires
+    # port/unmatched/func_0204335c_hostcopy.cpp and func_02043288_hostcopy.cpp.
+    # The other two wrappers (func_0204322c render 9/10/11, func_020432e4
+    # cleanup 3/4/5) keep their host copies: the render one carries the slot-5
+    # Virtual18 ruling and is not this lane's.
+    "func_0204335c": [
+        ("    return _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ebc, data_02099ec4, data_02099e94);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 1/0/2, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[1])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[0])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[2])(self, 0, code);\n"
+         "    return r;"),
+    ],
 }
 
 
