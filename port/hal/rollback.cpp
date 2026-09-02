@@ -88,6 +88,7 @@ void port_comms_counters_set(unsigned long long exchanges, unsigned long long ro
 int  port_dh_frame_get(void);
 void port_dh_frame_set(int f);
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
+extern int data_020a4b98[];               // the actor walker's list-5 view
 }
 
 namespace {
@@ -470,6 +471,26 @@ void keep_world(char **a, char **d, char **h)
     if (g_hw_n) port_hw_regions_copy_out(*h);
 }
 
+// The nearest actor at or below an arena address, for naming a DET diff:
+// walks the render list the way port_actor_render_replay does and reports
+// the actor id and the offset into it. Diagnostic only.
+void name_arena_addr(size_t off)
+{
+    struct Node { int pad; Node *next; unsigned char *obj; };
+    const unsigned char *addr = (const unsigned char *)port_arena_base() + off;
+    const unsigned char *best = 0;
+    unsigned best_id = 0;
+    for (Node *node = (Node *)(size_t)data_020a4b98[0]; node; node = node->next) {
+        if (node->obj <= addr && (!best || node->obj > best)) {
+            best = node->obj;
+            best_id = *(const unsigned *)(node->obj + 0x0c);
+        }
+    }
+    if (best)
+        fprintf(stderr, "[rb-det]       (arena +0x%zx is actor id %u at %p, +0x%zx)\n",
+                off, best_id, (const void *)best, (size_t)(addr - best));
+}
+
 size_t diff_region(const char *name, const char *want, const char *got, size_t n)
 {
     size_t differing = 0, ranges = 0, i = 0, first = (size_t)-1;
@@ -486,6 +507,7 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
                     (unsigned char)want[i + 2], (unsigned char)want[i + 3],
                     (unsigned char)got[i], (unsigned char)got[i + 1],
                     (unsigned char)got[i + 2], (unsigned char)got[i + 3]);
+        if (ranges < 8 && name[0] == 'a') name_arena_addr(i);
         ++ranges;
         i = j;
     }
