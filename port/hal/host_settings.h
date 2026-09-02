@@ -28,6 +28,108 @@ extern "C" {
 /* SwapCameraTurnDirection: 1 when the player turned it on. Default 0. */
 int host_setting_swap_camera_turn(void);
 
+/* ---- CameraMode: WHICH CAMERA AN INTERACTIVE RUN BOOTS INTO -------------
+   "analog" (default) | "freecam" | "ds", the three modes tests/walk_window.cpp
+   names CAM_ANALOG / CAM_FREE / CAM_DS. Returned as that numbering: 0 analog,
+   1 freecam, 2 ds. The default is analog because that is what main has always
+   promoted an interactive run to once the Camera actor is up, so a
+   settings.json without the key boots exactly the program that shipped before
+   the key existed. A SELFTEST IGNORES IT and stays DS-exact, for the reason
+   the RunMode pin gives: a comparator run must not depend on a preferences
+   file. SM64DS_ANALOG_CAMERA / SM64DS_DS_CAMERA / SM64DS_FREECAM still win
+   over the file, because an environment knob is a per-run request and the
+   file is a standing one. The debug menu's camera row writes the key back
+   through host_setting_save_camera_mode, the way the run row writes RunMode.
+   Boot-latched: F1 and the row move the live mode, the file moves the next
+   boot. */
+int host_setting_camera_mode(void);
+int host_setting_save_camera_mode(int mode);
+
+/* ---- THE CONTROL BINDINGS, ONE KEY PER ACTION ----------------------------
+   Why they are here at all: the F5 debug menu could rebind exactly one thing
+   (the run button) and only in a window a person was sitting at, and a lobby
+   match boots straight into VS with no menu on the way. settings.json is read
+   at boot by every copy of the game the launcher starts, single-player and
+   lobby alike (the launcher runs both out of the bundle directory, and the
+   file sits beside the exe), so a binding here reaches a match.
+
+   KEYBOARD, Win32 virtual-key codes (the number GetAsyncKeyState takes; 'W'
+   is 0x57, VK_SPACE is 0x20). 0 means that action has no keyboard binding.
+   Defaults are the bindings this program has always hardcoded:
+
+     KeyUp        0x57 W        KeyUpAlt     0x26 up arrow
+     KeyDown      0x53 S        KeyDownAlt   0x28 down arrow
+     KeyLeft      0x41 A        KeyLeftAlt   0x25 left arrow
+     KeyRight     0x44 D        KeyRightAlt  0x27 right arrow
+     KeyJump      0x20 space
+     KeyAttack    0x58 X        (punch / kick / Yoshi's tongue: the DS B button)
+     KeyCrouch    0x11 ctrl     (the DS R shoulder)
+     KeyRun       0x10 shift    (the port's own run button; see RunMode)
+     KeyStart     0x0d enter    (scene path only: the minigames' own menus)
+     KeySelect    0x08 backspace (scene path only, keyboard only on the DS
+                                 side too -- every free pad button is spoken
+                                 for, see the scene loop)
+
+   The four *Alt keys exist so the shipped "WASD and the arrows both walk"
+   default is a fact the launcher can show and change rather than a rule
+   hidden in the game. Either half of a pair may be 0.
+
+   PAD, XInput button masks (XINPUT_GAMEPAD_*: A 0x1000, B 0x2000, X 0x4000,
+   Y 0x8000, LB 0x0100, RB 0x0200, START 0x0010, BACK 0x0020, the d-pad
+   0x0001..0x0008, the stick clicks 0x0040/0x0080). 0 means no pad binding.
+   Defaults are again what the window has always done:
+
+     PadJump      0x1000 A
+     PadAttack    0x2000 B
+     PadCrouch    0      -- the RIGHT TRIGGER crouches and always has; it is
+                            an axis, not a button, so it has no mask and stays
+                            a fixed binding. A PadCrouch button crouches as
+                            well, it does not replace the trigger.
+     PadRun       0x4000 X
+     PadStart     0x0010 START
+     PadSelect    0      -- BACK opens the debug menu, so Select has no pad
+                            default; bind it here if the menu is not wanted
+                            on BACK.
+
+   The left stick and the d-pad walk, and the right stick, the bumpers and
+   the right-stick click drive the camera. Those are not bindings in this
+   file; they are the pad's shape.
+
+   RunButtonKey AND RunButtonPad, the two names that existed before this
+   block, KEEP WORKING AS ALIASES of KeyRun and PadRun. When both spellings
+   are in the file KeyRun / PadRun win; when only the old name is there it is
+   read exactly as before; the save path writes BOTH spellings so a launcher
+   of either vintage reads the choice back. host_setting_run_key and
+   host_setting_run_pad return the same answers as host_setting_key(HOST_KEY_RUN)
+   and host_setting_pad(HOST_PAD_RUN).
+
+   A value outside the code space (keys 0..0xff, pads 0..0xffff) is a typo,
+   not a choice, and reads as the default. Two actions on one key is legal
+   and means both happen; nothing here second-guesses it. The debug menu's
+   own navigation -- the arrows, enter, escape, F5, the d-pad, A, B and BACK
+   -- is fixed and is not in this table.
+
+   Boot-latched, like RunMode: the launcher's dialog promises the restart. */
+enum {
+    HOST_KEY_UP = 0, HOST_KEY_DOWN, HOST_KEY_LEFT, HOST_KEY_RIGHT,
+    HOST_KEY_UP_ALT, HOST_KEY_DOWN_ALT, HOST_KEY_LEFT_ALT, HOST_KEY_RIGHT_ALT,
+    HOST_KEY_JUMP, HOST_KEY_ATTACK, HOST_KEY_CROUCH, HOST_KEY_RUN,
+    HOST_KEY_START, HOST_KEY_SELECT,
+    HOST_KEY_COUNT
+};
+enum {
+    HOST_PAD_JUMP = 0, HOST_PAD_ATTACK, HOST_PAD_CROUCH, HOST_PAD_RUN,
+    HOST_PAD_START, HOST_PAD_SELECT,
+    HOST_PAD_COUNT
+};
+/* The bound code for one action, or 0 for unbound; an index outside the enum
+   is 0 too. host_setting_key_name / host_setting_pad_name give the
+   settings.json spelling of an action ("KeyJump", "PadJump"), for logs. */
+int host_setting_key(int action);
+int host_setting_pad(int action);
+const char *host_setting_key_name(int action);
+const char *host_setting_pad_name(int action);
+
 /* ---- WHICH WAY THE CAMERA TURNS ---------------------------------------
    The signed step a RIGHTWARD push of a camera control makes to the
    camera's heading, the angle from Mario to the eye that the Camera actor

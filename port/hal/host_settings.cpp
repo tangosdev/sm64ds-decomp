@@ -418,6 +418,54 @@ int g_run_pad;                       /* default 0x4000, pad X */
 
 const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
 
+/* ---- CameraMode -----------------------------------------------------------
+   0 analog, 1 freecam, 2 ds -- tests/walk_window.cpp's CAM_ numbering, and the
+   default is analog because that is what main has always promoted an
+   interactive run to. The header carries the rest. Read by name and, like
+   RunMode, by number too. */
+int g_camera_mode;                   /* default 0, analog */
+const char *const CAMERA_MODE_KEY[3] = { "analog", "freecam", "ds" };
+
+/* ---- THE CONTROL BINDINGS -------------------------------------------------
+   One settings.json key per action, keyboard and pad in two tables indexed by
+   the HOST_KEY_ / HOST_PAD_ enums in the header, which is also where the
+   meaning of every default is written down. The two tables below hold the
+   SPELLING and the DEFAULT side by side so they cannot drift apart, and the
+   stderr line at the end of load_once walks the same tables.
+
+   The run action is special in one way only: its old spellings, RunButtonKey
+   and RunButtonPad, still work. KeyRun / PadRun win when present; the old
+   name is read when the new one is not there; and the save path writes both.
+   That is the whole of the alias, and it lives in the two lines that read the
+   run entry rather than in a rule anywhere else. */
+struct BindKey { const char *name; int dflt; };
+const BindKey KEY_BIND[14] = {
+    { "KeyUp",       0x57 },      /* W */
+    { "KeyDown",     0x53 },      /* S */
+    { "KeyLeft",     0x41 },      /* A */
+    { "KeyRight",    0x44 },      /* D */
+    { "KeyUpAlt",    0x26 },      /* VK_UP */
+    { "KeyDownAlt",  0x28 },      /* VK_DOWN */
+    { "KeyLeftAlt",  0x25 },      /* VK_LEFT */
+    { "KeyRightAlt", 0x27 },      /* VK_RIGHT */
+    { "KeyJump",     0x20 },      /* VK_SPACE */
+    { "KeyAttack",   0x58 },      /* X */
+    { "KeyCrouch",   0x11 },      /* VK_CONTROL */
+    { "KeyRun",      0x10 },      /* VK_SHIFT; alias RunButtonKey */
+    { "KeyStart",    0x0d },      /* VK_RETURN */
+    { "KeySelect",   0x08 },      /* VK_BACK */
+};
+const BindKey PAD_BIND[6] = {
+    { "PadJump",   0x1000 },      /* A */
+    { "PadAttack", 0x2000 },      /* B */
+    { "PadCrouch", 0      },      /* the right trigger is fixed; see header */
+    { "PadRun",    0x4000 },      /* X; alias RunButtonPad */
+    { "PadStart",  0x0010 },      /* START */
+    { "PadSelect", 0      },      /* BACK opens the debug menu; see header */
+};
+int g_key[14];
+int g_pad[6];
+
 /* ---- THE DS SCREEN GAP -------------------------------------------------
    The four keys behind the launcher's "remove minigame gap" checkbox and
    the three that shape the gap when it is left in. See port/hal/screen_gap.h
@@ -617,6 +665,9 @@ void load_once(void)
     g_run_mode = 0;
     g_run_key = 0x10;
     g_run_pad = 0x4000;
+    g_camera_mode = 0;
+    for (int i = 0; i < 14; ++i) g_key[i] = KEY_BIND[i].dflt;
+    for (int i = 0; i < 6; ++i) g_pad[i] = PAD_BIND[i].dflt;
     g_gap_on = 1;
     g_gap_fill = 1;
     g_gap_color = 0xFF000000u;
@@ -659,6 +710,42 @@ void load_once(void)
             const int p = json_int(text, "RunButtonPad", 0x4000);
             if (p >= 0 && p <= 0xffff) g_run_pad = p;
         }
+        /* the camera mode, by name and by number like RunMode */
+        {
+            char mode[16];
+            if (json_str(text, "CameraMode", mode, sizeof mode)) {
+                int matched = 0;
+                for (int i = 0; i < 3; ++i)
+                    if (strlen(mode) == strlen(CAMERA_MODE_KEY[i]) &&
+                        ieq(mode, CAMERA_MODE_KEY[i], strlen(mode))) {
+                        g_camera_mode = i;
+                        matched = 1;
+                    }
+                if (!matched) {
+                    const int n = json_int(text, "CameraMode", 0);
+                    if (n >= 0 && n <= 2) g_camera_mode = n;
+                }
+            }
+        }
+        /* the bindings, each read against its OWN default so a file that
+           moves jump and says nothing about the rest is honoured for jump.
+           Out of the code space is a typo, not a choice, like the run pair. */
+        for (int i = 0; i < 14; ++i) {
+            const int k = json_int(text, KEY_BIND[i].name, KEY_BIND[i].dflt);
+            if (k >= 0 && k <= 0xff) g_key[i] = k;
+        }
+        for (int i = 0; i < 6; ++i) {
+            const int p = json_int(text, PAD_BIND[i].name, PAD_BIND[i].dflt);
+            if (p >= 0 && p <= 0xffff) g_pad[i] = p;
+        }
+        /* THE ALIAS: KeyRun / PadRun win when the file names them; when it
+           does not, the old RunButtonKey / RunButtonPad answer stands, which
+           is what the two reads above already left in g_run_key / g_run_pad.
+           After these two lines g_run_key and g_key[RUN] are one value. */
+        if (json_value(text, "KeyRun")) g_run_key = g_key[11];
+        else g_key[11] = g_run_key;
+        if (json_value(text, "PadRun")) g_run_pad = g_pad[3];
+        else g_pad[3] = g_run_pad;
         /* the screen gap. Each key is read against its OWN default, so a file
            that sets one of the four and none of the others is honoured for
            the one it set. */
@@ -744,6 +831,21 @@ void load_once(void)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
                 (unsigned)g_run_pad, path);
+    if (g_camera_mode)
+        fprintf(stderr, "[settings] CameraMode %s (%s)\n",
+                CAMERA_MODE_KEY[g_camera_mode], path);
+    /* one line per binding the player moved, so a support log answers "what
+       was jump bound to" without anyone opening the file */
+    for (int i = 0; i < 14; ++i)
+        if (g_key[i] != KEY_BIND[i].dflt)
+            fprintf(stderr, "[settings] %s 0x%02x (default 0x%02x) (%s)\n",
+                    KEY_BIND[i].name, (unsigned)g_key[i],
+                    (unsigned)KEY_BIND[i].dflt, path);
+    for (int i = 0; i < 6; ++i)
+        if (g_pad[i] != PAD_BIND[i].dflt)
+            fprintf(stderr, "[settings] %s 0x%04x (default 0x%04x) (%s)\n",
+                    PAD_BIND[i].name, (unsigned)g_pad[i],
+                    (unsigned)PAD_BIND[i].dflt, path);
     if (!g_gap_on || g_gap_fill != 1 || g_gap_color != 0xFF000000u ||
         g_gap_peek)
         fprintf(stderr, "[settings] MinigameGap %s, fill %s #%06x, peek %s "
@@ -904,6 +1006,41 @@ extern "C" int host_setting_run_pad(void)
 {
     load_once();
     return g_run_pad;
+}
+
+/* CameraMode: 0 analog, 1 freecam, 2 ds. See the header. */
+extern "C" int host_setting_camera_mode(void)
+{
+    load_once();
+    return g_camera_mode;
+}
+
+/* The bindings. An index outside the table is 0, unbound, so a caller that
+   grew an action before this file did gets "nothing" and not a wild read. */
+extern "C" int host_setting_key(int action)
+{
+    load_once();
+    if (action < 0 || action >= 14) return 0;
+    return g_key[action];
+}
+
+extern "C" int host_setting_pad(int action)
+{
+    load_once();
+    if (action < 0 || action >= 6) return 0;
+    return g_pad[action];
+}
+
+extern "C" const char *host_setting_key_name(int action)
+{
+    if (action < 0 || action >= 14) return "";
+    return KEY_BIND[action].name;
+}
+
+extern "C" const char *host_setting_pad_name(int action)
+{
+    if (action < 0 || action >= 6) return "";
+    return PAD_BIND[action].name;
 }
 
 /* The four screen-gap keys. See the block above load_once for what each one
@@ -1085,6 +1222,46 @@ extern "C" int host_settings_poll(void)
    thing and IS fixed, in write_text above.
    hal/instance_tag.h's survey carries the same note for a reader who arrives
    from the other direction. */
+/* The shared write: settings.json reloaded, `n` keys set in order, the whole
+   document published through write_text. Every key this program did not
+   write is carried across untouched (see json_set). Says why on stderr when
+   the write fails; the in-memory values are the caller's to have moved
+   already. */
+namespace {
+int save_keys(const char *const *keys, const char *const *vals, int n,
+              const char *what)
+{
+    char path[1024];
+    if (!settings_write_path(path, sizeof path)) return 0;
+
+    char *doc = slurp(path);
+    if (doc && !looks_like_json_object(doc)) {
+        /* a file that will not parse is one the loader is already ignoring,
+           so replacing it loses nothing a reader was going to honour */
+        free(doc);
+        doc = 0;
+    }
+    if (!doc) {
+        doc = (char *)malloc(4);
+        if (!doc) return 0;
+        memcpy(doc, "{\n}", 4);
+    }
+    int ok = 1;
+    for (int i = 0; i < n && ok; ++i) {
+        char *next = json_set(doc, keys[i], vals[i]);
+        free(doc);
+        doc = next;
+        if (!doc) ok = 0;
+    }
+    if (ok) ok = write_text(path, doc);
+    free(doc);
+    if (!ok)
+        fprintf(stderr, "[settings] could not write %s -- the %s is set for "
+                        "this run only\n", path, what);
+    return ok;
+}
+}  /* namespace */
+
 extern "C" int host_setting_save_run(int mode, int key, int pad)
 {
     load_once();
@@ -1094,50 +1271,32 @@ extern "C" int host_setting_save_run(int mode, int key, int pad)
     g_run_mode = mode;
     g_run_key = key;
     g_run_pad = pad;
+    g_key[11] = key;
+    g_pad[3] = pad;
 
-    char path[1024];
-    if (!settings_write_path(path, sizeof path)) return 0;
+    /* BOTH spellings of each binding, so a launcher that reads the old name
+       and one that reads the new name both see the choice, and the loader's
+       "KeyRun wins when present" rule cannot resurrect a stale old value. */
+    char vmode[24], vkey[24], vpad[24];
+    snprintf(vmode, sizeof vmode, "\"%s\"", RUN_MODE_KEY[mode]);
+    snprintf(vkey, sizeof vkey, "%d", key);
+    snprintf(vpad, sizeof vpad, "%d", pad);
+    const char *const keys[5] = { "RunMode", "RunButtonKey", "KeyRun",
+                                  "RunButtonPad", "PadRun" };
+    const char *const vals[5] = { vmode, vkey, vkey, vpad, vpad };
+    return save_keys(keys, vals, 5, "run mode");
+}
 
-    char *base = slurp(path);
-    if (base && !looks_like_json_object(base)) {
-        /* a file that will not parse is one the loader is already ignoring,
-           so replacing it loses nothing a reader was going to honour */
-        free(base);
-        base = 0;
-    }
-    if (!base) {
-        base = (char *)malloc(4);
-        if (!base) return 0;
-        memcpy(base, "{\n}", 4);
-    }
-
-    char val[24];
-    int ok = 1;
-    snprintf(val, sizeof val, "\"%s\"", RUN_MODE_KEY[mode]);
-    char *a = json_set(base, "RunMode", val);
-    free(base);
-    if (!a) ok = 0;
-    char *b = 0, *cc = 0;
-    if (ok) {
-        snprintf(val, sizeof val, "%d", key);
-        b = json_set(a, "RunButtonKey", val);
-        free(a);
-        a = 0;
-        if (!b) ok = 0;
-    }
-    if (ok) {
-        snprintf(val, sizeof val, "%d", pad);
-        cc = json_set(b, "RunButtonPad", val);
-        free(b);
-        b = 0;
-        if (!cc) ok = 0;
-    }
-    if (ok) ok = write_text(path, cc);
-    free(a);
-    free(b);
-    free(cc);
-    if (!ok)
-        fprintf(stderr, "[settings] could not write %s -- the run mode is "
-                        "set for this run only\n", path);
-    return ok;
+/* The camera row's twin of the above: the live mode moves whether or not the
+   write lands, and the file carries it to the next boot. */
+extern "C" int host_setting_save_camera_mode(int mode)
+{
+    load_once();
+    if (mode < 0 || mode > 2) mode = 0;
+    g_camera_mode = mode;
+    char v[24];
+    snprintf(v, sizeof v, "\"%s\"", CAMERA_MODE_KEY[mode]);
+    const char *const keys[1] = { "CameraMode" };
+    const char *const vals[1] = { v };
+    return save_keys(keys, vals, 1, "camera mode");
 }
