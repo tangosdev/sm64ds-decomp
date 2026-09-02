@@ -81,7 +81,10 @@ the view is folded into the projection `push_camera` makes.
 
 Behind the camera and off-screen are culled. The tag steps up one size when the
 player is close and that is the whole distance treatment - a continuous scale
-shimmers as it rounds to whole pixels.
+shimmers as it rounds to whole pixels. The threshold is in the clip w the
+projection hands back: a four-window arena films its other players at w 100..130
+(measured, see the probe below), so an arena tag draws at the readable size and a
+body across a course shrinks.
 
 ### Which slots, and why it cannot diverge
 
@@ -104,11 +107,44 @@ adventure selftest BMP moves.
 
 ### Build
 
-    PROOF_BUILD
+port/build-port.cmd, the whole guard chain and both configurations:
+
+    closestplayer_guard OK ... inferred_stub_guard OK ... every tool selftest PASS
+    dsstate_guard: OK -- 14233 hosted DS symbols all inside .dsstate
+                   [0xdcc000, 0xece683), 1058435 bytes captured
+    alternatename_guard: OK -- 2200 directive(s) scanned, 1674 fired,
+                   23 baseline-known, 0 new defeats (43229 publics)
+    gxband_guard: gxbank 3/24 maps (floor 3), 13 members, 36 deltas; dtcm 3/24;
+                   vsrank 3/24; vsstar 3/24 maps (floor 3), 2 members, 3 deltas;
+                   ready 3/24 -- layout OK
+    tailjump_guard: 35 frames, 97 assertions over 24 map(s) -- forms OK
+    BUILD_EXIT=0
+
+The gxband row that matters to this lane is **vsstar**: port_vs_slot_stars
+reads data_0209f310[slot] over that band, and the guard says the band still
+comes out of the linker in ROM order on every hosting target.
 
 ### The port battery
 
-    PROOF_BATTERY
+python port/tools/battery.py C:\tmp\nametag --skip-build
+
+    levels: 50 mounted, from hal/level_boot.cpp        (every one ok)
+    scenes: 34 hosted, from hal/scene_boot.cpp         (every one ok)
+    default boot: ok -- a bare launch reaches the TITLE, 300 frames clean,
+                  and writes its frame (589,878 bytes, liveness only)
+    linkage: 9139 (80.7%)
+    ptr_audit: 0 unhosted code pointers
+    shipcfg build: ok, walk_window.exe linked in build\port-kit
+                  (PORT_ROM_CLEAN, static CRT, 362s)
+    shipcfg selftest: ok, rc=0 and walk_window_selftest.bmp written
+    skips: level 27 without TTC_MOVING_BEAM, level 45 without GOOMBOSS
+           (both pre-existing, both another lane's missing matched body)
+    battery: ALL GREEN
+    BATTERY_EXIT=0
+
+Fifty level selftests and thirty-four scene selftests are also the evidence for
+"nothing outside a VS match changed": every one of them runs the new draw call
+and every one of them returns on its first compare.
 
 ### A wide muted session, and the divergence verdict
 
@@ -119,11 +155,54 @@ the grammar settles the shape by comma count), and every window keeps its
 `walk_window_selftest.bmp`. Quiet and muted per the standing rule: minimized,
 never activated, `SM64DS_VOLUME=0`.
 
-    PROOF_LADDER
+sh port/tools/nametag_proof.sh 16 900
+
+    windows 16  ports 46960..46975  child frames 900  parent 2340  map 0
+    all 16 exited
+    ... 120 pairings, every one rc=0 ...
+    pairings with a problem: 0
+
+    [vs] SM64DS_VS_NAMES accepted, 16 fields: [Tango] [Opie] [Hermit] [Vessel]
+         [Kappa] [Luma] [Bob] [Ella] [Gus] [Hana] [Iggy] [Jo] [Kit] [Lux]
+         [Moe] [Nyx]
+    live mask 0xffff
+    [tag] the ROM's message font is decoded from VRAM 06000000: 8x16 glyphs,
+          32-tile rows, widths from data_0208f074      (in all 16 windows)
+
+**120 pairings, NO DIVERGENCE, over 900 hashed frames each**, with the tags
+drawing the whole time. And the narrow arm, `nametag_proof.sh 4 900`:
+
+    windows 4  ports 44380..44383  child frames 900  parent 1620  map 0
+    all 4 exited
+    6 pairings, every one rc=0
+    pairings with a problem: 0
+
+Evidence on disk: C:\tmp\nametag-out\rung16 and \rung4, one directory per
+window with its run.log and its BMP.
 
 ### Screenshots
 
-    PROOF_SHOTS
+sh port/tools/nametag_shots.sh 240 -- four windows, only p0 walking, so
+the other three stay in its frame. Each window's own selftest BMP is kept:
+
+    C:\tmp\nametag\status_shots\nametag_p0.bmp   (and .png)
+    C:\tmp\nametag\status_shots\nametag_p1.bmp   (and .png)
+    C:\tmp\nametag\status_shots\nametag_p2.bmp   (and .png)
+    C:\tmp\nametag\status_shots\nametag_p3.bmp   (and .png)
+
+Each carries 2,112 pixels of the star line's own colour (0xFFFFE060, which
+nothing else on screen uses), so "the text is in the picture" is a count and
+not an opinion. p0's shows three tags -- Vessel, Opie and Hermit, each with its
+star line -- over the three remote bodies, and nothing over the local player.
+
+The probe from the same run, which is what says the projection is landing on
+bodies rather than anywhere:
+
+    [tag] slot 1 "Opie" 0 STARS at (154,163) w=104.28 scale 2
+    [tag] slot 2 "Hermit" 0 STARS at (360,155) w=116.40 scale 2
+    [tag] slot 3 "Vessel" 0 STARS at (85,147) w=128.58 scale 2
+
+The owner judges the look; this lane only claims the text is visible.
 
 ---
 
@@ -150,11 +229,15 @@ never activated, `SM64DS_VOLUME=0`.
   inventing a second one: a tag that disagreed with the winner banner would be
   worse than one that shares its caveat. Both move on the day the lobby sends a
   seat map.
-- **THE HEAD OFFSET IS A CHOSEN NUMBER.** `NT_HEAD_UP` is +320 world units
-  above the actor's position, sized off the follow rig's own +200
-  shoulder-height constant in `tests/walk_window.cpp`. It is not read out of the
-  player's collision cylinder or model bounds. It looks right at the sizes
-  captured; a lane that wants it exact should read the Player's own clsn height.
+- **THE HEAD OFFSET IS MEASURED, NOT DERIVED.** `NT_HEAD_UP` is +200 world
+  units above the actor's position, and where it came from is the game's own
+  camera rather than a matched constant: in a live arena the player's feet sit
+  at world y 254.0 and `Camera::Render`'s look-at (`cam+0x80`) at 415.2, so the
+  ROM films him from 161 units above his feet. `SM64DS_TAG_PROBE=2` prints that
+  ruler line, and it is what caught the first pass -- 320 lifted the tag 164 px
+  on a 384-row screen, a whole second body above him. It is still a measurement
+  of one camera in one arena, not the Player's own collision height; a lane that
+  wants it exact should read that out of the class.
 - **NOTHING HERE IS PROVEN OVER THE RELAY**, only over loopback, which is the
   same boundary every VS proof in this tree has.
 - **THE LAUNCHER DOES NOT WRITE `NameTags` YET.** The game reads it and

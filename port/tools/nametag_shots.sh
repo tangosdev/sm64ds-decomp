@@ -40,7 +40,7 @@ export SM64DS_MINIMIZED=1
 export SM64DS_VOLUME=0
 export SM64DS_NO_DIALOG=1
 export SM64DS_NAME_TAGS=1
-export SM64DS_TAG_PROBE=1
+export SM64DS_TAG_PROBE="${SM64DS_TAG_PROBE:-1}"
 export SM64DS_VS_NAMES="Tango,Opie,Hermit,Vessel"
 
 # Only p0 walks. The other three stand where the arena put them, so p0's own

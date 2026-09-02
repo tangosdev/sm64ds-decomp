@@ -100,7 +100,9 @@
  *
  * Behind the camera and off the screen are both culled. The tag steps up one
  * size when the player is close, which is the whole of the distance treatment:
- * a continuous scale shimmers as it rounds to whole pixels.
+ * a continuous scale shimmers as it rounds to whole pixels. The head anchor
+ * over the actor's feet is measured off the game's own camera rather than
+ * chosen; NT_HEAD_UP carries the measurement.
  *
  * ---- WHICH SLOTS -----------------------------------------------------------
  *
@@ -319,19 +321,35 @@ static int nt_project(const int wp[3], float *sx, float *sy, float *depth)
     return 1;
 }
 
-/* THE HEAD. The actor's position is at his feet; the follow rig's own
-   shoulder-height constant is +200 in these units (see the CAM block in
-   tests/walk_window.cpp), so the top of his head is a little above that and
-   the tag sits just clear of it. A chosen number, and the only one here. */
-enum { NT_HEAD_UP = 320 * 4096 };
+/* THE HEAD, MEASURED RATHER THAN GUESSED, and it is the only chosen number in
+   this file.
+
+   The actor's position is at his feet. What sits above them is not written
+   down anywhere in src/, so it was read off the GAME'S OWN CAMERA in a live
+   four-window arena (SM64DS_TAG_PROBE=2, whose ruler line prints exactly this
+   measurement): the player's feet at world y 254.0, and Camera::Render's
+   look-at (cam+0x80) at world y 415.2. The ROM films the player from 161 world
+   units above his feet, which is that camera's idea of his head.
+
+   So the anchor is 200 -- a little clear of the ROM's own head height, and the
+   name's bottom row lands just above it. The first pass used 320 and the same
+   ruler is what caught it: at the distance a four-window arena films from, 320
+   lifted the tag 164 px on a 384-row screen, a whole second body above him. */
+enum { NT_HEAD_UP = 200 * 4096 };
 
 /* SM64DS_TAG_PROBE=1 prints one line per tag on the frames it draws, which is
    what turns "no tag appeared" into "the slot was skipped" or "it projected
-   off screen". Off unless asked. */
+   off screen". =2 adds the RULER: the same body's FEET projected beside its
+   head, which is how NT_HEAD_UP above was sized instead of guessed -- the
+   pixel gap between the two is what a chosen world-unit offset is actually
+   worth on screen at the distance the game films from. Off unless asked. */
 static int nt_probe(void)
 {
     static int on = -1;
-    if (on < 0) on = getenv("SM64DS_TAG_PROBE") ? 1 : 0;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_TAG_PROBE");
+        on = e ? (e[0] == '2' ? 2 : 1) : 0;
+    }
     return on;
 }
 
@@ -357,7 +375,13 @@ static void nt_draw(const OvlSurface &fb)
         float sx = 0, sy = 0, d = 0;
         if (!nt_project(wp, &sx, &sy, &d)) continue;
 
-        const int scale = OVL_SCALE * (d < 26.0f ? 2 : 1);
+        /* THE WHOLE DISTANCE TREATMENT, and it is two tiers on purpose: a
+           continuous scale shimmers as it rounds to whole pixels. The
+           threshold is in the clip w the projection hands back, which is scene
+           units, and 200 is read off the measured range -- a four-window arena
+           films its other players at w 100..130, so an arena tag is the
+           readable size and a body across a course shrinks. */
+        const int scale = OVL_SCALE * (d < 200.0f ? 2 : 1);
         const int lh = NT_GH * scale + 2 * scale;
         const int cx = (int)(sx + 0.5f);
         const int name_y = (int)(sy + 0.5f) - lh;
@@ -382,9 +406,21 @@ static void nt_draw(const OvlSurface &fb)
         nt_text_centred(fb, cx, star_y, sline, scale, 0xFFFFE060u);
         nt_text_centred(fb, cx, name_y, who, scale, 0xFFFFFFFFu);
 
-        if (nt_probe())
+        if (nt_probe()) {
             fprintf(stderr, "[tag] slot %d \"%s\" %s at (%.0f,%.0f) w=%.2f "
                     "scale %d\n", i, who, sline, sx, sy, d, scale);
+            if (nt_probe() >= 2) {
+                const int fp[3] = {*(const int *)(p + 0x5c),
+                                   *(const int *)(p + 0x60),
+                                   *(const int *)(p + 0x64)};
+                float fx = 0, fy = 0, fd = 0;
+                if (nt_project(fp, &fx, &fy, &fd))
+                    fprintf(stderr, "[tag]   ruler: feet y=%.1f world at screen"
+                            " y %.0f, so +%d world lifts the anchor %.0f px\n",
+                            fp[1] / 4096.0, fy, (int)(NT_HEAD_UP / 4096),
+                            fy - sy);
+            }
+        }
     }
 }
 
