@@ -1423,12 +1423,50 @@ static void port_legacy_set_character(void *player, unsigned ch)
     spd[2] = *(int *)(c + 0xa8);
     spd[3] = *(int *)(c + 0xac);
 
+    /* run pal16: THE TWO-BIT FIELD, AND THE TRUE SLOT CARRIED ACROSS IT.
+       mPlayerNo is a whole byte and the port writes the TRUE slot into it
+       (hal/level_boot.cpp), but the flag word's slot field is bits 6-7 and
+       nothing else. Shifting a raw mPlayerNo in here was wrong twice over for
+       a slot at or above four:
+
+         - `5 << 6` is 0x140, so bit 8 went in SET, and this function's own
+           note three paragraphs up promises bits 8+ go in as 0 because they
+           feed func_ov002_020c7dd0's entrance type, which a mid-level swap
+           has no business re-running. Masking is what makes that note true.
+         - InitResources then unpacked `(a >> 6) & 3` back into +0x6d8 and
+           recomputed the VS palette word at +0x61C from it, so a legacy swap
+           in slot 5 came back as player 1 wearing row 1. That is exactly the
+           defect run pal16 fixed at the spawn, reverted here.
+
+       THE PORT HAS THREE CALLERS OF InitResources AND THIS IS THE ONLY ONE
+       THAT NEEDED THIS. hal/level_boot.cpp's ps_init is the vtable slot, so it
+       runs INSIDE Actor::Spawn and is exactly what the spawn-side repair
+       already corrects on the way out. hal_player_init_resources just above is
+       the gate-10 smoke's direct entry, one Mario at slot 0 in a harness with
+       no VS and no second player, where this delta is zero by construction.
+       This one is the only place a LIVE player at an arbitrary slot is rebuilt
+       mid-level, which is why it is the only place the invariant could come
+       back wrong.
+
+       So the field is masked going in, and both halves of the identity are
+       put back afterwards -- the same delta the spawn uses, for the same
+       reason: one step of mPlayerNo is one sixteen-colour row. A slot 0..3
+       masks to itself and the repair is a no-op, which is every run of the
+       legacy path that has ever been taken. */
+    const unsigned true_slot = *(unsigned char *)(c + 0x6d8);
+    const unsigned packed_slot = true_slot & 3;
+
     param = ch | ((unsigned)*(unsigned char *)(c + 0x6da) << 3) |
-            ((unsigned)*(unsigned char *)(c + 0x6d8) << 6);
+            (packed_slot << 6);
     *(int *)(c + 8) = (int)param;
     *(unsigned char *)(c + 0x6d9) = (unsigned char)ch;
 
     _ZN6Player13InitResourcesEv(c);
+
+    if (true_slot != packed_slot) {
+        *(int *)(c + 0x61c) += ((int)true_slot - (int)packed_slot) << 1;
+        *(unsigned char *)(c + 0x6d8) = (unsigned char)true_slot;
+    }
 
     *(int *)(c + 0x5c) = pos[0];
     *(int *)(c + 0x60) = pos[1];

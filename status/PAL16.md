@@ -257,7 +257,7 @@ Raw numbers: `C:\tmp\pal16_probe\coverage.txt` and `neighbours.txt`.
 
 ---
 
-## Two masks that were wrong at slot 4 and up
+## Three places that were wrong at slot 4 and up
 
 Both found by reading rather than by a failure, both in the same family as the
 main defect.
@@ -267,6 +267,24 @@ main defect.
   0.3.2 (`hal/cxx_aliases.cpp:70`), so a swap in slot 5 saved slot 1's health
   and then wrote slot 1's health back over whatever slot 1 had done in between.
   Read whole, bounded rather than masked.
+- `hal/player_bridges.cpp`'s LEGACY SWAP (`SM64DS_SWAP_LEGACY=1`) repacked the
+  spawn word as `mPlayerNo << 6` and re-ran `Player::InitResources`, which
+  unpacks `(a >> 6) & 3` and recomputes `+0x61C` from it. So a legacy swap in
+  slot 5 came back as player 1 wearing row 1 -- the very defect this lane fixed
+  at the spawn, reverted by the one other place a live Player is rebuilt
+  mid-level. Caught in review, not by a run. It was wrong twice: `5 << 6` is
+  0x140, so bit 8 also went in SET, and the function's own note promises bits
+  8+ go in as 0 because they feed `func_ov002_020c7dd0`'s entrance type. The
+  field is now masked going in and both halves of the identity are put back
+  after, by the same delta the spawn uses. For slots 0..3 it is a no-op, which
+  is every legacy swap ever taken.
+
+  The port's other two callers of `InitResources` do not need this and are not
+  changed: `level_boot.cpp`'s `ps_init` is the vtable slot, so it runs inside
+  `Actor::Spawn` and is exactly what the spawn-side repair already corrects;
+  `hal_player_init_resources` is the gate-10 smoke's direct entry, one Mario at
+  slot 0 where the delta is zero by construction.
+
 - `hal/editor_channel.cpp`'s INFO row reported `Player+0x6d9 & 3` as the live
   character. `InitResources:76` seats that byte as `b & 7` and
   `hal/comms_conductor.cpp:828` already reports the ROM's three-bit width;
@@ -427,6 +445,44 @@ Linkage 9139 (80.7%) is **unchanged** from the base, which is the honest
 reading rather than a win: nothing in this lane adds or removes a linked
 matched function. Pre-existing skips, re-probed bare on every run and not this
 lane's: level 27 without TTC_MOVING_BEAM, level 45 without GOOMBOSS.
+
+### The legacy-swap fix, rebuilt and exercised
+
+The review fix above landed after the battery, so it was rebuilt incrementally
+and the path it touches was driven live rather than re-argued.
+
+    ninja -C build/port
+    [6/9] Building CXX object ...\hal\player_bridges.cpp.obj
+    [7/9] Linking CXX executable smoke_player.exe
+    [8/9] Linking CXX executable walk_window_hires.exe
+    [9/9] Linking CXX executable walk_window.exe
+    dsstate_guard: OK -- 14233 hosted DS symbols all inside .dsstate
+    NINJA_RC=0
+
+One TU recompiled and three executables relinked, which is exactly the blast
+radius. `vs_palette_test` re-run: all green (unchanged -- it does not touch this
+file, and re-running it is the cheap way to say so rather than assume it).
+`smoke_player.exe`: `Mario walks on the castle grounds (gates 10+11 GREEN)`,
+rc 0.
+
+**And the changed path itself**, which no proof in this lane had exercised:
+
+    SM64DS_SWAP_LEGACY=1 SM64DS_SELFTEST_SWAP=1,2,3,0
+    SM64DS_WINDOW_SELFTEST=600 SM64DS_FAULTS_FATAL=1
+
+    [chr] f30 selftest swap -> 1    [chr] f30 swap PASS: param1=1 want=1
+    [chr] f50 selftest swap -> 2    [chr] f50 swap PASS: param1=2 want=2
+    [chr] f70 selftest swap -> 3    [chr] f70 swap PASS: param1=3 want=3
+    [chr] f90 selftest swap -> 0    [chr] f90 swap PASS: param1=0 want=0
+    rc=0, no faults
+
+Four legacy swaps, all passing, on the rebuilt binary. THIS IS THE SLOT-0 ARM
+ONLY: a single-player level has one Player at slot 0, so it proves the masking
+did not break the path everyone actually uses, and it does NOT exercise the
+slot-5 case the fix is for. That case has no harness -- the legacy swap is a
+debug fallback and nothing wires it to a wide VS session -- so it rests on the
+delta arithmetic, which is the same arithmetic the seven-window run proved at
+the spawn. Stated rather than glossed.
 
 ### Palette VRAM headroom
 
