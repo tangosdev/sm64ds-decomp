@@ -24,7 +24,7 @@ EXE="$ROOT/build/port/walk_window.exe"
 N="${1:-4}"
 FRAMES="${2:-900}"
 VSMAP="${3:-0}"
-OUT="C:/tmp/vs16-out/rung$N"
+OUT="${VS16_OUT:-C:/tmp/vs16-out}/rung$N"
 
 if [ "$N" -lt 2 ] || [ "$N" -gt 16 ]; then
   echo "N must be 2..16"; exit 2
@@ -53,7 +53,7 @@ rm -rf "$OUT"
 k=0
 while [ "$k" -lt "$N" ]; do mkdir -p "$OUT/p$k/tmp"; k=$((k + 1)); done
 
-export SM64DS_ASSET_ROOT="C:\\tmp\\vs16"
+export SM64DS_ASSET_ROOT="${VS16_ASSET_ROOT:-C:\\tmp\\vs16}"
 export SM64DS_VS_MAP="$VSMAP"
 export SM64DS_VS_PLAYERS="$N"
 export SM64DS_COMMS_PORT="$BASE"

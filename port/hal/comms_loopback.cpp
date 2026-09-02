@@ -849,6 +849,9 @@ int  g_child_told_delay[kCommsMaxPlayers];   // last number sent to this slot
 int  g_child_ack_delay[kCommsMaxPlayers];    // last number it said it runs
 bool g_child_delay_moved[kCommsMaxPlayers];  // it was retold; it owes an ack
 unsigned g_accept_sent_ms[kCommsMaxPlayers]; // when the last unicast went out
+unsigned g_sizing_wait_since_ms = 0;         // 0 = not waiting yet
+unsigned long long g_sizing_holds = 0;
+enum : unsigned { kSizingGraceMs = 400 };
 unsigned g_delay_gate_since_ms = 0;          // 0 = the gate is open
 unsigned g_delay_gate_last_log_ms = 0;
 unsigned long long g_delay_gate_holds = 0;
@@ -883,6 +886,7 @@ void delay_state_reset() {
     g_last_report_ms      = 0;
     g_report_tries        = 0;
     g_delay_gate_since_ms = 0;
+    g_sizing_wait_since_ms = 0;
     g_starve_ever         = false;
 }
 
@@ -2708,6 +2712,49 @@ int lb_exchange(const void *my_block, uint16_t *status) {
     if (g_state != kCommsParentConnected && g_state != kCommsChildConnected)
         return 0;
     if (!my_block) return 0;
+
+    // WAIT FOR THE MEASUREMENTS BEFORE FREEZING, BRIEFLY AND ONCE. The order
+    // here is otherwise fatal to the whole point: the parent becomes connected
+    // the instant a child's JOIN lands, its very next exchange() would freeze
+    // the depth, and that child's round-trip report is still one round trip
+    // away -- so the number would freeze at the mode default every time and the
+    // sizing would never fire on a real path.
+    //
+    // RETURNING 0 IS NOT A NEW STATE. It is what exchange() already returns on
+    // an incomplete round, the ROM's own wait loop is built to spin on it
+    // (src/func_0203ea5c.c, 1200 turns), and nothing has committed: no frame
+    // has been produced and no aggregate has gone out, so there is no history
+    // for a later number to be inconsistent with.
+    //
+    // THE GRACE IS A CEILING, NOT A DELAY. The moment every live child has
+    // reported this falls through, which on any real path is one round trip.
+    // If it expires with somebody still silent, that peer is an older build
+    // that is never going to answer, and the session keeps the mode default it
+    // would have had before this lane existed -- which is the same answer the
+    // "every live child, or nothing" rule gives everywhere else, and it is the
+    // one that cannot desync a mixed session.
+    if (g_role == kRoleParent && g_adaptive_delay && !g_delay_frozen) {
+        const unsigned t = now_ms();
+        if (g_sizing_wait_since_ms == 0) g_sizing_wait_since_ms = t ? t : 1;
+        bool all_reported = true;
+        for (int k = 1; k < kCommsMaxPlayers; ++k)
+            if ((g_live & (1u << k)) && g_child_rtt_ms[k] < 0)
+                all_reported = false;
+        if (!all_reported) {
+            if ((unsigned)(t - g_sizing_wait_since_ms) < kSizingGraceMs) {
+                ++g_sizing_holds;
+                return 0;
+            }
+            std::fprintf(stderr, "[comms:loopback] not every peer reported a "
+                         "round trip within %ums, so the adaptive sizing "
+                         "stands down and this session runs the mode default "
+                         "of %d. A peer that never reports is a peer that "
+                         "would never adopt a re-sized depth either, and a "
+                         "session where one console runs a different depth is "
+                         "a desync.\n", kSizingGraceMs, g_input_delay);
+            g_adaptive_delay = false;
+        }
+    }
 
     // FREEZE, AND BEFORE THE PATH SPLIT RATHER THAN INSIDE ONE ARM. The ROM's
     // wait loop is asking for a round, so frame 0 is imminent and the number
