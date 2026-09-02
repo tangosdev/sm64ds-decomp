@@ -2426,6 +2426,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov047)
 # this mount and is not defeated by a definition the way an /alternatename would
 # be. Derivation in port/ov055_syms.txt, slice in port/slice_sweep2_ov055.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov055)
+# ov029 is level 21's own overlay (data/stage/water_city, the Dire Dire Docks
+# city sublevel, course 10), already mounted --whole in hal/level_boot.cpp's
+# level-21 row. This per-symbol mount lands its eight actors -- ids 94..101,
+# every one placed by the level-21 boot census -- so RotatingPlatformWdw (94),
+# FloatOnWaterPlatformWdwSquare (95), ArrowLift (96), WaterDiamond (97),
+# SwitchActivatedPlank (98), CageLift (99), FloatOnWaterPlatformWdwRectangle
+# (100) and WDW_Water (101) reach their SpawnInfo records, resource tables and
+# the eight __sinit_ov029_* SharedFilePtr windows by name. WaterDiamond borrows
+# ArrowLift's vtable and WDW_Water borrows RotatingPlatformWdw's; CageLift uses
+# the unnamed Platform table data_ov029_02113e74. The four own tables stay OUT
+# of the mount (host arrays hal/actor_classes_ov029.cpp fills). Derivation in
+# port/ov029_syms.txt, slice in port/slice_ov029.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov029)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")

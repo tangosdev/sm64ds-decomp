@@ -1,0 +1,74 @@
+# ov029 per-symbol mount: level 21's own overlay (data/stage/water_city, the
+# Dire Dire Docks city sublevel, course 10, base 0x021111a0). ov029 is already
+# mounted --whole in the level table (hal/level_boot.cpp carries the level-21
+# row with port_ov029_patch/at); this is the SECOND mount, per symbol, the
+# ov009/ov015/ov016/ov018 treatment applied to a fifth level overlay's own
+# classes so its eight actors reach their SpawnInfo records, resource tables and
+# sinit-built bss by name.
+#
+# THE EIGHT CLASSES AND THEIR IDS (SpawnInfo +4 halfword, cross-checked against
+# the level-21 boot census which places all eight):
+#   94  RotatingPlatformWdw              SpawnInfo 0x02113ff4  Spawn 0x02112168
+#   95  FloatOnWaterPlatformWdwSquare    SpawnInfo 0x02113c08  Spawn 0x02111340
+#   96  ArrowLift                        SpawnInfo 0x02113ccc  Spawn 0x021116f8
+#   97  WaterDiamond                     SpawnInfo 0x02113d90  Spawn 0x02111a84
+#   98  SwitchActivatedPlank             SpawnInfo 0x0211417c  Spawn 0x02112964
+#   99  CageLift                         SpawnInfo 0x02113e50  Spawn 0x02111e74
+#  100  FloatOnWaterPlatformWdwRectangle SpawnInfo 0x02113f20  Spawn 0x02112044
+#  101  WDW_Water                        SpawnInfo 0x021140b8  Spawn 0x021125f8
+#
+# WaterDiamond (97) reuses ArrowLift's own vtable and WDW_Water (101) reuses
+# RotatingPlatformWdw's, both by storing the borrowed table directly in their
+# own Spawn -- so neither adds a vtable of its own. CageLift (99) stores the
+# unnamed Platform table data_ov029_02113e74. The four remaining classes carry
+# their own tables (below, held OUT of this list -- vtables are host arrays the
+# registry fills).
+#
+# ---- the eight SpawnInfo records (0x1c each; dsd marks every one ambiguous,
+#      so each is pinned rather than sized by next-symbol delta) --------------
+RotatingPlatformWdw_SpawnInfo:0x1c
+FloatOnWaterPlatformWdwSquare_SpawnInfo:0x1c
+ArrowLift_SpawnInfo:0x1c
+WaterDiamond_SpawnInfo:0x1c
+SwitchActivatedPlank_SpawnInfo:0x1c
+CageLift_SpawnInfo:0x1c
+FloatOnWaterPlatformWdwRectangle_SpawnInfo:0x1c
+WDW_Water_SpawnInfo:0x1c
+#
+# ---- the resource tables the InitResources bodies index --------------------
+# FloatOnWaterPlatformWdwSquare::InitResources reads data_ov029_0211302c as the
+# CLPS_Block MovingMeshCollider::SetFile consumes.
+data_ov029_0211302c
+# SwitchActivatedPlank::InitResources reads data_ov029_0211304c the same way.
+data_ov029_0211304c
+# RotatingPlatformWdw::InitResources indexes data_ov029_02112b2c[idx] for
+# idx 0..2 (idx clamped to 2), a three-Fix12i height table -- pinned to the
+# full 0xc so index [2] reads its own word and not the next symbol's (the
+# undersized-globals trap). It also reads data_ov029_02112fb8 (the BTA the
+# TextureTransformer prepares) and data_ov029_02112fec (its own CLPS_Block).
+data_ov029_02112b2c:0xc
+data_ov029_02112fb8
+data_ov029_02112fec
+# FloatOnWaterPlatformWdwRectangle::InitResources reads data_ov029_02113fc4 and
+# data_ov029_02113fd4 (its Model/Clsn statics).
+data_ov029_02113fc4
+data_ov029_02113fd4
+#
+# ---- the sinit-built bss window (0x02114220..0x02114360) --------------------
+# The eight __sinit_ov029_* constructors each build a Model SharedFilePtr and a
+# Clsn SharedFilePtr (func_02017acc / func_02017b4c) and register each one's
+# destruct node (func_020731dc), except ArrowLift's sinit (0x02112c10) which
+# builds a single Model file. Every cell the eight touch is reserved here so the
+# constructors' writes land in hosted memory. The cell at 0x02114278 is dsd's
+# _ZN13RollingLogTtm8BehaviorEv (a cross-overlay name collision on the shared
+# load window); it is reserved under its own ov029 name here and the collision
+# is bound in the slice/fill, never left to resolve against a real function.
+data_ov029_02114220 data_ov029_02114228 data_ov029_02114230 data_ov029_0211423c
+data_ov029_02114248 data_ov029_02114250 data_ov029_02114258 data_ov029_02114264
+data_ov029_02114270 data_ov029_02114278
+data_ov029_02114284 data_ov029_0211428c data_ov029_02114294 data_ov029_021142a0
+data_ov029_021142ac data_ov029_021142b4 data_ov029_021142bc data_ov029_021142c8
+data_ov029_021142d4 data_ov029_021142dc data_ov029_021142e4 data_ov029_021142f0
+data_ov029_021142fc data_ov029_02114304 data_ov029_0211430c data_ov029_02114318
+data_ov029_02114324 data_ov029_0211432c data_ov029_02114334 data_ov029_0211433c
+data_ov029_02114340 data_ov029_02114350
