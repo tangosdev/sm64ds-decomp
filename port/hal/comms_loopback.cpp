@@ -162,6 +162,8 @@
 
 extern "C" void func_02040724(void);   /* the seam's close() face */
 
+extern "C" int host_setting_net_mode(void);   /* hal/host_settings.cpp */
+
 namespace port {
 namespace {
 
@@ -757,8 +759,126 @@ struct PipeRound {
     unsigned      mask;
     bool          valid;
     bool          sent;                // parent: this aggregate went out
+    // ---- ROLLBACK LEDGER (port/rollback). Untouched with the mode off. ----
+    unsigned      live;        // the live mask the PARENT declares for this
+                               // round: set at the parent's exchange(), on a
+                               // child copied off the aggregate that carried it
+    bool          live_known;  // child: an aggregate for this round landed
+    bool          consumed;    // exchange() handed this round to the game
+    unsigned      served_live; // the live mask the game was handed
+    unsigned      pred_mask;   // slots the game was handed a PREDICTION for
+    unsigned      sent_mask;   // parent: the mask of the last aggregate sent
+    unsigned      last_agg_ms; // parent: when the last aggregate for it left
+    bool          live_set;    // parent: s.live was declared at staging
+    unsigned char pred[kCommsMaxPlayers][kCommsBlockBytes];
 };
 PipeRound g_pipe[kPipeDepth];
+
+// ===========================================================================
+// ROLLBACK NETCODE (port/rollback). OFF BY DEFAULT: g_rollback is false unless
+// settings.json says NetMode "rollback" or SM64DS_NETMODE=rollback, and with
+// it false every line below is dead and the stop-and-wait / pipelined paths
+// run byte-for-byte as before. status/ROLLBACK.md (the spike) has the numbers
+// and the hook-point argument; status/ROLLBACK_SHIP.md has what shipped.
+//
+// THE IDEA, in one paragraph. The pipelined ring above already files every
+// slot's block by round number. Rollback mode consumes round R the frame it
+// is opened, at input delay ZERO: this console's own block is real, and any
+// live slot whose block for R has not arrived is handed a PREDICTION (its
+// last confirmed block, heading extrapolated). What was predicted is kept in
+// the ledger; when the real block lands and differs, the frame loop
+// (hal/rollback.cpp) restores the snapshot it took before that round, rewinds
+// this clock (comms_rb_rewind) and replays: exchange() then serves the ring
+// -- confirmed blocks where they exist, fresh predictions elsewhere -- and
+// publishes nothing, because this console's own blocks for those rounds are
+// already on the wire and must not change.
+//
+// THE WINDOW. A slot may run at most kRbWindow rounds ahead of its last
+// confirmed block. Past that exchange() STALLS (returns 0, the ROM sleeps
+// through the pump exactly as a starve does today) for kRbGraceMs; then the
+// parent DROPS the slot through the same retire path a Bye takes, and a
+// child whose PARENT went silent leaves the session the way a parent's Bye
+// makes it leave. A child never drops another child on its own: the parent
+// is the clock and its revised aggregates carry the verdict.
+//
+// A DROP IS ROUND-EXACT. The slot leaves the session at round D = its last
+// confirmed round + 1 -- the first round anybody had to guess for it -- and
+// the parent revises every round from D on: the per-round live mask loses the
+// slot and the aggregates go out again. Every console then finds its served
+// live mask for D disagreeing with the declared one, rolls back to D, and
+// re-runs with the slot absent, which the ROM's own unpack loop turns into a
+// zeroed record (src/func_0203ea5c.c:290, func_0205a588 on a null block).
+// That is the state the ROM's own records take when a DS peer stops sending.
+// ===========================================================================
+bool g_rollback = false;
+enum : unsigned { kRbWindow = 8 };       // rounds predicted past the last confirmed
+enum : unsigned { kRbGraceMs = 1000 };   // stall this long, then drop
+bool     g_rb_replaying = false;
+unsigned g_rb_replay_end = 0;            // live round while replaying
+unsigned g_rb_scan_low = 0;              // oldest round not yet fully confirmed
+unsigned g_rb_live_round = 0;            // child: the round g_live was read from
+unsigned g_rb_stall_start_ms = 0;        // 0 = not stalling
+unsigned g_rb_stall_mask = 0;            // slots currently past the window
+unsigned long long g_rb_predicted = 0;   // slot-rounds served as a prediction
+unsigned long long g_rb_confirmed_ok = 0;// of those, confirmed equal
+unsigned long long g_rb_mispredicted = 0;// of those, confirmed different
+unsigned long long g_rb_stalled = 0;     // exchange() calls that stalled
+unsigned long long g_rb_stall_events = 0;// stall episodes
+unsigned long long g_rb_drops = 0;       // slots retired by the grace rule
+unsigned long long g_rb_rewinds = 0;     // comms_rb_rewind calls
+unsigned long long g_rb_replayed = 0;    // rounds served in replay
+struct RbSlotPred {
+    bool          have;
+    unsigned      round;                  // last confirmed round
+    unsigned char block[kCommsBlockBytes];
+    int           head_delta;             // heading change per round, last seen
+};
+RbSlotPred g_rb_pred[kCommsMaxPlayers];
+enum : unsigned { kRbAggMs = 8 };        // parent: min gap between growth aggregates
+bool     g_rb_det_reuse = false;         // replay serves the ledger's LAST guess
+bool     g_rb_flush_wait = false;        // area change: stall until nothing is a guess
+unsigned g_rb_unrecoverable = 0;         // rollbacks the ring could not honour
+unsigned char g_rb_my_served[kCommsBlockBytes];
+unsigned g_rb_served_round = ~0u;
+
+inline bool pipelined() { return g_input_delay > 0 || g_rollback; }
+inline unsigned rb_live_round() {
+    return g_rb_replaying ? g_rb_replay_end : g_round;
+}
+inline short rb_heading(const unsigned char *b) {
+    return (short)((unsigned)b[0x0B] | ((unsigned)b[0x0C] << 8));
+}
+// A real block for slot k, round r, landed (own blocks included). Keeps the
+// per-slot prediction source at the NEWEST confirmed round; an older round
+// arriving late (a resend) changes nothing.
+void rb_note_block(int k, unsigned r, const unsigned char *b) {
+    if (!g_rollback) return;
+    RbSlotPred &p = g_rb_pred[k];
+    if (p.have && (int)(r - p.round) <= 0) return;
+    if (p.have) {
+        const int d = (short)(rb_heading(b) - rb_heading(p.block));
+        const int span = (int)(r - p.round);
+        p.head_delta = span > 0 ? d / span : 0;
+    }
+    p.have  = true;
+    p.round = r;
+    std::memcpy(p.block, b, kCommsBlockBytes);
+}
+// The guess for slot k at round r: the last confirmed block, the heading
+// carried forward at its last per-round delta (the remote camera's yaw
+// moves smoothly while it turns; a flat repeat mispredicts every frame of a
+// turn), and the frame counter at +2 overwritten with THIS console's so the
+// ROM's clock check at src/func_0203ea5c.c:418 agrees.
+void rb_predict(int k, unsigned r, const unsigned char *mine,
+                unsigned char *out) {
+    const RbSlotPred &p = g_rb_pred[k];
+    std::memcpy(out, p.block, kCommsBlockBytes);
+    const int span = (int)(r - p.round);
+    const short h = (short)(rb_heading(p.block) + p.head_delta * span);
+    out[0x0B] = (unsigned char)(h & 0xFF);
+    out[0x0C] = (unsigned char)((h >> 8) & 0xFF);
+    std::memcpy(out + 2, mine + 2, 4);
+}
 // Parent: the lowest round not yet broadcast. Child: the lowest round whose
 // aggregate has not come back, and therefore the one to republish.
 unsigned  g_pipe_low = 0;
@@ -921,6 +1041,10 @@ enum : unsigned { kJoinReportBit = 0x40000000u };
 // ACCEPT `have`: bit 31 is the slot assignment and 8..15 the delay, both
 // frozen. Bit 16 is new and says "your report was recorded".
 enum : unsigned { kAcceptRttAckBit = 0x00010000u };
+// Bit 17 (port/rollback): the parent runs NetMode rollback. Carried in the
+// accept for the same reason the delay is: one end predicting while the
+// other waits is two different timelines. An older parent never sets it.
+enum : unsigned { kAcceptRollbackBit = 0x00020000u };
 
 void delay_state_reset() {
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
@@ -1145,6 +1269,11 @@ bool ws_start() {
 }
 
 unsigned now_ms() { return (unsigned)GetTickCount(); }
+bool ieq_word(const char *a, const char *b) {
+    for (; *a && *b; ++a, ++b)
+        if ((*a | 0x20) != (*b | 0x20)) return false;
+    return *a == 0 && *b == 0;
+}
 
 int popcount_live(unsigned m) {
     int n = 0;
@@ -1599,9 +1728,54 @@ void pipe_send_aggregate(const PipeRound &s) {
 // of pipelining is that the aggregate leaves the moment it is assemblable, and
 // waiting for the parent's own next exchange() would put a frame of the
 // parent's own pacing back into the path this exists to shorten.
+void pipe_send_aggregate_rb(PipeRound &s) {
+    // The ROLLBACK aggregate: sent whenever the round's real mask GREW (so a
+    // child confirms the parent's own block one hop after the parent staged
+    // it, without waiting for the slowest child), and again when a retire
+    // revised the round's live mask. It carries the PER-ROUND live mask, not
+    // the parent's current one, which is what makes a drop round-exact on
+    // every console.
+    Packet b;
+    fill_header(b, kTypeBlocks);
+    b.round = s.round;
+    set_live(b, s.live);
+    b.have  = s.mask & s.live;
+    for (int i = 0; i < kCommsMaxPlayers; ++i)
+        if (b.have & (1u << i))
+            std::memcpy(b.blocks[i], s.blocks[i], kCommsBlockBytes);
+    send_to_children(b);
+    s.sent_mask = b.have;
+    if (b.have == s.live) s.sent = true;
+}
+
 void pipe_try_broadcast() {
-    if (g_role != kRoleParent || g_input_delay <= 0) return;
+    if (g_role != kRoleParent || !pipelined()) return;
     if (g_state != kCommsParentConnected) return;
+    if (g_rollback) {
+        const unsigned end = rb_live_round();
+        bool contiguous = true;
+        for (unsigned q = g_pipe_low; (int)(q - end) < 0; ++q) {
+            PipeRound *s = pipe_find(q);
+            if (!s) { contiguous = false; continue; }
+            if ((s->mask & s->live) != s->sent_mask) {
+                // Every growth would be O(players) datagrams per round per
+                // child. Send on the first (the parent's own block, so a
+                // child confirms it one hop later), on completion, on a
+                // revision, and otherwise at most every kRbAggMs.
+                const unsigned have = s->mask & s->live;
+                const bool complete = have == s->live;
+                const bool forced   = s->sent_mask == 0 || s->sent_mask == ~0u;
+                if (complete || forced ||
+                    (unsigned)(now_ms() - s->last_agg_ms) >= kRbAggMs) {
+                    pipe_send_aggregate_rb(*s);
+                    s->last_agg_ms = now_ms();
+                }
+            }
+            if (contiguous && s->sent && q == g_pipe_low) ++g_pipe_low;
+            else contiguous = false;
+        }
+        return;
+    }
     // RULE 3. A child that was retold the delay and has not said back what it
     // is running may still be on the old number, and serving it round 0 would
     // start it simulating at a depth nobody else is at. Hold instead: a child
@@ -1661,6 +1835,48 @@ void pipe_try_broadcast() {
         }
         if (q == g_pipe_low) ++g_pipe_low;
     }
+}
+
+// ROLLBACK: slot k leaves the session at round D = last confirmed + 1. Every
+// round from D on is revised (live mask without k) and goes out again; the
+// boundary scan on every console -- this one included -- then sees the served
+// live mask disagree with the declared one and rolls back to D. See the
+// ledger banner. Used by the parent's Bye handling AND the grace-rule drop, so
+// a peer that quit and a peer that fell off the wire leave the same records.
+void rb_retire_slot(int k, const char *why) {
+    g_live &= ~(1u << k);
+    g_stage_mask &= ~(1u << k);
+    unsigned D = g_rb_pred[k].have ? g_rb_pred[k].round + 1 : 0;
+    const unsigned end = rb_live_round();
+    if ((int)(D - end) > 0) D = end;
+    unsigned revised = 0;
+    for (unsigned q = D; (int)(q - end) < 0; ++q) {
+        PipeRound *s = pipe_find(q);
+        if (!s) continue;
+        if (s->live & (1u << k)) {
+            s->live &= ~(1u << k);
+            s->sent = false;
+            s->sent_mask = ~0u;          // force a resend with the new mask
+            ++revised;
+        }
+    }
+    if ((int)(D - g_pipe_low) < 0) g_pipe_low = D;
+    g_rb_pred[k].have = false;
+    std::fprintf(stderr, "[comms:loopback] ROLLBACK: slot %d retired (%s) as of "
+                 "round %u; %u round(s) revised, live mask now 0x%x\n",
+                 k, why, D, revised, g_live);
+    if (why[0] == 'g') {
+        // The grace rule dropped it: tell it so, with the same Bye a parent
+        // that quits sends, so it leaves the way a parent's Bye makes a child
+        // leave (idle, then the ROM's own wait bound runs out and it goes
+        // solo with data_020a0f04 = 0, its own records for a lost session).
+        Packet r;
+        fill_header(r, kTypeBye);
+        send_to_slot(r, k);
+        ++g_rb_drops;
+    }
+    if (popcount_live(g_live) <= 1) g_state = kCommsConnecting;
+    pipe_try_broadcast();
 }
 
 void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
@@ -1867,7 +2083,8 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // AND THE ACCEPT CARRIES WHATEVER THE SIZING SETTLED ON, which is now
         // the last word rather than a value one statement out of date.
         a.have = 0x80000000u | (unsigned)k |
-                 ((unsigned)(g_input_delay & 0xFF) << 8);
+                 ((unsigned)(g_input_delay & 0xFF) << 8) |
+                 (g_rollback ? kAcceptRollbackBit : 0u);   // port/rollback: the mode too
         // BIT 16: "your report was recorded". Only the unicast accept can say
         // this, because only the unicast accept has one recipient -- the
         // roster broadcast reaches every child and an ack in it would tell
@@ -1879,15 +2096,28 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         break;
     }
     case kTypeBlocks:
-        if (g_input_delay > 0) {
+        if (pipelined()) {
             // PIPELINED. Rounds are in flight rather than one at a time, so a
             // child's block is filed by ITS OWN round number and the "is this
             // the round we are on" test does not apply -- being behind the
             // parent's clock is the normal state here, not a stale packet.
             if (p.have & (1u << k)) {
-                PipeRound &s = pipe_open(p.round);
-                std::memcpy(s.blocks[k], p.blocks[k], kCommsBlockBytes);
-                s.mask |= (1u << k);
+                // ROLLBACK: a child may run ahead of the parent's clock by
+                // the window, so its block can name a round this end has
+                // not opened yet. Filing it into a fresh ring entry is
+                // right; the parent's own exchange() finds it there. But a
+                // round older than the ring can hold must not evict a live
+                // one: pipe_open would reset a newer round's entry.
+                PipeRound *s = pipe_find(p.round);
+                if (!s && (!g_rollback ||
+                           ((int)(p.round - g_pipe_low) >= 0 &&
+                            (int)(p.round - (rb_live_round() + kPipeDepth / 2)) < 0)))
+                    s = &pipe_open(p.round);
+                if (s) {
+                    std::memcpy(s->blocks[k], p.blocks[k], kCommsBlockBytes);
+                    s->mask |= (1u << k);
+                    rb_note_block(k, p.round, p.blocks[k]);
+                }
             }
             // A republish of a round already closed means the child never saw
             // the aggregate. Re-serve it from the ledger, same job the
@@ -1920,6 +2150,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         }
         break;
     case kTypeBye:
+        if (g_rollback && (g_live & (1u << k))) rb_retire_slot(k, "Bye");
         g_live &= ~(1u << k);
         g_stage_mask &= ~(1u << k);
         if (popcount_live(g_live) <= 1) g_state = kCommsConnecting;
@@ -2101,7 +2332,26 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             // round has been consumed there is nothing to replay: exchange()
             // returns 0 until this line sets kCommsChildConnected.
             child_adopt_delay((int)((p.have >> 8) & 0xFF), true);
+            // ROLLBACK IS THE PARENT'S CALL TOO, for the same reason the
+            // delay is: one end predicting while the other waits is two
+            // different timelines. Bit 16 of the accept carries it.
+            {
+                const bool parent_rb = (p.have & kAcceptRollbackBit) != 0;
+                if (parent_rb != g_rollback) {
+                    std::fprintf(stderr, "[comms:loopback] the parent runs "
+                                 "NetMode %s and this end had %s; ADOPTING "
+                                 "the parent's\n",
+                                 parent_rb ? "rollback" : "lockstep",
+                                 g_rollback ? "rollback" : "lockstep");
+                    g_rollback = parent_rb;
+                    if (g_rollback) g_input_delay = 0;
+                }
+            }
             g_round = p.round;          // adopt the parent's clock
+            if (g_rollback) {           // port/rollback: the ledger starts here
+                g_rb_scan_low = p.round;
+                g_pipe_low = p.round;
+            }
             g_stage_mask = 0;
             g_round_done = false;
             g_state = kCommsChildConnected;
@@ -2140,6 +2390,35 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
     }
     case kTypeBlocks:
         if (g_state != kCommsChildConnected) break;
+        if (g_rollback) {
+            // ROLLBACK. The aggregate names ITS round's live mask (the
+            // parent's per-round declaration), so it is filed per round and
+            // g_live follows the NEWEST round heard, never an older resend.
+            if ((int)(p.round - g_pipe_low) < 0 &&
+                (int)(p.round - (rb_live_round() - kPipeDepth + 2)) < 0)
+                break;                   // older than the ring can hold
+            if ((int)(p.round - g_rb_live_round) >= 0) {
+                g_live = p.live_wide;
+                g_rb_live_round = p.round;
+            }
+            PipeRound &s = pipe_open(p.round);
+            s.live = p.live_wide;
+            s.live_known = true;
+            for (int i = 0; i < kCommsMaxPlayers; ++i) {
+                if (p.have & (1u << i)) {
+                    std::memcpy(s.blocks[i], p.blocks[i], kCommsBlockBytes);
+                    s.mask |= (1u << i);
+                    if (i != g_slot) rb_note_block(i, p.round, p.blocks[i]);
+                }
+            }
+            while (true) {
+                PipeRound *low = pipe_find(g_pipe_low);
+                if (!low || !low->live_known ||
+                    (low->mask & low->live) != low->live) break;
+                ++g_pipe_low;
+            }
+            break;
+        }
         if (g_input_delay > 0) {
             // PIPELINED. File the aggregate under ITS OWN round. A child is
             // normally several rounds behind the parent's clock here -- that
@@ -2604,7 +2883,7 @@ void service() {
     // complete, HERE rather than in its own exchange(): the pump runs this
     // constantly, and making the aggregate wait for the parent's next frame
     // would put 33 ms back into the path pipelining exists to shorten.
-    if (g_input_delay > 0) {
+    if (pipelined()) {
         if (g_role == kRoleParent) {
             pipe_try_broadcast();
         } else if (g_state == kCommsChildConnected &&
@@ -2614,7 +2893,7 @@ void service() {
             // whole in-flight window on every tick would turn one lost
             // datagram into a burst exactly when the path is already unhappy.
             g_last_publish_ms = t;
-            for (unsigned q = g_pipe_low; q < g_round; ++q) {
+            for (unsigned q = g_pipe_low; (int)(q - rb_live_round()) < 0; ++q) {
                 PipeRound *s = pipe_find(q);
                 if (!s || (s->mask & (1u << g_slot)) == 0) continue;
                 Packet b;
@@ -2780,6 +3059,13 @@ void lb_open(unsigned mode) {
     std::memset(g_pipe, 0, sizeof g_pipe);
     g_pipe_low = 0;
     g_joins_sent = 0;
+    g_rb_replaying = false;
+    g_rb_replay_end = 0;
+    g_rb_scan_low = 0;
+    g_rb_live_round = 0;
+    g_rb_stall_start_ms = 0;
+    g_rb_stall_mask = 0;
+    std::memset(g_rb_pred, 0, sizeof g_rb_pred);
 
     // SEED THE PEER TABLE. In loopback mode every entry is known up front and
     // never changes -- that is the old arithmetic, written down as data. In
@@ -2865,8 +3151,15 @@ void lb_close() {
     }
     std::fprintf(stderr, "[comms:loopback] closed after %u rounds; indelay=%d "
                  "starved=%llu sent=%llu recvd=%llu resends=%llu%s\n",
-                 g_round, g_input_delay, g_pipe_starved, g_sent, g_recvd,
+                 rb_live_round(), g_input_delay, g_pipe_starved, g_sent, g_recvd,
                  g_resends, by);
+    if (g_rollback)
+        std::fprintf(stderr, "[comms:loopback] rollback: predicted=%llu ok=%llu "
+                     "mispredicted=%llu rewinds=%llu replayed=%llu "
+                     "stalled=%llu stallevents=%llu drops=%llu\n",
+                     g_rb_predicted, g_rb_confirmed_ok, g_rb_mispredicted,
+                     g_rb_rewinds, g_rb_replayed, g_rb_stalled,
+                     g_rb_stall_events, g_rb_drops);
 }
 
 void lb_become_parent() {
@@ -2930,6 +3223,171 @@ int lb_player_count() {
     service();
     const int n = popcount_live(g_live);
     return n < 1 ? 1 : n;
+}
+
+// ===========================================================================
+// ROLLBACK: the exchange. Round R = g_round is served THIS call, at input
+// delay zero. This console's block is real; a live slot whose block for R is
+// filed is real; any other live slot is a guess from its last confirmed block
+// -- unless the guess would reach past kRbWindow, in which case this stalls
+// (returns 0, the ROM sleeps a turn and asks again) for kRbGraceMs and then
+// the parent drops the slot. In REPLAY nothing is published and nothing is
+// staged: the ring already holds this console's block for every round being
+// re-run, and the round is served from confirmed blocks where they exist and
+// a fresh guess (or, under comms_rb_det_reuse, the exact previous guess)
+// where they do not.
+// ===========================================================================
+bool rb_same_block(const unsigned char *a, const unsigned char *b) {
+    // +2..+5 is the frame counter, which a guess overwrites with this
+    // console's own and which the ROM's clock check polices itself.
+    return std::memcmp(a, b, 2) == 0 &&
+           std::memcmp(a + 6, b + 6, kCommsBlockBytes - 6) == 0;
+}
+
+bool rb_all_confirmed(unsigned end) {
+    for (unsigned q = g_rb_scan_low; (int)(q - end) < 0; ++q) {
+        PipeRound *s = pipe_find(q);
+        if (!s || !s->consumed) continue;
+        if (!s->live_known) return false;
+        if ((s->mask & s->live) != s->live) return false;
+    }
+    return true;
+}
+
+void rb_leave(const char *why) {
+    std::fprintf(stderr, "[comms:loopback] ROLLBACK: leaving the session at "
+                 "round %u (%s); the ROM's own wait bound now runs out and "
+                 "it goes solo the way its own drop does\n", g_round, why);
+    Packet r;
+    fill_header(r, kTypeBye);
+    if (g_role == kRoleChild) send_to_slot(r, 0); else send_to_children(r);
+    g_state = kCommsIdle;
+    g_live = 0;
+    g_rb_replaying = false;
+    g_rb_stall_start_ms = 0;
+}
+
+int rb_exchange(const void *my_block) {
+    const unsigned R = g_round;
+    PipeRound *s = pipe_find(R);
+    if (g_rb_replaying) {
+        if (!s || (s->mask & (1u << g_slot)) == 0) {
+            ++g_rb_unrecoverable;
+            rb_leave("replay found its own block missing from the ring");
+            return 0;
+        }
+    } else {
+        if (!s) s = &pipe_open(R);
+        if (g_role == kRoleParent && !s->live_set) {
+            s->live = g_live;
+            s->live_known = true;
+            s->live_set = true;
+        }
+        if ((s->mask & (1u << g_slot)) == 0) {
+            std::memcpy(s->blocks[g_slot], my_block, kCommsBlockBytes);
+            s->mask |= (1u << g_slot);
+            if (g_role == kRoleChild) {
+                Packet b;
+                fill_header(b, kTypeBlocks);
+                b.round = R;
+                b.have  = (1u << g_slot);
+                std::memcpy(b.blocks[g_slot], my_block, kCommsBlockBytes);
+                send_to_slot(b, 0);
+                g_last_publish_ms = now_ms();
+            } else {
+                pipe_try_broadcast();
+            }
+        }
+    }
+    service();                           // the answer may already be here
+    if (g_state != kCommsParentConnected && g_state != kCommsChildConnected)
+        return 0;
+    s = pipe_find(R);
+    if (!s) return 0;
+
+    unsigned live = s->live_known ? s->live : g_live;
+    if (g_rb_replaying && !s->live_known) live = s->served_live;
+
+    const unsigned now = now_ms();
+    unsigned waiting = 0, stalled = 0;
+    if (!g_rb_replaying && g_rb_flush_wait) {
+        if (rb_all_confirmed(R)) g_rb_flush_wait = false;
+        else waiting |= 0x80000000u;
+    }
+    for (int k = 0; k < kCommsMaxPlayers; ++k) {
+        const unsigned bit = 1u << k;
+        if (!(live & bit) || k == g_slot) continue;
+        if (s->mask & bit) continue;                      // real
+        const RbSlotPred &p = g_rb_pred[k];
+        if (!p.have) { waiting |= bit; continue; }        // the first round
+        if (!g_rb_replaying && (int)(R - p.round) > (int)kRbWindow)
+            stalled |= bit;
+    }
+    if (waiting || stalled) {
+        if (stalled) {
+            if (!g_rb_stall_start_ms) {
+                g_rb_stall_start_ms = now ? now : 1;
+                g_rb_stall_mask = stalled;
+                ++g_rb_stall_events;
+                std::fprintf(stderr, "[comms:loopback] ROLLBACK: round %u is "
+                             "%u past the last confirmed block of slot(s) 0x%x; "
+                             "stalling (grace %u ms)\n", R, kRbWindow + 1,
+                             stalled, kRbGraceMs);
+            }
+            ++g_rb_stalled;
+            const unsigned held = now - g_rb_stall_start_ms;
+            if (g_role == kRoleParent && held >= kRbGraceMs) {
+                for (int k = 0; k < kCommsMaxPlayers; ++k)
+                    if (stalled & (1u << k)) rb_retire_slot(k, "grace");
+                g_rb_stall_start_ms = 0;
+                g_rb_stall_mask = 0;
+            } else if (g_role == kRoleChild && (stalled & 1u) &&
+                       held >= 2 * kRbGraceMs) {
+                // The parent is the clock and it has gone quiet for longer
+                // than its own grace plus a hop: it is not coming back with
+                // a verdict, so leave the way its Bye would make us leave.
+                rb_leave("the parent went silent");
+            }
+        } else {
+            ++g_pipe_starved;
+        }
+        return 0;
+    }
+    if (g_rb_stall_start_ms) {
+        std::fprintf(stderr, "[comms:loopback] ROLLBACK: stall over after "
+                     "%u ms at round %u\n", now - g_rb_stall_start_ms, R);
+        g_rb_stall_start_ms = 0;
+        g_rb_stall_mask = 0;
+    }
+
+    // Serve it.
+    const unsigned char *mine = s->blocks[g_slot];
+    unsigned pred_mask = 0;
+    for (int k = 0; k < kCommsMaxPlayers; ++k) {
+        const unsigned bit = 1u << k;
+        if (!(live & bit)) continue;
+        if (s->mask & bit) {
+            std::memcpy(g_latched[k], s->blocks[k], kCommsBlockBytes);
+            continue;
+        }
+        if (!(g_rb_replaying && g_rb_det_reuse && (s->pred_mask & bit)))
+            rb_predict(k, R, mine, s->pred[k]);
+        std::memcpy(g_latched[k], s->pred[k], kCommsBlockBytes);
+        pred_mask |= bit;
+        ++g_rb_predicted;
+    }
+    g_latched_mask = live;
+    s->pred_mask   = pred_mask;
+    s->served_live = live;
+    s->consumed    = true;
+    std::memcpy(g_rb_my_served, mine, kCommsBlockBytes);
+    g_rb_served_round = R;
+    ++g_round;
+    if (g_rb_replaying) {
+        ++g_rb_replayed;
+        if (g_round == g_rb_replay_end) g_rb_replaying = false;
+    }
+    return 1;
 }
 
 int lb_exchange(const void *my_block, uint16_t *status) {
@@ -3014,6 +3472,7 @@ int lb_exchange(const void *my_block, uint16_t *status) {
                          "for the rest of this session; the ROM asked for its "
                          "first round\n", g_input_delay);
     }
+    if (g_rollback) return rb_exchange(my_block);   // port/rollback
 
     // =======================================================================
     // THE PIPELINED PATH. See the banner over the ring for why it exists and
@@ -3782,6 +4241,35 @@ bool comms_loopback_install_from_env() {
                      "clamped\n", kLegacyInputDelayMax);
     }
 
+    // NetMode (port/rollback): settings.json "NetMode": "lockstep" | "rollback",
+    // SM64DS_NETMODE overriding it. Lockstep is the default and with it
+    // g_rollback stays false, which leaves every path above and below this
+    // block byte-for-byte what it was. Rollback runs at input delay 0 by
+    // construction (the delay is what it replaces), and the parent's choice
+    // travels in the ACCEPT so a child that asked for the other mode adopts.
+    {
+        int mode = host_setting_net_mode();
+        if (const char *e = std::getenv("SM64DS_NETMODE")) {
+            if (ieq_word(e, "rollback")) mode = 1;
+            else if (ieq_word(e, "lockstep")) mode = 0;
+            else std::fprintf(stderr, "[comms:loopback] SM64DS_NETMODE=%s is "
+                              "neither lockstep nor rollback; ignored\n", e);
+        }
+        g_rollback = mode == 1;
+        if (g_rollback) {
+            if (g_input_delay > 0)
+                std::fprintf(stderr, "[comms:loopback] NetMode rollback: the "
+                             "input delay of %d is not used (rollback runs at "
+                             "delay 0 and predicts instead)\n", g_input_delay);
+            g_input_delay = 0;
+            std::fprintf(stderr, "[comms:loopback] NetMode ROLLBACK: rounds are "
+                         "served the frame they open, missing blocks are "
+                         "predicted up to %u rounds ahead, a misprediction "
+                         "rewinds and replays (hal/rollback.cpp); past the "
+                         "window this stalls %u ms and then drops the slot\n",
+                         kRbWindow, kRbGraceMs);
+        }
+    }
     // ARMED ONLY WHERE IT CAN HELP AND ONLY WHERE IT IS ALLOWED TO DECIDE.
     //   THE PARENT, because the delay is published parent to child and a child
     //     that sized its own would be sizing a number it is about to lose.
@@ -3952,6 +4440,105 @@ CommsLoopbackStats comms_loopback_stats() {
     s.input_delay     = g_input_delay;
     s.starved         = g_pipe_starved;
     return s;
+}
+
+// ---------------------------------------------------------------------------
+// ROLLBACK (port/rollback): what hal/rollback.cpp's frame-boundary step asks.
+// ---------------------------------------------------------------------------
+bool comms_rb_enabled() {
+    return g_rollback && g_open &&
+           (g_state == kCommsParentConnected || g_state == kCommsChildConnected);
+}
+bool comms_rb_mode() { return g_rollback; }
+bool comms_rb_replaying() { return g_rb_replaying; }
+unsigned comms_rb_round() { return g_round; }
+unsigned comms_rb_replay_end() { return g_rb_replay_end; }
+
+// The oldest consumed round whose served blocks the wire has since
+// contradicted -- a guessed block confirmed different, or a served live mask
+// the parent has revised -- or ~0u when every consumed round stands.
+unsigned comms_rb_scan() {
+    if (!g_rollback || g_rb_replaying) return ~0u;
+    const unsigned end = g_round;
+    unsigned low = g_rb_scan_low, target = ~0u;
+    for (unsigned q = g_rb_scan_low; (int)(q - end) < 0; ++q) {
+        PipeRound *s = pipe_find(q);
+        if (!s || !s->consumed) break;
+        bool bad = false;
+        if (s->live_known && s->served_live != s->live) bad = true;
+        const unsigned confirmed = s->pred_mask & s->mask;
+        for (int k = 0; k < kCommsMaxPlayers && confirmed; ++k) {
+            if (!(confirmed & (1u << k))) continue;
+            if (rb_same_block(s->pred[k], s->blocks[k])) {
+                ++g_rb_confirmed_ok;
+                s->pred_mask &= ~(1u << k);
+            } else {
+                bad = true;
+            }
+        }
+        if (bad) { ++g_rb_mispredicted; target = q; break; }
+        const bool done = s->live_known && (s->mask & s->live) == s->live &&
+                          s->pred_mask == 0;
+        if (done && q == low) low = q + 1;
+    }
+    g_rb_scan_low = low;
+    return target;
+}
+
+bool comms_rb_rewind(unsigned to) {
+    if (!g_rollback || g_rb_replaying) return false;
+    if ((int)(to - g_round) >= 0) return false;
+    for (unsigned q = to; (int)(q - g_round) < 0; ++q) {
+        PipeRound *s = pipe_find(q);
+        if (!s || (s->mask & (1u << g_slot)) == 0) {
+            ++g_rb_unrecoverable;
+            rb_leave("a rollback reached a round the ring no longer holds");
+            return false;
+        }
+    }
+    g_rb_replay_end = g_round;
+    g_rb_replaying  = true;
+    g_round = to;
+    ++g_rb_rewinds;
+    for (unsigned q = to; (int)(q - g_rb_replay_end) < 0; ++q)
+        if (PipeRound *s = pipe_find(q)) s->consumed = false;
+    return true;
+}
+
+void comms_rb_flush(const char *why) {
+    if (!g_rollback) return;
+    g_rb_flush_wait = true;
+    std::fprintf(stderr, "[comms:loopback] ROLLBACK: %s at round %u; guessing "
+                 "is suspended until every open round is confirmed\n",
+                 why ? why : "flush", g_round);
+}
+
+void comms_rb_det_reuse(bool on) { g_rb_det_reuse = on; }
+
+const unsigned char *comms_rb_my_served(unsigned *round) {
+    if (round) *round = g_rb_served_round;
+    return g_rb_served_round == ~0u ? 0 : g_rb_my_served;
+}
+
+void comms_rb_leave(const char *why) {
+    if (!g_rollback || !g_open) return;
+    if (g_state != kCommsParentConnected && g_state != kCommsChildConnected)
+        return;
+    rb_leave(why ? why : "asked to");
+}
+
+CommsRollbackStats comms_rb_stats() {
+    CommsRollbackStats r;
+    r.predicted     = g_rb_predicted;
+    r.confirmed_ok  = g_rb_confirmed_ok;
+    r.mispredicted  = g_rb_mispredicted;
+    r.rewinds       = g_rb_rewinds;
+    r.replayed      = g_rb_replayed;
+    r.stalled       = g_rb_stalled;
+    r.stall_events  = g_rb_stall_events;
+    r.drops         = g_rb_drops;
+    r.unrecoverable = g_rb_unrecoverable;
+    return r;
 }
 
 void comms_loopback_report(const char *tag) {
