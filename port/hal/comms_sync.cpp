@@ -493,6 +493,20 @@ struct GhostTarget { bool have; int x, y, z; short yaw; bool teleport;
                      int vx, vz; };
 GhostTarget g_gtarget[kCommsMaxPlayers];
 
+// ADVENTURE GHOSTS, the ANIMATION half of the follower. The ROM keeps ticking a
+// ghost's own Player::Behavior, which forces the puppet back into its spawn
+// no-control pose and overwrites the wire's animation every frame -- so an
+// animation applied only on the ~30 Hz receive frames flickers against the
+// ROM's reset and never plays. The follower instead re-drives the wire animation
+// EVERY render frame at a locally-advanced cursor, so the last write each frame
+// is always the right animation at a smoothly climbing frame. g_ganim is the
+// wire's current anim id, g_gcursor the playback cursor in 20.12 (advanced one
+// frame per render frame, re-synced to the wire on every snapshot so it stays in
+// phase with the sender's own cycle).
+unsigned short g_ganim[kCommsMaxPlayers];
+int            g_gcursor[kCommsMaxPlayers];
+bool           g_ganim_have[kCommsMaxPlayers];
+
 // Item 2's sender-side velocity sample: the local body's position last frame,
 // differenced each frame. Seeded on first sight so the first frame's
 // "velocity" is zero rather than the distance from the origin to the spawn.
@@ -949,7 +963,13 @@ void apply_snapshot(const unsigned char *buf, int n) {
                letting it step. */
             g_gtarget[slot].vx = e->vx;
             g_gtarget[slot].vz = e->vz;
-            apply_pose(a, e);
+            /* the animation is not applied here -- the follower drives it every
+               render frame so the ROM's per-frame reset cannot flicker it. Just
+               record the wire's id and re-sync the playback cursor to the
+               sender's own so the ghost stays in phase with its walk cycle. */
+            g_ganim[slot] = e->anim_id;
+            g_gcursor[slot] = e->anim_frame;
+            g_ganim_have[slot] = true;
             ++g_stats.applied;
             continue;
         }
@@ -1123,6 +1143,8 @@ extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
 // touched (the i == me skip), so local_writes stays 0. SM64DS_ADVENTURE_FOLLOW
 // tunes the ease fraction (percent per frame, default 40). A teleport snapshot
 // lands exactly rather than sliding across the level.
+static int g_follow_diag = -1;
+static unsigned g_follow_fcount = 0;
 extern "C" void port_adventure_ghost_follow() {
     if (!adventure_ghost_mode()) return;
     static int fpct = -1;
@@ -1132,6 +1154,11 @@ extern "C" void port_adventure_ghost_follow() {
         if (fpct < 1) fpct = 1;
         if (fpct > 100) fpct = 100;
     }
+    if (g_follow_diag < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_DIAG");
+        g_follow_diag = e ? std::atoi(e) : 0;   /* value = log stride, 0 = off */
+    }
+    ++g_follow_fcount;
     const int me = (int)data_0209f250;
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
         if (i == me) continue;
@@ -1177,6 +1204,25 @@ extern "C" void port_adventure_ghost_follow() {
            the body away from the target between snapshots. */
         *(int *)((char *)a + 0x98) = 0;
         *(int *)((char *)a + 0xa8) = 0;
+        /* DRIVE THE ANIMATION EVERY FRAME. The ROM's own Player::Behavior ran on
+           this ghost earlier in the frame and reset its pose to the spawn
+           no-control animation; re-issuing the wire animation here, after that,
+           makes the follower's animation the last word each frame instead of a
+           value that only lands on the ~30 Hz receive frames. The cursor is
+           advanced one frame per render frame (speed 1.0 in 20.12) so the cycle
+           plays, and re-synced to the sender's cursor on every snapshot above so
+           it does not drift out of phase. SetAnim is the legal cursor road (it
+           forces the slow-path reset that makes startFrame land); a raw +0x58
+           store would fire the animation's WillHitFrame events twice. */
+        if (g_ganim_have[i]) {
+            g_gcursor[i] += 0x1000;
+            _ZN6Player7SetAnimEji5Fix12IiEj(a, g_ganim[i], 0, 0x1000,
+                                            (unsigned)(g_gcursor[i] >> 12));
+        }
+        if (g_follow_diag > 0 && (g_follow_fcount % (unsigned)g_follow_diag) == 0)
+            std::fprintf(stderr, "[advfollow] slot%d render anim=%u cur=%d\n",
+                         i, (unsigned)player::anim_id(a),
+                         player::anim_frame(a) >> 12);
     }
 }
 

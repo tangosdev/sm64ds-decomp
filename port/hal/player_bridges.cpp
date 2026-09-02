@@ -395,14 +395,16 @@ extern "C" void port_adventure_probe(int frame)
                 if (!a) continue;
                 std::fprintf(stderr,
                     "[advdiag] f%d me=%d slot%d%s live=%u pos=(%d,%d,%d) "
-                    "yaw=%d noctl=%u clsn=%u cat4=%u\n",
+                    "yaw=%d noctl=%u clsn=%u cat4=%u anim=%u cur=%d\n",
                     frame, me, i, i == me ? "(LOCAL)" : "(ghost)",
                     data_0209fc5c[i],
                     *port::player::pos_x(a), *port::player::pos_y(a),
                     *port::player::pos_z(a), (int)*port::player::facing(a),
                     *(unsigned char *)((char *)a + port::player::kIsNoControl),
                     *(unsigned char *)((char *)a + port::player::kIsBodyClsnEnabled),
-                    (*(unsigned *)((char *)a + port::player::kBodyColliderFlags) & 4u) ? 1u : 0u);
+                    (*(unsigned *)((char *)a + port::player::kBodyColliderFlags) & 4u) ? 1u : 0u,
+                    (unsigned)port::player::anim_id(a),
+                    port::player::anim_frame(a) >> 12);
             }
         }
     }
