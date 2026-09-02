@@ -1,0 +1,58 @@
+# Gate BULLET: actor 233 (0xe9), ov002 -- the projectile Snufit fires. It flies
+# straight on a fixed lifetime, pops on ground/wall contact, and hurts the player
+# on contact; Snufit (func_ov065_02116364) is the only spawner.
+#
+# ---- what it is ------------------------------------------------------------
+#
+# _ZTV6Bullet / _ZTV24daPropeller_Heyho_Fire_c, ov002 0x0210d654 -- one address,
+# two names (the dsd emits both; D1 stores _ZTV6Bullet, D0 the RTTI name). An
+# Enemy subclass, 31-slot table, overriding the seven lifecycle slots
+# (0/3/6/9/12/16/17). Every tail slot is the Enemy/Actor default the reloc run
+# already lands on -- no ov002 body of its own, so nothing to trap by name and
+# inferred_stub_guard stays green. Its object is 860 bytes (Bullet_Spawn ov002
+# 0x020fefcc): MovingCylinderClsn at 0x110, WithMeshClsn at 0x144, Model at 0x300.
+#
+# ---- the id, and the live spawn edge ---------------------------------------
+#
+# Bullet_SpawnInfo (ov002 0x0210d630) has +4 halfword 0xe9 (233); Snufit spawns
+# it. ov002 is the engine overlay (always mounted). Reachability proof:
+# SM64DS_SPAWN_ACTOR=233, or spawn a Snufit and let it fire.
+#
+# ---- the PMF state machine -------------------------------------------------
+#
+# Bullet runs a SINGLE state: a 16-byte descriptor (data_ov002_02111190, ov002
+# bss) holding two mwcc {function, delta} records, enter at +0 and main at +8.
+# func_ov002_020fed2c (the setter) and Bullet::Behavior (the per-frame tick) both
+# form the pointer-to-member, so both are host copies in
+# port/unmatched/Bullet_StateDispatch.cpp, which also seats the two records over
+# the mounted DS addresses after __sinit_ov002_02108094 (already in
+# slice_gate10.txt) fills them. BOTH handlers are matched src and enrolled here:
+# func_ov002_020fed18 (enter, sets the lifetime timer) and func_ov002_020fec94
+# (main, the per-frame fly/collide/expire logic a live fired Bullet runs) -- no
+# hole, no stub in the live path.
+#
+# ---- this slice's new symbols ----------------------------------------------
+#
+# The seven class TUs that link (Behavior is the host copy, not enrolled), the
+# two matched state handlers, the main handler's target-check helper, and the
+# Behavior matrix helper. ov002 is whole-mounted, so every data symbol these
+# reach is already in the pack; the model-file handle is bridged onto ov065's
+# mounted symbol in hal/actor_classes_bullet.cpp. The vtable fill
+# hal_fill_bullet_vtable and the method faces are in hal/actor_classes_bullet.cpp;
+# the registry row is in hal/actor_classes.inc.
+src/Bullet_Spawn.c
+src/_ZN6Bullet13InitResourcesEv.cpp
+src/_ZN6Bullet6RenderEv.cpp
+src/_ZN6Bullet16CleanupResourcesEv.c
+src/_ZN6Bullet16OnPendingDestroyEv.c
+src/_ZN6BulletD0Ev.c
+src/_ZN6BulletD1Ev.c
+# the two matched state handlers the class dispatches through (reached only via
+# the seated descriptor, so no link edge names them):
+src/func_ov002_020fed18.c
+src/func_ov002_020fec94.c
+# the main handler's target-check helper (fec94 calls it once mMovingCylinderClsn
+# reports a hit target):
+src/func_ov002_020feb50.cpp
+# Behavior's matrix/shadow step:
+src/func_ov002_020fed7c.c

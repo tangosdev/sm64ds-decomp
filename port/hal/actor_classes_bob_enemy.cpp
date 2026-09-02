@@ -161,7 +161,9 @@ static int __fastcall e31_turn_egg(void *s, void *, void *p)
    ActorBase::OnHeapCreated, Actor::OnYoshiTryEat, Virtual50 and the eight
    combat hooks, plus the traps. A caller writes its own 0/3/6/9/12/16/17 and
    whichever of 18/19/29 it overrides. */
-static void ac31_fill_shared(void **vt)
+/* Shared with hal/actor_classes_bullet.cpp (BULLET is a plain Enemy on the same
+   31-slot table); the e31_* faces it writes stay file-local here. */
+void ac31_fill_shared(void **vt)
 {
     vt[1] = (void *)e31_binit;
     vt[2] = (void *)e31_ainit;
