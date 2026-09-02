@@ -69,13 +69,32 @@ rules keep it true while the number is allowed to move at all:
    there is no frame index whose N disagrees. A change after that is REFUSED,
    loudly and rate-limited. This replaces the old "on the first accept only"
    bound, which was standing in for exactly this property.
-3. **The parent will not serve round 0 until every child it retold has said
-   back what it is running.** A child cannot produce a frame without the
+3. **The parent will not serve round 0 until every live child has confirmed
+   the value actually in force.** A child cannot produce a frame without the
    parent's aggregate, so withholding the aggregate withholds frame 0 from the
    whole session, and the parent's own exchange starves meanwhile -- an
-   already-defined, already-counted, harmless state. Only children whose told
-   number CHANGED after their accept are gated, so a session whose delay never
-   moved behaves byte-identically to before.
+   already-defined, already-counted, harmless state. The predicate is keyed on
+   the VALUE, not on a flag: if the depth in force equals the pre-sizing value
+   there is nothing to confirm and the gate does not exist, which is why a
+   session that never sizes behaves byte-identically to before this lane.
+4. **A live child with no report WITHDRAWS a raised depth.** The pre-sizing
+   value is saved, and the moment any live child is seen without a round-trip
+   report -- a join arriving after the sizing fired, or the grace expiring with
+   somebody silent -- the raised number is taken back and re-announced to every
+   child. Nobody has consumed a round at that point, so the fallback replays
+   nothing and skips nothing, and the value fallen back to is the mode default,
+   which every build that has ever shipped can express.
+5. **A joiner arriving at a session already frozen deeper than 8 is not seated
+   at all.** After the freeze there is no withdrawing: peers have consumed
+   rounds at that depth and moving it would replay or skip them. 8 is the
+   ceiling every shipped build's adopt clamp accepts, so past it the parent
+   cannot publish a number it can be sure the joiner will run. It refuses by
+   SILENCE rather than by a Bye: over the relay a parent datagram reaches every
+   child, and a child reads Bye as "the parent left", so one refused joiner
+   would have ended the match for everyone already playing. The refused peer
+   spends its own ROM bound and falls back to solo, which is the failure it
+   already knows how to have. It costs a late joiner that IS a new build its
+   seat, and that is stated rather than hidden.
 
 **And it only engages when every live child has reported.** A peer of an older
 generation never sends a report, so it would never adopt a raised number and
@@ -306,11 +325,14 @@ CHILD's counts are necessarily flat (`0:89,2:89,...`) because a child receives
 the whole aggregate or nothing, so it can only ever say "everyone but me". That
 is a real limit of the attribution and it is written down rather than dressed up.
 
-**The pairwise world-hash sweep at depth 10, 1500 frames per child, all 21
-pairings** (`C:\tmp\lagdelay-out\proof_vs7_d10b.log`, sweep run with
-`C:\tmp\lagdelay-out\dhsweep.sh`):
+**The pairwise sweep at depth 10, seven windows, 1200 frames per child,
+trimmed by ROUND** -- the reviewer's axis, using their own
+`C:\tmp\lagrev\trimsweep.py`, which keeps only frames whose `rounds=` is at or
+under a cap every window reached, so no pairing is compared across a round one
+peer never had (`C:\tmp\lagdelay-out\proof_vs7_fix_trim.log`):
 
-    pairwise dhdiff over 7 windows in C:/tmp/lagdelay-out/vs16d10b/rung7
+    max rounds per window: {'p0': 1207, 'p1': 1200, 'p2': 1200, 'p3': 1200, 'p4': 1200, 'p5': 1200, 'p6': 1200}
+    agreed-round cap used: 1150 (min max = 1200 )
     p0 vs p1  NO DIVERGENCE
     p0 vs p2  NO DIVERGENCE
     p0 vs p3  NO DIVERGENCE
@@ -332,7 +354,7 @@ pairings** (`C:\tmp\lagdelay-out\proof_vs7_d10b.log`, sweep run with
     p4 vs p5  NO DIVERGENCE
     p4 vs p6  NO DIVERGENCE
     p5 vs p6  NO DIVERGENCE
-    sweep fail=0
+    trimmed sweep fail=0
 
 and the bare-loopback control at seven windows (no induced latency, so the
 carrier refuses a depth and the session is stop-and-wait) is also 21/21 clean.
@@ -406,48 +428,111 @@ muted and minimized):
 still says otherwise for the reason above, and that PATH bug is written up as a
 gap rather than fixed here.
 
-### P5. THE ONE THING THAT DID NOT COME OUT CLEAN
+### P5. The late-frame divergence at depth 10: a run-teardown effect
 
-At a **900**-frame child budget with depth 10 and 15 ms induced one way, three
-of four runs showed a divergence **in the last one to four frames**, in one or
-two player actors (`actorID 191`), while three runs of the same rig at depth 5
-were clean. Every observation:
+At a 900-frame child budget with depth 10, three of four runs disagreed **in
+the last one to four frames**, in one or two player actors (`actorID 191`),
+while three runs at depth 5 on the same rig were clean.
 
-| run | depth | frames | result |
-|---|---|---|---|
-| vs16d10  | 10 | 900  | first divergence f896, uid 3 and 6 |
-| vs16d10c | 10 | 900  | first divergence f899, uid 7 |
-| vs16d10d | 10 | 900  | first divergence f896, uid 3 |
-| vs16d10b | 10 | 1500 | 21/21 NO DIVERGENCE, all 1500 frames |
-| vs16d5, d5r1, d5r2 | 5 | 900 | 21/21 NO DIVERGENCE, three times |
+**The trimmed sweep settles that it is not a blocker.** Trimming by ROUND
+rather than by frame -- keeping only frames whose `rounds=` is at or under an
+agreed cap every window reached -- and re-running all 21 pairings is clean, on
+two fresh 1200-frame runs (`C:\tmp\lagrev\r1`, `C:\tmp\lagrev\r2`, swept with
+`C:\tmp\lagrev\trimsweep.py`). Reproduced in this worktree against r1:
 
-Two facts narrow it down. First, the disagreeing peers hold **each other's**
-hash values rather than novel ones -- `p1=b0bbf610 p2=b2366ed3` in one pairing
-and exactly those two swapped in another -- which is two consoles at different
-points on the SAME timeline, not two consoles simulating different inputs.
-Second, deleting the last ten frames from the very logs that failed and
-re-running the identical sweep is clean:
-
-    pairwise dhdiff over 7 windows in C:/tmp/lagdelay-out/trim
+    max rounds per window: {'p0': 1208, 'p1': 1200, 'p2': 1200, 'p3': 1200, 'p4': 1200, 'p5': 1200, 'p6': 1200}
+    agreed-round cap used: 1150 (min max = 1200 )
     p0 vs p1  NO DIVERGENCE
-    ... (all 21) ...
-    sweep fail=0
+    ... all 21 pairings ...
+    p5 vs p6  NO DIVERGENCE
+    trimmed sweep fail=0
 
-So the disagreement is confined to the frames where the harness takes its last
-sample while peers sit a round apart, and a deeper pipeline makes that straddle
-likelier because it puts more distance between the frame being drawn and the
-round being read. **That is the reading, not a proof.** It is not demonstrated
-that no simulation-visible divergence hides underneath, and this should be
-closed -- with a run whose windows are stopped at an agreed round rather than an
-independent frame budget each -- before anything ships at a raised depth.
+**And it corrects what this file said before.** The earlier reading here was a
+sampling straddle -- two consoles at different points on one timeline, caught a
+round apart by the harness's last sample. That is wrong on both halves:
+
+- **The peers were at the SAME round.** The trim is by `rounds=`, and the
+  windows agree on every frame at or under the cap, so the disagreeing frames
+  are not peers reading different rounds.
+- **The hash values are NOVEL, not swapped.** `p1`'s `f896` world hash
+  `da92dbd0` appears nowhere in `p3`'s log at any frame. The earlier "they hold
+  each other's values" claim came from reading two different pairings' digests
+  as if they were one pairing's, and it does not survive the check.
+
+So it is a **run-teardown effect**: at the end of whatever budget is set, the
+last one to four frames of a window can carry state no other window ever
+computed, and it persists for two to four frames rather than diverging onward.
+It scales with the budget's end, not with a fixed frame number, and a deeper
+pipeline makes the window wider. What it is NOT is two consoles simulating
+different inputs, and the trimmed sweep is the evidence.
+
+It stays open as a gap: nothing here explains what the teardown actually
+touches, and a run whose windows stop at an agreed round rather than an
+independent per-window frame budget would remove the question instead of
+bounding it.
+
+### P7. Late join of an old build (the blocker's own proof)
+
+`C:\tmp\lagdelay-out\latejoin_proof.py`, log
+`C:\tmp\lagdelay-out\proof_latejoin.log`. `SM64DS_COMMS_LEGACY_PEER`
+reproduces the two behaviours of a pre-0.3.3 peer that matter -- it never sends
+a round-trip report, and it DROPS an adopted depth past 8 rather than clamping
+to it.
+
+    exe C:/tmp/lagdelay\build\port\walk_window.exe  sha 51E5B0674DFD8B10
+
+    === ARM 1: the legacy peer is in the session before frame 0 ===
+      rc parent/new/legacy = [0, 0, 0]
+      parent       [comms:loopback] closed after 943 rounds; indelay=5 starved=2297 sent=980 recvd=1844 resends=0 starvedby=1:2262,2:1031 lastround=938
+      child_new    [comms:loopback] closed after 941 rounds; indelay=5 starved=2243 sent=1188 recvd=974 resends=240 starvedby=0:2243,2:1007 lastround=936
+      child_legacy [comms:loopback] closed after 900 rounds; indelay=5 starved=983 sent=905 recvd=933 resends=2 starvedby=0:983,1:983 lastround=894
+      P| [comms:loopback] not every peer reported a round trip within 400ms, so the adaptive sizing stands down and this session runs the mode default of 5. A peer that never reports is a peer that would never adopt a re-sized depth either, and a session where one console runs a different depth is a desync.
+      legacy peer joined the session: True
+      indelay parent/new/legacy = [5, 5, 5]
+      rounds parent/legacy = 943/900 (>=200 required: a session that never ran must not read as agreement)
+      ARM 1 PASS: every peer closed on the same depth
+
+    === ARM 2: the legacy peer arrives after the session froze ===
+      rc parent/new/legacy = [0, 0, 0]
+      parent       [comms:loopback] closed after 1209 rounds; indelay=11 starved=48 sent=1232 recvd=1215 resends=0 starvedby=1:48 lastround=1156
+      child_new    [comms:loopback] closed after 1200 rounds; indelay=11 starved=61 sent=1206 recvd=1220 resends=1 starvedby=0:61 lastround=1176
+      child_legacy [comms:loopback] closed after 0 rounds; indelay=5 starved=0 sent=12 recvd=452 resends=10
+      P| [comms:loopback] adaptive input delay 11 frame(s) (was 5): ceil(125 ms worst * 125% / 16.67 ms) + 1, floor 5 cap 15; worst is slot 1; per-child rtt s1=125ms [report]
+      P| [comms:loopback] input delay FROZEN at 11 for the rest of this session; the ROM asked for its first round
+      P| [comms:loopback] REFUSED a late join from slot 2: this session is frozen at input delay 11, past the 8 that every shipped build can adopt, so a peer that silently kept its own number would simulate a different match. The depth cannot be lowered now -- rounds have been consumed at it.
+      P| [comms:loopback] REFUSED a late join from slot 2: this session is frozen at input delay 11, past the 8 that every shipped build can adopt, so a peer that silently kept its own number would simulate a different match. The depth cannot be lowered now -- rounds have been consumed at it.
+      P| [comms:loopback] REFUSED a late join from slot 2: this session is frozen at input delay 11, past the 8 that every shipped build can adopt, so a peer that silently kept its own number would simulate a different match. The depth cannot be lowered now -- rounds have been consumed at it.
+      legacy peer got a transport at all: True
+      rounds parent/new = 1209/1200   sized past 8: True
+      parent/new indelay = 11/11   refused=True  seated=False
+      ARM 2 PASS: the running pair agrees and no peer was seated at a depth it cannot adopt
+
+    late-join proof: ALL GREEN
+
+Both arms assert LIVENESS first, because the first version of this rig scored a
+dead session as a pass: arm 2's relay had stopped answering, no peer completed a
+round, and "every peer agrees" was true of nothing at all. Each arm now requires
+its peers to have completed at least 200 rounds before any agreement counts, and
+each arm gets its own relay.
+
+**What each arm proves.** Arm 1 is the withdrawal: the parent had a legacy peer
+live and unreported at sizing time, so it never left a raised number standing --
+all three closed at 5. Its `starved=2297` is the honest price of a mixed session
+on a 100 ms path, and it is a STALL, which is the trade this whole design makes
+against a desync. Arm 2 is the refusal: the session sized to 11, froze, ran 1200
+rounds, and the late legacy peer was refused a seat three times over its knock
+window rather than being handed a number its clamp would have dropped.
+
 
 ## Honest remaining gaps
 
-1. **The final-frame divergence at depth 10 is explained, not proven.** P5 has
-   the whole record. The reading is a harness sampling straddle; it is not
-   demonstrated that nothing simulation-visible hides under it. Close it with a
-   wide run whose windows stop at an agreed ROUND rather than at an independent
-   per-window frame budget.
+1. **The run-teardown effect at the end of a budget is bounded, not
+   explained.** P5 has the record. The round-trimmed sweep is 21/21 clean on
+   three separate runs, so it is not a divergence in the simulation, but
+   nothing here says what the last one to four frames of a closing window
+   actually touch. A run whose windows stop at an agreed ROUND rather than an
+   independent per-window frame budget would remove the question rather than
+   bound it.
 
 2. **One handshake sample per child, and it never updates.** The round trip the
    depth is sized from is measured once, during the join, and the number is
@@ -483,13 +568,37 @@ independent frame budget each -- before anything ships at a raised depth.
    would let the parent tell "old build" from "still joining" faster than the
    400 ms grace.
 
-8. **Late joiners after the freeze get the frozen number.** In real play the
-   lobby gates the start so everyone is in first, but `vs16_ladder`-style
-   staggered starts can seat a two-player world and freeze before slots 3..6
-   arrive. Those peers are told the frozen depth and cannot change it, which is
-   correct and is also not sized for them.
+8. **A staggered start can freeze before the whole lobby is in.** The freeze
+   is the parent's first exchange, and a `vs16_ladder`-style staggered start
+   can seat a two-player world and freeze before slots 3..6 arrive. Real play
+   gates the start behind the lobby, so everyone is in first; a session that
+   does not is sized for whoever was there, and anyone later is either handed
+   the frozen number (if it is 8 or under) or refused a seat.
 
-10. **The shipping configuration is proven by a hand re-run, not by the
+9. **The mid-session renegotiation in section 3 is analysis, not code.** The
+   argument against it rests on reading `src/func_0203ea5c.c:418`, not on a run
+   that tried it and broke.
+
+10. **A late joiner that IS a new build is refused too.** Past the freeze the
+    parent cannot tell a new peer from an old one -- the report is a round trip
+    away and the seat decision is now -- so a session frozen deeper than 8
+    turns away every late joiner. Only a path bad enough to need more than 8
+    frames reaches this at all, but on such a path a legitimate rejoin after a
+    crash is refused for the rest of the match. Closing it properly wants a
+    generation byte in the JOIN, which is a wire change this lane did not make.
+
+11. **A mixed-generation session keeps depth 5 and starves.** That is the
+    withdrawal working as designed -- a stall rather than a desync -- but the
+    late-join proof measures the price: `starved=2297` over 943 rounds on a
+    100 ms path. Nothing here improves a mixed session; it only makes it
+    correct.
+
+12. **`SM64DS_COMMS_LEGACY_PEER` reproduces two behaviours of a pre-0.3.3
+    peer, not that peer.** It stands in for the report and the adopt clamp,
+    which are the two the blocker turns on. A real 0.3.2 binary was not run
+    against this branch.
+
+13. **The shipping configuration is proven by a hand re-run, not by the
     battery's own arm.** It configures, builds all 10210 targets, links and
     passes its liveness selftest with rc=0 -- but through
     `C:\tmp\lagdelay-out\shipcfg.cmd`, because the battery's arm cannot get
@@ -497,7 +606,7 @@ independent frame budget each -- before anything ships at a raised depth.
     line, same target, same selftest); the provenance is a hand-run script
     rather than a suite line, and that is worth knowing.
 
-11. **`battery.py`'s shipcfg arm needs a PATH line it does not set.** Found
+14. **`battery.py`'s shipcfg arm needs a PATH line it does not set.** Found
     here, not fixed here, because it is not this lane's file and a battery
     change wants its own review: `shipcfg_script` (`port/tools/battery.py:967`)
     should prepend `%ProgramFiles(x86)%\Microsoft Visual Studio\Installer` to
@@ -505,7 +614,3 @@ independent frame budget each -- before anything ships at a raised depth.
     does. Without it the arm passes or fails on what the launching shell
     happens to have on PATH, which is how a green battery and a red one can
     come from the same tree.
-
-9. **The mid-session renegotiation in section 3 is analysis, not code.** The
-   argument against it rests on reading `src/func_0203ea5c.c:418`, not on a run
-   that tried it and broke.
