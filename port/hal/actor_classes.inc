@@ -724,6 +724,18 @@ void hal_fill_monty_mole_rock_vtable(void);
 extern unsigned char DiamondLift_SpawnInfo[];       /* ov043 0x02112294, +4 reads 135 */
 void *DiamondLift_Spawn(void);                      /* ov043 0x021113cc (matched src) */
 void hal_fill_diamond_lift_vtable(void);
+/* ---- lane SEAT-BDW: two of ov043's remaining three classes, ids pinned by
+   Spawn-store, not by name (the naming shift, port/ov043_syms.txt). 136 and 134
+   are fully matched and seated. id 137 (RICKSHAW_BDW) is NOT seated: its own
+   bodies are inferred stubs, it is live on level 35, and a half-built 137
+   NULL-derefs during spawn -- registering it faults BitDW. See
+   hal/actor_classes_ov043.cpp and port/slice_bdw.txt. */
+extern unsigned char RickshawPlatformBdw_SpawnInfo[]; /* ov043 0x02112438, +4 reads 136 */
+extern unsigned char StairsBdw_SpawnInfo[];           /* ov043 0x021124fc, +4 reads 134 */
+void *RickshawPlatformBdw_Spawn(void);                /* ov043 0x021115f4 (matched src, returns int*) */
+void *StairsBdw_Spawn(void);                          /* ov043 0x0211176c (matched src) */
+void hal_fill_rickshaw_platform_bdw_vtable(void);
+void hal_fill_stairs_bdw_vtable(void);
 /* ---- gate 175: BLUE_FLAME (317) + RED_FLAME (316), the cave's flames ----
    One class (daObjFire_c, ov002), two matched factories installing
    _ZTV9BlueFlame; RED_FLAME's row is fill=0 (the GreenShellBlockTag shape).
@@ -2336,6 +2348,16 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     /* ---- gate 206: DIAMOND_LIFT (135), ov043, level 35's six lifts ---- */ \
     {135, "DIAMOND_LIFT", DiamondLift_SpawnInfo, DiamondLift_Spawn, \
      hal_fill_diamond_lift_vtable}, \
+    /* ---- lane SEAT-BDW: two of ov043's remaining Bowser-in-the-Dark-World \
+       classes. RICKSHAW_PLATFORM_BDW (136) is RICKSHAW_BDW's runtime child \
+       (not level-placed; census via SM64DS_SPAWN_ACTOR=136), STAIRS_BDW (134, \
+       L35 x1) the self-assembling staircase; both fully matched. RICKSHAW_BDW \
+       (137) is deliberately NOT registered: its InitResources is an inferred \
+       stub with no match and a live level-35 spawn NULL-derefs. ---- */ \
+    {136, "RICKSHAW_PLATFORM_BDW", RickshawPlatformBdw_SpawnInfo, \
+     RickshawPlatformBdw_Spawn, hal_fill_rickshaw_platform_bdw_vtable}, \
+    {134, "STAIRS_BDW", StairsBdw_SpawnInfo, StairsBdw_Spawn, \
+     hal_fill_stairs_bdw_vtable}, \
     /* ---- gate 175: the flames (ov002) -- BLUE_FLAME carries the fill, \
        RED_FLAME reuses it, the GreenShellBlockTag shape ---- */ \
     {317, "BLUE_FLAME", BlueFlame_SpawnInfo, BlueFlame_Spawn, \
