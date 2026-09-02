@@ -611,6 +611,23 @@ int ds_imod(int, int);
 # sibling unit drivers func_02053008 / func_020531a4 / func_02052fdc bind the
 # registers by literal cast or bound pointer and need no entry here.
 MMIO_EXTERN = {
+    # Lane shadow-A: G3i::PerspectiveW_. The register traffic itself needs no
+    # entry -- the sixteen MTX_LOAD_4x4 stores go through a pointer bound once
+    # to 0x4000458 and MMIO_PTR rewrites them, the u64 DIV_NUMER/DENOM stores
+    # are literal derefs. What the table carries is ONE DELIBERATE HOST
+    # DIVERGENCE: on the DS this function inherits 64/32 divide mode from the
+    # cstd::fdiv it opens with (fdiv_async writes DIVCNT); the port's
+    # cstd::fdiv is a pure C divide (hal/cstd_div.c) that touches no register,
+    # so without this write the two divisions run 32/32 and the near/far row
+    # comes out garbage. The retired host copy carried the same line at the
+    # same spot. Anchored on the first DIV_NUMER store so it lands after the
+    # scaleW adjust and before the numerator is latched.
+    "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3": [
+        ("    *(volatile u64 *)0x4000290 = (u64)(unsigned)tmp << 32;",
+         "    NTR_MMIO(unsigned short, 0x4000280) = 1;  /* hostgen: DIVCNT 64/32, "
+         "the DS inherits it from fdiv_async; see MMIO_EXTERN */\n"
+         "    *(volatile u64 *)0x4000290 = (u64)(unsigned)tmp << 32;"),
+    ],
     "func_02053130": [
         # the busy-bit spin: SQRTCNT through the proxy; the local pointer
         # binding goes with it (keeping it would keep the &SQRTCNT reference)

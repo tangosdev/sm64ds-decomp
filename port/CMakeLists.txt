@@ -8149,10 +8149,10 @@ set(CAMERA_HOST_SOURCES
     # shadow-A): the matched dispatchers go through hostgen's MG_PMF_CALL
     # table (GATE13_SYMS), the one PMF call each routed into
     # hal_call_camera_state_fn.
-    unmatched/G3i_PerspectiveW.cpp
-    # G3i_LookAt.cpp RETIRED (lane shadow-A): the matched TU reaches the
-    # geometry engine through a pointer bound once to a literal register
-    # address, which hostgen's MMIO_PTR pass rewrites (GATE13_SYMS).
+    # G3i_PerspectiveW.cpp and G3i_LookAt.cpp RETIRED (lane shadow-A): both
+    # matched TUs reach the geometry engine through a pointer bound once to a
+    # literal register address, which hostgen's MMIO_PTR pass rewrites
+    # (GATE13_SYMS); PerspectiveW_'s DIVCNT seam is an MMIO_EXTERN entry.
     hal/camera_states.cpp
     hal/camera_bridges.cpp)
 
@@ -8169,7 +8169,8 @@ set(CAMERA_HOST_SOURCES
 set(GATE13_SYMS _ZN6Camera6RenderEv LenVec3 _ZN4cstd11ldiv_resultEv
     func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj
     func_02008550 func_0200cae4 func_0200ca50
-    _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3)
+    _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3
+    _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3)
 set(GATE13_GEN "")
 foreach(sym IN LISTS GATE13_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")

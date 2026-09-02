@@ -5,11 +5,12 @@
 # projection and view matrices and pushes them at the geometry engine, and
 # GetAngleToCamera reads the heading the camera itself published.
 #
-# Everything below is MATCHED in src -- no new decomp. Three files the port
-# cannot take verbatim live in port/unmatched/ instead and are listed in
-# CMakeLists.txt: ChangeArea (r0 ride-through), G3i::PerspectiveW_ /
-# G3i::LookAt_ (register-bound MMIO pointers). func_0200cae4 / func_0200ca50
+# Everything below is MATCHED in src -- no new decomp. One file the port
+# cannot take verbatim lives in port/unmatched/ instead and is listed in
+# CMakeLists.txt: ChangeArea (r0 ride-through). func_0200cae4 / func_0200ca50
 # (mwcc PMF dispatch, hostgen MG_PMF_CALL into hal_call_camera_state_fn),
+# G3i::PerspectiveW_ / G3i::LookAt_ (register-bound MMIO pointers, hostgen
+# MMIO_PTR; PerspectiveW_'s DIVCNT seam is an MMIO_EXTERN entry),
 # Camera::Render, LenVec3 and cstd::ldiv_result go through hostgen
 # (CMakeLists.txt GATE13_SYMS).
 
