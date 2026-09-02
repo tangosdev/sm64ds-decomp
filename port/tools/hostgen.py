@@ -214,6 +214,10 @@ ATTRIBUTE = re.compile(r"__attribute__\s*\(\((?:[^()]|\([^()]*\))*\)\)")
 EXTERN_DATA = re.compile(
     r"^([ \t]*)((?:(?:unsigned|signed|volatile|const|struct|long|short|int|char|"
     r"float|double|u8|u16|u32|u64|s8|s16|s32|s64|bool|Vector3|Matrix4x3|"
+    # `void* data_0209f394[];` (HUD::InitResources): the star is glued to
+    # the keyword, so it is part of the alternative rather than of the
+    # trailing `\**` (lane shadow-A)
+    r"void\**|"
     r"[A-Z]\w*)[ \t]+)+\**[ \t]*)(data_(?:ov\d+_)?[0-9a-f]{6,8})"
     r"([ \t]*(?:\[[^\];=]*\])?)[ \t]*;",
     re.MULTILINE)
@@ -847,6 +851,41 @@ CALL_STATE_FN = {
 }
 
 
+# ---- ARGUMENT WIDTH ACROSS TWO MATCHED TUs -----------------------------------
+#
+# Lane shadow-A. Two src TUs can disagree about the width of one parameter and
+# both still be byte matches: on ARM the value rides in r0 either way, and the
+# caller that widened a byte to a register has done the callee's work for it.
+# Under x86 cdecl the two spellings are NOT interchangeable. MSVC stores an s8
+# argument as ONE byte into the outgoing four-byte slot and pushes the slot,
+# so a callee that reads the slot as `int` sees one meaningful byte and three
+# stale ones -- and CollectStar's body is `data_0209cab4[a] |= 1 << b;`, an
+# unbounded indexed read-modify-write. Measured: the first star the port ever
+# collected faulted at data_0209cab4 + 0x60e95014.
+#
+#     src/CollectStarInLevel.c   extern void CollectStar(s8 courseID, s32);
+#     src/CollectStar.c          void CollectStar(int a, int b);
+#
+# The patch retypes the one parameter in the DEFINITION to the width its
+# caller declares, so the callee extends the byte itself. Nothing else in the
+# body changes. src/IsStarCollected.c, the READ half of the same pair, already
+# spells its parameter s8 in src, which is why NumStars needs no entry here
+# and links plain. Exact strings, hard-errored like the tables above: if the
+# decomp ever settles the two declarations on one width, the entry stops
+# matching and this table says so rather than silently going inert.
+ARG_WIDTH = {
+    "CollectStar": [
+        ("void CollectStar(int a, int b){",
+         "void CollectStar(signed char a, int b){"),
+    ],
+}
+
+
+def arg_width_patch(text, sym):
+    """Retype one parameter to the width its matched caller declares."""
+    return apply_patches(text, sym, ARG_WIDTH, "ARG_WIDTH")
+
+
 def apply_patches(text, sym, table, what, decl=""):
     """Exact-string patches, with a hard error if one stops matching."""
     pats = table.get(sym)
@@ -930,6 +969,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = member_redecl_patch(text, sym)
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
+    text, _ = arg_width_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise

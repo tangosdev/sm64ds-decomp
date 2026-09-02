@@ -7714,7 +7714,7 @@ endforeach()
 # the listener came back 8192, past every distance limit in the game, and every
 # positional sound was culled. It goes through hostgen like every other TU that
 # touches hardware; src/func_02049018.c comes out of slice 10.
-set(GATE35_SYMS func_02049018)
+set(GATE35_SYMS func_02049018 CollectStar)
 set(GATE35_GEN "")
 foreach(sym IN LISTS GATE35_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -7914,9 +7914,11 @@ foreach(src IN LISTS SLICE10_SOURCES)
     # 14): its 0x027ffc40 console-type read is in no region ntr maps, and the
     # course sound boot is its first caller.
     # ...and CollectStar, the WRITE half of the s8/int argument-width
-    # disagreement port/unmatched/NumStars_hostcopy.cpp already carries the
-    # read half of. port/unmatched/CollectStar_hostcopy.cpp takes the course
-    # id as s8.
+    # disagreement (its caller CollectStarInLevel.c declares the course id
+    # s8, the body takes int, and cdecl pushes an s8 as one meaningful byte
+    # in a four-byte slot). It goes through hostgen's ARG_WIDTH patch, listed
+    # in GATE35_SYMS below, which retypes the one parameter; the host copy
+    # that used to carry the retype is deleted (lane shadow-A).
     if(src MATCHES "/HitDeathPlane\\.c$"
        OR src MATCHES "/func_0203d974\\.c$"
        OR src MATCHES "/CollectStar\\.c$"
@@ -8085,11 +8087,10 @@ set(LEVELBOOT_HOST_SOURCES
     # as the four-word general representation, which doubles the stride of the
     # table it indexes; see each file's header.
     unmatched/OneUpMushroom_Behavior.cpp
-    # NumStars_hostcopy.cpp RETIRED (lane shadow-A): src/IsStarCollected.c
-    # takes the course id as s8 now, so src/NumStars.c links as it stands
-    # (slice_gate10.txt).
-    # gate 35: the WRITE half of the same s8/int argument-width disagreement
-    unmatched/CollectStar_hostcopy.cpp
+    # NumStars_hostcopy.cpp and CollectStar_hostcopy.cpp RETIRED (lane
+    # shadow-A). src/IsStarCollected.c takes the course id as s8 now, so
+    # src/NumStars.c links as it stands (slice_gate10.txt); CollectStar goes
+    # through hostgen's ARG_WIDTH patch (GATE35_SYMS).
     unmatched/SignPost_StateDispatch.cpp
     # gate 18: the third, LakituBro's eleven-state machine
     unmatched/LakituBro_Behavior.cpp
