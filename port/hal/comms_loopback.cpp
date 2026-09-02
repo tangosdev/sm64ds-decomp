@@ -1555,23 +1555,38 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         if (p.have & kJoinReportBit) {
             const int child_rtt   = (int)(p.have & 0xFFFFu);
             const int child_delay = (int)((p.have >> 16) & 0xFFu);
-            // THE PARENT'S OWN MEASURE OF THE SAME PATH, free: the report is
-            // sent the moment the ACCEPT lands, so accept-out to report-in is
-            // a round trip this end timed with its own clock and owes nothing
-            // to the child's. Take the WORSE of the two -- one number has to
-            // cover the path and neither sample is entitled to be the small
-            // one.
+            // THE PARENT'S OWN INTERVAL IS A CROSS CHECK, NOT A SAMPLE, and
+            // that distinction was learned from a run rather than argued. It
+            // looks like a free second measurement of the same path: the report
+            // is sent the moment the ACCEPT lands, so accept-out to report-in
+            // ought to be one round trip on this end's own clock. It is not,
+            // because the parent stamps EVERY accept it sends and the accept
+            // being answered is not necessarily the last one stamped. The first
+            // accept goes out while the child is still booting its world, so
+            // the interval measured is the child's BOOT TIME -- 2500 ms in this
+            // lane's A/B rig -- and a repeat report answers an accept sent
+            // milliseconds earlier and measures 0. Taking the worse of the two
+            // sized that session at the cap off a number that was never a round
+            // trip, published it, and published a corrected one a moment later:
+            // two adoptions where one was owed.
+            //
+            // The child's own handshake sample IS a round trip: it timed its
+            // JOIN against the ACCEPT that answered it, on one clock, over this
+            // path. That is the number. The interval is printed beside it
+            // because a wild disagreement is worth seeing in a log, and it
+            // decides nothing.
             int measured = -1;
             if (g_accept_sent_ms[k] != 0) {
                 measured = (int)(now_ms() - g_accept_sent_ms[k]);
-                if (measured < 0 || measured > 5000) measured = -1;
+                if (measured < 0) measured = -1;
             }
-            int rtt = child_rtt > measured ? child_rtt : measured;
+            int rtt = child_rtt;
             if (rtt < 0) rtt = 0;
             if (rtt != g_child_rtt_ms[k]) {
                 std::fprintf(stderr, "[comms:loopback] slot %d reports "
-                             "handshake rtt %d ms (this end measured %d ms) "
-                             "and runs input delay %d\n",
+                             "handshake rtt %d ms (this end saw %d ms since its "
+                             "last accept to that slot, a cross check and not "
+                             "the sample) and runs input delay %d\n",
                              k, child_rtt, measured, child_delay);
             }
             g_child_rtt_ms[k]    = rtt;
