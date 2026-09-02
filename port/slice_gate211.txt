@@ -1,0 +1,88 @@
+# Gate 211: ENEMY_SWITCH_TAG (357) and ENEMY_SPAWNER (358), both ov002.
+#
+# ---- what they are ---------------------------------------------------------
+#
+# Two of ov002's level-designer object classes, seated together because they
+# are the same shape out of the same overlay and share every shared-half slot.
+#
+#   ENEMY_SWITCH_TAG  _ZTV14EnemySwitchTag  ov002 0x0210b3e8, 272-byte object.
+#     A tag block that toggles an Event bit. Its InitResources sets up a
+#     MovingCylinderClsn at +0xd4 and clears the Event bit it owns; Behavior
+#     counts down a timer, sets/clears the bit and marks itself for destruction
+#     when its one-shot fires, then ticks the cylinder each frame.
+#   ENEMY_SPAWNER     _ZTV12EnemySpawner   ov002 0x0210b364, 224-byte object.
+#     An invisible placer. Behavior watches its Event bit and, on the rising
+#     edge, calls Actor::Spawn(id) once and hands the result to
+#     func_ov102_0214ad14 (already linked; slice_gate32). A plain Actor with no
+#     members of its own.
+#
+# ---- the ids, cross-checked from the relocated overlay image ---------------
+#
+# Read as raw bytes out of extracted/overlays/overlay_0002.bin at the ov002
+# base 0x020ad660, not from a recovered name:
+#
+#   EnemySwitchTag_SpawnInfo  0x0210b324  +0 = 0x020f1954 (EnemySwitchTag_Spawn)
+#                                         +4 halfword = 357 (0x165)
+#   EnemySpawner_SpawnInfo    0x0210b340  +0 = 0x020f1924 (EnemySpawner_Spawn)
+#                                         +4 halfword = 358 (0x166)
+#
+# Both factory words match the delinks' own Spawn ranges and both ids match the
+# registry rows, so the registry's id/table cross-check passes. The two
+# SpawnInfo records are mounted through port/ov002_syms.txt (ovdata.py), the
+# AmbientSoundEffects_SpawnInfo precedent.
+#
+# ---- the width and the slot map --------------------------------------------
+#
+# `python port/tools/vtspan.py . _ZTV14EnemySwitchTag` and `. _ZTV12EnemySpawner`
+# both resolve to 31 slots by the semantic tail (the typeinfo route over-reads
+# past the class block, the documented shape). Every one of the 62 words
+# resolves. Each class owns FIVE slots and overrides nothing else:
+#
+#   0  InitResources    3  CleanupResources    6  Behavior    16  D1    17  D0
+#
+# Slot 9 stays _ZN9ActorBase6RenderEv (the no-op base render), slot 12 stays
+# ActorBase::OnPendingDestroy. Neither Behavior dispatches a pointer-to-member,
+# so there is no state table and no host state seat. The fills are in
+# hal/actor_classes_enemy_spawner.cpp.
+#
+# ---- the 350-vs-357/358 separation -----------------------------------------
+#
+# AMBIENT_SOUND_EFFECTS (350) is three records further along the same spawn
+# table and was named after THIS pair before the #1048 shift corrected the
+# ov002 method-block names (hal/actor_classes.cpp:517). The three tables are
+# distinct addresses now (_ZTV12EnemySpawner 0x0210b364, _ZTV14EnemySwitchTag
+# 0x0210b3e8, _ZTV19AmbientSoundEffects 0x0210b4c8); this gate fills its own two
+# host arrays and never touches AmbientSoundEffects'.
+#
+# ---- what is enrolled, and the two files that are NOT ----------------------
+#
+# TEN TUs, five per class: the factory, InitResources, CleanupResources,
+# Behavior and the deleting destructor D0. Every one is matched src with no
+# inferred-stub marker and closed callees already in walk_window.map.
+#
+# The two complete-object destructors _ZN14EnemySwitchTagD1Ev.cpp and
+# _ZN12EnemySpawnerD1Ev.cpp are NOT on this slice. They are empty-bodied real
+# C++ destructors whose auto-emitted member-dtor and base ~Actor calls would
+# resolve to MSVC-mangled names no TU in this build defines -- the same reason
+# the mole's slot-16 (hal/actor_classes_montymole.cpp) and the gate-31 shadow
+# destructors are host thunks. Slot 16 is spelled by hand in the fill instead:
+# EnemySwitchTag runs MovingCylinderClsn::~ at +0xd4 then Actor::~D2 (exactly
+# what its own D0 runs before the deallocate), EnemySpawner runs Actor::~D2
+# alone.
+#
+# EnemySpawner's D0 spells its table through the VT placeholder (renamed
+# per-source to _ZTV12EnemySpawner in port/CMakeLists.txt) and HEAP (bound
+# globally in hal/cxx_aliases.cpp). EnemySwitchTag's D0 spells the RTTI dual
+# name _ZTV11daESwitch_c, aliased to the host array in the fill. EnemySpawner's
+# InitResources reads the model SharedFilePtr data_ov002_0210d9e0 at a C++ data
+# spelling, aliased in hal/cxx_aliases.cpp.
+src/EnemySwitchTag_Spawn.c
+src/_ZN14EnemySwitchTag13InitResourcesEv.cpp
+src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp
+src/_ZN14EnemySwitchTag8BehaviorEv.cpp
+src/_ZN14EnemySwitchTagD0Ev.c
+src/EnemySpawner_Spawn.c
+src/_ZN12EnemySpawner13InitResourcesEv.cpp
+src/_ZN12EnemySpawner16CleanupResourcesEv.c
+src/_ZN12EnemySpawner8BehaviorEv.cpp
+src/_ZN12EnemySpawnerD0Ev.c

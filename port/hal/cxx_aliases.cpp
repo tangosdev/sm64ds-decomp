@@ -1732,6 +1732,10 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_0210d9d0@@3PADA=_data_ov002_0210d9d0")
 #pragma comment(linker, "/alternatename:?data_ov002_0210d9d8@@3PADA=_data_ov002_0210d9d8")
 #pragma comment(linker, "/alternatename:?data_ov002_0210d9e0@@3PADA=_data_ov002_0210d9e0")
+/* gate 211: EnemySpawner::InitResources declares the same model SharedFilePtr
+   cell as a plain `extern int` outside its extern "C" block, so it carries the
+   @@3HA spelling too. MSVC folds this onto the one C symbol. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210d9e0@@3HA=_data_ov002_0210d9e0")
 #pragma comment(linker, "/alternatename:?data_ov002_0210da18@@3PADA=_data_ov002_0210da18")
 #pragma comment(linker, "/alternatename:?data_ov002_0210da30@@3PADA=_data_ov002_0210da30")
 #pragma comment(linker, "/alternatename:?data_ov002_0210da40@@3PADA=_data_ov002_0210da40")

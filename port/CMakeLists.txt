@@ -9217,6 +9217,27 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8MugenBgmD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS "VT=_ZTV8MugenBgm")
 
+# ---- gate 211: ENEMY_SWITCH_TAG (357) and ENEMY_SPAWNER (358), ov002 --------
+# Ten matched TUs, five per class (the two complete-object D1 destructors stay
+# off the slice -- shadow-class C++ dtors that do not link on host; slot 16 is a
+# host thunk in hal/actor_classes_enemy_spawner.cpp). EnemySpawner's D0 spells
+# its table through the shared VT placeholder, which hal/cxx_aliases.cpp binds
+# globally to _data_ov002_021081e4 (the Enemy base table); rename it per-source
+# to its own array. HEAP is left alone -- already the game heap. EnemySwitchTag's
+# D0 spells the RTTI dual name _ZTV11daESwitch_c, aliased in the fill.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate211.txt" SLICE211_LINES)
+set(SLICE211_SOURCES "")
+foreach(line IN LISTS SLICE211_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE211_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN12EnemySpawnerD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=_ZTV12EnemySpawner")
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12352,6 +12373,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12564,6 +12586,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12810,6 +12833,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
