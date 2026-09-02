@@ -530,6 +530,21 @@ int hal_player_behavior(void *p);
 int hal_player_process(void *p);   /* gate 15: BeforeBehavior/Behavior/After */
 void sdat_host_tick(void);         /* hosted ARM7: hal/sdat/ */
 void hal_render_player_world(void *p);
+/* ADVENTURE GHOSTS: the per-frame no-collision hold over remote slots
+   (hal/player_bridges.cpp). No-op unless adventure-ghost mode is on. */
+void port_adventure_ghost_hold(void);
+/* the headless M1 proof; no-op unless SM64DS_ADVENTURE_PROBE is set. */
+void port_adventure_probe(int frame);
+/* ADVENTURE GHOSTS: the per-render-frame pure-follower step (hal/comms_sync.cpp).
+   Eases each ghost toward its latest snapshot and suppresses its ROM drift.
+   No-op unless adventure-ghost mode is on. */
+void port_adventure_ghost_follow(void);
+/* ADVENTURE co-op (M2): is this remote slot a ghost to draw right now -- present
+   and in THIS console's level (hal/comms_sync.cpp). The render loop gates on it
+   so a peer in another level is not drawn. 0 outside adventure mode. */
+int port_adventure_peer_visible(int slot);
+/* the M2 presence proof; no-op unless SM64DS_ADVENTURE_PRESENCE is set. */
+void port_adventure_presence_probe(int frame);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -8879,8 +8894,16 @@ int main(void)
                the fan-out off, nothing writes those records and these stores
                stay exactly what they were. */
             if (!(port::comms_transport() && comms_fanout_on())) {
-                *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
-                *(unsigned short *)((char *)data_020a0e58 + 2) =
+                /* THE LOCAL SLOT, not always slot 0. PadData strides 4 bytes per
+                   player ({u16 held, u16 pressed}); on the child data_0209f250 is
+                   1, so the local pad must land in PadData[1] or it drives the
+                   HOST's character (the ghost) and never the child's own body.
+                   Single player keeps data_0209f250 == 0, so this is unchanged
+                   there. Adventure runs with the fan-out off, which is why this
+                   direct store is the one that reaches the game. */
+                const int lo = (int)data_0209f250 * 4;
+                *(unsigned short *)((char *)data_020a0e58 + lo + 0) = raw;
+                *(unsigned short *)((char *)data_020a0e58 + lo + 2) =
                     (unsigned short)(raw & (unsigned short)~raw_prev);
             }
             raw_prev = raw;
@@ -9048,16 +9071,22 @@ int main(void)
                     int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
                     if (mag > 0x1000) mag = 0x1000;
                     if (mag < 0) mag = 0;
-                    *(short *)(data_0209f4a0 + 0) = (short)mag;
-                    *(short *)data_0209f4a2 =
+                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
+                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
+                       the ROM reads player N's fields at symbol + N*0x18 (see the
+                       fan block above). On the child data_0209f250 is 1, so the
+                       stick must land in slot 1. */
+                    const int lo = (int)data_0209f250 * 0x18;
+                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
+                    *(short *)((char *)data_0209f4a2 + lo) =
                         (short)((double)dxs * mag / len);
-                    *(short *)data_0209f4a4 =
+                    *(short *)((char *)data_0209f4a4 + lo) =
                         (short)((double)dys * mag / len);
-                    *(short *)data_0209f4a6 =
+                    *(short *)((char *)data_0209f4a6 + lo) =
                         _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
                     /* the field the walk/run branch keys off: "the player is
                        on the analog stick, read the deflection" */
-                    data_0209f4ac[0] = 1;
+                    *((unsigned char *)data_0209f4ac + lo) = 1;
                 }
             }
             /* camera lazy-follow, from the same intended direction */
@@ -9324,8 +9353,12 @@ int main(void)
              * Stage::CheckInput, the per-player fan -- and this store must not
              * put them anywhere else. */
             if (!(port::comms_transport() && comms_fanout_on())) {
-                *(unsigned short *)(data_0209f49c + 0) = btn;
-                *(unsigned short *)(data_0209f49e + 0) =
+                /* THE LOCAL SLOT, at the 0x18 Ctrl stride, so the child's buttons
+                   reach slot 1 rather than the host's slot 0. Single player keeps
+                   data_0209f250 == 0. */
+                const int lo = (int)data_0209f250 * 0x18;
+                *(unsigned short *)((char *)data_0209f49c + lo) = btn;
+                *(unsigned short *)((char *)data_0209f49e + lo) =
                     (unsigned short)(btn & (unsigned short)~btn_was);
             }
             btn_was = btn;
@@ -10483,6 +10516,22 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
+        /* ADVENTURE GHOSTS: hold every remote body in the disable-interaction
+           state, HERE because it must land AFTER the actor phases above --
+           Player::ChangeState re-arms all three fields on every transition, so
+           the hold is re-asserted each frame right after the behaviour that
+           could have cleared it and before the collision the next frame reads
+           it. No-op unless adventure-ghost mode is on; the local body is never
+           touched. */
+        port_adventure_ghost_hold();
+        /* the M1 proof reads the ghost's three flags right after the hold set
+           them, and drives one wire snapshot into the ghost. Inert unless
+           SM64DS_ADVENTURE_PROBE is set. */
+        port_adventure_probe(frame);
+        /* the M2 proof drives TWO ghosts with level-tagged snapshots and asserts
+           the same-level filter and the spawn/despawn transitions. Inert unless
+           SM64DS_ADVENTURE_PRESENCE is set. */
+        port_adventure_presence_probe(frame);
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
@@ -10697,6 +10746,12 @@ int main(void)
                lockstep blocks on. No-op unless SM64DS_SYNC=1 and the transport
                reports contract v2. */
             port::sync_tick();
+            /* ADVENTURE GHOSTS: ease every ghost toward its latest snapshot,
+               HERE -- after sync_tick has recorded this frame's target and after
+               the actor tick advanced the body under its own physics -- so the
+               rendered position is the smooth follower value and the ROM drift is
+               overridden. No-op outside adventure mode. */
+            port_adventure_ghost_follow();
             /* run mg16 lane MP3: the VS probe, read out of the game's own
                per-slot actor array. Here rather than at the report site
                because it must run whether or not SM64DS_COMMS_REPORT is on:
@@ -11597,6 +11652,14 @@ int main(void)
            submission order changes. */
         for (int pi = (int)data_0209f21c - 1; pi >= 0; --pi) {
             if (pi == (int)data_0209f250) continue;   /* drawn below, as before */
+            /* ADVENTURE co-op (M2): a ghost is DRAWN only for a peer present in
+               this console's level. A peer in another level (or gone quiet) is
+               despawned -- skipped here, so it casts no pixels -- exactly as the
+               follower and the name tag skip it on the same predicate. VS and
+               solo do not consult it (the gate is the mode), so their per-slot
+               draw is byte-unchanged. */
+            if (port::adventure_ghost_mode() && !port_adventure_peer_visible(pi))
+                continue;
             if (void *other = data_0209f394[pi])
                 hal_render_player_world(other);
         }

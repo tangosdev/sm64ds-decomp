@@ -63,6 +63,8 @@
 
 #include "comms_seam.h"
 #include "player_fields.h"
+#include "host_settings.h"   // port::adventure_ghost_mode(): adventure runs this
+                             // layer without SM64DS_SYNC
 
 #include <windows.h>   // GetTickCount, for the delay rig and the RTT probe --
                        // kernel32 only, which every object here already
@@ -93,6 +95,12 @@ void _ZN6Player11ChangeStateERNS_5StateE(char *, void *);
 extern void *data_0209f394[];
 extern unsigned char data_0209f21c;
 extern unsigned char data_0209f250;
+// ADVENTURE co-op (M2): the level currently up on THIS console, the id
+// hal/level_boot.cpp seats at every mount and hal/level_change.cpp rewrites on
+// a warp. The send side stamps it into each snapshot so a peer can tell whether
+// it shares this console's level; the presence gate compares a received level
+// against it. signed char in the ROM (levels 0..51); read as int here.
+extern signed char data_0209f2f8;
 }
 
 namespace port {
@@ -146,7 +154,14 @@ int env_int(const char *name, int dflt) {
 void parse_cfg() {
     if (g_parsed) return;
     g_parsed = true;
-    g_cfg.on         = env_int("SM64DS_SYNC", 0) != 0;
+    /* ADVENTURE GHOSTS turn this layer on without SM64DS_SYNC. Adventure mode
+       IS the state-broadcast session -- each console runs its own solo game and
+       the only thing on the wire is where each body is and what it is doing,
+       which is exactly what this layer carries. SM64DS_SYNC stays the explicit
+       knob for a VS session; adventure mode is the second door to the same
+       layer. Off by default either way: adventure mode defaults OFF, so an
+       unset environment still gets the byte-identical DS path SY4 asserts. */
+    g_cfg.on         = env_int("SM64DS_SYNC", 0) != 0 || adventure_ghost_mode();
     g_cfg.hz         = env_int("SM64DS_SYNC_HZ", 30);
     g_cfg.lerp_pct   = env_int("SM64DS_SYNC_LERP", 25);
     g_cfg.snap_units = env_int("SM64DS_SYNC_SNAP", 60);
@@ -293,10 +308,10 @@ bool sync_forced_v1() { parse_cfg(); return g_cfg.force_v1; }
 // under the design's own versioning rule -- the pose fields arrive in v2 when
 // the matched setters have named the storage.
 //
-// SIZE, as of v3: a 16-byte header plus one 38-byte entry -- under owner
-// authority each console sends only its own body, so a snapshot is 54 bytes
-// regardless of player count. Far under any MTU; the contract's one-datagram
-// rule is satisfied with room to spare.
+// SIZE, as of v4: a 16-byte header plus one 40-byte entry -- under owner
+// authority each console sends only its own body, so a snapshot is 56 bytes
+// regardless of player count (the level id added two). Far under any MTU; the
+// contract's one-datagram rule is satisfied with room to spare.
 // ===========================================================================
 #pragma pack(push, 1)
 struct SyncPlayerV1 {
@@ -331,6 +346,17 @@ struct SyncPlayerV1 {
     // further than the snap threshold -- extrapolating through a warp would
     // aim at a place nobody is.
     int            vx, vy, vz;
+
+    // ---- v4, PRESENCE / LEVEL FILTER (ADVENTURE co-op, M2) ------------
+    // The level this body's console is in right now (data_0209f2f8, the id
+    // hal/level_boot.cpp seats and hal/level_change.cpp rewrites on a warp).
+    // Adventure mode is a set of solo games sharing a wire, so a snapshot from
+    // a peer three levels away is not a body this console should draw. The
+    // receiver keeps the latest level per slot and draws a ghost only for a
+    // peer in the SAME level; on a mismatch it despawns the ghost. VS ignores
+    // it -- a versus match is one shared level -- but carries it so one wire
+    // format serves both modes. u16 for room; ids are 0..51 today.
+    unsigned short level_id;
 };
 struct SyncMsgV1 {
     unsigned       magic;     // kSyncMagic -- framing, never changes
@@ -363,11 +389,13 @@ struct SyncMsgV1 {
 // recognised, counted, and DROPPED at the version check -- no half-understood
 // message reaches the apply path, which is what the unreliable channel needs.
 enum : unsigned { kSyncMagic = 0x314e5953u };
-// v3: dead reckoning added vx/vy/vz to the entry (item 2). THE VERSION FIELD
-// BUMPS, THE MAGIC NEVER DOES -- spec trap 8, paid for once already when a
-// tag bump unframed the whole channel (247 sent, 0 received). Both sides
-// ship together; a mismatched peer is recognised, counted, dropped loudly.
-enum : unsigned { kSyncVersion = 3u };
+// v3: dead reckoning added vx/vy/vz to the entry (item 2). v4: the level id
+// (ADVENTURE co-op M2), so a receiver ghosts only peers in its own level. THE
+// VERSION FIELD BUMPS, THE MAGIC NEVER DOES -- spec trap 8, paid for once
+// already when a tag bump unframed the whole channel (247 sent, 0 received).
+// Both sides ship together; a mismatched peer is recognised, counted, dropped
+// loudly.
+enum : unsigned { kSyncVersion = 4u };
 enum : unsigned char { kFlagLive = 1, kFlagGrounded = 2, kFlagTeleport = 4 };
 enum : int { kSyncBufBytes = 256 };
 
@@ -475,6 +503,44 @@ unsigned short g_arr_anim[kCommsMaxPlayers];
 unsigned short g_ph_id[kCommsMaxPlayers];
 int            g_ph_hw[kCommsMaxPlayers];
 
+// ADVENTURE GHOSTS: the per-slot follow target. In adventure mode apply_snapshot
+// does NOT move the body -- it records the latest snapshot here, and
+// port_adventure_ghost_follow eases the body toward it every render frame. That
+// is what turns a body corrected only on ~30 Hz receive frames (and drifting on
+// its own ROM physics in between) into a smooth pure follower.
+struct GhostTarget { bool have; int x, y, z; short yaw; bool teleport;
+                     int vx, vz; };
+GhostTarget g_gtarget[kCommsMaxPlayers];
+
+// ADVENTURE GHOSTS, the ANIMATION half of the follower. The ROM keeps ticking a
+// ghost's own Player::Behavior, which forces the puppet back into its spawn
+// no-control pose and overwrites the wire's animation every frame -- so an
+// animation applied only on the ~30 Hz receive frames flickers against the
+// ROM's reset and never plays. The follower instead re-drives the wire animation
+// EVERY render frame at a locally-advanced cursor, so the last write each frame
+// is always the right animation at a smoothly climbing frame. g_ganim is the
+// wire's current anim id, g_gcursor the playback cursor in 20.12 (advanced one
+// frame per render frame, re-synced to the wire on every snapshot so it stays in
+// phase with the sender's own cycle).
+unsigned short g_ganim[kCommsMaxPlayers];
+int            g_gcursor[kCommsMaxPlayers];
+bool           g_ganim_have[kCommsMaxPlayers];
+
+// ADVENTURE co-op (M2), PRESENCE. The per-slot filter that turns "everyone on
+// the wire" into "everyone in MY level". Filled from every received snapshot:
+// the peer's level id, and the wall clock of the last snapshot for a liveness
+// timeout. peer_visible() is the one predicate every ghost loop consults --
+// draw, hold-follow, name tag -- so "spawn a ghost" and "despawn it when the
+// peer leaves or changes level" are one decision made in one place. A peer is
+// visible when it is present (a snapshot inside kPresenceTimeoutMs) AND its
+// level id equals this console's data_0209f2f8. A peer that stops sending, or
+// warps to another level, or that this console warps away from, drops out of
+// visible on the next frame -- which is the despawn.
+enum : unsigned { kPresenceTimeoutMs = 2000u };
+int      g_peer_level[kCommsMaxPlayers];
+unsigned g_peer_seen_ms[kCommsMaxPlayers];
+bool     g_peer_present[kCommsMaxPlayers];
+
 // Item 2's sender-side velocity sample: the local body's position last frame,
 // differenced each frame. Seeded on first sight so the first frame's
 // "velocity" is zero rather than the distance from the origin to the spawn.
@@ -561,7 +627,18 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
     // left to the state machine that owns it. It re-arms by itself: the next
     // ChangeState clears mIsNoControl and the id-change branch takes over
     // again on the following snapshot.
-    if (*(const unsigned char *)((const char *)a + player::kIsNoControl)) {
+    // ---- EXCEPT IN ADVENTURE-GHOST MODE, where the no-control flag is OURS.
+    // The pose-hold above protects a LOCALLY-SIMULATED body running the ROM's
+    // own scripted sequence (a VS star collect) from a stale wire animation.
+    // A ghost is not that: it is a puppet this console does not simulate, and
+    // its mIsNoControl is set by the ghost hold every frame to keep it
+    // non-colliding (hal/player_bridges.cpp), not by a real state machine. So
+    // the only true information about a ghost's pose is the wire's, and the
+    // hold's flag must not suppress it. In adventure mode every apply target is
+    // a remote puppet (the slot==me skip in apply_snapshot stands), so the
+    // bypass is exactly the ghost bodies and never the local one.
+    if (!adventure_ghost_mode() &&
+        *(const unsigned char *)((const char *)a + player::kIsNoControl)) {
         ++g_stats.pose_held;
         return;
     }
@@ -794,6 +871,10 @@ void sync_send_own() {
     e->vx = g_vel[0];
     e->vy = g_vel[1];
     e->vz = g_vel[2];
+    /* v4: the level this console is in, so a receiver ghosts only peers in its
+       own level. data_0209f2f8 is signed (levels 0..51); widen through int so a
+       hypothetical negative id does not sign-extend into the u16. */
+    e->level_id = (unsigned short)(int)data_0209f2f8;
 
     const int len = (int)sizeof(SyncMsgV1) + (int)sizeof(SyncPlayerV1);
     if (t->send_aux(buf, len) == len) {
@@ -899,6 +980,45 @@ void apply_snapshot(const unsigned char *buf, int n) {
                              slot, (unsigned)e->anim_id, GetTickCount());
             g_arr_seen[slot] = true;
             g_arr_anim[slot] = e->anim_id;
+        }
+
+        /* ADVENTURE GHOSTS: a ghost is a PURE FOLLOWER. Record this snapshot as
+           the slot's follow target and apply the pose, but do NOT move the body
+           here -- port_adventure_ghost_follow eases it toward the target every
+           render frame, which is what makes it smooth instead of stepping on the
+           receive frames and drifting on ROM physics between them. This slot is
+           never the local one (the slot==me skip above stands), so local_writes
+           stays 0. VS mode falls through to the correction logic below unchanged. */
+        if (adventure_ghost_mode()) {
+            /* PRESENCE (M2): record this peer's level and mark it seen NOW, so
+               peer_visible() can tell whether this slot shares our level and
+               whether it is still live. Recorded for EVERY received snapshot,
+               same-level or not -- the level compare is peer_visible()'s job, and
+               a body only drops out of visible when its level stops matching or
+               its snapshots stop arriving. */
+            g_peer_level[slot] = (int)e->level_id;
+            g_peer_seen_ms[slot] = GetTickCount();
+            g_peer_present[slot] = true;
+            g_gtarget[slot].have = true;
+            g_gtarget[slot].x = e->x;
+            g_gtarget[slot].y = e->y;
+            g_gtarget[slot].z = e->z;
+            g_gtarget[slot].yaw = e->yaw;
+            g_gtarget[slot].teleport = (e->flags & kFlagTeleport) != 0;
+            /* the sender's own per-frame velocity, so the follower can advance
+               the target continuously between the ~30 Hz snapshots instead of
+               letting it step. */
+            g_gtarget[slot].vx = e->vx;
+            g_gtarget[slot].vz = e->vz;
+            /* the animation is not applied here -- the follower drives it every
+               render frame so the ROM's per-frame reset cannot flicker it. Just
+               record the wire's id and re-sync the playback cursor to the
+               sender's own so the ghost stays in phase with its walk cycle. */
+            g_ganim[slot] = e->anim_id;
+            g_gcursor[slot] = e->anim_frame;
+            g_ganim_have[slot] = true;
+            ++g_stats.applied;
+            continue;
         }
 
         int *px = player::pos_x(a);
@@ -1019,6 +1139,190 @@ void handle_ping(const unsigned char *buf, int n) {
                                   ? (g_stats.rtt_avg_ms * 7 + rtt) / 8
                                   : rtt;
         ++g_stats.pongs;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TEST HOOK for the adventure-ghost probe (port/tests/smoke_player.cpp). Builds
+// a REAL v3 snapshot naming `slot` at the given pose and runs it through the
+// ACTUAL apply path, so a headless smoke can prove the ghost drive -- a wire
+// message moving the REMOTE body and never the local one -- without a second
+// instance on the loopback carrier. It uses the wire structs defined above, not
+// a copy of them, and the real apply_snapshot, so the probe cannot drift from
+// what the network path does. anim_id is taken from the target body so
+// apply_pose sees no id change; the teleport flag makes the position land
+// exactly for a clean assert. Inert unless called.
+extern "C" void port_adventure_probe_apply_lvl(int slot, int x, int y, int z,
+                                               short yaw, int level) {
+    if (slot < 0 || slot >= kCommsMaxPlayers) return;
+    void *a = data_0209f394[slot];
+    unsigned char buf[kSyncBufBytes];
+    SyncMsgV1 *m = (SyncMsgV1 *)buf;
+    m->magic = kSyncMagic;
+    m->version = kSyncVersion;
+    m->seq = 0;
+    m->count = 1;
+    m->pad[0] = m->pad[1] = m->pad[2] = 0;
+    SyncPlayerV1 *e = (SyncPlayerV1 *)(buf + sizeof(SyncMsgV1));
+    e->slot = (unsigned char)slot;
+    e->flags = (unsigned char)(kFlagLive | kFlagTeleport);
+    e->yaw = yaw;
+    e->x = x;
+    e->y = y;
+    e->z = z;
+    e->anim_id = a ? player::anim_id(a) : 0;
+    e->state_id = 0;
+    e->anim_frame = a ? player::anim_frame(a) : 0;
+    e->vx = e->vy = e->vz = 0;
+    /* v4: the injected peer's level. The M2 presence proof passes a level that
+       is NOT this console's to prove the filter despawns it; the M1 proof (via
+       port_adventure_probe_apply below) passes our own level so the ghost is
+       same-level and visible, exactly as the M1 assert expects. */
+    e->level_id = (unsigned short)level;
+    apply_snapshot(buf, (int)(sizeof(SyncMsgV1) + sizeof(SyncPlayerV1)));
+}
+
+// The M1 face: inject at THIS console's own level, so the ghost is same-level
+// and visible. Unchanged signature, so the M1 proof and its callers are
+// untouched by the v4 level field.
+extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
+                                           short yaw) {
+    port_adventure_probe_apply_lvl(slot, x, y, z, yaw, (int)data_0209f2f8);
+}
+
+// ---------------------------------------------------------------------------
+// ADVENTURE co-op (M2): the presence predicate. The single question every
+// ghost loop asks -- render, hold-follow, name tag -- so "is this remote body a
+// ghost I should draw right now" is answered in one place and cannot drift
+// between the four sites. True when:
+//   - adventure mode is on (VS and solo never ghost),
+//   - the slot is a real remote slot (not out of range, not the local body),
+//   - the peer is PRESENT: a snapshot arrived inside kPresenceTimeoutMs, so a
+//     peer that quit or dropped its link despawns after the timeout, and
+//   - the peer is in the SAME level: its last reported level id equals this
+//     console's data_0209f2f8. A peer that warps away, or that we warp away
+//     from, stops matching and despawns on the very next frame.
+// This is the whole of the spawn/despawn mechanism: the Player bodies are
+// seated once at level boot (vs_player_count), and which of them is DRAWN and
+// DRIVEN as a ghost is this predicate, re-evaluated every frame.
+// ---------------------------------------------------------------------------
+namespace {
+bool peer_visible(int slot) {
+    if (!adventure_ghost_mode()) return false;
+    if (slot < 0 || slot >= kCommsMaxPlayers) return false;
+    if (slot == (int)data_0209f250) return false;
+    if (!g_peer_present[slot]) return false;
+    if ((unsigned)(GetTickCount() - g_peer_seen_ms[slot]) > kPresenceTimeoutMs)
+        return false;
+    if (g_peer_level[slot] != (int)data_0209f2f8) return false;
+    return true;
+}
+}  // namespace
+
+// The extern "C" face the other host TUs gate on (walk_window's render loop,
+// player_bridges' hold, nametag.h's tag). Same predicate, one authority.
+extern "C" int port_adventure_peer_visible(int slot) {
+    return peer_visible(slot) ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------
+// ADVENTURE GHOSTS: the pure-follower step. Called once per RENDER frame from
+// the walk loop, AFTER sync_tick (so the target is this frame's freshest) and
+// after the ROM actor tick (so it OVERRIDES the physics the ghost would
+// otherwise drift under). For each remote slot with a target it eases the body
+// toward the last received snapshot -- position and facing -- at a fixed
+// per-frame fraction, and zeros the body's own speed so the ROM cannot keep
+// integrating it. That is the whole of "a ghost is a smooth pure follower":
+// the rendered position is this eased value every frame, not the ~30 Hz
+// receive-frame correction with ROM drift in between. The local body is never
+// touched (the i == me skip), so local_writes stays 0. SM64DS_ADVENTURE_FOLLOW
+// tunes the ease fraction (percent per frame, default 40). A teleport snapshot
+// lands exactly rather than sliding across the level.
+static int g_follow_diag = -1;
+static unsigned g_follow_fcount = 0;
+extern "C" void port_adventure_ghost_follow() {
+    if (!adventure_ghost_mode()) return;
+    static int fpct = -1;
+    if (fpct < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_FOLLOW");
+        fpct = e ? std::atoi(e) : 40;
+        if (fpct < 1) fpct = 1;
+        if (fpct > 100) fpct = 100;
+    }
+    if (g_follow_diag < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_DIAG");
+        g_follow_diag = e ? std::atoi(e) : 0;   /* value = log stride, 0 = off */
+    }
+    ++g_follow_fcount;
+    const int me = (int)data_0209f250;
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        if (i == me) continue;
+        /* PRESENCE (M2): only DRIVE a ghost that is present in this console's
+           level. A peer in another level (or gone quiet) is despawned -- its
+           body is left where it was, undriven, and the render/name-tag loops
+           skip it on the same predicate, so nothing about it shows. */
+        if (!peer_visible(i)) continue;
+        if (!g_gtarget[i].have) continue;
+        void *a = data_0209f394[i];
+        if (!a) continue;
+        GhostTarget &t = g_gtarget[i];
+        int *px = player::pos_x(a), *py = player::pos_y(a), *pz = player::pos_z(a);
+        if (t.teleport) {
+            /* a warp snaps everything -- position and facing -- because there is
+               no smooth path between a body's two sides of a teleport. */
+            *px = t.x; *py = t.y; *pz = t.z;
+            *player::facing(a) = t.yaw;
+        } else {
+            /* DEAD-RECKON THE TARGET one frame at the sender's own velocity, so
+               the target moves continuously and the follower does not beat at the
+               ~30 Hz snapshot cadence. The next snapshot overwrites x/z with the
+               true value, correcting any extrapolation error. Y is not reckoned
+               (it is a parabola under gravity); the body eases toward the last
+               received Y. Velocity is clamped GENEROUSLY -- 64 units/frame,
+               unlike apply_snapshot's 3-unit corrector ceiling -- because a
+               follower target must move at the sender's REAL speed (a dash is
+               ~18 units/frame, far over 3) or the target steps at the snapshot
+               cadence and the ghost beats; 64 still guards a garbage delta. */
+            int vx = t.vx, vz = t.vz;
+            const int vcap = units(64);
+            if (vx > vcap) vx = vcap; else if (vx < -vcap) vx = -vcap;
+            if (vz > vcap) vz = vcap; else if (vz < -vcap) vz = -vcap;
+            t.x += vx;
+            t.z += vz;
+            *px += (t.x - *px) * fpct / 100;
+            *py += (t.y - *py) * fpct / 100;
+            *pz += (t.z - *pz) * fpct / 100;
+            /* facing eased the SHORT way: the signed 16-bit wrap of
+               (target - cur) is the shortest angular delta, so a ghost turning
+               past 0 does not spin the long way round. */
+            const short cur = *player::facing(a);
+            const short d = (short)(t.yaw - cur);
+            *player::facing(a) = (short)(cur + (int)d * fpct / 100);
+        }
+        /* suppress the ROM physics drift on the puppet: zero the Actor's own
+           horizontal (+0x98) and vertical (+0xa8) speed so nothing integrates
+           the body away from the target between snapshots. */
+        *(int *)((char *)a + 0x98) = 0;
+        *(int *)((char *)a + 0xa8) = 0;
+        /* DRIVE THE ANIMATION EVERY FRAME. The ROM's own Player::Behavior ran on
+           this ghost earlier in the frame and reset its pose to the spawn
+           no-control animation; re-issuing the wire animation here, after that,
+           makes the follower's animation the last word each frame instead of a
+           value that only lands on the ~30 Hz receive frames. The cursor is
+           advanced one frame per render frame (speed 1.0 in 20.12) so the cycle
+           plays, and re-synced to the sender's cursor on every snapshot above so
+           it does not drift out of phase. SetAnim is the legal cursor road (it
+           forces the slow-path reset that makes startFrame land); a raw +0x58
+           store would fire the animation's WillHitFrame events twice. */
+        if (g_ganim_have[i]) {
+            g_gcursor[i] += 0x1000;
+            _ZN6Player7SetAnimEji5Fix12IiEj(a, g_ganim[i], 0, 0x1000,
+                                            (unsigned)(g_gcursor[i] >> 12));
+        }
+        if (g_follow_diag > 0 && (g_follow_fcount % (unsigned)g_follow_diag) == 0)
+            std::fprintf(stderr, "[advfollow] slot%d render anim=%u cur=%d\n",
+                         i, (unsigned)player::anim_id(a),
+                         player::anim_frame(a) >> 12);
     }
 }
 

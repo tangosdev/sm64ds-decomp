@@ -15,6 +15,8 @@
 #include "NestedHeapIterator.h"
 #include "Player.h"
 #include "player_fields.h"   /* run mg16 lane MP4: the one place field offsets live */
+#include "host_settings.h"   /* port::adventure_ghost_mode() for the ghost pass */
+#include "comms_seam.h"      /* port::sync_stats(): the local-write witness */
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "Heap.h"
@@ -305,11 +307,322 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
         ((void ***)head)[0][4]))(head, 0, 0);
 }
 
-/* run mg16 lane MP3: the two globals Player::Render's own gates read. */
+/* run mg16 lane MP3: the two globals Player::Render's own gates read. The
+   per-slot Player table and the local-player index are read by the adventure
+   ghost pass below (declared here so hal_render_player_world can tell a remote
+   body from the local one; also declared later at their first non-ghost use). */
 extern "C" {
 extern unsigned char data_0209f2d8;   /* VS mode flag */
 extern unsigned char data_0209fc5c[]; /* per-slot "this slot is live"; BYTE
                                          stride, the ROM's own width */
+extern void *data_0209f394[];         /* per-slot Player* */
+extern unsigned char data_0209f250;   /* local player index */
+}
+
+/* ---- THE GHOST ALPHA -------------------------------------------------------
+   The DS polygon alpha is 5 bits (0..31); func_02046208 writes it into the
+   0x1f0000 field of every material's polygon attribute. 31 is fully opaque and
+   1 is nearly gone; 0 is NOT invisible, it is the DS's wireframe mode, so the
+   floor here is 1. The default is a ghostly ~40%. SM64DS_ADVENTURE_ALPHA tunes
+   it for the visual check without a rebuild. */
+static unsigned ghost_alpha()
+{
+    static int a = -1;
+    if (a < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_ALPHA");
+        a = e ? std::atoi(e) : 12;
+        if (a < 1) a = 1;
+        if (a > 31) a = 31;
+    }
+    return (unsigned)a;
+}
+
+/* ModelBase::ApplyOpacity, the ROM's own one-argument body (method_faces.cpp
+   forwards to the matched src/_ZN9ModelBase12ApplyOpacityEj.cpp). It walks the
+   model's components and stamps the alpha into each material, the same call
+   Player::Render makes on the wings. Re-applied every frame because the
+   material flags are rebuilt by the per-frame update. */
+extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned a);
+static void ghost_opacity(void *model)
+{
+    if (model) _ZN9ModelBase12ApplyOpacityEj(model, ghost_alpha());
+}
+
+/* ---- THE NO-COLLISION HALF OF THE GHOST PASS ------------------------------
+   Once per frame, over every REMOTE live slot, re-assert the disable-
+   interaction state (status/VSMERCY.md, player_fields::disable_interaction) so
+   a ghost body cannot collide with, damage, or be damaged by the local player.
+   RE-ASSERTED every frame because Player::ChangeState re-arms all three fields
+   on every transition; a single set does not stick. The LOCAL body
+   (data_0209f250) is never touched, so the player stays fully solid and fully
+   interactive. Gated on the mode, so VS and solo are byte-unaffected. Called
+   from the per-frame tick in tests/walk_window.cpp, beside sync_tick. */
+extern "C" void port_adventure_ghost_hold()
+{
+    if (!port::adventure_ghost_mode()) return;
+    const int me = (int)data_0209f250;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0) continue;   /* slot not live */
+        if (void *a = data_0209f394[i])
+            port::player::disable_interaction(a);
+    }
+}
+
+/* ---- THE ADVENTURE-GHOST PROBE (SM64DS_ADVENTURE_PROBE) --------------------
+   A headless, single-instance proof of the M1 capability, run against the REAL
+   level-boot spawn (SM64DS_VS_PLAYERS=2 seats one extra body with no VS mode)
+   rather than a synthetic construction. Called once per frame from the walk
+   loop AFTER port_adventure_ghost_hold, so the three interaction flags it reads
+   on the ghost are this frame's. It asserts, and prints one [advprobe] line at
+   frame kAt+2:
+
+     - a ghost body exists at a remote live slot (i != data_0209f250);
+     - this is NOT VS mode (data_0209f2d8 == 0) and adventure mode is on;
+     - the ghost is held non-colliding (all three flags via interaction_disabled)
+       while the LOCAL body is not (it stays solid and interactive);
+     - the ghost CARRIES A NETWORK POSE: a real wire snapshot (port_adventure_
+       probe_apply, the actual apply_snapshot path) teleports the ghost to a
+       chosen pose and the ghost lands there while the LOCAL body does not move.
+
+   ALL PASS is the line the driver greps. Inert unless the env knob is set. */
+extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
+                                           short yaw);
+extern "C" void port_adventure_ghost_follow();
+/* M2: the presence predicate and this console's level, for the diag line and
+   the presence proof below (both defined in hal/comms_sync.cpp / here). */
+extern "C" int port_adventure_peer_visible(int slot);
+extern signed char data_0209f2f8;
+extern "C" void port_adventure_probe(int frame)
+{
+    /* DIAG (SM64DS_ADVENTURE_DIAG): identity + per-slot positions, every 60
+       frames, no injection. For the live two-window bug hunt: it shows each
+       instance's local index, which slot each live body is, its position, and
+       its interaction flags, so drift and slot confusion are visible in a
+       playlog. Temporary bug-hunt instrument. */
+    {
+        static int diag = -1;
+        if (diag < 0) {
+            const char *e = std::getenv("SM64DS_ADVENTURE_DIAG");
+            diag = e ? std::atoi(e) : 0;   /* value = frame stride, 0 = off */
+        }
+        if (diag > 0 && (frame % diag) == 0) {
+            const int me = (int)data_0209f250;
+            for (int i = 0; i < kPortMaxPlayers; ++i) {
+                if (data_0209fc5c[i] == 0 && !data_0209f394[i]) continue;
+                void *a = data_0209f394[i];
+                if (!a) continue;
+                std::fprintf(stderr,
+                    "[advdiag] f%d me=%d mylev=%d slot%d%s live=%u vis=%d "
+                    "pos=(%d,%d,%d) "
+                    "yaw=%d noctl=%u clsn=%u cat4=%u anim=%u cur=%d\n",
+                    frame, me, (int)data_0209f2f8, i,
+                    i == me ? "(LOCAL)" : "(ghost)",
+                    data_0209fc5c[i],
+                    i == me ? -1 : port_adventure_peer_visible(i),
+                    *port::player::pos_x(a), *port::player::pos_y(a),
+                    *port::player::pos_z(a), (int)*port::player::facing(a),
+                    *(unsigned char *)((char *)a + port::player::kIsNoControl),
+                    *(unsigned char *)((char *)a + port::player::kIsBodyClsnEnabled),
+                    (*(unsigned *)((char *)a + port::player::kBodyColliderFlags) & 4u) ? 1u : 0u,
+                    (unsigned)port::player::anim_id(a),
+                    port::player::anim_frame(a) >> 12);
+            }
+        }
+    }
+
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_ADVENTURE_PROBE") ? 1 : 0;
+    if (!on) return;
+
+    /* One shot, late enough that the level has booted and both bodies are past
+       the level-entry no-control. Inject AND verify in the SAME frame so the
+       ghost cannot drift under its own physics between set and read, and so the
+       local-write witness reads exactly this one apply. */
+    static bool done = false;
+    const int kAt = 90;
+    if (frame != kAt || done) return;
+
+    const int me = (int)data_0209f250;
+    void *localb = (me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0;
+    int ghost_slot = -1;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0) continue;
+        if (data_0209f394[i]) { ghost_slot = i; break; }
+    }
+    done = true;
+
+    int fails = 0;
+    const bool have_ghost = ghost_slot >= 0 && localb;
+    const bool not_vs = data_0209f2d8 == 0;
+    const bool adv_on = port::adventure_ghost_mode();
+    bool ghost_held = false, local_free = false, pose_ok = false,
+         local_untouched = false;
+
+    if (have_ghost) {
+        void *g = data_0209f394[ghost_slot];
+        /* the hold already ran this frame (walk_window calls it first), so the
+           three interaction flags are freshly set on the ghost and untouched on
+           the local body. */
+        ghost_held = port::player::interaction_disabled(g);
+        local_free = !port::player::interaction_disabled(localb);
+
+        /* drive one REAL wire snapshot into the ghost, 4 units off its own
+           position with a distinct yaw. The local body must NOT move under it:
+           the sync layer's own witness counts any change to the local body
+           across the apply call, and it must stay zero. */
+        const int tx = *port::player::pos_x(g) + 4 * 0x1000;
+        const int ty = *port::player::pos_y(g);
+        const int tz = *port::player::pos_z(g) + 4 * 0x1000;
+        const short tyaw = (short)0x2000;
+        const unsigned long long lw0 = port::sync_stats().local_writes;
+        port_adventure_probe_apply(ghost_slot, tx, ty, tz, tyaw);
+        /* the ghost is a pure follower now: apply_snapshot records the target and
+           port_adventure_ghost_follow moves the body. Run one follower step here
+           so the teleport target lands this frame for the exact assert below,
+           the same call the walk loop makes every frame after sync_tick. */
+        port_adventure_ghost_follow();
+        const unsigned long long lw1 = port::sync_stats().local_writes;
+
+        pose_ok = *port::player::pos_x(g) == tx &&
+                  *port::player::pos_z(g) == tz &&
+                  *port::player::facing(g) == tyaw;
+        local_untouched = (lw1 == lw0);
+    }
+
+    if (!have_ghost) ++fails;
+    if (!not_vs) ++fails;
+    if (!adv_on) ++fails;
+    if (!ghost_held) ++fails;
+    if (!local_free) ++fails;
+    if (!pose_ok) ++fails;
+    if (!local_untouched) ++fails;
+    std::fprintf(stderr,
+        "[advprobe] ghost_slot=%d have_ghost=%d not_vs=%d adv_on=%d "
+        "ghost_held=%d local_free=%d pose_carried=%d local_untouched=%d "
+        "=> %s\n",
+        ghost_slot, have_ghost, not_vs, adv_on, ghost_held, local_free,
+        pose_ok, local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
+}
+
+/* ---- THE ADVENTURE PRESENCE PROOF (SM64DS_ADVENTURE_PRESENCE) --------------
+   M2's headless proof: the level filter and N independent ghosts, on one
+   instance, through the REAL apply path. It seats >=2 remote bodies
+   (SM64DS_VS_PLAYERS=3, data_0209f2d8 left 0 so no VS mode) and drives them
+   with real v4 wire snapshots that carry a LEVEL ID, then asserts what a
+   multi-instance session would show:
+
+     - SAME-LEVEL peer is VISIBLE: a snapshot naming this console's own level
+       spawns the ghost -- peer_visible is 1 and the follower moves the body to
+       the wire pose.
+     - DIFFERENT-LEVEL peer is DESPAWNED: a snapshot naming another level leaves
+       peer_visible 0 and the follower does NOT move that body, so nothing of it
+       is drawn -- two peers on the same wire, only the same-level one ghosted.
+     - LEVEL CHANGE despawns and LEVEL ENTRY respawns: re-report the visible
+       peer in another level and it drops out (peer_visible 0, body frozen);
+       re-report the far peer in our level and it comes in (peer_visible 1, body
+       driven). That is a scripted peer changing level, both edges.
+     - THE LOCAL BODY IS NEVER WRITTEN across any of it (the sync layer's own
+       local_writes witness stays put), and this is NOT VS mode.
+
+   Two remote slots driven independently by their own snapshots is the N-ghost
+   generalisation in miniature: the same per-slot loop the render and tag walk,
+   proven to keep two ghosts apart. Prints one [advpresence] line with ALL PASS.
+   Inert unless the knob is set. */
+extern "C" void port_adventure_probe_apply_lvl(int slot, int x, int y, int z,
+                                               short yaw, int level);
+extern "C" void port_adventure_presence_probe(int frame)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_ADVENTURE_PRESENCE") ? 1 : 0;
+    if (!on) return;
+    static bool done = false;
+    const int kAt = 100;
+    if (frame != kAt || done) return;
+    done = true;
+
+    const int me = (int)data_0209f250;
+    const int mylev = (int)data_0209f2f8;
+    const int otherlev = mylev + 7;     /* an id that is not ours */
+
+    /* the first two REMOTE live bodies -- the N-ghost pair */
+    int sA = -1, sB = -1;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0 || !data_0209f394[i]) continue;
+        if (sA < 0) sA = i; else if (sB < 0) { sB = i; break; }
+    }
+    void *localb = (me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0;
+
+    int fails = 0;
+    const bool not_vs = data_0209f2d8 == 0;
+    const bool adv_on = port::adventure_ghost_mode();
+    const bool have_pair = sA >= 0 && sB >= 0 && localb;
+    bool visA_same = false, visB_diff = false, drawnA = false, frozenB = false;
+    bool visA_after = false, visB_after = false, frozenA2 = false, drawnB2 = false;
+    bool local_untouched = false;
+
+    if (have_pair) {
+        void *ba = data_0209f394[sA], *bb = data_0209f394[sB];
+        const unsigned long long lw0 = port::sync_stats().local_writes;
+
+        /* PHASE 1: A in our level (spawn), B in another (despawn). */
+        const int ax = *port::player::pos_x(ba) + 4 * 0x1000;
+        const int az = *port::player::pos_z(ba) + 4 * 0x1000;
+        const int bx0 = *port::player::pos_x(bb), bz0 = *port::player::pos_z(bb);
+        port_adventure_probe_apply_lvl(sA, ax, *port::player::pos_y(ba), az,
+                                       (short)0x1000, mylev);
+        port_adventure_probe_apply_lvl(sB, bx0 + 4 * 0x1000,
+                                       *port::player::pos_y(bb),
+                                       bz0 + 4 * 0x1000, (short)0x1000, otherlev);
+        visA_same = port_adventure_peer_visible(sA) != 0;
+        visB_diff = port_adventure_peer_visible(sB) == 0;
+        port_adventure_ghost_follow();
+        drawnA = *port::player::pos_x(ba) == ax && *port::player::pos_z(ba) == az;
+        frozenB = *port::player::pos_x(bb) == bx0 &&
+                  *port::player::pos_z(bb) == bz0;   /* not driven: despawned */
+
+        /* PHASE 2: A changes to another level (despawn), B enters ours (spawn). */
+        const int ax2 = *port::player::pos_x(ba), az2 = *port::player::pos_z(ba);
+        const int bx2 = *port::player::pos_x(bb) + 6 * 0x1000;
+        const int bz2 = *port::player::pos_z(bb) + 6 * 0x1000;
+        port_adventure_probe_apply_lvl(sA, ax2 + 9 * 0x1000,
+                                       *port::player::pos_y(ba),
+                                       az2 + 9 * 0x1000, (short)0x2000, otherlev);
+        port_adventure_probe_apply_lvl(sB, bx2, *port::player::pos_y(bb), bz2,
+                                       (short)0x2000, mylev);
+        visA_after = port_adventure_peer_visible(sA) == 0;   /* left our level */
+        visB_after = port_adventure_peer_visible(sB) != 0;   /* entered it */
+        port_adventure_ghost_follow();
+        frozenA2 = *port::player::pos_x(ba) == ax2 &&
+                   *port::player::pos_z(ba) == az2;   /* despawned: frozen */
+        drawnB2 = *port::player::pos_x(bb) == bx2 &&
+                  *port::player::pos_z(bb) == bz2;     /* spawned: driven */
+
+        local_untouched = port::sync_stats().local_writes == lw0;
+    }
+
+    if (!have_pair) ++fails;
+    if (!not_vs) ++fails;
+    if (!adv_on) ++fails;
+    if (!visA_same) ++fails;
+    if (!visB_diff) ++fails;
+    if (!drawnA) ++fails;
+    if (!frozenB) ++fails;
+    if (!visA_after) ++fails;
+    if (!visB_after) ++fails;
+    if (!frozenA2) ++fails;
+    if (!drawnB2) ++fails;
+    if (!local_untouched) ++fails;
+    std::fprintf(stderr,
+        "[advpresence] slotA=%d slotB=%d mylev=%d otherlev=%d have_pair=%d "
+        "not_vs=%d adv_on=%d visA_same=%d visB_diff=%d drawnA=%d frozenB=%d "
+        "visA_left=%d visB_entered=%d frozenA2=%d drawnB2=%d local_untouched=%d "
+        "=> %s\n",
+        sA, sB, mylev, otherlev, have_pair, not_vs, adv_on, visA_same, visB_diff,
+        drawnA, frozenB, visA_after, visB_after, frozenA2, drawnB2,
+        local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------
@@ -625,6 +938,14 @@ extern "C" int port_player_render_hidden(const void *player)
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
+    /* ADVENTURE GHOSTS: a REMOTE body drawn see-through. This is the render
+       half of the ghost pass; the no-collision half is port_adventure_ghost_hold
+       below. Remote means "not the body at the local player's slot" -- the same
+       body the per-slot render loop in tests/walk_window.cpp draws last and never
+       ghosts. The mode gate keeps VS and solo byte-unaffected: adventure mode is
+       its own flag, never data_0209f2d8. */
+    const bool ghost = port::adventure_ghost_mode() &&
+                       player != data_0209f394[data_0209f250];
     std::size_t vscol_tris0 = 0;
     static int vscol_frame = -1;
     if (vscol_on()) {
@@ -743,6 +1064,10 @@ void hal_render_player_world(void *player)
     for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
     ma->ModelAnim::UpdateVerts();
     hal_player_vs_palette(c, (char *)ma);
+    /* see-through, last before the draw so the per-frame material rebuild
+       (UpdateVerts, the palette stamp) is already done and the alpha is what
+       the raster reads. */
+    if (ghost) ghost_opacity(ma);
     ma->ModelAnim::Render(0);
     hal_player_texseq_body(c);
 
@@ -752,6 +1077,7 @@ void hal_render_player_world(void *player)
         if (head) {
             yhd_probe(c, scene, head);
             hal_player_vs_palette(c, head);
+            if (ghost) ghost_opacity(head);
             hal_render_head_group(c, head, hid, ma, scene);
             hal_player_texseq_head(c, hid);
         }

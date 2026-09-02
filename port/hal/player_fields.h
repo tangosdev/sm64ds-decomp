@@ -106,6 +106,23 @@ enum : unsigned {
     // hal/comms_sync.cpp's apply_pose for what applying a stale wire animation
     // over one of those does.
     kIsNoControl = 0x709,
+
+    // mIsBodyClsnEnabled -- 1 while the body cylinder participates in the
+    // collision system, 0 while it is taken out entirely. include/Player.h
+    // names it at 0x713. The ROM's player-vs-player hit path refuses on it
+    // (func_ov002_020d869c's first line returns when it is 0, status/VSMERCY.md
+    // section 1), and St_NoControl_Main step 2 (func_ov002_020c7ff8) clears it
+    // for a scripted sequence; Player::ChangeState:76 restores it to 1. The
+    // ghost hold clears it so a ghost body cannot be touched.
+    kIsBodyClsnEnabled = 0x713,
+
+    // The body collider's flags. Player_DisableInteraction (0x020c9e40) raises
+    // bit 2 (|= 4) here at the same time it sets mIsNoControl, and
+    // func_ov002_020c9e18 clears both; ChangeState calls the clear on every
+    // transition. Named beside the two flags it moves with (status/VSMERCY.md
+    // section 1's "three layers arm on the same frame"). The ghost hold sets
+    // bit 2 so the collider is categorised out of interaction.
+    kBodyColliderFlags = 0x2ec,
 };
 
 // The Player::State table. NOT an array symbol -- 78 individually named .bss
@@ -231,6 +248,30 @@ inline unsigned short state_timer(const void *p) {
 }
 inline unsigned short invincible_timer(const void *p) {
     return *(const unsigned short *)((const char *)p + kInvincibleTimer);
+}
+
+// ---- THE DISABLE-INTERACTION STATE, set together the way the ROM sets it ---
+// Player_DisableInteraction (0x020c9e40) sets mIsNoControl and raises bit 2 of
+// the body collider's flags; St_NoControl_Main's step 2 clears
+// mIsBodyClsnEnabled. status/VSMERCY.md section 1 calls these "three layers
+// arm on the same frame". A ghost body is held in exactly that state so it
+// cannot be touched, cannot land a touch, and is not driven by control. The
+// ROM re-arms them on every ChangeState (mIsBodyClsnEnabled at ChangeState:76,
+// the other two through func_ov002_020c9e18), so a holder must RE-ASSERT every
+// frame; a single set does not stick.
+inline void disable_interaction(void *p) {
+    *(unsigned char *)((char *)p + kIsBodyClsnEnabled) = 0;
+    *(unsigned *)((char *)p + kBodyColliderFlags) |= 4u;
+    *(unsigned char *)((char *)p + kIsNoControl) = 1;
+}
+
+// All three layers currently held. The probe reads this to assert a ghost body
+// is non-colliding, and the same predicate is the local player's negative: the
+// local body must never read as interaction-disabled.
+inline bool interaction_disabled(const void *p) {
+    return *(const unsigned char *)((const char *)p + kIsBodyClsnEnabled) == 0 &&
+           (*(const unsigned *)((const char *)p + kBodyColliderFlags) & 4u) != 0 &&
+           *(const unsigned char *)((const char *)p + kIsNoControl) != 0;
 }
 
 // ---------------------------------------------------------------------------

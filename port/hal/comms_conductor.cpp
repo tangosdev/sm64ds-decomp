@@ -84,6 +84,8 @@
 
 #include "comms_seam.h"
 #include "player_fields.h"   // run mg16 lane MP4: state_id for the VS probe
+#include "host_settings.h"   // adventure_ghost_mode(): fan-out stands down so an
+                             // adventure console runs its own solo game
 /* hal/comms_loopback.h is deliberately NOT included: nothing in this file may
    know which transport is installed. The re-seat used to read the loopback
    carrier's stats struct for the role and now takes it from state(), which is
@@ -622,6 +624,16 @@ bool comms_fanout_active() {
         forced = s ? (std::atoi(s) != 0) : -1;
     }
     if (forced >= 0) return forced != 0;
+    // ADVENTURE GHOSTS run each console as its OWN solo game: the local player
+    // is driven by local input and the remote body is a puppet corrected only
+    // by the aux sync channel, never by the lockstep input fan-out. Fanning the
+    // wire's records into the pad arrays would drive the LOCAL player off the
+    // wire and stop the game being solo, which is the one thing adventure mode
+    // must keep. The lockstep exchange still runs (it is what keeps the aux
+    // channel connected); only the record-to-pad fan-out stands down. An
+    // explicit SM64DS_COMMS_FANOUT still wins, handled above, for a proof that
+    // deliberately wants the shared-input path.
+    if (adventure_ghost_mode()) return false;
     return comms_transport() != nullptr;
 }
 

@@ -650,6 +650,13 @@ int g_mouse_capture;
    rather than a mod. */
 int g_name_tags = 1;
 
+/* AdventureGhosts: 1 when the player asked to play the single-player adventure
+   together, seeing other players as see-through ghosts. Default 0, and 0 is
+   the ROM's own solo game. Unlike NameTags the default is OFF -- see the
+   header for why a MODE defaults off where a presentation preference defaults
+   on. Read live like the gap keys; the accessor also honours SM64DS_ADVENTURE. */
+int g_adventure_ghosts = 0;
+
 /* Steps once per live re-read that changed an answer. hal/screen_gap.cpp
    latches on it. */
 int g_setgen;
@@ -847,6 +854,7 @@ void load_once(void)
     g_mouse_capture = 0;
     g_custom_palette = 0;
     g_name_tags = 1;
+    g_adventure_ghosts = 0;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
     g_padlayout_n = 0;
@@ -940,6 +948,10 @@ void load_once(void)
            written before this key existed reads as a file that left it on,
            which is what a player who never opened the dialog expects. */
         g_name_tags = json_bool(text, "NameTags", 1);
+        /* the adventure-ghost mode, read against its own default of OFF beside
+           the keys above: a file written before this key existed reads as one
+           that left it off, which is the ROM's solo game. */
+        g_adventure_ghosts = json_bool(text, "AdventureGhosts", 0);
         {
             char who[24];
             if (json_str(text, "LovesMeCharacter", who, sizeof who))
@@ -1061,6 +1073,14 @@ void load_once(void)
                         "holds the pointer and bare mouse movement turns the "
                         "camera, with no right button held. Escape hands the "
                         "pointer back (it opens the debug menu). (%s)\n", path);
+    /* Said on its own line and in plain words, because this key changes what
+       the session IS -- a solo game that opens the wire and draws other
+       players as ghosts -- rather than how a body already on the wire looks. */
+    if (g_adventure_ghosts)
+        fprintf(stderr, "[settings] AdventureGhosts on -- this is a solo game "
+                        "that opens the network and draws other players in the "
+                        "same level as see-through, walk-through ghosts. No "
+                        "shared world. (%s)\n", path);
     if (g_lovesme_character)
         fprintf(stderr, "[settings] LovesMeCharacter %s -- the Loves "
                         "Me...? minigame's Yoshi is replaced at the file "
@@ -1117,6 +1137,10 @@ int reload_live(const char *text)
        it costs nothing to change mid-run, and the launcher's dialog promises a
        restart only for the Mods panel. */
     const int tags = json_bool(text, "NameTags", g_name_tags);
+    /* reloads live beside NameTags for the same reason: the ghost render and
+       no-collision paths read it per frame, so the launcher's dialog can turn
+       the mode on and off with the game already running. */
+    const int adv = json_bool(text, "AdventureGhosts", g_adventure_ghosts);
     int fill = g_gap_fill;
     unsigned color = g_gap_color;
     int vol = g_volume;
@@ -1137,7 +1161,7 @@ int reload_live(const char *text)
     }
     if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
         color != g_gap_color || vol != g_volume || mcap != g_mouse_capture ||
-        tags != g_name_tags) {
+        tags != g_name_tags || adv != g_adventure_ghosts) {
         g_gap_on = gap;
         g_gap_peek = peek;
         g_gap_fill = fill;
@@ -1145,16 +1169,18 @@ int reload_live(const char *text)
         g_volume = vol;
         g_mouse_capture = mcap;
         g_name_tags = tags;
+        g_adventure_ghosts = adv;
         changed = 1;
         fprintf(stderr, "[settings] live re-read: MinigameGap %s, fill %s "
                 "#%06x, peek %s, volume %d, mouse capture %s, "
-                "name tags %s\n",
+                "name tags %s, adventure ghosts %s\n",
                 g_gap_on ? "on" : "OFF",
                 g_gap_fill == 0   ? "solid"
                 : g_gap_fill == 2 ? "custom"
                                   : "ambient",
                 g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", g_volume,
-                g_mouse_capture ? "ON" : "off", g_name_tags ? "on" : "OFF");
+                g_mouse_capture ? "ON" : "off", g_name_tags ? "on" : "OFF",
+                g_adventure_ghosts ? "ON" : "off");
     }
     return changed;
 }
@@ -1343,6 +1369,32 @@ extern "C" int host_setting_name_tags(void)
     load_once();
     return g_name_tags;
 }
+
+/* AdventureGhosts, plus the debug env override every host toggle in this file
+   has. SM64DS_ADVENTURE=0 forces the mode off and any other value forces it
+   on, so a proof run can pin the answer without editing a player's file; unset
+   is the file's answer, live re-read included. Read once, like every other env
+   in this file's neighbourhood. */
+extern "C" int host_setting_adventure_ghosts(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_ADVENTURE");
+        env = e ? ((e[0] == '0' && e[1] == 0) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_adventure_ghosts;
+}
+
+/* The C++ predicate the header promises. One reader, so the ghost render and
+   no-collision paths cannot drift from the accessor's answer. */
+namespace port {
+bool adventure_ghost_mode()
+{
+    return host_setting_adventure_ghosts() != 0;
+}
+}  // namespace port
 
 extern "C" int host_settings_gen(void)
 {

@@ -119,6 +119,8 @@
 #ifndef PORT_TESTS_NAMETAG_H
 #define PORT_TESTS_NAMETAG_H
 
+#include <math.h>   /* the ghost tag's distance fade (nt_draw) */
+
 extern "C" {
 /* the settings key and its env override (hal/host_settings.cpp) */
 int host_setting_name_tags(void);
@@ -131,7 +133,17 @@ int func_02054d88(void);
 extern unsigned char data_0208f074[];
 /* per-slot "this slot is live", Player::Render's own guard */
 extern unsigned char data_0209fc5c[];
+/* ADVENTURE co-op (M2): is this remote slot a ghost to draw now -- present and
+   in this console's level (hal/comms_sync.cpp). The tag loop skips a peer in
+   another level so no name floats over a body that is not drawn. */
+int port_adventure_peer_visible(int slot);
 }
+
+/* ADVENTURE GHOSTS: the same head tags label the ghosts in an adventure
+   session, which is not a VS match (data_0209f2d8 stays 0). Forward-declared
+   the way the settings key above is, so this header keeps its light include
+   surface. */
+namespace port { bool adventure_ghost_mode(); }
 
 /* ---- the glyph atlas ------------------------------------------------------
    Decoded ONCE, out of the font the game itself is reading, and kept. One
@@ -222,8 +234,23 @@ static int nt_font_build(void)
    pass 1 paints the ink. The caller runs the whole line through pass 0 before
    pass 1 so a glyph's outline cannot land on its neighbour's ink. measure
    returns the width and paints nothing. */
+/* Blend src over dst by alpha 0..255. At 255 it is a plain store, so the VS
+   callers (which pass 255) paint exactly the opaque pixels they always did. */
+static inline uint32_t nt_blend(uint32_t dst, uint32_t src, int a)
+{
+    if (a >= 255) return src;
+    if (a <= 0) return dst;
+    const int ia = 255 - a;
+    const uint32_t sr = (src >> 16) & 0xFF, sg = (src >> 8) & 0xFF, sb = src & 0xFF;
+    const uint32_t dr = (dst >> 16) & 0xFF, dg = (dst >> 8) & 0xFF, db = dst & 0xFF;
+    const uint32_t r = (sr * a + dr * ia) / 255;
+    const uint32_t g = (sg * a + dg * ia) / 255;
+    const uint32_t b = (sb * a + db * ia) / 255;
+    return 0xFF000000u | (r << 16) | (g << 8) | b;
+}
+
 static int nt_line(const OvlSurface &fb, int x0, int y0, const char *s,
-                   int scale, uint32_t rgb, int pass, int measure)
+                   int scale, uint32_t rgb, int pass, int measure, int alpha = 255)
 {
     int x = x0;
     for (; *s; ++s) {
@@ -248,8 +275,10 @@ static int nt_line(const OvlSurface &fb, int x0, int y0, const char *s,
                                 if (qx < 0 || qx >= ntr::SCREEN_W ||
                                     qy < 0 || qy >= ntr::SCREEN_H)
                                     continue;
-                                fb.px[(size_t)qy * (size_t)fb.stride + qx] =
-                                    pass ? rgb : 0xFF000000u;
+                                const size_t idx =
+                                    (size_t)qy * (size_t)fb.stride + qx;
+                                fb.px[idx] = nt_blend(fb.px[idx],
+                                    pass ? rgb : 0xFF000000u, alpha);
                             }
                     }
             }
@@ -259,12 +288,12 @@ static int nt_line(const OvlSurface &fb, int x0, int y0, const char *s,
 }
 
 static void nt_text_centred(const OvlSurface &fb, int cx, int y, const char *s,
-                            int scale, uint32_t rgb)
+                            int scale, uint32_t rgb, int alpha = 255)
 {
     const int w = nt_line(fb, 0, 0, s, scale, rgb, 1, 1);
     const int x = cx - w / 2;
-    nt_line(fb, x, y, s, scale, rgb, 0, 0);
-    nt_line(fb, x, y, s, scale, rgb, 1, 0);
+    nt_line(fb, x, y, s, scale, rgb, 0, 0, alpha);
+    nt_line(fb, x, y, s, scale, rgb, 1, 0, alpha);
 }
 
 /* ---- the stashed frame transform ------------------------------------------
@@ -378,7 +407,11 @@ static int nt_probe(void)
    Reads only. */
 static void nt_draw(const OvlSurface &fb)
 {
-    if (data_0209f2d8 != 1) return;              /* not a VS match */
+    /* A VS match OR an adventure-ghost session -- both draw a tag over every
+       remote body. Adventure is not VS (data_0209f2d8 stays 0), so the gate is
+       the two modes, not the one flag. */
+    const bool adventure = port::adventure_ghost_mode();
+    if (data_0209f2d8 != 1 && !adventure) return;
     if (!host_setting_name_tags()) return;
     if (!nt_font_build()) return;
 
@@ -388,6 +421,11 @@ static void nt_draw(const OvlSurface &fb)
         const char *p = (const char *)data_0209f394[i];
         if (!p) continue;
         if (data_0209fc5c[i] == 0) continue;     /* Player::Render's own guard */
+        /* ADVENTURE co-op (M2): in a ghost session, only tag a peer present in
+           this console's level -- a body in another level is despawned and
+           draws nothing, so a name over it would float on empty space. VS is
+           one shared level and does not consult the filter. */
+        if (adventure && !port_adventure_peer_visible(i)) continue;
 
         const int wp[3] = {*(const int *)(p + 0x5c),
                            *(const int *)(p + 0x60) + NT_HEAD_UP,
@@ -395,14 +433,39 @@ static void nt_draw(const OvlSurface &fb)
         float sx = 0, sy = 0, d = 0;
         if (!nt_project(wp, &sx, &sy, &d)) continue;
 
-        /* THE WHOLE DISTANCE TREATMENT, and it is two tiers on purpose: a
-           continuous scale shimmers as it rounds to whole pixels. The
-           threshold is in the clip w the projection hands back, which is scene
-           units, and 200 is read off the measured range -- a four-window arena
-           films its other players at w 100..130, so an arena tag is the
-           readable size and a body across a course shrinks. */
-        const int scale = OVL_SCALE * (d < 200.0f ? 2 : 1);
+        /* SIZE. The VS tag steps up one size when the player is close (a
+           continuous scale shimmers as it rounds to whole pixels; the w<200
+           threshold is scene units, an arena films its others at w 100..130).
+           A ghost tag is a touch smaller and does not take the close step, so a
+           crowd of ghosts stays legible without shouting. */
+        const int scale = adventure ? OVL_SCALE : OVL_SCALE * (d < 200.0f ? 2 : 1);
         const int lh = NT_GH * scale + 2 * scale;
+
+        /* PROXIMITY FADE, ghosts only, on the voice lane's radii (world units,
+           VoiceNearRadius 512 full / VoiceFarRadius 3072 gone; C:/tmp/voice
+           defaults, copied so the tag and the voice it labels share a range).
+           Full opacity inside near, linear to zero at far, and NO tag at all
+           beyond it -- a name you cannot talk to is not drawn. */
+        int alpha = 255;
+        if (adventure) {
+            const char *mp = (const char *)data_0209f394[me];
+            if (mp) {
+                const double ddx = (double)(*(const int *)(p + 0x5c) -
+                                            *(const int *)(mp + 0x5c));
+                const double ddy = (double)(*(const int *)(p + 0x60) -
+                                            *(const int *)(mp + 0x60));
+                const double ddz = (double)(*(const int *)(p + 0x64) -
+                                            *(const int *)(mp + 0x64));
+                const double dist =
+                    sqrt(ddx * ddx + ddy * ddy + ddz * ddz) / 4096.0;
+                const double kNear = 512.0, kFar = 3072.0;
+                const double aa = dist <= kNear ? 1.0
+                                : dist >= kFar  ? 0.0
+                                : (kFar - dist) / (kFar - kNear);
+                alpha = (int)(aa * 255.0 + 0.5);
+            }
+            if (alpha <= 0) continue;   /* out of prox-chat range: no tag */
+        }
         /* OFF THE SCREEN ENTIRELY, with a whole tag's margin so a name that is
            half on does not flicker at the edge -- and TESTED IN FLOATS, BEFORE
            THE CASTS, because the cast is the thing that has to be made safe.
@@ -416,9 +479,15 @@ static void nt_draw(const OvlSurface &fb)
         if (!(star_yf >= -2.0f * (float)lh && star_yf <= (float)ntr::SCREEN_H))
             continue;
 
+        /* TWO LINES, and the order flips by mode. VS keeps its shipped stack,
+           stars on top and name under. A ghost wants the name first and the
+           server star count beneath it, so name takes the top row and stars
+           the bottom. Both rows sit above the head anchor either way. */
         const int cx = (int)(sx + 0.5f);
-        const int name_y = (int)(sy + 0.5f) - lh;
-        const int star_y = name_y - lh;
+        const int y_top = (int)(sy + 0.5f) - 2 * lh;
+        const int y_bot = (int)(sy + 0.5f) - lh;
+        const int name_y = adventure ? y_top : y_bot;
+        const int star_y = adventure ? y_bot : y_top;
 
         char who[24];
         const char *nick = port_vs_slot_name(i);
@@ -427,13 +496,15 @@ static void nt_draw(const OvlSurface &fb)
         else
             snprintf(who, sizeof who, "PLAYER %d", i + 1);
 
+        /* The star count is port_vs_slot_stars, the per-server VS score, and it
+           labels a ghost the same as a VS body now: how many stars that player
+           has on this server. */
         const int stars = port_vs_slot_stars(i);
         char sline[24];
-        snprintf(sline, sizeof sline, "%d STAR%s", stars,
-                 stars == 1 ? "" : "S");
+        snprintf(sline, sizeof sline, "%d STAR%s", stars, stars == 1 ? "" : "S");
 
-        nt_text_centred(fb, cx, star_y, sline, scale, 0xFFFFE060u);
-        nt_text_centred(fb, cx, name_y, who, scale, 0xFFFFFFFFu);
+        nt_text_centred(fb, cx, star_y, sline, scale, 0xFFFFE060u, alpha);
+        nt_text_centred(fb, cx, name_y, who, scale, 0xFFFFFFFFu, alpha);
 
         if (nt_probe()) {
             fprintf(stderr, "[tag] slot %d \"%s\" %s at (%.0f,%.0f) w=%.2f "
