@@ -1,9 +1,11 @@
 # LAGDELAY: the input delay is measured now, and a starve names a slot
 
-Branch `port/lagdelay`, worktree `C:\tmp\lagdelay`, base `ad09cd9f5`
-(port-mount-noseat-cluster). Own build dir `C:\tmp\lagdelay\build`, own TEMP
-`C:\tmp\lagdelaybld`, evidence `C:\tmp\lagdelay-out`. Nothing under `src/` is
-touched: `git diff ad09cd9f5 -- src/` is empty.
+Branch `port/lagdelay`, worktree `C:\tmp\lagdelay`, rebased onto `f8e154e33`
+(port-mount-noseat-cluster, with co-op M2, voice and ov070 merged; the rebase
+was clean, the shared side's comms_loopback change is the voice reader in a
+region this lane does not touch). Own build dir `C:\tmp\lagdelay\build`, own
+TEMP `C:\tmp\lagdelay\build\tmp`, evidence `C:\tmp\lagdelay-out`. Nothing under
+`src/` or `include/` is touched: `git diff f8e154e33 -- src/ include/` is empty.
 
 ## The complaint and the arithmetic under it
 
@@ -179,21 +181,32 @@ All in `port/hal/comms_loopback.cpp` unless noted. Line numbers are at
 | :2962 | the starve branch: per-slot counters and the rate-limited line |
 | :3612 | `SM64DS_COMMS_LEGACY_PEER`, the pre-0.3.3 stand-in |
 | :3639 | the sizing's arming rule and its env knobs |
+| :864 | `g_delay_mode_default`: the fallback value survives `delay_state_reset()`, so a withdrawal can actually fire (it never had: the install step captured the presize value and `lb_open()` wiped it, and no log in this tree carried a WITHDRAWN line before commit cd300205a) |
+| :1912 | `child_adopt_delay()`: the legacy stand-in reads the delay off its FIRST accept only, as a real old build does, so the proof can tell the two orderings of accept and sizing apart |
+| `port/tests/walk_window.cpp:7801` | `SM64DS_COMMS_STOP_ROUND=R`: a selftest ends at an agreed completed round rather than its own frame budget |
+| `port/tests/walk_window.cpp:12155` | `SM64DS_COMMS_STOP_GRACE_MS` (default 3000): a window that reached the stop round holds its seat, serviced and silent, so every peer hashes the same last frame before this end's BYE |
+| `port/tools/vs16_stop_sweep.sh` | the wide session to an agreed stop round, then every pairing through `dhdiff.py` untrimmed |
+| `port/tools/latejoin_proof.py` | the six-arm late-join matrix (P9) |
 | `port/tools/vs16_ladder.sh:20` | `VS16_ROOT`, `VS16_OUT`, `VS16_ASSET_ROOT` |
 
 ## Proofs
 
 All from `C:\tmp\lagdelay`, all quiet and muted (`mp2_proof.env_base`:
 CREATE_NO_WINDOW, SW_SHOWMINNOACTIVE, `SM64DS_NO_FOCUS`, `SM64DS_MINIMIZED`,
-`SM64DS_VOLUME=0`). No window was ever shown. Build sha
-`51E5B0674DFD8B10` (`build/port/walk_window.exe`), built by
-`port/build-port.cmd` with zero errors (`C:\tmp\lagdelay-out\build7.log`).
+`SM64DS_VOLUME=0`). No window was ever shown.
 
-**Which output came from which binary.** P2, P3, P4's sweep and P7 were
-run on the current binary, after the review fix. P1 and P6 predate it and
-name the earlier sha `7E837CDA1317F41A`; nothing in the review fix touches
-what they measure (the sizing arithmetic and the battery's level and scene
-arms), and they are left as recorded rather than restated from memory.
+**The current binary is sha `BFC318ADF1EA67C2`** (`build/port/walk_window.exe`),
+built from the rebased tip by `port/build-port.cmd` with zero errors and every
+post-link guard OK (`C:\tmp\lagdelay-out\build13.log`). Everything from P8 on
+ran on it, one proof at a time with nothing else on the desk: the battery
+(`proof_battery3.log`), net_proof (`proof_net3.log`), the six-arm late-join
+matrix (`proof_latejoin5.log`), the two stop-round sweeps (`proof_vsstop4b.log`,
+`proof_vsstop7b.log`) and the RTT feel arms (`proof_rttfeel.log`).
+
+**Which output came from which binary.** P1 through P7 are earlier binaries
+(`7E837CDA1317F41A`, `51E5B0674DFD8B10`) and are left as recorded; each of
+them has a re-run on the current sha in P8 through P11 that says the same
+thing or more, and where a number moved it is the later section that counts.
 
 ### P1. The sizing works and it drops starves (`C:\tmp\lagdelay-out\proof_ab.log`)
 
@@ -471,7 +484,7 @@ touches, and a run whose windows stop at an agreed round rather than an
 independent per-window frame budget would remove the question instead of
 bounding it.
 
-### P7. Late join of an old build (the blocker's own proof)
+### P7. Late join of an old build (the two-arm original; superseded by P9)
 
 `C:\tmp\lagdelay-out\latejoin_proof.py`, log
 `C:\tmp\lagdelay-out\proof_latejoin.log`. `SM64DS_COMMS_LEGACY_PEER`
@@ -524,15 +537,165 @@ rounds, and the late legacy peer was refused a seat three times over its knock
 window rather than being handed a number its clamp would have dropped.
 
 
+### P8. Battery and net_proof on the current binary
+
+`python -u port/tools/battery.py C:/tmp/lagdelay --skip-build` on
+`BFC318ADF1EA67C2`, alone on the desk (`C:\tmp\lagdelay-out\proof_battery3.log`):
+
+    smoke suite 20 of 20 ok (smoke_settings is new from the shared tree)
+    selftest level: 50 of 50 ok      selftest scene: 34 of 34 ok
+    default boot: ok -- a bare launch reaches the TITLE, 300 frames clean
+    linkage: 9242 (81.6%)            ptr_audit: 0 unhosted code pointers
+    shipcfg build: ok, walk_window.exe linked in build\port-kit (PORT_ROM_CLEAN, static CRT, 33s)
+    shipcfg selftest: ok, rc=0 and walk_window_selftest.bmp written (589,878 bytes, 5s)
+    battery: ALL GREEN
+
+The shipcfg arm is green from the battery's own line this time, not a hand
+re-run; the launching shell had the Installer directory on PATH (gap 14 is
+still open in `battery.py` itself).
+
+`python -u port/tools/net_proof.py`, same binary, alone
+(`C:\tmp\lagdelay-out\proof_net3.log`): **32 PASS, 0 FAIL, ALL GREEN**. The
+live VPS rung N6 ran this time, which is the five checks over the 27 in P3,
+and it passed including its own pipelining measurement on the real path:
+
+    N4  RTT   0 ms  600 rounds  wall 10.1s  1.00x   RTT  40 ms  38.5s  3.81x
+        RTT  80 ms  57.6s  5.71x                    RTT 120 ms  81.3s  8.05x
+        delayovf=[0, 0] on every arm
+    N5  80 ms + 5% loss + 10 ms jitter: 600 rounds, 61.8s, session ok
+    N6  LIVE RELAY over the public internet: 600/600, paired both ends,
+        input delay 4 runs the same 600 frames in 10.5s instead of 40.6s (3.85x)
+    N7  RTT  80 ms: stop-and-wait 59.8s -> input delay 3  16.7s  3.59x  starved=[748, 703]
+        RTT 120 ms: stop-and-wait 79.2s -> input delay 4  17.2s  4.61x  starved=[778, 726]
+
+N4 and N7 pin the depth by env, so they measure the pipeline and not the
+sizing; the sizing's own RTT arms are P11.
+
+### P9. The six-arm late-join matrix (`port/tools/latejoin_proof.py`)
+
+`C:\tmp\lagdelay-out\proof_latejoin5.log`, sha `BFC318ADF1EA67C2`, RELAY mode
+over a local reference relay with an induced one-way delay, one relay per arm,
+every arm alone. The matrix is a late joiner in each state of the session
+(before the freeze; after it at a depth every build can adopt; after it deeper
+than 8) crossed with the two builds (a NEW one that reports and adopts, and the
+OLD-build stand-in `SM64DS_COMMS_LEGACY_PEER`, which never reports, drops a
+depth past 8, and reads the field on its first accept only). The pre-freeze
+arms hold the parent in the lobby with `SM64DS_VS_PLAYERS=3` so a joiner can
+land after the sizing and before round 0, which is how real play is ordered.
+Every arm requires liveness first (parent and first child past 200 rounds)
+before any agreement counts.
+
+    === ARM A: OLD build joins late BEFORE the freeze with its own delay 7 ===
+      parent     closed after 1205 rounds; indelay=5 starved=1336 starvedby=1:1328,2:1030
+      child_new  closed after 1200 rounds; indelay=5 starved=1543
+      child_late closed after  900 rounds; indelay=5 starved=1140
+      parent: adaptive input delay 11 ... every peer has confirmed input delay 11 ...
+              a live peer has not reported a round trip, so the sized depth of 11 is WITHDRAWN
+              and this session falls back to 5 ... Nobody has consumed a round yet.
+      ARM A PASS (sized, withdrawn, the joiner handed 5 off its first accept and its own 7 gone)
+    === ARM B: NEW build joins late BEFORE the freeze ===
+      parent 918 rounds indelay=11 / child_new 914 indelay=11 / child_late 900 indelay=11
+      the parent recorded slot 2's report; the two-report sizing line appeared
+      ARM B PASS
+    === ARM C: OLD build joins late AFTER the freeze at a depth <= 8 ===
+      parent 993 rounds indelay=6 / child_new 993 indelay=6 / child_late 993 indelay=6
+      LIMIT  the session STALLED after the late seat: parent's last completed round 987,
+             joiner seated at round 993, joiner published 18 block(s)
+      ARM C PASS (seated on the frozen 6; the stall is gap 15)
+    === ARM D: NEW build joins late AFTER the freeze at a depth > 8 ===
+      parent 1989 rounds indelay=11 / child_new 1985 indelay=11 / child_late 0 rounds
+      REFUSED a late join from slot 2 ... frozen at input delay 11, past the 8 ...
+      ARM D PASS (refused out loud, the running pair undisturbed; this is gap 10 measured)
+    === ARM E: OLD build present from the start ===
+      parent 911 indelay=5 / child_new 910 indelay=5 / child_late 900 indelay=5
+      not every peer reported a round trip within 400ms, so the adaptive sizing stands down
+      ARM E PASS
+    === ARM F: OLD build joins late AFTER the freeze at a depth > 8 ===
+      parent 1837 indelay=11 / child_new 1832 indelay=11 / child_late 0 rounds, refused
+      ARM F PASS
+    late-join proof: ALL GREEN
+
+**Every seated peer, in every arm, closed on one indelay; every unseated peer
+was refused out loud and completed no round.** Arm A is the one that found the
+bug commit cd300205a fixes: on the binary before it, the parent and new child
+closed at 11 and the late old build at its own 7 (`proof_latejoin3.log`),
+because the WITHDRAWN branch had never once been reachable.
+
+### P10. The stop-round sweeps: P5 closed, NO DIVERGENCE at four and seven windows
+
+P5's "run-teardown effect" is explained and gone. The first stop-round run
+(`proof_vsstop4.log`, earlier binary) stopped every child at round 900 and
+three pairings still disagreed on the LAST frame only, in one player actor:
+a window that exits sends BYE, a peer that has not yet hashed its own last
+frame processes that BYE inside it (the live mask drops, the departed
+player's actor changes), and its final hash carries a departure no other
+window saw at that frame. That was the teardown effect all along. So a window
+that reaches the agreed round now holds its seat, serviced and silent, for
+`SM64DS_COMMS_STOP_GRACE_MS` (3000) before it leaves.
+
+`sh port/tools/vs16_stop_sweep.sh N 900` with `SM64DS_COMMS_INPUT_DELAY=10`
+(past the old cap) and 15 ms induced one way, sha `BFC318ADF1EA67C2`, every
+window run to the agreed round and every pairing diffed UNTRIMMED:
+
+    4 windows (proof_vsstop4b.log): p0..p3 all "completed round 900 (agreed stop 900) at frame 900"
+      6 of 6 pairings NO DIVERGENCE (common frames: 900)
+      stop sweep: NO DIVERGENCE across all 4 windows to round 900
+    7 windows (proof_vsstop7b.log): p0..p6 all "completed round 900 (agreed stop 900) at frame 900"
+      21 of 21 pairings NO DIVERGENCE (common frames: 900)
+      stop sweep: NO DIVERGENCE across all 7 windows to round 900
+
+The parent stops at the agreed round too now (in the first run it closed
+after 899 with its children gone), so there is no trimming and no
+agreed-round cap in this sweep: 900 hashed frames, byte-identical world and
+per-actor digests, across every pairing.
+
+### P11. What the sizing does at RTT 0, 40, 80 and 160 ms (`proof_rttfeel.log`)
+
+The P1 A/B rig (`C:\tmp\lagdelay-out\lag_ab.py`: relay mode, local reference
+relay, arm A pins the shipped 5, arm B lets the parent size) at four induced
+round trips, 900 frames, sha `BFC318ADF1EA67C2`. The handshake the parent
+measures runs 15 to 30 ms above the induced figure (the desk's own cost),
+and that measured number is what the depth comes from.
+
+    RTT (induced)  measured  sized depth  = input delay   starves at 5 (p/c)   starves sized (p/c)
+      0 ms            --     5 (floor)      83 ms          0 /    1               11 /   4
+     40 ms          62 ms    6             100 ms        412 /  421              196 / 193
+     80 ms          93 ms    8             133 ms        452 /  436              231 / 186
+    160 ms         187 ms   15 (cap)       250 ms       1315 / 1315              131 / 118
+
+At 0 ms the rig's own PASS rule ("sized larger than the constant") does not
+apply, since 5 is the floor; the session runs the same number it always did.
+The 80 ms row is the third run of that arm: the first two (`AB_rtt80_first`,
+`AB_rtt80_second`) had arm B's parent knock on the relay after arm A and
+never get an answer (recvd=0 both ends, no pairing), and the relay's
+block-buffered log kept nothing past arm A's join, so which end went quiet is
+not known. Gap 16.
+
+**For the owner, in plain terms.** The game already puts a short delay between
+pressing a button and the character reacting, because online play has to
+wait for everyone's button presses to arrive; that delay used to be fixed at
+five frames (about 83 ms) no matter how far apart the players were. Now the
+host measures how long a message takes to get to each player and back, and
+picks the delay to match, once, before the match starts, and every player
+runs the same one. On a same-city connection (0 to 40 ms round trip) nothing
+changes: it stays at about 83 to 100 ms, which is under what most people can
+notice. At 80 ms round trip (cross-country) it grows to 8 frames, about 133 ms,
+which is a small but perceptible softness on jumps, and in return the game
+stops hitching roughly half as often as it did on that path. At 160 ms
+(cross-continent or a bad wifi) it hits the 15-frame cap, a quarter of a
+second between press and reaction, which is clearly felt; but on that same
+path the old fixed 5 froze the game on more frames than it ran (1315 stalls in
+900 frames), and the sized delay brings that down to about 120, so the match
+is playable where it was not. Past 160 ms the delay cannot grow further and
+stalls come back; the log names the player whose connection is causing them.
+
 ## Honest remaining gaps
 
-1. **The run-teardown effect at the end of a budget is bounded, not
-   explained.** P5 has the record. The round-trimmed sweep is 21/21 clean on
-   three separate runs, so it is not a divergence in the simulation, but
-   nothing here says what the last one to four frames of a closing window
-   actually touch. A run whose windows stop at an agreed ROUND rather than an
-   independent per-window frame budget would remove the question rather than
-   bound it.
+1. **CLOSED. The run-teardown effect was a BYE processed inside the last
+   hashed frame.** P10: a window that exits sends BYE, and a peer that has not
+   hashed its own last frame yet sees the live mask drop inside it. The
+   stop-round knob plus the seat hold remove it, and the untrimmed sweeps are
+   6/6 and 21/21 clean to round 900.
 
 2. **One handshake sample per child, and it never updates.** The round trip the
    depth is sized from is measured once, during the join, and the number is
@@ -586,6 +749,8 @@ window rather than being handed a number its clamp would have dropped.
     frames reaches this at all, but on such a path a legitimate rejoin after a
     crash is refused for the rest of the match. Closing it properly wants a
     generation byte in the JOIN, which is a wire change this lane did not make.
+    Measured in P9 arm D: the new-build joiner is refused three times over its
+    knock window and completes no round; the running pair is undisturbed.
 
 11. **A mixed-generation session keeps depth 5 and starves.** That is the
     withdrawal working as designed -- a stall rather than a desync -- but the
@@ -598,13 +763,9 @@ window rather than being handed a number its clamp would have dropped.
     which are the two the blocker turns on. A real 0.3.2 binary was not run
     against this branch.
 
-13. **The shipping configuration is proven by a hand re-run, not by the
-    battery's own arm.** It configures, builds all 10210 targets, links and
-    passes its liveness selftest with rc=0 -- but through
-    `C:\tmp\lagdelay-out\shipcfg.cmd`, because the battery's arm cannot get
-    past its own PATH bug on this desk. The evidence is equivalent (same cmake
-    line, same target, same selftest); the provenance is a hand-run script
-    rather than a suite line, and that is worth knowing.
+13. **CLOSED on the current binary.** P8's battery line for shipcfg is green
+    from the suite itself (build and selftest). It went green because the
+    launching shell carried the Installer PATH line; gap 14 stands.
 
 14. **`battery.py`'s shipcfg arm needs a PATH line it does not set.** Found
     here, not fixed here, because it is not this lane's file and a battery
@@ -614,3 +775,21 @@ window rather than being handed a number its clamp would have dropped.
     does. Without it the arm passes or fails on what the launching shell
     happens to have on PATH, which is how a green battery and a red one can
     come from the same tree.
+
+15. **A joiner seated AFTER round 0 stalls the session.** P9 arm C seats the
+    late old build on the frozen 6 (the agreement holds), but the parent then
+    waits for that console's block for rounds it was never handed, and the
+    session stops advancing: the parent's last completed round is 987 against
+    a seat at 993, and the joiner published 18 blocks. That is the seam's
+    shape, joins happen in the lobby as on the DS, and the harness prints it
+    as a LIMIT rather than scoring it. Not this lane's to fix, and now
+    measured rather than assumed.
+
+16. **The A/B rig's second knock on one relay is flaky at 80 ms.** Two of
+    three runs of `lag_ab.py` at 40 ms one way had arm B pair with nothing
+    after arm A on the same relay and ports (P11), while the 40 and 160 ms
+    rows paired first time and the third 80 ms run paired and passed. The
+    relay's stdout is block-buffered, so its log for the failed runs ends at
+    arm A's join and does not say whether it stopped answering or the knock
+    never arrived. The rig lives in `C:\tmp\lagdelay-out`, not the tree; a
+    relay per arm (as `latejoin_proof.py` does) would remove the question.
