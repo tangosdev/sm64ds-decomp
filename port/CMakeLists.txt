@@ -868,6 +868,26 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_0212390c.cpp"
     PROPERTIES COMPILE_DEFINITIONS "_ZN9Spindrift8BehaviorEv=func_ov077_02123c6c")
+# R5, run frontfix (lane FRONTFIX): THE SAME SHAPE at 0x020c5dec, where TWO
+# bodies alternate at one address and one /alternatename cannot route both.
+# hal/cxx_aliases.cpp keeps /alternatename:_func_ov007_020c5dec=_func_ov002_020c5dec
+# for the two PLAYER TUs (St_HurtWater_Main, St_WaitQuicksand_Main) that spell
+# the ov007 name for what is really ov002's body at that address -- they pass
+# two arguments, the ov002 signature, and they still want ov002's body. But
+# ov007's own caller src/func_ov007_020ba2e0.c passes one argument and wants
+# ov007's body at the same address, and the global alias was handing it ov002's
+# body instead: wrong overlay in the ov007 direction. src/func_ov007_020c5dec.cpp
+# is now listed in slice_ov007.txt, so compiling it plainly would DEFINE the
+# alias LHS -- which alternatename_guard refuses and which would hand the two
+# Player TUs the ov007 body too. The Spindrift/ov062 rule fixes it per source:
+# rename the symbol in the ov007 body TU and its ov007 caller to a private name,
+# so the ov007 body links as func_ov007_020c5dec_own and the ov007 caller reaches
+# it, while func_ov007_020c5dec stays undefined for the alias to route the two
+# Player TUs to ov002. Per-context routing with no /alternatename ambiguity.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov007_020c5dec.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov007_020ba2e0.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov007_020c5dec=func_ov007_020c5dec_own")
 # R3, run linkw wave 12 (lane w12): THE SAME DISEASE, a fourth time, and this
 # one arrived from the OTHER side -- not a newly sliced body under an alias's
 # LHS but a newly MOUNTED datum under it. src/func_ov071_0211fbf4.c (Scuttlebug's

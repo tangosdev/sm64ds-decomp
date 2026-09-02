@@ -1146,9 +1146,16 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    alias as "the shared-window artifact again in a third form" and noted that
    src/func_ov006_020e3078.cpp was not linked -- that note is now history.
 
-   THE ov007 SIBLING STAYS. No ov007 body at 0x020c5dec is in the link, the
-   guard reports that alias as firing normally, and nothing this lane did
-   touches it. */
+   THE ov007 SIBLING STAYS, but now for the two PLAYER TUs ONLY. Those
+   (St_HurtWater_Main, St_WaitQuicksand_Main) spell the ov007 name for what is
+   really ov002's body at 0x020c5dec, pass the ov002 two-argument signature, and
+   still route to ov002 through this alias. ov007's own caller
+   src/func_ov007_020ba2e0.c wants the ov007 body at the same address, which a
+   single /alternatename cannot also express, so the ov007 body and that caller
+   are compiled with COMPILE_DEFINITIONS func_ov007_020c5dec=func_ov007_020c5dec_own
+   in port/CMakeLists.txt (the Spindrift/ov062 rule). That keeps func_ov007_020c5dec
+   UNDEFINED here, so this alias still fires for the two Player TUs and the guard
+   still reports it firing normally. */
 #pragma comment(linker, "/alternatename:_func_ov007_020c5dec=_func_ov002_020c5dec")
 
 /* gate 42: the same shared-base illusion for PEACH_PAINTING. ov010, ov052 and
