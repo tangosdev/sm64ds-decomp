@@ -90,9 +90,10 @@ const char *port_actor_class_name(unsigned id);   /* hal/actor_registry */
   void port_actor_slot_decline(const char *what);  /* func_02043fdc_hostcopy.cpp */
 void port_actor_render_probe(const char *cls, void *model); /* actor_classes */
 
-/* Bully's own C-linkage bodies (matched src, slice_gate177.txt). D0/D1 are NOT
-   here -- they store the VT1 placeholder, so they are host thunks below. */
+/* Bully's own C-linkage bodies (matched src, slice_gate177.txt). */
 int _ZN5Bully13InitResourcesEv(void *self);       /* slot 0, face below */
+int *_ZN5BullyD1Ev(int *self);                    /* slot 16, .c, DTOR-PAIRS seat (0x02117070) */
+int *_ZN5BullyD0Ev(int *self);                    /* slot 17, .c, DTOR-PAIRS seat (0x021170c4) */
 int _ZN5Bully16CleanupResourcesEv(void *self);    /* slot 3, face below */
 int _ZN5Bully8BehaviorEv(char *self);             /* slot 6, .c C linkage */
 int _ZN5Bully6RenderEv(void *self);               /* slot 9, face below */
@@ -109,6 +110,8 @@ void *Bully_Spawn(void);
    Bully's -- the shared base bodies at 0x02116ca0 / 0x02115f84 -- so BigBully's
    table reuses them. Its six extension slots 31..36 are its own. */
 int _ZN8BigBully13InitResourcesEv(void *self);    /* slot 0, face below */
+int *_ZN8BigBullyD1Ev(int *self);                 /* slot 16, .c, DTOR-PAIRS seat (0x021174a0) */
+int *_ZN8BigBullyD0Ev(int *self);                 /* slot 17, .c, DTOR-PAIRS seat (0x021174f4) */
 int _ZN8BigBully8BehaviorEv(void *self);          /* slot 6, face below (.cpp method) */
 int _ZN8BigBully6RenderEv(void *self);            /* slot 9, face below */
 int func_ov064_0211755c(void *self);              /* slot 31 */
@@ -308,35 +311,23 @@ static int __fastcall bly_v33(void *s, void *) { return func_ov064_02117168(s); 
 static int __fastcall bly_v34(void *s, void *) { return func_ov064_02117154(s); }
 static int __fastcall bly_v35(void *s, void *) { return func_ov064_02117140(s); }
 static int __fastcall bly_v36(void *s, void *) { return func_ov064_0211712c(s); }
-/* D1/D0 host thunks, the montymole/flame treatment: run the matched teardown
-   with the derived table stored once, VT1 elided. Members are destroyed high
-   address first (the D0 order): ShadowModel +0x370, MovingCylinderClsn +0x33c,
-   WithMeshClsn +0x174, ModelAnim +0x110, then the Enemy base D2. D0 also frees
-   on the game heap; D1's caller (ActorBase::AfterCleanupResources) frees itself
-   after the dispatch, so the thunk stops before the Deallocate. */
+/* D1/D0 (DTOR-PAIRS seat): each class's own matched flat-C pair behind
+   ecx->arg adapters, where host copies of the chain stood. The VT1 the bodies
+   spell is settled by the ROM's own relocation, not by the shared auto_bss
+   dummy: every one of the four bodies' second store relocates to ov064
+   0x0211b768 (data_ov064_0211b768, the bullies' 37-slot base table, hosted in
+   hal/actor_classes_ov027.cpp), so port/CMakeLists.txt compiles the four TUs
+   with VT1=data_ov064_0211b768 (the minigame-scene D0 treatment). The store is
+   dead anyway -- the Enemy base D2 (func_ov002_020aed18) writes its own table
+   next -- and it is the ROM's word. G0 is the game heap by the standing alias. */
 static int __fastcall bly_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV5Bully;
-    _ZN11ShadowModelD1Ev(t + 0x370);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x33c);
-    _ZN12WithMeshClsnD1Ev(t + 0x174);
-    _ZN9ModelAnimD1Ev(t + 0x110);
-    func_ov002_020aed18(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN5BullyD1Ev((int *)s); }
 static int __fastcall bly_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV5Bully;
-    _ZN11ShadowModelD1Ev(t + 0x370);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x33c);
-    _ZN12WithMeshClsnD1Ev(t + 0x174);
-    _ZN9ModelAnimD1Ev(t + 0x110);
-    func_ov002_020aed18(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN5BullyD0Ev((int *)s); }
+static int __fastcall bbly_d1(void *s, void *)
+{ return (int)(size_t)_ZN8BigBullyD1Ev((int *)s); }
+static int __fastcall bbly_d0(void *s, void *)
+{ return (int)(size_t)_ZN8BigBullyD0Ev((int *)s); }
 static int __fastcall bly_init(void *s, void *)
 { return _ZN5Bully13InitResourcesEv(s); }
 static int __fastcall bly_render(void *s, void *)
@@ -390,8 +381,8 @@ static int __fastcall bbly_v35(void *s, void *) { return func_ov064_0211635c(s);
 static int __fastcall bbly_v36(void *s, void *) { return func_ov064_02116348(s); }
 /* BigBully shares Bully's Cleanup (slot 3 = 0x02116ca0) and OnAimedAtWithEgg
    (slot 29 = 0x02115f84), so its own object shape is identical -- reuse the
-   bly_clean/bly_aimed thunks. Its D1/D0 run the same member layout (same
-   offsets) as Bully; reuse bly_d1/bly_d0. */
+   bly_clean/bly_aimed thunks. Its D1/D0 are its OWN ROM bodies (same member
+   layout, its own table stored): bbly_d1/bbly_d0. */
 extern "C" void hal_fill_big_bully_vtable(void)
 {
     void **vt = (void **)_ZTV8BigBully;
@@ -400,8 +391,8 @@ extern "C" void hal_fill_big_bully_vtable(void)
     vt[3]  = (void *)bly_clean;
     vt[6]  = (void *)bbly_behavior;
     vt[9]  = (void *)bbly_render;
-    vt[16] = (void *)bly_d1;
-    vt[17] = (void *)bly_d0;
+    vt[16] = (void *)bbly_d1;
+    vt[17] = (void *)bbly_d0;
     vt[29] = (void *)bly_aimed;
     vt[31] = (void *)bbly_v31;
     vt[32] = (void *)bbly_v32;

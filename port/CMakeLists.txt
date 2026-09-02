@@ -1067,6 +1067,26 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10BrickBlockD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT=_ZTV10BrickBlock")
+# Lane DTOR-PAIRS-C: the cutscene object's deleting destructor, the same VT/HEAP
+# shape; its store relocates to its own table (ov002 from:0x020f1fc4 ->
+# 0x0210bd60, _ZTV14CutsceneObject, the host array hal/actor_classes_intro.cpp
+# fills; decl_common.h already declares it `extern int []`).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14CutsceneObjectD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=_ZTV14CutsceneObject")
+# Lane DTOR-PAIRS-C: the four bully destructors spell VT1 for their second vptr
+# store, and the ROM relocates all four stores to ov064 0x0211b768 -- the
+# bullies' base table, data_ov064_0211b768, hosted in hal/actor_classes_ov027.cpp
+# (which rides the same three targets as slice_gate177). Per source, so bare VT1
+# (auto_bss's dummy) keeps serving whatever else still spells it. G0 is the game
+# heap by the standing alias, the pool's last word (020A0EAC) in both D0s.
+foreach(bully_dtor _ZN5BullyD1Ev _ZN5BullyD0Ev _ZN8BigBullyD1Ev _ZN8BigBullyD0Ev)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${bully_dtor}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "VT1=data_ov064_0211b768")
+endforeach()
 
 # RUN LINK60 lane A2: SPINDRIFT'S KILL-BY-INVINCIBLE EDGE, misrouted since the
 # ov081 seat. One ROM address, 0x020ada40, resolved two ways in one binary.
