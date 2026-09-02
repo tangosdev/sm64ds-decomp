@@ -26,3 +26,19 @@ src/func_ov002_020f92e4.c
 src/func_ov002_020f8b24.c
 src/func_ov002_020f88ec.c
 src/func_ov002_020f897c.c
+#
+# ---- BOWSER_SHOCKWAVES (281, ov060) ---------------------------------------
+# _ZTV16BowserShockwaves / _ZTV9daFRing_c 0x0211ab54, 31 slots, hosted as an
+# array in the fill (the ov060 mount excludes its vtables). The SpawnInfo
+# (0x0211ab30, +4 reads 281) has been in port/ov060_syms.txt since wave 5.
+# Spawned by func_ov060_02115b0c (Bowser's stomp landing, +0x414 == 2; linked
+# since wave 5) with Actor::Spawn(0x119). Render is DROPPED from the slice: the
+# ModelAnim slot-5 collision on two ModelAnims, host copy appended to
+# unmatched/Ov060_Renders.cpp. InitResources' two BMA spellings func_021115e4/
+# f4 are the level-overlay window, aliased onto the ov046 per-symbol mount.
+src/BowserShockwaves_Spawn.c
+src/_ZN16BowserShockwaves13InitResourcesEv.cpp
+src/_ZN16BowserShockwaves16CleanupResourcesEv.c
+src/_ZN16BowserShockwaves8BehaviorEv.cpp
+src/_ZN16BowserShockwavesD1Ev.c
+src/_ZN16BowserShockwavesD0Ev.c

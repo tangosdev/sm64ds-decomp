@@ -252,3 +252,72 @@ extern "C" {
 int _ZN8Fireball13InitResourcesEv(void *self)
 { return ((Fireball *)self)->Fireball::InitResources(); }
 }
+
+// ============================================================================
+// BOWSER_SHOCKWAVES (actor 281, ov060) -- _ZTV16BowserShockwaves / _ZTV9daFRing_c
+// ============================================================================
+//
+// The two expanding rings Bowser's stomp sends across the arena floor. A
+// plain Actor build (ActorC2, 536 bytes) carrying two of everything: ModelAnim
+// at 0xd4 and 0x174, TextureSequence at 0x138/0x1d8, MaterialChanger at
+// 0x14c/0x1ec, TextureTransformer at 0x160/0x200. Spawned only by
+// func_ov060_02115b0c (Bowser's landing state, +0x414 == 2, linked since wave
+// 5), which asks for 0x119 and ignores the result.
+//
+// The table 0x0211ab54 is hosted as an array here (port/ov060_syms.txt
+// excludes the seven ov060 vtables). Own slots: 0 Init (real C++ method,
+// faced), 3 Cleanup (three SharedFilePtr releases, ignores this), 6 Behavior
+// (faced), 9 Render (HOST COPY: the ModelAnim slot-5 collision on two
+// ModelAnims, unmatched/Ov060_Renders.cpp), 16/17 the flat-C D1/D0. Slots
+// 18..30 are the plain Actor defaults per the ROM's reloc run.
+//
+// InitResources reaches two BMA files as `func_021115e4` / `func_021115f4`,
+// dsd's code-flavoured spelling of two level-overlay-window addresses; for
+// the mounted koopa2_boss arena the owner is ov046, so both are aliased onto
+// the ov046 per-symbol mount (the arena-CLPS treatment in actor_classes_ov060).
+extern "C" {
+int _ZN16BowserShockwaves13InitResourcesEv(void *self);   /* face below */
+int _ZN16BowserShockwaves16CleanupResourcesEv(void);      /* three releases */
+int _ZN16BowserShockwaves8BehaviorEv(void *self);         /* face below */
+int _ZN16BowserShockwaves6RenderEv(void *self);           /* host copy */
+int *_ZN16BowserShockwavesD1Ev(int *self);
+int *_ZN16BowserShockwavesD0Ev(int *self);
+void *_ZTV16BowserShockwaves[31];
+}
+#pragma comment(linker, "/alternatename:__ZTV9daFRing_c=__ZTV16BowserShockwaves")
+#pragma comment(linker, "/alternatename:_func_021115e4=_data_ov046_021115e4")
+#pragma comment(linker, "/alternatename:_func_021115f4=_data_ov046_021115f4")
+
+static int __fastcall bsw_init(void *s, void *)
+{ return _ZN16BowserShockwaves13InitResourcesEv(s); }
+static int __fastcall bsw_clean(void *s, void *)
+{ (void)s; return _ZN16BowserShockwaves16CleanupResourcesEv(); }
+static int __fastcall bsw_behavior(void *s, void *)
+{ return _ZN16BowserShockwaves8BehaviorEv(s); }
+static int __fastcall bsw_render(void *s, void *)
+{ port_actor_render_probe("BOWSER_SHOCKWAVES", (char *)s + 0xd4);
+  return _ZN16BowserShockwaves6RenderEv(s); }
+static int __fastcall bsw_d1(void *s, void *)
+{ return (int)(size_t)_ZN16BowserShockwavesD1Ev((int *)s); }
+static int __fastcall bsw_d0(void *s, void *)
+{ return (int)(size_t)_ZN16BowserShockwavesD0Ev((int *)s); }
+
+extern "C" void hal_fill_bowser_shockwaves_vtable(void)
+{
+    void *volatile *vt = (void *volatile *)_ZTV16BowserShockwaves;
+    rs_fill_shared(vt);
+    vt[0]  = (void *)bsw_init;
+    vt[3]  = (void *)bsw_clean;
+    vt[6]  = (void *)bsw_behavior;
+    vt[9]  = (void *)bsw_render;
+    vt[16] = (void *)bsw_d1;
+    vt[17] = (void *)bsw_d0;
+}
+
+#include "BowserShockwaves.h"
+extern "C" {
+int _ZN16BowserShockwaves13InitResourcesEv(void *self)
+{ return ((BowserShockwaves *)self)->BowserShockwaves::InitResources(); }
+int _ZN16BowserShockwaves8BehaviorEv(void *self)
+{ return ((BowserShockwaves *)self)->BowserShockwaves::Behavior(); }
+}
