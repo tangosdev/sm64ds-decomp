@@ -160,37 +160,40 @@ All in `port/hal/comms_loopback.cpp` unless noted. Line numbers are at
 |---|---|
 | :727 | `kInputDelayMax` 8 -> 15, with a `static_assert` tying it to `kPipeDepth` |
 | :737 | `kRoundPeriodMs100 = 1667`, the 16.67 ms the formula divides by |
-| :766 | starve attribution state: `g_starve_by_slot[]`, last round, rate limiter |
-| :781 | the adaptive-delay banner and its three rules |
-| :823 | its state: per-child rtt, told, ack, moved, frozen, frames-produced |
-| :858 | `delay_state_reset()`, called from `lb_open` and `lb_become_child` |
-| :1246 | `announce_roster` records that every live child was retold |
-| :1263 | `recompute_adaptive_delay()` -- the formula, the one log line, the publish |
-| :1311 | `delay_gate_open()` -- rule 3 as one predicate |
-| :1465 | `pipe_try_broadcast` holds round 0 behind the gate, re-announces, logs |
-| :1533 | the parent's JOIN arm reads a report and measures the path itself |
-| :1625 | the unicast ACCEPT carries the rtt ack (bit 16) and stamps the send |
-| :1651 | the sizing runs after the accept went out |
-| :1717 | `child_send_report()` -- the report JOIN |
-| :1738 | `child_adopt_delay()` -- rule 2, adopt before frame 0 or refuse loudly |
-| :1883 | the connected child reads the ack and a re-sized delay from an ACCEPT |
-| :2287 | `service()` repeats an unacked report, floored at 50 ms, capped at 12 |
-| :2604 | the close summary carries `starvedby=` |
-| :2705 | `lb_exchange` gives the sizing one round trip (400 ms ceiling) |
-| :2748 | and freezes the depth above the path split |
-| :2819 | the starve branch: per-slot counters and the rate-limited line |
-| :2858, :2911 | `g_frames_produced` on both success paths |
-| :3437 | the sizing's env knobs |
-| :3481 | its arming rule (parent, not env-pinned, not loopback, pipeline on) |
-| `port/tools/vs16_ladder.sh:20` | `VS16_ROOT`, `VS16_OUT`, `VS16_ASSET_ROOT` so a lane can run the ladder against its own tree |
+| :766 | starve attribution state and its rate limiter |
+| :781 | the adaptive-delay banner and its rules |
+| :838 | `g_delay_presize`, the value a raised depth is withdrawn back to |
+| :845 | `kLegacyInputDelayMax = 8`, the depth every shipped build can adopt |
+| :871 | `delay_state_reset()`, which now clears the rate-limit stamps too |
+| :1280 | `recompute_adaptive_delay()` -- the formula, and the withdrawal |
+| :1358 | `delay_gate_open()` -- keyed on the value in force, not on a flag |
+| :1524 | `pipe_try_broadcast` holds round 0 behind the gate |
+| :1605 | a joiner arriving at a session frozen deeper than 8 is not seated |
+| :1674 | a stale reordered report is not an acknowledgement |
+| :1845 | `child_send_report()`, silent under the legacy-peer simulation |
+| :1867 | `child_adopt_delay()` -- rule 2, and the legacy clamp it reproduces |
+| :2757 | the close summary carries `starvedby=` |
+| :2838 | `lb_exchange` gives the sizing one round trip (400 ms ceiling) |
+| :2870 | the grace stand-down withdraws before it stands down |
+| :2891 | and the depth freezes above the path split |
+| :2962 | the starve branch: per-slot counters and the rate-limited line |
+| :3612 | `SM64DS_COMMS_LEGACY_PEER`, the pre-0.3.3 stand-in |
+| :3639 | the sizing's arming rule and its env knobs |
+| `port/tools/vs16_ladder.sh:20` | `VS16_ROOT`, `VS16_OUT`, `VS16_ASSET_ROOT` |
 
 ## Proofs
 
 All from `C:\tmp\lagdelay`, all quiet and muted (`mp2_proof.env_base`:
 CREATE_NO_WINDOW, SW_SHOWMINNOACTIVE, `SM64DS_NO_FOCUS`, `SM64DS_MINIMIZED`,
 `SM64DS_VOLUME=0`). No window was ever shown. Build sha
-`7E837CDA1317F41A` (`build/port/walk_window.exe`), built by
-`port/build-port.cmd` with zero errors (`C:\tmp\lagdelay-out\build5.log`).
+`51E5B0674DFD8B10` (`build/port/walk_window.exe`), built by
+`port/build-port.cmd` with zero errors (`C:\tmp\lagdelay-out\build7.log`).
+
+**Which output came from which binary.** P2, P3, P4's sweep and P7 were
+run on the current binary, after the review fix. P1 and P6 predate it and
+name the earlier sha `7E837CDA1317F41A`; nothing in the review fix touches
+what they measure (the sizing arithmetic and the battery's level and scene
+arms), and they are left as recorded rather than restated from memory.
 
 ### P1. The sizing works and it drops starves (`C:\tmp\lagdelay-out\proof_ab.log`)
 
