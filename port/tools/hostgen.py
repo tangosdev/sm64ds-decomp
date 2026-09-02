@@ -464,6 +464,31 @@ MEMBER_REDECL = {
 }
 
 
+# ---- EXTERNAL DATA LEFT OUTSIDE THE TU'S OWN extern "C" BLOCK -----------------
+#
+# A recovered TU can declare its external data symbols ABOVE its own
+# `extern "C"` block, so MSVC gives them C++ linkage and asks the linker for
+# ?data_ov070_02123530@@3USharedFilePtr@@A and its siblings, while the port's
+# mount emits those names with C linkage as every other consumer spells them --
+# so each such declaration is an LNK2019. mwccarm did not care: the ROM carries
+# these names under a C++ mangling of its own, and the decomp author's placement
+# was a matched-source detail, not a linkage decision. The fix moves the
+# `extern "C" {` opener up so the data declarations fall inside it and take C
+# linkage. The body is untouched; this is purely the declaration-linkage
+# spelling that unmatched/FlyGuy_InitResources.cpp used to carry by hand (the
+# Coffin_InitResources.cpp shape). Exact strings, hard-errored by apply_patches
+# if the source moves.
+EXTERN_C_DATA = {
+    "_ZN6FlyGuy13InitResourcesEv": [
+        ("typedef struct PMF PMF;\nextern SharedFilePtr data_ov070_02123530;",
+         'typedef struct PMF PMF;\nextern "C" {\n'
+         "extern SharedFilePtr data_ov070_02123530;"),
+        ('extern PMF data_ov070_0212359c;\nextern "C" {\n',
+         "extern PMF data_ov070_0212359c;\n"),
+    ],
+}
+
+
 # ---- DS INTEGER DIVISION -----------------------------------------------------
 #
 # mwccarm compiles `/` and `%` on ints to a call to __aeabi_idiv (ITCM
@@ -790,6 +815,12 @@ def member_redecl_patch(text, sym):
     return apply_patches(text, sym, MEMBER_REDECL, "MEMBER_REDECL")
 
 
+def extern_c_data_patch(text, sym):
+    """Bring external data declarations a TU left above its own extern "C"
+    block into C linkage, so the mount's C-linkage symbols resolve them."""
+    return apply_patches(text, sym, EXTERN_C_DATA, "EXTERN_C_DATA")
+
+
 def shadow_header_decl(text, sym, spec):
     """Hide the shared header's declaration of one or more names across its
     include. `spec` is a header name, or (header, names)."""
@@ -820,6 +851,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = virtual_call_patch(text, sym)
     text, _ = mg_pmf_call_patch(text, sym)
     text, _ = member_redecl_patch(text, sym)
+    text, _ = extern_c_data_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise

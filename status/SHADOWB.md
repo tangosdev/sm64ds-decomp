@@ -118,3 +118,29 @@ scene selftest 361-390 ok, default boot reaches TITLE 300 frames clean, linkage
 (PORT_ROM_CLEAN, static CRT) built and its selftest rc=0. Pre-existing skips
 unrelated to this lane: level 27 (TtcMovingCube has no matched body), level 45
 (Goomboss func_ov074_02121380 has no matched body).
+
+## 4. FlyGuy::InitResources -- RETIRED via a HOSTGEN linkage patch
+
+The matched src declares its eight `data_ov070_*` externs ABOVE its own
+`extern "C"` block, so MSVC gives them C++ linkage and asks the linker for
+`?data_ov070_02123530@@3USharedFilePtr@@A` and siblings while the port's mount
+emits those names with C linkage -- eight LNK2019. The host mirror
+`unmatched/FlyGuy_InitResources.cpp` fixed this by hand, moving the eight lines
+inside `extern "C"`.
+
+Retired via hostgen instead. New exact-string mechanism `EXTERN_C_DATA` in
+`port/tools/hostgen.py` (wired into `emit()` next to the other patch tables)
+moves the `extern "C" {` opener above the data declarations for
+`_ZN6FlyGuy13InitResourcesEv`, so they take C linkage. The symbol is added to
+`OV70GEN_SYMS` in `port/CMakeLists.txt` (the ov070 hostgen set, already linked
+into smoke_player / walk_window / walk_window_hires), the host mirror is removed
+from those three target lists and `git rm`'d. The emitted file's body is
+byte-identical to the src and to the retired host mirror (diffed); only the
+extern "C" opener moved.
+
+Verification: `python port/tools/hostgen.py` emits the file with all eight
+externs inside the block, body unchanged; build exit 0, the generated object
+compiled into all three targets; guards + dsstate + inferred_stub +
+closestplayer green; linkage 9241 -> 9242 (+1), MSVC-NAME SHADOWS 16 -> 15,
+`_ZN6FlyGuy13InitResourcesEv` out of the queue and in `walk_window.map`;
+`git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass.

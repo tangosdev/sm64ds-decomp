@@ -2672,7 +2672,11 @@ endforeach()
 #   -> Quaternion_Normalize), closing the id-141 sqrt gap
 #   hal/actor_classes_ov045.cpp names from the HMC cast as well.
 #   OV70GEN -- func_ov070_0211f0a4, the census's measured compile fail (C4716;
-#   hostgen's FALLS_OFF_RETURN table documents the returned value).
+#   hostgen's FALLS_OFF_RETURN table documents the returned value); and
+#   _ZN6FlyGuy13InitResourcesEv, whose src declares its data_ov070 externs above
+#   its own extern "C" block (C++ linkage, LNK2019 against the C-linkage mount).
+#   hostgen's EXTERN_C_DATA table moves the extern "C" opener up, retiring the
+#   old host mirror.
 set(SQRTUNIT_SYMS func_02053008 func_02053130 func_020531a4 func_02052fdc)
 set(SQRTUNIT_GEN "")
 foreach(sym IN LISTS SQRTUNIT_SYMS)
@@ -2685,7 +2689,7 @@ foreach(sym IN LISTS SQRTUNIT_SYMS)
         COMMENT "hostgen ${sym}")
     list(APPEND SQRTUNIT_GEN "${sym_out}")
 endforeach()
-set(OV70GEN_SYMS func_ov070_0211f0a4)
+set(OV70GEN_SYMS func_ov070_0211f0a4 _ZN6FlyGuy13InitResourcesEv)
 set(OV70GEN "")
 foreach(sym IN LISTS OV70GEN_SYMS)
     set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
@@ -12298,7 +12302,6 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
@@ -12508,7 +12511,6 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -12754,7 +12756,6 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/FlyGuy_InitResources.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
