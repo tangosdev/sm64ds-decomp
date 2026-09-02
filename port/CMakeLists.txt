@@ -8145,10 +8145,10 @@ set(LEVELBOOT_HOST_SOURCES
 
 set(CAMERA_HOST_SOURCES
     unmatched/ChangeArea_hostcopy.c
-    # func_0200cae4_hostcopy.cpp RETIRED (lane shadow-A): the matched onEnter
-    # dispatcher goes through hostgen's MG_PMF_CALL table (GATE13_SYMS), the
-    # one PMF call routed into hal_call_camera_state_fn.
-    unmatched/func_0200ca50_hostcopy.cpp
+    # func_0200cae4_hostcopy.cpp and func_0200ca50_hostcopy.cpp RETIRED (lane
+    # shadow-A): the matched dispatchers go through hostgen's MG_PMF_CALL
+    # table (GATE13_SYMS), the one PMF call each routed into
+    # hal_call_camera_state_fn.
     unmatched/G3i_PerspectiveW.cpp
     unmatched/G3i_LookAt.cpp
     hal/camera_states.cpp
@@ -8166,7 +8166,7 @@ set(CAMERA_HOST_SOURCES
 # hal_call_camera_state_fn, func_02008550 over hal/ptr_tables.cpp's records).
 set(GATE13_SYMS _ZN6Camera6RenderEv LenVec3 _ZN4cstd11ldiv_resultEv
     func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj
-    func_02008550 func_0200cae4)
+    func_02008550 func_0200cae4 func_0200ca50)
 set(GATE13_GEN "")
 foreach(sym IN LISTS GATE13_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")

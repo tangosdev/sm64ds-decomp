@@ -923,6 +923,13 @@ MG_PMF_CALL = {
         ("  return (c->**p)();",
          "  return hal_call_camera_state_fn(c, *(unsigned *)p);"),
     ],
+    "func_0200ca50": [
+        ("extern \"C\" int func_0200ca50(C *self)\n{",
+         "extern \"C\" int hal_call_camera_state_fn(void *self, unsigned ds_addr);\n"
+         "extern \"C\" int func_0200ca50(C *self)\n{"),
+        ("            r5 = (self->**pp)();",
+         "            r5 = hal_call_camera_state_fn(self, *(unsigned *)pp);"),
+    ],
 }
 
 
