@@ -223,6 +223,115 @@ static void test_golden(void)
     if (kGoldenPurple[0]) check_rows("golden row", out, kGoldenPurple);
 }
 
+/* ---- 7. sixteen rows ------------------------------------------------------
+ *
+ * vs_palette_rows16 is what hal/fs_mods.cpp writes into the grown BMD palette,
+ * so these four checks are the whole contract the wide seats rest on. */
+
+static void test_rows16(void)
+{
+    u16 rows[16][16];
+    VsPick picks[16];
+    int i, s, t;
+
+    printf("rows16: the ROM's four rows survive a build with no picks\n");
+    memset(picks, 0, sizeof picks);
+    vs_palette_rows16(kVsRomRows, picks, rows);
+    for (s = 0; s < 4; ++s) {
+        char what[48];
+        sprintf(what, "row %d is the cartridge's, byte for byte", s);
+        check_rows(what, rows[s], kVsRomRows[s]);
+    }
+
+    /* THE POINT OF THE WHOLE LANE: sixteen seats, sixteen tellable-apart
+       Yoshis. Two rows are "the same Yoshi" if their four body words all
+       match, which is what a player actually sees from across an arena. */
+    printf("rows16: all sixteen body ramps are distinct\n");
+    {
+        int clashes = 0;
+        for (s = 0; s < 16; ++s)
+            for (t = s + 1; t < 16; ++t) {
+                int same = 1;
+                for (i = 0; i < 4; ++i)
+                    if (rows[s][kBodyIdx[i]] != rows[t][kBodyIdx[i]]) same = 0;
+                if (same) {
+                    printf("       rows %d and %d share a body ramp\n", s, t);
+                    ++clashes;
+                }
+            }
+        check("no two seats wear the same body", clashes == 0);
+    }
+
+    /* The shoes too, though a shoe clash is a much weaker collision than a
+       body one -- reported rather than failed if it ever appears alone. */
+    printf("rows16: the shoe pairs are distinct as well\n");
+    {
+        int clashes = 0;
+        for (s = 0; s < 16; ++s)
+            for (t = s + 1; t < 16; ++t)
+                if (rows[s][kShoeIdx[0]] == rows[t][kShoeIdx[0]] &&
+                    rows[s][kShoeIdx[1]] == rows[t][kShoeIdx[1]])
+                    ++clashes;
+        check("no two seats wear the same boots", clashes == 0);
+    }
+
+    /* The ten fixed slots stay fixed in EVERY row, not just the ROM's four.
+       This is what keeps the eye pupil, the saddle and the belly whites the
+       cartridge's on a defaulted wide seat. */
+    printf("rows16: the fixed slots are fixed in all sixteen rows\n");
+    {
+        static const int kFixed[10] = { 4, 5, 6, 9, 10, 11, 12, 13, 14, 15 };
+        int wrong = 0;
+        for (s = 0; s < 16; ++s)
+            for (i = 0; i < 10; ++i)
+                if (rows[s][kFixed[i]] != kVsRomRows[s & 3][kFixed[i]])
+                    ++wrong;
+        check("ten fixed slots x sixteen rows all untouched", wrong == 0);
+    }
+
+    /* A pick lands on the row it was made for and moves nothing else. Slot 9
+       is chosen because 9 & 3 == 1, so it also proves the base row a wide seat
+       is generated from is rom[s % 4] and not rom[0]. */
+    printf("rows16: a pick reaches its own seat and only its own seat\n");
+    {
+        u16 base[16][16], want[16];
+        memset(picks, 0, sizeof picks);
+        vs_palette_rows16(kVsRomRows, picks, base);
+        picks[9].set = 1;
+        parse_hex6("8a2be2", picks[9].body);
+        parse_hex6("ffd700", picks[9].shoes);
+        vs_palette_rows16(kVsRomRows, picks, rows);
+        vs_palette_row(kVsRomRows[1], picks[9].body, picks[9].shoes, want);
+        check_rows("seat 9 wears its pick, anchored on ROM row 1", rows[9], want);
+        {
+            int moved = 0;
+            for (s = 0; s < 16; ++s) {
+                if (s == 9) continue;
+                if (memcmp(rows[s], base[s], 32) != 0) ++moved;
+            }
+            check("no other seat moved", moved == 0);
+        }
+    }
+
+    /* And the same pick in two seats that share a base row gives the same
+       bytes, which is the property a player picking a colour actually cares
+       about: seat 0 and seat 4 both anchor on ROM row 0. */
+    printf("rows16: one pick, two seats on the same base row, same bytes\n");
+    {
+        memset(picks, 0, sizeof picks);
+        for (s = 0; s < 16; s += 4) {
+            picks[s].set = 1;
+            parse_hex6("00a0ff", picks[s].body);
+            parse_hex6("204020", picks[s].shoes);
+        }
+        vs_palette_rows16(kVsRomRows, picks, rows);
+        check("seats 0, 4, 8 and 12 are byte-identical",
+              memcmp(rows[0], rows[4], 32) == 0 &&
+              memcmp(rows[0], rows[8], 32) == 0 &&
+              memcmp(rows[0], rows[12], 32) == 0);
+    }
+}
+
 int main(int argc, char **argv)
 {
     if (argc >= 4 && strcmp(argv[1], "--emit") == 0) {
@@ -243,6 +352,7 @@ int main(int argc, char **argv)
     test_shading_order();
     test_parse();
     test_golden();
+    test_rows16();
     printf(g_fail ? "\nFAILED\n" : "\nall green\n");
     return g_fail;
 }

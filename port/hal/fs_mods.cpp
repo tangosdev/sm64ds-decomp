@@ -2243,38 +2243,40 @@ void vsc_parse(void)
        exist this is a cosmetic collision at five or more players, not a
        correctness one: identity is mPlayerNo and the name string, never the
        colour. */
-    if (g_vsc_fields > kPortNarrowPlayers) {
-        fprintf(stderr, "[mods] SM64DS_VS_COLORS: %d fields read, but the "
-                        "ROM's Yoshi palette has only %d rows -- slot n wears "
-                        "slot (n %% %d)'s colours above %d players. Sixteen "
-                        "authored rows are owed; identity is the name and the "
-                        "slot, never the colour.\n",
-                g_vsc_fields, kPortNarrowPlayers, kPortNarrowPlayers,
-                kPortNarrowPlayers);
-    }
+    /* run pal16: THE WARNING THAT USED TO BE HERE IS RETIRED, and it was wrong
+       twice over. It said "slot n wears slot (n mod 4)'s colours"; the actual
+       reuse was slot n wearing slot ((n-1) mod 3) + 1's, because the spawn
+       packs a cycled 1,2,3 into the two-bit flag field rather than n itself
+       (hal/level_boot.cpp), so seat 4 drew seat 1's row and not seat 0's. Both
+       halves are fixed now: level_boot repairs Player+0x61C to the true slot,
+       and yoshi_rows16_filter below serves sixteen real rows. */
 }
 
-/* Build the patch records. The body file gets all SIXTY-FOUR words -- every
-   slot's row, generated or ROM -- because VS reads one row per player out of
-   that one palette. Both head files get slot 0's SIXTEEN, for the same reason
-   PaletteYoshi gives them one: the heads carry their own copy of row 0, and
-   although VS re-points every head material at the body palette so the copy is
-   never sampled in a match, keeping them in step costs 32 bytes and means a
-   custom colour cannot half-apply if a head is ever drawn from its own. */
+/* Build the patch records.
+   run pal16: THE BODY RECORD IS GONE FROM HERE. It used to write the four
+   64-word rows in place; the body palette is now GROWN to sixteen rows by
+   yoshi_rows16_filter below, which runs last in the chain and reads this
+   variable itself, so writing four rows here first would have meant applying
+   the family transform twice to rows 0..3. What is left is the two head
+   records: both head files get slot 0's SIXTEEN words, for the same reason
+   PaletteYoshi gives them one. The heads carry their own copy of row 0, and
+   although VS re-points every head material at the BODY palette (see
+   hal/player_bridges.cpp's hal_player_vs_palette) so the copy is never sampled
+   in a match, keeping them in step costs 32 bytes and means a custom colour
+   cannot half-apply if a head is ever drawn from its own. */
 void vsc_build(void)
 {
-    static const u16 kCount[3] = { 64, 16, 16 };
-    static const u32 kOff[3] = { 0, 128, 160 };
-    const char *kPath[3];
+    static const u16 kCount[2] = { 16, 16 };
+    static const u32 kOff[2] = { 0, 32 };
+    const char *kPath[2];
     u32 blen = 0, dp = 0, sz = 0;
     u8 *body;
     u8 *syn;
     struct PalPatch *pp;
     u16 rows[4][16];
 
-    kPath[0] = YOSHI_BODY;
-    kPath[1] = YOSHI_HEAD;
-    kPath[2] = YOSHI_FILL;
+    kPath[0] = YOSHI_HEAD;
+    kPath[1] = YOSHI_FILL;
 
     body = file_by_name(YOSHI_BODY, &blen);
     if (!body) {
@@ -2294,25 +2296,24 @@ void vsc_build(void)
             rows[r][i] = rd16(body, dp + (u32)r * 32 + (u32)i * 2);
     free(body);
 
-    syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
-    pp = (struct PalPatch *)calloc(3, sizeof *pp);
+    syn = (u8 *)malloc(16 * 2 + 16 * 2);
+    pp = (struct PalPatch *)calloc(2, sizeof *pp);
     if (!syn || !pp) {
         free(syn);
         free(pp);
         fprintf(stderr, "[mods] SM64DS_VS_COLORS off: out of host memory\n");
         return;
     }
-    for (int r = 0; r < 4; ++r) {
+    {
         u16 out[16];
-        if (g_vsc[r].set)
-            vspal::vs_palette_row(rows[r], g_vsc[r].body, g_vsc[r].shoes, out);
+        if (g_vsc[0].set)
+            vspal::vs_palette_row(rows[0], g_vsc[0].body, g_vsc[0].shoes, out);
         else
-            memcpy(out, rows[r], 32);
-        memcpy(syn + (u32)r * 32, out, 32);
+            memcpy(out, rows[0], 32);
+        memcpy(syn, out, 32);           /* both heads take slot 0's row */
+        memcpy(syn + 32, out, 32);
     }
-    memcpy(syn + 128, syn, 32);     /* both heads take slot 0's row */
-    memcpy(syn + 160, syn, 32);
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 2; ++i) {
         snprintf(pp[i].path, sizeof pp[i].path, "%s", kPath[i]);
         snprintf(pp[i].name, sizeof pp[i].name, "%s", YOSHI_PAL);
         pp[i].count = kCount[i];
@@ -2321,7 +2322,7 @@ void vsc_build(void)
     }
     g_vsc_blob = syn;
     g_vsc_patch = pp;
-    g_vsc_npatch = 3;
+    g_vsc_npatch = 2;
 }
 
 void vsc_load(void)
@@ -2370,6 +2371,149 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
     return size;
 }
 
+/* ---- SIXTEEN ROWS: growing the served Yoshi palette -----------------------
+ *
+ * THE CEILING THIS LIFTS, and it is the one the block above used to say could
+ * not be lifted from here. yoshi_all_16p_pl is 128 bytes -- four sixteen-colour
+ * rows -- and VS reads one row per player out of it, so above four players the
+ * rows were reused and seat 4 wore another seat's colours. The old note said
+ * "growing the palette means growing an asset the game allocates from its own
+ * data rather than a host array the port hosts". That was true about a host
+ * array and wrong about the seam: the fs filter takes `u8 **data`, so it may
+ * REPLACE the buffer it is handed and return a new size, which lovesme_filter
+ * has always done. Growing the file is therefore the port's to do.
+ *
+ * HOW, exactly, and why it is the smallest edit that works. The 384 new bytes
+ * are APPENDED at the end of the file and the palette record is repointed at
+ * them (record +4 = offset, +8 = size). Nothing else in the BMD moves, so every
+ * other offset in the file -- bones, display lists, textures, materials, the
+ * bone-slot table -- still means what it meant, and bmd_parse's and
+ * palette_named's bounds checks (`dp + sz <= len`) hold against the new length.
+ * Rewriting the palette in place would have shifted every offset after it.
+ *
+ * AND THE RUNTIME FOLLOWS THE SIZE FIELD. src/func_0204a028.c is the upload
+ * walk: for each entry it asks the allocator for `p->field_10` bytes, gets a
+ * slot address back, and calls GX::LoadTexPltt with that same size. So the
+ * record's size is what is reserved AND what is copied, and the two cannot
+ * disagree. The material's palette base then names the row: ntr binds a
+ * sixteen-colour format at PLTT_SLOT_BASE + base*16 (port/ntr/gx.cpp
+ * bind_from_vram), and Player+0x61C is base + (mPlayerNo << 1), so one step of
+ * mPlayerNo is +32 bytes, which is exactly one row. Slot 15 lands at +480 of
+ * 512.
+ *
+ * WHY IT IS UNCONDITIONAL rather than gated on the session width or on
+ * SM64DS_VS_COLORS. Every peer has to agree about what everyone looks like, and
+ * a gate is one more thing that can be true on one machine and false on
+ * another. The file is served once per boot; the cost is 384 bytes of palette
+ * VRAM out of the 0x18000-byte window, and rows 4..15 are unreachable unless a
+ * player actually has mPlayerNo >= 4. Adventure, the minigames and every narrow
+ * match bind rows 0..3 exactly as before.
+ *
+ * WHAT IT DOES NOT CHANGE. With no SM64DS_VS_COLORS, rows 0..3 come out of the
+ * served buffer byte for byte, so the four ROM Yoshis are the cartridge's own
+ * bytes. This runs LAST in mod_filter, after PaletteYoshi, CustomPalette and
+ * the lobby's own colours, so whatever those wrote is the baseline the wide
+ * rows are generated from rather than something they get to overwrite. */
+
+int g_y16_said;
+
+u8 *yoshi_rows16_grow(const u8 *d, u32 size, u32 *out_size, const char **why)
+{
+    u32 npal, palo, rec = 0, dp = 0, sz = 0, newoff, nsize;
+    u16 rom[4][16], rows[16][16];
+    vspal::VsPick picks[kPortMaxPlayers];
+    u8 *n;
+
+    *why = "file too small for a BMD header";
+    if (size < 0x3c)
+        return 0;
+    npal = rd32(d, 0x1c);
+    palo = rd32(d, 0x20);
+    *why = "palette table is not a BMD's";
+    if (npal == 0 || npal > 64 || palo > size || npal * 0x10 > size - palo)
+        return 0;
+    *why = "no yoshi_all_16p_pl in the file";
+    for (u32 i = 0; i < npal; ++i) {
+        u32 r = palo + i * 0x10, nm = rd32(d, r);
+        if (nm < size && strcmp((const char *)d + nm, YOSHI_PAL) == 0) {
+            rec = r;
+            dp = rd32(d, r + 4);
+            sz = rd32(d, r + 8);
+            break;
+        }
+    }
+    if (!rec)
+        return 0;
+    /* 128 is the shape this grows FROM. Anything else -- including 512, which
+       would mean somebody already grew it -- is a disagreement rather than a
+       state to be idempotent about, and is refused out loud like every other
+       disagreement in this file. */
+    *why = "yoshi_all_16p_pl is not the four stacked rows this build knows";
+    if (sz != 128 || dp > size || sz > size - dp)
+        return 0;
+
+    for (int r = 0; r < 4; ++r)
+        for (int i = 0; i < 16; ++i)
+            rom[r][i] = rd16(d, dp + (u32)r * 32 + (u32)i * 2);
+
+    vsc_load();
+    for (int s = 0; s < kPortMaxPlayers; ++s) {
+        picks[s].set = g_vsc[s].set;
+        memcpy(picks[s].body, g_vsc[s].body, 3);
+        memcpy(picks[s].shoes, g_vsc[s].shoes, 3);
+    }
+    vspal::vs_palette_rows16(rom, picks, rows);
+
+    newoff = (size + 3u) & ~3u;
+    nsize = newoff + 512u;
+    *why = "out of host memory";
+    n = (u8 *)malloc(nsize);
+    if (!n)
+        return 0;
+    memcpy(n, d, size);
+    memset(n + size, 0, newoff - size);
+    for (int r = 0; r < 16; ++r)
+        for (int i = 0; i < 16; ++i)
+            wr16(n, newoff + (u32)r * 32 + (u32)i * 2, rows[r][i]);
+    wr32(n, rec + 4, newoff);
+    wr32(n, rec + 8, 512);
+    *out_size = nsize;
+    *why = 0;
+    return n;
+}
+
+u32 yoshi_rows16_filter(unsigned fileID, u8 **data, u32 size)
+{
+    static unsigned id;
+    static int resolved;
+    const char *why = 0;
+    u32 nsize = 0;
+    u8 *n;
+
+    if (!resolved) {
+        resolved = 1;
+        id = resolve_file_by_name(YOSHI_BODY);
+    }
+    if (!id || id != fileID)
+        return size;
+
+    n = yoshi_rows16_grow(*data, size, &nsize, &why);
+    if (!n) {
+        if (!g_y16_said++)
+            fprintf(stderr, "[mods] sixteen Yoshi rows OFF: %s; the four ROM "
+                            "rows are served and slots 4..15 share them\n",
+                    why ? why : "refused");
+        return size;
+    }
+    free(*data);
+    *data = n;
+    if (!g_y16_said++)
+        fprintf(stderr, "[mods] yoshi_all_16p_pl grown to 16 rows (128 -> 512 "
+                        "bytes at +%u); every VS seat has its own colours\n",
+                nsize - 512);
+    return nsize;
+}
+
 /* The installed filter is a chain, each mod deciding for itself whether the
    file is its business. Loves Me first because it can REPLACE the buffer;
    the palette patches then edit whatever bytes are actually being served.
@@ -2384,6 +2528,11 @@ u32 mod_filter(unsigned fileID, u8 **data, u32 size)
     size = palette_filter(fileID, data, size);
     size = character_palette_filter(fileID, data, size);
     size = vs_colors_filter(fileID, data, size);
+    /* run pal16: LAST, and it must stay last. It reads the four rows out of
+       whatever the chain above left in the buffer and generates twelve more
+       from them, so anything that ran after it would be writing into a
+       128-byte record that is no longer 128 bytes. */
+    size = yoshi_rows16_filter(fileID, data, size);
     return size;
 }
 

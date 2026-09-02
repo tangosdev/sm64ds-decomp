@@ -4388,6 +4388,56 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
 
     ObjSubTable *t = (ObjSubTable *)tbl;
     const int n = (int)data_0209f21c;
+
+    /* run pal16: THE TWO-BIT SLOT IS REPAIRED IN THE PALETTE WORD TOO, and
+       for every slot, not just the ones this function spawns.
+
+       Player+0x61C is the VS colour: src/func_ov002_020e5948.c:366 (hosted at
+       port/unmatched/TexSeq_Caller_ov002_020e5948.cpp) computes it inside
+       InitResources as
+
+           *(s32 *)(c + 0x61C) = material[0]->paletteBase + (mPlayerNo << 1)
+
+       where mPlayerNo is the byte InitResources itself just unpacked out of
+       the flag word as `(a >> 6) & 3`. Every reader downstream --
+       hal/player_bridges.cpp's hal_player_vs_palette, which stamps that word
+       into every material record the body and the head draw with -- spends
+       0x61C, never mPlayerNo. So repairing mPlayerNo after Actor::Spawn
+       returns fixed the IDENTITY and left the COLOUR on the truncated value,
+       and seats 4, 5 and 6 came out wearing seats 1, 2 and 3's rows. That is
+       the whole of the owner's two field reports from the seven-player match:
+       "player 5 looked like a copy of player 1", and a black pick in a wide
+       seat coming out as some other seat's recoloured brown.
+
+       ONE STEP OF mPlayerNo IS EXACTLY ONE SIXTEEN-COLOUR ROW (the base is in
+       eight-byte units and ntr binds at base*16, so `<< 1` is +32 bytes), so
+       the correction is a delta and needs nothing the actor does not already
+       hold: whatever value InitResources unpacked is still in the byte, and
+       the difference between it and the true slot is the number of rows the
+       word is off by.
+
+       WHY IT RUNS OVER EVERY SLOT AND NOT JUST THIS FUNCTION'S OWN. The
+       level's entrance table seats the slots it has records for before this
+       function is reached, through the ROM's own loop, which packs `i << 6`
+       with no cycling; those are correct for 0..3 and this pass is a
+       measured no-op on them -- a two- or four-player match repairs nothing
+       and behaves exactly as it always has. But if a level ever does seat a
+       record past the fourth, the ROM's own packing truncates it the same way
+       and nothing else would notice. Repairing on the DISAGREEMENT rather
+       than on which function did the spawning covers both, and says out loud
+       when it fires. */
+    for (int i = 0; i < n && i < kPortMaxPlayers; ++i) {
+        char *a = (char *)data_0209f394[i];
+        if (!a) continue;
+        const unsigned packed = *(unsigned char *)(a + 0x6d8);
+        if ((int)packed == i) continue;
+        *(int *)(a + 0x61c) += ((int)i - (int)packed) << 1;
+        *(unsigned char *)(a + 0x6d8) = (unsigned char)i;
+        std::fprintf(stderr,
+                     "[vs] slot %d came up with mPlayerNo=%u; palette row and "
+                     "player number repaired to %d\n", i, packed, i);
+    }
+
     if (n < 2 || !t || !t->entries) return;
     if ((unsigned)t->count <= p3) return;
 
@@ -4486,7 +4536,17 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
            two-bit value InitResources just unpacked. Guarded on `a` because
            Actor::Spawn answers null when the heap is out, and a null store
            here would be a fault instead of a missing player. */
-        if (a) *((unsigned char *)a + 0x6d8) = (unsigned char)i;
+        /* run pal16: AND THE PALETTE WORD, by the same delta and for the same
+           reason as the repair pass at the top of this function. wire_slot is
+           exactly what InitResources unpacked -- the packing is two lines
+           above and `(a >> 6) & 3` cannot narrow a value that already cycles
+           1..3 -- so this is the correction, not an estimate of it. For i in
+           1..3 wire_slot IS i and this adds nothing, which is the narrow
+           path staying byte-identical here as well as on the wire. */
+        if (a) {
+            *(int *)((char *)a + 0x61c) += ((int)i - (int)wire_slot) << 1;
+            *((unsigned char *)a + 0x6d8) = (unsigned char)i;
+        }
         data_0209f394[i] = a;
         /* 0.3.2: THE GLOBALS THE ROM SEATS FOR FOUR. src/SetPlayerGlobals.c
            gives players 0..3 their health word (0x880 = 8 of 8) and their
