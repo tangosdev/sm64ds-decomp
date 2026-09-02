@@ -403,3 +403,117 @@ int _ZN5Koopa16CleanupResourcesEv(void *self)
 int _ZN5Koopa8BehaviorEv(void *self)
 { return ((Koopa *)self)->Koopa::Behavior(); }
 }
+
+// ============================================================================
+// KLEPTO (actor 239, ov062)
+// ============================================================================
+//
+// _ZTV6Klepto / _ZTV9daJango_c, ov062 0x0211dd5c -- ONE address, both names
+// (the dsd emits the class name and the RTTI name on the same word; D0 and D1
+// both store 0x0211dd5c). The cap-stealing bird: it lifts Mario's hat or a
+// carried item and flies a path. An Enemy subclass on the plain 31-slot table,
+// overriding the six lifecycle slots and NOTHING in the interaction tail.
+//
+// Its SpawnInfo is already in port/ov062_syms.txt (gate 32 mounted the overlay)
+// and its own +4 halfword reads 0xef (239), the registry's cross-check. It is
+// STATICALLY PLACED: the object table of level 16 (Shifting Sand Land) places
+// id 239 at (1749,1284,102); levels 25 and 43 place it too.
+//
+// Object layout, from Klepto_Spawn (ov062 0x0211ce80, 1168 bytes):
+// MovingCylinderClsn at 0x110 and 0x144, WithMeshClsn at 0x178, BlendModelAnim
+// at 0x334, ShadowModel at 0x3a4.
+//
+// Slot 29 (OnAimedAtWithEgg) has a ROM body of its own, func_ov062_0211ce78,
+// but it carries the "recovered from vtable slot identity" GUESS marker, so it
+// is NOT enrolled and slot 29 keeps the shared Actor default (kc182_aimed_actor)
+// -- inferred_stub_guard stays green. Every other tail slot is the Actor
+// default the reloc run already lands on.
+//
+// KLEPTO IS A TWO-PMF-DISPATCHER CLASS. func_ov062_0211c658 (the state setter)
+// and Klepto::Behavior (the per-frame tick) both form the pointer-to-member
+// over a forward-declared struct, so both are host copies in
+// port/unmatched/Klepto_StateDispatch.cpp, which also seats the ten state
+// templates. Its Render dispatches its BlendModelAnim at +0x334 through a slot-5
+// local shadow, but blend_vtable.cpp (gate 24) is MSVC-slot-ordered for exactly
+// the five BlendModelAnim owners (Klepto among them), so Render stays a faced
+// .cpp method here, not a host copy.
+extern "C" {
+int _ZN6Klepto13InitResourcesEv(void *self);      /* face below */
+int _ZN6Klepto8BehaviorEv(void *self);            /* host copy (StateDispatch) */
+int _ZN6Klepto6RenderEv(void *self);              /* face below */
+int _ZN6Klepto16CleanupResourcesEv(void);         /* C-named in its own .c TU */
+void _ZN6Klepto16OnPendingDestroyEv(void);        /* empty body, its own .c TU */
+int *_ZN6KleptoD1Ev(int *self);
+int *_ZN6KleptoD0Ev(int *self);
+void *_ZTV6Klepto[31];
+void port_klepto_states_seat(void);               /* port/unmatched */
+}
+/* The bird's own D0 spells its table by the RTTI name; both names are the same
+   ROM word, so this aliases the one nominal to the host array. */
+#pragma comment(linker, "/alternatename:__ZTV9daJango_c=__ZTV6Klepto")
+/* The class's .cpp bodies (InitResources, Render, and the .cpp state handlers)
+   reach the mounted ov062/arm9 data and the real ROM methods under C++ mangled
+   names; bridge each to the C mount/decomp symbol (the KoopaShell / bowserpuzzle
+   pattern). The four SharedFilePtr model+anim file handles InitResources loads,
+   the alternate manglings the handlers read the same words under (BCA_File**,
+   Data, void*, char), the player pointer, and the PathPtr / Actor::Spawn methods
+   c2f4 and b930 form against include/. */
+#pragma comment(linker, "/alternatename:?data_ov062_0211e0fc@@3USharedFilePtr@@A=_data_ov062_0211e0fc")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e104@@3USharedFilePtr@@A=_data_ov062_0211e104")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e10c@@3USharedFilePtr@@A=_data_ov062_0211e10c")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e114@@3USharedFilePtr@@A=_data_ov062_0211e114")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e104@@3PAPAUBCA_File@@A=_data_ov062_0211e104")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e10c@@3UData@@A=_data_ov062_0211e10c")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e17c@@3DA=_data_ov062_0211e17c")
+#pragma comment(linker, "/alternatename:?data_ov062_0211e17c@@3PAXA=_data_ov062_0211e17c")
+#pragma comment(linker, "/alternatename:?data_0209f394@@3PAXA=_data_0209f394")
+#pragma comment(linker, "/alternatename:??0PathPtr@@QAE@XZ=__ZN7PathPtrC1Ev")
+#pragma comment(linker, "/alternatename:?FromID@PathPtr@@QAEXI@Z=__ZN7PathPtr6FromIDEj")
+#pragma comment(linker, "/alternatename:?Spawn@Actor@@SAIIIABUVector3@@PBUVector3_16@@HH@Z=__ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii")
+
+static int __fastcall klp_init(void *s, void *)
+{ return _ZN6Klepto13InitResourcesEv(s); }
+static int __fastcall klp_clean(void *, void *)
+{ return _ZN6Klepto16CleanupResourcesEv(); }
+static int __fastcall klp_behavior(void *s, void *)
+{ return _ZN6Klepto8BehaviorEv(s); }
+static int __fastcall klp_render(void *s, void *)
+{ port_actor_render_probe("KLEPTO", (char *)s + 0x334);
+  return _ZN6Klepto6RenderEv(s); }
+static int __fastcall klp_pdes(void *s, void *)
+{ (void)s; _ZN6Klepto16OnPendingDestroyEv(); return 0; }
+static int __fastcall klp_d1(void *s, void *)
+{ return (int)(size_t)_ZN6KleptoD1Ev((int *)s); }
+static int __fastcall klp_d0(void *s, void *)
+{ return (int)(size_t)_ZN6KleptoD0Ev((int *)s); }
+
+extern "C" void hal_fill_klepto_vtable(void)
+{
+    void **vt = (void **)_ZTV6Klepto;
+    port_klepto_states_seat();
+    port_enemy_death_states_seat();
+    kc182_fill_shared_0_30(vt);
+    vt[0]  = (void *)klp_init;
+    vt[3]  = (void *)klp_clean;
+    vt[6]  = (void *)klp_behavior;
+    vt[9]  = (void *)klp_render;
+    vt[12] = (void *)klp_pdes;
+    vt[16] = (void *)klp_d1;
+    vt[17] = (void *)klp_d0;
+    /* slots 18/19/29 stay the shared Actor defaults kc182_fill_shared_0_30 seats:
+       the reloc run lands 18/19 on the Actor defaults, and slot 29's ROM body
+       func_ov062_0211ce78 is a vtable-slot-identity guess, kept trapped. */
+}
+
+// ---- Klepto method faces ---------------------------------------------------
+// InitResources and Render are .cpp methods against include/Klepto.h; the
+// vtable thunks reference the Itanium C name, so face each onto the MSVC method.
+// CleanupResources, OnPendingDestroy, D0, D1 are .c C-linkage in their own TUs;
+// Behavior is the host copy. Render is faced, not host-copied (see the note).
+#include "Klepto.h"
+extern "C" {
+int _ZN6Klepto13InitResourcesEv(void *self)
+{ return ((Klepto *)self)->Klepto::InitResources(); }
+int _ZN6Klepto6RenderEv(void *self)
+{ return ((Klepto *)self)->Klepto::Render(); }
+}

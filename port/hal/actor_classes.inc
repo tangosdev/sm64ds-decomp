@@ -809,6 +809,11 @@ extern unsigned char Chuckya_SpawnInfo[];   /* ov062 0x0211d9bc, +4 reads 190 */
 extern unsigned char Koopa_SpawnInfo[];     /* ov062 0x0211da74, +4 reads 203 */
 void *Chuckya_Spawn(void);   /* installs _ZTV7Chuckya itself */
 void *Koopa_Spawn(void);     /* installs _ZTV5Koopa itself */
+/* KLEPTO (239), the cap-stealing bird: ov062 already mounted (gate 32), HAL-only
+   seat. Two-PMF-dispatcher class; see hal/actor_classes_koopa_chuckya.cpp. */
+extern unsigned char Klepto_SpawnInfo[];    /* ov062 0x0211dd38, +4 reads 239 */
+void *Klepto_Spawn(void);                   /* ov062 0x0211ce80, installs _ZTV6Klepto */
+void hal_fill_klepto_vtable(void);
 void hal_fill_chuckya_vtable(void);
 void hal_fill_koopa_vtable(void);
 
@@ -2349,6 +2354,8 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     /* KOOPA (203) restored: his model fileptrs (data_ov062_0211cee0 -> ov002)
        now rebase through ovdata.py's per-target cross pass, so SF4 boots. */ \
     {203, "KOOPA", Koopa_SpawnInfo, Koopa_Spawn, hal_fill_koopa_vtable}, \
+    /* ---- gate KLEPTO: ov062's cap-stealing bird (Shifting Sand Land et al.) ---- */ \
+    {239, "KLEPTO", Klepto_SpawnInfo, Klepto_Spawn, hal_fill_klepto_vtable}, \
     /* ---- gate 188: ov016's six MOVER classes (Jolly Roger Bay) ---- */ \
     {242, "UNAGI", Unagi_SpawnInfo, Unagi_Spawn, hal_fill_unagi_vtable}, \
     {57, "SHIP_UP", ShipUp_SpawnInfo, ShipUp_Spawn, hal_fill_ship_up_vtable}, \
