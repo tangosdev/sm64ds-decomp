@@ -1081,7 +1081,16 @@ static int port_door_swap(char *c, int chr)
        short, not just the HP byte -- the low byte is a fraction GiveHealth
        works in. Without this every swap visibly refills the HUD hearts, which
        makes the row useless for anything you were testing damage against. */
-    const unsigned pno = *(unsigned char *)(c + 0x6d8) & 3;
+    /* THE HEALTH TABLE IS SIXTEEN WIDE, so mPlayerNo is read WHOLE. The `& 3`
+       that used to be here predated 0.3.2's widening of data_02092144 to
+       kPortMaxPlayers (hal/cxx_aliases.cpp:70), and it was wrong the moment
+       slots 4..15 could exist: a swap in slot 5 saved slot 1's health and then
+       wrote slot 1's health back over whatever slot 1 had done in between.
+       mPlayerNo is a whole byte and the port writes the TRUE slot into it
+       (hal/level_boot.cpp, right after Actor::Spawn returns), so the only
+       thing owed here is a bound, not a mask. */
+    unsigned pno = *(unsigned char *)(c + 0x6d8);
+    if (pno >= (unsigned)kPortMaxPlayers) pno = 0;
     const short saved_hp = data_02092144[pno];
     /* which body model is animating RIGHT NOW, before param1 moves */
     const unsigned old_id =

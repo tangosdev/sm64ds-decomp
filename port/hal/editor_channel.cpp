@@ -851,7 +851,14 @@ void exec(const Cmd &c)
            no Player. `level <N> char <M>` is the shape the Studio parses (it
            strips "level " and reads the first field as i32). */
         const char *p = (const char *)data_0209f394[0];
-        int chr = p ? (*(const unsigned char *)(p + OFF_PLAYER_CHARACTER) & 3)
+        /* MASKED & 7, NOT & 3. Player+0x6d9 is seated as `b & 7` by
+           src/_ZN6Player13InitResourcesEv.cpp:76, so the ROM's field is three
+           bits, and hal/comms_conductor.cpp:828 already reports it at that
+           width. Two bits folded anything above 3 onto a different character
+           and reported it as fact. The save-side array below is a different
+           source -- a save byte holding one of the four playable characters --
+           and keeps its own width. */
+        int chr = p ? (*(const unsigned char *)(p + OFF_PLAYER_CHARACTER) & 7)
                     : (data_02092128[0] & 3);
         std::snprintf(buf, sizeof buf, "level %d char %d\n",
                       (int)data_0209f2f8, chr);
