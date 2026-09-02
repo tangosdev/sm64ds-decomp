@@ -1704,6 +1704,12 @@ void dh_frame() {
 
 }  // namespace
 
+/* port/rollback: the detector numbers frames with its own counter, which a
+   rewind must put back with the world or every hash line after the first
+   rollback names a different frame than the other console's. */
+extern "C" int  port_dh_frame_get(void) { return g_dh_frame; }
+extern "C" void port_dh_frame_set(int f) { g_dh_frame = f; }
+
 void sync_tick() {
     dh_frame();      // VCHOMP detector: ahead of the gate on purpose -- it has
                      // to work with the sync layer off. No-op unless armed.

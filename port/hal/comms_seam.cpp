@@ -241,6 +241,23 @@ int func_020406b4(const void *block, unsigned short *status) {
     return done;
 }
 
+/* port/rollback: the seam's two counters are host bookkeeping outside the
+   snapshot regions, and the divergence detector stamps `rounds` on every
+   frame's hash line. A rewind puts them back with the world so a replayed
+   frame prints the same stamp it printed the first time. */
+extern "C" void port_comms_counters_get(unsigned long long *exchanges,
+                                        unsigned long long *rounds)
+{
+    *exchanges = port::g_exchanges;
+    *rounds = port::g_rounds;
+}
+extern "C" void port_comms_counters_set(unsigned long long exchanges,
+                                        unsigned long long rounds)
+{
+    port::g_exchanges = exchanges;
+    port::g_rounds = rounds;
+}
+
 // src/func_0204068c.c: player `aid`'s received block, or 0.
 // PORT_HOST_ABI: hosted WM/radio seam face; returns a peer's received block out of the NITRO WM buffers over arm7.bin, which this repo does not decompile.
 const void *func_0204068c(unsigned short aid) {

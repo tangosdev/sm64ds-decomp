@@ -850,6 +850,8 @@ void rb_frame_end(int *frame, int selftest);
 int rb_replaying(void);
 int rb_skip_render(void);
 int rb_skip_actor_render(void);
+void rb_replay_phase(int idx, double ms);
+void port_actor_render_replay(void);
 enum { RB_ACTOR_TICK = 0, RB_ANIMS, RB_PARTICLE, RB_CYL, RB_SCENEPASS,
        RB_PH_INPUT, RB_PH_CAMERA, RB_PH_SUBMIT, RB_PH_RASTER, RB_PH_BLIT,
        RB_PH_FRAME };
@@ -10792,14 +10794,18 @@ int main(void)
                is what made every session's key word a d-pad nibble and every
                button dead once the direct Ctrl stores were gated. */
             port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
+            { const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
             func_0203df40();
+            if (rb_replaying()) rb_replay_phase(6, ovl_now_ms() - t_rb); }
             /* run mg16 lane MP4: one frame of the state-sync layer, AFTER the
                conductor. Call position is the contract's ordering rule made
                structural: func_0203df40 above has already put this frame's
                input record on the wire, so aux can never delay the thing the
                lockstep blocks on. No-op unless SM64DS_SYNC=1 and the transport
                reports contract v2. */
+            { const double t_rb = rb_replaying() ? ovl_now_ms() : 0;
             port::sync_tick();
+            if (rb_replaying()) rb_replay_phase(7, ovl_now_ms() - t_rb); }
             /* ADVENTURE GHOSTS: ease every ghost toward its latest snapshot,
                HERE -- after sync_tick has recorded this frame's target and after
                the actor tick advanced the body under its own physics -- so the
@@ -11394,7 +11400,8 @@ int main(void)
                 /* the tick-only re-sim (hal/rollback.cpp): a replayed frame
                    skips the actors' Render bodies; status/ROLLBACK_SHIP.md
                    has the audit that says they write nothing a tick reads */
-                if (!rb_skip_actor_render())
+                if (rb_skip_actor_render()) port_actor_render_replay();
+                else
                 port_actor_render();
                 /* THE PARTICLE SIMULATION GOES HERE, which is where
                    Stage::Render drives it. The SUBMISSION does not: it belongs
@@ -11979,6 +11986,9 @@ int main(void)
             rb_note(RB_PH_RASTER, g_clk.raw[PH_RASTER]);
             rb_note(RB_PH_BLIT,   g_clk.raw[PH_BLIT]);
             rb_note(RB_PH_FRAME,  g_clk.raw[PH_FRAME]);
+        }
+        if (rb_replaying()) {
+            for (int p = 0; p < PH_COUNT; ++p) rb_replay_phase(p, g_clk.raw[p]);
         }
         /* present-to-present rate, and the GAME TICK rate beside it -- the two
            diverge whenever a tick is skipped, which is what the debug menu's

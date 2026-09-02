@@ -83,6 +83,10 @@ void port_hw_regions_copy_in(const void *src);
 int  port_ss_rollguard_begin(void);
 void port_ss_rollguard_end(int began);
 void sd_host_mute(int on);
+void port_comms_counters_get(unsigned long long *exchanges, unsigned long long *rounds);
+void port_comms_counters_set(unsigned long long exchanges, unsigned long long rounds);
+int  port_dh_frame_get(void);
+void port_dh_frame_set(int f);
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
 }
 
@@ -106,6 +110,9 @@ struct Slot {
     bool      valid;
     unsigned  tag;                   // the round this world precedes
     int       frame;
+    // host bookkeeping outside the three regions, put back with them
+    unsigned long long exchanges, rounds;   // the seam's counters
+    int       dh_frame;                     // the divergence detector's clock
     char     *arena;
     char     *ds;
     void     *cursor;
@@ -145,6 +152,12 @@ int      g_keep_actor_render = 0;    // SM64DS_ROLLBACK_ACTOR_RENDER=1: replay r
 // counters and timing
 struct Stat { double sum, max; int n; double s[4096]; };
 Stat g_snap, g_restore, g_rbevent, g_rbframe, g_rbframes;
+Stat g_rp[8];                        // replayed frames, per loop phase
+static const char *const kPhase[8] = {
+    "replay PH_INPUT (tick)", "replay PH_CAMERA (exchange)",
+    "replay PH_SUBMIT", "replay PH_RASTER", "replay PH_BLIT",
+    "replay PH_FRAME (loop body)", "replay func_0203df40 (ROM comms)",
+    "replay sync_tick" };
 unsigned long long g_snapshots = 0, g_rollbacks = 0, g_frames_replayed = 0,
                    g_hw_pages_logged = 0, g_hw_pages_restored = 0,
                    g_flushes = 0, g_unrecoverable = 0, g_stalls_paused = 0;
@@ -409,6 +422,8 @@ int snapshot(unsigned tag, int frame)
     s.valid = true;
     s.tag = tag;
     s.frame = frame;
+    port_comms_counters_get(&s.exchanges, &s.rounds);
+    s.dh_frame = port_dh_frame_get();
     memcpy(s.arena, port_arena_base(), g_arena_size);
     memcpy(s.ds, &dsstate_lo, g_ds_size);
     s.cursor = port_arena_cursor();
@@ -428,6 +443,8 @@ bool restore(unsigned tag)
     memcpy(&dsstate_lo, s->ds, g_ds_size);
     port_ss_rollguard_end(norg);
     port_arena_set_cursor(s->cursor);
+    port_comms_counters_set(s->exchanges, s->rounds);
+    port_dh_frame_set(s->dh_frame);
     hw_restore_to(tag, *s);
     sd_consumer_reset();
     sd_sdat_reseat();
@@ -491,6 +508,7 @@ void report()
     print_stat("rollback event (restore+replay)", g_rbevent);
     print_stat("per replayed frame", g_rbframe);
     print_stat("frames per rollback", g_rbframes);
+    for (int p = 0; p < 8; ++p) print_stat(kPhase[p], g_rp[p]);
     if (g_local_probe)
         fprintf(stderr, "[rb-local] frames with a round served=%llu same-frame "
                 "input in the record=%llu mismatches=%llu -> %s\n",
@@ -498,13 +516,14 @@ void report()
                 g_probe_diff ? "FAIL" : (g_probe_frames ? "OK" : "no rounds"));
 }
 
-void end_replay()
+void end_replay(bool count = true)
 {
     g_replaying = false;
     sd_host_mute(0);
     port::comms_rb_det_reuse(false);
     const double ms = now_ms() - g_replay_t0;
     const unsigned n = g_replay_to - g_replay_from;
+    if (!count) return;              // the session ended mid-replay
     note(g_rbevent, ms);
     note(g_rbframes, (double)n);
     if (n) note(g_rbframe, ms / n);
@@ -587,6 +606,10 @@ int rb_skip_actor_render(void)
     return g_replaying && !g_no_render_skip && !g_keep_actor_render &&
            port::comms_rb_replaying();
 }
+void rb_replay_phase(int idx, double ms)
+{
+    if (idx >= 0 && idx < 8) note(g_rp[idx], ms);
+}
 int rb_owns_det(void) { read_env(); return port::comms_rb_mode() && g_det_frame >= 0; }
 
 void rb_frame_end(int *frame, int selftest)
@@ -596,7 +619,7 @@ void rb_frame_end(int *frame, int selftest)
     const bool up = port::comms_rb_enabled();
     if (!up) {
         if (g_ring_live) { ring_flush("the session ended"); g_ring_live = false; }
-        if (g_replaying) end_replay();
+        if (g_replaying) end_replay(false);
         if (selftest && *frame + 1 >= selftest) report();
         return;
     }

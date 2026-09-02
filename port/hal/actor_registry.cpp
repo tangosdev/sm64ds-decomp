@@ -970,6 +970,41 @@ extern "C" void port_actor_render(void)
     data_02099f24[0] = 0;
 }
 
+/* port/rollback: THE TICK-ONLY REPLAY'S RENDER PASS. status/ROLLBACK_SHIP.md
+   has the audit: every Render body reached from list 5 is geometry
+   submission and Render-private scratch, except InvisibleSecret (ids 329 and
+   330), whose Render decrements the countdown its Behavior gates on and
+   marks itself for destruction, and FlameChompFire (271) and MrI_Projectile
+   (264), whose Render is the only keep-alive for their particle emitters.
+   A replayed frame walks list 5 exactly as func_02043fdc does (same phase
+   word, same current-node global, same PMF dispatch) and runs only those
+   four; everything else stands down. Each allowed node is run through the
+   ROM's own walker on a one-node view of the list, so the dispatch, the
+   `this` adjustment and data_020a4b68 are the walker's, not a copy. */
+extern "C" void *data_020a4b68;
+extern "C" void *func_02043fdc(void *thing);
+extern "C" void port_actor_render_replay(void)
+{
+    struct Node { int pad; Node *next; unsigned char *obj; };
+    data_02099f24[0] = 5;
+    Node *node = (Node *)(size_t)data_020a4b98[0];
+    while (node) {
+        Node *next = node->next;
+        const unsigned id = *(const unsigned *)(node->obj + 0x0c);
+        if (id == 329 || id == 330 || id == 271 || id == 264) {
+            int one[8];
+            std::memcpy(one, data_020a4b98, sizeof one);
+            one[0] = (int)(size_t)node;
+            node->next = 0;
+            func_02043fdc(one);
+            node->next = next;
+        }
+        node = next;
+    }
+    data_020a4b68 = 0;
+    data_02099f24[0] = 0;
+}
+
 /* Phase 1: the scene tree. Priority re-sorts, parent flag propagation and the
    deferred list insertions -- the housekeeping that closes the ROM's frame. */
 extern "C" void port_actor_scene_pass(void)

@@ -74,8 +74,14 @@ def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None):
     e["SM64DS_COMMS_ROLE"] = "parent" if k == 0 else "child"
     e["SM64DS_COMMS_PORT"] = str(base or BASE)
     e["SM64DS_COMMS_FANOUT"] = "1"
-    e["SM64DS_COMMS_REPORT"] = "1"
-    e["SM64DS_VS_STATE_HASH"] = "2"
+    # NOT SM64DS_COMMS_REPORT: its per-frame lines are several unbuffered
+    # stderr writes a frame, about 9 ms here, and they land inside the
+    # exchange phase of every replayed frame. The cost numbers this ladder
+    # reports are measured the way a player runs, with it off; the session
+    # check reads the live mask off the transport's closing line instead.
+    # The hash at level 1 is the world hash the sweep needs; a divergence is
+    # re-run at level 3 by hand to name the field.
+    e["SM64DS_VS_STATE_HASH"] = "1"
     e["SM64DS_ROLLBACK_LOCALPROBE"] = "1"
     e["SM64DS_COMMS_INJECT"] = "key=0x%04x,toggle=%d,key2=0x%04x" % (
         KEYS[k % 4], TOGGLE, KEYS[(k + 1) % 4])
@@ -170,7 +176,7 @@ def session_ok(name, r, n):
     want = (1 << n) - 1
     oks = []
     for t in r["texts"]:
-        live = grab(t, r"live=0x([0-9a-f]+)", "0")
+        live = grab(t, r"rollback: live=0x[0-9a-f]+ peak=0x([0-9a-f]+)", "0")
         oks.append(int(live, 16) == want)
     return say(all(oks), name + " session", "live=0x%x on %d/%d, rc=%r, wall %.1fs"
                % (want, sum(oks), n, r["rcs"], r["wall"]))
@@ -208,9 +214,9 @@ def rung_pair(frames, relay=None):
         ok &= sweep(name, r)
         ok &= probe_ok(name, r)
         rolled = [grab(t, r"rollbacks=(\d+)", "0") for t in r["texts"]]
-        ovf = [grab(t, r"delayovf=(\d+)", "0") for t in r["texts"]]
-        say(all(o == "0" for o in ovf), name + " delay ring",
-            "delayovf=%r rollbacks=%r" % (ovf, rolled))
+        unrec = [grab(t, r"unrecoverable=(\d+)", "?") for t in r["texts"]]
+        ok &= say(all(u == "0" for u in unrec), name + " every rewind honoured",
+                  "unrecoverable=%r rollbacks=%r" % (unrec, rolled))
         summary_lines(r)
     return ok
 

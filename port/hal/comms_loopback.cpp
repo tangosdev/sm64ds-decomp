@@ -827,6 +827,9 @@ unsigned long long g_rb_stall_events = 0;// stall episodes
 unsigned long long g_rb_drops = 0;       // slots retired by the grace rule
 unsigned long long g_rb_rewinds = 0;     // comms_rb_rewind calls
 unsigned long long g_rb_replayed = 0;    // rounds served in replay
+unsigned long long g_rb_xcalls = 0, g_rb_xzero = 0;   // live exchange calls, zero returns
+unsigned g_rb_live_peak = 0;             // every slot that was ever live this session
+unsigned long long g_rb_rxcalls = 0, g_rb_rxzero = 0; // the same while replaying
 struct RbSlotPred {
     bool          have;
     unsigned      round;                  // last confirmed round
@@ -3065,6 +3068,7 @@ void lb_open(unsigned mode) {
     g_rb_live_round = 0;
     g_rb_stall_start_ms = 0;
     g_rb_stall_mask = 0;
+    g_rb_live_peak = 0;
     std::memset(g_rb_pred, 0, sizeof g_rb_pred);
 
     // SEED THE PEER TABLE. In loopback mode every entry is known up front and
@@ -3154,12 +3158,14 @@ void lb_close() {
                  rb_live_round(), g_input_delay, g_pipe_starved, g_sent, g_recvd,
                  g_resends, by);
     if (g_rollback)
-        std::fprintf(stderr, "[comms:loopback] rollback: predicted=%llu ok=%llu "
+        std::fprintf(stderr, "[comms:loopback] rollback: live=0x%x peak=0x%x predicted=%llu ok=%llu "
                      "mispredicted=%llu rewinds=%llu replayed=%llu "
-                     "stalled=%llu stallevents=%llu drops=%llu\n",
-                     g_rb_predicted, g_rb_confirmed_ok, g_rb_mispredicted,
+                     "stalled=%llu stallevents=%llu drops=%llu "
+                     "xcalls=%llu xzero=%llu rxcalls=%llu rxzero=%llu\n",
+                     g_live, g_rb_live_peak, g_rb_predicted, g_rb_confirmed_ok, g_rb_mispredicted,
                      g_rb_rewinds, g_rb_replayed, g_rb_stalled,
-                     g_rb_stall_events, g_rb_drops);
+                     g_rb_stall_events, g_rb_drops,
+                     g_rb_xcalls, g_rb_xzero, g_rb_rxcalls, g_rb_rxzero);
 }
 
 void lb_become_parent() {
@@ -3267,7 +3273,16 @@ void rb_leave(const char *why) {
     g_rb_stall_start_ms = 0;
 }
 
+int rb_exchange_body(const void *my_block);
 int rb_exchange(const void *my_block) {
+    const bool rp = g_rb_replaying;
+    const int r = rb_exchange_body(my_block);
+    g_rb_live_peak |= g_live;
+    if (rp) { ++g_rb_rxcalls; if (!r) ++g_rb_rxzero; }
+    else    { ++g_rb_xcalls;  if (!r) ++g_rb_xzero; }
+    return r;
+}
+int rb_exchange_body(const void *my_block) {
     const unsigned R = g_round;
     PipeRound *s = pipe_find(R);
     if (g_rb_replaying) {
@@ -3306,7 +3321,7 @@ int rb_exchange(const void *my_block) {
     if (!s) return 0;
 
     unsigned live = s->live_known ? s->live : g_live;
-    if (g_rb_replaying && !s->live_known) live = s->served_live;
+    if (g_rb_replaying && (!s->live_known || g_rb_det_reuse)) live = s->served_live;
 
     const unsigned now = now_ms();
     unsigned waiting = 0, stalled = 0;
@@ -3366,11 +3381,17 @@ int rb_exchange(const void *my_block) {
     for (int k = 0; k < kCommsMaxPlayers; ++k) {
         const unsigned bit = 1u << k;
         if (!(live & bit)) continue;
-        if (s->mask & bit) {
+        // The determinism check (comms_rb_det_reuse) re-serves the guess the
+        // straight run was handed even when the real block has landed since
+        // and disagrees: the question it asks is whether restore + re-tick
+        // reproduces the SAME inputs byte for byte, and the contradiction is
+        // the ordinary scan's business the moment the check is over.
+        const bool reuse = g_rb_replaying && g_rb_det_reuse && (s->pred_mask & bit);
+        if (!reuse && (s->mask & bit)) {
             std::memcpy(g_latched[k], s->blocks[k], kCommsBlockBytes);
             continue;
         }
-        if (!(g_rb_replaying && g_rb_det_reuse && (s->pred_mask & bit)))
+        if (!reuse)
             rb_predict(k, R, mine, s->pred[k]);
         std::memcpy(g_latched[k], s->pred[k], kCommsBlockBytes);
         pred_mask |= bit;
@@ -4450,7 +4471,12 @@ bool comms_rb_enabled() {
            (g_state == kCommsParentConnected || g_state == kCommsChildConnected);
 }
 bool comms_rb_mode() { return g_rollback; }
-bool comms_rb_replaying() { return g_rb_replaying; }
+bool comms_rb_replaying() {
+    // a session that collapsed mid-replay (the last peer left) has nothing
+    // left to replay against; the frame loop's own check reads this
+    return g_rb_replaying &&
+           (g_state == kCommsParentConnected || g_state == kCommsChildConnected);
+}
 unsigned comms_rb_round() { return g_round; }
 unsigned comms_rb_replay_end() { return g_rb_replay_end; }
 
