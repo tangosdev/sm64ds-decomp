@@ -208,6 +208,27 @@ int host_setting_mouse_capture(void);
    file's answer. */
 int host_setting_name_tags(void);
 
+/* ---- AdventureGhosts: PLAY THE SINGLE-PLAYER ADVENTURE TOGETHER ----------
+   Default 0, and 0 is the ROM: an ordinary solo game with nobody else in it.
+   With it on the game is still a solo game -- your own level, your own single
+   local player -- but it opens the comms carrier and the state-sync aux
+   channel and draws every OTHER player who is in the same level as a
+   see-through, walk-through ghost with a name tag. No shared world, no
+   collision, no interference; the only thing shared is "here is my body,
+   drawn faintly in your world" (status/ADVENTURE.md).
+
+   IT IS A MODE, NOT A PRESENTATION PREFERENCE, which is why the default is OFF
+   where NameTags' is ON. NameTags decides how an already-online body is
+   labelled; this decides whether the session is an adventure-ghost one at all.
+   It is NOT the VS flag data_0209f2d8==1: several draw and collide gates key
+   off VS mode, so ghost mode is its own scope and VS mode is byte-unaffected
+   by it.
+
+   Read like NameTags in every other respect: reloads live, and SM64DS_ADVENTURE
+   overrides the file (0 forces it off, any other value forces it on; unset is
+   the file's answer). */
+int host_setting_adventure_ghosts(void);
+
 /* ---- CustomPalette: the third Mods key ---------------------------------
    Default 0, and the default is the only setting that is the ROM. 1..3
    pick a palette combo file, palettes/combo<N>.pal in the same folder
@@ -299,6 +320,17 @@ int host_settings_gen(void);
 int host_setting_volume(void);
 
 #ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+namespace port {
+/* The adventure-ghost mode flag as a C++ predicate, so the ghost render and
+   no-collision paths read one name rather than the extern "C" accessor's
+   int. True exactly when host_setting_adventure_ghosts() is nonzero, env
+   override included. Nothing in src/ ever sees this; it gates host-layer
+   drawing and per-body interaction state only. */
+bool adventure_ghost_mode();
 }
 #endif
 
