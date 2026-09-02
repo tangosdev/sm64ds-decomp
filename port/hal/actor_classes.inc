@@ -406,6 +406,9 @@ void hal_fill_warp_vtable(void);
 extern unsigned char BobOmb_SpawnInfo[];        /* ov102 0x0214e534 */
 void *BobOmb_Spawn(void);                       /* ov102 0x0214c6f8 */
 void hal_fill_bob_omb_vtable(void);
+extern unsigned char KoopaShell_SpawnInfo[];    /* ov102 0x0214e62c, id 285 */
+void *KoopaShell_Spawn(void);                   /* ov102 0x0214d6b4 */
+void hal_fill_koopa_shell_vtable(void);
 extern unsigned char Goomba_SpawnInfo[];        /* ov084 0x021308ec */
 void *Goomba_Spawn(void);                       /* ov084 0x0212c0b0 */
 void hal_fill_goomba_vtable(void);
@@ -2010,6 +2013,8 @@ void hal_fill_wing_feather_vtable(void);              /* _ZTV11WingFeather, 31 *
      hal_fill_warp_pipe_vtable},                                           \
     /* ---- gate 32, Bob-omb Battlefield's cast (append-only block) ---- */    \
     {206, "BOB_OMB", BobOmb_SpawnInfo, BobOmb_Spawn, hal_fill_bob_omb_vtable},  \
+    {285, "KOOPA_SHELL", KoopaShell_SpawnInfo, KoopaShell_Spawn,               \
+     hal_fill_koopa_shell_vtable},                                             \
     {200, "GOOMBA", Goomba_SpawnInfo, Goomba_Spawn, hal_fill_goomba_vtable},    \
     {181, "BOB_OMB_BUDDY", BobOmbBuddy_SpawnInfo, BobOmbBuddy_Spawn,            \
      hal_fill_bob_omb_buddy_vtable},                                           \

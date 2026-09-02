@@ -282,6 +282,88 @@ int _ZN6BobOmb13InitResourcesEv(void *self)
 }
 
 // ============================================================================
+// KOOPA_SHELL (actor 285, ov102)
+// ============================================================================
+//
+// _ZTV10KoopaShell / _ZTV7daShl_c, ov102 0x0214e650. The green shell a stomped
+// Koopa leaves behind and the item a GREEN_SHELL_BLOCK_TAG cracks open. An Enemy
+// subclass on the same 31-slot table shape as BOB_OMB, overriding the six
+// lifecycle slots. Slot 18 (OnYoshiTryEat) keeps the shared Actor default:
+// the ROM body func_ov102_0214d6a0 is a vtable-slot-identity GUESS, not a named
+// decompilation, so inferred_stub_guard keeps it trapped out of the live fill.
+//
+// Its SpawnInfo is already in port/ov102_syms.txt (gate 23 mounted the overlay)
+// and its own +4 halfword reads 285, the registry's cross-check. It is spawned
+// dynamically, not placed: BrickBlock::SpawnKoopaShell (GREEN_SHELL_BLOCK_TAG id
+// 323, ov002) and a stomped Koopa (id 203, ov062) both call Actor::Spawn(0x11d).
+//
+// Object layout, from its own factory (KoopaShell_Spawn ov102 0x0214d6b4):
+// MovingCylinderClsn at 0x110, WithMeshClsn at 0x144, Model at 0x300,
+// ShadowModel at 0x350, MovingCylinderClsn at 0x378, 992 bytes.
+extern "C" {
+int _ZN10KoopaShell13InitResourcesEv(void *self);      /* C-named in its own TU */
+int _ZN10KoopaShell8BehaviorEv(void *self);            /* C-named in its own TU */
+int _ZN10KoopaShell6RenderEv(void *self);              /* C-named in its own TU */
+int _ZN10KoopaShell16CleanupResourcesEv(void *self);   /* C-named in its own TU */
+void _ZN10KoopaShell16OnPendingDestroyEv(void);        /* empty body */
+int *_ZN10KoopaShellD1Ev(int *self);
+int *_ZN10KoopaShellD0Ev(int *self);
+void *_ZTV10KoopaShell[31];
+}
+/* The shell's own D0 spells its table by the RTTI name. */
+#pragma comment(linker, "/alternatename:__ZTV7daShl_c=__ZTV10KoopaShell")
+/* The class's .cpp bodies reach the mounted ov102 data under C++ mangled names;
+   bridge each to the C mount symbol (the ov064 bowserpuzzle pattern). The model
+   file array and the four PMF state statics (ea68 reached under two shadows:
+   void* in InitResources, char in Behavior). */
+#pragma comment(linker, "/alternatename:?data_ov102_0214d70c@@3PAPAUSharedFilePtr@@A=_data_ov102_0214d70c")
+#pragma comment(linker, "/alternatename:?data_ov102_0214ea68@@3PAXA=_data_ov102_0214ea68")
+#pragma comment(linker, "/alternatename:?data_ov102_0214ea48@@3DA=_data_ov102_0214ea48")
+#pragma comment(linker, "/alternatename:?data_ov102_0214ea58@@3DA=_data_ov102_0214ea58")
+#pragma comment(linker, "/alternatename:?data_ov102_0214ea68@@3DA=_data_ov102_0214ea68")
+#pragma comment(linker, "/alternatename:?data_ov102_0214ea78@@3DA=_data_ov102_0214ea78")
+/* func_ov102_0214ce60 calls Actor::UpdateCarry returning Matrix4x3& (AAU); the
+   real matched method src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp (gate 18,
+   in this target) returns Matrix4x3* (PAU). Same __thiscall ABI, return-mangling
+   only; bridge the reference form to the pointer definition. */
+#pragma comment(linker, "/alternatename:?UpdateCarry@Actor@@QAEAAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z=?UpdateCarry@Actor@@QAEPAUMatrix4x3@@AAUPlayer@@ABUVector3@@@Z")
+
+static int __fastcall ksh_init(void *s, void *)
+{ return _ZN10KoopaShell13InitResourcesEv(s); }
+static int __fastcall ksh_clean(void *s, void *)
+{ return _ZN10KoopaShell16CleanupResourcesEv(s); }
+static int __fastcall ksh_behavior(void *s, void *)
+{ return _ZN10KoopaShell8BehaviorEv(s); }
+static int __fastcall ksh_render(void *s, void *)
+{ port_actor_render_probe("KOOPA_SHELL", (char *)s + 0x300);
+  return _ZN10KoopaShell6RenderEv(s); }
+static int __fastcall ksh_pdes(void *, void *)
+{ _ZN10KoopaShell16OnPendingDestroyEv(); return 0; }
+static int __fastcall ksh_d1(void *s, void *)
+{ return (int)(size_t)_ZN10KoopaShellD1Ev((int *)s); }
+static int __fastcall ksh_d0(void *s, void *)
+{ return (int)(size_t)_ZN10KoopaShellD0Ev((int *)s); }
+
+extern "C" void port_koopa_shell_states_seat(void);   /* port/unmatched */
+
+extern "C" void hal_fill_koopa_shell_vtable(void)
+{
+    void **vt = _ZTV10KoopaShell;
+    port_koopa_shell_states_seat();
+    port_enemy_death_states_seat();
+    ac31_fill_shared(vt);
+    vt[0] = (void *)ksh_init;
+    vt[3] = (void *)ksh_clean;
+    vt[6] = (void *)ksh_behavior;
+    vt[9] = (void *)ksh_render;
+    vt[12] = (void *)ksh_pdes;
+    vt[16] = (void *)ksh_d1;
+    vt[17] = (void *)ksh_d0;
+    /* slot 18 (OnYoshiTryEat) stays the shared Actor default: its ROM body
+       func_ov102_0214d6a0 is a vtable-slot-identity guess, kept trapped. */
+}
+
+// ============================================================================
 // GOOMBA (actor 200, ov084)
 // ============================================================================
 //
