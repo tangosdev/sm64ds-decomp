@@ -220,4 +220,216 @@ mounts NO object overlay and depends on whatever ov100/ov102 residency the
 previous scene left behind. The port mounts its overlays statically and so is
 immune; nothing is faked to reproduce a fragility.
 
-<!-- RUNTIME SECTIONS APPENDED BELOW ONCE THE PROOF RUNS -->
+---
+
+# THE RUNTIME HALF: what the port actually does, per arena
+
+Build green: `port/build-port.cmd` clean, every pre-configure selftest PASS, and
+`alternatename_guard`, `gxband_guard` (layout OK) and `tailjump_guard` (97
+assertions over 24 maps, forms OK) all green post-link.
+
+`python port/tools/vs_arena_census.py --frames 420`, one quiet muted boot per
+arena, **VERDICT: PASS**. Verbatim, with the SEQARC sound-effect traffic filtered
+out of the stream list:
+
+```
+========================================================================
+VS map 1  level 51   rc 0
+  star filter : 2
+  sound group : 43 bank 0x36 (table bgm column -1, unread in VS)
+  layer-1 seq : 0x4d
+  music streams started, in order (plus 57 SEQARC sound effects):
+      0x4d NCS_BGM_VSATHRETIC bank 128 (sdat+0x3dcbc, +0x1c into the file)
+  ROM places / port spawns / port keeps alive, by class:
+       31  rom x1    spawn x1    alive x1
+      178  rom x4    spawn x4    alive x4
+      180  rom x4    spawn x4    alive x4
+      191  rom x0    spawn x1    alive x0     (not placed: HUD, player, minimap, a spawn's child)
+      197  rom x7    spawn x7    alive x7
+      269  rom x6    spawn x6    alive x6
+      286  rom x12   spawn x12   alive x1     (folded: Tree::InitResources, see below)
+      332  rom x0    spawn x1    alive x0     (not placed)
+      334  rom x0    spawn x1    alive x1     (not placed)
+      335  rom x0    spawn x1    alive x1     (not placed)
+      337  rom x1    spawn x1    alive x1
+      350  rom x5    spawn x5    alive x5
+
+========================================================================
+VS map 2  level 43   rc 0
+  star filter : 2
+  sound group : 45 bank 0x36 (table bgm column 68, unread in VS)
+  layer-1 seq : 0x4d
+  music streams started, in order (plus 37 SEQARC sound effects):
+      0x4d NCS_BGM_VSATHRETIC bank 128 (sdat+0x3dcbc, +0x1c into the file)
+  ROM places / port spawns / port keeps alive, by class:
+       22  rom x1    spawn x1    alive x1
+      178  rom x5    spawn x5    alive x5
+      180  rom x5    spawn x5    alive x5
+      269  rom x6    spawn x6    alive x6
+      287  rom x5    spawn x5    alive x5
+      288  rom x8    spawn x8    alive x8
+
+========================================================================
+VS map 3  level 29   rc 0
+  star filter : 2
+  sound group : 46 bank 0x36 (table bgm column 65, unread in VS)
+  layer-1 seq : 0x4d
+  music streams started, in order (plus 29 SEQARC sound effects):
+      0x4d NCS_BGM_VSATHRETIC bank 128 (sdat+0x3dcbc, +0x1c into the file)
+  ROM places / port spawns / port keeps alive, by class:
+      178  rom x5    spawn x5    alive x5
+      180  rom x0    spawn x5    alive x5     (PowerStar's own child, see below)
+      269  rom x15   spawn x15   alive x15
+      288  rom x17   spawn x17   alive x17
+      290  rom x5    spawn x5    alive x5
+
+========================================================================
+VS map 4  level 42   rc 0
+  star filter : 2
+  sound group : 44 bank 0x36 (table bgm column 65, unread in VS)
+  layer-1 seq : 0x4d
+  music streams started, in order (plus 44 SEQARC sound effects):
+      0x4d NCS_BGM_VSATHRETIC bank 128 (sdat+0x3dcbc, +0x1c into the file)
+  ROM places / port spawns / port keeps alive, by class:
+       22  rom x2    spawn x2    alive x2
+      178  rom x5    spawn x5    alive x5
+      180  rom x5    spawn x5    alive x5
+      220  rom x2    spawn x2    alive x2
+      269  rom x6    spawn x6    alive x6
+      287  rom x1    spawn x1    alive x1
+      288  rom x8    spawn x8    alive x8
+
+VERDICT: PASS
+```
+
+**Zero declined spawns on any arena.** Every log carries
+`[census] N spawned (M classes), 0 skipped (0 classes)`, so the registry gate in
+`port/hal/actor_registry.cpp` declines nothing here, which matches the field
+logs, where the only decline anywhere is one unrelated id 0x14a.
+
+### The two rows that are not equalities, both adjudicated
+
+- **TREE 286, map 1: 12 placed, 12 spawned, 1 on the behaviour list.** The ROM's
+  own arrangement, not a loss. `src/_ZN4Tree13InitResourcesEv.cpp:34-38`
+  allocates a 0x4c-byte node, links it into `data_ov002_02110a48[modelIndex]`,
+  and then
+
+      *(int*)(p + 0x48) = *slot;
+      *slot = (int)p;
+      if (*(int*)(p + 0x48) != 0) return 0; else return 1;
+
+  so the FIRST tree of a model index returns 1 and stays an actor and every later
+  one returns 0 and lives as a node on that list, which the surviving tree
+  renders. All twelve trees are on the list; one of them is the actor.
+- **STAR_MARKER 180, map 3: 0 placed, 5 spawned.** Also the ROM's:
+  `src/_ZN9PowerStar13InitResourcesEv.cpp:171` and `:237` spawn actor `0xb4`
+  (180) from the star itself. The proof is in the positions: map 3's five
+  STAR_MARKERs read back at exactly the five POWER_STAR coordinates
+  `(4500,6300,-5500) (1829,-799,2735) (-6209,-4080,5571) (-5185,-4180,6189)
+  (-7210,-4180,6189)`. Maps 1, 2 and 4 place their markers in the level data and
+  the counts there are exact equalities, so the star takes the other branch on
+  those.
+
+## The four-window proof, all four arenas
+
+`python port/tools/vs4_proof.py --map <0..3> --frames 900`, muted and minimised
+through `mp2_proof.env_base`. **40 PASS / 0 FAIL on every map**, including all
+six pairings of rung 8:
+
+| map | level | verdict | rung 7 scores across windows | rung 8 |
+|---|---|---|---|---|
+| 1 | 51 | ALL GREEN | `(2,0,0,0)` x4 | 6/6 pairings NO DIVERGENCE, 401 common frames |
+| 2 | 43 | ALL GREEN | `(2,0,0,0)` x4 | 6/6 pairings NO DIVERGENCE, 401 common frames |
+| 3 | 29 | ALL GREEN | `(2,0,0,0)` x4 | 6/6 pairings NO DIVERGENCE, 401 common frames |
+| 4 | 42 | ALL GREEN | `(2,0,0,0)` x4 | 6/6 pairings NO DIVERGENCE, 401 common frames |
+
+The per-window census is identical across all four windows on every arena, and
+the sequence is issued in all four:
+
+```
+VS map 1   p0..p3  [census] 47 spawned (12 classes), 0 skipped   LoadAndSetMusic_Layer1(0x4d)
+     +  31 x1  PATH_LIFT        + 178 x4  POWER_STAR      + 180 x4  STAR_MARKER
+     + 191 x4  PLAYER           + 197 x7  WATERFALL_MIST  + 269 x6  CAP
+     + 286 x12 TREE             + 332 x1  CAMERA          + 334 x1  HUD
+     + 335 x1  MINIMAP          + 337 x1  UNCHAINED_CHOMP + 350 x5  AMBIENT_SOUND
+
+VS map 2   p0..p3  [census] 37 spawned (10 classes), 0 skipped   LoadAndSetMusic_Layer1(0x4d)
+     +  22 x1  EXCLAMATION_BLOCK_VS  + 178 x5  POWER_STAR   + 180 x5  STAR_MARKER
+     + 191 x4  PLAYER                + 269 x6  CAP          + 287 x5  INVISIBLE_POLE
+     + 288 x8  COIN                  + 332 x1  CAMERA       + 334 x1  HUD
+     + 335 x1  MINIMAP
+
+VS map 3   p0..p3  [census] 54 spawned (9 classes), 0 skipped    LoadAndSetMusic_Layer1(0x4d)
+     + 178 x5  POWER_STAR       + 180 x5  STAR_MARKER     + 191 x4  PLAYER
+     + 269 x15 CAP              + 288 x17 COIN            + 290 x5  BLUE_COIN
+     + 332 x1  CAMERA           + 334 x1  HUD             + 335 x1  MINIMAP
+
+VS map 4   p0..p3  [census] 36 spawned (11 classes), 0 skipped   LoadAndSetMusic_Layer1(0x4d)
+     +  22 x2  EXCLAMATION_BLOCK_VS  + 178 x5  POWER_STAR + 180 x5  STAR_MARKER
+     + 191 x4  PLAYER                + 220 x2  ROLLING_IRON_BALL   + 269 x6  CAP
+     + 287 x1  INVISIBLE_POLE        + 288 x8  COIN       + 332 x1  CAMERA
+     + 334 x1  HUD                   + 335 x1  MINIMAP
+```
+
+The four-player census is larger than the solo one by the three extra PLAYERs;
+the CAMERA/HUD/MINIMAP trio the boot always makes is in both.
+
+---
+
+# THE VERDICT, per arena
+
+| arena | ROM says | the port did | the port now does |
+|---|---|---|---|
+| map 1, level 51 | seq 0x4d at GO, silence before; group 0x2B bank 0x36; 40 objects in 8 classes, one enemy (UNCHAINED_CHOMP), 6 CAPs, no VS block | the same | unchanged, nothing to fix |
+| map 2, level 43 | seq 0x4d at GO; group 0x2D bank 0x36; 30 objects in 6 classes, no enemies, 6 CAPs, 1 EXCLAMATION_BLOCK_VS | the same | unchanged |
+| map 3, level 29 | seq 0x4d at GO; group 0x2E bank 0x36; 42 objects in 4 classes, no enemies, 15 CAPs, no VS block | the same | unchanged |
+| map 4, level 42 | seq 0x4d at GO; group 0x2C bank 0x36; 29 objects in 7 classes, ROLLING_IRON_BALL x2, 6 CAPs, 2 EXCLAMATION_BLOCK_VS | the same | unchanged |
+
+**No source change was needed and none was made.** The three reports resolve as:
+
+- **WRONG MUSIC** - already fixed in this base by 20621ecf0 and 4d251d9af, and
+  now proved at the sequencer rather than at the call site: the arena starts SSEQ
+  0x4d `NCS_BGM_VSATHRETIC`, bank 128, on all four maps. Worth knowing why it can
+  still SOUND wrong to a player: 0x4d and 0x41 `NCS_BGM_ATHRETIC` are the SAME
+  SSEQ FILE byte for byte (md5 `eaf021baab2f51612f325ef5cdea7cb0`, 8324 bytes,
+  file ids 73 and 62 pointing at different FAT entries holding identical
+  content), differing only in the bank their INFO records name (128 against 101).
+  The VS arena music IS the athletic theme on a different instrument set. That is
+  the cartridge.
+- **NO ENEMIES** - the cartridge has none. Every enemy in these four levels sits
+  in a star-group-1 sub-table that `LoadObjects` skips at filter 2.
+- **NO CAPS** - the CAPs are there, all of them, on every arena: 6 / 6 / 15 / 6
+  alive, at the ROM's own coordinates, in every one of the four windows. So are
+  the VS `!` blocks where the ROM puts them: 1 on map 2, 2 on map 4, and NONE on
+  maps 1 and 3. If the reported match was on map 1 or map 3, "no cap blocks" is
+  the cartridge's own answer.
+
+## Gaps and debts, stated rather than closed
+
+1. **The CAPs and blocks are alive but this lane did not LOOK at them.** Every
+   number here is a count and a coordinate off the behaviour list. Whether a CAP
+   renders, and whether picking one up turns a Yoshi into Mario, is a visual and a
+   gameplay question this lane is not allowed to judge for itself. That is the
+   next thing to check and it wants the owner's eyes on a capture.
+2. **The countdown's two missing ROM preconditions** are still open, already
+   recorded in `port/hal/star_flow.cpp` and `port/stage_lifecycle_map.txt`: the
+   `data_0209fc9c` pause arm and the `data_0209fc68 == 6` match-end arm are not
+   hosted, so `port_vs_countdown_tick` ticks where the ROM would suppress. Not
+   observable today; it becomes observable the day either piece of state goes
+   live.
+3. **`src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:12-14` is unreproduced, on
+   purpose.** In a match the cartridge loads NO object overlay at all and relies
+   on residency from the previous scene for ov100 and ov102, which is where
+   UNCHAINED_CHOMP, PATH_LIFT, ROLLING_IRON_BALL and the two `!` block classes
+   live. The port mounts its overlays statically and so is immune. Faking the
+   fragility would make the port worse, so nothing was done; it is recorded
+   because a reader who finds ov102 classes spawning in a match will otherwise
+   wonder how.
+4. **Seven players, not four.** The field report is from a seven-player match and
+   every proof here is four windows, because `vs4_proof.py` is the four-window
+   harness. Nothing in the object load or the music path is player-count
+   dependent, both run once at the boot ahead of any seat past four, but that is
+   an argument rather than a measurement, and the wide-session harness in
+   `status/VS16HOST.md` is where it would be measured.
+5. **420 and 900 frames.** Long enough to reach the countdown and a MATCH OVER,
+   not long enough to say anything about a full-length match.

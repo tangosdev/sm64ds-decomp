@@ -137,11 +137,34 @@ def run_map(mi, frames):
     return rc, M.text(log)
 
 
+# Classes whose InitResources returns 0 BY THE ROM'S DESIGN, so the count on
+# the behaviour list is legitimately below the count placed. Each row is the
+# file:line that settles it; nothing goes in here without one.
+FOLDED = {
+    286: ("TREE", "src/_ZN4Tree13InitResourcesEv.cpp:34-38 - each tree links "
+                  "itself into data_ov002_02110a48[modelIndex] and returns 1 "
+                  "only when that slot was empty, so ONE tree per model index "
+                  "stays on the behaviour list and renders the whole list"),
+}
+
+
 def spawned(text):
-    """The registry census: '+ 269 x6  CAP' rows, and the declined rows."""
+    """The registry census: '+ 269 x6  CAP' rows, and the declined rows.
+
+    THE FIRST BLOCK ONLY. walk_window prints the census twice, at the boot and
+    again at teardown, and the counters are cumulative -- summing both doubles
+    every class."""
     got = collections.Counter()
     declined = collections.Counter()
+    seen = False
     for ln in text.splitlines():
+        if ln.startswith("[census]"):
+            if seen:
+                break
+            seen = True
+            continue
+        if not seen:
+            continue
         m = re.match(r"\s+\+\s+(\d+) x(\d+)\s", ln)
         if m:
             got[int(m.group(1))] += int(m.group(2))
@@ -204,10 +227,19 @@ def main():
               % (grp.group(1), grp.group(2), grp.group(3)) if grp
               else "  sound group : MISSING")
         print("  layer-1 seq : %s" % (", ".join(seq) if seq else "none issued"))
-        started = [which_sequence(seqs, int(o, 16)) for o in
-                   re.findall(r"\[sseq\] start player \d+ .*\(sdat\+0x([0-9a-f]+)\)", t)]
-        print("  sequences actually started, in order:")
-        for s in started or ["      none"]:
+        # Only the SSEQ starts are interesting; the rest of the traffic is
+        # SEQARC sound effects, which live outside every SSEQ file's extent.
+        started, sfx = [], 0
+        for o in re.findall(
+                r"\[sseq\] start player \d+ .*\(sdat\+0x([0-9a-f]+)\)", t):
+            s = which_sequence(seqs, int(o, 16))
+            if "inside no SSEQ file" in s:
+                sfx += 1
+            else:
+                started.append(s)
+        print("  music streams started, in order (plus %d SEQARC sound "
+              "effects):" % sfx)
+        for s in started or ["none"]:
             print("      %s" % s)
         print("  ROM places / port spawns / port keeps alive, by class:")
         for aid in sorted(set(want.get(lvl, {})) | set(got)):
@@ -215,10 +247,12 @@ def main():
             g = got.get(aid, 0)
             a = live.get(aid, 0)
             if w == 0:
-                mark = "   (not a placed class: HUD, player, minimap...)"
+                mark = "   (not placed: HUD, player, minimap, a spawn's child)"
             elif g < w:
                 mark = "   <-- NEVER SPAWNED, %d short" % (w - g)
                 fails += 1
+            elif a < w and aid in FOLDED:
+                mark = "   (folded: %s)" % FOLDED[aid][1]
             elif a < w:
                 mark = "   <-- SPAWNED THEN GONE, %d short alive" % (w - a)
                 fails += 1
