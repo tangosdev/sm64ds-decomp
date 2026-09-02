@@ -63,6 +63,8 @@
 
 #include "comms_seam.h"
 #include "player_fields.h"
+#include "host_settings.h"   // port::adventure_ghost_mode(): adventure runs this
+                             // layer without SM64DS_SYNC
 
 #include <windows.h>   // GetTickCount, for the delay rig and the RTT probe --
                        // kernel32 only, which every object here already
@@ -146,7 +148,14 @@ int env_int(const char *name, int dflt) {
 void parse_cfg() {
     if (g_parsed) return;
     g_parsed = true;
-    g_cfg.on         = env_int("SM64DS_SYNC", 0) != 0;
+    /* ADVENTURE GHOSTS turn this layer on without SM64DS_SYNC. Adventure mode
+       IS the state-broadcast session -- each console runs its own solo game and
+       the only thing on the wire is where each body is and what it is doing,
+       which is exactly what this layer carries. SM64DS_SYNC stays the explicit
+       knob for a VS session; adventure mode is the second door to the same
+       layer. Off by default either way: adventure mode defaults OFF, so an
+       unset environment still gets the byte-identical DS path SY4 asserts. */
+    g_cfg.on         = env_int("SM64DS_SYNC", 0) != 0 || adventure_ghost_mode();
     g_cfg.hz         = env_int("SM64DS_SYNC_HZ", 30);
     g_cfg.lerp_pct   = env_int("SM64DS_SYNC_LERP", 25);
     g_cfg.snap_units = env_int("SM64DS_SYNC_SNAP", 60);
@@ -561,7 +570,18 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
     // left to the state machine that owns it. It re-arms by itself: the next
     // ChangeState clears mIsNoControl and the id-change branch takes over
     // again on the following snapshot.
-    if (*(const unsigned char *)((const char *)a + player::kIsNoControl)) {
+    // ---- EXCEPT IN ADVENTURE-GHOST MODE, where the no-control flag is OURS.
+    // The pose-hold above protects a LOCALLY-SIMULATED body running the ROM's
+    // own scripted sequence (a VS star collect) from a stale wire animation.
+    // A ghost is not that: it is a puppet this console does not simulate, and
+    // its mIsNoControl is set by the ghost hold every frame to keep it
+    // non-colliding (hal/player_bridges.cpp), not by a real state machine. So
+    // the only true information about a ghost's pose is the wire's, and the
+    // hold's flag must not suppress it. In adventure mode every apply target is
+    // a remote puppet (the slot==me skip in apply_snapshot stands), so the
+    // bypass is exactly the ghost bodies and never the local one.
+    if (!adventure_ghost_mode() &&
+        *(const unsigned char *)((const char *)a + player::kIsNoControl)) {
         ++g_stats.pose_held;
         return;
     }
@@ -1020,6 +1040,41 @@ void handle_ping(const unsigned char *buf, int n) {
                                   : rtt;
         ++g_stats.pongs;
     }
+}
+
+// ---------------------------------------------------------------------------
+// TEST HOOK for the adventure-ghost probe (port/tests/smoke_player.cpp). Builds
+// a REAL v3 snapshot naming `slot` at the given pose and runs it through the
+// ACTUAL apply path, so a headless smoke can prove the ghost drive -- a wire
+// message moving the REMOTE body and never the local one -- without a second
+// instance on the loopback carrier. It uses the wire structs defined above, not
+// a copy of them, and the real apply_snapshot, so the probe cannot drift from
+// what the network path does. anim_id is taken from the target body so
+// apply_pose sees no id change; the teleport flag makes the position land
+// exactly for a clean assert. Inert unless called.
+extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
+                                           short yaw) {
+    if (slot < 0 || slot >= kCommsMaxPlayers) return;
+    void *a = data_0209f394[slot];
+    unsigned char buf[kSyncBufBytes];
+    SyncMsgV1 *m = (SyncMsgV1 *)buf;
+    m->magic = kSyncMagic;
+    m->version = kSyncVersion;
+    m->seq = 0;
+    m->count = 1;
+    m->pad[0] = m->pad[1] = m->pad[2] = 0;
+    SyncPlayerV1 *e = (SyncPlayerV1 *)(buf + sizeof(SyncMsgV1));
+    e->slot = (unsigned char)slot;
+    e->flags = (unsigned char)(kFlagLive | kFlagTeleport);
+    e->yaw = yaw;
+    e->x = x;
+    e->y = y;
+    e->z = z;
+    e->anim_id = a ? player::anim_id(a) : 0;
+    e->state_id = 0;
+    e->anim_frame = a ? player::anim_frame(a) : 0;
+    e->vx = e->vy = e->vz = 0;
+    apply_snapshot(buf, (int)(sizeof(SyncMsgV1) + sizeof(SyncPlayerV1)));
 }
 
 // One whole aux message, already past the delay rig, told apart by its tag.

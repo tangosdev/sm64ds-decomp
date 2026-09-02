@@ -538,6 +538,8 @@ void hal_render_player_world(void *p);
 /* ADVENTURE GHOSTS: the per-frame no-collision hold over remote slots
    (hal/player_bridges.cpp). No-op unless adventure-ghost mode is on. */
 void port_adventure_ghost_hold(void);
+/* the headless M1 proof; no-op unless SM64DS_ADVENTURE_PROBE is set. */
+void port_adventure_probe(int frame);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -9993,6 +9995,10 @@ int main(void)
            it. No-op unless adventure-ghost mode is on; the local body is never
            touched. */
         port_adventure_ghost_hold();
+        /* the M1 proof reads the ghost's three flags right after the hold set
+           them, and drives one wire snapshot into the ghost. Inert unless
+           SM64DS_ADVENTURE_PROBE is set. */
+        port_adventure_probe(frame);
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase

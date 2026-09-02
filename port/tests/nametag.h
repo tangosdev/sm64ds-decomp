@@ -133,6 +133,12 @@ extern unsigned char data_0208f074[];
 extern unsigned char data_0209fc5c[];
 }
 
+/* ADVENTURE GHOSTS: the same head tags label the ghosts in an adventure
+   session, which is not a VS match (data_0209f2d8 stays 0). Forward-declared
+   the way the settings key above is, so this header keeps its light include
+   surface. */
+namespace port { bool adventure_ghost_mode(); }
+
 /* ---- the glyph atlas ------------------------------------------------------
    Decoded ONCE, out of the font the game itself is reading, and kept. One
    entry per printable ASCII code; have is 0 for a code the message encoding
@@ -378,7 +384,11 @@ static int nt_probe(void)
    Reads only. */
 static void nt_draw(const OvlSurface &fb)
 {
-    if (data_0209f2d8 != 1) return;              /* not a VS match */
+    /* A VS match OR an adventure-ghost session -- both draw a tag over every
+       remote body. Adventure is not VS (data_0209f2d8 stays 0), so the gate is
+       the two modes, not the one flag. */
+    const bool adventure = port::adventure_ghost_mode();
+    if (data_0209f2d8 != 1 && !adventure) return;
     if (!host_setting_name_tags()) return;
     if (!nt_font_build()) return;
 
@@ -427,12 +437,17 @@ static void nt_draw(const OvlSurface &fb)
         else
             snprintf(who, sizeof who, "PLAYER %d", i + 1);
 
-        const int stars = port_vs_slot_stars(i);
+        /* THE STAR LINE IS A VS FACT and there are no carried stars in an
+           adventure session, so a ghost gets only its name. The VS match keeps
+           both lines exactly as before. */
         char sline[24];
-        snprintf(sline, sizeof sline, "%d STAR%s", stars,
-                 stars == 1 ? "" : "S");
-
-        nt_text_centred(fb, cx, star_y, sline, scale, 0xFFFFE060u);
+        sline[0] = '\0';
+        if (!adventure) {
+            const int stars = port_vs_slot_stars(i);
+            snprintf(sline, sizeof sline, "%d STAR%s", stars,
+                     stars == 1 ? "" : "S");
+            nt_text_centred(fb, cx, star_y, sline, scale, 0xFFFFE060u);
+        }
         nt_text_centred(fb, cx, name_y, who, scale, 0xFFFFFFFFu);
 
         if (nt_probe()) {

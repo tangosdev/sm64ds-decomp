@@ -16,6 +16,7 @@
 #include "Player.h"
 #include "player_fields.h"   /* run mg16 lane MP4: the one place field offsets live */
 #include "host_settings.h"   /* port::adventure_ghost_mode() for the ghost pass */
+#include "comms_seam.h"      /* port::sync_stats(): the local-write witness */
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "Heap.h"
@@ -351,6 +352,97 @@ extern "C" void port_adventure_ghost_hold()
         if (void *a = data_0209f394[i])
             port::player::disable_interaction(a);
     }
+}
+
+/* ---- THE ADVENTURE-GHOST PROBE (SM64DS_ADVENTURE_PROBE) --------------------
+   A headless, single-instance proof of the M1 capability, run against the REAL
+   level-boot spawn (SM64DS_VS_PLAYERS=2 seats one extra body with no VS mode)
+   rather than a synthetic construction. Called once per frame from the walk
+   loop AFTER port_adventure_ghost_hold, so the three interaction flags it reads
+   on the ghost are this frame's. It asserts, and prints one [advprobe] line at
+   frame kAt+2:
+
+     - a ghost body exists at a remote live slot (i != data_0209f250);
+     - this is NOT VS mode (data_0209f2d8 == 0) and adventure mode is on;
+     - the ghost is held non-colliding (all three flags via interaction_disabled)
+       while the LOCAL body is not (it stays solid and interactive);
+     - the ghost CARRIES A NETWORK POSE: a real wire snapshot (port_adventure_
+       probe_apply, the actual apply_snapshot path) teleports the ghost to a
+       chosen pose and the ghost lands there while the LOCAL body does not move.
+
+   ALL PASS is the line the driver greps. Inert unless the env knob is set. */
+extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
+                                           short yaw);
+extern "C" void port_adventure_probe(int frame)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_ADVENTURE_PROBE") ? 1 : 0;
+    if (!on) return;
+
+    /* One shot, late enough that the level has booted and both bodies are past
+       the level-entry no-control. Inject AND verify in the SAME frame so the
+       ghost cannot drift under its own physics between set and read, and so the
+       local-write witness reads exactly this one apply. */
+    static bool done = false;
+    const int kAt = 90;
+    if (frame != kAt || done) return;
+
+    const int me = (int)data_0209f250;
+    void *localb = (me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0;
+    int ghost_slot = -1;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0) continue;
+        if (data_0209f394[i]) { ghost_slot = i; break; }
+    }
+    done = true;
+
+    int fails = 0;
+    const bool have_ghost = ghost_slot >= 0 && localb;
+    const bool not_vs = data_0209f2d8 == 0;
+    const bool adv_on = port::adventure_ghost_mode();
+    bool ghost_held = false, local_free = false, pose_ok = false,
+         local_untouched = false;
+
+    if (have_ghost) {
+        void *g = data_0209f394[ghost_slot];
+        /* the hold already ran this frame (walk_window calls it first), so the
+           three interaction flags are freshly set on the ghost and untouched on
+           the local body. */
+        ghost_held = port::player::interaction_disabled(g);
+        local_free = !port::player::interaction_disabled(localb);
+
+        /* drive one REAL wire snapshot into the ghost, 4 units off its own
+           position with a distinct yaw. The local body must NOT move under it:
+           the sync layer's own witness counts any change to the local body
+           across the apply call, and it must stay zero. */
+        const int tx = *port::player::pos_x(g) + 4 * 0x1000;
+        const int ty = *port::player::pos_y(g);
+        const int tz = *port::player::pos_z(g) + 4 * 0x1000;
+        const short tyaw = (short)0x2000;
+        const unsigned long long lw0 = port::sync_stats().local_writes;
+        port_adventure_probe_apply(ghost_slot, tx, ty, tz, tyaw);
+        const unsigned long long lw1 = port::sync_stats().local_writes;
+
+        pose_ok = *port::player::pos_x(g) == tx &&
+                  *port::player::pos_z(g) == tz &&
+                  *port::player::facing(g) == tyaw;
+        local_untouched = (lw1 == lw0);
+    }
+
+    if (!have_ghost) ++fails;
+    if (!not_vs) ++fails;
+    if (!adv_on) ++fails;
+    if (!ghost_held) ++fails;
+    if (!local_free) ++fails;
+    if (!pose_ok) ++fails;
+    if (!local_untouched) ++fails;
+    std::fprintf(stderr,
+        "[advprobe] ghost_slot=%d have_ghost=%d not_vs=%d adv_on=%d "
+        "ghost_held=%d local_free=%d pose_carried=%d local_untouched=%d "
+        "=> %s\n",
+        ghost_slot, have_ghost, not_vs, adv_on, ghost_held, local_free,
+        pose_ok, local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------
