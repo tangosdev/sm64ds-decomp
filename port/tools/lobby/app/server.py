@@ -102,7 +102,23 @@ CONTRACT_MIN = 1
 #
 # So the range is gated on the version too (see wide_ok / dial_max_for), and
 # that is what makes v3 a real version rather than a number that went up.
-CONTRACT_V = 3
+#
+# v4, ADVENTURE co-op (M2): a room gains an optional `session_type` field on
+# `create`. Default "vs" -- an unset field is exactly the versus match every
+# room was before this version -- and "adventure" for the state-broadcast
+# ghost session (status/ADVENTURE.md). A v1..v3 client cannot send it, so it
+# cannot be hurt by it, and a room it creates is a versus room as always. The
+# type rides the go plan so the launcher can boot an adventure console
+# (SM64DS_ADVENTURE=1 + SM64DS_LEVEL) instead of a versus arena
+# (SM64DS_VS_MAP); the relay and the seam are already session-type blind, so
+# nothing below the lobby changes.
+CONTRACT_V = 4
+V_SESSION = 4    # create.session_type
+
+# The session types a room may be. "vs" is the versus match; "adventure" is the
+# ghost-presence session, where each console runs its own solo level and only
+# broadcasts where its body is. An unknown value is refused at do_create.
+SESSION_TYPES = ("vs", "adventure")
 
 # The version each v2 addition arrived in. All three are 2 and all three say so
 # by name rather than by the digit, so a later bump cannot accidentally lock v2
@@ -531,6 +547,13 @@ class Room(object):
         self.by_token = {}      # token -> seat
         self.host_seat = 1
         self.state = "lobby"
+        # ADVENTURE co-op (v4): "vs" (the versus match, the default and what
+        # every room was before v4) or "adventure" (the ghost-presence session
+        # where each console runs its own solo level). Set once at create and
+        # constant for the room's life, so member_plan reads it live rather
+        # than freezing a copy at arm. A v1..v3 create never carries the field
+        # and so is always "vs".
+        self.session_type = "vs"
         self.map = 0
         self.win_mode = "time"
         self.star_target = None
@@ -739,6 +762,10 @@ class Room(object):
             # capability. The two new fields below are additive: an older
             # launcher's JSON reader drops what it has no property for.
             "max_players": GAME_MAX_PLAYERS,
+            # ADVENTURE co-op (v4): "vs" or "adventure". Additive like the two
+            # fields above -- a pre-v4 launcher's JSON reader has no property
+            # for it and drops it, and every room it can create is "vs" anyway.
+            "session_type": self.session_type,
             # The host's dial, and the largest value the server will accept for
             # it. `dial_max` is what lets the launcher grey out the rest of the
             # control instead of discovering the bound by being refused.
@@ -1103,8 +1130,10 @@ VERB_FIELDS = {
     "create":    (("v", "nick"),
                   # A colour pick travels as a PAIR or not at all; do_create
                   # enforces the pairing. Here they are two keys that may
-                  # appear from v2.
-                  {"pre_ok": 1, "color": V_COLOR, "shoes": V_COLOR}),
+                  # appear from v2. session_type is a v4 optional (ADVENTURE);
+                  # do_create checks its value against SESSION_TYPES.
+                  {"pre_ok": 1, "color": V_COLOR, "shoes": V_COLOR,
+                   "session_type": V_SESSION}),
     "join":      (("v", "room", "nick"),
                   {"pre_ok": 1, "color": V_COLOR, "shoes": V_COLOR}),
     "poll":      (("v", "room", "token", "cursor"), {"wait": 1}),
@@ -1210,6 +1239,15 @@ def do_create(body, who, now):
     color, shoes, err = v_color_pair(body, body.get("v", 1))
     if err:
         return 400, {"error": err}
+    # ADVENTURE co-op (v4): the session type. shape_for has already refused the
+    # key for a v1..v3 body, so reaching here with it present means a v4 caller;
+    # the value is the only thing left to check. Absent is "vs", the default and
+    # what every pre-v4 room is.
+    session_type = "vs"
+    if "session_type" in body:
+        session_type = body["session_type"]
+        if not isinstance(session_type, str) or session_type not in SESSION_TYPES:
+            return 400, {"error": "bad_session_type"}
 
     if not BUCKETS.allow_create(who, now):
         return 429, {"error": "too_fast"}
@@ -1229,6 +1267,7 @@ def do_create(body, who, now):
     # Room.__init__. Defaulted at the floor so a direct Room() in a test is
     # narrow unless it says otherwise.
     room = Room(code, now, request_version(body))
+    room.session_type = session_type
     token = new_token()
     # The host plays if the dial has room for anybody at all. The host is also
     # the session's parent, so a host who is not playing is not a thing any
@@ -1660,6 +1699,15 @@ def member_plan(room, seat):
         "role": role,
         "code": room.comms_code,
         "relay": RELAY_ADDR,
+        # ADVENTURE co-op (v4): the session type, so the launcher knows which
+        # game to boot. For "vs" it exports SM64DS_VS_MAP=<map> and the ROM's
+        # own VS start sets the mode byte, exactly as before. For "adventure"
+        # it exports SM64DS_ADVENTURE=1 and SM64DS_LEVEL=<map> instead, and
+        # must NOT set SM64DS_VS_MAP -- a solo level with the wire open, where
+        # each console ghosts the peers in its own level. The transport quartet
+        # (role/code/relay/slot) is identical for both; the relay forwards the
+        # same opaque datagrams either way.
+        "session_type": room.session_type,
         "map": room.match_map,
         "players": room.agreed_players,
         "slot": room.slot_of.get(seat, 0),

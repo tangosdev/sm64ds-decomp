@@ -796,8 +796,8 @@ def test_dial_is_v2_only():
           st == 400 and out["error"] == "bad_field", (st, out))
     st, out = _params(code, token, v=2, match_players=2)
     check("the same body at v2 is accepted", st == 200, (st, out))
-    check("the version range is a range, and it is 1..3",
-          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 3))
+    check("the version range is a range, and it is 1..4",
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 4))
     check("and the gate on the field is named, not spelled 2 at the check",
           S.V_DIAL == 2)
     # run vs16: the DIAL ARRIVED in v2 and stays gated at v2 forever -- a field
@@ -832,6 +832,7 @@ _FIELD_SAMPLES = {
     "pre_ok": True,
     "color": "ff8800",
     "shoes": "1a2b3c",
+    "session_type": "adventure",
 }
 
 
@@ -1459,6 +1460,61 @@ def test_ready_and_go():
     check("a duplicate ready after go is idempotent 200", st == 200, (st, r))
 
 
+def test_session_type():
+    print("\n-- the adventure session type (v4)")
+    reset()
+    # The default is vs, and a pre-v4 create cannot say otherwise -- so every
+    # room that ever existed before this version is exactly what it was.
+    st, host = create(nick="host")
+    check("a plain create is a vs room", st == 200
+          and S.ROOMS[host["room"]].session_type == "vs", (st, host))
+    check("and its view says so, additively", host["view"]["session_type"] == "vs")
+
+    # A v1..v3 body carrying the v4 field is refused as bad_field, exactly as an
+    # undefined key would be -- the bump has to mean something.
+    reset()
+    st, out = create(nick="host", v=1, session_type="adventure")
+    check("a v1 create carrying session_type is bad_field",
+          st == 400 and out["error"] == "bad_field", (st, out))
+
+    # A v4 create names the type, and an unknown value is refused by name.
+    reset()
+    st, out = create(nick="host", v=4, session_type="bogus")
+    check("a v4 create with an unknown session_type is bad_session_type",
+          st == 400 and out["error"] == "bad_session_type", (st, out))
+
+    reset()
+    st, host = create(nick="host", v=4, session_type="adventure", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    check("a v4 adventure create makes an adventure room", st == 200
+          and room.session_type == "adventure", (st, host))
+    check("the view reports the type", host["view"]["session_type"] == "adventure")
+
+    # It reaches the go plan, beside the SAME transport quartet a vs plan
+    # carries -- role, code, relay, slot -- so the launcher branches on the
+    # type and seats the identical carrier either way.
+    join(code, "b", pre_ok=True)
+    st, p = start(code, token)
+    plan = S.member_plan(room, 1)
+    check("the plan carries session_type=adventure",
+          plan["session_type"] == "adventure", plan)
+    check("and still carries the transport quartet unchanged",
+          plan["role"] == "parent" and "code" in plan and "relay" in plan
+          and plan["slot"] == 0, plan)
+
+    # A vs room's plan carries the type too, defaulted, so a launcher never has
+    # to guess: the field is always present from v4 on.
+    reset()
+    st, host = create(nick="host", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    join(code, "b", pre_ok=True)
+    start(code, token)
+    check("a vs room's plan says session_type=vs",
+          S.member_plan(room, 1)["session_type"] == "vs")
+
+
 def test_go_plan():
     print("\n-- the go plan: per member, identical where it must be")
     reset()
@@ -1916,9 +1972,9 @@ def test_colors():
                            "shoes": "0000ff"}, "10.0.0.1", 1000.0)
     check("a v1 create carrying colours is refused: the bump has to mean "
           "something", st == 400 and out["error"] == "bad_field", (st, out))
-    check("v1, v2 and v3 are the versions this server answers, and nothing "
+    check("v1 through v4 are the versions this server answers, and nothing "
           "else",
-          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 3),
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (1, 4),
           (S.CONTRACT_MIN, S.CONTRACT_V))
 
     # -- create and join with colours -------------------------------------
@@ -2412,6 +2468,7 @@ def main():
     test_seat_stability()
     test_start()
     test_ready_and_go()
+    test_session_type()
     test_go_plan()
     test_names()
     test_failed()
