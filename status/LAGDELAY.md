@@ -350,7 +350,7 @@ carrier refuses a depth and the session is stop-and-wait) is also 21/21 clean.
 | default boot | ok, reaches the TITLE, 300 frames clean |
 | linkage | **9139 (80.7%)**, identical to the number VS16HOST recorded; nothing lost |
 | ptr_audit | **0** unhosted code pointers |
-| shipping config | **RED, on the environment, not the code** -- see below |
+| shipping config | **ok** on a re-run, once a PATH line the battery omits is supplied -- see below |
 
 Not one `selftest level` or `selftest scene` line is anything but `ok`. The one
 qualified pass is level 45, which runs with `SM64DS_SKIP_CLASS=GOOMBOSS` and
@@ -358,7 +358,8 @@ says so itself -- that skip is the battery's own pre-existing baseline row,
 owned by the decomp (`func_ov074_02121380` has no matched body), and has
 nothing to do with this lane.
 
-**The shipping-config red, in full, because it is the one red here:**
+**The battery's own shipping-config arm went red, and the reason is not the
+code.** In full, because it is the one red in the run:
 
     'vswhere.exe' is not recognized as an internal or external command,
     operable program or batch file.
@@ -369,26 +370,41 @@ nothing to do with this lane.
        ninja: error: failed recompaction: Permission denied
     CMake Generate step failed.  Build files cannot be regenerated correctly.
 
-Two causes, both mine or the harness's, neither the diff's:
+Two causes, both the harness's or this lane's, neither the diff's:
 
 1. `battery.py`'s `shipcfg_script` (`port/tools/battery.py:967`) calls
    `vcvars32.bat` but does **not** put `%ProgramFiles(x86)%\Microsoft Visual
    Studio\Installer` on PATH first. `port/build-port.cmd:5` does, and that is
-   the line vcvars needs in order to find `vswhere.exe`. So this arm only
-   passes when the battery is launched from a shell that already has the VS
-   installer on PATH. That is a battery bug worth fixing on its own; it is not
-   this branch's.
+   the line vcvars needs in order to find `vswhere.exe`. So the arm passes or
+   fails on whatever the launching shell happens to carry, which is how one
+   tree can produce a green battery and a red one.
 2. `build/port-kit/build.ninja` was locked. This lane killed two racing
    `build-port.cmd` chains earlier (the desk was carrying seven other lanes'
    port builds at the time) and left a handle behind in that directory.
 
-**Re-run with the missing PATH line and a cleared `port-kit`, the configure is
-clean** (`C:\tmp\lagdelay-out\proof_shipcfg.log`): no vswhere error, compiler
-and ABI detected, `Configuring done (29.1s)`, then `hostgen` and the compile
-running with zero errors at the point this was written. **The link was NOT
-reached before this file was committed, so the shipping configuration is
-REPORTED AS UNPROVEN, not as green.** The command is
-`C:\tmp\lagdelay-out\shipcfg.cmd` and it reproduces the arm in one step.
+**Supply the missing PATH line, clear `port-kit`, and the arm is GREEN**
+(`C:\tmp\lagdelay-out\shipcfg.cmd`, log `C:\tmp\lagdelay-out\proof_shipcfg.log`).
+Same cmake line the battery uses -- `-DPORT_ROM_CLEAN=ON`
+`-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded`, target `walk_window`:
+
+    -- Configuring done (29.1s)
+    ...
+    [10210/10210] Linking CXX executable walk_window.exe
+    dsstate_guard: OK -- 14233 hosted DS symbols all inside .dsstate [0xe17000, 0xf19683), 1058435 bytes captured (12829 matched by name, 1404 by mount object).
+
+`rc=0`, zero `error C`, zero `LNK`, zero `FAILED:` over all 10210 targets, and
+`walk_window.exe` linked at 5,685,248 bytes. Its liveness selftest, the check
+the battery arm runs after the build (`C:\tmp\lagdelay-out\proof_kitsmoke.log`,
+muted and minimized):
+
+    [scene] 300 frames of scene 1 (SCENE_TITLE), clean
+    [audio] ring: 301 pushes, 280 refills, 0 starved (4 x 1024 frames at 32768 Hz = 125 ms)
+
+`rc=0`, and it wrote its frame (`walk_window_selftest.bmp`, 589,878 bytes).
+
+**So every battery arm passes on this branch.** The battery's own verdict line
+still says otherwise for the reason above, and that PATH bug is written up as a
+gap rather than fixed here.
 
 ### P5. THE ONE THING THAT DID NOT COME OUT CLEAN
 
@@ -473,11 +489,13 @@ independent frame budget each -- before anything ships at a raised depth.
    arrive. Those peers are told the frozen depth and cannot change it, which is
    correct and is also not sized for them.
 
-10. **The shipping configuration is not proven.** Every other battery arm is
-    green, including all 50 levels and all 34 scenes, and the failure was the
-    battery's own missing PATH line plus a build lock this lane left behind --
-    but a clean re-run had not reached the link when this was written, so it
-    stays unproven. `C:\tmp\lagdelay-out\shipcfg.cmd` finishes the job.
+10. **The shipping configuration is proven by a hand re-run, not by the
+    battery's own arm.** It configures, builds all 10210 targets, links and
+    passes its liveness selftest with rc=0 -- but through
+    `C:\tmp\lagdelay-out\shipcfg.cmd`, because the battery's arm cannot get
+    past its own PATH bug on this desk. The evidence is equivalent (same cmake
+    line, same target, same selftest); the provenance is a hand-run script
+    rather than a suite line, and that is worth knowing.
 
 11. **`battery.py`'s shipcfg arm needs a PATH line it does not set.** Found
     here, not fixed here, because it is not this lane's file and a battery
