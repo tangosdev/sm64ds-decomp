@@ -43,13 +43,26 @@
  * same slow cadence, so plugging a pad in mid-play picks it up without a
  * restart.
  *
+ * A WORKER THREAD OWNS EVERY SLOW CALL. Enumerating DirectInput devices is
+ * hundreds of milliseconds to two seconds; asking an empty XInput slot is
+ * milliseconds. Both run on a thread port_pad_init starts, which publishes
+ * the connected XInput slot and the translated DirectInput state; the game
+ * thread's port_pad_poll makes one XInputGetState on a slot already known to
+ * be connected and copies one snapshot, and never blocks. Init itself only
+ * reads the environment and starts the thread. See the banner in the .cpp.
+ *
+ * SM64DS_PAD_BACKEND=xinput|dinput|none forces one arm (or no pad at all),
+ * read once in port_pad_init and announced with a "[pad] forced: ..." line.
+ * This is how the DirectInput arm is exercised on a machine whose pad XInput
+ * already sees.
+ *
  * SELFTEST. port_pad_poll is never called by a headless selftest -- the
  * caller gates it, as it always did -- so a drifting stick cannot perturb the
- * battery. port_pad_init runs regardless and prints its one line, which is
- * the line a bug report needs:
+ * battery. port_pad_init runs regardless and the worker prints the one line a
+ * bug report needs, once it has looked:
  *
  *   [pad] XInput slot 0
- *   [pad] DirectInput: Pro Controller (057e:2009)
+ *   [pad] DirectInput: Pro Controller (057e:2009, Switch Pro Controller layout)
  *   [pad] none
  */
 #ifndef PORT_PAD_BACKEND_H
@@ -64,11 +77,16 @@ struct PortPadState {
     short lx, ly, rx, ry;       /* +-32767, Y positive up */
 };
 
-/* Load the backends and look once for a pad. Prints the one "[pad] ..." line.
-   Returns nonzero if either backend loaded at all (not whether a pad was
-   found); a zero return means no poll can ever succeed. Safe to call more
-   than once; only the first call does anything. */
+/* Read SM64DS_PAD_BACKEND and start the worker that loads the backends and
+   looks for a pad; the worker prints the "[pad] ..." line when it has looked.
+   Returns nonzero unless the pad is forced off or the worker could not start;
+   a zero return means no poll can ever succeed. Does not block. Safe to call
+   more than once; only the first call does anything. */
 int port_pad_init(void);
+
+/* Tell the worker a device came or went (WM_DEVICECHANGE), so the next scan
+   happens now rather than on the slow cadence. Cheap; any thread. */
+void port_pad_device_changed(void);
 
 /* Read the current pad. Returns 1 and fills *out when a pad is connected and
    answering; returns 0 and leaves *out untouched otherwise, which is exactly

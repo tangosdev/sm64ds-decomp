@@ -1,12 +1,34 @@
 /* The controller backend. Read pad_backend.h first; the banner there is the
-   design. This file is the two backends, the layouts and the reconnect logic.
+   design. This file is the two backends, the layouts, the reconnect logic and
+   the worker thread that keeps every slow call off the game thread.
 
-   No static import of xinput*.dll or dinput8.dll: both are LoadLibrary'd and
-   every entry point is GetProcAddress'd. INITGUID makes dinput.h instantiate
-   the interface and axis GUIDs in this translation unit, so neither
-   dinput8.lib nor dxguid.lib is on the link line, and the joystick data
-   format below is spelled by hand because the SDK's c_dfDIJoystick2 is a
-   symbol in that lib rather than in the header. */
+   No static import of xinput*.dll, dinput8.dll or user32.dll: all three are
+   LoadLibrary'd and every entry point is GetProcAddress'd. INITGUID makes
+   dinput.h instantiate the interface and axis GUIDs in this translation unit,
+   so neither dinput8.lib nor dxguid.lib is on the link line, and the joystick
+   data format below is spelled by hand because the SDK's c_dfDIJoystick2 is a
+   symbol in that lib rather than in the header.
+
+   THREADS. Enumerating DirectInput devices costs hundreds of milliseconds to
+   two seconds on a real machine (EnumDevices, then CreateDevice and a property
+   read per device), and asking an EMPTY XInput slot is the one slow call in
+   XInput. Neither may run on the game thread: a keyboard-only player would
+   feel a hitch on every rescan and every launch would pay the enumeration
+   before its first frame. So port_pad_init only reads its environment and
+   starts a worker, and the worker owns all of that:
+
+     * it loads both DLLs;
+     * it scans the empty XInput slots (once a second, and at once on a
+       device-change notification) and publishes the slot that answered;
+     * it enumerates, acquires, polls and translates the DirectInput device
+       and publishes the translated state under a lock;
+     * it prints the "[pad] ..." line, once per change of answer.
+
+   The game thread's port_pad_poll does exactly two cheap things: one
+   XInputGetState on the slot already known to be connected, and one copy of
+   the published DirectInput snapshot. It never enumerates and never sleeps.
+   The DirectInput device is created, used and released on the worker only, so
+   no interface pointer ever crosses a thread. */
 #define DIRECTINPUT_VERSION 0x0800
 #define INITGUID
 #define _CRT_SECURE_NO_WARNINGS
@@ -16,6 +38,7 @@
 #define DIDFT_OPTIONAL 0x80000000   /* older SDKs leave it to the caller */
 #endif
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 
@@ -29,44 +52,58 @@ enum {
     XB_A = 0x1000, XB_B = 0x2000, XB_X = 0x4000, XB_Y = 0x8000
 };
 
+/* SM64DS_PAD_BACKEND=xinput|dinput|none, read once in port_pad_init. Forcing
+   dinput is how the fallback arm is exercised on a machine whose pad XInput
+   already sees; none is a pad-less run on a machine with a pad. */
+enum { MODE_AUTO, MODE_XINPUT, MODE_DINPUT, MODE_NONE };
+static int g_mode = MODE_AUTO;
+
+/* ------------------------------------------------------- shared state, lock */
+
+static CRITICAL_SECTION g_lock;
+static volatile LONG xi_slot = -1;      /* the XInput slot answering, or -1 */
+static volatile LONG g_rescan_now = 0;  /* WM_DEVICECHANGE: scan on the next pass */
+static int di_pub_live;                 /* under g_lock: a DirectInput pad answers */
+static PortPadState di_pub_state;       /* under g_lock: its last translated state */
+static char describe_buf[160] = "none"; /* under g_lock */
+static char describe_out[160] = "none"; /* the caller-visible copy */
+
+static void describe_set(const char *s)
+{
+    static char said[160];
+    EnterCriticalSection(&g_lock);
+    strncpy(describe_buf, s, sizeof describe_buf - 1);
+    describe_buf[sizeof describe_buf - 1] = 0;
+    int changed = strcmp(said, describe_buf) != 0;
+    if (changed) strcpy(said, describe_buf);
+    LeaveCriticalSection(&g_lock);
+    /* one line per change of answer, never per pass */
+    if (changed) {
+        fprintf(stderr, "[pad] %s\n", s);
+        fflush(stderr);
+    }
+}
+
 /* ------------------------------------------------------------------ XInput */
 
 static DWORD(WINAPI *XInputGetState_)(DWORD, PortPadState *);
-static int xi_slot = -1;        /* the slot answering now, or -1 */
-static int xi_rescan = 0;       /* frames until empty slots are asked again */
-enum { XI_RESCAN_FRAMES = 60 }; /* once a second at the game's own rate */
 
-static int xinput_load(void)
+static void xinput_load(void)
 {
     const char *dlls[] = {"xinput1_4.dll", "xinput1_3.dll", "xinput9_1_0.dll"};
     for (int i = 0; i < 3 && !XInputGetState_; ++i)
         if (HMODULE x = LoadLibraryA(dlls[i]))
             XInputGetState_ =
                 (decltype(XInputGetState_))GetProcAddress(x, "XInputGetState");
-    return XInputGetState_ != 0;
 }
 
-/* Every slot, slot 0 first. Returns the slot that answered or -1. */
-static int xinput_scan(PortPadState *out)
+/* Every slot, slot 0 first. Worker only: an empty slot is slow to ask. */
+static int xinput_scan(void)
 {
-    if (!XInputGetState_) return -1;
+    PortPadState t;
     for (DWORD s = 0; s < 4; ++s)
-        if (XInputGetState_(s, out) == ERROR_SUCCESS) return (int)s;
+        if (XInputGetState_(s, &t) == ERROR_SUCCESS) return (int)s;
     return -1;
-}
-
-static int xinput_poll(PortPadState *out)
-{
-    if (!XInputGetState_) return 0;
-    if (xi_slot >= 0) {
-        if (XInputGetState_((DWORD)xi_slot, out) == ERROR_SUCCESS) return 1;
-        xi_slot = -1;                   /* unplugged: fall through to a rescan */
-        xi_rescan = 0;
-    }
-    if (--xi_rescan > 0) return 0;
-    xi_rescan = XI_RESCAN_FRAMES;
-    xi_slot = xinput_scan(out);
-    return xi_slot >= 0;
 }
 
 /* ------------------------------------------------------------- DirectInput */
@@ -74,13 +111,15 @@ static int xinput_poll(PortPadState *out)
 typedef HRESULT(WINAPI *DirectInput8Create_t)(HINSTANCE, DWORD, REFIID, LPVOID *,
                                               LPUNKNOWN);
 static IDirectInput8A *di8;
-static IDirectInputDevice8A *di_dev;
+static IDirectInputDevice8A *di_dev;    /* worker only */
 static int di_acquired;
-static int di_rescan;
-enum { DI_RESCAN_FRAMES = 120 };
 static char di_name[96];
 static unsigned di_vid, di_pid;
-static HWND(WINAPI *GetActiveWindow_)(void);
+static HWND di_hwnd;                    /* this process's top-level window, if found */
+
+/* user32, for the cooperative level's window. Dynamic like everything else. */
+static BOOL(WINAPI *EnumWindows_)(WNDENUMPROC, LPARAM);
+static DWORD(WINAPI *GetWindowThreadProcessId_)(HWND, DWORD *);
 
 /* One layout: which DirectInput button feeds each XInput bit, which buttons
    (or axes) are the triggers, and which axes are the right stick. Button
@@ -119,7 +158,7 @@ static const PadLayout PAD_LAYOUTS[] = {
      1, 2, 0, 3, 4, 5, 8, 9, 10, 11, 6, 7, 3, 4, 2, 5},
     /* Everything else: buttons 0..3 as A B X Y, then LB RB LT RT Back Start
        LS RS in the order most HID pads report them, X/Y left stick, Z/Rz
-       right stick, hat d-pad. */
+       right stick, hat d-pad. An axis the pad does not have reads 0. */
     {0, 0, "generic",
      0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 6, 7, -1, -1, 2, 5},
 };
@@ -152,13 +191,30 @@ static const DIDATAFORMAT DI_FORMAT = {
     sizeof(DIDATAFORMAT), sizeof(DIOBJECTDATAFORMAT), DIDF_ABSAXIS,
     sizeof(DIJOYSTATE2), sizeof(DI_OBJS) / sizeof(DI_OBJS[0]), DI_OBJS};
 
-/* The six axes' offsets in DIJOYSTATE2 and their reported ranges, read back
-   after asking for +-32767 so a pad that refuses the request still scales. */
+/* The six axes' offsets in DIJOYSTATE2, whether the bound pad HAS each one,
+   and its reported range (read back after asking for +-32767, so a pad that
+   refuses the request still scales).
+
+   PRESENCE MATTERS. An axis the pad lacks is left at 0 by GetDeviceState while
+   its range stays at DirectInput's 0..65535 default, and scaling that gives
+   -32767: a hard-over stick on an axis that does not exist. Every layout puts
+   the right stick on Z/Rz and plenty of pads have no Rz (an Xbox pad seen
+   through DirectInput, most cheap two-axis USB pads), so without this the
+   camera would spin and pitch forever on them. Absent reads 0. */
 static const DWORD DI_AXIS_OFS[6] = {
     FIELD_OFFSET(DIJOYSTATE2, lX),  FIELD_OFFSET(DIJOYSTATE2, lY),
     FIELD_OFFSET(DIJOYSTATE2, lZ),  FIELD_OFFSET(DIJOYSTATE2, lRx),
     FIELD_OFFSET(DIJOYSTATE2, lRy), FIELD_OFFSET(DIJOYSTATE2, lRz)};
+static int di_axis_present[6];
 static LONG di_axis_min[6], di_axis_max[6];
+
+static BOOL CALLBACK di_axis_cb(const DIDEVICEOBJECTINSTANCEA *doi, void *)
+{
+    /* after SetDataFormat, dwOfs is the object's offset in OUR format */
+    for (int a = 0; a < 6; ++a)
+        if (doi->dwOfs == DI_AXIS_OFS[a]) di_axis_present[a] = 1;
+    return DIENUM_CONTINUE;
+}
 
 /* An XInput-class device also shows up in DirectInput, with "IG_" in its
    device path. Step 1 already covers those, and reading one here as well
@@ -184,8 +240,17 @@ static void di_release_device(void)
         di_dev = 0;
     }
     di_acquired = 0;
+    EnterCriticalSection(&g_lock);
+    di_pub_live = 0;
+    LeaveCriticalSection(&g_lock);
 }
 
+/* THE FIRST NON-XINPUT GAME CONTROLLER WINS. DI8DEVCLASS_GAMECTRL covers
+   wheels, flight sticks and pedal sets as well as pads, and this takes the
+   first one attached with no attempt to tell them apart: a player with a
+   racing wheel and a Pro Controller both plugged in may find the wheel
+   answering. Unplugging it, or SM64DS_PAD_BACKEND=xinput, is the remedy
+   until a device-type preference is worth its weight. */
 static BOOL CALLBACK di_enum_cb(const DIDEVICEINSTANCEA *inst, void *)
 {
     IDirectInputDevice8A *dev = 0;
@@ -213,8 +278,14 @@ static BOOL CALLBACK di_enum_cb(const DIDEVICEINSTANCEA *inst, void *)
             di_layout = &PAD_LAYOUTS[i];
             break;
         }
-    /* ask for +-32767 on every axis, then read back what each really has */
+    /* which axes exist, then ask for +-32767 on each and read back what it
+       really has. An axis whose range cannot be read is treated as absent. */
+    memset(di_axis_present, 0, sizeof di_axis_present);
+    dev->EnumObjects(di_axis_cb, 0, DIDFT_AXIS);
     for (int a = 0; a < 6; ++a) {
+        di_axis_min[a] = 0;
+        di_axis_max[a] = 65535;
+        if (!di_axis_present[a]) continue;
         DIPROPRANGE r;
         memset(&r, 0, sizeof r);
         r.diph.dwSize = sizeof r;
@@ -224,8 +295,6 @@ static BOOL CALLBACK di_enum_cb(const DIDEVICEINSTANCEA *inst, void *)
         r.lMin = -32767;
         r.lMax = 32767;
         dev->SetProperty(DIPROP_RANGE, &r.diph);
-        di_axis_min[a] = 0;
-        di_axis_max[a] = 65535;         /* DirectInput's default if unasked */
         memset(&r, 0, sizeof r);
         r.diph.dwSize = sizeof r;
         r.diph.dwHeaderSize = sizeof r.diph;
@@ -234,6 +303,8 @@ static BOOL CALLBACK di_enum_cb(const DIDEVICEINSTANCEA *inst, void *)
         if (SUCCEEDED(dev->GetProperty(DIPROP_RANGE, &r.diph)) && r.lMax > r.lMin) {
             di_axis_min[a] = r.lMin;
             di_axis_max[a] = r.lMax;
+        } else {
+            di_axis_present[a] = 0;
         }
     }
     return DIENUM_STOP;
@@ -253,14 +324,15 @@ static int dinput_load(void)
         !out)
         return 0;
     di8 = (IDirectInput8A *)out;
-    if (HMODULE u = LoadLibraryA("user32.dll"))
-        GetActiveWindow_ =
-            (decltype(GetActiveWindow_))GetProcAddress(u, "GetActiveWindow");
+    if (HMODULE u = LoadLibraryA("user32.dll")) {
+        EnumWindows_ = (decltype(EnumWindows_))GetProcAddress(u, "EnumWindows");
+        GetWindowThreadProcessId_ = (decltype(GetWindowThreadProcessId_))
+            GetProcAddress(u, "GetWindowThreadProcessId");
+    }
     return 1;
 }
 
-/* Look for an attached, non-XInput game controller. Returns 1 if di_dev is
-   set afterwards. */
+/* Look for an attached, non-XInput game controller. Worker only. */
 static int dinput_scan(void)
 {
     if (!di8) return 0;
@@ -269,17 +341,31 @@ static int dinput_scan(void)
     return di_dev != 0;
 }
 
+static BOOL CALLBACK own_window_cb(HWND h, LPARAM)
+{
+    DWORD pid = 0;
+    GetWindowThreadProcessId_(h, &pid);
+    if (pid == GetCurrentProcessId()) {
+        di_hwnd = h;
+        return FALSE;
+    }
+    return TRUE;
+}
+
 static int di_acquire(void)
 {
     if (!di_dev) return 0;
     if (di_acquired) return 1;
     /* background + non-exclusive: the caller's own focus gate decides who
        gets the input, the same as it does for XInput, so the device must
-       keep answering when the window is not in front. The hwnd is whichever
-       window is active; NULL is accepted for a background level. A failure
-       here is not fatal, Acquire below is the real test. */
-    HWND hwnd = GetActiveWindow_ ? GetActiveWindow_() : 0;
-    di_dev->SetCooperativeLevel(hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+       keep answering when the window is not in front. The window is this
+       process's own top-level one if it exists yet (the worker has no active
+       window of its own, so it is looked up rather than asked for); NULL is
+       accepted for a background level. A failure here is not fatal, Acquire
+       below is the real test. */
+    if (!di_hwnd && EnumWindows_ && GetWindowThreadProcessId_)
+        EnumWindows_(own_window_cb, 0);
+    di_dev->SetCooperativeLevel(di_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
     if (FAILED(di_dev->Acquire())) return 0;
     di_acquired = 1;
     return 1;
@@ -287,7 +373,7 @@ static int di_acquire(void)
 
 static short di_axis(const DIJOYSTATE2 *js, int a)
 {
-    if (a < 0 || a > 5) return 0;
+    if (a < 0 || a > 5 || !di_axis_present[a]) return 0;
     LONG raw = *(const LONG *)((const char *)js + DI_AXIS_OFS[a]);
     LONG lo = di_axis_min[a], hi = di_axis_max[a];
     if (raw < lo) raw = lo;
@@ -301,11 +387,10 @@ static unsigned char di_trigger(const DIJOYSTATE2 *js, int btn, int axis)
 {
     unsigned char t = 0;
     if (btn >= 0 && btn < 128 && (js->rgbButtons[btn] & 0x80)) t = 255;
-    if (axis >= 0) {
-        /* the axis rests at its minimum for a trigger; scale 0..255 */
+    if (axis >= 0 && axis < 6 && di_axis_present[axis]) {
+        /* the axis rests at its minimum for a trigger; scale to 0..255 */
         int v = (int)di_axis(js, axis) + 32767;     /* 0..65534 */
-        int s = v / 257;
-        if (s > 255) s = 255;
+        int s = v * 255 / 65534;
         if (s > t) t = (unsigned char)s;
     }
     return t;
@@ -348,7 +433,7 @@ static void di_translate(const DIJOYSTATE2 *js, PortPadState *out)
     out->rx = di_axis(js, L->rx_axis);
     out->ry = (short)-di_axis(js, L->ry_axis);
     /* a packet number that changes when the state does, which is all the
-       callers ever ask of XInput's */
+       callers ever ask of XInput's. Worker only, so plain statics. */
     static unsigned long pkt;
     static PortPadState last;
     if (memcmp(&last.buttons, &out->buttons, sizeof *out - sizeof out->packet))
@@ -357,118 +442,168 @@ static void di_translate(const DIJOYSTATE2 *js, PortPadState *out)
     last = *out;
 }
 
-static int dinput_poll(PortPadState *out)
+/* One read of the bound device. 0 means "treat the device as lost": the
+   caller releases it and the next scan finds it again if it is still there.
+   One re-acquire is tried when input was lost; a second loss in the same
+   pass returns rather than repeating the dance against GetDeviceState. */
+static int di_read(PortPadState *out)
 {
-    if (!di8) return 0;
-    if (!di_dev) {
-        if (--di_rescan > 0) return 0;
-        di_rescan = DI_RESCAN_FRAMES;
-        if (!dinput_scan()) return 0;
-    }
     if (!di_acquire()) return 0;
     HRESULT hr = di_dev->Poll();
     if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
         di_acquired = 0;
-        if (!di_acquire()) goto lost;
+        if (!di_acquire()) return 0;
         hr = di_dev->Poll();
+        if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) return 0;
     }
     /* DI_NOEFFECT is a success code: the device needs no polling */
-    if (FAILED(hr) && hr != DIERR_INPUTLOST && hr != DIERR_NOTACQUIRED &&
-        hr != DI_NOEFFECT)
-        goto lost;
-    {
-        DIJOYSTATE2 js;
-        hr = di_dev->GetDeviceState(sizeof js, &js);
-        if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
-            di_acquired = 0;
-            if (!di_acquire()) goto lost;
-            hr = di_dev->GetDeviceState(sizeof js, &js);
-        }
-        if (FAILED(hr)) goto lost;
-        di_translate(&js, out);
-        return 1;
+    if (FAILED(hr)) return 0;
+    DIJOYSTATE2 js;
+    if (FAILED(di_dev->GetDeviceState(sizeof js, &js))) return 0;
+    di_translate(&js, out);
+    return 1;
+}
+
+/* ------------------------------------------------------------------ worker */
+
+enum {
+    XI_RESCAN_MS = 1000,    /* empty XInput slots, once a second */
+    DI_RESCAN_MS = 2000,    /* DirectInput enumeration when nothing is bound */
+    DI_POLL_MS = 4,         /* the bound device, ~250 Hz */
+    IDLE_MS = 50            /* nothing bound: wake for the cadence only */
+};
+
+static void announce(void)
+{
+    char b[160];
+    if (xi_slot >= 0) {
+        snprintf(b, sizeof b, "XInput slot %d", (int)xi_slot);
+    } else if (di_dev) {
+        snprintf(b, sizeof b, "DirectInput: %s (%04x:%04x, %s layout)",
+                 di_name[0] ? di_name : "unnamed controller", di_vid, di_pid,
+                 di_layout->name);
+    } else {
+        strcpy(b, "none");
     }
-lost:
-    /* unplugged (or taken exclusively by someone else): drop it and look
-       again on the slow cadence */
-    di_release_device();
-    di_rescan = DI_RESCAN_FRAMES;
-    return 0;
+    describe_set(b);
+}
+
+static DWORD WINAPI pad_worker(void *)
+{
+    if (g_mode != MODE_DINPUT) xinput_load();
+    if (g_mode != MODE_XINPUT) dinput_load();
+    DWORD last_xi = 0, last_di = 0;
+    int first = 1;
+    for (;;) {
+        const DWORD now = GetTickCount();
+        const int kick = InterlockedExchange(&g_rescan_now, 0) != 0;
+        /* XInput: confirm the known slot, or look for one */
+        if (XInputGetState_) {
+            if (xi_slot >= 0) {
+                if (first || kick || now - last_xi >= XI_RESCAN_MS) {
+                    PortPadState t;
+                    if (XInputGetState_((DWORD)xi_slot, &t) != ERROR_SUCCESS)
+                        xi_slot = -1;
+                    last_xi = now;
+                }
+            }
+            if (xi_slot < 0 && (first || kick || now - last_xi >= XI_RESCAN_MS)) {
+                xi_slot = xinput_scan();
+                last_xi = now;
+            }
+        }
+        /* DirectInput: bind, read, publish */
+        if (di8) {
+            if (!di_dev && (first || kick || now - last_di >= DI_RESCAN_MS)) {
+                dinput_scan();
+                last_di = now;
+            }
+            if (di_dev) {
+                PortPadState s;
+                if (di_read(&s)) {
+                    EnterCriticalSection(&g_lock);
+                    di_pub_live = 1;
+                    di_pub_state = s;
+                    LeaveCriticalSection(&g_lock);
+                } else {
+                    /* unplugged, or taken exclusively by someone else */
+                    di_release_device();
+                    last_di = now;
+                }
+            }
+        }
+        announce();
+        first = 0;
+        Sleep(di_dev ? DI_POLL_MS : IDLE_MS);
+    }
 }
 
 /* ------------------------------------------------------------------ public */
 
-static char describe_buf[160] = "none";
-static char describe_said[160];
 static int inited;
-
-static void describe_set(const char *s)
-{
-    strncpy(describe_buf, s, sizeof describe_buf - 1);
-    describe_buf[sizeof describe_buf - 1] = 0;
-    /* one line per change of answer, never per frame */
-    if (strcmp(describe_said, describe_buf) != 0) {
-        strcpy(describe_said, describe_buf);
-        fprintf(stderr, "[pad] %s\n", describe_buf);
-        fflush(stderr);
-    }
-}
-
-static void describe_xinput(int slot)
-{
-    char b[64];
-    snprintf(b, sizeof b, "XInput slot %d", slot);
-    describe_set(b);
-}
-
-static void describe_dinput(void)
-{
-    char b[160];
-    snprintf(b, sizeof b, "DirectInput: %s (%04x:%04x, %s layout)",
-             di_name[0] ? di_name : "unnamed controller", di_vid, di_pid,
-             di_layout->name);
-    describe_set(b);
-}
 
 int port_pad_init(void)
 {
-    if (inited) return XInputGetState_ != 0 || di8 != 0;
+    if (inited) return g_mode != MODE_NONE;
     inited = 1;
-    int xi = xinput_load();
-    int di = dinput_load();
-    PortPadState tmp;
-    xi_slot = xinput_scan(&tmp);
-    xi_rescan = XI_RESCAN_FRAMES;
-    if (xi_slot >= 0) {
-        describe_xinput(xi_slot);
-    } else if (di && dinput_scan()) {
-        di_rescan = DI_RESCAN_FRAMES;
-        describe_dinput();
-    } else {
-        describe_set("none");
+    InitializeCriticalSection(&g_lock);
+    if (const char *e = getenv("SM64DS_PAD_BACKEND")) {
+        if (!_stricmp(e, "xinput")) g_mode = MODE_XINPUT;
+        else if (!_stricmp(e, "dinput")) g_mode = MODE_DINPUT;
+        else if (!_stricmp(e, "none")) g_mode = MODE_NONE;
+        if (g_mode != MODE_AUTO) {
+            fprintf(stderr, "[pad] forced: %s (SM64DS_PAD_BACKEND)\n",
+                    g_mode == MODE_XINPUT ? "xinput only"
+                    : g_mode == MODE_DINPUT ? "dinput only" : "none");
+            fflush(stderr);
+        } else {
+            fprintf(stderr, "[pad] SM64DS_PAD_BACKEND=%s is not xinput, dinput "
+                            "or none; ignored\n", e);
+            fflush(stderr);
+        }
     }
-    return xi || di;
+    if (g_mode == MODE_NONE) {
+        describe_set("none (forced)");
+        return 0;
+    }
+    /* everything slow happens on the worker; see the file banner */
+    HANDLE t = CreateThread(0, 64 * 1024, pad_worker, 0, 0, 0);
+    if (!t) {
+        describe_set("none (worker thread failed)");
+        return 0;
+    }
+    CloseHandle(t);
+    return 1;
 }
 
 int port_pad_poll(PortPadState *out)
 {
     if (!inited) port_pad_init();
-    PortPadState s;
-    if (xinput_poll(&s)) {
-        *out = s;
-        describe_xinput(xi_slot);
-        return 1;
+    if (g_mode == MODE_NONE) return 0;
+    /* the known XInput slot: one cheap call, never an empty slot */
+    const LONG slot = xi_slot;
+    if (slot >= 0 && XInputGetState_) {
+        if (XInputGetState_((DWORD)slot, out) == ERROR_SUCCESS) return 1;
+        xi_slot = -1;           /* unplugged: the worker looks again */
     }
-    if (dinput_poll(&s)) {
-        *out = s;
-        describe_dinput();
-        return 1;
-    }
-    describe_set("none");
-    return 0;
+    int live;
+    EnterCriticalSection(&g_lock);
+    live = di_pub_live;
+    if (live) *out = di_pub_state;
+    LeaveCriticalSection(&g_lock);
+    return live;
+}
+
+void port_pad_device_changed(void)
+{
+    InterlockedExchange(&g_rescan_now, 1);
 }
 
 const char *port_pad_describe(void)
 {
-    return describe_buf;
+    if (!inited) return describe_out;
+    EnterCriticalSection(&g_lock);
+    strcpy(describe_out, describe_buf);
+    LeaveCriticalSection(&g_lock);
+    return describe_out;
 }

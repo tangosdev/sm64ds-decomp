@@ -4943,6 +4943,11 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
        default handler destroys the window, and WM_DESTROY above posts the quit
        message escape used to post directly. */
     switch (m) {
+    case WM_DEVICECHANGE:
+        /* a controller came or went: the pad backend's worker scans now
+           instead of on its slow cadence (hal/pad_backend.h) */
+        port_pad_device_changed();
+        break;
     case WM_RBUTTONDOWN:
         if (W.GetCursorPos_ && W.GetCursorPos_(&mo_anchor)) {
             mo_look = 1;
