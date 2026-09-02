@@ -480,7 +480,31 @@ all 4 windows.
 
 ### 8.5 The battery
 
-BATTERY_VERDICT
+`python port/tools/battery.py . --skip-build` (the build above is the one it
+would have made). **`battery: ALL GREEN`**, exit 0.
+
+```
+19 smoke binaries          all ok, including smoke_sdat (the hosted ARM7 whose
+                           mixer this lane put a hook in) and smoke_player
+levels                     50 mounted, every one clean
+scenes                     every hosted non-level scene clean, 373..390 included
+default boot: ok -- a bare launch reaches the TITLE, 300 frames clean, and writes its frame (589,878 bytes, liveness only)
+linkage: 9139 (80.7%)
+ptr_audit: 0 unhosted code pointers
+shipcfg build: ok, walk_window.exe linked in build\port-kit (PORT_ROM_CLEAN, static CRT, 390s)
+shipcfg selftest: ok, rc=0 and walk_window_selftest.bmp written (589,878 bytes, 10s)
+skips: level 27 without TTC_MOVING_BEAM (the decomp (_ZN14TtcMovingCubeA8BehaviorEv has no matched body)), level 45 without GOOMBOSS (the decomp (func_ov074_02121380 has no matched body))
+battery: ALL GREEN
+```
+
+**Linkage 9139 (80.7%) is unchanged** from the base tip, which is the expected
+answer: this lane added port-side files and touched no `src/`. `git diff
+ad09cd9f5 -- src/` is empty.
+
+**The shipping configuration builds and links too**, which is the arm that
+breaks on its own: it is a different compile (PORT_ROM_CLEAN, static CRT) and
+the new files go through it as well. The two skipped levels are pre-existing and
+belong to other lanes.
 
 ---
 

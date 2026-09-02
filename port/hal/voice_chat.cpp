@@ -497,7 +497,13 @@ void send_pending()
     g_pending_n = 0;
 }
 
-void capture_pump()
+/* `send` false means the device is drained and the audio thrown away.
+   THAT IS NOT THE SAME AS NOT DRAINING IT. A waveIn ring nobody empties fills
+   up in 160 ms and then stops; the moment a session forms, the first eight
+   reads hand back 160 ms of what the room sounded like BEFORE the match
+   started, all at once. Draining while there is nobody to send to costs one
+   memcpy a frame and makes the first thing a peer hears be the present. */
+void capture_pump(int send)
 {
     short frame[kCapFrameSamples];
     /* At 60 Hz against 20 ms frames there are one or two waiting; the bound is
@@ -521,6 +527,7 @@ void capture_pump()
             break;
         }
         ++g_cap_frames;
+        if (!send) continue;
         memcpy(g_pending[g_pending_n], frame, sizeof frame);
         ++g_pending_n;
         if (g_pending_n >= kFramesPerPkt) send_pending();
@@ -622,19 +629,22 @@ void voice_tick()
        unregistered mid-render from another point in the frame. */
     if (!g_hooked) { g_hooked = 1; sd_mix_set_aux_render(voice_mix_render); }
 
-    /* NO SESSION, NO VOICE. Capture keeps running (the device is the player's
-       choice, not the session's) but nothing is sent and nothing decoded, so a
-       player sitting in the menus with voice on is not broadcasting into a
-       socket that has nobody on it. */
+    /* NO SESSION, NOTHING ON THE WIRE. The device stays open -- it is the
+       player's choice, not the session's, and closing and reopening it every
+       time a match ends would be audible as a click on the next one -- and it
+       is still DRAINED, for the reason capture_pump's own note gives. What
+       stops is sending: a player sitting in the menus with voice on is not
+       broadcasting into a socket with nobody on it. */
     const CommsReadout rr = comms_readout();
     if (!rr.connected || rr.players <= 1) {
         g_pending_n = 0;
         for (int i = 0; i < kCommsMaxPlayers; ++i)
             if (g_rv[i].playing || g_rv[i].avail) rv_reset(g_rv[i]);
+        capture_pump(0);
         return;
     }
 
-    capture_pump();
+    capture_pump(1);
     recv_pump();
     update_gains();
     report_if_due();
