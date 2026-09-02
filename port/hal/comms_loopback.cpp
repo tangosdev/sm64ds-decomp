@@ -847,7 +847,18 @@ int  g_delay_safety_pct  = 125;         // SM64DS_COMMS_DELAY_SAFETY, percent
 int  g_child_rtt_ms[kCommsMaxPlayers];
 int  g_child_told_delay[kCommsMaxPlayers];   // last number sent to this slot
 int  g_child_ack_delay[kCommsMaxPlayers];    // last number it said it runs
-bool g_child_delay_moved[kCommsMaxPlayers];  // it was retold; it owes an ack
+// THE VALUE THE SESSION WOULD HAVE RUN IF NOTHING HAD BEEN SIZED -- the mode
+// default, captured before the first recompute. It is the value to fall BACK
+// to, and it is the reason a fallback is safe: every build that has ever
+// shipped can express it, because it is the number they all already used.
+int  g_delay_presize = -1;
+// THE DEPTH EVERY SHIPPED BUILD CAN EXPRESS. 0.3.2 and earlier clamp an
+// adopted delay at 8 (`parent_delay <= kInputDelayMax` against their own
+// smaller cap), so a published 11 does not raise them -- it is DROPPED, in
+// silence, and they keep the number they had. Anything at or under this is
+// adoptable by every peer alive; anything over it may only be published to a
+// session in which every live child has PROVED it is a new build by reporting.
+enum : int { kLegacyInputDelayMax = 8 };
 unsigned g_accept_sent_ms[kCommsMaxPlayers]; // when the last unicast went out
 unsigned g_sizing_wait_since_ms = 0;         // 0 = not waiting yet
 unsigned long long g_sizing_holds = 0;
@@ -859,6 +870,8 @@ enum : unsigned { kDelayGateLogMs = 3000 };
 // Child. The report is a JOIN with bit 30 set in `have`; it is repeated at the
 // republish interval until the parent's next unicast ACCEPT acknowledges it,
 // because a lost report leaves the parent sizing off one fewer peer.
+unsigned g_adopt_refuse_last_ms = 0;     // child: rate limit on the refusal
+bool     g_legacy_peer_sim = false;      // SM64DS_COMMS_LEGACY_PEER
 bool     g_report_acked   = false;
 unsigned g_last_report_ms = 0;
 int      g_report_tries   = 0;
@@ -876,10 +889,19 @@ void delay_state_reset() {
         g_child_rtt_ms[i]      = -1;
         g_child_told_delay[i]  = -1;
         g_child_ack_delay[i]   = -1;
-        g_child_delay_moved[i] = false;
         g_accept_sent_ms[i]    = 0;
         g_starve_by_slot[i]    = 0;
     }
+    // THE RATE-LIMIT STAMPS ARE PER SESSION, NOT PER PROCESS. Left standing,
+    // a second session in one launch inherits the first one's clock and
+    // swallows its own first starve line -- the one line a field log most
+    // needs, dropped precisely because an earlier session already said it.
+    g_starve_last_log_ms     = 0;
+    g_delay_gate_last_log_ms = 0;
+    g_adopt_refuse_last_ms   = 0;
+    g_delay_gate_holds       = 0;
+    g_sizing_holds           = 0;
+    g_delay_presize          = -1;
     g_delay_frozen        = false;
     g_frames_produced     = false;
     g_report_acked        = false;
@@ -1259,17 +1281,12 @@ void announce_roster() {
     set_live(a, g_live);
     a.have = ((unsigned)(g_input_delay & 0xFF) << 8);
     send_to_children(a);
-    // A BROADCAST RETELL IS STILL A RETELL. Every live child has now been sent
-    // this number, so any child that was previously told a different one owes
-    // an ack before round 0 goes out. Recording it here and not only in the
-    // unicast arm is what keeps rule 3 honest when the number moved during a
-    // roster window rather than during a join.
-    for (int k = 1; k < kCommsMaxPlayers; ++k) {
-        if ((g_live & (1u << k)) == 0) continue;
-        if (g_child_told_delay[k] >= 0 && g_child_told_delay[k] != g_input_delay)
-            g_child_delay_moved[k] = true;
-        g_child_told_delay[k] = g_input_delay;
-    }
+    // WHAT EVERY LIVE CHILD HAS NOW BEEN TOLD. Recorded here and not only in
+    // the unicast arm, because rule 3 asks "has this slot confirmed the value
+    // in force", and a value published by a roster broadcast is in force just
+    // as much as one published by an accept.
+    for (int k = 1; k < kCommsMaxPlayers; ++k)
+        if (g_live & (1u << k)) g_child_told_delay[k] = g_input_delay;
 }
 
 // SIZE THE SESSION'S INPUT DELAY FROM WHAT THE PATHS MEASURED. See the banner
@@ -1280,14 +1297,44 @@ void recompute_adaptive_delay(const char *why) {
     if (g_role != kRoleParent) return;
     if (!g_adaptive_delay || g_delay_frozen) return;
 
-    // EVERY LIVE CHILD, OR NOTHING. A child that has not reported is either
-    // still handshaking (wait for it) or an older build that never will (and
-    // would never adopt a raised number either). Both answers are "not yet".
+    // EVERY LIVE CHILD, OR FALL BACK -- and "or nothing" was the bug. This
+    // guard used to just `return` on an unreported child, which is right the
+    // first time it runs and WRONG every time after, because by then a number
+    // may already be published and adopted. The sequence that broke it:
+    //
+    //   new children join and report   -> sized to 11, published, adopted
+    //   an OLD build joins afterwards  -> its ACCEPT carries 11, its own adopt
+    //                                     clamp is 8, so 11 is DROPPED and it
+    //                                     keeps 5 while everyone else runs 11
+    //
+    // Same round, two depths, which is exactly the desync this whole field
+    // exists to prevent. Returning early left the raised value standing; the
+    // answer is to TAKE IT BACK. Every peer is still before frame 0 (the
+    // parent withholds round 0 until the gate below opens), so a fallback here
+    // replays nothing and skips nothing, and the value fallen back to is the
+    // mode default, which every build that has ever shipped can express.
     int worst = -1, worst_slot = -1;
+    bool all_reported = true;
     for (int k = 1; k < kCommsMaxPlayers; ++k) {
         if ((g_live & (1u << k)) == 0) continue;
-        if (g_child_rtt_ms[k] < 0) return;
+        if (g_child_rtt_ms[k] < 0) { all_reported = false; continue; }
         if (g_child_rtt_ms[k] > worst) { worst = g_child_rtt_ms[k]; worst_slot = k; }
+    }
+    if (!all_reported) {
+        if (g_delay_presize >= 0 && g_input_delay != g_delay_presize) {
+            std::fprintf(stderr, "[comms:loopback] a live peer has not "
+                         "reported a round trip, so the sized depth of %d is "
+                         "WITHDRAWN and this session falls back to %d. A peer "
+                         "that does not report may be a build whose adopt "
+                         "clamp is %d, which would DROP a larger number in "
+                         "silence and leave one console at a depth of its own "
+                         "-- and the fallback value is the one every build "
+                         "already runs. Nobody has consumed a round yet.\n",
+                         g_input_delay, g_delay_presize, kLegacyInputDelayMax);
+            g_input_delay = g_delay_presize;
+            announce_roster();
+        }
+        return;
     }
     if (worst < 0) return;                       // no children yet
 
@@ -1325,10 +1372,22 @@ void recompute_adaptive_delay(const char *why) {
 // was retold the delay has not yet said back what it is running -- and a child
 // running the wrong N is a divergence, where a held round is a stall.
 bool delay_gate_open() {
-    if (g_role != kRoleParent || !g_adaptive_delay) return true;
+    if (g_role != kRoleParent) return true;
+    // NOT KEYED ON g_adaptive_delay, and that was the second half of the same
+    // bug: the stand-down path sets that flag false, which made this predicate
+    // answer "open" unconditionally at the exact moment a raised value was
+    // still in force with an unconfirmed peer in the session.
+    //
+    // The honest key is the VALUE. If what is in force is the value every
+    // build would have run anyway, there is nothing to confirm and this gate
+    // does not exist -- which is why a session that never sized behaves
+    // byte-identically to before this lane. If the value in force is anything
+    // else, EVERY live child must have said back that exact number, including
+    // a child being told for the first time. The old `moved` test skipped
+    // those, which is how a late joiner walked straight through.
+    if (g_delay_presize < 0 || g_input_delay == g_delay_presize) return true;
     for (int k = 1; k < kCommsMaxPlayers; ++k) {
         if ((g_live & (1u << k)) == 0) continue;
-        if (!g_child_delay_moved[k]) continue;
         if (g_child_ack_delay[k] != g_input_delay) return false;
     }
     return true;
@@ -1499,7 +1558,6 @@ void pipe_try_broadcast() {
             who[0] = 0;
             for (int q = 1; q < kCommsMaxPlayers && w < (int)sizeof who - 12; ++q) {
                 if ((g_live & (1u << q)) == 0) continue;
-                if (!g_child_delay_moved[q]) continue;
                 if (g_child_ack_delay[q] == g_input_delay) continue;
                 w += std::snprintf(who + w, sizeof who - (size_t)w, "%s%d(runs %d)",
                                    w ? "," : "", q, g_child_ack_delay[q]);
@@ -1545,6 +1603,45 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
     switch (p.type) {
     case kTypeJoin: {
         const bool fresh = (g_live & (1u << k)) == 0;
+        // A DEPTH AN OLD BUILD CANNOT EXPRESS IS NOT SOMETHING TO SEAT A NEW
+        // PEER INTO, once the session is past the point where it could be
+        // taken back. Before frame 0 an unreported peer makes the parent
+        // WITHDRAW the sized depth (see recompute_adaptive_delay) and nobody
+        // is harmed. After the freeze there is no withdrawing it: peers have
+        // consumed rounds at that depth and moving it would replay or skip
+        // them. So a joiner arriving into a frozen session deeper than every
+        // shipped build's clamp is REFUSED, out loud, because the alternative
+        // is seating a console that may silently run a different number.
+        //
+        // It costs a late joiner that IS a new build its seat, and that is
+        // accepted rather than hidden: the parent cannot tell the two apart at
+        // JOIN time (the report is a round trip away) and only a path bad
+        // enough to need more than %d frames can reach this at all.
+        if (fresh && g_delay_frozen && g_input_delay > kLegacyInputDelayMax) {
+            // NOT SEATED, AND NOT SENT A BYE EITHER. A Bye would be the tidy
+            // answer on a unicast wire and is the wrong one here: over the
+            // relay send_to_slot() fans a parent datagram out to EVERY child,
+            // and a child reads Bye as "the parent left" and goes idle. One
+            // refused joiner would end the match for the six people already
+            // playing. Saying nothing costs the joiner its own ROM bound,
+            // which is the same ~20 s it would spend on a parent that never
+            // answered -- the failure it already knows how to have.
+            const unsigned t = now_ms();
+            if (g_delay_gate_last_log_ms == 0 ||
+                (unsigned)(t - g_delay_gate_last_log_ms) >= kDelayGateLogMs) {
+                g_delay_gate_last_log_ms = t ? t : 1;
+                std::fprintf(stderr, "[comms:loopback] REFUSED a late join "
+                             "from slot %d: this session is frozen at input "
+                             "delay %d, past the %d that every shipped build "
+                             "can adopt, so a peer that silently kept its own "
+                             "number would simulate a different match. The "
+                             "depth cannot be lowered now -- rounds have been "
+                             "consumed at it.\n",
+                             k, g_input_delay, kLegacyInputDelayMax);
+            }
+            ++g_dropped;
+            break;
+        }
         g_live |= (1u << k);
         // A REPORT RATHER THAN A KNOCK. Bit 30 of a JOIN's `have` means the
         // child is telling the parent what its path measured and what number
@@ -1590,7 +1687,25 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
                              k, child_rtt, measured, child_delay);
             }
             g_child_rtt_ms[k]    = rtt;
-            g_child_ack_delay[k] = child_delay;
+            // ONLY AN ANSWER TO WHAT THIS SLOT WAS LAST TOLD COUNTS AS AN ACK.
+            // The child reports once at accept (carrying the old N) and again
+            // after adopting (carrying the new one), and UDP is free to
+            // deliver those out of order. The stale one landing second used to
+            // overwrite the ack with the old number and re-close the gate --
+            // while the unicast ACCEPT that answered it still set bit 16, so
+            // the child marked itself acknowledged and stopped retrying. Round
+            // 0 then sat held until the ROM's own 20 s bound killed the
+            // session, with nothing in the log admitting why. The round trip
+            // in a stale report is still perfectly good and is kept; only the
+            // ack is conditional.
+            if (child_delay == g_child_told_delay[k])
+                g_child_ack_delay[k] = child_delay;
+            else
+                std::fprintf(stderr, "[comms:loopback] ignoring slot %d's "
+                             "report of delay %d as an acknowledgement: that "
+                             "slot was last told %d, so this is a stale report "
+                             "that overtook a newer one. Its round trip is "
+                             "kept.\n", k, child_delay, g_child_told_delay[k]);
             report_now = true;
         }
         // ACCEPT IT EVEN IF THE GAME HAS NOT ASKED TO BE PARENT YET, but do not
@@ -1658,8 +1773,6 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // roster broadcast reaches every child and an ack in it would tell
         // six peers something true of one.
         if (g_child_rtt_ms[k] >= 0) a.have |= kAcceptRttAckBit;
-        if (g_child_told_delay[k] >= 0 && g_child_told_delay[k] != g_input_delay)
-            g_child_delay_moved[k] = true;
         g_child_told_delay[k] = g_input_delay;
         g_accept_sent_ms[k]   = now_ms();
         send_to_slot(a, k);
@@ -1747,6 +1860,7 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
 // nothing else, so this costs a build that predates it exactly one datagram.
 void child_send_report() {
     if (g_role != kRoleChild) return;
+    if (g_legacy_peer_sim) return;      // an old build has no report to send
     int r = g_handshake_rtt_ms;
     if (r < 0)      r = 0;
     if (r > 0xFFFF) r = 0xFFFF;
@@ -1767,7 +1881,11 @@ void child_send_report() {
 // the game a round", which is the property the first-accept bound was standing
 // in for. See rule 2 in the banner over g_adaptive_delay.
 void child_adopt_delay(int parent_delay, bool at_accept) {
-    if (parent_delay < 0 || parent_delay > kInputDelayMax) return;
+    // THE CEILING AN OLD BUILD APPLIES, reproduced exactly: a value past it is
+    // not clamped DOWN, it is dropped, and the peer keeps whatever it had.
+    // That silence is the whole blocker.
+    const int cap = g_legacy_peer_sim ? kLegacyInputDelayMax : kInputDelayMax;
+    if (parent_delay < 0 || parent_delay > cap) return;
     if (parent_delay == g_input_delay) return;
 
     if (g_frames_produced) {
@@ -1776,10 +1894,10 @@ void child_adopt_delay(int parent_delay, bool at_accept) {
         // skips rounds -- the divergence this whole field exists to prevent,
         // arriving by a different door. Rate limited: if the parent is going to
         // say this it will say it every roster announce.
-        static unsigned last_ms = 0;
         const unsigned t = now_ms();
-        if (last_ms == 0 || (unsigned)(t - last_ms) >= kDelayGateLogMs) {
-            last_ms = t ? t : 1;
+        if (g_adopt_refuse_last_ms == 0 ||
+            (unsigned)(t - g_adopt_refuse_last_ms) >= kDelayGateLogMs) {
+            g_adopt_refuse_last_ms = t ? t : 1;
             std::fprintf(stderr, "[comms:loopback] the parent published input "
                          "delay %d and this end is running %d, but this end "
                          "has already handed the game %u round(s). REFUSED: "
@@ -2767,6 +2885,16 @@ int lb_exchange(const void *my_block, uint16_t *status) {
                 ++g_sizing_holds;
                 return 0;
             }
+            // WITHDRAW FIRST, THEN STAND DOWN. The line below printed "the
+            // mode default of %d" while passing the RAISED number and left
+            // it in force, so the one line meant to say "nothing was sized
+            // here" was itself the evidence that something had been -- and
+            // the session went on at a depth an unreported peer may not
+            // have been able to adopt at all.
+            if (g_delay_presize >= 0 && g_input_delay != g_delay_presize) {
+                g_input_delay = g_delay_presize;
+                announce_roster();
+            }
             std::fprintf(stderr, "[comms:loopback] not every peer reported a "
                          "round trip within %ums, so the adaptive sizing "
                          "stands down and this session runs the mode default "
@@ -3545,6 +3673,21 @@ bool comms_loopback_install_from_env() {
                           "%s is outside 0..%d frames; keeping %d\n",
                           v, kInputDelayMax, g_delay_floor);
     }
+    // STAND IN FOR AN OLD BUILD, ON PURPOSE. The blocker this knob exists to
+    // prove is a MIXED-GENERATION one, and proving it needs a peer that
+    // behaves like 0.3.2: never sends a round-trip report, and DROPS an
+    // adopted depth past that generation's own ceiling rather than clamping
+    // to it. Keeping a real old binary as a fixture would rot; reproducing
+    // its two relevant behaviours behind one env does not. A test knob, and
+    // it says so on the line it prints.
+    if (std::getenv("SM64DS_COMMS_LEGACY_PEER")) {
+        g_legacy_peer_sim = true;
+        std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_LEGACY_PEER: this "
+                     "end will behave like a pre-0.3.3 peer -- no round-trip "
+                     "report, and an adopted delay past %d dropped rather than "
+                     "clamped\n", kLegacyInputDelayMax);
+    }
+
     // ARMED ONLY WHERE IT CAN HELP AND ONLY WHERE IT IS ALLOWED TO DECIDE.
     //   THE PARENT, because the delay is published parent to child and a child
     //     that sized its own would be sizing a number it is about to lose.
@@ -3568,6 +3711,10 @@ bool comms_loopback_install_from_env() {
                        g_net_mode != kNetLoopback && g_input_delay > 0;
     if (const char *v = std::getenv("SM64DS_COMMS_ADAPTIVE_DELAY"))
         if (std::atoi(v) == 0) g_adaptive_delay = false;
+    // THE VALUE TO FALL BACK TO, captured before anything can raise it. It is
+    // the mode default, which is the number every build that has ever shipped
+    // already runs, and that is precisely what makes a fallback safe.
+    if (g_adaptive_delay) g_delay_presize = g_input_delay;
     if (g_adaptive_delay)
         std::fprintf(stderr, "[comms:loopback] adaptive input delay ARMED: "
                      "this end is the parent and will size the session's depth "
