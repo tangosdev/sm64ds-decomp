@@ -83,7 +83,10 @@ restart is needed, as it does for the Mods keys.
   capture refuses a key or pad button bound to another action. The key-name
   table covers arrows, enter, escape, nav cluster, numpad, F-keys, backslash,
   and the pad table covers BACK, both stick clicks and the d-pad. A `[keys]`
-  line at boot states every binding in words.
+  line at boot states every binding in words, on the LEVEL path only: a scene
+  run (SM64DS_SCENE) returns from main before that block, and a headless
+  scene run never calls a binding getter (the windowed scene loop does, at
+  its first key_act).
 - `port/tests/smoke_settings.cpp` + CMake target `smoke_settings`: six cases in
   child processes (defaults, remap with an out-of-range value, CameraMode by
   number, old alias alone, both spellings disagreeing, the save path).
@@ -110,7 +113,7 @@ names, none of which touch settings.
 
 - `port/build-port.cmd`: exit 0 with all pre- and post-link guards (see the
   TEMP note under Unproven).
-- `build/port/smoke_settings.exe`: 6 of 6 cases ok.
+- `build/port/smoke_settings.exe`: 7 of 7 cases ok (6 at the battery runs; `alias_badnew` added at review, run on the incremental rebuild).
 - Headless: `walk_window.exe` with `SM64DS_LEVEL=1 SM64DS_WINDOW_SELFTEST=40`
   and a settings.json in the working directory setting KeyJump 74, KeyCrouch 0,
   PadJump 32768, CameraMode ds: rc 0, stderr carries
@@ -140,6 +143,12 @@ names, none of which touch settings.
   from the literal it replaced.
 - Pad bindings were not exercised on hardware (no controller on the box).
 - Two actions on one key is legal and untested beyond the getter.
+- A fractional value (3.9) truncates to 3 rather than defaulting; that is
+  json_int's long-standing behaviour for every integer key, noted in the
+  header.
+- Review fix: a KeyRun / PadRun that is present but out of range no longer
+  beats a valid RunButtonKey / RunButtonPad beside it (the alias tracks
+  "parsed in range", not "present"); smoke case `alias_badnew` pins it.
 - Environmental: on this PC a freshly written .exe under %TEMP% is
   unreadable (Permission denied, for as long as it exists), which makes
   `tailjump_guard.py --selftest` fail before the build starts. The build and

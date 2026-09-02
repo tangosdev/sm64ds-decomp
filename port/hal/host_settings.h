@@ -104,7 +104,9 @@ int host_setting_save_camera_mode(int mode);
    and host_setting_pad(HOST_PAD_RUN).
 
    A value outside the code space (keys 0..0xff, pads 0..0xffff) is a typo,
-   not a choice, and reads as the default. Two actions on one key is legal
+   not a choice, and reads as the default. A fractional value such as 3.9
+   truncates to 3 (json_int reads the leading integer, the behaviour every
+   integer key in this file has always had) rather than defaulting. Two actions on one key is legal
    and means both happen; nothing here second-guesses it. The debug menu's
    own navigation -- the arrows, enter, escape, F5, the d-pad, A, B and BACK
    -- is fixed and is not in this table.

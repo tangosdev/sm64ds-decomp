@@ -18,6 +18,8 @@
      alias_old   only RunButtonKey / RunButtonPad in the file: read exactly
                  as before, and the new names answer the same.
      alias_both  both spellings present and disagreeing: KeyRun / PadRun win.
+     alias_badnew the new spelling present but out of range: the valid old
+                 spelling beside it wins, because "present" is not "parsed".
      save        the run save writes BOTH spellings and the camera save
                  writes CameraMode, and a key this program never heard of
                  survives the write untouched.
@@ -147,6 +149,13 @@ static int child(const char *which)
         check_eq(host_setting_run_pad(), 0x0200, "PadRun RB wins");
         check_eq(host_setting_key(HOST_KEY_RUN), 0x51, "KeyRun Q");
         check_eq(host_setting_pad(HOST_PAD_RUN), 0x0200, "PadRun RB");
+    } else if (!strcmp(which, "alias_badnew")) {
+        /* the new spelling is there but out of range: a typo, so the valid
+           old spelling beside it must still win */
+        check_eq(host_setting_run_key(), 0x52, "RunButtonKey R beats KeyRun 999");
+        check_eq(host_setting_run_pad(), 0x8000, "RunButtonPad Y beats PadRun -1");
+        check_eq(host_setting_key(HOST_KEY_RUN), 0x52, "KeyRun follows old");
+        check_eq(host_setting_pad(HOST_PAD_RUN), 0x8000, "PadRun follows old");
     } else if (!strcmp(which, "save")) {
         check(host_setting_save_run(1, 0x51, 0x0200), "save_run wrote");
         check(host_setting_save_camera_mode(1), "save_camera_mode wrote");
@@ -262,12 +271,15 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "alias_both",
         "{ \"RunButtonKey\": 82, \"KeyRun\": 81,\n"
         "  \"RunButtonPad\": 32768, \"PadRun\": 512 }");
+    bad |= run_case(exe, dir, "alias_badnew",
+        "{ \"RunButtonKey\": 82, \"KeyRun\": 999,\n"
+        "  \"RunButtonPad\": 32768, \"PadRun\": -1 }");
     bad |= run_case(exe, dir, "save", "{\n  \"Volume\": 37\n}\n");
     _rmdir(dir);
     if (bad) {
         printf("smoke_settings: FAIL\n");
         return 1;
     }
-    printf("smoke_settings: ok, 6 cases\n");
+    printf("smoke_settings: ok, 7 cases\n");
     return 0;
 }

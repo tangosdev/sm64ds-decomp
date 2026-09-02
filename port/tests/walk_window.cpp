@@ -7499,8 +7499,10 @@ int main(void)
     }
     /* THE BINDINGS, said once at boot for the same reason the run line is,
        and in the same words the menu uses. This is also the line a headless
-       check reads: a settings.json that moves jump must show up here even in
-       a run that never reads a live key. */
+       LEVEL check reads: a settings.json that moves jump must show up here
+       even in a run that never reads a live key. Only the level path reaches
+       it: a scene run (SM64DS_SCENE) returns from main before this block,
+       and a headless scene run never asks a binding getter at all. */
     bindings_load();
     {
         char b[HOST_KEY_COUNT][20];

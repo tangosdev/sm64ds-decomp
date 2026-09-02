@@ -730,21 +730,31 @@ void load_once(void)
         /* the bindings, each read against its OWN default so a file that
            moves jump and says nothing about the rest is honoured for jump.
            Out of the code space is a typo, not a choice, like the run pair. */
+        int keyrun_ok = 0, padrun_ok = 0;   /* KeyRun / PadRun parsed IN RANGE */
         for (int i = 0; i < 14; ++i) {
             const int k = json_int(text, KEY_BIND[i].name, KEY_BIND[i].dflt);
-            if (k >= 0 && k <= 0xff) g_key[i] = k;
+            if (k >= 0 && k <= 0xff) {
+                g_key[i] = k;
+                if (i == 11 && json_value(text, KEY_BIND[i].name)) keyrun_ok = 1;
+            }
         }
         for (int i = 0; i < 6; ++i) {
             const int p = json_int(text, PAD_BIND[i].name, PAD_BIND[i].dflt);
-            if (p >= 0 && p <= 0xffff) g_pad[i] = p;
+            if (p >= 0 && p <= 0xffff) {
+                g_pad[i] = p;
+                if (i == 3 && json_value(text, PAD_BIND[i].name)) padrun_ok = 1;
+            }
         }
-        /* THE ALIAS: KeyRun / PadRun win when the file names them; when it
-           does not, the old RunButtonKey / RunButtonPad answer stands, which
-           is what the two reads above already left in g_run_key / g_run_pad.
-           After these two lines g_run_key and g_key[RUN] are one value. */
-        if (json_value(text, "KeyRun")) g_run_key = g_key[11];
+        /* THE ALIAS: KeyRun / PadRun win when the file names them WITH A VALUE
+           THAT PARSED; when it does not, the old RunButtonKey / RunButtonPad
+           answer stands, which is what the two reads above already left in
+           g_run_key / g_run_pad. "Parsed", not "present": a KeyRun of 999 is a
+           typo and must not beat a valid RunButtonKey beside it, which a
+           presence test would let it do by handing over the default. After
+           these two lines g_run_key and g_key[RUN] are one value. */
+        if (keyrun_ok) g_run_key = g_key[11];
         else g_key[11] = g_run_key;
-        if (json_value(text, "PadRun")) g_run_pad = g_pad[3];
+        if (padrun_ok) g_run_pad = g_pad[3];
         else g_pad[3] = g_run_pad;
         /* the screen gap. Each key is read against its OWN default, so a file
            that sets one of the four and none of the others is honoured for
