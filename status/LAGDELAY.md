@@ -340,7 +340,7 @@ carrier refuses a depth and the session is stop-and-wait) is also 21/21 clean.
 ### P6. The battery: GREEN AS FAR AS IT GOT, NOT FINISHED
 
 `python port/tools/battery.py C:/tmp/lagdelay --skip-build`, log at
-`C:	mp\lagdelay-out\proof_battery.log`. Every smoke binary green:
+`C:\tmp\lagdelay-out\proof_battery.log`. Every smoke binary green:
 
     smoke.exe: ok  smoke: all checks passed (math, Timer, Fader on host)
     smoke_actor.exe: ok  smoke_actor: all checks passed (an actor spawned, initialized, behaved and rendered throug
