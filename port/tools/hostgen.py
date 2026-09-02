@@ -738,6 +738,34 @@ VIRTUAL_CALL = {
          "(*(void (***)(void *, void *))p6)[0]"
          "((void *)p6, *(void **)(self + 0xc));"),
     ],
+    # Lane shadow-A: Model::LoadAndSetFile's middle. The matched source
+    # dispatches DoSetFile through a LOCAL shadow class with three virtuals,
+    # `self->v2(file, c, d)`: slot 2 in ROM/Itanium numbering, where a
+    # destructor takes TWO slots (D1, D0). MSVC gives a destructor one slot,
+    # so the host's _ZTV5Model has DoSetFile at 1 and UpdateVerts at 2, and
+    # the shadow's "slot 2" walked a fresh Model's null vertex list inside the
+    # first Tree's InitResources. hal/cxxname_bridge.cpp's double-fill trick
+    # (Render, slots 4 and 5) cannot serve a slot that means two live things,
+    # so the call is resolved at the caller: DoSetFile is slot 1 in every
+    # host model table (_ZTV5Model, _ZTV9ModelAnim, _ZTV10ModelAnim2), and the
+    # slots are __fastcall thunks (ecx = this, the dummy edx absorbs
+    # fastcall's second register), the convention hal/actor_vtables.cpp set.
+    # The third patch is a HOST SEAM and not part of the slot fold: the tail
+    # is the ROM's shrink-to-fit (func_02017060 -> Heap::Reallocate), which the
+    # port declines by default on every model path (hal/level_boot.cpp's
+    # port_model_shrink_enabled, SM64DS_MODEL_SHRINK=1 turns it back on), and
+    # the retired host copy carried the same switch. Retires
+    # port/unmatched/func_02016ff4_hostcopy.cpp.
+    "func_02016ff4": [
+        ('extern "C" int func_02017060(BMD_File *f);',
+         'extern "C" int func_02017060(BMD_File *f);\n'
+         'extern "C" int port_model_shrink_enabled(void);'),
+        ("ret = self->v2(file, c, d);",
+         "ret = ((int (__fastcall *)(void *, void *, BMD_File *, int, int))"
+         "(*(void ***)self)[1])(self, 0, file, c, d);"),
+        ("if (ret) func_02017060(file);",
+         "if (ret && port_model_shrink_enabled()) func_02017060(file);"),
+    ],
 }
 
 

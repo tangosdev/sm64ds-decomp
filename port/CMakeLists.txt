@@ -7726,7 +7726,12 @@ endforeach()
 # the listener came back 8192, past every distance limit in the game, and every
 # positional sound was culled. It goes through hostgen like every other TU that
 # touches hardware; src/func_02049018.c comes out of slice 10.
-set(GATE35_SYMS func_02049018 CollectStar)
+# Lane shadow-A rides three more through the same plain-hostgen loop:
+# CollectStar (ARG_WIDTH), func_02016ff4 and the two ActorBase::Process
+# wrappers func_0204335c / func_02043288 (VIRTUAL_CALL). Their src lines stay
+# skipped where the slices list them (func_0204335c in the gate-10 camera
+# filter below).
+set(GATE35_SYMS func_02049018 CollectStar func_02016ff4)
 set(GATE35_GEN "")
 foreach(sym IN LISTS GATE35_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -8089,7 +8094,9 @@ set(LEVELBOOT_HOST_SOURCES
     # what it did and did not fix. Commented out of slice_gate14.txt in
     # exchange.
     unmatched/LoadEntranceObjects.cpp
-    unmatched/func_02016ff4_hostcopy.cpp
+    # func_02016ff4_hostcopy.cpp RETIRED (lane shadow-A): hostgen VIRTUAL_CALL
+    # resolves the shadow-class slot-2 call to DoSetFile's host slot 1 and
+    # keeps the shrink switch; see the table's note. GATE35_SYMS.
     # unmatched/ActorBase_AfterCleanupResources.cpp RETIRED -- the matched
     # source hosts itself now, through hostgen's ROLE_DATA map. See
     # HOSTABI_RETIRE_SYMS.
