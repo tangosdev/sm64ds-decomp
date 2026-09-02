@@ -71,7 +71,7 @@ recoloured brown is precisely what comes out.
 
 **The fix.** `port_vs_spawn_extra_players` in `hal/level_boot.cpp` corrects
 `0x61C` by the same delta that corrects `mPlayerNo`. One step of `mPlayerNo` is
-exactly one sixteen-colour row (the base is in eight-byte units and ntr binds
+exactly one sixteen-colour row (the base is in sixteen-byte units and ntr binds
 at `base * 16`, so `<< 1` is +32 bytes), so the correction needs nothing the
 actor does not already hold:
 
@@ -385,6 +385,14 @@ upload).
     walk_window.exe  5,470,720 bytes
       sha256 6ec49672af9569ed37263108d74d862c9883284cbde187d704545cf480d44c58
     smoke_player.exe 4,701,696 bytes
+
+THE ONE EDIT MADE AFTER THIS BINARY WAS BUILT is a comment: a note in
+hal/level_boot.cpp said the palette base was in eight-byte units when it is in
+sixteen (func_020462d0 sets a material's +0x20 to vramOffset >> 4). The
+conclusion it supports was right either way -- `<< 1` is +32 bytes, one row --
+and no instruction changed, so every proof below still describes this tree.
+Said out loud because "the artifact is older than the tree" is the failure
+shape that hides behind a green report.
 
 TWO BUILDS WERE KILLED BEFORE THIS ONE AND NEITHER WAS A COMPILE FAILURE, said
 plainly because their logs look like failures and are not. `FAILED:` lines with

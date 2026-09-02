@@ -4410,8 +4410,9 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
        seat coming out as some other seat's recoloured brown.
 
        ONE STEP OF mPlayerNo IS EXACTLY ONE SIXTEEN-COLOUR ROW (the base is in
-       eight-byte units and ntr binds at base*16, so `<< 1` is +32 bytes), so
-       the correction is a delta and needs nothing the actor does not already
+       SIXTEEN-byte units -- func_020462d0 sets a material's +0x20 to
+       vramOffset >> 4 and ntr binds at base*16 -- so `<< 1` is +32 bytes),
+       so the correction is a delta and needs nothing the actor does not already
        hold: whatever value InitResources unpacked is still in the byte, and
        the difference between it and the true slot is the number of rows the
        word is off by.
