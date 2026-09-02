@@ -15,7 +15,7 @@
  * the .c-matched ones (ArrowLift::CleanupResources, every D0, class-32's whole
  * set) are already C-linkage and are called directly by the fill.
  */
-#include "dsstate_seg.h"
+#include "hal/dsstate_seg.h"
 
 struct FloatOnWaterPlatformWdwSquare { int InitResources(); int CleanupResources(); int Behavior(); int Render(); };
 struct ArrowLift { int InitResources(); int Behavior(); int Render(); };
