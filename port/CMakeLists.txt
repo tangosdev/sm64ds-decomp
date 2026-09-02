@@ -3471,9 +3471,20 @@ foreach(line IN LISTS SLICE33_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # Lane CAPSHOW: WaterfallMist::Behavior is substituted by
+    # port/unmatched/WaterfallMist_Behavior_HostSites.cpp -- its shadow
+    # `v03()` on the cap's ModelAnim is the ROM's +0x0c UpdateVerts, and the
+    # port's MSVC-numbered _ZTV9ModelAnim puts Virtual10(Matrix4x3 &) there,
+    # whose `ret 4` unbalances the frameless caller (measured: c0000005 on
+    # the frame after a VS cap is collected). Skipped HERE so
+    # slice_gate33.txt stays another lane's file, the VS_PathDivGuard shape.
+    if(line STREQUAL "src/_ZN13WaterfallMist8BehaviorEv.cpp")
+        continue()
+    endif()
     list(APPEND SLICE33_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 list(APPEND SLICE33_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/WaterfallMist_Behavior_HostSites.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Coin_Behavior.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Coin_CollectDispatch.cpp"
      # argfix: func_ov002_020b10a0 calls StarMarker::SpawnRedCoinStarIfNecessary()
