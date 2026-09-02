@@ -8164,8 +8164,8 @@ set(CAMERA_HOST_SOURCES
 # _ZN12ActorDerived18AfterInitResourcesEj is C++ inside a .c (the gate-9 case
 # again): hostgen emits it as .cpp with the C-linkage wrap, which MSVC accepts.
 # Lane shadow-A adds the camera's three pointer-to-member dispatchers
-# (hostgen MG_PMF_CALL: func_0200cae4 / func_0200ca50 into
-# hal_call_camera_state_fn, func_02008550 over hal/ptr_tables.cpp's records).
+# (hostgen CALL_STATE_FN: func_0200cae4 / func_0200ca50 into
+# hal_call_camera_state_fn; MG_PMF_CALL: func_02008550 over hal/ptr_tables.cpp's records).
 set(GATE13_SYMS _ZN6Camera6RenderEv LenVec3 _ZN4cstd11ldiv_resultEv
     func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj
     func_02008550 func_0200cae4 func_0200ca50

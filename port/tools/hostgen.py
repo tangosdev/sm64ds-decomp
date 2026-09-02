@@ -921,36 +921,10 @@ MG_PMF_CALL = {
          "    return ((int (*)(void *, unsigned char *, int, int))"
          "*(void **)&data_0209b138[msg[6]])(obj, msg + 7, a2, a3);"),
     ],
-    # Lane shadow-A: the camera state machine's two dispatchers. The State
-    # objects at 0x0209b008.. are mwcc member-function pairs {code address,
-    # this-delta} that __sinit_02073a24 copies from relocated data; on the
-    # host the code word is a DS address and hal/camera_states.cpp's
-    # hal_call_camera_state_fn translates it through the address switch in
-    # camera_states.inc (every delta in the ROM's pairs is 0). Each entry
-    # swaps the one PMF call for that seam, reading the same word the src
-    # reads, and adds the seam's declaration at file scope (the sources are
-    # C++, so a block-scope declaration would take C++ linkage). onEnter is
-    # word 0 of the State (func_0200cae4); main is word 2 (func_0200ca50,
-    # the src's `obj + 8`). Retires port/unmatched/func_0200cae4_hostcopy.cpp
-    # and func_0200ca50_hostcopy.cpp.
-    "func_0200cae4": [
-        ("extern \"C\" int func_0200cae4(C* c){",
-         "extern \"C\" int hal_call_camera_state_fn(void *self, unsigned ds_addr);\n"
-         "extern \"C\" int func_0200cae4(C* c){"),
-        ("  return (c->**p)();",
-         "  return hal_call_camera_state_fn(c, *(unsigned *)p);"),
-    ],
-    "func_0200ca50": [
-        ("extern \"C\" int func_0200ca50(C *self)\n{",
-         "extern \"C\" int hal_call_camera_state_fn(void *self, unsigned ds_addr);\n"
-         "extern \"C\" int func_0200ca50(C *self)\n{"),
-        ("            r5 = (self->**pp)();",
-         "            r5 = hal_call_camera_state_fn(self, *(unsigned *)pp);"),
-    ],
 }
 
 
-# ---- PLAYER STATE-MACHINE mwcc MEMBER-POINTER DISPATCH ----------------------
+# ---- STATE-MACHINE mwcc MEMBER-POINTER DISPATCH (PLAYER, CAMERA) -----------
 #
 # Three Player state functions read a per-character/per-kind row that the ROM's
 # sinit copied out of a code-pointer table, and dispatch it as an mwcc member
@@ -971,7 +945,8 @@ MG_PMF_CALL = {
 # seam too: their ptr words are all zero, so the branch is dead in the ROM's own
 # data and word0 there would be a DS vtable byte offset, meaningless against a
 # host vtable pointer.
-CALL_STATE_FN_DECL = 'extern "C" int hal_call_state_fn(void *, unsigned);\n'
+CALL_STATE_FN_DECL = ('extern "C" int hal_call_state_fn(void *, unsigned);\n'
+                      'extern "C" int hal_call_camera_state_fn(void *, unsigned);\n')
 CALL_STATE_FN = {
     "_ZN6Player12St_Jump_MainEv": [
         ("      int (*f)(void*);\n      if (v & 1) {\n"
@@ -1006,6 +981,27 @@ CALL_STATE_FN = {
          "  if(fn & 1){\n"
          "    hal_call_state_fn(obj, (unsigned)(*(int*)obj + m->adj));\n"
          "  } else {\n    hal_call_state_fn(obj, (unsigned)m->adj);\n  }"),
+    ],
+    # Lane shadow-A: the camera state machine's two dispatchers, the same
+    # shape on a second seam. The State objects at 0x0209b008.. are mwcc
+    # member-function pairs {code address, this-delta} that __sinit_02073a24
+    # copies from relocated data; on the host the code word is a DS address
+    # and hal/camera_states.cpp's hal_call_camera_state_fn translates it
+    # through the address switch in camera_states.inc (every delta in the
+    # ROM's pairs is 0). Each entry swaps the one PMF call for that seam,
+    # reading the same word the src reads; the seam's declaration rides in
+    # CALL_STATE_FN_DECL at file scope (the sources are C++, so a block-scope
+    # declaration would take C++ linkage). onEnter is word 0 of the State
+    # (func_0200cae4); main is word 2 (func_0200ca50, the src's `obj + 8`).
+    # Retires port/unmatched/func_0200cae4_hostcopy.cpp and
+    # func_0200ca50_hostcopy.cpp.
+    "func_0200cae4": [
+        ("  return (c->**p)();",
+         "  return hal_call_camera_state_fn(c, *(unsigned *)p);"),
+    ],
+    "func_0200ca50": [
+        ("            r5 = (self->**pp)();",
+         "            r5 = hal_call_camera_state_fn(self, *(unsigned *)pp);"),
     ],
 }
 
