@@ -517,7 +517,8 @@ int _ZN3Boo6RenderEv(void *selfv)
 
    Control flow is the matched source line for line -- the 0x40000 bit at
    +0xb0 is FlyGuy.h's unk_0b0, and the argument really is a null Vector3
-   pointer (the ROM passes r1 = 0), not a scale this copy invented. */
+   pointer (the ROM passes r1 = 0), not a scale this copy invented.
+   PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
 int _ZN6FlyGuy6RenderEv(void *self)
 {
     char *c = (char *)self;

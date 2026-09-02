@@ -144,6 +144,7 @@ static const struct {
     { data_ov002_0210a36c, 0x020bccfc, func_ov002_020bccfc, "0210a36c" },
 };
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an incomplete class is the wider general representation
 extern "C" void func_ov002_020bd664(void *self, unsigned char *p, int a2,
                                     int a3)
 {
@@ -262,6 +263,7 @@ static const struct {
     { data_ov002_0210b8c8, 0x020f26c4, func_ov002_020f26c4, "0210b8c8" },
 };
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an incomplete class is the wider general representation
 extern "C" void func_ov002_020f7d74(void *self, unsigned char *p, int a2,
                                     int a3)
 {

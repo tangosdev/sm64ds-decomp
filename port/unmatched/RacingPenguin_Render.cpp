@@ -35,6 +35,7 @@
 extern "C" {
 void _ZN15TextureSequence6UpdateER15ModelComponents(void *self, void *mc);
 
+// PORT_HOST_ABI: mwcc shadow-class dispatch of a ModelAnim's ROM slot 5, which MSVC's ModelAnim table cannot serve.
 int _ZN13RacingPenguin6RenderEv(char *self)
 {
     _ZN15TextureSequence6UpdateER15ModelComponents(self + 0x138, self + 0xdc);

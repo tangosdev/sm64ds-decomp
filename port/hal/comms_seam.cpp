@@ -159,6 +159,7 @@ extern "C" {
 // src/func_020408b0.c: allocates the WM work buffers off the game heap, reads
 // the boot indicator to pick an init branch, and starts the SDK. A transport
 // needs none of that; it needs to know it is being opened.
+// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body starts the NITRO WM SDK over arm7.bin, which this repo does not decompile (file header). Behind the transport seam.
 void func_020408b0(unsigned short mode) {
     // Run vs16, hosted-conductor follow-up. The ROM clears its four records at
     // session start (src/func_0203db64.c:64 zeroes 0x90 at data_020a1154); the
@@ -179,6 +180,7 @@ void func_020408b0(unsigned short mode) {
 
 // src/func_02040820.c: the ROM's become-parent state machine over
 // data_020a0f94/data_020a0f5c, with Wireless_Reset on a role flip.
+// PORT_HOST_ABI: hosted WM/radio seam face; ROM body is the become-parent state machine over the NITRO WM SDK / arm7.bin radio, which this repo does not decompile.
 void func_02040820(void) {
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->become_parent(); return; }
@@ -189,6 +191,7 @@ void func_02040820(void) {
 }
 
 // src/func_02040790.c, the child half of the same machine.
+// PORT_HOST_ABI: hosted WM/radio seam face; the become-child half of the same WM SDK / arm7.bin state machine this repo does not decompile.
 void func_02040790(void) {
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->become_child(); return; }
@@ -196,6 +199,7 @@ void func_02040790(void) {
 }
 
 // src/func_02040724.c: leave.
+// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body closes the NITRO WM SDK session over arm7.bin, which this repo does not decompile.
 void func_02040724(void) {
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->close(); return; }
@@ -204,6 +208,7 @@ void func_02040724(void) {
 }
 
 // src/func_02040714.c is `return data_020a0f94`, the link state.
+// PORT_HOST_ABI: hosted WM/radio seam face; returns the link state the NITRO WM SDK / arm7.bin radio keeps, which this repo does not decompile.
 int func_02040714(void) {
     const port::CommsTransport *t = port::comms_transport();
     return t ? t->state() : port::g_solo_state;
@@ -214,6 +219,7 @@ int func_02040714(void) {
 // src/func_0203ea5c.c:252 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
 // on ARM is a dead r0 write the callee overwrites. Declared with the argument
 // here so a stack ABI agrees with the ROM's own call sites.
+// PORT_HOST_ABI: hosted WM/radio seam face plus a register ride-through; the ROM caller passes a dead r0 the callee overwrites, declared as an argument so the host stack ABI matches the ROM call sites.
 int func_02040704(int ignored) {
     (void)ignored;
     const port::CommsTransport *t = port::comms_transport();
@@ -222,6 +228,7 @@ int func_02040704(int ignored) {
 
 // src/func_020406b4.c: hands the staged block to func_02062df0 (the WM send)
 // and reports back through data_020a0f80. Returns 1 when the round is in.
+// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body hands the staged block to the NITRO WM send over arm7.bin, which this repo does not decompile.
 int func_020406b4(const void *block, unsigned short *status) {
     ++port::g_exchanges;
     const port::CommsTransport *t = port::comms_transport();
@@ -235,6 +242,7 @@ int func_020406b4(const void *block, unsigned short *status) {
 }
 
 // src/func_0204068c.c: player `aid`'s received block, or 0.
+// PORT_HOST_ABI: hosted WM/radio seam face; returns a peer's received block out of the NITRO WM buffers over arm7.bin, which this repo does not decompile.
 const void *func_0204068c(unsigned short aid) {
     const port::CommsTransport *t = port::comms_transport();
     if (!t) return nullptr;
@@ -254,6 +262,7 @@ const void *func_0204068c(unsigned short aid) {
 // invoked: on the DS they run in the wireless thread's context and mutate the
 // same state the poll path does, so calling them from here would double-apply
 // it. A transport that wants them driven does it from poll().
+// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body starts the DS wireless thread in the NITRO WM SDK over arm7.bin, which this repo does not decompile; the host is polled from the seam pump instead.
 void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
     (void)role; (void)b; (void)cb_recv; (void)cb_send; (void)e;
 }
@@ -262,7 +271,9 @@ void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
 // inside the WM work buffer (data_020a3fc0 + 0xB50). There is no WM work
 // buffer here, so the seam keeps the word itself.
 static unsigned int g_wm_status;
+// PORT_HOST_ABI: hosted WM/radio seam face; the ROM keeps this status word inside the NITRO WM work buffer (data_020a3fc0 + 0xB50) the port does not have, so the seam keeps the word itself.
 void func_02040a5c(unsigned int val) { g_wm_status = val & ~1u; }
+// PORT_HOST_ABI: hosted WM/radio seam face; reads the status word the ROM keeps inside the NITRO WM work buffer the port does not have.
 int func_02040a84(void) { return (int)g_wm_status; }
 
 // src/func_0203e20c.c: DS DOWNLOAD PLAY, an eight-state multiboot server that
@@ -271,6 +282,7 @@ int func_02040a84(void) { return (int)g_wm_status; }
 // no cartridge to send. REFUSED, and the refusal is the ROM's own shape: role
 // 3 is cleared back to solo, exactly what src/func_0203e20c.c does when its
 // distribution ends.
+// PORT_HOST_ABI: hosted WM/radio seam face; DS Download Play multiboot server over the radio, which a PC port with a socket transport cannot honestly provide (no cartridge to distribute).
 void func_0203e20c(void) {
     static bool said;
     if (!said) {

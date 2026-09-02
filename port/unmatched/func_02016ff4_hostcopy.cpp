@@ -35,6 +35,7 @@ int port_model_shrink_enabled(void);
 typedef int(__fastcall *ModelDoSetFile)(void *self, void *dummy,
                                         BMD_File *file, int a, int b);
 
+// PORT_HOST_ABI: the shadow class's slot 2 is DoSetFile only under ROM numbering where the destructor takes two slots; MSVC folds it to one slot so slot 2 lands on UpdateVerts, so this reads host slot 1
 int func_02016ff4(void *self, BMD_File *file, int c, int d)
 {
     int ret;

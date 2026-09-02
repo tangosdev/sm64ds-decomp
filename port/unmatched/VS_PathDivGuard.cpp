@@ -44,6 +44,7 @@ extern void SubVec3(void *a, void *b, void *c);
 
 
 
+// PORT_HOST_ABI: ARM AEABI division semantics (x / 0 = 0)
 extern "C" void func_ov002_020ef670(char *c)
 {
     struct Vector3 prev, node, diff1, diff2, scaled1, scaled2;

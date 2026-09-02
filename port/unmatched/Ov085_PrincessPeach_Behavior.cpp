@@ -87,6 +87,7 @@ struct PeachModelAnimDispatch {
     virtual void m2();
 };
 
+// PORT_HOST_ABI: ModelAnim vtable numbering (ROM slot 3 is MSVC index 2; the array cannot be dual-filled because ROM slot 5 is Virtual18's MSVC slot).
 extern "C" int _ZN13PrincessPeach8BehaviorEv(void *self)
 {
     char *c = (char *)self;

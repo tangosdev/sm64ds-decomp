@@ -25,6 +25,7 @@ extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_
 
 extern struct Matrix4x3 data_020a0e68;
 
+// PORT_HOST_ABI: matched code calls func_ov002_020e3f90() argless because r0 still holds c on the DS; the host cdecl call must pass it explicitly
 void func_ov002_020e444c(char *c)
 {
     int sp8, spC;

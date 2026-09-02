@@ -38,6 +38,7 @@ extern "C" {
 typedef int(__fastcall *ActorSlot0)(void *self, void *dummy);
 typedef void(__fastcall *ActorSlot2)(void *self, void *dummy, unsigned code);
 
+// PORT_HOST_ABI: ActorBase::Process's three args are mwcc pointer-to-members MSVC cannot represent; resolved to vtable slots 6/7/8 instead
 int func_02043288(void *self)
 {
     void **vt = *(void ***)self;

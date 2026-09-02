@@ -291,6 +291,7 @@ extern "C" void port_mg_slot3_state_slots(unsigned *out8)
 // otherwise. Rewriting it as a plain `if` would be tidier and would stop this
 // file being a transcription.
 
+// PORT_HOST_ABI: dScMgSlot3_c vtable slot 6 table dispatcher for data_ov006_02142bdc; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
 extern "C" int func_ov006_0210bcb0(char *self)
 {
     int i;

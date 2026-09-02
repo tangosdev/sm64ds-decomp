@@ -39,6 +39,7 @@ extern "C" void Camera_UpdateMatrices(int arg);
 
 extern unsigned char data_0209f5f8;
 
+// PORT_HOST_ABI: decl_common.h declares this (void*) while src defines it (char*), one register on the ROM but C2733 to MSVC, so the host takes the parameter as void* and casts inside, with the raw *(int*)0x4001000 I/O latch write landing through the ntr mmio map.
 extern "C" int func_ov006_020e6e78(void *cv)
 {
     char *self = (char *)cv;

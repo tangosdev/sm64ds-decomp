@@ -344,6 +344,7 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
    satisfied while MSVC strides the eight-byte table by four.  It is one of the
    two silent shapes port/mg_fanout_costs.txt section 4 names, and only the
    `::*` sweep finds it. */
+// PORT_HOST_ABI: mwcc table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
 extern "C" int func_ov006_020f5388(void *self)
 {
     char *c = (char *)self;
@@ -398,6 +399,7 @@ extern "C" void func_ov006_020f50f8(void *c)
    adjustment to r7; section 2 has the disassembly.  Twelve records, which is
    this class's whole board -- src/func_ov006_020f4f94.c clears twelve and
    src/func_ov006_020f4cd8.c deals 8, 10 or 12 of them. */
+// PORT_HOST_ABI: mwcc arity-1 table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
 extern "C" void func_ov006_020f3f10(void *c)
 {
     char *base = (char *)c;

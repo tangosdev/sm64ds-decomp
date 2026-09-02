@@ -144,6 +144,7 @@ void *MgMushroomRoulette_Spawn(void);
 
 }  /* extern "C" */
 
+// PORT_HOST_ABI: src spells the base constructor call func_ov004_020b2adc() with no argument because on ARM r0 already holds the object, a register ride-through C cannot spell; the host passes p explicitly so the callee does not store three vtable words through an uninitialised stack slot.
 extern "C" void *MgMushroomRoulette_Spawn(void)
 {
     char *p = (char *)_ZN9ActorBasenwEj(0x5400);

@@ -113,6 +113,7 @@ extern int _ZTV18dMgTrmpln3DMario_c[];
 /* ROM 0x020cd12c: the ELEMENT CONSTRUCTOR of the four dMgTrmpln3DMario_c
    records.  src/func_ov006_020cd12c.c verbatim with data_ov007_020cd72c ->
    func_ov006_020cd72c. */
+// PORT_HOST_ABI: port mounts ov006 and ov007 together so the shared DS address is ambiguous; re-pointed to the ov006 function the ROM's relocation names
 int *func_ov006_020cd12c(int *t)
 {
     func_ov006_020cd72c(t);
@@ -124,6 +125,7 @@ int *func_ov006_020cd12c(int *t)
 /* ROM 0x020cb16c: one of the twenty-one element STATES.
    src/func_ov006_020cb16c.c verbatim with data_ov007_020ccd78() ->
    func_ov006_020ccd78(c), the argument the ROM rides through in r0. */
+// PORT_HOST_ABI: port mounts ov006 and ov007 together so the shared DS address is ambiguous; re-pointed to the ov006 function and the dropped receiver restored
 void func_ov006_020cb16c(int *c)
 {
     if (*(int *)((char *)c + 0x20) >= -0x120000)

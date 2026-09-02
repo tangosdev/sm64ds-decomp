@@ -298,6 +298,7 @@ extern "C" void port_mg_bsc_index_range(int *lo, int *hi)
 // slot every seat wires by name -- which is section 14's practical rule:
 // before wiring slot 6 by name, read the src.
 
+// PORT_HOST_ABI: dScMgBSC_c vtable slot 6 table dispatcher; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
 extern "C" int func_ov006_021254c0(void *self)
 {
     char *c = (char *)self;

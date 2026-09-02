@@ -33,6 +33,7 @@ extern void _Z15ApproachLinear2Rsss(short *v, short t, short s);
 extern void _Z11UpdateAngleRssis(void *p, short a, int step, short d);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
 
+/* PORT_HOST_ABI: void* arithmetic (mwcc/GNU extension, rejected by MSVC C) */
 int func_ov002_020f7780(char *self, void *unused, int mode)
 {
     char *c = self;

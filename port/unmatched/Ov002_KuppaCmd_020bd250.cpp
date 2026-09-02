@@ -52,6 +52,7 @@ int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const void *src,
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y,
                                                     int z);
 
+// PORT_HOST_ABI: matched TU's local shadow makes Player::Hurt a THISCALL member (this would ride in ecx); host copy spells it extern C and passes self explicitly
 int func_ov002_020bd250(char *self, unsigned char *p)
 {
     Vector3 out1, off1, out2, off2, v;

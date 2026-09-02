@@ -11,6 +11,7 @@ void _Z15ApproachLinear2Rsss(short *dst, short a, short b);
 int func_0200cbe0(void *c);
 int hal_call_camera_state_fn(void *self, unsigned ds_addr);
 
+// PORT_HOST_ABI: the State object's main pair is an mwcc pointer-to-member holding a DS code address MSVC's PMF cannot represent; dispatch routed through hal_call_camera_state_fn
 int func_0200ca50(void *self)
 {
     char *f = (char *)self;

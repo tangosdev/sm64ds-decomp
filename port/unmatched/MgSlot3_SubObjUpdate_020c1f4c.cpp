@@ -109,6 +109,7 @@ extern Matrix4x3 data_020a0e68;
 
 struct Sub { char pad[0x120]; Matrix4x3 m; };
 
+// PORT_HOST_ABI: src dispatches through a local four-virtual shadow class and calls v3() at ROM Itanium slot 3 (UpdateVerts), but MSVC folds the two destructor slots into one so slot 3 becomes Virtual10 and the shadow smashes the call; the host calls the real BlendModelAnim::UpdateVerts so MSVC resolves the slot the ROM's way.
 extern "C" void func_ov006_020c1f4c(char *c)
 {
     Matrix4x3_FromTranslation(&data_020a0e68, *(int *)(c + 0x8c),

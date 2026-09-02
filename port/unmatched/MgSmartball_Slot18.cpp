@@ -83,6 +83,7 @@ void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, unsigned short a,
                                     unsigned short b, unsigned short c,
                                     unsigned short d);
 
+// PORT_HOST_ABI: src drops the self argument to func_ov006_02115b0c that the ROM rides through r0; MSVC would run board teardown off an uninitialised this, so the host copy passes self
 void func_ov006_02118a8c(void *self)
 {
     func_ov006_02115b0c((char *)self);

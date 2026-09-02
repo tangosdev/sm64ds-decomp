@@ -68,6 +68,7 @@ int _ZN13SharedFilePtr9ConstructEj(void *p, unsigned id);
 int _ZN14BlendModelAnimC1Ev(void *p);
 int _ZN11ShadowModelC1Ev(void *p);
 
+// PORT_HOST_ABI: src spells three constructor arguments as placeholder globals g0/g1/g2 that resolve nowhere on the host; host copy passes the file ids 0x205/0x206/0x207 the ROM loads from its pool
 int func_ov006_020c0a48(char *t)
 {
     func_02017acc(t, 0x205);                       /* DELTA 2: was g0 */

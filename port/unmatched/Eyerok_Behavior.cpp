@@ -74,6 +74,7 @@ extern char data_ov066_0211b07c;
 extern char data_020a0e68[];
 extern int data_ov066_0211ad18[];
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately incomplete class; MSVC's PMF representation does not reproduce the ROM's {function,delta} pair.
 int _ZN6Eyerok8BehaviorEv(char *c)
 {
     DecIfAbove0_Short((u16 *)(c + 0x4d0));

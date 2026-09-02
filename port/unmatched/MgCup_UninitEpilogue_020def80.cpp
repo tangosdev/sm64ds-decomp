@@ -97,6 +97,7 @@
 
 extern "C" void func_ov006_020def80(char *c, int i);
 
+// PORT_HOST_ABI: src leaves `int new_var;` uninitialised and reaches the epilogue via goto past its only assignment; mwcc allocated it to r1 which still holds `i` so the byte-matched body worked, but MSVC's allocation makes it a wild write, so the host initialises new_var = i, the value the ROM's r1 carries at the label on all three paths.
 extern "C" void func_ov006_020def80(char *c, int i)
 {
     unsigned char t;

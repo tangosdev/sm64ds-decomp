@@ -97,6 +97,7 @@ static void peach_pmf_call(char *c, const PeachStatePair *pair)
 }
 
 /* the ENTER half: run the current record's pair at +0 */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
 void func_ov085_0212a46c(void *cv)
 {
     char *c = (char *)cv;
@@ -105,6 +106,7 @@ void func_ov085_0212a46c(void *cv)
 }
 
 /* the per-frame half: run the current record's pair at +8 */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
 void func_ov085_0212a430(void *cv)
 {
     char *c = (char *)cv;

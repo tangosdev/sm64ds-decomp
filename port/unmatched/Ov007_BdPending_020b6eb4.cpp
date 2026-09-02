@@ -69,6 +69,7 @@ void func_ov007_020b72a0(void);
 extern char *data_ov007_02103430;
 extern char *data_ov007_0210342c;
 
+// PORT_HOST_ABI: register ride-through displaced from src for one ARM argument; src/func_ov007_020b6eb4.c declares the bd648 callee (void) and lets the mode word ride r0, which MSVC cannot reproduce (the caller pushes nothing). This copy spells the argument so the matched TU stays matched.
 int func_ov007_020b6eb4(void)
 {
     ARMMathState s;

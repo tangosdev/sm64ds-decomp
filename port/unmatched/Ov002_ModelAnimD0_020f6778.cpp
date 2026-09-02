@@ -54,6 +54,7 @@ void _ZN6Memory16operator_delete2EPv(void*);
 /* MSVC numbering and MSVC convention; see the header. */
 typedef void(__fastcall *VFN)(void*, void*);
 
+// PORT_HOST_ABI: MSVC folds the ROM's D1/D0 destructor pair into slot 0 and the seated deleting dtor is __fastcall (self in ecx)
 void* func_ov002_020f6778(char* c){
   void* p;
   int i;

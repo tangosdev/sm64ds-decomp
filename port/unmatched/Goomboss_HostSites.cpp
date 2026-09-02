@@ -62,6 +62,7 @@ extern int func_ov074_021222e0(char *c);
    Control flow is the matched source line for line. mParam is at +0x008,
    unk_60a at +0x60a, mScaleX at +0x080, mModelAnim at +0x210 and the
    ModelComponents the three Updates take at +0x218. */
+// PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case.
 int _ZN8Goomboss6RenderEv(void *selfv)
 {
     char *c = (char *)selfv;

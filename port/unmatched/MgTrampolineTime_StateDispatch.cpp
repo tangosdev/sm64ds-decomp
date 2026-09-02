@@ -303,6 +303,7 @@ extern "C" void port_mg_tti_anomalies(unsigned *unset, unsigned *virt,
 // It is the third of the three shapes port/mg_fanout_costs.txt section 4 names
 // and the second time a class has hidden it at vtable slot 6.
 
+// PORT_HOST_ABI: dScMgTrampoline_c vtable slot 6 Behavior; src dispatches a member pointer held in the field at c+0x5004 via (c->*c->pmf)() that is four bytes on MSVC where the ROM's field is eight, so the host reads the {code, adj} pair and routes it.
 extern "C" int func_ov006_021214f8(void *self)
 {
     char *c = (char *)self;

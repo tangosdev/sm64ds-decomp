@@ -198,6 +198,7 @@ extern "C" void port_mg_tte_sub_counts(unsigned *calls, unsigned *routed)
 
 // ---- the host copy ----------------------------------------------------------
 
+// PORT_HOST_ABI: dScMgTrmpln2Mario_c sub-object field-pmf dispatcher; the ROM open-codes the eight-byte {off, adj} decode at o+0x70 in plain ints, so it compiles and links but jumps to a DS address, and the host reads the pair and routes it.
 extern "C" void func_ov006_020c8f20(char *o)
 {
     *(int *)(o + 0x30) = *(int *)(o + 0x24);

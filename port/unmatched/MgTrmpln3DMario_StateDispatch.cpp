@@ -270,6 +270,7 @@ extern "C" void port_mg_mario_counts(unsigned *hits, unsigned *floor,
 // three-field copy at the top, the +0x64 null guard, the 0xb4b 20.12 scale,
 // the +0x38 / +0xcc comparisons and the two tail calls are src's.
 
+// PORT_HOST_ABI: dMgTrmpln3DMario_c second-level dispatcher; src open-codes the eight-byte {off, adj} field pmf at element+0x64 in plain ints, which MSVC reads as four bytes and jumps to a DS address (and rejects the TU as C2761 besides), so the host reads the pair and routes it.
 extern "C" void func_ov006_020cb030(char *o)
 {
     *(int *)(o + 0x28) = *(int *)(o + 0x1c);

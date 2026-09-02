@@ -110,6 +110,7 @@ extern Pair data_ov006_0213b8b8[11];
 
 #define VCALL90(p) (((Obj *)(p))->m_90())
 
+// PORT_HOST_ABI: src's `int data_0209d4b8;` is a mwcc tentative definition C++ has no notion of, so under MSVC it becomes a strong definition colliding LNK2005 with the HAL's arm9 global; the host copy is the src body verbatim with `extern` added.
 extern "C" void func_ov006_020d3ba0(char *sb)
 {
     int r5;

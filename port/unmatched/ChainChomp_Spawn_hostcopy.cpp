@@ -42,6 +42,7 @@ void func_020072c0(void);
 void func_0203d384(void);
 extern int _ZTV10ChainChomp[];
 
+// PORT_HOST_ABI: matched src calls the Enemy constructor argless because operator new left this in r0 on ARM; MSVC cdecl passes nothing and faults the constructor, so this is passed explicitly
 void *ChainChomp_Spawn(void)
 {
     char *c = (char *)_ZN9ActorBasenwEj(0x620);

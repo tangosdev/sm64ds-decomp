@@ -59,6 +59,7 @@ extern unsigned char data_ov066_0211ae08;
 extern unsigned char data_ov066_0211ae04;
 extern int data_ov066_0211b0ac;
 
+// PORT_HOST_ABI: implicit-register-arg (ClosestPlayer's this rode r0 in from this body's own argument; the host passes c).
 int func_ov066_02119398(char *c)
 {
     char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);   /* <-- this, the ROM's r0 */

@@ -30,6 +30,7 @@ extern "C" {
 extern unsigned char data_0209cab4[];
 extern unsigned char data_0209f224;
 
+// PORT_HOST_ABI: matched src passes the course id via the ARM r0 ride-through; MSVC cdecl pushes a byte with three stale bytes above it and corrupts the indexed write, so it is taken as s8 here
 void CollectStar(signed char courseID, int starID)
 {
     data_0209cab4[courseID] |= 1 << starID;

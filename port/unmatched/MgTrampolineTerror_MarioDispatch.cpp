@@ -165,6 +165,7 @@ extern "C" void port_mg_tte_mario_counts(unsigned *calls, unsigned *routed)
 }
 
 /* src/func_ov006_020cf758.cpp, whose whole body is the dispatch. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch, the 8-byte pair at record offset 0 MSVC's 4-byte pmf reads half of
 extern "C" void func_ov006_020cf758(void *c)
 {
     const MgPmf *p = (const MgPmf *)c;
@@ -172,6 +173,7 @@ extern "C" void func_ov006_020cf758(void *c)
 }
 
 /* src/func_ov006_020cea2c.cpp, verbatim except the first statement. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch, the 8-byte pair at record offset 0 MSVC's 4-byte pmf reads half of
 extern "C" void func_ov006_020cea2c(char *c)
 {
     {

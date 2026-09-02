@@ -149,6 +149,7 @@ extern "C" {
 
 struct RG { char pad[0x4c]; };
 
+// PORT_HOST_ABI: MSVC C2561 rejects the matched int-with-bare-return form.
 extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
 {
     s32 i;

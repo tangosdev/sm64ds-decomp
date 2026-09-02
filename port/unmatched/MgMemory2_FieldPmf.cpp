@@ -277,6 +277,7 @@ extern "C" void port_mg_memory2_field_counts(unsigned *calls, unsigned *hits)
    the host copy is the dispatch and nothing else.  The record pointer IS the
    object the pair belongs to, so `this` is the argument unchanged -- the ROM's
    `mov r0,r2` with a zero adjustment is exactly r0. */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch through an object-field 8-byte member pointer MSVC's 4-byte pmf cannot reproduce
 extern "C" void func_ov004_020b52fc(void *c)
 {
     const MgPmf *p = (const MgPmf *)c;
@@ -288,6 +289,7 @@ extern "C" void func_ov004_020b52fc(void *c)
    BlendModelAnim advance at +0x1c, the ApproachLinear2 at +0x1e0, the +0x1e2
    counter, the data_ov006_0212b89c lookup keyed on +0x1e2, the +0x1e4 spin and
    the tail call into func_ov006_020c07e8 on c+0xdc -- is verbatim. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the sub-object 8-byte pair MSVC's 4-byte pmf cannot reproduce
 extern "C" void func_ov006_020c19d0(void *thiz)
 {
     char *c = (char *)thiz;
