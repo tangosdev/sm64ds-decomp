@@ -65,6 +65,29 @@ int     g_next;                    // which header is due to come back next
 int     g_open;
 char    g_open_name[kCapNameBytes];
 
+/* ---- THE FAILURE LATCH ---------------------------------------------------
+ *
+ * A box with no recording device -- or one whose microphone another program
+ * already holds exclusively -- used to make this file try again on every
+ * frame, because the caller's only test was "is a device open", and on such a
+ * box it never is. Sixty enumerate-and-open attempts a second, and sixty
+ * copies of the failure line in the log with them. That is the same shape
+ * load_lib() above already guards against with g_lib, and it gets the same
+ * answer here.
+ *
+ * LATCHED PER NAME, not globally, so plugging in the headset the player named
+ * and pointing VoiceMicDevice at it is not blocked by an earlier failure on a
+ * different name. cap_rearm() clears it outright, and voice_chat.cpp calls
+ * that whenever the player changes the name or turns voice off and on again:
+ * somebody who just changed a setting is owed an immediate retry rather than a
+ * wait on a timer.
+ *
+ * THE BACKOFF IS THE CALLER'S (voice_chat.cpp, five seconds), because it owns
+ * the clock and the settings. This side only has to stop being loud and stop
+ * doing work, and the failure line is printed once per latch. */
+int     g_fail;
+char    g_fail_name[kCapNameBytes];
+
 /* Resolve winmm's recording entry points once. 0 means "this machine cannot
    record through this path", which every caller reads as "no voice", never as
    an error worth stopping the game for. */
@@ -144,6 +167,17 @@ UINT resolve_device(const char *name)
     return WAVE_MAPPER;
 }
 
+/* Latch a failure against the name that produced it. One line has already
+   been printed by whichever arm called this and nothing is printed here, so a
+   retry after the caller's backoff is silent too and the log carries a given
+   failure once per name rather than once per frame. */
+void cap_fail(const char *name)
+{
+    g_fail = 1;
+    strncpy(g_fail_name, name ? name : "", sizeof g_fail_name - 1);
+    g_fail_name[sizeof g_fail_name - 1] = '\0';
+}
+
 void free_ring()
 {
     for (int i = 0; i < NBUF; ++i) {
@@ -164,7 +198,10 @@ int cap_open(const char *device_name)
         if (strcmp(want, g_open_name) == 0) return 1;   // same device, no-op
         cap_close();                                    // a swap is a reopen
     }
-    if (!load_lib()) return 0;
+    /* Already known to fail for exactly this name: silent, and not one winmm
+       call -- not even the enumeration resolve_device would do. */
+    if (g_fail && strcmp(want, g_fail_name) == 0) return 0;
+    if (!load_lib()) { cap_fail(want); return 0; }
 
     WAVEFORMATEX wf;
     memset(&wf, 0, sizeof wf);
@@ -175,16 +212,28 @@ int cap_open(const char *device_name)
     wf.nBlockAlign = 2;
     wf.nAvgBytesPerSec = kCapRate * 2;
 
+    /* SM64DS_VOICE_NO_DEVICE=1 refuses the open as if the machine had no
+       recording hardware at all. It exists so the latch above can be PROVEN on
+       a box that does have a microphone, without the proof taking it: with it
+       set, this function walks the whole real path down to here and then
+       fails, and the log shows exactly what a player with no device sees. */
+    static int no_dev = -1;
+    if (no_dev < 0) no_dev = getenv("SM64DS_VOICE_NO_DEVICE") ? 1 : 0;
+
     const UINT id = resolve_device(want);
-    if (p_Open(&g_dev, id, &wf, 0, 0, CALLBACK_NULL) != MMSYSERR_NOERROR) {
+    if (no_dev ||
+        p_Open(&g_dev, id, &wf, 0, 0, CALLBACK_NULL) != MMSYSERR_NOERROR) {
         fprintf(stderr, "[voice] waveInOpen failed at %d Hz mono -- no "
-                        "capture this session\n", (int)kCapRate);
+                        "capture until the device or the setting changes\n", (int)kCapRate);
         g_dev = 0;
+        cap_fail(want);
         return 0;
     }
     for (int i = 0; i < NBUF; ++i) {
         g_buf[i] = (short *)calloc(kCapFrameSamples, sizeof(short));
-        if (!g_buf[i]) { free_ring(); p_Close(g_dev); g_dev = 0; return 0; }
+        if (!g_buf[i]) {
+            free_ring(); p_Close(g_dev); g_dev = 0; cap_fail(want); return 0;
+        }
         memset(&g_hdr[i], 0, sizeof g_hdr[i]);
         g_hdr[i].lpData = (LPSTR)g_buf[i];
         g_hdr[i].dwBufferLength = kCapFrameSamples * sizeof(short);
@@ -194,6 +243,7 @@ int cap_open(const char *device_name)
     g_next = 0;
     p_Start(g_dev);
     g_open = 1;
+    g_fail = 0;
     strncpy(g_open_name, want, sizeof g_open_name - 1);
     g_open_name[sizeof g_open_name - 1] = '\0';
     fprintf(stderr, "[voice] capture open: %d Hz mono, %d x %d samples "
@@ -218,6 +268,12 @@ void cap_close()
 }
 
 int cap_is_open() { return g_open; }
+
+void cap_rearm()
+{
+    g_fail = 0;
+    g_fail_name[0] = '\0';
+}
 
 int cap_read_frame(short *out)
 {
@@ -262,6 +318,7 @@ int cap_enumerate(char names[][kCapNameBytes], int max)
 int cap_open(const char *) { return 0; }
 void cap_close() {}
 int cap_is_open() { return 0; }
+void cap_rearm() {}
 int cap_read_frame(short *) { return 0; }
 int cap_enumerate(char[][kCapNameBytes], int) { return 0; }
 

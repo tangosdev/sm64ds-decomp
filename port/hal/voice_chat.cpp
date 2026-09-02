@@ -167,6 +167,30 @@ int adpcm_decode_one(Codec &c, unsigned char code)
     return c.pred;
 }
 
+/* THE ENCODER'S STEP INDEX, CARRIED ACROSS FRAMES.
+ *
+ * The first version of this file reset it to 0 at every frame boundary and put
+ * that zero in the header. That is a real defect and it was measured rather
+ * than argued: index 0 is step size 7, so at the top of every 20 ms frame the
+ * quantiser had to climb from 7 back up to whatever the signal needed, and the
+ * first handful of samples of every frame were badly wrong. A sine round trip
+ * through this codec read 18.7 dB SNR that way and 34.1 dB with the index
+ * carried, which is the difference between "muffled with a tick 50 times a
+ * second" and "a phone call".
+ *
+ * IT COSTS THE LOSS PROPERTY NOTHING, which is the only reason it is allowed.
+ * The carried index is WRITTEN INTO THE BLOCK, so every block still describes
+ * its own starting state completely and a decoder that never saw the previous
+ * datagram still decodes this one exactly. The encoder is simply choosing a
+ * better starting index than zero: one that already fits the signal. A lost
+ * datagram still costs exactly the 40 ms it contained.
+ *
+ * The PREDICTOR is still reset to the frame's own first sample rather than
+ * carried, and that half was always right: it makes the first residual zero, it
+ * is one byte cheaper to reason about, and unlike the step index a stale
+ * predictor is an audible DC jump rather than a slow re-converge. */
+int g_enc_index;
+
 /* One 20 ms frame into one 164-byte block. The block's header is the codec
    state BEFORE the first sample, so the decoder starts exactly where the
    encoder did and a lost frame costs nothing beyond itself. */
@@ -174,10 +198,11 @@ void encode_frame(const short *pcm, unsigned char *block)
 {
     Codec c;
     c.pred = pcm[0];
-    c.index = 0;
+    c.index = g_enc_index;
+    codec_clamp(c);
     /* The starting predictor is the frame's first sample, which makes the
        first residual zero and costs one sample of accuracy at a frame edge in
-       exchange for never carrying state across a datagram. */
+       exchange for never carrying a PREDICTOR across a datagram. */
     block[0] = (unsigned char)(c.pred & 0xff);
     block[1] = (unsigned char)((c.pred >> 8) & 0xff);
     block[2] = (unsigned char)c.index;
@@ -188,6 +213,7 @@ void encode_frame(const short *pcm, unsigned char *block)
         const unsigned char hi = adpcm_encode_one(c, pcm[i + 1]);
         out[i / 2] = (unsigned char)(lo | (hi << 4));
     }
+    g_enc_index = c.index;      /* where the next frame starts from */
 }
 
 void decode_frame(const unsigned char *block, short *pcm)
@@ -202,6 +228,54 @@ void decode_frame(const unsigned char *block, short *pcm)
         pcm[i]     = (short)adpcm_decode_one(c, (unsigned char)(b & 0x0f));
         pcm[i + 1] = (short)adpcm_decode_one(c, (unsigned char)(b >> 4));
     }
+}
+
+/* THE CODEC, MEASURED ON THE SHIPPED FUNCTIONS. SM64DS_VOICE_CODEC_SELFTEST=1.
+ *
+ * A sine at the amplitude a normal speaking voice reaches, pushed through the
+ * REAL encode_frame and decode_frame above for a second of frames, reported as
+ * a signal-to-noise ratio in dB. Not a Python model of the codec and not a
+ * unit test of the tables: the point is to measure the code that actually
+ * ships, across frame boundaries, so a regression in how the step index is
+ * carried shows up as a number rather than as somebody's ear.
+ *
+ * The first frame is excluded from the measurement and deliberately so: the
+ * encoder legitimately starts cold on the first frame of a call and spends it
+ * converging, which is a real 20 ms and not a defect. What this asserts is the
+ * steady state, which is every frame after it. Four bits a sample on a smooth
+ * waveform should read comfortably above 30 dB; it read 18.7 while the step
+ * index was being thrown away at every boundary. */
+void codec_selftest()
+{
+    enum { kFrames = 50 };          /* one second */
+    short in[kCapFrameSamples];
+    short out[kCapFrameSamples];
+    unsigned char block[kBlockBytes];
+    double phase = 0.0;
+    const double w = 2.0 * 3.14159265358979323846 * 440.0 / (double)kCapRate;
+    double sig = 0.0, err = 0.0;
+    const int save = g_enc_index;
+    g_enc_index = 0;
+    for (int f = 0; f < kFrames; ++f) {
+        for (int i = 0; i < kCapFrameSamples; ++i) {
+            in[i] = (short)(8000.0 * sin(phase));
+            phase += w;
+        }
+        encode_frame(in, block);
+        decode_frame(block, out);
+        if (f == 0) continue;       /* the cold frame; see the banner */
+        for (int i = 0; i < kCapFrameSamples; ++i) {
+            const double d = (double)in[i] - (double)out[i];
+            sig += (double)in[i] * (double)in[i];
+            err += d * d;
+        }
+    }
+    g_enc_index = save;
+    const double snr = (err > 0.0 && sig > 0.0)
+                     ? 10.0 * log10(sig / err) : 999.0;
+    fprintf(stderr, "[voice] codec selftest: %d frames of 440 Hz at amplitude "
+                    "8000 through the shipped IMA ADPCM, SNR %.1f dB\n",
+            kFrames - 1, snr);
 }
 
 // ---------------------------------------------------------------------------
@@ -284,6 +358,12 @@ int  g_hooked;                   // the mixer hook is registered
 int  g_vol;                      // VoiceVolume, 0..100
 int  g_near, g_far;              // the two radii, world units
 char g_mic[voice::kCapNameBytes];
+
+/* When the last cap_open attempt was made, so a device that will not open is
+   retried on a timer instead of on every frame. 0 means "no attempt yet", which
+   is why the store below never writes a literal 0. */
+unsigned g_open_retry_ms;
+enum : unsigned { kOpenRetryMs = 5000 };
 
 short g_pending[kFramesPerPkt][kCapFrameSamples];
 int   g_pending_n;
@@ -433,6 +513,11 @@ void refresh_settings()
 
     if (want != g_on) {
         g_on = want;
+        /* A player who just turned it back on is asking for another try, so
+           the capture layer's failure latch is cleared here rather than left
+           to expire. Same on the way off, so the next on is clean. */
+        voice::cap_rearm();
+        g_open_retry_ms = 0;
         fprintf(stderr, "[voice] VoiceEnabled -> %s\n", g_on ? "ON" : "off");
         if (!g_on) {
             /* OFF MEANS THE DEVICE IS GONE, not muted. This is the whole
@@ -452,11 +537,34 @@ void refresh_settings()
        having a microphone, and must not open one. */
     if (g_tone) return;
 
-    if (strcmp(mic, g_mic) != 0 || !voice::cap_is_open()) {
+    /* ---- OPENING THE DEVICE, AND NOT SPINNING ON IT --------------------
+       The old test here was "the name changed OR nothing is open", and on a
+       box with no recording device -- or one whose microphone another program
+       holds -- nothing is ever open, so this ran the whole enumerate-and-open
+       path on every frame and printed the failure line sixty times a second.
+
+       Two things fix it and they are different fixes for different events. A
+       CHANGED NAME is a player action and gets an immediate retry, with the
+       capture layer's per-name latch cleared so the new name is really tried.
+       A STILL-CLOSED DEVICE with an unchanged name is a situation, not an
+       event, and gets a five second retry: long enough that a machine with no
+       microphone costs nothing and says nothing, short enough that plugging
+       one in is picked up while the player is still wondering why it is quiet.
+       The capture layer stays silent on those retries anyway -- its latch
+       prints once per name -- so the backoff is about work, not noise. */
+    const int name_changed = strcmp(mic, g_mic) != 0;
+    if (name_changed) {
         strncpy(g_mic, mic, sizeof g_mic - 1);
         g_mic[sizeof g_mic - 1] = '\0';
-        voice::cap_open(g_mic);
+        voice::cap_rearm();
     }
+    if (voice::cap_is_open() && !name_changed) return;
+
+    const unsigned now = now_ms();
+    if (!name_changed && g_open_retry_ms &&
+        (unsigned)(now - g_open_retry_ms) < kOpenRetryMs) return;
+    g_open_retry_ms = now ? now : 1;
+    voice::cap_open(g_mic);
 }
 
 /* 440 Hz at full scale minus 6 dB, in 20 ms frames, phase carried across
@@ -614,6 +722,7 @@ void voice_tick()
         g_report = env_on("SM64DS_VOICE_REPORT");
         for (int i = 0; i < kCommsMaxPlayers; ++i) rv_reset(g_rv[i]);
         if (env_on("SM64DS_VOICE_DEVICES")) dump_devices();
+        if (env_on("SM64DS_VOICE_CODEC_SELFTEST")) codec_selftest();
         if (g_tone)
             fprintf(stderr, "[voice] SM64DS_VOICE_TEST_TONE=1: a generated "
                             "440 Hz tone replaces the microphone and NO "

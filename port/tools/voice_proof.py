@@ -360,6 +360,59 @@ def main():
 
     ok = True
 
+    # ---- arm 0a: THE CODEC, MEASURED ON THE SHIPPED FUNCTIONS.
+    #
+    # A sine round trip through the real encode_frame/decode_frame, reported by
+    # the game itself so that what is measured is the code that ships rather
+    # than a model of it. The threshold is 30 dB and the history is why it is
+    # there: the first version of the encoder reset its step index to zero at
+    # every 20 ms frame boundary, which made the quantiser re-climb from a step
+    # size of 7 fifty times a second and read 18.7 dB. Carrying the index (and
+    # writing it into the block, so a block still describes its own starting
+    # state and a lost datagram still costs only its own 40 ms) reads 34.
+    d0 = os.path.join(OUT, "codec")
+    os.makedirs(os.path.join(d0, "tmp"), exist_ok=True)
+    write_settings(d0, False, 512, 3072)
+    e0 = M.env_base(ROOT, d0, "codec")
+    e0["SM64DS_WINDOW_SELFTEST"] = "60"
+    e0["SM64DS_VOICE_CODEC_SELFTEST"] = "1"
+    e0["SM64DS_NO_AUDIO"] = "1"
+    l0 = os.path.join(d0, "run.log")
+    M.run_one(EXE, d0, e0, l0)
+    m0 = re.search(r"\[voice\] codec selftest: (\d+) frames.*SNR "
+                   r"(-?[0-9.]+) dB", M.text(l0))
+    snr = float(m0.group(2)) if m0 else None
+    ok &= M.verdict(snr is not None and snr > 30.0,
+                    "voice CODEC a sine round trip through the shipped IMA "
+                    "ADPCM reads above 30 dB | SNR %s dB over %s frames"
+                    % (snr, m0.group(1) if m0 else "?"))
+
+    # ---- arm 0b: A MISSING MICROPHONE SAYS SO ONCE AND THEN SHUTS UP.
+    #
+    # VoiceEnabled on, no tone hook, a device name nothing matches, and
+    # SM64DS_VOICE_NO_DEVICE so the open refuses as if the machine had no
+    # recording hardware -- which is what lets this run on a box that HAS a
+    # microphone without the proof taking it. Before the failure latch this
+    # printed its failure line on every frame; the assertion is that it now
+    # prints once over a whole run and does no work after that.
+    d1 = os.path.join(OUT, "nodev")
+    os.makedirs(os.path.join(d1, "tmp"), exist_ok=True)
+    write_settings(d1, True, 512, 3072, mic="NoSuchMicrophoneAnywhere")
+    e1 = M.env_base(ROOT, d1, "nodev")
+    e1["SM64DS_WINDOW_SELFTEST"] = "600"
+    e1["SM64DS_NO_AUDIO"] = "1"
+    e1["SM64DS_VOICE_NO_DEVICE"] = "1"
+    l1 = os.path.join(d1, "run.log")
+    rc1 = M.run_one(EXE, d1, e1, l1)
+    t1 = M.text(l1)
+    n_open_fail = len(re.findall(r"waveInOpen failed", t1))
+    n_nomatch = len(re.findall(r"no recording device matches", t1))
+    ok &= M.verdict(rc1 == 0 and n_open_fail == 1 and n_nomatch == 1,
+                    "voice NO DEVICE says so ONCE over 600 frames and then "
+                    "goes quiet | rc %s, %d 'waveInOpen failed' lines, %d 'no "
+                    "recording device matches' lines"
+                    % (rc1, n_open_fail, n_nomatch))
+
     # ---- arm 1: NEAR. Both radii well past any separation the arena has, so
     # the falloff is 1.0 and what the dump shows is the channel working at all.
     near = run_pair("near", 100000, 200000, a.frames, PORT)

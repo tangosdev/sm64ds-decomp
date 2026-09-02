@@ -113,11 +113,27 @@ off  size  field
 carrier's aux message size, both asserted at compile time in
 `port/hal/voice_chat.cpp` as well as where they are defined.
 
-**Every block carries its own codec state.** That costs three bytes a frame and
-is what makes the channel survive the loss it is promised: an ADPCM stream
-whose predictor ran across datagrams would turn one lost packet into a decoder
-that stays wrong for the rest of the call. This way a lost packet is 40 ms of
-silence and the next one is correct.
+**EVERY BLOCK CARRIES ITS OWN CODEC STATE**, which costs three bytes a frame
+and is what makes the channel survive the loss it is promised: an ADPCM stream
+whose state ran across datagrams would turn one lost packet into a decoder that
+stays wrong for the rest of the call. This way a lost packet is 40 ms of silence
+and the next one is correct.
+
+**The step index is CARRIED by the encoder and WRITTEN into the block; the
+predictor is not carried.** Those are different decisions and review caught the
+first one being wrong. The original encoder reset the index to 0 at every frame
+boundary and shipped that zero, so the quantiser had to re-climb from a step
+size of 7 fifty times a second and the first handful of samples of every frame
+were badly wrong: **18.7 dB SNR** on a sine round trip through the shipped
+functions. Carrying the encoder's adapted index and putting THAT in the header
+reads **36.4 dB** (section 8.6). It costs the loss property nothing, which is
+the only reason it is allowed: the block still describes its own starting state
+completely, so a decoder that never saw the previous datagram still decodes this
+one exactly. The encoder is only choosing a better starting index than zero.
+
+The PREDICTOR still resets to the frame's own first sample. That half was always
+right: it makes the first residual zero, and unlike a step index a stale
+predictor is an audible DC jump rather than a slow re-converge.
 
 **Batching two frames halves the packet rate** - 25 datagrams a second instead
 of 50 - which is what makes the relay budget below workable at all.
@@ -186,6 +202,22 @@ static imports **before** the TLS callback that claims
 game needs. 16 kHz mono, 8 buffers of 320 samples, `CALLBACK_NULL` and polled
 from the frame loop - so every captured byte is handled on the thread that runs
 the game and there is no lock anywhere in this lane.
+
+**The failure latch**, added in review. A box with no recording device, or one
+whose microphone another program holds exclusively, used to run the whole
+enumerate-and-open path on every frame, because the caller's only test was "is a
+device open" and on such a box it never is. Sixty attempts a second and sixty
+copies of the failure line in the log with them. A failure is now latched
+against the name that produced it - the same shape `load_lib()` already used for
+the library - and `cap_open` returns in silence for that name without making one
+winmm call. `cap_rearm()` clears it, and `voice_chat.cpp` calls that on exactly
+two events: the player edits `VoiceMicDevice`, or turns `VoiceEnabled` off and
+on. A still-closed device with an unchanged name gets a five second retry
+instead, which is a situation rather than an event. Proven in section 8.6.
+
+`SM64DS_VOICE_NO_DEVICE=1` refuses the open as if the machine had no recording
+hardware, so the latch can be proven on a box that does have a microphone
+without the proof taking it.
 
 ### `port/hal/sdat/mixer.cpp`, `sdat.h` - one nullable hook
 
@@ -342,10 +374,10 @@ across the two passes.
 
 ```
 PASS  voice-det every window with voice ON exited clean | rc [0, 0, 0, 0]
-PASS  voice-det ON p0 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 7085, 'tx': 3542, 'rx': 2170, 'bad': 0, 'dup': 0}
-PASS  voice-det ON p1 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 7086, 'tx': 3543, 'rx': 2078, 'bad': 0, 'dup': 0}
-PASS  voice-det ON p2 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 7087, 'tx': 3543, 'rx': 2103, 'bad': 0, 'dup': 0}
-PASS  voice-det ON p3 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 7086, 'tx': 3543, 'rx': 2090, 'bad': 0, 'dup': 0}
+PASS  voice-det ON p0 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1502, 'tx': 751, 'rx': 1999, 'bad': 0, 'dup': 0}
+PASS  voice-det ON p1 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1505, 'tx': 752, 'rx': 1779, 'bad': 0, 'dup': 0}
+PASS  voice-det ON p2 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1505, 'tx': 752, 'rx': 1790, 'bad': 0, 'dup': 0}
+PASS  voice-det ON p3 was really talking and listening | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1505, 'tx': 752, 'rx': 1815, 'bad': 0, 'dup': 0}
 PASS  voice-det ON p0 vs p1 | NO DIVERGENCE. The two windows agree on the world hash for all 900 common frames (f0..f899).
 PASS  voice-det ON p0 vs p2 | NO DIVERGENCE. The two windows agree on the world hash for all 900 common frames (f0..f899).
 PASS  voice-det ON p0 vs p3 | NO DIVERGENCE. The two windows agree on the world hash for all 900 common frames (f0..f899).
@@ -374,8 +406,8 @@ satisfied by a change that moved all four windows the same wrong way. The
 cross-run rows cannot: they say that the same window, in the same slot, holding
 the same key, produced a bit-identical world with four peers talking over it and
 with nobody talking at all. Every window in the ON pass really was talking
-(3542 datagrams sent each) and really was listening (about 2100 received each,
-three peers' worth), with zero malformed and zero duplicates.
+(751 datagrams sent each in this run) and really was listening (about 1800 to
+2000 received each, three peers' worth), with zero malformed and zero duplicates.
 
 ---
 
@@ -422,24 +454,23 @@ arms, with the radii placed around the separation the game itself reported.
 
 ```
 PASS  voice NEAR both windows exited clean | rc 0/0
-PASS  voice the talker used the TONE and opened NO DEVICE | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 4779, 'tx': 2389, 'rx': 862, 'bad': 0, 'dup': 0}
-PASS  voice the talker sent datagrams | tx=2389
-PASS  voice the listener received them, none malformed | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 4767, 'tx': 2383, 'rx': 873, 'bad': 0, 'dup': 0}
+PASS  voice the talker sent datagrams | tx=630
+PASS  voice the listener received them, none malformed | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1260, 'tx': 630, 'rx': 618, 'bad': 0, 'dup': 0}
 PASS  voice NEITHER window opened a recording device | listener dev=0
 PASS  voice the listener measured a real separation | d=190
 PASS  voice NEAR the game applies gain 1.000 | g=1.0
-PASS  voice NEAR the tone arrives at FULL LEVEL through capture, IMA ADPCM, the wire, the jitter buffer and the resampler | rms 0.34357 against 0.34527 predicted (16000/sqrt2 of full scale), 440 Hz bin 0.01930
+PASS  voice NEAR the tone arrives at FULL LEVEL through capture, IMA ADPCM, the wire, the jitter buffer and the resampler | rms 0.34424 against 0.34527 predicted (16000/sqrt2 of full scale), 440 Hz bin 0.00339
 PASS  voice the two bodies are actually apart in the arena, so the bracketing arms below mean something | d=190
-PASS  voice FAR the datagrams still ARRIVE (it is the mix that is silent, not the channel) | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 5406, 'tx': 2703, 'rx': 883, 'bad': 0, 'dup': 0}
+PASS  voice FAR the datagrams still ARRIVE (it is the mix that is silent, not the channel) | {'on': 1, 'tone': 1, 'dev': 0, 'cap': 1263, 'tx': 631, 'rx': 596, 'bad': 0, 'dup': 0}
 PASS  voice FAR the game applies gain 0.000 at d=190 with far=95 | g=0.0
 PASS  voice FAR the listener's whole dump is EXACTLY ZERO - so the game contributes nothing to these numbers and every non-zero sample in the other arms is voice | rms=0.00000, first non-silent sample -1
 PASS  voice MID the gain the game applied IS the log falloff | g=0.5, log(far/d)/log(far/near) = 0.500 at d=190 near=95 far=380
-PASS  voice MID the LEVEL follows the gain | rms 0.15340 against 0.15578 predicted (full level 0.34527 through the run's own reported gain series, modal gain 0.500)
+PASS  voice MID the LEVEL follows the gain | rms 0.15371 against 0.15098 predicted (full level 0.34527 through the run's own reported gain series, modal gain 0.500)
 
 measured separation d=190 world units, arena VS map 0
   full-level prediction  0.34527 rms (a 16000 amplitude sine)
-  NEAR near=100000 far=200000  gain 1.000  rms 0.34357  440Hz 0.01930
-  MID  near=95     far=380     gain 0.500  rms 0.15340  440Hz 0.00433
+  NEAR near=100000 far=200000  gain 1.000  rms 0.34424  440Hz 0.00339
+  MID  near=95     far=380     gain 0.500  rms 0.15371  440Hz 0.00473
   FAR  near=47     far=95      gain 0.000  rms 0.00000  440Hz 0.00000
 ```
 
@@ -459,6 +490,10 @@ measured separation d=190 world units, arena VS map 0
 * **MID** is the curve itself: the game applied 0.500 where
   log(380/190)/log(380/95) = log2/log4 = 0.500, and the measured level followed
   it to within 1.5 percent.
+
+(The RMS numbers move a percent or so run to run because the bodies drift and
+the harness predicts from each run's own reported gain series; the shape does
+not.)
 
 **Why the 440 Hz bin is small while the RMS is exact**, and it is a harness
 artefact rather than a defect. With `SM64DS_NO_AUDIO` the mixer is clocked off
@@ -508,6 +543,34 @@ belong to other lanes.
 
 ---
 
+### 8.6 The two things review caught
+
+Both arms are part of `voice_proof.py` and run ahead of the three above.
+
+```
+PASS  voice CODEC a sine round trip through the shipped IMA ADPCM reads above 30 dB | SNR 36.4 dB over 49 frames
+PASS  voice NO DEVICE says so ONCE over 600 frames and then goes quiet | rc 0, 1 'waveInOpen failed' lines, 1 'no recording device matches' lines
+```
+
+**The codec arm** (`SM64DS_VOICE_CODEC_SELFTEST=1`) pushes a 440 Hz sine at
+amplitude 8000 through the REAL `encode_frame` and `decode_frame` for a second
+of frames and reports the signal-to-noise ratio. Not a model of the codec: the
+functions that ship, across frame boundaries, which is where the defect was. The
+first frame is excluded because an encoder legitimately starts cold on the first
+frame of a call; what this measures is the steady state. **36.4 dB**, against
+**18.7 dB** with the step index thrown away at every boundary.
+
+**The missing-device arm** runs 600 frames with `VoiceEnabled` on, no tone hook,
+`VoiceMicDevice` set to a name nothing matches, and `SM64DS_VOICE_NO_DEVICE=1`
+so the open refuses as if the machine had no recording hardware. **One**
+`waveInOpen failed` line and **one** `no recording device matches` line for the
+whole run, where before the latch it was one of each per frame. After the latch
+fires, `cap_open` makes no winmm call at all for that name, so the five second
+backoff never even has to engage; it is there for the case where a re-arm
+cleared the latch.
+
+---
+
 ## 9. Gaps, plainly
 
 1. **Nothing over the relay.** Every run here is loopback, the same
@@ -554,7 +617,12 @@ belong to other lanes.
     with no cap on how many voices sound at once and no ducking. Four was proven
     (section 7); sixteen is arithmetic nobody has run.
 
-11. **The jitter buffer's depth is fixed at three frames.** It does not adapt to
+11. **The codec is fixed-quality 16 kHz mono ADPCM.** 36.4 dB SNR on a sine
+    (section 8.6) is a phone call, not music, and there is no bitrate
+    adaptation: a peer on a bad connection gets the same 8.5 KB a second as
+    everybody else.
+
+12. **The jitter buffer's depth is fixed at three frames.** It does not adapt to
     a peer whose network is worse than the others'.
 
-12. **No per-peer mute and no volume per player.** One global `VoiceVolume`.
+13. **No per-peer mute and no volume per player.** One global `VoiceVolume`.

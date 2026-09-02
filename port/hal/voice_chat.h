@@ -110,6 +110,14 @@ int cap_open(const char *device_name);
 void cap_close();
 int cap_is_open();
 
+// Clear the "this name cannot be opened" latch. cap_open refuses in silence
+// after a failure so that a box with no recording device does not run the
+// enumerate-and-open loop sixty times a second; this is how the caller says
+// the situation changed and it is worth another try. Called when the player
+// edits VoiceMicDevice or turns VoiceEnabled off and on, never on a timer --
+// the retry interval is the caller's, so the policy lives in one place.
+void cap_rearm();
+
 // One 20 ms frame of 320 mono s16 samples at 16 kHz into `out`. Returns 1 when
 // a frame was produced and 0 when nothing is ready. Never blocks. A caller
 // that wants everything pending loops until it returns 0.
@@ -117,7 +125,14 @@ int cap_read_frame(short *out);
 
 // Write up to `max` device names into `names`, NUL terminated, and return how
 // many the machine has (which can exceed `max`). Opens nothing.
-enum : int { kCapNameBytes = 64 };
+// ONE SIZE FOR THE WHOLE FEATURE. This buffer holds a device name coming back
+// from Windows AND the VoiceMicDevice value going in, and host_settings.cpp
+// stores that value in 96 bytes. Two different sizes meant a name the settings
+// layer accepted could be silently truncated on the way here and then never
+// compare equal to itself, which is a reopen on every poll. Windows truncates
+// its own names to 31 characters plus a terminator, so 96 is generous for the
+// half that comes back and exact for the half that goes in.
+enum : int { kCapNameBytes = 96 };
 int cap_enumerate(char names[][kCapNameBytes], int max);
 
 }  // namespace voice
