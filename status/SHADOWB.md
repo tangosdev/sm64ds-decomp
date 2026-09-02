@@ -58,3 +58,33 @@ Verification: build exit 0; guards + dsstate + inferred_stub + closestplayer
 green; linkage 9238 -> 9239 (+1), SHADOWS 149 -> 148, `_ZN9WaterRing6RenderEv`
 out of the SHADOW queue and present in `walk_window.map`; `git diff --stat
 d63b92a09 -- src/` empty; all 20 smokes pass.
+
+Commit `95f574fa4`.
+
+## 2. SkiLift::InitResources -- RETIRED PLAIN
+
+`src/_ZN7SkiLift13InitResourcesEv.cpp` enrolled in `port/slice_gate191.txt`;
+host copy `port/unmatched/MotherPenguin_InitResources.cpp` removed from the
+three CMake target lists and `git rm`'d. (The class is really MOTHER_PENGUIN
+(257) under a dsd-era `_ZN7SkiLift*` mislabel; the retirement changes nothing
+about that.)
+
+WHY PLAIN WORKS. The host copy existed for the TextureSequence::Prepare
+calling-convention seam. Prepare never uses `this`: it tail-calls
+func_02046d50(arg, t) and that body reads only r0=arg and r1=t. The matched src
+declares Prepare as a 2-arg function `(bmd, btp)` and calls
+`Prepare(model, animFile)` -- the ROM's real register layout (r0=model,
+r1=animFile). The host bridge (`hal/player_bridges.cpp:1666`) is 3-arg
+`(self, bmd, btp)`. By cdecl argument aliasing, the matched src's 2-arg call
+binds to the bridge as self=model, bmd=animFile, btp=dead, so
+func_02046d50 is reached with arg=model, t=animFile -- the exact corrected order
+the host copy produced by hand (it passed self=model, bmd=animFile explicitly,
+with a valid-but-dead third value). The third value is never read past
+func_02046d50's prologue, so a garbage btp is harmless; the two are
+behaviourally identical. cdecl is caller-cleans, so the 2-vs-3 arity is safe.
+
+Verification: build exit 0; guards + dsstate + inferred_stub + closestplayer
+green; linkage 9239 -> 9240 (+1), MSVC-NAME SHADOWS 18 -> 17,
+`_ZN7SkiLift13InitResourcesEv` out of the queue and in `walk_window.map`;
+`git diff --stat d63b92a09 -- src/` empty; all 20 smokes pass. Level selftests
+(the CCM/MotherPenguin fault check) validated in the battery run recorded below.

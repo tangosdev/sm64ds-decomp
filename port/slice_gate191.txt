@@ -69,10 +69,8 @@ src/func_ov018_02111368.cpp
 # ==== MOTHER_PENGUIN (daPgMthr_c), a plain Actor, 31 slots (no Kill) ========
 # _ZTV7SkiLift == _ZTV10daPgMthr_c (0x021139bc..02113a34 inclusive), read
 # with relocations applied, every slot:
-#   0  InitResources    _ZN7SkiLift13InitResourcesEv  HOST COPY (Prepare fix,
-#                        port/unmatched/MotherPenguin_InitResources.cpp) --
-#                        matched src stays byte-locked, dropped from this
-#                        slice
+#   0  InitResources    _ZN7SkiLift13InitResourcesEv  own -- RETIRED to the
+#                        matched src TU (see the ARGSWEEP note below)
 #   3  CleanupResources _ZN7SkiLift16CleanupResourcesEv  own
 #   6  Behavior         _ZN7SkiLift8BehaviorEv  own
 #   9  Render           _ZN7SkiLift6RenderEv  own
@@ -93,9 +91,14 @@ src/func_ov018_02111368.cpp
 # confirmed by reloc target address.
 #
 # ARGSWEEP: MotherPenguin's InitResources calls TextureSequence::Prepare
-# with 2 args (callee consumes 3, the SAME SHORT-1 row OneUpLogo's gate-190
-# follow-up fixes) -- resolved the same way, host copy passing this+0x138
-# (the embedded TextureSequence sub-object) as the bridge's first argument.
+# with 2 args where the host bridge (hal/player_bridges.cpp) takes 3
+# (self, bmd, btp). RETIRED PLAIN: the matched src's 2-arg call
+# Prepare(model, animFile) lands, by cdecl argument aliasing, on the bridge as
+# self=model, bmd=animFile, btp=dead -- exactly the corrected order the retired
+# host copy produced by hand (it passed self=model, bmd=animFile explicitly).
+# func_02046d50 reads only arg=model and t=animFile (the third value is dead
+# past its own prologue), so the matched TU and the host copy are behaviourally
+# identical, and port/unmatched/MotherPenguin_InitResources.cpp is dropped.
 #
 # src/_ZN7SkiLift13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
 # spellings (the #1308-#1310 trap family) are RESOLVED: carried byte-
@@ -141,6 +144,7 @@ src/func_ov018_021122ec.c
 # Matched src stays byte-locked in src/, dropped from CMakeLists' gate-191
 # source list.
 src/MotherPenguin_Spawn.c
+src/_ZN7SkiLift13InitResourcesEv.cpp
 src/_ZN7SkiLift16CleanupResourcesEv.cpp
 src/_ZN7SkiLift6RenderEv.cpp
 src/_ZN7SkiLift16OnPendingDestroyEv.c
