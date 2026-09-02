@@ -1056,6 +1056,17 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN15BookShotSpawnerD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT=port_bookshotspawner_vt")
+# Lane DTOR-PAIRS-C: the brick-block tag's deleting destructor is the same
+# shape -- `t[0] = (int)VT;` then Actor's D2 then Deallocate(HEAP) -- and its
+# ROM store relocates to its OWN table (ov002 from:0x020b41b0 -> 0x02108c18,
+# _ZTV10BrickBlock, the host array hal/actor_classes_bob_world.cpp fills).
+# decl_common.h already declares _ZTV10BrickBlock as `extern int []`, the
+# same type the VT placeholder carries, so the rename is a plain substitution.
+# HEAP stays bound to the game heap (the pool's second word is 020A0EAC).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10BrickBlockD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=_ZTV10BrickBlock")
 
 # RUN LINK60 lane A2: SPINDRIFT'S KILL-BY-INVINCIBLE EDGE, misrouted since the
 # ov081 seat. One ROM address, 0x020ada40, resolved two ways in one binary.
