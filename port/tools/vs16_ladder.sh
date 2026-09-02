@@ -17,7 +17,9 @@
 #   $1  how many windows (2..16)
 #   $2  frames of selftest per CHILD (default 900)
 #   $3  VS map index 0..3 (default 0 = level 51)
-ROOT="C:/tmp/vs16"
+# The tree this runs out of. Overridable so a lane in its own worktree can run
+# the ladder against its own build instead of editing the script it is proving.
+ROOT="${VS16_ROOT:-C:/tmp/vs16}"
 EXE="$ROOT/build/port/walk_window.exe"
 N="${1:-4}"
 FRAMES="${2:-900}"

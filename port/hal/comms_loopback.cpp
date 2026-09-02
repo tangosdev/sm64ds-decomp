@@ -1895,7 +1895,19 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
         // ALREADY CONNECTED. Two things can still be in this accept: the ack
         // for this end's report, and a delay the parent re-sized after some
         // later child joined.
-        if (p.have & kAcceptRttAckBit) g_report_acked = true;
+        // AND THE ACK IS ONLY OURS IF THE ACCEPT IS. Over the relay a
+        // parent datagram is fanned out to every child, so the accept that
+        // answers slot 3's report is also delivered to slots 1, 2 and 4. Bit
+        // 31 marks an accept aimed at one joiner and bits 0..7 name that
+        // joiner -- the slot-assignment field, which has carried the recipient
+        // since the parent started assigning slots -- so this is a recipient
+        // test with no new wire bits. Taking a stranger's ack would leave this
+        // end believing the parent has its round trip when the parent has
+        // nothing, and the parent would then hold round 0 for a confirmation
+        // that had already been thrown away.
+        if ((p.have & kAcceptRttAckBit) && (p.have & 0x80000000u) &&
+            (int)(p.have & 0xFFu) == g_slot)
+            g_report_acked = true;
         child_adopt_delay((int)((p.have >> 8) & 0xFF), false);
         break;
     }
@@ -2697,23 +2709,27 @@ int lb_exchange(const void *my_block, uint16_t *status) {
         return 0;
     if (!my_block) return 0;
 
+    // FREEZE, AND BEFORE THE PATH SPLIT RATHER THAN INSIDE ONE ARM. The ROM's
+    // wait loop is asking for a round, so frame 0 is imminent and the number
+    // stops moving here. It has to sit above the `g_input_delay > 0` test
+    // because the adaptive sizing can raise the depth FROM zero -- an
+    // induced-latency loopback starts at stop-and-wait -- and a freeze that
+    // only ran on the pipelined arm would never fire on the session that most
+    // needs it. Every join happens in the lobby, upstream of this call.
+    if (g_role == kRoleParent && !g_delay_frozen) {
+        g_delay_frozen = true;
+        if (g_adaptive_delay)
+            std::fprintf(stderr, "[comms:loopback] input delay FROZEN at %d "
+                         "for the rest of this session; the ROM asked for its "
+                         "first round\n", g_input_delay);
+    }
+
     // =======================================================================
     // THE PIPELINED PATH. See the banner over the ring for why it exists and
     // why it is consistent. Nothing below this block changes; with the knob at
     // 0 the stop-and-wait code underneath is what runs, unaltered.
     // =======================================================================
     if (g_input_delay > 0) {
-        // FREEZE. The ROM's wait loop is asking for a round, so frame 0 is
-        // imminent and the number stops moving here. Every join happens in the
-        // lobby, which is upstream of this call; a peer that joins after it
-        // gets the number as a constant, exactly as before this lane.
-        if (g_role == kRoleParent && !g_delay_frozen) {
-            g_delay_frozen = true;
-            if (g_adaptive_delay)
-                std::fprintf(stderr, "[comms:loopback] input delay FROZEN at "
-                             "%d for the rest of this session; the ROM asked "
-                             "for its first round\n", g_input_delay);
-        }
         PipeRound &mine = pipe_open(g_round);
         // PUBLISH ONCE PER ROUND, NOT ONCE PER CALL, and the difference is not
         // cosmetic. The ROM's wait loop calls exchange() over and over inside a
@@ -2852,6 +2868,11 @@ int lb_exchange(const void *my_block, uint16_t *status) {
     ++g_round;
     g_stage_mask = 0;
     g_round_done = false;
+    // Rule 2 bound on the stop-and-wait path too. A session whose depth was
+    // raised from zero by the adaptive sizing spends its first exchanges here,
+    // and a bound that only existed on the pipelined arm would leave this end
+    // believing it had produced no frames when it had produced several.
+    g_frames_produced = true;
     return 1;
 }
 
@@ -3463,8 +3484,17 @@ bool comms_loopback_install_from_env() {
     //     experiment stops being one. The override still wins, as promised.
     //   NOT WITH THE PIPELINE OFF, which is stop-and-wait by request and has
     //     no depth to size.
+    //   AND ON AN INDUCED-LATENCY LOOPBACK, which is the controlled
+    //     experiment this lane is measured by. Loopback's mode default is 0
+    //     because a bare loopback has no round trip to hide; with the delay and
+    //     jitter knobs on it has one, and the sizing has something real to
+    //     size. This is the same correction the refusal below already had to
+    //     make -- the right question is not which mode this is, it is whether
+    //     there is any latency here at all.
+    const bool induced_latency = (g_delay_ms > 0 || g_jitter_ms > 0);
     g_adaptive_delay = (g_role == kRoleParent) && !g_delay_from_env &&
-                       g_input_delay > 0;
+                       (g_input_delay > 0 ||
+                        (g_net_mode == kNetLoopback && induced_latency));
     if (const char *v = std::getenv("SM64DS_COMMS_ADAPTIVE_DELAY"))
         if (std::atoi(v) == 0) g_adaptive_delay = false;
     if (g_adaptive_delay)
@@ -3493,6 +3523,7 @@ bool comms_loopback_install_from_env() {
                      "for a wire with a round trip on it; a bare loopback "
                      "has none and no delay is being induced. Ignored.\n");
         g_input_delay = 0;
+        g_adaptive_delay = false;   // nothing left to size
     }
     if (g_input_delay > 0)
         std::fprintf(stderr, "[comms:loopback] input delay %d frame(s) (%s): "
