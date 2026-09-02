@@ -24,6 +24,17 @@ void hal_fill_tree_vtable(void);
 extern unsigned char AmbientSoundEffects_SpawnInfo[];   /* ov002 0x0210b47c */
 void *AmbientSoundEffects_Spawn(void);                  /* ov002 0x020f1b94 */
 void hal_fill_ambient_sound_vtable(void);
+/* ---- gate 211: ENEMY_SWITCH_TAG (357) and ENEMY_SPAWNER (358), ov002 ----
+   Two more classes out of the ov002 spawn table. AMBIENT_SOUND_EFFECTS (350)
+   above once carried EnemySwitchTag's config-named blocks (the #1048 shift);
+   the three vtables are distinct addresses and the two fills below own their
+   own host arrays. See port/slice_gate211.txt. */
+extern unsigned char EnemySwitchTag_SpawnInfo[];        /* ov002 0x0210b324, id 357 */
+void *EnemySwitchTag_Spawn(void);                       /* ov002 0x020f1954 */
+void hal_fill_enemy_switch_tag_vtable(void);
+extern unsigned char EnemySpawner_SpawnInfo[];          /* ov002 0x0210b340, id 358 */
+void *EnemySpawner_Spawn(void);                         /* ov002 0x020f1924 */
+void hal_fill_enemy_spawner_vtable(void);
 /* ---- BLACK_BRICK_BLOCK (17, ov002) x1 ---- */
 extern unsigned char BlackBrickBlock_SpawnInfo[];       /* ov002 0x02108a78 */
 void *BlackBrickBlock_Spawn(void);                      /* ov002 0x020b409c */
@@ -1966,6 +1977,11 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     {286, "TREE", Tree_SpawnInfo, Tree_Spawn, hal_fill_tree_vtable},          \
     {350, "AMBIENT_SOUND", AmbientSoundEffects_SpawnInfo,                     \
      AmbientSoundEffects_Spawn, hal_fill_ambient_sound_vtable},               \
+    /* ---- gate 211: ENEMY_SWITCH_TAG (357), ENEMY_SPAWNER (358), ov002 ---- */ \
+    {357, "ENEMY_SWITCH_TAG", EnemySwitchTag_SpawnInfo, EnemySwitchTag_Spawn, \
+     hal_fill_enemy_switch_tag_vtable},                                       \
+    {358, "ENEMY_SPAWNER", EnemySpawner_SpawnInfo, EnemySpawner_Spawn,        \
+     hal_fill_enemy_spawner_vtable},                                          \
     {17, "BLACK_BRICK_BLOCK", BlackBrickBlock_SpawnInfo,                      \
      BlackBrickBlock_Spawn, hal_fill_black_brick_block_vtable},               \
     /* ---- gate 78: BLUE_COIN_SWITCH (10), ov002 ---- */                      \

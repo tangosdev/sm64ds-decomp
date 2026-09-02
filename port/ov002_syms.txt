@@ -20,6 +20,10 @@ Tree_SpawnInfo data_ov002_0210abb8 data_ov002_02110a48
 # gate 16, AMBIENT_SOUND_EFFECTS: its SpawnInfo and the ambient loop
 # table its Behavior indexes by spawn parameter.
 AmbientSoundEffects_SpawnInfo data_ov002_0210b498
+# gate 211, ENEMY_SWITCH_TAG (357) and ENEMY_SPAWNER (358): the two SpawnInfo
+# records the registry reads (factory word repointed at runtime, +4 halfword is
+# the id cross-check). ovdata.py emits each under its own name from symbols.txt.
+EnemySwitchTag_SpawnInfo EnemySpawner_SpawnInfo
 # gate 16, BLACK_BRICK_BLOCK: its SpawnInfo, plus the three-row table
 # InitResources indexes by variant. The rows are 0xc bytes and the config
 # names each COLUMN (ab0 = the model file, ab4 = the KCL, ab8 = the CLPS),
