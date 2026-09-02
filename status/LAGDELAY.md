@@ -689,6 +689,47 @@ path the old fixed 5 froze the game on more frames than it ran (1315 stalls in
 is playable where it was not. Past 160 ms the delay cannot grow further and
 stalls come back; the log names the player whose connection is causing them.
 
+### P12. Re-proof on the rebased cons tip after the four review fixes
+
+The lane was rebased onto the current cons tip `18f96b2fa` (linkage 9284,
+82.0%), a clean linear forward from the old base `f8e154e33` -- the only file
+both sides touch is `port/tests/walk_window.cpp`, which git auto-merged with no
+conflict. The four review fixes (named formula-term constants plus
+`g_adaptive_armed` so a rematch re-sizes; `g_frozen_live`, the roster the
+round-0 ack gate waits on past the freeze, which closes the second cause of
+gap 15; a dedicated `g_refuse_join_last_log_ms` so a refusal line is never
+swallowed by a hold line's rate limiter; and `kReportRetryFloorMs` plus an
+install-time WARNING when `SM64DS_COMMS_INPUT_DELAY` is pinned past 8) are all
+in this checkpoint and all host-layer -- `git diff b765c9f6d -- src/ include/`
+is empty.
+
+Rebuilt by `port/build-port.cmd`, exit 0, zero `error C`/`LNK`/`FAILED:`, every
+post-link guard OK (closestplayer, inferred_stub, dsstate, alternatename,
+gxband, tailjump), `build/port/walk_window.exe` sha **`173AD2D55052CD2E`**
+(`C:\tmp\lagdelay-out\build_rebased.log`). Everything below ran on that binary,
+one proof at a time with nothing else on the desk, quiet and muted.
+
+- **Arms A and D of the late-join matrix**
+  (`proof_latejoin_AD_rebased.log`), the two the review fixes bear on. Arm A:
+  the parent sizes to 11, then WITHDRAWS to 5 because a live peer never
+  reported, all three peers close on 5, and the old-build joiner adopts 5 off
+  its first accept leaving its own 7 behind. Arm D: the session freezes at 11
+  (past 8), the late new-build joiner is REFUSED five times over its knock
+  window and completes no round, the running pair undisturbed at 11. Both PASS,
+  `late-join proof: ALL GREEN`.
+- **The four-window stop-round sweep** at depth 10 (past the old cap of 8),
+  15 ms induced one way, `SM64DS_COMMS_STOP_ROUND=900`
+  (`proof_vsstop4_final.log`): every window completed round 900 at frame 900 on
+  indelay 10, and all 6 pairings are `NO DIVERGENCE` over 900 untrimmed hashed
+  frames, `fail=0`. Deterministic no-divergence under the adaptive depth across
+  the wide session.
+- **The battery** (`proof_battery_final.log`): smoke 20 of 20, level 50 of 50,
+  scene 34 of 34, default boot reaches the TITLE clean, linkage 9284 (82.0%,
+  identical to the cons tip), ptr_audit 0 unhosted code pointers, and the
+  shipcfg arm green from the suite itself (build and selftest). `battery: ALL
+  GREEN`. The two level skips (27 TTC_MOVING_BEAM, 45 GOOMBOSS) are the decomp's
+  own pre-existing baseline rows, not this lane.
+
 ## Honest remaining gaps
 
 1. **CLOSED. The run-teardown effect was a BYE processed inside the last
@@ -780,10 +821,19 @@ stalls come back; the log names the player whose connection is causing them.
     late old build on the frozen 6 (the agreement holds), but the parent then
     waits for that console's block for rounds it was never handed, and the
     session stops advancing: the parent's last completed round is 987 against
-    a seat at 993, and the joiner published 18 blocks. That is the seam's
-    shape, joins happen in the lobby as on the DS, and the harness prints it
-    as a LIMIT rather than scoring it. Not this lane's to fix, and now
-    measured rather than assumed.
+    a seat at 993, and the joiner published 18 blocks. The seam LIMIT is the
+    pre-existing round-completion predicate in `pipe_try_broadcast`
+    (`(s->mask & g_live) != g_live`, comms_loopback.cpp, the aggregate loop
+    after the gate): once a joiner is in `g_live` the parent will not close a
+    round without that console's block, and a console seated after round 0
+    has no block for the rounds already in the pipe. Joins happen in the
+    lobby as on the DS, and the harness prints it as a LIMIT rather than
+    scoring it. Not this lane's to fix, and now measured rather than assumed.
+    This lane's own round-0 ack gate was a SECOND cause before the review
+    fix: it waited on every live child's ack, a post-freeze joiner included,
+    so a joiner whose confirmation had not landed held the session too. The
+    gate now waits only on the roster captured at the freeze (`g_frozen_live`);
+    the seam predicate above still stalls the session on its own.
 
 16. **The A/B rig's second knock on one relay is flaky at 80 ms.** Two of
     three runs of `lag_ab.py` at 40 ms one way had arm B pair with nothing
