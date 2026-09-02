@@ -11493,7 +11493,8 @@ foreach(line IN LISTS SLICE89_LINES)
 endforeach()
 list(APPEND SLICE89_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_star.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/PowerStar_States.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/PowerStar_States.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/PowerStar_KingGuards.cpp")
 
 # Two ov079 TUs need hostgen, both mwcc-vs-MSVC syntax quirks the byte-verified
 # tree must not be edited for. _ZN5Whomp13InitResourcesEv is the decl_common.h

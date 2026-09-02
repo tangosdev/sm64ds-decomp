@@ -3545,7 +3545,29 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
     {
         extern unsigned char VS_STAR_SPAWN_ORDERS[6][0xC];
         extern int data_020a1040;
-        data_0209f344 = &VS_STAR_SPAWN_ORDERS[(unsigned)data_020a1040 % 6][0];
+        extern int port_vs_king_target(void);
+        const unsigned row = (unsigned)data_020a1040 % 6;
+        if (port_vs_king_target() > 0) {
+            /* KING OF THE STAR: exactly one star for the whole match. The star
+               order the rotation index walks is replaced by a host buffer whose
+               slot 0 is the real first marker (star-id VS_STAR_SPAWN_ORDERS
+               [row][0]) and every later slot is 0xFF -- a star-id no marker
+               carries. StarMarker::Behavior and the ov002/ov084 progress checks
+               all test `mStarID == data_0209f344[data_0209f208]`, so once the
+               first star is collected and data_0209f208 advances, no marker can
+               ever match again and no second star wakes. The buffer is 256 bytes
+               so it covers the full u8 range of data_0209f208 across any number
+               of drop/steal re-collects, not just the ROM's 12-byte row. This is
+               suppression, not reimplementation: the first star spawns exactly as
+               the ROM spawns it; only the re-arm of the next one is starved. Gated
+               entirely on king mode, so time/stars VS seats the ROM row unchanged. */
+            static unsigned char king_star_order[256];
+            for (int i = 0; i < 256; ++i) king_star_order[i] = 0xFF;
+            king_star_order[0] = VS_STAR_SPAWN_ORDERS[row][0];
+            data_0209f344 = king_star_order;
+        } else {
+            data_0209f344 = &VS_STAR_SPAWN_ORDERS[row][0];
+        }
     }
     data_0209f340 = (unsigned char *)o;
 

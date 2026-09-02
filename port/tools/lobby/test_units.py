@@ -823,6 +823,7 @@ _FIELD_SAMPLES = {
     "map": 0,
     "win_mode": "time",
     "star_target": 3,
+    "king_target": 30,
     "match_players": 2,
     "seat": 2,
     "match": "0" * 16,
@@ -1565,6 +1566,96 @@ def test_go_plan():
     st, p = start(code, host["token"])
     check("time mode: the plan has no star_target key",
           "star_target" not in S.member_plan(room, 1), S.member_plan(room, 1))
+
+
+def test_king_of_the_star():
+    print("\n-- king of the star: win_mode and king_target, required-iff-king")
+    reset()
+    st, host = create()
+    code = host["room"]
+    tok = host["token"]
+
+    # king with a target is accepted, and the room takes the values.
+    st, out = S.do_params({"v": 1, "room": code, "token": tok, "map": 2,
+                           "win_mode": "king", "king_target": 30},
+                          "10.0.0.1", 1000.0)
+    check("king with a target is accepted", st == 200, out)
+    check("the room took king mode and the target",
+          S.ROOMS[code].win_mode == "king"
+          and S.ROOMS[code].king_target == 30
+          and S.ROOMS[code].star_target is None, S.ROOMS[code].__dict__)
+
+    # the default is a real number the launcher can pre-fill.
+    check("the launcher default is 30", S.KING_TARGET_DEFAULT == 30)
+
+    # every value up to the ceiling works; one past it, and zero, are refused.
+    check("one is the floor and is accepted",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king", "king_target": 1},
+                      "10.0.0.1", 1000.0)[0] == 200)
+    check("the ceiling is accepted",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king", "king_target": S.KING_TARGET_MAX},
+                      "10.0.0.1", 1000.0)[0] == 200)
+    check("one past the ceiling is refused with its own code",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king",
+                       "king_target": S.KING_TARGET_MAX + 1},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_king_target")
+    check("zero is refused too",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king", "king_target": 0},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_king_target")
+
+    # required iff king: king with no target is refused.
+    check("king with no target is refused",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king"},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_king_target")
+    # forbidden otherwise: king_target on a non-king mode is refused.
+    check("king_target in time mode is refused",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "time", "king_target": 30},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_king_target")
+    check("king_target in stars mode is refused",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "stars", "star_target": 3,
+                       "king_target": 30},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_king_target")
+    # and star_target on king is refused for the mirror reason.
+    check("star_target in king mode is refused",
+          S.do_params({"v": 1, "room": code, "token": tok, "map": 0,
+                       "win_mode": "king", "king_target": 30,
+                       "star_target": 3},
+                      "10.0.0.1", 1000.0)[1]["error"] == "bad_star_target")
+
+    # the room view advertises the field.
+    v = S.ROOMS[code].view(1)
+    check("the room view carries king_target", "king_target" in v, v)
+
+    # it freezes into the match and rides the plan, and only in king mode.
+    reset()
+    code, room, host, guest = _two_ready()
+    S.do_params({"v": 1, "room": code, "token": host["token"],
+                 "map": 1, "win_mode": "king", "king_target": 25},
+                "10.0.0.1", 1000.0)
+    st, p = start(code, host["token"])
+    check("king_target froze into the match",
+          room.match_win_mode == "king" and room.match_king_target == 25,
+          (room.match_win_mode, room.match_king_target))
+    hp = S.member_plan(room, 1)
+    gp = S.member_plan(room, 2)
+    check("the king target rides every playing plan",
+          hp.get("king_target") == 25 and gp.get("king_target") == 25, (hp, gp))
+    check("king mode carries no star_target",
+          "star_target" not in hp, hp)
+
+    # a non-king plan omits king_target entirely.
+    reset()
+    code, room, host, guest = _two_ready()
+    start(code, host["token"])
+    check("time mode: the plan has no king_target key",
+          "king_target" not in S.member_plan(room, 1), S.member_plan(room, 1))
 
 
 def test_names():
@@ -2470,6 +2561,7 @@ def main():
     test_ready_and_go()
     test_session_type()
     test_go_plan()
+    test_king_of_the_star()
     test_names()
     test_failed()
     test_arming_roster_is_the_frozen_one()
