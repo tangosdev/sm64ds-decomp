@@ -117,8 +117,27 @@ def dhdiff(a, b):
     compare."""
     p = subprocess.run([sys.executable, DHDIFF, a, b],
                        capture_output=True, text=True)
-    line = (p.stdout or p.stderr or "").strip().splitlines()
-    return p.returncode, (line[0] if line else "(no output)")
+    lines = [x for x in (p.stdout or p.stderr or "").strip().splitlines()
+             if x.strip()]
+    # THE VERDICT IS THE LAST LINE, not the first. dhdiff opens with a file
+    # census and closes with "NO DIVERGENCE ... for all N common frames" or the
+    # first differing frame, and quoting the census made every verdict here read
+    # as a header rather than an answer.
+    return p.returncode, (lines[-1] if lines else "(no output)")
+
+
+def voice_counts(text):
+    import re
+    m = None
+    for m in re.finditer(r"\[voice\] \S+: on=(\d+) tone=(\d+) dev=(\d+) "
+                         r"cap=(\d+) tx=(\d+) rx=(\d+) bad=(\d+) dup=(\d+)",
+                         text):
+        pass
+    if not m:
+        return None
+    return dict(on=int(m.group(1)), tone=int(m.group(2)), dev=int(m.group(3)),
+                cap=int(m.group(4)), tx=int(m.group(5)), rx=int(m.group(6)),
+                bad=int(m.group(7)), dup=int(m.group(8)))
 
 
 def main():
@@ -144,6 +163,15 @@ def main():
     ok &= M.verdict(all(r == 0 for r in on_rcs),
                     "voice-det every window with voice ON exited clean | rc %s"
                     % (on_rcs,))
+    # THE ON PASS HAS TO ACTUALLY BE TALKING, or the cross-run comparison at
+    # the bottom is trivially true and proves nothing. Every window sends, every
+    # window receives from its peers, and nothing is malformed.
+    for k in range(n):
+        c = voice_counts(M.text(on_logs[k]))
+        ok &= M.verdict(c is not None and c["on"] == 1 and c["tx"] > 0 and
+                        c["rx"] > 0 and c["bad"] == 0 and c["dev"] == 0,
+                        "voice-det ON p%d was really talking and listening | %s"
+                        % (k, c))
     for i in range(n):
         for j in range(i + 1, n):
             rc, line = dhdiff(on_logs[i], on_logs[j])
@@ -154,6 +182,12 @@ def main():
     ok &= M.verdict(all(r == 0 for r in off_rcs),
                     "voice-det every window with voice OFF exited clean | rc %s"
                     % (off_rcs,))
+    for k in range(n):
+        c = voice_counts(M.text(off_logs[k]))
+        ok &= M.verdict(c is None,
+                        "voice-det OFF p%d sent and received NOTHING (the "
+                        "report line is only emitted with voice on) | %s"
+                        % (k, c))
     for i in range(n):
         for j in range(i + 1, n):
             rc, line = dhdiff(off_logs[i], off_logs[j])

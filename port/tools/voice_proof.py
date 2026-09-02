@@ -117,28 +117,40 @@ def rms(samples):
     return math.sqrt(acc / len(samples)) / 32768.0
 
 
-def read_wav_mono(path, skip_s=1.0, take_s=2.0):
-    """The left channel of the dump, past the boot, as plain integers.
+def read_wav_mono(path, take_s=0.0, floor=200):
+    """The left channel of the dump, from where the voice actually starts.
 
-    SKIPS THE FIRST SECOND on purpose: the jitter buffer has to prime and the
-    session has to form, and a window that includes the silence before either
-    happened measures the harness's start-up rather than the channel.
+    NOT A FIXED OFFSET, and the first version of this file used one and paid
+    for it. A window that begins at a fixed second catches a different amount
+    of pre-voice silence in every arm -- the session takes a variable time to
+    form and the jitter buffer takes a variable time to prime -- and silence in
+    the window drags the RMS down by an amount that has nothing to do with the
+    falloff. So the window starts a quarter of a second after the FIRST sample
+    that is above the noise floor, and every arm is then measuring the same
+    thing.
+
+    Returns (samples, rate, start_index). An all-silent file returns an empty
+    list, which is the correct answer for the FAR arm and is read as one.
     """
     with wave.open(path, "rb") as w:
         rate = w.getframerate()
         ch = w.getnchannels()
         n = w.getnframes()
         raw = w.readframes(n)
-    step = ch
     all_s = struct.unpack("<%dh" % (len(raw) // 2), raw)
-    left = all_s[0::step]
-    a = int(skip_s * rate)
-    b = a + int(take_s * rate)
-    if b > len(left):
-        b = len(left)
+    left = all_s[0::ch]
+    first = -1
+    for i, x in enumerate(left):
+        if x > floor or x < -floor:
+            first = i
+            break
+    if first < 0:
+        return [], rate, -1
+    a = first + int(0.25 * rate)
+    b = len(left) if take_s <= 0.0 else min(len(left), a + int(take_s * rate))
     if a >= b:
-        a, b = 0, len(left)
-    return list(left[a:b]), rate
+        a, b = first, len(left)
+    return list(left[a:b]), rate, first
 
 
 # ---------------------------------------------------------------------------
@@ -205,11 +217,32 @@ def run_pair(name, near, far, frames, port):
                 log_a=la, log_b=lb, dir_a=da, dir_b=db)
 
 
+def modal(vals):
+    """The value that held for most of the run, not the last one seen.
+
+    THE LAST READING IS THE WRONG ONE AND USING IT COST A FALSE FAILURE. The
+    report line is emitted once a second, the bodies drift while a match runs,
+    and the measurement window below is four seconds near the START of the
+    audio. Reading the final separation described a moment the window does not
+    contain: one arm settled at 190 units after spending the whole run at 229,
+    and the level in the dump -- correctly -- followed the 229. So every arm
+    reads the value that held for the most seconds of its own run, which is the
+    one the window is actually measuring.
+    """
+    if not vals:
+        return None
+    best, n = None, -1
+    for v in set(vals):
+        c = vals.count(v)
+        if c > n:
+            best, n = v, c
+    return best
+
+
 def last_distance(text):
     """The separation the game itself reported, out of the [voice] line."""
     got = re.findall(r"\| s\d+ d=(-?\d+) g=", text)
-    vals = [int(v) for v in got if int(v) >= 0]
-    return vals[-1] if vals else None
+    return modal([int(v) for v in got if int(v) >= 0])
 
 
 def voice_counts(text):
@@ -225,12 +258,61 @@ def voice_counts(text):
                 bad=int(m.group(7)), dup=int(m.group(8)))
 
 
+def gain_series(text):
+    """Every gain the game reported over the run, in order. One a second."""
+    return [float(v)
+            for v in re.findall(r"\| s\d+ d=-?\d+ g=([0-9.]+)", text)]
+
+
+def last_gain(text):
+    """The gain that held for most of the run."""
+    g = gain_series(text)
+    return modal(g) if g else None
+
+
+def expected_rms(text, full):
+    """The level a whole run's gain series predicts, as an RMS.
+
+    NOT `full * one_gain`, and getting that wrong cost two false failures. The
+    measured RMS is a root-mean-square over the WHOLE audible run, and the gain
+    is not constant across it -- the two bodies drift, so an arm can sit at one
+    separation for the first half and another for the second. The honest
+    prediction is therefore the root mean square of the reported gain series,
+    which is what a time-varying gain does to a constant-amplitude source, and
+    it collapses to `full * g` exactly when the gain never moved.
+    """
+    g = gain_series(text)
+    if not g:
+        return None
+    return full * math.sqrt(sum(x * x for x in g) / len(g))
+
+
 def measure(res):
+    """RMS is the headline and the tone bin is the corroboration.
+
+    RMS BECAUSE THE GAME'S OWN AUDIO IS ZERO HERE. Every window runs with
+    SM64DS_VOLUME=0, which zeroes the DS mix at the host output stage, and the
+    voice mix runs AFTER that stage - so every non-zero sample in this dump is
+    voice and nothing else. The FAR arm is the assertion of exactly that: it
+    receives datagrams the whole run and its dump is all zeros.
+
+    The 440 Hz bin is reported beside it but is NOT the pass condition, and the
+    reason is a harness artefact worth writing down. With SM64DS_NO_AUDIO the
+    mixer is clocked off the VIDEO FRAME at a nominal 60 Hz (one 546-sample
+    block a frame, out_win.cpp's no-device arm), while the tone generator is
+    clocked off the wall. A headless selftest does not run at 60 fps, so the
+    dump's own clock runs slower than real time, voice arrives faster than it
+    is consumed, and the jitter ring drops its oldest frame to keep the delay
+    bounded - exactly as designed. The result is a tone chopped into segments
+    with phase steps between them, whose ENERGY is intact (RMS) but whose
+    coherence over a four-second window is not (the bin). On a real device the
+    mixer is clocked by the hardware at 32768 Hz and the drift does not exist.
+    """
     if not os.path.exists(res["wav"]):
         return None
-    s, rate = read_wav_mono(res["wav"])
+    s, rate, first = read_wav_mono(res["wav"])
     return dict(tone=goertzel(s, TONE_HZ, rate), rms=rms(s), n=len(s),
-                rate=rate)
+                rate=rate, first=first)
 
 
 # ---------------------------------------------------------------------------
@@ -279,9 +361,10 @@ def main():
     ok = True
 
     # ---- arm 1: NEAR. Both radii well past any separation the arena has, so
-    # the falloff is 1.0 and what the WAV shows is the channel working at all.
+    # the falloff is 1.0 and what the dump shows is the channel working at all.
     near = run_pair("near", 100000, 200000, a.frames, PORT)
     d = last_distance(near["tb"])
+    g = last_gain(near["tb"])
     ca, cb = voice_counts(near["ta"]), voice_counts(near["tb"])
     mn = measure(near)
     ok &= M.verdict(near["rc_a"] == 0 and near["rc_b"] == 0,
@@ -301,15 +384,24 @@ def main():
                     "listener dev=%s" % (cb["dev"] if cb else None,))
     ok &= M.verdict(d is not None,
                     "voice the listener measured a real separation | d=%s" % d)
-    ok &= M.verdict(mn is not None and mn["tone"] > 0.02,
-                    "voice NEAR the 440 Hz tone is present in the listener's "
-                    "own mixer output | tone=%.5f rms=%.5f"
-                    % (mn["tone"] if mn else -1, mn["rms"] if mn else -1))
-    # THE BRACKETING ARMS NEED A REAL SEPARATION TO BRACKET. Two bodies that
-    # spawned on top of each other would make the FAR arm's radii degenerate
-    # (near=0, far=1, d=0 is inside near) and it would fail for a reason that
-    # has nothing to do with the falloff. Said out loud rather than worked
-    # around, because a proof that quietly rescales its own inputs is not one.
+    ok &= M.verdict(g is not None and abs(g - 1.0) < 1e-6,
+                    "voice NEAR the game applies gain 1.000 | g=%s" % g)
+
+    # THE LEVEL A GAIN OF 1.0 IS SUPPOSED TO PRODUCE, computed rather than
+    # eyeballed. The generator's amplitude is 16000 of full scale, so a sine at
+    # unity gain has an RMS of 16000 / sqrt(2) / 32768 = 0.3453. Anything else
+    # would mean the resampler, the codec or the mix stage changed the level,
+    # which is the failure this arm is looking for.
+    want_full = 16000.0 / math.sqrt(2.0) / 32768.0
+    want_near = expected_rms(near["tb"], want_full) or want_full
+    ok &= M.verdict(mn is not None and
+                    abs(mn["rms"] - want_near) / want_near < 0.10,
+                    "voice NEAR the tone arrives at FULL LEVEL through capture, "
+                    "IMA ADPCM, the wire, the jitter buffer and the resampler "
+                    "| rms %.5f against %.5f predicted (16000/sqrt2 of full "
+                    "scale), 440 Hz bin %.5f"
+                    % (mn["rms"] if mn else -1, want_full,
+                       mn["tone"] if mn else -1))
     ok &= M.verdict(d is not None and d >= 8,
                     "voice the two bodies are actually apart in the arena, so "
                     "the bracketing arms below mean something | d=%s" % d)
@@ -318,48 +410,70 @@ def main():
         return 1
 
     # ---- arm 2: FAR. Both radii BELOW the separation the game just reported,
-    # so the falloff is exactly 0 and the same session must go silent.
+    # so the falloff is exactly 0. Not "quiet": the dump has to be all zeros,
+    # which is also the assertion that every non-zero sample in the other two
+    # arms is voice and not the game (SM64DS_VOLUME=0 zeroes the DS mix at the
+    # output stage, and the voice mix runs after it).
     far_near = max(1, d // 4)
     far_far = max(2, d // 2)
     far = run_pair("far", far_near, far_far, a.frames, PORT + 2)
     mf = measure(far)
     cbf = voice_counts(far["tb"])
+    gf = last_gain(far["tb"])
     ok &= M.verdict(cbf is not None and cbf["rx"] > 0,
                     "voice FAR the datagrams still ARRIVE (it is the mix that "
                     "is silent, not the channel) | %s" % (cbf,))
-    ok &= M.verdict(mf is not None and mf["tone"] < mn["tone"] / 10.0,
-                    "voice FAR the tone is attenuated to silence at d=%d with "
-                    "far=%d | tone=%.5f against NEAR's %.5f"
-                    % (d, far_far, mf["tone"] if mf else -1, mn["tone"]))
+    ok &= M.verdict(gf is not None and gf == 0.0,
+                    "voice FAR the game applies gain 0.000 at d=%d with far=%d "
+                    "| g=%s" % (d, far_far, gf))
+    ok &= M.verdict(mf is not None and mf["first"] == -1 and mf["rms"] == 0.0,
+                    "voice FAR the listener's whole dump is EXACTLY ZERO - so "
+                    "the game contributes nothing to these numbers and every "
+                    "non-zero sample in the other arms is voice | rms=%.5f, "
+                    "first non-silent sample %s"
+                    % (mf["rms"] if mf else -1, mf["first"] if mf else None))
 
-    # ---- arm 3: MID. The separation placed between the two radii, so the
-    # log falloff is somewhere strictly inside (0, 1) and the measured level
-    # has to land between the other two arms.
+    # ---- arm 3: MID. The separation placed between the two radii, so the log
+    # falloff lands strictly inside (0, 1). The prediction is taken from the
+    # distance THAT RUN reported, not from the first arm's, because the bodies
+    # are free to have settled somewhere else.
     mid_near = max(1, d // 2)
     mid_far = max(mid_near + 1, d * 2)
     mid = run_pair("mid", mid_near, mid_far, a.frames, PORT + 4)
     mm = measure(mid)
-    want = math.log(float(mid_far) / float(d)) / \
-        math.log(float(mid_far) / float(mid_near))
-    ok &= M.verdict(mm is not None and mf is not None and
-                    mm["tone"] > mf["tone"] and mm["tone"] < mn["tone"],
-                    "voice MID the level sits between the two, as the log "
-                    "falloff says (predicted gain %.3f at d=%d, near=%d "
-                    "far=%d) | tone %.5f, between FAR %.5f and NEAR %.5f"
-                    % (want, d, mid_near, mid_far,
-                       mm["tone"] if mm else -1, mf["tone"] if mf else -1,
-                       mn["tone"]))
+    gm = last_gain(mid["tb"])
+    dm = last_distance(mid["tb"])
+    want_math = None
+    if dm:
+        want_math = math.log(float(mid_far) / float(dm)) / \
+            math.log(float(mid_far) / float(mid_near))
+    ok &= M.verdict(gm is not None and want_math is not None and
+                    abs(gm - want_math) < 0.01,
+                    "voice MID the gain the game applied IS the log falloff | "
+                    "g=%s, log(far/d)/log(far/near) = %.3f at d=%s near=%d "
+                    "far=%d" % (gm, want_math if want_math else -1, dm,
+                                mid_near, mid_far))
+    want_mid = expected_rms(mid["tb"], want_full)
+    ok &= M.verdict(mm is not None and want_mid is not None and want_mid > 0 and
+                    abs(mm["rms"] - want_mid) / want_mid < 0.10,
+                    "voice MID the LEVEL follows the gain | rms %.5f against "
+                    "%.5f predicted (full level %.5f through the run's own "
+                    "reported gain series, modal gain %.3f)"
+                    % (mm["rms"] if mm else -1, want_mid if want_mid else -1,
+                       want_full, gm if gm else 0))
 
     print("")
-    print("measured separation d=%d world units" % d)
-    print("  NEAR near=%d far=%d  tone=%.5f rms=%.5f"
-          % (100000, 200000, mn["tone"], mn["rms"]))
-    print("  MID  near=%d far=%d  tone=%.5f rms=%.5f  predicted gain %.3f"
-          % (mid_near, mid_far, mm["tone"] if mm else -1,
-             mm["rms"] if mm else -1, want))
-    print("  FAR  near=%d far=%d  tone=%.5f rms=%.5f"
-          % (far_near, far_far, mf["tone"] if mf else -1,
-             mf["rms"] if mf else -1))
+    print("measured separation d=%d world units, arena VS map %s" % (d, VS_MAP))
+    print("  full-level prediction  %.5f rms (a 16000 amplitude sine)"
+          % want_full)
+    print("  NEAR near=%-6d far=%-6d  gain %.3f  rms %.5f  440Hz %.5f"
+          % (100000, 200000, g if g else 0, mn["rms"], mn["tone"]))
+    print("  MID  near=%-6d far=%-6d  gain %.3f  rms %.5f  440Hz %.5f"
+          % (mid_near, mid_far, gm if gm else 0, mm["rms"] if mm else -1,
+             mm["tone"] if mm else -1))
+    print("  FAR  near=%-6d far=%-6d  gain %.3f  rms %.5f  440Hz %.5f"
+          % (far_near, far_far, gf if gf else 0, mf["rms"] if mf else -1,
+             mf["tone"] if mf else -1))
     print("")
     for v in M.VERDICTS:
         print(v)
