@@ -81,10 +81,14 @@ int host_setting_save_camera_mode(int mode);
 
      PadJump      0x1000 A
      PadAttack    0x2000 B
-     PadCrouch    0      -- the RIGHT TRIGGER crouches and always has; it is
-                            an axis, not a button, so it has no mask and stays
-                            a fixed binding. A PadCrouch button crouches as
-                            well, it does not replace the trigger.
+     PadCrouch    0x20000 RT -- the right trigger, which has always crouched.
+                            THE TRIGGERS ARE NOT XINPUT BUTTONS: they are 0..255
+                            axes with no mask, so the file names them with two
+                            bits above the XInput word, HOST_PAD_LT 0x10000 and
+                            HOST_PAD_RT 0x20000, and a pull past 100 reads as
+                            the button being down. A PadCrouch of 0 (the value
+                            every launcher before 0.3.4 wrote) still crouches
+                            on RT, so an older file keeps the trigger.
      PadRun       0x4000 X
      PadStart     0x0010 START
      PadSelect    0      -- BACK opens the debug menu, so Select has no pad
@@ -124,6 +128,9 @@ enum {
     HOST_PAD_START, HOST_PAD_SELECT,
     HOST_PAD_COUNT
 };
+/* The two trigger pseudo-buttons a pad binding may name (see the PAD block
+   above), and the widest value a pad binding may hold. */
+enum { HOST_PAD_LT = 0x10000, HOST_PAD_RT = 0x20000, HOST_PAD_MASK_MAX = 0x3ffff };
 /* The bound code for one action, or 0 for unbound; an index outside the enum
    is 0 too. host_setting_key_name / host_setting_pad_name give the
    settings.json spelling of an action ("KeyJump", "PadJump"), for logs. */

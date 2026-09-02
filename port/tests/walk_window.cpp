@@ -2359,11 +2359,33 @@ static int key_act(int action)
     const int vk = g_key[action];
     return vk && key_live(vk);
 }
+/* A binding mask against the pad: the XInput word for the sixteen real
+   buttons, and the two trigger pseudo-bits (HOST_PAD_LT / HOST_PAD_RT,
+   hal/host_settings.h) read off the axes past the same 100-of-255 pull the
+   crouch trigger has always used. */
+static int pad_mask_down(const XPad *pad, int m)
+{
+    if (!m) return 0;
+    if (pad->buttons & (unsigned)(m & 0xffff)) return 1;
+    if ((m & HOST_PAD_LT) && pad->lt > 100) return 1;
+    if ((m & HOST_PAD_RT) && pad->rt > 100) return 1;
+    return 0;
+}
+
+/* The pad word with the triggers folded in as their pseudo-bits, for the
+   rebind capture: a trigger pull is then one fresh bit like any button. */
+static unsigned pad_word_with_triggers(const XPad *pad)
+{
+    unsigned w = pad->buttons;
+    if (pad->lt > 100) w |= HOST_PAD_LT;
+    if (pad->rt > 100) w |= HOST_PAD_RT;
+    return w;
+}
+
 static int pad_act(const XPad *pad, int action)
 {
     bindings_load();
-    const int m = g_pad[action];
-    return m && (pad->buttons & (unsigned)m) != 0;
+    return pad_mask_down(pad, g_pad[action]);
 }
 
 /* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
@@ -2539,6 +2561,8 @@ static const char *run_pad_name(int mask, char *buf, size_t cap)
     case 0x8000: return "pad Y";
     case 0x0100: return "pad LB";
     case 0x0200: return "pad RB";
+    case HOST_PAD_LT: return "pad LT";
+    case HOST_PAD_RT: return "pad RT";
     case 0x0010: return "pad start";
     case 0x0020: return "pad back";
     case 0x0040: return "left stick click";
@@ -4408,12 +4432,14 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
     if (pad_live) {
         if (pad_act(pad, HOST_PAD_JUMP)) btn |= 2;       /* A by default  */
         /* X by default; the rebind row moves it (0 = unbound) */
-        if (g_run_pad && (pad->buttons & (unsigned)g_run_pad))
+        if (pad_mask_down(pad, g_run_pad))
             btn |= 0x800;
         if (pad_act(pad, HOST_PAD_ATTACK)) btn |= 1;     /* B by default  */
-        if (pad->rt > 100) btn |= 0x400;          /* RT -> crouch, fixed: an
-                                                     axis has no button mask */
-        if (pad_act(pad, HOST_PAD_CROUCH)) btn |= 0x400; /* unbound by default */
+        /* RT is the crouch default (PadCrouch 0x20000); a file that says
+           PadCrouch 0 -- every launcher before 0.3.4 wrote that -- keeps the
+           trigger too, so nobody's crouch vanishes on update. */
+        if (pad_act(pad, HOST_PAD_CROUCH)) btn |= 0x400;
+        if (!host_setting_pad(HOST_PAD_CROUCH) && pad->rt > 100) btn |= 0x400;
         /* the bumpers are camera-rotate and go in with the rest of the rotate
            input at the level loop's own call site, where the freecam gate is */
     }
@@ -8237,7 +8263,7 @@ int main(void)
            or nudge the camera on its way to becoming a binding. */
         if (g_rebind_capture) {
             static unsigned bind_pad_prev = ~0u;   /* first frame: no edges */
-            const unsigned now = pad_live ? (unsigned)pad.buttons : 0u;
+            const unsigned now = pad_live ? pad_word_with_triggers(&pad) : 0u;
             const unsigned fresh = now & ~bind_pad_prev;
             bind_pad_prev = now;
             int done = 0;

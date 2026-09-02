@@ -458,7 +458,7 @@ const BindKey KEY_BIND[14] = {
 const BindKey PAD_BIND[6] = {
     { "PadJump",   0x1000 },      /* A */
     { "PadAttack", 0x2000 },      /* B */
-    { "PadCrouch", 0      },      /* the right trigger is fixed; see header */
+    { "PadCrouch", 0x20000 },     /* RT, the trigger pseudo-button; see header */
     { "PadRun",    0x4000 },      /* X; alias RunButtonPad */
     { "PadStart",  0x0010 },      /* START */
     { "PadSelect", 0      },      /* BACK opens the debug menu; see header */
@@ -708,7 +708,7 @@ void load_once(void)
             const int k = json_int(text, "RunButtonKey", 0x10);
             if (k >= 0 && k <= 0xff) g_run_key = k;
             const int p = json_int(text, "RunButtonPad", 0x4000);
-            if (p >= 0 && p <= 0xffff) g_run_pad = p;
+            if (p >= 0 && p <= HOST_PAD_MASK_MAX) g_run_pad = p;
         }
         /* the camera mode, by name and by number like RunMode */
         {
@@ -740,7 +740,7 @@ void load_once(void)
         }
         for (int i = 0; i < 6; ++i) {
             const int p = json_int(text, PAD_BIND[i].name, PAD_BIND[i].dflt);
-            if (p >= 0 && p <= 0xffff) {
+            if (p >= 0 && p <= HOST_PAD_MASK_MAX) {
                 g_pad[i] = p;
                 if (i == 3 && json_value(text, PAD_BIND[i].name)) padrun_ok = 1;
             }
@@ -1277,7 +1277,7 @@ extern "C" int host_setting_save_run(int mode, int key, int pad)
     load_once();
     if (mode < 0 || mode > 2) mode = 0;
     if (key < 0 || key > 0xff) key = 0;
-    if (pad < 0 || pad > 0xffff) pad = 0;
+    if (pad < 0 || pad > HOST_PAD_MASK_MAX) pad = 0;
     g_run_mode = mode;
     g_run_key = key;
     g_run_pad = pad;

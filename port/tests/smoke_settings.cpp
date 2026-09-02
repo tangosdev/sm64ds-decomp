@@ -70,7 +70,7 @@ static const int KEY_DFLT[HOST_KEY_COUNT] = {
     0x20, 0x58, 0x11, 0x10, 0x0d, 0x08,
 };
 static const int PAD_DFLT[HOST_PAD_COUNT] = {
-    0x1000, 0x2000, 0, 0x4000, 0x0010, 0,
+    0x1000, 0x2000, 0x20000, 0x4000, 0x0010, 0,   /* crouch = RT pseudo-mask */
 };
 
 static void check_defaults_except(const int *skip_key, int nskip_key,
