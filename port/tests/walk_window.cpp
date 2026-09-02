@@ -8383,8 +8383,16 @@ int main(void)
                the fan-out off, nothing writes those records and these stores
                stay exactly what they were. */
             if (!(port::comms_transport() && comms_fanout_on())) {
-                *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
-                *(unsigned short *)((char *)data_020a0e58 + 2) =
+                /* THE LOCAL SLOT, not always slot 0. PadData strides 4 bytes per
+                   player ({u16 held, u16 pressed}); on the child data_0209f250 is
+                   1, so the local pad must land in PadData[1] or it drives the
+                   HOST's character (the ghost) and never the child's own body.
+                   Single player keeps data_0209f250 == 0, so this is unchanged
+                   there. Adventure runs with the fan-out off, which is why this
+                   direct store is the one that reaches the game. */
+                const int lo = (int)data_0209f250 * 4;
+                *(unsigned short *)((char *)data_020a0e58 + lo + 0) = raw;
+                *(unsigned short *)((char *)data_020a0e58 + lo + 2) =
                     (unsigned short)(raw & (unsigned short)~raw_prev);
             }
             raw_prev = raw;
@@ -8552,16 +8560,22 @@ int main(void)
                     int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
                     if (mag > 0x1000) mag = 0x1000;
                     if (mag < 0) mag = 0;
-                    *(short *)(data_0209f4a0 + 0) = (short)mag;
-                    *(short *)data_0209f4a2 =
+                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
+                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
+                       the ROM reads player N's fields at symbol + N*0x18 (see the
+                       fan block above). On the child data_0209f250 is 1, so the
+                       stick must land in slot 1. */
+                    const int lo = (int)data_0209f250 * 0x18;
+                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
+                    *(short *)((char *)data_0209f4a2 + lo) =
                         (short)((double)dxs * mag / len);
-                    *(short *)data_0209f4a4 =
+                    *(short *)((char *)data_0209f4a4 + lo) =
                         (short)((double)dys * mag / len);
-                    *(short *)data_0209f4a6 =
+                    *(short *)((char *)data_0209f4a6 + lo) =
                         _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
                     /* the field the walk/run branch keys off: "the player is
                        on the analog stick, read the deflection" */
-                    data_0209f4ac[0] = 1;
+                    *((unsigned char *)data_0209f4ac + lo) = 1;
                 }
             }
             /* camera lazy-follow, from the same intended direction */
@@ -8828,8 +8842,12 @@ int main(void)
              * Stage::CheckInput, the per-player fan -- and this store must not
              * put them anywhere else. */
             if (!(port::comms_transport() && comms_fanout_on())) {
-                *(unsigned short *)(data_0209f49c + 0) = btn;
-                *(unsigned short *)(data_0209f49e + 0) =
+                /* THE LOCAL SLOT, at the 0x18 Ctrl stride, so the child's buttons
+                   reach slot 1 rather than the host's slot 0. Single player keeps
+                   data_0209f250 == 0. */
+                const int lo = (int)data_0209f250 * 0x18;
+                *(unsigned short *)((char *)data_0209f49c + lo) = btn;
+                *(unsigned short *)((char *)data_0209f49e + lo) =
                     (unsigned short)(btn & (unsigned short)~btn_was);
             }
             btn_was = btn;
