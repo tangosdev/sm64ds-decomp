@@ -8822,6 +8822,19 @@ foreach(line IN LISTS SLICE182_LINES)
     list(APPEND SLICE182_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# Gate KLEPTO: ov062's cap-stealing bird (actor 239). ov062 already mounted
+# (gate 32); the seat is HAL (actor_classes_koopa_chuckya.cpp) plus the two-PMF
+# host copy unmatched/Klepto_StateDispatch.cpp. See slice_klepto.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_klepto.txt" SLICEKLEPTO_LINES)
+set(SLICEKLEPTO_SOURCES "")
+foreach(line IN LISTS SLICEKLEPTO_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEKLEPTO_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate180.txt" SLICE180_LINES)
 set(SLICE180_SOURCES "")
 foreach(line IN LISTS SLICE180_LINES)
@@ -12339,7 +12352,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
@@ -12551,7 +12564,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
@@ -12797,7 +12810,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
