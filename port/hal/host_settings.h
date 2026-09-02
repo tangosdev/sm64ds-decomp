@@ -389,6 +389,73 @@ const char *host_setting_character_palette(int character);
 int host_setting_character_palette_any(void);
 int host_setting_yoshi_builtin_row(void);
 
+/* ---- PadLayouts: A LEARNED BUTTON MAP FOR ONE NON-XINPUT CONTROLLER ------
+   The DirectInput backend (hal/pad_backend.cpp) maps a pad's raw button
+   indices and axes onto the XInput mask through a built-in table keyed by
+   the pad's USB vendor:product id, with a positional guess for anything the
+   table does not know. A player reported the guess wrong on their pad: only
+   the d-pad worked and the face buttons came out rotated. The fix is a map
+   the player teaches the game one press at a time (the debug menu's "pad
+   layout" row), and this is where that map is kept between runs.
+
+   THE FILE SHAPE. One optional key, an array of flat objects:
+
+     "PadLayouts": [
+       { "vid": 1118, "pid": 654, "name": "USB Gamepad",
+         "a": 2, "b": 1, "x": 3, "y": 0, "lb": 4, "rb": 5,
+         "back": 8, "start": 9, "lthumb": 10, "rthumb": 11,
+         "lt_btn": 6, "rt_btn": 7, "lt_axis": -1, "rt_axis": -1,
+         "lx_axis": 0, "ly_axis": 1, "rx_axis": 2, "ry_axis": 5,
+         "lx_sign": 1, "ly_sign": -1, "rx_sign": 1, "ry_sign": -1 }
+     ]
+
+   The field names are pad_backend.cpp's PadLayout, so the two cannot drift.
+   vid and pid are the USB ids in DECIMAL (the file's integer reader reads
+   decimal). Button fields are DirectInput button indices 0..31, -1 for "this
+   pad has no such button". Axis fields are 0 X, 1 Y, 2 Z, 3 Rx, 4 Ry, 5 Rz,
+   -1 for none. The four sign fields are 1 or -1 and say which way the raw
+   axis moves for a rightward (or upward) push, because DirectInput's Y grows
+   downward and a learned pad may wire any axis either way. name is for a
+   person reading the file; the game ignores it.
+
+   LENIENT LIKE EVERY OTHER KEY. An object whose vid or pid is missing or out
+   of 1..65535 is dropped. Any other field that is missing or out of range
+   reads as the generic fallback's value for that field, so a half-edited
+   object still gives a usable pad rather than none. At most
+   HOST_PAD_LAYOUT_MAX objects are kept; later ones are ignored. A file with no
+   PadLayouts key reads exactly as before the key existed.
+
+   THE SAVE keeps the whole array: host_setting_save_pad_layout replaces the
+   object with the same vid:pid or appends one, then rewrites the PadLayouts
+   value in place and carries every other key of the file untouched, the way
+   the run and camera saves do. Boot-latched for the file's purposes, but the
+   pad backend is told the new map directly by the caller so the pad answers
+   with it at once; a restart re-reads it from here. */
+struct HostPadLayout {
+    int vid, pid;
+    int a, b, x, y, lb, rb, back, start, lthumb, rthumb;
+    int lt_btn, rt_btn, lt_axis, rt_axis;
+    int lx_axis, ly_axis, rx_axis, ry_axis;
+    int lx_sign, ly_sign, rx_sign, ry_sign;
+    char name[64];
+};
+enum { HOST_PAD_LAYOUT_MAX = 8 };
+/* The generic fallback's values into *out (vid and pid 0, name ""), the
+   same row pad_backend.cpp uses for an unknown pad. */
+void host_pad_layout_default(struct HostPadLayout *out);
+/* 1 and *out filled when the file names a layout for vid:pid, else 0. */
+int host_setting_pad_layout(int vid, int pid, struct HostPadLayout *out);
+/* How many layouts the file carries, and the i'th of them (1, or 0 when i
+   is out of range), so a caller can hand all of them to the pad backend. */
+int host_setting_pad_layout_count(void);
+int host_setting_pad_layout_at(int i, struct HostPadLayout *out);
+/* Upsert by vid:pid and persist. Returns 1 when the file on disk now says
+   so; the in-memory table moves either way. Fields out of range are
+   clamped to the fallback's value before anything is written. Refuses
+   (returns 0, nothing moves) when vid or pid is 0 or the table is full of
+   other pads. */
+int host_setting_save_pad_layout(const struct HostPadLayout *layout);
+
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it
    looks at the file's write time only every 30th call, so its steady-state

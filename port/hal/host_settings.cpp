@@ -132,6 +132,26 @@ const char *json_value_end(const char *v)
         while (*p && *p != '"') p += (*p == '\\' && p[1]) ? 2 : 1;
         return *p ? p + 1 : p;
     }
+    /* an array or object ends at its matching bracket, strings stepped over,
+       so PadLayouts (the one non-scalar this file writes) can be replaced
+       whole by json_set. Unbalanced text ends at the end of the string. */
+    if (*v == '[' || *v == '{') {
+        int depth = 0;
+        const char *p = v;
+        while (*p) {
+            if (*p == '"') {
+                ++p;
+                while (*p && *p != '"') p += (*p == '\\' && p[1]) ? 2 : 1;
+                if (!*p) break;
+            } else if (*p == '[' || *p == '{') {
+                ++depth;
+            } else if (*p == ']' || *p == '}') {
+                if (--depth == 0) return p + 1;
+            }
+            ++p;
+        }
+        return p;
+    }
     {
         const char *p = v;
         while (*p && *p != ',' && *p != '}' && *p != ']' && *p != ' ' &&
@@ -634,6 +654,156 @@ int g_name_tags = 1;
    latches on it. */
 int g_setgen;
 
+/* ---- PadLayouts ------------------------------------------------------------
+   The learned controller maps, see the header. Kept as a small fixed table;
+   the file's array is parsed object by object with the same scalar readers
+   as every other key, each object copied out on its own so "a" inside one
+   object cannot be found inside another. */
+HostPadLayout g_padlayouts[HOST_PAD_LAYOUT_MAX];
+int g_padlayout_n;
+
+/* The generic fallback row of pad_backend.cpp's PAD_LAYOUTS, field for
+   field. Every field a file object lacks reads as this. */
+void padlayout_default(HostPadLayout *o)
+{
+    memset(o, 0, sizeof *o);
+    o->a = 0; o->b = 1; o->x = 2; o->y = 3; o->lb = 4; o->rb = 5;
+    o->back = 8; o->start = 9; o->lthumb = 10; o->rthumb = 11;
+    o->lt_btn = 6; o->rt_btn = 7; o->lt_axis = -1; o->rt_axis = -1;
+    o->lx_axis = 0; o->ly_axis = 1; o->rx_axis = 2; o->ry_axis = 5;
+    o->lx_sign = 1; o->ly_sign = -1; o->rx_sign = 1; o->ry_sign = -1;
+}
+
+/* The field table: spelling, member, range. One row per PadLayout field so
+   the parser, the clamp and the writer walk the same list. */
+struct PadField { const char *name; int HostPadLayout::*f; int lo, hi; };
+const PadField PAD_FIELDS[22] = {
+    { "a",       &HostPadLayout::a,       -1, 31 },
+    { "b",       &HostPadLayout::b,       -1, 31 },
+    { "x",       &HostPadLayout::x,       -1, 31 },
+    { "y",       &HostPadLayout::y,       -1, 31 },
+    { "lb",      &HostPadLayout::lb,      -1, 31 },
+    { "rb",      &HostPadLayout::rb,      -1, 31 },
+    { "back",    &HostPadLayout::back,    -1, 31 },
+    { "start",   &HostPadLayout::start,   -1, 31 },
+    { "lthumb",  &HostPadLayout::lthumb,  -1, 31 },
+    { "rthumb",  &HostPadLayout::rthumb,  -1, 31 },
+    { "lt_btn",  &HostPadLayout::lt_btn,  -1, 31 },
+    { "rt_btn",  &HostPadLayout::rt_btn,  -1, 31 },
+    { "lt_axis", &HostPadLayout::lt_axis, -1, 5 },
+    { "rt_axis", &HostPadLayout::rt_axis, -1, 5 },
+    { "lx_axis", &HostPadLayout::lx_axis, -1, 5 },
+    { "ly_axis", &HostPadLayout::ly_axis, -1, 5 },
+    { "rx_axis", &HostPadLayout::rx_axis, -1, 5 },
+    { "ry_axis", &HostPadLayout::ry_axis, -1, 5 },
+    { "lx_sign", &HostPadLayout::lx_sign, -1, 1 },
+    { "ly_sign", &HostPadLayout::ly_sign, -1, 1 },
+    { "rx_sign", &HostPadLayout::rx_sign, -1, 1 },
+    { "ry_sign", &HostPadLayout::ry_sign, -1, 1 },
+};
+
+/* One object's text (NUL-terminated, braces included) into *o. 0 when the
+   object has no usable vid:pid, which drops it. A sign of 0 is out of
+   range: an axis that moves neither way is not a choice. */
+int padlayout_parse_object(const char *obj, HostPadLayout *o)
+{
+    padlayout_default(o);
+    const int vid = json_int(obj, "vid", 0);
+    const int pid = json_int(obj, "pid", 0);
+    if (vid < 1 || vid > 0xffff || pid < 1 || pid > 0xffff) return 0;
+    o->vid = vid;
+    o->pid = pid;
+    for (int i = 0; i < 22; ++i) {
+        const int dflt = o->*PAD_FIELDS[i].f;
+        const int v = json_int(obj, PAD_FIELDS[i].name, dflt);
+        const int is_sign = PAD_FIELDS[i].lo == -1 && PAD_FIELDS[i].hi == 1;
+        if (v >= PAD_FIELDS[i].lo && v <= PAD_FIELDS[i].hi && !(is_sign && v == 0))
+            o->*PAD_FIELDS[i].f = v;
+    }
+    if (json_str(obj, "name", o->name, sizeof o->name)) {
+        /* json_str hands the value back as written; the writer below
+           escapes quotes and backslashes, so undo exactly those two */
+        char *w = o->name;
+        for (const char *r = o->name; *r; ++r) {
+            if (*r == '\\' && (r[1] == '"' || r[1] == '\\')) ++r;
+            *w++ = *r;
+        }
+        *w = '\0';
+    }
+    return 1;
+}
+
+/* The whole array. Malformed text stops the walk where it is found; the
+   objects already read stay. */
+void padlayouts_parse(const char *text)
+{
+    g_padlayout_n = 0;
+    const char *v = json_value(text, "PadLayouts");
+    if (!v || *v != '[') return;
+    const char *end = json_value_end(v);
+    const char *p = v + 1;
+    while (p < end && g_padlayout_n < HOST_PAD_LAYOUT_MAX) {
+        while (p < end && *p != '{' && *p != ']') ++p;
+        if (p >= end || *p == ']') break;
+        const char *e = json_value_end(p);
+        if (e <= p || e > end) break;
+        const size_t n = (size_t)(e - p);
+        char *obj = (char *)malloc(n + 1);
+        if (!obj) break;
+        memcpy(obj, p, n);
+        obj[n] = '\0';
+        HostPadLayout o;
+        const int ok = padlayout_parse_object(obj, &o);
+        free(obj);
+        if (ok) {
+            /* a later object for the same pad replaces the earlier one, so
+               a hand edit that duplicates a row reads as its last word */
+            int slot = g_padlayout_n;
+            for (int i = 0; i < g_padlayout_n; ++i)
+                if (g_padlayouts[i].vid == o.vid && g_padlayouts[i].pid == o.pid)
+                    slot = i;
+            g_padlayouts[slot] = o;
+            if (slot == g_padlayout_n) ++g_padlayout_n;
+        }
+        p = e;
+    }
+}
+
+/* The array as text, the shape the header shows, into a malloc'd buffer. */
+char *padlayouts_text(void)
+{
+    const size_t cap = 64 + (size_t)g_padlayout_n * 512;
+    char *out = (char *)malloc(cap);
+    if (!out) return 0;
+    size_t w = 0;
+    w += (size_t)snprintf(out + w, cap - w, "[");
+    for (int i = 0; i < g_padlayout_n; ++i) {
+        const HostPadLayout *o = &g_padlayouts[i];
+        /* the name is written with quotes and backslashes escaped and any
+           control character dropped, so a product name cannot break the
+           file */
+        char nm[96];
+        size_t k = 0;
+        for (const char *c = o->name; *c && k + 3 < sizeof nm; ++c) {
+            if ((unsigned char)*c < 0x20) continue;
+            if (*c == '"' || *c == '\\') nm[k++] = '\\';
+            nm[k++] = *c;
+        }
+        nm[k] = '\0';
+        w += (size_t)snprintf(out + w, cap - w,
+                              "%s\n    { \"vid\": %d, \"pid\": %d, \"name\": \"%s\"",
+                              i ? "," : "", o->vid, o->pid, nm);
+        for (int f = 0; f < 22; ++f)
+            w += (size_t)snprintf(out + w, cap - w, ",%s\"%s\": %d",
+                                  (f % 6 == 0) ? "\n      " : " ",
+                                  PAD_FIELDS[f].name, o->*PAD_FIELDS[f].f);
+        w += (size_t)snprintf(out + w, cap - w, " }");
+        if (w >= cap) { free(out); return 0; }
+    }
+    snprintf(out + w, cap - w, "%s]", g_padlayout_n ? "\n  " : "");
+    return out;
+}
+
 /* "#RRGGBB" to 0xFFRRGGBB. Returns dflt for anything that is not exactly six
    hex digits after an optional '#', so a half-typed colour is the default
    rather than a colour nobody chose. Case insensitive, because a player
@@ -679,6 +849,7 @@ void load_once(void)
     g_name_tags = 1;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
+    g_padlayout_n = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -829,6 +1000,8 @@ void load_once(void)
            reason they are: a settings.json written before this key existed
            reads exactly as one that turned it off, which is the old program */
         g_mouse_capture = json_bool(text, "MouseCapture", 0);
+        /* the learned controller maps; absent is none, like every key */
+        padlayouts_parse(text);
     }
     free(text);
 
@@ -844,6 +1017,10 @@ void load_once(void)
     if (g_camera_mode)
         fprintf(stderr, "[settings] CameraMode %s (%s)\n",
                 CAMERA_MODE_KEY[g_camera_mode], path);
+    for (int i = 0; i < g_padlayout_n; ++i)
+        fprintf(stderr, "[settings] PadLayouts: learned layout for %04x:%04x "
+                        "%s (%s)\n", (unsigned)g_padlayouts[i].vid,
+                (unsigned)g_padlayouts[i].pid, g_padlayouts[i].name, path);
     /* one line per binding the player moved, so a support log answers "what
        was jump bound to" without anyone opening the file */
     for (int i = 0; i < 14; ++i)
@@ -1309,4 +1486,76 @@ extern "C" int host_setting_save_camera_mode(int mode)
     const char *const keys[1] = { "CameraMode" };
     const char *const vals[1] = { v };
     return save_keys(keys, vals, 1, "camera mode");
+}
+
+/* ---- PadLayouts -----------------------------------------------------------
+   See the header. The table is what load_once parsed plus whatever the learn
+   flow saved this run. */
+extern "C" void host_pad_layout_default(HostPadLayout *out)
+{
+    padlayout_default(out);
+}
+
+extern "C" int host_setting_pad_layout(int vid, int pid, HostPadLayout *out)
+{
+    load_once();
+    for (int i = 0; i < g_padlayout_n; ++i)
+        if (g_padlayouts[i].vid == vid && g_padlayouts[i].pid == pid) {
+            if (out) *out = g_padlayouts[i];
+            return 1;
+        }
+    return 0;
+}
+
+extern "C" int host_setting_pad_layout_count(void)
+{
+    load_once();
+    return g_padlayout_n;
+}
+
+extern "C" int host_setting_pad_layout_at(int i, HostPadLayout *out)
+{
+    load_once();
+    if (i < 0 || i >= g_padlayout_n) return 0;
+    if (out) *out = g_padlayouts[i];
+    return 1;
+}
+
+extern "C" int host_setting_save_pad_layout(const HostPadLayout *layout)
+{
+    load_once();
+    if (!layout || layout->vid < 1 || layout->vid > 0xffff ||
+        layout->pid < 1 || layout->pid > 0xffff)
+        return 0;
+    int slot = g_padlayout_n;
+    for (int i = 0; i < g_padlayout_n; ++i)
+        if (g_padlayouts[i].vid == layout->vid && g_padlayouts[i].pid == layout->pid)
+            slot = i;
+    if (slot >= HOST_PAD_LAYOUT_MAX) {
+        fprintf(stderr, "[settings] PadLayouts is full (%d pads); the layout "
+                        "is set for this run only\n", HOST_PAD_LAYOUT_MAX);
+        return 0;
+    }
+    /* clamp through the same table the parser uses, so what the file gets
+       is what a reader will accept */
+    HostPadLayout o = *layout;
+    HostPadLayout d;
+    padlayout_default(&d);
+    for (int f = 0; f < 22; ++f) {
+        const int v = o.*PAD_FIELDS[f].f;
+        const int is_sign = PAD_FIELDS[f].lo == -1 && PAD_FIELDS[f].hi == 1;
+        if (v < PAD_FIELDS[f].lo || v > PAD_FIELDS[f].hi || (is_sign && v == 0))
+            o.*PAD_FIELDS[f].f = d.*PAD_FIELDS[f].f;
+    }
+    o.name[sizeof o.name - 1] = '\0';
+    g_padlayouts[slot] = o;
+    if (slot == g_padlayout_n) ++g_padlayout_n;
+
+    char *arr = padlayouts_text();
+    if (!arr) return 0;
+    const char *const keys[1] = { "PadLayouts" };
+    const char *const vals[1] = { arr };
+    const int ok = save_keys(keys, vals, 1, "pad layout");
+    free(arr);
+    return ok;
 }
