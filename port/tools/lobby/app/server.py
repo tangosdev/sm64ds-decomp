@@ -464,10 +464,15 @@ REJ_AUTH = 0
 class Member(object):
     __slots__ = ("seat", "token", "nick", "display", "playing", "pre_ok",
                  "armed", "seen", "chat_allowance", "chat_stamp", "last_addr",
-                 "color", "shoes")
+                 "color", "shoes", "v")
 
     def __init__(self, seat, token, nick, playing, pre_ok, now, addr="",
-                 color="", shoes=""):
+                 color="", shoes="", v=1):
+        # The contract version this member joined at. 0.3.2: the dial and the
+        # start both refuse to take a room past four while anyone seated is
+        # below WIDE_MIN_V, because that member's build would be handed a
+        # sixteen-field plan it refuses at spawn and take the match down.
+        self.v = v
         self.seat = seat
         self.token = token
         self.nick = nick            # exactly as sent, never rewritten
@@ -1224,7 +1229,7 @@ def do_create(body, who, now):
     # the session's parent, so a host who is not playing is not a thing any
     # later code has to handle: `apply_dial` refuses to demote seat 1.
     m = Member(1, token, nick, room.match_players >= 1, pre_ok, now, who,
-               color, shoes)
+               color, shoes, request_version(body))
     room.members[1] = m
     room.by_token[token] = 1
     room.host_seat = 1
@@ -1289,7 +1294,7 @@ def do_join(body, who, now):
     # fixed for the whole server.
     playing = room.playing_count() < room.match_players
     room.members[seat] = Member(seat, token, nick, playing, pre_ok, now, who,
-                                color, shoes)
+                                color, shoes, request_version(body))
     room.by_token[token] = seat
     room.refresh_displays()
     room.push("joined", seat=seat, display=room.members[seat].display)
@@ -1421,6 +1426,13 @@ def do_params(body, who, now):
     # it had rather than being reset by an old launcher's ordinary settings
     # edit. That is the whole of the "0.3.0 is unaffected" story on this verb.
     if match_players is not None:
+        # 0.3.2: the door check in do_join is join-time only. A v2 client
+        # seated in a four-wide room, followed by a v3 host dialing it to
+        # eight, would be the same failure one verb later -- so the dial is
+        # refused while anyone seated cannot play the width asked for.
+        if match_players > NARROW_PLAYERS and any(
+                m.v < WIDE_MIN_V for m in room.members.values()):
+            return 409, {"error": "seated_client_too_old"}
         room.match_players = match_players
         room.apply_dial()
     # `match_players` rides the event as well as the view. Older launchers
@@ -1762,6 +1774,11 @@ def do_start(body, who, now):
     ps = playing_seats(room)
     if len(ps) < 2:
         return 409, {"error": "not_enough_players"}
+    # 0.3.2: belt and braces over do_params -- no wide start with an old
+    # client seated, whatever path got the room here.
+    if room.match_players > NARROW_PLAYERS and any(
+            m.v < WIDE_MIN_V for m in room.members.values()):
+        return 409, {"error": "seated_client_too_old"}
     if any(not room.members[s].pre_ok for s in ps):
         return 409, {"error": "member_not_ready"}
 

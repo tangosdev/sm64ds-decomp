@@ -59,15 +59,15 @@ COMM(".dsstate$camrec0004", data_020a1166, 0x12);
 COMM(".dsstate$camrec0005", data_020a1178, 4);
 COMM(".dsstate$camrec0006", data_020a117c, 0x24);
 COMM(".dsstate$camrec0007", data_020a11a0, 0x24);
-COMM(".dsstate$camrec0008", data_020a11c4, 0x20);
+COMM(".dsstate$camrec0008", data_020a11c4, 0x20 + 12 * 0x24);   /* 0.3.2: the run is sixteen records, as in hal/camera_bridges.cpp; the seam clears 4..15 at open */
 #undef COMM
 
 extern "C" {
 // TouchInfo[4] (4-byte records) and PadData[4] (stride 4). In the shipped
 // binaries hal/auto_bss.cpp hosts data_020a0de8 as four ROM-spaced slots and
 // data_020a0e58 as int[8].
-unsigned char data_020a0de8[16];
-int data_020a0e58[8];
+unsigned char data_020a0de8[kCommsMaxPlayers * 4];   /* 0.3.2: sixteen, as hal/auto_bss.cpp */
+int data_020a0e58[kCommsMaxPlayers];
 // The comms ROLE byte. hal/stage_slot0.cpp hosts it in the shipped binaries.
 unsigned char data_020a0f04[4];
 
@@ -199,7 +199,10 @@ int main() {
 
         std::printf("   local {x=%u y=%u touch=%u key=%04x} ->\n",
                     p.x, p.y, p.touch, p.key);
-        for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        /* The solo cascade is the ROM's and fills FOUR records; slots
+           4..15 exist in the host run (sixteen since 0.3.2) and stay zero
+           here, so the probe reads the four the cascade wrote. */
+        for (int i = 0; i < kCommsNarrowPlayers; ++i) {
             const unsigned char *rec = data_020a1154 + i * 0x24;
             const unsigned char *ti = data_020a0de8 + i * 4;
             const unsigned held = (unsigned)(data_020a0e58[i] & 0xFFFF);

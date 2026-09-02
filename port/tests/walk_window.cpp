@@ -8430,7 +8430,13 @@ int main(void)
                 const char *q = (const char *)data_0209f498;
                 int np = (int)data_0209f21c;
                 if (np < 1) np = 1;
-                if (np > 4) np = 4;
+                /* 0.3.2: sixteen. The five split arrays this fans into
+                   (hal/actor_vtables.cpp f49c/f49e/f4a0/f4ac/f4ae, and
+                   auto_bss.cpp's f4a2/f4a4/f4a6) are all 0x18 * kPortMaxPlayers
+                   now; the old cap at four was what kept slots 4..15 motionless
+                   in a wide match -- their records arrived and were never
+                   fanned out, so every peer agreed they stood still. */
+                if (np > kPortMaxPlayers) np = kPortMaxPlayers;
                 for (int pi = 0; pi < np; ++pi) {
                     const char *r = q + pi * 0x18;
                     const int o = pi * 0x18;

@@ -455,9 +455,15 @@ def selftest_dial(c):
     status, body = c.post("params", dict(base, v=1))
     check("a v1 params is answered at v1", status == 200 and body.get("v") == 1,
           (status, body))
-    status, body = c.post("params", dict(base, v=2, match_players=dial_max))
+    status, body = c.post("params", dict(base, v=2,
+                                          match_players=min(dial_max, 4)))
     check("a v2 params carrying the dial is answered at v2",
           status == 200 and body.get("v") == 2, (status, body))
+    if dial_max > 4:
+        expect("a v2 dial past four is refused even where the deployment "
+               "allows it (contract v3 owns the wide range)",
+               c.post("params", dict(base, v=2, match_players=5)),
+               400, "bad_match_players")
 
     expect("the dial at v1 is bad_field, as strict as an undefined field",
            c.post("params", dict(base, v=1, match_players=2)),
@@ -467,7 +473,7 @@ def selftest_dial(c):
     # 16, and the server refuses every value the deployment cannot run.
     refused = []
     for n in range(2, 17):
-        status, body = c.post("params", dict(base, v=2, match_players=n))
+        status, body = c.post("params", dict(base, v=3, match_players=n))
         if n <= dial_max:
             check("dial %d accepted" % n, status == 200, (status, body))
         else:

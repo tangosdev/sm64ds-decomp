@@ -161,6 +161,7 @@
  */
 
 #include "editor_channel.h"
+#include "vs_width.h"   /* 0.3.2: the port's player width */
 
 #ifdef _WIN32
 
@@ -594,10 +595,9 @@ void exec_objrespawn(const Cmd &c)
        rewrite it), so the "same param" this verb promises cannot be honoured;
        and killing the Player out from under the camera and the controller is
        not an edit, it is a crash with extra steps. data_0209f394 is the
-       per-slot Player pointer array, declared int[8] in hal/cxxname_bridge.cpp
-       with at most kCommsMaxPlayers = 4 slots used, so this walk is in
-       bounds. */
-    for (int s = 0; s < 4; ++s) {
+       per-slot Player pointer array, sixteen wide since 0.3.2
+       (hal/cxxname_bridge.cpp), so this walk is in bounds. */
+    for (int s = 0; s < kPortMaxPlayers; ++s) {   /* 0.3.2: sixteen slots */
         if (data_0209f394[s] == (void *)o) {
             push_reply("err that is a player, not scenery\n");
             return;
@@ -758,7 +758,7 @@ void exec_objkill(const Cmd &c)
         return;
     }
     char *o = (char *)a;
-    for (int s = 0; s < 4; ++s) {
+    for (int s = 0; s < kPortMaxPlayers; ++s) {   /* 0.3.2: sixteen slots */
         if (data_0209f394[s] == (void *)o) {
             push_reply("err that is a player, not scenery\n");
             return;

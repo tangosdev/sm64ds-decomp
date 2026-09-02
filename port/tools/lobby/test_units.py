@@ -1126,7 +1126,9 @@ def test_opacity():
               "seat", "token", "nick", "display", "playing", "pre_ok", "armed",
               "seen", "chat_allowance", "chat_stamp", "last_addr",
               # v2: the two colours this player picked.
-              "color", "shoes"},
+              "color", "shoes",
+              # 0.3.2: the contract version this member joined at.
+              "v"},
           Member_fields(room.members[1]))
     check("the only client address kept is the one a kick needs, and it never "
           "reaches a client",
@@ -2108,6 +2110,44 @@ def test_colors():
 
 
 
+def test_the_dial_cannot_widen_over_a_seated_old_client():
+    """0.3.2. The join-time gate answers 'can this client enter a wide room';
+    this one answers the other order: the old client is already in a narrow
+    room and the host then turns the dial. Same failure, one verb later, and
+    the same refusal, given to the host who can act on it."""
+    print("-- the dial refuses to widen a room over a seated v2 client")
+    reset()
+    with game_max(16, seats=16):
+        st, h = S.do_create({"v": 3, "nick": "new", "pre_ok": True},
+                             "10.0.0.1", 1000.0)
+        code, token = h["room"], h["token"]
+        st, out = S.do_params({"v": 3, "room": code, "token": token, "map": 0,
+                               "win_mode": "time", "match_players": 4},
+                              "10.0.0.1", 1000.5)
+        check("the v3 host dials the room down to four first", st == 200, (st, out))
+        st, out = S.do_join({"v": 2, "room": code, "nick": "old",
+                             "pre_ok": True}, "10.0.0.2", 1000.0)
+        check("a v2 client joins the four-wide room", st == 200, (st, out))
+        old_token = out["token"]
+        base = {"v": 3, "room": code, "token": token, "map": 0,
+                "win_mode": "time"}
+        st, out = S.do_params(dict(base, match_players=8), "10.0.0.1", 1001.0)
+        check("dialing it to eight is refused seated_client_too_old",
+              st == 409 and out["error"] == "seated_client_too_old", (st, out))
+        check("and the room is still four wide",
+              S.ROOMS[code].match_players == 4, S.ROOMS[code].match_players)
+        st, out = S.do_params(dict(base, match_players=3), "10.0.0.1", 1002.0)
+        check("dialing within four is still fine", st == 200, (st, out))
+        st, out = S.do_leave({"v": 2, "room": code, "token": old_token},
+                             "10.0.0.2", 1003.0)
+        st, out = S.do_join({"v": 3, "room": code, "nick": "new2",
+                             "pre_ok": True}, "10.0.0.3", 1004.0)
+        check("a v3 client joins in its place", st == 200, (st, out))
+        st, out = S.do_params(dict(base, match_players=8), "10.0.0.1", 1005.0)
+        check("and now the dial opens to eight", st == 200 and
+              S.ROOMS[code].match_players == 8, (st, out))
+
+
 def test_wide_is_v3_only():
     """run vs16. Above four players the game speaks a different wire and the
     two name/colour strings carry sixteen fields, so the RANGE the dial may
@@ -2116,7 +2156,11 @@ def test_wide_is_v3_only():
     print("\n-- five players and up need v3, and the shape follows the dial")
     reset()
     with game_max(16, seats=16):
-        st, host = create()
+        # 0.3.2: the host is seated at the version it created with, and a
+        # wide dial is refused while anyone seated is below v3 -- so a host
+        # that will dial at v3 creates at v3, as a real v3 launcher does.
+        st, host = S.do_create({"v": 3, "nick": "h", "pre_ok": True},
+                               "10.0.0.1", 1000.0)
         code, token = host["room"], host["token"]
 
         # A v2 caller may still dial anything up to four.
@@ -2289,6 +2333,7 @@ def main():
     test_dial_range_is_server_enforced()
     test_dial_is_v2_only()
     test_wide_is_v3_only()
+    test_the_dial_cannot_widen_over_a_seated_old_client()
     test_name_and_colour_shapes_move_together()
     test_a_room_is_never_wider_than_its_host_can_drive()
     test_every_versioned_field_is_gated()

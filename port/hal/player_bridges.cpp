@@ -5,6 +5,7 @@
 // Same hop as gate 9 (cxxname_bridge.cpp), split into its own TU because
 // Player.h drags a wider include surface than the gate-9 file wants.
 #include <cmath>
+#include "vs_width.h"   /* 0.3.2: the port's player width */
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -616,7 +617,7 @@ void hal_render_player_world(void *player)
      * applied has to be applied here or it is not applied anywhere. */
     {
         const unsigned char no = *(const unsigned char *)(c + 0x6d8);
-        if (data_0209f2d8 == 1 && no < 4 && data_0209fc5c[no] == 0)
+        if (data_0209f2d8 == 1 && no < kPortMaxPlayers && data_0209fc5c[no] == 0)   /* 0.3.2: sixteen */
             return;
         /* THROUGH THE ACCESSOR, and this line is why the accessor block
            exists. It read 0x6a6 as a raw offset -- mStateWaitTimer, not

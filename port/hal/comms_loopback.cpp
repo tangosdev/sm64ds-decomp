@@ -610,6 +610,13 @@ unsigned g_live       = 0;           // bit k set when slot k is live
 int g_want_players = 0;
 
 inline bool wire_wide() { return g_want_players > kCommsNarrowPlayers; }
+// THE SLOT CAP FOLLOWS THE WIRE. A narrow datagram carries four blocks and an
+// eight-bit live byte, so a narrow session must not admit, bind or pin a slot
+// past 3: an admitted slot 4 would be counted live, have its `have` bit set,
+// and have its block truncated off every 0x90-byte datagram -- a peer that
+// pairs, seats a body, and never moves, with nothing in either log saying
+// why. Every admission site below asks this instead of kCommsMaxPlayers.
+inline int slot_cap() { return wire_wide() ? (int)kCommsMaxPlayers : (int)kCommsNarrowPlayers; }
 inline unsigned char wire_version() {
     return wire_wide() ? kWireVersionWide : kWireVersionNarrow;
 }
@@ -1121,7 +1128,7 @@ void announce_roster() {
 int classify_sender(const sockaddr_in &from, int claimed, bool learn_ok) {
     if (g_net_mode == kNetRelay) {
         if (!same_addr(from, g_relay_addr)) return -1;
-        if (claimed < 0 || claimed >= kCommsMaxPlayers) return -1;
+        if (claimed < 0 || claimed >= slot_cap()) return -1;
         return claimed;
     }
 
@@ -1132,10 +1139,10 @@ int classify_sender(const sockaddr_in &from, int claimed, bool learn_ok) {
         // A new child. It PROPOSES a slot and the parent is the authority:
         // take the proposal when it is free, otherwise hand out the lowest
         // free one. The assignment travels back in the ACCEPT.
-        int want = (claimed >= 1 && claimed < kCommsMaxPlayers) ? claimed : 1;
+        int want = (claimed >= 1 && claimed < slot_cap()) ? claimed : 1;
         if (g_peer_known[want]) {
             want = -1;
-            for (int k = 1; k < kCommsMaxPlayers; ++k)
+            for (int k = 1; k < slot_cap(); ++k)
                 if (!g_peer_known[k]) { want = k; break; }
             if (want < 0) return -1;              // session full
         }
@@ -1148,7 +1155,7 @@ int classify_sender(const sockaddr_in &from, int claimed, bool learn_ok) {
     }
 
     // kNetLoopback: the slot is the port.
-    if (claimed < 0 || claimed >= kCommsMaxPlayers) return -1;
+    if (claimed < 0 || claimed >= slot_cap()) return -1;
     if (ntoh16(from.sin_port) != (unsigned short)(g_port_base + claimed))
         return -1;
     return claimed;
@@ -2042,7 +2049,7 @@ void lb_open(unsigned mode) {
     int first = 0, last = 0;
     if (g_role == kRoleParent)      { first = 0; last = 0; }
     else if (g_pinned >= 0)         { first = g_pinned; last = g_pinned; }
-    else                            { first = 1; last = kCommsMaxPlayers - 1; }
+    else                            { first = 1; last = slot_cap() - 1; }
 
     int bound = -1;
     for (int k = first; k <= last; ++k) {
@@ -2931,10 +2938,10 @@ bool comms_loopback_install_from_env() {
             std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_SLOT is a "
                          "child knob; ignored for the parent, which is always "
                          "slot 0\n");
-        else if (v >= 1 && v < kCommsMaxPlayers) g_pinned = v;
+        else if (v >= 1 && v < slot_cap()) g_pinned = v;
         else std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_SLOT=%s out "
                           "of range 1..%d; claiming the first free slot "
-                          "instead\n", s, kCommsMaxPlayers - 1);
+                          "instead\n", s, slot_cap() - 1);
     }
 
     if (!comms_set_transport(&kLoopback)) return false;
