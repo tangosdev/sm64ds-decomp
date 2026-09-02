@@ -404,6 +404,20 @@ the CAMERA/HUD/MINIMAP trio the boot always makes is in both.
   maps 1 and 3. If the reported match was on map 1 or map 3, "no cap blocks" is
   the cartridge's own answer.
 
+## Battery
+
+`python port/tools/battery.py`, this tree, this build: **ALL GREEN**, rc 0, zero
+FAIL lines. Every scene selftest ok, the default boot reaches the title clean,
+`linkage: 9139 (80.7%)`, `ptr_audit: 0 unhosted code pointers`, and the shipping
+configuration builds and selftests clean. The two skips are the standing ones and
+are not this lane's: level 27 without TTC_MOVING_BEAM and level 45 without
+GOOMBOSS, both because the decomp has no matched body yet.
+
+Nothing in `src/`, `port/hal/` or `port/tests/` was touched on this branch, so
+the battery is a regression check on the two new tools and the status document
+rather than on a behaviour change. It is recorded because a lane that reports "no
+change was owed" has to show that it also broke nothing.
+
 ## Gaps and debts, stated rather than closed
 
 1. **The CAPs and blocks are alive but this lane did not LOOK at them.** Every
