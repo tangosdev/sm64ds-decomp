@@ -259,11 +259,13 @@ static void m43_mul(const int *a, const int *b, int *out)
    ROM's own base Model::Render, and leaving every other head on the neck-bone
    compose, is the fix.
 
-   SCOPE: this draws Yoshi's HEAD in the right place every frame. It does not on
-   its own make the tongue reach: the head ModelAnim's currFrame does not advance
-   in the port (St_YoshiPower_Main's Animation::Advance on +0x160 leaves it at 0
-   here), so the mouth/tongue animation stays at frame 0. Extending the tongue is
-   a separate open gap (the head anim never being advanced/posed), not this fork. */
+   SCOPE: this draws Yoshi's HEAD in the right place every frame, and the hid==3
+   arm below now also POSES it. The head ModelAnim's currFrame used to stay at 0
+   in the port (St_YoshiPower_Main's advance on +0x160 and Player_AdvanceAnims's
+   UpdateVerts do not reach the head here), so the head mesh was frozen at the
+   frame-0 bind pose and sank into the body on a long fall. The hid==3 arm now
+   advances the head's jaw/tongue Animation on +0x160 and UpdateVerts's the head
+   before rendering it, the same pose-then-draw the body gets at :~703. */
 static void hal_render_head_group(char *c, char *head, unsigned hid,
                                   ModelAnim *ma, const int *scene)
 {
@@ -273,7 +275,20 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
            ROM's i==3 arm. Base, not the object's own slot 4: index 3 is a
            ModelAnim, whose virtual Render would re-run UpdateVerts, and the ROM
            calls Model::Render directly to render the head at the pose the anim
-           system already produced. */
+           system ALREADY PRODUCED.
+
+           On the ROM that pose is produced during the tick: St_YoshiPower_Main
+           advances the head anim on +0x160 and Player_AdvanceAnims UpdateVerts's
+           it, so by render time the head mesh is already at the current frame.
+           In this port neither reaches the head (the head model at +0x160 is the
+           same pointer as head here), so the head sat frozen at the frame-0 bind
+           pose and sank into the body on a long fall. Produce the pose here, at
+           render time, the same two steps the body gets at :~703: advance the
+           head's own jaw/tongue Animation at head+0x50 (St_YoshiPower_Main's
+           +0x160 advance), then ModelAnim::UpdateVerts to sample the frame into
+           the mesh, BEFORE the base Model::Render draws it at the seated matrix. */
+        ((Animation *)(head + 0x50))->Animation::Advance();
+        ((ModelAnim *)head)->ModelAnim::UpdateVerts();
         _ZN5Model6RenderEPK7Vector3(head, c + 0x80);
         return;
     }
@@ -573,6 +588,40 @@ static void vscol_probe(char *c, int frame, std::size_t tris_before)
         vscol_model("head", frame, no, ((char **)(c + 0x154))[hid]);
 }
 
+/* run mg16 lane MP3: the "should this player body be hidden this frame" test,
+   lifted out of hal_render_player_world so a later adventure ghost-hide path can
+   ask the SAME question instead of duplicating Player::Render's gates. Nonzero
+   means the ROM's Player::Render (src/_ZN6Player6RenderEv.cpp:44-58) would not
+   draw the body this frame, in its own gate order:
+     :44-48  VS mode and this slot not live       -> hide
+     :49-55  the invincibility blink               -> hide (see the bit note)
+     :56     fully transparent, mOpacity==0 (0x6f5) -> hide
+     :58     held/eaten, mFlags & 0x10 (Actor +0xb0)-> ROM skips the body block
+   Gates :56 and :58 were the two this port used to omit. The mFlags one is the
+   ROM's held/eaten hide, and the eaten victim is exactly why it matters: while
+   St_InYoshiMouth the player stays LIVE and keeps mOpacity 0x1f, so it passes
+   gates 1-3 and rode the eater visibly until mFlags&0x10 got honoured here. */
+extern "C" int port_player_render_hidden(const void *player)
+{
+    const char *c = (const char *)player;
+    const unsigned char no = *(const unsigned char *)(c + 0x6d8);
+    /* :44-48  VS liveness (0.3.2: kPortMaxPlayers is sixteen) */
+    if (data_0209f2d8 == 1 && no < kPortMaxPlayers && data_0209fc5c[no] == 0)
+        return 1;
+    /* :49-55  blink. The ROM picks bit 1 or bit 0 off IsState(hurt); that state
+       object is ov002's and unreachable here, so the port takes the conservative
+       half, bit 0, the arm the ROM uses everywhere except that one state. */
+    if (port::player::invincible_timer(c) & 1)
+        return 1;
+    /* :56  mOpacity == 0, offset 0x6f5 (Player.h). */
+    if (*(const unsigned char *)(c + 0x6f5) == 0)
+        return 1;
+    /* :58  mFlags & 0x10, Actor mFlags at +0xb0. The ROM's held/eaten hide. */
+    if (*(const unsigned int *)(c + 0xb0) & 0x10)
+        return 1;
+    return 0;
+}
+
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
@@ -596,15 +645,12 @@ void hal_render_player_world(void *player)
      * whether a player should be drawn AT ALL -- and a caster whose body is
      * gated out is precisely "a shadow with no body".
      *
-     * The four gates, in the ROM's own order (_ZN6Player6RenderEv.cpp:44-58):
+     * The four gates, in the ROM's own order (_ZN6Player6RenderEv.cpp:44-58),
+     * all four now reproduced through port_player_render_hidden:
      *   VS mode and this slot not live  -> not drawn
      *   the invincibility blink          -> not drawn on alternating frames
-     *   fully transparent                -> not drawn  (NOT reproduced here,
-     *                                       see the note at the gate: the
-     *                                       field offset is unconfirmed and a
-     *                                       guessed offset is worse than a
-     *                                       named gap)
-     *   mFlags & 0x10                    -> the ROM skips the body block
+     *   fully transparent, mOpacity==0   -> not drawn  (offset 0x6f5, Player.h)
+     *   mFlags & 0x10                    -> not drawn  (Actor +0xb0, held/eaten)
      *
      * The blink one matters most here: it is a PER-FRAME alternation, so a
      * body that ignores it while its shadow does not gives a shadow that
@@ -615,28 +661,23 @@ void hal_render_player_world(void *player)
      * Player::Render's vtable slot is a no-op in this port
      * (hal/level_boot.cpp's ps_render), so every gate that slot would have
      * applied has to be applied here or it is not applied anywhere. */
-    {
-        const unsigned char no = *(const unsigned char *)(c + 0x6d8);
-        if (data_0209f2d8 == 1 && no < kPortMaxPlayers && data_0209fc5c[no] == 0)   /* 0.3.2: sixteen */
-            return;
-        /* THROUGH THE ACCESSOR, and this line is why the accessor block
-           exists. It read 0x6a6 as a raw offset -- mStateWaitTimer, not
-           mInvincibleTimer -- so the blink gate was culling the body on a
-           timer that ticks constantly. One named constant, one place to fix,
-           and the raw offset that hid the bug is gone. */
-        const unsigned short inv = port::player::invincible_timer(c);
-        /* The ROM picks bit 1 or bit 0 off Player::IsState(the hurt state).
-           That state object is ov002's and is not reachable from here, so the
-           port takes the conservative half: blink on bit 0, which is the arm
-           the ROM uses everywhere except that one state. Stated rather than
-           silently simplified. */
-        if (inv & 1)
-            return;
-        /* mOpacity's offset is NOT confirmed from the header here, so the
-           ROM's `if (mOpacity == 0) return` gate is deliberately NOT
-           reproduced rather than guessed at an offset. Named so the gap is
-           visible: a fully transparent player would still have its body
-           drawn by this function. */
+    /* ALL FOUR gates now, through the one named predicate so the adventure
+       ghost-hide path can reuse it. The blink gate reads the invincibility
+       timer THROUGH THE ACCESSOR: the raw path here once read 0x6a6, which is
+       mStateWaitTimer not mInvincibleTimer, so it culled the body on a timer
+       that ticks constantly; the accessor is the one place that offset lives.
+       mOpacity (0x6f5) and mFlags&0x10 (+0xb0) used to be omitted here and are
+       reproduced inside the predicate now. */
+    if (port_player_render_hidden(c)) {
+        /* SM64DS_EATEN_PROBE: prove the held/eaten hide fires. On the green
+           path this is silent; set the env var to log the slot whose body is
+           now skipped because Actor mFlags&0x10 is set (the St_InYoshiMouth
+           victim that used to ride the eater). */
+        if (getenv("SM64DS_EATEN_PROBE") &&
+            (*(const unsigned int *)(c + 0xb0) & 0x10))
+            std::fprintf(stderr, "[eaten] slot %u body skipped: mFlags&0x10\n",
+                         (unsigned)*(const unsigned char *)(c + 0x6d8));
+        return;
     }
 
     unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
