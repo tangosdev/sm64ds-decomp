@@ -84,6 +84,7 @@ struct Player {
     int IsState(::State &s);
     int IsState(State &s);
     void SetAnim(unsigned a, int b, int f, unsigned d);
+    void Hurt(const Vector3 &, unsigned, int, unsigned, unsigned, unsigned);
 };
 int Player::ChangeState(::State &s)
 { return _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
@@ -97,6 +98,20 @@ extern "C" int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned, int, int,
                                                unsigned);
 void Player::SetAnim(unsigned a, int b, int f, unsigned d)
 { _ZN6Player7SetAnimEji5Fix12IiEj(this, a, b, f, d); }
+
+/* Player::Hurt: the receiver face for the intro knockback command
+   (src/func_ov002_020bd250.cpp reaches it through a local shadow class, so
+   MSVC mangles ?Hurt@Player@@QAEXABUVector3@@IHIII@Z, a thiscall member with
+   `this` in ecx). The one real definition carries the Itanium C name with C
+   linkage, self as its first stack argument. */
+extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self,
+                                                       const void *src,
+                                                       unsigned a, int b,
+                                                       unsigned c, unsigned d,
+                                                       unsigned e);
+void Player::Hurt(const Vector3 &v, unsigned a, int b, unsigned c, unsigned d,
+                  unsigned e)
+{ _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(this, &v, a, b, c, d, e); }
 
 /* ClsnResult::GetClsnID is the MATCHED body now (run linkw wave 3, w3-a).
    src/_ZNK10ClsnResult9GetClsnIDEv.cpp declares it `u32`, and MSVC puts the

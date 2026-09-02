@@ -3646,23 +3646,24 @@ list(APPEND SLICEINTRO_SOURCES
 # convention moves with the index: what is seated there is __fastcall.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_ModelAnimD0_020f6778.cpp")
-# Cutscene-object command 4, the character voice. hal/intro_kuppa_dispatch.cpp
-# trapped it as "needs Sound::PlayCharVoice (unhosted)"; the running chain
-# reached it and the trap said so, which is what the trap was left loud for. The
-# premise was stale -- Sound::PlayCharVoice is in this binary already
-# (slice_gate10.txt:1225, called twice by unmatched/Player_Behavior.cpp) -- so
-# this hosts the command and drags in nothing. A host copy only because the
-# matched TU declares its callee inside `namespace Sound`, whose MSVC mangling
-# has no alias in hal/cxx_aliases.cpp.
+# Cutscene-object command 4, the character voice. The matched TU declares its
+# callee inside `namespace Sound`, which MSVC mangles YA as
+# ?PlayCharVoice@Sound@@YAXIIABUVector3@@@Z while the one real definition carries
+# the Itanium C name (Sound::PlayCharVoice is in this binary already,
+# slice_gate10.txt:1225). WIRED as a faithful seam: hal/cxx_aliases.cpp now
+# carries the /alternatename for that mangling, so the matched TU links behind
+# it; the Ov002_KuppaCmd_020bd480.cpp host copy is retired.
 list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd480.cpp")
-# And command 9, the knockback, for the same reason on the next run: the trap
-# fired, and Player::Hurt / Vec3_RotateYAndTranslate / Particle::System::
-# NewSimple are all already in this binary too. A host copy because the matched
-# TU reaches Hurt through a local shadow CLASS, which makes MSVC mangle it as a
-# thiscall member and ride `this` in ecx.
+     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020bd480.cpp")
+# And command 9, the knockback. The matched TU reaches Player::Hurt through a
+# local shadow CLASS, so MSVC mangles it thiscall (?Hurt@Player@@QAEX..., `this`
+# in ecx) while the real body carries the Itanium C name with self on the stack.
+# WIRED as a faithful seam: hal/reverse_bridges.cpp now carries the Player::Hurt
+# receiver face (Particle::System::NewSimple's static mangle already had its
+# alias in cxx_aliases.cpp), so the matched TU links behind it; the
+# Ov002_KuppaCmd_020bd250.cpp host copy is retired.
 list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd250.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020bd250.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)

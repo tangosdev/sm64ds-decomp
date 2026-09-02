@@ -211,3 +211,51 @@ Verification: build exit 0; guards + dsstate + inferred_stub + closestplayer
 green; linkage 9245 -> 9246 (+1), SHADOWS 148 -> 147, `func_ov002_020ef670` out
 of the queue and in `walk_window.map`; `git diff --stat d63b92a09 -- src/`
 empty; all 20 smokes pass.
+
+Commit `7cbdb9e0c`.
+
+## 7. Three SEAMS -- kept as faithful host seams and wired
+
+These are NOT plain retirements: each callee is reached through a spelling MSVC
+mangles differently from the one real C-name definition, so the faithful host
+seam is a link alias or a receiver face, kept and wired, with the matched CALLER
+TU enrolled behind it. Exact mangled names were read off `cl /c` + `dumpbin
+/symbols` of each matched TU, not guessed.
+
+**Sound::PlayCharVoice alias.** `src/func_ov002_020bd480.cpp` (intro voice
+command) declares its callee `namespace Sound { void PlayCharVoice(...); }`,
+which MSVC mangles YA as `?PlayCharVoice@Sound@@YAXIIABUVector3@@@Z` while the
+real body carries the Itanium C name. Same three-argument cdecl shape, so a link
+alias bridges it: added `/alternatename:?PlayCharVoice@Sound@@YAXIIABUVector3@@@Z
+=__ZN5Sound13PlayCharVoiceEjjRK7Vector3` to `hal/cxx_aliases.cpp` (next to the
+PlayBank0 precedent). Enrolled the matched caller in SLICEINTRO_SOURCES, retired
+`unmatched/Ov002_KuppaCmd_020bd480.cpp`.
+
+**Player::Hurt face.** `src/func_ov002_020bd250.cpp` (intro knockback command)
+reaches Player::Hurt through a local shadow CLASS, so MSVC mangles it thiscall
+`?Hurt@Player@@QAEXABUVector3@@IHIII@Z` (`this` in ecx); an alias cannot bridge
+thiscall to the cdecl C name, so a receiver face is required. Added
+`Player::Hurt` to the existing Player shadow in `hal/reverse_bridges.cpp`,
+forwarding to `_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(this, &v, ...)`. Its other
+shadow callee, `Particle::System::NewSimple` (a static, cdecl), already had its
+alias in `hal/cxx_aliases.cpp:648`, so nothing new was needed for it. Enrolled
+the matched caller, retired `unmatched/Ov002_KuppaCmd_020bd250.cpp`.
+
+**Player::BlowAway face -- KEPT as the host seam, could not be wired to a linked
+method.** `unmatched/Player_BlowAway.cpp` transcribes the ROM body because the
+matched TU `src/_ZN6Player8BlowAwayEs.cpp` DOES NOT COMPILE in this tree: it
+reads `mPrevAngleY`/`mAngleY`, and `include/Player.h` declares neither (it
+duplicates Actor's layout inline and stops at 0x69c; the two angle fields live
+in `include/Actor.h` at 0x08e/0x094). That is a decomp-side header gap, and this
+lane does not edit `src/` or the shared headers, so the matched TU cannot be
+enrolled and no linked-method face is possible. The host copy stays as the
+faithful transcribed seam (its cdecl C name `_ZN6Player8BlowAwayEs` is exactly
+what the ov027 SnowmanBreath caller wants), which is the correct outcome for
+"keep as a faithful host seam". Recorded here rather than forced.
+
+Verification (PlayCharVoice + Hurt): build exit 0; guards + dsstate +
+inferred_stub + closestplayer green; linkage 9246 -> 9248 (+2), both matched
+callers `func_ov002_020bd480`/`func_ov002_020bd250` out of the SHADOW queue and
+in `walk_window.map`, the PlayCharVoice MSVC mangle and the Hurt receiver face
+both present in the map; `git diff --stat d63b92a09 -- src/` empty; all 20
+smokes pass.
