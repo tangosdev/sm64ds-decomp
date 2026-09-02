@@ -410,7 +410,9 @@ The three reports resolve as:
 ## Battery
 
 `python port/tools/battery.py`, this tree, this build: **ALL GREEN**, rc 0, zero
-FAIL lines. Every scene selftest ok, the default boot reaches the title clean,
+FAIL lines -- run twice, once on the census/proof build and again after the two
+probe changes at the end of this file, green both times. The census re-ran PASS
+and the map 2 four-window proof re-ran ALL GREEN on the second binary. Every scene selftest ok, the default boot reaches the title clean,
 `linkage: 9139 (80.7%)`, `ptr_audit: 0 unhosted code pointers`, and the shipping
 configuration builds and selftests clean. The two skips are the standing ones and
 are not this lane's: level 27 without TTC_MOVING_BEAM and level 45 without
