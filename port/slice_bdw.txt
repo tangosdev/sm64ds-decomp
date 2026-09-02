@@ -1,0 +1,67 @@
+# run stamp/seat-bdw, lane SEAT-BDW: the rest of Bowser in the Dark World's cast
+# (level 35, ov043), seated per symbol on top of gate 206's DIAMOND_LIFT (135).
+#
+# THREE CLASSES, and the id<->body map is the ov047 / ov036 NAMING SHIFT again:
+# the dsd _ZTV names and the recovered _ZN* body names are attached ONE CLASS
+# OVER from the id whose Spawn actually installs the table. Every row here is
+# pinned by the id's OWN Spawn's final vtable-store relocation, never by a name.
+# Full derivation: port/ov043_syms.txt (cast map + four widths + naming shift)
+# and hal/actor_classes_ov043.cpp's own header. The Spawn-store truth:
+#
+#   id   registry name          factory                    real table   int. base
+#   137  RICKSHAW_BDW           RickshawBdw_Spawn          0x0211238c   ov002 0x02109320
+#   136  RICKSHAW_PLATFORM_BDW  RickshawPlatformBdw_Spawn  0x0211245c   ov002 0x02109278
+#   134  STAIRS_BDW             StairsBdw_Spawn            0x0211255c   ov002 0x02108d94
+#
+# and the RTTI at each table's own vtable[-1]: 137 = 21daObjKm1_Kurumajiku_c,
+# 136 = 17daObjKm1_Kuruma_c, 134 = 17daObjKm1_Dorifu_c. So the class named
+# "RickshawBdw" by dsd (_ZN11RickshawBdw* bodies, _ZTV11RickshawBdw) is id 136;
+# the class named "RickshawPlatformBdw" (_ZN19RickshawPlatformBdw*,
+# _ZTV19RickshawPlatformBdw) is id 134; and id 137, whose factory IS spelled
+# RickshawBdw_Spawn, owns the FOUR guess func_ov043 bodies below and no matched
+# body of its own. This is exactly ov047's 152/151/153 shape (the Bowser-in-the-
+# Sky siblings), and the -D binds in port/CMakeLists.txt mirror ov047 by address.
+#
+# ==== 137 IS NOT SEATED: ITS OWN BODIES ARE INFERRED AND IT CRASHES LIVE =====
+# id 137's vtable 0x0211238c overrides slots 0/3/16/17 with ov043-local bodies
+# func_ov043_021114c4 (InitResources), _021114b0 (CleanupResources),
+# _021113fc (D1), _0211144c (D0). Three carry the inferred-stub marker
+# "recovered from vtable slot identity"; all four are GUESSES with no byte match
+# and are NOT enrolled (inferred_stub_guard stays green).
+#
+# SHIP-GATE, MEASURED: id 137 is PLACED on level 35 (x1) and spawns at boot.
+# With its InitResources trapped (declined), the spawn continuation NULL-derefs
+# (c0000005 at 0, esi=0x89=137) -- a hard fault, NOT a survivable quarantine
+# freeze -- so registering 137 faults BitDW at boot. 137 is therefore left
+# SKIPPED (unregistered), exactly as it was before this lane, until its
+# InitResources gets a real byte match. Its factory RickshawBdw_Spawn and sinit
+# __sinit_ov043_02111868 are NOT enrolled (nothing would reference them, and the
+# ov081 rule keeps an unhosted class's sinit off).
+#
+# ==== SLOTS 6 AND 9 ARE ALREADY-LINKED OV002 BODIES, FACED ==================
+# All three classes inherit Behavior (slot 6) and Render (slot 9) from ov002
+# intermediate bases. Those eight ov002 bodies were pulled into the link by the
+# ov036 cast slice (func_ov002_020b4bfc/_020b4bc4/_020b4b6c/_020b4d58) and the
+# ov047 sweep2 slice (func_ov002_020b6b38/_020b6b10/_020b6920/_020b68f8/
+# _020b6ac8/_020b6c54/_020b68b0/_020b6958). They are NOT enrolled here -- the
+# hal fill declares and faces them, the ov047 treatment.
+#
+# ==== THE MATCHED TUs THIS SLICE ENROLLS ====================================
+# id 136 RICKSHAW_PLATFORM_BDW -- factory + four matched bodies:
+src/RickshawPlatformBdw_Spawn.c
+src/_ZN11RickshawBdw13InitResourcesEv.c
+src/_ZN11RickshawBdw16CleanupResourcesEv.c
+src/_ZN11RickshawBdwD1Ev.c
+src/_ZN11RickshawBdwD0Ev.c
+# id 134 STAIRS_BDW -- factory + four matched bodies (all real names, no -D):
+src/StairsBdw_Spawn.cpp
+src/_ZN19RickshawPlatformBdw13InitResourcesEv.cpp
+src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.cpp
+src/_ZN19RickshawPlatformBdwD1Ev.cpp
+src/_ZN19RickshawPlatformBdwD0Ev.c
+# the two seated classes' file-constructor sinits (135's __sinit_021117fc runs
+# already in gate 206's port_ov43_bringup; 137's __sinit_02111868 stays off).
+# 021118d4 builds 136's pair, 02111940 builds 134's five-stair array (20
+# name-shift -D fixes in port/CMakeLists.txt).
+src/__sinit_ov043_021118d4.c
+src/__sinit_ov043_02111940.c

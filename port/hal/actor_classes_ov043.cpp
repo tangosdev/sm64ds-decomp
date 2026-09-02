@@ -65,6 +65,13 @@ void hal_fill_platform_vtable(void);              /* hal/actor_classes.cpp */
 void port_ov043_pack_check(void);
 void port_ov043_syms_patch(void);
 void __sinit_ov043_021117fc(void);   /* id 135's own two SharedFilePtrs */
+/* lane SEAT-BDW: the file constructors of the two SEATED classes (136, 134),
+   run in the same bring-up (declared here so port_ov43_bringup can call them).
+   id 137's sinit __sinit_ov043_02111868 stays OFF -- 137 is not seated (its
+   InitResources is an inferred wall that hard-crashes level 35 at spawn; the
+   ov081 rule, a sinit for an unhosted class stays off). */
+void __sinit_ov043_021118d4(void);   /* id 136 */
+void __sinit_ov043_02111940(void);   /* id 134 */
 
 /* id 135's own bodies, all matched src on slice_gate206.txt */
 int func_ov043_02111320(void *self);     /* slot 0,  InitResources */
@@ -222,6 +229,14 @@ extern "C" void port_ov43_bringup(void)
     /* the Platform base table the D1/D0 install between member teardowns */
     hal_fill_platform_vtable();
     __sinit_ov043_021117fc();
+    /* lane SEAT-BDW: the file constructors of the two SEATED classes. 136's
+       (021118d4) and 134's (02111940, the five-stair array) feed the
+       InitResources those classes run. DIAMOND_LIFT's "one sinit, not four"
+       note partly discharged: 136 and 134 are hosted so their sinits come on;
+       137's (02111868) stays off because 137 is not seatable (its InitResources
+       is an inferred wall). */
+    __sinit_ov043_021118d4();
+    __sinit_ov043_02111940();
 }
 
 // ---- DIAMOND_LIFT (id 135) -- table 0x021122b8 -----------------------------
@@ -274,5 +289,178 @@ extern "C" void hal_fill_diamond_lift_vtable(void)
     vt[28] = (void *)o43_under;
     vt[29] = (void *)o43_egg;
     vt[30] = (void *)o43_trap30;
+    vt[31] = (void *)o43_kill;
+}
+
+// ============================================================================
+// lane SEAT-BDW: the rest of ov043's cast -- RICKSHAW_BDW (137),
+// RICKSHAW_PLATFORM_BDW (136), STAIRS_BDW (134). Bowser in the Dark World,
+// level 35. Seated on top of DIAMOND_LIFT (135) above, the ov047 152/151/153
+// shape applied to the Bowser-in-the-Dark-World siblings.
+//
+// THE ID<->BODY MAP IS THE NAMING SHIFT (port/ov043_syms.txt): each id is
+// pinned by its OWN Spawn's final vtable store, never by a name. dsd's
+// _ZTV11RickshawBdw / _ZN11RickshawBdw* are id 136's; _ZTV19RickshawPlatformBdw
+// / _ZN19RickshawPlatformBdw* are id 134's; and RickshawBdw_Spawn is id 137's.
+//
+// ONLY 136 AND 134 ARE SEATED. id 137 (RICKSHAW_BDW) is NOT: its four own
+// bodies are GUESS func_ov043 TUs (inferred stubs), so its InitResources has no
+// matched body. 137 is placed on level 35 and spawns at boot, and a half-built
+// 137 (InitResources declined) NULL-derefs during its own spawn continuation --
+// not a survivable quarantine, a hard c0000005. Registering it faults BitDW, so
+// it stays skipped. SHIP-GATE: 137 needs its InitResources matched before it can
+// be seated. See lane SEAT-BDW's report and port/slice_bdw.txt.
+//
+// SLOTS 6/9 are inherited ov002 bodies already in the link (ov036 + ov047
+// slices); declared and faced here, never re-enrolled. SLOTS 0/3/16/17 are each
+// seated class's own matched bodies.
+extern "C" {
+/* the two seated factories are referenced only by the registry rows in
+   hal/actor_classes.inc (declared there as void*(void) to match the registry
+   field); nothing in this file calls them. */
+
+/* id 136's four matched own bodies (slots 0/3/16/17) */
+int _ZN11RickshawBdw13InitResourcesEv(void *self);      /* slot 0  */
+int _ZN11RickshawBdw16CleanupResourcesEv(void *self);   /* slot 3  */
+int *_ZN11RickshawBdwD1Ev(int *self);                   /* slot 16 */
+int *_ZN11RickshawBdwD0Ev(int *self);                   /* slot 17 */
+
+/* id 134's four matched own bodies (slots 0/3/16/17) */
+int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self);    /* slot 0  */
+int _ZN19RickshawPlatformBdw16CleanupResourcesEv(void *self); /* slot 3  */
+int *_ZN19RickshawPlatformBdwD1Ev(void *self);                /* slot 16 */
+int _ZN19RickshawPlatformBdwD0Ev(void *self);                 /* slot 17 */
+
+/* the four inherited slot 6/9 bodies (for 136 and 134), already linked by the
+   ov036 and ov047 slices -- declared and faced, NEVER enrolled here (a second
+   definition would be a duplicate symbol). */
+int func_ov002_020b6920(void *self);   /* 136 Behavior, ov047 slice */
+int func_ov002_020b68f8(void *self);   /* 136 Render,   ov047 slice */
+int func_ov002_020b4bfc(void *self);   /* 134 Behavior, ov036 slice */
+int func_ov002_020b4bc4(void *self);   /* 134 Render,   ov036 slice */
+
+/* the two seated classes' file-constructor sinits (135's runs already; 137's
+   __sinit_ov043_02111868 stays off, 137 is not seated). */
+void __sinit_ov043_021118d4(void);   /* id 136's Model 1619 + clsn 1620 */
+void __sinit_ov043_02111940(void);   /* id 134's five-stair array (files 1609-1618) */
+
+/* the two host vtables for the seated classes, both excluded from the mount
+   (the four-spans rule in port/CMakeLists.txt). The names are what each class's
+   OWN bodies spell after the per-source -D binds resolve -- dsd's for the
+   ADDRESS, not the class. 137's table 0x0211238c is deliberately NOT hosted:
+   nothing links to it because 137 is not registered. */
+DSSTATE_BEGIN
+int _ZTV11RickshawBdw[32];          /* 0x0211245c, id 136 RICKSHAW_PLATFORM_BDW */
+int _ZTV19RickshawPlatformBdw[32];  /* 0x0211255c, id 134 STAIRS_BDW */
+DSSTATE_END
+}
+
+/* id 134's InitResources/CleanupResources are real C++ methods (spelled
+   RickshawPlatformBdw::), so the Itanium _ZN19RickshawPlatformBdw* symbols the
+   fill wants do not exist -- faced here, the ov047 STAIRS_BS recipe. */
+#include "RickshawPlatformBdw.h"
+extern "C" {
+int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self)
+{ return ((RickshawPlatformBdw *)self)->RickshawPlatformBdw::InitResources(); }
+int _ZN19RickshawPlatformBdw16CleanupResourcesEv(void *self)
+{ return ((RickshawPlatformBdw *)self)->RickshawPlatformBdw::CleanupResources(); }
+}
+
+/* id 134's two //cpp method TUs declare `extern struct Arg data_ov043_02112518;`
+   at file scope OUTSIDE decl_common.h's extern "C" block, so MSVC mangles it
+   with the local struct type. The mount emits one C-named array; bind the
+   mangled spelling onto it -- the ov047 line, read off the linker's own LNK2019
+   hint. The LHS is defined nowhere, so alternatename_guard stays clean. */
+#pragma comment(linker, "/alternatename:?data_ov043_02112518@@3UArg@@A=_data_ov043_02112518")
+
+/* the shared half of a Platform table, exactly DIAMOND_LIFT's 25 non-own slots.
+   Each fill sets its own 0/3/6/9/16/17/31 afterward. */
+static void o43_fill_shared(void **vt)
+{
+    vt[1]  = (void *)o43_binit;
+    vt[2]  = (void *)o43_ainit;
+    vt[4]  = (void *)o43_bclean;
+    vt[5]  = (void *)o43_aclean;
+    vt[7]  = (void *)o43_bbeh;
+    vt[8]  = (void *)o43_abeh;
+    vt[10] = (void *)o43_bren;
+    vt[11] = (void *)o43_aren;
+    vt[12] = (void *)o43_pdes;
+    vt[13] = (void *)o43_trap13;
+    vt[14] = (void *)o43_trap14;
+    vt[15] = (void *)o43_heap;
+    vt[18] = (void *)o43_yoshi;
+    vt[19] = (void *)o43_turn_egg;
+    vt[20] = (void *)o43_v50;
+    vt[21] = (void *)o43_pounded;
+    vt[22] = (void *)o43_atk1;
+    vt[23] = (void *)o43_atk2;
+    vt[24] = (void *)o43_kicked;
+    vt[25] = (void *)o43_pushed;
+    vt[26] = (void *)o43_cannon;
+    vt[27] = (void *)o43_mega;
+    vt[28] = (void *)o43_under;
+    vt[29] = (void *)o43_egg;
+    vt[30] = (void *)o43_trap30;
+}
+
+// id 137 RICKSHAW_BDW is intentionally NOT filled or registered -- see the file
+// header. Its four own bodies are inferred and a live level-35 spawn crashes.
+
+// ---- RICKSHAW_PLATFORM_BDW (id 136) -- table 0x0211245c, matched -----------
+static int __fastcall rpbdw_init(void *s, void *)
+{ return _ZN11RickshawBdw13InitResourcesEv(s); }
+static int __fastcall rpbdw_clean(void *s, void *)
+{ return _ZN11RickshawBdw16CleanupResourcesEv(s); }
+static int __fastcall rpbdw_behavior(void *s, void *)
+{ return func_ov002_020b6920(s); }
+static int __fastcall rpbdw_render(void *s, void *)
+{ port_actor_render_probe("RICKSHAW_PLATFORM_BDW", (char *)s + 0xd4);
+  return func_ov002_020b68f8(s); }
+static int __fastcall rpbdw_d1(void *s, void *)
+{ return (int)(size_t)_ZN11RickshawBdwD1Ev((int *)s); }
+static int __fastcall rpbdw_d0(void *s, void *)
+{ return (int)(size_t)_ZN11RickshawBdwD0Ev((int *)s); }
+
+extern "C" void hal_fill_rickshaw_platform_bdw_vtable(void)
+{
+    port_ov43_bringup();
+    void **vt = (void **)_ZTV11RickshawBdw;
+    o43_fill_shared(vt);
+    vt[0]  = (void *)rpbdw_init;
+    vt[3]  = (void *)rpbdw_clean;
+    vt[6]  = (void *)rpbdw_behavior;
+    vt[9]  = (void *)rpbdw_render;
+    vt[16] = (void *)rpbdw_d1;
+    vt[17] = (void *)rpbdw_d0;
+    vt[31] = (void *)o43_kill;
+}
+
+// ---- STAIRS_BDW (id 134) -- table 0x0211255c, matched ----------------------
+static int __fastcall sbdw_init(void *s, void *)
+{ return _ZN19RickshawPlatformBdw13InitResourcesEv(s); }
+static int __fastcall sbdw_clean(void *s, void *)
+{ return _ZN19RickshawPlatformBdw16CleanupResourcesEv(s); }
+static int __fastcall sbdw_behavior(void *s, void *)
+{ return func_ov002_020b4bfc(s); }
+static int __fastcall sbdw_render(void *s, void *)
+{ port_actor_render_probe("STAIRS_BDW", (char *)s + 0xd4);
+  return func_ov002_020b4bc4(s); }
+static int __fastcall sbdw_d1(void *s, void *)
+{ return (int)(size_t)_ZN19RickshawPlatformBdwD1Ev(s); }
+static int __fastcall sbdw_d0(void *s, void *)
+{ return (int)(size_t)_ZN19RickshawPlatformBdwD0Ev(s); }
+
+extern "C" void hal_fill_stairs_bdw_vtable(void)
+{
+    port_ov43_bringup();
+    void **vt = (void **)_ZTV19RickshawPlatformBdw;
+    o43_fill_shared(vt);
+    vt[0]  = (void *)sbdw_init;
+    vt[3]  = (void *)sbdw_clean;
+    vt[6]  = (void *)sbdw_behavior;
+    vt[9]  = (void *)sbdw_render;
+    vt[16] = (void *)sbdw_d1;
+    vt[17] = (void *)sbdw_d0;
     vt[31] = (void *)o43_kill;
 }

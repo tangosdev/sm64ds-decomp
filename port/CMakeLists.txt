@@ -9029,6 +9029,64 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "VT0=_ZTV19daObjKm1_Ukishima_c;VT1=_ZTV10dBgActor_c")
 
+# ============================================================================
+# lane SEAT-BDW: ov043's remaining cast -- RICKSHAW_BDW (137),
+# RICKSHAW_PLATFORM_BDW (136), STAIRS_BDW (134). The ov047 152/151/153 shape
+# (Bowser in the Sky's identical siblings) applied to ov043, so every -D bind
+# below is the ov047 bind at the matching address. Ids by Spawn-store, not name
+# (the naming shift). See port/slice_bdw.txt and hal/actor_classes_ov043.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bdw.txt" SLICEBDW_LINES)
+set(SLICEBDW_SOURCES "")
+foreach(line IN LISTS SLICEBDW_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEBDW_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# Every bind is settled from the TU's own literal pool in
+# config/arm9/overlays/ov043/relocs.txt. In the two factories the recovered RTTI
+# name means the ov002 INTERMEDIATE base (stored first) and VT1 means the class's
+# OWN table (stored second) -- constructor order. In the destructors the same
+# RTTI name means the OWN table, _ZTV10dBgActor_c the intermediate base and VT2
+# the Platform base 0x0210ae38 (bound to _ZTV8Platform, the identical-fill twin
+# the port keeps at that shape). Left alone the factories install the abstract
+# intermediate last and dispatch InitResources through a ZERO slot 0 -- a null
+# call invisible to the byte gate.
+#
+# id 137 (RICKSHAW_BDW) is NOT enrolled: its four own bodies are inferred guesses
+# and it is not registered (a live level-35 137 NULL-derefs during spawn once its
+# InitResources is declined). Its factory RickshawBdw_Spawn.c and sinit
+# __sinit_ov043_02111868.c are left out of slice_bdw.txt.
+# id 136 (RICKSHAW_PLATFORM_BDW): factory + D1 + D0. Own table 0x0211245c
+# (host array _ZTV11RickshawBdw), intermediate base ov002 0x02109278. Its
+# Init/Cleanup .c bodies spell only mounted names and need no -D.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RickshawPlatformBdw_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjKm1_Kuruma_c=data_ov002_02109278;VT1=_ZTV11RickshawBdw")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11RickshawBdwD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjKm1_Kuruma_c=_ZTV11RickshawBdw;_ZTV10dBgActor_c=data_ov002_02109278;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11RickshawBdwD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjKm1_Kuruma_c=_ZTV11RickshawBdw;_ZTV10dBgActor_c=data_ov002_02109278;VT2=_ZTV8Platform;G0=data_020a0eac")
+# id 134 (STAIRS_BDW): its five TUs spell _ZTV19RickshawPlatformBdw,
+# data_ov002_02108d94 and _ZTV8Platform -- the three real addresses in ROM order
+# -- so they need no -D, the ov047 STAIRS_BS reading. Its sinit does: the
+# five-stair file constructor spells sixteen of its own .bss cells with an OV047
+# tag and four with an OV052 tag (the naming shift at the shared load window).
+# ov047 IS mounted, so the four ov052 names would silently build in Mario's Key
+# Course storage and the sixteen ov047 names are unresolvable -- a hard link
+# error. All twenty are ov043's own 0x021126xx cells (the mount defines them);
+# renamed direct, decl_common.h declares none of them.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov043_02111940.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov047_021126a0=data_ov043_021126a0;data_ov047_021126fc=data_ov043_021126fc;data_ov052_02112680=data_ov043_02112680;data_ov047_02112708=data_ov043_02112708;data_ov047_02112668=data_ov043_02112668;data_ov052_021126a8=data_ov043_021126a8;data_ov052_02112688=data_ov043_02112688;data_ov047_021126b4=data_ov043_021126b4;data_ov052_02112690=data_ov043_02112690;data_ov047_021126c0=data_ov043_021126c0;data_ov047_02112678=data_ov043_02112678;data_ov047_021126cc=data_ov043_021126cc;data_ov047_02112658=data_ov043_02112658;data_ov047_021126d8=data_ov043_021126d8;data_ov047_02112670=data_ov043_02112670;data_ov047_021126e4=data_ov043_021126e4;data_ov047_02112698=data_ov043_02112698;data_ov047_021126f0=data_ov043_021126f0;data_ov047_02112660=data_ov043_02112660;data_ov047_02112714=data_ov043_02112714")
+
 # Gate 207 (run link60, lane A2): four more ov002 slot-17 seats -- VirtualDoor,
 # PoppingLavaBubbles, AmbientSoundEffects and MugenBgm. Gate 204's convention
 # applied rather than extended, with all three of its conditions re-run against
@@ -12351,7 +12409,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
-    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICEBDW_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12563,7 +12621,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
-    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICEBDW_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12809,7 +12867,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
-    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
+    hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICEBDW_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
