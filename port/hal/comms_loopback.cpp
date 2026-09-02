@@ -2302,9 +2302,16 @@ void service() {
     // republish interval until the parent's unicast ACCEPT says it landed --
     // and it STOPS after kMaxReportTries, because a parent that never acks is
     // an older build and this must not become a permanent trickle.
+    // NOT AT THE REPUBLISH INTERVAL FLAT. Loopback republishes every 4 ms,
+    // which is correct for a round the receiver is already stuck on and wrong
+    // here: the answer to a report cannot come back faster than the path, so
+    // twelve retries at 4 ms would all leave before the first ack could
+    // possibly arrive and every one of them past the first would be a
+    // duplicate by construction. 50 ms is the floor.
+    const unsigned report_every = (unsigned)(g_resend_ms > 50 ? g_resend_ms : 50);
     if (g_role == kRoleChild && g_state == kCommsChildConnected &&
         !g_report_acked && g_report_tries < kMaxReportTries &&
-        (unsigned)(t - g_last_report_ms) >= (unsigned)g_resend_ms) {
+        (unsigned)(t - g_last_report_ms) >= report_every) {
         child_send_report();
     }
 
