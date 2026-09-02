@@ -689,19 +689,21 @@ src/func_ov007_020cca80.c
 src/func_ov007_020cca98.c
 src/func_ov007_020ccab4.c
 
-# ---- THE ONE EXCLUSION -----------------------------------------------------
-# src/func_ov007_020c5dec.cpp
-#   EXCLUDED, and this is a MISROUTE this lane could not fix from its own
-#   files. hal/cxx_aliases.cpp carries
-#   /alternatename:_func_ov007_020c5dec=_func_ov002_020c5dec because two
-#   PLAYER TUs already in the build (St_HurtWater_Main, St_WaitQuicksand_Main)
-#   name the ov007 spelling for what is really ov002's body at 0x020c5dec.
-#   Compiling this TU makes the alias LHS a DEFINED symbol, which
-#   alternatename_guard refuses AND which would hand those two level-path
-#   callers ov007's body. So it stays out, and src/func_ov007_020ba2e0.c's
-#   call to func_ov007_020c5dec resolves through the alias to the ov002 body
-#   -- wrong overlay, in the ov007 direction. One alias cannot express per-
-#   context routing. ROUTED.
+# ---- THE PER-CONTEXT ROUTE (was THE ONE EXCLUSION) -------------------------
+# src/func_ov007_020c5dec.cpp is LISTED and now links, but under a private
+#   symbol so the alias LHS stays undefined. hal/cxx_aliases.cpp carries
+#   /alternatename:_func_ov007_020c5dec=_func_ov002_020c5dec because two PLAYER
+#   TUs already in the build (St_HurtWater_Main, St_WaitQuicksand_Main) name the
+#   ov007 spelling for what is really ov002's body at 0x020c5dec. Those two want
+#   the ov002 body and keep reaching it through the alias. But ov007's own caller
+#   src/func_ov007_020ba2e0.c wants the ov007 body at the same address, and one
+#   /alternatename cannot express both. So the Spindrift/ov062 precedent applies:
+#   port/CMakeLists.txt compiles this TU and its ov007 caller with
+#   COMPILE_DEFINITIONS "func_ov007_020c5dec=func_ov007_020c5dec_own", so the
+#   ov007 body links as func_ov007_020c5dec_own and the ov007 caller reaches it,
+#   while func_ov007_020c5dec stays undefined for the alias to route the two
+#   Player TUs to ov002. Per-context routing, no /alternatename ambiguity. ROUTED.
+src/func_ov007_020c5dec.cpp
 
 # ---- THE FOURTH DISPLACEMENT (run mg15 lane IMPLICITR) ---------------------
 # src/func_ov007_020c2b9c.c IS STILL LISTED ABOVE and is NOT built by the port.
