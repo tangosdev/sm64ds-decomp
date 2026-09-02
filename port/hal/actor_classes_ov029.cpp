@@ -92,8 +92,7 @@ int _ZN9ArrowLift13InitResourcesEv(void *self);
 int _ZN9ArrowLift16CleanupResourcesEv(void *self);
 int _ZN9ArrowLift8BehaviorEv(void *self);
 int _ZN9ArrowLift6RenderEv(void *self);
-int *_ZN9ArrowLiftD1Ev(int *self);
-int *_ZN9ArrowLiftD0Ev(int *self);
+int *_ZN9ArrowLiftD0Ev(int *self);   /* D1 trapped: see WaterDiamond fill */
 /* id 99 CageLift is not mounted (guessed bodies) -- no externs. */
 /* id 100 FloatOnWaterPlatformWdwRectangle own bodies (unnamed; s17 D0 guessed,
    trapped not seated) */
@@ -154,7 +153,7 @@ static void ov29_trap_report(void *self, int slot)
 #define OV29_TRAP(n) \
     static int __fastcall ov29_trap##n(void *s, void *) \
     { ov29_trap_report(s, n); return 0; }
-OV29_TRAP(13) OV29_TRAP(14) OV29_TRAP(17) OV29_TRAP(30)
+OV29_TRAP(13) OV29_TRAP(14) OV29_TRAP(16) OV29_TRAP(17) OV29_TRAP(30)
 #undef OV29_TRAP
 
 // ---- the shared slots 1..30 (own 0/3/6/9/16/17 and 31 written by the caller) -
@@ -269,15 +268,17 @@ static int __fastcall wd_init(void *s, void *)  { return _ZN9ArrowLift13InitReso
 static int __fastcall wd_clean(void *s, void *) { return _ZN9ArrowLift16CleanupResourcesEv(s); }
 static int __fastcall wd_beh(void *s, void *)   { return _ZN9ArrowLift8BehaviorEv(s); }
 static int __fastcall wd_ren(void *s, void *)   { return _ZN9ArrowLift6RenderEv(s); }
-static int __fastcall wd_d1(void *s, void *)    { return (int)(size_t)_ZN9ArrowLiftD1Ev((int *)s); }
+/* slot 16 (D1) is _ZN9ArrowLiftD1Ev, a C++ virtual destructor whose TU cannot
+   link on the host (base dtors unhosted) -- TRAPPED. D0 (slot 17) is the
+   C-linkage _ZN9ArrowLiftD0Ev, seated. */
 static int __fastcall wd_d0(void *s, void *)    { return (int)(size_t)_ZN9ArrowLiftD0Ev((int *)s); }
 extern "C" void hal_fill_water_diamond_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)_ZTV9ArrowLift;
     ov29_fill_shared(vt);
-    vt[0]=(void *)wd_init; vt[3]=(void *)wd_clean; vt[6]=(void *)wd_beh;
-    vt[9]=(void *)wd_ren;  vt[16]=(void *)wd_d1;   vt[17]=(void *)wd_d0;
+    vt[0]=(void *)wd_init;      vt[3]=(void *)wd_clean; vt[6]=(void *)wd_beh;
+    vt[9]=(void *)wd_ren;  vt[16]=(void *)ov29_trap16; vt[17]=(void *)wd_d0;
     /* no slot 31: a plain Actor, 31 slots, ends at 30 */
 }
 

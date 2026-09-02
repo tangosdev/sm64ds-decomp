@@ -12186,7 +12186,14 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "_ZN13RollingLogTtm8BehaviorEv=data_ov029_02114278")
 
-set(OV029_SOURCES hal/actor_classes_ov029.cpp ${SLICE_OV029_SOURCES})
+# Two ov029 bodies are //cpp-marked .c files (a top-level `extern "C" {` block,
+# invalid C): compile them as C++.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111254.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111f58.c"
+    PROPERTIES LANGUAGE CXX)
+
+set(OV029_SOURCES hal/actor_classes_ov029.cpp unmatched/Ov029_MethodFaces.cpp ${SLICE_OV029_SOURCES})
 
 # The camera slice is on both binaries. The gate-13 State objects carry real
 # DS function addresses, and Player::ChangeState already reaches

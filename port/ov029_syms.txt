@@ -53,6 +53,11 @@ data_ov029_02112fec
 # data_ov029_02113fd4 (its Model/Clsn statics).
 data_ov029_02113fc4
 data_ov029_02113fd4
+# The Square and Rectangle InitResources helpers (func_ov029_02111254 /
+# func_ov029_02111f58) read two more static blocks the func_ov002_020b5e58
+# resource loader consumes.
+data_ov029_02113be8
+data_ov029_02113f00
 #
 # ---- the sinit-built bss window (0x02114220..0x02114360) --------------------
 # The eight __sinit_ov029_* constructors each build a Model SharedFilePtr and a
