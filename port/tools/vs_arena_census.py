@@ -91,6 +91,33 @@ def spawned(text):
     return got, declined
 
 
+def alive(text, names):
+    """Live actors on the BEHAVIOUR list, from port_actor_positions' [pos] rows.
+
+    The census counts spawn ATTEMPTS -- it is the pre-spawn gate -- so a class
+    whose InitResources returns 0 is counted there and is not in the world.
+    This is the other number, and the pair is what tells "declined" apart from
+    "spawned and immediately gone"."""
+    live = collections.Counter()
+    for ln in text.splitlines():
+        m = re.match(r"\[pos\] (\S+).*\[(\d+)\]\s*$", ln)
+        if m and m.group(1) in names:
+            live[names[m.group(1)]] += int(m.group(2))
+    return live
+
+
+def class_names():
+    """NAME -> id, from the same hal/actor_classes.inc the census names come
+    from, so the [pos] rows can be counted per actor id."""
+    out = {}
+    p = os.path.join(ROOT, "port", "hal", "actor_classes.inc")
+    for ln in open(p, errors="ignore"):
+        m = re.match(r'\s*\{\s*(\d+)\s*,\s*"([A-Z0-9_]+)"', ln)
+        if m:
+            out[m.group(2)] = int(m.group(1))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames", type=int, default=420)
@@ -98,11 +125,13 @@ def main():
     args = ap.parse_args()
 
     want = rom_placement(2)
+    names = class_names()
     fails = 0
     for mi in [int(x) for x in args.maps.split(",")]:
         lvl = MAP_LEVEL[mi]
         rc, t = run_map(mi, args.frames)
         got, declined = spawned(t)
+        live = alive(t, names)
         seq = re.findall(r"LoadAndSetMusic_Layer1\((0x[0-9a-f]+)\)", t)
         grp = re.search(r"sound row: group=(\d+) bank=(0x[0-9a-f]+) bgm=(-?\d+)", t)
         star = re.search(r"star filter (\d+)", t)
@@ -114,16 +143,23 @@ def main():
               % (grp.group(1), grp.group(2), grp.group(3)) if grp
               else "  sound group : MISSING")
         print("  layer-1 seq : %s" % (", ".join(seq) if seq else "none issued"))
-        print("  ROM places / port spawns, by class:")
+        print("  ROM places / port spawns / port keeps alive, by class:")
         for aid in sorted(set(want.get(lvl, {})) | set(got)):
             w = want.get(lvl, {}).get(aid, 0)
             g = got.get(aid, 0)
-            mark = "" if g >= w else "   <-- MISSING %d" % (w - g)
+            a = live.get(aid, 0)
             if w == 0:
                 mark = "   (not a placed class: HUD, player, minimap...)"
             elif g < w:
+                mark = "   <-- NEVER SPAWNED, %d short" % (w - g)
                 fails += 1
-            print("      %3d  rom x%-3d  port x%-3d%s" % (aid, w, g, mark))
+            elif a < w:
+                mark = "   <-- SPAWNED THEN GONE, %d short alive" % (w - a)
+                fails += 1
+            else:
+                mark = ""
+            print("      %3d  rom x%-3d  spawn x%-3d  alive x%-3d%s"
+                  % (aid, w, g, a, mark))
         if declined:
             print("  DECLINED by the registry gate:")
             for aid, c in sorted(declined.items()):
