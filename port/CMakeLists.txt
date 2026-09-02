@@ -7993,6 +7993,15 @@ list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor.cpp)
 # only -- nothing in src/ knows it exists -- and OFF unless SM64DS_SYNC=1,
 # so linking it changes no behaviour. See runs/mg16/status/MP4-DESIGN.md.
 list(APPEND SLICE_COMMS_SOURCES hal/comms_sync.cpp)
+# Lane VOICE: proximity voice chat. Port-side only -- nothing in src/ knows it
+# exists -- and INERT unless settings.json turns VoiceEnabled on, which is off
+# by default, so linking it opens no device and changes no behaviour. It rides
+# SLICE_COMMS_SOURCES rather than a list of its own because it needs BOTH the
+# carrier (comms_loopback.cpp's voice reader) and the hosted ARM7 mixer
+# (SOUND_HOST_SOURCES), and the three targets that take this list are exactly
+# the three that take that one -- the FINDING 5 shape again: a fourth variable
+# each of them has to remember is how a lane's TUs silently leave a link.
+list(APPEND SLICE_COMMS_SOURCES hal/voice_chat.cpp hal/voice_capture_win.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
 foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)

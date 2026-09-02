@@ -153,6 +153,15 @@ bool comms_loopback_install_from_env();
 // and the wire can never disagree about whether the session is wide.
 int comms_session_players();
 
+// Lane VOICE: one whole 'SYNV' voice message into `buf`, at most `cap` bytes,
+// with the SENDER'S SLOT written through `from_slot` (the slot the carrier
+// itself classified, never a field read out of the payload). Returns the byte
+// count or 0 when nothing is waiting; never blocks. The voice kind is served
+// here and skipped by the seam's recv_aux, so the sync layer and the voice
+// pump cannot eat each other's messages. hal/voice_chat.cpp is the only
+// caller; its header carries the datagram format.
+int comms_recv_voice(void *buf, int cap, int *from_slot);
+
 // The carrier's own counters, for a log line and for the proof ladder. These
 // are the transport's view; port::comms_readout() is the seam's.
 struct CommsLoopbackStats {

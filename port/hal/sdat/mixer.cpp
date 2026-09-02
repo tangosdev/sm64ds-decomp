@@ -100,6 +100,9 @@ int cnv_fall(int f)
     return 0x1e00 / (0x7e - f);
 }
 
+// Lane VOICE: the post-master-volume render hook. See sd_mix_render's tail.
+void (*g_aux_render)(sd_s16 *, int);
+
 double db10_to_gain(int db10)
 {
     if (db10 <= -723) return 0.0;
@@ -340,4 +343,27 @@ void sd_mix_render(sd_s16 *dst, int frames)
             dst[i] = (sd_s16)(s < -32768 ? -32768 : (s > 32767 ? 32767 : s));
         }
     }
+
+    // ---- THE AUX RENDER HOOK, lane VOICE --------------------------------
+    //
+    // A nullable function pointer and not a direct call, for one reason: this
+    // file is linked into targets that have no network and no voice chat, and
+    // a hard call would make every one of them fail the link for a feature
+    // they do not build. Nothing registers it unless hal/voice_chat.cpp is in
+    // the target AND the player turned voice on, so the default build runs one
+    // null test per render block and nothing else.
+    //
+    // AFTER THE MASTER VOLUME ON PURPOSE. Everything above this line is the
+    // DS's own mixer plus the host output trim, and the .wav dump downstream
+    // is the record of what the game sounded like. Voice chat is not the game:
+    // it has its own slider (VoiceVolume) and a player who muted the game to
+    // hear his friends should still hear his friends. Running it above the
+    // trim would have made SM64DS_VOLUME=0 a second mute for a control that
+    // already has one.
+    if (g_aux_render) g_aux_render(dst, frames);
+}
+
+void sd_mix_set_aux_render(void (*fn)(sd_s16 *, int))
+{
+    g_aux_render = fn;
 }

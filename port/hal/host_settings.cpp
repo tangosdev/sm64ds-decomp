@@ -657,6 +657,53 @@ int g_name_tags = 1;
    on. Read live like the gap keys; the accessor also honours SM64DS_ADVENTURE. */
 int g_adventure_ghosts = 0;
 
+/* ---- PROXIMITY VOICE CHAT, lane VOICE ------------------------------------
+   Five keys, all of them host preferences and none of them a mod: nothing
+   here touches game state, the lockstep input path, or a single byte the
+   simulation reads. The whole feature is off by default, and off means NO
+   CAPTURE DEVICE IS OPENED AT ALL -- not a device opened and discarded, not
+   a muted stream. A player who never turns this on has a build whose
+   microphone is untouched.
+
+     VoiceEnabled     false (default). The master switch. RELOADS LIVE, so
+                      the launcher's toggle takes effect mid-match: turning
+                      it off closes the capture device and silences every
+                      remote voice within a frame, turning it on opens the
+                      device again.
+     VoiceMicDevice   "" (default) is the system's default recording device.
+                      Any other value is matched, case-insensitively and as a
+                      SUBSTRING, against the names winmm reports for the
+                      machine's recording devices; the first match wins and no
+                      match falls back to the default device with one line on
+                      stderr. Substring rather than exact because the names
+                      winmm reports are truncated to 31 characters and a
+                      launcher listing them cannot always show a player the
+                      whole thing. RELOADS LIVE: a changed name reopens the
+                      device.
+     VoiceVolume      0..100, default 80. A linear gain on the decoded remote
+                      audio, applied on top of the distance falloff. It is NOT
+                      the game's Volume key and is deliberately independent of
+                      it -- a player who muted the game to hear his friends
+                      should still hear his friends -- so the voice mix runs
+                      after the master trim in hal/sdat/mixer.cpp. RELOADS
+                      LIVE.
+     VoiceNearRadius  world units, default 512. Inside this distance a remote
+                      player is at full VoiceVolume. RELOADS LIVE.
+     VoiceFarRadius   world units, default 3072. At and beyond this distance a
+                      remote player is silent, and between the two radii the
+                      gain falls off logarithmically. A file that sets far <=
+                      near gets the defaults back, because a falloff with no
+                      span is not a choice anybody made. RELOADS LIVE.
+
+   The radii are in the game's own world units -- the integer part of the
+   Fix12 positions at Actor+0x5c -- and the defaults are measured rather than
+   guessed; port/status/VOICE.md carries the arena span they came from. */
+int  g_voice_enabled;                /* default 0, and 0 opens no device */
+int  g_voice_volume = 80;
+char g_voice_mic[96];                /* "" = the system default device */
+int  g_voice_near = 512;
+int  g_voice_far  = 3072;
+
 /* Steps once per live re-read that changed an answer. hal/screen_gap.cpp
    latches on it. */
 int g_setgen;
@@ -834,6 +881,57 @@ unsigned parse_hex_color(const char *s, unsigned dflt)
     return 0xFF000000u | v;
 }
 
+/* ---- THE VOICE KEYS, read in ONE place ---------------------------------
+   Called from load_once with the variables at their defaults and from
+   reload_live with the variables holding whatever the last read produced, so
+   both callers get the same "an absent key keeps what we have" rule for free.
+   Returns 1 when any answer changed.
+
+   VoiceMicDevice is read into a scratch buffer first: json_str leaves its
+   output alone when a value will not fit, and a name too long for the buffer
+   has to read as "no name given" (the default device) rather than as the
+   previous name, which is what a bare read into g_voice_mic would have done
+   on a value that overflowed. */
+int read_voice_keys(const char *text)
+{
+    const int en = json_bool(text, "VoiceEnabled", g_voice_enabled);
+    int vol = g_voice_volume;
+    int near_r = g_voice_near;
+    int far_r = g_voice_far;
+    char mic[sizeof g_voice_mic];
+    mic[0] = '\0';
+    json_str(text, "VoiceMicDevice", mic, sizeof mic);
+    {
+        const int v = json_int(text, "VoiceVolume", -1);
+        if (v >= 0) vol = v > 100 ? 100 : v;
+    }
+    {
+        const int v = json_int(text, "VoiceNearRadius", -1);
+        if (v >= 0) near_r = v;
+    }
+    {
+        const int v = json_int(text, "VoiceFarRadius", -1);
+        if (v >= 0) far_r = v;
+    }
+    /* A falloff with no span, or an inverted one, is not a choice a player
+       made -- it is a typo or a launcher bug -- so both radii go back to the
+       defaults together rather than one of them being quietly clamped to the
+       other and producing a hard on/off cutoff nobody asked for. */
+    if (far_r <= near_r) { near_r = 512; far_r = 3072; }
+
+    int changed = 0;
+    if (en != g_voice_enabled) { g_voice_enabled = en; changed = 1; }
+    if (vol != g_voice_volume) { g_voice_volume = vol; changed = 1; }
+    if (near_r != g_voice_near) { g_voice_near = near_r; changed = 1; }
+    if (far_r != g_voice_far) { g_voice_far = far_r; changed = 1; }
+    if (strcmp(mic, g_voice_mic) != 0) {
+        strncpy(g_voice_mic, mic, sizeof g_voice_mic - 1);
+        g_voice_mic[sizeof g_voice_mic - 1] = '\0';
+        changed = 1;
+    }
+    return changed;
+}
+
 void load_once(void)
 {
     if (g_loaded) return;
@@ -858,6 +956,11 @@ void load_once(void)
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
     g_padlayout_n = 0;
+    g_voice_enabled = 0;
+    g_voice_volume = 80;
+    g_voice_mic[0] = '\0';
+    g_voice_near = 512;
+    g_voice_far = 3072;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -1014,6 +1117,11 @@ void load_once(void)
         g_mouse_capture = json_bool(text, "MouseCapture", 0);
         /* the learned controller maps; absent is none, like every key */
         padlayouts_parse(text);
+        /* lane VOICE: the same reader the live re-read uses, so the boot
+           values and the reloaded values cannot come out of two different
+           pieces of code that drift apart. Every key reads against the value
+           already in the variable, which at boot is its default. */
+        read_voice_keys(text);
     }
     free(text);
 
@@ -1068,6 +1176,15 @@ void load_once(void)
     /* Off its default, so it is said; and said in plain words because a
        support log where the player reports "the game stole my mouse" should
        carry the reason on one line. */
+    /* lane VOICE: said only when it is on, like every other non-default, and
+       said in plain words because a support log for "the game is using my
+       microphone" should carry the answer on one line. */
+    if (g_voice_enabled)
+        fprintf(stderr, "[settings] VoiceEnabled on -- proximity voice chat "
+                "will open a recording device in an online match. Mic '%s', "
+                "volume %d, audible from %d units out to %d (%s)\n",
+                g_voice_mic[0] ? g_voice_mic : "(system default)",
+                g_voice_volume, g_voice_near, g_voice_far, path);
     if (g_mouse_capture)
         fprintf(stderr, "[settings] MouseCapture on -- an adventure window "
                         "holds the pointer and bare mouse movement turns the "
@@ -1122,9 +1239,9 @@ unsigned long long g_watch_size;
 #endif
 
 /* Re-read ONLY the keys the header promises reload live: the four screen-gap
-   keys, Volume and MouseCapture. Returns 1 when an answer changed. Each key
-   lands on the value it already has rather than its default when the file no
-   longer names it, because "the launcher stopped writing a key" and "the
+   keys, Volume, MouseCapture and lane VOICE's five. Returns 1 when an answer
+   changed. Each key lands on the value it already has rather than its default
+   when the file no longer names it, because "the launcher stopped writing a key" and "the
    player turned a key off" are different sentences and only the second one has
    a picture. */
 int reload_live(const char *text)
@@ -1158,6 +1275,18 @@ int reload_live(const char *text)
     {
         const int v = json_int(text, "Volume", -1);
         if (v >= 0) vol = v > 100 ? 100 : v;
+    }
+    /* lane VOICE: read UNCONDITIONALLY and before the compare below, because
+       its keys own their own change detection. Folding them into the gap
+       comparison would have meant a voice-only edit either changing nothing
+       (if the read were inside the if) or being announced as a gap change. */
+    const int voice_changed = read_voice_keys(text);
+    if (voice_changed) {
+        changed = 1;
+        fprintf(stderr, "[settings] live re-read: voice %s, volume %d, mic "
+                "'%s', radii %d..%d\n", g_voice_enabled ? "ON" : "off",
+                g_voice_volume, g_voice_mic[0] ? g_voice_mic : "(default)",
+                g_voice_near, g_voice_far);
     }
     if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
         color != g_gap_color || vol != g_volume || mcap != g_mouse_capture ||
@@ -1395,6 +1524,39 @@ bool adventure_ghost_mode()
     return host_setting_adventure_ghosts() != 0;
 }
 }  // namespace port
+
+/* ---- THE VOICE ACCESSORS, lane VOICE ---------------------------------- */
+extern "C" int host_setting_voice_enabled(void)
+{
+    load_once();
+    return g_voice_enabled;
+}
+
+extern "C" int host_setting_voice_volume(void)
+{
+    load_once();
+    return g_voice_volume;
+}
+
+/* Never null. "" means the system's default recording device, which is what
+   an absent key, an empty key and a key too long for the buffer all mean. */
+extern "C" const char *host_setting_voice_mic_device(void)
+{
+    load_once();
+    return g_voice_mic;
+}
+
+extern "C" int host_setting_voice_near_radius(void)
+{
+    load_once();
+    return g_voice_near;
+}
+
+extern "C" int host_setting_voice_far_radius(void)
+{
+    load_once();
+    return g_voice_far;
+}
 
 extern "C" int host_settings_gen(void)
 {

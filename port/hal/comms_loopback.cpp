@@ -368,6 +368,10 @@ static_assert(kPacketNarrowBytes == 0x90,
 const unsigned kAuxMagicLE = 0x314e5953u;   // 'S','Y','N','1'
 const unsigned kAuxPingLE  = 0x504e5953u;   // 'S','Y','N','P'
 const unsigned kAuxPongLE  = 0x514e5953u;   // 'S','Y','N','Q'
+// Lane VOICE: proximity voice chat. Same tag space, same rule -- 'SYN*', four
+// bytes, classified and never read past. Its payload is compressed microphone
+// audio and nothing else; hal/voice_chat.cpp owns the format.
+const unsigned kAuxVoiceLE = 0x564e5953u;   // 'S','Y','N','V'
 
 static_assert(sizeof(Packet) == kPacketWideBytes,
               "the loopback wire packet grew padding; the length check is the "
@@ -568,7 +572,12 @@ int      g_slot       = 0;
 //   port the datagram ACTUALLY arrived from (the slot-is-the-port rule), never
 //   by reading the payload, so the bytes stay uninspected beyond the 4-byte
 //   kind tag this file already classified on.
-enum : int { kAuxMaxBytes = 256 };
+// Lane VOICE raised this from 256. A voice datagram is a 12-byte header and
+// two 164-byte IMA ADPCM frame blocks = 340 bytes, so 256 would have refused
+// every one of them at lb_send_aux's one-datagram check. 384 leaves the sync
+// snapshot (which is far smaller) untouched and stays a long way under the
+// relay's 700-byte cap, asserted just below.
+enum : int { kAuxMaxBytes = 384 };
 // The socket carries three kinds and the read buffer must hold the largest.
 // run vs16 made that the WIDE lockstep datagram, not the aux message.
 enum : int { kRawMaxBytes =
@@ -578,8 +587,15 @@ static_assert(kRawMaxBytes >= kPacketWideBytes,
               "sixteen-player packet would be lost to WSAEMSGSIZE");
 static_assert(kAuxMaxBytes <= kRelayMaxPayload,
               "an aux datagram no longer fits the relay's payload cap");
-enum : int { kAuxKinds = 3 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
-                                     // 2 = 'SYNQ' pong -- see the tag note
+enum : int { kAuxKinds = 4 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
+                                     // 2 = 'SYNQ' pong, 3 = 'SYNV' voice --
+                                     // see the tag note
+// Lane VOICE: the voice kind is served by lb_recv_voice and SKIPPED by
+// lb_recv_aux, so the sync layer's drain-until-zero pump cannot swallow audio
+// and the voice pump cannot swallow a snapshot. Two consumers, one socket, no
+// shared queue -- the alternative was one of them eating the other's messages,
+// which is exactly the failure the per-(sender, kind) split was made to stop.
+enum : int { kAuxKindVoice = 3 };
 struct AuxSlot { int len; unsigned char buf[kAuxMaxBytes]; };
 AuxSlot  g_aux[kCommsMaxPlayers][kAuxKinds];
 int      g_aux_rr     = 0;           // recv_aux round-robin cursor, see below
@@ -1617,6 +1633,8 @@ void dispatch(const unsigned char *raw, int n, const sockaddr_in &from) {
     if (n >= 4 && std::memcmp(raw, &kAuxMagicLE, 4) == 0) aux_kind = 0;
     else if (n >= 4 && std::memcmp(raw, &kAuxPingLE, 4) == 0) aux_kind = 1;
     else if (n >= 4 && std::memcmp(raw, &kAuxPongLE, 4) == 0) aux_kind = 2;
+    else if (n >= 4 && std::memcmp(raw, &kAuxVoiceLE, 4) == 0)
+        aux_kind = kAuxKindVoice;
     if (aux_kind >= 0) {
         const int sender = classify_aux_sender(from);
         if (sender < 0 || sender >= kCommsMaxPlayers || sender == g_slot) {
@@ -2476,12 +2494,48 @@ int lb_recv_aux(void *buf, int cap) {
     const int total = kCommsMaxPlayers * kAuxKinds;
     for (int i = 0; i < total; ++i) {
         const int idx = (g_aux_rr + i) % total;
+        if ((idx % kAuxKinds) == kAuxKindVoice) continue;   // lane VOICE: not ours
         AuxSlot &slot = g_aux[idx / kAuxKinds][idx % kAuxKinds];
         if (slot.len <= 0) continue;
         const int n = slot.len < cap ? slot.len : cap;
         std::memcpy(buf, slot.buf, (size_t)n);
         slot.len = 0;
         g_aux_rr = (idx + 1) % total;
+        return n;
+    }
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+// THE VOICE READER. Lane VOICE.
+//
+// The same round-robin over the same slots, restricted to the voice kind, with
+// its OWN cursor so a busy voice channel cannot move the sync layer's cursor
+// and vice versa. `from` is the sender slot the carrier already classified --
+// by source port on loopback, by learned address in direct mode, by the
+// packet's own slot field on the relay -- so the audio payload never has to be
+// trusted to say who sent it.
+//
+// Returns the byte count, or 0 when nothing is waiting. Never blocks. It
+// drains the socket first, exactly as lb_recv_aux does, because voice has to
+// work with the sync layer switched off and that layer's pump is the only
+// other thing that would have drained it. service() is idempotent -- a
+// nonblocking read loop that stops on WSAEWOULDBLOCK -- so a second call in
+// the same frame costs one failed recvfrom.
+int g_voice_rr = 0;
+
+int lb_recv_voice(void *buf, int cap, int *from) {
+    if (!buf || cap <= 0) return 0;
+    service();
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        const int s = (g_voice_rr + i) % kCommsMaxPlayers;
+        AuxSlot &slot = g_aux[s][kAuxKindVoice];
+        if (slot.len <= 0) continue;
+        const int n = slot.len < cap ? slot.len : cap;
+        std::memcpy(buf, slot.buf, (size_t)n);
+        slot.len = 0;
+        g_voice_rr = (s + 1) % kCommsMaxPlayers;
+        if (from) *from = s;
         return n;
     }
     return 0;
@@ -2530,6 +2584,23 @@ const CommsTransport kLoopback = {
 // is every solo boot, every local-play boot, and every narrow deployment.
 // ---------------------------------------------------------------------------
 int comms_session_players() { return g_want_players; }
+
+// ---------------------------------------------------------------------------
+// THE VOICE READER, exported. Lane VOICE.
+//
+// One caller: hal/voice_chat.cpp's receive pump. The CommsTransport struct is
+// deliberately NOT widened for this. That struct is a frozen contract with a
+// declared v2 boundary, and a proximity chat channel is a port feature rather
+// than a term of the seam. So voice SENDS through the contract's own send_aux
+// (an opaque whole message carrying its own 'SYNV' tag, which is exactly what
+// that entry is for) and READS through this one carrier-specific entry,
+// because the read side is the only half that needs the sender's identity and
+// a queue of its own. A build with some other transport installed simply has
+// no voice: the pump asks comms_transport() first and stays silent when the
+// carrier is not this one.
+int comms_recv_voice(void *buf, int cap, int *from_slot) {
+    return lb_recv_voice(buf, cap, from_slot);
+}
 
 // ---------------------------------------------------------------------------
 // INSTALL

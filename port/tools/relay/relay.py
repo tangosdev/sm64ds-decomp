@@ -36,6 +36,13 @@ Configuration (environment):
   SM64DS_RELAY_STATS_S  stats line interval       (default 60)
   SM64DS_RELAY_MAX_CHILDREN
                         children one session holds (default 3, so four people)
+  SM64DS_RELAY_RATE_PPS sustained packets per second, per source address
+                        (default 120, unchanged). SET 240 FOR VOICE SESSIONS:
+                        a seat running proximity voice chat sends ~117 a
+                        second and 120 leaves it no headroom at all. See the
+                        budget breakdown at RATE_PPS below.
+  SM64DS_RELAY_RATE_BURST
+                        token bucket depth (default: the same as RATE_PPS)
 
 Python 3 standard library only. No dependencies, no state on disk.
 """
@@ -73,8 +80,47 @@ STATUS_BAD = 2
 # ------------------------------------------------------------------ limits
 
 MAX_PAYLOAD = 700           # bytes; larger datagrams are dropped in silence
-RATE_PPS = 120              # sustained packets per second, per endpoint
-RATE_BURST = 120            # token bucket depth, same units
+
+# ---- THE PACKET RATE, AND WHY IT IS A KNOB NOW (lane VOICE) --------------
+#
+# THE DEFAULT IS UNCHANGED. A relay nobody reconfigures rate-limits exactly as
+# it did: 120 packets a second sustained per source address, burst 120.
+#
+# WHAT MADE IT TIGHT. The budget is per SOURCE ADDRESS and it counts everything
+# one endpoint sends, so a seat's traffic is the sum of every kind on its one
+# socket:
+#
+#     lockstep input record   up to 60/s   (one per frame, plus republishes
+#                                           at kPublishResendMs while a round
+#                                           is open)
+#     sync snapshots          30/s         (SM64DS_SYNC_HZ, default 30)
+#     RTT probes               2/s         ('SYNP' at ~2 Hz)
+#     ------------------------------------
+#     before voice           ~92/s
+#     voice                   25/s         (two 20 ms frames per datagram)
+#     ------------------------------------
+#     with voice            ~117/s   against a budget of 120
+#
+# Three packets of headroom is not headroom. A republish burst, a frame the
+# loop ran long on, or a peer that talks while the sync layer is catching up
+# puts a seat over the line, and what the relay does then is DROP -- silently,
+# by design, because a rate limiter that explained itself would be a
+# reflection amplifier. So a voice session on a stock relay would lose
+# lockstep records under load and look like a desync.
+#
+# BATCHING IS ALREADY DOING ITS HALF. Voice packs two 20 ms frames into one
+# datagram, which is 25 packets a second where one frame per datagram would be
+# 50. Without that, a voice seat is ~142/s and no plausible budget is enough.
+#
+# THE RECOMMENDATION, and the operator sets it: SM64DS_RELAY_RATE_PPS=240 for a
+# relay carrying voice sessions. That is double the old budget for a seat whose
+# steady state is ~117, which leaves the same proportional headroom the old
+# number left a seat at ~92. The burst follows the sustained rate unless it is
+# set on its own, because a bucket shallower than one second of traffic turns
+# an ordinary republish burst into a drop.
+RATE_PPS = clamp_int(os.environ.get("SM64DS_RELAY_RATE_PPS"), 120, 30, 2000)
+RATE_BURST = clamp_int(os.environ.get("SM64DS_RELAY_RATE_BURST"),
+                       RATE_PPS, 30, 4000)
 MAX_SESSIONS = 64
 
 # HOW MANY PEOPLE ONE SESSION HOLDS. A knob since the player-count dial landed,
@@ -537,9 +583,15 @@ async def run():
             pass
 
     log("relay listening on %s:%d idle=%.0fs max_sessions=%d "
-        "max_payload=%d rate_pps=%d seats=%d (1 parent + %d children)"
+        "max_payload=%d rate_pps=%d rate_burst=%d seats=%d "
+        "(1 parent + %d children)"
         % (bind, port, idle_s, MAX_SESSIONS, MAX_PAYLOAD, RATE_PPS,
-           MAX_ENDPOINTS_PER_SESSION, MAX_CHILDREN))
+           RATE_BURST, MAX_ENDPOINTS_PER_SESSION, MAX_CHILDREN))
+    if RATE_PPS < 240:
+        log("note: rate_pps %d is the pre-voice budget. A seat running "
+            "proximity voice chat sends ~117 packets a second; set "
+            "SM64DS_RELAY_RATE_PPS=240 before hosting voice sessions."
+            % RATE_PPS)
     log(protocol.stats_line())
 
     stop = asyncio.Event()

@@ -406,6 +406,7 @@ static bool winapi_load(void)
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
+#include "hal/voice_chat.h"      /* lane VOICE: proximity voice chat */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
 /* run mg16 lane MP3: hal/comms_lockstep.h is RETIRED. Its transcription of
    src/func_0203ea5c.c existed only because that TU was in no slice; the TU is
@@ -10752,6 +10753,15 @@ int main(void)
                rendered position is the smooth follower value and the ROM drift is
                overridden. No-op outside adventure mode. */
             port_adventure_ghost_follow();
+            /* lane VOICE: one frame of proximity voice chat, immediately
+               after the sync layer and for the same structural reason -- the
+               input record is already on the wire, so a voice datagram cannot
+               get in front of the thing the lockstep blocks on. It reads game
+               state (two player positions) and writes none, so it cannot
+               affect the simulation whatever it does. Returns on its first
+               line unless settings.json turned VoiceEnabled on, which is off
+               by default. */
+            port::voice_tick();
             /* run mg16 lane MP3: the VS probe, read out of the game's own
                per-slot actor array. Here rather than at the report site
                because it must run whether or not SM64DS_COMMS_REPORT is on:

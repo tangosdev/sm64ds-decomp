@@ -10,9 +10,9 @@
    Read once, on first use, and then WATCHED: host_settings_poll below
    re-reads the file when it changes on disk, so the launcher's dialog can
    adjust the gap and the volume while the game is running. Only the four
-   screen-gap keys, Volume and MouseCapture reload live; everything else keeps
-   its boot value, because the dialog's own Mods panel promises a restart for
-   those.
+   screen-gap keys, Volume, MouseCapture and the five VoiceChat keys reload
+   live; everything else keeps its boot value, because the dialog's own Mods
+   panel promises a restart for those.
    A missing, unreadable or malformed file falls back to the defaults in
    silence at boot, and a reload that cannot read the file keeps the values
    it has rather than falling back -- the launcher swaps the file in with a
@@ -496,6 +496,44 @@ int host_setting_save_pad_layout(const struct HostPadLayout *layout);
 int host_settings_poll(void);
 int host_settings_gen(void);
 int host_setting_volume(void);
+
+/* ---- PROXIMITY VOICE CHAT, lane VOICE ----------------------------------
+   Five keys, and every one of them RELOADS LIVE -- they are host preferences
+   with no cached artefact behind them, so the Mods panel's restart promise
+   does not apply and the launcher's toggle is expected to work mid-match.
+
+   VoiceEnabled     bool, default false. The master switch, and OFF MEANS NO
+                    RECORDING DEVICE IS OPENED. Not opened and muted, not
+                    opened and discarded: hal/voice_chat.cpp asks this before
+                    it touches winmm at all, and turning the key off while the
+                    game is running closes the device it had.
+   VoiceMicDevice   string, default "". "" is the system's default recording
+                    device. Any other value is matched case-insensitively as a
+                    SUBSTRING against the names winmm reports, first match
+                    wins; no match falls back to the default with one line on
+                    stderr. Substring because winmm truncates device names to
+                    31 characters and a launcher listing them cannot always
+                    show the whole name. A value longer than the buffer reads
+                    as "" -- the same "a typo is not a choice" rule the
+                    palette keys follow.
+   VoiceVolume      int 0..100, default 80. A linear gain on decoded remote
+                    audio, on top of the distance falloff. INDEPENDENT of the
+                    game's Volume key, and the voice mix runs after the master
+                    trim so that stays true: muting the game does not mute
+                    the people you are playing with.
+   VoiceNearRadius  int world units, default 512. Full volume inside this.
+   VoiceFarRadius   int world units, default 3072. Silence at and beyond it,
+                    with a log falloff between the two. far <= near is not a
+                    choice anybody made, so BOTH go back to their defaults.
+
+   The radii are the game's own world units -- the integer part of the Fix12
+   position at Actor+0x5c. port/status/VOICE.md carries the arena measurement
+   the defaults come from. host_setting_voice_mic_device never returns null. */
+int host_setting_voice_enabled(void);
+int host_setting_voice_volume(void);
+const char *host_setting_voice_mic_device(void);
+int host_setting_voice_near_radius(void);
+int host_setting_voice_far_radius(void);
 
 #ifdef __cplusplus
 }

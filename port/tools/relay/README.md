@@ -301,7 +301,7 @@ and once a minute a counter line:
     rss_kb=14208
 
 What the counters mean: `rx` datagrams received, `fwd` datagrams passed on,
-`ack` HELLO answers sent, `drop_rate` dropped for exceeding 120/s,
+`ack` HELLO answers sent, `drop_rate` dropped for exceeding the packet rate,
 `drop_size` dropped for being over 700 bytes, `drop_unpaired` from an address
 with no session, `drop_ignored` from an address inside its 10 second penalty,
 `bad` malformed HELLOs answered, `full` refusals for a full session or a full
@@ -328,7 +328,22 @@ sending its keepalive HELLOs; the 90 second idle expiry then dropped the seat.
 Look for `leave ... (idle)`.
 
 **It stops relaying under fast play.** Check `drop_rate` in the counter line.
-If it is climbing, something is sending more than 120 packets a second.
+If it is climbing, something is sending more than the packet rate allows
+(`rate_pps` on the startup line, 120 by default).
+
+**Voice chat sessions need a raised packet rate.** A seat with proximity voice
+chat on sends about 117 packets a second: up to 60 lockstep input records, 30
+state snapshots, 2 RTT probes and 25 voice datagrams. That is three packets
+under the stock 120 budget, which is not headroom, and what the relay does when
+a seat goes over is drop -- silently, so it looks like a desync rather than a
+limit. Set
+
+    Environment=SM64DS_RELAY_RATE_PPS=240
+
+in the unit file before hosting voice sessions and restart. The relay says so
+itself on startup while the rate is still at the pre-voice number. Voice
+datagrams are 340 bytes, well inside the 700 byte cap, so nothing else about
+the relay's contract moves.
 
 **A player who dropped out cannot get back in for a minute or so.** If their
 router hands them a different outside port when they reconnect, the relay sees

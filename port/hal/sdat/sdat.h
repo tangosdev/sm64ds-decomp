@@ -131,6 +131,10 @@ void sd_mix_set_vol(int ch, int volume_db10);   // ditto, volume only
 void sd_mix_set_rate(int ch, double rate);      // ditto, playback rate only
 void sd_mix_frame(void);              // advance every envelope one 192Hz frame
 void sd_mix_render(sd_s16 *dst, int frames);   // stereo interleaved
+// Lane VOICE: an extra fill run over the finished stereo block, AFTER the host
+// master volume, at SD_MIX_RATE. Null (the default) is no call at all. One
+// registrant, hal/voice_chat.cpp, and only when the player turned voice on.
+void sd_mix_set_aux_render(void (*fn)(sd_s16 *dst, int frames));
 void sd_mix_reset(void);
 
 // Re-seed the command queue (free list, ring, cursors) to its booted shape.

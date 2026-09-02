@@ -18,6 +18,11 @@ Environment=SM64DS_RELAY_PORT=41234
 Environment=SM64DS_RELAY_BIND=0.0.0.0
 Environment=SM64DS_RELAY_IDLE_S=90
 Environment=SM64DS_RELAY_STATS_S=60
+# Packets per second per source address. 120 is the pre-voice default and is
+# left in place here. A relay hosting proximity voice chat sessions must raise
+# this to 240 -- a voice seat sends ~117 a second and 120 leaves it no
+# headroom; see the packet rate section of README.md.
+#Environment=SM64DS_RELAY_RATE_PPS=240
 Environment=PYTHONUNBUFFERED=1
 
 Restart=always
