@@ -33,16 +33,14 @@ services:
       # MAX_SEATS is how many people a room HOLDS. GAME_MAX_PLAYERS is how many
       # of them THE GAME BUILD THIS DEPLOYMENT LAUNCHES can actually play.
       #
-      # BOTH ARE 4, AND 4 IS WHAT THE GAME DOES. Four is not a placeholder and
-      # it is not a limit of this service: it is the number the port has been
-      # proved at, four real windows on one arena, four distinct actors, four
-      # entrance records. The lobby's code reaches 16 and the launcher's control
-      # reaches 16; everything between 4 and 16 is game-side work and is
-      # enumerated, with evidence, in README.md under "the ceilings between 4
-      # and 16". RAISING EITHER NUMBER HERE DOES NOT MAKE THE GAME DO IT. Raise
-      # them when a lane has proved the rung, not before.
-      MAX_SEATS: "4"
-      GAME_MAX_PLAYERS: "4"
+      # BOTH ARE 16 AS OF 0.3.2, AND 16 IS WHAT THE GAME DOES. Sixteen real
+      # windows on one arena in lockstep, a full match to MATCH OVER with
+      # sixteen scores (status/VS16.md, status/VS16HOST.md). The relay's seat
+      # knob (SM64DS_RELAY_MAX_CHILDREN=15 on the deployed unit) moved with
+      # these; a deployment that has not raised the relay must not raise these,
+      # or the sixteenth seat pairs in the lobby and is refused on the wire.
+      MAX_SEATS: "16"
+      GAME_MAX_PLAYERS: "16"
       MAX_WAITERS: "96"
       # The largest "first to N stars" the host may pick. Five because an
       # arena holds five stars; past that the game would have to respawn them.
