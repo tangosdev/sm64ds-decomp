@@ -1179,6 +1179,7 @@ void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
 void port_input_probe_star_trigger(int frame);  /* TEMPORARY: SM64DS_STAR_TRIGGER */
+void port_input_probe_king_drop(int frame);     /* TEMPORARY: SM64DS_VS_KING_DROP */
 void port_input_probe_feather_trigger(int frame); /* TEMPORARY: SM64DS_FEATHER_TRIGGER */
 void port_vs_stars_probe(int frame);            /* TEMPORARY: SM64DS_VS_STARS */
 void port_stage0_vs_score(int frame);           /* STAGE 0: SM64DS_VS_SCORE */
@@ -9996,6 +9997,9 @@ int main(void)
                PowerStar state 4's own gate runs the real collect handler this
                same frame. SM64DS_STAR_TRIGGER. */
             port_input_probe_star_trigger(frame);
+            /* TEMPORARY: KING OF THE STAR drop, runs the ROM hurt->drop on the
+               holder so the one star transfers on the field. SM64DS_VS_KING_DROP. */
+            port_input_probe_king_drop(frame);
             /* TEMPORARY: arm the wing feather's collect word the same way, so
                the block's own feather hands out wings through the ROM's
                Behavior. SM64DS_FEATHER_TRIGGER. */

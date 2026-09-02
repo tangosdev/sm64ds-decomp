@@ -290,12 +290,26 @@ extern "C" void port_stage0_vs_breakall(int frame)
                          (unsigned)*(unsigned char *)(a + 0x1db),
                          (unsigned)*(unsigned short *)(a + 0x1d4));
     }
+    /* KING OF THE STAR: break ONLY the active marker, the one whose star-id is
+       what the rotation index currently selects. In king mode the star-order
+       seat pins that to a single marker, so this wakes exactly one star instead
+       of all five -- the gameplay-faithful analog of a break, and the fixture
+       that lets the headless proof see the one-star invariant. Off king mode
+       every eligible marker breaks, unchanged. */
+    extern int port_vs_king_target(void);
+    extern unsigned char *data_0209f344;
+    extern unsigned char data_0209f208;
+    const int king = port_vs_king_target() > 0;
     for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
         char *a = (char *)nd->x8;
         if (!a || *(unsigned short *)(a + 0xc) != 180) continue;
         if (*(unsigned char *)(a + 0x1d8) == 0) continue;
-        std::fprintf(stderr, "[breakall] f%d breaking marker %p (uid %08x)\n",
-                     frame, (void *)a, *(unsigned int *)(a + 4));
+        if (king && data_0209f344 &&
+            *(unsigned char *)(a + 0x1d9) != data_0209f344[data_0209f208])
+            continue;
+        std::fprintf(stderr, "[breakall] f%d breaking marker %p (uid %08x)%s\n",
+                     frame, (void *)a, *(unsigned int *)(a + 4),
+                     king ? " [king: active marker only]" : "");
         func_ov002_020e7d84(a);
     }
 }
@@ -621,6 +635,50 @@ extern "C" void port_input_probe_star_trigger(int frame)
                  frame, (void *)star, *(int *)(star + 0x43c),
                  *(int *)(star + 0x440),
                  (unsigned)*(unsigned char *)(star + 0x49d), pid);
+}
+
+/* SM64DS_VS_KING_DROP=<frame>[,<frame>...]: at each frame, in king mode, run the
+   ROM's OWN hurt->drop (func_ov002_020d94cc) on the current holder, so the one
+   star leaves the hand and lands as a fresh field star. That is the same path
+   steal-on-contact takes in play -- the star is dropped and re-grabbable, the
+   SAME one star, never a sixth. Reusing the ROM path (not re-implementing it) is
+   the point of step 4. King-gated, reads only shared holder state, and picks the
+   holder by a deterministic list walk, so it fires identically on every console.
+   Does nothing once the match is frozen. */
+extern "C" int port_vs_king_target(void);
+extern "C" int func_ov002_020d94cc(char *self);
+
+extern "C" void port_input_probe_king_drop(int frame)
+{
+    if (port_vs_king_target() <= 0) return;
+    const char *e = std::getenv("SM64DS_VS_KING_DROP");
+    if (!e) return;
+    int want = 0;
+    for (const char *p = e;;) {
+        char *end;
+        long at = std::strtol(p, &end, 0);
+        if (end == p) break;
+        if (frame == (int)at) { want = 1; break; }
+        p = end;
+        if (*p == ',') ++p; else break;
+    }
+    if (!want || port_vs_match_end_frozen()) return;
+
+    struct Node { void *x0; Node *next; char **x8; };
+    for (Node *nd = *(Node **)&data_0209b468; nd; nd = nd->next) {
+        char *a = (char *)nd->x8;
+        if (!a || *(unsigned short *)(a + 0xc) != 0xbf) continue;   /* a Player */
+        const unsigned char idx = *(unsigned char *)(a + 0x6d8);
+        if (idx < 16 && data_0209f310[idx] >= 1) {
+            const int r = func_ov002_020d94cc(a);
+            std::fprintf(stderr, "  [kingdrop] f%d holder P%u dropped the one "
+                         "star (ROM func_ov002_020d94cc -> %d); it re-enters the "
+                         "field as a fresh 0xb2 for anyone to re-grab\n",
+                         frame, idx, r);
+            return;
+        }
+    }
+    std::fprintf(stderr, "  [kingdrop] f%d no holder to drop\n", frame);
 }
 
 /* TEMPORARY, the star trigger's wing-feather sibling.

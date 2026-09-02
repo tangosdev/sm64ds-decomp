@@ -1013,6 +1013,27 @@ extern "C" int port_vs_king_target(void)
     return g_king_target;
 }
 
+/* The live behaviour list, walked to count the stars IN PLAY for the king probe:
+   node[1] is next, node[2] is the actor, its type id is at +0xc (0xb2 STAR /
+   0xb3 SILVER_STAR) and its state at +0x440. A VS arena always carries the four
+   table stars parked DORMANT in state 9 (the caged markers) -- those are not
+   "a star in play", so they are excluded. What is counted is the awake star:
+   collectable, held, tossed or dropped -- anything but state 9. The king
+   one-star invariant is that this is never more than 1. */
+extern int data_020a4b78[8];
+static int king_star_count(void)
+{
+    int n = 0, guard = 0;
+    for (int *node = (int *)(size_t)data_020a4b78[0];
+         node && guard < 4096; node = (int *)(size_t)node[1], ++guard) {
+        char *a = (char *)(size_t)node[2];
+        if (!a) continue;
+        const unsigned short id = *(unsigned short *)(a + 0xc);
+        if ((id == 0xb2 || id == 0xb3) && *(int *)(a + 0x440) != 9) ++n;
+    }
+    return n;
+}
+
 /* The current holder of the one star: the LOWEST slot carrying a star. With the
    one-star invariant only one slot can be nonzero, but scanning low-to-high is
    an explicit deterministic tiebreak, so even a stray double-count can never
@@ -1536,6 +1557,28 @@ extern "C" int port_vs_match_end_poll(int frame)
         if (++g_king_tick >= 60) {
             g_king_tick = 0;
             if (holder >= 0) ++g_king_points[holder];
+        }
+        /* SM64DS_VS_KING_PROBE=1: a flight-recorder line on any change of star
+           count, holder or total points. stars is the ONE-STAR proof (never 2),
+           holder+points are the accrual proof, and it is deterministic shared
+           state so two consoles print the same sequence. */
+        static int king_probe = -1;
+        if (king_probe < 0)
+            king_probe = std::getenv("SM64DS_VS_KING_PROBE") ? 1 : 0;
+        if (king_probe) {
+            static int last_stars = -1, last_holder = -2, last_pts = -1;
+            const int stars = king_star_count();
+            int psum = 0;
+            for (int i = 0; i < vs_players() && i < kPortMaxPlayers; ++i)
+                psum += g_king_points[i];
+            if (stars != last_stars || holder != last_holder
+                || psum != last_pts) {
+                last_stars = stars; last_holder = holder; last_pts = psum;
+                fprintf(stderr, "[king] f%d stars=%d holder=%d points=%d,%d,%d,%d\n",
+                        frame, stars, holder, g_king_points[0], g_king_points[1],
+                        g_king_points[2], g_king_points[3]);
+                fflush(stderr);
+            }
         }
     }
 
