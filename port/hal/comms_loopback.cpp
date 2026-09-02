@@ -1766,16 +1766,23 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
         // authority, carried in the reply the child is already waiting for,
         // applied before the child has consumed a single round. A child that
         // was told a different number by its own environment loses, loudly.
-        a.have = 0x80000000u | (unsigned)k |
-                 ((unsigned)(g_input_delay & 0xFF) << 8);
-        // BIT 16: "your report was recorded". Only the unicast accept can say
-        // this, because only the unicast accept has one recipient -- the
-        // roster broadcast reaches every child and an ack in it would tell
-        // six peers something true of one.
-        if (g_child_rtt_ms[k] >= 0) a.have |= kAcceptRttAckBit;
-        g_child_told_delay[k] = g_input_delay;
-        g_accept_sent_ms[k]   = now_ms();
-        send_to_slot(a, k);
+        // SIZE BEFORE THE ACCEPT GOES OUT, and this ordering was wrong the
+        // other way round. The accept used to be sent first and the session
+        // sized afterwards, so a joiner arriving while a raised depth was in
+        // force was handed THAT number -- and the withdrawal that follows one
+        // instruction later never reached it, because a pre-0.3.3 child adopts
+        // only on its FIRST accept. It dropped the raised value (past its
+        // clamp), kept whatever it already had, and the gate then waved the
+        // session through: after the withdrawal the depth equals
+        // g_delay_presize, which is the "nothing to confirm" case.
+        //
+        // That was survivable only while a legacy peer's own value happened to
+        // equal the parent's mode default, and SM64DS_COMMS_INPUT_DELAY on the
+        // child breaks exactly that assumption. Sizing first costs nothing:
+        // the joiner is already in g_live above, which is the only thing the
+        // old ordering comment claimed to be waiting for.
+        if (report_now || fresh) recompute_adaptive_delay(report_now ? "report"
+                                                                    : "join");
         if (fresh) {
             std::fprintf(stderr, "[comms:loopback] slot %d joined at round %u; "
                          "live mask 0x%x, players %d\n",
@@ -1792,11 +1799,18 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
             g_last_roster_ms = now;
             announce_roster();
         }
-        // SIZE IT AFTER THE ACCEPT WENT OUT, not before: this join may be the
-        // last peer the parent was waiting on, and recompute publishes through
-        // announce_roster(), which needs the joiner already live to reach it.
-        if (report_now || fresh) recompute_adaptive_delay(report_now ? "report"
-                                                                    : "join");
+        // AND THE ACCEPT CARRIES WHATEVER THE SIZING SETTLED ON, which is now
+        // the last word rather than a value one statement out of date.
+        a.have = 0x80000000u | (unsigned)k |
+                 ((unsigned)(g_input_delay & 0xFF) << 8);
+        // BIT 16: "your report was recorded". Only the unicast accept can say
+        // this, because only the unicast accept has one recipient -- the
+        // roster broadcast reaches every child and an ack in it would tell
+        // six peers something true of one.
+        if (g_child_rtt_ms[k] >= 0) a.have |= kAcceptRttAckBit;
+        g_child_told_delay[k] = g_input_delay;
+        g_accept_sent_ms[k]   = now_ms();
+        send_to_slot(a, k);
         break;
     }
     case kTypeBlocks:
