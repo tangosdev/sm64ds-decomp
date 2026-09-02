@@ -313,10 +313,30 @@ static int nt_project(const int wp[3], float *sx, float *sy, float *depth)
     const double cx = vx * P[0] + vy * P[4] + vz * P[8] + P[12];
     const double cy = vx * P[1] + vy * P[5] + vz * P[9] + P[13];
     const double cw = vx * P[3] + vy * P[7] + vz * P[11] + P[15];
-    if (cw <= 1e-4) return 0;                 /* behind the camera, or on it */
+    /* THE NEAR CULL, AND WHY IT IS NOT 1e-4. A body far off-axis but within a
+       hair of the eye plane divides a large cx by a near-zero cw, and the
+       quotient is what a caller eventually rounds into an int -- so an epsilon
+       chosen only to avoid dividing by zero leaves a number no int can hold.
+       1e-2 is still two orders under the smallest near plane anything in this
+       port sets (push_camera's is 3/8 in these units, and the ROM camera's
+       preset is larger), so nothing that could legitimately be drawn is lost,
+       and it is the same order as ntr/gx.cpp's own clip epsilon. */
+    if (cw <= 1e-2) return 0;                 /* behind the camera, or on it */
 
-    *sx = (float)((cx / cw + 1.0) * 0.5 * g_nt_vp[2] + g_nt_vp[0]);
-    *sy = (float)((1.0 - (cy / cw + 1.0) * 0.5) * g_nt_vp[3] + g_nt_vp[1]);
+    const double fx = (cx / cw + 1.0) * 0.5 * g_nt_vp[2] + g_nt_vp[0];
+    const double fy = (1.0 - (cy / cw + 1.0) * 0.5) * g_nt_vp[3] + g_nt_vp[1];
+    /* AND THE RANGE IS CHECKED HERE, IN DOUBLES, so no caller can be handed a
+       coordinate that will not survive a cast. The comparisons are written the
+       positive way round on purpose: !(a && b) rejects a NaN, which an
+       out-of-range test written as (a || b) would let through. The bound is
+       generous -- a hundred screens either side -- because this is the "is this
+       a number at all" guard, not the visibility test; nt_draw does that. */
+    const double kSane = 100000.0;
+    if (!(fx > -kSane && fx < kSane && fy > -kSane && fy < kSane))
+        return 0;
+
+    *sx = (float)fx;
+    *sy = (float)fy;
     *depth = (float)cw;
     return 1;
 }
@@ -383,13 +403,22 @@ static void nt_draw(const OvlSurface &fb)
            readable size and a body across a course shrinks. */
         const int scale = OVL_SCALE * (d < 200.0f ? 2 : 1);
         const int lh = NT_GH * scale + 2 * scale;
+        /* OFF THE SCREEN ENTIRELY, with a whole tag's margin so a name that is
+           half on does not flicker at the edge -- and TESTED IN FLOATS, BEFORE
+           THE CASTS, because the cast is the thing that has to be made safe.
+           Rounding first and testing the int afterwards is the wrong order: by
+           then the conversion has already happened, and a float outside int
+           range converts to an unspecified value rather than to a big number
+           the test would catch. Written positive so a NaN falls out here too. */
+        const float star_yf = sy - 2.0f * (float)lh;
+        if (!(sx >= -256.0f && sx <= (float)ntr::SCREEN_W + 256.0f))
+            continue;
+        if (!(star_yf >= -2.0f * (float)lh && star_yf <= (float)ntr::SCREEN_H))
+            continue;
+
         const int cx = (int)(sx + 0.5f);
         const int name_y = (int)(sy + 0.5f) - lh;
         const int star_y = name_y - lh;
-        /* off the screen entirely, with a whole tag's margin so a name that is
-           half on does not flicker at the edge */
-        if (cx < -256 || cx > ntr::SCREEN_W + 256) continue;
-        if (star_y < -2 * lh || star_y > ntr::SCREEN_H) continue;
 
         char who[24];
         const char *nick = port_vs_slot_name(i);
