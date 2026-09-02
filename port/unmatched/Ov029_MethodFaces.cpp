@@ -19,6 +19,9 @@ struct FloatOnWaterPlatformWdwSquare { int InitResources(); int CleanupResources
 struct ArrowLift { int InitResources(); int Behavior(); int Render(); };
 struct SwitchActivatedPlank { int InitResources(); int CleanupResources(); int Render(); };
 struct RotatingPlatformWdw { int InitResources(); int CleanupResources(); int Behavior(); int Render(); };
+/* Square and Rectangle InitResources call Actor::GetWaterHeightWDW, matched as a
+   C++ method (src/_ZN5Actor17GetWaterHeightWDWEv.c, //cpp) -- another face. */
+struct Actor { int GetWaterHeightWDW(); };
 
 /* The InitResources C++ methods reference their SharedFilePtr/CLPS_Block cells
  * with the struct TYPE at file scope, so MSVC decorates each. The per-symbol
@@ -75,5 +78,13 @@ int _ZN19RotatingPlatformWdw8BehaviorEv(void *s)
 { return ((RotatingPlatformWdw *)s)->Behavior(); }
 int _ZN19RotatingPlatformWdw6RenderEv(void *s)
 { return ((RotatingPlatformWdw *)s)->Render(); }
+
+/* the Actor water-height face + the 3-entry WDW height table it indexes. The
+   table is arm9 0x02075244, three non-relocated Fix12 heights read verbatim from
+   extracted/arm9_dec.bin (0002d000, 003e8000, 00abe000); it is unmounted arm9
+   data nothing else in the port had reached, so this TU carries the ROM bytes. */
+int data_02075244[3] = { 0x0002d000, 0x003e8000, 0x00abe000 };
+int _ZN5Actor17GetWaterHeightWDWEv(void *s)
+{ return ((Actor *)s)->GetWaterHeightWDW(); }
 
 }
