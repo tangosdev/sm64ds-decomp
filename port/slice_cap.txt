@@ -1,0 +1,120 @@
+# Slice CAP: the cap-visibility manager, and the Stage::Render statement that
+# runs it. Lane CAPSHOW.
+#
+# ---- 1. THE BUG THIS CLOSES ------------------------------------------------
+#
+# In a VS arena the six CAP items (actor 269, class WaterfallMist) spawn, live
+# on the behaviour list at the cartridge's own coordinates, run their render
+# slot every frame, and DRAW NOTHING. Lane VSMAP measured the whole chain
+# (status/VSMAP.md, "THE CAPS DO NOT DRAW"); this slice is the other end of it.
+#
+#   src/_ZN13WaterfallMist6RenderEv.cpp:14   returns while unk_3ff == 1
+#   src/_ZN13WaterfallMist8BehaviorEv.cpp:41 writes that 1 every frame while
+#                                            bit 1 of +0x3eb is clear
+#   +0x3eb is byte +0x1b of the registry node WaterfallMist::InitResources
+#   builds at this+0x3d0 through func_ov001_020ab228, which zeroes it
+#   (src/func_ov001_020ab228.c:18) -- correct, a cap starts hidden.
+#   The ONLY writer of bit 1 in the tree is func_ov001_020aa420 (:100, :125
+#   set; :73 clears), its only caller is src/func_ov001_020aaf40.c:50, and its
+#   only caller is Stage::Render (src/_ZN5Stage6RenderEv.cpp:125), which the
+#   port hosts. port/stage_lifecycle_map.txt:777-783 already lists
+#   func_ov001_020aaf40 among Stage::Render's eleven unresolved callees.
+#
+# So the manager never ran. Nothing about the object loader, the level data or
+# the actor spine was wrong.
+#
+# ---- 2. WHAT THE MANAGER DOES, AND WHY THREE CAPS SHOW AND NOT SIX ---------
+#
+# Every arena places SIX cap records and the DS shows THREE of them. That is
+# not a subset this port chose; it is what src/func_ov001_020aa420.c computes,
+# and the records say why. port/tools/vs_objcensus.py --records, actor 269:
+#
+#   map 1 (level 51)  params 0x0004 0x0104 0x0204 0x1004 0x1104 0x1204
+#   map 2 (level 43)  params 0x0004 0x0104 0x0204 0x1004 0x1104 0x1204
+#   map 4 (level 42)  params 0x0004 0x0104 0x0204 0x1004 0x1104 0x1204
+#   map 3 (level 29)  the same six, then the low three repeated four more
+#                     times -- fifteen records, five copies of the low trio
+#
+# WaterfallMist::InitResources reads that word as
+# mType = p & 0xff (4, the VS cap), mModelIndex = (p >> 8) & 0xf (0/1/2, which
+# cap: wing, metal, vanish) and unk_400 = (p >> 12) & 0xf, clamped to 0..2 for
+# mType 4. It then registers the node with
+# func_ov001_020ab228(this+0x3d0, this, mModelIndex, unk_400, 0)
+# (src/_ZN13WaterfallMist13InitResourcesEv.cpp:193), so the node's list index
+# is the cap TYPE and its node+0x19 priority is unk_400.
+#
+# Each arena therefore gives each of the three cap types exactly two nodes, one
+# with priority 1 and one with priority 0. func_ov001_020aa420 walks the three
+# lists once per frame and, per list:
+#
+#   :73-84  first pass only (data_ov001_020ad628[i] == 0): clear bit 1 on every
+#           node, and set the list's state byte to 1 if ANY node has priority
+#           exactly 1, else to 2. A list at 2 is skipped for the rest of the
+#           level. The priority-1 record is what ENABLES a cap type.
+#   :92-94  skip the list if data_ov001_020ad62c[i] & 3 (func_ov001_020aa79c),
+#           if the state byte is 2, or if nothing registered.
+#   :98-118 pick `best`: the highest nonzero priority wins. The priority-0 node
+#           is only ever reachable through the maxPriority == 0 arm, i.e. after
+#           the priority-1 node has been claimed by a player.
+#   :121    func_ov001_020aa7b8(i, best) vetoes the pick while any player is
+#           collecting a cap or already holds this type.
+#   :122    on a pick, `node+0x1b |= 2` -- the bit WaterfallMist::Behavior
+#           reads. Exactly ONE node per cap type carries it.
+#
+# THREE CAPS, one per type, at the 0x1x04 records. The 0x0x04 records are the
+# respawn alternates and stay hidden until their type's cap is taken. Map 3's
+# extra twelve are four more copies of the same low trio and are hidden for the
+# same reason.
+#
+# ---- 3. WHAT THIS SLICE COSTS ---------------------------------------------
+#
+# ELEVEN matched TUs, none of them carrying a NONMATCHING banner, and NO new
+# mount. The three ov001 tables func_ov001_020aa420 reads --
+# data_ov001_020ad628, data_ov001_020ad630 and data_ov001_020ad634 -- are
+# already hosted: port/ov001_syms.txt line 54 names all three (plus
+# data_ov001_020ad620/624/62c) and ov001 is in PORT_ACTOR_OVERLAYS, so
+# ovdata.py --pack already emits them as one contiguous bss run. They are bss
+# words in config/arm9/overlays/ov001/symbols.txt:148-153. That is why the
+# earlier reading of this fix (status/VSMAP.md, "The shape of the fix") costed
+# a mount that turns out to be already paid.
+#
+# Four more of the chain's ov001 functions were in the link before this slice
+# and are deliberately NOT listed here -- func_ov001_020aa6b0,
+# func_ov001_020aa6cc, func_ov001_020ab110 and func_ov001_020ab228, all in
+# slice_gate32.txt / slice_gate33.txt. Listing any of them again is LNK2005;
+# the guard for that is in CMakeLists beside this slice.
+#
+# Every address named above was read out of extracted/overlays/overlay_0001.bin
+# at the delinks.txt .text base 0x020aa420, not out of the dsd copies. The
+# first word at each function's own offset is a real prologue:
+#
+#   020aa420 +0x0000 e92d4ff0    020aa960 +0x0540 e92d4070
+#   020aa6e4 +0x02c4 e92d4010    020aaa54 +0x0634 e92d4ff0
+#   020aa79c +0x037c e59f1010    020aadac +0x098c e92d4ff0
+#   020aa7b8 +0x0398 e92d41f0    020aaf40 +0x0b20 e92d4ff0
+#   020aa858 +0x0438 e92d4030
+#
+# ---- 4. THE NON-VS ARM IS HERE TOO, AND ON PURPOSE ------------------------
+#
+# func_ov001_020aaf40 is called UNCONDITIONALLY by Stage::Render; the mode test
+# is inside it (src/func_ov001_020aaf40.c:50, data_0209f2d8 == 1 picks the VS
+# manager, anything else the single-console one). Hosting only the VS half
+# would be a port-shaped function, not the ROM's, so the whole thing is linked
+# and its own guard decides. That is what pulls func_ov001_020aadac,
+# func_ov001_020aaa54, func_ov001_020aa858 and func_ov001_020aa960 in.
+#
+# The two arm9 leaves are the sound-slot allocator func_0202a8e0 (the cap's
+# ambient handle) and func_02029600 (the minimap-area test aa6e4 gates its
+# jingle on). Neither was in the link and both are three-line matched files.
+
+src/func_ov001_020aaf40.c
+src/func_ov001_020aa420.c
+src/func_ov001_020aa79c.c
+src/func_ov001_020aa7b8.cpp
+src/func_ov001_020aa858.cpp
+src/func_ov001_020aa960.cpp
+src/func_ov001_020aa6e4.cpp
+src/func_ov001_020aaa54.cpp
+src/func_ov001_020aadac.c
+src/func_0202a8e0.c
+src/func_02029600.c

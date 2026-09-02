@@ -1290,6 +1290,8 @@ void hal_sub_camera_input(void);
    than the matched TU: MSVC's one-slot destructor shifts GetPos onto D0 and
    the first pass frees a cylinder. See that file's header. */
 extern "C" void port_cylinder_clsn_process(void);
+/* ov001, slice_cap.txt: Stage::Render's cap-visibility manager. */
+extern "C" void func_ov001_020aaf40(void);
 extern "C" void *_ZTV18MovingCylinderClsn[];
 extern "C" void *data_0209ee74;   /* the particle SysTracker (hal/auto_bss) */
 extern "C" void *data_0209f5bc;   /* the installed fader (hal/fader_wipes) */
@@ -11548,6 +11550,35 @@ int main(void)
            the Player (slice_gate10, the tree-grab block). */
         if (boot_spawns)
             port_cylinder_clsn_process();
+        /* Stage::Render:125, the very next statement: the cap-visibility
+           manager. func_ov001_020aaf40 walks the three cap registries and
+           decides which cap of each type is currently showing -- it is the
+           only writer of the +0x1b bit 1 that WaterfallMist::Behavior reads
+           before it stops writing unk_3ff, and unk_3ff == 1 is what
+           WaterfallMist::Render returns on. Without this line every CAP in
+           every VS arena is alive, positioned and invisible (status/VSMAP.md,
+           "THE CAPS DO NOT DRAW"; status/CAPSHOW.md for this seat).
+
+           UNCONDITIONAL, like the ROM's. The mode test is inside the function
+           (src/func_ov001_020aaf40.c:50): data_0209f2d8 == 1 runs the VS
+           manager func_ov001_020aa420, anything else the single-console pair
+           func_ov001_020aadac / func_ov001_020aaa54. Guarding it here on VS
+           would host a function the cartridge does not have. Its own first
+           statement is `if (data_ov001_020ad620 != 0)`, and every list it
+           walks is empty on a level that registers no cap, so a level with no
+           caps pays three null loads.
+
+           boot_spawns because the registries are filled from the actors'
+           own InitResources (func_ov001_020ab228), and a no-spawn boot has
+           none -- the same reason the line above it carries the guard.
+           SM64DS_NO_CAP_MANAGER=1 restores the pre-seat behaviour on this
+           binary, which is what the before/after probe pair is captured
+           with. */
+        static int no_cap_mgr = -1;
+        if (no_cap_mgr < 0)
+            no_cap_mgr = getenv("SM64DS_NO_CAP_MANAGER") ? 1 : 0;
+        if (boot_spawns && !no_cap_mgr)
+            func_ov001_020aaf40();
         /* phase 1, which is where func_02044120 ends: the scene tree's own
            housekeeping -- priority re-sorts, parent flag propagation, and the
            deferred list insertions for anything that spawned mid-phase. */

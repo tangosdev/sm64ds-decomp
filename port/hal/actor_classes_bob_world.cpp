@@ -1001,10 +1001,41 @@ static int __fastcall cap_render(void *s, void *)
 {
     port_actor_render_probe("CAP", (char *)s + 0x300);
     {
-        static int on = -1, said;
+        /* run capshow: report the VERDICT'S EDGE, not the first eight render
+           calls. The manager (func_ov001_020aaf40 -> func_ov001_020aa420) runs
+           in Stage::Render, so frame 1 is ALWAYS "returns early" for every cap
+           -- the flag it writes is read by the NEXT frame's Behavior. A probe
+           that stops after eight lines can therefore only ever witness the
+           broken state, which is what it did while it was the only instrument.
+           Keyed on the actor's uid, one line per cap per verdict change, so a
+           run prints six lines for six caps and then one more for each cap the
+           manager turns on. */
+        static int on = -1;
+        static unsigned uids[64];
+        static signed char verdicts[64];
+        static int nseen;
         if (on < 0) on = std::getenv("SM64DS_CAP_PROBE") != 0;
-        if (on && said < 8) {
-            ++said;
+        if (on) {
+            const char *cc = (const char *)s;
+            const unsigned uid = *(const unsigned *)(cc + 0x10);
+            const int early = (*(const unsigned char *)(cc + 0x3ff) == 1 ||
+                               *(const int *)(cc + 0x80) < 0x100) ? 1 : 0;
+            int slot = -1;
+            for (int i = 0; i < nseen; ++i)
+                if (uids[i] == uid) { slot = i; break; }
+            int say = 0;
+            if (slot < 0) {
+                if (nseen < 64) {
+                    slot = nseen++;
+                    uids[slot] = uid;
+                    verdicts[slot] = (signed char)early;
+                    say = 1;
+                }
+            } else if (verdicts[slot] != (signed char)early) {
+                verdicts[slot] = (signed char)early;
+                say = 1;
+            }
+            if (say) {
             const char *c = (const char *)s;
             std::printf("[cap] uid %u pos(%d,%d,%d) type %d model %d "
                         "unk_400 %02x unk_3ff %02x flags3eb %02x scaleX %d "
@@ -1022,6 +1053,7 @@ static int __fastcall cap_render(void *s, void *)
                         (*(const unsigned char *)(c + 0x3ff) == 1 ||
                          *(const int *)(c + 0x80) < 0x100)
                             ? "RETURNS EARLY, nothing drawn" : "draws");
+            }
         }
     }
     return ((WaterfallMist *)s)->WaterfallMist::Render();
