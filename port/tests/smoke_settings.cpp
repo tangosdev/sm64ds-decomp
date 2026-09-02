@@ -33,6 +33,10 @@
                  re-save of the same vid:pid replaces rather than appends,
                  the launcher's own key survives, and the file re-reads in
                  a child to the same values.
+     padlayouts_backslash
+                 a name carrying a backslash pair: the fields after it and
+                 the keys after the array still read, and a save drops the
+                 backslash rather than escaping it.
      padlayouts_bad
                  a PadLayouts that is not an array, and one that is an array
                  with nothing usable in it, both read as no layouts and every
@@ -254,6 +258,25 @@ static int child(const char *which)
             check(strstr(t, "\"b\": 2,") == 0, "the replaced value is gone");
             check(strstr(t, "Say \\\"hi\\\" pad") != 0, "the name is escaped");
         }
+    } else if (!strcmp(which, "padlayouts_backslash")) {
+        /* a name carrying a backslash pair, then more fields in the same
+           object and a key after the array: all of it must still read */
+        HostPadLayout L;
+        check_eq(host_setting_pad_layout_count(), 1, "one layout");
+        check(host_setting_pad_layout(1118, 654, &L), "found past the name");
+        check(!strcmp(L.name, "Pad \\ Co"), "name with the backslash");
+        check_eq(L.b, 5, "field after the name read");
+        check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "key after the array read");
+        check_eq(host_setting_camera_mode(), 2, "second key after the array read");
+        /* and a save of a name with a backslash writes it without one */
+        snprintf(L.name, sizeof L.name, "Back\\slash \"q\"");
+        check(host_setting_save_pad_layout(&L), "save wrote");
+        const char *t = slurp("settings.json");
+        check(t != 0, "file exists");
+        if (t) {
+            check(strstr(t, "Backslash \\\"q\\\"") != 0, "backslash dropped, quote escaped");
+            check(strstr(t, "\"KeyJump\": 74") != 0, "KeyJump survived");
+        }
     } else if (!strcmp(which, "padlayouts_reread")) {
         /* the file the save case left behind, read fresh by this process */
         HostPadLayout L;
@@ -404,6 +427,13 @@ int main(int argc, char **argv)
         "  \"PadLayouts\": [ { \"vid\": 1118, \"pid\": 654, \"a\": 2 } ]\n"
         "}\n", 1);
     bad |= run_case(exe, dir, "padlayouts_reread", (const char *)1);
+    bad |= run_case(exe, dir, "padlayouts_backslash",
+        "{\n"
+        "  \"PadLayouts\": [ { \"vid\": 1118, \"pid\": 654,\n"
+        "      \"name\": \"Pad \\\\ Co\", \"b\": 5 } ],\n"
+        "  \"KeyJump\": 74,\n"
+        "  \"CameraMode\": \"ds\"\n"
+        "}\n");
     /* not an array, then an array with nothing usable in it */
     bad |= run_case(exe, dir, "padlayouts_bad",
         "{ \"KeyJump\": 74, \"PadLayouts\": \"nope\", \"CameraMode\": \"ds\" }");
@@ -419,6 +449,6 @@ int main(int argc, char **argv)
         printf("smoke_settings: FAIL\n");
         return 1;
     }
-    printf("smoke_settings: ok, 14 cases\n");
+    printf("smoke_settings: ok, 15 cases\n");
     return 0;
 }

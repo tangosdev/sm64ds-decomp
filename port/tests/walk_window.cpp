@@ -2618,7 +2618,15 @@ static const char *run_pad_name(int mask, char *buf, size_t cap)
 
    Only offered when port_pad_raw says a DirectInput pad is the live one: an
    XInput pad's layout is XInput's own and there is nothing to teach. */
-enum { PADLEARN_STEPS = 14 };
+enum {
+    PADLEARN_STEPS = 14,
+    PADLEARN_STILL = 3000,      /* an axis moved less than this: still */
+    PADLEARN_STILL_FRAMES = 6,  /* this many still frames before arming */
+    PADLEARN_REST_BAND = 8000,  /* and every axis this close to its rest */
+    PADLEARN_PUSH = 16000,      /* a swing past this is a push */
+    PADLEARN_TRIGGER_REST = -20000, /* an axis resting below this is a trigger */
+    PADLEARN_TOAST_HOLD = 90    /* frames a refusal stays on the toast */
+};
 struct PadLearnStep {
     const char *prompt;
     int HostPadLayout::*btn;        /* the button field, or 0 */
@@ -2644,7 +2652,8 @@ static const PadLearnStep PADLEARN[PADLEARN_STEPS] = {
 static HostPadLayout padlearn_out;
 static unsigned padlearn_prev_btn;      /* last frame's raw button mask */
 static short padlearn_last[6];          /* last frame's axes, for the quiet test */
-static short padlearn_base[6];          /* the rest position once quiet */
+static short padlearn_rest[6];          /* the axes as the flow began: rest */
+static short padlearn_base[6];          /* the baseline a swing is measured from */
 static int padlearn_quiet, padlearn_armed;
 static int padlearn_hold;               /* frames a refusal toast stays up */
 
@@ -2678,6 +2687,11 @@ static void padlearn_start(const PortPadRaw *r)
     }
     padlearn_prev_btn = r->buttons;
     memcpy(padlearn_last, r->axis, sizeof padlearn_last);
+    /* THE REST POSITION IS TAKEN ONCE, HERE, with nothing held: a step
+       arms only when the axes are still AND near this, so a stick still
+       held from the previous step cannot become the baseline and answer
+       the next step with its release (review of lane PADCAL) */
+    memcpy(padlearn_rest, r->axis, sizeof padlearn_rest);
     g_padlearn = 1;
     g_rebind_key = 0;
     /* enter is still physically down, the rebind row's trick */
@@ -2704,7 +2718,7 @@ static int padlearn_axis_used(int a)
 static void padlearn_refuse(const char *msg)
 {
     ss_note(msg);
-    padlearn_hold = 90;
+    padlearn_hold = PADLEARN_TOAST_HOLD;
 }
 
 static void padlearn_finish(void)
@@ -2772,16 +2786,20 @@ static void padlearn_frame(int *pad_live)
     const PadLearnStep &st = PADLEARN[g_padlearn - 1];
     const unsigned fresh = r.buttons & ~padlearn_prev_btn;
     padlearn_prev_btn = r.buttons;
-    /* the quiet test: arm the axis baseline after six still frames */
+    /* the quiet test: arm the axis baseline after enough still frames,
+       and only with every present axis back near its rest */
     {
-        int moved = 0;
+        int moved = 0, away = 0;
         for (int a = 0; a < 6; ++a) {
             const int d = (int)r.axis[a] - (int)padlearn_last[a];
-            if (d > 3000 || d < -3000) moved = 1;
+            if (d > PADLEARN_STILL || d < -PADLEARN_STILL) moved = 1;
             padlearn_last[a] = r.axis[a];
+            const int e = (int)r.axis[a] - (int)padlearn_rest[a];
+            if (r.present[a] && (e > PADLEARN_REST_BAND || e < -PADLEARN_REST_BAND))
+                away = 1;
         }
         padlearn_quiet = moved ? 0 : padlearn_quiet + 1;
-        if (!padlearn_armed && padlearn_quiet >= 6) {
+        if (!padlearn_armed && !away && padlearn_quiet >= PADLEARN_STILL_FRAMES) {
             padlearn_armed = 1;
             memcpy(padlearn_base, r.axis, sizeof padlearn_base);
         }
@@ -2793,7 +2811,7 @@ static void padlearn_frame(int *pad_live)
             if (!r.present[a]) continue;
             const int d = (int)r.axis[a] - (int)padlearn_base[a];
             const int m = d < 0 ? -d : d;
-            if (m > 16000 && m > (best_d < 0 ? -best_d : best_d)) {
+            if (m > PADLEARN_PUSH && m > (best_d < 0 ? -best_d : best_d)) {
                 best = a;
                 best_d = d;
             }
@@ -2815,10 +2833,11 @@ static void padlearn_frame(int *pad_live)
                 padlearn_advance();
             }
         } else if (st.axis && best >= 0 && best_d > 0 &&
-                   padlearn_base[best] < -20000) {
+                   padlearn_base[best] < PADLEARN_TRIGGER_REST) {
             /* an analog trigger: rested at its minimum and swung up */
             if (padlearn_axis_used(best)) {
                 padlearn_refuse("that axis is already taken, try another");
+                padlearn_armed = 0;     /* re-arm once it is let go */
             } else {
                 padlearn_out.*st.axis = best;
                 fprintf(stderr, "[pad] learn %d: trigger axis %d\n", g_padlearn, best);
@@ -2828,6 +2847,10 @@ static void padlearn_frame(int *pad_live)
     } else if (best >= 0) {
         if (padlearn_axis_used(best)) {
             padlearn_refuse("that axis is already taken, push the other stick");
+            /* disarm, so the step re-baselines after the release rather
+               than reading the same swing every frame */
+            padlearn_armed = 0;
+            padlearn_quiet = 0;
         } else {
             padlearn_out.*st.axis = best;
             padlearn_out.*st.sign = best_d > 0 ? 1 : -1;

@@ -103,12 +103,12 @@ const char *json_value(const char *s, const char *key)
         if (*p != '"') continue;
         const char *name = p + 1;
         const char *end = name;
-        while (*end && *end != '"' && *end != '\\') ++end;
-        if (*end != '"') {
-            if (!*end) break;
-            p = end;
-            continue;
-        }
+        /* a backslash pair is stepped over and the SAME string goes on,
+           the idiom json_value_end uses: stopping at the backslash used to
+           leave the scanner inside the string, so every key after a value
+           holding one read as absent (review of lane PADCAL) */
+        while (*end && *end != '"') end += (*end == '\\' && end[1]) ? 2 : 1;
+        if (*end != '"') break;
         const int is_key = (size_t)(end - name) == klen && ieq(name, key, klen);
         const char *q = end + 1;
         while (*q == ' ' || *q == '\t' || *q == '\r' || *q == '\n') ++q;
@@ -779,14 +779,14 @@ char *padlayouts_text(void)
     w += (size_t)snprintf(out + w, cap - w, "[");
     for (int i = 0; i < g_padlayout_n; ++i) {
         const HostPadLayout *o = &g_padlayouts[i];
-        /* the name is written with quotes and backslashes escaped and any
-           control character dropped, so a product name cannot break the
-           file */
+        /* the name is written with quotes escaped, and backslashes and
+           control characters DROPPED, so a product name cannot break the
+           file; the name is for a person reading it, not for matching */
         char nm[96];
         size_t k = 0;
         for (const char *c = o->name; *c && k + 3 < sizeof nm; ++c) {
-            if ((unsigned char)*c < 0x20) continue;
-            if (*c == '"' || *c == '\\') nm[k++] = '\\';
+            if ((unsigned char)*c < 0x20 || *c == '\\') continue;
+            if (*c == '"') nm[k++] = '\\';
             nm[k++] = *c;
         }
         nm[k] = '\0';
