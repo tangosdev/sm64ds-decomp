@@ -544,6 +544,12 @@ void port_adventure_probe(int frame);
    Eases each ghost toward its latest snapshot and suppresses its ROM drift.
    No-op unless adventure-ghost mode is on. */
 void port_adventure_ghost_follow(void);
+/* ADVENTURE co-op (M2): is this remote slot a ghost to draw right now -- present
+   and in THIS console's level (hal/comms_sync.cpp). The render loop gates on it
+   so a peer in another level is not drawn. 0 outside adventure mode. */
+int port_adventure_peer_visible(int slot);
+/* the M2 presence proof; no-op unless SM64DS_ADVENTURE_PRESENCE is set. */
+void port_adventure_presence_probe(int frame);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -10021,6 +10027,10 @@ int main(void)
            them, and drives one wire snapshot into the ghost. Inert unless
            SM64DS_ADVENTURE_PROBE is set. */
         port_adventure_probe(frame);
+        /* the M2 proof drives TWO ghosts with level-tagged snapshots and asserts
+           the same-level filter and the spawn/despawn transitions. Inert unless
+           SM64DS_ADVENTURE_PRESENCE is set. */
+        port_adventure_presence_probe(frame);
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
@@ -11112,6 +11122,14 @@ int main(void)
            submission order changes. */
         for (int pi = (int)data_0209f21c - 1; pi >= 0; --pi) {
             if (pi == (int)data_0209f250) continue;   /* drawn below, as before */
+            /* ADVENTURE co-op (M2): a ghost is DRAWN only for a peer present in
+               this console's level. A peer in another level (or gone quiet) is
+               despawned -- skipped here, so it casts no pixels -- exactly as the
+               follower and the name tag skip it on the same predicate. VS and
+               solo do not consult it (the gate is the mode), so their per-slot
+               draw is byte-unchanged. */
+            if (port::adventure_ghost_mode() && !port_adventure_peer_visible(pi))
+                continue;
             if (void *other = data_0209f394[pi])
                 hal_render_player_world(other);
         }

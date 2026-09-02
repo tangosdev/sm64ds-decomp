@@ -109,3 +109,32 @@ carries (character, palette, spawn/despawn, level id).
 
 - 2026-09-02: lane opened, design recorded. Base tier = ghosts over your own
   game; party = later phase. Starting M1.
+- 2026-09-02: M1 shipped (two players, same level, ghosts): the mode flag, the
+  see-through non-colliding hold, the smooth dead-reckoned follower, the
+  wire-driven animation, the name tags with prox fade, and a headless proof.
+- 2026-09-02: M2 (this slice) done. Three parts:
+  - PRESENCE / LEVEL FILTER. The sync snapshot carries a level id (v4 of the
+    wire, hal/comms_sync.cpp): every console stamps data_0209f2f8 into its own
+    body's snapshot, and the receiver keeps the latest level per slot with a
+    liveness timestamp. peer_visible(slot) -- present within 2 s AND in this
+    console's level -- is the ONE predicate every ghost loop consults, so a
+    peer is drawn only while it shares your level and despawns the frame it
+    warps away, you warp away from it, or it goes quiet.
+  - N GHOSTS. The render, hold-follow and name-tag loops already walked every
+    seated slot (data_0209f394[i]); each now gates on peer_visible, so up to
+    the wire's max remote bodies are independent followers with their own slot,
+    tag, translucency and no-collision hold. The input-slot fix stands (local
+    input still routes to data_0209f250's body).
+  - INVITE. The lobby gained a session_type (v4, "vs" default or "adventure").
+    An adventure room seats the SAME relay/carrier a VS match uses, but the go
+    plan tells the launcher to boot SM64DS_ADVENTURE=1 + SM64DS_LEVEL instead
+    of SM64DS_VS_MAP, so a room code joins a ghost session rather than a
+    lockstep match. VS mode is untouched (data_0209f2d8 stays 0).
+  - PROOF. SM64DS_ADVENTURE_PRESENCE drives two level-tagged ghosts on one
+    instance and asserts the same-level filter, the spawn/despawn transitions
+    and local_writes=0 (hal/player_bridges.cpp; [advpresence] ALL PASS). The
+    live half (port/tools/adv_presence_proof.py) runs two loopback consoles
+    same-level (peer vis=1, applied>0, local_writes=0) and different-level
+    (peer vis=0). M1's [advprobe] still passes; the SY and VS wire rungs are
+    green, so the v4 bump did not regress the versus path.
+  Next: M3 in-game text chat.

@@ -133,6 +133,10 @@ int func_02054d88(void);
 extern unsigned char data_0208f074[];
 /* per-slot "this slot is live", Player::Render's own guard */
 extern unsigned char data_0209fc5c[];
+/* ADVENTURE co-op (M2): is this remote slot a ghost to draw now -- present and
+   in this console's level (hal/comms_sync.cpp). The tag loop skips a peer in
+   another level so no name floats over a body that is not drawn. */
+int port_adventure_peer_visible(int slot);
 }
 
 /* ADVENTURE GHOSTS: the same head tags label the ghosts in an adventure
@@ -417,6 +421,11 @@ static void nt_draw(const OvlSurface &fb)
         const char *p = (const char *)data_0209f394[i];
         if (!p) continue;
         if (data_0209fc5c[i] == 0) continue;     /* Player::Render's own guard */
+        /* ADVENTURE co-op (M2): in a ghost session, only tag a peer present in
+           this console's level -- a body in another level is despawned and
+           draws nothing, so a name over it would float on empty space. VS is
+           one shared level and does not consult the filter. */
+        if (adventure && !port_adventure_peer_visible(i)) continue;
 
         const int wp[3] = {*(const int *)(p + 0x5c),
                            *(const int *)(p + 0x60) + NT_HEAD_UP,

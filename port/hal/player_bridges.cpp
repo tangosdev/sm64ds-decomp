@@ -374,6 +374,10 @@ extern "C" void port_adventure_ghost_hold()
 extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
                                            short yaw);
 extern "C" void port_adventure_ghost_follow();
+/* M2: the presence predicate and this console's level, for the diag line and
+   the presence proof below (both defined in hal/comms_sync.cpp / here). */
+extern "C" int port_adventure_peer_visible(int slot);
+extern signed char data_0209f2f8;
 extern "C" void port_adventure_probe(int frame)
 {
     /* DIAG (SM64DS_ADVENTURE_DIAG): identity + per-slot positions, every 60
@@ -394,10 +398,13 @@ extern "C" void port_adventure_probe(int frame)
                 void *a = data_0209f394[i];
                 if (!a) continue;
                 std::fprintf(stderr,
-                    "[advdiag] f%d me=%d slot%d%s live=%u pos=(%d,%d,%d) "
+                    "[advdiag] f%d me=%d mylev=%d slot%d%s live=%u vis=%d "
+                    "pos=(%d,%d,%d) "
                     "yaw=%d noctl=%u clsn=%u cat4=%u anim=%u cur=%d\n",
-                    frame, me, i, i == me ? "(LOCAL)" : "(ghost)",
+                    frame, me, (int)data_0209f2f8, i,
+                    i == me ? "(LOCAL)" : "(ghost)",
                     data_0209fc5c[i],
+                    i == me ? -1 : port_adventure_peer_visible(i),
                     *port::player::pos_x(a), *port::player::pos_y(a),
                     *port::player::pos_z(a), (int)*port::player::facing(a),
                     *(unsigned char *)((char *)a + port::player::kIsNoControl),
@@ -482,6 +489,125 @@ extern "C" void port_adventure_probe(int frame)
         "=> %s\n",
         ghost_slot, have_ghost, not_vs, adv_on, ghost_held, local_free,
         pose_ok, local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
+}
+
+/* ---- THE ADVENTURE PRESENCE PROOF (SM64DS_ADVENTURE_PRESENCE) --------------
+   M2's headless proof: the level filter and N independent ghosts, on one
+   instance, through the REAL apply path. It seats >=2 remote bodies
+   (SM64DS_VS_PLAYERS=3, data_0209f2d8 left 0 so no VS mode) and drives them
+   with real v4 wire snapshots that carry a LEVEL ID, then asserts what a
+   multi-instance session would show:
+
+     - SAME-LEVEL peer is VISIBLE: a snapshot naming this console's own level
+       spawns the ghost -- peer_visible is 1 and the follower moves the body to
+       the wire pose.
+     - DIFFERENT-LEVEL peer is DESPAWNED: a snapshot naming another level leaves
+       peer_visible 0 and the follower does NOT move that body, so nothing of it
+       is drawn -- two peers on the same wire, only the same-level one ghosted.
+     - LEVEL CHANGE despawns and LEVEL ENTRY respawns: re-report the visible
+       peer in another level and it drops out (peer_visible 0, body frozen);
+       re-report the far peer in our level and it comes in (peer_visible 1, body
+       driven). That is a scripted peer changing level, both edges.
+     - THE LOCAL BODY IS NEVER WRITTEN across any of it (the sync layer's own
+       local_writes witness stays put), and this is NOT VS mode.
+
+   Two remote slots driven independently by their own snapshots is the N-ghost
+   generalisation in miniature: the same per-slot loop the render and tag walk,
+   proven to keep two ghosts apart. Prints one [advpresence] line with ALL PASS.
+   Inert unless the knob is set. */
+extern "C" void port_adventure_probe_apply_lvl(int slot, int x, int y, int z,
+                                               short yaw, int level);
+extern "C" void port_adventure_presence_probe(int frame)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_ADVENTURE_PRESENCE") ? 1 : 0;
+    if (!on) return;
+    static bool done = false;
+    const int kAt = 100;
+    if (frame != kAt || done) return;
+    done = true;
+
+    const int me = (int)data_0209f250;
+    const int mylev = (int)data_0209f2f8;
+    const int otherlev = mylev + 7;     /* an id that is not ours */
+
+    /* the first two REMOTE live bodies -- the N-ghost pair */
+    int sA = -1, sB = -1;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0 || !data_0209f394[i]) continue;
+        if (sA < 0) sA = i; else if (sB < 0) { sB = i; break; }
+    }
+    void *localb = (me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0;
+
+    int fails = 0;
+    const bool not_vs = data_0209f2d8 == 0;
+    const bool adv_on = port::adventure_ghost_mode();
+    const bool have_pair = sA >= 0 && sB >= 0 && localb;
+    bool visA_same = false, visB_diff = false, drawnA = false, frozenB = false;
+    bool visA_after = false, visB_after = false, frozenA2 = false, drawnB2 = false;
+    bool local_untouched = false;
+
+    if (have_pair) {
+        void *ba = data_0209f394[sA], *bb = data_0209f394[sB];
+        const unsigned long long lw0 = port::sync_stats().local_writes;
+
+        /* PHASE 1: A in our level (spawn), B in another (despawn). */
+        const int ax = *port::player::pos_x(ba) + 4 * 0x1000;
+        const int az = *port::player::pos_z(ba) + 4 * 0x1000;
+        const int bx0 = *port::player::pos_x(bb), bz0 = *port::player::pos_z(bb);
+        port_adventure_probe_apply_lvl(sA, ax, *port::player::pos_y(ba), az,
+                                       (short)0x1000, mylev);
+        port_adventure_probe_apply_lvl(sB, bx0 + 4 * 0x1000,
+                                       *port::player::pos_y(bb),
+                                       bz0 + 4 * 0x1000, (short)0x1000, otherlev);
+        visA_same = port_adventure_peer_visible(sA) != 0;
+        visB_diff = port_adventure_peer_visible(sB) == 0;
+        port_adventure_ghost_follow();
+        drawnA = *port::player::pos_x(ba) == ax && *port::player::pos_z(ba) == az;
+        frozenB = *port::player::pos_x(bb) == bx0 &&
+                  *port::player::pos_z(bb) == bz0;   /* not driven: despawned */
+
+        /* PHASE 2: A changes to another level (despawn), B enters ours (spawn). */
+        const int ax2 = *port::player::pos_x(ba), az2 = *port::player::pos_z(ba);
+        const int bx2 = *port::player::pos_x(bb) + 6 * 0x1000;
+        const int bz2 = *port::player::pos_z(bb) + 6 * 0x1000;
+        port_adventure_probe_apply_lvl(sA, ax2 + 9 * 0x1000,
+                                       *port::player::pos_y(ba),
+                                       az2 + 9 * 0x1000, (short)0x2000, otherlev);
+        port_adventure_probe_apply_lvl(sB, bx2, *port::player::pos_y(bb), bz2,
+                                       (short)0x2000, mylev);
+        visA_after = port_adventure_peer_visible(sA) == 0;   /* left our level */
+        visB_after = port_adventure_peer_visible(sB) != 0;   /* entered it */
+        port_adventure_ghost_follow();
+        frozenA2 = *port::player::pos_x(ba) == ax2 &&
+                   *port::player::pos_z(ba) == az2;   /* despawned: frozen */
+        drawnB2 = *port::player::pos_x(bb) == bx2 &&
+                  *port::player::pos_z(bb) == bz2;     /* spawned: driven */
+
+        local_untouched = port::sync_stats().local_writes == lw0;
+    }
+
+    if (!have_pair) ++fails;
+    if (!not_vs) ++fails;
+    if (!adv_on) ++fails;
+    if (!visA_same) ++fails;
+    if (!visB_diff) ++fails;
+    if (!drawnA) ++fails;
+    if (!frozenB) ++fails;
+    if (!visA_after) ++fails;
+    if (!visB_after) ++fails;
+    if (!frozenA2) ++fails;
+    if (!drawnB2) ++fails;
+    if (!local_untouched) ++fails;
+    std::fprintf(stderr,
+        "[advpresence] slotA=%d slotB=%d mylev=%d otherlev=%d have_pair=%d "
+        "not_vs=%d adv_on=%d visA_same=%d visB_diff=%d drawnA=%d frozenB=%d "
+        "visA_left=%d visB_entered=%d frozenA2=%d drawnB2=%d local_untouched=%d "
+        "=> %s\n",
+        sA, sB, mylev, otherlev, have_pair, not_vs, adv_on, visA_same, visB_diff,
+        drawnA, frozenB, visA_after, visB_after, frozenA2, drawnB2,
+        local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------

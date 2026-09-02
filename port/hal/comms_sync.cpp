@@ -95,6 +95,12 @@ void _ZN6Player11ChangeStateERNS_5StateE(char *, void *);
 extern void *data_0209f394[];
 extern unsigned char data_0209f21c;
 extern unsigned char data_0209f250;
+// ADVENTURE co-op (M2): the level currently up on THIS console, the id
+// hal/level_boot.cpp seats at every mount and hal/level_change.cpp rewrites on
+// a warp. The send side stamps it into each snapshot so a peer can tell whether
+// it shares this console's level; the presence gate compares a received level
+// against it. signed char in the ROM (levels 0..51); read as int here.
+extern signed char data_0209f2f8;
 }
 
 namespace port {
@@ -302,10 +308,10 @@ bool sync_forced_v1() { parse_cfg(); return g_cfg.force_v1; }
 // under the design's own versioning rule -- the pose fields arrive in v2 when
 // the matched setters have named the storage.
 //
-// SIZE, as of v3: a 16-byte header plus one 38-byte entry -- under owner
-// authority each console sends only its own body, so a snapshot is 54 bytes
-// regardless of player count. Far under any MTU; the contract's one-datagram
-// rule is satisfied with room to spare.
+// SIZE, as of v4: a 16-byte header plus one 40-byte entry -- under owner
+// authority each console sends only its own body, so a snapshot is 56 bytes
+// regardless of player count (the level id added two). Far under any MTU; the
+// contract's one-datagram rule is satisfied with room to spare.
 // ===========================================================================
 #pragma pack(push, 1)
 struct SyncPlayerV1 {
@@ -340,6 +346,17 @@ struct SyncPlayerV1 {
     // further than the snap threshold -- extrapolating through a warp would
     // aim at a place nobody is.
     int            vx, vy, vz;
+
+    // ---- v4, PRESENCE / LEVEL FILTER (ADVENTURE co-op, M2) ------------
+    // The level this body's console is in right now (data_0209f2f8, the id
+    // hal/level_boot.cpp seats and hal/level_change.cpp rewrites on a warp).
+    // Adventure mode is a set of solo games sharing a wire, so a snapshot from
+    // a peer three levels away is not a body this console should draw. The
+    // receiver keeps the latest level per slot and draws a ghost only for a
+    // peer in the SAME level; on a mismatch it despawns the ghost. VS ignores
+    // it -- a versus match is one shared level -- but carries it so one wire
+    // format serves both modes. u16 for room; ids are 0..51 today.
+    unsigned short level_id;
 };
 struct SyncMsgV1 {
     unsigned       magic;     // kSyncMagic -- framing, never changes
@@ -372,11 +389,13 @@ struct SyncMsgV1 {
 // recognised, counted, and DROPPED at the version check -- no half-understood
 // message reaches the apply path, which is what the unreliable channel needs.
 enum : unsigned { kSyncMagic = 0x314e5953u };
-// v3: dead reckoning added vx/vy/vz to the entry (item 2). THE VERSION FIELD
-// BUMPS, THE MAGIC NEVER DOES -- spec trap 8, paid for once already when a
-// tag bump unframed the whole channel (247 sent, 0 received). Both sides
-// ship together; a mismatched peer is recognised, counted, dropped loudly.
-enum : unsigned { kSyncVersion = 3u };
+// v3: dead reckoning added vx/vy/vz to the entry (item 2). v4: the level id
+// (ADVENTURE co-op M2), so a receiver ghosts only peers in its own level. THE
+// VERSION FIELD BUMPS, THE MAGIC NEVER DOES -- spec trap 8, paid for once
+// already when a tag bump unframed the whole channel (247 sent, 0 received).
+// Both sides ship together; a mismatched peer is recognised, counted, dropped
+// loudly.
+enum : unsigned { kSyncVersion = 4u };
 enum : unsigned char { kFlagLive = 1, kFlagGrounded = 2, kFlagTeleport = 4 };
 enum : int { kSyncBufBytes = 256 };
 
@@ -506,6 +525,21 @@ GhostTarget g_gtarget[kCommsMaxPlayers];
 unsigned short g_ganim[kCommsMaxPlayers];
 int            g_gcursor[kCommsMaxPlayers];
 bool           g_ganim_have[kCommsMaxPlayers];
+
+// ADVENTURE co-op (M2), PRESENCE. The per-slot filter that turns "everyone on
+// the wire" into "everyone in MY level". Filled from every received snapshot:
+// the peer's level id, and the wall clock of the last snapshot for a liveness
+// timeout. peer_visible() is the one predicate every ghost loop consults --
+// draw, hold-follow, name tag -- so "spawn a ghost" and "despawn it when the
+// peer leaves or changes level" are one decision made in one place. A peer is
+// visible when it is present (a snapshot inside kPresenceTimeoutMs) AND its
+// level id equals this console's data_0209f2f8. A peer that stops sending, or
+// warps to another level, or that this console warps away from, drops out of
+// visible on the next frame -- which is the despawn.
+enum : unsigned { kPresenceTimeoutMs = 2000u };
+int      g_peer_level[kCommsMaxPlayers];
+unsigned g_peer_seen_ms[kCommsMaxPlayers];
+bool     g_peer_present[kCommsMaxPlayers];
 
 // Item 2's sender-side velocity sample: the local body's position last frame,
 // differenced each frame. Seeded on first sight so the first frame's
@@ -837,6 +871,10 @@ void sync_send_own() {
     e->vx = g_vel[0];
     e->vy = g_vel[1];
     e->vz = g_vel[2];
+    /* v4: the level this console is in, so a receiver ghosts only peers in its
+       own level. data_0209f2f8 is signed (levels 0..51); widen through int so a
+       hypothetical negative id does not sign-extend into the u16. */
+    e->level_id = (unsigned short)(int)data_0209f2f8;
 
     const int len = (int)sizeof(SyncMsgV1) + (int)sizeof(SyncPlayerV1);
     if (t->send_aux(buf, len) == len) {
@@ -952,6 +990,15 @@ void apply_snapshot(const unsigned char *buf, int n) {
            never the local one (the slot==me skip above stands), so local_writes
            stays 0. VS mode falls through to the correction logic below unchanged. */
         if (adventure_ghost_mode()) {
+            /* PRESENCE (M2): record this peer's level and mark it seen NOW, so
+               peer_visible() can tell whether this slot shares our level and
+               whether it is still live. Recorded for EVERY received snapshot,
+               same-level or not -- the level compare is peer_visible()'s job, and
+               a body only drops out of visible when its level stops matching or
+               its snapshots stop arriving. */
+            g_peer_level[slot] = (int)e->level_id;
+            g_peer_seen_ms[slot] = GetTickCount();
+            g_peer_present[slot] = true;
             g_gtarget[slot].have = true;
             g_gtarget[slot].x = e->x;
             g_gtarget[slot].y = e->y;
@@ -1105,8 +1152,8 @@ void handle_ping(const unsigned char *buf, int n) {
 // what the network path does. anim_id is taken from the target body so
 // apply_pose sees no id change; the teleport flag makes the position land
 // exactly for a clean assert. Inert unless called.
-extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
-                                           short yaw) {
+extern "C" void port_adventure_probe_apply_lvl(int slot, int x, int y, int z,
+                                               short yaw, int level) {
     if (slot < 0 || slot >= kCommsMaxPlayers) return;
     void *a = data_0209f394[slot];
     unsigned char buf[kSyncBufBytes];
@@ -1127,7 +1174,55 @@ extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
     e->state_id = 0;
     e->anim_frame = a ? player::anim_frame(a) : 0;
     e->vx = e->vy = e->vz = 0;
+    /* v4: the injected peer's level. The M2 presence proof passes a level that
+       is NOT this console's to prove the filter despawns it; the M1 proof (via
+       port_adventure_probe_apply below) passes our own level so the ghost is
+       same-level and visible, exactly as the M1 assert expects. */
+    e->level_id = (unsigned short)level;
     apply_snapshot(buf, (int)(sizeof(SyncMsgV1) + sizeof(SyncPlayerV1)));
+}
+
+// The M1 face: inject at THIS console's own level, so the ghost is same-level
+// and visible. Unchanged signature, so the M1 proof and its callers are
+// untouched by the v4 level field.
+extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
+                                           short yaw) {
+    port_adventure_probe_apply_lvl(slot, x, y, z, yaw, (int)data_0209f2f8);
+}
+
+// ---------------------------------------------------------------------------
+// ADVENTURE co-op (M2): the presence predicate. The single question every
+// ghost loop asks -- render, hold-follow, name tag -- so "is this remote body a
+// ghost I should draw right now" is answered in one place and cannot drift
+// between the four sites. True when:
+//   - adventure mode is on (VS and solo never ghost),
+//   - the slot is a real remote slot (not out of range, not the local body),
+//   - the peer is PRESENT: a snapshot arrived inside kPresenceTimeoutMs, so a
+//     peer that quit or dropped its link despawns after the timeout, and
+//   - the peer is in the SAME level: its last reported level id equals this
+//     console's data_0209f2f8. A peer that warps away, or that we warp away
+//     from, stops matching and despawns on the very next frame.
+// This is the whole of the spawn/despawn mechanism: the Player bodies are
+// seated once at level boot (vs_player_count), and which of them is DRAWN and
+// DRIVEN as a ghost is this predicate, re-evaluated every frame.
+// ---------------------------------------------------------------------------
+namespace {
+bool peer_visible(int slot) {
+    if (!adventure_ghost_mode()) return false;
+    if (slot < 0 || slot >= kCommsMaxPlayers) return false;
+    if (slot == (int)data_0209f250) return false;
+    if (!g_peer_present[slot]) return false;
+    if ((unsigned)(GetTickCount() - g_peer_seen_ms[slot]) > kPresenceTimeoutMs)
+        return false;
+    if (g_peer_level[slot] != (int)data_0209f2f8) return false;
+    return true;
+}
+}  // namespace
+
+// The extern "C" face the other host TUs gate on (walk_window's render loop,
+// player_bridges' hold, nametag.h's tag). Same predicate, one authority.
+extern "C" int port_adventure_peer_visible(int slot) {
+    return peer_visible(slot) ? 1 : 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -1162,6 +1257,11 @@ extern "C" void port_adventure_ghost_follow() {
     const int me = (int)data_0209f250;
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
         if (i == me) continue;
+        /* PRESENCE (M2): only DRIVE a ghost that is present in this console's
+           level. A peer in another level (or gone quiet) is despawned -- its
+           body is left where it was, undriven, and the render/name-tag loops
+           skip it on the same predicate, so nothing about it shows. */
+        if (!peer_visible(i)) continue;
         if (!g_gtarget[i].have) continue;
         void *a = data_0209f394[i];
         if (!a) continue;
