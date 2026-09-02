@@ -12024,7 +12024,7 @@ list(APPEND SLICE_W3C_SOURCES
 # src/func_ov064_02119ea0.c, which slice_gate179.txt ALREADY carries -- it is
 # WaterRing's state-enter body, which gate 179 read as a stray pair behind "the
 # Piece" table, so it is correct where it is and must not be listed again here.
-foreach(dup IN ITEMS src/_ZN9WaterRing8BehaviorEv.cpp src/_ZN9WaterRing6RenderEv.cpp
+foreach(dup IN ITEMS src/_ZN9WaterRing8BehaviorEv.cpp
                      src/func_ov064_02119ecc.cpp src/func_ov064_02119afc.cpp
                      src/func_ov064_0211a6ec.cpp
                      src/func_ov064_0211a734.cpp src/_ZN13TreasureChest6RenderEv.cpp
