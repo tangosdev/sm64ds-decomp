@@ -4,12 +4,16 @@ Lane: NAMETAG. Tango's ask: in an online VS match, draw each OTHER player's
 username above their head and their star count above the name, in the game's
 own Mario-style font rather than a generic one.
 
-Worktree `C:\tmp\nametag`, branch `port/nametag`, base `ad09cd9f5`
-(port-mount-noseat-cluster's tip). Own build dir `C:\tmp\nametag\build\port`,
+Worktree `C:\tmp\nametag`, branch `port/nametag`, base `bd7d130ef`
+(port-mount-noseat-cluster's tip). REBASED off `ad09cd9f5` when the palette
+lane landed: five commits replayed with no conflict and no file in common --
+that lane owns level_boot.cpp, fs_mods.cpp, player_bridges.cpp,
+editor_channel.cpp and vs_palette_gen.h, none of which this one touches.
+Own build dir `C:\tmp\nametag\build\port`,
 evidence `C:\tmp\nametag-out` and `C:\tmp\nametag\status_shots`. Nothing
 pushed, nothing merged.
 
-`git diff --stat ad09cd9f5 -- src/` is EMPTY. No byte of matched source moved.
+`git diff --stat bd7d130ef -- src/` is EMPTY. No byte of matched source moved.
 
 ---
 
@@ -142,6 +146,11 @@ python port/tools/battery.py C:\tmp\nametag --skip-build
     battery: ALL GREEN
     BATTERY_EXIT=0
 
+TAKEN ON `ad09cd9f5`, BEFORE THE REBASE, and not re-run after it -- the
+coordinator's call, and the reason it is sound is that the rebase replayed
+clean onto a tip whose changes are in five files this lane does not touch.
+What WAS re-run on the new tip is the build and the four-window arm below.
+
 Fifty level selftests and thirty-four scene selftests are also the evidence for
 "nothing outside a VS match changed": every one of them runs the new draw call
 and every one of them returns on its first compare.
@@ -179,6 +188,32 @@ drawing the whole time. And the narrow arm, `nametag_proof.sh 4 900`:
 
 Evidence on disk: C:\tmp\nametag-out\rung16 and \rung4, one directory per
 window with its run.log and its BMP.
+
+### After the rebase, on bd7d130ef
+
+An incremental ninja rebuilt the palette lane's TUs and this lane's two,
+linked all four binaries and passed the link-time guard:
+
+    [24/24] Linking CXX executable walk_window_hires.exe
+    dsstate_guard: OK -- 14233 hosted DS symbols all inside .dsstate
+                   [0xdcd000, 0xecf683), 1058435 bytes captured
+    NINJA_EXIT=0
+
+and the narrow arm ran again, muted, on that binary:
+
+    windows 4  ports 43620..43623  child frames 900  parent 1620  map 0
+    all 4 exited
+    --- dhdiff ---
+    p0 vs p1: rc=0   1620 hashed frames, 1620 digest, 0 verbose
+    p0 vs p2: rc=0   1620 hashed frames, 1620 digest, 0 verbose
+    p0 vs p3: rc=0   1620 hashed frames, 1620 digest, 0 verbose
+    p1 vs p2: rc=0    900 hashed frames,  900 digest, 0 verbose
+    p1 vs p3: rc=0    900 hashed frames,  900 digest, 0 verbose
+    p2 vs p3: rc=0    900 hashed frames,  900 digest, 0 verbose
+    pairings with a problem: 0
+
+All four windows decoded the ROM font, and the captures below were retaken
+from this build.
 
 ### Screenshots
 
@@ -238,6 +273,16 @@ The owner judges the look; this lane only claims the text is visible.
   on a 384-row screen, a whole second body above him. It is still a measurement
   of one camera in one arena, not the Player's own collision height; a lane that
   wants it exact should read that out of the class.
+- **THE OFF-SCREEN CULL IS NOW THE ONLY THING BETWEEN A PROJECTION AND A
+  CAST**, and that was a review find rather than an observed fault. The
+  first version rounded `sx` into an int and tested the int; a body far
+  off-axis and within a hair of the eye plane divides a large numerator by a
+  near-zero `w`, and a float outside int range converts to an unspecified
+  value rather than to a big number the test would have caught. Both bounds
+  are checked in floating point ahead of every cast now, written positive so
+  a NaN falls out too, and the near cull moved from 1e-4 to 1e-2 -- still two
+  orders under the smallest near plane anything in this port sets, so nothing
+  drawable is lost. Never seen in a run; the arithmetic allowed it.
 - **NOTHING HERE IS PROVEN OVER THE RELAY**, only over loopback, which is the
   same boundary every VS proof in this tree has.
 - **THE LAUNCHER DOES NOT WRITE `NameTags` YET.** The game reads it and
