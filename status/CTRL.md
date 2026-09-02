@@ -312,3 +312,19 @@ Files touched by the fix commit: `port/hal/pad_backend.cpp` (rewritten around
 the worker), `port/hal/pad_backend.h` (banner, `port_pad_device_changed`),
 `port/tests/walk_window.cpp` (one `case WM_DEVICECHANGE:` in `wndproc`, four
 lines).
+
+### Review round 2 (tip c6820721a): PASS, two LOW follow-ups
+
+The re-review passed (absent axes read 0, poll 0.001 ms including poll 0, one
+thread, clean exit with the lock held, 66762 snapshot reads with 0 torn, all
+four `SM64DS_PAD_BACKEND` values rc=0, KERNEL32-only) and asked for two small
+things before stacking:
+
+| # | finding | fix |
+|---|---|---|
+| LOW 1 | with an XInput slot answering and no DirectInput device bound, the worker still enumerated DirectInput every 2 s forever (hundreds of ms of CPU and HID traffic per pass for every XInput user) | the DirectInput scan is skipped while `xi_slot >= 0`; the `WM_DEVICECHANGE` kick still forces one, so a swap to a non-XInput pad is seen at once, and the cadence resumes when the slot goes |
+| LOW 2 | the header did not say init is non-blocking | one sentence in the `pad_backend.h` banner: a pad reads not-live until the worker's first pass (~0.5 s) and the `[pad]` line can trail by one pass |
+
+Rebuilt with `ninja -C build/port walk_window` only, plus the post-link map
+guards; no battery, no other target.
+
