@@ -984,9 +984,46 @@ static int __fastcall cap_clean(void *s, void *)
 { return ((WaterfallMist *)s)->WaterfallMist::CleanupResources(); }
 static int __fastcall cap_behavior(void *s, void *)
 { return ((WaterfallMist *)s)->WaterfallMist::Behavior(); }
+/* SM64DS_CAP_PROBE=1 reports, once per run, the two words the ROM's own
+   WaterfallMist::Render gates on before it draws anything
+   (src/_ZN13WaterfallMist6RenderEv.cpp:14):
+
+       if (unk_3ff == 1 || mScaleX < 0x100) return 1;
+
+   The render SLOT running is not the same fact as a model being drawn, and
+   port_actor_render_probe above only witnesses the slot. Run vsmap wanted the
+   other half: the VS arenas place six CAPs, all six are alive on the behaviour
+   list, and whether the player can SEE one is decided by these two words and
+   nothing else. unk_400 is printed with them because Behavior's gate
+   (src/_ZN13WaterfallMist8BehaviorEv.cpp:41-43) is what writes unk_3ff, and it
+   only runs when unk_400 != 0xff. */
 static int __fastcall cap_render(void *s, void *)
 {
     port_actor_render_probe("CAP", (char *)s + 0x300);
+    {
+        static int on = -1, said;
+        if (on < 0) on = std::getenv("SM64DS_CAP_PROBE") != 0;
+        if (on && said < 8) {
+            ++said;
+            const char *c = (const char *)s;
+            std::printf("[cap] uid %u pos(%d,%d,%d) type %d model %d "
+                        "unk_400 %02x unk_3ff %02x flags3eb %02x scaleX %d "
+                        "-> Render %s\n",
+                        *(const unsigned *)(c + 0x10),
+                        *(const int *)(c + 0x5c) >> 12,
+                        *(const int *)(c + 0x60) >> 12,
+                        *(const int *)(c + 0x64) >> 12,
+                        *(const int *)(c + 0x3f0),
+                        *(const int *)(c + 0x3f4),
+                        *(const unsigned char *)(c + 0x400),
+                        *(const unsigned char *)(c + 0x3ff),
+                        *(const unsigned char *)(c + 0x3eb),
+                        *(const int *)(c + 0x80),
+                        (*(const unsigned char *)(c + 0x3ff) == 1 ||
+                         *(const int *)(c + 0x80) < 0x100)
+                            ? "RETURNS EARLY, nothing drawn" : "draws");
+        }
+    }
     return ((WaterfallMist *)s)->WaterfallMist::Render();
 }
 /* OnPendingDestroy takes `this`; the earlier thunk called it with no argument,

@@ -2262,8 +2262,23 @@ static int __fastcall qb_clean(void *s, void *)
 { return _ZN13QuestionBlock16CleanupResourcesEv(s); }
 static int __fastcall qb_behavior(void *s, void *)
 { return _ZN13QuestionBlock8BehaviorEv(s); }
+/* THE PROBE HAS TO PICK THE MEMBER THE ROM'S OWN Render PICKS, and it used to
+   name +0x320 for all six classes that share this vtable. That is the
+   ModelAnim, and src/_ZN13QuestionBlock6RenderEv.cpp:23-30 only draws it when
+   `mActorId == 0x14` -- the plain QUESTION_BLOCK. Every other id (21
+   EXCLAMATION_BLOCK, 22 EXCLAMATION_BLOCK_VS, 23/24/25 the three CAP_BLOCKs)
+   draws mModel at +0xd4, and InitResources never touches +0x320 for them
+   (src/_ZN13QuestionBlock13InitResourcesEv.c:26-46: only case 0 does).
+
+   So the probe was reading a member the class legitimately leaves zeroed and
+   reporting `file 00000000 transforms 00000000` on a block that was drawing
+   perfectly well. Run vsmap, chasing "the VS ! blocks do not render": the null
+   was the instrument's, not the game's. Reading +0xd4 for those ids is what the
+   probe was always supposed to say. */
 static int __fastcall qb_render(void *s, void *)
-{ port_actor_render_probe("QUESTION_BLOCK", (char *)s + 0x320);
+{ port_actor_render_probe("QUESTION_BLOCK",
+                          (char *)s + (*(unsigned short *)((char *)s + 0xc) ==
+                                       0x14 ? 0x320 : 0xd4));
   return _ZN13QuestionBlock6RenderEv(s); }
 
 /* GATE 203: the block's own five HIT slots, ov102, all matched src and now

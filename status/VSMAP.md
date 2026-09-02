@@ -385,7 +385,9 @@ the CAMERA/HUD/MINIMAP trio the boot always makes is in both.
 | map 3, level 29 | seq 0x4d at GO; group 0x2E bank 0x36; 42 objects in 4 classes, no enemies, 15 CAPs, no VS block | the same | unchanged |
 | map 4, level 42 | seq 0x4d at GO; group 0x2C bank 0x36; 29 objects in 7 classes, ROLLING_IRON_BALL x2, 6 CAPs, 2 EXCLAMATION_BLOCK_VS | the same | unchanged |
 
-**No source change was needed and none was made.** The three reports resolve as:
+**The object loader and the music needed no change and got none; one real bug
+was found downstream of both, in the pictures section at the end of this file.**
+The three reports resolve as:
 
 - **WRONG MUSIC** - already fixed in this base by 20621ecf0 and 4d251d9af, and
   now proved at the sequencer rather than at the call site: the arena starts SSEQ
@@ -398,11 +400,12 @@ the CAMERA/HUD/MINIMAP trio the boot always makes is in both.
   the cartridge.
 - **NO ENEMIES** - the cartridge has none. Every enemy in these four levels sits
   in a star-group-1 sub-table that `LoadObjects` skips at filter 2.
-- **NO CAPS** - the CAPs are there, all of them, on every arena: 6 / 6 / 15 / 6
-  alive, at the ROM's own coordinates, in every one of the four windows. So are
-  the VS `!` blocks where the ROM puts them: 1 on map 2, 2 on map 4, and NONE on
-  maps 1 and 3. If the reported match was on map 1 or map 3, "no cap blocks" is
-  the cartridge's own answer.
+- **NO CAPS** - HALF ANSWERED HERE AND CORRECTED AT THE END OF THIS FILE. The
+  CAP actors are all there: 6 / 6 / 15 / 6 alive at the ROM's own coordinates in
+  every one of the four windows. They are also NEVER DRAWN, which counting could
+  not see and the pictures did; see THE CAPS DO NOT DRAW below. The VS `!` blocks
+  are a different story and are fine: they draw, and they are where the ROM puts
+  them, which is 1 on map 2, 2 on map 4 and NONE on maps 1 and 3.
 
 ## Battery
 
@@ -420,11 +423,14 @@ change was owed" has to show that it also broke nothing.
 
 ## Gaps and debts, stated rather than closed
 
-1. **The CAPs and blocks are alive but this lane did not LOOK at them.** Every
-   number here is a count and a coordinate off the behaviour list. Whether a CAP
-   renders, and whether picking one up turns a Yoshi into Mario, is a visual and a
-   gameplay question this lane is not allowed to judge for itself. That is the
-   next thing to check and it wants the owner's eyes on a capture.
+1. **CLOSED, and it found a bug.** This read "the CAPs and blocks are alive but
+   this lane did not LOOK at them". It has now looked: the pictures and the
+   measured render gate are at the end of this file. The VS `!` blocks draw; the
+   CAPs never do, and the reason is a `Stage::Render` stand-in six links
+   upstream. What is still open from the original wording is the second half:
+   whether picking a cap up turns a Yoshi into Mario is a gameplay question this
+   lane has not touched, and it cannot be asked at all until the caps are
+   visible.
 2. **The countdown's two missing ROM preconditions** are still open, already
    recorded in `port/hal/star_flow.cpp` and `port/stage_lifecycle_map.txt`: the
    `data_0209fc9c` pause arm and the `data_0209fc68 == 6` match-end arm are not
@@ -447,3 +453,112 @@ change was owed" has to show that it also broke nothing.
    `status/VS16HOST.md` is where it would be measured.
 5. **420 and 900 frames.** Long enough to reach the countdown and a MATCH OVER,
    not long enough to say anything about a full-length match.
+
+---
+
+# THE PICTURES, AND THE ONE THING THE COUNTS GOT WRONG
+
+Gap 1 above said the lane had only counted and never looked. Looking changed one
+of the three answers, so the verdict table earlier in this file is CORRECTED
+below rather than left standing.
+
+`port/tools/vs_shots.py` boots one arena per candidate placement (muted,
+minimised, `mp2_proof.env_base`), puts the player beside the object with
+`SM64DS_SPAWN`, holds the DS camera-rotate bit with `SM64DS_SELFTEST_ORBIT` so
+the lens sweeps all the way round, and writes one BMP a frame with
+`SM64DS_DUMP_FROM/TO`. It then picks the frame whose camera axis sits about eight
+degrees off the object -- NOT the smallest angle, because zero degrees is exactly
+where the player and whatever he is standing against already are. The camera is
+the GAME'S (cam_mode stays CAM_DS), so the cull deciding what draws is the ROM's.
+
+## The pictures
+
+| file | what the run measured about that frame |
+|---|---|
+| `status_shots/map1_level51_cap_f245.png` | VS map 1, level 51. Camera 1506 units from the CAP record at (804,647,2974), 8.0 degrees off axis. In frame: the local Yoshi, the arena's UNCHAINED_CHOMP, a TREE, the castle wall and fence. |
+| `status_shots/map2_level43_cap_f162.png` | VS map 2, level 43. Camera 979 units from the CAP record at (-2614,158,2208), 8.0 degrees off axis. In frame: the local Yoshi on the sand spit, the sea, an INVISIBLE_POLE, and a round ground shadow at the record's position. |
+| `status_shots/map2_level43_exclamation_block_vs_f217.png` | VS map 2, level 43. Camera 1041 units from the EXCLAMATION_BLOCK_VS at (1295,550,-3493), 12.6 degrees off axis. In frame: the block, and the local Yoshi in front of it. |
+| `status_shots/map4_level42_cap_f323.png` | VS map 4, level 42. Camera 1446 units from the CAP record at (-400,0,1800), 8.0 degrees off axis. In frame: the local Yoshi and the arena's stone floor and walls. |
+| `status_shots/map4_level42_exclamation_block_vs_f428.png` | VS map 4, level 42. Camera 1092 units from the EXCLAMATION_BLOCK_VS at (2800,650,2800), 8.0 degrees off axis. In frame: the local Yoshi on the block, seen through the arena's fence, which is between the lens and both of them. |
+
+The pictures are not committed. They are ROM-derived imagery and this repository
+keeps that out of git; the paths above are where the run leaves them.
+
+## THE VS `!` BLOCKS DRAW. Actor 22 is fine.
+
+`[actor] QUESTION_BLOCK model 30037C14 file 300CFD30 transforms 300CFD00
+mat.t (161,68,-437) scene` -- a real BMD file, a real transform array, and a
+matrix translation of (161,68,-437) in scene units, which is (1288,544,-3496) in
+world units against the record's (1295,550,-3493). The map 4 block reads
+mat.t (350,81,350) against its record (2800,650,2800). Both draw, and map 2's
+picture shows one.
+
+**A false alarm this lane raised and then closed, recorded because it cost a
+build.** The first run of this reported `file 00000000 transforms 00000000` for
+both blocks, which reads exactly like a model load that never finished. It was
+the INSTRUMENT. `port/hal/actor_classes.cpp`'s `qb_render` passed
+`this + 0x320` -- the ModelAnim -- for all six classes sharing
+`_ZTV13QuestionBlock`, and `src/_ZN13QuestionBlock6RenderEv.cpp:23-30` only draws
+that member when `mActorId == 0x14`, the plain QUESTION_BLOCK. Ids 21, 22 and the
+three CAP_BLOCKs draw `mModel` at +0xd4, and
+`src/_ZN13QuestionBlock13InitResourcesEv.c:26-46` never touches +0x320 for them,
+so the probe was reading a member the class correctly leaves zeroed. The probe
+now picks the member the ROM's own Render picks. Nothing about the game changed.
+
+## THE CAPS DO NOT DRAW. Actor 269, and this is a real bug.
+
+Every CAP is spawned, alive on the behaviour list at the ROM's own coordinates,
+and its render slot runs every frame. It draws nothing, on every arena.
+MEASURED with `SM64DS_CAP_PROBE=1` (`port/hal/actor_classes_bob_world.cpp`):
+
+```
+map 1  [cap] pos(-1299,729,3236) type 4 model 2 unk_400 00 unk_3ff 01 flags3eb 00 scaleX 4096 -> Render RETURNS EARLY, nothing drawn
+map 2  [cap] pos(  341,356,-1106) type 4 model 0 unk_400 01 unk_3ff 01 flags3eb 00 scaleX 4096 -> Render RETURNS EARLY, nothing drawn
+map 4  [cap] pos( 1000,400,-1050) type 4 model 2 unk_400 01 unk_3ff 01 flags3eb 00 scaleX 4096 -> Render RETURNS EARLY, nothing drawn
+```
+
+### The path that fails, one link at a time
+
+1. `src/_ZN13WaterfallMist6RenderEv.cpp:14` --
+   `if (unk_3ff == 1 || mScaleX < 0x100) return 1;`. Measured `unk_3ff` is 1 and
+   `mScaleX` is 0x1000, so it is the first half of that test. `Model::Render` is
+   never reached.
+2. `src/_ZN13WaterfallMist8BehaviorEv.cpp:41-43` -- `unk_3ff` is written to 1
+   every frame, because the gate above it reads bit 1 of the byte at +0x3eb and
+   finds it clear. Measured `flags3eb` is 0x00.
+3. That byte is not the actor's own. `WaterfallMist::InitResources`
+   (`src/_ZN13WaterfallMist13InitResourcesEv.cpp:189-193`) builds a registry node
+   at `this + 0x3d0` through `func_ov001_020ab228`, whose flag byte is node
+   +0x1b -- actor +0x3eb. `src/func_ov001_020ab228.c:18` zeroes it, which is
+   correct: the cap starts hidden.
+4. The ONLY writer of bit 1 in the whole tree is `func_ov001_020aa420`
+   (`src/func_ov001_020aa420.c:100` and `:125` set it, `:73` clears it). It is
+   the manager that decides which caps are currently showing.
+5. Its only caller is `src/func_ov001_020aaf40.c:50`.
+6. Whose only caller is **`Stage::Render`** -- and
+   `port/stage_lifecycle_map.txt:777-783` already records that the port's
+   `Stage::Render` is HOSTED, with eleven unresolved callees, and names
+   `func_ov001_020aaf40` as one of them.
+
+So the caps are invisible because the port's `Stage::Render` is a stand-in and the
+cap-visibility manager behind it never runs. This is not the object loader, which
+is why the counting half of this document is still right: the placements load,
+the actors exist, they are in the right places, and one function downstream of
+all of that is missing.
+
+### What it does NOT explain, said plainly
+
+Nothing here says what the caps would look like once the manager runs.
+`func_ov001_020aa420` picks which of the caps on `data_ov001_020ad634[modelIndex]`
+shows, so it is entirely possible the DS shows a subset rather than all six. This
+lane did not run it and will not guess at it.
+
+### The shape of the fix, not taken here
+
+It is the shape this tree already uses for `port_vs_countdown_tick`: host the one
+`Stage::Render` statement that calls `func_ov001_020aaf40`, rather than the whole
+function. The cost is not the statement, it is the mount --
+`func_ov001_020aa420` is in no slice today and needs its three ov001 tables
+(`data_ov001_020ad628`, `data_ov001_020ad630`, `data_ov001_020ad634`) mounted
+with it. That is a real piece of work with its own proof obligations and it wants
+its own lane rather than a tail-end commit on this one.
