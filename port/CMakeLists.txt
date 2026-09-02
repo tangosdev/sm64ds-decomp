@@ -8150,7 +8150,9 @@ set(CAMERA_HOST_SOURCES
     # table (GATE13_SYMS), the one PMF call each routed into
     # hal_call_camera_state_fn.
     unmatched/G3i_PerspectiveW.cpp
-    unmatched/G3i_LookAt.cpp
+    # G3i_LookAt.cpp RETIRED (lane shadow-A): the matched TU reaches the
+    # geometry engine through a pointer bound once to a literal register
+    # address, which hostgen's MMIO_PTR pass rewrites (GATE13_SYMS).
     hal/camera_states.cpp
     hal/camera_bridges.cpp)
 
@@ -8166,7 +8168,8 @@ set(CAMERA_HOST_SOURCES
 # hal_call_camera_state_fn, func_02008550 over hal/ptr_tables.cpp's records).
 set(GATE13_SYMS _ZN6Camera6RenderEv LenVec3 _ZN4cstd11ldiv_resultEv
     func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj
-    func_02008550 func_0200cae4 func_0200ca50)
+    func_02008550 func_0200cae4 func_0200ca50
+    _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3)
 set(GATE13_GEN "")
 foreach(sym IN LISTS GATE13_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
