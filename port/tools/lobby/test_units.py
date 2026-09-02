@@ -2148,6 +2148,73 @@ def test_the_dial_cannot_widen_over_a_seated_old_client():
               S.ROOMS[code].match_players == 8, (st, out))
 
 
+def test_a_dropout_after_go_does_not_end_the_match_for_the_rest():
+    """0.3.2 field lesson. Once the match is sent off, a non-host member's
+    failed drops that member and the rest play on; the host's failed still
+    ends it; and a match that falls below two players ends."""
+    print("-- after go, one dropout does not end the match for the rest")
+    reset()
+    with game_max(16, seats=16):
+        st, h = S.do_create({"v": 3, "nick": "h", "pre_ok": True},
+                            "10.0.0.1", 1000.0)
+        code, htok = h["room"], h["token"]
+        toks = []
+        for k in (2, 3):
+            st, out = S.do_join({"v": 3, "room": code, "nick": "g%d" % k,
+                                 "pre_ok": True}, "10.0.0.%d" % k, 1000.0)
+            toks.append(out["token"])
+        st, out = S.do_params({"v": 3, "room": code, "token": htok, "map": 0,
+                               "win_mode": "time", "match_players": 3},
+                              "10.0.0.1", 1000.5)
+        st, p = start(code, htok)
+        check("three players start", st == 200, (st, p))
+        match = p["match"]
+        room = S.ROOMS[code]
+        # Arm: every playing launcher says it can spawn this match, and the
+        # last one flips the room from arming to go.
+        for tok, ip in ((htok, "10.0.0.1"), (toks[0], "10.0.0.2"),
+                        (toks[1], "10.0.0.3")):
+            st, out = S.do_ready({"v": 3, "room": code, "token": tok,
+                                  "match": match}, ip, 1001.0)
+        check("the room is at go", room.state == "go", room.state)
+        st, f = S.do_failed({"v": 3, "room": code, "token": toks[0],
+                             "match": match, "reason": "no_pairing"},
+                            "10.0.0.2", 1005.0)
+        check("a guest's failed after go is 200", st == 200, (st, f))
+        check("and the match is still on", room.state != "lobby"
+              and room.match == match, (room.state, room.match))
+        check("the guest is no longer playing",
+              not room.members[2].playing, room.members[2].playing)
+        ev = room.events[-1]
+        check("a dropped event names the seat and the reason",
+              ev["kind"] == "dropped" and ev["seat"] == 2
+              and ev["reason"] == "no_pairing", ev)
+        st, f = S.do_failed({"v": 3, "room": code, "token": htok,
+                             "match": match, "reason": "no_pairing"},
+                            "10.0.0.1", 1006.0)
+        check("the host's failed still ends the match",
+              st == 200 and room.state == "lobby" and room.match is None,
+              (st, room.state, room.match))
+        check("and every launcher sees a failed event",
+              room.events[-1]["kind"] == "failed", room.events[-1])
+
+
+def test_result_accepts_a_wide_scoreline():
+    """0.3.2: the marker prints four scores as its floor and up to sixteen."""
+    print("-- result takes four to sixteen scores")
+    reset()
+    code, room, host, guest = _two_ready()
+    st, p = start(code, host["token"])
+    ok7 = S.v_scores({"scores": [1, 0, 0, 0, 0, 0, 0]})
+    check("seven scores validate", ok7[1] is None, ok7)
+    ok16 = S.v_scores({"scores": [0] * 16})
+    check("sixteen scores validate", ok16[1] is None, ok16)
+    check("three scores are still refused",
+          S.v_scores({"scores": [1, 0, 0]})[1] == "bad_scores")
+    check("seventeen scores are refused",
+          S.v_scores({"scores": [0] * 17})[1] == "bad_scores")
+
+
 def test_wide_is_v3_only():
     """run vs16. Above four players the game speaks a different wire and the
     two name/colour strings carry sixteen fields, so the RANGE the dial may
@@ -2333,6 +2400,8 @@ def main():
     test_dial_range_is_server_enforced()
     test_dial_is_v2_only()
     test_wide_is_v3_only()
+    test_a_dropout_after_go_does_not_end_the_match_for_the_rest()
+    test_result_accepts_a_wide_scoreline()
     test_the_dial_cannot_widen_over_a_seated_old_client()
     test_name_and_colour_shapes_move_together()
     test_a_room_is_never_wider_than_its_host_can_drive()

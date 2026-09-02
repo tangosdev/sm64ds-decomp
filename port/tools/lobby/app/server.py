@@ -1031,7 +1031,12 @@ def v_win(body):
 
 def v_scores(body):
     v = body.get("scores")
-    if not isinstance(v, list) or len(v) != 4:
+    # 0.3.2: four scores from a four-player-or-fewer match (the marker prints
+    # four as its floor), up to DIAL_HARD_MAX from a wider one. The first
+    # sixteen-player night ended with every launcher's result refused here
+    # because this line still said exactly four.
+    if (not isinstance(v, list)
+            or len(v) < NARROW_PLAYERS or len(v) > DIAL_HARD_MAX):
         return None, "bad_scores"
     out = []
     for x in v:
@@ -1887,8 +1892,31 @@ def do_failed(body, who, now):
     # Only a real pre-result phase can be failed. If a result already landed the
     # match id was cleared, so this is stale_match above; here the room is still
     # arming/go/in_match and the reporter turns it back to lobby for everybody.
-    if room.state in ("arming", "go", "in_match"):
+    if room.state == "arming":
+        # Nobody is playing yet and the plan has to be remade: the whole
+        # room goes back to lobby, as it always did.
         match_to_lobby(room, reason)
+    elif room.state in ("go", "in_match"):
+        # 0.3.2 field lesson (the first sixteen-player night): once the match
+        # has been sent off, ONE member's failure must not end it for the
+        # six who are playing. A seven-player match ran for over a minute
+        # while one launcher, which never saw its own game pair, reported
+        # no_pairing and the lobby pulled every launcher's rug. The game
+        # itself already tolerates a peer leaving mid-match (the carrier
+        # clears the leaver's live bit), so the honest answer is to drop the
+        # one who failed and let the rest play on. The HOST is the parent of
+        # the session, so its failure still ends the match; and a match that
+        # drops below two players ends too.
+        if seat == room.host_seat:
+            match_to_lobby(room, reason)
+        else:
+            m.playing = False
+            m.armed = False
+            room.push("dropped", seat=seat, reason=reason)
+            log("room %s dropped seat %d from match=%s reason=%s (%d still playing)"
+                % (room.code, seat, room.match, reason, room.playing_count()))
+            if room.playing_count() < 2:
+                match_to_lobby(room, reason)
     return 200, {"cursor": room.seq}
 
 
