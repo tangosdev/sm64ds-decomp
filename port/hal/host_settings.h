@@ -535,6 +535,11 @@ const char *host_setting_voice_mic_device(void);
 int host_setting_voice_near_radius(void);
 int host_setting_voice_far_radius(void);
 
+/* NetMode: 0 lockstep (the default and what an absent key reads as), 1
+   rollback. The comms transport reads it once at install; SM64DS_NETMODE
+   overrides it there. See status/ROLLBACK_SHIP.md. */
+int host_setting_net_mode(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -635,6 +635,7 @@ int g_yoshi_row = -1;                /* -1 = not a built-in row */
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
 int g_volume = -1;
+int g_net_mode = 0;   /* NetMode: 0 lockstep, 1 rollback (port/rollback) */
 
 /* MouseCapture: 1 when the player asked the window to hold the pointer and
    steer the camera with bare movement instead of a right-button drag. Default
@@ -1111,6 +1112,16 @@ void load_once(void)
             const int v = json_int(text, "Volume", -1);
             if (v >= 0) g_volume = v > 100 ? 100 : v;
         }
+        /* NetMode (port/rollback): "lockstep" (the default, and what an
+           absent key reads as) or "rollback". Read once at load; the
+           transport asks at install, and SM64DS_NETMODE overrides there. */
+        {
+            char nm[16];
+            g_net_mode = 0;
+            if (json_str(text, "NetMode", nm, sizeof nm) &&
+                strlen(nm) == 8 && ieq(nm, "rollback", 8))
+                g_net_mode = 1;
+        }
         /* read against its own default beside the gap keys, for the same
            reason they are: a settings.json written before this key existed
            reads exactly as one that turned it off, which is the old program */
@@ -1471,6 +1482,13 @@ extern "C" int host_setting_volume(void)
 {
     load_once();
     return g_volume;
+}
+
+/* NetMode: 0 lockstep (default), 1 rollback. See the parse above. */
+extern "C" int host_setting_net_mode(void)
+{
+    load_once();
+    return g_net_mode;
 }
 
 /* MouseCapture: 1 when the window may hold the pointer. Only ever a
