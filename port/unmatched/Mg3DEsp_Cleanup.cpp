@@ -91,6 +91,7 @@ void _ZN13SharedFilePtr7ReleaseEv(void *p);
 extern void *data_ov006_02141e9c;
 extern void *data_ov006_02141e74;
 
+// PORT_HOST_ABI: src spells both Release arguments as placeholder globals G0/G1 that resolve nowhere (G1 also collides in decl_common.h); host copy names the mount symbols the pool words resolve to
 int func_ov006_020e9cec(void)
 {
     _ZN13SharedFilePtr7ReleaseEv(&data_ov006_02141e9c);

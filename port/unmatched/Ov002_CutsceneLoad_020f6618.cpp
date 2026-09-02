@@ -73,6 +73,7 @@ static void trace(const char *via, const void *self, const void *fp,
                  before_refs == 0 ? "   <- FIRST HOLDER" : "");
 }
 
+// PORT_HOST_ABI: ARM register ride-through; void ModelBase::SetFile's r0 rides through from the tail-called DoSetFile, live on ARM, garbage on x86
 extern "C" int func_ov002_020f6618(char* self, SharedFilePtr* mdl, int nAnims,
                                    SharedFilePtr** anims, int arg5,
                                    unsigned char texByte, SharedFilePtr** texs,

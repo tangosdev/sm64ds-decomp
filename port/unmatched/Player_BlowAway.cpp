@@ -80,6 +80,7 @@ extern "C" {
 void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *state);
 extern unsigned char data_ov002_0211037c[];
 
+// PORT_HOST_ABI: cdecl C name the caller wants versus the matched TU's thiscall Player::BlowAway method, whose src also cannot compile in-tree (decomp-side Player.h gap).
 void _ZN6Player8BlowAwayEs(void *self, short v)
 {
     char *c = (char *)self;

@@ -490,6 +490,7 @@ extern "C" int port_comms_conductor_check_layout(void) {
 // leave it. That line of the table is filled in by this lane.
 // ===========================================================================
 
+// PORT_HOST_ABI: the one WM SDK face (WM_CheckStateEx/SetCallbackTable/SendCommand); this IS the radio, and a loopback carrier has no radio mode to change, so it answers 2 or the ROM's unbounded busy loop hangs.
 extern "C" int func_0206259c(int callback, int arg) {
     (void)callback;   // the DS registers func_02040634 here; it is empty
     (void)arg;        // data_020a0f2c, the mode the ROM is asking for

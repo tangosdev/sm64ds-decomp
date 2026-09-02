@@ -158,6 +158,7 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * src TU declares -- that shadow mangles to `?UpdateModelPosAndRotY@Platform@@`
  * against a class this file does not define.
  * ========================================================================== */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC has no 8-byte {fn,delta} PMF representation, so the record's fn word is called with explicit self
 extern "C" int _ZN22RotatingUpDownPlatform8BehaviorEv(void *self)
 {
     char *s = (char *)self;
@@ -205,6 +206,7 @@ extern "C" int _ZN22RotatingUpDownPlatform8BehaviorEv(void *self)
  * words. Here it stores the record-array pointer at +0x364 the way the ROM
  * does and dispatches record[0]'s fn word with an explicit self.
  * ========================================================================== */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch; PMF over the incomplete C is MSVC's 16-byte unknown-inheritance form, so the record's fn word is dispatched with explicit self
 extern "C" int func_ov091_02134044(void *c, void *p)
 {
     *(void **)((char *)c + 0x364) = p;
@@ -224,6 +226,7 @@ extern "C" int func_ov091_02134044(void *c, void *p)
  * record-1-tick split. Everything else is the src body line for line, with
  * every leaf named by that body's own relocation.
  * ========================================================================== */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch; the record[1] fn word (the tick half) is called with explicit self
 extern "C" int _ZN5Stump8BehaviorEv(void *self)
 {
     char *c = (char *)self;

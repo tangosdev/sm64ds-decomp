@@ -162,5 +162,7 @@ static void shadow_tick(void *self)
     func_ov004_020b7020((char *)c);
 }
 
+// PORT_HOST_ABI: vtable slot 19 shadow-array call respelled __fastcall so MSVC does not double-clean the one stack parameter the host thunk already cleans
 extern "C" void func_ov004_020b6b40(void *c) { shadow_tick(c); }
+// PORT_HOST_ABI: vtable slot 19 shadow-array call respelled __fastcall so MSVC does not double-clean the one stack parameter the host thunk already cleans
 extern "C" void func_ov004_020b6c9c(void *c) { shadow_tick(c); }

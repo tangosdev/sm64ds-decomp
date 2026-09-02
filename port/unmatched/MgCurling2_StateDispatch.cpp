@@ -321,6 +321,7 @@ static void c2_call1(void *p, const MgC2Pair &e, int i)
  * The decode itself is kept rather than replaced by `tbl[idx]` indexing,
  * because the virtual bit and the adjustment shift are the ROM's own and this
  * file reports them rather than assuming them away. */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, calling the raw DS code word MSVC's pmf ABI cannot reproduce
 extern "C" int func_ov006_020e683c(char *c)
 {
     const int idx = *(int *)(c + 0x5580);
@@ -384,6 +385,7 @@ extern "C" void func_ov006_020e6354(char *c)
 }
 
 /* ---- src/func_ov006_020e4800.cpp, table 02141988 (arity 1) ---------------- */
+// PORT_HOST_ABI: mwcc arity-1 table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
 extern "C" void func_ov006_020e4800(char *o)
 {
     int i;

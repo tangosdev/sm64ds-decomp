@@ -51,6 +51,7 @@ extern PortOv074Pmf data_ov074_021230f8[];
 /* ENTER: sets the state index at +0x5cc, then dispatches cell[idx].pmf[0]. The
    ROM reads the field back after the store, which is why the matched source
    does too; kept here so a debugger sees the same sequence. */
+// PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class.
 void func_ov074_021203e4(void *cv, int i)
 {
     char *c = (char *)cv;
@@ -61,6 +62,7 @@ void func_ov074_021203e4(void *cv, int i)
 
 /* TICK: dispatches cell[idx].pmf[1]. Called every frame from
    Goomboss::Behavior. */
+// PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class.
 void func_ov074_0212042c(void *cv)
 {
     char *c = (char *)cv;

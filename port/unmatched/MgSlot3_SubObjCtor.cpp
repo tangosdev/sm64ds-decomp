@@ -81,6 +81,7 @@ int func_02017acc(void *p, int id);
 int _ZN13SharedFilePtr9ConstructEj(void *p, unsigned id);
 int _ZN14BlendModelAnimC1Ev(void *p);
 
+// PORT_HOST_ABI: src passes two invented placeholder globals g0/g1 that exist in no config, src or ROM and are unresolved externals under MSVC; the host copy passes the two consecutive NitroFS file-id immediates 0x205 and 0x206 the ROM's literal pool actually loads.
 int func_ov006_020c221c(char *t)
 {
     func_02017acc(t, 0x205);                       /* DELTA 2: was g0 */

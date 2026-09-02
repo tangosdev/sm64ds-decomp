@@ -306,6 +306,7 @@ extern "C" void port_mg_wiggler_counts(unsigned *calls, unsigned *hits,
    write on data_ov006_02141fcc is kept at halfword width, which is both what
    the ROM does (ldrh / add #0x800 / strh at 0x020ed19c..0x020ed1ac) and what
    include/decl_common.h declares. */
+// PORT_HOST_ABI: dScMgHanachan_c vtable slot 6 Behavior; src spells the dispatch as the member-pointer type (c->*(*(PMF*)(c+0x4660)))() that is eight bytes on the ROM and four on MSVC, so the host reads the {code, adj} pair and routes it.
 extern "C" int func_ov006_020ed18c(char *c)
 {
     data_ov006_02141fcc = (unsigned short)(data_ov006_02141fcc + 0x800);

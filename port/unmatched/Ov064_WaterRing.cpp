@@ -191,6 +191,7 @@ Lkeep:
 extern "C" {
 int _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *);
 
+// PORT_HOST_ABI: ROM-order Model slot-5 dispatch, the Whomp/Fish case.
 int _ZN9WaterRing6RenderEv(void *selfv)
 {
     char *c = (char *)selfv;

@@ -68,6 +68,7 @@ extern "C" void port_window_copy_count(unsigned long long *copies,
     if (distinct) *distinct = g_window_copy_distinct;
 }
 
+/* PORT_HOST_ABI: ARM asm primitive (word copy/fill), MSVC cannot assemble. */
 void MultiCopy_Int(int *src, int *dst, int len)
 {
     const unsigned d32 = (unsigned)(size_t)dst;

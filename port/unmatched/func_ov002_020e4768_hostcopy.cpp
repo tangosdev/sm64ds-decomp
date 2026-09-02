@@ -40,6 +40,7 @@ extern int data_020a0e68[12];
 
 typedef struct { int w[12]; } Mat43;
 
+// PORT_HOST_ABI: the matched TU's fifth-virtual call is ROM slot 4 (ModelAnim::Virtual10) but MSVC folds the two destructor slots into one, so it would land on Render; Virtual10 named outright
 extern "C" void func_ov002_020e4768(char* self)
 {
     unsigned int mid;

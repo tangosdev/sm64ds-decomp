@@ -110,6 +110,7 @@ extern int data_0209b308[];
 extern int data_0209d4a8[];
 extern int data_ov004_020beb60[];
 
+// PORT_HOST_ABI: src drops the pointer argument to func_0203cbc0 (operator delete) that the ROM rides through r0; MSVC __cdecl would free stack garbage, so the host copy passes it
 void func_ov004_020b0840(char *c, int arg)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;

@@ -108,6 +108,7 @@ int func_ov006_021203fc(char *self);
 
 }  /* extern "C" */
 
+// PORT_HOST_ABI: slot 0 InitResources host copy; src carries a mwcc codegen-nudge f2 += 0 on a void* that MSVC rejects as C2036 and the ROM never performs, so the host drops that one no-op statement.
 extern "C" int func_ov006_021203fc(char *self)
 {
     void *f1;

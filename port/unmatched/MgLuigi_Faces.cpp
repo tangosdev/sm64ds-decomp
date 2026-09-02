@@ -213,6 +213,7 @@ void func_ov006_020efdac(void);
 void MultiCopy_Int(int *dst, int *src, int len);
 }
 
+// PORT_HOST_ABI: src names the MMIO register VCOUNT as a C symbol (data_04000006) the linker cannot place at its absolute address; host copy derefs the literal address 0x4000006 like every other MMIO access
 extern "C" void func_ov006_020efcf8(void)
 {
     int v;

@@ -36,6 +36,7 @@
 
 extern "C" {
 
+// PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case.
 int func_ov036_02112378(void *selfv)
 {
     char *c = (char *)selfv;

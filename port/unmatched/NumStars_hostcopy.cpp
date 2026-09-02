@@ -30,6 +30,7 @@ extern "C" {
 
 int IsStarCollected(int courseID, int starID);
 
+// PORT_HOST_ABI: matched src passes the course id relying on the ARM r0 ride-through; MSVC cdecl pushes a byte with three stale bytes above it and faults the star lookup, so it is widened here
 unsigned char NumStars(void)
 {
     unsigned char count = 0;

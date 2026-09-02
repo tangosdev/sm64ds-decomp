@@ -258,6 +258,7 @@ void func_ov006_02122814(char *c);
 struct Mtx { int a, b, c, d; };
 
 /* src/func_ov006_020c4c54.cpp, with DELTA 1 at its one dispatch. */
+// PORT_HOST_ABI: mwcc virtual-shadow dispatch onto ModelAnim ROM slot 5, which MSVC's dtor-shifted vtable maps to a different method
 extern "C" void func_ov006_020c4c54(int this_)
 {
     Vector3 v;
@@ -274,6 +275,7 @@ extern "C" void func_ov006_020c4c54(int this_)
 }
 
 /* src/func_ov006_020c7734.cpp, with DELTA 1 at its one dispatch. */
+// PORT_HOST_ABI: mwcc virtual-shadow dispatch onto ModelAnim ROM slot 5, which MSVC's dtor-shifted vtable maps to a different method
 extern "C" void func_ov006_020c7734(char *self)
 {
     short v[2];

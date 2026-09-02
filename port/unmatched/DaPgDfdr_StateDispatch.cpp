@@ -219,6 +219,7 @@ extern "C" void port_dapgdfdr_states_check(void)
    src/func_ov027_02111cfc.cpp, both byte-matched and both dropped from the
    slice. Every other ov027 body still calls these two by name. */
 
+// PORT_HOST_ABI: mwcc pointer-to-member wall; MSVC's 4-byte member pointer cannot dispatch the ROM's 8-byte {code, adjustment} pairs.
 extern "C" void func_ov027_02111d38(void *self)
 {
     char *c = (char *)self;
@@ -230,6 +231,7 @@ extern "C" void func_ov027_02111d38(void *self)
     dispatch(pp, c, "02111d38");
 }
 
+// PORT_HOST_ABI: mwcc pointer-to-member wall; MSVC's 4-byte member pointer cannot dispatch the ROM's 8-byte {code, adjustment} pairs.
 extern "C" void func_ov027_02111cfc(void *self)
 {
     char *c = (char *)self;

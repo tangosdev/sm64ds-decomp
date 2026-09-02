@@ -41,7 +41,10 @@ extern "C" {
 
 /* The no-op destructor is deliberately OUTSIDE the DSSTATE bracket below: that
    bracket opens a DATA segment, and a function defined inside it would be
-   placed as data. */
+   placed as data.
+   PORT_HOST_ABI: no matched src TU; the port never runs global destructors and
+   the registrar (func_020731dc) only ever stores the pointer, so a no-op is the
+   faithful host body (the Sound::UnsetPlayerVoiceGroup precedent). */
 void _ZN10FaderColorD1Ev(void) {}
 
 DSSTATE_BEGIN

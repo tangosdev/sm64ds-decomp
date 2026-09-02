@@ -709,6 +709,7 @@ extern "C" void func_02052ec8(int *m)
     for (int i = 0; i < 16; ++i) m[i] = 0;
     m[0] = m[5] = m[10] = m[15] = 0x1000;
 }
+// PORT_HOST_ABI: hand-asm primitive; src/Matrix3x3_LoadIdentity.c is an `asm void` block MSVC cannot parse (section 1b), transcribed here rather than compiled.
 extern "C" void Matrix3x3_LoadIdentity(int *m)
 {
     m[8] = 0x1000;
@@ -717,6 +718,7 @@ extern "C" void Matrix3x3_LoadIdentity(int *m)
     m[4] = 0x1000; m[5] = 0;
     m[6] = 0;      m[7] = 0;
 }
+// PORT_HOST_ABI: hand-asm primitive; src/MultiStore32Bytes.c is an `asm void` block MSVC cannot parse (section 1b), transcribed here rather than compiled.
 extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 {
     for (int i = 0; i + 4 <= len; i += 4)
@@ -865,8 +867,10 @@ extern "C" unsigned _ZN4CP1510EnableDTCMEv(void) { return 0x10000u; }
    case, so returning 1 made every fresh run look like a corrupted save. Returning 2
    lets the callers do what they do on a new cartridge: write the defaults and carry
    on silently, with no dialog and no top-state 9 to wedge in. */
+// PORT_HOST_ABI: hosts the DS backup-media read leaf; the CARD_/backup driver under it is not present on the host, so the face returns the ROM's blank-medium answer (2).
 extern "C" int _ZN8SaveData16ReadDataFromCartEPcjj(char *, unsigned, unsigned)
 { return 2; }
+// PORT_HOST_ABI: hosts the DS backup-media write leaf; the CARD_/backup driver under it is not present on the host, so the face returns the ROM's no-media answer (1).
 extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char *, unsigned, unsigned)
 { return 1; }
 
@@ -1884,6 +1888,7 @@ void Scene::SetFaders(FaderBrightness *)
 struct Matrix4x3;
 struct Vector3;
 struct ModelComponents { void Render(Matrix4x3 *mat, Vector3 *vec); };
+// PORT_HOST_ABI: receiver-delivery face for a __thiscall member; the ov007 flat-name caller makes three __cdecl pushes, so the matched TU would take `this` out of ECX wrongly. This __cdecl definition makes the member call so MSVC emits the mov ecx the ROM's r0 always was.
 extern "C" void _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(void *thiz,
                                                                  void *mat,
                                                                  void *vec)

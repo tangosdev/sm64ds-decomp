@@ -292,6 +292,7 @@ static int sub_call(void *p, unsigned code)
    and CHAINS (BOX). All three refusal arms are dead in both measured scenes --
    361 and 367 each report 0 UNHANDLED over 1153 calls -- so no census number
    depends on which half of the union fires. */
+// PORT_HOST_ABI: the shared +0x4f38 sub-object's field-held pmf dispatcher; MSVC's four-byte single-inheritance member pointer reads word 0 of the mounted sub-object as a raw DS code address and jumps to it, so the host reads the {code, adj} pair and routes it.
 extern "C" void func_ov006_020c2b8c(char *c)
 {
     ++g_sub_calls;

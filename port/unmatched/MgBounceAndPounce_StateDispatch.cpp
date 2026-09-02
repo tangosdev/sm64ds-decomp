@@ -252,6 +252,7 @@ extern "C" void port_mg_jump_counts(unsigned *calls, unsigned *hits,
    in the copy is a raw char* offset at the same displacement the ROM uses. The
    ROM returns a literal 1 (mov r0,#1 at 0x020ee2ac, single exit), so the copy
    does too. */
+// PORT_HOST_ABI: dScMgJump_c vtable slot 6 Behavior; src dispatches a member pointer held in the field at self+0x5004 via (c->*c->m)() that is eight bytes on the ROM and four on MSVC, so the host reads the {code, adj} pair and routes it.
 extern "C" int func_ov006_020ee27c(void *c)
 {
     const MgPmf *p = (const MgPmf *)((char *)c + 0x5004);

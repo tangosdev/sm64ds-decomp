@@ -115,6 +115,7 @@ extern unsigned short data_020a0e5a[];
 extern unsigned char data_020a0de8[];
 extern int data_0208ee44;
 
+// PORT_HOST_ABI: src drops the self argument to Scene::BeforeBehavior (decl_Scene.h empty parens); the ROM rides it through r0 but MSVC __cdecl drops it, so the host copy passes self
 int func_ov004_020b0620(void *cv)
 {
     char *self = (char *)cv;                    /* the one added line */

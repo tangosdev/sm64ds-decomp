@@ -15,6 +15,7 @@
  */
 extern "C" int hal_call_camera_state_fn(void *self, unsigned ds_addr);
 
+// PORT_HOST_ABI: State objects are mwcc member-function pointers (code address plus this-delta) holding DS code addresses that MSVC's PMF cannot represent; dispatch routed through the host address table
 extern "C" int func_0200cae4(void *c)
 {
     char *f = (char *)c;

@@ -19,6 +19,7 @@
 extern void func_020308d0(int n);
 extern unsigned char data_0208a0e0;
 
+// PORT_HOST_ABI: matched src calls func_020308d0() argless while the callee reads n; n rides in r0 on ARM but the host cdecl call leaves it garbage, so the argument is spelled here
 void SetNumPlayers(int n)
 {
     data_0208a0e0 = (unsigned char)n;

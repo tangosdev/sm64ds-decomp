@@ -47,6 +47,7 @@ extern CamScriptFn data_0209b138[39];
 /* the 39 records, hal/ptr_tables.cpp, in this function's own slot order */
 extern void *const *const port_cam_script_records[39];
 
+// PORT_HOST_ABI: the 39 dispatch entries are mwcc pointer-to-member pairs holding DS code addresses MSVC cannot represent; read as host function pointers from the hosted records instead
 int func_02008550(void *obj, unsigned char *msg, int a2, int a3)
 {
     if ((data_0209b004 & 1) == 0) {

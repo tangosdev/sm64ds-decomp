@@ -49,6 +49,7 @@ extern char data_0209f61c[];
 extern unsigned char data_0209d460[];
 extern unsigned char data_0209d458[];
 
+// PORT_HOST_ABI: decl_common.h declares this void* while src defines it char*, which MSVC rejects as C2733 where mwccarm accepts; host copy respells the parameter
 int func_ov004_020b0930(void *cv)
 {
     char *c = (char *)cv;                       /* the one added line */

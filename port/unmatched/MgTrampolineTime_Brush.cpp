@@ -80,6 +80,7 @@ extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern int func_02054d88(void);
 extern void MultiCopy_Int(int *dst, int *src, int len);
 
+// PORT_HOST_ABI: src reads its mode selector via arithmetic on a void* (a GNU/mwcc extension) that MSVC refuses as C2036; the host copy is the src body verbatim with the one read cast to (char *)obj + 0x6c, no behaviour change.
 void func_ov006_02120da8(void *obj, int x_base, int y, int val, int n)
 {
     int half;

@@ -480,6 +480,7 @@ extern "C" unsigned port_mg_objstate_hit(unsigned i)
    0x020c4ce8 -- provably the bare `c` on every path this tree takes (routing is
    gated on adj == 0 and port_mg_call0 refuses a nonzero adjustment), and the
    faithful spelling is kept for the day one is measured. Site 0. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the 8-byte pair at +0x30 MSVC's 4-byte pmf cannot reproduce
 extern "C" void func_ov006_020c4cd8(char *c)
 {
     {
@@ -495,6 +496,7 @@ extern "C" void func_ov006_020c4cd8(char *c)
    unchanged prologue and an unchanged tail. Every other access in the TU is a
    raw char* offset and is copied verbatim. Same receiver reasoning as above,
    the ROM's sequence at 0x020c789c. Site 1. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the 8-byte pair at +0x3c MSVC's 4-byte pmf cannot reproduce
 extern "C" void func_ov006_020c7860(char *c)
 {
     _Z14ApproachLinearRiii((int *)(c + 0x24), data_ov006_0213b010,

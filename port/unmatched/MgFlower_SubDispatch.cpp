@@ -200,6 +200,7 @@ static void sub_call(void *p, unsigned code, int adj)
    the member pointer becomes sub_call. The pair read, the `v >> 1` this
    adjustment, the virtual-bit test, the Animation::Advance at +0xd68 and the
    0x16-iteration 0x98-stride sweep with its +0x48 guard are all src's. */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as plain ints, jumping to a raw DS code word MSVC's pmf ABI cannot reproduce
 extern "C" void func_ov006_020c3d18(char *c)
 {
     int v = *(int *)(c + 4);

@@ -455,6 +455,7 @@ extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
    object, not the entity -- and `mov r1,r6` puts the loop counter in the
    argument register. `add r5,r5,#0x14 / cmp r6,#0xa` is ten entities at stride
    0x14. */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, arity-1 loop MSVC's pmf ABI cannot reproduce
 extern "C" void func_ov006_0211b954(char *c)
 {
     int i = 0;
@@ -476,6 +477,7 @@ extern "C" void func_ov006_0211b954(char *c)
    index is `ldrb r0,[r0,#0x1d0]` at +0x51d0, the pool word 0x0211b650 is
    02142e20, and `add r5,r5,#0x24 / cmp r6,#0x1e` is THIRTY entities at stride
    0x24. `mov r1,r6` again, so arity 1. */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, arity-1 loop MSVC's pmf ABI cannot reproduce
 extern "C" void func_ov006_0211b5e0(char *c)
 {
     int i = 0;

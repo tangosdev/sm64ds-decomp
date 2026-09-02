@@ -154,6 +154,7 @@ extern void *data_ov006_02139c38;
 extern void *data_ov006_0213fff0[];
 }
 
+// PORT_HOST_ABI: slot 9 render; the ROM dispatches through a cdecl function-pointer read that under MSVC lands on a __fastcall thunk, so the host spells it as the C++ virtual Model::Render and lets MSVC form the receiver and convention.
 extern "C" int func_ov006_02127d10(char *c)
 {
     struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;

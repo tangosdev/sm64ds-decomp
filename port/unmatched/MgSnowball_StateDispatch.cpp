@@ -274,6 +274,7 @@ extern "C" void port_mg_snowball_slot_hits(const unsigned **v, unsigned *n)
 // is the ROM's: RandomIntInternal returns 32 bits, the top half is taken,
 // masked to 15 bits, then folded to a small lane index and re-scaled by 0xf.
 
+// PORT_HOST_ABI: first-level pmf dispatcher for data_ov006_02143038 and slot 6's only route in; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
 extern "C" void func_ov006_0212a2e0(char *o)
 {
     int i;

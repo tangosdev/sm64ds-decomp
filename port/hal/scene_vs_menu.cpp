@@ -986,10 +986,15 @@ static void vs_seam(const char *name)
 #define VS_SEAM(sym)                                                           \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { vs_seam(#sym); return 0; }
+// PORT_HOST_ABI: refused DS wireless-status wrapper; the one that really calls the wireless manager (func_020618b8), which the port does not host.
 VS_SEAM(func_0203d9f4)
+// PORT_HOST_ABI: nothing to unload; every hosted overlay is a static build-time mount.
 VS_SEAM(UnloadOverlay)
+// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's reschedule answers idle 0.
 VS_SEAM(func_02057f38)
+// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's queue-op answers idle 0.
 VS_SEAM(func_02058048)
+// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's poll answers idle 0.
 VS_SEAM(func_02058158)
 VS_SEAM(func_02058200)
 #undef VS_SEAM

@@ -93,6 +93,7 @@ extern int data_0209b308[];
 extern int func_ov004_020adc3c(void *c);   /* DELTA 1: was (void) */
 extern int func_02013580(int a, int b);
 
+// PORT_HOST_ABI: src drops the argument to func_ov004_020adc3c that the ROM rides through r0 (the ldr that made the null test); host copy passes data_ov004_020beb68 read as a pointer
 int func_ov004_020ad8b8(void)
 {
     if (data_ov004_020beb68 != 0) {

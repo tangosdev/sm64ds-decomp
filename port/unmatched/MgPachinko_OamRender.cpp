@@ -58,6 +58,7 @@ int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int,
 /* THE ONE TOKEN. The mount owns this cell and has already rebased it. */
 extern void *data_ov006_0213ac24;
 
+// PORT_HOST_ABI: src's `void* data_ov006_0213ac24;` in a .cpp is a tentative definition C++ treats as a real one, colliding with the mount (LNK2005); host copy respells it extern
 void func_ov006_020fa7b8(char *thiz)
 {
     for (int i = 0; i < 3; i++) {

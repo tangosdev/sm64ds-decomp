@@ -58,6 +58,7 @@ static void vs_state_call(void *self, unsigned off)
         fn(recv);
 }
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch spelled as an explicit cdecl call through the record word with self as the first argument
 extern "C" void func_ov075_0211a194(char *self, int *src)
 {
     *(int *)(self + 0x54) = src[0];
@@ -70,6 +71,7 @@ extern "C" void func_ov075_0211a194(char *self, int *src)
         vs_state_call(self, 0x54);
 }
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch spelled as an explicit cdecl call through the record word with self as the first argument
 extern "C" int func_ov075_0211a2b8(void *cv)
 {
     char *cc = (char *)cv;
@@ -117,6 +119,7 @@ extern "C" int func_ov075_0211a2b8(void *cv)
     return 1;
 }
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch spelled as an explicit cdecl call through the record word with self as the first argument
 extern "C" int func_ov075_0211a26c(void *cv)
 {
     char *cc = (char *)cv;

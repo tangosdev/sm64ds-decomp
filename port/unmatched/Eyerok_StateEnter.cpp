@@ -52,6 +52,7 @@ extern "C" {
 struct PortEyerokCell { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
 typedef int (*PortEyerokFn)(void *);
 
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately incomplete class; MSVC's PMF representation does not reproduce the ROM's {function,delta} pair.
 int func_ov066_02119454(void *cv, void *pv)
 {
     char *c = (char *)cv;

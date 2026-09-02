@@ -297,6 +297,7 @@ struct TteObj {
     MgPmf cb;                 /* 0x5004, two words -- DELTA: was PMF */
 };
 
+// PORT_HOST_ABI: dScMgTrampoline2_c vtable slot 6 field-pmf dispatcher; the member pointer at this+0x5004 is eight bytes in the ROM where MSVC's single-inheritance pmf is four, so the host reads the {code, adj} pair and routes it.
 extern "C" int func_ov006_02123340(TteObj *self)
 {
     const int saved = data_ov006_02140830;

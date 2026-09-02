@@ -72,7 +72,9 @@
 
 extern "C" {
 
+// PORT_HOST_ABI: releases a NARC the DS card loader mounted; the host has no mount to release (hal/fs.cpp resolves archive ids lazily, so an archive is never mounted).
 void UnloadArchive(int)             {}
+// PORT_HOST_ABI: loads the per-level DS overlay; the port has no overlay loader at all, every overlay is a static host array mounted at build time.
 void _Z17LoadLevelOverlaysi(int)    {}
 void _Z19UnloadLevelOverlaysi(int)  {}
 

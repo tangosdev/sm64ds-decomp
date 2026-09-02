@@ -149,6 +149,7 @@ extern int data_ov004_020bc56c[];
 extern int data_ov004_020bf560[];
 extern int data_ov004_020bf5d4[];
 
+// PORT_HOST_ABI: src's 29-entry table initializer is fabricated (byte-invisible on ARM); the host copy memcpys the ROM's real template data_ov004_020bc6e8 so entry 1 is not a wild dereference
 void func_ov004_020b2cb8(void)
 {
     int i;

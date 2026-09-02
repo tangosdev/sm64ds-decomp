@@ -202,6 +202,7 @@ extern "C" unsigned port_mg_jump2_field_row(unsigned i, unsigned *code)
    every one is confirmed against the disassembly in section 2.  The field the
    ROM reads is at +0x5004 and the unique id it feeds Particle::System is at
    +0x5a6c -- `add r0,r4,#0x5000 / ldr r0,[r0,#0xa6c]` at 0x020ef400. */
+// PORT_HOST_ABI: dScMgJump2_c vtable slot 6 Behavior; src dispatches a member pointer held in the object field at c+0x5004 that is four bytes on MSVC where the ROM's field is eight, so the host reads the {code, adj} pair and routes it.
 extern "C" int func_ov006_020ef3e0(char *c)
 {
     *(unsigned *)(c + 0x5a6c) =

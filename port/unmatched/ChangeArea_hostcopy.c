@@ -21,6 +21,7 @@ extern s8 data_02092120;
 extern void HideArea(int idx);
 extern void ShowArea(int areaID);
 
+// PORT_HOST_ABI: matched TU calls HideArea() argless relying on the ARM r0 ride-through; MSVC cdecl reads an uninitialized stack slot and writes at a garbage area-table index
 void ChangeArea(int areaID)
 {
     if (data_02092120 >= 0)

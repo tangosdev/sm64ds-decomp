@@ -89,6 +89,7 @@ static void toad_pmf_call(char *c, const ToadStatePair *pair)
 }
 
 /* the seat-and-enter: write the index, then run that state's ENTER half */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
 void func_ov085_02129524(void *cv, int i)
 {
     char *c = (char *)cv;
@@ -101,6 +102,7 @@ void func_ov085_02129524(void *cv, int i)
 }
 
 /* the per-frame half: run the current state's MAIN, at entry + 8 */
+// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
 void func_ov085_02129570(void *cv)
 {
     char *c = (char *)cv;

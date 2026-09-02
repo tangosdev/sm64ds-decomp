@@ -209,6 +209,7 @@ extern "C" void port_mg_cup_state_slots(unsigned *out8)
 // guard, the counter increment and wrap, func_ov006_020dedfc, and the two tail
 // calls are all src's.
 
+// PORT_HOST_ABI: dScMgCup_c vtable slot 6 Behavior table dispatcher for data_ov006_02141870; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
 extern "C" int func_ov006_020e0204(char *o)
 {
     int i;

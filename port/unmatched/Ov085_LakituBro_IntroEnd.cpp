@@ -80,6 +80,7 @@ static int lb_watch_on(void)
     return on;
 }
 
+// PORT_HOST_ABI: implicit-register-arg (func_ov002_020c3e8c's player rode r0 from ClosestPlayer's return; the host passes it).
 extern "C" int func_ov085_0212d5dc(char* c) {
   Range r;
   void* cam = *(void**)&data_0209f318;

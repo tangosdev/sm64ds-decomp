@@ -125,6 +125,7 @@ extern "C" {
 
 extern void func_ov006_020fbb2c(char *c, int idx, unsigned short val);
 
+// PORT_HOST_ABI: src drops the third argument to func_ov006_020fbb2c that the ROM rides through r2 (one ldrh doing test and arg); host copy passes it so the score is not stack garbage
 void func_ov006_020fb7e0(char *thiz)
 {
     int i;

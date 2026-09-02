@@ -56,6 +56,7 @@ extern "C" {
 
 void _ZN15TextureSequence6UpdateER15ModelComponents(void *ts, void *mc);
 
+// PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case.
 int func_ov027_02111e00(void *selfv)
 {
     char *c = (char *)selfv;

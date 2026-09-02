@@ -61,6 +61,7 @@ bool pump_fiber(unsigned) {
 
 extern "C" {
 
+// PORT_HOST_ABI: src/OS_SleepThread.c reschedules through ARMSaveContext/ARMRestoreContext, which have no host body; the queue-word half is reproduced exactly and the ARM context switch is replaced by a bounded host pump.
 void OS_SleepThread(uint16_t *q) {
     ++port::g_stats.sleeps;
 
@@ -109,6 +110,7 @@ void OS_SleepThread(uint16_t *q) {
     ntr::rt_irq_restore(saved2);
 }
 
+// PORT_HOST_ABI: the wake half of the DS sleep/wake pair; the port has no DS thread scheduler to reschedule into, so only the queue-word clear is reproducible on the host.
 void OS_WakeupThread(uint16_t *q) {
     if (!q) return;
     const uint32_t saved = ntr::rt_irq_disable();

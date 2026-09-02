@@ -167,6 +167,7 @@ extern "C" void port_mg_esp3d_field_counts(unsigned *calls, unsigned *routed)
    Animation::Advance, the func_ov006_020e7818 and the guarded
    Particle::System::New below it are src's, unchanged, and every one is
    confirmed against the disassembly in section 1. */
+// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the 8-byte pair at +0x210 MSVC's 4-byte pmf cannot reproduce
 extern "C" void func_ov006_020e7be8(char *c)
 {
     const MgPmf *p = (const MgPmf *)(c + 0x210);
