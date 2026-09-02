@@ -154,3 +154,30 @@ exe under the user's `%TEMP%` is unreadable on this machine for a moment.
     522af3025 smoke_settings: PadLayouts parse, lookup, bad values, save and re-read, and the pad_backend translation selftest
 
 Binary the battery ran: `build/port/walk_window.exe` built at `522af3025`.
+
+---
+
+## 6. Review round 1 (tip 24a282abd): MERGE WITH FIXES, and the fixes
+
+The independent review passed the file round trip, the override table, the
+kernel32-only imports and the battery, and required two fixes. Both are in
+commit `a2e60a372`.
+
+| # | finding | fix |
+|---|---|---|
+| a | `json_value` stopped at a backslash inside a string VALUE and left the scanner mid-string, so a pad name holding one (the writer escaped it to a pair) made every field after `name` in that object and every top-level key after the array read as absent; and because `json_set` inserts a new key just inside the opening brace, a freshly learned layout would have silently reverted all of the other settings on the next save | `json_value` skips two characters on a backslash and keeps scanning the same string, the idiom `json_value_end` already used; `padlayouts_text` DROPS backslashes from the name instead of escaping them (quotes are still escaped). New smoke case `padlayouts_backslash`: a name with a backslash pair followed by another field and two keys after the array, all read back; a save of a name holding a backslash writes it without one and `KeyJump` survives |
+| b | the stick baseline armed wherever the axes sat after six still frames and never re-armed, so a stick still held from the previous step became the baseline, its release read as a full swing on the used axis, and the second stick step jammed (dead vertical) | the rest position is snapshotted ONCE in `padlearn_start` (nothing is held then); a step arms only when the axes are still AND every present axis is within `PADLEARN_REST_BAND` (8000) of that snapshot; a used-axis refusal clears the arm so the step re-baselines after the release |
+| nice | five bare thresholds | named: `PADLEARN_STILL` 3000, `PADLEARN_STILL_FRAMES` 6, `PADLEARN_REST_BAND` 8000, `PADLEARN_PUSH` 16000, `PADLEARN_TRIGGER_REST` -20000, `PADLEARN_TOAST_HOLD` 90 |
+
+Rebuilt with `port/build-port.cmd` (full, every guard, exit 0), then:
+
+    build/port/smoke_settings.exe      smoke_settings: ok, 15 cases   rc 0
+    python port/tools/battery.py --skip-build
+      smoke_settings.exe: ok  smoke_settings: ok, 15 cases
+      linkage: 9148 (80.8%)
+      skips: level 27 without TTC_MOVING_BEAM, level 45 without GOOMBOSS (both the decomp)
+      battery: ALL GREEN
+
+Section 4 stands: the learn flow is still unexercised on a real
+DirectInput pad, and the rest band, like the other thresholds, is a guess
+until one is.
