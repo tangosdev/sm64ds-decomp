@@ -184,14 +184,21 @@ skip_destroy:
 }
 
 /* func_ov062_0211bd10 (0x508): KLEPTO's e17c MAIN handler, UNMATCHED. See the
-   banner. Name-and-abort so a live Klepto that reaches it says so, loud. */
+   banner. INERT RETURN, said once: a live Klepto that reaches its main state
+   hovers and does nothing rather than killing the player's game. The gate
+   policy (SHARED_CONTEXT 2026-09-03) is that an unmatched live handler in a
+   seated actor never aborts in a player build; the honest behaviour gap (no
+   cap steal) stays logged until func_ov062_0211bd10 is decompiled. */
 static int klepto_bd10_unmatched(void *self)
 {
-    std::fprintf(stderr, "FATAL: KLEPTO e17c.main func_ov062_0211bd10 (ov062, "
-                 "0x508) is UNMATCHED -- the cap-steal per-frame handler has no "
-                 "decomp; a default Klepto cannot run its main state faithfully "
-                 "(self=%p)\n", self);
-    std::abort();
+    static int said;
+    if (!said) {
+        said = 1;
+        std::fprintf(stderr, "[klepto] e17c.main func_ov062_0211bd10 (ov062, "
+                     "0x508) is UNMATCHED: the cap-steal per-frame handler has "
+                     "no decomp, so this Klepto idles instead of stealing "
+                     "(self=%p)\n", self);
+    }
     return 0;
 }
 
