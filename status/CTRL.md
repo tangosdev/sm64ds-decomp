@@ -232,3 +232,83 @@ Battery output, verbatim (`python port/tools/battery.py C:	mp\c3-ctrl`, exit 0):
 Binary the battery ran: `build/port/walk_window.exe` off branch tip commit 2 of
 this lane (the code commits); this file is commit 3 and changes no source.
 
+---
+
+## 6. Review round 1 (tip 9e65d6e92) and the fixes
+
+The independent review passed the XInput arm, the battery, the KERNEL32-only
+imports, the hand-built DIDATAFORMAT and the IG_ skip, and FAILED the
+DirectInput arm on a probe that compiled `pad_backend.cpp` with `LoadLibraryA`
+stubbed absent. Every finding is fixed in the commit after this file's first
+version; the build was INCREMENTAL ONLY (the machine was saturated by other
+lanes): `ninja -C build/port walk_window` and `walk_window_hires`, one headless
+selftest per mode, and the three post-link map guards. The full battery was
+NOT re-run after these fixes.
+
+| # | finding | fix |
+|---|---|---|
+| 1 HIGH | an axis the pad lacks kept the 0..65535 default range, `GetDeviceState` left it 0, `di_axis` returned -32767; every layout puts the right stick on Z/Rz, so a pad without Rz (an Xbox pad under DirectInput, most cheap USB pads) read `rx=-32767 ry=+32767` and the camera spun and pitched forever | per-axis presence: `EnumObjects(DIDFT_AXIS)` records which of the six axes exist (by `dwOfs` in our format), an axis whose range cannot be read back is also marked absent, and `di_axis`/`di_trigger` return 0 for an absent axis |
+| 2 HIGH | `dinput_scan` (EnumDevices + CreateDevice + GetProperty per device) ran on the game thread every 120 frames whenever no pad answered; measured 164 to 1967 ms per scan, so a keyboard-only player hitched every two seconds | a WORKER THREAD owns every slow call: DLL loads, `DirectInput8Create`, enumeration, acquire, poll and translation, and the empty-slot XInput scan. It publishes the connected XInput slot and the translated DirectInput state under a critical section. `port_pad_poll` on the game thread makes one `XInputGetState` on a slot already known connected and copies one snapshot; it never enumerates, never asks an empty slot and never sleeps. Cadence on the worker: empty XInput slots once a second, DirectInput enumeration every two seconds when nothing is bound, the bound device every 4 ms. AND `WM_DEVICECHANGE`: `wndproc` calls `port_pad_device_changed()`, which makes the worker scan on its next pass instead of waiting for the cadence |
+| 3 HIGH | init that found nothing left `di_rescan=0`, so frame 0 scanned again (1571 ms) | gone with the redesign: the game thread never scans; the worker's cadence is by tick count |
+| 4 MEDIUM | no way to exercise the fallback on a machine whose pad XInput sees | `SM64DS_PAD_BACKEND=xinput|dinput|none`, read once in `port_pad_init`, announced with `[pad] forced: ... (SM64DS_PAD_BACKEND)`; an unknown value is named and ignored. Used below |
+| 5 LOW | `65534/257 = 254`, the comment said 0..255 | `v * 255 / 65534` |
+| 6 LOW | a second INPUTLOST fell through to `GetDeviceState` and repeated the acquire dance | `di_read` returns on the second loss; one attempt at `GetDeviceState`, and any failure hands the device back to the scan |
+| 7 INFO | the first non-IG_ GAMECTRL device wins even if it is a wheel or pedals | said so in the comment above `di_enum_cb`, with the remedy (unplug it, or `SM64DS_PAD_BACKEND=xinput`) |
+
+Startup cost: the review measured `port_pad_init` at ~118 ms (388 ms with
+XInput absent), paid by every selftest before its first frame. It is now
+non-blocking: init reads one environment variable, initialises a critical
+section and starts the worker, and the DLL loads and the first scans happen on
+the worker while the game boots. The `[pad]` line therefore appears a little
+later in the log (line 10 rather than 2 in the runs below) because the worker
+prints it when it has looked, not when the game asked.
+
+`SetCooperativeLevel` gets this process's own top-level window, found by the
+worker through `EnumWindows` + `GetWindowThreadProcessId` (user32, loaded
+dynamically), or NULL if the window does not exist yet.
+
+### The knob, used
+
+`SM64DS_WINDOW_SELFTEST=30 SM64DS_LEVEL=1` off the incrementally relinked
+`build/port/walk_window.exe`, one run per mode, all `rc=0`. The `[pad]` lines
+verbatim:
+
+    SM64DS_PAD_BACKEND unset:
+      [pad] none
+    SM64DS_PAD_BACKEND=dinput:
+      [pad] forced: dinput only (SM64DS_PAD_BACKEND)
+      [pad] none
+    SM64DS_PAD_BACKEND=xinput:
+      [pad] forced: xinput only (SM64DS_PAD_BACKEND)
+      [pad] none
+    SM64DS_PAD_BACKEND=none:
+      [pad] forced: none (SM64DS_PAD_BACKEND)
+      [pad] none (forced)
+
+NOTE THE CHANGE FROM SECTION 3: the first version's run printed `[pad] XInput
+slot 0`; these print `[pad] none`. That is the machine, not the code: a direct
+`ctypes` probe of `xinput1_4!XInputGetState` at the same moment returned 1167
+(ERROR_DEVICE_NOT_CONNECTED) on all four slots, so the pad that was there
+during the first delivery had gone (a wireless pad asleep, most likely). The
+`dinput` run therefore proves the arm END TO END WITH NO DEVICE: dinput8.dll
+loaded, `DirectInput8Create` succeeded, `EnumDevices` ran on the worker,
+nothing non-IG_ was attached, and the answer was `none` with no hitch on the
+game thread. It still does not prove the translation of a real non-XInput pad;
+section 4 stands.
+
+Imports of the rebuilt object (`dumpbin /symbols`): kernel32 only, now
+including `CreateThread`, `CloseHandle`, `InitializeCriticalSection`,
+`EnterCriticalSection`, `LeaveCriticalSection`, `GetTickCount`, `Sleep`,
+`GetCurrentProcessId`. No dinput8, xinput or user32 import.
+
+Post-link map guards against the relinked build, all OK:
+
+    alternatename_guard: OK -- 2200 directive(s) scanned, 1674 fired, 23 baseline-known, 0 new defeats (43253 publics)
+    gxband_guard: gxbank 3/24 maps (floor 3), 13 members, 36 deltas; dtcm 3/24 maps (floor 3), 1 members, 0 deltas; vsrank 3/24 maps (floor 3), 2 members, 3 deltas; ...
+    tailjump_guard: 35 frames (7 A, 8 C, 22 veneer derived, 2 overlap), 97 assertions over 24 map(s); RETIRED 2 ...
+    dsstate_guard: OK -- 14233 hosted DS symbols all inside .dsstate [0xdca000, 0xecc683)
+
+Files touched by the fix commit: `port/hal/pad_backend.cpp` (rewritten around
+the worker), `port/hal/pad_backend.h` (banner, `port_pad_device_changed`),
+`port/tests/walk_window.cpp` (one `case WM_DEVICECHANGE:` in `wndproc`, four
+lines).
