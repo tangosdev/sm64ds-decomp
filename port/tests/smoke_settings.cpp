@@ -23,6 +23,23 @@
      save        the run save writes BOTH spellings and the camera save
                  writes CameraMode, and a key this program never heard of
                  survives the write untouched.
+     padlayouts  the PadLayouts array: two objects parse and answer by
+                 vid:pid, a field out of range reads as the generic
+                 fallback's value, an object with no usable vid:pid is
+                 dropped, a sign of 0 is refused, and an unknown pad is 0.
+     padlayouts_save
+                 a learned layout saved into a file that already has one
+                 for another pad: both are in the array afterwards, a
+                 re-save of the same vid:pid replaces rather than appends,
+                 the launcher's own key survives, and the file re-reads in
+                 a child to the same values.
+     padlayouts_bad
+                 a PadLayouts that is not an array, and one that is an array
+                 with nothing usable in it, both read as no layouts and every
+                 other key in the file still parses.
+     padtranslate
+                 hal/pad_backend.cpp's translation on a synthetic report
+                 through a learned row (port_pad_selftest).
 
    find_settings looks beside the exe first, then SM64DS_ASSET_ROOT, then the
    working directory. The parent refuses to run if a settings.json is beside
@@ -31,6 +48,7 @@
    working directory is the file that is read. */
 
 #include "hal/host_settings.h"
+#include "hal/pad_backend.h"
 
 #include <direct.h>
 #include <process.h>
@@ -175,6 +193,83 @@ static int child(const char *which)
             check(strstr(t, "\"Volume\": 37") != 0,
                   "the launcher's own key survived the write");
         }
+    } else if (!strcmp(which, "padlayouts")) {
+        HostPadLayout L, D;
+        host_pad_layout_default(&D);
+        check_eq(host_setting_pad_layout_count(), 2, "two layouts parsed");
+        check(host_setting_pad_layout(1118, 654, &L), "1118:654 found");
+        check_eq(L.a, 2, "a"); check_eq(L.b, 1, "b"); check_eq(L.x, 3, "x");
+        check_eq(L.y, 0, "y"); check_eq(L.lb, 4, "lb"); check_eq(L.rb, 5, "rb");
+        check_eq(L.back, 8, "back"); check_eq(L.start, 9, "start");
+        check_eq(L.lt_btn, 6, "lt_btn"); check_eq(L.rt_btn, -1, "rt_btn -1");
+        check_eq(L.rt_axis, 3, "rt_axis"); check_eq(L.lx_axis, 2, "lx_axis");
+        check_eq(L.lx_sign, -1, "lx_sign"); check_eq(L.ly_axis, 5, "ly_axis");
+        check_eq(L.ly_sign, 1, "ly_sign"); check_eq(L.rx_axis, 0, "rx_axis");
+        check(!strcmp(L.name, "USB Gamepad"), "name");
+        /* the second object: y is 99 (out of range), lthumb is "abc",
+           rx_sign is 0 -- each of those reads as the fallback; the rest of
+           the object is honoured */
+        check(host_setting_pad_layout(0x1234, 0x5678, &L), "4660:22136 found");
+        check_eq(L.a, 7, "second a");
+        check_eq(L.y, D.y, "y out of range reads as fallback");
+        check_eq(L.lthumb, D.lthumb, "lthumb not a number reads as fallback");
+        check_eq(L.rx_sign, D.rx_sign, "rx_sign 0 reads as fallback");
+        check_eq(L.ly_sign, -1, "second ly_sign kept");
+        check(!host_setting_pad_layout(1, 2, &L), "unknown pad is 0");
+        /* the object with vid 0 and the one with no pid were dropped */
+        check(!host_setting_pad_layout(0, 5, &L), "vid 0 dropped");
+        check(!host_setting_pad_layout(77, 0, &L), "no pid dropped");
+        check_eq(D.a, 0, "fallback a"); check_eq(D.ly_sign, -1, "fallback ly_sign");
+    } else if (!strcmp(which, "padlayouts_save")) {
+        HostPadLayout L;
+        host_pad_layout_default(&L);
+        L.vid = 0x2345; L.pid = 0x6789;
+        L.a = 3; L.b = 2; L.x = 1; L.y = 0; L.lx_axis = 3; L.lx_sign = -1;
+        L.rt_btn = -1; L.rt_axis = 4;
+        snprintf(L.name, sizeof L.name, "Say \"hi\" pad");
+        check(host_setting_save_pad_layout(&L), "save wrote");
+        check_eq(host_setting_pad_layout_count(), 2, "two after the save");
+        /* the same pad again with one change: replaces, does not append */
+        L.b = 9;
+        check(host_setting_save_pad_layout(&L), "re-save wrote");
+        check_eq(host_setting_pad_layout_count(), 2, "still two after re-save");
+        /* out of range on the way in is clamped to the fallback before the
+           write, so the file never carries a value a reader would refuse */
+        L.vid = 0x1111; L.pid = 0x2222; L.y = 200; L.ly_sign = 0;
+        check(host_setting_save_pad_layout(&L), "third save wrote");
+        check_eq(host_setting_pad_layout_count(), 3, "three");
+        check(host_setting_pad_layout(0x1111, 0x2222, &L), "third found");
+        check_eq(L.y, 3, "y 200 clamped to fallback");
+        check_eq(L.ly_sign, -1, "ly_sign 0 clamped to fallback");
+        HostPadLayout bad;
+        host_pad_layout_default(&bad);
+        check(!host_setting_save_pad_layout(&bad), "vid 0 refused");
+        const char *t = slurp("settings.json");
+        check(t != 0, "settings.json exists after save");
+        if (t) {
+            check(strstr(t, "\"Volume\": 37") != 0, "the launcher's key survived");
+            check(strstr(t, "\"vid\": 1118") != 0, "the earlier pad survived");
+            check(strstr(t, "\"vid\": 9029") != 0, "the saved pad is there");
+            check(strstr(t, "\"b\": 9") != 0, "the re-save's value is there");
+            check(strstr(t, "\"b\": 2,") == 0, "the replaced value is gone");
+            check(strstr(t, "Say \\\"hi\\\" pad") != 0, "the name is escaped");
+        }
+    } else if (!strcmp(which, "padlayouts_reread")) {
+        /* the file the save case left behind, read fresh by this process */
+        HostPadLayout L;
+        check_eq(host_setting_pad_layout_count(), 3, "three re-read");
+        check(host_setting_pad_layout(0x2345, 0x6789, &L), "saved pad re-read");
+        check_eq(L.b, 9, "re-read b"); check_eq(L.lx_axis, 3, "re-read lx_axis");
+        check_eq(L.lx_sign, -1, "re-read lx_sign"); check_eq(L.rt_axis, 4, "re-read rt_axis");
+        check_eq(L.rt_btn, -1, "re-read rt_btn");
+        check(!strcmp(L.name, "Say \"hi\" pad"), "re-read name unescaped");
+        check_eq(host_setting_key(HOST_KEY_JUMP), 0x20, "the other keys still default");
+    } else if (!strcmp(which, "padlayouts_bad")) {
+        check_eq(host_setting_pad_layout_count(), 0, "unusable PadLayouts is none");
+        check_eq(host_setting_key(HOST_KEY_JUMP), 0x4a, "KeyJump J still parsed");
+        check_eq(host_setting_camera_mode(), 2, "CameraMode ds still parsed");
+    } else if (!strcmp(which, "padtranslate")) {
+        check(port_pad_selftest(), "pad_backend translation selftest");
     } else {
         fprintf(stderr, "  unknown case %s\n", which);
         return 2;
@@ -191,13 +286,17 @@ static int write_file(const char *path, const char *text)
     return 1;
 }
 
-static int run_case(const char *exe, const char *dir, const char *which,
-                    const char *json)
+/* json is the file to write, 0 for no file at all, or (const char *)1 for
+   "the file the previous case left" -- which only exists when that case ran
+   with keep_after set, the shape the save-then-reread pair needs. */
+static int run_case_x(const char *exe, const char *dir, const char *which,
+                      const char *json, int keep_after)
 {
     char path[MAX_PATH];
     snprintf(path, sizeof path, "%s\\settings.json", dir);
-    remove(path);
-    if (json && !write_file(path, json)) {
+    const int reuse = json == (const char *)1;
+    if (!reuse) remove(path);
+    if (json && !reuse && !write_file(path, json)) {
         fprintf(stderr, "smoke_settings: cannot write %s\n", path);
         return 1;
     }
@@ -206,7 +305,7 @@ static int run_case(const char *exe, const char *dir, const char *which,
     if (_chdir(dir) != 0) return 1;
     const intptr_t rc = _spawnl(_P_WAIT, exe, "smoke_settings", which, (char *)0);
     _chdir(cwd);
-    remove(path);
+    if (!keep_after) remove(path);
     if (rc != 0) {
         fprintf(stderr, "smoke_settings: case %s FAILED (rc %d)\n", which,
                 (int)rc);
@@ -214,6 +313,12 @@ static int run_case(const char *exe, const char *dir, const char *which,
     }
     printf("smoke_settings: %s ok\n", which);
     return 0;
+}
+
+static int run_case(const char *exe, const char *dir, const char *which,
+                    const char *json)
+{
+    return run_case_x(exe, dir, which, json, 0);
 }
 
 int main(int argc, char **argv)
@@ -275,11 +380,45 @@ int main(int argc, char **argv)
         "{ \"RunButtonKey\": 82, \"KeyRun\": 999,\n"
         "  \"RunButtonPad\": 32768, \"PadRun\": -1 }");
     bad |= run_case(exe, dir, "save", "{\n  \"Volume\": 37\n}\n");
+    bad |= run_case(exe, dir, "padlayouts",
+        "{\n"
+        "  \"Volume\": 37,\n"
+        "  \"PadLayouts\": [\n"
+        "    { \"vid\": 1118, \"pid\": 654, \"name\": \"USB Gamepad\",\n"
+        "      \"a\": 2, \"b\": 1, \"x\": 3, \"y\": 0, \"lb\": 4, \"rb\": 5,\n"
+        "      \"back\": 8, \"start\": 9, \"lt_btn\": 6, \"rt_btn\": -1,\n"
+        "      \"rt_axis\": 3, \"lx_axis\": 2, \"lx_sign\": -1,\n"
+        "      \"ly_axis\": 5, \"ly_sign\": 1, \"rx_axis\": 0 },\n"
+        "    { \"vid\": 0, \"pid\": 5, \"a\": 1 },\n"
+        "    { \"vid\": 77, \"a\": 1 },\n"
+        "    { \"vid\": 4660, \"pid\": 22136, \"a\": 7, \"y\": 99,\n"
+        "      \"lthumb\": \"abc\", \"rx_sign\": 0, \"ly_sign\": -1 }\n"
+        "  ],\n"
+        "  \"KeyJump\": 74\n"
+        "}\n");
+    /* the save case writes into a file that already carries one pad, and
+       leaves the file for the re-read case, which is a fresh process */
+    bad |= run_case_x(exe, dir, "padlayouts_save",
+        "{\n"
+        "  \"Volume\": 37,\n"
+        "  \"PadLayouts\": [ { \"vid\": 1118, \"pid\": 654, \"a\": 2 } ]\n"
+        "}\n", 1);
+    bad |= run_case(exe, dir, "padlayouts_reread", (const char *)1);
+    /* not an array, then an array with nothing usable in it */
+    bad |= run_case(exe, dir, "padlayouts_bad",
+        "{ \"KeyJump\": 74, \"PadLayouts\": \"nope\", \"CameraMode\": \"ds\" }");
+    bad |= run_case(exe, dir, "padlayouts_bad",
+        "{\n"
+        "  \"KeyJump\": 74,\n"
+        "  \"PadLayouts\": [ 5, \"x\", { \"vid\": \"abc\", \"pid\": 1 }, [ ] ],\n"
+        "  \"CameraMode\": \"ds\"\n"
+        "}\n");
+    bad |= run_case(exe, dir, "padtranslate", 0);
     _rmdir(dir);
     if (bad) {
         printf("smoke_settings: FAIL\n");
         return 1;
     }
-    printf("smoke_settings: ok, 7 cases\n");
+    printf("smoke_settings: ok, 14 cases\n");
     return 0;
 }

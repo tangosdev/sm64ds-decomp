@@ -12638,7 +12638,10 @@ endif()
 # settings.json's control bindings and camera mode (hal/host_settings.cpp),
 # proved on the file alone: one child process per case because the loader
 # reads once, no ROM, no window. tests/smoke_settings.cpp carries the cases.
-add_executable(smoke_settings tests/smoke_settings.cpp hal/host_settings.cpp)
+# hal/pad_backend.cpp is on it too, for the PadLayouts translation case
+# (port_pad_selftest): no window, no worker thread, kernel32 only.
+add_executable(smoke_settings tests/smoke_settings.cpp hal/host_settings.cpp
+    hal/pad_backend.cpp)
 target_include_directories(smoke_settings PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
