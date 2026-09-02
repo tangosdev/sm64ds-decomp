@@ -162,6 +162,65 @@ def live_runs():
               % (tag, ap, lw, vs))
 
 
+def three_instances():
+    """The literal M2 picture: THREE solo consoles on one loopback session.
+    Parent and child A share level 1; child B is in level 5. The narrow
+    loopback seats parent (slot 0) + two pinned children (SM64DS_COMMS_SLOT).
+    Each reads its per-peer vis= from the diag: the two level-1 consoles ghost
+    each other and hide the level-5 one, and the level-5 console hides both.
+    local_writes=0 on all three."""
+    import time
+    print("\n-- three instances: same-level ghosting, three ways")
+    base = {
+        "SM64DS_ADVENTURE": "1",
+        "SM64DS_VS_PLAYERS": "3",
+        "SM64DS_COMMS_PORT": "41200",
+        "SM64DS_COMMS_REPORT": "1",
+        "SM64DS_SYNC_REPORT": "1",
+        "SM64DS_ADVENTURE_DIAG": "30",
+    }
+    insts = [("p", "parent", None, "1"),
+             ("cA", "child", "1", "1"),   # same level as parent
+             ("cB", "child", "2", "5")]   # a different level
+    procs, logs = [], {}
+    for tag, role, slot, lv in insts:
+        d = os.path.join(OUT, "three_" + tag)
+        os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+        e = M.env_base(ROOT, d, "a3" + tag)
+        e["SM64DS_WINDOW_SELFTEST"] = "300"
+        e["SM64DS_LEVEL"] = lv
+        e["SM64DS_COMMS_ROLE"] = role
+        if slot is not None:
+            e["SM64DS_COMMS_SLOT"] = slot
+        for k, v in base.items():
+            e[k] = v
+        logs[tag] = os.path.join(d, "run.log")
+        procs.append((tag, M.spawn(EXE, d, e, logs[tag])))
+        time.sleep(0.4)
+    for tag, p in procs:
+        M.finish(p, 900)
+
+    def vis_by_slot(t):
+        v = {}
+        for m in re.finditer(
+                r"\[advdiag\][^\n]*slot(\d+)\(ghost\)[^\n]*vis=(-?\d+)", t):
+            v[int(m.group(1))] = int(m.group(2))
+        return v
+    texts = {tag: M.text(logs[tag]) for tag in logs}
+    # who each console SHOULD ghost: same level only. levels: p=1, cA=1, cB=5.
+    want = {"p": {1: 1, 2: 0}, "cA": {0: 1, 2: 0}, "cB": {0: 0, 1: 0}}
+    for tag in ("p", "cA", "cB"):
+        v = vis_by_slot(texts[tag])
+        lw = stat(texts[tag], "local_writes")
+        ok = all(v.get(s) == want[tag][s] for s in want[tag])
+        check("%s ghosts exactly its same-level peers %s" % (tag, want[tag]),
+              ok, "got %s" % dict(sorted(v.items())))
+        check("%s: local_writes=0 (local input drives only the local body)"
+              % tag, lw == 0, "local_writes=%s" % lw)
+        print("      [%s] ghost_vis_by_slot=%s local_writes=%s"
+              % (tag, dict(sorted(v.items())), lw))
+
+
 def main():
     if not os.path.exists(EXE):
         print("no walk_window.exe at %s -- build first" % EXE)
@@ -169,7 +228,8 @@ def main():
     single_instance()
     try:
         live_runs()
-    except Exception as e:      # the live run corroborates; the single is the authority
+        three_instances()
+    except Exception as e:      # the live runs corroborate; the single is the authority
         print("info  live loopback run did not complete: %r" % e)
     print("\n%d failed" % len(FAILS))
     for n in FAILS:
