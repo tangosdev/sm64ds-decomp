@@ -540,6 +540,10 @@ void hal_render_player_world(void *p);
 void port_adventure_ghost_hold(void);
 /* the headless M1 proof; no-op unless SM64DS_ADVENTURE_PROBE is set. */
 void port_adventure_probe(int frame);
+/* ADVENTURE GHOSTS: the per-render-frame pure-follower step (hal/comms_sync.cpp).
+   Eases each ghost toward its latest snapshot and suppresses its ROM drift.
+   No-op unless adventure-ghost mode is on. */
+void port_adventure_ghost_follow(void);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -10231,6 +10235,12 @@ int main(void)
                lockstep blocks on. No-op unless SM64DS_SYNC=1 and the transport
                reports contract v2. */
             port::sync_tick();
+            /* ADVENTURE GHOSTS: ease every ghost toward its latest snapshot,
+               HERE -- after sync_tick has recorded this frame's target and after
+               the actor tick advanced the body under its own physics -- so the
+               rendered position is the smooth follower value and the ROM drift is
+               overridden. No-op outside adventure mode. */
+            port_adventure_ghost_follow();
             /* run mg16 lane MP3: the VS probe, read out of the game's own
                per-slot actor array. Here rather than at the report site
                because it must run whether or not SM64DS_COMMS_REPORT is on:

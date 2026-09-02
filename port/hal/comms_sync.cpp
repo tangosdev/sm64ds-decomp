@@ -484,6 +484,15 @@ unsigned short g_arr_anim[kCommsMaxPlayers];
 unsigned short g_ph_id[kCommsMaxPlayers];
 int            g_ph_hw[kCommsMaxPlayers];
 
+// ADVENTURE GHOSTS: the per-slot follow target. In adventure mode apply_snapshot
+// does NOT move the body -- it records the latest snapshot here, and
+// port_adventure_ghost_follow eases the body toward it every render frame. That
+// is what turns a body corrected only on ~30 Hz receive frames (and drifting on
+// its own ROM physics in between) into a smooth pure follower.
+struct GhostTarget { bool have; int x, y, z; short yaw; bool teleport;
+                     int vx, vz; };
+GhostTarget g_gtarget[kCommsMaxPlayers];
+
 // Item 2's sender-side velocity sample: the local body's position last frame,
 // differenced each frame. Seeded on first sight so the first frame's
 // "velocity" is zero rather than the distance from the origin to the spawn.
@@ -921,6 +930,30 @@ void apply_snapshot(const unsigned char *buf, int n) {
             g_arr_anim[slot] = e->anim_id;
         }
 
+        /* ADVENTURE GHOSTS: a ghost is a PURE FOLLOWER. Record this snapshot as
+           the slot's follow target and apply the pose, but do NOT move the body
+           here -- port_adventure_ghost_follow eases it toward the target every
+           render frame, which is what makes it smooth instead of stepping on the
+           receive frames and drifting on ROM physics between them. This slot is
+           never the local one (the slot==me skip above stands), so local_writes
+           stays 0. VS mode falls through to the correction logic below unchanged. */
+        if (adventure_ghost_mode()) {
+            g_gtarget[slot].have = true;
+            g_gtarget[slot].x = e->x;
+            g_gtarget[slot].y = e->y;
+            g_gtarget[slot].z = e->z;
+            g_gtarget[slot].yaw = e->yaw;
+            g_gtarget[slot].teleport = (e->flags & kFlagTeleport) != 0;
+            /* the sender's own per-frame velocity, so the follower can advance
+               the target continuously between the ~30 Hz snapshots instead of
+               letting it step. */
+            g_gtarget[slot].vx = e->vx;
+            g_gtarget[slot].vz = e->vz;
+            apply_pose(a, e);
+            ++g_stats.applied;
+            continue;
+        }
+
         int *px = player::pos_x(a);
         int *py = player::pos_y(a);
         int *pz = player::pos_z(a);
@@ -1075,6 +1108,76 @@ extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
     e->anim_frame = a ? player::anim_frame(a) : 0;
     e->vx = e->vy = e->vz = 0;
     apply_snapshot(buf, (int)(sizeof(SyncMsgV1) + sizeof(SyncPlayerV1)));
+}
+
+// ---------------------------------------------------------------------------
+// ADVENTURE GHOSTS: the pure-follower step. Called once per RENDER frame from
+// the walk loop, AFTER sync_tick (so the target is this frame's freshest) and
+// after the ROM actor tick (so it OVERRIDES the physics the ghost would
+// otherwise drift under). For each remote slot with a target it eases the body
+// toward the last received snapshot -- position and facing -- at a fixed
+// per-frame fraction, and zeros the body's own speed so the ROM cannot keep
+// integrating it. That is the whole of "a ghost is a smooth pure follower":
+// the rendered position is this eased value every frame, not the ~30 Hz
+// receive-frame correction with ROM drift in between. The local body is never
+// touched (the i == me skip), so local_writes stays 0. SM64DS_ADVENTURE_FOLLOW
+// tunes the ease fraction (percent per frame, default 40). A teleport snapshot
+// lands exactly rather than sliding across the level.
+extern "C" void port_adventure_ghost_follow() {
+    if (!adventure_ghost_mode()) return;
+    static int fpct = -1;
+    if (fpct < 0) {
+        const char *e = std::getenv("SM64DS_ADVENTURE_FOLLOW");
+        fpct = e ? std::atoi(e) : 40;
+        if (fpct < 1) fpct = 1;
+        if (fpct > 100) fpct = 100;
+    }
+    const int me = (int)data_0209f250;
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (!g_gtarget[i].have) continue;
+        void *a = data_0209f394[i];
+        if (!a) continue;
+        GhostTarget &t = g_gtarget[i];
+        int *px = player::pos_x(a), *py = player::pos_y(a), *pz = player::pos_z(a);
+        if (t.teleport) {
+            /* a warp snaps everything -- position and facing -- because there is
+               no smooth path between a body's two sides of a teleport. */
+            *px = t.x; *py = t.y; *pz = t.z;
+            *player::facing(a) = t.yaw;
+        } else {
+            /* DEAD-RECKON THE TARGET one frame at the sender's own velocity, so
+               the target moves continuously and the follower does not beat at the
+               ~30 Hz snapshot cadence. The next snapshot overwrites x/z with the
+               true value, correcting any extrapolation error. Y is not reckoned
+               (it is a parabola under gravity); the body eases toward the last
+               received Y. Velocity is clamped GENEROUSLY -- 64 units/frame,
+               unlike apply_snapshot's 3-unit corrector ceiling -- because a
+               follower target must move at the sender's REAL speed (a dash is
+               ~18 units/frame, far over 3) or the target steps at the snapshot
+               cadence and the ghost beats; 64 still guards a garbage delta. */
+            int vx = t.vx, vz = t.vz;
+            const int vcap = units(64);
+            if (vx > vcap) vx = vcap; else if (vx < -vcap) vx = -vcap;
+            if (vz > vcap) vz = vcap; else if (vz < -vcap) vz = -vcap;
+            t.x += vx;
+            t.z += vz;
+            *px += (t.x - *px) * fpct / 100;
+            *py += (t.y - *py) * fpct / 100;
+            *pz += (t.z - *pz) * fpct / 100;
+            /* facing eased the SHORT way: the signed 16-bit wrap of
+               (target - cur) is the shortest angular delta, so a ghost turning
+               past 0 does not spin the long way round. */
+            const short cur = *player::facing(a);
+            const short d = (short)(t.yaw - cur);
+            *player::facing(a) = (short)(cur + (int)d * fpct / 100);
+        }
+        /* suppress the ROM physics drift on the puppet: zero the Actor's own
+           horizontal (+0x98) and vertical (+0xa8) speed so nothing integrates
+           the body away from the target between snapshots. */
+        *(int *)((char *)a + 0x98) = 0;
+        *(int *)((char *)a + 0xa8) = 0;
+    }
 }
 
 // One whole aux message, already past the delay rig, told apart by its tag.

@@ -373,8 +373,40 @@ extern "C" void port_adventure_ghost_hold()
    ALL PASS is the line the driver greps. Inert unless the env knob is set. */
 extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
                                            short yaw);
+extern "C" void port_adventure_ghost_follow();
 extern "C" void port_adventure_probe(int frame)
 {
+    /* DIAG (SM64DS_ADVENTURE_DIAG): identity + per-slot positions, every 60
+       frames, no injection. For the live two-window bug hunt: it shows each
+       instance's local index, which slot each live body is, its position, and
+       its interaction flags, so drift and slot confusion are visible in a
+       playlog. Temporary bug-hunt instrument. */
+    {
+        static int diag = -1;
+        if (diag < 0) {
+            const char *e = std::getenv("SM64DS_ADVENTURE_DIAG");
+            diag = e ? std::atoi(e) : 0;   /* value = frame stride, 0 = off */
+        }
+        if (diag > 0 && (frame % diag) == 0) {
+            const int me = (int)data_0209f250;
+            for (int i = 0; i < kPortMaxPlayers; ++i) {
+                if (data_0209fc5c[i] == 0 && !data_0209f394[i]) continue;
+                void *a = data_0209f394[i];
+                if (!a) continue;
+                std::fprintf(stderr,
+                    "[advdiag] f%d me=%d slot%d%s live=%u pos=(%d,%d,%d) "
+                    "yaw=%d noctl=%u clsn=%u cat4=%u\n",
+                    frame, me, i, i == me ? "(LOCAL)" : "(ghost)",
+                    data_0209fc5c[i],
+                    *port::player::pos_x(a), *port::player::pos_y(a),
+                    *port::player::pos_z(a), (int)*port::player::facing(a),
+                    *(unsigned char *)((char *)a + port::player::kIsNoControl),
+                    *(unsigned char *)((char *)a + port::player::kIsBodyClsnEnabled),
+                    (*(unsigned *)((char *)a + port::player::kBodyColliderFlags) & 4u) ? 1u : 0u);
+            }
+        }
+    }
+
     static int on = -1;
     if (on < 0) on = std::getenv("SM64DS_ADVENTURE_PROBE") ? 1 : 0;
     if (!on) return;
@@ -422,6 +454,11 @@ extern "C" void port_adventure_probe(int frame)
         const short tyaw = (short)0x2000;
         const unsigned long long lw0 = port::sync_stats().local_writes;
         port_adventure_probe_apply(ghost_slot, tx, ty, tz, tyaw);
+        /* the ghost is a pure follower now: apply_snapshot records the target and
+           port_adventure_ghost_follow moves the body. Run one follower step here
+           so the teleport target lands this frame for the exact assert below,
+           the same call the walk loop makes every frame after sync_tick. */
+        port_adventure_ghost_follow();
         const unsigned long long lw1 = port::sync_stats().local_writes;
 
         pose_ok = *port::player::pos_x(g) == tx &&
