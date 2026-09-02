@@ -829,6 +829,8 @@ unsigned long long g_rb_rewinds = 0;     // comms_rb_rewind calls
 unsigned long long g_rb_replayed = 0;    // rounds served in replay
 unsigned long long g_rb_xcalls = 0, g_rb_xzero = 0;   // live exchange calls, zero returns
 unsigned g_rb_live_peak = 0;             // every slot that was ever live this session
+unsigned g_rb_dropped = 0;               // parent: slots the grace rule retired; their
+                                         // late datagrams are ignored for the session
 unsigned long long g_rb_rxcalls = 0, g_rb_rxzero = 0; // the same while replaying
 struct RbSlotPred {
     bool          have;
@@ -1849,9 +1851,16 @@ void pipe_try_broadcast() {
 void rb_retire_slot(int k, const char *why) {
     g_live &= ~(1u << k);
     g_stage_mask &= ~(1u << k);
-    unsigned D = g_rb_pred[k].have ? g_rb_pred[k].round + 1 : 0;
     const unsigned end = rb_live_round();
+    // A slot that never confirmed a block in this incarnation was never
+    // served live (exchange() waits on a first block), so it leaves as of
+    // now with nothing to revise. Otherwise the ring bounds the revision:
+    // the ledger cannot re-serve a round it no longer holds.
+    unsigned D = g_rb_pred[k].have ? g_rb_pred[k].round + 1 : end;
     if ((int)(D - end) > 0) D = end;
+    if ((int)(D - g_pipe_low) < 0) D = g_pipe_low;
+    if ((int)(D - (end - (kPipeDepth - 2))) < 0) D = end - (kPipeDepth - 2);
+    if (why[0] == 'g') g_rb_dropped |= (1u << k);
     unsigned revised = 0;
     for (unsigned q = D; (int)(q - end) < 0; ++q) {
         PipeRound *s = pipe_find(q);
@@ -1884,6 +1893,18 @@ void rb_retire_slot(int k, const char *why) {
 
 void on_parent_packet(const Packet &p, const sockaddr_in &from, int k) {
     (void)from;
+    if (g_rollback && (g_rb_dropped & (1u << k)) && p.type != kTypeBye) {
+        // A slot the grace rule retired is gone the way a DS that stopped
+        // sending is gone: its late keepalives and blocks must not seat it
+        // again mid-match, which would be a fresh join the ROM never saw.
+        static unsigned told = 0;
+        if (!(told & (1u << k))) {
+            told |= (1u << k);
+            std::fprintf(stderr, "[comms:loopback] ROLLBACK: slot %d was dropped; "
+                         "its later datagrams are ignored this session\n", k);
+        }
+        return;
+    }
     switch (p.type) {
     case kTypeJoin: {
         const bool fresh = (g_live & (1u << k)) == 0;
@@ -2400,6 +2421,10 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             if ((int)(p.round - g_pipe_low) < 0 &&
                 (int)(p.round - (rb_live_round() - kPipeDepth + 2)) < 0)
                 break;                   // older than the ring can hold
+            if ((int)(p.round - (rb_live_round() + kPipeDepth / 2)) >= 0)
+                break;                   // so far ahead (a parent that ran on
+                                         // while this end slept) that filing
+                                         // it would evict rounds still in play
             if ((int)(p.round - g_rb_live_round) >= 0) {
                 g_live = p.live_wide;
                 g_rb_live_round = p.round;
@@ -3069,6 +3094,7 @@ void lb_open(unsigned mode) {
     g_rb_stall_start_ms = 0;
     g_rb_stall_mask = 0;
     g_rb_live_peak = 0;
+    g_rb_dropped = 0;
     std::memset(g_rb_pred, 0, sizeof g_rb_pred);
 
     // SEED THE PEER TABLE. In loopback mode every entry is known up front and

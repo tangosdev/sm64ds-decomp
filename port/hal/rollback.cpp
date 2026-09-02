@@ -480,7 +480,12 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         differing += j - i;
         if (first == (size_t)-1) first = i;
         if (ranges < 8)
-            fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu\n", name, i, j - i);
+            fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
+                    " now %02x %02x %02x %02x\n", name, i, j - i,
+                    (unsigned char)want[i], (unsigned char)want[i + 1],
+                    (unsigned char)want[i + 2], (unsigned char)want[i + 3],
+                    (unsigned char)got[i], (unsigned char)got[i + 1],
+                    (unsigned char)got[i + 2], (unsigned char)got[i + 3]);
         ++ranges;
         i = j;
     }

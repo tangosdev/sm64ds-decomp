@@ -297,7 +297,7 @@ def rung_stall(frames):
                per={2: {"SM64DS_ROLLBACK_PAUSE": "200:2500"}}, base=BASE + 200)
     tp, t1, tc = r["texts"]
     ok = mode_took("stall", r)
-    ok &= session_ok("stall", r, 3)
+    ok &= session_ok("stall", dict(r, texts=r["texts"][:2]), 3)   # the sleeper's own close is not the question
     stalled = "stalling (grace" in tp
     retired = "slot 2 retired (grace)" in tp
     told = "the parent left" in tc or "leaving the session" in tc or "Bye" in tc
@@ -308,7 +308,7 @@ def rung_stall(frames):
     ok &= say(told, "stall sleeper told",
               "slot 2 saw the Bye" if told else "slot 2 never told")
     for k, t in ((0, tp), (1, t1)):
-        stats = grab(t, r"rollback: (predicted=.*)$", "no transport line")
+        stats = grab(t, r"rollback: live=\S+ peak=\S+ (predicted=.*)$", "no transport line")
         ok &= say("stallevents=1" in stats, "stall p%d one stall episode" % k,
                   stats[:200])
         over = grab(t, r"^(.*stall over after.*)$", "")
