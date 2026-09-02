@@ -39,12 +39,13 @@ src/FloatOnWaterPlatformJrb_Spawn.c
 src/Unagi_Spawn.c
 src/SlidingBox_Spawn.c
 # ---- SHIP_UP / SHIP_DOWN (daObjKi_Fune_c, _ZTV6ShipUp) ----
-# ShipUp D1/D0 are HOST THUNKS (they overwrite the vptr with the shared
-# _ZTV10dBgActor_c placeholder in the teardown chain, the 196-speller trap), so
-# they are OUT of the slice -- the fill in hal/actor_classes_jrb.cpp runs the
-# member-dtor chain (MovingMeshCollider +0x124, Model +0xd4, Actor D2; D0 also
-# Deallocate) with the derived table stored once.
+# ShipUp D1/D0 ride from src (lane DTOR-PAIRS-C): the "_ZTV10dBgActor_c
+# placeholder" their second store spells is ov002 0x0210ae38 by relocation, the
+# one Platform base table the port hosts (hal/lk2_platform_dtor_seat.cpp), and
+# the first store is _ZTV6ShipUp by its RTTI name, aliased in the fill.
 src/_ZN6ShipUp13InitResourcesEv.cpp
+src/_ZN6ShipUpD1Ev.c
+src/_ZN6ShipUpD0Ev.c
 src/_ZN6ShipUp16CleanupResourcesEv.cpp
 src/_ZN6ShipUp8BehaviorEv.cpp
 src/func_ov016_021126a8.c
@@ -78,8 +79,11 @@ src/func_ov002_020b5f9c.c
 # ---- SLIDING_BOX (id 313) == the DERIVED _ZN23FloatOnWaterPlatformJrb* class,
 # _ZTV23FloatOnWaterPlatformJrb -- carries the slot-5 Render (host copy) and the
 # COUPLED FindWithActorID(0x39=ShipUp) Behavior. Init/Cleanup/Behavior + matrix
-# builder join; Render is host, D1/D0 write the placeholder -> host thunks. ----
+# builder join; Render is host. D1/D0 ride from src (lane DTOR-PAIRS-C, the
+# ShipUp reading above: the second store is the hosted Platform base table). ----
 src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp
+src/_ZN23FloatOnWaterPlatformJrbD1Ev.c
+src/_ZN23FloatOnWaterPlatformJrbD0Ev.c
 src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv.cpp
 src/_ZN23FloatOnWaterPlatformJrb8BehaviorEv.c
 src/func_ov016_021130a4.c

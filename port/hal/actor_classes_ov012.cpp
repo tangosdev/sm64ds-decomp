@@ -61,6 +61,8 @@ DSSTATE_END
 /* BASEMENT_WATER (daObjC0Water_c) own bodies -- misnamed _ZN12SwitchPillar*
    by dsd (the class-identity swap), matched src under those filenames */
 int _ZN12SwitchPillar13InitResourcesEv(void *self);      /* slot 0, faced (real C++ method) */
+int *_ZN12SwitchPillarD1Ev(int *self);                   /* slot 16, .c, DTOR-PAIRS seat (0x02111450) */
+int *_ZN12SwitchPillarD0Ev(int *self);                   /* slot 17, .c, DTOR-PAIRS seat (0x0211149c) */
 int _ZN12SwitchPillar16CleanupResourcesEv(void *self);   /* slot 3 */
 int _ZN12SwitchPillar8BehaviorEv(void *self);            /* slot 6, faced (real C++ method) */
 int _ZN12SwitchPillar6RenderEv(void *self);              /* slot 9, HOST COPY (the ModelAnim
@@ -258,32 +260,17 @@ static int __fastcall bw_behavior(void *s, void *)
 static int __fastcall bw_render(void *s, void *)
 { port_actor_render_probe("BASEMENT_WATER", (char *)s + 0xd4);
   return _ZN12SwitchPillar6RenderEv(s); }
-/* D1/D0 host thunks (BasementWater's own, matched src filenames
-   _ZN12SwitchPillarD1Ev.c/D0Ev.c per the class-identity swap): the SAME
-   store-then-overwrite shape, dropped from the slice. Run the member
-   chain high-address first: TextureTransformer +0x320 (BasementWater's
-   own InitResources constructs one there -- SwitchPillar has none),
-   MovingMeshCollider +0x124, Model +0xd4, then Actor's own D2. D0 also
-   frees on the game heap. */
+/* D1/D0 (DTOR-PAIRS seat): BasementWater's own matched pair, the src files
+   spelled _ZN12SwitchPillarD1Ev.c/D0Ev.c per the class-identity swap, behind
+   ecx->arg adapters where host copies of the chain stood. The ROM's table at
+   0x02112408 puts them at words 16/17; their first store is that table by its
+   RTTI name (_ZTV14daObjC0Water_c, aliased above) and the second is ov002
+   0x0210ae38 by relocation, the one Platform base table the port hosts
+   (hal/lk2_platform_dtor_seat.cpp) -- not a placeholder. */
 static int __fastcall bw_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN18TextureTransformerD1Ev(t + 0x320);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN12SwitchPillarD1Ev((int *)s); }
 static int __fastcall bw_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN18TextureTransformerD1Ev(t + 0x320);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN12SwitchPillarD0Ev((int *)s); }
 
 extern "C" void hal_fill_basement_water_vtable(void)
 {

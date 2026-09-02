@@ -77,6 +77,7 @@ DSSTATE_END
    ClockPaintingHandShort.h, faced below (Render too: it compiles from src
    as a real method, the Tree recipe) */
 int _ZN22ClockPaintingHandShort13InitResourcesEv(void *self);    /* slot 0 */
+int *_ZN22ClockPaintingHandShortD0Ev(int *self);                 /* slot 17, .c, DTOR-PAIRS seat (0x021113ec) */
 int _ZN22ClockPaintingHandShort16CleanupResourcesEv(void *self); /* slot 3 */
 int _ZN22ClockPaintingHandShort8BehaviorEv(void *self);          /* slot 6 */
 int _ZN22ClockPaintingHandShort6RenderEv(void *self);            /* slot 9 */
@@ -276,8 +277,8 @@ static int __fastcall ch_behavior(void *s, void *)
 static int __fastcall ch_render(void *s, void *)
 { port_actor_render_probe("CLOCK_HAND", (char *)s + 0xd4);
   return _ZN22ClockPaintingHandShort6RenderEv(s); }
-/* D1/D0 host thunks (matched src: D1 is a real MSVC destructor over local
-   struct decls, D0 stores _ZTV12daObjClock_c == this table): same chain. */
+/* D1 host thunk (matched src is a real MSVC destructor over local struct
+   decls, unlinkable against the host seams -- lane DTOR-PAIRS-CPP's row). */
 static int __fastcall ch_d1(void *s, void *)
 {
     char *t = (char *)s;
@@ -286,15 +287,11 @@ static int __fastcall ch_d1(void *s, void *)
     _ZN5ActorD2Ev(t);
     return (int)(size_t)s;
 }
+/* D0 (DTOR-PAIRS seat): the matched flat-C body behind the ecx->arg adapter;
+   it stores _ZTV12daObjClock_c, this table by its RTTI name (aliased above),
+   and frees on data_020a0eac by name. */
 static int __fastcall ch_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV22ClockPaintingHandShort;
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN22ClockPaintingHandShortD0Ev((int *)s); }
 
 extern "C" void hal_fill_clock_hand_vtable(void)
 {

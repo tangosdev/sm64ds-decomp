@@ -25,6 +25,7 @@ src/_ZN14MovingBarSmall16CleanupResourcesEv.cpp
 src/_ZN14MovingBarSmall8BehaviorEv.c
 src/_ZN14MovingBarSmall6RenderEv.cpp
 src/_ZN14MovingBarSmallD1Ev.c
+src/_ZN14MovingBarSmallD0Ev.c
 # Seat B (PAIR): TOWER_STEP slot 31 Kill (0x0211233c) and slot 27
 # OnHitByMegaChar (0x021123a0). The slot-27 body credits the mega kill then
 # virtual-dispatches its OWN slot 31 (ldr [r0]; ldr [r1,#0x7c]; blx r1), so the
@@ -42,6 +43,7 @@ src/_ZN9TowerStep16CleanupResourcesEv.cpp
 src/_ZN9TowerStep8BehaviorEv.cpp
 src/_ZN9TowerStep6RenderEv.cpp
 src/_ZN9TowerStepD1Ev.c
+src/_ZN9TowerStepD0Ev.c
 
 # Gate 62: POLE_BILLBOARD (id 42) installs the billboard base vtable 0x02114360
 # (its own slots are the func_ov015_0211* family, slot 6 the ActorBase no-op),
@@ -59,6 +61,7 @@ src/_ZN13PoleBillboard16CleanupResourcesEv.cpp
 src/_ZN13PoleBillboard8BehaviorEv.cpp
 src/_ZN13PoleBillboard6RenderEv.cpp
 src/_ZN13PoleBillboardD1Ev.c
+src/_ZN13PoleBillboardD0Ev.c
 # Seat A: KNOCK_DOWN_PLANK slot 27 OnHitByMegaChar (0x021113c0). A leaf
 # dispatcher: it credits the mega kill through the helper at 0x020bee44 (already
 # in the link) and writes two fields, no vtable dispatch, no ClosestPlayer. This

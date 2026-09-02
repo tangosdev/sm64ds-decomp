@@ -12,8 +12,9 @@
 #     D0 also frees on the game heap via the "G0"/"VT0" resolver names the
 #     host cannot link)
 #   - src/_ZN22ClockPaintingHandShortD1Ev.cpp (a real MSVC destructor over
-#     local struct decls, unlinkable against the host seams) /
-#     src/_ZN22ClockPaintingHandShortD0Ev.c (stores _ZTV12daObjClock_c)
+#     local struct decls, unlinkable against the host seams). Its D0
+#     (src/_ZN22ClockPaintingHandShortD0Ev.c, stores _ZTV12daObjClock_c by the
+#     alias) rides from src since lane DTOR-PAIRS-C, listed below.
 # All four stay byte-locked in src/ as the matched proof; the thunks spell
 # the same member chain, read out of the two matched D0 bodies.
 #
@@ -36,6 +37,7 @@ src/func_ov013_02111430.c
 src/ClockPaintingHandShort_Spawn.c
 src/ClockPaintingHandLong_Spawn.c
 src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp
+src/_ZN22ClockPaintingHandShortD0Ev.c
 src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp
 src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp
 src/_ZN22ClockPaintingHandShort6RenderEv.cpp
