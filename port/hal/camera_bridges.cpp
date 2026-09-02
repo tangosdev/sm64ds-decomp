@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "PathPtr.h"
 #include "dsstate_seg.h"
+#include "ntr/ppu.h"   /* ntr::SCREEN_W/SCREEN_H for the widescreen frustum seam */
 
 /* Camera::Render calls View::Render() as a METHOD (its TU declares a local
    `struct View`); src defines the function at C linkage. Same shape as the
@@ -292,6 +293,40 @@ int data_0209ee90[0x348 / 4];
    dormancy of the ambient set (bird/butterfly/fish), not a port gap. */
 int data_0209f43c[0x5c / 4];
 DSSTATE_END
+
+/* WIDESCREEN OBJECT-CULL FRUSTUM (16:9), the host seam the first pass could not
+   reach. data_0209f43c above is the global Clipper the object Camera tests every
+   ambient actor against: Camera::Render ends in func_0200d954, which seeds the
+   clipper through Clipper::Func_020156DC with the camera's own aspect
+   (camera[0xf8], 0x1555 = 4:3), and Func_0201559C then builds the four SIDE
+   planes with a horizontal half-extent c = (m4c * b) >> 12 -- m4c is byte 0x4c,
+   the aspect term. On the 1024x576 frame the 3D field is widened Hor+
+   (ntr/gx.cpp scales clip.x by (4/3)*SCREEN_H/SCREEN_W = 0.75), so the CULL
+   frustum has to widen by the inverse or the birds, butterflies and fish that
+   sit just past the old 4:3 edge stay in the authentic dormancy the byte-frozen
+   src gives them -- Actor::BeforeBehavior skips a 0x10000-flagged actor's
+   Behavior whenever this test fails.
+
+   THE SEAM WIDENS m4c AND REBUILDS THE PLANES, both host-side and both gated on
+   the tier: scale m4c by target/native = (SCREEN_W/SCREEN_H)/(4/3), which is the
+   exact inverse of gx.cpp's 0.75, then re-run Func_0201559C so the side planes
+   come back off the wider aspect. func_0200d954 reseeds m4c from 0x1555 every
+   Render, so this is called AFTER the render seeds it and BEFORE the actor
+   buckets read it (hal drives both by hand; see the frame loop in
+   tests/walk_window.cpp), and it never accumulates: each frame starts from the
+   src's own value and is widened once. Scaling the value that is THERE rather
+   than a literal 0x1555 keeps a camera or cutscene that seeds a different aspect
+   correct. Empty and uncalled on the 4:3 targets. */
+#ifdef NTR_WIDE169
+void _ZN7Clipper13Func_0201559CEv(void *self);
+void hal_camera_widen_frustum(void)
+{
+    long long m4c = data_0209f43c[0x4c / 4];
+    data_0209f43c[0x4c / 4] =
+        (int)((m4c * (ntr::SCREEN_W * 3)) / (ntr::SCREEN_H * 4));
+    _ZN7Clipper13Func_0201559CEv(&data_0209f43c);
+}
+#endif
 
 /* Camera::SaveCameraStateBeforeTalk is called ARGLESS by both its callers
    (func_02005324 and func_02009a8c, which the community names func_0200cc5c):

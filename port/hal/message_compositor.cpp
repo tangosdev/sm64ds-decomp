@@ -1810,7 +1810,20 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             /* horizontal placement of this DS column's block */
 #ifdef NTR_WIDE169
             const int bw = uni;
-            const int hx0 = (x < band_l) ? x * uni
+            /* THE REANCHOR IS FOR A SPARSE HUD OVER A WIDE 3D VIEW, and only
+               there. With a 3D layer in the picture (shown3d) the bands it opens
+               between the HUD clusters are filled by the 3D field, so pushing the
+               power meter left and the star count right reads as a widescreen
+               HUD. But a MINIGAME's top screen is a FULL 2D raster with no 3D
+               behind it (shown3d is false), and reanchoring that tears it into
+               vertical strips with black gaps where the bands separate -- the two
+               dark bars a pachinko/smartball board showed. So a full 2D screen is
+               PILLARBOXED instead: centred at the uniform scale, black margins
+               either side, margin/2 == the bottom panel's pan_x0 (128) so the two
+               DS screens line up exactly (ntr/ppu_sub.cpp's stacked wide branch). */
+            const int hx0 = !shown3d
+                          ? x * uni + margin / 2
+                          : (x < band_l) ? x * uni
                           : (x >= band_r) ? x * uni + margin
                                           : x * uni + margin / 2;
 #else

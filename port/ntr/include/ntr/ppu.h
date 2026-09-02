@@ -456,6 +456,24 @@ struct StackLayout {
     // pass did before this existed and is still exactly right for every game
     // whose own G is the band's height.
     int game_g_ds;
+    // THE BOTTOM PANEL'S PILLARBOX, in image pixels. The stacked presentation
+    // scales the 256x192 bottom (sub) framebuffer up into the image; on a SQUARE
+    // tier the horizontal ratio SCREEN_W/SUB_W and the vertical SCREEN_H/SUB_H
+    // are the same whole number, so the panel fills the width with no distortion
+    // and these are (0, STACK_W). The FIRST non-square tier is NTR_WIDE169, where
+    // SCREEN_W/SUB_W (4) != SCREEN_H/SUB_H (3): filling the width would stretch
+    // the panel 33% sideways. So the panel is drawn at the UNIFORM vertical scale
+    // instead -- pan_w = SUB_W * scale host columns -- and CENTRED, pan_x0 =
+    // (STACK_W - pan_w) / 2, with black margins either side. It is native 4:3,
+    // pillarboxed, exactly the DS's own bottom screen.
+    //
+    // ONE ARITHMETIC, read by the compose (ntr/ppu_sub.cpp) and by the stylus
+    // inverse (hal/sub_screen.cpp's hal_present_client_to_sub) so the picture and
+    // the touch surface cannot disagree about where the panel is. On a square
+    // tier pan_x0 == 0 and pan_w == STACK_W, so every consumer is byte-for-byte
+    // what it was before this field existed.
+    int pan_x0;        // first image column of the bottom panel; 0 on 4:3 tiers
+    int pan_w;         // the bottom panel's image width; STACK_W on 4:3 tiers
 };
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
