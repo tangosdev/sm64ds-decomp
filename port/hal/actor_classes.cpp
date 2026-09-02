@@ -366,11 +366,17 @@ static int __fastcall ac_d1_door(void *s, void *)
    __fastcall face the slot needs. */
 extern "C" {
 int *_ZN11CastleWaterD1Ev(int *self);
+int *_ZN11CastleWaterD0Ev(int *self);  /* slot 17, DTOR-PAIRS seat (ov009 0x02111abc) */
 int *_ZN8MetalNetD1Ev(int *self);
 int *_ZN13QuestionBlockD1Ev(int *self);
 }
 static int __fastcall cw_d1(void *s, void *)
 { return (int)(size_t)_ZN11CastleWaterD1Ev((int *)s); }
+/* DTOR-PAIRS seat: the water's own D0 spells VT0/VT1; port/CMakeLists.txt
+   compiles that one TU with the ROM's two relocation targets
+   (_ZTV14daObjMcWater_c and the Platform base table as _ZTV10dBgActor_c). */
+static int __fastcall cw_d0(void *s, void *)
+{ return (int)(size_t)_ZN11CastleWaterD0Ev((int *)s); }
 static int __fastcall mn_d1(void *s, void *)
 { return (int)(size_t)_ZN8MetalNetD1Ev((int *)s); }
 static int __fastcall qb_d1(void *s, void *)
@@ -1155,12 +1161,15 @@ extern "C" void hal_fill_moving_cylinder_vtables(void)
 // for the water and _ZN11CastleWater*/_ZN8DockPole* for the net and the flag;
 // #1041 shifted them onto the blocks they belong to.
 //
-// SLOTS 16/17 TRAP FOR ALL FOUR. Nothing on the castle grounds destroys one
-// -- every InitResources here returns 1 on this level -- and the water's own
-// D0 (src/_ZN11CastleWaterD0Ev.c) is why it matters: it spells its two vtables VT0
-// and VT1, the same placeholder names src/_ZN10SphereClsnD1Ev.c uses for
-// three completely different tables, so one host definition would satisfy
-// both with the wrong bytes and nothing would say so.
+// SLOT 17 USED TO TRAP FOR ALL FOUR. Nothing on the castle grounds destroys
+// one -- every InitResources here returns 1 on this level -- and the water's
+// own D0 (src/_ZN11CastleWaterD0Ev.c) spells its two vtables VT0 and VT1, the
+// same placeholder names src/_ZN10SphereClsnD1Ev.c uses for three completely
+// different tables, so one shared host definition would have satisfied both
+// with the wrong bytes. Since lane DTOR-PAIRS-C all four D0s ride from src:
+// the water's relocs (from:0x02111ab4 -> 0x02113a18, from:0x02111ab8 ->
+// 0x0210ae38) name its two tables, and port/CMakeLists.txt compiles that one
+// TU with VT0=_ZTV14daObjMcWater_c;VT1=_ZTV10dBgActor_c, per source.
 
 // ---- BIRD (actor 343, ov009) x2 --------------------------------------------
 extern "C" {
@@ -1260,7 +1269,7 @@ extern "C" void hal_fill_castle_water_vtable(void)
     vt[9] = (void *)cw_render;
     vt[12] = (void *)ac_pdes_base;
     vt[16] = (void *)cw_d1;
-    vt[17] = (void *)ac_trap17;
+    vt[17] = (void *)cw_d0;
     /* 32 slots; slot 31 is Platform::Kill unchanged in the ROM table. dsd left
        an ambiguous symbol at word 14, so the symbol bound reads 14 here -- the
        reloc run is what says 32. */

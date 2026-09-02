@@ -1087,6 +1087,15 @@ foreach(bully_dtor _ZN5BullyD1Ev _ZN5BullyD0Ev _ZN8BigBullyD1Ev _ZN8BigBullyD0Ev
         PROPERTIES COMPILE_DEFINITIONS
         "VT1=data_ov064_0211b768")
 endforeach()
+# Lane DTOR-PAIRS-C: the castle water's deleting destructor spells VT0 and VT1
+# (the SphereClsn placeholder pair). The ROM relocates its two stores to ov009
+# 0x02113a18 (_ZTV14daObjMcWater_c, hosted in hal/actor_classes.cpp) and ov002
+# 0x0210ae38 (the Platform base table, hosted as _ZTV10dBgActor_c), the Mecha03
+# treatment below; G0 is the game heap by the standing alias (020A0EAC).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11CastleWaterD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV14daObjMcWater_c;VT1=_ZTV10dBgActor_c")
 
 # RUN LINK60 lane A2: SPINDRIFT'S KILL-BY-INVINCIBLE EDGE, misrouted since the
 # ov081 seat. One ROM address, 0x020ada40, resolved two ways in one binary.
