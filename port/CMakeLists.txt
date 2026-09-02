@@ -4957,7 +4957,7 @@ set(SCENE_MG_SOURCES
     # Rides these same three targets because scene_boot.cpp calls
     # port_scene_mg_seat_sound by name and it defines data_0209b308.
     hal/scene_mg_sound.cpp
-    unmatched/MgBase_DeclConflict.cpp unmatched/MgBase_Slot1.cpp
+    unmatched/MgBase_Slot1.cpp
     unmatched/MgBase_Slot7.cpp unmatched/MgBase_StateDispatch.cpp
     unmatched/MgCurling_StateDispatch.cpp unmatched/MgBase_LangTable.cpp
     # Run mg5, lane BASESET. The framework's STATE SETTER, which was the last
@@ -5021,12 +5021,14 @@ set(SCENE_MG_SOURCES
     # -- so it is not optional on any target that takes the slice, exactly like
     # the state dispatch above.
     unmatched/MgPachinko_Award.cpp
-    # Run mg5, lane HSDISP: the minigame HUD's HIGH SCORE drawer and the one
-    # 32-bit argument its caller declares as a single byte, which is why the
-    # screen read 999999 while the stored word and both getters read zero.
-    # REPLACES src/func_ov004_020b19f0.c (out of slice_mg1.txt) and
+    # Run mg5, lane HSDISP: the one 32-bit argument the HIGH SCORE drawer's
+    # caller declares as a single byte, which is why the screen read 999999
+    # while the stored word and both getters read zero. REPLACES
     # src/func_ov006_020fba48.c (out of slice_pch.txt), so it is not optional
-    # on any target that takes either slice, exactly like the award above.
+    # on any target that takes that slice, exactly like the award above. The
+    # drawer itself, src/func_ov004_020b19f0.c, is back on slice_mg1.txt as
+    # the matched TU (lane LINKMG): its void * parameter is the same 4-byte
+    # cdecl slot the host copy had retyped int, so the copy changed nothing.
     unmatched/MgHud_HighScore.cpp
     # Run mg5, lane WTIMER: the minigame HUD's SCALED NUMBER drawer, the third
     # of the three ov004 addresses with no delink block and no src TU, and the
@@ -5061,6 +5063,31 @@ set(SCENE_MG_SOURCES
     # _ZTV16dScMgPachinko2_c, which no config defines, so the slice does not
     # link without this file's one /alternatename row.
     unmatched/MgPachinko2_Faces.cpp)
+
+# Lane LINKMG: dScMgBase_c slots 29 and 30 come back as their MATCHED TUs.
+# unmatched/MgBase_DeclConflict.cpp carried src/func_ov004_020aeed8.cpp and
+# src/func_ov004_020af094.cpp with one token changed each, because both include
+# decl_common.h, which declares them (void*) while the TUs define them (char*)
+# and (Obj*) -- error C2733 under MSVC. That is exactly the shape hostgen's
+# HEADER_SHADOW already answers for func_ov002_020cfbdc, func_ov102_0214b248
+# and func_ov071_02121ba4: the header's declaration of the TU's OWN name is
+# hidden across the include, the definition keeps its src spelling, and every
+# caller still sees the header's (void*). Same C linkage, same 4-byte argument,
+# so nothing at the call site moves. The 18 MMIO derefs in the two bodies come
+# out as NTR_MMIO proxies, which for DISPCNT/POWCNT1 land on the same mapped
+# register page the raw writes did (ntr/io.cpp models no side effect for either).
+# src/ is untouched; the host-copy file is deleted rather than left inert.
+set(SCENE_MG_HOSTGEN_SYMS func_ov004_020aeed8 func_ov004_020af094)
+foreach(sym IN LISTS SCENE_MG_HOSTGEN_SYMS)
+    set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND SCENE_MG_SOURCES "${sym_out}")
+endforeach()
 
 # THE DELETING DESTRUCTOR SPELLS ITS OWN TABLE AS THE SHARED PLACEHOLDER `VT`.
 # src/func_ov006_020e065c.c is dScMgCurling_c's slot 17 and its body is

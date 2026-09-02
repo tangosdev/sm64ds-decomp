@@ -418,6 +418,14 @@ HEADER_SHADOW = {
     # src/func_ov071_02121ba4.cpp defines it `(char*)`. One register on the
     # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
     "func_ov071_02121ba4": "decl_common.h",
+    # lane LINKMG, dScMgBase_c slots 30 and 29: decl_common.h:2352-2353 declare
+    # both `(void*)` inside its extern "C" block while src/func_ov004_020aeed8.cpp
+    # defines `(char*)` and src/func_ov004_020af094.cpp defines `(Obj*)`. One
+    # register on the ROM, C2733 to MSVC -- the func_ov102_0214b248 case
+    # exactly. unmatched/MgBase_DeclConflict.cpp used to carry both bodies with
+    # the parameter retyped; this entry retires that file.
+    "func_ov004_020aeed8": "decl_common.h",
+    "func_ov004_020af094": "decl_common.h",
     # run rel0215 wave 3, lane w3-a2, TTC_ROTATING_CUBE/PRISM (108/109):
     # decl_common.h:2777-2778 declare func_ov065_021198a0 and
     # func_ov065_0211990c `(char*)` inside its extern "C" block, while

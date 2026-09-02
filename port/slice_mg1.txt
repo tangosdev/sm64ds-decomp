@@ -223,11 +223,17 @@ src/func_ov006_020e3578.c
 # the ROM built and the byte gate has no opinion. The ov004 half of this slice
 # was SWEPT for the pattern rather than found one build at a time, so these
 # four are all of them.
-# port/unmatched/MgBase_DeclConflict.cpp carries all four bodies with one
-# token changed each, and for slot 7 ALSO the dropped object pointer that
+# Slots 1 and 7 are host-copied in port/unmatched/MgBase_Slot1.cpp and
+# MgBase_Slot7.cpp (slot 7 ALSO carries the dropped object pointer that
 # include/decl_Scene.h's empty-paren declaration of Scene::BeforeBehavior
-# causes; that file states line by line what changed. The header fixes proper
-# are multi-file changes inside the byte-gated tree and are routed, not taken.
+# causes). Slots 29 and 30 were in port/unmatched/MgBase_DeclConflict.cpp
+# until lane LINKMG: they now compile FROM src through tools/hostgen.py's
+# HEADER_SHADOW (the header's declaration of the TU's own name is hidden
+# across the include, the same route func_ov002_020cfbdc and
+# func_ov071_02121ba4 take), so they are still not lines here -- they are
+# generated objects the CMake block after SCENE_MG_SOURCES appends -- but
+# they are the matched TUs and count as such. The header fixes proper are
+# multi-file changes inside the byte-gated tree and are routed, not taken.
 # Twenty-three of these are the base class's own vtable slots and are paid
 # ONCE for all thirty minigames. Twenty of those twenty-three carried the
 # inferred-stub marker and all twenty were ruled REAL_DECOMP against the ROM
@@ -313,13 +319,15 @@ src/func_ov004_020b0d30.c
 src/func_ov004_020b0d8c.c
 src/func_ov004_020b0de0.c
 src/func_ov004_020b14f0.c
-# Run mg5, lane HSDISP. src/func_ov004_020b19f0.c IS EXCLUDED, host-copied in
-# port/unmatched/MgHud_HighScore.cpp. It is the minigame HUD's HIGH SCORE
-# drawer and the ROM takes its one argument, the 32-bit score, in r0 at
-# 0x020b19f8. src spells the parameter as void * and hands it to
-# func_ov004_020b1ea4, whose own definition takes an int there; its caller
-# src/func_ov006_020fba48.c declares the same parameter as s8. The host copy
-# types the value as the word it is at both ends. See that file's banner.
+# Lane LINKMG: the minigame HUD's HIGH SCORE drawer is BACK as the matched TU.
+# Run mg5 lane HSDISP had excluded it and host-copied it in
+# port/unmatched/MgHud_HighScore.cpp with its void * parameter retyped int,
+# but that retype changes no host code: the TU is plain C and its one
+# parameter and func_ov004_020b1ea4's third argument are 4-byte cdecl slots
+# either way. The dropped-argument defect HSDISP fixed lives in the CALLER,
+# src/func_ov006_020fba48.c (s8 at both ends, an invented parameter), and
+# that caller alone stays host-copied, off slice_pch.txt, tagged PORT_HOST_ABI.
+src/func_ov004_020b19f0.c
 src/func_ov004_020b1c68.c
 src/func_ov004_020b1cf0.c
 src/func_ov004_020b1d60.c

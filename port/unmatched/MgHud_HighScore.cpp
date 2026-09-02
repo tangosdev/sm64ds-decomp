@@ -121,22 +121,23 @@
  *
  * ---- WHAT THIS FILE IS ------------------------------------------------
  *
- * Both bodies are their src TUs verbatim, with the prototypes the ROM proves
- * and nothing else changed. No clamp is touched, no value is hardcoded, and
- * the string 999999 does not appear in any code path.
+ * ONE body now, lane LINKMG. The file used to carry a second, a copy of
+ * src/func_ov004_020b19f0.c with the parameter retyped from void * to int.
+ * That retype was never load-bearing on the host: the src TU is plain C, its
+ * one parameter and func_ov004_020b1ea4's third argument are both 4-byte
+ * cdecl slots whether spelled void * or int, and MSVC compiles the src TU
+ * as-is with no diagnostic that changes code. The defect this file exists for
+ * was always in the CALLER below, so the drawer is back on port/slice_mg1.txt
+ * as the matched TU and only the caller stays here.
  *
- *   func_ov004_020b19f0   src/func_ov004_020b19f0.c verbatim except the
- *                         parameter and func_ov004_020b1ea4's third argument
- *                         are typed as the 32-bit value they are rather than
- *                         as void *, matching src/func_ov004_020b1ea4.c's own
- *                         definition (int val) and src/func_ov004_020b1a5c.c's
- *                         declaration of the same callee.
  *   func_ov006_020fba48   src/func_ov006_020fba48.c verbatim except the two
  *                         declarations and its own signature take the widths
- *                         the ROM takes.
+ *                         the ROM takes. Out of port/slice_pch.txt for that
+ *                         reason. The SM64DS_MG_SCORE_TRACE witness moved
+ *                         here from the drawer copy; it prints the same two
+ *                         numbers at the same instant.
  *
- * Both files are out of port/slice_mg1.txt and port/slice_pch.txt for that
- * reason. src/ and include/ are untouched; the byte gate never sees this file.
+ * src/ and include/ are untouched; the byte gate never sees this file.
  *
  * THE OTHER THREE CALLERS OF 0x020b19f0 HAVE THE SAME BREAK and are NOT fixed
  * here, because they belong to classes this lane does not own. All four ROM
@@ -159,15 +160,15 @@ typedef int s32;
 
 extern "C" {
 
-s32  GetGameLanguage(void);
-int  RenderOamMainScreen(int a, int b, int c, int d, int e);
-int  func_ov004_020b1ea4(int a, int b, int c, int d, int e, int f, int g);
+/* The drawer is the matched TU src/func_ov004_020b19f0.c (C linkage, one
+ * 4-byte parameter it spells void *); declared here at the width the ROM
+ * passes, which is the same slot. */
+int  func_ov004_020b19f0(int score);
 int  func_ov004_020adc1c(void);
-extern char *data_ov004_020bbfa8[];
 
 /* Read-only witness for the measurement this file exists to make. Off unless
  * SM64DS_MG_SCORE_TRACE is set, so no battery run changes shape. It prints the
- * value the drawer RECEIVED next to the value the getter returns at the same
+ * value the drawer is HANDED next to the value the getter returns at the same
  * instant: those two numbers are what separate a dropped argument from a
  * mis-seated glyph table, and reading the picture is not allowed to stand in
  * for either of them. */
@@ -181,35 +182,28 @@ static bool hud_hiscore_trace(void)
     return on != 0;
 }
 
-int func_ov004_020b19f0(int self)
-{
-    int i;
-    if (hud_hiscore_trace()) {
-        static unsigned n;
-        ++n;
-        if (n <= 3 || (n % 100) == 0) {
-            std::printf("[hud:hiscore] draw%u: drawer received %u (0x%08x)"
-                        "   func_ov004_020adc1c() = %d%s\n",
-                        n, (unsigned)self, (unsigned)self,
-                        func_ov004_020adc1c(),
-                        (self >= 0xf423f) ? "   <-- OVER THE 999999 CLAMP" : "");
-            std::fflush(stdout);
-        }
-    }
-    i = GetGameLanguage();
-    RenderOamMainScreen(*(int *)(data_ov004_020bbfa8[i] + 0x20), 0x20, 0xc, -1, -1);
-    return func_ov004_020b1ea4(0x48, 0xc, self, 1, -1, 2, 0xa);
-}
-
 /* src/func_ov006_020fba48.c verbatim, with the ROM's widths. The parameter the
  * src TU invented is gone because 0x020fba48 reads none -- exactly as
  * src/func_ov006_020fba28.cpp, the SCORE half of the same HUD, is already
  * spelled (void) against the same (void *) declaration in
  * src/func_ov006_020fedc4.c. The extra argument that declaration pushes is
  * harmless under cdecl: the caller cleans it up. */
+/* PORT_HOST_ABI: ARM r0 ride-through; src declares the 32-bit high score as s8 at both ends and invents a parameter the ROM does not take, so MSVC hands the drawer one byte plus stack litter */
 void func_ov006_020fba48(void)
 {
-    func_ov004_020b19f0(func_ov004_020adc1c());
+    int score = func_ov004_020adc1c();
+    if (hud_hiscore_trace()) {
+        static unsigned n;
+        ++n;
+        if (n <= 3 || (n % 100) == 0) {
+            std::printf("[hud:hiscore] draw%u: drawer handed %u (0x%08x)"
+                        "   func_ov004_020adc1c() = %d%s\n",
+                        n, (unsigned)score, (unsigned)score, score,
+                        (score >= 0xf423f) ? "   <-- OVER THE 999999 CLAMP" : "");
+            std::fflush(stdout);
+        }
+    }
+    func_ov004_020b19f0(score);
 }
 
 }  /* extern "C" */
