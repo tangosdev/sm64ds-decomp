@@ -69,6 +69,15 @@ export SM64DS_NO_FOCUS=1
 export SM64DS_MINIMIZED=1
 export SM64DS_VOLUME=0
 export SM64DS_NO_DIALOG=1
+# THE CAPTURE. SM64DS_STACK_BMP writes the PRESENTED image once at the named
+# frame, and it only fires under the stacked layout, so SM64DS_DUAL_SCREEN=1 is
+# stated rather than assumed (status/VSCOL.md learned this the hard way: the
+# level default is the corner-inset panel and the capture never ran under it).
+# The frame is part of the probe -- late enough that every window has joined
+# and every seat has a body, and the same number in every window so the shots
+# are of the same moment.
+export SM64DS_DUAL_SCREEN=1
+SHOTFRAME="${PAL16_SHOT_FRAME:-600}"
 
 key_for() {
   case $(( $1 % 4 )) in
@@ -98,4 +107,5 @@ while [ "$k" -lt "$N" ]; do
 done
 wait
 echo "all $N exited"
+ls -l "$OUT"/p*/window_p*.bmp 2>/dev/null
 ls "$OUT"/p*/walk_window_selftest.bmp 2>/dev/null
