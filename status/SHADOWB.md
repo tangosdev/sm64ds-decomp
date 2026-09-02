@@ -259,3 +259,33 @@ callers `func_ov002_020bd480`/`func_ov002_020bd250` out of the SHADOW queue and
 in `walk_window.map`, the PlayCharVoice MSVC mangle and the Hurt receiver face
 both present in the map; `git diff --stat d63b92a09 -- src/` empty; all 20
 smokes pass.
+
+Commit `ee13ffc4b`.
+
+## Final battery -- ALL GREEN
+
+`python port/tools/battery.py --skip-build` (`build/tmp/battery_final.log`):
+20/20 smokes ok, every level selftest ok, every scene selftest 361-390 ok
+(the intro-cutscene path exercises the two new KuppaCmd seams), default boot
+reaches TITLE 300 frames clean, linkage 9248 (81.6%), ptr_audit 0, shipping
+config built and selftest rc=0. Same two pre-existing skips (level 27
+TtcMovingCube, level 45 Goomboss).
+
+## Summary
+
+Base d63b92a09 linked 9238 -> tip 9248, +10 matched TUs linked. `src/` unchanged
+throughout (`git diff --stat d63b92a09 -- src/` empty at every commit).
+
+| # | retirement | mechanism | commit | linkage |
+|---|---|---|---|---|
+| 1 | WaterRing::Render (bug fix, null -> this+0x80) | plain, slot-5 dual-fill | 95f574fa4 | +1 |
+| 2 | SkiLift::InitResources | plain (Prepare arg-aliasing) | 6855aa6ce | +1 |
+| 3 | OneUpLogo::InitResources | plain (Prepare arg-aliasing) | 18bd87830 | +1 |
+| 4 | FlyGuy::InitResources | hostgen EXTERN_C_DATA (new) | 2de1180ae | +1 |
+| 5 | Player St_Jump/NoControl/WallJump | hostgen CALL_STATE_FN (new) | bf5977ba5 | +3 |
+| 6 | func_ov002_020ef670 | hostgen DS_DIV | 7cbdb9e0c | +1 |
+| 7 | PlayCharVoice alias + Hurt face | seams wired | ee13ffc4b | +2 |
+
+Seam kept, not retired: Player::BlowAway (matched TU cannot compile against the
+include/Player.h angle-field gap). Two hostgen mechanisms were added:
+`EXTERN_C_DATA` (item 4) and `CALL_STATE_FN` (item 5). Not pushed.
