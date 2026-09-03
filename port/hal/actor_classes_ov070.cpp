@@ -106,6 +106,7 @@
 // ov45_bringup's and ov70_bringup's bodies into port_actor_overlays_sinits.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 
 #include "Actor.h"
 #include "ActorBase.h"
@@ -559,19 +560,8 @@ static int __fastcall amp_pdes(void *s, void *)
    then WithMeshClsn +0x218, MovingCylinderClsnWithPos +0x1d8, ShadowModel
    +0x1b0, TextureTransformer +0x19c, TextureSequence +0x188, Model +0x138,
    ModelAnim +0xd4, Actor::D2. */
-static int __fastcall amp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV3Amp;
-    _ZN12WithMeshClsnD1Ev(t + 0x218);
-    _ZN25MovingCylinderClsnWithPosD1Ev(t + 0x1d8);
-    _ZN11ShadowModelD1Ev(t + 0x1b0);
-    _ZN18TextureTransformerD1Ev(t + 0x19c);
-    _ZN15TextureSequenceD1Ev(t + 0x188);
-    _ZN5ModelD1Ev(t + 0x138);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (amp_d1) spelled the same chain by hand. */
 static int __fastcall amp_d0(void *s, void *)
 { return (int)(size_t)_ZN3AmpD0Ev((int *)s); }
 extern "C" void hal_fill_amp_vtable(void)
@@ -584,7 +574,7 @@ extern "C" void hal_fill_amp_vtable(void)
     vt[6]  = (void *)amp_behavior;
     vt[9]  = (void *)amp_render;
     vt[12] = (void *)amp_pdes;
-    vt[16] = (void *)amp_d1;
+    vt[16] = (void *)hal_cppd1_Amp;
     vt[17] = (void *)amp_d0;
 }
 
@@ -610,17 +600,8 @@ static int __fastcall fc_pdes(void *s, void *)
 static int __fastcall fc_yoshi(void *, void *)
 { return func_ov070_021211bc(); }
 /* slot 16, HOST CHAIN -- the listing at 0x02121118. */
-static int __fastcall fc_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV10FlameChomp;
-    _ZN12WithMeshClsnD1Ev(t + 0x1a0);
-    _ZN25MovingCylinderClsnWithPosD1Ev(t + 0x160);
-    _ZN11ShadowModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (fc_d1) spelled the same chain by hand. */
 static int __fastcall fc_d0(void *s, void *)
 { return (int)(size_t)_ZN10FlameChompD0Ev((int *)s); }
 extern "C" void hal_fill_flame_chomp_vtable(void)
@@ -633,7 +614,7 @@ extern "C" void hal_fill_flame_chomp_vtable(void)
     vt[6]  = (void *)fc_behavior;
     vt[9]  = (void *)fc_render;
     vt[12] = (void *)fc_pdes;
-    vt[16] = (void *)fc_d1;
+    vt[16] = (void *)hal_cppd1_FlameChomp;
     vt[17] = (void *)fc_d0;
     vt[18] = (void *)fc_yoshi;
 }
@@ -658,16 +639,8 @@ static int __fastcall fcf_pdes(void *s, void *)
 { (void)s; _ZN14FlameChompFire16OnPendingDestroyEv(); return 0; }
 static int __fastcall fcf_yoshi(void *, void *)
 { return func_ov070_02121bdc(); }
-static int __fastcall fcf_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV14FlameChompFire;
-    _ZN12WithMeshClsnD1Ev(t + 0x130);
-    _ZN18MovingCylinderClsnD1Ev(t + 0xfc);
-    _ZN11ShadowModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (fcf_d1) spelled the same chain by hand. */
 static int __fastcall fcf_d0(void *s, void *)
 { return (int)(size_t)_ZN14FlameChompFireD0Ev((int *)s); }
 extern "C" void hal_fill_flame_chomp_fire_vtable(void)
@@ -680,7 +653,7 @@ extern "C" void hal_fill_flame_chomp_fire_vtable(void)
     vt[6]  = (void *)fcf_behavior;
     vt[9]  = (void *)fcf_render;
     vt[12] = (void *)fcf_pdes;
-    vt[16] = (void *)fcf_d1;
+    vt[16] = (void *)hal_cppd1_FlameChompFire;
     vt[17] = (void *)fcf_d0;
     vt[18] = (void *)fcf_yoshi;
 }

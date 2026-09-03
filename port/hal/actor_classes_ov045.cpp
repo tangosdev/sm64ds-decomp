@@ -167,6 +167,7 @@
 // ids in it (1635 model, 1636 clsn) are the ROM's own, read from that body.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -547,15 +548,8 @@ static int __fastcall ep_pdes(void *s, void *)
 /* slot 16, HOST CHAIN: src/_ZN8PoleLiftD1Ev.cpp is a real MSVC destructor over
    structs local to that TU, so there is no C name to call. The chain is the one
    its D0 sibling spells and relocs.txt confirms at 0x02111854/5c/64/74. */
-static int __fastcall ep_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV8PoleLift;
-    _ZN21ExtendingMeshColliderD1Ev(t + 0x158);
-    _ZN5ModelD1Ev(t + 0xd8);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (ep_d1) spelled the same chain by hand. */
 static int __fastcall ep_d0(void *s, void *)
 { return (int)(size_t)_ZN8PoleLiftD0Ev((int *)s); }
 extern "C" void hal_fill_extending_platform_vtable(void)
@@ -568,7 +562,7 @@ extern "C" void hal_fill_extending_platform_vtable(void)
     vt[6]  = (void *)ep_behavior;
     vt[9]  = (void *)ep_render;
     vt[12] = (void *)ep_pdes;
-    vt[16] = (void *)ep_d1;
+    vt[16] = (void *)hal_cppd1_PoleLift;
     vt[17] = (void *)ep_d0;
     /* 31 slots: this class is an Actor, not a Platform, and its table really
        does end at 30 -- the next dsd symbol is at 0x02112efc. No slot 31. */

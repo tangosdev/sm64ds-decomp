@@ -84,6 +84,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 
 #include "Actor.h"
 #include "ActorBase.h"
@@ -416,8 +417,8 @@ static int __fastcall pky_render(void *s, void *)
   return _ZN5Pokey6RenderEv(s); }
 static int __fastcall pky_pdes(void *s, void *)
 { _ZN5Pokey16OnPendingDestroyEv(s); return 0; }
-static int __fastcall pky_d1(void *s, void *)
-{ return (int)(size_t)_ZN5PokeyD1Ev((int *)s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (pky_d1) spelled the same chain by hand. */
 static int __fastcall pky_d0(void *s, void *)
 { return (int)(size_t)_ZN5PokeyD0Ev((int *)s); }
 static int __fastcall pky_yoshi(void *s, void *)
@@ -437,7 +438,7 @@ extern "C" void hal_fill_pokey_vtable(void)
     vt[6]  = (void *)pky_behavior;
     vt[9]  = (void *)pky_render;
     vt[12] = (void *)pky_pdes;
-    vt[16] = (void *)pky_d1;
+    vt[16] = (void *)hal_cppd1_Pokey;
     vt[17] = (void *)pky_d0;
     vt[18] = (void *)pky_yoshi;
     vt[19] = (void *)pky_egg;
@@ -459,8 +460,8 @@ static int __fastcall tor_behavior(void *s, void *)
 static int __fastcall tor_render(void *s, void *)
 { port_actor_render_probe("TORNADO", (char *)s + 0x2c4);
   return _ZN7Tornado6RenderEv(s); }
-static int __fastcall tor_d1(void *s, void *)
-{ return (int)(size_t)_ZN7TornadoD1Ev((int *)s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (tor_d1) spelled the same chain by hand. */
 static int __fastcall tor_d0(void *s, void *)
 { return (int)(size_t)_ZN7TornadoD0Ev((int *)s); }
 
@@ -473,7 +474,7 @@ extern "C" void hal_fill_tornado_vtable(void)
     vt[3]  = (void *)tor_clean;
     vt[6]  = (void *)tor_behavior;
     vt[9]  = (void *)tor_render;
-    vt[16] = (void *)tor_d1;
+    vt[16] = (void *)hal_cppd1_Tornado;
     vt[17] = (void *)tor_d0;
 }
 

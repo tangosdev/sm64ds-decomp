@@ -114,6 +114,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 
 extern "C" {
@@ -328,14 +329,8 @@ static int __fastcall num_render(void *s, void *)
    TextureSequence at +0x124, Model at +0xd4, then Actor's own D2. No vptr
    store, because the ROM body has none (its whole relocation span is the three
    destructor calls). */
-static int __fastcall num_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN15TextureSequenceD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (num_d1) spelled the same chain by hand. */
 static int __fastcall num_d0(void *s, void *)
 { return (int)(size_t)_ZN15InvisibleSecretD0Ev((int *)s); }
 
@@ -352,16 +347,8 @@ static int __fastcall wf_render(void *s, void *)
    WingFeather's own vptr changes nothing (no class derives from it), so the
    thunk spells only the part that has an effect -- exactly what the class's
    own D0 does after its store. Order is the D0's order, high address first. */
-static int __fastcall wf_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN11ShadowModelD1Ev(t + 0x314);
-    _ZN12WithMeshClsnD1Ev(t + 0x158);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (wf_d1) spelled the same chain by hand. */
 static int __fastcall wf_d0(void *s, void *)
 { return (int)(size_t)_ZN11WingFeatherD0Ev((int *)s); }
 
@@ -373,7 +360,7 @@ extern "C" void hal_fill_number_vtable(void)
     vt[3]  = (void *)num_clean;
     vt[6]  = (void *)num_behavior;
     vt[9]  = (void *)num_render;
-    vt[16] = (void *)num_d1;
+    vt[16] = (void *)hal_cppd1_InvisibleSecret;
     vt[17] = (void *)num_d0;
     /* no slot 31: Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -386,7 +373,7 @@ extern "C" void hal_fill_wing_feather_vtable(void)
     vt[3]  = (void *)wf_clean;
     vt[6]  = (void *)wf_behavior;
     vt[9]  = (void *)wf_render;
-    vt[16] = (void *)wf_d1;
+    vt[16] = (void *)hal_cppd1_WingFeather;
     vt[17] = (void *)wf_d0;
     /* no slot 31, same reason */
 }

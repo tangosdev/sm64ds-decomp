@@ -88,6 +88,7 @@
 // sibling D0, which spells the identical chain plus Memory::Deallocate.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -339,15 +340,8 @@ static int __fastcall tc_render(void *s, void *)
    ??1TreasureChest@@UAE@XZ and never the C name. Transcribed from ROM
    0x0211a200 and cross-checked against src/_ZN13TreasureChestD0Ev.c, which
    spells the identical chain plus Memory::Deallocate. */
-static int __fastcall tc_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV13TreasureChest;
-    _ZN18MovingCylinderClsnD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (tc_d1) spelled the same chain by hand. */
 static int __fastcall tc_d0(void *s, void *)
 { return (int)(size_t)_ZN13TreasureChestD0Ev((int *)s); }
 
@@ -400,7 +394,7 @@ extern "C" void hal_fill_treasure_chest_vtable(void)
     vt[3]  = (void *)tc_clean;
     vt[6]  = (void *)tc_behavior;
     vt[9]  = (void *)tc_render;
-    vt[16] = (void *)tc_d1;
+    vt[16] = (void *)hal_cppd1_TreasureChest;
     vt[17] = (void *)tc_d0;
     /* slot 12 keeps w3c_pdes_base -- the chest defaults to ActorBase's own. */
     /* 31 slots: an Actor, not a Platform. No slot 31. */

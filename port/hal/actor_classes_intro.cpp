@@ -54,6 +54,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "CutsceneObject.h"
 #include "Model.h"   /* the model class the vtable seat below describes */
@@ -308,13 +309,8 @@ static int __fastcall co_pdes(void *, void *)
    (ActorBase::AfterCleanupResources) deallocates itself. CutsceneObject adds no
    members of its own that need destroying -- its D1 body is empty -- so this is
    the vptr store and the Actor chain and nothing else. */
-static int __fastcall co_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV14CutsceneObject;
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (co_d1) spelled the same chain by hand. */
 /* Slot 17, the deleting destructor (DTOR-PAIRS seat): the matched flat-C body
    behind the ecx->arg adapter, its VT renamed onto this table per source (see
    the header). The chain is the same one co_d1 runs plus the free to the heap
@@ -578,7 +574,7 @@ extern "C" void hal_fill_cutscene_object_vtable(void)
     vt[6] = (void *)co_behavior;
     vt[9] = (void *)co_render;
     vt[12] = (void *)co_pdes;
-    vt[16] = (void *)co_d1;
+    vt[16] = (void *)hal_cppd1_CutsceneObject;
     vt[17] = (void *)co_d0;
 }
 

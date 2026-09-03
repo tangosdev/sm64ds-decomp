@@ -29,6 +29,7 @@
 // precedent -- NOT the ModelAnim slot-5 collision.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -279,14 +280,8 @@ static int __fastcall ch_render(void *s, void *)
   return _ZN22ClockPaintingHandShort6RenderEv(s); }
 /* D1 host thunk (matched src is a real MSVC destructor over local struct
    decls, unlinkable against the host seams -- lane DTOR-PAIRS-CPP's row). */
-static int __fastcall ch_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV22ClockPaintingHandShort;
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (ch_d1) spelled the same chain by hand. */
 /* D0 (DTOR-PAIRS seat): the matched flat-C body behind the ecx->arg adapter;
    it stores _ZTV12daObjClock_c, this table by its RTTI name (aliased above),
    and frees on data_020a0eac by name. */
@@ -301,7 +296,7 @@ extern "C" void hal_fill_clock_hand_vtable(void)
     vt[3]  = (void *)ch_clean;
     vt[6]  = (void *)ch_behavior;
     vt[9]  = (void *)ch_render;
-    vt[16] = (void *)ch_d1;
+    vt[16] = (void *)hal_cppd1_ClockPaintingHandShort;
     vt[17] = (void *)ch_d0;
 }
 

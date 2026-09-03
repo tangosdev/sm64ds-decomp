@@ -30,6 +30,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "HauntedChair.h"
 
@@ -212,19 +213,8 @@ static int __fastcall hc_render(void *s, void *)
 /* D1, the complete-object destructor slot 16 holds: the ROM's D0 chain
    (_ZN12HauntedChairD0Ev) without the Memory::Deallocate at its tail, because
    the caller of slot 16 (ActorBase::AfterCleanupResources) deallocates itself. */
-static int __fastcall hc_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    /* the class's own vtable ADDRESS -- _ZTV9daChair_c is a scalar decl, so
-       reading its value would load slot 0, not the table's address */
-    *(void **)t = (void *)_ZTV12HauntedChair;
-    _ZN12WithMeshClsnD1Ev(t + 0x1bc);
-    _ZN25MovingCylinderClsnWithPosD1Ev(t + 0x17c);
-    _ZN11ShadowModelD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (hc_d1) spelled the same chain by hand. */
 static int __fastcall hc_d0(void *s, void *)
 { return (int)(size_t)_ZN12HauntedChairD0Ev((int *)s); }
 
@@ -236,7 +226,7 @@ extern "C" void hal_fill_haunted_chair_vtable(void)
     vt[3] = (void *)hc_clean;
     vt[6] = (void *)hc_behavior;
     vt[9] = (void *)hc_render;
-    vt[16] = (void *)hc_d1;
+    vt[16] = (void *)hal_cppd1_HauntedChair;
     vt[17] = (void *)hc_d0;
 }
 

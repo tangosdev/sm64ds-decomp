@@ -63,6 +63,7 @@
 // them -- there is no class here without reach.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -331,14 +332,8 @@ static int __fastcall pt_tag_behavior(void *s, void *)
 { return _ZN10PyramidTag8BehaviorEv(s); }
 /* Slot 16, HELD OUT of the slice and transcribed; see the slice file's header
    for the disassembly and the receiver-shape reason. */
-static int __fastcall pt_tag_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV10PyramidTag;
-    _ZN18MovingCylinderClsnD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (pt_tag_d1) spelled the same chain by hand. */
 static int __fastcall pt_tag_d0(void *s, void *)
 { return (int)(size_t)_ZN10PyramidTagD0Ev((int *)s); }
 /* The two base slots this class carries in its OWN table rather than an
@@ -357,7 +352,7 @@ extern "C" void hal_fill_pyramid_tag_vtable(void)
     vt[3]  = (void *)pt_tag_clean;
     vt[6]  = (void *)pt_tag_behavior;
     vt[9]  = (void *)pt_tag_render;
-    vt[16] = (void *)pt_tag_d1;
+    vt[16] = (void *)hal_cppd1_PyramidTag;
     vt[17] = (void *)pt_tag_d0;
     /* NO slot 31: this table is 31 slots and the array is 31 long. Writing one
        would run past its own storage. */

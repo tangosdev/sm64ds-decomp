@@ -30,6 +30,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 
 extern "C" {
@@ -211,18 +212,8 @@ static int __fastcall pb_render(void *s, void *)
   return _ZN9PushBlock6RenderEv(s); }
 static int __fastcall pb_yoshi(void *s, void *)
 { (void)s; return func_ov002_020b9e04(); }
-static int __fastcall pb_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV9PushBlock;
-    _ZN12WithMeshClsnD1Ev(t + 0x200);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x1cc);
-    _ZN11ShadowModelD1Ev(t + 0x174);
-    _ZN5ModelD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (pb_d1) spelled the same chain by hand. */
 /* GATE 204: slot 17 runs the ROM's own body now, not the chain above typed out
    a second time. src/_ZN9PushBlockD0Ev.c is flat C, carries no inferred-stub
    marker, and is the block this thunk was transcribed from -- same six member
@@ -246,7 +237,7 @@ extern "C" void hal_fill_pushblock_vtable(void)
     vt[3]  = (void *)pb_clean;
     vt[6]  = (void *)pb_behavior;
     vt[9]  = (void *)pb_render;
-    vt[16] = (void *)pb_d1;
+    vt[16] = (void *)hal_cppd1_PushBlock;
     vt[17] = (void *)pb_d0;
     vt[18] = (void *)pb_yoshi;   /* own override: return 5, Yoshi cannot eat it */
 }
@@ -265,13 +256,8 @@ static int __fastcall mb_render(void *s, void *)
 { (void)s; return _ZN8MugenBgm6RenderEv(); }
 static int __fastcall mb_pdes(void *s, void *)
 { (void)s; _ZN8MugenBgm16OnPendingDestroyEv(); return 0; }
-static int __fastcall mb_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV8MugenBgm;
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mb_d1) spelled the same chain by hand. */
 /* GATE 207 replaced the hand-spelled slot-17 chain with the body it was
    transcribed from -- the PUSH_BLOCK move gate 204 made one class over. The
    ROM word at _ZTV8MugenBgm+0x44 is 0x020f1be8, read as raw bytes out of
@@ -294,7 +280,7 @@ extern "C" void hal_fill_mugen_bgm_vtable(void)
     vt[6]  = (void *)mb_behavior;
     vt[9]  = (void *)mb_render;
     vt[12] = (void *)mb_pdes;
-    vt[16] = (void *)mb_d1;
+    vt[16] = (void *)hal_cppd1_MugenBgm;
     vt[17] = (void *)mb_d0;
 }
 

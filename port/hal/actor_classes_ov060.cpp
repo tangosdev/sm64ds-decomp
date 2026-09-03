@@ -62,6 +62,7 @@
 // diverge from the whole-image mount the loaders walk.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -526,14 +527,8 @@ static int __fastcall spikebomb_render(void *s, void *)
    and auto-calls ??1Model@@QAE@XZ and two more that exist nowhere in this
    build -- the BigBooIcon/HauntedChair case. The chain below is what its
    matched D0 (.c, linked) spells minus the Deallocate. */
-static int __fastcall spikebomb_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV17BowserSkyPlatform;
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)s + 0x124);
-    _ZN5ModelD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (spikebomb_d1) spelled the same chain by hand. */
 static int __fastcall spikebomb_d0(void *s, void *)
 { return (int)(size_t)_ZN17BowserSkyPlatformD0Ev((int *)s); }
 extern "C" void hal_fill_spike_bomb_vtable(void)
@@ -545,7 +540,7 @@ extern "C" void hal_fill_spike_bomb_vtable(void)
     vt[3]  = (void *)spikebomb_clean;
     vt[6]  = (void *)spikebomb_behavior;
     vt[9]  = (void *)spikebomb_render;
-    vt[16] = (void *)spikebomb_d1;
+    vt[16] = (void *)hal_cppd1_BowserSkyPlatform;
     vt[17] = (void *)spikebomb_d0;
 }
 
@@ -628,17 +623,8 @@ static int __fastcall bowser_render(void *s, void *)
   return _ZN6Bowser6RenderEv(s); }
 static int __fastcall bowser_pdes(void *s, void *)
 { (void)s; _ZN6Bowser16OnPendingDestroyEv(); return 0; }
-static int __fastcall bowser_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV6Bowser;
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)s + 0x360);
-    _ZN11ShadowModelD1Ev((char *)s + 0x308);
-    _ZN12WithMeshClsnD1Ev((char *)s + 0x14c);
-    _ZN15TextureSequenceD1Ev((char *)s + 0x138);
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (bowser_d1) spelled the same chain by hand. */
 static int __fastcall bowser_d0(void *s, void *)
 { return (int)(size_t)_ZN6BowserD0Ev((int *)s); }
 extern "C" void hal_fill_bowser_vtable(void)
@@ -651,7 +637,7 @@ extern "C" void hal_fill_bowser_vtable(void)
     vt[6]  = (void *)bowser_behavior;
     vt[9]  = (void *)bowser_render;
     vt[12] = (void *)bowser_pdes;   /* after the shared fill, which writes 12 */
-    vt[16] = (void *)bowser_d1;
+    vt[16] = (void *)hal_cppd1_Bowser;
     vt[17] = (void *)bowser_d0;
 }
 
@@ -663,13 +649,8 @@ static int __fastcall btail_behavior(void *s, void *)
 { return _ZN10BowserTail8BehaviorEv(s); }
 static int __fastcall btail_render(void *s, void *)
 { (void)s; return _ZN10BowserTail6RenderEv(); }
-static int __fastcall btail_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV10BowserTail;
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (btail_d1) spelled the same chain by hand. */
 static int __fastcall btail_d0(void *s, void *)
 { return (int)(size_t)_ZN10BowserTailD0Ev((int *)s); }
 extern "C" void hal_fill_bowser_tail_vtable(void)
@@ -681,7 +662,7 @@ extern "C" void hal_fill_bowser_tail_vtable(void)
     vt[3]  = (void *)btail_clean;
     vt[6]  = (void *)btail_behavior;
     vt[9]  = (void *)btail_render;
-    vt[16] = (void *)btail_d1;
+    vt[16] = (void *)hal_cppd1_BowserTail;
     vt[17] = (void *)btail_d0;
 }
 

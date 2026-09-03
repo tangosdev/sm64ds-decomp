@@ -62,6 +62,7 @@
 
 #include "Actor.h"
 #include "ActorBase.h"
+#include "dtor_faces_cpp.h"
 
 extern "C" {
 int _ZN5Actor19BeforeInitResourcesEv(void *self);      /* slot 1  */
@@ -336,19 +337,8 @@ void *_ZN5ActorD2Ev(void *);
    the Memory::Deallocate itself (port/unmatched/
    ActorBase_AfterCleanupResources.cpp); a call landing on 17 means something
    reached the actor through operator delete, which is worth an abort. */
-static int __fastcall ac_d1_actor_only(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD2Ev(s); }
-static int __fastcall ac_d1_flag(void *s, void *)
-{
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    return (int)(size_t)_ZN5ActorD2Ev(s);
-}
-static int __fastcall ac_d1_cannon(void *s, void *)
-{
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0x124);
-    _ZN5ModelD1Ev((char *)s + 0xd4);
-    return (int)(size_t)_ZN5ActorD2Ev(s);
-}
+/* Flag's and Cannon's slot 16 (once ac_d1_flag / ac_d1_cannon, transcribed
+   chains) are the matched src D1s through hal/dtor_faces_cpp.cpp. */
 /* src/_ZN4DoorD0Ev.c is the same chain with the deallocate on the end, which
    is the cross-check that the member is a CommonModel at 0xd4.
    CommonModel::~CommonModel is itself a vtable store plus ModelBase's D2, and
@@ -566,7 +556,7 @@ extern "C" void hal_fill_ambient_sound_vtable(void)
        HEAP, and HEAP is already bound correctly. Gate 204's three conditions
        all hold and were re-measured on this build; see slice_gate207.txt.
        Slot 16 is unchanged. */
-    vt[16] = (void *)ac_d1_actor_only;
+    vt[16] = (void *)hal_cppd1_AmbientSoundEffects;   /* lane DTOR-FACES-CPP */
     vt[17] = (void *)amb_d0;
 }
 
@@ -765,9 +755,9 @@ extern "C" void hal_fill_black_brick_block_vtable(void)
 // A plain Actor subclass (the Rabbit shape), 20-slot vtable, own slots
 // 0/3/6/9/12/16/17. Init/Clean/Behavior/Render/OnPendingDestroy are real C++
 // methods (call qualified); D0 is extern-C .c; D1's matched .cpp is a real C++
-// destructor whose MSVC-synthesized member/base dtor calls do not resolve to the
-// extern-C ROM bodies, so its body is a host copy (port/unmatched/StarMarker_D1
-// .cpp) named _ZN10StarMarkerD1Ev, reached as a plain extern-C call. The
+// destructor; since lane DTOR-FACES-CPP it links from src through the faces
+// in hal/dtor_faces_cpp.cpp (the host copy port/unmatched/StarMarker_D1.cpp
+// that stood in for it is deleted). The
 // Behavior is a plain method with no pointer-to-member.
 //
 // InitResources/CleanupResources declare data_ov002_0210d9a8 as a C++ `extern
@@ -795,8 +785,7 @@ static int __fastcall sm_render(void *s, void *)
 }
 static int __fastcall sm_pdes(void *s, void *)
 { ((StarMarker *)s)->StarMarker::OnPendingDestroy(); return 0; }
-static int __fastcall sm_d1(void *s, void *)
-{ return (int)(size_t)_ZN10StarMarkerD1Ev((int *)s); }
+/* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 static int __fastcall sm_d0(void *s, void *)
 { return (int)(size_t)_ZN10StarMarkerD0Ev((int *)s); }
 extern "C" void hal_fill_star_marker_vtable(void)
@@ -808,7 +797,7 @@ extern "C" void hal_fill_star_marker_vtable(void)
     vt[6] = (void *)sm_behavior;
     vt[9] = (void *)sm_render;
     vt[12] = (void *)sm_pdes;
-    vt[16] = (void *)sm_d1;
+    vt[16] = (void *)hal_cppd1_StarMarker;
     vt[17] = (void *)sm_d0;
 }
 
@@ -1202,14 +1191,7 @@ static int __fastcall bird_d0(void *s, void *)
    died right here while this slot was a trap. The body is
    src/_ZN4BirdD0Ev.c minus its final Memory::Deallocate, which
    AfterCleanupResources performs itself after the dispatch returns. */
-static void *__fastcall bird_d1(void *s, void *)
-{
-    *(int *)s = (int)(size_t)_ZTV4Bird;
-    _ZN11ShadowModelD1Ev((char *)s + 0x138);
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return s;
-}
+/* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
 extern "C" void hal_fill_bird_vtable(void)
 {
@@ -1220,7 +1202,7 @@ extern "C" void hal_fill_bird_vtable(void)
     vt[6] = (void *)bird_behavior;
     vt[9] = (void *)bird_render;
     vt[12] = (void *)bird_pdes;
-    vt[16] = (void *)bird_d1;
+    vt[16] = (void *)hal_cppd1_Bird;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -1365,7 +1347,7 @@ extern "C" void hal_fill_flag_vtable(void)
     vt[6] = (void *)flag_behavior;
     vt[9] = (void *)flag_render;
     vt[12] = (void *)ac_pdes_base;
-    vt[16] = (void *)ac_d1_flag;
+    vt[16] = (void *)hal_cppd1_Flag;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -1614,7 +1596,7 @@ extern "C" void hal_fill_cannon_vtable(void)
     vt[6] = (void *)cn_behavior;
     vt[9] = (void *)cn_render;
     vt[12] = (void *)ac_pdes_base;
-    vt[16] = (void *)ac_d1_cannon;
+    vt[16] = (void *)hal_cppd1_Cannon;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -1695,7 +1677,7 @@ extern "C" void hal_fill_exit_vtable(void)
        against a layout that is not the ROM's. The D0 is a flat .c whose only
        placeholders are VT and HEAP. Gate 204's three conditions all hold and
        were re-measured on this build; see port/slice_gate207.txt. */
-    vt[16] = (void *)ac_d1_actor_only;
+    vt[16] = (void *)hal_cppd1_VirtualDoor;   /* lane DTOR-FACES-CPP: the matched D1 */
     vt[17] = (void *)ex_d0;
 }
 
@@ -1752,7 +1734,7 @@ extern "C" void hal_fill_waterfall_mist_vtable(void)
        re-measured against this build; see port/slice_gate207.txt. The name
        shift holds there too: the ROM word at 0x021094a0+0x44 is
        _ZN18PoppingLavaBubblesD0Ev, not WaterfallMist's. */
-    vt[16] = (void *)ac_d1_actor_only;
+    vt[16] = (void *)hal_cppd1_PoppingLavaBubbles;   /* lane DTOR-FACES-CPP */
     vt[17] = (void *)wm_d0;
 }
 
@@ -1808,18 +1790,7 @@ static int __fastcall bf_pdes(void *, void *)
    swarm despawns through AfterCleanupResources -> D1. The body is
    src/_ZN9ButterflyD0Ev.c minus its final Memory::Deallocate; the six
    members in the ROM's own reverse order, not MSVC's. */
-static void *__fastcall bf_d1(void *s, void *)
-{
-    *(int *)s = (int)(size_t)_ZTV9Butterfly;
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)s + 0x394);
-    _ZN12WithMeshClsnD1Ev((char *)s + 0x1d8);
-    _ZN11ShadowModelD1Ev((char *)s + 0x1b0);
-    _ZN11ShadowModelD1Ev((char *)s + 0x188);
-    _ZN5ModelD1Ev((char *)s + 0x138);
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return s;
-}
+/* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
 static int __fastcall bf_d0(void *s, void *)
 { return (int)(size_t)_ZN9ButterflyD0Ev((int *)s); }
@@ -1833,7 +1804,7 @@ extern "C" void hal_fill_butterfly_vtable(void)
     vt[6] = (void *)bf_behavior;
     vt[9] = (void *)bf_render;
     vt[12] = (void *)bf_pdes;
-    vt[16] = (void *)bf_d1;
+    vt[16] = (void *)hal_cppd1_Butterfly;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -1884,13 +1855,7 @@ static int __fastcall fs_pdes(void *, void *)
 /* SLOT 16 IS LIVE, the class's own comment above already said so: the owner
    test can MarkForDestruction any frame. src/_ZN4FishD0Ev.c minus the
    Deallocate -- one ModelAnim, then Actor's D2. */
-static void *__fastcall fs_d1(void *s, void *)
-{
-    *(int *)s = (int)(size_t)_ZTV4Fish;
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return s;
-}
+/* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 
 static int __fastcall fs_d0(void *s, void *)
 { return (int)(size_t)_ZN4FishD0Ev((int *)s); }
@@ -1904,7 +1869,7 @@ extern "C" void hal_fill_fish_vtable(void)
     vt[6] = (void *)fs_behavior;
     vt[9] = (void *)fs_render;
     vt[12] = (void *)fs_pdes;
-    vt[16] = (void *)fs_d1;
+    vt[16] = (void *)hal_cppd1_Fish;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -2099,7 +2064,7 @@ extern "C" void hal_fill_star_door_vtable(void)
     vt[12] = (void *)sd_pdes;
     /* slot 16: the member chain is the real door's (CommonModel at 0xd4), so
        ac_d1_door serves it. slot 17 is the class's own C D0. */
-    vt[16] = (void *)ac_d1_door;
+    vt[16] = (void *)hal_cppd1_Door;   /* lane DTOR-FACES-CPP: the ROM word 16 of _ZTV4Door */
     vt[17] = (void *)sd_d0;
 }
 
@@ -2280,8 +2245,7 @@ static int __fastcall pt_render(void *s, void *)
 /* slot 16: the class's D1 is a shadow-class C++ destructor in src, so it is not
    compiled; the chain is spelled here (Model at 0xd4 then Actor::~Actor), the
    gate-31 recipe for a shadow-class slot 16. */
-static int __fastcall pt_d1(void *s, void *)
-{ _ZN5ModelD1Ev((char *)s + 0xd4); return (int)(size_t)_ZN5ActorD2Ev(s); }
+/* slot 16: the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP). */
 static int __fastcall pt_d0(void *s, void *)
 { return (int)(size_t)_ZN13PeachPaintingD0Ev((int *)s); }
 
@@ -2294,7 +2258,7 @@ extern "C" void hal_fill_peach_painting_vtable(void)
     vt[6] = (void *)pt_behavior;
     vt[9] = (void *)pt_render;
     vt[12] = (void *)ac_pdes_base;
-    vt[16] = (void *)pt_d1;
+    vt[16] = (void *)hal_cppd1_PeachPainting;
     vt[17] = (void *)pt_d0;
 }
 

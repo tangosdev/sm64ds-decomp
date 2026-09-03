@@ -136,6 +136,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "MrI.h"
 #include "MrI_Projectile.h"
@@ -341,17 +342,8 @@ static int __fastcall mri_d0(void *s, void *)
 { return (int)(size_t)_ZN3MrID0Ev((int *)s); }
 /* D1, the complete-object destructor ROM slot 16 holds: the D0 chain without
    the Memory::Deallocate at its tail. */
-static int __fastcall mri_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV3MrI;
-    _ZN25MovingCylinderClsnWithPosD1Ev(t + 0x174);
-    _ZN11ShadowModelD1Ev(t + 0x14c);
-    _ZN15TextureSequenceD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mri_d1) spelled the same chain by hand. */
 
 // ---- MR_I_PROJECTILE's own slots -------------------------------------------
 static int __fastcall mrp_init(void *s, void *)
@@ -371,16 +363,8 @@ static int __fastcall mrp_d0(void *s, void *)
 { return (int)(size_t)_ZN14MrI_ProjectileD0Ev((int *)s); }
 static int __fastcall mrp_yoshi(void *s, void *)
 { (void)s; return func_ov071_02121b00(); }
-static int __fastcall mrp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV14MrI_Projectile;
-    _ZN12WithMeshClsnD1Ev(t + 0x13c);
-    _ZN25MovingCylinderClsnWithPosD1Ev(t + 0xfc);
-    _ZN11ShadowModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mrp_d1) spelled the same chain by hand. */
 
 /* the twenty-three shared-half seats both tables get, written once
    (slots 1,2,4,5,7,8,10,11,13,14,15,19-30 -- counted from this macro, after a
@@ -420,7 +404,7 @@ extern "C" void hal_fill_mri_vtable(void)
     vt[6]  = (void *)mri_behavior;
     vt[9]  = (void *)mri_render;
     vt[12] = (void *)mri_pdes;
-    vt[16] = (void *)mri_d1;
+    vt[16] = (void *)hal_cppd1_MrI;
     vt[17] = (void *)mri_d0;
     vt[18] = (void *)mri_yoshi;   /* Actor's default; MrI has no override */
     MRI_SHARED_TAIL(vt)
@@ -434,7 +418,7 @@ extern "C" void hal_fill_mri_projectile_vtable(void)
     vt[6]  = (void *)mrp_behavior;
     vt[9]  = (void *)mrp_render;
     vt[12] = (void *)mrp_pdes;
-    vt[16] = (void *)mrp_d1;
+    vt[16] = (void *)hal_cppd1_MrI_Projectile;
     vt[17] = (void *)mrp_d0;
     vt[18] = (void *)mrp_yoshi;   /* its OWN, func_ov071_02121b00, returns 4 */
     MRI_SHARED_TAIL(vt)

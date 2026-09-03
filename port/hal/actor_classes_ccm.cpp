@@ -46,6 +46,7 @@
 // within 0x180000, plays a sound, counts the timer down and kills the actor.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -165,8 +166,8 @@ static int __fastcall ccm_trap30(void *s, void *) { ccm_trap_report(s, 30); retu
 /* Slot 16, D1. The ROM body is an empty ~IceSlideManager: no member sub-objects
    (the header is plain u8 fields), so it is Actor::D2 alone, the ac_d1_actor_only
    reading hal/actor_classes.cpp already documents. */
-static int __fastcall ism_d1(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD2Ev(s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (ism_d1) spelled the same chain by hand. */
 
 /* Slot 17, the DELETING destructor -- run rel0215 wave 3 (lane w3-e). Until
    this line slot 17 was ccm_trap17, so the class had no hosted deleting
@@ -229,7 +230,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
     vt[6]  = (void *)ism_behavior;
     vt[9]  = (void *)ccm_render_base;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)ism_d1;
+    vt[16] = (void *)hal_cppd1_IceSlideManager;
     vt[17] = (void *)ism_d0;
     /* 20..30, Actor's own list, which is what the ROM table holds --
        IceSlideManager overrides none of it. Slot 30 declines: its ROM body
@@ -667,14 +668,8 @@ static int __fastcall oul_render(void *s, void *)
    overwrite the vptr with a placeholder (confirmed against src: D0 stores
    _ZTV14daObj1UpLogo_c, its OWN table, not a shared one), so nothing to
    redo here that D0's real body does not already do itself. */
-static int __fastcall oul_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN15TextureSequenceD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (oul_d1) spelled the same chain by hand. */
 static int __fastcall oul_d0(void *s, void *)
 { return (int)(size_t)_ZN9OneUpLogoD0Ev(s); }
 
@@ -690,7 +685,7 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
     vt[6]  = (void *)oul_behavior;
     vt[9]  = (void *)oul_render;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)oul_d1;
+    vt[16] = (void *)hal_cppd1_OneUpLogo;
     vt[17] = (void *)oul_d0;
     /* no slot 31: OneUpLogo is Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -978,17 +973,8 @@ static int __fastcall mpg_pdes(void *s, void *)
    store write -- MotherPenguin's D1/D0 never overwrite the vptr with a
    placeholder (D0 stores _ZTV10daPgMthr_c, its OWN table), so nothing to
    redo here that D0's real body does not already do itself. */
-static int __fastcall mpg_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN12WithMeshClsnD1Ev(t + 0x1a8);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x174);
-    _ZN11ShadowModelD1Ev(t + 0x14c);
-    _ZN15TextureSequenceD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mpg_d1) spelled the same chain by hand. */
 static int __fastcall mpg_d0(void *s, void *)
 { return (int)(size_t)_ZN7SkiLiftD0Ev((int *)s); }
 
@@ -1011,7 +997,7 @@ extern "C" void hal_fill_mother_penguin_vtable(void)
     vt[6]  = (void *)mpg_behavior;
     vt[9]  = (void *)mpg_render;
     vt[12] = (void *)mpg_pdes;   /* MotherPenguin's own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)mpg_d1;
+    vt[16] = (void *)hal_cppd1_SkiLift;
     vt[17] = (void *)mpg_d0;
     /* no slot 31: MotherPenguin is Actor-derived, not Platform-derived -- 31 slots total */
 }

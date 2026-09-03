@@ -81,6 +81,7 @@
 // of that class is one verified host copy of 540 bytes of ARM.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -219,15 +220,8 @@ static int __fastcall cl_render(void *s, void *)
 { port_actor_render_probe("CLAM", (char *)s + 0xd4);
   return _ZN4Clam6RenderEv(s); }
 /* slot 16, HOST CHAIN -- see this file's header. */
-static int __fastcall cl_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV4Clam;
-    _ZN18MovingCylinderClsnD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (cl_d1) spelled the same chain by hand. */
 static int __fastcall cl_d0(void *s, void *)
 { return (int)(size_t)_ZN4ClamD0Ev((int *)s); }
 
@@ -266,7 +260,7 @@ extern "C" void hal_fill_clam_vtable(void)
     vt[13] = (void *)ov64w12_trap13;
     vt[14] = (void *)ov64w12_trap14;
     vt[15] = (void *)cl_heap;
-    vt[16] = (void *)cl_d1;
+    vt[16] = (void *)hal_cppd1_Clam;
     vt[17] = (void *)cl_d0;
     vt[18] = (void *)cl_yoshi;
     vt[19] = (void *)cl_turn_egg;
