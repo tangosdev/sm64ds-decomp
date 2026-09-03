@@ -1,6 +1,6 @@
 /* HOST COPIES of KLEPTO's two pointer-to-member dispatchers (actor 239,
  * ov062 _ZTV6Klepto / _ZTV9daJango_c 0x0211dd5c), the seat of its ten
- * state-handler template records, and the one name-and-abort stub the unmatched
+ * state-handler template records, and the one inert-return stub the unmatched
  * cap-steal main handler needs.
  *
  * KLEPTO drives a five-state machine through five 16-byte descriptors in ov062
@@ -36,7 +36,7 @@
  * InitResources (its enter half func_ov062_0211c218 does not transition away),
  * so its MAIN half runs every frame. It is UNMATCHED: no src file, in no ledger.
  * There is no ROM-faithful body to seat, only a guess would fill it, so this
- * seats a name-and-abort stub over it (the Koopa func_ov062_02117724 precedent),
+ * seats an inert-return stub over it (one log line, never abort; gate policy 2026-09-03),
  * loud if a live Klepto reaches it, never a faked inert return. A carried Klepto
  * (mCarriedItem == 1, state e15c) runs entirely on matched handlers.
  */
