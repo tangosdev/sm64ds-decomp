@@ -1760,11 +1760,7 @@ src/MgSortOrSplode_Spawn.c:
 
 src/actors/dScMgCard_c.cpp:
     complete
-    .text start:0x020d95a4 end:0x020dbd54
-
-src/actors/MgPicturePoker.cpp:
-    complete
-    .text start:0x020dbd54 end:0x020dbe40
+    .text start:0x020d95a4 end:0x020dbe40
 
 src/_ZN11dScMgCoin_cD1Ev.cpp:
     complete
@@ -3427,188 +3423,9 @@ src/MgWanted_Spawn.c:
     complete
     .text start:0x020f3800 end:0x020f3834
 
-src/_ZN13dScMgMemory_cD1Ev.cpp:
+src/actors/dScMgMemory_c.cpp:
     complete
-    .text start:0x020f3834 end:0x020f3888
-
-src/_ZN13dScMgMemory_cD0Ev.cpp:
-    complete
-    .text start:0x020f3888 end:0x020f38f0
-
-src/func_ov006_020f38f0.c:
-    complete
-    .text start:0x020f38f0 end:0x020f392c
-
-src/func_ov006_020f392c.c:
-    complete
-    .text start:0x020f392c end:0x020f3964
-
-src/func_ov006_020f3964.c:
-    complete
-    .text start:0x020f3964 end:0x020f39c8
-
-src/func_ov006_020f39c8.c:
-    complete
-    .text start:0x020f39c8 end:0x020f39fc
-
-src/func_ov006_020f39fc.c:
-    complete
-    .text start:0x020f39fc end:0x020f3a10
-
-src/func_ov006_020f3a10.c:
-    complete
-    .text start:0x020f3a10 end:0x020f3a14
-
-src/func_ov006_020f3a14.c:
-    complete
-    .text start:0x020f3a14 end:0x020f3ba0
-
-src/func_ov006_020f3ba0.c:
-    complete
-    .text start:0x020f3ba0 end:0x020f3c0c
-
-src/func_ov006_020f3c0c.c:
-    .text start:0x020f3c0c end:0x020f3c90
-
-src/func_ov006_020f3c90.c:
-    complete
-    .text start:0x020f3c90 end:0x020f3d34
-
-src/func_ov006_020f3d34.cpp:
-    complete
-    .text start:0x020f3d34 end:0x020f3e68
-
-src/func_ov006_020f3f10.cpp:
-    complete
-    .text start:0x020f3f10 end:0x020f3f84
-
-src/func_ov006_020f3f84.c:
-    complete
-    .text start:0x020f3f84 end:0x020f411c
-
-src/func_ov006_020f411c.c:
-    complete
-    .text start:0x020f411c end:0x020f41ac
-
-src/func_ov006_020f41ac.c:
-    complete
-    .text start:0x020f41ac end:0x020f41b0
-
-src/func_ov006_020f41b0.c:
-    complete
-    .text start:0x020f41b0 end:0x020f4248
-
-src/func_ov006_020f4248.c:
-    complete
-    .text start:0x020f4248 end:0x020f43c0
-
-src/func_ov006_020f43c0.c:
-    complete
-    .text start:0x020f43c0 end:0x020f43c4
-
-src/func_ov006_020f43c4.c:
-    complete
-    .text start:0x020f43c4 end:0x020f456c
-
-src/func_ov006_020f456c.c:
-    complete
-    .text start:0x020f456c end:0x020f46ec
-
-src/func_ov006_020f46ec.cpp:
-    complete
-    .text start:0x020f46ec end:0x020f47d8
-
-src/func_ov006_020f47d8.c:
-    complete
-    .text start:0x020f47d8 end:0x020f4888
-
-src/func_ov006_020f4888.c:
-    complete
-    .text start:0x020f4888 end:0x020f49ac
-
-src/func_ov006_020f49ac.c:
-    complete
-    .text start:0x020f49ac end:0x020f4a40
-
-src/func_ov006_020f4a40.c:
-    complete
-    .text start:0x020f4a40 end:0x020f4ad4
-
-src/func_ov006_020f4ad4.c:
-    complete
-    .text start:0x020f4ad4 end:0x020f4b30
-
-src/func_ov006_020f4b30.c:
-    complete
-    .text start:0x020f4b30 end:0x020f4bbc
-
-src/func_ov006_020f4bbc.c:
-    complete
-    .text start:0x020f4bbc end:0x020f4c38
-
-src/func_ov006_020f4c38.c:
-    complete
-    .text start:0x020f4c38 end:0x020f4cd8
-
-src/func_ov006_020f4cd8.c:
-    complete
-    .text start:0x020f4cd8 end:0x020f4f94
-
-src/func_ov006_020f4f94.c:
-    complete
-    .text start:0x020f4f94 end:0x020f50c0
-
-src/func_ov006_020f50c0.c:
-    complete
-    .text start:0x020f50c0 end:0x020f50f8
-
-src/func_ov006_020f50f8.cpp:
-    complete
-    .text start:0x020f50f8 end:0x020f5140
-
-src/func_ov006_020f5140.c:
-    complete
-    .text start:0x020f5140 end:0x020f5164
-
-src/func_ov006_020f5164.cpp:
-    complete
-    .text start:0x020f5164 end:0x020f51b0
-
-src/func_ov006_020f51b0.c:
-    complete
-    .text start:0x020f51b0 end:0x020f51f0
-
-src/func_ov006_020f51f0.c:
-    complete
-    .text start:0x020f51f0 end:0x020f523c
-
-src/_ZN13dScMgMemory_c15OnGroundPoundedEv.cpp:
-    complete
-    .text start:0x020f523c end:0x020f5250
-
-src/_ZN13dScMgMemory_c13OnTurnIntoEggEi.cpp:
-    complete
-    .text start:0x020f5250 end:0x020f52c4
-
-src/_ZN13dScMgMemory_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x020f52c4 end:0x020f5324
-
-src/_ZN13dScMgMemory_c6RenderEv.cpp:
-    complete
-    .text start:0x020f5324 end:0x020f5388
-
-src/_ZN13dScMgMemory_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020f5388 end:0x020f53e4
-
-src/_ZN13dScMgMemory_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f53e4 end:0x020f5504
-
-src/MgMemoryMatch_Spawn.c:
-    complete
-    .text start:0x020f5504 end:0x020f5564
+    .text start:0x020f3834 end:0x020f5564
 
 src/_ZN14dScMgMemory2_cD1Ev.cpp:
     complete
@@ -3651,6 +3468,7 @@ src/func_ov006_020f58d0.c:
     .text start:0x020f58d0 end:0x020f593c
 
 src/func_ov006_020f593c.c:
+    complete
     .text start:0x020f593c end:0x020f59c0
 
 src/func_ov006_020f59c0.c:
@@ -3728,6 +3546,10 @@ src/func_ov006_020f67a0.c:
 src/func_ov006_020f6830.c:
     complete
     .text start:0x020f6830 end:0x020f6904
+
+src/func_ov006_020f6904.c:
+    complete
+    .text start:0x020f6904 end:0x020f6a00
 
 src/func_ov006_020f6a00.c:
     complete
@@ -3815,23 +3637,11 @@ src/MgMemoryMaster_Spawn.c:
 
 src/actors/dScMgMCarlo_c.cpp:
     complete
-    .text start:0x020f7634 end:0x020f8e44
-
-src/func_ov006_020f8e44.cpp:
-    complete
-    .text start:0x020f8e44 end:0x020f8ed8
-
-src/func_ov006_020f8ed8.c:
-    complete
-    .text start:0x020f8ed8 end:0x020f8ef4
+    .text start:0x020f7634 end:0x020f8ef4
 
 src/actors/dScMgMCarlo2_c.cpp:
     complete
-    .text start:0x020f8ef4 end:0x020fa6ac
-
-src/actors/MgPairAGoneAndOn.cpp:
-    complete
-    .text start:0x020fa6ac end:0x020fa75c
+    .text start:0x020f8ef4 end:0x020fa75c
 
 src/_ZN15dScMgPachinko_cD1Ev.cpp:
     complete
@@ -6257,6 +6067,10 @@ src/_ZN18dScMgTrampoline2_c8BehaviorEv.cpp:
     complete
     .text start:0x02123340 end:0x02123428
 
+src/func_ov006_02123428.cpp:
+    complete
+    .text start:0x02123428 end:0x0212373c
+
 src/func_ov006_0212373c.c:
     complete
     .text start:0x0212373c end:0x021237c8
@@ -6331,11 +6145,7 @@ src/actors/MgTrampolineTerror.cpp:
 
 src/actors/dScMgBSC_c.cpp:
     complete
-    .text start:0x02124908 end:0x021255f8
-
-src/MgLuckyStars_Spawn.cpp:
-    complete
-    .text start:0x021255f8 end:0x0212568c
+    .text start:0x02124908 end:0x0212568c
 
 src/_ZN15dScMgSnowball_cD1Ev.cpp:
     complete

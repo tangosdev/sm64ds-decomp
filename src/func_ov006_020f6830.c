@@ -1,5 +1,5 @@
 
-void func_ov006_020f6830(char *o)
+void _ZN14dScMgMemory2_c14RoundHideCardsEv(char *o)
 {
   int count;
   int i;

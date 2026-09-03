@@ -14,7 +14,6 @@ void dScMgMemory2_c::OnGroundPounded()
 {
     char *p = (char *)this;
 
-    struct dScMgMemory2_c *self = (struct dScMgMemory2_c *)(void *)p;
-    func_ov004_020b63a0(self->unk_5409);
+    func_ov004_020b63a0(mMaxMisses);
 }
 }

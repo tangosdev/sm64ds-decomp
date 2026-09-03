@@ -1,4 +1,4 @@
-void func_ov006_020f7064(char* c)
+void _ZN14dScMgMemory2_c9ResetGameEv(char* c)
 {
     int i; char* p; int j;
     p = c;

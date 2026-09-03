@@ -1,4 +1,4 @@
-void func_ov006_020f67a0(char *c){
+void _ZN14dScMgMemory2_c15RoundReadyCardsEv(char *c){
     int found = 0;
     int i;
     char *p;

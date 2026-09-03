@@ -17,17 +17,16 @@ void dScMgMemory2_c::OnYoshiTryEat(int /* arg */)
 {
     char *c = (char *)this;
 
-    struct dScMgMemory2_c *self = (struct dScMgMemory2_c *)(void *)c;
     char *o;
     int v;
-    func_ov006_020f7064(c);
-    self->unk_53d4 = 0;
+    ResetGame();
+    mState = 0;
     o = (char *)data_ov004_020beb68;
     v = 0;
     if (o != 0) v = *(int *)(o + 0xa8);
     if (v >= 5) v = 5;
     func_ov004_020b66d4(o);
     data_ov004_020bc7d4 = 1;
-    self->unk_5409 = (unsigned char)v;
+    mMaxMisses = (unsigned char)v;
 }
 }
