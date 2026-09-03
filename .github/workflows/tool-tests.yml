@@ -191,6 +191,7 @@ jobs:
             tools.test_asset_catalog \
             tools.test_attribution \
             tools.test_bytegate \
+            tools.test_check_data_definitions \
             tools.test_cpp_rename_verify \
             tools.test_delaunder \
             tools.test_enroll \
@@ -229,6 +230,9 @@ jobs:
 #                                      COMMITTED history; the credit data the site reads.
 #   test_bytegate               (18)   bytegate.py -- the byte-gate-failure half of the
 #                                      matched test, over layout_check/relocs/srcpath.
+#   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
+#                                      gate scans. It globbed only build/src/, which
+#                                      eligible.py never writes, so it skipped silently.
 #   test_cpp_rename_verify      (16)   cpp_rename.py -- func_ADDR -> demangled _ZN name
 #                                      renames. A wrong substitution here is silent.
 #   test_delaunder              (25)   delaunder.py -- removing launder idioms one site
