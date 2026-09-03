@@ -710,8 +710,8 @@ src/_ZN13ExpandingHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::ExpHeap_t	ExpandingHeap/mHe
 src/_ZN10daPgMthr_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov018	daPgMthr_c	daPgMthr_c/daPgMthr_c	vtable daPgMthr_c slot 12 @0x2112450 | _ZN10daPgMthr_c16OnPendingDestroyEv	1		True		-
 src/_ZN10daPgMthr_cD0Ev.c	DTOR-ONLY	ov018	daPgMthr_c	daPgMthr_c/daPgMthr_c	_ZN10daPgMthr_cD0Ev	1		True		-
 src/_ZN13OneUpMushroomD0Ev.c	DTOR-ONLY	ov002	da1up_c	OneUpMushroom/da1up_c	_ZN13OneUpMushroomD0Ev	1		True		-
-src/_ZN13PeachPainting16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Peach_c	PeachPainting/daObjC1Peach_c	vtable daObjC1Peach_c slot 3 @0x2111ec4 | _ZN13PeachPainting16CleanupResourcesEv	1		True		-
-src/_ZN13PeachPaintingD0Ev.c	DTOR-ONLY	ov010	daObjC1Peach_c	PeachPainting/daObjC1Peach_c	_ZN13PeachPaintingD0Ev	1		True		-
+src/_ZN14daObjC1Peach_c16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Peach_c	daObjC1Peach_c/daObjC1Peach_c	vtable daObjC1Peach_c slot 3 @0x2111ec4 | _ZN14daObjC1Peach_c16CleanupResourcesEv	1		True		-
+src/_ZN14daObjC1Peach_cD0Ev.c	DTOR-ONLY	ov010	daObjC1Peach_c	daObjC1Peach_c/daObjC1Peach_c	_ZN14daObjC1Peach_cD0Ev	1		True		-
 src/_ZN13PoleBillboardD0Ev.c	DTOR-ONLY	ov015	daObjBkBillboard_c	PoleBillboard/daObjBkBillboard_c	_ZN13PoleBillboardD0Ev	1		True	_ZTV13PoleBillboard	-
 src/_ZN13PrincessPeachD0Ev.c	DTOR-ONLY	ov085	daPeach_c	PrincessPeach/daPeach_c	_ZN13PrincessPeachD0Ev	1		True		-
 src/_ZN13QuestionBlock13InitResourcesEv.c	P1-vtable+mangled	ov102	daObjHatenaBlock_c	QuestionBlock/daObjHatenaBlock_c	vtable daObjHatenaBlock_c slot 0 @0x214a4a4 | _ZN13QuestionBlock13InitResourcesEv	1		True		-

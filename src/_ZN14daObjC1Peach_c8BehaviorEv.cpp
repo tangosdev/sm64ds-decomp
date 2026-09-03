@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN13PeachPainting8BehaviorEv
-#include "PeachPainting.h"
+// @symbol _ZN14daObjC1Peach_c8BehaviorEv
+#include "daObjC1Peach_c.h"
 
 namespace cstd { int fdiv(int a, int b); }
 
@@ -9,7 +9,7 @@ namespace cstd { int fdiv(int a, int b); }
  * the declaration itself is repaired; the ordinary member call is shorter. */
 extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *, u32 opacity, int enable);
 
-int PeachPainting::Behavior()
+int daObjC1Peach_c::Behavior()
 {
     int distance = DistToCPlayer();
     if (distance >= 0xe10000) {
