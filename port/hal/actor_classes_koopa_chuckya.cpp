@@ -510,8 +510,7 @@ static int __fastcall klp_behavior(void *s, void *)
            and the dive aims at the player's +0x644 floor height + 40. */
         char *pl = _ZN5Actor13ClosestPlayerEv(s);
         if (pl)
-            std::printf("[klepto]   player (%d,%d,%d) floor %d f6fb %d hit134 %08x hit168 %08x
-",
+            std::printf("[klepto]   player (%d,%d,%d) floor %d f6fb %d hit134 %08x hit168 %08x\n",
                         *(int *)(pl + 0x5c) >> 12, *(int *)(pl + 0x60) >> 12,
                         *(int *)(pl + 0x64) >> 12, *(int *)(pl + 0x644) >> 12,
                         *(unsigned char *)(pl + 0x6fb),
