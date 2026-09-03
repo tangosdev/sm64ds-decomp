@@ -532,7 +532,7 @@
       },
       "romSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
       "romMatchesStockBuild": true,
-      "romDataFromSource": "global romdata_check summary: 1,276 symbols and 7,216 records; 622 verified, 189 partial, 5 differ, and 460 unnamed. This TU introduces no ROM or module mismatch.",
+      "romDataFromSource": "global romdata_check summary after merging origin/main at 1cbf7ca94: 1,276 symbols and 7,207 records; 623 verified, 190 partial, 5 differ, and 458 unnamed. This TU introduces no ROM or module mismatch.",
       "licensedRecordVerdicts": "the manifest's compiler-produced RTTI, type strings, and vtables are audited before duplicate canonical records are discarded. The full production link reports 13 source-owned data claims, all 13 reproducing, and zero mismatching; source-owned BSS reports 2 claims totaling 60 NOBITS bytes."
     }
   }
