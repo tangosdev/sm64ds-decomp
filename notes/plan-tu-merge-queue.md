@@ -419,8 +419,10 @@ tb.cmd_create(a)
 ```
 
 **Validated read-only against the tree**: over all 131 refused safe-pool files this
-recovers **130**. The single residual, `src/func_ov018_021118fc.c` (Tier 2,
-`ov018/daPgMthr_c`), fails for a different reason worth naming — its definition is
+recovers **130**. The single residual was `func_ov018_021118fc` (Tier 2,
+`ov018/daPgMthr_c`; it lived in a per-function legacy source at the time and is now
+part of the promoted `src/actors/d_a_pg_mthr.cpp`), and it fails for a different
+reason worth naming — its definition is
 `struct dActor_c* func_ov018_021118fc(char* c) {`, and `split_legacy_source`'s first-word
 test sees `struct` in `_DECL_KEYWORDS` and consumes the whole function as a shadow
 declaration. **Any definition whose return type is spelled `struct X*` / `enum X` /
