@@ -6591,11 +6591,7 @@ src/actors/MgTrampolineTerror.cpp:
 
 src/actors/dScMgBSC_c.cpp:
     complete
-    .text start:0x02124908 end:0x021255f8
-
-src/MgLuckyStars_Spawn.cpp:
-    complete
-    .text start:0x021255f8 end:0x0212568c
+    .text start:0x02124908 end:0x0212568c
 
 src/_ZN15dScMgSnowball_cD1Ev.cpp:
     complete

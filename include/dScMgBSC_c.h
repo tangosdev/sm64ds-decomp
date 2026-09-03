@@ -1,16 +1,15 @@
 /* class dScMgBSC_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgBSC_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgLuckyStars_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). MG_BS_CARD is the ROM profile and Lucky Stars is its
+ * English minigame identity; the unique factory is named
+ * dScMgBSC_c_classInit from that profile+RTTI evidence.
  *
- * SIZE 0x51d0, from MgLuckyStars_Spawn.cpp's own
- * `_ZN7fBase_cnwEj(0x51d0)`.
+ * SIZE 0x51d0, from dScMgBSC_c_classInit's `_ZN7fBase_cnwEj(0x51d0)`.
  *
  * ONE SHARED MEMBER at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64),
- * shared verbatim by five other classes in this family -- left as raw
- * bytes, see include/dScMgMemory_c.h's own note.
+ * shared verbatim by five other classes in this family. Its interior is
+ * opaque here, but its extent and destructor are measured, so it has a real
+ * member type rather than being folded into the scene's padding.
  *
  * THE CARD TABLE at 0x51a8, 2 elements of 8 bytes, spelled as two s32
  * positions per card now that this class's own state handlers name the
@@ -46,10 +45,10 @@
  * D1 then D0, and the pair comes out in exactly the cartridge's order. Same
  * mechanism as dScMgSingle3DBase_c one level up -- see that header's note.
  *
- * The two calls in the body are member destruction, not hand-written
- * cleanup: mCardPos is declared after mTable and is destroyed first, which is
- * reverse-declaration order. They are spelled out only because mTable is
- * still a raw byte array with no element type recovered.
+ * The explicit array-helper call preserves the cartridge's common 8-byte
+ * element destructor target, whose class identity is not yet recovered.
+ * The typed shared state is then destroyed automatically, followed by the
+ * inherited scene, exactly in reverse-declaration order.
  *
  * No separate operator delete is needed -- dScMgBase_c, two levels up,
  * already provides one. */
@@ -61,10 +60,19 @@ extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature *
 extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void NullDestructor_0203d47c(void);
 
+/* The type name is reconstructed; the 0x270-byte extent and teardown are
+   measured. A real member lets C++ own this part of the scene lifecycle. */
+struct dMgBSCSharedState_c {
+    ~dMgBSCSharedState_c() { func_ov006_020c1c64((char *)this); }
+
+    u8 data[0x270];
+};
+
+typedef char dMgBSCSharedState_c_size_must_be_0x270[sizeof(dMgBSCSharedState_c) == 0x270 ? 1 : -1];
+
 struct dScMgBSC_c : dScMgSingle3DBase_c {
     virtual ~dScMgBSC_c() {
         __destroy_arr(mCardPos, 2, 8, (void *)NullDestructor_0203d47c);
-        func_ov006_020c1c64((char *)mTable);
     }
 
     /* --- this class's own vtable slots, named from the table ---
@@ -122,7 +130,7 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
         s32 y; /* 0x04 */
     };
 
-    u8  mTable[0x270];    /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */
+    dMgBSCSharedState_c mShared; /* 0x4f38..0x51a8 */
     CardPos mCardPos[2];  /* 0x51a8 -- ctor func_020733a8 via func_0203d738, dtor NullDestructor_0203d47c */
     s32 mState;          /* 0x51b8 -- index into data_ov006_02142f94 */
     s32 mStateTimer;     /* 0x51bc */
