@@ -7,9 +7,17 @@
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjEmmLog_c::~daObjEmmLog_c (D0, the deleting destructor) - the mislabel
- * "OnYoshiTryEat" and the two undefined VT0/VT1 placeholders were an
- * unfinished auto-generated stub; that is why this file carried no
- * `complete` marker in config/arm9/overlays/ov052/delinks.txt and dsd was
+ * "OnYoshiTryEat" and the prior body were both an unfinished auto-generated
+ * stub: `t[0] = VT0; t[0] = VT1;` used decl_common.h's generic `int VT0[20]`
+ * / `int VT1[20]` shared-header placeholders (port/hal/actor_vtables.cpp),
+ * not this class's own tables. It compiles and even byte-matches (match.py
+ * wildcards the literal-pool word a vtable store loads, so it cannot see
+ * which symbol filled the slot), but on the port it silently stored a
+ * 20-int dummy array's address over the object's own vtable and dBgActor_c's
+ * instead of _ZTV13daObjEmmLog_c and _ZTV10dBgActor_c, and no per-file
+ * COMPILE_DEFINITIONS override in port/CMakeLists.txt redirected either for
+ * this file. That is an unfinished recovery, which is why this file carried
+ * no `complete` marker in config/arm9/overlays/ov052/delinks.txt and dsd was
  * supplying its bytes straight from the ROM instead of building it. Fixed
  * to the same shape D1 (func_ov052_021111a0.c, already complete and
  * matched) already proves: own vtable store, then dBgActor_c's, then the
