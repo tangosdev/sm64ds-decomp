@@ -487,7 +487,6 @@ extern int _ZTV12FortressWall[];
 extern int _ZTV12HauntedChair[];
 extern int _ZTV7dBgW_Kc[];
 extern int _ZTV12PiranhaPlant[];
-extern int _ZTV13BasementWater[];
 extern int _ZTV12WaterSuction[];
 extern int _ZTV12dScMgLuigi_c[];
 extern int _ZTV12dScMgPanel_c[];

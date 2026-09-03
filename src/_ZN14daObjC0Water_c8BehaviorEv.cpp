@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13BasementWater8BehaviorEv
+// @symbol _ZN14daObjC0Water_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "BasementWater.h"
+#include "daObjC0Water_c.h"
 extern "C" {
 extern void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, unsigned short* p);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
@@ -13,7 +13,7 @@ extern void _ZN9Animation7AdvanceEv(void* thiz);
 extern int data_0209caa0[];
 extern int data_0209f32c;
 
-int BasementWater::Behavior()
+int daObjC0Water_c::Behavior()
 {
     if (mWasJustDrained != 0)
         _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (unsigned short*)((char*)&mSoundTimer));

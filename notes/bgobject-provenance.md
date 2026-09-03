@@ -736,7 +736,7 @@ same offsets:
   (0x0b0).
 * `include/daObjFm_Battan_c.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).
 * `include/FortressTower.h` — `actorID` (0x00c).
-* `include/BasementWater.h` — `mCamSpacePosX`.
+* `include/daObjC0Water_c.h` — `mCamSpacePosX`.
 * `include/TTC_MovingBeam.h` — `mTerminalVelocity`, `mVertSpeed`, `mClsnMat`.
 * `include/SlidingIce.h` — `mHorzSpeed`.
 * `include/PyramidStep.h` — `param1`, `mAngleY`, `mVertSpeed`.

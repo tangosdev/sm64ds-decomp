@@ -6,12 +6,12 @@ _ZN16daObjC0_Switch_c6RenderEv kind:function(arm,size=0x28) addr:0x02111324
 _ZN16daObjC0_Switch_c8BehaviorEv kind:function(arm,size=0x24) addr:0x0211134c
 _ZN16daObjC0_Switch_c13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111370
 daObjC0_Switch_c_Spawn kind:function(arm,size=0x30) addr:0x02111420
-_ZN13BasementWaterD1Ev kind:function(arm,size=0x4c) addr:0x02111450
-_ZN13BasementWaterD0Ev kind:function(arm,size=0x60) addr:0x0211149c
-_ZN13BasementWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021114fc
-_ZN13BasementWater6RenderEv kind:function(arm,size=0x34) addr:0x02111540
-_ZN13BasementWater8BehaviorEv kind:function(arm,size=0xd8) addr:0x02111574
-_ZN13BasementWater13InitResourcesEv kind:function(arm,size=0xe4) addr:0x0211164c
+_ZN14daObjC0Water_cD1Ev kind:function(arm,size=0x4c) addr:0x02111450
+_ZN14daObjC0Water_cD0Ev kind:function(arm,size=0x60) addr:0x0211149c
+_ZN14daObjC0Water_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021114fc
+_ZN14daObjC0Water_c6RenderEv kind:function(arm,size=0x34) addr:0x02111540
+_ZN14daObjC0Water_c8BehaviorEv kind:function(arm,size=0xd8) addr:0x02111574
+_ZN14daObjC0Water_c13InitResourcesEv kind:function(arm,size=0xe4) addr:0x0211164c
 daObjC0Water_c_classInit kind:function(arm,size=0x38) addr:0x02111730
 data_ov012_02111768 kind:data(any) addr:0x02111768
 data_ov012_0211176c kind:data(any) addr:0x0211176c
@@ -102,17 +102,8 @@ data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous
 _ZTI14daObjC0Water_c kind:data(any) addr:0x021123c4
 _ZTS14daObjC0Water_c kind:data(any) addr:0x021123d0
 g_profile_C0_WATER kind:data(any) addr:0x021123e4 ambiguous
-data_ov012_021123f4 kind:data(any) addr:0x021123f4 ambiguous
-data_ov012_02112404 kind:data(any) addr:0x02112404 ambiguous
-_ZTV13BasementWater kind:data(any) addr:0x02112408
 _ZTV14daObjC0Water_c kind:data(any) addr:0x02112408
-data_ov012_0211241c kind:data(any) addr:0x0211241c ambiguous
-data_ov012_02112428 kind:data(any) addr:0x02112428 ambiguous
-data_ov012_02112434 kind:data(any) addr:0x02112434 ambiguous
-data_ov012_02112438 kind:data(any) addr:0x02112438 ambiguous
-data_ov012_0211244c kind:data(any) addr:0x0211244c ambiguous
-data_ov012_02112464 kind:data(any) addr:0x02112464 ambiguous
-data_ov012_02112494 kind:data(any) addr:0x02112494 ambiguous
+data_ov012_02112488 kind:data(any) addr:0x02112488
 data_ov012_021124a0 kind:bss addr:0x021124a0
 data_ov012_021124a8 kind:bss addr:0x021124a8
 data_ov012_021124ac kind:bss addr:0x021124ac ambiguous

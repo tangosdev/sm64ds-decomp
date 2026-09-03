@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13BasementWater13InitResourcesEv
+// @symbol _ZN14daObjC0Water_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BasementWater.h"
+#include "daObjC0Water_c.h"
 #include "dBgW.h"
 extern "C" {
 int _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -17,7 +17,7 @@ int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,
 extern int data_0209caa0[];
 }
 
-int BasementWater::InitResources()
+int daObjC0Water_c::InitResources()
 {
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124d0);
   _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov012_021124c8);
