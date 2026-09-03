@@ -342,6 +342,7 @@ static void ghost_opacity(void *model)
    (data_0209f250) is never touched, so the player stays fully solid and fully
    interactive. Gated on the mode, so VS and solo are byte-unaffected. Called
    from the per-frame tick in tests/walk_window.cpp, beside sync_tick. */
+extern "C" int port_party_member(int slot);   /* hal/comms_sync.cpp */
 extern "C" void port_adventure_ghost_hold()
 {
     if (!port::adventure_ghost_mode()) return;
@@ -667,9 +668,9 @@ extern "C" void port_party_probe(int frame)
                 void *a = data_0209f394[i];
                 if (!a) continue;
                 std::fprintf(stderr,
-                    "[partydiag] f%d me=%d slot%d%s live=%u party=%d "
+                    "[partydiag] f%d me=%d mylev=%d slot%d%s live=%u party=%d "
                     "render_ghost=%d clsn_disabled=%d pos=(%d,%d,%d) anim=%d\n",
-                    frame, me2, i, i == me2 ? "(LOCAL)" : "",
+                    frame, me2, (int)data_0209f2f8, i, i == me2 ? "(LOCAL)" : "",
                     (unsigned)(i < kPortMaxPlayers ? data_0209fc5c[i] : 0),
                     i == me2 ? -1 : port_party_member(i),
                     i < 16 ? (int)g_party_render_ghost[i] : -1,
@@ -706,6 +707,19 @@ extern "C" void port_party_probe(int frame)
             base_anim[i] = a ? (int)port::player::anim_frame(a) : 0;
             base_px[i] = a ? *port::player::pos_x(a) : 0;
             base_pz[i] = a ? *port::player::pos_z(a) : 0;
+        }
+        /* The NON-party ghost (slot B) needs a presence snapshot to be drawn at
+           all -- a ghost is a broadcast body, and without a same-level snapshot
+           the render loop despawns it. Drive ONE real wire snapshot at its own
+           pose so peer_visible(B) is true and it renders translucent. The party
+           member (slot A) needs no such thing: a party body is always drawn (it
+           rides the sim, not the broadcast). */
+        if (sB >= 0 && data_0209f394[sB]) {
+            void *g = data_0209f394[sB];
+            port_adventure_probe_apply(sB, *port::player::pos_x(g),
+                                       *port::player::pos_y(g),
+                                       *port::player::pos_z(g),
+                                       (short)*port::player::facing(g));
         }
     }
     static bool done = false;
