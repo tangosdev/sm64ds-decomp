@@ -1,0 +1,430 @@
+{
+  "id": "ov006/dScMgCup_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgCup_c.cpp",
+  "promoted_source": "src/actors/dScMgCup_c.cpp",
+  "status": "shadow",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous 32-function text run: 0x020de988..0x020e0638; the next address starts dScMgCurling_c",
+    "dScMgCup_c RTTI/vtable plus the MG_CUP profile at 0x0213c020 identify the scene and its unique factory at 0x020e0574",
+    "the adjacent factory allocates sizeof(dScMgCup_c), installs its vtable, and constructs its 0x4f38, 0x50e8, and 0x53e8 members; the trailing 0x020e0634 callback is that factory's empty element constructor",
+    "__sinit_ov006_021303d0 exclusively builds the eight-entry Cup PMF table at 0x02141870 used by dScMgCup_c::Behavior"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020de988",
+      "end": "0x020e0638"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10dScMgCup_cD1Ev",
+      "address": "0x020de988",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN10dScMgCup_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10dScMgCup_cD0Ev",
+      "address": "0x020dea1c",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN10dScMgCup_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020deac4",
+      "address": "0x020deac4",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020deac4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020deac8",
+      "address": "0x020deac8",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020deac8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020deaf0",
+      "address": "0x020deaf0",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_020deaf0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020deb48",
+      "address": "0x020deb48",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020deb48.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020debb4",
+      "address": "0x020debb4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020debb4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020debfc",
+      "address": "0x020debfc",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_020debfc.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020dec3c",
+      "address": "0x020dec3c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_020dec3c.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020dec5c",
+      "address": "0x020dec5c",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_020dec5c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020dec88",
+      "address": "0x020dec88",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_020dec88.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020ded00",
+      "address": "0x020ded00",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_020ded00.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020ded84",
+      "address": "0x020ded84",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_020ded84.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020dedfc",
+      "address": "0x020dedfc",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov006_020dedfc.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020deed8",
+      "address": "0x020deed8",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_020deed8.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020def80",
+      "address": "0x020def80",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_020def80.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020df024",
+      "address": "0x020df024",
+      "size": "0x00000198",
+      "legacy_source": "src/func_ov006_020df024.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c9StateIdleEv",
+      "address": "0x020df1bc",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020df1bc.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c11StateFinishEv",
+      "address": "0x020df1c0",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov006_020df1c0.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c11StateResultEv",
+      "address": "0x020df28c",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov006_020df28c.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c11StateSelectEv",
+      "address": "0x020df3bc",
+      "size": "0x00000184",
+      "legacy_source": "src/func_ov006_020df3bc.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c17StateWaitForInputEv",
+      "address": "0x020df540",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_020df540.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c12StateShuffleEv",
+      "address": "0x020df5b8",
+      "size": "0x00000720",
+      "legacy_source": "src/func_ov006_020df5b8.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c19StatePrepareShuffleEv",
+      "address": "0x020dfcd8",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020dfcd8.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c10StateSetupEv",
+      "address": "0x020dfd48",
+      "size": "0x0000018c",
+      "legacy_source": "src/func_ov006_020dfd48.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c9Virtual50Ev",
+      "address": "0x020dfed4",
+      "size": "0x00000018",
+      "legacy_source": "src/_ZN10dScMgCup_c9Virtual50Ev.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c13OnYoshiTryEatEi",
+      "address": "0x020dfeec",
+      "size": "0x0000017c",
+      "legacy_source": "src/_ZN10dScMgCup_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c6RenderEv",
+      "address": "0x020e0068",
+      "size": "0x0000019c",
+      "legacy_source": "src/_ZN10dScMgCup_c6RenderEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c8BehaviorEv",
+      "address": "0x020e0204",
+      "size": "0x00000104",
+      "legacy_source": "src/_ZN10dScMgCup_c8BehaviorEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN10dScMgCup_c13InitResourcesEv",
+      "address": "0x020e0308",
+      "size": "0x0000026c",
+      "legacy_source": "src/_ZN10dScMgCup_c13InitResourcesEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "dScMgCup_c_classInit",
+      "address": "0x020e0574",
+      "size": "0x000000c0",
+      "legacy_source": "src/dScMgCup_c_classInit.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020e0634",
+      "address": "0x020e0634",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020e0634.c",
+      "ordinal": 31
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create, then reconciled to shared declarations, eager ROM-order emission, one source-level destructor, real Cup state member methods, and the adjacent factory tail.",
+    "The eight State* names are explicit class-anchored inferences from PMF order and behavior; the ROM proves their class identity and order, not their exact original source spelling.",
+    "Focused verification is 31/32: StateShuffle is size- and control-flow-identical with nine scratch-register encoding differences caused by eager CodeWarrior allocation; scoped pragma, lifetime, type, comparison, coalescing-copy, volatile-load, and natural-optimizer controls were measured without improvement."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgCup_c/dScMgCup_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 31,
+    "functions_declared": 32,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN10dScMgCup_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dScMgCup_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI10dScMgCup_c",
+        "_ZTS10dScMgCup_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTV10dScMgCup_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dScMgCup_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS10dScMgCup_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV10dScMgCup_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "FAIL",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10dScMgCup_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair; the ROM has no configured D2 home and no surviving relocation references it"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI10dScMgCup_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c048",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTS10dScMgCup_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c054",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTV10dScMgCup_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c154",
+      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned"
+    }
+  ]
+}
