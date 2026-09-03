@@ -3022,6 +3022,9 @@ extern "C" void port_vs_apply_chars(int frame);
 /* SM64DS_VS_LUIGI_INFECTION: seed the starting Luigi. Defined in
    hal/luigi_infection.cpp; VS-scoped, one-shot, inert with the mode off. */
 extern "C" void port_luigi_seed(int frame);
+/* SM64DS_VS_LUIGI_HITTEST: stage tag/immunity/survivor hits through the host
+   hit resolver at frame 130. Defined in hal/luigi_infection.cpp; off by default. */
+extern "C" void port_luigi_hittest(int frame);
 static int menu_on;
 /* B closed the menu and is still physically down: swallow it until it comes
    back up. See the block below the menu's input, where it is spent. */
@@ -11708,6 +11711,7 @@ int main(void)
                    the tagger's swap is the last word. VS-scoped, one-shot, inert
                    with no SM64DS_VS_LUIGI_INFECTION. */
                 port_luigi_seed(frame);
+                port_luigi_hittest(frame);
                 port_particle_frame();
                 if (selftest) {
                     const ntr::GxTriangle *at = ntr::gx_polygons(after);

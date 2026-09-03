@@ -65,7 +65,7 @@ def char_at(rws, slot, after):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--case", required=True,
-                    choices=["seed", "inert", "timer"])
+                    choices=["seed", "inert", "timer", "hit", "win"])
     ap.add_argument("--seed-slot", type=int, default=2)
     ap.add_argument("--frames", type=int, default=200)
     ap.add_argument("--out", default=None)
@@ -147,6 +147,57 @@ def main():
             print("  marker win=%s" % mk.group(1))
         if not mk or mk.group(1) != "survivor-timeout":
             fails.append("expected win=survivor-timeout, got %s"
+                         % (mk.group(1) if mk else None))
+
+    elif args.case == "hit":
+        # tag / immunity / survivor-vs-survivor through the real host resolver,
+        # mode ON; plus a mode-OFF control that must match the survivor case.
+        rc_on, t_on = run(outdir + "_on", 170,
+                          {"SM64DS_VS_LUIGI_INFECTION": "1",
+                           "SM64DS_VS_LUIGI_SEED": str(args.seed_slot),
+                           "SM64DS_VS_LUIGI_HITTEST": "1"})
+        rc_off, t_off = run(outdir + "_off", 170,
+                            {"SM64DS_VS_LUIGI_HITTEST": "1"})
+        print("rc on=%d off=%d" % (rc_on, rc_off))
+        got = {}
+        for tag, t in (("on", t_on), ("off", t_off)):
+            for m in re.finditer(r"\[luigi\] HITTEST (\w) (\w[\w-]*).*\| (PASS|FAIL)", t):
+                key = tag + ":" + m.group(1)
+                got[key] = m.group(3)
+                print("  %s %s -> %s" % (tag, m.group(1), m.group(3)))
+        for k in ("on:C", "on:A", "on:B", "off:C"):
+            if got.get(k) != "PASS":
+                fails.append("scenario %s = %s (want PASS)" % (k, got.get(k)))
+        # the regression equivalence: survivor-vs-survivor line identical on/off
+        cs = {tag: re.search(r"HITTEST C SURV-SURV \(mode \w+\): (.*)$", t, re.M)
+              for tag, t in (("on", t_on), ("off", t_off))}
+        if cs["on"] and cs["off"]:
+            norm = lambda s: re.sub(r"mode \w+", "mode", s.group(1))
+            a, b = norm(cs["on"]), norm(cs["off"])
+            print("  surv-surv on : %s" % a)
+            print("  surv-surv off: %s" % b)
+            if a != b:
+                fails.append("survivor-vs-survivor differs mode on vs off")
+
+    elif args.case == "win":
+        # Luigi tags all survivors -> the all-infected LUIGIS-win path fires.
+        rc, t = run(outdir, 220,
+                    {"SM64DS_VS_LUIGI_INFECTION": "1",
+                     "SM64DS_VS_LUIGI_SEED": str(args.seed_slot),
+                     "SM64DS_VS_LUIGI_TAGALL": "1",
+                     "SM64DS_VS_END_SCENE": "0", "SM64DS_VS_EXIT_ON_END": "0",
+                     "SM64DS_VS_END_GRACE": "0"})
+        print("rc=%d" % rc)
+        ta = re.search(r"TAGALL f\d+: survivors_alive now (\d+)", t)
+        mk = re.search(r"\[vs\] MATCH OVER f\d+ win=(\S+)", t)
+        if ta:
+            print("  tagall survivors_alive=%s" % ta.group(1))
+        if mk:
+            print("  marker win=%s" % mk.group(1))
+        if not ta or ta.group(1) != "0":
+            fails.append("tagall did not drive survivors to 0")
+        if not mk or mk.group(1) != "luigi-all-infected":
+            fails.append("expected win=luigi-all-infected, got %s"
                          % (mk.group(1) if mk else None))
 
     print("\nRESULT: %s" % ("PASS" if not fails else "FAIL"))

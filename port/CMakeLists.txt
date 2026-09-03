@@ -780,6 +780,12 @@ list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_HeadBo
 # on every dispatch). Both src lines are commented out of slice_gate10.txt.
 list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_OnAttacked2Dispatch.cpp")
 list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_OnKickedDispatch.cpp")
+# Luigi Infection host-copies the VS player-on-player hit resolver
+# func_ov002_020d869c: a verbatim transcription of the src body plus the team
+# branch (Luigi victim immune, survivor struck by a Luigi tagged). src line
+# commented out of slice_gate10.txt; inert with SM64DS_VS_LUIGI_INFECTION off,
+# so survivor-vs-survivor combat is exactly ROM-normal.
+list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/LuigiInfection_Hit.cpp")
 
 # Two Actor entry points are C++ inside a .c, but a different shape from the
 # hostgen cases below: each is a real METHOD against Actor.h, so hostgen's

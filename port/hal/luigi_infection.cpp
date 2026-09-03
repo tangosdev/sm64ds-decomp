@@ -249,6 +249,130 @@ extern "C" void port_luigi_minimap_hide(void)
     std::fprintf(stderr, "\n");
 }
 
+/* ---- SM64DS_VS_LUIGI_HITTEST: stage real hits through the host-copied hit
+ * resolver, to prove steps 4 and 5 without waiting for two AI players to punch
+ * each other. It sets exactly the fields func_ov002_020d869c reads on a real
+ * arena Player -- the attacker's uniqueID at victim+0x2f8, the move flags at
+ * +0x2f4, the two top-of-function gates at +0xd0 / +0x713 / +0x709 -- calls the
+ * resolver, and RESTORES every clobbered field afterwards so the arena is left
+ * as it was. Off by default; only ever set by tools/luigi_proof.py. */
+extern "C" int func_ov002_020d869c(char *c);
+
+static unsigned li_uid(void *actor) { return *(unsigned *)((char *)actor + 4); }
+
+/* Point victim at attacker as if attacker had just landed a hit with `flags`,
+ * call the resolver, restore the victim's fields, and return what the resolver
+ * returned. `flags == 0` is the ground-pound/jump path, which returns without
+ * connecting when the two are not stacked -- safe, and enough to show whether
+ * the resolver INTERCEPTED the pair (early return) or fell through to the ROM. */
+static int li_stage_hit(void *victim, void *attacker, unsigned flags)
+{
+    char *c = (char *)victim;
+    const int   sv_d0  = *(int *)(c + 0xd0);
+    const unsigned char sv_713 = *(unsigned char *)(c + 0x713);
+    const unsigned char sv_709 = *(unsigned char *)(c + 0x709);
+    const unsigned sv_2f8 = *(unsigned *)(c + 0x2f8);
+    const unsigned sv_2f4 = *(unsigned *)(c + 0x2f4);
+
+    *(int *)(c + 0xd0) = 0;                 /* the two top gates open */
+    *(unsigned char *)(c + 0x713) = 1;
+    *(unsigned char *)(c + 0x709) = 0;      /* so flags==0 reaches the jump test */
+    *(unsigned *)(c + 0x2f8) = li_uid(attacker);
+    *(unsigned *)(c + 0x2f4) = flags;
+
+    const int rc = func_ov002_020d869c(c);
+
+    *(int *)(c + 0xd0) = sv_d0;
+    *(unsigned char *)(c + 0x713) = sv_713;
+    *(unsigned char *)(c + 0x709) = sv_709;
+    *(unsigned *)(c + 0x2f8) = sv_2f8;
+    *(unsigned *)(c + 0x2f4) = sv_2f4;
+    return rc;
+}
+
+static int li_char_of(int slot)
+{
+    void *p = data_0209f394[slot];
+    return p ? (int)(*(unsigned char *)((char *)p + 0x6d9) & 7) : -1;
+}
+
+extern "C" void port_luigi_hittest(int frame)
+{
+    li_load();
+    static int on = -1, tagall = -1;
+    if (on < 0) on = std::getenv("SM64DS_VS_LUIGI_HITTEST") ? 1 : 0;
+    if (tagall < 0) tagall = std::getenv("SM64DS_VS_LUIGI_TAGALL") ? 1 : 0;
+    if ((!on && !tagall) || frame != 130) return;
+
+    /* TAG-ALL: Luigi tags every survivor through the real resolver, so the next
+       match-end poll sees survivors_alive==0 and fires the LUIGIS-win path.
+       Proves the all-infected win end to end from real tags. */
+    if (tagall && g_li_on && port_luigi_seeded()) {
+        int luigi = -1;
+        for (int i = 0; i < kPortMaxPlayers; ++i)
+            if (data_0209f394[i] && g_li_team[i]) { luigi = i; break; }
+        if (luigi >= 0) {
+            for (int i = 0; i < kPortMaxPlayers; ++i)
+                if (data_0209f394[i] && !g_li_team[i])
+                    li_stage_hit(data_0209f394[i], data_0209f394[luigi], 0x400);
+            std::fprintf(stderr, "[luigi] TAGALL f%d: survivors_alive now %d\n",
+                         frame, port_luigi_survivors_alive());
+        }
+    }
+    if (!on) return;
+
+    /* one Luigi, and the survivors, among the live slots. The scenarios run in
+       the order C, A, B on distinct slots so C sees PRISTINE survivors -- a tag
+       in A must not turn C's attacker into a Luigi (the trap the first cut hit). */
+    int luigi = -1, surv[kPortMaxPlayers], nsurv = 0;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (!data_0209f394[i]) continue;
+        if (g_li_team[i]) { if (luigi < 0) luigi = i; }
+        else surv[nsurv++] = i;
+    }
+    std::fprintf(stderr, "[luigi] HITTEST f%d: luigi=%d survivors=%d\n",
+                 frame, luigi, nsurv);
+
+    if (nsurv >= 2) {
+        /* C -- SURVIVOR vs SURVIVOR (run FIRST, pristine): the resolver is NOT
+           intercepted (rc=1, fell through to the ROM path) and the victim does
+           NOT convert. With the mode off the guard is skipped entirely and the
+           result is identical -- that equivalence is the regression check. */
+        const int a = surv[0], v = surv[1];
+        const int before = li_char_of(v), team_b = g_li_team[v];
+        const int rc = li_stage_hit(data_0209f394[v], data_0209f394[a], 0);
+        std::fprintf(stderr, "[luigi] HITTEST C SURV-SURV (mode %s): surv %d -> "
+                "surv %d | rc=%d char %d->%d team %d->%d | %s\n",
+                g_li_on ? "ON" : "off", a, v, rc, before, li_char_of(v),
+                team_b, g_li_team[v],
+                (rc == 1 && li_char_of(v) == before
+                 && g_li_team[v] == team_b) ? "PASS" : "FAIL");
+    }
+    if (g_li_on && luigi >= 0 && nsurv >= 1) {
+        /* A -- TAG: Luigi attacks a survivor. Expect the survivor converts. */
+        const int v = surv[0];
+        const int before = li_char_of(v), team_b = g_li_team[v];
+        const int rc = li_stage_hit(data_0209f394[v], data_0209f394[luigi], 0x400);
+        std::fprintf(stderr, "[luigi] HITTEST A TAG: luigi %d -> surv %d | rc=%d "
+                "char %d->%d team %d->%d | %s\n", luigi, v, rc, before,
+                li_char_of(v), team_b, g_li_team[v],
+                (rc == 1 && li_char_of(v) == 1 && g_li_team[v]) ? "PASS" : "FAIL");
+    }
+    if (g_li_on && luigi >= 0 && nsurv >= 2) {
+        /* B -- IMMUNITY: a survivor (the one NOT tagged in A) attacks Luigi.
+           Expect no change and rc=0 -- Luigi is never knocked, dropped or
+           tagged, and this same guard makes Luigi-on-Luigi a no-op too. */
+        const int a = surv[1];
+        const int before = li_char_of(luigi), team_b = g_li_team[luigi];
+        const int rc = li_stage_hit(data_0209f394[luigi], data_0209f394[a], 0x400);
+        std::fprintf(stderr, "[luigi] HITTEST B IMMUNE: surv %d -> luigi %d | "
+                "rc=%d char %d->%d team %d->%d | %s\n", a, luigi, rc, before,
+                li_char_of(luigi), team_b, g_li_team[luigi],
+                (rc == 0 && li_char_of(luigi) == before
+                 && g_li_team[luigi] == team_b) ? "PASS" : "FAIL");
+    }
+}
+
 /* Reset the per-match latch when a match tears down, so a second match in the
  * same process re-seeds cleanly. Called from the match-end disarm in
  * hal/star_flow.cpp (the one place that already tracks VS entry/exit). */
