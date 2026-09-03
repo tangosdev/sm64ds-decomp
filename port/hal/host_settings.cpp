@@ -191,6 +191,51 @@ int json_int(const char *s, const char *key, int dflt)
     return (int)strtol(v, 0, 10);
 }
 
+/* THE ONE PLACE THE ASPECT BAND IS SPELLED OUT. Both readers of the key -- the
+   settings file and the SM64DS_ASPECT override -- come through here, so the file
+   and the environment cannot disagree about what 9.0 means.
+
+     not a positive number   -> 0, the explicit native 4:3 sentinel. Covers
+                                absent, unparseable, 0 itself, negatives and NaN
+                                (the !(a > 0) spelling catches NaN; the test
+                                written the other way round would not).
+     positive                -> clamped into [1.0, 3.0]. 1.0 is square, 3.0 is
+                                wider than any shipping monitor; below 1.0 is a
+                                portrait picture the HUD has no layout for, and
+                                above 3.0 the DS's vertical field is a slot. */
+double aspect_sanitise(double a)
+{
+    if (!(a > 0.0)) return 0.0;
+    if (a < 1.0) return 1.0;
+    if (a > 3.0) return 3.0;
+    return a;
+}
+
+/* Find `key` used as an object KEY and read a DECIMAL FRACTION after it. The
+   same contract as json_int one function up -- dflt unless a number is really
+   there -- but the value is a ratio, so it cannot be an int. Only reader is the
+   Aspect key. strtod is locale-sensitive in principle; this process never calls
+   setlocale, so the C locale's '.' is the separator, which is what a settings
+   file written by the launcher contains. */
+double json_num(const char *s, const char *key, double dflt)
+{
+    const char *v = json_value(s, key);
+    if (!v) return dflt;
+    if (*v == '"') ++v;              /* "1.7777778" is as good as 1.7777778 */
+    {
+        const char *p = v;
+        if (*p == '-' || *p == '+') ++p;
+        /* a leading '.' is input a player might plausibly type */
+        if ((*p < '0' || *p > '9') && *p != '.') return dflt;
+    }
+    {
+        char *end = 0;
+        const double d = strtod(v, &end);
+        if (end == v) return dflt;   /* nothing consumed: unparseable */
+        return d;
+    }
+}
+
 /* Copy `key`'s value token into out (a quoted string arrives unquoted, so a
    caller comparing against "analog" does not have to know how it was
    written). 1 when a value was there and fitted, 0 otherwise. */
@@ -658,6 +703,26 @@ int g_name_tags = 1;
    on. Read live like the gap keys; the accessor also honours SM64DS_ADVENTURE. */
 int g_adventure_ghosts = 0;
 
+/* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
+   the explicit native sentinel -- the DS's own 4:3 at the 512x384 window the
+   port has always opened. 1.7777778 is 16:9. It is a NUMBER and not a
+   Widescreen boolean for one reason that matters and one that follows from it:
+   a boolean cannot express ultrawide, and a number means an odd monitor needs
+   no new mode name, only its own ratio.
+
+   ACCEPTED: 0 for native, or a ratio CLAMPED TO [1.0, 3.0]. Absent,
+   unparseable, negative or otherwise not a positive number all read as 0, so a
+   file written before this key existed -- or half-edited by hand -- lands on the
+   shipped 4:3 look like every other key here. A positive number outside the band
+   is clamped rather than rejected: 9.0 becomes 3.0, which is a picture, where
+   rejecting it would be a surprise.
+
+   BOOT-LATCHED, not read live: the framebuffer aspect is chosen once, at boot,
+   and threaded through the whole render path (ntr::configure_aspect), so unlike
+   NameTags/AdventureGhosts a mid-run change cannot take. The only reader is
+   walk_window's boot, which calls ntr::configure_aspect(host_setting_aspect()). */
+double g_aspect = 0.0;
+
 /* ---- PROXIMITY VOICE CHAT, lane VOICE ------------------------------------
    Five keys, all of them host preferences and none of them a mod: nothing
    here touches game state, the lockstep input path, or a single byte the
@@ -954,6 +1019,7 @@ void load_once(void)
     g_custom_palette = 0;
     g_name_tags = 1;
     g_adventure_ghosts = 0;
+    g_aspect = 0.0;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
     g_padlayout_n = 0;
@@ -1064,6 +1130,20 @@ void load_once(void)
            the keys above: a file written before this key existed reads as one
            that left it off, which is the ROM's solo game. */
         g_adventure_ghosts = json_bool(text, "AdventureGhosts", 0);
+        /* the presentation aspect, read against its own default of 0 (native)
+           so a file written before this key existed reads as the 4:3 window.
+           Sanitised HERE rather than at the accessor, so the stored value is
+           always one the render path can size a framebuffer from. Boot-latched:
+           walk_window's boot is the only reader and it reads once. */
+        {
+            double a = json_num(text, "Aspect", 0.0);
+            /* LEGACY: the boolean this key replaced. Only consulted when Aspect
+               itself is absent, so a file carrying both is decided by the newer
+               key and nobody has to migrate anything by hand. */
+            if (!json_value(text, "Aspect") && json_bool(text, "Widescreen", 0))
+                a = 16.0 / 9.0;
+            g_aspect = aspect_sanitise(a);
+        }
         {
             char who[24];
             if (json_str(text, "LovesMeCharacter", who, sizeof who))
@@ -1553,6 +1633,45 @@ extern "C" int host_setting_adventure_ghosts(void)
     if (env >= 0) return env;
     load_once();
     return g_adventure_ghosts;
+}
+
+/* Aspect: width divided by height, 0 for the native 4:3 window. Same shape as
+   host_setting_run_mode / host_setting_camera_mode above -- load_once, then the
+   stored value -- with two environment overrides in front of it, because a proof
+   run has to capture both aspects off ONE build without editing a player's
+   settings file.
+
+     SM64DS_ASPECT       the ratio directly, through the same sanitiser the file
+                         goes through: 0 native, 1.7777778 16:9, 9.0 clamps to
+                         3.0, junk reads as 0.
+     SM64DS_WIDESCREEN   the LEGACY boolean, kept because it is one line and
+                         because the proof scripts written before the key became
+                         a number spell it that way. 0 forces native, anything
+                         else forces 16:9. Only consulted when SM64DS_ASPECT is
+                         unset, so the newer variable wins if both are set.
+
+   Read once at boot -- the aspect is latched into the framebuffer and cannot
+   change mid-run. */
+extern "C" double host_setting_aspect(void)
+{
+    static int env_read = 0;
+    static double env = -1.0;        /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_ASPECT");
+        if (e && *e) {
+            char *end = 0;
+            const double d = strtod(e, &end);
+            /* an unparseable override is still an override: it says "native",
+               the same answer an unparseable file value gives */
+            env = (end != e) ? aspect_sanitise(d) : 0.0;
+        } else if ((e = getenv("SM64DS_WIDESCREEN")) != 0 && *e) {
+            env = (e[0] == '0' && e[1] == 0) ? 0.0 : 16.0 / 9.0;
+        }
+    }
+    if (env >= 0.0) return env;
+    load_once();
+    return g_aspect;
 }
 
 /* The C++ predicate the header promises. One reader, so the ghost render and

@@ -23,6 +23,19 @@ constexpr int SCREEN_H = 768;
 #elif defined(NTR_HIRES2)
 constexpr int SCREEN_W = 512;    /* 2x: the interactive window's tier */
 constexpr int SCREEN_H = 384;
+#elif defined(NTR_WIDE_RT)
+/* THE RUNTIME-SELECTABLE 16:9 TIER. One binary, either aspect, chosen at boot
+   from the Aspect settings key (a ratio) instead of a separate compile. The
+   framebuffer and every raster/stride array are sized for the WIDE MAXIMUM
+   (1024x576) so no reallocation is needed when the toggle is off; the ACTIVE
+   extent (ntr::active_w / active_h, below) is what the render, HUD, sub-screen,
+   input and present paths read, and it is set to 512x384 (byte-for-byte the old
+   2x window) when the toggle is off and to the full 1024x576 when it is on. So
+   these two constants are the STRIDE and the ALLOCATION only; they are never the
+   live screen size on this tier. See ntr/ppu.cpp for the globals and the setter,
+   and the NTR_WIDE169 tier below for the fixed-compile widescreen this replaces. */
+constexpr int SCREEN_W = 1024;
+constexpr int SCREEN_H = 576;
 #elif defined(NTR_WIDE169)
 /* THE FIRST NON-4:3 TIER: 16:9 widescreen, 1024x576. Unlike NTR_HIRES/HIRES2
    -- both 4:3, sharper but not wider -- this is a genuinely wider frame. The
@@ -41,6 +54,45 @@ constexpr int SCREEN_H = 576;
 constexpr int SCREEN_W = 256;
 constexpr int SCREEN_H = 192;
 #endif
+
+// ---- THE RUNTIME ACTIVE EXTENT ---------------------------------------------
+//
+// "How much of the screen is live this run." On every fixed tier these equal
+// SCREEN_W / SCREEN_H and never move -- the extra indirection costs nothing and
+// keeps one spelling of "screen extent" for code shared across tiers. On the
+// NTR_WIDE_RT tier the framebuffer is the wide maximum (SCREEN_W x SCREEN_H =
+// 1024x576) and these hold the aspect chosen at boot: 512x384 with the toggle
+// off, 1024x576 with it on. The rule the whole port follows: a read that means
+// the live screen SIZE (loop bounds, viewport, the present source rect, an
+// aspect ratio) uses active_w / active_h; a read that means the row STRIDE or
+// the buffer ALLOCATION keeps SCREEN_W / SCREEN_H.
+extern int active_w;
+extern int active_h;
+// The boot flag: true when this run's picture is wider than the DS's 4:3. Always false on the
+// fixed tiers. The wide-only branches (frustum widen, sub-screen pillarbox,
+// HUD reanchor) are compiled unconditionally now and self-normalise to the 4:3
+// behaviour when it is false, so most read active_w/active_h rather than this;
+// it is here for the few places that must not run the wide arm at all when off.
+extern bool widescreen;
+// Latch the boot aspect, as a NUMBER: width divided by height. 0 is the
+// explicit native sentinel and means the DS's own 4:3 at the shipped 512x384;
+// 16:9 is 1.7777778; 2.3703704 (21:9) or anything else an odd monitor wants
+// needs no new mode name, which is the whole reason this is a ratio and not a
+// Widescreen boolean -- a boolean cannot express ultrawide.
+//
+// A no-op on the fixed tiers (one aspect each). On NTR_WIDE_RT it derives
+// active_w/active_h from the ratio inside the wide-maximum buffer:
+//
+//   0            -> 512x384, byte-for-byte the 2x window the port ships
+//   1.7777778    -> 1024x576, the full buffer, the measured 16:9 tier
+//   wider        -> full width, shorter picture (3.0 -> 1024x341)
+//   narrower     -> full height, narrower picture (1.0 -> 576x576)
+//
+// The caller is expected to have already clamped to [1.0, 3.0] (see
+// host_setting_aspect); this clamps again rather than trusting, because a bad
+// ratio here is a divide that sizes a framebuffer. Call once, at boot, before
+// the first framebuffer use.
+void configure_aspect(double aspect);
 
 enum Engine { ENGINE_A = 0, ENGINE_B = 1 };
 

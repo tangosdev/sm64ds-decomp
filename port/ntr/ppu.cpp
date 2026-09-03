@@ -18,6 +18,84 @@
 #include <cstring>
 
 namespace ntr {
+
+// ---- THE RUNTIME ACTIVE EXTENT (see ntr/ppu.h) -----------------------------
+//
+// Defaults are the tier's own screen. On NTR_WIDE_RT the framebuffer is the
+// wide maximum but the DEFAULT aspect is 4:3 (the old 2x window's 512x384), so
+// a run that never sets the toggle -- or a tool that links this without wiring
+// the settings key -- is the 4:3 build exactly. configure_aspect() below is
+// the only writer, called once at boot.
+#ifdef NTR_WIDE_RT
+int active_w = 512;
+int active_h = 384;
+#else
+int active_w = SCREEN_W;
+int active_h = SCREEN_H;
+#endif
+#ifdef NTR_WIDE169
+// The fixed-compile 16:9 tier: the wide branches are ALWAYS on, so the runtime
+// flag they now read is true from the start. (NTR_WIDE_RT starts 4:3 and flips
+// this in configure_aspect; every 4:3 tier leaves it false.)
+bool widescreen = true;
+#else
+bool widescreen = false;
+#endif
+
+void configure_aspect(double aspect)
+{
+#ifdef NTR_WIDE_RT
+    if (!(aspect > 0.0)) {
+        // 0, negative, or NaN: the native sentinel. The 4:3 window at the old
+        // 2x size, rendered into the top-left of the wide buffer and presented
+        // at that size -- byte-for-byte the shipped build.
+        active_w = 512;
+        active_h = 384;
+    } else {
+        // Clamp again at the point of use. host_setting_aspect already clamps,
+        // but this is the divide that sizes a framebuffer and it does not get to
+        // trust its caller.
+        if (aspect < 1.0) aspect = 1.0;
+        if (aspect > 3.0) aspect = 3.0;
+        // The largest w:h rectangle that fits the wide-maximum buffer. Start
+        // full width and derive the height; if that is taller than the buffer,
+        // the ratio is narrower than the buffer's own and the height binds
+        // instead. At 1.7777778 the first arm lands exactly on 1024x576, the
+        // measured 16:9 tier, with no rounding at all.
+        int w = SCREEN_W;
+        int h = (int)(SCREEN_W / aspect + 0.5);
+        if (h > SCREEN_H) {
+            h = SCREEN_H;
+            w = (int)(SCREEN_H * aspect + 0.5);
+            if (w > SCREEN_W) w = SCREEN_W;
+        }
+        // Even extents: several centring and half-screen reads divide by two,
+        // and an odd width there leaves a one-pixel seam for no gain. The
+        // DERIVED side rounds in the direction that keeps the picture no WIDER
+        // than the ratio asked for, so the delivered w:h stays inside the
+        // clamp rather than sliding a hair past it -- 3.0 asked for on this
+        // buffer is 1024/342 (2.994) and not 1024/340 (3.012). The PINNED side
+        // is already even (both buffer dimensions are), so its round is a no-op.
+        if (h != SCREEN_H) h = (h + 1) & ~1;   // width pinned: round height up
+        else               w &= ~1;            // height pinned: round width down
+        if (h > SCREEN_H) h = SCREEN_H;
+        if (w < 2) w = 2;
+        if (h < 2) h = 2;
+        active_w = w;
+        active_h = h;
+    }
+    // "Is this run's picture wider than the DS's 4:3", which is what every
+    // runtime wide branch actually asks. Computed from the extent rather than
+    // stored from the argument, so an Aspect of 1.3333 (a 4:3 ratio written out
+    // longhand) correctly reads as NOT widescreen: there is no frustum to widen.
+    widescreen = (active_w * 3 != active_h * 4);
+#else
+    // A fixed tier has one aspect; there is nothing to choose. Kept so callers
+    // can invoke it unconditionally.
+    (void)aspect;
+#endif
+}
+
 namespace {
 
 // Engine A registers start at 0x4000000, engine B at 0x4001000. Engine B has no
@@ -132,8 +210,8 @@ void ppu_scanout(Engine eng, Framebuffer &fb) {
     const unsigned disp_mode = (dispcnt >> 16) & 3;
     const bool forced_blank = (dispcnt >> 7) & 1;
     if (disp_mode == 0 || forced_blank) {
-        for (int y = 0; y < SCREEN_H; ++y)
-            for (int x = 0; x < SCREEN_W; ++x) fb.px[y][x] = 0xFFFFFFFFu;
+        for (int y = 0; y < active_h; ++y)
+            for (int x = 0; x < active_w; ++x) fb.px[y][x] = 0xFFFFFFFFu;
         return;
     }
 
@@ -142,8 +220,8 @@ void ppu_scanout(Engine eng, Framebuffer &fb) {
 
     const uint32_t backdrop = bgr555(rd16(em.pltt_base));
 
-    for (int y = 0; y < SCREEN_H; ++y) {
-        for (int x = 0; x < SCREEN_W; ++x) {
+    for (int y = 0; y < active_h; ++y) {
+        for (int x = 0; x < active_w; ++x) {
             uint32_t c = backdrop;
             // Lower priority value wins; ties break toward the lower BG number,
             // so walk priorities 3..0 and let later writes overwrite.
@@ -275,10 +353,10 @@ void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
 
         for (int sy = 0; sy < bh; ++sy) {
             const int py = y + sy;
-            if (py < 0 || py >= SCREEN_H) continue;
+            if (py < 0 || py >= active_h) continue;
             for (int sx = 0; sx < bw; ++sx) {
                 const int px = x + sx;
-                if (px < 0 || px >= SCREEN_W) continue;
+                if (px < 0 || px >= active_w) continue;
                 // texel coordinate: affine maps through the matrix around the
                 // box center; plain is direct with optional flips.
                 int tx, ty;
@@ -368,7 +446,18 @@ bool ppu_write_bmp_px(const char *path, const uint32_t *px, int w, int h) {
 }
 
 bool ppu_write_bmp(const char *path, const Framebuffer &fb) {
-    return ppu_write_bmp_px(path, &fb.px[0][0], SCREEN_W, SCREEN_H);
+    // The framebuffer's live image is active_w x active_h. On every fixed tier
+    // (and on NTR_WIDE_RT with the toggle on) that equals the row stride, so the
+    // buffer is already tight and this is the byte-identical old call.
+    if (active_w == SCREEN_W)
+        return ppu_write_bmp_px(path, &fb.px[0][0], active_w, active_h);
+    // NTR_WIDE_RT, 4:3 toggle: the picture is narrower than the SCREEN_W stride,
+    // so pack the active rows tight before the writer (which assumes stride ==
+    // width) sees them. Static because this is a debug/probe dump, not per-frame.
+    static uint32_t packed[SCREEN_W * SCREEN_H];
+    for (int y = 0; y < active_h; ++y)
+        std::memcpy(packed + (size_t)y * active_w, fb.px[y], (size_t)active_w * 4);
+    return ppu_write_bmp_px(path, packed, active_w, active_h);
 }
 
 // ---- THE DISPLAY CAPTURE UNIT ----------------------------------------------
@@ -547,7 +636,11 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
     uint16_t *dst = reinterpret_cast<uint16_t *>(lcdc_addr(block) + off);
     for (int y = 0; y < ch; ++y) {
         const int sy = ry > 0 ? y * ry : (y * h) / SUB_H;
-        const uint32_t *row = src + (size_t)(sy < h ? sy : h - 1) * (size_t)w;
+        /* w/h are the LIVE image extent; the framebuffer's row stride is always
+           SCREEN_W (the buffer max), which equals w on every fixed tier and is
+           1024 on NTR_WIDE_RT with a 512-wide active image. Index by the stride,
+           sample within the extent. */
+        const uint32_t *row = src + (size_t)(sy < h ? sy : h - 1) * (size_t)SCREEN_W;
         for (int x = 0; x < cw; ++x) {
             const int sx = rx > 0 ? x * rx : (x * w) / SUB_W;
             const uint32_t p = row[sx < w ? sx : w - 1];

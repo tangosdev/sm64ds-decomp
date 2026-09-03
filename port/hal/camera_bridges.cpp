@@ -15,6 +15,14 @@
 #include "dsstate_seg.h"
 #include "ntr/ppu.h"   /* ntr::SCREEN_W/SCREEN_H for the widescreen frustum seam */
 
+/* The assembled-triangle counter, for the widescreen probe below and nothing
+   else. FORWARD-DECLARED rather than #included. The widescreen seam is compiled
+   unconditionally now (the aspect is a runtime choice, not a compile tier), so
+   there is no tier guard left to sit inside. Same shape hal/player_bridges.cpp
+   uses for the same call. */
+#include <cstddef>
+namespace ntr { struct GxTriangle; const GxTriangle *gx_polygons(std::size_t &n); }
+
 /* Camera::Render calls View::Render() as a METHOD (its TU declares a local
    `struct View`); src defines the function at C linkage. Same shape as the
    method faces in method_faces.cpp, kept here because the local View has no
@@ -317,16 +325,167 @@ DSSTATE_END
    src's own value and is widened once. Scaling the value that is THERE rather
    than a literal 0x1555 keeps a camera or cutscene that seeds a different aspect
    correct. Empty and uncalled on the 4:3 targets. */
-#ifdef NTR_WIDE169
+/* Compiled unconditionally now, and CALLED only when ntr::widescreen is set
+   (the frame loop guards the one call site). The scale is target/native =
+   (active_w/active_h)/(4/3), which is 1.333 at 16:9 and EXACTLY 1.0 at 4:3, so
+   even if it were called on a 4:3 run it would be a no-op; the call guard keeps
+   the 4:3 clipper untouched regardless. */
 void _ZN7Clipper13Func_0201559CEv(void *self);
+
+/* SM64DS_WIDEN_PROBE=1: PHASE-1 REACHABILITY COUNTER, and the only reason it
+   exists is that the call to this function is made BY HAND from one frame loop
+   (tests/walk_window.cpp). Any render path that does not run that loop seeds
+   the object Clipper from the camera's own 4:3 aspect and never widens it, so
+   ambient actors at the new 16:9 margins stay culled as off-screen while the
+   raster draws the world behind them. "Is that loop the only loop" cannot be
+   answered by reading -- a scene, a minigame and a cutscene each get a camera
+   rendered somewhere -- so it is answered by counting.
+
+   The count is a single static increment, unconditional and untimed; NOTHING is
+   printed unless SM64DS_WIDEN_PROBE is set to something other than 0. The
+   progress line every 64 calls is deliberate belt and braces: a run that dies on
+   a fault or is killed by a timeout never reaches a static destructor, and a
+   reachability answer that only exists at a clean exit is no answer at all. */
+static unsigned long g_widen_calls;
+/* scene frames the widen DECLINED; see hal_camera_widen_frustum_scene below */
+static unsigned long g_widen_skips;
+namespace {
+int widen_probe_on()
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_WIDEN_PROBE");
+        on = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return on;
+}
+struct WidenProbeReport {
+    ~WidenProbeReport()
+    {
+        if (widen_probe_on())
+            std::fprintf(stderr, "[widen] total calls %lu, scene frames "
+                                 "declined %lu\n",
+                         g_widen_calls, g_widen_skips);
+    }
+};
+WidenProbeReport g_widen_probe_report;
+}  // namespace
+
 void hal_camera_widen_frustum(void)
 {
+    ++g_widen_calls;
+    if (widen_probe_on() && (g_widen_calls == 1 || g_widen_calls % 64 == 0))
+        std::fprintf(stderr, "[widen] call %lu m4c %d\n", g_widen_calls,
+                     data_0209f43c[0x4c / 4]);
     long long m4c = data_0209f43c[0x4c / 4];
     data_0209f43c[0x4c / 4] =
-        (int)((m4c * (ntr::SCREEN_W * 3)) / (ntr::SCREEN_H * 4));
+        (int)((m4c * (ntr::active_w * 3)) / (ntr::active_h * 4));
     _ZN7Clipper13Func_0201559CEv(&data_0209f43c);
 }
-#endif
+
+/* SM64DS_WIDEN_PROBE, PHASE 2: THE SCENE PATH'S OWN LINE. Same variable, same
+   inert-when-unset rule, and inside the same tier guard, so the 4:3 and hires
+   targets do not see a byte of it. Two numbers per frame, and each one answers
+   a question the phase-1 counter above could not:
+
+     m4c   -- the object Clipper's aspect term AS THE FRAME LEFT IT. The level
+              path's widen is safe ONLY because Camera::Render reseeds this word
+              from 0x1555 every frame, so scaling it never compounds (measured
+              on level 1, 300 frames: m4c reads 5461 at every sampled call). The
+              scene path drives no camera by hand, so whether it HAS that reseed
+              is not something reading the file can answer -- a widen dropped on
+              a path with no reseed multiplies the same word by 4/3 three
+              hundred times and overflows it. This line settles that before the
+              call is placed, and keeps watching it afterwards.
+     tris  -- triangles submitted this frame, which is the ONLY thing an object
+              cull can move. A frustum that lets more through submits more.
+              Per frame rather than a histogram because ppu_audit keeps six
+              distinct values per slot and the busiest scenes have more than
+              six, so no mean can be taken off it.
+
+   Unbuffered and per frame for the reason the phase-1 counter is: a run that
+   faults or is killed never reaches a static destructor, and a number that only
+   exists at a clean exit is no number at all. */
+void hal_widen_probe_scene_frame(int frame, const char *where)
+{
+    if (!widen_probe_on()) return;
+    std::size_t tris = 0;
+    ntr::gx_polygons(tris);
+    std::fprintf(stderr, "[widen] scene f%d %s m4c %d tris %lu\n", frame, where,
+                 data_0209f43c[0x4c / 4], (unsigned long)tris);
+}
+
+/* THE SCENE PATH'S WIDEN, and it is a SEPARATE ENTRY POINT rather than the same
+   call in a second place, because the scene path does not come with the one
+   precondition the level path gets for free.
+
+   The level loop calls hal_camera_widen_frustum immediately after its by-hand
+   hal_camera_render, so the Clipper it scales has JUST been seeded by
+   func_0200d954 -> Clipper::Func_020156DC and the aspect term is known to be the
+   src's own 0x1555. That is the whole reason a non-idempotent scale is safe
+   there: every frame starts from 5461 and is widened exactly once. Measured on
+   level 1, 300 frames -- m4c reads 5461 at every sampled call.
+
+   THE SCENE PATH DRIVES NO CAMERA BY HAND, and measuring it with
+   SM64DS_WIDEN_PROBE over all 27 hosted scene ids found not two shapes but
+   THREE, which is why this is a guard and not a second call site:
+
+     NEVER SEEDED   SCENE_STAR_SELECT (4), SCENE_MG_CURLING (374) and the 2D
+                    minigames. m4c reads 0 on frame 0 and on frame 299. Nothing
+                    ever built an object cull for these scenes, so there is
+                    nothing to widen, and Func_0201559C over an all-zero Clipper
+                    would build four side planes out of a zero aspect -- a state
+                    the ROM never puts that structure in.
+     RESEEDED       SCENE_MG_MEMORY2 (363), SCENE_MG_JUMP2 (373) and the rest.
+                    Their Camera actor rides the ROM's own render bucket, so
+                    port_actor_render rewrites m4c to 5461 every frame. This is
+                    the level path's contract and a per-frame widen is right.
+     SEEDED ONCE    SCENE_MG_CUP (361), SCENE_MG_BOOMBOX (367). m4c is written
+                    at spawn and NEVER AGAIN. A per-frame widen on these
+                    multiplies the same word by 4/3 three hundred times:
+                    measured, before this guard existed, 5461 -> 7281 -> 9708 ->
+                    ... -> 1540606696 by frame 299, an overflowed aspect feeding
+                    four garbage side planes. That is the failure the level
+                    path's structure makes impossible and the scene path's does
+                    not.
+
+   SO THE RULE IS ONCE PER SEED, NOT ONCE PER FRAME. Remember the value this seam
+   last wrote; if the word still holds it, the ROM has not reseeded since and the
+   frustum is already the widened one, so decline. A reseed lands a different
+   value, is noticed, and is widened. On a RESEEDED scene that is a widen every
+   frame, identical to the level path; on a SEEDED ONCE scene it is one widen
+   that then persists, which is the correct answer for a Clipper written once;
+   on a NEVER SEEDED scene it is nothing at all.
+
+   THE ONE AMBIGUITY IS NAMED RATHER THAN HIDDEN. A reseed that happens to write
+   exactly the value the last widen produced is indistinguishable from no reseed,
+   and this declines it -- so that frame keeps the aspect it already has. The
+   direction is deliberate: declining is a no-op, and widening a second time
+   corrupts. The skip counter makes every declined frame a NUMBER rather than an
+   assumption about which scenes reseed. */
+static int g_widen_scene_written;   /* what this seam last wrote; 0 = nothing */
+void hal_camera_widen_frustum_scene(void)
+{
+    const int m4c = data_0209f43c[0x4c / 4];
+    if (m4c == 0) {
+        /* the scene tore its Clipper down, or never built one: forget the
+           memory so the next scene's first seed is widened rather than
+           mistaken for a value this seam had already written */
+        g_widen_scene_written = 0;
+        ++g_widen_skips;
+        if (widen_probe_on() && g_widen_skips == 1)
+            std::fprintf(stderr, "[widen] scene DECLINED: the object Clipper has "
+                                 "no aspect term (m4c 0), so no Render seeded it "
+                                 "and there is no cull to widen\n");
+        return;
+    }
+    if (m4c == g_widen_scene_written) {
+        ++g_widen_skips;
+        return;
+    }
+    hal_camera_widen_frustum();
+    g_widen_scene_written = data_0209f43c[0x4c / 4];
+}
 
 /* Camera::SaveCameraStateBeforeTalk is called ARGLESS by both its callers
    (func_02005324 and func_02009a8c, which the community names func_0200cc5c):

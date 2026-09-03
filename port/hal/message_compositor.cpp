@@ -1768,9 +1768,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     // host pixels the 3D engine did NOT draw, and leaves the rest untouched --
     // which is also why there is no colour blit for the 3D layer at all: its
     // pixels are already where they belong.
-    const int sx = ntr::SCREEN_W / 256;
-    const int sy = ntr::SCREEN_H / 192;
-#ifdef NTR_WIDE169
+    const int sx = ntr::active_w / 256;
+    const int sy = ntr::active_h / 192;
     /* WIDESCREEN HUD REANCHOR (16:9). The DS composes the top HUD in its own
        256x192 space. On the 4:3 tiers sx == sy, so one integer scale fills the
        screen with no distortion. At 1024x576 sx (4) != sy (3): the old x*sx
@@ -1789,9 +1788,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        touched here at all. See the report for the bands Tango may want to
        adjust per element. The 4:3 tiers keep the exact x*sx block. */
     const int uni = sy;                            /* uniform native scale (3) */
-    const int margin = ntr::SCREEN_W - 256 * uni;  /* spare width (256) */
+    const int margin = ntr::active_w - 256 * uni;  /* spare width (256; 0 at 4:3) */
     const int band_l = 96, band_r = 160;           /* source-x band splits */
-#endif
     /* TWO QUESTIONS, KEPT APART SO THE A/B ARM STILL MEASURES. `shown3d` is
        whether the 3D layer is in the picture at all, which decides whether the
        coverage mask means anything; `honour3d` is whether this run obeys its
@@ -1807,9 +1805,14 @@ extern "C" void port_message_composite_engine_a(void *fbp)
         for (int x = 0; x < 256; ++x) {
             if (!g_a[y][x].hit) continue;
             const uint32_t c = g_a[y][x].color;
-            /* horizontal placement of this DS column's block */
-#ifdef NTR_WIDE169
-            const int bw = uni;
+            /* horizontal placement of this DS column's block. In 4:3 (toggle
+               off) ntr::widescreen is false and this is the plain x*sx block; in
+               16:9 it reanchors. The wide arm also self-normalises -- margin is 0
+               and uni == sx at 4:3 -- but the runtime branch keeps the off path
+               byte-for-byte the old code. */
+            int bw, hx0;
+            if (ntr::widescreen) {
+            bw = uni;
             /* THE REANCHOR IS FOR A SPARSE HUD OVER A WIDE 3D VIEW, and only
                there. With a 3D layer in the picture (shown3d) the bands it opens
                between the HUD clusters are filled by the 3D field, so pushing the
@@ -1821,15 +1824,15 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                PILLARBOXED instead: centred at the uniform scale, black margins
                either side, margin/2 == the bottom panel's pan_x0 (128) so the two
                DS screens line up exactly (ntr/ppu_sub.cpp's stacked wide branch). */
-            const int hx0 = !shown3d
+            hx0 = !shown3d
                           ? x * uni + margin / 2
                           : (x < band_l) ? x * uni
                           : (x >= band_r) ? x * uni + margin
                                           : x * uni + margin / 2;
-#else
-            const int bw = sx;
-            const int hx0 = x * sx;
-#endif
+            } else {
+            bw = sx;
+            hx0 = x * sx;
+            }
             if (!honour3d
                 || !layer_behind_3d(g_a[y][x].owner, g_a[y][x].prio, p3d)) {
                 /* the owning 2D layer is in FRONT of the 3D layer (or there is
@@ -1857,8 +1860,8 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        is instrumentation and nothing reads it unless the probe is on, so it is
        gated: an ordinary play frame does not pay for a number nobody prints. */
     if (honour3d && std::getenv("SM64DS_MSG_COMPOSITE_DEBUG")) {
-        for (int hy = 0; hy < ntr::SCREEN_H; ++hy)
-            for (int hx = 0; hx < ntr::SCREEN_W; ++hx)
+        for (int hy = 0; hy < ntr::active_h; ++hy)
+            for (int hx = 0; hx < ntr::active_w; ++hx)
                 if (cover[hy * ntr::SCREEN_W + hx]
                     && !g_a[hy / sy][hx / sx].hit)
                     ++kept;

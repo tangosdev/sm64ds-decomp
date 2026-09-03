@@ -971,17 +971,22 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
     const int y0 = dst_h - out_h - margin;
     if (x0 < 1 || y0 < 1) return;      // no room; leave the frame alone
 
+    /* dst_w/dst_h are the LIVE image extent (where the panel sits, bottom-right);
+       the framebuffer's row STRIDE is always SCREEN_W, which equals dst_w on the
+       fixed tiers and is the buffer max on NTR_WIDE_RT with a narrower active
+       image. Place with the extent, index with the stride. */
+    const int stride = SCREEN_W;
     for (int x = x0 - 1; x <= x0 + out_w; ++x) {
-        dst[(y0 - 1) * dst_w + x] = 0xFF000000u;
-        dst[(y0 + out_h) * dst_w + x] = 0xFF000000u;
+        dst[(y0 - 1) * stride + x] = 0xFF000000u;
+        dst[(y0 + out_h) * stride + x] = 0xFF000000u;
     }
     for (int y = y0 - 1; y <= y0 + out_h; ++y) {
-        dst[y * dst_w + (x0 - 1)] = 0xFF000000u;
-        dst[y * dst_w + (x0 + out_w)] = 0xFF000000u;
+        dst[y * stride + (x0 - 1)] = 0xFF000000u;
+        dst[y * stride + (x0 + out_w)] = 0xFF000000u;
     }
     if (div == 1) {
         for (int y = 0; y < SUB_H; ++y)
-            std::memcpy(dst + (y0 + y) * dst_w + x0, sub.px[y], SUB_W * 4);
+            std::memcpy(dst + (y0 + y) * stride + x0, sub.px[y], SUB_W * 4);
         return;
     }
     const int n = div * div;
@@ -995,7 +1000,7 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
                     g += (p >> 8) & 0xFF;
                     b += p & 0xFF;
                 }
-            dst[(y0 + y) * dst_w + (x0 + x)] =
+            dst[(y0 + y) * stride + (x0 + x)] =
                 0xFF000000u | ((r / n) << 16) | ((g / n) << 8) | (b / n);
         }
 }
@@ -4179,8 +4184,12 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
     l.gap_ds = gap_ds;
     l.obj_shift_ds = obj_shift_ds;
     l.head_ds = head_ds;
-    l.scale = SCREEN_H / SUB_H;
-    l.w = STACK_W;
+    /* SCALE AND WIDTH ARE THE LIVE EXTENT, not the buffer max. On the fixed
+       tiers active_h/active_w equal SCREEN_H/STACK_W and this is unchanged; on
+       NTR_WIDE_RT the toggle picks 512x384 (scale 2, width 512 -- the old 2x
+       stacked image, pan_x0 0) or 1024x576 (scale 3, width 1024, pan_x0 128). */
+    l.scale = active_h / SUB_H;
+    l.w = active_w;
     l.head_h = head_ds * l.scale;
     /* EVERY BAND SHIFTS TOGETHER, which is the whole reason the headroom is a
        field of this struct rather than a second arithmetic somewhere: the
@@ -4188,10 +4197,10 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        mappers read top_y / band_y / bottom_y and none of them recomputes them.
        With head_h zero all four are exactly what they were. */
     l.top_y = l.head_h;
-    l.band_y = l.head_h + SCREEN_H;
+    l.band_y = l.head_h + active_h;
     l.band_h = gap_ds * l.scale;
     l.bottom_y = l.band_y + l.band_h;
-    l.h = l.head_h + SCREEN_H * 2 + l.band_h;
+    l.h = l.head_h + active_h * 2 + l.band_h;
     l.fill_mode = fill_mode == GAP_FILL_SOLID   ? GAP_FILL_SOLID
                   : fill_mode == GAP_FILL_CUSTOM ? GAP_FILL_CUSTOM
                                                  : GAP_FILL_AMBIENT;
@@ -4239,7 +4248,7 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        compose's wide branch (gated on pan_x0 > 0) never fires. The first tier
        where they differ is NTR_WIDE169: scale 3, pan_w 768, pan_x0 128. */
     l.pan_w = SUB_W * l.scale;
-    l.pan_x0 = (STACK_W - l.pan_w) / 2;
+    l.pan_x0 = (active_w - l.pan_w) / 2;
     return l;
 }
 
@@ -4434,43 +4443,46 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     const int a_y = lay.main_lower ? lay.bottom_y : lay.top_y;
     const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
 
-#ifdef NTR_WIDE169
     /* ---- THE WIDESCREEN STACKED PRESENTATION (16:9) -----------------------
      *
-     * On a square tier SCREEN_W/SUB_W == SCREEN_H/SUB_H, so scaling the 256x192
+     * On a square aspect active_w/SUB_W == active_h/SUB_H, so scaling the 256x192
      * bottom panel to fill the width is the same whole number both ways and is
-     * undistorted. NTR_WIDE169 is the first tier where they differ (4 across, 3
-     * down): filling the width would stretch the panel a third wider than tall.
-     * So the panel is PILLARBOXED -- drawn at the uniform vertical scale, native
-     * 4:3, centred in [pan_x0, pan_x0 + pan_w) with black margins either side --
-     * and the gap band under it (the ambient wash, the art, the hinge and the
-     * seam mods) is composed on that same centred column so it stays aligned with
-     * the panel, off a lay whose width IS the panel's. dst2 = dst + pan_x0 gives
-     * every band pass its horizontal origin for free: it walks 0..lay2.w and the
-     * pointer base carries it to the centre.
+     * undistorted. 16:9 is where they differ (4 across, 3 down): filling the
+     * width would stretch the panel a third wider than tall. So the panel is
+     * PILLARBOXED -- drawn at the uniform vertical scale, native 4:3, centred in
+     * [pan_x0, pan_x0 + pan_w) with black margins either side -- and the gap band
+     * under it (the ambient wash, the art, the hinge and the seam mods) is
+     * composed on that same centred column so it stays aligned with the panel,
+     * off a lay whose width IS the panel's. dst2 = dst + pan_x0 gives every band
+     * pass its horizontal origin for free: it walks 0..lay2.w and the pointer
+     * base carries it to the centre.
      *
      * THE TOP HALF IS LEFT FULL WIDTH. Whether a minigame's upper screen is the
      * widened Hor+ 3D field (which should keep the extra width) or a 2D DS raster
      * (which would want the same pillarbox) is a per-scene fact this compose
      * cannot read, and stretching it here would be wrong for the 3D case, so the
      * safe move is to touch only the panel that is unambiguously a 256x192 raster.
-     * Flagged for Tango. Gated on pan_x0 > 0, which is false on every 4:3 tier,
-     * so those build and compose byte-for-byte unchanged. */
+     * Flagged for Tango. GATED ON pan_x0 > 0, which is 0 whenever the run is 4:3
+     * (the toggle off, or any fixed 4:3 tier), so this whole arm is skipped and
+     * the square path below composes byte-for-byte unchanged -- no #ifdef. `top`
+     * is the framebuffer (row stride SCREEN_W); `dst` is the stacked image (row
+     * stride dst_w), so the engine-A copy is row-wise across the two strides. */
     if (lay.pan_x0 > 0) {
         const int px0 = lay.pan_x0, pw = lay.pan_w;
-        const int ry = SCREEN_H / SUB_H;   /* uniform scale, both axes */
+        const int ry = active_h / SUB_H;   /* uniform scale, both axes */
 
         /* Engine A verbatim and full width, exactly as the square path does it. */
-        std::memcpy(dst + (size_t)a_y * dst_w, top,
-                    (size_t)SCREEN_W * SCREEN_H * 4);
+        for (int y = 0; y < active_h; ++y)
+            std::memcpy(dst + (size_t)(a_y + y) * dst_w,
+                        top + (size_t)y * SCREEN_W, (size_t)active_w * 4);
 
         /* Engine B, pillarboxed: black margins, uniform-scaled centred panel. */
-        for (int y = 0; y < SCREEN_H; ++y) {
+        for (int y = 0; y < active_h; ++y) {
             const int sy = y / ry;
             const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
             uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
             for (int x = 0; x < px0; ++x) out[x] = 0xFF000000u;
-            for (int x = px0 + pw; x < SCREEN_W; ++x) out[x] = 0xFF000000u;
+            for (int x = px0 + pw; x < active_w; ++x) out[x] = 0xFF000000u;
             for (int x = 0; x < pw; ++x) {
                 const int sx = x / ry;
                 uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
@@ -4501,7 +4513,7 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
         for (int y = lay.band_y; y < lay.bottom_y; ++y) {
             uint32_t *row = dst + (size_t)y * dst_w;
             for (int x = 0; x < px0; ++x) row[x] = 0xFF000000u;
-            for (int x = px0 + pw; x < SCREEN_W; ++x) row[x] = 0xFF000000u;
+            for (int x = px0 + pw; x < active_w; ++x) row[x] = 0xFF000000u;
         }
 
         /* The band and seam passes on the centred column. lay2.w IS the panel
@@ -4520,26 +4532,31 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
         seam_snow(dst2, dst_w, lay2, evy, to_white);
         return;
     }
-#endif
 
     // ENGINE A, verbatim: it is already faded and already carries the F3
     // overlay, because it is the framebuffer the caller finished with.
     // AT a_y RATHER THAN AT ROW ZERO, which is the one word the headroom
     // changes here: with a headroom the upper screen starts head_h rows down
     // and with none top_y is 0 and this is the memcpy it always was.
-    std::memcpy(dst + (size_t)a_y * dst_w, top,
-                (size_t)SCREEN_W * SCREEN_H * 4);
+    // ROW-WISE across the two strides: `top` is the framebuffer (stride
+    // SCREEN_W), `dst` is the stacked image (stride dst_w == the live width).
+    // On the fixed tiers dst_w == SCREEN_W == active_w and this is the old
+    // contiguous copy; on NTR_WIDE_RT with the toggle off dst_w is 512 and the
+    // framebuffer stride is 1024, so the copy has to step each separately.
+    for (int y = 0; y < active_h; ++y)
+        std::memcpy(dst + (size_t)(a_y + y) * dst_w,
+                    top + (size_t)y * SCREEN_W, (size_t)active_w * 4);
 
     /* ENGINE B. The ratio is a whole number at every tier the port
        builds (1, 2 and 4), and a SHIFT rather than a divide would be wrong the
        day a tier is not a power of two, so it stays a divide. */
-    const int rx = SCREEN_W / SUB_W, ry = SCREEN_H / SUB_H;
-    for (int y = 0; y < SCREEN_H; ++y) {
-        const int sy = ry > 0 ? y / ry : (y * SUB_H) / SCREEN_H;
+    const int rx = active_w / SUB_W, ry = active_h / SUB_H;
+    for (int y = 0; y < active_h; ++y) {
+        const int sy = ry > 0 ? y / ry : (y * SUB_H) / active_h;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
         uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
-        for (int x = 0; x < SCREEN_W; ++x) {
-            const int sx = rx > 0 ? x / rx : (x * SUB_W) / SCREEN_W;
+        for (int x = 0; x < active_w; ++x) {
+            const int sx = rx > 0 ? x / rx : (x * SUB_W) / active_w;
             uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
             if (evy) {
                 /* the same expression walk_window's fade composite runs over

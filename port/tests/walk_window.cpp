@@ -715,9 +715,7 @@ void *hal_camera_new(void);
 int hal_camera_init_resources(void *cam);
 int hal_camera_behavior(void *cam);
 int hal_camera_render(void *cam);
-#ifdef NTR_WIDE169
 void hal_camera_widen_frustum(void);   /* 16:9 object-cull frustum widen */
-#endif
 void func_0203e0ac(void);
 /* run mg16 lane MP3: the ROM's own comms dispatcher, linked through
    port/slice_mp3.txt. It owns the switch that used to be hosted at the call
@@ -1454,7 +1452,13 @@ static void port_exit_place(char *ex, char *player, int z, int beside)
 
 #ifdef NTR_HIRES
 static const int ZOOM = 1;
-#elif defined(NTR_HIRES2)
+#elif defined(NTR_HIRES2) || defined(NTR_WIDE_RT)
+/* NTR_WIDE_RT shares the 2x window: with the toggle off the active image is the
+   512x384 of the 2x tier and 512*2 opens the exact same 1024x768 client the
+   shipped walk_window has always opened; with it on the active image is
+   1024x576 and 1024*2 opens a 2048x1152 client, which the create clamps to the
+   monitor like any other. The window is resizable and present() refits, so this
+   is only the initial size. */
 static const int ZOOM = 2;
 #else
 static const int ZOOM = 3;
@@ -1791,7 +1795,16 @@ static int port_pace_selftest(void)
    A's framebuffer at full size with the other screen as a corner panel inside
    it; there is no "upper half" to prefer, and the overlay goes where it always
    went. Nothing about a level changes. */
+#ifdef NTR_WIDE_RT
+/* The host debug overlay (F3 stats, F5 menu, save toast) is diagnostic UI, not
+   game content, and it is off in normal play. Pin it to the 2x tier's 1x text
+   so a 4:3 (toggle-off) run's overlay is byte-for-byte the shipped one; the wide
+   toggle keeps the same 1x text rather than growing it, which is fine for a
+   diagnostic layer. */
+static const int OVL_SCALE = 1;
+#else
 static const int OVL_SCALE = ntr::SCREEN_W >= 1024 ? 2 : 1;
+#endif
 static const int OVL_LINE = (OVL_GLYPH_H + 2) * OVL_SCALE;
 
 /* WHERE AN OVERLAY PAINTS: one DS screen's worth of 0xAARRGGBB pixels, at
@@ -1831,10 +1844,10 @@ static void ovl_shade(const OvlSurface &fb, int x0, int y0, int w, int h)
     /* half-strength darken of what is already there, so the text reads over
        sky and over stone without hiding the frame behind it */
     for (int y = y0; y < y0 + h; ++y) {
-        if (y < 0 || y >= ntr::SCREEN_H) continue;
+        if (y < 0 || y >= ntr::active_h) continue;
         uint32_t *row = fb.px + (size_t)y * (size_t)fb.stride;
         for (int x = x0; x < x0 + w; ++x) {
-            if (x < 0 || x >= ntr::SCREEN_W) continue;
+            if (x < 0 || x >= ntr::active_w) continue;
             const uint32_t p = row[x];
             row[x] = 0xFF000000u | ((p >> 1) & 0x007F7F7Fu);
         }
@@ -1858,8 +1871,8 @@ static int ovl_text(const OvlSurface &fb, int x0, int y0, const char *s,
                 for (int sy = 0; sy < OVL_SCALE; ++sy)
                     for (int sx = 0; sx < OVL_SCALE; ++sx) {
                         const int fx = px + sx, fy = py + sy;
-                        if (fx < 0 || fx >= ntr::SCREEN_W || fy < 0 ||
-                            fy >= ntr::SCREEN_H)
+                        if (fx < 0 || fx >= ntr::active_w || fy < 0 ||
+                            fy >= ntr::active_h)
                             continue;
                         fb.px[(size_t)fy * (size_t)fb.stride + fx] = rgb;
                     }
@@ -3858,9 +3871,9 @@ static void menu_draw(const OvlSurface &fb)
         if (tw > w) w = tw;
     }
     w += 3 * OVL_ADVANCE * OVL_SCALE;
-    x0 = (ntr::SCREEN_W - w) / 2;
+    x0 = (ntr::active_w - w) / 2;
     if (x0 < 2) x0 = 2;
-    y0 = (ntr::SCREEN_H - (MENU_COUNT + 2) * OVL_LINE) / 2;
+    y0 = (ntr::active_h - (MENU_COUNT + 2) * OVL_LINE) / 2;
     ovl_shade(fb, x0 - 4, y0 - 4, w + 8, (MENU_COUNT + 2) * OVL_LINE + 8);
     ovl_shade(fb, x0 - 4, y0 - 4, w + 8, (MENU_COUNT + 2) * OVL_LINE + 8);
     ovl_text(fb, x0, y0, title, 0xFF80C0FFu);
@@ -4969,8 +4982,14 @@ static void present(void)
     } else {
         bits = &g_present_fb->px[0][0];
         bi = g_present_bi;
-        sw = ntr::SCREEN_W;
-        sh = ntr::SCREEN_H;
+        /* THE SOURCE RECT IS THE ACTIVE EXTENT, not the buffer. On NTR_WIDE_RT
+           with the toggle off the live 4:3 image is active_w x active_h in the
+           top-left of a SCREEN_W-strided framebuffer; the DIB header (g_present_
+           bi) still carries the SCREEN_W stride, so StretchDIBits reads exactly
+           that sub-rectangle. On every fixed tier active == SCREEN_W/SCREEN_H and
+           this is the old value. */
+        sw = ntr::active_w;
+        sh = ntr::active_h;
     }
     /* the largest sw:sh rectangle inside cw x ch. Compared as a cross
        product so the choice is exact rather than a rounded ratio: wider than
@@ -5474,8 +5493,8 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
         }
         if (cx < 0) cx = 0;
         if (cy < 0) cy = 0;
-        if (cx >= ntr::SCREEN_W) cx = ntr::SCREEN_W - 1;
-        if (cy >= ntr::SCREEN_H) cy = ntr::SCREEN_H - 1;
+        if (cx >= ntr::active_w) cx = ntr::active_w - 1;
+        if (cy >= ntr::active_h) cy = ntr::active_h - 1;
         g_mouse_click_x = cx;
         g_mouse_click_y = cy;
         g_mouse_click_new = 1;
@@ -5861,10 +5880,10 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
        scene has booted -- the answer is the gapless one, 512x768, which is
        exactly the window this opened before the gap existed. stack_present_arm
        grows it later, once, when the scene latches its G. */
-    int stw = ntr::STACK_W, sth = ntr::STACK_H;
+    int stw = ntr::active_w, sth = ntr::active_h * 2;
     if (stacked) hal_sub_screen_stacked_size(&stw, &sth);
     RECT r = stacked ? RECT{0, 0, stw, sth}
-                     : RECT{0, 0, ntr::SCREEN_W * ZOOM, ntr::SCREEN_H * ZOOM};
+                     : RECT{0, 0, ntr::active_w * ZOOM, ntr::active_h * ZOOM};
     W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW, FALSE);
     /* ---- WHERE IT OPENS (port mod, Tango's ask: "can it open center screen")
        CW_USEDEFAULT IS NOT A POSITION. It asks Windows for the next slot in
@@ -6234,7 +6253,7 @@ static void host_layout_follow_scene(HWND hwnd, int two_screen, const char *what
     g_present_stack_bi = 0;
     g_stack_gen = ~0u;
 
-    int cw = ntr::SCREEN_W * ZOOM, ch = ntr::SCREEN_H * ZOOM;
+    int cw = ntr::active_w * ZOOM, ch = ntr::active_h * ZOOM;
     if (stacked) hal_sub_screen_stacked_size(&cw, &ch);
     if (hwnd && !g_user_sized && !g_fullscreen && W.AdjustWindowRect_ &&
         W.SetWindowPos_ && W.GetWindowLongA_) {
@@ -6297,7 +6316,7 @@ static void push_camera(const float eye_w[3], const float at_w[3])
        old 55 was a wide-angle lens -- it shrank and warped the world
        around Mario no matter how right the geometry was. */
     const float fovy = 32.9f * 3.14159265f / 180.0f;
-    const float aspect = (float)ntr::SCREEN_W / ntr::SCREEN_H;
+    const float aspect = (float)ntr::active_w / ntr::active_h;
     const float f = 1.0f / tanf(fovy * 0.5f);
     const float zn = 3.0f / 8, zf = 25600.0f / 8;
     float P[16] = {f / aspect, 0, 0, 0,
@@ -6559,11 +6578,11 @@ static int scene_window_run(void)
        opened before the scene latched its screen gap and is still at the
        gapless size, and the first frame's stack_present_arm grows it to match
        and says so on its own line. */
-    int wsw = ntr::STACK_W, wsh = ntr::STACK_H;
+    int wsw = ntr::active_w, wsh = ntr::active_h * 2;
     if (stacked) hal_sub_screen_stacked_size(&wsw, &wsh);
     fprintf(stderr, "[scene] WINDOWED %dx%d, %s, %s\n",
-            stacked ? wsw : ntr::SCREEN_W * ZOOM,
-            stacked ? wsh : ntr::SCREEN_H * ZOOM,
+            stacked ? wsw : ntr::active_w * ZOOM,
+            stacked ? wsh : ntr::active_h * ZOOM,
             stacked ? "STACKED (both DS screens, stylus over the bottom half)"
                     : "corner inset panel",
             budget ? "frame budget set" : "runs until the window closes");
@@ -6819,6 +6838,18 @@ static int scene_window_run(void)
    not as the process entry point. */
 int main(void)
 {
+    /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
+       host_setting_aspect() reads the Aspect key from settings.json (or
+       SM64DS_ASPECT, or the legacy SM64DS_WIDESCREEN) as a RATIO -- width over
+       height, 0 for native -- and ntr::configure_aspect latches the active
+       render size for the whole run: 512x384 (the shipped 4:3 window) at 0,
+       1024x576 at 1.7777778, and the largest rectangle of that ratio inside the
+       wide-maximum buffer for anything else. The framebuffer itself is always
+       that wide maximum, so this only picks how much of it is live -- nothing
+       reallocates, and at 0 every render, HUD, sub-screen and present path is
+       byte-for-byte the 4:3 build. On a non-runtime tier configure_aspect is a
+       no-op. */
+    ntr::configure_aspect(host_setting_aspect());
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address
@@ -11481,15 +11512,16 @@ int main(void)
                 fc_eye(pivot, fceye);
                 fc_push_view(cam, fceye, pivot);
             }
-#ifdef NTR_WIDE169
             /* WIDESCREEN: widen the object-cull frustum to match the Hor+ 3D
                field, AFTER the camera Render just seeded the global Clipper
                (func_0200d954 -> Func_020156DC) and BEFORE the actor buckets test
                it, so ambient actors at the new side margins are no longer culled
-               as off-screen. Host-side, gated on the tier; see
-               hal_camera_widen_frustum in hal/camera_bridges.cpp. */
-            hal_camera_widen_frustum();
-#endif
+               as off-screen. Host-side, gated on the RUNTIME toggle now (not the
+               compile tier): with widescreen off the clipper is left exactly as
+               the ROM seeded it. See hal_camera_widen_frustum in
+               hal/camera_bridges.cpp. */
+            if (ntr::widescreen)
+                hal_camera_widen_frustum();
             /* THE ACTOR RENDER BUCKET GOES HERE, and the reason is the shim
                immediately below. Processing list 5 is the game's own render
                pass -- func_0204322c over slots 9/10/11, in render-priority
@@ -11958,7 +11990,7 @@ int main(void)
             fprintf(stderr,
                     "[w] mario screen box x[%.0f..%.0f] y[%.0f..%.0f] "
                     "(center %d,%d) eye(%.1f,%.1f,%.1f) at(%.1f,%.1f,%.1f)\n",
-                    mnx, mxx, mny, mxy, ntr::SCREEN_W / 2, ntr::SCREEN_H / 2,
+                    mnx, mxx, mny, mxy, ntr::active_w / 2, ntr::active_h / 2,
                     dbg_eye[0], dbg_eye[1], dbg_eye[2], dbg_at[0], dbg_at[1],
                     dbg_at[2]);
         }
@@ -11973,9 +12005,9 @@ int main(void)
            all stand down with it (rb_skip_render); they write host pixels
            only, and they were a third of a replayed frame's cost */
         if (!rb_skip_render()) {
-        for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[0][x] = 0xFF101820u;
-        for (int y = 1; y < ntr::SCREEN_H; ++y)
-            memcpy(fb.px[y], fb.px[0], ntr::SCREEN_W * sizeof(fb.px[0][0]));
+        for (int x = 0; x < ntr::active_w; ++x) fb.px[0][x] = 0xFF101820u;
+        for (int y = 1; y < ntr::active_h; ++y)
+            memcpy(fb.px[y], fb.px[0], ntr::active_w * sizeof(fb.px[0][0]));
         }
         /* the rollback probe's re-run skips the rasteriser (SM64DS_ROLLBACK_DET_SKIP) */
         if (!rb_resim_skip_render() && !rb_skip_render())
@@ -11993,7 +12025,7 @@ int main(void)
            With the panel toggled off this writes nothing. Before the overlay,
            so F3 text stays readable over the panel. */
         if (!rb_skip_render())
-        hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
+        hal_sub_screen_present(&fb.px[0][0], ntr::active_w, ntr::active_h);
 
         /* THE FADE COMPOSITE. The DS master-brightness blend (MASTER_BRIGHT,
            reached through BLDCNT/BLDY at 0x4000050/0x4000054 for the main
@@ -12010,9 +12042,9 @@ int main(void)
             int evy = 0, toWhite = 0;
             if (!rb_skip_render() && port_fader_blend_state(&evy, &toWhite)) {
                 if (evy > 16) evy = 16;
-                for (int y = 0; y < ntr::SCREEN_H; ++y) {
+                for (int y = 0; y < ntr::active_h; ++y) {
                     uint32_t *row = fb.px[y];
-                    for (int x = 0; x < ntr::SCREEN_W; ++x) {
+                    for (int x = 0; x < ntr::active_w; ++x) {
                         uint32_t p = row[x];
                         int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff,
                             b = p & 0xff;
@@ -12108,8 +12140,8 @@ int main(void)
             char wb[96];
             if (!rb_skip_render() && port_vs_match_end_banner(wb, (int)sizeof wb)) {
                 const int tw = (int)strlen(wb) * OVL_ADVANCE * OVL_SCALE;
-                const int wx = (ntr::SCREEN_W - tw) / 2;
-                const int wy = ntr::SCREEN_H / 2 - OVL_LINE;
+                const int wx = (ntr::active_w - tw) / 2;
+                const int wy = ntr::active_h / 2 - OVL_LINE;
                 ovl_shade(surf, wx - 6 * OVL_SCALE, wy - 4 * OVL_SCALE,
                           tw + 12 * OVL_SCALE, OVL_LINE + 8 * OVL_SCALE);
                 ovl_text(surf, wx, wy, wb, 0xFFFFE060u);

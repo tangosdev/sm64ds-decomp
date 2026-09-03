@@ -2065,24 +2065,22 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
        rows. So this test does not need the layout to be right, and it reads
        it anyway -- if a later change ever moves the top screen, the one place
        that decides where it is has to be the one place both mappers read. */
-#ifdef NTR_WIDE169
-    /* WIDESCREEN (16:9) INPUT. This inverse maps a client point to a
-       FRAMEBUFFER pixel, and the framebuffer is the 3D layer the widened Hor+
-       field fills edge to edge (ntr/gx.cpp); present()'s fit already preserves
-       the 1024x576 aspect, so a click on the world still lands on the world.
-       The top HUD reanchor (hal/message_compositor.cpp) moves only the 2D
+    /* WIDESCREEN (16:9) INPUT. When the run is wide this inverse maps a client
+       point to a FRAMEBUFFER pixel, and the framebuffer is the 3D layer the
+       widened Hor+ field fills edge to edge (ntr/gx.cpp); present()'s fit already
+       preserves the active aspect, so a click on the world still lands on the
+       world. The top HUD reanchor (hal/message_compositor.cpp) moves only the 2D
        overlay composited ON TOP of this framebuffer, and no caller of this
-       inverse converts a framebuffer x back into DS-256 HUD space -- the
-       stylus surface is the BOTTOM screen (unchanged 256x192), the top screen
-       is display-only in a level. So the anchor has no input consumer to
-       mirror here and this mapping is already correct. If a future top-screen
-       touch UI needs to hit a reanchored HUD element, the inverse of the
-       message_compositor band split (left/centre/right by source x) belongs
-       here; flagged for Tango in the report. */
-#endif
+       inverse converts a framebuffer x back into DS-256 HUD space -- the stylus
+       surface is the BOTTOM screen (unchanged 256x192), the top screen is
+       display-only in a level. So the anchor has no input consumer to mirror
+       here and this mapping is already correct (and the extent below is active_w/
+       active_h, so a 4:3 run clamps to 512x384 exactly as before). If a future
+       top-screen touch UI needs to hit a reanchored HUD element, the inverse of
+       the message_compositor band split belongs here; flagged for Tango. */
     const ntr::StackLayout &lay = *hal_screen_layout();
-    const int inside = x >= 0 && y >= lay.top_y && x < ntr::SCREEN_W &&
-                       y < lay.top_y + ntr::SCREEN_H;
+    const int inside = x >= 0 && y >= lay.top_y && x < ntr::active_w &&
+                       y < lay.top_y + ntr::active_h;
     /* AND THE FRAMEBUFFER ROW IS THE SOURCE ROW MINUS top_y, which was a no-op
        for as long as top_y was zero and is not one any more: the gapless
        headroom puts head_h rows of image ABOVE the top screen, so a click on
@@ -2100,8 +2098,8 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
     y -= lay.top_y;
     if (x < 0) x = 0;
     if (y < 0) y = 0;
-    if (x >= ntr::SCREEN_W) x = ntr::SCREEN_W - 1;
-    if (y >= ntr::SCREEN_H) y = ntr::SCREEN_H - 1;
+    if (x >= ntr::active_w) x = ntr::active_w - 1;
+    if (y >= ntr::active_h) y = ntr::active_h - 1;
     if (fx) *fx = x;
     if (fy) *fy = y;
     return inside;
@@ -2148,17 +2146,15 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy)
     const ntr::StackLayout &lay = *hal_screen_layout();
     const int band_h = sh - lay.bottom_y;
     const int by = y - lay.bottom_y;
-#ifdef NTR_WIDE169
-    /* WIDESCREEN (16:9): the bottom panel is PILLARBOXED. The picture puts it in
-       image columns [pan_x0, pan_x0 + pan_w) (ntr/ppu_sub.cpp's wide branch), so
-       the stylus surface is that same band and nowhere else: a click in the black
-       margin either side is off the panel, exactly as the letterbox bars and the
-       gap are. pan_x0/pan_w are in the layout's own width; scale them into this
-       mapper's source width so a present() that reports a different source size
-       (the headless probe's fallback) still lands. On a square tier pan_x0 is 0
-       and pan_w is the full width, so this is the plain mapping -- but the branch
-       is compiled only for the wide tier, and the 4:3 build keeps the code below
-       byte-for-byte. */
+    /* The bottom panel is PILLARBOXED when the run is 16:9 and full-width when it
+       is 4:3, and this ONE mapping covers both: it reads lay.pan_x0/pan_w, which
+       the layout sets to (0, full width) on a 4:3 run and to the centred band on
+       a wide one. So with the toggle off px0 is 0, pw is the full width, and this
+       is byte-for-byte the old square mapping; no #ifdef, it self-normalises. A
+       click in a wide run's black margin is off the panel, exactly as a letterbox
+       bar or the gap is. pan_x0/pan_w are in the layout's own width; scale them
+       into this mapper's source width so a present() that reports a different
+       source size (the headless probe's fallback) still lands. */
     const int px0 = (int)((long long)sw * lay.pan_x0 / (lay.w > 0 ? lay.w : 1));
     const int pw  = (int)((long long)sw * lay.pan_w  / (lay.w > 0 ? lay.w : 1));
     const int bx = x - px0;
@@ -2168,14 +2164,6 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy)
         dx = (int)(((long long)bx * ntr::SUB_W) / (pw > 0 ? pw : 1));
         dy = (int)(((long long)by * ntr::SUB_H) / band_h);
     }
-#else
-    const int inside = band_h > 0 && x >= 0 && x < sw && by >= 0 && by < band_h;
-    int dx = 0, dy = 0;
-    if (band_h > 0) {
-        dx = (int)(((long long)x * ntr::SUB_W) / (sw > 0 ? sw : 1));
-        dy = (int)(((long long)by * ntr::SUB_H) / band_h);
-    }
-#endif
     if (dx < 0) dx = 0;
     if (dy < 0) dy = 0;
     if (dx >= ntr::SUB_W) dx = ntr::SUB_W - 1;
