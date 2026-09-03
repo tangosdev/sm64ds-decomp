@@ -24,7 +24,14 @@ struct daObjLava_c : dActor_c {
      * handle looks like -- a fresh call would pass a constant instead. */
     u32 mEffectHandle;
 
-    virtual ~daObjLava_c();                     /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared FIRST. This TU defines every virtual the class has,
+     * so it emits the vtable and RTTI no matter what is declared first -- moving
+     * the declaration last buys nothing. Out of line, mwccarm emits the D2/D1/D0
+     * triple in D0-before-D1 order, but retail puts D1 (0x020b6d28) BELOW D0
+     * (0x020b6d4c), and objisolate then refuses the whole TU for emitting out of
+     * ROM address order. The inline body emits only the retail D1/D0 pair, in
+     * retail order, and emits no D2. */
+    virtual ~daObjLava_c() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();     /* slot  0 */
 

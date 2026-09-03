@@ -1374,6 +1374,11 @@
     "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c6RenderEv": "tangosdev",
     "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_c8BehaviorEv": "andrewboudreau",
+    "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_lava.cpp#daObjLava_c_Spawn": "andrewboudreau"
   }
 }
