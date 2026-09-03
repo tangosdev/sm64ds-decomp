@@ -2104,3 +2104,7 @@ func_ov070_02121fb0  REAL_DECOMP  status/OV070.md#t5  ov070 FlameChompFire(271) 
 #
 # id 254, ov002, Fireball (daFPknBall_c) -- SEATED by this lane.
 func_ov002_020f92e4  REAL_DECOMP  SEATOV002.md#adjudicated  slot 18 OnYoshiTryEat 0x20: ldrb +0x36d, 5 if not 0 and not 4 else 0; match.py strict-reloc byte match
+#
+# id 291, ov002, Bubble (daObjAbuku_c) -- SEATED by this lane.
+func_ov002_020b3518  REAL_DECOMP  SEATOV002.md#adjudicated  InitResources 0x50: MovingCylinderClsn::Init(+0xd4, this, 0x96000, 0x96000, 0x100002, 0), +0x10e = 0x12c, return 1; match.py strict-reloc byte match
+func_ov002_020b33dc  REAL_DECOMP  SEATOV002.md#adjudicated  Behavior 0x13c: +0x10c += 0x400, sin-table bob, ApproachLinear(+0x108, 0x6000, 0x332), UpdatePos(0), Heal(0x300) on the id at +0xf8, DecIfAbove0(+0x10e) / raycast pop, particle 1, cylinder clear+update; match.py strict-reloc byte match

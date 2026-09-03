@@ -427,6 +427,9 @@ void hal_fill_fireball_vtable(void);
 extern unsigned char BowserShockwaves_SpawnInfo[]; /* ov060 0x0211ab30, id 281 */
 void *BowserShockwaves_Spawn(void);             /* ov060 0x021191f4 */
 void hal_fill_bowser_shockwaves_vtable(void);
+extern unsigned char Bubble_SpawnInfo[];        /* ov002 0x02108940, id 291 */
+void *Bubble_Spawn(void);                       /* ov002 0x020b3568 */
+void hal_fill_bubble_vtable(void);
 extern unsigned char Goomba_SpawnInfo[];        /* ov084 0x021308ec */
 void *Goomba_Spawn(void);                       /* ov084 0x0212c0b0 */
 void hal_fill_goomba_vtable(void);
@@ -3058,4 +3061,5 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     {254, "FIREBALL", Fireball_SpawnInfo, Fireball_Spawn, \
      hal_fill_fireball_vtable}, \
     {281, "BOWSER_SHOCKWAVES", BowserShockwaves_SpawnInfo, BowserShockwaves_Spawn, \
-     hal_fill_bowser_shockwaves_vtable},
+     hal_fill_bowser_shockwaves_vtable}, \
+    {291, "BUBBLE", Bubble_SpawnInfo, Bubble_Spawn, hal_fill_bubble_vtable},

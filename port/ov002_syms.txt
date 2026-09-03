@@ -433,3 +433,12 @@ Number_SpawnInfo:0x1c WingFeather_SpawnInfo:0x1c
 # fireball's variant byte (+0x36d); sizes pin to the next symbols (0x14 each).
 Fireball_SpawnInfo:0x1c _ZTV8Fireball:0x7c
 data_ov002_02100320 data_ov002_02100334 data_ov002_02100348
+#
+# ---- gate 210: BUBBLE (291) --------------------------------------------------
+# Bubble_SpawnInfo 0x02108940 (+4 reads 291; :0x1c, the record ends where the
+# table's RTTI prefix begins) and its table, which dsd left UNNAMED at
+# data_ov002_02108964 (the D1 body restores it as _ZTV12daObjAbuku_c; the next
+# dsd symbol data_ov002_021089e0 pins 31 slots, :0x7c). Mounted raw and
+# overwritten slot for slot by hal_fill_bubble_vtable; the fill aliases the
+# _ZTV12daObjAbuku_c spelling onto it.
+Bubble_SpawnInfo:0x1c data_ov002_02108964:0x7c

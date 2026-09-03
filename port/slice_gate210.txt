@@ -42,3 +42,29 @@ src/_ZN16BowserShockwaves16CleanupResourcesEv.c
 src/_ZN16BowserShockwaves8BehaviorEv.cpp
 src/_ZN16BowserShockwavesD1Ev.c
 src/_ZN16BowserShockwavesD0Ev.c
+#
+# ---- BUBBLE (291, ov002) --------------------------------------------------
+# daObjAbuku_c, the air bubble a treasure chest lets go of when it is opened
+# underwater (func_ov064_0211a39c, TreasureChest's open state, linked since
+# w3c; Actor::Spawn(0x123) when Player+0x706 mIsUnderwater is set). Its table
+# is the unnamed data_ov002_02108964 (mounted with the SpawnInfo, see
+# ov002_syms.txt). The class's four own slots are all func_ov002 bodies:
+#   0  func_ov002_020b3518  InitResources  (marker: dsd's daObjAbuku_c name;
+#                                            match.py strict-reloc byte match,
+#                                            ruled REAL_DECOMP)
+#   6  func_ov002_020b33dc  Behavior       (same ruling)
+#   16 func_ov002_020b3298  D1             (flat C, clean)
+#   17 func_ov002_020b32c8  D0 -- NOT ENROLLED: the matched body spells its
+#      table and heap as the VT0 / G0 shadow globals (the PoleLift trap
+#      hal/actor_classes_ov045.cpp documents); host thunk in the fill,
+#      transcribed from that body: table restore, MovingCylinderClsn::D1
+#      +0xd4, Actor::D2, Memory::Deallocate(this, *0x020a0eac).
+# Slots 3 and 9 are ActorBase's own CleanupResources / Render per the relocs.
+src/Bubble_Spawn.c
+src/func_ov002_020b3518.cpp
+src/func_ov002_020b33dc.cpp
+src/func_ov002_020b3298.c
+# Behavior's two helpers: the pop (sound, particle, MarkForDestruction) and
+# the water-surface raycast
+src/func_ov002_020b330c.cpp
+src/func_ov002_020b3344.c

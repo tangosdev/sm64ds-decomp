@@ -187,6 +187,22 @@ static void rs_fill_shared(void *volatile *vt)
     vt[30] = (void *)rs_trap30;
 }
 
+
+/* SM64DS_RS_PROBE=1: one line per Behavior tick for this lane's classes --
+   position and a class-chosen word -- so a headless run can show an actor
+   MOVING, not merely surviving (the Klepto lesson: a quarantined actor also
+   "survives" a census). Off by default, prints nothing. */
+static void rs_probe(const char *cls, void *s, int word)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_RS_PROBE") != 0;
+    if (!on) return;
+    char *c = (char *)s;
+    std::printf("[rsprobe] %s %p pos (%d,%d,%d) word %d\n", cls, s,
+                *(int *)(c + 0x5c) >> 12, *(int *)(c + 0x60) >> 12,
+                *(int *)(c + 0x64) >> 12, word);
+}
+
 // ============================================================================
 // FIREBALL (actor 254, ov002) -- _ZTV8Fireball / _ZTV12daFPknBall_c, 0x0210bf94
 // ============================================================================
@@ -320,4 +336,61 @@ int _ZN16BowserShockwaves13InitResourcesEv(void *self)
 { return ((BowserShockwaves *)self)->BowserShockwaves::InitResources(); }
 int _ZN16BowserShockwaves8BehaviorEv(void *self)
 { return ((BowserShockwaves *)self)->BowserShockwaves::Behavior(); }
+}
+
+// ============================================================================
+// BUBBLE (actor 291, ov002) -- daObjAbuku_c, table data_ov002_02108964
+// ============================================================================
+//
+// The air bubble a treasure chest releases when it is opened underwater
+// (TreasureChest's open state func_ov064_0211a39c: Actor::Spawn(0x123) when
+// the player's mIsUnderwater byte is set, then zeroes the bubble's velocity).
+// A plain Actor build (ActorC2, 276 bytes) with one MovingCylinderClsn at
+// 0xd4. It rises on a sine bob, heals the player it touches (+0xf8 holds the
+// id its cylinder hit) and pops on a timer or when it breaks the surface.
+//
+// dsd named none of its methods (the class shares its base with nothing that
+// carries a name), so every own slot is a func_ov002 body: 0 InitResources
+// (func_ov002_020b3518), 6 Behavior (func_ov002_020b33dc), 16 D1
+// (func_ov002_020b3298). Slot 17, the D0, is a HOST THUNK: the matched body
+// func_ov002_020b32c8 spells its table and the heap as the VT0 / G0 shadow
+// globals (the PoleLift trap), so it is transcribed here instead: table
+// restore, MovingCylinderClsn::D1 at +0xd4, Actor::D2, Deallocate against
+// 0x020a0eac. Slots 3 and 9 are ActorBase's own (relocs), 18..30 defaults.
+extern "C" {
+int func_ov002_020b3518(char *self);     /* slot 0, InitResources */
+int func_ov002_020b33dc(char *self);     /* slot 6, Behavior */
+int *func_ov002_020b3298(int *self);     /* slot 16, D1 */
+extern int data_ov002_02108964[];        /* ov002 mount: the 31-slot table */
+}
+/* The D1 restores the table by its RTTI name. */
+#pragma comment(linker, "/alternatename:__ZTV12daObjAbuku_c=_data_ov002_02108964")
+
+static int __fastcall bub_init(void *s, void *)
+{ return func_ov002_020b3518((char *)s); }
+static int __fastcall bub_behavior(void *s, void *)
+{ rs_probe("BUBBLE", s, *(unsigned short *)((char *)s + 0x10e));
+  return func_ov002_020b33dc((char *)s); }
+static int __fastcall bub_d1(void *s, void *)
+{ return (int)(size_t)func_ov002_020b3298((int *)s); }
+static int __fastcall bub_d0(void *s, void *)
+{
+    char *t = (char *)s;
+    *(void **)t = (void *)data_ov002_02108964;
+    _ZN18MovingCylinderClsnD1Ev(t + 0xd4);
+    _ZN5ActorD2Ev(t);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
+    return (int)(size_t)s;
+}
+
+extern "C" void hal_fill_bubble_vtable(void)
+{
+    void *volatile *vt = (void *volatile *)data_ov002_02108964;
+    rs_fill_shared(vt);
+    vt[0]  = (void *)bub_init;
+    vt[3]  = (void *)rs_clean_base;    /* ROM slot 3: ActorBase::CleanupResources */
+    vt[6]  = (void *)bub_behavior;
+    vt[9]  = (void *)rs_render_base;   /* ROM slot 9: ActorBase::Render */
+    vt[16] = (void *)bub_d1;
+    vt[17] = (void *)bub_d0;
 }
