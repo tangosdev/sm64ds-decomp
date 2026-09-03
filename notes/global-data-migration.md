@@ -319,13 +319,14 @@ cannot disambiguate, so those need `objisolate` work first.
 Sizes are small and tractable (0x4 / 0xc / 0x14 / 0x20, one outlier at 0x600).
 Examples:
 
-```md
-[data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt)  0x0211114c  size 0x04  src/_ZN7Minimap8BehaviorEv.cpp
-[data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt)  0x02114d4c  size 0x0c  src/_ZN5Unagi13InitResourcesEv.cpp
-[data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt)  0x02113f4c  size 0x0c  src/_ZN12WaterSuction13InitResourcesEv.cpp
-[data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt)  0x02140518  size 0x20  [src/func_ov006_020c8a30.c](../src/func_ov006_020c8a30.c)
-[data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt)  0x02103f98  size 0x600 [src/func_ov007_020b8548.c](../src/func_ov007_020b8548.c)
-```
+| Symbol | Address | Size | File |
+|--------|---------|------|------|
+| [data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/_ZN7Minimap8BehaviorEv.cpp` |
+| [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/_ZN5Unagi13InitResourcesEv.cpp` |
+| [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/_ZN12WaterSuction13InitResourcesEv.cpp` |
+| [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | [src/func_ov006_020c8a30.c](../src/func_ov006_020c8a30.c) |
+| [data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt) | 0x02103f98 | 0x600 | [src/func_ov007_020b8548.c](../src/func_ov007_020b8548.c) |
+
 
 Every one is named `data_<module>_<addr>`; **zero** carry a recovered name. So the
 pilot proves the *mechanism* and buys no readability — a separate naming pass would
