@@ -776,11 +776,13 @@ struct PipeRound {
 PipeRound g_pipe[kPipeDepth];
 
 // ===========================================================================
-// ROLLBACK NETCODE (port/rollback). ON BY DEFAULT since the owner's decision
-// of 2026-09-03: g_rollback is true unless settings.json says NetMode
-// "lockstep", SM64DS_NETMODE=lockstep, or the seated session is wider than
-// kRollbackMaxPlayers (the width it is proven to; the install block says so
-// on one line). With it false every line below is dead and the stop-and-wait
+// ROLLBACK NETCODE (port/rollback). OPT-IN since the 0.3.6 hotfix of
+// 2026-09-03: g_rollback is false (lockstep) unless settings.json says NetMode
+// "rollback" or SM64DS_NETMODE=rollback, and even then only when the seated
+// session is no wider than kRollbackMaxPlayers (the width it is proven to;
+// the install block says so on one line). Rollback re-simulates the world on
+// every frame a remote peer moves, which is why it lost the default.
+// With it false every line below is dead and the stop-and-wait
 // / pipelined paths run byte-for-byte as before; a solo run never installs
 // the transport at all, so it is never reached there.
 // status/ROLLBACK.md (the spike) has the numbers
@@ -4314,11 +4316,14 @@ bool comms_loopback_install_from_env() {
     }
 
     // NetMode (port/rollback): settings.json "NetMode": "lockstep" | "rollback",
-    // SM64DS_NETMODE overriding it. ROLLBACK IS THE DEFAULT (owner's decision,
-    // 2026-09-03; hal/host_settings.cpp reads an absent or unparseable file as
-    // rollback). With lockstep g_rollback stays false, which leaves every path
-    // above and below this block byte-for-byte what it was. Rollback runs at
-    // input delay 0 by construction (the delay is what it replaces), and the
+    // SM64DS_NETMODE overriding it. LOCKSTEP IS THE DEFAULT and rollback is
+    // opt-in (0.3.6 hotfix, 2026-09-03: rollback shipped as the default in
+    // 0.3.4 but re-simulates the world every frame a remote peer moves, which
+    // halves the effective tick rate; hal/host_settings.cpp reads an absent or
+    // unparseable file, or a file without the key, as lockstep). With
+    // lockstep g_rollback stays false, which leaves every path above and
+    // below this block byte-for-byte what it was. Rollback runs at input
+    // delay 0 by construction (the delay is what it replaces), and the
     // parent's choice travels in the ACCEPT so a child that asked for the
     // other mode adopts.
     //
