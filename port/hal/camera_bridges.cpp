@@ -15,14 +15,13 @@
 #include "dsstate_seg.h"
 #include "ntr/ppu.h"   /* ntr::SCREEN_W/SCREEN_H for the widescreen frustum seam */
 
-#ifdef NTR_WIDE169
 /* The assembled-triangle counter, for the widescreen probe below and nothing
-   else. FORWARD-DECLARED rather than #included, and INSIDE the tier guard, so
-   that the 4:3 and hires objects built from this file cannot change by so much
-   as a declaration. Same shape hal/player_bridges.cpp uses for the same call. */
+   else. FORWARD-DECLARED rather than #included. The widescreen seam is compiled
+   unconditionally now (the aspect is a runtime choice, not a compile tier), so
+   there is no tier guard left to sit inside. Same shape hal/player_bridges.cpp
+   uses for the same call. */
 #include <cstddef>
 namespace ntr { struct GxTriangle; const GxTriangle *gx_polygons(std::size_t &n); }
-#endif
 
 /* Camera::Render calls View::Render() as a METHOD (its TU declares a local
    `struct View`); src defines the function at C linkage. Same shape as the
@@ -326,7 +325,11 @@ DSSTATE_END
    src's own value and is widened once. Scaling the value that is THERE rather
    than a literal 0x1555 keeps a camera or cutscene that seeds a different aspect
    correct. Empty and uncalled on the 4:3 targets. */
-#ifdef NTR_WIDE169
+/* Compiled unconditionally now, and CALLED only when ntr::widescreen is set
+   (the frame loop guards the one call site). The scale is target/native =
+   (active_w/active_h)/(4/3), which is 1.333 at 16:9 and EXACTLY 1.0 at 4:3, so
+   even if it were called on a 4:3 run it would be a no-op; the call guard keeps
+   the 4:3 clipper untouched regardless. */
 void _ZN7Clipper13Func_0201559CEv(void *self);
 
 /* SM64DS_WIDEN_PROBE=1: PHASE-1 REACHABILITY COUNTER, and the only reason it
@@ -376,7 +379,7 @@ void hal_camera_widen_frustum(void)
                      data_0209f43c[0x4c / 4]);
     long long m4c = data_0209f43c[0x4c / 4];
     data_0209f43c[0x4c / 4] =
-        (int)((m4c * (ntr::SCREEN_W * 3)) / (ntr::SCREEN_H * 4));
+        (int)((m4c * (ntr::active_w * 3)) / (ntr::active_h * 4));
     _ZN7Clipper13Func_0201559CEv(&data_0209f43c);
 }
 
@@ -483,7 +486,6 @@ void hal_camera_widen_frustum_scene(void)
     hal_camera_widen_frustum();
     g_widen_scene_written = data_0209f43c[0x4c / 4];
 }
-#endif
 
 /* Camera::SaveCameraStateBeforeTalk is called ARGLESS by both its callers
    (func_02005324 and func_02009a8c, which the community names func_0200cc5c):

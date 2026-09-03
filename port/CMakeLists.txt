@@ -144,6 +144,24 @@ if(MSVC)
     target_compile_options(ntr_2x PRIVATE /wd4311 /wd4312)
 endif()
 
+# THE RUNTIME-SELECTABLE 16:9 LAYER, and the one walk_window now links. Its
+# framebuffer is the wide maximum (1024x576) but the ACTIVE render size is chosen
+# at boot from the Widescreen settings key (ntr::configure_widescreen): 512x384
+# 4:3 -- byte-for-byte the old 2x window -- when the key is off, the full
+# 1024x576 when it is on. That is what makes one exe present either aspect
+# without a second build. NTR_WIDE_RT is PUBLIC so it reaches walk_window's own
+# sources (ppu.h's dims, the runtime widescreen branches) exactly as the tier
+# defines above reach their targets.
+add_library(ntr_wide_rt STATIC
+    ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
+    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
+target_include_directories(ntr_wide_rt PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
+target_include_directories(ntr_wide_rt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(ntr_wide_rt PUBLIC NTR_WIDE_RT)
+if(MSVC)
+    target_compile_options(ntr_wide_rt PRIVATE /wd4311 /wd4312)
+endif()
+
 # The same layer at 1024x768 for the interactive window; the smokes keep
 # the DS-native lib (their reference pixel counts depend on 256x192).
 add_library(ntr_hires STATIC
@@ -12918,10 +12936,13 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
 target_include_directories(walk_window PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
-# 2x (512x384, window ZOOM 2): the software raster is fill-bound; the
-# hires 1024x768 tier burns ~40ms/frame on the level alone, native
-# 256x192 reads too chunky. 2x is ~12ms -> 60fps with frame pacing.
-target_link_libraries(walk_window PRIVATE ntr_2x)
+# The runtime-selectable 16:9 layer. Off (the default) it renders the 512x384
+# 4:3 window ZOOM 2 the port has always shipped -- the software raster is
+# fill-bound and 2x is ~12ms -> 60fps; on it renders the full 1024x576 16:9. One
+# exe, the Widescreen settings key picks the aspect at boot. Was ntr_2x
+# (NTR_HIRES2, the fixed 512x384 tier); the wide-max buffer with a 4:3 default
+# active size is byte-for-byte that build when the key is off.
+target_link_libraries(walk_window PRIVATE ntr_wide_rt)
 target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
     # this target links hal/cxx_aliases.cpp, which already carries
@@ -13167,49 +13188,16 @@ endif()
 
 
 # ---------------------------------------------------------------------------
-# THE FIRST WIDESCREEN (16:9) TIER: walk_window_wide at 1024x576.
+# WIDESCREEN IS A RUNTIME TOGGLE NOW, not a separate exe.
 #
-# Opt-in and host-layer only. It is walk_window_hires's EXACT source set (the
-# list is copied off that target rather than respelled, so the two cannot drift)
-# built against a new ntr library variant whose only difference is the tier
-# define. NTR_WIDE169 is PUBLIC on ntr_wide, so it reaches every one of this
-# executable's own sources -- gx.cpp's Hor+ field, message_compositor.cpp's HUD
-# reanchor, ppu.h's 1024x576 -- exactly the way NTR_HIRES reaches the hires
-# build. The 4:3 targets (walk_window, walk_window_hires) never see the define
-# and are untouched.
-add_library(ntr_wide STATIC
-    ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
-    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
-target_include_directories(ntr_wide PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
-target_include_directories(ntr_wide PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_compile_definitions(ntr_wide PUBLIC NTR_WIDE169)
-if(MSVC)
-    target_compile_options(ntr_wide PRIVATE /wd4311 /wd4312)
-endif()
-
-# Copy the hires target's source list verbatim (includes the PORT_ROM_CLEAN
-# romdata sources if that arm is on, since they were added by target_sources
-# before this point). The RC is added later in the WIN32 block, same as the
-# other two game-shaped exes.
-get_target_property(_ww_wide_srcs walk_window_hires SOURCES)
-add_executable(walk_window_wide ${_ww_wide_srcs})
-target_include_directories(walk_window_wide PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
-target_link_libraries(walk_window_wide PRIVATE ntr_wide)
-target_compile_definitions(walk_window_wide PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
-    PORT_CXX_ALIASES_LINKED)
-if(PORT_ROM_CLEAN)
-    # The romdata sources are already in the copied list; only the define and
-    # the romblob dependency need repeating here.
-    target_compile_definitions(walk_window_wide PRIVATE PORT_ROM_CLEAN)
-    add_dependencies(walk_window_wide romblob_ready_ww)
-endif()
-if(MSVC)
-    target_compile_options(walk_window_wide PRIVATE /wd4311 /wd4312 /wd4068 /wd4576)
-    target_link_options(walk_window_wide PRIVATE /DYNAMICBASE:NO)
-endif()
+# The old walk_window_wide (a second exe built against a fixed NTR_WIDE169 tier)
+# is gone: walk_window links ntr_wide_rt (defined near the top of this file),
+# whose framebuffer is the wide maximum and whose active render size is chosen at
+# boot from the Widescreen settings key. One binary presents either aspect --
+# 512x384 4:3 (the shipped default) with the key off, 1024x576 16:9 with it on --
+# with no aspect distortion off and no second source set to keep in sync. The
+# NTR_WIDE169 tier (ppu.h) is still defined for a fixed-compile wide build, but
+# nothing here builds one.
 
 
 # The SDAT player on its own: parser, sequencer and mixer with no game code
@@ -13327,7 +13315,6 @@ if(WIN32)
     enable_language(RC)
     target_sources(walk_window PRIVATE res/walk_window.rc)
     target_sources(walk_window_hires PRIVATE res/walk_window.rc)
-    target_sources(walk_window_wide PRIVATE res/walk_window.rc)
 endif()
 
 # ===========================================================================

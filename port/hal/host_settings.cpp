@@ -658,6 +658,15 @@ int g_name_tags = 1;
    on. Read live like the gap keys; the accessor also honours SM64DS_ADVENTURE. */
 int g_adventure_ghosts = 0;
 
+/* Widescreen: 1 when the player asked for the 16:9 presentation. Default 0 (the
+   4:3 window the port has always opened). BOOT-LATCHED, not read live: the
+   framebuffer aspect is chosen once, at boot, and threaded through the whole
+   render path (ntr::configure_widescreen), so unlike NameTags/AdventureGhosts a
+   mid-run change cannot take -- a file written before this key existed reads as
+   the 4:3 default, which is the shipped look. The only reader is walk_window's
+   boot, which calls ntr::configure_widescreen(host_setting_widescreen()). */
+int g_widescreen = 0;
+
 /* ---- PROXIMITY VOICE CHAT, lane VOICE ------------------------------------
    Five keys, all of them host preferences and none of them a mod: nothing
    here touches game state, the lockstep input path, or a single byte the
@@ -954,6 +963,7 @@ void load_once(void)
     g_custom_palette = 0;
     g_name_tags = 1;
     g_adventure_ghosts = 0;
+    g_widescreen = 0;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
     g_padlayout_n = 0;
@@ -1064,6 +1074,10 @@ void load_once(void)
            the keys above: a file written before this key existed reads as one
            that left it off, which is the ROM's solo game. */
         g_adventure_ghosts = json_bool(text, "AdventureGhosts", 0);
+        /* the widescreen aspect, read against its own default of OFF so a file
+           written before this key existed reads as the 4:3 window. Boot-latched:
+           walk_window's boot is the only reader and it reads once. */
+        g_widescreen = json_bool(text, "Widescreen", 0);
         {
             char who[24];
             if (json_str(text, "LovesMeCharacter", who, sizeof who))
@@ -1553,6 +1567,23 @@ extern "C" int host_setting_adventure_ghosts(void)
     if (env >= 0) return env;
     load_once();
     return g_adventure_ghosts;
+}
+
+/* Widescreen: 1 for the 16:9 presentation. SM64DS_WIDESCREEN=0 forces the 4:3
+   window and any other value forces 16:9, so a proof run can capture both
+   aspects off one build without editing a player's file; unset is the file's
+   answer. Read once at boot -- the aspect is latched into the framebuffer and
+   cannot change mid-run. */
+extern "C" int host_setting_widescreen(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_WIDESCREEN");
+        env = e ? ((e[0] == '0' && e[1] == 0) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_widescreen;
 }
 
 /* The C++ predicate the header promises. One reader, so the ghost render and

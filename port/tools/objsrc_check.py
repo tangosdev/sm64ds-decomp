@@ -71,9 +71,10 @@ BUILD_RULE = re.compile(
 # static library it links against. Scoping to these two matters -- the tree
 # builds twenty-odd smoke harnesses out of overlapping source sets, and a
 # basename read across all of them collides constantly for reasons that say
-# nothing about the binary under test. ntr_2x is the one the walk_window target
-# links (ntr and ntr_hires are the 1x and 1024x768 tiers).
-LINK_TARGETS = ("walk_window", "ntr_2x")
+# nothing about the binary under test. ntr_wide_rt is the one the walk_window
+# target links (ntr and ntr_hires are the 1x and 1024x768 tiers); it is the
+# runtime-selectable 16:9 layer that replaced the fixed ntr_2x tier.
+LINK_TARGETS = ("walk_window", "ntr_wide_rt")
 
 
 def object_sources(root, targets=LINK_TARGETS):

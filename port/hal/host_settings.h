@@ -340,6 +340,14 @@ int host_setting_name_tags(void);
    the file's answer). */
 int host_setting_adventure_ghosts(void);
 
+/* Widescreen: 1 for the 16:9 presentation, 0 (the default) for the 4:3 window
+   the port has always opened. BOOT-LATCHED, unlike the keys around it: the
+   aspect is chosen once and threaded into the framebuffer, so a mid-run reload
+   cannot move it. walk_window's boot is the only reader and hands the answer to
+   ntr::configure_widescreen. SM64DS_WIDESCREEN overrides the file (0 forces 4:3,
+   any other value forces 16:9; unset is the file's answer). */
+int host_setting_widescreen(void);
+
 /* ---- CustomPalette: the third Mods key ---------------------------------
    Default 0, and the default is the only setting that is the ROM. 1..3
    pick a palette combo file, palettes/combo<N>.pal in the same folder

@@ -33,7 +33,14 @@ int active_h = 384;
 int active_w = SCREEN_W;
 int active_h = SCREEN_H;
 #endif
+#ifdef NTR_WIDE169
+// The fixed-compile 16:9 tier: the wide branches are ALWAYS on, so the runtime
+// flag they now read is true from the start. (NTR_WIDE_RT starts 4:3 and flips
+// this in configure_widescreen; every 4:3 tier leaves it false.)
+bool widescreen = true;
+#else
 bool widescreen = false;
+#endif
 
 void configure_widescreen(bool on)
 {
@@ -590,7 +597,11 @@ void ppu_display_capture(const uint32_t *src, int w, int h) {
     uint16_t *dst = reinterpret_cast<uint16_t *>(lcdc_addr(block) + off);
     for (int y = 0; y < ch; ++y) {
         const int sy = ry > 0 ? y * ry : (y * h) / SUB_H;
-        const uint32_t *row = src + (size_t)(sy < h ? sy : h - 1) * (size_t)w;
+        /* w/h are the LIVE image extent; the framebuffer's row stride is always
+           SCREEN_W (the buffer max), which equals w on every fixed tier and is
+           1024 on NTR_WIDE_RT with a 512-wide active image. Index by the stride,
+           sample within the extent. */
+        const uint32_t *row = src + (size_t)(sy < h ? sy : h - 1) * (size_t)SCREEN_W;
         for (int x = 0; x < cw; ++x) {
             const int sx = rx > 0 ? x * rx : (x * w) / SUB_W;
             const uint32_t p = row[sx < w ? sx : w - 1];

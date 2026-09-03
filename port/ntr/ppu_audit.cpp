@@ -739,8 +739,8 @@ void ppu_audit_sample(const char *tag) {
                                                : (v[1].y < v[2].y ? v[1].y : v[2].y);
             const float hi_y = v[0].y > v[1].y ? (v[0].y > v[2].y ? v[0].y : v[2].y)
                                                : (v[1].y > v[2].y ? v[1].y : v[2].y);
-            const bool off = hi_x < 0 || lo_x >= (float)SCREEN_W
-                          || hi_y < 0 || lo_y >= (float)SCREEN_H;
+            const bool off = hi_x < 0 || lo_x >= (float)active_w
+                          || hi_y < 0 || lo_y >= (float)active_h;
             if (off) ++g.offscreen;
             if (a < (1.0f / 256.0f)) ++g.degenerate;
             if (!off && a >= (1.0f / 256.0f)) ++g.drawable;
@@ -951,7 +951,7 @@ void ppu_audit_dump() {
 
     std::fprintf(f, "-- 3D TRIANGLES IN SCREEN SPACE, LAST SAMPLE --\n");
     std::fprintf(f, "Framebuffer is %dx%d. x and y are post-divide pixels, so a\n",
-                 (int)SCREEN_W, (int)SCREEN_H);
+                 (int)active_w, (int)active_h);
     std::fprintf(f, "box outside it is geometry the raster cannot reach and a\n");
     std::fprintf(f, "degenerate count equal to the triangle count is a collapsed\n");
     std::fprintf(f, "transform. Both look identical from POLYGONS alone.\n");

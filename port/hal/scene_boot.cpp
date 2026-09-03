@@ -467,13 +467,12 @@ extern "C" int port_graph_block_word0(void);
 void port_actor_tick(void);          /* phases 4/2/3 */
 void port_actor_render(void);        /* phase 5 */
 void port_actor_scene_pass(void);    /* phase 1 */
-#ifdef NTR_WIDE169
-/* THE 16:9 OBJECT-CULL SEAM, hal/camera_bridges.cpp. Both declarations sit
-   inside the tier guard so the 4:3 and hires objects built from this file are
-   unchanged down to the last byte. */
+/* THE 16:9 OBJECT-CULL SEAM, hal/camera_bridges.cpp. Declared unconditionally:
+   the aspect is a RUNTIME choice now, not a compile tier, so there is no tier to
+   guard on. The widen call below is guarded on ntr::widescreen instead, and the
+   probe gates itself on SM64DS_WIDEN_PROBE. */
 void hal_camera_widen_frustum_scene(void);
 void hal_widen_probe_scene_frame(int frame, const char *where);  /* inert unset */
-#endif
 void port_fader_advance(void);
 void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
 /* SM64DS_MG_RESULTS_PROBE (hal/scene_mg.cpp), off unless the variable is set */
@@ -5940,12 +5939,11 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             if (trace) std::fprintf(stderr, "[scene-trace] f%d gx_reset\n", frame);
             ntr::gx_reset();
             if (trace) std::fprintf(stderr, "[scene-trace] f%d actor_render\n", frame);
-#ifdef NTR_WIDE169
             hal_widen_probe_scene_frame(frame, "pre ");
-#endif
             port_actor_render();
-#ifdef NTR_WIDE169
-            /* WIDESCREEN OBJECT CULL, THE SCENE PATH'S HALF. tests/walk_window.cpp
+            /* WIDESCREEN OBJECT CULL, THE SCENE PATH'S HALF, gated on the
+               RUNTIME aspect (ntr::widescreen) rather than a compile tier.
+               tests/walk_window.cpp
                widens the ROM's global Clipper once per frame on the LEVEL path;
                nothing did it here, so every scene in the 16:9 build drew a widened
                PICTURE (ntr/gx.cpp's project()) against a 4:3 CULL and could drop an
@@ -5979,13 +5977,12 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                banner has the three measured shapes. There is exactly one call site
                on this path, and the probe's per-frame m4c line is what keeps that
                honest -- a second call would show as a compounding m4c. */
-            hal_camera_widen_frustum_scene();
-#endif
+            if (ntr::widescreen) hal_camera_widen_frustum_scene();
             if (trace) std::fprintf(stderr, "[scene-trace] f%d clear\n", frame);
-            for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[0][x] = 0xFF101820u;
-            for (int y = 1; y < ntr::SCREEN_H; ++y)
+            for (int x = 0; x < ntr::active_w; ++x) fb.px[0][x] = 0xFF101820u;
+            for (int y = 1; y < ntr::active_h; ++y)
                 std::memcpy(fb.px[y], fb.px[0],
-                            ntr::SCREEN_W * sizeof(fb.px[0][0]));
+                            ntr::active_w * sizeof(fb.px[0][0]));
             if (trace) std::fprintf(stderr, "[scene-trace] f%d gx_render\n", frame);
             ntr::gx_render(fb);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d composite\n", frame);
@@ -6010,11 +6007,9 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             title_oam_tail_zero();
             port_message_composite_engine_a(&fb);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d sub_present\n", frame);
-            hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
+            hal_sub_screen_present(&fb.px[0][0], ntr::active_w, ntr::active_h);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d render done\n", frame);
-#ifdef NTR_WIDE169
             hal_widen_probe_scene_frame(frame, "post");
-#endif
         }
         /* AND AGAIN AFTER THE RENDER, because the title's attract callback
            func_ov007_020b0da0 is reached from the scene's RENDER slot
@@ -6129,8 +6124,8 @@ extern "C" int port_scene_finish(int frames_run)
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
                         "bottom screen, each %dx%d, with %d row(s) of headroom "
                         "above and %d row(s) of %s between them\n",
-                        bmp_stacked, iw, ih, ntr::SCREEN_W, ntr::SCREEN_H, head,
-                        ih - ntr::SCREEN_H * 2 - head,
+                        bmp_stacked, iw, ih, ntr::active_w, ntr::active_h, head,
+                        ih - ntr::active_h * 2 - head,
                         shift ? "the world's own rows, drawn by the top engine "
                                 "at its shifted submission,"
                               : "gap");

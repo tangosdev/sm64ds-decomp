@@ -98,7 +98,7 @@ struct State {
     std::vector<GxVertex> strip;   // vertices accumulated in the current primitive
     int strip_parity = 0;
 
-    int vp_x = 0, vp_y = 0, vp_w = SCREEN_W, vp_h = SCREEN_H;
+    int vp_x = 0, vp_y = 0, vp_w = active_w, vp_h = active_h;
     /* How many VIEWPORT commands have executed since the last gx_reset. The
        default above IS a full-screen rectangle, so a sampled viewport of
        0,0 SCREEN_W x SCREEN_H cannot on its own tell a game-issued
@@ -266,7 +266,6 @@ GxVertex project(int16_t x, int16_t y, int16_t z) {
     const Vec4 v{x * FX12, y * FX12, z * FX12, 1.0f};
     Vec4 c = mul(mul(v, current_pos()), g.proj);
 
-#ifdef NTR_WIDE169
     /* WIDESCREEN 3D FIELD (16:9 Hor+). The ROM builds its projection with a
        4:3 aspect (G3i::PerspectiveW_ divides the x scale by 0x1555). Presented
        on the 1024x576 framebuffer that 4:3 image would be stretched sideways;
@@ -277,15 +276,15 @@ GxVertex project(int16_t x, int16_t y, int16_t z) {
        Hor+, never a vertical squish. It fires ONLY for a perspective load;
        an ortho / 2D projection carries no vertex-dependent w (m[3]/m[7]/m[11]
        all zero) and is left exactly as it was, so the HUD's own 2D geometry is
-       untouched here. clip.x scales by native/target =
-       (4/3) / (SCREEN_W/SCREEN_H) = 0.75, so what sat at the old screen edge
-       moves inward and the new margins reveal world that was off-screen. */
+       untouched here. clip.x scales by native/target = (4/3) / (active_w/
+       active_h): 0.75 at 16:9, and EXACTLY 1.0 at any 4:3 aspect, so with the
+       runtime toggle off (active 512x384) this multiply is the identity and the
+       4:3 field is byte-for-byte the old one -- no #ifdef needed. */
     if (g.proj.m[3] != 0.0f || g.proj.m[7] != 0.0f || g.proj.m[11] != 0.0f) {
         const float widen =
-            (4.0f / 3.0f) * ((float)SCREEN_H / (float)SCREEN_W);
+            (4.0f / 3.0f) * ((float)active_h / (float)active_w);
         c.x *= widen;
     }
-#endif
 
     GxVertex out{};
     out.x = c.x;
@@ -802,10 +801,10 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             // this is exactly the old math.
             const int x1 = p[0] & 0xFF, y1 = (p[0] >> 8) & 0xFF;
             const int x2 = (p[0] >> 16) & 0xFF, y2 = (p[0] >> 24) & 0xFF;
-            g.vp_x = x1 * SCREEN_W / 256;
-            g.vp_y = y1 * SCREEN_H / 192;
-            g.vp_w = (x2 - x1 + 1) * SCREEN_W / 256;
-            g.vp_h = (y2 - y1 + 1) * SCREEN_H / 192;
+            g.vp_x = x1 * active_w / 256;
+            g.vp_y = y1 * active_h / 192;
+            g.vp_w = (x2 - x1 + 1) * active_w / 256;
+            g.vp_h = (y2 - y1 + 1) * active_h / 192;
             ++g.vp_writes;
             break;
         }
@@ -1825,8 +1824,8 @@ void gx_render(Framebuffer &fb) {
         int maxy = static_cast<int>(std::ceil(std::fmax(a.y, std::fmax(b.y, c.y))));
         if (minx < 0) minx = 0;
         if (miny < 0) miny = 0;
-        if (maxx > SCREEN_W - 1) maxx = SCREEN_W - 1;
-        if (maxy > SCREEN_H - 1) maxy = SCREEN_H - 1;
+        if (maxx > active_w - 1) maxx = active_w - 1;
+        if (maxy > active_h - 1) maxy = active_h - 1;
 
         /* EVERYTHING BELOW THAT DOES NOT DEPEND ON THE PIXEL IS COMPUTED ONCE.
            The edge functions were three full expressions per pixel, each
