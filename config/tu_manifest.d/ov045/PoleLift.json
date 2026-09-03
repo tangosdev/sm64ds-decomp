@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
-    "single class label over the whole run (PoleLift, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17ExtendingPlatformD1Ev begins at 0x02111840)",
+    "single class label over the whole run (PoleLift, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17daObjKm2_Nobiru_cD1Ev begins at 0x02111840)",
     "sinit count corroboration: build/tu_map.json records ov045 as 41 functions in 6 candidate TUs with 6 static initialisers and 6 .ctor entries, sinit_vs_tu 'ok', corroborated true, all 5 internal boundaries high",
     "static-initialiser attribution: __sinit_ov045_02112214 is the only one of the six that touches this TU's two .bss SharedFilePtr statics (0x021131a8, 0x021131b0)",
     "build/tu_map.json unit record lists exactly these seven symbols for the span"

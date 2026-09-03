@@ -1226,15 +1226,15 @@ ov045	0x02111618	func_ov045_02111618	_ZN8PoleLift8BehaviorEv	vtable slot 6 (was 
 ov045	0x02111738	func_ov045_02111738	_ZN8PoleLift13InitResourcesEv	vtable slot 0 (was _ZN15FireSeaElevator13InitResourcesEv)
 ov045	0x02111808	func_ov045_02111808	PoleLift_Spawn	spawnfunc
 ov045	0x02111808	PoleLift_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x02111840	func_ov045_02111840	_ZN17ExtendingPlatformD1Ev	vtable slot 16
-ov045	0x02111878	func_ov045_02111878	_ZN17ExtendingPlatformD0Ev	vtable slot 17
-ov045	0x021118c4	func_ov045_021118c4	_ZN17ExtendingPlatform23UpdateColliderTransformEv	InitResources-only helper; writes owned collider transform
-ov045	0x021118f8	func_ov045_021118f8	_ZN17ExtendingPlatform20UpdateModelTransformEv	InitResources-only helper; writes owned Model transform
-ov045	0x02111938	func_ov045_02111938	_ZN17ExtendingPlatform16CleanupResourcesEv	vtable slot 3
-ov045	0x02111970	func_ov045_02111970	_ZN17ExtendingPlatform16OnPendingDestroyEv	vtable slot 12
-ov045	0x02111974	func_ov045_02111974	_ZN17ExtendingPlatform6RenderEv	vtable slot 9
-ov045	0x021119c0	func_ov045_021119c0	_ZN17ExtendingPlatform8BehaviorEv	vtable slot 6
-ov045	0x02111a30	func_ov045_02111a30	_ZN17ExtendingPlatform13InitResourcesEv	vtable slot 0
+ov045	0x02111840	func_ov045_02111840	_ZN17daObjKm2_Nobiru_cD1Ev	vtable slot 16
+ov045	0x02111878	func_ov045_02111878	_ZN17daObjKm2_Nobiru_cD0Ev	vtable slot 17
+ov045	0x021118c4	func_ov045_021118c4	_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv	InitResources-only helper; writes owned collider transform
+ov045	0x021118f8	func_ov045_021118f8	_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv	InitResources-only helper; writes owned Model transform
+ov045	0x02111938	func_ov045_02111938	_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv	vtable slot 3
+ov045	0x02111970	func_ov045_02111970	_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv	vtable slot 12
+ov045	0x02111974	func_ov045_02111974	_ZN17daObjKm2_Nobiru_c6RenderEv	vtable slot 9
+ov045	0x021119c0	func_ov045_021119c0	_ZN17daObjKm2_Nobiru_c8BehaviorEv	vtable slot 6
+ov045	0x02111a30	func_ov045_02111a30	_ZN17daObjKm2_Nobiru_c13InitResourcesEv	vtable slot 0
 ov045	0x02111ad4	func_ov045_02111ad4	ExtendingPlatform_Spawn	spawnfunc
 ov045	0x02111ad4	ExtendingPlatform_Spawn	daObjKm2_Nobiru_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02111bf4	func_ov045_02111bf4	FloatingFloorBfs_Spawn	spawnfunc
@@ -1261,7 +1261,7 @@ ov045	0x02112d98	PoleLift_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile 
 ov045	0x02112dbc	data_ov045_02112dbc	_ZTV8PoleLift	vtable alloc=? (was _ZTV15FireSeaElevator)
 ov045	0x02112e5c	data_ov045_02112e5c	ExtendingPlatform_SpawnInfo	spawninfo
 ov045	0x02112e5c	ExtendingPlatform_SpawnInfo	g_profile_KM2_NOBIRU	reconstructed profile global; literal ROM ID KM2_NOBIRU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x02112e80	data_ov045_02112e80	_ZTV17ExtendingPlatform	vtable alloc=0x328
+ov045	0x02112e80	data_ov045_02112e80	_ZTV17daObjKm2_Nobiru_c	vtable alloc=0x328
 ov045	0x02112f2c	data_ov045_02112f2c	FloatingFloorBfs_SpawnInfo	spawninfo
 ov045	0x02112f2c	FloatingFloorBfs_SpawnInfo	g_profile_KM2_UKISHIMA	reconstructed profile global; literal ROM ID KM2_UKISHIMA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112ffc	data_ov045_02112ffc	TiltingPlatformBfs_SpawnInfo	spawninfo

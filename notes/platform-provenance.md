@@ -401,7 +401,7 @@ as its `const Matrix4x3 &`. Was a `u8` marker plus its pad.
 which lands exactly on the next member), and 0x350 + 0x30 closes on the 0x380
 `SpinningPlatform_Spawn` allocates.
 
-## `include/ExtendingPlatform.h`
+## `include/daObjKm2_Nobiru_c.h`
 
 The `Model` marker's pad ran 0x30 bytes past the end of the object; that space is
 not evidenced and stays explicit padding rather than being folded into the

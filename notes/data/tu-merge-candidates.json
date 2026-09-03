@@ -8602,20 +8602,20 @@
    "start": "0x2111840",
    "end": "0x2111b14",
    "classes": [
-    "ExtendingPlatform"
+    "daObjKm2_Nobiru_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN17ExtendingPlatformD1Ev.cpp",
-    "src/_ZN17ExtendingPlatformD0Ev.c",
+    "src/_ZN17daObjKm2_Nobiru_cD1Ev.cpp",
+    "src/_ZN17daObjKm2_Nobiru_cD0Ev.c",
     "src/func_ov045_021118c4.cpp",
     "src/func_ov045_021118f8.c",
-    "src/_ZN17ExtendingPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN17ExtendingPlatform16OnPendingDestroyEv.c",
-    "src/_ZN17ExtendingPlatform6RenderEv.cpp",
-    "src/_ZN17ExtendingPlatform8BehaviorEv.cpp",
-    "src/_ZN17ExtendingPlatform13InitResourcesEv.cpp",
+    "src/_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv.c",
+    "src/_ZN17daObjKm2_Nobiru_c6RenderEv.cpp",
+    "src/_ZN17daObjKm2_Nobiru_c8BehaviorEv.cpp",
+    "src/_ZN17daObjKm2_Nobiru_c13InitResourcesEv.cpp",
     "src/daObjKm2_Nobiru_c_classInit.c"
    ],
    "ext_mix": {
