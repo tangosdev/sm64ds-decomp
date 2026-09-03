@@ -1,9 +1,9 @@
 {
   "id": "ov045/daObjKm2_Nobiru_c",
   "module": "ov045",
-  "source": "src_tu/actors/daObjKm2_Nobiru_c.cpp",
-  "promoted_source": "src/actors/daObjKm2_Nobiru_c.cpp",
-  "status": "text-verified",
+  "source": "src/actors/d_a_obj_km2_nobiru.cpp",
+  "promoted_source": "src/actors/d_a_obj_km2_nobiru.cpp",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2111840..0x2111ad4, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -119,7 +119,7 @@
       "emitted_storage_address": "0x02112e78",
       "address_point_bias": "0x8",
       "size": "0x84",
-      "evidence": "compiler storage includes the two-word ABI preamble (offset-to-top 0, typeinfo 0x02112e3c); the public address point stays 0x02112e80 and its 31 slots hold this class\u00c3\u0192\u00c2\u00a2\u00c3\u00a2\u00e2\u20ac\u0161\u00c2\u00ac\u00c3\u00a2\u00e2\u20ac\u017e\u00c2\u00a2s seven overrides at 0, 3, 6, 9, 12, 16, 17"
+      "evidence": "compiler storage includes the two-word ABI preamble (offset-to-top 0, typeinfo 0x02112e3c); the public address point stays 0x02112e80 and its 31 slots hold this classÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s seven overrides at 0, 3, 6, 9, 12, 16, 17"
     }
   ],
   "bss": [],

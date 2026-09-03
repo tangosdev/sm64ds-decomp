@@ -68,45 +68,10 @@ src/daObjKm2_Ami_Bou_c_classInit.c:
     complete
     .text start:0x02111808 end:0x02111840
 
-src/_ZN17daObjKm2_Nobiru_cD1Ev.cpp:
+src/actors/d_a_obj_km2_nobiru.cpp:
     complete
-    .text start:0x02111840 end:0x02111878
-
-src/_ZN17daObjKm2_Nobiru_cD0Ev.cpp:
-    complete
-    .text start:0x02111878 end:0x021118c4
-
-src/_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv.cpp:
-    complete
-    .text start:0x021118c4 end:0x021118f8
-
-src/_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv.cpp:
-    complete
-    .text start:0x021118f8 end:0x02111938
-
-src/_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111938 end:0x02111970
-
-src/_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02111970 end:0x02111974
-
-src/_ZN17daObjKm2_Nobiru_c6RenderEv.cpp:
-    complete
-    .text start:0x02111974 end:0x021119c0
-
-src/_ZN17daObjKm2_Nobiru_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021119c0 end:0x02111a30
-
-src/_ZN17daObjKm2_Nobiru_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111a30 end:0x02111ad4
-
-src/daObjKm2_Nobiru_c_classInit.c:
-    complete
-    .text start:0x02111ad4 end:0x02111b14
+    .text start:0x02111840 end:0x02111b14
+    .data start:0x02112e3c end:0x02112efc
 
 src/_ZN16FloatingFloorBfsD1Ev.cpp:
     complete

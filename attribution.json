@@ -1387,6 +1387,16 @@
     "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c6RenderEv": "andrewboudreau",
     "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_c1_peach.cpp#daObjC1Peach_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_c1_peach.cpp#daObjC1Peach_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_nobiru.cpp#daObjKm2_Nobiru_c_classInit": "github-actions[bot]"
   }
 }
