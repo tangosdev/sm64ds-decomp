@@ -8358,16 +8358,16 @@
    "start": "0x2112db4",
    "end": "0x2112f10",
    "classes": [
-    "ShutterHmc"
+    "daObjCvShutter_c"
    ],
    "n_functions_map": 6,
    "n_files": 6,
    "files": [
-    "src/_ZN10ShutterHmcD1Ev.cpp",
-    "src/_ZN10ShutterHmcD0Ev.c",
-    "src/_ZN10ShutterHmc16CleanupResourcesEv.cpp",
-    "src/_ZN10ShutterHmc8BehaviorEv.cpp",
-    "src/_ZN10ShutterHmc13InitResourcesEv.cpp",
+    "src/_ZN16daObjCvShutter_cD1Ev.cpp",
+    "src/_ZN16daObjCvShutter_cD0Ev.c",
+    "src/_ZN16daObjCvShutter_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCvShutter_c8BehaviorEv.cpp",
+    "src/_ZN16daObjCvShutter_c13InitResourcesEv.cpp",
     "src/daObjCvShutter_c_classInit.c"
    ],
    "ext_mix": {

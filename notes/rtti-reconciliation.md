@@ -158,7 +158,7 @@ Each row: the tree named an ancestor and skipped the class in between.
     daObjFlMaruta_c  (FallBlockLll)  : daObjMaruta_c      tree said dBgActor_c
     daObjHmMaruta_c  (daObjHmBskt_c)     : daObjMaruta_c      tree said dBgActor_c
     daObjBSwdoor_c   (daObjBSwdoor_c)    : daObjSwdoor_c      tree said Platform
-    daObjCvShutter_c (ShutterHmc)    : daObjSwdoor_c      tree said Platform
+    daObjCvShutter_c (daObjCvShutter_c)    : daObjSwdoor_c      tree said Platform
     daObjFl_Ukiyuka_c                : daObjUkiyuka_c     tree said Platform
     daDonketu_c      (Bully)         : daOts_c            tree said Enemy
     daBDonketu_c     (BigBully)      : daOts_c            tree said Enemy
@@ -288,7 +288,7 @@ headers that distinguishes `daObjDorifu_c` from `Platform`, so a generated
 `daObjDorifu_c` would be a class whose entire content is inherited.
 
 The tell that identity is weak evidence: `FallBlockLll` (family `daObjMaruta_c`) has the
-**same** header body as `daObjBSwdoor_c`/`ShutterHmc` (family `daObjSwdoor_c`). Identical
+**same** header body as `daObjBSwdoor_c`/`daObjCvShutter_c` (family `daObjSwdoor_c`). Identical
 bodies across *different* ROM bases means the identity reflects how little the generator
 found, not a shared layout.
 

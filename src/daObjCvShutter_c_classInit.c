@@ -4,13 +4,13 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int _ZTV13daObjSwdoor_c[];
-extern int _ZTV10ShutterHmc[];
+extern int _ZTV16daObjCvShutter_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV13daObjSwdoor_c */
 /* Reconstructed source-style name: SM64DS proves daObjCvShutter_c through RTTI,
  * allocation size, most-derived vtable identity, and the CV_SHUTTER registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
- * not preserved. The project's ShutterHmc implementation aliases remain
+ * not preserved. The project's daObjCvShutter_c implementation aliases remain
  * unchanged. Historical alias: ShutterHmc_Spawn. */
 int *daObjCvShutter_c_classInit(void)
 {
@@ -18,7 +18,7 @@ int *daObjCvShutter_c_classInit(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV13daObjSwdoor_c;
-        p[0] = (int)_ZTV10ShutterHmc;
+        p[0] = (int)_ZTV16daObjCvShutter_c;
     }
     return p;
 }
