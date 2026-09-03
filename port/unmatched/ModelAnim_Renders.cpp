@@ -563,7 +563,8 @@ int _ZN8YoshiEgg6RenderEv(void *selfv)
    numbering and Virtual18 in the host array (measured: a placed switch on
    level 0 faulted c0000005 in Model::Virtual10 through Virtual18 -> Virtual10
    with a null matrix on its first drawn frame). The matched TU stays OFF
-   slice_gate212.txt; this body is the one line it means. */
+   slice_gate212.txt; this body is the one line it means.
+   PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
 int _ZN14QuestionSwitch6RenderEv(void *selfv)
 {
     /* ((D *)this)->b.m(0) */
