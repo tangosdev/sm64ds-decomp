@@ -434,7 +434,7 @@ ov006	0x021250e4	func_ov006_021250e4	_ZN10dScMgBSC_c14StateDealCardsEv	coined: R
 ov006	0x02125248	func_ov006_02125248	_ZN10dScMgBSC_c15OnGroundPoundedEv	legacy recovered name stands uncontradicted; vtable slot 21 of dScMgBSC_c
 ov006	0x0212527c	func_ov006_0212527c	_ZN10dScMgBSC_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgBSC_c
 ov006	0x02125364	func_ov006_02125364	_ZN10dScMgBSC_c13OnYoshiTryEatEi	legacy recovered name stands uncontradicted; vtable slot 18 of dScMgBSC_c
-ov006	0x021255f8	func_ov006_021255f8	MgLuckyStars_Spawn	spawnfunc
+ov006	0x021255f8	func_ov006_021255f8	dScMgBSC_c_classInit	reconstructed classInit; unique MG_BS_CARD profile + RTTI-proven class + allocation/vtable shape; Lucky Stars remains the English minigame identity, while exact original source spelling is not preserved
 ov006	0x0212a520	func_ov006_0212a520	MgSnowballSlalom_Spawn	spawnfunc
 ov006	0x0213badc	data_ov006_0213badc	MgSortOrSplode_SpawnInfo	spawninfo
 ov006	0x0213bc50	data_ov006_0213bc50	MgPicturePoker_SpawnInfo	spawninfo
