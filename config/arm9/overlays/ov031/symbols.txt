@@ -1,9 +1,9 @@
-_ZN25SlideDecorationSilverStarD1Ev kind:function(arm,size=0x30) addr:0x021111a0
-_ZN25SlideDecorationSilverStarD0Ev kind:function(arm,size=0x44) addr:0x021111d0
+_ZN18daObjHsBillboard_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN18daObjHsBillboard_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov031_02111214 kind:function(arm,size=0x40) addr:0x02111214
-_ZN25SlideDecorationSilverStar16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111254
-_ZN25SlideDecorationSilverStar6RenderEv kind:function(arm,size=0x28) addr:0x02111280
-_ZN25SlideDecorationSilverStar13InitResourcesEv kind:function(arm,size=0x9c) addr:0x021112a8
+_ZN18daObjHsBillboard_c16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111254
+_ZN18daObjHsBillboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
+_ZN18daObjHsBillboard_c13InitResourcesEv kind:function(arm,size=0x9c) addr:0x021112a8
 SlideDecorationBlueSmiley_Spawn kind:function(arm,size=0x38) addr:0x02111344
 SlideDecorationOrangeSmiley_Spawn kind:function(arm,size=0x38) addr:0x0211137c
 SlideDecorationYellowStar_Spawn kind:function(arm,size=0x38) addr:0x021113b4
@@ -55,7 +55,6 @@ SlideDecorationYellowStar_SpawnInfo kind:data(any) addr:0x02111928 ambiguous
 data_ov031_0211192c kind:data(any) addr:0x0211192c ambiguous
 SlideDecorationOrangeSmiley_SpawnInfo kind:data(any) addr:0x02111944 ambiguous
 SlideDecorationBlueSmiley_SpawnInfo kind:data(any) addr:0x02111960 ambiguous
-_ZTV25SlideDecorationSilverStar kind:data(any) addr:0x02111984
 _ZTV18daObjHsBillboard_c kind:data(any) addr:0x02111984
 data_ov031_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov031_02111a00 kind:bss addr:0x02111a00
