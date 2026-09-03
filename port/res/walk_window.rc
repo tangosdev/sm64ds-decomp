@@ -17,8 +17,8 @@
 1 ICON "walk_window.ico"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,3,4,0
- PRODUCTVERSION 0,3,4,0
+ FILEVERSION 0,3,6,0
+ PRODUCTVERSION 0,3,6,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
  FILEFLAGS 0x0L
  FILEOS VOS_NT_WINDOWS32
@@ -31,12 +31,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Tango"
             VALUE "FileDescription", "SM64DS PC Port"
-            VALUE "FileVersion", "0.3.4"
+            VALUE "FileVersion", "0.3.6"
             VALUE "InternalName", "walk_window"
             VALUE "LegalCopyright", "Fan decompilation project. Not affiliated with or endorsed by Nintendo."
             VALUE "OriginalFilename", "walk_window.exe"
             VALUE "ProductName", "SM64DS Port"
-            VALUE "ProductVersion", "0.3.4"
+            VALUE "ProductVersion", "0.3.6"
         END
     END
     BLOCK "VarFileInfo"
