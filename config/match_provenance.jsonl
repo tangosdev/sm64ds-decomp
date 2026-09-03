@@ -692,3 +692,4 @@
 {"id":"ov006:0x020f3c0c","module":"ov006","addr":34552844,"name":"func_ov006_020f3c0c","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_020f3c0c.c"}
 {"id":"ov006:0x020f3e68","module":"ov006","addr":34553448,"name":"func_ov006_020f3e68","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_020f3e68.c"}
 {"id":"ov006:0x020f593c","module":"ov006","addr":34560316,"name":"func_ov006_020f593c","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_020f593c.c"}
+{"id":"ov006:0x02123428","module":"ov006","addr":34747432,"name":"func_ov006_02123428","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_02123428.cpp"}
