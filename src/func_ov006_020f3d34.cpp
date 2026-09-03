@@ -3,7 +3,7 @@ extern "C" void func_02012790(int a);
 extern "C" void func_ov004_020b5dd4(void);
 namespace Sound { void PlayBank2_2D(unsigned int); }
 
-extern "C" void func_ov006_020f3d34(char *self)
+extern "C" void _ZN13dScMgMemory_c9JudgePairEv(char *self)
 {
     int a, b;
     unsigned char *ea, *eb;

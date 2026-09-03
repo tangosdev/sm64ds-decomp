@@ -3,7 +3,7 @@ extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern s16 data_02082214[];
 extern u16* data_ov006_0213d09c[];
 
-void func_ov006_020f43c4(char* self, int i)
+void _ZN13dScMgMemory_c8CardMoveEi(char* self, int i)
 {
     int i2 = i * 2;
     u16* row = data_ov006_0213d09c[*(u8*)(self + 0x533c)];

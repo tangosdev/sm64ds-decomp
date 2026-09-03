@@ -5,7 +5,7 @@ extern void func_ov006_020c0c80(void *c);
 extern void func_ov006_020c0d68(char *c);
 extern char *data_ov004_020beb68;
 
-void func_ov006_020f4888(char *self)
+void _ZN13dScMgMemory_c10ResultWaitEv(char *self)
 {
     if (*(unsigned short *)(self + 0x5324) != 0) {
         *(unsigned short *)(((int)self + 0x5324)) -= 1;

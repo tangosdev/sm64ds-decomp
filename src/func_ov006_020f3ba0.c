@@ -1,4 +1,4 @@
-void func_ov006_020f3ba0(char *c, int i){
+void _ZN13dScMgMemory_c10PlayerDropEi(char *c, int i){
     short *e = (short*)(c + 0x52d6 + i*0x14);
     if(*(unsigned short*)e != 0){
         *e = *(unsigned short*)e - 1;

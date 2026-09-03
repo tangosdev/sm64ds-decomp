@@ -1,4 +1,4 @@
-void func_ov006_020f3964(char* c)
+void _ZN13dScMgMemory_c12UpdateCursorEv(char* c)
 {
     if (*(unsigned char*)(c + 0x5000 + 0x310) == 0)
         return;

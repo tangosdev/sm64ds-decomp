@@ -1,3 +1,3 @@
-void func_ov006_020f3a10(void)
+void _ZN13dScMgMemory_c10PlayerWaitEi(void)
 {
 }

@@ -2,7 +2,7 @@
 extern int data_0209d4b8;
 int RandomIntInternal(int *seed);
 
-void func_ov006_020f4cd8(char *c)
+void _ZN13dScMgMemory_c12ShuffleCardsEv(char *c)
 {
     int slot;
     int k;

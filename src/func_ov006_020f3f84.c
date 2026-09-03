@@ -19,7 +19,7 @@ typedef struct Big
     unsigned char mode;
 } Big;
 
-void func_ov006_020f3f84(Big *p, int i)
+void _ZN13dScMgMemory_c11CardFlyAwayEi(Big *p, int i)
 {
     int j;
     int n;

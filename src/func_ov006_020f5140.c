@@ -1,8 +1,8 @@
-extern void func_ov006_020f3f10(void* c);
-extern void func_ov006_020f3d34(void* c);
-extern void func_ov006_020f3c90(void* c);
-void func_ov006_020f5140(void* c) {
-    func_ov006_020f3f10(c);
-    func_ov006_020f3d34(c);
-    func_ov006_020f3c90(c);
+extern void _ZN13dScMgMemory_c11UpdateCardsEv(void* c);
+extern void _ZN13dScMgMemory_c9JudgePairEv(void* c);
+extern void _ZN13dScMgMemory_c13CheckFinishedEv(void* c);
+void _ZN13dScMgMemory_c10StateJudgeEv(void* c) {
+    _ZN13dScMgMemory_c11UpdateCardsEv(c);
+    _ZN13dScMgMemory_c9JudgePairEv(c);
+    _ZN13dScMgMemory_c13CheckFinishedEv(c);
 }

@@ -1,6 +1,6 @@
 void func_ov006_020c1604(char* c, int unused, short a2, int a3);
 
-void func_ov006_020f4c38(char* c){
+void _ZN13dScMgMemory_c10RoundStartEv(char* c){
     *(short*)(c+0x5326) = 0;
     *(short*)(c+0x5328) = 0;
     if (*(unsigned char*)(c+0x533c) >= 2)

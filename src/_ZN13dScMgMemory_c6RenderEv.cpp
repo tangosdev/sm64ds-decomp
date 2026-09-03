@@ -19,6 +19,9 @@ extern "C" {
 void func_ov006_020c0aa8(char *p);
 void func_ov004_020b1bc8(char *c, int a, int b, int d);
 void func_ov006_020c1804(char *p);
+void _ZN13dScMgMemory_c11DrawMessageEv(char *c);
+void _ZN13dScMgMemory_c10DrawCursorEv(char *c);
+void _ZN13dScMgMemory_c9DrawCardsEv(char *c);
 }
 
 s32 dScMgMemory_c::Render()
@@ -28,9 +31,9 @@ s32 dScMgMemory_c::Render()
     func_ov006_020c0aa8(c + 0x4660);
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b6430();
-    func_ov006_020f38f0(c);
-    func_ov006_020f392c(c);
-    func_ov006_020f3e68(c);
+    _ZN13dScMgMemory_c11DrawMessageEv(c);
+    _ZN13dScMgMemory_c10DrawCursorEv(c);
+    _ZN13dScMgMemory_c9DrawCardsEv(c);
     func_ov006_020c1804(c + 0x4f38);
     return 1;
 }
