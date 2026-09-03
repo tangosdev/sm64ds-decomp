@@ -170,6 +170,15 @@ int      g_keep_actor_render = 0;    // SM64DS_ROLLBACK_ACTOR_RENDER=1: replay r
 // rewound at once) costs several smooth frames of catch-up instead of one
 // long one. 0 = unbounded (the shipped behaviour). SM64DS_ROLLBACK_SPREAD.
 int      g_spread = 0;
+// THE BUDGET (port/rollback follow-up, the per-frame re-sim cap): the spread
+// by time rather than by count. A replay stops to present as soon as the
+// frame's elapsed work plus what a rendered frame costs on this machine
+// (g_render_ema, the loop body of the frames that rendered, smoothed)
+// would pass g_budget_ms, so no presented frame carries more re-run than
+// fits under the budget. SM64DS_ROLLBACK_BUDGET_MS, default 33 (two 60 Hz
+// periods); 0 turns it off. The count spread and the budget both apply.
+double   g_budget_ms = 33.0;
+double   g_render_ema = 0;
 int      g_spread_used = 0;          // replayed frames since the last present
 bool     g_spread_present = false;   // the next replayed frame renders and presents
 bool     g_presenting = false;       // ... and this is that frame
@@ -194,6 +203,7 @@ double   g_body_sum = 0, g_between_sum = 0, g_boundary_sum = 0, g_sound_sum = 0;
 double   g_real_t0 = 0;              // 0 = no real frame open
 double   g_live_t0 = 0;              // when the ring went live (wall clock)
 unsigned long long g_real_frames = 0, g_real_outliers = 0;
+unsigned long long g_budget_presents = 0;   // replays the budget split
 unsigned long long g_rb_at_begin = 0, g_replayed_at_begin = 0;
 Stat g_rp[8];                        // replayed frames, per loop phase
 static const char *const kPhase[8] = {
@@ -265,6 +275,7 @@ void read_env()
     g_no_render_skip = getenv("SM64DS_ROLLBACK_FULL_RESIM") != 0;
     g_keep_actor_render = getenv("SM64DS_ROLLBACK_ACTOR_RENDER") != 0;
     if (const char *s = getenv("SM64DS_ROLLBACK_SPREAD")) g_spread = atoi(s);
+    if (const char *b = getenv("SM64DS_ROLLBACK_BUDGET_MS")) g_budget_ms = atof(b);
     if (g_spread < 0) g_spread = 0;
 }
 
@@ -563,17 +574,21 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         size_t j = i;
         while (j < n && want[j] != got[j]) ++j;
         differing += j - i;
+        size_t outside = 0;
         if (unexplained)
             for (size_t q = i; q < j; ++q)
-                if (!in_sound_queue(got + q)) ++*unexplained;
+                if (!in_sound_queue(got + q)) { ++*unexplained; ++outside; }
         if (first == (size_t)-1) first = i;
-        if (ranges < 8)
+        // the first 8 ranges, and EVERY range with a byte outside the sound
+        // queue (those are the verdict; the queue's own are the noise)
+        if (ranges < 8 || outside)
             fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
-                    " now %02x %02x %02x %02x\n", name, i, j - i,
+                    " now %02x %02x %02x %02x%s\n", name, i, j - i,
                     (unsigned char)want[i], (unsigned char)want[i + 1],
                     (unsigned char)want[i + 2], (unsigned char)want[i + 3],
                     (unsigned char)got[i], (unsigned char)got[i + 1],
-                    (unsigned char)got[i + 2], (unsigned char)got[i + 3]);
+                    (unsigned char)got[i + 2], (unsigned char)got[i + 3],
+                    outside ? "  <-- OUTSIDE the sound command queue" : "");
         if (ranges < 8 && name[0] == 'a') name_arena_addr(i);
         ++ranges;
         i = j;
@@ -616,6 +631,9 @@ void report()
                 secs > 0 ? g_rollbacks / secs : 0.0,
                 100.0 * g_rollbacks / g_real_frames,
                 g_rollbacks ? (double)g_frames_replayed / g_rollbacks : 0.0);
+        fprintf(stderr, "[rollback] budget: %.1f ms (spread %d) -> %llu replay(s) split "
+                "across frames, render estimate %.2f ms\n", g_budget_ms, g_spread,
+                g_budget_presents, g_render_ema);
     }
     for (int p = 0; p < 8; ++p) print_stat(kPhase[p], g_rp[p]);
     if (g_local_probe)
@@ -757,11 +775,17 @@ void rb_frame_begin(void)
 {
     if (!port::comms_rb_mode() || !g_ring_live) return;
     g_t_iter = now_ms();
-    if (g_replaying && !g_spread_present) return;
-    // a real frame, or the replayed frame the spread presents: either way a
-    // frame the player sees, and the one the real-frame stat measures
+    // the replayed frame the spread or the budget presents renders and
+    // paces like a real one
     g_presenting = g_replaying && g_spread_present;
-    g_real_t0 = now_ms();
+    // The real frame stays OPEN across a replay: it opens at the first loop
+    // iteration after the last presented boundary and closes at the next
+    // boundary the player sees (a settled real frame, or the replayed frame
+    // the spread presents). A split replay is therefore measured as the
+    // presented chunks the player sees, each from its first tick to its
+    // present, with nothing between two presents left out.
+    if (g_real_t0 > 0) return;
+    g_real_t0 = g_t_iter;
     g_rb_at_begin = g_rollbacks;
     g_replayed_at_begin = g_frames_replayed;
 }
@@ -774,12 +798,25 @@ void rb_frame_end(int *frame, int selftest)
     g_last_presented = presented;
     const double t_entry = now_ms();
     if (g_t_body_end > 0) g_between_sum += t_entry - g_t_body_end;
+    // what a frame that renders costs here (the loop body of this iteration,
+    // when it rendered), for the budget's estimate of the present to come
+    if ((!was_replaying || presented) && g_t_body_end > 0 && g_t_iter > 0) {
+        const double body = g_t_body_end - g_t_iter;
+        g_render_ema = g_render_ema > 0 ? g_render_ema * 0.9 + body * 0.1 : body;
+    }
     rb_frame_end_body(frame, selftest);
     g_boundary_sum += now_ms() - t_entry;
     // the spread's count: replayed frames since the last present
     if (!was_replaying || presented) g_spread_used = 0;
     else ++g_spread_used;
     g_spread_present = g_replaying && g_spread > 0 && g_spread_used >= g_spread;
+    // ... and the budget: present now if one more tick-only frame and then
+    // the rendered frame would not fit under it
+    if (g_replaying && !g_spread_present && g_budget_ms > 0 && g_real_t0 > 0 &&
+        (now_ms() - g_real_t0) + g_render_ema >= g_budget_ms) {
+        g_spread_present = true;
+        ++g_budget_presents;
+    }
     if ((!g_replaying || presented) && g_real_t0 > 0) {
         const double ms = now_ms() - g_real_t0;
         // a frame over a second is a load, a stall or the session forming,

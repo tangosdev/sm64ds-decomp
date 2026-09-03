@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // ---- the ARM9-side globals, as the matched code sees them ---------------
 extern "C" {
@@ -877,8 +878,16 @@ extern "C" void sdat_host_tick(void)
     // other core consumes after), and it matters here because the recycle and
     // the volume ramps func_0204fafc queues have to reach the same drain as
     // everything else the frame sent.
+    // SM64DS_SND_SLOW_MS=<n>: name any drain over n ms by its three parts
+    // (the ARM9 sound frame, the queue drain, the output push), for the
+    // rollback lane's frame budget. Off unless set.
+    static double slow_ms = -1;
+    if (slow_ms < 0) { const char *e = getenv("SM64DS_SND_SLOW_MS"); slow_ms = e ? atof(e) : 0; }
+    const clock_t q0 = slow_ms > 0 ? clock() : 0;
     sd_sound_frame_host();
+    const clock_t q1 = slow_ms > 0 ? clock() : 0;
     sd_consumer_tick();
+    const clock_t q2 = slow_ms > 0 ? clock() : 0;
 
     // SM64DS_SND_MUSIC=<seq id> starts a BGM through the game's OWN front
     // door on the first tick. The walking harness never reaches the level
@@ -916,4 +925,11 @@ extern "C" void sdat_host_tick(void)
     }
 
     sd_out_push();
+    if (slow_ms > 0) {
+        const double k = 1000.0 / CLOCKS_PER_SEC;
+        const double a = (clock() - q0) * k;
+        if (a >= slow_ms)
+            fprintf(stderr, "[snd-slow] drain %.1f ms: sound_frame %.1f consumer %.1f "
+                    "out_push %.1f\n", a, (q1 - q0) * k, (q2 - q1) * k, a - (q2 - q0) * k);
+    }
 }
