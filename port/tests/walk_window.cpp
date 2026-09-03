@@ -11821,8 +11821,13 @@ int main(void)
             if (fx_tr) ntr::gx_polygons(fx_before);
             {
                 const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
-                if (!rb_skip_render())
-                    port_particle_render();
+                /* port/rollback: the particle submission RUNS in a replayed
+                   frame. It is not render-only: the DET rung on VS map 0
+                   showed a 16-bit countdown per 0x78-byte particle entry
+                   advanced here (8 skipped renders, 8 steps short), so it
+                   belongs with the Stage::Render spans the tick-only re-sim
+                   keeps, not with the pixel work it drops. */
+                port_particle_render();
                 if (rb_probe_mode()) rb_note(RB_PARTICLE, rb_now_ms() - rb_t);
             }
             if (fx_tr) {
