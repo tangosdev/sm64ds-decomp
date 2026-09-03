@@ -618,3 +618,62 @@ not, the same way the sparkle and fire effects already did. Proved twice
 more on map 0 alone and once across all four courses at once, all clean;
 the multiplayer and moving-peer checks and the full test battery were
 run again on the same build and are still green.
+
+### 9.5 The rebase, and a build-cache scare that was not a bug
+
+Two more things happened closing this out, both worth naming so nobody
+re-chases them.
+
+REBASED ONTO CONS 1192d9cee. This branch's base (f1b05e8fe) predated
+SEATCAMERATAG (1192d9cee, camera tag 333 seated by address); the two
+commits between them touch no file this lane owns
+(port/hal/rollback.cpp, player_bridges.cpp, tests/walk_window.cpp,
+status/ROLLBACK_SHIP.md), so `git rebase 1192d9cee` replayed clean, no
+conflicts. It also explains a battery red that showed up first: a stale
+build/port-kit (a long-lived worktree binary directory, not rebuilt in
+this session before now) had a baked romblob table one rebase behind and
+romblob_verify failed on CameraTag_SpawnInfo not being in it -- a
+build-kit staleness, not code, and `rm -rf build/port-kit` before the
+battery's next run cleared it the way section 4.2 and 8's own notes said
+a fresh kit configure would.
+
+A SECOND, LOUDER RED, AND WHERE IT ACTUALLY WAS. Deleting build/port-kit
+uncovered a real-looking one: default boot (a bare launch, no
+SM64DS_* env, which is ROLLBACK by section 8's default) failed rc=1 at
+frame 0, reproducibly, while NetMode lockstep on the same binary ran 300
+frames clean. Bisecting by hand (checking out the pre-fix files, stubbing
+hal_player_texseq_tick's body, adding entry/exit traces) chased it
+through several contradictory results -- a stub passed, a fully-traced
+real body passed and was never even entered, the untouched committed code
+failed -- because none of those rebuilds ever cleared build/port's own
+incremental object cache, which had accumulated four back-to-back
+edit/rebuild cycles in the same directory. `rm -rf build/port` and one
+clean rebuild of the exact committed tree (no edits at all) ran default
+boot clean 6/6, and DET (all four arenas + det8), PAIR and one MOVE arm
+all re-passed on that same clean binary (build/tmp/det_clean_final.log,
+pair_clean_final.log, move_clean_final.log). The lesson for the next
+session bisecting a boot-time crash in this worktree: wipe build/port (or
+build/port-kit) before trusting a rebuild that follows several rapid
+in-place edits, or a stale object file can look exactly like a real
+regression.
+
+THE FINAL NUMBERS, fully clean binary, exe hash in build_clean.log,
+rebased onto 1192d9cee:
+
+* DET, all four VS arenas plus det8: ALL GREEN, 25 pass 0 fail, arena=0
+  on every window of every map (build/tmp/det_clean_final.log).
+* PAIR, all four RTTs: ALL GREEN, 20 pass 0 fail, sweep NO DIVERGENCE
+  (build/tmp/pair_clean_final.log). An earlier PAIR attempt on this desk
+  read one FAIL at RTT 40 from a stray walk_window.exe left running out
+  of an unrelated worktree (C:\tmp\oc) colliding on the PID-derived port
+  range; re-run alone, clean, it passed -- a desk-sharing artifact, not
+  this branch's.
+* MOVE, one arm (walk + turn, RTT 40): ALL GREEN, 10 pass 0 fail, sweep
+  NO DIVERGENCE both profiles (build/tmp/move_clean_final.log).
+* battery.py --skip-build, build/port-kit rebuilt clean: ALL GREEN --
+  every smoke, level and scene selftest ok, default boot ok (300 frames,
+  clean), linkage 9487 (83.7%), ptr_audit 0, shipcfg build and selftest
+  ok (build/tmp/battery_clean_final.log).
+
+Rollback is still the shipped default (section 8); nothing about that
+decision changed here, only the one open item under it.
