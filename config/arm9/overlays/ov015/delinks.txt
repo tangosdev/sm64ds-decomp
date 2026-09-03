@@ -208,29 +208,9 @@ src/daObjBk_Lift_c_classInit.c:
     complete
     .text start:0x0211290c end:0x02112944
 
-src/_ZN14RotatingBridgeD1Ev.cpp:
+src/actors/d_a_obj_bk_rotebar.cpp:
     complete
-    .text start:0x02112944 end:0x02112988
-
-src/_ZN14RotatingBridgeD0Ev.cpp:
-    complete
-    .text start:0x02112988 end:0x021129e0
-
-src/_ZN14RotatingBridge16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021129e0 end:0x02112a24
-
-src/_ZN14RotatingBridge6RenderEv.cpp:
-    complete
-    .text start:0x02112a24 end:0x02112a4c
-
-src/_ZN14RotatingBridge8BehaviorEv.cpp:
-    complete
-    .text start:0x02112a4c end:0x02112b04
-
-src/_ZN14RotatingBridge13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112b04 end:0x02112ba0
+    .text start:0x02112944 end:0x02112ba0
 
 src/daObjBk_Rotebar_c_classInit.c:
     complete

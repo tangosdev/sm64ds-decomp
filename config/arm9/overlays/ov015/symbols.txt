@@ -55,12 +55,12 @@ _ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
 func_ov015_021128e8 kind:function(arm,size=0x10) addr:0x021128e8
 func_ov015_021128f8 kind:function(arm,size=0x14) addr:0x021128f8
 daObjBk_Lift_c_classInit kind:function(arm,size=0x38) addr:0x0211290c
-_ZN14RotatingBridgeD1Ev kind:function(arm,size=0x44) addr:0x02112944
-_ZN14RotatingBridgeD0Ev kind:function(arm,size=0x58) addr:0x02112988
-_ZN14RotatingBridge16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
-_ZN14RotatingBridge6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
-_ZN14RotatingBridge8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
-_ZN14RotatingBridge13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
+_ZN17daObjBk_Rotebar_cD1Ev kind:function(arm,size=0x44) addr:0x02112944
+_ZN17daObjBk_Rotebar_cD0Ev kind:function(arm,size=0x58) addr:0x02112988
+_ZN17daObjBk_Rotebar_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
+_ZN17daObjBk_Rotebar_c6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
+_ZN17daObjBk_Rotebar_c8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
+_ZN17daObjBk_Rotebar_c13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
 daObjBk_Rotebar_c_classInit kind:function(arm,size=0x30) addr:0x02112ba0
 _ZN17daObjBk_Ukisima_cD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
 _ZN17daObjBk_Ukisima_cD0Ev kind:function(arm,size=0x64) addr:0x02112c20
@@ -240,7 +240,7 @@ _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
 _ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
 _ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
 g_profile_BK_ROTEBAR kind:data(any) addr:0x021146f0 ambiguous
-_ZTV14RotatingBridge kind:data(any) addr:0x02114714
+_ZTV17daObjBk_Rotebar_c kind:data(any) addr:0x02114714
 data_ov015_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov015_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov015_02114794 kind:data(any) addr:0x02114794
