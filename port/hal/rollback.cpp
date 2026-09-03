@@ -102,6 +102,10 @@ extern int data_020a6484[], data_020a6488[], data_020a648c[], data_020a6490[],
 extern void *data_020a64a8[];             // the 16-slot batch ring
 extern int data_020a6760[];               // the 256 x 0x18 node pool
 extern unsigned char data_020a50ec[];     // sdat sound bss, 0x440
+// the ARM9's own voice bookkeeping, which follows the ARM7 state the restore
+// re-seeds: the FREE and ACTIVE voice lists (0xc-byte NestedHeapIterators)
+// and the 32 x 0x1c voice nodes they link (hal/sdat/consumer.cpp)
+extern unsigned char data_020a4d54[], data_020a4d60[], data_020a4d6c[];
 }
 
 namespace {
@@ -555,6 +559,13 @@ bool in_sound_queue(const char *p)
         { data_020a649c, 16 }, { data_020a64a0, 16 }, { data_020a64a4, 16 },
         { data_020a64a8, 16 * sizeof(void *) }, { data_020a6760, 256 * 0x18 },
         { data_020a50ec, 0x440 },
+        // The ARM9's voice lists and nodes (DET on VS map 3, the arena with
+        // an ambient voice sounding through the window): a voice the ARM7
+        // was still playing in the straight run is reported finished to the
+        // re-run, whose consumer was re-seeded, so the ARM9 frees it a frame
+        // earlier. Which voices are still sounding is the audio-across-a-
+        // rewind question (status section 7, item 5), not the game's world.
+        { data_020a4d54, 0xc }, { data_020a4d60, 0xc }, { data_020a4d6c, 32 * 0x1c },
     };
     for (size_t i = 0; i < sizeof spans / sizeof spans[0]; ++i) {
         const char *b = (const char *)spans[i].base;
@@ -800,9 +811,13 @@ void rb_frame_end(int *frame, int selftest)
     if (g_t_body_end > 0) g_between_sum += t_entry - g_t_body_end;
     // what a frame that renders costs here (the loop body of this iteration,
     // when it rendered), for the budget's estimate of the present to come
+    // (a body over a second is a load or the session forming, not a frame,
+    // and one of those in the estimate would make the budget present after
+    // every replayed frame for the rest of the session)
     if ((!was_replaying || presented) && g_t_body_end > 0 && g_t_iter > 0) {
         const double body = g_t_body_end - g_t_iter;
-        g_render_ema = g_render_ema > 0 ? g_render_ema * 0.9 + body * 0.1 : body;
+        if (body < 1000.0)
+            g_render_ema = g_render_ema > 0 ? g_render_ema * 0.9 + body * 0.1 : body;
     }
     rb_frame_end_body(frame, selftest);
     g_boundary_sum += now_ms() - t_entry;
