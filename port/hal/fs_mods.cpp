@@ -88,6 +88,8 @@
 #endif
 
 #include "vs_palette_gen.h"
+#include "vs_char_palette_gen.h"
+#include "vs_char_groups.h"
 
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -2371,6 +2373,340 @@ u32 vs_colors_filter(unsigned fileID, u8 **data, u32 size)
     return size;
 }
 
+/* ---- THE FIFTH MOD: the lobby's per-CHARACTER, per-CATEGORY bro colours ----
+   SM64DS_VS_CHAR_COLORS -- the game side of recolouring the bros (Mario, Luigi,
+   Wario) in VS by category. It mirrors SM64DS_VS_COLORS / SM64DS_VS_CHARS: comma
+   separated fields in SLOT order, EXACTLY 3 commas (four fields) OR 15 (sixteen).
+   Each field is either empty (that slot's character keeps its ROM colours) or a
+   run of FIVE colon-separated categories, in Tango's order:
+
+       hat_undershirt : overalls : gloves : buttons : shoes
+
+   so exactly four colons per non-empty field. Each category is empty (leave that
+   part on the ROM) or six hex digits (recolour it toward that colour). Example,
+   a Mario slot recolouring only overalls green and gloves red:
+       ":00ff00:ff0000::"
+   A whole field ":", i.e. all five empty, is legal and recolours nothing.
+
+   HAT + UNDERSHIRT ARE ONE CATEGORY (Tango's tie). The hat lives in the head
+   BMD and the undershirt in the body BMD, so one picked colour drives a family
+   transform in each file, each shaded from its own ROM anchor. Mario has no hat
+   family in the Studio's grouping, so for Mario this category moves only his
+   undershirt; Wario has no undershirt family, so it moves only his hat. buttons
+   has NO grouping data for any bro (vs_char_groups.h flags the gap) so it is a
+   silent no-op today; shoes moves only Wario. Nothing is invented: the index
+   membership is exactly vs_char_groups.h, generated from groups.json.
+
+   WHY THIS IS A FILE MOD LIKE THE OTHERS. Each bro model is a served BMD with a
+   named palette; recolouring by category is palette_try's shape -- find the
+   named palette, recolour its indices, write the words back in place, no resize.
+   The arithmetic is vs_palette_gen.h's verified family transform, spent through
+   vs_char_palette_gen.h. It runs after char-apply (player_bridges.cpp seats the
+   character at frame 90); the palette is read when the model is served, before
+   it is uploaded, so the recolour just has to be in the bytes by then.
+
+   THE ONE HONEST LIMIT: keyed per CHARACTER, not per SLOT. The cartridge tells
+   VS Yoshis apart by palette ROW, so two Yoshis can differ; the bros have ONE
+   palette per model file and no per-seat row, so two slots both playing Mario
+   share one mario_model.bmd and cannot wear different colours. The colours of
+   the LOWEST slot that picked a character win for that character's file, and a
+   second slot picking the same character with different colours is logged as a
+   conflict. In the common VS arena (Mario/Luigi/Wario/Yoshi, each once) there is
+   no conflict. Which slot owns which character comes from SM64DS_VS_CHARS; with
+   no SM64DS_VS_CHARS no bro is seated, so this whole path is inert.
+
+   IGNORED WHOLESALE on any grammar violation, the sibling contracts' rule. */
+
+struct VccSpec {
+    int set[vscg::CAT_COUNT];       /* which categories this slot picked */
+    u8  col[vscg::CAT_COUNT][3];    /* the picked colour per category */
+    int any;
+};
+
+VccSpec g_vcc[kPortMaxPlayers];
+int g_vcc_char[kPortMaxPlayers];    /* engine char 0..2, or -1 = Yoshi/none */
+int g_vcc_char_slot[3];             /* per bro chr, the winning slot, or -1 */
+int g_vcc_fields;
+int g_vcc_state;                    /* 0 not read, 1 read */
+int g_vcc_any;
+
+/* Parse SM64DS_VS_CHARS into g_vcc_char (engine 0..2, -1 for Yoshi/empty). Same
+   grammar as the reader in player_bridges.cpp: '0'/empty = Yoshi (-1), 1..3 map
+   to engine 0..2. A violation leaves every slot at -1 (all Yoshi). This is read
+   here rather than shared because that reader is a static in another TU; the
+   grammar is four bytes long and duplicating it costs less than a new export. */
+void vcc_parse_chars(void)
+{
+    for (int i = 0; i < kPortMaxPlayers; ++i)
+        g_vcc_char[i] = -1;
+    const char *e = getenv("SM64DS_VS_CHARS");
+    if (!e)
+        return;
+    unsigned len = (unsigned)strlen(e);
+    if (len < 1 || len > 31)
+        return;
+    unsigned commas = 0;
+    for (unsigned i = 0; i < len; ++i)
+        if (e[i] == ',') ++commas;
+    if (commas != (unsigned)(kPortNarrowPlayers - 1) &&
+        commas != (unsigned)(kPortMaxPlayers - 1))
+        return;
+    int tmp[kPortMaxPlayers];
+    for (int i = 0; i < kPortMaxPlayers; ++i) tmp[i] = -1;
+    int slot = 0, w = 0;
+    for (unsigned i = 0; i <= len; ++i) {
+        char ch = (i < len) ? e[i] : ',';
+        if (ch == ',') { ++slot; w = 0; continue; }
+        if (++w > 1) return;                 /* field longer than one char */
+        if (ch < '0' || ch > '3') return;    /* not 0..3 */
+        if (slot < kPortMaxPlayers)
+            tmp[slot] = (ch == '0') ? -1 : (ch - '1');
+    }
+    for (int i = 0; i < kPortMaxPlayers; ++i)
+        g_vcc_char[i] = tmp[i];
+}
+
+/* Parse one SM64DS_VS_CHAR_COLORS field into a VccSpec. "" is a slot with no
+   recolour and is not an error. Otherwise exactly five colon-separated
+   categories, each "" or six hex digits. 0 means the WHOLE variable is bad. */
+int vcc_field(const char *f, unsigned n, VccSpec *out)
+{
+    for (int c = 0; c < vscg::CAT_COUNT; ++c) out->set[c] = 0;
+    out->any = 0;
+    if (n == 0)
+        return 1;
+    /* split on ':' -- must be exactly CAT_COUNT parts */
+    unsigned start = 0, part = 0;
+    for (unsigned i = 0; i <= n; ++i) {
+        if (i == n || f[i] == ':') {
+            unsigned plen = i - start;
+            if (part >= (unsigned)vscg::CAT_COUNT)
+                return 0;                    /* too many colons */
+            if (plen != 0) {
+                if (plen != 6)
+                    return 0;
+                if (!vspal::parse_hex6(f + start, out->col[part]))
+                    return 0;
+                out->set[part] = 1;
+                out->any = 1;
+            }
+            ++part;
+            start = i + 1;
+        }
+    }
+    if (part != (unsigned)vscg::CAT_COUNT)
+        return 0;                            /* too few colons */
+    return 1;
+}
+
+void vcc_parse(void)
+{
+    static const char *const kCat[vscg::CAT_COUNT] = {
+        "hat+undershirt", "overalls", "gloves", "buttons", "shoes"
+    };
+    static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
+    const char *e = getenv("SM64DS_VS_CHAR_COLORS");
+    unsigned len, start, slot, commas;
+
+    for (int i = 0; i < 3; ++i) g_vcc_char_slot[i] = -1;
+
+    if (!e)
+        return;                              /* absent: common case, silent */
+    len = (unsigned)strlen(e);
+    /* widest field is 5*6 + 4 colons = 34; sixteen of them plus 15 commas is
+       559. narrow is 4*34 + 3 = 139. the comma count decides which. */
+    if (len < 1 || len > 559) {
+        fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: %u bytes, out of "
+                        "the contract's range\n", len);
+        return;
+    }
+    commas = 0;
+    for (unsigned i = 0; i < len; ++i) {
+        unsigned char c = (unsigned char)e[i];
+        if (c == ',') { ++commas; continue; }
+        if (c != ':' && !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')
+                          || (c >= 'A' && c <= 'F'))) {
+            fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: byte %02x at "
+                            "%u is not a hex digit, a colon or a comma\n",
+                    (unsigned)c, i);
+            return;
+        }
+    }
+    if (commas == (unsigned)(kPortNarrowPlayers - 1))
+        g_vcc_fields = kPortNarrowPlayers;
+    else if (commas == (unsigned)(kPortMaxPlayers - 1))
+        g_vcc_fields = kPortMaxPlayers;
+    else {
+        fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: %u comma(s), the "
+                        "contract requires exactly 3 (four fields) or exactly "
+                        "15 (sixteen)\n", commas);
+        return;
+    }
+
+    start = 0;
+    slot = 0;
+    for (unsigned i = 0; i <= len; ++i) {
+        if (i == len || e[i] == ',') {
+            VccSpec s;
+            if (!vcc_field(e + start, i - start, &s)) {
+                fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS ignored: field %u "
+                                "is neither empty nor five colon-separated "
+                                "categories (hat:overalls:gloves:buttons:shoes)"
+                                "\n", slot);
+                for (int k = 0; k < kPortMaxPlayers; ++k) g_vcc[k].any = 0;
+                return;
+            }
+            if (slot < (unsigned)kPortMaxPlayers)
+                g_vcc[slot] = s;
+            ++slot;
+            start = i + 1;
+        }
+    }
+
+    vcc_parse_chars();
+
+    for (int k = 0; k < g_vcc_fields; ++k)
+        if (g_vcc[k].any)
+            g_vcc_any = 1;
+    if (!g_vcc_any) {
+        fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS: every field is empty; "
+                        "every bro keeps his ROM colours\n");
+        return;
+    }
+
+    /* Resolve, per bro character, the winning slot: the LOWEST slot that both
+       picked that character (SM64DS_VS_CHARS) and set at least one category. */
+    for (int chr = 0; chr < 3; ++chr) {
+        for (int k = 0; k < g_vcc_fields; ++k) {
+            if (g_vcc_char[k] == chr && g_vcc[k].any) {
+                g_vcc_char_slot[chr] = k;
+                break;
+            }
+        }
+        /* a conflict is a second slot playing the same character with any
+           category set -- logged, but the lowest slot still wins the file */
+        if (g_vcc_char_slot[chr] >= 0) {
+            for (int k = g_vcc_char_slot[chr] + 1; k < g_vcc_fields; ++k)
+                if (g_vcc_char[k] == chr && g_vcc[k].any)
+                    fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS: slots %d and "
+                            "%d both play %s; the bros share one palette file, "
+                            "so slot %d's colours win for both\n",
+                            g_vcc_char_slot[chr], k, kName[chr],
+                            g_vcc_char_slot[chr]);
+        }
+    }
+
+    for (int chr = 0; chr < 3; ++chr) {
+        int s = g_vcc_char_slot[chr];
+        if (s < 0)
+            continue;
+        fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS %s (slot %d):", kName[chr],
+                s);
+        int printed = 0;
+        for (int c = 0; c < vscg::CAT_COUNT; ++c)
+            if (g_vcc[s].set[c]) {
+                fprintf(stderr, " %s=%02x%02x%02x", kCat[c], g_vcc[s].col[c][0],
+                        g_vcc[s].col[c][1], g_vcc[s].col[c][2]);
+                printed = 1;
+            }
+        if (!printed)
+            fprintf(stderr, " (no category set)");
+        fprintf(stderr, "\n");
+    }
+}
+
+/* Resolve the group table's file paths to this dump's file ids, once. */
+unsigned g_vcc_group_id[64];
+int g_vcc_ids_done;
+void vcc_resolve_ids(void)
+{
+    if (g_vcc_ids_done)
+        return;
+    g_vcc_ids_done = 1;
+    for (int i = 0; i < vscg::kVscGroupCount && i < 64; ++i)
+        g_vcc_group_id[i] = resolve_file_by_name(vscg::kVscGroups[i].file);
+}
+
+void vcc_load(void)
+{
+    if (g_vcc_state)
+        return;
+    g_vcc_state = 1;
+    vcc_parse();
+    if (!g_vcc_any)
+        return;
+    vcc_resolve_ids();
+}
+
+/* Recolour one category group's indices in the served BMD, in place. Returns 0
+   and writes the changed words on success, or a reason string (writing nothing)
+   otherwise. The named palette is found the same way palette_try finds it. */
+const char *vcc_recolor_group(u8 *d, u32 size, const vscg::Group *g,
+                              const u8 target[3])
+{
+    u32 dp = 0, sz = 0;
+    if (!palette_named(d, size, g->pal, &dp, &sz))
+        return "no palette of that name in the file";
+    int ncol = (int)(sz / 2);
+    if (ncol <= 0)
+        return "empty palette";
+    u16 *buf = (u16 *)malloc((size_t)ncol * 2);
+    if (!buf)
+        return "out of host memory";
+    for (int i = 0; i < ncol; ++i)
+        buf[i] = rd16(d, dp + (u32)i * 2);
+    const char *why = vspal::char_recolor_palette(buf, ncol, g->idx, g->count,
+                                                  target);
+    if (why) {
+        free(buf);
+        return why;
+    }
+    for (int i = 0; i < g->count; ++i)
+        wr16(d, dp + (u32)g->idx[i] * 2, buf[g->idx[i]]);
+    free(buf);
+    return 0;
+}
+
+/* Runs in the chain like the other palette mods: for a served bro BMD, recolour
+   every category the winning slot for that character set. Byte-inert with no
+   SM64DS_VS_CHAR_COLORS (one getenv). */
+int g_vcc_said[64];
+
+u32 vs_char_colors_filter(unsigned fileID, u8 **data, u32 size)
+{
+    if (!getenv("SM64DS_VS_CHAR_COLORS"))
+        return size;                         /* the byte-inert path */
+    vcc_load();
+    if (!g_vcc_any)
+        return size;
+    for (int i = 0; i < vscg::kVscGroupCount && i < 64; ++i) {
+        const vscg::Group *g = &vscg::kVscGroups[i];
+        if (!g_vcc_group_id[i] || g_vcc_group_id[i] != fileID)
+            continue;
+        int s = g_vcc_char_slot[g->chr];
+        if (s < 0)
+            continue;                        /* no slot plays this character */
+        if (!g_vcc[s].set[g->cat])
+            continue;                        /* this category not picked */
+        const char *why = vcc_recolor_group(*data, size, g, g_vcc[s].col[g->cat]);
+        if (g_vcc_said[i]++)
+            continue;
+        static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
+        static const char *const kCat[vscg::CAT_COUNT] = {
+            "hat+undershirt", "overalls", "gloves", "buttons", "shoes"
+        };
+        if (why)
+            fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS: %s %s '%s' REFUSED: "
+                    "%s; that palette keeps the ROM's colours\n", kName[g->chr],
+                    kCat[g->cat], g->pal, why);
+        else
+            fprintf(stderr, "[mods] SM64DS_VS_CHAR_COLORS: %s %s '%s' recoloured,"
+                    " %d index(es)\n", kName[g->chr], kCat[g->cat], g->pal,
+                    g->count);
+    }
+    return size;
+}
+
 /* ---- SIXTEEN ROWS: growing the served Yoshi palette -----------------------
  *
  * THE CEILING THIS LIFTS, and it is the one the block above used to say could
@@ -2553,6 +2889,11 @@ u32 mod_filter(unsigned fileID, u8 **data, u32 size)
     size = lovesme_filter(fileID, data, size);
     size = palette_filter(fileID, data, size);
     size = character_palette_filter(fileID, data, size);
+    /* The lobby's per-character bro colours: a served bro BMD gets its
+       categories recoloured after any local PaletteMario/etc, so the room wins.
+       Yoshi's file is untouched here (this only knows the three bros), so it is
+       order-independent with the Yoshi colour filters that follow. */
+    size = vs_char_colors_filter(fileID, data, size);
     size = vs_colors_filter(fileID, data, size);
     /* run pal16: LAST, and it must stay last. It reads the four rows out of
        whatever the chain above left in the buffer and generates twelve more
