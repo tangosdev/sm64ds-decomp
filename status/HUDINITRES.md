@@ -142,8 +142,8 @@ missing:
     fs: load-at handle=0x22a id=124        GXS palette 0x120..0x200
 
 Battery: ALL GREEN (`build/battery.log`, `--skip-build` on the guarded build
-above, TMP/TEMP under build/tmp): 20/20 smoke binaries ok, 0 level selftests ok
-under SM64DS_FAULTS_FATAL=1, 0 scene selftests ok (the VS rows among them), default
+above, TMP/TEMP under build/tmp): 20/20 smoke binaries ok, 50 level selftests ok
+under SM64DS_FAULTS_FATAL=1, 34 scene selftests ok (the VS rows among them), default
 title boot ok, linkage 9404 (83.0%), ptr_audit 0, shipping config (PORT_ROM_CLEAN,
 static CRT) built and its selftest rc=0.
 
