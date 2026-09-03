@@ -43,8 +43,14 @@ extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020ca604(void);
 extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_020eed64(void);
+#ifdef DSCMGTRAMPOLINE2_INLINE_DTOR
+struct Model;
+extern "C" int func_ov006_021227c8(char *object);
+extern "C" Model *func_ov006_02122c68(Model *model);
+#else
 extern "C" void func_ov006_021227c8(void);
 extern "C" void func_ov006_02122c68(void);
+#endif
 extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {

@@ -78,13 +78,9 @@
  * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "common.h"
 #include "types.h"
-#define func_ov006_021227c8 func_ov006_021227c8_class_header_shadow
-#define func_ov006_02122c68 func_ov006_02122c68_class_header_shadow
 #define DSCMGTRAMPOLINE2_INLINE_DTOR
 #include "dScMgTrampoline2_c.h"
 #undef DSCMGTRAMPOLINE2_INLINE_DTOR
-#undef func_ov006_021227c8
-#undef func_ov006_02122c68
 #define func_ov006_021227c8 func_ov006_021227c8_decl_common_shadow
 #define func_ov006_02122c68 func_ov006_02122c68_decl_common_shadow
 #include "decl_common.h"
