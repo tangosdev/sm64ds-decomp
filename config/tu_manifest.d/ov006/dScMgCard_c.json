@@ -6,22 +6,23 @@
   "status": "promoted",
   "goal": {
     "idiomCensus": {
-      "externC": 2,
+      "externC": 5,
       "rawOffsets": 0
     },
-    "justification": "Converted from the tubuild shadow 2026-08-31: all thirty-two written functions are real member functions of dScMgCard_c or of the two RTTI-confirmed element classes dMgCardObj_c/dMgDilarCardObj_c (free defs 0), every raw self+0xoffset access whose cartridge emission a member spelling reproduces byte-for-byte is now a named header member access, and all 34 functions match the retail ROM -- the section-hash dumps bracketing the respells prove they changed no function's bytes (36/36 identical). The one nonzero number is the cartridge's own shape, disclosed: externC=2 is the pair of element destroy stubs _ZN12dMgCardObj_cD1Ev/_ZN17dMgDilarCardObj_cD1Ev, hand-written extern \"C\" blocks spelling the ROM's mangled names literally because the header's inline __destroy_arr calls pass the destructor as a plain function pointer; the element classes declare no destructor (measured: retyping mArray1/mArray2 from raw bytes to the element classes changed no function's bytes but UpdateState's, which it unlocked), and the stub FORM is under family adjudication: it is the destroy-side twin of this hand's hand-written ctor stubs in src/actors/MgPicturePoker.cpp, and it is the only measured spelling that lands the pair in the cartridge's own shape and order -- real member destructors were measured across every form (both out of line; both marked inline in class, on the definition, and under #pragma force_inline/inline; every source order -- include/dScMgCard_c.h carries the enumeration) and none passes: out of line the derived D1 goes out 0x24 bytes as a bl to the base D2 against the cartridge's 0x1c two-store form and drags in both classes' D0 and D2 (six destructor symbols where the cartridge carries two); with both marked inline the two D1s come out byte-matching with no D0/D2, but the element pair is emitted between the scene D1 and the scene D0, sliding the scene D0 behind it, off the cartridge's ROM address order, which rombuild's fail-closed isolate refuses. Retiring the stubs would therefore move the pair's own bytes or order and cannot pass the byte gate; the adjudication question is whether the extern-C mangled-stub form is ratified as the family idiom alongside its ctor twins, or whether some family-level spelling can retire it census-clean. rawOffsets=0: Render's two bank loops were the last raw sites, re-spelled 2026-08-31 (review fold-in) as indexed member access -- mArray1[k].mValue read, mArray1[k].Render() drawn, k from 4 down to 0 -- measured byte-identical (0x228/0x228); the FOLDED member form (one typed pointer stepping back 0x30 a card) is the one that measurably moves bytes (0x210), so the raw two-walker shape was retired once both member forms had been measured, with the measurement said in the file."
+    "justification": "The complete 37-function Picture Poker text run is reconstructed as real dScMgCard_c, dMgCardObj_c and dMgDilarCardObj_c C++, plus its adjacent unique MG_CARD classInit and four narrow construction/destruction-array ABI callbacks. All behavior lives on RTTI-proven classes, every raw this-offset chain remains retired, and the shared 0x270 state is a typed member. The callbacks are retained only at measured mwccarm walls: CW 1.2 rejects every placement-new route for the folded factory, and genuine base/derived card lifecycle can reproduce every body but not the cartridge's scene-D1, scene-D0, base-D1, derived-D1 section order."
   },
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x20d95a4..0x20dbd54, 34 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): dScMgCard_c",
-    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "contiguous linker run: 0x020d95a4..0x020dbe40, 37 functions; the 34 scene/card methods are immediately followed by the unique MG_CARD classInit and its two card-construction callbacks, ending exactly where dScMgCoin_c begins",
+    "RTTI/data ownership cluster: state, both card RTTI records, the unique MgPicturePoker_SpawnInfo profile, scene/base RTTI, type strings, both card vtables, resources/tables, and scene vtable occupy 0x0213bc44..0x0213be44; the previous byte ends dScMgBomroom_c and the next symbol begins dScMgCoin_c data",
+    "static-initializer ownership: __sinit_ov006_021300b0 and .p__sinit_ov006_021300b0 initialize this TU's sprite-handle table at 0x02141774; the next initializer at 0x0213014c belongs to dScMgCoin_c",
+    "BSS ownership: this minigame's flags and sprite-handle table occupy 0x02141768..0x021417b0; the next BSS symbol begins dScMgCoin_c state"
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x020d95a4",
-      "end": "0x020dbd54"
+      "end": "0x020dbe40"
     }
   ],
   "functions": [
@@ -262,6 +263,27 @@
       "size": "0x00000264",
       "legacy_source": "src/_ZN11dScMgCard_c13InitResourcesEv.cpp",
       "ordinal": 34
+    },
+    {
+      "symbol": "dScMgCard_c_classInit",
+      "address": "0x020dbd54",
+      "size": "0x000000c0",
+      "legacy_source": "src/MgPicturePoker_Spawn.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN17dMgDilarCardObj_cC1Ev",
+      "address": "0x020dbe14",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_020dbe14.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN12dMgCardObj_cC1Ev",
+      "address": "0x020dbe30",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_020dbe30.c",
+      "ordinal": 37
     }
   ],
   "data": [],
@@ -290,7 +312,10 @@
     "tubuild create warning: CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov006_020da174 and the one that held _ZN11dScMgCard_c13OnTurnIntoEggEi; kept the first, the other is commented out for review",
     "compiler_only_output, measured pre-link in this worktree with .rela.data slots masked as wildcards the way tools/match.py masks .text: the six typeinfo NAME STRINGS carry no relocations and every byte of each equals the cartridge (_ZTS7fBase_c 9/9, _ZTS7dBase_c 9/9, _ZTS8dScene_c 10/10, _ZTS11dScMgBase_c 14/14, _ZTS19dScMgSingle3DBase_c 22/22, _ZTS11dScMgCard_c 14/14). The six typeinfo RECORDS are 100% relocation words (8 or 12 bytes, 0 comparable), so nothing about them can be judged before the link -- romdata_check during rombuild is the authority, not this object. _ZTV11dScMgCard_c has exactly one non-relocated word, the offset-to-top, and it equals the cartridge: note the config symbol addr:0x0213bdb4 names the vtable's ADDRESS POINT, so the record starts 8 bytes earlier at 0x0213bdac, where the cartridge holds 0 then 0x0213bc70 (_ZTI11dScMgCard_c) -- comparing at the configured address without that -8 makes every word look wrong. The object emits 0x50 bytes = the 8-byte header plus 18 slots; the cartridge's table runs 0x0213bdb4..0x0213be44 = 144 bytes = 36 slots, so this vtable  2026-08-31 addendum, same masking methodology, for the six element-class records the mArray1/mArray2 retype added (the header now defines dMgCardObj_c/dMgDilarCardObj_c, keying their records here): _ZTS12dMgCardObj_c 15/15 and _ZTS17dMgDilarCardObj_c 20/20 raw bytes equal the cartridge at 0x0213bc8c/0x0213bc9c; _ZTI12dMgCardObj_c (8 bytes) and _ZTI17dMgDilarCardObj_c (12 bytes) are 100% relocation words like the scene records -- the retail extract marks pointer-shaped words at exactly the positions my relocations occupy, word for word, and every one of my targets resolves to the address the cartridge word holds: the __class_type_info/__si_class_type_info vtable address points 0x0209a77c/0x0209a76c, the own name strings, and the si-form base word 0x0213bc48; and the two element VTABLES are complete three-slot records in the cartridge (record starts 0x0213bcc4/0x0213bcec -- the config symbols 0x0213bccc/0x0213bcf4 name the ADDRESS POINTS, the same convention as _ZTV11dScMgCard_c above): the raw offset-to-top word equals the cartridge, and my four relocated words resolve to the cartridge slot addresses in cartridge order -- 0x0213bc48 plus 0x020d9bdc/0x020d9c5c/0x020d9bd0 (Render/Update/GetOffscreenY) for dMgCardObj_c, and 0x0213bc58 plus 0x020d970c/0x020d978c/0x020d9998 for dMgDilarCardObj_c. romdata_check during the production rombuild stays the authority for all of these; this is the pre-link evidence the baseline linkcheck cannot make, because it deadstrips my copies before the link and links the retail gap copies.",
     "The destructor is defined INLINE in include/dScMgCard_c.h, not out of line in this TU. Out of line, mwccarm emitted _ZN11dScMgCard_cD0Ev AHEAD of _ZN11dScMgCard_cD1Ev and rombuild's fail-closed isolate refused the object -- the cartridge has D1 first at 0x020d95a4 and D0 second at 0x020d9638. Inline, vtable slots 16 and 17 name D1 then D0 and odr-use both, so the compiler emits the pair in cartridge order; the key function moves to InitResources, the next virtual declared and non-inline, which this same TU defines, so _ZTV11dScMgCard_c is still emitted here. It also removes _ZN11dScMgCard_cD2Ev entirely, so that symbol needs no deadstrip policy. Same recipe and same reason as ov006/dScMgMCarlo2_c.",
-    "2026-08-31 conversion to real members: the twenty-eight tubuild extern \"C\" free functions became real member functions -- dScMgCard_c's own scene logic (RenderHud, UpdateState, the hand-evaluation family SettleHand/ArrangeHand/MarkSingles/EvaluateHand/CompareHands/AllLifted/AllInState/CountInState/FindInState/DrawCardValue/FillWeights, the adjudicated vtable-slot events OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded) and the element motion members FlyOff/SetHome/Redeal/DealIn/GetOffscreenY/Render/Update over the RTTI-confirmed element classes dMgCardObj_c/dMgDilarCardObj_c. The header retype of mArray1/mArray2 from raw byte arrays to the element classes is destructor-neutral (measured) and unlocks UpdateState's member spellings. Each function was byte-verified with tools/match.py as it converted, and the hash dumps bracketing the final respells show all 36 function sections identical to the matched baseline.",
+    "2026-09-03 full-boundary consolidation: the original 34-function scene/card promotion ended at 0x020dbd54, but the immediately adjacent MG_CARD classInit and two card constructors extend the same original TU through 0x020dbe40. The text run, RTTI/vtable/profile data at 0x0213bc44..0x0213be44, __sinit_ov006_021300b0 and its ctor pointer, and BSS at 0x02141768..0x021417b0 all terminate where dScMgCoin_c begins. The retired MgPicturePoker.cpp was therefore a three-function fragment of this class TU, not a separate source boundary.",
+    "MEASURED CW 1.2 ABI WALLS: genuine out-of-line dMgCardObj_c/dMgDilarCardObj_c constructors and destructors make the derived bodies 0x24 bytes by calling the base C2/D2, not the cartridge's 0x1c-byte folded stores. Marking the base lifecycle inline makes all four C1/D1 bodies byte-identical, but mwccarm emits base D1 between the scene D1 and scene D0 instead of the cartridge's scene-D1, scene-D0, base-D1, derived-D1 order. Swapping source definitions and the force-inline pragmas do not change that order. A semantic placement-construction factory is also unavailable: this compiler rejects class, global, and placement operator-new declarations and supplies no placement-new builtin. The four C1/D1 callbacks and dScMgCard_c_classInit are consequently the smallest literal ABI bridges; the classes, ownership, behavior, layout and shared state remain genuine typed C++.",
+    "FOCUSED VERIFY LIMITATION: tools/tubuild.py verify reports 32/37 because objisolate rejects an R_ARM_ABS32 relocation with addend zero against a vtable emitted by the same object. The five affected functions are exactly the four retained C1/D1 callbacks plus dScMgCard_c_classInit. Their extracted bytes match individually and all 37 emitted text sections occur in cartridge order; the production linker and full ROM build are the authority for their same-object relocation resolution.",
+    "2026-08-31 conversion to real members: the twenty-eight tubuild extern \"C\" free functions became real member functions -- dScMgCard_c's own scene logic (RenderHud, UpdateState, the hand-evaluation family SettleHand/ArrangeHand/MarkSingles/EvaluateHand/CompareHands/AllLifted/AllInState/CountInState/FindInState/DrawCardValue/FillWeights, the adjudicated vtable-slot events OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded) and the element motion members FlyOff/SetHome/Redeal/DealIn/GetOffscreenY/Render/Update over the RTTI-confirmed element classes dMgCardObj_c/dMgDilarCardObj_c. The header retype of mArray1/mArray2 from raw byte arrays to the element classes is destructor-neutral (measured) and unlocks UpdateState's member spellings. Each function was byte-verified with tools/match.py as it converted, and the hash dumps bracketing the final respells show every then-enrolled function section identical to the matched baseline.",
     "COINED NAMES, the one thing not provable: the twenty-eight renamed functions' ROM symbols are address-only (func_ov006_020d96e0..func_ov006_020db9dc), so no recovered spelling exists to confirm or contradict the behavioral names. RenderHud, UpdateState, SettleHand, ArrangeHand, MarkSingles, EvaluateHand, CompareHands, AllLifted, AllInState, CountInState, FindInState, DrawCardValue, FillWeights, FlyOff, SetHome, Redeal, DealIn and the element Render/Update/GetOffscreenY are coined from what each function does; OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded are the family's adjudicated legacy recovered names (vtable slots 18/19/21, notes/minigame-family-decisions.md); the two element D1 symbols are the compiler's own mangling of the classes this TU's _ZTI/_ZTS proves. The coinage is disclosed here, in the per-function banner comments, and in symbols/actor_renames.tsv's why column.",
     "D3 declarations: Sound::PlayBank2_2D, GX::LoadOBJPltt, GXS::LoadOBJPltt, G2x::SetBlendAlpha, ApproachLinear and ApproachLinear2 are declared at their RATIFIED_TRUE_NAMES forms (parameter types read off the mangled names, see the engine-helpers banner in the source); func_ov006_020c0aa8 and func_ov006_020c1804 keep the void* spellings shared with dScMgBSC_c/dScMgMCarlo2_c, and func_ov006_020c1a88 this TU's extern int (char*) form, because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. The local shadow types (Node, Five, Struct30, OamAttrTmpl, Slot6, Obj6 and kin) are byte-exact struct spellings of raw-offset object headers the family has not yet carved; retiring them belongs to a header carve, not this TU.",
     "tubuild reconcile note: the warnings above named the legacy file by its function's old auto-generated symbol func_ov006_020db720, which was renamed to _ZN11dScMgCard_c13OnTurnIntoEggEi (ov006 0x020db720). The rename rewrote that name inside the conflict markers in src/actors/dScMgCard_c.cpp, because those are comment text, but not inside these notes, which are prose. Only the spelling changed: the remaining conflicts are still OPEN and their markers still stand. Checked by tools/check_tubuild_conflicts.py.",
@@ -303,7 +328,7 @@
     "object": "build/tu/ov006-dScMgCard_c/dScMgCard_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 32,
-    "functions_declared": 34,
+    "functions_declared": 37,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
@@ -390,7 +415,7 @@
       "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
     },
     "postPromotion": {
-      "round": "tools/rombuild.py -j 16 against the REAL tree, after the delinks entry was collapsed to one source -- the production counterpart of the scratch linkcheck above, which cannot run once the TU is enrolled (its substitution model needs the legacy delinks entries it just replaced)",
+      "round": "tools/rombuild.py -j 16 after the merged 37-function enrollment, typed shared-state reconstruction, and measured ABI-wall consolidation, on origin/main 1cbf7ca94 plus PR #2122 commit 07f0d6b04",
       "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
       "sourceBuiltFunctions": {
         "total": 11088,
@@ -398,8 +423,10 @@
         "mismatching": 0
       },
       "intactTuGates": "dsd modules PASS, zero new symbol errors, storage aliases exact",
-      "romDataFromSource": "462 verified, 250 partial, 9 differ, 524 unnamed by config, from 7,586 object records. The record total falls 13 against origin/main for the same arithmetic reason ov006/dScMgMCarlo2_c's did: on main the out-of-line destructor was this class's key function, so _ZN11dScMgCard_cD1Ev.cpp and _ZN11dScMgCard_cD0Ev.cpp EACH emitted the same 13 licensed records; inlining the destructor moves the key function to InitResources and the one promoted object emits each record once. No symbol changed verdict.",
-      "licensedRecordVerdicts": "tools/romdata_check.py --files src/actors/dScMgCard_c.cpp -> 13 data symbols, 6 VERIFIED (68 bytes), 7 PARTIAL (140 bytes), 0 DIFFERS, 0 UNNAMED. VERIFIED means every byte of the cartridge's extent was compared and equal, with the object's relocations resolved the way the linker resolves them: ALL SIX typeinfo records -- _ZTI7fBase_c (8/8), _ZTI7dBase_c (12/12), _ZTI8dScene_c (12/12), _ZTI11dScMgBase_c (12/12), _ZTI19dScMgSingle3DBase_c (12/12) and this class's own _ZTI11dScMgCard_c (12/12). PARTIAL is an exact prefix short of the ROM's extent: the six typeinfo name strings, each equal to the cartridge for every whole word it emits and short only of the cartridge's 4-byte-aligned padding (_ZTS7fBase_c 8 of 12, _ZTS7dBase_c 8 of 12, _ZTS8dScene_c 8 of 12, _ZTS11dScMgBase_c 12 of 16, _ZTS11dScMgCard_c 12 of 16, _ZTS19dScMgSingle3DBase_c 20 of 24); and _ZTV11dScMgCard_c at 72 of the cartridge's 144 bytes -- 18 of 36 slots, because dScMgBase_c still leaves slots 18-35 undeclared. Widening that vtable is a separate change to the base class, not to this TU."
+      "romSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "romMatchesStockBuild": true,
+      "romDataFromSource": "global romdata_check summary: 1,276 symbols and 7,207 records; 623 verified, 190 partial, 5 differ, and 458 unnamed. This TU introduces no ROM or module mismatch.",
+      "licensedRecordVerdicts": "the production link reports 13 source-owned data claims, all 13 reproducing and zero mismatching; source-owned BSS reports 2 claims totaling 60 NOBITS bytes. Compiler-produced RTTI, type strings and vtables are audited before duplicate canonical records are discarded."
     }
   },
   "compiler_only_output": [
@@ -538,7 +565,7 @@
     }
   ],
   "partial_isolation": {
-    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "round": "historical 34-function pre-merge tools/tubuild.py linkcheck --partial; superseded for this combined 37-function TU by verification.postPromotion above",
     "derivedObjects": 34,
     "contributionEquivalent": "34/34",
     "comparedFields": [
@@ -554,8 +581,8 @@
     "extraInertImports": 143,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov006-dScMgCard_c/partial/partial.json (gitignored)",
-    "state": "partial-link-verified",
-    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "state": "superseded-by-production-rombuild",
+    "stateMeaning": "historical 34-function evidence only: contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduced the module and ROM byte-for-byte with config/**/delinks.txt unchanged; the current 37-function production enrollment is covered by verification.postPromotion",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [

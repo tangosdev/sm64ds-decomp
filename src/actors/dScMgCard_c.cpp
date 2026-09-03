@@ -1,6 +1,6 @@
 //cpp
-/* ov006/dScMgCard_c -- the Dilar (card-match) minigame scene, as one C++
- * translation unit. 34 functions, ROM 0x020d95a4-0x020dbd54.
+/* ov006/dScMgCard_c -- the Dilar (Picture Poker) minigame scene, as one C++
+ * translation unit. 37 functions, ROM 0x020d95a4-0x020dbe40.
  *
  * ENROLLED AND CANONICAL. config/arm9/overlays/ov006/delinks.txt names this
  * one file for that whole .text range, so every byte the cartridge carries
@@ -18,7 +18,7 @@
  * destructor is not written here at all -- it is inline in the class header,
  * which is what puts the D1/D0 pair in cartridge order; see that banner.
  *
- * The 34 members, in ROM address order (the reverse of the order below).
+ * The 37 functions, in ROM address order (the reverse of the order below).
  * Each was a separate one-function source until this commit; the manifest's
  * "functions" array keeps the old path beside every address.
  *   [1] 0x020d95a4  _ZN11dScMgCard_cD1Ev
@@ -55,6 +55,9 @@
  *   [32] 0x020db720  _ZN11dScMgCard_c13OnTurnIntoEggEi
  *   [33] 0x020db9dc  _ZN11dScMgCard_c13OnYoshiTryEatEi
  *   [34] 0x020dbaf0  _ZN11dScMgCard_c13InitResourcesEv
+ *   [35] 0x020dbd54  dScMgCard_c_classInit
+ *   [36] 0x020dbe14  _ZN17dMgDilarCardObj_cC1Ev
+ *   [37] 0x020dbe30  _ZN12dMgCardObj_cC1Ev
  */
 
 /* The union of what the 34 legacy sources included, first-seen in
@@ -169,13 +172,9 @@ typedef short s16;
 extern "C" {
 extern int data_ov006_0213acb0[2];
 extern int data_ov006_0213aca8[2];
-/* the two element vtables, by the symbols.txt rows (0x0213bccc / 0x0213bcf4):
-   this same TU emits them (Render -- each class's key function -- is defined
-   below), and the hand-written destroy stubs near the file's end reference
-   them. The names are already the mangled Itanium names in symbols.txt, so
-   extern "C" here means "use literally" */
-extern int _ZTV12dMgCardObj_c[];
-extern int _ZTV17dMgDilarCardObj_c[];
+/* The two element vtables are emitted here by their key functions. The four
+   measured array-construction ABI callbacks reference the ROM address points;
+   these names are already mangled, so C linkage means "use literally". */
 extern unsigned short data_ov006_0213bd64[];
 extern void *data_ov006_02141774[];
 extern void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
@@ -236,6 +235,16 @@ extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, u32);
 extern int func_ov006_020c1a88(char *);
+void* _ZN7fBase_cnwEj(unsigned int);
+void _ZN11dScMgBase_cC2Ev(void*);
+void _ZN8Particle10SysTrackerC1Ev(void*);
+void func_020733a8(void*, int, int, void*, void*);
+extern int _ZTV19dScMgSingle3DBase_c;
+extern int _ZTV11dScMgCard_c;
+extern int _ZTV12dMgCardObj_c[];
+extern int _ZTV17dMgDilarCardObj_c[];
+void _ZN12dMgCardObj_cC1Ev(void*);
+void _ZN17dMgDilarCardObj_cC1Ev(void*);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da8e4, from the legacy file for func_ov006_020d9c5c, NOT applied: int func_ov006_020da8e4(void); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020da8e4, from the legacy file for func_ov006_020da00c, NOT applied: extern "C" int func_ov006_020da8e4(void); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec2_Sub, from the legacy file for func_ov006_020da0ac, NOT applied: extern "C" void Vec2_Sub(int *o, int *a, int *b); */
@@ -246,6 +255,42 @@ extern int func_ov006_020c1a88(char *);
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c1718, from the legacy file for _ZN11dScMgCard_c13OnTurnIntoEggEi, NOT applied: extern int func_ov006_020c1718(void* p); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov006_02134028, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern u32 *data_ov006_02134028; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020c0aa8, from the legacy file for _ZN11dScMgCard_c13InitResourcesEv, NOT applied: extern void func_ov006_020c0aa8(char *); */
+}
+
+/* ROM ordinal 37 -- dMgCardObj_c constructor ABI callback, 0x020dbe30. */
+// @symbol _ZN12dMgCardObj_cC1Ev
+extern "C" void _ZN12dMgCardObj_cC1Ev(void* elem)
+{
+    *(int*)elem = (int)_ZTV12dMgCardObj_c;
+}
+
+/* ROM ordinal 36 -- dMgDilarCardObj_c constructor ABI callback, 0x020dbe14. */
+// @symbol _ZN17dMgDilarCardObj_cC1Ev
+extern "C" void _ZN17dMgDilarCardObj_cC1Ev(void* elem)
+{
+    *(int*)elem = (int)_ZTV12dMgCardObj_c;
+    *(int*)elem = (int)_ZTV17dMgDilarCardObj_c;
+}
+
+/* ROM ordinal 35 -- the unique MG_CARD profile factory, 0x020dbd54. */
+// @symbol dScMgCard_c_classInit
+extern "C" void* dScMgCard_c_classInit()
+{
+    char* p = (char*)_ZN7fBase_cnwEj(sizeof(dScMgCard_c));
+    if (p) {
+        _ZN11dScMgBase_cC2Ev(p);
+        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
+        *(int*)p = (int)&_ZTV11dScMgCard_c;
+        func_ov006_020c1d80(p + 0x4f38);
+        func_020733a8(p + 0x51a8, 5, 0x30,
+                     (void*)_ZN12dMgCardObj_cC1Ev,
+                     (void*)_ZN12dMgCardObj_cD1Ev);
+        func_020733a8(p + 0x5298, 5, 0x30,
+                     (void*)_ZN17dMgDilarCardObj_cC1Ev,
+                     (void*)_ZN17dMgDilarCardObj_cD1Ev);
+    }
+    return p;
 }
 
 /* --- the engine helpers, by their true names -------------------------------
@@ -342,7 +387,7 @@ s32 dScMgCard_c::InitResources()
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     func_ov006_020c0aa8(pad_4660);
-    if (func_ov006_020c1a88((char *)pad_4f38) == 0)
+    if (func_ov006_020c1a88((char *)&mShared) == 0)
         return 0;
 
     {
@@ -397,10 +442,10 @@ void dScMgCard_c::OnYoshiTryEat(int mode)
     unk_5390 = 6;
     unk_5392 = 6;
     unk_5394 = 6;
-    func_ov006_020c1604((char *)pad_4f38, 4, 5, (int)&unk_538c);
+    func_ov006_020c1604((char *)&mShared, 4, 5, (int)&unk_538c);
 
-    unk_511e = 1;
-    unk_4f52 = 2;
+    mShared.unk_1e6 = 1;
+    mShared.unk_01a = 2;
     dScMgCard_c::FillWeights(5);
 
     p1 = (char *)mArray1;
@@ -449,7 +494,7 @@ int dScMgCard_c::OnTurnIntoEgg(int mode)
         break;
     }
     case 0xf:
-        if (func_ov006_020c1718(pad_4f38) != 0) {
+        if (func_ov006_020c1718(&mShared) != 0) {
             int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
                 func_ov004_020b5ed0();
@@ -578,11 +623,11 @@ void dScMgCard_c::UpdateState()
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (func_ov006_020c0f0c(pad_4f38) != 0)
+        if (func_ov006_020c0f0c(&mShared) != 0)
             mState++;
         break;
     case 2:
-        if (func_ov006_020c1718(pad_4f38) != 0) {
+        if (func_ov006_020c1718(&mShared) != 0) {
             mStateTimer = 0x10;
             mState++;
         } else {
@@ -670,14 +715,14 @@ void dScMgCard_c::UpdateState()
         break;
     case 5:
         if (data_ov006_02141768 != 0 && dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0
-            && func_ov006_020c1718(pad_4f38) != 0) {
+            && func_ov006_020c1718(&mShared) != 0) {
             mState++;
-        } else if (func_ov006_020c1718(pad_4f38) != 0) {
+        } else if (func_ov006_020c1718(&mShared) != 0) {
             r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray1, 6);
             if (r != 0) {
                 unk_538c = 0;
-                unk_511e = 0;
-                func_ov006_020c1420(pad_4f38, (s16)r, &unk_538c);
+                mShared.unk_1e6 = 0;
+                func_ov006_020c1420(&mShared, (s16)r, &unk_538c);
             }
         } else {
             r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray1, 6);
@@ -692,7 +737,7 @@ void dScMgCard_c::UpdateState()
         mState++;
         break;
     case 7:
-        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 && func_ov006_020c1718(pad_4f38) != 0) {
+        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 && func_ov006_020c1718(&mShared) != 0) {
             r = data_ov006_0213bc44 - 1;
             data_ov006_0213bc44 = r;
             if (r == 0) {
@@ -703,12 +748,12 @@ void dScMgCard_c::UpdateState()
                 data_ov006_02141768 = 0;
                 data_ov006_02141770 = 0;
             }
-        } else if (func_ov006_020c1718(pad_4f38) != 0) {
+        } else if (func_ov006_020c1718(&mShared) != 0) {
             r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray2, 6);
             if (r != 0) {
                 unk_538c = 0;
-                unk_511e = 0;
-                func_ov006_020c1420(pad_4f38, (s16)r, &unk_538c);
+                mShared.unk_1e6 = 0;
+                func_ov006_020c1420(&mShared, (s16)r, &unk_538c);
             }
         } else {
             r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray2, 6);
@@ -807,7 +852,7 @@ void dScMgCard_c::UpdateState()
         if (mStateTimer == 0) {
             r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
             if (r == -1) {
-                func_ov006_020c0d68(pad_4f38);
+                func_ov006_020c0d68(&mShared);
                 g = data_ov004_020beb68;
                 if (g != 0) {
                     if (((dScMgBase_c *)g)->mHudScore > 0) {
@@ -816,7 +861,7 @@ void dScMgCard_c::UpdateState()
                 }
                 func_ov004_020b0a54(5);
             } else if (r == 1) {
-                func_ov006_020c0c80(pad_4f38);
+                func_ov006_020c0c80(&mShared);
                 g = data_ov004_020beb68;
                 if (g != 0) {
                     if (((dScMgBase_c *)g)->mHudScore < 0x270f) {
@@ -865,13 +910,13 @@ void dScMgCard_c::UpdateState()
  * own override of the virtual fBase_c declares.
  *
  * mFrameCounter is the frame counter the header's "own tail" note lists among the
- * nine fields five of this class's methods already touch; pad_4f38 is the
- * start of the 0x270-byte table six classes in this family share, which
+ * nine fields five of this class's methods already touch; mShared is the
+ * 0x270-byte table six classes in this family share, which
  * func_ov006_020c19d0 steps. */
 s32 dScMgCard_c::Behavior()
 {
     mFrameCounter += 1;
-    func_ov006_020c19d0(pad_4f38);
+    func_ov006_020c19d0(&mShared);
     UpdateState();
     func_ov004_020b65e4();
     return 1;
@@ -971,7 +1016,7 @@ s32 dScMgCard_c::Render()
         }
     }
 
-    func_ov006_020c1804(pad_4f38);
+    func_ov006_020c1804(&mShared);
     return 1;
 }
 
@@ -1912,35 +1957,24 @@ void dMgDilarCardObj_c::Render()
 /* ROM ordinal 4 -- _ZN17dMgDilarCardObj_cD1Ev, 0x020d96f0, size 0x1c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN17dMgDilarCardObj_cD1Ev
-extern "C" {  /* the mangled name is the ROM's own symbol, used literally */
-/* The dealer's card, destroyed one element at a time through __destroy_arr
- * (the mangled-name extern "C" declaration in the header -- C++ cannot take
- * a destructor's address). HAND-WRITTEN, not a member destructor: this is
- * the destroy-side twin of this hand's hand-written ctor stubs in
- * src/actors/MgPicturePoker.cpp, and no member-destructor spelling
- * reproduces the cartridge pair -- include/dScMgCard_c.h's note above the
- * two class definitions carries the measurement. Two vptr stores and no
- * bl: the derived class's own address point 0x0213bcf4 as the routine
- * enters the class, then the base class's 0x0213bccc beneath it, exactly
- * as a destructor walks down the chain. */
-void _ZN17dMgDilarCardObj_cD1Ev(void *elem)
+/* Genuine C++ produces these two stores only when the base destructor is
+ * inline, but then emits the base D1 between the scene D1/D0. This callback
+ * is the measured section-order ABI bridge. */
+extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem)
 {
   *(int *)elem = (int)_ZTV17dMgDilarCardObj_c;
   *(int *)elem = (int)_ZTV12dMgCardObj_c;
-}
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN12dMgCardObj_cD1Ev, 0x020d96e0, size 0x10 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12dMgCardObj_cD1Ev
-extern "C" {  /* the mangled name is the ROM's own symbol, used literally */
-/* The player's card, same reach, same idiom: one vptr store -- this class's
- * own address point 0x0213bccc -- and nothing else. */
-void _ZN12dMgCardObj_cD1Ev(void *elem)
+/* The real inline body is byte-identical but cannot occupy the cartridge's
+ * post-scene-D0 section position. */
+extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem)
 {
   *(int *)elem = (int)_ZTV12dMgCardObj_c;
-}
 }
 
 /* The destructor is DEFINED INLINE in include/dScMgCard_c.h. mwcc emits the

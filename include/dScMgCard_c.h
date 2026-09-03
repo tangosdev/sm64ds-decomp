@@ -1,17 +1,16 @@
 /* class dScMgCard_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgCard_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgPicturePoker_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). MG_CARD is the ROM profile and Picture Poker is its
+ * English minigame identity; the unique factory is named
+ * dScMgCard_c_classInit from that profile+RTTI evidence.
  *
- * SIZE 0x539c, from MgPicturePoker_Spawn.cpp's own
- * `_ZN7fBase_cnwEj(0x539c)`.
+ * SIZE 0x539c, from dScMgCard_c_classInit's `_ZN7fBase_cnwEj(0x539c)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
- * fall WITHIN it and are real matched access (src/func_ov006_020db9dc.c):
- * unk_4f52 and unk_511e are literally the ctor's own `*(short*)(t+0x1a)=0`
+ * fall WITHIN it and are real matched access:
+ * mShared.unk_01a and mShared.unk_1e6 are literally the ctor's own
+ * `*(short*)(t+0x1a)=0`
  * and `*(short*)(t+0x1e6)=0` writes (func_ov006_020c1d80's own
  * body), same as dScMgMCarlo2_c's own instance of these two fields -- named
  * here instead of folded into the opaque table, everything else stays pad.
@@ -21,11 +20,11 @@
  * 0x51a8, dMgDilarCardObj_c for the hand at 0x5298, both RTTI-confirmed --
  * and the members themselves carry those types here, so UpdateState's state
  * walks spell real member access (&mArray1[0].mState, mArray1[i].mState) and
- * the compiler folds each member+field address itself. The two classes declare
- * NO destructor, so the compiler's own member destruction is empty and the
- * destructor below's hand-spelled __destroy_arr calls remain the whole
- * story; measured byte-for-byte against the raw-u8 build, the retype
- * changes no function except UpdateState (see src/actors/dScMgCard_c.cpp).
+ * the compiler folds each member+field address itself. The two classes
+ * deliberately declare no C++ destructor: real lifecycle definitions make
+ * the exact bodies but not the cartridge's required section order. The
+ * scene's inline destructor therefore retains the two measured array-helper
+ * ABI callbacks, the smallest surviving compiler-wall bridge.
  *
  * OWN TAIL, 0x5388..0x539c: nine fields are real matched access (five
  * src files: func_ov006_020da9c4.cpp, 020db6ec.c, 020db720.c,
@@ -42,13 +41,8 @@
  * compiler emits the pair for us in cartridge order. It also removes the
  * homeless D2 entirely -- a base-object variant byte-identical to D1, with no
  * ROM address to claim and no inbound relocation. The two __destroy_arr calls
- * below are ordinary reverse-declaration member destruction, spelled out
- * because the element classes declare no destructor at all -- so the
- * compiler's own implicit member destruction is empty (measured: retyping the
- * two members from raw bytes to the element classes changes no function's
- * bytes but UpdateState's) and these calls carry the cartridge pair alone;
- * the third call releases the shared table, since two of its words stay
- * named. No separate operator delete is needed --
+ * preserve the cartridge's callback ABI and reverse member order; the third
+ * releases the typed shared state. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one.
  * Same recipe as include/dScMgMCarlo2_c.h, and for the same reason. */
 #ifndef DSCMGCARD_C_H
@@ -56,18 +50,16 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
+extern "C" void func_ov006_020c1d80(void *t);
 extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem);
+extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
 
-/* The two element destroy routines, spelled by their mangled D1 names: C++
-   source cannot take a destructor's address, so the __destroy_arr calls
-   below reference them through extern-"C" declarations of the mangled
-   symbols -- the double-mangling defect this tree already documents. Both
-   routines are HAND-WRITTEN in src/actors/dScMgCard_c.cpp as extern-"C"
-   definitions of these two names -- the destroy-side twin of this hand's
-   hand-written ctor stubs in src/actors/MgPicturePoker.cpp -- and the two
-   classes below declare NO destructor at all, because no member-destructor
-   spelling lands the pair in the cartridge's own shape and order,
-   measured across every form:
+/* The element destroy callbacks use their ABI D1 spellings because C++ cannot
+   take a destructor's address. Both live beside their constructor callbacks
+   and classInit in src/actors/dScMgCard_c.cpp. The classes below declare no
+   destructor because no member-destructor spelling lands the pair in the
+   cartridge's own shape AND section order, measured across every form:
      both written out of line
         -> mwcc never -O4 auto-inlines a callee that is not marked inline:
            the derived D1 goes out as a bl to the base D2 (0x24 bytes with a
@@ -89,12 +81,22 @@ extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
            rombuild's fail-closed isolate refuses a TU whose licensed
            .text is not in ROM address order. #pragma force_inline /
            #pragma inline change neither outcome.
-   The vtable/RTTI records do not follow the destructor: this header
+   Construction has a second measured wall: CW 1.2 rejects class/global
+   placement-new declarations and has no builtin placement new, so the folded
+   allocation+construction factory cannot be expressed as semantic C++.
+   The vtable/RTTI records do not follow these callbacks: this header
    declares Render -- each class's key function -- non-inline, and
    src/actors/dScMgCard_c.cpp defines it, so the key-function TU keeps
    emitting _ZTV/_ZTI/_ZTS for both classes either way. */
-extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem);
-extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
+struct dMgCardSharedState_c {
+    u8  pad_000[0x1a];
+    s16 unk_01a;
+    u8  pad_01c[0x1ca];
+    s16 unk_1e6;
+    u8  pad_1e8[0x88];
+};
+
+typedef char dMgCardSharedState_c_size_must_be_0x270[sizeof(dMgCardSharedState_c) == 0x270 ? 1 : -1];
 
 /* --- the card element classes ---------------------------------------------
    Both names are RTTI-confirmed (build/rtti.json: _ZTS12dMgCardObj_c and
@@ -121,13 +123,10 @@ extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
    the weighted 0..5 draw), its state byte (mState) and the combo marker
    (mComboFlag) the hand evaluation sets on the cards forming the pair.
 
-   The objects are CONSTRUCTED by this hand's factory (src/actors/
-   MgPicturePoker.cpp: func_020733a8 with func_ov006_020dbe30/020dbe14 as
-   the element ctors) -- those ctors live in the factory's own TU as
-   extern-C stubs, which is why no constructor is declared here; and they
-   are DESTROYED by the two hand-written routines declared above (the
-   mangled D1 names), the destroy-side twin of those ctor stubs -- which
-   is why no destructor is declared here either. */
+   Objects are constructed and destroyed through the C1/D1 ABI callbacks in
+   src/actors/dScMgCard_c.cpp. Their class identities are RTTI-proven; the
+   callback spellings remain only at the measured factory and section-order
+   walls described above. */
 
 struct dMgCardObj_c {
     virtual void Render();       /* slot 0 -- ov006 0x020d9bdc */
@@ -174,7 +173,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c() {
         __destroy_arr(mArray2, 5, 0x30, (void *)_ZN17dMgDilarCardObj_cD1Ev);
         __destroy_arr(mArray1, 5, 0x30, (void *)_ZN12dMgCardObj_cD1Ev);
-        func_ov006_020c1c64((char *)pad_4f38);
+        func_ov006_020c1c64((char *)&mShared);
     }
 
     /* --- this class's own vtable slots, named from the table ---
@@ -213,11 +212,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     static int  DrawCardValue();                                           /* 0x020da8e4 */
     static void FillWeights(int v);                                       /* 0x020da974 */
 
-    u8  pad_4f38[0x1a];   /* 0x4f38 -- shared table start, see file banner */
-    s16 unk_4f52;          /* 0x4f52 -- within shared table */
-    u8  pad_4f54[0x1ca];   /* 0x4f54 */
-    s16 unk_511e;           /* 0x511e -- within shared table */
-    u8  pad_5120[0x88];     /* 0x5120 -- rest of shared table (ends 0x51a8) */
+    dMgCardSharedState_c mShared; /* 0x4f38..0x51a8 */
     dMgCardObj_c     mArray1[5];  /* 0x51a8 -- dtor _ZN12dMgCardObj_cD1Ev (hand stub) */
     dMgDilarCardObj_c mArray2[5]; /* 0x5298 -- dtor _ZN17dMgDilarCardObj_cD1Ev (hand stub) */
     s16 mState;              /* 0x5388 -- the round's step counter; UpdateState
