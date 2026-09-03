@@ -1,19 +1,31 @@
 extern int *data_ov004_020beb68;
-void func_ov006_020f3c0c(int this) {
+void _ZN13dScMgMemory_c11InitPlayersEv(char *self)
+{
     int n;
     int i;
+    int angle;
+    char *entry;
+
     if (data_ov004_020beb68 != 0)
-        n = *(int*)((char*)data_ov004_020beb68 + 0xa8);
+        n = *(int *)((char *)data_ov004_020beb68 + 0xa8);
     else
         n = 0;
-    if (n >= 3) n = 3;
-    *(unsigned char*)(this + 0x5000 + 0x33b) = (unsigned char)n;
+    if (n >= 3)
+        n = 3;
+
+    entry = self;
     i = 0;
-    if (n <= 0) return;
+    *(unsigned char *)(self + 0x533b) = (unsigned char)n;
+    if (n <= 0)
+        return;
+
+    angle = 0;
     do {
-        *(unsigned char*)(this + i*0x14 + 0x5000 + 0x2d8) = 1;
-        *(unsigned char*)(this + i*0x14 + 0x5000 + 0x2da) = 0;
-        *(short*)(this + i*0x14 + 0x5200 + 0xd6) = i*0x10;
+        *(unsigned char *)(entry + 0x52d8) = 1;
+        *(unsigned char *)(entry + 0x52da) = 0;
+        *(short *)(entry + 0x52d6) = angle;
         i++;
+        entry += 0x14;
+        angle += 0x10;
     } while (i < n);
 }

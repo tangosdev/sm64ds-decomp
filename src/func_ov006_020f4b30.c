@@ -1,5 +1,5 @@
 #include "types.h"
-/* func_ov006_020f4b30 — once at least 2 items are ready, mark slot
+/* RoundDealNormal — once at least 2 items are ready, mark slot
  * (11 - count) done (stride 0x18 array at 0x51a8), bump count; then per
  * mode: mode 1 -> state 4 at count >= 10, else state 3/4 at count >= 8. */
 typedef struct {
@@ -20,7 +20,7 @@ typedef struct {
     u8 mode;          /* 0x533c */
 } Work;
 
-void func_ov006_020f4b30(char* c)
+void _ZN13dScMgMemory_c15RoundDealNormalEv(char* c)
 {
     Work* w = (Work*)c;
     u8 mode;

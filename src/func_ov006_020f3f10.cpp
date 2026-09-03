@@ -16,4 +16,4 @@ struct C75 {
     }
 };
 
-extern "C" void func_ov006_020f3f10(C75* c) { c->run(); }
+extern "C" void _ZN13dScMgMemory_c11UpdateCardsEv(C75* c) { c->run(); }

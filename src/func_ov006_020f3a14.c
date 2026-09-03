@@ -1,7 +1,7 @@
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern short data_02082214[];
 
-void func_ov006_020f3a14(char *c, int i)
+void _ZN13dScMgMemory_c10PlayerMoveEi(char *c, int i)
 {
     int off = i * 0x14;
     int tx = i * 16 + 12;

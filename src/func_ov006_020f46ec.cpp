@@ -1,8 +1,8 @@
 //cpp
 namespace Sound { void PlayBank2_2D(unsigned int); }
-extern "C" void func_ov006_020f39c8(char *p);
+extern "C" void _ZN13dScMgMemory_c10ShowCursorEv(char *p);
 
-extern "C" void func_ov006_020f46ec(char *c)
+extern "C" void _ZN13dScMgMemory_c15ResultTurnCardsEv(char *c)
 {
     int cnt;
     int i;
@@ -34,6 +34,6 @@ extern "C" void func_ov006_020f46ec(char *c)
     else
         Sound::PlayBank2_2D(0x146);
     *(int *)(c + 0x5318) = 3;
-    func_ov006_020f39c8(c);
+    _ZN13dScMgMemory_c10ShowCursorEv(c);
     *(unsigned short *)(c + 0x5322) = 0x20;
 }

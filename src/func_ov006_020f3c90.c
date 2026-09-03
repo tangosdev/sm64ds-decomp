@@ -5,7 +5,7 @@ inline int *inline_fn(char *arg0)
   return (int *) arg0;
 }
 
-void func_ov006_020f3c90(char *c)
+void _ZN13dScMgMemory_c13CheckFinishedEv(char *c)
 {
   if ((*((unsigned char *) (c + 0x5337))) >= (*((unsigned short *) (c + 0x532a))))
   {

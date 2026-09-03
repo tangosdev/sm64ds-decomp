@@ -1,5 +1,5 @@
 extern unsigned short data_ov006_0213d0a8[];
-void func_ov006_020f411c(char *c, int i){
+void _ZN13dScMgMemory_c12CardFlipDownEi(char *c, int i){
     int o = i * 0x18;
     unsigned short cnt;
     *(unsigned short*)(c + 0x51b6 + o) += 1;

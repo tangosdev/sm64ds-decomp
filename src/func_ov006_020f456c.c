@@ -24,12 +24,12 @@ extern u8 data_020a0e40;
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
 
-extern void func_ov006_020f3f10(Ctx *c);
-extern void func_ov006_020f3964(Ctx *c);
+extern void _ZN13dScMgMemory_c11UpdateCardsEv(Ctx *c);
+extern void _ZN13dScMgMemory_c12UpdateCursorEv(Ctx *c);
 extern unsigned int func_02012790(unsigned int a);
-extern void func_ov006_020f39fc(Ctx *c);
+extern void _ZN13dScMgMemory_c10HideCursorEv(Ctx *c);
 
-void func_ov006_020f456c(Ctx *c)
+void _ZN13dScMgMemory_c12ResultFinishEv(Ctx *c)
 {
     s32 i;
     s32 j;
@@ -39,8 +39,8 @@ void func_ov006_020f456c(Ctx *c)
     s32 ok;
     u16 *p;
 
-    func_ov006_020f3f10(c);
-    func_ov006_020f3964(c);
+    _ZN13dScMgMemory_c11UpdateCardsEv(c);
+    _ZN13dScMgMemory_c12UpdateCursorEv(c);
 
     if (c->h5322 != 0)
     {
@@ -98,6 +98,6 @@ void func_ov006_020f456c(Ctx *c)
         c->b533d = 0;
     }
 
-    func_ov006_020f39fc(c);
+    _ZN13dScMgMemory_c10HideCursorEv(c);
     c->f5314 = 4;
 }

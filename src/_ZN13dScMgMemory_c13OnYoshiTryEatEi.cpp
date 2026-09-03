@@ -11,6 +11,7 @@ extern "C" {
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
 extern void func_ov004_020b66d4(void *o);
+extern void _ZN13dScMgMemory_c9ResetGameEv(void *c);
 /* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site. */
 
 void dScMgMemory_c::OnYoshiTryEat(int /* arg */)
@@ -20,7 +21,7 @@ void dScMgMemory_c::OnYoshiTryEat(int /* arg */)
     struct dScMgMemory_c *self = (struct dScMgMemory_c *)(void *)c;
     char *o;
     int v;
-    func_ov006_020f4f94(c);
+    _ZN13dScMgMemory_c9ResetGameEv(c);
     self->unk_5314 = 0;
     o = (char *)data_ov004_020beb68;
     v = 0;

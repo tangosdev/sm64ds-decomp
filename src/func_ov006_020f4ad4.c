@@ -1,4 +1,4 @@
-void func_ov006_020f4ad4(unsigned char* c){
+void _ZN13dScMgMemory_c13RoundDealHardEv(unsigned char* c){
   short n=*(short*)(c+0x5326);
   short k;
   short* q;

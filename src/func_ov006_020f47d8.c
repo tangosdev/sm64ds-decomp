@@ -8,7 +8,7 @@ struct S5300
   char pad2[0x2a - 0x24];
   unsigned short f2a;
 };
-void func_ov006_020f47d8(char *c)
+void _ZN13dScMgMemory_c12ResultRewardEv(char *c)
 {
   struct S5300 *s;
   if (((struct S5300 *) (c + 0x5300))->timer != 0)

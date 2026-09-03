@@ -3576,6 +3576,7 @@ src/func_ov006_020f3ba0.c:
     .text start:0x020f3ba0 end:0x020f3c0c
 
 src/func_ov006_020f3c0c.c:
+    complete
     .text start:0x020f3c0c end:0x020f3c90
 
 src/func_ov006_020f3c90.c:
@@ -3585,6 +3586,10 @@ src/func_ov006_020f3c90.c:
 src/func_ov006_020f3d34.cpp:
     complete
     .text start:0x020f3d34 end:0x020f3e68
+
+src/func_ov006_020f3e68.c:
+    complete
+    .text start:0x020f3e68 end:0x020f3f10
 
 src/func_ov006_020f3f10.cpp:
     complete

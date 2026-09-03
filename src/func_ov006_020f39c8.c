@@ -1,4 +1,4 @@
-void func_ov006_020f39c8(char *p)
+void _ZN13dScMgMemory_c10ShowCursorEv(char *p)
 {
     *(char *)(p + 0x5310) = 1;
     *(char *)(p + 0x5312) = 1;

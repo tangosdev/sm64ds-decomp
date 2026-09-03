@@ -1,4 +1,4 @@
-void* func_ov006_020f4a40(char* c){
+void* _ZN13dScMgMemory_c13RoundWaitDealEv(char* c){
   int cnt = 0;
   int i = 0;
   char* p = c;
