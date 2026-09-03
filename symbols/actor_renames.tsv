@@ -571,12 +571,12 @@ ov015	0x021124d0	func_ov015_021124d0	_ZN9TowerStep8BehaviorEv	vtable slot 6 (was
 ov015	0x0211269c	func_ov015_0211269c	_ZN9TowerStep13InitResourcesEv	vtable slot 0 (was _ZN14MovingBarSmall13InitResourcesEv)
 ov015	0x0211290c	func_ov015_0211290c	TowerStep_Spawn	spawnfunc
 ov015	0x0211290c	TowerStep_Spawn	daObjBk_Lift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x02112944	func_ov015_02112944	_ZN14RotatingBridgeD1Ev	vtable slot 16 (was _ZN9TowerStepD1Ev)
-ov015	0x02112988	func_ov015_02112988	_ZN14RotatingBridgeD0Ev	vtable slot 17 (was _ZN9TowerStepD0Ev)
-ov015	0x021129e0	func_ov015_021129e0	_ZN14RotatingBridge16CleanupResourcesEv	vtable slot 3 (was _ZN9TowerStep16CleanupResourcesEv)
-ov015	0x02112a24	func_ov015_02112a24	_ZN14RotatingBridge6RenderEv	vtable slot 9 (was _ZN9TowerStep6RenderEv)
-ov015	0x02112a4c	func_ov015_02112a4c	_ZN14RotatingBridge8BehaviorEv	vtable slot 6 (was _ZN9TowerStep8BehaviorEv)
-ov015	0x02112b04	func_ov015_02112b04	_ZN14RotatingBridge13InitResourcesEv	vtable slot 0 (was _ZN9TowerStep13InitResourcesEv)
+ov015	0x02112944	func_ov015_02112944	_ZN17daObjBk_Rotebar_cD1Ev	vtable slot 16 (was _ZN9TowerStepD1Ev)
+ov015	0x02112988	func_ov015_02112988	_ZN17daObjBk_Rotebar_cD0Ev	vtable slot 17 (was _ZN9TowerStepD0Ev)
+ov015	0x021129e0	func_ov015_021129e0	_ZN17daObjBk_Rotebar_c16CleanupResourcesEv	vtable slot 3 (was _ZN9TowerStep16CleanupResourcesEv)
+ov015	0x02112a24	func_ov015_02112a24	_ZN17daObjBk_Rotebar_c6RenderEv	vtable slot 9 (was _ZN9TowerStep6RenderEv)
+ov015	0x02112a4c	func_ov015_02112a4c	_ZN17daObjBk_Rotebar_c8BehaviorEv	vtable slot 6 (was _ZN9TowerStep8BehaviorEv)
+ov015	0x02112b04	func_ov015_02112b04	_ZN17daObjBk_Rotebar_c13InitResourcesEv	vtable slot 0 (was _ZN9TowerStep13InitResourcesEv)
 ov015	0x02112ba0	func_ov015_02112ba0	RotatingBridge_Spawn	spawnfunc
 ov015	0x02112ba0	RotatingBridge_Spawn	daObjBk_Rotebar_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x02112cb8	func_ov015_02112cb8	RotatingPlatformWf_Spawn	spawnfunc
@@ -600,7 +600,7 @@ ov015	0x0211462c	TowerStep_SpawnInfo	g_profile_BK_LIFT01	reconstructed profile g
 ov015	0x02114650	data_ov015_02114650	_ZTV9TowerStep	vtable alloc=? (was _ZTV14MovingBarSmall)
 ov015	0x021146f0	data_ov015_021146f0	RotatingBridge_SpawnInfo	spawninfo
 ov015	0x021146f0	RotatingBridge_SpawnInfo	g_profile_BK_ROTEBAR	reconstructed profile global; literal ROM ID BK_ROTEBAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x02114714	data_ov015_02114714	_ZTV14RotatingBridge	vtable alloc=? (was _ZTV9TowerStep)
+ov015	0x02114714	data_ov015_02114714	_ZTV17daObjBk_Rotebar_c	vtable alloc=? (was _ZTV9TowerStep)
 ov015	0x021147c4	data_ov015_021147c4	RotatingPlatformWf_SpawnInfo	spawninfo
 ov015	0x021147c4	RotatingPlatformWf_SpawnInfo	g_profile_BK_UKISIMA	reconstructed profile global; literal ROM ID BK_UKISIMA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x021148b8	data_ov015_021148b8	daObjBk_Fall_Block_c_SpawnInfo	spawninfo
