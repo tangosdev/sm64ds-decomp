@@ -23,7 +23,7 @@ of (`tubuild.py promote --dry-run` refuses; `cpp_tu_compat` marks `enroll`/`romb
 ## M1 result (2026-08-23): compile+enroll works, link hits the RTTI wall
 
 `python tools/rombuild.py --no-rom --tu-module ov010` compiles all 3 merged TUs
-(daObjC1_Trap_c/LightBeam/PeachPainting) as `//cpp` and enrolls them, then **mwldarm fails**:
+(daObjC1_Trap_c/LightBeam/daObjC1Peach_c) as `//cpp` and enrolls them, then **mwldarm fails**:
 
     Multiply-defined: "typeinfo structure for fBase_c" in daObjC1_Trap_c.o
       Previously defined in _dsd_gap@main_44.o
@@ -112,7 +112,7 @@ isn't recorded yet. Two ways forward:
 
 M2 therefore refuses `--partitioned-tu` for an entry without a complete, previously
 partitioned-link-verified recipe. The first usable control is Abuku. ov010 still needs
-data/RTTI ownership established for each of daObjC1_Trap_c, LightBeam, and PeachPainting before
+data/RTTI ownership established for each of daObjC1_Trap_c, LightBeam, and daObjC1Peach_c before
 `--tu-module ov010` can become a verified whole-module build; the production mechanism
 is ready, but those three source/manifest inputs are not.
 

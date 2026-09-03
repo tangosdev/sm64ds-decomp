@@ -3026,18 +3026,18 @@
    "start": "0x2111e10",
    "end": "0x211203c",
    "classes": [
-    "PeachPainting"
+    "daObjC1Peach_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN13PeachPaintingD1Ev.cpp",
-    "src/_ZN13PeachPaintingD0Ev.c",
+    "src/_ZN14daObjC1Peach_cD1Ev.cpp",
+    "src/_ZN14daObjC1Peach_cD0Ev.c",
     "src/func_ov010_02111e84.c",
-    "src/_ZN13PeachPainting16CleanupResourcesEv.c",
-    "src/_ZN13PeachPainting6RenderEv.cpp",
-    "src/_ZN13PeachPainting8BehaviorEv.cpp",
-    "src/_ZN13PeachPainting13InitResourcesEv.cpp",
+    "src/_ZN14daObjC1Peach_c16CleanupResourcesEv.c",
+    "src/_ZN14daObjC1Peach_c6RenderEv.cpp",
+    "src/_ZN14daObjC1Peach_c8BehaviorEv.cpp",
+    "src/_ZN14daObjC1Peach_c13InitResourcesEv.cpp",
     "src/daObjC1Peach_c_classInit.c"
    ],
    "ext_mix": {
