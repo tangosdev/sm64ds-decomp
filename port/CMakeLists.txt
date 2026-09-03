@@ -3485,7 +3485,8 @@ endforeach()
 
 # Gate 27: the HUD actor (id 334). Its methods are all matched; what it needed
 # was gate 25's sub-OAM path, a registry row, and the ov001 sprite templates.
-# InitResources comes from port/unmatched/ -- see the head of slice_gate27.txt.
+# InitResources is the matched TU through hostgen (GATE27_GEN below) -- see the
+# head of slice_gate27.txt.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate27.txt" SLICE27_LINES)
 set(SLICE27_SOURCES "")
 foreach(line IN LISTS SLICE27_LINES)
@@ -3495,7 +3496,31 @@ foreach(line IN LISTS SLICE27_LINES)
     endif()
     list(APPEND SLICE27_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-list(APPEND SLICE27_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/HUD_InitResources.cpp")
+# Lane HUD-INITRES: HUD::InitResources is src/_ZN3HUD13InitResourcesEv.cpp,
+# retiring port/unmatched/HUD_InitResources.cpp (the matched body with
+# `extern` on its globals and its loader calls hand-rerouted). --extern-data
+# turns the TU's ten file-scope engine globals into declarations (seven
+# collide with storage the port owns, the save block hal/level_boot.cpp holds
+# as a grouped-section run among them); hostgen's CALLEE_SEAM routes
+# LoadFile / DecompressLZ16 / LoadOBJPltt to hal/hud_load.cpp, the raw loader
+# (the ROM's still-compressed contract, so DecompressLZ16 decodes once) with
+# the null path for the handles this extraction does not carry. The
+# `u8 GetHealth()` shadow declaration is bridged by name in the same file.
+# See status/HUDINITRES.md.
+set(GATE27_SYMS _ZN3HUD13InitResourcesEv)
+set(GATE27_GEN "")
+foreach(sym IN LISTS GATE27_SYMS)
+    set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" --extern-data ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE27_GEN "${sym_out}")
+endforeach()
+list(APPEND SLICE27_SOURCES ${GATE27_GEN}
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/hud_load.cpp")
 
 # Gate 28: the MINIMAP actor (id 335). Same shape as the HUD -- eighteen-slot
 # vtable, constructor as factory -- plus the BG3-sub tilemap and the extended

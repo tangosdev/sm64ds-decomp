@@ -10,11 +10,15 @@
 # its factory is the CONSTRUCTOR at 0x020fe154 -- the ROM stores the ctor itself
 # in the record's +0 word for this class rather than a separate Spawn veneer.
 #
-# NOT HERE: src/_ZN3HUD13InitResourcesEv.cpp. Its file-scope globals are
-# tentative definitions, seven of which collide with storage the port already
-# owns -- including the save block, which hal/level_boot.cpp has to own as a
-# grouped-section run. port/unmatched/HUD_InitResources.cpp is that file with
-# `extern` on the block and nothing else changed.
+# NOT ON THIS LIST: src/_ZN3HUD13InitResourcesEv.cpp. It IS linked, through
+# hostgen (GATE27_GEN in CMakeLists.txt, lane HUD-INITRES): --extern-data
+# because its file-scope globals are definitions to MSVC's C++ front end and
+# seven collide with storage the port owns (the save block, which
+# hal/level_boot.cpp holds as a grouped-section run, among them), and
+# CALLEE_SEAM because the port's LoadFile decodes on the way out while the
+# body decodes its result itself -- hal/hud_load.cpp is the raw-loader seam.
+# port/unmatched/HUD_InitResources.cpp, the hand copy that carried both by
+# hand, is retired. See status/HUDINITRES.md.
 
 src/_ZN3HUDC1Ev.c
 src/_ZN3HUDD0Ev.c

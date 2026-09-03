@@ -1036,6 +1036,64 @@ ARG_WIDTH = {
 }
 
 
+# ---- CALLEE SEAM: ONE TU'S LOADER CALLEES ROUTED TO A HOST SEAM ------------
+#
+# Lane HUD-INITRES. HUD::InitResources (src/_ZN3HUD13InitResourcesEv.cpp) is
+# the ROM's own loader shape twenty-five times over:
+#
+#     h = LoadFile(0x229);                  the file, STILL COMPRESSED
+#     DecompressLZ16(h, vram_b + 0x2000);   expanded into VRAM by the caller
+#     Deallocate(h);
+#
+# and, for the palettes, LoadFile then GX::LoadOBJPltt / GXS::LoadOBJPltt on
+# the raw bytes. Two things stop that body linking and running as it stands,
+# and neither is in the body. The port's LoadFile (hal/level_boot.cpp) is
+# SharedFilePtr-backed and hands back DECODED bytes, so the DecompressLZ16
+# that follows would LZ-decode an already-decoded buffer straight into VRAM;
+# the ROM-faithful spelling of that load is the port's raw loader
+# func_0201817c (hal/fs.cpp). And ten of the handles the body names (the
+# ARCHIVE members 0xa003/a007/a00a/a00e, 0xac03, 0xb00e, 0x8000..0x8003,
+# 0x980f) are not in this extraction, so the raw loader returns null for them
+# and DecompressLZ16 / LoadOBJPltt would read it.
+#
+# Both live BEHIND the callee names, so the reroute is spelled at the NAME
+# rather than at the twenty-five call sites: one `#define` per callee, at file
+# scope ahead of the TU's own declarations, so the TU's `void* LoadFile(int)`
+# declares the seam and every call in the body resolves to it with the body
+# verbatim. The seams are hal/hud_load.cpp: LoadFile is the raw loader plus
+# the extraction's null path (say so once, hand back null); the two consumers
+# skip a null and otherwise call the port's own DecompressLZ16 / LoadOBJPltt
+# unchanged. Deallocate is not routed: src/Deallocate.c tolerates a null.
+#
+# Per symbol, and hard-errored like the exact-string tables: a listed callee
+# the TU no longer calls is a src that moved, and the entry has to be re-read
+# rather than left inert.
+CALLEE_SEAM = {
+    "_ZN3HUD13InitResourcesEv": [
+        ("LoadFile",       "port_hud_loadfile"),
+        ("DecompressLZ16", "port_hud_lz16"),
+        ("LoadOBJPltt",    "port_hud_objpltt"),   # GX:: and GXS:: alike
+    ],
+}
+
+
+def callee_seam_patch(text, sym):
+    """Route a TU's named callees to host seams, by #define at file scope."""
+    seams = CALLEE_SEAM.get(sym)
+    if not seams:
+        return text, 0
+    lines = ["/* hostgen CALLEE_SEAM: this TU's loader callees resolve to",
+             "   hal/hud_load.cpp -- see the table */"]
+    for callee, seam in seams:
+        if not re.search(r"\b%s\s*\(" % re.escape(callee), text):
+            sys.exit(
+                "hostgen: %s: CALLEE_SEAM names %s but the source no longer "
+                "calls it.\nThe source moved. Re-read the entry -- do NOT drop "
+                "it, it is load-bearing." % (sym, callee))
+        lines.append("#define %s %s" % (callee, seam))
+    return "\n".join(lines) + "\n" + text, len(seams)
+
+
 def arg_width_patch(text, sym):
     """Retype one parameter to the width its matched caller declares."""
     return apply_patches(text, sym, ARG_WIDTH, "ARG_WIDTH")
@@ -1125,6 +1183,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)
+    text, _ = callee_seam_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise
