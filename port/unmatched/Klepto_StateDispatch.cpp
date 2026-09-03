@@ -1,7 +1,6 @@
 /* HOST COPIES of KLEPTO's two pointer-to-member dispatchers (actor 239,
- * ov062 _ZTV6Klepto / _ZTV9daJango_c 0x0211dd5c), the seat of its ten
- * state-handler template records, and the one inert-return stub the unmatched
- * cap-steal main handler needs.
+ * ov062 _ZTV6Klepto / _ZTV9daJango_c 0x0211dd5c) and the seat of its ten
+ * state-handler template records.
  *
  * KLEPTO drives a five-state machine through five 16-byte descriptors in ov062
  * bss (data_ov062_0211e14c/15c/16c/17c/18c), each two mwcc {function, delta}
@@ -24,21 +23,16 @@
  * fn words as DS CODE ADDRESSES (the mount rebases only pointers into other
  * mounted DATA). port_klepto_states_seat() rewrites each source fn word with its
  * host body BEFORE that sinit runs, validating each mounted word against the ROM
- * address first (WRONG-BYTES abort). All ten .delta halves are 0. Nine of the
- * ten handlers are matched src (slice_klepto.txt); the tenth is the hole below.
- * Called from hal/actor_overlays.cpp between port_chuckya_states_seat() and
+ * address first (WRONG-BYTES abort). All ten .delta halves are 0. All ten
+ * handlers are matched src (slice_klepto.txt). Called from
+ * hal/actor_overlays.cpp between port_chuckya_states_seat() and
  * __sinit_ov062_0211d6fc().
  *
- * THE ONE HOLE, STUBBED LOUD
- * --------------------------
- * func_ov062_0211bd10 (0x508) is KLEPTO's e17c MAIN handler -- the per-frame
- * cap-steal logic. e17c is the state a default (cap-stealing) Klepto enters from
- * InitResources (its enter half func_ov062_0211c218 does not transition away),
- * so its MAIN half runs every frame. It is UNMATCHED: no src file, in no ledger.
- * There is no ROM-faithful body to seat, only a guess would fill it, so this
- * seats an inert-return stub over it (one log line, never abort; gate policy 2026-09-03),
- * loud if a live Klepto reaches it, never a faked inert return. A carried Klepto
- * (mCarriedItem == 1, state e15c) runs entirely on matched handlers.
+ * func_ov062_0211bd10 (0x508), the e17c MAIN handler (the per-frame cap-steal
+ * logic: fly the path, watch the closest player, dive when he is in range with
+ * a cap on), was the last of the ten to be decompiled and used to be seated as
+ * an inert-return stub here. It is matched src now (2004/b56, strict relocs)
+ * and seats like the other nine.
  */
 #include <cstdio>
 #include <cstdlib>
@@ -70,12 +64,12 @@ extern PortPmf data_ov062_0211dcd0, data_ov062_0211dcd8, data_ov062_0211dce0,
     data_ov062_0211dd00, data_ov062_0211dd08, data_ov062_0211dd10,
     data_ov062_0211dd18;
 
-/* the nine matched handlers (called by host pointer with `this` as arg 0) */
+/* the ten matched handlers (called by host pointer with `this` as arg 0) */
 int func_ov062_0211ba84(void *c); int func_ov062_0211c594(void *c);
-int func_ov062_0211b880(void *c); int func_ov062_0211c2f4(void *c);
-int func_ov062_0211bc54(void *c); int func_ov062_0211b8d8(void *c);
-int func_ov062_0211b800(void *c); int func_ov062_0211c218(void *c);
-int func_ov062_0211b930(void *c);
+int func_ov062_0211bd10(void *c); int func_ov062_0211b880(void *c);
+int func_ov062_0211c2f4(void *c); int func_ov062_0211bc54(void *c);
+int func_ov062_0211b8d8(void *c); int func_ov062_0211b800(void *c);
+int func_ov062_0211c218(void *c); int func_ov062_0211b930(void *c);
 
 }  /* extern "C" */
 
@@ -183,25 +177,6 @@ skip_destroy:
     return 1;
 }
 
-/* func_ov062_0211bd10 (0x508): KLEPTO's e17c MAIN handler, UNMATCHED. See the
-   banner. INERT RETURN, said once: a live Klepto that reaches its main state
-   hovers and does nothing rather than killing the player's game. The gate
-   policy (SHARED_CONTEXT 2026-09-03) is that an unmatched live handler in a
-   seated actor never aborts in a player build; the honest behaviour gap (no
-   cap steal) stays logged until func_ov062_0211bd10 is decompiled. */
-static int klepto_bd10_unmatched(void *self)
-{
-    static int said;
-    if (!said) {
-        said = 1;
-        std::fprintf(stderr, "[klepto] e17c.main func_ov062_0211bd10 (ov062, "
-                     "0x508) is UNMATCHED: the cap-steal per-frame handler has "
-                     "no decomp, so this Klepto idles instead of stealing "
-                     "(self=%p)\n", self);
-    }
-    return 0;
-}
-
 /* ---- THE SEAT -------------------------------------------------------------
    The ten source fn words (0x0211dcd0..0x0211dd18), each {slot, rom, host}
    matched against its own reloc destination in
@@ -211,7 +186,7 @@ static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_klepto_states[] = {
     {&data_ov062_0211dcd0, 0x0211ba84, (void *)func_ov062_0211ba84},
     {&data_ov062_0211dcd8, 0x0211c594, (void *)func_ov062_0211c594},
-    {&data_ov062_0211dce0, 0x0211bd10, (void *)klepto_bd10_unmatched},
+    {&data_ov062_0211dce0, 0x0211bd10, (void *)func_ov062_0211bd10},
     {&data_ov062_0211dce8, 0x0211b880, (void *)func_ov062_0211b880},
     {&data_ov062_0211dcf0, 0x0211c2f4, (void *)func_ov062_0211c2f4},
     {&data_ov062_0211dcf8, 0x0211bc54, (void *)func_ov062_0211bc54},

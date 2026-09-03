@@ -480,8 +480,33 @@ static int __fastcall klp_init(void *s, void *)
 { return _ZN6Klepto13InitResourcesEv(s); }
 static int __fastcall klp_clean(void *, void *)
 { return _ZN6Klepto16CleanupResourcesEv(); }
+/* SM64DS_KLEPTO_PROBE=1: one line per Behavior tick -- position, which of
+   the five state descriptors is seated at +0x42c (14c..18c, by distance from
+   data_ov062_0211e14c), the held-actor id (+0x44c), the two timers (+0x100,
+   +0x444), the carried-item word (+0x468) and the save's lost-cap flag -- so
+   a headless run can show the bird MOVING on its path and the steal actually
+   landing (the cap actor id appears at +0x44c and the save flips), not merely
+   a census entry that survived. Off by default, prints nothing. */
+extern "C" int _ZN8SaveData16HasPlayerLostCapEv(void);
+extern "C" unsigned char data_ov062_0211e14c[];
 static int __fastcall klp_behavior(void *s, void *)
-{ return _ZN6Klepto8BehaviorEv(s); }
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_KLEPTO_PROBE") != 0;
+    int r = _ZN6Klepto8BehaviorEv(s);
+    if (on) {
+        char *c = (char *)s;
+        int st = (int)(*(unsigned char **)(c + 0x42c) - data_ov062_0211e14c);
+        std::printf("[klepto] %p pos (%d,%d,%d) state e%03x held %08x t100 %u "
+                    "t444 %u item %d lostcap %d\n", s,
+                    *(int *)(c + 0x5c) >> 12, *(int *)(c + 0x60) >> 12,
+                    *(int *)(c + 0x64) >> 12, 0x14c + st,
+                    *(unsigned *)(c + 0x44c), *(unsigned short *)(c + 0x100),
+                    *(unsigned short *)(c + 0x444), *(int *)(c + 0x468),
+                    _ZN8SaveData16HasPlayerLostCapEv());
+    }
+    return r;
+}
 static int __fastcall klp_render(void *s, void *)
 { port_actor_render_probe("KLEPTO", (char *)s + 0x334);
   return _ZN6Klepto6RenderEv(s); }
