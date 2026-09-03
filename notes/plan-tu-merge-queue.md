@@ -190,7 +190,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 ```
 ov002 0x20b09b0  n=9  L=338  daChScene_c                   CONF1
 ov002 0x20b46a0  n=8  L=189  MegaMushroomCreateTag  CONF1 pcov=5
-ov002 0x20bc5e0  n=8  L=175  HealingHeart           CONF1 pcov=4
+ov002 0x20bc5e0  n=8  L=175  daObjHeart_c           CONF1 pcov=4
 ov002 0x20f0894  n=8  L=258  Number                 CONF1
 ov002 0x20f11b0  n=9  L=322  daObjBC_Switch_c         CONF2
 ov006 0x212471c  n=2  L=79   MgTrampolineTerror     CONF1

@@ -149,13 +149,13 @@ ov002	0x020bbea4	func_ov002_020bbea4	_ZN8SignPost8BehaviorEv	vtable slot 6
 ov002	0x020bc240	func_ov002_020bc240	_ZN8SignPost13InitResourcesEv	vtable slot 0
 ov002	0x020bc3c8	func_ov002_020bc3c8	SignPost_Spawn	spawnfunc
 ov002	0x020bc5a8	func_ov002_020bc5a8	daObjWakame_c_Spawn	spawnfunc
-ov002	0x020bc5e0	func_ov002_020bc5e0	_ZN12HealingHeartD1Ev	vtable slot 16 (was _ZN7SeaweedD1Ev)
-ov002	0x020bc618	func_ov002_020bc618	_ZN12HealingHeartD0Ev	vtable slot 17 (was _ZN7SeaweedD0Ev)
-ov002	0x020bc6a4	func_ov002_020bc6a4	_ZN12HealingHeart16CleanupResourcesEv	vtable slot 3 (was _ZN7Seaweed16CleanupResourcesEv)
-ov002	0x020bc6d4	func_ov002_020bc6d4	_ZN12HealingHeart6RenderEv	vtable slot 9 (was _ZN7Seaweed6RenderEv)
-ov002	0x020bc6fc	func_ov002_020bc6fc	_ZN12HealingHeart8BehaviorEv	vtable slot 6 (was _ZN7Seaweed8BehaviorEv)
-ov002	0x020bc81c	func_ov002_020bc81c	_ZN12HealingHeart13InitResourcesEv	vtable slot 0 (was _ZN7Seaweed13InitResourcesEv)
-ov002	0x020bc8b4	func_ov002_020bc8b4	HealingHeart_Spawn	spawnfunc
+ov002	0x020bc5e0	func_ov002_020bc5e0	_ZN12daObjHeart_cD1Ev	vtable slot 16 (was _ZN7SeaweedD1Ev)
+ov002	0x020bc618	func_ov002_020bc618	_ZN12daObjHeart_cD0Ev	vtable slot 17 (was _ZN7SeaweedD0Ev)
+ov002	0x020bc6a4	func_ov002_020bc6a4	_ZN12daObjHeart_c16CleanupResourcesEv	vtable slot 3 (was _ZN7Seaweed16CleanupResourcesEv)
+ov002	0x020bc6d4	func_ov002_020bc6d4	_ZN12daObjHeart_c6RenderEv	vtable slot 9 (was _ZN7Seaweed6RenderEv)
+ov002	0x020bc6fc	func_ov002_020bc6fc	_ZN12daObjHeart_c8BehaviorEv	vtable slot 6 (was _ZN7Seaweed8BehaviorEv)
+ov002	0x020bc81c	func_ov002_020bc81c	_ZN12daObjHeart_c13InitResourcesEv	vtable slot 0 (was _ZN7Seaweed13InitResourcesEv)
+ov002	0x020bc8b4	func_ov002_020bc8b4	daObjHeart_c_classInit	spawnfunc
 ov002	0x020bc8f4	func_ov002_020bc8f4	_ZN20daObjCannonShutter_cD1Ev	vtable slot 16
 ov002	0x020bc938	func_ov002_020bc938	_ZN20daObjCannonShutter_cD0Ev	vtable slot 17
 ov002	0x020bc9b0	func_ov002_020bc9b0	_ZN20daObjCannonShutter_c16CleanupResourcesEv	vtable slot 3
@@ -324,8 +324,8 @@ ov002	0x02109940	data_ov002_02109940	_ZTV10StarSwitch	vtable alloc=0x354
 ov002	0x02109ad4	data_ov002_02109ad4	SignPost_SpawnInfo	spawninfo
 ov002	0x02109af8	data_ov002_02109af8	_ZTV8SignPost	vtable alloc=?
 ov002	0x02109b94	data_ov002_02109b94	daObjWakame_c_SpawnInfo	spawninfo
-ov002	0x02109c50	data_ov002_02109c50	HealingHeart_SpawnInfo	spawninfo
-ov002	0x02109c74	data_ov002_02109c74	_ZTV12HealingHeart	vtable alloc=? (was _ZTV7Seaweed)
+ov002	0x02109c50	data_ov002_02109c50	g_profile_HEART	spawninfo
+ov002	0x02109c74	data_ov002_02109c74	_ZTV12daObjHeart_c	vtable alloc=? (was _ZTV7Seaweed)
 ov002	0x02109d14	data_ov002_02109d14	daObjCannonShutter_c_SpawnInfo	spawninfo
 ov002	0x02109d14	daObjCannonShutter_c_SpawnInfo	g_profile_CANNON_SHUTTER	reconstructed profile global; literal ROM ID CANNON_SHUTTER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02109d38	data_ov002_02109d38	_ZTV20daObjCannonShutter_c	vtable alloc=0x1

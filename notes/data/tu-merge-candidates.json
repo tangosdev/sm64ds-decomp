@@ -5223,19 +5223,19 @@
    "start": "0x20bc5e0",
    "end": "0x20bc8f4",
    "classes": [
-    "HealingHeart"
+    "daObjHeart_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN12HealingHeartD1Ev.cpp",
-    "src/_ZN12HealingHeartD0Ev.c",
+    "src/_ZN12daObjHeart_cD1Ev.cpp",
+    "src/_ZN12daObjHeart_cD0Ev.c",
     "src/func_ov002_020bc664.c",
-    "src/_ZN12HealingHeart16CleanupResourcesEv.c",
-    "src/_ZN12HealingHeart6RenderEv.cpp",
-    "src/_ZN12HealingHeart8BehaviorEv.c",
-    "src/_ZN12HealingHeart13InitResourcesEv.cpp",
-    "src/HealingHeart_Spawn.c"
+    "src/_ZN12daObjHeart_c16CleanupResourcesEv.c",
+    "src/_ZN12daObjHeart_c6RenderEv.cpp",
+    "src/_ZN12daObjHeart_c8BehaviorEv.c",
+    "src/_ZN12daObjHeart_c13InitResourcesEv.cpp",
+    "src/daObjHeart_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 3,
