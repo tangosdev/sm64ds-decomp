@@ -89,6 +89,7 @@
 #include "comms_loopback.h"
 
 #include "comms_seam.h"
+#include "host_settings.h"   // kRollbackMaxPlayers, beside the NetMode parse it guards
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -775,10 +776,13 @@ struct PipeRound {
 PipeRound g_pipe[kPipeDepth];
 
 // ===========================================================================
-// ROLLBACK NETCODE (port/rollback). OFF BY DEFAULT: g_rollback is false unless
-// settings.json says NetMode "rollback" or SM64DS_NETMODE=rollback, and with
-// it false every line below is dead and the stop-and-wait / pipelined paths
-// run byte-for-byte as before. status/ROLLBACK.md (the spike) has the numbers
+// ROLLBACK NETCODE (port/rollback). ON BY DEFAULT since the owner's decision
+// of 2026-09-03: g_rollback is true unless settings.json says NetMode
+// "lockstep", SM64DS_NETMODE=lockstep, or the seated session is wider than
+// kRollbackMaxPlayers (the width it is proven to; the install block says so
+// on one line). With it false every line below is dead and the stop-and-wait
+// / pipelined paths run byte-for-byte as before; a solo run never installs
+// the transport at all, so it is never reached there. status/ROLLBACK.md (the spike) has the numbers
 // and the hook-point argument; status/ROLLBACK_SHIP.md has what shipped.
 //
 // THE IDEA, in one paragraph. The pipelined ring above already files every
@@ -4309,11 +4313,21 @@ bool comms_loopback_install_from_env() {
     }
 
     // NetMode (port/rollback): settings.json "NetMode": "lockstep" | "rollback",
-    // SM64DS_NETMODE overriding it. Lockstep is the default and with it
-    // g_rollback stays false, which leaves every path above and below this
-    // block byte-for-byte what it was. Rollback runs at input delay 0 by
-    // construction (the delay is what it replaces), and the parent's choice
-    // travels in the ACCEPT so a child that asked for the other mode adopts.
+    // SM64DS_NETMODE overriding it. ROLLBACK IS THE DEFAULT (owner's decision,
+    // 2026-09-03; hal/host_settings.cpp reads an absent or unparseable file as
+    // rollback). With lockstep g_rollback stays false, which leaves every path
+    // above and below this block byte-for-byte what it was. Rollback runs at
+    // input delay 0 by construction (the delay is what it replaces), and the
+    // parent's choice travels in the ACCEPT so a child that asked for the
+    // other mode adopts.
+    //
+    // THE WIDTH GUARD, applied after the env so it cannot be talked past:
+    // determinism and cost are proven up to kRollbackMaxPlayers seated
+    // players (the DET and COST rungs of port/tools/rollback_proof.py; past
+    // eight the wide lane's Minimap::Render faults in lockstep too), so a
+    // session opened wider than that runs lockstep and says why. Every peer
+    // reads the same SM64DS_VS_PLAYERS, so every peer lands on the same side
+    // of this line, and the parent's bit 17 carries it anyway.
     {
         int mode = host_setting_net_mode();
         if (const char *e = std::getenv("SM64DS_NETMODE")) {
@@ -4321,6 +4335,14 @@ bool comms_loopback_install_from_env() {
             else if (ieq_word(e, "lockstep")) mode = 0;
             else std::fprintf(stderr, "[comms:loopback] SM64DS_NETMODE=%s is "
                               "neither lockstep nor rollback; ignored\n", e);
+        }
+        if (mode == 1 && g_want_players > kRollbackMaxPlayers) {
+            std::fprintf(stderr, "[comms:loopback] NetMode rollback asked for "
+                         "a %d-player session, but rollback is proven "
+                         "(determinism and cost) only up to %d players; this "
+                         "session runs LOCKSTEP instead\n",
+                         g_want_players, (int)kRollbackMaxPlayers);
+            mode = 0;
         }
         g_rollback = mode == 1;
         if (g_rollback) {

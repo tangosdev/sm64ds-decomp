@@ -28,8 +28,20 @@ reads the logs. Rungs:
           and still agree round for round; the sleeper must be told.
   RELAY   the PAIR rung once more through the local reference relay.
 
+  GUARD   the width guard: WIDE windows (must be more than
+          kRollbackMaxPlayers, 8) asked for rollback; every window must print
+          the "runs LOCKSTEP instead" line and none may print NetMode ROLLBACK.
+          Run it as --only GUARD --wide 9.
+
   python port/tools/rollback_proof.py [--only PAIR,VS4,...] [--frames N]
-                                      [--wide N]
+                                      [--wide N] [--netmode rollback|none]
+
+  --netmode: what every window is handed in SM64DS_NETMODE. "rollback" (the
+  default, what the ladder has always injected after env_base's scrub) or
+  "none", which hands the game NO SM64DS_NETMODE and no settings.json, so the
+  mode it runs is the built-in default. Since the owner's decision of
+  2026-09-03 that default is rollback, and "--only PAIR --netmode none" is
+  the rung that proves it.
 
   --wide N: the wide session's player count for DET and COST (default 16).
   The 16-player wide session faults at frame 2 on slots 8, 12, 14 and 15 in
@@ -58,6 +70,8 @@ BASE = 43000 + (os.getpid() % 300) * 20
 KEYS = [0x0040, 0x0080, 0x0020, 0x0010]
 FRAMES = 600
 TOGGLE = 45      # frames per injected-key phase; the guess is wrong at each flip
+NETMODE = "rollback"   # --netmode; "none" hands the game no SM64DS_NETMODE at all
+GUARD_LINE = "runs LOCKSTEP instead"   # comms_loopback.cpp's width-guard line
 
 results = []
 
@@ -77,7 +91,8 @@ def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None):
     d = os.path.join(outdir, "p%d" % k)
     os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
     e = M.env_base(ROOT, d, "p%d" % k)
-    e["SM64DS_NETMODE"] = "rollback"
+    if NETMODE != "none":
+        e["SM64DS_NETMODE"] = NETMODE
     e["SM64DS_WINDOW_SELFTEST"] = str(frames)
     e["SM64DS_COMMS_ROLE"] = "parent" if k == 0 else "child"
     e["SM64DS_COMMS_PORT"] = str(base or BASE)
@@ -359,6 +374,28 @@ def rung_stall(frames):
     return ok
 
 
+def rung_guard(frames):
+    """WIDE windows asked for rollback, WIDE > kRollbackMaxPlayers: the
+    transport must fall back to lockstep on every window and say why. The
+    windows past player 8 fault in Minimap::Render (section 5 of the status)
+    in lockstep too, so their exit codes are not the question; the install
+    line is printed before any level is entered and that line is."""
+    if WIDE <= 8:
+        return say(False, "guard", "--wide %d is not wider than kRollbackMaxPlayers (8)" % WIDE)
+    r = launch("guard%d" % WIDE, WIDE, frames, vsmap=0, base=BASE + 240)
+    fell = [GUARD_LINE in t for t in r["texts"]]
+    rb = ["NetMode ROLLBACK" in t for t in r["texts"]]
+    ok = say(all(fell), "guard fell back",
+             "'%s' printed by %d/%d windows" % (GUARD_LINE, sum(fell), WIDE))
+    ok &= say(not any(rb), "guard no rollback",
+              "NetMode ROLLBACK printed by %d/%d windows (want 0)" % (sum(rb), WIDE))
+    for k in (0, 1):
+        line = grab(r["texts"][k], r"^(.*%s.*)$" % re.escape(GUARD_LINE), "")
+        if line:
+            print("      p%d %s" % (k, line.strip()[:220]))
+    return ok
+
+
 def start_relay(port):
     env = dict(os.environ)
     env["SM64DS_RELAY_PORT"] = str(port)
@@ -376,7 +413,7 @@ def start_relay(port):
 
 
 RUNGS = ("PAIR", "VS4", "VS7", "RELAY", "RELAY4", "RELAY7", "DET", "COST",
-         "STALL")
+         "STALL", "GUARD")
 
 
 def main():
@@ -384,11 +421,13 @@ def main():
     ap.add_argument("--only", default="")
     ap.add_argument("--frames", type=int, default=FRAMES)
     ap.add_argument("--wide", type=int, default=16)
+    ap.add_argument("--netmode", default="rollback", choices=("rollback", "none"))
     ap.add_argument("--extra", action="append", default=[],
                     help="KEY=VAL for every window (bisecting a DET diff)")
     a = ap.parse_args()
-    global WIDE
+    global WIDE, NETMODE
     WIDE = a.wide
+    NETMODE = a.netmode
     for kv in a.extra:
         k, _, v = kv.partition("=")
         EXTRA[k] = v
@@ -397,7 +436,8 @@ def main():
         return 2
     os.makedirs(OUT, exist_ok=True)
     want = [s.strip().upper() for s in a.only.split(",") if s.strip()]
-    print("rollback_proof: exe %s  ports %d..  out %s" % (M.sha(EXE), BASE, OUT))
+    print("rollback_proof: exe %s  ports %d..  out %s  netmode env %s"
+          % (M.sha(EXE), BASE, OUT, "(none)" if NETMODE == "none" else NETMODE))
     ok = True
     for name in RUNGS:
         if want and name not in want:
@@ -421,6 +461,8 @@ def main():
                 ok &= rung_cost(600)
             elif name == "STALL":
                 ok &= rung_stall(a.frames)
+            elif name == "GUARD":
+                ok &= rung_guard(min(a.frames, 120))
             elif name == "RELAY":
                 rp = start_relay(BASE + 300)
                 try:

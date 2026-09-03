@@ -535,10 +535,21 @@ const char *host_setting_voice_mic_device(void);
 int host_setting_voice_near_radius(void);
 int host_setting_voice_far_radius(void);
 
-/* NetMode: 0 lockstep (the default and what an absent key reads as), 1
-   rollback. The comms transport reads it once at install; SM64DS_NETMODE
+/* NetMode: 0 lockstep, 1 rollback. ROLLBACK IS THE DEFAULT (owner's
+   decision, 2026-09-03): an absent settings.json, one that will not parse,
+   or one without the key all read as rollback; "lockstep" is still a
+   choice. The comms transport reads it once at install; SM64DS_NETMODE
    overrides it there. See status/ROLLBACK_SHIP.md. */
 int host_setting_net_mode(void);
+
+/* THE WIDTH ROLLBACK IS PROVEN TO. Determinism (the DET rung) and cost (the
+   COST rung) are measured up to eight seated players; past that the wide
+   lane's Minimap::Render faults at frame 2 on player numbers 8 and up, in
+   lockstep as much as in rollback, so nothing past eight has been shown to
+   hold. A seated session wider than this runs lockstep whatever NetMode
+   says, and the transport says so on one line at install. Lives here, next
+   to the NetMode parse, so the number and the default are read together. */
+enum { kRollbackMaxPlayers = 8 };
 
 #ifdef __cplusplus
 }
