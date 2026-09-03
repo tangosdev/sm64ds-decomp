@@ -16745,7 +16745,7 @@
       "factory_module": "ov006",
       "factory_address": "0x020fa6ac",
       "current_factory_name": "MgPairAGoneAndOn_Spawn",
-      "current_factory_file": "src/actors/MgPairAGoneAndOn.cpp",
+      "current_factory_file": "src/actors/dScMgMCarlo2_c.cpp",
       "proposed_factory_name": "dScMgMCarlo2_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00005930",
