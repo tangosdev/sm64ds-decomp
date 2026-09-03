@@ -9179,6 +9179,35 @@ int main(void)
                the second, but this reads menu_on itself so the intent is at
                the line rather than three lines away. */
             if (run_mode() == RUN_AUTO && !menu_on) btn |= 0x800;
+            /* ---- RUN MODE ANALOG, the multiplayer half. In single player the
+               push-far-to-run of analog mode is the magnitude write a few
+               hundred lines up (data_0209f4a0..): the stick's deflection lands
+               in the local slot and the ROM's own walk/run threshold reads it.
+               That write is GATED OFF with a transport up -- it would land on
+               the owner's slot, and the wire carries no deflection anyway, only
+               the digital d-pad and this button word -- so under a session an
+               analog player crossed as a d-pad press with no run bit and walked
+               everywhere, whatever the stick was doing. That is the owner's
+               "run does not work in multiplayer" for this mode. The faithful
+               reduction of "how far the stick is pushed" onto a wire that only
+               carries bits is to read THIS console's own stick against the same
+               ~87% floor the ROM's split uses and fold the result into the run
+               bit, which host_btn_to_raw_keys then carries across exactly like
+               button and auto do. Push past the floor and the run bit crosses
+               and he runs; ease off and the d-pad still crosses so he walks.
+               Only with a transport up, so the single-player magnitude path
+               above is untouched; never under a selftest (run_mode() is pinned
+               to button there) or with the menu open. */
+            if (run_mode() == RUN_ANALOG && !menu_on && pad_live &&
+                port::comms_transport() && comms_fanout_on()) {
+                const int DEAD = 7849;      /* the same XInput floor as above */
+                const int FULL = 32767;
+                const double len = sqrt((double)pad.lx * pad.lx +
+                                        (double)pad.ly * pad.ly);
+                const double norm = len > FULL ? 1.0
+                                  : (len - DEAD) / (double)(FULL - DEAD);
+                if (norm >= 0.87) btn |= 0x800;
+            }
             /* selftest: synthetic hop at frame 30 (walking start speed) */
             if (selftest && frame >= 30 && frame <= 33 &&
                 !getenv("SM64DS_SELFTEST_DASHJUMP") &&
