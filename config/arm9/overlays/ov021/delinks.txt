@@ -127,25 +127,9 @@ src/RollingRock_Spawn.c:
     complete
     .text start:0x02112d64 end:0x02112db4
 
-src/_ZN10ShutterHmcD1Ev.cpp:
+src/actors/d_a_obj_cv_shutter.cpp:
     complete
-    .text start:0x02112db4 end:0x02112e04
-
-src/_ZN10ShutterHmcD0Ev.cpp:
-    complete
-    .text start:0x02112e04 end:0x02112e68
-
-src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112e68 end:0x02112e7c
-
-src/_ZN10ShutterHmc8BehaviorEv.cpp:
-    complete
-    .text start:0x02112e7c end:0x02112ec0
-
-src/_ZN10ShutterHmc13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112ec0 end:0x02112ed4
+    .text start:0x02112db4 end:0x02112ed4
 
 src/daObjCvShutter_c_classInit.c:
     complete

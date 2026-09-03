@@ -213,3 +213,7 @@
 {"path": "src/_ZN11DiamondLift6RenderEv.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}
 {"path": "src/_ZN11DiamondLiftD0Ev.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}
 {"path": "src/_ZN11DiamondLiftD1Ev.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}
+{"path": "src/_ZN10ShutterHmc13InitResourcesEv.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
+{"path": "src/_ZN10ShutterHmc16CleanupResourcesEv.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
+{"path": "src/_ZN10ShutterHmcD0Ev.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
+{"path": "src/_ZN10ShutterHmcD1Ev.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}

@@ -30,11 +30,11 @@ _ZN11RollingRock6RenderEv kind:function(arm,size=0x38) addr:0x0211281c
 _ZN11RollingRock8BehaviorEv kind:function(arm,size=0x2d8) addr:0x02112854
 _ZN11RollingRock13InitResourcesEv kind:function(arm,size=0x238) addr:0x02112b2c
 RollingRock_Spawn kind:function(arm,size=0x50) addr:0x02112d64
-_ZN10ShutterHmcD1Ev kind:function(arm,size=0x50) addr:0x02112db4
-_ZN10ShutterHmcD0Ev kind:function(arm,size=0x64) addr:0x02112e04
-_ZN10ShutterHmc16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112e68
-_ZN10ShutterHmc8BehaviorEv kind:function(arm,size=0x44) addr:0x02112e7c
-_ZN10ShutterHmc13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112ec0
+_ZN16daObjCvShutter_cD1Ev kind:function(arm,size=0x50) addr:0x02112db4
+_ZN16daObjCvShutter_cD0Ev kind:function(arm,size=0x64) addr:0x02112e04
+_ZN16daObjCvShutter_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112e68
+_ZN16daObjCvShutter_c8BehaviorEv kind:function(arm,size=0x44) addr:0x02112e7c
+_ZN16daObjCvShutter_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112ec0
 daObjCvShutter_c_classInit kind:function(arm,size=0x3c) addr:0x02112ed4
 data_ov021_02112f10 kind:data(any) addr:0x02112f10
 data_ov021_02112f14 kind:data(any) addr:0x02112f14
@@ -213,7 +213,7 @@ data_ov021_021148d0 kind:data(any) addr:0x021148d0
 _ZTS16daObjCvShutter_c kind:data(any) addr:0x021148dc
 data_ov021_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 g_profile_CV_SHUTTER kind:data(any) addr:0x021148f0 ambiguous
-_ZTV10ShutterHmc kind:data(any) addr:0x02114914
+_ZTV16daObjCvShutter_c kind:data(any) addr:0x02114914
 data_ov021_021149a0 kind:bss addr:0x021149a0
 data_ov021_021149a8 kind:bss addr:0x021149a8
 data_ov021_021149b0 kind:bss addr:0x021149b0

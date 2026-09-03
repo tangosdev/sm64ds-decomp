@@ -1,5 +1,5 @@
-#ifndef SHUTTERHMC_H
-#define SHUTTERHMC_H
+#ifndef DAOBJCVSHUTTER_C_H
+#define DAOBJCVSHUTTER_C_H
 
 #include "types.h"
 
@@ -11,7 +11,7 @@
  *
  *   _ZTI16daObjCvShutter_c  ov021 0x021148c4
  *   _ZTS16daObjCvShutter_c  ov021 0x021148dc
- *   _ZTV10ShutterHmc        ov021 0x02114914  (its record sits at V-4)
+ *   _ZTV16daObjCvShutter_c        ov021 0x02114914  (its record sits at V-4)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjSwdoor_c, ov002 0x021099c0
  *
@@ -30,19 +30,23 @@
 
 #include "daObjSwdoor_c.h"
 
-struct ShutterHmc : daObjSwdoor_c {
+struct daObjCvShutter_c : daObjSwdoor_c {
     u8  pad_320[0x4];
 
     /* --- vtable --- */
-    virtual ~ShutterHmc();             /* slots 16 (D1), 17 (D0) */
+    /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these
+       two are emitted; with the body out of line mwcc emits D0 ahead of D1
+       and the ROM has D1 first (rombuild refuses the object outright). An
+       inline body also drops the D2 variant the cartridge never carried. */
+    virtual ~daObjCvShutter_c() {}     /* slots 16 (D1), 17 (D0) */
 
     int Behavior();                    /* slot  6 */
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
 };
 
-typedef char ShutterHmc_size_must_be_0x324[sizeof(ShutterHmc) == 0x324 ? 1 : -1];
+typedef char daObjCvShutter_c_size_must_be_0x324[sizeof(daObjCvShutter_c) == 0x324 ? 1 : -1];
 
 #endif /* __cplusplus */
 
-#endif /* SHUTTERHMC_H */
+#endif /* DAOBJCVSHUTTER_C_H */

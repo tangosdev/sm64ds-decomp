@@ -3,7 +3,7 @@
 /* recovered: real C++ destructor, defined inline in the header
  *
  * ~daObjSwdoor_c is defined in the class body, not here, and that is
- * load-bearing: this class's two descendants (daObjBSwdoor_c, ShutterHmc)
+ * load-bearing: this class's two descendants (daObjBSwdoor_c, daObjCvShutter_c)
  * inline this destructor's vptr store rather than calling it, which the
  * compiler can only do from a visible body. include/daObjSwdoor_c.h records
  * the measurement.

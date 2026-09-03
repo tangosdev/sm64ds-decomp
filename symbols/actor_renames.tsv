@@ -745,11 +745,11 @@ ov021	0x0211281c	func_ov021_0211281c	_ZN11RollingRock6RenderEv	vtable slot 9
 ov021	0x02112854	func_ov021_02112854	_ZN11RollingRock8BehaviorEv	vtable slot 6
 ov021	0x02112b2c	func_ov021_02112b2c	_ZN11RollingRock13InitResourcesEv	vtable slot 0
 ov021	0x02112d64	func_ov021_02112d64	RollingRock_Spawn	spawnfunc
-ov021	0x02112db4	func_ov021_02112db4	_ZN10ShutterHmcD1Ev	vtable slot 16
-ov021	0x02112e04	func_ov021_02112e04	_ZN10ShutterHmcD0Ev	vtable slot 17
-ov021	0x02112e68	func_ov021_02112e68	_ZN10ShutterHmc16CleanupResourcesEv	vtable slot 3
-ov021	0x02112e7c	func_ov021_02112e7c	_ZN10ShutterHmc8BehaviorEv	vtable slot 6
-ov021	0x02112ec0	func_ov021_02112ec0	_ZN10ShutterHmc13InitResourcesEv	vtable slot 0
+ov021	0x02112db4	func_ov021_02112db4	_ZN16daObjCvShutter_cD1Ev	vtable slot 16
+ov021	0x02112e04	func_ov021_02112e04	_ZN16daObjCvShutter_cD0Ev	vtable slot 17
+ov021	0x02112e68	func_ov021_02112e68	_ZN16daObjCvShutter_c16CleanupResourcesEv	vtable slot 3
+ov021	0x02112e7c	func_ov021_02112e7c	_ZN16daObjCvShutter_c8BehaviorEv	vtable slot 6
+ov021	0x02112ec0	func_ov021_02112ec0	_ZN16daObjCvShutter_c13InitResourcesEv	vtable slot 0
 ov021	0x02112ed4	func_ov021_02112ed4	ShutterHmc_Spawn	spawnfunc
 ov021	0x02112ed4	ShutterHmc_Spawn	daObjCvShutter_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov021	0x02114768	data_ov021_02114768	WorkElevator_SpawnInfo	spawninfo
@@ -759,7 +759,7 @@ ov021	0x02114824	data_ov021_02114824	RollingRock_SpawnInfo	spawninfo
 ov021	0x02114848	data_ov021_02114848	_ZTV11RollingRock	vtable alloc=0x3c8
 ov021	0x021148f0	data_ov021_021148f0	ShutterHmc_SpawnInfo	spawninfo
 ov021	0x021148f0	ShutterHmc_SpawnInfo	g_profile_CV_SHUTTER	reconstructed profile global; literal ROM ID CV_SHUTTER+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov021	0x02114914	data_ov021_02114914	_ZTV10ShutterHmc	vtable alloc=0x324
+ov021	0x02114914	data_ov021_02114914	_ZTV16daObjCvShutter_c	vtable alloc=0x324
 ov022	0x02111578	func_ov022_02111578	VolcanoRing_Spawn	spawnfunc
 ov022	0x02111578	VolcanoRing_Spawn	daObjFl_Ring_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02111688	func_ov022_02111688	RotatingPlatformLll_Spawn	spawnfunc

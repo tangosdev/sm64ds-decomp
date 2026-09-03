@@ -429,7 +429,7 @@ src/daObjRc_Hane_c_classInit.c	WEAK-refs-only	ov036				1		None		-
 src/ShowArea.c	PURE-C	arm9				1		None		-
 src/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBob	1		None	_ZTV10ShutterBob/_ZTV13daObjSwdoor_c	-
-src/daObjCvShutter_c_classInit.c	S1-stores-rom-vptr	ov021			stores _ZTV10ShutterHmc	1		None	_ZTV10ShutterHmc/_ZTV13daObjSwdoor_c	-
+src/daObjCvShutter_c_classInit.c	S1-stores-rom-vptr	ov021			stores _ZTV16daObjCvShutter_c	1		None	_ZTV16daObjCvShutter_c/_ZTV13daObjSwdoor_c	-
 src/SignPost_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/SilverStarBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/SilverStar_Spawn.c	WEAK-refs-only	ov002				1		None		-
@@ -591,7 +591,7 @@ src/_ZN10Scuttlebug16CleanupResourcesEv.c	P1-vtable+mangled	ov071	daSpd_c	Scuttl
 src/_ZN10Scuttlebug16OnPendingDestroyEv.c	P1-vtable+mangled	ov071	daSpd_c	Scuttlebug/daSpd_c	vtable daSpd_c slot 12 @0x2120338 | _ZN10Scuttlebug16OnPendingDestroyEv	1		True		-
 src/_ZN10ScuttlebugD0Ev.c	DTOR-ONLY	ov071	daSpd_c	Scuttlebug/daSpd_c	_ZN10ScuttlebugD0Ev	1		True		-
 src/_ZN14daObjBSwdoor_cD0Ev.c	DTOR-ONLY	ov014	daObjBSwdoor_c	daObjBSwdoor_c/daObjBSwdoor_c	_ZN14daObjBSwdoor_cD0Ev	1		True	_ZTV14daObjBSwdoor_c/_ZTV10dBgActor_c/_ZTV13daObjSwdoor_c	-
-src/_ZN10ShutterHmcD0Ev.c	DTOR-ONLY	ov021	daObjCvShutter_c	ShutterHmc/daObjCvShutter_c	_ZN10ShutterHmcD0Ev	1		True	_ZTV10ShutterHmc/_ZTV10dBgActor_c/_ZTV13daObjSwdoor_c	-
+src/_ZN16daObjCvShutter_cD0Ev.c	DTOR-ONLY	ov021	daObjCvShutter_c	daObjCvShutter_c/daObjCvShutter_c	_ZN16daObjCvShutter_cD0Ev	1		True	_ZTV16daObjCvShutter_c/_ZTV10dBgActor_c/_ZTV13daObjSwdoor_c	-
 src/_ZN10SlidingBox8BehaviorEv.c	P1-vtable+mangled	ov016	daSlide_Box_c	SlidingBox/daSlide_Box_c	vtable daSlide_Box_c slot 6 @0x2113158 | _ZN10SlidingBox8BehaviorEv	1		True		-
 src/_ZN10SlidingBoxD0Ev.c	DTOR-ONLY	ov016	daSlide_Box_c	SlidingBox/daSlide_Box_c	_ZN10SlidingBoxD0Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN10SlidingBoxD1Ev.c	DTOR-ONLY	ov016	daSlide_Box_c	SlidingBox/daSlide_Box_c	_ZN10SlidingBoxD1Ev	1		True	_ZTV10dBgActor_c	-
