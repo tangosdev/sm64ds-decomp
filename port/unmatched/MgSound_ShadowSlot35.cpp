@@ -166,7 +166,11 @@ struct MgSoundVt {
    paragraph above explains why that is a typing artefact rather than a fifth
    divergence: the ROM leaves three different uncomputed values in r0 and the
    dispatcher's blx discards all of them. src types the function int, so it is
-   kept int here. */
+   kept int here.
+   PORT_HOST_ABI: four measured defects in the matched TU (sections 1-4
+   above): a dropped vtable-slot-35 receiver, an approximated modulo, a byte
+   store spelled as an int store over a live neighbour, and a differently
+   nested zero test. Host-copied and corrected; not an ABI wall. */
 extern "C" int func_ov006_0211ba88(char *base, int idx)
 {
     int *cur  = (int *)(base + 0x50e8 + idx * 0x14);
