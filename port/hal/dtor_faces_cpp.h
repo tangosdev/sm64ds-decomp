@@ -33,5 +33,22 @@ int __fastcall hal_cppd1_Scuttlebug(void *self, void *edx);
 int __fastcall hal_cppd1_BabyPenguin(void *self, void *edx);
 int __fastcall hal_cppd1_SnowmanBody(void *self, void *edx);
 int __fastcall hal_cppd1_SnowmanHead(void *self, void *edx);
+int __fastcall hal_cppd1_PyramidTag(void *self, void *edx);
+int __fastcall hal_cppd1_CrazedCrate(void *self, void *edx);
+int __fastcall hal_cppd1_BookShotSpawner(void *self, void *edx);
+int __fastcall hal_cppd1_WingFeather(void *self, void *edx);
+int __fastcall hal_cppd1_InvisibleSecret(void *self, void *edx);
+int __fastcall hal_cppd1_EnemySpawner(void *self, void *edx);
+int __fastcall hal_cppd1_EnemySwitchTag(void *self, void *edx);
+int __fastcall hal_cppd1_HauntedChair(void *self, void *edx);
+int __fastcall hal_cppd1_PrincessPeach(void *self, void *edx);
+int __fastcall hal_cppd1_Toad(void *self, void *edx);
+int __fastcall hal_cppd1_RacingPenguin(void *self, void *edx);
+int __fastcall hal_cppd1_IceSlideManager(void *self, void *edx);
+int __fastcall hal_cppd1_RollingLogLll(void *self, void *edx);
+int __fastcall hal_cppd1_RollingLogTtm(void *self, void *edx);
+int __fastcall hal_cppd1_TreasureChest(void *self, void *edx);
+int __fastcall hal_cppd1_Clam(void *self, void *edx);
+int __fastcall hal_cppd1_CutsceneObject(void *self, void *edx);
 
 #endif

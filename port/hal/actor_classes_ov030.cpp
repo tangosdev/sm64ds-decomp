@@ -142,6 +142,7 @@
 #include <cstdlib>
 
 #include "types.h"
+#include "dtor_faces_cpp.h"
 #include "Actor.h"
 #include "ActorBase.h"
 #include "RollingLogTtm.h"
@@ -630,16 +631,8 @@ static int __fastcall mky_pdes(void *s, void *)
    0x02115a48 -> data_ov080_02128338 -> _ZTV8Platform, three tables deep, and
    src/func_ov030_021111a0.c walks two. All three stay in the slice and run
    their own stores. */
-static int __fastcall mky_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN12WithMeshClsnD1Ev(t + 0x194);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x160);
-    _ZN11ShadowModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mky_d1) spelled the same chain by hand. */
 static int __fastcall mky_d0(void *s, void *)
 { return (int)(size_t)_ZN13RollingLogTtmD0Ev((int *)s); }
 static int __fastcall mky_yoshi(void *s, void *)
@@ -664,7 +657,7 @@ extern "C" void hal_fill_ukiki_vtable(void)
     vt[6]  = (void *)mky_behavior;
     vt[9]  = (void *)mky_render;
     vt[12] = (void *)mky_pdes;   /* own body, overrides ActorBase's default */
-    vt[16] = (void *)mky_d1;
+    vt[16] = (void *)hal_cppd1_RollingLogTtm;
     vt[17] = (void *)mky_d0;
     vt[18] = (void *)mky_yoshi;  /* own OnYoshiTryEat, overrides the shared default */
     vt[19] = (void *)mky_egg;    /* own OnTurnIntoEgg, overrides the shared default */

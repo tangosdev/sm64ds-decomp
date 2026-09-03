@@ -28,3 +28,21 @@ src/_ZN10ScuttlebugD1Ev.cpp
 src/_ZN11BabyPenguinD1Ev.cpp
 src/_ZN11SnowmanBodyD1Ev.cpp
 src/_ZN11SnowmanHeadD1Ev.cpp
+# group 4
+src/_ZN10PyramidTagD1Ev.cpp
+src/_ZN11CrazedCrateD1Ev.cpp
+src/_ZN15BookShotSpawnerD1Ev.cpp
+src/_ZN11WingFeatherD1Ev.cpp
+src/_ZN15InvisibleSecretD1Ev.cpp
+src/_ZN12EnemySpawnerD1Ev.cpp
+src/_ZN14EnemySwitchTagD1Ev.cpp
+src/_ZN12HauntedChairD1Ev.cpp
+src/_ZN13PrincessPeachD1Ev.cpp
+src/_ZN4ToadD1Ev.cpp
+src/_ZN13RacingPenguinD1Ev.cpp
+src/_ZN15IceSlideManagerD1Ev.cpp
+src/_ZN13RollingLogLllD1Ev.cpp
+src/_ZN13RollingLogTtmD1Ev.cpp
+src/_ZN13TreasureChestD1Ev.cpp
+src/_ZN4ClamD1Ev.cpp
+src/_ZN14CutsceneObjectD1Ev.cpp

@@ -79,6 +79,7 @@
 // any of them, the src TU replaces the copy via slice_w5a.txt.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -843,12 +844,8 @@ static int __fastcall bks_behavior(void *s, void *)
 { return _ZN15BookShotSpawner8BehaviorEv((char *)s); }
 static int __fastcall bks_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
-static int __fastcall bks_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV15BookShotSpawner;
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (bks_d1) spelled the same chain by hand. */
 static int __fastcall bks_d0(void *s, void *)
 { return (int)(size_t)_ZN15BookShotSpawnerD0Ev(s); }
 extern "C" void hal_fill_book_shot_spawner_vtable(void)
@@ -860,7 +857,7 @@ extern "C" void hal_fill_book_shot_spawner_vtable(void)
     vt[3]  = (void *)bks_clean;
     vt[6]  = (void *)bks_behavior;
     vt[9]  = (void *)bks_render;
-    vt[16] = (void *)bks_d1;
+    vt[16] = (void *)hal_cppd1_BookShotSpawner;
     vt[17] = (void *)bks_d0;
 }
 
@@ -923,17 +920,8 @@ static int __fastcall cc_render(void *s, void *)
   return ((CrazedCrate *)s)->CrazedCrate::Render(); }
 static int __fastcall cc_pdes(void *s, void *)
 { (void)s; _ZN11CrazedCrate16OnPendingDestroyEv(); return 0; }
-static int __fastcall cc_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV11CrazedCrate;
-    _ZN12WithMeshClsnD1Ev(t + 0x180);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x14c);
-    _ZN11ShadowModelD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (cc_d1) spelled the same chain by hand. */
 static int __fastcall cc_d0(void *s, void *)
 { return (int)(size_t)_ZN11CrazedCrateD0Ev(s); }
 static int __fastcall cc_yoshi(void *s, void *)
@@ -949,7 +937,7 @@ extern "C" void hal_fill_crazed_crate_vtable(void)
     vt[6]  = (void *)cc_behavior;
     vt[9]  = (void *)cc_render;
     vt[12] = (void *)cc_pdes;
-    vt[16] = (void *)cc_d1;
+    vt[16] = (void *)hal_cppd1_CrazedCrate;
     vt[17] = (void *)cc_d0;
     vt[18] = (void *)cc_yoshi;
     vt[19] = (void *)cc_turn_egg;

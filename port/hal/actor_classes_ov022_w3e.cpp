@@ -135,6 +135,7 @@
 
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 
 #include "Actor.h"
 #include "ActorBase.h"
@@ -579,14 +580,8 @@ static int __fastcall vf_render(void *s, void *)
    ??1RollingLogLll@@UAE@XZ). The ROM body at 0x021125e0 restores the vptr,
    runs MovingCylinderClsn::D1 at +0xd4 and then Actor::D2 -- HIGH ADDRESS
    FIRST, one member, no Deallocate (that is D0's). */
-static int __fastcall vf_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV13RollingLogLll;
-    _ZN18MovingCylinderClsnD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (vf_d1) spelled the same chain by hand. */
 static int __fastcall vf_d0(void *s, void *)
 { return (int)(size_t)_ZN13RollingLogLllD0Ev((int *)s); }
 /* the two pointer-to-member records, as __fastcall (ecx is arg 1) so the
@@ -604,7 +599,7 @@ extern "C" void hal_fill_volcano_fire_vtable(void)
     vt[3]  = (void *)vf_clean;
     vt[6]  = (void *)vf_behavior;
     vt[9]  = (void *)vf_render;
-    vt[16] = (void *)vf_d1;
+    vt[16] = (void *)hal_cppd1_RollingLogLll;
     vt[17] = (void *)vf_d0;
     /* ov22e_fill_shared wrote slot 30; this table has no slot 31 and the fill
        never touches one. */

@@ -123,6 +123,7 @@
 // ===========================================================================
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -366,15 +367,8 @@ static int __fastcall td_render(void *s, void *)
    nine gate-31 hosted destructors that leave it out: this class HAS a host
    array under that name, so the store has somewhere real to point and costs
    one instruction. */
-static int __fastcall td_d1(void *s, void *)
-{
-    ((void **)s)[0] = (void *)_ZTV4Toad;
-    _ZN11ShadowModelD1Ev((char *)s + 0x16c);
-    _ZN9ModelAnimD1Ev((char *)s + 0x108);
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (td_d1) spelled the same chain by hand. */
 static int __fastcall td_d0(void *s, void *)
 { return (int)(size_t)_ZN4ToadD0Ev((int *)s); }
 
@@ -386,7 +380,7 @@ extern "C" void hal_fill_toad_vtable(void)
     vt[3]  = (void *)td_clean;
     vt[6]  = (void *)td_behavior;
     vt[9]  = (void *)td_render;
-    vt[16] = (void *)td_d1;
+    vt[16] = (void *)hal_cppd1_Toad;
     vt[17] = (void *)td_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }
@@ -513,16 +507,8 @@ static int __fastcall pp_pdes(void *, void *)
    store the ROM opens with is kept, as TOAD's is and for the same reason: this
    class has a host array under that name, so the store has somewhere real to
    point and costs one instruction. */
-static int __fastcall pp_d1(void *s, void *)
-{
-    ((void **)s)[0] = (void *)_ZTV13PrincessPeach;
-    _ZN12WithMeshClsnD1Ev((char *)s + 0x194);
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0x160);
-    _ZN11ShadowModelD1Ev((char *)s + 0x138);
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (pp_d1) spelled the same chain by hand. */
 static int __fastcall pp_d0(void *s, void *)
 { return (int)(size_t)_ZN13PrincessPeachD0Ev((int *)s); }
 
@@ -537,7 +523,7 @@ extern "C" void hal_fill_princess_peach_vtable(void)
     /* her own OnPendingDestroy, not ActorBase's -- the one slot this class
        takes back from ov85_fill_shared */
     vt[12] = (void *)pp_pdes;
-    vt[16] = (void *)pp_d1;
+    vt[16] = (void *)hal_cppd1_PrincessPeach;
     vt[17] = (void *)pp_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }

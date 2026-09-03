@@ -46,6 +46,7 @@
 // within 0x180000, plays a sound, counts the timer down and kills the actor.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -165,8 +166,8 @@ static int __fastcall ccm_trap30(void *s, void *) { ccm_trap_report(s, 30); retu
 /* Slot 16, D1. The ROM body is an empty ~IceSlideManager: no member sub-objects
    (the header is plain u8 fields), so it is Actor::D2 alone, the ac_d1_actor_only
    reading hal/actor_classes.cpp already documents. */
-static int __fastcall ism_d1(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD2Ev(s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (ism_d1) spelled the same chain by hand. */
 
 /* Slot 17, the DELETING destructor -- run rel0215 wave 3 (lane w3-e). Until
    this line slot 17 was ccm_trap17, so the class had no hosted deleting
@@ -229,7 +230,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
     vt[6]  = (void *)ism_behavior;
     vt[9]  = (void *)ccm_render_base;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)ism_d1;
+    vt[16] = (void *)hal_cppd1_IceSlideManager;
     vt[17] = (void *)ism_d0;
     /* 20..30, Actor's own list, which is what the ROM table holds --
        IceSlideManager overrides none of it. Slot 30 declines: its ROM body

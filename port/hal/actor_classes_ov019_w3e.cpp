@@ -95,6 +95,7 @@
 
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 
 #include "Actor.h"
 #include "ActorBase.h"
@@ -282,18 +283,8 @@ static int __fastcall rp_pdes(void *s, void *)
 { (void)s; _ZN13RacingPenguin16OnPendingDestroyEv(); return 0; }
 /* slot 16, the held-out D1 -- see this file's header for why the matched TU
    cannot carry the Itanium name, and for where this chain comes from. */
-static int __fastcall rp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV13RacingPenguin;
-    _ZN12WithMeshClsnD1Ev(t + 0x1a8);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x174);
-    _ZN11ShadowModelD1Ev(t + 0x14c);
-    _ZN15TextureSequenceD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (rp_d1) spelled the same chain by hand. */
 static int __fastcall rp_d0(void *s, void *)
 { return (int)(size_t)_ZN13RacingPenguinD0Ev((int *)s); }
 
@@ -373,7 +364,7 @@ extern "C" void hal_fill_racing_penguin_vtable(void)
     vt[13] = (void *)rp_trap13;
     vt[14] = (void *)rp_trap14;
     vt[15] = (void *)rp_heap;
-    vt[16] = (void *)rp_d1;
+    vt[16] = (void *)hal_cppd1_RacingPenguin;
     vt[17] = (void *)rp_d0;
     vt[18] = (void *)rp_yoshi;
     vt[19] = (void *)rp_turn_egg;

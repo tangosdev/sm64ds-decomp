@@ -46,6 +46,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "EnemySwitchTag.h"
 #include "EnemySpawner.h"
@@ -226,9 +227,8 @@ static int __fastcall est_behavior(void *s, void *)
    member is a MovingCylinderClsn at +0xd4 (its own D0 destroys it there), then
    Actor::~D2. No vtable store: nothing dispatches through the object again
    before the caller deallocates it. */
-static int __fastcall est_d1(void *s, void *)
-{ _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-  return (int)(size_t)_ZN5ActorD2Ev(s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (est_d1) spelled the same chain by hand. */
 static int __fastcall est_d0(void *s, void *)
 { return (int)(size_t)_ZN14EnemySwitchTagD0Ev((int *)s); }
 
@@ -243,8 +243,8 @@ static int __fastcall esp_behavior(void *s, void *)
 { return _ZN12EnemySpawner8BehaviorEv((char *)s); }
 /* Slot 16: EnemySpawner has no members, so the complete-object destructor is
    Actor::~D2 alone (the ac_d1_actor_only shape). */
-static int __fastcall esp_d1(void *s, void *)
-{ return (int)(size_t)_ZN5ActorD2Ev(s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (esp_d1) spelled the same chain by hand. */
 static int __fastcall esp_d0(void *s, void *)
 { return (int)(size_t)_ZN12EnemySpawnerD0Ev((int *)s); }
 
@@ -255,7 +255,7 @@ extern "C" void hal_fill_enemy_switch_tag_vtable(void)
     vt[0]  = (void *)est_init;
     vt[3]  = (void *)est_clean;
     vt[6]  = (void *)est_behavior;
-    vt[16] = (void *)est_d1;
+    vt[16] = (void *)hal_cppd1_EnemySwitchTag;
     vt[17] = (void *)est_d0;
 }
 
@@ -266,6 +266,6 @@ extern "C" void hal_fill_enemy_spawner_vtable(void)
     vt[0]  = (void *)esp_init;
     vt[3]  = (void *)esp_clean;
     vt[6]  = (void *)esp_behavior;
-    vt[16] = (void *)esp_d1;
+    vt[16] = (void *)hal_cppd1_EnemySpawner;
     vt[17] = (void *)esp_d0;
 }
