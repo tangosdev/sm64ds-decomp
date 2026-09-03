@@ -91,9 +91,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },
@@ -223,9 +223,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },

@@ -89,9 +89,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },
@@ -221,9 +221,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },
@@ -4296,7 +4296,7 @@
       "overlay_ambiguous": true,
       "overlay": "ov032",
       "profile_address": "0x02113800",
-      "current_profile_name": "data_ov032_02113800",
+      "current_profile_name": "g_profile_BAKUBAKU",
       "proposed_profile_name": "g_profile_SL_ICEBLOCK_SHOT",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 228,
@@ -4312,8 +4312,8 @@
       "far_distance": "0x01000000",
       "factory_module": "ov032",
       "factory_address": "0x0211244c",
-      "current_factory_name": "func_ov032_0211244c",
-      "current_factory_file": "src/func_ov032_0211244c.c",
+      "current_factory_name": "daBakubaku_c_classInit",
+      "current_factory_file": "src/actors/d_a_bakubaku.cpp",
       "proposed_factory_name": "daBakubaku_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000438",
@@ -10218,7 +10218,7 @@
       "overlay_ambiguous": true,
       "overlay": "ov032",
       "profile_address": "0x02113800",
-      "current_profile_name": "data_ov032_02113800",
+      "current_profile_name": "g_profile_BAKUBAKU",
       "proposed_profile_name": "g_profile_BAKUBAKU",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 228,
@@ -10234,8 +10234,8 @@
       "far_distance": "0x01000000",
       "factory_module": "ov032",
       "factory_address": "0x0211244c",
-      "current_factory_name": "func_ov032_0211244c",
-      "current_factory_file": "src/func_ov032_0211244c.c",
+      "current_factory_name": "daBakubaku_c_classInit",
+      "current_factory_file": "src/actors/d_a_bakubaku.cpp",
       "proposed_factory_name": "daBakubaku_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000438",
