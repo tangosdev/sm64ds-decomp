@@ -635,7 +635,7 @@ int g_yoshi_row = -1;                /* -1 = not a built-in row */
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
 int g_volume = -1;
-int g_net_mode = 1;   /* NetMode: 0 lockstep, 1 rollback (port/rollback); rollback is the default */
+int g_net_mode = 0;   /* NetMode: 0 lockstep, 1 rollback (port/rollback); lockstep is the default (0.3.6 hotfix: rollback mispredicts every frame a peer moves) */
 
 /* MouseCapture: 1 when the player asked the window to hold the pointer and
    steer the camera with bare movement instead of a right-button drag. Default
@@ -962,10 +962,14 @@ void load_once(void)
     g_voice_mic[0] = '\0';
     g_voice_near = 512;
     g_voice_far = 3072;
-    /* NetMode: rollback by default (owner's decision, 2026-09-03). Set HERE,
-       with the other defaults, so a missing file and a file that will not
-       parse both land on it; the parse below only ever moves it to lockstep. */
-    g_net_mode = 1;
+    /* NetMode: lockstep by default (0.3.6 hotfix, 2026-09-03; rollback shipped
+       0.3.4 as the default but re-simulates the world every frame a remote peer
+       moves -- prediction only carries the heading, so any button/stick change
+       mispredicts and forces a rollback each frame, halving the effective tick
+       rate. Lockstep never predicts, so it never re-sims). Set HERE, with the
+       other defaults, so a missing file and a file that will not parse both
+       land on it; the parse below only ever moves it to rollback. */
+    g_net_mode = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -1116,18 +1120,18 @@ void load_once(void)
             const int v = json_int(text, "Volume", -1);
             if (v >= 0) g_volume = v > 100 ? 100 : v;
         }
-        /* NetMode (port/rollback): "rollback" (the default, and what an
-           absent key, an absent file and an unparseable file all read as;
-           owner's decision 2026-09-03) or "lockstep". Only the word
-           "lockstep" moves it; anything else keeps the default, like every
-           other reader. Read once at load; the transport asks at install,
-           SM64DS_NETMODE overrides there, and a seated session wider than
-           kRollbackMaxPlayers (host_settings.h) runs lockstep regardless. */
+        /* NetMode (port/rollback): "lockstep" (the default since the 0.3.6
+           hotfix, and what an absent key, an absent file and an unparseable
+           file all read as) or "rollback" (opt-in). Only the word "rollback"
+           moves it; anything else keeps the default, like every other reader.
+           Read once at load; the transport asks at install, SM64DS_NETMODE
+           overrides there, and a seated session wider than kRollbackMaxPlayers
+           (host_settings.h) runs lockstep regardless. */
         {
             char nm[16];
             if (json_str(text, "NetMode", nm, sizeof nm) &&
-                strlen(nm) == 8 && ieq(nm, "lockstep", 8))
-                g_net_mode = 0;
+                strlen(nm) == 8 && ieq(nm, "rollback", 8))
+                g_net_mode = 1;
         }
         /* read against its own default beside the gap keys, for the same
            reason they are: a settings.json written before this key existed
@@ -1148,14 +1152,16 @@ void load_once(void)
        non-default choices were in force. */
     if (g_swap_camera_turn)
         fprintf(stderr, "[settings] SwapCameraTurnDirection on (%s)\n", path);
-    /* Off its default (rollback), so it is said, and said in plain words:
-       a support log for "the game hitches online" should carry on one line
-       that this copy chose to wait for every player's input. */
-    if (!g_net_mode)
-        fprintf(stderr, "[settings] NetMode lockstep -- online play waits for "
-                        "every player's input each frame instead of the "
-                        "default rollback (predict, then rewind on a wrong "
-                        "guess). (%s)\n", path);
+    /* Off its default (lockstep since the 0.3.6 hotfix), so it is said, and
+       said in plain words: a support log for "the game hitches online" should
+       carry on one line that this copy opted back into rollback, which
+       re-simulates the world every frame a remote peer moves. */
+    if (g_net_mode)
+        fprintf(stderr, "[settings] NetMode rollback -- online play predicts "
+                        "each peer and rewinds on a wrong guess instead of the "
+                        "default lockstep (wait for every player's input each "
+                        "frame). Rollback re-sims on every frame a peer moves. "
+                        "(%s)\n", path);
     if (g_run_mode || g_run_key != 0x10 || g_run_pad != 0x4000)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
@@ -1499,7 +1505,7 @@ extern "C" int host_setting_volume(void)
     return g_volume;
 }
 
-/* NetMode: 0 lockstep, 1 rollback (the default). See the parse above. */
+/* NetMode: 0 lockstep (the default), 1 rollback (opt-in). See the parse above. */
 extern "C" int host_setting_net_mode(void)
 {
     load_once();
