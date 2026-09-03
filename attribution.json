@@ -1397,6 +1397,14 @@
     "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_nobiru.cpp#_ZN17daObjKm2_Nobiru_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_km2_nobiru.cpp#daObjKm2_Nobiru_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_km2_nobiru.cpp#daObjKm2_Nobiru_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c13OnTurnIntoEggER6Player": "github-actions[bot]",
+    "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c13OnYoshiTryEatEv": "andrewboudreau",
+    "src/actors/d_a_obj_fire.cpp#BlueFlame_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_fire.cpp#RedFlame_Spawn": "github-actions[bot]"
   }
 }
