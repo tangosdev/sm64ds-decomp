@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN9BlueFlame13InitResourcesEv
+// @symbol _ZN11daObjFire_c13InitResourcesEv
 
-#include "BlueFlame.h"
+#include "daObjFire_c.h"
 
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *actor, Fix12i radius, Fix12i height,
     u32 flags, u32 vulnFlags);
 
-int BlueFlame::InitResources()
+int daObjFire_c::InitResources()
 {
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         &mdCcAc_c, this, 0x41000, 0x41000, 0x200002, 0x8000);

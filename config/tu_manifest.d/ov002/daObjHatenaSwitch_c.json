@@ -7,7 +7,7 @@
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x020b4ed8..0x020b5734, 13 functions, ending immediately before daObjFire_c/BlueFlame D1",
+    "contiguous linker run: 0x020b4ed8..0x020b5734, 13 functions, ending immediately before daObjFire_c/daObjFire_c D1",
     "ROM class identity: _ZTI19daObjHatenaSwitch_c at 0x02108e14 and _ZTS19daObjHatenaSwitch_c at 0x02108e20",
     "the deferred initializer, ctor word, CLPS blocks, and resource BSS remain separately enrolled and outside this class TU"
   ],

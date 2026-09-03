@@ -785,7 +785,7 @@ extern int _ZTV8daKrpa_c[];
 extern int _ZTV8daNknk_c[];
 extern int _ZTV8daStar_c[];
 extern int _ZTV8daYegg_c[];
-extern int _ZTV9BlueFlame[];
+extern int _ZTV11daObjFire_c[];
 extern int _ZTV9Butterfly[];
 extern int _ZTV10daChRoom_c[];
 extern int _ZTV12daDossyCap_c[];
