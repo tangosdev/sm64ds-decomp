@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2648,
+  "count": 2652,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -2389,6 +2389,8 @@
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c6RenderEv",
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c9BoardBusyEv",
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c9RenderHudEv",
+    "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_cD0Ev",
+    "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_cD1Ev",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c10IsPairWithEPS_",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c4InitEi",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c6DealInEi",
@@ -2396,6 +2398,8 @@
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c6UpdateEi",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c7HitTestEv",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c8FlipAwayEi",
+    "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_cC1Ev",
+    "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_cD1Ev",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c12BeforeRenderEv",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj",
