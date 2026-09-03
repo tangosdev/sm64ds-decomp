@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8PoleLift13InitResourcesEv
+// @symbol _ZN18daObjKm2_Ami_Bou_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PoleLift.h"
+#include "daObjKm2_Ami_Bou_c.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
@@ -14,7 +14,7 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* act, int fix, int t, unsigned int a, unsigned int b);
 }
 
-int PoleLift::InitResources()
+int daObjKm2_Ami_Bou_c::InitResources()
 {
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);

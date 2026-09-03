@@ -1,5 +1,5 @@
 //cpp
-/* SHADOW translation unit -- ov045 / PoleLift (RTTI name daObjKm2_Ami_Bou_c).
+/* SHADOW translation unit -- ov045 / daObjKm2_Ami_Bou_c (RTTI name daObjKm2_Ami_Bou_c).
  *
  * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
  * build. The seven one-function sources under src/ remain the enrolled owners of
@@ -13,18 +13,18 @@
  * section order equal the ROM's address order. Confirmed by probe against this
  * exact compiler rather than assumed; the reading order below is therefore
  * daObjKm2_Ami_Bou_c_classInit, InitResources, Behavior, Render,
- * CleanupResources, ~PoleLift.
+ * CleanupResources, ~daObjKm2_Ami_Bou_c.
  * The rule holds between distinct definitions but NOT inside the destructor's
  * variant group -- see the report.
  *
  * THIS TU ALSO OWNS, and this round neither declares nor verifies any of it:
- *   _ZTV8PoleLift       .data  0x02112dbc (slot array; the C++ object starts
+ *   _ZTV18daObjKm2_Ami_Bou_c       .data  0x02112dbc (slot array; the C++ object starts
  *                              8 bytes earlier, at 0x02112db4)
- *   _ZTI8PoleLift       .data  0x02112d74
+ *   _ZTI18daObjKm2_Ami_Bou_c       .data  0x02112d74
  *   g_profile_KM2_AMI_BOU .data 0x02112d98
- *                          (historical alias PoleLift_SpawnInfo)
- *   PoleLift_ClsnFile   .bss   0x021131d0
- *   PoleLift_ModelFile  .bss   0x021131d8
+ *                          (historical alias daObjKm2_Ami_Bou_c_SpawnInfo)
+ *   daObjKm2_Ami_Bou_c_ClsnFile   .bss   0x021131d0
+ *   daObjKm2_Ami_Bou_c_ModelFile  .bss   0x021131d8
  *   a static initialiser in .init
  * Compiling the class's key function here does emit a vtable, RTTI records and
  * dBgActor_c's out-of-line destructors as a side effect. That is expected and is
@@ -35,7 +35,7 @@
 #include "decl_dCcAc_c.h"
 #include "decl_Platform.h"
 
-#include "PoleLift.h"
+#include "daObjKm2_Ami_Bou_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
@@ -69,14 +69,14 @@ extern short data_02082214[];
 /* ROM ordinal 6 -- daObjKm2_Ami_Bou_c_classInit, 0x02111808, size 0x38      */
 /* ------------------------------------------------------------------------- */
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
-/* resolved: VT0 = _ZTV8PoleLift
+/* resolved: VT0 = _ZTV18daObjKm2_Ami_Bou_c
  *
  * C LINKAGE IS LOAD-BEARING: the ROM symbol is the bare name. The legacy file
  * was a C translation unit and got that for free; in a merged C++ TU it has to
  * be asked for.
  *
  * THE `+ 2` IS ALSO LOAD-BEARING, and it is the one thing consolidation forced.
- * decl_common.h declares `_ZTV8PoleLift` by the ROM's convention, where the
+ * decl_common.h declares `_ZTV18daObjKm2_Ami_Bou_c` by the ROM's convention, where the
  * symbol IS the slot array. mwcc's own convention -- and this TU now defines
  * the vtable, because it defines the class's key function -- puts the symbol at
  * the start of the vtable OBJECT, two words of Itanium preamble earlier. The
@@ -91,23 +91,54 @@ extern short data_02082214[];
 /* Reconstructed source-style name: SM64DS proves daObjKm2_Ami_Bou_c through
  * RTTI, allocation size, vtable identity, and the KM2_AMI_BOU registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
- * not preserved. Historical alias: PoleLift_Spawn. */
+ * not preserved. Historical alias: daObjKm2_Ami_Bou_c_Spawn. */
+// @symbol daObjKm2_Ami_Bou_c_classInit
 extern "C" int *daObjKm2_Ami_Bou_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(856);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)(_ZTV8PoleLift + 2);
+        /* &[2], not the bare symbol: this TU EMITS the vtable, so mwcc's
+         * symbol is the object start at 0x02112db4 and +8 is what reaches the
+         * 0x02112dbc address point the ROM stores. The addend-0 spelling was
+         * right only while the class merely IMPORTED its vtable. */
+        p[0] = (int)&_ZTV18daObjKm2_Ami_Bou_c[2];
         _ZN7dCcAc_cC1Ev((char *)p + 0x320);
     }
     return p;
 }
 
+/* -------------------------------------------------------------------------- */
+/* g_profile_KM2_AMI_BOU, 0x02112d98, size 0x1c                               */
+/* -------------------------------------------------------------------------- */
+/* .data objects emit in SOURCE order, so the descriptor is written directly
+ * after the factory it names -- which is where the ROM's run puts it, between
+ * _ZTS (0x02112d80) and the vtable object (0x02112db4). */
+struct Km2AmiBouSpawnInfo {
+    int *(*classInit)();
+    s16 profileIDAndExecuteOrder;   /* 0x008e */
+    s16 drawOrder;                  /* 0x00d5 */
+    u32 actorFlags;
+    s32 clipOffsetY;
+    s32 clipRadius;                 /* 0x1000 == 1.0 */
+    s32 clipDistance;
+    s32 farDistance;
+};
+typedef char Km2AmiBouSpawnInfo_size_must_be_0x1c[
+    sizeof(Km2AmiBouSpawnInfo) == 0x1c ? 1 : -1];
+
+// @symbol g_profile_KM2_AMI_BOU
+extern "C" Km2AmiBouSpawnInfo g_profile_KM2_AMI_BOU = {
+    daObjKm2_Ami_Bou_c_classInit, 0x008e, 0x00d5, 0x00000002,
+    0x00100000, 0x00300000, 0x01000000, 0x00000000
+};
+
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- PoleLift::InitResources, 0x02111738, size 0xd0            */
+/* ROM ordinal 5 -- daObjKm2_Ami_Bou_c::InitResources, 0x02111738, size 0xd0            */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method */
-int PoleLift::InitResources()
+// @symbol _ZN18daObjKm2_Ami_Bou_c13InitResourcesEv
+int daObjKm2_Ami_Bou_c::InitResources()
 {
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);
@@ -126,10 +157,11 @@ int PoleLift::InitResources()
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- PoleLift::Behavior, 0x02111618, size 0x120                */
+/* ROM ordinal 4 -- daObjKm2_Ami_Bou_c::Behavior, 0x02111618, size 0x120                */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method */
-int PoleLift::Behavior()
+// @symbol _ZN18daObjKm2_Ami_Bou_c8BehaviorEv
+int daObjKm2_Ami_Bou_c::Behavior()
 {
     _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
     _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
@@ -154,7 +186,7 @@ int PoleLift::Behavior()
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- PoleLift::Render, 0x021115f0, size 0x28                   */
+/* ROM ordinal 3 -- daObjKm2_Ami_Bou_c::Render, 0x021115f0, size 0x28                   */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -165,14 +197,15 @@ int PoleLift::Behavior()
  * headers, and both describe something include/Model.h already declares
  * correctly. Reconciled onto the real member: byte-identical, measured.
  */
-int PoleLift::Render()
+// @symbol _ZN18daObjKm2_Ami_Bou_c6RenderEv
+int daObjKm2_Ami_Bou_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- PoleLift::CleanupResources, 0x021115b8, size 0x38         */
+/* ROM ordinal 2 -- daObjKm2_Ami_Bou_c::CleanupResources, 0x021115b8, size 0x38         */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -183,7 +216,8 @@ int PoleLift::Render()
  * dBgW, so the cast chain was describing an inheritance the headers
  * already know about. Reconciled onto the member call: byte-identical, measured.
  */
-int PoleLift::CleanupResources()
+// @symbol _ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv
+int daObjKm2_Ami_Bou_c::CleanupResources()
 {
     mMeshCollider.Disable();
     ((SharedFilePtr *)(data_ov045_021131b0))->Release();
@@ -193,20 +227,23 @@ int PoleLift::CleanupResources()
 
 /* ------------------------------------------------------------------------- */
 /* ROM ordinals 1 and 0 -- one inline definition, two ROM-visible variants:   */
-/*   _ZN8PoleLiftD1Ev  0x0211150c  size 0x4c   (complete-object destructor)   */
-/*   _ZN8PoleLiftD0Ev  0x02111558  size 0x60   (deleting destructor)          */
+/*   _ZN18daObjKm2_Ami_Bou_cD1Ev  0x0211150c  size 0x4c   (complete-object destructor)   */
+/*   _ZN18daObjKm2_Ami_Bou_cD0Ev  0x02111558  size 0x60   (deleting destructor)          */
 /* ------------------------------------------------------------------------- */
-/* The destructor is defined in the class body in include/PoleLift.h, and is
+/* The destructor is defined in the class body in include/daObjKm2_Ami_Bou_c.h, and is
  * deliberately NOT repeated out of line here. An out-of-line definition makes
  * mwccarm emit D2, D0, D1 -- and the cartridge holds D1, D0 with no D2 at all.
  * Defined inline, the compiler emits exactly the ROM's two variants, in the
  * ROM's order, from this translation unit.
  *
  * The body itself is two vtable stores and three destructor calls, every one a
- * consequence of `struct PoleLift : dBgActor_c`: its own vptr, then
+ * consequence of `struct daObjKm2_Ami_Bou_c : dBgActor_c`: its own vptr, then
  * dBgActor_c's -- inlined, because dBgActor_c's destructor is defined in its
  * class body -- then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This
  * class adds no member with a destructor of its own. D0 additionally returns
  * the object to its heap through the inline operator delete it inherits, which
  * is why nothing mentions a heap.
  */
+
+// @symbol _ZN18daObjKm2_Ami_Bou_cD0Ev
+// @symbol _ZN18daObjKm2_Ami_Bou_cD1Ev

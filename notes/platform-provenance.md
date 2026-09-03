@@ -101,7 +101,7 @@ key function, so no translation unit that merely includes this header emits
 vtable this header emitted and the one in the cartridge.
 
 `_ZTV10dBgActor_c` is 0x84 at ov002:0x0210ae38 — 33 words, one more than the 32 a
-`dActor_c`-shaped table needs — and `_ZTV8PoleLift`, one of the 70 subclasses, is
+`dActor_c`-shaped table needs — and `_ZTV18daObjKm2_Ami_Bou_c`, one of the 70 subclasses, is
 0x84 as well. `rtti_vtables` agrees from the other side: `dActor_c` has 31 slots
 and `dBgActor_c`'s own overrides are 16 (D1), 17 (D0) and 31, and 97 of its 101
 RTTI children have exactly 32 slots. Without this declaration every one of those

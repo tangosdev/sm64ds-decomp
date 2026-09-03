@@ -6379,17 +6379,17 @@
    "start": "0x211150c",
    "end": "0x2111840",
    "classes": [
-    "PoleLift"
+    "daObjKm2_Ami_Bou_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN8PoleLiftD1Ev.cpp",
-    "src/_ZN8PoleLiftD0Ev.cpp",
-    "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
-    "src/_ZN8PoleLift6RenderEv.cpp",
-    "src/_ZN8PoleLift8BehaviorEv.cpp",
-    "src/_ZN8PoleLift13InitResourcesEv.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp",
+    "src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp",
     "src/daObjKm2_Ami_Bou_c_classInit.c"
    ],
    "ext_mix": {

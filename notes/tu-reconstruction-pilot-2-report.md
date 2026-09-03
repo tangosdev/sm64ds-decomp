@@ -346,7 +346,7 @@ Six copies across five objects today; **two** in the merged object. Consolidatio
 *reduces* the surplus. No legacy object emits any `.data`/`.rodata`/`.bss`
 either, so the merged object's cleanliness there is inherited, not new.
 
-Contrast with pilot #1, where the unlicensed output was `_ZN8PoleLiftD2Ev` plus
+Contrast with pilot #1, where the unlicensed output was `_ZN18daObjKm2_Ami_Bou_cD2Ev` plus
 `Platform`'s two out-of-line destructors plus twelve RTTI/vtable `.data`
 sections — all consequences of owning a class. None of that shape is present
 here.
@@ -613,9 +613,9 @@ and appended an `ov045/FallBlockBfs` entry to `config/tu_manifest.d/`.
 
 This pilot's manifest entry was therefore **spliced in textually** ahead of the
 closing bracket rather than written by re-serialising the file, so that entry and
-the concurrent session's edit to the `ov045/PoleLift` record are preserved
+the concurrent session's edit to the `ov045/daObjKm2_Ami_Bou_c` record are preserved
 byte-for-byte. The result parses and carries three entries in order:
-`ov045/PoleLift`, `ov045/FallBlockBfs`, `ov002/LevelObjects`.
+`ov045/daObjKm2_Ami_Bou_c`, `ov045/FallBlockBfs`, `ov002/LevelObjects`.
 
 Nothing here was produced by or verified against `tools/tubuild.py`; every
 measurement above was made by hand against `match.py`, `objisolate.py`,

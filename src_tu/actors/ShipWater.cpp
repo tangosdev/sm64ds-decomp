@@ -6,7 +6,7 @@
  * build. Render/CleanupResources/Behavior are reconciled against the real
  * headers (mModel/mMeshCollider/mTextureTransformer are real inherited
  * members; the legacy generator's local shadow structs and offset casts are
- * gone), the same reconciliation pilot #1 did by hand for PoleLift's
+ * gone), the same reconciliation pilot #1 did by hand for daObjKm2_Ami_Bou_c's
  * equivalents (see notes/tu-reconstruction-pilot-report.md sec 5.2). What is
  * left as extern "C" is load-bearing: Sound::PlayLong and the two Fix12<int>
  * SetFile calls have no real-method route yet (see the comments at each).

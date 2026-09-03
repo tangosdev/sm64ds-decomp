@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN8PoleLift8BehaviorEv
+// @symbol _ZN18daObjKm2_Ami_Bou_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "PoleLift.h"
+#include "daObjKm2_Ami_Bou_c.h"
 extern "C" {
 extern void _ZN5dCc_c5ClearEv(void *self);
 extern void _ZN5dCc_c6UpdateEv(void *self);
@@ -11,7 +11,7 @@ extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 }
 extern short data_02082214[];
 
-int PoleLift::Behavior()
+int daObjKm2_Ami_Bou_c::Behavior()
 {
     _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
     _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);

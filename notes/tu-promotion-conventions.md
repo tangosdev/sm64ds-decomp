@@ -446,7 +446,7 @@ costs, not the statements.
 
 So write
 
-    virtual ~PoleLift() {
+    virtual ~daObjKm2_Ami_Bou_c() {
         ...
     }
 
