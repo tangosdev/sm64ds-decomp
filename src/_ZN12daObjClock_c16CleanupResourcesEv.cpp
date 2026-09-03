@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN22ClockPaintingHandShort16CleanupResourcesEv
+// @symbol _ZN12daObjClock_c16CleanupResourcesEv
 /* recovered: typed file ownership through the shared class APIs */
 #include "decl_common.h"
-#include "ClockPaintingHandShort.h"
+#include "daObjClock_c.h"
 #include "SharedFilePtr.h"
 
-int ClockPaintingHandShort::CleanupResources()
+int daObjClock_c::CleanupResources()
 {
     ((SharedFilePtr *)data_ov013_021116b0[mHandIndex])->Release();
     return 1;

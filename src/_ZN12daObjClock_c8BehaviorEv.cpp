@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN22ClockPaintingHandShort8BehaviorEv
+// @symbol _ZN12daObjClock_c8BehaviorEv
 /* recovered: real C++ method over inherited actor fields */
 #include "decl_common.h"
-#include "ClockPaintingHandShort.h"
+#include "daObjClock_c.h"
 extern "C" {
 int IsAreaShowing(int areaId);
 }
 extern signed char data_02092110[];
 extern unsigned char data_0209f2c0[];
 
-int ClockPaintingHandShort::Behavior()
+int daObjClock_c::Behavior()
 {
     if (data_02092110[0] <= 0) {
         mAngleZ += data_ov013_021116ac[mHandIndex];

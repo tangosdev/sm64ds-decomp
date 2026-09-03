@@ -9,8 +9,8 @@
 #endif
 
 /* The swinging pendulum inside the clock painting -- a leaf dActor_c child at
- * ov013 0x021111a0..0x02111384, alongside its sibling ClockPaintingHandShort
- * (include/ClockPaintingHandShort.h, a separate class -- same painting, not a
+ * ov013 0x021111a0..0x02111384, alongside its sibling daObjClock_c
+ * (include/daObjClock_c.h, a separate class -- same painting, not a
  * base/derived relationship: neither RTTI record names the other).
  *
  * DERIVATION. The RTTI record at ov013 0x021120e0 is mangled
@@ -79,7 +79,7 @@
  * one s16, read and written as `*(short *)(c + 0x124)` in both
  * InitResources (set to 0x100) and Behavior (nudged by 8 per frame, compared
  * against +-0x10), plus 2 bytes of trailing padding. Same offset,
- * ClockPaintingHandShort.h's sibling field (`mHandIndex`, u8) confirms the
+ * daObjClock_c.h's sibling field (`mHandIndex`, u8) confirms the
  * shape -- one small scalar right after the embedded Model.
  *
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths

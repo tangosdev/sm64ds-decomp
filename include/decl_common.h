@@ -684,7 +684,7 @@ extern int _ZTV21daObjKm2_Fall_Block_c[];
 extern int _ZTV21daObjKm3_Kurumajiku_c[];
 extern int _ZTV21daObjWlKoopaShutter_c[];
 extern int _ZTV21daObj_volcanoCannon_c[];
-extern int _ZTV22ClockPaintingHandShort[];
+extern int _ZTV12daObjClock_c[];
 extern int _ZTV22RotatingUpDownPlatform[];
 extern int _ZTV10SlidingBox[];
 extern int _ZTV23daObjRotateUpdownLift_c[];
