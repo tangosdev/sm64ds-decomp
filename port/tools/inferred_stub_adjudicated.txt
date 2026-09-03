@@ -2111,3 +2111,5 @@ func_ov002_020b33dc  REAL_DECOMP  SEATOV002.md#adjudicated  Behavior 0x13c: +0x1
 #
 # id 9, ov002, YoshiEgg (daYegg_c) -- SEATED by this lane.
 func_ov002_020ed0d4  REAL_DECOMP  SEATOV002.md#adjudicated  state 0 main 0x4dc (dsd misnamed it daWarpkun_c::Kill): reads the laying player at +0x38c, copies his velocity, aims the egg by the +0x3ea..3ee angles through Matrix4x3_FromRotationZXYExt, holds it in the mouth while +0x41e counts down, hands off to the thrown state; match.py strict-reloc byte match
+# id 26, ov002, QuestionSwitch (daObjHatenaSwitch_c) -- SEATED by lane SEAT-QUESTIONSWITCH.
+func_ov002_020b4fc4  REAL_DECOMP  SEATQSWITCH.md#slot-21  3/3 words (mov r1,#0; strb r1,[r0,#0x718]; bx lr) under 2004/b56 --module ov002; OnGroundPounded zeroes the +0x718 countdown

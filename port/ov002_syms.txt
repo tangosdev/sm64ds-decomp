@@ -455,3 +455,11 @@ Bubble_SpawnInfo:0x1c data_ov002_02108964:0x7c
 # data_ov002_021000b8). The state table data_ov002_02110a5c and the
 # two animation SharedFilePtrs 0x0210e6b0 / 0x0210eb78 were already mounted.
 YoshiEgg_SpawnInfo:0x1c _ZTV8YoshiEgg:0x7c data_ov002_021000a0:0x8 data_ov002_021000a8:0x10
+# gate 212, QUESTION_SWITCH (26): its SpawnInfo record (0x24 bytes to the next
+# symbol _ZTV14QuestionSwitch, which stays a host array) and the two CLPS
+# blocks InitResources hands MovingMeshCollider::SetFile: data_ov002_0210d774
+# for the raised mesh (+0x324; 0x20 bytes, the delta to data_ov002_0210d794,
+# and until now only the boundary of the IceSheet block above) and
+# data_ov002_0210d8b4 for the pressed mesh (+0x4ec; 0x20 bytes to
+# data_ov002_0210d8d4). The four SharedFilePtr cells are already above.
+QuestionSwitch_SpawnInfo data_ov002_0210d774:0x20 data_ov002_0210d8b4:0x20

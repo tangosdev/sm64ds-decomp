@@ -555,4 +555,19 @@ int _ZN8YoshiEgg6RenderEv(void *selfv)
     ((ModelAnim *)(c + 0x300))->ModelAnim::Render(0);
     return 1;
 }
+
+/* ---- QUESTION_SWITCH (actor 26, ov002), gate 212 --------------------------
+   HOST COPY of src/_ZN14QuestionSwitch6RenderEv.cpp, the same ModelAnim
+   slot-5 collision: the matched TU dispatches slot 5 of a six-virtual local
+   shadow over the ModelAnim at 0x6b4, which is ModelAnim::Render(0) in ROM
+   numbering and Virtual18 in the host array (measured: a placed switch on
+   level 0 faulted c0000005 in Model::Virtual10 through Virtual18 -> Virtual10
+   with a null matrix on its first drawn frame). The matched TU stays OFF
+   slice_gate212.txt; this body is the one line it means. */
+int _ZN14QuestionSwitch6RenderEv(void *selfv)
+{
+    /* ((D *)this)->b.m(0) */
+    ((ModelAnim *)((char *)selfv + 0x6b4))->ModelAnim::Render(0);
+    return 1;
+}
 }  /* extern "C" */

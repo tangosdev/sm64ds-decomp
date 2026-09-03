@@ -35,6 +35,11 @@ void hal_fill_enemy_switch_tag_vtable(void);
 extern unsigned char EnemySpawner_SpawnInfo[];          /* ov002 0x0210b340, id 358 */
 void *EnemySpawner_Spawn(void);                         /* ov002 0x020f1924 */
 void hal_fill_enemy_spawner_vtable(void);
+/* ---- gate 212: QUESTION_SWITCH (26), ov002. 32-slot Platform table; see
+   port/slice_gate212.txt and hal/actor_classes_question_switch.cpp. */
+extern unsigned char QuestionSwitch_SpawnInfo[];        /* ov002 0x02108e38, id 26 */
+void *QuestionSwitch_Spawn(void);                       /* ov002 0x020b56d8 */
+void hal_fill_question_switch_vtable(void);
 /* ---- BLACK_BRICK_BLOCK (17, ov002) x1 ---- */
 extern unsigned char BlackBrickBlock_SpawnInfo[];       /* ov002 0x02108a78 */
 void *BlackBrickBlock_Spawn(void);                      /* ov002 0x020b409c */
@@ -2016,6 +2021,9 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
      hal_fill_enemy_switch_tag_vtable},                                       \
     {358, "ENEMY_SPAWNER", EnemySpawner_SpawnInfo, EnemySpawner_Spawn,        \
      hal_fill_enemy_spawner_vtable},                                          \
+    /* ---- gate 212: QUESTION_SWITCH (26), ov002 ---- */                     \
+    {26, "QUESTION_SWITCH", QuestionSwitch_SpawnInfo, QuestionSwitch_Spawn,   \
+     hal_fill_question_switch_vtable},                                        \
     {17, "BLACK_BRICK_BLOCK", BlackBrickBlock_SpawnInfo,                      \
      BlackBrickBlock_Spawn, hal_fill_black_brick_block_vtable},               \
     /* ---- gate 78: BLUE_COIN_SWITCH (10), ov002 ---- */                      \

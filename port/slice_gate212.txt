@@ -1,0 +1,63 @@
+# Gate 212: QUESTION_SWITCH (actor 26, ov002) -- the big "?" switch the player
+# lands on or ground-pounds to flip a level-wide bit, then a one-line message.
+#
+# ---- what it is ------------------------------------------------------------
+#
+# _ZTV14QuestionSwitch, ov002 0x02108e5c (RTTI daObjHatenaSwitch_c). A Platform
+# subclass on the 32-slot Platform table, re-derived on this tree:
+#     python port/tools/vtspan.py . _ZTV14QuestionSwitch  ->  32, Platform subclass
+# (tail, typeinfo, terminator, raw run and next-symbol routes all agree on 32).
+# Own slots: 0 InitResources, 3 CleanupResources, 6 Behavior, 9 Render, 16 D1,
+# 17 D0, 21 OnGroundPounded (func_ov002_020b4fc4). Slot 12 stays
+# ActorBase::OnPendingDestroy, slot 31 stays Platform::Kill. No pointer-to-
+# member dispatch in Behavior, so no state table and no host state seat.
+# Object: 0x724 bytes (QuestionSwitch_Spawn ov002 0x020b56d8): Platform base,
+# MovingMeshCollider at 0x324 (raised) and 0x4ec (pressed), ModelAnim at 0x6b4.
+#
+# ---- the id, and the live edge ---------------------------------------------
+#
+# QuestionSwitch_SpawnInfo (ov002 0x02108e38, 0x24 bytes to the vtable) has +4
+# halfword 26, the registry's cross-check; mounted through port/ov002_syms.txt
+# with the two CLPS blocks InitResources passes to MovingMeshCollider::SetFile,
+# data_ov002_0210d774 (raised mesh) and data_ov002_0210d8b4 (pressed mesh),
+# 0x20 bytes each. The four SharedFilePtr cells (data_ov002_0210dd50/58/60/68)
+# were already in the mount. Statically placed once on level 0 (the test map) and once on
+# level 31 (habatake, which does not boot); SM64DS_LEVEL=0 is the proof level.
+#
+# ---- slot 21 -----------------------------------------------------------------
+#
+# src/func_ov002_020b4fc4.c carries dsd's "recovered from vtable slot identity"
+# marker. It was byte-matched against the ROM before the seat (tools/match.py
+# --module ov002, 3/3 words) and is ruled REAL_DECOMP in
+# port/tools/inferred_stub_adjudicated.txt, which is what lets the guard admit
+# it. It zeroes the +0x718 countdown so a ground pound flips the switch at once.
+#
+# ---- Render is a host copy ---------------------------------------------------
+#
+# src/_ZN14QuestionSwitch6RenderEv.cpp IS NOT HERE: it dispatches slot 5 of a
+# six-virtual local shadow over the ModelAnim at 0x6b4, which the ROM numbers
+# as ModelAnim::Render(0) and the host _ZTV9ModelAnim (MSVC numbering, one
+# destructor slot) as Virtual18(matrix, scale). Compiled from src/ it faulted
+# c0000005 in Model::Virtual10 with a null matrix on the switch's first drawn
+# frame (the QuestionBlock/Butterfly/Fish case, slice_gate23.txt). The one-line
+# host copy is appended to port/unmatched/ModelAnim_Renders.cpp.
+#
+# ---- this slice's new symbols ----------------------------------------------
+#
+# Six class TUs (Render excepted, above), the slot-21 body, and the five helpers (the collider
+# callback pair, the collider select/transform pair, the matrix refresh). The
+# vtable fill hal_fill_question_switch_vtable and the faces are
+# hal/actor_classes_question_switch.cpp; the registry row is in
+# hal/actor_classes.inc.
+src/QuestionSwitch_Spawn.c
+src/_ZN14QuestionSwitch13InitResourcesEv.cpp
+src/_ZN14QuestionSwitch16CleanupResourcesEv.cpp
+src/_ZN14QuestionSwitch8BehaviorEv.cpp
+src/_ZN14QuestionSwitchD1Ev.cpp
+src/_ZN14QuestionSwitchD0Ev.c
+src/func_ov002_020b4fc4.c
+src/func_ov002_020b4fd0.c
+src/func_ov002_020b503c.cpp
+src/func_ov002_020b50a0.c
+src/func_ov002_020b567c.c
+src/func_ov002_020b56c4.c
