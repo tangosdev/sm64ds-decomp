@@ -295,23 +295,38 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
            body is neither seated nor advanced by the player state machine, so
            the head rendered UPSIDE DOWN with the tongue animation SPAMMING (the
            first, unguarded landing of this fix was reverted for exactly that: it
-           regressed the intro). mIsNoControl (player_fields::kIsNoControl,
-           +0x709) is the ROM's own "the game has taken this body and is playing
-           a scripted sequence on it" flag: set by Player_DisableInteraction and
-           by ChangeState for every scripted/no-control state (the opening drives
-           the Player into one), clear while the human is driving. So pose ONLY
-           when the human controls the body; a cutscene/scripted Yoshi falls
-           through with NO pose and renders exactly as the reverted cons does. */
-        const bool live = *(const unsigned char *)(c + port::player::kIsNoControl) == 0;
+           regressed the intro).
+
+           mIsNoControl (+0x709) IS NOT THE DISCRIMINATOR, and this was measured:
+           through the whole opening the intro Yoshi renders here with
+           mIsNoControl CLEAR (the opening does not park the Player in a
+           no-control state -- the LakituBro camera script and the
+           CutsceneObjects run the scene while the Yoshi body just sits idle), so
+           a guard on mIsNoControl alone would pose it and re-regress the intro.
+
+           data_0209fc48 IS the discriminator. It is the ROM's "the cutscene
+           script now executing" word (level_boot.cpp: 0 = none), non-zero only
+           while a scripted cutscene owns the scene, which on a level boot is the
+           opening and nothing else. Every intro-Yoshi head render measured here
+           had it non-zero; every live-gameplay one had it zero. So pose ONLY
+           when NO cutscene script is running AND the human has control; a
+           cutscene Yoshi (data_0209fc48 != 0) falls through with NO pose and
+           renders exactly as the reverted cons does. */
+        extern int data_0209fc48;   /* the running cutscene, 0 = none */
+        const bool live = data_0209fc48 == 0 &&
+                          *(const unsigned char *)(c + port::player::kIsNoControl) == 0;
         if (const char *pr = std::getenv("SM64DS_HEADPOSE_PROBE")) {
             static int seen = -1;
             if (seen < 0) seen = std::atoi(pr[0] ? pr : "1");
             if (seen != 0) {
+                extern int data_0209fc48;   /* diag: running cutscene, 0 = none */
                 std::fprintf(stderr,
-                    "[headpose] hid==3 slot=%u noctl=%u air=%u -> %s\n",
+                    "[headpose] hid==3 slot=%u noctl=%u air=%u clsn=%u cut=%d -> %s\n",
                     (unsigned)*(const unsigned char *)(c + port::player::kPlayerNo),
                     (unsigned)*(const unsigned char *)(c + port::player::kIsNoControl),
                     (unsigned)*(const unsigned char *)(c + port::player::kIsAirborne),
+                    (unsigned)*(const unsigned char *)(c + port::player::kIsBodyClsnEnabled),
+                    data_0209fc48,
                     live ? "POSED (live player)" : "no pose (scripted/cutscene)");
             }
         }
