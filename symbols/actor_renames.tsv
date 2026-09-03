@@ -775,8 +775,8 @@ ov022	0x021117cc	func_ov022_021117cc	_ZN19FloatOnLavaPlatform8BehaviorEv	vtable 
 ov022	0x02111870	func_ov022_02111870	_ZN19FloatOnLavaPlatform13InitResourcesEv	vtable slot 0 (was _ZN19RotatingPlatformLll13InitResourcesEv)
 ov022	0x02111950	func_ov022_02111950	FloatOnLavaPlatform_Spawn	spawnfunc
 ov022	0x02111950	FloatOnLavaPlatform_Spawn	daObjFl_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov022	0x02111c7c	func_ov022_02111c7c	LavaBridge_Spawn	spawnfunc
-ov022	0x02111c7c	LavaBridge_Spawn	daObjFl_London_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov022	0x02111c7c	func_ov022_02111c7c	daObjFl_London_c_Spawn	spawnfunc
+ov022	0x02111c7c	daObjFl_London_c_Spawn	daObjFl_London_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02111f3c	func_ov022_02111f3c	LavaSeesaw_Spawn	spawnfunc
 ov022	0x02111f3c	LavaSeesaw_Spawn	daObjFl_Seesaw_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02111f6c	func_ov022_02111f6c	_ZN21FloatingFloorLllSmallD1Ev	vtable slot 16
@@ -815,8 +815,8 @@ ov022	0x02113dc4	RotatingPlatformLll_SpawnInfo	g_profile_FL_KOMA_D	reconstructed
 ov022	0x02113e88	data_ov022_02113e88	FloatOnLavaPlatform_SpawnInfo	spawninfo
 ov022	0x02113e88	FloatOnLavaPlatform_SpawnInfo	g_profile_FL_BLOCK	reconstructed profile global; literal ROM ID FL_BLOCK+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02113eac	data_ov022_02113eac	_ZTV19FloatOnLavaPlatform	vtable alloc=? (was _ZTV19RotatingPlatformLll)
-ov022	0x02113f4c	data_ov022_02113f4c	LavaBridge_SpawnInfo	spawninfo
-ov022	0x02113f4c	LavaBridge_SpawnInfo	g_profile_FL_LONDON	reconstructed profile global; literal ROM ID FL_LONDON+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov022	0x02113f4c	data_ov022_02113f4c	daObjFl_London_c_SpawnInfo	spawninfo
+ov022	0x02113f4c	daObjFl_London_c_SpawnInfo	g_profile_FL_LONDON	reconstructed profile global; literal ROM ID FL_LONDON+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02114010	data_ov022_02114010	LavaSeesaw_SpawnInfo	spawninfo
 ov022	0x02114010	LavaSeesaw_SpawnInfo	g_profile_FL_SEESAW	reconstructed profile global; literal ROM ID FL_SEESAW+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x021140ec	data_ov022_021140ec	FloatingFloorLllBig_SpawnInfo	spawninfo

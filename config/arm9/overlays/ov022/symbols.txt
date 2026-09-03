@@ -21,13 +21,13 @@ _ZN19FloatOnLavaPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
 daObjFl_Block_c_classInit kind:function(arm,size=0x30) addr:0x02111950
-_ZN10LavaBridgeD1Ev kind:function(arm,size=0x44) addr:0x02111980
-_ZN10LavaBridgeD0Ev kind:function(arm,size=0x58) addr:0x021119c4
+_ZN16daObjFl_London_cD1Ev kind:function(arm,size=0x44) addr:0x02111980
+_ZN16daObjFl_London_cD0Ev kind:function(arm,size=0x58) addr:0x021119c4
 func_ov022_02111a1c kind:function(arm,size=0x48) addr:0x02111a1c
-_ZN10LavaBridge16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111a64
-_ZN10LavaBridge6RenderEv kind:function(arm,size=0x28) addr:0x02111aa8
-_ZN10LavaBridge8BehaviorEv kind:function(arm,size=0x10c) addr:0x02111ad0
-_ZN10LavaBridge13InitResourcesEv kind:function(arm,size=0xa0) addr:0x02111bdc
+_ZN16daObjFl_London_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111a64
+_ZN16daObjFl_London_c6RenderEv kind:function(arm,size=0x28) addr:0x02111aa8
+_ZN16daObjFl_London_c8BehaviorEv kind:function(arm,size=0x10c) addr:0x02111ad0
+_ZN16daObjFl_London_c13InitResourcesEv kind:function(arm,size=0xa0) addr:0x02111bdc
 daObjFl_London_c_classInit kind:function(arm,size=0x30) addr:0x02111c7c
 _ZN10LavaSeesawD1Ev kind:function(arm,size=0x44) addr:0x02111cac
 _ZN10LavaSeesawD0Ev kind:function(arm,size=0x58) addr:0x02111cf0
@@ -213,8 +213,7 @@ data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI16daObjFl_London_c kind:data(any) addr:0x02113f2c
 _ZTS16daObjFl_London_c kind:data(any) addr:0x02113f38
 g_profile_FL_LONDON kind:data(any) addr:0x02113f4c ambiguous
-_ZTV10LavaBridge kind:data(any) addr:0x02113f70
-data_ov022_02113f78 kind:data(any) addr:0x02113f78 ambiguous
+_ZTV16daObjFl_London_c kind:data(any) addr:0x02113f70
 _ZTI16daObjFl_Seesaw_c kind:data(any) addr:0x02113ff0
 data_ov022_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
 _ZTS16daObjFl_Seesaw_c kind:data(any) addr:0x02113ffc

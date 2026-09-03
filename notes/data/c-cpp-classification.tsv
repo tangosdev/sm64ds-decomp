@@ -231,7 +231,7 @@ src/LZ77UnCompReadNormalWrite8bit.c	PURE-C					0		None		not-in-delinks
 src/LakituBro_Spawn.c	WEAK-refs-only	ov085				1		None		-
 src/Lakitu_Spawn.c	WEAK-refs-only	ov077				1		None		-
 src/LastStar_Spawn.c	WEAK-refs-only	ov089				1		None		-
-src/daObjFl_London_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV10LavaBridge	1		None	_ZTV10LavaBridge	-
+src/daObjFl_London_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjFl_London_c	1		None	_ZTV16daObjFl_London_c	-
 src/LavaBubble_Spawn.c	WEAK-refs-only	ov064				1		None		-
 src/daObjFl_UkiKi_c_classInit.c	WEAK-refs-only	ov022				1		None		-
 src/daObjFl_Seesaw_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV10LavaSeesaw	1		None	_ZTV10LavaSeesaw	-
@@ -581,7 +581,7 @@ src/_ZN10FlameChomp13OnYoshiTryEatEv.c	P1-vtable+mangled	ov070	daKrpa_c	FlameCho
 src/_ZN10FlameChomp16CleanupResourcesEv.c	P1-vtable+mangled	ov070	daKrpa_c	FlameChomp/daKrpa_c	vtable daKrpa_c slot 3 @0x212189c | _ZN10FlameChomp16CleanupResourcesEv	1		True		-
 src/_ZN10FlameChomp16OnPendingDestroyEv.c	P1-vtable+mangled	ov070	daKrpa_c	FlameChomp/daKrpa_c	vtable daKrpa_c slot 12 @0x21218c0 | _ZN10FlameChomp16OnPendingDestroyEv	1		True		-
 src/_ZN10FlameChompD0Ev.c	DTOR-ONLY	ov070	daKrpa_c	FlameChomp/daKrpa_c	_ZN10FlameChompD0Ev	1		True		-
-src/_ZN10LavaBridgeD0Ev.c	DTOR-ONLY	ov022	daObjFl_London_c	LavaBridge/daObjFl_London_c	_ZN10LavaBridgeD0Ev	1		True	_ZTV10LavaBridge/_ZTV10dBgActor_c	-
+src/_ZN16daObjFl_London_cD0Ev.c	DTOR-ONLY	ov022	daObjFl_London_c	daObjFl_London_c/daObjFl_London_c	_ZN16daObjFl_London_cD0Ev	1		True	_ZTV16daObjFl_London_c/_ZTV10dBgActor_c	-
 src/_ZN10LavaSeesawD0Ev.c	DTOR-ONLY	ov022	daObjFl_Seesaw_c	LavaSeesaw/daObjFl_Seesaw_c	_ZN10LavaSeesawD0Ev	1		True	_ZTV10LavaSeesaw/_ZTV10dBgActor_c	-
 src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt	1		True		by-value-class-param
 src/_ZN10ModelAnim2C1Ev.c	P3-mangled-method-only	arm9		ModelAnim2	_ZN10ModelAnim2C1Ev	1		True	_ZTV10ModelAnim2	-

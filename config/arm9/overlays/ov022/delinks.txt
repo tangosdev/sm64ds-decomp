@@ -96,11 +96,11 @@ src/daObjFl_Block_c_classInit.c:
     complete
     .text start:0x02111950 end:0x02111980
 
-src/_ZN10LavaBridgeD1Ev.cpp:
+src/_ZN16daObjFl_London_cD1Ev.cpp:
     complete
     .text start:0x02111980 end:0x021119c4
 
-src/_ZN10LavaBridgeD0Ev.cpp:
+src/_ZN16daObjFl_London_cD0Ev.cpp:
     complete
     .text start:0x021119c4 end:0x02111a1c
 
@@ -108,19 +108,19 @@ src/func_ov022_02111a1c.c:
     complete
     .text start:0x02111a1c end:0x02111a64
 
-src/_ZN10LavaBridge16CleanupResourcesEv.cpp:
+src/_ZN16daObjFl_London_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111a64 end:0x02111aa8
 
-src/_ZN10LavaBridge6RenderEv.cpp:
+src/_ZN16daObjFl_London_c6RenderEv.cpp:
     complete
     .text start:0x02111aa8 end:0x02111ad0
 
-src/_ZN10LavaBridge8BehaviorEv.cpp:
+src/_ZN16daObjFl_London_c8BehaviorEv.cpp:
     complete
     .text start:0x02111ad0 end:0x02111bdc
 
-src/_ZN10LavaBridge13InitResourcesEv.cpp:
+src/_ZN16daObjFl_London_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111c7c
 
