@@ -22,6 +22,7 @@ take over, ping the claimant first.
 
 | Class / chain | Who | Claimed | Status |
 |---|---|---|---|
+| ov006 dScMgMCarlo2_c + dMgMCarlo2CardObj_c + MgPairAGoneAndOn original TU | andrewboudreau | 2026-09-03 | **active** - reconstruct the complete playable-minigame TU as period-style C++, including the scene, card element, adjacent factory, RTTI/vtables, static initializer, data, and BSS; exact candidate span `.text` 0x020f8ef4..0x020fa75c, with full overlay/ROM verification required; CLAIMS.md fallback after the live range check reported free (protected API key not transmitted) |
 | ActorBase -> ActorDerived -> Actor -> Player | andrewboudreau | 2026-08-01 | **active** - ActorBase landed as a real polymorphic class (#974); ActorDerived next, then Actor, then Player |
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |

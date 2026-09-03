@@ -393,6 +393,24 @@ ov006	0x020f3800	func_ov006_020f3800	MgWanted_Spawn	spawnfunc
 ov006	0x020f5504	func_ov006_020f5504	MgMemoryMatch_Spawn	spawnfunc
 ov006	0x020f75d4	func_ov006_020f75d4	MgMemoryMaster_Spawn	spawnfunc
 ov006	0x020fa6ac	func_ov006_020fa6ac	MgPairAGoneAndOn_Spawn	spawnfunc
+ov006	0x020fa6ac	MgPairAGoneAndOn_Spawn	dScMgMCarlo2_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique MG_MCARLO2 profile; exact SM64DS source spelling not preserved
+ov006	0x020f8ff0	func_ov006_020f8ff0	_ZN19dMgMCarlo2CardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; empty real destructor reproduces the ROM body
+ov006	0x020f9000	func_ov006_020f9000	_ZN14dScMgMCarlo2_c11UpdateBoardEv	coined: private static helper named from the matched board update/recycle state machine
+ov006	0x020f94f4	func_ov006_020f94f4	_ZN14dScMgMCarlo2_c14FlipDealtCardsEv	coined: private static helper queues each dealt card for its flip-away state
+ov006	0x020f9560	func_ov006_020f9560	_ZN14dScMgMCarlo2_c13DrawCardValueEv	coined: private static helper performs the weighted card-face draw
+ov006	0x020f95f0	func_ov006_020f95f0	_ZN14dScMgMCarlo2_c10BoardReadyEv	coined: private static helper tests whether the currently dealt board has settled
+ov006	0x020f9668	func_ov006_020f9668	_ZN14dScMgMCarlo2_c9BoardBusyEv	coined: private static helper is the complementary in-flight board test
+ov006	0x020f96e0	func_ov006_020f96e0	_ZN14dScMgMCarlo2_c16HasRemovablePairEv	coined: private static helper searches the live list for an adjacent matching pair
+ov006	0x020f9760	func_ov006_020f9760	_ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c	coined: private static helper resets, links, and validates the typed 40-card board
+ov006	0x020f98dc	func_ov006_020f98dc	_ZN19dMgMCarlo2CardObj_c6RenderEv	coined slot name; ROM element vtable slot 0 points here and the body renders one card
+ov006	0x020f9994	func_ov006_020f9994	_ZN19dMgMCarlo2CardObj_c6UpdateEi	coined slot name; ROM element vtable slot 1 points here and the body advances one card
+ov006	0x020f9bec	func_ov006_020f9bec	_ZN19dMgMCarlo2CardObj_c7HitTestEv	coined: nonvirtual card helper tests the stylus against this card
+ov006	0x020f9cbc	func_ov006_020f9cbc	_ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_	coined: nonvirtual card helper compares face and board adjacency with another card
+ov006	0x020f9d68	func_ov006_020f9d68	_ZN19dMgMCarlo2CardObj_c8FlipAwayEi	coined: nonvirtual card helper arms the staggered flip-away state
+ov006	0x020f9db8	func_ov006_020f9db8	_ZN19dMgMCarlo2CardObj_c6DealInEi	coined: nonvirtual card helper sends the card toward a board slot
+ov006	0x020f9f40	func_ov006_020f9f40	_ZN19dMgMCarlo2CardObj_c4InitEi	coined: nonvirtual card helper resets one element and assigns its slot and weighted face
+ov006	0x020fa740	func_ov006_020fa740	_ZN19dMgMCarlo2CardObj_cC1Ev	compiler-proven C1 for the RTTI-named card element; real constructor reproduces the ROM body
+ov006	0x0213d728	data_ov006_0213d728	_ZTV19dMgMCarlo2CardObj_c	RTTI-proven two-slot card-element vtable; slots relocate to Render and Update
 ov006	0x020ff3ec	func_ov006_020ff3ec	MgBobOmbSquad_Spawn	spawnfunc
 ov006	0x02104258	func_ov006_02104258	MgLakituLaunch_Spawn	spawnfunc
 ov006	0x02107858	func_ov006_02107858	MgPuzzlePanelPuzzlePanic_Spawn	spawnfunc

@@ -3939,11 +3939,7 @@ src/func_ov006_020f8ed8.c:
 
 src/actors/dScMgMCarlo2_c.cpp:
     complete
-    .text start:0x020f8ef4 end:0x020fa6ac
-
-src/actors/MgPairAGoneAndOn.cpp:
-    complete
-    .text start:0x020fa6ac end:0x020fa75c
+    .text start:0x020f8ef4 end:0x020fa75c
 
 src/_ZN15dScMgPachinko_cD1Ev.cpp:
     complete
