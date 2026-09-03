@@ -3,7 +3,7 @@
 /* recovered: real C++ method
  *
  * MATCHED 2026-08-27, after standing as a 4-byte near-miss (916 against the ROM's
- * 912) long enough for the file to carry a NONMATCHING banner. The whole gap was
+ * 912) long enough for the file to carry a non-matching banner. The whole gap was
  * one instruction, and the cause is the field-address CSE: written with the load
  * and the store spelled identically, mwcc computes `c + 8` once into a register
  * and uses it twice, where the ROM re-issues `[r4, #8]` on both. Spelling the two

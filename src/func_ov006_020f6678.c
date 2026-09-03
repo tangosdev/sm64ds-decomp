@@ -1,6 +1,6 @@
 
-extern void func_ov006_020f593c(void *);
-void func_ov006_020f6678(char *c)
+extern void _ZN14dScMgMemory2_c11InitPlayersEv(void *);
+void _ZN14dScMgMemory2_c11RoundRevealEv(char *c)
 {
   char *q = c + 0x5300;
   char *h;
@@ -12,7 +12,7 @@ void func_ov006_020f6678(char *c)
     {
       return;
     }
-    func_ov006_020f593c(c);
+    _ZN14dScMgMemory2_c11InitPlayersEv(c);
     return;
   }
   {

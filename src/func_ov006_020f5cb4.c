@@ -20,7 +20,7 @@ typedef struct Ctx {
 
 extern s32 data_ov006_0212e930[];
 
-void func_ov006_020f5cb4(Ctx *ctx, int idx)
+void _ZN14dScMgMemory2_c11CardFlyAwayEi(Ctx *ctx, int idx)
 {
     s32 lim;
     s32 rem;

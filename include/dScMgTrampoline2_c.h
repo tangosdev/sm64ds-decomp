@@ -30,8 +30,11 @@
  * No Model and no typed member, so nothing here is compiler-generated --
  * the destructor body is all six calls and nothing else.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf. No separate operator
- * delete is needed: dScMgD3DBase_c, the immediate base, provides one. */
+ * The current split production sources still provide the destructor out of
+ * line. A reconstructed whole TU defines DSCMGTRAMPOLINE2_INLINE_DTOR before
+ * including this header to test the final inline form: that is the spelling
+ * which emits the retail D1/D0 order without inventing a homeless D2. No
+ * separate operator delete is needed: dScMgD3DBase_c provides one. */
 #ifndef DSCMGTRAMPOLINE2_C_H
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"
@@ -45,7 +48,18 @@ extern "C" void func_ov006_02122c68(void);
 extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {
+#ifdef DSCMGTRAMPOLINE2_INLINE_DTOR
+    virtual ~dScMgTrampoline2_c() {
+        __destroy_arr(mArray6, 5, 0x24, (void *)func_ov006_02120938);
+        __destroy_arr(mArray5, 0x14, 0x78, (void *)func_ov006_02122c68);
+        __destroy_arr(mArray4, 0xa, 0x24, (void *)func_ov006_020eed64);
+        __destroy_arr(mArray3, 0xa, 0x1d0, (void *)func_ov006_021227c8);
+        __destroy_arr(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
+        __destroy_arr(mArray1, 5, 0xdc, (void *)func_ov006_020ca604);
+    }
+#else
     virtual ~dScMgTrampoline2_c();
+#endif
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual int  OnAttacked2();                        /* slot 23 */

@@ -1,6 +1,6 @@
 
 extern int data_ov006_0212e918[];
-void func_ov006_020f6b78(char *this)
+void _ZN14dScMgMemory2_c13RoundDealEasyEv(char *this)
 {
   int idx;
   char *r3;

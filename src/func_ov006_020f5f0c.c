@@ -8,7 +8,7 @@ extern u8 data_020a0deb[];
 extern void func_02012718(void *a, int b);
 extern void func_ov004_020ad79c(int a, int b);
 
-void func_ov006_020f5f0c(char *self, int idx)
+void _ZN14dScMgMemory2_c10CardSelectEi(char *self, int idx)
 {
     unsigned int e;
     unsigned int i;

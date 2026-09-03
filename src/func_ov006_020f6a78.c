@@ -1,5 +1,5 @@
 #include "types.h"
-/* func_ov006_020f6a78 — once at least 3 items are queued, mark slot
+/* _ZN14dScMgMemory2_c13RoundDealHardEv — once at least 3 items are queued, mark slot
  * (total*2 - 1 - count) done (stride 0x18 array at 0x51a8), bump count;
  * when count reaches the per-mode threshold (data_ov006_0212e93c),
  * set state 5 (mode 1) or 4 (otherwise). */
@@ -24,7 +24,7 @@ typedef struct {
     u8 mode;          /* 0x540a */
 } Work;
 
-void func_ov006_020f6a78(char* c)
+void _ZN14dScMgMemory2_c13RoundDealHardEv(char* c)
 {
     Work* w = (Work*)c;
     u8 mode;

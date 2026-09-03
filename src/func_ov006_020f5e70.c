@@ -1,3 +1,3 @@
-void func_ov006_020f5e70(void)
+void _ZN14dScMgMemory2_c8CardWaitEi(void)
 {
 }

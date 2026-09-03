@@ -1,0 +1,621 @@
+{
+  "id": "ov006/dScMgMemory_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgMemory_c.cpp",
+  "promoted_source": "src/actors/dScMgMemory_c.cpp",
+  "status": "promoted",
+  "goal": {
+    "idiomCensus": {
+      "externC": 1,
+      "rawOffsets": 17
+    },
+    "justification": "The complete 47-function Memory Match scene/factory run is reconstructed as one real dScMgMemory_c C++ translation unit. All address-only behavior is attached to class members, the five PMF state tables are typed, the 0x270 shared state has compiler-owned destruction, and the scene/card/player/cursor layout is explicit. Seventeen iterator-heavy methods retain localized byte-offset views because direct typed array spellings were measured and changed register allocation, scheduling, or code size; those are documented compiler boundaries, not unknown ownership. The sole extern-C definition is the classInit allocation bridge retained at the measured CW 1.2 folded-construction wall."
+  },
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020f3834..0x020f5564, 47 functions; the 46 scene methods are immediately followed by the unique MG_MEMORY classInit and end exactly where dScMgMemory2_c begins",
+    "RTTI/data ownership cluster: the unique MgMemoryMatch_SpawnInfo profile, PMF source pairs, scene RTTI/type string, resources/tables and vtable occupy 0x0213cfa0..0x0213d288; the previous byte ends dScMgLuigi_c data and the next symbol begins dScMgMemory2_c data",
+    "static-initializer ownership: __sinit_ov006_021311c8 and .p__sinit_ov006_021311c8 build this TU's five PMF tables and sprite-pointer state; the next initializer at 0x021314e4 owns dScMgMemory2_c state",
+    "BSS ownership: this minigame's state occupies 0x021422a4..0x021423a8; the next BSS symbol begins dScMgMemory2_c state"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020f3834",
+      "end": "0x020f5564"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13dScMgMemory_cD1Ev",
+      "address": "0x020f3834",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN13dScMgMemory_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_cD0Ev",
+      "address": "0x020f3888",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN13dScMgMemory_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11DrawMessageEv",
+      "address": "0x020f38f0",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020f38f0.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10DrawCursorEv",
+      "address": "0x020f392c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_020f392c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c12UpdateCursorEv",
+      "address": "0x020f3964",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov006_020f3964.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10ShowCursorEv",
+      "address": "0x020f39c8",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov006_020f39c8.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10HideCursorEv",
+      "address": "0x020f39fc",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020f39fc.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10PlayerWaitEi",
+      "address": "0x020f3a10",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020f3a10.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10PlayerMoveEi",
+      "address": "0x020f3a14",
+      "size": "0x0000018c",
+      "legacy_source": "src/func_ov006_020f3a14.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10PlayerDropEi",
+      "address": "0x020f3ba0",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020f3ba0.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11InitPlayersEv",
+      "address": "0x020f3c0c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov006_020f3c0c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13CheckFinishedEv",
+      "address": "0x020f3c90",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov006_020f3c90.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c9JudgePairEv",
+      "address": "0x020f3d34",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov006_020f3d34.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c9DrawCardsEv",
+      "address": "0x020f3e68",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_020f3e68.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11UpdateCardsEv",
+      "address": "0x020f3f10",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_020f3f10.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11CardFlyAwayEi",
+      "address": "0x020f3f84",
+      "size": "0x00000198",
+      "legacy_source": "src/func_ov006_020f3f84.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c12CardFlipDownEi",
+      "address": "0x020f411c",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_020f411c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c8CardWaitEi",
+      "address": "0x020f41ac",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020f41ac.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10CardFlipUpEi",
+      "address": "0x020f41b0",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_020f41b0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10CardSelectEi",
+      "address": "0x020f4248",
+      "size": "0x00000178",
+      "legacy_source": "src/func_ov006_020f4248.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c8CardIdleEi",
+      "address": "0x020f43c0",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020f43c0.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c8CardMoveEi",
+      "address": "0x020f43c4",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov006_020f43c4.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c12ResultFinishEv",
+      "address": "0x020f456c",
+      "size": "0x00000180",
+      "legacy_source": "src/func_ov006_020f456c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c15ResultTurnCardsEv",
+      "address": "0x020f46ec",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov006_020f46ec.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c12ResultRewardEv",
+      "address": "0x020f47d8",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov006_020f47d8.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10ResultWaitEv",
+      "address": "0x020f4888",
+      "size": "0x00000124",
+      "legacy_source": "src/func_ov006_020f4888.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11RoundRevealEv",
+      "address": "0x020f49ac",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020f49ac.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13RoundWaitDealEv",
+      "address": "0x020f4a40",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020f4a40.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13RoundDealHardEv",
+      "address": "0x020f4ad4",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_020f4ad4.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c15RoundDealNormalEv",
+      "address": "0x020f4b30",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov006_020f4b30.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13RoundDealEasyEv",
+      "address": "0x020f4bbc",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_020f4bbc.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10RoundStartEv",
+      "address": "0x020f4c38",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_020f4c38.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c12ShuffleCardsEv",
+      "address": "0x020f4cd8",
+      "size": "0x000002bc",
+      "legacy_source": "src/func_ov006_020f4cd8.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c9ResetGameEv",
+      "address": "0x020f4f94",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_020f4f94.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c9StateExitEv",
+      "address": "0x020f50c0",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_020f50c0.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c11StateResultEv",
+      "address": "0x020f50f8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020f50f8.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10StateJudgeEv",
+      "address": "0x020f5140",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov006_020f5140.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c9StatePlayEv",
+      "address": "0x020f5164",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_020f5164.cpp",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c10StateSetupEv",
+      "address": "0x020f51b0",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_020f51b0.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c15SetupDifficultyEv",
+      "address": "0x020f51f0",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_020f51f0.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c15OnGroundPoundedEv",
+      "address": "0x020f523c",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN13dScMgMemory_c15OnGroundPoundedEv.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13OnTurnIntoEggEi",
+      "address": "0x020f5250",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN13dScMgMemory_c13OnTurnIntoEggEi.cpp",
+      "ordinal": 41
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13OnYoshiTryEatEi",
+      "address": "0x020f52c4",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN13dScMgMemory_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 42
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c6RenderEv",
+      "address": "0x020f5324",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13dScMgMemory_c6RenderEv.cpp",
+      "ordinal": 43
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c8BehaviorEv",
+      "address": "0x020f5388",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN13dScMgMemory_c8BehaviorEv.cpp",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN13dScMgMemory_c13InitResourcesEv",
+      "address": "0x020f53e4",
+      "size": "0x00000120",
+      "legacy_source": "src/_ZN13dScMgMemory_c13InitResourcesEv.cpp",
+      "ordinal": 45
+    },
+    {
+      "symbol": "dScMgMemory_c_classInit",
+      "address": "0x020f5504",
+      "size": "0x00000060",
+      "legacy_source": "src/MgMemoryMatch_Spawn.c",
+      "ordinal": 46
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "2026-09-03 real-member reconstruction: all 38 address-only scene functions are genuine dScMgMemory_c members with descriptive names. Five PMF tables built by __sinit_ov006_021311c8 independently fix their groupings and order: main StateSetup/StatePlay/StateJudge/StateResult/StateExit; round RoundStart/RoundDealEasy/RoundDealNormal/RoundDealHard/RoundWaitDeal/RoundReveal; result ResultWait/ResultReward/ResultTurnCards/ResultFinish; card CardMove/CardIdle/CardSelect/CardFlipUp/CardWait/CardFlipDown/CardFlyAway; player PlayerDrop/PlayerMove/PlayerWait.",
+    "COINED NAMES, the one thing not provable: the 38 handler/helper ROM symbols were address-only, so no recovered spelling exists to confirm or contradict the descriptive names in functions[]. The ROM proves their dScMgMemory_c ownership and the PMF tables prove state-group identities; exact original source spellings are disclosed as unknown here and in symbols/actor_renames.tsv.",
+    "ROM-PROVEN LAYOUT: the unique MG_MEMORY factory allocates 0x5340 bytes. Matched access patterns prove twelve 0x18-byte cards, three 0x14-byte player markers, a 0x10-byte cursor, signed ready/deal counters, and the scene-state tail. The shared 0x270 object at 0x4f38 has its measured func_ov006_020c1c64 destructor, so C++ owns reverse-order scene teardown.",
+    "MEASURED CODEWARRIOR EMISSION BOUNDARY: the default deferred code generator makes the last optimization state win across an apparent pragma push/pop. Global defer_codegen off makes definitions emit eagerly in ROM-ascending source order, allowing DrawCards' opt_propagation off and CardFlyAway's opt_lifetimes off to be scoped with push/pop. The resulting single object emits all 47 text sections byte-exact and in cartridge order.",
+    "MEASURED ITERATOR-SPELLING BOUNDARY: direct typed mCards/mPlayers expressions were tested in the remaining 17 offset-view methods. They changed strength reduction, base-address formation, register allocation, or section size despite identical semantics. The public class layout remains typed; those localized implementation views preserve demonstrated mwccarm 1.2 code generation rather than substituting prettier non-matching code.",
+    "MEASURED CW 1.2 FACTORY WALL: dScMgMemory_c_classInit is allocation plus a fully folded scene construction sequence. Semantic placement construction is unavailable in this compiler setup, so the literal classInit bridge preserves allocation size, base construction, vptr transitions, Particle::SysTracker construction and shared-state construction explicitly and byte-exact.",
+    "FOCUSED VERIFY LIMITATION: tools/tubuild.py verify reports 46/47 because objisolate rejects the classInit's R_ARM_ABS32 relocation with addend zero against _ZTV13dScMgMemory_c emitted by the same object. Extracted factory bytes match individually and all 47 text sections occur in cartridge order; the production linker and full ROM build are the authority for that same-object vtable relocation.",
+    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The five PMF tables, resource/static data, compiler-generated RTTI/vtable, __sinit_ov006_021311c8 and 0x021422a4..0x021423a8 BSS remain ROM-gap owned until their exact input-section order and initializers are reconstructed. The production rombuild is 106/106 and stock-identical; a post-promotion tubuild linkcheck currently refuses this valid text-only promotion at intact-object preparation because it requires at least one non-text claim, so the recorded pre-promotion 47/47 full linkcheck remains the single-object relocation proof.",
+    "tubuild create warnings (RESOLVED): the generated extern-C wrapper and declaration-conflict markers were reconciled in place. No TUBUILD CONFLICT marker remains in the source; this note retains the fact that the legacy fragments disagreed while making the resolution status explicit."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgMemory_c/dScMgMemory_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 46,
+    "functions_declared": 47,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN13dScMgMemory_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN13dScMgMemory_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTI13dScMgMemory_c",
+        "_ZTS13dScMgMemory_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTV13dScMgMemory_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI13dScMgMemory_c",
+        "_ZTI19dScMgSingle3DBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS13dScMgMemory_c",
+        "_ZTS19dScMgSingle3DBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV13dScMgMemory_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgMemory_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020f3834",
+        "end": "0x020f5564",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020f3834",
+          "end": "0x020f5564",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 47
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13dScMgMemory_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair; the ROM has no configured D2 home and no surviving relocation references it"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTI13dScMgMemory_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d090",
+      "reason": "this class's RTTI record; romdata_check verifies the emitted copy against its canonical cartridge record before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS13dScMgMemory_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d0b4",
+      "reason": "this class's RTTI name; romdata_check verifies the emitted copy against its canonical cartridge string before duplicate removal"
+    },
+    {
+      "symbol": "_ZTI19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bc64",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTS19dScMgSingle3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213bd00",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled and romdata_check verifies this emitted copy before duplicate removal"
+    },
+    {
+      "symbol": "_ZTV13dScMgMemory_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213d1b8",
+      "reason": "this class's vtable; romdata_check verifies the emitted copy against its canonical cartridge record before duplicate removal"
+    }
+  ]
+}

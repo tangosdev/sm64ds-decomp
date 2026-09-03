@@ -3,7 +3,7 @@ struct Sound { static void PlayBank2_2D(unsigned int); };
 extern "C" void func_02012790(int x);
 extern "C" void func_ov004_020b5dd4(void);
 
-extern "C" void func_ov006_020f5a64(char *c)
+extern "C" void _ZN14dScMgMemory2_c9JudgePairEv(char *c)
 {
     int a, b;
     unsigned char *sa, *sb;
