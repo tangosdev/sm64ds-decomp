@@ -2425,3 +2425,136 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
     if (rc == 1)
         port_legacy_set_character(player, (int)(ch & 3));
 }
+
+/* ---- SM64DS_VS_CHARS: the lobby's per-slot character pick, applied post-boot -
+ *
+ * THE GAME SIDE of VS character selection. In VS the spawn loop forces every
+ * player to Yoshi -- mCharacter = 3 into every slot's spawn param, the force in
+ * the frozen src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp.
+ * This reads a per-slot pick the lobby assigns and, once the world is seated,
+ * swaps each chosen slot to its character through the game's OWN in-place door
+ * path (port_player_set_character -> SetRealCharacter) -- the exact swap the
+ * vs-nonyoshi spike (status/VSNONYOSHI.md) proved loads, renders and plays in a
+ * VS arena, per slot, with no fault: func_ov002_020e5948 seats all four
+ * characters' body+head archives unconditionally in VS, so nothing needs a
+ * non-Yoshi file seated at boot.
+ *
+ * THE FORMAT mirrors SM64DS_VS_NAMES / SM64DS_VS_COLORS (hal/star_flow.cpp,
+ * hal/fs_mods.cpp): comma-separated fields in SLOT order, EXACTLY 3 commas
+ * (four fields, a narrow session) OR EXACTLY 15 commas (sixteen, a wide one),
+ * nothing between. Each field is ONE of:
+ *     empty  -> that slot keeps its Yoshi default (no swap)
+ *     '0'    -> Yoshi, the default (no swap)
+ *     '1' Mario     '2' Luigi     '3' Wario
+ * so "1,2,3,0" is Mario / Luigi / Wario / Yoshi in slots 0..3 and slot 3 is
+ * left untouched. The env value is NOT the engine's own character index: 0 is
+ * Yoshi so "leave it at the VS default" is the natural zero, and 1..3 are the
+ * three non-Yoshi bodies, mapped to the engine's 0..2 (Mario/Luigi/Wario) when
+ * the swap is applied.
+ *
+ * IGNORED WHOLESALE ON ANY VIOLATION, the contract names/colours keep: a
+ * malformed variable is dropped, not partly salvaged, and every slot stays
+ * Yoshi. ABSENT is the common case and silent -- with no SM64DS_VS_CHARS this
+ * loads nothing and swaps nothing, so a VS match is byte-for-byte the all-Yoshi
+ * arena it is today.
+ *
+ * This is the seam the lobby character picker feeds: lobby -> plan ->
+ * SM64DS_VS_CHARS env -> this apply, the same shape as names and colours. */
+static int g_vs_chars[kPortMaxPlayers];   /* engine char 0..2, or -1 = no swap */
+static int g_vs_chars_read;
+static int g_vs_chars_fields;
+
+static void vs_chars_load(void)
+{
+    if (g_vs_chars_read)
+        return;
+    g_vs_chars_read = 1;
+    g_vs_chars_fields = kPortNarrowPlayers;
+    for (int i = 0; i < kPortMaxPlayers; ++i) g_vs_chars[i] = -1;
+
+    const char *e = std::getenv("SM64DS_VS_CHARS");
+    if (!e)
+        return;                          /* absent: the common case, silent */
+
+    const size_t len = std::strlen(e);
+    /* 16 x 1 + 15 = 31 at the wide shape, 7 at the narrow one; the comma count
+       below decides the shape, so the cap is the wide one. */
+    if (len < 1 || len > 31) {
+        std::fprintf(stderr, "[vs] SM64DS_VS_CHARS ignored: %u bytes, the "
+                "contract allows 1..7 (four fields) or 1..31 (sixteen)\n",
+                (unsigned)len);
+        return;
+    }
+    int commas = 0;
+    for (size_t i = 0; i < len; ++i)
+        if (e[i] == ',') ++commas;
+    int nf;
+    if (commas == kPortNarrowPlayers - 1) nf = kPortNarrowPlayers;
+    else if (commas == kPortMaxPlayers - 1) nf = kPortMaxPlayers;
+    else {
+        std::fprintf(stderr, "[vs] SM64DS_VS_CHARS ignored: %d comma(s), the "
+                "contract requires exactly 3 (four fields) or exactly 15 "
+                "(sixteen)\n", commas);
+        return;
+    }
+
+    int tmp[kPortMaxPlayers];
+    for (int i = 0; i < kPortMaxPlayers; ++i) tmp[i] = -1;
+    int slot = 0, w = 0;
+    for (size_t i = 0; i <= len; ++i) {
+        const char ch = (i < len) ? e[i] : ',';
+        if (ch == ',') { ++slot; w = 0; continue; }
+        ++w;
+        if (w > 1) {
+            std::fprintf(stderr, "[vs] SM64DS_VS_CHARS ignored: field %d is "
+                    "longer than one character\n", slot);
+            return;
+        }
+        if (ch < '0' || ch > '3') {
+            std::fprintf(stderr, "[vs] SM64DS_VS_CHARS ignored: field %d byte "
+                    "%02x is not one of 0..3 (0/blank Yoshi, 1 Mario, 2 Luigi, "
+                    "3 Wario)\n", slot, (unsigned char)ch);
+            return;
+        }
+        /* '0' is the default Yoshi = no swap; 1..3 map to engine 0..2 */
+        tmp[slot] = (ch == '0') ? -1 : (ch - '1');
+    }
+
+    g_vs_chars_fields = nf;
+    for (int i = 0; i < nf; ++i) g_vs_chars[i] = tmp[i];
+
+    static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
+    std::fprintf(stderr, "[vs] SM64DS_VS_CHARS accepted, %d fields:", nf);
+    for (int i = 0; i < nf; ++i)
+        std::fprintf(stderr, " [%s]",
+                     g_vs_chars[i] < 0 ? "Yoshi" : kName[g_vs_chars[i]]);
+    std::fprintf(stderr, "\n");
+}
+
+/* Apply the SM64DS_VS_CHARS pick once the VS world is seated. Called every frame
+   from the walk loop beside the SM64DS_SWITCH probe; self-gates to VS mode, to
+   frame 90 (the point the spike's swap fires, past the level-entry no-control),
+   and to ONE shot -- not a per-frame write. Each slot whose pick differs from
+   Yoshi is swapped through the game's own door path; a Yoshi (or empty, or
+   absent) slot is never touched. Inert with no SM64DS_VS_CHARS, so the all-Yoshi
+   arena is byte-unchanged. Single-player and every non-VS boot are untouched
+   because data_0209f2d8 != 1 returns before anything is read. */
+extern "C" void port_vs_apply_chars(int frame)
+{
+    if (data_0209f2d8 != 1) return;      /* VS mode only */
+    static bool done = false;
+    if (frame != 90 || done) return;
+    done = true;
+    vs_chars_load();
+
+    static const char *const kName[3] = { "Mario", "Luigi", "Wario" };
+    for (int i = 0; i < g_vs_chars_fields && i < kPortMaxPlayers; ++i) {
+        const int chr = g_vs_chars[i];
+        if (chr < 0) continue;           /* Yoshi/empty: left as the default */
+        void *p = data_0209f394[i];
+        if (!p) continue;                /* slot has no body in this arena */
+        std::fprintf(stderr, "[vs] SM64DS_VS_CHARS slot %d -> %s\n", i,
+                     kName[chr]);
+        port_player_set_character(p, (unsigned)chr);
+    }
+}

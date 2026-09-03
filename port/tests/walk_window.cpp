@@ -3014,6 +3014,11 @@ static void character_set_pending(int ch)
    Yoshi cap for it to run. The reasoning is in hal/player_bridges.cpp, where
    it lives because it wants Player.h. SM64DS_SWITCH=<0..3> drives it headless. */
 extern "C" void port_player_set_character(void *player, unsigned ch);
+/* SM64DS_VS_CHARS: the game side of VS character selection. Reads a per-slot
+   character pick (mirrors SM64DS_VS_NAMES/SM64DS_VS_COLORS) and applies it once,
+   post-boot, through the proven door path. VS-scoped and one-shot inside; inert
+   with no SM64DS_VS_CHARS. Defined in hal/player_bridges.cpp beside the swap. */
+extern "C" void port_vs_apply_chars(int frame);
 static int menu_on;
 /* B closed the menu and is still physically down: swallow it until it comes
    back up. See the block below the menu's input, where it is spent. */
@@ -11687,6 +11692,14 @@ int main(void)
                         g_character = g_character_pending = sw & 3;
                     }
                 }
+                /* SM64DS_VS_CHARS: the game side of VS character selection. Each
+                   VS slot's chosen character is applied here, once, at the same
+                   frame the SM64DS_SWITCH probe above fires, through the proven
+                   door path -- but per slot (data_0209f394[i]) rather than only
+                   the local body. VS-scoped and one-shot inside; inert with no
+                   SM64DS_VS_CHARS (the all-Yoshi arena is byte-unchanged). This
+                   is the seam the lobby character picker feeds. */
+                port_vs_apply_chars(frame);
                 port_particle_frame();
                 if (selftest) {
                     const ntr::GxTriangle *at = ntr::gx_polygons(after);
