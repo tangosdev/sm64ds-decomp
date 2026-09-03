@@ -1057,6 +1057,8 @@
     "src/actors/dScMgSingle3DBase_c.cpp#func_ov006_0210a708": "github-actions[bot]",
     "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_cD1Ev": "tangosdev",
     "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_cD0Ev": "tangosdev",
+    "src/actors/dScMgBSC_c.cpp#MgLuckyStars_Spawn": "github-actions[bot]",
+    "src/actors/dScMgBSC_c.cpp#dScMgBSC_c_classInit": "github-actions[bot]",
     "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c9StateDoneEv": "github-actions[bot]",
     "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c16StateReturnCardsEv": "github-actions[bot]",
     "src/actors/dScMgBSC_c.cpp#_ZN10dScMgBSC_c14StateWaitTableEv": "github-actions[bot]",
