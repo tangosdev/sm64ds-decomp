@@ -428,14 +428,17 @@ unsigned char data_0209f1f4; /* ...and the flag it clears with it */
 // than in a class's own file so that hosting the subsystem retires exactly one
 // line.
 //
-// Enemy::UpdateYoshiEat (ov002 0x020ade78) is UNMATCHED -- a 0x3cc-byte hole
-// in ov002's delink table, no C anywhere -- and OneUpMushroom::Behavior opens
-// with it every frame. It answers "is this actor inside Yoshi's mouth right
-// now"; there is no Yoshi on the castle grounds and the local character is
-// Mario, so the ROM's answer is 0 and the mushroom runs its own type
-// behaviour. When the function is matched this definition comes out and the
-// file goes in the slice.
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *, void *) { return 0; }
+// Enemy::UpdateYoshiEat (ov002 0x020ade78) NO LONGER LIVES HERE. It was a
+// constant-0 stub -- "is this actor inside Yoshi's mouth", answered 0 -- and
+// that constant 0 was the Yoshi-swallow-key bug: an eaten enemy never entered
+// the swallow states, so the intro rabbit's eat branch (which writes the
+// caught-by player at rabbit+0x45c and arms its key + dialogue) was dead code.
+// The function is now hosted, as its full swallow-arc state machine, in
+// port/unmatched/Enemy_UpdateYoshiEat.cpp (host-transcribed; it is a 6o
+// ordering floor, not byte-matchable in this lane). That file rides the
+// LEVELBOOT_HOST_SOURCES slice, next to the enemy Behaviors that call it; the
+// small actor smokes that also link this HAL object never reference the symbol,
+// so it is gone from here rather than duplicated.
 
 // Player::StartTalk is LIVE (2026-08-08, the talk-entry session). The decline
 // stub is GONE: the matched src is in slice_gate10 (right after ShowMessage2).

@@ -1444,6 +1444,91 @@ extern "C" void port_probe_rabbit_trigger(int frame)
     func_ov085_0212a828(rb);        /* the rabbit's own real grab check */
 }
 
+/* TEMPORARY Yoshi-swallow trigger -- the functional proof for the
+ * Enemy::UpdateYoshiEat fix (the Yoshi-swallow-key bug, known since 0.1.11).
+ *
+ * Every enemy Yoshi can eat opens its Behavior by calling Enemy::UpdateYoshiEat
+ * on itself; a non-zero return puts the enemy in its eat branch instead of its
+ * normal AI. For the intro rabbit that branch (src/_ZN6Rabbit8BehaviorEv.c:130-
+ * 151) is what writes rabbit+0x45c -- the caught-by player that arms the talk
+ * block and the key spawn. While UpdateYoshiEat was a constant-0 host stub the
+ * branch was dead: an eaten enemy never entered the swallow states, the rabbit
+ * never handed over its key, and the opening could not be finished.
+ *
+ * This stands in for Yoshi's tongue-grab the way SM64DS_RABBIT_TRIGGER stands in
+ * for the punch-detect: it seats the eater (rabbit+0xd0) and raises the
+ * swallow-complete bit (rabbit+0xb0 |= 0x80000) directly, then (a) calls the
+ * real UpdateYoshiEat once so its return value and swallow-completion side
+ * effects are logged, and (b) lets the rabbit's own real Behavior run the eat
+ * branch that writes rabbit+0x45c. On the stub build every line reads "no eat":
+ * ret=0, spit=0, rabbit+0x45c null. Hosted, ret=3, spit=1, timer=5, a launch
+ * speed appears, and rabbit+0x45c is written.
+ *
+ *   SM64DS_YOSHI_SWALLOW=<frame>   arm from that frame (default 90)
+ */
+extern "C" { int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn); }
+
+extern "C" void port_probe_yoshi_swallow(int frame)
+{
+    const char *e = std::getenv("SM64DS_YOSHI_SWALLOW");
+    if (!e) return;
+    int from = std::atoi(e);
+    if (from <= 0) from = 90;
+    if (frame < from) return;
+
+    char *rb = (char *)find_actor_by_class(187);
+    char *player = (char *)find_actor_by_class(0xbf);
+    if (!rb || !player) return;
+
+    /* make the rabbit live, same stand-in the grab trigger uses */
+    if ((data_0209caa0[2] & 0x20000) == 0) {
+        data_0209caa0[2] |= 0x20000;
+        std::fprintf(stderr, "  [swallow] f%d rabbit made live "
+                     "(data_0209caa0[2] |= 0x20000)\n", frame);
+    }
+
+    /* stand in for Yoshi's tongue: seat the eater and raise the swallow-complete
+       bit, exactly the state St_Swallow leaves the victim in. */
+    *(void **)(rb + 0xd0) = player;
+    *(unsigned int *)(rb + 0xb0) |= 0x80000;
+
+    /* one direct exercise of the newly-hosted function on the real rabbit */
+    static int shown = 0;
+    if (!shown) {
+        shown = 1;
+        int spit0 = *(unsigned char *)(rb + 0x107);
+        int tmr0  = *(unsigned short *)(rb + 0x104);
+        int spd0  = *(int *)(rb + 0x98);
+        int ret = _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(rb, rb + 0x144);
+        std::fprintf(stderr,
+            "  [swallow] f%d UpdateYoshiEat(rabbit) ret=%d  "
+            "spit(0x107) %d->%d  timer(0x104) %d->%d  launchSpeed(0x98) %d->%d\n",
+            frame, ret, spit0, (int)*(unsigned char *)(rb + 0x107),
+            tmr0, (int)*(unsigned short *)(rb + 0x104),
+            spd0, *(int *)(rb + 0x98));
+        /* re-arm so the rabbit's OWN Behavior enters its eat branch this frame
+           and writes rabbit+0x45c */
+        *(void **)(rb + 0xd0) = player;
+        *(unsigned int *)(rb + 0xb0) |= 0x80000;
+    }
+
+    /* report the reward-arming write the first time it lands */
+    static int reported = 0;
+    void *cur = *(void **)(rb + 0x45c);
+    if (!reported && cur) {
+        reported = 1;
+        std::fprintf(stderr,
+            "  [swallow] f%d REWARD ARMED: rabbit+0x45c = %p written by the "
+            "Yoshi-eat branch (Rabbit::Behavior:149) -> key + caught dialogue "
+            "reachable\n", frame, cur);
+    }
+    static int hb = 0;
+    if (!cur && (++hb % 60) == 1)
+        std::fprintf(stderr,
+            "  [swallow] f%d rabbit+0x45c still null (eat branch not taken)\n",
+            frame);
+}
+
 /* TEMPORARY frame-scheduled RABBIT_KEY spawn.
  *
  * SM64DS_SPAWN_ACTOR only fires at boot, and the whole question about this

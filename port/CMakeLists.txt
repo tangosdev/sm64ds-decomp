@@ -8160,6 +8160,12 @@ set(LEVELBOOT_HOST_SOURCES
     # source hosts itself now, through hostgen's ROLE_DATA map. See
     # HOSTABI_RETIRE_SYMS.
     unmatched/func_ov002_020c6f3c.cpp
+    # Enemy::UpdateYoshiEat (ov002 0x020ade78): the eaten actor's swallow-arc
+    # state machine, host-transcribed here from the 241/243 near-miss draft (the
+    # residual is the 6o ordering floor, not matchable in this lane -- see the
+    # file header). Retires the constant-0 stub that hal/actor_vtables.cpp used
+    # to carry. It rides this slice, next to the enemy Behaviors that call it.
+    unmatched/Enemy_UpdateYoshiEat.cpp
     # gate 16: two more mwcc pointer-to-member dispatches, both in actor
     # classes the registry carries. MSVC forms a PMF over an INCOMPLETE class
     # as the four-word general representation, which doubles the stride of the
