@@ -506,18 +506,18 @@ ov012	0x021123e4	data_ov012_021123e4	BasementWater_SpawnInfo	spawninfo
 ov012	0x021123e4	BasementWater_SpawnInfo	g_profile_C0_WATER	reconstructed profile global; literal ROM ID C0_WATER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov012	0x02112408	data_ov012_02112408	_ZTV13BasementWater	vtable alloc=? (was _ZTV16daObjC0_Switch_c)
 ov013	0x02111384	func_ov013_02111384	daObjClockHuriko_c_Spawn	spawnfunc
-ov013	0x021113bc	func_ov013_021113bc	_ZN22ClockPaintingHandShortD1Ev	vtable slot 16
-ov013	0x021113ec	func_ov013_021113ec	_ZN22ClockPaintingHandShortD0Ev	vtable slot 17
-ov013	0x02111478	func_ov013_02111478	_ZN22ClockPaintingHandShort16CleanupResourcesEv	vtable slot 3
-ov013	0x021114a4	func_ov013_021114a4	_ZN22ClockPaintingHandShort6RenderEv	vtable slot 9
-ov013	0x021114cc	func_ov013_021114cc	_ZN22ClockPaintingHandShort8BehaviorEv	vtable slot 6
-ov013	0x021115cc	func_ov013_021115cc	_ZN22ClockPaintingHandShort13InitResourcesEv	vtable slot 0
+ov013	0x021113bc	func_ov013_021113bc	_ZN12daObjClock_cD1Ev	vtable slot 16
+ov013	0x021113ec	func_ov013_021113ec	_ZN12daObjClock_cD0Ev	vtable slot 17
+ov013	0x02111478	func_ov013_02111478	_ZN12daObjClock_c16CleanupResourcesEv	vtable slot 3
+ov013	0x021114a4	func_ov013_021114a4	_ZN12daObjClock_c6RenderEv	vtable slot 9
+ov013	0x021114cc	func_ov013_021114cc	_ZN12daObjClock_c8BehaviorEv	vtable slot 6
+ov013	0x021115cc	func_ov013_021115cc	_ZN12daObjClock_c13InitResourcesEv	vtable slot 0
 ov013	0x0211163c	func_ov013_0211163c	ClockPaintingHandShort_Spawn	spawnfunc
 ov013	0x02111674	func_ov013_02111674	ClockPaintingHandLong_Spawn	spawnfunc
 ov013	0x02112104	data_ov013_02112104	daObjClockHuriko_c_SpawnInfo	spawninfo
 ov013	0x021121c0	data_ov013_021121c0	ClockPaintingHandLong_SpawnInfo	spawninfo
 ov013	0x021121dc	data_ov013_021121dc	ClockPaintingHandShort_SpawnInfo	spawninfo
-ov013	0x02112200	data_ov013_02112200	_ZTV22ClockPaintingHandShort	vtable alloc=0x128
+ov013	0x02112200	data_ov013_02112200	_ZTV12daObjClock_c	vtable alloc=0x128
 ov014	0x021111a0	func_ov014_021111a0	_ZN14daObjBSwdoor_cD1Ev	vtable slot 16
 ov014	0x021111f0	func_ov014_021111f0	_ZN14daObjBSwdoor_cD0Ev	vtable slot 17
 ov014	0x02111254	func_ov014_02111254	_ZN14daObjBSwdoor_c16CleanupResourcesEv	vtable slot 3
@@ -2589,3 +2589,5 @@ ov002	0x020b47ec	func_ov002_020b47ec	_ZN16daObjKinokoTag_c20TrySpawnMegaMushroom
 ov065	0x0211a550	func_ov065_0211a550	_ZN16daObjCtMecha04_c12UpdateShadowEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller, owned shadow fields, and dActor_c shadow call
 ov065	0x0211aa38	func_ov065_0211aa38	_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c	inferred helper name and dActor_c reference parameter; callback forwarding and conveyor/actor field ABI prove ownership and call shape
 ov065	0x0211aacc	func_ov065_0211aacc	_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred helper name and callback types; installed as the collider callback and observed forwarding owner and colliding actor
+ov013	0x021121dc	ClockPaintingHandShort_SpawnInfo	g_profile_CLOCK_SHORT	ROM debug-string profile id CLOCK_SHORT (actor 292) at 0x02090230; descriptor word 0 relocates to ClockPaintingHandShort_Spawn
+ov013	0x021121c0	ClockPaintingHandLong_SpawnInfo	g_profile_CLOCK_LONG	ROM debug-string profile id CLOCK_LONG (actor 293) at 0x0208ffa8; descriptor word 0 relocates to ClockPaintingHandLong_Spawn

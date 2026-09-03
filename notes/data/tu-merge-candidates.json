@@ -5899,18 +5899,18 @@
    "start": "0x21113bc",
    "end": "0x2111674",
    "classes": [
-    "ClockPaintingHandShort"
+    "daObjClock_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN22ClockPaintingHandShortD1Ev.cpp",
-    "src/_ZN22ClockPaintingHandShortD0Ev.cpp",
+    "src/_ZN12daObjClock_cD1Ev.cpp",
+    "src/_ZN12daObjClock_cD0Ev.cpp",
     "src/func_ov013_02111430.c",
-    "src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp",
-    "src/_ZN22ClockPaintingHandShort6RenderEv.cpp",
-    "src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp",
-    "src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp",
+    "src/_ZN12daObjClock_c16CleanupResourcesEv.cpp",
+    "src/_ZN12daObjClock_c6RenderEv.cpp",
+    "src/_ZN12daObjClock_c8BehaviorEv.cpp",
+    "src/_ZN12daObjClock_c13InitResourcesEv.cpp",
     "src/ClockPaintingHandShort_Spawn.cpp"
    ],
    "ext_mix": {

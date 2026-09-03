@@ -145,7 +145,7 @@ cheapest possible probe of post-regeneration ov006.
 ```
 ov009 0x2112078  n=7  L=116  Flag                     pcov=2
 ov012 0x21111a0  n=8  L=175  daObjC0_Switch_c
-ov013 0x21113bc  n=8  L=153  ClockPaintingHandShort   uncorrob
+ov013 0x21113bc  n=8  L=153  daObjClock_c   uncorrob
 ov014 0x2112e0c  n=8  L=197  daObjWanwanShutter_c
 ov015 0x21111a0  n=7  L=106  PoleBillboard            uncorrob
 ov018 0x21126d4  n=4  L=60   daSCre_c                 uncorrob

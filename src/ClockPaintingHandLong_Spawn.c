@@ -5,13 +5,13 @@
 #include "decl_Model.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV22ClockPaintingHandShort */
+/* resolved: VT0 = _ZTV12daObjClock_c */
 int *ClockPaintingHandLong_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(296);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV22ClockPaintingHandShort;
+        p[0] = (int)_ZTV12daObjClock_c;
         _ZN5ModelC1Ev((char *)p + 0xd4);
     }
     return p;

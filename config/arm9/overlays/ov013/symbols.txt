@@ -6,13 +6,13 @@ _ZN18daObjClockHuriko_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
 _ZN18daObjClockHuriko_c8BehaviorEv kind:function(arm,size=0x94) addr:0x021112a8
 _ZN18daObjClockHuriko_c13InitResourcesEv kind:function(arm,size=0x48) addr:0x0211133c
 daObjClockHuriko_c_Spawn kind:function(arm,size=0x38) addr:0x02111384
-_ZN22ClockPaintingHandShortD1Ev kind:function(arm,size=0x30) addr:0x021113bc
-_ZN22ClockPaintingHandShortD0Ev kind:function(arm,size=0x44) addr:0x021113ec
+_ZN12daObjClock_cD1Ev kind:function(arm,size=0x30) addr:0x021113bc
+_ZN12daObjClock_cD0Ev kind:function(arm,size=0x44) addr:0x021113ec
 func_ov013_02111430 kind:function(arm,size=0x48) addr:0x02111430
-_ZN22ClockPaintingHandShort16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111478
-_ZN22ClockPaintingHandShort6RenderEv kind:function(arm,size=0x28) addr:0x021114a4
-_ZN22ClockPaintingHandShort8BehaviorEv kind:function(arm,size=0x100) addr:0x021114cc
-_ZN22ClockPaintingHandShort13InitResourcesEv kind:function(arm,size=0x70) addr:0x021115cc
+_ZN12daObjClock_c16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111478
+_ZN12daObjClock_c6RenderEv kind:function(arm,size=0x28) addr:0x021114a4
+_ZN12daObjClock_c8BehaviorEv kind:function(arm,size=0x100) addr:0x021114cc
+_ZN12daObjClock_c13InitResourcesEv kind:function(arm,size=0x70) addr:0x021115cc
 ClockPaintingHandShort_Spawn kind:function(arm,size=0x38) addr:0x0211163c
 ClockPaintingHandLong_Spawn kind:function(arm,size=0x38) addr:0x02111674
 data_ov013_021116ac kind:data(any) addr:0x021116ac
@@ -96,13 +96,9 @@ data_ov013_02112178 kind:data(any) addr:0x02112178 ambiguous
 data_ov013_02112198 kind:data(any) addr:0x02112198 ambiguous
 _ZTI12daObjClock_c kind:data(any) addr:0x021121a4
 _ZTS12daObjClock_c kind:data(any) addr:0x021121b0
-data_ov013_021121b8 kind:data(any) addr:0x021121b8 ambiguous
-ClockPaintingHandLong_SpawnInfo kind:data(any) addr:0x021121c0 ambiguous
-ClockPaintingHandShort_SpawnInfo kind:data(any) addr:0x021121dc ambiguous
-data_ov013_021121f8 kind:data(any) addr:0x021121f8 ambiguous
-_ZTV22ClockPaintingHandShort kind:data(any) addr:0x02112200
+g_profile_CLOCK_LONG kind:data(any) addr:0x021121c0
+g_profile_CLOCK_SHORT kind:data(any) addr:0x021121dc
 _ZTV12daObjClock_c kind:data(any) addr:0x02112200
-data_ov013_02112258 kind:data(any) addr:0x02112258 ambiguous
 data_ov013_0211227c kind:data(any) addr:0x0211227c ambiguous
 data_ov013_02112280 kind:bss addr:0x02112280
 data_ov013_02112288 kind:bss addr:0x02112288

@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN22ClockPaintingHandShort13InitResourcesEv
+// @symbol _ZN12daObjClock_c13InitResourcesEv
 /* recovered: typed actor, model, and shared-file ownership */
 #include "decl_common.h"
-#include "ClockPaintingHandShort.h"
+#include "daObjClock_c.h"
 #include "SharedFilePtr.h"
 
-int ClockPaintingHandShort::InitResources()
+int daObjClock_c::InitResources()
 {
     int isShortHand = (int)(actorID == 0x125);
     if (isShortHand != 0)

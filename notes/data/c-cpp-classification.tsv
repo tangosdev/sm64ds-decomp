@@ -861,7 +861,7 @@ src/_ZN21FloatingFloorLllSmallD0Ev.c	DTOR-ONLY	ov022	daObjFl_Ukiyuka_c	FloatingF
 src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.c	P1-vtable+mangled	ov047	daObjKm3_Kurumajiku_c	daObjKm3_Kurumajiku_c	vtable daObjKm3_Kurumajiku_c slot 0 @0x2111268 | _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv	1		True		-
 src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.c	P1-vtable+mangled	ov047	daObjKm3_Kurumajiku_c	daObjKm3_Kurumajiku_c	vtable daObjKm3_Kurumajiku_c slot 3 @0x2111254 | _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv	1		True		-
 src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c	DTOR-ONLY	ov047	daObjKm3_Kurumajiku_c	daObjKm3_Kurumajiku_c	_ZN21daObjKm3_Kurumajiku_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
-src/_ZN22ClockPaintingHandShortD0Ev.cpp	DTOR-ONLY	ov013	daObjClock_c	ClockPaintingHandShort/daObjClock_c	_ZN22ClockPaintingHandShortD0Ev	1		True		-
+src/_ZN12daObjClock_cD0Ev.cpp	DTOR-ONLY	ov013	daObjClock_c	daObjClock_c/daObjClock_c	_ZN12daObjClock_cD0Ev	1		True		-
 src/_ZN22ExpandingHeapAllocatorC1EPvj.c	P3-mangled-method-only	arm9		ExpandingHeapAllocator	_ZN22ExpandingHeapAllocatorC1EPvj	1		True		-
 src/_ZN22RotatingUpDownPlatformD0Ev.c	DTOR-ONLY	ov091	daLinelift2_c	RotatingUpDownPlatform/daLinelift2_c	_ZN22RotatingUpDownPlatformD0Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN22RotatingUpDownPlatformD1Ev.c	DTOR-ONLY	ov091	daLinelift2_c	RotatingUpDownPlatform/daLinelift2_c	_ZN22RotatingUpDownPlatformD1Ev	1		True	_ZTV10dBgActor_c	-
