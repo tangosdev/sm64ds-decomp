@@ -1437,6 +1437,13 @@
     "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_heart.cpp#daObjHeart_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_heart.cpp#daObjHeart_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c0_water.cpp#daObjC0Water_c_classInit": "andrewboudreau"
   }
 }
