@@ -1043,7 +1043,7 @@ src/_ZN9AnimationD1Ev.cpp	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl
 src/_ZN9AnimationD2Ev.cpp	DTOR-ONLY	arm9		Animation	_ZN9AnimationD2Ev	1		True	_ZTV9Animation	-
 src/_ZN15daObjWc_Obj02_cD0Ev.c	DTOR-ONLY	ov029	daObjWc_Obj02_c	daObjWc_Obj02_c/daObjWc_Obj02_c	_ZN15daObjWc_Obj02_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV15daObjWc_Obj02_c	-
 src/_ZN15daObjWc_Obj02_cD1Ev.c	DTOR-ONLY	ov029	daObjWc_Obj02_c	daObjWc_Obj02_c/daObjWc_Obj02_c	_ZN15daObjWc_Obj02_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV15daObjWc_Obj02_c	-
-src/_ZN9BlueFlameD0Ev.c	DTOR-ONLY	ov002	daObjFire_c	BlueFlame/daObjFire_c	_ZN9BlueFlameD0Ev	1		True		-
+src/_ZN11daObjFire_cD0Ev.c	DTOR-ONLY	ov002	daObjFire_c	daObjFire_c/daObjFire_c	_ZN11daObjFire_cD0Ev	1		True		-
 src/_ZN9BootScene13InitResourcesEv.c	P1-vtable+mangled	arm9	dScBoot_c	BootScene/dScBoot_c	vtable dScBoot_c slot 0 @0x2005a58 | _ZN9BootScene13InitResourcesEv	1		True		-
 src/_ZN9BootScene8BehaviorEv.c	P1-vtable+mangled	arm9	dScBoot_c	BootScene/dScBoot_c	vtable dScBoot_c slot 6 @0x2005418 | _ZN9BootScene8BehaviorEv	1		True		-
 src/_ZN9Butterfly16CleanupResourcesEv.c	P1-vtable+mangled	ov100	daBtfly_c	Butterfly/daBtfly_c	vtable daBtfly_c slot 3 @0x2141988 | _ZN9Butterfly16CleanupResourcesEv	1		True		-

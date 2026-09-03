@@ -5,13 +5,13 @@
 #include "decl_dCcAc_c.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV9BlueFlame */
+/* resolved: VT0 = _ZTV11daObjFire_c */
 int *RedFlame_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(280);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV9BlueFlame;
+        p[0] = (int)_ZTV11daObjFire_c;
         _ZN7dCcAc_cC1Ev((char *)p + 0xe4);
     }
     return p;

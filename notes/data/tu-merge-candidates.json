@@ -7288,17 +7288,17 @@
    "start": "0x20b5734",
    "end": "0x20b59e0",
    "classes": [
-    "BlueFlame"
+    "daObjFire_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9BlueFlameD1Ev.cpp",
-    "src/_ZN9BlueFlameD0Ev.c",
-    "src/_ZN9BlueFlame8BehaviorEv.cpp",
-    "src/_ZN9BlueFlame13InitResourcesEv.cpp",
-    "src/_ZN9BlueFlame13OnTurnIntoEggER6Player.cpp",
-    "src/_ZN9BlueFlame13OnYoshiTryEatEv.cpp",
+    "src/_ZN11daObjFire_cD1Ev.cpp",
+    "src/_ZN11daObjFire_cD0Ev.c",
+    "src/_ZN11daObjFire_c8BehaviorEv.cpp",
+    "src/_ZN11daObjFire_c13InitResourcesEv.cpp",
+    "src/_ZN11daObjFire_c13OnTurnIntoEggER6Player.cpp",
+    "src/_ZN11daObjFire_c13OnYoshiTryEatEv.cpp",
     "src/BlueFlame_Spawn.c"
    ],
    "ext_mix": {

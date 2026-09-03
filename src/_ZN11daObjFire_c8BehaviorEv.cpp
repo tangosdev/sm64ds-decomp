@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9BlueFlame8BehaviorEv
+// @symbol _ZN11daObjFire_c8BehaviorEv
 
-#include "BlueFlame.h"
+#include "daObjFire_c.h"
 #include "Player.h"
 
 extern "C" {
@@ -12,7 +12,7 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     u32 id, Fix12i x, Fix12i y, Fix12i z);
 }
 
-int BlueFlame::Behavior()
+int daObjFire_c::Behavior()
 {
     struct Vector3 pos;
     struct Vector3 particlePos;
