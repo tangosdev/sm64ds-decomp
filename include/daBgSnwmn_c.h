@@ -38,7 +38,8 @@
  *     _ZN10dCcAcPos_cC1Ev(p + 0x1b0) -- dCcAcPos_c, 0x40
  * THE LAST MEMBER CLOSES EXACTLY ON THE ALLOCATION LITERAL:
  * 0x1b0 + 0x40 = 0x1f0. Nothing is left over. The destructor
- * (func_ov072_02120824 / _02120874) tears the same five down in exactly the
+ * (_ZN11daBgSnwmn_cD1Ev at 0x02120824, _ZN11daBgSnwmn_cD0Ev at 0x02120874)
+ * tears the same five down in exactly the
  * reverse order -- dCcAcPos_c, ShadowModel, TextureSequence,
  * Model, Model -- which is what a compiler-generated body emits for typed
  * members declared in ascending-offset order, so they are declared typed
@@ -47,7 +48,7 @@
  * THE OLD FLAT HEADER'S SIZE WAS WRONG: it asserted nothing explicitly but
  * its last field sat at 0x368 -- 0x178 bytes past the real 0x1f0 allocation.
  * Every field it listed below 0xd0 (0x05c, 0x060, 0x064, 0x080, 0x084,
- * 0x088, 0x08e, 0x094, 0x098, 0x09c, 0x0a0, 0x0a8, 0x0cc, 0x0d0) is really
+ * 0x088, 0x08e, 0x094, 0x098, 0x09c, 0x0a0, 0x0a8, 0x0cc) is really
  * dActor_c's OWN field, misattributed by the flat generator exactly the way
  * dScEntry_c's old header misattributed everything below fBase_c's 0x50
  * (see dScEntry_c.h) -- dActor_c.h already declares mPosX/Y/Z at 0x05c,
@@ -81,18 +82,27 @@ struct daBgSnwmn_c : dActor_c {
     ShadowModel mShadow;           /* 0x188 */
     dCcAcPos_c mCylClsn; /* 0x1b0 */
 
-    /* Declared first -- key function; see the family convention discussed
-       in dActor_c.h. Never defined as a real method in any TU: both D1 and
-       D0 are plain functions carrying their literal mangled name
-       (src/_ZN11daBgSnwmn_cD1Ev.c, src/_ZN11daBgSnwmn_cD0Ev.c). */
-    virtual ~daBgSnwmn_c();                              /* slots 16 (D1), 17 (D0) */
-
     /* --- overrides, in dActor_c's own vtable order. --- */
     virtual s32  InitResources();                        /* slot  0 */
     virtual s32  CleanupResources();                     /* slot  3 */
     virtual s32  Behavior();                              /* slot  6 */
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
+
+    /* Declared LAST, deliberately. Nothing DEFINES this destructor as a real
+       C++ member: the cartridge's D1 (0x02120824) sits BELOW its D0
+       (0x02120874), and a real member definition makes mwccarm emit the
+       D2/D1/D0 triple as one group in the order D0-then-D1, which the
+       whole-range link refuses. Both variants are therefore carried in
+       src/actors/d_a_bg_snwmn.cpp as `// @symbol` mangled bodies, which the
+       compiler sees as unrelated functions -- so the class has no key
+       function and its vtable and RTTI are vague linkage. With the
+       destructor declared FIRST, mwccarm emits no RTTI at all and
+       _ZTV/_ZTI/_ZTS11daBgSnwmn_c go unverified by any source; declared
+       last, after the five virtual overrides, it emits all three. See
+       notes/mwccarm-codegen.md and include/daObjWc_Mizu_c.h, which carries
+       the same shape for the same reason. */
+    virtual ~daBgSnwmn_c();                              /* slots 16 (D1), 17 (D0) */
 };
 
 typedef char daBgSnwmn_c_size_must_be_0x1f0[sizeof(daBgSnwmn_c) == 0x1f0 ? 1 : -1];

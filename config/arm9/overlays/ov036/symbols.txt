@@ -195,12 +195,10 @@ data_ov036_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 _ZTV21ArmedRotatingPlatform kind:data(any) addr:0x02113dcc
 data_ov036_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 _ZTI16daObjRc_Dorifu_c kind:data(any) addr:0x02113e4c
-data_ov036_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 _ZTS16daObjRc_Dorifu_c kind:data(any) addr:0x02113e58
 g_profile_RC_DORIFU kind:data(any) addr:0x02113e6c ambiguous
 data_ov036_02113e88 kind:data(any) addr:0x02113e88
 _ZTV16daObjRc_Dorifu_c kind:data(any) addr:0x02113ecc
-data_ov036_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI15daObjRcCarpet_c kind:data(any) addr:0x02113f4c
 data_ov036_02113f58 kind:data(any) addr:0x02113f58
 _ZTS15daObjRcCarpet_c kind:data(any) addr:0x02113f64

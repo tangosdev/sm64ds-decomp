@@ -200,37 +200,9 @@ src/SnowmanHead_Spawn.c:
     complete
     .text start:0x021207d4 end:0x02120824
 
-src/_ZN11daBgSnwmn_cD1Ev.cpp:
+src/actors/d_a_bg_snwmn.cpp:
     complete
-    .text start:0x02120824 end:0x02120874
-
-src/_ZN11daBgSnwmn_cD0Ev.cpp:
-    complete
-    .text start:0x02120874 end:0x021208d8
-
-src/func_ov072_021208d8.cpp:
-    complete
-    .text start:0x021208d8 end:0x02120980
-
-src/_ZN11daBgSnwmn_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02120980 end:0x021209bc
-
-src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x021209bc end:0x021209c0
-
-src/_ZN11daBgSnwmn_c6RenderEv.cpp:
-    complete
-    .text start:0x021209c0 end:0x02120a08
-
-src/_ZN11daBgSnwmn_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02120a08 end:0x02120a44
-
-src/_ZN11daBgSnwmn_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02120a44 end:0x02120c00
+    .text start:0x02120824 end:0x02120c00
 
 src/func_ov072_02120c00.c:
     complete

@@ -3,6 +3,7 @@
   "module": "ov036",
   "source": "src/actors/d_a_obj_rc_dorifu.cpp",
   "promoted_source": "src/actors/d_a_obj_rc_dorifu.cpp",
+  "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -15,6 +16,11 @@
       "name": ".text",
       "start": "0x02111f8c",
       "end": "0x02112158"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113e4c",
+      "end": "0x02113f4c"
     }
   ],
   "functions": [
@@ -54,29 +60,62 @@
       "ordinal": 4
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI16daObjRc_Dorifu_c",
+      "address": "0x02113e4c",
+      "size": "0xc",
+      "evidence": "compiler-emitted single-inheritance RTTI record matches the retail bytes and all three configured relocations"
+    },
+    {
+      "symbol": "_ZTS16daObjRc_Dorifu_c",
+      "address": "0x02113e58",
+      "size": "0x13",
+      "evidence": "compiler-emitted type-name string matches the retail bytes -- \"16daObjRc_Dorifu_c\\0\" is 19 bytes (0x13); the class-name string owns no trailing pad, the next word at 0x02113e6c is g_profile_RC_DORIFU"
+    },
+    {
+      "symbol": "_ZTV16daObjRc_Dorifu_c",
+      "address": "0x02113ecc",
+      "emitted_storage_address": "0x02113ec4",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "read directly from the ov036 overlay image via tools/modules.py: 34 words from 0x02113ec4 (the two-word ABI preamble) through 0x02113f48 inclusive, immediately followed at 0x02113f4c by the next class's own _ZTI15daObjRcCarpet_c preamble word; word[2] at the address point (0x02113ecc) is 0x021120b4, InitResources, matching slot 0, and word[35] (0x02113f48) is 0x020ee55c, dBgActor_c::Kill, matching the un-overridden slot 31 -- both consistent with the sibling classes' 32-slot table"
+    },
+    {
+      "symbol": "g_profile_RC_DORIFU",
+      "address": "0x02113e6c",
+      "size": "0x1c",
+      "evidence": "the class's spawn-registration profile (RcDorifuSpawnInfo), read directly from the ov036 overlay image via tools/modules.py: spawn=0x021120c8 (this TU's own daObjRc_Dorifu_c_classInit), behaviorPriority=0x7b, renderPriority=0xfd, flags=0, rangeOffsetY=0x500000, range=0x1000000, drawDistance=0x2000000, unk_18=0 -- the same field shape and two of the same range constants as sibling daObjKm1_Dorifu_c's StairsBdw_SpawnInfo and daObjRcCarpet_c's g_profile_RC_CARPET"
+    },
+    {
+      "symbol": "data_ov036_02113e88",
+      "address": "0x02113e88",
+      "size": "0x3c",
+      "evidence": "the daObjDorifuResources[5] table InitResources/CleanupResources forward to daObjDorifu_c with, read directly from the ov036 overlay image via tools/modules.py: five 0xc-byte {SharedFilePtr*, SharedFilePtr*, CLPS_Block*} entries pointing into this overlay's own .bss/.data cells, the same shape as sibling daObjKm1_Dorifu_c's data_ov043_02112518"
+    }
+  ],
   "bss": [],
   "notes": [
-    "SUPERSEDED BY THE PROMOTION. Original text: 'Manually curated against include/daObjRc_Dorifu_c.h; the class TU contains real member definitions and one empty destructor definition rather than the legacy C D0 body.' The empty destructor definition is exactly what the promotion removed -- see the PROMOTION note below. What remains true is that the manifest was curated by hand against the header.",
-    "SUPERSEDED BY THE PROMOTION, in every clause. Original text: 'STRICT PARTIAL-ISOLATION BOUNDARY: D1, InitResources, and CleanupResources are contribution-identical. Compiler-generated D0 calls __cxa_vec_cleanup while the legacy C object names the configured same-address alias __destroy_arr (both arm9 0x0207328c), so symbolic object equivalence is conservatively 3/4 and no partial-link claim is made.' There is no compiler-generated D0 any more -- D0 is a hand-transcribed mangled body that names __destroy_arr explicitly, so the divergence the note was about no longer exists -- and there is no legacy C object, and the range is now five functions rather than four.",
-    "PROMOTION (read this first). Before the promotion this TU carried a real `daObjRc_Dorifu_c::~daObjRc_Dorifu_c()` member and verified 4/4 MATCH with objisolate clean -- but with `emission order: 1 ordinal pair(s) NOT in ROM order: [(0, 1)]` and an unhomed `_ZN16daObjRc_Dorifu_cD2Ev` that no ROM address claims. The cartridge keeps D1 at 0x02111f8c BELOW D0 at 0x0211200c while mwccarm emits the D2/D1/D0 group D0-then-D1, so production isolation would have refused it. Both variants are now `// @symbol` mangled bodies transcribed from the cartridge with tools/disasm.py (ov036 base 0x021111a0); D2 is gone and the order line now reads `all 5 function(s) in the expected ROM-ascending section order`. That costs the CONVERTED tier's no-raw-offset and no-mangled-refs criteria for those two functions, banked in config/converted-backslide-exceptions.jsonl. The TU also absorbed daObjRc_Dorifu_c_classInit at 0x021120c8, which was contiguous with the other four and previously stood alone; the section now runs .text 0x02111f8c-0x02112158. NO VPTR BIAS: symbols.txt records _ZTV16daObjRc_Dorifu_c at 0x02113ecc and that IS the address point -- D1's literal pool word at 0x02111ff8 is exactly 0x02113ecc -- so every vptr store names the symbol with addend 0.",
-    "WHY THE DESTRUCTOR IS DECLARED LAST IN include/daObjRc_Dorifu_c.h, and where the 13 compiler_only_output entries come from. Nothing defines ~daObjRc_Dorifu_c() as a C++ member (see the previous note), so the class's vtable and RTTI have no key function to home them. Whether mwccarm emits them here turns on WHERE the destructor is declared in the class body: measured on the sibling daObjWc_Mizu_c, declared FIRST the TU emits 0 data symbols, moved after the other members it emits the full set. Declared first is not harmless -- it drops _ZTI/_ZTS/_ZTV16daObjRc_Dorifu_c out of the set of ROM data any source verifies, and tools/validate_merge.py ratchets on that count with no escape hatch. The 13 licensed entries are this class's own three plus the vague-linkage RTTI passengers of the base chain daObjDorifu_c / dBgActor_c / dActor_c / fBase_c / dBase_c -- a longer chain than the daObjWc_* siblings' because this class sits two levels below dBgActor_c.",
-    "The three remaining `objisolate: _ZTV16daObjRc_Dorifu_c: unexpected reloc type=2 addend=0` DIFFs on D1, D0 and classInit are a verify-path artifact, not a defect. tools/objisolate.py demands `addend >= VTABLE_PREAMBLE` only for a _ZTV symbol it is EXTERNALISING; in production the deadstrip-data disposition drops it instead, where addend 0 is the correct spelling. The same command run against the already-landed, CI-green src/actors/d_a_obj_wc_mizu.cpp and src/actors/d_a_obj_wc_obj03.cpp produces the identical shape. tools/rombuild.py -j16 is the gate that matters."
+    "SUPERSEDED. Original text: 'Manually curated against include/daObjRc_Dorifu_c.h; the class TU contains real member definitions and one empty destructor definition rather than the legacy C D0 body.' The empty destructor definition is exactly what the promotion removed -- see the FIX note below. What remains true is that the manifest was curated by hand against the header.",
+    "SUPERSEDED, in every clause. Original text: 'STRICT PARTIAL-ISOLATION BOUNDARY: D1, InitResources, and CleanupResources are contribution-identical. Compiler-generated D0 calls __cxa_vec_cleanup while the legacy C object names the configured same-address alias __destroy_arr (both arm9 0x0207328c), so symbolic object equivalence is conservatively 3/4 and no partial-link claim is made.' There is no legacy C object any more, and the range is now five functions rather than four.",
+    "PROMOTION (superseded by the FIX note below, kept for history). Before the promotion this TU carried a real `daObjRc_Dorifu_c::~daObjRc_Dorifu_c()` member DEFINED OUT OF LINE and verified 4/4 MATCH with objisolate clean -- but with `emission order: 1 ordinal pair(s) NOT in ROM order: [(0, 1)]` and an unhomed `_ZN16daObjRc_Dorifu_cD2Ev` that no ROM address claims, because out-of-line mwccarm 2004/b56 emits the D2/D1/D0 group D0-then-D1 while the cartridge keeps D1 at 0x02111f8c below D0 at 0x0211200c. The promotion PR (#2193) worked around that by replacing both variants with `// @symbol` mangled bodies transcribed from the cartridge with tools/disasm.py, banking the CONVERTED tier's no-raw-offset and no-mangled-refs criteria for those two functions in config/converted-backslide-exceptions.jsonl. That workaround was unnecessary: the D0-before-D1 problem is specific to an out-of-line definition, not the destructor itself.",
+    "FIX (read this first). ~daObjRc_Dorifu_c() is now `virtual ~daObjRc_Dorifu_c() {}`, defined INLINE in the class body in include/daObjRc_Dorifu_c.h, declared FIRST (matching the already-landed sibling classes daObjKm1_Dorifu_c and daObjWanwanShutter_c). Defined inline, mwccarm emits D1 then D0 in that order with no D2 at all -- `tools/tubuild.py verify` reports `all 5 function(s) in the expected ROM-ascending section order` and `objisolate check: clean`, and the two hand-transcribed mangled bodies and their private externs are gone, so the two config/converted-backslide-exceptions.jsonl rows for this class's destructor symbols are removed. Declaring the destructor makes it this class's key function: mwccarm now homes _ZTI/_ZTS/_ZTV16daObjRc_Dorifu_c in this TU as genuinely owned `data` (moved out of `compiler_only_output` below), matching config/tu_manifest.d/ov043/daObjKm1_Dorifu_c.json's shape for the same base chain. VPTR BIAS: because this TU now owns the vtable, every vptr store names the symbol with addend +8 (`&_ZTV16daObjRc_Dorifu_c[2]`), past the two-word ABI preamble -- addend 0 was only correct while the vtable was an unhomed vague-linkage passenger.",
+    "The 10 remaining compiler_only_output entries are the vague-linkage RTTI passengers of the base chain daObjDorifu_c / dBgActor_c / dActor_c / fBase_c / dBase_c -- their own key functions live elsewhere and are unaffected by this fix."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov036-daObjRc_Dorifu_c/daObjRc_Dorifu_c.o (gitignored)",
+    "object": "build/tu/ov036-daObjRc_Dorifu_c/d_a_obj_rc_dorifu.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 2,
+    "functions_matched": 5,
     "functions_declared": 5,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
+      "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
       "requested": [],
@@ -95,13 +134,8 @@
         15,
         16,
         17,
-        18,
-        19,
         20,
-        21,
-        22,
-        23,
-        24
+        21
       ],
       "data": [
         "_ZTI7dBase_c",
@@ -113,32 +147,124 @@
         "_ZTI10dBgActor_c",
         "_ZTS10dBgActor_c",
         "_ZTI13daObjDorifu_c",
-        "_ZTS13daObjDorifu_c",
-        "_ZTI16daObjRc_Dorifu_c",
-        "_ZTS16daObjRc_Dorifu_c",
-        "_ZTV16daObjRc_Dorifu_c"
+        "_ZTS13daObjDorifu_c"
       ],
       "dataExternalized": [
         "_ZTI10dBgActor_c",
         "_ZTI13daObjDorifu_c",
-        "_ZTI16daObjRc_Dorifu_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
         "_ZTS10dBgActor_c",
         "_ZTS13daObjDorifu_c",
-        "_ZTS16daObjRc_Dorifu_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV16daObjRc_Dorifu_c"
+        "_ZTS8dActor_c"
       ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov036-daObjRc_Dorifu_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111f8c",
+        "end": "0x02112158",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111f8c",
+          "end": "0x02112158",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02113e4c",
+          "end": "0x02113f4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 10
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ],
+            "desired": [
+              18,
+              22,
+              23,
+              25,
+              27
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "partial_isolation": {
     "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
-    "derivedObjects": 4,
-    "contributionEquivalent": "3/4",
+    "derivedObjects": 5,
+    "contributionEquivalent": "0/5",
     "comparedFields": [
       "keptSection",
       "keptBytes",
@@ -148,8 +274,8 @@
       "live",
       "undefReferenced"
     ],
-    "legacyEntriesComplete": "4/4",
-    "extraInertImports": 59,
+    "legacyEntriesComplete": "0/5",
+    "extraInertImports": 0,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov036-daObjRc_Dorifu_c/partial/partial.json (gitignored)",
     "state": "derived",
@@ -227,27 +353,528 @@
       "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov002:0x02108d7c, which no section this entry licenses (.text 0x02111f8c-0x02112158) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
       "canonical_module": "ov002",
       "canonical_address": "0x02108d7c"
-    },
+    }
+  ],
+  "relocations": [
     {
-      "symbol": "_ZTI16daObjRc_Dorifu_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daObjRc_Dorifu_c.h declares ~daObjRc_Dorifu_c() but nothing DEFINES it as a C++ member: the cartridge's D1 and D0 are carried in this TU as `// @symbol` marked bodies under their mangled names, which the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the two non-virtual methods -- with it declared first mwccarm emits no RTTI at all here and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov036:0x02113e4c, outside this entry's only licensed range (.text 0x02111f8c-0x02112158), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov036",
-      "canonical_address": "0x02113e4c"
-    },
-    {
+      "section": ".data",
+      "source": "0x02113e50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
       "symbol": "_ZTS16daObjRc_Dorifu_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daObjRc_Dorifu_c.h declares ~daObjRc_Dorifu_c() but nothing DEFINES it as a C++ member: the cartridge's D1 and D0 are carried in this TU as `// @symbol` marked bodies under their mangled names, which the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the two non-virtual methods -- with it declared first mwccarm emits no RTTI at all here and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov036:0x02113e58, outside this entry's only licensed range (.text 0x02111f8c-0x02112158), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov036",
-      "canonical_address": "0x02113e58"
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02113e58"
     },
     {
-      "symbol": "_ZTV16daObjRc_Dorifu_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daObjRc_Dorifu_c.h declares ~daObjRc_Dorifu_c() but nothing DEFINES it as a C++ member: the cartridge's D1 and D0 are carried in this TU as `// @symbol` marked bodies under their mangled names, which the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the two non-virtual methods -- with it declared first mwccarm emits no RTTI at all here and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov036:0x02113ecc, outside this entry's only licensed range (.text 0x02111f8c-0x02112158), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov036",
-      "canonical_address": "0x02113ecc"
+      "section": ".data",
+      "source": "0x02113e54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI13daObjDorifu_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x02108d70"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjRc_Dorifu_c_classInit",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021120c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ec0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112ae8",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112ae8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ebc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140dc",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113eb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_0211410c",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x0211410c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113eb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112b88",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112b88"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113eb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02114114",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114114"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113eac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02114104",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02114104"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ea8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112a88",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112a88"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ea4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140ec",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ea0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140e4",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112c08",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112c08"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140d4",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140fc",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_02112be8",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02112be8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e8c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_021140f4",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021140f4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113e88",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov036_0211411c",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x0211411c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ec8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjRc_Dorifu_c",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02113e4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113efc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ef8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ef4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113eec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ee8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ee0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113edc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ed4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ed0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ef0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjDorifu_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlays(0,2)",
+      "target_address": "0x020b4bc4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ee4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN13daObjDorifu_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlays(0,2)",
+      "target_address": "0x020b4bfc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjRc_Dorifu_cD0Ev",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x0211200c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ecc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjRc_Dorifu_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021120b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ed8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjRc_Dorifu_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x021120a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113f0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjRc_Dorifu_cD1Ev",
+      "addend": 0,
+      "target_module": "ov036",
+      "target_address": "0x02111f8c"
     }
   ]
 }
