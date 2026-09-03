@@ -40,8 +40,13 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       own. This arm configures and builds it into its own
                       build/port-kit and fails the battery if configure, build
                       or link fails, then runs that exe's headless selftest ONCE
-                      as a liveness check. --no-shipcfg opts out, loudly. The
-                      long form is at THE SHIPPING CONFIGURATION below
+                      as a liveness check. Before any of that it reads two
+                      files and refuses a build/port-kit left over from an
+                      older romdata blob, which is a stale directory rather
+                      than a broken change and used to arrive as a runtime
+                      refusal an hour in (shipcfg_stale_kit). --no-shipcfg opts
+                      out, loudly. The long form is at THE SHIPPING
+                      CONFIGURATION below
 
     python port/tools/battery.py [repo-root] [--linked-floor N] [--skip-build]
                                  [--no-shipcfg]
@@ -305,6 +310,23 @@ SHIPCFG_BUILD = os.path.join("build", "port-kit")
 SHIPCFG_BUILD_TIMEOUT = 5400
 SHIPCFG_RUN_TIMEOUT = 600
 SHIPCFG_BMP = "walk_window_selftest.bmp"
+
+# The two files the stale-kit precheck below reads. Both are build products
+# that exist on disk before this arm runs, which is the whole reason the check
+# can be free: neither number has to be learned by launching anything.
+#
+# port/tools/romblob.py writes both, in the same run. It emits the consolidated
+# blob build/assets/romdata.bin with a header line in
+# build/assets/romdata.manifest reading "# romdata-manifest v1 <sha256> <len>",
+# and it stamps the SAME sha and length into the generated dispatch TU as
+# port_romdata_expect_sha / port_romdata_expect_len, beside the per-part base
+# offsets it computed from that exact blob. hal/romdata_loader.cpp compares the
+# two at startup and refuses the pair if they disagree, because a blob from
+# another build has that build's parts at other offsets and every ROM table
+# would be filled from the wrong slice in silence.
+SHIPCFG_KIT_DISPATCH = os.path.join("build", "port-kit", "host-src",
+                                    "romdata_dispatch.c")
+ROMDATA_MANIFEST = os.path.join("build", "assets", "romdata.manifest")
 
 TABLE_OPEN = "static const PortLevelDesc port_level_table[] = {"
 SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
@@ -1205,6 +1227,117 @@ def shipcfg_env(root):
     return env
 
 
+def shipcfg_stale_kit(root):
+    """Refuse a build/port-kit that was linked against a different romdata blob.
+
+    Returns None when there is nothing to say, or the text of a FAIL line the
+    caller must print before it stops.
+
+    THIS IS A CHECKABLE INVARIANT AND IT USED TO ARRIVE AS A MYSTERY. On
+    2026-09-02 the shipcfg arm went red at the selftest and the red landed on
+    the change that happened to be in flight, which had nothing to do with it.
+    An unrelated hotfix had cleared build/port-kit at some point and the two
+    halves of the pair stopped being rebuilt together: the kit's
+    walk_window.exe had been linked against a romdata blob of 939074 bytes
+    while the developer build had since regenerated build/assets/romdata.bin at
+    939046. hal/romdata_loader.cpp did exactly what it says it does and refused
+    the pair, but it refused it three quarters of an hour into the battery, in
+    a step whose whole job is to say "the shipping configuration is broken".
+    Nothing about that message pointed at a stale directory.
+
+    Both numbers are sitting on disk before the arm starts, so the answer costs
+    a file read rather than a build and a launch, and it can be given at the
+    top where it is cheap to act on.
+
+    WHAT IS COMPARED, AND WHY IT IS THE HONEST PAIR. The expectation is not
+    recoverable from the exe as a number -- port_romdata_expect_len is a u64 in
+    .data with nothing around it to anchor a search on -- so it is read from
+    the generated TU the exe was compiled from, build/port-kit/host-src/
+    romdata_dispatch.c, where romblob.py wrote it as text. That would only
+    speak for the exe if the exe were actually linked from that TU, so the
+    second half of the check asks the exe: port_romdata_expect_sha is a plain
+    string literal and survives into the image, so a byte search for it either
+    finds the dispatch's sha in walk_window.exe or proves the exe is older than
+    its own generated source. Both outcomes are the same staleness with the
+    same remedy, and they are reported separately so the reader knows which
+    half went first.
+
+    IT MUST NOT FIRE ON A TREE THAT IS MERELY YOUNG. Every path that cannot
+    establish both sides returns None: no build/port-kit, no dispatch TU, no
+    linked exe yet, no manifest in build/assets, a header this parser does not
+    recognise. A kit that does not exist is about to be configured and built
+    from scratch against the blob that is there now, which is consistent by
+    construction, and a false red here would be worse than the bug it is
+    named for.
+    """
+    dispatch = os.path.join(root, SHIPCFG_KIT_DISPATCH)
+    manifest = os.path.join(root, ROMDATA_MANIFEST)
+    exe = os.path.join(root, SHIPCFG_BUILD, "walk_window.exe")
+    if not (os.path.isfile(dispatch) and os.path.isfile(manifest)
+            and os.path.isfile(exe)):
+        return None
+
+    try:
+        gen = open(dispatch, "r", encoding="utf-8", errors="replace").read()
+    except OSError:
+        return None
+    m_sha = re.search(r'port_romdata_expect_sha\[\]\s*=\s*"([0-9a-fA-F]+)"',
+                      gen)
+    m_len = re.search(r"port_romdata_expect_len\s*=\s*(\d+)", gen)
+    if not (m_sha and m_len):
+        # An older kit directory from before romblob.py started stamping, or a
+        # spelling this parser does not know. Silence is the right answer: the
+        # check has no expectation to compare and inventing one is how a guard
+        # earns its reputation for crying wolf.
+        return None
+    want_sha = m_sha.group(1).lower()
+    want_len = int(m_len.group(1))
+
+    try:
+        head = open(manifest, "r", encoding="utf-8",
+                    errors="replace").readline()
+    except OSError:
+        return None
+    m_man = re.match(r"#\s*romdata-manifest v1 ([0-9a-fA-F]+) (\d+)\s*$", head)
+    if not m_man:
+        return None
+    have_sha = m_man.group(1).lower()
+    have_len = int(m_man.group(2))
+
+    remedy = (f"Delete {SHIPCFG_BUILD} and let this arm configure and build it "
+              f"again, so the exe and the blob it addresses are made in the "
+              f"same pass. Nothing in build/port needs touching.")
+
+    if want_sha != have_sha:
+        return (f"shipcfg romdata: FAIL, {SHIPCFG_BUILD} is STALE against "
+                f"build/assets and no build or run below this line would have "
+                f"said so. The kit's walk_window.exe was linked against a "
+                f"romdata blob of {want_len:,} bytes (sha {want_sha[:12]}), "
+                f"and {ROMDATA_MANIFEST} now describes one of {have_len:,} "
+                f"bytes (sha {have_sha[:12]}). The developer build "
+                f"regenerated the blob after the kit was linked, so the kit's "
+                f"baked per-part offsets no longer address it and "
+                f"hal/romdata_loader.cpp will refuse the pair at startup. This "
+                f"is a stale directory, not a fault in whatever change is in "
+                f"flight. {remedy}")
+
+    try:
+        image = open(exe, "rb").read()
+    except OSError:
+        return None
+    if want_sha.encode("ascii") not in image:
+        return (f"shipcfg romdata: FAIL, {SHIPCFG_BUILD} is STALE inside "
+                f"itself. Its generated {SHIPCFG_KIT_DISPATCH} was written for "
+                f"a blob of {want_len:,} bytes (sha {want_sha[:12]}), which is "
+                f"the blob {ROMDATA_MANIFEST} describes at {have_len:,} bytes, "
+                f"but walk_window.exe does not carry that sha anywhere in its "
+                f"image, so the exe was linked from an EARLIER dispatch and "
+                f"the offsets it holds are that earlier blob's. The numbers on "
+                f"disk agree with each other and the exe agrees with neither. "
+                f"{remedy}")
+    return None
+
+
 def shipcfg_arm(root):
     """Build the shipping configuration, and prove the exe it makes still runs.
 
@@ -1223,6 +1356,15 @@ def shipcfg_arm(root):
     only and what that leaves uncovered, and why the BMP is not compared
     against anything -- is THE SHIPPING CONFIGURATION in this file's docstring.
     """
+    # FIRST, AND BEFORE ANYTHING IS SPENT. shipcfg_stale_kit reads two files
+    # and answers a question that otherwise only surfaces as a runtime refusal
+    # at the far end of a configure, a link and a launch, wearing the face of
+    # whatever change is in flight. Its docstring has the incident.
+    stale = shipcfg_stale_kit(root)
+    if stale:
+        print(stale)
+        return False, None
+
     build = os.path.join(root, SHIPCFG_BUILD)
     script, no_vcvars = shipcfg_script(root, build)
     if script is None:
