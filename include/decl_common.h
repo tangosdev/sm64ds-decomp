@@ -756,7 +756,6 @@ extern int _ZTV7daTor_c[];
 extern int _ZTV7daWbm_c[];
 extern int _ZTV8BookShot[];
 extern int _ZTV8CccArena[];
-extern int _ZTV4Flag[];
 extern int _ZTV8Fireball[];
 extern int _ZTV8IceBlock[];
 extern int _ZTV8IceSheet[];

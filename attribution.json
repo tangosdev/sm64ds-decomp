@@ -1393,6 +1393,13 @@
     "src/actors/d_a_obj_km2_gura.cpp#daObjKm2_Gura_c_classInit": "github-actions[bot]",
     "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfsD1Ev": "github-actions[bot]",
     "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs16CleanupResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_mc_flag.cpp#daMcFlag_c_Spawn": "github-actions[bot]"
   }
 }

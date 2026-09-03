@@ -6263,18 +6263,18 @@
    "start": "0x2112078",
    "end": "0x2112228",
    "classes": [
-    "Flag"
+    "daMcFlag_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN4FlagD1Ev.cpp",
-    "src/_ZN4FlagD0Ev.c",
-    "src/_ZN4Flag16CleanupResourcesEv.c",
-    "src/_ZN4Flag6RenderEv.cpp",
-    "src/_ZN4Flag8BehaviorEv.cpp",
-    "src/_ZN4Flag13InitResourcesEv.cpp",
-    "src/Flag_Spawn.c"
+    "src/_ZN10daMcFlag_cD1Ev.cpp",
+    "src/_ZN10daMcFlag_cD0Ev.c",
+    "src/_ZN10daMcFlag_c16CleanupResourcesEv.c",
+    "src/_ZN10daMcFlag_c6RenderEv.cpp",
+    "src/_ZN10daMcFlag_c8BehaviorEv.cpp",
+    "src/_ZN10daMcFlag_c13InitResourcesEv.cpp",
+    "src/daMcFlag_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 4,

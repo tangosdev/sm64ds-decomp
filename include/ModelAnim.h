@@ -39,7 +39,7 @@
  * -- and are called from 103 and 131 source files respectively. A compiler
  * emits C1/D1 only for a type something actually creates; a class that can
  * only ever be a base gets C2/D2 alone. Those calls land at member offsets
- * inside other classes (Amp+0xd4, Flag+0xd4, QuestionSwitch+0x6b4, ...),
+ * inside other classes (Amp+0xd4, daMcFlag_c+0xd4, QuestionSwitch+0x6b4, ...),
  * which is what an embedded member looks like, and they are relocations the
  * ROM build checks -- not prose.
  *

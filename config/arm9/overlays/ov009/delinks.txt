@@ -116,33 +116,9 @@ src/MetalNet_Spawn.c:
     complete
     .text start:0x02112048 end:0x02112078
 
-src/_ZN4FlagD1Ev.cpp:
+src/actors/d_a_mc_flag.cpp:
     complete
-    .text start:0x02112078 end:0x021120a8
-
-src/_ZN4FlagD0Ev.cpp:
-    complete
-    .text start:0x021120a8 end:0x021120ec
-
-src/_ZN4Flag16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021120ec end:0x0211211c
-
-src/_ZN4Flag6RenderEv.cpp:
-    complete
-    .text start:0x0211211c end:0x02112144
-
-src/_ZN4Flag8BehaviorEv.cpp:
-    complete
-    .text start:0x02112144 end:0x02112190
-
-src/_ZN4Flag13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112190 end:0x021121f0
-
-src/Flag_Spawn.c:
-    complete
-    .text start:0x021121f0 end:0x02112228
+    .text start:0x02112078 end:0x02112228
 
 src/__sinit_ov009_02112458.c:
     complete
