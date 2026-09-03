@@ -550,6 +550,34 @@ void name_arena_addr(size_t off)
                 off, best_id, (const void *)best, (size_t)(addr - best));
 }
 
+// The aligned word a differing arena byte sits in, both worlds, and whether
+// either reads as a HOST address (a pointer into the host heap kept in the
+// game's memory would differ between two runs by the allocator's whim, not
+// by the game's). Diagnostic only.
+void name_word(const char *want, const char *got, size_t i, size_t n)
+{
+    const size_t w = i & ~(size_t)3;
+    if (w + 4 > n) return;
+    const unsigned a = *(const unsigned *)(want + w), b = *(const unsigned *)(got + w);
+    char desc[2][96];
+    for (int k = 0; k < 2; ++k) {
+        const unsigned v = k ? b : a;
+        MEMORY_BASIC_INFORMATION mbi;
+        if (VirtualQuery((const void *)(size_t)v, &mbi, sizeof mbi) && mbi.State == MEM_COMMIT)
+            snprintf(desc[k], sizeof desc[k], "host %s at %p+0x%zx (type 0x%x)",
+                     (const char *)mbi.AllocationBase == (const char *)port_arena_base() ? "ARENA" : "memory",
+                     mbi.AllocationBase, (size_t)(v - (size_t)mbi.AllocationBase), (unsigned)mbi.Type);
+        else snprintf(desc[k], sizeof desc[k], "not a host address");
+    }
+    fprintf(stderr, "[rb-det]       word at +0x%zx: was 0x%08x (%s) now 0x%08x (%s)\n",
+            w, a, desc[0], b, desc[1]);
+    fprintf(stderr, "[rb-det]       around: was");
+    for (size_t q = (w >= 16 ? w - 16 : 0); q < w + 20 && q < n; ++q) fprintf(stderr, " %02x", (unsigned char)want[q]);
+    fprintf(stderr, "\n[rb-det]               now");
+    for (size_t q = (w >= 16 ? w - 16 : 0); q < w + 20 && q < n; ++q) fprintf(stderr, " %02x", (unsigned char)got[q]);
+    fprintf(stderr, "\n");
+}
+
 bool in_sound_queue(const char *p)
 {
     struct Span { const void *base; size_t n; };
@@ -600,7 +628,7 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
                     (unsigned char)got[i], (unsigned char)got[i + 1],
                     (unsigned char)got[i + 2], (unsigned char)got[i + 3],
                     outside ? "  <-- OUTSIDE the sound command queue" : "");
-        if (ranges < 8 && name[0] == 'a') name_arena_addr(i);
+        if (ranges < 8 && name[0] == 'a') { name_arena_addr(i); name_word(want, got, i, n); }
         ++ranges;
         i = j;
     }

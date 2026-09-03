@@ -236,29 +236,40 @@ def probe_ok(name, r):
                "[rb-local] OK on %d/%d" % (sum(oks), len(oks)))
 
 
-def rung_pair(frames, relay=None):
+def rung_pair(frames, relay_port=None):
+    # relay_port set: a FRESH relay per RTT, on its own port, for the reason
+    # rung_vs gives. The pair rung reused one relay with one code per RTT
+    # and still lost the RTT 80 and 160 sessions (parent sent=13 recvd=0
+    # through the relay, build/tmp/ladder5.log): each RTT is its own session
+    # and gets its own relay.
     ok = True
-    for rtt in (0, 40, 80, 160):
+    for i, rtt in enumerate((0, 40, 80, 160)):
         extra = {}
         if rtt:
             extra["SM64DS_COMMS_DELAY_MS"] = str(rtt // 2)
-        if relay:
-            extra["SM64DS_COMMS_RELAY"] = relay
+        rp = None
+        if relay_port is not None:
+            rp = start_relay(relay_port + i)
+            extra["SM64DS_COMMS_RELAY"] = "127.0.0.1:%d" % (relay_port + i)
             # one code PER RTT: the relay keeps an endpoint for its idle
             # expiry (90 s) after a window exits, so a second session on the
             # same code inside that window is told FULL and never seats
             extra["SM64DS_COMMS_CODE"] = "RB%03d%03d" % (os.getpid() % 1000, rtt)
-        name = "%s_rtt%d" % ("relay" if relay else "pair", rtt)
-        r = launch(name, 2, frames, per={0: extra, 1: extra}, base=BASE + (rtt // 8) * 2)
-        ok &= mode_took(name, r)
-        ok &= session_ok(name, r, 2)
-        ok &= sweep(name, r)
-        ok &= probe_ok(name, r)
-        rolled = [grab(t, r"rollbacks=(\d+)", "0") for t in r["texts"]]
-        unrec = [grab(t, r"unrecoverable=(\d+)", "?") for t in r["texts"]]
-        ok &= say(all(u == "0" for u in unrec), name + " every rewind honoured",
-                  "unrecoverable=%r rollbacks=%r" % (unrec, rolled))
-        summary_lines(r)
+        name = "%s_rtt%d" % ("relay" if rp else "pair", rtt)
+        try:
+            r = launch(name, 2, frames, per={0: extra, 1: extra}, base=BASE + (rtt // 8) * 2)
+            ok &= mode_took(name, r)
+            ok &= session_ok(name, r, 2)
+            ok &= sweep(name, r)
+            ok &= probe_ok(name, r)
+            rolled = [grab(t, r"rollbacks=(\d+)", "0") for t in r["texts"]]
+            unrec = [grab(t, r"unrecoverable=(\d+)", "?") for t in r["texts"]]
+            ok &= say(all(u == "0" for u in unrec), name + " every rewind honoured",
+                      "unrecoverable=%r rollbacks=%r" % (unrec, rolled))
+            summary_lines(r)
+        finally:
+            if rp:
+                rp.kill()
     return ok
 
 
@@ -557,11 +568,7 @@ def main():
                 ok &= rung_move(BASE + 400,
                                 [x.strip() for x in a.move_profiles.split(",") if x.strip()])
             elif name == "RELAY":
-                rp = start_relay(BASE + 300)
-                try:
-                    ok &= rung_pair(a.frames, relay="127.0.0.1:%d" % (BASE + 300))
-                finally:
-                    rp.kill()
+                ok &= rung_pair(a.frames, relay_port=BASE + 300)
         except Exception as e:  # noqa: BLE001
             ok = False
             print("  %s RAISED: %r" % (name, e))
