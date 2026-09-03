@@ -1,0 +1,722 @@
+{
+  "id": "ov006/dScMgTrampoline_c",
+  "module": "ov006",
+  "source": "src_tu/actors/dScMgTrampoline_c.cpp",
+  "promoted_source": "src/actors/dScMgTrampoline_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous class run plus directly adjacent factory and element constructor: 0x21207dc..0x21225ac, 44 function(s)",
+    "class label(s): dScMgTrampoline_c",
+    "MgTrampolineTime_Spawn at 0x02122490 constructs dScMgTrampoline_c and relocates to the immediately following 0x021225a8 element constructor; the next symbol at 0x021225ac begins dScMgTrampoline2_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021207dc",
+      "end": "0x021225ac"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN17dScMgTrampoline_cD1Ev",
+      "address": "0x021207dc",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN17dScMgTrampoline_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_cD0Ev",
+      "address": "0x02120880",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN17dScMgTrampoline_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_02120938",
+      "address": "0x02120938",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02120938.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_0212093c",
+      "address": "0x0212093c",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_0212093c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_021209ac",
+      "address": "0x021209ac",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_021209ac.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_02120a18",
+      "address": "0x02120a18",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_02120a18.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_02120a44",
+      "address": "0x02120a44",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02120a44.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_02120a54",
+      "address": "0x02120a54",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02120a54.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_02120a64",
+      "address": "0x02120a64",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov006_02120a64.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_02120ab8",
+      "address": "0x02120ab8",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_02120ab8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_02120b30",
+      "address": "0x02120b30",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_02120b30.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_02120b7c",
+      "address": "0x02120b7c",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_02120b7c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_02120bc8",
+      "address": "0x02120bc8",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_02120bc8.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_02120c08",
+      "address": "0x02120c08",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02120c08.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_02120c40",
+      "address": "0x02120c40",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_02120c40.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_02120ca0",
+      "address": "0x02120ca0",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_02120ca0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_02120d0c",
+      "address": "0x02120d0c",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_02120d0c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_02120d8c",
+      "address": "0x02120d8c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02120d8c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c9Virtual88Eiiii",
+      "address": "0x02120da8",
+      "size": "0x00000170",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c9Virtual88Eiiii.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_02120f18",
+      "address": "0x02120f18",
+      "size": "0x00000104",
+      "legacy_source": "src/func_ov006_02120f18.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c11OnAttacked2Ev",
+      "address": "0x0212101c",
+      "size": "0x000001a0",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c8OnPushedEv",
+      "address": "0x021211bc",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c8OnPushedEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c8OnKickedEv",
+      "address": "0x021211e0",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c8OnKickedEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c16CleanupResourcesEv",
+      "address": "0x021212e0",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c6RenderEv",
+      "address": "0x021212fc",
+      "size": "0x000001fc",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c6RenderEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c8BehaviorEv",
+      "address": "0x021214f8",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_0212157c",
+      "address": "0x0212157c",
+      "size": "0x000001d4",
+      "legacy_source": "src/func_ov006_0212157c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_02121750",
+      "address": "0x02121750",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_02121750.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_02121768",
+      "address": "0x02121768",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov006_02121768.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_02121774",
+      "address": "0x02121774",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02121774.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_02121778",
+      "address": "0x02121778",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov006_02121778.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_02121848",
+      "address": "0x02121848",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov006_02121848.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_021218c4",
+      "address": "0x021218c4",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_021218c4.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_021218fc",
+      "address": "0x021218fc",
+      "size": "0x000002cc",
+      "legacy_source": "src/func_ov006_021218fc.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_02121bc8",
+      "address": "0x02121bc8",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_02121bc8.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_02121cf4",
+      "address": "0x02121cf4",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_02121cf4.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_02121d64",
+      "address": "0x02121d64",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov006_02121d64.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_02121f04",
+      "address": "0x02121f04",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_02121f04.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c13OnTurnIntoEggEi",
+      "address": "0x02121f70",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c13OnTurnIntoEggEi.cpp",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c13OnYoshiTryEatEi",
+      "address": "0x02121fa4",
+      "size": "0x000001f4",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN17dScMgTrampoline_c13InitResourcesEv",
+      "address": "0x02122198",
+      "size": "0x00000184",
+      "legacy_source": "src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_ov006_0212231c",
+      "address": "0x0212231c",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov006_0212231c.c",
+      "ordinal": 41
+    },
+    {
+      "symbol": "MgTrampolineTime_Spawn",
+      "address": "0x02122490",
+      "size": "0x00000118",
+      "legacy_source": "src/MgTrampolineTime_Spawn.cpp",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov006_021225a8",
+      "address": "0x021225a8",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_021225a8.c",
+      "ordinal": 43
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "The complete 44-function Bounce & Pounce scene run is reconstructed as one dScMgTrampoline_c C++ translation unit: the 42-function class run, adjacent MgTrampolineTime_Spawn classInit, and its immediately following 0x24-byte element constructor. The next function begins dScMgTrampoline2_c, closing the right boundary.",
+    "Four C-derived two-word camera-pair copies initially scalarised differently in C++ mode. Copying through P2Words, whose only member is an int[2], preserves the original front end's blind aggregate-copy scheduling and makes all four byte-exact without changing their data model.",
+    "FACTORY RELOCATION PROOF: because the consolidated TU owns _ZTV17dScMgTrampoline_c, MgTrampolineTime_Spawn must select the Itanium ABI address point with +2 int words. The legacy standalone source used addend zero against an external symbol; objisolate correctly rejected that spelling once the vtable became local.",
+    "LIFECYCLE ORDER PROOF: one real out-of-line destructor reproduces both retail D1 and D0 bodies. A positional #pragma defer_codegen off immediately before that final definition makes mwccarm emit D1 then D0 in cartridge order; its additional D2 is exact, unreferenced, homeless, and explicitly deadstripped by compiler_only_output.",
+    "LINKAGE PROOF: partial-link contribution comparison caught two declarations accidentally lifted out of the legacy extern-C block in OnYoshiTryEat. Restoring C linkage for _ZN3G2x13SetBlendAlphaEPVttttj and func_ov006_020d0b04 yields 44/44 contribution-equivalent derived objects and zero unhomed imports.",
+    "CURRENT NON-TEXT BOUNDARY: compiler-generated RTTI/vtable records are verified against their canonical cartridge homes and discarded from this text-only promotion. Static/resource data, BSS and any initializer ownership remain ROM-gap owned until separately reconstructed.",
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/_ZN17dScMgTrampoline_c13OnYoshiTryEatEi.cpp (_ZN17dScMgTrampoline_c13OnYoshiTryEatEi) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f64' differs between the legacy file that used to hold func_ov006_02120b7c and the one that held func_ov006_02120bc8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f64' differs between the legacy file that used to hold func_ov006_02120b7c and the one that held func_ov006_02120c08; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f68' differs between the legacy file that used to hold func_ov006_02120c40 and the one that held func_ov006_02120ca0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f64' differs between the legacy file that used to hold func_ov006_02120b7c and the one that held func_ov006_02120ca0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN2G213GetBG2CharPtrEv' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_02120f18; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02054efc' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_02120f18; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02054ea8' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_02120f18; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02054d88' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_02120f18; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02054d88' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held _ZN17dScMgTrampoline_c11OnAttacked2Ev; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held _ZN17dScMgTrampoline_c11OnAttacked2Ev; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold func_ov006_0212093c and the one that held _ZN17dScMgTrampoline_c6RenderEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_02121778; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_020cd39c' differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_021218fc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_021218fc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold func_ov006_021209ac and the one that held func_ov006_021218fc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02120a18 and the one that held func_ov006_021218fc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02140588' differs between the legacy file that used to hold func_ov006_021218fc and the one that held func_ov006_02121bc8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_02120a18' differs between the legacy file that used to hold func_ov006_021218fc and the one that held func_ov006_02121cf4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02120a18 and the one that held func_ov006_02121cf4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov006_020d0ac0' differs between the legacy file that used to hold func_ov006_021218fc and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02054d88' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c11OnAttacked2Ev and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_021218fc and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020ae5c4' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_020126e8' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_02012468' differs between the legacy file that used to hold func_ov006_0212157c and the one that held func_ov006_02121d64; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0212e044' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_0212e048' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c6RenderEv and the one that held _ZN17dScMgTrampoline_c13OnTurnIntoEggEi; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN4cstd4fdivEii' differs between the legacy file that used to hold func_ov006_02121d64 and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209d45c' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c8OnKickedEv and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c6RenderEv and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN2G213GetBG2CharPtrEv' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c9Virtual88Eiiii and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN2GX10LoadBGPlttEPKvjj' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_021218c4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121cf4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_02120f18 and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgTrampoline_c/dScMgTrampoline_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 44,
+    "functions_declared": 44,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN17dScMgTrampoline_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN17dScMgTrampoline_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "data": [
+        "_ZTV17dScMgTrampoline_c",
+        "_ZTI17dScMgTrampoline_c",
+        "_ZTS17dScMgTrampoline_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI14dScMgD3DBase_c",
+        "_ZTI17dScMgTrampoline_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS14dScMgD3DBase_c",
+        "_ZTS17dScMgTrampoline_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV17dScMgTrampoline_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgTrampoline_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021207dc",
+        "end": "0x021225ac",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021207dc",
+          "end": "0x021225ac",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 44
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN17dScMgTrampoline_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated D2 variant; the retail link discarded it, no ROM symbol names it, and nothing here references it"
+    },
+    {
+      "symbol": "_ZTV17dScMgTrampoline_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213fb34",
+      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTI17dScMgTrampoline_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213fad0",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTS17dScMgTrampoline_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213faf0",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTI14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5c8",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5d4",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    }
+  ],
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 44,
+    "contributionEquivalent": "44/44",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/_ZN17dScMgTrampoline_cD1Ev.cpp",
+      "src/_ZN17dScMgTrampoline_cD0Ev.cpp",
+      "src/func_ov006_02120938.c",
+      "src/func_ov006_0212093c.c",
+      "src/func_ov006_021209ac.cpp",
+      "src/func_ov006_02120a18.c",
+      "src/func_ov006_02120a44.c",
+      "src/func_ov006_02120a54.c",
+      "src/func_ov006_02120a64.c",
+      "src/func_ov006_02120ab8.c",
+      "src/func_ov006_02120b30.c",
+      "src/func_ov006_02120b7c.c",
+      "src/func_ov006_02120bc8.c",
+      "src/func_ov006_02120c08.c",
+      "src/func_ov006_02120c40.c",
+      "src/func_ov006_02120ca0.c",
+      "src/func_ov006_02120d0c.c",
+      "src/func_ov006_02120d8c.c",
+      "src/_ZN17dScMgTrampoline_c9Virtual88Eiiii.cpp",
+      "src/func_ov006_02120f18.c",
+      "src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.cpp",
+      "src/_ZN17dScMgTrampoline_c8OnPushedEv.cpp",
+      "src/_ZN17dScMgTrampoline_c8OnKickedEv.cpp",
+      "src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp",
+      "src/_ZN17dScMgTrampoline_c6RenderEv.cpp",
+      "src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp",
+      "src/func_ov006_0212157c.c",
+      "src/func_ov006_02121750.c",
+      "src/func_ov006_02121768.c",
+      "src/func_ov006_02121774.c",
+      "src/func_ov006_02121778.c",
+      "src/func_ov006_02121848.c",
+      "src/func_ov006_021218c4.c",
+      "src/func_ov006_021218fc.c",
+      "src/func_ov006_02121bc8.cpp",
+      "src/func_ov006_02121cf4.c",
+      "src/func_ov006_02121d64.cpp",
+      "src/func_ov006_02121f04.c",
+      "src/_ZN17dScMgTrampoline_c13OnTurnIntoEggEi.cpp",
+      "src/_ZN17dScMgTrampoline_c13OnYoshiTryEatEi.cpp",
+      "src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp",
+      "src/func_ov006_0212231c.c",
+      "src/MgTrampolineTime_Spawn.cpp",
+      "src/func_ov006_021225a8.c"
+    ],
+    "extraInertImports": 197,
+    "extraImportsWithNoHome": [],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x021207dc",
+      "end": "0x021225ac",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov006-dScMgTrampoline_c/link-partial (gitignored)",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  }
+}
