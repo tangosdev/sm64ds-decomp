@@ -186,13 +186,17 @@ extern "C" void port_luigi_tag_player(const void *victim)
     li_infect(s);
 }
 
-/* SEED: at frame 90 (the char-apply timing, past the level-entry no-control),
- * turn exactly one slot into the starting Luigi. VS only, once per match. */
+/* SEED: turn exactly one slot into the starting Luigi. VS only, once per match.
+ * The TIMING is owned by the pre-round countdown driver (hal/star_flow.cpp's
+ * port_luigi_countdown_drive), which calls this at countdown end (frame 240, a
+ * full five seconds in) rather than the old frame 90 -- so the tagger is chosen
+ * only after the READY? / 3-2-1 / START countdown has played out. Self-latches
+ * on g_li_seeded, so being called every frame from the pick on seeds once. */
 extern "C" void port_luigi_seed(int frame)
 {
     if (data_0209f2d8 != 1) return;        /* VS mode only */
     li_load();
-    if (!g_li_on || g_li_seeded || frame != 90) return;
+    if (!g_li_on || g_li_seeded) return;
     g_li_seeded = 1;
 
     int slot = g_li_seed_slot;
@@ -302,7 +306,9 @@ extern "C" void port_luigi_hittest(int frame)
     static int on = -1, tagall = -1;
     if (on < 0) on = std::getenv("SM64DS_VS_LUIGI_HITTEST") ? 1 : 0;
     if (tagall < 0) tagall = std::getenv("SM64DS_VS_LUIGI_TAGALL") ? 1 : 0;
-    if ((!on && !tagall) || frame != 130) return;
+    /* frame 260: after the pre-round countdown seeds the tagger at frame 240, so
+       a Luigi exists on the team for the TAG / IMMUNITY / TAG-ALL scenarios. */
+    if ((!on && !tagall) || frame != 260) return;
 
     /* TAG-ALL: Luigi tags every survivor through the real resolver, so the next
        match-end poll sees survivors_alive==0 and fires the LUIGIS-win path.

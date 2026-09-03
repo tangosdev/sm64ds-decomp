@@ -144,6 +144,13 @@ void HitDeathPlane(int arg)
 }
 }  // extern "C"
 
+/* Luigi Infection (hal/luigi_infection.cpp). The pre-round countdown driver
+ * below needs these, and port_vs_countdown_tick guards on the first so the mode
+ * owns the whole countdown when it is armed. Both are a cached compare when
+ * SM64DS_VS_LUIGI_INFECTION is unset. */
+extern "C" int  port_luigi_enabled(void);
+extern "C" void port_luigi_seed(int frame);
+
 // =============================================================================
 // The boot: the state the whole loop reads before any of it means anything
 // =============================================================================
@@ -722,6 +729,13 @@ void port_vs_countdown_tick(void)
 {
     if (data_0209f2d8 != 1)
         return;
+    /* LUIGI INFECTION owns the whole countdown when it is armed -- the state,
+       the stretched ~5s cadence, the beeps, the arena music and the tagger pick
+       (port_luigi_countdown_drive below). So the native ~2s sound countdown
+       steps aside here. Gated on the mode: a normal VS round never takes this
+       early return and everything below is byte-unchanged. */
+    if (port_luigi_enabled())
+        return;
     int cnt = 0;
     /* run vs16: over data_0209fc50 -- what SetNumPlayers seated -- rather than
        four. The gate below already compares against that same number, so a
@@ -756,6 +770,103 @@ void port_vs_countdown_tick(void)
         g_course_music = 0x4d;
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
     }
+}
+
+/* ---- SM64DS_VS_LUIGI_INFECTION: the pre-round START COUNTDOWN ---------------
+ *
+ * Luigi Infection asks for a full FIVE-SECOND wait before the first Luigi, so
+ * players can read the arena and the tagger cannot snowball off the spawn. This
+ * does not invent a countdown: it drives the ROM's OWN VS start countdown -- the
+ * one Stage::InitResources seats (data_0209f2bc = 3) and the matched
+ * Stage::RenderVsModeCountdown draws as the READY? banner, the big red 3/2/1
+ * numeral, then START. The ROM's countdown is ~2s; this stretches it to 5s off
+ * the HOST FRAME COUNTER, so every peer runs the identical cadence and seeds the
+ * tagger on the identical frame (lockstep VS -- no local clock, no rand). The
+ * port hosts RenderVsModeCountdown NOWHERE for a normal VS round, and
+ * port_vs_countdown_tick above steps aside when the mode is armed, so a normal
+ * round is byte-unchanged.
+ *
+ * The schedule, in host ticks (walk_window runs the 3D logic at ~30Hz, so 30
+ * ticks ~= one second), anchored at frame 90 -- the frame the tagger used to be
+ * seeded, past the level-entry no-control freeze:
+ *     [90,150)   count 3   READY? + red 3    ~2.0s (the get-ready / spread beat)
+ *     [150,195)  count 2   READY? + red 2    ~1.5s
+ *     [195,240)  count 1   READY? + red 1    ~1.5s
+ *      240       count 0   START  + port_luigi_seed picks the tagger (a full 5s)
+ *     [240,270)  count 0   START held up (f304 non-zero so the glyph stays)
+ * The native render pairs the READY? banner with the leading numeral, so the "3"
+ * doubles as the get-ready beat held two seconds; 2 and 1 tick once a second.
+ * data_0209f2bc != 0 across the window freezes the players exactly as the DS's
+ * own 3-2-1 does (func_ov002_020c71e0), and it drops to 0 at the pick. */
+extern void _ZN5Stage21RenderVsModeCountdownEv(void);
+extern void *data_0209f5bc;   /* the installed fader; the render derefs it, unguarded */
+
+enum {
+    kLiCdStart = 90,
+    kLiCd3End  = 150,
+    kLiCd2End  = 195,
+    kLiCdPick  = 240,   /* count reaches 0: START + the tagger pick, a full 5s in */
+    kLiCdEnd   = 270    /* START glyph held to here */
+};
+
+/* UPDATE half, called from the frame loop's behavior phase beside
+   port_vs_countdown_tick: set the ROM countdown counter for this host frame,
+   ring the native beeps / GO on the stretched cadence, and pick the tagger when
+   the count reaches 0. Inert unless the mode is armed. */
+void port_luigi_countdown_drive(int frame)
+{
+    if (data_0209f2d8 != 1) return;         /* VS only */
+    if (!port_luigi_enabled()) return;      /* a normal VS round never enters */
+    if (frame < kLiCdStart) return;         /* seat_vs_countdown left the counter
+                                               at 3; hold there until the arena
+                                               is ready and the render can draw */
+
+    int count;
+    if      (frame < kLiCd3End) count = 3;
+    else if (frame < kLiCd2End) count = 2;
+    else if (frame < kLiCdPick) count = 1;
+    else                        count = 0;
+
+    data_0209f2bc = (unsigned char)count;
+    data_0209f304 = (unsigned short)((count != 0 || frame < kLiCdEnd) ? 0x28 : 0);
+
+    /* the native countdown audio on the stretched schedule: Sound::Play2D(2,..)
+       -- a beep entering each count (0x2b), the GO chord (0x2a) and the arena's
+       own music (0x4d) at START -- the exact calls port_vs_countdown_tick makes. */
+    if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End) {
+        func_02012790(0x2b);
+    } else if (frame == kLiCdPick) {
+        func_02012790(0x2a);
+        g_course_music = 0x4d;
+        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
+    }
+
+    static int last_shown = -99;
+    if (count != last_shown) {
+        last_shown = count;
+        fprintf(stderr, "[luigi] COUNTDOWN f%d shows %s\n", frame,
+                count == 3 ? "READY? + 3" : count == 2 ? "READY? + 2" :
+                count == 1 ? "READY? + 1" : "START (0)");
+    }
+
+    /* THE PICK, at countdown end -- moved here from the old frame-90 seed.
+       port_luigi_seed self-latches on g_li_seeded, so calling it every frame
+       from the pick on seeds exactly once, on frame 240. */
+    if (frame >= kLiCdPick)
+        port_luigi_seed(frame);
+}
+
+/* RENDER half, called from the frame loop's render phase after the actors so the
+   countdown sprites join the same engine-A OAM batch the VS timer fills: the
+   ROM's own Stage::RenderVsModeCountdown, which reads data_0209f2bc and draws
+   READY? + the red numeral + START. Null-guarded on the fader that render
+   dereferences without a check. Inert unless the mode is armed. */
+void port_luigi_countdown_render(void)
+{
+    if (data_0209f2d8 != 1) return;
+    if (!port_luigi_enabled()) return;
+    if (data_0209f5bc == 0) return;
+    _ZN5Stage21RenderVsModeCountdownEv();
 }
 
 // =============================================================================
@@ -1674,7 +1785,8 @@ extern "C" int port_vs_match_end_poll(int frame)
          *   - the clock runs out with a survivor still alive -> the SURVIVORS
          *     win. The clock is the ROM's own match timer by default (timeup),
          *     or the SM64DS_VS_LUIGI_TIME test override measured from the frame
-         *     the tagger was seeded (90).
+         *     the tagger is seeded -- countdown end, kLiCdPick -- so the match
+         *     clock starts AFTER the pre-round countdown, not during it.
          * Only after the seed has run, so an empty team array on frame one is
          * never read as "everyone infected". Feeds the same one end path. */
         int luigi_end = 0;   /* 0 none, 1 Luigis win, 2 survivors win */
@@ -1684,7 +1796,7 @@ extern "C" int port_vs_match_end_poll(int frame)
                 luigi_end = 1;
             } else {
                 const int tf = port_luigi_time_frames();
-                const int expired = tf > 0 ? (frame >= 90 + tf) : timeup;
+                const int expired = tf > 0 ? (frame >= kLiCdPick + tf) : timeup;
                 if (expired) luigi_end = 2;
             }
         }

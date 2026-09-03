@@ -1205,6 +1205,11 @@ void port_message_pump(void);
 /* the OTHER statement of Stage::Behavior the port hosts (hal/star_flow.cpp):
    the VS 3-2-1, which ends by starting the arena's own music */
 void port_vs_countdown_tick(void);
+/* LUIGI INFECTION pre-round START COUNTDOWN (hal/star_flow.cpp). The drive owns
+   the VS countdown state + cadence + tagger pick when the mode is armed; the
+   render draws the ROM's READY? / red 3-2-1 / START. Both inert otherwise. */
+void port_luigi_countdown_drive(int frame);
+void port_luigi_countdown_render(void);
 /* and the tail of that same VS block: the match clock running out, the results
    request the ROM makes when it does, and the end marker. Returns nonzero when
    the run has asked to quit (SM64DS_VS_EXIT_ON_END). */
@@ -10930,6 +10935,11 @@ int main(void)
            which is the only music a VS arena has. Self-guarded on the mode, so
            an adventure frame reaches one load and a compare. */
         port_vs_countdown_tick();
+        /* LUIGI INFECTION START COUNTDOWN, update half (host-frame deterministic).
+           When the mode is armed it owns the whole VS countdown -- the state, the
+           stretched ~5s cadence, the beeps/music and the tagger pick at the end.
+           port_vs_countdown_tick just stepped aside for it. Inert otherwise. */
+        port_luigi_countdown_drive(frame);
         /* AND THE TAIL OF THAT SAME BLOCK. Stage::Behavior's countdown and its
            end-of-match test are statements of one function, so they are ticked
            from one place, in the ROM's own order -- the countdown first, which
@@ -11706,11 +11716,13 @@ int main(void)
                    SM64DS_VS_CHARS (the all-Yoshi arena is byte-unchanged). This
                    is the seam the lobby character picker feeds. */
                 port_vs_apply_chars(frame);
-                /* LUIGI INFECTION: seed one slot as the starting Luigi at the
-                   same post-boot frame, AFTER the per-slot characters are in so
-                   the tagger's swap is the last word. VS-scoped, one-shot, inert
-                   with no SM64DS_VS_LUIGI_INFECTION. */
-                port_luigi_seed(frame);
+                /* LUIGI INFECTION START COUNTDOWN, render half: draw the ROM's
+                   own READY? banner + red 3-2-1 + START over the arena while the
+                   countdown runs. The tagger pick moved to countdown end (the
+                   drive above, beside port_vs_countdown_tick); this is the draw,
+                   placed after the actors so its sprites join the VS timer's
+                   engine-A OAM batch. Inert with no SM64DS_VS_LUIGI_INFECTION. */
+                port_luigi_countdown_render();
                 port_luigi_hittest(frame);
                 port_particle_frame();
                 if (selftest) {

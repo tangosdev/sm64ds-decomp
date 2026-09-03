@@ -42,6 +42,14 @@ src/_ZN3HUD13RenderVsTimerEv.cpp
 src/_ZN3HUD13UpdateVsTimerEv.cpp
 src/_ZN3HUD17UpdateHealthMeterEv.cpp
 
+# Stage::RenderVsModeCountdown -- the VS start-of-round READY? / red 3-2-1 /
+# START draw. Not a HUD leaf, but it rides here because it emits through the
+# same OAM::Render overloads and reads the same ov002 sprite templates and
+# GetOwnerLanguage that RenderVsTimer above already pulls into this slice. Its
+# banner/START templates (0x0210d008..0x0210d420) are mounted in ov002_syms.txt.
+# Hosted for the Luigi Infection pre-round countdown (hal/star_flow.cpp).
+src/_ZN5Stage21RenderVsModeCountdownEv.cpp
+
 # the two OAM entry points the leaves emit through that gate 25 did not need
 src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.c
 src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
