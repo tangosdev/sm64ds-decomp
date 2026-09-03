@@ -60,7 +60,6 @@ func_ov045_021113ec
 func_ov045_02111b64
 func_ov045_02111bc8
 func_ov045_02111bdc
-func_ov052_021111e4
 func_ov052_0211123c
 func_ov052_02111284
 func_ov052_021112ac
