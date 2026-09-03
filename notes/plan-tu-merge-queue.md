@@ -216,7 +216,7 @@ ov022 0x21116c4  n=9  L=160  FloatOnLavaPlatform  CONF2
 ov022 0x2112130  n=7  L=135  LavaPlank            CONF2
 ov025 0x2111d40  n=9  L=203  PyramidStep          CONF1
 ov032 0x2112698  n=7  L=155  HugeWater            CONF2
-ov033 0x21113d4  n=7  L=155  TinyWater            CONF3 pcov=2
+ov033 0x21113d4  n=7  L=155  daObjTtWater_c            CONF3 pcov=2
 ```
 
 **B8 — R1 · 7 TUs / 50 files / net −43 / 1,286 lines**

@@ -6,12 +6,12 @@ _ZN9TinyCover6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
 _ZN9TinyCover8BehaviorEv kind:function(arm,size=0x24) addr:0x021112ec
 _ZN9TinyCover13InitResourcesEv kind:function(arm,size=0x94) addr:0x02111310
 daObjTtFuta_c_classInit kind:function(arm,size=0x30) addr:0x021113a4
-_ZN9TinyWaterD1Ev kind:function(arm,size=0x4c) addr:0x021113d4
-_ZN9TinyWaterD0Ev kind:function(arm,size=0x60) addr:0x02111420
-_ZN9TinyWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111480
-_ZN9TinyWater6RenderEv kind:function(arm,size=0x34) addr:0x021114c4
-_ZN9TinyWater8BehaviorEv kind:function(arm,size=0xc4) addr:0x021114f8
-_ZN9TinyWater13InitResourcesEv kind:function(arm,size=0xd4) addr:0x021115bc
+_ZN14daObjTtWater_cD1Ev kind:function(arm,size=0x4c) addr:0x021113d4
+_ZN14daObjTtWater_cD0Ev kind:function(arm,size=0x60) addr:0x02111420
+_ZN14daObjTtWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111480
+_ZN14daObjTtWater_c6RenderEv kind:function(arm,size=0x34) addr:0x021114c4
+_ZN14daObjTtWater_c8BehaviorEv kind:function(arm,size=0xc4) addr:0x021114f8
+_ZN14daObjTtWater_c13InitResourcesEv kind:function(arm,size=0xd4) addr:0x021115bc
 daObjTtWater_c_classInit kind:function(arm,size=0x38) addr:0x02111690
 data_ov033_021116c8 kind:data(any) addr:0x021116c8
 data_ov033_021116cc kind:data(any) addr:0x021116cc
@@ -110,17 +110,9 @@ _ZTV9TinyCover kind:data(any) addr:0x0211237c
 data_ov033_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov033_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 _ZTI14daObjTtWater_c kind:data(any) addr:0x021123fc
-data_ov033_02112404 kind:data(any) addr:0x02112404 ambiguous
 _ZTS14daObjTtWater_c kind:data(any) addr:0x02112408
-g_profile_TT_WATER kind:data(any) addr:0x0211241c ambiguous
-data_ov033_02112428 kind:data(any) addr:0x02112428 ambiguous
-data_ov033_02112434 kind:data(any) addr:0x02112434 ambiguous
-data_ov033_02112438 kind:data(any) addr:0x02112438 ambiguous
-_ZTV9TinyWater kind:data(any) addr:0x02112440
-data_ov033_0211244c kind:data(any) addr:0x0211244c ambiguous
-data_ov033_02112464 kind:data(any) addr:0x02112464 ambiguous
-data_ov033_02112494 kind:data(any) addr:0x02112494 ambiguous
-data_ov033_021124ac kind:data(any) addr:0x021124ac ambiguous
+g_profile_TT_WATER kind:data(any) addr:0x0211241c
+_ZTV14daObjTtWater_c kind:data(any) addr:0x02112440
 data_ov033_021124c0 kind:bss addr:0x021124c0
 data_ov033_021124c4 kind:bss addr:0x021124c4 ambiguous
 data_ov033_021124c8 kind:bss addr:0x021124c8

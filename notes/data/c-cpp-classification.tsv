@@ -1078,7 +1078,7 @@ src/_ZN9SolidHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9
 src/_ZN9SpindriftD0Ev.c	DTOR-ONLY	ov081	daHuwa_c	Spindrift/daHuwa_c	_ZN9SpindriftD0Ev	1		True		-
 src/_ZN9SubmarineD0Ev.c	DTOR-ONLY	ov026	daObjWlSubmarine_c	Submarine/daObjWlSubmarine_c	_ZN9SubmarineD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9Submarine	-
 src/_ZN9TinyCoverD0Ev.c	DTOR-ONLY	ov033	daObjTtFuta_c	TinyCover/daObjTtFuta_c	_ZN9TinyCoverD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9TinyCover	-
-src/_ZN9TinyWater8BehaviorEv.c	P1-vtable+mangled	ov033	daObjTtWater_c	TinyWater/daObjTtWater_c	vtable daObjTtWater_c slot 6 @0x21114f8 | _ZN9TinyWater8BehaviorEv	1		True		-
+src/_ZN14daObjTtWater_c8BehaviorEv.c	P1-vtable+mangled	ov033	daObjTtWater_c	daObjTtWater_c/daObjTtWater_c	vtable daObjTtWater_c slot 6 @0x21114f8 | _ZN14daObjTtWater_c8BehaviorEv	1		True		-
 src/_ZN13daObjHmBskt_c16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daObjHmBskt_c	daObjHmBskt_c/daObjHmBskt_c	vtable daObjHmBskt_c slot 3 @0x211130c | _ZN13daObjHmBskt_c16CleanupResourcesEv	1		True		-
 src/_ZN9dScDSMT_c16CleanupResourcesEv.c	P1-vtable+mangled	ov007	dScDSMT_c	dScDSMT_c	vtable dScDSMT_c slot 3 @0x20cc45c | _ZN9dScDSMT_c16CleanupResourcesEv	1		True		-
 src/_ZN9dScDSMT_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov007	dScDSMT_c	dScDSMT_c	vtable dScDSMT_c slot 12 @0x20cc2ac | _ZN9dScDSMT_c16OnPendingDestroyEv	1		True		-
