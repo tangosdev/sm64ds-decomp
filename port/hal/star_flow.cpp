@@ -987,6 +987,19 @@ static int vs_players(void)
 }
 static int g_end_total;
 static int g_end_by_king;
+/* Luigi Infection: 0 = not this mode, 1 = the Luigis won (all infected), 2 =
+ * the survivors won (clock ran out with one alive). Set in the end poll, read
+ * by the banner and the marker so the winner line names the team, not a slot. */
+static int g_end_by_luigi;
+
+/* SM64DS_VS_LUIGI_INFECTION, defined in hal/luigi_infection.cpp. All inert (a
+ * cached compare) when the mode is off. */
+extern "C" int  port_luigi_enabled(void);
+extern "C" int  port_luigi_seeded(void);
+extern "C" int  port_luigi_survivors_alive(void);
+extern "C" int  port_luigi_match_slots(void);
+extern "C" int  port_luigi_time_frames(void);
+extern "C" void port_luigi_match_reset(void);
 
 /* ===================== KING OF THE STAR (host win mode) =====================
  *
@@ -1447,6 +1460,22 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
     }
     if (!on || g_end_fired < 0 || data_0209f2d8 != 1 || n < 64)
         return 0;
+    /* LUIGI INFECTION names a TEAM, not a scoreline: the whole match is a race
+       between the taggers and the survivors, so the banner says which side won
+       and how many survivors were left rather than picking a slot by carried
+       stars. */
+    if (g_end_by_luigi != 0) {
+        const int surv = port_luigi_survivors_alive();
+        const int np_li = port_luigi_match_slots();
+        if (g_end_by_luigi == 1)
+            std::snprintf(out, (size_t)n,
+                    "MATCH OVER  -  THE LUIGIS WIN  (all %d infected)", np_li);
+        else
+            std::snprintf(out, (size_t)n,
+                    "MATCH OVER  -  THE SURVIVORS WIN  (%d of %d left)",
+                    surv, np_li);
+        return 1;
+    }
     /* THE MECHANICAL HALF IS EXACT AT EVERY N. The winner, the draw test and
        the score list all run over the players who are actually in the match,
        not over four. What the DISPLAY does with sixteen scores is a separate
@@ -1511,6 +1540,10 @@ extern "C" int port_vs_match_end_poll(int frame)
             g_end_announced = 0;
             g_end_by_target = 0;
             g_end_by_king = 0;
+            g_end_by_luigi = 0;
+            /* Leaving VS clears the Luigi Infection latch too, so the next VS
+               entry re-seeds one tagger from a clean team array. */
+            port_luigi_match_reset();
         }
         /* Outside VS the king match is disarmed, so the next VS entry re-zeroes
            the points. This is the only reset point, so a king match always
@@ -1634,8 +1667,30 @@ extern "C" int port_vs_match_end_poll(int frame)
             for (int i = 0; i < np_end; ++i)
                 if (g_king_points[i] >= king_target) { king_winner = i; break; }
         }
-        if (!timeup && star_winner < 0 && king_winner < 0)
+        /* ---- TRIGGER FOUR: LUIGI INFECTION. Two ways a Luigi Infection match
+         * ends, both dual-win rather than a single scoreline:
+         *   - every survivor infected -> the LUIGIS win, and it can fire before
+         *     the clock (the point of the mode);
+         *   - the clock runs out with a survivor still alive -> the SURVIVORS
+         *     win. The clock is the ROM's own match timer by default (timeup),
+         *     or the SM64DS_VS_LUIGI_TIME test override measured from the frame
+         *     the tagger was seeded (90).
+         * Only after the seed has run, so an empty team array on frame one is
+         * never read as "everyone infected". Feeds the same one end path. */
+        int luigi_end = 0;   /* 0 none, 1 Luigis win, 2 survivors win */
+        if (port_luigi_enabled() && port_luigi_seeded()) {
+            const int surv = port_luigi_survivors_alive();
+            if (surv == 0) {
+                luigi_end = 1;
+            } else {
+                const int tf = port_luigi_time_frames();
+                const int expired = tf > 0 ? (frame >= 90 + tf) : timeup;
+                if (expired) luigi_end = 2;
+            }
+        }
+        if (!timeup && star_winner < 0 && king_winner < 0 && luigi_end == 0)
             return 0;
+        g_end_by_luigi = luigi_end;
         g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
         g_end_by_king = (king_winner >= 0);
@@ -1651,7 +1706,13 @@ extern "C" int port_vs_match_end_poll(int frame)
             g_end_scores[i] = (king_target > 0) ? g_king_points[i]
                                                 : (int)data_0209f310[i];
         g_end_total = (int)NumVsStarsObtained();
-        if (king_winner >= 0)
+        if (luigi_end != 0)
+            fprintf(stderr, "[vs] f%d LUIGI INFECTION OVER: %s (survivors "
+                    "alive=%d, players=%d)\n", frame,
+                    luigi_end == 1 ? "all survivors infected, the LUIGIS win"
+                                   : "the clock ran out, the SURVIVORS win",
+                    port_luigi_survivors_alive(), port_luigi_match_slots());
+        else if (king_winner >= 0)
             fprintf(stderr, "[vs] f%d KING TARGET REACHED: player %d has %d "
                     "point(s), the target is %d (points %d,%d,%d,%d)\n", frame,
                     king_winner, g_king_points[king_winner], king_target,
@@ -1783,7 +1844,9 @@ extern "C" int port_vs_match_end_poll(int frame)
     const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%s players=%d total=%d "
             "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
-            g_end_by_king ? "king-target"
+            g_end_by_luigi == 1 ? "luigi-all-infected"
+              : g_end_by_luigi == 2 ? "survivor-timeout"
+              : g_end_by_king ? "king-target"
                           : (g_end_by_target ? "star-target" : "time-up"),
             scores_field, np_marker,
             g_end_total, (unsigned)data_02092664,

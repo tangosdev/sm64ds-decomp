@@ -30,6 +30,10 @@ int         g_mm_iconX[kMinimapWidePlayers];
 int         g_mm_iconY[kMinimapWidePlayers];
 signed char g_mm_mapID[kMinimapWidePlayers];
 
+/* Luigi Infection minimap hide, defined in hal/luigi_infection.cpp; inert when
+ * the mode is off. Called at the tail of Behavior, below. */
+extern "C" void port_luigi_minimap_hide(void);
+
 struct Vector3 { s32 x, y, z; };
 
 struct Obj {
@@ -434,5 +438,10 @@ Lc00:
     }
 Lc30:
     UpdateMinimap(&self->f50, self->f60, self->f64, self->f60 - 0x80, self->f64 - 0x60);
+    /* LUIGI INFECTION: after every slot's blip has been reseated above, blank
+       the mapID of any Luigi-team slot so the Render loop's `== current map`
+       test skips it -- the taggers are hidden from every survivor's minimap.
+       Inert (a single compare and return) when the mode is off. */
+    port_luigi_minimap_hide();
     return 1;
 }

@@ -3019,6 +3019,9 @@ extern "C" void port_player_set_character(void *player, unsigned ch);
    post-boot, through the proven door path. VS-scoped and one-shot inside; inert
    with no SM64DS_VS_CHARS. Defined in hal/player_bridges.cpp beside the swap. */
 extern "C" void port_vs_apply_chars(int frame);
+/* SM64DS_VS_LUIGI_INFECTION: seed the starting Luigi. Defined in
+   hal/luigi_infection.cpp; VS-scoped, one-shot, inert with the mode off. */
+extern "C" void port_luigi_seed(int frame);
 static int menu_on;
 /* B closed the menu and is still physically down: swallow it until it comes
    back up. See the block below the menu's input, where it is spent. */
@@ -11700,6 +11703,11 @@ int main(void)
                    SM64DS_VS_CHARS (the all-Yoshi arena is byte-unchanged). This
                    is the seam the lobby character picker feeds. */
                 port_vs_apply_chars(frame);
+                /* LUIGI INFECTION: seed one slot as the starting Luigi at the
+                   same post-boot frame, AFTER the per-slot characters are in so
+                   the tagger's swap is the last word. VS-scoped, one-shot, inert
+                   with no SM64DS_VS_LUIGI_INFECTION. */
+                port_luigi_seed(frame);
                 port_particle_frame();
                 if (selftest) {
                     const ntr::GxTriangle *at = ntr::gx_polygons(after);
