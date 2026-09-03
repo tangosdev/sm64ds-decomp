@@ -629,37 +629,10 @@ src/actors/daObjHatenaSwitch_c.cpp:
     .text start:0x020b4ed8 end:0x020b5734
     .data start:0x02108e14 end:0x02108edc
 
-src/_ZN11daObjFire_cD1Ev.cpp:
+src/actors/d_a_obj_fire.cpp:
     complete
-    .text start:0x020b5734 end:0x020b5764
-
-src/_ZN11daObjFire_cD0Ev.cpp:
-    complete
-    .text start:0x020b5764 end:0x020b57a8
-
-src/_ZN11daObjFire_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b57a8 end:0x020b5940
-
-src/_ZN11daObjFire_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b5940 end:0x020b599c
-
-src/_ZN11daObjFire_c13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x020b599c end:0x020b59a0
-
-src/_ZN11daObjFire_c13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x020b59a0 end:0x020b59a8
-
-src/BlueFlame_Spawn.c:
-    complete
-    .text start:0x020b59a8 end:0x020b59e0
-
-src/RedFlame_Spawn.c:
-    complete
-    .text start:0x020b59e0 end:0x020b5a18
+    .text start:0x020b5734 end:0x020b5a18
+    .data start:0x02108edc end:0x02108fb4
 
 src/_ZN17daObjFloatBoard_cD0Ev.cpp:
     complete

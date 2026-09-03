@@ -1,9 +1,9 @@
 {
   "id": "ov002/daObjFire_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjFire_c.cpp",
+  "source": "src/actors/d_a_obj_fire.cpp",
   "promoted_source": "src/actors/d_a_obj_fire.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20b5734..0x20b59a8, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
