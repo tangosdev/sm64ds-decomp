@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgMemory_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgMemory_c.cpp",
+  "source": "src/actors/dScMgMemory_c.cpp",
   "promoted_source": "src/actors/dScMgMemory_c.cpp",
-  "status": "shadow",
+  "status": "promoted",
   "goal": {
     "idiomCensus": {
       "externC": 1,
@@ -366,6 +366,7 @@
     "MEASURED ITERATOR-SPELLING BOUNDARY: direct typed mCards/mPlayers expressions were tested in the remaining 17 offset-view methods. They changed strength reduction, base-address formation, register allocation, or section size despite identical semantics. The public class layout remains typed; those localized implementation views preserve demonstrated mwccarm 1.2 code generation rather than substituting prettier non-matching code.",
     "MEASURED CW 1.2 FACTORY WALL: dScMgMemory_c_classInit is allocation plus a fully folded scene construction sequence. Semantic placement construction is unavailable in this compiler setup, so the literal classInit bridge preserves allocation size, base construction, vptr transitions, Particle::SysTracker construction and shared-state construction explicitly and byte-exact.",
     "FOCUSED VERIFY LIMITATION: tools/tubuild.py verify reports 46/47 because objisolate rejects the classInit's R_ARM_ABS32 relocation with addend zero against _ZTV13dScMgMemory_c emitted by the same object. Extracted factory bytes match individually and all 47 text sections occur in cartridge order; the production linker and full ROM build are the authority for that same-object vtable relocation.",
+    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The five PMF tables, resource/static data, compiler-generated RTTI/vtable, __sinit_ov006_021311c8 and 0x021422a4..0x021423a8 BSS remain ROM-gap owned until their exact input-section order and initializers are reconstructed. The production rombuild is 106/106 and stock-identical; a post-promotion tubuild linkcheck currently refuses this valid text-only promotion at intact-object preparation because it requires at least one non-text claim, so the recorded pre-promotion 47/47 full linkcheck remains the single-object relocation proof.",
     "tubuild create warnings (RESOLVED): the generated extern-C wrapper and declaration-conflict markers were reconciled in place. No TUBUILD CONFLICT marker remains in the source; this note retains the fact that the legacy fragments disagreed while making the resolution status explicit."
   ],
   "verification": {

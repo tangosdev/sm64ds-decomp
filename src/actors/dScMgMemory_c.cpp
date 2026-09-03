@@ -74,7 +74,6 @@
 /* Includes: union of the legacy files', first-seen in ROM-ascending
  * processing order. NOT verified for header ordering constraints (e.g. a
  * common.h-before-X rule) -- watch for new compile errors after this. */
-#define DSCMGMEMORY_COMPLETE_TU
 #include "dScMgMemory_c.h"
 #include "common.h"
 #include "types.h"

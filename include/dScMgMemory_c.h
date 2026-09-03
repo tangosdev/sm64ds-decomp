@@ -16,9 +16,7 @@
 extern "C" int func_ov006_020c1c64(char *state);
 
 struct dMgMemorySharedState_c {
-#ifdef DSCMGMEMORY_COMPLETE_TU
     ~dMgMemorySharedState_c() { func_ov006_020c1c64((char *)this); }
-#endif
     u8 pad_000[0x1e6];
     s16 ready;       /* 0x1e6 -- set when a new Memory Match round starts */
     u8 pad_1e8[0x88];
@@ -127,14 +125,8 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     dMgMemoryCard_c mCards[12];     /* 0x51a8 */
     dMgMemoryPlayer_c mPlayers[3];  /* 0x52c8 */
     dMgMemoryCursor_c mCursor;      /* 0x5304 */
-    union {
-        s32 mState;                 /* 0x5314 */
-        s32 unk_5314;               /* compatibility for the retiring split files */
-    };
-    union {
-        s32 mSubstate;              /* 0x5318 */
-        s32 unk_5318;               /* compatibility for the retiring split files */
-    };
+    s32 mState;                     /* 0x5314 */
+    s32 mSubstate;                  /* 0x5318 */
     u8 pad_531c[4];                 /* 0x531c */
     u16 mRoundTimer;                /* 0x5320 */
     u16 mCardTimer;                 /* 0x5322 */
@@ -149,10 +141,7 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     u8 mSelectedCount;              /* 0x5338 */
     u8 unk_5339;                    /* 0x5339 */
     u8 mMisses;                     /* 0x533a */
-    union {
-        u8 mMaxMisses;              /* 0x533b */
-        u8 unk_533b;                /* compatibility for the retiring split files */
-    };
+    u8 mMaxMisses;                  /* 0x533b */
     u8 mDifficulty;                 /* 0x533c */
     u8 mMessageVisible;             /* 0x533d */
     u8 mInputSeen;                  /* 0x533e */
