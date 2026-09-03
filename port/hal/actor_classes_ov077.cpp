@@ -63,6 +63,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "Lakitu.h"
 #include "Spiny.h"
@@ -381,8 +382,8 @@ static int __fastcall lak_render(void *s, void *)
   return _ZN6Lakitu6RenderEv(s); }
 static int __fastcall lak_pdes(void *s, void *)
 { (void)s; _ZN6Lakitu16OnPendingDestroyEv(); return 0; }
-static int __fastcall lak_d1(void *s, void *)
-{ return (int)(size_t)_ZN6LakituD1Ev((int *)s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (lak_d1) spelled the same chain by hand. */
 static int __fastcall lak_d0(void *s, void *)
 { return (int)(size_t)_ZN6LakituD0Ev((int *)s); }
 static int __fastcall lak_yoshi(void *s, void *)
@@ -402,7 +403,7 @@ extern "C" void hal_fill_lakitu_vtable(void)
     vt[6]  = (void *)lak_behavior;
     vt[9]  = (void *)lak_render;
     vt[12] = (void *)lak_pdes;
-    vt[16] = (void *)lak_d1;
+    vt[16] = (void *)hal_cppd1_Lakitu;
     vt[17] = (void *)lak_d0;
     vt[18] = (void *)lak_yoshi;
     vt[19] = (void *)lak_egg;
@@ -423,8 +424,8 @@ static int __fastcall spn_render(void *s, void *)
   return _ZN5Spiny6RenderEv(s); }
 static int __fastcall spn_pdes(void *s, void *)
 { (void)s; _ZN5Spiny16OnPendingDestroyEv(); return 0; }
-static int __fastcall spn_d1(void *s, void *)
-{ return (int)(size_t)_ZN5SpinyD1Ev((int *)s); }
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (spn_d1) spelled the same chain by hand. */
 static int __fastcall spn_d0(void *s, void *)
 { return (int)(size_t)_ZN5SpinyD0Ev((int *)s); }
 static int __fastcall spn_yoshi(void *s, void *)
@@ -444,7 +445,7 @@ extern "C" void hal_fill_spiny_vtable(void)
     vt[6]  = (void *)spn_behavior;
     vt[9]  = (void *)spn_render;
     vt[12] = (void *)spn_pdes;
-    vt[16] = (void *)spn_d1;
+    vt[16] = (void *)hal_cppd1_Spiny;
     vt[17] = (void *)spn_d0;
     vt[18] = (void *)spn_yoshi;
     vt[19] = (void *)spn_egg;

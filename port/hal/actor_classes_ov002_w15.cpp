@@ -81,6 +81,7 @@
 // here models.
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -212,13 +213,8 @@ static int __fastcall kt_behavior(void *s, void *)
 static int __fastcall kt_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
 /* Slot 16, the ROM D1 transcribed; see this file's header. */
-static int __fastcall kt_d1(void *s, void *)
-{
-    ((void **)s)[0] = (void *)_ZTV21MegaMushroomCreateTag;
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (kt_d1) spelled the same chain by hand. */
 static int __fastcall kt_d0(void *s, void *)
 { return (int)(size_t)_ZN21MegaMushroomCreateTagD0Ev((int *)s); }
 
@@ -247,7 +243,7 @@ extern "C" void hal_fill_mega_mushroom_tag_vtable(void)
     vt[13] = (void *)kt_trap13;
     vt[14] = (void *)kt_trap14;
     vt[15] = (void *)kt_heap;
-    vt[16] = (void *)kt_d1;
+    vt[16] = (void *)hal_cppd1_MegaMushroomCreateTag;
     vt[17] = (void *)kt_d0;
     vt[18] = (void *)kt_yoshi;
     vt[19] = (void *)kt_turn_egg;

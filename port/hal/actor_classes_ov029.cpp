@@ -30,6 +30,7 @@
 
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include "Actor.h"
 #include "ActorBase.h"
 
@@ -268,9 +269,10 @@ static int __fastcall wd_init(void *s, void *)  { return _ZN9ArrowLift13InitReso
 static int __fastcall wd_clean(void *s, void *) { return _ZN9ArrowLift16CleanupResourcesEv(s); }
 static int __fastcall wd_beh(void *s, void *)   { return _ZN9ArrowLift8BehaviorEv(s); }
 static int __fastcall wd_ren(void *s, void *)   { return _ZN9ArrowLift6RenderEv(s); }
-/* slot 16 (D1) is _ZN9ArrowLiftD1Ev, a C++ virtual destructor whose TU cannot
-   link on the host (base dtors unhosted) -- TRAPPED. D0 (slot 17) is the
-   C-linkage _ZN9ArrowLiftD0Ev, seated. */
+/* slot 16 (D1) is _ZN9ArrowLiftD1Ev, a C++ virtual destructor: since lane
+   DTOR-FACES-CPP it links from src through hal/dtor_faces_cpp.cpp's faces and
+   is seated here (it was TRAPPED while the base dtors were unhosted). D0
+   (slot 17) is the C-linkage _ZN9ArrowLiftD0Ev, seated. */
 static int __fastcall wd_d0(void *s, void *)    { return (int)(size_t)_ZN9ArrowLiftD0Ev((int *)s); }
 extern "C" void hal_fill_water_diamond_vtable(void)
 {
@@ -278,7 +280,7 @@ extern "C" void hal_fill_water_diamond_vtable(void)
     void *volatile *vt = (void *volatile *)_ZTV9ArrowLift;
     ov29_fill_shared(vt);
     vt[0]=(void *)wd_init;      vt[3]=(void *)wd_clean; vt[6]=(void *)wd_beh;
-    vt[9]=(void *)wd_ren;  vt[16]=(void *)ov29_trap16; vt[17]=(void *)wd_d0;
+    vt[9]=(void *)wd_ren;  vt[16]=(void *)hal_cppd1_ArrowLift; vt[17]=(void *)wd_d0;
     /* no slot 31: a plain Actor, 31 slots, ends at 30 */
 }
 

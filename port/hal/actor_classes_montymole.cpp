@@ -42,6 +42,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "MontyMole.h"
 
@@ -201,15 +202,8 @@ static int __fastcall mm_aimed(void *s, void *)
    (_ZN9MontyMoleD0Ev) without the Memory::Deallocate at its tail, because the
    caller of slot 16 (ActorBase::AfterCleanupResources) deallocates itself.
    Member sub-objects are destroyed high address first, the D0 order. */
-static int __fastcall mm_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV9MontyMole;
-    _ZN18MovingCylinderClsnD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mm_d1) spelled the same chain by hand. */
 
 extern "C" void hal_fill_monty_mole_vtable(void)
 {
@@ -230,7 +224,7 @@ extern "C" void hal_fill_monty_mole_vtable(void)
     vt[13] = (void *)mm_trap13;
     vt[14] = (void *)mm_trap14;
     vt[15] = (void *)mm_heap;
-    vt[16] = (void *)mm_d1;
+    vt[16] = (void *)hal_cppd1_MontyMole;
     vt[17] = (void *)mm_d0;
     /* the Actor tail (18..30): all bind to Actor's own default, except 29 which
        MontyMole overrides with func_ov080_02123858. */

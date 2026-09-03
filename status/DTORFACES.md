@@ -62,9 +62,49 @@ rc 0, 51 / 185 / 174 / 208 actors torn down on the four warps, no fault,
 no declined teardown. vtspan --seats over dumpbin /disasm:nobytes of the
 946 hal objects: 1689 checked, no wrong-body seats; --sweep rc 0.
 
+Group 2, `hal/actor_classes.cpp` (a2de7dc2d): StarMarker (the host copy
+`unmatched/StarMarker_D1.cpp` deleted), Bird, Butterfly, Fish, Door (the ROM
+word 16 of `_ZTV4Door`, the table `hal_fill_star_door_vtable` binds),
+PeachPainting, Flag, Cannon, and the three Actor-only bodies VirtualDoor,
+PoppingLavaBubbles, AmbientSoundEffects whose slot was the shared
+`ac_d1_actor_only` thunk (now deleted). 9404 -> 9415.
+
+Group 3, the ov060/ov070/ov071/ov072 enemies: BowserTail, Bowser,
+BowserSkyPlatform (the spike-bomb table), Amp (whose transcription had
+dropped the ModelAnim member the ROM body tears down), FlameChomp,
+FlameChompFire, MrI, MrI_Projectile, Scuttlebug, BabyPenguin, SnowmanBody,
+SnowmanHead. 9415 -> 9427.
+
+Group 4, the small-cast level overlays and ov002 tags (ab90ac188):
+PyramidTag, CrazedCrate, BookShotSpawner, WingFeather, InvisibleSecret (the
+vspopup number table `_ZTV15InvisibleSecret`; bob_world's "invisible secret"
+fill is a different class), EnemySpawner, EnemySwitchTag, HauntedChair,
+PrincessPeach, Toad, RacingPenguin, IceSlideManager, RollingLogLll,
+RollingLogTtm, TreasureChest, Clam, CutsceneObject. 9427 -> 9444.
+
+Group 5, the rest of the seated cast: MegaMushroomCreateTag,
+ClockPaintingHandShort, SlideDecorationSilverStar, RotatingPlatformRr,
+OrangeBallBillboard, Pokey, Tornado, Spiny, Lakitu, Moneybag, MugenBgm,
+PushBlock, PoleLift, BlueFlame, KoopaFlag, BobOmbBuddy, MontyMole, OneUpLogo,
+SkiLift (the ROM word of `_ZTV7SkiLift`, which the port fills as
+MotherPenguin's table), Seaweed (`_ZTV7Seaweed`, HealingHeart's table),
+BrickBlock, and ArrowLift (`_ZTV9ArrowLift`, filled as WaterDiamond's table;
+its slot 16 was `ov29_trap16`, the one trap this lane replaces). Every
+name-shifted seat was settled by `vtspan.py <symbol>` reading the ROM word
+16 of the table the port storage stands for, and by the transcribed thunk's
+chain agreeing with the D1 TU's ROM relocations.
+
 ## Skipped, with the wall
 
-(filled below)
+- Trap (`_ZN4TrapD1Ev`, ov010): `hal/actor_classes.cpp`'s `tr_d1` ruling
+  stands. TRAP (0x24) and LIGHT_BEAM (0x25) share the table with different
+  layouts and the ROM chain (Model 0xd4, MovingCylinderClsnWithPos 0x124)
+  fits only LIGHT_BEAM; the thunk switches on the id. Seating the matched
+  body would run that chain on a 944-byte TRAP.
+- InvisiblePole (`_ZN13InvisiblePoleD1Ev`): stores `_ZTV13InvisiblePole`,
+  which is CameraTag's table, not the pole's (DTORPAIRS.md, same wall for
+  its D0). CameraTag itself: no table in the port and no live edge.
+- Cloud (`_ZN5CloudD1Ev`): ov039 is not mounted (LINKSCOPE lane 12).
 
 ## Proofs
 

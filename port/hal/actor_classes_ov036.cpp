@@ -174,6 +174,7 @@
 #include <cstdlib>
 
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 
 #include "Actor.h"
 #include "ActorBase.h"
@@ -587,14 +588,8 @@ static int __fastcall sw_render(void *s, void *)
    class and provides no C name (see this file's header). Chain spelled
    directly from the ROM's own listing at 0x02111580: the class's own vtable,
    then the CommonModel member at +0xd4, then Actor's D2. */
-static int __fastcall sw_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV18RotatingPlatformRr;
-    _ZN11CommonModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (sw_d1) spelled the same chain by hand. */
 static int __fastcall sw_d0(void *s, void *)
 { return (int)(size_t)_ZN18RotatingPlatformRrD0Ev((int *)s); }
 
@@ -606,7 +601,7 @@ extern "C" void hal_fill_ship_wing_vtable(void)
     vt[3]  = (void *)sw_clean;
     vt[6]  = (void *)sw_behavior;
     vt[9]  = (void *)sw_render;
-    vt[16] = (void *)sw_d1;
+    vt[16] = (void *)hal_cppd1_RotatingPlatformRr;
     vt[17] = (void *)sw_d0;
     /* no slot 31: a plain Actor, 31 slots total, ends at 30 */
 }

@@ -99,6 +99,7 @@
 #include <cstdlib>
 
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include "Actor.h"
 #include "ActorBase.h"
 #include "OrangeBallBillboard.h"
@@ -250,13 +251,8 @@ static int __fastcall obb_render(void *s, void *)
    and relocs.txt pins it: 0x021111cc loads 0x02111604 (the table), 0x021111b4
    calls 0x02016d20 (Model::~Model, member at +0xd4), 0x021111bc calls
    0x020112c8 (Actor::D2). Nothing else. */
-static int __fastcall obb_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV19OrangeBallBillboard;
-    _ZN5ModelD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (obb_d1) spelled the same chain by hand. */
 static int __fastcall obb_d0(void *s, void *)
 { return (int)(size_t)_ZN19OrangeBallBillboardD0Ev((int *)s); }
 
@@ -315,7 +311,7 @@ extern "C" void hal_fill_orange_ball_billboard_vtable(void)
     vt[13] = (void *)obb_trap13;     /* ActorBase::Virtual34, the wf/ov45 trap */
     vt[14] = (void *)obb_trap14;     /* ActorBase::Virtual38, likewise */
     vt[15] = (void *)obb_heap;
-    vt[16] = (void *)obb_d1;
+    vt[16] = (void *)hal_cppd1_OrangeBallBillboard;
     vt[17] = (void *)obb_d0;
     vt[18] = (void *)obb_yoshi;
     vt[19] = (void *)obb_turn_egg;

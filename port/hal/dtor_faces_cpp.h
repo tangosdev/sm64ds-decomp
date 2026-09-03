@@ -50,5 +50,27 @@ int __fastcall hal_cppd1_RollingLogTtm(void *self, void *edx);
 int __fastcall hal_cppd1_TreasureChest(void *self, void *edx);
 int __fastcall hal_cppd1_Clam(void *self, void *edx);
 int __fastcall hal_cppd1_CutsceneObject(void *self, void *edx);
+int __fastcall hal_cppd1_MegaMushroomCreateTag(void *self, void *edx);
+int __fastcall hal_cppd1_ClockPaintingHandShort(void *self, void *edx);
+int __fastcall hal_cppd1_SlideDecorationSilverStar(void *self, void *edx);
+int __fastcall hal_cppd1_RotatingPlatformRr(void *self, void *edx);
+int __fastcall hal_cppd1_OrangeBallBillboard(void *self, void *edx);
+int __fastcall hal_cppd1_Pokey(void *self, void *edx);
+int __fastcall hal_cppd1_Tornado(void *self, void *edx);
+int __fastcall hal_cppd1_Spiny(void *self, void *edx);
+int __fastcall hal_cppd1_Lakitu(void *self, void *edx);
+int __fastcall hal_cppd1_Moneybag(void *self, void *edx);
+int __fastcall hal_cppd1_MugenBgm(void *self, void *edx);
+int __fastcall hal_cppd1_PushBlock(void *self, void *edx);
+int __fastcall hal_cppd1_PoleLift(void *self, void *edx);
+int __fastcall hal_cppd1_BlueFlame(void *self, void *edx);
+int __fastcall hal_cppd1_KoopaFlag(void *self, void *edx);
+int __fastcall hal_cppd1_BobOmbBuddy(void *self, void *edx);
+int __fastcall hal_cppd1_MontyMole(void *self, void *edx);
+int __fastcall hal_cppd1_OneUpLogo(void *self, void *edx);
+int __fastcall hal_cppd1_SkiLift(void *self, void *edx);
+int __fastcall hal_cppd1_Seaweed(void *self, void *edx);
+int __fastcall hal_cppd1_BrickBlock(void *self, void *edx);
+int __fastcall hal_cppd1_ArrowLift(void *self, void *edx);
 
 #endif

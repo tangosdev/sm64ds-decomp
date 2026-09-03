@@ -35,6 +35,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "dsstate_seg.h"
 
@@ -485,15 +486,8 @@ static int __fastcall bbud_render(void *s, void *)
    below is src/_ZN11BobOmbBuddyD0Ev.c minus its final Memory::Deallocate,
    which ActorBase::AfterCleanupResources performs itself after the dispatch
    returns -- the Bird's treatment. */
-static int __fastcall bbud_d1(void *s, void *)
-{
-    *(int *)s = (int)(size_t)_ZTV11BobOmbBuddy;
-    _ZN11ShadowModelD1Ev((char *)s + 0x16c);
-    _ZN9ModelAnimD1Ev((char *)s + 0x108);
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (bbud_d1) spelled the same chain by hand. */
 static int __fastcall bbud_d0(void *s, void *)
 { return (int)(size_t)_ZN11BobOmbBuddyD0Ev((int *)s); }
 
@@ -509,7 +503,7 @@ extern "C" void hal_fill_bob_omb_buddy_vtable(void)
     vt[3] = (void *)bbud_clean;
     vt[6] = (void *)bbud_behavior;
     vt[9] = (void *)bbud_render;
-    vt[16] = (void *)bbud_d1;
+    vt[16] = (void *)hal_cppd1_BobOmbBuddy;
     vt[17] = (void *)bbud_d0;
 }
 
@@ -894,14 +888,8 @@ static int __fastcall kfl_render(void *s, void *)
    two member dtors that exist nowhere in this build. The body below is
    src/_ZN9KoopaFlagD0Ev.c minus its final Memory::Deallocate, which
    ActorBase::AfterCleanupResources performs itself after the dispatch. */
-static int __fastcall kfl_d1(void *s, void *)
-{
-    *(int *)s = (int)(size_t)_ZTV9KoopaFlag;
-    _ZN9ModelAnimD1Ev((char *)s + 0x108);
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (kfl_d1) spelled the same chain by hand. */
 static int __fastcall kfl_d0(void *s, void *)
 { return (int)(size_t)_ZN9KoopaFlagD0Ev((int *)s); }
 
@@ -913,7 +901,7 @@ extern "C" void hal_fill_koopa_flag_vtable(void)
     vt[3] = (void *)kfl_clean;
     vt[6] = (void *)kfl_behavior;
     vt[9] = (void *)kfl_render;
-    vt[16] = (void *)kfl_d1;
+    vt[16] = (void *)hal_cppd1_KoopaFlag;
     vt[17] = (void *)kfl_d0;
 }
 

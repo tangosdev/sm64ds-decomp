@@ -36,6 +36,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "Player.h"
 
@@ -171,14 +172,8 @@ static int __fastcall fl_d0(void *s, void *)
 { return (int)(size_t)_ZN9BlueFlameD0Ev((int *)s); }
 /* D1, the HauntedChair treatment: the matched D1 is the auto-emitted-member-
    dtor .cpp form, so the thunk runs the D0 chain minus the tail Deallocate. */
-static int __fastcall fl_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV9BlueFlame;
-    _ZN18MovingCylinderClsnD1Ev(t + 0xe4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (fl_d1) spelled the same chain by hand. */
 
 extern "C" void hal_fill_blue_flame_vtable(void)
 {
@@ -199,7 +194,7 @@ extern "C" void hal_fill_blue_flame_vtable(void)
     vt[13] = (void *)fl_trap13;
     vt[14] = (void *)fl_trap14;
     vt[15] = (void *)fl_heap;
-    vt[16] = (void *)fl_d1;
+    vt[16] = (void *)hal_cppd1_BlueFlame;
     vt[17] = (void *)fl_d0;
     vt[18] = (void *)fl_yoshi;
     vt[19] = (void *)fl_egg;

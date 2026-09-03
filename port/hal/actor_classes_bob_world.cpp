@@ -564,12 +564,8 @@ static int __fastcall mmbt_behavior(void *s, void *)
 { itemtag_probe_tick((char *)s); return ((BrickBlock *)s)->BrickBlock::Behavior(); }
 static int __fastcall mmbt_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
-static int __fastcall mmbt_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV10BrickBlock;
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mmbt_d1) spelled the same chain by hand. */
 /* The matched D0 spells its table as decl_common.h's shared placeholder VT;
    port/CMakeLists.txt compiles that one TU with VT=_ZTV10BrickBlock, the
    ROM's own relocation for the store (ov002 from:0x020b41b0 -> 0x02108c18),
@@ -745,7 +741,7 @@ extern "C" void hal_fill_mega_mushroom_block_tag_vtable(void)
     vt[6] = (void *)mmbt_behavior;
     vt[9] = (void *)mmbt_render;
     vt[12] = (void *)bw_pdes_base;
-    vt[16] = (void *)mmbt_d1;
+    vt[16] = (void *)hal_cppd1_BrickBlock;
     /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
        matched flat-C body behind the ecx->arg adapter, the
        lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
@@ -1145,14 +1141,8 @@ static int __fastcall hh_render(void *s, void *)
     port_actor_render_probe("HEALING_HEART", (char *)s + 0xd4);
     return _ZN7Seaweed6RenderEv(s);
 }
-static int __fastcall hh_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV7Seaweed;
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0x138);
-    _ZN9ModelAnimD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (hh_d1) spelled the same chain by hand. */
 static int __fastcall hh_d0(void *s, void *)
 { return (int)(size_t)_ZN7SeaweedD0Ev((int *)s); }
 extern "C" void hal_fill_healing_heart_vtable(void)
@@ -1164,7 +1154,7 @@ extern "C" void hal_fill_healing_heart_vtable(void)
     vt[6] = (void *)hh_behavior;
     vt[9] = (void *)hh_render;
     vt[12] = (void *)bw_pdes_base;
-    vt[16] = (void *)hh_d1;
+    vt[16] = (void *)hal_cppd1_Seaweed;
     /* 17: the ROM's own word, gate 204. hh_d1 above is this same body minus
        the closing Deallocate, which is the D1/D0 split every class here has. */
     vt[17] = (void *)hh_d0;

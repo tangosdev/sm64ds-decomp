@@ -102,6 +102,7 @@
 // ===========================================================================
 #include <cstdio>
 #include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
 #include <cstdlib>
 
 #include "Actor.h"
@@ -273,13 +274,8 @@ static int __fastcall hsb_render(void *s, void *)
 { return ((SlideDecorationSilverStar *)s)
              ->SlideDecorationSilverStar::Render(); }
 /* Slot 16, the ROM D1's own three relocs; see this file's header. */
-static int __fastcall hsb_d1(void *s, void *)
-{
-    ((void **)s)[0] = (void *)_ZTV18daObjHsBillboard_c;
-    _ZN5ModelD1Ev((char *)s + 0xd4);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (hsb_d1) spelled the same chain by hand. */
 static int __fastcall hsb_d0(void *s, void *)
 { return (int)(size_t)_ZN25SlideDecorationSilverStarD0Ev((int *)s); }
 
@@ -304,7 +300,7 @@ extern "C" void hal_fill_slide_decoration_vtable(void)
     vt[13] = (void *)hsb_trap13;    /* ActorBase::Virtual34(u32,u32), not linked */
     vt[14] = (void *)hsb_trap14;    /* ActorBase::Virtual38(u32,u32), not linked */
     vt[15] = (void *)hsb_heap;      /* ActorBase::OnHeapCreated */
-    vt[16] = (void *)hsb_d1;        /* D1, hosted; see the header */
+    vt[16] = (void *)hal_cppd1_SlideDecorationSilverStar;        /* D1, hosted; see the header */
     vt[17] = (void *)hsb_d0;        /* D0, the matched .c TU */
     vt[18] = (void *)hsb_yoshi;     /* Actor::OnYoshiTryEat */
     vt[19] = (void *)hsb_egg;       /* Actor::OnTurnIntoEgg(Player&) */

@@ -668,14 +668,8 @@ static int __fastcall oul_render(void *s, void *)
    overwrite the vptr with a placeholder (confirmed against src: D0 stores
    _ZTV14daObj1UpLogo_c, its OWN table, not a shared one), so nothing to
    redo here that D0's real body does not already do itself. */
-static int __fastcall oul_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN15TextureSequenceD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (oul_d1) spelled the same chain by hand. */
 static int __fastcall oul_d0(void *s, void *)
 { return (int)(size_t)_ZN9OneUpLogoD0Ev(s); }
 
@@ -691,7 +685,7 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
     vt[6]  = (void *)oul_behavior;
     vt[9]  = (void *)oul_render;
     vt[12] = (void *)ccm_pdes;
-    vt[16] = (void *)oul_d1;
+    vt[16] = (void *)hal_cppd1_OneUpLogo;
     vt[17] = (void *)oul_d0;
     /* no slot 31: OneUpLogo is Actor-derived, not Platform-derived -- 31 slots total */
 }
@@ -979,17 +973,8 @@ static int __fastcall mpg_pdes(void *s, void *)
    store write -- MotherPenguin's D1/D0 never overwrite the vptr with a
    placeholder (D0 stores _ZTV10daPgMthr_c, its OWN table), so nothing to
    redo here that D0's real body does not already do itself. */
-static int __fastcall mpg_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN12WithMeshClsnD1Ev(t + 0x1a8);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x174);
-    _ZN11ShadowModelD1Ev(t + 0x14c);
-    _ZN15TextureSequenceD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mpg_d1) spelled the same chain by hand. */
 static int __fastcall mpg_d0(void *s, void *)
 { return (int)(size_t)_ZN7SkiLiftD0Ev((int *)s); }
 
@@ -1012,7 +997,7 @@ extern "C" void hal_fill_mother_penguin_vtable(void)
     vt[6]  = (void *)mpg_behavior;
     vt[9]  = (void *)mpg_render;
     vt[12] = (void *)mpg_pdes;   /* MotherPenguin's own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)mpg_d1;
+    vt[16] = (void *)hal_cppd1_SkiLift;
     vt[17] = (void *)mpg_d0;
     /* no slot 31: MotherPenguin is Actor-derived, not Platform-derived -- 31 slots total */
 }

@@ -169,3 +169,32 @@ CPPD1(RollingLogTtm)
 CPPD1(TreasureChest)
 CPPD1(Clam)
 CPPD1(CutsceneObject)
+
+/* group 5: the rest of the seated cast */
+CPPD1(MegaMushroomCreateTag)
+CPPD1(ClockPaintingHandShort)
+CPPD1(SlideDecorationSilverStar)
+CPPD1(RotatingPlatformRr)
+CPPD1(OrangeBallBillboard)
+CPPD1(Pokey)
+CPPD1(Tornado)
+CPPD1(Spiny)
+CPPD1(Lakitu)
+CPPD1(Moneybag)
+CPPD1(MugenBgm)
+CPPD1(PushBlock)
+CPPD1(PoleLift)
+CPPD1(BlueFlame)
+CPPD1(KoopaFlag)
+CPPD1(BobOmbBuddy)
+CPPD1(MontyMole)
+CPPD1(OneUpLogo)
+CPPD1(SkiLift)
+CPPD1(Seaweed)
+CPPD1(BrickBlock)
+/* ArrowLift: the ROM word 16 of _ZTV9ArrowLift (ov029 0x02113db4), which
+   hal/actor_classes_ov029.cpp fills as WaterDiamond's live table; the slot
+   was a trap. SkiLift above is the ROM word 16 of _ZTV7SkiLift, which the
+   port fills as MotherPenguin's table (the ccm name shift), and Seaweed is
+   the word of _ZTV7Seaweed, HealingHeart's table. */
+CPPD1(ArrowLift)

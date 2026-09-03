@@ -70,6 +70,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 
 extern "C" {
@@ -794,18 +795,8 @@ static int __fastcall mn_pdes(void *s, void *)
    store is 0x02128c04 (_ZTV8Moneybag, NOT the RTTI spelling D0 uses), then
    WithMeshClsn +0x1e4, MovingCylinderClsn +0x1b0, ShadowModel +0x188,
    Model +0x138, ModelAnim +0xd4, then Actor's own D2. */
-static int __fastcall mn_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV8Moneybag;
-    _ZN12WithMeshClsnD1Ev(t + 0x1e4);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x1b0);
-    _ZN11ShadowModelD1Ev(t + 0x188);
-    _ZN5ModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (mn_d1) spelled the same chain by hand. */
 static int __fastcall mn_d0(void *s, void *)
 { return _ZN8MoneybagD0Ev(s); }
 static int __fastcall mn_yoshi(void *s, void *)
@@ -828,7 +819,7 @@ extern "C" void hal_fill_moneybag_vtable(void)
     vt[6]  = (void *)mn_behavior;
     vt[9]  = (void *)mn_render;
     vt[12] = (void *)mn_pdes;        /* own OnPendingDestroy, NOT the shared default */
-    vt[16] = (void *)mn_d1;
+    vt[16] = (void *)hal_cppd1_Moneybag;
     vt[17] = (void *)mn_d0;
     vt[18] = (void *)mn_yoshi;       /* own OnYoshiTryEat */
     vt[19] = (void *)mn_egg;         /* own OnTurnIntoEgg */

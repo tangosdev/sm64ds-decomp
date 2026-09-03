@@ -46,3 +46,26 @@ src/_ZN13RollingLogTtmD1Ev.cpp
 src/_ZN13TreasureChestD1Ev.cpp
 src/_ZN4ClamD1Ev.cpp
 src/_ZN14CutsceneObjectD1Ev.cpp
+# group 5
+src/_ZN21MegaMushroomCreateTagD1Ev.cpp
+src/_ZN22ClockPaintingHandShortD1Ev.cpp
+src/_ZN25SlideDecorationSilverStarD1Ev.cpp
+src/_ZN18RotatingPlatformRrD1Ev.cpp
+src/_ZN19OrangeBallBillboardD1Ev.cpp
+src/_ZN5PokeyD1Ev.cpp
+src/_ZN7TornadoD1Ev.cpp
+src/_ZN5SpinyD1Ev.cpp
+src/_ZN6LakituD1Ev.cpp
+src/_ZN8MoneybagD1Ev.cpp
+src/_ZN8MugenBgmD1Ev.cpp
+src/_ZN9PushBlockD1Ev.cpp
+src/_ZN8PoleLiftD1Ev.cpp
+src/_ZN9BlueFlameD1Ev.cpp
+src/_ZN9KoopaFlagD1Ev.cpp
+src/_ZN11BobOmbBuddyD1Ev.cpp
+src/_ZN9MontyMoleD1Ev.cpp
+src/_ZN9OneUpLogoD1Ev.cpp
+src/_ZN7SkiLiftD1Ev.cpp
+src/_ZN7SeaweedD1Ev.cpp
+src/_ZN10BrickBlockD1Ev.cpp
+src/_ZN9ArrowLiftD1Ev.cpp
