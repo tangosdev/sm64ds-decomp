@@ -274,7 +274,7 @@ ancestor already owns, and none is attributable to the intermediate.**
 The `daObjDorifu_c` family is the clean case. Its three descendants' headers are
 **byte-identical**:
 
-    ArmedRotatingPlatform  |  RickshawPlatformBdw  |  daObjKm3_Dorifu_c
+    ArmedRotatingPlatform  |  daObjKm1_Kuruma_c  |  daObjKm3_Dorifu_c
         u8 pad_000[0xd4];
         u8 mModel;              /* 0x0d4 */
         u8 pad_0d5[0x4f];

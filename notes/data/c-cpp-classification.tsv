@@ -372,7 +372,7 @@ src/ResetInput.c	PURE-C	arm9				1		None		-
 src/ResetKuppaScript.c	PURE-C	arm9				1		None		-
 src/daObjKm1_Kurumajiku_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV11RickshawBdw	1		None	_ZTV11RickshawBdw/_ZTV17daObjKurumajiku_c	-
 src/actors/daObjKm3_Kurumajiku_c.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
-src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV19RickshawPlatformBdw	-
+src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
 src/actors/daObjKm3_Kuruma_c.cpp	S1-stores-rom-vptr	ov047			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm3_Kuruma_c	-
 src/daObjKi_Hasira_c_classInit.c	S1-stores-rom-vptr	ov016			stores _ZTV10RockPillar	1		None	_ZTV10RockPillar	-
 src/RockTriangle_Spawn.c	WEAK-refs-only	ov102				1		None		-
@@ -830,9 +830,9 @@ src/_ZN19BowserPuzzleManagerD0Ev.c	DTOR-ONLY	ov064	daObjFl_Coin_c	BowserPuzzleMa
 src/_ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj.c	P3-mangled-method-only	arm9		CylinderClsnWithPos	_ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj	1		True		by-value-class-param
 src/_ZN19CylinderClsnWithPos6GetPosEv.c	P1-vtable+mangled	arm9	dCcPos_c	CylinderClsnWithPos/dCcPos_c	vtable dCcPos_c slot 2 @0x2014820 | _ZN19CylinderClsnWithPos6GetPosEv	1		True		-
 src/_ZN19CylinderClsnWithPosC1Ev.c	P3-mangled-method-only	arm9		CylinderClsnWithPos	_ZN19CylinderClsnWithPosC1Ev	1		True		-
-src/_ZN19RickshawPlatformBdw13InitResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	RickshawPlatformBdw/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 0 @0x21115e0 | _ZN19RickshawPlatformBdw13InitResourcesEv	1		True		-
-src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	RickshawPlatformBdw/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 3 @0x21115cc | _ZN19RickshawPlatformBdw16CleanupResourcesEv	1		True		-
-src/_ZN19RickshawPlatformBdwD0Ev.c	DTOR-ONLY	ov043	daObjKm1_Kuruma_c	RickshawPlatformBdw/daObjKm1_Kuruma_c	_ZN19RickshawPlatformBdwD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjKuruma_c/_ZTV19RickshawPlatformBdw	-
+src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 0 @0x21115e0 | _ZN17daObjKm1_Kuruma_c13InitResourcesEv	1		True		-
+src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.c	P1-vtable+mangled	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	vtable daObjKm1_Kuruma_c slot 3 @0x21115cc | _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv	1		True		-
+src/_ZN17daObjKm1_Kuruma_cD0Ev.c	DTOR-ONLY	ov043	daObjKm1_Kuruma_c	daObjKm1_Kuruma_c/daObjKm1_Kuruma_c	_ZN17daObjKm1_Kuruma_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
 src/_ZN19RotatingPlatformLllD0Ev.c	DTOR-ONLY	ov022	daObjFl_Koma_D_c	RotatingPlatformLll/daObjFl_Koma_D_c	_ZN19RotatingPlatformLllD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
 src/_ZN15daObjWc_Obj07_c13InitResourcesEv.c	P1-vtable+mangled	ov029	daObjWc_Obj07_c	daObjWc_Obj07_c/daObjWc_Obj07_c	vtable daObjWc_Obj07_c slot 0 @0x2112148 | _ZN15daObjWc_Obj07_c13InitResourcesEv	1		True		-
 src/_ZN15daObjWc_Obj07_c16CleanupResourcesEv.c	P1-vtable+mangled	ov029	daObjWc_Obj07_c	daObjWc_Obj07_c/daObjWc_Obj07_c	vtable daObjWc_Obj07_c slot 3 @0x2112134 | _ZN15daObjWc_Obj07_c16CleanupResourcesEv	1		True		-

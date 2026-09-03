@@ -166,7 +166,7 @@ ov029 0x2111ea4  n=4  L=124  daObjWcObj06_c
 ov036 0x2111580  n=8  L=146  ShipWing
 ov036 0x2111d14  n=7  L=155  ArmedRotatingPlatform
 ov036 0x2111f8c  n=4  L=75   daObjRc_Dorifu_c
-ov043 0x2111518  n=5  L=80   RickshawPlatformBdw              pcov=3
+ov043 0x2111518  n=5  L=80   daObjKm1_Kuruma_c              pcov=3
 ```
 `daObjWcObj01_c` and `daObjWcObj06_c` — the Wdw square and rectangle floating
 platforms, coined `FloatOnWaterPlatformWdwSquare`/`...Rectangle` before the

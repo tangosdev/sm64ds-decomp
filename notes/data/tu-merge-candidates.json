@@ -9833,15 +9833,15 @@
    "start": "0x2111518",
    "end": "0x2111630",
    "classes": [
-    "RickshawPlatformBdw"
+    "daObjKm1_Kuruma_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN19RickshawPlatformBdwD1Ev.cpp",
-    "src/_ZN19RickshawPlatformBdwD0Ev.c",
-    "src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.c",
-    "src/_ZN19RickshawPlatformBdw13InitResourcesEv.c",
+    "src/_ZN17daObjKm1_Kuruma_cD1Ev.cpp",
+    "src/_ZN17daObjKm1_Kuruma_cD0Ev.c",
+    "src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.c",
+    "src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.c",
     "src/daObjKm1_Kuruma_c_classInit.c"
    ],
    "ext_mix": {
