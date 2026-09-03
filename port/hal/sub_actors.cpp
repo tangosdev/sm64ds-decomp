@@ -614,6 +614,219 @@ static int port_vs_hud_render_coins_on_top(HUD *self)
     return 1;
 }
 
+// ---- THE ADVENTURE STAR AND LIFE COUNTS, MOVED TO THE TOP SCREEN -----------
+//
+// The mirror image of the VS coin move above, and Tango's ask on the round-2
+// HUD captures: in adventure the WHOLE HUD -- meter, coins, stars, lives --
+// belongs on the TOP screen, and the bottom screen keeps only the minimap.
+//
+// WHERE THE ROM DRAWS THEM TODAY, all four measured in adventure play:
+//
+//     RenderHealthMeter   OAM::Render(0, ...)   engine A / TOP    (unchanged)
+//     RenderCoinCount     OAM::Render(0, ...)   engine A / TOP    (else-arm; unchanged)
+//     RenderStarCount     OAM::Render(1, ...)   engine B / BOTTOM (default arm)
+//     RenderLifeCount     RenderSub / (1, ...)  engine B / BOTTOM (else arm)
+//
+// So meter and coins are already up top; only the star count and the life count
+// are still on the sub screen. This moves those two, and only in adventure.
+//
+// WHY THE WHOLE ARM IS REPRODUCED RATHER THAN THE TWO LEAVES. RenderStarCount
+// owns its own C symbol in src/ (a free function taking HUD*), so a host face
+// for it would be a duplicate definition -- unlike RenderCoinCount, which the
+// VS move above never had to touch. And the two leaves are reached from inside
+// HUD::Render, which is matched src this lane may not edit. So the port stands
+// in for HUD::Render's ADVENTURE arm the same way the block above stands in for
+// its VS arm: the ROM's own leaves in the ROM's own order behind the ROM's own
+// guards, calling the ROM's RenderHealthMeter / RenderCoinCount / RenderRedCoins
+// / RenderSilverStars / RenderTimeTimer / RenderCameraButtons UNCHANGED, and
+// substituting a top-screen copy of the star and life leaves. Anything that is
+// not the adventure arm -- VS (data_0209f2d8 == 1), and want=0 -- falls straight
+// through to HUD::Render untouched, so VS placement is byte-for-byte the ROM's.
+//
+// THE ROM'S BOTTOM-SCREEN DRAW IS SUPPRESSED because returning 1 skips
+// HUD::Render entirely; leaving it standing would be a duplicate rather than a
+// move, the same reasoning as the coin block.
+//
+// ---- THE COORDINATES, and the one judgement in here --------------------------
+//
+// The star and life copies keep the ROM's own x, digit sprites and suppression;
+// only the target engine (and, for the star, a y offset) changes.
+//
+//   LIFE: the ROM's own TOP form already exists -- RenderLifeCount's
+//   state-3..6 arm draws the icon with the ten-argument OAM::Render(0, ...) at
+//   scale 0x1000 and the glyph/digits at sub=0. This copy is that arm verbatim,
+//   run unconditionally. In normal play xBase (unk6E) is 0x10, so life lands at
+//   the TOP-LEFT corner -- clear of the meter (x=0x80) and the coins (x~0xcf+).
+//   life_dy defaults to 0 (SM64DS_ADV_LIFE_TOP_Y).
+//
+//   STAR: the ROM's default arm draws the count at x=unk70 (0xF0 in normal
+//   play), digits at y=2 -- the SAME top-right corner the coin count already
+//   occupies at y=2. Flipping the engine alone would stack the star digits ON
+//   the coin digits. So the star goes one block DOWN, under the coins on the
+//   same right edge, exactly the way the VS block stacks the coins under the
+//   star. star_dy defaults to 18 (SM64DS_ADV_STAR_TOP_Y) and is the only number
+//   here that is a judgement rather than a measurement -- it goes to the owner
+//   with a capture. The star's own special-state arm (already sub=0 / TOP in the
+//   ROM) is reproduced unchanged, no offset: those are cutscene states where the
+//   ROM itself puts the star on top and the coins are not in the corner.
+//
+// SM64DS_ADV_HUD_TOP=0 leaves the ROM alone (star+life back on the bottom) on
+// the same binary, which is how the before/after capture pair is taken.
+extern "C" {
+void _ZN3HUD17RenderHealthMeterEv(void *self);
+void _ZN3HUD15RenderCoinCountEv(void *self);
+void _ZN3HUD14RenderRedCoinsEv(void *self);
+void _ZN3HUD17RenderSilverStarsEv(void *self);
+void _ZN3HUD15RenderTimeTimerEv(void *self);
+void _ZN5Stage20RenderBouncingArrowsEv(void);
+int _ZN5Event6GetBitEj(unsigned int);
+void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, void *attr, int x,
+                                                 int y, int e, int f, int g,
+                                                 int h, int i, int j);
+extern char func_020abad0;                 /* OAM::POWER_STAR icon           */
+extern void *func_020ab948[];              /* OAM::LIFE_ICONS, per-health    */
+extern signed char data_0209f310[];        /* per-player collectible counts  */
+extern unsigned char data_0209f2fc;        /* the star arm's mode `m`        */
+extern unsigned char data_ov002_02111178;  /* the star/life sub-state        */
+extern unsigned char data_0209f2ac;
+extern unsigned char data_0209f2d4;
+extern int data_020a0db0;
+extern signed char data_0209f2f4;          /* the life count value           */
+extern unsigned char data_0209f284;        /* the bouncing-arrow gate        */
+extern unsigned char NumStars(void);
+}
+
+/* src/_ZN3HUD15RenderStarCountEv.cpp's adventure (data_0209f2d8 != 1) arm,
+   verbatim except the default block's OAM::Render leading argument is 0 (engine
+   A) instead of 1 and its y carries dy. The special-state block is already
+   sub=0 in the ROM and is copied unchanged. digits[3] is at HUD+0x74, x at
+   HUD+0x70. */
+static void port_adv_star_count_top(HUD *self, int dy)
+{
+    int x = *(short *)((char *)self + 0x70);
+    const signed char *digits = (const signed char *)((char *)self + 0x74);
+    int i;
+
+    self->CalculateDigits(NumStars());
+
+    {
+        unsigned char m = data_0209f2fc;
+        if ((m != 2 && data_ov002_02111178 == 4) ||
+            (m == 1 && data_ov002_02111178 >= 3 && data_ov002_02111178 < 6)) {
+            int flag;
+            if (data_0209f2ac != 0) {
+                if (data_0209f2d4 == 3 && (data_020a0db0 & 0x18) == 0)
+                    flag = 0;
+                else
+                    flag = 1;
+            } else {
+                flag = 1;
+            }
+            if (flag == 0)
+                return;
+            for (i = 2; i >= 0; i--) {
+                if (digits[i] >= 0) {
+                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[digits[i]], x, 2, -1, 1, 0);
+                    x -= 9;
+                }
+            }
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, x, 10, -1, 1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad0, x - 16, 10, -1, 1, 0);
+            return;
+        }
+    }
+
+    for (i = 2; i >= 0; i--) {
+        if (digits[i] >= 0) {
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[digits[i]], x, 2 + dy, -1, 1, 0);
+            x -= 9;
+        }
+    }
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, x, 10 + dy, -1, 1, 0);
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad0, x - 16, 10 + dy, -1, 1, 0);
+}
+
+/* src/_ZN3HUD15RenderLifeCountEv.cpp's own TOP arm (its state-3..6 branch),
+   run unconditionally: the icon via the ten-argument OAM::Render(0, ...) at
+   scale 0x1000, glyph and digits at sub=0. xBase is at HUD+0x6e, digits at
+   HUD+0x74. */
+static void port_adv_life_count_top(HUD *self, int dy)
+{
+    unsigned char idx = data_0209f250;
+    const unsigned char *info = (const unsigned char *)data_0209f394[idx];
+    int face = info[0x6d9];
+    short xBase = *(short *)((char *)self + 0x6e);
+    const signed char *digits = (const signed char *)((char *)self + 0x74);
+
+    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020ab948[face], xBase, 0xa + dy, -1, 1, 0x1000, 0x1000, 0, -1);
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, xBase + 0x10, 0xa + dy, -1, 1, 0);
+    self->CalculateDigits((unsigned short)data_0209f2f4);
+    int x = xBase + 0x18;
+    for (int i = 0; i < 3; i++) {
+        signed char d = digits[i];
+        if (d >= 0) {
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[d], x, 2 + dy, -1, 1, 0);
+            x += 9;
+        }
+    }
+}
+
+/* Returns 1 when it has drawn the whole adventure arm itself and the caller
+   must NOT also run HUD::Render; 0 means "not my case, run the ROM's". */
+static int port_adv_hud_render_stars_lives_on_top(HUD *self)
+{
+    static int want = -1, star_dy = 18, life_dy = 0;
+    if (want < 0) {
+        const char *e = std::getenv("SM64DS_ADV_HUD_TOP");
+        want = (e && e[0] == '0') ? 0 : 1;
+        e = std::getenv("SM64DS_ADV_STAR_TOP_Y");
+        if (e) star_dy = std::atoi(e);
+        e = std::getenv("SM64DS_ADV_LIFE_TOP_Y");
+        if (e) life_dy = std::atoi(e);
+        if (star_dy < 0) star_dy = 0; if (star_dy > 160) star_dy = 160;
+        if (life_dy < 0) life_dy = 0; if (life_dy > 160) life_dy = 160;
+    }
+    if (!want)
+        return 0;
+    if (data_0209f2d8 == 1)          /* VS -> the ROM leaf, byte-for-byte */
+        return 0;
+
+    /* HUD::Render's else (adventure) arm, in its own order. Every leaf but the
+       two counts is the ROM's, called through the faces above. */
+    if ((data_0209caa0[2] & 0x80) == 0)
+        return 1;                     /* the ROM's `goto end`: nothing drawn */
+
+    unsigned char v = data_0209f20c;
+    if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
+        _ZN3HUD17RenderHealthMeterEv((void *)self);
+        if (_ZN5Event6GetBitEj(0x1d) == 0) {
+            _ZN3HUD15RenderCoinCountEv((void *)self);
+            _ZN3HUD14RenderRedCoinsEv((void *)self);
+            _ZN3HUD17RenderSilverStarsEv((void *)self);
+            _ZN3HUD15RenderTimeTimerEv((void *)self);
+        }
+        if (data_0209f284 != 0)
+            _ZN5Stage20RenderBouncingArrowsEv();
+    } else {
+        if (v != 0) {
+            port_adv_life_count_top(self, life_dy);
+            port_adv_star_count_top(self, star_dy);
+        }
+    }
+
+    unsigned char v2 = data_0209f20c;
+    if ((data_0209f2c4 | v2 | data_0209f294) & 0xff) {
+        if (v2 == 0)
+            return 1;
+        if (data_0209f2d4 >= 3)
+            return 1;
+    }
+    port_adv_star_count_top(self, star_dy);
+    _ZN3HUD19RenderCameraButtonsEv((void *)self);
+    port_adv_life_count_top(self, life_dy);
+    return 1;
+}
+
 // ---- HUD -------------------------------------------------------------------
 int __fastcall hud_init(void *s, void *) { return ((HUD *)s)->HUD::InitResources(); }
 int __fastcall hud_clean(void *s, void *) { return ((HUD *)s)->HUD::CleanupResources(); }
@@ -642,6 +855,10 @@ int __fastcall hud_render(void *s, void *)
     /* the VS coin move, above; it answers 0 on every path that is not the VS
        full-render arm, and the ROM's own Render runs then exactly as before */
     if (port_vs_hud_render_coins_on_top((HUD *)s))
+        return 1;
+    /* the adventure star/life move; answers 0 on VS and on want=0, and the
+       ROM's own Render runs then exactly as before */
+    if (port_adv_hud_render_stars_lives_on_top((HUD *)s))
         return 1;
     return ((HUD *)s)->HUD::Render();
 }

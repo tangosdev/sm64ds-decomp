@@ -1214,6 +1214,7 @@ void port_probe_sign_yaw(void);
 void port_probe_chomp(int frame);
 void port_probe_rabbit_key(int frame);   /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
 void port_probe_rabbit_trigger(int frame); /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+void port_probe_yoshi_swallow(int frame);  /* TEMPORARY: SM64DS_YOSHI_SWALLOW */
 void port_probe_key_spawn(int frame);      /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
 void port_probe_klepto_spawn(int frame);   /* test fixture: SM64DS_KLEPTO_SPAWN_AT */
 void port_probe_vs_overlap(int frame);     /* test fixture: SM64DS_VS_OVERLAP_AT */
@@ -10549,6 +10550,7 @@ int main(void)
             port_probe_sign_yaw();
             port_probe_chomp(frame);
             port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+            port_probe_yoshi_swallow(frame);   /* TEMPORARY: SM64DS_YOSHI_SWALLOW */
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_probe_klepto_spawn(frame);    /* test fixture: SM64DS_KLEPTO_SPAWN_AT */
             port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
