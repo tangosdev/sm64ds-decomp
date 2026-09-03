@@ -373,7 +373,7 @@ ov003	0x020b1750	data_ov003_020b1750	g_profile_GAME_OVER	reconstructed profile g
 ov005	0x020c21ec	func_ov005_020c21ec	dScMiniGm_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov005	0x020c2440	data_ov005_020c2440	g_profile_MINIGAME	reconstructed profile global; literal ROM ID MINIGAME+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x020d9574	func_ov006_020d9574	MgSortOrSplode_Spawn	spawnfunc
-ov006	0x020dbd54	func_ov006_020dbd54	MgPicturePoker_Spawn	spawnfunc
+ov006	0x020dbd54	func_ov006_020dbd54	dScMgCard_c_classInit	reconstructed classInit; unique MG_CARD profile + RTTI-proven class + factory allocation/vtable shape; Picture Poker remains the English minigame identity, while exact original source spelling is not preserved
 ov006	0x020de940	func_ov006_020de940	MgCoincentration_Spawn	spawnfunc
 ov006	0x020e0574	func_ov006_020e0574	dScMgCup_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x020e3820	func_ov006_020e3820	MgShuffleShell_Spawn	spawnfunc
@@ -2618,8 +2618,8 @@ ov002	0x020b47ec	func_ov002_020b47ec	_ZN16daObjKinokoTag_c20TrySpawnMegaMushroom
 ov065	0x0211a550	func_ov065_0211a550	_ZN16daObjCtMecha04_c12UpdateShadowEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller, owned shadow fields, and dActor_c shadow call
 ov065	0x0211aa38	func_ov065_0211aa38	_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c	inferred helper name and dActor_c reference parameter; callback forwarding and conveyor/actor field ABI prove ownership and call shape
 ov065	0x0211aacc	func_ov065_0211aacc	_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred helper name and callback types; installed as the collider callback and observed forwarding owner and colliding actor
-ov006	0x020d96e0	func_ov006_020d96e0	_ZN12dMgCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
-ov006	0x020d96f0	func_ov006_020d96f0	_ZN17dMgDilarCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
+ov006	0x020d96e0	func_ov006_020d96e0	_ZN12dMgCardObj_cD1Ev	RTTI-named card-element D1 ABI callback; a real inline destructor makes the exact body but lands between the scene D1/D0, so the callback spelling is retained at the measured mwccarm section-order wall
+ov006	0x020d96f0	func_ov006_020d96f0	_ZN17dMgDilarCardObj_cD1Ev	RTTI-named dealer-card D1 ABI callback; a real destructor makes the exact body only with its base inline, which moves the base D1 between the scene D1/D0, so the callback spelling is retained at the measured mwccarm section-order wall
 ov006	0x020d970c	func_ov006_020d970c	_ZN17dMgDilarCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
 ov006	0x020d978c	func_ov006_020d978c	_ZN17dMgDilarCardObj_c6UpdateEv	coined: vtable slot 1 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
 ov006	0x020d9998	func_ov006_020d9998	_ZN17dMgDilarCardObj_c13GetOffscreenYEv	coined: vtable slot 2 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
@@ -2648,6 +2648,8 @@ ov006	0x020db720	func_ov006_020db720	_ZN11dScMgCard_c13OnTurnIntoEggEi	legacy re
 ov006	0x020db9dc	func_ov006_020db9dc	_ZN11dScMgCard_c13OnYoshiTryEatEi	family-adjudicated slot-18 name (notes/minigame-family-decisions.md); vtable slot 18 of dScMgCard_c
 ov006	0x0213bccc	data_ov006_0213bccc	_ZTV12dMgCardObj_c	vtable alloc=0x30
 ov006	0x0213bcf4	data_ov006_0213bcf4	_ZTV17dMgDilarCardObj_c	vtable alloc=0x30
+ov006	0x020dbe14	func_ov006_020dbe14	_ZN17dMgDilarCardObj_cC1Ev	RTTI-named dealer-card C1 ABI callback; the factory wall prevents placement construction and the real derived constructor requires the base constructor inline, so the callback spelling preserves the exact two-vptr body and section order
+ov006	0x020dbe30	func_ov006_020dbe30	_ZN12dMgCardObj_cC1Ev	RTTI-named card-element C1 ABI callback; retained as the construction-array callback at the measured mwccarm factory wall
 ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; a real empty destructor reproduces the ROM body
 ov006	0x020f7740	func_ov006_020f7740	_ZN13dScMgMCarlo_c11UpdateBoardEv	coined: ROM symbol is address-only; named from what the function does
 ov006	0x020f7994	func_ov006_020f7994	_ZN13dScMgMCarlo_c14FlipDealtCardsEv	coined: ROM symbol is address-only; named from what the function does
