@@ -535,10 +535,13 @@ const char *host_setting_voice_mic_device(void);
 int host_setting_voice_near_radius(void);
 int host_setting_voice_far_radius(void);
 
-/* NetMode: 0 lockstep, 1 rollback. ROLLBACK IS THE DEFAULT (owner's
-   decision, 2026-09-03): an absent settings.json, one that will not parse,
-   or one without the key all read as rollback; "lockstep" is still a
-   choice. The comms transport reads it once at install; SM64DS_NETMODE
+/* NetMode: 0 lockstep, 1 rollback. LOCKSTEP IS THE DEFAULT (0.3.6 hotfix,
+   2026-09-03): an absent settings.json, one that will not parse, or one
+   without the key all read as lockstep; "rollback" is still a choice.
+   Rollback shipped 0.3.4 as the default but re-simulates the world every
+   frame a remote peer moves (the prediction carries only the heading), which
+   halves the effective tick rate; lockstep never predicts, so it never
+   re-sims. The comms transport reads it once at install; SM64DS_NETMODE
    overrides it there. See status/ROLLBACK_SHIP.md. */
 int host_setting_net_mode(void);
 
