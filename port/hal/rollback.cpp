@@ -571,6 +571,33 @@ void name_word(const char *want, const char *got, size_t i, size_t n)
     }
     fprintf(stderr, "[rb-det]       word at +0x%zx: was 0x%08x (%s) now 0x%08x (%s)\n",
             w, a, desc[0], b, desc[1]);
+    // the heap block that owns it: the ExpandingHeapAllocator's used-node
+    // header sits 0x10 before a payload (u16 magic 0x5544, u32 size at +4;
+    // hal/level_boot.cpp port_loadfile_node_size reads the same)
+    {
+        // NOTE: this search previously used a for-loop whose entry condition
+        // (b + 0x10 <= w + 4) was false at the starting b == w, so the C
+        // for-loop never ran its body on ANY call; every prior DET run's
+        // silence here was that bug, not "no heap header nearby". Rewritten
+        // as a while-loop that checks the starting word too.
+        const unsigned char *base = (const unsigned char *)port_arena_base();
+        size_t b = w & ~(size_t)3;
+        for (;;) {
+            if (*(const unsigned short *)(got + b) == 0x5544) {
+                const unsigned size = *(const unsigned *)(got + b + 4);
+                if (size < 0x800000 && b + 0x10 + size > w) {
+                    fprintf(stderr, "[rb-det]       in heap block payload +0x%zx (%p) size 0x%x, at +0x%zx; "
+                            "first words %08x %08x %08x %08x\n", b + 0x10, (const void *)(base + b + 0x10),
+                            size, w - (b + 0x10), *(const unsigned *)(got + b + 0x10),
+                            *(const unsigned *)(got + b + 0x14), *(const unsigned *)(got + b + 0x18),
+                            *(const unsigned *)(got + b + 0x1c));
+                    break;
+                }
+            }
+            if (b < 4 || w - b >= (size_t)2 << 20) break;
+            b -= 4;
+        }
+    }
     fprintf(stderr, "[rb-det]       around: was");
     for (size_t q = (w >= 16 ? w - 16 : 0); q < w + 20 && q < n; ++q) fprintf(stderr, " %02x", (unsigned char)want[q]);
     fprintf(stderr, "\n[rb-det]               now");

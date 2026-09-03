@@ -854,6 +854,11 @@ void rb_frame_sound_ms(double ms);  /* the sound drain's cost, same breakdown */
 int rb_replaying(void);
 int rb_skip_render(void);
 int rb_skip_actor_render(void);
+// port/rollback: the player's texture-sequence tick (eye-blink material
+// flag, shared per character model) that must run every tick regardless
+// of rb_skip_render() -- see the comment on hal_player_texseq_tick in
+// hal/player_bridges.cpp for why (the map0 DET rung).
+void hal_player_texseq_tick(void *player);
 void rb_replay_phase(int idx, double ms);
 void port_actor_render_replay(void);
 enum { RB_ACTOR_TICK = 0, RB_ANIMS, RB_PARTICLE, RB_CYL, RB_SCENEPASS,
@@ -11797,16 +11802,26 @@ int main(void)
                draw is byte-unchanged. */
             if (port::adventure_ghost_mode() && !port_adventure_peer_visible(pi))
                 continue;
-            /* port/rollback: a replayed frame draws nobody (tick-only re-sim,
-               hal/rollback.cpp rb_skip_render); the DET rung proves the
-               player's draw writes nothing a tick reads */
-            if (rb_skip_render())
+            /* port/rollback: a replayed frame draws nobody's pixels
+               (tick-only re-sim, hal/rollback.cpp rb_skip_render); the DET
+               rung proves the player's DRAW writes nothing a tick reads.
+               But the map0 DET rung found one call inside the draw that is
+               NOT render-private: hal_player_texseq_tick (the eye-blink
+               material flag on the shared character head model). That
+               still has to run every tick, replayed or not -- see the
+               comment on hal_player_texseq_tick, hal/player_bridges.cpp. */
+            if (rb_skip_render()) {
+                if (void *other = data_0209f394[pi])
+                    hal_player_texseq_tick(other);
                 continue;
+            }
             if (void *other = data_0209f394[pi])
                 hal_render_player_world(other);
         }
         if (!rb_skip_render())
             hal_render_player_world(player);
+        else
+            hal_player_texseq_tick(player);
         /* Stage::GraphCallback1: the particle submission, last, after every
            opaque draw in the frame. The billboards carry their own absolute
            position matrix so nothing above this line has to be preserved for
