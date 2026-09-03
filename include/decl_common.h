@@ -689,7 +689,6 @@ extern int _ZTV10SlidingBox[];
 extern int _ZTV23daObjRotateUpdownLift_c[];
 extern int _ZTV24daPropeller_Heyho_Fire_c[];
 extern int _ZTV25RotatingUpDownPlatformUtm[];
-extern int _ZTV25SlideDecorationSilverStar[];
 extern int _ZTV15daObjWc_Obj02_c[];
 extern int _ZTV7daTrs_c[];
 extern int _ZTV3Key[];

@@ -221,3 +221,8 @@
 {"path": "src/_ZN21ArmedRotatingPlatform6RenderEv.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
 {"path": "src/_ZN21ArmedRotatingPlatformD0Ev.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
 {"path": "src/_ZN21ArmedRotatingPlatformD1Ev.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
+{"path": "src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp", "reason": "ov031: daObjHsBillboard_c promoted to a single TU; its six one-function sources are consolidated, not lost"}
+{"path": "src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp", "reason": "ov031: daObjHsBillboard_c promoted to a single TU; its six one-function sources are consolidated, not lost"}
+{"path": "src/_ZN25SlideDecorationSilverStar6RenderEv.cpp", "reason": "ov031: daObjHsBillboard_c promoted to a single TU; its six one-function sources are consolidated, not lost"}
+{"path": "src/_ZN25SlideDecorationSilverStarD0Ev.cpp", "reason": "ov031: daObjHsBillboard_c promoted to a single TU; its six one-function sources are consolidated, not lost"}
+{"path": "src/_ZN25SlideDecorationSilverStarD1Ev.cpp", "reason": "ov031: daObjHsBillboard_c promoted to a single TU; its six one-function sources are consolidated, not lost"}

@@ -1030,11 +1030,11 @@ ov030	0x02115a48	data_ov030_02115a48	_ZTV13RollingLogTtm	vtable alloc=? (was _ZT
 ov030	0x02115b90	data_ov030_02115b90	UkikiThief_SpawnInfo	spawninfo
 ov030	0x02115bac	data_ov030_02115bac	UkikiStar_SpawnInfo	spawninfo
 ov030	0x02115bfc	data_ov030_02115bfc	_ZTV5Ukiki	vtable alloc=? (was _ZTV13RollingLogTtm)
-ov031	0x021111a0	func_ov031_021111a0	_ZN25SlideDecorationSilverStarD1Ev	vtable slot 16
-ov031	0x021111d0	func_ov031_021111d0	_ZN25SlideDecorationSilverStarD0Ev	vtable slot 17
-ov031	0x02111254	func_ov031_02111254	_ZN25SlideDecorationSilverStar16CleanupResourcesEv	vtable slot 3
-ov031	0x02111280	func_ov031_02111280	_ZN25SlideDecorationSilverStar6RenderEv	vtable slot 9
-ov031	0x021112a8	func_ov031_021112a8	_ZN25SlideDecorationSilverStar13InitResourcesEv	vtable slot 0
+ov031	0x021111a0	func_ov031_021111a0	_ZN18daObjHsBillboard_cD1Ev	vtable slot 16
+ov031	0x021111d0	func_ov031_021111d0	_ZN18daObjHsBillboard_cD0Ev	vtable slot 17
+ov031	0x02111254	func_ov031_02111254	_ZN18daObjHsBillboard_c16CleanupResourcesEv	vtable slot 3
+ov031	0x02111280	func_ov031_02111280	_ZN18daObjHsBillboard_c6RenderEv	vtable slot 9
+ov031	0x021112a8	func_ov031_021112a8	_ZN18daObjHsBillboard_c13InitResourcesEv	vtable slot 0
 ov031	0x02111344	func_ov031_02111344	SlideDecorationBlueSmiley_Spawn	spawnfunc
 ov031	0x0211137c	func_ov031_0211137c	SlideDecorationOrangeSmiley_Spawn	spawnfunc
 ov031	0x021113b4	func_ov031_021113b4	SlideDecorationYellowStar_Spawn	spawnfunc
@@ -1043,7 +1043,7 @@ ov031	0x0211190c	data_ov031_0211190c	SlideDecorationSilverStar_SpawnInfo	spawnin
 ov031	0x02111928	data_ov031_02111928	SlideDecorationYellowStar_SpawnInfo	spawninfo
 ov031	0x02111944	data_ov031_02111944	SlideDecorationOrangeSmiley_SpawnInfo	spawninfo
 ov031	0x02111960	data_ov031_02111960	SlideDecorationBlueSmiley_SpawnInfo	spawninfo
-ov031	0x02111984	data_ov031_02111984	_ZTV25SlideDecorationSilverStar	vtable alloc=0x128
+ov031	0x02111984	data_ov031_02111984	_ZTV18daObjHsBillboard_c	vtable alloc=0x128
 ov032	0x02112668	func_ov032_02112668	HugeCover_Spawn	spawnfunc
 ov032	0x02112668	HugeCover_Spawn	daObjTdFuta_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov032	0x02112698	func_ov032_02112698	_ZN9HugeWaterD1Ev	vtable slot 16
