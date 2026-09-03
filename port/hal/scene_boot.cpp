@@ -467,6 +467,13 @@ extern "C" int port_graph_block_word0(void);
 void port_actor_tick(void);          /* phases 4/2/3 */
 void port_actor_render(void);        /* phase 5 */
 void port_actor_scene_pass(void);    /* phase 1 */
+#ifdef NTR_WIDE169
+/* THE 16:9 OBJECT-CULL SEAM, hal/camera_bridges.cpp. Both declarations sit
+   inside the tier guard so the 4:3 and hires objects built from this file are
+   unchanged down to the last byte. */
+void hal_camera_widen_frustum_scene(void);
+void hal_widen_probe_scene_frame(int frame, const char *where);  /* inert unset */
+#endif
 void port_fader_advance(void);
 void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
 /* SM64DS_MG_RESULTS_PROBE (hal/scene_mg.cpp), off unless the variable is set */
@@ -5933,7 +5940,47 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             if (trace) std::fprintf(stderr, "[scene-trace] f%d gx_reset\n", frame);
             ntr::gx_reset();
             if (trace) std::fprintf(stderr, "[scene-trace] f%d actor_render\n", frame);
+#ifdef NTR_WIDE169
+            hal_widen_probe_scene_frame(frame, "pre ");
+#endif
             port_actor_render();
+#ifdef NTR_WIDE169
+            /* WIDESCREEN OBJECT CULL, THE SCENE PATH'S HALF. tests/walk_window.cpp
+               widens the ROM's global Clipper once per frame on the LEVEL path;
+               nothing did it here, so every scene in the 16:9 build drew a widened
+               PICTURE (ntr/gx.cpp's project()) against a 4:3 CULL and could drop an
+               object standing in the new side margins.
+
+               POSITION IS THE WHOLE OF THE CORRECTNESS, for two reasons that pull
+               in the same direction.
+
+               AFTER port_actor_render, because that is where the seed is. The
+               level loop widens straight after its by-hand hal_camera_render,
+               which is what runs func_0200d954 -> Clipper::Func_020156DC and
+               rewrites the aspect term from 0x1555. A scene drives no camera by
+               hand: its Camera actor rides the ROM's own render bucket, so the
+               reseed happens INSIDE port_actor_render. Widening before the bucket
+               would be undone by the reseed inside it, in the same frame, and the
+               fix would measure as a null result.
+
+               BEFORE the next frame's port_actor_tick, which is where it is read.
+               Actor::BeforeBehavior is the cull's consumer -- a 0x10000-flagged
+               actor skips its Behavior whenever the frustum test fails -- and that
+               runs in the tick, not the render. So the level path's real ordering
+               is "widen after the seed, read on the next tick", and this call sits
+               at the same seam.
+
+               ONCE PER SEED, never twice on the same one. The scale is not
+               idempotent -- it multiplies the aspect term by 4/3 in place -- and on
+               the level path it is safe only because the Render rewrites the term
+               to 0x1555 first. Some scenes do that and some seed the Clipper once
+               at spawn and never again, so hal_camera_widen_frustum_scene carries
+               the guard rather than this call site carrying an assumption; its
+               banner has the three measured shapes. There is exactly one call site
+               on this path, and the probe's per-frame m4c line is what keeps that
+               honest -- a second call would show as a compounding m4c. */
+            hal_camera_widen_frustum_scene();
+#endif
             if (trace) std::fprintf(stderr, "[scene-trace] f%d clear\n", frame);
             for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[0][x] = 0xFF101820u;
             for (int y = 1; y < ntr::SCREEN_H; ++y)
@@ -5965,6 +6012,9 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             if (trace) std::fprintf(stderr, "[scene-trace] f%d sub_present\n", frame);
             hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d render done\n", frame);
+#ifdef NTR_WIDE169
+            hal_widen_probe_scene_frame(frame, "post");
+#endif
         }
         /* AND AGAIN AFTER THE RENDER, because the title's attract callback
            func_ov007_020b0da0 is reached from the scene's RENDER slot
