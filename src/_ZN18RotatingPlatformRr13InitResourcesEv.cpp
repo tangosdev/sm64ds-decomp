@@ -7,7 +7,7 @@
  * A tail call into daObjKaitendai_c's shared cross-overlay helper
  * func_ov002_020b676c(this, filetable, angle) -- out of this task's
  * scope, kept under its existing name, same idiom as
- * RotatingPlatformWf/Lll's slot 0. Unlike those two, the angle argument
+ * daObjBk_Ukisima_c/Lll's slot 0. Unlike those two, the angle argument
  * here is picked between two per-instance statics based on param1
  * (fBase_c's own field, include/fBase_c.h) -- param1 == 1 selects the
  * alternate angle. */

@@ -62,10 +62,10 @@ _ZN14RotatingBridge6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
 _ZN14RotatingBridge8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
 _ZN14RotatingBridge13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
 daObjBk_Rotebar_c_classInit kind:function(arm,size=0x30) addr:0x02112ba0
-_ZN18RotatingPlatformWfD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
-_ZN18RotatingPlatformWfD0Ev kind:function(arm,size=0x64) addr:0x02112c20
-_ZN18RotatingPlatformWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
-_ZN18RotatingPlatformWf13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
+_ZN17daObjBk_Ukisima_cD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
+_ZN17daObjBk_Ukisima_cD0Ev kind:function(arm,size=0x64) addr:0x02112c20
+_ZN17daObjBk_Ukisima_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
+_ZN17daObjBk_Ukisima_c13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
 daObjBk_Ukisima_c_classInit kind:function(arm,size=0x3c) addr:0x02112cb8
 _ZN20daObjBk_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
 _ZN20daObjBk_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x02112d44
@@ -248,7 +248,7 @@ _ZTI17daObjBk_Ukisima_c kind:data(any) addr:0x02114798
 data_ov015_021147a4 kind:data(any) addr:0x021147a4
 _ZTS17daObjBk_Ukisima_c kind:data(any) addr:0x021147b0
 g_profile_BK_UKISIMA kind:data(any) addr:0x021147c4 ambiguous
-_ZTV18RotatingPlatformWf kind:data(any) addr:0x021147e8
+_ZTV17daObjBk_Ukisima_c kind:data(any) addr:0x021147e8
 data_ov015_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov015_02114860 kind:data(any) addr:0x02114860 ambiguous
 _ZTI20daObjBk_Fall_Block_c kind:data(any) addr:0x02114868

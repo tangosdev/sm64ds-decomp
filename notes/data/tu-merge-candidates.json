@@ -10110,15 +10110,15 @@
    "start": "0x2112bd0",
    "end": "0x2112cf4",
    "classes": [
-    "RotatingPlatformWf"
+    "daObjBk_Ukisima_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN18RotatingPlatformWfD1Ev.cpp",
-    "src/_ZN18RotatingPlatformWfD0Ev.c",
-    "src/_ZN18RotatingPlatformWf16CleanupResourcesEv.cpp",
-    "src/_ZN18RotatingPlatformWf13InitResourcesEv.cpp",
+    "src/_ZN17daObjBk_Ukisima_cD1Ev.cpp",
+    "src/_ZN17daObjBk_Ukisima_cD0Ev.c",
+    "src/_ZN17daObjBk_Ukisima_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp",
     "src/daObjBk_Ukisima_c_classInit.c"
    ],
    "ext_mix": {
