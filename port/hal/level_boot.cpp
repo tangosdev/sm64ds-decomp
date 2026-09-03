@@ -4660,6 +4660,13 @@ extern "C" void *port_debug_spawn_at(unsigned id, unsigned param,
     data_ov002_0211118c = (short)(seq + 1);
     a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(id, param, &pos, &rot,
                                                      area, seq);
+    /* YOSHI_EGG (9): its only spawners, the egg lay (func_ov002_020d6368 /
+       020d5ab4), write the laying player into the egg's +0x38c right after
+       Actor::Spawn returns, before InitResources runs, and Behavior, Render
+       and every state body read it unguarded. A debug spawn stands in for
+       that spawner, so it makes the same write. */
+    if (a && id == 9)
+        *(void **)((char *)a + 0x38c) = data_0209f394[0];
     /* Regression assertion for the +0x10/+0xcc confusion above: the area this
        call asked for must be the one the constructor seated. The report line
        below prints the READBACK, not the argument, so "area N" in the log is

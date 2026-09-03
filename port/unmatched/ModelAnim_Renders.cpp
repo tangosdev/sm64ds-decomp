@@ -529,4 +529,30 @@ int _ZN6FlyGuy6RenderEv(void *self)
     return 1;
 }
 
+
+/* ---- YOSHI_EGG (actor 9, ov002) ------------------------------------------
+   src/_ZN8YoshiEgg6RenderEv.cpp dispatches `((Obj *)&mModelAnim)->m(0)`
+   through a LOCAL six-virtual shadow: the ROM's ModelAnim slot 5, Render,
+   which is the host array's Virtual18 (the Whomp/Butterfly collision above).
+   Kept off slice_gate210.txt and hosted here, the matched control flow line
+   for line: hidden while the 0x40000 flag is set, while the laying player is
+   inside a cannon, or while his egg opacity byte (+0x6f5) is 0; otherwise the
+   ModelAnim at 0x300 renders. mPlayer is the egg's +0x38c. */
+int _ZN6Player16IsInsideOfCannonEv(void *player);   /* hal/sub_actors.cpp */
+
+/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish
+ * case. */
+int _ZN8YoshiEgg6RenderEv(void *selfv)
+{
+    char *c = (char *)selfv;
+    char *player = *(char **)(c + 0x38c);
+    if ((*(unsigned *)(c + 0xb0) & 0x40000) != 0)
+        return 1;
+    if (_ZN6Player16IsInsideOfCannonEv(player))
+        return 1;
+    if (*(unsigned char *)(player + 0x6f5) < 1)
+        return 1;
+    ((ModelAnim *)(c + 0x300))->ModelAnim::Render(0);
+    return 1;
+}
 }  /* extern "C" */

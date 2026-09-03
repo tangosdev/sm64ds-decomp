@@ -442,3 +442,16 @@ data_ov002_02100320 data_ov002_02100334 data_ov002_02100348
 # overwritten slot for slot by hal_fill_bubble_vtable; the fill aliases the
 # _ZTV12daObjAbuku_c spelling onto it.
 Bubble_SpawnInfo:0x1c data_ov002_02108964:0x7c
+#
+# ---- gate 210: YOSHI_EGG (9) -------------------------------------------------
+# YoshiEgg_SpawnInfo 0x0210ad90 (+4 reads 9; :0x1c, the record ends where the
+# table's RTTI prefix begins) and _ZTV8YoshiEgg 0x0210adb4 (31 slots, :0x7c;
+# _ZTV8Platform follows at 0x0210ae38 after the next prefix). Mounted raw and
+# overwritten slot for slot by hal_fill_yoshi_egg_vtable, which aliases the
+# _ZTV8daYegg_c spelling the D0 restores onto it. data_ov002_021000a0 is the
+# two-entry model file table InitResources indexes by the egg variant (:0x8,
+# pinned by data_ov002_021000a8), and data_ov002_021000a8 the s16 tumble-angle
+# table the landed state (func_ov002_020ec9c4) indexes (:0x10, pinned by
+# data_ov002_021000b8). The state table data_ov002_02110a5c and the
+# two animation SharedFilePtrs 0x0210e6b0 / 0x0210eb78 were already mounted.
+YoshiEgg_SpawnInfo:0x1c _ZTV8YoshiEgg:0x7c data_ov002_021000a0:0x8 data_ov002_021000a8:0x10

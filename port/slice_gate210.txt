@@ -68,3 +68,50 @@ src/func_ov002_020b3298.c
 # the water-surface raycast
 src/func_ov002_020b330c.cpp
 src/func_ov002_020b3344.c
+#
+# ---- YOSHI_EGG (9, ov002) --------------------------------------------------
+# daYegg_c, the egg Yoshi lays after a swallow and then aims and throws.
+# Spawned only by the Player's egg lay (func_ov002_020d6368 / 020d5ab4, gate
+# 10). Lifecycle: InitResources flat C, CleanupResources and Behavior real
+# C++ methods (faced in hal/actor_classes_runtime_spawns.cpp), D1/D0 flat C,
+# the factory. NOT ENROLLED, hosted instead:
+#   _ZN8YoshiEgg6RenderEv       the ModelAnim slot-5 collision (a local
+#                               six-virtual shadow), unmatched/ModelAnim_Renders.cpp
+#   func_ov002_020ed63c/684     the state setter and the per-frame main
+#                               dispatch, mwcc pointer-to-member over the bss
+#                               table data_ov002_02110a5c; host copies with
+#                               the address switch in
+#                               unmatched/YoshiEgg_StateDispatch.cpp. 020ed63c
+#                               LEAVES slice_gate10.txt for that copy.
+# Every TU below byte-matches under tools/match.py (strict relocs). The eight
+# state bodies (0x020ec938..0x020ed5b0, see the dispatch file's table) and the
+# remaining helpers not already linked by gate 10 (020ec610/628/640, 020ec728,
+# 020ec80c, 020edca4 are; slice_w1l5.txt names 020ec9c4 only in a comment)
+# follow the lifecycle.
+# func_ov002_020ed0d4 (state 0 main) carries dsd's misname daWarpkun_c::Kill;
+# match.py strict-reloc byte match, ruled REAL_DECOMP in
+# tools/inferred_stub_adjudicated.txt before this seat.
+src/YoshiEgg_Spawn.c
+src/_ZN8YoshiEgg13InitResourcesEv.c
+src/_ZN8YoshiEgg16CleanupResourcesEv.cpp
+src/_ZN8YoshiEgg8BehaviorEv.cpp
+src/_ZN8YoshiEggD1Ev.c
+src/_ZN8YoshiEggD0Ev.c
+src/func_ov002_020ec654.c
+src/func_ov002_020ec670.c
+src/func_ov002_020ec938.cpp
+src/func_ov002_020ec978.c
+src/func_ov002_020ec9c4.c
+src/func_ov002_020ecad4.c
+src/func_ov002_020ecb0c.c
+src/func_ov002_020ecd18.cpp
+src/func_ov002_020ecf94.c
+src/func_ov002_020ecfc8.c
+src/func_ov002_020ed0d4.c
+src/func_ov002_020ed5b0.c
+src/func_ov002_020ed6cc.c
+src/func_ov002_020ed738.cpp
+src/func_ov002_020ed7f8.c
+src/func_ov002_020ed998.cpp
+src/func_ov002_020edb3c.cpp
+src/func_ov002_020eddc4.c

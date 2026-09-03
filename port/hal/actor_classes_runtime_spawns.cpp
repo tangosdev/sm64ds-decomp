@@ -394,3 +394,79 @@ extern "C" void hal_fill_bubble_vtable(void)
     vt[16] = (void *)bub_d1;
     vt[17] = (void *)bub_d0;
 }
+
+// ============================================================================
+// YOSHI_EGG (actor 9, ov002) -- _ZTV8YoshiEgg / _ZTV8daYegg_c, 0x0210adb4
+// ============================================================================
+//
+// The egg Yoshi lays after swallowing an enemy, then aims and throws. An Enemy
+// build (EnemyC2, 1068 bytes): MovingCylinderClsn 0x110, WithMeshClsn 0x144,
+// ModelAnim 0x300, ShadowModel 0x364, the laying player at 0x38c (written by
+// the spawner right after Actor::Spawn, before InitResources), the state word
+// at 0x3f0 and the up-to-five aim targets at 0x3fc. Spawned only by the
+// Player's egg lay (func_ov002_020d6368 / 020d5ab4, slice_gate10, linked).
+//
+// Own slots: 0 Init (flat C), 3 Cleanup (real C++ method, faced), 6 Behavior
+// (faced), 9 Render (HOST COPY: the ModelAnim slot-5 collision,
+// unmatched/ModelAnim_Renders.cpp), 16/17 the flat-C D1/D0. Its four-state
+// PMF machine is unmatched/YoshiEgg_StateDispatch.cpp; every state body and
+// every other helper (26 func_ov002 TUs between 0x020ec610 and 0x020eddc4)
+// byte-matches and the ones not already linked are on slice_gate210.txt.
+//
+// func_02123804 is dsd's code-flavoured spelling of a level-overlay-window
+// address the egg's collision helper (func_ov002_020ec670) calls when the
+// thing it hit is a WHOMP (id 0xa4) or WHOMP_KING (0xa5): that is ov079's
+// func_ov079_02123804 (slice_gate64, linked), the Whomp's hit-by-egg entry,
+// so the spelling is aliased onto it -- the same treatment BowserShockwaves'
+// two BMA spellings get above.
+extern "C" {
+int _ZN8YoshiEgg13InitResourcesEv(void *self);     /* flat C TU */
+int _ZN8YoshiEgg16CleanupResourcesEv(void *self);  /* face below */
+int _ZN8YoshiEgg8BehaviorEv(void *self);           /* face below */
+int _ZN8YoshiEgg6RenderEv(void *self);             /* host copy */
+int *_ZN8YoshiEggD1Ev(int *self);
+int *_ZN8YoshiEggD0Ev(int *self);
+extern int _ZTV8YoshiEgg[];                        /* ov002 mount, 31 slots */
+}
+#pragma comment(linker, "/alternatename:__ZTV8daYegg_c=__ZTV8YoshiEgg")
+#pragma comment(linker, "/alternatename:_func_02123804=_func_ov079_02123804")
+/* CleanupResources.cpp releases the two animation SharedFilePtrs as C++
+   `extern char` objects; the mount defines them under the C spelling. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210e6b0@@3DA=_data_ov002_0210e6b0")
+#pragma comment(linker, "/alternatename:?data_ov002_0210eb78@@3DA=_data_ov002_0210eb78")
+
+static int __fastcall ye_init(void *s, void *)
+{ return _ZN8YoshiEgg13InitResourcesEv(s); }
+static int __fastcall ye_clean(void *s, void *)
+{ return _ZN8YoshiEgg16CleanupResourcesEv(s); }
+static int __fastcall ye_behavior(void *s, void *)
+{ rs_probe("YOSHI_EGG", s, *(int *)((char *)s + 0x3f0));
+  return _ZN8YoshiEgg8BehaviorEv(s); }
+static int __fastcall ye_render(void *s, void *)
+{ port_actor_render_probe("YOSHI_EGG", (char *)s + 0x300);
+  return _ZN8YoshiEgg6RenderEv(s); }
+static int __fastcall ye_d1(void *s, void *)
+{ return (int)(size_t)_ZN8YoshiEggD1Ev((int *)s); }
+static int __fastcall ye_d0(void *s, void *)
+{ return (int)(size_t)_ZN8YoshiEggD0Ev((int *)s); }
+
+extern "C" void hal_fill_yoshi_egg_vtable(void)
+{
+    port_enemy_death_states_seat();
+    void *volatile *vt = (void *volatile *)_ZTV8YoshiEgg;
+    rs_fill_shared(vt);
+    vt[0]  = (void *)ye_init;
+    vt[3]  = (void *)ye_clean;
+    vt[6]  = (void *)ye_behavior;
+    vt[9]  = (void *)ye_render;
+    vt[16] = (void *)ye_d1;
+    vt[17] = (void *)ye_d0;
+}
+
+#include "YoshiEgg.h"
+extern "C" {
+int _ZN8YoshiEgg16CleanupResourcesEv(void *self)
+{ return ((YoshiEgg *)self)->YoshiEgg::CleanupResources(); }
+int _ZN8YoshiEgg8BehaviorEv(void *self)
+{ return ((YoshiEgg *)self)->YoshiEgg::Behavior(); }
+}

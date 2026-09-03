@@ -2108,3 +2108,6 @@ func_ov002_020f92e4  REAL_DECOMP  SEATOV002.md#adjudicated  slot 18 OnYoshiTryEa
 # id 291, ov002, Bubble (daObjAbuku_c) -- SEATED by this lane.
 func_ov002_020b3518  REAL_DECOMP  SEATOV002.md#adjudicated  InitResources 0x50: MovingCylinderClsn::Init(+0xd4, this, 0x96000, 0x96000, 0x100002, 0), +0x10e = 0x12c, return 1; match.py strict-reloc byte match
 func_ov002_020b33dc  REAL_DECOMP  SEATOV002.md#adjudicated  Behavior 0x13c: +0x10c += 0x400, sin-table bob, ApproachLinear(+0x108, 0x6000, 0x332), UpdatePos(0), Heal(0x300) on the id at +0xf8, DecIfAbove0(+0x10e) / raycast pop, particle 1, cylinder clear+update; match.py strict-reloc byte match
+#
+# id 9, ov002, YoshiEgg (daYegg_c) -- SEATED by this lane.
+func_ov002_020ed0d4  REAL_DECOMP  SEATOV002.md#adjudicated  state 0 main 0x4dc (dsd misnamed it daWarpkun_c::Kill): reads the laying player at +0x38c, copies his velocity, aims the egg by the +0x3ea..3ee angles through Matrix4x3_FromRotationZXYExt, holds it in the mouth while +0x41e counts down, hands off to the thrown state; match.py strict-reloc byte match
