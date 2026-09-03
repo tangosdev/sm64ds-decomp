@@ -4,29 +4,9 @@
     .ctor       start:0x02113410 end:0x0211342c kind:rodata align:4
     .data       start:0x02113440 end:0x02114960 kind:data align:32
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
-src/_ZN13PoleBillboardD1Ev.cpp:
+src/actors/d_a_obj_bk_billboard.cpp:
     complete
-    .text start:0x021111a0 end:0x021111d0
-
-src/_ZN13PoleBillboardD0Ev.cpp:
-    complete
-    .text start:0x021111d0 end:0x02111214
-
-src/func_ov015_02111214.c:
-    complete
-    .text start:0x02111214 end:0x02111254
-
-src/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111254 end:0x02111278
-
-src/_ZN13PoleBillboard6RenderEv.cpp:
-    complete
-    .text start:0x02111278 end:0x021112a0
-
-src/_ZN13PoleBillboard13InitResourcesEv.cpp:
-    complete
-    .text start:0x021112a0 end:0x021112dc
+    .text start:0x021111a0 end:0x021112dc
 
 src/daObjBkBillboard_c_classInit.c:
     complete

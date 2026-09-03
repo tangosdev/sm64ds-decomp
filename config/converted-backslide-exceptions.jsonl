@@ -197,3 +197,7 @@
 {"path": "src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}
 {"path": "src/_ZN18RotatingPlatformRrD0Ev.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}
 {"path": "src/_ZN18RotatingPlatformRrD1Ev.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}
+{"path": "src/_ZN13PoleBillboard13InitResourcesEv.cpp", "reason": "ov015/daObjBkBillboard_c: six per-function sources promoted into src/actors/d_a_obj_bk_billboard.cpp (a move into a CONVERTED file, not a removal)"}
+{"path": "src/_ZN13PoleBillboard6RenderEv.cpp", "reason": "ov015/daObjBkBillboard_c: six per-function sources promoted into src/actors/d_a_obj_bk_billboard.cpp (a move into a CONVERTED file, not a removal)"}
+{"path": "src/_ZN13PoleBillboardD0Ev.cpp", "reason": "ov015/daObjBkBillboard_c: six per-function sources promoted into src/actors/d_a_obj_bk_billboard.cpp (a move into a CONVERTED file, not a removal)"}
+{"path": "src/_ZN13PoleBillboardD1Ev.cpp", "reason": "ov015/daObjBkBillboard_c: six per-function sources promoted into src/actors/d_a_obj_bk_billboard.cpp (a move into a CONVERTED file, not a removal)"}

@@ -9,7 +9,7 @@ This lane independently audits three rows ranked `high` by
 | Initializer | Candidate owner | Ownership verdict | Regeneration readiness |
 | --- | --- | --- | --- |
 | `__sinit_ov009_02112458` | `ov009/Bird` | **CONFIRMED** | Not promotion-ready: resource-family symbol names, four original PMF member names, and unlicensed vtable/RTTI output remain |
-| `__sinit_ov015_02112f9c` | `ov015/PoleBillboard` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
+| `__sinit_ov015_02112f9c` | `ov015/daObjBkBillboard_c` | **CONFIRMED** | Structurally straightforward, but no shadow manifest exists and vtable/RTTI/data ranges are unlicensed |
 | `__sinit_ov002_02101064` | `ov002/daObjMarioCap_c` | **CONFIRMED** | Not promotion-ready: `InitResources` is not a matching source, the PMF member names remain unknown, and ov002 cannot be ordinal-partitioned |
 
 All three committed initializer transcriptions pass strict matching and linked
@@ -41,7 +41,7 @@ The audit ran in the wired worktree
 under `mwccarm 2004/b56`.
 
 `CLAIMS.md` has only historical `done`/`released` entries relevant to Bird,
-PoleBillboard, and daObjMarioCap_c; no active span conflicts with this read-only
+daObjBkBillboard_c, and daObjMarioCap_c; no active span conflicts with this read-only
 audit. A claims key is absent, so this experiment could not be announced through
 the claims service. It did not claim or alter any production span.
 
@@ -102,7 +102,7 @@ still refused for its existing compiler-only D2/helper outputs and vtable/RTTI
 side effects; one legacy entry also lacks `complete` despite its carried asm hatch
 matching in the shadow build.
 
-## 2. `ov015/PoleBillboard`
+## 2. `ov015/daObjBkBillboard_c`
 
 ### Ownership edges
 
@@ -112,7 +112,7 @@ unmapped or external consumer:
 
 | Ownership global | Size/type | Non-initializer consumers |
 | --- | --- | --- |
-| `data_ov015_02114960` | 8-byte model resource handle | `PoleBillboard::InitResources`, `PoleBillboard::CleanupResources` |
+| `data_ov015_02114960` | 8-byte model resource handle | `daObjBkBillboard_c::InitResources`, `daObjBkBillboard_c::CleanupResources` |
 
 The initializer constructs asset 1416 with `func_02017acc` and registers
 `func_02017ab4` through node `data_ov015_02114968`. The exact ROM BSS interval
@@ -123,7 +123,7 @@ The initializer constructs asset 1416 with `func_02017acc` and registers
 This is initializer ordinal 0 of 7. `.p__sinit_ov015_02112f9c` at
 `0x02113410` points to it; the next word points to
 `__sinit_ov015_02112fdc`, independently owned by KnockDownPlank. The parallel
-TU config attributes PoleBillboard's `.init` (`0x02112f9c..0x02112fdc`),
+TU config attributes daObjBkBillboard_c's `.init` (`0x02112f9c..0x02112fdc`),
 `.ctor` word, and exact BSS interval to its first text TU.
 
 With `SINIT_OWNERSHIP_PROBE`, `notes/sinit-probes/pole_billboard.cpp`
@@ -257,7 +257,7 @@ The probes were compiled with pinned production C++ flags plus
 compiled transcription with `tools.match.extract_func` produced:
 
 ```text
-PoleBillboard  size 64/64     raw_equal=True  reloc_topology_equal=True  5 relocs
+daObjBkBillboard_c  size 64/64     raw_equal=True  reloc_topology_equal=True  5 relocs
 Bird           size 204/204   raw_equal=True  reloc_topology_equal=True 15 relocs
 MarioCap       size 1044/1044 raw_equal=True  reloc_topology_equal=True 80 relocs
 ```
@@ -265,7 +265,7 @@ MarioCap       size 1044/1044 raw_equal=True  reloc_topology_equal=True 80 reloc
 Additional scoped gates:
 
 - `python tools/tu_config.py --module ov009 --module ov015 --module ov002 ... --report`:
-  Bird and PoleBillboard receive ordered full-section intervals; ov002 correctly
+  Bird and daObjBkBillboard_c receive ordered full-section intervals; ov002 correctly
   refuses the invalid 26-to-71 ordinal partition.
 - `python tools/tubuild.py verify ov009/Bird`: 13/13 MATCH, objisolate clean,
   relocation destinations clean; promotion refused for pre-existing unlicensed

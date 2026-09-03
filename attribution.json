@@ -1514,6 +1514,18 @@
     "src/actors/d_a_obj_fl_gura.cpp#_ZN14daObjFl_Gura_cD0Ev": "tangosdev",
     "src/actors/d_a_obj_fl_gura.cpp#_ZN14daObjFl_Gura_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_fl_gura.cpp#_ZN14daObjFl_Gura_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_fl_gura.cpp#daObjFl_Gura_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_fl_gura.cpp#daObjFl_Gura_c_classInit": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#_ZN18daObjBkBillboard_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#_ZN18daObjBkBillboard_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#func_ov015_02111214": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#_ZN18daObjBkBillboard_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#_ZN18daObjBkBillboard_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjBkBillboard_c.cpp#_ZN18daObjBkBillboard_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#func_ov015_02111214": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c13InitResourcesEv": "github-actions[bot]"
   }
 }

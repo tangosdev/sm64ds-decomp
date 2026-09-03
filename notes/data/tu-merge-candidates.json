@@ -7346,17 +7346,17 @@
    "start": "0x21111a0",
    "end": "0x2111314",
    "classes": [
-    "PoleBillboard"
+    "daObjBkBillboard_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN13PoleBillboardD1Ev.cpp",
-    "src/_ZN13PoleBillboardD0Ev.c",
+    "src/_ZN18daObjBkBillboard_cD1Ev.cpp",
+    "src/_ZN18daObjBkBillboard_cD0Ev.c",
     "src/func_ov015_02111214.c",
-    "src/_ZN13PoleBillboard16CleanupResourcesEv.cpp",
-    "src/_ZN13PoleBillboard6RenderEv.cpp",
-    "src/_ZN13PoleBillboard13InitResourcesEv.cpp",
+    "src/_ZN18daObjBkBillboard_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjBkBillboard_c6RenderEv.cpp",
+    "src/_ZN18daObjBkBillboard_c13InitResourcesEv.cpp",
     "src/daObjBkBillboard_c_classInit.c"
    ],
    "ext_mix": {

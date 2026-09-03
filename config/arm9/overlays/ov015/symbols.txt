@@ -1,9 +1,9 @@
-_ZN13PoleBillboardD1Ev kind:function(arm,size=0x30) addr:0x021111a0
-_ZN13PoleBillboardD0Ev kind:function(arm,size=0x44) addr:0x021111d0
+_ZN18daObjBkBillboard_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN18daObjBkBillboard_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov015_02111214 kind:function(arm,size=0x40) addr:0x02111214
-_ZN13PoleBillboard16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
-_ZN13PoleBillboard6RenderEv kind:function(arm,size=0x28) addr:0x02111278
-_ZN13PoleBillboard13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
+_ZN18daObjBkBillboard_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN18daObjBkBillboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN18daObjBkBillboard_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
 daObjBkBillboard_c_classInit kind:function(arm,size=0x38) addr:0x021112dc
 _ZN14KnockDownPlankD1Ev kind:function(arm,size=0x4c) addr:0x02111314
 _ZN14KnockDownPlankD0Ev kind:function(arm,size=0x60) addr:0x02111360
@@ -199,7 +199,7 @@ _ZTI18daObjBkBillboard_c kind:data(any) addr:0x02114318
 _ZTS18daObjBkBillboard_c kind:data(any) addr:0x02114324
 g_profile_BK_BILLBOARD kind:data(any) addr:0x0211433c ambiguous
 data_ov015_02114350 kind:data(any) addr:0x02114350 ambiguous
-_ZTV13PoleBillboard kind:data(any) addr:0x02114360
+_ZTV18daObjBkBillboard_c kind:data(any) addr:0x02114360
 data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
 _ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
 _ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
