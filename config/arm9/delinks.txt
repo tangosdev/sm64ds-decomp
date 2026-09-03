@@ -3759,6 +3759,7 @@ src/_ZN5Stage7VE_InitEv.cpp:
     .text start:0x02023a80 end:0x02023be0
 
 src/_ZN5Stage20RenderBouncingArrowsEv.cpp:
+    complete
     .text start:0x02023be0 end:0x02023db8
 
 src/_ZN5Stage9LC_RenderEv.cpp:
