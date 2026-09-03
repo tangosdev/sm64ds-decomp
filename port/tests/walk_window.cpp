@@ -650,6 +650,18 @@ extern unsigned char data_ov002_02110124[];  /* _ZN6Player11ST_DEAD_PITE */
 extern int data_ov002_02110a48[5];           /* Tree's five cylinder lists */
 extern int data_ov002_0211073c[];            /* 4 rows of {fn-or-vtoff, v} */
 int _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
+/* SM64DS_FORCE_STATE=squish. NOT a hand-written ChangeState: this is the ROM's
+   own crush entry point, Player::Unk_020c6a10 (ov002 0x020c6a10), the exact
+   function the crushers call -- ov073 0x02120284 with 1, ov074 0x02120d74 with
+   2, ov078 0x021240a0 with 1 (src/func_ov073_021200e0.c:73,
+   src/func_ov074_02120d74.c:73 and src/func_ov078_021240a0.c:107). It runs the
+   ROM's own three gates (mClsnFlags & 1, i.e. on the ground; not already in
+   ST_SQUISH; func_ov002_020d82f0), then sets mScaleY = 0x100 and holds
+   ST_SQUISH for 30 frames. A refusal returns 0 and is logged, so "the probe
+   did nothing" cannot pass for "the state did nothing". C-linkage face is
+   hal/bob_enemy_header_faces.cpp:48. */
+extern "C" int _ZN6Player12Unk_020c6a10Ej(void *self, unsigned a);
+int func_ov002_020d82f0(void *c);   /* its second gate, logged on a refusal */
 #ifdef PORT_ROM_CLEAN
 /* ROM-CLEAN: fill the zeroed ROM tables from build/assets/romdata.bin before
    anything reads them. Loud FATAL if the file is missing/corrupt. Runs ahead of
@@ -9570,6 +9582,50 @@ int main(void)
                 fprintf(stderr, "[tree] drop at frame %d -> (%d,%d,%d)\n",
                         tf, tx, ty, tz);
             }
+        }
+        /* SM64DS_FORCE_STATE=squish[,frame] -- the CRUSH probe. The only
+           writers of Player mScale are the two crush states, and the only
+           way into one in normal play is a crusher actor landing on the
+           player. Rather than script a level with a Whomp in it, call the
+           ROM's own entry the way those actors do. Default frame 60: late
+           enough that the entrance sequence has handed him to St_Walk and he
+           is standing on the ground, which is the first gate. */
+        {
+            static int sq = -1, sqf = 60;
+            if (sq < 0) {
+                const char *e = getenv("SM64DS_FORCE_STATE");
+                sq = 0;
+                if (e && !strncmp(e, "squish", 6)) {
+                    sq = 1;
+                    if (e[6] == ',') sqf = atoi(e + 7);
+                }
+            }
+            static int sq_done = 0;
+            if (sq && !sq_done && frame >= sqf) {
+                /* RETRY EVERY FRAME UNTIL IT TAKES. Unk_020c6a10's first
+                   gate is mClsnFlags & 1 (Player.h +0x6e9, the ground bit),
+                   and whether a given frame has it set depends on where the
+                   walk probe happens to be in its stride. Retrying is how a
+                   crusher behaves anyway -- it tests the player every frame
+                   it is in contact -- and it keeps the probe from measuring
+                   a refusal it could have avoided by asking one frame
+                   later. */
+                int r = _ZN6Player12Unk_020c6a10Ej(player, 1);
+                if (r || frame == sqf || frame == sqf + 30)
+                    fprintf(stderr, "[squish] frame %d Unk_020c6a10(1) -> %d"
+                            "  clsn=%02x g2=%d scale=(%d,%d,%d) state=%p\n",
+                            frame, r, *(unsigned char *)(c + 0x6e9),
+                            func_ov002_020d82f0(c),
+                            *(int *)(c + 0x80), *(int *)(c + 0x84),
+                            *(int *)(c + 0x88), *(void **)(c + 0x370));
+                if (r) sq_done = frame;
+            }
+            if (sq && sq_done && frame >= sq_done && frame <= sq_done + 45)
+                fprintf(stderr, "[squish] f%03d scaleY=%d state=%p step=%u"
+                        " timer=%u\n", frame, *(int *)(c + 0x84),
+                        *(void **)(c + 0x370),
+                        *(unsigned char *)(c + 0x6e3),
+                        *(unsigned short *)(c + 0x6a6));
         }
         /* SM64DS_FORCE_STATE=walljump -- the walljump crash probe.
            Tango walljumped in the live game and the process died with no
