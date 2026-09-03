@@ -10,13 +10,10 @@ struct PathPtr {
     void FromID(u32 id);
     void GetNode(Vector3 &out, u32 idx) const;
 };
-struct BCA_File;
-struct BlendModelAnim {
-    int SetAnim(BCA_File &f, int a, int b, int spd, unsigned short t);
-};
 
 extern "C" {
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *anim, void *file, int a, int b, int spd, unsigned short t);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s16 Vec3_VertAngle(const void *a, const void *b);
 extern int Vec3_Dist(const void *a, const void *b);
@@ -30,8 +27,8 @@ extern int func_ov062_0211b3ac(void *c);
 extern void func_ov062_0211c658(void *c, void *p);
 
 extern s8 data_0209f2f8;
-extern BCA_File *data_ov062_0211e104[];
-extern BCA_File *data_ov062_0211e114[];
+extern void *data_ov062_0211e104[];
+extern void *data_ov062_0211e114[];
 extern int data_ov062_0211e15c;
 extern int data_ov062_0211e18c;
 }
@@ -116,7 +113,7 @@ extern "C" int func_ov062_0211bd10(char *self)
 
     if (turn < 0x300) {
         if (*(int *)(self + 0x43c) == 1) {
-            ((BlendModelAnim *)(self + 0x334))->SetAnim(*data_ov062_0211e104[1], 4, 0, 0x1000, 0);
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(self + 0x334, data_ov062_0211e104[1], 4, 0, 0x1000, 0);
             if (*(u8 *)(self + 0x448) == 2 || (u8)(s8)(data_0209f2f8 - 0x18) <= 1) {
                 (*(int *)(self + 0x440))--;
                 if (*(int *)(self + 0x440) <= 0)
@@ -126,7 +123,7 @@ extern "C" int func_ov062_0211bd10(char *self)
         }
     } else {
         if (*(int *)(self + 0x43c) == 0) {
-            ((BlendModelAnim *)(self + 0x334))->SetAnim(*data_ov062_0211e114[1], 4, 0, 0x1000, 0);
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(self + 0x334, data_ov062_0211e114[1], 4, 0, 0x1000, 0);
             (*(int *)(self + 0x43c))++;
         }
     }
