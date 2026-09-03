@@ -101,78 +101,6 @@ ladder3b.log and ladder3c.log of the worktree; the per-window logs under
 build/rollback_proof/<rung>/p<k>/run.log. The table in section 4.1 is from
 the final binary (the tip named at the top of section 7).
 
-## 5. The 16-player wall, and why it is not this lane's
-
-The wide VS session at 16 players does not survive its second frame on four
-of its sixteen consoles, and it does not survive it in LOCKSTEP either. The
-control (build/tmp/ctrl16.py, NetMode lockstep, VS map 0, 16 windows, no
-rollback code reachable) faults on slots 8, 12, 14 and 15 at frame 2, rc
-0xC0000005, every time:
-
-    FAULT code c0000005 at +0x000428f0 accessing ffffe11a
-      walker node 3002C2A4 actor 3002C26C id 0x14f
-
-id 0x14f is 335, the MINIMAP. The frame is +0x428f0 = OAM::Render, called
-from Minimap::Render (src/_ZN7Minimap6RenderEv.cpp), and the read that faults
-is `unk70[idx]` / `MM_VS_PLAYER_ICONS[pl->unk8 + idx * 4]` with idx =
-data_0209f250, this console's player number: the ROM's minimap keeps
-four-entry position and icon tables (the DS never had more than four
-players) and a player number of 8 or more indexes past them into whatever
-sits there. Slots 4 to 7 happen to read something harmless. That is a
-src/ file this lane may not touch, and the fix (a wide-session Minimap seat
-in hal/, or the wide lane clamping the minimap's own-player index) belongs to
-the lane that seated 16 players.
-
-So the 16-player restore+retick and cost gates could not be run on a whole
-session. The ladder's --wide knob runs DET and COST at 8 players, the widest
-session that survives, and section 4.1 carries those numbers; the 16-player
-attempt is kept in build/tmp/ladder3c.log for the record (the session
-collapses at frame 2 on the four faulting consoles, and every surviving
-console's numbers are of a session that fell apart). The rollback code path
-does not scale with the player count except in the re-sim (a wide frame
-ticks more Players), so the 8-player p95 is the number to plan against until
-the minimap is fixed and the 16-player rung can be re-run as it stands.
-
-## 6. The Render-side audit, done by measurement
-
-The spike's tick-only re-sim rests on "no Render body writes state a tick
-reads". The first cut of that audit was by reading, and the DET rung showed
-it was short: with only the four actors it named in the replay walk, a
-4-player restore+retick left one arena byte different on every console, at
-Minimap +0x22e (the star-marker blink counter Minimap::Render advances), and
-once that was in the walk, 14 to 20 bytes of the UnchainedChomp's chain-link
-matrices (ModelAnim::Render through its five +0x370 links advances them, and
-its Behavior reads them back). Both were found by bisection, not by reading:
-SM64DS_ROLLBACK_REPLAY_ALSO="id,id" adds actors to the replay walk without a
-rebuild, and DET at 4 players with the map's census (POWER_STAR, STAR_MARKER,
-PLAYER, WATERFALL_MIST, CAP, TREE, COIN, CAMERA, HUD, MINIMAP,
-UNCHAINED_CHOMP, AMBIENT_SOUND) split into groups named the chomp in two
-rounds. The replay walk now runs 329, 330, 271, 264, 335 and 337. Two other
-findings on the way: the walk's actor-id read was unmasked (aliveState sits
-in the byte above actorID, so 0x1014f never equalled 335 and the first cut
-ran none of its four), and the rig's injected key toggled on a publish
-counter of its own, so a replayed frame staged a different local record than
-the straight run had; it is keyed on the seam's round count now, which rides
-in the snapshot.
-
-The rule this leaves for a new map: run DET on it. An actor whose Render
-advances an animation or a counter its tick reads shows up as arena bytes
-with its id named, and goes on the list. SM64DS_ROLLBACK_ACTOR_RENDER=1 (the
-conservative re-sim, every Render body kept) is the fallback that needs no
-list and was also measured byte-identical in the arena (build/tmp/l_det_cons.log).
-
-What the DET verdict counts. The arena and the hardware stores must come
-back with 0 bytes different. The .dsstate section has one region a restore
-does not put back: the hosted ARM7 sound command queue (data_020a6760's node
-pool, the data_020a64a8 batch ring, the data_020a6484.. cursors, the
-data_020a50ec sdat bss), which the restore re-seeds the way lk6 does and the
-muted replay re-fills; the spike documented it and hal/rollback.cpp names
-those bytes (in_sound_queue) so the verdict reads IDENTICAL-EXCEPT-SOUNDQUEUE
-rather than failing on audio. Any .dsstate byte outside that queue is a
-divergence and fails the rung. With nothing skipped at all
-(SM64DS_ROLLBACK_FULL_RESIM=1, build/tmp/l_det_full.log) every window came
-back IDENTICAL in all three regions, sound queue included.
-
 ### 4.1 Verdicts and numbers on the final binary
 
 All rows: this desk, every window of a rung on the same CPU (so the per-frame
@@ -279,6 +207,78 @@ romblob_verify in a stale build/port-kit (13 ov002/ov046 symbols from the
 merged cons tree not in the kit's baked table); a fresh kit configure cleared
 it and it is not this lane's code. No level was touched by this lane; the
 battery's level selftests run every mounted level under SM64DS_FAULTS_FATAL=1.
+
+## 5. The 16-player wall, and why it is not this lane's
+
+The wide VS session at 16 players does not survive its second frame on four
+of its sixteen consoles, and it does not survive it in LOCKSTEP either. The
+control (build/tmp/ctrl16.py, NetMode lockstep, VS map 0, 16 windows, no
+rollback code reachable) faults on slots 8, 12, 14 and 15 at frame 2, rc
+0xC0000005, every time:
+
+    FAULT code c0000005 at +0x000428f0 accessing ffffe11a
+      walker node 3002C2A4 actor 3002C26C id 0x14f
+
+id 0x14f is 335, the MINIMAP. The frame is +0x428f0 = OAM::Render, called
+from Minimap::Render (src/_ZN7Minimap6RenderEv.cpp), and the read that faults
+is `unk70[idx]` / `MM_VS_PLAYER_ICONS[pl->unk8 + idx * 4]` with idx =
+data_0209f250, this console's player number: the ROM's minimap keeps
+four-entry position and icon tables (the DS never had more than four
+players) and a player number of 8 or more indexes past them into whatever
+sits there. Slots 4 to 7 happen to read something harmless. That is a
+src/ file this lane may not touch, and the fix (a wide-session Minimap seat
+in hal/, or the wide lane clamping the minimap's own-player index) belongs to
+the lane that seated 16 players.
+
+So the 16-player restore+retick and cost gates could not be run on a whole
+session. The ladder's --wide knob runs DET and COST at 8 players, the widest
+session that survives, and section 4.1 carries those numbers; the 16-player
+attempt is kept in build/tmp/ladder3c.log for the record (the session
+collapses at frame 2 on the four faulting consoles, and every surviving
+console's numbers are of a session that fell apart). The rollback code path
+does not scale with the player count except in the re-sim (a wide frame
+ticks more Players), so the 8-player p95 is the number to plan against until
+the minimap is fixed and the 16-player rung can be re-run as it stands.
+
+## 6. The Render-side audit, done by measurement
+
+The spike's tick-only re-sim rests on "no Render body writes state a tick
+reads". The first cut of that audit was by reading, and the DET rung showed
+it was short: with only the four actors it named in the replay walk, a
+4-player restore+retick left one arena byte different on every console, at
+Minimap +0x22e (the star-marker blink counter Minimap::Render advances), and
+once that was in the walk, 14 to 20 bytes of the UnchainedChomp's chain-link
+matrices (ModelAnim::Render through its five +0x370 links advances them, and
+its Behavior reads them back). Both were found by bisection, not by reading:
+SM64DS_ROLLBACK_REPLAY_ALSO="id,id" adds actors to the replay walk without a
+rebuild, and DET at 4 players with the map's census (POWER_STAR, STAR_MARKER,
+PLAYER, WATERFALL_MIST, CAP, TREE, COIN, CAMERA, HUD, MINIMAP,
+UNCHAINED_CHOMP, AMBIENT_SOUND) split into groups named the chomp in two
+rounds. The replay walk now runs 329, 330, 271, 264, 335 and 337. Two other
+findings on the way: the walk's actor-id read was unmasked (aliveState sits
+in the byte above actorID, so 0x1014f never equalled 335 and the first cut
+ran none of its four), and the rig's injected key toggled on a publish
+counter of its own, so a replayed frame staged a different local record than
+the straight run had; it is keyed on the seam's round count now, which rides
+in the snapshot.
+
+The rule this leaves for a new map: run DET on it. An actor whose Render
+advances an animation or a counter its tick reads shows up as arena bytes
+with its id named, and goes on the list. SM64DS_ROLLBACK_ACTOR_RENDER=1 (the
+conservative re-sim, every Render body kept) is the fallback that needs no
+list and was also measured byte-identical in the arena (build/tmp/l_det_cons.log).
+
+What the DET verdict counts. The arena and the hardware stores must come
+back with 0 bytes different. The .dsstate section has one region a restore
+does not put back: the hosted ARM7 sound command queue (data_020a6760's node
+pool, the data_020a64a8 batch ring, the data_020a6484.. cursors, the
+data_020a50ec sdat bss), which the restore re-seeds the way lk6 does and the
+muted replay re-fills; the spike documented it and hal/rollback.cpp names
+those bytes (in_sound_queue) so the verdict reads IDENTICAL-EXCEPT-SOUNDQUEUE
+rather than failing on audio. Any .dsstate byte outside that queue is a
+divergence and fails the rung. With nothing skipped at all
+(SM64DS_ROLLBACK_FULL_RESIM=1, build/tmp/l_det_full.log) every window came
+back IDENTICAL in all three regions, sound queue included.
 
 ## 7. What changed on the way, and what is not closed
 
