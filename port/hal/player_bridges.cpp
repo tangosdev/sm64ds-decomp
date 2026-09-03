@@ -453,8 +453,92 @@ extern signed char data_0209f2f8;
    -1 = not drawn this frame. Indexed by the player slot (Player +0x6d8). */
 extern "C" signed char g_party_render_ghost[16] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+/* TEMP faithful eat/egg-lay reproduction driver (SM64DS_YOSHI_EGG_REPRO=<frame>).
+   The headless harness cannot turn Yoshi to face a wandering enemy, so a natural
+   tongue-catch is not scriptable. This forces the SAME grab the tongue-collision
+   handler performs (func_ov002_020d6998 sets mObjInMouth and the enemy's grabbed
+   bit), then hands control to the REAL St_Swallow egg-lay path via ChangeState.
+   Everything downstream -- Player_DisableInteraction, anim 0x70, FinishedAnim,
+   YoshiEgg_Spawn -- runs unchanged, so the freeze it exposes is the game's, not
+   the driver's. Inert unless the env is set. */
+extern "C" {
+extern void *port_first_live_actor_of_class(unsigned id);   /* hal/actor_registry.cpp */
+extern unsigned port_unique_id_of_actor(void *actor);       /* hal/actor_registry.cpp */
+}
 extern "C" void port_adventure_probe(int frame)
 {
+    {
+        /* NATURAL egg-lay driver: from SM64DS_YOSHI_EGG_REPRO for the next
+           SM64DS_YOSHI_EGG_WIN frames, keep the tongue's target id (Player+0x338)
+           pointed at the first live enemy of class SM64DS_YOSHI_EGG_CLASS, so a
+           scripted B flick (SM64DS_PAD_TEST) makes the REAL func_ov002_020d6998
+           grab it and the whole St_YoshiPower->swallow->St_Swallow machine runs
+           with the real per-frame Main dispatch. */
+        static int rf = -2;
+        static unsigned cls = 201u;
+        static int win = 60;
+        static char *pp = 0;
+        static unsigned uid = 0xffffffffu;
+        if (rf == -2) {
+            const char *e = std::getenv("SM64DS_YOSHI_EGG_REPRO");
+            rf = e ? std::atoi(e) : -1;
+            const char *c = std::getenv("SM64DS_YOSHI_EGG_CLASS");
+            if (c) cls = (unsigned)std::strtoul(c, 0, 0);
+            const char *w = std::getenv("SM64DS_YOSHI_EGG_WIN");
+            if (w) win = std::atoi(w);
+        }
+        if (rf >= 0 && frame >= rf && frame < rf + win) {
+            const int me = (int)data_0209f250;
+            pp = (char *)((me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0);
+            char *gg = (char *)port_first_live_actor_of_class(cls);
+            if (frame == rf) {
+                uid = gg ? port_unique_id_of_actor(gg) : 0xffffffffu;
+                std::fprintf(stderr, "[eggrepro] arm f%d p=%p enemy=%p uid=%u "
+                             "(class %u)\n", frame, (void *)pp, (void *)gg, uid, cls);
+                std::fflush(stderr);
+            }
+            if (pp && gg && uid != 0xffffffffu) {
+                /* only seed while Yoshi is not already holding something, so the
+                   tongue's own grab check runs unshortcut */
+                if (*(void **)(pp + 0x360) == 0)
+                    *(unsigned *)(pp + 0x338) = uid;   /* tongue target id */
+            }
+        }
+        /* State dump while (likely) frozen, to see which eat substate is stuck. */
+        if (rf >= 0 && pp && frame >= rf && frame < rf + win) {
+            static int last6e3 = -1, laststuck = 0;
+            char *g2 = (char *)port_first_live_actor_of_class(cls);
+            void *held = *(void **)(pp + 0x360);
+            int step = *(unsigned char *)(pp + 0x6e3);
+            int t = *(unsigned short *)(pp + 0x6a4);
+            int f714 = *(unsigned char *)(pp + 0x714);
+            unsigned s6ce = *(unsigned short *)(pp + 0x6ce);
+            unsigned eb0 = held ? *(unsigned *)((char *)held + 0xb0) : 0u;
+            int noctl = *(unsigned char *)(pp + 0x709);
+            if (step != last6e3 || (noctl && !laststuck) || (frame % 15) == 0) {
+                last6e3 = step; laststuck = noctl;
+                char *bm = (char *)port::player::body_model_anim(pp);   /* GetBodyModelID model */
+                char *m160 = *(char **)(pp + 0x160);                    /* the p+0x160 ModelAnim */
+                char *ba = bm ? bm + 0x50 : 0;
+                char *a160 = m160 ? m160 + 0x50 : 0;
+                std::fprintf(stderr, "[eggstate] f%d step=%d f714=%d held=%p "
+                             "enemyb0=0x%x noctl=%d animId=%u | bodyModel=%p "
+                             "num=0x%x cur=%d spd=%d | m160=%p num=0x%x cur=%d spd=%d "
+                             "same=%d\n",
+                             frame, step, f714, held, eb0, noctl,
+                             (unsigned)port::player::anim_id(pp),
+                             (void *)bm,
+                             ba ? *(unsigned *)(ba + 4) : 0u,
+                             ba ? *(int *)(ba + 8) : -1, ba ? *(int *)(ba + 0xc) : -1,
+                             (void *)m160,
+                             a160 ? *(unsigned *)(a160 + 4) : 0u,
+                             a160 ? *(int *)(a160 + 8) : -1, a160 ? *(int *)(a160 + 0xc) : -1,
+                             (bm == m160));
+                std::fflush(stderr);
+            }
+        }
+    }
     /* DIAG (SM64DS_ADVENTURE_DIAG): identity + per-slot positions, every 60
        frames, no injection. For the live two-window bug hunt: it shows each
        instance's local index, which slot each live body is, its position, and

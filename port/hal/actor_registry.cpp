@@ -566,6 +566,24 @@ static void *pp_first_of_class(unsigned id)
     return 0;
 }
 
+/* TEMP repro helper (SM64DS_YOSHI_EGG_REPRO in hal/player_bridges.cpp): the
+   first live actor of a class, so the egg-lay driver targets a real, currently
+   constructed enemy rather than a stale boot-time pointer. Inert otherwise. */
+extern "C" void *port_first_live_actor_of_class(unsigned id)
+{
+    return pp_first_of_class(id);
+}
+
+/* TEMP repro helper: the enemy's unique Actor id, so the egg-lay driver can set
+   the tongue's target (Player+0x338) and let the REAL grab->swallow run. */
+extern "C" unsigned port_unique_id_of_actor(void *actor)
+{
+    for (unsigned u = 0; u < 65536u; ++u)
+        if (_ZN5Actor10FindWithIDEj(u) == actor)
+            return u;
+    return 0xffffffffu;
+}
+
 static unsigned pp_unique_id_of(void *actor)
 {
     for (unsigned u = 0; u < 65536u; ++u)
