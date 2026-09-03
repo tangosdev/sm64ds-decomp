@@ -1421,6 +1421,14 @@
     "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_tt_water.cpp#daObjTtWater_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_tt_water.cpp#daObjTtWater_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_r_flag.cpp#func_ov062_0211afbc": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_r_flag.cpp#daRFlag_c_classInit": "github-actions[bot]"
   }
 }

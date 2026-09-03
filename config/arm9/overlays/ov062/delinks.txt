@@ -376,37 +376,10 @@ src/KoopaTheQuick_Spawn.c:
     complete
     .text start:0x0211aee0 end:0x0211af38
 
-src/_ZN9daRFlag_cD1Ev.cpp:
+src/actors/d_a_r_flag.cpp:
     complete
-    .text start:0x0211af38 end:0x0211af70
-
-src/_ZN9daRFlag_cD0Ev.cpp:
-    complete
-    .text start:0x0211af70 end:0x0211afbc
-
-src/func_ov062_0211afbc.c:
-    complete
-    .text start:0x0211afbc end:0x0211b000
-
-src/_ZN9daRFlag_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211b000 end:0x0211b030
-
-src/_ZN9daRFlag_c6RenderEv.cpp:
-    complete
-    .text start:0x0211b030 end:0x0211b05c
-
-src/_ZN9daRFlag_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211b05c end:0x0211b168
-
-src/_ZN9daRFlag_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211b168 end:0x0211b208
-
-src/daRFlag_c_classInit.c:
-    complete
-    .text start:0x0211b208 end:0x0211b248
+    .text start:0x0211af38 end:0x0211b248
+    .data start:0x0211dc18 end:0x0211dcd0
 
 src/_ZN6KleptoD1Ev.cpp:
     complete

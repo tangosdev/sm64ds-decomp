@@ -42,6 +42,7 @@
 #include "decl_dCcAc_c.h"
 #include "decl_common.h"
 #include "daRFlag_c.h"
+#include "SharedFilePtr.h"
 #include "decl_Timer.h"
 #include "decl_ActorBase.h"
 
@@ -56,15 +57,6 @@
  * D0 before D1 and left six unlicensed symbols behind. */
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
-
-/* shadow struct 'Base' */
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-
-/* shadow struct 'Derived' */
-struct Derived { char pad[0x108]; Base base; };
-
-/* shadow struct 'SharedFilePtr' */
-struct SharedFilePtr;
 
 /* shadow struct 'BMD_File' */
 struct BMD_File;
@@ -81,9 +73,6 @@ struct dCcAc_c {
 extern "C" {
 extern void *data_020a0eac;
 extern void Matrix4x3_FromRotationY(void *, int);
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov062_0211e0d4[];
-extern int data_ov062_0211e0dc[];
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void _ZN9Animation7AdvanceEv(void *a);
@@ -93,6 +82,11 @@ extern char data_0209d4c8[];
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File* f, int a, Fix12i b, unsigned int c);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 }
+
+/* The two shared files this class loads in InitResources and releases in
+ * CleanupResources; they live in ov062 .data, outside this TU's claimed run. */
+extern SharedFilePtr data_ov062_0211e0d4;
+extern SharedFilePtr data_ov062_0211e0dc;
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- daRFlag_c_classInit, 0x0211b208, size 0x40 */
@@ -154,8 +148,8 @@ extern "C" RFlagSpawnInfo g_profile_RACE_FLAG = {
 int daRFlag_c::InitResources()
 {
     ((ModelBase*)((char*)&mModelAnim))->SetFile(
-        (BMD_File*)Model::LoadFile(*(SharedFilePtr*)data_ov062_0211e0d4), 1, -1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)((char*)&mModelAnim), (BCA_File*)Animation::LoadFile(*(SharedFilePtr*)data_ov062_0211e0dc), 0, 0x1000, 0);
+        (BMD_File*)Model::LoadFile(data_ov062_0211e0d4), 1, -1);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)((char*)&mModelAnim), (BCA_File*)Animation::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((dCcAc_c*)((char*)&mdCcAc_c), (dActor_c*)((char*)this), 0x35555, 0x294000, 0x280000c, 0);
     mHasTouchedFlag = 0xff;
     mVictoryTimer = 0;
@@ -215,24 +209,27 @@ int daRFlag_c::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int daRFlag_c::Render()
 {
- Base *b = &((Derived *)this)->base; b->m(0); return 1;
+    mModelAnim.Render(0);
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN9daRFlag_c16CleanupResourcesEv, 0x0211b000, size 0x30 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int _ZN9daRFlag_c16CleanupResourcesEv(void)
+// @symbol _ZN9daRFlag_c16CleanupResourcesEv
+/* Releases the two shared files the class holds; it never touches `this`, which is
+ * why the legacy C form could declare itself nullary and still reproduce. */
+int daRFlag_c::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0d4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0dc);
+    data_ov062_0211e0d4.Release();
+    data_ov062_0211e0dc.Release();
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov062_0211afbc, 0x0211afbc, size 0x44 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov062_0211afbc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov062_0211afbc(char *t)
 {

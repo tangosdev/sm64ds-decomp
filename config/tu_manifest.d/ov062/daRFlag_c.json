@@ -1,9 +1,9 @@
 {
   "id": "ov062/daRFlag_c",
   "module": "ov062",
-  "source": "src_tu/actors/daRFlag_c.cpp",
+  "source": "src/actors/d_a_r_flag.cpp",
   "promoted_source": "src/actors/d_a_r_flag.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "tu_map splits this range at 0x0211b208, leaving the unlabelled factory as its own candidate TU; the profile descriptor at 0x0211dc30 names that factory in its classInit word, so the two belong to one source file and the manifest is extended over the split by hand.",
@@ -161,7 +161,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov062-daRFlag_c/daRFlag_c.o (gitignored)",
+    "object": "build/tu/ov062-daRFlag_c/d_a_r_flag.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 8,
     "functions_declared": 8,
