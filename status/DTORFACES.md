@@ -92,7 +92,11 @@ BrickBlock, and ArrowLift (`_ZTV9ArrowLift`, filled as WaterDiamond's table;
 its slot 16 was `ov29_trap16`, the one trap this lane replaces). Every
 name-shifted seat was settled by `vtspan.py <symbol>` reading the ROM word
 16 of the table the port storage stands for, and by the transcribed thunk's
-chain agreeing with the D1 TU's ROM relocations.
+chain agreeing with the D1 TU's ROM relocations. All 22 D1 TUs link (each
+`_ZN..D1Ev` symbol present in walk_window.map); linked total 9467 (83.6%).
+The branch was then rebased onto the cons base da58b6db0 (HUD-INITRES); the
+CMakeLists slice and the gate-27 hostgen block are in far-apart regions and
+the rebase took clean, followed by a full clean rebuild.
 
 ## Skipped, with the wall
 
@@ -108,4 +112,31 @@ chain agreeing with the D1 TU's ROM relocations.
 
 ## Proofs
 
-(filled below)
+Off tip cb75b8215, rebased onto cons base da58b6db0 and fully clean-rebuilt
+(build/port wiped, all four targets and every smoke relinked from scratch,
+all build-port.cmd guards green).
+
+- Teardown under faults (the DTORPAIRS warp): walk_window.exe,
+  `SM64DS_LEVEL=1 SM64DS_FAULTS_FATAL=1 SM64DS_WINDOW_SELFTEST=600
+  SM64DS_WARP_SEQ=6@100,7@200,8@300,15@400,1@500`. rc 0, five warps
+  (castle grounds -> 6 -> 7 -> 8 -> 15 -> castle grounds) with 51 / 185 /
+  174 / 208 / 56 live actors torn down through `port_level_teardown`
+  dispatching slot 16 on each, no fault, no declined teardown. The per-warp
+  counts are non-vacuous, so the seated faces are exercised on real live
+  actors, not a motionless census.
+- vtspan.py --seats over `dumpbin /disasm:nobytes` of 950 hal objects
+  (`build/port/_abicheck_disasm`): 1689 shared-arm9-body seats checked, NO
+  wrong-body seats; the 22 group-5 adapters are class-body seats and each
+  fill site points at its `hal_cppd1_<Class>` (source diff), no unseated
+  regression.
+- Linkage 9467 (83.6%); all 22 group-5 `_ZN..D1Ev` symbols present in
+  walk_window.map; ptr_audit 0 unhosted code pointers.
+- battery.py ALL GREEN: build, 20/20 smokes, every mounted level selftest
+  under FAULTS_FATAL (the two skips -- level 27 TTC_MOVING_BEAM, level 45
+  GOOMBOSS -- are decomp-owned unmatched bodies, not this lane), all 34
+  scene selftests, default boot to title, shipcfg (PORT_ROM_CLEAN static
+  CRT) build + selftest rc 0.
+- Scope: no src/ or include/ change vs da58b6db0; the whole lane is port/
+  (39 files) and this status file. The src D1 TUs were already matched
+  decomp on the base; this lane only enrolls them into the port link and
+  rewires slot 16.
