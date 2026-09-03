@@ -1379,6 +1379,14 @@
     "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_cD0Ev": "github-actions[bot]",
     "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_c8BehaviorEv": "andrewboudreau",
     "src/actors/d_a_obj_lava.cpp#_ZN11daObjLava_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_lava.cpp#daObjLava_c_Spawn": "andrewboudreau"
+    "src/actors/d_a_obj_lava.cpp#daObjLava_c_Spawn": "andrewboudreau",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c20UpdateModelTransformEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c1_peach.cpp#_ZN14daObjC1Peach_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_c1_peach.cpp#daObjC1Peach_c_classInit": "github-actions[bot]"
   }
 }

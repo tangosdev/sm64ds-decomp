@@ -1,9 +1,9 @@
 {
   "id": "ov010/daObjC1Peach_c",
   "module": "ov010",
-  "source": "src_tu/actors/daObjC1Peach_c.cpp",
+  "source": "src/actors/d_a_obj_c1_peach.cpp",
   "promoted_source": "src/actors/d_a_obj_c1_peach.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2111e10..0x211203c, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
