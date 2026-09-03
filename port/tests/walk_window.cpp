@@ -852,9 +852,18 @@ void rb_probe_frame_end(int *frame, int selftest);
    editor drain stand down, and rb_skip_render drops the level model, the
    rasteriser and the present on every replayed frame but the last. */
 void rb_frame_end(int *frame, int selftest);
+void rb_frame_begin(void);          /* stamps the real frame's start, after the pace */
+int rb_presented_frame(void);       /* the spread presented this replayed frame: pace it */
+void rb_frame_body_end(void);       /* the loop body ended: the real-frame breakdown */
+void rb_frame_sound_ms(double ms);  /* the sound drain's cost, same breakdown */
 int rb_replaying(void);
 int rb_skip_render(void);
 int rb_skip_actor_render(void);
+// port/rollback: the player's texture-sequence tick (eye-blink material
+// flag, shared per character model) that must run every tick regardless
+// of rb_skip_render() -- see the comment on hal_player_texseq_tick in
+// hal/player_bridges.cpp for why (the map0 DET rung).
+void hal_player_texseq_tick(void *player);
 void rb_replay_phase(int idx, double ms);
 void port_actor_render_replay(void);
 enum { RB_ACTOR_TICK = 0, RB_ANIMS, RB_PARTICLE, RB_CYL, RB_SCENEPASS,
@@ -6718,7 +6727,8 @@ static int scene_window_run(void)
             stacked ? ovl_surface_stacked(stack_img, fb) : ovl_surface(fb);
 
         if (menu_on) menu_draw(surf);
-        toast_draw(surf);
+        if (!rb_skip_render())
+            toast_draw(surf);
 
         if (stacked && !rb_skip_render())
             stack_present_arm(stack_img, hwnd);
@@ -8147,6 +8157,7 @@ int main(void)
             mo_capture_opt = host_setting_mouse_capture();
         }
         ph_begin(&t_frame);
+        rb_frame_begin();
         ph_begin(&t_phase);
         /* the focus edge, read once a frame BEFORE any key is. Coming back,
            every key starts stale, so whatever the player was holding in the
@@ -11706,7 +11717,8 @@ int main(void)
                     if (sh_tr < 0) sh_tr = getenv("SM64DS_SHADOW_TRIS") ? 1 : 0;
                     size_t sh_before = 0, sh_after = 0;
                     if (sh_tr) ntr::gx_polygons(sh_before);
-                    ShadowModel::RenderAll();
+                    if (!rb_skip_render())
+                        ShadowModel::RenderAll();
                     if (sh_tr) {
                         const ntr::GxTriangle *st2 = ntr::gx_polygons(sh_after);
                         float mnx = 1e30f, mxx = -1e30f, mny = 1e30f,
@@ -11806,10 +11818,26 @@ int main(void)
             if (port::adventure_ghost_mode() && !port_party_member(pi) &&
                 !port_adventure_peer_visible(pi))
                 continue;
+            /* port/rollback: a replayed frame draws nobody's pixels
+               (tick-only re-sim, hal/rollback.cpp rb_skip_render); the DET
+               rung proves the player's DRAW writes nothing a tick reads.
+               But the map0 DET rung found one call inside the draw that is
+               NOT render-private: hal_player_texseq_tick (the eye-blink
+               material flag on the shared character head model). That
+               still has to run every tick, replayed or not -- see the
+               comment on hal_player_texseq_tick, hal/player_bridges.cpp. */
+            if (rb_skip_render()) {
+                if (void *other = data_0209f394[pi])
+                    hal_player_texseq_tick(other);
+                continue;
+            }
             if (void *other = data_0209f394[pi])
                 hal_render_player_world(other);
         }
-        hal_render_player_world(player);
+        if (!rb_skip_render())
+            hal_render_player_world(player);
+        else
+            hal_player_texseq_tick(player);
         /* Stage::GraphCallback1: the particle submission, last, after every
            opaque draw in the frame. The billboards carry their own absolute
            position matrix so nothing above this line has to be preserved for
@@ -11824,6 +11852,12 @@ int main(void)
             if (fx_tr) ntr::gx_polygons(fx_before);
             {
                 const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
+                /* port/rollback: the particle submission RUNS in a replayed
+                   frame. It is not render-only: the DET rung on VS map 0
+                   showed a 16-bit countdown per 0x78-byte particle entry
+                   advanced here (8 skipped renders, 8 steps short), so it
+                   belongs with the Stage::Render spans the tick-only re-sim
+                   keeps, not with the pixel work it drops. */
                 port_particle_render();
                 if (rb_probe_mode()) rb_note(RB_PARTICLE, rb_now_ms() - rb_t);
             }
@@ -11878,9 +11912,15 @@ int main(void)
         ph_begin(&t_phase);
         /* clear: build one row, memcpy the rest (0xFF101820 is not a
            repeating byte pattern, so memset cannot do it directly) */
+        /* port/rollback: a replayed frame presents nothing, so the clear, the
+           raster, the engine-A composite, the fade and the overlays below
+           all stand down with it (rb_skip_render); they write host pixels
+           only, and they were a third of a replayed frame's cost */
+        if (!rb_skip_render()) {
         for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[0][x] = 0xFF101820u;
         for (int y = 1; y < ntr::SCREEN_H; ++y)
             memcpy(fb.px[y], fb.px[0], ntr::SCREEN_W * sizeof(fb.px[0][0]));
+        }
         /* the rollback probe's re-run skips the rasteriser (SM64DS_ROLLBACK_DET_SKIP) */
         if (!rb_resim_skip_render() && !rb_skip_render())
         ntr::gx_render(fb);
@@ -11889,7 +11929,8 @@ int main(void)
            there (BG3 + the cursor OBJ), so raster engine A's 2D and write only
            the covered pixels over the 3D framebuffer. Before the fade composite,
            so the box dims with the master-brightness blend the same as the DS. */
-        port_message_composite_engine_a(&fb);
+        if (!rb_skip_render())
+            port_message_composite_engine_a(&fb);
         ph_end(PH_RASTER, t_phase);
         /* Bottom of the DS 2D frame: upload the shadows the game filled,
            rasterise engine B, and drop it into the corner at 1:1 DS pixels.
@@ -11911,7 +11952,7 @@ int main(void)
            channel, which is exactly the DS blend math (16/16 = full). */
         {
             int evy = 0, toWhite = 0;
-            if (port_fader_blend_state(&evy, &toWhite)) {
+            if (!rb_skip_render() && port_fader_blend_state(&evy, &toWhite)) {
                 if (evy > 16) evy = 16;
                 for (int y = 0; y < ntr::SCREEN_H; ++y) {
                     uint32_t *row = fb.px[y];
@@ -11968,7 +12009,7 @@ int main(void)
         /* THE OVERLAY GOES HERE: after the raster owns the frame and before
            the blit hands it to GDI, so it is in the pixels rather than over
            the window, and the selftest BMP carries it. */
-        if (g_overlay_on) {
+        if (g_overlay_on && !rb_skip_render()) {
             OvlStats os;
             size_t tn = 0;
             int actors = 0;
@@ -11996,8 +12037,10 @@ int main(void)
         /* THE NAME TAGS, before the menu and the banner so a menu the player
            opened still sits over them. Returns immediately outside a VS match,
            which is why no adventure selftest BMP moves. */
+        if (!rb_skip_render()) {
         nt_draw(surf);
         if (menu_on) menu_draw(surf);
+        }
         /* THE WINNER, once a VS match is over. Centred, over everything, for
            the whole grace window before the process closes -- which is what
            makes closing acceptable: nobody's window disappears without being
@@ -12007,7 +12050,7 @@ int main(void)
            a match). */
         {
             char wb[96];
-            if (port_vs_match_end_banner(wb, (int)sizeof wb)) {
+            if (!rb_skip_render() && port_vs_match_end_banner(wb, (int)sizeof wb)) {
                 const int tw = (int)strlen(wb) * OVL_ADVANCE * OVL_SCALE;
                 const int wx = (ntr::SCREEN_W - tw) / 2;
                 const int wy = ntr::SCREEN_H / 2 - OVL_LINE;
@@ -12018,7 +12061,8 @@ int main(void)
         }
         /* the save-state toast, over everything, bottom-left; at file scope
            now so the windowed scene loop can show the menu's refusals too */
-        toast_draw(surf);
+        if (!rb_skip_render())
+            toast_draw(surf);
 
         if (stacked && !rb_skip_render())
             stack_present_arm(stack_img, hwnd);
@@ -12028,6 +12072,7 @@ int main(void)
         present();
         ph_end(PH_BLIT, t_phase);
         ph_end(PH_FRAME, t_frame);
+        rb_frame_body_end();
         if (rb_probe_mode()) {
             rb_note(RB_PH_INPUT,  g_clk.raw[PH_INPUT]);
             rb_note(RB_PH_CAMERA, g_clk.raw[PH_CAMERA]);
@@ -12259,7 +12304,9 @@ int main(void)
                 ntr::ppu_write_bmp(nm, fb);
             }
         }
+        { const double t_snd = ovl_now_ms();
         sdat_host_tick();   /* hosted ARM7: drain the sound queue, feed the mixer */
+        rb_frame_sound_ms(ovl_now_ms() - t_snd); }
         /* THE FRAME BOUNDARY. Everything this frame -- tick, render, present --
            is done, and nothing of the next frame has started, so an editor's
            object move or staged warp lands on a world that is not half-updated.
@@ -12400,6 +12447,7 @@ int main(void)
            the only way to measure an online session the way a player runs
            one; see port_pace_selftest. */
         frame_stat();
-        if (!rb_replaying() && (!selftest || port_pace_selftest())) frame_pace();
+        if ((!rb_replaying() || rb_presented_frame()) &&
+            (!selftest || port_pace_selftest())) frame_pace();
     }
 }

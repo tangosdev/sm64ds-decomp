@@ -15,8 +15,10 @@ reads the logs. Rungs:
   RELAY4  the VS4 sweep through the local reference relay, all four RTTs.
   RELAY7  the VS7 sweep through the local reference relay, all four RTTs.
   DET     the restore+retick determinism check inside a live VS session: 4
-          and 16 players, SM64DS_ROLLBACK_DET on the parent, through the
-          real rollback path -> rb-det: IDENTICAL arena=0 dsstate=0 hw=0.
+          players on every map named by --det-maps (default 0; 0,1,2,3 is
+          every arena) and then WIDE players on map 0, SM64DS_ROLLBACK_DET
+          on the parent, through the real rollback path -> rb-det: IDENTICAL
+          arena=0 dsstate=0 hw=0.
   COST    16 players, SM64DS_ROLLBACK_FORCE rewinding 8 rounds every 30
           frames on the parent: the [rollback] p95 lines, once with the
           tick-only re-sim (the default) and once conservative
@@ -27,6 +29,15 @@ reads the logs. Rungs:
           slot 2 under the grace rule, both survivors finish their budget
           and still agree round for round; the sleeper must be told.
   RELAY   the PAIR rung once more through the local reference relay.
+
+  MOVE    the moving-peer cost (the follow-up): two windows on VS map 0
+          through the local reference relay at RTT 40 and 80 ms, PACED at 60
+          Hz (SM64DS_PACE_SELFTEST=1) so a round trip is the number of frames
+          it is for a player, each peer WALKING for the whole run: "walk"
+          holds Up on both, "turn" alternates Up and Left every 45 rounds on
+          both, out of phase. Reads the real-frame time (loop top to settled
+          boundary, pace excluded), the rollback rate and the mispredict
+          byte census off every window, plus the sweep. --move-frames N.
 
   GUARD   the width guard: WIDE windows (must be more than
           kRollbackMaxPlayers, 8) asked for rollback; every window must print
@@ -87,7 +98,7 @@ def grab(text, rx, default=None, group=1):
     return m.group(group) if m else default
 
 
-def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None):
+def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None, drop=()):
     d = os.path.join(outdir, "p%d" % k)
     os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
     e = M.env_base(ROOT, d, "p%d" % k)
@@ -117,11 +128,13 @@ def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None):
         e["SM64DS_VS_PROBE"] = "1"
     e.update(extra or {})
     e.update(EXTRA)
+    for key in drop:
+        e.pop(key, None)
     return d, e
 
 
 def launch(name, n, frames, vsmap=None, per=None, stagger=1.0, parent_extra=None,
-           base=None, timeout=1500):
+           base=None, timeout=1500, drop=()):
     outdir = os.path.join(OUT, name)
     pbudget = frames + 60 * (n + 8)
     procs, logs = [], []
@@ -129,7 +142,8 @@ def launch(name, n, frames, vsmap=None, per=None, stagger=1.0, parent_extra=None
         extra = dict((per or {}).get(k, {}))
         if k == 0:
             extra.update(parent_extra or {})
-        d, e = env_for(k, n, outdir, pbudget if k == 0 else frames, vsmap, extra, base)
+        d, e = env_for(k, n, outdir, pbudget if k == 0 else frames, vsmap, extra, base,
+                       drop)
         lp = os.path.join(d, "run.log")
         procs.append(M.spawn(EXE, d, e, lp))
         logs.append(lp)
@@ -222,29 +236,40 @@ def probe_ok(name, r):
                "[rb-local] OK on %d/%d" % (sum(oks), len(oks)))
 
 
-def rung_pair(frames, relay=None):
+def rung_pair(frames, relay_port=None):
+    # relay_port set: a FRESH relay per RTT, on its own port, for the reason
+    # rung_vs gives. The pair rung reused one relay with one code per RTT
+    # and still lost the RTT 80 and 160 sessions (parent sent=13 recvd=0
+    # through the relay, build/tmp/ladder5.log): each RTT is its own session
+    # and gets its own relay.
     ok = True
-    for rtt in (0, 40, 80, 160):
+    for i, rtt in enumerate((0, 40, 80, 160)):
         extra = {}
         if rtt:
             extra["SM64DS_COMMS_DELAY_MS"] = str(rtt // 2)
-        if relay:
-            extra["SM64DS_COMMS_RELAY"] = relay
+        rp = None
+        if relay_port is not None:
+            rp = start_relay(relay_port + i)
+            extra["SM64DS_COMMS_RELAY"] = "127.0.0.1:%d" % (relay_port + i)
             # one code PER RTT: the relay keeps an endpoint for its idle
             # expiry (90 s) after a window exits, so a second session on the
             # same code inside that window is told FULL and never seats
             extra["SM64DS_COMMS_CODE"] = "RB%03d%03d" % (os.getpid() % 1000, rtt)
-        name = "%s_rtt%d" % ("relay" if relay else "pair", rtt)
-        r = launch(name, 2, frames, per={0: extra, 1: extra}, base=BASE + (rtt // 8) * 2)
-        ok &= mode_took(name, r)
-        ok &= session_ok(name, r, 2)
-        ok &= sweep(name, r)
-        ok &= probe_ok(name, r)
-        rolled = [grab(t, r"rollbacks=(\d+)", "0") for t in r["texts"]]
-        unrec = [grab(t, r"unrecoverable=(\d+)", "?") for t in r["texts"]]
-        ok &= say(all(u == "0" for u in unrec), name + " every rewind honoured",
-                  "unrecoverable=%r rollbacks=%r" % (unrec, rolled))
-        summary_lines(r)
+        name = "%s_rtt%d" % ("relay" if rp else "pair", rtt)
+        try:
+            r = launch(name, 2, frames, per={0: extra, 1: extra}, base=BASE + (rtt // 8) * 2)
+            ok &= mode_took(name, r)
+            ok &= session_ok(name, r, 2)
+            ok &= sweep(name, r)
+            ok &= probe_ok(name, r)
+            rolled = [grab(t, r"rollbacks=(\d+)", "0") for t in r["texts"]]
+            unrec = [grab(t, r"unrecoverable=(\d+)", "?") for t in r["texts"]]
+            ok &= say(all(u == "0" for u in unrec), name + " every rewind honoured",
+                      "unrecoverable=%r rollbacks=%r" % (unrec, rolled))
+            summary_lines(r)
+        finally:
+            if rp:
+                rp.kill()
     return ok
 
 
@@ -287,15 +312,29 @@ WIDE = 16
 EXTRA = {}      # --extra KEY=VAL, applied to every window after the rung's own env
 
 
+DET_MAPS = (0,)
+
+
 def rung_det(frames):
     ok = True
-    for n in (4, WIDE):
-        rn = "det%d" % n
-        r = launch(rn, n, frames, vsmap=0, base=BASE + 100 + n * 2,
+    # every VS arena at 4 players, then the wide session on map 0: the
+    # tick-only replay list is proven per map (status section 6), so a DET
+    # verdict is owed on each of the four arenas, not on the first alone
+    runs = [(4, m) for m in DET_MAPS] + ([(WIDE, 0)] if WIDE != 4 else [])
+    for n, vsmap in runs:
+        rn = "det%d" % n if vsmap == 0 else "det%d_map%d" % (n, vsmap)
+        # DET_N 9: the window is 8 rounds past the last confirmed block, so
+        # a natural rollback re-runs up to 9 frames; the check rewinds that
+        # many. PACED: the check is about determinism, not speed, and an
+        # unpaced wide session on a loaded desk runs its fast windows nine
+        # rounds ahead of its slow ones, into the stall path, whose grace
+        # the ROM's own wait bound can beat (status section 9).
+        per = dict((k, {"SM64DS_PACE_SELFTEST": "1"}) for k in range(n))
+        per[1].update({"SM64DS_ROLLBACK_DET": "150", "SM64DS_ROLLBACK_DET_N": "9"})
+        r = launch(rn, n, frames, vsmap=vsmap, base=BASE + 100 + n * 2 + vsmap * 8,
                    parent_extra={"SM64DS_ROLLBACK_DET": "150",
-                                 "SM64DS_ROLLBACK_DET_N": "8"},
-                   per={1: {"SM64DS_ROLLBACK_DET": "150",
-                            "SM64DS_ROLLBACK_DET_N": "8"}})
+                                 "SM64DS_ROLLBACK_DET_N": "9"},
+                   per=per)
         ok &= mode_took(rn, r)
         ok &= session_ok(rn, r, n)
         for k in (0, 1):
@@ -412,11 +451,66 @@ def start_relay(port):
     return p
 
 
+MOVE_FRAMES = 900
+MOVE_RTTS = (40, 80)
+MOVE_PROFILES = {
+    # p0 inject, p1 inject
+    "walk": ("key=0x0040", "key=0x0040"),
+    "turn": ("key=0x0040,toggle=45,key2=0x0020", "key=0x0020,toggle=45,key2=0x0040"),
+}
+
+
+def move_lines(t):
+    real = re.search(r"real frame \(work, pace excluded\)" + STAT, t)
+    rate = grab(t, r"^\[rollback\] rate: (.*)$", "no rate line")
+    miss = grab(t, r"rollback mispredict: (.*)$", "no mispredict line")
+    ev = re.search(r"rollback event \(restore\+replay\)" + STAT, t)
+    fr = re.search(r"per replayed frame" + STAT, t)
+    f = lambda m: ("mean %s p50 %s p95 %s max %s" % m.groups()) if m else "none"
+    return real, ("real frame %s | event %s | per replayed frame %s | %s | %s"
+                  % (f(real), f(ev), f(fr), rate, miss))
+
+
+def rung_move(relay_port, profiles=None):
+    ok = True
+    i = 0
+    for prof in (profiles or ("walk", "turn")):
+        for rtt in MOVE_RTTS:
+            rp = start_relay(relay_port + i)
+            relay = "127.0.0.1:%d" % (relay_port + i)
+            i += 1
+            try:
+                inj = MOVE_PROFILES[prof]
+                extra = {"SM64DS_COMMS_DELAY_MS": str(rtt // 2),
+                         "SM64DS_COMMS_RELAY": relay,
+                         "SM64DS_COMMS_CODE": "M%s%02d%04d" % (prof[0].upper(), rtt // 10, os.getpid() % 10000),
+                         "SM64DS_PACE_SELFTEST": "1"}
+                per = {0: dict(extra, SM64DS_COMMS_INJECT=inj[0]),
+                       1: dict(extra, SM64DS_COMMS_INJECT=inj[1])}
+                rn = "move_%s_rtt%d" % (prof, rtt)
+                # no per-slot probe lines: SM64DS_VS_PROBE writes sixteen
+                # unbuffered stderr lines a frame, replayed frames included,
+                # and that is a measurement of the logging, not of the game
+                r = launch(rn, 2, MOVE_FRAMES, vsmap=0, per=per,
+                           base=BASE + 260 + i * 2, drop=("SM64DS_VS_PROBE",))
+                ok &= mode_took(rn, r)
+                ok &= session_ok(rn, r, 2)
+                ok &= sweep(rn, r)
+                for k in (0, 1):
+                    real, line = move_lines(r["texts"][k])
+                    ok &= say(real is not None, "%s p%d measured" % (rn, k), line)
+                summary_lines(r)
+            finally:
+                rp.kill()
+    return ok
+
+
 RUNGS = ("PAIR", "VS4", "VS7", "RELAY", "RELAY4", "RELAY7", "DET", "COST",
-         "STALL", "GUARD")
+         "STALL", "GUARD", "MOVE")
 
 
 def main():
+    global WIDE, NETMODE, MOVE_FRAMES, MOVE_RTTS, DET_MAPS
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="")
     ap.add_argument("--frames", type=int, default=FRAMES)
@@ -424,10 +518,17 @@ def main():
     ap.add_argument("--netmode", default="rollback", choices=("rollback", "none"))
     ap.add_argument("--extra", action="append", default=[],
                     help="KEY=VAL for every window (bisecting a DET diff)")
+    ap.add_argument("--move-frames", type=int, default=MOVE_FRAMES)
+    ap.add_argument("--move-profiles", default="walk,turn")
+    ap.add_argument("--move-rtts", default="40,80")
+    ap.add_argument("--det-maps", default="0",
+                    help="VS maps the 4-player DET rung runs on (0,1,2,3)")
     a = ap.parse_args()
-    global WIDE, NETMODE
+    DET_MAPS = tuple(int(x) for x in a.det_maps.split(",") if x.strip())
     WIDE = a.wide
     NETMODE = a.netmode
+    MOVE_FRAMES = a.move_frames
+    MOVE_RTTS = tuple(int(x) for x in a.move_rtts.split(",") if x.strip())
     for kv in a.extra:
         k, _, v = kv.partition("=")
         EXTRA[k] = v
@@ -463,12 +564,11 @@ def main():
                 ok &= rung_stall(a.frames)
             elif name == "GUARD":
                 ok &= rung_guard(min(a.frames, 120))
+            elif name == "MOVE":
+                ok &= rung_move(BASE + 400,
+                                [x.strip() for x in a.move_profiles.split(",") if x.strip()])
             elif name == "RELAY":
-                rp = start_relay(BASE + 300)
-                try:
-                    ok &= rung_pair(a.frames, relay="127.0.0.1:%d" % (BASE + 300))
-                finally:
-                    rp.kill()
+                ok &= rung_pair(a.frames, relay_port=BASE + 300)
         except Exception as e:  # noqa: BLE001
             ok = False
             print("  %s RAISED: %r" % (name, e))

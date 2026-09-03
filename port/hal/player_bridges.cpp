@@ -817,6 +817,7 @@ extern "C" void port_party_probe(int frame)
 extern "C" void _ZN15TextureSequence6UpdateER15ModelComponents(void *seq,
                                                                void *mc);
 extern "C" int func_ov002_020bea7c(char *self);
+extern "C" int port_player_render_hidden(const void *player);  /* below, hoisted */
 
 static void hal_player_texseq_body(char *c)
 {
@@ -841,6 +842,39 @@ static void hal_player_texseq_head(char *c, unsigned hid)
             _ZN15TextureSequence6UpdateER15ModelComponents(
                 c + 0x1dc + *(unsigned char *)(c + 0x6db) * 0x14, head + 8);
     }
+}
+
+/* port/rollback: THE TEXTURE-SEQUENCE UPDATES RUN IN A REPLAYED FRAME.
+   hal_render_player_world is entirely tick-only-skipped and entirely
+   conservative-re-sim-skipped (rb_skip_render(), which SM64DS_ROLLBACK_-
+   ACTOR_RENDER=1 does not touch -- it is a Stage-level render skip, not
+   the actor-Render one). The map0 DET rung showed one arena byte
+   drifting on every VS map 0 window: the per-character eye-blink material
+   flag (hal_player_texseq_head's third block, "everyone gets, all
+   characters") lands in the CURRENT HEAD MODEL's ModelComponents, which
+   every player slot on the same character shares (VS map 0's census plays
+   four of the same character) -- so the update is shared state a later
+   frame's SAME call reads (whether the blink shows), not Render-private
+   scratch, exactly the rule status/ROLLBACK_SHIP.md section 6 states for
+   an actor's Render. It is not an actor, so it is not on the actor replay
+   list (port_actor_render_replay); it is a Player, and it belongs beside
+   the particle submission (tests/walk_window.cpp, "the particle
+   SUBMISSION stays in a replayed frame") -- state-mutating, not pixel
+   work, so it runs on every tick, replayed or not. What it does NOT do is
+   run the frame's other player-render work (UpdateVerts, ModelAnim::-
+   Render, the wing model): those stay under rb_skip_render(), unmeasured
+   here, because they write host GX state only.
+   The port_player_render_hidden gate is reproduced because the ROM's own
+   Player::Render only reaches these updates past its four hide gates
+   (comment above hal_render_player_world). */
+extern "C" void hal_player_texseq_tick(void *player)
+{
+    char *c = (char *)player;
+    if (port_player_render_hidden(c)) return;
+    hal_player_texseq_body(c);
+    const unsigned hid = func_ov002_020becf4(c, *(unsigned char *)(c + 0x6db), 1);
+    if (hid != 8 && hid != 9)
+        hal_player_texseq_head(c, hid);
 }
 
 /* ---- SM64DS_YHD_PROBE: the head-vs-body matrix separation, per frame --------

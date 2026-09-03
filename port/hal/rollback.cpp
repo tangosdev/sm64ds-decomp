@@ -102,6 +102,10 @@ extern int data_020a6484[], data_020a6488[], data_020a648c[], data_020a6490[],
 extern void *data_020a64a8[];             // the 16-slot batch ring
 extern int data_020a6760[];               // the 256 x 0x18 node pool
 extern unsigned char data_020a50ec[];     // sdat sound bss, 0x440
+// the ARM9's own voice bookkeeping, which follows the ARM7 state the restore
+// re-seeds: the FREE and ACTIVE voice lists (0xc-byte NestedHeapIterators)
+// and the 32 x 0x1c voice nodes they link (hal/sdat/consumer.cpp)
+extern unsigned char data_020a4d54[], data_020a4d60[], data_020a4d6c[];
 }
 
 namespace {
@@ -163,10 +167,48 @@ int      g_local_probe = 0;
 int      g_verbose = 0;
 int      g_no_render_skip = 0;       // SM64DS_ROLLBACK_FULL_RESIM=1: conservative re-sim
 int      g_keep_actor_render = 0;    // SM64DS_ROLLBACK_ACTOR_RENDER=1: replay runs the actors' Render bodies
+// THE SPREAD (port/rollback follow-up): at most g_spread replayed frames run
+// inside one presented frame. A rollback deeper than that presents a
+// corrected-but-still-behind world after g_spread re-run frames, paces, and
+// goes on replaying in the next frame, so a storm (a whole 8-round window
+// rewound at once) costs several smooth frames of catch-up instead of one
+// long one. 0 = unbounded (the shipped behaviour). SM64DS_ROLLBACK_SPREAD.
+int      g_spread = 0;
+// THE BUDGET (port/rollback follow-up, the per-frame re-sim cap): the spread
+// by time rather than by count. A replay stops to present as soon as the
+// frame's elapsed work plus what a rendered frame costs on this machine
+// (g_render_ema, the loop body of the frames that rendered, smoothed)
+// would pass g_budget_ms, so no presented frame carries more re-run than
+// fits under the budget. SM64DS_ROLLBACK_BUDGET_MS, default 33 (two 60 Hz
+// periods); 0 turns it off. The count spread and the budget both apply.
+double   g_budget_ms = 33.0;
+double   g_render_ema = 0;
+int      g_spread_used = 0;          // replayed frames since the last present
+bool     g_spread_present = false;   // the next replayed frame renders and presents
+bool     g_presenting = false;       // ... and this is that frame
+bool     g_last_presented = false;   // the frame that just ended was presented (spread)
 
 // counters and timing
 struct Stat { double sum, max; int n; double s[4096]; };
 Stat g_snap, g_restore, g_rbevent, g_rbframe, g_rbframes;
+// THE REAL FRAME (port/rollback follow-up): loop top (rb_frame_begin, after
+// the pace sleep) to the boundary at which the frame is finally settled --
+// this boundary when nothing was contradicted, or the boundary that ends the
+// replay a contradiction started. It is what a player's frame costs with
+// the rollback inside it, and it excludes the pace.
+Stat g_real;
+// ... and where it goes: the loop body (tick, exchange, render, present),
+// the stretch between the present and the boundary (overlay, sound drain,
+// hash line), and the boundary itself (snapshot, scan, restore). Summed
+// over every loop iteration a real frame contains, replayed ones included.
+Stat g_real_body, g_real_between, g_real_boundary, g_real_sound;
+double   g_t_iter = 0, g_t_body_end = 0;
+double   g_body_sum = 0, g_between_sum = 0, g_boundary_sum = 0, g_sound_sum = 0;
+double   g_real_t0 = 0;              // 0 = no real frame open
+double   g_live_t0 = 0;              // when the ring went live (wall clock)
+unsigned long long g_real_frames = 0, g_real_outliers = 0;
+unsigned long long g_budget_presents = 0;   // replays the budget split
+unsigned long long g_rb_at_begin = 0, g_replayed_at_begin = 0;
 Stat g_rp[8];                        // replayed frames, per loop phase
 static const char *const kPhase[8] = {
     "replay PH_INPUT (tick)", "replay PH_CAMERA (exchange)",
@@ -236,6 +278,9 @@ void read_env()
     g_verbose = getenv("SM64DS_ROLLBACK_VERBOSE") != 0;
     g_no_render_skip = getenv("SM64DS_ROLLBACK_FULL_RESIM") != 0;
     g_keep_actor_render = getenv("SM64DS_ROLLBACK_ACTOR_RENDER") != 0;
+    if (const char *s = getenv("SM64DS_ROLLBACK_SPREAD")) g_spread = atoi(s);
+    if (const char *b = getenv("SM64DS_ROLLBACK_BUDGET_MS")) g_budget_ms = atof(b);
+    if (g_spread < 0) g_spread = 0;
 }
 
 uint64_t hash_bytes(const void *p, size_t n)
@@ -505,6 +550,61 @@ void name_arena_addr(size_t off)
                 off, best_id, (const void *)best, (size_t)(addr - best));
 }
 
+// The aligned word a differing arena byte sits in, both worlds, and whether
+// either reads as a HOST address (a pointer into the host heap kept in the
+// game's memory would differ between two runs by the allocator's whim, not
+// by the game's). Diagnostic only.
+void name_word(const char *want, const char *got, size_t i, size_t n)
+{
+    const size_t w = i & ~(size_t)3;
+    if (w + 4 > n) return;
+    const unsigned a = *(const unsigned *)(want + w), b = *(const unsigned *)(got + w);
+    char desc[2][96];
+    for (int k = 0; k < 2; ++k) {
+        const unsigned v = k ? b : a;
+        MEMORY_BASIC_INFORMATION mbi;
+        if (VirtualQuery((const void *)(size_t)v, &mbi, sizeof mbi) && mbi.State == MEM_COMMIT)
+            snprintf(desc[k], sizeof desc[k], "host %s at %p+0x%zx (type 0x%x)",
+                     (const char *)mbi.AllocationBase == (const char *)port_arena_base() ? "ARENA" : "memory",
+                     mbi.AllocationBase, (size_t)(v - (size_t)mbi.AllocationBase), (unsigned)mbi.Type);
+        else snprintf(desc[k], sizeof desc[k], "not a host address");
+    }
+    fprintf(stderr, "[rb-det]       word at +0x%zx: was 0x%08x (%s) now 0x%08x (%s)\n",
+            w, a, desc[0], b, desc[1]);
+    // the heap block that owns it: the ExpandingHeapAllocator's used-node
+    // header sits 0x10 before a payload (u16 magic 0x5544, u32 size at +4;
+    // hal/level_boot.cpp port_loadfile_node_size reads the same)
+    {
+        // NOTE: this search previously used a for-loop whose entry condition
+        // (b + 0x10 <= w + 4) was false at the starting b == w, so the C
+        // for-loop never ran its body on ANY call; every prior DET run's
+        // silence here was that bug, not "no heap header nearby". Rewritten
+        // as a while-loop that checks the starting word too.
+        const unsigned char *base = (const unsigned char *)port_arena_base();
+        size_t b = w & ~(size_t)3;
+        for (;;) {
+            if (*(const unsigned short *)(got + b) == 0x5544) {
+                const unsigned size = *(const unsigned *)(got + b + 4);
+                if (size < 0x800000 && b + 0x10 + size > w) {
+                    fprintf(stderr, "[rb-det]       in heap block payload +0x%zx (%p) size 0x%x, at +0x%zx; "
+                            "first words %08x %08x %08x %08x\n", b + 0x10, (const void *)(base + b + 0x10),
+                            size, w - (b + 0x10), *(const unsigned *)(got + b + 0x10),
+                            *(const unsigned *)(got + b + 0x14), *(const unsigned *)(got + b + 0x18),
+                            *(const unsigned *)(got + b + 0x1c));
+                    break;
+                }
+            }
+            if (b < 4 || w - b >= (size_t)2 << 20) break;
+            b -= 4;
+        }
+    }
+    fprintf(stderr, "[rb-det]       around: was");
+    for (size_t q = (w >= 16 ? w - 16 : 0); q < w + 20 && q < n; ++q) fprintf(stderr, " %02x", (unsigned char)want[q]);
+    fprintf(stderr, "\n[rb-det]               now");
+    for (size_t q = (w >= 16 ? w - 16 : 0); q < w + 20 && q < n; ++q) fprintf(stderr, " %02x", (unsigned char)got[q]);
+    fprintf(stderr, "\n");
+}
+
 bool in_sound_queue(const char *p)
 {
     struct Span { const void *base; size_t n; };
@@ -514,6 +614,13 @@ bool in_sound_queue(const char *p)
         { data_020a649c, 16 }, { data_020a64a0, 16 }, { data_020a64a4, 16 },
         { data_020a64a8, 16 * sizeof(void *) }, { data_020a6760, 256 * 0x18 },
         { data_020a50ec, 0x440 },
+        // The ARM9's voice lists and nodes (DET on VS map 3, the arena with
+        // an ambient voice sounding through the window): a voice the ARM7
+        // was still playing in the straight run is reported finished to the
+        // re-run, whose consumer was re-seeded, so the ARM9 frees it a frame
+        // earlier. Which voices are still sounding is the audio-across-a-
+        // rewind question (status section 7, item 5), not the game's world.
+        { data_020a4d54, 0xc }, { data_020a4d60, 0xc }, { data_020a4d6c, 32 * 0x1c },
     };
     for (size_t i = 0; i < sizeof spans / sizeof spans[0]; ++i) {
         const char *b = (const char *)spans[i].base;
@@ -533,18 +640,22 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         size_t j = i;
         while (j < n && want[j] != got[j]) ++j;
         differing += j - i;
+        size_t outside = 0;
         if (unexplained)
             for (size_t q = i; q < j; ++q)
-                if (!in_sound_queue(got + q)) ++*unexplained;
+                if (!in_sound_queue(got + q)) { ++*unexplained; ++outside; }
         if (first == (size_t)-1) first = i;
-        if (ranges < 8)
+        // the first 8 ranges, and EVERY range with a byte outside the sound
+        // queue (those are the verdict; the queue's own are the noise)
+        if (ranges < 8 || outside)
             fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
-                    " now %02x %02x %02x %02x\n", name, i, j - i,
+                    " now %02x %02x %02x %02x%s\n", name, i, j - i,
                     (unsigned char)want[i], (unsigned char)want[i + 1],
                     (unsigned char)want[i + 2], (unsigned char)want[i + 3],
                     (unsigned char)got[i], (unsigned char)got[i + 1],
-                    (unsigned char)got[i + 2], (unsigned char)got[i + 3]);
-        if (ranges < 8 && name[0] == 'a') name_arena_addr(i);
+                    (unsigned char)got[i + 2], (unsigned char)got[i + 3],
+                    outside ? "  <-- OUTSIDE the sound command queue" : "");
+        if (ranges < 8 && name[0] == 'a') { name_arena_addr(i); name_word(want, got, i, n); }
         ++ranges;
         i = j;
     }
@@ -572,6 +683,24 @@ void report()
     print_stat("rollback event (restore+replay)", g_rbevent);
     print_stat("per replayed frame", g_rbframe);
     print_stat("frames per rollback", g_rbframes);
+    print_stat("real frame (work, pace excluded)", g_real);
+    print_stat("  of which loop body (all iterations)", g_real_body);
+    print_stat("  of which present-to-boundary", g_real_between);
+    print_stat("    of which sound drain", g_real_sound);
+    print_stat("  of which boundary (snapshot+scan)", g_real_boundary);
+    if (g_live_t0 > 0 && g_real_frames) {
+        const double secs = (now_ms() - g_live_t0) / 1000.0;
+        fprintf(stderr, "[rollback] rate: real_frames=%llu (outliers over 1 s: %llu) "
+                "wall=%.1f s rollbacks=%llu -> %.2f/s, %.1f per 100 frames, "
+                "%.2f frames replayed per event\n",
+                g_real_frames, g_real_outliers, secs, g_rollbacks,
+                secs > 0 ? g_rollbacks / secs : 0.0,
+                100.0 * g_rollbacks / g_real_frames,
+                g_rollbacks ? (double)g_frames_replayed / g_rollbacks : 0.0);
+        fprintf(stderr, "[rollback] budget: %.1f ms (spread %d) -> %llu replay(s) split "
+                "across frames, render estimate %.2f ms\n", g_budget_ms, g_spread,
+                g_budget_presents, g_render_ema);
+    }
     for (int p = 0; p < 8; ++p) print_stat(kPhase[p], g_rp[p]);
     if (g_local_probe)
         fprintf(stderr, "[rb-local] frames with a round served=%llu same-frame "
@@ -658,9 +787,29 @@ void local_probe(unsigned tag)
 extern "C" {
 
 int rb_replaying(void) { return g_replaying; }
+// Every replayed frame stands its render down, THE LAST ONE INCLUDED: the
+// frame the rollback fired at was already presented with the guessed world,
+// and the corrected world is shown by the next real frame, which renders
+// anyway. The shipped build read the transport's replaying flag here, which
+// drops during the last replayed frame's exchange, so that frame rendered
+// and presented a second time: a whole render per rollback event that
+// nobody saw for longer than a frame. Under the spread, the frame chosen to
+// present mid-replay (g_presenting) renders as a real frame does.
+// THE DET CHECK IS THE EXCEPTION: its re-run renders its last frame, as the
+// shipped build did, so its verdict compares the straight run's world (whose
+// last frame rendered) with a re-run whose last frame rendered too. What it
+// proves is then "k tick-only frames followed by one full frame reproduce k+1
+// full frames byte for byte", which is exactly the shape a live rollback has
+// once the next real frame has drawn; with the last frame tick-only the
+// verdict would count every Render-private scratch byte the next full frame
+// overwrites anyway, and say nothing about the tick.
+static bool det_last_frame()
+{
+    return g_det_phase == 2 && !port::comms_rb_replaying();
+}
 int rb_skip_render(void)
 {
-    return g_replaying && !g_no_render_skip && port::comms_rb_replaying();
+    return g_replaying && !g_no_render_skip && !g_presenting && !det_last_frame();
 }
 // The tick-only re-sim: the actors' Render bodies stand down too. Off with
 // SM64DS_ROLLBACK_ACTOR_RENDER=1 (the conservative re-sim of the spike, which
@@ -668,17 +817,102 @@ int rb_skip_render(void)
 int rb_skip_actor_render(void)
 {
     return g_replaying && !g_no_render_skip && !g_keep_actor_render &&
-           port::comms_rb_replaying();
+           !g_presenting && !det_last_frame();
 }
+// The frame that just ended was a replayed frame the spread presented, so
+// the loop paces it like a real one.
+int rb_presented_frame(void) { return g_last_presented; }
 void rb_replay_phase(int idx, double ms)
 {
     if (idx >= 0 && idx < 8) note(g_rp[idx], ms);
 }
 int rb_owns_det(void) { read_env(); return port::comms_rb_mode() && g_det_frame >= 0; }
 
+static void rb_frame_end_body(int *frame, int selftest);
+// The loop body ended (after the present, before the overlay and the sound
+// drain), and the sound drain's own cost: the real-frame breakdown.
+void rb_frame_body_end(void)
+{
+    g_t_body_end = now_ms();
+    if (g_t_iter > 0) g_body_sum += g_t_body_end - g_t_iter;
+}
+void rb_frame_sound_ms(double ms) { g_sound_sum += ms; }
+void rb_frame_begin(void)
+{
+    if (!port::comms_rb_mode() || !g_ring_live) return;
+    g_t_iter = now_ms();
+    // the replayed frame the spread or the budget presents renders and
+    // paces like a real one
+    g_presenting = g_replaying && g_spread_present;
+    // The real frame stays OPEN across a replay: it opens at the first loop
+    // iteration after the last presented boundary and closes at the next
+    // boundary the player sees (a settled real frame, or the replayed frame
+    // the spread presents). A split replay is therefore measured as the
+    // presented chunks the player sees, each from its first tick to its
+    // present, with nothing between two presents left out.
+    if (g_real_t0 > 0) return;
+    g_real_t0 = g_t_iter;
+    g_rb_at_begin = g_rollbacks;
+    g_replayed_at_begin = g_frames_replayed;
+}
 void rb_frame_end(int *frame, int selftest)
 {
     if (!port::comms_rb_mode()) return;
+    const bool was_replaying = g_replaying;     // the frame that just ended was re-run
+    const bool presented = g_presenting;        // ... and the spread presented it
+    g_presenting = false;
+    g_last_presented = presented;
+    const double t_entry = now_ms();
+    if (g_t_body_end > 0) g_between_sum += t_entry - g_t_body_end;
+    // what a frame that renders costs here (the loop body of this iteration,
+    // when it rendered), for the budget's estimate of the present to come
+    // (a body over a second is a load or the session forming, not a frame,
+    // and one of those in the estimate would make the budget present after
+    // every replayed frame for the rest of the session)
+    if ((!was_replaying || presented) && g_t_body_end > 0 && g_t_iter > 0) {
+        const double body = g_t_body_end - g_t_iter;
+        if (body < 1000.0)
+            g_render_ema = g_render_ema > 0 ? g_render_ema * 0.9 + body * 0.1 : body;
+    }
+    rb_frame_end_body(frame, selftest);
+    g_boundary_sum += now_ms() - t_entry;
+    // the spread's count: replayed frames since the last present
+    if (!was_replaying || presented) g_spread_used = 0;
+    else ++g_spread_used;
+    g_spread_present = g_replaying && g_spread > 0 && g_spread_used >= g_spread;
+    // ... and the budget: present now if one more tick-only frame and then
+    // the rendered frame would not fit under it
+    if (g_replaying && !g_spread_present && g_budget_ms > 0 && g_real_t0 > 0 &&
+        (now_ms() - g_real_t0) + g_render_ema >= g_budget_ms) {
+        g_spread_present = true;
+        ++g_budget_presents;
+    }
+    if ((!g_replaying || presented) && g_real_t0 > 0) {
+        const double ms = now_ms() - g_real_t0;
+        // a frame over a second is a load, a stall or the session forming,
+        // not a frame; counted apart so the distribution is of frames
+        if (ms > 1000.0) ++g_real_outliers;
+        else {
+            note(g_real, ms);
+            note(g_real_body, g_body_sum);
+            note(g_real_between, g_between_sum);
+            note(g_real_boundary, g_boundary_sum);
+            note(g_real_sound, g_sound_sum);
+        }
+        ++g_real_frames;
+        if (g_verbose)
+            fprintf(stderr, "[rbf] f%d %.2f ms rb=%d replayed=%llu body=%.2f "
+                    "between=%.2f (sound %.2f) boundary=%.2f\n", *frame, ms,
+                    (int)(g_rollbacks - g_rb_at_begin),
+                    g_frames_replayed - g_replayed_at_begin, g_body_sum,
+                    g_between_sum, g_sound_sum, g_boundary_sum);
+        g_real_t0 = 0;
+        g_body_sum = g_between_sum = g_boundary_sum = g_sound_sum = 0;
+    }
+    g_t_body_end = 0;
+}
+static void rb_frame_end_body(int *frame, int selftest)
+{
     read_env();
     const bool up = port::comms_rb_enabled();
     if (!up) {
@@ -691,6 +925,7 @@ void rb_frame_end(int *frame, int selftest)
         if (!ring_init()) return;
         ring_flush(0);
         g_ring_live = true;
+        g_live_t0 = now_ms();
         atexit(report);
     }
     if (g_pause_frame >= 0 && *frame == g_pause_frame && !g_pause_done) {

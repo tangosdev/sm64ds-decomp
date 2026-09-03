@@ -850,6 +850,30 @@ bool     g_rb_flush_wait = false;        // area change: stall until nothing is 
 unsigned g_rb_unrecoverable = 0;         // rollbacks the ring could not honour
 unsigned char g_rb_my_served[kCommsBlockBytes];
 unsigned g_rb_served_round = ~0u;
+// WHAT MISPREDICTS (port/rollback follow-up). Per byte offset of the block,
+// how many contradicted guesses differed there, and the heading error of the
+// guess in buckets, so the rig can say whether a walking peer is missed on
+// its key, its stylus or its camera heading. Printed on the close line.
+unsigned long long g_rb_miss_off[kCommsBlockBytes];
+unsigned long long g_rb_miss_blocks = 0, g_rb_miss_only_heading = 0;
+unsigned long long g_rb_miss_hd[6];      // |heading err| 1, <=4, <=16, <=64, <=256, more
+void rb_note_miss(const unsigned char *pred, const unsigned char *real) {
+    ++g_rb_miss_blocks;
+    bool other = false;
+    for (int i = 0; i < kCommsBlockBytes; ++i) {
+        if (i >= 2 && i <= 5) continue;             // the frame counter
+        if (pred[i] == real[i]) continue;
+        ++g_rb_miss_off[i];
+        if (i != 0x0B && i != 0x0C) other = true;
+    }
+    const int e = (short)((unsigned)real[0x0B] | ((unsigned)real[0x0C] << 8)) -
+                  (short)((unsigned)pred[0x0B] | ((unsigned)pred[0x0C] << 8));
+    const int a = e < 0 ? -e : e;
+    if (a) {
+        if (!other) ++g_rb_miss_only_heading;
+        ++g_rb_miss_hd[a <= 1 ? 0 : a <= 4 ? 1 : a <= 16 ? 2 : a <= 64 ? 3 : a <= 256 ? 4 : 5];
+    }
+}
 
 inline bool pipelined() { return g_input_delay > 0 || g_rollback; }
 inline unsigned rb_live_round() {
@@ -870,6 +894,13 @@ void rb_note_block(int k, unsigned r, const unsigned char *b) {
         const int span = (int)(r - p.round);
         p.head_delta = span > 0 ? d / span : 0;
     }
+    // SM64DS_ROLLBACK_VERBOSE=1: the confirmed heading per slot per round,
+    // so a predictor can be tried offline against what the wire carried
+    static int trace = -1;
+    if (trace < 0) trace = std::getenv("SM64DS_ROLLBACK_VERBOSE") != 0;
+    if (trace && k != g_slot)
+        std::fprintf(stderr, "[rbh] k=%d r=%u h=%d key=0x%04x\n", k, r,
+                     (int)rb_heading(b), (unsigned)b[6] | ((unsigned)b[7] << 8));
     p.have  = true;
     p.round = r;
     std::memcpy(p.block, b, kCommsBlockBytes);
@@ -3203,6 +3234,21 @@ void lb_close() {
                      g_rb_rewinds, g_rb_replayed, g_rb_stalled,
                      g_rb_stall_events, g_rb_drops,
                      g_rb_xcalls, g_rb_xzero, g_rb_rxcalls, g_rb_rxzero);
+    if (g_rollback && g_rb_miss_blocks) {
+        unsigned long long flags = g_rb_miss_off[0] + g_rb_miss_off[1];
+        unsigned long long key = g_rb_miss_off[6] + g_rb_miss_off[7];
+        unsigned long long touch = g_rb_miss_off[8] + g_rb_miss_off[9] + g_rb_miss_off[10];
+        unsigned long long head = g_rb_miss_off[11] + g_rb_miss_off[12];
+        unsigned long long rest = 0;
+        for (int i = 13; i < kCommsBlockBytes; ++i) rest += g_rb_miss_off[i];
+        std::fprintf(stderr, "[comms:loopback] rollback mispredict: blocks=%llu "
+                     "bytes flags=%llu key=%llu touch=%llu heading=%llu rest=%llu "
+                     "only_heading=%llu | heading err 1:%llu <=4:%llu <=16:%llu "
+                     "<=64:%llu <=256:%llu more:%llu\n",
+                     g_rb_miss_blocks, flags, key, touch, head, rest,
+                     g_rb_miss_only_heading, g_rb_miss_hd[0], g_rb_miss_hd[1],
+                     g_rb_miss_hd[2], g_rb_miss_hd[3], g_rb_miss_hd[4], g_rb_miss_hd[5]);
+    }
 }
 
 void lb_become_parent() {
@@ -4568,6 +4614,7 @@ unsigned comms_rb_scan() {
                 ++g_rb_confirmed_ok;
                 s->pred_mask &= ~(1u << k);
             } else {
+                rb_note_miss(s->pred[k], s->blocks[k]);
                 bad = true;
             }
         }

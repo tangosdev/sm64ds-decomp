@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -285,6 +286,12 @@ void sd_out_push(void)
 
 #if defined(_WIN32)
     if (g_opened > 0) {
+        // SM64DS_SND_SLOW_MS: how the push's time splits between the mix
+        // render and the device write (see consumer.cpp's [snd-slow] line)
+        static double slow_ms = -1;
+        if (slow_ms < 0) { const char *e = getenv("SM64DS_SND_SLOW_MS"); slow_ms = e ? atof(e) : 0; }
+        double t_mix = 0, t_write = 0;
+        int refilled = 0;
         int free_on_entry = 0;
         for (int i = 0; i < NBUF; i++)
             if (g_hdr[i].dwFlags & WHDR_DONE) free_on_entry++;
@@ -295,6 +302,7 @@ void sd_out_push(void)
         if (free_on_entry == NBUF && g_pushes > 1) g_starved++;
         for (int i = 0; i < NBUF; i++) {
             if (!(g_hdr[i].dwFlags & WHDR_DONE)) continue;
+            const clock_t c0 = slow_ms > 0 ? clock() : 0;
             if (g_devRate == SD_MIX_RATE) {
                 render_mix(OUT_FRAMES);
                 memcpy(g_buf[i], g_mix, OUT_FRAMES * 2 * sizeof(sd_s16));
@@ -325,8 +333,18 @@ void sd_out_push(void)
             g_hdr[i].dwFlags &= ~WHDR_DONE;
             g_hdr[i].dwBufferLength = OUT_FRAMES * 2 * sizeof(sd_s16);
             g_refills++;
+            const clock_t c1 = slow_ms > 0 ? clock() : 0;
             p_Write(g_dev, &g_hdr[i], sizeof(WAVEHDR));
+            if (slow_ms > 0) {
+                const double k = 1000.0 / CLOCKS_PER_SEC;
+                t_mix += (c1 - c0) * k;
+                t_write += (clock() - c1) * k;
+                ++refilled;
+            }
         }
+        if (slow_ms > 0 && t_mix + t_write >= slow_ms)
+            fprintf(stderr, "[snd-slow]   out_push: %d block(s) refilled (%d free on entry), "
+                    "mix %.1f ms, waveOutWrite %.1f ms\n", refilled, free_on_entry, t_mix, t_write);
         return;
     }
 #endif
