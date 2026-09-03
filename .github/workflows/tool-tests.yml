@@ -223,8 +223,10 @@ jobs:
 #                                      local header drags into the validation compile.
 #   test_asm_policy             (14)   asm_policy.py -- the one shared answer to "is this
 #                                      an asm transcription?". Guards the VACUOUS match.
-#   test_asset_catalog           (7)   asset_catalog.py -- NitroFS catalog build and the
-#                                      source references into it.
+#   test_asset_catalog          (10)   asset_catalog.py -- NitroFS catalog build, the
+#                                      source references into it, and `resolve`, which
+#                                      must read an integer as a runtime handle and
+#                                      never as a NitroFS file ID.
 #   test_attribution            (17)   chaos_db_ci.py -- rebuilds chaos-db.json from
 #                                      COMMITTED history; the credit data the site reads.
 #   test_bytegate               (18)   bytegate.py -- the byte-gate-failure half of the
