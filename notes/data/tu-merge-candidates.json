@@ -3085,19 +3085,19 @@
    "start": "0x211af38",
    "end": "0x211b248",
    "classes": [
-    "KoopaFlag"
+    "daRFlag_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9KoopaFlagD1Ev.cpp",
-    "src/_ZN9KoopaFlagD0Ev.c",
+    "src/_ZN9daRFlag_cD1Ev.cpp",
+    "src/_ZN9daRFlag_cD0Ev.c",
     "src/func_ov062_0211afbc.c",
-    "src/_ZN9KoopaFlag16CleanupResourcesEv.c",
-    "src/_ZN9KoopaFlag6RenderEv.cpp",
-    "src/_ZN9KoopaFlag8BehaviorEv.cpp",
-    "src/_ZN9KoopaFlag13InitResourcesEv.cpp",
-    "src/KoopaFlag_Spawn.c"
+    "src/_ZN9daRFlag_c16CleanupResourcesEv.c",
+    "src/_ZN9daRFlag_c6RenderEv.cpp",
+    "src/_ZN9daRFlag_c8BehaviorEv.cpp",
+    "src/_ZN9daRFlag_c13InitResourcesEv.cpp",
+    "src/daRFlag_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 4,

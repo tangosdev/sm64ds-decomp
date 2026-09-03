@@ -1,10 +1,16 @@
 #include "types.h"
 // @symbol func_ov062_0211ba84
-// recovered name: KoopaFlag_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daRFlag_c::Kill - recovered from vtable slot identity */
+/* NOT daRFlag_c::Kill, and not a vtable slot at all. This word is entry 0 of the
+ * six-record {function, 0} table at ov062 0x0211dcd0, which sits immediately
+ * after daRFlag_c's 31-slot vtable ends at that same address -- the leaf scan
+ * that produced the old name read one word past the table. The body settles it
+ * independently: it reads c+0x444 and constructs dBgCh_Actr at c+0x178, and
+ * +0x178 is Klepto's dBgCh_Actr (alloc 0x490), not daRFlag_c's, whose whole
+ * object is 0x174 bytes. The owning class is left unnamed here rather than
+ * guessed. */
 extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern int func_ov062_0211c658(char *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);

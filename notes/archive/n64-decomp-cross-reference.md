@@ -314,7 +314,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvMrI` | → | `MrI` (+`MrI_Projectile`) | ov071 |
 | **`bhvFlyingBookend`** | → | **`BookShot`** — *not* "Bookend" | ov020 |
 | `bhvHomingAmp` / `bhvCirclingAmp` | → | `Amp` | ov070 |
-| `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `KoopaFlag`, `KoopaShell`) | ov062 |
+| `bhvKoopa` | → | `Koopa` (+`KoopaTheQuick`, `daRFlag_c`, `KoopaShell`) | ov062 |
 | `bhvKlepto` / `bhvChuckya` | → | `Klepto` / `Chuckya` | ov062 |
 | `bhvHeaveHo` | → | `HeaveHo` | ov077 |
 | `bhvFlyGuy` | → | `FlyGuy` | ov070 |

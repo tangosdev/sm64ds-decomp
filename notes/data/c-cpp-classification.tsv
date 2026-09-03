@@ -221,7 +221,7 @@ src/KillPlayer.c	WEAK-refs-only	arm9				1		None		-
 src/KingBobOmb_Spawn.c	WEAK-refs-only	ov078				1		None		-
 src/Klepto_Spawn.c	WEAK-refs-only	ov062				1		None		-
 src/daObjBk_Botaosi_c_classInit.c	WEAK-refs-only	ov015				1		None		-
-src/KoopaFlag_Spawn.c	WEAK-refs-only	ov062				1		None		-
+src/daRFlag_c_classInit.c	WEAK-refs-only	ov062				1		None		-
 src/KoopaShell_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/KoopaSmall_Spawn.c	WEAK-refs-only	ov062				1		None		-
 src/KoopaTheQuick_Spawn.c	WEAK-refs-only	ov062				1		None		-
@@ -1054,8 +1054,8 @@ src/_ZN9DorrieCap13OnYoshiTryEatEv.c	P1-vtable+mangled	ov065	daDossyCap_c	Dorrie
 src/_ZN9DorrieCapD0Ev.c	DTOR-ONLY	ov065	daDossyCap_c	DorrieCap/daDossyCap_c	_ZN9DorrieCapD0Ev	1		True		-
 src/_ZN9DorrieCapD1Ev.c	DTOR-ONLY	ov065	daDossyCap_c	DorrieCap/daDossyCap_c	_ZN9DorrieCapD1Ev	1		True		-
 src/_ZN9HugeCoverD0Ev.c	DTOR-ONLY	ov032	daObjTdFuta_c	HugeCover/daObjTdFuta_c	_ZN9HugeCoverD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9HugeCover	-
-src/_ZN9KoopaFlag16CleanupResourcesEv.c	P1-vtable+mangled	ov062	daRFlag_c	KoopaFlag/daRFlag_c	vtable daRFlag_c slot 3 @0x211b000 | _ZN9KoopaFlag16CleanupResourcesEv	1		True		-
-src/_ZN9KoopaFlagD0Ev.c	DTOR-ONLY	ov062	daRFlag_c	KoopaFlag/daRFlag_c	_ZN9KoopaFlagD0Ev	1		True		-
+src/_ZN9daRFlag_c16CleanupResourcesEv.c	P1-vtable+mangled	ov062	daRFlag_c	daRFlag_c/daRFlag_c	vtable daRFlag_c slot 3 @0x211b000 | _ZN9daRFlag_c16CleanupResourcesEv	1		True		-
+src/_ZN9daRFlag_cD0Ev.c	DTOR-ONLY	ov062	daRFlag_c	daRFlag_c/daRFlag_c	_ZN9daRFlag_cD0Ev	1		True		-
 src/_ZN9LightBeam16CleanupResourcesEv.c	P1-vtable+mangled	ov010	daObjC1Hikari_c	LightBeam/daObjC1Hikari_c	vtable daObjC1Hikari_c slot 3 @0x2111a94 | _ZN9LightBeam16CleanupResourcesEv	1		True		-
 src/_ZN9LightBeamD0Ev.c	DTOR-ONLY	ov010	daObjC1Hikari_c	LightBeam/daObjC1Hikari_c	_ZN9LightBeamD0Ev	1		True		-
 src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj	1		True		by-value-class-param

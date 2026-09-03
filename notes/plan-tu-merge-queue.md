@@ -226,7 +226,7 @@ ov043 0x21113fc  n=5  L=107  RickshawBdw        CONF1
 ov052 0x21111a0  n=7  L=158  daObjEmmLog_c      CONF3 WHOLEMOD pcov=3 (1 distinct include)
 ov052 0x2111440  n=7  L=190  SquarePathLift     CONF2
 ov056 0x21111a0  n=7  L=216  BigMovingIceBlock  CONF2 WHOLEMOD pcov=2
-ov062 0x211af38  n=8  L=188  KoopaFlag          CONF2 pcov=3
+ov062 0x211af38  n=8  L=188  daRFlag_c          CONF2 pcov=3
 ov064 0x211a930  n=8  L=264  Clam               CONF1
 ```
 
