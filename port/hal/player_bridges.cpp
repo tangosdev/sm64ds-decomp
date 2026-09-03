@@ -720,6 +720,142 @@ static void yhd_probe(char *c, const int *scene, const char *head)
            yhd_sqrt(dtr), drot);
 }
 
+/* ---- SM64DS_HSINK_PROBE, and the scale the body draw was missing ------
+   Env-gated, inert unless SM64DS_HSINK_PROBE is set. Reads only; writes no
+   game state.
+
+   THE ROM PASSES ONE SCALE VECTOR TO BOTH HALVES OF THE PLAYER.
+   src/_ZN6Player6RenderEv.cpp:79 draws the body
+
+       _ZN5Model6RenderEPK7Vector3(bodyMdl, ((char*)this) + 0x80);
+
+   and :121 draws Yoshi's head with the SAME ((char*)this) + 0x80. That is
+   Player mScaleX/Y/Z (Actor.h +0x080/+0x084/+0x088). This port drew the head
+   with it and the body with nothing, until the call site below was corrected:
+
+       body:  ma->ModelAnim::Render(0)                     -> NULL == unit
+       head:  _ZN5Model6RenderEPK7Vector3(head, c + 0x80)  -> mScale
+
+   (that body call was ALSO the wrong method -- see the call site's own banner
+   for the re-pose half of the same one-line correction)
+
+   NULL really is unit: the vector reaches func_0204488c
+   (src/func_0204488c.c:66-72), which writes MTX_SCALE (0x0400046c) only when
+   the pointer is non-null, and it writes it AFTER the world matrix multiply
+   and BEFORE the per-bone MTX_TRANS -- so the scale multiplies the bone
+   translations, i.e. it scales the model about the model ROOT (the player's
+   feet), not about the bone.
+
+   With the root, the world rotation and the world translation identical for
+   both models, any scale != 1.0 moves one mesh and leaves the other where it
+   was. mScaleY is written by exactly two functions, both crush states:
+   Player::St_Squish_Main (src/_ZN6Player14St_Squish_MainEv.cpp, case 0 sets
+   mScaleY = 0x100 and case 1 walks it back up in 0x100 steps) and
+   Player::Unk_020c6a10 (mScaleY = 0x100, 30-frame hold), so in ordinary play
+   mScale is unit and this whole difference is invisible.
+
+   COLUMNS, all Fix12 (0x1000 == 1.0). Bone translations are SCENE units, which
+   are world >> 3.
+     frame   render frame counter
+     posY    Player mPosY (+0x60), world Fix12
+     sy      the Y the HEAD render was actually handed. Player mScaleY on
+             Yoshi (the i==3 arm); 4096 on Mario/Luigi/Wario, whose head is
+             a scene-space stand-in that is handed no scale at all -- see
+             hal_render_head_group
+     bsy     the Y the BODY render was actually handed this frame; it read
+             4096 on every frame before the fix, because the call passed
+             NULL, and it now carries Player mScaleY
+     hb0y    head bone 0 origin, model space Y
+     nky     body neck bone (bones + 0x2d0) origin, model space Y
+     headY   head bone 0 world Y AS DRAWN, i.e. through the head's scale
+     bodyY   neck bone world Y AS DRAWN, i.e. through the body's scale
+     gap     headY - bodyY. THIS IS THE ANSWER COLUMN. The head's anchor and
+             the body's neck are the same joint; a large negative gap is the
+             head drawn far below the neck it hangs from.
+     btris   polygons the body draw submitted this frame, so "the fix is a
+             no-op in unscaled play" is a measurement and not an argument.
+
+   MEASURED on castle grounds as Yoshi (SM64DS_CHARACTER=3, level 1),
+   squished at frame 66 by SM64DS_FORCE_STATE=squish, which calls the ROM's
+   own crusher entry Player::Unk_020c6a10(1):
+
+     standing, sy 4096   gap 0        on every frame
+     squished, sy 256    gap -41723   pre-fix, flat for the whole hold
+     squished, sy 256    gap 0        post-fix
+
+   -41723 Fix12 in scene units is 10.2 scene units, and scene is world >> 3,
+   so the head was drawn 81.5 world units below the neck it hangs from --
+   a head inside a body that had not shrunk.
+
+   MARIO/LUIGI/WARIO ARE BETTER BUT NOT WHOLE, and the residue is not this
+   line's. Their head is a separate cap model that the ROM parents to the
+   body's neck bone and renders with &mScaleX
+   (src/_ZN6Player6RenderEv.cpp:127); the port's stand-in composes the neck
+   into head+0x1c and passes no scale, so the cap keeps its full size while
+   the body shrinks. Same run as Mario (SM64DS_CHARACTER=0), squished:
+
+     [hsink] 68 1040384 4096 256 0 44136 130048 132806 -2758 246
+
+   gap -2758 Fix12 scene, 5.4 world units, against the same row's -44136
+   (the pre-fix figure the row gives directly: bodyY at unit scale is
+   130048 + 44136). So the body draw fixes 94 percent of his sink too, and
+   what is left is the non-Yoshi head stand-in, which is its own change to
+   its own function and is deliberately not made here.               */
+static int hsink_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_HSINK_PROBE");
+        on = e ? std::atoi(e) : 0;
+    }
+    return on;
+}
+static int hsink_worldY(const int *m, int px, int py, int pz)
+{
+    long long v = (long long)px * m[1] + (long long)py * m[4] +
+                  (long long)pz * m[7];
+    return (int)(v >> 12) + m[10];
+}
+static int hsink_axisY(const int *m, const int *b, const int *s)
+{
+    const int px = (int)(((long long)b[9]  * s[0]) >> 12);
+    const int py = (int)(((long long)b[10] * s[1]) >> 12);
+    const int pz = (int)(((long long)b[11] * s[2]) >> 12);
+    return hsink_worldY(m, px, py, pz);
+}
+static void hsink_probe(char *c, const int *scene, const char *head,
+                        const char *ma, const int *bscale,
+                        const int *hscale, int btris)
+{
+    static int on = -1;
+    if (on < 0) {
+        on = hsink_on();
+        if (on)
+            std::printf("[hsink] frame posY sy bsy hb0y nky headY bodyY gap btris\n");
+    }
+    if (!on || !head || !ma) return;
+
+    static int frame = 0;
+    const int unit[3] = { 0x1000, 0x1000, 0x1000 };
+    const int *hs = hscale ? hscale : unit;
+    const int *bs = bscale ? bscale : unit;
+
+    const char *hb = *(const char *const *)(head + 0x14);
+    const char *bb = *(const char *const *)(ma + 0x14);
+    if (!hb || !bb) { ++frame; return; }
+    const int *b0 = (const int *)hb;              /* head bone 0  */
+    const int *nk = (const int *)(bb + 0x2d0);    /* body neck    */
+
+    const int *hm = (const int *)(head + 0x1c);
+    const int headY = hsink_axisY(hm, b0, hs);
+    const int bodyY = hsink_axisY(scene, nk, bs);
+
+    std::printf("[hsink] %d %d %d %d %d %d %d %d %d %d\n", frame++,
+                *(const int *)(c + 0x60), hs[1], bs[1], b0[10], nk[10],
+                headY, bodyY, headY - bodyY, btris);
+}
+
+
 /* ---- THE VS COLOUR, AND WHY EVERY YOSHI WAS GREEN --------------------------
 
    In VS every player is Yoshi -- the spawn loop forces character 3 into every
@@ -1053,7 +1189,31 @@ void hal_render_player_world(void *player)
        (UpdateVerts, the palette stamp) is already done and the alpha is what
        the raster reads. */
     if (ghost) ghost_opacity(ma);
-    ma->ModelAnim::Render(0);
+    /* THE ROM'S BODY DRAW, WHOLE. src/_ZN6Player6RenderEv.cpp:79 is one
+       statement carrying two facts, and the port used to get both of them
+       wrong with `ma->ModelAnim::Render(0)`:
+
+           _ZN5Model6RenderEPK7Vector3(bodyMdl, ((char*)this) + 0x80);
+
+       BASE Model::Render, not ModelAnim::Render. ModelAnim::Render is
+       UpdateVerts + Model::Render (src/_ZN9ModelAnim6RenderEPK7Vector3.cpp),
+       so dispatching it here re-posed the body a second time at draw
+       time, after the UpdateVerts three lines up and after `scene` was
+       read. That is the same reach-past-the-anim the head's i==3 arm makes
+       for the same reason (see hal_render_head_group's banner).
+
+       AND THE +0x80 SCALE, not NULL. Player mScaleX/Y/Z. See the
+       SM64DS_HSINK_PROBE banner above for what NULL cost.
+
+       ONE LINE, BOTH HALVES, DELIBERATELY. They land on the same call and
+       either one alone is still not the ROM's statement; written as two
+       independent switches, whichever flipped second would silently edit
+       what the first one did. */
+    std::size_t hsink_t0 = 0;
+    if (hsink_on()) ntr::gx_polygons(hsink_t0);
+    ma->Model::Render((const Vector3 *)(c + 0x80));
+    std::size_t hsink_t1 = hsink_t0;
+    if (hsink_on()) ntr::gx_polygons(hsink_t1);
     hal_player_texseq_body(c);
 
     unsigned hid = func_ov002_020becf4(c, *(unsigned char *)(c + 0x6db), 1);
@@ -1061,6 +1221,10 @@ void hal_render_player_world(void *player)
         char *head = ((char **)(c + 0x154))[hid];
         if (head) {
             yhd_probe(c, scene, head);
+            hsink_probe(c, scene, head, (const char *)ma,
+                        (const int *)(c + 0x80),
+                        hid == 3 ? (const int *)(c + 0x80) : 0,
+                        (int)(hsink_t1 - hsink_t0));
             hal_player_vs_palette(c, head);
             if (ghost) ghost_opacity(head);
             hal_render_head_group(c, head, hid, ma, scene);
