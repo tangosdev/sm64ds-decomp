@@ -342,7 +342,9 @@ extern "C" int func_ov006_020ed18c(char *c)
    it -- every other access is a raw char* offset. The copy still spells the
    pair as two words, because the DISPATCH is wrong at four bytes whatever the
    layout does. The #pragma O3 the src carries is a mwcc directive and is
-   dropped; it affects no host semantics. */
+   dropped; it affects no host semantics.
+   PORT_HOST_ABI: mwcc pointer-to-member wall, the field-embedded {code,adj}
+   pair decoded through port_mg_wiggler_call0. Host-copied. */
 extern "C" void func_ov006_020eb018(char *c)
 {
     {
@@ -367,7 +369,9 @@ extern "C" void func_ov006_020eb018(char *c)
 }
 
 /* src/func_ov006_020eb0c8.cpp. Same `char pad10[0x10]; Pmf cb;` shape and the
-   same reasoning; the dispatch sits in the else arm and stays there. */
+   same reasoning; the dispatch sits in the else arm and stays there.
+   PORT_HOST_ABI: mwcc pointer-to-member wall, the field-embedded {code,adj}
+   pair decoded through port_mg_wiggler_call0. Host-copied. */
 extern "C" void func_ov006_020eb0c8(char *self)
 {
     if (_Z15ApproachLinear2Rsss((short *)(self + 0x90), 0, 1)) {
@@ -412,7 +416,9 @@ extern "C" void func_ov006_020eb0c8(char *self)
    pointer field. The src already spells that copy as two ints
    (`*(int*)c = b ? a : a; *(int*)(c+4) = b;`, mwcc's own shape for a member-
    pointer assignment), so the copy is verbatim and eight bytes wide on both
-   machines. Only the dispatch changed. */
+   machines. Only the dispatch changed.
+   PORT_HOST_ABI: mwcc pointer-to-member wall, the field-embedded {code,adj}
+   pair decoded through port_mg_wiggler_call0. Host-copied. */
 extern "C" void func_ov006_020eb31c(char *c)
 {
     short *t = (short *)(((int)c + 0x90));
@@ -455,7 +461,10 @@ extern "C" void func_ov006_020eb31c(char *c)
    it, and the first symptom would be eip on a raw DS address. THE NULL GUARD IS
    THE SRC'S OWN AND THE ROM'S: `cmp r2,#0 / beq` at 0x020eb71c, so this copy is
    not adding one. Everything above and below the decode is verbatim, including
-   the L()/M() casts, which are mwcc codegen shapes and mean `*(int*)`. */
+   the L()/M() casts, which are mwcc codegen shapes and mean `*(int*)`.
+   PORT_HOST_ABI: mwcc pointer-to-member wall, the open-coded ARM Itanium
+   decode over a DS code address; the port's own address-switch answers the
+   raw call. Host-copied. */
 extern "C" void func_ov006_020eb610(char *c)
 {
 #define WIG_L(a) (*(int *)(((long long)(int)(a))))
