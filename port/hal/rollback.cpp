@@ -158,6 +158,7 @@ unsigned g_det_tag = 0;
 uint64_t g_det_straight[3];
 char    *g_det_arena = 0, *g_det_ds = 0, *g_det_hw = 0;
 int      g_force_every = 0, g_force_depth = 0;   // SM64DS_ROLLBACK_FORCE=<every>:<depth>
+int      g_force_last = -1;          // the frame the last forced rewind fired at
 int      g_local_probe = 0;
 int      g_verbose = 0;
 int      g_no_render_skip = 0;       // SM64DS_ROLLBACK_FULL_RESIM=1: conservative re-sim
@@ -775,8 +776,11 @@ void rb_frame_end(int *frame, int selftest)
     const unsigned D = port::comms_rb_scan();
     if (D != ~0u) rollback_to(D, frame, tag, false);
     else if (g_force_every > 0 && *frame > 0 && *frame % g_force_every == 0 &&
-             (int)g_force_depth < (int)tag && ring_find(tag - g_force_depth))
+             *frame > g_force_last &&     // the replay lands on this frame again
+             (int)g_force_depth < (int)tag && ring_find(tag - g_force_depth)) {
+        g_force_last = *frame;
         rollback_to(tag - g_force_depth, frame, tag, true);
+    }
 
     if (selftest && *frame + 1 >= selftest && !g_replaying) report();
 }
