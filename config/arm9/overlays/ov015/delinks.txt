@@ -276,21 +276,9 @@ src/daObjBk_Ukisima_c_classInit.c:
     complete
     .text start:0x02112cb8 end:0x02112cf4
 
-src/_ZN11FallBlockWfD1Ev.cpp:
+src/actors/d_a_obj_bk_fall_block.cpp:
     complete
-    .text start:0x02112cf4 end:0x02112d44
-
-src/_ZN11FallBlockWfD0Ev.cpp:
-    complete
-    .text start:0x02112d44 end:0x02112da8
-
-src/_ZN11FallBlockWf16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112da8 end:0x02112dbc
-
-src/_ZN11FallBlockWf13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112dbc end:0x02112dd0
+    .text start:0x02112cf4 end:0x02112dd0
 
 src/daObjBk_Fall_Block_c_classInit.c:
     complete

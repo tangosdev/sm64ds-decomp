@@ -581,12 +581,12 @@ ov015	0x02112ba0	func_ov015_02112ba0	RotatingBridge_Spawn	spawnfunc
 ov015	0x02112ba0	RotatingBridge_Spawn	daObjBk_Rotebar_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x02112cb8	func_ov015_02112cb8	RotatingPlatformWf_Spawn	spawnfunc
 ov015	0x02112cb8	RotatingPlatformWf_Spawn	daObjBk_Ukisima_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x02112cf4	func_ov015_02112cf4	_ZN11FallBlockWfD1Ev	vtable slot 16
-ov015	0x02112d44	func_ov015_02112d44	_ZN11FallBlockWfD0Ev	vtable slot 17
-ov015	0x02112da8	func_ov015_02112da8	_ZN11FallBlockWf16CleanupResourcesEv	vtable slot 3
-ov015	0x02112dbc	func_ov015_02112dbc	_ZN11FallBlockWf13InitResourcesEv	vtable slot 0
-ov015	0x02112dd0	func_ov015_02112dd0	FallBlockWf_Spawn	spawnfunc
-ov015	0x02112dd0	FallBlockWf_Spawn	daObjBk_Fall_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov015	0x02112cf4	func_ov015_02112cf4	_ZN20daObjBk_Fall_Block_cD1Ev	vtable slot 16
+ov015	0x02112d44	func_ov015_02112d44	_ZN20daObjBk_Fall_Block_cD0Ev	vtable slot 17
+ov015	0x02112da8	func_ov015_02112da8	_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv	vtable slot 3
+ov015	0x02112dbc	func_ov015_02112dbc	_ZN20daObjBk_Fall_Block_c13InitResourcesEv	vtable slot 0
+ov015	0x02112dd0	func_ov015_02112dd0	daObjBk_Fall_Block_c_Spawn	spawnfunc
+ov015	0x02112dd0	daObjBk_Fall_Block_c_Spawn	daObjBk_Fall_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x0211433c	data_ov015_0211433c	PoleBillboard_SpawnInfo	spawninfo
 ov015	0x0211433c	PoleBillboard_SpawnInfo	g_profile_BK_BILLBOARD	reconstructed profile global; literal ROM ID BK_BILLBOARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x021143fc	data_ov015_021143fc	KnockDownPlank_SpawnInfo	spawninfo
@@ -603,9 +603,9 @@ ov015	0x021146f0	RotatingBridge_SpawnInfo	g_profile_BK_ROTEBAR	reconstructed pro
 ov015	0x02114714	data_ov015_02114714	_ZTV14RotatingBridge	vtable alloc=? (was _ZTV9TowerStep)
 ov015	0x021147c4	data_ov015_021147c4	RotatingPlatformWf_SpawnInfo	spawninfo
 ov015	0x021147c4	RotatingPlatformWf_SpawnInfo	g_profile_BK_UKISIMA	reconstructed profile global; literal ROM ID BK_UKISIMA+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x021148b8	data_ov015_021148b8	FallBlockWf_SpawnInfo	spawninfo
-ov015	0x021148b8	FallBlockWf_SpawnInfo	g_profile_BK_DOWN_B	reconstructed profile global; literal ROM ID BK_DOWN_B+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x021148dc	data_ov015_021148dc	_ZTV11FallBlockWf	vtable alloc=0x34c
+ov015	0x021148b8	data_ov015_021148b8	daObjBk_Fall_Block_c_SpawnInfo	spawninfo
+ov015	0x021148b8	daObjBk_Fall_Block_c_SpawnInfo	g_profile_BK_DOWN_B	reconstructed profile global; literal ROM ID BK_DOWN_B+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov015	0x021148dc	data_ov015_021148dc	_ZTV20daObjBk_Fall_Block_c	vtable alloc=0x34c
 ov016	0x021111a0	func_ov016_021111a0	_ZN5UnagiD1Ev	vtable slot 16
 ov016	0x02111208	func_ov016_02111208	_ZN5UnagiD0Ev	vtable slot 17
 ov016	0x021115a4	func_ov016_021115a4	BookSwitch_Spawn	spawnfunc

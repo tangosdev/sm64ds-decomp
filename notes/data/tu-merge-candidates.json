@@ -9719,15 +9719,15 @@
    "start": "0x2112cf4",
    "end": "0x2112e0c",
    "classes": [
-    "FallBlockWf"
+    "daObjBk_Fall_Block_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN11FallBlockWfD1Ev.cpp",
-    "src/_ZN11FallBlockWfD0Ev.c",
-    "src/_ZN11FallBlockWf16CleanupResourcesEv.c",
-    "src/_ZN11FallBlockWf13InitResourcesEv.c",
+    "src/_ZN20daObjBk_Fall_Block_cD1Ev.cpp",
+    "src/_ZN20daObjBk_Fall_Block_cD0Ev.c",
+    "src/_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv.c",
+    "src/_ZN20daObjBk_Fall_Block_c13InitResourcesEv.c",
     "src/daObjBk_Fall_Block_c_classInit.c"
    ],
    "ext_mix": {

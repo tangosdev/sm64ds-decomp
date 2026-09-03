@@ -67,10 +67,10 @@ _ZN18RotatingPlatformWfD0Ev kind:function(arm,size=0x64) addr:0x02112c20
 _ZN18RotatingPlatformWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
 _ZN18RotatingPlatformWf13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
 daObjBk_Ukisima_c_classInit kind:function(arm,size=0x3c) addr:0x02112cb8
-_ZN11FallBlockWfD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
-_ZN11FallBlockWfD0Ev kind:function(arm,size=0x64) addr:0x02112d44
-_ZN11FallBlockWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
-_ZN11FallBlockWf13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
+_ZN20daObjBk_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
+_ZN20daObjBk_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x02112d44
+_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
+_ZN20daObjBk_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
 daObjBk_Fall_Block_c_classInit kind:function(arm,size=0x3c) addr:0x02112dd0
 data_ov015_02112e0c kind:data(any) addr:0x02112e0c
 data_ov015_02112e10 kind:data(any) addr:0x02112e10
@@ -260,7 +260,7 @@ data_ov015_02114898 kind:data(any) addr:0x02114898 ambiguous
 _ZTS20daObjBk_Fall_Block_c kind:data(any) addr:0x021148a0
 data_ov015_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 g_profile_BK_DOWN_B kind:data(any) addr:0x021148b8 ambiguous
-_ZTV11FallBlockWf kind:data(any) addr:0x021148dc
+_ZTV20daObjBk_Fall_Block_c kind:data(any) addr:0x021148dc
 data_ov015_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov015_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov015_02114960 kind:bss addr:0x02114960
