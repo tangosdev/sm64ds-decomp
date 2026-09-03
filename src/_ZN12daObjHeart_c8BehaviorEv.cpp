@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12HealingHeart8BehaviorEv
-/* HealingHeart::Behavior -- once something is standing in the collider, heal
+// @symbol _ZN12daObjHeart_c8BehaviorEv
+/* daObjHeart_c::Behavior -- once something is standing in the collider, heal
  * that actor if it is the player (object id 0xbf), then start a 90-frame
  * cooldown. The heart spins slowly while idle and fast while cooling down.
  *
@@ -13,7 +13,7 @@
  * player is in dBgActor_c::KillByMegaChar: this TU has no use for Player.h
  * beyond two words.
  */
-#include "HealingHeart.h"
+#include "daObjHeart_c.h"
 
 extern "C" {
 u8   DecIfAbove0_Byte(u8 *p);
@@ -23,7 +23,7 @@ void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, const Vector3 *pos);
 void Math_Function_0203b14c(int *p, int a, int b, int c, int d);
 }
 
-int HealingHeart::Behavior()
+int daObjHeart_c::Behavior()
 {
     int spin = 0x1000;
     DecIfAbove0_Byte(&mHealTimer);

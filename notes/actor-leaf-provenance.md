@@ -202,15 +202,15 @@ Worth naming once here rather than thirteen times below.
 Source: `src/_ZN9SpikeBomb13InitResourcesEv.cpp`. Both branches of the header
 carry the rename.
 
-## HealingHeart -- include/HealingHeart.h
+## daObjHeart_c -- include/daObjHeart_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x16c | `mAnimSpeed` | seeded 0x1000 (1.0), eased toward 0x8000 while the heal cooldown is above 0x2d and back toward 0x1000 otherwise, then copied into `mModelAnim.speed`. The heart spins slowly while idle and fast just after it heals. |
 | 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
 
-Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
-`src/_ZN12HealingHeart8BehaviorEv.cpp`, and `src_tu/actors/HealingHeart.cpp`.
+Sources: `src/_ZN12daObjHeart_c13InitResourcesEv.cpp`,
+`src/_ZN12daObjHeart_c8BehaviorEv.cpp`, and `src_tu/actors/daObjHeart_c.cpp`.
 
 ## WingFeather -- include/WingFeather.h
 

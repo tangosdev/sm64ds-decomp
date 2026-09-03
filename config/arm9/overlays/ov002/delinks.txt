@@ -1262,11 +1262,11 @@ src/actors/d_a_obj_wakame.cpp:
     complete
     .text start:0x020bc414 end:0x020bc5e0
 
-src/_ZN12HealingHeartD1Ev.cpp:
+src/_ZN12daObjHeart_cD1Ev.cpp:
     complete
     .text start:0x020bc5e0 end:0x020bc618
 
-src/_ZN12HealingHeartD0Ev.cpp:
+src/_ZN12daObjHeart_cD0Ev.cpp:
     complete
     .text start:0x020bc618 end:0x020bc664
 
@@ -1274,23 +1274,23 @@ src/func_ov002_020bc664.c:
     complete
     .text start:0x020bc664 end:0x020bc6a4
 
-src/_ZN12HealingHeart16CleanupResourcesEv.cpp:
+src/_ZN12daObjHeart_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020bc6a4 end:0x020bc6d4
 
-src/_ZN12HealingHeart6RenderEv.cpp:
+src/_ZN12daObjHeart_c6RenderEv.cpp:
     complete
     .text start:0x020bc6d4 end:0x020bc6fc
 
-src/_ZN12HealingHeart8BehaviorEv.cpp:
+src/_ZN12daObjHeart_c8BehaviorEv.cpp:
     complete
     .text start:0x020bc6fc end:0x020bc81c
 
-src/_ZN12HealingHeart13InitResourcesEv.cpp:
+src/_ZN12daObjHeart_c13InitResourcesEv.cpp:
     complete
     .text start:0x020bc81c end:0x020bc8b4
 
-src/HealingHeart_Spawn.c:
+src/daObjHeart_c_classInit.c:
     complete
     .text start:0x020bc8b4 end:0x020bc8f4
 
