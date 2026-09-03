@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9KoopaFlag13InitResourcesEv
+// @symbol _ZN9daRFlag_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "KoopaFlag.h"
+#include "daRFlag_c.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct BCA_File;
@@ -25,7 +25,7 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, F
 extern SharedFilePtr data_ov062_0211e0d4;
 extern SharedFilePtr data_ov062_0211e0dc;
 
-int KoopaFlag::InitResources()
+int daRFlag_c::InitResources()
 {
     mModelAnim.SetFile(
         (BMD_File*)Model::LoadFile(data_ov062_0211e0d4), 1, -1);

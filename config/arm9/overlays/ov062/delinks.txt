@@ -376,11 +376,11 @@ src/KoopaTheQuick_Spawn.c:
     complete
     .text start:0x0211aee0 end:0x0211af38
 
-src/_ZN9KoopaFlagD1Ev.cpp:
+src/_ZN9daRFlag_cD1Ev.cpp:
     complete
     .text start:0x0211af38 end:0x0211af70
 
-src/_ZN9KoopaFlagD0Ev.cpp:
+src/_ZN9daRFlag_cD0Ev.cpp:
     complete
     .text start:0x0211af70 end:0x0211afbc
 
@@ -388,23 +388,23 @@ src/func_ov062_0211afbc.c:
     complete
     .text start:0x0211afbc end:0x0211b000
 
-src/_ZN9KoopaFlag16CleanupResourcesEv.cpp:
+src/_ZN9daRFlag_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211b000 end:0x0211b030
 
-src/_ZN9KoopaFlag6RenderEv.cpp:
+src/_ZN9daRFlag_c6RenderEv.cpp:
     complete
     .text start:0x0211b030 end:0x0211b05c
 
-src/_ZN9KoopaFlag8BehaviorEv.cpp:
+src/_ZN9daRFlag_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b05c end:0x0211b168
 
-src/_ZN9KoopaFlag13InitResourcesEv.cpp:
+src/_ZN9daRFlag_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211b168 end:0x0211b208
 
-src/KoopaFlag_Spawn.c:
+src/daRFlag_c_classInit.c:
     complete
     .text start:0x0211b208 end:0x0211b248
 

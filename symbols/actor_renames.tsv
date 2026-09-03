@@ -1407,13 +1407,13 @@ ov062	0x0211ab88	func_ov062_0211ab88	_ZN13KoopaTheQuick8BehaviorEv	vtable slot 6
 ov062	0x0211ac10	func_ov062_0211ac10	_ZN13KoopaTheQuick16CleanupResourcesEv	vtable slot 3
 ov062	0x0211ac94	func_ov062_0211ac94	_ZN13KoopaTheQuick13InitResourcesEv	vtable slot 0
 ov062	0x0211aee0	func_ov062_0211aee0	KoopaTheQuick_Spawn	spawnfunc
-ov062	0x0211af38	func_ov062_0211af38	_ZN9KoopaFlagD1Ev	vtable slot 16
-ov062	0x0211af70	func_ov062_0211af70	_ZN9KoopaFlagD0Ev	vtable slot 17
-ov062	0x0211b000	func_ov062_0211b000	_ZN9KoopaFlag16CleanupResourcesEv	vtable slot 3
-ov062	0x0211b030	func_ov062_0211b030	_ZN9KoopaFlag6RenderEv	vtable slot 9
-ov062	0x0211b05c	func_ov062_0211b05c	_ZN9KoopaFlag8BehaviorEv	vtable slot 6
-ov062	0x0211b168	func_ov062_0211b168	_ZN9KoopaFlag13InitResourcesEv	vtable slot 0
-ov062	0x0211b208	func_ov062_0211b208	KoopaFlag_Spawn	spawnfunc
+ov062	0x0211af38	func_ov062_0211af38	_ZN9daRFlag_cD1Ev	vtable slot 16
+ov062	0x0211af70	func_ov062_0211af70	_ZN9daRFlag_cD0Ev	vtable slot 17
+ov062	0x0211b000	func_ov062_0211b000	_ZN9daRFlag_c16CleanupResourcesEv	vtable slot 3
+ov062	0x0211b030	func_ov062_0211b030	_ZN9daRFlag_c6RenderEv	vtable slot 9
+ov062	0x0211b05c	func_ov062_0211b05c	_ZN9daRFlag_c8BehaviorEv	vtable slot 6
+ov062	0x0211b168	func_ov062_0211b168	_ZN9daRFlag_c13InitResourcesEv	vtable slot 0
+ov062	0x0211b208	func_ov062_0211b208	daRFlag_c_classInit	spawnfunc
 ov062	0x0211b248	func_ov062_0211b248	_ZN6KleptoD1Ev	vtable slot 16
 ov062	0x0211b298	func_ov062_0211b298	_ZN6KleptoD0Ev	vtable slot 17
 ov062	0x0211c8b0	func_ov062_0211c8b0	_ZN6Klepto16CleanupResourcesEv	vtable slot 3
@@ -1429,8 +1429,8 @@ ov062	0x0211da90	data_ov062_0211da90	KoopaSmall_SpawnInfo	spawninfo
 ov062	0x0211dab4	data_ov062_0211dab4	_ZTV5Koopa	vtable alloc=0x3d0
 ov062	0x0211db78	data_ov062_0211db78	KoopaTheQuick_SpawnInfo	spawninfo
 ov062	0x0211db9c	data_ov062_0211db9c	_ZTV13KoopaTheQuick	vtable alloc=0x3e0
-ov062	0x0211dc30	data_ov062_0211dc30	KoopaFlag_SpawnInfo	spawninfo
-ov062	0x0211dc54	data_ov062_0211dc54	_ZTV9KoopaFlag	vtable alloc=0x174
+ov062	0x0211dc30	data_ov062_0211dc30	g_profile_RACE_FLAG	spawninfo
+ov062	0x0211dc54	data_ov062_0211dc54	_ZTV9daRFlag_c	vtable alloc=0x174
 ov062	0x0211dd38	data_ov062_0211dd38	Klepto_SpawnInfo	spawninfo
 ov062	0x0211dd5c	data_ov062_0211dd5c	_ZTV6Klepto	vtable alloc=0x490
 ov063	0x02115ee0	func_ov063_02115ee0	_ZN7daTrs_cD1Ev	vtable slot 16

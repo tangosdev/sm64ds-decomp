@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9KoopaFlag6RenderEv
+// @symbol _ZN9daRFlag_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "KoopaFlag.h"
+#include "daRFlag_c.h"
 
-int KoopaFlag::Render()
+int daRFlag_c::Render()
 {
     mModelAnim.Render(0);
     return 1;

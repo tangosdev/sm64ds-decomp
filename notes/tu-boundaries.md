@@ -26,7 +26,7 @@ about structure, and the map does not merge anything.
 ## The trap that makes the naive detector look correct
 
 Cut wherever the class name changes, and ov062 scores 5/5. Chuckya, Koopa,
-KoopaTheQuick, KoopaFlag and Klepto really do sit in five contiguous runs.
+KoopaTheQuick, daRFlag_c and Klepto really do sit in five contiguous runs.
 
 ov062 is the lucky case. Where two classes share a file, mwcc emits their methods
 **interleaved in source order**, not grouped by class:

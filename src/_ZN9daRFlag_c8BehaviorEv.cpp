@@ -1,16 +1,16 @@
 //cpp
-// @symbol _ZN9KoopaFlag8BehaviorEv
+// @symbol _ZN9daRFlag_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Timer.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "KoopaFlag.h"
+#include "daRFlag_c.h"
 extern "C" {
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 }
 extern char data_0209d4c8[];
 
-int KoopaFlag::Behavior()
+int daRFlag_c::Behavior()
 {
     unsigned int id;
     dActor_c *a;
