@@ -992,6 +992,7 @@
     "src/func_ov002_020cd3e0.cpp": "ruspecial",
     "src/func_ov003_020adc10.c": "ruspecial",
     "src/func_ov003_020adc10.cpp": "ruspecial",
+    "src/func_ov006_020f6904.c": "github-actions[bot]",
     "src/func_ov006_0210ddf0.c": "andrewboudreau",
     "src/func_ov006_0210e014.c": "ruspecial",
     "src/func_ov006_0210e098.c": "tangosdev",
