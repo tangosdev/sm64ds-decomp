@@ -1405,6 +1405,15 @@
     "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c13OnTurnIntoEggER6Player": "github-actions[bot]",
     "src/actors/d_a_obj_fire.cpp#_ZN11daObjFire_c13OnYoshiTryEatEv": "andrewboudreau",
     "src/actors/d_a_obj_fire.cpp#BlueFlame_Spawn": "github-actions[bot]",
-    "src/actors/d_a_obj_fire.cpp#RedFlame_Spawn": "github-actions[bot]"
+    "src/actors/d_a_obj_fire.cpp#RedFlame_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_clock.cpp#func_ov013_02111430": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#ClockPaintingHandShort_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_clock.cpp#ClockPaintingHandLong_Spawn": "github-actions[bot]"
   }
 }

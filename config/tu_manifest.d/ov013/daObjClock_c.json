@@ -1,9 +1,9 @@
 {
   "id": "ov013/daObjClock_c",
   "module": "ov013",
-  "source": "src_tu/actors/daObjClock_c.cpp",
+  "source": "src/actors/d_a_obj_clock.cpp",
   "promoted_source": "src/actors/d_a_obj_clock.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21113bc..0x211163c, 7 function(s), from build/tu_map.json (tools/tu_map.py), HAND-EXTENDED to 0x211163c..0x21116ac: tu_map splits the two unlabelled factories ClockPaintingHandShort_Spawn and ClockPaintingHandLong_Spawn into TUs of their own, but both build this class -- same 0x128 allocation, same _ZTV12daObjClock_c address point, same _ZN5ModelC1Ev at +0xd4 -- and their two descriptors sit inside the same .data run as this class's RTTI group",

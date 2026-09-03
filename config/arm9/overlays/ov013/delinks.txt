@@ -8,41 +8,10 @@ src/actors/d_a_obj_clock_huriko.cpp:
     complete
     .text start:0x021111a0 end:0x021113bc
 
-src/_ZN12daObjClock_cD1Ev.cpp:
+src/actors/d_a_obj_clock.cpp:
     complete
-    .text start:0x021113bc end:0x021113ec
-
-src/_ZN12daObjClock_cD0Ev.cpp:
-    complete
-    .text start:0x021113ec end:0x02111430
-
-src/func_ov013_02111430.c:
-    complete
-    .text start:0x02111430 end:0x02111478
-
-src/_ZN12daObjClock_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111478 end:0x021114a4
-
-src/_ZN12daObjClock_c6RenderEv.cpp:
-    complete
-    .text start:0x021114a4 end:0x021114cc
-
-src/_ZN12daObjClock_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021114cc end:0x021115cc
-
-src/_ZN12daObjClock_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021115cc end:0x0211163c
-
-src/ClockPaintingHandShort_Spawn.cpp:
-    complete
-    .text start:0x0211163c end:0x02111674
-
-src/ClockPaintingHandLong_Spawn.c:
-    complete
-    .text start:0x02111674 end:0x021116ac
+    .text start:0x021113bc end:0x021116ac
+    .data start:0x021121a4 end:0x0211227c
 
 src/__sinit_ov013_021116b8.c:
     complete
