@@ -1,0 +1,748 @@
+{
+  "id": "ov012/daObjC0Water_c",
+  "module": "ov012",
+  "source": "src_tu/actors/daObjC0Water_c.cpp",
+  "promoted_source": "src/actors/d_a_obj_c0_water.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111450..0x2111768, 7 function(s), from build/tu_map.json (tools/tu_map.py). tu_map splits the unlabelled factory at 0x02111730 into a TU of its own, but it builds this class -- the same 0x340 allocation, the same _ZTV14daObjC0Water_c address point, the same _ZN18TextureTransformerC1Ev at +0x320 -- and the descriptor naming it sits inside the same .data run as this class's RTTI group, so the manifest is extended over it by hand",
+    "class label(s): daObjC0Water_c",
+    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "data run 0x21123c4..0x2112488: _ZTI/_ZTS for this class, the 0x1c actor descriptor at 0x021123e4, then the vtable storage at 0x02112400 whose address point is 0x02112408 and whose 32 slots end at 0x02112488. This class closes ov012's .data; delinks.txt gives that section end:0x021124a0 align:32, so the 24 zero bytes past the vtable are the section's own alignment padding, owned by nobody. A neutral data_ov012_02112488 row was added over them purely to bound the vtable's dsd extent -- without it dsd sizes _ZTV as everything up to the section end and refuses the file."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111450",
+      "end": "0x02111768"
+    },
+    {
+      "name": ".data",
+      "start": "0x021123c4",
+      "end": "0x02112488"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjC0Water_cD1Ev",
+      "address": "0x02111450",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14daObjC0Water_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjC0Water_cD0Ev",
+      "address": "0x0211149c",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN14daObjC0Water_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN14daObjC0Water_c16CleanupResourcesEv",
+      "address": "0x021114fc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN14daObjC0Water_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN14daObjC0Water_c6RenderEv",
+      "address": "0x02111540",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN14daObjC0Water_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjC0Water_c8BehaviorEv",
+      "address": "0x02111574",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN14daObjC0Water_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14daObjC0Water_c13InitResourcesEv",
+      "address": "0x0211164c",
+      "size": "0x000000e4",
+      "legacy_source": "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "daObjC0Water_c_classInit",
+      "address": "0x02111730",
+      "size": "0x00000038",
+      "legacy_source": "src/daObjC0Water_c_classInit.c",
+      "ordinal": 6
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTI14daObjC0Water_c",
+      "address": "0x021123c4",
+      "size": "0xc",
+      "evidence": "own class typeinfo: __si_class_type_info vtable+8 (0x0209a764), its own _ZTS at 0x021123d0, then base _ZTI10dBgActor_c at ov012-visible 0x021089ec, whose canonical home is ov002; retail opens the run with it"
+    },
+    {
+      "symbol": "_ZTS14daObjC0Water_c",
+      "address": "0x021123d0",
+      "size": "0x11",
+      "evidence": "ROM type-name string '14daObjC0Water_c': 16 chars + NUL = 0x11 emitted bytes, followed by 3 bytes of alignment padding before the next object"
+    },
+    {
+      "symbol": "g_profile_C0_WATER",
+      "address": "0x021123e4",
+      "size": "0x1c",
+      "evidence": "typed actor profile; word 0 relocates to daObjC0Water_c_classInit at 0x02111730 and all seven fields are compared to retail. The C0_WATER name was already the ROM profile id"
+    },
+    {
+      "symbol": "_ZTV14daObjC0Water_c",
+      "address": "0x02112408",
+      "emitted_storage_address": "0x02112400",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble (offset-to-top 0, typeinfo 0x021123c4); the public address point stays 0x02112408 and its 32 slots hold this class's overrides at 0, 3, 6, 9, 16, 17, with slot 31 left as dBgActor_c::Kill at ov002 0x020ee55c"
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "Promoted to a single translation unit. The destructor is INLINE and declared FIRST in include/daObjC0Water_c.h: that makes this TU emit the retail D1/D0 pair in retail order with no homeless D2, and makes it the TU that emits the _ZTV/_ZTI/_ZTS group -- so the factory installs the vptr as &_ZTV14daObjC0Water_c[2], not the bare symbol.",
+    "daObjC0Water_c_classInit and g_profile_C0_WATER are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were daObjC0Water_c_Spawn and daObjC0Water_c_SpawnInfo.",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN14daObjC0Water_c8BehaviorEv and the one that held _ZN14daObjC0Water_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN14daObjC0Water_c8BehaviorEv and the one that held _ZN14daObjC0Water_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "Nine neutral data_ov012_* rows inside this run (0x021123f4, 0x02112404, 0x0211241c, 0x02112428, 0x02112434, 0x02112438, 0x0211244c, 0x02112464, 0x02112494) were deleted from config/arm9/overlays/ov012/symbols.txt. None was this class's: every one is marked ambiguous and every one is an arm9/ov074 fan-out -- ov074 loads those addresses under module:overlays(9,10,12,24,33,35,43,45,47,52,53,56), so dsd resolved one unresolvable pointer into every overlay that covers it and left a phantom mid-object. They split the profile and the vtable, and the last of them overran the run's end, which is what dsd delink refused. Same removal the daObjWlPolelift_c promotion made in ov026."
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov012-daObjC0Water_c/daObjC0Water_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS10dBgActor_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c"
+      ]
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov012-daObjC0Water_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111450",
+        "end": "0x02111768",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111450",
+          "end": "0x02111768",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021123c4",
+          "end": "0x02112488",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 11
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              16,
+              19,
+              20,
+              22
+            ],
+            "desired": [
+              16,
+              19,
+              20,
+              22
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI. Unlike the other bases this one is homed in ov002, not arm9 -- dBgActor_c::Kill is its key function and lives there."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string, homed in ov002 alongside its typeinfo."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021123c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021123c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS14daObjC0Water_c",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x021123d0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021123cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x021123e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjC0Water_c_classInit",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x02111730"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112404",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI14daObjC0Water_c",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x021123c4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112408",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x0211164c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211240c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112410",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112414",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x021114fc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112418",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211241c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112420",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x02111574"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112424",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112428",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211242c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x02111540"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112430",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112434",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112438",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211243c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112440",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112444",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112448",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_cD1Ev",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x02111450"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211244c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN14daObjC0Water_cD0Ev",
+      "addend": 0,
+      "target_module": "ov012",
+      "target_address": "0x0211149c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112450",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112454",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112458",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211245c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112460",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112464",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112468",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211246c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112470",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112474",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112478",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211247c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112480",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112484",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    }
+  ],
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "derivedObjects": 7,
+    "contributionEquivalent": "7/7",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "legacyEntriesComplete": "7/7",
+    "extraInertImports": 80,
+    "extraImportsWithNoHome": [],
+    "artefacts": "build/tu/ov012-daObjC0Water_c/partial/partial.json (gitignored)",
+    "state": "contribution-equivalent",
+    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "delinksChanged": false,
+    "substitutedObjectPaths": [
+      "src/_ZN14daObjC0Water_cD1Ev.cpp",
+      "src/_ZN14daObjC0Water_cD0Ev.cpp",
+      "src/_ZN14daObjC0Water_c16CleanupResourcesEv.cpp",
+      "src/_ZN14daObjC0Water_c6RenderEv.cpp",
+      "src/_ZN14daObjC0Water_c8BehaviorEv.cpp",
+      "src/_ZN14daObjC0Water_c13InitResourcesEv.cpp",
+      "src/daObjC0Water_c_classInit.c"
+    ],
+    "result": "failed",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x02111450",
+      "end": "0x02111768",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": null,
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "scratch": "build/tu/ov012-daObjC0Water_c/link-partial (gitignored)"
+  }
+}

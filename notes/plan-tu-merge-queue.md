@@ -202,7 +202,7 @@ ov009 0x2111a70  n=8  L=247  CastleWater      CONF1
 ov009 0x2111dc4  n=8  L=163  MetalNet         CONF2 pcov=2
 ov010 0x21119d0  n=8  L=233  LightBeam        CONF1 pcov=3
 ov010 0x2111e10  n=8  L=148  daObjC1Peach_c    CONF1 pcov=3
-ov012 0x2111450  n=7  L=164  BasementWater    CONF2
+ov012 0x2111450  n=7  L=164  daObjC0Water_c    CONF2
 ov015 0x2112944  n=7  L=143  RotatingBridge   CONF2
 ov016 0x211260c  n=8  L=185  ShipUp           CONF1
 ```
