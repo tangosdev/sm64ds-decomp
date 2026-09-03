@@ -4,41 +4,10 @@
     .ctor       start:0x02112da4 end:0x02112db8 kind:rodata align:4
     .data       start:0x02112dc0 end:0x02113ea0 kind:data align:32
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
-src/_ZN17daObjWlPolelift_cD1Ev.cpp:
+src/actors/d_a_obj_wl_polelift.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e0
-
-src/_ZN17daObjWlPolelift_cD0Ev.cpp:
-    complete
-    .text start:0x021111e0 end:0x02111234
-
-src/func_ov026_02111234.cpp:
-    complete
-    .text start:0x02111234 end:0x021112a4
-
-src/func_ov026_021112a4.c:
-    complete
-    .text start:0x021112a4 end:0x021112e4
-
-src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021112e4 end:0x02111308
-
-src/_ZN17daObjWlPolelift_c6RenderEv.cpp:
-    complete
-    .text start:0x02111308 end:0x02111330
-
-src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02111330 end:0x02111598
-
-src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111598 end:0x02111678
-
-src/daObjWlPolelift_c_classInit.cpp:
-    complete
-    .text start:0x02111678 end:0x021116c8
+    .text start:0x021111a0 end:0x021116c8
+    .data start:0x02113a9c end:0x02113b5c
 
 src/_ZN13BowserShutterD1Ev.cpp:
     complete

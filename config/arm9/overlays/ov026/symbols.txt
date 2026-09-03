@@ -168,14 +168,9 @@ data_ov026_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 data_ov026_02113a74 kind:data(any) addr:0x02113a74 ambiguous
 _ZTI17daObjWlPolelift_c kind:data(any) addr:0x02113a90
 data_ov026_02113a9c kind:data(any) addr:0x02113a9c
-data_ov026_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 _ZTS17daObjWlPolelift_c kind:data(any) addr:0x02113aa8
 g_profile_WL_POLELIFT kind:data(any) addr:0x02113abc ambiguous
-data_ov026_02113ae0 kind:data(any) addr:0x02113ae0
 _ZTV17daObjWlPolelift_c kind:data(any) addr:0x02113ae0
-data_ov026_02113b10 kind:data(any) addr:0x02113b10 ambiguous
-data_ov026_02113b2c kind:data(any) addr:0x02113b2c ambiguous
-data_ov026_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 _ZTI21daObjWlKoopaShutter_c kind:data(any) addr:0x02113b5c
 _ZTS21daObjWlKoopaShutter_c kind:data(any) addr:0x02113b68
 data_ov026_02113b7c kind:data(any) addr:0x02113b7c ambiguous

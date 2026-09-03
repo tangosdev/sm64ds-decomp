@@ -69,17 +69,19 @@ struct daObjWlPolelift_c : dActor_c {
     struct Matrix4x3 dropShadowMtx;  /* 0x1b0 */
     s32  groundY;                    /* 0x1e0 */
 
-    /* Declared first -- key function; see the family convention discussed in
-       dActor_c.h. The D1 and D0 translation units both define this real empty
-       method; CodeWarrior generates their complete-object/member teardown and
-       objisolate retains the enrolled variant from each object. */
-    virtual ~daObjWlPolelift_c();                        /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared first. Out of line, mwccarm emits the D2/D1/D0 triple
+       in D0-before-D1 order, and this class's retail layout puts D1 (0x021111a0)
+       BELOW D0 (0x021111e0) -- objisolate then refuses the whole TU because its
+       licensed functions are not emitted in ROM address order. The inline body
+       emits only the retail D1/D0 pair, in retail order. */
+    virtual ~daObjWlPolelift_c() {}                      /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dActor_c/_ZTV7fBase_c order. --- */
     virtual s32 InitResources();                         /* slot  0 */
     virtual s32 CleanupResources();                        /* slot  3 */
     virtual s32 Behavior();                                 /* slot  6 */
     virtual s32 Render();                                   /* slot  9 */
+
 };
 
 typedef char daObjWlPolelift_c_size_must_be_0x1e4[
