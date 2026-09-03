@@ -81,6 +81,11 @@ extern void _ZN10ClsnResultD1Ev(void *self);
 
 extern int data_02099368;
 extern short data_02082214[];
+/* The quarantine net's interaction-receiver latch (func_02043fdc_hostcopy.cpp):
+   name the receiver about to be dispatched so a genuine access violation inside
+   its slot freezes the RECEIVER, not the player driving the interaction. */
+void *port_actor_interaction_begin(void *receiver);
+void port_actor_interaction_end(void *prev);
 }
 
 /* The one changed line's shape. Twenty-four filler virtuals put the
@@ -162,7 +167,9 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *actor)
                 void *a = _ZN5Actor10FindWithIDEj(
                     _ZNK10ClsnResult9GetClsnIDEv(&tmp));
                 if (a) {
+                    void *port_prev_recv = port_actor_interaction_begin(a);
                     ((KickActor *)a)->OnKicked(actor);
+                    port_actor_interaction_end(port_prev_recv);
                     _ZN10ClsnResultD1Ev(&tmp);
                     _ZN11RaycastLineD1Ev(rl);
                     return 1;
