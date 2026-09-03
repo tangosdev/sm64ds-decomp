@@ -4290,6 +4290,10 @@ void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned actorID,
                                                    int deathTableID);
 extern void *data_0209f394[];          /* the local players, [0] is ours */
 const char *port_actor_class_name(unsigned id);
+/* the ROM's actor-list walk: the first actor with this id after `prev`, or
+   null. Passing null asks for the first one, so a null answer to a null
+   `prev` means the level has none at all. */
+void *_ZN5Actor15FindWithActorIDEjPS_(unsigned id, void *prev);
 }
 
 /* ===========================================================================
@@ -4632,6 +4636,59 @@ static int port_actor_area(const void *actor)
     return *(const signed char *)((const char *)actor + 0xcc);
 }
 
+/* ---- classes whose ROM Behavior WAITS on a partner actor ------------------
+   BigBrickBlock (19) opens with, in the ROM and correctly:
+
+       do { mSwitch = Actor::FindWithActorID(0xb, mSwitch); p = mSwitch; }
+       while (p == 0 || mEventID != *(u8 *)(p + 0x34e));
+
+   -- it walks the actor list for its EXCLAMATION_SWITCH (11) and will not
+   leave that loop until it finds one whose event id matches. On a level that
+   ships both, which is every level that places the bricks (Jolly Roger Bay is
+   the measured one), the walk ends on the first or second pass. On a level
+   with no id-11 actor at all, FindWithActorID restarts at the list head and
+   hands back null forever, and the game wedges inside the first Behavior tick
+   -- one core pinned, no fault, no timeout of its own.
+
+   That loop IS the ROM and stays exactly as it is; src/ is not the place to
+   fix this and there is nothing there to fix. What is not the ROM is
+   SM64DS_SPAWN_ACTOR dropping a 19 onto a level the ROM would never have put
+   one on -- the wedge is reachable only through this debug knob. So the knob
+   refuses, by name, and the run carries on.
+
+   Refuse rather than quietly spawning the partner as well: the knob's whole
+   contract is that it spawns what it was asked for, and a log line reading
+   "actor 19" while an unasked-for actor 11 also stood in the level would make
+   every later run lie about what was in it.
+
+   One row, because one pair is measured. Do not add a row without the wedge
+   in hand. */
+static const struct { unsigned id; unsigned needs; } port_dbgspawn_partner[] = {
+    {19, 11},   /* BRICK_BLOCK_SWITCH_ACTIVATED needs EXCLAMATION_SWITCH */
+};
+
+/* True when `id` wants a partner this level does not have -- and says so. */
+static int port_dbgspawn_partner_missing(unsigned id)
+{
+    for (unsigned i = 0; i < sizeof port_dbgspawn_partner /
+                             sizeof port_dbgspawn_partner[0]; ++i) {
+        unsigned needs = port_dbgspawn_partner[i].needs;
+        if (port_dbgspawn_partner[i].id != id)
+            continue;
+        if (_ZN5Actor15FindWithActorIDEjPS_(needs, 0))
+            return 0;
+        std::fprintf(stderr, "  [dbgspawn] REFUSED actor %u (%s): its ROM "
+                     "Behavior walks the actor list for a partner actor %u "
+                     "(%s), this level has none, and that search never ends "
+                     "-- skipping this spawn; spell %u,%u to spawn the pair\n",
+                     id, port_actor_class_name(id), needs,
+                     port_actor_class_name(needs), needs, id);
+        return 1;
+    }
+    return 0;
+}
+
+
 /* Spawn `id` at an explicit world position (Fix12i, i.e. units << 12) facing
    `yaw`. Returns the ActorBase* the spine built, or 0 when the registry gate
    turned the class away -- which it reports itself, on stdout. */
@@ -4649,6 +4706,11 @@ extern "C" void *port_debug_spawn_at(unsigned id, unsigned param,
                          port_level_owned_class[i].what, port_level_id());
             return 0;
         }
+
+    /* the partner-actor gate, same shape and same reason as the one above:
+       a spawn that would wedge the game is refused, not attempted */
+    if (port_dbgspawn_partner_missing(id))
+        return 0;
 
     PortVec3 pos;
     PortVec3_16 rot;
