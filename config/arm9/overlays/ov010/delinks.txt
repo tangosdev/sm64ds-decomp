@@ -39,37 +39,10 @@ src/daObjC1Hikari_c_classInit.c:
     complete
     .text start:0x02111dd0 end:0x02111e10
 
-src/_ZN14daObjC1Peach_cD1Ev.cpp:
+src/actors/d_a_obj_c1_peach.cpp:
     complete
-    .text start:0x02111e10 end:0x02111e40
-
-src/_ZN14daObjC1Peach_cD0Ev.cpp:
-    complete
-    .text start:0x02111e40 end:0x02111e84
-
-src/_ZN14daObjC1Peach_c20UpdateModelTransformEv.cpp:
-    complete
-    .text start:0x02111e84 end:0x02111ec4
-
-src/_ZN14daObjC1Peach_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111ec4 end:0x02111ee8
-
-src/_ZN14daObjC1Peach_c6RenderEv.cpp:
-    complete
-    .text start:0x02111ee8 end:0x02111f28
-
-src/_ZN14daObjC1Peach_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02111f28 end:0x02111fc0
-
-src/_ZN14daObjC1Peach_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111fc0 end:0x02112004
-
-src/daObjC1Peach_c_classInit.c:
-    complete
-    .text start:0x02112004 end:0x0211203c
+    .text start:0x02111e10 end:0x0211203c
+    .data start:0x02112c24 end:0x02112ce4
 
 src/__sinit_ov010_0211203c.c:
     complete
