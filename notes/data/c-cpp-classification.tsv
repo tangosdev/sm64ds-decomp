@@ -791,8 +791,8 @@ src/_ZN17BigMovingIceBlockD1Ev.c	DTOR-ONLY	ov056	daObjEwmIceBlock_c	BigMovingIce
 src/_ZN17BowserPuzzlePieceD0Ev.c	DTOR-ONLY	ov064	daObjFl_Puzzle_c	BowserPuzzlePiece/daObjFl_Puzzle_c	_ZN17BowserPuzzlePieceD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17BowserPuzzlePiece	-
 src/_ZN17BowserPuzzlePieceD1Ev.c	DTOR-ONLY	ov064	daObjFl_Puzzle_c	BowserPuzzlePiece/daObjFl_Puzzle_c	_ZN17BowserPuzzlePieceD1Ev	1		True	_ZTV10dBgActor_c/_ZTV17BowserPuzzlePiece	-
 src/_ZN17BowserSkyPlatformD0Ev.c	DTOR-ONLY	ov060	daKpa3Bg_c	BowserSkyPlatform/daKpa3Bg_c	_ZN17BowserSkyPlatformD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17BowserSkyPlatform	-
-src/_ZN17ExtendingPlatform16OnPendingDestroyEv.c	P1-vtable+mangled	ov045	daObjKm2_Nobiru_c	ExtendingPlatform/daObjKm2_Nobiru_c	vtable daObjKm2_Nobiru_c slot 12 @0x2111970 | _ZN17ExtendingPlatform16OnPendingDestroyEv	1		True		-
-src/_ZN17ExtendingPlatformD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Nobiru_c	ExtendingPlatform/daObjKm2_Nobiru_c	_ZN17ExtendingPlatformD0Ev	1		True		-
+src/_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov045	daObjKm2_Nobiru_c	daObjKm2_Nobiru_c/daObjKm2_Nobiru_c	vtable daObjKm2_Nobiru_c slot 12 @0x2111970 | _ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv	1		True		-
+src/_ZN17daObjKm2_Nobiru_cD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Nobiru_c	daObjKm2_Nobiru_c/daObjKm2_Nobiru_c	_ZN17daObjKm2_Nobiru_cD0Ev	1		True		-
 src/_ZN17daObjKm1_Dorifu_cD0Ev.c	DTOR-ONLY	ov043	daObjKm1_Dorifu_c	daObjKm1_Dorifu_c	_ZN17daObjKm1_Dorifu_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjDorifu_c/_ZTV17daObjKm1_Dorifu_c	-
 src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.c	P1-vtable+mangled	ov047	daObjKm3_Kuruma_c	daObjKm3_Kuruma_c	vtable daObjKm3_Kuruma_c slot 0 @0x21114c0 | _ZN17daObjKm3_Kuruma_c13InitResourcesEv	1		True		-
 src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.c	P1-vtable+mangled	ov047	daObjKm3_Kuruma_c	daObjKm3_Kuruma_c	vtable daObjKm3_Kuruma_c slot 3 @0x21114ac | _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv	1		True		-

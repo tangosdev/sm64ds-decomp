@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN17ExtendingPlatform20UpdateModelTransformEv
-#include "ExtendingPlatform.h"
+// @symbol _ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv
+#include "daObjKm2_Nobiru_c.h"
 
 extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *, s32);
 
-void ExtendingPlatform::UpdateModelTransform()
+void daObjKm2_Nobiru_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;

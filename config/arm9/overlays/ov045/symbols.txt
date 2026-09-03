@@ -14,15 +14,15 @@ _ZN8PoleLift6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
 _ZN8PoleLift8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
 _ZN8PoleLift13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
 daObjKm2_Ami_Bou_c_classInit kind:function(arm,size=0x38) addr:0x02111808
-_ZN17ExtendingPlatformD1Ev kind:function(arm,size=0x38) addr:0x02111840
-_ZN17ExtendingPlatformD0Ev kind:function(arm,size=0x4c) addr:0x02111878
-_ZN17ExtendingPlatform23UpdateColliderTransformEv kind:function(arm,size=0x34) addr:0x021118c4
-_ZN17ExtendingPlatform20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x021118f8
-_ZN17ExtendingPlatform16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111938
-_ZN17ExtendingPlatform16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111970
-_ZN17ExtendingPlatform6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
-_ZN17ExtendingPlatform8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
-_ZN17ExtendingPlatform13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
+_ZN17daObjKm2_Nobiru_cD1Ev kind:function(arm,size=0x38) addr:0x02111840
+_ZN17daObjKm2_Nobiru_cD0Ev kind:function(arm,size=0x4c) addr:0x02111878
+_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv kind:function(arm,size=0x34) addr:0x021118c4
+_ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x021118f8
+_ZN17daObjKm2_Nobiru_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111938
+_ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111970
+_ZN17daObjKm2_Nobiru_c6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
+_ZN17daObjKm2_Nobiru_c8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
+_ZN17daObjKm2_Nobiru_c13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
 daObjKm2_Nobiru_c_classInit kind:function(arm,size=0x40) addr:0x02111ad4
 _ZN16FloatingFloorBfsD1Ev kind:function(arm,size=0x50) addr:0x02111b14
 _ZN16FloatingFloorBfsD0Ev kind:function(arm,size=0x64) addr:0x02111b64
@@ -136,7 +136,6 @@ _ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
 _ZTI17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e3c
 _ZTS17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e48
 g_profile_KM2_NOBIRU kind:data(any) addr:0x02112e5c ambiguous
-_ZTV17ExtendingPlatform kind:data(any) addr:0x02112e80
 _ZTV17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e80
 _ZTI19daObjKm2_Ukishima_c kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08

@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN17ExtendingPlatform13InitResourcesEv
-#include "ExtendingPlatform.h"
+// @symbol _ZN17daObjKm2_Nobiru_c13InitResourcesEv
+#include "daObjKm2_Nobiru_c.h"
 #include "SharedFilePtr.h"
 
 extern SharedFilePtr PoleLift_ClsnFile;
@@ -13,7 +13,7 @@ extern "C" void _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
     dBgW_KcMbgSclY *, KCL_File *, const Matrix4x3 &, s32, s16, CLPS_Block &);
 extern "C" void func_020396c0(void *, s32);
 
-int ExtendingPlatform::InitResources()
+int daObjKm2_Nobiru_c::InitResources()
 {
     mModel.SetFile((BMD_File *)Model::LoadFile(PoleLift_ModelFile), 1, -1);
     UpdateModelTransform();

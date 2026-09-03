@@ -763,7 +763,7 @@ extern int _ZTV8IceSheet[];
 extern int _ZTV8MantaRay[];
 extern int _ZTV8Moneybag[];
 extern int _ZTV14CutsceneObject[];
-extern int _ZTV17ExtendingPlatform[];
+extern int _ZTV17daObjKm2_Nobiru_c[];
 extern int _ZTV10DonutBlock[];
 extern int _ZTV8SignPost[];
 extern int _ZTV8Snowball[];
