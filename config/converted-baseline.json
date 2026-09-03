@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2654,
+  "count": 2658,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -742,7 +742,6 @@
     "src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp",
     "src/_ZN13dScGameOver_cD0Ev.cpp",
     "src/_ZN13dScGameOver_cD1Ev.cpp",
-    "src/_ZN13dScMgMemory_c6RenderEv.cpp",
     "src/_ZN13dScMgTeresa_c6RenderEv.cpp",
     "src/_ZN13dScMgTeresa_cD0Ev.cpp",
     "src/_ZN13dScMgTeresa_cD1Ev.cpp",
@@ -2388,6 +2387,11 @@
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_c8FlipAwayEi",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_cC1Ev",
     "src/actors/dScMgMCarlo_c.cpp#_ZN18dMgMCarloCardObj_cD1Ev",
+    "src/actors/dScMgMemory_c.cpp#_ZN13dScMgMemory_c13OnTurnIntoEggEi",
+    "src/actors/dScMgMemory_c.cpp#_ZN13dScMgMemory_c15OnGroundPoundedEv",
+    "src/actors/dScMgMemory_c.cpp#_ZN13dScMgMemory_c6RenderEv",
+    "src/actors/dScMgMemory_c.cpp#_ZN13dScMgMemory_c8BehaviorEv",
+    "src/actors/dScMgMemory_c.cpp#_ZN13dScMgMemory_cD1Ev",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c12BeforeRenderEv",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv",
     "src/actors/dScMgSingle3DBase_c.cpp#_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj",
