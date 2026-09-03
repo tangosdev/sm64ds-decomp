@@ -1365,6 +1365,15 @@
     "src/actors/d_a_obj_km2_gura.cpp#daObjKm2_Gura_c_classInit": "github-actions[bot]",
     "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfsD1Ev": "github-actions[bot]",
     "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs16CleanupResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_km2_gura.cpp#_ZN18TiltingPlatformBfs13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_cD0Ev": "tangosdev",
+    "src/actors/d_a_obj_wl_polelift.cpp#func_ov026_02111234": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#func_ov026_021112a4": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c6RenderEv": "tangosdev",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#_ZN17daObjWlPolelift_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_wl_polelift.cpp#daObjWlPolelift_c_classInit": "github-actions[bot]"
   }
 }
