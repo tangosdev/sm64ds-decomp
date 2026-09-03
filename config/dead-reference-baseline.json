@@ -299,7 +299,35 @@
   },
   {
    "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
    "ref": "src/daObjKm2_Ami_Bou_c_Spawn.c"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "src_tu/actors/daObjKm2_Ami_Bou_c.cpp"
   },
   {
    "file": "port/docs/mmio-inventory.md",

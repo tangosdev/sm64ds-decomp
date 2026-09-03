@@ -1452,6 +1452,13 @@
     "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_fl_london.cpp#daObjFl_London_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_fl_london.cpp#daObjFl_London_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km2_ami_bou.cpp#daObjKm2_Ami_Bou_c_classInit": "github-actions[bot]"
   }
 }

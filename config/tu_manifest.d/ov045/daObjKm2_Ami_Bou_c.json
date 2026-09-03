@@ -1,9 +1,9 @@
 {
   "id": "ov045/daObjKm2_Ami_Bou_c",
   "module": "ov045",
-  "source": "src_tu/actors/daObjKm2_Ami_Bou_c.cpp",
+  "source": "src/actors/d_a_obj_km2_ami_bou.cpp",
   "promoted_source": "src/actors/d_a_obj_km2_ami_bou.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
@@ -113,7 +113,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov045-daObjKm2_Ami_Bou_c/daObjKm2_Ami_Bou_c.o (gitignored)",
+    "object": "build/tu/ov045-daObjKm2_Ami_Bou_c/d_a_obj_km2_ami_bou.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 7,
     "functions_declared": 7,

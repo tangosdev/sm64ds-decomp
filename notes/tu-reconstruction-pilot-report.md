@@ -11,6 +11,13 @@ function-by-function against the ROM.
 `src/` remain the sole enrolled owners of `0x0211150c..0x02111840`. No
 `rombuild.py`, no `eligible.py`, no link.
 
+> **Superseded by the promotion, and kept as a historical record.** Every path
+> below is the path as it stood when the pilot ran. The class has since been
+> renamed from its coined name `PoleLift` to its ROM RTTI name, and the seven
+> one-function sources under `src/` and the shadow TU under `src_tu/` were
+> promoted into the single enrolled source `src/actors/d_a_obj_km2_ami_bou.cpp`.
+> Read the paths here as history; none of them is in the tree any more.
+
 ---
 
 ## 1. Headline result
