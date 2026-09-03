@@ -1,9 +1,9 @@
 {
   "id": "ov033/daObjTtWater_c",
   "module": "ov033",
-  "source": "src_tu/actors/daObjTtWater_c.cpp",
+  "source": "src/actors/d_a_obj_tt_water.cpp",
   "promoted_source": "src/actors/d_a_obj_tt_water.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21113d4..0x2111690, 6 function(s), from build/tu_map.json (tools/tu_map.py), HAND-EXTENDED to 0x21116c8: tu_map splits the unlabelled factory at 0x02111690 into a TU of its own, but it builds this class -- the same 0x340 allocation, the same _ZTV14daObjTtWater_c address point, the same _ZN18TextureTransformerC1Ev at +0x320 -- and the descriptor naming it sits inside the same .data run as this class's RTTI group",

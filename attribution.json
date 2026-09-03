@@ -1414,6 +1414,13 @@
     "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_clock.cpp#_ZN12daObjClock_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_clock.cpp#ClockPaintingHandShort_Spawn": "github-actions[bot]",
-    "src/actors/d_a_obj_clock.cpp#ClockPaintingHandLong_Spawn": "github-actions[bot]"
+    "src/actors/d_a_obj_clock.cpp#ClockPaintingHandLong_Spawn": "github-actions[bot]",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_tt_water.cpp#_ZN14daObjTtWater_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_tt_water.cpp#daObjTtWater_c_classInit": "github-actions[bot]"
   }
 }
