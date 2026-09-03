@@ -65,8 +65,14 @@ int   _ZN4cstd4fdivEii(int a, int b);
 int   Vec3_HorzLen(int *v);
 extern short data_02082214[];
 
+extern "C" char *getenv(const char *);
 int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *selfv, void *clsnv)
 {
+    /* TEMP A/B: SM64DS_YOSHI_STUB reverts this to the pre-0.3.4 constant-0 stub
+       (the swallow-key fix off), so the same build can be tested both ways. */
+    static int stub = -1;
+    if (stub < 0) stub = getenv("SM64DS_YOSHI_STUB") ? 1 : 0;
+    if (stub) return 0;
     char *self = (char *)selfv;
     char *clsn = (char *)clsnv;
     int flags = *(int *)(self + 0xb0);

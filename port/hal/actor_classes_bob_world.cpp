@@ -983,7 +983,7 @@ extern "C" {
 void _ZN13WaterfallMist16OnPendingDestroyEv(char *c);
 int *_ZN13WaterfallMistD1Ev(int *self);
 int *_ZN13WaterfallMistD0Ev(int *self);        /* slot 17, gate 204 */
-int func_ov002_020b8270(void);
+int func_ov002_020b8270(char *self);
 void func_ov002_020b81e0(char *self, int arg);
 void *_ZTV13WaterfallMist[31];
 }
@@ -1081,8 +1081,15 @@ static int __fastcall cap_d1(void *s, void *)
 { return (int)(size_t)_ZN13WaterfallMistD1Ev((int *)s); }
 static int __fastcall cap_d0(void *s, void *)
 { return (int)(size_t)_ZN13WaterfallMistD0Ev((int *)s); }
-static int __fastcall cap_yoshi(void *, void *)
-{ return func_ov002_020b8270(); }
+/* daObjMarioCap_c::OnYoshiTryEat reads this->unk_3f0 to decide 0 vs 4, so the
+   `this` in ecx must be forwarded to the ROM body. The earlier face dropped it
+   and declared the target (void), so the cdecl body read a garbage stack word
+   as `this` and faulted at +0x3f0 -- a non-deterministic AV that, raised from
+   inside St_YoshiPower_Main's held->OnYoshiTryEat() call, made the actor-walk
+   quarantine net freeze the PLAYER (the walker) and soft-lock the eat. Same
+   shape as cap_egg below, which passes s. */
+static int __fastcall cap_yoshi(void *s, void *)
+{ return func_ov002_020b8270((char *)s); }
 static int __fastcall cap_egg(void *s, void *, int a)
 { func_ov002_020b81e0((char *)s, a); return 0; }
 extern "C" void port_cap_states_seat(void);   /* port/unmatched */

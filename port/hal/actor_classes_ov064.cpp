@@ -97,7 +97,7 @@ int *_ZN5BullyD0Ev(int *self);                    /* slot 17, .c, DTOR-PAIRS sea
 int _ZN5Bully16CleanupResourcesEv(void *self);    /* slot 3, face below */
 int _ZN5Bully8BehaviorEv(char *self);             /* slot 6, .c C linkage */
 int _ZN5Bully6RenderEv(void *self);               /* slot 9, face below */
-int func_ov064_02115f84(void);                    /* slot 29, OnAimedAtWithEgg */
+int func_ov064_02115f84(void *self);              /* slot 29, OnAimedAtWithEgg */
 int func_ov064_021171b0(void *self);              /* slot 31 */
 int func_ov064_02117220(void *self);              /* slot 32 */
 int func_ov064_02117168(void *self);              /* slot 33 */
@@ -275,7 +275,7 @@ static int __fastcall bly_behavior(void *s, void *)
 static int __fastcall bly_clean(void *s, void *)
 { return _ZN5Bully16CleanupResourcesEv(s); }
 static int __fastcall bly_aimed(void *s, void *)
-{ (void)s; return func_ov064_02115f84(); }      /* slot 29, Bully's own stub */
+{ return func_ov064_02115f84(s); }              /* slot 29, OnAimedAtWithEgg: derefs [this+0x330] */
 /* slots 31..36: the six extension virtuals, Bully's own.
 
    SLOT 32 STAYS THE TWO-PARAMETER SHAPE, AND THE REASON IS MEASURED. It was

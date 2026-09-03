@@ -364,7 +364,7 @@ int port_mg_try_base_state(void *self, unsigned code);
 /* the bodies the host copies below call, unchanged from their src */
 void DecompressLZ16(int src, int dst);
 int  func_ov004_020af5e0(int a, void *b, int c, int d);
-void func_ov004_020b42c0(void);
+void func_ov004_020b42c0(char *self);   /* derefs [this+0x34/0x10/0x12/0x1c/0x18/0x20] */
 void _Z14ApproachLinearRiii(int &, int, int);
 
 }  /* extern "C" */
@@ -564,7 +564,7 @@ extern "C" void func_ov004_020b31b4(void *self)
         port_mg_call0(c, p->code, p->adj);
         return;
     }
-    func_ov004_020b42c0();
+    func_ov004_020b42c0(c);
 }
 
 /* src/func_ov004_020b321c.cpp. The ROM moves `this` to the adjusted pointer

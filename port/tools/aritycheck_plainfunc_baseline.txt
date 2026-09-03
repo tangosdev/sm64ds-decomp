@@ -131,10 +131,8 @@ func_0205d644|src/func_02018e3c.c
 func_0205d644|src/func_0205d518.c
 func_0205fbd0|src/func_0205fab4.c
 func_ov002_020aefb8|src/func_ov002_020afbb4.c
-func_ov002_020b16c4|port/unmatched/Coin_CollectDispatch.cpp
 func_ov002_020b16c4|src/func_ov002_020b19dc.c
 func_ov002_020b1884|src/func_ov002_020b19dc.c
-func_ov002_020b8270|port/hal/actor_classes_bob_world.cpp
 func_ov002_020bac18|src/_ZN10ShutterHmc8BehaviorEv.cpp
 func_ov002_020c3e8c|src/func_ov085_0212d5dc.cpp
 func_ov002_020d4d88|port/unmatched/func_ov002_020d3b9c.c
@@ -159,7 +157,6 @@ func_ov004_020b08f0|include/decl_common.h
 func_ov004_020b19f0|src/func_ov006_021004c0.c
 func_ov004_020b2adc|src/MgMushroomRoulette_Spawn.cpp
 func_ov004_020b2adc|src/func_ov006_020e0574.cpp
-func_ov004_020b42c0|port/unmatched/MgBase_StateDispatch.cpp
 func_ov004_020b42c0|src/func_ov004_020b31b4.cpp
 func_ov004_020b743c|src/func_ov004_020b7460.c
 func_ov005_020c0030|include/decl_common.h
@@ -182,7 +179,6 @@ func_ov030_021141a8|src/_ZN13RollingLogTtm8BehaviorEv.cpp
 func_ov063_02118eac|src/unnamed/ov063/func_ov063_02118ea0.c
 func_ov063_02119b84|src/unnamed/ov063/func_ov063_02119274.c
 func_ov063_0211a0dc|src/unnamed/ov063/func_ov063_02119b1c.c
-func_ov064_02115f84|port/hal/actor_classes_ov064.cpp
 func_ov072_02121d50|src/_ZN11BabyPenguin13InitResourcesEv.cpp
 func_ov072_02121d50|src/func_ov072_021217ac.cpp
 func_ov077_0212478c|include/decl_common.h

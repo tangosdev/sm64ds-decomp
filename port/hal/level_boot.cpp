@@ -4688,6 +4688,9 @@ static int port_dbgspawn_partner_missing(unsigned id)
     return 0;
 }
 
+/* TEMP repro instrument: last actor made by a debug spawn (SM64DS_SPAWN_ACTOR).
+   Only read by the SM64DS_YOSHI_EGG_REPRO driver in hal/player_bridges.cpp. */
+extern "C" { void *g_yq_repro_enemy = 0; }
 
 /* Spawn `id` at an explicit world position (Fix12i, i.e. units << 12) facing
    `yaw`. Returns the ActorBase* the spine built, or 0 when the registry gate
@@ -4730,6 +4733,11 @@ extern "C" void *port_debug_spawn_at(unsigned id, unsigned param,
        that spawner, so it makes the same write. */
     if (a && id == 9)
         *(void **)((char *)a + 0x38c) = data_0209f394[0];
+    /* TEMP repro instrument (SM64DS_YOSHI_EGG_REPRO): remember the last
+       debug-spawned actor so the eat/egg-lay driver in hal/player_bridges.cpp
+       can force a real grab of it. Inert in normal play; nothing reads this
+       unless the driver's env is set. */
+    if (a) g_yq_repro_enemy = a;
     /* Regression assertion for the +0x10/+0xcc confusion above: the area this
        call asked for must be the one the constructor seated. The report line
        below prints the READBACK, not the argument, so "area N" in the log is
