@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN9TinyWater8BehaviorEv
-/* TinyWater::Behavior -- once event bit 0xe is set, drain the pool: sink one
+// @symbol _ZN14daObjTtWater_c8BehaviorEv
+/* daObjTtWater_c::Behavior -- once event bit 0xe is set, drain the pool: sink one
  * unit a frame while looping the drain sound, and when the surface reaches
  * mMinPosY play the secret jingle and destroy the actor once it finishes.
  *
@@ -8,7 +8,7 @@
  * extern-C mangled free functions. Animation::Advance and
  * fBase_c::MarkForDestruction are declared, and are reached as members.
  */
-#include "TinyWater.h"
+#include "daObjTtWater_c.h"
 
 extern "C" {
 int  _ZN5Event6GetBitEj(u32 bit);
@@ -17,7 +17,7 @@ int  _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 a, u32 b, const Vector3 *
 void _ZN7Minimap19UpdateLevelSpecificEv(void);
 }
 
-int TinyWater::Behavior()
+int daObjTtWater_c::Behavior()
 {
     if (_ZN5Event6GetBitEj(0xe)) {
         if (mPosY <= mMinPosY) {

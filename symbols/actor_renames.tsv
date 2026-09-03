@@ -1065,19 +1065,19 @@ ov032	0x02113980	HugeWater_SpawnInfo	g_profile_TD_WATER	reconstructed profile gl
 ov032	0x021139a4	data_ov032_021139a4	_ZTV9HugeWater	vtable alloc=0x334
 ov033	0x021113a4	func_ov033_021113a4	TinyCover_Spawn	spawnfunc
 ov033	0x021113a4	TinyCover_Spawn	daObjTtFuta_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov033	0x021113d4	func_ov033_021113d4	_ZN9TinyWaterD1Ev	vtable slot 16 (was _ZN9TinyCoverD1Ev)
-ov033	0x02111420	func_ov033_02111420	_ZN9TinyWaterD0Ev	vtable slot 17 (was _ZN9TinyCoverD0Ev)
-ov033	0x02111480	func_ov033_02111480	_ZN9TinyWater16CleanupResourcesEv	vtable slot 3 (was _ZN9TinyCover16CleanupResourcesEv)
-ov033	0x021114c4	func_ov033_021114c4	_ZN9TinyWater6RenderEv	vtable slot 9 (was _ZN9TinyCover6RenderEv)
-ov033	0x021114f8	func_ov033_021114f8	_ZN9TinyWater8BehaviorEv	vtable slot 6 (was _ZN9TinyCover8BehaviorEv)
-ov033	0x021115bc	func_ov033_021115bc	_ZN9TinyWater13InitResourcesEv	vtable slot 0 (was _ZN9TinyCover13InitResourcesEv)
-ov033	0x02111690	func_ov033_02111690	TinyWater_Spawn	spawnfunc
-ov033	0x02111690	TinyWater_Spawn	daObjTtWater_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov033	0x021113d4	func_ov033_021113d4	_ZN14daObjTtWater_cD1Ev	vtable slot 16 (was _ZN9TinyCoverD1Ev)
+ov033	0x02111420	func_ov033_02111420	_ZN14daObjTtWater_cD0Ev	vtable slot 17 (was _ZN9TinyCoverD0Ev)
+ov033	0x02111480	func_ov033_02111480	_ZN14daObjTtWater_c16CleanupResourcesEv	vtable slot 3 (was _ZN9TinyCover16CleanupResourcesEv)
+ov033	0x021114c4	func_ov033_021114c4	_ZN14daObjTtWater_c6RenderEv	vtable slot 9 (was _ZN9TinyCover6RenderEv)
+ov033	0x021114f8	func_ov033_021114f8	_ZN14daObjTtWater_c8BehaviorEv	vtable slot 6 (was _ZN9TinyCover8BehaviorEv)
+ov033	0x021115bc	func_ov033_021115bc	_ZN14daObjTtWater_c13InitResourcesEv	vtable slot 0 (was _ZN9TinyCover13InitResourcesEv)
+ov033	0x02111690	func_ov033_02111690	daObjTtWater_c_Spawn	spawnfunc
+ov033	0x02111690	daObjTtWater_c_Spawn	daObjTtWater_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov033	0x02112358	data_ov033_02112358	TinyCover_SpawnInfo	spawninfo
 ov033	0x02112358	TinyCover_SpawnInfo	g_profile_TT_FUTA	reconstructed profile global; literal ROM ID TT_FUTA+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov033	0x0211241c	data_ov033_0211241c	TinyWater_SpawnInfo	spawninfo
-ov033	0x0211241c	TinyWater_SpawnInfo	g_profile_TT_WATER	reconstructed profile global; literal ROM ID TT_WATER+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov033	0x02112440	data_ov033_02112440	_ZTV9TinyWater	vtable alloc=? (was _ZTV9TinyCover)
+ov033	0x0211241c	data_ov033_0211241c	daObjTtWater_c_SpawnInfo	spawninfo
+ov033	0x0211241c	daObjTtWater_c_SpawnInfo	g_profile_TT_WATER	reconstructed profile global; literal ROM ID TT_WATER+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov033	0x02112440	data_ov033_02112440	_ZTV14daObjTtWater_c	vtable alloc=? (was _ZTV9TinyCover)
 ov034	0x021111a0	func_ov034_021111a0	_ZN7WigglerD1Ev	vtable slot 16
 ov034	0x021112b0	func_ov034_021112b0	_ZN7WigglerD0Ev	vtable slot 17
 ov034	0x02112a5c	func_ov034_02112a5c	_ZN7Wiggler16CleanupResourcesEv	vtable slot 3

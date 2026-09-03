@@ -5782,17 +5782,17 @@
    "start": "0x21113d4",
    "end": "0x21116c8",
    "classes": [
-    "TinyWater"
+    "daObjTtWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9TinyWaterD1Ev.cpp",
-    "src/_ZN9TinyWaterD0Ev.cpp",
-    "src/_ZN9TinyWater16CleanupResourcesEv.cpp",
-    "src/_ZN9TinyWater6RenderEv.cpp",
-    "src/_ZN9TinyWater8BehaviorEv.c",
-    "src/_ZN9TinyWater13InitResourcesEv.cpp",
+    "src/_ZN14daObjTtWater_cD1Ev.cpp",
+    "src/_ZN14daObjTtWater_cD0Ev.cpp",
+    "src/_ZN14daObjTtWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjTtWater_c6RenderEv.cpp",
+    "src/_ZN14daObjTtWater_c8BehaviorEv.c",
+    "src/_ZN14daObjTtWater_c13InitResourcesEv.cpp",
     "src/daObjTtWater_c_classInit.c"
    ],
    "ext_mix": {

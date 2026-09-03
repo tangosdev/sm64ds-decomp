@@ -173,13 +173,13 @@ SKIP WDW_Water: ov029:0x2112794 already claimed by SwitchActivatedPlank (vtable 
 SKIP WDW_Water: ov029:0x2112630 already claimed by SwitchActivatedPlank (vtable slot 16)
 SKIP WDW_Water: ov029:0x211267c already claimed by SwitchActivatedPlank (vtable slot 17)
 AMBIG actor 104 TINY_COVER: ['ov033', 'ov047'] -> ov033
-SKIP TinyWater: ov033:0x2112440 already claimed by TinyCover (vtable alloc=0x340)
-SKIP TinyWater: ov033:0x21115bc already claimed by TinyCover (vtable slot 0)
-SKIP TinyWater: ov033:0x2111480 already claimed by TinyCover (vtable slot 3)
-SKIP TinyWater: ov033:0x21114f8 already claimed by TinyCover (vtable slot 6)
-SKIP TinyWater: ov033:0x21114c4 already claimed by TinyCover (vtable slot 9)
-SKIP TinyWater: ov033:0x21113d4 already claimed by TinyCover (vtable slot 16)
-SKIP TinyWater: ov033:0x2111420 already claimed by TinyCover (vtable slot 17)
+SKIP daObjTtWater_c: ov033:0x2112440 already claimed by TinyCover (vtable alloc=0x340)
+SKIP daObjTtWater_c: ov033:0x21115bc already claimed by TinyCover (vtable slot 0)
+SKIP daObjTtWater_c: ov033:0x2111480 already claimed by TinyCover (vtable slot 3)
+SKIP daObjTtWater_c: ov033:0x21114f8 already claimed by TinyCover (vtable slot 6)
+SKIP daObjTtWater_c: ov033:0x21114c4 already claimed by TinyCover (vtable slot 9)
+SKIP daObjTtWater_c: ov033:0x21113d4 already claimed by TinyCover (vtable slot 16)
+SKIP daObjTtWater_c: ov033:0x2111420 already claimed by TinyCover (vtable slot 17)
 AMBIG actor 106 HUGE_COVER: ['ov032', 'ov024', 'ov025'] -> ov032
 AMBIG actor 107 HUGE_WATER: ['ov032', 'ov025', 'ov027'] -> ov032
 SKIP HugeWater: ov032:0x21139a4 already claimed by HugeCover (vtable alloc=0x334)

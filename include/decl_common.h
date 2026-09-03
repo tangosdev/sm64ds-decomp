@@ -801,7 +801,7 @@ extern int _ZTV9SeesawBob[];
 extern int _ZTV9ShipWater[];
 extern int _ZTV9Spindrift[];
 extern int _ZTV9Whirlpool[];
-extern int _ZTV9TinyWater[];
+extern int _ZTV14daObjTtWater_c[];
 extern int _ZTV14RotatingBridge[];
 extern int _ZTV9WaterBomb[];
 extern int _ZTV9WaterRing[];
