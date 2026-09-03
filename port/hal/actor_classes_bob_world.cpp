@@ -359,6 +359,7 @@ void *_ZN5ActorD2Ev(void *);
 extern "C" int *_ZN4CoinD0Ev(int *self);
 
 #include "Coin.h"
+#include "dtor_faces_cpp.h"
 
 static int __fastcall coin_init(void *s, void *)
 { return _ZN4Coin13InitResourcesEv((char *)s); }
@@ -393,17 +394,9 @@ static int __fastcall coin_render(void *s, void *)
     coin_model_probe("COIN", (const char *)s + 0xd8);
     return ((Coin *)s)->Coin::Render();
 }
-static int __fastcall coin_d1(void *s, void *)
-{
-    *(void **)s = (void *)_ZTV4Coin;
-    _ZN12WithMeshClsnD1Ev((char *)s + 0x1ac);
-    _ZN18MovingCylinderClsnD1Ev((char *)s + 0x178);
-    _ZN11ShadowModelD1Ev((char *)s + 0x150);
-    _ZN11CommonModelD1Ev((char *)s + 0x114);
-    _ZN11CommonModelD1Ev((char *)s + 0xd8);
-    _ZN5ActorD2Ev(s);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src/_ZN4CoinD1Ev.cpp, reached through
+   hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP); the transcription that
+   stood here spelled the same chain by hand. */
 static int __fastcall coin_d0(void *s, void *)
 { return (int)(size_t)_ZN4CoinD0Ev((int *)s); }
 static int __fastcall coin_yoshi(void *, void *)
@@ -483,7 +476,7 @@ extern "C" void hal_fill_coin_vtable(void)
     vt[6] = (void *)coin_behavior;
     vt[9] = (void *)coin_render;
     vt[12] = (void *)bw_pdes_base;
-    vt[16] = (void *)coin_d1;
+    vt[16] = (void *)hal_cppd1_Coin;
     /* 17 IS THE ROM'S OWN WORD NOW (gate 204). Nothing dispatches the deleting
        form -- the destroy path is the D1 dispatch plus an explicit Deallocate
        by AfterCleanupResources -- so this is not a behaviour change; it is the

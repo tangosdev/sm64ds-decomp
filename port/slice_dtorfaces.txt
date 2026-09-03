@@ -1,0 +1,5 @@
+# Lane DTOR-FACES-CPP: the real-C++ D1 TUs of seated classes, seated in
+# slot 16 through hal/dtor_faces_cpp.cpp. One line per class, grouped as
+# status/DTORFACES.md records them.
+# group 1
+src/_ZN4CoinD1Ev.cpp

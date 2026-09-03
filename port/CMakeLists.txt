@@ -12496,6 +12496,20 @@ set_source_files_properties(
 
 set(OV029_SOURCES hal/actor_classes_ov029.cpp unmatched/Ov029_MethodFaces.cpp ${SLICE_OV029_SOURCES})
 
+# Lane DTOR-FACES-CPP (status/DTORFACES.md): the real-C++ D1 TUs of seated
+# classes, seated in slot 16 through hal/dtor_faces_cpp.cpp. The slice rides
+# the same four targets as the fills it serves (smoke_player, walk_window and
+# the two derived windows), next to hal/dtor_seats_base.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_dtorfaces.txt" SLICE_DTORFACES_LINES)
+set(SLICE_DTORFACES_SOURCES "")
+foreach(line IN LISTS SLICE_DTORFACES_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_DTORFACES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # The camera slice is on both binaries. The gate-13 State objects carry real
 # DS function addresses, and Player::ChangeState already reaches
 # func_0200d81c -> Camera::ChangeState on every state change, so the smoke
@@ -12510,7 +12524,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # harness with no settings.json beside it gets every default.
     hal/screen_gap.cpp hal/host_settings.cpp hal/gap_art.cpp hal/gap_continuity.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/dtor_faces_cpp.cpp ${SLICE_DTORFACES_SOURCES} hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its
@@ -12720,7 +12734,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp hal/rollback_probe.cpp hal/rollback.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/dtor_faces_cpp.cpp ${SLICE_DTORFACES_SOURCES} hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its
@@ -12966,7 +12980,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp hal/rollback_probe.cpp hal/rollback.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/dtor_faces_cpp.cpp ${SLICE_DTORFACES_SOURCES} hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its
