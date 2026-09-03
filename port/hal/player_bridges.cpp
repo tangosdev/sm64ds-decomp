@@ -275,7 +275,49 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
            ROM's i==3 arm. Base, not the object's own slot 4: index 3 is a
            ModelAnim, whose virtual Render would re-run UpdateVerts, and the ROM
            calls Model::Render directly to render the head at the pose the anim
-           system already produced. */
+           system ALREADY PRODUCED.
+
+           On the ROM that pose is produced during the tick: St_YoshiPower_Main
+           advances the head anim on +0x160 and Player_AdvanceAnims UpdateVerts's
+           it, so by render time the head mesh is already at the current frame.
+           In this port neither reaches the head (the head model at +0x160 is the
+           same pointer as head here), so the head sat frozen at the frame-0 bind
+           pose and sank into the body on a long fall. Produce the pose here, at
+           render time, the same two steps the body gets at :~703: advance the
+           head's own jaw/tongue Animation at head+0x50 (St_YoshiPower_Main's
+           +0x160 advance), then ModelAnim::UpdateVerts to sample the frame into
+           the mesh, BEFORE the base Model::Render draws it at the seated matrix.
+
+           GUARDED, and this guard is the whole reason the fix is back. The pose
+           is the LIVE-PLAYER head pose. Applied to a body the GAME owns and is
+           playing a scripted sequence on -- the opening's sleeping Yoshi -- it
+           posed the head off its own jaw/tongue anim, which for that scripted
+           body is neither seated nor advanced by the player state machine, so
+           the head rendered UPSIDE DOWN with the tongue animation SPAMMING (the
+           first, unguarded landing of this fix was reverted for exactly that: it
+           regressed the intro). mIsNoControl (player_fields::kIsNoControl,
+           +0x709) is the ROM's own "the game has taken this body and is playing
+           a scripted sequence on it" flag: set by Player_DisableInteraction and
+           by ChangeState for every scripted/no-control state (the opening drives
+           the Player into one), clear while the human is driving. So pose ONLY
+           when the human controls the body; a cutscene/scripted Yoshi falls
+           through with NO pose and renders exactly as the reverted cons does. */
+        const bool live = *(const unsigned char *)(c + port::player::kIsNoControl) == 0;
+        if (const char *pr = std::getenv("SM64DS_HEADPOSE_PROBE")) {
+            static int seen = -1;
+            if (seen < 0) seen = std::atoi(pr[0] ? pr : "1");
+            if (seen != 0) {
+                std::fprintf(stderr,
+                    "[headpose] hid==3 slot=%u noctl=%u -> %s\n",
+                    (unsigned)*(const unsigned char *)(c + port::player::kPlayerNo),
+                    (unsigned)*(const unsigned char *)(c + port::player::kIsNoControl),
+                    live ? "POSED (live player)" : "no pose (scripted/cutscene)");
+            }
+        }
+        if (live) {
+            ((Animation *)(head + 0x50))->Animation::Advance();
+            ((ModelAnim *)head)->ModelAnim::UpdateVerts();
+        }
         _ZN5Model6RenderEPK7Vector3(head, c + 0x80);
         return;
     }
