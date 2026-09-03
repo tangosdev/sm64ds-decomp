@@ -2065,21 +2065,19 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
        rows. So this test does not need the layout to be right, and it reads
        it anyway -- if a later change ever moves the top screen, the one place
        that decides where it is has to be the one place both mappers read. */
-#ifdef NTR_WIDE169
-    /* WIDESCREEN (16:9) INPUT. This inverse maps a client point to a
-       FRAMEBUFFER pixel, and the framebuffer is the 3D layer the widened Hor+
-       field fills edge to edge (ntr/gx.cpp); present()'s fit already preserves
-       the 1024x576 aspect, so a click on the world still lands on the world.
-       The top HUD reanchor (hal/message_compositor.cpp) moves only the 2D
+    /* WIDESCREEN (16:9) INPUT. When the run is wide this inverse maps a client
+       point to a FRAMEBUFFER pixel, and the framebuffer is the 3D layer the
+       widened Hor+ field fills edge to edge (ntr/gx.cpp); present()'s fit already
+       preserves the active aspect, so a click on the world still lands on the
+       world. The top HUD reanchor (hal/message_compositor.cpp) moves only the 2D
        overlay composited ON TOP of this framebuffer, and no caller of this
-       inverse converts a framebuffer x back into DS-256 HUD space -- the
-       stylus surface is the BOTTOM screen (unchanged 256x192), the top screen
-       is display-only in a level. So the anchor has no input consumer to
-       mirror here and this mapping is already correct. If a future top-screen
-       touch UI needs to hit a reanchored HUD element, the inverse of the
-       message_compositor band split (left/centre/right by source x) belongs
-       here; flagged for Tango in the report. */
-#endif
+       inverse converts a framebuffer x back into DS-256 HUD space -- the stylus
+       surface is the BOTTOM screen (unchanged 256x192), the top screen is
+       display-only in a level. So the anchor has no input consumer to mirror
+       here and this mapping is already correct (and the extent below is active_w/
+       active_h, so a 4:3 run clamps to 512x384 exactly as before). If a future
+       top-screen touch UI needs to hit a reanchored HUD element, the inverse of
+       the message_compositor band split belongs here; flagged for Tango. */
     const ntr::StackLayout &lay = *hal_screen_layout();
     const int inside = x >= 0 && y >= lay.top_y && x < ntr::active_w &&
                        y < lay.top_y + ntr::active_h;
