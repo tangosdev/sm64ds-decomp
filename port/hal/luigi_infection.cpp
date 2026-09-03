@@ -222,11 +222,31 @@ extern "C" void port_luigi_seed(int frame)
  * map` test never matches it -- survivors see every other survivor and never
  * the taggers. Called from the tail of the Behavior host copy, before Render
  * reads the band the same frame. Inert when the mode is off. */
+extern "C" signed char data_ov002_02111148;   /* the minimap's current map id */
+
 extern "C" void port_luigi_minimap_hide(void)
 {
     if (!g_li_on) return;
     for (int i = 0; i < kPortMaxPlayers; ++i)
         if (g_li_team[i]) g_mm_mapID[i] = -1;
+
+    /* SM64DS_VS_LUIGI_PROBE=1: after the blanking, snapshot the band once a
+       second so a headless proof can read that every Luigi-team slot's mapID is
+       -1 (the Render `== current map` test can never match it) while every
+       survivor keeps a live mapID that DOES match -- the blip is drawn for
+       survivors and suppressed for taggers, per slot. Gated and off by default. */
+    static int probe = -1;
+    if (probe < 0) probe = std::getenv("SM64DS_VS_LUIGI_PROBE") ? 1 : 0;
+    if (!probe) return;
+    static unsigned tick;
+    if ((tick++ % 60) != 0) return;
+    std::fprintf(stderr, "[luigi] MINIMAP curmap=%d", (int)data_ov002_02111148);
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (!data_0209f394[i]) continue;
+        std::fprintf(stderr, " s%d[%s mapID=%d]", i,
+                     g_li_team[i] ? "LUIGI" : "surv", (int)g_mm_mapID[i]);
+    }
+    std::fprintf(stderr, "\n");
 }
 
 /* Reset the per-match latch when a match tears down, so a second match in the
