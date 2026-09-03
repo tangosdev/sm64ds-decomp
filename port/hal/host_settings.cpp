@@ -1505,7 +1505,7 @@ extern "C" int host_setting_volume(void)
     return g_volume;
 }
 
-/* NetMode: 0 lockstep, 1 rollback (the default). See the parse above. */
+/* NetMode: 0 lockstep (the default), 1 rollback (opt-in). See the parse above. */
 extern "C" int host_setting_net_mode(void)
 {
     load_once();
