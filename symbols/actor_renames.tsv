@@ -1220,14 +1220,14 @@ ov044	0x021115e0	OrangeBallBillboard_SpawnInfo	g_profile_KB1_BILLBOARD	reconstru
 ov044	0x02111604	_ZTV19OrangeBallBillboard	_ZTV19daObjKb1Billboard_c	vtable alloc=0x124; class identity proven by ov044 RTTI/ZTS
 ov045	0x021114dc	func_ov045_021114dc	FireSeaElevator_Spawn	spawnfunc
 ov045	0x021114dc	FireSeaElevator_Spawn	daObjKm2_Agaru_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x0211150c	func_ov045_0211150c	_ZN8PoleLiftD1Ev	vtable slot 16 (was _ZN15FireSeaElevatorD1Ev)
-ov045	0x02111558	func_ov045_02111558	_ZN8PoleLiftD0Ev	vtable slot 17 (was _ZN15FireSeaElevatorD0Ev)
-ov045	0x021115b8	func_ov045_021115b8	_ZN8PoleLift16CleanupResourcesEv	vtable slot 3 (was _ZN15FireSeaElevator16CleanupResourcesEv)
-ov045	0x021115f0	func_ov045_021115f0	_ZN8PoleLift6RenderEv	vtable slot 9 (was _ZN15FireSeaElevator6RenderEv)
-ov045	0x02111618	func_ov045_02111618	_ZN8PoleLift8BehaviorEv	vtable slot 6 (was _ZN15FireSeaElevator8BehaviorEv)
-ov045	0x02111738	func_ov045_02111738	_ZN8PoleLift13InitResourcesEv	vtable slot 0 (was _ZN15FireSeaElevator13InitResourcesEv)
-ov045	0x02111808	func_ov045_02111808	PoleLift_Spawn	spawnfunc
-ov045	0x02111808	PoleLift_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov045	0x0211150c	func_ov045_0211150c	_ZN18daObjKm2_Ami_Bou_cD1Ev	vtable slot 16 (was _ZN15FireSeaElevatorD1Ev)
+ov045	0x02111558	func_ov045_02111558	_ZN18daObjKm2_Ami_Bou_cD0Ev	vtable slot 17 (was _ZN15FireSeaElevatorD0Ev)
+ov045	0x021115b8	func_ov045_021115b8	_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv	vtable slot 3 (was _ZN15FireSeaElevator16CleanupResourcesEv)
+ov045	0x021115f0	func_ov045_021115f0	_ZN18daObjKm2_Ami_Bou_c6RenderEv	vtable slot 9 (was _ZN15FireSeaElevator6RenderEv)
+ov045	0x02111618	func_ov045_02111618	_ZN18daObjKm2_Ami_Bou_c8BehaviorEv	vtable slot 6 (was _ZN15FireSeaElevator8BehaviorEv)
+ov045	0x02111738	func_ov045_02111738	_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv	vtable slot 0 (was _ZN15FireSeaElevator13InitResourcesEv)
+ov045	0x02111808	func_ov045_02111808	daObjKm2_Ami_Bou_c_Spawn	spawnfunc
+ov045	0x02111808	daObjKm2_Ami_Bou_c_Spawn	daObjKm2_Ami_Bou_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02111840	func_ov045_02111840	_ZN17daObjKm2_Nobiru_cD1Ev	vtable slot 16
 ov045	0x02111878	func_ov045_02111878	_ZN17daObjKm2_Nobiru_cD0Ev	vtable slot 17
 ov045	0x021118c4	func_ov045_021118c4	_ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv	InitResources-only helper; writes owned collider transform
@@ -1258,9 +1258,9 @@ ov045	0x02111e10	func_ov045_02111e10	_ZN21daObjKm2_Fall_Block_c13InitResourcesEv
 ov045	0x02111e24	func_ov045_02111e24	daObjKm2_Fall_Block_c_Spawn	spawnfunc
 ov045	0x02112cd0	data_ov045_02112cd0	FireSeaElevator_SpawnInfo	spawninfo
 ov045	0x02112cd0	FireSeaElevator_SpawnInfo	g_profile_KM2_AGARU	reconstructed profile global; literal ROM ID KM2_AGARU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x02112d98	data_ov045_02112d98	PoleLift_SpawnInfo	spawninfo
-ov045	0x02112d98	PoleLift_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile global; literal ROM ID KM2_AMI_BOU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov045	0x02112dbc	data_ov045_02112dbc	_ZTV8PoleLift	vtable alloc=? (was _ZTV15FireSeaElevator)
+ov045	0x02112d98	data_ov045_02112d98	daObjKm2_Ami_Bou_c_SpawnInfo	spawninfo
+ov045	0x02112d98	daObjKm2_Ami_Bou_c_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile global; literal ROM ID KM2_AMI_BOU+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov045	0x02112dbc	data_ov045_02112dbc	_ZTV18daObjKm2_Ami_Bou_c	vtable alloc=? (was _ZTV15FireSeaElevator)
 ov045	0x02112e5c	data_ov045_02112e5c	ExtendingPlatform_SpawnInfo	spawninfo
 ov045	0x02112e5c	ExtendingPlatform_SpawnInfo	g_profile_KM2_NOBIRU	reconstructed profile global; literal ROM ID KM2_NOBIRU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112e80	data_ov045_02112e80	_ZTV17daObjKm2_Nobiru_c	vtable alloc=0x328

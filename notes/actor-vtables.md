@@ -189,7 +189,7 @@ it. The table was wrong in the only place it could be wrong silently.
 Four independent measurements agree it is 32:
 
 - **`_ZTV8Platform` spans `0x0210ae30`..`0x0210aeb8` = 0x88 bytes.** Two header words plus
-  32 slots. `_ZTV8PoleLift`, one of the subclasses, is 0x88 as well.
+  32 slots. `_ZTV18daObjKm2_Ami_Bou_c`, one of the subclasses, is 0x88 as well.
 - `rtti_vtables.py` reads `dActor_c` at 31 slots and `dBgActor_c`'s own overrides as
   16, 17 and **31**.
 - **97 of `dBgActor_c`'s 101 direct RTTI children have exactly 32 slots** (three add one or

@@ -6,7 +6,7 @@
  * build. It is a STARTING POINT (plan sec 7.3): local shadow declarations
  * below were carried verbatim from the legacy files, not reconciled against
  * real project headers -- that judgement call is left to a human/LLM review,
- * the way pilot #1 reconciled PoleLift::Render and ::CleanupResources by hand
+ * the way pilot #1 reconciled daObjKm2_Ami_Bou_c::Render and ::CleanupResources by hand
  * (see notes/tu-reconstruction-pilot-report.md sec 5.2).
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
@@ -35,8 +35,8 @@
 
 extern "C" {
 extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *, s32);
-extern SharedFilePtr PoleLift_ClsnFile;
-extern SharedFilePtr PoleLift_ModelFile;
+extern SharedFilePtr daObjKm2_Ami_Bou_c_ClsnFile;
+extern SharedFilePtr daObjKm2_Ami_Bou_c_ModelFile;
 extern "C" s32 func_0203aad0(dBgW_KcMbgSclY *);
 extern "C" void _ZN14dBgW_KcMbgSclY9SetScaleYE5Fix12IiE( dBgW_KcMbgSclY *, s32);
 extern "C" CLPS_Block data_ov045_021125b0;
@@ -105,12 +105,12 @@ extern "C" Km2NobiruSpawnInfo g_profile_KM2_NOBIRU = {
  * as SetScaleY. Keep the cartridge spelling at this call boundary. */
 int daObjKm2_Nobiru_c::InitResources()
 {
-    mModel.SetFile((BMD_File *)Model::LoadFile(PoleLift_ModelFile), 1, -1);
+    mModel.SetFile((BMD_File *)Model::LoadFile(daObjKm2_Ami_Bou_c_ModelFile), 1, -1);
     UpdateModelTransform();
     UpdateColliderTransform();
 
     _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mCollider, (KCL_File *)dBgW_Kc::LoadFile(PoleLift_ClsnFile),
+        &mCollider, (KCL_File *)dBgW_Kc::LoadFile(daObjKm2_Ami_Bou_c_ClsnFile),
         mColliderTransform, 0x1000, mAngleY, data_ov045_021125b0);
     func_020396c0(&mCollider, 4);
     mCollider.unk_4d = 1;
@@ -170,8 +170,8 @@ void daObjKm2_Nobiru_c::OnPendingDestroy()
 int daObjKm2_Nobiru_c::CleanupResources()
 {
     mCollider.Disable();
-    PoleLift_ModelFile.Release();
-    PoleLift_ClsnFile.Release();
+    daObjKm2_Ami_Bou_c_ModelFile.Release();
+    daObjKm2_Ami_Bou_c_ClsnFile.Release();
     return 1;
 }
 

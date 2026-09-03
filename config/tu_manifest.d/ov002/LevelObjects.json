@@ -279,7 +279,7 @@
     "init": []
   },
   "notes": [
-    "Pilot #2 for notes/translation-unit-reconstruction-plan.md section 18. Report: notes/tu-reconstruction-pilot-2-report.md. Deliberately the opposite shape from pilot #1 (ov045/PoleLift): no class, therefore no destructor group and no vtable/RTTI, which is what this round exists to isolate.",
+    "Pilot #2 for notes/translation-unit-reconstruction-plan.md section 18. Report: notes/tu-reconstruction-pilot-2-report.md. Deliberately the opposite shape from pilot #1 (ov045/daObjKm2_Ami_Bou_c): no class, therefore no destructor group and no vtable/RTTI, which is what this round exists to isolate.",
     "All seventeen functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
     "SEVENTEEN functions, not the plan's 'approximately 5-15'. The evidence puts the boundary where it is; splitting it to hit the count would have been an invented cut.",
     "Consolidation forced FOUR declaration conflicts that per-file compilation had been hiding, where pilot #1 found none: data_0209caa0's element type (int[] vs u8[]), data_0209f5c0's type (ActorBase* vs void*), Actor::Spawn's spelling (real static method vs hand-spelled extern \"C\" alias, with four mutually inconsistent copies of the alias), and func_0203accc's ARITY (decl_common.h's 1 argument vs a local 3-argument declaration -- the one no cast could reconcile). All four resolutions are byte-free; see the report.",

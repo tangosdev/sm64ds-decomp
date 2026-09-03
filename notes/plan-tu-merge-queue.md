@@ -29,7 +29,7 @@ when the function *definition* is inside the block, so `body_start` never gets s
 is `False` for all 173 because the census joined on the wrong key. The real key is
 `entries[*].functions[*].legacy_source`. Joining on it:
 
-* `ov045/PoleLift` (7 files, text-verified + linkcheck record) — **in the safe pool**
+* `ov045/daObjKm2_Ami_Bou_c` (7 files, text-verified + linkcheck record) — **in the safe pool**
 * `ov045/daObjKm2_Fall_Block_c` (5 files, text-verified) — **in the safe pool**
 * `ov002/Enemy` → `ov002 @0x20ad838 dEnemyBase_c` (30 files) — blocked pool
 * `ov002/Platform` → `ov002 @0x20ee42c dBgActor_c` (11) — blocked pool
@@ -119,7 +119,7 @@ unavailable, not failed). `pcov` = how many of the TU's `.c` members the C++ cen
 independently proved C++.
 
 **B0 — calibration / regression control (no new source).**
-`ov045/PoleLift` (7 files), `ov045/daObjKm2_Fall_Block_c` (5 files), both already `text-verified`.
+`ov045/daObjKm2_Ami_Bou_c` (7 files), `ov045/daObjKm2_Fall_Block_c` (5 files), both already `text-verified`.
 Re-run `compile` + `verify` only. Proves the pinned toolchain, the ROM dump and the
 serial-build assumption reproduce a *known-green* transcript before a real pilot is
 spent. **Run first; 10 minutes, and it de-risks every later "is it me or is it the TU?"**
@@ -448,9 +448,9 @@ emission order    : N ordinal pair(s) NOT in ROM order: [...]
 ```
 
 **Pass: N == 0, or the only reported pairs lie within one class's D0/D1/D2 group.** That
-exception is precedented — the committed `ov045/PoleLift` entry records
+exception is precedented — the committed `ov045/daObjKm2_Ami_Bou_c` entry records
 `"functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]"`
-at `text-verified`, and (0,1) is exactly `_ZN8PoleLiftD1Ev`/`_ZN8PoleLiftD0Ev`. Any
+at `text-verified`, and (0,1) is exactly `_ZN18daObjKm2_Ami_Bou_cD1Ev`/`_ZN18daObjKm2_Ami_Bou_cD0Ev`. Any
 cross-group pair is a real order bug and blocks the TU.
 
 ### 2.4 Declaration conflicts — reconcile in place
@@ -523,7 +523,7 @@ python tu_preflight.py --batch B3
 | **P2** | **local-struct + extern collision scan** — replay `tubuild._merge_field`, print both texts side by side; flag same-key/same-text `struct` decls in ≥3 members as advisory | silent layout divergence (§2.5) | **WARN**; count must equal the batch's `CONFn`, all resolved before `verify` |
 | **P3** | **`decl_common.h` usage** — count members including it, print what each actually consumes | it sometimes declares a TU's own functions as **data** → silent mismatch | **WARN**. Policy: drop it and restate the 3–17 lines. Median distinct includes is 6–7; usage 0–6 members/TU (highest `ov016/ShipUp` 6/8) |
 | **P4** | **sinit accounting** — module `sinits` / `ctor_entries` / `sinit_vs_tu` / `corroborated`, plus this TU's share | two merged TUs that each carried a sinit must produce **one** | **FAIL** if `sinit_vs_tu != "ok"`. **WARN** on `corroborated:false` (67 of 100 Tier-1 — *unavailable*, not *failed*). Corroboration is module-wide, **not narrowed to this TU** |
-| **P5** | **manifest dedupe** — join on `entries[*].functions[*].legacy_source`, **not** the census flag | redoing PoleLift/daObjKm2_Fall_Block_c, or fighting an entry that already claims a member (§0.2) | **FAIL** on partial overlap; route whole-TU overlap to B0 as a re-verify |
+| **P5** | **manifest dedupe** — join on `entries[*].functions[*].legacy_source`, **not** the census flag | redoing daObjKm2_Ami_Bou_c/daObjKm2_Fall_Block_c, or fighting an entry that already claims a member (§0.2) | **FAIL** on partial overlap; route whole-TU overlap to B0 as a re-verify |
 | **P6** | **completeness re-derived** — `SP.path_for(sym)` not `None`, `is_complete(module, path)`, assert `len(unit_functions) == len(census files)` | the census drops sourceless functions (§0.5). Without `complete`, dsd supplies the range from ROM bytes and **your source is never compiled** | **FAIL** on any missing or incomplete. All 100 Tier-1 pass today; 3 Tier-2 fail |
 | **P7** | **`create`-ability probe** — `split_legacy_source`, on error retry `tu_create.normalize` | discovering mid-batch that `create` aborts; the `struct`-return misparse (§2.2) | **INFO**: clean / normalizer-required / HAND-ASSEMBLE. FAIL only on the third |
 | **P8** | **inert-marker + blocker cross-check** — `text.startswith("//cpp")` vs `"//cpp" in text[:400]`; assert no member is in the by-value / not-in-delinks / extra-sections / NONMATCHING sets | a file that looks C++ and compiles as C99; a member invisible to the byte gates | **REPORT ONLY, do not tidy.** All four blocker sets currently have 0 safe-pool hits |
@@ -805,7 +805,7 @@ where noted.**
 
 | control | result |
 |---|---|
-| `ov045/PoleLift` | **7/7 MATCH, objisolate clean, reloc-destinations clean → TEXT-VERIFIED.** The one out-of-order pair is the D1/D0 group, the precedented exception. |
+| `ov045/daObjKm2_Ami_Bou_c` | **7/7 MATCH, objisolate clean, reloc-destinations clean → TEXT-VERIFIED.** The one out-of-order pair is the D1/D0 group, the precedented exception. |
 | `ov045/daObjKm2_Fall_Block_c` | **3/5 — NOT verified.** Both destructors `999 word(s) differ` with wrong reloc destinations (`_ZTV10dBgActor_c != 0x021130f4:ov045`). |
 
 `daObjKm2_Fall_Block_c` is banked in `config/tu_manifest.d/` as `text-verified` and does not
@@ -819,7 +819,7 @@ of them predicted hazards, and all of them recurring across the queue:
 1. **empty-paren prototype** — `extern void func_0200fa04();` called with 3 args. Legal in
    C (unspecified args), illegal in C++. Restate with the signature the call site proves.
 2. **destructor redefined** — D1 and D0 each spell `Squasher::~Squasher()`. One definition
-   emits both (plus D2). Collapse to one, mirroring `PoleLift.cpp`.
+   emits both (plus D2). Collapse to one, mirroring `daObjKm2_Ami_Bou_c.cpp`.
 3. **the vptr store** — see below. This is the one worth memorising.
 
 ### The vptr store: `+ 2` inside the cast
@@ -838,7 +838,7 @@ p[0] = (int)_ZTV8Squasher + 8;     /* WRONG -- mwcc emits an extra ADD; the func
                                     * changes (999 word(s) differ) and the addend stays 0 */
 ```
 
-**The `+ 2` must be inside the cast.** `src_tu/actors/PoleLift.cpp` documents this in a
+**The `+ 2` must be inside the cast.** `src_tu/actors/daObjKm2_Ami_Bou_c.cpp` documents this in a
 17-line comment that predates this plan; roughly **88 of the 100 Tier-1 TUs** hand-store a
 vtable their own TU owns and will need the same edit. It is the most common reconcile step
 in the queue — a known step, not a blocker. *(An earlier revision of this section claimed

@@ -731,7 +731,7 @@ same offsets:
   (0x05c), `mAngleY` (0x08e), and `mAreaId` (0x0cc) directly through `dActor_c`.
 * `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
 * `include/MetalNet.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
-* `include/PoleLift.h` — `param1`, `mAngleY`.
+* `include/daObjKm2_Ami_Bou_c.h` — `param1`, `mAngleY`.
 * `include/IceSheet.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
   (0x0b0).
 * `include/daObjFm_Battan_c.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).

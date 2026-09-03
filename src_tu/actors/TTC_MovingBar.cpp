@@ -6,7 +6,7 @@
  * build. It is a STARTING POINT (plan sec 7.3): local shadow declarations
  * below were carried verbatim from the legacy files, not reconciled against
  * real project headers -- that judgement call is left to a human/LLM review,
- * the way pilot #1 reconciled PoleLift::Render and ::CleanupResources by hand
+ * the way pilot #1 reconciled daObjKm2_Ami_Bou_c::Render and ::CleanupResources by hand
  * (see notes/tu-reconstruction-pilot-report.md sec 5.2).
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
@@ -320,7 +320,7 @@ void func_ov065_0211b40c(char* c){
  * empty body and each having objisolate keep the variant its filename named.
  * In TU context one definition produces both -- and a third,
  * _ZN13TTC_MovingBarD2Ev, byte-identical to D1, which the ROM does not
- * contain (see decomp-cpp-class-form and the matching PoleLift/Squasher
+ * contain (see decomp-cpp-class-form and the matching daObjKm2_Ami_Bou_c/Squasher
  * precedent in this same src_tu/actors/ directory).
  */
 TTC_MovingBar::~TTC_MovingBar()

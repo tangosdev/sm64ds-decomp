@@ -7,12 +7,12 @@ _ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xbc) addr:0x021113
 func_ov045_021114a8 kind:function(arm,size=0x20) addr:0x021114a8
 func_ov045_021114c8 kind:function(arm,size=0x14) addr:0x021114c8
 daObjKm2_Agaru_c_classInit kind:function(arm,size=0x30) addr:0x021114dc
-_ZN8PoleLiftD1Ev kind:function(arm,size=0x4c) addr:0x0211150c
-_ZN8PoleLiftD0Ev kind:function(arm,size=0x60) addr:0x02111558
-_ZN8PoleLift16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021115b8
-_ZN8PoleLift6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
-_ZN8PoleLift8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
-_ZN8PoleLift13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
+_ZN18daObjKm2_Ami_Bou_cD1Ev kind:function(arm,size=0x4c) addr:0x0211150c
+_ZN18daObjKm2_Ami_Bou_cD0Ev kind:function(arm,size=0x60) addr:0x02111558
+_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021115b8
+_ZN18daObjKm2_Ami_Bou_c6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
+_ZN18daObjKm2_Ami_Bou_c8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
+_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
 daObjKm2_Ami_Bou_c_classInit kind:function(arm,size=0x38) addr:0x02111808
 _ZN17daObjKm2_Nobiru_cD1Ev kind:function(arm,size=0x38) addr:0x02111840
 _ZN17daObjKm2_Nobiru_cD0Ev kind:function(arm,size=0x4c) addr:0x02111878
@@ -131,7 +131,6 @@ data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
 _ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74
 _ZTS18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d80
 g_profile_KM2_AMI_BOU kind:data(any) addr:0x02112d98 ambiguous
-_ZTV8PoleLift kind:data(any) addr:0x02112dbc
 _ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
 _ZTI17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e3c
 _ZTS17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e48
@@ -164,9 +163,9 @@ data_ov045_021131b0 kind:bss addr:0x021131b0
 data_ov045_021131b8 kind:bss addr:0x021131b8
 data_ov045_021131c4 kind:bss addr:0x021131c4
 data_ov045_021131d0 kind:bss addr:0x021131d0
-PoleLift_ClsnFile kind:bss addr:0x021131d0
+daObjKm2_Ami_Bou_c_ClsnFile kind:bss addr:0x021131d0
 data_ov045_021131d8 kind:bss addr:0x021131d8
-PoleLift_ModelFile kind:bss addr:0x021131d8
+daObjKm2_Ami_Bou_c_ModelFile kind:bss addr:0x021131d8
 data_ov045_021131e0 kind:bss addr:0x021131e0
 data_ov045_021131ec kind:bss addr:0x021131ec
 data_ov045_021131f8 kind:bss addr:0x021131f8

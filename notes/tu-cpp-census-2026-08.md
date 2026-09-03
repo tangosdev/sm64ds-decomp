@@ -72,7 +72,7 @@ EMPIRICAL SIZE CLIFF: 80% of 1-4-member TUs compiled; **0 of 159 with >=10 membe
 Composition: 171/173 are mixed `.c`+`.cpp`, 2 all-`.cpp`, 0 all-`.c`. 811 `.c` + 1,194 `.cpp` members.
 - 155/173 contain a member wrapped in an `extern "C" { }` block — `tubuild.py create` REFUSES those ("scanned to end of file without finding a function body"); hand-assemble via `tubuild.build_manifest_entry`.
 - 106/173 have file-scope local struct definitions in MORE THAN ONE member (collision risk).
-- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (PoleLift, daObjKm2_Fall_Block_c, LevelObjects, Platform, ov002/Enemy) — dedupe against `config/tu_manifest.d/` first.
+- 5 of the 173 already have `src_tu/` entries at text-/link-verified but UNPROMOTED (daObjKm2_Ami_Bou_c, daObjKm2_Fall_Block_c, LevelObjects, Platform, ov002/Enemy) — dedupe against `config/tu_manifest.d/` first.
 
 Blocked pool: 214 TUs. Traps, in descending attractiveness:
 - `main` @0x20049f0 (2,927 files) — NOT a TU, it is the un-segmented remainder of arm9. Do not touch.

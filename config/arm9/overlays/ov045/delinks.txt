@@ -40,27 +40,27 @@ src/daObjKm2_Agaru_c_classInit.c:
     complete
     .text start:0x021114dc end:0x0211150c
 
-src/_ZN8PoleLiftD1Ev.cpp:
+src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp:
     complete
     .text start:0x0211150c end:0x02111558
 
-src/_ZN8PoleLiftD0Ev.cpp:
+src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp:
     complete
     .text start:0x02111558 end:0x021115b8
 
-src/_ZN8PoleLift16CleanupResourcesEv.cpp:
+src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021115b8 end:0x021115f0
 
-src/_ZN8PoleLift6RenderEv.cpp:
+src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp:
     complete
     .text start:0x021115f0 end:0x02111618
 
-src/_ZN8PoleLift8BehaviorEv.cpp:
+src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp:
     complete
     .text start:0x02111618 end:0x02111738
 
-src/_ZN8PoleLift13InitResourcesEv.cpp:
+src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111738 end:0x02111808
 

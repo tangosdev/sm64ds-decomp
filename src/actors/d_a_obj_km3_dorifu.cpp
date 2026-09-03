@@ -141,7 +141,7 @@ s32 daObjKm3_Dorifu_c::CleanupResources()
  * In TU context one definition produces both -- and, if it is written out of
  * line HERE, a third: _ZN17daObjKm3_Dorifu_cD2Ev, byte-identical to D1, which
  * the ROM does not contain (see decomp-cpp-class-form and the matching
- * PoleLift/Squasher precedent in src_tu/actors/).
+ * daObjKm2_Ami_Bou_c/Squasher precedent in src_tu/actors/).
  *
  * So there is deliberately no definition at this point. `~daObjKm3_Dorifu_c()
  * {}` is INLINE in include/daObjKm3_Dorifu_c.h, which is what emits D1 and D0

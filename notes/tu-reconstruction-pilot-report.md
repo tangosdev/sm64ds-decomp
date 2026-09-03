@@ -1,4 +1,4 @@
-# TU reconstruction pilot — `ov045/PoleLift`
+# TU reconstruction pilot — `ov045/daObjKm2_Ami_Bou_c`
 
 **What this is:** the read-only experiment described in
 [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md)
@@ -6,7 +6,7 @@
 into a single `.cpp`, compiled once with the pinned toolchain, and compared
 function-by-function against the ROM.
 
-**What it is not:** a build change. `src_tu/actors/PoleLift.cpp` is not enrolled,
+**What it is not:** a build change. `src_tu/actors/daObjKm2_Ami_Bou_c.cpp` is not enrolled,
 `config/**/delinks.txt` is untouched, and the seven one-function sources under
 `src/` remain the sole enrolled owners of `0x0211150c..0x02111840`. No
 `rombuild.py`, no `eligible.py`, no link.
@@ -24,15 +24,15 @@ candidate the answer is unambiguous. It cost one deliberate source-level change
 hiding (§6).
 
 ```python
-TU ov045/PoleLift
+TU ov045/daObjKm2_Ami_Bou_c
 
-MATCH  PoleLift::~PoleLift [D1]      0x0211150c  size 0x04c
-MATCH  PoleLift::~PoleLift [D0]      0x02111558  size 0x060
-MATCH  PoleLift::CleanupResources    0x021115b8  size 0x038
-MATCH  PoleLift::Render              0x021115f0  size 0x028
-MATCH  PoleLift::Behavior            0x02111618  size 0x120
-MATCH  PoleLift::InitResources       0x02111738  size 0x0d0
-MATCH  PoleLift_Spawn                0x02111808  size 0x038
+MATCH  daObjKm2_Ami_Bou_c::~daObjKm2_Ami_Bou_c [D1]      0x0211150c  size 0x04c
+MATCH  daObjKm2_Ami_Bou_c::~daObjKm2_Ami_Bou_c [D0]      0x02111558  size 0x060
+MATCH  daObjKm2_Ami_Bou_c::CleanupResources    0x021115b8  size 0x038
+MATCH  daObjKm2_Ami_Bou_c::Render              0x021115f0  size 0x028
+MATCH  daObjKm2_Ami_Bou_c::Behavior            0x02111618  size 0x120
+MATCH  daObjKm2_Ami_Bou_c::InitResources       0x02111738  size 0x0d0
+MATCH  daObjKm2_Ami_Bou_c_Spawn                0x02111808  size 0x038
 
 Result: 7/7 functions reproduce in merged-TU context
 ```
@@ -47,13 +47,13 @@ Before and after, the seven untouched legacy files were re-verified with
 an environment artefact:
 
 ```python
-OK    src/_ZN8PoleLiftD1Ev.cpp                       2004/b56
-OK    src/_ZN8PoleLiftD0Ev.cpp                       2004/b56
-OK    src/_ZN8PoleLift16CleanupResourcesEv.cpp       2004/b56
-OK    src/_ZN8PoleLift6RenderEv.cpp                  2004/b56
-OK    src/_ZN8PoleLift8BehaviorEv.cpp                2004/b56
-OK    src/_ZN8PoleLift13InitResourcesEv.cpp          2004/b56
-OK    src/PoleLift_Spawn.c                           2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp                       2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp                       2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp       2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp                  2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp                2004/b56
+OK    src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp          2004/b56
+OK    src/daObjKm2_Ami_Bou_c_Spawn.c                           2004/b56
 ```
 
 ---
@@ -62,12 +62,12 @@ OK    src/PoleLift_Spawn.c                           2004/b56
 
 | | |
 | --- | --- |
-| Candidate | `ov045` / `PoleLift`, RTTI name `daObjKm2_Ami_Bou_c` |
+| Candidate | `ov045` / `daObjKm2_Ami_Bou_c`, RTTI name `daObjKm2_Ami_Bou_c` |
 | Span | `.text` `0x0211150c`–`0x02111840`, 7 functions |
-| Shadow source | `src_tu/actors/PoleLift.cpp` (`//cpp`, so C++) |
+| Shadow source | `src_tu/actors/daObjKm2_Ami_Bou_c.cpp` (`//cpp`, so C++) |
 | Compiler | `tools/mwccarm/2004/b56/mwccarm.exe` — `rombuild.VERSION`, and `config/rombuild-versions.txt` carries no override for any of the seven stems, so this is the pin for all of them |
 | Flags | `rombuild.CFLAGS` with `-lang c99` → `-lang c++`, exactly what `build_pin.flags_for` returns for a `//cpp` file:<br>`-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off -i include` |
-| Object | `build/tu/ov045-PoleLift/PoleLift.o` (gitignored) |
+| Object | `build/tu/ov045-daObjKm2_Ami_Bou_c/daObjKm2_Ami_Bou_c.o` (gitignored) |
 | Comparison | `match.extract_func` + `match.compare` — the tree's own relocation-aware word compare, unmodified. `extract_func` already matches the relocation section by `sh_info` rather than by name, which is exactly the multi-`.text` case this object is. |
 | ROM bytes | `extracted/overlays/overlay_0045.bin`, base `0x021111a0`, via `tools/modules.py` |
 
@@ -85,7 +85,7 @@ From `build/tu_map.json`, unchanged and not regenerated:
   `high`. This is one of the well-segmented modules §14 asks for, not one of the
   four listed as under-segmented.
 - The unit record for `0x211150c..0x2111840` lists exactly the seven symbols
-  above and one class label, `PoleLift`.
+  above and one class label, `daObjKm2_Ami_Bou_c`.
 - Neighbours differ: `FireSeaElevator_Spawn` ends at `0x0211150c`,
   `_ZN17daObjKm2_Nobiru_cD1Ev` begins at `0x02111840`.
 - Added here: of ov045's six static initialisers, `__sinit_ov045_02112214` is the
@@ -124,20 +124,20 @@ Strict reversal. Confirmed.
 
 ### The real TU
 
-`src_tu/actors/PoleLift.cpp` is therefore written **bottom-to-top against the ROM**
-— `PoleLift_Spawn` first in the file, `~PoleLift` last. The emitted `.text` order
+`src_tu/actors/daObjKm2_Ami_Bou_c.cpp` is therefore written **bottom-to-top against the ROM**
+— `daObjKm2_Ami_Bou_c_Spawn` first in the file, `~daObjKm2_Ami_Bou_c` last. The emitted `.text` order
 is:
 
 | emitted | section | symbol | size | binding | ROM ordinal |
 | ---: | ---: | --- | ---: | --- | --- |
-| 1 | 22 | `_ZN8PoleLiftD2Ev` | `0x4c` | GLOBAL | — not in ROM |
-| 2 | 24 | `_ZN8PoleLiftD0Ev` | `0x60` | GLOBAL | **1** |
-| 3 | 26 | `_ZN8PoleLiftD1Ev` | `0x4c` | GLOBAL | **0** |
-| 4 | 28 | `_ZN8PoleLift16CleanupResourcesEv` | `0x38` | GLOBAL | 2 ✓ |
-| 5 | 30 | `_ZN8PoleLift6RenderEv` | `0x28` | GLOBAL | 3 ✓ |
-| 6 | 31 | `_ZN8PoleLift8BehaviorEv` | `0x120` | GLOBAL | 4 ✓ |
-| 7 | 33 | `_ZN8PoleLift13InitResourcesEv` | `0xd0` | GLOBAL | 5 ✓ |
-| 8 | 35 | `PoleLift_Spawn` | `0x38` | GLOBAL | 6 ✓ |
+| 1 | 22 | `_ZN18daObjKm2_Ami_Bou_cD2Ev` | `0x4c` | GLOBAL | — not in ROM |
+| 2 | 24 | `_ZN18daObjKm2_Ami_Bou_cD0Ev` | `0x60` | GLOBAL | **1** |
+| 3 | 26 | `_ZN18daObjKm2_Ami_Bou_cD1Ev` | `0x4c` | GLOBAL | **0** |
+| 4 | 28 | `_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv` | `0x38` | GLOBAL | 2 ✓ |
+| 5 | 30 | `_ZN18daObjKm2_Ami_Bou_c6RenderEv` | `0x28` | GLOBAL | 3 ✓ |
+| 6 | 31 | `_ZN18daObjKm2_Ami_Bou_c8BehaviorEv` | `0x120` | GLOBAL | 4 ✓ |
+| 7 | 33 | `_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv` | `0xd0` | GLOBAL | 5 ✓ |
+| 8 | 35 | `daObjKm2_Ami_Bou_c_Spawn` | `0x38` | GLOBAL | 6 ✓ |
 | 9 | 39 | `_ZN8PlatformD1Ev` | `0x38` | LOPROC | — elsewhere (ov002 `0x020ee42c`) |
 | 10 | 41 | `_ZN8PlatformD0Ev` | `0x4c` | LOPROC | — elsewhere |
 
@@ -148,11 +148,11 @@ not merely true, it is load-bearing for any future whole-range link.
 **Two limits the old finding did not state, both new:**
 
 1. **The reversal does not reach inside a destructor's variant group.** One
-   `PoleLift::~PoleLift()` definition emits three `.text` sections in the fixed
+   `daObjKm2_Ami_Bou_c::~daObjKm2_Ami_Bou_c()` definition emits three `.text` sections in the fixed
    order **D2, D0, D1**. The ROM's order is **D1 then D0**, with no D2 at all.
    No arrangement of source text can change this: it is one definition, and the
    compiler chooses the intra-group order. Ordinals 0 and 1 are therefore
-   emitted swapped, and `_ZN8PoleLiftD2Ev` — byte-identical to D1 — sits in
+   emitted swapped, and `_ZN18daObjKm2_Ami_Bou_cD2Ev` — byte-identical to D1 — sits in
    front of both.
 
 2. **Vague-linkage bodies trail the whole file.** `_ZN8PlatformD1Ev` and
@@ -185,30 +185,30 @@ Licensed: the seven in the table above. Unlicensed and emitted anyway:
 
 | symbol | size | binding | why it is here |
 | --- | ---: | --- | --- |
-| `_ZN8PoleLiftD2Ev` | `0x4c` | GLOBAL | mwcc emits D0/D1/D2 from one `~PoleLift()`. Byte-identical to D1. **Fact:** no such symbol appears anywhere in `config/`, and nothing in the ROM calls it. **Inference, not verified here:** the original link deadstripped it, which is what a vague-linkage-free `D2` with no caller normally suffers. |
+| `_ZN18daObjKm2_Ami_Bou_cD2Ev` | `0x4c` | GLOBAL | mwcc emits D0/D1/D2 from one `~daObjKm2_Ami_Bou_c()`. Byte-identical to D1. **Fact:** no such symbol appears anywhere in `config/`, and nothing in the ROM calls it. **Inference, not verified here:** the original link deadstripped it, which is what a vague-linkage-free `D2` with no caller normally suffers. |
 | `_ZN8PlatformD1Ev` | `0x38` | LOPROC | `Platform`'s destructor is inline in `include/Platform.h`; instantiating the base emits a vague-linkage out-of-line copy. The real one lives in ov002 at `0x020ee42c`, and `config/arm9/overlays/ov002/symbols.txt` gives it `size=0x38` — the same size this object emitted. |
 | `_ZN8PlatformD0Ev` | `0x4c` | LOPROC | same; ov002 `0x020ee464`, `size=0x4c`, again matching what was emitted here. |
 
 ### `.data` — 12 sections, 0 licensed
 
 All are RTTI or vtable output, and all are a consequence of this TU being
-`PoleLift`'s **key-function TU**: `PoleLift` declares exactly one virtual of its
-own, `virtual ~PoleLift()`, and defining it here is what makes the compiler emit
+`daObjKm2_Ami_Bou_c`'s **key-function TU**: `daObjKm2_Ami_Bou_c` declares exactly one virtual of its
+own, `virtual ~daObjKm2_Ami_Bou_c()`, and defining it here is what makes the compiler emit
 the class's vtable.
 
 | symbol | size | binding |
 | --- | ---: | --- |
-| `_ZTV8PoleLift` | `0x84` | **GLOBAL** |
+| `_ZTV18daObjKm2_Ami_Bou_c` | `0x84` | **GLOBAL** |
 | `_ZTV8Platform` | `0x84` | LOPROC |
-| `_ZTI8PoleLift` / `_ZTS8PoleLift` | `0xc` / `0xa` | LOPROC |
+| `_ZTI18daObjKm2_Ami_Bou_c` / `_ZTS18daObjKm2_Ami_Bou_c` | `0xc` / `0xa` | LOPROC |
 | `_ZTI8Platform` / `_ZTS8Platform` | `0xc` / `0xa` | LOPROC |
 | `_ZTI5Actor` / `_ZTS5Actor` | `0xc` / `0x7` | LOPROC |
 | `_ZTI12ActorDerived` / `_ZTS12ActorDerived` | `0xc` / `0xf` | LOPROC |
 | `_ZTI9ActorBase` / `_ZTS9ActorBase` | `0x8` / `0xb` | LOPROC |
 
 This is expected per plan §10 and §11 and is **inventoried, not verified**. The
-correctness of `_ZTV8PoleLift`'s 33 words against the ROM's `0x02112db4..0x02112e38`
-was not checked and is not claimed. Note only that `_ZTV8PoleLift` is the single
+correctness of `_ZTV18daObjKm2_Ami_Bou_c`'s 33 words against the ROM's `0x02112db4..0x02112e38`
+was not checked and is not claimed. Note only that `_ZTV18daObjKm2_Ami_Bou_c` is the single
 `STB_GLOBAL` data symbol — the strong definition a key-function TU is supposed to
 produce — while every other data symbol is vague-linkage.
 
@@ -217,9 +217,9 @@ produce — while every other data symbol is vague-linkage.
 55 in `.text` and 78 in `.data`. Of the `.text` relocations, **39 belong to the
 seven licensed functions** — in ROM order 6 / 8 / 5 / 0 / 6 / 10 / 4, `Render`
 having none because it is a pure vtable dispatch — and 16 belong to the three
-unlicensed bodies (`_ZN8PoleLiftD2Ev` 6, `_ZN8PlatformD1Ev` 4, `_ZN8PlatformD0Ev`
+unlicensed bodies (`_ZN18daObjKm2_Ami_Bou_cD2Ev` 6, `_ZN8PlatformD1Ev` 4, `_ZN8PlatformD0Ev`
 6). The `.data` relocations are all vtable slot pointers and typeinfo links, 32
-each for `_ZTV8PoleLift` and `_ZTV8Platform` and 2–3 per RTTI record.
+each for `_ZTV18daObjKm2_Ami_Bou_c` and `_ZTV8Platform` and 2–3 per RTTI record.
 
 56 undefined imports, every one a real ROM symbol. All relocation sections are
 `RELA`, none `REL`, and `objisolate.plan` found no unnamed section-symbol
@@ -232,52 +232,52 @@ relocation into a dropped section for any of the seven.
 One change was required. Two more were taken because consolidation made them
 available, and both were measured byte-free.
 
-### 5.1 Required: `PoleLift_Spawn`'s vptr store, `(int)_ZTV8PoleLift` → `(int)(_ZTV8PoleLift + 2)`
+### 5.1 Required: `daObjKm2_Ami_Bou_c_Spawn`'s vptr store, `(int)_ZTV18daObjKm2_Ami_Bou_c` → `(int)(_ZTV18daObjKm2_Ami_Bou_c + 2)`
 
 This is the interesting one, and per-function compilation could not have exposed
 it.
 
 The two conventions collide:
 
-- `decl_common.h` declares `extern int _ZTV8PoleLift[];`, and the config's
-  `_ZTV8PoleLift` sits at `0x02112dbc` — which is the **slot array**, already past
-  the Itanium preamble. The ROM's `PoleLift_Spawn` literal pool holds exactly
-  `0x02112dbc`, and the ROM's `_ZN8PoleLiftD1Ev` stores exactly `0x02112dbc`.
-- mwcc's own `_ZTV8PoleLift` names the **vtable object**, which begins two words
+- `decl_common.h` declares `extern int _ZTV18daObjKm2_Ami_Bou_c[];`, and the config's
+  `_ZTV18daObjKm2_Ami_Bou_c` sits at `0x02112dbc` — which is the **slot array**, already past
+  the Itanium preamble. The ROM's `daObjKm2_Ami_Bou_c_Spawn` literal pool holds exactly
+  `0x02112dbc`, and the ROM's `_ZN18daObjKm2_Ami_Bou_cD1Ev` stores exactly `0x02112dbc`.
+- mwcc's own `_ZTV18daObjKm2_Ami_Bou_c` names the **vtable object**, which begins two words
   earlier at `0x02112db4` (`0x00000000` offset-to-top, then
   `0x02112d74` = typeinfo). Its own vptr stores relocate against it with
   addend `8`.
 
-In the legacy tree the two never meet: `src/PoleLift_Spawn.c` is a **C** TU that
-only ever references an external `_ZTV8PoleLift`, so addend 0 is right; and
-`src/_ZN8PoleLiftD1Ev.cpp` defines the vtable, but `objisolate` strips it,
+In the legacy tree the two never meet: `src/daObjKm2_Ami_Bou_c_Spawn.c` is a **C** TU that
+only ever references an external `_ZTV18daObjKm2_Ami_Bou_c`, so addend 0 is right; and
+`src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp` defines the vtable, but `objisolate` strips it,
 externalises the symbol and subtracts `VTABLE_PREAMBLE` from the addend — the
 correction its own comment documents at length.
 
 Merge them and both spellings land in one object against **one locally-defined
-symbol**: the destructors say `+8`, `PoleLift_Spawn` says `+0`, and they differ by
+symbol**: the destructors say `+8`, `daObjKm2_Ami_Bou_c_Spawn` says `+0`, and they differ by
 eight bytes. This is invisible to every byte gate, because a relocated word is a
 wildcard — the naive merge reports **7/7 MATCH** with a vptr store eight bytes
 low. What caught it was `objisolate.plan`:
 
 ```python
-PoleLift_Spawn   error='_ZTV8PoleLift: unexpected reloc type=2 addend=0'
+daObjKm2_Ami_Bou_c_Spawn   error='_ZTV18daObjKm2_Ami_Bou_c: unexpected reloc type=2 addend=0'
 ```
 
 The tooling fails closed, which is the right outcome, but it fails closed on a
-file that had already been declared matching. Writing `(int)(_ZTV8PoleLift + 2)`
-— `int`-indexed, so eight bytes — makes `PoleLift_Spawn` agree with the addend the
+file that had already been declared matching. Writing `(int)(_ZTV18daObjKm2_Ami_Bou_c + 2)`
+— `int`-indexed, so eight bytes — makes `daObjKm2_Ami_Bou_c_Spawn` agree with the addend the
 compiler generates for itself. Bytes unchanged (7/7 before and after), and
 `objisolate` then accepts all seven:
 
 ```python
-_ZN8PoleLiftD1Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV8PoleLift']
-_ZN8PoleLiftD0Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV8PoleLift']
-_ZN8PoleLift16CleanupResourcesEv   error=None  externalise=[]
-_ZN8PoleLift6RenderEv              error=None  externalise=[]
-_ZN8PoleLift8BehaviorEv            error=None  externalise=[]
-_ZN8PoleLift13InitResourcesEv      error=None  externalise=[]
-PoleLift_Spawn                     error=None  externalise=['_ZTV8PoleLift']
+_ZN18daObjKm2_Ami_Bou_cD1Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV18daObjKm2_Ami_Bou_c']
+_ZN18daObjKm2_Ami_Bou_cD0Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV18daObjKm2_Ami_Bou_c']
+_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv   error=None  externalise=[]
+_ZN18daObjKm2_Ami_Bou_c6RenderEv              error=None  externalise=[]
+_ZN18daObjKm2_Ami_Bou_c8BehaviorEv            error=None  externalise=[]
+_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv      error=None  externalise=[]
+daObjKm2_Ami_Bou_c_Spawn                     error=None  externalise=['_ZTV18daObjKm2_Ami_Bou_c']
 ```
 
 **Generalisation, and it is a warning for the workstream:** any TU that both
@@ -317,14 +317,14 @@ were verified byte-identical rather than assumed:
   `_ZN8Platform21UpdateModelPosAndRotYEv` and `_ZN8Platform19UpdateClsnPosAndRotEv`
   appeared twice each. **Nothing contradicted anything** — all repeated signatures
   agreed. One `extern "C"` block now.
-- **Language mode.** `PoleLift_Spawn` was the only C file of the seven; it is now
+- **Language mode.** `daObjKm2_Ami_Bou_c_Spawn` was the only C file of the seven; it is now
   compiled as C++ and needs an explicit `extern "C"` to keep its unmangled ROM
   symbol. Its bytes are unchanged by the mode switch.
 - **`data_02082214`** was declared in the `Behavior` file outside any linkage
   specification. Moved inside `extern "C"` — no ABI effect for a namespace-scope
   variable, but the intent is now stated rather than relying on that.
 - **The destructor** was two files each carrying the same empty
-  `PoleLift::~PoleLift() {}`, with `objisolate` keeping the variant the filename
+  `daObjKm2_Ami_Bou_c::~daObjKm2_Ami_Bou_c() {}`, with `objisolate` keeping the variant the filename
   named. Now one definition.
 - **No `#pragma` anywhere** in the seven legacy sources — §14's "no local
   `#pragma opt_*` workarounds" criterion is met on the evidence, not by
@@ -353,13 +353,13 @@ status means layers 2 and 3 only.
 
 For this candidate specifically, in ascending difficulty:
 
-1. **`_ZN8PoleLiftD2Ev` has nowhere to go.** It is `0x4c` of `STB_GLOBAL` `.text`
+1. **`_ZN18daObjKm2_Ami_Bou_cD2Ev` has nowhere to go.** It is `0x4c` of `STB_GLOBAL` `.text`
    that the ROM range does not contain. `rombuild.py` links `-nodead`, so it
    cannot be dropped the way the original build dropped it. Either the TU
    contributes through per-function isolation (plan §9/§13, which works today —
    `objisolate` accepts all seven), or the linkcheck needs a rule for
    deadstrippable extras. **Not a new obstacle:** the legacy, already-enrolled
-   `src/_ZN8PoleLiftD1Ev.cpp` compiled alone emits the identical D2 today, and
+   `src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp` compiled alone emits the identical D2 today, and
    `objisolate` already strips it on every push. TU consolidation does not
    introduce this shape; it only makes it visible in one object instead of
    scattered across per-function ones.
@@ -398,7 +398,7 @@ bit — shared vtable/key-function emission, and it bit through a *relocation*, 
 through instruction bytes. The other eleven (pragma state, declaration order,
 language mode, linkage, literal placement, static initialisation, inlining,
 template instantiation, compiler-generated helpers) cost nothing measurable here,
-including the `.c` → C++ language-mode change on `PoleLift_Spawn`, which §10 lists
+including the `.c` → C++ language-mode change on `daObjKm2_Ami_Bou_c_Spawn`, which §10 lists
 as a hazard and which turned out to be free.
 
 Two caveats on generalising from one data point:
@@ -434,7 +434,7 @@ the tools rather than assuming a new top-level directory is ignored:
   (`src_root or SRC`), `marker_census.py` (`(root / "src").rglob`) — every
   source-tree scan in `tools/` is rooted at `src/`.
 - `grep -rn src_tu tools/` — no hits.
-- `build/` is gitignored, so `build/tu/ov045-PoleLift/` cannot be committed.
+- `build/` is gitignored, so `build/tu/ov045-daObjKm2_Ami_Bou_c/` cannot be committed.
 
 `src/` was not modified: the seven legacy files are byte-identical to their
 committed state and still `complete` in `config/arm9/overlays/ov045/delinks.txt`.
@@ -443,9 +443,9 @@ committed state and still `complete` in `config/arm9/overlays/ov045/delinks.txt`
 
 | Path | |
 | --- | --- |
-| `src_tu/actors/PoleLift.cpp` | new — the shadow TU, not enrolled |
-| `config/tu_manifest.d/` | new — one entry, `ov045/PoleLift`, status `text-verified` |
+| `src_tu/actors/daObjKm2_Ami_Bou_c.cpp` | new — the shadow TU, not enrolled |
+| `config/tu_manifest.d/` | new — one entry, `ov045/daObjKm2_Ami_Bou_c`, status `text-verified` |
 | `notes/tu-reconstruction-pilot-report.md` | new — this file |
 
-Untracked build output at `build/tu/ov045-PoleLift/` (`PoleLift.o`,
+Untracked build output at `build/tu/ov045-daObjKm2_Ami_Bou_c/` (`daObjKm2_Ami_Bou_c.o`,
 `inventory.txt`) is gitignored, per §13 item 10.
