@@ -3772,7 +3772,7 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        WHY IT HAD TO MOVE RATHER THAN BE ADDED. hal/level_boot.cpp's own
        LoadFile(handle) above WAS a per-level cache, and on a repeat request
        for a handle it already held it returned THE SAME filePtr.
-       func_02016ff4 (port/unmatched/func_02016ff4_hostcopy.cpp) then calls
+       func_02016ff4 (src, through hostgen's VIRTUAL_CALL patch) then calls
        Model::UpdateFileOffsets unconditionally, and that rebases the BMD's
        file-relative offsets IN PLACE. So two Stage::LoadModel calls inside
        one level would add the base twice and send every pointer in the level

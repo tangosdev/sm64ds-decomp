@@ -14,9 +14,10 @@
 # frame-0 jump, and the same stale prev is why a fast fall could pass through
 # a thin deck: the "swept" segment never swept.
 #
-# Everything here is MATCHED in src except the Process wrapper itself, which
-# stages three mwcc pointer-to-member-functions (port/unmatched/func_02043288_hostcopy.cpp,
-# the func_0204335c treatment).
+# Everything here is MATCHED in src. The Process wrapper itself stages three
+# mwcc pointer-to-member-functions; src/func_02043288.c goes through hostgen's
+# VIRTUAL_CALL table (CMakeLists.txt GATE35_SYMS, lane shadow-A), which
+# resolves the three static {slot, 1} records to the vtable slots they name.
 
 # ---- the spine
 # _ZN5Actor14BeforeBehaviorEv is a .cpp that spells its eight engine BSS

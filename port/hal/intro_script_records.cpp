@@ -30,22 +30,15 @@
  * drives, is already hosted elsewhere and is deliberately NOT defined here.)
  *
  * _ZN10FaderColorD1Ev: the sinit hands this to func_020731dc, the ROM's
- * global-destructor registrar, as the destructor for a static FaderColor. It
- * has NO matched src TU and nothing in the port hosts it -- hal/fader_wipes.cpp
- * only NAMES it, in the comment identifying slots 0 and 1 of data_0208eb2c.
- * A no-op is the correct host body: the port never runs global destructors, and
- * the registrar only ever stores the pointer. Same shape as
- * Sound::UnsetPlayerVoiceGroup in hal/auto_bss.cpp.
+ * global-destructor registrar, as the destructor for a static FaderColor. A
+ * no-op host body used to live here under the claim that the symbol had no
+ * matched src TU. That was stale: src/engine/fader/_ZN10FaderColorD1Ev.c is
+ * matched (vptr store, base-subobject dtor func_020177c4, returns self) and
+ * is on slice_intro.txt now, so the registrar stores the ROM's own body. The
+ * port never runs global destructors, so nothing observable changes; the
+ * stand-in is simply gone (lane shadow-A).
  */
 extern "C" {
-
-/* The no-op destructor is deliberately OUTSIDE the DSSTATE bracket below: that
-   bracket opens a DATA segment, and a function defined inside it would be
-   placed as data.
-   PORT_HOST_ABI: no matched src TU; the port never runs global destructors and
-   the registrar (func_020731dc) only ever stores the pointer, so a no-op is the
-   faithful host body (the Sound::UnsetPlayerVoiceGroup precedent). */
-void _ZN10FaderColorD1Ev(void) {}
 
 DSSTATE_BEGIN
 unsigned char data_0209b278[12];

@@ -398,6 +398,21 @@ if(MSVC)
 endif()
 
 # Gate 7: ModelAnim -- the game owns frame progression.
+#
+# Animation::Advance goes through hostgen (lane shadow-A): its looping arm is
+# `% len` with len 0 on a ModelAnim that carries a model and no animation (the
+# VS cap), which the ROM's ITCM divider answers with 0 and x86 idiv faults on.
+# hostgen's DS_DIV table reroutes that one modulus through ds_imod; the src
+# line is skipped in the gate-7 and gate-10 loops below and the generated file
+# is appended to both. Retires port/unmatched/Animation_AdvanceDivGuard.cpp.
+set(ANIM_ADVANCE_SYM _ZN9Animation7AdvanceEv)
+set(ANIM_ADVANCE_GEN "${CMAKE_BINARY_DIR}/host-src/src/${ANIM_ADVANCE_SYM}.cpp")
+add_custom_command(OUTPUT "${ANIM_ADVANCE_GEN}"
+    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            --out "${CMAKE_BINARY_DIR}/host-src" ${ANIM_ADVANCE_SYM}
+    DEPENDS "${PORT_REPO_ROOT_ABS}/src/${ANIM_ADVANCE_SYM}.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+    COMMENT "hostgen ${ANIM_ADVANCE_SYM}")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
 set(SLICE7_SOURCES "")
 foreach(line IN LISTS SLICE7_LINES)
@@ -405,18 +420,15 @@ foreach(line IN LISTS SLICE7_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    # Lane CAPSHOW: Animation::Advance is substituted by
-    # port/unmatched/Animation_AdvanceDivGuard.cpp -- its `% len` needs the
-    # ARM divider's n % 0 = 0, and a ModelAnim with a model and no animation
-    # (the VS cap, once the cap-visibility manager lets it show) makes len 0
-    # (measured: c0000094 on VS map 2). The manifest line is skipped HERE so
-    # slice_gate7.txt stays another lane's file, the VS_PathDivGuard shape.
+    # Animation::Advance comes from hostgen (ANIM_ADVANCE_GEN above); the
+    # manifest line is skipped HERE so slice_gate7.txt stays another lane's
+    # file, the VS_PathDivGuard shape.
     if(line STREQUAL "src/_ZN9Animation7AdvanceEv.cpp")
         continue()
     endif()
     list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Animation_AdvanceDivGuard.cpp")
+list(APPEND SLICE7_SOURCES "${ANIM_ADVANCE_GEN}")
 
 # Gate 24: BlendModelAnim -- the cross-fading ModelAnim. Rides on gate 7's
 # stack and is proven by the same smoke; see slice_gate24.txt.
@@ -728,14 +740,14 @@ foreach(line IN LISTS SLICE10_LINES)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
-    # Lane CAPSHOW: same substitution as the slice_gate7 loop above --
-    # Animation::Advance comes from unmatched/Animation_AdvanceDivGuard.cpp.
+    # same substitution as the slice_gate7 loop above -- Animation::Advance
+    # comes from hostgen (ANIM_ADVANCE_GEN).
     if(line STREQUAL "src/_ZN9Animation7AdvanceEv.cpp")
         continue()
     endif()
     list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Animation_AdvanceDivGuard.cpp")
+list(APPEND SLICE10_SOURCES "${ANIM_ADVANCE_GEN}")
 # fix round: func_ov002_020e5948's HOST COPY (the TexSeq Prepare SHORT-1
 # caller behind the L11 ONE_UP_MUSHROOM quarantine; Brain A's handoff,
 # re-verified against the byte-locked src -- exactly the Prepare arity
@@ -7714,7 +7726,13 @@ endforeach()
 # the listener came back 8192, past every distance limit in the game, and every
 # positional sound was culled. It goes through hostgen like every other TU that
 # touches hardware; src/func_02049018.c comes out of slice 10.
-set(GATE35_SYMS func_02049018)
+# Lane shadow-A rides three more through the same plain-hostgen loop:
+# CollectStar (ARG_WIDTH), func_02016ff4 and the two ActorBase::Process
+# wrappers func_0204335c / func_02043288 (VIRTUAL_CALL). Their src lines stay
+# skipped where the slices list them (func_0204335c in the gate-10 camera
+# filter below).
+set(GATE35_SYMS func_02049018 CollectStar func_02016ff4 func_0204335c
+    func_02043288)
 set(GATE35_GEN "")
 foreach(sym IN LISTS GATE35_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -7832,7 +7850,10 @@ endforeach()
 # of bytes. unmatched/func_02008550_hostcopy.cpp is the second table's
 # consumer, host-copied for the same mwcc-PMF reason func_0200cae4 is.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ptrsweep.txt" SLICE_PTR_LINES)
-set(SLICE_PTR_SOURCES hal/ptr_tables.cpp unmatched/func_02008550_hostcopy.cpp)
+# func_02008550_hostcopy.cpp RETIRED (lane shadow-A): the matched TU goes
+# through hostgen's MG_PMF_CALL table (GATE13_SYMS), the 39 seeding lines
+# kept and the one PMF call read back as the host handler it seeded.
+set(SLICE_PTR_SOURCES hal/ptr_tables.cpp)
 foreach(line IN LISTS SLICE_PTR_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -7847,7 +7868,8 @@ endforeach()
 list(APPEND SLICE_PTR_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Camera_ApproachAngleVeneer.cpp")
 
-# gate 10 minus the two files the camera build replaces
+# gate 10 minus the two files the camera build replaces (ChangeArea by its
+# host copy; func_0200cae4 by hostgen, GATE13_SYMS, lane shadow-A)
 set(SLICE10_CAM_SOURCES "")
 foreach(src IN LISTS SLICE10_SOURCES)
     if(src MATCHES "/ChangeArea\\.c$" OR src MATCHES "/func_0200cae4\\.cpp$")
@@ -7855,13 +7877,16 @@ foreach(src IN LISTS SLICE10_SOURCES)
     endif()
     # the pointer sweep: func_02008550 dispatches the camera script commands
     # through an mwcc pointer-to-member array, which MSVC cannot represent and
-    # which was loading DS code addresses out of romdata besides. Host copy in
-    # port/unmatched/, tables in hal/ptr_tables.cpp.
+    # which was loading DS code addresses out of romdata besides. Tables in
+    # hal/ptr_tables.cpp; the TU itself is generated by hostgen (GATE13_SYMS,
+    # lane shadow-A), so its plain line stays out here.
     if(src MATCHES "/func_02008550\\.cpp$")
         continue()
     endif()
     # gate 14: three more ARM ride-throughs, dormant until the level boot
     # reaches them (port/unmatched/ActorDerived_Spawn.cpp, PathPtr_FromID.cpp)
+    # func_0204335c is generated by hostgen instead (GATE35_SYMS, lane
+    # shadow-A), so its plain line still has to stay out.
     if(src MATCHES "/_ZN12ActorDerived5SpawnEjP9ActorBaseii\\.cpp$"
        OR src MATCHES "/func_02042ffc\\.c$"
        OR src MATCHES "/_ZN7PathPtr6FromIDEj\\.cpp$"
@@ -7914,9 +7939,11 @@ foreach(src IN LISTS SLICE10_SOURCES)
     # 14): its 0x027ffc40 console-type read is in no region ntr maps, and the
     # course sound boot is its first caller.
     # ...and CollectStar, the WRITE half of the s8/int argument-width
-    # disagreement port/unmatched/NumStars_hostcopy.cpp already carries the
-    # read half of. port/unmatched/CollectStar_hostcopy.cpp takes the course
-    # id as s8.
+    # disagreement (its caller CollectStarInLevel.c declares the course id
+    # s8, the body takes int, and cdecl pushes an s8 as one meaningful byte
+    # in a four-byte slot). It goes through hostgen's ARG_WIDTH patch, listed
+    # in GATE35_SYMS below, which retypes the one parameter; the host copy
+    # that used to carry the retype is deleted (lane shadow-A).
     if(src MATCHES "/HitDeathPlane\\.c$"
        OR src MATCHES "/func_0203d974\\.c$"
        OR src MATCHES "/CollectStar\\.c$"
@@ -8064,8 +8091,10 @@ set(SOUND_HOST_SOURCES
 set(LEVELBOOT_HOST_SOURCES
     unmatched/ActorDerived_Spawn.cpp
     unmatched/PathPtr_FromID.cpp
-    unmatched/func_0204335c_hostcopy.cpp
-    unmatched/func_02043288_hostcopy.cpp
+    # func_0204335c_hostcopy.cpp and func_02043288_hostcopy.cpp RETIRED (lane
+    # shadow-A): the init and behaviour Process wrappers come from hostgen's
+    # VIRTUAL_CALL table now (GATE35_SYMS), the three static {slot, 1} records
+    # resolved to the vtable slots they name at the caller.
     unmatched/func_0204322c_hostcopy.cpp
     unmatched/func_02043fdc_hostcopy.cpp
     # ...and a fourth, dormant one: LoadEntranceObjects ends in
@@ -8075,7 +8104,9 @@ set(LEVELBOOT_HOST_SOURCES
     # what it did and did not fix. Commented out of slice_gate14.txt in
     # exchange.
     unmatched/LoadEntranceObjects.cpp
-    unmatched/func_02016ff4_hostcopy.cpp
+    # func_02016ff4_hostcopy.cpp RETIRED (lane shadow-A): hostgen VIRTUAL_CALL
+    # resolves the shadow-class slot-2 call to DoSetFile's host slot 1 and
+    # keeps the shrink switch; see the table's note. GATE35_SYMS.
     # unmatched/ActorBase_AfterCleanupResources.cpp RETIRED -- the matched
     # source hosts itself now, through hostgen's ROLE_DATA map. See
     # HOSTABI_RETIRE_SYMS.
@@ -8085,9 +8116,10 @@ set(LEVELBOOT_HOST_SOURCES
     # as the four-word general representation, which doubles the stride of the
     # table it indexes; see each file's header.
     unmatched/OneUpMushroom_Behavior.cpp
-    unmatched/NumStars_hostcopy.cpp
-    # gate 35: the WRITE half of the same s8/int argument-width disagreement
-    unmatched/CollectStar_hostcopy.cpp
+    # NumStars_hostcopy.cpp and CollectStar_hostcopy.cpp RETIRED (lane
+    # shadow-A). src/IsStarCollected.c takes the course id as s8 now, so
+    # src/NumStars.c links as it stands (slice_gate10.txt); CollectStar goes
+    # through hostgen's ARG_WIDTH patch (GATE35_SYMS).
     unmatched/SignPost_StateDispatch.cpp
     # gate 18: the third, LakituBro's eleven-state machine
     unmatched/LakituBro_Behavior.cpp
@@ -8113,10 +8145,14 @@ set(LEVELBOOT_HOST_SOURCES
 
 set(CAMERA_HOST_SOURCES
     unmatched/ChangeArea_hostcopy.c
-    unmatched/func_0200cae4_hostcopy.cpp
-    unmatched/func_0200ca50_hostcopy.cpp
-    unmatched/G3i_PerspectiveW.cpp
-    unmatched/G3i_LookAt.cpp
+    # func_0200cae4_hostcopy.cpp and func_0200ca50_hostcopy.cpp RETIRED (lane
+    # shadow-A): the matched dispatchers go through hostgen's MG_PMF_CALL
+    # table (GATE13_SYMS), the one PMF call each routed into
+    # hal_call_camera_state_fn.
+    # G3i_PerspectiveW.cpp and G3i_LookAt.cpp RETIRED (lane shadow-A): both
+    # matched TUs reach the geometry engine through a pointer bound once to a
+    # literal register address, which hostgen's MMIO_PTR pass rewrites
+    # (GATE13_SYMS); PerspectiveW_'s DIVCNT seam is an MMIO_EXTERN entry.
     hal/camera_states.cpp
     hal/camera_bridges.cpp)
 
@@ -8127,8 +8163,14 @@ set(CAMERA_HOST_SOURCES
 # hostgen strips attributes as well as rewriting MMIO.
 # _ZN12ActorDerived18AfterInitResourcesEj is C++ inside a .c (the gate-9 case
 # again): hostgen emits it as .cpp with the C-linkage wrap, which MSVC accepts.
+# Lane shadow-A adds the camera's three pointer-to-member dispatchers
+# (hostgen CALL_STATE_FN: func_0200cae4 / func_0200ca50 into
+# hal_call_camera_state_fn; MG_PMF_CALL: func_02008550 over hal/ptr_tables.cpp's records).
 set(GATE13_SYMS _ZN6Camera6RenderEv LenVec3 _ZN4cstd11ldiv_resultEv
-    func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj)
+    func_02009d90 _ZN12ActorDerived18AfterInitResourcesEj
+    func_02008550 func_0200cae4 func_0200ca50
+    _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3
+    _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3)
 set(GATE13_GEN "")
 foreach(sym IN LISTS GATE13_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -11637,7 +11679,15 @@ endforeach()
 # ActorBase::AfterCleanupResources, the OTHER file this retirement was written
 # for, turned out not to need a block of its own: gate 9 was already hostgen'ing
 # that symbol for the actor smokes, just without --extern-data. See GATE9_SYMS.
-set(HOSTABI_RETIRE_SYMS _ZN6Player13InitResourcesEv)
+# Lane shadow-A: Scene::AfterCleanupResources, the second symbol of the same
+# shape. The matched TU spells `unsigned char data_02092660;` inside extern
+# "C", a strong definition to MSVC's C++ front end, and the byte is DS state
+# hal/scene_boot.cpp owns inside the .dsstate bracket (dsstate_guard refuses
+# it anywhere else). --extern-data turns that one line into a declaration and
+# the body links as it stands. port/unmatched/Scene_AfterCleanupResources.cpp
+# used to be the matched source with that one word added; it is deleted.
+set(HOSTABI_RETIRE_SYMS _ZN6Player13InitResourcesEv
+    _ZN5Scene21AfterCleanupResourcesEj)
 set(HOSTABI_RETIRE_GEN "")
 foreach(sym IN LISTS HOSTABI_RETIRE_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -12373,7 +12423,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -12583,7 +12633,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -12829,7 +12879,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires

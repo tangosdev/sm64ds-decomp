@@ -38,11 +38,12 @@
 src/_ZN5Scene16SpawnIfNecessaryEv.c
 src/func_02013edc.c
 src/func_02042fe4.c
-# _ZN5Scene21AfterCleanupResourcesEj is a HOST COPY
-# (port/unmatched/Scene_AfterCleanupResources.cpp): the matched TU DEFINES
+# _ZN5Scene21AfterCleanupResourcesEj is the matched TU through hostgen
+# --extern-data (CMakeLists.txt HOSTABI_RETIRE_SYMS): the TU DEFINES
 # data_02092660, and a hosted DS global has to sit inside .dsstate to be
-# captured by a save state. Same body, the definition moved to
-# hal/scene_boot.cpp inside the bracket. That file has the full reasoning.
+# captured by a save state, so the definition stays in hal/scene_boot.cpp
+# inside the bracket and the TU's line becomes a declaration. The host copy
+# that used to carry that one-word change is retired (lane shadow-A).
 # NOT HERE, and hal/scene_actor_faces.cpp says why in full: the three Scene::
 # halves that are 0xc-byte TAIL-CALL VENEERS on the ROM
 # (_ZN5Scene18AfterInitResourcesEj, _ZN5Scene13AfterBehaviorEj,

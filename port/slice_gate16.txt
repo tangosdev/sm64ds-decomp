@@ -56,9 +56,10 @@ src/_ZN19CylinderClsnWithPos6GetPosEv.c
 src/_ZN19CylinderClsnWithPos10GetOwnerIDEv.cpp
 src/_ZN12CylinderClsnD2Ev.c
 src/_ZN5Model14LoadAndSetFileEtii.cpp
-# func_02016ff4 is a HOST COPY in port/unmatched/: its shadow-class
-# virtual call counts slots in ROM numbering (two destructor slots) and
-# lands on UpdateVerts in the host tables. See the file header.
+# func_02016ff4 goes through hostgen (CMakeLists.txt GATE35_SYMS, lane
+# shadow-A): its shadow-class virtual call counts slots in ROM numbering (two
+# destructor slots) and would land on UpdateVerts in the host tables, so the
+# VIRTUAL_CALL table resolves it to DoSetFile's host slot at the caller.
 # Model::LoadAndSetFile ends in the ROM's shrink-to-fit: rebase the BMD, hand
 # it to SetFile, then reallocate the block down to the size the file itself
 # reports. That is the first host caller of Heap::Reallocate, so the heap

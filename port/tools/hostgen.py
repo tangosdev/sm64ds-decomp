@@ -214,6 +214,10 @@ ATTRIBUTE = re.compile(r"__attribute__\s*\(\((?:[^()]|\([^()]*\))*\)\)")
 EXTERN_DATA = re.compile(
     r"^([ \t]*)((?:(?:unsigned|signed|volatile|const|struct|long|short|int|char|"
     r"float|double|u8|u16|u32|u64|s8|s16|s32|s64|bool|Vector3|Matrix4x3|"
+    # `void* data_0209f394[];` (HUD::InitResources): the star is glued to
+    # the keyword, so it is part of the alternative rather than of the
+    # trailing `\**` (lane shadow-A)
+    r"void\**|"
     r"[A-Z]\w*)[ \t]+)+\**[ \t]*)(data_(?:ov\d+_)?[0-9a-f]{6,8})"
     r"([ \t]*(?:\[[^\];=]*\])?)[ \t]*;",
     re.MULTILINE)
@@ -557,6 +561,18 @@ DS_DIV = {
         ("ad2 / dv", "ds_idiv(ad2, dv)"),
         ("ad1 / dv", "ds_idiv(ad1, dv)"),
     ],
+    # Lane shadow-A: Animation::Advance's looping arm, `(frame + speed + len)
+    # % len`, and len is ZERO on a ModelAnim that carries a model and no
+    # animation (the VS cap: WaterfallMist seats only the BMD for mType 4 and
+    # calls Advance every visible frame). The ROM's `bl 0x01ffabe4` answers
+    # n % 0 = 0 and parks the frame at 0; x86 idiv faults (measured:
+    # c0000094 at Advance+0x1e, VS map 2 level 43, lane CAPSHOW). This entry
+    # retires port/unmatched/Animation_AdvanceDivGuard.cpp, which was the
+    # matched source with exactly this one modulus rerouted.
+    "_ZN9Animation7AdvanceEv": [
+        ("currFrame = (currFrame + speed + (int)len) % (int)len;",
+         "currFrame = ds_imod(currFrame + speed + (int)len, (int)len);"),
+    ],
 }
 
 DS_DIV_DECL = """/* hostgen: DS integer-division semantics, see hal/cstd_div.c */
@@ -595,6 +611,23 @@ int ds_imod(int, int);
 # sibling unit drivers func_02053008 / func_020531a4 / func_02052fdc bind the
 # registers by literal cast or bound pointer and need no entry here.
 MMIO_EXTERN = {
+    # Lane shadow-A: G3i::PerspectiveW_. The register traffic itself needs no
+    # entry -- the sixteen MTX_LOAD_4x4 stores go through a pointer bound once
+    # to 0x4000458 and MMIO_PTR rewrites them, the u64 DIV_NUMER/DENOM stores
+    # are literal derefs. What the table carries is ONE DELIBERATE HOST
+    # DIVERGENCE: on the DS this function inherits 64/32 divide mode from the
+    # cstd::fdiv it opens with (fdiv_async writes DIVCNT); the port's
+    # cstd::fdiv is a pure C divide (hal/cstd_div.c) that touches no register,
+    # so without this write the two divisions run 32/32 and the near/far row
+    # comes out garbage. The retired host copy carried the same line at the
+    # same spot. Anchored on the first DIV_NUMER store so it lands after the
+    # scaleW adjust and before the numerator is latched.
+    "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3": [
+        ("    *(volatile u64 *)0x4000290 = (u64)(unsigned)tmp << 32;",
+         "    NTR_MMIO(unsigned short, 0x4000280) = 1;  /* hostgen: DIVCNT 64/32, "
+         "the DS inherits it from fdiv_async; see MMIO_EXTERN */\n"
+         "    *(volatile u64 *)0x4000290 = (u64)(unsigned)tmp << 32;"),
+    ],
     "func_02053130": [
         # the busy-bit spin: SQRTCNT through the proxy; the local pointer
         # binding goes with it (keeping it would keep the &SQRTCNT reference)
@@ -722,6 +755,87 @@ VIRTUAL_CALL = {
          "(*(void (***)(void *, void *))p6)[0]"
          "((void *)p6, *(void **)(self + 0xc));"),
     ],
+    # Lane shadow-A: Model::LoadAndSetFile's middle. The matched source
+    # dispatches DoSetFile through a LOCAL shadow class with three virtuals,
+    # `self->v2(file, c, d)`: slot 2 in ROM/Itanium numbering, where a
+    # destructor takes TWO slots (D1, D0). MSVC gives a destructor one slot,
+    # so the host's _ZTV5Model has DoSetFile at 1 and UpdateVerts at 2, and
+    # the shadow's "slot 2" walked a fresh Model's null vertex list inside the
+    # first Tree's InitResources. hal/cxxname_bridge.cpp's double-fill trick
+    # (Render, slots 4 and 5) cannot serve a slot that means two live things,
+    # so the call is resolved at the caller: DoSetFile is slot 1 in every
+    # host model table (_ZTV5Model, _ZTV9ModelAnim, _ZTV10ModelAnim2), and the
+    # slots are __fastcall thunks (ecx = this, the dummy edx absorbs
+    # fastcall's second register), the convention hal/actor_vtables.cpp set.
+    # The third patch is a HOST SEAM and not part of the slot fold: the tail
+    # is the ROM's shrink-to-fit (func_02017060 -> Heap::Reallocate), which the
+    # port declines by default on every model path (hal/level_boot.cpp's
+    # port_model_shrink_enabled, SM64DS_MODEL_SHRINK=1 turns it back on), and
+    # the retired host copy carried the same switch. Retires
+    # port/unmatched/func_02016ff4_hostcopy.cpp.
+    "func_02016ff4": [
+        ('extern "C" int func_02017060(BMD_File *f);',
+         'extern "C" int func_02017060(BMD_File *f);\n'
+         'extern "C" int port_model_shrink_enabled(void);'),
+        ("ret = self->v2(file, c, d);",
+         "ret = ((int (__fastcall *)(void *, void *, BMD_File *, int, int))"
+         "(*(void ***)self)[1])(self, 0, file, c, d);"),
+        ("if (ret) func_02017060(file);",
+         "if (ret && port_model_shrink_enabled()) func_02017060(file);"),
+    ],
+    # Lane shadow-A: two of the four ActorBase::Process wrappers. Each passes
+    # three mwcc pointer-to-member-functions, static {vtable byte offset, 1}
+    # records at 0x02099e74..0x02099ecc, into
+    #
+    #     ActorBase::Process(self, <main>, <before>, <after>)
+    #
+    # and on the host those three globals are zeroed storage
+    # (hal/player_bridges.cpp) because MSVC has no representation for the
+    # mwcc pair. The records are static and the ROM's bytes name the slots:
+    # 0x02099ebc/ec4/e94 = {0x00,1} {0x04,1} {0x08,1} -> InitResources,
+    # BeforeInitResources, AfterInitResources (func_0204335c, the init
+    # Process); 0x02099ea4/eac/eb4 = {0x18,1} {0x1c,1} {0x20,1} -> Behavior,
+    # BeforeBehavior, AfterBehavior (func_02043288, the per-frame tick). The
+    # patch inlines Process's own control flow over those slots (the body of
+    # src/_ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp, unchanged: before,
+    # then main, then after(code)), through the same __fastcall thunk
+    # convention as func_02016ff4 above. Retires
+    # port/unmatched/func_0204335c_hostcopy.cpp and func_02043288_hostcopy.cpp.
+    # The other two wrappers (func_0204322c render 9/10/11, func_020432e4
+    # cleanup 3/4/5) keep their host copies: the render one carries the slot-5
+    # Virtual18 ruling and is not this lane's.
+    "func_0204335c": [
+        ("    return _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ebc, data_02099ec4, data_02099e94);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 1/0/2, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[1])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[0])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[2])(self, 0, code);\n"
+         "    return r;"),
+    ],
+    "func_02043288": [
+        ("    return _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(\n"
+         "        self, data_02099ea4, data_02099eac, data_02099eb4);",
+         "    /* hostgen VIRTUAL_CALL: Process over slots 7/6/8, see the table */\n"
+         "    void **vt = *(void ***)self;\n"
+         "    int r = ((int (__fastcall *)(void *, void *))vt[7])(self, 0);\n"
+         "    unsigned code;\n"
+         "    if (r != 0) {\n"
+         "        r = ((int (__fastcall *)(void *, void *))vt[6])(self, 0);\n"
+         "        code = r == -1 ? 3u : r == 1 ? 2u : 1u;\n"
+         "    } else {\n"
+         "        code = 0;\n"
+         "    }\n"
+         "    ((void (__fastcall *)(void *, void *, unsigned))vt[8])(self, 0, code);\n"
+         "    return r;"),
+    ],
 }
 
 
@@ -784,10 +898,33 @@ MG_PMF_CALL = {
         ("        fn(thisp, i);",
          "        port_mg_panel_call1(thisp, (unsigned)e->off, adj, i);"),
     ],
+    # Lane shadow-A: the camera half of the kuppa script's command dispatch.
+    # The matched source seeds data_0209b138[39] from 39 static
+    # pointer-to-member records and calls
+    #
+    #     (obj->*data_0209b138[msg[6]])(msg + 7, a2, a3)
+    #
+    # On the host those 39 records are hal/ptr_tables.cpp's {host handler,
+    # 0} pairs (real host function pointers, the ROM's two-word record
+    # layout), data_0209b138 is hal/auto_bss.cpp's 0x138-byte span, and the
+    # handlers are C-linkage cdecl functions that take the camera as an
+    # ordinary first argument. `Obj` is a complete single-inheritance struct,
+    # so MSVC's PMF for it is one code word and every one of the 39 seeding
+    # assignments copies word 0 of a record -- the host handler -- into the
+    # table at the host stride. The ONE line that cannot behave is the call:
+    # MSVC would dispatch it __thiscall. The patch reads the seeded word back
+    # and calls it cdecl with the receiver first, which is what the ROM's own
+    # call sequence does in r0. Retires port/unmatched/func_02008550_hostcopy.cpp,
+    # which was the same body with the 39 assignments spelled as a loop.
+    "func_02008550": [
+        ("    return (obj->*data_0209b138[msg[6]])(msg + 7, a2, a3);",
+         "    return ((int (*)(void *, unsigned char *, int, int))"
+         "*(void **)&data_0209b138[msg[6]])(obj, msg + 7, a2, a3);"),
+    ],
 }
 
 
-# ---- PLAYER STATE-MACHINE mwcc MEMBER-POINTER DISPATCH ----------------------
+# ---- STATE-MACHINE mwcc MEMBER-POINTER DISPATCH (PLAYER, CAMERA) -----------
 #
 # Three Player state functions read a per-character/per-kind row that the ROM's
 # sinit copied out of a code-pointer table, and dispatch it as an mwcc member
@@ -808,7 +945,8 @@ MG_PMF_CALL = {
 # seam too: their ptr words are all zero, so the branch is dead in the ROM's own
 # data and word0 there would be a DS vtable byte offset, meaningless against a
 # host vtable pointer.
-CALL_STATE_FN_DECL = 'extern "C" int hal_call_state_fn(void *, unsigned);\n'
+CALL_STATE_FN_DECL = ('extern "C" int hal_call_state_fn(void *, unsigned);\n'
+                      'extern "C" int hal_call_camera_state_fn(void *, unsigned);\n')
 CALL_STATE_FN = {
     "_ZN6Player12St_Jump_MainEv": [
         ("      int (*f)(void*);\n      if (v & 1) {\n"
@@ -844,7 +982,63 @@ CALL_STATE_FN = {
          "    hal_call_state_fn(obj, (unsigned)(*(int*)obj + m->adj));\n"
          "  } else {\n    hal_call_state_fn(obj, (unsigned)m->adj);\n  }"),
     ],
+    # Lane shadow-A: the camera state machine's two dispatchers, the same
+    # shape on a second seam. The State objects at 0x0209b008.. are mwcc
+    # member-function pairs {code address, this-delta} that __sinit_02073a24
+    # copies from relocated data; on the host the code word is a DS address
+    # and hal/camera_states.cpp's hal_call_camera_state_fn translates it
+    # through the address switch in camera_states.inc (every delta in the
+    # ROM's pairs is 0). Each entry swaps the one PMF call for that seam,
+    # reading the same word the src reads; the seam's declaration rides in
+    # CALL_STATE_FN_DECL at file scope (the sources are C++, so a block-scope
+    # declaration would take C++ linkage). onEnter is word 0 of the State
+    # (func_0200cae4); main is word 2 (func_0200ca50, the src's `obj + 8`).
+    # Retires port/unmatched/func_0200cae4_hostcopy.cpp and
+    # func_0200ca50_hostcopy.cpp.
+    "func_0200cae4": [
+        ("  return (c->**p)();",
+         "  return hal_call_camera_state_fn(c, *(unsigned *)p);"),
+    ],
+    "func_0200ca50": [
+        ("            r5 = (self->**pp)();",
+         "            r5 = hal_call_camera_state_fn(self, *(unsigned *)pp);"),
+    ],
 }
+
+
+# ---- ARGUMENT WIDTH ACROSS TWO MATCHED TUs -----------------------------------
+#
+# Lane shadow-A. Two src TUs can disagree about the width of one parameter and
+# both still be byte matches: on ARM the value rides in r0 either way, and the
+# caller that widened a byte to a register has done the callee's work for it.
+# Under x86 cdecl the two spellings are NOT interchangeable. MSVC stores an s8
+# argument as ONE byte into the outgoing four-byte slot and pushes the slot,
+# so a callee that reads the slot as `int` sees one meaningful byte and three
+# stale ones -- and CollectStar's body is `data_0209cab4[a] |= 1 << b;`, an
+# unbounded indexed read-modify-write. Measured: the first star the port ever
+# collected faulted at data_0209cab4 + 0x60e95014.
+#
+#     src/CollectStarInLevel.c   extern void CollectStar(s8 courseID, s32);
+#     src/CollectStar.c          void CollectStar(int a, int b);
+#
+# The patch retypes the one parameter in the DEFINITION to the width its
+# caller declares, so the callee extends the byte itself. Nothing else in the
+# body changes. src/IsStarCollected.c, the READ half of the same pair, already
+# spells its parameter s8 in src, which is why NumStars needs no entry here
+# and links plain. Exact strings, hard-errored like the tables above: if the
+# decomp ever settles the two declarations on one width, the entry stops
+# matching and this table says so rather than silently going inert.
+ARG_WIDTH = {
+    "CollectStar": [
+        ("void CollectStar(int a, int b){",
+         "void CollectStar(signed char a, int b){"),
+    ],
+}
+
+
+def arg_width_patch(text, sym):
+    """Retype one parameter to the width its matched caller declares."""
+    return apply_patches(text, sym, ARG_WIDTH, "ARG_WIDTH")
 
 
 def apply_patches(text, sym, table, what, decl=""):
@@ -930,6 +1124,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = member_redecl_patch(text, sym)
     text, _ = extern_c_data_patch(text, sym)
     text, _ = call_state_fn_patch(text, sym)
+    text, _ = arg_width_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise

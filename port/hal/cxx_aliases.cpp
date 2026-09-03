@@ -1274,10 +1274,18 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?func_0203dafc@@YAXH@Z=_func_0203dafc")
 #pragma comment(linker, "/alternatename:?Math_Function_0203b0fc@@YAXPAHHHH@Z=_Math_Function_0203b0fc")
 #pragma comment(linker, "/alternatename:?_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj@@YAIIIHHHPBXE@Z=__ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj")
-/* the G3i pair are host copies (port/unmatched/); their TU declares them as
-   C names, Camera::Render as class statics */
+/* the G3i pair are the matched TUs through hostgen (lane shadow-A).
+   Camera::Render declares both as class statics (?..@G3i@@SA..). PerspectiveW_
+   is a .c that defines the Itanium C name itself, so its static-member
+   spelling aliases onto that. LookAt_ is a real `namespace G3i` function in
+   its .cpp, so MSVC emits the namespace mangling (?..@G3i@@YA..): the
+   static-member spelling aliases onto THAT, and so does the Itanium C name
+   the four C callers use (Camera_UpdateMatrices, func_ov007_020b1fa4/20e8/
+   2160, func_ov003_020ae6f4, func_ov075_021152d4). bool vs int for `draw`
+   is the same four-byte slot under cdecl. */
 #pragma comment(linker, "/alternatename:?PerspectiveW_@G3i@@SAXHHHHHH_NPAUMatrix4x3@@@Z=__ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3")
-#pragma comment(linker, "/alternatename:?LookAt_@G3i@@SAXPBUVector3@@00_NPAUMatrix4x3@@@Z=__ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3")
+#pragma comment(linker, "/alternatename:?LookAt_@G3i@@SAXPBUVector3@@00_NPAUMatrix4x3@@@Z=?LookAt_@G3i@@YAXPBUVector3@@00_NPAUMatrix4x3@@@Z")
+#pragma comment(linker, "/alternatename:__ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3=?LookAt_@G3i@@YAXPBUVector3@@00_NPAUMatrix4x3@@@Z")
 #pragma comment(linker, "/alternatename:?SetBlendAlpha@G2x@@SAXPCGGGGG@Z=__ZN3G2x13SetBlendAlphaEPVttttt")
 #pragma comment(linker, "/alternatename:?Render@OAM@@SAX_NPAUOamAttr@@HHHHHHHH@Z=__ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii")
 /* community names for matched symbols: Vec3_DistSq IS func_0203cf94,
