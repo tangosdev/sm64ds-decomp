@@ -143,6 +143,8 @@ void *Unagi_Spawn(void);                             /* installs _ZTV5Unagi itse
 /* ---- SHIP_UP (57) own bodies. Init/Cleanup/Behavior are real methods, faced
    below; Render is the host copy; D1/D0 are host thunks. ------------------- */
 int _ZN6ShipUp13InitResourcesEv(void *self);         /* slot 0, faced */
+int *_ZN6ShipUpD1Ev(int *self);                      /* slot 16, .c, DTOR-PAIRS seat (0x0211260c) */
+int *_ZN6ShipUpD0Ev(int *self);                      /* slot 17, .c, DTOR-PAIRS seat (0x02112650) */
 int _ZN6ShipUp16CleanupResourcesEv(void *self);      /* slot 3, faced */
 int _ZN6ShipUp8BehaviorEv(void *self);               /* slot 6, faced */
 int _ZN6ShipUp6RenderEv(void *self);                 /* slot 9, HOST COPY */
@@ -160,6 +162,8 @@ void *RockPillar_Spawn(void);          /* installs data_ov016_02114b00 itself */
    plain C-linkage body (the COUPLED FindWithActorID(0x39) one); Render host copy;
    D1/D0 host thunks. -- */
 int _ZN23FloatOnWaterPlatformJrb13InitResourcesEv(void *self);    /* slot 0, faced */
+int *_ZN23FloatOnWaterPlatformJrbD1Ev(int *self);    /* slot 16, .c, DTOR-PAIRS seat (0x02112ff8) */
+int *_ZN23FloatOnWaterPlatformJrbD0Ev(int *self);    /* slot 17, .c, DTOR-PAIRS seat (0x02113044) */
 int _ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv(void *self); /* slot 3, faced */
 int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(void *self);          /* slot 6, .c C linkage */
 int _ZN23FloatOnWaterPlatformJrb6RenderEv(void *self);            /* slot 9, HOST COPY */
@@ -207,6 +211,9 @@ DSSTATE_END
      FloatOnWaterPlatformJrb_Spawn's transient write and func_ov016_02112ef4/f44).
    Each RTTI name aliases to its OWN host array, not to the other. */
 #pragma comment(linker, "/alternatename:__ZTV13daSlide_Box_c=__ZTV23FloatOnWaterPlatformJrb")
+/* ShipUp's D1/D0 spell their table by its RTTI name; the ROM store relocates
+   to ov016 0x02114a3c, _ZTV6ShipUp (the host array above). */
+#pragma comment(linker, "/alternatename:__ZTV14daObjKi_Fune_c=__ZTV6ShipUp")
 #pragma comment(linker, "/alternatename:__ZTV13daObjKi_Ita_c=_data_ov016_02114bcc")
 
 // ---- the trap --------------------------------------------------------------
@@ -363,31 +370,17 @@ static int __fastcall shu_render(void *s, void *)
   return _ZN6ShipUp6RenderEv(s); }                        /* HOST COPY (slot-5) */
 static int __fastcall shu_kill(void *s, void *)
 { _ZN8Platform4KillEv(s); return 0; }                     /* slot 31 */
-/* D1/D0 host thunks: the matched src stores _ZTV14daObjKi_Fune_c then OVERWRITES
-   with the _ZTV10dBgActor_c placeholder, so it is dropped from the slice. Store
-   the derived table once and run the chain high-address first: MovingMeshCollider
-   +0x124, Model +0xd4, then the Actor base D2. D0 also frees on the game heap;
-   D1's caller (ActorBase::AfterCleanupResources) frees itself after the dispatch,
-   so D1 stops before the Deallocate. */
+/* D1/D0 (DTOR-PAIRS seat): the matched flat-C pair behind ecx->arg
+   adapters, replacing the host copies of the chain that stood here. The
+   "shared placeholder" the copies were written to avoid is not one: every
+   body's second vptr store relocates to ov002 0x0210ae38, the ONE Platform
+   base table the port hosts as _ZTV10dBgActor_c / _ZTV8Platform
+   (hal/lk2_platform_dtor_seat.cpp), and the first store is this class's own
+   table by its RTTI name, aliased onto the host array above. */
 static int __fastcall shu_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV6ShipUp;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN6ShipUpD1Ev((int *)s); }
 static int __fastcall shu_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV6ShipUp;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN6ShipUpD0Ev((int *)s); }
 
 extern "C" void hal_fill_ship_up_vtable(void)
 {
@@ -472,32 +465,17 @@ static int __fastcall sbx_render(void *s, void *)
   return _ZN23FloatOnWaterPlatformJrb6RenderEv(s); }       /* HOST COPY (slot-5) */
 static int __fastcall sbx_kill(void *s, void *)
 { _ZN8Platform4KillEv(s); return 0; }                     /* slot 31 */
-/* D1/D0 host thunks: the matched src stores _ZTV13daSlide_Box_c, runs the
-   WithMeshClsn teardown at +0x324, THEN stores the _ZTV10dBgActor_c placeholder,
-   so it is dropped from the slice. Store the derived table once and run the
-   chain: WithMeshClsn +0x324 (this class's extra member), MovingMeshCollider
-   +0x124, Model +0xd4, then the Actor base D2. D0 also frees on the game heap. */
+/* D1/D0 (DTOR-PAIRS seat): the matched flat-C pair behind ecx->arg
+   adapters, replacing the host copies of the chain that stood here. The
+   "shared placeholder" the copies were written to avoid is not one: every
+   body's second vptr store relocates to ov002 0x0210ae38, the ONE Platform
+   base table the port hosts as _ZTV10dBgActor_c / _ZTV8Platform
+   (hal/lk2_platform_dtor_seat.cpp), and the first store is this class's own
+   table by its RTTI name, aliased onto the host array above. */
 static int __fastcall sbx_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV23FloatOnWaterPlatformJrb;
-    _ZN12WithMeshClsnD1Ev(t + 0x324);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN23FloatOnWaterPlatformJrbD1Ev((int *)s); }
 static int __fastcall sbx_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV23FloatOnWaterPlatformJrb;
-    _ZN12WithMeshClsnD1Ev(t + 0x324);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN23FloatOnWaterPlatformJrbD0Ev((int *)s); }
 
 extern "C" void hal_fill_sliding_box_vtable(void)
 {

@@ -121,12 +121,14 @@ src/MrBlizzard_Spawn.c
 src/func_ov081_021261b8.c
 #
 # ---- ICE_BLOCK (daObjIceBlock_c), a Platform, 32 slots (own Kill) ----------
-# _ZN8IceBlockD1Ev.c and _ZN8IceBlockD0Ev.c are NOT in this list -- both
-# store their own table then OVERWRITE with the shared _ZTV8Platform
-# placeholder (the ShipUp/RockPillar/SkiLift gate-188/191 shape); the fill
-# runs the member-teardown chain directly instead. func_ov081_02127be0 is a
+# _ZN8IceBlockD1Ev.c and _ZN8IceBlockD0Ev.c ride from src (lane DTOR-PAIRS-C):
+# the "_ZTV8Platform placeholder" their second store spells is ov002 0x0210ae38
+# by relocation, the one Platform base table the port hosts, so the fill's
+# slots 16/17 take the matched pair behind adapters. func_ov081_02127be0 is a
 # DIFFERENT function (a Behavior helper, address-confirmed -- sits right
 # after D0 ends, 0x02127be0..02127ccc), not D1; it stays in the slice.
+src/_ZN8IceBlockD1Ev.c
+src/_ZN8IceBlockD0Ev.c
 src/func_ov081_02127be0.cpp
 src/func_ov081_02127ccc.cpp
 src/func_ov081_02127cf4.c
@@ -148,10 +150,8 @@ src/__sinit_ov081_021280e8.c
 src/__sinit_ov081_02128154.c
 src/__sinit_ov081_021287b8.c
 #
-# NOT in this slice (host thunks cover their vtable slots instead):
-# src/_ZN8IceBlockD1Ev.c, src/_ZN8IceBlockD0Ev.c. Both stay byte-locked in
-# src/ as the matched proof; neither is referenced from CMakeLists' gate-192
-# source list.
+# (The D1/D0 pair used to sit out of this slice behind host thunks; lane
+# DTOR-PAIRS-C seated the matched bodies, see the ICE_BLOCK block above.)
 #
 # ==== RECORD CORRECTION (review round) ====
 # The gate-192 commit message described func_02044b30's SHORT-arg seam as

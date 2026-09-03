@@ -69,8 +69,11 @@ src/func_ov002_020bebd4.cpp
 # four have a plain-C D1 in src; the other five are compiler-generated member
 # destruction over shadow classes and are written out in actor_classes.cpp.
 src/_ZN11CastleWaterD1Ev.c
+src/_ZN11CastleWaterD0Ev.c
 src/_ZN8MetalNetD1Ev.c
+src/_ZN8MetalNetD0Ev.c
 src/_ZN13QuestionBlockD1Ev.c
+src/_ZN13QuestionBlockD0Ev.c
 # CastleWater's own chain reaches the texture transformer it scrolls the moat
 # surface with; gate 17 landed the constructor and Update, this is the other
 # end of the same object.

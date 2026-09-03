@@ -33,15 +33,16 @@
 //       that is not the ROM's. The ROM's D1 body is empty apart from the vptr
 //       store and the Actor chain, which is exactly what co_d1 does.
 //
-//   D0: src/_ZN14CutsceneObjectD0Ev.c is a weaker recovery than its siblings --
-//       it reaches the vtable and the heap through decl_common.h's GENERIC
-//       placeholders (`extern int VT[];`, `extern void *HEAP;`) rather than
-//       through the real symbols the way LakituBro's D0 does
-//       (_ZTV11daC_Jugem_c and data_020a0eac by name). Those placeholders do
-//       resolve -- actor_vtables.cpp and cxxname_bridge.cpp define them -- so
-//       it would have LINKED and stored the wrong vtable pointer into every
-//       destroyed cutscene object, and freed to whatever heap HEAP happens to
-//       be. co_d0 writes the ROM's own two symbols instead.
+//   D0: src/_ZN14CutsceneObjectD0Ev.c reaches the vtable and the heap through
+//       decl_common.h's GENERIC placeholders (`extern int VT[];`, `extern void
+//       *HEAP;`) rather than through the real symbols the way LakituBro's D0
+//       does. Bare VT is bound to the ov002 Enemy base table, so linked as-is
+//       it would store the wrong vtable pointer. Since lane DTOR-PAIRS-C the
+//       body RIDES FROM SRC anyway: port/CMakeLists.txt compiles that one TU
+//       with VT=_ZTV14CutsceneObject, the ROM's own relocation for the store
+//       (ov002 from:0x020f1fc4 -> 0x0210bd60), the BookShotSpawner D0
+//       treatment; HEAP is the game heap by the standing alias, which is the
+//       pool's second word (020A0EAC). co_d0 is the ecx->arg adapter over it.
 //
 //       data_020a0eac is not a guess: src/_ZN9ActorBasenwEj.cpp allocates every
 //       actor out of it, and CutsceneObject_Spawn is an ActorBase::operator new
@@ -83,6 +84,7 @@ int _ZN14CutsceneObject8BehaviorEv(void *self);           /* face, below */
 int _ZN14CutsceneObject6RenderEv(void *self);             /* face, below */
 int _ZN14CutsceneObject16CleanupResourcesEv(void *self);  /* face, below */
 void _ZN14CutsceneObject16OnPendingDestroyEv(void);       /* C linkage in src */
+int *_ZN14CutsceneObjectD0Ev(int *self);                  /* slot 17, .c, DTOR-PAIRS seat (0x020f1f94) */
 void *_ZTV14CutsceneObject[31];
 
 /* the Actor chain co_d1/co_d0 end on, and the heap every actor is allocated
@@ -313,16 +315,12 @@ static int __fastcall co_d1(void *s, void *)
     _ZN5ActorD2Ev(t);
     return (int)(size_t)s;
 }
-/* Slot 17, the deleting destructor: the same chain plus the free, to the heap
+/* Slot 17, the deleting destructor (DTOR-PAIRS seat): the matched flat-C body
+   behind the ecx->arg adapter, its VT renamed onto this table per source (see
+   the header). The chain is the same one co_d1 runs plus the free to the heap
    ActorBase::operator new took it from. */
 static int __fastcall co_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV14CutsceneObject;
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN14CutsceneObjectD0Ev((int *)s); }
 
 /* ---- A VTABLE SLOT THE SCRIPT'S OWN MODEL CLASS CALLS THROUGH --------------
    data_ov002_0210bae4 is a VTABLE, not a spawn record -- an earlier version of

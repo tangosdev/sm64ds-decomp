@@ -1068,6 +1068,46 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN15BookShotSpawnerD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT=port_bookshotspawner_vt")
+# Lane DTOR-PAIRS-C: the brick-block tag's deleting destructor is the same
+# shape -- `t[0] = (int)VT;` then Actor's D2 then Deallocate(HEAP) -- and its
+# ROM store relocates to its OWN table (ov002 from:0x020b41b0 -> 0x02108c18,
+# _ZTV10BrickBlock, the host array hal/actor_classes_bob_world.cpp fills).
+# decl_common.h already declares _ZTV10BrickBlock as `extern int []`, the
+# same type the VT placeholder carries, so the rename is a plain substitution.
+# HEAP stays bound to the game heap (the pool's second word is 020A0EAC).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10BrickBlockD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=_ZTV10BrickBlock")
+# Lane DTOR-PAIRS-C: the cutscene object's deleting destructor, the same VT/HEAP
+# shape; its store relocates to its own table (ov002 from:0x020f1fc4 ->
+# 0x0210bd60, _ZTV14CutsceneObject, the host array hal/actor_classes_intro.cpp
+# fills; decl_common.h already declares it `extern int []`).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14CutsceneObjectD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=_ZTV14CutsceneObject")
+# Lane DTOR-PAIRS-C: the four bully destructors spell VT1 for their second vptr
+# store, and the ROM relocates all four stores to ov064 0x0211b768 -- the
+# bullies' base table, data_ov064_0211b768, hosted in hal/actor_classes_ov027.cpp
+# (which rides the same three targets as slice_gate177). Per source, so bare VT1
+# (auto_bss's dummy) keeps serving whatever else still spells it. G0 is the game
+# heap by the standing alias, the pool's last word (020A0EAC) in both D0s.
+foreach(bully_dtor _ZN5BullyD1Ev _ZN5BullyD0Ev _ZN8BigBullyD1Ev _ZN8BigBullyD0Ev)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${bully_dtor}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "VT1=data_ov064_0211b768")
+endforeach()
+# Lane DTOR-PAIRS-C: the castle water's deleting destructor spells VT0 and VT1
+# (the SphereClsn placeholder pair). The ROM relocates its two stores to ov009
+# 0x02113a18 (_ZTV14daObjMcWater_c, hosted in hal/actor_classes.cpp) and ov002
+# 0x0210ae38 (the Platform base table, hosted as _ZTV10dBgActor_c), the Mecha03
+# treatment below; G0 is the game heap by the standing alias (020A0EAC).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11CastleWaterD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV14daObjMcWater_c;VT1=_ZTV10dBgActor_c")
 
 # RUN LINK60 lane A2: SPINDRIFT'S KILL-BY-INVINCIBLE EDGE, misrouted since the
 # ov081 seat. One ROM address, 0x020ada40, resolved two ways in one binary.
@@ -12412,7 +12452,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # harness with no settings.json beside it gets every default.
     hal/screen_gap.cpp hal/host_settings.cpp hal/gap_art.cpp hal/gap_continuity.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its
@@ -12622,7 +12662,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its
@@ -12868,7 +12908,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/dtor_seats_base.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     ${SLICE_W8SHADOWS_SOURCES}
     # hal/megachar_stub.cpp is NOT here any more (lane w8-shadows). Its

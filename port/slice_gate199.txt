@@ -25,17 +25,17 @@ src/SwitchPillar_Spawn.c
 # BASEMENT_WATER (daObjC0Water_c), a Platform, 32 slots (no own Kill). Its
 # whole matched-src file family is misnamed `_ZN12SwitchPillar*` by dsd
 # (the class-identity swap, see ov012_syms.txt) -- the FILENAMES below are
-# the real ones on disk. D1/D0 (_ZN12SwitchPillarD1Ev/D0Ev) are NOT in this
-# list -- same shape, store own table then overwrite with the shared
-# placeholder, HOST THUNKS.
+# the real ones on disk. D1/D0 (_ZN12SwitchPillarD1Ev/D0Ev) ride from src
+# (lane DTOR-PAIRS-C): the "shared placeholder" their second store spells is
+# ov002 0x0210ae38 by relocation, the hosted Platform base table.
+src/_ZN12SwitchPillarD1Ev.c
+src/_ZN12SwitchPillarD0Ev.c
 src/_ZN12SwitchPillar16CleanupResourcesEv.cpp
 src/_ZN12SwitchPillar8BehaviorEv.cpp
 src/_ZN12SwitchPillar13InitResourcesEv.cpp
 src/BasementWater_Spawn.c
 #
-# NOT in this list: src/_ZN12SwitchPillarD1Ev.c, src/_ZN12SwitchPillarD0Ev.c
-# (BasementWater's own D1/D0, host thunks, byte-locked proof only), and
-# src/_ZN12SwitchPillar6RenderEv.cpp (BasementWater's REAL Render -- the
+# NOT in this list: src/_ZN12SwitchPillar6RenderEv.cpp (BasementWater's REAL Render -- the
 # SAME ModelAnim/Model slot-5 shadow-vtable collision SwitchPillar's own
 # Render hits, correcting ov012_syms.txt's original "does not hit this
 # shape" read -- host-copied into unmatched/ModelAnim_Renders.cpp instead).

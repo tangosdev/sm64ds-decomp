@@ -69,6 +69,7 @@ src/func_0203db0c.c
 # and stored the wrong vtable pointer. See that file's header.
 src/CutsceneObject_Spawn.c
 src/_ZN14CutsceneObject13InitResourcesEv.cpp
+src/_ZN14CutsceneObjectD0Ev.c
 src/_ZN14CutsceneObject8BehaviorEv.cpp
 # src/_ZN14CutsceneObject6RenderEv.cpp -- HOST COPY at unmatched/CutsceneObject_Render.cpp
 #   It dispatches its model through a LOCAL SHADOW class counted in ROM/Itanium

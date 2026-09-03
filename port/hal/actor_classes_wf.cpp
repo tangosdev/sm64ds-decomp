@@ -277,6 +277,7 @@ extern "C" {
 int _ZN14MovingBarSmall13InitResourcesEv(char *self);  /* .cpp, but extern "C" */
 int _ZN14MovingBarSmall8BehaviorEv(char *self);   /* .c, C linkage */
 int *_ZN14MovingBarSmallD1Ev(int *self);          /* .c, C linkage */
+int *_ZN14MovingBarSmallD0Ev(int *self);          /* .c, slot 17, DTOR-PAIRS seat (0x021122dc) */
 void *_ZTV14MovingBarSmall[32];
 }
 /* The address 0x02114650 answers to both _ZTV names; the class D1 restores it
@@ -295,6 +296,8 @@ static int __fastcall ts_render(void *s, void *)
 }
 static int __fastcall ts_d1(void *s, void *)
 { return (int)(size_t)_ZN14MovingBarSmallD1Ev((int *)s); }
+static int __fastcall ts_d0(void *s, void *)
+{ return (int)(size_t)_ZN14MovingBarSmallD0Ev((int *)s); }
 extern "C" void hal_fill_tower_step_vtable(void)
 {
     void **vt = _ZTV14MovingBarSmall;
@@ -304,6 +307,13 @@ extern "C" void hal_fill_tower_step_vtable(void)
     vt[6] = (void *)ts_behavior;
     vt[9] = (void *)ts_render;
     vt[16] = (void *)ts_d1;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where wf_fill_shared's trap
+       stood, and the reference edge that links the TU. */
+    vt[17] = (void *)ts_d0;
     /* 32 slots. _ZTV14MovingBarSmall overrides two of the tail with its own
        ov015 bodies, both matched in src and in no slice: 27 OnHitByMegaChar
        (0x021123a0) and 31 Kill (0x0211233c). Seated together (gate 60): the
@@ -326,6 +336,7 @@ extern "C" void hal_fill_tower_step_vtable(void)
 #include "TowerStep.h"
 extern "C" {
 int *_ZN9TowerStepD1Ev(int *self);                /* .c, C linkage */
+int *_ZN9TowerStepD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02112988) */
 void *_ZTV9TowerStep[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV17daObjBk_Rotebar_c=__ZTV9TowerStep")
@@ -342,6 +353,8 @@ static int __fastcall rb_render(void *s, void *)
 }
 static int __fastcall rb_d1(void *s, void *)
 { return (int)(size_t)_ZN9TowerStepD1Ev((int *)s); }
+static int __fastcall rb_d0(void *s, void *)
+{ return (int)(size_t)_ZN9TowerStepD0Ev((int *)s); }
 extern "C" void hal_fill_rotating_bridge_vtable(void)
 {
     void **vt = _ZTV9TowerStep;
@@ -351,6 +364,13 @@ extern "C" void hal_fill_rotating_bridge_vtable(void)
     vt[6] = (void *)rb_behavior;
     vt[9] = (void *)rb_render;
     vt[16] = (void *)rb_d1;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where wf_fill_shared's trap
+       stood, and the reference edge that links the TU. */
+    vt[17] = (void *)rb_d0;
     /* 32 slots -- this is ROTATING_BRIDGE's table, the class the slot-31 probe
        crashed on. Slot 31 is Platform::Kill, not overridden. */
     vt[31] = (void *)wf_kill;
@@ -421,6 +441,7 @@ extern "C" {
 int _ZN13PoleBillboard13InitResourcesEv(char *self);  /* .c, C linkage */
 int _ZN13PoleBillboard8BehaviorEv(char *self);         /* .cpp extern "C" */
 int *_ZN13PoleBillboardD1Ev(int *self);                /* .c, C linkage */
+int *_ZN13PoleBillboardD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02111360) */
 void *_ZTV13PoleBillboard[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV17daObjBk_Botaosi_c=__ZTV13PoleBillboard")
@@ -437,6 +458,8 @@ static int __fastcall kp_render(void *s, void *)
 }
 static int __fastcall kp_d1(void *s, void *)
 { return (int)(size_t)_ZN13PoleBillboardD1Ev((int *)s); }
+static int __fastcall kp_d0(void *s, void *)
+{ return (int)(size_t)_ZN13PoleBillboardD0Ev((int *)s); }
 extern "C" void hal_fill_knock_down_plank_vtable(void)
 {
     void **vt = _ZTV13PoleBillboard;
@@ -446,6 +469,13 @@ extern "C" void hal_fill_knock_down_plank_vtable(void)
     vt[6] = (void *)kp_behavior;
     vt[9] = (void *)kp_render;
     vt[16] = (void *)kp_d1;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where wf_fill_shared's trap
+       stood, and the reference edge that links the TU. */
+    vt[17] = (void *)kp_d0;
     /* 32 slots. _ZTV13PoleBillboard overrides four of the tail with its own
        ov015 bodies, all matched in src and none in a slice: 23 OnAttacked2
        (0x02111408), 24 OnKicked (0x021113fc), 27 OnHitByMegaChar (0x021113c0)
@@ -560,6 +590,7 @@ extern "C" void hal_fill_rotating_platform_wf_vtable(void)
 extern "C" {
 int _ZN14KnockDownPlank8BehaviorEv(void *self);          /* host copy, extern C */
 int *_ZN14KnockDownPlankD1Ev(int *self);                 /* .c, C linkage */
+int *_ZN14KnockDownPlankD0Ev(int *self);                 /* .c, slot 17, DTOR-PAIRS seat (0x02111be4) */
 void port_knock_down_plank_states_seat(void);            /* the two-table seat */
 void *_ZTV14KnockDownPlank[32];
 }
@@ -606,6 +637,8 @@ static int __fastcall mb_render(void *s, void *)
 }
 static int __fastcall mb_d1(void *s, void *)
 { return (int)(size_t)_ZN14KnockDownPlankD1Ev((int *)s); }
+static int __fastcall mb_d0(void *s, void *)
+{ return (int)(size_t)_ZN14KnockDownPlankD0Ev((int *)s); }
 extern "C" void hal_fill_moving_bar_vtable(void)
 {
     void **vt = _ZTV14KnockDownPlank;
@@ -615,6 +648,13 @@ extern "C" void hal_fill_moving_bar_vtable(void)
     vt[6] = (void *)mb_behavior;
     vt[9] = (void *)mb_render;
     vt[16] = (void *)mb_d1;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where wf_fill_shared's trap
+       stood, and the reference edge that links the TU. */
+    vt[17] = (void *)mb_d0;
     /* 32 slots. _ZTV14KnockDownPlank overrides two of the tail with its own
        ov015 bodies, both matched in src and in no slice: 27 OnHitByMegaChar
        (0x02111cb8) and 31 Kill (0x02111c3c). dsd's bound reads 3 words. Seated

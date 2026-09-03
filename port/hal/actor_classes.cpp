@@ -366,11 +366,17 @@ static int __fastcall ac_d1_door(void *s, void *)
    __fastcall face the slot needs. */
 extern "C" {
 int *_ZN11CastleWaterD1Ev(int *self);
+int *_ZN11CastleWaterD0Ev(int *self);  /* slot 17, DTOR-PAIRS seat (ov009 0x02111abc) */
 int *_ZN8MetalNetD1Ev(int *self);
 int *_ZN13QuestionBlockD1Ev(int *self);
 }
 static int __fastcall cw_d1(void *s, void *)
 { return (int)(size_t)_ZN11CastleWaterD1Ev((int *)s); }
+/* DTOR-PAIRS seat: the water's own D0 spells VT0/VT1; port/CMakeLists.txt
+   compiles that one TU with the ROM's two relocation targets
+   (_ZTV14daObjMcWater_c and the Platform base table as _ZTV10dBgActor_c). */
+static int __fastcall cw_d0(void *s, void *)
+{ return (int)(size_t)_ZN11CastleWaterD0Ev((int *)s); }
 static int __fastcall mn_d1(void *s, void *)
 { return (int)(size_t)_ZN8MetalNetD1Ev((int *)s); }
 static int __fastcall qb_d1(void *s, void *)
@@ -1155,12 +1161,15 @@ extern "C" void hal_fill_moving_cylinder_vtables(void)
 // for the water and _ZN11CastleWater*/_ZN8DockPole* for the net and the flag;
 // #1041 shifted them onto the blocks they belong to.
 //
-// SLOTS 16/17 TRAP FOR ALL FOUR. Nothing on the castle grounds destroys one
-// -- every InitResources here returns 1 on this level -- and the water's own
-// D0 (src/_ZN11CastleWaterD0Ev.c) is why it matters: it spells its two vtables VT0
-// and VT1, the same placeholder names src/_ZN10SphereClsnD1Ev.c uses for
-// three completely different tables, so one host definition would satisfy
-// both with the wrong bytes and nothing would say so.
+// SLOT 17 USED TO TRAP FOR ALL FOUR. Nothing on the castle grounds destroys
+// one -- every InitResources here returns 1 on this level -- and the water's
+// own D0 (src/_ZN11CastleWaterD0Ev.c) spells its two vtables VT0 and VT1, the
+// same placeholder names src/_ZN10SphereClsnD1Ev.c uses for three completely
+// different tables, so one shared host definition would have satisfied both
+// with the wrong bytes. Since lane DTOR-PAIRS-C all four D0s ride from src:
+// the water's relocs (from:0x02111ab4 -> 0x02113a18, from:0x02111ab8 ->
+// 0x0210ae38) name its two tables, and port/CMakeLists.txt compiles that one
+// TU with VT0=_ZTV14daObjMcWater_c;VT1=_ZTV10dBgActor_c, per source.
 
 // ---- BIRD (actor 343, ov009) x2 --------------------------------------------
 extern "C" {
@@ -1169,6 +1178,7 @@ int _ZN4Bird8BehaviorEv(void *self);            /* host copy: hal/ov009_boot */
 int _ZN4Bird6RenderEv(void *self);
 int _ZN4Bird16CleanupResourcesEv(void);
 void _ZN4Bird16OnPendingDestroyEv(void);
+int *_ZN4BirdD0Ev(int *self);                  /* slot 17, DTOR-PAIRS seat (ov009 0x021111d8) */
 void *_ZTV4Bird[31];
 }
 /* The Bird's own D0 spells its table by the RTTI name. */
@@ -1185,6 +1195,8 @@ static int __fastcall bird_render(void *s, void *)
   return _ZN4Bird6RenderEv(s); }
 static int __fastcall bird_pdes(void *, void *)
 { _ZN4Bird16OnPendingDestroyEv(); return 0; }
+static int __fastcall bird_d0(void *s, void *)
+{ return (int)(size_t)_ZN4BirdD0Ev((int *)s); }
 /* SLOT 16 IS LIVE: a woken bird's state 0 spawns its flock, state 3 climbs,
    and past y 3000 func_ov009_02111234 marks every member -- the turn walk
    died right here while this slot was a trap. The body is
@@ -1209,9 +1221,13 @@ extern "C" void hal_fill_bird_vtable(void)
     vt[9] = (void *)bird_render;
     vt[12] = (void *)bird_pdes;
     vt[16] = (void *)bird_d1;
-    /* 17 keeps the trap: the ROM's destroy path is D1 + an explicit
-       Deallocate, and nothing on this level calls the deleting form. */
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)bird_d0;
 }
 
 // ---- CASTLE_WATER (actor 338, ov009) x1 ------------------------------------
@@ -1253,7 +1269,7 @@ extern "C" void hal_fill_castle_water_vtable(void)
     vt[9] = (void *)cw_render;
     vt[12] = (void *)ac_pdes_base;
     vt[16] = (void *)cw_d1;
-    vt[17] = (void *)ac_trap17;
+    vt[17] = (void *)cw_d0;
     /* 32 slots; slot 31 is Platform::Kill unchanged in the ROM table. dsd left
        an ambiguous symbol at word 14, so the symbol bound reads 14 here -- the
        reloc run is what says 32. */
@@ -1271,6 +1287,7 @@ int _ZN8MetalNet8BehaviorEv(void *self);
 int _ZN8MetalNet6RenderEv(void *self);
 int _ZN8MetalNet16CleanupResourcesEv(void *self);
 void _ZN8MetalNet16OnPendingDestroyEv(void);
+int *_ZN8MetalNetD0Ev(int *self);              /* slot 17, DTOR-PAIRS seat (ov009 0x02111e08) */
 void *_ZTV8MetalNet[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV18daObjMc_Metalnet_c=__ZTV8MetalNet")
@@ -1286,6 +1303,8 @@ static int __fastcall mn_render(void *s, void *)
   return _ZN8MetalNet6RenderEv(s); }
 static int __fastcall mn_pdes(void *, void *)
 { _ZN8MetalNet16OnPendingDestroyEv(); return 0; }
+static int __fastcall mn_d0(void *s, void *)
+{ return (int)(size_t)_ZN8MetalNetD0Ev((int *)s); }
 
 extern "C" void hal_fill_metal_net_vtable(void)
 {
@@ -1298,7 +1317,13 @@ extern "C" void hal_fill_metal_net_vtable(void)
     vt[9] = (void *)mn_render;
     vt[12] = (void *)mn_pdes;
     vt[16] = (void *)mn_d1;
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)mn_d0;
     /* 32 slots; slot 31 is Platform::Kill unchanged in the ROM table. */
     vt[31] = (void *)ac_kill;
 }
@@ -1314,6 +1339,7 @@ int _ZN4Flag13InitResourcesEv(void *self);
 int _ZN4Flag8BehaviorEv(void *self);
 int _ZN4Flag6RenderEv(void *self);
 int _ZN4Flag16CleanupResourcesEv(void);
+int *_ZN4FlagD0Ev(int *self);                  /* slot 17, DTOR-PAIRS seat (ov009 0x021120a8) */
 void *_ZTV4Flag[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV10daMcFlag_c=__ZTV4Flag")
@@ -1327,6 +1353,8 @@ static int __fastcall flag_behavior(void *s, void *)
 static int __fastcall flag_render(void *s, void *)
 { port_actor_render_probe("FLAG", (char *)s + 0xd4);
   return _ZN4Flag6RenderEv(s); }
+static int __fastcall flag_d0(void *s, void *)
+{ return (int)(size_t)_ZN4FlagD0Ev((int *)s); }
 
 extern "C" void hal_fill_flag_vtable(void)
 {
@@ -1338,7 +1366,13 @@ extern "C" void hal_fill_flag_vtable(void)
     vt[9] = (void *)flag_render;
     vt[12] = (void *)ac_pdes_base;
     vt[16] = (void *)ac_d1_flag;
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)flag_d0;
 }
 
 // ============================================================================
@@ -1554,6 +1588,7 @@ int _ZN6Cannon13InitResourcesEv(void *self);      /* face: method_faces */
 int _ZN6Cannon8BehaviorEv(void *self);            /* face: method_faces */
 int _ZN6Cannon6RenderEv(void *self);              /* host copy */
 int _ZN6Cannon16CleanupResourcesEv(void);
+int *_ZN6CannonD0Ev(int *self);                /* slot 17, DTOR-PAIRS seat (ov098 0x0213a938) */
 void *_ZTV6Cannon[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV7daCnn_c=__ZTV6Cannon")
@@ -1567,6 +1602,8 @@ static int __fastcall cn_behavior(void *s, void *)
 static int __fastcall cn_render(void *s, void *)
 { port_actor_render_probe("CANNON", (char *)s + 0xd4);
   return _ZN6Cannon6RenderEv(s); }
+static int __fastcall cn_d0(void *s, void *)
+{ return (int)(size_t)_ZN6CannonD0Ev((int *)s); }
 
 extern "C" void hal_fill_cannon_vtable(void)
 {
@@ -1578,7 +1615,13 @@ extern "C" void hal_fill_cannon_vtable(void)
     vt[9] = (void *)cn_render;
     vt[12] = (void *)ac_pdes_base;
     vt[16] = (void *)ac_d1_cannon;
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)cn_d0;
 }
 
 // ============================================================================
@@ -1744,6 +1787,7 @@ int _ZN9Butterfly8BehaviorEv(char *self);
 int _ZN9Butterfly6RenderEv(void *self);              /* face: method_faces */
 int _ZN9Butterfly16CleanupResourcesEv(void);
 void _ZN9Butterfly16OnPendingDestroyEv(void);
+int *_ZN9ButterflyD0Ev(int *self);             /* slot 17, DTOR-PAIRS seat (ov100 0x02140dd8) */
 void *_ZTV9Butterfly[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV9daBtfly_c=__ZTV9Butterfly")
@@ -1777,6 +1821,9 @@ static void *__fastcall bf_d1(void *s, void *)
     return s;
 }
 
+static int __fastcall bf_d0(void *s, void *)
+{ return (int)(size_t)_ZN9ButterflyD0Ev((int *)s); }
+
 extern "C" void hal_fill_butterfly_vtable(void)
 {
     void **vt = _ZTV9Butterfly;
@@ -1787,9 +1834,13 @@ extern "C" void hal_fill_butterfly_vtable(void)
     vt[9] = (void *)bf_render;
     vt[12] = (void *)bf_pdes;
     vt[16] = (void *)bf_d1;
-    /* 17 keeps the trap, the bird's reading: destroy is D1 + an explicit
-       Deallocate; nothing on this level calls the deleting form. */
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)bf_d0;
 }
 
 // ---- FISH (actor 344, ov100) x2 --------------------------------------------
@@ -1814,6 +1865,7 @@ int _ZN4Fish8BehaviorEv(void *self);                 /* host copy */
 int _ZN4Fish6RenderEv(void *self);                   /* face: method_faces */
 int _ZN4Fish16CleanupResourcesEv(void *self);        /* face: method_faces */
 void _ZN4Fish16OnPendingDestroyEv(void);
+int *_ZN4FishD0Ev(int *self);                  /* slot 17, DTOR-PAIRS seat (ov100 0x0214623c) */
 void *_ZTV4Fish[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV8daFish_c=__ZTV4Fish")
@@ -1840,6 +1892,9 @@ static void *__fastcall fs_d1(void *s, void *)
     return s;
 }
 
+static int __fastcall fs_d0(void *s, void *)
+{ return (int)(size_t)_ZN4FishD0Ev((int *)s); }
+
 extern "C" void hal_fill_fish_vtable(void)
 {
     void **vt = _ZTV4Fish;
@@ -1850,9 +1905,13 @@ extern "C" void hal_fill_fish_vtable(void)
     vt[9] = (void *)fs_render;
     vt[12] = (void *)fs_pdes;
     vt[16] = (void *)fs_d1;
-    /* 17 keeps the trap, the bird's reading: destroy is D1 + an explicit
-       Deallocate; nothing on this level calls the deleting form. */
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat): the
+       matched flat-C body behind the ecx->arg adapter, the
+       lk2_platform_dtor_seat.cpp shape. Nothing on a mounted level
+       dispatches 17 (AfterCleanupResources dispatches 16 and frees
+       itself), so this is the ROM's word where the trap stood, and the
+       reference edge that links the TU. */
+    vt[17] = (void *)fs_d0;
 }
 
 // ---- UNCHAINED_CHOMP (actor 337, ov100) ------------------------------------
@@ -2096,6 +2155,7 @@ int _ZN4Trap13InitResourcesEv(void *self);        /* face: method_faces */
 int _ZN4Trap8BehaviorEv(void *self);              /* face: method_faces */
 int _ZN4Trap6RenderEv(void *self);                /* face: method_faces */
 int _ZN4Trap16CleanupResourcesEv(void);           /* C in src, returns 1 */
+int *_ZN4TrapD0Ev(int *self);                  /* slot 17, DTOR-PAIRS seat (ov010 0x02111a08) */
 void *_ZTV4Trap[31];
 void hal_fill_platform_vtable(void);
 }
@@ -2138,6 +2198,9 @@ static int __fastcall tr_d1(void *s, void *)
     return (int)(size_t)_ZN5ActorD2Ev(s);
 }
 
+static int __fastcall tr_d0(void *s, void *)
+{ return (int)(size_t)_ZN4TrapD0Ev((int *)s); }
+
 extern "C" void hal_fill_trap_vtable(void)
 {
     void **vt = _ZTV4Trap;
@@ -2149,9 +2212,15 @@ extern "C" void hal_fill_trap_vtable(void)
     vt[9] = (void *)tr_render;
     vt[12] = (void *)ac_pdes_base;
     vt[16] = (void *)tr_d1;
-    /* 17 keeps the trap: AfterCleanupResources dispatches 16 and does the
-       Deallocate itself; a landing on the deleting form means operator delete. */
-    vt[17] = (void *)ac_trap17;
+    /* Slot 17, the ROM's own deleting destructor (DTOR-PAIRS seat). The ROM
+       parks ONE body, _ZN4TrapD0Ev (ov010 0x02111a08), at word 17 of this
+       table for both ids that install it, and that body runs the LIGHT_BEAM
+       chain (MovingCylinderClsnWithPos +0x124, Model +0xd4) -- the same fact
+       tr_d1 above discriminates on for slot 16. Seating it is the ROM's word
+       where the trap stood; nothing dispatches 17 on a mounted level
+       (AfterCleanupResources dispatches 16 and frees itself), so the
+       TRAP-layout caveat in tr_d1 stays tr_d1's. */
+    vt[17] = (void *)tr_d0;
 }
 
 // ============================================================================
@@ -2252,6 +2321,7 @@ int _ZN13QuestionBlock13InitResourcesEv(char *self);
 int _ZN13QuestionBlock8BehaviorEv(void *self);          /* face: method_faces */
 int _ZN13QuestionBlock6RenderEv(void *self);            /* face: method_faces */
 int _ZN13QuestionBlock16CleanupResourcesEv(void *self); /* face: method_faces */
+int *_ZN13QuestionBlockD0Ev(int *self);        /* slot 17, DTOR-PAIRS seat (ov102 0x02149010) */
 void *_ZTV13QuestionBlock[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV18daObjHatenaBlock_c=__ZTV13QuestionBlock")
@@ -2308,6 +2378,9 @@ static int __fastcall qb_atk1(void *s, void *, void *o)
 static int __fastcall qb_pounded(void *s, void *, void *o)
 { func_ov102_02149820(s, o); return 0; }
 
+static int __fastcall qb_d0(void *s, void *)
+{ return (int)(size_t)_ZN13QuestionBlockD0Ev((int *)s); }
+
 extern "C" void hal_fill_question_block_vtable(void)
 {
     void **vt = _ZTV13QuestionBlock;
@@ -2317,11 +2390,13 @@ extern "C" void hal_fill_question_block_vtable(void)
     vt[6] = (void *)qb_behavior;
     vt[9] = (void *)qb_render;
     vt[12] = (void *)ac_pdes_base;
-    /* SLOTS 16/17 TRAP, the gate-17 reading: the castle grounds' one block is
-       never destroyed -- its own Behavior parks it in state 2 when it is used
-       rather than marking it. */
+    /* The gate-17 reading: the castle grounds' one block is never destroyed
+       -- its own Behavior parks it in state 2 when it is used rather than
+       marking it. Slot 16 is the matched D1; slot 17 is the ROM's own deleting
+       destructor (DTOR-PAIRS seat), the matched flat-C body behind the ecx->arg
+       adapter where the trap stood. */
     vt[16] = (void *)qb_d1;
-    vt[17] = (void *)ac_trap17;
+    vt[17] = (void *)qb_d0;
     /* 32 slots. Five of the tail are the block's own ov102 bodies: 21
        OnGroundPounded (0x02149820), 22 OnAttacked1 (0x021497c8), 24 OnKicked
        (0x02149770), 27 OnHitByMegaChar (0x02149710) and 28

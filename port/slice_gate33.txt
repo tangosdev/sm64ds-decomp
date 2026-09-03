@@ -182,6 +182,7 @@ src/BrickBlock_Spawn.c
 # for all four ids.
 src/MegaMushroomBlockTag_Spawn.c
 src/_ZN10BrickBlock13InitResourcesEv.cpp
+src/_ZN10BrickBlockD0Ev.c
 src/_ZN10BrickBlock16CleanupResourcesEv.cpp
 src/_ZN10BrickBlock8BehaviorEv.cpp
 # _ZN10BrickBlockD1Ev.cpp is NOT here (real C++ destructor) and
@@ -197,6 +198,7 @@ src/_ZN11CannonHatch16CleanupResourcesEv.cpp
 src/_ZN11CannonHatch8BehaviorEv.cpp
 src/_ZN11CannonHatch6RenderEv.cpp
 src/_ZN11CannonHatchD1Ev.c
+src/_ZN11CannonHatchD0Ev.c
 
 # CAP (269) -- _ZTV13WaterfallMist, RTTI daObjMarioCap_c. NOT gate 20's class:
 # WATERFALL_MIST (197) installs _ZTV18PoppingLavaBubbles, RTTI daObjWaterfall_c.
@@ -236,6 +238,7 @@ src/_ZN10StarSwitch16CleanupResourcesEv.cpp
 src/_ZN10StarSwitch8BehaviorEv.cpp
 src/_ZN10StarSwitch6RenderEv.cpp
 src/_ZN10StarSwitchD1Ev.c
+src/_ZN10StarSwitchD0Ev.c
 
 # INVISIBLE_SECRET (329) x5 -- the vtable at ov002 0x0210b030, RTTI daSCoin_c.
 # NOT _ZTV15InvisibleSecret and NOT the six _ZN15InvisibleSecret* files: the
@@ -253,6 +256,7 @@ src/func_ov002_020f03c4.c
 # both binaries, so only the left factory and the destructor are new here.
 src/ArrowSignLeft_Spawn.c
 src/_ZN14ArrowSignRightD1Ev.c
+src/_ZN14ArrowSignRightD0Ev.c
 # The sign's own interaction bodies, matched src, were in no slice so slots 27
 # and 31 declined by name. Now enrolled and seated through as_mega / as_kill in
 # hal/actor_classes_bob_world.cpp. Slot 27 OnHitByMegaChar (0x02137d80) is
@@ -279,6 +283,7 @@ src/_ZN9WaterBomb16CleanupResourcesEv.cpp
 src/_ZN9WaterBomb8BehaviorEv.cpp
 src/_ZN9WaterBomb6RenderEv.cpp
 src/_ZN9WaterBombD1Ev.c
+src/_ZN9WaterBombD0Ev.c
 
 # ROLLING_IRON_BALL (220) x4 -- _ZTV15RollingIronBall, RTTI daIbl_c
 src/RollingIronBall_Spawn.c
@@ -287,6 +292,7 @@ src/_ZN15RollingIronBall16CleanupResourcesEv.cpp
 src/_ZN15RollingIronBall8BehaviorEv.cpp
 src/_ZN15RollingIronBall6RenderEv.cpp
 src/_ZN15RollingIronBallD1Ev.c
+src/_ZN15RollingIronBallD0Ev.c
 
 # WARP_PIPE (298) -- _ZTV13FortressTower, RTTI daObjSimpleBg_c. Bob-omb
 # Battlefield does not name it; it is here because the task asks for warp
@@ -297,6 +303,7 @@ src/_ZN13FortressTower16CleanupResourcesEv.cpp
 src/_ZN13FortressTower8BehaviorEv.cpp
 src/_ZN13FortressTower6RenderEv.cpp
 src/_ZN13FortressTowerD1Ev.c
+src/_ZN13FortressTowerD0Ev.c
 
 # gate 48: BigBrickBlock (16) and FortressTowerWall (46) of Whomp's Fortress
 # (level 7). Both factories install _ZTV13BigBrickBlock, the class body gate 16

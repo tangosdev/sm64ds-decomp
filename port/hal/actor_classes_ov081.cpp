@@ -97,6 +97,7 @@ void hal_fill_platform_vtable(void);              /* hal/actor_classes.cpp, Plat
                                                        own base table */
 extern int _ZTV8Platform[];
 void _ZN18MovingMeshColliderD1Ev(void *);         /* MovingMeshCollider at +0x124 */
+void _ZN18MovingCylinderClsnD1Ev(void *);        /* MovingCylinderClsn (Moneybag +0x1b0) */
 void _ZN5ModelD1Ev(void *);                       /* Model at +0xd4 */
 void *_ZN5ActorD2Ev(void *);                      /* the Actor base D2 (returns void*) */
 void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
@@ -429,6 +430,8 @@ int _ZN8IceBlock13InitResourcesEv(void *self);        /* slot 0, faced */
 int _ZN8IceBlock16CleanupResourcesEv(void *self);     /* slot 3, faced */
 int _ZN8IceBlock8BehaviorEv(void *self);              /* slot 6, faced */
 int _ZN8IceBlock6RenderEv(void *self);                /* slot 9, faced */
+int *_ZN8IceBlockD1Ev(int *self);                     /* slot 16, .c, DTOR-PAIRS seat (0x02127b34) */
+int *_ZN8IceBlockD0Ev(int *self);                     /* slot 17, .c, DTOR-PAIRS seat (0x02127b80) */
 void func_ov081_02127ccc(void *self, void *p);        /* slot 27, OnHitByMegaChar */
 void func_ov081_02127cf4(void *self);                 /* slot 31, Kill */
 void *IceBlock_Spawn(void);                           /* installs _ZTV15daObjIceBlock_c */
@@ -454,31 +457,16 @@ static int __fastcall icb_mega(void *s, void *, void *p)
 { func_ov081_02127ccc(s, p); return 0; }
 static int __fastcall icb_kill(void *s, void *)
 { func_ov081_02127cf4(s); return 0; }
-/* D1/D0 host thunks: store the derived table once, run the chain high-
-   address first (MovingCylinderClsn +0x320, MovingMeshCollider +0x124,
-   Model +0xd4), then Actor's own D2. D0 also frees on the game heap. */
-extern "C" void _ZN18MovingCylinderClsnD1Ev(void *);
+/* D1/D0 (DTOR-PAIRS seat): the matched flat-C pair behind ecx->arg adapters,
+   replacing the host copies of the chain that stood here. The "_ZTV8Platform
+   placeholder" the copies were written to avoid is the ONE Platform base table
+   by relocation (ov002 0x0210ae38, hosted as _ZTV8Platform / _ZTV10dBgActor_c,
+   hal/lk2_platform_dtor_seat.cpp), and the first store is this table by its
+   RTTI name, aliased above. */
 static int __fastcall icb_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV8IceBlock;
-    _ZN18MovingCylinderClsnD1Ev(t + 0x320);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN8IceBlockD1Ev((int *)s); }
 static int __fastcall icb_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV8IceBlock;
-    _ZN18MovingCylinderClsnD1Ev(t + 0x320);
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)_ZN8IceBlockD0Ev((int *)s); }
 
 extern "C" void hal_fill_ice_block_vtable(void)
 {
