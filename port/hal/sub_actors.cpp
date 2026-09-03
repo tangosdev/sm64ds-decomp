@@ -75,6 +75,10 @@ void *_ZN3HUDD0Ev(void *self);
 void *_ZN7MinimapD1Ev(void *self);
 void *_ZN7MinimapD0Ev(void *self);
 int _ZN7Minimap8BehaviorEv(void *self);
+/* the sixteen-wide per-player blip tables the host copies own (Minimap_wide.h);
+   map_render's SM64DS_MM_TRACE reads slot 0 out of them */
+extern int g_mm_iconX[16];
+extern int g_mm_iconY[16];
 
 /* vtable storage the three constructors install by name (declared in
    include/decl_common.h, defined nowhere until now). dMeter_c is the HUD's and
@@ -660,9 +664,11 @@ int __fastcall map_render(void *s, void *)
         static int n;
         if (n < 2 || (n % 120) == 0) {
             char *b = (char *)s;
+            /* The local player's blip coords moved off the struct (+0x70/+0x80)
+               into g_mm_icon* for the sixteen-player widen; read slot 0 there. */
             std::printf("  [mm] render #%d: marker=(%d,%d) mode=%u hidden=%u "
                         "scale=%d oam=%d\n", n,
-                        ((int *)(b + 0x70))[0], ((int *)(b + 0x80))[0],
+                        g_mm_iconX[0], g_mm_iconY[0],
                         (unsigned)*(unsigned char *)(b + 0x251),
                         (unsigned)*(unsigned char *)(b + 0x255),
                         ((int *)(b + 0x214))[0], port_sub_oam_nonzero());

@@ -39,8 +39,17 @@ src/_ZN7MinimapD1Ev.c
 src/_ZN7Minimap13InitResourcesEv.cpp
 src/_ZN7Minimap16CleanupResourcesEv.cpp
 src/_ZN7Minimap16OnPendingDestroyEv.cpp
-src/_ZN7Minimap8BehaviorEv.cpp
-src/_ZN7Minimap6RenderEv.cpp
+# Behavior and Render index the three per-player tables (mPlayerIconX/Y @0x70/
+# 0x80, mPlayerMapIDs @0x21e) by PLAYER NUMBER. The ROM sizes them at four; this
+# port hosts sixteen players (port/hal/vs_width.h), so a console on slot 8..15
+# walked the self-icon index off the end of the four-entry arrays AND off the
+# end of the sixteen-entry OAM::MM_VS_PLAYER_ICONS table -- a c0000005 in
+# Minimap::Render at the frame the minimap first drew (measured at seats
+# 8/12/15). src/ is byte-frozen, so both are host-copied with sixteen-wide host
+# storage and the loop/index bounded: port/unmatched/Minimap_Behavior.cpp and
+# port/unmatched/Minimap_Render.cpp (appended to SLICE28_SOURCES in CMakeLists).
+# src/_ZN7Minimap8BehaviorEv.cpp
+# src/_ZN7Minimap6RenderEv.cpp
 
 # the leaves the three big methods reach
 src/_ZN7Minimap19UpdateLevelSpecificEv.cpp

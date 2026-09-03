@@ -3509,6 +3509,15 @@ foreach(line IN LISTS SLICE28_LINES)
     endif()
     list(APPEND SLICE28_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# Minimap::Behavior and Minimap::Render are host-copied for the sixteen-player
+# minimap: the ROM's four-entry per-player tables are indexed by player number,
+# which a console on slot 8..15 walks off the end (a c0000005 in Render). src/
+# is byte-frozen; the two host copies keep the storage sixteen wide (see
+# port/unmatched/Minimap_wide.h) and are linked in place of the excluded src
+# TUs (commented out in slice_gate28.txt). Every target that hosts SLICE28
+# picks them up here, so no add_executable line changes.
+list(APPEND SLICE28_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Minimap_Behavior.cpp")
+list(APPEND SLICE28_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Minimap_Render.cpp")
 
 # Gate 29: the particle subsystem -- the last subsystem the boot reported as
 # stubbed. 101 matched files (the other 18 in its closure already ride on
