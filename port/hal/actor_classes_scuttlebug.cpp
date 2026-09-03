@@ -49,6 +49,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "Scuttlebug.h"
 
@@ -251,17 +252,8 @@ static int __fastcall sb_aimed(void *s, void *)
    (_ZN10ScuttlebugD0Ev) without the Memory::Deallocate at its tail, because the
    caller of slot 16 (ActorBase::AfterCleanupResources) deallocates itself.
    Member sub-objects are destroyed high address first, the D0 order. */
-static int __fastcall sb_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV10Scuttlebug;
-    _ZN12WithMeshClsnD1Ev(t + 0x194);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x160);
-    _ZN11ShadowModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (sb_d1) spelled the same chain by hand. */
 
 extern "C" void hal_fill_scuttlebug_vtable(void)
 {
@@ -282,7 +274,7 @@ extern "C" void hal_fill_scuttlebug_vtable(void)
     vt[13] = (void *)sb_trap13;
     vt[14] = (void *)sb_trap14;
     vt[15] = (void *)sb_heap;
-    vt[16] = (void *)sb_d1;
+    vt[16] = (void *)hal_cppd1_Scuttlebug;
     vt[17] = (void *)sb_d0;
     /* the Enemy tail (18..30): 18/19/29 are Scuttlebug's own overrides, the
        rest bind Actor/ActorBase's default half, 30 traps (SRET). */

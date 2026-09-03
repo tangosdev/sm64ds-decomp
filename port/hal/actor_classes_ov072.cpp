@@ -147,6 +147,7 @@
 #include <cstdlib>
 
 #include "Actor.h"
+#include "dtor_faces_cpp.h"
 #include "ActorBase.h"
 #include "BabyPenguin.h"
 #include "SnowmanBody.h"
@@ -454,16 +455,8 @@ static int __fastcall bp_pdes(void *s, void *)
    compiled. Chain spelled directly, HIGH ADDRESS FIRST (WithMeshClsn
    +0x194, MovingCylinderClsn +0x160, ShadowModel +0x138, ModelAnim
    +0xd4), then Actor's own D2. */
-static int __fastcall bp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN12WithMeshClsnD1Ev(t + 0x194);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x160);
-    _ZN11ShadowModelD1Ev(t + 0x138);
-    _ZN9ModelAnimD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (bp_d1) spelled the same chain by hand. */
 static int __fastcall bp_d0(void *s, void *)
 { return (int)(size_t)_ZN11BabyPenguinD0Ev((int *)s); }
 static int __fastcall bp_yoshi(void *s, void *)
@@ -491,7 +484,7 @@ extern "C" void hal_fill_baby_penguin_vtable(void)
     vt[6]  = (void *)bp_behavior;
     vt[9]  = (void *)bp_render;
     vt[12] = (void *)bp_pdes;
-    vt[16] = (void *)bp_d1;
+    vt[16] = (void *)hal_cppd1_BabyPenguin;
     vt[17] = (void *)bp_d0;
     vt[18] = (void *)bp_yoshi;   /* own OnYoshiTryEat, overrides the shared default */
     vt[19] = (void *)bp_egg;     /* own OnTurnIntoEgg, overrides the shared default */
@@ -731,17 +724,8 @@ static int __fastcall smb_pdes(void *s, void *)
    UNLIKE bp_d1 this one DOES store its own table first, exactly as the ROM
    does; over the host array that is a no-op re-store. The same member set,
    order and offsets appear independently in _ZN11SnowmanBodyD0Ev.c. */
-static int __fastcall smb_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    ((void **)t)[0] = (void *)_ZTV11SnowmanBody;
-    _ZN12WithMeshClsnD1Ev(t + 0x180);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x14c);
-    _ZN11ShadowModelD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (smb_d1) spelled the same chain by hand. */
 static int __fastcall smb_d0(void *s, void *)
 { return (int)(size_t)_ZN11SnowmanBodyD0Ev((int *)s); }
 
@@ -756,7 +740,7 @@ extern "C" void hal_fill_snowman_body_vtable(void)
     vt[6]  = (void *)smb_behavior;
     vt[9]  = (void *)smb_render;
     vt[12] = (void *)smb_pdes;
-    vt[16] = (void *)smb_d1;
+    vt[16] = (void *)hal_cppd1_SnowmanBody;
     vt[17] = (void *)smb_d0;
     /* no own 18/19 and no slot 31: a plain Actor, 31 slots, ends here */
 }
@@ -778,17 +762,8 @@ static int __fastcall smh_pdes(void *s, void *)
    where SnowmanBody has a ShadowModel, and the two clsn members sit lower,
    +0x138 and +0x16c -- and _ZN11SnowmanHeadD0Ev.c carries the identical
    order and offsets. */
-static int __fastcall smh_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    ((void **)t)[0] = (void *)_ZTV11SnowmanHead;
-    _ZN12WithMeshClsnD1Ev(t + 0x16c);
-    _ZN18MovingCylinderClsnD1Ev(t + 0x138);
-    _ZN15TextureSequenceD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+/* slot 16 is the matched src D1 through hal/dtor_faces_cpp.cpp (lane DTOR-FACES-CPP);
+   the transcribed thunk that stood here (smh_d1) spelled the same chain by hand. */
 static int __fastcall smh_d0(void *s, void *)
 { return (int)(size_t)_ZN11SnowmanHeadD0Ev((int *)s); }
 
@@ -802,7 +777,7 @@ extern "C" void hal_fill_snowman_head_vtable(void)
     vt[6]  = (void *)smh_behavior;
     vt[9]  = (void *)smh_render;
     vt[12] = (void *)smh_pdes;
-    vt[16] = (void *)smh_d1;
+    vt[16] = (void *)hal_cppd1_SnowmanHead;
     vt[17] = (void *)smh_d0;
     /* no own 18/19 and no slot 31: a plain Actor, 31 slots, ends here */
 }

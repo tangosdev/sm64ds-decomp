@@ -21,5 +21,17 @@ int __fastcall hal_cppd1_VirtualDoor(void *self, void *edx);
 int __fastcall hal_cppd1_PoppingLavaBubbles(void *self, void *edx);
 int __fastcall hal_cppd1_AmbientSoundEffects(void *self, void *edx);
 int __fastcall hal_cppd1_Door(void *self, void *edx);
+int __fastcall hal_cppd1_BowserTail(void *self, void *edx);
+int __fastcall hal_cppd1_Bowser(void *self, void *edx);
+int __fastcall hal_cppd1_BowserSkyPlatform(void *self, void *edx);
+int __fastcall hal_cppd1_Amp(void *self, void *edx);
+int __fastcall hal_cppd1_FlameChomp(void *self, void *edx);
+int __fastcall hal_cppd1_FlameChompFire(void *self, void *edx);
+int __fastcall hal_cppd1_MrI(void *self, void *edx);
+int __fastcall hal_cppd1_MrI_Projectile(void *self, void *edx);
+int __fastcall hal_cppd1_Scuttlebug(void *self, void *edx);
+int __fastcall hal_cppd1_BabyPenguin(void *self, void *edx);
+int __fastcall hal_cppd1_SnowmanBody(void *self, void *edx);
+int __fastcall hal_cppd1_SnowmanHead(void *self, void *edx);
 
 #endif
