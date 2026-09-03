@@ -3,3 +3,15 @@
 # status/DTORFACES.md records them.
 # group 1
 src/_ZN4CoinD1Ev.cpp
+# group 2
+src/_ZN10StarMarkerD1Ev.cpp
+src/_ZN4BirdD1Ev.cpp
+src/_ZN9ButterflyD1Ev.cpp
+src/_ZN4FishD1Ev.cpp
+src/_ZN13PeachPaintingD1Ev.cpp
+src/_ZN4FlagD1Ev.cpp
+src/_ZN6CannonD1Ev.cpp
+src/_ZN11VirtualDoorD1Ev.cpp
+src/_ZN18PoppingLavaBubblesD1Ev.cpp
+src/_ZN19AmbientSoundEffectsD1Ev.cpp
+src/_ZN4DoorD1Ev.cpp

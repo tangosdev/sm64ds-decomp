@@ -12639,7 +12639,6 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
-    unmatched/StarMarker_D1.cpp
     # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep
@@ -12851,7 +12850,6 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
-    unmatched/StarMarker_D1.cpp
     # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep
@@ -13097,7 +13095,6 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
-    unmatched/StarMarker_D1.cpp
     # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
     ${SWEEP1_SOURCES}
     # run rel0215 wave 2 (lane cast-sweep2): the four-overlay cast sweep

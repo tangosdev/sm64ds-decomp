@@ -116,3 +116,23 @@ ExtendingMeshCollider::~ExtendingMeshCollider() { _ZN21ExtendingMeshColliderD1Ev
    ROM 0x020b0f54 (ov002): WithMeshClsn, MovingCylinderClsn, ShadowModel,
    CommonModel x2, Actor D2. */
 CPPD1(Coin)
+
+/* group 2: hal/actor_classes.cpp. StarMarker (ov002 0x020e6cf4; the host
+   copy unmatched/StarMarker_D1.cpp is deleted), Bird (ov009), Butterfly,
+   Fish, Door (ov100; the ROM word 16 of _ZTV4Door), PeachPainting (ov010),
+   Flag (ov009), Cannon (ov098), and the three Actor-only bodies VirtualDoor,
+   PoppingLavaBubbles, AmbientSoundEffects (ov002), whose slot was the shared
+   ac_d1_actor_only thunk. Trap is NOT here: hal/actor_classes.cpp's tr_d1
+   ruling (TRAP 0x24 and LIGHT_BEAM 0x25 share the table with different
+   layouts, and the ROM chain fits only LIGHT_BEAM) stands. */
+CPPD1(StarMarker)
+CPPD1(Bird)
+CPPD1(Butterfly)
+CPPD1(Fish)
+CPPD1(PeachPainting)
+CPPD1(Flag)
+CPPD1(Cannon)
+CPPD1(VirtualDoor)
+CPPD1(PoppingLavaBubbles)
+CPPD1(AmbientSoundEffects)
+CPPD1(Door)

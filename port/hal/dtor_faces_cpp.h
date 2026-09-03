@@ -10,5 +10,16 @@
 #define PORT_HAL_DTOR_FACES_CPP_H
 
 int __fastcall hal_cppd1_Coin(void *self, void *edx);
+int __fastcall hal_cppd1_StarMarker(void *self, void *edx);
+int __fastcall hal_cppd1_Bird(void *self, void *edx);
+int __fastcall hal_cppd1_Butterfly(void *self, void *edx);
+int __fastcall hal_cppd1_Fish(void *self, void *edx);
+int __fastcall hal_cppd1_PeachPainting(void *self, void *edx);
+int __fastcall hal_cppd1_Flag(void *self, void *edx);
+int __fastcall hal_cppd1_Cannon(void *self, void *edx);
+int __fastcall hal_cppd1_VirtualDoor(void *self, void *edx);
+int __fastcall hal_cppd1_PoppingLavaBubbles(void *self, void *edx);
+int __fastcall hal_cppd1_AmbientSoundEffects(void *self, void *edx);
+int __fastcall hal_cppd1_Door(void *self, void *edx);
 
 #endif
