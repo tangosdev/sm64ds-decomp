@@ -6,11 +6,8 @@
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
 src/actors/d_a_bakubaku.cpp:
     complete
-    .text start:0x021111a0 end:0x0211244c
-
-src/func_ov032_0211244c.c:
-    complete
-    .text start:0x0211244c end:0x021124a8
+    .text start:0x021111a0 end:0x021124a8
+    .data start:0x021137e4 end:0x021138a0
 
 src/_ZN9HugeCoverD1Ev.cpp:
     complete

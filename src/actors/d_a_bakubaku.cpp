@@ -1,11 +1,11 @@
 //cpp
-/* PROMOTED translation unit -- ov032/daBakubaku_c (23 function(s)).
+/* Reconstructed ov032/daBakubaku_c translation unit.
  *
  * This one file is the production source for the whole class: the ROM build
- * takes every one of these functions from a single object, the way the
- * cartridge's own build did. It licenses the contiguous .text run
- * 0x021111a0..0x0211244c in ov032 (config/tu_manifest.d/ov032/daBakubaku_c.json,
- * config/arm9/overlays/ov032/delinks.txt), where twenty-three separate
+ * takes every one of these functions from a single object. It licenses the
+ * contiguous .text run 0x021111a0..0x021124a8 in ov032
+ * (config/tu_manifest.d/ov032/daBakubaku_c.json and
+ * config/arm9/overlays/ov032/delinks.txt), where twenty-four separate
  * one-function entries used to stand.
  *
  * WRITTEN IN REVERSE ROM ORDER. mwccarm 2004/b56 emits one .text section per
@@ -13,31 +13,8 @@
  * is written FIRST here and the lowest LAST. Do not reorder: the whole-range
  * link checks emission order and refuses anything else.
  *
- * The two destructor variants are `// @symbol` mangled bodies in `extern "C"`
- * blocks rather than a real `~daBakubaku_c()` member, and the vptr stores are
- * spelled `&_ZTV12daBakubaku_c[2]` rather than the bare symbol. Both are forced,
- * and both are explained where they appear -- see the D0 comment for the
- * D1-below-D0 emission-order wall.
- *
- * The vtable spelling is decided by tools/objisolate.py, not by this class, and it
- * is the OPPOSITE of what #2184's daObjWc_Mizu_c needed -- an unrelated class
- * (dBgActor_c in ov029, not a relative of this dEnemyBase_c one), so do not read
- * either file as the convention. With the bare symbol objisolate refused both
- * bodies here with `_ZTV12daBakubaku_c: unexpected reloc type=2 addend=0`;
- * `&_ZTV12daBakubaku_c[2]` cleared it and both matched. The rule is in
- * tools/objisolate.py:472: a `_ZTV` on the EXTERNALISE list must carry
- * `addend >= VTABLE_PREAMBLE` (8), because that path converts mwccarm's
- * object-start `_ZTV` into the ROM's address point by subtracting 8. Mizu's object
- * took the intact-multi-symbol path instead, which cannot rewrite an addend and so
- * demanded 0 -- a different refusal message ("cannot rewrite it"), not this one.
- *
- * None of that contradicts config/arm9/overlays/ov032/relocs.txt recording the two
- * cartridge vptr loads as `to:0x02113824` addend 0, or the legacy
- * src/func_ov032_0211244c.c storing that word with the bare symbol: those describe
- * the CARTRIDGE's relocation against a symbol that already IS the address point
- * (0x0211381c = offset-to-top, 0x02113820 = &_ZTI, 0x02113824 = slot 0). The +8
- * here is mwccarm's object-start bias, folded at compile time and undone by
- * isolation; both spellings emit the same addend-0 word in the final image.
+ * Keep the class initializer first. The inline destructor declared last in
+ * daBakubaku_c emits the retail D1/D0 pair first and emits no D2 body.
  *
  * The functions, in ROM address order:
  *   [0]  0x021111a0  _ZN12daBakubaku_cD1Ev
@@ -63,6 +40,7 @@
  *   [20] 0x021121b4  daBakubaku_c::Behavior
  *   [21] 0x021122dc  daBakubaku_c::InitResources
  *   [22] 0x02112444  daBakubaku_c::OnAimedAtWithEgg
+ *   [23] 0x0211244c  daBakubaku_c_classInit
  *
  * FOLLOW-UP, not done here: several of the shadow declarations below duplicate
  * things include/*.h already carries. Each swap changes what the compiler knows
@@ -182,6 +160,39 @@ dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a, void *b);
 /* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for _ZN12daBakubaku_c13InitResourcesEv, NOT applied: void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj( */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov032_02111ff4, from the legacy file for _ZN12daBakubaku_c13InitResourcesEv, NOT applied: int func_ov032_02111ff4(void *self, void *stateTable); */
 }
+
+struct BakubakuProfile {
+    daBakubaku_c *(*classInit)();
+    s16 profileID;
+    s16 groupFlags;
+    u32 actorFlags;
+    Fix12i cullRadiusX;
+    Fix12i cullRadiusY;
+    u32 executeOrder;
+    u32 drawOrder;
+};
+
+typedef char BakubakuProfile_size_must_be_0x1c[
+    sizeof(BakubakuProfile) == 0x1c ? 1 : -1];
+
+/* Reconstructed source-style names. SM64DS directly preserves the class RTTI,
+ * BAKUBAKU ID, descriptor relationship, and factory behavior. */
+// @symbol daBakubaku_c_classInit
+extern "C" daBakubaku_c *daBakubaku_c_classInit()
+{
+    return new daBakubaku_c();
+}
+
+extern "C" BakubakuProfile g_profile_BAKUBAKU = {
+    daBakubaku_c_classInit,
+    0x00e4,
+    0x0052,
+    3,
+    0,
+    0x003e8000,
+    0x01000000,
+    0x01000000
+};
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- _ZN12daBakubaku_c16OnAimedAtWithEggEv, 0x02112444, size 0x8 */
@@ -389,10 +400,10 @@ void func_ov032_02112044(char* c)
         c, c + 0x3b4, c + 0x3dc, 0xfa000, 0x258000, 0xf);
 }
 }
-
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov032_02111ff4, 0x02111ff4, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111ff4
 /* The state setter. Its second parameter is a pointer to a pointer-to-member,
    so this needs a class of its own whose layout ends at the 0x3b0 state slot;
    the parameters are spelled void* to agree with the declaration above and with
@@ -412,6 +423,7 @@ extern "C" int func_ov032_02111ff4(void *cv, void *pv)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov032_02111f9c, 0x02111f9c, size 0x58 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111f9c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111f9c(char* c){
   unsigned int r = RandomIntInternal(data_0209e650);
@@ -426,6 +438,7 @@ int func_ov032_02111f9c(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov032_02111e24, 0x02111e24, size 0x178 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111e24
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111e24(char* c) {
     int in[3];
@@ -475,6 +488,7 @@ int func_ov032_02111e24(char* c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov032_02111dd8, 0x02111dd8, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111dd8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111dd8(char* c){
   unsigned int r = RandomIntInternal(data_0209e650);
@@ -490,6 +504,7 @@ int func_ov032_02111dd8(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov032_02111d7c, 0x02111d7c, size 0x5c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111d7c
 extern "C" {
 extern int func_ov032_02111254(void*);
 extern int func_ov032_02111ff4(void*, void*);
@@ -503,6 +518,7 @@ int func_ov032_02111d7c(void* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov032_02111d58, 0x02111d58, size 0x24 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111d58
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111d58(char *p)
 {
@@ -568,6 +584,7 @@ track:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov032_02111b50, 0x02111b50, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111b50
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111b50(char *c)
 {
@@ -584,6 +601,7 @@ int func_ov032_02111b50(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov032_02111830, 0x02111830, size 0x320 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111830
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111830(char *c)
 {
@@ -683,6 +701,7 @@ afterblock: ;
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov032_02111814, 0x02111814, size 0x1c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111814
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111814(char *p)
 {
@@ -696,6 +715,7 @@ int func_ov032_02111814(char *p)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov032_02111620, 0x02111620, size 0x1f4 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111620
 extern "C" int func_ov032_02111620(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
@@ -864,6 +884,7 @@ int func_ov032_02111350(char* c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov032_02111254, 0x02111254, size 0xfc */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov032_02111254
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov032_02111254(void *cv) {
     char *c = (char *)cv;
@@ -891,78 +912,5 @@ int func_ov032_02111254(void *cv) {
             return 0;
     }
     return 1;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN12daBakubaku_cD0Ev, 0x021111f0, size 0x64 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBakubaku_cD0Ev
-/* mangled body: the deleting destructor, written out rather than declared.
- *
- * D0 is the DELETING destructor: destroy this class and its bases, then hand the
- * object back to the game heap. Normally declaring `~daBakubaku_c()` is enough and
- * mwcc emits D2/D1/D0 together -- but this cartridge puts D1 (0x021111a0) BELOW
- * D0 (0x021111f0), while mwcc emits the group D0-first, so the whole-range link
- * refuses with "licensed .text functions are not emitted in ROM address order".
- * Both variants are therefore `// @symbol` mangled bodies in `extern "C"` blocks,
- * which costs this pair the CONVERTED tier's no-mangled-refs criterion.
- *
- * The five members are destroyed in reverse declaration order, then dEnemyBase_c,
- * exactly as the factory constructs them.
- */
-extern "C" {  /* mangled body: C linkage so the name is emitted verbatim */
-extern int _ZTV12daBakubaku_c[];
-extern void *data_020a0eac;   /* GAME_HEAP_PTR */
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN10dBgCh_ActrD1Ev(void *);
-extern void _ZN10dCcAcPos_cD1Ev(void *);
-extern void _ZN12dEnemyBase_cD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-int *_ZN12daBakubaku_cD0Ev(int *t)
-{
-    t[0] = (int)&_ZTV12daBakubaku_c[2];
-    _ZN11ShadowModelD1Ev((char *)t + 0x3b4);
-    _ZN9ModelAnimD1Ev((char *)t + 0x34c);
-    _ZN10dBgCh_ActrD1Ev((char *)t + 0x190);
-    _ZN10dCcAcPos_cD1Ev((char *)t + 0x150);
-    _ZN10dCcAcPos_cD1Ev((char *)t + 0x110);
-    _ZN12dEnemyBase_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12daBakubaku_cD1Ev, 0x021111a0, size 0x50 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBakubaku_cD1Ev
-/* mangled body: vtable slot 16, previously func_ov032_021111a0.
- *
- * The same body as D0 without the Deallocate call. One vtable store -- one, not
- * two -- and six destructor calls: the five members in reverse declaration order,
- * then dEnemyBase_c. This body is most of the evidence for the header's layout:
- * four of the five members close exactly on the next one's offset, and the factory
- * constructs the same five forwards. The exception is the gap this body cannot
- * witness -- ModelAnim at 0x34c is 0x64 bytes and so closes at 0x3b0, but
- * ShadowModel is at 0x3b4; the word at 0x3b0 is `void *mState`, a field with no
- * destructor, evidenced by the state-machine functions rather than by any structor.
- * See include/daBakubaku_c.h for that member.
- *
- * Written LAST in the file because the file is in reverse ROM order and this is
- * ROM ordinal 0. See the D0 comment above for why it is a mangled body.
- */
-extern "C" {  /* mangled body: C linkage so the name is emitted verbatim */
-int *_ZN12daBakubaku_cD1Ev(int *t)
-{
-    t[0] = (int)&_ZTV12daBakubaku_c[2];
-    _ZN11ShadowModelD1Ev((char *)t + 0x3b4);
-    _ZN9ModelAnimD1Ev((char *)t + 0x34c);
-    _ZN10dBgCh_ActrD1Ev((char *)t + 0x190);
-    _ZN10dCcAcPos_cD1Ev((char *)t + 0x150);
-    _ZN10dCcAcPos_cD1Ev((char *)t + 0x110);
-    _ZN12dEnemyBase_cD2Ev(t);
-    return t;
 }
 }

@@ -21,7 +21,7 @@ _ZN12daBakubaku_c6RenderEv kind:function(arm,size=0x50) addr:0x02112164
 _ZN12daBakubaku_c8BehaviorEv kind:function(arm,size=0x128) addr:0x021121b4
 _ZN12daBakubaku_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x021122dc
 _ZN12daBakubaku_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02112444
-func_ov032_0211244c kind:function(arm,size=0x5c) addr:0x0211244c
+daBakubaku_c_classInit kind:function(arm,size=0x5c) addr:0x0211244c
 _ZN9HugeCoverD1Ev kind:function(arm,size=0x44) addr:0x021124a8
 _ZN9HugeCoverD0Ev kind:function(arm,size=0x58) addr:0x021124ec
 _ZN9HugeCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112544
@@ -122,13 +122,8 @@ data_ov032_021137cc kind:data(any) addr:0x021137cc
 data_ov032_021137d8 kind:data(any) addr:0x021137d8
 _ZTI12daBakubaku_c kind:data(any) addr:0x021137e4
 _ZTS12daBakubaku_c kind:data(any) addr:0x021137f0
-data_ov032_021137f8 kind:data(any) addr:0x021137f8 ambiguous
-data_ov032_02113800 kind:data(any) addr:0x02113800 ambiguous
-data_ov032_02113804 kind:data(any) addr:0x02113804 ambiguous
-data_ov032_02113820 kind:data(any) addr:0x02113820 ambiguous
-data_ov032_02113824 kind:data(any) addr:0x02113824
+g_profile_BAKUBAKU kind:data(any) addr:0x02113800 ambiguous
 _ZTV12daBakubaku_c kind:data(any) addr:0x02113824
-data_ov032_0211382c kind:data(any) addr:0x0211382c ambiguous
 _ZTI13daObjTdFuta_c kind:data(any) addr:0x021138a0
 data_ov032_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 _ZTS13daObjTdFuta_c kind:data(any) addr:0x021138ac

@@ -4,17 +4,24 @@
   "source": "src/actors/d_a_bakubaku.cpp",
   "promoted_source": "src/actors/d_a_bakubaku.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x21111a0..0x211244c, 23 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "build/tu_map.json identifies the 23-function daBakubaku_c run at 0x021111a0..0x0211244c but leaves the immediately following factory run at 0x0211244c..0x021124a8 unattributed",
     "class label(s): daBakubaku_c",
-    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+    "the profile at 0x02113800 stores ID 228 (BAKUBAKU) and points to daBakubaku_c_classInit at 0x0211244c",
+    "daBakubaku_c_classInit allocates the RTTI-proven class size 0x438, constructs the five header-proven members, and ends exactly at HugeCover's D1 at 0x021124a8; the factory join is registry/factory-backed rather than tu_map-proven"
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021111a0",
-      "end": "0x0211244c"
+      "end": "0x021124a8"
+    },
+    {
+      "name": ".data",
+      "start": "0x021137e4",
+      "end": "0x021138a0"
     }
   ],
   "functions": [
@@ -178,12 +185,426 @@
       "size": "0x00000008",
       "legacy_source": "src/_ZN12daBakubaku_c16OnAimedAtWithEggEv.cpp",
       "ordinal": 22
+    },
+    {
+      "symbol": "daBakubaku_c_classInit",
+      "address": "0x0211244c",
+      "size": "0x0000005c",
+      "legacy_source": "src/daBakubaku_c_classInit.c",
+      "ordinal": 23
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI12daBakubaku_c",
+      "address": "0x021137e4",
+      "size": "0xc",
+      "evidence": "ROM single-inheritance RTTI record naming dEnemyBase_c as the direct base; exact compiler emission"
+    },
+    {
+      "symbol": "_ZTS12daBakubaku_c",
+      "address": "0x021137f0",
+      "size": "0xf",
+      "evidence": "literal ROM RTTI type-name string and exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_BAKUBAKU",
+      "address": "0x02113800",
+      "size": "0x1c",
+      "evidence": "typed actor profile; descriptor-stored ID 228, BAKUBAKU ROM string, factory relocation, and all fields compared to retail"
+    },
+    {
+      "symbol": "_ZTV12daBakubaku_c",
+      "address": "0x02113824",
+      "emitted_storage_address": "0x0211381c",
+      "address_point_bias": "0x8",
+      "size": "0x84",
+      "evidence": "compiler storage has the two-word ABI preamble; the configured public address point remains unchanged at 0x02113824"
+    }
+  ],
   "bss": [],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "_ZN12daBakubaku_cD1Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "_ZN12daBakubaku_cD0Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x021137e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021137e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12daBakubaku_c",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021137f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021137ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113800",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daBakubaku_c_classInit",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x0211244c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113820",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12daBakubaku_c",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021137e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021122dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113828",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211382c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113830",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113834",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113838",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211383c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021121b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113840",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113844",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113848",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112164"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211384c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113850",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113854",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113858",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211385c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113860",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113864",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_cD1Ev",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_cD0Ev",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x021111f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211386c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211387c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113880",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113884",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113888",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211388c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113890",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113894",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113898",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daBakubaku_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "ov032",
+      "target_address": "0x02112444"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211389c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    }
+  ],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "ROM-proven identities are daBakubaku_c from RTTI and BAKUBAKU from descriptor field 0x00e4/debug table identity. daBakubaku_c_classInit and g_profile_BAKUBAKU are reconstructed source-style spellings; their addresses and descriptor/factory relationship are direct ROM evidence.",
+    "The 0x1c profile is emitted as writable .data. A const source probe moved the object to .rodata, contrary to the retail envelope, so the exact source uses the project's local evidence-bounded profile shape without const and does not claim that the original C++ type name survives.",
+    "The inline destructor declared last emits the retail D1 at 0x021111a0 followed by D0 at 0x021111f0 and emits no D2. The genuine new-expression factory emits the class vptr through compiler relocs to _ZTV12daBakubaku_c plus 8; intact-object preparation rebases the public address point to 0x02113824/addend 0.",
+    "Five stale interior aliases were removed: data_ov032_021137f8 (inside _ZTS), data_ov032_02113804 (inside the profile), data_ov032_02113820 (vtable preamble typeinfo word), data_ov032_02113824 (duplicate of the public _ZTV address point), and data_ov032_0211382c (interior vtable slot). Restoring the set while keeping the exact linked TU produced five new missing-symbol errors plus one vtable possible-name diagnostic; with the aliases absent, linked bytes remain exact and dsd returns to the nine pre-existing errors.",
     "tubuild create warning: RAW: src/func_ov032_02111d7c.cpp (func_ov032_02111d7c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: RAW: src/func_ov032_02112044.cpp (func_ov032_02112044) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov032_02111254 and the one that held func_ov032_02111350; kept the first, the other is commented out for review",
@@ -227,8 +648,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov032-daBakubaku_c/d_a_bakubaku.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 23,
-    "functions_declared": 23,
+    "functions_matched": 24,
+    "functions_declared": 24,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev"
@@ -237,62 +658,21 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        32
+        34
       ],
-      "data": [
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c",
-        "_ZTI7dBase_c",
-        "_ZTS7dBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS8dActor_c",
-        "_ZTI12dEnemyBase_c",
-        "_ZTS12dEnemyBase_c",
-        "_ZTI12daBakubaku_c",
-        "_ZTS12daBakubaku_c",
-        "_ZTV12daBakubaku_c"
-      ],
-      "dataExternalized": [
-        "_ZTI12dEnemyBase_c",
-        "_ZTI12daBakubaku_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS12dEnemyBase_c",
-        "_ZTS12daBakubaku_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV12daBakubaku_c"
-      ]
+      "data": [],
+      "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 8 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov032-daBakubaku_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -305,7 +685,7 @@
       },
       "tuRange": {
         "start": "0x021111a0",
-        "end": "0x0211244c",
+        "end": "0x021124a8",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -313,21 +693,44 @@
         {
           "section": ".text",
           "start": "0x021111a0",
-          "end": "0x0211244c",
+          "end": "0x021124a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x021137e4",
+          "end": "0x021138a0",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 28
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              16,
+              18,
+              20,
+              22
+            ],
+            "desired": [
+              16,
+              18,
+              20,
+              22
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },
@@ -366,83 +769,6 @@
   },
   "compiler_only_output": [
     {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086d70, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70"
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e60, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60"
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78"
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e54, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54"
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e390, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390"
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e384, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384"
-    },
-    {
-      "symbol": "_ZTI12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov002:0x021081c0, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081c0"
-    },
-    {
-      "symbol": "_ZTS12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov002:0x021081cc, which no section this entry licenses (.text 0x021111a0-0x0211244c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081cc"
-    },
-    {
-      "symbol": "_ZTI12daBakubaku_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daBakubaku_c.h declares ~daBakubaku_c() but nothing DEFINES it as a C++ member: the cartridge's D1 (0x021111a0) sits BELOW its D0 (0x021111f0), and a real member definition makes mwccarm emit the D2/D1/D0 triple as one group in the order D0-then-D1, which the whole-range link refuses, so both variants are carried as `// @symbol` mangled bodies the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the six virtual overrides -- declared first, mwccarm emits no RTTI here at all and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov032:0x021137e4, in ov032's .data (0x02112ec0-0x02113a40) and outside this entry's only licensed range (.text 0x021111a0-0x0211244c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov032",
-      "canonical_address": "0x021137e4"
-    },
-    {
-      "symbol": "_ZTS12daBakubaku_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daBakubaku_c.h declares ~daBakubaku_c() but nothing DEFINES it as a C++ member: the cartridge's D1 (0x021111a0) sits BELOW its D0 (0x021111f0), and a real member definition makes mwccarm emit the D2/D1/D0 triple as one group in the order D0-then-D1, which the whole-range link refuses, so both variants are carried as `// @symbol` mangled bodies the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the six virtual overrides -- declared first, mwccarm emits no RTTI here at all and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov032:0x021137f0, in ov032's .data (0x02112ec0-0x02113a40) and outside this entry's only licensed range (.text 0x021111a0-0x0211244c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov032",
-      "canonical_address": "0x021137f0"
-    },
-    {
-      "symbol": "_ZTV12daBakubaku_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because no translation unit homes this class's vtable. include/daBakubaku_c.h declares ~daBakubaku_c() but nothing DEFINES it as a C++ member: the cartridge's D1 (0x021111a0) sits BELOW its D0 (0x021111f0), and a real member definition makes mwccarm emit the D2/D1/D0 triple as one group in the order D0-then-D1, which the whole-range link refuses, so both variants are carried as `// @symbol` mangled bodies the compiler sees as unrelated functions. The destructor is declared LAST in the class, after the six virtual overrides -- declared first, mwccarm emits no RTTI here at all and these three ROM records go unverified by any source. The cartridge keeps its canonical copy at ov032:0x02113824, in ov032's .data (0x02112ec0-0x02113a40) and outside this entry's only licensed range (.text 0x021111a0-0x0211244c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON: 0x02113824 is the vtable's ADDRESS POINT, not the start of the emitted table object. The table begins two words earlier -- 0x0211381c holds the offset-to-top 0 and 0x02113820 holds 0x021137e4, `&_ZTI12daBakubaku_c` -- and those two words lie outside the symbol's extent, so anchoring the comparison at the symbol leaves them uncompared. The function slots from 0x02113824 up are covered; the two leading words are not.",
-      "canonical_module": "ov032",
-      "canonical_address": "0x02113824"
-    },
-    {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
@@ -450,25 +776,201 @@
       "reason": "Several members declare Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ],
+  "externalized_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x8",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi17__class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a774"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e60"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0x9",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xa",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e54"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7fBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086d70"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS12dEnemyBase_c",
+          "addend": 0,
+          "target_module": "ov002",
+          "target_address": "0x021081cc"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e390"
+        }
+      ]
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xf",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague RTTI copy",
+      "relocations": []
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "canonical-import",
+      "section": ".data",
+      "binding": "STB_LOPROC",
+      "size": "0xc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague RTTI copy",
+      "relocations": [
+        {
+          "offset": 0,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTVN3abi20__si_class_type_infoE",
+          "addend": 8,
+          "target_module": "arm9",
+          "target_address": "0x0209a764"
+        },
+        {
+          "offset": 4,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTS8dActor_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x0208e384"
+        },
+        {
+          "offset": 8,
+          "type": "R_ARM_ABS32",
+          "kind": "load",
+          "symbol": "_ZTI7dBase_c",
+          "addend": 0,
+          "target_module": "arm9",
+          "target_address": "0x02086e78"
+        }
+      ]
+    }
+  ],
   "partial_isolation": {
-    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
-    "derivedObjects": 23,
-    "contributionEquivalent": "23/23",
-    "comparedFields": [
-      "keptSection",
-      "keptBytes",
-      "relocs",
-      "defined",
-      "mapping",
-      "live",
-      "undefReferenced"
-    ],
-    "legacyEntriesComplete": "23/23",
-    "extraInertImports": 124,
-    "extraImportsWithNoHome": [],
-    "artefacts": "build/tu/ov032-daBakubaku_c/partial/partial.json (gitignored)",
-    "state": "contribution-equivalent",
-    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+    "state": "not-applicable-after-promotion",
+    "reason": "The final intact TU replaces all 24 legacy shards and lets mwccarm synthesize the ROM-order D1/D0 pair. There is no truthful per-function legacy-object comparison for the synthesized destructors or the newly joined factory; intact whole-object link and data verification is the production proof."
   }
 }

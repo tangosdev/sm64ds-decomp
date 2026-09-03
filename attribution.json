@@ -1441,6 +1441,7 @@
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c16OnAimedAtWithEggEv": "github-actions[bot]",
+    "src/actors/d_a_bakubaku.cpp#daBakubaku_c_classInit": "github-actions[bot]",
     "src/actors/d_a_bg_snwmn.cpp#daBgSnwmn_c_classInit": "github-actions[bot]",
     "src/actors/d_a_obj_emm_log.cpp#_ZN13daObjEmmLog_cD1Ev": "tangosdev",
     "src/actors/d_a_obj_emm_log.cpp#_ZN13daObjEmmLog_cD0Ev": "tangosdev",
