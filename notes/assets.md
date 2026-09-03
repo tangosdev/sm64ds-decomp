@@ -40,6 +40,22 @@ The second command writes three review surfaces:
 - `build/assets/layout-candidates.tsv` correlates static initializers with named
   actor directories that consume their resource globals.
 
+## Look up a single ID
+
+```powershell
+python tools/asset_catalog.py resolve 1570
+python tools/asset_catalog.py resolve kb1_ball data_ov044_02111680
+```
+
+`resolve` answers one query at a time against the generated catalogs, so reading a
+literal in matched source does not mean grepping a TSV. It accepts a handle literal
+(`1570`, `0x622`), a path fragment (`kb1_ball`), or an owner symbol
+(`data_ov044_02111680`), and prints the asset path, kind, size, the separate NitroFS
+file ID, the `ASSET_HANDLE_*` constant, and every loader call site found by the
+`references` command. An integer is always read as a runtime handle; values at or
+above `0x8000` report that they bypass the overlay 0 table rather than resolving to
+a wrong name. It exits non-zero when a query does not resolve.
+
 These are evidence for review, not automatic renames. A candidate is marked
 `high` only when one anonymous owner maps to one asset and the proposed name does
 not collide with another owner. Reused owners, duplicate names, and initializer
