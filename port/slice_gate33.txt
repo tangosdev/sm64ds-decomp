@@ -334,6 +334,22 @@ src/func_ov002_020b064c.c
 src/func_ov002_020b05d0.c
 src/func_ov002_020b0600.c
 
+# lane SEAT-CAMERATAG: CameraTag (333), RTTI daCamTag_c. Resolved by address:
+# ACTOR_SPAWN_TABLE[333] -> CameraTag_SpawnInfo (0x02108518), factory
+# CameraTag_Spawn (0x020b07c8) installs 0x0210853c, the table the config names
+# _ZTV13InvisiblePole, whose slot bodies are the config's _ZN13InvisiblePole*
+# (the gate-20 shift, one class past the pole). All matched at their ROM
+# addresses (tools/match.py 2004/b56, 8 of 8). The D1 is class-form C++ and
+# rides slice_dtorfaces.txt; the vtable is host storage filled by hand in
+# hal/actor_classes_bob_world.cpp. No shipped level places 333.
+src/CameraTag_Spawn.c
+src/_ZN13InvisiblePole13InitResourcesEv.c
+src/_ZN13InvisiblePole16CleanupResourcesEv.c
+src/_ZN13InvisiblePole8BehaviorEv.c
+src/_ZN13InvisiblePole6RenderEv.c
+src/_ZN13InvisiblePole16OnPendingDestroyEv.c
+src/_ZN13InvisiblePoleD0Ev.c
+
 # --- linkloop round 3: the closure of the twelve above ----------------------
 src/IsCannonOpenInCurLevel.c
 src/UnloadSilverStarAndNumber.c

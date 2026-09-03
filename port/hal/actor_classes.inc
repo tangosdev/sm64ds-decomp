@@ -394,6 +394,11 @@ void hal_fill_invisible_secret_vtable(void);
 extern unsigned char InvisiblePole_SpawnInfo[];         /* ov002 0x0210845c */
 void *InvisiblePole_Spawn(void);                        /* ov002 0x020b0710 */
 void hal_fill_invisible_pole_vtable(void);
+/* lane SEAT-CAMERATAG: CAMERA_TAG (333), RTTI daCamTag_c. Its table is the
+   config's _ZTV13InvisiblePole (0x0210853c), host storage filled by hand. */
+extern unsigned char CameraTag_SpawnInfo[];             /* ov002 0x02108518 */
+void *CameraTag_Spawn(void);                            /* ov002 0x020b07c8 */
+void hal_fill_camera_tag_vtable(void);
 extern unsigned char ArrowSignLeft_SpawnInfo[];         /* ov098 0x0213c398 */
 void *ArrowSignLeft_Spawn(void);
 extern unsigned char ArrowSignRight_SpawnInfo[];        /* ov098 0x0213c3b4 */
@@ -2092,6 +2097,10 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     /* gate 46: the moving bar (RTTI daBar_c), Whomp's Fortress */             \
     {287, "INVISIBLE_POLE", InvisiblePole_SpawnInfo, InvisiblePole_Spawn,      \
      hal_fill_invisible_pole_vtable},                                          \
+    /* lane SEAT-CAMERATAG: the camera tag (RTTI daCamTag_c), placed by no    \
+       shipped level; SM64DS_SPAWN_ACTOR=333 is its edge */                   \
+    {333, "CAMERA_TAG", CameraTag_SpawnInfo, CameraTag_Spawn,                 \
+     hal_fill_camera_tag_vtable},                                             \
     {299, "ARROW_SIGN_LEFT", ArrowSignLeft_SpawnInfo, ArrowSignLeft_Spawn,     \
      hal_fill_arrow_sign_vtable},                                              \
     {300, "ARROW_SIGN_RIGHT", ArrowSignRight_SpawnInfo, ArrowSignRight_Spawn,  \

@@ -72,5 +72,6 @@ int __fastcall hal_cppd1_SkiLift(void *self, void *edx);
 int __fastcall hal_cppd1_Seaweed(void *self, void *edx);
 int __fastcall hal_cppd1_BrickBlock(void *self, void *edx);
 int __fastcall hal_cppd1_ArrowLift(void *self, void *edx);
+int __fastcall hal_cppd1_InvisiblePole(void *self, void *edx);
 
 #endif

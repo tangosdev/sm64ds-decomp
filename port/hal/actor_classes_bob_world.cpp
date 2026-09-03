@@ -1355,6 +1355,89 @@ extern "C" void hal_fill_invisible_pole_vtable(void)
     vt[17] = (void *)ip_d0;
 }
 
+// ---- CAMERA_TAG (333, ov002) -- lane SEAT-CAMERATAG ------------------------
+//
+// RTTI 10daCamTag_c, resolved by ADDRESS and not by the config's names:
+// ACTOR_SPAWN_TABLE[333] is 0x02108518 (CameraTag_SpawnInfo, +4 halfword
+// 333), its +0 word is CameraTag_Spawn (0x020b07c8), and that factory's
+// literal pool (reloc from:0x020b07f4) installs the table at 0x0210853c --
+// which the config names _ZTV13InvisiblePole. The gate-20 name shift, one
+// class further along than the pole: the config's _ZN13InvisiblePole* bodies
+// are THIS class's slots (0x020b0748..0x020b07c0; the typeinfo four bytes
+// before the table names daCamTag_c), and the config's _ZN9CameraTag* bodies
+// belong to the next table (0x021085f8, RTTI daChRoom_c), which is not this
+// class and is not touched here.
+//
+// A 212-byte plain Actor (no collider, no model). Every own slot is a matched
+// body at its ROM address (tools/match.py, 2004/b56, 8 of 8): InitResources,
+// CleanupResources, Behavior and Render all `return 1`, OnPendingDestroy is
+// empty, D1 is the class-form _ZN13InvisiblePoleD1Ev.cpp (seated through the
+// hal/dtor_faces_cpp.cpp face like the other 22 real-C++ D1s) and D0 is the
+// flat _ZN13InvisiblePoleD0Ev.c, which stores this host array and frees.
+// The camera reads the tag's record from the actor list; nothing here calls
+// out, so there is no PMF dispatch and no host substitute anywhere.
+//
+// The vtable is HOST STORAGE the registry fills (the InvisibleSecret / pole
+// case). It is defined under the config's own name so the D0 body's
+// `_ZTV13InvisiblePole` store and the factory's install both land on this one
+// array with no alias. No shipped level places 333 (all 52 LVL_Overlay object
+// tables scanned, 0 records; the 50 mounted levels' runtime census agrees, and
+// no src body spawns it by id), so the class's live edge is
+// SM64DS_SPAWN_ACTOR=333 and the probe below is how a run shows it ticking.
+extern "C" {
+int _ZN13InvisiblePole13InitResourcesEv(void);     /* slot 0,  0x020b07c0 */
+int _ZN13InvisiblePole16CleanupResourcesEv(void);  /* slot 3,  0x020b07a4 */
+int _ZN13InvisiblePole8BehaviorEv(void);           /* slot 6,  0x020b07b8 */
+int _ZN13InvisiblePole6RenderEv(void);             /* slot 9,  0x020b07b0 */
+void _ZN13InvisiblePole16OnPendingDestroyEv(void); /* slot 12, 0x020b07ac */
+int *_ZN13InvisiblePoleD0Ev(int *self);            /* slot 17, 0x020b076c */
+DSSTATE_BEGIN
+void *_ZTV13InvisiblePole[31];                     /* ov002 0x0210853c */
+DSSTATE_END
+}
+/* SM64DS_CAMTAG_PROBE=1: one line per Behavior tick, so a headless run shows
+   the tag on the behaviour list with its id, position, param and area rather
+   than merely surviving a census. Off by default, prints nothing. */
+static void camtag_probe(char *c)
+{
+    static int on = -1;
+    static unsigned ticks;
+    if (on < 0) on = std::getenv("SM64DS_CAMTAG_PROBE") != 0;
+    if (!on) return;
+    ++ticks;
+    std::printf("[camtagprobe] tick %u %p id %u pos (%d,%d,%d) param 0x%x "
+                "area %d\n", ticks, (void *)c,
+                (unsigned)*(unsigned short *)(c + 0xc),
+                *(int *)(c + 0x5c) >> 12, *(int *)(c + 0x60) >> 12,
+                *(int *)(c + 0x64) >> 12, *(unsigned *)(c + 0x90),
+                (int)*(signed char *)(c + 0x8e));
+    std::fflush(stdout);
+}
+static int __fastcall ct_init(void *s, void *)
+{ return _ZN13InvisiblePole13InitResourcesEv(); }
+static int __fastcall ct_clean(void *s, void *)
+{ return _ZN13InvisiblePole16CleanupResourcesEv(); }
+static int __fastcall ct_behavior(void *s, void *)
+{ camtag_probe((char *)s); return _ZN13InvisiblePole8BehaviorEv(); }
+static int __fastcall ct_render(void *s, void *)
+{ return _ZN13InvisiblePole6RenderEv(); }
+static int __fastcall ct_pdes(void *s, void *)
+{ _ZN13InvisiblePole16OnPendingDestroyEv(); return 0; }
+static int __fastcall ct_d0(void *s, void *)
+{ return (int)(size_t)_ZN13InvisiblePoleD0Ev((int *)s); }
+extern "C" void hal_fill_camera_tag_vtable(void)
+{
+    void **vt = _ZTV13InvisiblePole;
+    bw_fill_shared(vt);
+    vt[0] = (void *)ct_init;
+    vt[3] = (void *)ct_clean;
+    vt[6] = (void *)ct_behavior;
+    vt[9] = (void *)ct_render;
+    vt[12] = (void *)ct_pdes;
+    vt[16] = (void *)hal_cppd1_InvisiblePole;
+    vt[17] = (void *)ct_d0;
+}
+
 // ---- ARROW_SIGN_LEFT (299) and ARROW_SIGN_RIGHT (300), ov098 ----------------
 //
 // _ZTV14ArrowSignRight, ov098 0x0213c3d8, RTTI 15daObjYajirusi_c (yajirushi:

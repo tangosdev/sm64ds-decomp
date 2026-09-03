@@ -69,3 +69,6 @@ src/_ZN7SkiLiftD1Ev.cpp
 src/_ZN7SeaweedD1Ev.cpp
 src/_ZN10BrickBlockD1Ev.cpp
 src/_ZN9ArrowLiftD1Ev.cpp
+# lane SEAT-CAMERATAG: the class-form D1 of the table at ov002 0x0210853c
+# (config name InvisiblePole; RTTI daCamTag_c, CAMERA_TAG 333).
+src/_ZN13InvisiblePoleD1Ev.cpp

@@ -70,9 +70,11 @@
 // WHAT IS NOT DONE. The D0 half of each pair is a flat .c TU carrying the
 // ROM's C name; lane DTOR-PAIRS-C (status/DTORPAIRS.md) already seats those
 // and they are untouched. The unseated classes with a class-form D1 (Cloud:
-// ov039 not mounted; CameraTag: no table, no edge; InvisiblePole: its D1
-// stores _ZTV13InvisiblePole, which is CameraTag's table, the same wall
-// DTORPAIRS.md records for its D0) are skipped, see status/DTORFACES.md.
+// ov039 not mounted; the config-named _ZN9CameraTagD1Ev: the daChRoom_c
+// table's word, no seat) are skipped, see status/DTORFACES.md. InvisiblePole's
+// D1 (0x020b0748) is seated below since lane SEAT-CAMERATAG: the table it
+// stores, _ZTV13InvisiblePole (0x0210853c), IS the camera tag's (RTTI
+// daCamTag_c) and is host storage now (hal/actor_classes_bob_world.cpp).
 
 #include "dtor_faces_cpp.h"
 
@@ -198,3 +200,7 @@ CPPD1(BrickBlock)
    port fills as MotherPenguin's table (the ccm name shift), and Seaweed is
    the word of _ZTV7Seaweed, HealingHeart's table. */
 CPPD1(ArrowLift)
+/* lane SEAT-CAMERATAG: the ROM word 16 of the table at ov002 0x0210853c, the
+   config's _ZTV13InvisiblePole, which CameraTag_Spawn installs (RTTI
+   daCamTag_c). Actor-only chain: Actor::D2 and nothing else. */
+CPPD1(InvisiblePole)

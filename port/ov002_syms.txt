@@ -100,6 +100,15 @@ OneUpMushroomBlockTag_SpawnInfo:0x1c
 # func_ov002_020b0* bodies). SpawnInfo mounted here; the vtable is HOST STORAGE
 # the registry fills, so it is NOT mounted (the InvisibleSecret case).
 InvisiblePole_SpawnInfo:0x1c
+# lane SEAT-CAMERATAG: CameraTag (333), RTTI 10daCamTag_c. ACTOR_SPAWN_TABLE
+# [333] -> 0x02108518, +0 word CameraTag_Spawn (0x020b07c8), which installs the
+# table at 0x0210853c -- the one the config names _ZTV13InvisiblePole (the
+# gate-20 name shift again; the config's _ZN9CameraTag* bodies are the next
+# table's, RTTI daChRoom_c). SpawnInfo mounted here; the vtable is HOST
+# STORAGE the registry fills (hal/actor_classes_bob_world.cpp), NOT mounted.
+# No shipped level places 333 (52 object tables scanned); the live edge is
+# SM64DS_SPAWN_ACTOR=333.
+CameraTag_SpawnInfo:0x1c
 # Data the gate-33 classes' own InitResources/CleanupResources read.
 # data_ov002_0210b000 is the typeinfo record the vtable at 0x0210b030 follows;
 # 0x0210b030 itself is NOT here -- it is a real actor vtable dsd left unnamed
