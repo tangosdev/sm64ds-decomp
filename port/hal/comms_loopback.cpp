@@ -1463,7 +1463,8 @@ void announce_roster() {
     Packet a;
     fill_header(a, kTypeAccept);
     set_live(a, g_live);
-    a.have = ((unsigned)(g_input_delay & 0xFF) << 8);
+    a.have = ((unsigned)(g_input_delay & 0xFF) << 8) |
+             (g_rollback ? kAcceptRollbackBit : 0u);   // port/rollback: the mode too
     send_to_children(a);
     // WHAT EVERY LIVE CHILD HAS NOW BEEN TOLD. Recorded here and not only in
     // the unicast arm, because rule 3 asks "has this slot confirmed the value
@@ -2360,6 +2361,10 @@ void on_child_packet(const Packet &p, const sockaddr_in &from, int k) {
             // delay is: one end predicting while the other waits is two
             // different timelines. Bit 17 of the accept carries it (bit 16 is the
             // adaptive delay's report ack).
+            // Read off the accept that seats this end (bit 31, the slot
+            // assignment) and off the roster announce, which carries it too;
+            // a datagram from an older parent has neither bit and reads as
+            // lockstep, which is what that parent runs.
             {
                 const bool parent_rb = (p.have & kAcceptRollbackBit) != 0;
                 if (parent_rb != g_rollback) {

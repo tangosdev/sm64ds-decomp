@@ -29,6 +29,14 @@ reads the logs. Rungs:
   RELAY   the PAIR rung once more through the local reference relay.
 
   python port/tools/rollback_proof.py [--only PAIR,VS4,...] [--frames N]
+                                      [--wide N]
+
+  --wide N: the wide session's player count for DET and COST (default 16).
+  The 16-player wide session faults at frame 2 on slots 8, 12, 14 and 15 in
+  LOCKSTEP too (Minimap::Render, src/_ZN7Minimap6RenderEv.cpp, indexes its
+  four-entry icon and position tables with the player number; walker actor
+  id 0x14f); status/ROLLBACK_SHIP.md. --wide 8 is the widest session that
+  survives, and the ladder runs DET/COST at that width when asked.
 """
 import argparse
 import os
@@ -243,9 +251,12 @@ def rung_vs(name, n, vsmap, frames, rtts=(0, 40, 80, 160), relay=None):
     return ok
 
 
+WIDE = 16
+
+
 def rung_det(frames):
     ok = True
-    for n in (4, 16):
+    for n in (4, WIDE):
         rn = "det%d" % n
         r = launch(rn, n, frames, vsmap=0, base=BASE + 100 + n * 2,
                    parent_extra={"SM64DS_ROLLBACK_DET": "150",
@@ -280,17 +291,17 @@ def rung_cost(frames):
     ok = True
     for tag, extra in (("tickonly", {}),
                        ("conservative", {"SM64DS_ROLLBACK_ACTOR_RENDER": "1"})):
-        rn = "cost16_" + tag
+        rn = "cost%d_%s" % (WIDE, tag)
         pe = {"SM64DS_ROLLBACK_FORCE": "30:8"}
         pe.update(extra)
-        r = launch(rn, 16, frames, vsmap=0,
+        r = launch(rn, WIDE, frames, vsmap=0,
                    base=BASE + 160 + (4 if extra else 0), parent_extra=pe)
         ok &= mode_took(rn, r)
-        ok &= session_ok(rn, r, 16)
-        ok &= sweep(rn, r, pairs=[(0, 1), (0, 15), (3, 9)])
+        ok &= session_ok(rn, r, WIDE)
+        ok &= sweep(rn, r, pairs=[(0, 1), (0, WIDE - 1), (3, WIDE // 2 + 1)])
         ev, line = cost_line(r["texts"][0])
         ok &= say(ev is not None, rn + " measured",
-                  "16P forced 8-round rollbacks: " + line)
+                  "%dP forced 8-round rollbacks: " % WIDE + line)
         summary_lines(r)
     return ok
 
@@ -350,7 +361,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="")
     ap.add_argument("--frames", type=int, default=FRAMES)
+    ap.add_argument("--wide", type=int, default=16)
     a = ap.parse_args()
+    global WIDE
+    WIDE = a.wide
     if not os.path.exists(EXE):
         print("no exe at %s -- build first" % EXE)
         return 2
