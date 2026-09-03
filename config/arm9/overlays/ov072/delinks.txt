@@ -202,11 +202,8 @@ src/SnowmanHead_Spawn.c:
 
 src/actors/d_a_bg_snwmn.cpp:
     complete
-    .text start:0x02120824 end:0x02120c00
-
-src/func_ov072_02120c00.c:
-    complete
-    .text start:0x02120c00 end:0x02120c58
+    .text start:0x02120824 end:0x02120c58
+    .data start:0x02122938 end:0x021229f4
 
 src/_ZN11BabyPenguinD1Ev.cpp:
     complete
