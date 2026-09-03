@@ -308,9 +308,10 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
             if (seen < 0) seen = std::atoi(pr[0] ? pr : "1");
             if (seen != 0) {
                 std::fprintf(stderr,
-                    "[headpose] hid==3 slot=%u noctl=%u -> %s\n",
+                    "[headpose] hid==3 slot=%u noctl=%u air=%u -> %s\n",
                     (unsigned)*(const unsigned char *)(c + port::player::kPlayerNo),
                     (unsigned)*(const unsigned char *)(c + port::player::kIsNoControl),
+                    (unsigned)*(const unsigned char *)(c + port::player::kIsAirborne),
                     live ? "POSED (live player)" : "no pose (scripted/cutscene)");
             }
         }
