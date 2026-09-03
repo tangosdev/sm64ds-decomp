@@ -1444,6 +1444,14 @@
     "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_c0_water.cpp#_ZN14daObjC0Water_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_c0_water.cpp#daObjC0Water_c_classInit": "andrewboudreau"
+    "src/actors/d_a_obj_c0_water.cpp#daObjC0Water_c_classInit": "andrewboudreau",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_fl_london.cpp#func_ov022_02111a1c": "github-actions[bot]",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fl_london.cpp#_ZN16daObjFl_London_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_fl_london.cpp#daObjFl_London_c_classInit": "github-actions[bot]"
   }
 }
