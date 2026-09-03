@@ -1093,6 +1093,8 @@
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c13OnTurnIntoEggEi": "github-actions[bot]",
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c13OnYoshiTryEatEi": "github-actions[bot]",
     "src/actors/dScMgMCarlo_c.cpp#_ZN13dScMgMCarlo_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/dScMgMCarlo_c.cpp#func_ov006_020f8e44": "github-actions[bot]",
+    "src/actors/dScMgMCarlo_c.cpp#func_ov006_020f8ed8": "github-actions[bot]",
     "src/actors/daBrq_c.cpp#_ZN7daBrq_cD1Ev": "github-actions[bot]",
     "src/actors/daBrq_c.cpp#_ZN7daBrq_cD0Ev": "github-actions[bot]",
     "src/actors/daBrq_c.cpp#_ZN7daBrq_c21HandlePlayerCollisionEv": "github-actions[bot]",
