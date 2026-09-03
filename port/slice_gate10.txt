@@ -564,7 +564,15 @@ src/func_ov002_020d8118.c
 src/func_ov002_020d8360.c
 src/func_ov002_020d85fc.cpp
 src/func_ov002_020d9298.cpp
-port/unmatched/func_ov002_020e444c_hostcopy.c
+# func_ov002_020e444c RETIRED to its matched TU via hostgen's REG_RIDE_ARG
+# table (GATE10_SYMS): decl_common.h declares func_ov002_020e3f90 (void) and
+# the matched body calls it argless because on ARM r0 still holds the Player
+# at the bl (0x020e4454 mov r4,r0 / 0x020e4458 bl 0x020e3f90), while
+# src/func_ov002_020e3f90.c defines it (char*) and dereferences it first
+# thing. hostgen's HEADER_SHADOW hides the (void) declaration for this TU and
+# REG_RIDE_ARG spells the one argument. This is the body that seats the head
+# model's world matrix. Was port/unmatched/func_ov002_020e444c_hostcopy.c,
+# which transcribed the whole hundred-line body to change that one call.
 port/unmatched/func_ov002_020e4768_hostcopy.cpp
 src/func_ov002_020e4990.c
 src/func_ov002_020eea84.c

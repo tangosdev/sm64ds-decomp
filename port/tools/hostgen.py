@@ -422,6 +422,15 @@ HEADER_SHADOW = {
     # src/func_ov071_02121ba4.cpp defines it `(char*)`. One register on the
     # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
     "func_ov071_02121ba4": "decl_common.h",
+    # Lane RIDE-020E444C: decl_common.h:1461 declares func_ov002_020e3f90
+    # `(void)` while src/func_ov002_020e3f90.c defines it `(char*)`, and
+    # src/func_ov002_020e444c.c calls it through that `(void)` prototype with
+    # no argument because on ARM r0 still holds the Player (0x020e4454
+    # `mov r4,r0` / 0x020e4458 `bl 0x020e3f90`). Hiding the header's
+    # declaration here lets REG_RIDE_ARG below hand the callee the receiver
+    # the ROM rode through r0. Retires
+    # port/unmatched/func_ov002_020e444c_hostcopy.c.
+    "func_ov002_020e444c": ("decl_common.h", ("func_ov002_020e3f90",)),
     # lane LINKMG, dScMgBase_c slots 30 and 29: decl_common.h:2352-2353 declare
     # both `(void*)` inside its extern "C" block while src/func_ov004_020aeed8.cpp
     # defines `(char*)` and src/func_ov004_020af094.cpp defines `(Obj*)`. One
@@ -1099,6 +1108,73 @@ def arg_width_patch(text, sym):
     return apply_patches(text, sym, ARG_WIDTH, "ARG_WIDTH")
 
 
+# ---- AN ARM REGISTER RIDE-THROUGH THE HOST HAS TO SPELL ----------------------
+#
+# Lane RIDE-020E444C. Two matched TUs can disagree about a function's ARITY the
+# same way ARG_WIDTH's pair disagree about a parameter's width, and both still
+# be byte matches: on ARM the argument is already in r0 and the caller does not
+# have to put it there. include/decl_common.h:1461 declares
+#
+#     extern int func_ov002_020e3f90(void);
+#
+# and src/func_ov002_020e444c.c calls it through that prototype with no
+# argument, while src/func_ov002_020e3f90.c:15 DEFINES it `int
+# func_ov002_020e3f90(char* self)` and dereferences self on its first line
+# (`*(char**)(self + 0x35c)`). The ROM says the two agree -- 0x020e444c's
+# prologue is `push {r4,r5,r6,lr}` / `sub sp,#0x28` / `mov r4,r0` /
+# `bl 0x020e3f90`, so r0 is still the incoming Player at the branch and nothing
+# between entry and the call touches it. mwccarm emitted no `mov r0,..` because
+# there was nothing to move, and the byte gate is satisfied.
+#
+# Under x86 cdecl the caller pushes nothing and the callee reads its `self`
+# slot out of whatever the frame happened to leave there. That is the function
+# that seats the player's head-model world matrix
+# (`*(Matrix4x3*)(head+0x1c) = data_020a0e68`), so the failure is a wrong head
+# transform rather than a fault.
+#
+# The patch spells the argument the ROM rode through r0 and nothing else. Its
+# HEADER_SHADOW entry hides decl_common.h's `(void)` declaration for this TU
+# only, and REG_RIDE_ARG_DECL puts the definition's own signature back, so the
+# call site type-checks against the arity src/func_ov002_020e3f90.c really has.
+# Neither src/ nor include/ moves. Exact strings, hard-errored by
+# apply_patches: if the decomp ever settles the two declarations on one arity,
+# the entry stops matching and says so rather than going quietly inert.
+# Retires port/unmatched/func_ov002_020e444c_hostcopy.c, which was this whole
+# hundred-line body transcribed to change this one call.
+#
+# THE GO/NO-GO TEST, ANSWERED. CALLEE_SEAM's disqualifier is a receiver that
+# exists only in a register with no in-scope expression naming it. That is NOT
+# this case: the receiver is `c`, func_ov002_020e444c's own first parameter,
+# live and named at the call site (the next statement reads `*(int *)(c +
+# 0x690)`). Nothing is guessed and nothing is reached for. So the retirement is
+# admissible.
+#
+# It is spelled here rather than through CALLEE_SEAM for two reasons. First,
+# CALLEE_SEAM emits an OBJECT-LIKE `#define callee seam`, which can send a call
+# somewhere else but cannot change what the call PASSES: `func_ov002_020e3f90()`
+# stays argless whatever name it resolves to. The missing thing here is an
+# argument, not a destination. Second, there is nothing to seam TO. The correct
+# destination is the matched body src/func_ov002_020e3f90.c, which already
+# takes `char* self` and is already linked in this slice; interposing a host
+# seam function would ADD a stand-in to retire one. The rewrite therefore lands
+# on the call expression, and hard-errors the same way CALLEE_SEAM does if the
+# source moves.
+REG_RIDE_ARG_DECL = 'extern "C" int func_ov002_020e3f90(char *);\n'
+REG_RIDE_ARG = {
+    "func_ov002_020e444c": [
+        ("    if (func_ov002_020e3f90() == 0) {",
+         "    if (func_ov002_020e3f90(c) == 0) {  /* hostgen REG_RIDE_ARG: "
+         "ARM r0 still held c at the ROM's bl, see the table */"),
+    ],
+}
+
+
+def reg_ride_arg_patch(text, sym):
+    """Spell an argument the ROM's caller left riding in a register."""
+    return apply_patches(text, sym, REG_RIDE_ARG, "REG_RIDE_ARG",
+                         REG_RIDE_ARG_DECL)
+
+
 def apply_patches(text, sym, table, what, decl=""):
     """Exact-string patches, with a hard error if one stops matching."""
     pats = table.get(sym)
@@ -1184,6 +1260,7 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = call_state_fn_patch(text, sym)
     text, _ = arg_width_patch(text, sym)
     text, _ = callee_seam_patch(text, sym)
+    text, _ = reg_ride_arg_patch(text, sym)
     new, n = transform(text, extern_data)
     # An excision that left an asm block behind would emit a file MSVC cannot
     # read, and the file was only let past the skip in main() on the promise
