@@ -6,7 +6,7 @@ extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 data_ov006_0213d45c[];
 extern void *data_ov006_02142490[];
 
-void func_ov006_020f5b98(char *a0)
+void _ZN14dScMgMemory2_c9DrawCardsEv(char *a0)
 {
     int i;
     int k, flag;

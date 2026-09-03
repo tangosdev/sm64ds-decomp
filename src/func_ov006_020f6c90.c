@@ -1,9 +1,9 @@
 #include "types.h"
 extern int RandomIntInternal(int *seed);
-extern void func_ov006_020f6f88(char *obj);
+extern void _ZN14dScMgMemory2_c18ChoosePreviewCardsEv(char *obj);
 extern int data_0209d4b8;
 
-void func_ov006_020f6c90(char *c)
+void _ZN14dScMgMemory2_c12ShuffleCardsEv(char *c)
 {
     for (int i = 0; i < 11; i++)
         *(u8 *)(c + i + 0x53f2) = 0;
@@ -36,7 +36,7 @@ void func_ov006_020f6c90(char *c)
             *(u8 *)(q + 0x51ba) = 1;
             *(u8 *)(q + 0x51bc) = 0;
         }
-        func_ov006_020f6f88(c);
+        _ZN14dScMgMemory2_c18ChoosePreviewCardsEv(c);
         return;
     } else if (flag == 1) {
         int i = 0;
@@ -63,7 +63,7 @@ void func_ov006_020f6c90(char *c)
             *(u8 *)(q + 0x51ba) = 1;
             *(u8 *)(q + 0x51bc) = 0;
         }
-        func_ov006_020f6f88(c);
+        _ZN14dScMgMemory2_c18ChoosePreviewCardsEv(c);
         return;
     } else {
         int i = 0;
@@ -90,7 +90,7 @@ void func_ov006_020f6c90(char *c)
             *(u8 *)(q + 0x51ba) = 1;
             *(u8 *)(q + 0x51bc) = 0;
         }
-        func_ov006_020f6f88(c);
+        _ZN14dScMgMemory2_c18ChoosePreviewCardsEv(c);
         return;
     }
 }

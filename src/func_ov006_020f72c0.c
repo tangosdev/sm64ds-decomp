@@ -1,4 +1,4 @@
-void func_ov006_020f72c0(char* c) {
+void _ZN14dScMgMemory2_c15SetupDifficultyEv(char* c) {
     *(unsigned char*)(c + 0x540a) = 0;
     *(unsigned short*)(c + 0x53ea) = 8;
     int x = *(int*)(c + 0xb4);
