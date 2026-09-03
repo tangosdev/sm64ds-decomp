@@ -19,5 +19,5 @@
 #include "dScMgMemory2_c.h"
 dScMgMemory2_c::~dScMgMemory2_c()
 {
-    func_ov006_020c1c64((char *)this + 0x4f38);
+    /* mShared is destroyed automatically before the inherited scene. */
 }

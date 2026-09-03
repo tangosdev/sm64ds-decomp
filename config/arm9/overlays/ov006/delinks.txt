@@ -3580,6 +3580,7 @@ src/func_ov006_020f58d0.c:
     .text start:0x020f58d0 end:0x020f593c
 
 src/func_ov006_020f593c.c:
+    complete
     .text start:0x020f593c end:0x020f59c0
 
 src/func_ov006_020f59c0.c:
@@ -3657,6 +3658,10 @@ src/func_ov006_020f67a0.c:
 src/func_ov006_020f6830.c:
     complete
     .text start:0x020f6830 end:0x020f6904
+
+src/func_ov006_020f6904.c:
+    complete
+    .text start:0x020f6904 end:0x020f6a00
 
 src/func_ov006_020f6a00.c:
     complete

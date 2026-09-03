@@ -1,8 +1,8 @@
 #pragma opt_loop_invariants off
-extern void func_ov006_020f5c40(char *p);
-extern void func_ov006_020f5694(char *p);
+extern void _ZN14dScMgMemory2_c11UpdateCardsEv(char *p);
+extern void _ZN14dScMgMemory2_c12UpdateCursorEv(char *p);
 extern unsigned int func_02012790(unsigned int a);
-extern void func_ov006_020f572c(char *p);
+extern void _ZN14dScMgMemory2_c10HideCursorEv(char *p);
 
 extern unsigned char data_020a0e40[];
 extern unsigned char data_020a0de8[];
@@ -10,7 +10,7 @@ extern unsigned char data_020a0de9[];
 extern int data_ov006_0212e8e8[];
 extern int data_ov006_0212e8f4[];
 
-void func_ov006_020f6230(char *p)
+void _ZN14dScMgMemory2_c12ResultFinishEv(char *p)
 {
     int i;
     int best;
@@ -20,8 +20,8 @@ void func_ov006_020f6230(char *p)
     int ok;
     unsigned short *q;
 
-    func_ov006_020f5c40(p);
-    func_ov006_020f5694(p);
+    _ZN14dScMgMemory2_c11UpdateCardsEv(p);
+    _ZN14dScMgMemory2_c12UpdateCursorEv(p);
 
     if (*(unsigned short *)(p + 0x53e2) != 0) {
         q = (unsigned short *)(unsigned int)(p + 0x53e2);
@@ -60,6 +60,6 @@ void func_ov006_020f6230(char *p)
         *(unsigned char *)(p + 0x540b) = 0;
     }
 
-    func_ov006_020f572c(p);
+    _ZN14dScMgMemory2_c10HideCursorEv(p);
     *(int *)(p + 0x53d4) = 4;
 }

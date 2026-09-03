@@ -12,7 +12,7 @@ struct B {
 
 extern struct B *data_ov004_020beb68;
 
-void func_ov006_020f6538(char *c)
+void _ZN14dScMgMemory2_c10ResultWaitEv(char *c)
 {
     struct B *p;
 

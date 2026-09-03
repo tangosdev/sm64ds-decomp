@@ -1,33 +1,33 @@
-
 extern int *data_ov004_020beb68;
-void func_ov006_020f593c(int this)
+
+void _ZN14dScMgMemory2_c11InitPlayersEv(int this)
 {
-  int n;
-  int i;
-  if (data_ov004_020beb68 != 0)
-  {
-    n = *((int *) (((char *) data_ov004_020beb68) + 0xa8));
-  }
-  else
-  {
-    n = 0;
-  }
-  if (n >= 5)
-  {
-    n = 5;
-  }
-  i = 0;
-  *((unsigned char *) ((this + 0x5000) + 0x409)) = (unsigned char) n;
-  if (n <= 0)
-  {
-    return;
-  }
-  do
-  {
-    *((unsigned char *) (((this + (i * 0x14)) + 0x5000) + 0x398)) = 1;
-    *((unsigned char *) (((this + (i * 0x14)) + 0x5000) + 0x39a)) = 0;
-    *((short *) (((this + (i * 0x14)) + 0x5300) + 0x96)) = i * 0x10;
-    i++;
-  }
-  while (i < n);
+    char *self = (char *)this;
+    int n;
+    int i;
+    int angle;
+    char *entry;
+
+    if (data_ov004_020beb68 != 0)
+        n = *(int *)((char *)data_ov004_020beb68 + 0xa8);
+    else
+        n = 0;
+    if (n >= 5)
+        n = 5;
+
+    entry = self;
+    i = 0;
+    *(unsigned char *)(self + 0x5409) = (unsigned char)n;
+    if (n <= 0)
+        return;
+
+    angle = 0;
+    do {
+        *(unsigned char *)(entry + 0x5398) = 1;
+        *(unsigned char *)(entry + 0x539a) = 0;
+        *(short *)(entry + 0x5396) = angle;
+        i++;
+        entry += 0x14;
+        angle += 0x10;
+    } while (i < n);
 }

@@ -1,7 +1,7 @@
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
-extern void func_ov006_020f56f8(char* p);
+extern void _ZN14dScMgMemory2_c10ShowCursorEv(char* p);
 
-void func_ov006_020f639c(char* c)
+void _ZN14dScMgMemory2_c15ResultTurnCardsEv(char* c)
 {
     if (*(unsigned short*)(c + 0x5300 + 0xe2)) {
         unsigned short* q = (unsigned short*)(((int)c + 0x53e2));
@@ -33,6 +33,6 @@ void func_ov006_020f639c(char* c)
         }
     }
     *(int*)(c + 0x5000 + 0x3d8) = 3;
-    func_ov006_020f56f8(c);
+    _ZN14dScMgMemory2_c10ShowCursorEv(c);
     *(unsigned short*)(c + 0x5300 + 0xe2) = 0x20;
 }

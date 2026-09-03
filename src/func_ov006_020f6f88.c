@@ -3,7 +3,7 @@ extern int data_ov006_0212e900[];
 extern int data_ov006_0212e90c[];
 extern int data_0209d4b8;
 
-void func_ov006_020f6f88(char *obj)
+void _ZN14dScMgMemory2_c18ChoosePreviewCardsEv(char *obj)
 {
     int idx = *(unsigned char *)(obj + 0x5000 + 0x40a);
     int n = data_ov006_0212e900[idx];

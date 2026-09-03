@@ -1,7 +1,7 @@
 #include "types.h"
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern s16 data_02082214[];
-void func_ov006_020f5744(char *base, int i)
+void _ZN14dScMgMemory2_c10PlayerMoveEi(char *base, int i)
 {
   int n = i * 0x14;
   int tx = (i << 4) + 0xc;
