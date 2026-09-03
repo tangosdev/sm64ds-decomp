@@ -1,9 +1,9 @@
 {
   "id": "ov002/daObjHeart_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjHeart_c.cpp",
+  "source": "src/actors/d_a_obj_heart.cpp",
   "promoted_source": "src/actors/d_a_obj_heart.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "The profile descriptor at 0x02109c50 names 0x020bc8b4 in its classInit word, which is this TU's factory, so the .text run and the .data run belong to one source file.",

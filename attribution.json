@@ -1429,6 +1429,14 @@
     "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_r_flag.cpp#_ZN9daRFlag_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_r_flag.cpp#daRFlag_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_r_flag.cpp#daRFlag_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_heart.cpp#func_ov002_020bc664": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#_ZN12daObjHeart_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_heart.cpp#daObjHeart_c_classInit": "github-actions[bot]"
   }
 }
