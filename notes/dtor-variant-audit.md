@@ -55,9 +55,9 @@ function *to* a vtable VA that `build/rtti.json` knows:
     named D1, nothing points at it, AND it stores a vtable VA   -> not a D1
 ```
 ## 2. The result
-
+```text
     destructor-variant symbols: D0 261   D1 260   D2 17
-
+```
 **7 of the 17 are impossible.** Each is resolved back through `build/rtti.json` to
 the vtable that references it, which also names what it should have been:
 
@@ -238,13 +238,13 @@ revision of this section named only the first and drew the wrong conclusion from
 
 **Cause 1 — the key function.** Defining a class's key function (the first non-inline
 virtual declared) makes mwccarm emit the vtable group into that TU:
-```c
+```cpp
     Fader::~Fader() {}   ->  .data x3 + .text x3,  defines _ZTV5Fader _ZTI5Fader _ZTS5Fader
 ```
 **Cause 2 — one definition, three functions.** A `~Class()` definition always emits
 **D2, D0 and D1**, vtable or not, so the object has three `.text` sections.
 `eligible.py:132-136` rejects that on its own:
-```sh
+```cpp
     ActorBase::~ActorBase() {}  ->  .text x3, defines NO vtable
                                     (ActorBase declares its dtor LAST, so it is not
                                      the key function -- cause 1 does not apply)
@@ -282,7 +282,7 @@ which nominates pilots on the assumption that destructors are the tractable part
 
 Confirmed empirically on `2004/b56` (dActor_c.h cites CW 1.2), by compiling three probes
 against the real `Fader.h`:
-```c
+```cpp
     Fader::~Fader() {}          (declared first)  -> emits _ZTV5Fader _ZTI5Fader _ZTS5Fader
     void Fader::AdvanceFade(){} (not first)       -> emits nothing
     int Fader::IsAtEnd(){...}   (not first)       -> emits nothing
