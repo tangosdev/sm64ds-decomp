@@ -349,6 +349,10 @@ extern "C" void port_adventure_ghost_hold()
     for (int i = 0; i < kPortMaxPlayers; ++i) {
         if (i == me) continue;
         if (data_0209fc5c[i] == 0) continue;   /* slot not live */
+        /* PARTY: a party member is a shared-world body that COLLIDES and
+           interacts -- do NOT hold it non-colliding. Only non-party remotes
+           (adventure ghosts) get the pass-through hold. */
+        if (port_party_member(i)) continue;
         if (void *a = data_0209f394[i])
             port::player::disable_interaction(a);
     }
@@ -377,7 +381,18 @@ extern "C" void port_adventure_ghost_follow();
 /* M2: the presence predicate and this console's level, for the diag line and
    the presence proof below (both defined in hal/comms_sync.cpp / here). */
 extern "C" int port_adventure_peer_visible(int slot);
+/* PARTY: the per-slot party-member predicate (hal/comms_sync.cpp). A remote
+   slot that is a party member renders SOLID and COLLIDES; a remote slot that
+   is not stays a translucent, pass-through ghost. */
+extern "C" int port_party_member(int slot);
 extern signed char data_0209f2f8;
+
+/* PARTY: what the render pass actually DID with each slot last frame, recorded
+   at the render site so the party probe reads an observation rather than
+   re-deriving the decision. 1 = drawn ghost (translucent), 0 = drawn solid,
+   -1 = not drawn this frame. Indexed by the player slot (Player +0x6d8). */
+extern "C" signed char g_party_render_ghost[16] = {
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 extern "C" void port_adventure_probe(int frame)
 {
     /* DIAG (SM64DS_ADVENTURE_DIAG): identity + per-slot positions, every 60
@@ -608,6 +623,155 @@ extern "C" void port_adventure_presence_probe(int frame)
         sA, sB, mylev, otherlev, have_pair, not_vs, adv_on, visA_same, visB_diff,
         drawnA, frozenB, visA_after, visB_after, frozenA2, drawnB2,
         local_untouched, fails == 0 ? "ALL PASS" : "FAIL");
+}
+
+/* ---- THE PARTY RENDER-BOUNDARY PROOF (SM64DS_PARTY_PROBE) ------------------
+   The party slice's deterministic authority for the ghost-vs-party render
+   boundary and party-body liveness, on ONE instance. It seats >=3 bodies
+   (SM64DS_VS_PLAYERS=3, VS mode off, SM64DS_ADVENTURE=1) and, with
+   SM64DS_PARTY_MEMBERS="1", marks slot 1 a PARTY member and leaves slot 2 an
+   adventure GHOST. In one run it asserts BOTH treatments coexist:
+
+     - the PARTY body (slot 1) renders SOLID (the render pass did NOT apply
+       ghost opacity: g_party_render_ghost==0) and COLLIDES (the hold left it
+       interactive: interaction_disabled==false), while
+     - the GHOST body (slot 2) renders TRANSLUCENT (g_party_render_ghost==1)
+       and is PASS-THROUGH (interaction_disabled==true), and
+     - the LOCAL body (slot 0) is solid and interactive throughout.
+
+   LIVENESS BY MOVEMENT, per slot, NOT a frozen census (the Klepto lesson): a
+   baseline of each body's anim frame and world position is captured at
+   kBaseline, and by kAt the PARTY body must have TICKED BEHAVIOR -- its anim
+   frame advanced or its world position moved -- proving it is a live,
+   Behavior-driven body and not a motionless seat. The observation is read
+   back out of the fields the ROM's own Behavior writes; nothing here drives
+   the party body, so any change is the Behavior's. The live loopback run adds
+   MOVEMENT through the shipped rollback sim under injected input.
+
+   Prints one [partyprobe] line with ALL PASS. Inert unless the knob is set. */
+extern "C" signed char g_party_render_ghost[16];
+extern "C" void port_party_probe(int frame)
+{
+    /* DIAG (SM64DS_PARTY_DIAG=<stride>): per-slot party treatment + position,
+       for the live loopback run to read the remote party body's solid/collide
+       treatment and its movement across frames. No injection, no assert. */
+    {
+        static int diag = -2;
+        if (diag == -2) {
+            const char *e = std::getenv("SM64DS_PARTY_DIAG");
+            diag = e ? std::atoi(e) : 0;
+        }
+        if (diag > 0 && (frame % diag) == 0) {
+            const int me2 = (int)data_0209f250;
+            for (int i = 0; i < kPortMaxPlayers; ++i) {
+                void *a = data_0209f394[i];
+                if (!a) continue;
+                std::fprintf(stderr,
+                    "[partydiag] f%d me=%d slot%d%s live=%u party=%d "
+                    "render_ghost=%d clsn_disabled=%d pos=(%d,%d,%d) anim=%d\n",
+                    frame, me2, i, i == me2 ? "(LOCAL)" : "",
+                    (unsigned)(i < kPortMaxPlayers ? data_0209fc5c[i] : 0),
+                    i == me2 ? -1 : port_party_member(i),
+                    i < 16 ? (int)g_party_render_ghost[i] : -1,
+                    port::player::interaction_disabled(a) ? 1 : 0,
+                    *port::player::pos_x(a), *port::player::pos_y(a),
+                    *port::player::pos_z(a),
+                    (int)port::player::anim_frame(a));
+            }
+        }
+    }
+
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_PARTY_PROBE") ? 1 : 0;
+    if (!on) return;
+
+    const int me = (int)data_0209f250;
+    /* the first two REMOTE live bodies: slot A the party member, slot B ghost */
+    int sA = -1, sB = -1;
+    for (int i = 0; i < kPortMaxPlayers; ++i) {
+        if (i == me) continue;
+        if (data_0209fc5c[i] == 0 || !data_0209f394[i]) continue;
+        if (sA < 0) sA = i; else if (sB < 0) { sB = i; break; }
+    }
+
+    /* per-slot liveness baseline, captured once */
+    static bool seeded = false;
+    static int base_anim[16], base_px[16], base_pz[16];
+    const int kBaseline = 40;
+    const int kAt = 120;
+    if (frame == kBaseline && !seeded) {
+        seeded = true;
+        for (int i = 0; i < kPortMaxPlayers && i < 16; ++i) {
+            void *a = data_0209f394[i];
+            base_anim[i] = a ? (int)port::player::anim_frame(a) : 0;
+            base_px[i] = a ? *port::player::pos_x(a) : 0;
+            base_pz[i] = a ? *port::player::pos_z(a) : 0;
+        }
+    }
+    static bool done = false;
+    if (frame != kAt || done) return;
+    done = true;
+
+    int fails = 0;
+    const bool not_vs = data_0209f2d8 == 0;
+    const bool adv_on = port::adventure_ghost_mode();
+    const bool have_pair = sA >= 0 && sB >= 0 && seeded;
+
+    bool party_is_member = false, party_solid = false, party_collides = false;
+    bool ghost_is_ghost = false, ghost_translucent = false, ghost_passthrough = false;
+    bool local_solid = false, local_interactive = false;
+    bool party_live = false;
+    int panim0 = 0, panim1 = 0, ppos_d = 0;
+
+    if (have_pair) {
+        void *pa = data_0209f394[sA], *gb = data_0209f394[sB];
+        void *lb = (me >= 0 && me < kPortMaxPlayers) ? data_0209f394[me] : 0;
+
+        party_is_member = port_party_member(sA) != 0;
+        ghost_is_ghost = port_party_member(sB) == 0;
+
+        /* the render pass's own record of what it drew last frame */
+        party_solid = g_party_render_ghost[sA] == 0;
+        ghost_translucent = g_party_render_ghost[sB] == 1;
+
+        /* the hold's observable collision treatment */
+        party_collides = !port::player::interaction_disabled(pa);
+        ghost_passthrough = port::player::interaction_disabled(gb);
+        local_solid = lb && g_party_render_ghost[me] == 0;
+        local_interactive = lb && !port::player::interaction_disabled(lb);
+
+        /* LIVENESS of the party body: Behavior ticked (anim advanced) or it
+           moved (position changed) since the baseline. Per-slot, movement, not
+           census. */
+        panim0 = base_anim[sA];
+        panim1 = (int)port::player::anim_frame(pa);
+        const int dx = *port::player::pos_x(pa) - base_px[sA];
+        const int dz = *port::player::pos_z(pa) - base_pz[sA];
+        ppos_d = (dx < 0 ? -dx : dx) + (dz < 0 ? -dz : dz);
+        party_live = (panim1 != panim0) || (ppos_d != 0);
+    }
+
+    if (!have_pair) ++fails;
+    if (!not_vs) ++fails;
+    if (!adv_on) ++fails;
+    if (!party_is_member) ++fails;
+    if (!party_solid) ++fails;
+    if (!party_collides) ++fails;
+    if (!ghost_is_ghost) ++fails;
+    if (!ghost_translucent) ++fails;
+    if (!ghost_passthrough) ++fails;
+    if (!local_solid) ++fails;
+    if (!local_interactive) ++fails;
+    if (!party_live) ++fails;
+    std::fprintf(stderr,
+        "[partyprobe] partyslot=%d ghostslot=%d have_pair=%d not_vs=%d adv_on=%d "
+        "party_member=%d party_solid=%d party_collides=%d ghost=%d "
+        "ghost_translucent=%d ghost_passthrough=%d local_solid=%d "
+        "local_interactive=%d party_live=%d(anim %d->%d posd=%d) => %s\n",
+        sA, sB, have_pair, not_vs, adv_on, party_is_member, party_solid,
+        party_collides, ghost_is_ghost, ghost_translucent, ghost_passthrough,
+        local_solid, local_interactive, party_live, panim0, panim1, ppos_d,
+        fails == 0 ? "ALL PASS" : "FAIL");
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------
@@ -929,8 +1093,17 @@ void hal_render_player_world(void *player)
        body the per-slot render loop in tests/walk_window.cpp draws last and never
        ghosts. The mode gate keeps VS and solo byte-unaffected: adventure mode is
        its own flag, never data_0209f2d8. */
-    const bool ghost = port::adventure_ghost_mode() &&
-                       player != data_0209f394[data_0209f250];
+    /* PARTY co-op: a REMOTE body is a translucent ghost UNLESS it is a party
+       member, in which case it is a shared-world body and renders SOLID (no
+       ghost opacity). The per-slot party flag is the one thing that selects
+       between the two treatments; everything else about the ghost pass is
+       unchanged. The slot is the Player number at +0x6d8. */
+    const int party_slot = (int)*(const unsigned char *)(c + 0x6d8);
+    const bool remote = player != data_0209f394[data_0209f250];
+    const bool ghost = port::adventure_ghost_mode() && remote &&
+                       !port_party_member(party_slot);
+    if (party_slot >= 0 && party_slot < 16)
+        g_party_render_ghost[party_slot] = (signed char)(ghost ? 1 : 0);
     std::size_t vscol_tris0 = 0;
     static int vscol_frame = -1;
     if (vscol_on()) {
@@ -983,6 +1156,10 @@ void hal_render_player_world(void *player)
             (*(const unsigned int *)(c + 0xb0) & 0x10))
             std::fprintf(stderr, "[eaten] slot %u body skipped: mFlags&0x10\n",
                          (unsigned)*(const unsigned char *)(c + 0x6d8));
+        /* PARTY: not drawn this frame -- the recorded treatment is neither
+           solid nor ghost. */
+        if (party_slot >= 0 && party_slot < 16)
+            g_party_render_ghost[party_slot] = -1;
         return;
     }
 

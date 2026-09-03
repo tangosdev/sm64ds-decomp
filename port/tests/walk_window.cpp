@@ -546,6 +546,11 @@ void port_adventure_ghost_follow(void);
 int port_adventure_peer_visible(int slot);
 /* the M2 presence proof; no-op unless SM64DS_ADVENTURE_PRESENCE is set. */
 void port_adventure_presence_probe(int frame);
+/* the party render-boundary proof; no-op unless SM64DS_PARTY_PROBE (or the
+   SM64DS_PARTY_DIAG stride) is set. */
+void port_party_probe(int frame);
+/* PARTY: per-slot party-member predicate (hal/comms_sync.cpp). */
+extern "C" int port_party_member(int slot);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
@@ -10621,6 +10626,12 @@ int main(void)
            the same-level filter and the spawn/despawn transitions. Inert unless
            SM64DS_ADVENTURE_PRESENCE is set. */
         port_adventure_presence_probe(frame);
+        /* PARTY: the render boundary (a party body solid+colliding vs a
+           non-party ghost translucent+pass-through) and party-body liveness.
+           Reads the render pass's own per-slot record (set just below in the
+           player draw loop) and the hold's collision state. Inert unless
+           SM64DS_PARTY_PROBE or SM64DS_PARTY_DIAG is set. */
+        port_party_probe(frame);
         /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
            the actor phases the branch above ran, before the render below. ONE
            PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
@@ -11788,7 +11799,12 @@ int main(void)
                follower and the name tag skip it on the same predicate. VS and
                solo do not consult it (the gate is the mode), so their per-slot
                draw is byte-unchanged. */
-            if (port::adventure_ghost_mode() && !port_adventure_peer_visible(pi))
+            /* PARTY: a party member is a shared-world body -- always drawn,
+               even when no broadcast presence snapshot has arrived for it (a
+               party rides the rollback sim, not the ghost broadcast). Only
+               NON-party remotes are gated on adventure presence. */
+            if (port::adventure_ghost_mode() && !port_party_member(pi) &&
+                !port_adventure_peer_visible(pi))
                 continue;
             if (void *other = data_0209f394[pi])
                 hal_render_player_world(other);

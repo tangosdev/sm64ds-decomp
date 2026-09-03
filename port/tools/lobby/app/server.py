@@ -117,8 +117,12 @@ V_SESSION = 4    # create.session_type
 
 # The session types a room may be. "vs" is the versus match; "adventure" is the
 # ghost-presence session, where each console runs its own solo level and only
-# broadcasts where its body is. An unknown value is refused at do_create.
-SESSION_TYPES = ("vs", "adventure")
+# broadcasts where its body is. "party" (party slice, status/COOP_PARTY.md) is
+# the shared, synced world: it rides the SAME room-code invite path as
+# adventure, but seats as a ROLLBACK session (NetMode rollback) and every
+# joiner boots into the HOST's level, so members share one deterministic world
+# instead of ghosting their own. An unknown value is refused at do_create.
+SESSION_TYPES = ("vs", "adventure", "party")
 
 # The version each v2 addition arrived in. All three are 2 and all three say so
 # by name rather than by the digit, so a later bump cannot accidentally lock v2
@@ -1737,6 +1741,14 @@ def member_plan(room, seat):
         # each console ghosts the peers in its own level. The transport quartet
         # (role/code/relay/slot) is identical for both; the relay forwards the
         # same opaque datagrams either way.
+        #
+        # PARTY (party slice, status/COOP_PARTY.md): same adventure invite path,
+        # but a SHARED world. The launcher exports SM64DS_ADVENTURE=1 +
+        # SM64DS_PARTY=1 + SM64DS_NETMODE=rollback, and -- the shared-world
+        # entry -- SM64DS_LEVEL=<host_level> for EVERY member (below), so a
+        # joiner boots into the host's level rather than its own. The parent's
+        # bit-17 accept still carries the rollback mode on the wire, so a joiner
+        # that asked for lockstep adopts it (the shipped handshake).
         "session_type": room.session_type,
         "map": room.match_map,
         "players": room.agreed_players,
@@ -1761,6 +1773,19 @@ def member_plan(room, seat):
     # host enforces one star all match and the first-to-N-points win.
     if room.match_win_mode == "king":
         plan["king_target"] = room.match_king_target
+    # PARTY (party slice): the two fields that make a party session what it is.
+    #   host_level  -- SHARED WORLD ENTRY (COOP_PARTY.md step 2/3): the host's
+    #     level, handed to EVERY member so a joiner boots the host's world, not
+    #     its own. It is room.match_map (the level the host is in) for every
+    #     seat, which is exactly "the joiner adopts the host's level".
+    #   netmode     -- ROLLBACK SEATING (COOP_PARTY.md step 1): the launcher
+    #     exports SM64DS_NETMODE=rollback so announce_roster() carries the
+    #     accept-rollback bit and the session runs the shipped rollback sim.
+    # Both are additive: a "vs" or "adventure" plan never carries them, so those
+    # launchers are byte-unchanged.
+    if room.session_type == "party":
+        plan["host_level"] = room.match_map
+        plan["netmode"] = "rollback"
     return plan
 
 
