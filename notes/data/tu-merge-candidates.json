@@ -6671,18 +6671,18 @@
    "start": "0x2111980",
    "end": "0x2111cac",
    "classes": [
-    "LavaBridge"
+    "daObjFl_London_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN10LavaBridgeD1Ev.cpp",
-    "src/_ZN10LavaBridgeD0Ev.c",
+    "src/_ZN16daObjFl_London_cD1Ev.cpp",
+    "src/_ZN16daObjFl_London_cD0Ev.c",
     "src/func_ov022_02111a1c.c",
-    "src/_ZN10LavaBridge16CleanupResourcesEv.cpp",
-    "src/_ZN10LavaBridge6RenderEv.cpp",
-    "src/_ZN10LavaBridge8BehaviorEv.cpp",
-    "src/_ZN10LavaBridge13InitResourcesEv.cpp",
+    "src/_ZN16daObjFl_London_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjFl_London_c6RenderEv.cpp",
+    "src/_ZN16daObjFl_London_c8BehaviorEv.cpp",
+    "src/_ZN16daObjFl_London_c13InitResourcesEv.cpp",
     "src/daObjFl_London_c_classInit.c"
    ],
    "ext_mix": {

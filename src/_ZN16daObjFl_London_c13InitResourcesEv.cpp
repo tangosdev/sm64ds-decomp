@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN10LavaBridge13InitResourcesEv
-#include "LavaBridge.h"
+// @symbol _ZN16daObjFl_London_c13InitResourcesEv
+#include "daObjFl_London_c.h"
 
-/* LavaBridge::InitResources -- vtable slot 0, ov022 0x02111bdc.
+/* daObjFl_London_c::InitResources -- vtable slot 0, ov022 0x02111bdc.
  *
  * Real member function on real fields, same idiom as
  * src/_ZN11VolcanoRing13InitResourcesEv.cpp (#1583). func_ov022_02111a1c is
  * this class's own, still-unmigrated helper (out of this task's scope),
  * called under its existing name. mCooldown/mFlag are this class's own
- * fields (include/LavaBridge.h). */
+ * fields (include/daObjFl_London_c.h). */
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
@@ -22,7 +22,7 @@ extern void *data_ov022_02114578;
 extern void *data_ov064_0211bb2c;
 }
 
-int LavaBridge::InitResources()
+int daObjFl_London_c::InitResources()
 {
     void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov022_02114580);
     mModel.SetFile((BMD_File *)f, 1, -1);

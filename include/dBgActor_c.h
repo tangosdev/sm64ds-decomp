@@ -85,9 +85,10 @@ struct dBgActor_c {
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
+    s16 mAngleZ;            /* 0x090 */
+    s16 mPrevAngleX;        /* 0x092 */
     s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x2];
+    s16 mPrevAngleZ;        /* 0x096 */
     s32 mHorzSpeed;            /* 0x098 */
     s32 mVertAccel;            /* 0x09c */
     s32 mTerminalVelocity;            /* 0x0a0 */
