@@ -129,24 +129,17 @@ if(MSVC)
     target_compile_options(ntr PRIVATE /wd4311 /wd4312)
 endif()
 
-# 512x384 middle tier: 4x the pixels of native (~12ms software raster),
-# half the chunk of DS-native. The interactive window's default.
-add_library(ntr_2x STATIC
-    ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
-    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
-target_include_directories(ntr_2x PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
-# ntr/runtime.cpp hosts two DS DMA globals (data_020a60c4/data_020a6460) that
-# are real save state, so it needs hal/dsstate_seg.h. PRIVATE: only this
-# library reads it, consumers keep their own include set.
-target_include_directories(ntr_2x PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-target_compile_definitions(ntr_2x PUBLIC NTR_HIRES2)
-if(MSVC)
-    target_compile_options(ntr_2x PRIVATE /wd4311 /wd4312)
-endif()
+# ntr_2x, THE FIXED 512x384 TIER, IS GONE. It existed for exactly one consumer,
+# walk_window, and walk_window links ntr_wide_rt below instead: same 512x384
+# picture when the Aspect key is 0 (its default), and a wider one when it is not.
+# Nothing else ever linked it, so leaving it here would have been a second copy
+# of eleven translation units built every configure to be thrown away. The
+# NTR_HIRES2 tier itself still exists in ntr/ppu.h -- ntr_wide_rt's 4:3 default
+# IS that tier's extent -- there is just no library compiled at it.
 
 # THE RUNTIME-SELECTABLE 16:9 LAYER, and the one walk_window now links. Its
 # framebuffer is the wide maximum (1024x576) but the ACTIVE render size is chosen
-# at boot from the Widescreen settings key (ntr::configure_widescreen): 512x384
+# at boot from the Aspect settings key (ntr::configure_aspect): 512x384
 # 4:3 -- byte-for-byte the old 2x window -- when the key is off, the full
 # 1024x576 when it is on. That is what makes one exe present either aspect
 # without a second build. NTR_WIDE_RT is PUBLIC so it reaches walk_window's own
@@ -12939,7 +12932,7 @@ target_include_directories(walk_window PRIVATE
 # The runtime-selectable 16:9 layer. Off (the default) it renders the 512x384
 # 4:3 window ZOOM 2 the port has always shipped -- the software raster is
 # fill-bound and 2x is ~12ms -> 60fps; on it renders the full 1024x576 16:9. One
-# exe, the Widescreen settings key picks the aspect at boot. Was ntr_2x
+# exe, the Aspect settings key (a ratio, 0 = native) picks it at boot. Was ntr_2x
 # (NTR_HIRES2, the fixed 512x384 tier); the wide-max buffer with a 4:3 default
 # active size is byte-for-byte that build when the key is off.
 target_link_libraries(walk_window PRIVATE ntr_wide_rt)
@@ -13193,7 +13186,7 @@ endif()
 # The old walk_window_wide (a second exe built against a fixed NTR_WIDE169 tier)
 # is gone: walk_window links ntr_wide_rt (defined near the top of this file),
 # whose framebuffer is the wide maximum and whose active render size is chosen at
-# boot from the Widescreen settings key. One binary presents either aspect --
+# boot from the Aspect settings key (a ratio). One binary presents either aspect --
 # 512x384 4:3 (the shipped default) with the key off, 1024x576 16:9 with it on --
 # with no aspect distortion off and no second source set to keep in sync. The
 # NTR_WIDE169 tier (ppu.h) is still defined for a fixed-compile wide build, but

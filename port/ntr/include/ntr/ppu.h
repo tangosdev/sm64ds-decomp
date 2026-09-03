@@ -25,7 +25,7 @@ constexpr int SCREEN_W = 512;    /* 2x: the interactive window's tier */
 constexpr int SCREEN_H = 384;
 #elif defined(NTR_WIDE_RT)
 /* THE RUNTIME-SELECTABLE 16:9 TIER. One binary, either aspect, chosen at boot
-   from the Widescreen settings key instead of a separate compile. The
+   from the Aspect settings key (a ratio) instead of a separate compile. The
    framebuffer and every raster/stride array are sized for the WIDE MAXIMUM
    (1024x576) so no reallocation is needed when the toggle is off; the ACTIVE
    extent (ntr::active_w / active_h, below) is what the render, HUD, sub-screen,
@@ -68,16 +68,31 @@ constexpr int SCREEN_H = 192;
 // the buffer ALLOCATION keeps SCREEN_W / SCREEN_H.
 extern int active_w;
 extern int active_h;
-// The boot flag: true when this run is presenting 16:9. Always false on the
+// The boot flag: true when this run's picture is wider than the DS's 4:3. Always false on the
 // fixed tiers. The wide-only branches (frustum widen, sub-screen pillarbox,
 // HUD reanchor) are compiled unconditionally now and self-normalise to the 4:3
 // behaviour when it is false, so most read active_w/active_h rather than this;
 // it is here for the few places that must not run the wide arm at all when off.
 extern bool widescreen;
-// Latch the boot aspect. A no-op on the fixed tiers (one aspect each). On
-// NTR_WIDE_RT it sets active_w/active_h and widescreen. Call once, at boot,
-// before the first framebuffer use.
-void configure_widescreen(bool on);
+// Latch the boot aspect, as a NUMBER: width divided by height. 0 is the
+// explicit native sentinel and means the DS's own 4:3 at the shipped 512x384;
+// 16:9 is 1.7777778; 2.3703704 (21:9) or anything else an odd monitor wants
+// needs no new mode name, which is the whole reason this is a ratio and not a
+// Widescreen boolean -- a boolean cannot express ultrawide.
+//
+// A no-op on the fixed tiers (one aspect each). On NTR_WIDE_RT it derives
+// active_w/active_h from the ratio inside the wide-maximum buffer:
+//
+//   0            -> 512x384, byte-for-byte the 2x window the port ships
+//   1.7777778    -> 1024x576, the full buffer, the measured 16:9 tier
+//   wider        -> full width, shorter picture (3.0 -> 1024x341)
+//   narrower     -> full height, narrower picture (1.0 -> 576x576)
+//
+// The caller is expected to have already clamped to [1.0, 3.0] (see
+// host_setting_aspect); this clamps again rather than trusting, because a bad
+// ratio here is a divide that sizes a framebuffer. Call once, at boot, before
+// the first framebuffer use.
+void configure_aspect(double aspect);
 
 enum Engine { ENGINE_A = 0, ENGINE_B = 1 };
 

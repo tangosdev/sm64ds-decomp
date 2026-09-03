@@ -340,13 +340,21 @@ int host_setting_name_tags(void);
    the file's answer). */
 int host_setting_adventure_ghosts(void);
 
-/* Widescreen: 1 for the 16:9 presentation, 0 (the default) for the 4:3 window
-   the port has always opened. BOOT-LATCHED, unlike the keys around it: the
-   aspect is chosen once and threaded into the framebuffer, so a mid-run reload
-   cannot move it. walk_window's boot is the only reader and hands the answer to
-   ntr::configure_widescreen. SM64DS_WIDESCREEN overrides the file (0 forces 4:3,
-   any other value forces 16:9; unset is the file's answer). */
-int host_setting_widescreen(void);
+/* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
+   the explicit native sentinel -- the 4:3 window the port has always opened;
+   1.7777778 is 16:9. A NUMBER rather than a Widescreen boolean because a
+   boolean cannot express ultrawide, and a ratio means an odd monitor needs no
+   new mode name. Absent, unparseable, negative or otherwise not a positive
+   number all read as 0; a positive value is CLAMPED into [1.0, 3.0], so 9.0 is
+   3.0 and not an error.
+
+   BOOT-LATCHED, unlike the keys around it: the aspect is chosen once and
+   threaded into the framebuffer, so a mid-run reload cannot move it.
+   walk_window's boot is the only reader and hands the answer to
+   ntr::configure_aspect. SM64DS_ASPECT overrides the file with a ratio;
+   SM64DS_WIDESCREEN still works as the legacy boolean (0 native, anything else
+   16:9) and is consulted only when SM64DS_ASPECT is unset. */
+double host_setting_aspect(void);
 
 /* ---- CustomPalette: the third Mods key ---------------------------------
    Default 0, and the default is the only setting that is the ROM. 1..3

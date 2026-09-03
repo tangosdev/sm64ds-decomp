@@ -8,88 +8,131 @@ This file is the record so that does not happen a third time. Read it before
 scoping anything that says "widescreen", "aspect ratio", "wider view" or
 "ultrawide".
 
-Everything below is either quoted from the tree at commit cd821c4d2 with a
-file:line, or a number lifted out of a run log in `build/agent_wide1/` or
-`build/hudband/`. Where a number in an earlier lane's summary did not match what
-the tree or the log actually says, the tree's version is what is written here
-and the difference is called out.
+IT IS A RUNTIME SETTING NOW, NOT A COMPILE TIER. That is the one thing to
+update in your head if you read an older copy of this file. There is no
+`walk_window_wide` executable and no `NTR_WIDE169` build. ONE binary,
+`walk_window.exe`, presents either aspect, and which one it presents is decided
+at boot by a NUMBER in `settings.json` called `Aspect`. Everything the tier did
+still happens, in the same places, for the same reasons; the `#ifdef`s became
+`if`s and `ntr::SCREEN_W/SCREEN_H` became `ntr::active_w/active_h`.
 
-The three commits that built it, all ancestors of this branch:
+Everything below is quoted from the tree with a file:line, or is a number
+lifted out of a run log. Where a number in an earlier lane's summary did not
+match what the tree or the log actually says, the tree's version is what is
+written here and the difference is called out.
+
+The commits that built it, all ancestors of this branch:
 
     d7bdaa9d7  port: first 16:9 widescreen tier (host-layer, opt-in)
     2350c2cd9  port: widescreen 16:9 second pass -- object cull, stacked minigames
     cd821c4d2  port: the 16:9 cull widen reaches the scene path, once per seed
-
-There is a fourth line of work on a SEPARATE branch, `port-widescreen-toggle`
-(9502c9a1a, 1d5f2f54c, 7aebef270), which turns the compile-time tier into a
-runtime `Widescreen` settings key. It is NOT in this branch's history, so
-everything below describes the compile-time tier as it stands here. If that
-branch lands, the mechanism does not change; only how it is selected does.
+    (this lane) the runtime plumbing off port-widescreen-toggle (1d5f2f54c,
+               9502c9a1a, 7aebef270) merged onto the scene-path cull, with the
+               boolean `Widescreen` key replaced by the numeric `Aspect` key
 
 ---
 
 ## 1. What exists
 
-`NTR_WIDE169` is a screen tier, in the same sense that `NTR_HIRES` and
-`NTR_HIRES2` are tiers: a compile define that changes what `ntr::SCREEN_W` and
-`ntr::SCREEN_H` are, and that a handful of host files read to behave differently.
-It is defined at `port/ntr/include/ntr/ppu.h:18-43`, which is the whole
-`#ifdef` chain of tiers; the 16:9 arm itself is `:26-39`:
+### 1a. The buffer, and the active extent inside it
 
-    NTR_HIRES    1024 x 768   4x the DS panel, 4:3
-    NTR_HIRES2    512 x 384   2x, 4:3
-    NTR_WIDE169  1024 x 576   the first non-4:3 tier
-    (default)     256 x 192   the DS panel
+`walk_window` links one library, `ntr_wide_rt`, declared at
+`port/CMakeLists.txt:132-157`. Its only difference from plain `ntr` is one
+line:
 
-The target is `walk_window_wide`, built in `port/CMakeLists.txt:13155-13198`.
-(An earlier summary of this work cited 13101-13145; that range is inside the
-`walk_window_hires` block, which sits immediately above. The correct range is
-13155-13198, plus the resource script added later at :13316 with the other two
-game-shaped executables.)
+    target_compile_definitions(ntr_wide_rt PUBLIC NTR_WIDE_RT)
 
-The target is built the one way that keeps it honest. `port/CMakeLists.txt:13180`
-does
+PUBLIC is doing real work there: because the define is on the library, it also
+reaches every source of the executable that links it, which is how
+`hal/message_compositor.cpp` and `tests/walk_window.cpp` see the tier's screen
+constants without the CMake file having to name them.
 
-    get_target_property(_ww_wide_srcs walk_window_hires SOURCES)
+On that tier `SCREEN_W` x `SCREEN_H` is 1024x576, the WIDE MAXIMUM, and it is
+the row STRIDE and the ALLOCATION -- never the live picture size. The live
+picture is `ntr::active_w` x `ntr::active_h`, two integers set once at boot
+(`port/ntr/include/ntr/ppu.h:58-96`, `port/ntr/ppu.cpp:20-97`). The rule the
+whole port follows, and the rule to apply to any new line of host code:
 
-and then `:13181` builds the wide executable from exactly that list. The
-widescreen target's source list is therefore not a second copy of a
-several-thousand-line list that somebody has to remember to update; it IS the
-hires target's list, read at configure time. The two cannot drift. Anyone adding
-a source file to the port adds it in one place and the widescreen build gets it.
+    a read that means the live screen SIZE  -> active_w / active_h
+      (loop bounds, viewport, present source rect, an aspect ratio)
+    a read that means the row STRIDE or the buffer ALLOCATION -> SCREEN_W / H
 
-The only thing that differs is the library underneath. `ntr_wide` is declared at
-`:13166-13174` with the same ten `ntr/*.cpp` files as `ntr` and `ntr_hires`, and
-one extra line, `:13171`:
+The other tiers are unchanged and still exist for the builds that use them:
 
-    target_compile_definitions(ntr_wide PUBLIC NTR_WIDE169)
+    NTR_HIRES    1024 x 768   4x the DS panel, 4:3   (walk_window_hires)
+    NTR_HIRES2    512 x 384   2x, 4:3                (no library builds it now)
+    NTR_WIDE_RT  1024 x 576   the wide MAXIMUM; active extent chosen at boot
+    NTR_WIDE169  1024 x 576   the old fixed 16:9 tier; nothing builds one
+    (default)     256 x 192   the DS panel           (ntr, the smokes)
 
-PUBLIC is doing real work there. Because the define is PUBLIC on the library,
-it also reaches every source of the executable that links it, which is how
-`hal/message_compositor.cpp` and `tests/walk_window.cpp` see the tier without
-the CMake file having to name them. This mirrors exactly how `NTR_HIRES` reaches
-the hires build.
+`ntr_2x`, the fixed 512x384 library, is GONE. `walk_window` was its only
+consumer and `ntr_wide_rt` with `Aspect` at 0 is byte-for-byte that build.
+`NTR_WIDE169` itself is left defined in `ppu.h` -- a fixed-compile wide build is
+still expressible -- but nothing in `CMakeLists.txt` builds one, and the runtime
+branches below no longer consult it.
+
+### 1b. The Aspect key
+
+`Aspect` is a NUMBER in `settings.json`: WIDTH DIVIDED BY HEIGHT. It is read
+once, at boot, through `host_setting_aspect()` in
+`port/hal/host_settings.cpp`, which follows the shape of the accessors around it
+(`host_setting_run_mode`, `host_setting_camera_mode`, `host_setting_key`) --
+`load_once()`, then the stored value, with the environment in front of it.
+
+    { "Aspect": 0 }            native: 512x384, the window the port has shipped
+    { "Aspect": 1.7777778 }    16:9:   1024x576
+    absent / unparseable /     0, native. A file written before this key
+      negative / not a number  existed reads as the shipped look.
+    any other positive value   CLAMPED into [1.0, 3.0] and then fitted to the
+                               largest rectangle of that ratio inside the
+                               1024x576 buffer. 9.0 is 3.0 is 1024x342.
+
+A NUMBER AND NOT A `Widescreen` BOOLEAN, and the reason is worth keeping: a
+boolean cannot express ultrawide, and a number means an odd monitor needs no new
+mode name, only its own ratio. The boolean this replaced still works as a legacy
+alias -- `{ "Widescreen": true }` reads as 16:9 -- but only when `Aspect` is
+absent, so a file carrying both is decided by the newer key.
+
+Two environment overrides, for proofs, in front of the file:
+`SM64DS_ASPECT` takes the ratio directly and goes through the same sanitiser;
+`SM64DS_WIDESCREEN` is the legacy boolean and is consulted only when
+`SM64DS_ASPECT` is unset.
+
+`ntr::configure_aspect(host_setting_aspect())` is the single call, the first
+statement of `main()` in `port/tests/walk_window.cpp`, before anything touches
+the framebuffer. It sets `active_w`, `active_h`, and `ntr::widescreen`, which is
+computed FROM THE EXTENT (`active_w * 3 != active_h * 4`) rather than stored from
+the argument -- so an `Aspect` of 1.3333 written out longhand correctly reads as
+NOT widescreen and the frustum widen declines, because there is nothing to widen.
+
+### 1c. The five behaviours
 
 There are five distinct widescreen BEHAVIOURS in the host layer, spread across
-eight files. Every one of them is inside `#ifdef NTR_WIDE169`, which is what
-makes the claim "the 4:3 and hires builds are unchanged" checkable rather than
-hopeful:
+eight files. Every one of them used to sit inside `#ifdef NTR_WIDE169`. They are
+compiled UNCONDITIONALLY now, and the 4:3 run is protected two ways rather than
+one: most of them self-normalise (the widen factor is exactly 1.0 at 4:3, the
+pillarbox margin is exactly 0), and the one that cannot self-normalise -- the
+frustum widen, because it is not idempotent -- is guarded by `ntr::widescreen`
+at its call sites:
 
-| behaviour | where |
-|---|---|
-| the 3D picture widens (Hor+) | `port/ntr/gx.cpp:269-287` |
-| the object cull widens to match | `port/hal/camera_bridges.cpp:306-486`, called from `port/tests/walk_window.cpp:11406-11414` and `port/hal/scene_boot.cpp:5946-5983` |
-| the top HUD reanchors instead of stretching | `port/hal/message_compositor.cpp:1773-1794` and `:1811-1832` |
-| the stacked (minigame) bottom panel is pillarboxed | `port/ntr/ppu_sub.cpp:4437-4470` |
-| the stylus maps to the pillarboxed band | `port/hal/sub_screen.cpp:2068` and `:2151` |
+| behaviour | where | how it is off at 4:3 |
+|---|---|---|
+| the 3D picture widens (Hor+) | `port/ntr/gx.cpp:266-287` | factor is exactly 1.0 |
+| the object cull widens to match | `port/hal/camera_bridges.cpp:317-491`, called from `port/tests/walk_window.cpp:11442-11443` and `port/hal/scene_boot.cpp:5980` | `if (ntr::widescreen)` at both call sites |
+| the top HUD reanchors instead of stretching | `port/hal/message_compositor.cpp` | spare width is 0, so every band lands where it did |
+| the stacked (minigame) bottom panel is pillarboxed | `port/ntr/ppu_sub.cpp` | margin is 0 |
+| the stylus maps to the pillarboxed band | `port/hal/sub_screen.cpp` | inverse of the above; clamps to 512x384 |
 
-The commit that added the scene-path call proved the "unchanged" claim three
-ways, and the method is worth reusing: preprocess both touched files under
-`-DNTR_HIRES2` and `-DNTR_HIRES` and compare token streams against HEAD;
-rebuild `walk_window.exe` and diff it against the same tree with the commit
-reverted (it came out two bytes apart, the COFF TimeDateStamp at 0x120 and its
-copy in the debug directory); and compare all 27 scenes' full
-`SM64DS_PPU_AUDIT` census reports across the change.
+THE FRUSTUM WIDEN IS THE ONE THAT NEEDS A GUARD AND NOT A SELF-NORMALISING
+FACTOR, and section 4 is why: it is a non-idempotent in-place multiply on a ROM
+structure. Its scale would be 1.0 at 4:3, so calling it would be harmless in
+arithmetic, but the guard means the 4:3 run does not touch the ROM's Clipper at
+all, which is the stronger and cheaper statement. It is proved rather than
+asserted: a native level-1 run reports `[widen] total calls 0`.
+
+That the 4:3 run is unchanged is now measured directly rather than by
+preprocessing, because there is no second build to compare against -- section 5
+has the numbers, and they are the same numbers the compile-time tier produced.
 
 ## 2. How the widening works, and why it can only live where it lives
 
@@ -167,32 +210,41 @@ by the rasteriser but has its `Behavior` skipped, because the frustum it is
 tested against still thinks the screen ends where the 4:3 screen ended. The fix
 is to scale `m4c` by the exact inverse of the picture's 0.75 and rebuild the
 planes, which is `hal_camera_widen_frustum` at
-`port/hal/camera_bridges.cpp:371-380`:
+`port/hal/camera_bridges.cpp:374-386`:
 
     long long m4c = data_0209f43c[0x4c / 4];
     data_0209f43c[0x4c / 4] =
-        (int)((m4c * (ntr::SCREEN_W * 3)) / (ntr::SCREEN_H * 4));
+        (int)((m4c * (ntr::active_w * 3)) / (ntr::active_h * 4));
     _ZN7Clipper13Func_0201559CEv(&data_0209f43c);
 
+`active_w`/`active_h`, not `SCREEN_W`/`SCREEN_H`, for the same reason `project()`
+above reads them: the buffer is the wide maximum on every run and the live
+picture is not.
+
 (An earlier summary put this function at `camera_bridges.cpp:297-329`. That range
-is the explanatory banner, which starts at :306. The function body is :371-380
-and the scene-path variant is :464-490.)
+is the explanatory banner. The function body is :374-386 and the scene-path
+variant is :467-491.)
 
 Note that it scales the value that is THERE rather than a literal 0x1555. A
 camera or a cutscene that seeds a different aspect stays correct.
 
 There are exactly two call sites.
 
-The LEVEL path calls it from `port/tests/walk_window.cpp:11413`, immediately
+The LEVEL path calls it from `port/tests/walk_window.cpp:11443`, immediately
 after the loop's by-hand `hal_camera_render` and before the actor render bucket.
 That position is chosen because the by-hand render is what runs
 `func_0200d954` and reseeds `m4c`, so the widen always starts from a known
 0x1555 and always lands before anything reads the frustum.
 
 The SCENE path calls `hal_camera_widen_frustum_scene` from `port_scene_tick` in
-`port/hal/scene_boot.cpp:5982`, and this is the change that commit cd821c4d2
+`port/hal/scene_boot.cpp:5980`, and this is the change that commit cd821c4d2
 made. Before it, every 3D scene in the 16:9 build drew a widened picture against
 a 4:3 cull, measured as zero reaches on all 27 hosted scene ids.
+
+BOTH CALL SITES ARE WRAPPED IN `if (ntr::widescreen)`. That is what replaced the
+`#ifdef NTR_WIDE169` around them when the tier became a setting, and it is not
+cosmetic: with the aspect at 0 the ROM's Clipper is left exactly as the ROM
+seeded it, on both paths, and the counter says so (`[widen] total calls 0`).
 
 THE SCENE CALL SITS AFTER `port_actor_render`, NOT BEFORE, and that ordering was
 measured rather than reasoned. A scene drives no camera by hand. Its `Camera` is
@@ -257,19 +309,92 @@ line exists to catch a violation: a second call on the same seed shows up as a
 compounding `m4c` in the log, immediately.
 
 `SM64DS_WIDEN_PROBE` is the instrument for all of this
-(`camera_bridges.cpp:346-414`). One environment variable, inert unless set to
+(`camera_bridges.cpp:335-417`). One environment variable, inert unless set to
 something other than 0, and it prints progress every 64 calls rather than only
 at a static destructor, because a run that faults or is killed by a timeout
 never reaches a destructor and a reachability answer that only exists at a clean
 exit is no answer at all.
 
+READ IT OUT OF THE RIGHT FILE. The probe writes to stderr, and on the SCENE path
+the port's flight recorder routes stderr into `playlog/play_*.log` in the run's
+working directory, not into whatever the harness piped. A scene run whose widen
+lines are "missing" from the pipe is almost certainly a harness reading the wrong
+file; the level path writes to both.
+
 ## 5. What was measured
 
 All runs through `port/tools/mp2_proof.py`'s quiet spawner, `FAULTS_FATAL=1`,
-`VOLUME=0`, `MINIMIZED=1`, `SM64DS_*` scrubbed. Logs in
+`VOLUME=0`, `MINIMIZED=1`, `SM64DS_*` scrubbed, window minimized and unfocused.
+
+### 5a. ONE BINARY, BOTH ASPECTS
+
+The whole point of the runtime conversion, and the thing to re-run first if any
+of this is ever in doubt. Same `walk_window.exe`, 300-frame selftest, the only
+difference is `SM64DS_ASPECT`:
+
+| content | aspect 0 | aspect 1.7777778 |
+|---|---|---|
+| level 1  | 512x384, 2034.6 tris | 1024x576, 2064.0 tris |
+| level 13 | 512x384, 1145.3 tris | 1024x576, 1166.1 tris |
+
+Those four triangle means are the compile-time tier's own numbers, to the
+decimal, and the selftest positions are identical across the aspect on both
+levels (`pos=(-4915200, 2929633, 11141348)` on level 1,
+`pos=(-24206229, 8192012, 24214420)` on level 13). The runtime conversion is
+therefore not "close to" the tier; it reproduces it.
+
+The dimensions are read out of the selftest BMP header, so the aspect claim is
+made in pixels rather than in a log line the code could be wrong about.
+
+### 5b. THE ASPECT KEY
+
+Read from `settings.json` with no environment override, 60-frame runs, BMP
+dimensions again:
+
+| `settings.json` | picture |
+|---|---|
+| `{ "Volume": 100 }` (Aspect absent) | 512x384 |
+| `{ "Aspect": 0 }` | 512x384 |
+| `{ "Aspect": 1.7777778 }` | 1024x576 |
+| `{ "Aspect": 9.0 }` | 1024x342 (clamped to 3.0, rc 0) |
+| `{ "Aspect": "wide" }` | 512x384 |
+| `{ "Aspect": -2 }` | 512x384 |
+| `{ "Widescreen": true }` | 1024x576 (legacy alias) |
+| `{ "Aspect": 0, "Widescreen": true }` | 512x384 (newer key wins) |
+
+9.0 CLAMPS RATHER THAN BREAKING, which is the case worth stating: the run exits
+0 and draws a picture, at 1024x342, whose ratio is 2.994 and therefore inside
+the documented band. The derived side of the fit rounds in the direction that
+keeps the delivered ratio no wider than the clamp, which is why it is 342 and
+not 340.
+
+### 5c. The compile-time tier's original measurements
+
+Everything from here down was measured against the fixed `NTR_WIDE169` build and
+is retained because the mechanism did not change. Logs in
 `C:\tmp\wide\build\agent_wide1\`.
 
-REACHABILITY. The level path reaches the widen on every frame: levels 1, 5, 6, 8
+REACHABILITY, RE-PROVED ON THE RUNTIME BUILD. At aspect 1.7777778, level 1 and
+level 6 each report `[widen] total calls 300, scene frames declined 0` over a
+300-frame selftest -- once per frame, not twice -- with `m4c` reading 5461 at
+every sampled call (1, 64, 128, 192, 256), which is the non-compounding
+signature. At aspect 0 the same level reports `[widen] total calls 0`: the
+runtime guard leaves the ROM's Clipper untouched.
+
+THE SCENE PATH STILL FIRES, and all three shapes reproduce at the runtime
+aspect over 300 scene frames:
+
+| scene | shape | wide (1.7777778) | native (0) |
+|---|---|---|---|
+| 363 MG_MEMORY2 | reseeded every frame | 300 calls, 0 declined, post `m4c` 7281 every frame | 0 calls, `m4c` 5461 |
+| 361 MG_CUP | seeded once at spawn | 1 call, 299 declined, `m4c` 7281 and HOLDS | 0 calls, `m4c` 5461 |
+| 374 MG_CURLING | never seeded | 0 calls, 300 declined, `m4c` 0 | 0 calls, `m4c` 0 |
+
+361 holding at 7281 for 299 frames instead of climbing is the once-per-seed
+guard doing its job; see section 4 for what happens without it.
+
+The original tier measurements follow. The level path reaches the widen on every
+frame: levels 1, 5, 6, 8
 and 13 all report `[widen] total calls 300` for a 300-frame selftest
 (`w_lvl1`, `w_l5`, `w_l6`, `w_l8`, `w_l13`). A cutscene reaches it 900 of 900
 frames (`w_intro`, `[widen] total calls 900`) because a cutscene runs the level
@@ -429,10 +554,13 @@ would be wrong for the 3D case. So the compose touches only the panel that is
 unambiguously a 256x192 raster, and A 2D-TOP MINIGAME WILL STRETCH. That is a
 known, deliberate, flagged gap.
 
-NEVER LINK A SMOKE TEST AGAINST `ntr_wide`. The smokes deliberately keep the
+NEVER LINK A SMOKE TEST AGAINST `ntr_wide_rt`. The smokes deliberately keep the
 DS-native 256x192 `ntr` library (`port/CMakeLists.txt:120`, with the reasoning
-spelled out at `:147-148` where `ntr_hires` is declared: "the smokes keep the
-DS-native lib (their reference pixel counts depend on 256x192)"). The selftest
+spelled out where `ntr_hires` is declared: "the smokes keep the DS-native lib
+(their reference pixel counts depend on 256x192)"). This did not stop mattering
+when the tier became runtime-selectable: `ntr_wide_rt`'s framebuffer is 1024x576
+no matter what `Aspect` says, and the stride is what a reference pixel count is a
+function of. The selftest
 BMP probes compare against reference pixel counts that are a function of the
 frame's dimensions, so a smoke linked against a wide library fails for a reason
 that has nothing to do with what it is testing. This is the same trap recorded
@@ -443,13 +571,21 @@ part of the probe.
 
 HIGHER RESOLUTION IS A SEPARATE AXIS FROM WIDER. This gets conflated constantly,
 so state it flatly. `NTR_HIRES` is 1024x768 and 4:3: sharper, not wider.
-`NTR_WIDE169` is 1024x576 and 16:9: wider, and at the same 1024 across as hires,
-so it is not sharper than hires, it is hires's width applied to a shorter frame.
-Wide AND sharp is a third tier, and it is not hard: pick a taller whole multiple
-of 192 (768 is the obvious one, since hires already uses it) and pair it with a
-wider width (1366 for 16:9 at 768; the width need not be an integer multiple, see
-section 7). Everything else is the same runtime width work against a bigger
-buffer. No new mechanism is required. Nobody has done it because nobody asked.
+`NTR_WIDE_RT` is a 1024x576 buffer: at 16:9 that is wider than the DS, and at
+the same 1024 across as hires, so it is not sharper than hires, it is hires's
+width applied to a shorter frame. THE `Aspect` KEY DOES NOT CHANGE THIS -- it
+picks a SHAPE inside that buffer, never a bigger one. Wide AND sharp is a bigger
+buffer, and it is not hard: raise `SCREEN_H` on the `NTR_WIDE_RT` arm to a taller
+whole multiple of 192 (768 is the obvious one, since hires already uses it) and
+`SCREEN_W` to match the widest ratio wanted (1366 for 16:9 at 768; the width need
+not be an integer multiple, see section 7). `configure_aspect` fits the active
+extent inside whatever those two are, so nothing else has to change and no new
+mechanism is required. Nobody has done it because nobody asked.
+
+ULTRAWIDE IS NOW EXPRESSIBLE, AND STILL GATED ON THE PER-ELEMENT HUD WORK. The
+key can say 2.37 and the fit will deliver a 21:9 picture out of the same buffer;
+that half is done, and `Aspect: 9.0` clamping to 1024x342 is the proof the
+arithmetic holds past 16:9. What is not done is the HUD.
 
 TRUE ULTRAWIDE BEYOND ABOUT 2.0 IS GATED ON THE PER-ELEMENT HUD WORK. The 3D
 side scales fine: section 2's widen is a ratio and does not care how wide the
@@ -462,23 +598,35 @@ not a nice-to-have.
 
 ## 9. Reproducing
 
-    build with port\build-port.cmd (the wide target is walk_window_wide)
+    build with port\build-port.cmd (there is one game target, walk_window)
+
+    the aspect A/B, one binary, in pixels:
+      SM64DS_LEVEL=1 SM64DS_WINDOW_SELFTEST=300 SM64DS_FRAME_MS=1 walk_window.exe
+      SM64DS_ASPECT=1.7777778 <the same>
+      -> walk_window_selftest.bmp is 512x384 then 1024x576; the [perf] tris
+         means are 2034.6 then 2064.0; the selftest pos line is identical.
+
+    the settings key, with no environment override:
+      write settings.json next to the run and unset SM64DS_ASPECT and
+      SM64DS_WIDESCREEN. Section 5b is the table of what each value gives.
 
     reachability and the compounding watch, level path:
-      SM64DS_LEVEL=1 SM64DS_WINDOW_SELFTEST=300 SM64DS_WIDEN_PROBE=1 walk_window_wide.exe
-      -> [widen] call N m4c 5461 every 64 calls, [widen] total calls 300 at exit
+      SM64DS_LEVEL=1 SM64DS_WINDOW_SELFTEST=300 SM64DS_WIDEN_PROBE=1
+      SM64DS_ASPECT=1.7777778 walk_window.exe
+      -> [widen] call N m4c 5461 every 64 calls, [widen] total calls 300 at exit.
+         Drop SM64DS_ASPECT and it must be total calls 0.
 
     reachability and the compounding watch, scene path:
-      SM64DS_SCENE=361 SM64DS_SCENE_FRAMES=300 SM64DS_WIDEN_PROBE=1 walk_window_wide.exe
-      -> [widen] scene fN pre/post m4c ... tris ... every frame.
+      SM64DS_SCENE=361 SM64DS_SCENE_FRAMES=300 SM64DS_WIDEN_PROBE=1
+      SM64DS_ASPECT=1.7777778 walk_window.exe
+      -> READ playlog/play_*.log, NOT the piped stderr (section 4).
+         [widen] scene fN pre/post m4c ... tris ... every frame.
          m4c must go 5461 -> 7281 ONCE and then hold. If it keeps climbing,
          something added a second call site. See section 4.
 
-    the 4:3 / wide A/B:
-      the same level under walk_window.exe and walk_window_wide.exe; compare the
-      [census] block (must be identical) and the [perf] tris means (wide is
-      slightly higher). build/agent_wide1/drv.py is the driver that produced the
-      logs quoted in section 5.
+    the 4:3 / wide A/B on content:
+      the same level at aspect 0 and at 1.7777778; compare the [census] block
+      (must be identical) and the [perf] tris means (wide is slightly higher).
 
     the HUD band evidence:
       build/hudband/shots.py captures the four reference images in

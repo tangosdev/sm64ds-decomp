@@ -6839,14 +6839,17 @@ static int scene_window_run(void)
 int main(void)
 {
     /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
-       host_setting_widescreen() reads the Widescreen key from settings.json (or
-       SM64DS_WIDESCREEN); ntr::configure_widescreen latches the active render
-       size to 512x384 (4:3, the shipped window) or 1024x576 (16:9) for the whole
-       run. The framebuffer itself is always the wide maximum, so this only picks
-       how much of it is live -- nothing reallocates, and with the key off every
-       render, HUD, sub-screen and present path is byte-for-byte the 4:3 build.
-       On a non-runtime tier configure_widescreen is a no-op. */
-    ntr::configure_widescreen(host_setting_widescreen() != 0);
+       host_setting_aspect() reads the Aspect key from settings.json (or
+       SM64DS_ASPECT, or the legacy SM64DS_WIDESCREEN) as a RATIO -- width over
+       height, 0 for native -- and ntr::configure_aspect latches the active
+       render size for the whole run: 512x384 (the shipped 4:3 window) at 0,
+       1024x576 at 1.7777778, and the largest rectangle of that ratio inside the
+       wide-maximum buffer for anything else. The framebuffer itself is always
+       that wide maximum, so this only picks how much of it is live -- nothing
+       reallocates, and at 0 every render, HUD, sub-screen and present path is
+       byte-for-byte the 4:3 build. On a non-runtime tier configure_aspect is a
+       no-op. */
+    ntr::configure_aspect(host_setting_aspect());
     /* fault_probe.h has been included here since gate 4 and was never armed,
        so every crash in the window build printed nothing at all. It costs
        nothing until something faults, and it prints a module-relative address
