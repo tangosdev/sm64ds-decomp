@@ -1218,8 +1218,8 @@ ov044	0x021112a0	_ZN19OrangeBallBillboard13InitResourcesEv	_ZN19daObjKb1Billboar
 ov044	0x021112dc	OrangeBallBillboard_Spawn	daObjKb1Billboard_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov044	0x021115e0	OrangeBallBillboard_SpawnInfo	g_profile_KB1_BILLBOARD	reconstructed profile global; literal ROM ID KB1_BILLBOARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov044	0x02111604	_ZTV19OrangeBallBillboard	_ZTV19daObjKb1Billboard_c	vtable alloc=0x124; class identity proven by ov044 RTTI/ZTS
-ov045	0x021114dc	func_ov045_021114dc	FireSeaElevator_Spawn	spawnfunc
-ov045	0x021114dc	FireSeaElevator_Spawn	daObjKm2_Agaru_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov045	0x021114dc	func_ov045_021114dc	daObjKm2_Agaru_c_Spawn	spawnfunc
+ov045	0x021114dc	daObjKm2_Agaru_c_Spawn	daObjKm2_Agaru_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x0211150c	func_ov045_0211150c	_ZN18daObjKm2_Ami_Bou_cD1Ev	vtable slot 16 (was _ZN15FireSeaElevatorD1Ev)
 ov045	0x02111558	func_ov045_02111558	_ZN18daObjKm2_Ami_Bou_cD0Ev	vtable slot 17 (was _ZN15FireSeaElevatorD0Ev)
 ov045	0x021115b8	func_ov045_021115b8	_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv	vtable slot 3 (was _ZN15FireSeaElevator16CleanupResourcesEv)
@@ -1256,8 +1256,8 @@ ov045	0x02111d98	func_ov045_02111d98	_ZN21daObjKm2_Fall_Block_cD0Ev	vtable slot 
 ov045	0x02111dfc	func_ov045_02111dfc	_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv	vtable slot 3
 ov045	0x02111e10	func_ov045_02111e10	_ZN21daObjKm2_Fall_Block_c13InitResourcesEv	vtable slot 0
 ov045	0x02111e24	func_ov045_02111e24	daObjKm2_Fall_Block_c_Spawn	spawnfunc
-ov045	0x02112cd0	data_ov045_02112cd0	FireSeaElevator_SpawnInfo	spawninfo
-ov045	0x02112cd0	FireSeaElevator_SpawnInfo	g_profile_KM2_AGARU	reconstructed profile global; literal ROM ID KM2_AGARU+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov045	0x02112cd0	data_ov045_02112cd0	daObjKm2_Agaru_c_SpawnInfo	spawninfo
+ov045	0x02112cd0	daObjKm2_Agaru_c_SpawnInfo	g_profile_KM2_AGARU	reconstructed profile global; literal ROM ID KM2_AGARU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112d98	data_ov045_02112d98	daObjKm2_Ami_Bou_c_SpawnInfo	spawninfo
 ov045	0x02112d98	daObjKm2_Ami_Bou_c_SpawnInfo	g_profile_KM2_AMI_BOU	reconstructed profile global; literal ROM ID KM2_AMI_BOU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov045	0x02112dbc	data_ov045_02112dbc	_ZTV18daObjKm2_Ami_Bou_c	vtable alloc=? (was _ZTV15FireSeaElevator)

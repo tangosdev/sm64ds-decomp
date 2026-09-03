@@ -2679,17 +2679,17 @@
    "start": "0x21111a0",
    "end": "0x211150c",
    "classes": [
-    "FireSeaElevator"
+    "daObjKm2_Agaru_c"
    ],
    "n_functions_map": 9,
    "n_files": 9,
    "files": [
-    "src/_ZN15FireSeaElevatorD1Ev.cpp",
-    "src/_ZN15FireSeaElevatorD0Ev.c",
-    "src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp",
-    "src/_ZN15FireSeaElevator6RenderEv.cpp",
-    "src/_ZN15FireSeaElevator8BehaviorEv.cpp",
-    "src/_ZN15FireSeaElevator13InitResourcesEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_cD1Ev.cpp",
+    "src/_ZN16daObjKm2_Agaru_cD0Ev.c",
+    "src/_ZN16daObjKm2_Agaru_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c6RenderEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp",
+    "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp",
     "src/func_ov045_021114a8.cpp",
     "src/func_ov045_021114c8.c",
     "src/daObjKm2_Agaru_c_classInit.c"

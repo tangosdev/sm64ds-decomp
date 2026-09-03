@@ -93,7 +93,7 @@ From `build/tu_map.json`, unchanged and not regenerated:
   four listed as under-segmented.
 - The unit record for `0x211150c..0x2111840` lists exactly the seven symbols
   above and one class label, `daObjKm2_Ami_Bou_c`.
-- Neighbours differ: `FireSeaElevator_Spawn` ends at `0x0211150c`,
+- Neighbours differ: `daObjKm2_Agaru_c_Spawn` ends at `0x0211150c`,
   `_ZN17daObjKm2_Nobiru_cD1Ev` begins at `0x02111840`.
 - Added here: of ov045's six static initialisers, `__sinit_ov045_02112214` is the
   only one that references this TU's two `.bss` `SharedFilePtr` statics
