@@ -3927,15 +3927,7 @@ src/MgMemoryMaster_Spawn.c:
 
 src/actors/dScMgMCarlo_c.cpp:
     complete
-    .text start:0x020f7634 end:0x020f8e44
-
-src/func_ov006_020f8e44.cpp:
-    complete
-    .text start:0x020f8e44 end:0x020f8ed8
-
-src/func_ov006_020f8ed8.c:
-    complete
-    .text start:0x020f8ed8 end:0x020f8ef4
+    .text start:0x020f7634 end:0x020f8ef4
 
 src/actors/dScMgMCarlo2_c.cpp:
     complete

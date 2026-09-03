@@ -2648,7 +2648,7 @@ ov006	0x020db720	func_ov006_020db720	_ZN11dScMgCard_c13OnTurnIntoEggEi	legacy re
 ov006	0x020db9dc	func_ov006_020db9dc	_ZN11dScMgCard_c13OnYoshiTryEatEi	family-adjudicated slot-18 name (notes/minigame-family-decisions.md); vtable slot 18 of dScMgCard_c
 ov006	0x0213bccc	data_ov006_0213bccc	_ZTV12dMgCardObj_c	vtable alloc=0x30
 ov006	0x0213bcf4	data_ov006_0213bcf4	_ZTV17dMgDilarCardObj_c	vtable alloc=0x30
-ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler's own mangling of the element class this TU's RTTI (_ZTI/_ZTS) proves; ROM symbol is address-only; the destroy-stub form is disclosed in the manifest goal block
+ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; a real empty destructor reproduces the ROM body
 ov006	0x020f7740	func_ov006_020f7740	_ZN13dScMgMCarlo_c11UpdateBoardEv	coined: ROM symbol is address-only; named from what the function does
 ov006	0x020f7994	func_ov006_020f7994	_ZN13dScMgMCarlo_c14FlipDealtCardsEv	coined: ROM symbol is address-only; named from what the function does
 ov006	0x020f7a00	func_ov006_020f7a00	_ZN13dScMgMCarlo_c13DrawCardValueEv	coined: ROM symbol is address-only; named from what the function does
@@ -2667,3 +2667,5 @@ ov006	0x020f8540	func_ov006_020f8540	_ZN13dScMgMCarlo_c9RenderHudEv	coined: ROM 
 ov006	0x020f8a3c	func_ov006_020f8a3c	_ZN13dScMgMCarlo_c13OnTurnIntoEggEi	legacy recovered name stands uncontradicted; vtable slot 19 of dScMgMCarlo_c
 ov006	0x020f8c68	func_ov006_020f8c68	_ZN13dScMgMCarlo_c13OnYoshiTryEatEi	family-adjudicated slot-18 name (notes/minigame-family-decisions.md); vtable slot 18 of dScMgMCarlo_c
 ov006	0x0213d5ac	data_ov006_0213d5ac	_ZTV18dMgMCarloCardObj_c	vtable alloc=0x30
+ov006	0x020f8e44	func_ov006_020f8e44	dScMgMCarlo_c_classInit	reconstructed classInit; unique MG_MCARLO profile + RTTI-proven class + factory allocation/vtable shape; exact original source spelling not preserved
+ov006	0x020f8ed8	func_ov006_020f8ed8	_ZN18dMgMCarloCardObj_cC1Ev	compiler-proven C1 for the RTTI-named card element; real constructor reproduces the ROM body

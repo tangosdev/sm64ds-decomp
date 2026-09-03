@@ -5,21 +5,21 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEj(0x60b0)`
- * (src/func_ov006_020f8e44.cpp).
+ * (the classInit factory in src/actors/dScMgMCarlo_c.cpp).
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80
  * and destroyed by func_ov006_020c1c64 -- the same pair dScMgCard_c and
  * dScMgMCarlo2_c use at this same offset; see include/dScMgCard_c.h's own
  * note. The SAME two fields fall within it here as in both of those
- * siblings, unk_4f52 and unk_511e, and they are the same thing there too:
+ * siblings, mShared.unk_01a and mShared.unk_1e6, and they are the same thing there too:
  * literally the shared constructor's own `*(short*)(t+0x1a)=0` and
  * `*(short*)(t+0x1e6)=0` writes. Named here rather than folded into the
  * opaque table; everything else in the table stays pad.
  *
  * ONE ARRAY, 0x50 elements of 0x30 bytes, at 0x51a8: the factory builds it
- * with element ctor func_ov006_020f8ed8 and the destructor destroys it with
- * the hand-written destroy stub declared above, ending exactly on 0x60a8
- * where the own tail begins. The element type is RECOVERED here, the same
+ * with the compiler-spelled element C1 and the scene destructor destroys it
+ * with the compiler-spelled element D1, ending exactly on 0x60a8 where the
+ * own tail begins. The element type is RECOVERED here, the same
  * treatment dScMgCard_c's conversion gave its two hands: dMgMCarloCardObj_c,
  * confirmed by the cartridge's own RTTI pair (_ZTI at 0x0213d578, _ZTS at
  * 0x0213d5c8, build/rtti.json), and the member below carries that type, so
@@ -35,61 +35,34 @@
  * below 0x4f38 (0x0a8, 0x0ac) are dropped: both are dScMgBase_c's own and
  * are already declared there.
  *
- * THE DESTRUCTOR IS DEFINED INLINE, in the class body, and the ROM's own
- * emission order is why. Written out of line, mwcc emits the synthesized D0
- * AHEAD of the written D1; the cartridge has D1 first (0x020f7634) and D0
- * second (0x020f76a8), and linkcheck's pre-link audit refuses a TU whose
- * licensed .text is not in ROM address order. Inline, the destructor cannot
- * be the key function; InitResources -- the next virtual declared, and
- * non-inline -- takes that role, and the TU that defines it emits
- * _ZTV13dScMgMCarlo_c. Slots 16 and 17 name D1 then D0, odr-using both, so
- * the compiler emits the pair for us in cartridge order. It also removes
- * the homeless D2 entirely. The two calls below are ordinary
- * reverse-declaration member destruction, spelled out because the element
- * class declares no destructor at all (so the compiler's own member
- * destruction is empty, and the stub carries the cartridge's destroy call
- * alone); the second call releases the shared table, since two of its
- * words stay named. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one.
- * Same recipe as include/dScMgCard_c.h, and for the same reason. */
+ * LIFECYCLE IS COMPILER-OWNED. The empty inline scene destructor destroys
+ * members in reverse declaration order: the typed card array, the shared
+ * state wrapper, then the inherited scene. That produces the cartridge's
+ * D1/D0 bodies exactly. The card class's real out-of-line constructor and
+ * destructor produce the cartridge C1/D1 exactly; mwccarm's unreferenced
+ * C2/D2/D0 companions are explicitly proven dead and removed by the TU
+ * manifest. InitResources remains the scene key function and Render the card
+ * key function, so their ROM RTTI/vtables are emitted by this TU. */
 #ifndef DSCMGMCARLO_C_H
 #define DSCMGMCARLO_C_H
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
-
-/* The element destroy routine, spelled by its mangled D1 name: C++ source
-   cannot take a destructor's address, so the __destroy_arr call below
-   references it through an extern-"C" declaration of the mangled symbol --
-   the double-mangling defect this tree already documents. The routine is
-   HAND-WRITTEN in src/actors/dScMgMCarlo_c.cpp as an extern-"C" definition
-   of this name -- the destroy-side twin of this hand's hand-written ctor
-   stub in src/func_ov006_020f8ed8.c -- and the class below declares NO
-   destructor at all, because no member-destructor spelling lands the pair
-   in the cartridge's own shape and order. That was measured across every
-   form for dScMgCard_c's two element classes (include/dScMgCard_c.h:60-95
-   carries the enumeration), and the same two failures apply to the same
-   layout here -- the scene pair 0x020f7634/0x020f76a8 is adjacent in the
-   cartridge with the element stub after it at 0x020f7730:
-     written out of line -> the derived D1 goes out as a bl to the base D2
-       with a push/blr frame where the cartridge carries a bare 0x10
-       two-store-free form, and D0 and D2 come with it -- destructor
-       symbols emitted where the cartridge carries one;
-     marked inline (in class, on the definition, any source order, under
-       #pragma force_inline / inline) -> the D1 IS emitted, byte-matching,
-       but between the scene D1 and the scene D0, sliding the scene D0
-       behind it, off the cartridge's ROM address order, which
-       rombuild's fail-closed isolate refuses.
-   The stub form is the ratified family idiom (adjudicated 2026-08-31,
-   notes/minigame-family-decisions.md): the destroy-side twin of the
-   hand-written ctor stubs the factory uses, disclosed in the manifest's
-   goal block. The vtable/RTTI records do not follow the destructor: this
-   header declares Render -- the element class's key function --
-   non-inline, and src/actors/dScMgMCarlo_c.cpp defines it, so the
-   key-function TU keeps emitting _ZTV/_ZTI/_ZTS for the element class
-   either way. */
 extern "C" void _ZN18dMgMCarloCardObj_cD1Ev(void *elem);
+
+/* The shared state name is reconstructed; its 0x270 layout and destructor
+   behavior are measured. A real member lets C++ spell the scene teardown. */
+struct dMgMCarloSharedState_c {
+    ~dMgMCarloSharedState_c() { func_ov006_020c1c64((char *)this); }
+
+    u8  pad_000[0x1a];
+    s16 unk_01a;
+    u8  pad_01c[0x1ca];
+    s16 unk_1e6;
+    u8  pad_1e8[0x88];
+};
+
+typedef char dMgMCarloSharedState_c_size_must_be_0x270[sizeof(dMgMCarloSharedState_c) == 0x270 ? 1 : -1];
 
 /* --- the board-card element class ------------------------------------------
    Name RTTI-confirmed (build/rtti.json: _ZTS18dMgMCarloCardObj_c at
@@ -120,15 +93,14 @@ extern "C" void _ZN18dMgMCarloCardObj_cD1Ev(void *elem);
    visible flag (mVisible). The board list runs mPrev/mNext through every
    element -- see the ONE ARRAY paragraph above.
 
-   The objects are CONSTRUCTED by this hand's factory (src/
-   func_ov006_020f8e44.cpp: func_020733a8 with func_ov006_020f8ed8 as the
-   element ctor -- a stub in the factory's own TU, which is why no
-   constructor is declared here); and they are DESTROYED by the
-   hand-written routine declared above (the mangled D1 name), the
-   destroy-side twin of that ctor stub -- which is why no destructor is
-   declared here either. */
+   The objects are constructed and destroyed by the real C1/D1 definitions
+   in the same original TU. C++ cannot take a destructor's address, so the
+   factory's array helper references D1 through the ABI declaration above. */
 
 struct dMgMCarloCardObj_c {
+    dMgMCarloCardObj_c();
+    ~dMgMCarloCardObj_c();
+
     virtual void Render();          /* slot 0 -- ov006 0x020f7e2c */
     virtual void Update(int event); /* slot 1 -- ov006 0x020f7ee4 */
 
@@ -159,10 +131,7 @@ struct dMgMCarloCardObj_c {
 typedef char dMgMCarloCardObj_c_size_must_be_0x30[sizeof(dMgMCarloCardObj_c) == 0x30 ? 1 : -1];
 
 struct dScMgMCarlo_c : dScMgSingle3DBase_c {
-    virtual ~dScMgMCarlo_c() {
-        __destroy_arr(mArray, 0x50, 0x30, (void *)_ZN18dMgMCarloCardObj_cD1Ev);
-        func_ov006_020c1c64((char *)pad_4f38);
-    }
+    virtual ~dScMgMCarlo_c() {}
 
     /* This class's own override, read off the ROM's vtable: the one slot where
        the table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
@@ -194,13 +163,8 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
     static void SetupBoard(dMgMCarloCardObj_c *cards); /* ov006 0x020f7c10 */
     void RenderHud();                                  /* ov006 0x020f8540 */
 
-    u8  pad_4f38[0x1a];    /* 0x4f38 -- shared table start, see file banner */
-    s16 unk_4f52;          /* 0x4f52 -- within shared table */
-    u8  pad_4f54[0x1ca];   /* 0x4f54 */
-    s16 unk_511e;          /* 0x511e -- within shared table */
-    u8  pad_5120[0x88];    /* 0x5120 -- rest of shared table (ends 0x51a8) */
-    dMgMCarloCardObj_c mArray[0x50]; /* 0x51a8 -- dtor _ZN18dMgMCarloCardObj_cD1Ev
-                                        (destroy stub) */
+    dMgMCarloSharedState_c mShared; /* 0x4f38..0x51a8 */
+    dMgMCarloCardObj_c mArray[0x50]; /* 0x51a8..0x60a8 */
     s16 unk_60a8;          /* 0x60a8 */
     s16 unk_60aa;          /* 0x60aa */
     u8  pad_60ac[0x2];     /* 0x60ac */
