@@ -795,6 +795,7 @@
     "src/actors/MgBingoBallSlotsShot.cpp#func_ov006_02119900": "github-actions[bot]",
     "src/actors/MgMushroomRoulette.cpp#MgMushroomRoulette_Spawn": "github-actions[bot]",
     "src/actors/MgMushroomRoulette.cpp#func_ov006_0210a4ac": "github-actions[bot]",
+    "src/actors/dScMgMCarlo2_c.cpp#MgPairAGoneAndOn": "andrewboudreau",
     "src/actors/dScMgMCarlo2_c.cpp#MgPairAGoneAndOn_Spawn": "github-actions[bot]",
     "src/actors/dScMgMCarlo2_c.cpp#_ZN19dMgMCarlo2CardObj_cC1Ev": "github-actions[bot]",
     "src/actors/MgPicturePoker.cpp#MgPicturePoker_Spawn": "github-actions[bot]",
