@@ -635,6 +635,7 @@ int g_yoshi_row = -1;                /* -1 = not a built-in row */
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
 int g_volume = -1;
+int g_net_mode = 1;   /* NetMode: 0 lockstep, 1 rollback (port/rollback); rollback is the default */
 
 /* MouseCapture: 1 when the player asked the window to hold the pointer and
    steer the camera with bare movement instead of a right-button drag. Default
@@ -961,6 +962,10 @@ void load_once(void)
     g_voice_mic[0] = '\0';
     g_voice_near = 512;
     g_voice_far = 3072;
+    /* NetMode: rollback by default (owner's decision, 2026-09-03). Set HERE,
+       with the other defaults, so a missing file and a file that will not
+       parse both land on it; the parse below only ever moves it to lockstep. */
+    g_net_mode = 1;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -1111,6 +1116,19 @@ void load_once(void)
             const int v = json_int(text, "Volume", -1);
             if (v >= 0) g_volume = v > 100 ? 100 : v;
         }
+        /* NetMode (port/rollback): "rollback" (the default, and what an
+           absent key, an absent file and an unparseable file all read as;
+           owner's decision 2026-09-03) or "lockstep". Only the word
+           "lockstep" moves it; anything else keeps the default, like every
+           other reader. Read once at load; the transport asks at install,
+           SM64DS_NETMODE overrides there, and a seated session wider than
+           kRollbackMaxPlayers (host_settings.h) runs lockstep regardless. */
+        {
+            char nm[16];
+            if (json_str(text, "NetMode", nm, sizeof nm) &&
+                strlen(nm) == 8 && ieq(nm, "lockstep", 8))
+                g_net_mode = 0;
+        }
         /* read against its own default beside the gap keys, for the same
            reason they are: a settings.json written before this key existed
            reads exactly as one that turned it off, which is the old program */
@@ -1130,6 +1148,14 @@ void load_once(void)
        non-default choices were in force. */
     if (g_swap_camera_turn)
         fprintf(stderr, "[settings] SwapCameraTurnDirection on (%s)\n", path);
+    /* Off its default (rollback), so it is said, and said in plain words:
+       a support log for "the game hitches online" should carry on one line
+       that this copy chose to wait for every player's input. */
+    if (!g_net_mode)
+        fprintf(stderr, "[settings] NetMode lockstep -- online play waits for "
+                        "every player's input each frame instead of the "
+                        "default rollback (predict, then rewind on a wrong "
+                        "guess). (%s)\n", path);
     if (g_run_mode || g_run_key != 0x10 || g_run_pad != 0x4000)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
@@ -1471,6 +1497,13 @@ extern "C" int host_setting_volume(void)
 {
     load_once();
     return g_volume;
+}
+
+/* NetMode: 0 lockstep, 1 rollback (the default). See the parse above. */
+extern "C" int host_setting_net_mode(void)
+{
+    load_once();
+    return g_net_mode;
 }
 
 /* MouseCapture: 1 when the window may hold the pointer. Only ever a

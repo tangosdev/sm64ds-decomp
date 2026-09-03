@@ -112,6 +112,13 @@ double db10_to_gain(int db10)
 
 }  // namespace
 
+// port/rollback: the output stage muted while a rewound window is re-run.
+// Voices still start and envelopes still advance, so a sound that began
+// inside the window is heard from where the replay leaves it; only the bytes
+// on the way to the device are zeroed. One int, read on the render path.
+static volatile int g_host_mute = 0;
+extern "C" void sd_host_mute(int on) { g_host_mute = on ? 1 : 0; }
+
 void sd_mix_reset(void)
 {
     static int latched;
@@ -336,7 +343,7 @@ void sd_mix_render(sd_s16 *dst, int frames)
     // pan above stayed hardware-faithful; this only trims the summed result on
     // the way out (and so the .wav dump and the device hear the same level).
     // pct == 100 is a no-op fast path; pct == 0 zeroes (the old muted case).
-    int pct = out_volume_pct();
+    int pct = g_host_mute ? 0 : out_volume_pct();
     if (pct != 100) {
         for (int i = 0; i < frames * 2; i++) {
             sd_s32 s = (sd_s32)((long long)dst[i] * pct / 100);

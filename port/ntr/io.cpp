@@ -367,10 +367,21 @@ Occupant g_occ[24];
 unsigned g_occ_n;
 
 // Reserve one DS region at its real address. Fixed low bases keep (u32)&x exact.
+// port/rollback: the three hardware content stores (palette, video, sprite
+// memory) are reserved with MEM_WRITE_WATCH so hal/rollback.cpp can ask the
+// kernel which of their pages a frame wrote instead of hashing 9 MB to find
+// out. The flag costs nothing on a page that is never written and is only
+// asked about when rollback is on. Anything else keeps the plain reservation.
+bool watch_writes(uintptr_t base) {
+    return base == PLTT_BASE || base == VRAM_BASE || base == OAM_BASE;
+}
+
 void *map_fixed(uintptr_t base, size_t size) {
 #if defined(_WIN32)
     void *p = VirtualAlloc(reinterpret_cast<void *>(base), size,
-                           MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+                           MEM_RESERVE | MEM_COMMIT |
+                               (watch_writes(base) ? MEM_WRITE_WATCH : 0),
+                           PAGE_READWRITE);
 #else
     void *p = mmap(reinterpret_cast<void *>(base), size, PROT_READ | PROT_WRITE,
                    MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
@@ -923,6 +934,20 @@ extern "C" unsigned port_hw_regions_size(void)
         total += (unsigned)ntr::kRegions[i].size;
     }
     return total;
+}
+
+/* port/rollback: the i-th captured store by address, in blob order, so the
+   rollback ring can ask the kernel's write-watch about each one. 0 past the
+   end or when a store is not held (the headless smokes). */
+extern "C" int port_hw_region_at(int i, void **base, unsigned *size)
+{
+    if (i < 0 || i >= (int)(sizeof kHwCaptureBases / sizeof kHwCaptureBases[0]))
+        return 0;
+    const int r = hw_region_index(kHwCaptureBases[i]);
+    if (r < 0 || !ntr::g_held[r]) return 0;
+    *base = (void *)kHwCaptureBases[i];
+    *size = (unsigned)ntr::kRegions[r].size;
+    return 1;
 }
 
 extern "C" void port_hw_regions_copy_out(void *dst)

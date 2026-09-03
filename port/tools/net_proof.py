@@ -173,6 +173,9 @@ def session_ok(tp, tc, min_rounds=30):
     return True, "live=0x3 both, rounds %d/%d" % (rounds_p, rounds_c)
 
 
+NETMODE = ""          # --netmode; see run_pair
+
+
 def run_pair(name, extra_p, extra_c, frames=None, port=None, stagger=0.4,
              timeout=900):
     """Two instances, parent and child, quiet and muted. Returns timing too.
@@ -197,6 +200,12 @@ def run_pair(name, extra_p, extra_c, frames=None, port=None, stagger=0.4,
         e["SM64DS_COMMS_REPORT"] = "1"
     ep.update(extra_p or {})
     ec.update(extra_c or {})
+    # --netmode rollback (port/rollback): the same ladder with the transport
+    # predicting instead of waiting. Injected here, after env_base's scrub,
+    # because an exported SM64DS_NETMODE would be thrown away by it.
+    if NETMODE:
+        ep["SM64DS_NETMODE"] = NETMODE
+        ec["SM64DS_NETMODE"] = NETMODE
     lp, lc = os.path.join(dp, "run.log"), os.path.join(dc, "run.log")
 
     t0 = time.time()
@@ -618,7 +627,13 @@ def main():
     # and each would watch the other's game fail to make sense.
     ap.add_argument("--code", default="NP%06d" % (os.getpid() % 1000000))
     ap.add_argument("--frames", default=None)
+    ap.add_argument("--netmode", default="",
+                    help="lockstep (default) or rollback: SM64DS_NETMODE for "
+                         "every instance the ladder launches")
     a = ap.parse_args()
+
+    global NETMODE
+    NETMODE = a.netmode
 
     global FRAMES
     if a.frames:

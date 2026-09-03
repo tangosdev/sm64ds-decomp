@@ -196,6 +196,28 @@ CommsLoopbackStats comms_loopback_stats();
 // way port::comms_report is so the two interleave readably in one log.
 void comms_loopback_report(const char *tag);
 
+// ---------------------------------------------------------------------------
+// ROLLBACK (port/rollback). All of these are inert (false / ~0u / no-op)
+// unless NetMode is rollback. hal/rollback.cpp is the caller; see its banner.
+// ---------------------------------------------------------------------------
+bool     comms_rb_mode();                 // NetMode rollback selected
+bool     comms_rb_enabled();              // ... and a session is connected
+bool     comms_rb_replaying();            // a rewind is being re-run
+unsigned comms_rb_round();                // the round exchange() serves next
+unsigned comms_rb_replay_end();           // the live round while replaying
+unsigned comms_rb_scan();                 // oldest contradicted round, or ~0u
+bool     comms_rb_rewind(unsigned to);    // start replaying from round `to`
+void     comms_rb_flush(const char *why); // suspend guessing until confirmed
+void     comms_rb_det_reuse(bool on);     // replay serves the exact old guess
+const unsigned char *comms_rb_my_served(unsigned *round); // own block served
+void     comms_rb_leave(const char *why); // leave the session, Bye sent
+struct CommsRollbackStats {
+    unsigned long long predicted, confirmed_ok, mispredicted, rewinds,
+                       replayed, stalled, stall_events, drops;
+    unsigned unrecoverable;
+};
+CommsRollbackStats comms_rb_stats();
+
 }  // namespace port
 
 #endif  // PORT_HAL_COMMS_LOOPBACK_H
