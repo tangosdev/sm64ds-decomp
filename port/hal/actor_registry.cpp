@@ -975,7 +975,20 @@ extern "C" void port_actor_render(void)
    submission and Render-private scratch, except InvisibleSecret (ids 329 and
    330), whose Render decrements the countdown its Behavior gates on and
    marks itself for destruction, and FlameChompFire (271) and MrI_Projectile
-   (264), whose Render is the only keep-alive for their particle emitters.
+   (264), whose Render is the only keep-alive for their particle emitters,
+   and the Minimap (335), whose Render advances the star-marker and star-key
+   blink counters it keeps in its own object (+0x22e, +0x256) and writes the
+   sub-screen sprite table; nothing in a tick reads those, but the arena
+   would not be byte-identical after a replay without it (the DET rung's one
+   arena byte was that counter), and it is a few sprite writes; and the
+   UnchainedChomp (337), whose Render is where its ModelAnim and the five
+   chain-link models advance and write their matrices (ModelAnim::Render
+   through the +0x370 links), which its Behavior reads back for the chain.
+   The DET rung named it by bisection (SM64DS_ROLLBACK_REPLAY_ALSO): with it
+   in the walk every window is arena-identical; without it 14 to 20 bytes of
+   link matrices drift. The rule this leaves: an actor whose Render advances
+   an animation its tick reads belongs on this list, and the DET rung on a
+   new map is how such an actor is found.
    A replayed frame walks list 5 exactly as func_02043fdc does (same phase
    word, same current-node global, same PMF dispatch) and runs only those
    four; everything else stands down. Each allowed node is run through the
@@ -983,6 +996,29 @@ extern "C" void port_actor_render(void)
    `this` adjustment and data_020a4b68 are the walker's, not a copy. */
 extern "C" void *data_020a4b68;
 extern "C" void *func_02043fdc(void *thing);
+/* SM64DS_ROLLBACK_REPLAY_ALSO="id,id,...": extra actor ids whose Render
+   runs in the tick-only replay. A bisecting knob for the DET rung, so a
+   Render body that writes tick-visible state can be named without a
+   rebuild per guess; it decides nothing in a shipped run. */
+static unsigned char g_replay_also[1024 / 8];
+static int g_replay_also_read;
+static int replay_also(unsigned id)
+{
+    if (!g_replay_also_read) {
+        g_replay_also_read = 1;
+        if (const char *e = std::getenv("SM64DS_ROLLBACK_REPLAY_ALSO")) {
+            for (const char *q = e; *q;) {
+                char *end;
+                const long v = std::strtol(q, &end, 10);
+                if (end == q) break;
+                if (v >= 0 && v < 1024) g_replay_also[v >> 3] |= (unsigned char)(1u << (v & 7));
+                q = *end == ',' ? end + 1 : end;
+            }
+        }
+    }
+    return id < 1024 && (g_replay_also[id >> 3] >> (id & 7)) & 1;
+}
+
 extern "C" void port_actor_render_replay(void)
 {
     struct Node { int pad; Node *next; unsigned char *obj; };
@@ -990,8 +1026,12 @@ extern "C" void port_actor_render_replay(void)
     Node *node = (Node *)(size_t)data_020a4b98[0];
     while (node) {
         Node *next = node->next;
-        const unsigned id = *(const unsigned *)(node->obj + 0x0c);
-        if (id == 329 || id == 330 || id == 271 || id == 264) {
+        // actorID is the u16 at +0x0c (include/Actor.h:405); the byte above
+        // it is aliveState, which is 1 on a live actor, so an unmasked read
+        // of the word compares 0x1014f against 335 and matches nothing
+        const unsigned id = *(const unsigned *)(node->obj + 0x0c) & 0xFFFFu;
+        if (id == 329 || id == 330 || id == 271 || id == 264 || id == 335 ||
+            id == 337 || replay_also(id)) {
             int one[8];
             std::memcpy(one, data_020a4b98, sizeof one);
             one[0] = (int)(size_t)node;

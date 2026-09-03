@@ -101,6 +101,7 @@ def env_for(k, n, outdir, frames, vsmap=None, extra=None, base=None):
         e["SM64DS_VS_PLAYERS"] = str(n)
         e["SM64DS_VS_PROBE"] = "1"
     e.update(extra or {})
+    e.update(EXTRA)
     return d, e
 
 
@@ -232,26 +233,43 @@ def rung_pair(frames, relay=None):
     return ok
 
 
-def rung_vs(name, n, vsmap, frames, rtts=(0, 40, 80, 160), relay=None):
+def rung_vs(name, n, vsmap, frames, rtts=(0, 40, 80, 160), relay=None,
+            relay_port=None):
+    # relay_port set: a FRESH relay per RTT, on its own port. One relay reused
+    # across four RTTs accumulates a wide session's worth of stale endpoints
+    # from each pass (idle expiry is 90 s and a 900-frame wide run is longer),
+    # and the next RTT's windows land on a relay that will not seat them --
+    # which is why the reused-relay rungs formed only at rtt0. Each RTT is an
+    # independent session and gets an independent relay.
     ok = True
-    for rtt in rtts:
+    for i, rtt in enumerate(rtts):
         extra = {"SM64DS_COMMS_DELAY_MS": str(rtt // 2)} if rtt else {}
-        if relay:
-            extra["SM64DS_COMMS_RELAY"] = relay
-            extra["SM64DS_COMMS_CODE"] = "R%d%02d%04d" % (n, rtt // 10, os.getpid() % 10000)
-        per = dict((k, dict(extra)) for k in range(n))
-        rn = "%s_rtt%d" % (name, rtt)
-        r = launch(rn, n, frames, vsmap=vsmap, per=per,
-                   base=BASE + 40 + n * 2 + (rtt // 8))
-        ok &= mode_took(rn, r)
-        ok &= session_ok(rn, r, n)
-        ok &= sweep(rn, r)
-        ok &= probe_ok(rn, r)
-        summary_lines(r)
+        rp = None
+        if relay_port is not None:
+            rp = start_relay(relay_port + i)
+            relay = "127.0.0.1:%d" % (relay_port + i)
+        try:
+            if relay:
+                extra["SM64DS_COMMS_RELAY"] = relay
+                extra["SM64DS_COMMS_CODE"] = "R%d%02d%04d" % (
+                    n, rtt // 10, os.getpid() % 10000)
+            per = dict((k, dict(extra)) for k in range(n))
+            rn = "%s_rtt%d" % (name, rtt)
+            r = launch(rn, n, frames, vsmap=vsmap, per=per,
+                       base=BASE + 40 + n * 2 + (rtt // 8))
+            ok &= mode_took(rn, r)
+            ok &= session_ok(rn, r, n)
+            ok &= sweep(rn, r)
+            ok &= probe_ok(rn, r)
+            summary_lines(r)
+        finally:
+            if rp:
+                rp.kill()
     return ok
 
 
 WIDE = 16
+EXTRA = {}      # --extra KEY=VAL, applied to every window after the rung's own env
 
 
 def rung_det(frames):
@@ -267,7 +285,11 @@ def rung_det(frames):
         ok &= session_ok(rn, r, n)
         for k in (0, 1):
             v = grab(r["texts"][k], r"^rb-det: (.*)$")
-            good = v is not None and v.startswith("IDENTICAL arena=0")
+            # IDENTICAL, or IDENTICAL-EXCEPT-SOUNDQUEUE: arena 0, hw 0, and
+            # every .dsstate byte that moved is in the re-seeded sound
+            # command queue (hal/rollback.cpp in_sound_queue)
+            good = v is not None and v.startswith("IDENTICAL") and (
+                " arena=0 " in v and " hw=0" in v)
             ok &= say(good, "%s p%d restore+retick" % (rn, k), v or "no verdict")
         ok &= sweep(rn, r, pairs=[(0, 1), (0, n - 1), (1, n - 1)])
         summary_lines(r)
@@ -362,9 +384,14 @@ def main():
     ap.add_argument("--only", default="")
     ap.add_argument("--frames", type=int, default=FRAMES)
     ap.add_argument("--wide", type=int, default=16)
+    ap.add_argument("--extra", action="append", default=[],
+                    help="KEY=VAL for every window (bisecting a DET diff)")
     a = ap.parse_args()
     global WIDE
     WIDE = a.wide
+    for kv in a.extra:
+        k, _, v = kv.partition("=")
+        EXTRA[k] = v
     if not os.path.exists(EXE):
         print("no exe at %s -- build first" % EXE)
         return 2
@@ -385,13 +412,9 @@ def main():
                 ok &= rung_vs("vs7", 7, 0, max(a.frames, 900))
             elif name in ("RELAY4", "RELAY7"):
                 n = 4 if name == "RELAY4" else 7
-                rp = start_relay(BASE + 300 + n)
-                try:
-                    ok &= rung_vs("relay%d" % n, n, 1 if n == 4 else 0,
-                                  max(a.frames, 900),
-                                  relay="127.0.0.1:%d" % (BASE + 300 + n))
-                finally:
-                    rp.kill()
+                ok &= rung_vs("relay%d" % n, n, 1 if n == 4 else 0,
+                              max(a.frames, 900),
+                              relay_port=BASE + 300 + n * 8)
             elif name == "DET":
                 ok &= rung_det(400)
             elif name == "COST":

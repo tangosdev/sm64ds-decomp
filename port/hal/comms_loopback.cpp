@@ -3367,8 +3367,22 @@ int rb_exchange_body(const void *my_block) {
         if (s->mask & bit) continue;                      // real
         const RbSlotPred &p = g_rb_pred[k];
         if (!p.have) { waiting |= bit; continue; }        // the first round
-        if (!g_rb_replaying && (int)(R - p.round) > (int)kRbWindow)
-            stalled |= bit;
+        if (!g_rb_replaying && (int)(R - p.round) > (int)kRbWindow) {
+            // A CHILD NEVER WINDOW-DROPS THE PARENT. The parent is the clock,
+            // and while it grace-drops a stalled peer it stops opening new
+            // rounds for up to kRbGraceMs -- so a child running ahead of it on
+            // prediction will overshoot the parent's own last block by the
+            // window. That is the parent being briefly behind, not gone: the
+            // child WAITS for it (starves) rather than deciding a drop it has
+            // no authority to decide. A parent that is truly gone stops even
+            // resending, and the ROM's own ~20 s wait bound ends the session
+            // the way it always has. Without this the child leaves and
+            // re-knocks in a loop every time the parent stalls a sleeper.
+            if (g_role == kRoleChild && k == 0)
+                waiting |= bit;
+            else
+                stalled |= bit;
+        }
     }
     if (waiting || stalled) {
         if (stalled) {
@@ -3388,13 +3402,13 @@ int rb_exchange_body(const void *my_block) {
                     if (stalled & (1u << k)) rb_retire_slot(k, "grace");
                 g_rb_stall_start_ms = 0;
                 g_rb_stall_mask = 0;
-            } else if (g_role == kRoleChild && (stalled & 1u) &&
-                       held >= 2 * kRbGraceMs) {
-                // The parent is the clock and it has gone quiet for longer
-                // than its own grace plus a hop: it is not coming back with
-                // a verdict, so leave the way its Bye would make us leave.
-                rb_leave("the parent went silent");
             }
+            // A child does not leave on a stall: it cannot drop a peer (only
+            // the parent revises the roster), and it never stalls on the
+            // parent (see the loop above), so a stall on a child is always a
+            // wait for the parent's verdict on some other slot. It holds
+            // until that verdict arrives or the ROM's own wait bound ends the
+            // session.
         } else {
             ++g_pipe_starved;
         }

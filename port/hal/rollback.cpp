@@ -89,6 +89,19 @@ int  port_dh_frame_get(void);
 void port_dh_frame_set(int f);
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
 extern int data_020a4b98[];               // the actor walker's list-5 view
+// THE HOSTED ARM7 SOUND COMMAND QUEUE (hal/player_bridges.cpp, hal/sdat).
+// The one part of .dsstate a restore does not put back byte-for-byte: the
+// restore re-seeds the queue (sd_consumer_reset, the same call lk6 makes),
+// the replay re-triggers sounds into the reset queue, and the queue's node
+// pool, its batch ring and its cursors drift from the straight run's. Nothing
+// in the game reads the queue back, and the replay is muted. The DET rung
+// names these bytes rather than counting them as a divergence.
+extern int data_020a6484[], data_020a6488[], data_020a648c[], data_020a6490[],
+           data_020a6494[], data_020a6498[], data_020a649c[], data_020a64a0[],
+           data_020a64a4[];
+extern void *data_020a64a8[];             // the 16-slot batch ring
+extern int data_020a6760[];               // the 256 x 0x18 node pool
+extern unsigned char data_020a50ec[];     // sdat sound bss, 0x440
 }
 
 namespace {
@@ -483,7 +496,7 @@ void name_arena_addr(size_t off)
     for (Node *node = (Node *)(size_t)data_020a4b98[0]; node; node = node->next) {
         if (node->obj <= addr && (!best || node->obj > best)) {
             best = node->obj;
-            best_id = *(const unsigned *)(node->obj + 0x0c);
+            best_id = *(const unsigned *)(node->obj + 0x0c) & 0xFFFFu;
         }
     }
     if (best)
@@ -491,7 +504,27 @@ void name_arena_addr(size_t off)
                 off, best_id, (const void *)best, (size_t)(addr - best));
 }
 
-size_t diff_region(const char *name, const char *want, const char *got, size_t n)
+bool in_sound_queue(const char *p)
+{
+    struct Span { const void *base; size_t n; };
+    static const Span spans[] = {
+        { data_020a6484, 16 }, { data_020a6488, 16 }, { data_020a648c, 16 },
+        { data_020a6490, 16 }, { data_020a6494, 16 }, { data_020a6498, 16 },
+        { data_020a649c, 16 }, { data_020a64a0, 16 }, { data_020a64a4, 16 },
+        { data_020a64a8, 16 * sizeof(void *) }, { data_020a6760, 256 * 0x18 },
+        { data_020a50ec, 0x440 },
+    };
+    for (size_t i = 0; i < sizeof spans / sizeof spans[0]; ++i) {
+        const char *b = (const char *)spans[i].base;
+        if (p >= b && p < b + spans[i].n) return true;
+    }
+    return false;
+}
+
+// `unexplained`, when given, counts the differing bytes that are NOT in the
+// sound command queue (used for the .dsstate region only).
+size_t diff_region(const char *name, const char *want, const char *got, size_t n,
+                   size_t *unexplained = 0)
 {
     size_t differing = 0, ranges = 0, i = 0, first = (size_t)-1;
     while (i < n) {
@@ -499,6 +532,9 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         size_t j = i;
         while (j < n && want[j] != got[j]) ++j;
         differing += j - i;
+        if (unexplained)
+            for (size_t q = i; q < j; ++q)
+                if (!in_sound_queue(got + q)) ++*unexplained;
         if (first == (size_t)-1) first = i;
         if (ranges < 8)
             fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
@@ -689,16 +725,22 @@ void rb_frame_end(int *frame, int selftest)
             if (!same) {
                 char *hw = g_hw_n ? big_alloc(port_hw_regions_size()) : 0;
                 if (hw) port_hw_regions_copy_out(hw);
-                size_t da = 0, dd = 0, dh = 0;
+                size_t da = 0, dd = 0, dh = 0, dx = 0;
                 if (h[0] != g_det_straight[0])
                     da = diff_region("arena", g_det_arena, (const char *)port_arena_base(), g_arena_size);
                 if (h[1] != g_det_straight[1])
-                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size);
+                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size, &dx);
                 if (h[2] != g_det_straight[2] && hw)
                     dh = diff_region("hw", g_det_hw, hw, port_hw_regions_size());
-                fprintf(stderr, "[rb-det] arena %zu bytes, dsstate %zu bytes, hw %zu bytes differ\n", da, dd, dh);
-                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu\n",
-                       (da == 0 && dh == 0) ? "IDENTICAL-EXCEPT-DSSTATE" : "DIVERGED", da, dd, dh);
+                fprintf(stderr, "[rb-det] arena %zu bytes, dsstate %zu bytes (%zu outside the "
+                        "sound command queue), hw %zu bytes differ\n", da, dd, dx, dh);
+                // The verdict the rig reads. IDENTICAL-EXCEPT-SOUNDQUEUE is
+                // the pass: the game's world came back byte-for-byte and only
+                // the re-seeded audio queue moved (see in_sound_queue).
+                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu\n",
+                       (da == 0 && dh == 0 && dx == 0) ? "IDENTICAL-EXCEPT-SOUNDQUEUE"
+                       : (da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED",
+                       da, dd, dh, dd - dx);
             } else {
                 fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes differ\n");
                 printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0\n");

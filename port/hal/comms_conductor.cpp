@@ -529,11 +529,14 @@ namespace {
 bool     g_inject_on = false;
 unsigned g_inj_key = 0, g_inj_x = 0, g_inj_y = 0, g_inj_touch = 0;
 // port/rollback: ",toggle=<n>[,key2=<hex>]" alternates the key word between
-// key and key2 (default 0) every n publishes, so a headless session's input
+// key and key2 (default 0) every n ROUNDS, so a headless session's input
 // actually CHANGES and a transport that guesses gets to be wrong on a
 // schedule. Constant injected input never mispredicts, which would make a
-// rollback proof prove nothing.
-unsigned g_inj_toggle = 0, g_inj_key2 = 0, g_inj_calls = 0;
+// rollback proof prove nothing. Keyed on the seam's completed-round count
+// and not on a publish counter of its own: the round count rides in the
+// rollback snapshot, so a replayed frame is handed the key the straight run
+// was handed, and the local record it stages is byte-identical.
+unsigned g_inj_toggle = 0, g_inj_key2 = 0;
 
 void inject_parse() {
     static bool done = false;
@@ -738,7 +741,8 @@ void comms_publish_pad(unsigned held) {
     comms_retry_dropped_session();
     if (g_inject_on) {
         held = g_inj_key;
-        if (g_inj_toggle && ((++g_inj_calls / g_inj_toggle) & 1u)) held = g_inj_key2;
+        if (g_inj_toggle && ((comms_readout().rounds / g_inj_toggle) & 1u))
+            held = g_inj_key2;
     }
 
     // ACTIVE LOW, which is the entire point. See THE STUCK CONTROLLER at the
