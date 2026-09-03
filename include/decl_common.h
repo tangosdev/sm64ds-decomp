@@ -2580,7 +2580,7 @@ extern void func_ov006_02120c08(void);
 extern void func_ov006_02120c40(void);
 extern void func_ov006_02120ca0(void);
 extern void func_ov006_02120d8c(void*, int);
-extern void func_ov006_0212157c(void*);
+extern void func_ov006_0212157c(char*);
 extern void func_ov006_02121750(char*, short);
 extern void func_ov006_02121f04(char*);
 extern void func_ov006_0212231c(void*);

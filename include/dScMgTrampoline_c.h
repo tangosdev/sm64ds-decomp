@@ -15,8 +15,9 @@
  * OWN TAIL, 0x5d94..0x5dc6: eighteen fields carried over verbatim from this
  * header's previous auto-generated form, at unchanged offsets and widths.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf. No separate operator
- * delete is needed: dScMgD3DBase_c, the immediate base, provides one. */
+ * THE DESTRUCTOR IS DEFINED IN THE CLASS BODY, for the emission-order reason
+ * spelled out at the definition below. No separate operator delete is needed:
+ * dScMgD3DBase_c, the immediate base, provides one. */
 #ifndef DSCMGTRAMPOLINE_C_H
 #define DSCMGTRAMPOLINE_C_H
 #include "dScMgD3DBase_c.h"
@@ -27,7 +28,24 @@ extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline_c : dScMgD3DBase_c {
-    virtual ~dScMgTrampoline_c();
+    /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
+       D1 sits at 0x021207dc, BELOW D0 at 0x02120880. An out-of-line member
+       definition makes mwccarm 2004/b56 emit the destructor group as
+       D0-then-D1 plus a homeless D2, and a single translation unit covering
+       the whole .text run 0x021207dc..0x02122490 cannot then be linked: the
+       functions are not emitted in ROM address order. Defining it here emits
+       D1 before D0, emits no D2 at all, and costs nothing else -- it is still
+       the same body, and it is still not inlined into callers because a
+       virtual destructor is always reached through the vtable.
+       It does give up the key function: with this inline, the first virtual
+       DECLARED but not defined here is InitResources below, which lives in
+       src/actors/d_sc_mg_trampoline.cpp, so _ZTV17dScMgTrampoline_c is still
+       emitted by that one translation unit and by no other. */
+    virtual ~dScMgTrampoline_c() {
+        __destroy_arr(mArray3, 5, 0x24, (void *)func_ov006_02120938);
+        __destroy_arr(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
+        __destroy_arr(mArray1, 4, 0xd0, (void *)func_ov006_020ccfc8);
+    }
 
     /* --- this class's own vtable slots, named from the table ---
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
