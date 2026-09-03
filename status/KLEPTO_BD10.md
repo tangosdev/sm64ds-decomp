@@ -6,7 +6,7 @@ and seated in the port in place of the inert-return stub.
 
 * Worktree `C:\tmp\klepto-decode`, branch `port/klepto-bd10` off the cons tip
   `2d4f3104e`
-* Branch tip: see the report; this file is the last commit
+* Branch tip: the commit that carries this file (see the report)
 * Under `src/` exactly one file is new: `src/func_ov062_0211bd10.cpp`. No
   header, no `config/` file and no other matched source was touched
 
@@ -183,8 +183,33 @@ hit134/hit168 print 0 on every line because the probe runs after
 Klepto::Behavior, which Clears both cylinders as its last act; the steal is
 witnessed by held/lostcap/[head], not by those two words.
 
-BATTERY_PLACEHOLDER
+### 4.3 The battery
+
+    python port/tools/battery.py --skip-build
+    selftest level 16: ok
+    linkage: 9403 (83.0%)
+    ptr_audit: 0 unhosted code pointers
+    shipcfg build: ok, walk_window.exe linked in build\port-kit (PORT_ROM_CLEAN, static CRT)
+    shipcfg selftest: ok, rc=0 and walk_window_selftest.bmp written
+    battery: ALL GREEN
+
+The two standing skips (27 TTC_MOVING_BEAM, 45 GOOMBOSS) are the decomp's,
+listed in LEVEL_SKIPS, and unchanged by this lane.
 
 ## 5. What is NOT proven
 
-GAPS_PLACEHOLDER
+* The steal is proven with a bird DROPPED on the grounded player. The level's
+  own SSL Klepto flies its path at y=1292 over sand at y=0; its 50-tick dive
+  (func_ov062_0211ba84, ~22 units a tick, matched code and not this lane's)
+  covers ~1100 units, so from that path it cannot reach a player on the
+  ground, and run C shows eight such dives ending ~600 units short. Whether
+  the ROM's bird reaches the player from its real path (higher ground near
+  the pillars, or a dive geometry the host's Matrix4x3 rotation helpers get
+  subtly wrong) was not measured. It is a question about ba84 and the hal
+  matrix helpers, not about bd10, which drove every dive here on cue.
+* hit134/hit168 are printed after Klepto::Behavior Clears the cylinders and
+  so never show the touch; the steal is witnessed by held/lostcap/[head].
+* The three-steal cycle shows the player re-collecting the dropped cap at
+  once because he stands under the bird; a moving player was not scripted.
+* Only level 16 was run with the probe and the drop. The battery covers the
+  other levels with the probe off, which is how it ships.
