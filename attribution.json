@@ -1540,6 +1540,18 @@
     "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c8BehaviorEv": "github-actions[bot]",
-    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_c6RenderEv": "andrewboudreau",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjTdFuta_c.cpp#_ZN13daObjTdFuta_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c13InitResourcesEv": "github-actions[bot]"
   }
 }

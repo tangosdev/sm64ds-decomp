@@ -10,7 +10,7 @@
     "build/tu_map.json identifies the 23-function daBakubaku_c run at 0x021111a0..0x0211244c but leaves the immediately following factory run at 0x0211244c..0x021124a8 unattributed",
     "class label(s): daBakubaku_c",
     "the profile at 0x02113800 stores ID 228 (BAKUBAKU) and points to daBakubaku_c_classInit at 0x0211244c",
-    "daBakubaku_c_classInit allocates the RTTI-proven class size 0x438, constructs the five header-proven members, and ends exactly at HugeCover's D1 at 0x021124a8; the factory join is registry/factory-backed rather than tu_map-proven"
+    "daBakubaku_c_classInit allocates the RTTI-proven class size 0x438, constructs the five header-proven members, and ends exactly at daObjTdFuta_c's D1 at 0x021124a8; the factory join is registry/factory-backed rather than tu_map-proven"
   ],
   "sections": [
     {

@@ -25517,17 +25517,17 @@
    "start": "0x21124a8",
    "end": "0x2112698",
    "classes": [
-    "HugeCover"
+    "daObjTdFuta_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9HugeCoverD1Ev.cpp",
-    "src/_ZN9HugeCoverD0Ev.c",
-    "src/_ZN9HugeCover16CleanupResourcesEv.cpp",
-    "src/_ZN9HugeCover6RenderEv.cpp",
-    "src/_ZN9HugeCover8BehaviorEv.cpp",
-    "src/_ZN9HugeCover13InitResourcesEv.cpp",
+    "src/_ZN13daObjTdFuta_cD1Ev.cpp",
+    "src/_ZN13daObjTdFuta_cD0Ev.c",
+    "src/_ZN13daObjTdFuta_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjTdFuta_c6RenderEv.cpp",
+    "src/_ZN13daObjTdFuta_c8BehaviorEv.cpp",
+    "src/_ZN13daObjTdFuta_c13InitResourcesEv.cpp",
     "src/daObjTdFuta_c_classInit.c"
    ],
    "ext_mix": {
