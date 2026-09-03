@@ -320,7 +320,10 @@ extern "C" void func_ov006_0212a2e0(char *o)
 //
 // Reached ONLY as slot 1 of data_ov006_02143038.  It has no arm_call anywhere
 // in ov006; the pair word at 0x0213ffb0 is its only reference in the overlay.
-
+//
+// PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
+// MgPmf {code,adj} table (section 0 above) and host-copied as the class's
+// address-switch dispatch, port_mg_snowball_call1.
 extern "C" void func_ov006_0212a224(char *base, int idx)
 {
     unsigned char state = *(unsigned char *)(base + idx * 0x24 + 0xbeb0);
@@ -342,7 +345,10 @@ extern "C" void func_ov006_0212a224(char *base, int idx)
 // element; the byte offsets below are that layout written out, which is also
 // how func_ov006_0212a2e0's src and the ROM at 0x02129db4 and 0x02129dec
 // spell it.
-
+//
+// PORT_HOST_ABI: mwcc pointer-to-member wall, two decode sites over this
+// class's MgPmf {code,adj} tables (section 0 above), host-copied as the
+// class's address-switch dispatch, port_mg_snowball_call1.
 extern "C" void func_ov006_02129d94(char *c, int i)
 {
     unsigned char idx0 = *(unsigned char *)(c + 0xbeb0 + i * 0x24);
