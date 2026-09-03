@@ -43,7 +43,7 @@
 extern "C" {
 
 void *_ZN5Actor10FindWithIDEj(unsigned int id);
-void func_ov002_020b16c4(char *self);
+void func_ov002_020b16c4(char *self, char *p);   /* derefs the player at +0x706/+0x6d8 */
 void func_ov002_020b1674(char *self, char *p);
 void func_ov002_020b1884(char *self, char *p);   /* the real two-arg shape */
 
@@ -57,7 +57,7 @@ int func_ov002_020b19dc(char *self)
             if (*(int *)(self + 0x198) & 0x400000) {
                 *(unsigned short *)(self + 0x3a8) = 0;
                 if (*(int *)(self + 0x3a0) == 1)
-                    func_ov002_020b16c4(self);
+                    func_ov002_020b16c4(self, p);   /* <-- the player, ROM's r1 */
                 else if (*(int *)(self + 0x3a0) == 2)
                     func_ov002_020b1674(self, p);
                 else
