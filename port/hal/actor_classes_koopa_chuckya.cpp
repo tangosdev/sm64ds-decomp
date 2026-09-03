@@ -488,6 +488,7 @@ static int __fastcall klp_clean(void *, void *)
    landing (the cap actor id appears at +0x44c and the save flips), not merely
    a census entry that survived. Off by default, prints nothing. */
 extern "C" int _ZN8SaveData16HasPlayerLostCapEv(void);
+extern "C" char *_ZN5Actor13ClosestPlayerEv(void *self);
 extern "C" unsigned char data_ov062_0211e14c[];
 static int __fastcall klp_behavior(void *s, void *)
 {
@@ -504,6 +505,17 @@ static int __fastcall klp_behavior(void *s, void *)
                     *(unsigned *)(c + 0x44c), *(unsigned short *)(c + 0x100),
                     *(unsigned short *)(c + 0x444), *(int *)(c + 0x468),
                     _ZN8SaveData16HasPlayerLostCapEv());
+        /* the steal's physical gate: the second cylinder (+0x144) must have
+           touched the player, id at +0x168 (the first cylinder's at +0x134),
+           and the dive aims at the player's +0x644 floor height + 40. */
+        char *pl = _ZN5Actor13ClosestPlayerEv(s);
+        if (pl)
+            std::printf("[klepto]   player (%d,%d,%d) floor %d f6fb %d hit134 %08x hit168 %08x
+",
+                        *(int *)(pl + 0x5c) >> 12, *(int *)(pl + 0x60) >> 12,
+                        *(int *)(pl + 0x64) >> 12, *(int *)(pl + 0x644) >> 12,
+                        *(unsigned char *)(pl + 0x6fb),
+                        *(unsigned *)(c + 0x134), *(unsigned *)(c + 0x168));
     }
     return r;
 }

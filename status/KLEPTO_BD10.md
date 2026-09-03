@@ -97,6 +97,29 @@ No NONMATCHING banner, no asm, no pragma.
 
 ## 4. How it was proven
 
+### 4.1 Level 16 selftest, bare, 900 frames
+
+build/port rebuilt off this branch through port/build-port.cmd with every guard
+(rc 0), then:
+
+    SM64DS_LEVEL=16 SM64DS_WINDOW_SELFTEST=900 SM64DS_FAULTS_FATAL=1
+    SM64DS_NO_FOCUS=1 SM64DS_VOLUME=0 SM64DS_KLEPTO_PROBE=1 walk_window.exe
+    rc 0
+    [census] 89 spawned (34 classes), 0 skipped (0 classes)
+             + 239 x1   KLEPTO
+
+898 `[klepto]` ticks for the level's own bird (3002709C), 367 distinct
+positions, 658 ticks in e17c (the bd10 main) and 240 in e15c (the path-node
+state bd10 hands off to): the bird flies its path and is never quarantined.
+First and last ticks:
+
+    [klepto] 3002709C pos (1749,1292,770) state e17c held 00000056 t100 600 t444 0 item 1 lostcap 0
+    [klepto] 3002709C pos (-3009,1292,870) state e15c held 00000056 t100 0 t444 0 item 1 lostcap 0
+
+(held 00000056 / item 1 is the level's own Klepto, which InitResources spawns
+carrying its star item; the bare-cap default is the param-0 bird section 4.2
+injects.)
+
 PROOF_PLACEHOLDER
 
 ## 5. What is NOT proven
