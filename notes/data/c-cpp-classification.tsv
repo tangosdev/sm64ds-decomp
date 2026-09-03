@@ -340,7 +340,7 @@ src/PokeySegment_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/Pokey_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/daObjBkBillboard_c_classInit.c	S1-stores-rom-vptr	ov015			stores _ZTV13PoleBillboard	1		None	_ZTV13PoleBillboard	-
 src/daObjKm2_Ami_Bou_c_classInit.c	WEAK-refs-only	ov045				1		None		-
-src/PoppingLavaBubbles_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV18PoppingLavaBubbles	1		None	_ZTV18PoppingLavaBubbles	-
+src/daObjLava_c_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV11daObjLava_c	1		None	_ZTV11daObjLava_c	-
 src/PowerFlower_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/daSCre_c_Spawn.c	S1-stores-rom-vptr	ov018			stores _ZTV8daSCre_c	1		None	_ZTV8daSCre_c	-
 src/PowerStar_Spawn.c	WEAK-refs-only	ov002				1		None		-
@@ -811,7 +811,7 @@ src/_ZN18NestedHeapIterator10FindNestedEPv.c	P3-mangled-method-only	arm9		Nested
 src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.c	P3-mangled-method-only	arm9		NestedHeapIterator	_ZN18NestedHeapIterator19RecursiveFindNestedEPv	1		True		-
 src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.c	P3-mangled-method-only	arm9		NestedHeapIterator	_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_	1		True		-
 src/_ZN18NestedHeapIteratorC1Ej.cpp	P3-mangled-method-only	arm9		NestedHeapIterator	_ZN18NestedHeapIteratorC1Ej	1		True		-
-src/_ZN18PoppingLavaBubblesD0Ev.c	DTOR-ONLY	ov002	daObjLava_c	PoppingLavaBubbles/daObjLava_c	_ZN18PoppingLavaBubblesD0Ev	1		True	_ZTV18PoppingLavaBubbles	-
+src/_ZN11daObjLava_cD0Ev.c	DTOR-ONLY	ov002	daObjLava_c	daObjLava_c/daObjLava_c	_ZN11daObjLava_cD0Ev	1		True	_ZTV11daObjLava_c	-
 src/_ZN17daObjKm3_Dorifu_cD0Ev.c	DTOR-ONLY	ov047	daObjKm3_Dorifu_c	daObjKm3_Dorifu_c/daObjKm3_Dorifu_c	_ZN17daObjKm3_Dorifu_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjDorifu_c/_ZTV17daObjKm3_Dorifu_c	-
 src/_ZN18RotatingPlatformRrD0Ev.c	DTOR-ONLY	ov036	daObjRc_Kaitendai_c	RotatingPlatformRr/daObjRc_Kaitendai_c	_ZN18RotatingPlatformRrD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV18RotatingPlatformRr	-
 src/_ZN18RotatingPlatformWfD0Ev.c	DTOR-ONLY	ov015	daObjBk_Ukisima_c	RotatingPlatformWf/daObjBk_Ukisima_c	_ZN18RotatingPlatformWfD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV18RotatingPlatformWf	-

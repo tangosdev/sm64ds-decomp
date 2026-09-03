@@ -262,11 +262,11 @@ func_ov002_020b6ac8 kind:function(arm,size=0x48) addr:0x020b6ac8
 _ZN17daObjKurumajiku_c6RenderEv kind:function(arm,size=0x28) addr:0x020b6b10
 _ZN17daObjKurumajiku_c8BehaviorEv kind:function(arm,size=0x11c) addr:0x020b6b38
 func_ov002_020b6c54 kind:function(arm,size=0xd4) addr:0x020b6c54
-_ZN18PoppingLavaBubblesD1Ev kind:function(arm,size=0x24) addr:0x020b6d28
-_ZN18PoppingLavaBubblesD0Ev kind:function(arm,size=0x38) addr:0x020b6d4c
-func_ov002_020b6d84 kind:function(arm,size=0x4c) addr:0x020b6d84
-_ZN18PoppingLavaBubbles13InitResourcesEv kind:function(arm,size=0x8) addr:0x020b6dd0
-PoppingLavaBubbles_Spawn kind:function(arm,size=0x30) addr:0x020b6dd8
+_ZN11daObjLava_cD1Ev kind:function(arm,size=0x24) addr:0x020b6d28
+_ZN11daObjLava_cD0Ev kind:function(arm,size=0x38) addr:0x020b6d4c
+_ZN11daObjLava_c8BehaviorEv kind:function(arm,size=0x4c) addr:0x020b6d84
+_ZN11daObjLava_c13InitResourcesEv kind:function(arm,size=0x8) addr:0x020b6dd0
+daObjLava_c_Spawn kind:function(arm,size=0x30) addr:0x020b6dd8
 _ZN16daObjWaterfall_cD1Ev kind:function(arm,size=0x24) addr:0x020b6e08
 _ZN16daObjWaterfall_cD0Ev kind:function(arm,size=0x38) addr:0x020b6e2c
 _ZN16daObjWaterfall_c8BehaviorEv kind:function(arm,size=0x48) addr:0x020b6e64
@@ -1798,8 +1798,8 @@ _ZTS17daObjKurumajiku_c kind:data(any) addr:0x02109304
 _ZTV17daObjKurumajiku_c kind:data(any) addr:0x02109320
 _ZTI11daObjLava_c kind:data(any) addr:0x021093a0
 _ZTS11daObjLava_c kind:data(any) addr:0x021093ac
-PoppingLavaBubbles_SpawnInfo kind:data(any) addr:0x021093bc
-_ZTV18PoppingLavaBubbles kind:data(any) addr:0x021093e0
+daObjLava_c_SpawnInfo kind:data(any) addr:0x021093bc
+_ZTV11daObjLava_c kind:data(any) addr:0x021093e0
 _ZTI16daObjWaterfall_c kind:data(any) addr:0x0210945c
 _ZTS16daObjWaterfall_c kind:data(any) addr:0x02109468
 g_profile_WATERFALL kind:data(any) addr:0x0210947c

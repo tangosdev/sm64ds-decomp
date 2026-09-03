@@ -109,7 +109,8 @@ ov002	0x020b57a8	func_ov002_020b57a8	_ZN9BlueFlame8BehaviorEv	vtable slot 6
 ov002	0x020b5940	func_ov002_020b5940	_ZN9BlueFlame13InitResourcesEv	vtable slot 0
 ov002	0x020b59a8	func_ov002_020b59a8	BlueFlame_Spawn	spawnfunc
 ov002	0x020b59e0	func_ov002_020b59e0	RedFlame_Spawn	spawnfunc
-ov002	0x020b6dd8	func_ov002_020b6dd8	PoppingLavaBubbles_Spawn	spawnfunc
+ov002	0x020b6d84	func_ov002_020b6d84	_ZN11daObjLava_c8BehaviorEv	vtable slot 6
+ov002	0x020b6dd8	func_ov002_020b6dd8	daObjLava_c_Spawn	spawnfunc
 ov002	0x020b6e08	func_ov002_020b6e08	_ZN16daObjWaterfall_cD1Ev	vtable slot 16 (was _ZN18PoppingLavaBubblesD1Ev)
 ov002	0x020b6e2c	func_ov002_020b6e2c	_ZN16daObjWaterfall_cD0Ev	vtable slot 17 (was _ZN18PoppingLavaBubblesD0Ev)
 ov002	0x020b6e64	func_ov002_020b6e64	_ZN16daObjWaterfall_c8BehaviorEv	vtable slot 6 (was _ZN18PoppingLavaBubbles8BehaviorEv)
@@ -306,7 +307,7 @@ ov002	0x02108e5c	data_ov002_02108e5c	_ZTV19daObjHatenaSwitch_c	vtable alloc=0x72
 ov002	0x02108ef8	data_ov002_02108ef8	RedFlame_SpawnInfo	spawninfo
 ov002	0x02108f14	data_ov002_02108f14	BlueFlame_SpawnInfo	spawninfo
 ov002	0x02108f38	data_ov002_02108f38	_ZTV9BlueFlame	vtable alloc=0x118
-ov002	0x021093bc	data_ov002_021093bc	PoppingLavaBubbles_SpawnInfo	spawninfo
+ov002	0x021093bc	data_ov002_021093bc	daObjLava_c_SpawnInfo	spawninfo
 ov002	0x0210947c	data_ov002_0210947c	WaterfallMist_SpawnInfo	spawninfo
 ov002	0x0210947c	WaterfallMist_SpawnInfo	g_profile_WATERFALL	reconstructed profile global; literal ROM ID WATERFALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x021094a0	data_ov002_021094a0	_ZTV16daObjWaterfall_c	vtable alloc=? (was _ZTV18PoppingLavaBubbles)

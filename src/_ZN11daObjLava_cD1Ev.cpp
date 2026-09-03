@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN18PoppingLavaBubblesD1Ev
+// @symbol _ZN11daObjLava_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vtable store, the members in reverse, then ~dActor_c. */
-#include "PoppingLavaBubbles.h"
+#include "daObjLava_c.h"
 
-PoppingLavaBubbles::~PoppingLavaBubbles()
+daObjLava_c::~daObjLava_c()
 {
 }

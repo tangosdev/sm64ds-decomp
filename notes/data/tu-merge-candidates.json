@@ -15546,17 +15546,17 @@
    "start": "0x20b6d28",
    "end": "0x20b6e08",
    "classes": [
-    "PoppingLavaBubbles",
+    "daObjLava_c",
     "daObjLava_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN18PoppingLavaBubblesD1Ev.cpp",
-    "src/_ZN18PoppingLavaBubblesD0Ev.c",
+    "src/_ZN11daObjLava_cD1Ev.cpp",
+    "src/_ZN11daObjLava_cD0Ev.c",
     "src/func_ov002_020b6d84.c",
-    "src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp",
-    "src/PoppingLavaBubbles_Spawn.c"
+    "src/_ZN11daObjLava_c13InitResourcesEv.cpp",
+    "src/daObjLava_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 2,
