@@ -367,7 +367,10 @@ extern "C" int func_ov006_020f5388(void *self)
    pop / bx lr` returns whatever the tail call left in r0, and the only consumer
    is an arity-0 PMF dispatch typed `void (C::*)()` that discards it.  Spelling
    both void here is the reading that cannot be wrong; inventing a return value
-   would be. */
+   would be.
+   PORT_HOST_ABI: mwcc pointer-to-member wall (this class's MgPmf {code,adj}
+   table, decoded through port_mg_memory1_call0) plus the link-visible PAU
+   table name that slips facegen's alias guards (section 10). Host-copied. */
 extern "C" void func_ov006_020f5164(void *c)
 {
     char *p = (char *)c;
@@ -378,7 +381,9 @@ extern "C" void func_ov006_020f5164(void *c)
 
 /* src/func_ov006_020f50f8.cpp.  Its table is declared inside extern "C"
    (`extern "C" Entry data_ov006_021422bc[];`), so this is the SECOND silent
-   shape: the link never complains and MSVC strides eight bytes by four. */
+   shape: the link never complains and MSVC strides eight bytes by four.
+   PORT_HOST_ABI: mwcc pointer-to-member wall, this class's MgPmf {code,adj}
+   table decoded through port_mg_memory1_call0. Host-copied. */
 extern "C" void func_ov006_020f50f8(void *c)
 {
     char *p = (char *)c;
