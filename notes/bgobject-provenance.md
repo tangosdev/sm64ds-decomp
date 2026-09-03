@@ -640,7 +640,7 @@ A pendulum, in four fields `Behavior` integrates. Bodies read:
 
 ---
 
-## RotatingBridge (`include/RotatingBridge.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x324)
+## daObjBk_Rotebar_c (`include/daObjBk_Rotebar_c.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x324)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

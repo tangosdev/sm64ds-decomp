@@ -106,7 +106,7 @@ SKIP daObjBk_Ukisima_c: ov015:0x2112dbc already claimed by daObjBk_Fall_Block_c 
 SKIP daObjBk_Ukisima_c: ov015:0x2112da8 already claimed by daObjBk_Fall_Block_c (vtable slot 3)
 SKIP daObjBk_Ukisima_c: ov015:0x2112cf4 already claimed by daObjBk_Fall_Block_c (vtable slot 16)
 SKIP daObjBk_Ukisima_c: ov015:0x2112d44 already claimed by daObjBk_Fall_Block_c (vtable slot 17)
-NOVTABLE actor 51 RotatingBridge (alloc=0x324)
+NOVTABLE actor 51 daObjBk_Rotebar_c (alloc=0x324)
 SKIP MovingBarBig: ov015:0x211458c already claimed by KnockDownPlank (vtable alloc=0x338)
 SKIP MovingBarBig: ov015:0x21120fc already claimed by KnockDownPlank (vtable slot 0)
 SKIP MovingBarBig: ov015:0x2112004 already claimed by KnockDownPlank (vtable slot 3)
