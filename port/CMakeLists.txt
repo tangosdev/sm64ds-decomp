@@ -1179,7 +1179,21 @@ set(GATE10_SYMS func_ov002_020dec70 func_ov002_020d708c
     # CALL_STATE_FN table routes each through hal_call_state_fn, retiring the
     # Player_St_*.cpp host copies these three used to be.
     _ZN6Player12St_Jump_MainEv _ZN6Player16St_WallJump_MainEv
-    _ZN6Player17St_NoControl_InitEv)
+    _ZN6Player17St_NoControl_InitEv
+    # func_ov002_020e444c is an ARITY disagreement between two matched TUs, the
+    # ARG_WIDTH shape one register wider: include/decl_common.h:1461 declares
+    # func_ov002_020e3f90 `(void)` and this body calls it with no argument,
+    # while src/func_ov002_020e3f90.c defines it `(char*)` and dereferences
+    # that pointer on its first line. The ROM says they agree -- 0x020e4454
+    # `mov r4,r0` then 0x020e4458 `bl 0x020e3f90`, so r0 is still the incoming
+    # Player and mwccarm had nothing to move. Under x86 cdecl the callee would
+    # read its receiver off a stack slot the caller never wrote. hostgen's
+    # HEADER_SHADOW hides the `(void)` declaration for this TU alone and its
+    # REG_RIDE_ARG table spells the argument, which retires
+    # port/unmatched/func_ov002_020e444c_hostcopy.c -- the whole hundred-line
+    # body transcribed to change that one call. It is the body that seats the
+    # player's head-model world matrix (`*(Matrix4x3*)(head+0x1c)`).
+    func_ov002_020e444c)
 set(GATE10_GEN "")
 foreach(sym IN LISTS GATE10_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
