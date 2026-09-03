@@ -25773,18 +25773,18 @@
    "start": "0x21111a0",
    "end": "0x21113b4",
    "classes": [
-    "Cloud"
+    "daObjKumo_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN5CloudD1Ev.cpp",
-    "src/_ZN5CloudD0Ev.c",
+    "src/_ZN11daObjKumo_cD1Ev.cpp",
+    "src/_ZN11daObjKumo_cD0Ev.c",
     "src/func_ov039_02111214.c",
-    "src/_ZN5Cloud16CleanupResourcesEv.cpp",
-    "src/_ZN5Cloud6RenderEv.cpp",
-    "src/_ZN5Cloud8BehaviorEv.cpp",
-    "src/_ZN5Cloud13InitResourcesEv.cpp",
+    "src/_ZN11daObjKumo_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daObjKumo_c6RenderEv.cpp",
+    "src/_ZN11daObjKumo_c8BehaviorEv.cpp",
+    "src/_ZN11daObjKumo_c13InitResourcesEv.cpp",
     "src/Cloud_Spawn.c"
    ],
    "ext_mix": {

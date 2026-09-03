@@ -918,7 +918,7 @@ src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	
 src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd16reciprocal_asyncE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
 src/_ZN4cstd5atan2E5Fix12IiES1_.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd5atan2E5Fix12IiES1_	1		False		by-value-class-param;no-header:cstd
 src/_ZN5BullyD0Ev.c	DTOR-ONLY	ov064	daDonketu_c	Bully/daDonketu_c	_ZN5BullyD0Ev	1		True	_ZTV5Bully	-
-src/_ZN5CloudD0Ev.c	DTOR-ONLY	ov039	daObjKumo_c	Cloud/daObjKumo_c	_ZN5CloudD0Ev	1		True		-
+src/_ZN11daObjKumo_cD0Ev.c	DTOR-ONLY	ov039	daObjKumo_c	daObjKumo_c/daObjKumo_c	_ZN11daObjKumo_cD0Ev	1		True		-
 src/_ZN5Crate13OnTurnIntoEggER6Player.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 19 @0x2139e78 | _ZN5Crate13OnTurnIntoEggER6Player	1		True		-
 src/_ZN5Crate13OnYoshiTryEatEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 18 @0x2139e64 | _ZN5Crate13OnYoshiTryEatEv	1		True		-
 src/_ZN5Crate4KillEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c	vtable daObjBlockS_c slot 31 @0x2139070 | _ZN5Crate4KillEv	1		True		-

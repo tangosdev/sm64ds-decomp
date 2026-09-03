@@ -702,7 +702,6 @@ extern int _ZTV8StarDoor[];
 extern int _ZTV4Fish[];
 extern int _ZTV4Toad[];
 extern int _ZTV9LightBeam[];
-extern int _ZTV5Cloud[];
 extern int _ZTV5Koopa[];
 extern int _ZTV5Pokey[];
 extern int _ZTV5Shark[];

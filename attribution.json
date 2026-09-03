@@ -1526,6 +1526,20 @@
     "src/actors/d_a_obj_bk_billboard.cpp#func_ov015_02111214": "github-actions[bot]",
     "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c6RenderEv": "github-actions[bot]",
-    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_bk_billboard.cpp#_ZN18daObjBkBillboard_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_cD1Ev": "andrewboudreau",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#func_ov039_02111214": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjKumo_c.cpp#_ZN11daObjKumo_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#func_ov039_02111214": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_kumo.cpp#_ZN11daObjKumo_c13InitResourcesEv": "github-actions[bot]"
   }
 }

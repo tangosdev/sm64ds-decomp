@@ -1163,15 +1163,15 @@ ov036	0x02113e6c	TrickyTriangles_SpawnInfo	g_profile_RC_DORIFU	reconstructed pro
 ov036	0x02113ecc	data_ov036_02113ecc	_ZTV16daObjRc_Dorifu_c	vtable alloc=? (was _ZTV21ArmedRotatingPlatform)
 ov036	0x02113f78	data_ov036_02113f78	FlyingCarpet_SpawnInfo	spawninfo
 ov036	0x02113f78	FlyingCarpet_SpawnInfo	g_profile_RC_CARPET	reconstructed profile global; literal ROM ID RC_CARPET+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov039	0x021111a0	func_ov039_021111a0	_ZN5CloudD1Ev	vtable slot 16
-ov039	0x021111d0	func_ov039_021111d0	_ZN5CloudD0Ev	vtable slot 17
-ov039	0x02111254	func_ov039_02111254	_ZN5Cloud16CleanupResourcesEv	vtable slot 3
-ov039	0x02111278	func_ov039_02111278	_ZN5Cloud6RenderEv	vtable slot 9
-ov039	0x021112a0	func_ov039_021112a0	_ZN5Cloud8BehaviorEv	vtable slot 6
-ov039	0x0211132c	func_ov039_0211132c	_ZN5Cloud13InitResourcesEv	vtable slot 0
+ov039	0x021111a0	func_ov039_021111a0	_ZN11daObjKumo_cD1Ev	vtable slot 16
+ov039	0x021111d0	func_ov039_021111d0	_ZN11daObjKumo_cD0Ev	vtable slot 17
+ov039	0x02111254	func_ov039_02111254	_ZN11daObjKumo_c16CleanupResourcesEv	vtable slot 3
+ov039	0x02111278	func_ov039_02111278	_ZN11daObjKumo_c6RenderEv	vtable slot 9
+ov039	0x021112a0	func_ov039_021112a0	_ZN11daObjKumo_c8BehaviorEv	vtable slot 6
+ov039	0x0211132c	func_ov039_0211132c	_ZN11daObjKumo_c13InitResourcesEv	vtable slot 0
 ov039	0x0211137c	func_ov039_0211137c	Cloud_Spawn	spawnfunc
 ov039	0x02111834	data_ov039_02111834	Cloud_SpawnInfo	spawninfo
-ov039	0x02111858	data_ov039_02111858	_ZTV5Cloud	vtable alloc=0x124
+ov039	0x02111858	data_ov039_02111858	_ZTV11daObjKumo_c	vtable alloc=0x124
 ov043	0x021113cc	func_ov043_021113cc	DiamondLift_Spawn	spawnfunc
 ov043	0x021113cc	DiamondLift_Spawn	daObjKm1_Ukishima_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov043	0x021114dc	func_ov043_021114dc	RickshawBdw_Spawn	spawnfunc
