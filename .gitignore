@@ -15,6 +15,9 @@ build/
 ghidra_out/
 ghidra_targets.txt
 
+# --- Headless proof run output (scratch; regenerated per run) ---
+port/tools/_party_out/
+
 # --- Tooling / OS noise ---
 __pycache__/
 *.pyc

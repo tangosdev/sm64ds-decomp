@@ -1516,6 +1516,61 @@ def test_session_type():
           S.member_plan(room, 1)["session_type"] == "vs")
 
 
+def test_party_session():
+    print("\n-- the party session type (party slice)")
+    # A v4 party create makes a party room, exactly as adventure does.
+    reset()
+    st, host = create(nick="host", v=4, session_type="party", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    check("a v4 party create makes a party room",
+          st == 200 and room.session_type == "party", (st, host))
+    check("the view reports the type", host["view"]["session_type"] == "party")
+
+    # SHARED WORLD ENTRY: the host's level rides the plan as host_level, and it
+    # is the SAME value for the host and the joiner, so a joiner boots the
+    # host's level rather than its own. ROLLBACK SEATING: netmode=rollback.
+    room.map = 2                       # the host is in level 2
+    join(code, "b", pre_ok=True)
+    st, p = start(code, token)
+    host_plan = S.member_plan(room, 1)     # seats are 1-based: host is seat 1
+    join_plan = S.member_plan(room, 2)     # the joiner is seat 2
+    check("the plan carries session_type=party",
+          host_plan["session_type"] == "party", host_plan)
+    check("the host plan carries host_level=2 (the host's level)",
+          host_plan.get("host_level") == 2, host_plan)
+    check("the JOINER's plan carries the SAME host_level=2 (shared world entry)",
+          join_plan.get("host_level") == 2, join_plan)
+    check("the plan seats rollback (netmode=rollback)",
+          host_plan.get("netmode") == "rollback"
+          and join_plan.get("netmode") == "rollback", (host_plan, join_plan))
+    check("and still carries the transport quartet unchanged",
+          host_plan["role"] == "parent" and "code" in host_plan
+          and "relay" in host_plan and host_plan["slot"] == 0, host_plan)
+
+    # A vs and an adventure plan never carry the party-only fields, so those
+    # launchers are byte-unchanged.
+    reset()
+    st, host = create(nick="host", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    join(code, "b", pre_ok=True)
+    start(code, token)
+    vp = S.member_plan(room, 1)
+    check("a vs plan carries no host_level and no netmode",
+          "host_level" not in vp and "netmode" not in vp, vp)
+
+    reset()
+    st, host = create(nick="host", v=4, session_type="adventure", pre_ok=True)
+    code, token = host["room"], host["token"]
+    room = S.ROOMS[code]
+    join(code, "b", pre_ok=True)
+    start(code, token)
+    ap = S.member_plan(room, 1)
+    check("an adventure plan carries no host_level and no netmode",
+          "host_level" not in ap and "netmode" not in ap, ap)
+
+
 def test_go_plan():
     print("\n-- the go plan: per member, identical where it must be")
     reset()
@@ -2560,6 +2615,7 @@ def main():
     test_start()
     test_ready_and_go()
     test_session_type()
+    test_party_session()
     test_go_plan()
     test_king_of_the_star()
     test_names()

@@ -541,6 +541,17 @@ int      g_peer_level[kCommsMaxPlayers];
 unsigned g_peer_seen_ms[kCommsMaxPlayers];
 bool     g_peer_present[kCommsMaxPlayers];
 
+// PARTY co-op (party slice): the per-slot party-member flag. This resolves the
+// COOP_PARTY.md first-slice detail "which slot field carries is-party-member":
+// a dedicated per-slot host array in the SAME presence block that already keeps
+// the per-slot level and liveness. A remote slot marked party is a shared-world
+// member -- rendered SOLID and COLLIDING, driven by the shipped rollback sim,
+// NOT eased by the ghost follower or held non-colliding. A remote slot NOT
+// marked party stays a translucent, pass-through adventure ghost. The flag is
+// per-slot (not a whole-session mode) precisely so the two treatments can
+// coexist in one level: some peers are party members, some are ghosts.
+bool     g_peer_party[kCommsMaxPlayers];
+
 // Item 2's sender-side velocity sample: the local body's position last frame,
 // differenced each frame. Seeded on first sight so the first frame's
 // "velocity" is zero rather than the distance from the origin to the spawn.
@@ -1226,6 +1237,66 @@ extern "C" int port_adventure_peer_visible(int slot) {
 }
 
 // ---------------------------------------------------------------------------
+// PARTY co-op (party slice): the per-slot party-member predicate, the ONE
+// authority the render boundary consults (the render pass's solid-vs-ghost
+// choice, the hold that skips party members, the follower that leaves them to
+// the sim). A slot is a party member when:
+//   - the wire/lobby marked it (g_peer_party[slot]), OR
+//   - the deterministic proof named it: SM64DS_PARTY_MEMBERS="1,2" marks
+//     exactly those slots party and leaves all other remotes as ghosts -- the
+//     mixed run where a solid party body and a translucent ghost coexist, OR
+//   - SM64DS_PARTY=1 marks the WHOLE session a party: every valid remote slot
+//     is a member (the pure party session, no ghosts).
+// The local slot is never a "party member" in this sense -- it is the owner's
+// own body, already solid and interactive; this predicate is only ever asked
+// about REMOTE slots.
+// ---------------------------------------------------------------------------
+namespace {
+// -1 unread, 0 no env list, 1 env list present. When present, env_party_mask
+// holds the named slots and env membership is authoritative (proof override).
+int  g_party_env_read = -1;
+int  g_party_env_all  = 0;      // SM64DS_PARTY=1: all remotes are party
+unsigned g_party_env_mask = 0;  // SM64DS_PARTY_MEMBERS bitmask (slots 0..31)
+int  g_party_env_have_list = 0;
+void party_env_once() {
+    if (g_party_env_read >= 0) return;
+    g_party_env_read = 1;
+    if (const char *e = std::getenv("SM64DS_PARTY"))
+        g_party_env_all = std::atoi(e) != 0;
+    if (const char *e = std::getenv("SM64DS_PARTY_MEMBERS")) {
+        g_party_env_have_list = 1;
+        for (const char *q = e; *q;) {
+            char *end;
+            const long v = std::strtol(q, &end, 10);
+            if (end == q) break;
+            if (v >= 0 && v < 32) g_party_env_mask |= (1u << (unsigned)v);
+            q = *end == ',' ? end + 1 : end;
+        }
+    }
+}
+bool party_member(int slot) {
+    party_env_once();
+    if (slot < 0 || slot >= kCommsMaxPlayers) return false;
+    if (slot == (int)data_0209f250) return false;    // never the local body
+    if (g_party_env_have_list) return (g_party_env_mask >> slot) & 1u;
+    if (g_party_env_all) return true;
+    return g_peer_party[slot];
+}
+}  // namespace
+
+extern "C" int port_party_member(int slot) {
+    return party_member(slot) ? 1 : 0;
+}
+
+// Wire/lobby setter: mark (or clear) a remote slot's party membership. The
+// first slice drives membership from the proof env above; this is the seam the
+// invite path writes when a joiner accepts the party (COOP_PARTY.md step 1).
+extern "C" void port_party_set_member(int slot, int on) {
+    if (slot < 0 || slot >= kCommsMaxPlayers) return;
+    g_peer_party[slot] = on != 0;
+}
+
+// ---------------------------------------------------------------------------
 // ADVENTURE GHOSTS: the pure-follower step. Called once per RENDER frame from
 // the walk loop, AFTER sync_tick (so the target is this frame's freshest) and
 // after the ROM actor tick (so it OVERRIDES the physics the ghost would
@@ -1262,6 +1333,10 @@ extern "C" void port_adventure_ghost_follow() {
            body is left where it was, undriven, and the render/name-tag loops
            skip it on the same predicate, so nothing about it shows. */
         if (!peer_visible(i)) continue;
+        // PARTY: a party member is a shared-world body driven by the rollback
+        // sim, not a broadcast ghost -- leave it to the sim, do NOT ease it
+        // toward a snapshot here (that would fight the sim).
+        if (party_member(i)) continue;
         if (!g_gtarget[i].have) continue;
         void *a = data_0209f394[i];
         if (!a) continue;
