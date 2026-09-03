@@ -21,7 +21,7 @@ struct daObjKm1_Ukishima_c : dBgActor_c {
     /* THIS CLASS'S OWN, in dBgActor_c's TAIL PADDING: the base's last field ends
        at 0x31e and its size rounds to 0x320, so the Itanium ABI puts the first
        derived byte at 0x31e and sizeof stays 0x320 (same placement as
-       ArmedRotatingPlatform::mAngVelY). InitResources seeds it with 0x3c and
+       daObjRc_Guruguru_c::mAngVelY). InitResources seeds it with 0x3c and
        Behavior counts it down, turning the island a quarter turn each time it
        reaches zero. */
     u8 mTurnTimer;            /* 0x31e */

@@ -115,29 +115,9 @@ src/daObjRc_Tikuwa_c_classInit.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 
-src/_ZN21ArmedRotatingPlatformD1Ev.cpp:
+src/actors/d_a_obj_rc_guruguru.cpp:
     complete
-    .text start:0x02111d14 end:0x02111d58
-
-src/_ZN21ArmedRotatingPlatformD0Ev.cpp:
-    complete
-    .text start:0x02111d58 end:0x02111db0
-
-src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111db0 end:0x02111df8
-
-src/_ZN21ArmedRotatingPlatform6RenderEv.cpp:
-    complete
-    .text start:0x02111df8 end:0x02111e20
-
-src/_ZN21ArmedRotatingPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x02111e20 end:0x02111eb0
-
-src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111eb0 end:0x02111f5c
+    .text start:0x02111d14 end:0x02111f5c
 
 src/daObjRc_Guruguru_c_classInit.c:
     complete

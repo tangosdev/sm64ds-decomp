@@ -33,7 +33,7 @@ struct dBgActor_c : dActor_c {
     u8  unk_31c;            /* 0x31c */
     u8  unk_31d;            /* 0x31d */
     /* The class ends at 0x31e; sizeof rounds to 0x320, and derived classes do
-       use that tail padding (ArmedRotatingPlatform::mAngVelY). */
+       use that tail padding (daObjRc_Guruguru_c::mAngVelY). */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* MEASURED -- INLINE ON PURPOSE, do not move out of line. Every subclass

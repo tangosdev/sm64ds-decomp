@@ -217,3 +217,7 @@
 {"path": "src/_ZN10ShutterHmc16CleanupResourcesEv.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
 {"path": "src/_ZN10ShutterHmcD0Ev.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
 {"path": "src/_ZN10ShutterHmcD1Ev.cpp", "reason": "ov021/daObjCvShutter_c promoted to a single TU"}
+{"path": "src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
+{"path": "src/_ZN21ArmedRotatingPlatform6RenderEv.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
+{"path": "src/_ZN21ArmedRotatingPlatformD0Ev.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}
+{"path": "src/_ZN21ArmedRotatingPlatformD1Ev.cpp", "reason": "ov036/daObjRc_Guruguru_c promoted to a single TU: five per-function sources consolidated, members retained"}

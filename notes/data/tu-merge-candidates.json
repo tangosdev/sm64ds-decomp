@@ -8006,17 +8006,17 @@
    "start": "0x2111d14",
    "end": "0x2111f8c",
    "classes": [
-    "ArmedRotatingPlatform"
+    "daObjRc_Guruguru_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN21ArmedRotatingPlatformD1Ev.cpp",
-    "src/_ZN21ArmedRotatingPlatformD0Ev.cpp",
-    "src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform6RenderEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform8BehaviorEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_cD1Ev.cpp",
+    "src/_ZN18daObjRc_Guruguru_cD0Ev.cpp",
+    "src/_ZN18daObjRc_Guruguru_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c6RenderEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c8BehaviorEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp",
     "src/daObjRc_Guruguru_c_classInit.c"
    ],
    "ext_mix": {

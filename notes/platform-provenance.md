@@ -14,7 +14,7 @@ classes) is in the project memory note `platform-family-census`.
 
 ## `include/dBgActor_c.h`
 
-`dBgActor_c` is the base of the level-object family — ArmedRotatingPlatform,
+`dBgActor_c` is the base of the level-object family — daObjRc_Guruguru_c,
 PyramidTop, daObjKm3_Kaitendai_c, daObjBSwdoor_c, daObjCvShutter_c, SlidingIce and ~130
 others. Seeded by `tools/gen_header.py` from matched-function evidence, then
 given its real base and real member types by hand.
@@ -68,7 +68,7 @@ at 0x320 before storing `_ZTV10dBgActor_c` and running the base.
 
 One layout satisfies all five: **data ends 0x31e, `sizeof` 0x320.** The four
 above align up from 0x31e to 0x320; `BowserFireSeaArena` puts its own three `s16`
-at 0x31e/0x320/0x322 so its `Model` lands at 0x324; `ArmedRotatingPlatform` puts
+at 0x31e/0x320/0x322 so its `Model` lands at 0x324; `daObjRc_Guruguru_c` puts
 a single `s16` at 0x31e, in this class's tail padding, and its `Behavior` reads
 `this+0x31e` and reproduces. Ending at 0x324 satisfies `BowserFireSeaArena` and
 contradicts the other four.
@@ -148,7 +148,7 @@ For a class whose destructor stores its own vptr and then `dBgActor_c`'s
 chaining to `dActor_c`: all three of those are `dBgActor_c`'s own. Everything such
 a header used to restate below 0x31e was `dActor_c`'s and `dBgActor_c`'s, and is
 inherited. This applies to `SlidingPlatformWf`, `FloatOnLavaPlatform`,
-`ArmedRotatingPlatform`, `RotatingUpDownPlatformUtm` and their siblings.
+`daObjRc_Guruguru_c`, `RotatingUpDownPlatformUtm` and their siblings.
 
 Where a size assertion is only the observed field span rounded up, it guards the
 declaration and is **not** independent evidence about the ROM. Where a factory's
@@ -407,7 +407,7 @@ The `Model` marker's pad ran 0x30 bytes past the end of the object; that space i
 not evidenced and stays explicit padding rather than being folded into the
 member.
 
-## `include/ArmedRotatingPlatform.h`
+## `include/daObjRc_Guruguru_c.h`
 
 A donut lift: stands still until ridden, then shakes, falls and respawns.
 
