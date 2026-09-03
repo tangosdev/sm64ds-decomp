@@ -15,3 +15,13 @@
 # mount. CLPS records carry no pointers, so the per-symbol copy cannot
 # diverge from the whole-image one.
 data_ov046_021115bc
+#
+# lane SEAT-OV002-RUNTIME: BowserShockwaves::InitResources (ov060, id 281,
+# spawned by Bowser's stomp) hands MaterialChanger::Prepare/SetFile a BMA
+# spelled `func_021115e4` and a second one `func_021115f4` -- the same
+# code-flavoured spelling of two level-overlay-window addresses (the reloc
+# module list is the twenty-way overlays(8,11,...,46,...,59) set, ov060 is not
+# on it). For the mounted koopa2_boss arena (level 38) the owner is ov046,
+# this image; sizes pin to the next dsd symbols (0x10 and 0x28).
+# hal/actor_classes_runtime_spawns.cpp aliases both spellings onto these.
+data_ov046_021115e4 data_ov046_021115f4

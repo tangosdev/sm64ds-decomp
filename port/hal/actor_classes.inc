@@ -420,6 +420,19 @@ void hal_fill_bob_omb_vtable(void);
 extern unsigned char KoopaShell_SpawnInfo[];    /* ov102 0x0214e62c, id 285 */
 void *KoopaShell_Spawn(void);                   /* ov102 0x0214d6b4 */
 void hal_fill_koopa_shell_vtable(void);
+/* ---- gate 210 (lane SEAT-OV002-RUNTIME): run-time spawns from linked code ---- */
+extern unsigned char Fireball_SpawnInfo[];      /* ov002 0x0210bf70, id 254 */
+void *Fireball_Spawn(void);                     /* ov002 0x020f9304 */
+void hal_fill_fireball_vtable(void);
+extern unsigned char BowserShockwaves_SpawnInfo[]; /* ov060 0x0211ab30, id 281 */
+void *BowserShockwaves_Spawn(void);             /* ov060 0x021191f4 */
+void hal_fill_bowser_shockwaves_vtable(void);
+extern unsigned char Bubble_SpawnInfo[];        /* ov002 0x02108940, id 291 */
+void *Bubble_Spawn(void);                       /* ov002 0x020b3568 */
+void hal_fill_bubble_vtable(void);
+extern unsigned char YoshiEgg_SpawnInfo[];      /* ov002 0x0210ad90, id 9 */
+void *YoshiEgg_Spawn(void);                     /* ov002 0x020ee3d8 */
+void hal_fill_yoshi_egg_vtable(void);
 extern unsigned char Goomba_SpawnInfo[];        /* ov084 0x021308ec */
 void *Goomba_Spawn(void);                       /* ov084 0x0212c0b0 */
 void hal_fill_goomba_vtable(void);
@@ -3049,4 +3062,16 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
     {100, "FLOAT_ON_WATER_PLATFORM_WDW_RECTANGLE", FloatOnWaterPlatformWdwRectangle_SpawnInfo, \
      FloatOnWaterPlatformWdwRectangle_Spawn, hal_fill_float_on_water_platform_wdw_rectangle_vtable}, \
     {101, "WDW_WATER", WDW_Water_SpawnInfo, WDW_Water_Spawn, \
-     hal_fill_wdw_water_vtable},
+     hal_fill_wdw_water_vtable}, \
+    /* ---- gate 210 (lane SEAT-OV002-RUNTIME): four run-time spawns asked for \
+       by code already in the link and turned away until now. None is on any \
+       level's object table, so a boot census moves by zero; a played frame \
+       (a fire piranha's spit, Bowser's stomp, an underwater chest, Yoshi's \
+       egg) is what each row changes. hal/actor_classes_runtime_spawns.cpp. */ \
+    {254, "FIREBALL", Fireball_SpawnInfo, Fireball_Spawn, \
+     hal_fill_fireball_vtable}, \
+    {281, "BOWSER_SHOCKWAVES", BowserShockwaves_SpawnInfo, BowserShockwaves_Spawn, \
+     hal_fill_bowser_shockwaves_vtable}, \
+    {291, "BUBBLE", Bubble_SpawnInfo, Bubble_Spawn, hal_fill_bubble_vtable}, \
+    {9, "YOSHI_EGG", YoshiEgg_SpawnInfo, YoshiEgg_Spawn, \
+     hal_fill_yoshi_egg_vtable},

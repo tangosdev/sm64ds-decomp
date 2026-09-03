@@ -1208,7 +1208,10 @@ src/func_ov002_020dc09c.c
 src/func_ov002_020de3d0.c
 src/func_ov002_020de428.c
 src/func_ov002_020df8f0.c
-src/func_ov002_020ed63c.cpp
+# src/func_ov002_020ed63c.cpp -- gate 210: YoshiEgg's state setter is an mwcc
+# pointer-to-member over data_ov002_02110a5c; host copy in
+# unmatched/YoshiEgg_StateDispatch.cpp (the MSVC build of this TU called a raw
+# DS word). Nothing dispatched it before the egg was seated.
 src/func_ov002_020c5dec.cpp
 src/_ZN5Sound7PlaySubEjjj5Fix12IiEb.cpp
 src/func_02053274.c

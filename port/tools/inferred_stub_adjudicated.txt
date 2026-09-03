@@ -2089,3 +2089,25 @@ func_ov070_021211bc  REAL_DECOMP  status/OV070.md#t5  ov070 FlameChomp(270) vtab
 func_ov070_02121bdc  REAL_DECOMP  status/OV070.md#t5  ov070 FlameChompFire(271) vtable slot 18 OnYoshiTryEat, addr 0x02121bdc size 0x8; match.py MATCH at 2004/b56 with --strict-relocs. Same two-instruction body as 0x021211bc, bytes 0500a0e31eff2fe1
 func_ov070_02121438  REAL_DECOMP  status/OV070.md#t5  ov070 FlameChomp(270) state-0 Kill root (the {0x02121438,0} record at 0x021232f4 that __sinit_ov070_02122f30 copies into data_ov070_021236ac[0]); addr 0x02121438 size 0xc0; match.py MATCH at 2004/b56 with --strict-relocs, all 192 bytes with every call and pool reloc checked. Sound::PlayBank0(9, this+0x74); clear bit 0 of +0xb0; -0x2000/-0x3c000/0xa000/0x28000 into +0x9c/+0xa0/+0x98/+0xa8; 0x1000 scale into +0x80/84/88; byte 0x2d at +0x3ac; ModelAnim::SetAnim(this+0xd4, data_ov070_021234c4, 0, 0x1000, 0); Particle::System::NewSimple 0x43 then 0x44 at +0x5c; state word 3 at +0x3a0; return 1. The marker's recovered name says daBrq_c::Kill (Amp); the record it sits in is FlameChomp's, and the offsets (+0x3a0/+0x3ac, past Amp's 0x41c pp) agree
 func_ov070_02121fb0  REAL_DECOMP  status/OV070.md#t5  ov070 FlameChompFire(271) state-0 Kill root (record 0x021233ec -> data_ov070_021236ec[0]); addr 0x02121fb0 size 0x20; match.py MATCH at 2004/b56 with --strict-relocs. 0xa000 into +0x98, byte 0x69 at +0x32c, 0 into +0x320, return 1; eight instructions, all constants checked
+#
+# ---------------------------------------------------------------------------
+# lane SEAT-OV002-RUNTIME (status/SEATOV002.md), 2026-09-02.
+#
+# Each body below was compiled with the pinned mwccarm 2004/b56 and compared
+# against extracted/overlays/overlay_0002.bin by tools/match.py in its DEFAULT
+# strict-reloc mode: every byte identical AND every relocation slot verified
+# against config/arm9/overlays/ov002/relocs.txt's destination. That is a
+# stricter reading than an instruction-for-instruction disassembly compare:
+# the ROM's bytes are reproduced from this source, not merely resembled by it.
+# The marker on each records a dsd NAME (three of the four are misnamed), not
+# a guessed body. Commands and outputs: SEATOV002.md#adjudicated.
+#
+# id 254, ov002, Fireball (daFPknBall_c) -- SEATED by this lane.
+func_ov002_020f92e4  REAL_DECOMP  SEATOV002.md#adjudicated  slot 18 OnYoshiTryEat 0x20: ldrb +0x36d, 5 if not 0 and not 4 else 0; match.py strict-reloc byte match
+#
+# id 291, ov002, Bubble (daObjAbuku_c) -- SEATED by this lane.
+func_ov002_020b3518  REAL_DECOMP  SEATOV002.md#adjudicated  InitResources 0x50: MovingCylinderClsn::Init(+0xd4, this, 0x96000, 0x96000, 0x100002, 0), +0x10e = 0x12c, return 1; match.py strict-reloc byte match
+func_ov002_020b33dc  REAL_DECOMP  SEATOV002.md#adjudicated  Behavior 0x13c: +0x10c += 0x400, sin-table bob, ApproachLinear(+0x108, 0x6000, 0x332), UpdatePos(0), Heal(0x300) on the id at +0xf8, DecIfAbove0(+0x10e) / raycast pop, particle 1, cylinder clear+update; match.py strict-reloc byte match
+#
+# id 9, ov002, YoshiEgg (daYegg_c) -- SEATED by this lane.
+func_ov002_020ed0d4  REAL_DECOMP  SEATOV002.md#adjudicated  state 0 main 0x4dc (dsd misnamed it daWarpkun_c::Kill): reads the laying player at +0x38c, copies his velocity, aims the egg by the +0x3ea..3ee angles through Matrix4x3_FromRotationZXYExt, holds it in the mouth while +0x41e counts down, hands off to the thrown state; match.py strict-reloc byte match

@@ -421,3 +421,37 @@ data_ov002_02100364 data_ov002_0210d6d0 data_ov002_02100380
 # 0210da58 for the feather's model) are ALREADY mounted above -- nothing to
 # add for either class's resources.
 Number_SpawnInfo:0x1c WingFeather_SpawnInfo:0x1c
+#
+# ---- gate 210 (lane SEAT-OV002-RUNTIME): FIREBALL (254) ---------------------
+# Fireball_SpawnInfo 0x0210bf70 (+4 reads 254; pinned :0x1c so the record ends
+# where the table's RTTI prefix begins, the VSPOPUP rule) and its table
+# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots (:0x7c; the next dsd
+# symbol data_ov002_0210c010 pins it exactly). The table is mounted raw and
+# overwritten slot for slot by hal_fill_fireball_vtable before any spawn
+# (the gate-200 _ZTV9PushBlock shape). data_ov002_02100320/334/348 are the
+# three five-word particle tables func_ov002_020f8b24 indexes by the
+# fireball's variant byte (+0x36d); sizes pin to the next symbols (0x14 each).
+Fireball_SpawnInfo:0x1c _ZTV8Fireball:0x7c
+data_ov002_02100320 data_ov002_02100334 data_ov002_02100348
+#
+# ---- gate 210: BUBBLE (291) --------------------------------------------------
+# Bubble_SpawnInfo 0x02108940 (+4 reads 291; :0x1c, the record ends where the
+# table's RTTI prefix begins) and its table, which dsd left UNNAMED at
+# data_ov002_02108964 (the D1 body restores it as _ZTV12daObjAbuku_c; the next
+# dsd symbol data_ov002_021089e0 pins 31 slots, :0x7c). Mounted raw and
+# overwritten slot for slot by hal_fill_bubble_vtable; the fill aliases the
+# _ZTV12daObjAbuku_c spelling onto it.
+Bubble_SpawnInfo:0x1c data_ov002_02108964:0x7c
+#
+# ---- gate 210: YOSHI_EGG (9) -------------------------------------------------
+# YoshiEgg_SpawnInfo 0x0210ad90 (+4 reads 9; :0x1c, the record ends where the
+# table's RTTI prefix begins) and _ZTV8YoshiEgg 0x0210adb4 (31 slots, :0x7c;
+# _ZTV8Platform follows at 0x0210ae38 after the next prefix). Mounted raw and
+# overwritten slot for slot by hal_fill_yoshi_egg_vtable, which aliases the
+# _ZTV8daYegg_c spelling the D0 restores onto it. data_ov002_021000a0 is the
+# two-entry model file table InitResources indexes by the egg variant (:0x8,
+# pinned by data_ov002_021000a8), and data_ov002_021000a8 the s16 tumble-angle
+# table the landed state (func_ov002_020ec9c4) indexes (:0x10, pinned by
+# data_ov002_021000b8). The state table data_ov002_02110a5c and the
+# two animation SharedFilePtrs 0x0210e6b0 / 0x0210eb78 were already mounted.
+YoshiEgg_SpawnInfo:0x1c _ZTV8YoshiEgg:0x7c data_ov002_021000a0:0x8 data_ov002_021000a8:0x10

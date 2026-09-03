@@ -1,0 +1,117 @@
+# Gate 210 (lane SEAT-OV002-RUNTIME): four run-time spawns from code already
+# linked. None is on any level's object table; each is asked for by a linked
+# caller in a played frame. The fills and the derivation are in
+# hal/actor_classes_runtime_spawns.cpp; the per-body byte-match table is
+# status/SEATOV002.md.
+#
+# ---- FIREBALL (254, ov002) ------------------------------------------------
+# _ZTV8Fireball / _ZTV12daFPknBall_c 0x0210bf94, 31 slots. Fireball_SpawnInfo
+# (0x0210bf70, +4 reads 254) and the table joined port/ov002_syms.txt, with the
+# three particle tables Behavior's helper indexes (data_ov002_02100320/334/348).
+# Spawned by Actor::SpawnFireball (arm9, linked; asks for 0xfe), whose callers
+# func_ov084_0212ddbc (fire piranha, gate 71), func_ov070_0211f48c and
+# func_ov063_02118458 are all in the link.
+# Slot 18 func_ov002_020f92e4 carries the name marker (dsd called it
+# daFPknBall_c::OnYoshiTryEat, which is what it is) and byte-matches under
+# tools/match.py with strict relocs; ruled REAL_DECOMP in
+# tools/inferred_stub_adjudicated.txt before seating.
+src/Fireball_Spawn.c
+src/_ZN8Fireball13InitResourcesEv.cpp
+src/_ZN8Fireball8BehaviorEv.cpp
+src/_ZN8Fireball6RenderEv.c
+src/_ZN8FireballD1Ev.c
+src/_ZN8FireballD0Ev.c
+src/func_ov002_020f92e4.c
+# Behavior's three helpers
+src/func_ov002_020f8b24.c
+src/func_ov002_020f88ec.c
+src/func_ov002_020f897c.c
+#
+# ---- BOWSER_SHOCKWAVES (281, ov060) ---------------------------------------
+# _ZTV16BowserShockwaves / _ZTV9daFRing_c 0x0211ab54, 31 slots, hosted as an
+# array in the fill (the ov060 mount excludes its vtables). The SpawnInfo
+# (0x0211ab30, +4 reads 281) has been in port/ov060_syms.txt since wave 5.
+# Spawned by func_ov060_02115b0c (Bowser's stomp landing, +0x414 == 2; linked
+# since wave 5) with Actor::Spawn(0x119). Render is DROPPED from the slice: the
+# ModelAnim slot-5 collision on two ModelAnims, host copy appended to
+# unmatched/Ov060_Renders.cpp. InitResources' two BMA spellings func_021115e4/
+# f4 are the level-overlay window, aliased onto the ov046 per-symbol mount.
+src/BowserShockwaves_Spawn.c
+src/_ZN16BowserShockwaves13InitResourcesEv.cpp
+src/_ZN16BowserShockwaves16CleanupResourcesEv.c
+src/_ZN16BowserShockwaves8BehaviorEv.cpp
+src/_ZN16BowserShockwavesD1Ev.c
+src/_ZN16BowserShockwavesD0Ev.c
+#
+# ---- BUBBLE (291, ov002) --------------------------------------------------
+# daObjAbuku_c, the air bubble a treasure chest lets go of when it is opened
+# underwater (func_ov064_0211a39c, TreasureChest's open state, linked since
+# w3c; Actor::Spawn(0x123) when Player+0x706 mIsUnderwater is set). Its table
+# is the unnamed data_ov002_02108964 (mounted with the SpawnInfo, see
+# ov002_syms.txt). The class's four own slots are all func_ov002 bodies:
+#   0  func_ov002_020b3518  InitResources  (marker: dsd's daObjAbuku_c name;
+#                                            match.py strict-reloc byte match,
+#                                            ruled REAL_DECOMP)
+#   6  func_ov002_020b33dc  Behavior       (same ruling)
+#   16 func_ov002_020b3298  D1             (flat C, clean)
+#   17 func_ov002_020b32c8  D0 -- NOT ENROLLED: the matched body spells its
+#      table and heap as the VT0 / G0 shadow globals (the PoleLift trap
+#      hal/actor_classes_ov045.cpp documents); host thunk in the fill,
+#      transcribed from that body: table restore, MovingCylinderClsn::D1
+#      +0xd4, Actor::D2, Memory::Deallocate(this, *0x020a0eac).
+# Slots 3 and 9 are ActorBase's own CleanupResources / Render per the relocs.
+src/Bubble_Spawn.c
+src/func_ov002_020b3518.cpp
+src/func_ov002_020b33dc.cpp
+src/func_ov002_020b3298.c
+# Behavior's two helpers: the pop (sound, particle, MarkForDestruction) and
+# the water-surface raycast
+src/func_ov002_020b330c.cpp
+src/func_ov002_020b3344.c
+#
+# ---- YOSHI_EGG (9, ov002) --------------------------------------------------
+# daYegg_c, the egg Yoshi lays after a swallow and then aims and throws.
+# Spawned only by the Player's egg lay (func_ov002_020d6368 / 020d5ab4, gate
+# 10). Lifecycle: InitResources flat C, CleanupResources and Behavior real
+# C++ methods (faced in hal/actor_classes_runtime_spawns.cpp), D1/D0 flat C,
+# the factory. NOT ENROLLED, hosted instead:
+#   _ZN8YoshiEgg6RenderEv       the ModelAnim slot-5 collision (a local
+#                               six-virtual shadow), unmatched/ModelAnim_Renders.cpp
+#   func_ov002_020ed63c/684     the state setter and the per-frame main
+#                               dispatch, mwcc pointer-to-member over the bss
+#                               table data_ov002_02110a5c; host copies with
+#                               the address switch in
+#                               unmatched/YoshiEgg_StateDispatch.cpp. 020ed63c
+#                               LEAVES slice_gate10.txt for that copy.
+# Every TU below byte-matches under tools/match.py (strict relocs). The eight
+# state bodies (0x020ec938..0x020ed5b0, see the dispatch file's table) and the
+# remaining helpers not already linked by gate 10 (020ec610/628/640, 020ec728,
+# 020ec80c, 020edca4 are; slice_w1l5.txt names 020ec9c4 only in a comment)
+# follow the lifecycle.
+# func_ov002_020ed0d4 (state 0 main) carries dsd's misname daWarpkun_c::Kill;
+# match.py strict-reloc byte match, ruled REAL_DECOMP in
+# tools/inferred_stub_adjudicated.txt before this seat.
+src/YoshiEgg_Spawn.c
+src/_ZN8YoshiEgg13InitResourcesEv.c
+src/_ZN8YoshiEgg16CleanupResourcesEv.cpp
+src/_ZN8YoshiEgg8BehaviorEv.cpp
+src/_ZN8YoshiEggD1Ev.c
+src/_ZN8YoshiEggD0Ev.c
+src/func_ov002_020ec654.c
+src/func_ov002_020ec670.c
+src/func_ov002_020ec938.cpp
+src/func_ov002_020ec978.c
+src/func_ov002_020ec9c4.c
+src/func_ov002_020ecad4.c
+src/func_ov002_020ecb0c.c
+src/func_ov002_020ecd18.cpp
+src/func_ov002_020ecf94.c
+src/func_ov002_020ecfc8.c
+src/func_ov002_020ed0d4.c
+src/func_ov002_020ed5b0.c
+src/func_ov002_020ed6cc.c
+src/func_ov002_020ed738.cpp
+src/func_ov002_020ed7f8.c
+src/func_ov002_020ed998.cpp
+src/func_ov002_020edb3c.cpp
+src/func_ov002_020eddc4.c
