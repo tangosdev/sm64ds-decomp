@@ -275,65 +275,7 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
            ROM's i==3 arm. Base, not the object's own slot 4: index 3 is a
            ModelAnim, whose virtual Render would re-run UpdateVerts, and the ROM
            calls Model::Render directly to render the head at the pose the anim
-           system ALREADY PRODUCED.
-
-           On the ROM that pose is produced during the tick: St_YoshiPower_Main
-           advances the head anim on +0x160 and Player_AdvanceAnims UpdateVerts's
-           it, so by render time the head mesh is already at the current frame.
-           In this port neither reaches the head (the head model at +0x160 is the
-           same pointer as head here), so the head sat frozen at the frame-0 bind
-           pose and sank into the body on a long fall. Produce the pose here, at
-           render time, the same two steps the body gets at :~703: advance the
-           head's own jaw/tongue Animation at head+0x50 (St_YoshiPower_Main's
-           +0x160 advance), then ModelAnim::UpdateVerts to sample the frame into
-           the mesh, BEFORE the base Model::Render draws it at the seated matrix.
-
-           GUARDED, and this guard is the whole reason the fix is back. The pose
-           is the LIVE-PLAYER head pose. Applied to a body the GAME owns and is
-           playing a scripted sequence on -- the opening's sleeping Yoshi -- it
-           posed the head off its own jaw/tongue anim, which for that scripted
-           body is neither seated nor advanced by the player state machine, so
-           the head rendered UPSIDE DOWN with the tongue animation SPAMMING (the
-           first, unguarded landing of this fix was reverted for exactly that: it
-           regressed the intro).
-
-           mIsNoControl (+0x709) IS NOT THE DISCRIMINATOR, and this was measured:
-           through the whole opening the intro Yoshi renders here with
-           mIsNoControl CLEAR (the opening does not park the Player in a
-           no-control state -- the LakituBro camera script and the
-           CutsceneObjects run the scene while the Yoshi body just sits idle), so
-           a guard on mIsNoControl alone would pose it and re-regress the intro.
-
-           data_0209fc48 IS the discriminator. It is the ROM's "the cutscene
-           script now executing" word (level_boot.cpp: 0 = none), non-zero only
-           while a scripted cutscene owns the scene, which on a level boot is the
-           opening and nothing else. Every intro-Yoshi head render measured here
-           had it non-zero; every live-gameplay one had it zero. So pose ONLY
-           when NO cutscene script is running AND the human has control; a
-           cutscene Yoshi (data_0209fc48 != 0) falls through with NO pose and
-           renders exactly as the reverted cons does. */
-        extern int data_0209fc48;   /* the running cutscene, 0 = none */
-        const bool live = data_0209fc48 == 0 &&
-                          *(const unsigned char *)(c + port::player::kIsNoControl) == 0;
-        if (const char *pr = std::getenv("SM64DS_HEADPOSE_PROBE")) {
-            static int seen = -1;
-            if (seen < 0) seen = std::atoi(pr[0] ? pr : "1");
-            if (seen != 0) {
-                extern int data_0209fc48;   /* diag: running cutscene, 0 = none */
-                std::fprintf(stderr,
-                    "[headpose] hid==3 slot=%u noctl=%u air=%u clsn=%u cut=%d -> %s\n",
-                    (unsigned)*(const unsigned char *)(c + port::player::kPlayerNo),
-                    (unsigned)*(const unsigned char *)(c + port::player::kIsNoControl),
-                    (unsigned)*(const unsigned char *)(c + port::player::kIsAirborne),
-                    (unsigned)*(const unsigned char *)(c + port::player::kIsBodyClsnEnabled),
-                    data_0209fc48,
-                    live ? "POSED (live player)" : "no pose (scripted/cutscene)");
-            }
-        }
-        if (live) {
-            ((Animation *)(head + 0x50))->Animation::Advance();
-            ((ModelAnim *)head)->ModelAnim::UpdateVerts();
-        }
+           system already produced. */
         _ZN5Model6RenderEPK7Vector3(head, c + 0x80);
         return;
     }
