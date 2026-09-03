@@ -1,9 +1,9 @@
-_ZN15FireSeaElevatorD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN15FireSeaElevatorD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-_ZN15FireSeaElevator16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x0211123c
-_ZN15FireSeaElevator6RenderEv kind:function(arm,size=0x28) addr:0x02111274
-_ZN15FireSeaElevator8BehaviorEv kind:function(arm,size=0x150) addr:0x0211129c
-_ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xbc) addr:0x021113ec
+_ZN16daObjKm2_Agaru_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN16daObjKm2_Agaru_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN16daObjKm2_Agaru_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x0211123c
+_ZN16daObjKm2_Agaru_c6RenderEv kind:function(arm,size=0x28) addr:0x02111274
+_ZN16daObjKm2_Agaru_c8BehaviorEv kind:function(arm,size=0x150) addr:0x0211129c
+_ZN16daObjKm2_Agaru_c13InitResourcesEv kind:function(arm,size=0xbc) addr:0x021113ec
 func_ov045_021114a8 kind:function(arm,size=0x20) addr:0x021114a8
 func_ov045_021114c8 kind:function(arm,size=0x14) addr:0x021114c8
 daObjKm2_Agaru_c_classInit kind:function(arm,size=0x30) addr:0x021114dc
@@ -122,12 +122,10 @@ data_ov045_02112c58 kind:data(any) addr:0x02112c58 ambiguous
 data_ov045_02112c68 kind:data(any) addr:0x02112c68 ambiguous
 data_ov045_02112c88 kind:data(any) addr:0x02112c88 ambiguous
 data_ov045_02112ca8 kind:data(any) addr:0x02112ca8 ambiguous
-data_ov045_02112cb0 kind:data(any) addr:0x02112cb0
+_ZTI16daObjKm2_Agaru_c kind:data(any) addr:0x02112cb0
 _ZTS16daObjKm2_Agaru_c kind:data(any) addr:0x02112cbc
-data_ov045_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
-FireSeaElevator_SpawnInfo kind:data(any) addr:0x02112cd0 ambiguous
-_ZTV15FireSeaElevator kind:data(any) addr:0x02112cf4
-data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
+g_profile_KM2_AGARU kind:data(any) addr:0x02112cd0 ambiguous
+_ZTV16daObjKm2_Agaru_c kind:data(any) addr:0x02112cf4
 _ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74
 _ZTS18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d80
 g_profile_KM2_AMI_BOU kind:data(any) addr:0x02112d98 ambiguous

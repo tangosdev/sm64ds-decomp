@@ -1,10 +1,9 @@
 //cpp
-// @symbol _ZN15FireSeaElevator13InitResourcesEv
-#include "FireSeaElevator.h"
+// @symbol _ZN16daObjKm2_Agaru_c13InitResourcesEv
+#include "daObjKm2_Agaru_c.h"
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
-#include "daObjKm2_Agaru_c.h"
 // recovered name: daObjKm2_Agaru_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjKm2_Agaru_c::InitResources - name recovered from the vtable slot it fills.
@@ -23,7 +22,7 @@ extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vect
 extern void func_ov045_021114c8(void*, int);
 }
 
-s32 FireSeaElevator::InitResources() {
+s32 daObjKm2_Agaru_c::InitResources() {
     char * c = (char *)this;
     struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
   int f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_02113188);
@@ -36,7 +35,7 @@ s32 FireSeaElevator::InitResources() {
   func_020393d4(c+0x124, (int)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   func_020393c4(c+0x124, (int)func_ov045_021114c8);
   *(short*)(c+0x300+0x24) = 0;
-  self->unk_327 = 0;
-  self->unk_320 = self->mPosY;
+  self->mState = 0;
+  self->mRestY = self->mPosY;
   return 1;
 }

@@ -256,7 +256,7 @@ ov030 0x21111a0  n=8  L=236  daObjHmBskt_c              NORM2 pcov=2
 ```
 ov033 0x21111a0  n=8  L=151  TinyCover        NORM1
 ov043 0x21111a0  n=7  L=145  DiamondLift      NORM1
-ov045 0x21111a0  n=9  L=200  FireSeaElevator  NORM1 CONF2
+ov045 0x21111a0  n=9  L=200  daObjKm2_Agaru_c  NORM1 CONF2
 ov064 0x21174a0  n=8  L=263  BigBully         NORM1 pcov=2
 ```
 
