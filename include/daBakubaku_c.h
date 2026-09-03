@@ -64,8 +64,6 @@ struct daBakubaku_c : dEnemyBase_c {
     u16                        unk_42a;         /* 0x42a -- Behavior ticks it down */
     u8                         pad_42c[0xc];
 
-    virtual ~daBakubaku_c();
-
     /* The slots it overrides, found by diffing all 31 against dEnemyBase_c's. All six bodies
        are now real methods -- Behavior and InitResources were the last two still
        written as free functions over raw offsets, and both reproduce unchanged. */
@@ -75,6 +73,12 @@ struct daBakubaku_c : dEnemyBase_c {
     virtual s32  Render();              /* slot  9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnAimedAtWithEgg();    /* slot 29 */
+
+    /* DECLARED LAST on purpose. Nothing in the build DEFINES the key function, so
+       where the virtual destructor is declared decides whether mwcc emits
+       _ZTV/_ZTI/_ZTS at all: declared last it emits them, declared first it emits
+       nothing and the validator's romdata ratchet reds the PR. */
+    virtual ~daBakubaku_c();
 };
 
 typedef char daBakubaku_c_size_must_be_0x438[sizeof(daBakubaku_c) == 0x438 ? 1 : -1];
