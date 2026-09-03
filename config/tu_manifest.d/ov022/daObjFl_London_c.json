@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFl_London_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFl_London_c.cpp",
+  "source": "src/actors/d_a_obj_fl_london.cpp",
   "promoted_source": "src/actors/d_a_obj_fl_london.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2111980..0x2111c7c, 7 function(s), from build/tu_map.json (tools/tu_map.py); extended by hand to 0x02111cac to take in daObjFl_London_c_classInit, which tu_map splits off only because the factory carries no class label",
