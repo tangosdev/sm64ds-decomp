@@ -660,15 +660,21 @@ static int port_vs_hud_render_coins_on_top(HUD *self)
 //   life_dy defaults to 0 (SM64DS_ADV_LIFE_TOP_Y).
 //
 //   STAR: the ROM's default arm draws the count at x=unk70 (0xF0 in normal
-//   play), digits at y=2 -- the SAME top-right corner the coin count already
-//   occupies at y=2. Flipping the engine alone would stack the star digits ON
-//   the coin digits. So the star goes one block DOWN, under the coins on the
-//   same right edge, exactly the way the VS block stacks the coins under the
-//   star. star_dy defaults to 18 (SM64DS_ADV_STAR_TOP_Y) and is the only number
-//   here that is a judgement rather than a measurement -- it goes to the owner
-//   with a capture. The star's own special-state arm (already sub=0 / TOP in the
-//   ROM) is reproduced unchanged, no offset: those are cutscene states where the
-//   ROM itself puts the star on top and the coins are not in the corner.
+//   play), digits at y=2 -- the top-right corner. Tango's round-3 pick puts the
+//   star on that top row and the coin one row below it (the swap of the 0.3.4
+//   layout, which had the coin on top and star below at +18). So the star draws
+//   at the ROM's y with no offset: star_dy defaults to 0 (SM64DS_ADV_STAR_TOP_Y),
+//   and the coin leaf below carries the +18 instead. The star's own
+//   special-state arm (already sub=0 / TOP in the ROM) is reproduced unchanged,
+//   no offset: those are cutscene states where the ROM itself puts the star on
+//   top and the coins are not in the corner.
+//
+//   COIN: the ROM's adventure arm already draws the coin count on the TOP screen
+//   (engine A) at the same top-right y=2 the star now holds. port_adv_coin_count_top
+//   is a copy of that arm carrying coin_dy so the coin sits one sprite row DOWN,
+//   under the star on the same right edge. coin_dy defaults to 18
+//   (SM64DS_ADV_COIN_TOP_Y); it is the judgement number now, and it goes to the
+//   owner with a capture.
 //
 // SM64DS_ADV_HUD_TOP=0 leaves the ROM alone (star+life back on the bottom) on
 // the same binary, which is how the before/after capture pair is taken.
@@ -771,19 +777,54 @@ static void port_adv_life_count_top(HUD *self, int dy)
     }
 }
 
+/* src/_ZN3HUD15RenderCoinCountEv.cpp's adventure (else, data_0209f2d8 != 1)
+   arm, verbatim except the three OAM::Render calls carry dy so the coin count
+   now sits one sprite row BELOW the star count instead of on the top row it
+   used to hold. Leaf-copied here -- not the ROM's RenderCoinCount face -- only
+   so the y offset can be applied; the leading engine argument stays the ROM's
+   own 0 (engine A / TOP), and the ROM's SublevelToLevel==0x1d suppression is
+   kept unchanged. digits[3] is at HUD+0x74. coin_dy defaults to 18. */
+extern "C" {
+int SublevelToLevel(int i);
+extern signed char data_0209f2f8;
+}
+static void port_adv_coin_count_top(HUD *self, int dy)
+{
+    if (SublevelToLevel(data_0209f2f8) == 0x1d)
+        return;
+    int sb = 0xf0;
+    self->CalculateDigits(data_0209f358[data_0209f250]);
+    const signed char *digits = (const signed char *)((char *)self + 0x74);
+    for (int i = 2; i >= 0; i--) {
+        const signed char d = digits[i];
+        if (d >= 0) {
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[d],
+                                                     sb, 2 + dy, -1, 1, 0);
+            sb -= 9;
+        }
+    }
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, sb, 0xa + dy,
+                                             -1, 1, 0);
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad8, sb - 0x10,
+                                             2 + dy, -1, 1, 0);
+}
+
 /* Returns 1 when it has drawn the whole adventure arm itself and the caller
    must NOT also run HUD::Render; 0 means "not my case, run the ROM's". */
 static int port_adv_hud_render_stars_lives_on_top(HUD *self)
 {
-    static int want = -1, star_dy = 18, life_dy = 0;
+    static int want = -1, star_dy = 0, coin_dy = 18, life_dy = 0;
     if (want < 0) {
         const char *e = std::getenv("SM64DS_ADV_HUD_TOP");
         want = (e && e[0] == '0') ? 0 : 1;
         e = std::getenv("SM64DS_ADV_STAR_TOP_Y");
         if (e) star_dy = std::atoi(e);
+        e = std::getenv("SM64DS_ADV_COIN_TOP_Y");
+        if (e) coin_dy = std::atoi(e);
         e = std::getenv("SM64DS_ADV_LIFE_TOP_Y");
         if (e) life_dy = std::atoi(e);
         if (star_dy < 0) star_dy = 0; if (star_dy > 160) star_dy = 160;
+        if (coin_dy < 0) coin_dy = 0; if (coin_dy > 160) coin_dy = 160;
         if (life_dy < 0) life_dy = 0; if (life_dy > 160) life_dy = 160;
     }
     if (!want)
@@ -800,7 +841,7 @@ static int port_adv_hud_render_stars_lives_on_top(HUD *self)
     if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
         _ZN3HUD17RenderHealthMeterEv((void *)self);
         if (_ZN5Event6GetBitEj(0x1d) == 0) {
-            _ZN3HUD15RenderCoinCountEv((void *)self);
+            port_adv_coin_count_top(self, coin_dy);
             _ZN3HUD14RenderRedCoinsEv((void *)self);
             _ZN3HUD17RenderSilverStarsEv((void *)self);
             _ZN3HUD15RenderTimeTimerEv((void *)self);
