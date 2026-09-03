@@ -415,7 +415,7 @@
       "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
     },
     "postPromotion": {
-      "round": "tools/rombuild.py -j 16 after the merged 37-function enrollment, typed shared-state reconstruction, and measured ABI-wall consolidation, on origin/main 1cbf7ca94 plus PR #2122 commit 07f0d6b04",
+      "round": "tools/rombuild.py -j 16 after the merged 37-function enrollment, typed shared-state reconstruction, and measured ABI-wall consolidation, on origin/main 62e6e2ae7 plus PR #2122 commit 07f0d6b04",
       "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
       "sourceBuiltFunctions": {
         "total": 11088,
@@ -425,8 +425,8 @@
       "intactTuGates": "dsd modules PASS, zero new symbol errors, storage aliases exact",
       "romSha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
       "romMatchesStockBuild": true,
-      "romDataFromSource": "global romdata_check summary: 1,276 symbols and 7,207 records; 623 verified, 190 partial, 5 differ, and 458 unnamed. This TU introduces no ROM or module mismatch.",
-      "licensedRecordVerdicts": "the production link reports 13 source-owned data claims, all 13 reproducing and zero mismatching; source-owned BSS reports 2 claims totaling 60 NOBITS bytes. Compiler-produced RTTI, type strings and vtables are audited before duplicate canonical records are discarded."
+      "romDataFromSource": "global romdata_check summary: 625 verified, 190 partial, 5 differ, and 458 unnamed from 7,200 object records. This TU introduces no ROM or module mismatch.",
+      "licensedRecordVerdicts": "the production link reports 14 source-owned data claims, all 14 reproducing and zero mismatching; source-owned BSS reports 2 claims totaling 60 NOBITS bytes. Compiler-produced RTTI, type strings and vtables are audited before duplicate canonical records are discarded."
     }
   },
   "compiler_only_output": [
