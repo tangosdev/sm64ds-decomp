@@ -27,13 +27,13 @@ _ZN8MetalNet6RenderEv kind:function(arm,size=0x28) addr:0x02111ea8
 _ZN8MetalNet8BehaviorEv kind:function(arm,size=0x70) addr:0x02111ed0
 _ZN8MetalNet13InitResourcesEv kind:function(arm,size=0x108) addr:0x02111f40
 MetalNet_Spawn kind:function(arm,size=0x30) addr:0x02112048
-_ZN4FlagD1Ev kind:function(arm,size=0x30) addr:0x02112078
-_ZN4FlagD0Ev kind:function(arm,size=0x44) addr:0x021120a8
-_ZN4Flag16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021120ec
-_ZN4Flag6RenderEv kind:function(arm,size=0x28) addr:0x0211211c
-_ZN4Flag8BehaviorEv kind:function(arm,size=0x4c) addr:0x02112144
-_ZN4Flag13InitResourcesEv kind:function(arm,size=0x60) addr:0x02112190
-Flag_Spawn kind:function(arm,size=0x38) addr:0x021121f0
+_ZN10daMcFlag_cD1Ev kind:function(arm,size=0x30) addr:0x02112078
+_ZN10daMcFlag_cD0Ev kind:function(arm,size=0x44) addr:0x021120a8
+_ZN10daMcFlag_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021120ec
+_ZN10daMcFlag_c6RenderEv kind:function(arm,size=0x28) addr:0x0211211c
+_ZN10daMcFlag_c8BehaviorEv kind:function(arm,size=0x4c) addr:0x02112144
+_ZN10daMcFlag_c13InitResourcesEv kind:function(arm,size=0x60) addr:0x02112190
+daMcFlag_c_Spawn kind:function(arm,size=0x38) addr:0x021121f0
 data_ov009_02112228 kind:data(any) addr:0x02112228
 data_ov009_0211222c kind:data(any) addr:0x0211222c
 data_ov009_02112230 kind:data(any) addr:0x02112230
@@ -170,10 +170,9 @@ data_ov009_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 data_ov009_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 _ZTI10daMcFlag_c kind:data(any) addr:0x02113b60
 _ZTS10daMcFlag_c kind:data(any) addr:0x02113b6c
-Flag_SpawnInfo kind:data(any) addr:0x02113b7c ambiguous
+daMcFlag_c_SpawnInfo kind:data(any) addr:0x02113b7c ambiguous
 data_ov009_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov009_02113b90 kind:data(any) addr:0x02113b90 ambiguous
-_ZTV4Flag kind:data(any) addr:0x02113ba0
 _ZTV10daMcFlag_c kind:data(any) addr:0x02113ba0
 data_ov009_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 data_ov009_02113c14 kind:data(any) addr:0x02113c14 ambiguous
