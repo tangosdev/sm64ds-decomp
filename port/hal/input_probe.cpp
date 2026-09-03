@@ -1493,6 +1493,40 @@ extern "C" void port_probe_key_spawn(int frame)
                         (int)*(signed char *)(player + 0xcc));
 }
 
+/* TEST SCAFFOLDING (KLEPTO_BD10): frame-scheduled bare Klepto at the player.
+ *
+ *   SM64DS_KLEPTO_SPAWN_AT=<frame>
+ *
+ * SM64DS_SPAWN_ACTOR=239 fires at the boot, which on level 16 is the player's
+ * mid-air entrance 1737 units above the sand; the bird then parks at that
+ * altitude and its 50-tick dive (func_ov062_0211ba84, ~22 units a tick) runs
+ * out ~600 units short of the grounded player every time. This drops the same
+ * param-0 (cap-stealing) bird ON the player once he has landed, so the e17c
+ * main (func_ov062_0211bd10) sees him inside its 1000-unit SSL window at once
+ * and the e18c dive starts with the +0x144 cylinder already over him. Same
+ * port_debug_spawn_at path as the key spawn above; class 239 = KLEPTO. */
+extern "C" void port_probe_klepto_spawn(int frame)
+{
+    const char *e = std::getenv("SM64DS_KLEPTO_SPAWN_AT");
+    if (!e) return;
+    static int fired;
+    if (fired) return;
+    int at = std::atoi(e);
+    if (at <= 0 || frame < at) return;
+    char *player = (char *)find_actor_by_class(0xbf);
+    if (!player) return;
+    fired = 1;
+    std::fprintf(stderr, "  [klepto] f%d spawning KLEPTO param 0 at the player "
+                 "(%d,%d,%d) floor %d\n", frame,
+                 *(int *)(player + 0x5c) >> 12, *(int *)(player + 0x60) >> 12,
+                 *(int *)(player + 0x64) >> 12, *(int *)(player + 0x644) >> 12);
+    port_debug_spawn_at(239, 0, *(int *)(player + 0x5c),
+                        *(int *)(player + 0x60),
+                        *(int *)(player + 0x64),
+                        (int)*(short *)(player + 0x8e),
+                        (int)*(signed char *)(player + 0xcc));
+}
+
 /* TEST SCAFFOLDING: frame-scheduled two-player overlap fixture.
  *
  *   SM64DS_VS_OVERLAP_AT=<frame>[:<units>]   units default 40
