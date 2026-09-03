@@ -3,29 +3,9 @@
     .ctor       start:0x02111ae8 end:0x02111af8 kind:rodata align:4
     .data       start:0x02111b00 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/_ZN11DiamondLiftD1Ev.cpp:
+src/actors/d_a_obj_km1_ukishima.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
-
-src/_ZN11DiamondLiftD0Ev.cpp:
-    complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/_ZN11DiamondLift16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211123c end:0x02111280
-
-src/_ZN11DiamondLift6RenderEv.cpp:
-    complete
-    .text start:0x02111280 end:0x021112a8
-
-src/_ZN11DiamondLift8BehaviorEv.cpp:
-    complete
-    .text start:0x021112a8 end:0x02111320
-
-src/_ZN11DiamondLift13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111320 end:0x021113cc
+    .text start:0x021111a0 end:0x021113cc
 
 src/daObjKm1_Ukishima_c_classInit.c:
     complete

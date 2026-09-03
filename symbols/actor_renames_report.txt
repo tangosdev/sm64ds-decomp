@@ -280,7 +280,7 @@ SKIP SeesawBdw: ov095:0x2135a28 already claimed by SeesawBob (vtable slot 9)
 SKIP SeesawBdw: ov095:0x2135700 already claimed by SeesawBob (vtable slot 16)
 SKIP SeesawBdw: ov095:0x2135744 already claimed by SeesawBob (vtable slot 17)
 NOVTABLE actor 134 StairsBdw (alloc=?)
-NOVTABLE actor 135 DiamondLift (alloc=0x320)
+NOVTABLE actor 135 daObjKm1_Ukishima_c (alloc=0x320)
 NOVTABLE actor 138 SlidingPlatformBdw (alloc=0x330)
 AMBIG actor 140 FIRE_SEA_ELEVATOR: ['ov045', 'ov010'] -> ov045
 SKIP TiltingPlatformBfs: ov045:0x21130f4 already claimed by daObjKm2_Fall_Block_c (vtable alloc=0x350)

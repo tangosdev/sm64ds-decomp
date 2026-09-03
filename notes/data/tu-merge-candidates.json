@@ -8241,17 +8241,17 @@
    "start": "0x21111a0",
    "end": "0x21113fc",
    "classes": [
-    "DiamondLift"
+    "daObjKm1_Ukishima_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN11DiamondLiftD1Ev.cpp",
-    "src/_ZN11DiamondLiftD0Ev.c",
-    "src/_ZN11DiamondLift16CleanupResourcesEv.cpp",
-    "src/_ZN11DiamondLift6RenderEv.cpp",
-    "src/_ZN11DiamondLift8BehaviorEv.cpp",
-    "src/_ZN11DiamondLift13InitResourcesEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_cD1Ev.cpp",
+    "src/_ZN19daObjKm1_Ukishima_cD0Ev.c",
+    "src/_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c6RenderEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c8BehaviorEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp",
     "src/daObjKm1_Ukishima_c_classInit.c"
    ],
    "ext_mix": {

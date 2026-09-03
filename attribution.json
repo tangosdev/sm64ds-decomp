@@ -1552,6 +1552,18 @@
     "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c6RenderEv": "andrewboudreau",
     "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c8BehaviorEv": "github-actions[bot]",
-    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_td_futa.cpp#_ZN13daObjTdFuta_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjKm1_Ukishima_c.cpp#_ZN19daObjKm1_Ukishima_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_km1_ukishima.cpp#_ZN19daObjKm1_Ukishima_c13InitResourcesEv": "github-actions[bot]"
   }
 }

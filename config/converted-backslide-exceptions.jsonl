@@ -210,3 +210,6 @@
 {"path": "src/_ZN9HugeCover6RenderEv.cpp", "reason": "ov032/daObjTdFuta_c promoted to a single TU; rebased onto post-#2216 main"}
 {"path": "src/_ZN9HugeCoverD0Ev.cpp", "reason": "ov032/daObjTdFuta_c promoted to a single TU; rebased onto post-#2216 main"}
 {"path": "src/_ZN9HugeCoverD1Ev.cpp", "reason": "ov032/daObjTdFuta_c promoted to a single TU; rebased onto post-#2216 main"}
+{"path": "src/_ZN11DiamondLift6RenderEv.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}
+{"path": "src/_ZN11DiamondLiftD0Ev.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}
+{"path": "src/_ZN11DiamondLiftD1Ev.cpp", "reason": "ov043/daObjKm1_Ukishima_c promoted to a single TU; rebased onto post-#2217 main"}

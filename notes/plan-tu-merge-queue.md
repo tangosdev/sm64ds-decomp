@@ -255,7 +255,7 @@ ov030 0x21111a0  n=8  L=236  daObjHmBskt_c              NORM2 pcov=2
 **B11 — R2 tail · 4 TUs / 32 files / net −28 / 759 lines**
 ```
 ov033 0x21111a0  n=8  L=151  TinyCover        NORM1
-ov043 0x21111a0  n=7  L=145  DiamondLift      NORM1
+ov043 0x21111a0  n=7  L=145  daObjKm1_Ukishima_c      NORM1
 ov045 0x21111a0  n=9  L=200  FireSeaElevator  NORM1 CONF2
 ov064 0x21174a0  n=8  L=263  BigBully         NORM1 pcov=2
 ```
