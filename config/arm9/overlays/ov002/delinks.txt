@@ -837,25 +837,10 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/_ZN11daObjLava_cD1Ev.cpp:
+src/actors/d_a_obj_lava.cpp:
     complete
-    .text start:0x020b6d28 end:0x020b6d4c
-
-src/_ZN11daObjLava_cD0Ev.cpp:
-    complete
-    .text start:0x020b6d4c end:0x020b6d84
-
-src/_ZN11daObjLava_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b6d84 end:0x020b6dd0
-
-src/_ZN11daObjLava_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b6dd0 end:0x020b6dd8
-
-src/daObjLava_c_Spawn.c:
-    complete
-    .text start:0x020b6dd8 end:0x020b6e08
+    .text start:0x020b6d28 end:0x020b6e08
+    .data start:0x021093a0 end:0x0210945c
 
 src/actors/d_a_obj_waterfall.cpp:
     complete
