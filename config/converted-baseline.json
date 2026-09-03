@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2658,
+  "count": 2661,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -2402,6 +2402,9 @@
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c16OnAimedAtWithEggEv",
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c16OnPendingDestroyEv",
     "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_c6RenderEv",
+    "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_cD0Ev",
+    "src/actors/d_a_bakubaku.cpp#_ZN12daBakubaku_cD1Ev",
+    "src/actors/d_a_bakubaku.cpp#daBakubaku_c_classInit",
     "src/actors/d_a_bg_snwmn.cpp#_ZN11daBgSnwmn_c16OnPendingDestroyEv",
     "src/actors/d_a_bg_snwmn.cpp#_ZN11daBgSnwmn_c8BehaviorEv",
     "src/actors/d_a_bg_snwmn.cpp#_ZN11daBgSnwmn_cD0Ev",

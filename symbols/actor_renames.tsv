@@ -2713,3 +2713,5 @@ ov006	0x020f8ed8	func_ov006_020f8ed8	_ZN18dMgMCarloCardObj_cC1Ev	compiler-proven
 ov072	0x02120c00	func_ov072_02120c00	daBgSnwmn_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov072	0x02122954	data_ov072_02122954	g_profile_BIG_SNOWMAN	reconstructed profile global; literal ROM ID BIG_SNOWMAN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov072	0x02122978	data_ov072_02122978	_ZTV11daBgSnwmn_c	ROM RTTI class identity; address-point symbol already configured at the same address
+ov032	0x0211244c	func_ov032_0211244c	daBakubaku_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov032	0x02113800	data_ov032_02113800	g_profile_BAKUBAKU	reconstructed profile global; descriptor-stored profile ID 228+literal ROM ID BAKUBAKU+registry role+later EAD lineage; exact SM64DS spelling not preserved
