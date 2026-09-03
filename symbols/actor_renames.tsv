@@ -1112,12 +1112,12 @@ ov036	0x02111414	func_ov036_02111414	SwingingPlatform_Spawn	spawnfunc
 ov036	0x02111414	SwingingPlatform_Spawn	daObjRcBuranko_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov036	0x02111544	func_ov036_02111544	RotatingPlatformRr_Spawn	spawnfunc
 ov036	0x02111544	RotatingPlatformRr_Spawn	daObjRc_Kaitendai_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov036	0x02111580	func_ov036_02111580	_ZN8ShipWingD1Ev	vtable slot 16 (was _ZN18RotatingPlatformRrD1Ev)
-ov036	0x021115b0	func_ov036_021115b0	_ZN8ShipWingD0Ev	vtable slot 17 (was _ZN18RotatingPlatformRrD0Ev)
-ov036	0x021115f4	func_ov036_021115f4	_ZN8ShipWing16CleanupResourcesEv	vtable slot 3 (was _ZN18RotatingPlatformRr16CleanupResourcesEv)
-ov036	0x0211169c	func_ov036_0211169c	_ZN8ShipWing6RenderEv	vtable slot 9 (was _ZN18RotatingPlatformRr6RenderEv)
-ov036	0x021116c0	func_ov036_021116c0	_ZN8ShipWing8BehaviorEv	vtable slot 6 (was _ZN18RotatingPlatformRr8BehaviorEv)
-ov036	0x02111854	func_ov036_02111854	_ZN8ShipWing13InitResourcesEv	vtable slot 0 (was _ZN18RotatingPlatformRr13InitResourcesEv)
+ov036	0x02111580	func_ov036_02111580	_ZN8ShipWingD1Ev	vtable slot 16 (was _ZN19daObjRc_Kaitendai_cD1Ev)
+ov036	0x021115b0	func_ov036_021115b0	_ZN8ShipWingD0Ev	vtable slot 17 (was _ZN19daObjRc_Kaitendai_cD0Ev)
+ov036	0x021115f4	func_ov036_021115f4	_ZN8ShipWing16CleanupResourcesEv	vtable slot 3 (was _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv)
+ov036	0x0211169c	func_ov036_0211169c	_ZN8ShipWing6RenderEv	vtable slot 9 (was _ZN19daObjRc_Kaitendai_c6RenderEv)
+ov036	0x021116c0	func_ov036_021116c0	_ZN8ShipWing8BehaviorEv	vtable slot 6 (was _ZN19daObjRc_Kaitendai_c8BehaviorEv)
+ov036	0x02111854	func_ov036_02111854	_ZN8ShipWing13InitResourcesEv	vtable slot 0 (was _ZN19daObjRc_Kaitendai_c13InitResourcesEv)
 ov036	0x02111904	func_ov036_02111904	ShipWing_Spawn	spawnfunc
 ov036	0x02111904	ShipWing_Spawn	daObjRc_Hane_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov036	0x0211193c	func_ov036_0211193c	_ZN10DonutBlockD1Ev	vtable slot 16 (was _ZN8ShipWingD1Ev)
@@ -1151,7 +1151,7 @@ ov036	0x02113b50	data_ov036_02113b50	RotatingPlatformRr_SpawnInfo	spawninfo
 ov036	0x02113b50	RotatingPlatformRr_SpawnInfo	g_profile_RC_KAITEN	reconstructed profile global; literal ROM ID RC_KAITEN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov036	0x02113c14	data_ov036_02113c14	ShipWing_SpawnInfo	spawninfo
 ov036	0x02113c14	ShipWing_SpawnInfo	g_profile_RC_HANE	reconstructed profile global; literal ROM ID RC_HANE+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov036	0x02113c38	data_ov036_02113c38	_ZTV8ShipWing	vtable alloc=? (was _ZTV18RotatingPlatformRr)
+ov036	0x02113c38	data_ov036_02113c38	_ZTV8ShipWing	vtable alloc=? (was _ZTV19daObjRc_Kaitendai_c)
 ov036	0x02113cd4	data_ov036_02113cd4	DonutBlock_SpawnInfo	spawninfo
 ov036	0x02113cd4	DonutBlock_SpawnInfo	g_profile_RC_TIKUWA	reconstructed profile global; literal ROM ID RC_TIKUWA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov036	0x02113cf8	data_ov036_02113cf8	_ZTV10DonutBlock	vtable alloc=? (was _ZTV8ShipWing)

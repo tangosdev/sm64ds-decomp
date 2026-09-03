@@ -6,10 +6,10 @@ _ZN16SwingingPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021112c8
 _ZN16SwingingPlatform8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112f0
 _ZN16SwingingPlatform13InitResourcesEv kind:function(arm,size=0x98) addr:0x0211137c
 daObjRcBuranko_c_classInit kind:function(arm,size=0x30) addr:0x02111414
-_ZN18RotatingPlatformRrD1Ev kind:function(arm,size=0x50) addr:0x02111444
-_ZN18RotatingPlatformRrD0Ev kind:function(arm,size=0x64) addr:0x02111494
-_ZN18RotatingPlatformRr16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114f8
-_ZN18RotatingPlatformRr13InitResourcesEv kind:function(arm,size=0x38) addr:0x0211150c
+_ZN19daObjRc_Kaitendai_cD1Ev kind:function(arm,size=0x50) addr:0x02111444
+_ZN19daObjRc_Kaitendai_cD0Ev kind:function(arm,size=0x64) addr:0x02111494
+_ZN19daObjRc_Kaitendai_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114f8
+_ZN19daObjRc_Kaitendai_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x0211150c
 daObjRc_Kaitendai_c_classInit kind:function(arm,size=0x3c) addr:0x02111544
 _ZN8ShipWingD1Ev kind:function(arm,size=0x30) addr:0x02111580
 _ZN8ShipWingD0Ev kind:function(arm,size=0x44) addr:0x021115b0
@@ -165,7 +165,7 @@ _ZTI19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b20
 data_ov036_02113b2c kind:data(any) addr:0x02113b2c
 _ZTS19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b38
 g_profile_RC_KAITEN kind:data(any) addr:0x02113b50 ambiguous
-_ZTV18RotatingPlatformRr kind:data(any) addr:0x02113b74
+_ZTV19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b74
 data_ov036_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov036_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov036_02113b90 kind:data(any) addr:0x02113b90 ambiguous

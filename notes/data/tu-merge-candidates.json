@@ -10226,15 +10226,15 @@
    "start": "0x2111444",
    "end": "0x2111580",
    "classes": [
-    "RotatingPlatformRr"
+    "daObjRc_Kaitendai_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN18RotatingPlatformRrD1Ev.cpp",
-    "src/_ZN18RotatingPlatformRrD0Ev.c",
-    "src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp",
-    "src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp",
+    "src/_ZN19daObjRc_Kaitendai_cD1Ev.cpp",
+    "src/_ZN19daObjRc_Kaitendai_cD0Ev.c",
+    "src/_ZN19daObjRc_Kaitendai_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjRc_Kaitendai_c13InitResourcesEv.cpp",
     "src/daObjRc_Kaitendai_c_classInit.c"
    ],
    "ext_mix": {
