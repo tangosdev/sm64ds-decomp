@@ -1,0 +1,430 @@
+{
+  "id": "ov006/dScMgJump2_c",
+  "module": "ov006",
+  "source": "src/actors/d_sc_mg_jump2.cpp",
+  "promoted_source": "src/actors/d_sc_mg_jump2.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20eebe8..0x20efc08, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgJump2_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020eebe8",
+      "end": "0x020efc08"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12dScMgJump2_cD1Ev",
+      "address": "0x020eebe8",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN12dScMgJump2_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_cD0Ev",
+      "address": "0x020eec9c",
+      "size": "0x000000c8",
+      "legacy_source": "src/_ZN12dScMgJump2_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020eed64",
+      "address": "0x020eed64",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020eed64.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020eed68",
+      "address": "0x020eed68",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020eed68.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020eedc8",
+      "address": "0x020eedc8",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_020eedc8.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020eee3c",
+      "address": "0x020eee3c",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov006_020eee3c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020eeef4",
+      "address": "0x020eeef4",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_020eeef4.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020eef40",
+      "address": "0x020eef40",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov006_020eef40.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020eef58",
+      "address": "0x020eef58",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_020eef58.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020eef90",
+      "address": "0x020eef90",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020eef90.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020eeff0",
+      "address": "0x020eeff0",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020eeff0.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020ef05c",
+      "address": "0x020ef05c",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov006_020ef05c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020ef0d4",
+      "address": "0x020ef0d4",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020ef0d4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c16CleanupResourcesEv",
+      "address": "0x020ef110",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN12dScMgJump2_c16CleanupResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c6RenderEv",
+      "address": "0x020ef148",
+      "size": "0x00000170",
+      "legacy_source": "src/_ZN12dScMgJump2_c6RenderEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020ef2b8",
+      "address": "0x020ef2b8",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov006_020ef2b8.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c8BehaviorEv",
+      "address": "0x020ef3e0",
+      "size": "0x0000009c",
+      "legacy_source": "src/_ZN12dScMgJump2_c8BehaviorEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020ef47c",
+      "address": "0x020ef47c",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020ef47c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_020ef480",
+      "address": "0x020ef480",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020ef480.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020ef4ec",
+      "address": "0x020ef4ec",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020ef4ec.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020ef580",
+      "address": "0x020ef580",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_020ef580.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020ef5ac",
+      "address": "0x020ef5ac",
+      "size": "0x000001bc",
+      "legacy_source": "src/func_ov006_020ef5ac.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020ef768",
+      "address": "0x020ef768",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_020ef768.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020ef794",
+      "address": "0x020ef794",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov006_020ef794.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020ef7f8",
+      "address": "0x020ef7f8",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020ef7f8.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c13InitResourcesEv",
+      "address": "0x020ef834",
+      "size": "0x00000250",
+      "legacy_source": "src/_ZN12dScMgJump2_c13InitResourcesEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c13OnTurnIntoEggEi",
+      "address": "0x020efa84",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12dScMgJump2_c13OnTurnIntoEggEi.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN12dScMgJump2_c13OnYoshiTryEatEi",
+      "address": "0x020efaa8",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN12dScMgJump2_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "dScMgJump2_c_Spawn",
+      "address": "0x020efaf0",
+      "size": "0x00000118",
+      "legacy_source": "src/dScMgJump2_c_Spawn.c",
+      "ordinal": 28
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eef40; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eef58; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020eeff0; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421c0' differs between the legacy file that used to hold func_ov006_020eeef4 and the one that held func_ov006_020eeff0; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020ef05c; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_021421b0' differs between the legacy file that used to hold func_ov006_020eef90 and the one that held func_ov006_020ef0d4; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold func_ov006_020eedc8 and the one that held func_ov006_020ef5ac; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020adb1c' differs between the legacy file that used to hold func_ov006_020ef480 and the one that held func_ov006_020ef5ac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_ov006_021421b8' differs between the legacy file that used to hold _ZN12dScMgJump2_c16CleanupResourcesEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold _ZN12dScMgJump2_c6RenderEv and the one that held _ZN12dScMgJump2_c13InitResourcesEv; kept the first; RESOLVED -- the TU now carries one declaration per symbol, typed to what the ROM bytes require (struct Elem */struct Node * for the two 021421xx pointers, one s16* spelling of ApproachLinear2, and data_020a0e68 copied whole as *(Mtx43T *)&data_020a0e68), and every call site casts to it; 29/29 MATCH with that spelling"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgJump2_c/d_sc_mg_jump2.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 29,
+    "functions_declared": 29,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov006-dScMgJump2_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020eebe8",
+        "end": "0x020efc08",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020eebe8",
+          "end": "0x020efc08",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 29
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086d70, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e60, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e54, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScene_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x020914d4, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScene_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x020914b0, in arm9's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov004:0x020bbf6c, in ov004's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dScMgBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov004:0x020bbf84, in ov004's .data, which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the direct base class dScMgD3DBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov006:0x0213c5c8, in ov006's .data (0x02133600-0x021402e0), which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5c8"
+    },
+    {
+      "symbol": "_ZTS14dScMgD3DBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the direct base class dScMgD3DBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov006:0x0213c5d4, in ov006's .data (0x02133600-0x021402e0), which no section this entry licenses (.text 0x020eebe8-0x020efc08) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213c5d4"
+    },
+    {
+      "symbol": "_ZTI12dScMgJump2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213cca4, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213cca4"
+    },
+    {
+      "symbol": "_ZTS12dScMgJump2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccbc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. The record is the ROM's own spelling of the name: 0x0213ccbc holds the NUL-terminated string 12dScMgJump2_c, so the class name in include/dScMgJump2_c.h is transcribed from the cartridge, not coined.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213ccbc"
+    },
+    {
+      "symbol": "_ZTV12dScMgJump2_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/dScMgJump2_c.h defines `virtual ~dScMgJump2_c()` in the class body, so the destructor is no longer the key function and the first virtual DECLARED but not defined inline -- OnYoshiTryEat, at ov006:0x020efaa8 -- takes that role. It is defined in this translation unit and in no other, so mwccarm puts _ZTI/_ZTS/_ZTV in this object alone. (The destructor has to be defined in the class body: the cartridge keeps D1 at 0x020eebe8 BELOW D0 at 0x020eec9c, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov006:0x0213ccfc, in ov006's .data (0x02133600-0x021402e0) and outside this entry's only licensed range (.text 0x020eebe8-0x020efc08), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, limited once. 0x0213ccfc is the vtable's ADDRESS POINT, not the start of the emitted 0x98-byte object: the table begins two words earlier -- 0x0213ccf4 holds the offset-to-top 0 and 0x0213ccf8 holds 0x0213cca4, `&_ZTI12dScMgJump2_c` -- and those two words lie outside the symbol's extent (they fall inside data_ov006_0213cce0), so anchoring the comparison at the symbol leaves them uncompared. The slots themselves are covered in full, unlike ov018/daPgMthr_c: the next symbol is data_ov006_0213cd8c, so the _ZTV extent 0x0213ccfc-0x0213cd8c is 0x90 bytes, all 36 slots, exactly the emitted object minus its two preamble words.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213ccfc"
+    }
+  ]
+}

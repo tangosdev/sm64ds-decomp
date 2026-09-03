@@ -1518,7 +1518,9 @@ extern int func_ov010_02111984[];
 extern int func_ov015_021114f0(void*);
 extern int func_ov016_02111c40(void*);
 extern int func_ov018_02111804[];
-extern int func_ov018_02111bf0(void*, void*);
+/* Returns nothing: ov018 0x02111d18..0x02111d24 pops straight to bx lr with no
+   r0 set. Definition in src/actors/d_a_pg_mthr.cpp. */
+extern void func_ov018_02111bf0(void*, void*);
 extern int func_ov021_02112128, func_ov021_02111fe4, func_ov021_02111f8c, func_ov021_02111f34, func_ov021_02111edc;
 extern int func_ov021_021122fc(char*);
 extern int func_ov022_0211193c(void);
