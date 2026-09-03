@@ -21,9 +21,11 @@ players' characters occasionally hop a short distance when a guess is
 corrected, which is the visible cost of every rollback game ever made. If one
 player's connection falls badly behind, the others keep playing at full speed
 while the game guesses for up to eight frames, then hold for one second, and
-if that player is still silent they are dropped and the match goes on. The
-default mode is unchanged: "lockstep" is what an absent key reads as, and with
-it the rollback code is one cached compare per frame and otherwise dead.
+if that player is still silent they are dropped and the match goes on. Since
+the owner's decision of 2026-09-03 rollback is the default (section 8): a
+copy with no settings.json, or one that never mentions NetMode, plays online
+this way, "lockstep" is still there for anyone who writes it, and a session
+of more than eight players runs lockstep on its own and says so.
 
 ## 2. The pieces
 
@@ -68,7 +70,10 @@ it the rollback code is one cached compare per frame and otherwise dead.
   SM64DS_ROLLBACK_ACTOR_RENDER=1 is the conservative re-sim (every Render
   body kept, only the rasteriser and the present dropped).
 * NetMode: hal/host_settings.cpp reads "NetMode": "lockstep" | "rollback"
-  once at load; SM64DS_NETMODE overrides it at transport install. The parent's
+  once at load, rollback being the default (an absent file, an unparseable
+  file and an absent key all read as rollback; section 8); SM64DS_NETMODE
+  overrides it at transport install, and a session wider than
+  kRollbackMaxPlayers (8, hal/host_settings.h) runs lockstep. The parent's
   choice travels in the ACCEPT and the roster announce on bit 17 (bit 16 is
   LAGDELAY's report ack), and a child that asked for the other mode adopts the
   parent's, loudly. An older parent sets neither bit and reads as lockstep.
@@ -344,3 +349,56 @@ in the existing sixteen-player mode itself (not this work), and all the
 speed numbers were taken with every copy of the game crammed onto one
 computer, so real-world numbers will be better than the table but have not
 been measured across real machines.
+
+## 8. Rollback is the default (owner's decision, 2026-09-03)
+
+The owner decided that rollback ships ON in the next release. What changed:
+
+* THE DEFAULT. hal/host_settings.cpp sets g_net_mode to rollback with the
+  other defaults, before it looks for the file, so settings.json absent,
+  unparseable, or without the key all read as rollback. Only the word
+  "lockstep" moves it. SM64DS_NETMODE still wins over the file, both ways.
+  The "[settings]" boot line follows the file's rule (a setting is said only
+  when it is off its default), so it now names lockstep when lockstep was
+  chosen, in plain words, and says nothing for rollback.
+* THE WIDTH GUARD. Determinism (DET) and cost (COST) are proven only up to
+  eight seated players; past that the wide lane's Minimap::Render faults at
+  frame 2 on player numbers 8 and up, in lockstep as much as in rollback
+  (section 5). So kRollbackMaxPlayers = 8 lives in hal/host_settings.h next
+  to the NetMode parse, and the transport's install block, after the env has
+  had its say, runs any session opened wider than that in lockstep with one
+  line naming the width and the reason:
+
+      [comms:loopback] NetMode rollback asked for a 9-player session, but
+      rollback is proven (determinism and cost) only up to 8 players; this
+      session runs LOCKSTEP instead
+
+  Every peer reads the same SM64DS_VS_PLAYERS, so every peer lands on the
+  same side of the line, and the parent's accept bit 17 carries the mode
+  anyway.
+* THE LADDER. rollback_proof.py takes --netmode none (no SM64DS_NETMODE
+  handed to the game, and there is no settings.json in a proof run, so the
+  mode is the built-in default) and a GUARD rung (--only GUARD --wide 9).
+
+Re-proved on the rebuilt binary, exe 63536EEC702E5069, build/tmp of the
+worktree (pair_default.log, n0_default.log, guard9.log, battery_netmode.log):
+
+* PAIR with --netmode none: NetMode ROLLBACK printed by 2/2 windows at every
+  RTT, 1/1 pairings NO DIVERGENCE to round 592 at RTT 0/40/80/160, [rb-local]
+  OK on 2/2, unrecoverable 0 with 119 to 191 rollbacks per window. ALL GREEN
+  (20 pass, 0 fail).
+* net_proof N0, default mode: SOLO IS BYTE-IDENTICAL, pos=(-4915200,
+  2929633, 11141348) as pinned, and the carrier is SILENT. A solo run never
+  installs the transport, so the default touches nothing there.
+* GUARD at --wide 9: the fallback line printed by 9/9 windows, NetMode
+  ROLLBACK by 0/9. ALL GREEN (2 pass, 0 fail).
+* battery.py --skip-build: ALL GREEN (build/tmp/battery_netmode2.log):
+  every smoke, level and scene selftest ok, default boot to the title ok,
+  linkage 9284 (82.0%), ptr_audit 0, the shipping configuration built in
+  201 s and its selftest rc 0. The first attempt (battery_netmode.log) went
+  red on the same stale build/port-kit romblob_verify the section 4.2 run
+  hit (the 13 ov002/ov046 symbols); a fresh kit configure cleared it, as
+  before, and nothing in this change touches the kit.
+* the boundary at exactly 8 players (build/tmp/guard8.log): NetMode ROLLBACK
+  printed by 8/8 windows and the fallback line by none, so the guard is
+  strictly "more than eight".

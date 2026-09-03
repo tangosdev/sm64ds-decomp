@@ -782,7 +782,8 @@ PipeRound g_pipe[kPipeDepth];
 // kRollbackMaxPlayers (the width it is proven to; the install block says so
 // on one line). With it false every line below is dead and the stop-and-wait
 // / pipelined paths run byte-for-byte as before; a solo run never installs
-// the transport at all, so it is never reached there. status/ROLLBACK.md (the spike) has the numbers
+// the transport at all, so it is never reached there.
+// status/ROLLBACK.md (the spike) has the numbers
 // and the hook-point argument; status/ROLLBACK_SHIP.md has what shipped.
 //
 // THE IDEA, in one paragraph. The pipelined ring above already files every
