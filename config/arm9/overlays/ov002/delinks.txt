@@ -837,23 +837,23 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/_ZN18PoppingLavaBubblesD1Ev.cpp:
+src/_ZN11daObjLava_cD1Ev.cpp:
     complete
     .text start:0x020b6d28 end:0x020b6d4c
 
-src/_ZN18PoppingLavaBubblesD0Ev.cpp:
+src/_ZN11daObjLava_cD0Ev.cpp:
     complete
     .text start:0x020b6d4c end:0x020b6d84
 
-src/func_ov002_020b6d84.c:
+src/_ZN11daObjLava_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6d84 end:0x020b6dd0
 
-src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp:
+src/_ZN11daObjLava_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b6dd0 end:0x020b6dd8
 
-src/PoppingLavaBubbles_Spawn.c:
+src/daObjLava_c_Spawn.c:
     complete
     .text start:0x020b6dd8 end:0x020b6e08
 

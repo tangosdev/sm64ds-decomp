@@ -42,8 +42,8 @@
  *
  * The separate 0x021094a0 table-name defect is now fixed: it is configured as
  * _ZTV16daObjWaterfall_c, matching the adjacent retail RTTI. The preceding
- * 0x021093e0 table still belongs to the distinct daObjLava_c actor represented
- * in this tree by PoppingLavaBubbles.
+ * 0x021093e0 table belongs to the distinct daObjLava_c actor, which now carries
+ * that cartridge name in this tree too (it was coined PoppingLavaBubbles).
  */
 struct daObjMarioCap_c : dEnemyBase_c {
     dCcAc_c  mdCcAc_c;    /* 0x110 */
