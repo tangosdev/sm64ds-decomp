@@ -31,6 +31,10 @@
  */
 #include "BlendModelAnim.h"
 
+/* PORT_HOST_ABI: ROM-order BlendModelAnim slot-5 dispatch (MSVC's vtable
+   spends one slot on the destructor where Itanium spends two, so the
+   matched TU's local shadow-class dispatch lands on Virtual18 instead of
+   Render); the ModelAnim_Renders/Whomp case, one class over. */
 extern "C" int _ZN6Klepto6RenderEv(void *selfv)
 {
     ((BlendModelAnim *)((char *)selfv + 0x334))
