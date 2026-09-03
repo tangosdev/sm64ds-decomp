@@ -209,8 +209,8 @@ carry the rename.
 | 0x16c | `mAnimSpeed` | seeded 0x1000 (1.0), eased toward 0x8000 while the heal cooldown is above 0x2d and back toward 0x1000 otherwise, then copied into `mModelAnim.speed`. The heart spins slowly while idle and fast just after it heals. |
 | 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
 
-Sources: `src/_ZN12daObjHeart_c13InitResourcesEv.cpp`,
-`src/_ZN12daObjHeart_c8BehaviorEv.cpp`, and `src_tu/actors/daObjHeart_c.cpp`.
+Sources: `src/actors/d_a_obj_heart.cpp`, the single translation unit the
+class's per-function sources were promoted into.
 
 ## WingFeather -- include/WingFeather.h
 

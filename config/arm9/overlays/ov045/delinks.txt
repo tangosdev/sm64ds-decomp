@@ -40,33 +40,10 @@ src/daObjKm2_Agaru_c_classInit.c:
     complete
     .text start:0x021114dc end:0x0211150c
 
-src/_ZN18daObjKm2_Ami_Bou_cD1Ev.cpp:
+src/actors/d_a_obj_km2_ami_bou.cpp:
     complete
-    .text start:0x0211150c end:0x02111558
-
-src/_ZN18daObjKm2_Ami_Bou_cD0Ev.cpp:
-    complete
-    .text start:0x02111558 end:0x021115b8
-
-src/_ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021115b8 end:0x021115f0
-
-src/_ZN18daObjKm2_Ami_Bou_c6RenderEv.cpp:
-    complete
-    .text start:0x021115f0 end:0x02111618
-
-src/_ZN18daObjKm2_Ami_Bou_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02111618 end:0x02111738
-
-src/_ZN18daObjKm2_Ami_Bou_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111738 end:0x02111808
-
-src/daObjKm2_Ami_Bou_c_classInit.c:
-    complete
-    .text start:0x02111808 end:0x02111840
+    .text start:0x0211150c end:0x02111840
+    .data start:0x02112d74 end:0x02112e3c
 
 src/actors/d_a_obj_km2_nobiru.cpp:
     complete
