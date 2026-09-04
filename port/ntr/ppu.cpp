@@ -350,6 +350,12 @@ void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
             pc = (int16_t)rd16(oam_base + (grp * 4 + 2) * 8u + 6);
             pd = (int16_t)rd16(oam_base + (grp * 4 + 3) * 8u + 6);
         }
+        if (std::getenv("SM64DS_STAR_AFF_PROBE_A")) {
+            std::fprintf(stderr, "[staraffA] i=%d aff=%d w=%d h=%d bw=%d bh=%d "
+                         "x=%d y=%d dbl=%d tile=%u pa=%d pb=%d pc=%d pd=%d\n",
+                         i, affine?1:0, w, h, bw, bh, x, y, dbl?1:0, tile,
+                         pa, pb, pc, pd);
+        }
 
         for (int sy = 0; sy < bh; ++sy) {
             const int py = y + sy;
