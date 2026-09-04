@@ -1,4 +1,4 @@
-// @symbol RacingPenguin_Spawn
+// @symbol daPgRcer_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -11,7 +11,11 @@
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13RacingPenguin */
 extern void _ZN7PathPtrC1Ev(void *);
-int *RacingPenguin_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daPgRcer_c through RTTI,
+ * allocation size, vtable identity, and the PENGUIN_RACER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: RacingPenguin_Spawn. */
+int *daPgRcer_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(920);
     if (p) {

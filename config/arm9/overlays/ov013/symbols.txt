@@ -13,8 +13,8 @@ _ZN22ClockPaintingHandShort16CleanupResourcesEv kind:function(arm,size=0x2c) add
 _ZN22ClockPaintingHandShort6RenderEv kind:function(arm,size=0x28) addr:0x021114a4
 _ZN22ClockPaintingHandShort8BehaviorEv kind:function(arm,size=0x100) addr:0x021114cc
 _ZN22ClockPaintingHandShort13InitResourcesEv kind:function(arm,size=0x70) addr:0x021115cc
-ClockPaintingHandShort_Spawn kind:function(arm,size=0x38) addr:0x0211163c
-ClockPaintingHandLong_Spawn kind:function(arm,size=0x38) addr:0x02111674
+daObjClock_c_classInit_CLOCK_SHORT kind:function(arm,size=0x38) addr:0x0211163c
+daObjClock_c_classInit_CLOCK_LONG kind:function(arm,size=0x38) addr:0x02111674
 data_ov013_021116ac kind:data(any) addr:0x021116ac
 data_ov013_021116b0 kind:data(any) addr:0x021116b0
 __sinit_ov013_021116b8 kind:function(arm,size=0x40) addr:0x021116b8
@@ -97,8 +97,8 @@ data_ov013_02112198 kind:data(any) addr:0x02112198 ambiguous
 _ZTI12daObjClock_c kind:data(any) addr:0x021121a4
 _ZTS12daObjClock_c kind:data(any) addr:0x021121b0
 data_ov013_021121b8 kind:data(any) addr:0x021121b8 ambiguous
-ClockPaintingHandLong_SpawnInfo kind:data(any) addr:0x021121c0 ambiguous
-ClockPaintingHandShort_SpawnInfo kind:data(any) addr:0x021121dc ambiguous
+g_profile_CLOCK_LONG kind:data(any) addr:0x021121c0 ambiguous
+g_profile_CLOCK_SHORT kind:data(any) addr:0x021121dc ambiguous
 data_ov013_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 _ZTV22ClockPaintingHandShort kind:data(any) addr:0x02112200
 _ZTV12daObjClock_c kind:data(any) addr:0x02112200

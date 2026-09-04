@@ -1,4 +1,4 @@
-// @symbol BookShot_Spawn
+// @symbol daBook_c_classInit_SHOOT_BOOK
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -10,7 +10,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8BookShot */
-int *BookShot_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBook_c through RTTI,
+ * allocation size, vtable identity, and the SHOOT_BOOK registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BookShot_Spawn. */
+int *daBook_c_classInit_SHOOT_BOOK(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {

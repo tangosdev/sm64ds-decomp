@@ -8,7 +8,11 @@ extern void func_020733a8(void*, int, int, void*, void*);
 extern int _ZTV5Unagi[];
 extern int _ZN7Vector3D1Ev[];
 extern int func_0203d384[];
-int *Unagi_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daMoray_c through RTTI,
+ * allocation size, vtable identity, and the MORAY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Unagi_Spawn. */
+int *daMoray_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(sizeof(struct Unagi));
     if (p) {

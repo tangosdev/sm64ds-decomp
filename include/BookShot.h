@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
  * class's own destructor `_ZN8BookShotD1Ev` destroys each member, and
- * `BookShot_Spawn` constructs the same types at the same offsets before
+ * `daBook_c_classInit_SHOOT_BOOK` constructs the same types at the same offsets before
  * storing `_ZTV8BookShot`. Everything this header used to restate below 0x110
  * belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -18,11 +18,15 @@
  *     0x21c dCcAcPos_c  0x40    -> 0x25c
  *     0x25c dBgCh_Actr               0x1bc   -> 0x418
  *
- * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `fBase_c::operator new(1108)`
+ * SIZE IS THE ROM'S OWN: `daBook_c_classInit_SHOOT_BOOK` calls `fBase_c::operator new(1108)`
  * -- 0x454 -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *
  * The ROM's RTTI names this class daBook_c.
+ *
+ * SM64DS RTTI names the implementation daBook_c. The reconstructed factory
+ * daBook_c_classInit_SHOOT_BOOK (historical alias BookShot_Spawn) installs this class's
+ * cartridge vtable for the SHOOT_BOOK registry profile.
  */
 
 #include "dEnemyBase_c.h"

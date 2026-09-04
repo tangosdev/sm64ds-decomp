@@ -25,10 +25,10 @@ _ZN8BookShot13InitResourcesEv kind:function(arm,size=0x284) addr:0x021124e4
 _ZN15BookShotSpawner13InitResourcesEv kind:function(arm,size=0x3c) addr:0x02112768
 _ZN8BookShot16OnAimedAtWithEggEv kind:function(arm,size=0x28) addr:0x021127a4
 _ZN8BookShot13OnYoshiTryEatEv kind:function(arm,size=0x28) addr:0x021127cc
-func_ov020_021127f4 kind:function(arm,size=0x5c) addr:0x021127f4
+daBook_c_classInit_BOOK_SWITCH kind:function(arm,size=0x5c) addr:0x021127f4
 daBookGen_c_classInit kind:function(arm,size=0x30) addr:0x02112850
-Bookend_Spawn kind:function(arm,size=0x5c) addr:0x02112880
-BookShot_Spawn kind:function(arm,size=0x5c) addr:0x021128dc
+daBook_c_classInit_KILLER_BOOK kind:function(arm,size=0x5c) addr:0x02112880
+daBook_c_classInit_SHOOT_BOOK kind:function(arm,size=0x5c) addr:0x021128dc
 _ZN12HauntedChairD1Ev kind:function(arm,size=0x48) addr:0x02112938
 _ZN12HauntedChairD0Ev kind:function(arm,size=0x5c) addr:0x02112980
 _ZN12HauntedChair6State3Ev kind:function(arm,size=0x124) addr:0x021129dc
@@ -42,7 +42,7 @@ _ZN12HauntedChair16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021132
 _ZN12HauntedChair6RenderEv kind:function(arm,size=0x28) addr:0x021132fc
 _ZN12HauntedChair8BehaviorEv kind:function(arm,size=0x8c) addr:0x02113324
 _ZN12HauntedChair13InitResourcesEv kind:function(arm,size=0xe4) addr:0x021133b0
-HauntedChair_Spawn kind:function(arm,size=0x50) addr:0x02113494
+daChair_c_classInit kind:function(arm,size=0x50) addr:0x02113494
 data_ov020_021134e4 kind:data(any) addr:0x021134e4
 data_ov020_021134e8 kind:data(any) addr:0x021134e8
 data_ov020_021134ec kind:data(any) addr:0x021134ec
@@ -201,12 +201,12 @@ _ZTS8daBook_c kind:data(any) addr:0x0211482c
 _ZTI11daBookGen_c kind:data(any) addr:0x02114838
 _ZTI8daBook_c kind:data(any) addr:0x02114844
 _ZTS11daBookGen_c kind:data(any) addr:0x02114850
-Bookend_SpawnInfo kind:data(any) addr:0x02114860 ambiguous
+g_profile_KILLER_BOOK kind:data(any) addr:0x02114860 ambiguous
 data_ov020_02114874 kind:data(any) addr:0x02114874 ambiguous
 g_profile_BOOK_GENERATOR kind:data(any) addr:0x0211487c ambiguous
 data_ov020_0211488c kind:data(any) addr:0x0211488c ambiguous
-data_ov020_02114898 kind:data(any) addr:0x02114898 ambiguous
-BookShot_SpawnInfo kind:data(any) addr:0x021148b4 ambiguous
+g_profile_BOOK_SWITCH kind:data(any) addr:0x02114898 ambiguous
+g_profile_SHOOT_BOOK kind:data(any) addr:0x021148b4 ambiguous
 data_ov020_021148b8 kind:data(any) addr:0x021148b8 ambiguous
 _ZTV15BookShotSpawner kind:data(any) addr:0x021148d8
 data_ov020_021148e0 kind:data(any) addr:0x021148e0 ambiguous
@@ -215,7 +215,7 @@ _ZTV8BookShot kind:data(any) addr:0x0211495c
 _ZTV8daBook_c kind:data(any) addr:0x0211495c
 _ZTS9daChair_c kind:data(any) addr:0x021149d8
 _ZTI9daChair_c kind:data(any) addr:0x021149e4
-HauntedChair_SpawnInfo kind:data(any) addr:0x021149f0 ambiguous
+g_profile_CHAIR kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
 _ZTV12HauntedChair kind:data(any) addr:0x02114a14
 _ZTV9daChair_c kind:data(any) addr:0x02114a14

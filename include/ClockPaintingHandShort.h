@@ -9,6 +9,10 @@
  * vtable, base teardown, constructor call, and 0xd4 Model construction together
  * establish the actual leaf class: dActor_c occupies 0x000..0x0cf, four bytes of
  * derived padding precede the owned Model, and the one-byte hand index follows it.
+ *
+ * SM64DS RTTI names the implementation daObjClock_c. The reconstructed factory
+ * daObjClock_c_classInit_CLOCK_SHORT (historical alias ClockPaintingHandShort_Spawn) installs this class's
+ * cartridge vtable for the CLOCK_SHORT registry profile.
  */
 struct ClockPaintingHandShort : dActor_c {
     u8 pad_0d0[0x4];       /* 0x0d0 */

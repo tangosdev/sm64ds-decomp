@@ -194,14 +194,14 @@ extern struct M48 IDENTITY_MATRIX4X3;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- HauntedChair_Spawn, 0x02113494, size 0x50 */
+/* ROM ordinal 13 -- daChair_c_classInit, 0x02113494, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol HauntedChair_Spawn
+// @symbol daChair_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12HauntedChair */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *HauntedChair_Spawn(void)
+int *daChair_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {

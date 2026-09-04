@@ -41,8 +41,8 @@ _ZN9MovingBar16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02112004
 _ZN9MovingBar6RenderEv kind:function(arm,size=0x28) addr:0x02112068
 _ZN9MovingBar8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
 _ZN9MovingBar13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
-MovingBarBig_Spawn kind:function(arm,size=0x30) addr:0x02112230
-MovingBarSmall_Spawn kind:function(arm,size=0x30) addr:0x02112260
+daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L kind:function(arm,size=0x30) addr:0x02112230
+daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S kind:function(arm,size=0x30) addr:0x02112260
 _ZN9TowerStepD1Ev kind:function(arm,size=0x4c) addr:0x02112290
 _ZN9TowerStepD0Ev kind:function(arm,size=0x60) addr:0x021122dc
 _ZN9TowerStep4KillEv kind:function(arm,size=0x64) addr:0x0211233c
@@ -227,8 +227,8 @@ _ZTS19daObjBk_Dossunbar_c kind:data(any) addr:0x0211451c
 data_ov015_02114534 kind:data(any) addr:0x02114534
 data_ov015_02114538 kind:data(any) addr:0x02114538
 data_ov015_0211453c kind:data(any) addr:0x0211453c
-MovingBarSmall_SpawnInfo kind:data(any) addr:0x0211454c ambiguous
-MovingBarBig_SpawnInfo kind:data(any) addr:0x02114568 ambiguous
+g_profile_BK_DOSSUNBAR_S kind:data(any) addr:0x0211454c ambiguous
+g_profile_BK_DOSSUNBAR_L kind:data(any) addr:0x02114568 ambiguous
 _ZTV9MovingBar kind:data(any) addr:0x0211458c
 data_ov015_02114598 kind:data(any) addr:0x02114598 ambiguous
 data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous

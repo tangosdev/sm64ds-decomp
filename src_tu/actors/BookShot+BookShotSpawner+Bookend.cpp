@@ -176,14 +176,14 @@ extern int data_ov020_02114aa0[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- BookShot_Spawn, 0x021128dc, size 0x5c */
+/* ROM ordinal 30 -- daBook_c_classInit_SHOOT_BOOK, 0x021128dc, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol BookShot_Spawn
+// @symbol daBook_c_classInit_SHOOT_BOOK
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8BookShot */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *BookShot_Spawn(void)
+int *daBook_c_classInit_SHOOT_BOOK(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {
@@ -200,14 +200,14 @@ int *BookShot_Spawn(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- Bookend_Spawn, 0x02112880, size 0x5c */
+/* ROM ordinal 29 -- daBook_c_classInit_KILLER_BOOK, 0x02112880, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol Bookend_Spawn
+// @symbol daBook_c_classInit_KILLER_BOOK
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8BookShot */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *Bookend_Spawn(void)
+int *daBook_c_classInit_KILLER_BOOK(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {
@@ -241,14 +241,14 @@ int *daBookGen_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- func_ov020_021127f4, 0x021127f4, size 0x5c */
+/* ROM ordinal 27 -- daBook_c_classInit_BOOK_SWITCH, 0x021127f4, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov020_021127f4
+// @symbol daBook_c_classInit_BOOK_SWITCH
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8BookShot */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *func_ov020_021127f4(void)
+int *daBook_c_classInit_BOOK_SWITCH(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {

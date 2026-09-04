@@ -264,14 +264,14 @@ extern void _ZN7PathPtrC1Ev(void *);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- RacingPenguin_Spawn, 0x021125bc, size 0x60 */
+/* ROM ordinal 29 -- daPgRcer_c_classInit, 0x021125bc, size 0x60 */
 /* -------------------------------------------------------------------------- */
-// @symbol RacingPenguin_Spawn
+// @symbol daPgRcer_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13RacingPenguin */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *RacingPenguin_Spawn(void)
+int *daPgRcer_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(920);
     if (p) {

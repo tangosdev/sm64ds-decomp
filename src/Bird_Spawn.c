@@ -1,4 +1,4 @@
-// @symbol Bird_Spawn
+// @symbol daSBird_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV4Bird */
-int *Bird_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSBird_c through RTTI,
+ * allocation size, vtable identity, and the SBIRD registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Bird_Spawn. */
+int *daSBird_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(388);
     if (p) {

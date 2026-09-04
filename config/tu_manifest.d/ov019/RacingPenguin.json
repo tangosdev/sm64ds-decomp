@@ -222,7 +222,7 @@
       "ordinal": 28
     },
     {
-      "symbol": "RacingPenguin_Spawn",
+      "symbol": "daPgRcer_c_classInit",
       "address": "0x021125bc",
       "size": "0x00000060",
       "legacy_source": "src/RacingPenguin_Spawn.c",

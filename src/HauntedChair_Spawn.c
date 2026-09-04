@@ -1,4 +1,4 @@
-// @symbol HauntedChair_Spawn
+// @symbol daChair_c_classInit
 /* The natural C++ spelling `return new HauntedChair` reproduces every
  * instruction, but its allocation relocation names the unavailable global
  * `_Znwm` (linkcheck BLIND-1) where the ROM calls fBase_c::operator new.
@@ -10,7 +10,11 @@
 #include "decl_ShadowModel.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
-int *HauntedChair_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daChair_c through RTTI,
+ * allocation size, vtable identity, and the CHAIR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: HauntedChair_Spawn. */
+int *daChair_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {

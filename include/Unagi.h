@@ -20,6 +20,10 @@
  *
  * The array at 0x448 is Vector3[7]: the ROM destroys it with
  * __destroy_arr(ptr, 7, 0xc, _ZN7Vector3D1Ev), and 0xc is sizeof(Vector3).
+ *
+ * SM64DS RTTI names the implementation daMoray_c. The reconstructed factory
+ * daMoray_c_classInit (historical alias Unagi_Spawn) installs this class's
+ * cartridge vtable for the MORAY registry profile.
  */
 
 #ifdef __cplusplus

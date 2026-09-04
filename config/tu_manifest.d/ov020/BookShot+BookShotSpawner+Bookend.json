@@ -208,7 +208,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "func_ov020_021127f4",
+      "symbol": "daBook_c_classInit_BOOK_SWITCH",
       "address": "0x021127f4",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov020_021127f4.c",
@@ -222,14 +222,14 @@
       "ordinal": 28
     },
     {
-      "symbol": "Bookend_Spawn",
+      "symbol": "daBook_c_classInit_KILLER_BOOK",
       "address": "0x02112880",
       "size": "0x0000005c",
       "legacy_source": "src/Bookend_Spawn.c",
       "ordinal": 29
     },
     {
-      "symbol": "BookShot_Spawn",
+      "symbol": "daBook_c_classInit_SHOOT_BOOK",
       "address": "0x021128dc",
       "size": "0x0000005c",
       "legacy_source": "src/BookShot_Spawn.c",

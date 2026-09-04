@@ -1,4 +1,4 @@
-// @symbol SlidingBox_Spawn
+// @symbol daSlide_Box_c_classInit
 /* Measured C/ABI wall: `return new SlidingBox` reproduces the instruction
  * bytes, but its allocator relocation names unresolved global `_Znwm` while
  * the ROM calls fBase_c::operator new at 0x02043444. Keep the explicit actor
@@ -9,7 +9,11 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 
-int *SlidingBox_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSlide_Box_c through RTTI,
+ * allocation size, vtable identity, and the SLIDE_BOX registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SlidingBox_Spawn. */
+int *daSlide_Box_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1272);
     if (p) {

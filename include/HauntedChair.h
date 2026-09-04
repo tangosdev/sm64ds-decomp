@@ -18,9 +18,13 @@
  * own `_ZTV12HauntedChair` spelling and objisolate rebinds it to the same ROM
  * slot array without retaining a source-level alias.
  *
- * HauntedChair_Spawn allocates 0x3a8 bytes, constructs dActor_c, then the four
+ * daChair_c_classInit allocates 0x3a8 bytes, constructs dActor_c, then the four
  * owned objects below. Both destructor variants destroy those objects in
  * reverse order at these exact offsets, independently pinning the layout.
+ *
+ * SM64DS RTTI names the implementation daChair_c. The reconstructed factory
+ * daChair_c_classInit (historical alias HauntedChair_Spawn) installs this class's
+ * cartridge vtable for the CHAIR registry profile.
  */
 struct HauntedChair : dActor_c {
     u8 mPad0d0[0x4];                    /* 0x0d0 */

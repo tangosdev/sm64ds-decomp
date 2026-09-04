@@ -27,7 +27,7 @@ _ZN13RacingPenguin16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021123
 _ZN13RacingPenguin6RenderEv kind:function(arm,size=0x34) addr:0x02112360
 _ZN13RacingPenguin8BehaviorEv kind:function(arm,size=0x40) addr:0x02112394
 _ZN13RacingPenguin13InitResourcesEv kind:function(arm,size=0x1e8) addr:0x021123d4
-RacingPenguin_Spawn kind:function(arm,size=0x60) addr:0x021125bc
+daPgRcer_c_classInit kind:function(arm,size=0x60) addr:0x021125bc
 _ZN10daSldMng_cD1Ev kind:function(arm,size=0x24) addr:0x0211261c
 _ZN10daSldMng_cD0Ev kind:function(arm,size=0x38) addr:0x02112640
 _ZN10daSldMng_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
@@ -100,7 +100,7 @@ data_ov019_021132c0 kind:data(any) addr:0x021132c0
 data_ov019_021132c8 kind:data(any) addr:0x021132c8
 _ZTI10daPgRcer_c kind:data(any) addr:0x021132d0
 _ZTS10daPgRcer_c kind:data(any) addr:0x021132dc
-RacingPenguin_SpawnInfo kind:data(any) addr:0x021132ec ambiguous
+g_profile_PENGUIN_RACER kind:data(any) addr:0x021132ec ambiguous
 _ZTV13RacingPenguin kind:data(any) addr:0x02113310
 _ZTV10daPgRcer_c kind:data(any) addr:0x02113310
 data_ov019_02113344 kind:data(any) addr:0x02113344 ambiguous

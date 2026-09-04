@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "Bird_Spawn",
+      "symbol": "daSBird_c_classInit",
       "address": "0x02111a30",
       "size": "0x00000040",
       "legacy_source": "src/Bird_Spawn.c",
@@ -124,7 +124,7 @@
     "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'func_ov009_02111224' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
-    "13/13 MATCH, objisolate clean, reloc-destinations clean (tubuild verify). Reconciliations: RandomIntInternal kept as unsigned (021116ec's own decl; signed % 400 changed codegen and cost 999-word DIFF), decl_common.h's char[] view of the two SharedFilePtr globals kept with casts at 4 sites, Bird_Spawn stores &_ZTV4Bird[2] because this TU now defines the vtable, one ~Bird() emits D0+D1. Member func_ov009_0211145c is the pre-existing NONMATCHING asm hatch, carried verbatim with its banner."
+    "13/13 MATCH, objisolate clean, reloc-destinations clean (tubuild verify). Reconciliations: RandomIntInternal kept as unsigned (021116ec's own decl; signed % 400 changed codegen and cost 999-word DIFF), decl_common.h's char[] view of the two SharedFilePtr globals kept with casts at 4 sites, daSBird_c_classInit stores &_ZTV4Bird[2] because this TU now defines the vtable, one ~Bird() emits D0+D1. Member func_ov009_0211145c is the pre-existing NONMATCHING asm hatch, carried verbatim with its banner."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

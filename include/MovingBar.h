@@ -12,6 +12,14 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjBk_Dossunbar_c. The reconstructed factory
+ * daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S (historical alias MovingBarSmall_Spawn) installs this class's
+ * cartridge vtable for the BK_DOSSUNBAR_S registry profile.
+ *
+ * SM64DS RTTI names the implementation daObjBk_Dossunbar_c. The reconstructed factory
+ * daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L (historical alias MovingBarBig_Spawn) installs this class's
+ * cartridge vtable for the BK_DOSSUNBAR_L registry profile.
  */
 
 #ifdef __cplusplus
@@ -24,8 +32,8 @@ struct MovingBar : dBgActor_c {
     s32 mHomePosY;                      /* 0x324 */
     s32 mHomePosZ;                      /* 0x328 */
     s32 mVariant;                     /* 0x32c */
-    /* Both factories storing _ZTV9MovingBar (ov015:0x0211458c) -- MovingBarBig_Spawn
-       and MovingBarSmall_Spawn -- call fBase_c::operator new(0x338). They agree, so
+    /* Both factories storing _ZTV9MovingBar (ov015:0x0211458c) -- daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L
+       and daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S -- call fBase_c::operator new(0x338). They agree, so
        they are two spawn-info variants of one actor, and 0x330 was the field span
        rather than the size. */
     u32 mState;              /* 0x330 */

@@ -5,11 +5,15 @@
 #include "ShadowModel.h"
 #include "dActor_c.h"
 
-/* Bird_Spawn allocates 0x184 bytes, constructs dActor_c, then constructs a
+/* daSBird_c_classInit allocates 0x184 bytes, constructs dActor_c, then constructs a
  * ModelAnim at 0xd4 and a ShadowModel at 0x138. D1 destroys those members in
  * reverse order before chaining to dActor_c. InitResources snapshots the
  * inherited actor position into 0x160 and Behavior dispatches through the
  * state index at 0x17c.
+ *
+ * SM64DS RTTI names the implementation daSBird_c. The reconstructed factory
+ * daSBird_c_classInit (historical alias Bird_Spawn) installs this class's
+ * cartridge vtable for the SBIRD registry profile.
  */
 struct Bird : dActor_c {
     u8          pad_0d0[0x4];

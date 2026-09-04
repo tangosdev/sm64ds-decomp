@@ -6,13 +6,18 @@
  * symbol uses it. _ZTV13RacingPenguin and _ZTV10daPgRcer_c are co-address
  * compatibility views of the same ROM table.
  *
- * sizeof is independently pinned by RacingPenguin_Spawn allocating 0x398.
+ * sizeof is independently pinned by daPgRcer_c_classInit allocating 0x398.
  * The factory remains a truthful C source for now: plain `new RacingPenguin`
  * emits the global `_Znwm`, while the ROM calls `fBase_c::operator new`; the
  * current mwccarm rejects declaring that class operator in fBase_c, and an
  * explicit allocator plus placement-new changes the factory from 0x60 bytes to
  * 0x68/0x70. The compiler-spelled constructor sequence is therefore a measured
- * source-form wall, not something to hide behind a relocation wildcard. */
+ * source-form wall, not something to hide behind a relocation wildcard.
+ *
+ * SM64DS RTTI names the implementation daPgRcer_c. The reconstructed factory
+ * daPgRcer_c_classInit (historical alias RacingPenguin_Spawn) installs this class's
+ * cartridge vtable for the PENGUIN_RACER registry profile.
+ */
 #ifndef RACINGPENGUIN_H
 #define RACINGPENGUIN_H
 #include "types.h"
@@ -113,7 +118,7 @@ struct RacingPenguin {
     s32 mPathNodeIndex;            /* 0x36c */
     u8  pad_370[0x26];
     /* InitResources stores dActor_c::TrackStar's result here. It is the last
-       byte of the object: 0x397 rounds to the 0x398 RacingPenguin_Spawn
+       byte of the object: 0x397 rounds to the 0x398 daPgRcer_c_classInit
        allocates. */
     u8  unk_396;            /* 0x396 */
 };

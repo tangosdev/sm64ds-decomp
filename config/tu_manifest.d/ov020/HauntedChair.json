@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "HauntedChair_Spawn",
+      "symbol": "daChair_c_classInit",
       "address": "0x02113494",
       "size": "0x00000050",
       "legacy_source": "src/HauntedChair_Spawn.c",

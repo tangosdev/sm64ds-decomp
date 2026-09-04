@@ -10,9 +10,14 @@
  * offset zero, and the 32-slot vtable differs from dBgActor_c only at slots
  * 0, 3, 6, 9, 16 and 17.
  *
- * SlidingBox_Spawn allocates 0x4f8 bytes, constructs dBgActor_c, then the
+ * daSlide_Box_c_classInit allocates 0x4f8 bytes, constructs dBgActor_c, then the
  * dBgCh_Actr at 0x324. Both destructor variants destroy that member before
- * the inherited dBgActor_c teardown, independently pinning the layout. */
+ * the inherited dBgActor_c teardown, independently pinning the layout.
+ *
+ * SM64DS RTTI names the implementation daSlide_Box_c. The reconstructed factory
+ * daSlide_Box_c_classInit (historical alias SlidingBox_Spawn) installs this class's
+ * cartridge vtable for the SLIDE_BOX registry profile.
+ */
 struct SlidingBox : dBgActor_c {
     dActor_c *mShip;                    /* 0x320 - actor 0x39 carrying the box */
     dBgCh_Actr mWithMeshClsn;           /* 0x324 */

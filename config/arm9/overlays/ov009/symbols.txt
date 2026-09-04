@@ -10,7 +10,7 @@ _ZN4Bird16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211186c
 _ZN4Bird6RenderEv kind:function(arm,size=0x28) addr:0x02111870
 _ZN4Bird8BehaviorEv kind:function(arm,size=0xe4) addr:0x02111898
 _ZN4Bird13InitResourcesEv kind:function(arm,size=0xb4) addr:0x0211197c
-Bird_Spawn kind:function(arm,size=0x40) addr:0x02111a30
+daSBird_c_classInit kind:function(arm,size=0x40) addr:0x02111a30
 _ZN14daObjMcWater_cD1Ev kind:function(arm,size=0x4c) addr:0x02111a70
 _ZN14daObjMcWater_cD0Ev kind:function(arm,size=0x60) addr:0x02111abc
 func_ov009_02111b1c kind:function(arm,size=0xb8) addr:0x02111b1c
@@ -145,7 +145,7 @@ data_ov009_0211390c kind:data(any) addr:0x0211390c
 data_ov009_02113914 kind:data(any) addr:0x02113914
 _ZTS9daSBird_c kind:data(any) addr:0x0211391c
 _ZTI9daSBird_c kind:data(any) addr:0x02113928
-Bird_SpawnInfo kind:data(any) addr:0x02113934 ambiguous
+g_profile_SBIRD kind:data(any) addr:0x02113934 ambiguous
 _ZTV4Bird kind:data(any) addr:0x02113958
 _ZTV9daSBird_c kind:data(any) addr:0x02113958
 data_ov009_02113980 kind:data(any) addr:0x02113980 ambiguous
