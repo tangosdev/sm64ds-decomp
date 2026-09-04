@@ -47,9 +47,9 @@
             "overlay": "ov035",
             "factory_module": "ov035",
             "profile_address": "0x02112ac0",
-            "current_profile_name": "data_ov035_02112ac0",
+            "current_profile_name": "g_profile_CT_MECHA12L",
             "factory_address": "0x0211168c",
-            "current_factory_name": "func_ov035_0211168c"
+            "current_factory_name": "daObjCtMecha10_c_classInit_CT_MECHA12L"
           }
         ]
       },
@@ -83,9 +83,9 @@
             "overlay": "ov027",
             "factory_module": "ov027",
             "profile_address": "0x02113800",
-            "current_profile_name": "SlidingIce_SpawnInfo",
+            "current_profile_name": "g_profile_SL_ICEBLOCK_SHOT",
             "factory_address": "0x02111564",
-            "current_factory_name": "SlidingIce_Spawn"
+            "current_factory_name": "daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT"
           },
           {
             "overlay": "ov032",
@@ -135,9 +135,9 @@
             "overlay": "ov035",
             "factory_module": "ov035",
             "profile_address": "0x02112ac0",
-            "current_profile_name": "data_ov035_02112ac0",
+            "current_profile_name": "g_profile_CT_MECHA12L",
             "factory_address": "0x0211168c",
-            "current_factory_name": "func_ov035_0211168c"
+            "current_factory_name": "daObjCtMecha10_c_classInit_CT_MECHA12L"
           }
         ]
       },
@@ -215,9 +215,9 @@
             "overlay": "ov027",
             "factory_module": "ov027",
             "profile_address": "0x02113800",
-            "current_profile_name": "SlidingIce_SpawnInfo",
+            "current_profile_name": "g_profile_SL_ICEBLOCK_SHOT",
             "factory_address": "0x02111564",
-            "current_factory_name": "SlidingIce_Spawn"
+            "current_factory_name": "daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT"
           },
           {
             "overlay": "ov032",
@@ -1532,9 +1532,9 @@
           "overlay": "ov035",
           "factory_module": "ov035",
           "profile_address": "0x02112ac0",
-          "current_profile_name": "data_ov035_02112ac0",
+          "current_profile_name": "g_profile_CT_MECHA12L",
           "factory_address": "0x0211168c",
-          "current_factory_name": "func_ov035_0211168c"
+          "current_factory_name": "daObjCtMecha10_c_classInit_CT_MECHA12L"
         }
       ],
       "tu_start": "0x2111998",
