@@ -229,21 +229,21 @@
       "ordinal": 28
     },
     {
-      "symbol": "func_ov006_02121774",
+      "symbol": "_ZN17dScMgTrampoline_c9StateDoneEv",
       "address": "0x02121774",
       "size": "0x00000004",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 29
     },
     {
-      "symbol": "func_ov006_02121778",
+      "symbol": "_ZN17dScMgTrampoline_c13StateWaitExitEv",
       "address": "0x02121778",
       "size": "0x000000d0",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 30
     },
     {
-      "symbol": "func_ov006_02121848",
+      "symbol": "_ZN17dScMgTrampoline_c12StateResultsEv",
       "address": "0x02121848",
       "size": "0x0000007c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -257,7 +257,7 @@
       "ordinal": 32
     },
     {
-      "symbol": "func_ov006_021218fc",
+      "symbol": "_ZN17dScMgTrampoline_c9StatePlayEv",
       "address": "0x021218fc",
       "size": "0x000002cc",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -278,7 +278,7 @@
       "ordinal": 35
     },
     {
-      "symbol": "func_ov006_02121d64",
+      "symbol": "_ZN17dScMgTrampoline_c10StateIntroEv",
       "address": "0x02121d64",
       "size": "0x000001a0",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -339,19 +339,19 @@
       "symbol": "data_ov006_0213faa0",
       "address": "0x0213faa0",
       "size": "0x8",
-      "evidence": "TU-local state descriptor whose function relocation resolves to func_ov006_02121778"
+      "evidence": "eight-byte dScMgTrampoline_c PMF descriptor targeting the byte-verified StateWaitExit member"
     },
     {
       "symbol": "data_ov006_0213faa8",
       "address": "0x0213faa8",
       "size": "0x8",
-      "evidence": "TU-local state descriptor whose function relocation resolves to func_ov006_02121774"
+      "evidence": "eight-byte dScMgTrampoline_c PMF descriptor targeting the byte-verified StateDone member"
     },
     {
       "symbol": "data_ov006_0213fab0",
       "address": "0x0213fab0",
       "size": "0x8",
-      "evidence": "TU-local state descriptor whose function relocation resolves to func_ov006_02121d64"
+      "evidence": "eight-byte dScMgTrampoline_c PMF descriptor targeting the byte-verified StateIntro member"
     },
     {
       "symbol": "MgTrampolineTime_SpawnInfo",
@@ -363,13 +363,13 @@
       "symbol": "data_ov006_0213fac0",
       "address": "0x0213fac0",
       "size": "0x8",
-      "evidence": "TU-local state descriptor whose function relocation resolves to func_ov006_021218fc"
+      "evidence": "eight-byte dScMgTrampoline_c PMF descriptor targeting the byte-verified StatePlay member"
     },
     {
       "symbol": "data_ov006_0213fac8",
       "address": "0x0213fac8",
       "size": "0x8",
-      "evidence": "TU-local state descriptor whose function relocation resolves to func_ov006_02121848"
+      "evidence": "eight-byte dScMgTrampoline_c PMF descriptor targeting the byte-verified StateResults member"
     },
     {
       "symbol": "_ZTI17dScMgTrampoline_c",
@@ -416,7 +416,7 @@
       "source": "0x0213faa0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov006_02121778",
+      "symbol": "_ZN17dScMgTrampoline_c13StateWaitExitEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02121778"
@@ -426,7 +426,7 @@
       "source": "0x0213faa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov006_02121774",
+      "symbol": "_ZN17dScMgTrampoline_c9StateDoneEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02121774"
@@ -436,7 +436,7 @@
       "source": "0x0213fab0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov006_02121d64",
+      "symbol": "_ZN17dScMgTrampoline_c10StateIntroEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02121d64"
@@ -456,7 +456,7 @@
       "source": "0x0213fac0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov006_021218fc",
+      "symbol": "_ZN17dScMgTrampoline_c9StatePlayEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x021218fc"
@@ -466,7 +466,7 @@
       "source": "0x0213fac8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov006_02121848",
+      "symbol": "_ZN17dScMgTrampoline_c12StateResultsEv",
       "addend": 0,
       "target_module": "ov006",
       "target_address": "0x02121848"
@@ -981,6 +981,8 @@
     "LIFECYCLE ORDER PROOF: the one real inline virtual destructor in dScMgTrampoline_c.h makes mwccarm emit retail D1 then D0 in cartridge order without an extra D2 body; the factory and destructor agree on all three member arrays.",
     "LINKAGE PROOF: partial-link contribution comparison caught two declarations accidentally lifted out of the legacy extern-C block in OnYoshiTryEat. Restoring C linkage for _ZN3G2x13SetBlendAlphaEPVttttj and func_ov006_020d0b04 yields 44/44 contribution-equivalent derived objects and zero unhomed imports.",
     "NON-TEXT BOUNDARY: the contiguous 0x0213faa0..0x0213fbc4 band contains six state/profile records, this class's compiler-generated RTTI/vtable, and three resource tables. Its final byte is exactly the start of dScMgTrampoline2_c's verified data band; no BSS or initializer is claimed.",
+    "STATE-MEMBER PROOF: the five address-only callbacks at 0x02121774, 0x02121778, 0x02121848, 0x021218fc and 0x02121d64 are real no-argument dScMgTrampoline_c members. Behavior dispatches an eight-byte member pointer from this+0x5004, and the TU's five adjacent eight-byte descriptors relocate to exactly those bodies. Each compiler-spelled member is byte-exact. The StateDone/StateWaitExit/StateResults/StatePlay/StateIntro suffixes are behavioral coinage, disclosed in symbols/actor_renames.tsv.",
+    "PMF STATIC-INITIALIZER WALL: spelling the five namespace-scope descriptors directly as dScMgTrampoline_c::State initializers makes mwccarm 2004/b56 emit a new __sinit, .ctor entry and five anonymous data temporaries absent from the cartridge. The class declares the State type and Behavior uses it at dispatch; the runtime field and ROM descriptors retain raw two-word storage, with literal aliases used only to give the descriptors relocations to the compiler-spelled member symbols.",
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/_ZN17dScMgTrampoline_c13OnYoshiTryEatEi.cpp (_ZN17dScMgTrampoline_c13OnYoshiTryEatEi) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: CONFLICT: extern declaration 'data_ov006_02142f64' differs between the legacy file that used to hold func_ov006_02120b7c and the one that held func_ov006_02120bc8; kept the first, the other is commented out for review",

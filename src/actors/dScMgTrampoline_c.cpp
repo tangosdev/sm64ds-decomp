@@ -141,17 +141,19 @@ struct UnkObj {
 /* shadow typedef 'Vec2s' */
 typedef struct Vec2s { s16 x, y; } Vec2s;
 
-/* shadow typedef 'void' */
-typedef void (dScMgTrampoline_c::*TrampolineState)();
-
 /* shadow struct 'B4' */
 struct B4 {
     unsigned char v;
     unsigned char pad[3];
 };
 
-/* shadow struct 'P2' */
-struct P2 { int a,b; };
+/* Raw storage form of mwccarm's eight-byte single-inheritance PMF. Behavior
+   gives the live scene storage its dScMgTrampoline_c::State meaning at the
+   dispatch site; these descriptors retain the raw form because direct
+   namespace-scope PMF initialization makes
+   mwccarm 2004/b56 emit a __sinit, .ctor entry, and five anonymous data
+   temporaries that the cartridge does not contain. */
+struct P2 { int a, b; };
 
 // Preserve the original front end's blind two-word aggregate copy in C++ mode.
 struct P2Words { int words[2]; };
@@ -259,14 +261,11 @@ extern short data_ov006_02140538;
 
 
 
-extern int data_ov006_0213faa8[];
 extern void func_ov006_020cd39c(...);
 extern int _Z14ApproachLinearRiii(int*,int,int);
 extern int func_ov006_020cd158(void);
 extern void func_ov004_020b0a54(int);
-extern struct P2 data_ov006_0213faa0;
 extern void func_ov006_020cd1e0(void *c);
-extern struct P2 data_ov006_0213fac8;
 extern int data_ov006_02140588;
 extern int data_ov006_0213b0ec;
 extern int data_ov006_0214058c;
@@ -283,14 +282,12 @@ extern void func_ov006_02120a18(u16 *a, int b);
 extern int RandomIntInternal(int *seed);
 extern "C" void func_ov006_020cd62c(int n);
 extern "C" void func_ov006_020cd510(int a);
-extern struct P2 data_ov006_0213fac0;
 void func_ov006_020d0bd8(void);
 void func_ov006_02121cf4(char *c);
 int _ZN4cstd4fdivEii(int a, int b);
 extern s16 data_ov006_0212e04c;
 extern s16 data_ov006_0212e044;
 extern s16 data_ov006_0212e048;
-extern struct P2 data_ov006_0213fab0;
 extern void Camera_UpdateMatrices(void *cam);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
@@ -337,11 +334,13 @@ extern void func_ov006_021225a8(void);
 extern void func_ov006_02120a54(char *self);
 
 void *MgTrampolineTime_Spawn(void);
-void func_ov006_02121778(char *scene);
-void func_ov006_02121774(void);
-void func_ov006_02121d64(char *scene);
-void func_ov006_021218fc(char *scene);
-void func_ov006_02121848(unsigned char *scene);
+/* Literal aliases used only to make the five ROM PMF relocations static data.
+   Their definitions below are real compiler-spelled C++ members. */
+extern "C" void _ZN17dScMgTrampoline_c9StateDoneEv(void);
+extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void);
+extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);
+extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);
+extern "C" void _ZN17dScMgTrampoline_c10StateIntroEv(void);
 extern int data_ov006_02134d40[];
 extern int data_ov006_02134d4c[];
 extern int data_ov006_02134d58[];
@@ -354,14 +353,14 @@ extern int data_ov006_021372f4[];
 extern int data_ov006_02137454[];
 
 /* Data owned by the same original TU. */
-P2 data_ov006_0213faa0 = { (int)func_ov006_02121778, 0 };
-int data_ov006_0213faa8[] = { (int)func_ov006_02121774, 0 };
-P2 data_ov006_0213fab0 = { (int)func_ov006_02121d64, 0 };
+P2 data_ov006_0213faa0 = { (int)_ZN17dScMgTrampoline_c13StateWaitExitEv, 0 };
+P2 data_ov006_0213faa8 = { (int)_ZN17dScMgTrampoline_c9StateDoneEv, 0 };
+P2 data_ov006_0213fab0 = { (int)_ZN17dScMgTrampoline_c10StateIntroEv, 0 };
 TrampolineTimeProfile MgTrampolineTime_SpawnInfo = {
     MgTrampolineTime_Spawn, 0x180, 0x180
 };
-P2 data_ov006_0213fac0 = { (int)func_ov006_021218fc, 0 };
-P2 data_ov006_0213fac8 = { (int)func_ov006_02121848, 0 };
+P2 data_ov006_0213fac0 = { (int)_ZN17dScMgTrampoline_c9StatePlayEv, 0 };
+P2 data_ov006_0213fac8 = { (int)_ZN17dScMgTrampoline_c12StateResultsEv, 0 };
 int data_ov006_0213fadc[] = { 0x107, 0x109, 0x104, 0x105, 0x106 };
 int *data_ov006_0213fb04[] = {
     data_ov006_021373a4,
@@ -661,11 +660,12 @@ void func_ov006_02121f04(char *o)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov006_02121d64, 0x02121d64, size 0x1a0 */
+/* ROM ordinal 36 -- dScMgTrampoline_c::StateIntro, 0x02121d64, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121d64
-extern "C" void func_ov006_02121d64(char *c)
+// @symbol _ZN17dScMgTrampoline_c10StateIntroEv
+void dScMgTrampoline_c::StateIntro()
 {
+    char *c = (char *)this;
     int counter;
 
     func_ov006_020d0ac0();
@@ -769,12 +769,12 @@ extern "C" void func_ov006_02121bc8(char* self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov006_021218fc, 0x021218fc, size 0x2cc */
+/* ROM ordinal 33 -- dScMgTrampoline_c::StatePlay, 0x021218fc, size 0x2cc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021218fc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021218fc(char *c)
+// @symbol _ZN17dScMgTrampoline_c9StatePlayEv
+void dScMgTrampoline_c::StatePlay()
 {
+    char *c = (char *)this;
     int old = data_ov006_02140588;
     func_ov006_020d0ac0();
     func_ov006_020cd39c();
@@ -847,7 +847,6 @@ void func_ov006_021218fc(char *c)
         _Z14ApproachLinearRiii((int *)(c + 0x5da8), 0, 1);
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- func_ov006_021218c4, 0x021218c4, size 0x38 */
@@ -862,11 +861,12 @@ void func_ov006_021218c4(char *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov006_02121848, 0x02121848, size 0x7c */
+/* ROM ordinal 31 -- dScMgTrampoline_c::StateResults, 0x02121848, size 0x7c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121848
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02121848(unsigned char* c){
+// @symbol _ZN17dScMgTrampoline_c12StateResultsEv
+void dScMgTrampoline_c::StateResults()
+{
+  unsigned char *c = (unsigned char *)this;
   func_ov006_020cd39c(c);
   if(_Z14ApproachLinearRiii((int*)(c+0x5d90),0,1)==0) return;
   if(func_ov006_020cd158()==0) return;
@@ -875,15 +875,14 @@ void func_ov006_02121848(unsigned char* c){
   *(int*)(c+0x5d90)=0xb4;
   *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213faa0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov006_02121778, 0x02121778, size 0xd0 */
+/* ROM ordinal 30 -- dScMgTrampoline_c::StateWaitExit, 0x02121778, size 0xd0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121778
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02121778(char *c)
+// @symbol _ZN17dScMgTrampoline_c13StateWaitExitEv
+void dScMgTrampoline_c::StateWaitExit()
 {
+    char *c = (char *)this;
     int idx, b;
     *(int *)(c + 0x5d90) -= 1;
     if (*(int *)(c + 0x5000 + 0xd90) != 0)
@@ -904,23 +903,20 @@ void func_ov006_02121778(char *c)
     }
     *(short *)(c + 0x5dc2) = 1;
     {
-        int w0 = data_ov006_0213faa8[0];
-        int w1 = data_ov006_0213faa8[1];
+        int w0 = ((int *)&data_ov006_0213faa8)[0];
+        int w1 = ((int *)&data_ov006_0213faa8)[1];
         w0 = w1 ? w0 : w0;
         *(int *)(c + 0x5004) = w0;
         *(int *)(c + 0x5008) = w1;
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov006_02121774, 0x02121774, size 0x4 */
+/* ROM ordinal 29 -- dScMgTrampoline_c::StateDone, 0x02121774, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121774
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02121774(void)
+// @symbol _ZN17dScMgTrampoline_c9StateDoneEv
+void dScMgTrampoline_c::StateDone()
 {
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -999,19 +995,20 @@ void func_ov006_0212157c(char *c)
  * _ZTV17dScMgTrampoline_c holds where dScMgD3DBase_c's table holds something
  * else, so it is this class's own override of the virtual fBase_c declares.
  *
- * 0x5004 IS A POINTER-TO-MEMBER-FUNCTION, not a pad. The pre-migration file
+ * 0x5004 IS A POINTER-TO-MEMBER-FUNCTION. The pre-migration file
  * had already worked that out -- it invented a `struct C` whose only purpose
  * was to put a `void (C::*)()` eight bytes in -- but it could not say WHICH
  * class, because it had no name for the receiver. With the receiver named the
- * member pointer is this class's own, and the header's `pad_5004[0x8]` is
- * exactly its two words. It stays declared as pad there rather than retyped:
- * eight bytes either way, and retyping it is a claim about every other file
- * that includes the header, not about this one. */
+ * member pointer is this class's own. The five state bodies and all five data
+ * descriptors now agree on `dScMgTrampoline_c::State`; the header names the
+ * two-word raw storage, while this local cast gives it the proven semantic
+ * type at dispatch. The measured mwccarm static-PMF-initializer wall is
+ * documented beside the data definitions. */
 s32 dScMgTrampoline_c::Behavior()
 {
     int saved = data_ov006_02140588;
     func_ov006_02120c40();
-    (this->*(*(TrampolineState *)pad_5004))();
+    (this->*(*(State *)mState))();
     func_ov006_0212157c((char *)this);
     func_ov006_021209ac((short *)pad_5d84);
     if (saved != data_ov006_02140588)
