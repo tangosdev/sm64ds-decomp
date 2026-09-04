@@ -2145,6 +2145,6 @@ src/func_ov007_020ccab4.c:
     complete
     .text start:0x020ccab4 end:0x020ccad0
 
-src/dScDSMT_c_classInit.c:
+src/d_s_dsmt.c:
     complete
     .text start:0x020ccad0 end:0x020ccb54

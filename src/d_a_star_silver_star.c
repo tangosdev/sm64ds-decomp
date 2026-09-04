@@ -1,4 +1,4 @@
-// @symbol SilverStar_Spawn
+// @symbol daStar_c_classInit_SILVER_STAR
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9PowerStar */
-int *SilverStar_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daStar_c through RTTI,
+ * allocation size, vtable identity, and the SILVER_STAR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SilverStar_Spawn. */
+int *daStar_c_classInit_SILVER_STAR(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1220);
     if (p) {

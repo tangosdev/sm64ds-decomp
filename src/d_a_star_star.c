@@ -1,4 +1,4 @@
-// @symbol PowerStar_Spawn
+// @symbol daStar_c_classInit_STAR
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9PowerStar */
-int *PowerStar_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daStar_c through RTTI,
+ * allocation size, vtable identity, and the STAR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: PowerStar_Spawn. */
+int *daStar_c_classInit_STAR(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1220);
     if (p) {

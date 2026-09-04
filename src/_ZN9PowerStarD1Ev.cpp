@@ -10,7 +10,7 @@
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
  *
  * This body is the evidence for the header. It was the hand-written C that
- * named those offsets in the first place, and `PowerStar_Spawn` constructs the
+ * named those offsets in the first place, and `daStar_c_classInit_STAR` constructs the
  * same types at the same offsets.
  */
 #include "PowerStar.h"

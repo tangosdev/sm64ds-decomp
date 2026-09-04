@@ -89,17 +89,17 @@
       "ordinal": 9
     },
     {
-      "symbol": "EnemySpawner_Spawn",
+      "symbol": "daECreate_c_classInit",
       "address": "0x020f1924",
       "size": "0x00000030",
-      "legacy_source": "src/EnemySpawner_Spawn.c",
+      "legacy_source": "src/d_a_e_create.c",
       "ordinal": 10
     },
     {
-      "symbol": "EnemySwitchTag_Spawn",
+      "symbol": "daESwitch_c_classInit",
       "address": "0x020f1954",
       "size": "0x00000038",
-      "legacy_source": "src/EnemySwitchTag_Spawn.c",
+      "legacy_source": "src/d_a_e_switch.c",
       "ordinal": 11
     }
   ],
@@ -154,8 +154,8 @@
       "src/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
       "src/_ZN12EnemySpawner13InitResourcesEv.cpp",
       "src/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
-      "src/EnemySpawner_Spawn.c",
-      "src/EnemySwitchTag_Spawn.c"
+      "src/d_a_e_create.c",
+      "src/d_a_e_switch.c"
     ],
     "extraInertImports": 73,
     "extraImportsWithNoHome": [],

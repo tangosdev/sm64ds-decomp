@@ -1,8 +1,8 @@
 //cpp
-// @symbol Minimap_Spawn
+// @symbol dMap_c_classInit
 /* Allocation factory formerly labelled _ZN7MinimapC1Ev. It ignores an
  * incoming `this`, allocates sizeof(Minimap), and is held in a factory table;
- * no constructor ABI variant has that shape. See HUD_Spawn for the measured
+ * no constructor ABI variant has that shape. See dMeter_c_classInit for the measured
  * CodeWarrior placement-new limitation behind the explicit lifecycle steps. */
 #include "Minimap.h"
 
@@ -13,7 +13,11 @@ extern void *_ZTV7dBase_c[];
 extern void *_ZTV7Minimap[];
 }
 
-extern "C" Minimap *Minimap_Spawn()
+/* Reconstructed source-style name: SM64DS proves dMap_c through RTTI,
+ * allocation size, vtable identity, and the MAP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Minimap_Spawn. */
+extern "C" Minimap *dMap_c_classInit()
 {
     Minimap *minimap = (Minimap *)_ZN7fBase_cnwEj(sizeof(Minimap));
     if (minimap) {

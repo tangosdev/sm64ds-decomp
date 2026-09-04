@@ -18,7 +18,7 @@ and again after each raw-offset collapse.
 Bodies read: `src/_ZN10StarSwitch13InitResourcesEv.cpp`,
 `src/_ZN10StarSwitch8BehaviorEv.cpp`, `src/_ZN10StarSwitch6RenderEv.cpp`,
 `src/_ZN10StarSwitch16CleanupResourcesEv.cpp`,
-`src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp`, `src/StarSwitch_Spawn.c`.
+`src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp`, `src/d_a_obj_switch_star_switch.c`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

@@ -1,4 +1,4 @@
-// @symbol StarMarker_Spawn
+// @symbol daStarBase_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -8,7 +8,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10StarMarker */
-int *StarMarker_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daStarBase_c through RTTI,
+ * allocation size, vtable identity, and the STARBASE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: StarMarker_Spawn. */
+int *daStarBase_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(476);
     if (p) {

@@ -92,7 +92,7 @@ claim about the whole link.
 | `CANNON_SHUTTER` | `src/actors/daObjCannonShutter_c.cpp` | ov002 `0x020bc8f4..0x020bccfc` | `d_a_obj_cannon_shutter.cpp` | same | unique `d_a_obj_*` stem | B- | right boundary is medium |
 | `C1_TRAP` | `src/actors/daObjC1_Trap_c.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |
 | `STAR_CAMERA` | `src/StarCamera_Spawn.cpp` | ov002 `0x020e6c40..0x020ebf8c` | — | — | TU contains a broader Star family | — | no most-derived RTTI class for the factory |
-| `PLAYER` | `src/Player_Spawn.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
+| `PLAYER` | `src/d_a_ply.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
 | `WATERFALL` | `src/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
 | `KURIBO` | `src/Goomba_Spawn.c` | ov084 `0x02129020..0x0212c10c` | `d_a_krb.cpp` | same | one distinct stem | B- | duplicate class entries; left edge lacks confidence |
 | `TERESA` | `src/actors/daTrs_c/d_a_trs_teresa.cpp` | ov063 `0x02115ee0..0x0211c600` | `d_a_trs.cpp` | — | later `d_a_*` family | — | same TU also yields `d_a_t_basket.cpp`; TU-map check has baseline failure |

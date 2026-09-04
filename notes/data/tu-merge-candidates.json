@@ -974,7 +974,7 @@
     "src/_ZN10StarSwitch13InitResourcesEv.cpp",
     "src/func_ov002_020baa2c.c",
     "src/func_ov002_020baa98.c",
-    "src/StarSwitch_Spawn.c"
+    "src/d_a_obj_switch_star_switch.c"
    ],
    "ext_mix": {
     ".cpp": 13,
@@ -4150,7 +4150,7 @@
     "src/_ZN9TinyCover6RenderEv.cpp",
     "src/_ZN9TinyCover8BehaviorEv.cpp",
     "src/_ZN9TinyCover13InitResourcesEv.cpp",
-    "src/daObjTtFuta_c_classInit.c"
+    "src/d_a_obj_tt_futa.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -5234,7 +5234,7 @@
     "src/_ZN12HealingHeart6RenderEv.cpp",
     "src/_ZN12HealingHeart8BehaviorEv.c",
     "src/_ZN12HealingHeart13InitResourcesEv.cpp",
-    "src/HealingHeart_Spawn.c"
+    "src/d_a_obj_heart.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -5791,7 +5791,7 @@
     "src/_ZN9TinyWater6RenderEv.cpp",
     "src/_ZN9TinyWater8BehaviorEv.c",
     "src/_ZN9TinyWater13InitResourcesEv.cpp",
-    "src/daObjTtWater_c_classInit.c"
+    "src/d_a_obj_tt_water.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -5850,7 +5850,7 @@
     "src/_ZN9OneUpLogo6RenderEv.cpp",
     "src/_ZN9OneUpLogo8BehaviorEv.cpp",
     "src/_ZN9OneUpLogo13InitResourcesEv.cpp",
-    "src/OneUpLogo_Spawn.c"
+    "src/d_a_obj1_up_logo.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -7033,7 +7033,7 @@
     "src/_ZN6Number6RenderEv.cpp",
     "src/_ZN6Number8BehaviorEv.cpp",
     "src/_ZN6Number13InitResourcesEv.cpp",
-    "src/Number_Spawn.c"
+    "src/d_a_obj_number.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -7657,8 +7657,8 @@
     "src/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
     "src/_ZN12EnemySpawner13InitResourcesEv.cpp",
     "src/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
-    "src/EnemySpawner_Spawn.c",
-    "src/EnemySwitchTag_Spawn.c"
+    "src/d_a_e_create.c",
+    "src/d_a_e_switch.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -9099,7 +9099,7 @@
     "src/_ZN10DonutBlock13InitResourcesEv.cpp",
     "src/func_ov036_02111ca4.cpp",
     "src/func_ov036_02111cc4.c",
-    "src/daObjRc_Tikuwa_c_classInit.c"
+    "src/d_a_obj_rc_tikuwa.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -15797,7 +15797,7 @@
     "src/_ZN8SignPost6RenderEv.cpp",
     "src/_ZN8SignPost8BehaviorEv.cpp",
     "src/_ZN8SignPost13InitResourcesEv.cpp",
-    "src/SignPost_Spawn.c"
+    "src/d_a_obj_tatefuda.c"
    ],
    "ext_mix": {
     ".c": 15,
@@ -16776,9 +16776,9 @@
     "src/_ZN10StarMarker13InitResourcesEv.cpp",
     "src/_ZN9PowerStar13InitResourcesEv.cpp",
     "src/StarCamera_Spawn.cpp",
-    "src/StarMarker_Spawn.c",
-    "src/SilverStar_Spawn.c",
-    "src/PowerStar_Spawn.c"
+    "src/d_a_star_base.c",
+    "src/d_a_star_silver_star.c",
+    "src/d_a_star_star.c"
    ],
    "ext_mix": {
     ".cpp": 35,
@@ -17106,7 +17106,7 @@
     "src/_ZN9daSCoin_c16CleanupResourcesEv.c",
     "src/_ZN9daSCoin_c8BehaviorEv.cpp",
     "src/_ZN9daSCoin_c13InitResourcesEv.cpp",
-    "src/daSCoin_c_Spawn.c"
+    "src/d_a_s_coin.c"
    ],
    "ext_mix": {
     ".c": 6,
@@ -17220,7 +17220,7 @@
     "src/_ZN8MugenBgm6RenderEv.cpp",
     "src/_ZN8MugenBgm8BehaviorEv.cpp",
     "src/_ZN8MugenBgm13InitResourcesEv.cpp",
-    "src/MugenBgm_Spawn.c"
+    "src/d_a_mugen_bgm.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -17413,7 +17413,7 @@
     "src/_ZN14CutsceneObject6RenderEv.cpp",
     "src/_ZN14CutsceneObject8BehaviorEv.cpp",
     "src/_ZN14CutsceneObject13InitResourcesEv.cpp",
-    "src/CutsceneObject_Spawn.c"
+    "src/d_a_demo.c"
    ],
    "ext_mix": {
     ".cpp": 24,
@@ -17481,7 +17481,7 @@
     "src/_ZN8Fireball8BehaviorEv.cpp",
     "src/_ZN8Fireball13InitResourcesEv.cpp",
     "src/_ZN8Fireball13OnYoshiTryEatEv.cpp",
-    "src/Fireball_Spawn.c"
+    "src/d_a_f_pkn_ball.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -17778,7 +17778,7 @@
     "src/_ZN6Bullet6RenderEv.cpp",
     "src/_ZN6Bullet8BehaviorEv.cpp",
     "src/_ZN6Bullet13InitResourcesEv.cpp",
-    "src/Bullet_Spawn.c"
+    "src/d_a_propeller_heyho_fire.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -24257,7 +24257,7 @@
     "src/func_ov007_020cca80.c",
     "src/func_ov007_020cca98.c",
     "src/func_ov007_020ccab4.c",
-    "src/dScDSMT_c_classInit.c"
+    "src/d_s_dsmt.c"
    ],
    "ext_mix": {
     ".c": 7
@@ -24819,8 +24819,8 @@
     "src/_ZN10PyramidTag8BehaviorEv.cpp",
     "src/_ZN10PyramidTop13InitResourcesEv.cpp",
     "src/_ZN10PyramidTag13InitResourcesEv.cpp",
-    "src/daObjDlPyramidDummy_c_classInit.c",
-    "src/daObjDlPyramid_c_classInit.c"
+    "src/d_a_obj_dl_pyramid_dummy.c",
+    "src/d_a_obj_dl_pyramid.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -32978,7 +32978,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ExclamationSwitch_Spawn.c"
+    "src/d_a_obj_switch_hanswitch.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -33213,7 +33213,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScTitle_c_classInit.cpp"
+    "src/d_s_title.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -33263,7 +33263,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScStarSel_c_classInit.cpp"
+    "src/d_s_star_sel.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -33309,7 +33309,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScGameOver_c_classInit.cpp"
+    "src/d_s_game_over.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -33694,7 +33694,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScMiniGm_c_classInit.c"
+    "src/d_s_mini_gm.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37721,7 +37721,7 @@
     "src/_ZN10StarSwitch13InitResourcesEv.cpp",
     "src/func_ov002_020baa2c.c",
     "src/func_ov002_020baa98.c",
-    "src/StarSwitch_Spawn.c"
+    "src/d_a_obj_switch_star_switch.c"
    ],
    "ext_mix": {
     ".cpp": 13,

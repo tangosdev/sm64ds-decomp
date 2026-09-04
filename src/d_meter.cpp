@@ -1,5 +1,5 @@
 //cpp
-// @symbol HUD_Spawn
+// @symbol dMeter_c_classInit
 /* This was historically labelled _ZN3HUDC1Ev, but it ignores an incoming
  * `this`, allocates sizeof(HUD), and is referenced through a factory table.
  * It is the out-of-line fold of `new HUD`, not a constructor ABI variant.
@@ -15,7 +15,11 @@ extern void *_ZTV7dBase_c[];
 extern void *_ZTV3HUD[];
 }
 
-extern "C" HUD *HUD_Spawn()
+/* Reconstructed source-style name: SM64DS proves dMeter_c through RTTI,
+ * allocation size, vtable identity, and the METER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: HUD_Spawn. */
+extern "C" HUD *dMeter_c_classInit()
 {
     HUD *hud = (HUD *)_ZN7fBase_cnwEj(sizeof(HUD));
     if (hud) {

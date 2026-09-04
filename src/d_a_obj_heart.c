@@ -1,4 +1,4 @@
-// @symbol HealingHeart_Spawn
+// @symbol daObjHeart_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12HealingHeart */
-int *HealingHeart_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjHeart_c through RTTI,
+ * allocation size, vtable identity, and the HEART registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: HealingHeart_Spawn. */
+int *daObjHeart_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(372);
     if (p) {

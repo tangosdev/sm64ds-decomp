@@ -51,7 +51,7 @@ src/func_ov036_02111cc4.c:
     complete
     .text start:0x02111cc4 end:0x02111cd8
 
-src/daObjRc_Tikuwa_c_classInit.c:
+src/d_a_obj_rc_tikuwa.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 

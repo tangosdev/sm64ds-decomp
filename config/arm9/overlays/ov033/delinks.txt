@@ -32,7 +32,7 @@ src/_ZN9TinyCover13InitResourcesEv.cpp:
     complete
     .text start:0x02111310 end:0x021113a4
 
-src/daObjTtFuta_c_classInit.c:
+src/d_a_obj_tt_futa.c:
     complete
     .text start:0x021113a4 end:0x021113d4
 
@@ -60,7 +60,7 @@ src/_ZN9TinyWater13InitResourcesEv.cpp:
     complete
     .text start:0x021115bc end:0x02111690
 
-src/daObjTtWater_c_classInit.c:
+src/d_a_obj_tt_water.c:
     complete
     .text start:0x02111690 end:0x021116c8
 

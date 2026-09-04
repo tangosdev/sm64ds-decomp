@@ -1,4 +1,4 @@
-// @symbol Number_Spawn
+// @symbol daObjNumber_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Number */
-int *Number_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjNumber_c through RTTI,
+ * allocation size, vtable identity, and the OBJ_NUMBER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Number_Spawn. */
+int *daObjNumber_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(336);
     if (p) {

@@ -95,6 +95,6 @@ src/_ZN11dScMiniGm_c13InitResourcesEv.cpp:
     complete
     .text start:0x020c1a20 end:0x020c21ec
 
-src/dScMiniGm_c_classInit.c:
+src/d_s_mini_gm.c:
     complete
     .text start:0x020c21ec end:0x020c2250

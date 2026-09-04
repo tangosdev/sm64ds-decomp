@@ -35,7 +35,7 @@ src/_ZN10dScTitle_c13InitResourcesEv.cpp:
     complete
     .text start:0x020ada9c end:0x020adc10
 
-src/dScTitle_c_classInit.cpp:
+src/d_s_title.cpp:
     complete
     .text start:0x020adc10 end:0x020adc74
 
@@ -87,7 +87,7 @@ src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020af86c end:0x020af8a0
 
-src/dScStarSel_c_classInit.cpp:
+src/d_s_star_sel.cpp:
     complete
     .text start:0x020b04f0 end:0x020b0580
 
@@ -127,6 +127,6 @@ src/_ZN13dScGameOver_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b0b3c end:0x020b1118
 
-src/dScGameOver_c_classInit.cpp:
+src/d_s_game_over.cpp:
     complete
     .text start:0x020b1118 end:0x020b117c

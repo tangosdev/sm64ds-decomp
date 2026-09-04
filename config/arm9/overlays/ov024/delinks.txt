@@ -60,11 +60,11 @@ src/_ZN10PyramidTag13InitResourcesEv.cpp:
     complete
     .text start:0x021117c8 end:0x0211183c
 
-src/daObjDlPyramidDummy_c_classInit.c:
+src/d_a_obj_dl_pyramid_dummy.c:
     complete
     .text start:0x0211183c end:0x02111874
 
-src/daObjDlPyramid_c_classInit.c:
+src/d_a_obj_dl_pyramid.c:
     complete
     .text start:0x02111874 end:0x021118ac
 

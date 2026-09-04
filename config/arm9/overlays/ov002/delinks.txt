@@ -1156,11 +1156,11 @@ src/func_ov002_020baa98.c:
     complete
     .text start:0x020baa98 end:0x020baaac
 
-src/StarSwitch_Spawn.c:
+src/d_a_obj_switch_star_switch.c:
     complete
     .text start:0x020baaac end:0x020baadc
 
-src/ExclamationSwitch_Spawn.c:
+src/d_a_obj_switch_hanswitch.c:
     complete
     .text start:0x020baadc end:0x020bab0c
 
@@ -1296,7 +1296,7 @@ src/_ZN8SignPost13InitResourcesEv.cpp:
     complete
     .text start:0x020bc240 end:0x020bc3c8
 
-src/SignPost_Spawn.c:
+src/d_a_obj_tatefuda.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
@@ -1332,7 +1332,7 @@ src/_ZN12HealingHeart13InitResourcesEv.cpp:
     complete
     .text start:0x020bc81c end:0x020bc8b4
 
-src/HealingHeart_Spawn.c:
+src/d_a_obj_heart.c:
     complete
     .text start:0x020bc8b4 end:0x020bc8f4
 
@@ -3811,7 +3811,7 @@ src/func_ov002_020e6bb0.c:
     complete
     .text start:0x020e6bb0 end:0x020e6c0c
 
-src/Player_Spawn.cpp:
+src/d_a_ply.cpp:
     complete
     .text start:0x020e6c0c end:0x020e6c40
 
@@ -4125,15 +4125,15 @@ src/StarCamera_Spawn.cpp:
     complete
     .text start:0x020ebe5c end:0x020ebe8c
 
-src/StarMarker_Spawn.c:
+src/d_a_star_base.c:
     complete
     .text start:0x020ebe8c end:0x020ebed4
 
-src/SilverStar_Spawn.c:
+src/d_a_star_silver_star.c:
     complete
     .text start:0x020ebed4 end:0x020ebf30
 
-src/PowerStar_Spawn.c:
+src/d_a_star_star.c:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
@@ -4491,7 +4491,7 @@ src/_ZN9daSCoin_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f07dc end:0x020f085c
 
-src/daSCoin_c_Spawn.c:
+src/d_a_s_coin.c:
     complete
     .text start:0x020f085c end:0x020f0894
 
@@ -4523,7 +4523,7 @@ src/_ZN6Number13InitResourcesEv.cpp:
     complete
     .text start:0x020f0bd4 end:0x020f0d90
 
-src/Number_Spawn.c:
+src/d_a_obj_number.c:
     complete
     .text start:0x020f0d90 end:0x020f0dd0
 
@@ -4555,7 +4555,7 @@ src/_ZN9OneUpLogo13InitResourcesEv.cpp:
     complete
     .text start:0x020f107c end:0x020f1170
 
-src/OneUpLogo_Spawn.c:
+src/d_a_obj1_up_logo.c:
     complete
     .text start:0x020f1170 end:0x020f11b0
 
@@ -4603,11 +4603,11 @@ src/_ZN14EnemySwitchTag13InitResourcesEv.cpp:
     complete
     .text start:0x020f1878 end:0x020f1924
 
-src/EnemySpawner_Spawn.c:
+src/d_a_e_create.c:
     complete
     .text start:0x020f1924 end:0x020f1954
 
-src/EnemySwitchTag_Spawn.c:
+src/d_a_e_switch.c:
     complete
     .text start:0x020f1954 end:0x020f198c
 
@@ -4646,7 +4646,7 @@ src/_ZN8MugenBgm8BehaviorEv.cpp:
 src/_ZN8MugenBgm13InitResourcesEv.cpp:
     .text start:0x020f1eb4 end:0x020f1f40
 
-src/MugenBgm_Spawn.c:
+src/d_a_mugen_bgm.c:
     complete
     .text start:0x020f1f40 end:0x020f1f70
 
@@ -5216,7 +5216,7 @@ src/_ZN14CutsceneObject8BehaviorEv.cpp:
 src/_ZN14CutsceneObject13InitResourcesEv.cpp:
     .text start:0x020f83a4 end:0x020f8808
 
-src/CutsceneObject_Spawn.c:
+src/d_a_demo.c:
     complete
     .text start:0x020f8808 end:0x020f8838
 
@@ -5264,7 +5264,7 @@ src/_ZN8Fireball13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020f92e4 end:0x020f9304
 
-src/Fireball_Spawn.c:
+src/d_a_f_pkn_ball.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
@@ -5316,7 +5316,7 @@ src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp:
     complete
     .text start:0x020fb85c end:0x020fb8bc
 
-src/Minimap_Spawn.cpp:
+src/d_map.cpp:
     complete
     .text start:0x020fb8bc end:0x020fb8f8
 
@@ -5396,7 +5396,7 @@ src/_ZN3HUD13InitResourcesEv.cpp:
     complete
     .text start:0x020fda04 end:0x020fe154
 
-src/HUD_Spawn.cpp:
+src/d_meter.cpp:
     complete
     .text start:0x020fe154 end:0x020fe190
 
@@ -5531,7 +5531,7 @@ src/_ZN6Bullet8BehaviorEv.cpp:
 src/_ZN6Bullet13InitResourcesEv.cpp:
     .text start:0x020feef4 end:0x020fefcc
 
-src/Bullet_Spawn.c:
+src/d_a_propeller_heyho_fire.c:
     complete
     .text start:0x020fefcc end:0x020ff014
 
