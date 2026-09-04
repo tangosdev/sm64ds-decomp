@@ -1,12 +1,19 @@
 //cpp
-/* PROMOTED translation unit -- ov018/daPgMthr_c (22 function(s)).
+/* PROMOTED translation unit -- ov018/daPgMthr_c (23 function(s)).
  *
  * This one file is the production source for the whole class: the ROM build
  * takes every one of these functions from a single object, the way the
  * cartridge's own build did. It licenses the contiguous .text run
- * 0x02111848..0x0211267c in ov018 (config/tu_manifest.d/ov018/daPgMthr_c.json,
+ * 0x02111848..0x021126d4 in ov018 (config/tu_manifest.d/ov018/daPgMthr_c.json,
  * config/arm9/overlays/ov018/delinks.txt), where twenty-two separate
  * one-function entries used to stand.
+ *
+ * THE TWENTY-THIRD IS THE FACTORY, FOLDED IN LATER. MotherPenguin_Spawn at
+ * 0x0211267c is the PENGUIN_MOTHER registry profile's spawn function. It sits
+ * immediately after InitResources in the ROM's own .text order, inside this
+ * TU's recovered boundary, and was outside only because this promotion
+ * predated the profile-reconstruction campaign. It keeps C linkage and brings
+ * no new include with it.
  *
  * WRITTEN IN REVERSE ROM ORDER. mwccarm 2004/b56 emits one .text section per
  * function in the REVERSE of source order, so the highest-address ROM function
@@ -127,6 +134,53 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *se
 /* TUBUILD CONFLICT -- alternate declaration of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj, from the legacy file for func_ov018_021122ec, NOT applied: extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigned int); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj, from the legacy file for func_ov018_021122ec, NOT applied: extern int _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*,int,int,int,unsigned int); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov018_02111d28, from the legacy file for _ZN10daPgMthr_c13InitResourcesEv, NOT applied: extern void func_ov018_02111d28(char *c, int r1); */
+
+/* The folded factory's own dependencies, restated here rather than pulled in
+   through decl_Actor.h / decl_ActorBase.h / decl_ModelAnim.h / decl_dCcAc_c.h /
+   decl_ShadowModel.h / decl_TextureSequence.h / decl_dBgCh_Actr.h as the legacy
+   file did. Adding seven headers to a twenty-two-function TU is exactly the
+   change that could move a byte in a member that already matches, and none of
+   them is needed: these seven are the only names the factory adds, and the
+   eighth, _ZTV10daPgMthr_c, is already declared by the decl_common.h this TU
+   includes. So the fold introduces no new include at all. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN8dActor_cC2Ev(void *self);
+extern void _ZN9ModelAnimC1Ev(void *self);
+extern void _ZN15TextureSequenceC1Ev(void *self);
+extern void _ZN11ShadowModelC1Ev(void *self);
+extern void _ZN7dCcAc_cC1Ev(void *self);
+extern void _ZN10dBgCh_ActrC1Ev(void *self);
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 22 -- MotherPenguin_Spawn, 0x0211267c, size 0x58               */
+/* -------------------------------------------------------------------------- */
+// @symbol MotherPenguin_Spawn
+/* recovered: vtable identified, globals resolved */
+/* resolved: VT0 = _ZTV10daPgMthr_c */
+/* The PENGUIN_MOTHER profile's factory, and the highest-address member of this
+   TU, so it is written first. 908 = 0x38c is the whole object; the inlined
+   dActor_c constructor runs first, this class stores its own vptr over the
+   base's, and the five members are then constructed in declaration order --
+   ModelAnim 0xd4, TextureSequence 0x138, ShadowModel 0x14c, dCcAc_c 0x174,
+   dBgCh_Actr 0x1a8 -- which is what closes the class on 0x38c.
+
+   The vptr store here is the plain bare-symbol one the legacy file carried,
+   not the &_ZTV[2] form the compiler generates for the in-class destructor;
+   the two coexist because _ZTV10daPgMthr_c IS the address point. */
+extern "C" int *MotherPenguin_Spawn(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(908);
+    if (p) {
+        _ZN8dActor_cC2Ev(p);
+        p[0] = (int)_ZTV10daPgMthr_c;
+        _ZN9ModelAnimC1Ev((char *)p + 0xd4);
+        _ZN15TextureSequenceC1Ev((char *)p + 0x138);
+        _ZN11ShadowModelC1Ev((char *)p + 0x14c);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x174);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x1a8);
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -289,7 +289,6 @@ src/Mod.c	PURE-C					0		None		not-in-delinks
 src/Moneybag_Spawn.c	WEAK-refs-only	ov081				1		None		-
 src/MontyMoleRock_Spawn.c	WEAK-refs-only	ov080				1		None		-
 src/MontyMole_Spawn.c	WEAK-refs-only	ov080				1		None		-
-src/MotherPenguin_Spawn.c	WEAK-refs-only	ov018				1		None		-
 src/MovingBarBig_Spawn.c	WEAK-refs-only	ov015				1		None		-
 src/MovingBarSmall_Spawn.c	WEAK-refs-only	ov015				1		None		-
 src/MrBlizzard_Spawn.c	WEAK-refs-only	ov081				1		None		-
