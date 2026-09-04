@@ -807,16 +807,28 @@ void resolve(int band_l, int band_r, int margin)
     // reads the HORIZONTALLY dilated mask, so the result is the rectangular
     // dilation of the original -- which is what makes two marks that are
     // diagonally apart within the two radii one element.
+    //
+    // IT READS A SNAPSHOT, NOT THE BUFFER IT IS WRITING. Sweeping down and
+    // then up over the SAME array lets the second sweep treat pixels the
+    // first sweep invented as if they were real marks, which quietly grows
+    // the vertical reach past kBridgeY. That would still be safe -- the
+    // bridge errs large on purpose -- but it would no longer be the 16 x 8
+    // rectangle this file documents, and port/tools/wide_sweep.py groups the
+    // captured pixels by exactly that rectangle in order to measure the
+    // elements the placement actually acted on. A checker grouping by a
+    // different rule from the code is measuring its own opinion.
+    static uint8_t vsrc[192][256];
+    std::memcpy(vsrc, dil, sizeof(vsrc));
     for (int x = 0; x < 256; ++x) {
         int run = kBridgeY + 1;
         for (int y = 0; y < 192; ++y) {
-            if (dil[y][x]) { run = 0; continue; }
+            if (vsrc[y][x]) { run = 0; continue; }
             ++run;
             if (run <= kBridgeY) dil[y][x] = 1;
         }
         run = kBridgeY + 1;
         for (int y = 191; y >= 0; --y) {
-            if (dil[y][x]) { run = 0; continue; }
+            if (vsrc[y][x]) { run = 0; continue; }
             ++run;
             if (run <= kBridgeY) dil[y][x] = 1;
         }
