@@ -11,13 +11,13 @@ _ZN19daObjRc_Kaitendai_cD0Ev kind:function(arm,size=0x64) addr:0x02111494
 _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114f8
 _ZN19daObjRc_Kaitendai_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x0211150c
 daObjRc_Kaitendai_c_classInit kind:function(arm,size=0x3c) addr:0x02111544
-_ZN8ShipWingD1Ev kind:function(arm,size=0x30) addr:0x02111580
-_ZN8ShipWingD0Ev kind:function(arm,size=0x44) addr:0x021115b0
-_ZN8ShipWing16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021115f4
+_ZN14daObjRc_Hane_cD1Ev kind:function(arm,size=0x30) addr:0x02111580
+_ZN14daObjRc_Hane_cD0Ev kind:function(arm,size=0x44) addr:0x021115b0
+_ZN14daObjRc_Hane_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021115f4
 func_ov036_02111618 kind:function(arm,size=0x84) addr:0x02111618
-_ZN8ShipWing6RenderEv kind:function(arm,size=0x24) addr:0x0211169c
-_ZN8ShipWing8BehaviorEv kind:function(arm,size=0x194) addr:0x021116c0
-_ZN8ShipWing13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111854
+_ZN14daObjRc_Hane_c6RenderEv kind:function(arm,size=0x24) addr:0x0211169c
+_ZN14daObjRc_Hane_c8BehaviorEv kind:function(arm,size=0x194) addr:0x021116c0
+_ZN14daObjRc_Hane_c13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111854
 daObjRc_Hane_c_classInit kind:function(arm,size=0x38) addr:0x02111904
 _ZN10DonutBlockD1Ev kind:function(arm,size=0x4c) addr:0x0211193c
 _ZN10DonutBlockD0Ev kind:function(arm,size=0x60) addr:0x02111988
@@ -170,12 +170,11 @@ data_ov036_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov036_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov036_02113b90 kind:data(any) addr:0x02113b90 ambiguous
 _ZTI14daObjRc_Hane_c kind:data(any) addr:0x02113bf4
-data_ov036_02113c00 kind:data(any) addr:0x02113c00
+_ZTS14daObjRc_Hane_c kind:data(any) addr:0x02113c00
 data_ov036_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 g_profile_RC_HANE kind:data(any) addr:0x02113c14 ambiguous
 data_ov036_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov036_02113c28 kind:data(any) addr:0x02113c28 ambiguous
-_ZTV8ShipWing kind:data(any) addr:0x02113c38
 _ZTV14daObjRc_Hane_c kind:data(any) addr:0x02113c38
 data_ov036_02113c48 kind:data(any) addr:0x02113c48 ambiguous
 data_ov036_02113cb4 kind:data(any) addr:0x02113cb4

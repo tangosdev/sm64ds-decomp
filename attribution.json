@@ -1688,6 +1688,13 @@
     "src/func_ov084_021298d0.cpp": "tangosdev",
     "src/func_ov084_0212d564.c": "ruspecial",
     "src/func_ov084_0212d564.cpp": "ruspecial",
-    "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp": "tangosdev"
+    "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp": "tangosdev",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#func_ov036_02111618": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]"
   }
 }

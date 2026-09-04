@@ -163,7 +163,7 @@ ov022 0x2112498  n=6  L=100  RollingLogLll
 ov026 0x21118b8  n=6  L=115  Submarine
 ov029 0x21111a0  n=4  L=135  daObjWcObj01_c
 ov029 0x2111ea4  n=4  L=124  daObjWcObj06_c
-ov036 0x2111580  n=8  L=146  ShipWing
+ov036 0x2111580  n=8  L=146  daObjRc_Hane_c
 ov036 0x2111d14  n=7  L=155  daObjRc_Guruguru_c
 ov036 0x2111f8c  n=4  L=75   daObjRc_Dorifu_c
 ov043 0x2111518  n=5  L=80   daObjKm1_Kuruma_c              pcov=3

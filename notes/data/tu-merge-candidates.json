@@ -5459,18 +5459,18 @@
    "start": "0x2111580",
    "end": "0x211193c",
    "classes": [
-    "ShipWing"
+    "daObjRc_Hane_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN8ShipWingD1Ev.cpp",
-    "src/_ZN8ShipWingD0Ev.cpp",
-    "src/_ZN8ShipWing16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjRc_Hane_cD1Ev.cpp",
+    "src/_ZN14daObjRc_Hane_cD0Ev.cpp",
+    "src/_ZN14daObjRc_Hane_c16CleanupResourcesEv.cpp",
     "src/func_ov036_02111618.c",
-    "src/_ZN8ShipWing6RenderEv.cpp",
-    "src/_ZN8ShipWing8BehaviorEv.cpp",
-    "src/_ZN8ShipWing13InitResourcesEv.cpp",
+    "src/_ZN14daObjRc_Hane_c6RenderEv.cpp",
+    "src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp",
+    "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp",
     "src/daObjRc_Hane_c_classInit.c"
    ],
    "ext_mix": {
