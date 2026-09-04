@@ -1346,13 +1346,13 @@ ov060	0x021176cc	func_ov060_021176cc	_ZN10BowserFire6RenderEv	vtable slot 9
 ov060	0x021176d4	func_ov060_021176d4	_ZN10BowserFire8BehaviorEv	vtable slot 6
 ov060	0x02117790	func_ov060_02117790	_ZN10BowserFire13InitResourcesEv	vtable slot 0
 ov060	0x02117938	func_ov060_02117938	BowserFire_Spawn	spawnfunc
-ov060	0x02117980	func_ov060_02117980	_ZN18BowserFireSeaArenaD1Ev	vtable slot 16
-ov060	0x021179d4	func_ov060_021179d4	_ZN18BowserFireSeaArenaD0Ev	vtable slot 17
-ov060	0x02117b58	func_ov060_02117b58	_ZN18BowserFireSeaArena16CleanupResourcesEv	vtable slot 3
-ov060	0x02117b9c	func_ov060_02117b9c	_ZN18BowserFireSeaArena6RenderEv	vtable slot 9
-ov060	0x02117bc8	func_ov060_02117bc8	_ZN18BowserFireSeaArena8BehaviorEv	vtable slot 6
-ov060	0x02117c30	func_ov060_02117c30	_ZN18BowserFireSeaArena13InitResourcesEv	vtable slot 0
-ov060	0x02117cdc	func_ov060_02117cdc	BowserFireSeaArena_Spawn	spawnfunc
+ov060	0x02117980	func_ov060_02117980	_ZN10daKpa2Bg_cD1Ev	vtable slot 16
+ov060	0x021179d4	func_ov060_021179d4	_ZN10daKpa2Bg_cD0Ev	vtable slot 17
+ov060	0x02117b58	func_ov060_02117b58	_ZN10daKpa2Bg_c16CleanupResourcesEv	vtable slot 3
+ov060	0x02117b9c	func_ov060_02117b9c	_ZN10daKpa2Bg_c6RenderEv	vtable slot 9
+ov060	0x02117bc8	func_ov060_02117bc8	_ZN10daKpa2Bg_c8BehaviorEv	vtable slot 6
+ov060	0x02117c30	func_ov060_02117c30	_ZN10daKpa2Bg_c13InitResourcesEv	vtable slot 0
+ov060	0x02117cdc	func_ov060_02117cdc	daKpa2Bg_c_classInit	spawnfunc
 ov060	0x02118408	func_ov060_02118408	BowserSkyPlatform_Spawn	spawnfunc
 ov060	0x02118438	func_ov060_02118438	_ZN9SpikeBombD1Ev	vtable slot 16 (was _ZN17BowserSkyPlatformD1Ev)
 ov060	0x02118470	func_ov060_02118470	_ZN9SpikeBombD0Ev	vtable slot 17 (was _ZN17BowserSkyPlatformD0Ev)
@@ -1374,8 +1374,8 @@ ov060	0x0211a634	data_ov060_0211a634	_ZTV10BowserTail	vtable alloc=0x118
 ov060	0x0211a6b8	data_ov060_0211a6b8	_ZTV6Bowser	vtable alloc=?
 ov060	0x0211a7d0	data_ov060_0211a7d0	BowserFire_SpawnInfo	spawninfo
 ov060	0x0211a7f4	data_ov060_0211a7f4	_ZTV10BowserFire	vtable alloc=0x38c
-ov060	0x0211a88c	data_ov060_0211a88c	BowserFireSeaArena_SpawnInfo	spawninfo
-ov060	0x0211a8b0	data_ov060_0211a8b0	_ZTV18BowserFireSeaArena	vtable alloc=0x570
+ov060	0x0211a88c	data_ov060_0211a88c	daKpa2Bg_c_SpawnInfo	spawninfo
+ov060	0x0211a8b0	data_ov060_0211a8b0	_ZTV10daKpa2Bg_c	vtable alloc=0x570
 ov060	0x0211a964	data_ov060_0211a964	BowserSkyPlatform_SpawnInfo	spawninfo
 ov060	0x0211aa68	data_ov060_0211aa68	SpikeBomb_SpawnInfo	spawninfo
 ov060	0x0211aa8c	data_ov060_0211aa8c	_ZTV9SpikeBomb	vtable alloc=? (was _ZTV17BowserSkyPlatform)

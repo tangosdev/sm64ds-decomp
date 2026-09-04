@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN18BowserFireSeaArena8BehaviorEv
+// @symbol _ZN10daKpa2Bg_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BowserFireSeaArena.h"
+#include "daKpa2Bg_c.h"
 
-int BowserFireSeaArena::Behavior()
+int daKpa2Bg_c::Behavior()
 {
     short *a = (short *)(((int)((char *)this) + 0x8c));
     short *b = (short *)(((int)((char *)this) + 0x8e));

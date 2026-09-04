@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN18BowserFireSeaArenaD0Ev
+// @symbol _ZN10daKpa2Bg_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is vtable slot 17: destroy -- through both this class and its dBgActor_c base,
@@ -7,8 +7,8 @@
  * The deallocation is the inline dActor_c::operator delete, which is why nothing here
  * mentions the heap.
  */
-#include "BowserFireSeaArena.h"
+#include "daKpa2Bg_c.h"
 
-BowserFireSeaArena::~BowserFireSeaArena()
+daKpa2Bg_c::~daKpa2Bg_c()
 {
 }

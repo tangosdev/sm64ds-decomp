@@ -255,3 +255,7 @@
 {"path": "src/_ZN11CastleWater8BehaviorEv.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
 {"path": "src/_ZN11CastleWaterD0Ev.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
 {"path": "src/_ZN11CastleWaterD1Ev.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp", "reason": "ov060: BowserFireSeaArena renamed to its ROM RTTI name daKpa2Bg_c; factory renamed to daKpa2Bg_c_classInit"}
+{"path": "src/_ZN18BowserFireSeaArena6RenderEv.cpp", "reason": "ov060: BowserFireSeaArena renamed to its ROM RTTI name daKpa2Bg_c; factory renamed to daKpa2Bg_c_classInit"}
+{"path": "src/_ZN18BowserFireSeaArenaD0Ev.cpp", "reason": "ov060: BowserFireSeaArena renamed to its ROM RTTI name daKpa2Bg_c; factory renamed to daKpa2Bg_c_classInit"}
+{"path": "src/_ZN18BowserFireSeaArenaD1Ev.cpp", "reason": "ov060: BowserFireSeaArena renamed to its ROM RTTI name daKpa2Bg_c; factory renamed to daKpa2Bg_c_classInit"}
