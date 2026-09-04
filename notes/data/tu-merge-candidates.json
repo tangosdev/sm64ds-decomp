@@ -8251,8 +8251,7 @@
     "src/_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv.cpp",
     "src/_ZN19daObjKm1_Ukishima_c6RenderEv.cpp",
     "src/_ZN19daObjKm1_Ukishima_c8BehaviorEv.cpp",
-    "src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp",
-    "src/daObjKm1_Ukishima_c_classInit.c"
+    "src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -25784,8 +25783,7 @@
     "src/_ZN11daObjKumo_c16CleanupResourcesEv.cpp",
     "src/_ZN11daObjKumo_c6RenderEv.cpp",
     "src/_ZN11daObjKumo_c8BehaviorEv.cpp",
-    "src/_ZN11daObjKumo_c13InitResourcesEv.cpp",
-    "src/Cloud_Spawn.c"
+    "src/_ZN11daObjKumo_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,

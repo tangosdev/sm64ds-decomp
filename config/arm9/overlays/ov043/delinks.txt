@@ -5,11 +5,7 @@
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 src/actors/d_a_obj_km1_ukishima.cpp:
     complete
-    .text start:0x021111a0 end:0x021113cc
-
-src/daObjKm1_Ukishima_c_classInit.c:
-    complete
-    .text start:0x021113cc end:0x021113fc
+    .text start:0x021111a0 end:0x021113fc
 
 src/_ZN11RickshawBdwD1Ev.cpp:
     complete

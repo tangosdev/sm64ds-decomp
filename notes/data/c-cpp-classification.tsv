@@ -72,7 +72,6 @@ src/CleanCommonModelDataArr.c	WEAK-refs-only					0		None		not-in-delinks
 src/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
 src/ClockPaintingHandLong_Spawn.c	WEAK-refs-only	ov013				1		None		-
 src/daObjClockHuriko_c_Spawn.c	S1-stores-rom-vptr	ov013			stores _ZTV18daObjClockHuriko_c	1		None	_ZTV18daObjClockHuriko_c	-
-src/Cloud_Spawn.c	WEAK-refs-only	ov039				1		None		-
 src/daObjCasket_c_classInit.c	WEAK-refs-only	ov071				1		None		-
 src/Coin_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/CollectStar.c	PURE-C	arm9				1		None		-
@@ -105,7 +104,6 @@ src/DeathTable_SetBit.c	PURE-C	arm9				1		None		-
 src/DecIfAbove0_Byte.c	PURE-C	arm9				1		None		-
 src/DecIfAbove0_Short.c	PURE-C	arm9				1		None		-
 src/DecompressLZ16.c	PURE-C	arm9				1		None		-
-src/daObjKm1_Ukishima_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV19daObjKm1_Ukishima_c	1		None	_ZTV19daObjKm1_Ukishima_c	-
 src/DisableSoundPlayersForCredits.c	WEAK-refs-only	arm9				1		None		-
 src/DisableVramBanks.c	PURE-C	arm9				1		None		-
 src/Div.c	PURE-C					0		None		not-in-delinks

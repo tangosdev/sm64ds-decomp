@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov039/daObjKumo_c, hand-curated.
- * 7 function(s), .text 0x021111a0..0x0211137c.
+ * 8 function(s), .text 0x021111a0..0x021113b4.
  *
  * A cloud actor (`kumo` is the ROM's own word for it). It derives DIRECTLY
  * from dActor_c -- the cartridge's RTTI says so -- and adds one member, a
@@ -29,6 +29,13 @@
  *   [4] 0x02111278  src/_ZN11daObjKumo_c6RenderEv.cpp
  *   [5] 0x021112a0  src/_ZN11daObjKumo_c8BehaviorEv.cpp
  *   [6] 0x0211132c  src/_ZN11daObjKumo_c13InitResourcesEv.cpp
+ *   [7] 0x0211137c  src/Cloud_Spawn.c
+ *
+ * THE EIGHTH IS THE FACTORY. Cloud_Spawn is the OBJ_KUMO registry profile's
+ * spawn function and sits immediately after InitResources in the ROM's own
+ * .text order, so it is part of this TU; it was outside only because the
+ * promotion predated the profile-reconstruction campaign. It keeps C linkage
+ * and is written first here, being the highest-address member.
  */
 
 #include "daObjKumo_c.h"
@@ -45,6 +52,15 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
    because the emitted order is the reverse of the source order. */
 void func_ov039_02111214(char *t);
 extern int data_ov039_021118e0;
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_Actor.h / decl_ActorBase.h / decl_Model.h as the legacy file did -- this
+   TU declares in place, and adding those headers would change what the seven
+   already-matching members see. _ZTV11daObjKumo_c needs no restatement: the
+   decl_common.h this TU already includes declares it (line 476 there). */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN8dActor_cC2Ev(void *self);
+extern void _ZN5ModelC1Ev(void *self);
 }
 
 /* FILE-GLOBAL BY MEASUREMENT. `opt_propagation` is not positional in mwccarm
@@ -53,6 +69,27 @@ extern int data_ov039_021118e0;
    seven members were re-verified with it here: 7/7 MATCH, so no other member
    pays for it. */
 #pragma opt_propagation off
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 7 -- Cloud_Spawn, 0x0211137c, size 0x38                        */
+/* -------------------------------------------------------------------------- */
+// @symbol Cloud_Spawn
+/* recovered: vtable identified, globals resolved */
+/* resolved: VT0 = _ZTV11daObjKumo_c */
+/* The OBJ_KUMO profile's factory. 292 = 0x124 is the whole object, matching the
+   header's size assert; the inlined dActor_c constructor runs first, this class
+   stores its own vptr over the base's, and the one member -- Model at 0xd4 --
+   is constructed last, which is what closes the class on 0x124. */
+extern "C" int *Cloud_Spawn(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(292);
+    if (p) {
+        _ZN8dActor_cC2Ev(p);
+        p[0] = (int)_ZTV11daObjKumo_c;
+        _ZN5ModelC1Ev((char *)p + 0xd4);
+    }
+    return p;
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- _ZN11daObjKumo_c13InitResourcesEv, 0x0211132c, size 0x50 */

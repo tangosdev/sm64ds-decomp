@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov043/daObjKm1_Ukishima_c, hand-curated.
- * 6 function(s), .text 0x021111a0..0x021113cc.
+ * 7 function(s), .text 0x021111a0..0x021113fc.
  *
  * The floating island of the KM1_UKISHIMA profile: a dBgActor_c that drifts
  * forward along its own yaw and turns a quarter turn every 60 frames. The
@@ -13,9 +13,11 @@
  * InitResources (0), CleanupResources (3), Behavior (6) and Render (9) -- and
  * adds one byte of its own storage in dBgActor_c's tail padding at 0x31e.
  *
- * The .text run ends at 0x021113cc: daObjKm1_Ukishima_c_classInit lives there
- * in its own C file and _ZN11RickshawBdwD1Ev at 0x021113fc opens the next
- * class, so nothing outside this TU's six functions belongs to it.
+ * The .text run ends at 0x021113fc, where _ZN11RickshawBdwD1Ev opens the next
+ * class. daObjKm1_Ukishima_c_classInit at 0x021113cc, which used to sit in its
+ * own C file just past this TU's old end, has been folded in: it is the
+ * KM1_UKISHIMA registry profile's factory and the ROM's .text order puts it
+ * immediately after InitResources, so it was always part of this TU.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
  * emits one .text section per function in the REVERSE of source order, so the
@@ -30,6 +32,10 @@
  *   [3] 0x02111280  src/_ZN19daObjKm1_Ukishima_c6RenderEv.cpp
  *   [4] 0x021112a8  src/_ZN19daObjKm1_Ukishima_c8BehaviorEv.cpp
  *   [5] 0x02111320  src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp
+ *   [6] 0x021113cc  src/daObjKm1_Ukishima_c_classInit.c
+ *
+ * THE SEVENTH IS THE FACTORY. It keeps C linkage and is written first here,
+ * being the highest-address member.
  */
 
 #include "daObjKm1_Ukishima_c.h"
@@ -51,6 +57,31 @@ extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vecto
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
+
+/* The factory's own dependencies, restated here exactly as the legacy file
+   spelled them. It pulled in no headers at all, so nothing new enters this TU
+   and the six already-matching members see what they saw before. */
+extern void *_ZN7fBase_cnwEj(unsigned);
+extern void _ZN10dBgActor_cC2Ev(void *);
+extern int _ZTV19daObjKm1_Ukishima_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjKm1_Ukishima_c_classInit, 0x021113cc, size 0x30      */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjKm1_Ukishima_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjKm1_Ukishima_c through
+   RTTI, allocation size, vtable identity, and the KM1_UKISHIMA registry
+   profile; later EAD lineage supplies classInit. Exact original spelling is
+   not preserved. Historical alias: DiamondLift_Spawn.
+
+   800 = 0x320 is the whole object: dBgActor_c's own size, this class's one
+   byte living in its tail padding at 0x31e. */
+extern "C" int *daObjKm1_Ukishima_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV19daObjKm1_Ukishima_c; }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */
