@@ -98,12 +98,34 @@ GRAB = os.path.join(ROOT, "port", "tools", "wide_sweep_grab.ps1")
 # fault that 16:9 hides by a few pixels is obvious here.
 ASPECTS = [("native", "0"), ("16x9", "1.7777778"), ("21x9", "2.3333333")]
 
-# The uniform scale is SCREEN_H/192 at every aspect the port fits into its
-# 576-row buffer, and the native window is 512x384, so an element is 2 px per DS
-# pixel at native and 3 at every wide aspect. Hence the one expected ratio.
-NATIVE_SCALE = 2
-WIDE_SCALE = 3
-EXPECT_RATIO = WIDE_SCALE / NATIVE_SCALE
+# THE SCALES ARE DERIVED PER IMAGE, NOT ASSUMED, and the first pass of this tool
+# assumed them and was wrong twice over.
+#
+# First, the client area is not the framebuffer. On a high-DPI desktop Windows
+# hands the window a client rectangle a whole multiple larger than the extent the
+# port renders: the 512x384 native window came back as a 1024x768 photograph. So
+# every measurement in host pixels has to be divided by that factor before it
+# means anything in the port's own terms, and the factor is read off the NATIVE
+# capture, whose extent is known to be 512x384.
+#
+# Second, the uniform scale is NOT 3 at every wide aspect. It is active_h/192,
+# and active_h is whatever the aspect fit leaves inside the 1024x576 buffer. At
+# 16:9 that is 576, so uni is 3. At 21:9 the fit is 1024x440 and uni is 2 -- the
+# HUD is drawn at a SMALLER native scale there, and the spare width is 512 rather
+# than 256. A checker carrying 3 as a constant would have measured 21:9 against a
+# margin twice the real one and called every element misplaced.
+NATIVE_EXTENT_W, NATIVE_EXTENT_H = 512, 384
+
+
+def geom(native_shape, wide_shape):
+    """(dpi, uni_native, uni_wide, margin_client) for one aspect's images."""
+    dpi = native_shape[1] / NATIVE_EXTENT_W
+    uni_n = int(round((native_shape[0] / dpi) / 192))
+    aw = wide_shape[1] / dpi
+    ah = wide_shape[0] / dpi
+    uni_w = int((ah + 0.5) // 192)
+    margin = int(round((aw - 256 * uni_w) * dpi))
+    return dpi, uni_n, uni_w, margin
 
 # The element bridge, in HOST pixels at the wide scale. It is the compositor's
 # own DS-pixel bridge (16 x 8, see the hudelem banner in
@@ -133,26 +155,58 @@ def states():
     it produces images that look like evidence for a state nobody photographed.
     """
     return {
-        # The title screen: scene 1, held open by a frame budget nothing will
-        # reach and the scene path's own window.
-        "title": {"SM64DS_SCENE": "1", "SM64DS_SCENE_WINDOW": "1",
-                  "SM64DS_SCENE_FRAMES": "100000"},
-        # The save-file picker, which is the title scene driven one step in.
-        "fileselect": {"SM64DS_SCENE": "1", "SM64DS_SCENE_WINDOW": "1",
-                       "SM64DS_SCENE_FRAMES": "100000",
-                       "SM64DS_TITLE_ENTRY": "1"},
-        # The star select screen (scene 4), the other menu with counters on it.
+        # THE MENUS. All three are scene-path boots held open by a frame budget
+        # nothing reaches. SM64DS_SCENE_WINDOW=1 is required alongside a
+        # SCENE_FRAMES budget: the scene path is windowed only when
+        # SCENE_FRAMES is UNSET unless SCENE_WINDOW says otherwise
+        # (walk_window.cpp:6508-6518).
+        "title":      {"SM64DS_SCENE": "1", "SM64DS_SCENE_WINDOW": "1",
+                       "SM64DS_SCENE_FRAMES": "100000"},
         "starselect": {"SM64DS_SCENE": "4", "SM64DS_SCENE_WINDOW": "1",
                        "SM64DS_SCENE_FRAMES": "100000"},
-        # The course HUD: a real level, with the star and coin counters up.
-        "coursehud": {"SM64DS_LEVEL": "1", "SM64DS_SCENE_WINDOW": "1",
-                      "SM64DS_WINDOW_SELFTEST": "100000"},
-        # The minigame menu and the VS entry menu, both full-2D top screens,
-        # which is the arm that is pillarboxed rather than anchored.
-        "mgmenu": {"SM64DS_SCENE": "5", "SM64DS_SCENE_WINDOW": "1",
-                   "SM64DS_SCENE_FRAMES": "100000"},
-        "vsmenu": {"SM64DS_SCENE": "6", "SM64DS_SCENE_WINDOW": "1",
-                   "SM64DS_SCENE_FRAMES": "100000"},
+        "mgmenu":     {"SM64DS_SCENE": "5", "SM64DS_SCENE_WINDOW": "1",
+                       "SM64DS_SCENE_FRAMES": "100000"},
+        "vsmenu":     {"SM64DS_SCENE": "6", "SM64DS_SCENE_WINDOW": "1",
+                       "SM64DS_SCENE_FRAMES": "100000"},
+
+        # THE FILE SELECT IS REACHED BY SM64DS_SKIP_MENU, NOT SM64DS_TITLE_ENTRY.
+        # TITLE_ENTRY only ARMS the bridge that lets a picked file fall through
+        # into the adventure (title_entry.cpp:321-343); it does not advance the
+        # title. SKIP_MENU is the driver that taps the title and stops on the
+        # file select without picking a file (title_entry.cpp:567-655). The
+        # screen lands around frame 550-600, so this row needs a long wait.
+        "fileselect": {"SM64DS_SCENE_WINDOW": "1", "SM64DS_SCENE_FRAMES": "100000",
+                       "SM64DS_SKIP_MENU": "1"},
+
+        # THE COURSE HUD. Level 6 (Bob-omb Battlefield) and not the castle
+        # family, because RenderCoinCount takes an early-out on course 0x1d and
+        # the coin counter is the element this sweep is about.
+        #
+        # SM64DS_MENU_AT=<frame> FREEZES THE GAME TICK once the screen has
+        # formed, and it is here for a measurement reason rather than convenience. The HUD is isolated by subtracting a
+        # 2D-layers-off capture from a normal one, and that subtraction is only
+        # meaningful between two captures of the SAME frame. A live level
+        # animates, so two launches photograph two different frames and the
+        # subtraction returns the animation as well as the HUD. The menu's pause
+        # is "skip the tick" and nothing else (walk_window.cpp:9626), so the
+        # picture stays fully composited and completely still, and the panel it
+        # draws is identical in every capture of the row and cancels in the
+        # difference.
+        "coursehud":  {"SM64DS_LEVEL": "6", "SM64DS_MENU_AT": "240"},
+
+        # THE MESSAGE BOX: the probe opens one at frame 90 and nothing dismisses
+        # it, because the pump only advances on an A/B press and there is nobody
+        # at the keyboard (message_pump.cpp:237). Frozen for the same reason as
+        # above. This is the "message boxes keep their shape" state.
+        "message":    {"SM64DS_LEVEL": "6", "SM64DS_PROBE_MESSAGE": "42",
+                       "SM64DS_MENU_AT": "150"},
+
+        # THE VS HUD, AND THE STATE THIS WHOLE CHANGE IS ABOUT. The VS timer's
+        # TIME label sits at DS x 140-179, which crosses band_r (160), so it is
+        # the straddling element the band split tears and the one the control
+        # half has to show torn. It draws on engine A (sub=0), which is the
+        # screen the reanchor acts on.
+        "vshud":      {"SM64DS_VS_MAP": "0", "SM64DS_MENU_AT": "420"},
     }
 
 
@@ -170,6 +224,15 @@ def env_for(state_env, aspect, bandsplit, layers_off):
     e["SM64DS_TEST_LOCK"] = "1"
     e["SM64DS_TEST_LOCK_PATH"] = r"C:\tmp\sm64ds-test-slot\windowed_test.lock"
     e["SM64DS_TEST_LOCK_TIMEOUT"] = "5400"
+    # A FIXED, ON-SCREEN WINDOW POSITION, and this is not tidiness. CopyFromScreen
+    # reads the DESKTOP at the window's client coordinates, so a window the OS
+    # placed partly or wholly off the desktop photographs as whatever is at those
+    # coordinates, which is nothing. Measured: a first pass left the native window
+    # at y=-1117 and its captures were unusable, and two launches of one state
+    # landed at two different positions, so the images were not even comparable
+    # with each other. Pinning the corner makes every image in the sweep the same
+    # rectangle of glass.
+    e["SM64DS_WINDOW_POS"] = "0,0"
     if bandsplit:
         e["SM64DS_HUD_BANDSPLIT"] = "1"
     if layers_off:
@@ -397,15 +460,11 @@ def judge(out, st, meta):
     print("\n==== PER-STATE WIDESCREEN SWEEP ====\n")
     rows = []
     for name in st:
-        # The native reference: what every element's true width is.
-        nat_boxes = None
         npx = os.path.join(out, f"{name}__native__fix.png")
         nof = os.path.join(out, f"{name}__native__no2d.png")
-        if os.path.exists(npx) and os.path.exists(nof):
-            m = changed_mask(load(npx), load(nof))
-            if m is not None:
-                nat_boxes = label(m, BRIDGE_X_DS * NATIVE_SCALE,
-                                  BRIDGE_Y_DS * NATIVE_SCALE)
+        nat_img = load(npx) if os.path.exists(npx) else None
+        nat_mask = (changed_mask(nat_img, load(nof))
+                    if nat_img is not None and os.path.exists(nof) else None)
 
         for aname, _ in ASPECTS:
             if aname == "native":
@@ -415,56 +474,96 @@ def judge(out, st, meta):
             f2 = os.path.join(out, f"{name}__{aname}__fix2.png")
             fo = os.path.join(out, f"{name}__{aname}__no2d.png")
             fb = os.path.join(out, f"{name}__{aname}__band.png")
-            if not all(os.path.exists(p) for p in (f1, f2, fo, fb)):
+            if nat_img is None or not all(os.path.exists(p)
+                                          for p in (f1, f2, fo, fb)):
                 res["verdict"] = "NO IMAGES"
                 rows.append(res)
                 continue
 
             i1, i2 = load(f1), load(f2)
-            # Staticness first: the HUD subtraction below is only meaningful
-            # between two captures of the same frame, so this is a gate on the
-            # whole row rather than a footnote under it.
-            static = changed_mask(i1, i2)
-            res["static"] = bool(static is not None and not static.any())
+            # STATICNESS, AND THE ONE TOLERANCE IN THIS TOOL. The HUD
+            # subtraction below is only meaningful between two captures of the
+            # SAME frame, so two launches of a frozen state must photograph the
+            # same picture. They very nearly do: measured on the VS HUD at 16:9,
+            # two launches differ in 372 pixels out of 2,359,296 -- 0.016% --
+            # and every one of them is inside a single 26x26 box at a FIXED
+            # SCREEN position that is the same box in every pair, including
+            # pairs that differ in nothing else. That is desktop furniture
+            # caught by CopyFromScreen, not the game.
+            #
+            # So instability is MEASURED, BOUNDED AND EXCLUDED rather than
+            # waved through. The unstable pixels are masked out of every mask
+            # below, so nothing untrustworthy reaches an element; the count is
+            # carried into the report so a reader can see how much was dropped;
+            # and if it ever exceeds a tenth of a percent the row is refused
+            # outright, because at that point it is the game moving and not the
+            # desktop.
+            unstable = changed_mask(i1, i2)
+            if unstable is None:
+                res["verdict"] = "SIZE MISMATCH - not scored"
+                rows.append(res)
+                continue
+            res["unstable_px"] = int(unstable.sum())
+            res["unstable_pct"] = round(100.0 * unstable.mean(), 4)
+            res["static"] = res["unstable_pct"] <= 0.1
             if not res["static"]:
                 res["verdict"] = "DYNAMIC - not scored"
                 rows.append(res)
                 continue
+            trust = ~unstable
 
-            hud_fix = changed_mask(i1, load(fo))
-            hud_band = changed_mask(load(fb), load(fo))
-            bx, by = BRIDGE_X_DS * WIDE_SCALE, BRIDGE_Y_DS * WIDE_SCALE
-            ef = label(hud_fix, bx, by)
-            eb = label(hud_band, bx, by)
+            dpi, uni_n, uni_w, margin = geom(nat_img.shape, i1.shape)
+            res["dpi"] = dpi
+            res["uni_native"], res["uni_wide"] = uni_n, uni_w
+            res["margin"] = margin
+            expect = uni_w / uni_n
+
+            ib = load(fb)
+            hud_fix = changed_mask(i1, load(fo)) & trust
+            hud_band = changed_mask(ib, load(fo)) & trust
+            # What the fix actually MOVED, on this state, at this aspect: the
+            # pixels where the shipped placement and the band-split control
+            # disagree. Empty means no element on this screen straddles a split,
+            # so the two rules agree and there is nothing here for either to get
+            # wrong -- which is a real result and is reported as one.
+            moved = changed_mask(i1, ib) & trust
+            res["moved_px"] = int(moved.sum())
+            # The bridge is the compositor's own 16 x 8 DS-pixel rectangle taken
+            # into the host pixels of THIS image, so the checker groups by the
+            # rule the placement acted on rather than by one of its own.
+            ef = label(hud_fix, int(BRIDGE_X_DS * uni_w * dpi),
+                       int(BRIDGE_Y_DS * uni_w * dpi))
+            eb = label(hud_band, int(BRIDGE_X_DS * uni_w * dpi),
+                       int(BRIDGE_Y_DS * uni_w * dpi))
+            nat = label(nat_mask, int(BRIDGE_X_DS * uni_n * dpi),
+                        int(BRIDGE_Y_DS * uni_n * dpi)) if nat_mask is not None else []
+
             W = i1.shape[1]
-            margin = W - 256 * WIDE_SCALE
-
             res["elements"] = len(ef)
-            res["margin"] = int(margin)
+            res["elements_native"] = len(nat)
             tf = tear_pairs(ef, margin)
             tb = tear_pairs(eb, margin)
-            res["tears_fix"] = tf
-            res["tears_band"] = tb
-            res["tear_fix"] = bool(tf)
-            res["tear_band"] = bool(tb)
+            res["tears_fix"], res["tears_band"] = tf, tb
+            res["tear_fix"], res["tear_band"] = bool(tf), bool(tb)
             res["clip"] = any(e["x0"] <= 0 or e["x1"] >= W - 1 for e in ef)
 
-            # Stretch: the widest element must scale by exactly uni/sx off the
-            # native reference. Compared on the widest rather than element by
-            # element because the two aspects do not necessarily resolve the
-            # same number of elements once anchoring moves them apart.
-            if nat_boxes:
-                wn = max((e["w"] for e in nat_boxes), default=0)
-                wf = max((e["w"] for e in ef), default=0)
-                res["widest_native"] = wn
-                res["widest_wide"] = wf
-                res["ratio"] = round(wf / wn, 3) if wn else None
-                res["stretch"] = (res["ratio"] is not None
-                                  and abs(res["ratio"] - EXPECT_RATIO) > 0.12)
+            # STRETCH. Every element is composited at ONE uniform scale, so the
+            # widest element at the wide aspect must be the widest at native
+            # times uni_wide/uni_native. A HUD stretched to fill the width comes
+            # back well above that; a torn one comes back above it too, because
+            # the fragment pair inflates nothing but the whole-element span is
+            # what the widest measures.
+            wn = max((e["w"] for e in nat), default=0)
+            wf = max((e["w"] for e in ef), default=0)
+            res["widest_native"], res["widest_wide"] = wn, wf
+            res["expect_ratio"] = round(expect, 3)
+            res["ratio"] = round(wf / wn, 3) if wn else None
+            res["stretch"] = (res["ratio"] is not None
+                              and abs(res["ratio"] - expect) > 0.12)
             rows.append(res)
 
     hdr = (f"{'state':<12}{'aspect':<8}{'stat':<6}{'elem':<6}"
-           f"{'tears_fix':<10}{'tears_ctl':<10}{'marg':<6}"
+           f"{'tears_fix':<10}{'tears_ctl':<10}{'marg':<6}{'moved':<8}"
            f"{'TEAR fix':<10}{'TEAR ctl':<10}{'ratio':<8}{'verdict'}")
     print(hdr)
     print("-" * len(hdr))
@@ -484,6 +583,7 @@ def judge(out, st, meta):
         print(f"{r['state']:<12}{r['aspect']:<8}{str(r.get('static')):<6}"
               f"{r.get('elements', 0):<6}{len(r.get('tears_fix', [])):<10}"
               f"{len(r.get('tears_band', [])):<10}{r.get('margin', 0):<6}"
+              f"{r.get('moved_px', 0):<8}"
               f"{str(r.get('tear_fix')):<10}{str(r.get('tear_band')):<10}"
               f"{str(r.get('ratio')):<8}{verdict}")
     json.dump(rows, open(os.path.join(out, "verdict.json"), "w"), indent=1)

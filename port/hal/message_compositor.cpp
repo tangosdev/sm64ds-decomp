@@ -2039,7 +2039,33 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        adjust per element. The 4:3 tiers keep the exact x*sx block. */
     const int uni = sy;                            /* uniform native scale (3) */
     const int margin = ntr::active_w - 256 * uni;  /* spare width (256; 0 at 4:3) */
-    const int band_l = 96, band_r = 160;           /* source-x band splits */
+    /* THE SPLITS. 96 and 160 are the shipped values, chosen for where this
+       game's HUD clusters actually sit, and SM64DS_HUD_BANDS=<l>,<r> moves
+       them for one run without touching the build.
+
+       IT EXISTS TO MAKE THE TEAR REPRODUCIBLE ON DEMAND, which is a
+       measurement problem and not a feature. The per-element rule prevents a
+       straddling element from being cut; proving it prevents anything needs a
+       straddling element to exist. Measured on the states this port can
+       actually reach, none does: the VS HUD's own clusters land at DS x
+       107-149 and 192-256, each wholly inside one band, so the band split and
+       the element rule place them identically and a before/after shows
+       nothing. That is a real and welcome result -- today's content does not
+       exhibit the defect -- but it leaves the checker unproven, and a check
+       that has never failed is not evidence.
+
+       Moving a split ONTO a cluster that is on screen produces a genuine
+       straddle out of real content, on the shipped binary, at the same state
+       base. The band-split control must then tear it and the element rule
+       must not, which is the falsifiable pair the sweep needs.
+
+       Unset, this is exactly the two constants it replaces. */
+    int band_l = 96, band_r = 160;                 /* source-x band splits */
+    if (const char *bands = std::getenv("SM64DS_HUD_BANDS")) {
+        int l = 0, r = 0;
+        if (std::sscanf(bands, "%d,%d", &l, &r) == 2
+            && l >= 0 && r > l && r <= 256) { band_l = l; band_r = r; }
+    }
     /* THE ELEMENT PASS. Labelling is the whole per-element rule (see the
        hudelem banner above): it runs ONCE for the frame, here, after every
        layer has been resolved into g_a and before a single pixel is placed,

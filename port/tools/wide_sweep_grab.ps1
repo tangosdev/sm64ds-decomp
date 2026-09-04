@@ -65,6 +65,7 @@ public class WsGrab {
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
   [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr h);
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int c);
+  [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr h, IntPtr after, int x, int y, int cx, int cy, uint f);
   public delegate bool EnumProc(IntPtr h, IntPtr p);
   [StructLayout(LayoutKind.Sequential)] public struct RECT  { public int L,T,R,B; }
   [StructLayout(LayoutKind.Sequential)] public struct POINT { public int X,Y; }
@@ -79,7 +80,18 @@ public class WsGrab {
     return true;
   }
   public static IntPtr Find(uint pid) { Found = IntPtr.Zero; TargetPid = pid; EnumWindows(Cb, IntPtr.Zero); return Found; }
-  public static void Front(IntPtr h) { ShowWindow(h, 9); BringWindowToTop(h); SetForegroundWindow(h); }
+  // SWP_NOSIZE|SWP_NOZORDER = 0x0001|0x0004. The corner is PINNED on every
+  // raise, not merely requested at launch: CopyFromScreen reads the desktop
+  // at the client rectangle, so a window the OS placed off the desktop (a
+  // first pass caught one at y=-1117) photographs as nothing at all, and two
+  // launches that land at two positions produce two images of two different
+  // pieces of glass, which cannot be compared with each other. The game has
+  // its own SM64DS_WINDOW_POS and it did NOT hold across every launch here,
+  // so this pins it from the outside where nothing can override it.
+  public static void Front(IntPtr h) {
+    ShowWindow(h, 9); SetWindowPos(h, IntPtr.Zero, 8, 31, 0, 0, 0x0001|0x0004);
+    BringWindowToTop(h); SetForegroundWindow(h);
+  }
   public static string Grab(IntPtr h, string path) {
     RECT c; GetClientRect(h, out c);
     int w = c.R - c.L, ht = c.B - c.T;
