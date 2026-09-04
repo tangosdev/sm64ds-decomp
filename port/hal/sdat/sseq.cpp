@@ -485,13 +485,23 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
        this ROM's values it never exceeds 255, but the accept/reject test
        upstream uses the untruncated sum, so the sum is what we pass.
 
-       This is the whole reason the music was losing notes to the effects.
-       SM64DS's BGM carries cpr 106 and its tracks set 0xC6 in the 64..69
-       band, so the ROM asks for about 106+66 = 172. Its sound effects
-       carry cpr 96 with no 0xC6 at all, so they ask for 96+64 = 160. The
-       MUSIC OUTRANKS THE EFFECTS on hardware. Folding cpr into the track
-       priority instead produced 66 for the music against 96 for the
-       effects, which is the same comparison upside down. */
+       WHAT THIS ACTUALLY COMES TO, MEASURED, IN THE OPENING. cpr is not one
+       value across the game: of the 83 SEQ records, 37 carry cpr 64 and 32
+       carry 106. THE OPENING'S BGM IS ONE OF THE 64s. Its tracks set 0xC6 in
+       the 64..68 band, so it asks the allocator for 128..132, and that is
+       exactly what the dropped-note trace shows. The sound effects over it
+       come out of the SEQARCs at cpr 96 with no 0xC6 at all, so they ask 160.
+       So in THIS scene the effects outrank the music, and the ROM's own
+       arithmetic says they should.
+
+       (An earlier version of this comment claimed the reverse, on the 106
+       sequences. Those exist, and for them the music does outrank a 96 effect
+       -- but they are not the opening, and the general claim was wrong. See
+       sdat.cpp, which has the same numbers from the other side.)
+
+       Folding cpr into the TRACK priority, as this port briefly did, is wrong
+       for a different reason than the ordering: 0xC6 then overwrites it, so
+       the player's contribution disappears entirely rather than being added. */
     /* A TIED NOTE REUSES THE TRACK'S CHANNEL. IT DOES NOT OPEN ANOTHER.
        ARM7 note-on, 0x037FD454: it tests track flags bit 3 (tie) and, if the
        track's channel list is non-empty, writes the new key and velocity into
