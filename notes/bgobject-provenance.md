@@ -732,7 +732,7 @@ same offsets:
 * `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
 * `include/daObjMc_Metalnet_c.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
 * `include/PoleLift.h` — `param1`, `mAngleY`.
-* `include/IceSheet.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
+* `include/daObjIceBoard_c.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
   (0x0b0).
 * `include/daObjFm_Battan_c.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).
 * `include/FortressTower.h` — `actorID` (0x00c).
@@ -752,5 +752,5 @@ same offsets:
 * `RotatingUpDownPlatformUtm` 0x300 in the C twin — that offset is *interior* to
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single
   `s16` read would be an invention.
-* The classes with no fields of their own — `daObjMc_Metalnet_c`, `IceSheet`,
+* The classes with no fields of their own — `daObjMc_Metalnet_c`, `daObjIceBoard_c`,
   `FortressTower`, `daObjTdWater_c` — have nothing left to name.

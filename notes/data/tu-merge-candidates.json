@@ -9033,21 +9033,21 @@
    "start": "0x21127bc",
    "end": "0x2112a74",
    "classes": [
-    "IceSheet"
+    "daObjIceBoard_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN8IceSheetD1Ev.cpp",
-    "src/_ZN8IceSheetD0Ev.cpp",
-    "src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN8IceSheet4KillEv.cpp",
-    "src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp",
-    "src/_ZN8IceSheet16CleanupResourcesEv.cpp",
-    "src/_ZN8IceSheet6RenderEv.cpp",
-    "src/_ZN8IceSheet8BehaviorEv.cpp",
-    "src/_ZN8IceSheet13InitResourcesEv.cpp",
-    "src/IceSheet_Spawn.c"
+    "src/_ZN15daObjIceBoard_cD1Ev.cpp",
+    "src/_ZN15daObjIceBoard_cD0Ev.cpp",
+    "src/_ZN15daObjIceBoard_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN15daObjIceBoard_c4KillEv.cpp",
+    "src/_ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN15daObjIceBoard_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjIceBoard_c6RenderEv.cpp",
+    "src/_ZN15daObjIceBoard_c8BehaviorEv.cpp",
+    "src/_ZN15daObjIceBoard_c13InitResourcesEv.cpp",
+    "src/daObjIceBoard_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 9,
