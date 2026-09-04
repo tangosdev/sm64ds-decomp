@@ -21,20 +21,20 @@ _ZN12daBakubaku_c6RenderEv kind:function(arm,size=0x50) addr:0x02112164
 _ZN12daBakubaku_c8BehaviorEv kind:function(arm,size=0x128) addr:0x021121b4
 _ZN12daBakubaku_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x021122dc
 _ZN12daBakubaku_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02112444
-func_ov032_0211244c kind:function(arm,size=0x5c) addr:0x0211244c
-_ZN9HugeCoverD1Ev kind:function(arm,size=0x44) addr:0x021124a8
-_ZN9HugeCoverD0Ev kind:function(arm,size=0x58) addr:0x021124ec
-_ZN9HugeCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112544
-_ZN9HugeCover6RenderEv kind:function(arm,size=0x28) addr:0x02112588
-_ZN9HugeCover8BehaviorEv kind:function(arm,size=0x24) addr:0x021125b0
-_ZN9HugeCover13InitResourcesEv kind:function(arm,size=0x94) addr:0x021125d4
+daBakubaku_c_classInit kind:function(arm,size=0x5c) addr:0x0211244c
+_ZN13daObjTdFuta_cD1Ev kind:function(arm,size=0x44) addr:0x021124a8
+_ZN13daObjTdFuta_cD0Ev kind:function(arm,size=0x58) addr:0x021124ec
+_ZN13daObjTdFuta_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112544
+_ZN13daObjTdFuta_c6RenderEv kind:function(arm,size=0x28) addr:0x02112588
+_ZN13daObjTdFuta_c8BehaviorEv kind:function(arm,size=0x24) addr:0x021125b0
+_ZN13daObjTdFuta_c13InitResourcesEv kind:function(arm,size=0x94) addr:0x021125d4
 daObjTdFuta_c_classInit kind:function(arm,size=0x30) addr:0x02112668
-_ZN9HugeWaterD1Ev kind:function(arm,size=0x4c) addr:0x02112698
-_ZN9HugeWaterD0Ev kind:function(arm,size=0x60) addr:0x021126e4
-_ZN9HugeWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112744
-_ZN9HugeWater6RenderEv kind:function(arm,size=0x34) addr:0x02112788
-_ZN9HugeWater8BehaviorEv kind:function(arm,size=0x34) addr:0x021127bc
-_ZN9HugeWater13InitResourcesEv kind:function(arm,size=0xc8) addr:0x021127f0
+_ZN14daObjTdWater_cD1Ev kind:function(arm,size=0x4c) addr:0x02112698
+_ZN14daObjTdWater_cD0Ev kind:function(arm,size=0x60) addr:0x021126e4
+_ZN14daObjTdWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112744
+_ZN14daObjTdWater_c6RenderEv kind:function(arm,size=0x34) addr:0x02112788
+_ZN14daObjTdWater_c8BehaviorEv kind:function(arm,size=0x34) addr:0x021127bc
+_ZN14daObjTdWater_c13InitResourcesEv kind:function(arm,size=0xc8) addr:0x021127f0
 daObjTdWater_c_classInit kind:function(arm,size=0x38) addr:0x021128b8
 data_ov032_021128f0 kind:data(any) addr:0x021128f0
 data_ov032_021128f4 kind:data(any) addr:0x021128f4
@@ -122,29 +122,22 @@ data_ov032_021137cc kind:data(any) addr:0x021137cc
 data_ov032_021137d8 kind:data(any) addr:0x021137d8
 _ZTI12daBakubaku_c kind:data(any) addr:0x021137e4
 _ZTS12daBakubaku_c kind:data(any) addr:0x021137f0
-data_ov032_021137f8 kind:data(any) addr:0x021137f8 ambiguous
-data_ov032_02113800 kind:data(any) addr:0x02113800 ambiguous
-data_ov032_02113804 kind:data(any) addr:0x02113804 ambiguous
-data_ov032_02113820 kind:data(any) addr:0x02113820 ambiguous
-data_ov032_02113824 kind:data(any) addr:0x02113824
+g_profile_BAKUBAKU kind:data(any) addr:0x02113800 ambiguous
 _ZTV12daBakubaku_c kind:data(any) addr:0x02113824
-data_ov032_0211382c kind:data(any) addr:0x0211382c ambiguous
 _ZTI13daObjTdFuta_c kind:data(any) addr:0x021138a0
 data_ov032_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 _ZTS13daObjTdFuta_c kind:data(any) addr:0x021138ac
 g_profile_TD_FUTA kind:data(any) addr:0x021138bc ambiguous
 data_ov032_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov032_021138d8 kind:data(any) addr:0x021138d8 ambiguous
-_ZTV9HugeCover kind:data(any) addr:0x021138e0
 _ZTV13daObjTdFuta_c kind:data(any) addr:0x021138e0
 data_ov032_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov032_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov032_02113934 kind:data(any) addr:0x02113934 ambiguous
 _ZTI14daObjTdWater_c kind:data(any) addr:0x02113960
-data_ov032_0211396c kind:data(any) addr:0x0211396c
+_ZTS14daObjTdWater_c kind:data(any) addr:0x0211396c
 g_profile_TD_WATER kind:data(any) addr:0x02113980 ambiguous
 data_ov032_02113998 kind:data(any) addr:0x02113998 ambiguous
-_ZTV9HugeWater kind:data(any) addr:0x021139a4
 _ZTV14daObjTdWater_c kind:data(any) addr:0x021139a4
 data_ov032_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov032_021139f4 kind:data(any) addr:0x021139f4 ambiguous

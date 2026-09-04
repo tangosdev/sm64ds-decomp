@@ -48,93 +48,9 @@ src/daObjSm_Lift_c_classInit.c:
     complete
     .text start:0x02111818 end:0x02111848
 
-src/_ZN10daPgMthr_cD1Ev.cpp:
+src/actors/d_a_pg_mthr.cpp:
     complete
-    .text start:0x02111848 end:0x02111898
-
-src/_ZN10daPgMthr_cD0Ev.cpp:
-    complete
-    .text start:0x02111898 end:0x021118fc
-
-src/func_ov018_021118fc.c:
-    complete
-    .text start:0x021118fc end:0x02111968
-
-src/func_ov018_02111968.c:
-    complete
-    .text start:0x02111968 end:0x02111a48
-
-src/func_ov018_02111a48.c:
-    complete
-    .text start:0x02111a48 end:0x02111b3c
-
-src/func_ov018_02111b3c.c:
-    complete
-    .text start:0x02111b3c end:0x02111bf0
-
-src/func_ov018_02111bf0.cpp:
-    complete
-    .text start:0x02111bf0 end:0x02111d28
-
-src/func_ov018_02111d28.cpp:
-    complete
-    .text start:0x02111d28 end:0x02111e28
-
-src/func_ov018_02111e28.cpp:
-    complete
-    .text start:0x02111e28 end:0x02111f1c
-
-src/func_ov018_02111f1c.cpp:
-    complete
-    .text start:0x02111f1c end:0x02111fac
-
-src/func_ov018_02111fac.c:
-    complete
-    .text start:0x02111fac end:0x021121dc
-
-src/func_ov018_021121dc.cpp:
-    complete
-    .text start:0x021121dc end:0x02112234
-
-src/func_ov018_02112234.c:
-    complete
-    .text start:0x02112234 end:0x021122ec
-
-src/func_ov018_021122ec.c:
-    complete
-    .text start:0x021122ec end:0x0211235c
-
-src/func_ov018_0211235c.cpp:
-    complete
-    .text start:0x0211235c end:0x02112398
-
-src/func_ov018_02112398.cpp:
-    complete
-    .text start:0x02112398 end:0x021123d0
-
-src/func_ov018_021123d0.c:
-    complete
-    .text start:0x021123d0 end:0x021123ec
-
-src/_ZN10daPgMthr_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021123ec end:0x02112450
-
-src/_ZN10daPgMthr_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02112450 end:0x02112454
-
-src/_ZN10daPgMthr_c6RenderEv.cpp:
-    complete
-    .text start:0x02112454 end:0x02112480
-
-src/_ZN10daPgMthr_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02112480 end:0x021124d0
-
-src/_ZN10daPgMthr_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021124d0 end:0x0211267c
+    .text start:0x02111848 end:0x0211267c
 
 src/MotherPenguin_Spawn.c:
     complete
@@ -144,45 +60,9 @@ src/actors/d_a_s_cre.cpp:
     complete
     .text start:0x021126d4 end:0x021127bc
 
-src/_ZN8IceSheetD1Ev.cpp:
+src/actors/d_a_obj_ice_board.cpp:
     complete
-    .text start:0x021127bc end:0x02112800
-
-src/_ZN8IceSheetD0Ev.cpp:
-    complete
-    .text start:0x02112800 end:0x02112858
-
-src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02112858 end:0x02112880
-
-src/_ZN8IceSheet4KillEv.cpp:
-    complete
-    .text start:0x02112880 end:0x021128e0
-
-src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x021128e0 end:0x02112924
-
-src/_ZN8IceSheet16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112924 end:0x02112968
-
-src/_ZN8IceSheet6RenderEv.cpp:
-    complete
-    .text start:0x02112968 end:0x02112990
-
-src/_ZN8IceSheet8BehaviorEv.cpp:
-    complete
-    .text start:0x02112990 end:0x021129c0
-
-src/_ZN8IceSheet13InitResourcesEv.cpp:
-    complete
-    .text start:0x021129c0 end:0x02112a44
-
-src/IceSheet_Spawn.c:
-    complete
-    .text start:0x02112a44 end:0x02112a74
+    .text start:0x021127bc end:0x02112a74
 
 src/__sinit_ov018_02112c14.c:
     complete

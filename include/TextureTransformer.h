@@ -18,7 +18,7 @@
  * signature IS the call surface. The matched func_02046b64.c takes TWO
  * arguments and no this: the BMD's texture-name table and the BTA
  * object whose name entries it resolves against it. Every matched
- * caller (Tornado, Whirlpool, the ov006 users, CastleWater) passes
+ * caller (Tornado, Whirlpool, the ov006 users, daObjMcWater_c) passes
  * exactly those two, and the sibling veneers at 0x0201577c
  * (MaterialChanger) and 0x0201597c (TextureSequence) are called the
  * same way. Declared static below: a static member mangles identically,

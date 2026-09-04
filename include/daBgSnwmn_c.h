@@ -6,6 +6,8 @@
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* An dActor_c-side class (da* prefix, not a scene class) -- a background
  * snowman actor. It had a FLAT header before this pass, with no base
  * clause; seven resolvable vtable slots were blocked on it. The flat
@@ -26,7 +28,8 @@
  *     31. daBgSnwmn_c overrides exactly seven of dActor_c's 31 -- 0, 3, 6,
  *     9, 12, 16, 17.
  *
- * CONSTRUCTION. func_ov072_02120c00 is the factory: it opens with
+ * CONSTRUCTION. daBgSnwmn_c_classInit is the reconstructed source-style
+ * factory name. The function at 0x02120c00 opens with
  * `_ZN7fBase_cnwEj(496)` -- fBase_c::operator new(0x1f0). SIZE 0x1f0 (496
  * bytes) comes directly off the allocator call, and the same factory
  * constructs five typed sub-objects after the dActor_c base and the
@@ -38,8 +41,8 @@
  *     _ZN10dCcAcPos_cC1Ev(p + 0x1b0) -- dCcAcPos_c, 0x40
  * THE LAST MEMBER CLOSES EXACTLY ON THE ALLOCATION LITERAL:
  * 0x1b0 + 0x40 = 0x1f0. Nothing is left over. The destructor
- * (func_ov072_02120824 / _02120874) tears the same five down in exactly the
- * reverse order -- dCcAcPos_c, ShadowModel, TextureSequence,
+ * pair emitted from src/actors/d_a_bg_snwmn.cpp tears the same five down in
+ * exactly the reverse order -- dCcAcPos_c, ShadowModel, TextureSequence,
  * Model, Model -- which is what a compiler-generated body emits for typed
  * members declared in ascending-offset order, so they are declared typed
  * below rather than left as opaque storage.
@@ -81,18 +84,20 @@ struct daBgSnwmn_c : dActor_c {
     ShadowModel mShadow;           /* 0x188 */
     dCcAcPos_c mCylClsn; /* 0x1b0 */
 
-    /* Declared first -- key function; see the family convention discussed
-       in dActor_c.h. Never defined as a real method in any TU: both D1 and
-       D0 are plain functions carrying their literal mangled name
-       (src/_ZN11daBgSnwmn_cD1Ev.c, src/_ZN11daBgSnwmn_cD0Ev.c). */
-    virtual ~daBgSnwmn_c();                              /* slots 16 (D1), 17 (D0) */
-
     /* --- overrides, in dActor_c's own vtable order. --- */
     virtual s32  InitResources();                        /* slot  0 */
     virtual s32  CleanupResources();                     /* slot  3 */
     virtual s32  Behavior();                              /* slot  6 */
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    /* Declared last and inline so class instantiation emits the retail D1/D0
+       pair in that order, with no separate D2 body. */
+    virtual ~daBgSnwmn_c() {}                            /* slots 16 (D1), 17 (D0) */
 };
 
 typedef char daBgSnwmn_c_size_must_be_0x1f0[sizeof(daBgSnwmn_c) == 0x1f0 ? 1 : -1];

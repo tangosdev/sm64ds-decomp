@@ -3658,19 +3658,19 @@
    "start": "0x2111a70",
    "end": "0x2111dc4",
    "classes": [
-    "CastleWater"
+    "daObjMcWater_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN11CastleWaterD1Ev.c",
-    "src/_ZN11CastleWaterD0Ev.c",
+    "src/_ZN14daObjMcWater_cD1Ev.c",
+    "src/_ZN14daObjMcWater_cD0Ev.c",
     "src/func_ov009_02111b1c.cpp",
-    "src/_ZN11CastleWater16CleanupResourcesEv.cpp",
-    "src/_ZN11CastleWater6RenderEv.cpp",
-    "src/_ZN11CastleWater8BehaviorEv.cpp",
-    "src/_ZN11CastleWater13InitResourcesEv.cpp",
-    "src/CastleWater_Spawn.c"
+    "src/_ZN14daObjMcWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjMcWater_c6RenderEv.cpp",
+    "src/_ZN14daObjMcWater_c8BehaviorEv.cpp",
+    "src/_ZN14daObjMcWater_c13InitResourcesEv.cpp",
+    "src/daObjMcWater_c_classInit.c"
    ],
    "ext_mix": {
     ".c": 3,
@@ -3717,19 +3717,19 @@
    "start": "0x2111dc4",
    "end": "0x2112078",
    "classes": [
-    "MetalNet"
+    "daObjMc_Metalnet_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN8MetalNetD1Ev.cpp",
-    "src/_ZN8MetalNetD0Ev.cpp",
-    "src/_ZN8MetalNet16CleanupResourcesEv.cpp",
-    "src/_ZN8MetalNet16OnPendingDestroyEv.c",
-    "src/_ZN8MetalNet6RenderEv.cpp",
-    "src/_ZN8MetalNet8BehaviorEv.cpp",
-    "src/_ZN8MetalNet13InitResourcesEv.cpp",
-    "src/MetalNet_Spawn.c"
+    "src/_ZN18daObjMc_Metalnet_cD1Ev.cpp",
+    "src/_ZN18daObjMc_Metalnet_cD0Ev.cpp",
+    "src/_ZN18daObjMc_Metalnet_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv.c",
+    "src/_ZN18daObjMc_Metalnet_c6RenderEv.cpp",
+    "src/_ZN18daObjMc_Metalnet_c8BehaviorEv.cpp",
+    "src/_ZN18daObjMc_Metalnet_c13InitResourcesEv.cpp",
+    "src/daObjMc_Metalnet_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -5724,17 +5724,17 @@
    "start": "0x21111a0",
    "end": "0x21114b8",
    "classes": [
-    "ShipWater"
+    "daObjKsWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9ShipWaterD1Ev.cpp",
-    "src/_ZN9ShipWaterD0Ev.cpp",
-    "src/_ZN9ShipWater16CleanupResourcesEv.cpp",
-    "src/_ZN9ShipWater6RenderEv.cpp",
-    "src/_ZN9ShipWater8BehaviorEv.cpp",
-    "src/_ZN9ShipWater13InitResourcesEv.c",
+    "src/_ZN14daObjKsWater_cD1Ev.cpp",
+    "src/_ZN14daObjKsWater_cD0Ev.cpp",
+    "src/_ZN14daObjKsWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjKsWater_c6RenderEv.cpp",
+    "src/_ZN14daObjKsWater_c8BehaviorEv.cpp",
+    "src/_ZN14daObjKsWater_c13InitResourcesEv.c",
     "src/daObjKsWater_c_classInit.c"
    ],
    "ext_mix": {
@@ -6263,18 +6263,18 @@
    "start": "0x2112078",
    "end": "0x2112228",
    "classes": [
-    "Flag"
+    "daMcFlag_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN4FlagD1Ev.cpp",
-    "src/_ZN4FlagD0Ev.c",
-    "src/_ZN4Flag16CleanupResourcesEv.c",
-    "src/_ZN4Flag6RenderEv.cpp",
-    "src/_ZN4Flag8BehaviorEv.cpp",
-    "src/_ZN4Flag13InitResourcesEv.cpp",
-    "src/Flag_Spawn.c"
+    "src/_ZN10daMcFlag_cD1Ev.cpp",
+    "src/_ZN10daMcFlag_cD0Ev.c",
+    "src/_ZN10daMcFlag_c16CleanupResourcesEv.c",
+    "src/_ZN10daMcFlag_c6RenderEv.cpp",
+    "src/_ZN10daMcFlag_c8BehaviorEv.cpp",
+    "src/_ZN10daMcFlag_c13InitResourcesEv.cpp",
+    "src/daMcFlag_c_Spawn.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -6848,18 +6848,18 @@
    "start": "0x21111a0",
    "end": "0x2111444",
    "classes": [
-    "SwingingPlatform"
+    "daObjRcBuranko_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN16SwingingPlatformD1Ev.cpp",
-    "src/_ZN16SwingingPlatformD0Ev.c",
+    "src/_ZN16daObjRcBuranko_cD1Ev.cpp",
+    "src/_ZN16daObjRcBuranko_cD0Ev.c",
     "src/func_ov036_0211123c.c",
-    "src/_ZN16SwingingPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN16SwingingPlatform6RenderEv.cpp",
-    "src/_ZN16SwingingPlatform8BehaviorEv.cpp",
-    "src/_ZN16SwingingPlatform13InitResourcesEv.cpp",
+    "src/_ZN16daObjRcBuranko_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjRcBuranko_c6RenderEv.cpp",
+    "src/_ZN16daObjRcBuranko_c8BehaviorEv.cpp",
+    "src/_ZN16daObjRcBuranko_c13InitResourcesEv.cpp",
     "src/daObjRcBuranko_c_classInit.c"
    ],
    "ext_mix": {
@@ -7346,17 +7346,17 @@
    "start": "0x21111a0",
    "end": "0x2111314",
    "classes": [
-    "PoleBillboard"
+    "daObjBkBillboard_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN13PoleBillboardD1Ev.cpp",
-    "src/_ZN13PoleBillboardD0Ev.c",
+    "src/_ZN18daObjBkBillboard_cD1Ev.cpp",
+    "src/_ZN18daObjBkBillboard_cD0Ev.c",
     "src/func_ov015_02111214.c",
-    "src/_ZN13PoleBillboard16CleanupResourcesEv.cpp",
-    "src/_ZN13PoleBillboard6RenderEv.cpp",
-    "src/_ZN13PoleBillboard13InitResourcesEv.cpp",
+    "src/_ZN18daObjBkBillboard_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjBkBillboard_c6RenderEv.cpp",
+    "src/_ZN18daObjBkBillboard_c13InitResourcesEv.cpp",
     "src/daObjBkBillboard_c_classInit.c"
    ],
    "ext_mix": {
@@ -7404,17 +7404,17 @@
    "start": "0x2112698",
    "end": "0x21128f0",
    "classes": [
-    "HugeWater"
+    "daObjTdWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9HugeWaterD1Ev.cpp",
-    "src/_ZN9HugeWaterD0Ev.cpp",
-    "src/_ZN9HugeWater16CleanupResourcesEv.cpp",
-    "src/_ZN9HugeWater6RenderEv.cpp",
-    "src/_ZN9HugeWater8BehaviorEv.cpp",
-    "src/_ZN9HugeWater13InitResourcesEv.cpp",
+    "src/_ZN14daObjTdWater_cD1Ev.cpp",
+    "src/_ZN14daObjTdWater_cD0Ev.cpp",
+    "src/_ZN14daObjTdWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjTdWater_c6RenderEv.cpp",
+    "src/_ZN14daObjTdWater_c8BehaviorEv.cpp",
+    "src/_ZN14daObjTdWater_c13InitResourcesEv.cpp",
     "src/daObjTdWater_c_classInit.c"
    ],
    "ext_mix": {
@@ -7523,18 +7523,18 @@
    "classes": [
     "SlideDecorationBlueSmiley",
     "SlideDecorationOrangeSmiley",
-    "SlideDecorationSilverStar",
+    "daObjHsBillboard_c",
     "SlideDecorationYellowStar"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN25SlideDecorationSilverStarD1Ev.cpp",
-    "src/_ZN25SlideDecorationSilverStarD0Ev.cpp",
+    "src/_ZN18daObjHsBillboard_cD1Ev.cpp",
+    "src/_ZN18daObjHsBillboard_cD0Ev.cpp",
     "src/func_ov031_02111214.c",
-    "src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp",
-    "src/_ZN25SlideDecorationSilverStar6RenderEv.cpp",
-    "src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp",
+    "src/_ZN18daObjHsBillboard_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjHsBillboard_c6RenderEv.cpp",
+    "src/_ZN18daObjHsBillboard_c13InitResourcesEv.cpp",
     "src/SlideDecorationBlueSmiley_Spawn.c",
     "src/SlideDecorationOrangeSmiley_Spawn.c",
     "src/SlideDecorationYellowStar_Spawn.c",
@@ -7831,17 +7831,17 @@
    "start": "0x2112944",
    "end": "0x2112bd0",
    "classes": [
-    "RotatingBridge"
+    "daObjBk_Rotebar_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN14RotatingBridgeD1Ev.cpp",
-    "src/_ZN14RotatingBridgeD0Ev.cpp",
-    "src/_ZN14RotatingBridge16CleanupResourcesEv.cpp",
-    "src/_ZN14RotatingBridge6RenderEv.cpp",
-    "src/_ZN14RotatingBridge8BehaviorEv.cpp",
-    "src/_ZN14RotatingBridge13InitResourcesEv.cpp",
+    "src/_ZN17daObjBk_Rotebar_cD1Ev.cpp",
+    "src/_ZN17daObjBk_Rotebar_cD0Ev.cpp",
+    "src/_ZN17daObjBk_Rotebar_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjBk_Rotebar_c6RenderEv.cpp",
+    "src/_ZN17daObjBk_Rotebar_c8BehaviorEv.cpp",
+    "src/_ZN17daObjBk_Rotebar_c13InitResourcesEv.cpp",
     "src/daObjBk_Rotebar_c_classInit.c"
    ],
    "ext_mix": {
@@ -8006,17 +8006,17 @@
    "start": "0x2111d14",
    "end": "0x2111f8c",
    "classes": [
-    "ArmedRotatingPlatform"
+    "daObjRc_Guruguru_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN21ArmedRotatingPlatformD1Ev.cpp",
-    "src/_ZN21ArmedRotatingPlatformD0Ev.cpp",
-    "src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform6RenderEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform8BehaviorEv.cpp",
-    "src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_cD1Ev.cpp",
+    "src/_ZN18daObjRc_Guruguru_cD0Ev.cpp",
+    "src/_ZN18daObjRc_Guruguru_c16CleanupResourcesEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c6RenderEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c8BehaviorEv.cpp",
+    "src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp",
     "src/daObjRc_Guruguru_c_classInit.c"
    ],
    "ext_mix": {
@@ -8241,17 +8241,17 @@
    "start": "0x21111a0",
    "end": "0x21113fc",
    "classes": [
-    "DiamondLift"
+    "daObjKm1_Ukishima_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN11DiamondLiftD1Ev.cpp",
-    "src/_ZN11DiamondLiftD0Ev.c",
-    "src/_ZN11DiamondLift16CleanupResourcesEv.cpp",
-    "src/_ZN11DiamondLift6RenderEv.cpp",
-    "src/_ZN11DiamondLift8BehaviorEv.cpp",
-    "src/_ZN11DiamondLift13InitResourcesEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_cD1Ev.cpp",
+    "src/_ZN19daObjKm1_Ukishima_cD0Ev.c",
+    "src/_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c6RenderEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c8BehaviorEv.cpp",
+    "src/_ZN19daObjKm1_Ukishima_c13InitResourcesEv.cpp",
     "src/daObjKm1_Ukishima_c_classInit.c"
    ],
    "ext_mix": {
@@ -8358,16 +8358,16 @@
    "start": "0x2112db4",
    "end": "0x2112f10",
    "classes": [
-    "ShutterHmc"
+    "daObjCvShutter_c"
    ],
    "n_functions_map": 6,
    "n_files": 6,
    "files": [
-    "src/_ZN10ShutterHmcD1Ev.cpp",
-    "src/_ZN10ShutterHmcD0Ev.c",
-    "src/_ZN10ShutterHmc16CleanupResourcesEv.cpp",
-    "src/_ZN10ShutterHmc8BehaviorEv.cpp",
-    "src/_ZN10ShutterHmc13InitResourcesEv.cpp",
+    "src/_ZN16daObjCvShutter_cD1Ev.cpp",
+    "src/_ZN16daObjCvShutter_cD0Ev.c",
+    "src/_ZN16daObjCvShutter_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCvShutter_c8BehaviorEv.cpp",
+    "src/_ZN16daObjCvShutter_c13InitResourcesEv.cpp",
     "src/daObjCvShutter_c_classInit.c"
    ],
    "ext_mix": {
@@ -9033,21 +9033,21 @@
    "start": "0x21127bc",
    "end": "0x2112a74",
    "classes": [
-    "IceSheet"
+    "daObjIceBoard_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN8IceSheetD1Ev.cpp",
-    "src/_ZN8IceSheetD0Ev.cpp",
-    "src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN8IceSheet4KillEv.cpp",
-    "src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp",
-    "src/_ZN8IceSheet16CleanupResourcesEv.cpp",
-    "src/_ZN8IceSheet6RenderEv.cpp",
-    "src/_ZN8IceSheet8BehaviorEv.cpp",
-    "src/_ZN8IceSheet13InitResourcesEv.cpp",
-    "src/IceSheet_Spawn.c"
+    "src/_ZN15daObjIceBoard_cD1Ev.cpp",
+    "src/_ZN15daObjIceBoard_cD0Ev.cpp",
+    "src/_ZN15daObjIceBoard_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN15daObjIceBoard_c4KillEv.cpp",
+    "src/_ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c.cpp",
+    "src/_ZN15daObjIceBoard_c16CleanupResourcesEv.cpp",
+    "src/_ZN15daObjIceBoard_c6RenderEv.cpp",
+    "src/_ZN15daObjIceBoard_c8BehaviorEv.cpp",
+    "src/_ZN15daObjIceBoard_c13InitResourcesEv.cpp",
+    "src/daObjIceBoard_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -9719,15 +9719,15 @@
    "start": "0x2112cf4",
    "end": "0x2112e0c",
    "classes": [
-    "FallBlockWf"
+    "daObjBk_Fall_Block_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN11FallBlockWfD1Ev.cpp",
-    "src/_ZN11FallBlockWfD0Ev.c",
-    "src/_ZN11FallBlockWf16CleanupResourcesEv.c",
-    "src/_ZN11FallBlockWf13InitResourcesEv.c",
+    "src/_ZN20daObjBk_Fall_Block_cD1Ev.cpp",
+    "src/_ZN20daObjBk_Fall_Block_cD0Ev.c",
+    "src/_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv.c",
+    "src/_ZN20daObjBk_Fall_Block_c13InitResourcesEv.c",
     "src/daObjBk_Fall_Block_c_classInit.c"
    ],
    "ext_mix": {
@@ -9833,15 +9833,15 @@
    "start": "0x2111518",
    "end": "0x2111630",
    "classes": [
-    "RickshawPlatformBdw"
+    "daObjKm1_Kuruma_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN19RickshawPlatformBdwD1Ev.cpp",
-    "src/_ZN19RickshawPlatformBdwD0Ev.c",
-    "src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.c",
-    "src/_ZN19RickshawPlatformBdw13InitResourcesEv.c",
+    "src/_ZN17daObjKm1_Kuruma_cD1Ev.cpp",
+    "src/_ZN17daObjKm1_Kuruma_cD0Ev.c",
+    "src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.c",
+    "src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.c",
     "src/daObjKm1_Kuruma_c_classInit.c"
    ],
    "ext_mix": {
@@ -10110,15 +10110,15 @@
    "start": "0x2112bd0",
    "end": "0x2112cf4",
    "classes": [
-    "RotatingPlatformWf"
+    "daObjBk_Ukisima_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN18RotatingPlatformWfD1Ev.cpp",
-    "src/_ZN18RotatingPlatformWfD0Ev.c",
-    "src/_ZN18RotatingPlatformWf16CleanupResourcesEv.cpp",
-    "src/_ZN18RotatingPlatformWf13InitResourcesEv.cpp",
+    "src/_ZN17daObjBk_Ukisima_cD1Ev.cpp",
+    "src/_ZN17daObjBk_Ukisima_cD0Ev.c",
+    "src/_ZN17daObjBk_Ukisima_c16CleanupResourcesEv.cpp",
+    "src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp",
     "src/daObjBk_Ukisima_c_classInit.c"
    ],
    "ext_mix": {
@@ -10226,15 +10226,15 @@
    "start": "0x2111444",
    "end": "0x2111580",
    "classes": [
-    "RotatingPlatformRr"
+    "daObjRc_Kaitendai_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN18RotatingPlatformRrD1Ev.cpp",
-    "src/_ZN18RotatingPlatformRrD0Ev.c",
-    "src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp",
-    "src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp",
+    "src/_ZN19daObjRc_Kaitendai_cD1Ev.cpp",
+    "src/_ZN19daObjRc_Kaitendai_cD0Ev.c",
+    "src/_ZN19daObjRc_Kaitendai_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjRc_Kaitendai_c13InitResourcesEv.cpp",
     "src/daObjRc_Kaitendai_c_classInit.c"
    ],
    "ext_mix": {
@@ -25517,17 +25517,17 @@
    "start": "0x21124a8",
    "end": "0x2112698",
    "classes": [
-    "HugeCover"
+    "daObjTdFuta_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9HugeCoverD1Ev.cpp",
-    "src/_ZN9HugeCoverD0Ev.c",
-    "src/_ZN9HugeCover16CleanupResourcesEv.cpp",
-    "src/_ZN9HugeCover6RenderEv.cpp",
-    "src/_ZN9HugeCover8BehaviorEv.cpp",
-    "src/_ZN9HugeCover13InitResourcesEv.cpp",
+    "src/_ZN13daObjTdFuta_cD1Ev.cpp",
+    "src/_ZN13daObjTdFuta_cD0Ev.c",
+    "src/_ZN13daObjTdFuta_c16CleanupResourcesEv.cpp",
+    "src/_ZN13daObjTdFuta_c6RenderEv.cpp",
+    "src/_ZN13daObjTdFuta_c8BehaviorEv.cpp",
+    "src/_ZN13daObjTdFuta_c13InitResourcesEv.cpp",
     "src/daObjTdFuta_c_classInit.c"
    ],
    "ext_mix": {
@@ -25773,18 +25773,18 @@
    "start": "0x21111a0",
    "end": "0x21113b4",
    "classes": [
-    "Cloud"
+    "daObjKumo_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN5CloudD1Ev.cpp",
-    "src/_ZN5CloudD0Ev.c",
+    "src/_ZN11daObjKumo_cD1Ev.cpp",
+    "src/_ZN11daObjKumo_cD0Ev.c",
     "src/func_ov039_02111214.c",
-    "src/_ZN5Cloud16CleanupResourcesEv.cpp",
-    "src/_ZN5Cloud6RenderEv.cpp",
-    "src/_ZN5Cloud8BehaviorEv.cpp",
-    "src/_ZN5Cloud13InitResourcesEv.cpp",
+    "src/_ZN11daObjKumo_c16CleanupResourcesEv.cpp",
+    "src/_ZN11daObjKumo_c6RenderEv.cpp",
+    "src/_ZN11daObjKumo_c8BehaviorEv.cpp",
+    "src/_ZN11daObjKumo_c13InitResourcesEv.cpp",
     "src/Cloud_Spawn.c"
    ],
    "ext_mix": {
@@ -26130,21 +26130,21 @@
    "start": "0x2117980",
    "end": "0x2117d1c",
    "classes": [
-    "BowserFireSeaArena"
+    "daKpa2Bg_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN18BowserFireSeaArenaD1Ev.cpp",
-    "src/_ZN18BowserFireSeaArenaD0Ev.cpp",
+    "src/_ZN10daKpa2Bg_cD1Ev.cpp",
+    "src/_ZN10daKpa2Bg_cD0Ev.cpp",
     "src/func_ov060_02117a3c.c",
     "src/func_ov060_02117a64.c",
     "src/func_ov060_02117ae0.c",
-    "src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp",
-    "src/_ZN18BowserFireSeaArena6RenderEv.cpp",
-    "src/_ZN18BowserFireSeaArena8BehaviorEv.cpp",
-    "src/_ZN18BowserFireSeaArena13InitResourcesEv.cpp",
-    "src/BowserFireSeaArena_Spawn.c"
+    "src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daKpa2Bg_c6RenderEv.cpp",
+    "src/_ZN10daKpa2Bg_c8BehaviorEv.cpp",
+    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp",
+    "src/daKpa2Bg_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 6,

@@ -11,10 +11,9 @@
  * from dBgActor_c. The destructor stores three vptrs -- its own, daObjDorifu_c's,
  * then dBgActor_c's -- and destroys daObjDorifu_c's Model[5] and
  * dBgW_KcMbg[5] in between. That shape is inherited from the base declaration,
- * but it is no longer compiler-derived here: since the promotion both destructor
- * variants are carried in src/actors/d_a_obj_rc_dorifu.cpp as hand-transcribed
- * mangled bodies (see the class-body comment below for why), so what follows is
- * a description of the cartridge's code, not of code mwccarm generates.
+ * and IS compiler-derived: the inline empty body below is enough for mwccarm to
+ * generate the whole thing (see the class-body comment for why it must stay
+ * inline).
  *
  *   _ZTI16daObjRc_Dorifu_c  ov036 0x02113e4c
  *   _ZTS16daObjRc_Dorifu_c  ov036 0x02113e58
@@ -38,24 +37,22 @@
 
 struct daObjRc_Dorifu_c : daObjDorifu_c {
     /* --- vtable --- */
+    /* MEASURED -- INLINE ON PURPOSE, do not move out of line.
+     * Out of line, mwccarm 2004/b56 emits D0 before D1 (the reverse of the
+     * cartridge's 0x02111f8c D1 / 0x0211200c D0) and a homeless D2, and
+     * objisolate rejects the whole translation unit -- `tubuild verify`
+     * reported exactly that as `1 ordinal pair(s) NOT in ROM order: [(0, 1)]`.
+     * Defined in the class body it emits D1 then D0 and no D2, which is the
+     * ROM's own order, and it becomes this class's key function: mwccarm
+     * homes _ZTI/_ZTS/_ZTV16daObjRc_Dorifu_c in the TU that defines it rather
+     * than emitting them as unhomed vague-linkage passengers. Declared FIRST
+     * (this class's sibling daObjKm1_Dorifu_c and daObjWanwanShutter_c both
+     * do the same) so it becomes the earliest-declared virtual, which is what
+     * makes it the key function under the Itanium ABI. */
+    virtual ~daObjRc_Dorifu_c() {}      /* slots 16 (D1), 17 (D0) */
+
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
-
-    /* DECLARED LAST ON PURPOSE, after the other members. Nothing DEFINES this
-       destructor as a C++ member -- D1 and D0 are carried in
-       src/actors/d_a_obj_rc_dorifu.cpp as `// @symbol` marked mangled bodies,
-       for the emission-order reason that file's header gives -- so the class's
-       vtable and RTTI have no key function to home them. With the declaration
-       LAST, mwccarm still emits them as vague linkage into the TU that defines
-       the class's members, and tools/romdata_check.py word-compares that
-       emitted copy against the cartridge; with the declaration FIRST it emits
-       no data at all and those ROM records go unverified by any source.
-       Measured both ways on the sibling daObjWc_Mizu_c: first -> 0 data
-       symbols, last -> 11. This class licenses 13 rather than Mizu's 11
-       because it sits two levels below dBgActor_c, so its base chain
-       contributes one more _ZTI/_ZTS pair; the manifest's
-       compiler_only_output lists all 13 with their canonical addresses. */
-    virtual ~daObjRc_Dorifu_c();       /* slots 16 (D1), 17 (D0) */
 };
 
 typedef char daObjRc_Dorifu_c_size_must_be_0xdcc[sizeof(daObjRc_Dorifu_c) == 0xdcc ? 1 : -1];

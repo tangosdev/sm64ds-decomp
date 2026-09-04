@@ -1,0 +1,411 @@
+{
+  "id": "ov018/daPgMthr_c",
+  "module": "ov018",
+  "source": "src/actors/d_a_pg_mthr.cpp",
+  "promoted_source": "src/actors/d_a_pg_mthr.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111848..0x211267c, 22 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daPgMthr_c",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111848",
+      "end": "0x0211267c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10daPgMthr_cD1Ev",
+      "address": "0x02111848",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN10daPgMthr_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10daPgMthr_cD0Ev",
+      "address": "0x02111898",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN10daPgMthr_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov018_021118fc",
+      "address": "0x021118fc",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov018_021118fc.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov018_02111968",
+      "address": "0x02111968",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov018_02111968.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov018_02111a48",
+      "address": "0x02111a48",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov018_02111a48.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov018_02111b3c",
+      "address": "0x02111b3c",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov018_02111b3c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov018_02111bf0",
+      "address": "0x02111bf0",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov018_02111bf0.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov018_02111d28",
+      "address": "0x02111d28",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov018_02111d28.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov018_02111e28",
+      "address": "0x02111e28",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov018_02111e28.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov018_02111f1c",
+      "address": "0x02111f1c",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov018_02111f1c.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov018_02111fac",
+      "address": "0x02111fac",
+      "size": "0x00000230",
+      "legacy_source": "src/func_ov018_02111fac.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov018_021121dc",
+      "address": "0x021121dc",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov018_021121dc.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov018_02112234",
+      "address": "0x02112234",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov018_02112234.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov018_021122ec",
+      "address": "0x021122ec",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov018_021122ec.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov018_0211235c",
+      "address": "0x0211235c",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov018_0211235c.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov018_02112398",
+      "address": "0x02112398",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov018_02112398.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov018_021123d0",
+      "address": "0x021123d0",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov018_021123d0.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN10daPgMthr_c16CleanupResourcesEv",
+      "address": "0x021123ec",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN10daPgMthr_c16CleanupResourcesEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN10daPgMthr_c16OnPendingDestroyEv",
+      "address": "0x02112450",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN10daPgMthr_c16OnPendingDestroyEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN10daPgMthr_c6RenderEv",
+      "address": "0x02112454",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN10daPgMthr_c6RenderEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN10daPgMthr_c8BehaviorEv",
+      "address": "0x02112480",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN10daPgMthr_c8BehaviorEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN10daPgMthr_c13InitResourcesEv",
+      "address": "0x021124d0",
+      "size": "0x000001ac",
+      "legacy_source": "src/_ZN10daPgMthr_c13InitResourcesEv.cpp",
+      "ordinal": 21
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov018_02111bf0.cpp (func_ov018_02111bf0) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov018_021121dc.cpp (func_ov018_021121dc) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov018_02111a48 and the one that held func_ov018_02111e28; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov018_02111a48 and the one that held func_ov018_02111e28; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov018_02111b3c and the one that held func_ov018_02111e28; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_021123d0' differs between the legacy file that used to hold func_ov018_02111968 and the one that held func_ov018_02111e28; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_021123d0' differs between the legacy file that used to hold func_ov018_02111968 and the one that held func_ov018_02111f1c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov018_02111a48 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov018_02111a48 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Matrix4x3_ApplyInPlaceToRotationY' differs between the legacy file that used to hold func_ov018_02111d28 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov018_02111e28 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_021123d0' differs between the legacy file that used to hold func_ov018_02111968 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_02111a48' differs between the legacy file that used to hold func_ov018_02111e28 and the one that held func_ov018_02111fac; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov018_02111b3c and the one that held func_ov018_02112234; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_02111a48' differs between the legacy file that used to hold func_ov018_02111e28 and the one that held func_ov018_02112234; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_02111bf0' differs between the legacy file that used to hold func_ov018_02111e28 and the one that held func_ov018_02112234; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov018_02111e28 and the one that held func_ov018_02112234; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov018_02111f1c and the one that held func_ov018_021122ec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov018_02111f1c and the one that held func_ov018_021122ec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov018_02111d28' differs between the legacy file that used to hold _ZN10daPgMthr_c8BehaviorEv and the one that held _ZN10daPgMthr_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov018_021118fc and the one that held func_ov018_02111d28; kept the first, the other is commented out for review -- resolved by deleting BOTH shadow declarations and including the real include/dActor_c.h, which the promoted TU does via daPgMthr_c.h. The shadow spelling named the actor id field `kind`; the real header calls it `actorID` at 0x00c.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov018_021118fc and the one that held func_ov018_02111e28; kept the first, the other is commented out for review -- resolved by deleting BOTH shadow declarations and including the real include/dActor_c.h, which the promoted TU does via daPgMthr_c.h. The shadow spelling named the actor id field `kind`; the real header calls it `actorID` at 0x00c."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/src/actors/d_a_pg_mthr.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        29
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10daPgMthr_c",
+        "_ZTS10daPgMthr_c",
+        "_ZTV10daPgMthr_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10daPgMthr_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10daPgMthr_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV10daPgMthr_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov018-daPgMthr_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111848",
+        "end": "0x0211267c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111848",
+          "end": "0x0211267c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 22
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086d70, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class fBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e60, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the base class dBase_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e54, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the direct base class dActor_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e390, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming the direct base class dActor_c in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e384, which no section this entry licenses (.text 0x02111848-0x0211267c) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI10daPgMthr_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/daPgMthr_c.h defines `virtual ~daPgMthr_c() {}` in the class body and it is the first virtual declared, so it is the key function and mwccarm puts _ZTI/_ZTS/_ZTV in this object. (The definition has to be in the class body: the cartridge keeps D1 at 0x02111848 BELOW D0 at 0x02111898, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses with `licensed .text functions are not emitted in ROM address order`.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov018:0x0211397c, in ov018's .data (0x02112e80-0x02113bc0) and outside this entry's only licensed range (.text 0x02111848-0x0211267c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov018",
+      "canonical_address": "0x0211397c"
+    },
+    {
+      "symbol": "_ZTS10daPgMthr_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/daPgMthr_c.h defines `virtual ~daPgMthr_c() {}` in the class body and it is the first virtual declared, so it is the key function and mwccarm puts _ZTI/_ZTS/_ZTV in this object. (The definition has to be in the class body: the cartridge keeps D1 at 0x02111848 BELOW D0 at 0x02111898, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses with `licensed .text functions are not emitted in ROM address order`.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov018:0x02113988, in ov018's .data (0x02112e80-0x02113bc0) and outside this entry's only licensed range (.text 0x02111848-0x0211267c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. The record is the ROM's own spelling of the name: 0x02113988 holds the bytes \"10daPgMthr_c\u0000\", so the class name in include/daPgMthr_c.h is transcribed from the cartridge, not coined.",
+      "canonical_module": "ov018",
+      "canonical_address": "0x02113988"
+    },
+    {
+      "symbol": "_ZTV10daPgMthr_c",
+      "disposition": "deadstrip-data",
+      "reason": "Emitted here because this TU homes the class's vtable: include/daPgMthr_c.h defines `virtual ~daPgMthr_c() {}` in the class body and it is the first virtual declared, so it is the key function and mwccarm puts _ZTI/_ZTS/_ZTV in this object. (The definition has to be in the class body: the cartridge keeps D1 at 0x02111848 BELOW D0 at 0x02111898, and an out-of-line member definition makes mwccarm emit the group D0-then-D1 plus a homeless D2, which the whole-range link refuses with `licensed .text functions are not emitted in ROM address order`.) This entry licenses text only, so the emitted record is still discarded: the cartridge keeps its canonical copy at ov018:0x021139bc, in ov018's .data (0x02112e80-0x02113bc0) and outside this entry's only licensed range (.text 0x02111848-0x0211267c), so dsd supplies that ROM data independently. tools/romdata_check.py compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. SCOPE OF THAT COMPARISON, twice limited. First, 0x021139bc is the vtable's ADDRESS POINT, not the start of the emitted 0x84-byte object: the table begins two words earlier -- 0x021139b4 holds the offset-to-top 0 and 0x021139b8 holds 0x0211397c, `&_ZTI10daPgMthr_c` -- and those two words lie outside the symbol's extent, so anchoring the comparison at the symbol leaves them uncompared. Second, dsd cuts the table short: config/arm9/overlays/ov018/symbols.txt records `data_ov018_021139f4` at 0x021139f4, inside the table, so the _ZTV symbol's extent in the ROM map ends there and only slots 0-13 (0x021139bc-0x021139f4) are word-compared. Slots 14-30, up to the table's real end at 0x02113a38, are not covered by this comparison.",
+      "canonical_module": "ov018",
+      "canonical_address": "0x021139bc"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Several members declare Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+//cpp
+/* Production translation unit for ov015/daObjBkBillboard_c, hand-curated.
+ * 6 function(s), .text 0x021111a0..0x021112dc.
+ *
+ * The billboard on a pole in Big Boo's Haunt (`bk` is the ROM's tag for that
+ * stage). It derives DIRECTLY from dActor_c -- the cartridge's own RTTI says
+ * so -- and adds one member, a Model at 0xd4, which is what closes the class
+ * on the factory's literal 0x124. It fills three vtable slots: InitResources
+ * (0), CleanupResources (3) and Render (9).
+ *
+ * ONE OF THE SIX IS NOT A METHOD. func_ov015_02111214 sits between D0 and
+ * CleanupResources in the ROM's own .text order, so it is part of this TU and
+ * cannot be split out; it is a file-local helper that InitResources calls to
+ * seed the model's rotation matrix and scale from the actor's fields. It keeps
+ * C linkage and its unmangled ROM name, which is why it is wrapped in its own
+ * `extern "C"` block below rather than being made a member.
+ *
+ * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
+ * emits one .text section per function in the REVERSE of source order, so the
+ * highest-address ROM function is written FIRST here. Do not reorder:
+ * tools/rombuild.py refuses the object outright when the emitted order and the
+ * ROM's disagree.
+ *
+ * Assembled from these legacy one-function sources (ROM address order):
+ *   [0] 0x021111a0  src/_ZN18daObjBkBillboard_cD1Ev.cpp
+ *   [1] 0x021111d0  src/_ZN18daObjBkBillboard_cD0Ev.cpp
+ *   [2] 0x02111214  src/func_ov015_02111214.c
+ *   [3] 0x02111254  src/_ZN18daObjBkBillboard_c16CleanupResourcesEv.cpp
+ *   [4] 0x02111278  src/_ZN18daObjBkBillboard_c6RenderEv.cpp
+ *   [5] 0x021112a0  src/_ZN18daObjBkBillboard_c13InitResourcesEv.cpp
+ */
+
+#include "daObjBkBillboard_c.h"
+#include "decl_common.h"
+
+/* Local shadow declarations carried from the legacy files verbatim.
+ * NOT reconciled against real project headers -- check include/*.h for
+ * each of these before compiling; a real header should usually win. */
+/* shadow struct 'Base' */
+struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
+
+/* shadow struct 'Derived' */
+struct Derived { char pad[0xd4]; Base base; };
+
+extern "C" {
+extern void Matrix4x3_FromRotationY(void *, int);
+extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+/* CONFLICT RESOLVED. The two legacy files spelled this ROM object differently:
+   CleanupResources declared it locally as `int data_ov015_02114960[]`, while
+   InitResources took include/decl_common.h's `extern int data_ov015_02114960`.
+   Both cannot stand in one TU. decl_common.h's spelling wins -- it is the
+   project-wide declaration -- and CleanupResources takes the address explicitly
+   below, which is the same address the array spelling decayed to. */
+/* Defined further down this same file -- InitResources is written above it
+   because the emitted order is the reverse of the source order. */
+void func_ov015_02111214(char *t);
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 5 -- _ZN18daObjBkBillboard_c13InitResourcesEv, 0x021112a0, size 0x3c */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN18daObjBkBillboard_c13InitResourcesEv
+// recovered name: daObjBkBillboard_c::InitResources
+/* daObjBkBillboard_c::InitResources - vtable slot 0, overriding
+ * fBase_c::InitResources(). Migrated to a real member: mModel is a real
+ * field (include/daObjBkBillboard_c.h, 0xd4) so the raw `c + 0xd4` cast becomes
+ * `mModel`, and Model::LoadFile / Model::SetFile are real (static/member)
+ * declarations in include/Model.h and include/ModelBase.h. */
+s32 daObjBkBillboard_c::InitResources()
+{
+    void *file = Model::LoadFile(*(SharedFilePtr *)&data_ov015_02114960);
+    mModel.SetFile((BMD_File *)file, 1, -1);
+    func_ov015_02111214((char *)this);
+    return 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- _ZN18daObjBkBillboard_c6RenderEv, 0x02111278, size 0x28 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN18daObjBkBillboard_c6RenderEv
+// recovered name: daObjBkBillboard_c_Render
+/* recovered: renamed to Class_Method */
+/* daObjBkBillboard_c::Render - recovered from vtable slot identity */
+s32 daObjBkBillboard_c::Render() {
+    Derived * d = (Derived *)this; Base *b = &d->base; b->m(0); return 1; }
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 3 -- _ZN18daObjBkBillboard_c16CleanupResourcesEv, 0x02111254, size 0x24 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN18daObjBkBillboard_c16CleanupResourcesEv
+// recovered name: daObjBkBillboard_c_CleanupResources
+/* recovered: renamed to Class_Method */
+/* daObjBkBillboard_c::CleanupResources - recovered from vtable slot identity */
+s32 daObjBkBillboard_c::CleanupResources() {
+    _ZN13SharedFilePtr7ReleaseEv(&data_ov015_02114960);
+    return 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 2 -- func_ov015_02111214, 0x02111214, size 0x40 */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+void func_ov015_02111214(char *t)
+{
+    Matrix4x3_FromRotationY(t + 0xf0, *(short *)(t + 0x8e));
+    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
+    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
+    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 1 -- _ZN18daObjBkBillboard_cD0Ev, 0x021111d0, size 0x44        */
+/* ROM ordinal 0 -- _ZN18daObjBkBillboard_cD1Ev, 0x021111a0, size 0x30        */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN18daObjBkBillboard_cD1Ev
+// @symbol _ZN18daObjBkBillboard_cD0Ev
+/* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjBkBillboard_c() {}` in the
+   header is the whole source of both variants: from an inline body mwcc emits
+   D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body
+   out of line here instead flips them to D0-before-D1 and the isolation step
+   rejects the object.
+
+   Their bodies are one vptr store, then mModel destroyed, then ~dActor_c --
+   the direct-base chain the RTTI states. D0's trailing deallocation is the
+   inline `operator delete` it inherits, which is why nothing here names a
+   heap. */

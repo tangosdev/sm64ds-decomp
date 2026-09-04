@@ -39,7 +39,7 @@ int Crate::InitResources()
     Crate_SetState(((char*)this), 0);
     /* dBgActor_c's own generic 0xd0..0xd4 pad (include/dBgActor_c.h), not a
        Crate field -- reused here by raw offset, same idiom as
-       ArmedRotatingPlatform's tail-padding field. */
+       daObjRc_Guruguru_c's tail-padding field. */
     *(s32*)(((char*)this) + 0xd0) = 0;
     func_ov098_02138ce0(((char*)this));
     return 1;

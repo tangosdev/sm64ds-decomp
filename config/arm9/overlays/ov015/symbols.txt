@@ -1,9 +1,9 @@
-_ZN13PoleBillboardD1Ev kind:function(arm,size=0x30) addr:0x021111a0
-_ZN13PoleBillboardD0Ev kind:function(arm,size=0x44) addr:0x021111d0
+_ZN18daObjBkBillboard_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN18daObjBkBillboard_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov015_02111214 kind:function(arm,size=0x40) addr:0x02111214
-_ZN13PoleBillboard16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
-_ZN13PoleBillboard6RenderEv kind:function(arm,size=0x28) addr:0x02111278
-_ZN13PoleBillboard13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
+_ZN18daObjBkBillboard_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN18daObjBkBillboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN18daObjBkBillboard_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
 daObjBkBillboard_c_classInit kind:function(arm,size=0x38) addr:0x021112dc
 _ZN14KnockDownPlankD1Ev kind:function(arm,size=0x4c) addr:0x02111314
 _ZN14KnockDownPlankD0Ev kind:function(arm,size=0x60) addr:0x02111360
@@ -55,22 +55,22 @@ _ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
 func_ov015_021128e8 kind:function(arm,size=0x10) addr:0x021128e8
 func_ov015_021128f8 kind:function(arm,size=0x14) addr:0x021128f8
 daObjBk_Lift_c_classInit kind:function(arm,size=0x38) addr:0x0211290c
-_ZN14RotatingBridgeD1Ev kind:function(arm,size=0x44) addr:0x02112944
-_ZN14RotatingBridgeD0Ev kind:function(arm,size=0x58) addr:0x02112988
-_ZN14RotatingBridge16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
-_ZN14RotatingBridge6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
-_ZN14RotatingBridge8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
-_ZN14RotatingBridge13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
+_ZN17daObjBk_Rotebar_cD1Ev kind:function(arm,size=0x44) addr:0x02112944
+_ZN17daObjBk_Rotebar_cD0Ev kind:function(arm,size=0x58) addr:0x02112988
+_ZN17daObjBk_Rotebar_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
+_ZN17daObjBk_Rotebar_c6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
+_ZN17daObjBk_Rotebar_c8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
+_ZN17daObjBk_Rotebar_c13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
 daObjBk_Rotebar_c_classInit kind:function(arm,size=0x30) addr:0x02112ba0
-_ZN18RotatingPlatformWfD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
-_ZN18RotatingPlatformWfD0Ev kind:function(arm,size=0x64) addr:0x02112c20
-_ZN18RotatingPlatformWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
-_ZN18RotatingPlatformWf13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
+_ZN17daObjBk_Ukisima_cD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
+_ZN17daObjBk_Ukisima_cD0Ev kind:function(arm,size=0x64) addr:0x02112c20
+_ZN17daObjBk_Ukisima_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
+_ZN17daObjBk_Ukisima_c13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
 daObjBk_Ukisima_c_classInit kind:function(arm,size=0x3c) addr:0x02112cb8
-_ZN11FallBlockWfD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
-_ZN11FallBlockWfD0Ev kind:function(arm,size=0x64) addr:0x02112d44
-_ZN11FallBlockWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
-_ZN11FallBlockWf13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
+_ZN20daObjBk_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
+_ZN20daObjBk_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x02112d44
+_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
+_ZN20daObjBk_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
 daObjBk_Fall_Block_c_classInit kind:function(arm,size=0x3c) addr:0x02112dd0
 data_ov015_02112e0c kind:data(any) addr:0x02112e0c
 data_ov015_02112e10 kind:data(any) addr:0x02112e10
@@ -199,7 +199,7 @@ _ZTI18daObjBkBillboard_c kind:data(any) addr:0x02114318
 _ZTS18daObjBkBillboard_c kind:data(any) addr:0x02114324
 g_profile_BK_BILLBOARD kind:data(any) addr:0x0211433c ambiguous
 data_ov015_02114350 kind:data(any) addr:0x02114350 ambiguous
-_ZTV13PoleBillboard kind:data(any) addr:0x02114360
+_ZTV18daObjBkBillboard_c kind:data(any) addr:0x02114360
 data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
 _ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
 _ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
@@ -240,7 +240,7 @@ _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
 _ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
 _ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
 g_profile_BK_ROTEBAR kind:data(any) addr:0x021146f0 ambiguous
-_ZTV14RotatingBridge kind:data(any) addr:0x02114714
+_ZTV17daObjBk_Rotebar_c kind:data(any) addr:0x02114714
 data_ov015_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov015_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov015_02114794 kind:data(any) addr:0x02114794
@@ -248,7 +248,7 @@ _ZTI17daObjBk_Ukisima_c kind:data(any) addr:0x02114798
 data_ov015_021147a4 kind:data(any) addr:0x021147a4
 _ZTS17daObjBk_Ukisima_c kind:data(any) addr:0x021147b0
 g_profile_BK_UKISIMA kind:data(any) addr:0x021147c4 ambiguous
-_ZTV18RotatingPlatformWf kind:data(any) addr:0x021147e8
+_ZTV17daObjBk_Ukisima_c kind:data(any) addr:0x021147e8
 data_ov015_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov015_02114860 kind:data(any) addr:0x02114860 ambiguous
 _ZTI20daObjBk_Fall_Block_c kind:data(any) addr:0x02114868
@@ -260,7 +260,7 @@ data_ov015_02114898 kind:data(any) addr:0x02114898 ambiguous
 _ZTS20daObjBk_Fall_Block_c kind:data(any) addr:0x021148a0
 data_ov015_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 g_profile_BK_DOWN_B kind:data(any) addr:0x021148b8 ambiguous
-_ZTV11FallBlockWf kind:data(any) addr:0x021148dc
+_ZTV20daObjBk_Fall_Block_c kind:data(any) addr:0x021148dc
 data_ov015_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov015_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov015_02114960 kind:bss addr:0x02114960

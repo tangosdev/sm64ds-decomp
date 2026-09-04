@@ -515,11 +515,11 @@ Raw-offset collapses, each re-verified byte-exact: the six
 
 ---
 
-## BowserFireSeaArena (`include/BowserFireSeaArena.h`, [ov060](../config/arm9/overlays/ov060/symbols.txt), size 0x570)
+## daKpa2Bg_c (`include/daKpa2Bg_c.h`, [ov060](../config/arm9/overlays/ov060/symbols.txt), size 0x570)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mAngleXSpeed` | `src/_ZN18BowserFireSeaArena8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
+| 0x31e | `mAngleXSpeed` | `src/_ZN10daKpa2Bg_c8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
 | 0x320 | `mAngleYSpeed` | the same, into `mAngleY`. |
 | 0x322 | `mAngleZSpeed` | the same, into `mAngleZ`. |
 
@@ -640,7 +640,7 @@ A pendulum, in four fields `Behavior` integrates. Bodies read:
 
 ---
 
-## RotatingBridge (`include/RotatingBridge.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x324)
+## daObjBk_Rotebar_c (`include/daObjBk_Rotebar_c.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x324)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -724,15 +724,15 @@ their headers were `dActor_c`'s / `dBgActor_c`'s / `fBase_c`'s own storage resta
 flat by the C twin, and were repointed to the names those headers already give the
 same offsets:
 
-* `include/ShipWater.h` — `mAngleY` (0x08e), `mClipOffsetY`, `mClipRadius`,
+* `include/daObjKsWater_c.h` — `mAngleY` (0x08e), `mClipOffsetY`, `mClipRadius`,
   `mClipDistance`, `mFarDistance` (0x0b4..0x0c0), `mClipResult` (0x0c4),
   `mDeathTableID` (0x0ce).
 * `include/daObjC1_Trap_c.h` — its production class TU uses inherited `mPosX/Y/Z`
   (0x05c), `mAngleY` (0x08e), and `mAreaId` (0x0cc) directly through `dActor_c`.
 * `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
-* `include/MetalNet.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
+* `include/daObjMc_Metalnet_c.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
 * `include/daObjKm2_Ami_Bou_c.h` — `param1`, `mAngleY`.
-* `include/IceSheet.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
+* `include/daObjIceBoard_c.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
   (0x0b0).
 * `include/daObjFm_Battan_c.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).
 * `include/FortressTower.h` — `actorID` (0x00c).
@@ -748,9 +748,9 @@ same offsets:
 
 * `CccArena` 0x330 / 0x334 / 0x338 — written once each by `InitResources`, never read.
 * `RotatingCogSmall` 0x326 — written the same table value as `mAngleYStep`, never read.
-* `BowserFireSeaArena` 0x56c — zeroed, never read.
+* `daKpa2Bg_c` 0x56c — zeroed, never read.
 * `RotatingUpDownPlatformUtm` 0x300 in the C twin — that offset is *interior* to
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single
   `s16` read would be an invention.
-* The classes with no fields of their own — `MetalNet`, `IceSheet`,
-  `FortressTower`, `HugeWater` — have nothing left to name.
+* The classes with no fields of their own — `daObjMc_Metalnet_c`, `daObjIceBoard_c`,
+  `FortressTower`, `daObjTdWater_c` — have nothing left to name.

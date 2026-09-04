@@ -1,12 +1,16 @@
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.
  *
- * The ROM RTTI calls this class daPgMthr_c and identifies dActor_c as its base.
- * The readable daPgMthr_c name is retained because every recovered method
- * symbol uses it. _ZTV10daPgMthr_c and _ZTV10daPgMthr_c are co-address
- * compatibility views of the same ROM table. The compiler-emitted vtable and
- * typeinfo record reproduce that table; only the emitted type-name string says
- * `13MotherPenguin` instead of the cartridge's `10daPgMthr_c`.
+ * The ROM RTTI calls this class daPgMthr_c and identifies dActor_c as its base:
+ * overlay_0018.bin holds the type-name string `10daPgMthr_c` at 0x02113988, and
+ * the type_info record at 0x0211397c points its base word at 0x0208e390, which
+ * config/arm9/symbols.txt names _ZTI8dActor_c. The class name here is the
+ * cartridge's own spelling, so the compiler-emitted _ZTS reproduces the ROM
+ * string exactly rather than a coined one.
+ *
+ * The destructor is the first virtual declared, and so this class's key
+ * function; ov018/daPgMthr_c defines it, and every other override, so mwccarm
+ * homes _ZTI/_ZTS/_ZTV in that translation unit.
  *
  * sizeof is independently pinned by MotherPenguin_Spawn allocating 0x38c.
  * Field names for the unknown tail are placeholders. */
@@ -38,7 +42,15 @@ struct daPgMthr_c : dActor_c {
     u8  pad_378[0x14];
 
     /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */
-    virtual ~daPgMthr_c();                    /* slots 16 (D1), 17 (D0) */
+    /* Defined here, in the class body, and not out of line in the .cpp: the
+     * cartridge keeps D1 (0x02111848) BELOW D0 (0x02111898), and an out-of-line
+     * member definition makes mwccarm emit the D2/D1/D0 group in the order
+     * D0-then-D1, which the whole-range link refuses (`licensed .text functions
+     * are not emitted in ROM address order`). Written in the class body the
+     * group comes out ROM-ascending, and no D2 is emitted at all. The body is
+     * genuinely empty -- every store and call in the two ROM bodies is base and
+     * member destruction the compiler generates. Slots 16 (D1), 17 (D0). */
+    virtual ~daPgMthr_c() {}
     virtual int InitResources();                 /* slot 0 */
     virtual int CleanupResources();              /* slot 3 */
     virtual int Behavior();                      /* slot 6 */

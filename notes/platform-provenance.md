@@ -14,8 +14,8 @@ classes) is in the project memory note `platform-family-census`.
 
 ## `include/dBgActor_c.h`
 
-`dBgActor_c` is the base of the level-object family — ArmedRotatingPlatform,
-PyramidTop, daObjKm3_Kaitendai_c, daObjBSwdoor_c, ShutterHmc, SlidingIce and ~130
+`dBgActor_c` is the base of the level-object family — daObjRc_Guruguru_c,
+PyramidTop, daObjKm3_Kaitendai_c, daObjBSwdoor_c, daObjCvShutter_c, SlidingIce and ~130
 others. Seeded by `tools/gen_header.py` from matched-function evidence, then
 given its real base and real member types by hand.
 
@@ -50,7 +50,7 @@ same bytes twice.
 
 ### `sizeof` is 0x320, and it takes more than one derived class to see why
 
-`BowserFireSeaArena` starts its own `Model` at 0x324, which alone reads like the
+`daKpa2Bg_c` starts its own `Model` at 0x324, which alone reads like the
 class ending there. But four classes derive from `dBgActor_c` **directly** — one
 non-`dBgActor_c` vtable store each, so no intermediate — and each places a
 4-byte-aligned class member at 0x320, impossible if this class occupied
@@ -67,10 +67,10 @@ Each is read straight off that class's destructor, which destroys its own member
 at 0x320 before storing `_ZTV10dBgActor_c` and running the base.
 
 One layout satisfies all five: **data ends 0x31e, `sizeof` 0x320.** The four
-above align up from 0x31e to 0x320; `BowserFireSeaArena` puts its own three `s16`
-at 0x31e/0x320/0x322 so its `Model` lands at 0x324; `ArmedRotatingPlatform` puts
+above align up from 0x31e to 0x320; `daKpa2Bg_c` puts its own three `s16`
+at 0x31e/0x320/0x322 so its `Model` lands at 0x324; `daObjRc_Guruguru_c` puts
 a single `s16` at 0x31e, in this class's tail padding, and its `Behavior` reads
-`this+0x31e` and reproduces. Ending at 0x324 satisfies `BowserFireSeaArena` and
+`this+0x31e` and reproduces. Ending at 0x324 satisfies `daKpa2Bg_c` and
 contradicts the other four.
 
 ### `#include "common.h"` must come first — LOAD-BEARING
@@ -148,7 +148,7 @@ For a class whose destructor stores its own vptr and then `dBgActor_c`'s
 chaining to `dActor_c`: all three of those are `dBgActor_c`'s own. Everything such
 a header used to restate below 0x31e was `dActor_c`'s and `dBgActor_c`'s, and is
 inherited. This applies to `SlidingPlatformWf`, `FloatOnLavaPlatform`,
-`ArmedRotatingPlatform`, `RotatingUpDownPlatformUtm` and their siblings.
+`daObjRc_Guruguru_c`, `RotatingUpDownPlatformUtm` and their siblings.
 
 Where a size assertion is only the observed field span rounded up, it guards the
 declaration and is **not** independent evidence about the ROM. Where a factory's
@@ -332,7 +332,7 @@ so plausibly a one-second timer, but only ever written), `unk_350`, `unk_374`,
 
 ---
 
-## `include/TiltingPlatformLll.h` — retraction, kept for the trap
+## `include/daObjFl_Gura_c.h` — retraction, kept for the trap
 
 Lethal Lava Land's tilting slab. It does **not** derive from `dBgActor_c`; it
 derives from `daObjGuragura_c`, which derives from `dBgActor_c`, and the
@@ -342,7 +342,7 @@ emits two.
 
     _ZTI14daObjFl_Gura_c     ov064 0x0211bce8
     _ZTS14daObjFl_Gura_c     ov064 0x0211bcf4
-    _ZTV18TiltingPlatformLll ov064 0x0211bd2c   (its record sits at V-4)
+    _ZTV14daObjFl_Gura_c     ov064 0x0211bd2c   (public address point)
     kind  __si_class_type_info, ONE base, subobject offset 0
     base  daObjGuragura_c, ov002 0x0210905c
 
@@ -356,7 +356,7 @@ the base leaves null.
 at +0x360". `MetalNetLift` is a different class: its factory stores
 `_ZTV12MetalNetLift`, ov064 0x0211bc68, and never mentions this one. This class's
 factory is `daObjFl_Gura_c_classInit`, which allocates 848 = 0x350, stores
-`_ZTV15daObjGuragura_c` and then `_ZTV18TiltingPlatformLll`, ov064 0x0211bd2c, and
+`_ZTV15daObjGuragura_c` and then `_ZTV14daObjFl_Gura_c`, ov064 0x0211bd2c, and
 constructs no `PathPtr`. The two vtables are 0xc4 apart in the same overlay, which
 is presumably how they were crossed. Both relocation sets are in
 `config/arm9/overlays/ov064/relocs.txt` and they do not overlap. Nothing consumed
@@ -407,7 +407,7 @@ The `Model` marker's pad ran 0x30 bytes past the end of the object; that space i
 not evidenced and stays explicit padding rather than being folded into the
 member.
 
-## `include/ArmedRotatingPlatform.h`
+## `include/daObjRc_Guruguru_c.h`
 
 A donut lift: stands still until ridden, then shakes, falls and respawns.
 

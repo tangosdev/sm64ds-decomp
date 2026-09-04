@@ -3,53 +3,17 @@
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
     .data       start:0x02112a00 end:0x02114020 kind:data align:32
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
-src/_ZN16SwingingPlatformD1Ev.cpp:
+src/actors/d_a_obj_rc_buranko.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
-
-src/_ZN16SwingingPlatformD0Ev.cpp:
-    complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/func_ov036_0211123c.c:
-    complete
-    .text start:0x0211123c end:0x02111284
-
-src/_ZN16SwingingPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111284 end:0x021112c8
-
-src/_ZN16SwingingPlatform6RenderEv.cpp:
-    complete
-    .text start:0x021112c8 end:0x021112f0
-
-src/_ZN16SwingingPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x021112f0 end:0x0211137c
-
-src/_ZN16SwingingPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211137c end:0x02111414
+    .text start:0x021111a0 end:0x02111414
 
 src/daObjRcBuranko_c_classInit.c:
     complete
     .text start:0x02111414 end:0x02111444
 
-src/_ZN18RotatingPlatformRrD1Ev.cpp:
+src/actors/d_a_obj_rc_kaitendai.cpp:
     complete
-    .text start:0x02111444 end:0x02111494
-
-src/_ZN18RotatingPlatformRrD0Ev.cpp:
-    complete
-    .text start:0x02111494 end:0x021114f8
-
-src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021114f8 end:0x0211150c
-
-src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211150c end:0x02111544
+    .text start:0x02111444 end:0x02111544
 
 src/daObjRc_Kaitendai_c_classInit.c:
     complete
@@ -127,29 +91,9 @@ src/daObjRc_Tikuwa_c_classInit.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 
-src/_ZN21ArmedRotatingPlatformD1Ev.cpp:
+src/actors/d_a_obj_rc_guruguru.cpp:
     complete
-    .text start:0x02111d14 end:0x02111d58
-
-src/_ZN21ArmedRotatingPlatformD0Ev.cpp:
-    complete
-    .text start:0x02111d58 end:0x02111db0
-
-src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111db0 end:0x02111df8
-
-src/_ZN21ArmedRotatingPlatform6RenderEv.cpp:
-    complete
-    .text start:0x02111df8 end:0x02111e20
-
-src/_ZN21ArmedRotatingPlatform8BehaviorEv.cpp:
-    complete
-    .text start:0x02111e20 end:0x02111eb0
-
-src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111eb0 end:0x02111f5c
+    .text start:0x02111d14 end:0x02111f5c
 
 src/daObjRc_Guruguru_c_classInit.c:
     complete
@@ -158,6 +102,7 @@ src/daObjRc_Guruguru_c_classInit.c:
 src/actors/d_a_obj_rc_dorifu.cpp:
     complete
     .text start:0x02111f8c end:0x02112158
+    .data start:0x02113e4c end:0x02113f4c
 
 src/actors/daObjRcCarpet_c.cpp:
     complete

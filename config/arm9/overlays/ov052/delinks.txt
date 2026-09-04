@@ -4,33 +4,9 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
-src/_ZN13daObjEmmLog_cD1Ev.cpp:
+src/actors/d_a_obj_emm_log.cpp:
     complete
-    .text start:0x021111a0 end:0x021111e4
-
-src/_ZN13daObjEmmLog_cD0Ev.cpp:
-    complete
-    .text start:0x021111e4 end:0x0211123c
-
-src/_ZN13daObjEmmLog_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211123c end:0x02111284
-
-src/_ZN13daObjEmmLog_c6RenderEv.cpp:
-    complete
-    .text start:0x02111284 end:0x021112ac
-
-src/_ZN13daObjEmmLog_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021112ac end:0x02111348
-
-src/_ZN13daObjEmmLog_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111348 end:0x02111410
-
-src/daObjEmmLog_c_Spawn.c:
-    complete
-    .text start:0x02111410 end:0x02111440
+    .text start:0x021111a0 end:0x02111440
 
 src/_ZN14SquarePathLiftD1Ev.cpp:
     complete
