@@ -191,8 +191,6 @@ src/HideArea.c	PURE-C	arm9				1		None		-
 src/HitDeathPlane.c	WEAK-refs-only	arm9				1		None		-
 src/HootTheOwl_Spawn.c	WEAK-refs-only	ov094				1		None		-
 src/HuffUnCompReadByCallback.c	PURE-C					0		None		not-in-delinks
-src/daObjTdFuta_c_classInit.c	S1-stores-rom-vptr	ov032			stores _ZTV13daObjTdFuta_c	1		None	_ZTV13daObjTdFuta_c	-
-src/daObjTdWater_c_classInit.c	WEAK-refs-only	ov032				1		None		-
 src/IPCSend.c	WEAK-refs-only	arm9				1		None		-
 src/daObjIceBlock_c_classInit.c	WEAK-refs-only	ov081				1		None		-
 src/daObjIceBoard_c_classInit.c	WEAK-refs-only	ov018				1		None		-

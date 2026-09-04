@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov032/daObjTdFuta_c, hand-curated.
- * 6 function(s), .text 0x021124a8..0x02112668.
+ * 7 function(s), .text 0x021124a8..0x02112698.
  *
  * Tiny-Huge Island's lid ("futa") -- the ROM's own RTTI spells the class
  * daObjTdFuta_c; the coined HugeCover alias that shared vtable 0x021138e0 in
@@ -29,6 +29,14 @@
  *   [3] 0x02112588  src/_ZN13daObjTdFuta_c6RenderEv.cpp
  *   [4] 0x021125b0  src/_ZN13daObjTdFuta_c8BehaviorEv.cpp
  *   [5] 0x021125d4  src/_ZN13daObjTdFuta_c13InitResourcesEv.cpp
+ *   [6] 0x02112668  src/daObjTdFuta_c_classInit.c
+ *
+ * THE SEVENTH IS THE FACTORY. daObjTdFuta_c_classInit (historical alias
+ * HugeCover_Spawn) is the TD_FUTA registry profile's spawn function and sits
+ * immediately after InitResources in the ROM's own .text order, so it is part
+ * of this TU. It was outside it only because the promotion predated the
+ * profile-reconstruction campaign. It keeps C linkage and is written first
+ * here, being the highest-address member.
  */
 
 /* Includes and externs: the union of the legacy files', kept at their legacy
@@ -51,6 +59,34 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
 extern char data_ov032_02112f98;
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   a decl_*.h as the legacy file did -- this TU declares in place, and reaching
+   a shared header would change what the rest of the TU sees. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV13daObjTdFuta_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjTdFuta_c_classInit, 0x02112668, size 0x30            */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjTdFuta_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjTdFuta_c through RTTI,
+   allocation size, vtable identity, and the TD_FUTA registry profile; later
+   EAD lineage supplies classInit. Exact original spelling is not preserved.
+   Historical alias: HugeCover_Spawn.
+
+   The factory remains in its measured C ABI form. mwccarm rejects fBase_c's
+   actor allocator as an in-class operator new declaration (see fBase_c.h), so
+   a source-level `new daObjTdFuta_c` binds the wrong global allocator; the ROM
+   calls the actor allocator, the base constructor and the derived vptr store
+   explicitly. 800 = 0x320 = the whole object; this class adds no fields. */
+extern "C" int *daObjTdFuta_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV13daObjTdFuta_c; }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

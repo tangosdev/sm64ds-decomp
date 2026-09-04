@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x021124a8",
-      "end": "0x02112668"
+      "end": "0x02112698"
     }
   ],
   "functions": [
@@ -59,6 +59,13 @@
       "size": "0x00000094",
       "legacy_source": "src/_ZN13daObjTdFuta_c13InitResourcesEv.cpp",
       "ordinal": 5
+    },
+    {
+      "symbol": "daObjTdFuta_c_classInit",
+      "address": "0x02112668",
+      "size": "0x00000030",
+      "legacy_source": "src/daObjTdFuta_c_classInit.c",
+      "ordinal": 6
     }
   ],
   "data": [],
@@ -69,7 +76,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov032_02113ad4' differs between the legacy file that used to hold _ZN13daObjTdFuta_c16CleanupResourcesEv and the one that held _ZN13daObjTdFuta_c13InitResourcesEv; kept the first, the other is commented out for review",
     "MEASURED -- the destructor is declared INLINE in include/daObjTdFuta_c.h on purpose. With the body out of line mwccarm 2004/b56 emits D0 ahead of D1 and the cartridge has D1 first, which rombuild refuses outright; an inline body emits D1 then D0 and no D2, exactly the set and the order ov032 carries. The cost is that `tubuild linkcheck --partial` is impossible for this TU, so its evidence is a full `linkcheck --baseline --module ov032` run after promotion plus rombuild 106/106.",
     "The class adds no storage: the factory's own allocation literal is 0x320, which is dBgActor_c's size, and the size assert in the header closes on it.",
-    "The two SharedFilePtr globals data_ov032_02113acc / data_ov032_02113ad4 were spelled `extern \"C\"` by the destructor and cleanup sources and plain `extern` by InitResources; both name the same unmangled ov032 data symbol, so the C-linkage spelling is the true one and tubuild's reported conflict was cosmetic."
+    "The two SharedFilePtr globals data_ov032_02113acc / data_ov032_02113ad4 were spelled `extern \"C\"` by the destructor and cleanup sources and plain `extern` by InitResources; both name the same unmangled ov032 data symbol, so the C-linkage spelling is the true one and tubuild's reported conflict was cosmetic.",
+    "FOLD 2026-09-04. daObjTdFuta_c_classInit at 0x02112668 (historical alias HugeCover_Spawn) was folded in from src/daObjTdFuta_c_classInit.c. It is the TD_FUTA registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_obj_td_futa stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. It keeps C linkage and its own extern declarations are restated in this TU rather than pulled in through a decl_*.h."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -77,8 +85,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov032-daObjTdFuta_c/daObjTdFuta_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 6,
-    "functions_declared": 6,
+    "functions_matched": 7,
+    "functions_declared": 7,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
