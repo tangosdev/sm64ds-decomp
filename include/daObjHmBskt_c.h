@@ -38,13 +38,20 @@ struct daObjHmBskt_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     dActor_c *mStarActor;            /* 0x4dc -- Spawn(0xb2, ...) result */
 
-    /* --- vtable --- */
-    virtual ~daObjHmBskt_c();
+    /* Inline, and declared FIRST. This TU defines every virtual the class has,
+     * so it emits the vtable and RTTI; out of line, mwccarm emits the D2/D1/D0
+     * triple in D0-before-D1 order, but retail puts D1 (0x021111a0) ABOVE D0
+     * (0x021111ec), and objisolate then refuses the whole TU for emitting out
+     * of ROM address order. The inline body emits only the retail D1/D0 pair,
+     * in retail order, and emits no D2. */
+    virtual ~daObjHmBskt_c() {}         /* slots 16 (D1), 17 (D0) */
 
-    int InitResources();
-    int CleanupResources();
-    int Behavior();
-    int Render();
+    /* --- overrides, diffed slot by slot against _ZTV10dBgActor_c; every
+       other slot holds the base's own word and is inherited. --- */
+    virtual s32 InitResources();        /* slot  0 */
+    virtual s32 CleanupResources();     /* slot  3 */
+    virtual s32 Behavior();             /* slot  6 */
+    virtual s32 Render();               /* slot  9 */
 };
 
 typedef char UkikiCage_size_must_be_0x4e0[sizeof(daObjHmBskt_c) == 0x4e0 ? 1 : -1];
