@@ -17,7 +17,7 @@ Run args pick which case. See --help.
 """
 import argparse, os, re, sys
 
-ROOT = r"C:\tmp\luigi-countdown"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, "port", "tools"))
 import mp2_proof as M
 
