@@ -5,7 +5,7 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEj(0x60b0)`
- * (the classInit factory in src/actors/dScMgMCarlo_c.cpp).
+ * (the classInit factory in src/minigames/d_s_mg_m_carlo.cpp).
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80
  * and destroyed by func_ov006_020c1c64 -- the same pair dScMgCard_c and
@@ -73,7 +73,7 @@ typedef char dMgMCarloSharedState_c_size_must_be_0x270[sizeof(dMgMCarloSharedSta
    range claims a D0.
 
    The slot names and every field name below are COINED from the matched
-   bodies in src/actors/dScMgMCarlo_c.cpp -- the ROM's symbols for these
+   bodies in src/minigames/d_s_mg_m_carlo.cpp -- the ROM's symbols for these
    functions were address-only before this conversion renamed them
    (func_ov006_020f7e2c and friends), so no recovered spelling exists to
    confirm or contradict them. Render draws
@@ -153,7 +153,7 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
        carries a hand/board argument, never a scene pointer (RenderHud
        below is the one member: the ROM passes this and its body never
        reads it, the honest-parameter form). Names coined from the bodies;
-       see each definition in src/actors/dScMgMCarlo_c.cpp. */
+       see each definition in src/minigames/d_s_mg_m_carlo.cpp. */
     static void UpdateBoard();                         /* ov006 0x020f7740 */
     static void FlipDealtCards();                      /* ov006 0x020f7994 */
     static int  DrawCardValue();                       /* ov006 0x020f7a00 */

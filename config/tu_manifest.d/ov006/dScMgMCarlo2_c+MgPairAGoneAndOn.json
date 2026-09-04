@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgMCarlo2_c+MgPairAGoneAndOn",
   "module": "ov006",
-  "source": "src/actors/dScMgMCarlo2_c.cpp",
-  "promoted_source": "src/actors/dScMgMCarlo2_c.cpp",
+  "source": "src/minigames/d_s_mg_m_carlo2.cpp",
+  "promoted_source": "src/minigames/d_s_mg_m_carlo2.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -225,7 +225,7 @@
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f9bec and the one that held func_ov006_020f9cbc; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_020f9bec and the one that held func_ov006_020f9d68; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Node') differs between the legacy file that used to hold func_ov006_020f9000 and the one that held _ZN14dScMgMCarlo2_c6RenderEv; kept the first, the other is commented out for review",
-    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/actors/dScMgMCarlo2_c.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/minigames/d_s_mg_m_carlo2.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
     "Naming evidence: dScMgMCarlo2_c and dMgMCarlo2CardObj_c are literal ROM RTTI names; the 16 newly promoted helper/member spellings are explicitly marked coined in symbols/actor_renames.tsv. The existing OnYoshiTryEat/OnTurnIntoEgg names and the English factory name predate this promotion.",
     "Lifecycle evidence: a clean compiler oracle proved that the real card constructor C1 and destructor D1 reproduce 0x020fa740 and 0x020f8ff0. The typed array and shared-state destructor make mwccarm synthesize both scene destructor bodies exactly. Unreferenced card C2, D2, and D0 variants are recorded below and deadstripped.",
     "Focused verifier limitation: 24/25 functions report MATCH. MgPairAGoneAndOn_Spawn has byte-identical code but objisolate cannot represent the same-object _ZTV14dScMgMCarlo2_c relocation with addend zero; the production linker resolves it, and the linked ov006 plus full stock ROM are byte-identical."
@@ -363,7 +363,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgMCarlo2_c+MgPairAGoneAndOn/dScMgMCarlo2_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgMCarlo2_c+MgPairAGoneAndOn/d_s_mg_m_carlo2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 24,
     "functions_declared": 25,

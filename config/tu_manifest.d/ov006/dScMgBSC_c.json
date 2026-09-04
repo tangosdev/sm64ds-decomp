@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgBSC_c",
   "module": "ov006",
-  "source": "src/actors/dScMgBSC_c.cpp",
-  "promoted_source": "src/actors/dScMgBSC_c.cpp",
+  "source": "src/minigames/d_s_mg_bsc.cpp",
+  "promoted_source": "src/minigames/d_s_mg_bsc.cpp",
   "status": "promoted",
   "goal": {
     "idiomCensus": {
@@ -183,13 +183,13 @@
     "FOCUSED VERIFY LIMITATION: tools/tubuild.py verify reports 19/20 because objisolate rejects the classInit's R_ARM_ABS32 relocation with addend zero against _ZTV10dScMgBSC_c emitted by the same object. The extracted classInit bytes match individually and all 20 text sections occur in cartridge order; the production linker and full ROM build are the authority for that same-object vtable relocation.",
     "COINED NAMES, the one thing not provable: the state handlers' ROM symbols are address-only (func_ov006_02124a04..), so no recovered spelling exists to confirm or contradict StateDone/StateReturnCards/StateWaitTable/StateTableReaction/StateJudgeCards/StateRevealCards/StateWaitMove/StateMoveCards/StateChooseCard/StateWaitDeal/StateDealCards. The coinage is disclosed here, in include/dScMgBSC_c.h's state-machine comment, and in symbols/actor_renames.tsv's why column; the three event names (OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded) are legacy recovered names that stand uncontradicted. Table entries 7/8 (StateTableReaction) have no mState writer anywhere in the recovered code -- kept byte-exact, see the source comment.",
     "D3 declarations: Math_Function_0203b14c, func_ov006_020c1718, func_ov006_020c1a88, func_ov006_020c19d0 and func_ov006_020c0d68 are declared at the definition's own signatures where this TU alone owns the declaration (the first four); func_ov006_020c0d68 and func_ov006_020c0c80 keep decl_common.h's void* spellings because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. Sound::PlayBank2_2D, GXS::LoadOBJPltt and ApproachLinear are declared in their RATIFIED_TRUE_NAMES forms with C++ linkage.",
-    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/actors/dScMgBSC_c.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
+    "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in src/minigames/d_s_mg_bsc.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgBSC_c/dScMgBSC_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgBSC_c/d_s_mg_bsc.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 19,
     "functions_declared": 20,

@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgTrampoline2_c",
   "module": "ov006",
-  "source": "src/actors/dScMgTrampoline2_c.cpp",
-  "promoted_source": "src/actors/dScMgTrampoline2_c.cpp",
+  "source": "src/minigames/d_s_mg_trampoline2.cpp",
+  "promoted_source": "src/minigames/d_s_mg_trampoline2.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",
@@ -1268,7 +1268,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgTrampoline2_c/dScMgTrampoline2_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgTrampoline2_c/d_s_mg_trampoline2.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 42,
     "functions_declared": 42,
@@ -1933,10 +1933,10 @@
         "ok": true,
         "errors": [],
         "expectedTuSelectors": [
-          "dScMgTrampoline2_c.o(.data)"
+          "d_s_mg_trampoline2.o(.data)"
         ],
         "observedTuSelectors": [
-          "dScMgTrampoline2_c.o(.data)"
+          "d_s_mg_trampoline2.o(.data)"
         ],
         "expectedLegacyCount": 41,
         "selectorCount": 10862,

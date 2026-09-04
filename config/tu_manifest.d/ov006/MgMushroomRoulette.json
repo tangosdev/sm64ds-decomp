@@ -1,8 +1,8 @@
 {
   "id": "ov006/MgMushroomRoulette",
   "module": "ov006",
-  "source": "src/actors/MgMushroomRoulette.cpp",
-  "promoted_source": "src/actors/MgMushroomRoulette.cpp",
+  "source": "src/minigames/d_s_mg_roulette.cpp",
+  "promoted_source": "src/minigames/d_s_mg_roulette.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -43,7 +43,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-MgMushroomRoulette/MgMushroomRoulette.o (gitignored)",
+    "object": "build/tu/ov006-MgMushroomRoulette/d_s_mg_roulette.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 2,
     "functions_declared": 2,

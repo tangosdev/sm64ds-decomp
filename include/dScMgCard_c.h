@@ -57,7 +57,7 @@ extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
 
 /* The element destroy callbacks use their ABI D1 spellings because C++ cannot
    take a destructor's address. Both live beside their constructor callbacks
-   and classInit in src/actors/dScMgCard_c.cpp. The classes below declare no
+   and classInit in src/minigames/d_s_mg_card.cpp. The classes below declare no
    destructor because no member-destructor spelling lands the pair in the
    cartridge's own shape AND section order, measured across every form:
      both written out of line
@@ -86,7 +86,7 @@ extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
    allocation+construction factory cannot be expressed as semantic C++.
    The vtable/RTTI records do not follow these callbacks: this header
    declares Render -- each class's key function -- non-inline, and
-   src/actors/dScMgCard_c.cpp defines it, so the key-function TU keeps
+   src/minigames/d_s_mg_card.cpp defines it, so the key-function TU keeps
    emitting _ZTV/_ZTI/_ZTS for both classes either way. */
 struct dMgCardSharedState_c {
     u8  pad_000[0x1a];
@@ -108,7 +108,7 @@ typedef char dMgCardSharedState_c_size_must_be_0x270[sizeof(dMgCardSharedState_c
    are three slots wide and nothing in the range claims a D0.
 
    The slot names and every field name below are COINED from the matched
-   bodies in src/actors/dScMgCard_c.cpp -- the ROM's symbols for these
+   bodies in src/minigames/d_s_mg_card.cpp -- the ROM's symbols for these
    functions are address-only (func_ov006_020d970c and friends), so no
    recovered spelling exists to confirm or contradict them. Render draws the
    card through the Hud_RenderSprite bank table; Update runs the card's own
@@ -124,7 +124,7 @@ typedef char dMgCardSharedState_c_size_must_be_0x270[sizeof(dMgCardSharedState_c
    (mComboFlag) the hand evaluation sets on the cards forming the pair.
 
    Objects are constructed and destroyed through the C1/D1 ABI callbacks in
-   src/actors/dScMgCard_c.cpp. Their class identities are RTTI-proven; the
+   src/minigames/d_s_mg_card.cpp. Their class identities are RTTI-proven; the
    callback spellings remain only at the measured factory and section-order
    walls described above. */
 
@@ -199,7 +199,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     /* --- hand helpers, static: they take the hand they work on ---
        The register shape is the evidence: r0/r1 carry the hand pointers,
        not a this. Names coined from the bodies; see each definition in
-       src/actors/dScMgCard_c.cpp. */
+       src/minigames/d_s_mg_card.cpp. */
     static int  CompareHands(const dMgCardObj_c *a, const dMgCardObj_c *b); /* 0x020da5e8 */
     static int  EvaluateHand(const dMgCardObj_c *hand, s16 *out);           /* 0x020da4ac */
     static void MarkSingles(dMgCardObj_c *hand);                            /* 0x020da420 */

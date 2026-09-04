@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgCup_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgCup_c.cpp",
-  "promoted_source": "src/actors/dScMgCup_c.cpp",
+  "source": "src_tu/minigames/d_s_mg_cup.cpp",
+  "promoted_source": "src/minigames/d_s_mg_cup.cpp",
   "status": "shadow",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -255,7 +255,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgCup_c/dScMgCup_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgCup_c/d_s_mg_cup.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 31,
     "functions_declared": 32,

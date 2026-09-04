@@ -41,7 +41,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        virtual destructor is always reached through the vtable.
        It does give up the key function: with this inline, the first virtual
        DECLARED but not defined here is InitResources below, which lives in
-       src/actors/dScMgTrampoline_c.cpp, so _ZTV17dScMgTrampoline_c is still
+       src/minigames/d_s_mg_trampoline.cpp, so _ZTV17dScMgTrampoline_c is still
        emitted by that one translation unit and by no other. */
     virtual ~dScMgTrampoline_c() {
         __destroy_arr(mArray3, 5, 0x24, (void *)func_ov006_02120938);
