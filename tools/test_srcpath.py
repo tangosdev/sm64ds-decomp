@@ -355,7 +355,15 @@ def _reconstructed_stem(symbol):
     """The NSMBW-convention stem a `<Class>_classInit[_<PROFILE_ID>]` symbol must use.
 
     None when ``symbol`` is not a reconstructed factory, which is the signal to fall
-    back to the legacy `stem == symbol` rule."""
+    back to the legacy `stem == symbol` rule.
+
+    Symbol -> stem is a function, so per-file detection is total: any single file on the
+    wrong stem fails, including a name swap between two campaign files.  It is NOT
+    injective, though -- `daObjBlockL_c_classInit_BLOCK_L` and
+    `daObjBlockLBlockL_c_classInit` both derive `d_a_obj_block_l_block_l`.  No such pair
+    exists today, and if one ever did both files would own symbols from one stem, which
+    lands in the multi-symbol branch where this check does not run.  So the rule cannot
+    detect that collision; `tools/layout_check.py` L2 is what catches it."""
     m = re.match(r"^(.*?_c)_classInit(?:_([A-Z0-9_]+))?$", symbol)
     if not m:
         return None
@@ -374,14 +382,29 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
 
     That is a deliberate convention change, not drift, and the check below encodes it
     rather than being deleted for it: a reconstructed factory must sit on the stem
-    `tu_names.candidate_stem` derives for its class, which is *stricter* than the old
-    rule.  Under the old assertion these 310 sources could only be tolerated wholesale;
-    under this one a misnamed campaign file is still caught.
+    `tu_names.candidate_stem` derives for its class.  Under the old assertion these 310
+    sources could only be tolerated wholesale; under this one a misnamed campaign file
+    is still caught.
+
+    Not *strictly* stronger, and the gap is worth naming.  The `stem == symbol` escape
+    hatch is tried first, so a `classInit` symbol still sitting on its OLD spelling --
+    `src/daObjKumo_c_classInit.c` -- passes as legacy and a half-finished rename stays
+    invisible here.  Zero classInit symbols are on the legacy spelling today; this is a
+    dormant hole, not a live one.
 
     None of this touches resolution.  `symbol_for` has exactly one production caller --
-    the unenrolled fallback inside `symbols_for` -- so for an enrolled source the
+    the unenrolled fallback inside `symbols_for` -- so for an *enrolled* source the
     filename is documentation, and `symbols_for`/`path_for` answer from the enrollment
-    table.  Both directions are asserted here for every enrolled source."""
+    table.  Both directions are asserted here for every enrolled source.  An *unenrolled*
+    NSMBW-named file is a different matter: `symbol_for` would hand back
+    `d_a_obj_kumo` as though it were a symbol.  There are none today -- every convention
+    name in the tree is enrolled -- so that is an open door with nobody behind it, but it
+    is a door, and it closes the moment such a file appears.
+
+    This makes `tools/tu_names.py` load-bearing for a gate for the first time: a change
+    to `candidate_stem` now reds this test for all 310 files at once.  That is intended
+    -- it pins the convention to one derivation rather than letting each wave spell it
+    by hand -- but it is a new coupling, not a free one."""
 
     def test_enrolment_round_trips_single_and_multi_symbol_sources(self):
         idx = SP.enrolment_index()
@@ -422,6 +445,27 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
         self.assertIsNone(_reconstructed_stem("func_0203b438"))
         self.assertIsNone(_reconstructed_stem("_ZN8dActor_cD1Ev"))
         self.assertIsNone(_reconstructed_stem("Cloud_Spawn"))
+
+    def test_the_derivation_is_a_function_but_not_injective(self):
+        """Pinned so the limit is a recorded fact rather than a surprise later.
+
+        Two distinct classes can derive one stem.  Detection per file is still total --
+        each symbol has exactly one legal stem -- but a genuine collision would give one
+        stem two owners, which lands in the multi-symbol branch this check skips.
+        `tools/layout_check.py` L2 is the gate for that, not this one."""
+        self.assertEqual(_reconstructed_stem("daObjBlockL_c_classInit_BLOCK_L"),
+                         _reconstructed_stem("daObjBlockLBlockL_c_classInit"))
+        self.assertEqual(_reconstructed_stem("daObjBlockLBlockL_c_classInit"),
+                         "d_a_obj_block_l_block_l")
+
+    def test_the_legacy_escape_hatch_still_accepts_an_unfinished_rename(self):
+        """The one thing this rule is NOT stricter about, pinned so it stays known.
+
+        A classInit symbol on its old `<symbol>.c` spelling passes via `stem == symbol`
+        before the convention branch is ever reached.  Zero such files exist today."""
+        stem = "daObjKumo_c_classInit"
+        self.assertNotEqual(stem, _reconstructed_stem("daObjKumo_c_classInit"))
+        self.assertEqual(_reconstructed_stem("daObjKumo_c_classInit"), "d_a_obj_kumo")
 
     def test_a_misnamed_reconstructed_factory_is_still_caught(self):
         """The whole point of strengthening rather than exempting: a campaign file on
