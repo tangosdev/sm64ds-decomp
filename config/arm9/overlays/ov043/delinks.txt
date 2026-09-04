@@ -33,11 +33,7 @@ src/daObjKm1_Kurumajiku_c_classInit.c:
 
 src/actors/d_a_obj_km1_kuruma.cpp:
     complete
-    .text start:0x02111518 end:0x021115f4
-
-src/daObjKm1_Kuruma_c_classInit.c:
-    complete
-    .text start:0x021115f4 end:0x02111630
+    .text start:0x02111518 end:0x02111630
 
 src/actors/daObjKm1_Dorifu_c.cpp:
     complete
