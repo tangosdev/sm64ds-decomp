@@ -1219,6 +1219,7 @@ ov039	0x0211132c	func_ov039_0211132c	_ZN11daObjKumo_c13InitResourcesEv	vtable sl
 ov039	0x0211137c	func_ov039_0211137c	Cloud_Spawn	spawnfunc
 ov039	0x0211137c	Cloud_Spawn	daObjKumo_c_classInit	reconstructed classInit; ROM RTTI class daObjKumo_c + OBJ_KUMO registry profile + later EAD lineage; exact SM64DS spelling not preserved
 ov039	0x02111834	data_ov039_02111834	Cloud_SpawnInfo	spawninfo
+ov039	0x02111834	Cloud_SpawnInfo	g_profile_OBJ_KUMO	reconstructed profile global; literal ROM ID OBJ_KUMO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov039	0x02111858	data_ov039_02111858	_ZTV11daObjKumo_c	vtable alloc=0x124
 ov043	0x021113cc	func_ov043_021113cc	DiamondLift_Spawn	spawnfunc
 ov043	0x021113cc	DiamondLift_Spawn	daObjKm1_Ukishima_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved

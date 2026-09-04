@@ -47,7 +47,7 @@ data_ov039_02111760 kind:data(any) addr:0x02111760 ambiguous
 data_ov039_02111768 kind:data(any) addr:0x02111768 ambiguous
 _ZTI11daObjKumo_c kind:data(any) addr:0x02111818
 _ZTS11daObjKumo_c kind:data(any) addr:0x02111824
-Cloud_SpawnInfo kind:data(any) addr:0x02111834 ambiguous
+g_profile_OBJ_KUMO kind:data(any) addr:0x02111834 ambiguous
 data_ov039_02111844 kind:data(any) addr:0x02111844 ambiguous
 _ZTV11daObjKumo_c kind:data(any) addr:0x02111858
 data_ov039_021118e0 kind:bss addr:0x021118e0
