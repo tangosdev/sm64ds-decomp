@@ -1110,10 +1110,7 @@ src/_ZN6Player12St_Spin_InitEv.cpp
 src/_ZN6Player15St_Spin_CleanupEv.cpp
 src/_ZN6Player21St_StuckInGround_MainEv.cpp
 src/_ZN6Player21St_StuckInGround_InitEv.cpp
-# src/_ZN6Player15St_Swallow_MainEv.cpp -- HOST COPY: unmatched/Player_St_Swallow_Main.cpp
-#   (the frame-7 egg lay dispatches slots 19 and 18 as cdecl while every seated
-#    face is thiscall, so OnTurnIntoEgg got the ENEMY as its Player& and the stack
-#    over-popped; remodelled as C++ virtuals. The Player_HeadBonk pattern.)
+src/_ZN6Player15St_Swallow_MainEv.cpp
 src/_ZN6Player15St_Swallow_InitEv.cpp
 src/_ZN6Player17St_SweepKick_MainEv.cpp
 src/_ZN6Player17St_SweepKick_InitEv.cpp

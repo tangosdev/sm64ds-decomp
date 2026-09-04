@@ -770,14 +770,6 @@ list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/TexSeq_Caller
 # src/func_ov002_020cef84.cpp with the dispatch remodelled as a C++ virtual
 # so both sites are thiscall, which is what lets slot 28 hold a real body.
 list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_HeadBonk.cpp")
-# Yoshi's egg lay hits the SAME divergence at slot 19: the frame-7 dispatch in
-# Player::St_Swallow_Main is cdecl while every seated slot-19 face is the
-# thiscall-shaped __fastcall, so OnTurnIntoEgg(Player&) was handed the eaten
-# ENEMY instead of the player and the block over-popped the stack -- an access
-# violation inside the player's own callback, which the quarantine net turns
-# into a frozen Yoshi. See unmatched/Player_St_Swallow_Main.cpp. Replaces
-# src/_ZN6Player15St_Swallow_MainEv.cpp, commented out of slice_gate10.txt.
-list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_St_Swallow_Main.cpp")
 # Slots 23 and 24 have exactly one dispatch site each, and both model the vtable
 # as plain cdecl function pointers while every seated slot-23/24 body is
 # thiscall; see unmatched/Actor_OnAttacked2Dispatch.cpp and
