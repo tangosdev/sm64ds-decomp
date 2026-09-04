@@ -900,8 +900,7 @@
     "src/_ZN10daPgMthr_c16OnPendingDestroyEv.c",
     "src/_ZN10daPgMthr_c6RenderEv.cpp",
     "src/_ZN10daPgMthr_c8BehaviorEv.cpp",
-    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp",
-    "src/MotherPenguin_Spawn.c"
+    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -37688,8 +37687,7 @@
     "src/_ZN10daPgMthr_c16OnPendingDestroyEv.c",
     "src/_ZN10daPgMthr_c6RenderEv.cpp",
     "src/_ZN10daPgMthr_c8BehaviorEv.cpp",
-    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp",
-    "src/MotherPenguin_Spawn.c"
+    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 12,
