@@ -58,7 +58,7 @@ src/CapBlockLuigi_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockMario_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockWario_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/Cap_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/CastleWater_Spawn.c	WEAK-refs-only	ov009				1		None		-
+src/daObjMcWater_c_classInit.c	WEAK-refs-only	ov009				1		None		-
 src/CccArena_Spawn.c	WEAK-refs-only	ov073				1		None		-
 src/CccBigIce_Spawn.c	WEAK-refs-only	ov073				1		None		-
 src/CccSmallIce_Spawn.c	WEAK-refs-only	ov073				1		None		-
@@ -621,8 +621,8 @@ src/_ZN11BabyPenguinD0Ev.c	DTOR-ONLY	ov072	daPgBby_c	BabyPenguin/daPgBby_c	_ZN11
 src/_ZN11BillBlasterD0Ev.c	DTOR-ONLY	ov079	daObjBkKillerdai_c	BillBlaster/daObjBkKillerdai_c	_ZN11BillBlasterD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11BillBlaster	-
 src/_ZN11BobOmbBuddy16CleanupResourcesEv.c	P1-vtable+mangled	ov084	daRedBombhei_c	BobOmbBuddy/daRedBombhei_c	vtable daRedBombhei_c slot 3 @0x212cf10 | _ZN11BobOmbBuddy16CleanupResourcesEv	1		True		-
 src/_ZN11BobOmbBuddyD0Ev.c	DTOR-ONLY	ov084	daRedBombhei_c	BobOmbBuddy/daRedBombhei_c	_ZN11BobOmbBuddyD0Ev	1		True		-
-src/_ZN11CastleWaterD0Ev.c	DTOR-ONLY	ov009	daObjMcWater_c	CastleWater/daObjMcWater_c	_ZN11CastleWaterD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11CastleWater	-
-src/_ZN11CastleWaterD1Ev.c	DTOR-ONLY	ov009	daObjMcWater_c	CastleWater/daObjMcWater_c	_ZN11CastleWaterD1Ev	1		True	_ZTV10dBgActor_c	-
+src/_ZN14daObjMcWater_cD0Ev.c	DTOR-ONLY	ov009	daObjMcWater_c	daObjMcWater_c/daObjMcWater_c	_ZN14daObjMcWater_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV14daObjMcWater_c	-
+src/_ZN14daObjMcWater_cD1Ev.c	DTOR-ONLY	ov009	daObjMcWater_c	daObjMcWater_c/daObjMcWater_c	_ZN14daObjMcWater_cD1Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN11CommonModelC1Ev.c	P3-mangled-method-only	arm9		CommonModel	_ZN11CommonModelC1Ev	1		True	_ZTV11CommonModel	-
 src/_ZN11CrazedCrate16CleanupResourcesEv.c	P1-vtable+mangled	ov080	daBttBk_c	CrazedCrate/daBttBk_c	vtable daBttBk_c slot 3 @0x2125158 | _ZN11CrazedCrate16CleanupResourcesEv	1		True		-
 src/_ZN11CrazedCrate16OnPendingDestroyEv.c	P1-vtable+mangled	ov080	daBttBk_c	CrazedCrate/daBttBk_c	vtable daBttBk_c slot 12 @0x212517c | _ZN11CrazedCrate16OnPendingDestroyEv	1		True		-
