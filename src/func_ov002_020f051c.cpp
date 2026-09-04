@@ -1,3 +1,7 @@
+//cpp
+/* Compiled as C++: as C this same body assembles to 0xac bytes, and the
+ * cartridge's function is 0xd8. The language mode is the whole difference --
+ * see tools/match.py --c on both spellings. C linkage keeps the ROM symbol. */
 typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
@@ -5,10 +9,13 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 struct Vector3 { s32 x, y, z; };
 struct dActor_c;
-extern struct dActor_c* _ZN8dActor_c4NextEPKS_(const struct dActor_c* a);
-extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
+/* Both are ROM symbols spelled by their final names, so they need C linkage:
+ * seen as C++ the compiler would mangle them a second time and the link would
+ * fail on the doubly-mangled spelling. */
+extern "C" struct dActor_c* _ZN8dActor_c4NextEPKS_(const struct dActor_c* a);
+extern "C" int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 
-void func_ov002_020f051c(char* c)
+extern "C" void func_ov002_020f051c(char* c)
 {
     struct dActor_c* a;
     u32 t;
