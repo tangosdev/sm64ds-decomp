@@ -147,7 +147,7 @@ src/daObjFl_Block_c_classInit.c	WEAK-refs-only	ov022				1		None		-
 src/daObjKi_Ita_c_classInit.c	S1-stores-rom-vptr	ov016			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV23FloatOnWaterPlatformJrb	-
 src/actors/d_a_obj_wc_obj06.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj06_c	-
 src/actors/d_a_obj_wc_obj01.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj01_c	-
-src/FloatingFloorBfs_Spawn.c	S1-stores-rom-vptr	ov045			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV16FloatingFloorBfs	-
+src/FloatingFloorBfs_Spawn.c	S1-stores-rom-vptr	ov045			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV19daObjKm2_Ukishima_c	-
 src/FloatingFloorLllBig_Spawn.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
 src/FloatingFloorLllSmall_Spawn.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
 src/daPropeller_Heyho_c_classInit.c	WEAK-refs-only	ov070				1		None		-
@@ -774,7 +774,7 @@ src/_ZN15TtcRotatingCubeD0Ev.c	DTOR-ONLY	ov065	daObjCtRotateBlock_c	TtcRotatingC
 src/_ZN15TtcRotatingCubeD1Ev.c	DTOR-ONLY	ov065	daObjCtRotateBlock_c	TtcRotatingCube/daObjCtRotateBlock_c	_ZN15TtcRotatingCubeD1Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN15TtcRotatingGear8BehaviorEv.c	P1-vtable+mangled	ov065	daObjCtMecha08_c	TtcRotatingGear/daObjCtMecha08_c	vtable daObjCtMecha08_c slot 6 @0x211b8f8 | _ZN15TtcRotatingGear8BehaviorEv	1		True		-
 src/_ZN15daObjPathLift_c16CleanupResourcesEv.c	P1-vtable+mangled	ov100	daObjPathLift_c	daObjPathLift_c	vtable daObjPathLift_c slot 3 @0x2147054 | _ZN15daObjPathLift_c16CleanupResourcesEv	1		True		-
-src/_ZN16FloatingFloorBfsD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Ukishima_c	FloatingFloorBfs/daObjKm2_Ukishima_c	_ZN16FloatingFloorBfsD0Ev	1		True	_ZTV10dBgActor_c/_ZTV14daObjUkiyuka_c/_ZTV16FloatingFloorBfs	-
+src/_ZN19daObjKm2_Ukishima_cD0Ev.c	DTOR-ONLY	ov045	daObjKm2_Ukishima_c	daObjKm2_Ukishima_c/daObjKm2_Ukishima_c	_ZN19daObjKm2_Ukishima_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV14daObjUkiyuka_c/_ZTV19daObjKm2_Ukishima_c	-
 src/_ZN16MeshColliderBaseC2Ev.c	P3-mangled-method-only	arm9		MeshColliderBase	_ZN16MeshColliderBaseC2Ev	1		True	_ZTV16MeshColliderBase	-
 src/_ZN16MeshColliderBaseD0Ev.c	DTOR-ONLY	arm9	dBgW	MeshColliderBase/dBgW	_ZN16MeshColliderBaseD0Ev	1		True	_ZTV16MeshColliderBase	-
 src/_ZN16MeshColliderBaseD1Ev.c	DTOR-ONLY	arm9	dBgW	MeshColliderBase/dBgW	_ZN16MeshColliderBaseD1Ev	1		True	_ZTV16MeshColliderBase	-

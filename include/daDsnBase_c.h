@@ -66,7 +66,7 @@
  * closes there and nothing this class owns reaches higher. The leaves allocate
  * more -- Grindel_Spawn passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- and
  * because the two disagree, no literal fixes this class's end the way
- * FloatingFloorBfs fixes daObjUkiyuka_c's. 0x360..0x3a0 exists in both leaves and
+ * daObjKm2_Ukishima_c fixes daObjUkiyuka_c's. 0x360..0x3a0 exists in both leaves and
  * is declared on them; if a later pass shows both reading the same offsets in it,
  * it moves up here.
  *

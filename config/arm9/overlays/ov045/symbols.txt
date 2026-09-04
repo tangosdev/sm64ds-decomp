@@ -24,10 +24,10 @@ _ZN17daObjKm2_Nobiru_c6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
 _ZN17daObjKm2_Nobiru_c8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
 _ZN17daObjKm2_Nobiru_c13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
 daObjKm2_Nobiru_c_classInit kind:function(arm,size=0x40) addr:0x02111ad4
-_ZN16FloatingFloorBfsD1Ev kind:function(arm,size=0x50) addr:0x02111b14
-_ZN16FloatingFloorBfsD0Ev kind:function(arm,size=0x64) addr:0x02111b64
-_ZN16FloatingFloorBfs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111bc8
-_ZN16FloatingFloorBfs13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111bdc
+_ZN19daObjKm2_Ukishima_cD1Ev kind:function(arm,size=0x50) addr:0x02111b14
+_ZN19daObjKm2_Ukishima_cD0Ev kind:function(arm,size=0x64) addr:0x02111b64
+_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111bc8
+_ZN19daObjKm2_Ukishima_c13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111bdc
 daObjKm2_Ukishima_c_classInit kind:function(arm,size=0x3c) addr:0x02111bf4
 _ZN15daObjKm2_Gura_cD1Ev kind:function(arm,size=0x50) addr:0x02111c30
 _ZN15daObjKm2_Gura_cD0Ev kind:function(arm,size=0x64) addr:0x02111c80
@@ -138,7 +138,7 @@ _ZTI19daObjKm2_Ukishima_c kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
 _ZTS19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f14
 g_profile_KM2_UKISHIMA kind:data(any) addr:0x02112f2c ambiguous
-_ZTV16FloatingFloorBfs kind:data(any) addr:0x02112f50
+_ZTV19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f50
 data_ov045_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov045_02112f7c kind:data(any) addr:0x02112f7c ambiguous
 _ZTI15daObjKm2_Gura_c kind:data(any) addr:0x02112fd0

@@ -9553,15 +9553,15 @@
    "start": "0x2111b14",
    "end": "0x2111c30",
    "classes": [
-    "FloatingFloorBfs"
+    "daObjKm2_Ukishima_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/_ZN16FloatingFloorBfsD1Ev.cpp",
-    "src/_ZN16FloatingFloorBfsD0Ev.c",
-    "src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp",
-    "src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp",
+    "src/_ZN19daObjKm2_Ukishima_cD1Ev.cpp",
+    "src/_ZN19daObjKm2_Ukishima_cD0Ev.c",
+    "src/_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjKm2_Ukishima_c13InitResourcesEv.cpp",
     "src/daObjKm2_Ukishima_c_classInit.c"
    ],
    "ext_mix": {

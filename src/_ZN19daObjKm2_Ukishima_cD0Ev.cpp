@@ -1,18 +1,18 @@
 //cpp
-// @symbol _ZN16FloatingFloorBfsD0Ev
+// @symbol _ZN19daObjKm2_Ukishima_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
  * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~FloatingFloorBfs()` is enough, because mwcc
+ * its heap. Nobody writes that; declaring `~daObjKm2_Ukishima_c()` is enough, because mwcc
  * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
  * to.
  *
  * The deallocation is an inline operator delete, which is why nothing below
  * mentions a heap.
  */
-#include "FloatingFloorBfs.h"
+#include "daObjKm2_Ukishima_c.h"
 
-FloatingFloorBfs::~FloatingFloorBfs()
+daObjKm2_Ukishima_c::~daObjKm2_Ukishima_c()
 {
 }
