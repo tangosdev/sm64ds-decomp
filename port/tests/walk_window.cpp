@@ -5033,8 +5033,31 @@ static void present(void)
             W.SetStretchBltMode_(g_present_hdc, PRESENT_STRETCH_COLORONCOLOR);
         }
     }
+    /* THE DIB HEIGHT MUST EQUAL THE SOURCE-RECT HEIGHT, or StretchDIBits into a
+       window (device) DC leaves the bottom of a taller client BLACK.
+
+       Measured against a real CS_OWNDC window, reproduced and fixed: when the
+       source rectangle is SHORTER than the DIB the header declares -- here the
+       live image is active_h (384) rows read from a framebuffer whose header
+       carried SCREEN_H (576, the NTR_WIDE_RT allocation) -- the display driver's
+       StretchDIBits copies the source rows 1:1 into the TOP of the destination
+       and does not scale the vertical axis, so a 384-row image fitted into a
+       768-row client fills only the top half and the rest is never painted.
+       The WM_ERASEBKGND that returns 1 (present owns every pixel) then leaves
+       that band the window's initial black. The horizontal axis does NOT show it
+       (a narrower source rect scales fine), and a blit to a MEMORY DIB does not
+       show it either -- which is exactly why the framebuffer capture read full
+       (fb_lastcontentrow = 383/384) while the on-screen window had a black
+       bottom half.
+
+       The width is a STRIDE and stays SCREEN_W so the active_w sub-rect reads
+       the correct columns; only the height is corrected, to sh, so the declared
+       DIB is byte-for-byte the rectangle being read. The stacked header already
+       carries -sh (sh is read out of it above) and is unchanged by this. */
+    BITMAPINFO bihdr = *bi;
+    bihdr.bmiHeader.biHeight = -sh;
     W.StretchDIBits_(g_present_hdc, dx, dy, dw, dh, 0, 0, sw, sh,
-                     bits, bi, DIB_RGB_COLORS, SRCCOPY);
+                     bits, &bihdr, DIB_RGB_COLORS, SRCCOPY);
     /* the touch bridge's half of the same arithmetic. The SOURCE SIZE goes
        with the rectangle: in the stacked layout the rectangle was filled from
        an image twice as tall as the framebuffer, and an inverse that assumed
