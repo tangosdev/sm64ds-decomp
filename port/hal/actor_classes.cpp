@@ -690,6 +690,29 @@ static int __fastcall bbb_d0(void *s, void *)
 extern "C" void func_ov002_020b382c(void *self, void *other);
 static int __fastcall bbb_pounded(void *s, void *, void *other)
 { func_ov002_020b382c(s, other); return 0; }
+/* Slot 23, OnAttacked2(Actor &attacker): a bro's PUNCH (St_PunchKick steps 0/1
+   -> func_ov002_020d8a50 which==0/1 -> func_ov002_020ef070 dispatches slot 23).
+   The matched body (host copy unmatched/BigBrickBlock_OnAttacked2.cpp) reads the
+   attacker at +8 and breaks the block through Kill (slot 31). It was trapped, so
+   a punch on a brick declined slot 23 -- an AV that, raised in the Player's own
+   punch callback, soft-locked the bro exactly the way the Yoshi eat-cap face did
+   (before the quarantine-attribution fix froze the brick instead of the Player,
+   the block still never broke). The body reaches Kill through a cdecl call the
+   host copy converts to a thiscall virtual, so it lands on bbb_kill. Forward the
+   receiver and the attacker; the seated shape is __fastcall three-parameter,
+   matching the thiscall dispatcher (Actor_OnAttacked2Dispatch.cpp). */
+extern "C" void func_ov002_020b3788(void *self, void *attacker);
+static int __fastcall bbb_atk2(void *s, void *, void *o)
+{ func_ov002_020b3788(s, o); return 0; }
+/* Slot 24, OnKicked(Actor &attacker): a bro's KICK (St_PunchKick step 2 and
+   SweepKick -> func_ov002_020d8a50 which==2/3 -> func_ov002_020eeeb8 dispatches
+   slot 24). The matched body func_ov002_020b36dc reaches Kill through a C++
+   VIRTUAL (already thiscall), so its src links directly (slice_gate16.txt) and
+   lands on bbb_kill unchanged. Same trap, same freeze as the punch above; both
+   dispatchers were already converted to thiscall, so seating both is safe now. */
+extern "C" void func_ov002_020b36dc(void *self, void *attacker);
+static int __fastcall bbb_kicked(void *s, void *, void *o)
+{ func_ov002_020b36dc(s, o); return 0; }
 /* Slot 31, Kill(). No arguments, so nothing to pop. */
 extern "C" void func_ov002_020b38a0(char *self);
 static int __fastcall bbb_kill(void *s, void *)
@@ -724,23 +747,26 @@ extern "C" void hal_fill_black_brick_block_vtable(void)
        is not. Both bodies are sliced with it (slice_gate16.txt) and 31's whole
        closure was already linked.
 
-       22 AND 23 STAY TRAPPED here, but the reason narrowed. Slot 23's only
-       dispatcher (was src/func_ov002_020ef070.cpp:73) modelled the vtable as
-       plain cdecl function pointers while every seated thunk here is thiscall;
-       one word could not satisfy both. That dispatcher is now the thiscall
-       host copy unmatched/Actor_OnAttacked2Dispatch.cpp (slot 24's is
-       unmatched/Actor_OnKickedDispatch.cpp), and ac_trap23/ac_trap24 are the
-       three-parameter shape that emits `ret 4` to match it, so the convention
-       conflict is gone. 23 stays on ac_trap23 only because its real body is
-       not sliced yet -- seating it is a follow-up, not this change. Slot 22 is
-       still genuinely blocked: its body (0x020b37ec) reaches slot 31 through
-       `fn(c)`, a cdecl call, so seating 22 would put a cdecl caller back onto
-       the slot 31 this file seated thiscall; it needs its own dispatcher
-       converted first, the transform in unmatched/Player_HeadBonk.cpp. */
+       23 AND 24 ARE NOW SEATED, the bro-punch and bro-kick paths. A bro's
+       punch-kick combo dispatches slot 23 (OnAttacked2) on the first two hits
+       and slot 24 (OnKicked) on the third (func_ov002_020d8a50 which 0/1 vs
+       2/3), and SweepKick dispatches 24; all delegate to Kill (slot 31). Both
+       were trapped, so a punch or kick on a brick declined here and took the AV
+       that soft-locks the bro -- the same interaction-tail freeze as slot 21's
+       ground pound. Their dispatchers were already converted to thiscall
+       (Actor_OnAttacked2Dispatch.cpp, Actor_OnKickedDispatch.cpp) and
+       ac_trap23/ac_trap24 already carried the three-parameter ret-4 shape, so
+       the only thing left was the bodies: 24's src links directly (its slot-31
+       call is a C++ virtual), 23's rides a thiscall host copy
+       (unmatched/BigBrickBlock_OnAttacked2.cpp) because its src reaches slot 31
+       through a cdecl `fn(c)`. Slot 22 (OnAttacked1, 0x020b37ec) STAYS TRAPPED:
+       a bro's punch/kick never dispatches it, and its body reaches slot 31
+       through the same cdecl `fn(c)`, so seating it needs its own host copy --
+       a follow-up, not this change. */
     vt[21] = (void *)bbb_pounded;
     vt[22] = (void *)ac_trap22;
-    vt[23] = (void *)ac_trap23;
-    vt[24] = (void *)ac_trap24;
+    vt[23] = (void *)bbb_atk2;
+    vt[24] = (void *)bbb_kicked;
     vt[27] = (void *)ac_trap27;
     vt[31] = (void *)bbb_kill;
 }

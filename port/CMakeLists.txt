@@ -11903,6 +11903,15 @@ endforeach()
 list(APPEND SLICE16_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_ClosestPlayerWrappers.cpp")
 
+# BigBrickBlock::OnAttacked2 (slot 23, the bro PUNCH). The byte-locked src
+# src/func_ov002_020b3788.cpp reaches its own Kill (slot 31) through a cdecl
+# `(*(Vt**)c)->fn(c)` call; slot 31 is seated thiscall, so the raw src would
+# read `this` from the vtable register and fault. This host copy is that src
+# line for line with the slot-31 call converted to a C++ virtual (thiscall),
+# the Actor_OnAttacked2Dispatch.cpp pattern. Src line stays out of the slice.
+list(APPEND SLICE16_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/BigBrickBlock_OnAttacked2.cpp")
+
 # run linkw wave C, lane cat-2d, slice 2d1. One TU: src/func_ov004_020adc4c.c,
 # the only ov004 body a LINKED arm9 caller reaches (src/LoadFont.cpp's
 # data_0209d698 == 2 arm calls it twice). It reads one ov004 BSS word,

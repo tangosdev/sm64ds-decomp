@@ -118,11 +118,17 @@ src/_ZN13BigBrickBlock16CleanupResourcesEv.cpp
 src/_ZN13BigBrickBlockD1Ev.c
 src/_ZN13BigBrickBlockD0Ev.c
 # The combat tail the ov002 relocations put on this table: slot 21
-# OnGroundPounded (0x02108b30 -> 0x020b382c) and the slot 31 Kill it
-# delegates to (0x02108b58 -> 0x020b38a0). Slot 22 OnAttacked1
-# (0x020b37ec) and slot 23 OnAttacked2 (0x020b3788) are deliberately NOT
-# here; see hal/actor_classes.cpp for why they stay trapped.
+# OnGroundPounded (0x02108b30 -> 0x020b382c), slot 24 OnKicked (0x020b36dc)
+# and the slot 31 Kill they delegate to (0x02108b58 -> 0x020b38a0). A bro's
+# kick (St_PunchKick step 2, SweepKick) dispatches slot 24; its body reaches
+# Kill through a C++ virtual (already thiscall), so it links here directly and
+# lands on the seated slot 31. Slot 23 OnAttacked2 (0x020b3788, the bro PUNCH)
+# is NOT here as raw src: its body reaches Kill through a cdecl `fn(c)`, so it
+# rides the thiscall host copy port/unmatched/BigBrickBlock_OnAttacked2.cpp
+# (wired in CMakeLists.txt) instead. Slot 22 OnAttacked1 (0x020b37ec) stays
+# trapped; see hal/actor_classes.cpp for why.
 src/func_ov002_020b382c.cpp
+src/func_ov002_020b36dc.cpp
 src/func_ov002_020b38a0.c
 # Kill delegates to this one leaf (no further calls of its own).
 src/func_ov002_020b363c.c
