@@ -98,49 +98,75 @@ GRAB = os.path.join(ROOT, "port", "tools", "wide_sweep_grab.ps1")
 # fault that 16:9 hides by a few pixels is obvious here.
 ASPECTS = [("native", "0"), ("16x9", "1.7777778"), ("21x9", "2.3333333")]
 
-# THE SCALES ARE DERIVED PER IMAGE, NOT ASSUMED, and the first pass of this tool
-# assumed them and was wrong twice over.
+# THE GEOMETRY IS COMPUTED FROM THE ASPECT, NOT GUESSED FROM THE IMAGE, and the
+# first two versions of this tool guessed and were wrong twice.
 #
-# First, the client area is not the framebuffer. On a high-DPI desktop Windows
-# hands the window a client rectangle a whole multiple larger than the extent the
-# port renders: the 512x384 native window came back as a 1024x768 photograph. So
-# every measurement in host pixels has to be divided by that factor before it
-# means anything in the port's own terms, and the factor is read off the NATIVE
-# capture, whose extent is known to be 512x384.
+# The first assumed the client area IS the framebuffer. It is not: on this
+# desktop the level-path window comes back at twice the port's extent (a 512x384
+# native picture photographs 1024x768), so every host-pixel measurement needs
+# dividing by that factor before it means anything. The second assumed that
+# factor was the same everywhere. It is not either: the scene path opens a
+# STACKED two-screen window that is capped to fit the desktop, so the title
+# photographs at 1:1 (512x768 native, 1024x1152 at 16:9) while a level
+# photographs at 2:1. A constant would have been wrong for half the table.
 #
-# Second, the uniform scale is NOT 3 at every wide aspect. It is active_h/192,
-# and active_h is whatever the aspect fit leaves inside the 1024x576 buffer. At
-# 16:9 that is 576, so uni is 3. At 21:9 the fit is 1024x440 and uni is 2 -- the
-# HUD is drawn at a SMALLER native scale there, and the spare width is 512 rather
-# than 256. A checker carrying 3 as a constant would have measured 21:9 against a
-# margin twice the real one and called every element misplaced.
-NATIVE_EXTENT_W, NATIVE_EXTENT_H = 512, 384
+# And the uniform scale is NOT 3 at every wide aspect. It is active_h/192, and
+# active_h is whatever the aspect fit leaves inside the 1024x576 buffer: 576 at
+# 16:9 so uni is 3, but 440 at 21:9 so uni is 2 -- the HUD is drawn SMALLER
+# there, and the spare width is 512 rather than 256. A checker carrying 3 as a
+# constant would have measured every 21:9 element against twice the real margin.
+#
+# So the extent is derived by mirroring ntr::configure_aspect (port/ntr/ppu.cpp)
+# exactly, the scale factor is then read off as image_width / active_w, and both
+# are reported per row so a reader can check them.
+BUF_W, BUF_H = 1024, 576
 
-
-def geom(native_shape, wide_shape):
-    """(dpi, uni_native, uni_wide, margin_client) for one aspect's images."""
-    dpi = native_shape[1] / NATIVE_EXTENT_W
-    uni_n = int(round((native_shape[0] / dpi) / 192))
-    aw = wide_shape[1] / dpi
-    ah = wide_shape[0] / dpi
-    uni_w = int((ah + 0.5) // 192)
-    margin = int(round((aw - 256 * uni_w) * dpi))
-    return dpi, uni_n, uni_w, margin
-
-# The element bridge, in HOST pixels at the wide scale. It is the compositor's
-# own DS-pixel bridge (16 x 8, see the hudelem banner in
-# port/hal/message_compositor.cpp) carried into host pixels, so the checker
-# groups pixels into elements by the same rule the placement did. A checker that
-# grouped differently would be measuring its own opinion of where the elements
-# are rather than the one the code acted on.
+# The element bridge, in DS pixels. It is the compositor's own rectangle (see the
+# hudelem banner in port/hal/message_compositor.cpp), carried into each image's
+# host pixels by the scale derived above, so the checker groups pixels into
+# elements by the same rule the placement acted on. A checker that grouped
+# differently would be measuring its own opinion of where the elements are.
 BRIDGE_X_DS, BRIDGE_Y_DS = 16, 8
 
-# A pixel counts as "changed" between two captures when any channel moves by
-# more than this. It is not zero because the capture path is a real desktop
-# composite: a window can pick up a pixel of edge blending at its border. It is
-# small enough that a HUD glyph, which is opaque and high contrast, is never
-# missed.
+# A pixel counts as changed between two captures when any channel moves by more
+# than this. It is not zero because the capture path is a real desktop composite
+# and a window can pick up a pixel of edge blending at its border; it is small
+# enough that a HUD glyph, which is opaque and high contrast, is never missed.
 DIFF_TOL = 24
+
+
+
+def active_extent(aspect):
+    """ntr::configure_aspect's arithmetic, mirrored. 0 is the native sentinel."""
+    if not (aspect > 0.0):
+        return 512, 384
+    a = min(max(aspect, 1.0), 3.0)
+    w, h = BUF_W, int(BUF_W / a + 0.5)
+    if h > BUF_H:
+        h = BUF_H
+        w = int(BUF_H * a + 0.5)
+        if w > BUF_W:
+            w = BUF_W
+    if h != BUF_H:
+        h = (h + 1) & ~1        # width pinned: the derived side rounds up
+    else:
+        w &= ~1                 # height pinned: the derived side rounds down
+    return max(w, 2), max(min(h, BUF_H), 2)
+
+
+def screen_geom(aspect, img_shape):
+    """(scale, uni, margin_px, top_rows) for one capture.
+
+    top_rows crops to ENGINE A. The scene path stacks both DS screens in one
+    window, and the HUD this tool is about is engine A's, on the top one; the
+    bottom screen is engine B and is composited by a different file entirely.
+    Measuring both would fold the radar and the touch panel into the element
+    census as if they were HUD elements the reanchor had moved.
+    """
+    aw, ah = active_extent(aspect)
+    scale = img_shape[1] / aw
+    uni = ah // 192
+    return scale, uni, int((aw - 256 * uni) * scale), int(ah * scale)
 
 
 def states():
@@ -219,11 +245,40 @@ def states():
         # half has to show torn. It draws on engine A (sub=0), which is the
         # screen the reanchor acts on.
         "vshud":      {"SM64DS_VS_MAP": "0", "SM64DS_MENU_AT": "420"},
+
+        # THE VS "TIME UP" BANNER, AND THE ONE STATE WITH A REAL STRADDLE.
+        #
+        # This is not the ROM's pause banner and not Stage::RenderVsModeCountdown
+        # -- neither of those draws in this port. It is HUD::RenderVsTimer's own
+        # arm (src/_ZN3HUD13RenderVsTimerEv.cpp:79), which is compiled, linked and
+        # called from hal/sub_actors.cpp:589, and which draws OAM::VS_TIME_UP once
+        # the match clock's expiry flag (data_0209f204) is set. It is an OBJ
+        # sprite, owner 4, so unlike the message layer it is NOT held out of the
+        # band split -- and it is placed at DS x 0x80, which is 128, right beside
+        # band_r at 160. That is the straddle every other state on this list
+        # lacks.
+        #
+        # IT COSTS FIFTY SECONDS OF REAL TIME AND THERE IS NO SHORTCUT. The clock
+        # is the ROM's; nothing in the port shortens it, and the landed proof log
+        # quoted at hal/star_flow.cpp:971 reads "[vs] f2791 TIME UP". So the run
+        # has to get there, which is what the long dwell below is for, and the
+        # freeze is set just past it.
+        #
+        # SM64DS_VS_EXIT_ON_END=0 IS NOT OPTIONAL. It defaults to 1 and the frame
+        # loop posts WM_QUIT when the end state is reached, so without it the
+        # window closes before it can be photographed. END_SCENE stays 0: it
+        # requests the ROM's results screen, which aborts the process about thirty
+        # frames later on an unhosted Stage teardown.
+        "vstimeup":   {"SM64DS_VS_MAP": "0", "SM64DS_MENU_AT": "2900",
+                       "SM64DS_VS_EXIT_ON_END": "0",
+                       "SM64DS_VS_END_SCENE": "0",
+                       "_wait": "78"},
     }
 
 
 def env_for(state_env, aspect, bandsplit, layers_off):
     e = dict(os.environ)
+    state_env = {k: v for k, v in state_env.items() if not k.startswith("_")}
     # Scrub every SM64DS_* the parent happens to be carrying, so a run is
     # exactly this row's recipe and not the shell's history. The lock variables
     # are put back below because the grab script needs them.
@@ -254,6 +309,7 @@ def env_for(state_env, aspect, bandsplit, layers_off):
 
 def recipe_text(state_env, aspect, bandsplit, layers_off):
     bits = [f"SM64DS_ASPECT={aspect}"]
+    state_env = {k: v for k, v in state_env.items() if not k.startswith("_")}
     bits += [f"{k}={v}" for k, v in sorted(state_env.items())]
     if bandsplit:
         bits.append("SM64DS_HUD_BANDSPLIT=1")
@@ -457,7 +513,11 @@ def main():
                             ("no2d", False, True)]
                 for tag, band, off in jobs:
                     png = os.path.join(a.out, f"{name}__{aname}__{tag}.png")
-                    ok, note = grab(png, senv, aval, band, off, a.wait)
+                    # A state may need longer on the clock than the sweep's
+                    # default dwell; vstimeup needs fifty seconds of match
+                    # before the element it is about exists at all.
+                    ok, note = grab(png, senv, aval, band, off,
+                                    float(senv.get("_wait", a.wait)))
                     key = f"{name}__{aname}__{tag}"
                     meta[key] = {"recipe": recipe_text(senv, aval, band, off),
                                  "ok": ok, "note": note}
@@ -475,10 +535,15 @@ def judge(out, st, meta):
         npx = os.path.join(out, f"{name}__native__fix.png")
         nof = os.path.join(out, f"{name}__native__no2d.png")
         nat_img = load(npx) if os.path.exists(npx) else None
-        nat_mask = (changed_mask(nat_img, load(nof))
-                    if nat_img is not None and os.path.exists(nof) else None)
+        nat = []
+        if nat_img is not None and os.path.exists(nof):
+            ns, nu, _nm, ntop = screen_geom(0.0, nat_img.shape)
+            nmask = changed_mask(nat_img[:ntop], load(nof)[:ntop])
+            if nmask is not None:
+                nat = label(nmask, int(BRIDGE_X_DS * nu * ns),
+                            int(BRIDGE_Y_DS * nu * ns))
 
-        for aname, _ in ASPECTS:
+        for aname, aval in ASPECTS:
             if aname == "native":
                 continue
             res = {"state": name, "aspect": aname}
@@ -524,33 +589,36 @@ def judge(out, st, meta):
                 continue
             trust = ~unstable
 
-            dpi, uni_n, uni_w, margin = geom(nat_img.shape, i1.shape)
-            res["dpi"] = float(dpi)
-            res["uni_native"], res["uni_wide"] = uni_n, uni_w
+            scale, uni_w, margin, top = screen_geom(float(aval), i1.shape)
+            _ns, uni_n, _nm, _nt = screen_geom(0.0, nat_img.shape)
+            res["scale"] = float(scale)
+            res["uni_native"], res["uni_wide"] = int(uni_n), int(uni_w)
             res["margin"] = int(margin)
-            expect = uni_w / uni_n
+            res["top_rows"] = int(top)
+            expect = (uni_w * scale) / (uni_n * _ns)
 
-            ib = load(fb)
-            hud_fix = changed_mask(i1, load(fo)) & trust
-            hud_band = changed_mask(ib, load(fo)) & trust
+            ib = load(fb)[:top]
+            io = load(fo)[:top]
+            i1t = i1[:top]
+            trust = trust[:top]
+            hud_fix = changed_mask(i1t, io) & trust
+            hud_band = changed_mask(ib, io) & trust
             # What the fix actually MOVED, on this state, at this aspect: the
             # pixels where the shipped placement and the band-split control
             # disagree. Empty means no element on this screen straddles a split,
             # so the two rules agree and there is nothing here for either to get
             # wrong -- which is a real result and is reported as one.
-            moved = changed_mask(i1, ib) & trust
+            moved = changed_mask(i1t, ib) & trust
             res["moved_px"] = int(moved.sum())
             # The bridge is the compositor's own 16 x 8 DS-pixel rectangle taken
             # into the host pixels of THIS image, so the checker groups by the
             # rule the placement acted on rather than by one of its own.
-            ef = label(hud_fix, int(BRIDGE_X_DS * uni_w * dpi),
-                       int(BRIDGE_Y_DS * uni_w * dpi))
-            eb = label(hud_band, int(BRIDGE_X_DS * uni_w * dpi),
-                       int(BRIDGE_Y_DS * uni_w * dpi))
-            nat = label(nat_mask, int(BRIDGE_X_DS * uni_n * dpi),
-                        int(BRIDGE_Y_DS * uni_n * dpi)) if nat_mask is not None else []
+            bx = int(BRIDGE_X_DS * uni_w * scale)
+            by = int(BRIDGE_Y_DS * uni_w * scale)
+            ef = label(hud_fix, bx, by)
+            eb = label(hud_band, bx, by)
 
-            W = i1.shape[1]
+            W = i1t.shape[1]
             res["elements"] = len(ef)
             res["elements_native"] = len(nat)
             tf = tear_pairs(ef, margin)
