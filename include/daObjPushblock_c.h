@@ -1,6 +1,14 @@
 #ifndef DAOBJPUSHBLOCK_C_H
 #define DAOBJPUSHBLOCK_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjPushblock_c -- daObjPushblock_c_classInit (was PushBlock_Spawn), g_profile_PUSHBLOCK (was PushBlock_SpawnInfo)
+ */
+
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
@@ -9,7 +17,7 @@
  * Everything this header used to restate below 0x320 was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
- * SIZE IS 0x4f4, THE LITERAL PushBlock_Spawn.cpp passes to fBase_c::operator
+ * SIZE IS 0x4f4, THE LITERAL d_a_obj_pushblock.cpp passes to fBase_c::operator
  * new (1268 decimal) -- not merely the observed field span, though here they
  * agree: dBgActor_c ends at 0x320 and this class adds exactly one dBgCh_Actr
  * (0x1bc) plus six trailing scalars, landing on 0x4f4 with no padding.

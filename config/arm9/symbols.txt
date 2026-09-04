@@ -195,7 +195,7 @@ _ZN6Camera16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0200da00
 _ZN6Camera6RenderEv kind:function(arm,size=0x4b8) addr:0x0200da04
 _ZN6Camera8BehaviorEv kind:function(arm,size=0x47c) addr:0x0200debc
 _ZN6Camera13InitResourcesEv kind:function(arm,size=0x10c) addr:0x0200e338
-Camera_Spawn kind:function(arm,size=0x50) addr:0x0200e444
+dCamera_c_classInit kind:function(arm,size=0x50) addr:0x0200e444
 func_0200e494 kind:function(arm,size=0x50) addr:0x0200e494
 func_0200e4e4 kind:function(arm,size=0x78) addr:0x0200e4e4
 func_0200e55c kind:function(arm,size=0x50) addr:0x0200e55c
@@ -1213,7 +1213,7 @@ _ZN7dScMB_c6RenderEv kind:function(arm,size=0x8) addr:0x02034d9c
 _ZN7dScMB_c8BehaviorEv kind:function(arm,size=0x218) addr:0x02034da4
 func_02034fbc kind:function(arm,size=0xb0) addr:0x02034fbc
 _ZN7dScMB_c13InitResourcesEv kind:function(arm,size=0x248) addr:0x0203506c
-func_020352b4 kind:function(arm,size=0xa0) addr:0x020352b4
+dScMB_c_classInit kind:function(arm,size=0xa0) addr:0x020352b4
 func_02035354 kind:function(arm,size=0x40) addr:0x02035354
 func_02035394 kind:function(arm,size=0x1c) addr:0x02035394
 func_020353b0 kind:function(arm,size=0x24) addr:0x020353b0
@@ -3289,7 +3289,7 @@ data_02086d58 kind:data(any) addr:0x02086d58
 data_02086d60 kind:data(any) addr:0x02086d60
 data_02086d68 kind:data(any) addr:0x02086d68
 _ZTI7fBase_c kind:data(any) addr:0x02086d70
-Camera_SpawnInfo kind:data(any) addr:0x02086d78
+g_profile_CAMERA kind:data(any) addr:0x02086d78
 data_02086d80 kind:data(any) addr:0x02086d80
 data_02086d88 kind:data(any) addr:0x02086d88
 data_02086d90 kind:data(any) addr:0x02086d90
@@ -4270,7 +4270,7 @@ data_02092d3c kind:data(any) addr:0x02092d3c
 data_0209325c kind:data(any) addr:0x0209325c
 data_020937bc kind:data(any) addr:0x020937bc
 data_02093d7c kind:data(any) addr:0x02093d7c
-data_0209435c kind:data(any) addr:0x0209435c
+g_profile_MULTIBOOT kind:data(any) addr:0x0209435c
 _ZTS7dScMB_c kind:data(any) addr:0x02094364
 _ZTI7dScMB_c kind:data(any) addr:0x02094370
 _ZTIN7dScMB_c15graphCallback_cE kind:data(any) addr:0x0209437c

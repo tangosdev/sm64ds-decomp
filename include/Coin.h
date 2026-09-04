@@ -1,5 +1,15 @@
 #ifndef COIN_H
 #define COIN_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daCoin_c -- daCoin_c_classInit_COIN (was Coin_Spawn), g_profile_COIN (was Coin_SpawnInfo)
+ *   daCoin_c -- daCoin_c_classInit_RED_COIN (was RedCoin_Spawn), g_profile_RED_COIN (was RedCoin_SpawnInfo)
+ *   daCoin_c -- daCoin_c_classInit_BLUE_COIN (was BlueCoin_Spawn), g_profile_BLUE_COIN (was BlueCoin_SpawnInfo)
+ */
 #include "types.h"
 #include "dActor_c.h"
 #include "CommonModel.h"
@@ -10,7 +20,7 @@
 
 /* THREE WITNESSES:
  *
- *   Coin_Spawn / BlueCoin_Spawn / RedCoin_Spawn
+ *   daCoin_c_classInit_COIN / daCoin_c_classInit_BLUE_COIN / daCoin_c_classInit_RED_COIN
  *       fBase_c::operator new(948 = 0x3b4), dActor_c::dActor_c(), stores
  *       _ZTV4Coin, then the five members below in this order.
  *   _ZN4CoinD0Ev  the same five members destroyed in reverse, then ~dActor_c.

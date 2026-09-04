@@ -1,5 +1,13 @@
 #ifndef WINGFEATHER_H
 #define WINGFEATHER_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daFeather_c -- daFeather_c_classInit (was WingFeather_Spawn), g_profile_FEATHER (was WingFeather_SpawnInfo)
+ */
 #include "types.h"
 #include "dActor_c.h"
 #include "Model.h"
@@ -11,7 +19,7 @@
  * decomp name, but a different spelling -- so unlike every prior pilot's
  * coined-name mismatch, this one cannot be caught by comparing lengths;
  * only reading config/arm9/overlays/ov002/symbols.txt next to _ZTV11WingFeather
- * shows it). WingFeather_Spawn allocates 0x388 bytes (fBase_c::operator new(904)),
+ * shows it). daFeather_c_classInit allocates 0x388 bytes (fBase_c::operator new(904)),
  * constructs dActor_c, stores _ZTV11WingFeather, then four more members in
  * declaration order; ~WingFeather (tools/dtor_members.py) tears them down in
  * reverse. That closes the object with no unaccounted bytes:

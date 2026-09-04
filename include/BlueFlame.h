@@ -1,13 +1,21 @@
 #ifndef BLUEFLAME_H
 #define BLUEFLAME_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjFire_c -- daObjFire_c_classInit_OBJ_BLUE_FIRE (was BlueFlame_Spawn), g_profile_OBJ_BLUE_FIRE (was BlueFlame_SpawnInfo)
+ */
+
 #include "types.h"
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   BlueFlame_Spawn  fBase_c::operator new(280 = 0x118), dActor_c::dActor_c(), stores _ZTV9BlueFlame,
+ *   daObjFire_c_classInit_OBJ_BLUE_FIRE  fBase_c::operator new(280 = 0x118), dActor_c::dActor_c(), stores _ZTV9BlueFlame,
  *                 then the member below in this order.
  *   ~BlueFlame   the same member destroyed in reverse, then ~dActor_c.
  *

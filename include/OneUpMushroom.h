@@ -1,11 +1,19 @@
 #ifndef ONEUPMUSHROOM_H
 #define ONEUPMUSHROOM_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   da1up_c -- da1up_c_classInit_ONEUPKINOKO (was OneUpMushroom_Spawn), g_profile_ONEUPKINOKO (was OneUpMushroom_SpawnInfo)
+ */
+
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
  * class's own destructor `_ZN13OneUpMushroomD1Ev` destroys each member, and
- * `OneUpMushroom_Spawn` constructs the same types at the same offsets before
+ * `da1up_c_classInit_ONEUPKINOKO` constructs the same types at the same offsets before
  * storing `_ZTV13OneUpMushroom`. Everything this header used to restate below 0x110
  * belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -17,7 +25,7 @@
  *     0x300 Model                      0x50    -> 0x350
  *     0x350 ShadowModel                0x28    -> 0x378
  *
- * SIZE IS THE ROM'S OWN: `OneUpMushroom_Spawn` calls `fBase_c::operator new(920)`
+ * SIZE IS THE ROM'S OWN: `da1up_c_classInit_ONEUPKINOKO` calls `fBase_c::operator new(920)`
  * -- 0x398 -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *

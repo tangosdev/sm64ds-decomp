@@ -1,5 +1,13 @@
 #ifndef DSCMB_C_H
 #define DSCMB_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   dScMB_c -- dScMB_c_classInit (was func_020352b4), g_profile_MULTIBOOT (was data_0209435c)
+ */
 #include "dScene_c.h"
 #include "FaderColor.h"
 #include "dGraph_c.h"
@@ -15,7 +23,7 @@
  * 0, 3, 6, 9, 16, 17 -- and every other slot is still whatever dScene_c's
  * own table holds there.
  *
- * CONSTRUCTION. A real Spawn-style factory, func_020352b4: it opens with
+ * CONSTRUCTION. A real Spawn-style factory, dScMB_c_classInit: it opens with
  * `_ZN7fBase_cnwEj(0x68)`, i.e. fBase_c::operator new(0x68). SIZE 0x68 is
  * read directly off the allocator call.
  *

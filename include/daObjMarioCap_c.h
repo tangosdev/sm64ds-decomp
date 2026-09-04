@@ -1,6 +1,14 @@
 #ifndef DAOBJMARIOCAP_C_H
 #define DAOBJMARIOCAP_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjMarioCap_c -- daObjMarioCap_c_classInit (was Cap_Spawn), g_profile_OBJ_MARIO_CAP (was Cap_SpawnInfo)
+ */
+
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "CapIcon.h"
@@ -11,7 +19,7 @@
 
 /* Derives from dEnemyBase_c, and both witnesses agree offset for offset:
  *
- *   Cap_Spawn (ov002) allocates 0x410, calls _ZN12dEnemyBase_cC2Ev, stores
+ *   daObjMarioCap_c_classInit (ov002) allocates 0x410, calls _ZN12dEnemyBase_cC2Ev, stores
  *   _ZTV15daObjMarioCap_c, then constructs dCcAc_c 0x110, dBgCh_Actr 0x144,
  *   ModelAnim 0x300, ShadowModel 0x364 and the CapIcon at 0x3d0.
  *
@@ -25,7 +33,7 @@
  * SIZE, which reads as `999 word(s) differ` and looks like a total failure
  * rather than one missing member.
  *
- * SIZE 0x410, the literal in Cap_Spawn's fBase_c::operator new. CapIcon is 0x1c, so
+ * SIZE 0x410, the literal in daObjMarioCap_c_classInit's fBase_c::operator new. CapIcon is 0x1c, so
  * 0x3d0 + 0x1c = 0x3ec closes onto the scalars below it.
  *
  * THE CLASS USED TO BE CALLED WaterfallMist, and the previous revision of this comment
@@ -33,7 +41,7 @@
  * outright rather than by inference: build/rtti.json has a record at ov002 0x021095ac,
  * mangled 15daObjMarioCap_c, whose `vtable` field is 0x021095f0 -- the very address the
  * tree was calling _ZTV13WaterfallMist. The circumstantial evidence all points the same
- * way: the factory is Cap_Spawn, and the class holds a CapIcon.
+ * way: the factory is daObjMarioCap_c_classInit, and the class holds a CapIcon.
  *
  * The historical WaterfallMist_Spawn and WaterfallMist_SpawnInfo aliases belong
  * to a different actor: daObjWaterfall_c_classInit allocates 220 bytes

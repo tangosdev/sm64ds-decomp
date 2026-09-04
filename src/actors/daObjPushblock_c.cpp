@@ -1,7 +1,7 @@
 //cpp
 /* Production translation unit for ov002/daObjPushblock_c's nine-method run,
- * 0x020b8bf0..0x020b910c. The adjacent PushBlock_Spawn function starts a
- * separate high-confidence TU and remains in PushBlock_Spawn.cpp.
+ * 0x020b8bf0..0x020b910c. The adjacent daObjPushblock_c_classInit function starts a
+ * separate high-confidence TU and remains in d_a_obj_pushblock.cpp.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so

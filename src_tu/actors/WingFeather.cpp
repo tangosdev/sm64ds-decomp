@@ -23,7 +23,7 @@
  *   [4] 0x020b2e54  src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp
  *   [5] 0x020b2e9c  src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp
  *   [6] 0x020b311c  src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp
- *   [7] 0x020b3248  src/game/actors/WingFeather/WingFeather_Spawn.c
+ *   [7] 0x020b3248  src/game/actors/WingFeather/d_a_feather.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
@@ -135,14 +135,14 @@ extern SharedFilePtr data_ov002_0210da58;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- WingFeather_Spawn, 0x020b3248, size 0x50 */
+/* ROM ordinal 7 -- daFeather_c_classInit, 0x020b3248, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol WingFeather_Spawn
+// @symbol daFeather_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11WingFeather */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *WingFeather_Spawn(void)
+int *daFeather_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(904);
     if (p) {

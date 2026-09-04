@@ -1,5 +1,13 @@
 #ifndef POWERFLOWER_H
 #define POWERFLOWER_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjPowerUpItem_c -- daObjPowerUpItem_c_classInit (was PowerFlower_Spawn), g_profile_POWER_UP_ITEM (was PowerFlower_SpawnInfo)
+ */
 #include "types.h"
 #include "dActor_c.h"
 #include "Model.h"
@@ -9,7 +17,7 @@
 
 /* TWO WITNESSES:
  *
- *   PowerFlower_Spawn  fBase_c::operator new(972 = 0x3cc),
+ *   daObjPowerUpItem_c_classInit  fBase_c::operator new(972 = 0x3cc),
  *       dActor_c::dActor_c(), stores _ZTV11PowerFlower, then the five
  *       members below in this order.
  *   _ZN11PowerFlowerD0Ev  the same five members destroyed in reverse,
@@ -25,7 +33,7 @@
  * mFlags (mPosX/Y/Z and mScaleX/Y/Z already shared dActor_c's names).
  *
  * mShadowModel was mistyped `u8` at 0x174 in the generated header --
- * PowerFlower_Spawn calls _ZN11ShadowModelC1Ev at that offset, so it is the
+ * daObjPowerUpItem_c_classInit calls _ZN11ShadowModelC1Ev at that offset, so it is the
  * real 0x28-byte member (0x174..0x19c); the 0x30 bytes from 0x19c..0x1cc
  * are genuinely unevidenced padding.
  *
@@ -43,9 +51,9 @@ struct PowerFlower : dActor_c {
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x124. [_ZN11PowerFlowerD0Ev.c] */
     Model mModel2;            /* 0x124 */
-    /* ShadowModel member, named by PowerFlower_Spawn's own C1 call and the
+    /* ShadowModel member, named by daObjPowerUpItem_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x174.
-       [PowerFlower_Spawn.c, _ZN11PowerFlowerD0Ev.c] */
+       [d_a_obj_power_up_item.c, _ZN11PowerFlowerD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x174 */
     u8  pad_19c[0x30];
     /* dCcAc_c member, named by the class's own destructor calling
