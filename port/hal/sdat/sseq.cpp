@@ -133,6 +133,12 @@ struct Player {
     int tempo, tempoCount;
     int volume, pan;
     int volDb10;            // PLAYER_PARAM 6: distance/fade attenuation
+    // The sequence's base CHANNEL PRIORITY, out of the SDAT's cpr byte. Every
+    // track of this player starts here (sd_seq_start and 0x93 open-track); the
+    // 0xC6 opcode overrides it per track. See sdat_seq_priority: defaulting
+    // this to 64 flattened the opening's cpr-96..127 SFX down onto the BGM and
+    // let the mixer steal between them at random.
+    int cpr;
     sd_s16 var[SD_VARS];
 };
 
@@ -212,8 +218,9 @@ void note_release(int ch, const char *why)
     // channel's pitch here (envStatus 3 -- see retune_note_pitch), so a
     // reader diffing the two has to know where the trajectory legitimately
     // stops moving.
-    SD_PD("rel f=%d p=%d t=%d ch=%d why=%s\n", g_frame, g_note[ch].player,
-          g_note[ch].track, ch, why);
+    SD_PD("rel f=%d p=%d t=%d ch=%d rate=%d ticks=%d why=%s\n", g_frame,
+          g_note[ch].player, g_note[ch].track, ch, sd_mix_release_rate(ch),
+          sd_mix_release_ticks(ch), why);
     sd_mix_release(ch, why);
 }
 
@@ -309,6 +316,18 @@ int track_pitch_units(const Track &tk)
 double pitch_units_scale(int units)
 {
     return pow(2.0, (double)units / 64.0 / 12.0);
+}
+
+/* The channel this track owns, or -1. The ARM7 keeps a real linked list --
+   head at track+0x3C, links through channel+0x50, prepended at 0x037FD55C --
+   and this port scans instead, which finds the same channel because a track
+   only ever holds one in the case that asks (TIE). */
+int track_first_channel(int p, int t)
+{
+    for (int i = 0; i < SD_CHANNELS; i++)
+        if (g_note[i].active && g_note[i].player == p && g_note[i].track == t)
+            return i;
+    return -1;
 }
 
 int track_has_channel(int p, int t)
@@ -437,30 +456,104 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     if (rate <= 0.0 || rate > 64.0) {
         SD_VT("note p%d t%d key %d DROPPED: playback rate %.3f out of "
               "range\n", pi, ti, key, rate);
+        SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=rate rate=%.9f\n",
+              g_frame, pi, ti, key, pl.cpr + tk.priority, rate);
         return;
     }
-    // The inputs the rate is made of, printed whenever the note lands more
-    // than a semitone from the wave's own pitch. A sample that comes out low
-    // and long is one of these being wrong, and which one cannot be read
-    // back out of the rate alone.
-    if (semis < -1.0 || semis > 1.0)
-        SD_VT("note p%d t%d key %d: %+.2f semitones off base %d "
-              "(transpose %d, bend %d, range %d, track pitch %d units) -> "
-              "rate %.4f\n",
-              pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
-              tk.bendRange, pitchUnits, rate);
+    /* The inputs the rate is made of. UNCONDITIONAL, one line per note-on.
+       This used to fire only when the note landed more than a semitone from
+       the wave's own pitch, on the theory that a note sitting at its base
+       pitch has nothing interesting to say about pitch. That was the wrong
+       trade: it also meant a track playing near its base pitch produced NO
+       success record at all, so pairing survivors against the DROPPED lines
+       below -- "did that part go silent, or just thin out" -- could not be
+       answered from this trace. A dropped note only means something next to
+       the notes that were NOT dropped, so both sides have to be printed. */
+    SD_VT("note p%d t%d key %d: %+.2f semitones off base %d "
+          "(transpose %d, bend %d, range %d, track pitch %d units) -> "
+          "rate %.4f\n",
+          pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
+          tk.bendRange, pitchUnits, rate);
 
-    int ch = sd_mix_alloc(tk.priority);
+    /* THE ALLOCATOR PRIORITY IS THE SUM OF THE PLAYER'S AND THE TRACK'S.
+       ARM7 note-on at 0x037FD410:
+           ldrb r2, [r7, #4]    ; player->priority  (the SDAT cpr)
+           ldrb r1, [r8, #0x12] ; track->priority   (64, or the 0xC6 value)
+           add  r1, r2, r1      ; <<< the sum is what AllocChannel gets
+       Both addends are byte loads and the sum is NOT clamped, so it runs
+       0..510 even though the channel stores it back through a strb. With
+       this ROM's values it never exceeds 255, but the accept/reject test
+       upstream uses the untruncated sum, so the sum is what we pass.
+
+       WHAT THIS ACTUALLY COMES TO, MEASURED, IN THE OPENING. cpr is not one
+       value across the game: of the 83 SEQ records, 37 carry cpr 64 and 32
+       carry 106. THE OPENING'S BGM IS ONE OF THE 64s. Its tracks set 0xC6 in
+       the 64..68 band, so it asks the allocator for 128..132, and that is
+       exactly what the dropped-note trace shows. The sound effects over it
+       come out of the SEQARCs at cpr 96 with no 0xC6 at all, so they ask 160.
+       So in THIS scene the effects outrank the music, and the ROM's own
+       arithmetic says they should.
+
+       (An earlier version of this comment claimed the reverse, on the 106
+       sequences. Those exist, and for them the music does outrank a 96 effect
+       -- but they are not the opening, and the general claim was wrong. See
+       sdat.cpp, which has the same numbers from the other side.)
+
+       Folding cpr into the TRACK priority, as this port briefly did, is wrong
+       for a different reason than the ordering: 0xC6 then overwrites it, so
+       the player's contribution disappears entirely rather than being added. */
+    /* A TIED NOTE REUSES THE TRACK'S CHANNEL. IT DOES NOT OPEN ANOTHER.
+       ARM7 note-on, 0x037FD454: it tests track flags bit 3 (tie) and, if the
+       track's channel list is non-empty, writes the new key and velocity into
+       the channel it already owns (ch+0x08, ch+0x09) and branches PAST the
+       allocation entirely -- "cmp r4,#0 / bne 0x37fd568". The per-frame walker
+       at 0x037FD678 then pushes the new pitch and volume down. One tied track
+       therefore costs exactly one channel no matter how many notes it plays.
+
+       THIS IS THE VOICE LEAK. Without it a tied track opens a fresh channel per
+       note and never closes any, because a tied note also gets no scheduled
+       note-off (length is forced to 0 at 0x037FD50C). In the opening, player 11
+       track 0 is such a track: it fired a note about every 0.4 s and by 25 s
+       held FIFTEEN of the sixteen channels, all still sounding, the oldest
+       since 18.9 s. The music, asking at 129 to 131 against those voices at
+       160, was refused every time for about six seconds. The ROM holds one
+       channel there.
+
+       Note this is NOT the same fix as the release-priority collapse in
+       sd_mix_release: that one governs a voice whose track has ENDED, this one
+       stops the voices being created in the first place. Both were needed. */
+    if (tk.tie) {
+        const int held = track_first_channel(pi, ti);
+        if (held >= 0) {
+            g_note[held].basePan   = basePan;
+            g_note[held].baseDb10  = baseDb10;
+            g_note[held].baseRate  = baseRate;
+            g_note[held].lastUnits = pitchUnits;
+            g_note[held].ticks     = -1;   /* tie: no scheduled note-off */
+            g_note[held].released  = 0;
+            sd_mix_set(held, db10, pan, rate);
+            SD_VT("note p%d t%d key %d TIED onto chan %d (no new voice)\n",
+                  pi, ti, key, held);
+            SD_PD("tie f=%d p=%d t=%d ch=%d key=%d\n", g_frame, pi, ti, held,
+                  key);
+            return;
+        }
+    }
+
+    const int prio = pl.cpr + tk.priority;
+    int ch = sd_mix_alloc(prio);
     if (ch < 0) {
         SD_VT("note p%d t%d key %d DROPPED: no mixer channel free\n", pi, ti,
               key);
+        SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=nochan\n",
+              g_frame, pi, ti, key, prio);
         return;
     }
     if (g_note[ch].active)
         SD_VT("chan %2d taken from player %d track %d\n", ch,
               g_note[ch].player, g_note[ch].track);
 
-    sd_mix_start(ch, &w, &n, db10, pan, rate, tk.priority);
+    sd_mix_start(ch, &w, &n, db10, pan, rate, prio);
     g_note[ch].active = 1;
     g_note[ch].player = pi;
     g_note[ch].track = ti;
@@ -672,6 +765,9 @@ int run_track(Player &pl, int pi, int ti)
                 t2.active = keepActive;
                 t2.pc = off;
                 t2.volume = 127; t2.expression = 127; t2.pan = 64;
+                // Opened tracks start at the player's base priority, the same
+                // as track 0; a 0xC6 in the opened track overrides it.
+                /* Same TrackInit default as track 0; 0xC6 overrides it. */
                 t2.bendRange = 2; t2.priority = 64; t2.noteWait = 1;
                 t2.prog = 0;
             }
@@ -738,7 +834,13 @@ int run_track(Player &pl, int pi, int ti)
         case 0xc5: { int v = argU8(); if (condition) tk.bendRange = v; break; }
         case 0xc6: { int v = argU8(); if (condition) tk.priority = v; break; }
         case 0xc7: { int v = argU8(); if (condition) tk.noteWait = v; break; }
-        case 0xc8: { int v = argU8(); if (condition) tk.tie = v; break; }
+        /* 0xC8 (TIE) also RELEASES whatever the track is holding. The ARM7
+           calls ReleaseTrackChannels(track, player, -1) from the opcode at
+           0x037FCFFC, the same routine 0xFF goes through, so changing tie
+           mode ends the current voices instead of stranding them. */
+        case 0xc8: { int v = argU8();
+            if (condition) { tk.tie = v; track_stop(pi, ti, "tie changed"); }
+            break; }
         case 0xd5: { int v = argU8(); if (condition) tk.expression = v; break; }
 
         // Accepted and parsed, but not rendered: portamento, modulation and
@@ -876,6 +978,16 @@ sd_u32 sd_seq_player_mask(void)
 // and a pc walking through data rather than code rarely meets an end-of-track
 // with an empty stack, so the track does not die either. Pitched down,
 // stretched out, and dragging on: one offset applied twice.
+/* The mixer frees channels, but the frame counter and the pitch dump live in
+   here behind an anonymous namespace. This is the one seam across it, so a
+   channel FREE lands in the same frame-stamped file as the note-on that
+   opened it. Without the free records a trace shows what started and never
+   what finished, which is precisely the shape a voice leak hides in. */
+void sd_pd_end(int ch, int prio, const char *why)
+{
+    SD_PD("end f=%d ch=%d prio=%d why=%s\n", g_frame, ch, prio, why);
+}
+
 int sd_seq_start(int p, const sd_u8 *seqBase, sd_u32 startOff,
                  const sd_u8 *sbnk)
 {
@@ -909,11 +1021,18 @@ int sd_seq_start(int p, const sd_u8 *seqBase, sd_u32 startOff,
     pl.tempoCount = 0;
     pl.volume = 127;
     pl.pan = 64;
+    // The player's base channel priority, out of the SDAT record. The ARM7
+    // starts every one of a player's tracks at this; the port used to default
+    // to 64 and lose it, which inverted the ROM's steal order (see
+    // sdat_seq_priority).
+    pl.cpr = sdat_seq_priority(seqBase, startOff);
 
     Track &t0 = pl.tr[0];
     t0.active = 1;
     t0.pc = startOff;
     t0.volume = 127; t0.expression = 127; t0.pan = 64;
+    /* TrackInit at 0x037FDA74: mov r1,#0x40 / strb r1,[r4,#0x12]. The
+       player's cpr is NOT folded in here; see the sum at the note-on. */
     t0.bendRange = 2; t0.priority = 64; t0.noteWait = 1;
 
     // A multi-track sequence opens with 0xFE <u16 mask>; track 0's own code

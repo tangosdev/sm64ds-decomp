@@ -102,6 +102,147 @@ sd_u32 sdat_file_id_of(const void *p)
     return (sd_u32)-1;
 }
 
+// The sequence's base CHANNEL PRIORITY (the SDAT's cpr byte), which is the
+// priority every track of the player starts at on the ARM7. The SSEQ 0xC6
+// opcode overrides it per track; a stream with no 0xC6 keeps it.
+//
+// This existed nowhere in the port before, and its absence inverted the ROM's
+// voice-steal order in any busy scene. The opening cutscene is the worst case:
+// its SFX carry cpr 96..127 (NCS_SE_VT_PEACH_LETTER and NCS_SE_VO_SLEEP1_Y are
+// 127) and set no 0xC6, while NCS_BGM_OPENING carries cpr 64 and its lead
+// track sets 0xC6 66. On hardware the SFX therefore dominate the music and the
+// mix ducks cleanly. The port defaulted every track to 64, so the 127-priority
+// voices ran at 64 -- level with the BGM -- and the 16-channel mixer stole
+// between them at random, dropping the letter narration and the music in turn.
+// That is the opening's "sounds overlap and cut out".
+//
+// seqBase is the file's DATA base (what the START command carries in b); the
+// SSAR case reads the entry table beside it, the SSEQ case the INFO record.
+//
+// WHY ONLY cpr, AND NOT ppr OR THE PLAYER RECORD'S maxSeq. Those two are real
+// and they are enforced -- but they are ARM9-side, and on the ARM9 side this
+// project runs the ROM's own decompiled code, so implementing them here would
+// be writing a second copy of something already running.
+//
+// The arbitration lives in func_0204f63c, which IS decompiled, in
+// src/func_0204f63c.cpp, and is called from the sequence-start core in
+// src/func_02051a98.c. Its body is the ROM's:
+//
+//     if (seqCount(+8) >= seqMax(+0x18)) {      // the PLAYER record's cap
+//         it = lowest-priority sequence on this player;
+//         if (!it) return 0;                    // nothing to evict
+//         if (r7 < it[0x3d]) return 0;          // new ppr < victim ppr: REFUSE
+//         stop(it);
+//     }
+//     if (!func_0204f364(r7)) return 0;         // global 16-slot pool, also
+//                                               // gated on ppr
+//
+// maxSeq reaches that +0x18 field through Sound::Player::SetPlayableSeqCount,
+// which hal/sdat/sound_abi.cpp deliberately hosts as an ALIAS onto
+// data_020a4d6c + id*0x1c + 0x18 precisely so the write lands in the block
+// func_0204f63c reads it back out of. That aliasing exists because the two DS
+// views (data_020a4d6c and data_020a4d84) are one array on hardware.
+//
+// cpr is different, and that is why it needed seating here. It is not consumed
+// on the ARM9 at all: func_02051a98 reads info->cpr at +7 and immediately ships
+// it across as SND_SetSeqPriority -> SNDi_SetPlayerParam(offset 4, size 1) ->
+// ARM7 command 3, which stores it to player->priority. The ARM7 is the side
+// this port reimplements, so cpr is the one of the three that had nowhere to
+// land until now.
+//
+// So the split is: ppr and maxSeq decide whether a SEQUENCE gets a player slot
+// (ARM9, already faithful, not ours); cpr feeds the per-NOTE channel priority
+// (ARM7, ours). They do not otherwise interact -- the ARM7 image contains no
+// SDAT parsing at all, and the allocator's only caller is the note-on path.
+//
+// MEASURED with port/tools/opening_audio_measure.py, which IS the recipe --
+// the numbers below cannot be quoted without it, because an earlier version of
+// this measurement was written down as a list of environment variables and
+// turned out to depend on the worktree's leftover save file. The opening only
+// plays down the NEW FILE path, so a tree that has had the battery run against
+// it boots to the title and stays there. The script forces the save absent and
+// refuses to print anything unless the log says a cutscene script is running.
+//
+// Counts are note-ons: one [pd] on line per note that got a mixer channel, one
+// [pd] off line per note that got nothing and is simply not heard.
+// SM64DS_NO_AUDIO=1 clocks the mixer at exactly 1/60 s per video frame, so the
+// run repeats exactly. Both builds are handed the SAME 1449 note-ons.
+//
+//                                       sounded / dropped
+//   whole 4000-frame run   (1449 notes)
+//     cons baseline                        1038 / 411   (28.4%)
+//     this branch                          1140 / 309   (21.3%)
+//   title and file-select only, 700 frames  (272 notes)
+//     cons baseline                         264 / 8     (2.9%)
+//     this branch                           234 / 38    (14.0%)
+//   the cutscene itself, by subtraction    (1177 notes)
+//     cons baseline                         774 / 403   (34.2%)
+//     this branch                           906 / 271   (23.0%)
+//
+// So the opening cutscene gains 132 notes it used to lose, and the title and
+// file-select LOSES 30 it used to keep. THE TITLE REGRESSION IS REAL AND IS
+// NOT WAVED AWAY AS "hardware-correct": it is what the ROM's own arithmetic
+// produces, because the title's music sits at cpr 64 while the effects over it
+// sit at cpr 96, and 96+64 outranks 64+64. Whether that trade is worth
+// shipping is a judgement for a listener, not for this comment.
+//
+// No track goes silent in any of these runs -- every track that loses notes
+// also keeps some, so a losing part THINS rather than disappearing. It does
+// thin badly: the opening's busiest music track drops 30 note-ons in a row at
+// its worst, which is a real hole, not a texture change.
+//
+// THE ROM SAYS THIS DIRECTLY, INDEPENDENT OF THE PORT. Reading the cpr byte
+// out of extracted/dsd/files/data/sound_data.sdat:
+//
+//   INFO SEQ records (83 of them, the music):
+//     cpr 64:37  65:3  72:6  73:4  106:32  127:1
+//   SSAR entries across the five sound-effect archives (1464 of them):
+//     cpr 96:1143  127:269  and 52 others spread over 0,40,50,64,80,90,92,
+//     98,100,110,115,120
+//
+// So 1412 of the game's 1464 sound effects are authored at 96 or 127, and
+// exactly FOUR are at 64. The port ran all 1464 of them at 64, level with the
+// music. That is the whole bug: with every voice at one priority the 16-channel
+// allocator's "steal the lowest, oldest among equals" degenerates into "steal
+// whatever started first", so in a busy scene the music and the effects evict
+// each other by arrival order instead of by the order the ROM asked for.
+int sdat_seq_priority(const sd_u8 *seqBase, sd_u32 startOff)
+{
+    if (!seqBase || !g_sdat.base || !g_sdat.info) return 64;
+    sd_u32 fid = sdat_file_id_of(seqBase);
+    if (fid == (sd_u32)-1) return 64;
+    sd_u8 *f = sdat_file(fid);
+    if (!f) return 64;
+
+    if (!memcmp(f, "SSAR", 4)) {
+        // entry table: count at +0x1c, entries at +0x20, 12 bytes each:
+        // { seqOff u32, bank u16, vol u8, cpr u8, ppr u8, ply u8 }. seqOff is
+        // relative to the DATA base, which is exactly startOff's frame.
+        sd_u32 count = rd32(f + 0x1c);
+        for (sd_u32 i = 0; i < count; i++) {
+            sd_u8 *e = f + 0x20 + i * 12;
+            if (rd32(e) == startOff) return e[7];
+        }
+        return 64;
+    }
+    if (!memcmp(f, "SSEQ", 4)) {
+        // A standalone sequence carries its cpr in the INFO SEQ record whose
+        // fileId names this file: { fileId u16, unk u16, bank u16, vol u8,
+        // cpr u8, ... }.
+        sd_u32 recOff = rd32(g_sdat.info + 8 + SDAT_REC_SEQ * 4);
+        if (!recOff) return 64;
+        sd_u8 *tbl = g_sdat.info + recOff;
+        sd_u32 n = rd32(tbl);
+        for (sd_u32 i = 0; i < n; i++) {
+            sd_u32 v = rd32(tbl + 4 + i * 4);
+            if (!v) continue;
+            sd_u8 *e = g_sdat.info + v;
+            if (rd16(e) == fid) return e[7];
+        }
+    }
+    return 64;
+}
+
 // ---- INFO ---------------------------------------------------------------
 
 sd_u8 *sdat_info_entry(int rec, sd_u32 id)
