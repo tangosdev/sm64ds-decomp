@@ -1,8 +1,8 @@
 {
   "id": "ov009/daObjMcWater_c",
   "module": "ov009",
-  "source": "src/actors/d_a_obj_mc_water.cpp",
-  "promoted_source": "src/actors/d_a_obj_mc_water.cpp",
+  "source": "src/game/actors/d_a_obj_mc_water.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_mc_water.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

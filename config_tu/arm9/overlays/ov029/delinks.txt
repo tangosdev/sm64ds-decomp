@@ -4,35 +4,35 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
-src/actors/d_a_obj_wc_obj01.cpp:
+src/game/actors/d_a_obj_wc_obj01.cpp:
     .text start:0x021111a0 end:0x0211137c
     .init start:0x02112b38 end:0x02112ba4
     .ctor start:0x02112e68 end:0x02112e6c
     .data start:0x02113c08 end:0x02113cac
     .bss start:0x02114230 end:0x02114248
 
-src/actors/d_a_obj_wc_obj02.cpp:
+src/game/actors/d_a_obj_wc_obj02.cpp:
     .text start:0x0211137c end:0x02111728
     .init start:0x02112ba4 end:0x02112c10
     .ctor start:0x02112e6c end:0x02112e70
     .data start:0x02113ccc end:0x02113d70
     .bss start:0x02114248 end:0x02114270
 
-src/actors/d_a_obj_wc_obj03.cpp:
+src/game/actors/d_a_obj_wc_obj03.cpp:
     .text start:0x02111728 end:0x02111ac4
     .init start:0x02112c10 end:0x02112c4c
     .ctor start:0x02112e70 end:0x02112e74
     .data start:0x02113d90 end:0x02113e00
     .bss start:0x02114270 end:0x02114284
 
-src/actors/d_a_obj_wc_obj05.cpp:
+src/game/actors/d_a_obj_wc_obj05.cpp:
     .text start:0x02111ac4 end:0x02111ea4
     .init start:0x02112c4c end:0x02112cb8
     .ctor start:0x02112e74 end:0x02112e78
     .data start:0x02113e50 end:0x02113ef4
     .bss start:0x02114284 end:0x021142ac
 
-src/actors/d_a_obj_wc_obj06.cpp:
+src/game/actors/d_a_obj_wc_obj06.cpp:
     .text start:0x02111ea4 end:0x02112080
     .init start:0x02112cb8 end:0x02112d24
     .ctor start:0x02112e78 end:0x02112e7c
@@ -46,14 +46,14 @@ src_tu/actors/RotatingPlatformWdw.cpp:
     .data start:0x02113ff4 end:0x02114098
     .bss start:0x021142e4 end:0x021142fc
 
-src/actors/d_a_obj_wc_mizu.cpp:
+src/game/actors/d_a_obj_wc_mizu.cpp:
     .text start:0x021121a4 end:0x02112630
     .init start:0x02112d90 end:0x02112dfc
     .ctor start:0x02112e80 end:0x02112e84
     .data start:0x02114098 end:0x0211415c
     .bss start:0x021142fc end:0x02114324
 
-src/actors/d_a_obj_wc_obj04.cpp:
+src/game/actors/d_a_obj_wc_obj04.cpp:
     .text start:0x02112630 end:0x0211299c
     .init start:0x02112dfc end:0x02112e68
     .ctor start:0x02112e84 end:0x02112e88

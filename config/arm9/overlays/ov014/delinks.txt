@@ -7,11 +7,11 @@ src/game/actors/d_a_obj_b_swdoor.cpp:
     complete
     .text start:0x021111a0 end:0x02111308
 
-src/actors/d_a_wanwan.cpp:
+src/game/actors/d_a_wanwan.cpp:
     complete
     .text start:0x02111308 end:0x02112e0c
 
-src/actors/d_a_obj_wanwan_shutter.cpp:
+src/game/actors/d_a_obj_wanwan_shutter.cpp:
     complete
     .text start:0x02112e0c end:0x021130ac
 

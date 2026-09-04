@@ -9,7 +9,7 @@ src/game/actors/d_a_bakubaku.cpp:
     .text start:0x021111a0 end:0x021124a8
     .data start:0x021137e4 end:0x021138a0
 
-src/actors/d_a_obj_td_futa.cpp:
+src/game/actors/d_a_obj_td_futa.cpp:
     complete
     .text start:0x021124a8 end:0x02112668
 
@@ -17,7 +17,7 @@ src/daObjTdFuta_c_classInit.c:
     complete
     .text start:0x02112668 end:0x02112698
 
-src/actors/d_a_obj_td_water.cpp:
+src/game/actors/d_a_obj_td_water.cpp:
     complete
     .text start:0x02112698 end:0x021128b8
 

@@ -857,7 +857,7 @@ src/PoppingLavaBubbles_Spawn.c:
     complete
     .text start:0x020b6dd8 end:0x020b6e08
 
-src/actors/d_a_obj_waterfall.cpp:
+src/game/actors/d_a_obj_waterfall.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6f18
 
@@ -1300,7 +1300,7 @@ src/SignPost_Spawn.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
-src/actors/d_a_obj_wakame.cpp:
+src/game/actors/d_a_obj_wakame.cpp:
     complete
     .text start:0x020bc414 end:0x020bc5e0
 
@@ -4137,11 +4137,11 @@ src/PowerStar_Spawn.c:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
-src/actors/d_a_tree.cpp:
+src/game/actors/d_a_tree.cpp:
     complete
     .text start:0x020ebf8c end:0x020ec388
 
-src/actors/d_a_warpkun.cpp:
+src/game/actors/d_a_warpkun.cpp:
     complete
     .text start:0x020ec388 end:0x020ec56c
 
@@ -4611,7 +4611,7 @@ src/EnemySwitchTag_Spawn.c:
     complete
     .text start:0x020f1954 end:0x020f198c
 
-src/actors/d_a_set_se.cpp:
+src/game/actors/d_a_set_se.cpp:
     complete
     .text start:0x020f198c end:0x020f1bc4
 
@@ -5268,7 +5268,7 @@ src/Fireball_Spawn.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
-src/actors/d_a_sound_obj.cpp:
+src/game/actors/d_a_sound_obj.cpp:
     complete
     .text start:0x020f934c end:0x020f975c
 
