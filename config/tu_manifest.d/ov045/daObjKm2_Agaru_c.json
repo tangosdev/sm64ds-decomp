@@ -1,0 +1,707 @@
+{
+  "id": "ov045/daObjKm2_Agaru_c",
+  "module": "ov045",
+  "source": "src/actors/d_a_obj_km2_agaru.cpp",
+  "promoted_source": "src/actors/d_a_obj_km2_agaru.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x021111a0..0x0211150c, nine functions with no foreign symbol inside the span",
+    "the run is bracketed by two different classes: 0x021111a0 is the first function of ov045's .text after the module header's own run, and _ZN18daObjKm2_Ami_Bou_cD1Ev begins at 0x0211150c",
+    "build/tu_map.json cuts this run short at 0x021114a8 because func_ov045_021114a8 and func_ov045_021114c8 carry no class label. They are this TU's file-local dBgW callbacks: InitResources installs func_ov045_021114c8 through func_020393c4, and that function's only caller-visible act is forwarding to func_ov045_021114a8, which writes this class's own 0x326 field. Nothing outside the run references either. The known tu_map behaviour is recorded in notes/tu-reconstruction-pilot-report.md.",
+    "daObjKm2_Agaru_c_classInit at 0x021114dc closes the run: it allocates the class's 0x328 and installs this class's vtable, and the descriptor it is named by (g_profile_KM2_AGARU, 0x02112cd0) sits inside this TU's .data run",
+    ".data run 0x02112cb0..0x02112d74 is bounded by _ZTI18daObjKm2_Ami_Bou_c at 0x02112d74 and holds exactly this class's RTTI chain, profile descriptor and vtable"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x0211150c"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112cb0",
+      "end": "0x02112d74"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_cD0Ev",
+      "address": "0x021111e4",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_c16CleanupResourcesEv",
+      "address": "0x0211123c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_c6RenderEv",
+      "address": "0x02111274",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_c6RenderEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_c8BehaviorEv",
+      "address": "0x0211129c",
+      "size": "0x00000150",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjKm2_Agaru_c13InitResourcesEv",
+      "address": "0x021113ec",
+      "size": "0x000000bc",
+      "legacy_source": "src/_ZN16daObjKm2_Agaru_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov045_021114a8",
+      "address": "0x021114a8",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov045_021114a8.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov045_021114c8",
+      "address": "0x021114c8",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov045_021114c8.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daObjKm2_Agaru_c_classInit",
+      "address": "0x021114dc",
+      "size": "0x00000030",
+      "legacy_source": "src/daObjKm2_Agaru_c_classInit.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTI16daObjKm2_Agaru_c",
+      "address": "0x02112cb0",
+      "size": "0x0000000c"
+    },
+    {
+      "symbol": "_ZTS16daObjKm2_Agaru_c",
+      "address": "0x02112cbc",
+      "size": "0x00000013"
+    },
+    {
+      "symbol": "g_profile_KM2_AGARU",
+      "address": "0x02112cd0",
+      "size": "0x0000001c"
+    },
+    {
+      "symbol": "_ZTV16daObjKm2_Agaru_c",
+      "address": "0x02112cf4",
+      "size": "0x00000088",
+      "emitted_storage_address": "0x02112cec",
+      "address_point_bias": "0x8"
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "Thirteenth single-TU promotion on this line, and the same shape as ov045/daObjKm2_Ami_Bou_c next door: a dBgActor_c subclass whose TU owns its own key function and therefore emits its vtable and RTTI.",
+    "The class was coined FireSeaElevator until the rename immediately before this promotion. The cartridge spells it at ov045:0x02112cb0/0x02112cbc, and promotion needs that name: the compiler's _ZTS bytes have to equal the cartridge's, which no coined spelling can achieve.",
+    "daObjKm2_Agaru_c_classInit's vptr store is (int)&_ZTV16daObjKm2_Agaru_c[2], not the bare symbol. Once the TU emits the vtable, mwcc's symbol is the storage start at 0x02112cec and the ROM stores the address point eight bytes later. Every byte gate is blind to this -- a relocated word is a wildcard -- and objisolate's addend check is what catches it.",
+    "The destructor is defined inline in include/daObjKm2_Agaru_c.h and declared first in the class body. Out of line, mwccarm emits D2/D0/D1 while the cartridge holds D1 (0x021111a0) then D0 (0x021111e4) and no D2 at all, and objisolate refuses the object for emitting out of ROM address order.",
+    "func_ov045_021114a8 and func_ov045_021114c8 are this TU's file-local dBgW callbacks. The legacy pair disagreed about func_ov045_021114c8's arity -- the definition took three parameters, InitResources declared it as two -- which no single TU can hold; the three-parameter definition is kept and InitResources takes its address through an int cast, exactly as the ROM does.",
+    "The four fields above dBgActor_c's 0x320 end are named from behaviour rather than padded over: mRestY latches the spawn height, mDelayTimer counts the 0x14-frame hold at each end, mRidden is set by func_ov045_021114a8 and cleared every frame, mState drives Behavior's switch. Offsets, types and the 0x328 span are unchanged from the padded declaration.",
+    "daObjKm2_Agaru_c_classInit and g_profile_KM2_AGARU are reconstructed source-style names: SM64DS proves the RTTI class, KM2_AGARU registry ID, descriptor/factory relationship, allocation size, and vtable identity; later EAD lineage supplies the spelling prior. Historical aliases were daObjKm2_Agaru_c_Spawn and daObjKm2_Agaru_c_SpawnInfo."
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov045-daObjKm2_Agaru_c/d_a_obj_km2_agaru.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS10dBgActor_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov045-daObjKm2_Agaru_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x0211150c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x0211150c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02112cb0",
+          "end": "0x02112d74",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 13
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              16,
+              19,
+              20,
+              22
+            ],
+            "desired": [
+              16,
+              19,
+              20,
+              22
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; compare the compiler copy to its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Inherited vague-linkage RTTI. Unlike the other bases this one is homed in ov002, not arm9 -- dBgActor_c::Kill is its key function and lives there."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; compare its canonical arm9 bytes before isolation."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Inherited vague-linkage type-name string, homed in ov002 alongside its typeinfo."
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".data",
+      "source": "0x02112cb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16daObjKm2_Agaru_c",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02112cbc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjKm2_Agaru_c_classInit",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021114dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjKm2_Agaru_c",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02112cb0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021113ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112cfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x0211123c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x0211129c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x02111274"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_cD1Ev",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjKm2_Agaru_cD0Ev",
+      "addend": 0,
+      "target_module": "ov045",
+      "target_address": "0x021111e4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d6c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112d70",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    }
+  ]
+}
