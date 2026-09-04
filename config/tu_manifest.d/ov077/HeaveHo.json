@@ -166,10 +166,10 @@
       "ordinal": 20
     },
     {
-      "symbol": "HeaveHo_Spawn",
+      "symbol": "daPopoi_c_classInit",
       "address": "0x021271d4",
       "size": "0x0000005c",
-      "legacy_source": "src/HeaveHo_Spawn.c",
+      "legacy_source": "src/daPopoi_c_classInit.c",
       "ordinal": 21
     }
   ],

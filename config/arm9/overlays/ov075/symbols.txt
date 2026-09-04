@@ -39,7 +39,7 @@ _ZN14UnknownVsEntry16CleanupResourcesEv kind:function(arm,size=0x144) addr:0x021
 _ZN14UnknownVsEntry6RenderEv kind:function(arm,size=0x90) addr:0x021154cc
 _ZN14UnknownVsEntry8BehaviorEv kind:function(arm,size=0x184) addr:0x0211555c
 _ZN14UnknownVsEntry13InitResourcesEv kind:function(arm,size=0x314) addr:0x021156e0
-UnknownVsEntry_Spawn kind:function(arm,size=0x94) addr:0x021159f4
+dEntObj_c_classInit kind:function(arm,size=0x94) addr:0x021159f4
 _ZN15UnknownVsPlayerC1Ev kind:function(arm,size=0x30) addr:0x02115a88
 _ZN10dScEntry_cD1Ev kind:function(arm,size=0x70) addr:0x02115ab8
 _ZN10dScEntry_cD0Ev kind:function(arm,size=0x84) addr:0x02115b28
@@ -120,10 +120,10 @@ _ZN10dScEntry_c6RenderEv kind:function(arm,size=0x4c) addr:0x0211a26c
 _ZN10dScEntry_c8BehaviorEv kind:function(arm,size=0x158) addr:0x0211a2b8
 _ZN10dScEntry_c13InitResourcesEv kind:function(arm,size=0x324) addr:0x0211a410
 _ZN10dScEntry_c19BeforeInitResourcesEv kind:function(arm,size=0xc) addr:0x0211a734
-func_ov075_0211a740 kind:function(arm,size=0xf4) addr:0x0211a740
+dScEntry_c_classInit_RESULT kind:function(arm,size=0xf4) addr:0x0211a740
 _ZN12OamAnimationC1Ev kind:function(arm,size=0x4) addr:0x0211a834
 _ZN10dScEntry_c6icon_cC1Ev kind:function(arm,size=0x1c) addr:0x0211a838
-func_ov075_0211a854 kind:function(arm,size=0xf4) addr:0x0211a854
+dScEntry_c_classInit_ENTRY kind:function(arm,size=0xf4) addr:0x0211a854
 func_ov075_0211a948 kind:function(arm,size=0xb8) addr:0x0211a948
 func_ov075_0211aa00 kind:function(arm,size=0x94) addr:0x0211aa00
 func_ov075_0211aa94 kind:function(arm,size=0xa4) addr:0x0211aa94
@@ -165,7 +165,7 @@ data_ov075_0211c5f0 kind:data(any) addr:0x0211c5f0
 data_ov075_0211c5f8 kind:data(any) addr:0x0211c5f8
 data_ov075_0211c600 kind:data(any) addr:0x0211c600
 data_ov075_0211c608 kind:data(any) addr:0x0211c608
-UnknownVsEntry_SpawnInfo kind:data(any) addr:0x0211c610 ambiguous
+g_profile_ENTRY_OBJECT kind:data(any) addr:0x0211c610 ambiguous
 data_ov075_0211c618 kind:data(any) addr:0x0211c618
 data_ov075_0211c620 kind:data(any) addr:0x0211c620
 data_ov075_0211c628 kind:data(any) addr:0x0211c628
@@ -200,7 +200,7 @@ data_ov075_0211c768 kind:data(any) addr:0x0211c768
 data_ov075_0211c770 kind:data(any) addr:0x0211c770
 data_ov075_0211c778 kind:data(any) addr:0x0211c778
 data_ov075_0211c780 kind:data(any) addr:0x0211c780
-data_ov075_0211c788 kind:data(any) addr:0x0211c788 ambiguous
+g_profile_RESULT kind:data(any) addr:0x0211c788 ambiguous
 data_ov075_0211c790 kind:data(any) addr:0x0211c790
 data_ov075_0211c798 kind:data(any) addr:0x0211c798
 data_ov075_0211c7a0 kind:data(any) addr:0x0211c7a0
@@ -231,7 +231,7 @@ data_ov075_0211c860 kind:data(any) addr:0x0211c860
 data_ov075_0211c868 kind:data(any) addr:0x0211c868
 data_ov075_0211c870 kind:data(any) addr:0x0211c870
 data_ov075_0211c878 kind:data(any) addr:0x0211c878
-data_ov075_0211c880 kind:data(any) addr:0x0211c880 ambiguous
+g_profile_ENTRY kind:data(any) addr:0x0211c880 ambiguous
 data_ov075_0211c888 kind:data(any) addr:0x0211c888
 data_ov075_0211c890 kind:data(any) addr:0x0211c890
 data_ov075_0211c898 kind:data(any) addr:0x0211c898

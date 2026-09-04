@@ -38,14 +38,14 @@
  *   [28] 0x021248b8  src/_ZN6Lakitu8BehaviorEv.cpp
  *   [29] 0x02124908  src/_ZN6Lakitu13InitResourcesEv.cpp
  *   [30] 0x02124aa4  src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp
- *   [31] 0x02124b04  src/Lakitu_Spawn.c
+ *   [31] 0x02124b04  src/daJgm_c_classInit.c
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- Lakitu_Spawn, 0x02124b04, size 0x60 */
+/* ROM ordinal 31 -- daJgm_c_classInit, 0x02124b04, size 0x60 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol Lakitu_Spawn
+// @symbol daJgm_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -58,7 +58,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Lakitu */
-int *Lakitu_Spawn(void)
+int *daJgm_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1056);
     if (p) {

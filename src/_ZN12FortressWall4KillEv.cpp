@@ -11,7 +11,7 @@
  * The odd one out of this family. It plays the sound FIRST, spawns particle
  * 0x121 at the wall's own position with no vertical offset, and does NOT call
  * PoofDustAt at all. Then it branches on the actor id: id 0x30 is the breakable
- * fortress wall (src/FortressWallBreakable_Spawn.c), which only sets mBroken and
+ * fortress wall (src/daObjBk_Kabe_c_classInit_BK_KABE00.c), which only sets mBroken and
  * stays alive; every other id falls through to MarkForDestruction.
  *
  * THE `int b` INTERMEDIATE IS LOAD-BEARING, the same way it is in

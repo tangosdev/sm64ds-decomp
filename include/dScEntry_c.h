@@ -27,6 +27,16 @@
  *
  * Real class-form methods use this header. Method-local offset views remain
  * where naming the full opaque object layout would add unsupported claims.
+ *
+ * SM64DS RTTI names the implementation dScEntry_c. The reconstructed
+ * factory dScEntry_c_classInit_RESULT (historical alias
+ * func_ov075_0211a740) constructs it for the RESULT
+ * registry profile.
+ *
+ * SM64DS RTTI names the implementation dScEntry_c. The reconstructed
+ * factory dScEntry_c_classInit_ENTRY (historical alias
+ * func_ov075_0211a854) constructs it for the ENTRY
+ * registry profile.
  */
 struct dScEntry_c : dScene_c {
     struct icon_c : dThIcon_c {

@@ -28,14 +28,14 @@
  *   [18] 0x02126e38  src/_ZN7HeaveHo6RenderEv.cpp
  *   [19] 0x02126e88  src/_ZN7HeaveHo8BehaviorEv.cpp
  *   [20] 0x0212706c  src/_ZN7HeaveHo13InitResourcesEv.cpp
- *   [21] 0x021271d4  src/HeaveHo_Spawn.c
+ *   [21] 0x021271d4  src/daPopoi_c_classInit.c
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- HeaveHo_Spawn, 0x021271d4, size 0x5c */
+/* ROM ordinal 21 -- daPopoi_c_classInit, 0x021271d4, size 0x5c */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol HeaveHo_Spawn
+// @symbol daPopoi_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -47,7 +47,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV7HeaveHo */
-int *HeaveHo_Spawn(void)
+int *daPopoi_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1068);
     if (p) {

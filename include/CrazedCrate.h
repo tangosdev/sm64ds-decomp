@@ -9,7 +9,7 @@
 
 /* TWO WITNESSES:
  *
- *   CrazedCrate_Spawn  fBase_c::operator new(888 = 0x378),
+ *   daBttBk_c_classInit  fBase_c::operator new(888 = 0x378),
  *       dActor_c::dActor_c(), stores _ZTV11CrazedCrate, then the four
  *       members below in this order.
  *   _ZN11CrazedCrateD0Ev  the same four members destroyed in reverse,
@@ -25,7 +25,7 @@
  * shared dActor_c's names).
  *
  * mWithMeshClsn was mistyped `u8` at 0x180 in the generated header --
- * CrazedCrate_Spawn calls _ZN10dBgCh_ActrC1Ev at that offset, so it is the
+ * daBttBk_c_classInit calls _ZN10dBgCh_ActrC1Ev at that offset, so it is the
  * real 0x1bc-byte member (0x180..0x33c); the 0x38 bytes from 0x33c..0x374
  * are genuinely unevidenced padding.
  *
@@ -36,6 +36,11 @@
  * function), 18 (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot
  * holds the base's own word and is inherited, so it is deliberately not
  * redeclared here.
+ *
+ * SM64DS RTTI names the implementation daBttBk_c. The reconstructed
+ * factory daBttBk_c_classInit (historical alias
+ * CrazedCrate_Spawn) constructs it for the BATTA_BLOCK
+ * registry profile.
  */
 struct CrazedCrate : dActor_c {
     u8  pad_0d0[0x4];
@@ -48,9 +53,9 @@ struct CrazedCrate : dActor_c {
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x14c */
-    /* dBgCh_Actr member, named by CrazedCrate_Spawn's own C1 call and the
+    /* dBgCh_Actr member, named by daBttBk_c_classInit's own C1 call and the
        class's own destructor's D1 call at +0x180.
-       [CrazedCrate_Spawn.c, _ZN11CrazedCrateD0Ev.c] */
+       [daBttBk_c_classInit.c, _ZN11CrazedCrateD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x180 */
     u8  pad_33c[0x38];
     s32 unk_374;            /* 0x374 */

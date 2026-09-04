@@ -17,6 +17,11 @@
  * eight ROM PMF constants into data_ov072_02122c00. SetState indexes that table
  * at state * 0x10 and invokes the first PMF; Behavior invokes the second.
  * Descriptive original names are absent, so the ROM-evidenced indices remain.
+ *
+ * SM64DS RTTI names the implementation daBgSnmHed_c. The reconstructed
+ * factory daBgSnmHed_c_classInit (historical alias
+ * SnowmanHead_Spawn) constructs it for the BIG_SNOWMAN_HEAD
+ * registry profile.
  */
 struct SnowmanHead : dActor_c {
     u8 mPad0d0[0x4];                    /* 0x0d0 */

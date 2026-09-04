@@ -49,7 +49,7 @@ _ZN10KingBobOmb6RenderEv kind:function(arm,size=0x58) addr:0x021260ac
 _ZN10KingBobOmb8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
 _ZN10KingBobOmb13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
 _ZN10KingBobOmb16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
-KingBobOmb_Spawn kind:function(arm,size=0x64) addr:0x021265fc
+daBombking_c_classInit kind:function(arm,size=0x64) addr:0x021265fc
 __sinit_ov078_02126660 kind:function(arm,size=0x674) addr:0x02126660
 .p__sinit_ov078_02126660 kind:data(word) addr:0x02126cd4
 data_ov078_02126ce0 kind:data(any) addr:0x02126ce0
@@ -91,7 +91,7 @@ data_ov078_02126df8 kind:data(any) addr:0x02126df8
 data_ov078_02126e00 kind:data(any) addr:0x02126e00
 _ZTI12daBombking_c kind:data(any) addr:0x02126e0c
 _ZTS12daBombking_c kind:data(any) addr:0x02126e18
-KingBobOmb_SpawnInfo kind:data(any) addr:0x02126e28 ambiguous
+g_profile_BOMBKING kind:data(any) addr:0x02126e28 ambiguous
 _ZTV10KingBobOmb kind:data(any) addr:0x02126e4c
 _ZTV12daBombking_c kind:data(any) addr:0x02126e4c
 data_ov078_02126ee0 kind:bss addr:0x02126ee0

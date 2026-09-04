@@ -9,7 +9,7 @@
 
 /* TWO WITNESSES:
  *
- *   BabyPenguin_Spawn  fBase_c::operator new(880 = 0x370),
+ *   daPgBby_c_classInit  fBase_c::operator new(880 = 0x370),
  *       dActor_c::dActor_c(), stores _ZTV11BabyPenguin, then the four
  *       members below in this order.
  *   _ZN11BabyPenguinD0Ev  the same four members destroyed in reverse,
@@ -37,6 +37,11 @@
  * function), 18 (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot
  * holds the base's own word and is inherited, so it is deliberately not
  * redeclared here.
+ *
+ * SM64DS RTTI names the implementation daPgBby_c. The reconstructed
+ * factory daPgBby_c_classInit (historical alias
+ * BabyPenguin_Spawn) constructs it for the PENGUIN_BABY
+ * registry profile.
  */
 struct BabyPenguin : dActor_c {
     s32 mEatingPlayer;            /* 0x0d0 */

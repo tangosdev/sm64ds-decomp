@@ -20,6 +20,11 @@
  * that table at state * 0x10 and invokes the first PMF; Behavior invokes the
  * second. Descriptive original names are absent, so the ROM-evidenced indices
  * are retained.
+ *
+ * SM64DS RTTI names the implementation daBgSnmBdy_c. The reconstructed
+ * factory daBgSnmBdy_c_classInit (historical alias
+ * SnowmanBody_Spawn) constructs it for the BIG_SNOWMAN_BODY
+ * registry profile.
  */
 struct SnowmanBody : dActor_c {
     u8 mPad0d0[0x4];                    /* 0x0d0 */

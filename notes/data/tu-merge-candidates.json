@@ -528,9 +528,9 @@
     "src/_ZN8CccArena13InitResourcesEv.cpp",
     "src/func_ov073_02122730.c",
     "src/func_ov073_021227d0.c",
-    "src/CccSmallIce_Spawn.c",
-    "src/CccBigIce_Spawn.c",
-    "src/CccArena_Spawn.c"
+    "src/daObjEwbIce_c_classInit_EWB_ICE_C.c",
+    "src/daObjEwbIce_c_classInit_EWB_ICE_B.c",
+    "src/daObjEwbIce_c_classInit_EWB_ICE_A.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -605,7 +605,7 @@
     "src/_ZN7HeaveHo6RenderEv.cpp",
     "src/_ZN7HeaveHo8BehaviorEv.cpp",
     "src/_ZN7HeaveHo13InitResourcesEv.cpp",
-    "src/HeaveHo_Spawn.c"
+    "src/daPopoi_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -1263,7 +1263,7 @@
     "src/_ZN11CrazedCrate8BehaviorEv.cpp",
     "src/_ZN11CrazedCrate13InitResourcesEv.cpp",
     "src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp",
-    "src/CrazedCrate_Spawn.c"
+    "src/daBttBk_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -1334,7 +1334,7 @@
     "src/_ZN11SnowmanHead6RenderEv.cpp",
     "src/_ZN11SnowmanHead8BehaviorEv.cpp",
     "src/_ZN11SnowmanHead13InitResourcesEv.cpp",
-    "src/SnowmanHead_Spawn.c"
+    "src/daBgSnmHed_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -2050,7 +2050,7 @@
     "src/_ZN5Spiny8BehaviorEv.cpp",
     "src/_ZN5Spiny13InitResourcesEv.cpp",
     "src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
-    "src/Spiny_Spawn.c"
+    "src/daTgz_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -2548,7 +2548,7 @@
     "src/_ZN6Lakitu8BehaviorEv.cpp",
     "src/_ZN6Lakitu13InitResourcesEv.cpp",
     "src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp",
-    "src/Lakitu_Spawn.c"
+    "src/daJgm_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -3216,7 +3216,7 @@
     "src/_ZN12FortressWall6RenderEv.cpp",
     "src/_ZN12FortressWall8BehaviorEv.cpp",
     "src/_ZN12FortressWall13InitResourcesEv.cpp",
-    "src/FortressWall_Spawn.c"
+    "src/daObjBk_Kabe_c_classInit_BK_KABE01.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -4032,7 +4032,7 @@
     "src/_ZN11BillBlaster6RenderEv.cpp",
     "src/_ZN11BillBlaster8BehaviorEv.cpp",
     "src/_ZN11BillBlaster13InitResourcesEv.cpp",
-    "src/daObjBkKillerdai_c_classInit.c"
+    "src/d_a_obj_bk_killerdai.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -5608,7 +5608,7 @@
     "src/_ZN11SnowmanBody6RenderEv.cpp",
     "src/_ZN11SnowmanBody8BehaviorEv.cpp",
     "src/_ZN11SnowmanBody13InitResourcesEv.cpp",
-    "src/SnowmanBody_Spawn.c"
+    "src/daBgSnmBdy_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 13,
@@ -7172,8 +7172,8 @@
     "src/_ZN13MontyMoleRock8BehaviorEv.cpp",
     "src/_ZN9MontyMole13InitResourcesEv.cpp",
     "src/_ZN13MontyMoleRock13InitResourcesEv.cpp",
-    "src/MontyMoleRock_Spawn.c",
-    "src/MontyMole_Spawn.c"
+    "src/daChoro_Rock_c_classInit.c",
+    "src/daChoropu_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 16,
@@ -27821,7 +27821,7 @@
     "src/_ZN11BabyPenguin8BehaviorEv.cpp",
     "src/_ZN11BabyPenguin13InitResourcesEv.cpp",
     "src/_ZN11BabyPenguin13OnTurnIntoEggER6Player.cpp",
-    "src/BabyPenguin_Spawn.c"
+    "src/daPgBby_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 17,
@@ -27916,7 +27916,7 @@
     "src/_ZN11ChiefChilly8BehaviorEv.cpp",
     "src/_ZN11ChiefChilly13InitResourcesEv.cpp",
     "src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp",
-    "src/ChiefChilly_Spawn.cpp"
+    "src/daKing_Donketu_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -28023,8 +28023,8 @@
     "src/func_ov074_021222e0.cpp",
     "src/func_ov074_021223bc.cpp",
     "src/func_ov074_02122634.cpp",
-    "src/ExplosionGoomba_Spawn.cpp",
-    "src/Goomboss_Spawn.cpp"
+    "src/daKuriKing_c_classInit_KURIKING_VANISH.cpp",
+    "src/daKuriKing_c_classInit_KURIKING.cpp"
    ],
    "ext_mix": {
     ".cpp": 21,
@@ -28115,7 +28115,7 @@
     "src/_ZN14UnknownVsEntry6RenderEv.cpp",
     "src/_ZN14UnknownVsEntry8BehaviorEv.cpp",
     "src/_ZN14UnknownVsEntry13InitResourcesEv.cpp",
-    "src/UnknownVsEntry_Spawn.cpp",
+    "src/dEntObj_c_classInit.cpp",
     "src/func_ov075_02115a88.c",
     "src/func_ov075_0211ab38.c",
     "src/func_ov075_0211b3b8.c",
@@ -28303,10 +28303,10 @@
    "n_functions_map": 7,
    "n_files": 6,
    "files": [
-    "src/func_ov075_0211a740.c",
+    "src/dScEntry_c_classInit_RESULT.c",
     "src/func_ov075_0211a834.c",
     "src/func_ov075_0211a838.c",
-    "src/func_ov075_0211a854.c",
+    "src/dScEntry_c_classInit_ENTRY.c",
     "src/func_ov075_0211aa00.c",
     "src/func_ov075_0211aa94.c"
    ],
@@ -28467,7 +28467,7 @@
     "src/_ZN10KingBobOmb8BehaviorEv.cpp",
     "src/_ZN10KingBobOmb13InitResourcesEv.cpp",
     "src/_ZN10KingBobOmb16OnAimedAtWithEggEv.cpp",
-    "src/KingBobOmb_Spawn.c"
+    "src/daBombking_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 25,
@@ -28561,8 +28561,8 @@
     "src/_ZN5Whomp6RenderEv.cpp",
     "src/_ZN5Whomp8BehaviorEv.cpp",
     "src/_ZN5Whomp13InitResourcesEv.cpp",
-    "src/WhompKing_Spawn.c",
-    "src/Whomp_Spawn.c"
+    "src/daBtn_c_classInit_BATANKING.c",
+    "src/daBtn_c_classInit_BATAN.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -28628,7 +28628,7 @@
     "src/_ZN10BulletBill6RenderEv.cpp",
     "src/_ZN10BulletBill8BehaviorEv.cpp",
     "src/_ZN10BulletBill13InitResourcesEv.cpp",
-    "src/BulletBill_Spawn.c"
+    "src/daKlr_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -28708,7 +28708,7 @@
     "src/_ZN8Painting6RenderEv.cpp",
     "src/_ZN8Painting8BehaviorEv.cpp",
     "src/_ZN8Painting13InitResourcesEv.cpp",
-    "src/Painting_Spawn.c"
+    "src/daPicGate_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -36387,7 +36387,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/FortressWallBreakable_Spawn.c"
+    "src/daObjBk_Kabe_c_classInit_BK_KABE00.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37451,9 +37451,9 @@
     "src/_ZN8CccArena13InitResourcesEv.cpp",
     "src/func_ov073_02122730.c",
     "src/func_ov073_021227d0.c",
-    "src/CccSmallIce_Spawn.c",
-    "src/CccBigIce_Spawn.c",
-    "src/CccArena_Spawn.c"
+    "src/daObjEwbIce_c_classInit_EWB_ICE_C.c",
+    "src/daObjEwbIce_c_classInit_EWB_ICE_B.c",
+    "src/daObjEwbIce_c_classInit_EWB_ICE_A.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -37497,7 +37497,7 @@
     "src/_ZN7HeaveHo6RenderEv.cpp",
     "src/_ZN7HeaveHo8BehaviorEv.cpp",
     "src/_ZN7HeaveHo13InitResourcesEv.cpp",
-    "src/HeaveHo_Spawn.c"
+    "src/daPopoi_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -37894,7 +37894,7 @@
     "src/_ZN11CrazedCrate8BehaviorEv.cpp",
     "src/_ZN11CrazedCrate13InitResourcesEv.cpp",
     "src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp",
-    "src/CrazedCrate_Spawn.c"
+    "src/daBttBk_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -37936,7 +37936,7 @@
     "src/_ZN11SnowmanHead6RenderEv.cpp",
     "src/_ZN11SnowmanHead8BehaviorEv.cpp",
     "src/_ZN11SnowmanHead13InitResourcesEv.cpp",
-    "src/SnowmanHead_Spawn.c"
+    "src/daBgSnmHed_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 7,

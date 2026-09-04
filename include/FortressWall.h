@@ -12,6 +12,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjBk_Kabe_c. The reconstructed
+ * factory daObjBk_Kabe_c_classInit_BK_KABE01 (historical alias
+ * FortressWall_Spawn) constructs it for the BK_KABE01
+ * registry profile.
  */
 
 #ifdef __cplusplus

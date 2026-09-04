@@ -23,10 +23,15 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HeaveHo_Spawn` calls
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daPopoi_c_classInit` calls
  * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x428; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daPopoi_c. The reconstructed
+ * factory daPopoi_c_classInit (historical alias
+ * HeaveHo_Spawn) constructs it for the POPOI
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

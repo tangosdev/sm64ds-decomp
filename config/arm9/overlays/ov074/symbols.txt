@@ -51,8 +51,8 @@ func_ov074_0212229c kind:function(arm,size=0x44) addr:0x0212229c
 func_ov074_021222e0 kind:function(arm,size=0xdc) addr:0x021222e0
 func_ov074_021223bc kind:function(arm,size=0x278) addr:0x021223bc
 func_ov074_02122634 kind:function(arm,size=0x130) addr:0x02122634
-ExplosionGoomba_Spawn kind:function(arm,size=0xd4) addr:0x02122764
-Goomboss_Spawn kind:function(arm,size=0xd4) addr:0x02122838
+daKuriKing_c_classInit_KURIKING_VANISH kind:function(arm,size=0xd4) addr:0x02122764
+daKuriKing_c_classInit_KURIKING kind:function(arm,size=0xd4) addr:0x02122838
 data_ov074_0212290c kind:data(any) addr:0x0212290c
 data_ov074_0212291c kind:data(any) addr:0x0212291c
 data_ov074_0212292c kind:data(any) addr:0x0212292c
@@ -86,8 +86,8 @@ _ZTI12daKuriKing_c kind:data(any) addr:0x02122e30
 _ZTS12daKuriKing_c kind:data(any) addr:0x02122e3c
 data_ov074_02122e4c kind:data(any) addr:0x02122e4c
 data_ov074_02122e5c kind:data(any) addr:0x02122e5c
-Goomboss_SpawnInfo kind:data(any) addr:0x02122e78 ambiguous
-ExplosionGoomba_SpawnInfo kind:data(any) addr:0x02122e94 ambiguous
+g_profile_KURIKING kind:data(any) addr:0x02122e78 ambiguous
+g_profile_KURIKING_VANISH kind:data(any) addr:0x02122e94 ambiguous
 data_ov074_02122eb0 kind:data(any) addr:0x02122eb0 ambiguous
 _ZTV8Goomboss kind:data(any) addr:0x02122eb8
 data_ov074_02122f34 kind:data(any) addr:0x02122f34

@@ -10,6 +10,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daBombking_c. The reconstructed
+ * factory daBombking_c_classInit (historical alias
+ * KingBobOmb_Spawn) constructs it for the BOMBKING
+ * registry profile.
  */
 
 #ifdef __cplusplus

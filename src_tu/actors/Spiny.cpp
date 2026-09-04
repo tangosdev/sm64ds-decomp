@@ -40,14 +40,14 @@
  *   [30] 0x02125f68  src/_ZN5Spiny8BehaviorEv.cpp
  *   [31] 0x02126058  src/_ZN5Spiny13InitResourcesEv.cpp
  *   [32] 0x02126194  src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp
- *   [33] 0x021261f4  src/Spiny_Spawn.c
+ *   [33] 0x021261f4  src/daTgz_c_classInit.c
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- Spiny_Spawn, 0x021261f4, size 0x58 */
+/* ROM ordinal 33 -- daTgz_c_classInit, 0x021261f4, size 0x58 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol Spiny_Spawn
+// @symbol daTgz_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -59,7 +59,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV5Spiny */
-int *Spiny_Spawn(void)
+int *daTgz_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1004);
     if (p) {

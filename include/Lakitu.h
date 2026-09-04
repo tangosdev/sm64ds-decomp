@@ -12,7 +12,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Lakitu_Spawn  fBase_c::operator new(1056 = 0x420), dActor_c::dActor_c(), stores _ZTV6Lakitu,
+ *   daJgm_c_classInit  fBase_c::operator new(1056 = 0x420), dActor_c::dActor_c(), stores _ZTV6Lakitu,
  *                 then the six members below in this order.
  *   ~Lakitu       the same members destroyed in reverse, then ~dActor_c.
  *
@@ -21,6 +21,11 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov077). Only the
  * slots declared below differ; every other slot holds the base's own word and is inherited,
  * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daJgm_c. The reconstructed
+ * factory daJgm_c_classInit (historical alias
+ * Lakitu_Spawn) constructs it for the JUGEM
+ * registry profile.
  */
 struct Lakitu : dActor_c {
     u8  pad_0d0[0x4];

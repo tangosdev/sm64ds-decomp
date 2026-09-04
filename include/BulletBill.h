@@ -17,6 +17,11 @@
  *
  * unk_130 and unk_134 are gone: both fall inside the dCcAcPos_c
  * at 0x110 (+0x20 and +0x24).
+ *
+ * SM64DS RTTI names the implementation daKlr_c. The reconstructed
+ * factory daKlr_c_classInit (historical alias
+ * BulletBill_Spawn) constructs it for the KILLER
+ * registry profile.
  */
 
 #ifdef __cplusplus
@@ -36,7 +41,7 @@ struct BulletBill : dEnemyBase_c {
     s32 mState;            /* 0x3d4 */
     s32 unk_3d8;            /* 0x3d8 */
     /* Trailing remainder, 4 bytes. Every sub-object is typed and every field
-       the seven recovered functions touch ends at 0x3dc; BulletBill_Spawn
+       the seven recovered functions touch ends at 0x3dc; daKlr_c_classInit
        allocates 0x3e0. */
     u8  pad_3dc[0x4];
 
@@ -102,7 +107,7 @@ struct BulletBill {
     s32 mState;            /* 0x3d4 */
     s32 unk_3d8;            /* 0x3d8 */
     /* Trailing remainder, 4 bytes. Every sub-object is typed and every field
-       the seven recovered functions touch ends at 0x3dc; BulletBill_Spawn
+       the seven recovered functions touch ends at 0x3dc; daKlr_c_classInit
        allocates 0x3e0. */
     u8  pad_3dc[0x4];
 };

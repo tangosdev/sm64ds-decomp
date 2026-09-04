@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Painting_Spawn  fBase_c::operator new(444 = 0x1bc), dActor_c::dActor_c(), stores _ZTV8Painting,
+ *   daPicGate_c_classInit  fBase_c::operator new(444 = 0x1bc), dActor_c::dActor_c(), stores _ZTV8Painting,
  *                 then the members below in this order.
  *   ~Painting   the same members destroyed in reverse, then ~dActor_c.
  *
@@ -15,6 +15,11 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daPicGate_c. The reconstructed
+ * factory daPicGate_c_classInit (historical alias
+ * Painting_Spawn) constructs it for the PICTURE_GATE
+ * registry profile.
  */
 struct Painting : dActor_c {
     u8  pad_0d0[0xec];

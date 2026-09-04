@@ -26,6 +26,11 @@
  * destructor does not touch 0x3d8, and a Vector3 member would be destroyed there.
  *
  * Field provenance: notes/enemy-leaf-provenance.md.
+ *
+ * SM64DS RTTI names the implementation daKing_Donketu_c. The reconstructed
+ * factory daKing_Donketu_c_classInit (historical alias
+ * ChiefChilly_Spawn) constructs it for the KING_DONKETU
+ * registry profile.
  */
 
 #ifdef __cplusplus

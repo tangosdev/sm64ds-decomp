@@ -236,10 +236,10 @@
       "ordinal": 30
     },
     {
-      "symbol": "Lakitu_Spawn",
+      "symbol": "daJgm_c_classInit",
       "address": "0x02124b04",
       "size": "0x00000060",
-      "legacy_source": "src/Lakitu_Spawn.c",
+      "legacy_source": "src/daJgm_c_classInit.c",
       "ordinal": 31
     }
   ],

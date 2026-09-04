@@ -11,7 +11,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Spiny_Spawn  fBase_c::operator new(1004 = 0x3ec), dActor_c::dActor_c(), stores _ZTV5Spiny,
+ *   daTgz_c_classInit  fBase_c::operator new(1004 = 0x3ec), dActor_c::dActor_c(), stores _ZTV5Spiny,
  *                then the five members below in this order.
  *   ~Spiny       the same members destroyed in reverse, then ~dActor_c.
  *
@@ -20,6 +20,11 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov077). Only the
  * slots declared below differ; every other slot holds the base's own word and is inherited,
  * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daTgz_c. The reconstructed
+ * factory daTgz_c_classInit (historical alias
+ * Spiny_Spawn) constructs it for the TOGEZO
+ * registry profile.
  */
 struct Spiny : dActor_c {
     u8  pad_0d0[0x4];

@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN5WhompD1Ev` destroys each member, and
- * `Whomp_Spawn` constructs the same types at the same offsets before
+ * `daBtn_c_classInit_BATAN` constructs the same types at the same offsets before
  * storing `_ZTV5Whomp`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -24,9 +24,14 @@
  *
  * Field provenance: notes/enemy-leaf-provenance.md.
  *
- * SIZE IS THE ROM'S OWN: `Whomp_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daBtn_c_classInit_BATAN` calls
  * `fBase_c::operator new(1552)` -- 0x610 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daBtn_c. The reconstructed
+ * factory daBtn_c_classInit_BATAN (historical alias
+ * Whomp_Spawn) constructs it for the BATAN
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

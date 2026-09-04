@@ -1,6 +1,6 @@
 /* class CccArena : dBgActor_c. Real C++ form.
  *
- * Base and size from the factory (src/CccArena_Spawn.c):
+ * Base and size from the factory (src/daObjEwbIce_c_classInit_EWB_ICE_A.c):
  * fBase_c::operator new(828) -- 0x33c -- then dBgActor_c::dBgActor_c(),
  * then stores _ZTV8CccArena. No intermediate: the destructor stores only
  * its own vptr and dBgActor_c's, with zero extra member-destructor calls
@@ -10,6 +10,11 @@
  * dBgActor_c ends at 0x320; CccArena adds 0x1c more bytes, closing exactly
  * on 0x33c (the operator new literal), matching the old AUTO-GENERATED
  * header's own field span -- kept as-is, just re-parented.
+ *
+ * SM64DS RTTI names the implementation daObjEwbIce_c. The reconstructed
+ * factory daObjEwbIce_c_classInit_EWB_ICE_A (historical alias
+ * CccArena_Spawn) constructs it for the EWB_ICE_A
+ * registry profile.
  */
 #ifndef CCCARENA_H
 #define CCCARENA_H

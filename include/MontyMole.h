@@ -7,7 +7,7 @@
 
 /* TWO WITNESSES:
  *
- *   MontyMole_Spawn  fBase_c::operator new(396 = 0x18c),
+ *   daChoropu_c_classInit  fBase_c::operator new(396 = 0x18c),
  *       dActor_c::dActor_c(), stores _ZTV9MontyMole, then the two members
  *       below in this order.
  *   _ZN9MontyMoleD0Ev  the same two members destroyed in reverse, then
@@ -27,6 +27,11 @@
  * dActor_c -- plus slot 29 (OnAimedAtWithEgg). Every other slot holds the
  * base's own word and is inherited, so it is deliberately not redeclared
  * here.
+ *
+ * SM64DS RTTI names the implementation daChoropu_c. The reconstructed
+ * factory daChoropu_c_classInit (historical alias
+ * MontyMole_Spawn) constructs it for the CHOROPU
+ * registry profile.
  */
 struct MontyMole : dActor_c {
     u8  pad_0d0[0x4];

@@ -32,8 +32,8 @@ _ZN5Whomp16CleanupResourcesEv kind:function(arm,size=0xc8) addr:0x02125eb0
 _ZN5Whomp6RenderEv kind:function(arm,size=0x54) addr:0x02125f78
 _ZN5Whomp8BehaviorEv kind:function(arm,size=0x198) addr:0x02125fcc
 _ZN5Whomp13InitResourcesEv kind:function(arm,size=0x424) addr:0x02126164
-WhompKing_Spawn kind:function(arm,size=0x60) addr:0x02126588
-Whomp_Spawn kind:function(arm,size=0x60) addr:0x021265e8
+daBtn_c_classInit_BATANKING kind:function(arm,size=0x60) addr:0x02126588
+daBtn_c_classInit_BATAN kind:function(arm,size=0x60) addr:0x021265e8
 _ZN10BulletBillD1Ev kind:function(arm,size=0x50) addr:0x02126648
 _ZN10BulletBillD0Ev kind:function(arm,size=0x64) addr:0x02126698
 _ZN10BulletBill16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021266fc
@@ -44,7 +44,7 @@ _ZN10BulletBill16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02126a18
 _ZN10BulletBill6RenderEv kind:function(arm,size=0x3c) addr:0x02126a48
 _ZN10BulletBill8BehaviorEv kind:function(arm,size=0x1c0) addr:0x02126a84
 _ZN10BulletBill13InitResourcesEv kind:function(arm,size=0x120) addr:0x02126c44
-BulletBill_Spawn kind:function(arm,size=0x58) addr:0x02126d64
+daKlr_c_classInit kind:function(arm,size=0x58) addr:0x02126d64
 _ZN11BillBlasterD1Ev kind:function(arm,size=0x44) addr:0x02126dbc
 _ZN11BillBlasterD0Ev kind:function(arm,size=0x58) addr:0x02126e00
 _ZN11BillBlaster4KillEv kind:function(arm,size=0x74) addr:0x02126e58
@@ -62,8 +62,8 @@ _ZN12FortressWall16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021273
 _ZN12FortressWall6RenderEv kind:function(arm,size=0x40) addr:0x02127364
 _ZN12FortressWall8BehaviorEv kind:function(arm,size=0xf0) addr:0x021273a4
 _ZN12FortressWall13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02127494
-FortressWall_Spawn kind:function(arm,size=0x30) addr:0x0212757c
-FortressWallBreakable_Spawn kind:function(arm,size=0x30) addr:0x021275ac
+daObjBk_Kabe_c_classInit_BK_KABE01 kind:function(arm,size=0x30) addr:0x0212757c
+daObjBk_Kabe_c_classInit_BK_KABE00 kind:function(arm,size=0x30) addr:0x021275ac
 data_ov079_021275dc kind:data(any) addr:0x021275dc
 data_ov079_021275e4 kind:data(any) addr:0x021275e4
 data_ov079_021275ec kind:data(any) addr:0x021275ec
@@ -92,8 +92,8 @@ data_ov079_02127c18 kind:data(any) addr:0x02127c18
 data_ov079_02127c20 kind:data(any) addr:0x02127c20
 _ZTS7daBtn_c kind:data(any) addr:0x02127c28
 _ZTI7daBtn_c kind:data(any) addr:0x02127c34
-WhompKing_SpawnInfo kind:data(any) addr:0x02127c40 ambiguous
-Whomp_SpawnInfo kind:data(any) addr:0x02127c5c ambiguous
+g_profile_BATANKING kind:data(any) addr:0x02127c40 ambiguous
+g_profile_BATAN kind:data(any) addr:0x02127c5c ambiguous
 _ZTV5Whomp kind:data(any) addr:0x02127c80
 data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
@@ -101,7 +101,7 @@ data_ov079_02127e9c kind:data(any) addr:0x02127e9c
 data_ov079_02127ea4 kind:data(any) addr:0x02127ea4
 _ZTS7daKlr_c kind:data(any) addr:0x02127eac
 _ZTI7daKlr_c kind:data(any) addr:0x02127eb8
-BulletBill_SpawnInfo kind:data(any) addr:0x02127ec4
+g_profile_KILLER kind:data(any) addr:0x02127ec4
 _ZTV10BulletBill kind:data(any) addr:0x02127ee8
 _ZTV7daKlr_c kind:data(any) addr:0x02127ee8
 data_ov079_02127f64 kind:data(any) addr:0x02127f64
@@ -116,8 +116,8 @@ _ZTS14daObjBk_Kabe_c kind:data(any) addr:0x02128044
 data_ov079_02128058 kind:data(any) addr:0x02128058
 data_ov079_0212805c kind:data(any) addr:0x0212805c
 data_ov079_02128060 kind:data(any) addr:0x02128060
-FortressWallBreakable_SpawnInfo kind:data(any) addr:0x02128070 ambiguous
-FortressWall_SpawnInfo kind:data(any) addr:0x0212808c ambiguous
+g_profile_BK_KABE00 kind:data(any) addr:0x02128070 ambiguous
+g_profile_BK_KABE01 kind:data(any) addr:0x0212808c ambiguous
 _ZTV12FortressWall kind:data(any) addr:0x021280b0
 data_ov079_02128140 kind:bss addr:0x02128140
 data_ov079_02128148 kind:bss addr:0x02128148

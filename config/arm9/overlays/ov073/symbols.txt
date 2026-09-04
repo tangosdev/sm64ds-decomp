@@ -44,7 +44,7 @@ _ZN11ChiefChilly6RenderEv kind:function(arm,size=0x30) addr:0x02121870
 _ZN11ChiefChilly8BehaviorEv kind:function(arm,size=0x42c) addr:0x021218a0
 _ZN11ChiefChilly13InitResourcesEv kind:function(arm,size=0x1f4) addr:0x02121ccc
 _ZN11ChiefChilly16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02121ec0
-ChiefChilly_Spawn kind:function(arm,size=0xc8) addr:0x02121ec8
+daKing_Donketu_c_classInit kind:function(arm,size=0xc8) addr:0x02121ec8
 _ZN8CccArenaD1Ev kind:function(arm,size=0x44) addr:0x02121f90
 _ZN8CccArenaD0Ev kind:function(arm,size=0x58) addr:0x02121fd4
 func_ov073_0212202c kind:function(arm,size=0x8) addr:0x0212202c
@@ -63,9 +63,9 @@ _ZN8CccArena8BehaviorEv kind:function(arm,size=0x88) addr:0x021224f0
 _ZN8CccArena13InitResourcesEv kind:function(arm,size=0x1b8) addr:0x02122578
 func_ov073_02122730 kind:function(arm,size=0xa0) addr:0x02122730
 func_ov073_021227d0 kind:function(arm,size=0x14) addr:0x021227d0
-CccSmallIce_Spawn kind:function(arm,size=0x30) addr:0x021227e4
-CccBigIce_Spawn kind:function(arm,size=0x30) addr:0x02122814
-CccArena_Spawn kind:function(arm,size=0x30) addr:0x02122844
+daObjEwbIce_c_classInit_EWB_ICE_C kind:function(arm,size=0x30) addr:0x021227e4
+daObjEwbIce_c_classInit_EWB_ICE_B kind:function(arm,size=0x30) addr:0x02122814
+daObjEwbIce_c_classInit_EWB_ICE_A kind:function(arm,size=0x30) addr:0x02122844
 __sinit_ov073_02122874 kind:function(arm,size=0x4d4) addr:0x02122874
 __sinit_ov073_02122d48 kind:function(arm,size=0x1ec) addr:0x02122d48
 .p__sinit_ov073_02122874 kind:data(word) addr:0x02122f34
@@ -105,7 +105,7 @@ data_ov073_02123038 kind:data(any) addr:0x02123038
 data_ov073_02123040 kind:data(any) addr:0x02123040
 _ZTI16daKing_Donketu_c kind:data(any) addr:0x0212304c
 _ZTS16daKing_Donketu_c kind:data(any) addr:0x02123058
-ChiefChilly_SpawnInfo kind:data(any) addr:0x0212306c ambiguous
+g_profile_KING_DONKETU kind:data(any) addr:0x0212306c ambiguous
 _ZTV11ChiefChilly kind:data(any) addr:0x02123090
 data_ov073_0212310c kind:data(any) addr:0x0212310c
 data_ov073_02123114 kind:data(any) addr:0x02123114
@@ -117,9 +117,9 @@ data_ov073_0212313c kind:data(any) addr:0x0212313c
 data_ov073_02123144 kind:data(any) addr:0x02123144
 _ZTI13daObjEwbIce_c kind:data(any) addr:0x0212314c
 _ZTS13daObjEwbIce_c kind:data(any) addr:0x02123158
-CccArena_SpawnInfo kind:data(any) addr:0x02123168 ambiguous
-CccBigIce_SpawnInfo kind:data(any) addr:0x02123184 ambiguous
-CccSmallIce_SpawnInfo kind:data(any) addr:0x021231a0 ambiguous
+g_profile_EWB_ICE_A kind:data(any) addr:0x02123168 ambiguous
+g_profile_EWB_ICE_B kind:data(any) addr:0x02123184 ambiguous
+g_profile_EWB_ICE_C kind:data(any) addr:0x021231a0 ambiguous
 data_ov073_021231bc kind:data(any) addr:0x021231bc
 data_ov073_021231c0 kind:data(any) addr:0x021231c0
 data_ov073_021231c4 kind:data(any) addr:0x021231c4
