@@ -39,6 +39,15 @@
  */
 #ifndef DACHSCENE_C_H
 #define DACHSCENE_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daChScene_c -- daChScene_c_classInit (was daChScene_c_Spawn),
+ *       g_profile_CH_SCENE (was daChScene_c_SpawnInfo)
+ */
 #include "types.h"
 #include "math/Matrix.h"
 

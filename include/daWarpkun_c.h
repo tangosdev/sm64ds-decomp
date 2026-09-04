@@ -1,13 +1,22 @@
 #ifndef DAWARPKUN_C_H
 #define DAWARPKUN_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daWarpkun_c -- daWarpkun_c_classInit (was daWarpkun_c_Spawn),
+ *       g_profile_WARPKUN (was daWarpkun_c_SpawnInfo)
+ */
+
 #include "types.h"
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   daWarpkun_c_Spawn  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(), stores _ZTV11daWarpkun_c,
+ *   daWarpkun_c_classInit  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(), stores _ZTV11daWarpkun_c,
  *                 then the member below in this order.
  *   ~daWarpkun_c   the same member destroyed in reverse, then ~dActor_c.
  *

@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjWakame_c_Spawn",
+      "symbol": "daObjWakame_c_classInit",
       "address": "0x020bc5a8",
       "size": "0x00000038",
       "legacy_source": "src/daObjWakame_c_Spawn.c",

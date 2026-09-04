@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daChRoom_c_Spawn",
+      "symbol": "daChRoom_c_classInit",
       "address": "0x020b0980",
       "size": "0x00000030",
       "legacy_source": "src/daChRoom_c_Spawn.c",

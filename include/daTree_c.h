@@ -12,7 +12,7 @@
  * InitResources, CleanupResources, Render and OnPendingDestroy are real
  * compiler-spelled daTree_c methods in src/actors/d_a_tree.cpp; the destructor
  * pair is compiler-generated from the inline definition below. Behavior stays a
- * hand-written free function under its own mangled ROM name, and Tree_Spawn
+ * hand-written free function under its own mangled ROM name, and daTree_c_classInit
  * under its unmangled one, because neither body references a named daTree_c
  * member. InitResources also keeps one low-level extern-C declaration for
  * dCcPos_c::Init: its ROM name carries by-value Fix12 parameters whose honest
@@ -36,6 +36,15 @@
  */
 #ifndef DATREE_C_H
 #define DATREE_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daTree_c -- daTree_c_classInit (was Tree_Spawn),
+ *       g_profile_TREE (was Tree_SpawnInfo)
+ */
 #include "types.h"
 #include "dActor_c.h"
 #include "Model.h"

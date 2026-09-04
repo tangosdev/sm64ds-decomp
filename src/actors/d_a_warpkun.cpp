@@ -73,14 +73,18 @@ extern int _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, Fix12i, Fix
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daWarpkun_c_Spawn, 0x020ec534, size 0x38 */
+/* ROM ordinal 7 -- daWarpkun_c_classInit, 0x020ec534, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol daWarpkun_c_Spawn
+// @symbol daWarpkun_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV11daWarpkun_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daWarpkun_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daWarpkun_c through RTTI,
+ * allocation size, vtable identity, and the WARPKUN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daWarpkun_c_Spawn. */
+int *daWarpkun_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(264);
     if (p) {

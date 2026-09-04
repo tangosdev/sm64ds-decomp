@@ -85,7 +85,7 @@ _ZN10daCamTag_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020b07ac
 _ZN10daCamTag_c6RenderEv kind:function(arm,size=0x8) addr:0x020b07b0
 _ZN10daCamTag_c8BehaviorEv kind:function(arm,size=0x8) addr:0x020b07b8
 _ZN10daCamTag_c13InitResourcesEv kind:function(arm,size=0x8) addr:0x020b07c0
-daCamTag_c_Spawn kind:function(arm,size=0x30) addr:0x020b07c8
+daCamTag_c_classInit kind:function(arm,size=0x30) addr:0x020b07c8
 _ZN10daChRoom_cD1Ev kind:function(arm,size=0x24) addr:0x020b07f8
 _ZN10daChRoom_cD0Ev kind:function(arm,size=0x38) addr:0x020b081c
 _ZN10daChRoom_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020b0854
@@ -93,7 +93,7 @@ _ZN10daChRoom_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020b085c
 _ZN10daChRoom_c6RenderEv kind:function(arm,size=0x8) addr:0x020b0860
 _ZN10daChRoom_c8BehaviorEv kind:function(arm,size=0xd0) addr:0x020b0868
 _ZN10daChRoom_c13InitResourcesEv kind:function(arm,size=0x48) addr:0x020b0938
-daChRoom_c_Spawn kind:function(arm,size=0x30) addr:0x020b0980
+daChRoom_c_classInit kind:function(arm,size=0x30) addr:0x020b0980
 _ZN11daChScene_cD1Ev kind:function(arm,size=0x24) addr:0x020b09b0
 _ZN11daChScene_cD0Ev kind:function(arm,size=0x38) addr:0x020b09d4
 func_ov002_020b0a0c kind:function(arm,size=0x64) addr:0x020b0a0c
@@ -102,7 +102,7 @@ _ZN11daChScene_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020b0a78
 _ZN11daChScene_c6RenderEv kind:function(arm,size=0x8) addr:0x020b0a7c
 _ZN11daChScene_c8BehaviorEv kind:function(arm,size=0x304) addr:0x020b0a84
 _ZN11daChScene_c13InitResourcesEv kind:function(arm,size=0x19c) addr:0x020b0d88
-daChScene_c_Spawn kind:function(arm,size=0x30) addr:0x020b0f24
+daChScene_c_classInit kind:function(arm,size=0x30) addr:0x020b0f24
 _ZN4CoinD1Ev kind:function(arm,size=0x50) addr:0x020b0f54
 _ZN4CoinD0Ev kind:function(arm,size=0x64) addr:0x020b0fa4
 func_ov002_020b1008 kind:function(arm,size=0x98) addr:0x020b1008
@@ -398,7 +398,7 @@ _ZN13daObjWakame_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x020bc
 _ZN13daObjWakame_c6RenderEv kind:function(arm,size=0x28) addr:0x020bc4f8
 _ZN13daObjWakame_c8BehaviorEv kind:function(arm,size=0x20) addr:0x020bc520
 _ZN13daObjWakame_c13InitResourcesEv kind:function(arm,size=0x68) addr:0x020bc540
-daObjWakame_c_Spawn kind:function(arm,size=0x38) addr:0x020bc5a8
+daObjWakame_c_classInit kind:function(arm,size=0x38) addr:0x020bc5a8
 _ZN12HealingHeartD1Ev kind:function(arm,size=0x38) addr:0x020bc5e0
 _ZN12HealingHeartD0Ev kind:function(arm,size=0x4c) addr:0x020bc618
 func_ov002_020bc664 kind:function(arm,size=0x40) addr:0x020bc664
@@ -1127,7 +1127,7 @@ _ZN8daTree_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ec0a0
 _ZN8daTree_c6RenderEv kind:function(arm,size=0x134) addr:0x020ec0a4
 _ZN8daTree_c8BehaviorEv kind:function(arm,size=0x54) addr:0x020ec1d8
 _ZN8daTree_c13InitResourcesEv kind:function(arm,size=0x100) addr:0x020ec22c
-Tree_Spawn kind:function(arm,size=0x5c) addr:0x020ec32c
+daTree_c_classInit kind:function(arm,size=0x5c) addr:0x020ec32c
 _ZN11daWarpkun_cD1Ev kind:function(arm,size=0x30) addr:0x020ec388
 _ZN11daWarpkun_cD0Ev kind:function(arm,size=0x44) addr:0x020ec3b8
 _ZN11daWarpkun_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020ec3fc
@@ -1135,7 +1135,7 @@ _ZN11daWarpkun_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ec404
 _ZN11daWarpkun_c6RenderEv kind:function(arm,size=0x8) addr:0x020ec408
 _ZN11daWarpkun_c8BehaviorEv kind:function(arm,size=0xb4) addr:0x020ec410
 _ZN11daWarpkun_c13InitResourcesEv kind:function(arm,size=0x70) addr:0x020ec4c4
-daWarpkun_c_Spawn kind:function(arm,size=0x38) addr:0x020ec534
+daWarpkun_c_classInit kind:function(arm,size=0x38) addr:0x020ec534
 _ZN8YoshiEggD1Ev kind:function(arm,size=0x48) addr:0x020ec56c
 _ZN8YoshiEggD0Ev kind:function(arm,size=0x5c) addr:0x020ec5b4
 func_ov002_020ec610 kind:function(arm,size=0x18) addr:0x020ec610
@@ -1268,7 +1268,7 @@ _ZN9daSetSE_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020f19f0
 _ZN9daSetSE_c6RenderEv kind:function(arm,size=0x8) addr:0x020f19f4
 _ZN9daSetSE_c8BehaviorEv kind:function(arm,size=0xc8) addr:0x020f19fc
 _ZN9daSetSE_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x020f1ac4
-daSetSE_c_Spawn kind:function(arm,size=0x30) addr:0x020f1b94
+daSetSE_c_classInit kind:function(arm,size=0x30) addr:0x020f1b94
 _ZN8MugenBgmD1Ev kind:function(arm,size=0x24) addr:0x020f1bc4
 _ZN8MugenBgmD0Ev kind:function(arm,size=0x38) addr:0x020f1be8
 func_ov002_020f1c20 kind:function(arm,size=0x30) addr:0x020f1c20
@@ -1442,7 +1442,7 @@ func_ov002_020f93a8 kind:function(arm,size=0xc0) addr:0x020f93a8
 func_ov002_020f9468 kind:function(arm,size=0x94) addr:0x020f9468
 _ZN12daSoundObj_c8BehaviorEv kind:function(arm,size=0xe4) addr:0x020f94fc
 _ZN12daSoundObj_c13InitResourcesEv kind:function(arm,size=0x14c) addr:0x020f95e0
-daSoundObj_c_Spawn kind:function(arm,size=0x30) addr:0x020f972c
+daSoundObj_c_classInit kind:function(arm,size=0x30) addr:0x020f972c
 _ZN7MinimapD1Ev kind:function(arm,size=0x30) addr:0x020f975c
 _ZN7MinimapD0Ev kind:function(arm,size=0x44) addr:0x020f978c
 _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3 kind:function(arm,size=0x1d8) addr:0x020f97d0
@@ -1698,15 +1698,15 @@ g_profile_BAR kind:data(any) addr:0x0210845c
 _ZTV7daBar_c kind:data(any) addr:0x02108480
 _ZTI10daCamTag_c kind:data(any) addr:0x021084fc
 _ZTS10daCamTag_c kind:data(any) addr:0x02108508
-daCamTag_c_SpawnInfo kind:data(any) addr:0x02108518
+g_profile_CAMERA_TAG kind:data(any) addr:0x02108518
 _ZTV10daCamTag_c kind:data(any) addr:0x0210853c
 _ZTI10daChRoom_c kind:data(any) addr:0x021085b8
 _ZTS10daChRoom_c kind:data(any) addr:0x021085c4
-daChRoom_c_SpawnInfo kind:data(any) addr:0x021085d4
+g_profile_CH_ROOM kind:data(any) addr:0x021085d4
 _ZTV10daChRoom_c kind:data(any) addr:0x021085f8
 _ZTI11daChScene_c kind:data(any) addr:0x02108674
 _ZTS11daChScene_c kind:data(any) addr:0x02108680
-daChScene_c_SpawnInfo kind:data(any) addr:0x02108690
+g_profile_CH_SCENE kind:data(any) addr:0x02108690
 _ZTV11daChScene_c kind:data(any) addr:0x021086b4
 data_ov002_02108730 kind:data(any) addr:0x02108730
 data_ov002_02108738 kind:data(any) addr:0x02108738
@@ -1883,7 +1883,7 @@ _ZTV8SignPost kind:data(any) addr:0x02109af8
 _ZTV15daObjTatefuda_c kind:data(any) addr:0x02109af8
 _ZTI13daObjWakame_c kind:data(any) addr:0x02109b78
 _ZTS13daObjWakame_c kind:data(any) addr:0x02109b84
-daObjWakame_c_SpawnInfo kind:data(any) addr:0x02109b94
+g_profile_WAKAME kind:data(any) addr:0x02109b94
 _ZTV13daObjWakame_c kind:data(any) addr:0x02109bb8
 _ZTI12daObjHeart_c kind:data(any) addr:0x02109c34
 _ZTS12daObjHeart_c kind:data(any) addr:0x02109c40
@@ -2205,11 +2205,11 @@ _ZTV8daStar_c kind:data(any) addr:0x0210ab3c
 data_ov002_0210abb8 kind:data(any) addr:0x0210abb8
 _ZTS8daTree_c kind:data(any) addr:0x0210abc4
 _ZTI8daTree_c kind:data(any) addr:0x0210abd0
-Tree_SpawnInfo kind:data(any) addr:0x0210abdc
+g_profile_TREE kind:data(any) addr:0x0210abdc
 _ZTV8daTree_c kind:data(any) addr:0x0210ac00
 _ZTI11daWarpkun_c kind:data(any) addr:0x0210ac7c
 _ZTS11daWarpkun_c kind:data(any) addr:0x0210ac88
-daWarpkun_c_SpawnInfo kind:data(any) addr:0x0210ac98
+g_profile_WARPKUN kind:data(any) addr:0x0210ac98
 _ZTV11daWarpkun_c kind:data(any) addr:0x0210acbc
 data_ov002_0210ad38 kind:data(any) addr:0x0210ad38
 data_ov002_0210ad40 kind:data(any) addr:0x0210ad40
@@ -2269,7 +2269,7 @@ _ZTV14EnemySwitchTag kind:data(any) addr:0x0210b3e8
 _ZTV11daESwitch_c kind:data(any) addr:0x0210b3e8
 _ZTS9daSetSE_c kind:data(any) addr:0x0210b464
 _ZTI9daSetSE_c kind:data(any) addr:0x0210b470
-daSetSE_c_SpawnInfo kind:data(any) addr:0x0210b47c
+g_profile_SET_SE kind:data(any) addr:0x0210b47c
 data_ov002_0210b498 kind:data(any) addr:0x0210b498
 _ZTV9daSetSE_c kind:data(any) addr:0x0210b4c8
 _ZTI12daMugenBGM_c kind:data(any) addr:0x0210b544
@@ -2442,7 +2442,7 @@ data_ov002_0210c038 kind:data(any) addr:0x0210c038
 data_ov002_0210c040 kind:data(any) addr:0x0210c040
 _ZTI12daSoundObj_c kind:data(any) addr:0x0210c048
 _ZTS12daSoundObj_c kind:data(any) addr:0x0210c054
-daSoundObj_c_SpawnInfo kind:data(any) addr:0x0210c064
+g_profile_SOUND_OBJ kind:data(any) addr:0x0210c064
 data_ov002_0210c080 kind:data(any) addr:0x0210c080
 data_ov002_0210c084 kind:data(any) addr:0x0210c084
 data_ov002_0210c088 kind:data(any) addr:0x0210c088

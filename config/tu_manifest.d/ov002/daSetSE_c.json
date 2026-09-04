@@ -69,7 +69,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daSetSE_c_Spawn",
+      "symbol": "daSetSE_c_classInit",
       "address": "0x020f1b94",
       "size": "0x00000030",
       "legacy_source": "src/daSetSE_c_Spawn.c",

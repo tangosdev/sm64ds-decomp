@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daSoundObj_c_Spawn",
+      "symbol": "daSoundObj_c_classInit",
       "address": "0x020f972c",
       "size": "0x00000030",
       "legacy_source": "src/daSoundObj_c_Spawn.c",

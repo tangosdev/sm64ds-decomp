@@ -58,14 +58,18 @@ extern void *data_020a0eac;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daCamTag_c_Spawn, 0x020b07c8, size 0x30 */
+/* ROM ordinal 7 -- daCamTag_c_classInit, 0x020b07c8, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daCamTag_c_Spawn
+// @symbol daCamTag_c_classInit
 /* recovered: globals resolved, declarations from a shared header */
 /* recovered: globals resolved */
 /* resolved: VT = _ZTV10daCamTag_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daCamTag_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daCamTag_c through RTTI,
+ * allocation size, vtable identity, and the CAMERA_TAG registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daCamTag_c_Spawn. */
+int *daCamTag_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(sizeof(struct daCamTag_c));
     if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV10daCamTag_c + 2); }

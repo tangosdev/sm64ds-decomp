@@ -2,7 +2,7 @@
  * class daCamTag_c, ov002 0x020b0748-0x020b07f8 (8 functions, no other class
  * in the TU -- tu_map.py). That range is the entry's licensed `complete`
  * delinks span and it is exact: the eight functions chain contiguously from
- * 0x020b0748 up to daCamTag_c_Spawn at 0x020b07c8 + 0x30. An earlier version
+ * 0x020b0748 up to daCamTag_c_classInit at 0x020b07c8 + 0x30. An earlier version
  * of this line said 0x020b0710-0x020b07c8, which started one function too
  * early -- 0x020b0710 is InvisiblePole_Spawn, the same off-by-one factory
  * that produced the retracted layout described below.
@@ -13,13 +13,13 @@
  * dActor_c and nothing more functionally, marking a position other code
  * queries.
  *
- * SIZE 0xd4 (212), tools/opnew_sizes.py's own literal from daCamTag_c_Spawn's
+ * SIZE 0xd4 (212), tools/opnew_sizes.py's own literal from daCamTag_c_classInit's
  * `operator new` call -- independent ROM evidence, not the header's own
  * sizeof() echoed back. dActor_c itself is 0xd0 (include/dActor_c.h), so
  * daCamTag_c adds exactly FOUR bytes on top of it: one unknown/unused field,
  * not zero as an earlier version of this header claimed.
  *
- *   daCamTag_c_Spawn  0x020b07c8  new(212 == 0xd4), dActor_c::dActor_c(),
+ *   daCamTag_c_classInit  0x020b07c8  new(212 == 0xd4), dActor_c::dActor_c(),
  *                                stores _ZTV10daCamTag_c.
  *
  * THIS HEADER USED TO SAY 0x108, with a dCcAc_c at 0xd4. That was
@@ -56,6 +56,15 @@
  */
 #ifndef DACAMTAG_C_H
 #define DACAMTAG_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daCamTag_c -- daCamTag_c_classInit (was daCamTag_c_Spawn),
+ *       g_profile_CAMERA_TAG (was daCamTag_c_SpawnInfo)
+ */
 #include "types.h"
 
 #ifdef __cplusplus

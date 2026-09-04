@@ -1,6 +1,15 @@
 #ifndef DAOBJWAKAME_C_H
 #define DAOBJWAKAME_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjWakame_c -- daObjWakame_c_classInit (was daObjWakame_c_Spawn),
+ *       g_profile_WAKAME (was daObjWakame_c_SpawnInfo)
+ */
+
 #include "types.h"
 #include "dActor_c.h"
 #include "ModelAnim.h"
@@ -11,7 +20,7 @@
  * THE SIZE HAS TWO WITNESSES AND THEY CLOSE ON EACH OTHER, which is the whole
  * reason this layout can be stated flatly rather than hedged.
  *
- *   SIZE 0x138 is daObjWakame_c_Spawn's own literal: `mov r0, #312` into
+ *   SIZE 0x138 is daObjWakame_c_classInit's own literal: `mov r0, #312` into
  *   fBase_c::operator new. The factory then runs dActor_c's constructor, stores
  *   the vptr, and constructs ONE member, at this+0xd4.
  *

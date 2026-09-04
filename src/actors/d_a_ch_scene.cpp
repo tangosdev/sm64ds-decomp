@@ -137,14 +137,18 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
  * Behavior's. */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- daChScene_c_Spawn, 0x020b0f24, size 0x30 */
+/* ROM ordinal 8 -- daChScene_c_classInit, 0x020b0f24, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daChScene_c_Spawn
+// @symbol daChScene_c_classInit
 /* recovered: globals resolved, declarations from a shared header */
 /* recovered: globals resolved */
 /* resolved: VT = _ZTV11daChScene_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daChScene_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daChScene_c through RTTI,
+ * allocation size, vtable identity, and the CH_SCENE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daChScene_c_Spawn. */
+int *daChScene_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(sizeof(daChScene_c));
     if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV11daChScene_c + 2); }

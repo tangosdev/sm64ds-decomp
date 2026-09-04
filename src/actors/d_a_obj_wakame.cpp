@@ -58,12 +58,16 @@ extern int   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *, void *, int, in
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjWakame_c_Spawn, 0x020bc5a8, size 0x38 */
+/* ROM ordinal 7 -- daObjWakame_c_classInit, 0x020bc5a8, size 0x38 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* The +2 addend is the vtable ADDRESS POINT: _ZTV names the record's start and
    the object stores a pointer eight bytes in, past {offset-to-top, _ZTI}. */
-int *daObjWakame_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjWakame_c through RTTI,
+ * allocation size, vtable identity, and the WAKAME registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjWakame_c_Spawn. */
+int *daObjWakame_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(312);
     if (p) {

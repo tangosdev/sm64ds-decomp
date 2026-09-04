@@ -1,6 +1,15 @@
 #ifndef DASOUNDOBJ_C_H
 #define DASOUNDOBJ_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daSoundObj_c -- daSoundObj_c_classInit (was daSoundObj_c_Spawn),
+ *       g_profile_SOUND_OBJ (was daSoundObj_c_SpawnInfo)
+ */
+
 #include "types.h"
 #include "dActor_c.h"
 
@@ -8,7 +17,7 @@
  * witnesses -- worth stating plainly, because this class initializes nothing in
  * its factory and destroys nothing in its destructor.
  *
- *   SIZE 0xe4 is daSoundObj_c_Spawn's own literal: `mov r0, #0xe4` into
+ *   SIZE 0xe4 is daSoundObj_c_classInit's own literal: `mov r0, #0xe4` into
  *   fBase_c::operator new. All twelve words of that 0x30-byte function are new,
  *   the dActor_c base constructor, the vptr store and the return -- it touches
  *   no member of its own. `~daSoundObj_c` is 0x24 bytes, one vptr store and the

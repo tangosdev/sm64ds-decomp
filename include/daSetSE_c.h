@@ -1,9 +1,18 @@
 #ifndef DASETSE_C_H
 #define DASETSE_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daSetSE_c -- daSetSE_c_classInit (was daSetSE_c_Spawn),
+ *       g_profile_SET_SE (was daSetSE_c_SpawnInfo)
+ */
+
 #include "dActor_c.h"
 
-/* SIZE 0xd8 is daSetSE_c_Spawn's own literal -- it allocates 0xd8 and
+/* SIZE 0xd8 is daSetSE_c_classInit's own literal -- it allocates 0xd8 and
  * constructs only the dActor_c base, touching no member of its own.
  *
  * THE ONE DERIVED FIELD is witnessed by Behavior, which reads 0xd4, passes it
@@ -12,7 +21,7 @@
  * inherited param1 at 0x08. Field names are a reading; the offset is pinned.
  *
  * NOTHING INITIALIZES IT, and that is the cartridge's behaviour, not an
- * omission here. daSetSE_c_Spawn allocates 0xd8 and constructs only the
+ * omission here. daSetSE_c_classInit allocates 0xd8 and constructs only the
  * dActor_c base -- it never touches 0xd4 -- so Behavior's first call reads
  * whatever fBase_c::operator new left there and hands it to PlayLong, which
  * treats a handle it does not recognise as "not playing". Do not add an

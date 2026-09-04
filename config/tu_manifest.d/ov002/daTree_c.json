@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "Tree_Spawn",
+      "symbol": "daTree_c_classInit",
       "address": "0x020ec32c",
       "size": "0x0000005c",
       "legacy_source": "src/Tree_Spawn.cpp",

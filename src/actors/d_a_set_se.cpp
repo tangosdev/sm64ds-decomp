@@ -76,10 +76,14 @@ extern int data_0209fc48;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daSetSE_c_Spawn, 0x020f1b94, size 0x30 */
+/* ROM ordinal 7 -- daSetSE_c_classInit, 0x020f1b94, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daSetSE_c_Spawn
-extern "C" daSetSE_c *daSetSE_c_Spawn(void)
+// @symbol daSetSE_c_classInit
+/* Reconstructed source-style name: SM64DS proves daSetSE_c through RTTI,
+ * allocation size, vtable identity, and the SET_SE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daSetSE_c_Spawn. */
+extern "C" daSetSE_c *daSetSE_c_classInit(void)
 {
     daSetSE_c *p =
         (daSetSE_c *)_ZN7fBase_cnwEj(sizeof(daSetSE_c));

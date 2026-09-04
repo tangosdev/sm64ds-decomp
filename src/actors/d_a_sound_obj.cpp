@@ -91,10 +91,14 @@ extern void _ZN8dActor_cC2Ev(void *);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daSoundObj_c_Spawn, 0x020f972c, size 0x30 */
+/* ROM ordinal 6 -- daSoundObj_c_classInit, 0x020f972c, size 0x30 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daSoundObj_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSoundObj_c through RTTI,
+ * allocation size, vtable identity, and the SOUND_OBJ registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daSoundObj_c_Spawn. */
+int *daSoundObj_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(228);
     if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV12daSoundObj_c + 2); }

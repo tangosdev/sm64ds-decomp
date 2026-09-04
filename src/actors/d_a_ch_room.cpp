@@ -76,14 +76,18 @@ extern char data_020a0ebc;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daChRoom_c_Spawn, 0x020b0980, size 0x30 */
+/* ROM ordinal 7 -- daChRoom_c_classInit, 0x020b0980, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daChRoom_c_Spawn
+// @symbol daChRoom_c_classInit
 /* recovered: globals resolved, declarations from a shared header */
 /* recovered: globals resolved */
 /* resolved: VT = _ZTV10daChRoom_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daChRoom_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daChRoom_c through RTTI,
+ * allocation size, vtable identity, and the CH_ROOM registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daChRoom_c_Spawn. */
+int *daChRoom_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(sizeof(daChRoom_c));
     if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV10daChRoom_c + 2); }

@@ -75,7 +75,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "daChScene_c_Spawn",
+      "symbol": "daChScene_c_classInit",
       "address": "0x020b0f24",
       "size": "0x00000030",
       "legacy_source": "src/daChScene_c_Spawn.c",

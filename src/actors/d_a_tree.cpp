@@ -96,7 +96,7 @@ extern unsigned short data_ov002_0210abb8[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- Tree_Spawn, 0x020ec32c, size 0x5c */
+/* ROM ordinal 7 -- daTree_c_classInit, 0x020ec32c, size 0x5c */
 /* -------------------------------------------------------------------------- */
 #include "daTree_c.h"
 extern "C" {
@@ -106,7 +106,11 @@ extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ModelC1Ev(void*);
 extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV8daTree_c[];
-int* Tree_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daTree_c through RTTI,
+ * allocation size, vtable identity, and the TREE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Tree_Spawn. */
+int* daTree_c_classInit(void){
   int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct daTree_c));
   if(p){
     _ZN8dActor_cC2Ev(p);

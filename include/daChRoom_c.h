@@ -1,13 +1,22 @@
 #ifndef DACHROOM_C_H
 #define DACHROOM_C_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daChRoom_c -- daChRoom_c_classInit (was daChRoom_c_Spawn),
+ *       g_profile_CH_ROOM (was daChRoom_c_SpawnInfo)
+ */
+
 #include "dActor_c.h"
 
 /* An area-transition trigger box -- ov002/daChRoom_c, and the class the ROM
  * spells daChRoom_c rather than the coined VirtualDoor it carried until this
  * commit.
  *
- * THE SIZE IS THE FACTORY'S OWN LITERAL: daChRoom_c_Spawn at 0x020b0980 is
+ * THE SIZE IS THE FACTORY'S OWN LITERAL: daChRoom_c_classInit at 0x020b0980 is
  * `mov r0, #0xd4` into fBase_c::operator new, then the dActor_c base
  * constructor, the vptr store and the return. dActor_c ends at 0xd0, so the
  * class's own storage is the final four bytes and nothing in this TU reads
