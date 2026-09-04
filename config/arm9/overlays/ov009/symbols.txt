@@ -11,14 +11,14 @@ _ZN4Bird6RenderEv kind:function(arm,size=0x28) addr:0x02111870
 _ZN4Bird8BehaviorEv kind:function(arm,size=0xe4) addr:0x02111898
 _ZN4Bird13InitResourcesEv kind:function(arm,size=0xb4) addr:0x0211197c
 Bird_Spawn kind:function(arm,size=0x40) addr:0x02111a30
-_ZN11CastleWaterD1Ev kind:function(arm,size=0x4c) addr:0x02111a70
-_ZN11CastleWaterD0Ev kind:function(arm,size=0x60) addr:0x02111abc
+_ZN14daObjMcWater_cD1Ev kind:function(arm,size=0x4c) addr:0x02111a70
+_ZN14daObjMcWater_cD0Ev kind:function(arm,size=0x60) addr:0x02111abc
 func_ov009_02111b1c kind:function(arm,size=0xb8) addr:0x02111b1c
-_ZN11CastleWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111bd4
-_ZN11CastleWater6RenderEv kind:function(arm,size=0x34) addr:0x02111c18
-_ZN11CastleWater8BehaviorEv kind:function(arm,size=0x28) addr:0x02111c4c
-_ZN11CastleWater13InitResourcesEv kind:function(arm,size=0x118) addr:0x02111c74
-CastleWater_Spawn kind:function(arm,size=0x38) addr:0x02111d8c
+_ZN14daObjMcWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111bd4
+_ZN14daObjMcWater_c6RenderEv kind:function(arm,size=0x34) addr:0x02111c18
+_ZN14daObjMcWater_c8BehaviorEv kind:function(arm,size=0x28) addr:0x02111c4c
+_ZN14daObjMcWater_c13InitResourcesEv kind:function(arm,size=0x118) addr:0x02111c74
+daObjMcWater_c_classInit kind:function(arm,size=0x38) addr:0x02111d8c
 _ZN18daObjMc_Metalnet_cD1Ev kind:function(arm,size=0x44) addr:0x02111dc4
 _ZN18daObjMc_Metalnet_cD0Ev kind:function(arm,size=0x58) addr:0x02111e08
 _ZN18daObjMc_Metalnet_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111e60
@@ -153,9 +153,8 @@ data_ov009_02113998 kind:data(any) addr:0x02113998 ambiguous
 data_ov009_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 _ZTI14daObjMcWater_c kind:data(any) addr:0x021139d4
 _ZTS14daObjMcWater_c kind:data(any) addr:0x021139e0
-CastleWater_SpawnInfo kind:data(any) addr:0x021139f4 ambiguous
+daObjMcWater_c_SpawnInfo kind:data(any) addr:0x021139f4 ambiguous
 data_ov009_02113a00 kind:data(any) addr:0x02113a00 ambiguous
-_ZTV11CastleWater kind:data(any) addr:0x02113a18
 _ZTV14daObjMcWater_c kind:data(any) addr:0x02113a18
 data_ov009_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 data_ov009_02113a74 kind:data(any) addr:0x02113a74 ambiguous

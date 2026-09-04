@@ -251,3 +251,7 @@
 {"path": "src/_ZN9ShipWater16CleanupResourcesEv.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}
 {"path": "src/_ZN9ShipWaterD0Ev.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}
 {"path": "src/_ZN9ShipWaterD1Ev.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN11CastleWater16CleanupResourcesEv.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN11CastleWater8BehaviorEv.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN11CastleWaterD0Ev.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN11CastleWaterD1Ev.cpp", "reason": "ov009/daObjMcWater_c promoted into a single C++ TU (src/actors/d_a_obj_mc_water.cpp); the eight legacy one-function sources it consolidates are gone."}
