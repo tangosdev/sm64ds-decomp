@@ -1733,6 +1733,18 @@
     "src/actors/d_a_obj_bk_rotebar.cpp#_ZN17daObjBk_Rotebar_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_bk_rotebar.cpp#_ZN17daObjBk_Rotebar_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_bk_rotebar.cpp#_ZN17daObjBk_Rotebar_c8BehaviorEv": "github-actions[bot]",
-    "src/actors/d_a_obj_bk_rotebar.cpp#_ZN17daObjBk_Rotebar_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_bk_rotebar.cpp#_ZN17daObjBk_Rotebar_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c13InitResourcesEv": "github-actions[bot]"
   }
 }
