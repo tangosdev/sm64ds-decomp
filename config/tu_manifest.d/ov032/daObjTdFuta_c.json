@@ -1,8 +1,8 @@
 {
   "id": "ov032/daObjTdFuta_c",
   "module": "ov032",
-  "source": "src/actors/d_a_obj_td_futa.cpp",
-  "promoted_source": "src/actors/d_a_obj_td_futa.cpp",
+  "source": "src/game/actors/d_a_obj_td_futa.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_td_futa.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

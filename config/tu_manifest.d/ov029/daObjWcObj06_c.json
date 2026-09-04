@@ -1,8 +1,8 @@
 {
   "id": "ov029/daObjWcObj06_c",
   "module": "ov029",
-  "source": "src/actors/d_a_obj_wc_obj06.cpp",
-  "promoted_source": "src/actors/d_a_obj_wc_obj06.cpp",
+  "source": "src/game/actors/d_a_obj_wc_obj06.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_wc_obj06.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -58,7 +58,7 @@
     "round": "tools/tu_promote.py then tools/rombuild.py -j16 -- the promoted TU compiled and isolated in the production build, 106/106 exact, 100.000000%, mismatching 0, zero new symbol errors",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov029-daObjWcObj06_c/daObjWcObj06_c.o was the pre-promotion shadow object and no longer exists; the object under comparison is now the production one built from src/actors/d_a_obj_wc_obj06.cpp by the enrolled mwccarm step of tools/rombuild.py",
+    "object": "build/tu/ov029-daObjWcObj06_c/daObjWcObj06_c.o was the pre-promotion shadow object and no longer exists; the object under comparison is now the production one built from src/game/actors/d_a_obj_wc_obj06.cpp by the enrolled mwccarm step of tools/rombuild.py",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 4,
     "functions_declared": 4,

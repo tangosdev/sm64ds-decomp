@@ -11,7 +11,7 @@ src_tu/actors/RacingPenguin.cpp:
     .data start:0x02113270 end:0x0211338c
     .bss start:0x02113498 end:0x021135cc
 
-src/actors/d_a_sld_mng.cpp:
+src/game/actors/d_a_sld_mng.cpp:
     .text start:0x0211261c end:0x0211277c
     .init start:0x02112b14 end:0x02112b64
     .ctor start:0x02112b68 end:0x02112b6c

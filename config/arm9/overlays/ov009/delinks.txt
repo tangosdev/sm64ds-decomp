@@ -52,11 +52,11 @@ src/Bird_Spawn.c:
     complete
     .text start:0x02111a30 end:0x02111a70
 
-src/actors/d_a_obj_mc_water.cpp:
+src/game/actors/d_a_obj_mc_water.cpp:
     complete
     .text start:0x02111a70 end:0x02111dc4
 
-src/actors/d_a_obj_mc_metalnet.cpp:
+src/game/actors/d_a_obj_mc_metalnet.cpp:
     complete
     .text start:0x02111dc4 end:0x02112078
 

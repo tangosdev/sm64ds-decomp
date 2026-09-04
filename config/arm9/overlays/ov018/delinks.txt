@@ -48,7 +48,7 @@ src/daObjSm_Lift_c_classInit.c:
     complete
     .text start:0x02111818 end:0x02111848
 
-src/actors/d_a_pg_mthr.cpp:
+src/game/actors/d_a_pg_mthr.cpp:
     complete
     .text start:0x02111848 end:0x0211267c
 
@@ -56,7 +56,7 @@ src/MotherPenguin_Spawn.c:
     complete
     .text start:0x0211267c end:0x021126d4
 
-src/actors/d_a_s_cre.cpp:
+src/game/actors/d_a_s_cre.cpp:
     complete
     .text start:0x021126d4 end:0x021127bc
 
