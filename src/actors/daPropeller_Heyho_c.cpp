@@ -56,7 +56,12 @@ struct PropellerHeyhoSpawnInfo {
 typedef char PropellerHeyhoSpawnInfo_size_must_be_0x1c[
     sizeof(PropellerHeyhoSpawnInfo) == 0x1c ? 1 : -1];
 
-extern "C" PropellerHeyhoSpawnInfo FlyGuy_SpawnInfo = {
+/* Reconstructed source-style name: SM64DS proves this descriptor through
+ * its registry role, the PROPELLER_HEYHO literal ROM profile ID, and the
+ * factory relocation it carries; later EAD lineage supplies g_profile_.
+ * Exact original spelling is not preserved. Historical alias:
+ * FlyGuy_SpawnInfo. */
+extern "C" PropellerHeyhoSpawnInfo g_profile_PROPELLER_HEYHO = {
     daPropeller_Heyho_c_classInit,
     0x00e8,
     0x0057,

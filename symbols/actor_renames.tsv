@@ -1819,6 +1819,7 @@ ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x021221fc	FlameChompFire_Spawn	daKpFr_c_Spawn	prior RTTI-anchored project alias; class identity proven, exact source spelling not preserved
 ov070	0x021221fc	daKpFr_c_Spawn	daKpFr_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
+ov070	0x02123144	FlyGuy_SpawnInfo	g_profile_PROPELLER_HEYHO	reconstructed profile global; literal ROM ID PROPELLER_HEYHO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov070	0x02123168	data_ov070_02123168	_ZTV19daPropeller_Heyho_c	vtable alloc=0x3e8
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
 ov070	0x02123254	Amp_SpawnInfo	g_profile_BIRIKYU	reconstructed profile global; literal ROM ID BIRIKYU+registry role+later EAD lineage; exact SM64DS spelling not preserved
