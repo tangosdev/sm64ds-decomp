@@ -143,6 +143,23 @@ int sd_mix_alloc(int priority)
     if (best < 0) {
         SD_VT("chan ALLOC FAILED: all 16 sounding, none at or below "
               "priority %d\n", priority);
+    if (best < 0 && g_voice_trace) {
+        /* WHY THE CENSUS. "all 16 sounding" is not the same claim as "all 16
+           audible": a channel whose note has been released is still marked
+           active here until its envelope reaches the -72.3 dB floor, and a
+           slow release keeps it holding a slot long after it stopped being
+           worth hearing. If a drop happens while most channels sit in
+           ENV_RELEASE, the saturation is the port holding release tails, not
+           the scene genuinely wanting 17 voices. Printing the state next to
+           the priority is what tells those two apart. */
+        static const char *st[] = { "off", "atk", "dec", "sus", "rel" };
+        for (int i = 0; i < SD_CHANNELS; i++)
+            sd_vtrace("    chan %2d: prio %3d, %s, ampl %d%s\n", i,
+                      g_ch[i].priority,
+                      st[g_ch[i].state >= 0 && g_ch[i].state <= 4
+                         ? g_ch[i].state : 0],
+                      (int)g_ch[i].ampl, g_ch[i].active ? "" : ", INACTIVE");
+    }
         return -1;
     }
     SD_VT("chan %2d STOLEN for priority %d (victim priority %d)\n", best,
