@@ -59,9 +59,9 @@
             "overlay": "ov009",
             "factory_module": "ov009",
             "profile_address": "0x02113abc",
-            "current_profile_name": "MetalNet_SpawnInfo",
+            "current_profile_name": "g_profile_MC_METALNET",
             "factory_address": "0x02112048",
-            "current_factory_name": "MetalNet_Spawn"
+            "current_factory_name": "daObjMc_Metalnet_c_classInit"
           },
           {
             "overlay": "ov026",
@@ -235,9 +235,9 @@
             "overlay": "ov009",
             "factory_module": "ov009",
             "profile_address": "0x02113abc",
-            "current_profile_name": "MetalNet_SpawnInfo",
+            "current_profile_name": "g_profile_MC_METALNET",
             "factory_address": "0x02112048",
-            "current_factory_name": "MetalNet_Spawn"
+            "current_factory_name": "daObjMc_Metalnet_c_classInit"
           },
           {
             "overlay": "ov026",
@@ -4044,7 +4044,7 @@
       "overlay_ambiguous": true,
       "overlay": "ov009",
       "profile_address": "0x02113abc",
-      "current_profile_name": "MetalNet_SpawnInfo",
+      "current_profile_name": "g_profile_MC_METALNET",
       "proposed_profile_name": "g_profile_WL_POLELIFT",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 339,
@@ -4060,8 +4060,8 @@
       "far_distance": "0x00000000",
       "factory_module": "ov009",
       "factory_address": "0x02112048",
-      "current_factory_name": "MetalNet_Spawn",
-      "current_factory_file": "src/MetalNet_Spawn.c",
+      "current_factory_name": "daObjMc_Metalnet_c_classInit",
+      "current_factory_file": "src/daObjMc_Metalnet_c_classInit.c",
       "proposed_factory_name": "daObjMc_Metalnet_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000320",
@@ -14880,7 +14880,7 @@
       "overlay_ambiguous": true,
       "overlay": "ov009",
       "profile_address": "0x02113abc",
-      "current_profile_name": "MetalNet_SpawnInfo",
+      "current_profile_name": "g_profile_MC_METALNET",
       "proposed_profile_name": "g_profile_MC_METALNET",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 339,
@@ -14896,8 +14896,8 @@
       "far_distance": "0x00000000",
       "factory_module": "ov009",
       "factory_address": "0x02112048",
-      "current_factory_name": "MetalNet_Spawn",
-      "current_factory_file": "src/MetalNet_Spawn.c",
+      "current_factory_name": "daObjMc_Metalnet_c_classInit",
+      "current_factory_file": "src/daObjMc_Metalnet_c_classInit.c",
       "proposed_factory_name": "daObjMc_Metalnet_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000320",

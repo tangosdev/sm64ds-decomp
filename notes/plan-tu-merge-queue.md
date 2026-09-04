@@ -199,7 +199,7 @@ ov006 0x212471c  n=2  L=79   MgTrampolineTerror     CONF1
 **B6 — R1 · 7 TUs / 54 files / net −47 / 1,283 lines**
 ```
 ov009 0x2111a70  n=8  L=247  CastleWater      CONF1
-ov009 0x2111dc4  n=8  L=163  MetalNet         CONF2 pcov=2
+ov009 0x2111dc4  n=8  L=163  daObjMc_Metalnet_c         CONF2 pcov=2
 ov010 0x21119d0  n=8  L=233  LightBeam        CONF1 pcov=3
 ov010 0x2111e10  n=8  L=148  PeachPainting    CONF1 pcov=3
 ov012 0x2111450  n=7  L=164  BasementWater    CONF2

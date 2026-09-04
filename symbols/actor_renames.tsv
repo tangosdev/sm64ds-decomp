@@ -443,13 +443,13 @@ ov009	0x02111898	func_ov009_02111898	_ZN4Bird8BehaviorEv	vtable slot 6
 ov009	0x0211197c	func_ov009_0211197c	_ZN4Bird13InitResourcesEv	vtable slot 0
 ov009	0x02111a30	func_ov009_02111a30	Bird_Spawn	spawnfunc
 ov009	0x02111d8c	func_ov009_02111d8c	CastleWater_Spawn	spawnfunc
-ov009	0x02111dc4	func_ov009_02111dc4	_ZN8MetalNetD1Ev	vtable slot 16 (was _ZN11CastleWaterD1Ev)
-ov009	0x02111e08	func_ov009_02111e08	_ZN8MetalNetD0Ev	vtable slot 17 (was _ZN11CastleWaterD0Ev)
-ov009	0x02111e60	func_ov009_02111e60	_ZN8MetalNet16CleanupResourcesEv	vtable slot 3 (was _ZN11CastleWater16CleanupResourcesEv)
-ov009	0x02111ea4	func_ov009_02111ea4	_ZN8MetalNet16OnPendingDestroyEv	vtable slot 12 (was _ZN11CastleWater16OnPendingDestroyEv)
-ov009	0x02111ea8	func_ov009_02111ea8	_ZN8MetalNet6RenderEv	vtable slot 9 (was _ZN11CastleWater6RenderEv)
-ov009	0x02111ed0	func_ov009_02111ed0	_ZN8MetalNet8BehaviorEv	vtable slot 6 (was _ZN11CastleWater8BehaviorEv)
-ov009	0x02111f40	func_ov009_02111f40	_ZN8MetalNet13InitResourcesEv	vtable slot 0 (was _ZN11CastleWater13InitResourcesEv)
+ov009	0x02111dc4	func_ov009_02111dc4	_ZN18daObjMc_Metalnet_cD1Ev	vtable slot 16 (was _ZN11CastleWaterD1Ev)
+ov009	0x02111e08	func_ov009_02111e08	_ZN18daObjMc_Metalnet_cD0Ev	vtable slot 17 (was _ZN11CastleWaterD0Ev)
+ov009	0x02111e60	func_ov009_02111e60	_ZN18daObjMc_Metalnet_c16CleanupResourcesEv	vtable slot 3 (was _ZN11CastleWater16CleanupResourcesEv)
+ov009	0x02111ea4	func_ov009_02111ea4	_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv	vtable slot 12 (was _ZN11CastleWater16OnPendingDestroyEv)
+ov009	0x02111ea8	func_ov009_02111ea8	_ZN18daObjMc_Metalnet_c6RenderEv	vtable slot 9 (was _ZN11CastleWater6RenderEv)
+ov009	0x02111ed0	func_ov009_02111ed0	_ZN18daObjMc_Metalnet_c8BehaviorEv	vtable slot 6 (was _ZN11CastleWater8BehaviorEv)
+ov009	0x02111f40	func_ov009_02111f40	_ZN18daObjMc_Metalnet_c13InitResourcesEv	vtable slot 0 (was _ZN11CastleWater13InitResourcesEv)
 ov009	0x02112048	func_ov009_02112048	DockPole_Spawn	spawnfunc
 ov009	0x02112078	func_ov009_02112078	_ZN10daMcFlag_cD1Ev	vtable slot 16 (was _ZN8DockPoleD1Ev, then _ZN4FlagD1Ev)
 ov009	0x021120a8	func_ov009_021120a8	_ZN10daMcFlag_cD0Ev	vtable slot 17 (was _ZN8DockPoleD0Ev, then _ZN4FlagD0Ev)
@@ -462,7 +462,7 @@ ov009	0x02113934	data_ov009_02113934	Bird_SpawnInfo	spawninfo
 ov009	0x02113958	data_ov009_02113958	_ZTV4Bird	vtable alloc=0x184
 ov009	0x021139f4	data_ov009_021139f4	CastleWater_SpawnInfo	spawninfo
 ov009	0x02113abc	data_ov009_02113abc	DockPole_SpawnInfo	spawninfo
-ov009	0x02113ae0	data_ov009_02113ae0	_ZTV8MetalNet	vtable alloc=? (was _ZTV11CastleWater)
+ov009	0x02113ae0	data_ov009_02113ae0	_ZTV18daObjMc_Metalnet_c	vtable alloc=? (was _ZTV11CastleWater)
 ov009	0x02113b7c	data_ov009_02113b7c	daMcFlag_c_SpawnInfo	spawninfo (was Flag_SpawnInfo)
 ov009	0x02113ba0	data_ov009_02113ba0	_ZTV10daMcFlag_c	vtable alloc=? (was _ZTV8DockPole, then _ZTV4Flag)
 ov010	0x02111998	func_ov010_02111998	Trap_Spawn	spawnfunc

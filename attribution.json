@@ -1637,6 +1637,22 @@
     "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c6RenderEv": "github-actions[bot]",
     "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c8BehaviorEv": "github-actions[bot]",
-    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#_ZN18daObjMc_Metalnet_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_mc_metalnet.cpp#daObjMc_Metalnet_c_classInit": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjMc_Metalnet_c.cpp#daObjMc_Metalnet_c_classInit": "github-actions[bot]"
   }
 }
