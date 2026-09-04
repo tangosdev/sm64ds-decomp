@@ -91,42 +91,7 @@ src/dScStarSel_c_classInit.cpp:
     complete
     .text start:0x020b04f0 end:0x020b0580
 
-src/_ZN13dScGameOver_cD1Ev.cpp:
+src/actors/d_sc_game_over.cpp:
     complete
-    .text start:0x020b0580 end:0x020b05bc
-
-src/_ZN13dScGameOver_cD0Ev.cpp:
-    complete
-    .text start:0x020b05bc end:0x020b060c
-
-src/func_ov003_020b060c.c:
-    complete
-    .text start:0x020b060c end:0x020b0730
-
-src/func_ov003_020b0730.c:
-    complete
-    .text start:0x020b0730 end:0x020b0810
-
-src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020b0810 end:0x020b0814
-
-src/_ZN13dScGameOver_c6RenderEv.cpp:
-    complete
-    .text start:0x020b0814 end:0x020b0894
-
-src/_ZN13dScGameOver_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b0894 end:0x020b0b34
-
-src/_ZN13dScGameOver_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b0b34 end:0x020b0b3c
-
-src/_ZN13dScGameOver_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b0b3c end:0x020b1118
-
-src/dScGameOver_c_classInit.cpp:
-    complete
-    .text start:0x020b1118 end:0x020b117c
+    .text start:0x020b0580 end:0x020b117c
+    .data start:0x020b174c end:0x020b17e4

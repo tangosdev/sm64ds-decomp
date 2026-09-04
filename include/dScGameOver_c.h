@@ -56,10 +56,14 @@ struct dScGameOver_c : dScene_c {
     u8  unk_094;                    /* 0x094 -- input-gate counter, Behavior/Render */
     u8  pad_095[0x3];    /* 0x095 -- trailing alignment */
 
-    /* Declared first -- key function; see the family convention discussed in
-       dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
-       D1 and D0 are plain functions carrying their literal mangled name. */
-    virtual ~dScGameOver_c();                            /* slots 16 (D1), 17 (D0) */
+    /* Declared FIRST and defined INLINE, both deliberately. First makes this
+       the key function, so the vtable is emitted by the TU that owns the
+       class; inline makes mwccarm emit the cartridge's D1/D0 pair in the
+       cartridge's order with no D2 at all (out of line it emits D2, D0, D1
+       and objisolate then refuses the TU for emitting out of ROM address
+       order). The body is empty because the three vptr stores and the base
+       teardown all follow from the base clause. */
+    virtual ~dScGameOver_c() {}                          /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */

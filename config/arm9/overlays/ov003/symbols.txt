@@ -118,7 +118,6 @@ _ZTI13dScGameOver_c kind:data(any) addr:0x020b1758
 data_ov003_020b1764 kind:data(any) addr:0x020b1764
 data_ov003_020b1774 kind:data(any) addr:0x020b1774
 _ZTS13dScGameOver_c kind:data(any) addr:0x020b1784
-data_ov003_020b179c kind:data(any) addr:0x020b179c
 _ZTV13dScGameOver_c kind:data(any) addr:0x020b179c
 data_ov003_020b17e4 kind:data(any) addr:0x020b17e4
 data_ov003_020b17ec kind:data(any) addr:0x020b17ec
