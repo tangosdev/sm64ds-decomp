@@ -465,30 +465,30 @@ ov006	0x0213fab8	data_ov006_0213fab8	MgTrampolineTime_SpawnInfo	spawninfo
 ov006	0x0213fd6c	data_ov006_0213fd6c	MgLuckyStars_SpawnInfo	spawninfo
 ov006	0x0213ffb8	data_ov006_0213ffb8	MgSnowballSlalom_SpawnInfo	spawninfo
 ov006	0x02140114	data_ov006_02140114	g_profile_MG_FLOWER	reconstructed profile global; literal ROM ID MG_FLOWER+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213c98c	data_ov006_0213c98c	MgWhichWiggler_SpawnInfo	spawninfo
 ov006	0x0213c98c	MgWhichWiggler_SpawnInfo	g_profile_MG_HANACHAN	reconstructed profile global; literal ROM ID MG_HANACHAN+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213cc7c	data_ov006_0213cc7c	MgBounceAndTrounce_SpawnInfo	spawninfo
 ov006	0x0213cc7c	MgBounceAndTrounce_SpawnInfo	g_profile_MG_JUMP2	reconstructed profile global; literal ROM ID MG_JUMP2+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213d70c	data_ov006_0213d70c	MgPairAGoneAndOn_SpawnInfo	spawninfo
 ov006	0x0213d70c	MgPairAGoneAndOn_SpawnInfo	g_profile_MG_MCARLO2	reconstructed profile global; literal ROM ID MG_MCARLO2+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213e2f0	data_ov006_0213e2f0	MgMushroomRoulette_SpawnInfo	spawninfo
 ov006	0x0213e2f0	MgMushroomRoulette_SpawnInfo	g_profile_MG_ROULETTE	reconstructed profile global; literal ROM ID MG_ROULETTE+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213ebd0	data_ov006_0213ebd0	MgBingoBallSlotsShot_SpawnInfo	spawninfo
 ov006	0x0213ebd0	MgBingoBallSlotsShot_SpawnInfo	g_profile_MG_SMARTBALL	reconstructed profile global; literal ROM ID MG_SMARTBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213fbc8	data_ov006_0213fbc8	MgTrampolineTerror_SpawnInfo	spawninfo
 ov006	0x0213fbc8	MgTrampolineTerror_SpawnInfo	g_profile_MG_TRAMPOLINE2	reconstructed profile global; literal ROM ID MG_TRAMPOLINE2+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213c98c	data_ov006_0213c98c	MgWhichWiggler_SpawnInfo	spawninfo
 ov006	0x0213cb64	MgBounceAndPounce_SpawnInfo	g_profile_MG_JUMP	reconstructed profile global; literal ROM ID MG_JUMP+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213cc7c	data_ov006_0213cc7c	MgBounceAndTrounce_SpawnInfo	spawninfo
 ov006	0x0213ce0c	MgWanted_SpawnInfo	g_profile_MG_LUIGI	reconstructed profile global; literal ROM ID MG_LUIGI+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213cfd8	MgMemoryMatch_SpawnInfo	g_profile_MG_MEMORY	reconstructed profile global; literal ROM ID MG_MEMORY+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213d288	MgMemoryMaster_SpawnInfo	g_profile_MG_MEMORY_J	reconstructed profile global; literal ROM ID MG_MEMORY_J+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213d70c	data_ov006_0213d70c	MgPairAGoneAndOn_SpawnInfo	spawninfo
 ov006	0x0213d910	MgBobOmbSquad_SpawnInfo	g_profile_MG_PACHINKO	reconstructed profile global; literal ROM ID MG_PACHINKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213da64	MgLakituLaunch_SpawnInfo	g_profile_MG_TAMAIRE	reconstructed profile global; literal ROM ID MG_TAMAIRE+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213dc64	MgPuzzlePanelPuzzlePanic_SpawnInfo	g_profile_MG_PANEL	reconstructed profile global; literal ROM ID MG_PANEL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213e2f0	data_ov006_0213e2f0	MgMushroomRoulette_SpawnInfo	spawninfo
-ov006	0x0213ebd0	data_ov006_0213ebd0	MgBingoBallSlotsShot_SpawnInfo	spawninfo
 ov006	0x0213f69c	MgBoomBox_SpawnInfo	g_profile_MG_SOUND	reconstructed profile global; literal ROM ID MG_SOUND+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213f974	MgHideAndBooSeek_SpawnInfo	g_profile_MG_TERESA	reconstructed profile global; literal ROM ID MG_TERESA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213fab8	MgTrampolineTime_SpawnInfo	g_profile_MG_TRAMPOLINE	reconstructed profile global; literal ROM ID MG_TRAMPOLINE+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213fbc8	data_ov006_0213fbc8	MgTrampolineTerror_SpawnInfo	spawninfo
 ov006	0x0213fd6c	MgLuckyStars_SpawnInfo	g_profile_MG_BS_CARD	reconstructed profile global; literal ROM ID MG_BS_CARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213ffb8	MgSnowballSlalom_SpawnInfo	g_profile_MG_SNOWBALL	reconstructed profile global; literal ROM ID MG_SNOWBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov009	0x021111a0	func_ov009_021111a0	_ZN4BirdD1Ev	vtable slot 16
