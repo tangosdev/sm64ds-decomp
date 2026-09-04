@@ -42,8 +42,17 @@ Game code was built with asserts stripped. So the derived filenames are a naming
 *proposal*; nothing writes them where the build can see them.
 
 The prefix mapping does not settle acronym or numeric word boundaries. Candidates
-such as `d_s_mg_m_carlo.cpp` and `d_s_mg3_d_esp.cpp` remain mechanical hypotheses
-until separate TU evidence supports their exact spelling.
+such as `d_s_mg_bsc.cpp`, `d_s_mg_m_carlo.cpp`,
+`d_s_mg_single3_d_base.cpp`, and `d_s_mg3_d_esp.cpp` are adopted mechanical
+spellings, not evidence for Nintendo's exact tokenization. A numeric family suffix
+such as `jump2` or `memory2` is likewise preserved from the ROM class identity;
+whether an original filename separated the number is unknown.
+
+Multi-class or currently under-segmented runs need an additional anchor. The
+repository basename may follow the ROM-proven primary scene class or the class
+installed by its factory, but that choice does not prove every passenger class was
+named in the original filename. If neither anchor is unique, keep the established
+basename and record the exception rather than selecting an English profile alias.
 
 ## 2. What IS testable: the grouping the convention implies
 
