@@ -45,8 +45,8 @@ python tools/coddog.py --min 0x400 --max 0x800 --limit 24 --draft --out progress
 ## How the converter works (tools/m2c_draft.py)
 
 m2c consumes GAS-style assembly text; our functions are ROM bytes. The
-converter bridges capstone -> the dialect m2c's ARM parser accepts (studied
-from vendor/m2c/tests/end_to_end/*/agbcc-o2.s and m2c/arch_arm.py):
+converter bridges *Capstone* -> the dialect m2c's ARM parser accepts (studied
+from `vendor/m2c/tests/end_to_end/*/agbcc-o2.s` and `m2c/arch_arm.py`):
 
 - **Per-word decode, not linear sweep.** Every aligned 4-byte word is decoded
   independently, so a mid-function literal pool cannot truncate the
@@ -71,7 +71,7 @@ from vendor/m2c/tests/end_to_end/*/agbcc-o2.s and m2c/arch_arm.py):
   indirect tail call, so those case blocks may render as unreachable labels.
 - **Data words** are emitted as labeled `.word` directives (safe inside .text;
   m2c attaches them to the enclosing label as data).
-- Capstone's operand text is otherwise GAS-compatible for ARM, including cc
+- *Capstone*'s operand text is otherwise GAS-compatible for ARM, including cc
   suffixes (`movne`, `addls`), register aliases (`ip`/`sb`/`sl`/`fp`), barrel
   shifts, writeback (`[r0, #4]!`), and ldm/stm directions. m2c's arch_arm
   covers the ARMv5TE ops the ARM9 uses (`clz`, `smull`, `smulbb`, ...); system
@@ -80,7 +80,7 @@ from vendor/m2c/tests/end_to_end/*/agbcc-o2.s and m2c/arch_arm.py):
 ## Status: WORKING (validated 2026-07-01)
 
 - Trivial oracle case: `mov r0,#1; bx lr` -> `s32 f(void) { return 1; }`.
-- 4 already-matched mid-size functions (0x140-0x3f4, arm9 + ov002, C and C++)
+- 4 already-matched mid-size functions (0x140-0x3f4, [arm9](../config/arm9/symbols.txt) + [ov002](../config/arm9/overlays/ov002/symbols.txt), C and C++)
   produce drafts whose control flow, callees, and field offsets line up with
   the committed src 1:1 -- including the C++ vtable dispatch in
   func_02038a38 (`(*temp_r4)->unk20(...)` vs the matched `o->f8(arg0)`) and

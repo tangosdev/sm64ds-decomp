@@ -56,7 +56,7 @@ it lose it. Both directions are live. Affected Tier 1:
 ```
 ov029/daObjWc_Obj02_c(1/9)  ov029/daObjWc_Obj05_c(1/9)  ov029/daObjWc_Obj07_c(1/5)
 ov014/daObjBSwdoor_c(1/6) ov030/RollingLogTtm(3/6) ov063/FallBlockBbh(2/5)
-ov015/FallBlockWf(2/5) ov015/RotatingPlatformWf(1/5) ov022/RotatingPlatformLll(1/5)
+ov015/daObjBk_Fall_Block_c(2/5) ov015/daObjBk_Ukisima_c(1/5) ov022/RotatingPlatformLll(1/5)
 ov036/RotatingPlatformRr(1/5) ov064/TiltingPlatformLll(2/5) ov016/FloatOnWaterPlatformJrb(1/4)
 ```
 
@@ -143,14 +143,14 @@ cheapest possible probe of post-regeneration ov006.
 
 **B2 — R0, one TU per module · 10 TUs / 69 files / net −59 / 1,356 lines**
 ```
-ov009 0x2112078  n=7  L=116  Flag                     pcov=2
+ov009 0x2112078  n=7  L=116  daMcFlag_c               pcov=2
 ov012 0x21111a0  n=8  L=175  daObjC0_Switch_c
 ov013 0x21113bc  n=8  L=153  daObjClock_c   uncorrob
 ov014 0x2112e0c  n=8  L=197  daObjWanwanShutter_c
-ov015 0x21111a0  n=7  L=106  PoleBillboard            uncorrob
+ov015 0x21111a0  n=7  L=106  daObjBkBillboard_c            uncorrob
 ov018 0x21126d4  n=4  L=60   daSCre_c                 uncorrob
 ov019 0x211261c  n=5  L=93   daSldMng_c
-ov021 0x2112db4  n=6  L=105  ShutterHmc
+ov021 0x2112db4  n=6  L=105  daObjCvShutter_c
 ov022 0x2111980  n=8  L=181  daObjFl_London_c               uncorrob
 ov022 0x2111cac  n=8  L=170  LavaSeesaw               uncorrob
 ```
@@ -164,9 +164,9 @@ ov026 0x21118b8  n=6  L=115  Submarine
 ov029 0x21111a0  n=4  L=135  daObjWcObj01_c
 ov029 0x2111ea4  n=4  L=124  daObjWcObj06_c
 ov036 0x2111580  n=8  L=146  ShipWing
-ov036 0x2111d14  n=7  L=155  ArmedRotatingPlatform
+ov036 0x2111d14  n=7  L=155  daObjRc_Guruguru_c
 ov036 0x2111f8c  n=4  L=75   daObjRc_Dorifu_c
-ov043 0x2111518  n=5  L=80   RickshawPlatformBdw              pcov=3
+ov043 0x2111518  n=5  L=80   daObjKm1_Kuruma_c              pcov=3
 ```
 `daObjWcObj01_c` and `daObjWcObj06_c` — the Wdw square and rectangle floating
 platforms, coined `FloatOnWaterPlatformWdwSquare`/`...Rectangle` before the
@@ -198,30 +198,30 @@ ov006 0x212471c  n=2  L=79   MgTrampolineTerror     CONF1
 
 **B6 — R1 · 7 TUs / 54 files / net −47 / 1,283 lines**
 ```
-ov009 0x2111a70  n=8  L=247  CastleWater      CONF1
-ov009 0x2111dc4  n=8  L=163  MetalNet         CONF2 pcov=2
+ov009 0x2111a70  n=8  L=247  daObjMcWater_c      CONF1
+ov009 0x2111dc4  n=8  L=163  daObjMc_Metalnet_c         CONF2 pcov=2
 ov010 0x21119d0  n=8  L=233  LightBeam        CONF1 pcov=3
 ov010 0x2111e10  n=8  L=148  daObjC1Peach_c    CONF1 pcov=3
 ov012 0x2111450  n=7  L=164  daObjC0Water_c    CONF2
-ov015 0x2112944  n=7  L=143  RotatingBridge   CONF2
+ov015 0x2112944  n=7  L=143  daObjBk_Rotebar_c   CONF2
 ov016 0x211260c  n=8  L=185  ShipUp           CONF1
 ```
 
 **B7 — R1 · 8 TUs / 63 files / net −55 / 1,440 lines**
 ```
 ov016 0x2112ff8  n=8  L=233  SlidingBox           CONF2 pcov=3
-ov017 0x21111a0  n=7  L=159  ShipWater            CONF2 WHOLEMOD pcov=2
+ov017 0x21111a0  n=7  L=159  daObjKsWater_c            CONF2 WHOLEMOD pcov=2
 ov022 0x21111a0  n=9  L=240  VolcanoRing          CONF1
 ov022 0x21116c4  n=9  L=160  FloatOnLavaPlatform  CONF2
 ov022 0x2112130  n=7  L=135  LavaPlank            CONF2
 ov025 0x2111d40  n=9  L=203  PyramidStep          CONF1
-ov032 0x2112698  n=7  L=155  HugeWater            CONF2
+ov032 0x2112698  n=7  L=155  daObjTdWater_c            CONF2
 ov033 0x21113d4  n=7  L=155  daObjTtWater_c            CONF3 pcov=2
 ```
 
 **B8 — R1 · 7 TUs / 50 files / net −43 / 1,286 lines**
 ```
-ov036 0x21111a0  n=8  L=163  SwingingPlatform   CONF1
+ov036 0x21111a0  n=8  L=163  daObjRcBuranko_c   CONF1
 ov043 0x21113fc  n=5  L=107  RickshawBdw        CONF1
 ov052 0x21111a0  n=7  L=158  daObjEmmLog_c      CONF3 WHOLEMOD pcov=3 (1 distinct include)
 ov052 0x2111440  n=7  L=190  SquarePathLift     CONF2
@@ -255,7 +255,7 @@ ov030 0x21111a0  n=8  L=236  daObjHmBskt_c              NORM2 pcov=2
 **B11 — R2 tail · 4 TUs / 32 files / net −28 / 759 lines**
 ```
 ov033 0x21111a0  n=8  L=151  TinyCover        NORM1
-ov043 0x21111a0  n=7  L=145  DiamondLift      NORM1
+ov043 0x21111a0  n=7  L=145  daObjKm1_Ukishima_c      NORM1
 ov045 0x21111a0  n=9  L=200  daObjKm2_Agaru_c  NORM1 CONF2
 ov064 0x21174a0  n=8  L=263  BigBully         NORM1 pcov=2
 ```
@@ -263,8 +263,8 @@ ov064 0x21174a0  n=8  L=263  BigBully         NORM1 pcov=2
 **B12 — R3, `#pragma long_calls on` · 10 TUs / 59 files / net −49 / 1,265 lines**
 ```
 ov014 0x21111a0  n=6  L=133  daObjBSwdoor_c               1/6 members
-ov015 0x2112bd0  n=5  L=105  RotatingPlatformWf       1/5
-ov015 0x2112cf4  n=5  L=80   FallBlockWf              2/5  pcov=3
+ov015 0x2112bd0  n=5  L=105  daObjBk_Ukisima_c       1/5
+ov015 0x2112cf4  n=5  L=80   daObjBk_Fall_Block_c              2/5  pcov=3
 ov016 0x2112ef4  n=4  L=82   FloatOnWaterPlatformJrb  1/4
 ov022 0x21115a8  n=5  L=106  RotatingPlatformLll      1/5
 ov029 0x211137c  n=9  L=243  daObjWc_Obj02_c                1/9  CONF2
@@ -419,8 +419,10 @@ tb.cmd_create(a)
 ```
 
 **Validated read-only against the tree**: over all 131 refused safe-pool files this
-recovers **130**. The single residual, `src/func_ov018_021118fc.c` (Tier 2,
-`ov018/daPgMthr_c`), fails for a different reason worth naming — its definition is
+recovers **130**. The single residual was `func_ov018_021118fc` (Tier 2,
+`ov018/daPgMthr_c`; it lived in a per-function legacy source at the time and is now
+part of the promoted `src/actors/d_a_pg_mthr.cpp`), and it fails for a different
+reason worth naming — its definition is
 `struct dActor_c* func_ov018_021118fc(char* c) {`, and `split_legacy_source`'s first-word
 test sees `struct` in `_DECL_KEYWORDS` and consumes the whole function as a shadow
 declaration. **Any definition whose return type is spelled `struct X*` / `enum X` /

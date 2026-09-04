@@ -19,7 +19,7 @@
 struct VolcanoRing : dBgActor_c {
     /* dBgActor_c ends at 0x31e (its own sizeof rounds 0x31e up to 0x320);
        these two bytes are this class's own, in the base's tail padding --
-       same shape as ArmedRotatingPlatform's single s16 there (see
+       same shape as daObjRc_Guruguru_c's single s16 there (see
        include/dBgActor_c.h). Field names are placeholders: offsets, widths
        and read/write sites are observed from Behavior (slot 6, ov022
        0x021112ac), not proven semantics. */

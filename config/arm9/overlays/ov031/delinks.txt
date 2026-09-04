@@ -4,29 +4,9 @@
     .ctor       start:0x021114ec end:0x021114f0 kind:rodata align:4
     .data       start:0x02111500 end:0x02111a00 kind:data align:32
     .bss        start:0x02111a00 end:0x02111a60 kind:bss align:32
-src/_ZN25SlideDecorationSilverStarD1Ev.cpp:
+src/actors/d_a_obj_hs_billboard.cpp:
     complete
-    .text start:0x021111a0 end:0x021111d0
-
-src/_ZN25SlideDecorationSilverStarD0Ev.cpp:
-    complete
-    .text start:0x021111d0 end:0x02111214
-
-src/func_ov031_02111214.c:
-    complete
-    .text start:0x02111214 end:0x02111254
-
-src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111254 end:0x02111280
-
-src/_ZN25SlideDecorationSilverStar6RenderEv.cpp:
-    complete
-    .text start:0x02111280 end:0x021112a8
-
-src/_ZN25SlideDecorationSilverStar13InitResourcesEv.cpp:
-    complete
-    .text start:0x021112a8 end:0x02111344
+    .text start:0x021111a0 end:0x02111344
 
 src/SlideDecorationBlueSmiley_Spawn.c:
     complete

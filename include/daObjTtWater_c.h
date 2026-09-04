@@ -38,7 +38,7 @@ struct daObjTtWater_c : dBgActor_c {
     s32 mMinPosY;                      /* 0x334 */
     /* Named out of the padding by this class's own Behavior, which stores
        Sound::PlayLong's handle here and passes it back as that call's first
-       argument on the next frame -- the same field the sibling ShipWater
+       argument on the next frame -- the same field the sibling daObjKsWater_c
        already calls mSoundID. Four bytes of pad became four bytes of s32, so
        nothing below it moves. */
     s32 mSoundID;                      /* 0x338 */

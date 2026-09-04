@@ -3,7 +3,7 @@
 /* recovered: real C++ destructor, defined inline in the header
  *
  * ~daObjKuruma_c is defined in the class body, not here, and that is
- * load-bearing: this class's two descendants (RickshawPlatformBdw and the
+ * load-bearing: this class's two descendants (daObjKm1_Kuruma_c and the
  * unnamed ov047 sibling daObjKm3_Kuruma_c) inline this destructor's vptr
  * store rather than calling it, which the compiler can only do from a
  * visible body. include/daObjKuruma_c.h records the measurement.

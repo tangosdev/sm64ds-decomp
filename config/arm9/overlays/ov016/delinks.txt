@@ -152,21 +152,9 @@ src/daObjKi_Hasira_c_classInit.c:
     complete
     .text start:0x02112ec4 end:0x02112ef4
 
-src/_ZN23FloatOnWaterPlatformJrbD1Ev.cpp:
+src/actors/d_a_obj_ki_ita.cpp:
     complete
-    .text start:0x02112ef4 end:0x02112f44
-
-src/_ZN23FloatOnWaterPlatformJrbD0Ev.cpp:
-    complete
-    .text start:0x02112f44 end:0x02112fa8
-
-src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112fa8 end:0x02112fbc
-
-src/daObjKi_Ita_c_classInit.c:
-    complete
-    .text start:0x02112fbc end:0x02112ff8
+    .text start:0x02112ef4 end:0x02112ff8
 
 src/_ZN10SlidingBoxD1Ev.cpp:
     complete

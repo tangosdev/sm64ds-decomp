@@ -12,7 +12,7 @@
  *
  * unk_428, unk_42c, unk_43c and unk_440 are NOT this class's own fields --
  * they are all < 0x450, inside dPathLiftActor_c's own storage, the
- * same idiom include/dBgActor_c.h documents for ArmedRotatingPlatform and
+ * same idiom include/dBgActor_c.h documents for daObjRc_Guruguru_c and
  * include/Crate.h now documents for its own 0xd0 reuse. This class's methods
  * reach them by raw offset instead of declaring colliding members. */
 #ifndef DAOBJPATHLIFT_C_H

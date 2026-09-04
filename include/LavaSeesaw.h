@@ -17,7 +17,7 @@
  * is deliberately not redeclared here.
  *
  * mSwingStep sits at 0x31e, in dBgActor_c's TAIL PADDING (same placement rationale
- * as ArmedRotatingPlatform's mAngVelY): Behavior adds it to mAngleX every frame while
+ * as daObjRc_Guruguru_c's mAngVelY): Behavior adds it to mAngleX every frame while
  * mSwingCooldown is zero, and flips its sign (a see-saw tilt reversal) once mAngleX
  * passes +-0x400, also reloading mSwingCooldown to 0x1e. InitResources seeds
  * mSwingStep to -0x10.

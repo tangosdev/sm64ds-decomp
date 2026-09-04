@@ -52,97 +52,17 @@ src/Bird_Spawn.c:
     complete
     .text start:0x02111a30 end:0x02111a70
 
-src/_ZN11CastleWaterD1Ev.cpp:
+src/actors/d_a_obj_mc_water.cpp:
     complete
-    .text start:0x02111a70 end:0x02111abc
+    .text start:0x02111a70 end:0x02111dc4
 
-src/_ZN11CastleWaterD0Ev.cpp:
+src/actors/d_a_obj_mc_metalnet.cpp:
     complete
-    .text start:0x02111abc end:0x02111b1c
+    .text start:0x02111dc4 end:0x02112078
 
-src/func_ov009_02111b1c.cpp:
+src/actors/d_a_mc_flag.cpp:
     complete
-    .text start:0x02111b1c end:0x02111bd4
-
-src/_ZN11CastleWater16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111bd4 end:0x02111c18
-
-src/_ZN11CastleWater6RenderEv.cpp:
-    complete
-    .text start:0x02111c18 end:0x02111c4c
-
-src/_ZN11CastleWater8BehaviorEv.cpp:
-    complete
-    .text start:0x02111c4c end:0x02111c74
-
-src/_ZN11CastleWater13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111c74 end:0x02111d8c
-
-src/CastleWater_Spawn.c:
-    complete
-    .text start:0x02111d8c end:0x02111dc4
-
-src/_ZN8MetalNetD1Ev.cpp:
-    complete
-    .text start:0x02111dc4 end:0x02111e08
-
-src/_ZN8MetalNetD0Ev.cpp:
-    complete
-    .text start:0x02111e08 end:0x02111e60
-
-src/_ZN8MetalNet16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111e60 end:0x02111ea4
-
-src/_ZN8MetalNet16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02111ea4 end:0x02111ea8
-
-src/_ZN8MetalNet6RenderEv.cpp:
-    complete
-    .text start:0x02111ea8 end:0x02111ed0
-
-src/_ZN8MetalNet8BehaviorEv.cpp:
-    complete
-    .text start:0x02111ed0 end:0x02111f40
-
-src/_ZN8MetalNet13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111f40 end:0x02112048
-
-src/MetalNet_Spawn.c:
-    complete
-    .text start:0x02112048 end:0x02112078
-
-src/_ZN4FlagD1Ev.cpp:
-    complete
-    .text start:0x02112078 end:0x021120a8
-
-src/_ZN4FlagD0Ev.cpp:
-    complete
-    .text start:0x021120a8 end:0x021120ec
-
-src/_ZN4Flag16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021120ec end:0x0211211c
-
-src/_ZN4Flag6RenderEv.cpp:
-    complete
-    .text start:0x0211211c end:0x02112144
-
-src/_ZN4Flag8BehaviorEv.cpp:
-    complete
-    .text start:0x02112144 end:0x02112190
-
-src/_ZN4Flag13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112190 end:0x021121f0
-
-src/Flag_Spawn.c:
-    complete
-    .text start:0x021121f0 end:0x02112228
+    .text start:0x02112078 end:0x02112228
 
 src/__sinit_ov009_02112458.c:
     complete

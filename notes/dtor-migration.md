@@ -37,9 +37,9 @@
 > trusting the list above -- these entries were fixed underneath the note, not by it.
 >
 > The daKrb_c wall in the paragraph above is **not class-specific**. `daTrs_c`'s D0+D1
-> hit the identical rejection (`cand _ZN11dCapEnemy_cD2Ev (0x0200651c) != config
-> 0x020aedbc:ov002`), so the cross-module `dCapEnemy_c::~dCapEnemy_c` duplicate blocks
-> the destructor pair of **every** `dCapEnemy_c` descendant, not just daKrb_c.
+> hit the identical rejection (`cand _ZN11dCapEnemy_cD2Ev (0x0200651c) != config`
+> *0x020aedbc*:[ov002](../config/arm9/overlays/ov002/symbols.txt)), so the cross-module
+> `dCapEnemy_c::~dCapEnemy_c` duplicate blocks the destructor pair of **every** `dCapEnemy_c` descendant, not just daKrb_c.
 >
 > Operational note: `d0_migrate.py` performs the `.c` -> `.cpp` rename but does NOT
 > re-point `delinks.txt`. It reports `OK` anyway; the next `rombuild` fails in

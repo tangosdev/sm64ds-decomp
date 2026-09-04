@@ -17,7 +17,7 @@
  * is deliberately not redeclared here.
  *
  * mPressed sits at 0x31e, in dBgActor_c's TAIL PADDING (same placement rationale as
- * ArmedRotatingPlatform's mAngVelY): InitResources and OnGroundPounded both guard on
+ * daObjRc_Guruguru_c's mAngVelY): InitResources and OnGroundPounded both guard on
  * and set this byte -- OnGroundPounded no-ops if already set, then walks every other
  * actorID-0x22 instance and, on finding one already pressed, sets a shared flag in
  * data_0209caa0[2]. It is this switch pillar's own "pressed" state.

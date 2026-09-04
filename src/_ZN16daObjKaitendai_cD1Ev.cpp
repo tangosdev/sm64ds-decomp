@@ -3,8 +3,8 @@
 /* recovered: real C++ destructor, defined inline in the header
  *
  * ~daObjKaitendai_c is defined in the class body, not here, and that is
- * load-bearing: this class's five descendants (RotatingPlatformWf,
- * RotatingPlatformLll, daObjWc_Obj07_c, RotatingPlatformRr,
+ * load-bearing: this class's five descendants (daObjBk_Ukisima_c,
+ * RotatingPlatformLll, daObjWc_Obj07_c, daObjRc_Kaitendai_c,
  * daObjKm3_Kaitendai_c) inline this destructor's vptr store rather than
  * calling it, which the compiler can only do from a visible body.
  * include/daObjKaitendai_c.h records the measurement.

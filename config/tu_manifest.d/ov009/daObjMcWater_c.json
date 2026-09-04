@@ -1,0 +1,232 @@
+{
+  "id": "ov009/daObjMcWater_c",
+  "module": "ov009",
+  "source": "src/actors/d_a_obj_mc_water.cpp",
+  "promoted_source": "src/actors/d_a_obj_mc_water.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111a70..0x2111dc4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjMcWater_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111a70",
+      "end": "0x02111dc4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjMcWater_cD1Ev",
+      "address": "0x02111a70",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14daObjMcWater_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjMcWater_cD0Ev",
+      "address": "0x02111abc",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN14daObjMcWater_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov009_02111b1c",
+      "address": "0x02111b1c",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov009_02111b1c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN14daObjMcWater_c16CleanupResourcesEv",
+      "address": "0x02111bd4",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN14daObjMcWater_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjMcWater_c6RenderEv",
+      "address": "0x02111c18",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN14daObjMcWater_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14daObjMcWater_c8BehaviorEv",
+      "address": "0x02111c4c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN14daObjMcWater_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN14daObjMcWater_c13InitResourcesEv",
+      "address": "0x02111c74",
+      "size": "0x00000118",
+      "legacy_source": "src/_ZN14daObjMcWater_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjMcWater_c_classInit",
+      "address": "0x02111d8c",
+      "size": "0x00000038",
+      "legacy_source": "src/daObjMcWater_c_classInit.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "The cartridge's own RTTI names this class daObjMcWater_c: _ZTS at ov009:0x021139e0 spells \"14daObjMcWater_c\", and _ZTI at 0x021139d4 is an __si_class_type_info whose +8 word points at _ZTI10dBgActor_c (ov002:0x021089ec), so dBgActor_c is the direct and only base. The coined CastleWater alias that used to sit on this vtable has been removed from config/arm9/overlays/ov009/symbols.txt.",
+    "The destructor is declared FIRST and INLINE in include/daObjMcWater_c.h. Out of line, mwccarm emits D0 ahead of D1 (the cartridge has D1 first, at 0x02111a70) and also emits the D2 base-object variant the ROM never carried; declaring it first is also what makes this TU the vtable's home, so _ZTV and the RTTI pair land here.",
+    "daObjMcWater_c_classInit stores (int)&_ZTV14daObjMcWater_c[2], not the bare symbol. Because this TU emits the vtable rather than importing it, _ZTV names the emitted OBJECT -- the two-word Itanium preamble at ov009:0x02113a10 -- and the [2] steps over it onto the address point at 0x02113a18 that the cartridge's literal-pool word at 0x02111dc0 actually holds.",
+    "The factory's ROM-era name was CastleWater_Spawn; it is spelled daObjMcWater_c_classInit here, matching its ov009 neighbour daObjMc_Metalnet_c_classInit.",
+    "func_ov009_02111b1c stays a C-linkage free function taking char*. The cartridge gives it a global symbol that other config still names, and it is called with `this` from InitResources; promoting it to a member is a separate change with its own codegen risk.",
+    "data_0209caa0 carried two conflicting legacy spellings (bare int vs a three-int record). The record wins in this TU and InitResources reaches the same word through the byte offset its own matched body already spelled, which is why the tubuild create conflict note is resolved rather than carried."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov009-daObjMcWater_c/daObjMcWater_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "data": [
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI14daObjMcWater_c",
+        "_ZTS14daObjMcWater_c",
+        "_ZTV14daObjMcWater_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI14daObjMcWater_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS14daObjMcWater_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daObjMcWater_c"
+      ]
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e78, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e54, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086d70, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x02086e60, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e390, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e384, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov002:0x021089ec, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec"
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at ov002:0x02108a04, which no section this entry licenses (.text 0x02111a70-0x02111dc4) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04"
+    },
+    {
+      "symbol": "_ZTI14daObjMcWater_c",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x021139d4, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov009",
+      "canonical_address": "0x021139d4"
+    },
+    {
+      "symbol": "_ZTS14daObjMcWater_c",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x021139e0, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov009",
+      "canonical_address": "0x021139e0"
+    },
+    {
+      "symbol": "_ZTV14daObjMcWater_c",
+      "disposition": "deadstrip-data",
+      "reason": "This TU defines every virtual daObjMcWater_c has, so mwccarm homes the class's vtable and RTTI pair HERE -- that is what declaring the destructor first and inline in include/daObjMcWater_c.h buys. The cartridge keeps the canonical record at ov009:0x02113a18, outside this entry's only licensed range (.text 0x02111a70-0x02111dc4), so dsd supplies that ROM data independently. tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov009",
+      "canonical_address": "0x02113a18"
+    }
+  ]
+}

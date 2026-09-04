@@ -1,10 +1,10 @@
-_ZN5CloudD1Ev kind:function(arm,size=0x30) addr:0x021111a0
-_ZN5CloudD0Ev kind:function(arm,size=0x44) addr:0x021111d0
+_ZN11daObjKumo_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN11daObjKumo_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov039_02111214 kind:function(arm,size=0x40) addr:0x02111214
-_ZN5Cloud16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
-_ZN5Cloud6RenderEv kind:function(arm,size=0x28) addr:0x02111278
-_ZN5Cloud8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112a0
-_ZN5Cloud13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211132c
+_ZN11daObjKumo_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN11daObjKumo_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN11daObjKumo_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112a0
+_ZN11daObjKumo_c13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211132c
 Cloud_Spawn kind:function(arm,size=0x38) addr:0x0211137c
 __sinit_ov039_021113b4 kind:function(arm,size=0x40) addr:0x021113b4
 .p__sinit_ov039_021113b4 kind:data(word) addr:0x021113f4
@@ -49,7 +49,6 @@ _ZTI11daObjKumo_c kind:data(any) addr:0x02111818
 _ZTS11daObjKumo_c kind:data(any) addr:0x02111824
 Cloud_SpawnInfo kind:data(any) addr:0x02111834 ambiguous
 data_ov039_02111844 kind:data(any) addr:0x02111844 ambiguous
-_ZTV5Cloud kind:data(any) addr:0x02111858
 _ZTV11daObjKumo_c kind:data(any) addr:0x02111858
 data_ov039_021118e0 kind:bss addr:0x021118e0
 data_ov039_021118e4 kind:bss addr:0x021118e4

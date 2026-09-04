@@ -8,6 +8,8 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* The last of the three intermediate bases the RTTI puts under dEnemyBase_c -- except
  * that this one has NO children, so it is only "intermediate" by where it sits in the
  * graph. The decomp had no name for it at all: every one of its functions was still
@@ -17,7 +19,8 @@
  *
  * TWO WITNESSES, and they agree offset for offset:
  *
- *   func_ov032_0211244c is the factory. fBase_c::operator new(0x438), then
+ *   daBakubaku_c_classInit is the reconstructed factory name. Its body calls
+ *   fBase_c::operator new(0x438), then
  *   _ZN12dEnemyBase_cC2Ev, then ONE vtable store -- one, not two, which is what says nothing
  *   derives from this class -- then the five members below in this order.
  *
@@ -64,8 +67,6 @@ struct daBakubaku_c : dEnemyBase_c {
     u16                        unk_42a;         /* 0x42a -- Behavior ticks it down */
     u8                         pad_42c[0xc];
 
-    virtual ~daBakubaku_c();
-
     /* The slots it overrides, found by diffing all 31 against dEnemyBase_c's. All six bodies
        are now real methods -- Behavior and InitResources were the last two still
        written as free functions over raw offsets, and both reproduce unchanged. */
@@ -75,6 +76,14 @@ struct daBakubaku_c : dEnemyBase_c {
     virtual s32  Render();              /* slot  9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnAimedAtWithEgg();    /* slot 29 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    /* Declared last and inline so class instantiation emits the retail D1/D0
+       pair in that order, with no separate D2 body. */
+    virtual ~daBakubaku_c() {}
 };
 
 typedef char daBakubaku_c_size_must_be_0x438[sizeof(daBakubaku_c) == 0x438 ? 1 : -1];

@@ -13,7 +13,7 @@
  * 0x0d0..0x0d4 is dBgActor_c's own generic pad (include/dBgActor_c.h), not a
  * Crate field -- InitResources reaches it with a raw `this + 0xd0` write
  * instead of a named member, the same idiom dBgActor_c.h documents for
- * ArmedRotatingPlatform's tail-padding field.
+ * daObjRc_Guruguru_c's tail-padding field.
  *
  * Field names come from what the matched bodies do with each offset; the
  * per-offset citations are in notes/bgobject-provenance.md. Offsets with no

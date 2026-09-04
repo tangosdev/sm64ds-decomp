@@ -17,7 +17,7 @@
  * is deliberately not redeclared here.
  *
  * mCooldown/mFlag sit at 0x31e/0x31f, in dBgActor_c's TAIL PADDING (same placement
- * rationale as ArmedRotatingPlatform's mAngVelY). InitResources is this task's only
+ * rationale as daObjRc_Guruguru_c's mAngVelY). InitResources is this task's only
  * evidence for them (seeds mCooldown to 0xf, mFlag to 0); Behavior (out of this
  * task's scope) is presumably where they are read.
  */

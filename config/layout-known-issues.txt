@@ -10,7 +10,7 @@
 # not cosmetic. srcpath resolves a symbol .c-before-.cpp, so the .c SHADOWS the .cpp
 # for every tool that asks where a symbol lives, including enroll.
 #
-# _ZN13PoleBillboard8BehaviorEv is the case that shows why this matters. Its .c is a
+# _ZN18daObjBkBillboard_c8BehaviorEv is the case that shows why this matters. Its .c is a
 # `// NONMATCHING` draft and its .cpp is not marked as one, but neither is enrolled --
 # because enroll resolves the symbol to the .c, sees the NONMATCHING hatch, and skips
 # the symbol without ever considering the .cpp. A real match sitting in that .cpp would
@@ -20,7 +20,7 @@
 # The other five have the .c enrolled and building, with an unenrolled .cpp duplicate
 # alongside. Clearing these means deciding per symbol which file is real and deleting
 # the other, which is a separate PR with its own verification -- not a layout change.
-L2 _ZN13PoleBillboard8BehaviorEv
+L2 _ZN18daObjBkBillboard_c8BehaviorEv
 L2 _ZN15TtcRotatingGear8BehaviorEv
 L2 _ZN5Stage7PS_InitEv
 L2 func_ov065_02116364

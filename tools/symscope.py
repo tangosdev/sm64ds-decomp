@@ -17,7 +17,8 @@ still passes every existing gate:
   - `eligible.py` rule 5 resolves references against every symbols.txt merged into
     one flat namespace, so a name from a never-coresident overlay counts as resolved.
 
-Observed: `src/_ZN10daPgMthr_c8BehaviorEv.cpp`, enrolled in ov018, called
+Observed: `daPgMthr_c::Behavior`, enrolled in ov018 (in a per-function legacy
+source at the time; now part of `src/actors/d_a_pg_mthr.cpp`), called
 `_ZN13RacingPenguin16OnPendingDestroyEv`, which is ov019's 4-byte `bx lr` stub. The
 ROM's call at 0x02112488 goes to func_ov018_0211235c, ov018's pointer-to-member
 dispatcher, which sits at the same address 0x0211235c that ov019 gives the stub.

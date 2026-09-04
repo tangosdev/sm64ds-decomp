@@ -1,15 +1,15 @@
-_ZN16SwingingPlatformD1Ev kind:function(arm,size=0x44) addr:0x021111a0
-_ZN16SwingingPlatformD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN16daObjRcBuranko_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN16daObjRcBuranko_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov036_0211123c kind:function(arm,size=0x48) addr:0x0211123c
-_ZN16SwingingPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111284
-_ZN16SwingingPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021112c8
-_ZN16SwingingPlatform8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112f0
-_ZN16SwingingPlatform13InitResourcesEv kind:function(arm,size=0x98) addr:0x0211137c
+_ZN16daObjRcBuranko_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111284
+_ZN16daObjRcBuranko_c6RenderEv kind:function(arm,size=0x28) addr:0x021112c8
+_ZN16daObjRcBuranko_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112f0
+_ZN16daObjRcBuranko_c13InitResourcesEv kind:function(arm,size=0x98) addr:0x0211137c
 daObjRcBuranko_c_classInit kind:function(arm,size=0x30) addr:0x02111414
-_ZN18RotatingPlatformRrD1Ev kind:function(arm,size=0x50) addr:0x02111444
-_ZN18RotatingPlatformRrD0Ev kind:function(arm,size=0x64) addr:0x02111494
-_ZN18RotatingPlatformRr16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114f8
-_ZN18RotatingPlatformRr13InitResourcesEv kind:function(arm,size=0x38) addr:0x0211150c
+_ZN19daObjRc_Kaitendai_cD1Ev kind:function(arm,size=0x50) addr:0x02111444
+_ZN19daObjRc_Kaitendai_cD0Ev kind:function(arm,size=0x64) addr:0x02111494
+_ZN19daObjRc_Kaitendai_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114f8
+_ZN19daObjRc_Kaitendai_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x0211150c
 daObjRc_Kaitendai_c_classInit kind:function(arm,size=0x3c) addr:0x02111544
 _ZN8ShipWingD1Ev kind:function(arm,size=0x30) addr:0x02111580
 _ZN8ShipWingD0Ev kind:function(arm,size=0x44) addr:0x021115b0
@@ -29,12 +29,12 @@ _ZN10DonutBlock13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111bb8
 func_ov036_02111ca4 kind:function(arm,size=0x20) addr:0x02111ca4
 func_ov036_02111cc4 kind:function(arm,size=0x14) addr:0x02111cc4
 daObjRc_Tikuwa_c_classInit kind:function(arm,size=0x3c) addr:0x02111cd8
-_ZN21ArmedRotatingPlatformD1Ev kind:function(arm,size=0x44) addr:0x02111d14
-_ZN21ArmedRotatingPlatformD0Ev kind:function(arm,size=0x58) addr:0x02111d58
-_ZN21ArmedRotatingPlatform16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02111db0
-_ZN21ArmedRotatingPlatform6RenderEv kind:function(arm,size=0x28) addr:0x02111df8
-_ZN21ArmedRotatingPlatform8BehaviorEv kind:function(arm,size=0x90) addr:0x02111e20
-_ZN21ArmedRotatingPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111eb0
+_ZN18daObjRc_Guruguru_cD1Ev kind:function(arm,size=0x44) addr:0x02111d14
+_ZN18daObjRc_Guruguru_cD0Ev kind:function(arm,size=0x58) addr:0x02111d58
+_ZN18daObjRc_Guruguru_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02111db0
+_ZN18daObjRc_Guruguru_c6RenderEv kind:function(arm,size=0x28) addr:0x02111df8
+_ZN18daObjRc_Guruguru_c8BehaviorEv kind:function(arm,size=0x90) addr:0x02111e20
+_ZN18daObjRc_Guruguru_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111eb0
 daObjRc_Guruguru_c_classInit kind:function(arm,size=0x30) addr:0x02111f5c
 _ZN16daObjRc_Dorifu_cD1Ev kind:function(arm,size=0x80) addr:0x02111f8c
 _ZN16daObjRc_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x0211200c
@@ -153,9 +153,9 @@ data_ov036_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov036_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov036_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 _ZTI16daObjRcBuranko_c kind:data(any) addr:0x02113a54
-data_ov036_02113a60 kind:data(any) addr:0x02113a60
+_ZTS16daObjRcBuranko_c kind:data(any) addr:0x02113a60
 g_profile_RC_BURANKO kind:data(any) addr:0x02113a74 ambiguous
-_ZTV16SwingingPlatform kind:data(any) addr:0x02113a98
+_ZTV16daObjRcBuranko_c kind:data(any) addr:0x02113a98
 data_ov036_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov036_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov036_02113b10 kind:data(any) addr:0x02113b10 ambiguous
@@ -165,7 +165,7 @@ _ZTI19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b20
 data_ov036_02113b2c kind:data(any) addr:0x02113b2c
 _ZTS19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b38
 g_profile_RC_KAITEN kind:data(any) addr:0x02113b50 ambiguous
-_ZTV18RotatingPlatformRr kind:data(any) addr:0x02113b74
+_ZTV19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b74
 data_ov036_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov036_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov036_02113b90 kind:data(any) addr:0x02113b90 ambiguous
@@ -192,15 +192,13 @@ _ZTI18daObjRc_Guruguru_c kind:data(any) addr:0x02113d84
 _ZTS18daObjRc_Guruguru_c kind:data(any) addr:0x02113d90
 g_profile_RC_GURUGURU kind:data(any) addr:0x02113da8 ambiguous
 data_ov036_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
-_ZTV21ArmedRotatingPlatform kind:data(any) addr:0x02113dcc
+_ZTV18daObjRc_Guruguru_c kind:data(any) addr:0x02113dcc
 data_ov036_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 _ZTI16daObjRc_Dorifu_c kind:data(any) addr:0x02113e4c
-data_ov036_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 _ZTS16daObjRc_Dorifu_c kind:data(any) addr:0x02113e58
 g_profile_RC_DORIFU kind:data(any) addr:0x02113e6c ambiguous
 data_ov036_02113e88 kind:data(any) addr:0x02113e88
 _ZTV16daObjRc_Dorifu_c kind:data(any) addr:0x02113ecc
-data_ov036_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI15daObjRcCarpet_c kind:data(any) addr:0x02113f4c
 data_ov036_02113f58 kind:data(any) addr:0x02113f58
 _ZTS15daObjRcCarpet_c kind:data(any) addr:0x02113f64

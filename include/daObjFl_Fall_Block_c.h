@@ -14,7 +14,7 @@
  * in the RTTI: its destructor stores THREE vptrs -- its own,
  * daObjFallBlock_c's, then dBgActor_c's (func_ov022_02112380 /
  * func_ov022_021123d0, both `complete` today under placeholder names). A
- * one-level chain emits two. Its siblings include/FallBlockWf.h (ov015),
+ * one-level chain emits two. Its siblings include/daObjBk_Fall_Block_c.h (ov015),
  * daObjKm2_Fall_Block_c.h (ov045) and FallBlockBbh.h (ov063) already document the
  * identical shape.
  *

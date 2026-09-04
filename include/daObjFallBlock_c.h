@@ -31,7 +31,7 @@
  * own overrides are 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 27
  * (OnHitByMegaChar) and 31 (Kill).
  *
- * FOUR DESCENDANTS, one per level overlay: daObjBk_Fall_Block_c (FallBlockWf,
+ * FOUR DESCENDANTS, one per level overlay: daObjBk_Fall_Block_c (daObjBk_Fall_Block_c,
  * ov015), daObjFl_Fall_Block_c (ov022, only ever named by its factory
  * daObjFl_Fall_Block_c_classInit), daObjKm2_Fall_Block_c (FallBlockBfs, ov045) and
  * daObjTh_Fall_Block_c (FallBlockBbh, ov063). Each one's destructor stores this

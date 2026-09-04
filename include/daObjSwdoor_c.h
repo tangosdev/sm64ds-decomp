@@ -18,10 +18,10 @@
  *
  * ABSTRACT IN THREE SLOTS. 0 (InitResources), 3 (CleanupResources) and 6
  * (Behavior) are all null; this class supplies only 9 (Render), 16 (D1) and 17
- * (D0). Both leaves fill all three nulls, which is why daObjBSwdoor_c and ShutterHmc
+ * (D0). Both leaves fill all three nulls, which is why daObjBSwdoor_c and daObjCvShutter_c
  * each have their own InitResources, CleanupResources and Behavior in the tree.
  *
- * TWO DESCENDANTS: daObjBSwdoor_c (was ShutterBob) and daObjCvShutter_c (ShutterHmc).
+ * TWO DESCENDANTS: daObjBSwdoor_c (was ShutterBob) and daObjCvShutter_c (daObjCvShutter_c).
  * Each one's destructor stores this class's vtable between its own and
  * _ZTV10dBgActor_c.
  *

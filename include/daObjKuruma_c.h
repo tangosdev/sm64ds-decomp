@@ -19,7 +19,7 @@
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null.
  * Its own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
  *
- * TWO DESCENDANTS: RickshawPlatformBdw (daObjKm1_Kuruma_c) and the unnamed ov047
+ * TWO DESCENDANTS: daObjKm1_Kuruma_c (daObjKm1_Kuruma_c) and the unnamed ov047
  * sibling daObjKm3_Kuruma_c. Both destructors store this class's vtable between
  * their own and _ZTV10dBgActor_c, which is the same fact the RTTI records.
  *
@@ -28,7 +28,7 @@
  * nothing above dBgActor_c -- Behavior is UpdateModelPosAndRotY plus the guarded
  * UpdateClsnPosAndRot, Render dispatches through the Model at 0xd4. Its own
  * destructor destroys only dBgActor_c's two members. And both factories,
- * RickshawPlatformBdw_Spawn and daObjKm3_Dorifu_c_Spawn, pass 800 = 0x320 to
+ * daObjKm1_Kuruma_c_Spawn and daObjKm3_Dorifu_c_Spawn, pass 800 = 0x320 to
  * fBase_c::operator new, which is sizeof(dBgActor_c) exactly: there is no room
  * for a field anywhere in this class or in either leaf.
  */

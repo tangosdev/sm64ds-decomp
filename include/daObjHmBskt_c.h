@@ -60,7 +60,7 @@ typedef char UkikiCage_size_must_be_0x4e0[sizeof(daObjHmBskt_c) == 0x4e0 ? 1 : -
 
 /* The C spelling of the same object, flat. Kept because the D0 file used to be
    compiler-generated C; the arrangement matches include/daObjPushblock_c.h and the
-   other members of this family (DonutBlock.h, BigBrickBlock.h, MetalNet.h,
+   other members of this family (DonutBlock.h, BigBrickBlock.h, daObjMc_Metalnet_c.h,
    daObjC1_Trap_c.h). */
 struct daObjHmBskt_c {
     u8  pad_000[0x5c];
