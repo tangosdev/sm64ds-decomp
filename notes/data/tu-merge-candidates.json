@@ -8907,22 +8907,22 @@
    "start": "0x21125e0",
    "end": "0x2112950",
    "classes": [
-    "VolcanoFire",
+    "daObj_volcanoCannon_c",
     "daObjFlMaruta_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN11VolcanoFireD1Ev.cpp",
-    "src/_ZN11VolcanoFireD0Ev.c",
+    "src/_ZN21daObj_volcanoCannon_cD1Ev.cpp",
+    "src/_ZN21daObj_volcanoCannon_cD0Ev.c",
     "src/func_ov022_02112654.cpp",
     "src/func_ov022_021126ac.c",
     "src/func_ov022_02112710.c",
     "src/func_ov022_02112790.cpp",
-    "src/_ZN11VolcanoFire16CleanupResourcesEv.c",
-    "src/_ZN11VolcanoFire8BehaviorEv.cpp",
-    "src/_ZN11VolcanoFire13InitResourcesEv.cpp",
-    "src/VolcanoFire_Spawn.c"
+    "src/_ZN21daObj_volcanoCannon_c16CleanupResourcesEv.c",
+    "src/_ZN21daObj_volcanoCannon_c8BehaviorEv.cpp",
+    "src/_ZN21daObj_volcanoCannon_c13InitResourcesEv.cpp",
+    "src/daObj_volcanoCannon_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 5,
