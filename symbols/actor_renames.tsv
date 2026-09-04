@@ -865,6 +865,7 @@ ov024	0x02113820	data_ov024_02113820	PyramidTag_SpawnInfo	spawninfo
 ov024	0x02113820	PyramidTag_SpawnInfo	g_profile_DL_PYRAMID_DUMMY	reconstructed profile global; literal ROM ID DL_PYRAMID_DUMMY+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov024	0x02113844	data_ov024_02113844	_ZTV10PyramidTag	vtable alloc=0x3b8
 ov024	0x021138c8	data_ov024_021138c8	_ZTV10PyramidTop	vtable alloc=0x3b8
+ov025	0x02111898	func_ov025_02111898	daDgr_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x02111cf4	func_ov025_02111cf4	Grindel_Spawn	spawnfunc
 ov025	0x02111d40	func_ov025_02111d40	_ZN11PyramidStepD1Ev	vtable slot 16
 ov025	0x02111d8c	func_ov025_02111d8c	_ZN11PyramidStepD0Ev	vtable slot 17
@@ -882,6 +883,7 @@ ov025	0x02112288	func_ov025_02112288	_ZN11PyramidLift8BehaviorEv	vtable slot 6
 ov025	0x02112498	func_ov025_02112498	_ZN11PyramidLift13InitResourcesEv	vtable slot 0
 ov025	0x021125f0	func_ov025_021125f0	PyramidLift_Spawn	spawnfunc
 ov025	0x021125f0	PyramidLift_Spawn	daDpLift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov025	0x0211373c	data_ov025_0211373c	g_profile_DONGURU	reconstructed profile global; literal ROM ID DONGURU+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov025	0x0211382c	data_ov025_0211382c	Grindel_SpawnInfo	spawninfo
 ov025	0x021138f0	data_ov025_021138f0	PyramidStep_SpawnInfo	spawninfo
 ov025	0x021138f0	PyramidStep_SpawnInfo	g_profile_DP_BROCK	reconstructed profile global; literal ROM ID DP_BROCK+registry role+later EAD lineage; exact SM64DS spelling not preserved

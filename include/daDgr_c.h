@@ -23,7 +23,7 @@
  *
  * SIZE IS 0x334 (820 decimal), THE LITERAL THE FACTORY PASSES TO operator new --
  * not the field span a naive read of the destructor gives. The factory,
- * func_ov025_02111898, is a trivial-constructor shape: `fBase_c::operator
+ * daDgr_c_classInit, is a trivial-constructor shape: `fBase_c::operator
  * new(820)`, `dBgActor_c::dBgActor_c()`, store `_ZTV7daDgr_c`. No dedicated
  * "daDgr_c()" constructor exists in the ROM -- the derived class's own ctor
  * body is empty and gets folded into the factory, the same shape
