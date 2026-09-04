@@ -2545,42 +2545,22 @@
           "overlay": "ov020",
           "factory_module": "ov020",
           "profile_address": "0x021148b4",
-          "current_profile_name": "BookShot_SpawnInfo",
+          "current_profile_name": "g_profile_SHOOT_BOOK",
           "factory_address": "0x021128dc",
-          "current_factory_name": "BookShot_Spawn"
+          "current_factory_name": "daBook_c_classInit_SHOOT_BOOK"
         }
       ],
-      "tu_start": "0x21111a0",
+      "tu_start": "0x21127f4",
       "tu_end": "0x2112938",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "BookShot",
-        "BookShotSpawner"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "SHOOT_BOOK",
         "BOOK_GENERATOR"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov020_02113674",
-          "address": "0x02113674",
-          "size": "0xb8",
-          "classification": "high",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "4 of 4 ownership global(s) map through consumers to ov020:0",
-            "ordered hypothesis ov020:0 (ov020/BookShot+BookShotSpawner): module has one sinit per candidate TU; this is corroboration, not proof"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x021128dc",
       "factory_size": "0x0000005c",
       "registry_factory_reference_count": 1,
@@ -2592,8 +2572,8 @@
           "profile_address": "0x021148b4"
         }
       ],
-      "current_factory_name": "BookShot_Spawn",
-      "current_factory_file": "src/BookShot_Spawn.c",
+      "current_factory_name": "daBook_c_classInit_SHOOT_BOOK",
+      "current_factory_file": "src/d_a_book_shoot_book.c",
       "proposed_factory_name": "daBook_c_classInit_SHOOT_BOOK",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2602,7 +2582,7 @@
       "proposed_factory_collision": "ov020:0x021127f4;ov020:0x02112880;ov020:0x021128dc",
       "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x021148b4",
-      "current_profile_name": "BookShot_SpawnInfo",
+      "current_profile_name": "g_profile_SHOOT_BOOK",
       "proposed_profile_name": "g_profile_SHOOT_BOOK",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 325,
@@ -2620,25 +2600,22 @@
       "class_size": "0x00000454",
       "installed_vtable": "0x0211495c",
       "expected_vtable": "_ZTV8daBook_c",
-      "factory_ordinal_in_tu": 31,
+      "factory_ordinal_in_tu": 4,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x70",
       "profile_to_vtable_delta": "+0xa8",
       "data_order": "rtti_name < rtti < profile < vtable",
       "class_filename_candidate": "d_a_book.cpp",
-      "probable_filename": "",
-      "tu_filename_candidates": [
-        "d_a_book.cpp",
-        "d_a_book_gen.cpp"
-      ],
-      "filename_contradictions": "one recovered TU carries multiple distinct RTTI-derived filename stems",
-      "filename_evidence": "RTTI yields a mechanical class-family candidate, but recovered TU evidence does not select one filename; later EAD convention remains lineage-only",
+      "probable_filename": "d_a_book.cpp",
+      "tu_filename_candidates": [],
+      "filename_contradictions": "",
+      "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B",
       "profile_name_confidence": "B+",
-      "filename_confidence": "",
+      "filename_confidence": "B-",
       "selection_reason": "profile in a recovered multi-class, multi-profile TU",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOOK_SHOT"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; community actor gloss=BOOK_SHOT"
     },
     {
       "actor_id": 328,
@@ -2663,37 +2640,17 @@
           "current_factory_name": "daBookGen_c_classInit"
         }
       ],
-      "tu_start": "0x21111a0",
+      "tu_start": "0x21127f4",
       "tu_end": "0x2112938",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "BookShot",
-        "BookShotSpawner"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "SHOOT_BOOK",
         "BOOK_GENERATOR"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov020_02113674",
-          "address": "0x02113674",
-          "size": "0xb8",
-          "classification": "high",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "4 of 4 ownership global(s) map through consumers to ov020:0",
-            "ordered hypothesis ov020:0 (ov020/BookShot+BookShotSpawner): module has one sinit per candidate TU; this is corroboration, not proof"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x02112850",
       "factory_size": "0x00000030",
       "registry_factory_reference_count": 1,
@@ -2706,7 +2663,7 @@
         }
       ],
       "current_factory_name": "daBookGen_c_classInit",
-      "current_factory_file": "src/daBookGen_c_classInit.c",
+      "current_factory_file": "src/d_a_book_gen.c",
       "proposed_factory_name": "daBookGen_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2733,25 +2690,22 @@
       "class_size": "0x000000d8",
       "installed_vtable": "0x021148d8",
       "expected_vtable": "_ZTV11daBookGen_c",
-      "factory_ordinal_in_tu": 29,
+      "factory_ordinal_in_tu": 2,
       "factory_is_last_in_tu": false,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x44",
       "profile_to_vtable_delta": "+0x5c",
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_book_gen.cpp",
-      "probable_filename": "",
-      "tu_filename_candidates": [
-        "d_a_book.cpp",
-        "d_a_book_gen.cpp"
-      ],
-      "filename_contradictions": "one recovered TU carries multiple distinct RTTI-derived filename stems",
-      "filename_evidence": "RTTI yields a mechanical class-family candidate, but recovered TU evidence does not select one filename; later EAD convention remains lineage-only",
+      "probable_filename": "d_a_book_gen.cpp",
+      "tu_filename_candidates": [],
+      "filename_contradictions": "",
+      "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
       "profile_name_confidence": "B+",
-      "filename_confidence": "",
+      "filename_confidence": "B-",
       "selection_reason": "related profile in the same recovered TU",
-      "notes": "one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOOK_SHOT_SPAWNER"
+      "notes": "community actor gloss=BOOK_SHOT_SPAWNER"
     },
     {
       "actor_id": 361,
