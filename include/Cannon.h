@@ -10,7 +10,7 @@
 #include "dActor_c.h"
 
 /* The ROM constructs dActor_c first, then the owned Model and dCcAc_c in
- * Cannon_Spawn. D1/D0 destroy those members in reverse before the actor base;
+ * daCnn_c_classInit. D1/D0 destroy those members in reverse before the actor base;
  * together the two directions pin this inheritance and layout. */
 struct Cannon : dActor_c {
     u8 pad_0d0[0x4];         /* 0x0d0 */

@@ -64,7 +64,7 @@
  * differ", which is match.py's sentinel for "the sizes differ at all", not a
  * count.
  *
- * SIZE. Door_Spawn.c calls `_ZN7fBase_cnwEj(328)` -- 0x148 -- for a fresh Door,
+ * SIZE. daDoor_c_classInit.c calls `_ZN7fBase_cnwEj(328)` -- 0x148 -- for a fresh Door,
  * then _ZN8dActor_cC2Ev and _ZN9ModelAnimC1Ev at +0xd4. dActor_c is 0xd0
  * (include/dActor_c.h) and ModelAnim is 0x64 (include/ModelAnim.h), so the
  * embedded ModelAnim runs 0xd4..0x138 (the same 4-byte alignment pad
@@ -92,13 +92,18 @@
  *
  * Field NAMES elsewhere are placeholders and cannot change codegen. Offsets
  * and widths are observed.
+ *
+ * SM64DS RTTI names the implementation daDoor_c. The reconstructed
+ * factory daDoor_c_classInit (historical alias
+ * Door_Spawn) constructs it for the DOOR
+ * registry profile.
  */
 
 #ifdef __cplusplus
 
 struct Door : dActor_c {
     u8  pad_0d0[0x4];
-    /* Named by Door_Spawn.c's own _ZN9ModelAnimC1Ev call at +0xd4 -- a
+    /* Named by daDoor_c_classInit.c's own _ZN9ModelAnimC1Ev call at +0xd4 -- a
        relocation the ROM build checks, same idiom as include/dBgActor_c.h's
        mModel. */
     ModelAnim mModel;        /* 0x0d4 */
@@ -150,7 +155,7 @@ struct Door : dActor_c {
     virtual void OnPendingDestroy();      /* slot 12 */
 };
 
-/* Holds the chain to the size Door_Spawn.c's operator new(0x148) call
+/* Holds the chain to the size daDoor_c_classInit.c's operator new(0x148) call
    evidences. A silently-added member anywhere fails this. */
 typedef char Door_size_must_be_0x148[sizeof(Door) == 0x148 ? 1 : -1];
 

@@ -12,6 +12,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjSimpleBg_c. The reconstructed
+ * factory daObjSimpleBg_c_classInit_BK_TOWER (historical alias
+ * FortressTower_Spawn) constructs it for the BK_TOWER
+ * registry profile.
  */
 
 #ifdef __cplusplus

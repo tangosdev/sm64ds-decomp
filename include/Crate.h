@@ -1,10 +1,10 @@
 /* Derives from dBgActor_c. RTTI carries this class as `daObjBlockS_c`
  * (_ZTI13daObjBlockS_c / _ZTS13daObjBlockS_c, ov098 0x0213c4d4/0x0213c500) but
  * every mangled symbol in the ROM already spells it `Crate` (_ZTV5Crate,
- * _ZN5CrateD1Ev, Crate_Spawn, ...), so the C++ class keeps that name -- a real
+ * _ZN5CrateD1Ev, daObjBlockS_c_classInit, ...), so the C++ class keeps that name -- a real
  * class references its own _ZTV, and a name mismatch only fails at link.
  *
- * SIZE 0x608, the literal Crate_Spawn (src/Crate_Spawn.cpp) passes to
+ * SIZE 0x608, the literal daObjBlockS_c_classInit (src/daObjBlockS_c_classInit.cpp) passes to
  * fBase_c::operator new. dBgActor_c ends 0x320; everything from there down is
  * this class's own, confirmed by _ZN5CrateD1Ev.cpp destroying
  * dCcAcPos_c x2, ShadowModel and dBgCh_Actr in reverse before

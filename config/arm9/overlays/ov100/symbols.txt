@@ -13,7 +13,7 @@ _ZN9Butterfly16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021419d0
 _ZN9Butterfly6RenderEv kind:function(arm,size=0x6c) addr:0x021419d4
 _ZN9Butterfly8BehaviorEv kind:function(arm,size=0x22c) addr:0x02141a40
 _ZN9Butterfly13InitResourcesEv kind:function(arm,size=0x238) addr:0x02141c6c
-Butterfly_Spawn kind:function(arm,size=0x60) addr:0x02141ea4
+daBtfly_c_classInit kind:function(arm,size=0x60) addr:0x02141ea4
 _ZN15RollingIronBallD1Ev kind:function(arm,size=0x48) addr:0x02141f04
 _ZN15RollingIronBallD0Ev kind:function(arm,size=0x5c) addr:0x02141f4c
 _ZN15RollingIronBall16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02141fa8
@@ -29,7 +29,7 @@ _ZN15RollingIronBall16CleanupResourcesEv kind:function(arm,size=0x40) addr:0x021
 _ZN15RollingIronBall6RenderEv kind:function(arm,size=0x3c) addr:0x02142d5c
 _ZN15RollingIronBall8BehaviorEv kind:function(arm,size=0x48) addr:0x02142d98
 _ZN15RollingIronBall13InitResourcesEv kind:function(arm,size=0x38c) addr:0x02142de0
-RollingIronBall_Spawn kind:function(arm,size=0x58) addr:0x0214316c
+daIbl_c_classInit kind:function(arm,size=0x58) addr:0x0214316c
 _ZN14UnchainedChompD1Ev kind:function(arm,size=0xcc) addr:0x021431c4
 _ZN14UnchainedChompD0Ev kind:function(arm,size=0xe0) addr:0x02143290
 func_ov100_02143370 kind:function(arm,size=0xdc) addr:0x02143370
@@ -46,7 +46,7 @@ _ZN14UnchainedChomp6RenderEv kind:function(arm,size=0x58) addr:0x02143d0c
 _ZN14UnchainedChomp8BehaviorEv kind:function(arm,size=0x324) addr:0x02143d64
 _ZN14UnchainedChomp13InitResourcesEv kind:function(arm,size=0x24c) addr:0x02144088
 _ZN14UnchainedChomp16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021442d4
-UnchainedChomp_Spawn kind:function(arm,size=0x118) addr:0x021442dc
+daWanwan2_c_classInit kind:function(arm,size=0x118) addr:0x021442dc
 _ZN4DoorD1Ev kind:function(arm,size=0x30) addr:0x021443f4
 _ZN4DoorD0Ev kind:function(arm,size=0x44) addr:0x02144424
 func_ov100_02144468 kind:function(arm,size=0x80) addr:0x02144468
@@ -78,7 +78,7 @@ _ZN4Door16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021454c4
 _ZN4Door6RenderEv kind:function(arm,size=0x88) addr:0x021454c8
 _ZN4Door8BehaviorEv kind:function(arm,size=0x50) addr:0x02145550
 _ZN4Door13InitResourcesEv kind:function(arm,size=0x2fc) addr:0x021455a0
-Door_Spawn kind:function(arm,size=0x38) addr:0x0214589c
+daDoor_c_classInit kind:function(arm,size=0x38) addr:0x0214589c
 _ZN8StarDoorD1Ev kind:function(arm,size=0x30) addr:0x021458d4
 _ZN8StarDoorD0Ev kind:function(arm,size=0x44) addr:0x02145904
 func_ov100_02145948 kind:function(arm,size=0x40) addr:0x02145948
@@ -98,7 +98,7 @@ _ZN8StarDoor16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02145fe0
 _ZN8StarDoor6RenderEv kind:function(arm,size=0xf8) addr:0x02145fe4
 _ZN8StarDoor8BehaviorEv kind:function(arm,size=0x50) addr:0x021460dc
 _ZN8StarDoor13InitResourcesEv kind:function(arm,size=0xa8) addr:0x0214612c
-StarDoor_Spawn kind:function(arm,size=0x38) addr:0x021461d4
+daStarGate_c_classInit kind:function(arm,size=0x38) addr:0x021461d4
 _ZN4FishD1Ev kind:function(arm,size=0x30) addr:0x0214620c
 _ZN4FishD0Ev kind:function(arm,size=0x44) addr:0x0214623c
 func_ov100_02146280 kind:function(arm,size=0x1c) addr:0x02146280
@@ -116,7 +116,7 @@ _ZN4Fish16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02146b00
 _ZN4Fish6RenderEv kind:function(arm,size=0x34) addr:0x02146b04
 _ZN4Fish8BehaviorEv kind:function(arm,size=0x130) addr:0x02146b38
 _ZN4Fish13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02146c68
-Fish_Spawn kind:function(arm,size=0x44) addr:0x02146d38
+daFish_c_classInit kind:function(arm,size=0x44) addr:0x02146d38
 _ZN15daObjPathLift_cD1Ev kind:function(arm,size=0x70) addr:0x02146d7c
 _ZN15daObjPathLift_cD0Ev kind:function(arm,size=0x84) addr:0x02146dec
 func_ov100_02146e70 kind:function(arm,size=0x19c) addr:0x02146e70
@@ -152,7 +152,7 @@ data_ov100_02147e50 kind:data(any) addr:0x02147e50
 data_ov100_02147e58 kind:data(any) addr:0x02147e58
 _ZTS9daBtfly_c kind:data(any) addr:0x02147e60
 _ZTI9daBtfly_c kind:data(any) addr:0x02147e6c
-Butterfly_SpawnInfo kind:data(any) addr:0x02147e78
+g_profile_BUTTERFLY kind:data(any) addr:0x02147e78
 _ZTV9Butterfly kind:data(any) addr:0x02147e9c
 _ZTV9daBtfly_c kind:data(any) addr:0x02147e9c
 data_ov100_02147f18 kind:data(any) addr:0x02147f18
@@ -162,7 +162,7 @@ data_ov100_02147f30 kind:data(any) addr:0x02147f30
 data_ov100_02147f38 kind:data(any) addr:0x02147f38
 _ZTS7daIbl_c kind:data(any) addr:0x02147f40
 _ZTI7daIbl_c kind:data(any) addr:0x02147f4c
-RollingIronBall_SpawnInfo kind:data(any) addr:0x02147f58
+g_profile_IRONBALL kind:data(any) addr:0x02147f58
 _ZTV15RollingIronBall kind:data(any) addr:0x02147f7c
 _ZTV7daIbl_c kind:data(any) addr:0x02147f7c
 data_ov100_02147ff8 kind:data(any) addr:0x02147ff8
@@ -170,7 +170,7 @@ data_ov100_02148000 kind:data(any) addr:0x02148000
 data_ov100_02148008 kind:data(any) addr:0x02148008
 _ZTI11daWanwan2_c kind:data(any) addr:0x02148014
 _ZTS11daWanwan2_c kind:data(any) addr:0x02148020
-UnchainedChomp_SpawnInfo kind:data(any) addr:0x02148030
+g_profile_WANWAN2 kind:data(any) addr:0x02148030
 _ZTV14UnchainedChomp kind:data(any) addr:0x02148054
 data_ov100_021480d0 kind:data(any) addr:0x021480d0
 data_ov100_021480d4 kind:data(any) addr:0x021480d4
@@ -190,7 +190,7 @@ data_ov100_0214813c kind:data(any) addr:0x0214813c
 data_ov100_02148144 kind:data(any) addr:0x02148144
 _ZTS8daDoor_c kind:data(any) addr:0x0214814c
 _ZTI8daDoor_c kind:data(any) addr:0x02148158
-Door_SpawnInfo kind:data(any) addr:0x02148164
+g_profile_DOOR kind:data(any) addr:0x02148164
 _ZTV4Door kind:data(any) addr:0x02148188
 data_ov100_02148204 kind:data(any) addr:0x02148204
 data_ov100_02148334 kind:data(any) addr:0x02148334
@@ -204,7 +204,7 @@ data_ov100_0214836c kind:data(any) addr:0x0214836c
 _ZTI12daStarGate_c kind:data(any) addr:0x02148374
 _ZTS12daStarGate_c kind:data(any) addr:0x02148380
 data_ov100_02148390 kind:data(any) addr:0x02148390
-StarDoor_SpawnInfo kind:data(any) addr:0x021483a8
+g_profile_STAR_GATE kind:data(any) addr:0x021483a8
 _ZTV8StarDoor kind:data(any) addr:0x021483cc
 _ZTV12daStarGate_c kind:data(any) addr:0x021483cc
 data_ov100_02148448 kind:data(any) addr:0x02148448
@@ -216,7 +216,7 @@ data_ov100_02148470 kind:data(any) addr:0x02148470
 data_ov100_02148478 kind:data(any) addr:0x02148478
 _ZTS8daFish_c kind:data(any) addr:0x02148480
 _ZTI8daFish_c kind:data(any) addr:0x0214848c
-Fish_SpawnInfo kind:data(any) addr:0x02148498
+g_profile_FISH kind:data(any) addr:0x02148498
 _ZTV4Fish kind:data(any) addr:0x021484bc
 _ZTV8daFish_c kind:data(any) addr:0x021484bc
 _ZTI15daObjPathLift_c kind:data(any) addr:0x02148538

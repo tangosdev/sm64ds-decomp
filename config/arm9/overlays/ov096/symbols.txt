@@ -32,8 +32,8 @@ _ZN5Pokey6RenderEv kind:function(arm,size=0x54) addr:0x021369fc
 _ZN5Pokey8BehaviorEv kind:function(arm,size=0x60) addr:0x02136a50
 _ZN5Pokey13InitResourcesEv kind:function(arm,size=0x220) addr:0x02136ab0
 _ZN5Pokey13OnTurnIntoEggER6Player kind:function(arm,size=0x40) addr:0x02136cd0
-PokeySegment_Spawn kind:function(arm,size=0x50) addr:0x02136d10
-Pokey_Spawn kind:function(arm,size=0x50) addr:0x02136d60
+daSanbo_c_classInit_SANBO_BODY kind:function(arm,size=0x50) addr:0x02136d10
+daSanbo_c_classInit_SANBO kind:function(arm,size=0x50) addr:0x02136d60
 _ZN7TornadoD1Ev kind:function(arm,size=0x48) addr:0x02136db0
 _ZN7TornadoD0Ev kind:function(arm,size=0x5c) addr:0x02136df8
 _ZN7Tornado10UpdateSpinEi kind:function(arm,size=0x180) addr:0x02136e54
@@ -44,7 +44,7 @@ _ZN7Tornado16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021373e4
 _ZN7Tornado6RenderEv kind:function(arm,size=0x34) addr:0x02137414
 _ZN7Tornado8BehaviorEv kind:function(arm,size=0x11c) addr:0x02137448
 _ZN7Tornado13InitResourcesEv kind:function(arm,size=0x158) addr:0x02137564
-Tornado_Spawn kind:function(arm,size=0x50) addr:0x021376bc
+daTor_c_classInit kind:function(arm,size=0x50) addr:0x021376bc
 __sinit_ov096_0213770c kind:function(arm,size=0x188) addr:0x0213770c
 __sinit_ov096_02137894 kind:function(arm,size=0x6c) addr:0x02137894
 .p__sinit_ov096_0213770c kind:data(word) addr:0x02137900
@@ -63,13 +63,13 @@ data_ov096_02137970 kind:data(any) addr:0x02137970
 data_ov096_02137978 kind:data(any) addr:0x02137978
 _ZTS9daSanbo_c kind:data(any) addr:0x02137980
 _ZTI9daSanbo_c kind:data(any) addr:0x0213798c
-Pokey_SpawnInfo kind:data(any) addr:0x02137998 ambiguous
-PokeySegment_SpawnInfo kind:data(any) addr:0x021379b4 ambiguous
+g_profile_SANBO kind:data(any) addr:0x02137998 ambiguous
+g_profile_SANBO_BODY kind:data(any) addr:0x021379b4 ambiguous
 _ZTV5Pokey kind:data(any) addr:0x021379d8
 _ZTV9daSanbo_c kind:data(any) addr:0x021379d8
 _ZTS7daTor_c kind:data(any) addr:0x02137a54
 _ZTI7daTor_c kind:data(any) addr:0x02137a60
-Tornado_SpawnInfo kind:data(any) addr:0x02137a6c ambiguous
+g_profile_TORNADO kind:data(any) addr:0x02137a6c ambiguous
 _ZTV7Tornado kind:data(any) addr:0x02137a90
 _ZTV7daTor_c kind:data(any) addr:0x02137a90
 data_ov096_02137b20 kind:bss addr:0x02137b20

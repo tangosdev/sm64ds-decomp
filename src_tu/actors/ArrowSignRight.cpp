@@ -26,7 +26,7 @@
  *   [7] 0x02137e20  src/_ZN14ArrowSignRight6RenderEv.cpp
  *   [8] 0x02137e48  src/_ZN14ArrowSignRight8BehaviorEv.cpp
  *   [9] 0x02137eec  src/_ZN14ArrowSignRight13InitResourcesEv.cpp
- *   [10] 0x02137fd0  src/ArrowSignRight_Spawn.c
+ *   [10] 0x02137fd0  src/daObjYajirusi_c_classInit_YAJIRUSI_R.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -80,14 +80,14 @@ extern int _ZTV14ArrowSignRight[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- ArrowSignRight_Spawn, 0x02137fd0, size 0x38 */
+/* ROM ordinal 10 -- daObjYajirusi_c_classInit_YAJIRUSI_R, 0x02137fd0, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol ArrowSignRight_Spawn
+// @symbol daObjYajirusi_c_classInit_YAJIRUSI_R
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV14ArrowSignRight */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *ArrowSignRight_Spawn(void)
+int *daObjYajirusi_c_classInit_YAJIRUSI_R(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(896);
     if (p) {

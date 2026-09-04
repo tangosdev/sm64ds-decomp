@@ -8,8 +8,8 @@ _ZN14ArrowSignRight16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0213
 _ZN14ArrowSignRight6RenderEv kind:function(arm,size=0x28) addr:0x02137e20
 _ZN14ArrowSignRight8BehaviorEv kind:function(arm,size=0xa4) addr:0x02137e48
 _ZN14ArrowSignRight13InitResourcesEv kind:function(arm,size=0xe4) addr:0x02137eec
-ArrowSignRight_Spawn kind:function(arm,size=0x38) addr:0x02137fd0
-ArrowSignLeft_Spawn kind:function(arm,size=0x38) addr:0x02138008
+daObjYajirusi_c_classInit_YAJIRUSI_R kind:function(arm,size=0x38) addr:0x02137fd0
+daObjYajirusi_c_classInit_YAJIRUSI_L kind:function(arm,size=0x38) addr:0x02138008
 _ZN5CrateD1Ev kind:function(arm,size=0x7c) addr:0x02138040
 _ZN5CrateD0Ev kind:function(arm,size=0x90) addr:0x021380bc
 func_ov098_0213814c kind:function(arm,size=0x9c) addr:0x0213814c
@@ -46,7 +46,7 @@ _ZN5Crate13InitResourcesEv kind:function(arm,size=0x130) addr:0x02139d14
 _ZN5Crate15OnGroundPoundedER8dActor_c kind:function(arm,size=0x20) addr:0x02139e44
 _ZN5Crate13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x02139e64
 _ZN5Crate13OnTurnIntoEggER6Player kind:function(arm,size=0x8c) addr:0x02139e78
-Crate_Spawn kind:function(arm,size=0x6c) addr:0x02139f04
+daObjBlockS_c_classInit kind:function(arm,size=0x6c) addr:0x02139f04
 _ZN16daObjFallBlock_cD0Ev kind:function(arm,size=0x58) addr:0x02139f70
 _ZN16daObjFallBlock_cD1Ev kind:function(arm,size=0x44) addr:0x02139fc8
 func_ov098_0213a00c kind:function(arm,size=0x9c) addr:0x0213a00c
@@ -74,7 +74,7 @@ _ZN6Cannon16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0213b1d8
 _ZN6Cannon6RenderEv kind:function(arm,size=0x58) addr:0x0213b214
 _ZN6Cannon8BehaviorEv kind:function(arm,size=0x68) addr:0x0213b26c
 _ZN6Cannon13InitResourcesEv kind:function(arm,size=0x168) addr:0x0213b2d4
-Cannon_Spawn kind:function(arm,size=0x40) addr:0x0213b43c
+daCnn_c_classInit kind:function(arm,size=0x40) addr:0x0213b43c
 _ZN9WaterBombD1Ev kind:function(arm,size=0x48) addr:0x0213b47c
 _ZN9WaterBombD0Ev kind:function(arm,size=0x5c) addr:0x0213b4c4
 func_ov098_0213b520 kind:function(arm,size=0x64) addr:0x0213b520
@@ -88,7 +88,7 @@ _ZN9WaterBomb16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0213bb9c
 _ZN9WaterBomb6RenderEv kind:function(arm,size=0x3c) addr:0x0213bbe4
 _ZN9WaterBomb8BehaviorEv kind:function(arm,size=0xf4) addr:0x0213bc20
 _ZN9WaterBomb13InitResourcesEv kind:function(arm,size=0x1fc) addr:0x0213bd14
-WaterBomb_Spawn kind:function(arm,size=0x50) addr:0x0213bf10
+daWbm_c_classInit kind:function(arm,size=0x50) addr:0x0213bf10
 data_ov098_0213bf60 kind:data(any) addr:0x0213bf60
 data_ov098_0213bf64 kind:data(any) addr:0x0213bf64
 data_ov098_0213bf68 kind:data(any) addr:0x0213bf68
@@ -106,8 +106,8 @@ _ZTS15daObjYajirusi_c kind:data(any) addr:0x0213c36c
 data_ov098_0213c380 kind:data(any) addr:0x0213c380
 data_ov098_0213c384 kind:data(any) addr:0x0213c384
 data_ov098_0213c388 kind:data(any) addr:0x0213c388
-ArrowSignLeft_SpawnInfo kind:data(any) addr:0x0213c398 ambiguous
-ArrowSignRight_SpawnInfo kind:data(any) addr:0x0213c3b4 ambiguous
+g_profile_YAJIRUSI_L kind:data(any) addr:0x0213c398 ambiguous
+g_profile_YAJIRUSI_R kind:data(any) addr:0x0213c3b4 ambiguous
 _ZTV14ArrowSignRight kind:data(any) addr:0x0213c3d8
 _ZTV15daObjYajirusi_c kind:data(any) addr:0x0213c3d8
 MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
@@ -130,7 +130,7 @@ _ZTI13daObjBlockS_c kind:data(any) addr:0x0213c4d4
 data_ov098_0213c4e0 kind:data(any) addr:0x0213c4e0
 data_ov098_0213c4f0 kind:data(any) addr:0x0213c4f0
 _ZTS13daObjBlockS_c kind:data(any) addr:0x0213c500
-Crate_SpawnInfo kind:data(any) addr:0x0213c510 ambiguous
+g_profile_BLOCK_S kind:data(any) addr:0x0213c510 ambiguous
 _ZTV5Crate kind:data(any) addr:0x0213c534
 _ZTV16daObjFallBlock_c kind:data(any) addr:0x0213c5bc
 data_ov098_0213c63c kind:data(any) addr:0x0213c63c
@@ -140,7 +140,7 @@ data_ov098_0213c654 kind:data(any) addr:0x0213c654
 data_ov098_0213c65c kind:data(any) addr:0x0213c65c
 _ZTS7daCnn_c kind:data(any) addr:0x0213c664
 _ZTI7daCnn_c kind:data(any) addr:0x0213c670
-Cannon_SpawnInfo kind:data(any) addr:0x0213c67c ambiguous
+g_profile_CANNON kind:data(any) addr:0x0213c67c ambiguous
 _ZTV6Cannon kind:data(any) addr:0x0213c6a0
 _ZTV7daCnn_c kind:data(any) addr:0x0213c6a0
 data_ov098_0213c71c kind:data(any) addr:0x0213c71c
@@ -148,7 +148,7 @@ data_ov098_0213c724 kind:data(any) addr:0x0213c724
 data_ov098_0213c72c kind:data(any) addr:0x0213c72c
 _ZTS7daWbm_c kind:data(any) addr:0x0213c734
 _ZTI7daWbm_c kind:data(any) addr:0x0213c740
-WaterBomb_SpawnInfo kind:data(any) addr:0x0213c74c ambiguous
+g_profile_WATERBOMB kind:data(any) addr:0x0213c74c ambiguous
 _ZTV9WaterBomb kind:data(any) addr:0x0213c770
 _ZTV7daWbm_c kind:data(any) addr:0x0213c770
 data_ov098_0213c78c kind:data(any) addr:0x0213c78c ambiguous

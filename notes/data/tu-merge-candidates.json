@@ -827,7 +827,7 @@
     "src/_ZN10KoopaShell8BehaviorEv.cpp",
     "src/_ZN10KoopaShell13InitResourcesEv.cpp",
     "src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp",
-    "src/KoopaShell_Spawn.c"
+    "src/daShl_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 18,
@@ -1544,7 +1544,7 @@
     "src/_ZN8StarDoor6RenderEv.cpp",
     "src/_ZN8StarDoor8BehaviorEv.cpp",
     "src/_ZN8StarDoor13InitResourcesEv.cpp",
-    "src/StarDoor_Spawn.c"
+    "src/daStarGate_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -2825,7 +2825,7 @@
     "src/_ZN14UnchainedChomp8BehaviorEv.cpp",
     "src/_ZN14UnchainedChomp13InitResourcesEv.cpp",
     "src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp",
-    "src/UnchainedChomp_Spawn.cpp"
+    "src/daWanwan2_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -2978,7 +2978,7 @@
     "src/_ZN6BobOmb8BehaviorEv.cpp",
     "src/_ZN6BobOmb13InitResourcesEv.cpp",
     "src/_ZN6BobOmb13OnYoshiTryEatEv.cpp",
-    "src/BobOmb_Spawn.c"
+    "src/daBmb_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -5057,7 +5057,7 @@
     "src/_ZN9WaterBomb6RenderEv.cpp",
     "src/_ZN9WaterBomb8BehaviorEv.cpp",
     "src/_ZN9WaterBomb13InitResourcesEv.cpp",
-    "src/WaterBomb_Spawn.c"
+    "src/daWbm_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -8546,7 +8546,7 @@
     "src/_ZN14ArrowSignRight6RenderEv.cpp",
     "src/_ZN14ArrowSignRight8BehaviorEv.cpp",
     "src/_ZN14ArrowSignRight13InitResourcesEv.cpp",
-    "src/ArrowSignRight_Spawn.c"
+    "src/daObjYajirusi_c_classInit_YAJIRUSI_R.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -8974,10 +8974,10 @@
     "src/_ZN13FortressTower6RenderEv.cpp",
     "src/_ZN13FortressTower8BehaviorEv.cpp",
     "src/_ZN13FortressTower13InitResourcesEv.cpp",
-    "src/RopeBarrier_Spawn.c",
-    "src/CgStairs_Spawn.c",
-    "src/WarpPipe_Spawn.c",
-    "src/FortressTower_Spawn.c"
+    "src/daObjSimpleBg_c_classInit_MC_HAZAD.c",
+    "src/daObjSimpleBg_c_classInit_MC_DODAI.c",
+    "src/daObjSimpleBg_c_classInit_DOKAN.c",
+    "src/daObjSimpleBg_c_classInit_BK_TOWER.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -29866,8 +29866,8 @@
     "src/_ZN5Pokey8BehaviorEv.cpp",
     "src/_ZN5Pokey13InitResourcesEv.cpp",
     "src/_ZN5Pokey13OnTurnIntoEggER6Player.cpp",
-    "src/PokeySegment_Spawn.c",
-    "src/Pokey_Spawn.c"
+    "src/daSanbo_c_classInit_SANBO_BODY.c",
+    "src/daSanbo_c_classInit_SANBO.c"
    ],
    "ext_mix": {
     ".cpp": 21,
@@ -29926,7 +29926,7 @@
     "src/_ZN7Tornado6RenderEv.cpp",
     "src/_ZN7Tornado8BehaviorEv.cpp",
     "src/_ZN7Tornado13InitResourcesEv.cpp",
-    "src/Tornado_Spawn.c"
+    "src/daTor_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -30011,7 +30011,7 @@
     "src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp",
     "src/_ZN5Crate13OnYoshiTryEatEv.c",
     "src/_ZN5Crate13OnTurnIntoEggER6Player.c",
-    "src/Crate_Spawn.cpp"
+    "src/daObjBlockS_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 22,
@@ -30188,7 +30188,7 @@
     "src/_ZN6Cannon6RenderEv.cpp",
     "src/_ZN6Cannon8BehaviorEv.cpp",
     "src/_ZN6Cannon13InitResourcesEv.cpp",
-    "src/Cannon_Spawn.cpp"
+    "src/daCnn_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -30252,7 +30252,7 @@
     "src/_ZN9Butterfly6RenderEv.cpp",
     "src/_ZN9Butterfly8BehaviorEv.cpp",
     "src/_ZN9Butterfly13InitResourcesEv.cpp",
-    "src/Butterfly_Spawn.c"
+    "src/daBtfly_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -30320,7 +30320,7 @@
     "src/_ZN15RollingIronBall6RenderEv.cpp",
     "src/_ZN15RollingIronBall8BehaviorEv.cpp",
     "src/_ZN15RollingIronBall13InitResourcesEv.cpp",
-    "src/RollingIronBall_Spawn.c"
+    "src/daIbl_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 13,
@@ -30400,7 +30400,7 @@
     "src/_ZN4Door6RenderEv.cpp",
     "src/_ZN4Door8BehaviorEv.cpp",
     "src/_ZN4Door13InitResourcesEv.c",
-    "src/Door_Spawn.c"
+    "src/daDoor_c_classInit.c"
    ],
    "ext_mix": {
     ".c": 23,
@@ -30466,7 +30466,7 @@
     "src/_ZN4Fish6RenderEv.cpp",
     "src/_ZN4Fish8BehaviorEv.cpp",
     "src/_ZN4Fish13InitResourcesEv.cpp",
-    "src/Fish_Spawn.cpp"
+    "src/daFish_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -30614,11 +30614,11 @@
     "src/_ZN13QuestionBlock6RenderEv.cpp",
     "src/_ZN13QuestionBlock8BehaviorEv.cpp",
     "src/_ZN13QuestionBlock13InitResourcesEv.c",
-    "src/CapBlockWario_Spawn.c",
-    "src/CapBlockLuigi_Spawn.c",
-    "src/CapBlockMario_Spawn.c",
-    "src/ExclamationBlock_Spawn.c",
-    "src/QuestionBlock_Spawn.c"
+    "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_W.c",
+    "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_L.c",
+    "src/daObjHatenaBlock_c_classInit_CAP_BLOCK_M.c",
+    "src/daObjHatenaBlock_c_classInit_ITEM_BLOCK.c",
+    "src/daObjHatenaBlock_c_classInit_HATENA_BLOCK.c"
    ],
    "ext_mix": {
     ".cpp": 20,
@@ -36916,7 +36916,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ArrowSignLeft_Spawn.c"
+    "src/daObjYajirusi_c_classInit_YAJIRUSI_L.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37012,7 +37012,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/RockTriangle_Spawn.c"
+    "src/daObjSimpleBg_c_classInit_KI_HASIRA_DAI.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37060,7 +37060,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/StaticRock_Spawn.c"
+    "src/daObjSimpleBg_c_classInit_KI_IWA.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37108,7 +37108,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ExclamationBlockVs_Spawn.c"
+    "src/daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37632,7 +37632,7 @@
     "src/_ZN10KoopaShell8BehaviorEv.cpp",
     "src/_ZN10KoopaShell13InitResourcesEv.cpp",
     "src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp",
-    "src/KoopaShell_Spawn.c"
+    "src/daShl_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 18,

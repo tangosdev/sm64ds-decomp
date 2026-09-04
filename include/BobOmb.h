@@ -23,10 +23,15 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE ROM'S OWN, not a rounded-up field span: `BobOmb_Spawn` calls
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daBmb_c_classInit` calls
  * `fBase_c::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f8; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daBmb_c. The reconstructed
+ * factory daBmb_c_classInit (historical alias
+ * BobOmb_Spawn) constructs it for the BOMBHEI
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

@@ -14,6 +14,11 @@ struct Player;
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjYajirusi_c. The reconstructed
+ * factory daObjYajirusi_c_classInit_YAJIRUSI_R (historical alias
+ * ArrowSignRight_Spawn) constructs it for the YAJIRUSI_R
+ * registry profile.
  */
 
 #ifdef __cplusplus
@@ -27,7 +32,7 @@ struct Player;
 /* mwccarm reuses dBgActor_c's two bytes of tail padding, placing this class's
    first derived storage at 0x31e. MSVC starts after sizeof(dBgActor_c)==0x320,
    which shifts the derived fields and grows the object to 0x384 even though
-   ArrowSignRight_Spawn allocates exactly 0x380. The port supplies its vtable
+   daObjYajirusi_c_classInit_YAJIRUSI_R allocates exactly 0x380. The port supplies its vtable
    manually, so use a flat host view with every exercised field pinned to the
    ROM offset. The matching build below retains the real inheritance. */
 struct ArrowSignRight {

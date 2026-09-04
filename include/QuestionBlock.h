@@ -13,6 +13,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjHatenaBlock_c. The reconstructed
+ * factory daObjHatenaBlock_c_classInit_HATENA_BLOCK (historical alias
+ * QuestionBlock_Spawn) constructs it for the HATENA_BLOCK
+ * registry profile.
  */
 
 #ifdef __cplusplus
@@ -74,7 +79,7 @@ struct QuestionBlock : dBgActor_c {
     void OnHitByMegaChar(Player &player);      /* slot 27 */
     int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
 
-    /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn
+    /* Tail padding. The field span stops short of the real size: daObjHatenaBlock_c_classInit_CAP_BLOCK_L and daObjHatenaBlock_c_classInit_CAP_BLOCK_M
        call fBase_c::operator new(0x3f8), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_3f4[0x4];      /* 0x3f4, to the ROM's 0x3f8 */

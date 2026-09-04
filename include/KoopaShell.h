@@ -13,6 +13,11 @@
  *     dCcAc_c 0x378 + 0x034 = 0x3ac  -> mState
  *
  * Two cylinder collisions, one at each end of the shell.
+ *
+ * SM64DS RTTI names the implementation daShl_c. The reconstructed
+ * factory daShl_c_classInit (historical alias
+ * KoopaShell_Spawn) constructs it for the SHELL
+ * registry profile.
  */
 
 #ifdef __cplusplus
@@ -53,7 +58,7 @@ struct KoopaShell : dEnemyBase_c {
     s32 mParticleHandle_3d0;            /* 0x3d0 */
     s32 mParticleHandle_3d4;            /* 0x3d4 */
     /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
-       the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
+       the eight recovered functions touch ends at 0x3d8; daShl_c_classInit
        allocates 0x3e0. */
     u8  pad_3d8[0x8];
 
@@ -138,7 +143,7 @@ struct KoopaShell {
     s32 mParticleHandle_3d0;            /* 0x3d0 */
     s32 mParticleHandle_3d4;            /* 0x3d4 */
     /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
-       the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
+       the eight recovered functions touch ends at 0x3d8; daShl_c_classInit
        allocates 0x3e0. */
     u8  pad_3d8[0x8];
 };

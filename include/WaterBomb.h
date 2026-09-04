@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9WaterBombD1Ev` destroys each member, and
- * `WaterBomb_Spawn` constructs the same types at the same offsets before
+ * `daWbm_c_classInit` constructs the same types at the same offsets before
  * storing `_ZTV9WaterBomb`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -17,9 +17,14 @@
  *     0x300 Model                      0x50    -> 0x350
  *     0x350 ShadowModel                0x28    -> 0x378
  *
- * SIZE IS THE ROM'S OWN: `WaterBomb_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daWbm_c_classInit` calls
  * `fBase_c::operator new(972)` -- 0x3cc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daWbm_c. The reconstructed
+ * factory daWbm_c_classInit (historical alias
+ * WaterBomb_Spawn) constructs it for the WATERBOMB
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN15RollingIronBallD1Ev` destroys each member, and
- * `RollingIronBall_Spawn` constructs the same types at the same offsets before
+ * `daIbl_c_classInit` constructs the same types at the same offsets before
  * storing `_ZTV15RollingIronBall`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -19,7 +19,7 @@
  *     0x3f4 PathPtr                    0x8     -> 0x3fc
  *
  * THE FIFTH MEMBER HAS NO DESTRUCTOR, so only the factory witnesses it:
- * RollingIronBall_Spawn constructs a PathPtr at 0x3f4 that the destructor
+ * daIbl_c_classInit constructs a PathPtr at 0x3f4 that the destructor
  * never destroys, PathPtr's being trivial. 0x3f4 + 8 is 0x3fc, exactly the
  * allocation literal -- the layout does not close without it. Reading only
  * the destructor leaves the class eight bytes short.
@@ -30,9 +30,14 @@
  * volatile read and wants its own matching session. Every other function of
  * this class reproduces.)
  *
- * SIZE IS THE ROM'S OWN: `RollingIronBall_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daIbl_c_classInit` calls
  * `fBase_c::operator new(1020)` -- 0x3fc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daIbl_c. The reconstructed
+ * factory daIbl_c_classInit (historical alias
+ * RollingIronBall_Spawn) constructs it for the IRONBALL
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

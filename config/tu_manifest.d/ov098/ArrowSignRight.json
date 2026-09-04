@@ -89,10 +89,10 @@
       "ordinal": 9
     },
     {
-      "symbol": "ArrowSignRight_Spawn",
+      "symbol": "daObjYajirusi_c_classInit_YAJIRUSI_R",
       "address": "0x02137fd0",
       "size": "0x00000038",
-      "legacy_source": "src/ArrowSignRight_Spawn.c",
+      "legacy_source": "src/daObjYajirusi_c_classInit_YAJIRUSI_R.c",
       "ordinal": 10
     }
   ],
@@ -343,7 +343,7 @@
       "src/_ZN14ArrowSignRight6RenderEv.cpp",
       "src/_ZN14ArrowSignRight8BehaviorEv.cpp",
       "src/_ZN14ArrowSignRight13InitResourcesEv.cpp",
-      "src/ArrowSignRight_Spawn.c"
+      "src/daObjYajirusi_c_classInit_YAJIRUSI_R.c"
     ],
     "extraInertImports": 85,
     "extraImportsWithNoHome": [],

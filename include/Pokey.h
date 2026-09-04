@@ -10,7 +10,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Pokey_Spawn  fBase_c::operator new(944 = 0x3b0), dActor_c::dActor_c(), stores _ZTV5Pokey,
+ *   daSanbo_c_classInit_SANBO  fBase_c::operator new(944 = 0x3b0), dActor_c::dActor_c(), stores _ZTV5Pokey,
  *                then the four members below in this order.
  *   ~Pokey       the same members destroyed in reverse, then ~dActor_c.
  *
@@ -19,6 +19,11 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov096). Only the
  * slots declared below differ; every other slot holds the base's own word and is inherited,
  * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daSanbo_c. The reconstructed
+ * factory daSanbo_c_classInit_SANBO (historical alias
+ * Pokey_Spawn) constructs it for the SANBO
+ * registry profile.
  */
 struct Pokey : dActor_c {
     u8  pad_0d0[0x4];

@@ -21,9 +21,14 @@
  *     0x720  Vector3     x6   stride 0x0c
  *     0x768  Vector3s    x6   stride 0x06   -> ends 0x78c
  *
- * UnchainedChomp_Spawn constructs the same six through func_020733a8, which takes the
+ * daWanwan2_c_classInit constructs the same six through func_020733a8, which takes the
  * same counts and strides, and allocates 0x7a4 -- so 0x18 of tail is spare and stays
  * padding.
+ *
+ * SM64DS RTTI names the implementation daWanwan2_c. The reconstructed
+ * factory daWanwan2_c_classInit (historical alias
+ * UnchainedChomp_Spawn) constructs it for the WANWAN2
+ * registry profile.
  */
 struct UnchainedChomp : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x110 */

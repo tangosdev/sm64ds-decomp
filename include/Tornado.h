@@ -112,7 +112,7 @@ struct Tornado : dActor_c {
     s32 mSoundHandle;            /* 0x36c -- the handle Sound::PlayLong returns
                                      for sound 0x85, fed back in the same way
                                      by states 0 and 1. Was the header's
-                                     trailing pad; Tornado_Spawn allocates
+                                     trailing pad; daTor_c_classInit allocates
                                      0x370, so this is the last word. */
     /* Inline is load-bearing: the small forcing translation units emit the
      * ROM's D1 and D0 while objisolate discards their wrappers and D2. */
