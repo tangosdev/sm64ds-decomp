@@ -1,12 +1,20 @@
 #ifndef DASCOIN_C_H
 #define DASCOIN_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daSCoin_c -- daSCoin_c_classInit (was daSCoin_c_Spawn), g_profile_SECRET_COIN (was InvisibleSecret_SpawnInfo)
+ */
 #include "types.h"
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
 /* TWO WITNESSES:
  *
- *   daSCoin_c_Spawn  fBase_c::operator new(276 = 0x114),
+ *   daSCoin_c_classInit  fBase_c::operator new(276 = 0x114),
  *       dActor_c::dActor_c(), stores the class vtable, then the
  *       dCcAc_c member below.
  *   _ZN9daSCoin_cD0Ev  the same member destroyed, then ~dActor_c.
@@ -47,9 +55,9 @@
  */
 struct daSCoin_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* dCcAc_c member, named by daSCoin_c_Spawn's own C1 call and
+    /* dCcAc_c member, named by daSCoin_c_classInit's own C1 call and
        the class's own destructors' D1 call at +0xd4.
-       [daSCoin_c_Spawn.c, _ZN9daSCoin_cD1Ev.c, _ZN9daSCoin_cD0Ev.c] */
+       [d_a_s_coin.c, _ZN9daSCoin_cD1Ev.c, _ZN9daSCoin_cD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
     /* THE GROUP. Silver coins (actor 0x149) act as one set: exactly one of them
        elects itself leader and stamps the rest, so the fifth collection can

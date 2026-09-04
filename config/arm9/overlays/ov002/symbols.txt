@@ -354,8 +354,8 @@ _ZN10StarSwitch8BehaviorEv kind:function(arm,size=0x218) addr:0x020ba624
 _ZN10StarSwitch13InitResourcesEv kind:function(arm,size=0x1f0) addr:0x020ba83c
 func_ov002_020baa2c kind:function(arm,size=0x6c) addr:0x020baa2c
 func_ov002_020baa98 kind:function(arm,size=0x14) addr:0x020baa98
-StarSwitch_Spawn kind:function(arm,size=0x30) addr:0x020baaac
-ExclamationSwitch_Spawn kind:function(arm,size=0x30) addr:0x020baadc
+daObjSwitch_c_classInit_STAR_SWITCH kind:function(arm,size=0x30) addr:0x020baaac
+daObjSwitch_c_classInit_HANSWITCH kind:function(arm,size=0x30) addr:0x020baadc
 _ZN13daObjSwdoor_cD0Ev kind:function(arm,size=0x58) addr:0x020bab0c
 _ZN13daObjSwdoor_cD1Ev kind:function(arm,size=0x44) addr:0x020bab64
 func_ov002_020baba8 kind:function(arm,size=0x48) addr:0x020baba8
@@ -390,7 +390,7 @@ _ZN8SignPost16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x020bbdec
 _ZN8SignPost6RenderEv kind:function(arm,size=0x74) addr:0x020bbe30
 _ZN8SignPost8BehaviorEv kind:function(arm,size=0x39c) addr:0x020bbea4
 _ZN8SignPost13InitResourcesEv kind:function(arm,size=0x188) addr:0x020bc240
-SignPost_Spawn kind:function(arm,size=0x4c) addr:0x020bc3c8
+daObjTatefuda_c_classInit kind:function(arm,size=0x4c) addr:0x020bc3c8
 _ZN13daObjWakame_cD1Ev kind:function(arm,size=0x30) addr:0x020bc414
 _ZN13daObjWakame_cD0Ev kind:function(arm,size=0x44) addr:0x020bc444
 func_ov002_020bc488 kind:function(arm,size=0x40) addr:0x020bc488
@@ -406,7 +406,7 @@ _ZN12HealingHeart16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x020bc6
 _ZN12HealingHeart6RenderEv kind:function(arm,size=0x28) addr:0x020bc6d4
 _ZN12HealingHeart8BehaviorEv kind:function(arm,size=0x120) addr:0x020bc6fc
 _ZN12HealingHeart13InitResourcesEv kind:function(arm,size=0x98) addr:0x020bc81c
-HealingHeart_Spawn kind:function(arm,size=0x40) addr:0x020bc8b4
+daObjHeart_c_classInit kind:function(arm,size=0x40) addr:0x020bc8b4
 _ZN20daObjCannonShutter_cD1Ev kind:function(arm,size=0x44) addr:0x020bc8f4
 _ZN20daObjCannonShutter_cD0Ev kind:function(arm,size=0x58) addr:0x020bc938
 func_ov002_020bc990 kind:function(arm,size=0x20) addr:0x020bc990
@@ -1038,7 +1038,7 @@ func_ov002_020e6ad4 kind:function(arm,size=0x68) addr:0x020e6ad4
 func_ov002_020e6b3c kind:function(arm,size=0x38) addr:0x020e6b3c
 func_ov002_020e6b74 kind:function(arm,size=0x3c) addr:0x020e6b74
 func_ov002_020e6bb0 kind:function(arm,size=0x5c) addr:0x020e6bb0
-Player_Spawn kind:function(arm,size=0x34) addr:0x020e6c0c
+daPly_c_classInit kind:function(arm,size=0x34) addr:0x020e6c0c
 _ZN9PowerStarD1Ev kind:function(arm,size=0x50) addr:0x020e6c40
 _ZN9PowerStarD0Ev kind:function(arm,size=0x64) addr:0x020e6c90
 _ZN10StarMarkerD1Ev kind:function(arm,size=0x40) addr:0x020e6cf4
@@ -1117,9 +1117,9 @@ _ZN9PowerStar8BehaviorEv kind:function(arm,size=0x1a8) addr:0x020eb05c
 _ZN10StarMarker13InitResourcesEv kind:function(arm,size=0x438) addr:0x020eb204
 _ZN9PowerStar13InitResourcesEv kind:function(arm,size=0x820) addr:0x020eb63c
 StarCamera_Spawn kind:function(arm,size=0x30) addr:0x020ebe5c
-StarMarker_Spawn kind:function(arm,size=0x48) addr:0x020ebe8c
-SilverStar_Spawn kind:function(arm,size=0x5c) addr:0x020ebed4
-PowerStar_Spawn kind:function(arm,size=0x5c) addr:0x020ebf30
+daStarBase_c_classInit kind:function(arm,size=0x48) addr:0x020ebe8c
+daStar_c_classInit_SILVER_STAR kind:function(arm,size=0x5c) addr:0x020ebed4
+daStar_c_classInit_STAR kind:function(arm,size=0x5c) addr:0x020ebf30
 _ZN8daTree_cD1Ev kind:function(arm,size=0x40) addr:0x020ebf8c
 _ZN8daTree_cD0Ev kind:function(arm,size=0x54) addr:0x020ebfcc
 _ZN8daTree_c16CleanupResourcesEv kind:function(arm,size=0x80) addr:0x020ec020
@@ -1223,7 +1223,7 @@ func_ov002_020f05f4 kind:function(arm,size=0xa8) addr:0x020f05f4
 _ZN9daSCoin_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x020f069c
 _ZN9daSCoin_c8BehaviorEv kind:function(arm,size=0x11c) addr:0x020f06c0
 _ZN9daSCoin_c13InitResourcesEv kind:function(arm,size=0x80) addr:0x020f07dc
-daSCoin_c_Spawn kind:function(arm,size=0x38) addr:0x020f085c
+daSCoin_c_classInit kind:function(arm,size=0x38) addr:0x020f085c
 _ZN6NumberD1Ev kind:function(arm,size=0x38) addr:0x020f0894
 _ZN6NumberD0Ev kind:function(arm,size=0x4c) addr:0x020f08cc
 func_ov002_020f0918 kind:function(arm,size=0x24) addr:0x020f0918
@@ -1231,7 +1231,7 @@ _ZN6Number16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x020f093c
 _ZN6Number6RenderEv kind:function(arm,size=0xcc) addr:0x020f0994
 _ZN6Number8BehaviorEv kind:function(arm,size=0x174) addr:0x020f0a60
 _ZN6Number13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x020f0bd4
-Number_Spawn kind:function(arm,size=0x40) addr:0x020f0d90
+daObjNumber_c_classInit kind:function(arm,size=0x40) addr:0x020f0d90
 _ZN9OneUpLogoD1Ev kind:function(arm,size=0x38) addr:0x020f0dd0
 _ZN9OneUpLogoD0Ev kind:function(arm,size=0x4c) addr:0x020f0e08
 func_ov002_020f0e54 kind:function(arm,size=0x24) addr:0x020f0e54
@@ -1239,7 +1239,7 @@ _ZN9OneUpLogo16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x020f0e78
 _ZN9OneUpLogo6RenderEv kind:function(arm,size=0x60) addr:0x020f0ea8
 _ZN9OneUpLogo8BehaviorEv kind:function(arm,size=0x174) addr:0x020f0f08
 _ZN9OneUpLogo13InitResourcesEv kind:function(arm,size=0xf4) addr:0x020f107c
-OneUpLogo_Spawn kind:function(arm,size=0x40) addr:0x020f1170
+daObj1UpLogo_c_classInit kind:function(arm,size=0x40) addr:0x020f1170
 _ZN16daObjBC_Switch_cD1Ev kind:function(arm,size=0x44) addr:0x020f11b0
 _ZN16daObjBC_Switch_cD0Ev kind:function(arm,size=0x58) addr:0x020f11f4
 _ZN16daObjBC_Switch_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x020f124c
@@ -1259,8 +1259,8 @@ _ZN14EnemySwitchTag8BehaviorEv kind:function(arm,size=0xb4) addr:0x020f1760
 _ZN12EnemySpawner16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x020f1814
 _ZN12EnemySpawner13InitResourcesEv kind:function(arm,size=0x40) addr:0x020f1838
 _ZN14EnemySwitchTag13InitResourcesEv kind:function(arm,size=0xac) addr:0x020f1878
-EnemySpawner_Spawn kind:function(arm,size=0x30) addr:0x020f1924
-EnemySwitchTag_Spawn kind:function(arm,size=0x38) addr:0x020f1954
+daECreate_c_classInit kind:function(arm,size=0x30) addr:0x020f1924
+daESwitch_c_classInit kind:function(arm,size=0x38) addr:0x020f1954
 _ZN9daSetSE_cD1Ev kind:function(arm,size=0x24) addr:0x020f198c
 _ZN9daSetSE_cD0Ev kind:function(arm,size=0x38) addr:0x020f19b0
 _ZN9daSetSE_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020f19e8
@@ -1277,7 +1277,7 @@ _ZN8MugenBgm16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020f1c58
 _ZN8MugenBgm6RenderEv kind:function(arm,size=0x8) addr:0x020f1c5c
 _ZN8MugenBgm8BehaviorEv kind:function(arm,size=0x250) addr:0x020f1c64
 _ZN8MugenBgm13InitResourcesEv kind:function(arm,size=0x8c) addr:0x020f1eb4
-MugenBgm_Spawn kind:function(arm,size=0x30) addr:0x020f1f40
+daMugenBGM_c_classInit kind:function(arm,size=0x30) addr:0x020f1f40
 _ZN14CutsceneObjectD1Ev kind:function(arm,size=0x24) addr:0x020f1f70
 _ZN14CutsceneObjectD0Ev kind:function(arm,size=0x38) addr:0x020f1f94
 func_ov002_020f1fcc kind:function(arm,size=0x128) addr:0x020f1fcc
@@ -1423,7 +1423,7 @@ _ZN14CutsceneObject16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020f8
 _ZN14CutsceneObject6RenderEv kind:function(arm,size=0x118) addr:0x020f80ac
 _ZN14CutsceneObject8BehaviorEv kind:function(arm,size=0x1e0) addr:0x020f81c4
 _ZN14CutsceneObject13InitResourcesEv kind:function(arm,size=0x464) addr:0x020f83a4
-CutsceneObject_Spawn kind:function(arm,size=0x30) addr:0x020f8808
+daDemo_c_classInit kind:function(arm,size=0x30) addr:0x020f8808
 _ZThn80_N8daDemo_c10anmModel_cD0Ev kind:function(arm,size=0x10) addr:0x020f8838
 _ZThn80_N8daDemo_c10anmModel_cD1Ev kind:function(arm,size=0x10) addr:0x020f8848
 _ZN8FireballD1Ev kind:function(arm,size=0x40) addr:0x020f8858
@@ -1435,7 +1435,7 @@ _ZN8Fireball6RenderEv kind:function(arm,size=0x8) addr:0x020f8c8c
 _ZN8Fireball8BehaviorEv kind:function(arm,size=0x570) addr:0x020f8c94
 _ZN8Fireball13InitResourcesEv kind:function(arm,size=0xe0) addr:0x020f9204
 _ZN8Fireball13OnYoshiTryEatEv kind:function(arm,size=0x20) addr:0x020f92e4
-Fireball_Spawn kind:function(arm,size=0x48) addr:0x020f9304
+daFPknBall_c_classInit kind:function(arm,size=0x48) addr:0x020f9304
 _ZN12daSoundObj_cD1Ev kind:function(arm,size=0x24) addr:0x020f934c
 _ZN12daSoundObj_cD0Ev kind:function(arm,size=0x38) addr:0x020f9370
 func_ov002_020f93a8 kind:function(arm,size=0xc0) addr:0x020f93a8
@@ -1454,7 +1454,7 @@ _ZN7Minimap8BehaviorEv kind:function(arm,size=0xcfc) addr:0x020fa690
 _ZN7Minimap13InitResourcesEv kind:function(arm,size=0x478) addr:0x020fb38c
 _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_ kind:function(arm,size=0x58) addr:0x020fb804
 _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_ kind:function(arm,size=0x60) addr:0x020fb85c
-Minimap_Spawn kind:function(arm,size=0x3c) addr:0x020fb8bc
+dMap_c_classInit kind:function(arm,size=0x3c) addr:0x020fb8bc
 _ZN3HUDD1Ev kind:function(arm,size=0x30) addr:0x020fb8f8
 _ZN3HUDD0Ev kind:function(arm,size=0x44) addr:0x020fb928
 _ZN3HUD15RenderTimeTimerEv kind:function(arm,size=0x440) addr:0x020fb96c
@@ -1474,7 +1474,7 @@ _ZN3HUD16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020fd5dc
 _ZN3HUD6RenderEv kind:function(arm,size=0x1c4) addr:0x020fd5e0
 _ZN3HUD8BehaviorEv kind:function(arm,size=0x260) addr:0x020fd7a4
 _ZN3HUD13InitResourcesEv kind:function(arm,size=0x750) addr:0x020fda04
-HUD_Spawn kind:function(arm,size=0x3c) addr:0x020fe154
+dMeter_c_classInit kind:function(arm,size=0x3c) addr:0x020fe154
 _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc kind:function(arm,size=0x1ac) addr:0x020fe190
 _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij kind:function(arm,size=0x90) addr:0x020fe33c
 _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij kind:function(arm,size=0x18) addr:0x020fe3cc
@@ -1508,7 +1508,7 @@ _ZN6Bullet16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020fee14
 _ZN6Bullet6RenderEv kind:function(arm,size=0x2c) addr:0x020fee18
 _ZN6Bullet8BehaviorEv kind:function(arm,size=0xb0) addr:0x020fee44
 _ZN6Bullet13InitResourcesEv kind:function(arm,size=0xd8) addr:0x020feef4
-Bullet_Spawn kind:function(arm,size=0x48) addr:0x020fefcc
+daPropeller_Heyho_Fire_c_classInit kind:function(arm,size=0x48) addr:0x020fefcc
 data_ov002_020ff014 kind:data(any) addr:0x020ff014
 data_ov002_020ff01c kind:data(any) addr:0x020ff01c
 data_ov002_020ff028 kind:data(any) addr:0x020ff028 ambiguous
@@ -1860,8 +1860,8 @@ _ZTS13daObjSwitch_c kind:data(any) addr:0x021098d8
 data_ov002_021098e8 kind:data(any) addr:0x021098e8
 data_ov002_021098ec kind:data(any) addr:0x021098ec
 data_ov002_021098f0 kind:data(any) addr:0x021098f0
-ExclamationSwitch_SpawnInfo kind:data(any) addr:0x02109900
-StarSwitch_SpawnInfo kind:data(any) addr:0x0210991c
+g_profile_HANSWITCH kind:data(any) addr:0x02109900
+g_profile_STAR_SWITCH kind:data(any) addr:0x0210991c
 _ZTV10StarSwitch kind:data(any) addr:0x02109940
 _ZTI13daObjSwdoor_c kind:data(any) addr:0x021099c0
 _ZTS13daObjSwdoor_c kind:data(any) addr:0x021099cc
@@ -1878,7 +1878,7 @@ data_ov002_02109aa4 kind:data(any) addr:0x02109aa4
 data_ov002_02109aac kind:data(any) addr:0x02109aac
 _ZTI15daObjTatefuda_c kind:data(any) addr:0x02109ab4
 _ZTS15daObjTatefuda_c kind:data(any) addr:0x02109ac0
-SignPost_SpawnInfo kind:data(any) addr:0x02109ad4
+g_profile_TATEFUDA kind:data(any) addr:0x02109ad4
 _ZTV8SignPost kind:data(any) addr:0x02109af8
 _ZTV15daObjTatefuda_c kind:data(any) addr:0x02109af8
 _ZTI13daObjWakame_c kind:data(any) addr:0x02109b78
@@ -1887,7 +1887,7 @@ g_profile_WAKAME kind:data(any) addr:0x02109b94
 _ZTV13daObjWakame_c kind:data(any) addr:0x02109bb8
 _ZTI12daObjHeart_c kind:data(any) addr:0x02109c34
 _ZTS12daObjHeart_c kind:data(any) addr:0x02109c40
-HealingHeart_SpawnInfo kind:data(any) addr:0x02109c50
+g_profile_HEART kind:data(any) addr:0x02109c50
 _ZTV12HealingHeart kind:data(any) addr:0x02109c74
 _ZTV12daObjHeart_c kind:data(any) addr:0x02109c74
 _ZTI20daObjCannonShutter_c kind:data(any) addr:0x02109cf0
@@ -2166,7 +2166,7 @@ data_ov002_0210a6ac kind:data(any) addr:0x0210a6ac
 data_ov002_0210a6bc kind:data(any) addr:0x0210a6bc
 data_ov002_0210a6d4 kind:data(any) addr:0x0210a6d4
 data_ov002_0210a6ec kind:data(any) addr:0x0210a6ec
-Player_SpawnInfo kind:data(any) addr:0x0210a704
+g_profile_PLAYER kind:data(any) addr:0x0210a704
 data_ov002_0210a720 kind:data(any) addr:0x0210a720
 data_ov002_0210a740 kind:data(any) addr:0x0210a740
 data_ov002_0210a760 kind:data(any) addr:0x0210a760
@@ -2194,10 +2194,10 @@ data_ov002_0210aa0c kind:data(any) addr:0x0210aa0c
 _ZTI12daStarBase_c kind:data(any) addr:0x0210aa18
 _ZTI8daStar_c kind:data(any) addr:0x0210aa24
 _ZTS12daStarBase_c kind:data(any) addr:0x0210aa30
-PowerStar_SpawnInfo kind:data(any) addr:0x0210aa40
-SilverStar_SpawnInfo kind:data(any) addr:0x0210aa5c
-StarMarker_SpawnInfo kind:data(any) addr:0x0210aa78
-StarCamera_SpawnInfo kind:data(any) addr:0x0210aa94
+g_profile_STAR kind:data(any) addr:0x0210aa40
+g_profile_SILVER_STAR kind:data(any) addr:0x0210aa5c
+g_profile_STARBASE kind:data(any) addr:0x0210aa78
+g_profile_STAR_CAMERA kind:data(any) addr:0x0210aa94
 _ZTV10StarMarker kind:data(any) addr:0x0210aab8
 _ZTV12daStarBase_c kind:data(any) addr:0x0210aab8
 _ZTV9PowerStar kind:data(any) addr:0x0210ab3c
@@ -2242,16 +2242,16 @@ data_ov002_0210af70 kind:data(any) addr:0x0210af70
 _ZTV16dPathLiftActor_c kind:data(any) addr:0x0210af70
 _ZTS9daSCoin_c kind:data(any) addr:0x0210aff4
 _ZTI9daSCoin_c kind:data(any) addr:0x0210b000
-InvisibleSecret_SpawnInfo kind:data(any) addr:0x0210b00c
+g_profile_SECRET_COIN kind:data(any) addr:0x0210b00c
 _ZTV9daSCoin_c kind:data(any) addr:0x0210b030
 _ZTI13daObjNumber_c kind:data(any) addr:0x0210b0ac
 _ZTS13daObjNumber_c kind:data(any) addr:0x0210b0b8
-Number_SpawnInfo kind:data(any) addr:0x0210b0c8
+g_profile_OBJ_NUMBER kind:data(any) addr:0x0210b0c8
 _ZTV6Number kind:data(any) addr:0x0210b0ec
 _ZTV13daObjNumber_c kind:data(any) addr:0x0210b0ec
 _ZTI14daObj1UpLogo_c kind:data(any) addr:0x0210b168
 _ZTS14daObj1UpLogo_c kind:data(any) addr:0x0210b174
-OneUpLogo_SpawnInfo kind:data(any) addr:0x0210b188
+g_profile_OBJ_1UPLOGO kind:data(any) addr:0x0210b188
 _ZTV9OneUpLogo kind:data(any) addr:0x0210b1ac
 _ZTV14daObj1UpLogo_c kind:data(any) addr:0x0210b1ac
 _ZTI16daObjBC_Switch_c kind:data(any) addr:0x0210b228
@@ -2262,8 +2262,8 @@ _ZTI11daESwitch_c kind:data(any) addr:0x0210b2ec
 _ZTI11daECreate_c kind:data(any) addr:0x0210b2f8
 _ZTS11daECreate_c kind:data(any) addr:0x0210b304
 _ZTS11daESwitch_c kind:data(any) addr:0x0210b314
-EnemySwitchTag_SpawnInfo kind:data(any) addr:0x0210b324
-EnemySpawner_SpawnInfo kind:data(any) addr:0x0210b340
+g_profile_ENEMY_SWITCH kind:data(any) addr:0x0210b324
+g_profile_ENEMY_CREATE kind:data(any) addr:0x0210b340
 _ZTV12EnemySpawner kind:data(any) addr:0x0210b364
 _ZTV14EnemySwitchTag kind:data(any) addr:0x0210b3e8
 _ZTV11daESwitch_c kind:data(any) addr:0x0210b3e8
@@ -2274,7 +2274,7 @@ data_ov002_0210b498 kind:data(any) addr:0x0210b498
 _ZTV9daSetSE_c kind:data(any) addr:0x0210b4c8
 _ZTI12daMugenBGM_c kind:data(any) addr:0x0210b544
 _ZTS12daMugenBGM_c kind:data(any) addr:0x0210b550
-MugenBgm_SpawnInfo kind:data(any) addr:0x0210b560
+g_profile_MUGEN_BGM kind:data(any) addr:0x0210b560
 _ZTV8MugenBgm kind:data(any) addr:0x0210b584
 data_ov002_0210b600 kind:data(any) addr:0x0210b600
 data_ov002_0210b604 kind:data(any) addr:0x0210b604
@@ -2399,7 +2399,7 @@ data_ov002_0210b9fc kind:data(any) addr:0x0210b9fc
 data_ov002_0210ba14 kind:data(any) addr:0x0210ba14
 data_ov002_0210ba2c kind:data(any) addr:0x0210ba2c
 _ZTSN8daDemo_c13simpleModel_cE kind:data(any) addr:0x0210ba44
-CutsceneObject_SpawnInfo kind:data(any) addr:0x0210ba60
+g_profile_DEMO kind:data(any) addr:0x0210ba60
 data_ov002_0210ba7c kind:data(any) addr:0x0210ba7c
 data_ov002_0210ba9c kind:data(any) addr:0x0210ba9c
 _ZTIN8daDemo_c10anmModel_cE kind:data(any) addr:0x0210babc
@@ -2430,7 +2430,7 @@ data_ov002_0210be9c kind:data(any) addr:0x0210be9c
 data_ov002_0210bef4 kind:data(any) addr:0x0210bef4
 _ZTI12daFPknBall_c kind:data(any) addr:0x0210bf54
 _ZTS12daFPknBall_c kind:data(any) addr:0x0210bf60
-Fireball_SpawnInfo kind:data(any) addr:0x0210bf70
+g_profile_FPAKUN_BALL kind:data(any) addr:0x0210bf70
 _ZTV8Fireball kind:data(any) addr:0x0210bf94
 _ZTV12daFPknBall_c kind:data(any) addr:0x0210bf94
 data_ov002_0210c010 kind:data(any) addr:0x0210c010
@@ -2449,12 +2449,12 @@ data_ov002_0210c088 kind:data(any) addr:0x0210c088
 data_ov002_0210c08a kind:data(any) addr:0x0210c08a
 _ZTV12daSoundObj_c kind:data(any) addr:0x0210c0dc
 _ZTS6dMap_c kind:data(any) addr:0x0210c158
-_ZN7Minimap9spawnDataE kind:data(any) addr:0x0210c160
+g_profile_MAP kind:data(any) addr:0x0210c160
 _ZTI6dMap_c kind:data(any) addr:0x0210c168
 _ZN3OAM15MM_PLAYER_ICONSE kind:data(any) addr:0x0210c174
 _ZTV7Minimap kind:data(any) addr:0x0210c1c0
 data_ov002_0210c208 kind:data(any) addr:0x0210c208
-_ZN3HUD9spawnDataE kind:data(any) addr:0x0210c210
+g_profile_METER kind:data(any) addr:0x0210c210
 _ZTS8dMeter_c kind:data(any) addr:0x0210c218
 _ZTI8dMeter_c kind:data(any) addr:0x0210c224
 data_ov002_0210c230 kind:data(any) addr:0x0210c230
@@ -2641,7 +2641,7 @@ data_ov002_0210d5f8 kind:data(any) addr:0x0210d5f8
 data_ov002_0210d600 kind:data(any) addr:0x0210d600
 _ZTI24daPropeller_Heyho_Fire_c kind:data(any) addr:0x0210d608
 _ZTS24daPropeller_Heyho_Fire_c kind:data(any) addr:0x0210d614
-Bullet_SpawnInfo kind:data(any) addr:0x0210d630
+g_profile_PROPELLER_HEYHO_FIRE kind:data(any) addr:0x0210d630
 _ZTV6Bullet kind:data(any) addr:0x0210d654
 _ZTV24daPropeller_Heyho_Fire_c kind:data(any) addr:0x0210d654
 data_ov002_0210d6d0 kind:data(any) addr:0x0210d6d0

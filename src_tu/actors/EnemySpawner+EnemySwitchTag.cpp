@@ -26,8 +26,8 @@
  *   [7] 0x020f1814  src/_ZN12EnemySpawner16CleanupResourcesEv.cpp
  *   [8] 0x020f1838  src/_ZN12EnemySpawner13InitResourcesEv.cpp
  *   [9] 0x020f1878  src/_ZN14EnemySwitchTag13InitResourcesEv.cpp
- *   [10] 0x020f1924  src/EnemySpawner_Spawn.c
- *   [11] 0x020f1954  src/EnemySwitchTag_Spawn.c
+ *   [10] 0x020f1924  src/d_a_e_create.c
+ *   [11] 0x020f1954  src/d_a_e_switch.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -70,14 +70,14 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *clsn, void *a, i
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- EnemySwitchTag_Spawn, 0x020f1954, size 0x38 */
+/* ROM ordinal 11 -- daESwitch_c_classInit, 0x020f1954, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol EnemySwitchTag_Spawn
+// @symbol daESwitch_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV14EnemySwitchTag */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *EnemySwitchTag_Spawn(void)
+int *daESwitch_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(272);
     if (p) {
@@ -90,14 +90,14 @@ int *EnemySwitchTag_Spawn(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- EnemySpawner_Spawn, 0x020f1924, size 0x30 */
+/* ROM ordinal 10 -- daECreate_c_classInit, 0x020f1924, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol EnemySpawner_Spawn
+// @symbol daECreate_c_classInit
 /* recovered: globals resolved, declarations from a shared header */
 /* recovered: globals resolved */
 /* resolved: VT = _ZTV12EnemySpawner */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *EnemySpawner_Spawn(void)
+int *daECreate_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(224);
     if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)(_ZTV12EnemySpawner + 2); }

@@ -14,16 +14,16 @@
  * _ZTV10dBgActor_c -- with this class's own three members destroyed between them
  * and dBgActor_c's Model and dBgW_KcMbg destroyed after. Two stores is a
  * DIRECT child; an intermediate layer would have put a third one in between.
- * SignPost_Spawn agrees from the other side: it calls _ZN10dBgActor_cC2Ev and then
+ * daObjTatefuda_c_classInit agrees from the other side: it calls _ZN10dBgActor_cC2Ev and then
  * overwrites the vptr with _ZTV8SignPost, which is the same address as
  * _ZTV15daObjTatefuda_c -- one table, two names.
  *
- * SIZE IS 0x5a4, the literal SignPost_Spawn passes to fBase_c::operator new
+ * SIZE IS 0x5a4, the literal daObjTatefuda_c_classInit passes to fBase_c::operator new
  * (1444). The last named field, the Player * at 0x59c, closes at 0x5a0, so four
  * bytes of tail stay padding.
  *
  * THE THREE MEMBERS ARE PLACED BY THE FACTORY, not by field-span guesswork:
- * SignPost_Spawn runs dCcAc_c's constructor at this+0x320,
+ * daObjTatefuda_c_classInit runs dCcAc_c's constructor at this+0x320,
  * ShadowModel's at this+0x358 and dBgCh_Actr's at this+0x3c8, and the
  * destructor tears the same three down in reverse. Two of them are typed here
  * and each closes on its own class's size assert -- dCcAc_c 0x34 ends
@@ -41,6 +41,14 @@
  */
 #ifndef SIGNPOST_H
 #define SIGNPOST_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjTatefuda_c -- daObjTatefuda_c_classInit (was SignPost_Spawn), g_profile_TATEFUDA (was SignPost_SpawnInfo)
+ */
 #include "types.h"
 #include "Model.h"
 #include "dBgW_KcMbg.h"

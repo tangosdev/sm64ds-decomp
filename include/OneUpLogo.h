@@ -1,11 +1,19 @@
 #ifndef ONEUPLOGO_H
 #define ONEUPLOGO_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObj1UpLogo_c -- daObj1UpLogo_c_classInit (was OneUpLogo_Spawn), g_profile_OBJ_1UPLOGO (was OneUpLogo_SpawnInfo)
+ */
+
 #include "Model.h"
 #include "TextureSequence.h"
 #include "dActor_c.h"
 
-/* OneUpLogo_Spawn allocates 0x150 bytes, constructs dActor_c, then constructs
+/* daObj1UpLogo_c_classInit allocates 0x150 bytes, constructs dActor_c, then constructs
  * Model at 0xd4 and TextureSequence at 0x124. D1 destroys those two subobjects
  * in reverse order before chaining to dActor_c. InitResources and Behavior
  * close the remaining fields at 0x138..0x14e.

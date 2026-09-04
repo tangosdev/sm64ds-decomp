@@ -23,7 +23,7 @@
  *   [4] 0x020f0ea8  src/_ZN9OneUpLogo6RenderEv.cpp
  *   [5] 0x020f0f08  src/_ZN9OneUpLogo8BehaviorEv.cpp
  *   [6] 0x020f107c  src/_ZN9OneUpLogo13InitResourcesEv.cpp
- *   [7] 0x020f1170  src/OneUpLogo_Spawn.c
+ *   [7] 0x020f1170  src/d_a_obj1_up_logo.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -56,14 +56,14 @@ extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* self, void*
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- OneUpLogo_Spawn, 0x020f1170, size 0x40 */
+/* ROM ordinal 7 -- daObj1UpLogo_c_classInit, 0x020f1170, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol OneUpLogo_Spawn
+// @symbol daObj1UpLogo_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9OneUpLogo */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *OneUpLogo_Spawn(void)
+int *daObj1UpLogo_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(336);
     if (p) {

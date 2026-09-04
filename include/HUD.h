@@ -1,6 +1,14 @@
 #ifndef HUD_H
 #define HUD_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   dMeter_c -- dMeter_c_classInit (was HUD_Spawn), g_profile_METER (was _ZN3HUD9spawnDataE)
+ */
+
 #include "types.h"
 #include "dBase_c.h"
 
@@ -57,7 +65,7 @@ struct HUD : dBase_c {
     void RenderVsTimer();
     void UpdateHealthMeter();
 
-    /* Tail padding. The field span stops short of the real size: HUD_Spawn
+    /* Tail padding. The field span stops short of the real size: dMeter_c_classInit
        calls fBase_c::operator new(0x7c), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_078[0x4];      /* 0x078, to the ROM's 0x7c */

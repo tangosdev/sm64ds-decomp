@@ -23,7 +23,7 @@
  *   [4] 0x020bc6d4  src/_ZN12HealingHeart6RenderEv.cpp
  *   [5] 0x020bc6fc  src/_ZN12HealingHeart8BehaviorEv.cpp
  *   [6] 0x020bc81c  src/_ZN12HealingHeart13InitResourcesEv.cpp
- *   [7] 0x020bc8b4  src/HealingHeart_Spawn.c
+ *   [7] 0x020bc8b4  src/d_a_obj_heart.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -69,14 +69,14 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* m, void* a, Fix12i r
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- HealingHeart_Spawn, 0x020bc8b4, size 0x40 */
+/* ROM ordinal 7 -- daObjHeart_c_classInit, 0x020bc8b4, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol HealingHeart_Spawn
+// @symbol daObjHeart_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12HealingHeart */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *HealingHeart_Spawn(void)
+int *daObjHeart_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(372);
     if (p) {

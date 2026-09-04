@@ -1,11 +1,19 @@
 #ifndef POWERSTAR_H
 #define POWERSTAR_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daStar_c -- daStar_c_classInit_STAR (was PowerStar_Spawn), g_profile_STAR (was PowerStar_SpawnInfo)
+ */
+
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9PowerStarD1Ev` destroys each member, and
- * `PowerStar_Spawn` constructs the same types at the same offsets before
+ * `daStar_c_classInit_STAR` constructs the same types at the same offsets before
  * storing `_ZTV9PowerStar`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -18,7 +26,7 @@
  *     0x370 ModelAnim                  0x64    -> 0x3d4
  *     0x3d4 ShadowModel                0x28    -> 0x3fc
  *
- * SIZE IS THE ROM'S OWN: `PowerStar_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daStar_c_classInit_STAR` calls
  * `fBase_c::operator new(1220)` -- 0x4c4 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */

@@ -1,9 +1,17 @@
 #ifndef MUGENBGM_H
 #define MUGENBGM_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daMugenBGM_c -- daMugenBGM_c_classInit (was MugenBgm_Spawn), g_profile_MUGEN_BGM (was MugenBgm_SpawnInfo)
+ */
+
 #include "dActor_c.h"
 
-/* MugenBgm_Spawn allocates 0xd4 bytes, constructs dActor_c, and installs
+/* daMugenBGM_c_classInit allocates 0xd4 bytes, constructs dActor_c, and installs
  * _ZTV8MugenBgm. D1 chains directly to dActor_c::~dActor_c, so the class has
  * no owned subobjects; its behavior uses only inherited actor state.
  */

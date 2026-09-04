@@ -1,9 +1,17 @@
 #ifndef ENEMYSPAWNER_H
 #define ENEMYSPAWNER_H
 
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daECreate_c -- daECreate_c_classInit (was EnemySpawner_Spawn), g_profile_ENEMY_CREATE (was EnemySpawner_SpawnInfo)
+ */
+
 #include "dActor_c.h"
 
-/* EnemySpawner_Spawn allocates 0xe0 bytes, constructs dActor_c, and stores
+/* daECreate_c_classInit allocates 0xe0 bytes, constructs dActor_c, and stores
  * _ZTV12EnemySpawner. D1 chains directly to dActor_c::~dActor_c. The remaining
  * four fields are closed by InitResources and Behavior at 0xd4..0xdc.
  */

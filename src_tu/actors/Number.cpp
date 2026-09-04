@@ -23,7 +23,7 @@
  *   [4] 0x020f0994  src/_ZN6Number6RenderEv.cpp
  *   [5] 0x020f0a60  src/_ZN6Number8BehaviorEv.cpp
  *   [6] 0x020f0bd4  src/_ZN6Number13InitResourcesEv.cpp
- *   [7] 0x020f0d90  src/Number_Spawn.c
+ *   [7] 0x020f0d90  src/d_a_obj_number.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -98,14 +98,14 @@ extern SharedFilePtrLayout data_ov002_0210d9a8;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- Number_Spawn, 0x020f0d90, size 0x40 */
+/* ROM ordinal 7 -- daObjNumber_c_classInit, 0x020f0d90, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol Number_Spawn
+// @symbol daObjNumber_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Number */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *Number_Spawn(void)
+int *daObjNumber_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(336);
     if (p) {
