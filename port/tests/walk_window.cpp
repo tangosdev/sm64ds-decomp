@@ -647,6 +647,11 @@ extern unsigned char data_ov002_0210ffec[];  /* _ZN6Player13ST_LEDGE_HANGE */
    case 1 is the ROM's own call to HitDeathPlane (out-of-bounds death), so a
    ChangeState into it with mStateStep==1 drives the real OOB path. */
 extern unsigned char data_ov002_02110124[];  /* _ZN6Player11ST_DEAD_PITE */
+/* ST_SWINGPLAYER, the Wario carry-and-spin. __sinit_ov002_021019d0 fills
+   0x02110604's lo/hi/tail from 0x0210a4b4, 0x0210a494 and 0x0210a414, and
+   ov002's reloc table takes those three to St_SwingPlayer_Init, _Main and
+   _Cleanup exactly. */
+extern unsigned char data_ov002_02110604[];  /* _ZN6Player13ST_SWINGPLAYERE */
 extern int data_ov002_02110a48[5];           /* Tree's five cylinder lists */
 extern int data_ov002_0211073c[];            /* 4 rows of {fn-or-vtoff, v} */
 int _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
@@ -9859,6 +9864,96 @@ int main(void)
                and the dispatch sits past that check -- so hold him airborne
                for the length of the probe. */
             if (force_wj && frame >= 10) *(unsigned char *)(c + 0x6de) = 1;
+
+            /* SM64DS_FORCE_STATE=swing -- the Wario CARRY-AND-SPIN probe. The
+               entry gate func_ov002_020d9dcc puts the carrier into
+               ST_SWINGPLAYER (data_ov002_02110604) when the active versus slot
+               is Wario (char index 2, cap OR plain). St_SwingPlayer_Init is
+               hosted and sets the held partner's PIN bit
+               *(u32 *)(mHeldObj + 0xb0) |= 0x800, which ONLY
+               St_SwingPlayer_Cleanup clears. St_SwingPlayer_Main was a MATCHING
+               FLOOR left unhosted, so hal_call_state_fn no-ops it: mStateStep
+               never leaves 0, the state never reaches the throw phase, never
+               ChangeState's out, so Cleanup never runs -- the partner stays
+               pinned (STUCK) and the carrier keeps an mAngleYSpeed nothing
+               consumes (the SLIDE). Forcing the state reproduces both without
+               two networked players and a real grab. */
+            {
+                static int force_sw = -1;
+                static unsigned char swing_victim[0x100];
+                static int swing_cleared = 0;
+                if (force_sw < 0) {
+                    const char *fs = getenv("SM64DS_FORCE_STATE");
+                    force_sw = (fs && !strcmp(fs, "swing")) ? 1 : 0;
+                }
+                if (force_sw && frame == 10) {
+                    /* Stand in a held partner: a zeroed object whose +0xb0 flag
+                       word we can watch. The non-versus spin path only ever
+                       touches the partner at +0xb0 (Init sets the pin, Cleanup
+                       clears it), so a scratch object is faithful for the pin
+                       observation. */
+                    for (unsigned i = 0; i < sizeof swing_victim; ++i)
+                        swing_victim[i] = 0;
+                    *(void **)(c + 0x358) = swing_victim;   /* mHeldObj */
+                    fprintf(stderr, "[swing] frame 10: mHeldObj = %p  "
+                            "ChangeState -> ST_SWINGPLAYER (%p)\n",
+                            (void *)swing_victim,
+                            (void *)data_ov002_02110604);
+                    _ZN6Player11ChangeStateERNS_5StateE(player,
+                                                        data_ov002_02110604);
+                    /* Init has now run. Put a known spin on the clock -- a real
+                       grab-at-angle leaves mAngleYSpeed nonzero, and it is the
+                       value the dead Main never winds down. This is the SLIDE
+                       made measurable, the device the climb probe uses on
+                       +0x98. */
+                    *(short *)(c + 0x69c) = 0x1000;          /* mAngleYSpeed */
+                    fprintf(stderr, "[swing] after Init: step=%u pin=0x%03x "
+                            "aspd=%d\n", *(unsigned char *)(c + 0x6e3),
+                            *(unsigned int *)(swing_victim + 0xb0) & 0x800,
+                            *(short *)(c + 0x69c));
+                }
+                /* frame 40: raise the versus RELEASE signal, the ROM's own
+                   spin-exit -- case 1 of St_SwingPlayer_Main checks
+                   data_0209f49e[idx] & 1 first and, on a partner not already
+                   flagged, throws it (func_ov002_020d9c70) and detaches it
+                   (func_ov002_020da95c clears the pin and nulls mHeldObj),
+                   then steps to the throw-recover anim whose finish
+                   ChangeState's out and runs Cleanup. This is the signal the
+                   versus logic raises when the spin should end; forcing it is
+                   how the exit is driven headlessly. With Main no-op'd (the
+                   bug) this bit does nothing, because nothing reads it. */
+                if (force_sw && frame == 40) {
+                    unsigned idx = data_020a0e40[0];
+                    *(unsigned short *)(&data_0209f49e[idx * 0x18]) |= 1;
+                    fprintf(stderr, "[swing] frame 40: raised versus release "
+                            "flag (slot %u) -- spin should now wind out\n", idx);
+                }
+                if (force_sw && frame > 10 && !swing_cleared &&
+                    (*(unsigned int *)(swing_victim + 0xb0) & 0x800) == 0) {
+                    swing_cleared = 1;
+                    fprintf(stderr, "[swing] frame %3d: pin bit CLEARED, "
+                            "partner released (state exited -> Cleanup)\n",
+                            frame);
+                }
+                if (force_sw && frame >= 10 && frame <= 150 &&
+                    (frame % 10) == 0)
+                    fprintf(stderr, "[swing] frame %3d  step=%u pin=0x%03x "
+                            "aspd=%d timer=%u\n", frame,
+                            *(unsigned char *)(c + 0x6e3),
+                            *(unsigned int *)(swing_victim + 0xb0) & 0x800,
+                            *(short *)(c + 0x69c),
+                            *(unsigned short *)(c + 0x6a4));
+                if (force_sw && frame == 151) {
+                    unsigned pin =
+                        *(unsigned int *)(swing_victim + 0xb0) & 0x800;
+                    fprintf(stderr, "[swing] final: step=%u pin=%s aspd=%d\n",
+                            *(unsigned char *)(c + 0x6e3),
+                            pin ? "STUCK SET (victim still pinned)"
+                                : "cleared (victim released)",
+                            *(short *)(c + 0x69c));
+                    exit(0);
+                }
+            }
         }
         /* SM64DS_LOOP_PROBE=<frame>[,<soundId>]: the gate-31 loose end, the
            level-change looping-sound reap. At <frame> it starts a looping sound

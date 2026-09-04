@@ -53,7 +53,12 @@ src/func_ov002_020cc01c.cpp
 src/func_ov002_020bf340.c
 src/func_0200d5c0.c
 src/func_0200d5fc.c
+# St_SwingPlayer_Main (0x020d9fec) is a MATCHING FLOOR with no matched src TU;
+# its Init and Cleanup are hosted (hal/player_bridges.cpp) but Main was left
+# unhosted, so the state entered and pinned the held partner but never advanced
+# or ran Cleanup. Host-transcribed from the ROM, the Climb shape.
 port/unmatched/Player_St_Climb.cpp
+port/unmatched/Player_St_SwingPlayer_Main.cpp
 src/func_ov002_020d22ec.c
 src/func_ov002_020d36d8.c
 src/func_ov002_020d4540.c
