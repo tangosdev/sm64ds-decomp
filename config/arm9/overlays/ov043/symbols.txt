@@ -19,7 +19,7 @@ _ZN17daObjKm1_Dorifu_cD1Ev kind:function(arm,size=0x80) addr:0x02111630
 _ZN17daObjKm1_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x021116b0
 _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111744
 _ZN17daObjKm1_Dorifu_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111758
-StairsBdw_Spawn kind:function(arm,size=0x90) addr:0x0211176c
+daObjKm1_Dorifu_c_classInit kind:function(arm,size=0x90) addr:0x0211176c
 __sinit_ov043_021117fc kind:function(arm,size=0x6c) addr:0x021117fc
 __sinit_ov043_02111868 kind:function(arm,size=0x6c) addr:0x02111868
 __sinit_ov043_021118d4 kind:function(arm,size=0x6c) addr:0x021118d4
@@ -108,7 +108,7 @@ data_ov043_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 data_ov043_021124d4 kind:data(any) addr:0x021124d4 ambiguous
 _ZTI17daObjKm1_Dorifu_c kind:data(any) addr:0x021124dc
 _ZTS17daObjKm1_Dorifu_c kind:data(any) addr:0x021124e8
-StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc
+g_profile_KM1_DORIFU kind:data(any) addr:0x021124fc
 data_ov043_02112518 kind:data(any) addr:0x02112518
 _ZTV17daObjKm1_Dorifu_c kind:data(any) addr:0x0211255c
 data_ov043_021125dc kind:data(any) addr:0x021125dc ambiguous

@@ -53,7 +53,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "StairsBdw_Spawn",
+      "symbol": "daObjKm1_Dorifu_c_classInit",
       "address": "0x0211176c",
       "size": "0x00000090",
       "legacy_source": "src/StairsBdw_Spawn.cpp",
@@ -74,7 +74,7 @@
       "evidence": "compiler-emitted type-name string matches the retail bytes"
     },
     {
-      "symbol": "StairsBdw_SpawnInfo",
+      "symbol": "g_profile_KM1_DORIFU",
       "address": "0x021124fc",
       "size": "0x1c",
       "evidence": "typed actor descriptor; factory relocation and all priority, flag, and range words match retail"
@@ -131,7 +131,7 @@
       "source": "0x021124fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "StairsBdw_Spawn",
+      "symbol": "daObjKm1_Dorifu_c_classInit",
       "addend": 0,
       "target_module": "ov043",
       "target_address": "0x0211176c"
@@ -863,7 +863,7 @@
   "compiler_only_output": [],
   "notes": [
     "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order without a D2 body.",
-    "StairsBdw_Spawn is the adjacent fifth function: it allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
+    "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: it allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
     "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __destroy_arr remains the sized owner at the same ROM address and is not renamed."
   ],
   "verification": {
@@ -1055,7 +1055,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "StairsBdw_Spawn",
+            "symbol": "daObjKm1_Dorifu_c_classInit",
             "identical": true,
             "relocCount": 10,
             "differences": []
@@ -1148,7 +1148,7 @@
           ".data"
         ],
         "licensedSymbols": [
-          "StairsBdw_SpawnInfo",
+          "g_profile_KM1_DORIFU",
           "_ZTI17daObjKm1_Dorifu_c",
           "_ZTS17daObjKm1_Dorifu_c",
           "_ZTV17daObjKm1_Dorifu_c",
@@ -1176,7 +1176,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "StairsBdw_Spawn",
+            "symbol": "daObjKm1_Dorifu_c_classInit",
             "section": ".text",
             "size": "0x00000090"
           }
@@ -1201,7 +1201,7 @@
           40
         ],
         "externalizedTextSymbols": [
-          "StairsBdw_Spawn",
+          "daObjKm1_Dorifu_c_classInit",
           "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
           "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
           "_ZN17daObjKm1_Dorifu_cD0Ev",
@@ -1443,7 +1443,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "StairsBdw_Spawn",
+            "symbol": "daObjKm1_Dorifu_c_classInit",
             "identical": true,
             "relocCount": 10,
             "differences": []
@@ -1536,7 +1536,7 @@
           ".data"
         ],
         "licensedSymbols": [
-          "StairsBdw_SpawnInfo",
+          "g_profile_KM1_DORIFU",
           "_ZTI17daObjKm1_Dorifu_c",
           "_ZTS17daObjKm1_Dorifu_c",
           "_ZTV17daObjKm1_Dorifu_c",
@@ -1564,7 +1564,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "StairsBdw_Spawn",
+            "symbol": "daObjKm1_Dorifu_c_classInit",
             "section": ".text",
             "size": "0x00000090"
           }
@@ -1589,7 +1589,7 @@
           40
         ],
         "externalizedTextSymbols": [
-          "StairsBdw_Spawn",
+          "daObjKm1_Dorifu_c_classInit",
           "_ZN17daObjKm1_Dorifu_c13InitResourcesEv",
           "_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv",
           "_ZN17daObjKm1_Dorifu_cD0Ev",

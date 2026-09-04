@@ -1,7 +1,7 @@
 _ZN14daObjWcObj01_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
 _ZN14daObjWcObj01_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 _ZN14daObjWcObj01_c13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111254
-daObjWcObj01_c_Spawn kind:function(arm,size=0x3c) addr:0x02111340
+daObjWcObj01_c_classInit kind:function(arm,size=0x3c) addr:0x02111340
 _ZN15daObjWc_Obj02_cD1Ev kind:function(arm,size=0x44) addr:0x0211137c
 _ZN15daObjWc_Obj02_cD0Ev kind:function(arm,size=0x58) addr:0x021113c0
 _ZN15daObjWc_Obj02_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111418
@@ -33,7 +33,7 @@ daObjWc_Obj05_c_classInit kind:function(arm,size=0x30) addr:0x02111e74
 _ZN14daObjWcObj06_cD1Ev kind:function(arm,size=0x50) addr:0x02111ea4
 _ZN14daObjWcObj06_cD0Ev kind:function(arm,size=0x64) addr:0x02111ef4
 _ZN14daObjWcObj06_c13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111f58
-daObjWcObj06_c_Spawn kind:function(arm,size=0x3c) addr:0x02112044
+daObjWcObj06_c_classInit kind:function(arm,size=0x3c) addr:0x02112044
 _ZN15daObjWc_Obj07_cD1Ev kind:function(arm,size=0x50) addr:0x02112080
 _ZN15daObjWc_Obj07_cD0Ev kind:function(arm,size=0x64) addr:0x021120d0
 _ZN15daObjWc_Obj07_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112134
@@ -172,7 +172,7 @@ data_ov029_02113b90 kind:data(any) addr:0x02113b90 ambiguous
 _ZTI14daObjWcObj01_c kind:data(any) addr:0x02113bdc
 data_ov029_02113be8 kind:data(any) addr:0x02113be8
 _ZTS14daObjWcObj01_c kind:data(any) addr:0x02113bf4
-daObjWcObj01_c_SpawnInfo kind:data(any) addr:0x02113c08 ambiguous
+g_profile_WC_OBJ01 kind:data(any) addr:0x02113c08 ambiguous
 data_ov029_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov029_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov029_02113c28 kind:data(any) addr:0x02113c28 ambiguous

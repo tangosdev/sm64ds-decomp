@@ -59,13 +59,17 @@ extern int data_ov029_02113be8[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- daObjWcObj01_c_Spawn, 0x02111340, size 0x3c */
+/* ROM ordinal 3 -- daObjWcObj01_c_classInit, 0x02111340, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWcObj01_c_Spawn
+// @symbol daObjWcObj01_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV17daObjFloatBoard_c */
-extern "C" int *daObjWcObj01_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjWcObj01_c through RTTI,
+ * allocation size, vtable identity, and the WC_OBJ01 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjWcObj01_c_Spawn. */
+extern "C" int *daObjWcObj01_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(840);
     if (p) {

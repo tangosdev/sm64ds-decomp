@@ -63,9 +63,13 @@ extern SharedFilePtr data_ov043_02112660;
 extern CLPS_Block data_ov043_02111c60;
 }
 
-/* ROM ordinal 4 -- StairsBdw_Spawn, 0x0211176c, size 0x90 */
-// @symbol StairsBdw_Spawn
-extern "C" daObjKm1_Dorifu_c *StairsBdw_Spawn()
+/* ROM ordinal 4 -- daObjKm1_Dorifu_c_classInit, 0x0211176c, size 0x90 */
+// @symbol daObjKm1_Dorifu_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjKm1_Dorifu_c through RTTI,
+ * allocation size, vtable identity, and the KM1_DORIFU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: StairsBdw_Spawn. */
+extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit()
 {
     char *actor = static_cast<char *>(_ZN7fBase_cnwEj(0xdcc));
 
@@ -84,8 +88,13 @@ extern "C" daObjKm1_Dorifu_c *StairsBdw_Spawn()
     return reinterpret_cast<daObjKm1_Dorifu_c *>(actor);
 }
 
-extern "C" StairsBdwSpawnInfo StairsBdw_SpawnInfo = {
-    StairsBdw_Spawn,
+/* Reconstructed source-style name: SM64DS proves this descriptor through
+ * its registry role, the KM1_DORIFU literal ROM profile ID, and the
+ * factory relocation it carries; later EAD lineage supplies g_profile_.
+ * Exact original spelling is not preserved. Historical alias:
+ * StairsBdw_SpawnInfo. */
+extern "C" StairsBdwSpawnInfo g_profile_KM1_DORIFU = {
+    daObjKm1_Dorifu_c_classInit,
     0x0086,
     0x00af,
     0,

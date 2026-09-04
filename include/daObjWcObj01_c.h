@@ -16,7 +16,7 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjFloatBoard_c, ov002 0x02108fb4
  *
- * NO FIELDS OF ITS OWN: daObjWcObj01_c_Spawn passes 840 = 0x348, which
+ * NO FIELDS OF ITS OWN: daObjWcObj01_c_classInit passes 840 = 0x348, which
  * daObjFloatBoard_c fills. It overrides slot 0 only.
  */
 

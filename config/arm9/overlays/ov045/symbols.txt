@@ -125,7 +125,7 @@ data_ov045_02112ca8 kind:data(any) addr:0x02112ca8 ambiguous
 data_ov045_02112cb0 kind:data(any) addr:0x02112cb0
 _ZTS16daObjKm2_Agaru_c kind:data(any) addr:0x02112cbc
 data_ov045_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
-FireSeaElevator_SpawnInfo kind:data(any) addr:0x02112cd0 ambiguous
+g_profile_KM2_AGARU kind:data(any) addr:0x02112cd0 ambiguous
 _ZTV15FireSeaElevator kind:data(any) addr:0x02112cf4
 data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
 _ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74

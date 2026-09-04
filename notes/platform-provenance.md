@@ -381,7 +381,7 @@ destructor stores three vptrs and destroys `daObjDorifu_c`'s `Model[5]` and
 
 **The tree's "Bs" names are crossed**, and the header does not try to fix it. The
 factory that builds *this* class is `StairsBs_Spawn` (0xdcc, this class's
-vtable), mirroring `StairsBdw_Spawn` in ov043. The function called
+vtable), mirroring `daObjKm1_Dorifu_c_classInit` in ov043. The function called
 `daObjKm3_Dorifu_c_Spawn` builds something else — 800 = 0x320,
 `daObjKuruma_c`'s vtable then ov047 0x0211244c, which is `daObjKm3_Kuruma_c`, a
 class the tree has never named. Untangling the two names is a config change and

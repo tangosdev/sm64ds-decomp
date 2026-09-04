@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* The Bob-omb Battlefield drifting stairs. Its factory is
- * StairsBdw_Spawn; the class itself is named by its ROM RTTI identity.
+ * daObjKm1_Dorifu_c_classInit; the class itself is named by its ROM RTTI identity.
  *
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjDorifu_c, which derives
  * from dBgActor_c. The destructor stores three vptrs -- its own, daObjDorifu_c's,
@@ -18,7 +18,7 @@
  *   kind                     __si_class_type_info, ONE base, offset 0
  *   base                     daObjDorifu_c, ov002 0x02108d70
  *
- * NO FIELDS OF ITS OWN: StairsBdw_Spawn passes 0xdcc, which
+ * NO FIELDS OF ITS OWN: daObjKm1_Dorifu_c_classInit passes 0xdcc, which
  * daObjDorifu_c fills. It overrides slots 0 and 3, which the base leaves null.
  * Everything this header
  * used to restate -- a `u8 mModel` marker at 0xd4 and a `u8 mMovingMeshCollider`

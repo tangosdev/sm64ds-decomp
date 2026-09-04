@@ -103,6 +103,7 @@ ov002	0x020b5500	func_ov002_020b5500	_ZN19daObjHatenaSwitch_c13InitResourcesEv	v
 ov002	0x020b567c	func_ov002_020b567c	_ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c	inferred private helper on ROM-proven class; player/Yoshi collision handling; body byte-verified
 ov002	0x020b56c4	func_ov002_020b56c4	_ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred static callback on ROM-proven class; registered on the owned collider; body byte-verified
 ov002	0x020b56d8	func_ov002_020b56d8	QuestionSwitch_Spawn	spawnfunc
+ov002	0x020b56d8	QuestionSwitch_Spawn	daObjHatenaSwitch_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov002	0x020b5734	func_ov002_020b5734	_ZN9BlueFlameD1Ev	vtable slot 16
 ov002	0x020b5764	func_ov002_020b5764	_ZN9BlueFlameD0Ev	vtable slot 17
 ov002	0x020b57a8	func_ov002_020b57a8	_ZN9BlueFlame8BehaviorEv	vtable slot 6
@@ -199,6 +200,7 @@ ov002	0x020ee144	func_ov002_020ee144	_ZN8YoshiEgg13InitResourcesEv	vtable slot 0
 ov002	0x020ee3d8	func_ov002_020ee3d8	YoshiEgg_Spawn	spawnfunc
 ov002	0x020ee3d8	YoshiEgg_Spawn	daYegg_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020f085c	func_ov002_020f085c	InvisibleSecret_Spawn	spawnfunc
+ov002	0x020f085c	InvisibleSecret_Spawn	daSCoin_c_Spawn	renamed to the class's ROM RTTI identity; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov002	0x020f0894	func_ov002_020f0894	_ZN6NumberD1Ev	vtable slot 16 (was _ZN15InvisibleSecretD1Ev)
 ov002	0x020f08cc	func_ov002_020f08cc	_ZN6NumberD0Ev	vtable slot 17 (was _ZN15InvisibleSecretD0Ev)
 ov002	0x020f093c	func_ov002_020f093c	_ZN6Number16CleanupResourcesEv	vtable slot 3 (was _ZN15InvisibleSecret16CleanupResourcesEv)
@@ -302,6 +304,7 @@ ov002	0x02108cd0	data_ov002_02108cd0	MegaMushroomCreateTag_SpawnInfo	spawninfo
 ov002	0x02108cd0	MegaMushroomCreateTag_SpawnInfo	g_profile_KINOKO_CREATE_TAG	reconstructed profile global; literal ROM ID KINOKO_CREATE_TAG+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02108cf4	data_ov002_02108cf4	_ZTV16daObjKinokoTag_c	vtable alloc=0x110; class name from ROM RTTI
 ov002	0x02108e38	data_ov002_02108e38	QuestionSwitch_SpawnInfo	spawninfo
+ov002	0x02108e38	QuestionSwitch_SpawnInfo	g_profile_HATENA_SWITCH	reconstructed profile global; literal ROM ID HATENA_SWITCH+registry role+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov002	0x02108e5c	data_ov002_02108e5c	_ZTV19daObjHatenaSwitch_c	vtable alloc=0x724; class name from ROM RTTI
 ov002	0x02108ef8	data_ov002_02108ef8	RedFlame_SpawnInfo	spawninfo
 ov002	0x02108f14	data_ov002_02108f14	BlueFlame_SpawnInfo	spawninfo
@@ -450,7 +453,7 @@ ov009	0x02111ea4	func_ov009_02111ea4	_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv
 ov009	0x02111ea8	func_ov009_02111ea8	_ZN18daObjMc_Metalnet_c6RenderEv	vtable slot 9 (was _ZN14daObjMcWater_c6RenderEv)
 ov009	0x02111ed0	func_ov009_02111ed0	_ZN18daObjMc_Metalnet_c8BehaviorEv	vtable slot 6 (was _ZN14daObjMcWater_c8BehaviorEv)
 ov009	0x02111f40	func_ov009_02111f40	_ZN18daObjMc_Metalnet_c13InitResourcesEv	vtable slot 0 (was _ZN14daObjMcWater_c13InitResourcesEv)
-ov009	0x02112048	func_ov009_02112048	DockPole_Spawn	spawnfunc
+ov009	0x02112048	func_ov009_02112048	daObjMc_Metalnet_c_classInit	supersedes a misattributed DockPole spawnfunc row: tools/actor_names.py's pre-#1418 parse_spawnfunc took the NEXT class's identity, writing DockPole onto daObjMc_Metalnet_c's addresses; symbols/actor_renames_report.txt:763 then shows the generator refusing the correct name as "already claimed by DockPole". DockPole never named this symbol
 ov009	0x02112078	func_ov009_02112078	_ZN10daMcFlag_cD1Ev	vtable slot 16 (was _ZN8DockPoleD1Ev, then _ZN4FlagD1Ev)
 ov009	0x021120a8	func_ov009_021120a8	_ZN10daMcFlag_cD0Ev	vtable slot 17 (was _ZN8DockPoleD0Ev, then _ZN4FlagD0Ev)
 ov009	0x021120ec	func_ov009_021120ec	_ZN10daMcFlag_c16CleanupResourcesEv	vtable slot 3 (was _ZN8DockPole16CleanupResourcesEv, then _ZN4Flag16CleanupResourcesEv)
@@ -461,7 +464,7 @@ ov009	0x021121f0	func_ov009_021121f0	daMcFlag_c_Spawn	spawnfunc (was Flag_Spawn)
 ov009	0x02113934	data_ov009_02113934	Bird_SpawnInfo	spawninfo
 ov009	0x02113958	data_ov009_02113958	_ZTV4Bird	vtable alloc=0x184
 ov009	0x021139f4	data_ov009_021139f4	daObjMcWater_c_SpawnInfo	spawninfo
-ov009	0x02113abc	data_ov009_02113abc	DockPole_SpawnInfo	spawninfo
+ov009	0x02113abc	data_ov009_02113abc	g_profile_MC_METALNET	supersedes a misattributed DockPole spawninfo row: tools/actor_names.py's pre-#1418 parse_spawnfunc took the NEXT class's identity, writing DockPole onto daObjMc_Metalnet_c's addresses; symbols/actor_renames_report.txt:762 then shows the generator refusing the correct name as "already claimed by DockPole". DockPole never named this symbol
 ov009	0x02113ae0	data_ov009_02113ae0	_ZTV18daObjMc_Metalnet_c	vtable alloc=? (was _ZTV14daObjMcWater_c)
 ov009	0x02113b7c	data_ov009_02113b7c	daMcFlag_c_SpawnInfo	spawninfo (was Flag_SpawnInfo)
 ov009	0x02113ba0	data_ov009_02113ba0	_ZTV10daMcFlag_c	vtable alloc=? (was _ZTV8DockPole, then _ZTV4Flag)
@@ -996,6 +999,7 @@ ov029	0x02113db4	data_ov029_02113db4	_ZTV15daObjWc_Obj03_c	vtable alloc=? (was _
 ov029	0x02113e50	data_ov029_02113e50	daObjWc_Obj05_c_SpawnInfo	spawninfo (was CageLift_SpawnInfo)
 ov029	0x02113e50	daObjWc_Obj05_c_SpawnInfo	g_profile_WC_OBJ05	reconstructed profile global; literal ROM ID WC_OBJ05+registry role+later EAD lineage; exact SM64DS spelling not preserved (was CageLift_SpawnInfo)
 ov029	0x02113f20	data_ov029_02113f20	FloatOnWaterPlatformWdwRectangle_SpawnInfo	spawninfo
+ov029	0x02113f20	FloatOnWaterPlatformWdwRectangle_SpawnInfo	daObjWcObj06_c_SpawnInfo	renamed to the class's ROM RTTI identity; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov029	0x02113ff4	data_ov029_02113ff4	daObjWc_Obj07_c_SpawnInfo	spawninfo
 ov029	0x02114018	data_ov029_02114018	_ZTV15daObjWc_Obj07_c	vtable alloc=? (was _ZTV32FloatOnWaterPlatformWdwRectangle)
 ov029	0x021140b8	data_ov029_021140b8	WDW_Water_SpawnInfo	spawninfo
@@ -1692,6 +1696,7 @@ ov065	0x0211aae0	TtcConveyorBeltLarge_Spawn	daObjCtMecha04_c_classInit_CT_MECHA0
 ov065	0x0211ab20	func_ov065_0211ab20	TtcConveyorBeltSmall_Spawn	spawnfunc
 ov065	0x0211ab20	TtcConveyorBeltSmall_Spawn	daObjCtMecha04_c_classInit_CT_MECHA04S	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211b328	func_ov065_0211b328	TTC_MovingBar_Spawn	spawnfunc
+ov065	0x0211b328	TTC_MovingBar_Spawn	daObjCtMecha05_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov065	0x0211b360	func_ov065_0211b360	_ZN13TTC_MovingBarD1Ev	vtable slot 16
 ov065	0x0211b3ac	func_ov065_0211b3ac	_ZN13TTC_MovingBarD0Ev	vtable slot 17
 ov065	0x0211b47c	func_ov065_0211b47c	_ZN13TTC_MovingBar16CleanupResourcesEv	vtable slot 3
@@ -1744,6 +1749,7 @@ ov065	0x0211d1c8	data_ov065_0211d1c8	TtcConveyorBeltLarge_SpawnInfo	spawninfo
 ov065	0x0211d1c8	TtcConveyorBeltLarge_SpawnInfo	g_profile_CT_MECHA04L	reconstructed profile global; literal ROM ID CT_MECHA04L+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211d1ec	data_ov065_0211d1ec	_ZTV16daObjCtMecha04_c	vtable alloc=? (was _ZTV20TtcConveyorBeltLarge)
 ov065	0x0211d290	data_ov065_0211d290	TTC_MovingBar_SpawnInfo	spawninfo
+ov065	0x0211d290	TTC_MovingBar_SpawnInfo	g_profile_CT_MECHA05	reconstructed profile global; literal ROM ID CT_MECHA05+registry role+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov065	0x0211d374	data_ov065_0211d374	TtcRotatingGear_SpawnInfo	spawninfo
 ov065	0x0211d374	TtcRotatingGear_SpawnInfo	g_profile_CT_MECHA06	reconstructed profile global; literal ROM ID CT_MECHA06+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211d390	data_ov065_0211d390	TtcRotatingTriangle_SpawnInfo	spawninfo
@@ -2506,6 +2512,7 @@ ov100	0x02146b38	func_ov100_02146b38	_ZN4Fish8BehaviorEv	vtable slot 6
 ov100	0x02146c68	func_ov100_02146c68	_ZN4Fish13InitResourcesEv	vtable slot 0
 ov100	0x02146d38	func_ov100_02146d38	Fish_Spawn	spawnfunc
 ov100	0x02147328	func_ov100_02147328	PathLift_Spawn	spawnfunc
+ov100	0x02147328	PathLift_Spawn	daObjPathLift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov100	0x02147e78	data_ov100_02147e78	Butterfly_SpawnInfo	spawninfo
 ov100	0x02147e9c	data_ov100_02147e9c	_ZTV9Butterfly	vtable alloc=0x3f4
 ov100	0x02147f58	data_ov100_02147f58	RollingIronBall_SpawnInfo	spawninfo
@@ -2518,6 +2525,7 @@ ov100	0x021483cc	data_ov100_021483cc	_ZTV8StarDoor	vtable alloc=? (was _ZTV4Door
 ov100	0x02148498	data_ov100_02148498	Fish_SpawnInfo	spawninfo
 ov100	0x021484bc	data_ov100_021484bc	_ZTV4Fish	vtable alloc=0x160
 ov100	0x02148558	data_ov100_02148558	PathLift_SpawnInfo	spawninfo
+ov100	0x02148558	PathLift_SpawnInfo	g_profile_PATH_LIFT	reconstructed profile global; literal ROM ID PATH_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
 ov102	0x02148a80	func_ov102_02148a80	_ZN13FortressTowerD1Ev	vtable slot 16
 ov102	0x02148ac4	func_ov102_02148ac4	_ZN13FortressTowerD0Ev	vtable slot 17
 ov102	0x02148b1c	func_ov102_02148b1c	_ZN13FortressTower16CleanupResourcesEv	vtable slot 3
