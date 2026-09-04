@@ -212,7 +212,7 @@ The pair goes in registers exactly as two ints either way.
 
 ## `include/RotatingUpDownPlatformUtm.h`
 
-Base and size from the factory (`src/RotatingUpDownPlatformUtm_Spawn.c`):
+Base and size from the factory (`src/d_a_obj_rotate_updown_lift_hs_updown_lift.c`):
 `fBase_c::operator new(936)` — 0x3a8 — then `dBgActor_c::dBgActor_c()`, then stores
 `_ZTV25RotatingUpDownPlatformUtm`. No intermediate base: one non-base vtable
 store, matching the D1 destructor.

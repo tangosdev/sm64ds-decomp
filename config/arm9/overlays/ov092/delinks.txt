@@ -92,7 +92,7 @@ src/_ZN6ToxBox13InitResourcesEv.cpp:
     complete
     .text start:0x02131da0 end:0x02132018
 
-src/ToxBox_Spawn.cpp:
+src/d_a_onms.cpp:
     complete
     .text start:0x02132018 end:0x02132074
 

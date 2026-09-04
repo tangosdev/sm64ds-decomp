@@ -309,7 +309,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.cpp"
+    "src/d_a_onms.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -678,7 +678,7 @@
     "src/_ZN10HootTheOwl6RenderEv.cpp",
     "src/_ZN10HootTheOwl8BehaviorEv.cpp",
     "src/_ZN10HootTheOwl13InitResourcesEv.cpp",
-    "src/HootTheOwl_Spawn.c"
+    "src/d_a_owl.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -1473,7 +1473,7 @@
     "src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp",
     "src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp",
     "src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp",
-    "src/Fwoosh_Spawn.c"
+    "src/d_a_hyuhyu.c"
    ],
    "ext_mix": {
     ".cpp": 13,
@@ -1745,7 +1745,7 @@
     "src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp",
     "src/_ZN6Thwomp8BehaviorEv.cpp",
     "src/_ZN6Thwomp13InitResourcesEv.cpp",
-    "src/Thwomp_Spawn.c",
+    "src/d_a_dsn.c",
     "src/_ZN11daDsnBase_cD0Ev.cpp",
     "src/_ZN11daDsnBase_cD1Ev.c",
     "src/func_ov091_02132dc0.cpp",
@@ -3283,9 +3283,9 @@
     "src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp",
     "src/func_ov095_02136764.cpp",
     "src/func_ov095_02136788.c",
-    "src/UpDownLiftRr_Spawn.c",
-    "src/UpDownLiftHmc_Spawn.c",
-    "src/UpDownLiftBbh_Spawn.c"
+    "src/d_a_udlift_rc_rift02.c",
+    "src/d_a_udlift_udlift.c",
+    "src/d_a_udlift_udlift_teresa.c"
    ],
    "ext_mix": {
     ".c": 8,
@@ -7721,7 +7721,7 @@
     "src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp",
     "src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp",
     "src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp",
-    "src/RotatingUpDownPlatformUtm_Spawn.c"
+    "src/d_a_obj_rotate_updown_lift_hs_updown_lift.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -8068,7 +8068,7 @@
     "src/_ZN17SlidingPlatformWf6RenderEv.cpp",
     "src/_ZN17SlidingPlatformWf8BehaviorEv.cpp",
     "src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp",
-    "src/SlidingPlatformWf_Spawn.c"
+    "src/d_a_obj_simple_lift_bk_transbar.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -8484,7 +8484,7 @@
     "src/_ZN5Stump6RenderEv.cpp",
     "src/_ZN5Stump8BehaviorEv.cpp",
     "src/_ZN5Stump13InitResourcesEv.cpp",
-    "src/daObjPile_c_classInit.c"
+    "src/d_a_obj_pile.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -29634,7 +29634,7 @@
    "n_functions_map": 13,
    "n_files": 13,
    "files": [
-    "src/RotatingUpDownPlatform_Spawn.c",
+    "src/d_a_obj_rotate_updown_lift_updown_lift.c",
     "src/_ZN22RotatingUpDownPlatformD1Ev.c",
     "src/_ZN22RotatingUpDownPlatformD0Ev.c",
     "src/func_ov091_02131cb0.c",
@@ -29715,12 +29715,12 @@
     "src/_ZN9SeesawBob13InitResourcesEv.cpp",
     "src/func_ov095_02135cdc.c",
     "src/func_ov095_02135e90.c",
-    "src/SeesawRr_Spawn.c",
-    "src/SeesawBsZigZag_Spawn.c",
-    "src/SeesawBsPlank_Spawn.c",
-    "src/SeesawBfs_Spawn.c",
-    "src/SeesawBdw_Spawn.c",
-    "src/SeesawBob_Spawn.c"
+    "src/d_a_obj_seesaw_rc_seesaw.c",
+    "src/d_a_obj_seesaw_km3_yokoseesaw.c",
+    "src/d_a_obj_seesaw_km3_seesaw.c",
+    "src/d_a_obj_seesaw_km2_yokoseesaw.c",
+    "src/d_a_obj_seesaw_km1_seesaw.c",
+    "src/d_a_obj_seesaw_bomb_seesaw.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -29780,7 +29780,7 @@
     "src/_ZN12FlamethrowerD0Ev.cpp",
     "src/_ZN12Flamethrower8BehaviorEv.cpp",
     "src/_ZN12Flamethrower13InitResourcesEv.cpp",
-    "src/Flamethrower_Spawn.cpp"
+    "src/d_a_obj_flamethrower.cpp"
    ],
    "ext_mix": {
     ".cpp": 5
@@ -36484,7 +36484,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SquareMetalNetLift_Spawn.c"
+    "src/d_a_linelift2_km2_susumu.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36533,7 +36533,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ArrowPathLift_Spawn.c"
+    "src/d_a_linelift2_km3_lift.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36581,7 +36581,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformBfsRectangle_Spawn.c"
+    "src/d_a_obj_simple_lift_km2_rifut02.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36629,7 +36629,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformBfsSquare_Spawn.c"
+    "src/d_a_obj_simple_lift_km2_rifut01.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36677,7 +36677,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformRr_Spawn.c"
+    "src/d_a_obj_simple_lift_rc_rift01.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36725,7 +36725,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformBsLong_Spawn.c"
+    "src/d_a_obj_simple_lift_km3_deru02.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36773,7 +36773,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformBsWide_Spawn.c"
+    "src/d_a_obj_simple_lift_km3_deru01.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36821,7 +36821,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingPlatformBdw_Spawn.c"
+    "src/d_a_obj_simple_lift_km1_deru.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36869,7 +36869,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SeesawUtm_Spawn.c"
+    "src/d_a_obj_seesaw_seesaw.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37320,7 +37320,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.cpp"
+    "src/d_a_onms.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -37542,7 +37542,7 @@
     "src/_ZN10HootTheOwl6RenderEv.cpp",
     "src/_ZN10HootTheOwl8BehaviorEv.cpp",
     "src/_ZN10HootTheOwl13InitResourcesEv.cpp",
-    "src/HootTheOwl_Spawn.c"
+    "src/d_a_owl.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -38018,7 +38018,7 @@
     "src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp",
     "src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp",
     "src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp",
-    "src/Fwoosh_Spawn.c"
+    "src/d_a_hyuhyu.c"
    ],
    "ext_mix": {
     ".cpp": 13,

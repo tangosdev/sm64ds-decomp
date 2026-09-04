@@ -10,7 +10,11 @@ extern void func_0203d384(void*);
 extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV12Flamethrower[];
 
-int* Flamethrower_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daObjFlamethrower_c through RTTI,
+ * allocation size, vtable identity, and the OBJ_FLAMETHROWER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Flamethrower_Spawn. */
+int* daObjFlamethrower_c_classInit(void){
   int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct Flamethrower));
   if(p){
     _ZN8dActor_cC2Ev(p);

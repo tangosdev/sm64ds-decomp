@@ -52,31 +52,31 @@ src/func_ov095_02135e90.c:
     complete
     .text start:0x02135e90 end:0x02135ea4
 
-src/SeesawRr_Spawn.c:
+src/d_a_obj_seesaw_rc_seesaw.c:
     complete
     .text start:0x02135ea4 end:0x02135ed4
 
-src/SeesawBsZigZag_Spawn.c:
+src/d_a_obj_seesaw_km3_yokoseesaw.c:
     complete
     .text start:0x02135ed4 end:0x02135f04
 
-src/SeesawBsPlank_Spawn.c:
+src/d_a_obj_seesaw_km3_seesaw.c:
     complete
     .text start:0x02135f04 end:0x02135f34
 
-src/SeesawBfs_Spawn.c:
+src/d_a_obj_seesaw_km2_yokoseesaw.c:
     complete
     .text start:0x02135f34 end:0x02135f64
 
-src/SeesawBdw_Spawn.c:
+src/d_a_obj_seesaw_km1_seesaw.c:
     complete
     .text start:0x02135f64 end:0x02135f94
 
-src/SeesawBob_Spawn.c:
+src/d_a_obj_seesaw_bomb_seesaw.c:
     complete
     .text start:0x02135f94 end:0x02135fc4
 
-src/SeesawUtm_Spawn.c:
+src/d_a_obj_seesaw_seesaw.c:
     complete
     .text start:0x02135fc4 end:0x02135ff4
 
@@ -132,15 +132,15 @@ src/func_ov095_02136788.c:
     complete
     .text start:0x02136788 end:0x0213679c
 
-src/UpDownLiftRr_Spawn.c:
+src/d_a_udlift_rc_rift02.c:
     complete
     .text start:0x0213679c end:0x021367cc
 
-src/UpDownLiftHmc_Spawn.c:
+src/d_a_udlift_udlift.c:
     complete
     .text start:0x021367cc end:0x021367fc
 
-src/UpDownLiftBbh_Spawn.c:
+src/d_a_udlift_udlift_teresa.c:
     complete
     .text start:0x021367fc end:0x0213682c
 
@@ -160,7 +160,7 @@ src/_ZN12Flamethrower13InitResourcesEv.cpp:
     complete
     .text start:0x02136d60 end:0x02136ed4
 
-src/Flamethrower_Spawn.cpp:
+src/d_a_obj_flamethrower.cpp:
     complete
     .text start:0x02136ed4 end:0x02136f58
 

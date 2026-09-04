@@ -48,11 +48,11 @@ src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp:
     complete
     .text start:0x021318f0 end:0x02131ba4
 
-src/RotatingUpDownPlatformUtm_Spawn.c:
+src/d_a_obj_rotate_updown_lift_hs_updown_lift.c:
     complete
     .text start:0x02131ba4 end:0x02131bdc
 
-src/RotatingUpDownPlatform_Spawn.c:
+src/d_a_obj_rotate_updown_lift_updown_lift.c:
     complete
     .text start:0x02131bdc end:0x02131c14
 
@@ -108,11 +108,11 @@ src/func_ov091_02132380.c:
     complete
     .text start:0x02132380 end:0x02132394
 
-src/SquareMetalNetLift_Spawn.c:
+src/d_a_linelift2_km2_susumu.c:
     complete
     .text start:0x02132394 end:0x021323cc
 
-src/ArrowPathLift_Spawn.c:
+src/d_a_linelift2_km3_lift.c:
     complete
     .text start:0x021323cc end:0x02132404
 
@@ -140,31 +140,31 @@ src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp:
     complete
     .text start:0x021325d4 end:0x021327e8
 
-src/SlidingPlatformWf_Spawn.c:
+src/d_a_obj_simple_lift_bk_transbar.c:
     complete
     .text start:0x021327e8 end:0x02132818
 
-src/SlidingPlatformBfsRectangle_Spawn.c:
+src/d_a_obj_simple_lift_km2_rifut02.c:
     complete
     .text start:0x02132818 end:0x02132848
 
-src/SlidingPlatformBfsSquare_Spawn.c:
+src/d_a_obj_simple_lift_km2_rifut01.c:
     complete
     .text start:0x02132848 end:0x02132878
 
-src/SlidingPlatformRr_Spawn.c:
+src/d_a_obj_simple_lift_rc_rift01.c:
     complete
     .text start:0x02132878 end:0x021328a8
 
-src/SlidingPlatformBsLong_Spawn.c:
+src/d_a_obj_simple_lift_km3_deru02.c:
     complete
     .text start:0x021328a8 end:0x021328d8
 
-src/SlidingPlatformBsWide_Spawn.c:
+src/d_a_obj_simple_lift_km3_deru01.c:
     complete
     .text start:0x021328d8 end:0x02132908
 
-src/SlidingPlatformBdw_Spawn.c:
+src/d_a_obj_simple_lift_km1_deru.c:
     complete
     .text start:0x02132908 end:0x02132938
 
@@ -192,7 +192,7 @@ src/_ZN6Thwomp13InitResourcesEv.cpp:
     complete
     .text start:0x02132c84 end:0x02132cb8
 
-src/Thwomp_Spawn.c:
+src/d_a_dsn.c:
     complete
     .text start:0x02132cb8 end:0x02132d04
 
@@ -284,7 +284,7 @@ src/_ZN5Stump13InitResourcesEv.cpp:
     complete
     .text start:0x021338ac end:0x02133938
 
-src/daObjPile_c_classInit.c:
+src/d_a_obj_pile.c:
     complete
     .text start:0x02133938 end:0x02133968
 
@@ -364,7 +364,7 @@ src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02134498 end:0x021344a0
 
-src/Fwoosh_Spawn.c:
+src/d_a_hyuhyu.c:
     complete
     .text start:0x021344a0 end:0x021344e8
 

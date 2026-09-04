@@ -1,5 +1,5 @@
 //cpp
-// @symbol ToxBox_Spawn
+// @symbol daOnms_c_classInit
 #include "ToxBox.h"
 
 /* CodeWarrior rejects the cartridge's class-specific operator-new spelling
@@ -14,7 +14,11 @@ void _ZN7PathPtrC1Ev(void *self);
 extern void *_ZTV6ToxBox;
 }
 
-extern "C" ToxBox *ToxBox_Spawn()
+/* Reconstructed source-style name: SM64DS proves daOnms_c through RTTI,
+ * allocation size, vtable identity, and the ONIMASU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: ToxBox_Spawn. */
+extern "C" ToxBox *daOnms_c_classInit()
 {
     ToxBox *actor = (ToxBox *)_ZN7fBase_cnwEj(sizeof(ToxBox));
     if (actor) {
