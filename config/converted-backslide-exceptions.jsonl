@@ -241,3 +241,10 @@
 {"path": "src/_ZN8MetalNet6RenderEv.cpp", "reason": "ov009/daObjMc_Metalnet_c promoted to a single C++ TU (src/actors/d_a_obj_mc_metalnet.cpp); the per-symbol legacy sources were consolidated, so their identities move to the new path"}
 {"path": "src/_ZN8MetalNetD0Ev.cpp", "reason": "ov009/daObjMc_Metalnet_c promoted to a single C++ TU (src/actors/d_a_obj_mc_metalnet.cpp); the per-symbol legacy sources were consolidated, so their identities move to the new path"}
 {"path": "src/_ZN8MetalNetD1Ev.cpp", "reason": "ov009/daObjMc_Metalnet_c promoted to a single C++ TU (src/actors/d_a_obj_mc_metalnet.cpp); the per-symbol legacy sources were consolidated, so their identities move to the new path"}
+{"path": "src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheet16CleanupResourcesEv.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheet6RenderEv.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheet8BehaviorEv.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheetD0Ev.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN8IceSheetD1Ev.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
