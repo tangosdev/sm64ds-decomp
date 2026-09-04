@@ -646,17 +646,17 @@ ov016	0x02114ba8	data_ov016_02114ba8	FloatOnWaterPlatformJrb_SpawnInfo	spawninfo
 ov016	0x02114ba8	FloatOnWaterPlatformJrb_SpawnInfo	g_profile_KI_ITA	reconstructed profile global; literal ROM ID KI_ITA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov016	0x02114c68	data_ov016_02114c68	SlidingBox_SpawnInfo	spawninfo
 ov016	0x02114c8c	data_ov016_02114c8c	_ZTV10SlidingBox	vtable alloc=? (was _ZTV23FloatOnWaterPlatformJrb)
-ov017	0x021111a0	func_ov017_021111a0	_ZN9ShipWaterD1Ev	vtable slot 16
-ov017	0x021111ec	func_ov017_021111ec	_ZN9ShipWaterD0Ev	vtable slot 17
-ov017	0x0211124c	func_ov017_0211124c	_ZN9ShipWater16CleanupResourcesEv	vtable slot 3
-ov017	0x02111290	func_ov017_02111290	_ZN9ShipWater6RenderEv	vtable slot 9
-ov017	0x021112c4	func_ov017_021112c4	_ZN9ShipWater8BehaviorEv	vtable slot 6
-ov017	0x021113c0	func_ov017_021113c0	_ZN9ShipWater13InitResourcesEv	vtable slot 0
-ov017	0x02111480	func_ov017_02111480	ShipWater_Spawn	spawnfunc
-ov017	0x02111480	ShipWater_Spawn	daObjKsWater_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov017	0x02111bd4	data_ov017_02111bd4	ShipWater_SpawnInfo	spawninfo
-ov017	0x02111bd4	ShipWater_SpawnInfo	g_profile_KS_MIZU	reconstructed profile global; literal ROM ID KS_MIZU+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov017	0x02111bf8	data_ov017_02111bf8	_ZTV9ShipWater	vtable alloc=0x340
+ov017	0x021111a0	func_ov017_021111a0	_ZN14daObjKsWater_cD1Ev	vtable slot 16
+ov017	0x021111ec	func_ov017_021111ec	_ZN14daObjKsWater_cD0Ev	vtable slot 17
+ov017	0x0211124c	func_ov017_0211124c	_ZN14daObjKsWater_c16CleanupResourcesEv	vtable slot 3
+ov017	0x02111290	func_ov017_02111290	_ZN14daObjKsWater_c6RenderEv	vtable slot 9
+ov017	0x021112c4	func_ov017_021112c4	_ZN14daObjKsWater_c8BehaviorEv	vtable slot 6
+ov017	0x021113c0	func_ov017_021113c0	_ZN14daObjKsWater_c13InitResourcesEv	vtable slot 0
+ov017	0x02111480	func_ov017_02111480	daObjKsWater_c_Spawn	spawnfunc
+ov017	0x02111480	daObjKsWater_c_Spawn	daObjKsWater_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov017	0x02111bd4	data_ov017_02111bd4	daObjKsWater_c_SpawnInfo	spawninfo
+ov017	0x02111bd4	daObjKsWater_c_SpawnInfo	g_profile_KS_MIZU	reconstructed profile global; literal ROM ID KS_MIZU+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov017	0x02111bf8	data_ov017_02111bf8	_ZTV14daObjKsWater_c	vtable alloc=0x340
 ov018	0x02111818	func_ov018_02111818	SkiLift_Spawn	spawnfunc
 ov018	0x02111818	SkiLift_Spawn	daObjSm_Lift_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov018	0x02111848	func_ov018_02111848	_ZN10daPgMthr_cD1Ev	vtable slot 16 (was _ZN7SkiLiftD1Ev)

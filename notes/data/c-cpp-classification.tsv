@@ -1072,7 +1072,7 @@ src/_ZN9MontyMoleD0Ev.c	DTOR-ONLY	ov080	daChoropu_c	MontyMole/daChoropu_c	_ZN9Mo
 src/_ZN16daObjPushblock_c16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 3 @0x20b8d68 | _ZN16daObjPushblock_c16CleanupResourcesEv	1		True		-
 src/_ZN16daObjPushblock_c8BehaviorEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 6 @0x20b8dd4 | _ZN16daObjPushblock_c8BehaviorEv	1		True		-
 src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.c	P1-vtable+mangled	ov002	daObjPushblock_c	daObjPushblock_c/daObjPushblock_c	vtable daObjPushblock_c slot 25 @0x20b8d3c | _ZN16daObjPushblock_c8OnPushedER8dActor_c	1		True		-
-src/_ZN9ShipWater13InitResourcesEv.c	P1-vtable+mangled	ov017	daObjKsWater_c	ShipWater/daObjKsWater_c	vtable daObjKsWater_c slot 0 @0x21113c0 | _ZN9ShipWater13InitResourcesEv	1		True		-
+src/_ZN14daObjKsWater_c13InitResourcesEv.c	P1-vtable+mangled	ov017	daObjKsWater_c	daObjKsWater_c/daObjKsWater_c	vtable daObjKsWater_c slot 0 @0x21113c0 | _ZN14daObjKsWater_c13InitResourcesEv	1		True		-
 src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c	P3-mangled-method-only	arm9		SolidHeap	_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator	1		True	_ZTV9SolidHeap	-
 src/_ZN9SolidHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9SolidHeapD1Ev	1		True	_ZTV9SolidHeap	-
 src/_ZN9SpindriftD0Ev.c	DTOR-ONLY	ov081	daHuwa_c	Spindrift/daHuwa_c	_ZN9SpindriftD0Ev	1		True		-
