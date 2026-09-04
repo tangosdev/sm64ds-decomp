@@ -33,7 +33,13 @@ struct daObjKm2_Agaru_c : dBgActor_c {
     u8  mRidden;                        /* 0x326 */
     u8  mState;                         /* 0x327 */
 
-    virtual ~daObjKm2_Agaru_c();        /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared FIRST. This TU defines every virtual the class has,
+     * so it emits the vtable and RTTI; out of line, mwccarm emits the D2/D1/D0
+     * triple in D0-before-D1 order, but retail puts D1 (0x021111a0) ABOVE D0
+     * (0x021111e4), and objisolate then refuses the whole TU for emitting out
+     * of ROM address order. The inline body emits only the retail D1/D0 pair,
+     * in retail order, and emits no D2. */
+    virtual ~daObjKm2_Agaru_c() {}      /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();      /* slot  0 */
     virtual s32   CleanupResources();   /* slot  3 */
