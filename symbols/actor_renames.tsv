@@ -930,6 +930,7 @@ ov027	0x02111440	func_ov027_02111440	_ZN10SlidingIce13InitResourcesEv	vtable slo
 ov027	0x02111564	func_ov027_02111564	SlidingIce_Spawn	spawnfunc
 ov027	0x02111594	func_ov027_02111594	SlidingIceSpawner_Spawn	spawnfunc
 ov027	0x0211186c	func_ov027_0211186c	daIDonketu_c_Spawn	spawnfunc
+ov027	0x0211207c	func_ov027_0211207c	daPgDfdr_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov027	0x021120c4	func_ov027_021120c4	_ZN13SnowmanBreathD1Ev	vtable slot 16
 ov027	0x02112104	func_ov027_02112104	_ZN13SnowmanBreathD0Ev	vtable slot 17
 ov027	0x02112700	func_ov027_02112700	_ZN13SnowmanBreath16CleanupResourcesEv	vtable slot 3
@@ -942,6 +943,7 @@ ov027	0x021137e4	data_ov027_021137e4	SlidingIceSpawner_SpawnInfo	spawninfo
 ov027	0x02113800	data_ov027_02113800	SlidingIce_SpawnInfo	spawninfo
 ov027	0x02113824	data_ov027_02113824	_ZTV10SlidingIce	vtable alloc=0x32c
 ov027	0x021138d8	data_ov027_021138d8	daIDonketu_c_SpawnInfo	spawninfo
+ov027	0x02113a00	data_ov027_02113a00	g_profile_PENGUIN_DEFENDER	reconstructed profile global; literal ROM ID PENGUIN_DEFENDER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov027	0x02113b2c	data_ov027_02113b2c	SnowmanBreath_SpawnInfo	spawninfo
 ov027	0x02113b50	data_ov027_02113b50	_ZTV13SnowmanBreath	vtable alloc=?
 ov029	0x02111340	func_ov029_02111340	FloatOnWaterPlatformWdwSquare_Spawn	spawnfunc

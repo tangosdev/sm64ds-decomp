@@ -25,7 +25,7 @@
  * daDgr_c and BigBrickBlock.
  *
  * SIZE IS 0x3dc (988 decimal), THE LITERAL THE FACTORY PASSES TO operator new.
- * The factory, func_ov027_0211207c, is: `fBase_c::operator new(988)`,
+ * The factory, daPgDfdr_c_classInit, is: `fBase_c::operator new(988)`,
  * `dBgActor_c::dBgActor_c()`, store `_ZTV10daPgDfdr_c`, then three member
  * constructors run in field order -- `ModelAnim::ModelAnim()` at +0x320,
  * `TextureSequence::TextureSequence()` at +0x384, `dCcAc_c::dCcAc_c()`
