@@ -23,6 +23,12 @@
  * ambiguous cross-overlay load with twenty candidate modules, and ov060 makes no
  * unambiguous call to any of them, so the reference stays the phantom
  * `func_021115bc`.
+ *
+ * SM64DS RTTI names the implementation daKpa2Bg_c. The reconstructed factory
+ * daKpa2Bg_c_classInit (historical alias daKpa2Bg_c_classInit)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_KOOPA2BG (historical alias daKpa2Bg_c_SpawnInfo)
+ * is its registry descriptor.
  */
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.

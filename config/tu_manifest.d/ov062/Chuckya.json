@@ -264,7 +264,7 @@
       "ordinal": 34
     },
     {
-      "symbol": "Chuckya_Spawn",
+      "symbol": "daHolhei_c_classInit",
       "address": "0x02117478",
       "size": "0x00000054",
       "legacy_source": "src/Chuckya_Spawn.c",

@@ -42,7 +42,7 @@
  *   [1] 0x02111590  src/_ZN17daObjKm3_Dorifu_cD0Ev.cpp
  *   [2] 0x02111624  src/_ZN17daObjKm3_Dorifu_c16CleanupResourcesEv.cpp
  *   [3] 0x02111638  src/_ZN17daObjKm3_Dorifu_c13InitResourcesEv.cpp
- *   [4] 0x0211164c  src/StairsBs_Spawn.cpp
+ *   [4] 0x0211164c  src/daObjKm3_Dorifu_c_classInit.cpp
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -66,7 +66,7 @@
 extern daObjDorifuResources data_ov047_02112508[5];
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- StairsBs_Spawn, 0x0211164c, size 0x90 */
+/* ROM ordinal 4 -- daObjKm3_Dorifu_c_classInit, 0x0211164c, size 0x90 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned);
@@ -78,7 +78,11 @@ extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ModelC1Ev(void*);
 extern void _ZN10dBgW_KcMbgD1Ev(void*);
 extern void _ZN10dBgW_KcMbgC1Ev(void*);
-void* StairsBs_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daObjKm3_Dorifu_c through RTTI,
+ * allocation size, vtable identity, and the KM3_DORIFU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: StairsBs_Spawn. */
+void* daObjKm3_Dorifu_c_classInit(void){
   char* c = (char*)_ZN7fBase_cnwEj(0xdcc);
   if(c){
     _ZN10dBgActor_cC2Ev(c);

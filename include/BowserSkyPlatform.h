@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   BowserSkyPlatform_Spawn  fBase_c::operator new(812 = 0x32c), dBgActor_c::dBgActor_c(), stores _ZTV17BowserSkyPlatform,
+ *   daKpa3Bg_c_classInit  fBase_c::operator new(812 = 0x32c), dBgActor_c::dBgActor_c(), stores _ZTV17BowserSkyPlatform,
  *                 then the members below in this order.
  *   ~BowserSkyPlatform   the same members destroyed in reverse, then ~dBgActor_c.
  *
@@ -15,6 +15,12 @@
  * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daKpa3Bg_c. The reconstructed factory
+ * daKpa3Bg_c_classInit (historical alias BowserSkyPlatform_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_KOOPA3BG (historical alias BowserSkyPlatform_SpawnInfo)
+ * is its registry descriptor.
  */
 struct BowserSkyPlatform : dBgActor_c {
     u8  pad_320[0xc];

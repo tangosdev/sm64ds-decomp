@@ -105,14 +105,14 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, F
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- KoopaFlag_Spawn, 0x0211b208, size 0x40 */
+/* ROM ordinal 7 -- daRFlag_c_classInit, 0x0211b208, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol KoopaFlag_Spawn
+// @symbol daRFlag_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9KoopaFlag */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *KoopaFlag_Spawn(void)
+int *daRFlag_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(372);
     if (p) {

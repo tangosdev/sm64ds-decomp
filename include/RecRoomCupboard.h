@@ -3,7 +3,7 @@
  *
  * ov058, _ZTV15RecRoomCupboard at 0x02111a70.
  *
- * SIZE AND BASE come from the factory. RecRoomCupboard_Spawn (0x02111688)
+ * SIZE AND BASE come from the factory. daObjCloset_c_classInit (0x02111688)
  * allocates fBase_c::operator new(0x21c), calls _ZN8dActor_cC2Ev on it and then
  * stores _ZTV15RecRoomCupboard -- so the object is 0x21c bytes and the base is
  * dActor_c (0xd0). Spawn also runs func_020733a8 over `this + 0xd4` as
@@ -44,6 +44,12 @@
  * as include/daObjHatenaSwitch_c.h, include/Rabbit.h and include/Toad.h already
  * spell the same two roles; none of the three shadows a name in fBase_c,
  * dBase_c or dActor_c.
+ *
+ * SM64DS RTTI names the implementation daObjCloset_c. The reconstructed factory
+ * daObjCloset_c_classInit (historical alias RecRoomCupboard_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_PL_CLOSET (historical alias RecRoomCupboard_SpawnInfo)
+ * is its registry descriptor.
  */
 #ifndef RECROOMCUPBOARD_H
 #define RECROOMCUPBOARD_H

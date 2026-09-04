@@ -138,7 +138,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "KoopaTheQuick_Spawn",
+      "symbol": "daRNk_c_classInit",
       "address": "0x0211aee0",
       "size": "0x00000058",
       "legacy_source": "src/KoopaTheQuick_Spawn.c",

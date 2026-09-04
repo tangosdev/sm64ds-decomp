@@ -636,8 +636,8 @@ def gates(results):
     r = by.get("ov062")
     if r:
         koopa = next((u for u in r["units"] if "Koopa" in u["classes"]), None)
-        ok = bool(koopa) and "KoopaSmall_Spawn" in koopa["functions"]
-        out.append(("V1b ov062 KoopaSmall_Spawn is in the Koopa TU", ok,
+        ok = bool(koopa) and "daNknk_c_classInit_NOKONOKO_S" in koopa["functions"]
+        out.append(("V1b ov062 daNknk_c_classInit_NOKONOKO_S is in the Koopa TU", ok,
                     "" if ok else "KoopaSmall was split out"))
 
     r = by.get("ov063")

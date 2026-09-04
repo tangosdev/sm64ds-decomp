@@ -1,4 +1,4 @@
-// @symbol Klepto_Spawn
+// @symbol daJango_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_BlendModelAnim.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Klepto */
-int *Klepto_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daJango_c through RTTI,
+ * allocation size, vtable identity, and the JANGO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Klepto_Spawn. */
+int *daJango_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1168);
     if (p) {

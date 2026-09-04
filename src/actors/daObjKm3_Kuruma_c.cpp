@@ -14,7 +14,7 @@
  *   [1] 0x02111448  src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp
  *   [2] 0x021114ac  src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp
  *   [3] 0x021114c0  src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp
- *   [4] 0x021114d4  src/daObjKm3_Dorifu_c_Spawn.c
+ *   [4] 0x021114d4  src/daObjKm3_Kuruma_c_classInit.c
  */
 
 struct ResourceDescriptor {
@@ -62,9 +62,13 @@ int func_ov002_020b6958(daObjKm3_Kuruma_c *self,
                         ResourceDescriptor *descriptor);
 }
 
-/* ROM ordinal 4 -- daObjKm3_Dorifu_c_Spawn */
-// @symbol daObjKm3_Dorifu_c_Spawn
-extern "C" daObjKm3_Kuruma_c *daObjKm3_Dorifu_c_Spawn()
+/* ROM ordinal 4 -- daObjKm3_Kuruma_c_classInit */
+// @symbol daObjKm3_Kuruma_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjKm3_Kuruma_c through RTTI,
+ * allocation size, vtable identity, and the KM3_KURUMA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjKm3_Dorifu_c_Spawn. */
+extern "C" daObjKm3_Kuruma_c *daObjKm3_Kuruma_c_classInit()
 {
     daObjKm3_Kuruma_c *actor =
         static_cast<daObjKm3_Kuruma_c *>(_ZN7fBase_cnwEj(0x320));
@@ -86,7 +90,7 @@ extern "C" daObjKm3_Kuruma_c *daObjKm3_Dorifu_c_Spawn()
  * supplies the g_profile_ form. Exact original spelling is not preserved.
  * Historical alias: daObjKm3_Dorifu_c_SpawnInfo. */
 extern "C" KurumaSpawnInfo g_profile_KM3_KURUMA = {
-    daObjKm3_Dorifu_c_Spawn,
+    daObjKm3_Kuruma_c_classInit,
     0x0097,
     0x00de,
     2,

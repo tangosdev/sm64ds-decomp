@@ -28,8 +28,14 @@
  *         _ZTI lives in ov015 and its out-of-line destructor in ov098, so
  *         nothing of the base is this module's to license.
  *
- * NO FIELDS OF ITS OWN: daObjKm2_Fall_Block_c_Spawn passes 844 = 0x34c, which daObjFallBlock_c
+ * NO FIELDS OF ITS OWN: daObjKm2_Fall_Block_c_classInit passes 844 = 0x34c, which daObjFallBlock_c
  * fills exactly. It overrides slots 0 and 3, which the base leaves null.
+ *
+ * SM64DS RTTI names the implementation daObjKm2_Fall_Block_c. The reconstructed factory
+ * daObjKm2_Fall_Block_c_classInit (historical alias daObjKm2_Fall_Block_c_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_KM2_KUZURE (historical alias daObjKm2_Fall_Block_c_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #ifdef __cplusplus

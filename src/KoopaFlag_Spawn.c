@@ -1,4 +1,4 @@
-// @symbol KoopaFlag_Spawn
+// @symbol daRFlag_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9KoopaFlag */
-int *KoopaFlag_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daRFlag_c through RTTI,
+ * allocation size, vtable identity, and the RACE_FLAG registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: KoopaFlag_Spawn. */
+int *daRFlag_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(372);
     if (p) {

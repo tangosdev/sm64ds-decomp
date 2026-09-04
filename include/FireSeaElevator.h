@@ -16,6 +16,12 @@
  * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daObjKm2_Agaru_c. The reconstructed factory
+ * daObjKm2_Agaru_c_classInit (historical alias daObjKm2_Agaru_c_classInit)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_KM2_AGARU (historical alias FireSeaElevator_SpawnInfo)
+ * is its registry descriptor.
  */
 struct FireSeaElevator : dBgActor_c {
     u8  pad_320[0x8];

@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daObjEmmLog_c_Spawn",
+      "symbol": "daObjEmmLog_c_classInit",
       "address": "0x02111410",
       "size": "0x00000030",
       "legacy_source": "src/daObjEmmLog_c_Spawn.c",

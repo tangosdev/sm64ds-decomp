@@ -10,7 +10,11 @@ extern void* func_020733a8(void* a, int b, int n, void* ctor, void* dtor);
 extern int _ZTV11MirrorLuigi[];
 extern void _ZN15TextureSequenceD1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
-MirrorLuigi* MirrorLuigi_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daLuigi_c through RTTI,
+ * allocation size, vtable identity, and the LUIGI registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MirrorLuigi_Spawn. */
+MirrorLuigi* daLuigi_c_classInit(void){
   MirrorLuigi* c = (MirrorLuigi*)_ZN7fBase_cnwEj(sizeof(MirrorLuigi));
   if (c) {
     _ZN8dActor_cC2Ev(c);

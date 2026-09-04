@@ -18,8 +18,8 @@
  * sizeof is 0x1b0, and it IS the field span: the last field mOpacity ends at 0x1af.
  *
  * It used to say 0x32c, "not inferred from the fields", on the authority of
- * BowserSkyPlatform_Spawn -- a DIFFERENT CLASS's factory. That is the pair-by-name
- * error: SpikeBomb_Spawn is the factory that stores _ZTV9SpikeBomb, and it asks
+ * daKpa3Bg_c_classInit -- a DIFFERENT CLASS's factory. That is the pair-by-name
+ * error: daKirai_c_classInit is the factory that stores _ZTV9SpikeBomb, and it asks
  * fBase_c::operator new for 0x1b0. BowserSkyPlatform's own assert is 0x32c and is
  * correct; this class simply inherited its number, and 0x17d bytes of tail padding
  * were invented to reach it.

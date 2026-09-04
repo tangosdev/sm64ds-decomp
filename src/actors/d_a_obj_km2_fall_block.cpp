@@ -18,7 +18,7 @@
  *   [1] 0x02111d98  src/_ZN21daObjKm2_Fall_Block_cD0Ev.cpp
  *   [2] 0x02111dfc  src/_ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv.cpp
  *   [3] 0x02111e10  src/_ZN21daObjKm2_Fall_Block_c13InitResourcesEv.cpp
- *   [4] 0x02111e24  src/daObjKm2_Fall_Block_c_Spawn.c
+ *   [4] 0x02111e24  src/daObjKm2_Fall_Block_c_classInit.c
  *
  * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
  * `FallBlockBfs`, a coined name; the measurement that settles it is at the top
@@ -49,9 +49,9 @@ extern int data_ov045_021130ac[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- daObjKm2_Fall_Block_c_Spawn, 0x02111e24, size 0x3c */
+/* ROM ordinal 4 -- daObjKm2_Fall_Block_c_classInit, 0x02111e24, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjKm2_Fall_Block_c_Spawn
+// @symbol daObjKm2_Fall_Block_c_classInit
 /* resolved: VT0 = _ZTV16daObjFallBlock_c, VT1 = _ZTV21daObjKm2_Fall_Block_c.
  *
  * The natural C++ spelling `return new daObjKm2_Fall_Block_c` reproduces the
@@ -67,7 +67,11 @@ extern int data_ov045_021130ac[];
  * symbols.txt's symbol at 0x021130f4 is already the slot array. Hence `&[2]`.
  * _ZTV16daObjFallBlock_c is not defined here (ov098 owns it), so that one
  * resolves to symbols.txt's address and takes no bias. */
-extern "C" int *daObjKm2_Fall_Block_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjKm2_Fall_Block_c through RTTI,
+ * allocation size, vtable identity, and the KM2_KUZURE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjKm2_Fall_Block_c_Spawn. */
+extern "C" int *daObjKm2_Fall_Block_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(844);
     if (p) {

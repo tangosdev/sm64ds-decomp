@@ -11,7 +11,7 @@
  * in ov002, `_ZN8PathLiftD1Ev` and friends at 0x020ef320..0x020eff18 -- so the
  * old name was matched across an OVERLAY BOUNDARY at a near-identical address,
  * not a coined one like MgBounceAndPounce was. Renamed to the fallback
- * `<ClassName>_Spawn` convention (compare daObjEmmLog_c_Spawn): no game object
+ * `<ClassName>_Spawn` convention (compare daObjEmmLog_c_classInit): no game object
  * name is known for this minigame, unlike dScMgJump_c's own factory
  * dScMgJump_c_classInit.
  *

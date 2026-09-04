@@ -19,6 +19,12 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daNknk_c. The reconstructed factory
+ * daNknk_c_classInit_NOKONOKO (historical alias Koopa_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_NOKONOKO (historical alias Koopa_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #include "dEnemyBase_c.h"

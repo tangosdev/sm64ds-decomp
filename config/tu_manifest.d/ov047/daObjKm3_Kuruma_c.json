@@ -7,8 +7,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "manually corrected contiguous linker run: 0x021113f8..0x02111510, five functions; build/tu_map.json stopped at 0x021114d4 and omitted the immediately adjacent daObjKm3_Dorifu_c_Spawn factory",
-    "daObjKm3_Dorifu_c_Spawn allocates sizeof(daObjKm3_Kuruma_c), calls the dBgActor base constructor, then stores the daObjKuruma_c and daObjKm3_Kuruma_c vptrs; g_profile_KM3_KURUMA at 0x02112428 (historical alias daObjKm3_Dorifu_c_SpawnInfo) relocates directly to that factory",
+    "manually corrected contiguous linker run: 0x021113f8..0x02111510, five functions; build/tu_map.json stopped at 0x021114d4 and omitted the immediately adjacent daObjKm3_Kuruma_c_classInit factory",
+    "daObjKm3_Kuruma_c_classInit allocates sizeof(daObjKm3_Kuruma_c), calls the dBgActor base constructor, then stores the daObjKuruma_c and daObjKm3_Kuruma_c vptrs; g_profile_KM3_KURUMA at 0x02112428 (historical alias daObjKm3_Dorifu_c_SpawnInfo) relocates directly to that factory",
     "the next class destructor begins exactly at 0x02111510, while this class's RTTI, descriptor, type name, SpawnInfo, and vtable tile 0x021123fc..0x021124cc without a gap"
   ],
   "sections": [
@@ -53,7 +53,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm3_Dorifu_c_Spawn",
+      "symbol": "daObjKm3_Kuruma_c_classInit",
       "address": "0x021114d4",
       "size": "0x0000003c",
       "legacy_source": "src/daObjKm3_Dorifu_c_Spawn.c",
@@ -162,7 +162,7 @@
       "source": "0x02112428",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "daObjKm3_Dorifu_c_Spawn",
+      "symbol": "daObjKm3_Kuruma_c_classInit",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x021114d4"
@@ -743,7 +743,7 @@
   ],
   "compiler_only_output": [],
   "notes": [
-    "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Dorifu_c_Spawn factory and its descriptor establish the corrected five-function boundary.",
+    "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Kuruma_c_classInit factory and its g_profile_KM3_KURUMA descriptor establish the corrected five-function boundary.",
     "This TU owns the contiguous data band 0x021123fc..0x021124cc: compiler-emitted RTTI and type-name records, resource descriptor, SpawnInfo, and vtable storage. Only inherited vague RTTI copies remain exact-symbol externalized.",
     "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; there is no compiler-only D2 body.",
     "The manual C-linkage factory remains intentional: natural new has not been proven to preserve the retail allocator and vptr relocation shape."
@@ -968,7 +968,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm3_Dorifu_c_Spawn",
+            "symbol": "daObjKm3_Kuruma_c_classInit",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1120,7 +1120,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm3_Dorifu_c_Spawn",
+            "symbol": "daObjKm3_Kuruma_c_classInit",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1145,7 +1145,7 @@
           40
         ],
         "externalizedTextSymbols": [
-          "daObjKm3_Dorifu_c_Spawn",
+          "daObjKm3_Kuruma_c_classInit",
           "_ZN17daObjKm3_Kuruma_c13InitResourcesEv",
           "_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv",
           "_ZN17daObjKm3_Kuruma_cD0Ev",
@@ -1387,7 +1387,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "daObjKm3_Dorifu_c_Spawn",
+            "symbol": "daObjKm3_Kuruma_c_classInit",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1539,7 +1539,7 @@
             "size": "0x00000014"
           },
           {
-            "symbol": "daObjKm3_Dorifu_c_Spawn",
+            "symbol": "daObjKm3_Kuruma_c_classInit",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1564,7 +1564,7 @@
           40
         ],
         "externalizedTextSymbols": [
-          "daObjKm3_Dorifu_c_Spawn",
+          "daObjKm3_Kuruma_c_classInit",
           "_ZN17daObjKm3_Kuruma_c13InitResourcesEv",
           "_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv",
           "_ZN17daObjKm3_Kuruma_cD0Ev",

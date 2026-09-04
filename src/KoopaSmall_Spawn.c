@@ -1,4 +1,4 @@
-// @symbol KoopaSmall_Spawn
+// @symbol daNknk_c_classInit_NOKONOKO_S
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV5Koopa */
-int *KoopaSmall_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daNknk_c through RTTI,
+ * allocation size, vtable identity, and the NOKONOKO_S registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: KoopaSmall_Spawn. */
+int *daNknk_c_classInit_NOKONOKO_S(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(976);
     if (p) {

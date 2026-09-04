@@ -13,6 +13,12 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjEmmYuka_c. The reconstructed factory
+ * daObjEmmYuka_c_classInit (historical alias SquarePathLift_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_EMM_YUKA (historical alias SquarePathLift_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #ifdef __cplusplus

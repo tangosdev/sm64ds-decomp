@@ -23,7 +23,7 @@
  * the original source is not decidable from the bytes -- the layout and the
  * teardown are identical either way.)
  *
- * sizeof is 0x218, which is not inferred from the fields: BowserShockwaves_Spawn
+ * sizeof is 0x218, which is not inferred from the fields: daFRing_c_classInit
  * asks fBase_c::operator new for 536 bytes.
  *
  * Field NAMES for the unk_ entries are placeholders. */

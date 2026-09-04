@@ -19,7 +19,7 @@
  * siblings of a `u8 mModelAnim` marker whose pad stopped short of the real object.
  * Same shape as Player's two ModelAnims.
  *
- * sizeof is 0x454, which is not inferred from the fields: Bowser_Spawn asks
+ * sizeof is 0x454, which is not inferred from the fields: daKpa_c_classInit asks
  * fBase_c::operator new for 1108 bytes -- and the last declared field, mSoundID,
  * happens to end there too.
  *

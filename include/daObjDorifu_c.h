@@ -48,7 +48,7 @@
  * The names below are coined from that; nothing in the ROM names them.
  *
  * SIZE 0xdcc closes the class: all three factories that build a descendant of it
- * -- daObjKm1_Dorifu_c_classInit, StairsBs_Spawn and daObjRc_Dorifu_c_classInit
+ * -- daObjKm1_Dorifu_c_classInit, daObjKm3_Dorifu_c_classInit and daObjRc_Dorifu_c_classInit
  * (historical alias TrickyTriangles_Spawn), one per
  * descendant -- pass 0xdcc to fBase_c::operator new, and each of them then
  * constructs the Model[5] and dBgW_KcMbg[5] in place at 0x320 and 0x4b0

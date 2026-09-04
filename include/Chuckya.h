@@ -19,6 +19,12 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daHolhei_c. The reconstructed factory
+ * daHolhei_c_classInit (historical alias Chuckya_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_HOLHEI (historical alias Chuckya_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #include "dEnemyBase_c.h"

@@ -77,8 +77,8 @@ _ZN6Bowser8BehaviorEv kind:function(arm,size=0x114) addr:0x02115f64
 _ZN10BowserTail8BehaviorEv kind:function(arm,size=0xb8) addr:0x02116078
 _ZN6Bowser13InitResourcesEv kind:function(arm,size=0x284) addr:0x02116130
 _ZN10BowserTail13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021163b4
-BowserTail_Spawn kind:function(arm,size=0x38) addr:0x021163f0
-Bowser_Spawn kind:function(arm,size=0x5c) addr:0x02116428
+daKpaTail_c_classInit kind:function(arm,size=0x38) addr:0x021163f0
+daKpa_c_classInit kind:function(arm,size=0x5c) addr:0x02116428
 _ZN10BowserFireD1Ev kind:function(arm,size=0x40) addr:0x02116484
 _ZN10BowserFireD0Ev kind:function(arm,size=0x54) addr:0x021164c4
 func_ov060_02116518 kind:function(arm,size=0x228) addr:0x02116518
@@ -105,7 +105,7 @@ _ZN10BowserFire16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x021176c4
 _ZN10BowserFire6RenderEv kind:function(arm,size=0x8) addr:0x021176cc
 _ZN10BowserFire8BehaviorEv kind:function(arm,size=0xbc) addr:0x021176d4
 _ZN10BowserFire13InitResourcesEv kind:function(arm,size=0x1a8) addr:0x02117790
-BowserFire_Spawn kind:function(arm,size=0x48) addr:0x02117938
+daKpaFire_c_classInit kind:function(arm,size=0x48) addr:0x02117938
 _ZN10daKpa2Bg_cD1Ev kind:function(arm,size=0x54) addr:0x02117980
 _ZN10daKpa2Bg_cD0Ev kind:function(arm,size=0x68) addr:0x021179d4
 func_ov060_02117a3c kind:function(arm,size=0x28) addr:0x02117a3c
@@ -127,7 +127,7 @@ _ZN17BowserSkyPlatform8BehaviorEv kind:function(arm,size=0x5c) addr:0x02118254
 _ZN17BowserSkyPlatform13InitResourcesEv kind:function(arm,size=0x11c) addr:0x021182b0
 func_ov060_021183cc kind:function(arm,size=0x28) addr:0x021183cc
 func_ov060_021183f4 kind:function(arm,size=0x14) addr:0x021183f4
-BowserSkyPlatform_Spawn kind:function(arm,size=0x30) addr:0x02118408
+daKpa3Bg_c_classInit kind:function(arm,size=0x30) addr:0x02118408
 _ZN9SpikeBombD1Ev kind:function(arm,size=0x38) addr:0x02118438
 _ZN9SpikeBombD0Ev kind:function(arm,size=0x4c) addr:0x02118470
 func_ov060_021184bc kind:function(arm,size=0x88) addr:0x021184bc
@@ -143,14 +143,14 @@ _ZN9SpikeBomb16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02118ab0
 _ZN9SpikeBomb6RenderEv kind:function(arm,size=0x58) addr:0x02118ad4
 _ZN9SpikeBomb8BehaviorEv kind:function(arm,size=0x88) addr:0x02118b2c
 _ZN9SpikeBomb13InitResourcesEv kind:function(arm,size=0x108) addr:0x02118bb4
-SpikeBomb_Spawn kind:function(arm,size=0x40) addr:0x02118cbc
+daKirai_c_classInit kind:function(arm,size=0x40) addr:0x02118cbc
 _ZN16BowserShockwavesD1Ev kind:function(arm,size=0x68) addr:0x02118cfc
 _ZN16BowserShockwavesD0Ev kind:function(arm,size=0x7c) addr:0x02118d64
 _ZN16BowserShockwaves16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02118de0
 _ZN16BowserShockwaves6RenderEv kind:function(arm,size=0x9c) addr:0x02118e1c
 _ZN16BowserShockwaves8BehaviorEv kind:function(arm,size=0x14c) addr:0x02118eb8
 _ZN16BowserShockwaves13InitResourcesEv kind:function(arm,size=0x1f0) addr:0x02119004
-BowserShockwaves_Spawn kind:function(arm,size=0x70) addr:0x021191f4
+daFRing_c_classInit kind:function(arm,size=0x70) addr:0x021191f4
 data_ov060_02119264 kind:data(any) addr:0x02119264
 data_ov060_02119268 kind:data(any) addr:0x02119268
 data_ov060_0211927c kind:data(any) addr:0x0211927c
@@ -210,8 +210,8 @@ _ZTS7daKpa_c kind:data(any) addr:0x0211a5c0
 _ZTI7daKpa_c kind:data(any) addr:0x0211a5cc
 _ZTI11daKpaTail_c kind:data(any) addr:0x0211a5d8
 _ZTS11daKpaTail_c kind:data(any) addr:0x0211a5e4
-Bowser_SpawnInfo kind:data(any) addr:0x0211a5f4
-BowserTail_SpawnInfo kind:data(any) addr:0x0211a610
+g_profile_KOOPA kind:data(any) addr:0x0211a5f4
+g_profile_KOOPATAIL kind:data(any) addr:0x0211a610
 _ZTV10BowserTail kind:data(any) addr:0x0211a634
 _ZTV11daKpaTail_c kind:data(any) addr:0x0211a634
 _ZTV6Bowser kind:data(any) addr:0x0211a6b8
@@ -234,19 +234,19 @@ data_ov060_0211a7a4 kind:data(any) addr:0x0211a7a4
 data_ov060_0211a7ac kind:data(any) addr:0x0211a7ac
 _ZTI11daKpaFire_c kind:data(any) addr:0x0211a7b4
 _ZTS11daKpaFire_c kind:data(any) addr:0x0211a7c0
-BowserFire_SpawnInfo kind:data(any) addr:0x0211a7d0
+g_profile_KOOPAFIRE kind:data(any) addr:0x0211a7d0
 _ZTV10BowserFire kind:data(any) addr:0x0211a7f4
 _ZTV11daKpaFire_c kind:data(any) addr:0x0211a7f4
 _ZTI10daKpa2Bg_c kind:data(any) addr:0x0211a870
 _ZTS10daKpa2Bg_c kind:data(any) addr:0x0211a87c
-daKpa2Bg_c_SpawnInfo kind:data(any) addr:0x0211a88c
+g_profile_KOOPA2BG kind:data(any) addr:0x0211a88c
 _ZTV10daKpa2Bg_c kind:data(any) addr:0x0211a8b0
 data_ov060_0211a930 kind:data(any) addr:0x0211a930
 data_ov060_0211a938 kind:data(any) addr:0x0211a938
 data_ov060_0211a940 kind:data(any) addr:0x0211a940
 _ZTI10daKpa3Bg_c kind:data(any) addr:0x0211a948
 _ZTS10daKpa3Bg_c kind:data(any) addr:0x0211a954
-BowserSkyPlatform_SpawnInfo kind:data(any) addr:0x0211a964 ambiguous
+g_profile_KOOPA3BG kind:data(any) addr:0x0211a964 ambiguous
 data_ov060_0211a980 kind:data(any) addr:0x0211a980
 _ZTV17BowserSkyPlatform kind:data(any) addr:0x0211a9b0
 data_ov060_0211aa30 kind:data(any) addr:0x0211aa30
@@ -255,13 +255,13 @@ data_ov060_0211aa40 kind:data(any) addr:0x0211aa40
 data_ov060_0211aa48 kind:data(any) addr:0x0211aa48
 _ZTS9daKirai_c kind:data(any) addr:0x0211aa50
 _ZTI9daKirai_c kind:data(any) addr:0x0211aa5c
-SpikeBomb_SpawnInfo kind:data(any) addr:0x0211aa68
+g_profile_KIRAI kind:data(any) addr:0x0211aa68
 _ZTV9SpikeBomb kind:data(any) addr:0x0211aa8c
 _ZTV9daKirai_c kind:data(any) addr:0x0211aa8c
 _ZTS9daFRing_c kind:data(any) addr:0x0211ab08
 _ZTI9daFRing_c kind:data(any) addr:0x0211ab14
 data_ov060_0211ab20 kind:data(any) addr:0x0211ab20
-BowserShockwaves_SpawnInfo kind:data(any) addr:0x0211ab30
+g_profile_FIRERING kind:data(any) addr:0x0211ab30
 _ZTV16BowserShockwaves kind:data(any) addr:0x0211ab54
 _ZTV9daFRing_c kind:data(any) addr:0x0211ab54
 data_ov060_0211abe0 kind:bss addr:0x0211abe0

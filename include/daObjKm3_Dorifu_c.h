@@ -19,15 +19,21 @@
  *   base                     daObjDorifu_c, ov002 0x02108d70
  *
  * THE TREE'S "Bs" NAMES ARE CROSSED, and this header does not try to fix it. The
- * factory that builds THIS class is StairsBs_Spawn (0xdcc, this class's vtable),
+ * factory that builds THIS class is daObjKm3_Dorifu_c_classInit (0xdcc, this class's vtable),
  * mirroring daObjKm1_Dorifu_c_classInit in ov043. The function called
- * daObjKm3_Dorifu_c_Spawn builds something else -- 800 = 0x320, daObjKuruma_c's
+ * daObjKm3_Kuruma_c_classInit builds something else -- 800 = 0x320, daObjKuruma_c's
  * vtable then ov047 0x0211244c, which is daObjKm3_Kuruma_c, a class the tree has
  * never named. Untangling the two names is a config change and belongs in its
  * own piece of work; the class modelled here is the one the vtable symbol names.
  *
- * NO FIELDS OF ITS OWN: StairsBs_Spawn passes 0xdcc, which daObjDorifu_c fills.
+ * NO FIELDS OF ITS OWN: daObjKm3_Dorifu_c_classInit passes 0xdcc, which daObjDorifu_c fills.
  * It overrides slots 0 and 3, which the base leaves null.
+ *
+ * SM64DS RTTI names the implementation daObjKm3_Dorifu_c. The reconstructed factory
+ * daObjKm3_Dorifu_c_classInit (historical alias StairsBs_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_KM3_DORIFU (historical alias StairsBs_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #ifdef __cplusplus

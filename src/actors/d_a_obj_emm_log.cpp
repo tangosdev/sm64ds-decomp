@@ -41,7 +41,7 @@
  *   [3] 0x02111284  src/_ZN13daObjEmmLog_c6RenderEv.cpp
  *   [4] 0x021112ac  src/_ZN13daObjEmmLog_c8BehaviorEv.cpp
  *   [5] 0x02111348  src/_ZN13daObjEmmLog_c13InitResourcesEv.cpp
- *   [6] 0x02111410  src/daObjEmmLog_c_Spawn.c
+ *   [6] 0x02111410  src/daObjEmmLog_c_classInit.c
  */
 
 #include "daObjEmmLog_c.h"
@@ -75,11 +75,15 @@ extern int _ZTV13daObjEmmLog_c[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daObjEmmLog_c_Spawn, 0x02111410, size 0x30 */
+/* ROM ordinal 6 -- daObjEmmLog_c_classInit, 0x02111410, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjEmmLog_c_Spawn
+// @symbol daObjEmmLog_c_classInit
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daObjEmmLog_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjEmmLog_c through RTTI,
+ * allocation size, vtable identity, and the EMM_LOG registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjEmmLog_c_Spawn. */
+int *daObjEmmLog_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(808);
     if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)&_ZTV13daObjEmmLog_c[2]; }

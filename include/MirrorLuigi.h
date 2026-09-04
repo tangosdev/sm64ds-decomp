@@ -6,7 +6,7 @@
  * `_ZTI11MirrorLuigi` / `_ZTS11MirrorLuigi` are therefore isolation-only
  * passengers, not names for the ROM metadata at ov055 0x02111aa4..0x02111abc.
  *
- * The 0x20c allocation literal in MirrorLuigi_Spawn fixes the total size. Its
+ * The 0x20c allocation literal in daLuigi_c_classInit fixes the total size. Its
  * factory constructs the four owned member regions in declaration order and
  * D1/D0 destroy them in reverse order, independently proving the layout below:
  * ModelAnim @ 0x0d4, Model @ 0x138, ShadowModel @ 0x188, and two
@@ -16,6 +16,12 @@
  * The ROM vtable has exactly dActor_c's 31 slots. Slots 0, 3, 6, 9, 12, 16
  * and 17 point at the overrides declared here; every other destination is
  * inherited unchanged.
+ *
+ * SM64DS RTTI names the implementation daLuigi_c. The reconstructed factory
+ * daLuigi_c_classInit (historical alias MirrorLuigi_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_LUIGI (historical alias MirrorLuigi_SpawnInfo)
+ * is its registry descriptor.
  */
 #ifndef MIRRORLUIGI_H
 #define MIRRORLUIGI_H

@@ -195,14 +195,14 @@ extern void _ZN7PathPtrC1Ev(void *);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- KoopaTheQuick_Spawn, 0x0211aee0, size 0x58 */
+/* ROM ordinal 17 -- daRNk_c_classInit, 0x0211aee0, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol KoopaTheQuick_Spawn
+// @symbol daRNk_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13KoopaTheQuick */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *KoopaTheQuick_Spawn(void)
+int *daRNk_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(992);
     if (p) {

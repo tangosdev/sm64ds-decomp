@@ -278,14 +278,14 @@
       "ordinal": 36
     },
     {
-      "symbol": "KoopaSmall_Spawn",
+      "symbol": "daNknk_c_classInit_NOKONOKO_S",
       "address": "0x021196bc",
       "size": "0x00000050",
       "legacy_source": "src/KoopaSmall_Spawn.c",
       "ordinal": 37
     },
     {
-      "symbol": "Koopa_Spawn",
+      "symbol": "daNknk_c_classInit_NOKONOKO",
       "address": "0x0211970c",
       "size": "0x00000050",
       "legacy_source": "src/Koopa_Spawn.c",

@@ -20,6 +20,12 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daJango_c. The reconstructed factory
+ * daJango_c_classInit (historical alias Klepto_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_JANGO (historical alias Klepto_SpawnInfo)
+ * is its registry descriptor.
  */
 
 #include "dEnemyBase_c.h"

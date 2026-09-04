@@ -1,6 +1,6 @@
 /* Derives from dBgActor_c: the factory is fBase_c::operator new(808), then
  * dBgActor_c::dBgActor_c(), then a single vtable store to this class's own
- * table (daObjEmmLog_c_Spawn, ov052 0x02111410). The destructor confirms the same
+ * table (daObjEmmLog_c_classInit, ov052 0x02111410). The destructor confirms the same
  * shape in reverse: one vtable store to this class's own table, then one to
  * _ZTV10dBgActor_c -- inlined, per include/dBgActor_c.h -- destroying
  * dBgW_KcMbg at 0x124 and Model at 0xd4 before chaining to dActor_c.

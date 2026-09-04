@@ -206,7 +206,7 @@ void func_ov006_020c6f3c();
    constructor, dScMgD3DBase_c's vtable, mSysTracker, then dScMgJump2_c's own vtable
    and every member -- a factory for dScMgJump2_c. Renamed per the fallback
    convention (no known game object name for this minigame; compare
-   daObjEmmLog_c_Spawn, the tree's other `<ClassName>_Spawn` factory) rather than
+   daObjEmmLog_c_classInit, the tree's other `<ClassName>_Spawn` factory) rather than
    the game-name-based dScMgJump_c_classInit that dScMgJump_c's own factory
    carries. See include/dScMgJump2_c.h. */
 /* Reconstructed source-style name: SM64DS proves dScMgJump2_c through RTTI,

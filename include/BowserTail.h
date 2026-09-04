@@ -9,7 +9,7 @@
  *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     dCcAc_c  0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
  *
- * sizeof is 0x118, which is not inferred from the fields: BowserTail_Spawn asks
+ * sizeof is 0x118, which is not inferred from the fields: daKpaTail_c_classInit asks
  * fBase_c::operator new for 280 bytes.
  *
  * The position fields the generated header declared at 0x5c..0x64 are gone from

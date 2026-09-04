@@ -47,7 +47,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjKm2_Fall_Block_c_Spawn",
+      "symbol": "daObjKm2_Fall_Block_c_classInit",
       "address": "0x02111e24",
       "size": "0x0000003c",
       "legacy_source": "src/daObjKm2_Fall_Block_c_Spawn.c",

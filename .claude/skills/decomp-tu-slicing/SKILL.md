@@ -179,7 +179,7 @@ status.** On `main` it prints `[PASS]`/`[FAIL]` per gate and returns; the exit c
 does not rewrite `build/tu_map.json`.
 
 The gates on `main` are V1 (known-answer classed-TU counts for ov062/ov063/ov080/ov020),
-V1b (`KoopaSmall_Spawn` lands inside the Koopa TU), V2a (sinit count == `.ctor` entry
+V1b (`daNknk_c_classInit_NOKONOKO_S` lands inside the Koopa TU), V2a (sinit count == `.ctor` entry
 count), V2b (no module has more sinits than TUs) and V3 (every function in exactly one
 TU), followed by the blind negative-control table. V2b earns its keep — it caught the
 RTTI-bridge bug.

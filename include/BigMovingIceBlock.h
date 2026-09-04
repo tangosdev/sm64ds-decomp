@@ -9,10 +9,16 @@
  * discard-only passenger of the independently isolated functions, not a
  * claim that the readable spelling owns the cartridge RTTI.
  *
- * SIZE 0x330 is the literal passed by BigMovingIceBlock_Spawn to
+ * SIZE 0x330 is the literal passed by daObjEwmIceBlock_c_classInit to
  * fBase_c::operator new. dBgActor_c occupies 0x000..0x31f. The factory
  * constructs a PathPtr at 0x320, and the matched behavior reads the two
  * trailing words at 0x328 and 0x32c.
+ *
+ * SM64DS RTTI names the implementation daObjEwmIceBlock_c. The reconstructed factory
+ * daObjEwmIceBlock_c_classInit (historical alias BigMovingIceBlock_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_EWM_ICE_BLOCK (historical alias BigMovingIceBlock_SpawnInfo)
+ * is its registry descriptor.
  */
 #ifndef BIGMOVINGICEBLOCK_H
 #define BIGMOVINGICEBLOCK_H

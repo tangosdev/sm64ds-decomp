@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "KoopaFlag_Spawn",
+      "symbol": "daRFlag_c_classInit",
       "address": "0x0211b208",
       "size": "0x00000040",
       "legacy_source": "src/KoopaFlag_Spawn.c",
