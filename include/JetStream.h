@@ -10,6 +10,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daWater_Hakidasi_c. The reconstructed
+ * factory daWater_Hakidasi_c_classInit (historical alias
+ * JetStream_Spawn) constructs it for the WATER_HAKIDASI
+ * registry profile.
  */
 
 #ifdef __cplusplus
@@ -48,7 +53,7 @@ struct JetStream : dEnemyBase_c {
     virtual void OnPendingDestroy();
     virtual s32 Render();
 
-    /* Tail padding. The field span stops short of the real size: JetStream_Spawn
+    /* Tail padding. The field span stops short of the real size: daWater_Hakidasi_c_classInit
        calls fBase_c::operator new(0x378), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_31c[0x5c];      /* 0x31c, to the ROM's 0x378 */

@@ -5,7 +5,7 @@
 #include "daOts_c.h"
 
 /* The third of daOts_c's children -- the small Bully that stands on the ice.
- * daIDonketu_c_Spawn is Bully_Spawn and BigBully_Spawn again, with 0x3fc for the
+ * daIDonketu_c_Spawn is daDonketu_c_classInit and daBDonketu_c_classInit again, with 0x3fc for the
  * allocation and this class's vtable stored last.
  *
  * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class

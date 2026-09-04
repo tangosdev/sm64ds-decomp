@@ -234,8 +234,8 @@
     "src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp",
     "src/func_ov064_0211929c.cpp",
     "src/func_ov064_021192bc.c",
-    "src/daObjFl_Coin_c_classInit.c",
-    "src/daObjFl_Puzzle_c_classInit.c"
+    "src/d_a_obj_fl_coin.c",
+    "src/d_a_obj_fl_puzzle.c"
    ],
    "ext_mix": {
     ".c": 14,
@@ -1049,7 +1049,7 @@
     "src/_ZN6Snufit16OnAimedAtWithEggEv.cpp",
     "src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp",
     "src/_ZN6Snufit13OnYoshiTryEatEv.cpp",
-    "src/Snufit_Spawn.c"
+    "src/daYurei_Mucho_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -1122,7 +1122,7 @@
     "src/_ZN5Swoop16OnAimedAtWithEggEv.cpp",
     "src/_ZN5Swoop13OnTurnIntoEggER6Player.cpp",
     "src/_ZN5Swoop13OnYoshiTryEatEv.cpp",
-    "src/Swoop_Spawn.c"
+    "src/daBasabasa_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -1192,7 +1192,7 @@
     "src/_ZN3Amp6RenderEv.cpp",
     "src/_ZN3Amp8BehaviorEv.cpp",
     "src/_ZN3Amp13InitResourcesEv.cpp",
-    "src/daBrq_c_classInit.c"
+    "src/d_a_brq.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -2757,7 +2757,7 @@
     "src/_ZN6Coffin6RenderEv.cpp",
     "src/_ZN6Coffin8BehaviorEv.cpp",
     "src/_ZN6Coffin13InitResourcesEv.cpp",
-    "src/daObjCasket_c_classInit.c"
+    "src/d_a_obj_casket.c"
    ],
    "ext_mix": {
     ".c": 7,
@@ -2893,7 +2893,7 @@
     "src/_ZN13TreasureChest6RenderEv.cpp",
     "src/_ZN13TreasureChest8BehaviorEv.cpp",
     "src/_ZN13TreasureChest13InitResourcesEv.cpp",
-    "src/daObjTbox_c_classInit.c"
+    "src/d_a_obj_tbox.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -3913,7 +3913,7 @@
     "src/_ZN9WaterRing6RenderEv.cpp",
     "src/_ZN9WaterRing8BehaviorEv.cpp",
     "src/_ZN9WaterRing13InitResourcesEv.cpp",
-    "src/WaterRing_Spawn.c"
+    "src/daWater_Ring_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -4551,7 +4551,7 @@
     "src/_ZN10LavaBubble8BehaviorEv.cpp",
     "src/_ZN10LavaBubble13InitResourcesEv.cpp",
     "src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp",
-    "src/LavaBubble_Spawn.c"
+    "src/daBbl_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -5530,7 +5530,7 @@
     "src/_ZN4Clam6RenderEv.cpp",
     "src/_ZN4Clam8BehaviorEv.cpp",
     "src/_ZN4Clam13InitResourcesEv.cpp",
-    "src/Clam_Spawn.cpp"
+    "src/daObjShell_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -5675,7 +5675,7 @@
     "src/_ZN12MetalNetLift13InitResourcesEv.cpp",
     "src/func_ov064_02117fb4.cpp",
     "src/func_ov064_02117fd4.c",
-    "src/daObjFl_Amilift_c_classInit.c"
+    "src/d_a_obj_fl_amilift.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -6919,7 +6919,7 @@
     "src/_ZN8BigBully6RenderEv.cpp",
     "src/_ZN8BigBully8BehaviorEv.cpp",
     "src/_ZN8BigBully13InitResourcesEv.cpp",
-    "src/BigBully_Spawn.c"
+    "src/daBDonketu_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -8430,8 +8430,8 @@
     "src/_ZN15TtcRotatingCube6RenderEv.cpp",
     "src/_ZN15TtcRotatingCube8BehaviorEv.cpp",
     "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp",
-    "src/TtcRotatingPrism_Spawn.c",
-    "src/TtcRotatingCube_Spawn.c"
+    "src/daObjCtRotateBlock_c_classInit_CT_MECHA02.c",
+    "src/daObjCtRotateBlock_c_classInit_CT_MECHA01.c"
    ],
    "ext_mix": {
     ".c": 6,
@@ -9504,7 +9504,7 @@
     "src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp",
-    "src/actors/FallBlockBbh/daObjTh_Fall_Block_c_classInit.c"
+    "src/actors/FallBlockBbh/d_a_obj_th_fall_block.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -26727,8 +26727,8 @@
     "src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp",
     "src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp",
     "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp",
-    "src/actors/BigBooIcon/BigBooIcon_Spawn.c",
-    "src/actors/BooCage/BooCage_Spawn.c",
+    "src/actors/BigBooIcon/daTrsIcon_c_classInit.c",
+    "src/actors/BooCage/daTBasket_c_classInit.c",
     "src/actors/BigBoo/BigBoo_Spawn.cpp",
     "src/actors/Boo/Boo_Spawn.cpp"
    ],
@@ -26805,7 +26805,7 @@
     "src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp",
     "src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp",
     "src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp",
-    "src/actors/MadPiano/MadPiano_Spawn.cpp"
+    "src/actors/MadPiano/daPiano_c_classInit.cpp"
    ],
    "ext_mix": {
     ".c": 7,
@@ -26987,7 +26987,7 @@
     "src/func_ov064_02117220.cpp",
     "src/_ZN5Bully8BehaviorEv.cpp",
     "src/_ZN5Bully13InitResourcesEv.cpp",
-    "src/Bully_Spawn.c"
+    "src/daDonketu_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -27042,7 +27042,7 @@
     "src/_ZN15RotatingFirebar6RenderEv.cpp",
     "src/_ZN15RotatingFirebar8BehaviorEv.cpp",
     "src/_ZN15RotatingFirebar13InitResourcesEv.cpp",
-    "src/daObjFl_KomaU_c_classInit.cpp"
+    "src/d_a_obj_fl_koma_u.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -27109,7 +27109,7 @@
     "src/_ZN9JetStream6RenderEv.cpp",
     "src/_ZN9JetStream8BehaviorEv.cpp",
     "src/_ZN9JetStream13InitResourcesEv.cpp",
-    "src/JetStream_Spawn.c"
+    "src/daWater_Hakidasi_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -27188,8 +27188,8 @@
     "src/func_ov065_021195bc.c",
     "src/func_ov065_021195d0.c",
     "src/_ZN9DorrieCap13OnYoshiTryEatEv.c",
-    "src/DorrieCap_Spawn.c",
-    "src/Dorrie_Spawn.cpp",
+    "src/daDossyCap_c_classInit.c",
+    "src/daDossy_c_classInit.cpp",
     "src/func_ov065_021196bc.c"
    ],
    "ext_mix": {
@@ -27309,7 +27309,7 @@
     "src/_ZN20TtcConveyorBeltLarge13InitResourcesEv.cpp",
     "src/func_ov065_0211aa38.c",
     "src/func_ov065_0211aacc.c",
-    "src/TtcConveyorBeltLarge_Spawn.c"
+    "src/daObjCtMecha04_c_classInit_CT_MECHA04L.c"
    ],
    "ext_mix": {
     ".c": 6,
@@ -27360,7 +27360,7 @@
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/TtcRotatingGear_Spawn.c",
+    "src/daObjCtKaitendai_c_classInit_CT_MECHA06.c",
     "src/_ZN15TtcRotatingGearD1Ev.cpp",
     "src/_ZN15TtcRotatingGearD0Ev.cpp",
     "src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp",
@@ -27421,7 +27421,7 @@
     "src/_ZN14TTC_MovingBeam16CleanupResourcesEv.cpp",
     "src/_ZN14TTC_MovingBeam6RenderEv.cpp",
     "src/_ZN14TTC_MovingBeam13InitResourcesEv.cpp",
-    "src/daObjCtMecha09_c_classInit.c"
+    "src/d_a_obj_ct_mecha09.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -27533,7 +27533,7 @@
     "src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp",
     "src/func_ov066_0211a2e4.c",
     "src/func_ov066_0211a35c.c",
-    "src/Eyerok_Spawn.cpp"
+    "src/daIwante_c_classInit.cpp"
    ],
    "ext_mix": {
     ".cpp": 16,
@@ -27627,7 +27627,7 @@
     "src/_ZN10Scuttlebug8BehaviorEv.cpp",
     "src/_ZN10Scuttlebug13InitResourcesEv.cpp",
     "src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp",
-    "src/Scuttlebug_Spawn.c"
+    "src/daSpd_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -27698,7 +27698,7 @@
     "src/_ZN3MrI16OnPendingDestroyEv.c",
     "src/_ZN3MrI6RenderEv.cpp",
     "src/_ZN3MrI8BehaviorEv.cpp",
-    "src/BigMrI_Spawn.c",
+    "src/daEykn_c_classInit_EYEKUN_BOSS.c",
     "src/MrI_Spawn.c"
    ],
    "ext_mix": {
@@ -36111,7 +36111,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/daObjCtMecha03_c_classInit.c"
+    "src/d_a_obj_ct_mecha03.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36161,7 +36161,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/TtcConveyorBeltSmall_Spawn.c"
+    "src/daObjCtMecha04_c_classInit_CT_MECHA04S.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36209,7 +36209,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/TtcRotatingTriangle_Spawn.c"
+    "src/daObjCtKaitendai_c_classInit_CT_MECHA07.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36257,7 +36257,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/TtcMovingCubeB_Spawn.c"
+    "src/daObjCtMecha08_c_classInit_CT_MECHA08B.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -36305,7 +36305,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/TtcMovingCubeA_Spawn.c"
+    "src/daObjCtMecha08_c_classInit_CT_MECHA08A.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -37287,8 +37287,8 @@
     "src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp",
     "src/func_ov064_0211929c.cpp",
     "src/func_ov064_021192bc.c",
-    "src/daObjFl_Coin_c_classInit.c",
-    "src/daObjFl_Puzzle_c_classInit.c"
+    "src/d_a_obj_fl_coin.c",
+    "src/d_a_obj_fl_puzzle.c"
    ],
    "ext_mix": {
     ".c": 14,
@@ -37781,7 +37781,7 @@
     "src/_ZN6Snufit16OnAimedAtWithEggEv.cpp",
     "src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp",
     "src/_ZN6Snufit13OnYoshiTryEatEv.cpp",
-    "src/Snufit_Spawn.c"
+    "src/daYurei_Mucho_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -37825,7 +37825,7 @@
     "src/_ZN5Swoop16OnAimedAtWithEggEv.cpp",
     "src/_ZN5Swoop13OnTurnIntoEggER6Player.cpp",
     "src/_ZN5Swoop13OnYoshiTryEatEv.cpp",
-    "src/Swoop_Spawn.c"
+    "src/daBasabasa_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -37866,7 +37866,7 @@
     "src/_ZN3Amp6RenderEv.cpp",
     "src/_ZN3Amp8BehaviorEv.cpp",
     "src/_ZN3Amp13InitResourcesEv.cpp",
-    "src/daBrq_c_classInit.c"
+    "src/d_a_brq.c"
    ],
    "ext_mix": {
     ".cpp": 11,

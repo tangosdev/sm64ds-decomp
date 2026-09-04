@@ -25,10 +25,15 @@
  * `speed` of its Animation base (base at +0x50, speed at +0x0c). Same shape as
  * HootTheOwl's.
  *
- * SIZE IS THE ROM'S OWN, not a rounded-up field span: `Snufit_Spawn` calls
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daYurei_Mucho_c_classInit` calls
  * `fBase_c::operator new(996)` -- 0x3e4 -- and stores `_ZTV6Snufit`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3dc; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daYurei_Mucho_c. The reconstructed
+ * factory daYurei_Mucho_c_classInit (historical alias
+ * Snufit_Spawn) constructs it for the YUREI_MUCHO
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

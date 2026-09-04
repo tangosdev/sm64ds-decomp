@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9WaterRingD1Ev` destroys each member, and
- * `WaterRing_Spawn` constructs the same types at the same offsets before
+ * `daWater_Ring_c_classInit` constructs the same types at the same offsets before
  * storing `_ZTV9WaterRing`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -20,9 +20,14 @@
  * Typing them absorbed markers that were their insides:
  *   - unk_368 = TextureTransformer.speed
  *
- * SIZE IS THE ROM'S OWN: `WaterRing_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daWater_Ring_c_classInit` calls
  * `fBase_c::operator new(912)` -- 0x390 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daWater_Ring_c. The reconstructed
+ * factory daWater_Ring_c_classInit (historical alias
+ * WaterRing_Spawn) constructs it for the WATER_RING
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

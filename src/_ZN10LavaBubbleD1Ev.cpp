@@ -9,7 +9,7 @@
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
  *
  * This body is the evidence for the header. It was the hand-written C that
- * named those offsets in the first place, and `LavaBubble_Spawn` constructs the
+ * named those offsets in the first place, and `daBbl_c_classInit` constructs the
  * same types at the same offsets.
  */
 #include "LavaBubble.h"

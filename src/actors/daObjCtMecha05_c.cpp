@@ -4,7 +4,7 @@
  * mwccarm emits ordinary functions in reverse source order, so the eight
  * definitions below intentionally run from the highest retail address back
  * toward the compiler-owned destructor group. The adjacent C ABI factory is
- * independently enrolled in src/daObjCtMecha05_c_classInit.cpp; adjacency alone is
+ * independently enrolled in src/d_a_obj_ct_mecha05.cpp; adjacency alone is
  * not evidence that it belonged to this class TU.
  *
  * Superseded one-function sources (ROM address order):

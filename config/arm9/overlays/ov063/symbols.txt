@@ -91,8 +91,8 @@ _ZN7daTrs_c13InitResourcesEv kind:function(arm,size=0x9a0) addr:0x0211b9bc
 _ZN11daTBasket_c13InitResourcesEv kind:function(arm,size=0xe8) addr:0x0211c35c
 _ZN11daTrsIcon_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x0211c444
 _ZN7daTrs_c13OnYoshiTryEatEv kind:function(arm,size=0x20) addr:0x0211c480
-BigBooIcon_Spawn kind:function(arm,size=0x30) addr:0x0211c4a0
-BooCage_Spawn kind:function(arm,size=0x50) addr:0x0211c4d0
+daTrsIcon_c_classInit kind:function(arm,size=0x30) addr:0x0211c4a0
+daTBasket_c_classInit kind:function(arm,size=0x50) addr:0x0211c4d0
 BigBoo_Spawn kind:function(arm,size=0x70) addr:0x0211c520
 Boo_Spawn kind:function(arm,size=0x70) addr:0x0211c590
 _ZN11daTrsTrap_cD1Ev kind:function(arm,size=0x38) addr:0x0211c600
@@ -138,7 +138,7 @@ _ZN8MadPiano16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x0211de3c
 _ZN8MadPiano6RenderEv kind:function(arm,size=0x2c) addr:0x0211de8c
 _ZN8MadPiano8BehaviorEv kind:function(arm,size=0xf4) addr:0x0211deb8
 _ZN8MadPiano13InitResourcesEv kind:function(arm,size=0x17c) addr:0x0211dfac
-MadPiano_Spawn kind:function(arm,size=0x98) addr:0x0211e128
+daPiano_c_classInit kind:function(arm,size=0x98) addr:0x0211e128
 data_ov063_0211e1c0 kind:data(any) addr:0x0211e1c0
 data_ov063_0211e1c8 kind:data(any) addr:0x0211e1c8
 data_ov063_0211e1d0 kind:data(any) addr:0x0211e1d0
@@ -166,8 +166,8 @@ _ZTS11daTBasket_c kind:data(any) addr:0x0211e750
 _ZTS11daTrsIcon_c kind:data(any) addr:0x0211e760
 g_profile_TERESA kind:data(any) addr:0x0211e770
 g_profile_BOSS_TERESA kind:data(any) addr:0x0211e78c
-BooCage_SpawnInfo kind:data(any) addr:0x0211e7a8
-BigBooIcon_SpawnInfo kind:data(any) addr:0x0211e7c4
+g_profile_T_BASKET kind:data(any) addr:0x0211e7a8
+g_profile_ICON_TERESA kind:data(any) addr:0x0211e7c4
 data_ov063_0211e7e0 kind:data(any) addr:0x0211e7e0
 _ZTV7daTrs_c kind:data(any) addr:0x0211e828
 _ZTV10BigBooIcon kind:data(any) addr:0x0211e8ac
@@ -205,7 +205,7 @@ data_ov063_0211ece8 kind:data(any) addr:0x0211ece8
 data_ov063_0211ecf0 kind:data(any) addr:0x0211ecf0
 _ZTS9daPiano_c kind:data(any) addr:0x0211ecf8
 _ZTI9daPiano_c kind:data(any) addr:0x0211ed04
-MadPiano_SpawnInfo kind:data(any) addr:0x0211ed10
+g_profile_PIANO kind:data(any) addr:0x0211ed10
 _ZTV8MadPiano kind:data(any) addr:0x0211ed34
 data_ov063_0211edc0 kind:bss addr:0x0211edc0
 data_ov063_0211edc4 kind:bss addr:0x0211edc4
