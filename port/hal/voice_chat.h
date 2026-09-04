@@ -177,10 +177,14 @@ int cap_read_frame(short *out);
 enum : int { kCapNameBytes = 96 };
 int cap_enumerate(char names[][kCapNameBytes], int max);
 
-// SM64DS_VOICE_MIC_PROBE=1 support: opens the default recording device with
-// the exact format voice capture uses, prints the device name and whether
-// the open succeeded, then samples a few seconds of real audio and prints
-// the peak level. Blocks for the duration of the probe. A no-op build target
+// SM64DS_VOICE_MIC_PROBE=1 support: opens the WINDOWS DEFAULT recording device
+// -- not the auto-picked one, which is a different device on exactly the
+// machines this matters on -- with the format voice capture uses, prints the
+// device name and whether the open succeeded, then samples a few seconds of
+// real audio and prints the peak level. Blocks for the duration of the probe.
+// Deliberately the default device and not auto-pick: this answers the question
+// "what does the device Windows would have given me actually do", which is
+// what makes it a diagnosis rather than a repeat of what cap_open just did. A no-op build target
 // (no WIN32 backend) answers with nothing, same as every other entry here.
 void cap_probe();
 
