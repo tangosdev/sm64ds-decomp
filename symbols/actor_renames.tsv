@@ -2772,3 +2772,5 @@ ov006	0x02121d64	func_ov006_02121d64	_ZN17dScMgTrampoline_c10StateIntroEv	coined
 ov006	0x021218c4	func_ov006_021218c4	_ZN17dScMgTrampoline_c12BeginResultsEv	coined: ROM symbol is address-only; helper initializes the results timer and installs the StateResults PMF descriptor
 ov006	0x02121cf4	func_ov006_02121cf4	_ZN17dScMgTrampoline_c9BeginPlayEv	coined: ROM symbol is address-only; helper enables input, initializes play fields, and installs the StatePlay PMF descriptor
 ov006	0x02121f04	func_ov006_02121f04	_ZN17dScMgTrampoline_c10BeginIntroEv	coined: ROM symbol is address-only; helper initializes intro interpolation fields and installs the StateIntro PMF descriptor
+ov006	0x0212157c	func_ov006_0212157c	_ZN17dScMgTrampoline_c16UpdateTouchInputEv	coined: ROM symbol is address-only; matched body samples and tracks the stylus drag and records its release edge every frame
+ov006	0x02121bc8	func_ov006_02121bc8	_ZN17dScMgTrampoline_c12UpdateScrollEv	coined: ROM symbol is address-only; matched body derives the scroll target from score progress and approaches it every active-play frame

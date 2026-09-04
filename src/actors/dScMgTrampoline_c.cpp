@@ -272,7 +272,6 @@ extern int data_ov006_0214058c;
 extern int data_ov006_02142f60;
 extern int data_0209e650;
 extern void func_ov006_020d0ac0(void);
-extern void func_ov006_02121bc8(char *self);
 extern int func_ov006_020ccd04(int *r0);
 extern void func_ov006_020cc9fc(char *c);
 extern short func_ov006_02121768(char *c);
@@ -651,7 +650,7 @@ void dScMgTrampoline_c::BeginIntro()
     *(short *)(o + 0x5db6) = b;
     *(short *)(o + 0x5db0) = a;
     *(short *)(o + 0x5db2) = b;
-    *(int *)(o + 0x5dac) = 0;
+    mDragSoundHandle = 0;
     *(P2Words *)(o + 0x5004) = *(P2Words *)&data_ov006_0213fab0;
 }
 
@@ -706,8 +705,8 @@ void dScMgTrampoline_c::StateIntro()
                             *(s16 *)(c + 0x5db0),
                             *(s16 *)(c + 0x5db2), 2, 0xc);
 
-        *(int *)(c + 0x5dac) =
-            func_02012468(*(int *)(c + 0x5dac), 2, 0x1b0, 2, 0,
+        mDragSoundHandle =
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0,
                            func_020126e8(mixRaw), 0, 0);
     }
 }
@@ -722,45 +721,45 @@ void dScMgTrampoline_c::BeginPlay()
     *(int*)(c + 0x5d90) = 0x1e;
     *(short*)(c + 0x5db8) = 1;
     func_ov006_02120a18((u16 *)(c + 0x5d84), *(short*)(c + 0x5dba));
-    *(int*)(c + 0x5dac) = 0;
+    mDragSoundHandle = 0;
     _ZN5Sound12PlayBank2_2DEj(0x1b6);
     *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213fac0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- func_ov006_02121bc8, 0x02121bc8, size 0x12c */
+/* ROM ordinal 34 -- dScMgTrampoline_c::UpdateScroll, 0x02121bc8, size 0x12c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121bc8
+// @symbol _ZN17dScMgTrampoline_c12UpdateScrollEv
 int ApproachLinear(int&, int, int);
 
-extern "C" void func_ov006_02121bc8(char* self)
+void dScMgTrampoline_c::UpdateScroll()
 {
     int q = data_ov006_02140588 / 10;
-    int old = *(int*)(self + 0xbc);
-    func_ov006_020cd62c(*(int*)(self + 0x5d94));
+    int old = unk_0bc;
+    func_ov006_020cd62c(mScrollY);
     func_ov006_020cd510((q << 8) + 0x1000);
     if (old != q) {
-        *(int*)(self + 0xbc) = q;
-        if (*(unsigned*)(self + 0xbc) > 0x270e)
-            *(int*)(self + 0xbc) = 0x270e;
-        if (*(int*)(self + 0x5d98) < 0x50) {
-            *(int*)(self + 0x5d9c) = 0x78;
+        unk_0bc = q;
+        if (unk_0bc > 0x270e)
+            unk_0bc = 0x270e;
+        if (mScrollTargetY < 0x50) {
+            mScrollHoldTimer = 0x78;
             Sound::PlayBank2_2D(0x1b2);
         }
     }
-    if (ApproachLinear(*(int*)(self + 0x5d9c), 0, 1) != 0) {
-        if (*(int*)(self + 0x5d94) == *(int*)(self + 0x5d98)) {
+    if (ApproachLinear(mScrollHoldTimer, 0, 1) != 0) {
+        if (mScrollY == mScrollTargetY) {
             int t;
-            *(int*)(self + 0x5d98) = (q << 3) + 0x20;
-            t = *(int*)(self + 0x5d98);
+            mScrollTargetY = (q << 3) + 0x20;
+            t = mScrollTargetY;
             if (t > 0x50)
                 t = 0x50;
-            *(int*)(self + 0x5d98) = t;
+            mScrollTargetY = t;
         }
-        ApproachLinear(*(int*)(self + 0x5d94), *(int*)(self + 0x5d98), 2);
-        *(int*)(self + 0x5da0) = 0;
+        ApproachLinear(mScrollY, mScrollTargetY, 2);
+        mScrollOffsetY = 0;
     } else {
-        *(int*)(self + 0x5da0) = (*(int*)(self + 0x5d9c) & 2) >> 1;
+        mScrollOffsetY = (mScrollHoldTimer & 2) >> 1;
     }
 }
 
@@ -778,7 +777,7 @@ void dScMgTrampoline_c::StatePlay()
         if (data_ov006_02140588 == 3)
             *(u8 *)(c + 0xc3) = 0;
     }
-    func_ov006_02121bc8(c);
+    UpdateScroll();
 
     if (data_ov006_0213b0ec == 0) {
         *(s16 *)(c + 0x5db8) = 0;
@@ -938,47 +937,45 @@ void func_ov006_02121750(char *c, short v)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov006_0212157c, 0x0212157c, size 0x1d4 */
+/* ROM ordinal 26 -- dScMgTrampoline_c::UpdateTouchInput, 0x0212157c, size 0x1d4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_0212157c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_0212157c(char *c)
+// @symbol _ZN17dScMgTrampoline_c16UpdateTouchInputEv
+void dScMgTrampoline_c::UpdateTouchInput()
 {
     int i;
     int b;
 
-    if (*(short *)(c + 0x5db8) == 0) {
-        *(unsigned char *)(c + 0x5dc4) = 0;
+    if (mInputEnabled == 0) {
+        mTouching = 0;
         return;
     }
 
     i = data_020a0e40[0];
     b = (data_020a0de8[i].v != 0 && data_020a0de9[i].v != 0);
     if (b) {
-        *(short *)(c + 0x5db0) = data_020a0dea[i].v;
-        *(short *)(c + 0x5db4) = *(short *)(c + 0x5db0);
-        *(short *)(c + 0x5db2) = data_020a0deb[i].v;
-        *(short *)(c + 0x5db6) = *(short *)(c + 0x5db2);
-        *(unsigned char *)(c + 0x5dc4) = 1;
-        *(int *)(c + 0x5dac) = 0;
+        mTouchX = data_020a0dea[i].v;
+        mTouchStartX = mTouchX;
+        mTouchY = data_020a0deb[i].v;
+        mTouchStartY = mTouchY;
+        mTouching = 1;
+        mDragSoundHandle = 0;
     }
 
-    if (*(unsigned char *)(c + 0x5dc4) != 1) return;
+    if (mTouching != 1) return;
 
     i = data_020a0e40[0];
     if (data_020a0de8[i].v != 0) {
-        func_ov004_020ae5c4((void *)c, *(short *)(c + 0x5db0), *(short *)(c + 0x5db2),
+        func_ov004_020ae5c4(this, mTouchX, mTouchY,
                             data_020a0dea[i].v, data_020a0deb[i].v, 2, 4);
         i = data_020a0e40[0];
-        *(short *)(c + 0x5db0) = data_020a0dea[i].v;
-        *(short *)(c + 0x5db2) = data_020a0deb[i].v;
-        *(int *)(c + 0x5dac) = func_02012468(*(int *)(c + 0x5dac), 2, 0x1b0, 2, 0,
-                                             func_020126e8(*(short *)(c + 0x5db0) << 12), 0, 0);
+        mTouchX = data_020a0dea[i].v;
+        mTouchY = data_020a0deb[i].v;
+        mDragSoundHandle = func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0,
+                                         func_020126e8(mTouchX << 12), 0, 0);
     } else {
         b = (int)(data_020a0de8[i].v == 0 && data_020a0de9[i].v != 0);
-        if (b != 0) { *(unsigned char *)(c + 0x5dc5) = 1; }
+        if (b != 0) { mTouchReleased = 1; }
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1005,7 +1002,7 @@ s32 dScMgTrampoline_c::Behavior()
     int saved = data_ov006_02140588;
     func_ov006_02120c40();
     (this->*(*(State *)mState))();
-    func_ov006_0212157c((char *)this);
+    UpdateTouchInput();
     func_ov006_021209ac((short *)pad_5d84);
     if (saved != data_ov006_02140588)
         func_ov004_020adb1c(data_ov006_02140588);
