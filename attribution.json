@@ -1623,6 +1623,20 @@
     "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c8BehaviorEv": "github-actions[bot]",
     "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_td_water.cpp#_ZN14daObjTdWater_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_cD1Ev": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#func_ov036_0211123c": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjRcBuranko_c.cpp#_ZN16daObjRcBuranko_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#func_ov036_0211123c": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c6RenderEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_buranko.cpp#_ZN16daObjRcBuranko_c13InitResourcesEv": "github-actions[bot]"
   }
 }

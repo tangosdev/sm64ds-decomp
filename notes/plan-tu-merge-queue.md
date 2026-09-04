@@ -221,7 +221,7 @@ ov033 0x21113d4  n=7  L=155  TinyWater            CONF3 pcov=2
 
 **B8 — R1 · 7 TUs / 50 files / net −43 / 1,286 lines**
 ```
-ov036 0x21111a0  n=8  L=163  SwingingPlatform   CONF1
+ov036 0x21111a0  n=8  L=163  daObjRcBuranko_c   CONF1
 ov043 0x21113fc  n=5  L=107  RickshawBdw        CONF1
 ov052 0x21111a0  n=7  L=158  daObjEmmLog_c      CONF3 WHOLEMOD pcov=3 (1 distinct include)
 ov052 0x2111440  n=7  L=190  SquarePathLift     CONF2
