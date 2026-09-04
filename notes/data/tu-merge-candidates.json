@@ -381,10 +381,10 @@
     "src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp",
     "src/unnamed/ov063/func_ov063_0211d270.cpp",
     "src/unnamed/ov063/func_ov063_0211d28c.c",
-    "src/actors/TrapDoor/TrapDoor_Spawn.c",
-    "src/actors/MerryGoRound/MerryGoRound_Spawn.c",
-    "src/actors/Bookshelf/Bookshelf_Spawn.c",
-    "src/actors/MansionSteps/MansionSteps_Spawn.c"
+    "src/actors/TrapDoor/daTrsTrap_c_classInit_TERESAPIT.c",
+    "src/actors/MerryGoRound/daTrsTrap_c_classInit_MERRYGOROUND.c",
+    "src/actors/Bookshelf/daTrsTrap_c_classInit_BOOKSHELF.c",
+    "src/actors/MansionSteps/daTrsTrap_c_classInit_KAIDAN.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -26729,8 +26729,8 @@
     "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp",
     "src/actors/BigBooIcon/daTrsIcon_c_classInit.c",
     "src/actors/BooCage/daTBasket_c_classInit.c",
-    "src/actors/BigBoo/BigBoo_Spawn.cpp",
-    "src/actors/Boo/Boo_Spawn.cpp"
+    "src/actors/BigBoo/daTrs_c_classInit_BOSS_TERESA.cpp",
+    "src/actors/Boo/daTrs_c_classInit_TERESA.cpp"
    ],
    "ext_mix": {
     ".cpp": 27,
@@ -27699,7 +27699,7 @@
     "src/_ZN3MrI6RenderEv.cpp",
     "src/_ZN3MrI8BehaviorEv.cpp",
     "src/daEykn_c_classInit_EYEKUN_BOSS.c",
-    "src/MrI_Spawn.c"
+    "src/daEykn_c_classInit_EYEKUN.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -37376,10 +37376,10 @@
     "src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp",
     "src/unnamed/ov063/func_ov063_0211d270.cpp",
     "src/unnamed/ov063/func_ov063_0211d28c.c",
-    "src/actors/TrapDoor/TrapDoor_Spawn.c",
-    "src/actors/MerryGoRound/MerryGoRound_Spawn.c",
-    "src/actors/Bookshelf/Bookshelf_Spawn.c",
-    "src/actors/MansionSteps/MansionSteps_Spawn.c"
+    "src/actors/TrapDoor/daTrsTrap_c_classInit_TERESAPIT.c",
+    "src/actors/MerryGoRound/daTrsTrap_c_classInit_MERRYGOROUND.c",
+    "src/actors/Bookshelf/daTrsTrap_c_classInit_BOOKSHELF.c",
+    "src/actors/MansionSteps/daTrsTrap_c_classInit_KAIDAN.c"
    ],
    "ext_mix": {
     ".cpp": 6,

@@ -1,4 +1,4 @@
-// @symbol MansionSteps_Spawn
+// @symbol daTrsTrap_c_classInit_TERESAPIT
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -10,7 +10,11 @@
 /* KAIDAN, BOOKSHELF, MERRYGOROUND, and TERESAPIT all construct the ROM-proven
  * daTrsTrap_c class. A class-anchored classInit rename would collide, so this
  * factory keeps its historical project spelling. */
-int *MansionSteps_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daTrsTrap_c through RTTI,
+ * allocation size, vtable identity, and the TERESAPIT registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: TrapDoor_Spawn. */
+int *daTrsTrap_c_classInit_TERESAPIT(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(852);
     if (p) {

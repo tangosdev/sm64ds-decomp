@@ -12,7 +12,11 @@ extern void* _ZTV7daTrs_c;
 /* TERESA and BOSS_TERESA both construct the ROM-proven daTrs_c class. A
  * class-anchored classInit rename would collide, so this factory keeps its
  * historical project spelling until the original distinction is recovered. */
-void* Boo_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daTrs_c through RTTI,
+ * allocation size, vtable identity, and the TERESA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Boo_Spawn. */
+void* daTrs_c_classInit_TERESA(void){
   char* t=(char*)_ZN7fBase_cnwEj(0x5e0);
   if(t){
     _ZN11dCapEnemy_cC2Ev(t);

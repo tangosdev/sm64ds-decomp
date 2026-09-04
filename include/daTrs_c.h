@@ -13,16 +13,16 @@
  *     at 0x020aedf4, by the already-matched _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc
  *     is dCapEnemy_c's own out-of-line base-object destructor, and both sibling
  *     destructors chain to it.
- *   - Forward: Boo_Spawn (src/actors/daTrs_c/Boo_Spawn.cpp) calls
+ *   - Forward: daTrs_c_classInit_TERESA (src/actors/daTrs_c/daTrs_c_classInit_TERESA.cpp) calls
  *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
  *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV7daKrb_c.
  *
- * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
- * (src/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
+ * SIZE 0x5e0, the literal daTrs_c_classInit_TERESA passes to fBase_c::operator new
+ * (src/actors/daTrs_c/daTrs_c_classInit_TERESA.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
  * 0x180 (include/dCapEnemy_c.h); everything from there down is daTrs_c's own.
  *
  * The six members close exactly on one another -- evidenced twice, in the
- * same offsets and order in both Boo_Spawn's construction and
+ * same offsets and order in both daTrs_c_classInit_TERESA's construction and
  * _ZN7daTrs_cD1Ev / _ZN7daTrs_cD0Ev's teardown (reverse order):
  *
  *     0x184 dCcAcPos_c   0x40  -> 0x1c4
@@ -37,7 +37,7 @@
  * 29 (OnAimedAtWithEgg) are this class's own overrides -- see
  * include/dActor_c.h for the slot table.
  *
- * No daTrs_c() constructor is declared: Boo_Spawn builds the object field-by-field
+ * No daTrs_c() constructor is declared: daTrs_c_classInit_TERESA builds the object field-by-field
  * (calling dCapEnemy_c::dCapEnemy_c, storing the vtable, then each member's own
  * constructor) rather than through a daTrs_c::daTrs_c(), so declaring one risks an
  * implicit body the compiler would inline somewhere the ROM does not.
@@ -57,6 +57,16 @@
  * class's and daKrb_c's destructors tearing down their base sub-object, which
  * is what D2 is for. Renaming both accordingly is what let these two bodies
  * become real C++.
+ *
+ * SM64DS RTTI names the implementation daTrs_c. The reconstructed
+ * factory daTrs_c_classInit_TERESA (historical alias
+ * Boo_Spawn) constructs it for the TERESA
+ * registry profile.
+ *
+ * SM64DS RTTI names the implementation daTrs_c. The reconstructed
+ * factory daTrs_c_classInit_BOSS_TERESA (historical alias
+ * BigBoo_Spawn) constructs it for the BOSS_TERESA
+ * registry profile.
  */
 #ifndef DATRS_C_H
 #define DATRS_C_H

@@ -37,7 +37,7 @@ struct daTrsTrap_c : dActor_c {
        (dBgActor_c 0x124/0x2ec, SpinningPlatform and TtcRotatingCube the same,
        both of which hand `this + 0x2ec` to dBgW_KcMbg::SetFile as a
        `const Matrix4x3 &`). 0x15c + 0x1c8 = 0x324, and 0x324 + 0x30 closes on
-       the 0x354 MansionSteps_Spawn allocates. InitResources, which is where
+       the 0x354 daTrsTrap_c_classInit_KAIDAN allocates. InitResources, which is where
        the SetFile call would be, is still a near miss and not in the tree. */
     Matrix4x3 mClsnMat;            /* 0x324 */
 

@@ -239,7 +239,7 @@ src/d_a_eykn_eyekun_boss.c:
     complete
     .text start:0x021219cc end:0x02121a1c
 
-src/MrI_Spawn.c:
+src/d_a_eykn_eyekun.c:
     complete
     .text start:0x02121a1c end:0x02121a6c
 

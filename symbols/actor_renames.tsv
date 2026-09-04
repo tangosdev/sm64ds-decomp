@@ -1452,7 +1452,9 @@ ov063	0x0211c4a0	BigBooIcon_Spawn	daTrsIcon_c_classInit	reconstructed classInit;
 ov063	0x0211c4d0	func_ov063_0211c4d0	BooCage_Spawn	spawnfunc
 ov063	0x0211c4d0	BooCage_Spawn	daTBasket_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211c520	func_ov063_0211c520	BigBoo_Spawn	spawnfunc
+ov063	0x0211c520	BigBoo_Spawn	daTrs_c_classInit_BOSS_TERESA	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211c590	func_ov063_0211c590	Boo_Spawn	spawnfunc
+ov063	0x0211c590	Boo_Spawn	daTrs_c_classInit_TERESA	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211c600	func_ov063_0211c600	_ZN11daTrsTrap_cD1Ev	vtable slot 16
 ov063	0x0211c638	func_ov063_0211c638	_ZN11daTrsTrap_cD0Ev	vtable slot 17
 ov063	0x0211cdec	func_ov063_0211cdec	_ZN11daTrsTrap_c16CleanupResourcesEv	vtable slot 3
@@ -1461,9 +1463,13 @@ ov063	0x0211ce34	func_ov063_0211ce34	_ZN11daTrsTrap_c6RenderEv	vtable slot 9
 ov063	0x0211ce74	func_ov063_0211ce74	_ZN11daTrsTrap_c8BehaviorEv	vtable slot 6
 ov063	0x0211cf00	func_ov063_0211cf00	_ZN11daTrsTrap_c13InitResourcesEv	vtable slot 0
 ov063	0x0211d2a0	func_ov063_0211d2a0	TrapDoor_Spawn	spawnfunc
+ov063	0x0211d2a0	TrapDoor_Spawn	daTrsTrap_c_classInit_TERESAPIT	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d2e0	func_ov063_0211d2e0	MerryGoRound_Spawn	spawnfunc
+ov063	0x0211d2e0	MerryGoRound_Spawn	daTrsTrap_c_classInit_MERRYGOROUND	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d320	func_ov063_0211d320	Bookshelf_Spawn	spawnfunc
+ov063	0x0211d320	Bookshelf_Spawn	daTrsTrap_c_classInit_BOOKSHELF	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d360	func_ov063_0211d360	MansionSteps_Spawn	spawnfunc
+ov063	0x0211d360	MansionSteps_Spawn	daTrsTrap_c_classInit_KAIDAN	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d3a0	func_ov063_0211d3a0	_ZN12FallBlockBbhD1Ev	vtable slot 16
 ov063	0x0211d3f0	func_ov063_0211d3f0	_ZN12FallBlockBbhD0Ev	vtable slot 17
 ov063	0x0211d454	func_ov063_0211d454	_ZN12FallBlockBbh16CleanupResourcesEv	vtable slot 3
@@ -1844,6 +1850,7 @@ ov071	0x02121734	func_ov071_02121734	_ZN3MrI13InitResourcesEv	vtable slot 0
 ov071	0x021219cc	func_ov071_021219cc	BigMrI_Spawn	spawnfunc
 ov071	0x021219cc	BigMrI_Spawn	daEykn_c_classInit_EYEKUN_BOSS	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02121a1c	func_ov071_02121a1c	MrI_Spawn	spawnfunc
+ov071	0x02121a1c	MrI_Spawn	daEykn_c_classInit_EYEKUN	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02121a6c	func_ov071_02121a6c	_ZN8daEyBm_cD1Ev	vtable slot 16
 ov071	0x02121aac	func_ov071_02121aac	_ZN8daEyBm_cD0Ev	vtable slot 17
 ov071	0x02121b08	func_ov071_02121b08	_ZN8daEyBm_c18SpawnDestroyEffectEv	inferred private class helper; effect 0x45 then destruction

@@ -1,4 +1,4 @@
-// @symbol MrI_Spawn
+// @symbol daEykn_c_classInit_EYEKUN
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV3MrI */
-int *MrI_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daEykn_c through RTTI,
+ * allocation size, vtable identity, and the EYEKUN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MrI_Spawn. */
+int *daEykn_c_classInit_EYEKUN(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(536);
     if (p) {

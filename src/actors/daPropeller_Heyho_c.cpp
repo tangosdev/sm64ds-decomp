@@ -40,7 +40,7 @@
  * spelling.  Keep that evidence-bounded alias while giving the table its real
  * field layout; all seven scalar words and the factory relocation are covered
  * by the TU's data claim. */
-extern "C" int *FlyGuy_Spawn(void);
+extern "C" int *daPropeller_Heyho_c_classInit(void);
 
 struct PropellerHeyhoSpawnInfo {
     int *(*spawn)();
@@ -57,7 +57,7 @@ typedef char PropellerHeyhoSpawnInfo_size_must_be_0x1c[
     sizeof(PropellerHeyhoSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" PropellerHeyhoSpawnInfo FlyGuy_SpawnInfo = {
-    FlyGuy_Spawn,
+    daPropeller_Heyho_c_classInit,
     0x00e8,
     0x0057,
     0x10000003,
@@ -85,7 +85,11 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV19daPropeller_Heyho_c */
-int *FlyGuy_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daPropeller_Heyho_c through
+ * RTTI, allocation size, vtable identity, and the PROPELLER_HEYHO registry
+ * profile; later EAD lineage supplies classInit. Exact original spelling is
+ * not preserved. Historical alias: FlyGuy_Spawn. */
+int *daPropeller_Heyho_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1000);
     if (p) {

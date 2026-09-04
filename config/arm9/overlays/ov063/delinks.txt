@@ -375,11 +375,11 @@ src/actors/BooCage/d_a_t_basket.c:
     complete
     .text start:0x0211c4d0 end:0x0211c520
 
-src/actors/BigBoo/BigBoo_Spawn.cpp:
+src/actors/BigBoo/d_a_trs_boss_teresa.cpp:
     complete
     .text start:0x0211c520 end:0x0211c590
 
-src/actors/daTrs_c/Boo_Spawn.cpp:
+src/actors/daTrs_c/d_a_trs_teresa.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
@@ -451,19 +451,19 @@ src/unnamed/ov063/func_ov063_0211d28c.c:
     complete
     .text start:0x0211d28c end:0x0211d2a0
 
-src/actors/TrapDoor/TrapDoor_Spawn.c:
+src/actors/TrapDoor/d_a_trs_trap_teresapit.c:
     complete
     .text start:0x0211d2a0 end:0x0211d2e0
 
-src/actors/MerryGoRound/MerryGoRound_Spawn.c:
+src/actors/MerryGoRound/d_a_trs_trap_merrygoround.c:
     complete
     .text start:0x0211d2e0 end:0x0211d320
 
-src/actors/Bookshelf/Bookshelf_Spawn.c:
+src/actors/Bookshelf/d_a_trs_trap_bookshelf.c:
     complete
     .text start:0x0211d320 end:0x0211d360
 
-src/actors/MansionSteps/MansionSteps_Spawn.c:
+src/actors/MansionSteps/d_a_trs_trap_kaidan.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
