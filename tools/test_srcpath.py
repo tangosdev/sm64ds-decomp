@@ -388,9 +388,9 @@ class EnrolmentMatchesTheTree(unittest.TestCase):
 
     Not *strictly* stronger, and the gap is worth naming.  The `stem == symbol` escape
     hatch is tried first, so a `classInit` symbol still sitting on its OLD spelling --
-    `src/daObjKumo_c_classInit.c` -- passes as legacy and a half-finished rename stays
-    invisible here.  Zero classInit symbols are on the legacy spelling today; this is a
-    dormant hole, not a live one.
+    a file named for the symbol itself, `daObjKumo_c_classInit.c` -- passes as legacy
+    and a half-finished rename stays invisible here.  Zero classInit symbols are on the
+    legacy spelling today; this is a dormant hole, not a live one.
 
     None of this touches resolution.  `symbol_for` has exactly one production caller --
     the unenrolled fallback inside `symbols_for` -- so for an *enrolled* source the
