@@ -316,11 +316,11 @@ src/_ZN10BowserTail13InitResourcesEv.cpp:
     complete
     .text start:0x021163b4 end:0x021163f0
 
-src/BowserTail_Spawn.c:
+src/d_a_kpa_tail.c:
     complete
     .text start:0x021163f0 end:0x02116428
 
-src/Bowser_Spawn.c:
+src/d_a_kpa.c:
     complete
     .text start:0x02116428 end:0x02116484
 
@@ -428,7 +428,7 @@ src/_ZN10BowserFire13InitResourcesEv.cpp:
     complete
     .text start:0x02117790 end:0x02117938
 
-src/BowserFire_Spawn.c:
+src/d_a_kpa_fire.c:
     complete
     .text start:0x02117938 end:0x02117980
 
@@ -467,7 +467,7 @@ src/_ZN10daKpa2Bg_c8BehaviorEv.cpp:
 src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp:
     .text start:0x02117c30 end:0x02117cdc
 
-src/daKpa2Bg_c_classInit.c:
+src/d_a_kpa2_bg.c:
     complete
     .text start:0x02117cdc end:0x02117d1c
 
@@ -515,7 +515,7 @@ src/func_ov060_021183f4.c:
     complete
     .text start:0x021183f4 end:0x02118408
 
-src/BowserSkyPlatform_Spawn.c:
+src/d_a_kpa3_bg.c:
     complete
     .text start:0x02118408 end:0x02118438
 
@@ -579,7 +579,7 @@ src/_ZN9SpikeBomb13InitResourcesEv.cpp:
     complete
     .text start:0x02118bb4 end:0x02118cbc
 
-src/SpikeBomb_Spawn.c:
+src/d_a_kirai.c:
     complete
     .text start:0x02118cbc end:0x02118cfc
 
@@ -606,7 +606,7 @@ src/_ZN16BowserShockwaves8BehaviorEv.cpp:
 src/_ZN16BowserShockwaves13InitResourcesEv.cpp:
     .text start:0x02119004 end:0x021191f4
 
-src/BowserShockwaves_Spawn.c:
+src/d_a_f_ring.c:
     complete
     .text start:0x021191f4 end:0x02119264
 

@@ -144,7 +144,7 @@ src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02117470 end:0x02117478
 
-src/Chuckya_Spawn.c:
+src/d_a_holhei.c:
     complete
     .text start:0x02117478 end:0x021174cc
 
@@ -296,11 +296,11 @@ src/_ZN5Koopa13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021196a8 end:0x021196bc
 
-src/KoopaSmall_Spawn.c:
+src/d_a_nknk_nokonoko_s.c:
     complete
     .text start:0x021196bc end:0x0211970c
 
-src/Koopa_Spawn.c:
+src/d_a_nknk_nokonoko.c:
     complete
     .text start:0x0211970c end:0x0211975c
 
@@ -372,7 +372,7 @@ src/_ZN13KoopaTheQuick13InitResourcesEv.cpp:
     complete
     .text start:0x0211ac94 end:0x0211aee0
 
-src/KoopaTheQuick_Spawn.c:
+src/d_a_r_nk.c:
     complete
     .text start:0x0211aee0 end:0x0211af38
 
@@ -404,7 +404,7 @@ src/_ZN9KoopaFlag13InitResourcesEv.cpp:
     complete
     .text start:0x0211b168 end:0x0211b208
 
-src/KoopaFlag_Spawn.c:
+src/d_a_r_flag.c:
     complete
     .text start:0x0211b208 end:0x0211b248
 
@@ -500,7 +500,7 @@ src/_ZN6Klepto16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0211ce78 end:0x0211ce80
 
-src/Klepto_Spawn.c:
+src/d_a_jango.c:
     complete
     .text start:0x0211ce80 end:0x0211ced8
 

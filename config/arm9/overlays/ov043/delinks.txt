@@ -23,7 +23,7 @@ src/_ZN11RickshawBdw13InitResourcesEv.cpp:
     complete
     .text start:0x021114c4 end:0x021114dc
 
-src/daObjKm1_Kurumajiku_c_classInit.c:
+src/d_a_obj_km1_kurumajiku.c:
     complete
     .text start:0x021114dc end:0x02111518
 

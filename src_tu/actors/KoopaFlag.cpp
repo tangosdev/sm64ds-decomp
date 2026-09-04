@@ -23,7 +23,7 @@
  *   [4] 0x0211b030  src/_ZN9KoopaFlag6RenderEv.cpp
  *   [5] 0x0211b05c  src/_ZN9KoopaFlag8BehaviorEv.cpp
  *   [6] 0x0211b168  src/_ZN9KoopaFlag13InitResourcesEv.cpp
- *   [7] 0x0211b208  src/KoopaFlag_Spawn.c
+ *   [7] 0x0211b208  src/d_a_r_flag.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

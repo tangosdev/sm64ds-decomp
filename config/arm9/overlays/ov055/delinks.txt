@@ -47,7 +47,7 @@ src/_ZN11MirrorLuigi13InitResourcesEv.cpp:
     complete
     .text start:0x02111674 end:0x02111860
 
-src/MirrorLuigi_Spawn.cpp:
+src/d_a_luigi.cpp:
     complete
     .text start:0x02111860 end:0x021118d4
 

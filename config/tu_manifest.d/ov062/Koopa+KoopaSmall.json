@@ -281,14 +281,14 @@
       "symbol": "daNknk_c_classInit_NOKONOKO_S",
       "address": "0x021196bc",
       "size": "0x00000050",
-      "legacy_source": "src/KoopaSmall_Spawn.c",
+      "legacy_source": "src/d_a_nknk_nokonoko_s.c",
       "ordinal": 37
     },
     {
       "symbol": "daNknk_c_classInit_NOKONOKO",
       "address": "0x0211970c",
       "size": "0x00000050",
-      "legacy_source": "src/Koopa_Spawn.c",
+      "legacy_source": "src/d_a_nknk_nokonoko.c",
       "ordinal": 38
     }
   ],

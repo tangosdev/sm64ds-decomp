@@ -36,7 +36,7 @@ src/func_ov045_021114c8.c:
     complete
     .text start:0x021114c8 end:0x021114dc
 
-src/daObjKm2_Agaru_c_classInit.c:
+src/d_a_obj_km2_agaru.c:
     complete
     .text start:0x021114dc end:0x0211150c
 
@@ -64,7 +64,7 @@ src/_ZN8PoleLift13InitResourcesEv.cpp:
     complete
     .text start:0x02111738 end:0x02111808
 
-src/daObjKm2_Ami_Bou_c_classInit.c:
+src/d_a_obj_km2_ami_bou.c:
     complete
     .text start:0x02111808 end:0x02111840
 
@@ -104,7 +104,7 @@ src/_ZN17ExtendingPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x02111a30 end:0x02111ad4
 
-src/daObjKm2_Nobiru_c_classInit.c:
+src/d_a_obj_km2_nobiru.c:
     complete
     .text start:0x02111ad4 end:0x02111b14
 
@@ -124,7 +124,7 @@ src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111bf4
 
-src/daObjKm2_Ukishima_c_classInit.c:
+src/d_a_obj_km2_ukishima.c:
     complete
     .text start:0x02111bf4 end:0x02111c30
 

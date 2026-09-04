@@ -33,7 +33,7 @@
  *   [14] 0x0211ab88  src/_ZN13KoopaTheQuick8BehaviorEv.cpp
  *   [15] 0x0211ac10  src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp
  *   [16] 0x0211ac94  src/_ZN13KoopaTheQuick13InitResourcesEv.cpp
- *   [17] 0x0211aee0  src/KoopaTheQuick_Spawn.c
+ *   [17] 0x0211aee0  src/d_a_r_nk.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

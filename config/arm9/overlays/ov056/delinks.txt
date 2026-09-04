@@ -28,7 +28,7 @@ src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp:
     complete
     .text start:0x021114e0 end:0x02111594
 
-src/BigMovingIceBlock_Spawn.c:
+src/d_a_obj_ewm_ice_block.c:
     complete
     .text start:0x02111594 end:0x021115cc
 

@@ -71,7 +71,7 @@
       "symbol": "daRFlag_c_classInit",
       "address": "0x0211b208",
       "size": "0x00000040",
-      "legacy_source": "src/KoopaFlag_Spawn.c",
+      "legacy_source": "src/d_a_r_flag.c",
       "ordinal": 7
     }
   ],

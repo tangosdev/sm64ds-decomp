@@ -53,8 +53,8 @@
  *   [34] 0x02119608  src/_ZN5Koopa16OnAimedAtWithEggEv.cpp
  *   [35] 0x02119628  src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp
  *   [36] 0x021196a8  src/_ZN5Koopa13OnYoshiTryEatEv.cpp
- *   [37] 0x021196bc  src/KoopaSmall_Spawn.c
- *   [38] 0x0211970c  src/Koopa_Spawn.c
+ *   [37] 0x021196bc  src/d_a_nknk_nokonoko_s.c
+ *   [38] 0x0211970c  src/d_a_nknk_nokonoko.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

@@ -158,7 +158,7 @@
     "src/_ZN6Klepto8BehaviorEv.cpp",
     "src/_ZN6Klepto13InitResourcesEv.cpp",
     "src/_ZN6Klepto16OnAimedAtWithEggEv.cpp",
-    "src/Klepto_Spawn.c"
+    "src/d_a_jango.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -2691,7 +2691,7 @@
     "src/_ZN15FireSeaElevator13InitResourcesEv.cpp",
     "src/func_ov045_021114a8.cpp",
     "src/func_ov045_021114c8.c",
-    "src/daObjKm2_Agaru_c_classInit.c"
+    "src/d_a_obj_km2_agaru.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -3096,7 +3096,7 @@
     "src/_ZN9KoopaFlag6RenderEv.cpp",
     "src/_ZN9KoopaFlag8BehaviorEv.cpp",
     "src/_ZN9KoopaFlag13InitResourcesEv.cpp",
-    "src/KoopaFlag_Spawn.c"
+    "src/d_a_r_flag.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -4485,7 +4485,7 @@
     "src/_ZN10BowserFire6RenderEv.cpp",
     "src/_ZN10BowserFire8BehaviorEv.cpp",
     "src/_ZN10BowserFire13InitResourcesEv.cpp",
-    "src/BowserFire_Spawn.c"
+    "src/d_a_kpa_fire.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -6388,7 +6388,7 @@
     "src/_ZN8PoleLift6RenderEv.cpp",
     "src/_ZN8PoleLift8BehaviorEv.cpp",
     "src/_ZN8PoleLift13InitResourcesEv.cpp",
-    "src/daObjKm2_Ami_Bou_c_classInit.c"
+    "src/d_a_obj_km2_ami_bou.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -6446,7 +6446,7 @@
     "src/_ZN17BigMovingIceBlock6RenderEv.cpp",
     "src/_ZN17BigMovingIceBlock8BehaviorEv.cpp",
     "src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp",
-    "src/BigMovingIceBlock_Spawn.c"
+    "src/d_a_obj_ewm_ice_block.c"
    ],
    "ext_mix": {
     ".c": 4,
@@ -6974,7 +6974,7 @@
     "src/_ZN14SquarePathLift6RenderEv.cpp",
     "src/_ZN14SquarePathLift8BehaviorEv.cpp",
     "src/_ZN14SquarePathLift13InitResourcesEv.cpp",
-    "src/SquarePathLift_Spawn.c"
+    "src/d_a_obj_emm_yuka.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -7095,7 +7095,7 @@
     "src/_ZN11MirrorLuigi6RenderEv.cpp",
     "src/_ZN11MirrorLuigi8BehaviorEv.cpp",
     "src/_ZN11MirrorLuigi13InitResourcesEv.cpp",
-    "src/MirrorLuigi_Spawn.cpp"
+    "src/d_a_luigi.cpp"
    ],
    "ext_mix": {
     ".c": 6,
@@ -8607,7 +8607,7 @@
     "src/_ZN17ExtendingPlatform6RenderEv.cpp",
     "src/_ZN17ExtendingPlatform8BehaviorEv.cpp",
     "src/_ZN17ExtendingPlatform13InitResourcesEv.cpp",
-    "src/daObjKm2_Nobiru_c_classInit.c"
+    "src/d_a_obj_km2_nobiru.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -9553,7 +9553,7 @@
     "src/_ZN16FloatingFloorBfsD0Ev.c",
     "src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp",
     "src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp",
-    "src/daObjKm2_Ukishima_c_classInit.c"
+    "src/d_a_obj_km2_ukishima.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -10281,7 +10281,7 @@
     "src/_ZN11RickshawBdwD0Ev.c",
     "src/_ZN11RickshawBdw16CleanupResourcesEv.cpp",
     "src/_ZN11RickshawBdw13InitResourcesEv.cpp",
-    "src/daObjKm1_Kurumajiku_c_classInit.c"
+    "src/d_a_obj_km1_kurumajiku.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -25932,7 +25932,7 @@
     "src/_ZN15RecRoomCupboard16CleanupResourcesEv.c",
     "src/_ZN15RecRoomCupboard8BehaviorEv.cpp",
     "src/_ZN15RecRoomCupboard13InitResourcesEv.c",
-    "src/RecRoomCupboard_Spawn.cpp"
+    "src/d_a_obj_closet.cpp"
    ],
    "ext_mix": {
     ".c": 2,
@@ -26064,8 +26064,8 @@
     "src/_ZN10BowserTail8BehaviorEv.cpp",
     "src/_ZN6Bowser13InitResourcesEv.cpp",
     "src/_ZN10BowserTail13InitResourcesEv.cpp",
-    "src/BowserTail_Spawn.c",
-    "src/Bowser_Spawn.c"
+    "src/d_a_kpa_tail.c",
+    "src/d_a_kpa.c"
    ],
    "ext_mix": {
     ".cpp": 30,
@@ -26130,7 +26130,7 @@
     "src/_ZN10daKpa2Bg_c6RenderEv.cpp",
     "src/_ZN10daKpa2Bg_c8BehaviorEv.cpp",
     "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp",
-    "src/daKpa2Bg_c_classInit.c"
+    "src/d_a_kpa2_bg.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -26190,7 +26190,7 @@
     "src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp",
     "src/func_ov060_021183cc.c",
     "src/func_ov060_021183f4.c",
-    "src/BowserSkyPlatform_Spawn.c"
+    "src/d_a_kpa3_bg.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -26258,7 +26258,7 @@
     "src/_ZN9SpikeBomb6RenderEv.cpp",
     "src/_ZN9SpikeBomb8BehaviorEv.cpp",
     "src/_ZN9SpikeBomb13InitResourcesEv.cpp",
-    "src/SpikeBomb_Spawn.c"
+    "src/d_a_kirai.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -26319,7 +26319,7 @@
     "src/_ZN16BowserShockwaves6RenderEv.cpp",
     "src/_ZN16BowserShockwaves8BehaviorEv.cpp",
     "src/_ZN16BowserShockwaves13InitResourcesEv.cpp",
-    "src/BowserShockwaves_Spawn.c"
+    "src/d_a_f_ring.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -26403,7 +26403,7 @@
     "src/_ZN7Chuckya8BehaviorEv.cpp",
     "src/_ZN7Chuckya13InitResourcesEv.cpp",
     "src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp",
-    "src/Chuckya_Spawn.c"
+    "src/d_a_holhei.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -26494,8 +26494,8 @@
     "src/_ZN5Koopa16OnAimedAtWithEggEv.cpp",
     "src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp",
     "src/_ZN5Koopa13OnYoshiTryEatEv.cpp",
-    "src/KoopaSmall_Spawn.c",
-    "src/Koopa_Spawn.c"
+    "src/d_a_nknk_nokonoko_s.c",
+    "src/d_a_nknk_nokonoko.c"
    ],
    "ext_mix": {
     ".cpp": 17,
@@ -26567,7 +26567,7 @@
     "src/_ZN13KoopaTheQuick8BehaviorEv.cpp",
     "src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp",
     "src/_ZN13KoopaTheQuick13InitResourcesEv.cpp",
-    "src/KoopaTheQuick_Spawn.c"
+    "src/d_a_r_nk.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -37226,7 +37226,7 @@
     "src/_ZN6Klepto8BehaviorEv.cpp",
     "src/_ZN6Klepto13InitResourcesEv.cpp",
     "src/_ZN6Klepto16OnAimedAtWithEggEv.cpp",
-    "src/Klepto_Spawn.c"
+    "src/d_a_jango.c"
    ],
    "ext_mix": {
     ".cpp": 15,

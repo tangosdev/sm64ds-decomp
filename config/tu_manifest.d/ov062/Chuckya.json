@@ -267,7 +267,7 @@
       "symbol": "daHolhei_c_classInit",
       "address": "0x02117478",
       "size": "0x00000054",
-      "legacy_source": "src/Chuckya_Spawn.c",
+      "legacy_source": "src/d_a_holhei.c",
       "ordinal": 35
     }
   ],

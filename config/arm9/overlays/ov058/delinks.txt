@@ -22,6 +22,6 @@ src/_ZN15RecRoomCupboard13InitResourcesEv.cpp:
     complete
     .text start:0x0211161c end:0x02111688
 
-src/RecRoomCupboard_Spawn.cpp:
+src/d_a_obj_closet.cpp:
     complete
     .text start:0x02111688 end:0x021116e4

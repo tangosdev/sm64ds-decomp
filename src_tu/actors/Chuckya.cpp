@@ -51,7 +51,7 @@
  *   [32] 0x0211707c  src/_ZN7Chuckya8BehaviorEv.cpp
  *   [33] 0x02117334  src/_ZN7Chuckya13InitResourcesEv.cpp
  *   [34] 0x02117470  src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp
- *   [35] 0x02117478  src/Chuckya_Spawn.c
+ *   [35] 0x02117478  src/d_a_holhei.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
