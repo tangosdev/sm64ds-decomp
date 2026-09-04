@@ -120,7 +120,7 @@ src/_ZN13RacingPenguin13InitResourcesEv.cpp:
     complete
     .text start:0x021123d4 end:0x021125bc
 
-src/RacingPenguin_Spawn.c:
+src/d_a_pg_rcer.c:
     complete
     .text start:0x021125bc end:0x0211261c
 

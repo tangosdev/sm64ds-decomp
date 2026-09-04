@@ -29,7 +29,7 @@
  *   [10] 0x021132fc  src/_ZN12HauntedChair6RenderEv.cpp
  *   [11] 0x02113324  src/_ZN12HauntedChair8BehaviorEv.cpp
  *   [12] 0x021133b0  src/_ZN12HauntedChair13InitResourcesEv.cpp
- *   [13] 0x02113494  src/HauntedChair_Spawn.c
+ *   [13] 0x02113494  src/d_a_chair.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

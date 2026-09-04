@@ -23,7 +23,7 @@
  *   [4] 0x02111ab8  src/_ZN9LightBeam6RenderEv.cpp
  *   [5] 0x02111ae0  src/_ZN9LightBeam8BehaviorEv.cpp
  *   [6] 0x02111d20  src/_ZN9LightBeam13InitResourcesEv.cpp
- *   [7] 0x02111dd0  src/daObjC1Hikari_c_classInit.c
+ *   [7] 0x02111dd0  src/d_a_obj_c1_hikari.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

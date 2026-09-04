@@ -35,7 +35,7 @@ src/_ZN9LightBeam13InitResourcesEv.cpp:
     complete
     .text start:0x02111d20 end:0x02111dd0
 
-src/daObjC1Hikari_c_classInit.c:
+src/d_a_obj_c1_hikari.c:
     complete
     .text start:0x02111dd0 end:0x02111e10
 
@@ -67,7 +67,7 @@ src/_ZN13PeachPainting13InitResourcesEv.cpp:
     complete
     .text start:0x02111fc0 end:0x02112004
 
-src/daObjC1Peach_c_classInit.c:
+src/d_a_obj_c1_peach.c:
     complete
     .text start:0x02112004 end:0x0211203c
 

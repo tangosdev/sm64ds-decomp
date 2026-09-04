@@ -3037,7 +3037,7 @@
     "src/_ZN13PeachPainting6RenderEv.cpp",
     "src/_ZN13PeachPainting8BehaviorEv.cpp",
     "src/_ZN13PeachPainting13InitResourcesEv.cpp",
-    "src/daObjC1Peach_c_classInit.c"
+    "src/d_a_obj_c1_peach.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -3787,7 +3787,7 @@
     "src/_ZN9LightBeam6RenderEv.cpp",
     "src/_ZN9LightBeam8BehaviorEv.cpp",
     "src/_ZN9LightBeam13InitResourcesEv.cpp",
-    "src/daObjC1Hikari_c_classInit.c"
+    "src/d_a_obj_c1_hikari.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -5411,7 +5411,7 @@
     "src/_ZN10SlidingBox6RenderEv.cpp",
     "src/_ZN10SlidingBox8BehaviorEv.c",
     "src/_ZN10SlidingBox13InitResourcesEv.cpp",
-    "src/SlidingBox_Spawn.c"
+    "src/d_a_slide_box.c"
    ],
    "ext_mix": {
     ".c": 5,
@@ -5909,7 +5909,7 @@
     "src/_ZN22ClockPaintingHandShort6RenderEv.cpp",
     "src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp",
     "src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp",
-    "src/ClockPaintingHandShort_Spawn.cpp"
+    "src/d_a_obj_clock_clock_short.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -6149,7 +6149,7 @@
     "src/_ZN4Bird6RenderEv.cpp",
     "src/_ZN4Bird8BehaviorEv.cpp",
     "src/_ZN4Bird13InitResourcesEv.cpp",
-    "src/Bird_Spawn.c"
+    "src/d_a_s_bird.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -6330,7 +6330,7 @@
     "src/_ZN13BasementWater6RenderEv.cpp",
     "src/_ZN13BasementWater8BehaviorEv.cpp",
     "src/_ZN13BasementWater13InitResourcesEv.cpp",
-    "src/daObjC0Water_c_classInit.c"
+    "src/d_a_obj_c0_water.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -6622,7 +6622,7 @@
     "src/_ZN6ShipUp6RenderEv.cpp",
     "src/_ZN6ShipUp8BehaviorEv.cpp",
     "src/_ZN6ShipUp13InitResourcesEv.cpp",
-    "src/ShipUp_Spawn.c"
+    "src/d_a_obj_ki_fune_ki_fune_up.c"
    ],
    "ext_mix": {
     ".c": 4,
@@ -7236,7 +7236,7 @@
     "src/_ZN9TowerStep13InitResourcesEv.cpp",
     "src/func_ov015_021128e8.c",
     "src/func_ov015_021128f8.c",
-    "src/daObjBk_Lift_c_classInit.c"
+    "src/d_a_obj_bk_lift.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -8790,7 +8790,7 @@
     "src/_ZN7SkiLift13InitResourcesEv.cpp",
     "src/func_ov018_021117e8.cpp",
     "src/func_ov018_02111804.c",
-    "src/daObjSm_Lift_c_classInit.c"
+    "src/d_a_obj_sm_lift.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -24320,7 +24320,7 @@
     "src/_ZN14KnockDownPlank6RenderEv.cpp",
     "src/_ZN14KnockDownPlank8BehaviorEv.cpp",
     "src/_ZN14KnockDownPlank13InitResourcesEv.cpp",
-    "src/daObjBk_Botaosi_c_classInit.c"
+    "src/d_a_obj_bk_botaosi.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -24393,7 +24393,7 @@
     "src/_ZN5Unagi6RenderEv.cpp",
     "src/_ZN5Unagi8BehaviorEv.cpp",
     "src/_ZN5Unagi13InitResourcesEv.cpp",
-    "src/Unagi_Spawn.c"
+    "src/d_a_moray.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -24455,7 +24455,7 @@
     "src/_ZN10RockPillar6RenderEv.cpp",
     "src/_ZN10RockPillar8BehaviorEv.cpp",
     "src/_ZN10RockPillar13InitResourcesEv.cpp",
-    "src/daObjKi_Hasira_c_classInit.c"
+    "src/d_a_obj_ki_hasira.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -24537,7 +24537,7 @@
     "src/_ZN13RacingPenguin6RenderEv.cpp",
     "src/_ZN13RacingPenguin8BehaviorEv.cpp",
     "src/_ZN13RacingPenguin13InitResourcesEv.cpp",
-    "src/RacingPenguin_Spawn.c"
+    "src/d_a_pg_rcer.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -24621,10 +24621,10 @@
     "src/_ZN15BookShotSpawner13InitResourcesEv.cpp",
     "src/_ZN8BookShot16OnAimedAtWithEggEv.cpp",
     "src/_ZN8BookShot13OnYoshiTryEatEv.cpp",
-    "src/func_ov020_021127f4.c",
-    "src/daBookGen_c_classInit.c",
-    "src/Bookend_Spawn.c",
-    "src/BookShot_Spawn.c"
+    "src/d_a_book_book_switch.c",
+    "src/d_a_book_gen.c",
+    "src/d_a_book_killer_book.c",
+    "src/d_a_book_shoot_book.c"
    ],
    "ext_mix": {
     ".cpp": 19,
@@ -24686,7 +24686,7 @@
     "src/_ZN12HauntedChair6RenderEv.cpp",
     "src/_ZN12HauntedChair8BehaviorEv.cpp",
     "src/_ZN12HauntedChair13InitResourcesEv.cpp",
-    "src/HauntedChair_Spawn.c"
+    "src/d_a_chair.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -35042,7 +35042,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ClockPaintingHandLong_Spawn.c"
+    "src/d_a_obj_clock_clock_long.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35090,7 +35090,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MovingBarBig_Spawn.c"
+    "src/d_a_obj_bk_dossunbar_bk_dossunbar_l.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35138,7 +35138,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MovingBarSmall_Spawn.c"
+    "src/d_a_obj_bk_dossunbar_bk_dossunbar_s.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35186,7 +35186,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/ShipDown_Spawn.c"
+    "src/d_a_obj_ki_fune_ki_fune.c"
    ],
    "ext_mix": {
     ".c": 1

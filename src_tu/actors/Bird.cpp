@@ -28,7 +28,7 @@
  *   [9] 0x02111870  src/_ZN4Bird6RenderEv.cpp
  *   [10] 0x02111898  src/_ZN4Bird8BehaviorEv.cpp
  *   [11] 0x0211197c  src/_ZN4Bird13InitResourcesEv.cpp
- *   [12] 0x02111a30  src/Bird_Spawn.c
+ *   [12] 0x02111a30  src/d_a_s_bird.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

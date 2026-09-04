@@ -43,10 +43,10 @@
  *   [24] 0x02112768  src/_ZN15BookShotSpawner13InitResourcesEv.cpp
  *   [25] 0x021127a4  src/_ZN8BookShot16OnAimedAtWithEggEv.cpp
  *   [26] 0x021127cc  src/_ZN8BookShot13OnYoshiTryEatEv.cpp
- *   [27] 0x021127f4  src/func_ov020_021127f4.c
- *   [28] 0x02112850  src/daBookGen_c_classInit.c
- *   [29] 0x02112880  src/Bookend_Spawn.c
- *   [30] 0x021128dc  src/BookShot_Spawn.c
+ *   [27] 0x021127f4  src/d_a_book_book_switch.c
+ *   [28] 0x02112850  src/d_a_book_gen.c
+ *   [29] 0x02112880  src/d_a_book_killer_book.c
+ *   [30] 0x021128dc  src/d_a_book_shoot_book.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

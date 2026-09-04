@@ -225,7 +225,7 @@
       "symbol": "daPgRcer_c_classInit",
       "address": "0x021125bc",
       "size": "0x00000060",
-      "legacy_source": "src/RacingPenguin_Spawn.c",
+      "legacy_source": "src/d_a_pg_rcer.c",
       "ordinal": 29
     }
   ],

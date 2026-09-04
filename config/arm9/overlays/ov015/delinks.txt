@@ -52,7 +52,7 @@ src/_ZN14KnockDownPlank13InitResourcesEv.cpp:
     complete
     .text start:0x02111960 end:0x02111b68
 
-src/daObjBk_Botaosi_c_classInit.c:
+src/d_a_obj_bk_botaosi.c:
     complete
     .text start:0x02111b68 end:0x02111ba0
 
@@ -148,11 +148,11 @@ src/_ZN9MovingBar13InitResourcesEv.cpp:
     complete
     .text start:0x021120fc end:0x02112230
 
-src/MovingBarBig_Spawn.c:
+src/d_a_obj_bk_dossunbar_bk_dossunbar_l.c:
     complete
     .text start:0x02112230 end:0x02112260
 
-src/MovingBarSmall_Spawn.c:
+src/d_a_obj_bk_dossunbar_bk_dossunbar_s.c:
     complete
     .text start:0x02112260 end:0x02112290
 
@@ -200,7 +200,7 @@ src/func_ov015_021128f8.c:
     complete
     .text start:0x021128f8 end:0x0211290c
 
-src/daObjBk_Lift_c_classInit.c:
+src/d_a_obj_bk_lift.c:
     complete
     .text start:0x0211290c end:0x02112944
 

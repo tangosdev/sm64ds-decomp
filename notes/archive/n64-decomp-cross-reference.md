@@ -332,7 +332,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 **Two traps in this table:**
 
 1. **`Bookend` → `BookShot`.** The community actor-ID label and the ROM-embedded mangled class name
-   disagree. `src/Bookend_Spawn.c` has `VT0=_ZTV8BookShot`. Trust the mangled name.
+   disagree. `src/d_a_book_killer_book.c` has `VT0=_ZTV8BookShot`. Trust the mangled name.
 2. **`UkikiThief` is not a class.** `UkikiThief_Spawn` (`ov030/symbols.txt:60`) instantiates
    `_ZTV13RollingLogTtm` — identical-code folding. `notes/actor-naming.md:31-33` already warns
    that shared functions are "claimed by the lowest actor id." Re-derive its real behavior; do not

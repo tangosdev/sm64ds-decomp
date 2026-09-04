@@ -71,7 +71,7 @@
       "symbol": "daObjC1Hikari_c_classInit",
       "address": "0x02111dd0",
       "size": "0x00000040",
-      "legacy_source": "src/daObjC1Hikari_c_classInit.c",
+      "legacy_source": "src/d_a_obj_c1_hikari.c",
       "ordinal": 7
     }
   ],

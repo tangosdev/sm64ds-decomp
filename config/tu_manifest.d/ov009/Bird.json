@@ -106,7 +106,7 @@
       "symbol": "daSBird_c_classInit",
       "address": "0x02111a30",
       "size": "0x00000040",
-      "legacy_source": "src/Bird_Spawn.c",
+      "legacy_source": "src/d_a_s_bird.c",
       "ordinal": 12
     }
   ],

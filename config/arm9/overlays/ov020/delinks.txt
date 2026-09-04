@@ -112,19 +112,19 @@ src/_ZN8BookShot13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021127cc end:0x021127f4
 
-src/func_ov020_021127f4.c:
+src/d_a_book_book_switch.c:
     complete
     .text start:0x021127f4 end:0x02112850
 
-src/daBookGen_c_classInit.c:
+src/d_a_book_gen.c:
     complete
     .text start:0x02112850 end:0x02112880
 
-src/Bookend_Spawn.c:
+src/d_a_book_killer_book.c:
     complete
     .text start:0x02112880 end:0x021128dc
 
-src/BookShot_Spawn.c:
+src/d_a_book_shoot_book.c:
     complete
     .text start:0x021128dc end:0x02112938
 
@@ -180,7 +180,7 @@ src/_ZN12HauntedChair13InitResourcesEv.cpp:
     complete
     .text start:0x021133b0 end:0x02113494
 
-src/HauntedChair_Spawn.c:
+src/d_a_chair.c:
     complete
     .text start:0x02113494 end:0x021134e4
 

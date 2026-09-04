@@ -211,28 +211,28 @@
       "symbol": "daBook_c_classInit_BOOK_SWITCH",
       "address": "0x021127f4",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov020_021127f4.c",
+      "legacy_source": "src/d_a_book_book_switch.c",
       "ordinal": 27
     },
     {
       "symbol": "daBookGen_c_classInit",
       "address": "0x02112850",
       "size": "0x00000030",
-      "legacy_source": "src/daBookGen_c_classInit.c",
+      "legacy_source": "src/d_a_book_gen.c",
       "ordinal": 28
     },
     {
       "symbol": "daBook_c_classInit_KILLER_BOOK",
       "address": "0x02112880",
       "size": "0x0000005c",
-      "legacy_source": "src/Bookend_Spawn.c",
+      "legacy_source": "src/d_a_book_killer_book.c",
       "ordinal": 29
     },
     {
       "symbol": "daBook_c_classInit_SHOOT_BOOK",
       "address": "0x021128dc",
       "size": "0x0000005c",
-      "legacy_source": "src/BookShot_Spawn.c",
+      "legacy_source": "src/d_a_book_shoot_book.c",
       "ordinal": 30
     }
   ],

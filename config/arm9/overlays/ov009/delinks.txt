@@ -48,7 +48,7 @@ src/_ZN4Bird13InitResourcesEv.cpp:
     complete
     .text start:0x0211197c end:0x02111a30
 
-src/Bird_Spawn.c:
+src/d_a_s_bird.c:
     complete
     .text start:0x02111a30 end:0x02111a70
 

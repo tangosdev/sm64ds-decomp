@@ -45,7 +45,7 @@
  *   [26] 0x02112360  src/_ZN13RacingPenguin6RenderEv.cpp
  *   [27] 0x02112394  src/_ZN13RacingPenguin8BehaviorEv.cpp
  *   [28] 0x021123d4  src/_ZN13RacingPenguin13InitResourcesEv.cpp
- *   [29] 0x021125bc  src/RacingPenguin_Spawn.c
+ *   [29] 0x021125bc  src/d_a_pg_rcer.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

@@ -22,7 +22,7 @@
  *   [3] 0x02111540  src/_ZN13BasementWater6RenderEv.cpp
  *   [4] 0x02111574  src/_ZN13BasementWater8BehaviorEv.cpp
  *   [5] 0x0211164c  src/_ZN13BasementWater13InitResourcesEv.cpp
- *   [6] 0x02111730  src/daObjC0Water_c_classInit.c
+ *   [6] 0x02111730  src/d_a_obj_c0_water.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
