@@ -4,37 +4,10 @@
     .ctor       start:0x02114dd0 end:0x02114ddc kind:rodata align:4
     .data       start:0x02114de0 end:0x02115c80 kind:data align:32
     .bss        start:0x02115c80 end:0x02115ec0 kind:bss align:32
-src/_ZN13daObjHmBskt_cD1Ev.cpp:
+src/actors/d_a_obj_hm_bskt.cpp:
     complete
-    .text start:0x021111a0 end:0x021111ec
-
-src/_ZN13daObjHmBskt_cD0Ev.cpp:
-    complete
-    .text start:0x021111ec end:0x0211124c
-
-src/func_ov030_0211124c.cpp:
-    complete
-    .text start:0x0211124c end:0x0211130c
-
-src/_ZN13daObjHmBskt_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211130c end:0x02111350
-
-src/_ZN13daObjHmBskt_c6RenderEv.cpp:
-    complete
-    .text start:0x02111350 end:0x02111384
-
-src/_ZN13daObjHmBskt_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02111384 end:0x02111410
-
-src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111410 end:0x02111524
-
-src/daObjHmBskt_c_classInit.c:
-    complete
-    .text start:0x02111524 end:0x0211155c
+    .text start:0x021111a0 end:0x0211155c
+    .data start:0x02115934 end:0x021159f4
 
 src/_ZN13RollingLogTtmD1Ev.cpp:
     complete

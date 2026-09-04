@@ -1507,6 +1507,14 @@
     "src/actors/d_sc_game_over.cpp#_ZN13dScGameOver_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_sc_game_over.cpp#_ZN13dScGameOver_c16CleanupResourcesEv": "tangosdev",
     "src/actors/d_sc_game_over.cpp#_ZN13dScGameOver_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_sc_game_over.cpp#dScGameOver_c_classInit": "github-actions[bot]"
+    "src/actors/d_sc_game_over.cpp#dScGameOver_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD1Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#func_ov030_0211124c": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c6RenderEv": "tangosdev",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#_ZN13daObjHmBskt_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_hm_bskt.cpp#daObjHmBskt_c_classInit": "github-actions[bot]"
   }
 }
