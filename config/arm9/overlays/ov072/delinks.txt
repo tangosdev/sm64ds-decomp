@@ -116,7 +116,7 @@ src/_ZN11SnowmanBody13InitResourcesEv.cpp:
     complete
     .text start:0x0211fd54 end:0x0211fedc
 
-src/SnowmanBody_Spawn.c:
+src/d_a_bg_snm_bdy.c:
     complete
     .text start:0x0211fedc end:0x0211ff34
 
@@ -196,7 +196,7 @@ src/_ZN11SnowmanHead13InitResourcesEv.cpp:
     complete
     .text start:0x0212069c end:0x021207d4
 
-src/SnowmanHead_Spawn.c:
+src/d_a_bg_snm_hed.c:
     complete
     .text start:0x021207d4 end:0x02120824
 
@@ -329,7 +329,7 @@ src/_ZN11BabyPenguin13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02121fa0 end:0x02121fac
 
-src/BabyPenguin_Spawn.c:
+src/d_a_pg_bby.c:
     complete
     .text start:0x02121fac end:0x02121ffc
 

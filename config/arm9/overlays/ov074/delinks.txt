@@ -211,11 +211,11 @@ src/func_ov074_02122634.cpp:
     complete
     .text start:0x02122634 end:0x02122764
 
-src/ExplosionGoomba_Spawn.cpp:
+src/d_a_kuri_king_kuriking_vanish.cpp:
     complete
     .text start:0x02122764 end:0x02122838
 
-src/Goomboss_Spawn.cpp:
+src/d_a_kuri_king_kuriking.cpp:
     complete
     .text start:0x02122838 end:0x0212290c
 

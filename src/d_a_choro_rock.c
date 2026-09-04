@@ -1,4 +1,4 @@
-// @symbol MontyMoleRock_Spawn
+// @symbol daChoro_Rock_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -8,7 +8,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13MontyMoleRock */
-int *MontyMoleRock_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daChoro_Rock_c through RTTI,
+ * allocation size, vtable identity, and the CHORO_ROCK registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MontyMoleRock_Spawn. */
+int *daChoro_Rock_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(852);
     if (p) {

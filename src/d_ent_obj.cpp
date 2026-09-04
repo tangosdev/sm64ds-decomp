@@ -13,8 +13,12 @@ extern void* _ZTV14UnknownVsEntry;
 extern void _ZN15UnknownVsPlayerD1Ev(void);
 extern void _ZN15UnknownVsPlayerC1Ev(void);
 }
-extern "C" UnknownVsEntry* UnknownVsEntry_Spawn(void);
-extern "C" UnknownVsEntry* UnknownVsEntry_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves dEntObj_c through RTTI,
+ * allocation size, vtable identity, and the ENTRY_OBJECT registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: UnknownVsEntry_Spawn. */
+extern "C" UnknownVsEntry* dEntObj_c_classInit(void);
+extern "C" UnknownVsEntry* dEntObj_c_classInit(void){
   UnknownVsEntry* p = (UnknownVsEntry*)_ZN7fBase_cnwEj(sizeof(UnknownVsEntry));
   if (p) {
     _ZN7fBase_cC2Ev(p);

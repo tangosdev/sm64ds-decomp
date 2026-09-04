@@ -139,11 +139,11 @@ src/_ZN5Whomp8BehaviorEv.cpp:
 src/_ZN5Whomp13InitResourcesEv.cpp:
     .text start:0x02126164 end:0x02126588
 
-src/WhompKing_Spawn.c:
+src/d_a_btn_batanking.c:
     complete
     .text start:0x02126588 end:0x021265e8
 
-src/Whomp_Spawn.c:
+src/d_a_btn_batan.c:
     complete
     .text start:0x021265e8 end:0x02126648
 
@@ -187,7 +187,7 @@ src/_ZN10BulletBill13InitResourcesEv.cpp:
     complete
     .text start:0x02126c44 end:0x02126d64
 
-src/BulletBill_Spawn.c:
+src/d_a_klr.c:
     complete
     .text start:0x02126d64 end:0x02126dbc
 
@@ -223,7 +223,7 @@ src/_ZN11BillBlaster13InitResourcesEv.cpp:
     complete
     .text start:0x02127090 end:0x021271b4
 
-src/daObjBkKillerdai_c_classInit.c:
+src/d_a_obj_bk_killerdai.c:
     complete
     .text start:0x021271b4 end:0x021271e4
 
@@ -259,11 +259,11 @@ src/_ZN12FortressWall13InitResourcesEv.cpp:
     complete
     .text start:0x02127494 end:0x0212757c
 
-src/FortressWall_Spawn.c:
+src/d_a_obj_bk_kabe_bk_kabe01.c:
     complete
     .text start:0x0212757c end:0x021275ac
 
-src/FortressWallBreakable_Spawn.c:
+src/d_a_obj_bk_kabe_bk_kabe00.c:
     complete
     .text start:0x021275ac end:0x021275dc
 

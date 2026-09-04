@@ -1,4 +1,4 @@
-// @symbol BulletBill_Spawn
+// @symbol daKlr_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10BulletBill */
-int *BulletBill_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daKlr_c through RTTI,
+ * allocation size, vtable identity, and the KILLER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BulletBill_Spawn. */
+int *daKlr_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(992);
     if (p) {

@@ -1,4 +1,4 @@
-// @symbol SnowmanBody_Spawn
+// @symbol daBgSnmBdy_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -10,7 +10,11 @@
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11SnowmanBody */
 extern void _ZN7PathPtrC1Ev(void *);
-int *SnowmanBody_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBgSnmBdy_c through RTTI,
+ * allocation size, vtable identity, and the BIG_SNOWMAN_BODY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SnowmanBody_Spawn. */
+int *daBgSnmBdy_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {

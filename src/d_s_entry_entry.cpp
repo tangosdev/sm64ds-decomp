@@ -17,7 +17,11 @@ extern void _ZN10dScEntry_c6icon_cC1Ev(void);
 extern void _ZN12OamAnimationD1Ev(void);
 extern void _ZN12OamAnimationC1Ev(void);
 
-void* func_ov075_0211a854(void)
+/* Reconstructed source-style name: SM64DS proves dScEntry_c through RTTI,
+ * allocation size, vtable identity, and the ENTRY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov075_0211a854. */
+void* dScEntry_c_classInit_ENTRY(void)
 {
     /* The raw byte pointer preserves the ROM factory's address-expression
        tree; typed member expressions fold five instructions in mwccarm. */

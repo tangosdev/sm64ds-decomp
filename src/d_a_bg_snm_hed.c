@@ -1,4 +1,4 @@
-// @symbol SnowmanHead_Spawn
+// @symbol daBgSnmHed_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11SnowmanHead */
-int *SnowmanHead_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBgSnmHed_c through RTTI,
+ * allocation size, vtable identity, and the BIG_SNOWMAN_HEAD registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SnowmanHead_Spawn. */
+int *daBgSnmHed_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(824);
     if (p) {

@@ -128,7 +128,7 @@ src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02124aa4 end:0x02124b04
 
-src/Lakitu_Spawn.c:
+src/d_a_jgm.c:
     complete
     .text start:0x02124b04 end:0x02124b64
 
@@ -264,7 +264,7 @@ src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02126194 end:0x021261f4
 
-src/Spiny_Spawn.c:
+src/d_a_tgz.c:
     complete
     .text start:0x021261f4 end:0x0212624c
 
@@ -352,7 +352,7 @@ src/_ZN7HeaveHo13InitResourcesEv.cpp:
     complete
     .text start:0x0212706c end:0x021271d4
 
-src/HeaveHo_Spawn.c:
+src/d_a_popoi.c:
     complete
     .text start:0x021271d4 end:0x02127230
 

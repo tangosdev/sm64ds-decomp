@@ -95,6 +95,14 @@
   },
   {
    "file": "notes/bgobject-provenance.md",
+   "ref": "src/FortressWallBreakable_Spawn.c"
+  },
+  {
+   "file": "notes/bgobject-provenance.md",
+   "ref": "src/FortressWall_Spawn.c"
+  },
+  {
+   "file": "notes/bgobject-provenance.md",
    "ref": "src/func_ov025_02111898.c"
   },
   {

@@ -6,7 +6,11 @@ extern void _ZN15TextureSequenceC1Ev(void *);
 extern void _ZN11ShadowModelC1Ev(void *);
 extern void _ZN10dBgW_KcMbgC1Ev(void *);
 extern int _ZTV5Whomp[];
-int *WhompKing_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBtn_c through RTTI,
+ * allocation size, vtable identity, and the BATANKING registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: WhompKing_Spawn. */
+int *daBtn_c_classInit_BATANKING(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(0x610);
     if (p) {

@@ -168,7 +168,7 @@ src/_ZN14UnknownVsEntry13InitResourcesEv.cpp:
     complete
     .text start:0x021156e0 end:0x021159f4
 
-src/UnknownVsEntry_Spawn.cpp:
+src/d_ent_obj.cpp:
     complete
     .text start:0x021159f4 end:0x02115a88
 
@@ -483,7 +483,7 @@ src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a740
 
-src/func_ov075_0211a740.cpp:
+src/d_s_entry_result.cpp:
     complete
     .text start:0x0211a740 end:0x0211a834
 
@@ -495,7 +495,7 @@ src/_ZN10dScEntry_c6icon_cC1Ev.cpp:
     complete
     .text start:0x0211a838 end:0x0211a854
 
-src/func_ov075_0211a854.cpp:
+src/d_s_entry_entry.cpp:
     complete
     .text start:0x0211a854 end:0x0211a948
 

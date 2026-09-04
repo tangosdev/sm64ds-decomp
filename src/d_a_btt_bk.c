@@ -1,4 +1,4 @@
-// @symbol CrazedCrate_Spawn
+// @symbol daBttBk_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11CrazedCrate */
-int *CrazedCrate_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBttBk_c through RTTI,
+ * allocation size, vtable identity, and the BATTA_BLOCK registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: CrazedCrate_Spawn. */
+int *daBttBk_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(888);
     if (p) {

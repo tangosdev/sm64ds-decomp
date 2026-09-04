@@ -1,4 +1,4 @@
-// @symbol KingBobOmb_Spawn
+// @symbol daBombking_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_BlendModelAnim.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10KingBobOmb */
-int *KingBobOmb_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBombking_c through RTTI,
+ * allocation size, vtable identity, and the BOMBKING registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: KingBobOmb_Spawn. */
+int *daBombking_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1292);
     if (p) {

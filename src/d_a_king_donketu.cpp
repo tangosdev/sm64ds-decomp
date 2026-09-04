@@ -12,7 +12,11 @@ extern int _ZTV11ChiefChilly;
 extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" void func_0203d384(void);
 
-extern "C" void* ChiefChilly_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daKing_Donketu_c through RTTI,
+ * allocation size, vtable identity, and the KING_DONKETU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: ChiefChilly_Spawn. */
+extern "C" void* daKing_Donketu_c_classInit(void)
 {
     char* p = (char*)_ZN7fBase_cnwEj(sizeof(struct ChiefChilly));
     if (p) {

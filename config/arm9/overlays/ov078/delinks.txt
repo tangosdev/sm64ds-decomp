@@ -206,7 +206,7 @@ src/_ZN10KingBobOmb16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265f4 end:0x021265fc
 
-src/KingBobOmb_Spawn.c:
+src/d_a_bombking.c:
     complete
     .text start:0x021265fc end:0x02126660
 
