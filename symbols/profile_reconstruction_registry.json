@@ -2927,7 +2927,7 @@
       "factory_module": "ov017",
       "factory_address": "0x02111480",
       "current_factory_name": "daObjKsWater_c_classInit",
-      "current_factory_file": "src/daObjKsWater_c_classInit.c",
+      "current_factory_file": "src/actors/d_a_obj_ks_water.cpp",
       "proposed_factory_name": "daObjKsWater_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000340",

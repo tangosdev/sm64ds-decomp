@@ -724,7 +724,7 @@ their headers were `dActor_c`'s / `dBgActor_c`'s / `fBase_c`'s own storage resta
 flat by the C twin, and were repointed to the names those headers already give the
 same offsets:
 
-* `include/ShipWater.h` — `mAngleY` (0x08e), `mClipOffsetY`, `mClipRadius`,
+* `include/daObjKsWater_c.h` — `mAngleY` (0x08e), `mClipOffsetY`, `mClipRadius`,
   `mClipDistance`, `mFarDistance` (0x0b4..0x0c0), `mClipResult` (0x0c4),
   `mDeathTableID` (0x0ce).
 * `include/daObjC1_Trap_c.h` — its production class TU uses inherited `mPosX/Y/Z`

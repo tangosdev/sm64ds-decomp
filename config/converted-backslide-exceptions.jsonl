@@ -248,3 +248,6 @@
 {"path": "src/_ZN8IceSheet8BehaviorEv.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
 {"path": "src/_ZN8IceSheetD0Ev.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
 {"path": "src/_ZN8IceSheetD1Ev.cpp", "reason": "ov018/daObjIceBoard_c promoted into src/actors/d_a_obj_ice_board.cpp; legacy one-function sources consolidated, not lost"}
+{"path": "src/_ZN9ShipWater16CleanupResourcesEv.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN9ShipWaterD0Ev.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}
+{"path": "src/_ZN9ShipWaterD1Ev.cpp", "reason": "ov017/daObjKsWater_c promoted into a single C++ TU (src/actors/d_a_obj_ks_water.cpp); the legacy one-function sources it consolidates are gone."}

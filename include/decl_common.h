@@ -791,7 +791,6 @@ extern int _ZTV9PowerStar[];
 extern int _ZTV11PowerFlower[];
 extern int _ZTV9RabbitKey[];
 extern int _ZTV9SeesawBob[];
-extern int _ZTV9ShipWater[];
 extern int _ZTV9Spindrift[];
 extern int _ZTV9Whirlpool[];
 extern int _ZTV9TinyWater[];
