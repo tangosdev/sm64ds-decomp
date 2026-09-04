@@ -13,6 +13,15 @@
  * LAYOUT, not this class's, and were already named from include/dActor_c.h by
  * offset.
  *
+ *
+ * SM64DS proves this class as daOnms_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daOnms_c_classInit at 0x02132018 (historical alias ToxBox_Spawn) installs
+ * this class's cartridge vtable. It backs the ONIMASU registry profile,
+ * whose descriptor at 0x021322ac is reconstructed as g_profile_ONIMASU.
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef TOXBOX_H
 #define TOXBOX_H

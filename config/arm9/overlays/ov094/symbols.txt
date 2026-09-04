@@ -19,7 +19,7 @@ _ZN10HootTheOwl16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02136428
 _ZN10HootTheOwl6RenderEv kind:function(arm,size=0x4c) addr:0x0213642c
 _ZN10HootTheOwl8BehaviorEv kind:function(arm,size=0x1bc) addr:0x02136478
 _ZN10HootTheOwl13InitResourcesEv kind:function(arm,size=0x164) addr:0x02136634
-HootTheOwl_Spawn kind:function(arm,size=0x50) addr:0x02136798
+daOwl_c_classInit kind:function(arm,size=0x50) addr:0x02136798
 __sinit_ov094_021367e8 kind:function(arm,size=0x1d0) addr:0x021367e8
 .p__sinit_ov094_021367e8 kind:data(word) addr:0x021369b8
 data_ov094_021369c0 kind:data(any) addr:0x021369c0
@@ -35,7 +35,7 @@ data_ov094_02136a08 kind:data(any) addr:0x02136a08
 _ZTS7daOwl_c kind:data(any) addr:0x02136a10
 data_ov094_02136a1c kind:data(any) addr:0x02136a1c
 _ZTI7daOwl_c kind:data(any) addr:0x02136a28
-HootTheOwl_SpawnInfo kind:data(any) addr:0x02136a34 ambiguous
+g_profile_OWL kind:data(any) addr:0x02136a34 ambiguous
 _ZTV10HootTheOwl kind:data(any) addr:0x02136a58
 _ZTV7daOwl_c kind:data(any) addr:0x02136a58
 data_ov094_02136ae0 kind:bss addr:0x02136ae0

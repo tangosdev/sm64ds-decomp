@@ -11,6 +11,17 @@
  * fBase_c::param1, mActorID -> fBase_c::actorID, unk_074 -> dActor_c::mCamSpacePosX,
  * unk_0b0 -> dActor_c::mFlags), confirmed against include/dActor_c.h and
  * include/fBase_c.h and updated at every call site.
+ *
+ * SM64DS proves this class as daObjRotateUpdownLift_c through RTTI,
+ * allocation size and vtable identity. The factory and profile spellings
+ * below are reconstructed source-style names -- evidence-bounded proposals,
+ * not recovered SM64DS symbols.
+ *
+ * daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT at 0x02131ba4 (historical
+ * alias RotatingUpDownPlatformUtm_Spawn) allocates 0x3a8 and installs this
+ * class's cartridge vtable. It backs the HS_UPDOWN_LIFT registry profile,
+ * whose descriptor at 0x02134c14 is reconstructed as
+ * g_profile_HS_UPDOWN_LIFT.
  */
 #ifndef ROTATINGUPDOWNPLATFORMUTM_H
 #define ROTATINGUPDOWNPLATFORMUTM_H

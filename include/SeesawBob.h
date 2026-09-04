@@ -12,6 +12,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daObjSeesaw_c through RTTI, allocation size
+ * and vtable identity. The factory and profile spellings below are
+ * reconstructed source-style names -- evidence-bounded proposals, not
+ * recovered SM64DS symbols.
+ *
+ * daObjSeesaw_c_classInit_BOMB_SEESAW at 0x02135f94 (historical alias
+ * SeesawBob_Spawn) allocates 0x328 and installs this class's cartridge
+ * vtable. It backs the BOMB_SEESAW registry profile, whose descriptor at
+ * 0x02137484 is reconstructed as g_profile_BOMB_SEESAW.
  */
 
 #ifdef __cplusplus

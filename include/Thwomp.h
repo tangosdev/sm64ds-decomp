@@ -54,6 +54,16 @@
  * it, in the same function that calls Animation::Advance on the same sub-object.
  * It is spelled through the member now, so nothing describes those four bytes
  * twice.
+ *
+ * SM64DS proves this class as daDsn_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daDsn_c_classInit at 0x02132cb8 (historical alias Thwomp_Spawn) allocates
+ * 0x3a4 and installs this class's cartridge vtable. It backs the DOSUN
+ * registry profile, whose descriptor at 0x02135150 is reconstructed as
+ * g_profile_DOSUN.
  */
 
 #ifdef __cplusplus

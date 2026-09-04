@@ -10,6 +10,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daHyuhyu_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daHyuhyu_c_classInit at 0x021344a0 (historical alias Fwoosh_Spawn)
+ * allocates 0x378 and installs this class's cartridge vtable. It backs the
+ * HYUHYU registry profile, whose descriptor at 0x02135388 is reconstructed
+ * as g_profile_HYUHYU.
  */
 
 #ifdef __cplusplus

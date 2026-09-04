@@ -5,6 +5,16 @@
 #include "dBgW_KcMbg.h"
 
 /* A dBgActor_c: model at 0xd4, moving mesh collider at 0x124, clsn matrix at
+ *
+ * SM64DS proves this class as daObjSimpleLift_c through RTTI, allocation
+ * size and vtable identity. The factory and profile spellings below are
+ * reconstructed source-style names -- evidence-bounded proposals, not
+ * recovered SM64DS symbols.
+ *
+ * daObjSimpleLift_c_classInit_BK_TRANSBAR at 0x021327e8 (historical alias
+ * SlidingPlatformWf_Spawn) allocates 0x330 and installs this class's
+ * cartridge vtable. It backs the BK_TRANSBAR registry profile, whose
+ * descriptor at 0x02135008 is reconstructed as g_profile_BK_TRANSBAR.
  * 0x2ec, all inherited. Layout evidence: notes/platform-provenance.md. */
 
 #ifdef __cplusplus

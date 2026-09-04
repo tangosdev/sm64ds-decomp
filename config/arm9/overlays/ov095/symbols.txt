@@ -10,13 +10,13 @@ _ZN9SeesawBob8BehaviorEv kind:function(arm,size=0x124) addr:0x02135a50
 _ZN9SeesawBob13InitResourcesEv kind:function(arm,size=0x168) addr:0x02135b74
 func_ov095_02135cdc kind:function(arm,size=0x1b4) addr:0x02135cdc
 func_ov095_02135e90 kind:function(arm,size=0x14) addr:0x02135e90
-SeesawRr_Spawn kind:function(arm,size=0x30) addr:0x02135ea4
-SeesawBsZigZag_Spawn kind:function(arm,size=0x30) addr:0x02135ed4
-SeesawBsPlank_Spawn kind:function(arm,size=0x30) addr:0x02135f04
-SeesawBfs_Spawn kind:function(arm,size=0x30) addr:0x02135f34
-SeesawBdw_Spawn kind:function(arm,size=0x30) addr:0x02135f64
-SeesawBob_Spawn kind:function(arm,size=0x30) addr:0x02135f94
-SeesawUtm_Spawn kind:function(arm,size=0x30) addr:0x02135fc4
+daObjSeesaw_c_classInit_RC_SEESAW kind:function(arm,size=0x30) addr:0x02135ea4
+daObjSeesaw_c_classInit_KM3_YOKOSEESAW kind:function(arm,size=0x30) addr:0x02135ed4
+daObjSeesaw_c_classInit_KM3_SEESAW kind:function(arm,size=0x30) addr:0x02135f04
+daObjSeesaw_c_classInit_KM2_YOKOSEESAW kind:function(arm,size=0x30) addr:0x02135f34
+daObjSeesaw_c_classInit_KM1_SEESAW kind:function(arm,size=0x30) addr:0x02135f64
+daObjSeesaw_c_classInit_BOMB_SEESAW kind:function(arm,size=0x30) addr:0x02135f94
+daObjSeesaw_c_classInit_SEESAW kind:function(arm,size=0x30) addr:0x02135fc4
 _ZN13UpDownLiftBbhD1Ev kind:function(arm,size=0x44) addr:0x02135ff4
 _ZN13UpDownLiftBbhD0Ev kind:function(arm,size=0x58) addr:0x02136038
 func_ov095_02136090 kind:function(arm,size=0x74) addr:0x02136090
@@ -30,14 +30,14 @@ _ZN13UpDownLiftBbh8BehaviorEv kind:function(arm,size=0x100) addr:0x021364d8
 _ZN13UpDownLiftBbh13InitResourcesEv kind:function(arm,size=0x18c) addr:0x021365d8
 func_ov095_02136764 kind:function(arm,size=0x24) addr:0x02136764
 func_ov095_02136788 kind:function(arm,size=0x14) addr:0x02136788
-UpDownLiftRr_Spawn kind:function(arm,size=0x30) addr:0x0213679c
-UpDownLiftHmc_Spawn kind:function(arm,size=0x30) addr:0x021367cc
-UpDownLiftBbh_Spawn kind:function(arm,size=0x30) addr:0x021367fc
+daUdlift_c_classInit_RC_RIFT02 kind:function(arm,size=0x30) addr:0x0213679c
+daUdlift_c_classInit_UDLIFT kind:function(arm,size=0x30) addr:0x021367cc
+daUdlift_c_classInit_UDLIFT_TERESA kind:function(arm,size=0x30) addr:0x021367fc
 _ZN12FlamethrowerD1Ev kind:function(arm,size=0x58) addr:0x0213682c
 _ZN12FlamethrowerD0Ev kind:function(arm,size=0x6c) addr:0x02136884
 _ZN12Flamethrower8BehaviorEv kind:function(arm,size=0x470) addr:0x021368f0
 _ZN12Flamethrower13InitResourcesEv kind:function(arm,size=0x174) addr:0x02136d60
-Flamethrower_Spawn kind:function(arm,size=0x84) addr:0x02136ed4
+daObjFlamethrower_c_classInit kind:function(arm,size=0x84) addr:0x02136ed4
 data_ov095_02136f58 kind:data(any) addr:0x02136f58
 data_ov095_02136f68 kind:data(any) addr:0x02136f68
 data_ov095_02136f74 kind:data(any) addr:0x02136f74
@@ -50,15 +50,15 @@ __sinit_ov095_0213722c kind:function(arm,size=0x188) addr:0x0213722c
 .p__sinit_ov095_0213722c kind:data(word) addr:0x021373b8
 _ZTI13daObjSeesaw_c kind:data(any) addr:0x021373c0
 _ZTS13daObjSeesaw_c kind:data(any) addr:0x021373cc
-SeesawUtm_SpawnInfo kind:data(any) addr:0x021373dc ambiguous
-SeesawBdw_SpawnInfo kind:data(any) addr:0x021373f8 ambiguous
+g_profile_SEESAW kind:data(any) addr:0x021373dc ambiguous
+g_profile_KM1_SEESAW kind:data(any) addr:0x021373f8 ambiguous
 data_ov095_021373fc kind:data(any) addr:0x021373fc ambiguous
-SeesawBfs_SpawnInfo kind:data(any) addr:0x02137414 ambiguous
-SeesawBsPlank_SpawnInfo kind:data(any) addr:0x02137430 ambiguous
-SeesawBsZigZag_SpawnInfo kind:data(any) addr:0x0213744c ambiguous
+g_profile_KM2_YOKOSEESAW kind:data(any) addr:0x02137414 ambiguous
+g_profile_KM3_SEESAW kind:data(any) addr:0x02137430 ambiguous
+g_profile_KM3_YOKOSEESAW kind:data(any) addr:0x0213744c ambiguous
 data_ov095_02137454 kind:data(any) addr:0x02137454 ambiguous
-SeesawRr_SpawnInfo kind:data(any) addr:0x02137468 ambiguous
-SeesawBob_SpawnInfo kind:data(any) addr:0x02137484 ambiguous
+g_profile_RC_SEESAW kind:data(any) addr:0x02137468 ambiguous
+g_profile_BOMB_SEESAW kind:data(any) addr:0x02137484 ambiguous
 data_ov095_021374a0 kind:data(any) addr:0x021374a0
 data_ov095_021374a4 kind:data(any) addr:0x021374a4
 data_ov095_021374a8 kind:data(any) addr:0x021374a8
@@ -71,13 +71,13 @@ data_ov095_0213759c kind:data(any) addr:0x0213759c
 data_ov095_021375a4 kind:data(any) addr:0x021375a4
 _ZTI10daUdlift_c kind:data(any) addr:0x021375b0
 _ZTS10daUdlift_c kind:data(any) addr:0x021375bc
-UpDownLiftBbh_SpawnInfo kind:data(any) addr:0x021375cc ambiguous
-UpDownLiftHmc_SpawnInfo kind:data(any) addr:0x021375e8 ambiguous
-UpDownLiftRr_SpawnInfo kind:data(any) addr:0x02137604 ambiguous
+g_profile_UDLIFT_TERESA kind:data(any) addr:0x021375cc ambiguous
+g_profile_UDLIFT kind:data(any) addr:0x021375e8 ambiguous
+g_profile_RC_RIFT02 kind:data(any) addr:0x02137604 ambiguous
 _ZTV13UpDownLiftBbh kind:data(any) addr:0x02137628
 _ZTI19daObjFlamethrower_c kind:data(any) addr:0x021376a8
 _ZTS19daObjFlamethrower_c kind:data(any) addr:0x021376b4
-Flamethrower_SpawnInfo kind:data(any) addr:0x021376cc ambiguous
+g_profile_OBJ_FLAMETHROWER kind:data(any) addr:0x021376cc ambiguous
 _ZTV12Flamethrower kind:data(any) addr:0x021376f0
 data_ov095_02137780 kind:bss addr:0x02137780
 data_ov095_02137788 kind:bss addr:0x02137788

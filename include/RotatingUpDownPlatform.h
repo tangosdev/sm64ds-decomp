@@ -17,6 +17,16 @@
  * allocation.  That factory constructs PathPtr at +0x344.  The function
  * currently named RotatingUpDownPlatform_Spawn is not this constructor: its
  * bytes allocate 0x3a8 and construct RotatingUpDownPlatformUtm instead.
+ *
+ * SM64DS proves this class as daObjRotateUpdownLift_c through RTTI,
+ * allocation size and vtable identity. The factory and profile spellings
+ * below are reconstructed source-style names -- evidence-bounded proposals,
+ * not recovered SM64DS symbols.
+ *
+ * daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT at 0x02131bdc (historical
+ * alias RotatingUpDownPlatform_Spawn) allocates 0x3a8 and installs this
+ * class's cartridge vtable. It backs the UPDOWN_LIFT registry profile, whose
+ * descriptor at 0x02134bf8 is reconstructed as g_profile_UPDOWN_LIFT.
  */
 
 #ifdef __cplusplus

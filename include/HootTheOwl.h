@@ -33,6 +33,16 @@
  * `fBase_c::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f4; the difference is trailing space no source reads.
+ *
+ * SM64DS proves this class as daOwl_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daOwl_c_classInit at 0x02136798 (historical alias HootTheOwl_Spawn)
+ * allocates 0x3f8 and installs this class's cartridge vtable. It backs the
+ * OWL registry profile, whose descriptor at 0x02136a34 is reconstructed as
+ * g_profile_OWL.
  */
 
 #include "dEnemyBase_c.h"

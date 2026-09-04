@@ -20,7 +20,7 @@ _ZN6ToxBox16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02131bd8
 _ZN6ToxBox6RenderEv kind:function(arm,size=0x28) addr:0x02131c1c
 _ZN6ToxBox8BehaviorEv kind:function(arm,size=0x15c) addr:0x02131c44
 _ZN6ToxBox13InitResourcesEv kind:function(arm,size=0x278) addr:0x02131da0
-ToxBox_Spawn kind:function(arm,size=0x5c) addr:0x02132018
+daOnms_c_classInit kind:function(arm,size=0x5c) addr:0x02132018
 data_ov092_02132074 kind:data(any) addr:0x02132074
 data_ov092_02132080 kind:data(any) addr:0x02132080
 data_ov092_0213208c kind:data(any) addr:0x0213208c
@@ -39,7 +39,7 @@ data_ov092_02132280 kind:data(any) addr:0x02132280
 _ZTS8daOnms_c kind:data(any) addr:0x02132288
 data_ov092_02132294 kind:data(any) addr:0x02132294
 _ZTI8daOnms_c kind:data(any) addr:0x021322a0
-ToxBox_SpawnInfo kind:data(any) addr:0x021322ac
+g_profile_ONIMASU kind:data(any) addr:0x021322ac
 _ZTV6ToxBox kind:data(any) addr:0x021322d0
 data_ov092_02132350 kind:data(any) addr:0x02132350
 data_ov092_021323dc kind:data(any) addr:0x021323dc

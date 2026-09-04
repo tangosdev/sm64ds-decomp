@@ -21,6 +21,16 @@
  * actorID 0x83 -- and then, four statements later, tests it for `== 2`. That
  * branch (the one that raises mTopY by unk_096) is unreachable in the shipped
  * ROM. It is reproduced as written because the cartridge contains it.
+ *
+ * SM64DS proves this class as daUdlift_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daUdlift_c_classInit_UDLIFT_TERESA at 0x021367fc (historical alias
+ * UpDownLiftBbh_Spawn) allocates 0x34c and installs this class's cartridge
+ * vtable. It backs the UDLIFT_TERESA registry profile, whose descriptor at
+ * 0x021375cc is reconstructed as g_profile_UDLIFT_TERESA.
  */
 #ifndef UPDOWNLIFTBBH_H
 #define UPDOWNLIFTBBH_H
