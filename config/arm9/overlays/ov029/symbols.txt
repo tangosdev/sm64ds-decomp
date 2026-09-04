@@ -202,7 +202,7 @@ data_ov029_02113e88 kind:data(any) addr:0x02113e88 ambiguous
 _ZTI14daObjWcObj06_c kind:data(any) addr:0x02113ef4
 data_ov029_02113f00 kind:data(any) addr:0x02113f00
 _ZTS14daObjWcObj06_c kind:data(any) addr:0x02113f0c
-daObjWcObj06_c_SpawnInfo kind:data(any) addr:0x02113f20 ambiguous
+g_profile_WC_OBJ06 kind:data(any) addr:0x02113f20 ambiguous
 _ZTV14daObjWcObj06_c kind:data(any) addr:0x02113f44
 data_ov029_02113f4c kind:data(any) addr:0x02113f4c ambiguous
 data_ov029_02113f78 kind:data(any) addr:0x02113f78 ambiguous

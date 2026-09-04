@@ -1000,6 +1000,7 @@ ov029	0x02113e50	data_ov029_02113e50	daObjWc_Obj05_c_SpawnInfo	spawninfo (was Ca
 ov029	0x02113e50	daObjWc_Obj05_c_SpawnInfo	g_profile_WC_OBJ05	reconstructed profile global; literal ROM ID WC_OBJ05+registry role+later EAD lineage; exact SM64DS spelling not preserved (was CageLift_SpawnInfo)
 ov029	0x02113f20	data_ov029_02113f20	FloatOnWaterPlatformWdwRectangle_SpawnInfo	spawninfo
 ov029	0x02113f20	FloatOnWaterPlatformWdwRectangle_SpawnInfo	daObjWcObj06_c_SpawnInfo	renamed to the class's ROM RTTI identity; row recorded retroactively -- the rename reached symbols.txt without a ledger entry
+ov029	0x02113f20	daObjWcObj06_c_SpawnInfo	g_profile_WC_OBJ06	reconstructed profile global; literal ROM ID WC_OBJ06+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov029	0x02113ff4	data_ov029_02113ff4	daObjWc_Obj07_c_SpawnInfo	spawninfo
 ov029	0x02114018	data_ov029_02114018	_ZTV15daObjWc_Obj07_c	vtable alloc=? (was _ZTV32FloatOnWaterPlatformWdwRectangle)
 ov029	0x021140b8	data_ov029_021140b8	WDW_Water_SpawnInfo	spawninfo
