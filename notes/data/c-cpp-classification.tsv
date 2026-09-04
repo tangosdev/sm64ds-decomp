@@ -5982,7 +5982,7 @@ src/func_ov024_021112c0.c	WEAK-refs-only	ov024				1		None		-
 src/func_ov024_02111350.c	WEAK-refs-only	ov024				1		None		-
 src/func_ov024_021114c4.c	PURE-C	ov024				1		None		-
 src/func_ov025_02111344.c	PURE-C	ov025				1		None		-
-src/func_ov025_02111898.c	S1-stores-rom-vptr	ov025			stores _ZTV7daDgr_c	1		None	_ZTV7daDgr_c	-
+src/daDgr_c_classInit.c	S1-stores-rom-vptr	ov025			stores _ZTV7daDgr_c	1		None	_ZTV7daDgr_c	-
 src/func_ov025_021119f4.c	PURE-C	ov025				1		None		-
 src/func_ov025_02111e30.c	PURE-C	ov025				1		None		-
 src/func_ov025_021125dc.c	PURE-C	ov025				1		None		-
