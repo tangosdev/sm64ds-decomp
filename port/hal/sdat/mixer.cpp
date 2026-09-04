@@ -232,10 +232,12 @@ int sd_mix_alloc(int priority)
         }
         return -1;
     }
-    if (g_ch[best].active)
+    if (g_ch[best].active) {
         SD_VT("chan %2d STOLEN for priority %d (victim priority %d, atten "
               "%d dB10)\n", best, priority, g_ch[best].priority,
               chan_attenuation_db10(g_ch[best]));
+        sd_pd_end(best, g_ch[best].priority, "stolen");
+    }
     g_ch[best].active = 0;
     return best;
 }
@@ -312,17 +314,67 @@ void sd_mix_set_rate(int ch, double rate)
     if (rate > 0.0) g_ch[ch].step = rate;
 }
 
+/* The release rate this channel fades at, in the envelope's own units per
+   192 Hz tick, and how many ticks it needs to reach the -72.3 dB floor from
+   where it is now. A channel holds its slot and its full allocation priority
+   for every one of those ticks -- the ARM7 only zeroes the priority once the
+   floor is reached -- so this number is the difference between a tail and a
+   leak. At rate 1 the fade is 92544 ticks, which is 482 seconds. */
+int sd_mix_release_rate(int ch)
+{
+    if (ch < 0 || ch >= SD_CHANNELS) return 0;
+    return g_ch[ch].releaseRate;
+}
+
+int sd_mix_release_ticks(int ch)
+{
+    if (ch < 0 || ch >= SD_CHANNELS) return 0;
+    const int r = g_ch[ch].releaseRate;
+    if (r <= 0) return -1;                  /* never gets there */
+    const sd_s32 span = g_ch[ch].ampl - AMPL_MIN;
+    if (span <= 0) return 0;
+    return (int)(span / r) + 1;
+}
+
 void sd_mix_release(int ch, const char *why)
 {
     if (ch < 0 || ch >= SD_CHANNELS || !g_ch[ch].active) return;
-    SD_VT("chan %2d release: %s\n", ch, why);
+    SD_VT("chan %2d release: %s@", ch, why);
     g_ch[ch].state = ENV_RELEASE;
+    /* A RELEASED CHANNEL COLLAPSES TO PRIORITY 1. This is the ARM7's, not a
+       heuristic: ReleaseTrackChannels at 0x037FD948 does
+
+           strb r4, [r6, #0x22]   ; ch->priority = 1   (r4 = 1)
+           bl   0x037fc3b0        ; ch->envState  = 3  (RELEASE)
+
+       and the note-length expiry path reaches the same state through the steal
+       callback at 0x037FD744, whose reason-1 arm is "mov r1,#1 / strb r1,
+       [r5,#0x22]". Priority 0 is NOT the same thing and is not interchangeable:
+       the ROM reserves 0 for a channel that has been fully reclaimed, and uses
+       1 for one that is still audibly fading.
+
+       WHY IT MATTERS HERE. Releasing without dropping the priority is what made
+       the opening's music disappear for six seconds. A sound-effect voice is
+       allocated at cpr 96 + track 64 = 160. When its track ends, this port put
+       it in ENV_RELEASE but left it sitting at 160, so it went on outranking
+       the music -- which asks at 129 to 131 -- for the entire length of its
+       fade, and with a slow release rate that is many seconds. Sixteen of those
+       held every channel at once. On hardware the same voice is priority 1 the
+       moment its track ends: still sounding, but the cheapest thing in the
+       room, so the music takes the channel straight back.
+
+       The old allocator hid this. It had no volume tie-break and would steal
+       an equal-priority channel by index, so the music got channels back by
+       accident. Making the allocator faithful removed the accident and left
+       the real defect exposed. */
+    g_ch[ch].priority = 1;
 }
 
 void sd_mix_kill(int ch, const char *why)
 {
     if (ch < 0 || ch >= SD_CHANNELS) return;
     if (g_ch[ch].active) SD_VT("chan %2d kill: %s\n", ch, why);
+    sd_pd_end(ch, g_ch[ch].priority, "kill");
     g_ch[ch].active = 0;
     g_ch[ch].state = ENV_OFF;
     g_ch[ch].priority = 0;   /* stopped sorts first, as on the ARM7 */
@@ -357,6 +409,7 @@ void sd_mix_frame(void)
             c.ampl -= c.releaseRate;
             if (c.ampl <= AMPL_MIN) {
                 SD_VT("chan %2d off: envelope release reached silence\n", i);
+                sd_pd_end(i, c.priority, "relfloor");
                 c.active = 0;
                 c.state = ENV_OFF;
                 c.priority = 0;   /* reached the floor: priority 0 */
@@ -403,6 +456,7 @@ void sd_mix_render(sd_s16 *dst, int frames)
                     } else {
                         SD_VT("chan %2d off: sample ran out (%u samples, "
                               "no loop)\n", i, (unsigned)c.total);
+                        sd_pd_end(i, c.priority, "sampleend");
                         c.active = 0;
                         c.priority = 0;   /* stopped: priority 0 */
                         break;

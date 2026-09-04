@@ -127,6 +127,15 @@ void sd_mix_start(int ch, const SdatWave *w, const SdatNote *n,
 // finished" from "something took the channel away", and that difference is
 // the difference between working sound and sound that cuts out.
 void sd_mix_release(int ch, const char *why);   // enter the release phase
+// How fast a released channel is fading, and how many 192 Hz ticks it still
+// needs to reach the silence floor. It holds its slot AND its full allocation
+// priority for every one of them, so this is what tells a long tail apart from
+// a stuck voice.
+int sd_mix_release_rate(int ch);
+int sd_mix_release_ticks(int ch);
+// Pitch-dump record for a channel being freed. Defined in sseq.cpp, which owns
+// the dump and the frame counter.
+void sd_pd_end(int ch, int prio, const char *why);
 void sd_mix_kill(int ch, const char *why);      // immediate stop
 int  sd_mix_active(int ch);
 void sd_mix_set(int ch, int volume_db10, int pan, double rate);
