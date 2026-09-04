@@ -1,9 +1,10 @@
 {
   "id": "ov006/dScMgTrampoline2_c",
   "module": "ov006",
-  "source": "src_tu/actors/dScMgTrampoline2_c.cpp",
+  "source": "src/actors/dScMgTrampoline2_c.cpp",
   "promoted_source": "src/actors/dScMgTrampoline2_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous class and factory run: 0x021225ac..0x02124908, 42 function(s); the adjacent factory constructs dScMgTrampoline2_c and its TU-local 0x1d0-stride element constructor",
@@ -1274,8 +1275,16 @@
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
+      "droppedSections": [
+        32,
+        33
+      ],
+      "data": [
+        "_ZTI14dScMgD3DBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI14dScMgD3DBase_c"
+      ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1465,6 +1474,7 @@
     }
   },
   "partitioned_link": {
+    "supersededNote": "Historical partitioned-text experiment only. The live promoted shape uses production_mode intact-object and is proved by verification.linkcheck: both licensed ranges are identical, all 106 modules are exact, there are zero new symbol errors versus the stock control, and the packaged ROM matches stock. The refused state below is not the production gate.",
     "lastAttempt": {
       "result": "partitioned-text-refused",
       "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive non-text delinks entry, objisolate-derived per-function text objects, exact compiler-only/RTTI policies, exact data partition and vtable address-point rebias, whole-tree link and full-ROM comparison",

@@ -27,14 +27,12 @@
  * unreached, and cutting the gap two-thirds of the way along would assert a
  * boundary nothing shows.
  *
- * No Model and no typed member, so nothing here is compiler-generated --
- * the destructor body is all six calls and nothing else.
- *
- * The current split production sources still provide the destructor out of
- * line. A reconstructed whole TU defines DSCMGTRAMPOLINE2_INLINE_DTOR before
- * including this header to test the final inline form: that is the spelling
- * which emits the retail D1/D0 order without inventing a homeless D2. No
- * separate operator delete is needed: dScMgD3DBase_c provides one. */
+ * No Model and no typed member is needed to express the six arrays; the
+ * destructor body is exactly their six reverse-order destruction calls.
+ * It is permanently inline now that the class is compiler-owned by one
+ * production TU. That spelling emits the retail D1/D0 order without inventing
+ * a homeless D2. No separate operator delete is needed: dScMgD3DBase_c
+ * provides one. */
 #ifndef DSCMGTRAMPOLINE2_C_H
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"
@@ -43,18 +41,12 @@ extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020ca604(void);
 extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_020eed64(void);
-#ifdef DSCMGTRAMPOLINE2_INLINE_DTOR
 struct Model;
 extern "C" int func_ov006_021227c8(char *object);
 extern "C" Model *func_ov006_02122c68(Model *model);
-#else
-extern "C" void func_ov006_021227c8(void);
-extern "C" void func_ov006_02122c68(void);
-#endif
 extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {
-#ifdef DSCMGTRAMPOLINE2_INLINE_DTOR
     virtual ~dScMgTrampoline2_c() {
         __destroy_arr(mArray6, 5, 0x24, (void *)func_ov006_02120938);
         __destroy_arr(mArray5, 0x14, 0x78, (void *)func_ov006_02122c68);
@@ -63,9 +55,6 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
         __destroy_arr(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
         __destroy_arr(mArray1, 5, 0xdc, (void *)func_ov006_020ca604);
     }
-#else
-    virtual ~dScMgTrampoline2_c();
-#endif
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual int  OnAttacked2();                        /* slot 23 */
@@ -99,18 +88,18 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     u8  unk_7baa;         /* 0x7baa */
     u8  unk_7bab;         /* 0x7bab */
 
-    /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot fBase_c already holds rather
+    /* --- this class's own vtable overrides, defined out of line in the
+       production TU. Each re-uses a slot fBase_c already holds rather
        than appending one, and none adds a field, so the size assert below is
-       untouched. The destructor above stays the key function, so no
-       translation unit starts emitting _ZTV18dScMgTrampoline2_c because of
-       these. Signatures are include/fBase_c.h's and include/dScMgBase_c.h's
-       own, copied unchanged.
+       untouched. InitResources is the first non-inline virtual and the key
+       function, so this TU emits _ZTV18dScMgTrampoline2_c; the manifest owns
+       and verifies that table. Signatures are include/fBase_c.h's and
+       include/dScMgBase_c.h's own, copied unchanged.
 
        Behavior IS THE MATCHED ACCESS THAT REACHES pad_7ac4 and pad_5004; the
        banner above records what that costs the two "no matched access"
        claims. --- */
-    s32 InitResources();      /* slot 0 -- src/_ZN18dScMgTrampoline2_c13InitResourcesEv.cpp */
+    s32 InitResources();      /* slot 0 -- src/actors/dScMgTrampoline2_c.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x0212318c */
     s32 Behavior();           /* slot 6 -- ov006 0x02123340 */
     s32 Render();             /* slot 9 -- ov006 0x021231ac */
