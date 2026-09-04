@@ -722,6 +722,7 @@ ov018	0x02112a44	func_ov018_02112a44	daObjIceBoard_c_classInit	spawnfunc
 ov018	0x021138a8	data_ov018_021138a8	SkiLift_SpawnInfo	spawninfo
 ov018	0x021138a8	SkiLift_SpawnInfo	g_profile_SM_LIFT	reconstructed profile global; literal ROM ID SM_LIFT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov018	0x02113998	data_ov018_02113998	MotherPenguin_SpawnInfo	spawninfo
+ov018	0x02113998	MotherPenguin_SpawnInfo	g_profile_PENGUIN_MOTHER	reconstructed profile global; literal ROM ID PENGUIN_MOTHER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov018	0x021139bc	data_ov018_021139bc	_ZTV10daPgMthr_c	vtable alloc=? (was _ZTV7SkiLift)
 ov018	0x02113a00	data_ov018_02113a00	BridgePenguin_SpawnInfo	spawninfo
 ov018	0x02113a50	data_ov018_02113a50	daSCre_c_SpawnInfo	spawninfo

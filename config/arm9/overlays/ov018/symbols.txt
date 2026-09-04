@@ -142,7 +142,7 @@ data_ov018_02113974 kind:data(any) addr:0x02113974
 _ZTI10daPgMthr_c kind:data(any) addr:0x0211397c
 data_ov018_02113980 kind:data(any) addr:0x02113980 ambiguous
 _ZTS10daPgMthr_c kind:data(any) addr:0x02113988
-MotherPenguin_SpawnInfo kind:data(any) addr:0x02113998 ambiguous
+g_profile_PENGUIN_MOTHER kind:data(any) addr:0x02113998 ambiguous
 data_ov018_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 _ZTV10daPgMthr_c kind:data(any) addr:0x021139bc
 data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
