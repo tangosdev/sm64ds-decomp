@@ -36,301 +36,301 @@
       "symbol": "_ZN14dScMgMemory2_c11DrawMessageEv",
       "address": "0x020f5620",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov006_020f5620.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11DrawMessageEv.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10DrawCursorEv",
       "address": "0x020f565c",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov006_020f565c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10DrawCursorEv.c",
       "ordinal": 3
     },
     {
       "symbol": "_ZN14dScMgMemory2_c12UpdateCursorEv",
       "address": "0x020f5694",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov006_020f5694.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c12UpdateCursorEv.c",
       "ordinal": 4
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10ShowCursorEv",
       "address": "0x020f56f8",
       "size": "0x00000034",
-      "legacy_source": "src/func_ov006_020f56f8.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10ShowCursorEv.c",
       "ordinal": 5
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10HideCursorEv",
       "address": "0x020f572c",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov006_020f572c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10HideCursorEv.c",
       "ordinal": 6
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10PlayerWaitEi",
       "address": "0x020f5740",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov006_020f5740.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10PlayerWaitEi.c",
       "ordinal": 7
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10PlayerMoveEi",
       "address": "0x020f5744",
       "size": "0x0000018c",
-      "legacy_source": "src/func_ov006_020f5744.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10PlayerMoveEi.c",
       "ordinal": 8
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10PlayerDropEi",
       "address": "0x020f58d0",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov006_020f58d0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10PlayerDropEi.c",
       "ordinal": 9
     },
     {
       "symbol": "_ZN14dScMgMemory2_c11InitPlayersEv",
       "address": "0x020f593c",
       "size": "0x00000084",
-      "legacy_source": "src/func_ov006_020f593c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11InitPlayersEv.c",
       "ordinal": 10
     },
     {
       "symbol": "_ZN14dScMgMemory2_c13CheckFinishedEv",
       "address": "0x020f59c0",
       "size": "0x000000a4",
-      "legacy_source": "src/func_ov006_020f59c0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c13CheckFinishedEv.c",
       "ordinal": 11
     },
     {
       "symbol": "_ZN14dScMgMemory2_c9JudgePairEv",
       "address": "0x020f5a64",
       "size": "0x00000134",
-      "legacy_source": "src/func_ov006_020f5a64.cpp",
+      "legacy_source": "src/_ZN14dScMgMemory2_c9JudgePairEv.cpp",
       "ordinal": 12
     },
     {
       "symbol": "_ZN14dScMgMemory2_c9DrawCardsEv",
       "address": "0x020f5b98",
       "size": "0x000000a8",
-      "legacy_source": "src/func_ov006_020f5b98.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c9DrawCardsEv.c",
       "ordinal": 13
     },
     {
       "symbol": "_ZN14dScMgMemory2_c11UpdateCardsEv",
       "address": "0x020f5c40",
       "size": "0x00000074",
-      "legacy_source": "src/func_ov006_020f5c40.cpp",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_ZN14dScMgMemory2_c11CardFlyAwayEi",
       "address": "0x020f5cb4",
       "size": "0x0000012c",
-      "legacy_source": "src/func_ov006_020f5cb4.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c",
       "ordinal": 15
     },
     {
       "symbol": "_ZN14dScMgMemory2_c12CardFlipDownEi",
       "address": "0x020f5de0",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov006_020f5de0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c12CardFlipDownEi.c",
       "ordinal": 16
     },
     {
       "symbol": "_ZN14dScMgMemory2_c8CardWaitEi",
       "address": "0x020f5e70",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov006_020f5e70.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c8CardWaitEi.c",
       "ordinal": 17
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10CardFlipUpEi",
       "address": "0x020f5e74",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov006_020f5e74.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10CardFlipUpEi.c",
       "ordinal": 18
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10CardSelectEi",
       "address": "0x020f5f0c",
       "size": "0x00000178",
-      "legacy_source": "src/func_ov006_020f5f0c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10CardSelectEi.c",
       "ordinal": 19
     },
     {
       "symbol": "_ZN14dScMgMemory2_c8CardIdleEi",
       "address": "0x020f6084",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov006_020f6084.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c8CardIdleEi.c",
       "ordinal": 20
     },
     {
       "symbol": "_ZN14dScMgMemory2_c8CardMoveEi",
       "address": "0x020f6088",
       "size": "0x000001a8",
-      "legacy_source": "src/func_ov006_020f6088.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c8CardMoveEi.c",
       "ordinal": 21
     },
     {
       "symbol": "_ZN14dScMgMemory2_c12ResultFinishEv",
       "address": "0x020f6230",
       "size": "0x0000016c",
-      "legacy_source": "src/func_ov006_020f6230.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c12ResultFinishEv.c",
       "ordinal": 22
     },
     {
       "symbol": "_ZN14dScMgMemory2_c15ResultTurnCardsEv",
       "address": "0x020f639c",
       "size": "0x000000ec",
-      "legacy_source": "src/func_ov006_020f639c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c",
       "ordinal": 23
     },
     {
       "symbol": "_ZN14dScMgMemory2_c12ResultRewardEv",
       "address": "0x020f6488",
       "size": "0x000000b0",
-      "legacy_source": "src/func_ov006_020f6488.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c12ResultRewardEv.c",
       "ordinal": 24
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10ResultWaitEv",
       "address": "0x020f6538",
       "size": "0x00000140",
-      "legacy_source": "src/func_ov006_020f6538.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10ResultWaitEv.c",
       "ordinal": 25
     },
     {
       "symbol": "_ZN14dScMgMemory2_c11RoundRevealEv",
       "address": "0x020f6678",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov006_020f6678.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11RoundRevealEv.c",
       "ordinal": 26
     },
     {
       "symbol": "_ZN14dScMgMemory2_c13RoundWaitDealEv",
       "address": "0x020f670c",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov006_020f670c.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c",
       "ordinal": 27
     },
     {
       "symbol": "_ZN14dScMgMemory2_c15RoundReadyCardsEv",
       "address": "0x020f67a0",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov006_020f67a0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c",
       "ordinal": 28
     },
     {
       "symbol": "_ZN14dScMgMemory2_c14RoundHideCardsEv",
       "address": "0x020f6830",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov006_020f6830.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c",
       "ordinal": 29
     },
     {
       "symbol": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
       "address": "0x020f6904",
       "size": "0x000000fc",
-      "legacy_source": "src/func_ov006_020f6904.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c",
       "ordinal": 30
     },
     {
       "symbol": "_ZN14dScMgMemory2_c15RoundDealFourthEv",
       "address": "0x020f6a00",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov006_020f6a00.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c",
       "ordinal": 31
     },
     {
       "symbol": "_ZN14dScMgMemory2_c13RoundDealHardEv",
       "address": "0x020f6a78",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov006_020f6a78.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c13RoundDealHardEv.c",
       "ordinal": 32
     },
     {
       "symbol": "_ZN14dScMgMemory2_c15RoundDealNormalEv",
       "address": "0x020f6b00",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov006_020f6b00.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c",
       "ordinal": 33
     },
     {
       "symbol": "_ZN14dScMgMemory2_c13RoundDealEasyEv",
       "address": "0x020f6b78",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov006_020f6b78.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c",
       "ordinal": 34
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10RoundStartEv",
       "address": "0x020f6bf0",
       "size": "0x000000a0",
-      "legacy_source": "src/func_ov006_020f6bf0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10RoundStartEv.c",
       "ordinal": 35
     },
     {
       "symbol": "_ZN14dScMgMemory2_c12ShuffleCardsEv",
       "address": "0x020f6c90",
       "size": "0x000002f8",
-      "legacy_source": "src/func_ov006_020f6c90.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c",
       "ordinal": 36
     },
     {
       "symbol": "_ZN14dScMgMemory2_c18ChoosePreviewCardsEv",
       "address": "0x020f6f88",
       "size": "0x000000dc",
-      "legacy_source": "src/func_ov006_020f6f88.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c",
       "ordinal": 37
     },
     {
       "symbol": "_ZN14dScMgMemory2_c9ResetGameEv",
       "address": "0x020f7064",
       "size": "0x0000012c",
-      "legacy_source": "src/func_ov006_020f7064.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c9ResetGameEv.c",
       "ordinal": 38
     },
     {
       "symbol": "_ZN14dScMgMemory2_c9StateExitEv",
       "address": "0x020f7190",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov006_020f7190.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c9StateExitEv.c",
       "ordinal": 39
     },
     {
       "symbol": "_ZN14dScMgMemory2_c11StateResultEv",
       "address": "0x020f71c8",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov006_020f71c8.cpp",
+      "legacy_source": "src/_ZN14dScMgMemory2_c11StateResultEv.cpp",
       "ordinal": 40
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10StateJudgeEv",
       "address": "0x020f7210",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov006_020f7210.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10StateJudgeEv.c",
       "ordinal": 41
     },
     {
       "symbol": "_ZN14dScMgMemory2_c9StatePlayEv",
       "address": "0x020f7234",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov006_020f7234.cpp",
+      "legacy_source": "src/_ZN14dScMgMemory2_c9StatePlayEv.cpp",
       "ordinal": 42
     },
     {
       "symbol": "_ZN14dScMgMemory2_c10StateSetupEv",
       "address": "0x020f7280",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov006_020f7280.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c10StateSetupEv.c",
       "ordinal": 43
     },
     {
       "symbol": "_ZN14dScMgMemory2_c15SetupDifficultyEv",
       "address": "0x020f72c0",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov006_020f72c0.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c",
       "ordinal": 44
     },
     {
@@ -379,7 +379,7 @@
       "symbol": "dScMgMemory2_c_classInit",
       "address": "0x020f75d4",
       "size": "0x00000060",
-      "legacy_source": "src/MgMemoryMaster_Spawn.c",
+      "legacy_source": "src/dScMgMemory2_c_classInit.c",
       "ordinal": 51
     }
   ],
