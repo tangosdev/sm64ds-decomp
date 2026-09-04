@@ -61,9 +61,9 @@
             "overlay": "ov009",
             "factory_module": "ov009",
             "profile_address": "0x02113abc",
-            "current_profile_name": "MetalNet_SpawnInfo",
+            "current_profile_name": "g_profile_MC_METALNET",
             "factory_address": "0x02112048",
-            "current_factory_name": "MetalNet_Spawn"
+            "current_factory_name": "daObjMc_Metalnet_c_classInit"
           },
           {
             "overlay": "ov026",
@@ -237,9 +237,9 @@
             "overlay": "ov009",
             "factory_module": "ov009",
             "profile_address": "0x02113abc",
-            "current_profile_name": "MetalNet_SpawnInfo",
+            "current_profile_name": "g_profile_MC_METALNET",
             "factory_address": "0x02112048",
-            "current_factory_name": "MetalNet_Spawn"
+            "current_factory_name": "daObjMc_Metalnet_c_classInit"
           },
           {
             "overlay": "ov026",
