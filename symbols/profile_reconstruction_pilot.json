@@ -2039,42 +2039,20 @@
           "profile_address": "0x0211e770",
           "current_profile_name": "g_profile_TERESA",
           "factory_address": "0x0211c590",
-          "current_factory_name": "Boo_Spawn"
+          "current_factory_name": "daTrs_c_classInit_TERESA"
         }
       ],
-      "tu_start": "0x2115ee0",
+      "tu_start": "0x211c4a0",
       "tu_end": "0x211c600",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daTBasket_c",
-        "daTrsIcon_c",
-        "daTrs_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "TERESA",
         "BOSS_TERESA"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov063_0211e29c",
-          "address": "0x0211e29c",
-          "size": "0x130",
-          "classification": "medium",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "7 of 7 ownership global(s) map through consumers to ov063:0"
-          ],
-          "blockers": [
-            "module TU map is under-segmented; consumer ownership is only medium confidence"
-          ]
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x0211c590",
       "factory_size": "0x00000070",
       "registry_factory_reference_count": 1,
@@ -2086,8 +2064,8 @@
           "profile_address": "0x0211e770"
         }
       ],
-      "current_factory_name": "Boo_Spawn",
-      "current_factory_file": "src/actors/daTrs_c/Boo_Spawn.cpp",
+      "current_factory_name": "daTrs_c_classInit_TERESA",
+      "current_factory_file": "src/actors/daTrs_c/d_a_trs_teresa.cpp",
       "proposed_factory_name": "daTrs_c_classInit_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2114,25 +2092,22 @@
       "class_size": "0x000005e0",
       "installed_vtable": "0x0211e828",
       "expected_vtable": "_ZTV7daTrs_c",
-      "factory_ordinal_in_tu": 97,
+      "factory_ordinal_in_tu": 4,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x38",
       "profile_to_vtable_delta": "+0xb8",
       "data_order": "rtti_name < rtti < profile < vtable",
       "class_filename_candidate": "d_a_trs.cpp",
-      "probable_filename": "",
-      "tu_filename_candidates": [
-        "d_a_t_basket.cpp",
-        "d_a_trs.cpp"
-      ],
-      "filename_contradictions": "one recovered TU carries multiple distinct RTTI-derived filename stems",
-      "filename_evidence": "RTTI yields a mechanical class-family candidate, but recovered TU evidence does not select one filename; later EAD convention remains lineage-only",
+      "probable_filename": "d_a_trs.cpp",
+      "tu_filename_candidates": [],
+      "filename_contradictions": "",
+      "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B",
       "profile_name_confidence": "B+",
-      "filename_confidence": "",
+      "filename_confidence": "B-",
       "selection_reason": "first of two profiles constructing daTrs_c",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOO"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; community actor gloss=BOO"
     },
     {
       "actor_id": 210,
@@ -2154,42 +2129,20 @@
           "profile_address": "0x0211e78c",
           "current_profile_name": "g_profile_BOSS_TERESA",
           "factory_address": "0x0211c520",
-          "current_factory_name": "BigBoo_Spawn"
+          "current_factory_name": "daTrs_c_classInit_BOSS_TERESA"
         }
       ],
-      "tu_start": "0x2115ee0",
+      "tu_start": "0x211c4a0",
       "tu_end": "0x211c600",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daTBasket_c",
-        "daTrsIcon_c",
-        "daTrs_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "TERESA",
         "BOSS_TERESA"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov063_0211e29c",
-          "address": "0x0211e29c",
-          "size": "0x130",
-          "classification": "medium",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "7 of 7 ownership global(s) map through consumers to ov063:0"
-          ],
-          "blockers": [
-            "module TU map is under-segmented; consumer ownership is only medium confidence"
-          ]
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x0211c520",
       "factory_size": "0x00000070",
       "registry_factory_reference_count": 1,
@@ -2201,8 +2154,8 @@
           "profile_address": "0x0211e78c"
         }
       ],
-      "current_factory_name": "BigBoo_Spawn",
-      "current_factory_file": "src/actors/BigBoo/BigBoo_Spawn.cpp",
+      "current_factory_name": "daTrs_c_classInit_BOSS_TERESA",
+      "current_factory_file": "src/actors/BigBoo/d_a_trs_boss_teresa.cpp",
       "proposed_factory_name": "daTrs_c_classInit_BOSS_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2229,25 +2182,22 @@
       "class_size": "0x000005e0",
       "installed_vtable": "0x0211e828",
       "expected_vtable": "_ZTV7daTrs_c",
-      "factory_ordinal_in_tu": 96,
+      "factory_ordinal_in_tu": 3,
       "factory_is_last_in_tu": false,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x54",
       "profile_to_vtable_delta": "+0x9c",
       "data_order": "rtti_name < rtti < profile < vtable",
       "class_filename_candidate": "d_a_trs.cpp",
-      "probable_filename": "",
-      "tu_filename_candidates": [
-        "d_a_t_basket.cpp",
-        "d_a_trs.cpp"
-      ],
-      "filename_contradictions": "one recovered TU carries multiple distinct RTTI-derived filename stems",
-      "filename_evidence": "RTTI yields a mechanical class-family candidate, but recovered TU evidence does not select one filename; later EAD convention remains lineage-only",
+      "probable_filename": "d_a_trs.cpp",
+      "tu_filename_candidates": [],
+      "filename_contradictions": "",
+      "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B",
       "profile_name_confidence": "B+",
-      "filename_confidence": "",
+      "filename_confidence": "B-",
       "selection_reason": "second daTrs_c profile; tests classInit name collision",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BIG_BOO"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; community actor gloss=BIG_BOO"
     },
     {
       "actor_id": 219,
@@ -2445,39 +2395,21 @@
           "overlay": "ov070",
           "factory_module": "ov070",
           "profile_address": "0x02123144",
-          "current_profile_name": "FlyGuy_SpawnInfo",
+          "current_profile_name": "g_profile_PROPELLER_HEYHO",
           "factory_address": "0x02120520",
-          "current_factory_name": "FlyGuy_Spawn"
+          "current_factory_name": "daPropeller_Heyho_c_classInit"
         }
       ],
-      "tu_start": "0x211f000",
+      "tu_start": "0x2120520",
       "tu_end": "0x2120570",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daPropeller_Heyho_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "PROPELLER_HEYHO"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov070_02122afc",
-          "address": "0x02122afc",
-          "size": "0x284",
-          "classification": "high",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "13 of 13 ownership global(s) map through consumers to ov070:0"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x02120520",
       "factory_size": "0x00000050",
       "registry_factory_reference_count": 1,
@@ -2489,7 +2421,7 @@
           "profile_address": "0x02123144"
         }
       ],
-      "current_factory_name": "FlyGuy_Spawn",
+      "current_factory_name": "daPropeller_Heyho_c_classInit",
       "current_factory_file": "src/actors/daPropeller_Heyho_c.cpp",
       "proposed_factory_name": "daPropeller_Heyho_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
@@ -2499,7 +2431,7 @@
       "proposed_factory_collision": "",
       "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x02123144",
-      "current_profile_name": "FlyGuy_SpawnInfo",
+      "current_profile_name": "g_profile_PROPELLER_HEYHO",
       "proposed_profile_name": "g_profile_PROPELLER_HEYHO",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 232,
@@ -2517,7 +2449,7 @@
       "class_size": "0x000003e8",
       "installed_vtable": "0x02123168",
       "expected_vtable": "_ZTV19daPropeller_Heyho_c",
-      "factory_ordinal_in_tu": 27,
+      "factory_ordinal_in_tu": 1,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x24",
@@ -2525,9 +2457,7 @@
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_propeller_heyho.cpp",
       "probable_filename": "d_a_propeller_heyho.cpp",
-      "tu_filename_candidates": [
-        "d_a_propeller_heyho.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",

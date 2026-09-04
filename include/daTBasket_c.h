@@ -43,8 +43,7 @@
 /* ROM-authenticated lifecycle identity.  `_ZTI11daTBasket_c` / `_ZTS11daTBasket_c`
  * exist in ov063; no `_ZTI7BooCage` / `_ZTS7BooCage` ever did, so the cartridge
  * names this class and `BooCage` was only ever the actor's coined name -- which
- * is why `daTBasket_c_classInit` / `g_profile_T_BASKET` keep it, exactly as ov018 keeps
- * `MotherPenguin_Spawn` for `daPgMthr_c`. */
+ * is why `daTBasket_c_classInit` / `g_profile_T_BASKET` keep it. */
 struct daTBasket_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */

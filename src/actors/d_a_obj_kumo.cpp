@@ -31,7 +31,8 @@
  *   [6] 0x0211132c  src/_ZN11daObjKumo_c13InitResourcesEv.cpp
  *   [7] 0x0211137c  src/Cloud_Spawn.c
  *
- * THE EIGHTH IS THE FACTORY. Cloud_Spawn is the OBJ_KUMO registry profile's
+ * THE EIGHTH IS THE FACTORY. daObjKumo_c_classInit (historical alias
+ * Cloud_Spawn) is the OBJ_KUMO registry profile's
  * spawn function and sits immediately after InitResources in the ROM's own
  * .text order, so it is part of this TU; it was outside only because the
  * promotion predated the profile-reconstruction campaign. It keeps C linkage
@@ -71,16 +72,16 @@ extern void _ZN5ModelC1Ev(void *self);
 #pragma opt_propagation off
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- Cloud_Spawn, 0x0211137c, size 0x38                        */
+/* ROM ordinal 7 -- daObjKumo_c_classInit, 0x0211137c, size 0x38             */
 /* -------------------------------------------------------------------------- */
-// @symbol Cloud_Spawn
+// @symbol daObjKumo_c_classInit
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11daObjKumo_c */
 /* The OBJ_KUMO profile's factory. 292 = 0x124 is the whole object, matching the
    header's size assert; the inlined dActor_c constructor runs first, this class
    stores its own vptr over the base's, and the one member -- Model at 0xd4 --
    is constructed last, which is what closes the class on 0x124. */
-extern "C" int *Cloud_Spawn(void)
+extern "C" int *daObjKumo_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(292);
     if (p) {
