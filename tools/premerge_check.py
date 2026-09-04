@@ -158,7 +158,8 @@ and including one would buy a green that means nothing:
   check_references.py         reads build/rombuild-eligibility.json, which only
                               `eligible.py` produces, and then validates its commit
                               stamp against HEAD. An exported tree has no HEAD.
-  check_data_definitions.py   reads the objects `eligible.py` leaves in build/src/.
+  check_data_definitions.py   reads the objects `eligible.py` leaves in
+                              build/eligible-scratch/, or rombuild.py in build/src/.
   check_layout_free.py        reads `extracted/` (the ROM dump) and needs PyYAML.
   check_python_names.py       needs pyflakes, which is not stdlib.
   check_src_tu_compiles.py    needs mwccarm.

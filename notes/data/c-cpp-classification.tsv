@@ -35,7 +35,7 @@ src/daBookGen_c_classInit.c	WEAK-refs-only	ov020				1		None		-
 src/BookShot_Spawn.c	WEAK-refs-only	ov020				1		None		-
 src/BookSwitch_Spawn.c	PURE-C	ov016				1		None		-
 src/Bookend_Spawn.c	WEAK-refs-only	ov020				1		None		-
-src/BowserFireSeaArena_Spawn.c	WEAK-refs-only	ov060				1		None		-
+src/daKpa2Bg_c_classInit.c	WEAK-refs-only	ov060				1		None		-
 src/BowserFire_Spawn.c	WEAK-refs-only	ov060				1		None		-
 src/daObjFl_Coin_c_classInit.c	S1-stores-rom-vptr	ov064			stores _ZTV19BowserPuzzleManager	1		None	_ZTV19BowserPuzzleManager	-
 src/daObjFl_Puzzle_c_classInit.c	WEAK-refs-only	ov064				1		None		-

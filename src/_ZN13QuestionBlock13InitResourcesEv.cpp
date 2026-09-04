@@ -21,8 +21,8 @@ extern char data_ov002_0210d9e0, data_ov102_0214e800, data_ov102_0214e7f0;
 extern char data_ov002_0210da40, data_ov102_0214e7d8, data_ov002_0210d9a0;
 extern char data_ov102_0214e7e0, data_ov002_0210d9c0, data_ov102_0214e7d0;
 extern char data_ov002_0210d954, data_ov002_0210da58, data_ov002_0210da18;
-extern char data_ov002_0210d9d8, data_ov002_0210da30, data_ov002_0210d9b0;
-extern char data_ov002_0210d9d0;
+extern char data_ov002_0210d9d8, data_ov002_0210da30, gPFlowerOpenModelFile;
+extern char gPFlowerCloseModelFile;
 
 struct M12 { int w[12]; };
 
@@ -113,18 +113,18 @@ int QuestionBlock::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
         break;
     case 7:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerOpenModelFile);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerCloseModelFile);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
         break;
     case 5:
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerOpenModelFile);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerCloseModelFile);
         break;
     case 6:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerOpenModelFile);
+        _ZN5Model8LoadFileER13SharedFilePtr(&gPFlowerCloseModelFile);
         break;
     }
 end:

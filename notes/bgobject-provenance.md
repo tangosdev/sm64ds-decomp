@@ -515,11 +515,11 @@ Raw-offset collapses, each re-verified byte-exact: the six
 
 ---
 
-## BowserFireSeaArena (`include/BowserFireSeaArena.h`, [ov060](../config/arm9/overlays/ov060/symbols.txt), size 0x570)
+## daKpa2Bg_c (`include/daKpa2Bg_c.h`, [ov060](../config/arm9/overlays/ov060/symbols.txt), size 0x570)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mAngleXSpeed` | `src/_ZN18BowserFireSeaArena8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
+| 0x31e | `mAngleXSpeed` | `src/_ZN10daKpa2Bg_c8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
 | 0x320 | `mAngleYSpeed` | the same, into `mAngleY`. |
 | 0x322 | `mAngleZSpeed` | the same, into `mAngleZ`. |
 
@@ -748,7 +748,7 @@ same offsets:
 
 * `CccArena` 0x330 / 0x334 / 0x338 — written once each by `InitResources`, never read.
 * `RotatingCogSmall` 0x326 — written the same table value as `mAngleYStep`, never read.
-* `BowserFireSeaArena` 0x56c — zeroed, never read.
+* `daKpa2Bg_c` 0x56c — zeroed, never read.
 * `RotatingUpDownPlatformUtm` 0x300 in the C twin — that offset is *interior* to
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single
   `s16` read would be an invention.

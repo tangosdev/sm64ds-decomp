@@ -300,7 +300,7 @@ the sole reference is:
  231  sole reference is an ordinary function file  (124 files)
 ```
 
-A `__sinit_ov002_02100560.c` names dozens of bss symbols because it *constructs* them
+A [__sinit_ov002_02100560.c](../src/__sinit_ov002_02100560.c) names dozens of bss symbols because it *constructs* them
 — it is the compiler-synthesised static-initialiser TU, not the TU that **defined**
 them. "Referenced by exactly one file" is a proxy for ownership and for 91% of the set
 it is the *wrong* proxy. Those 2,421 must be excluded.
@@ -319,13 +319,14 @@ cannot disambiguate, so those need `objisolate` work first.
 Sizes are small and tractable (0x4 / 0xc / 0x14 / 0x20, one outlier at 0x600).
 Examples:
 
-```sh
-data_ov002_0211114c  0x0211114c  size 0x04  src/_ZN7Minimap8BehaviorEv.cpp
-data_ov016_02114d4c  0x02114d4c  size 0x0c  src/_ZN5Unagi13InitResourcesEv.cpp
-data_ov026_02113f4c  0x02113f4c  size 0x0c  src/_ZN12WaterSuction13InitResourcesEv.cpp
-data_ov006_02140518  0x02140518  size 0x20  src/func_ov006_020c8a30.c
-data_ov007_02103f98  0x02103f98  size 0x600 src/func_ov007_020b8548.c
-```
+| Symbol | Address | Size | File |
+|--------|---------|------|------|
+| [data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/_ZN7Minimap8BehaviorEv.cpp` |
+| [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/_ZN5Unagi13InitResourcesEv.cpp` |
+| [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/_ZN12WaterSuction13InitResourcesEv.cpp` |
+| [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | [src/func_ov006_020c8a30.c](../src/func_ov006_020c8a30.c) |
+| [data_ov007_02103f98](../config/arm9/overlays/ov007/symbols.txt) | 0x02103f98 | 0x600 | [src/func_ov007_020b8548.c](../src/func_ov007_020b8548.c) |
+
 
 Every one is named `data_<module>_<addr>`; **zero** carry a recovered name. So the
 pilot proves the *mechanism* and buys no readability — a separate naming pass would
@@ -334,8 +335,7 @@ be needed for that to be worth anything to a reader.
 ### The ownership problem the count cannot solve
 
 `src/` is one function per file. The ROM's `.bss` was laid out per **translation
-unit**, and a TU is many functions. Putting `data_ov016_02114d4c`'s definition in
-`_ZN5Unagi13InitResourcesEv.cpp` because that is the only file mentioning it is a
+unit**, and a TU is many functions. Putting [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt)'s definition in `_ZN5Unagi13InitResourcesEv.cpp` because that is the only file mentioning it is a
 *guess* about ownership dressed up as a fact — and it is a guess the byte gate cannot
 falsify, because any file in the module can host the range and still link identically.
 

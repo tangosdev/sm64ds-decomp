@@ -1,0 +1,202 @@
+{
+  "id": "ov036/daObjRc_Hane_c",
+  "module": "ov036",
+  "source": "src/actors/d_a_obj_rc_hane.cpp",
+  "promoted_source": "src/actors/d_a_obj_rc_hane.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111580..0x2111904, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjRc_Hane_c",
+    "the run is bounded on both sides by another class's code: 0x02111544..0x02111580 belongs to the daObjRc_Kaitendai_c neighbourhood and 0x0211193c onward is DonutBlock/daObjRc_Tikuwa_c, so no function of another class falls inside it",
+    "daObjRc_Hane_c_classInit (0x02111904..0x0211193c) is deliberately EXCLUDED and keeps its own C file, matching the arrangement daObjRc_Kaitendai_c and daObjRcBuranko_c already landed with in this module"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111580",
+      "end": "0x02111904"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjRc_Hane_cD1Ev",
+      "address": "0x02111580",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN14daObjRc_Hane_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjRc_Hane_cD0Ev",
+      "address": "0x021115b0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN14daObjRc_Hane_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN14daObjRc_Hane_c16CleanupResourcesEv",
+      "address": "0x021115f4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN14daObjRc_Hane_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov036_02111618",
+      "address": "0x02111618",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov036_02111618.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjRc_Hane_c6RenderEv",
+      "address": "0x0211169c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN14daObjRc_Hane_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14daObjRc_Hane_c8BehaviorEv",
+      "address": "0x021116c0",
+      "size": "0x00000194",
+      "legacy_source": "src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN14daObjRc_Hane_c13InitResourcesEv",
+      "address": "0x02111854",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated, not generated. See the file's own header comment for the full evidence and for why the destructor is inline in the header rather than written in the TU.",
+    "MEASURED 2026-09-04, reading extracted/dsd/arm9_overlays/ov036.bin directly (ov036 base 0x021111a0, from extracted/dsd/arm9_overlays/overlays.yaml): _ZTV14daObjRc_Hane_c's symbols.txt address 0x02113c38 IS the address point -- 0x02113c30 is the offset-to-top word 0, 0x02113c34 is 0x02113bf4 (&_ZTI14daObjRc_Hane_c), slot 0 at 0x02113c38 is 0x02111854 (InitResources), slot 3 is 0x021115f4 (CleanupResources), slot 6 is 0x021116c0 (Behavior), slot 9 is 0x0211169c (Render), slots 16 and 17 are 0x02111580 and 0x021115b0 (D1, D0). _ZTI14daObjRc_Hane_c's +4 word points at 0x02113c00, whose bytes are the length-prefixed string '14daObjRc_Hane_c' -- the ROM's own spelling, not the coined ShipWing -- and its +8 base pointer is 0x0208e390 = _ZTI8dActor_c (arm9), so the cartridge itself states the direct base.",
+    "THE VTABLE IS 31 WORDS, NOT 32, AND THAT IS THE SECOND PROOF OF THE BASE. It runs 0x02113c38..0x02113cb4, and 0x02113cb4 is already daObjRc_Tikuwa_c's typeinfo record (first word 0x0209a764, the __si_class_type_info vptr; +4 string reads '16daObjRc_Tikuwa_c'). _ZTV8dActor_c at arm9 0x0208e3a4 is the same 31 words, ending at 0x0208e420. The dBgActor_c-derived neighbours in this very overlay are 32 words and carry Kill (0x020ee55c) in slot 31 -- daObjRc_Kaitendai_c's table runs 0x02113b74..0x02113bf4 and ends on exactly that word. There is no slot 31 here to override because dActor_c has no slot 31."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the DIRECT base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them. MEASURED: this is the very address _ZTI14daObjRc_Hane_c's +8 base pointer names."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the DIRECT base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI14daObjRc_Hane_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113bf4",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names it. The cartridge's own copy lives at ov036:0x02113bf4 -- inside this module's .data, but OUTSIDE the 0x02111580..0x02111904 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them. MEASURED in extracted/dsd/arm9_overlays/ov036.bin (ov036 base 0x021111a0): 0x02113bf4 is the __si_class_type_info record whose +4 word is 0x02113c00 (the type string) and whose +8 base pointer is 0x0208e390 = _ZTI8dActor_c (arm9), so the cartridge itself states the direct base."
+    },
+    {
+      "symbol": "_ZTS14daObjRc_Hane_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113c00",
+      "reason": "This class's own type-name string, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov036:0x02113c00, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's bytes against the cartridge's before isolation discards them. MEASURED: the bytes there are the length-prefixed '14daObjRc_Hane_c' -- the ROM's own spelling of this class's name, not the coined ShipWing."
+    },
+    {
+      "symbol": "_ZTV14daObjRc_Hane_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov036",
+      "canonical_address": "0x02113c38",
+      "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor declared first makes this TU the key-function home. The cartridge's own copy lives at ov036:0x02113c38, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/dsd/arm9_overlays/ov036.bin: symbols.txt's 0x02113c38 IS the address point -- 0x02113c30 is the offset-to-top word 0, 0x02113c34 is 0x02113bf4 (&_ZTI14daObjRc_Hane_c), and 0x02113c38 is slot 0 = 0x02111854 (InitResources). The table is 31 words and ends at 0x02113cb4, which is already daObjRc_Tikuwa_c's typeinfo; _ZTV8dActor_c is the same 31 words, so there is no slot 31 to carry Kill."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov036-daObjRc_Hane_c/daObjRc_Hane_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI14daObjRc_Hane_c",
+        "_ZTS14daObjRc_Hane_c",
+        "_ZTV14daObjRc_Hane_c"
+      ],
+      "dataExternalized": [
+        "_ZTI14daObjRc_Hane_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS14daObjRc_Hane_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daObjRc_Hane_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

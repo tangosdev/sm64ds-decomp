@@ -13,9 +13,9 @@ has been told. `romdata_check` scores the result PARTIAL: a verified byte-exact
 prefix, not a disagreement. Ownership needs the full 36. See
 `notes/dScMgBase_c-slots-18-35.md` for the slot-by-slot map and its two hazards.
 
-## 2. `data_ov006_0213e42c` is two objects glued into one delink entry
+## 2. [data_ov006_0213e42c](../config/arm9/overlays/ov006/symbols.txt) is two objects glued into one delink entry
 
-The entry is configured as 0x1c bytes at ov006:0x0213e42c. Dumped, it is:
+The entry is configured as 0x1c bytes at [ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213e42c. Dumped, it is:
 
 | range | bytes | what it actually is |
 |---|---|---|
@@ -33,10 +33,8 @@ entry overlapping the storage start of a vtable the TU is about to supply is not
 merely droppable, it is *unkeepable* — once the TU emits those eight bytes, no symbol
 of that name exists in the linked binary and `dsd check symbols --fail` rejects it.
 
-The twist here, which #2061's `ov047` case does not have: this entry is **not purely
-delinker-invented**. Twenty of its twenty-eight bytes are a live data object. So the
-fix is not "drop it" but **split it** — retain `data_ov006_0213e42c` at 0x14 bytes
-(0x0213e42c..0x0213e440) so its reader keeps resolving, and let the TU supply the
+The twist here, which #2061's [ov047](../config/arm9/overlays/ov047/symbols.txt) case does not have: this entry is **not purely delinker-invented**. Twenty of its twenty-eight bytes are a live data object. So the
+fix is not "drop it" but **split it** — retain [data_ov006_0213e42c](../config/arm9/overlays/ov006/symbols.txt) at 0x14 bytes (0x0213e42c..0x0213e440) so its reader keeps resolving, and let the TU supply the
 eight preamble bytes. Dropping the whole entry would strand the language table.
 
 Apply #2061's discriminator either way: restore the entry at its full 0x1c extent on
