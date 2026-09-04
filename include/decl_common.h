@@ -1897,7 +1897,7 @@ extern void Player_Hurt(void*, void*, unsigned int, int, unsigned int, unsigned 
 extern void Quaternion_FromVector3(int*, struct Vector3*, struct Vector3*);
 extern void Quaternion_Normalize(int*);
 extern void Quaternion_SLerp(void*, void*, int, void*);
-extern void RollingRock_Spawn(void);
+extern void daGrock_c_classInit(void);
 extern void Scene_AfterRender(void*, unsigned int);
 extern void SetBg0Offset(int, int);
 extern void SetBg1Offset(int, int);

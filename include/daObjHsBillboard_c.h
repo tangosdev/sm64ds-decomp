@@ -20,6 +20,26 @@
  * Vtable diff against dActor_c: only slots 0, 3, 9, 16 and 17 hold words inside
  * ov031. Every other slot of 0..19 still points into arm9, so there is NO
  * Behavior override at slot 6 -- the billboards never tick.
+ *
+ * SM64DS RTTI names the implementation daObjHsBillboard_c. The reconstructed factory
+ * daObjHsBillboard_c_classInit_HS_MOON (historical alias SlideDecorationSilverStar_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_HS_MOON
+ * (historical alias SlideDecorationSilverStar_SpawnInfo) is its registry descriptor.
+ *
+ * SM64DS RTTI names the implementation daObjHsBillboard_c. The reconstructed factory
+ * daObjHsBillboard_c_classInit_HS_STAR (historical alias SlideDecorationYellowStar_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_HS_STAR
+ * (historical alias SlideDecorationYellowStar_SpawnInfo) is its registry descriptor.
+ *
+ * SM64DS RTTI names the implementation daObjHsBillboard_c. The reconstructed factory
+ * daObjHsBillboard_c_classInit_HS_Y_STAR (historical alias SlideDecorationOrangeSmiley_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_HS_Y_STAR
+ * (historical alias SlideDecorationOrangeSmiley_SpawnInfo) is its registry descriptor.
+ *
+ * SM64DS RTTI names the implementation daObjHsBillboard_c. The reconstructed factory
+ * daObjHsBillboard_c_classInit_HS_B_STAR (historical alias SlideDecorationBlueSmiley_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_HS_B_STAR
+ * (historical alias SlideDecorationBlueSmiley_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

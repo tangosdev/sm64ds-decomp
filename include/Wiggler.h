@@ -18,6 +18,11 @@
  *
  * The Vector3s array is what named func_02011508 -- see the note on Vector3s in
  * include/types.h and src/_ZN8Vector3sD1Ev.cpp.
+ *
+ * SM64DS RTTI names the implementation daHanachan_c. The reconstructed factory
+ * daHanachan_c_classInit (historical alias Wiggler_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_HANACHAN
+ * (historical alias Wiggler_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

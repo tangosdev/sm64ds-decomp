@@ -1,4 +1,4 @@
-// @symbol Grindel_Spawn
+// @symbol daDkk_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
@@ -9,7 +9,11 @@ extern int _ZTV7daDkk_c[];
 extern int _ZTV11daDsnBase_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV11daDsnBase_c; VT1 = _ZTV7daDkk_c */
-int *Grindel_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daDkk_c through RTTI,
+ * allocation size, vtable identity, and the DONKAKU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Grindel_Spawn. */
+int *daDkk_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(928);
     if (p) {

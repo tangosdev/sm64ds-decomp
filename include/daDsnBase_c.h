@@ -24,7 +24,7 @@
  * the ambiguous tag `overlays(6,91)`; the config settles it from the other side
  * by marking ov006's copy of 0x021351fc `ambiguous` and leaving ov091's as the
  * definition. Both factories agree with that independently -- Thwomp_Spawn in
- * ov091 and Grindel_Spawn in ov025 both store 0x021351fc.
+ * ov091 and daDkk_c_classInit in ov025 both store 0x021351fc.
  *
  * AND IT IS THE ONLY ONE OF THE ELEVEN WITH SUB-OBJECTS OF ITS OWN. The other ten
  * add scalars or nothing; this one adds a TextureSequence and a ShadowModel, both
@@ -36,7 +36,7 @@
  * (D1) and 17 (D0).
  *
  * TWO DESCENDANTS: daDsn_c (Thwomp, ov091) and daDkk_c (ov025, whose factory the
- * tree calls Grindel_Spawn and whose class it has never named).
+ * tree calls daDkk_c_classInit and whose class it has never named).
  *
  * SLOTS 3 AND 9 BELONG TO THIS CLASS, NOT TO Thwomp, and they are declared here
  * now. Dumping the cartridge's own _ZTV11daDsnBase_c settles it: slot 3 holds
@@ -55,7 +55,7 @@
  *          from here and releases entries [0], [1] and, when it is non-null, [3];
  *          its own Render reads entry [3] to decide whether to run the texture
  *          animation. Both are slot words of THIS class.
- *   0x324  TextureSequence. Thwomp_Spawn and Grindel_Spawn both call
+ *   0x324  TextureSequence. Thwomp_Spawn and daDkk_c_classInit both call
  *          _ZN15TextureSequenceC1Ev at +0x324 while the vptr is this class's, and
  *          both destructors call its D1 there. sizeof is 0x14, so it closes on
  *          0x338.
@@ -64,7 +64,7 @@
  *
  * SIZE 0x360, WHICH IS THE MINIMAL READING AND SAID AS SUCH. The ShadowModel
  * closes there and nothing this class owns reaches higher. The leaves allocate
- * more -- Grindel_Spawn passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- and
+ * more -- daDkk_c_classInit passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- and
  * because the two disagree, no literal fixes this class's end the way
  * FloatingFloorBfs fixes daObjUkiyuka_c's. 0x360..0x3a0 exists in both leaves and
  * is declared on them; if a later pass shows both reading the same offsets in it,

@@ -1,4 +1,4 @@
-// @symbol VolcanoFire_Spawn
+// @symbol daObj_volcanoCannon_c_classInit
 /* The factory remains C because a natural `new VolcanoFire()` makes mwccarm
  * call unresolved `_Znwm`; the ROM calls the class allocator
  * `_ZN7fBase_cnwEj`. The hand-spelled form preserves that destination exactly. */
@@ -7,7 +7,11 @@
 #include "decl_dCcAc_c.h"
 #include "decl_common.h"
 
-int *VolcanoFire_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObj_volcanoCannon_c through RTTI,
+ * allocation size, vtable identity, and the OBJ_VOLCANO_CANNON registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: VolcanoFire_Spawn. */
+int *daObj_volcanoCannon_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(0x11c);
     if (p) {

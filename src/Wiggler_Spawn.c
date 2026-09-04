@@ -17,7 +17,11 @@ extern int _ZN9ModelAnimC1Ev(void *p);
 extern int _ZN9ModelAnimD1Ev(void *p);
 extern int _ZTV7Wiggler[];
 
-void *Wiggler_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves daHanachan_c through RTTI,
+ * allocation size, vtable identity, and the HANACHAN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Wiggler_Spawn. */
+void *daHanachan_c_classInit(void){
   char *c = (char *)_ZN7fBase_cnwEj(sizeof(struct Wiggler));
   if(c){
     _ZN12dEnemyBase_cC2Ev(c);

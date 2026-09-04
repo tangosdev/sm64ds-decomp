@@ -56,8 +56,8 @@ _ZN5Ukiki6RenderEv kind:function(arm,size=0x48) addr:0x02114230
 _ZN5Ukiki8BehaviorEv kind:function(arm,size=0x100) addr:0x02114278
 _ZN5Ukiki13InitResourcesEv kind:function(arm,size=0x25c) addr:0x02114378
 _ZN5Ukiki13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x021145d4
-UkikiStar_Spawn kind:function(arm,size=0x58) addr:0x021145e0
-UkikiThief_Spawn kind:function(arm,size=0x58) addr:0x02114638
+daMky_c_classInit_MONKEY_STAR kind:function(arm,size=0x58) addr:0x021145e0
+daMky_c_classInit_MONKEY_THIEF kind:function(arm,size=0x58) addr:0x02114638
 data_ov030_02114690 kind:data(any) addr:0x02114690
 data_ov030_02114694 kind:data(any) addr:0x02114694
 data_ov030_02114698 kind:data(any) addr:0x02114698
@@ -137,8 +137,8 @@ data_ov030_02115b68 kind:data(any) addr:0x02115b68
 data_ov030_02115b70 kind:data(any) addr:0x02115b70
 _ZTS7daMky_c kind:data(any) addr:0x02115b78
 _ZTI7daMky_c kind:data(any) addr:0x02115b84
-UkikiThief_SpawnInfo kind:data(any) addr:0x02115b90
-UkikiStar_SpawnInfo kind:data(any) addr:0x02115bac ambiguous
+g_profile_MONKEY_THIEF kind:data(any) addr:0x02115b90
+g_profile_MONKEY_STAR kind:data(any) addr:0x02115bac ambiguous
 data_ov030_02115bc8 kind:data(any) addr:0x02115bc8
 _ZTV5Ukiki kind:data(any) addr:0x02115bfc
 _ZTV7daMky_c kind:data(any) addr:0x02115bfc

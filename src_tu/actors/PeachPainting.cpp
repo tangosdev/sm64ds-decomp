@@ -122,7 +122,7 @@ int *daObjC1Peach_c_classInit(void)
 /* recovered: named members + shared header, real C++ method */
 int PeachPainting::InitResources()
 {
-    void *file = _ZN5Model8LoadFileER13SharedFilePtr((void*)RollingRock_Spawn);
+    void *file = _ZN5Model8LoadFileER13SharedFilePtr((void*)daGrock_c_classInit);
     _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)((void *)this) + 0xd4, file, 1, -1);
     *(unsigned char*)((char*)&mOpacity) = 0xff;
     func_ov010_02111e84(((void *)this));

@@ -25,7 +25,7 @@
  * daDgr_c and BigBrickBlock.
  *
  * SIZE IS 0x3dc (988 decimal), THE LITERAL THE FACTORY PASSES TO operator new.
- * The factory, func_ov027_0211207c, is: `fBase_c::operator new(988)`,
+ * The factory, daPgDfdr_c_classInit, is: `fBase_c::operator new(988)`,
  * `dBgActor_c::dBgActor_c()`, store `_ZTV10daPgDfdr_c`, then three member
  * constructors run in field order -- `ModelAnim::ModelAnim()` at +0x320,
  * `TextureSequence::TextureSequence()` at +0x384, `dCcAc_c::dCcAc_c()`
@@ -61,6 +61,11 @@
  * countdown byte; 0x3d0, 0x3d4 and 0x3d9 stay unk_ because "a flag", "an index"
  * and "a table index" do not say what they hold. See
  * notes/bgobject-provenance.md.
+ *
+ * SM64DS RTTI names the implementation daPgDfdr_c. The reconstructed factory
+ * daPgDfdr_c_classInit (historical alias func_ov027_0211207c) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_PENGUIN_DEFENDER
+ * (historical alias data_ov027_02113a00) is its registry descriptor.
  */
 
 struct daPgDfdr_c : dBgActor_c {

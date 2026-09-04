@@ -18,10 +18,15 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE ROM'S OWN, not a rounded-up field span: `RollingRock_Spawn` calls
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daGrock_c_classInit` calls
  * `fBase_c::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3c4; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daGrock_c. The reconstructed factory
+ * daGrock_c_classInit (historical alias RollingRock_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_GORO_ROCK
+ * (historical alias RollingRock_SpawnInfo) is its registry descriptor.
  */
 
 #include "dEnemyBase_c.h"

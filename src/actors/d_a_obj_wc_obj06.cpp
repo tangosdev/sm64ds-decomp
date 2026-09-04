@@ -17,7 +17,7 @@
  *   [0] 0x02111ea4  src/_ZN14daObjWcObj06_cD1Ev.cpp
  *   [1] 0x02111ef4  src/_ZN14daObjWcObj06_cD0Ev.cpp
  *   [2] 0x02111f58  src/_ZN14daObjWcObj06_c13InitResourcesEv.cpp
- *   [3] 0x02112044  src/daObjWcObj06_c_Spawn.c
+ *   [3] 0x02112044  src/daObjWcObj06_c_classInit.c
  *
  * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
  * `FloatOnWaterPlatformWdwRectangle`, a coined name. MEASURED in

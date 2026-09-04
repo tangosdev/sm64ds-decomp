@@ -5,7 +5,7 @@
 #include "daOts_c.h"
 
 /* The third of daOts_c's children -- the small Bully that stands on the ice.
- * daIDonketu_c_Spawn is daDonketu_c_classInit and daBDonketu_c_classInit again, with 0x3fc for the
+ * daIDonketu_c_classInit is daDonketu_c_classInit and daBDonketu_c_classInit again, with 0x3fc for the
  * allocation and this class's vtable stored last.
  *
  * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
@@ -35,13 +35,18 @@
  * daOts_c's code and vtable are in ov064. That is the vague-linkage copy the leaf's
  * own typeinfo needs to point at, emitted into whichever module first needed it.
  *
- * SIZE 0x3fc, the literal in daIDonketu_c_Spawn's fBase_c::operator new. The base
+ * SIZE 0x3fc, the literal in daIDonketu_c_classInit's fBase_c::operator new. The base
  * ends at 0x398, so the two bytes below are all this class adds -- which is why it is
  * four bytes smaller than its siblings rather than larger.
  *
  * Besides InitResources, Behavior and the destructor pair, it overrides daOts_c's
  * state-1 and state-4 hooks. CleanupResources, Render, the actor hooks, and the four
  * sound hooks remain inherited.
+ *
+ * SM64DS RTTI names the implementation daIDonketu_c. The reconstructed factory
+ * daIDonketu_c_classInit (historical alias daIDonketu_c_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_ICE_DONKETU
+ * (historical alias daIDonketu_c_SpawnInfo) is its registry descriptor.
  */
 struct daIDonketu_c : daOts_c {
     u8  pad_398[0x62];

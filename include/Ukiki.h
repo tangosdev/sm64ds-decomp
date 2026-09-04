@@ -10,7 +10,7 @@
 
 /* THREE WITNESSES:
  *
- *   UkikiThief_Spawn / UkikiStar_Spawn
+ *   daMky_c_classInit_MONKEY_THIEF / daMky_c_classInit_MONKEY_STAR
  *       fBase_c::operator new(972 = 0x3cc), dActor_c::dActor_c(), stores
  *       _ZTV5Ukiki, then the six members below in this order.
  *   _ZN5UkikiD0Ev  five of the six destroyed in reverse (PathPtr is
@@ -27,7 +27,7 @@
  * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
  *
  * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
- * UkikiThief_Spawn/UkikiStar_Spawn call _ZN10dBgCh_ActrC1Ev at that
+ * daMky_c_classInit_MONKEY_THIEF/UkikiStar_Spawn call _ZN10dBgCh_ActrC1Ev at that
  * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
  * bytes from 0x350..0x380 are genuinely unevidenced padding.
  *
@@ -49,7 +49,7 @@ struct Ukiki : dActor_c {
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x160. [_ZN5UkikiD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x160 */
-    /* dBgCh_Actr member, named by UkikiThief_Spawn/UkikiStar_Spawn's own
+    /* dBgCh_Actr member, named by daMky_c_classInit_MONKEY_THIEF/UkikiStar_Spawn's own
        C1 call and the class's own destructor's D1 call at +0x194.
        [UkikiThief_Spawn.c, _ZN5UkikiD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
@@ -67,7 +67,7 @@ struct Ukiki : dActor_c {
     s32 mSpawnPosX;            /* 0x38c */
     s32 mSpawnPosY;            /* 0x390 */
     s32 mSpawnPosZ;            /* 0x394 */
-    /* PathPtr member, named by UkikiThief_Spawn/UkikiStar_Spawn's own C1
+    /* PathPtr member, named by daMky_c_classInit_MONKEY_THIEF/UkikiStar_Spawn's own C1
        call at +0x398. Trivial (no dtor), so _ZN5UkikiD0Ev does not destroy
        it. */
     PathPtr mPathPtr;            /* 0x398 */

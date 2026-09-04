@@ -7,7 +7,7 @@ _ZN7daDgr_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111384
 _ZN7daDgr_c6RenderEv kind:function(arm,size=0x28) addr:0x021113c8
 _ZN7daDgr_c8BehaviorEv kind:function(arm,size=0x3ec) addr:0x021113f0
 _ZN7daDgr_c13InitResourcesEv kind:function(arm,size=0xbc) addr:0x021117dc
-func_ov025_02111898 kind:function(arm,size=0x30) addr:0x02111898
+daDgr_c_classInit kind:function(arm,size=0x30) addr:0x02111898
 _ZN7daDkk_cD1Ev kind:function(arm,size=0x60) addr:0x021118c8
 _ZN7daDkk_cD0Ev kind:function(arm,size=0x74) addr:0x02111928
 _ZN7daDkk_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211199c
@@ -16,7 +16,7 @@ func_ov025_021119f4 kind:function(arm,size=0x90) addr:0x021119f4
 func_ov025_02111a84 kind:function(arm,size=0xe0) addr:0x02111a84
 _ZN7daDkk_c8BehaviorEv kind:function(arm,size=0xc0) addr:0x02111b64
 _ZN7daDkk_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111c24
-Grindel_Spawn kind:function(arm,size=0x4c) addr:0x02111cf4
+daDkk_c_classInit kind:function(arm,size=0x4c) addr:0x02111cf4
 _ZN11PyramidStepD1Ev kind:function(arm,size=0x4c) addr:0x02111d40
 _ZN11PyramidStepD0Ev kind:function(arm,size=0x60) addr:0x02111d8c
 func_ov025_02111dec kind:function(arm,size=0x44) addr:0x02111dec
@@ -113,7 +113,7 @@ data_ov025_021136d4 kind:data(any) addr:0x021136d4 ambiguous
 data_ov025_021136f4 kind:data(any) addr:0x021136f4 ambiguous
 _ZTS7daDgr_c kind:data(any) addr:0x02113724
 _ZTI7daDgr_c kind:data(any) addr:0x02113730
-data_ov025_0211373c kind:data(any) addr:0x0211373c ambiguous
+g_profile_DONGURU kind:data(any) addr:0x0211373c ambiguous
 _ZTV7daDgr_c kind:data(any) addr:0x02113760
 _ZTS7daDkk_c kind:data(any) addr:0x021137e0
 data_ov025_021137e4 kind:data(any) addr:0x021137e4 ambiguous
@@ -123,7 +123,7 @@ data_ov025_02113800 kind:data(any) addr:0x02113800 ambiguous
 _ZTS11daDsnBase_c kind:data(any) addr:0x02113804
 data_ov025_02113814 kind:data(any) addr:0x02113814
 data_ov025_02113820 kind:data(any) addr:0x02113820 ambiguous
-Grindel_SpawnInfo kind:data(any) addr:0x0211382c ambiguous
+g_profile_DONKAKU kind:data(any) addr:0x0211382c ambiguous
 _ZTV7daDkk_c kind:data(any) addr:0x02113850
 data_ov025_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov025_021138bc kind:data(any) addr:0x021138bc ambiguous

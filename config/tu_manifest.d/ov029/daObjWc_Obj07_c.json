@@ -47,7 +47,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daObjWc_Obj07_c_Spawn",
+      "symbol": "daObjWc_Obj07_c_classInit",
       "address": "0x02112168",
       "size": "0x0000003c",
       "legacy_source": "src/daObjWc_Obj07_c_Spawn.c",

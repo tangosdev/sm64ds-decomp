@@ -11,6 +11,11 @@ struct Player;
  * the ROM prove composition, not inheritance: dCcPos_c lives at offset zero,
  * and the array helpers use a stride of 0x60. The descriptive class and method
  * names are inferred from the call graph; their ownership and layouts are not.
+ *
+ * SM64DS RTTI names the implementation daSnmBth_c. The reconstructed factory
+ * daSnmBth_c_classInit (historical alias SnowmanBreath_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_SNOWMAN_BREATH
+ * (historical alias SnowmanBreath_SpawnInfo) is its registry descriptor.
  */
 struct SnowmanBreathParticle {
     dCcPos_c mCollider;         /* 0x00 */

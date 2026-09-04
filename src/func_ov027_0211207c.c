@@ -1,4 +1,4 @@
-// @symbol func_ov027_0211207c
+// @symbol daPgDfdr_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_ModelAnim.h"
@@ -9,7 +9,11 @@
 extern int _ZTV10daPgDfdr_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV10daPgDfdr_c */
-int *func_ov027_0211207c(void)
+/* Reconstructed source-style name: SM64DS proves daPgDfdr_c through RTTI,
+ * allocation size, vtable identity, and the PENGUIN_DEFENDER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov027_0211207c. */
+int *daPgDfdr_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(988);
     if (p) {

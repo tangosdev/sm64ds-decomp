@@ -1,4 +1,4 @@
-// @symbol UkikiThief_Spawn
+// @symbol daMky_c_classInit_MONKEY_THIEF
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -10,7 +10,11 @@
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV5Ukiki */
 extern void _ZN7PathPtrC1Ev(void *);
-int *UkikiThief_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daMky_c through RTTI,
+ * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: UkikiThief_Spawn. */
+int *daMky_c_classInit_MONKEY_THIEF(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(972);
     if (p) {

@@ -32,7 +32,7 @@ _ZN7Wiggler16CleanupResourcesEv kind:function(arm,size=0x98) addr:0x02112a5c
 _ZN7Wiggler6RenderEv kind:function(arm,size=0x68) addr:0x02112af4
 _ZN7Wiggler8BehaviorEv kind:function(arm,size=0x6e0) addr:0x02112b5c
 _ZN7Wiggler13InitResourcesEv kind:function(arm,size=0x468) addr:0x0211323c
-Wiggler_Spawn kind:function(arm,size=0x17c) addr:0x021136a4
+daHanachan_c_classInit kind:function(arm,size=0x17c) addr:0x021136a4
 data_ov034_02113820 kind:data(any) addr:0x02113820
 data_ov034_02113828 kind:data(any) addr:0x02113828
 data_ov034_0211382c kind:data(any) addr:0x0211382c ambiguous
@@ -111,7 +111,7 @@ _ZTI12daHanachan_c kind:data(any) addr:0x0211445c
 data_ov034_02114468 kind:data(any) addr:0x02114468
 _ZTS12daHanachan_c kind:data(any) addr:0x02114478
 data_ov034_02114488 kind:data(any) addr:0x02114488
-Wiggler_SpawnInfo kind:data(any) addr:0x02114498 ambiguous
+g_profile_HANACHAN kind:data(any) addr:0x02114498 ambiguous
 _ZTV7Wiggler kind:data(any) addr:0x021144bc
 data_ov034_02114538 kind:data(any) addr:0x02114538
 data_ov034_0211454c kind:data(any) addr:0x0211454c ambiguous

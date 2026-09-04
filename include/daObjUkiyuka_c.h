@@ -23,7 +23,7 @@
  * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
  *
  * TWO DESCENDANTS: daObjFl_Ukiyuka_c (FloatingFloorLllSmall, which has a second
- * factory FloatingFloorLllBig_Spawn building the same class with different
+ * factory daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA building the same class with different
  * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
  *
  * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
@@ -39,7 +39,7 @@
  * SIZE 0x32c. 0x32a + 2 closes the class, and FloatingFloorBfs_Spawn passes
  * 812 = 0x32c to fBase_c::operator new, which is this class and nothing more:
  * daObjKm2_Ukishima_c adds no field of its own. THE OTHER LEAF IS BIGGER --
- * FloatingFloorLllSmall_Spawn and FloatingFloorLllBig_Spawn both pass 816 = 0x330
+ * daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L and daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA both pass 816 = 0x330
  * -- so daObjFl_Ukiyuka_c has 4 bytes this class does not, which is what fixes the
  * boundary at 0x32c rather than anywhere higher.
  *

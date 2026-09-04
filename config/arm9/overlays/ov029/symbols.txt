@@ -38,7 +38,7 @@ _ZN15daObjWc_Obj07_cD1Ev kind:function(arm,size=0x50) addr:0x02112080
 _ZN15daObjWc_Obj07_cD0Ev kind:function(arm,size=0x64) addr:0x021120d0
 _ZN15daObjWc_Obj07_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112134
 _ZN15daObjWc_Obj07_c13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112148
-daObjWc_Obj07_c_Spawn kind:function(arm,size=0x3c) addr:0x02112168
+daObjWc_Obj07_c_classInit kind:function(arm,size=0x3c) addr:0x02112168
 _ZN14daObjWc_Mizu_cD1Ev kind:function(arm,size=0x4c) addr:0x021121a4
 _ZN14daObjWc_Mizu_cD0Ev kind:function(arm,size=0x60) addr:0x021121f0
 func_ov029_02112250 kind:function(arm,size=0x64) addr:0x02112250
@@ -210,7 +210,7 @@ data_ov029_02113fc4 kind:data(any) addr:0x02113fc4
 _ZTI15daObjWc_Obj07_c kind:data(any) addr:0x02113fc8
 data_ov029_02113fd4 kind:data(any) addr:0x02113fd4
 _ZTS15daObjWc_Obj07_c kind:data(any) addr:0x02113fe0
-daObjWc_Obj07_c_SpawnInfo kind:data(any) addr:0x02113ff4 ambiguous
+g_profile_WC_UKISIMA kind:data(any) addr:0x02113ff4 ambiguous
 data_ov029_02114010 kind:data(any) addr:0x02114010 ambiguous
 _ZTV15daObjWc_Obj07_c kind:data(any) addr:0x02114018
 _ZTI14daObjWc_Mizu_c kind:data(any) addr:0x02114098

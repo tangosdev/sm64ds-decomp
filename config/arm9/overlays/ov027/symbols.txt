@@ -5,15 +5,15 @@ _ZN10SlidingIce16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
 _ZN10SlidingIce6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
 _ZN10SlidingIce8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
 _ZN10SlidingIce13InitResourcesEv kind:function(arm,size=0x124) addr:0x02111440
-SlidingIce_Spawn kind:function(arm,size=0x30) addr:0x02111564
-SlidingIceSpawner_Spawn kind:function(arm,size=0x30) addr:0x02111594
+daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT kind:function(arm,size=0x30) addr:0x02111564
+daObjSlIceBlock_c_classInit_SL_ICEBLOCK kind:function(arm,size=0x30) addr:0x02111594
 _ZN12daIDonketu_cD1Ev kind:function(arm,size=0x54) addr:0x021115c4
 _ZN12daIDonketu_cD0Ev kind:function(arm,size=0x68) addr:0x02111618
 _ZN12daIDonketu_c14UpdateRunStateEv kind:function(arm,size=0x70) addr:0x02111680
 _ZN12daIDonketu_c16UpdateDeathStateEv kind:function(arm,size=0x80) addr:0x021116f0
 _ZN12daIDonketu_c8BehaviorEv kind:function(arm,size=0xac) addr:0x02111770
 _ZN12daIDonketu_c13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211181c
-daIDonketu_c_Spawn kind:function(arm,size=0x5c) addr:0x0211186c
+daIDonketu_c_classInit kind:function(arm,size=0x5c) addr:0x0211186c
 _ZN10daPgDfdr_cD1Ev kind:function(arm,size=0x5c) addr:0x021118c8
 _ZN10daPgDfdr_cD0Ev kind:function(arm,size=0x70) addr:0x02111924
 func_ov027_02111994 kind:function(arm,size=0x94) addr:0x02111994
@@ -29,7 +29,7 @@ _ZN10daPgDfdr_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111dfc
 _ZN10daPgDfdr_c6RenderEv kind:function(arm,size=0x34) addr:0x02111e00
 _ZN10daPgDfdr_c8BehaviorEv kind:function(arm,size=0x80) addr:0x02111e34
 _ZN10daPgDfdr_c13InitResourcesEv kind:function(arm,size=0x1c8) addr:0x02111eb4
-func_ov027_0211207c kind:function(arm,size=0x48) addr:0x0211207c
+daPgDfdr_c_classInit kind:function(arm,size=0x48) addr:0x0211207c
 _ZN13SnowmanBreathD1Ev kind:function(arm,size=0x40) addr:0x021120c4
 _ZN13SnowmanBreathD0Ev kind:function(arm,size=0x54) addr:0x02112104
 _ZN21SnowmanBreathParticleD1Ev kind:function(arm,size=0x18) addr:0x02112158
@@ -46,7 +46,7 @@ _ZN13SnowmanBreath16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021127
 _ZN13SnowmanBreath6RenderEv kind:function(arm,size=0x64) addr:0x02112740
 _ZN13SnowmanBreath8BehaviorEv kind:function(arm,size=0x238) addr:0x021127a4
 _ZN13SnowmanBreath13InitResourcesEv kind:function(arm,size=0xd8) addr:0x021129dc
-SnowmanBreath_Spawn kind:function(arm,size=0x60) addr:0x02112ab4
+daSnmBth_c_classInit kind:function(arm,size=0x60) addr:0x02112ab4
 data_ov027_02112b14 kind:data(any) addr:0x02112b14
 data_ov027_02112b18 kind:data(any) addr:0x02112b18
 data_ov027_02112b1c kind:data(any) addr:0x02112b1c
@@ -116,9 +116,9 @@ data_ov027_021136f4 kind:data(any) addr:0x021136f4 ambiguous
 data_ov027_0211373c kind:data(any) addr:0x0211373c ambiguous
 _ZTI17daObjSlIceBlock_c kind:data(any) addr:0x021137c4
 _ZTS17daObjSlIceBlock_c kind:data(any) addr:0x021137d0
-SlidingIceSpawner_SpawnInfo kind:data(any) addr:0x021137e4 ambiguous
+g_profile_SL_ICEBLOCK kind:data(any) addr:0x021137e4 ambiguous
 data_ov027_021137f8 kind:data(any) addr:0x021137f8 ambiguous
-SlidingIce_SpawnInfo kind:data(any) addr:0x02113800 ambiguous
+g_profile_SL_ICEBLOCK_SHOT kind:data(any) addr:0x02113800 ambiguous
 data_ov027_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov027_02113820 kind:data(any) addr:0x02113820 ambiguous
 _ZTV10SlidingIce kind:data(any) addr:0x02113824
@@ -129,7 +129,7 @@ _ZTI12daIDonketu_c kind:data(any) addr:0x021138b0
 _ZTI7daOts_c kind:data(any) addr:0x021138bc
 data_ov027_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 _ZTS12daIDonketu_c kind:data(any) addr:0x021138c8
-daIDonketu_c_SpawnInfo kind:data(any) addr:0x021138d8 ambiguous
+g_profile_ICE_DONKETU kind:data(any) addr:0x021138d8 ambiguous
 data_ov027_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov027_021138f4 kind:data(any) addr:0x021138f4
 data_ov027_021138fc kind:data(any) addr:0x021138fc ambiguous
@@ -146,7 +146,7 @@ data_ov027_021139dc kind:data(any) addr:0x021139dc
 _ZTI10daPgDfdr_c kind:data(any) addr:0x021139e4
 _ZTS10daPgDfdr_c kind:data(any) addr:0x021139f0
 data_ov027_021139f4 kind:data(any) addr:0x021139f4 ambiguous
-data_ov027_02113a00 kind:data(any) addr:0x02113a00 ambiguous
+g_profile_PENGUIN_DEFENDER kind:data(any) addr:0x02113a00 ambiguous
 data_ov027_02113a1c kind:data(any) addr:0x02113a1c
 data_ov027_02113a20 kind:data(any) addr:0x02113a20
 data_ov027_02113a24 kind:data(any) addr:0x02113a24
@@ -158,7 +158,7 @@ data_ov027_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov027_02113abc kind:data(any) addr:0x02113abc ambiguous
 _ZTI10daSnmBth_c kind:data(any) addr:0x02113b10
 _ZTS10daSnmBth_c kind:data(any) addr:0x02113b1c
-SnowmanBreath_SpawnInfo kind:data(any) addr:0x02113b2c ambiguous
+g_profile_SNOWMAN_BREATH kind:data(any) addr:0x02113b2c ambiguous
 _ZTV13SnowmanBreath kind:data(any) addr:0x02113b50
 data_ov027_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov027_02113b80 kind:data(any) addr:0x02113b80 ambiguous

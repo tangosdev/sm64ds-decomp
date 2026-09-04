@@ -10,6 +10,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daWater_Suikomi_c. The reconstructed factory
+ * daWater_Suikomi_c_classInit (historical alias WaterSuction_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_WATER_SUIKOMI
+ * (historical alias WaterSuction_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

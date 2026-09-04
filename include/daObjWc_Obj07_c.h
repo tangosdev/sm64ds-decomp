@@ -16,8 +16,13 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKaitendai_c, ov002 0x021091ac
  *
- * NO FIELDS OF ITS OWN: daObjWc_Obj07_c_Spawn passes 800 = 0x320 = sizeof(dBgActor_c).
+ * NO FIELDS OF ITS OWN: daObjWc_Obj07_c_classInit passes 800 = 0x320 = sizeof(dBgActor_c).
  * It overrides slots 0 and 3, which the base leaves null.
+ *
+ * SM64DS RTTI names the implementation daObjWc_Obj07_c. The reconstructed factory
+ * daObjWc_Obj07_c_classInit (historical alias daObjWc_Obj07_c_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_WC_UKISIMA
+ * (historical alias daObjWc_Obj07_c_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

@@ -23,7 +23,7 @@
  *
  * SIZE IS 0x334 (820 decimal), THE LITERAL THE FACTORY PASSES TO operator new --
  * not the field span a naive read of the destructor gives. The factory,
- * func_ov025_02111898, is a trivial-constructor shape: `fBase_c::operator
+ * daDgr_c_classInit, is a trivial-constructor shape: `fBase_c::operator
  * new(820)`, `dBgActor_c::dBgActor_c()`, store `_ZTV7daDgr_c`. No dedicated
  * "daDgr_c()" constructor exists in the ROM -- the derived class's own ctor
  * body is empty and gets folded into the factory, the same shape
@@ -59,6 +59,11 @@
  * 0x320 + 0x14 = 0x334, closing exactly on the factory's literal. Types are
  * proven from the accesses above, not guessed; the per-offset citations are in
  * notes/bgobject-provenance.md.
+ *
+ * SM64DS RTTI names the implementation daDgr_c. The reconstructed factory
+ * daDgr_c_classInit (historical alias func_ov025_02111898) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_DONGURU
+ * (historical alias data_ov025_0211373c) is its registry descriptor.
  */
 
 struct daDgr_c : dBgActor_c {

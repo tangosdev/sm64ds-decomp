@@ -20,9 +20,14 @@
  * InitResources sets it from the actor id -- 0 for id 0x4b, 1 for id 0x4c -- and
  * then indexes a 0xc-stride table in ov022 with it; CleanupResources indexes the
  * same table with the same byte. So the two factories the tree gives separate
- * names, FloatingFloorLllSmall_Spawn and FloatingFloorLllBig_Spawn, build ONE
+ * names, daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L and daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA, build ONE
  * class: both pass 816 = 0x330 and both store this vtable. 0x32c + 1 rounds to
  * 0x330, which closes the class on that literal, and daObjUkiyuka_c ends at 0x32c.
+ *
+ * SM64DS RTTI names the implementation daObjFl_Ukiyuka_c. The reconstructed factory
+ * daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L (historical alias FloatingFloorLllSmall_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_FL_UKIYUKA_L
+ * (historical alias FloatingFloorLllSmall_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

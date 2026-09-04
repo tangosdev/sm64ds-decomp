@@ -6,9 +6,14 @@
  * the compatibility-facing C++ class; the ROM-owned metadata is audited
  * independently at _ZTI21daObj_volcanoCannon_c / _ZTV21daObj_volcanoCannon_c.
  *
- * VolcanoFire_Spawn allocates 0x11c bytes, constructs dActor_c, then dCcAc_c at
+ * daObj_volcanoCannon_c_classInit allocates 0x11c bytes, constructs dActor_c, then dCcAc_c at
  * +0xd4. The D1 body destroys that member and then the base, closing the same
  * layout from the other direction.
+ *
+ * SM64DS RTTI names the implementation daObj_volcanoCannon_c. The reconstructed factory
+ * daObj_volcanoCannon_c_classInit (historical alias VolcanoFire_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_OBJ_VOLCANO_CANNON
+ * (historical alias VolcanoFire_SpawnInfo) is its registry descriptor.
  */
 #ifndef VOLCANOFIRE_H
 #define VOLCANOFIRE_H

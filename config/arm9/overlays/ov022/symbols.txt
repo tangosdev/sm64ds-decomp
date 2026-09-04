@@ -41,8 +41,8 @@ _ZN21FloatingFloorLllSmallD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
 _ZN21FloatingFloorLllSmallD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
 _ZN21FloatingFloorLllSmall16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
 _ZN21FloatingFloorLllSmall13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
-FloatingFloorLllSmall_Spawn kind:function(arm,size=0x3c) addr:0x021120b8
-FloatingFloorLllBig_Spawn kind:function(arm,size=0x3c) addr:0x021120f4
+daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L kind:function(arm,size=0x3c) addr:0x021120b8
+daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA kind:function(arm,size=0x3c) addr:0x021120f4
 _ZN9LavaPlankD1Ev kind:function(arm,size=0x44) addr:0x02112130
 _ZN9LavaPlankD0Ev kind:function(arm,size=0x58) addr:0x02112174
 _ZN9LavaPlank16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021121cc
@@ -70,7 +70,7 @@ _ZN11VolcanoFire11ChangeStateEPNS_5StateE kind:function(arm,size=0x50) addr:0x02
 _ZN11VolcanoFire16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
 _ZN11VolcanoFire8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
 _ZN11VolcanoFire13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
-VolcanoFire_Spawn kind:function(arm,size=0x38) addr:0x02112918
+daObj_volcanoCannon_c_classInit kind:function(arm,size=0x38) addr:0x02112918
 data_ov022_02112950 kind:data(any) addr:0x02112950
 data_ov022_02112954 kind:data(any) addr:0x02112954
 data_ov022_02112958 kind:data(any) addr:0x02112958
@@ -224,9 +224,9 @@ _ZTI17daObjFl_Ukiyuka_c kind:data(any) addr:0x021140b4
 data_ov022_021140b8 kind:data(any) addr:0x021140b8 ambiguous
 _ZTS17daObjFl_Ukiyuka_c kind:data(any) addr:0x021140c0
 data_ov022_021140d4 kind:data(any) addr:0x021140d4
-FloatingFloorLllBig_SpawnInfo kind:data(any) addr:0x021140ec ambiguous
+g_profile_FL_UKIYUKA kind:data(any) addr:0x021140ec ambiguous
 data_ov022_021140f8 kind:data(any) addr:0x021140f8 ambiguous
-FloatingFloorLllSmall_SpawnInfo kind:data(any) addr:0x02114108 ambiguous
+g_profile_FL_UKIYUKA_L kind:data(any) addr:0x02114108 ambiguous
 _ZTV21FloatingFloorLllSmall kind:data(any) addr:0x0211412c
 data_ov022_0211417c kind:data(any) addr:0x0211417c ambiguous
 _ZTI15daObjFl_UkiKi_c kind:data(any) addr:0x021141ac
@@ -250,7 +250,7 @@ data_ov022_02114424 kind:data(any) addr:0x02114424
 data_ov022_0211442c kind:data(any) addr:0x0211442c
 _ZTI21daObj_volcanoCannon_c kind:data(any) addr:0x02114434
 _ZTS21daObj_volcanoCannon_c kind:data(any) addr:0x02114440
-VolcanoFire_SpawnInfo kind:data(any) addr:0x02114458 ambiguous
+g_profile_OBJ_VOLCANO_CANNON kind:data(any) addr:0x02114458 ambiguous
 _ZTV11VolcanoFire kind:data(any) addr:0x0211447c
 _ZTV21daObj_volcanoCannon_c kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous

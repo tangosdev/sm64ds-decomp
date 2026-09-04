@@ -36,7 +36,7 @@
  *   [1] 0x021120d0  src/_ZN15daObjWc_Obj07_cD0Ev.cpp
  *   [2] 0x02112134  src/_ZN15daObjWc_Obj07_c16CleanupResourcesEv.cpp
  *   [3] 0x02112148  src/_ZN15daObjWc_Obj07_c13InitResourcesEv.cpp
- *   [4] 0x02112168  src/daObjWc_Obj07_c_Spawn.c
+ *   [4] 0x02112168  src/daObjWc_Obj07_c_classInit.c
  *
  * tubuild's create pass left one #pragma uncarried and asked for a decision
  * by hand; it was resolved at CleanupResources below, where the reasoning
@@ -73,13 +73,17 @@ extern int func_ov002_020b676c(unsigned char *self, struct Arg *a, short arg2);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- daObjWc_Obj07_c_Spawn, 0x02112168, size 0x3c */
+/* ROM ordinal 4 -- daObjWc_Obj07_c_classInit, 0x02112168, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWc_Obj07_c_Spawn
+// @symbol daObjWc_Obj07_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV16daObjKaitendai_c */
-extern "C" int *daObjWc_Obj07_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjWc_Obj07_c through RTTI,
+ * allocation size, vtable identity, and the WC_UKISIMA registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjWc_Obj07_c_Spawn. */
+extern "C" int *daObjWc_Obj07_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(800);
     if (p) {

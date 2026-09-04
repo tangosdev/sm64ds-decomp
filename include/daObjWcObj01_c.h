@@ -18,6 +18,11 @@
  *
  * NO FIELDS OF ITS OWN: daObjWcObj01_c_classInit passes 840 = 0x348, which
  * daObjFloatBoard_c fills. It overrides slot 0 only.
+ *
+ * SM64DS RTTI names the implementation daObjWcObj01_c. The reconstructed factory
+ * daObjWcObj01_c_classInit (historical alias daObjWcObj01_c_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_WC_OBJ01
+ * (historical alias daObjWcObj01_c_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

@@ -20,7 +20,7 @@
  *   [3] 0x021116f0  src/_ZN12daIDonketu_c16UpdateDeathStateEv.cpp
  *   [4] 0x02111770  src/_ZN12daIDonketu_c8BehaviorEv.cpp
  *   [5] 0x0211181c  src/_ZN12daIDonketu_c13InitResourcesEv.cpp
- *   [6] 0x0211186c  src/daIDonketu_c_Spawn.c
+ *   [6] 0x0211186c  src/daIDonketu_c_classInit.c
  *
  * THE CLASS NAME IS THE CARTRIDGE'S OWN. The decomp used to call this class
  * `ChillBully`, a coined name; the measurement that settles it is at the top of
@@ -57,9 +57,9 @@ int _ZN8dActor_c9TrackStarEjj(void *, unsigned int, unsigned int);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daIDonketu_c_Spawn, 0x0211186c, size 0x5c                  */
+/* ROM ordinal 6 -- daIDonketu_c_classInit, 0x0211186c, size 0x5c                  */
 /* -------------------------------------------------------------------------- */
-// @symbol daIDonketu_c_Spawn
+// @symbol daIDonketu_c_classInit
 /* resolved: VT0 = _ZTV7daOts_c, VT1 = _ZTV12daIDonketu_c.
  *
  * The natural C++ spelling `return new daIDonketu_c` reproduces the text, but
@@ -78,7 +78,11 @@ int _ZN8dActor_c9TrackStarEjj(void *, unsigned int, unsigned int);
  * _ZTV7daOts_c is NOT defined here (daOts_c's key function is CleanupResources, in
  * src/_ZN7daOts_c16CleanupResourcesEv.cpp), so that one resolves to symbols.txt's
  * ov064 address and takes no bias. */
-extern "C" int *daIDonketu_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daIDonketu_c through RTTI,
+ * allocation size, vtable identity, and the ICE_DONKETU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daIDonketu_c_Spawn. */
+extern "C" int *daIDonketu_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1020);
     if (p) {

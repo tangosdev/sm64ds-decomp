@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daIDonketu_c_Spawn",
+      "symbol": "daIDonketu_c_classInit",
       "address": "0x0211186c",
       "size": "0x0000005c",
       "legacy_source": "src/daIDonketu_c_Spawn.c",

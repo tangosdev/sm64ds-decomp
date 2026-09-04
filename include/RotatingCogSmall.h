@@ -12,6 +12,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjCtMecha10_c. The reconstructed factory
+ * daObjCtMecha10_c_classInit_CT_MECHA12S (historical alias RotatingCogSmall_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_CT_MECHA12S
+ * (historical alias RotatingCogSmall_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus

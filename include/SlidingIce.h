@@ -12,6 +12,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjSlIceBlock_c. The reconstructed factory
+ * daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT (historical alias SlidingIce_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_SL_ICEBLOCK_SHOT
+ * (historical alias SlidingIce_SpawnInfo) is its registry descriptor.
  */
 
 #ifdef __cplusplus
