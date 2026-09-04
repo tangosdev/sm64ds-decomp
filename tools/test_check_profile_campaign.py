@@ -296,6 +296,94 @@ class RegistryScan(Fixture):
         self.assertEqual(rc, 0)
         self.assertIn("1 in scope", out)
 
+    def test_row_states_partition_the_rows_in_scope(self):
+        """complete + pending + diverged == rows in scope, always.
+
+        THE ARITHMETIC CONTROL. The first draft incremented one counter per
+        CHECK and printed it beside a ROW count, so a 391-row scan announced
+        "216 complete, 889 pending" -- 1,105 things out of 391 rows, which reads
+        as a campaign a fifth done when it is nearer half. Two units in one
+        sentence is the same misleading green this tool exists to remove, so the
+        partition is asserted here and again at print time.
+        """
+        self._tree()  # ov002, fully migrated
+        # ov009 still on its pre-campaign names -> pending
+        self.symbols("ov009", [("DockPole_Spawn", "0x02112048", "function(arm,size=0x30)"),
+                               ("DockPole_SpawnInfo", "0x02113abc", "data(any)")])
+        self.delinks("ov009", [("src/DockPole_Spawn.c", "0x02112048", "0x02112078")])
+        # ov043 carries a third name -> diverged
+        self.symbols("ov043", [("who_is_this", "0x0211176c", "function(arm,size=0x30)"),
+                               ("g_profile_KM1_DORIFU", "0x021124fc", "data(any)")])
+        self.delinks("ov043", [("src/x.c", "0x0211176c", "0x0211179c")])
+        self.registry([
+            self._row(),
+            self._row(profile_id="MC_METALNET", overlay="ov009",
+                      profile_address="0x02113abc",
+                      current_profile_name="DockPole_SpawnInfo",
+                      proposed_profile_name="g_profile_MC_METALNET",
+                      factory_module="ov009", factory_address="0x02112048",
+                      current_factory_name="DockPole_Spawn",
+                      proposed_factory_name="daObjMc_Metalnet_c_classInit",
+                      factory_filename="d_a_obj_mc_metalnet.c"),
+            self._row(profile_id="KM1_DORIFU", overlay="ov043",
+                      profile_address="0x021124fc",
+                      current_profile_name="StairsBdw_SpawnInfo",
+                      proposed_profile_name="g_profile_KM1_DORIFU",
+                      factory_module="ov043", factory_address="0x0211176c",
+                      current_factory_name="StairsBdw_Spawn",
+                      proposed_factory_name="daObjKm1_Dorifu_c_classInit",
+                      factory_filename="d_a_obj_km1_dorifu.c"),
+        ])
+        rc, out = self.run_tool()
+        self.assertEqual(rc, 1)  # the diverged row
+        self.assertIn("3 in scope", out)
+        self.assertIn("rows      : 1 complete, 1 pending, 1 diverged", out)
+
+    def test_rows_and_checks_are_reported_as_separate_labelled_units(self):
+        """A reader must never have to guess which unit a number is in."""
+        self._tree()
+        self.registry([self._row()])
+        _rc, out = self.run_tool()
+        self.assertIn("rows      :", out)
+        self.assertIn("checks    :", out)
+        self.assertIn("up to three per row", out)
+
+    def test_a_row_is_pending_when_any_one_of_its_checks_is(self):
+        """Two checks of three applied is not a complete row."""
+        self.symbols("ov002", [
+            ("daObjSwitch_c_classInit_HANSWITCH", "0x020baadc", "function(arm,size=0x30)"),
+            ("g_profile_HANSWITCH", "0x02109900", "data(any)"),
+        ])
+        self.delinks("ov002", [("src/ExclamationSwitch_Spawn.c", "0x020baadc", "0x020bab0c")])
+        self.ledger([])
+        self.registry([self._row()])
+        _rc, out = self.run_tool()
+        self.assertIn("rows      : 0 complete, 1 pending, 0 diverged", out)
+        self.assertIn("checks    : 2 complete, 1 pending", out)
+
+    def test_an_exempt_row_is_complete_on_its_two_remaining_checks(self):
+        """A folded factory has no third check, not a failed one."""
+        self.symbols("ov070", [
+            ("daPropeller_Heyho_c_classInit", "0x02120520", "function(arm,size=0x50)"),
+            ("_ZN18daPropeller_Heyho_cD1Ev", "0x0211f100", "function(arm,size=0x40)"),
+            ("g_profile_PROPELLER_HEYHO", "0x02121000", "data(any)"),
+        ])
+        self.delinks("ov070", [("src/actors/daPropeller_Heyho_c.cpp", "0x0211f000",
+                                "0x02120570")])
+        self.ledger([])
+        self.registry([self._row(
+            profile_id="PROPELLER_HEYHO", overlay="ov070", profile_address="0x02121000",
+            proposed_profile_name="g_profile_PROPELLER_HEYHO",
+            current_profile_name="FlyGuy_SpawnInfo",
+            factory_module="ov070", factory_address="0x02120520",
+            current_factory_name="FlyGuy_Spawn",
+            proposed_factory_name="daPropeller_Heyho_c_classInit",
+            factory_filename="d_a_propeller_heyho.c")])
+        rc, out = self.run_tool()
+        self.assertEqual(rc, 0)
+        self.assertIn("rows      : 1 complete, 0 pending, 0 diverged", out)
+        self.assertIn("checks    : 2 complete", out)
+
     def test_a_row_still_on_its_pre_campaign_name_is_pending_not_a_failure(self):
         self.symbols("ov002", [
             ("ExclamationSwitch_Spawn", "0x020baadc", "function(arm,size=0x30)"),
@@ -366,7 +454,7 @@ class RegistryScan(Fixture):
             factory_filename="d_a_propeller_heyho.c")])
         rc, out = self.run_tool()
         self.assertEqual(rc, 0)
-        self.assertIn("1 factory source(s) exempt", out)
+        self.assertIn("exempt    : 1 factory source(s) folded into a promoted TU", out)
 
     def test_a_standalone_source_on_the_wrong_filename_is_pending(self):
         self.symbols("ov002", [

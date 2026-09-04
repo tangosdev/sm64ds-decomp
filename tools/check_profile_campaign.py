@@ -258,9 +258,23 @@ def scan_registry(repo, sym_cache, delinks_cache):
     report['status'] is one of ok / absent / incomplete, and the caller decides
     what that means; this function never turns a dataset it could not read into
     a pass.
+
+    TWO UNITS, NEVER MIXED IN ONE SENTENCE. `complete`/`pending`/`diverged`
+    count REGISTRY ROWS and partition `scope` exactly -- a row is complete when
+    every check on it is, pending when any is outstanding and none diverged, and
+    diverged when any check disagrees with the tree. `checks` counts INDIVIDUAL
+    ASSERTIONS, of which there are up to three per row, and is reported on its
+    own line.
+
+    The first draft incremented one counter for both, so a 391-row scan printed
+    "216 complete, 889 pending" -- 1,105 things out of 391 rows. Read as rows
+    that says a fifth of the campaign is done when the true figure is near half,
+    which is the same misleading green this tool exists to remove. `exempt`
+    counts checks too, and says so where it is printed.
     """
     report = {"status": "ok", "rows": 0, "scope": 0, "superseded": 0,
-              "complete": 0, "pending": 0, "exempt": 0, "missing_columns": []}
+              "complete": 0, "pending": 0, "diverged": 0, "exempt": 0,
+              "checks": collections.Counter(), "missing_columns": []}
     failures = []
     pendings = []
 
@@ -291,6 +305,8 @@ def scan_registry(repo, sym_cache, delinks_cache):
             continue
         pid = r.get("profile_id") or r.get("actor_id") or "?"
         report["scope"] += 1
+        row_pending = False
+        row_diverged = False
 
         # 1. descriptor
         mod = r.get("overlay") or "arm9"
@@ -302,16 +318,17 @@ def scan_registry(repo, sym_cache, delinks_cache):
                 failures.append(("descriptor address unreadable", pid, mod,
                                  r["profile_address"]))
                 addr = None
+                row_diverged = True
             if addr is not None:
                 state, why = symbol_state(table, addr, r.get("current_profile_name"),
                                           r["proposed_profile_name"])
-                if state == "COMPLETE":
-                    report["complete"] += 1
-                elif state == "PENDING":
-                    report["pending"] += 1
+                report["checks"]["descriptor " + state.lower()] += 1
+                if state == "PENDING":
+                    row_pending = True
                     pendings.append(("descriptor", pid, mod, r["profile_address"],
                                      r["proposed_profile_name"]))
-                else:
+                elif state == "DIVERGED":
+                    row_diverged = True
                     failures.append(("descriptor symbol diverged", pid, mod,
                                      "%s: want %s, %s" % (r["profile_address"],
                                                           r["proposed_profile_name"], why)))
@@ -326,16 +343,17 @@ def scan_registry(repo, sym_cache, delinks_cache):
                 failures.append(("factory address unreadable", pid, fmod,
                                  r["factory_address"]))
                 faddr = None
+                row_diverged = True
             if faddr is not None:
                 state, why = symbol_state(table, faddr, r.get("current_factory_name"),
                                           r["proposed_factory_name"])
-                if state == "COMPLETE":
-                    report["complete"] += 1
-                elif state == "PENDING":
-                    report["pending"] += 1
+                report["checks"]["factory " + state.lower()] += 1
+                if state == "PENDING":
+                    row_pending = True
                     pendings.append(("factory", pid, fmod, r["factory_address"],
                                      r["proposed_factory_name"]))
-                else:
+                elif state == "DIVERGED":
+                    row_diverged = True
                     failures.append(("factory symbol diverged", pid, fmod,
                                      "%s: want %s, %s" % (r["factory_address"],
                                                           r["proposed_factory_name"], why)))
@@ -344,15 +362,30 @@ def scan_registry(repo, sym_cache, delinks_cache):
                 if want:
                     src, nfuncs = owning_source(repo, fmod, faddr, delinks_cache, table)
                     if src is None:
+                        report["checks"]["filename diverged"] += 1
+                        row_diverged = True
                         failures.append(("factory source unlocatable", pid, fmod,
                                          "%s owned by no delinks entry" % r["factory_address"]))
                     elif nfuncs > 1:
+                        # exempt: no standalone source exists to be on a filename,
+                        # so this row has no third check rather than a passing one
                         report["exempt"] += 1
                     elif os.path.basename(src) == want:
-                        report["complete"] += 1
+                        report["checks"]["filename complete"] += 1
                     else:
-                        report["pending"] += 1
+                        report["checks"]["filename pending"] += 1
+                        row_pending = True
                         pendings.append(("filename", pid, fmod, src, want))
+
+        # A row is diverged if anything on it disagrees with the tree, pending if
+        # anything is merely outstanding, complete only when nothing is either.
+        # These three partition `scope`; main() asserts that before printing.
+        if row_diverged:
+            report["diverged"] += 1
+        elif row_pending:
+            report["pending"] += 1
+        else:
+            report["complete"] += 1
 
     return report, failures, pendings
 
@@ -479,11 +512,32 @@ def main(argv=None):
         print("check_profile_campaign: registry scan SKIPPED -- %s lacks the column(s) %s."
               % (REGISTRY, ", ".join(reg["missing_columns"]) or "(file is empty)"))
     else:
-        print("check_profile_campaign: %d registry row(s), %d in scope (%d superseded); "
-              "%d assertion(s) complete, %d pending, %d factory source(s) exempt as folded "
-              "into a promoted TU"
-              % (reg["rows"], reg["scope"], reg["superseded"], reg["complete"],
-                 reg["pending"], reg["exempt"]))
+        # The two units get their own lines, each saying which it is. Printing a
+        # row count and a check count in one sentence is how "216 complete, 889
+        # pending" over 391 rows happened.
+        total = reg["complete"] + reg["pending"] + reg["diverged"]
+        if total != reg["scope"]:
+            print("check_profile_campaign: INTERNAL ERROR -- row states (%d complete + "
+                  "%d pending + %d diverged = %d) do not partition the %d row(s) in "
+                  "scope." % (reg["complete"], reg["pending"], reg["diverged"], total,
+                              reg["scope"]))
+            print("  Refusing to report a count that does not add up.")
+            return 2
+        c = reg["checks"]
+        outstanding = ", ".join(
+            "%d %s" % (c["%s pending" % k], k)
+            for k in ("descriptor", "factory", "filename") if c["%s pending" % k])
+        print("check_profile_campaign: %d registry row(s), %d in scope (%d superseded)"
+              % (reg["rows"], reg["scope"], reg["superseded"]))
+        print("  rows      : %d complete, %d pending, %d diverged"
+              % (reg["complete"], reg["pending"], reg["diverged"]))
+        print("  checks    : %d complete, %d pending, %d diverged (up to three per row%s)"
+              % (sum(c[k] for k in c if k.endswith(" complete")),
+                 sum(c[k] for k in c if k.endswith(" pending")),
+                 sum(c[k] for k in c if k.endswith(" diverged")),
+                 "; outstanding: " + outstanding if outstanding else ""))
+        print("  exempt    : %d factory source(s) folded into a promoted TU, so those "
+              "rows carry no filename check" % reg["exempt"])
 
     print("check_profile_campaign: %d live coined ledger claim(s) resolved against "
           "%d symbols.txt file(s); %d diverge, %d of them banked in %s"
