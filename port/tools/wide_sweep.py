@@ -627,24 +627,55 @@ def judge(out, st, meta):
             res["tear_fix"], res["tear_band"] = bool(tf), bool(tb)
             res["clip"] = bool(any(e["x0"] <= 0 or e["x1"] >= W - 1 for e in ef))
 
-            # STRETCH. Every element is composited at ONE uniform scale, so the
-            # widest element at the wide aspect must be the widest at native
-            # times uni_wide/uni_native. A HUD stretched to fill the width comes
-            # back well above that; a torn one comes back above it too, because
-            # the fragment pair inflates nothing but the whole-element span is
-            # what the widest measures.
-            wn = max((e["w"] for e in nat), default=0)
-            wf = max((e["w"] for e in ef), default=0)
-            res["widest_native"], res["widest_wide"] = int(wn), int(wf)
-            res["expect_ratio"] = round(expect, 3)
-            res["ratio"] = round(wf / wn, 3) if wn else None
-            res["stretch"] = bool(res["ratio"] is not None
-                                  and abs(res["ratio"] - expect) > 0.12)
+            # STRETCH, MEASURED IN DS SPACE, because measuring it in host
+            # pixels does not survive the thing this change deliberately does.
+            #
+            # The first version compared the WIDEST element at the wide aspect
+            # against the widest at native and expected the ratio to be the
+            # uniform scale. That is wrong whenever ANCHORING CHANGES THE
+            # CLUSTERING, and anchoring changing the clustering is the whole
+            # point: two elements that sit adjacent at the native aspect (where
+            # there is no spare width) are bridged into one blob, and at a wide
+            # aspect they take different anchors, move apart, and become two.
+            # Measured on the star select, a single 185 DS-px native blob became
+            # 145 and 42 -- 187 together, so nothing stretched and nothing was
+            # lost -- and the widest-element ratio read 1.176 against an expected
+            # 1.5 and called it a stretch. It was a false positive, and it would
+            # have been reported as a defect.
+            #
+            # So each element's width is divided back through the only horizontal
+            # factor the placement applies, the uniform scale, giving its width
+            # in DS pixels. Those are comparable across aspects no matter how the
+            # elements group: an unstretched HUD has the same DS widths at every
+            # aspect, and a stretched one does not. What is compared is the
+            # MULTISET, and a wide width is accepted if it matches a native width
+            # or if it is part of a split whose parts sum to one.
+            def ds_widths(elems, u, sc):
+                return sorted(round(e["w"] / (u * sc), 1) for e in elems)
+
+            res["ds_widths_native"] = ds_widths(nat, uni_n, _ns)
+            res["ds_widths_wide"] = ds_widths(ef, uni_w, scale)
+            nat_w = list(res["ds_widths_native"])
+            unmatched = []
+            for w in res["ds_widths_wide"]:
+                hit = next((v for v in nat_w if abs(v - w) <= 2.0), None)
+                if hit is not None:
+                    nat_w.remove(hit)
+                else:
+                    unmatched.append(w)
+            # A native blob that split into parts: the parts sum to it.
+            for v in list(nat_w):
+                tot = sum(unmatched)
+                if unmatched and abs(tot - v) <= 3.0:
+                    unmatched, nat_w = [], [x for x in nat_w if x != v]
+                    break
+            res["unmatched_widths"] = unmatched
+            res["stretch"] = bool(unmatched)
             rows.append(res)
 
     hdr = (f"{'state':<12}{'aspect':<8}{'stat':<6}{'elem':<6}"
            f"{'tears_fix':<10}{'tears_ctl':<10}{'marg':<6}{'moved':<8}"
-           f"{'TEAR fix':<10}{'TEAR ctl':<10}{'ratio':<8}{'verdict'}")
+           f"{'TEAR fix':<10}{'TEAR ctl':<10}{'dsW':<6}{'verdict'}")
     print(hdr)
     print("-" * len(hdr))
     for r in rows:
@@ -665,7 +696,7 @@ def judge(out, st, meta):
               f"{len(r.get('tears_band', [])):<10}{r.get('margin', 0):<6}"
               f"{r.get('moved_px', 0):<8}"
               f"{str(r.get('tear_fix')):<10}{str(r.get('tear_band')):<10}"
-              f"{str(r.get('ratio')):<8}{verdict}")
+              f"{'ok' if not r.get('stretch') else 'BAD':<6}{verdict}")
     json.dump(rows, open(os.path.join(out, "verdict.json"), "w"), indent=1)
     print("\nrecipes:", os.path.join(out, "recipes.json"))
     print("verdict:", os.path.join(out, "verdict.json"))
