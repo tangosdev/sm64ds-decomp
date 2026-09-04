@@ -673,6 +673,230 @@ inline bool layer_behind_3d(unsigned owner, int prio, int p3d) {
     return (owner == (unsigned)kOwnerObj) ? (prio > p3d) : (prio >= p3d);
 }
 
+// ---- PER-ELEMENT HUD ANCHORING (widescreen) --------------------------------
+//
+// WHAT THIS REPLACES, AND WHY. The widescreen HUD used to be placed by a BAND
+// SPLIT on source x: a DS column below 96 rode the left screen edge, one at 160
+// or above rode the right edge, and the middle stayed centred. That is right
+// for the sparse corner HUD and it is what makes a widescreen HUD read as one --
+// the lives cluster out at the left edge, the coin and star counters out at the
+// right. It has one failure, and status/WIDE169.md section 6 named it as OWED
+// rather than fixed: an element that STRADDLES a band boundary is cut in half,
+// with the whole spare width opened through the middle of it. The pixels below
+// the split go one way and the pixels above it go the other, so the element is
+// not merely misplaced, it is TORN, with a margin/2 void through it (128 px at
+// 16:9, 288 px at 21:9 -- wider than the element itself).
+//
+// The elements that straddle are not exotic. The red-coin pip row crosses 96.
+// The TIME label crosses 160. The pause banner's number sits ON 160. The VS
+// "TIME UP" banner and a level-clear banner are centred rects wide enough to
+// cross both. Every one of those is ordinary play.
+//
+// WHY IT COULD NOT BE FIXED AT THIS SEAM BEFORE. WIDE169 recorded the reason:
+// by the time this code runs the compositor holds a flat 256x192 buffer of DS
+// pixels and "has already lost per-element identity. There is no 'this pixel
+// belongs to the coin counter' available at this point." That is true of the
+// OWNER byte -- a whole layer is not an element -- but it is not true of the
+// PIXELS. An on-screen element is a spatially COHERENT cluster of set pixels
+// with empty space around it, and coherence is recoverable from the buffer
+// itself by labelling it. So identity is not lost; it has to be recovered
+// geometrically rather than read off a byte.
+//
+// WHAT THIS DOES. Once per frame, label the composited hit mask into connected
+// ELEMENTS, then give each whole element ONE anchor, chosen from that element's
+// own horizontal centre against the same two splits the band rule used. Every
+// pixel of an element therefore moves by the same offset. An element cannot be
+// torn by construction, because tearing requires two different offsets inside
+// one element and an element now has exactly one.
+//
+// WHY IT IS A NO-OP ON EVERYTHING ALREADY MEASURED. For an element that lies
+// wholly inside one band, its centre is in that band too, so it gets the band's
+// offset -- the same offset every one of its pixels already had. WIDE169
+// measured the three clusters in play: lives at source x 6-47 (centre 26, left),
+// the health meter at 108-147 (centre 127, centre band) and the coin and star
+// counters at 207-247 (centre 227, right). All three land byte-identically.
+// The change is visible ONLY on an element that used to be torn, which is what
+// makes the before/after a clean control rather than a whole-HUD reshuffle.
+//
+// GAP BRIDGING, AND WHY IT IS NOT OPTIONAL. Strict pixel connectivity is the
+// wrong grain for this. A line of text is not one connected blob -- the letters
+// do not touch -- so labelling it strictly would make every GLYPH its own
+// element, each free to take a different anchor, which is the tear again at a
+// finer grain. So the mask is DILATED before labelling: kBridgeX columns and
+// kBridgeY rows. Two marks closer than the bridge are one element.
+//
+// The bridge is sized off the two facts that matter. It must be LARGER than the
+// gaps inside one element: the DS font is on an 8 px tile grid and glyphs sit
+// within a few pixels of each other, so 16 (two tiles) closes a text run and a
+// digit pair. It must be SMALLER than the gaps between elements that are meant
+// to anchor apart: the lives cluster ends at 47 and the meter starts at 108 (61
+// clear), the meter ends at 147 and the counters start at 207 (59 clear). 16
+// sits with a wide margin on both sides of that window.
+//
+// AND THE ERROR DIRECTION IS DELIBERATE. If the bridge over-merges, two
+// elements share one anchor and both stay whole -- they sit where the merged
+// centre puts them, which is a placement judgement. If it under-merges, one
+// element splits and TEARS, which is a defect. Over-merging is a look and
+// under-merging is a bug, so the bridge is sized to err large.
+//
+// COST. Four linear passes over the 192x256 mask (two dilation, two labelling)
+// plus a sparse extent walk. It runs ONLY when the aspect is wide; at the
+// native aspect the whole block is skipped and the placement is the byte-for-
+// byte original x*sx, so the default build pays nothing at all.
+namespace hudelem {
+
+// The dilation radii, in DS pixels. See the bridge discussion above.
+const int kBridgeX = 16, kBridgeY = 8;
+
+// The anchor each label resolved to, as the host-pixel offset added to x*uni.
+// Label 0 is "no element" and is never read for a hit pixel; it holds the
+// centred offset so that a stray read is placed rather than thrown.
+const int kMaxLabels = 4096;
+int g_off[kMaxLabels];
+int16_t g_lbl[192][256];
+
+// Union-find over provisional labels, flattened by path halving. The label
+// count is bounded by kMaxLabels; a mask fragmented past that (which no HUD
+// produces -- it would need thousands of separate marks) stops allocating new
+// labels and folds the excess into the last one, which keeps every pixel
+// placed and whole rather than unlabelled.
+int g_par[kMaxLabels];
+int g_nlab;
+
+int find_root(int a) {
+    while (g_par[a] != a) { g_par[a] = g_par[g_par[a]]; a = g_par[a]; }
+    return a;
+}
+void unite(int a, int b) {
+    a = find_root(a); b = find_root(b);
+    if (a != b) g_par[a > b ? a : b] = (a < b) ? a : b;
+}
+
+// Label the frame's elements and resolve each one's anchor offset.
+//
+// BG3 is excluded from the mask because the message layer has its own placement
+// rule that predates this one and is not a band decision at all: dialogue is
+// centred at the native scale, whatever else is on screen. Leaving its glyphs
+// in the mask would also bridge a box of text into whatever HUD sits beside it
+// and drag both to the box's centre.
+//
+// band_l / band_r are the same two splits the band rule used, so an element
+// wholly inside a band keeps exactly that band's offset.
+void resolve(int band_l, int band_r, int margin)
+{
+    // Pass 1: horizontal dilation. A running count of "columns since the last
+    // set pixel" turns a left-to-right sweep into a one-sided dilation, and the
+    // right-to-left sweep completes it, so the whole radius costs two adds per
+    // pixel rather than a kBridgeX-wide window scan at each one.
+    static uint8_t dil[192][256];
+    for (int y = 0; y < 192; ++y) {
+        int run = kBridgeX + 1;
+        for (int x = 0; x < 256; ++x) {
+            const bool on = g_a[y][x].hit && g_a[y][x].owner != 3;
+            run = on ? 0 : (run + 1);
+            dil[y][x] = (run <= kBridgeX) ? 1 : 0;
+        }
+        run = kBridgeX + 1;
+        for (int x = 255; x >= 0; --x) {
+            const bool on = g_a[y][x].hit && g_a[y][x].owner != 3;
+            run = on ? 0 : (run + 1);
+            if (run <= kBridgeX) dil[y][x] = 1;
+        }
+    }
+    // Pass 2: vertical dilation, the same two-sweep trick down the columns. It
+    // reads the HORIZONTALLY dilated mask, so the result is the rectangular
+    // dilation of the original -- which is what makes two marks that are
+    // diagonally apart within the two radii one element.
+    for (int x = 0; x < 256; ++x) {
+        int run = kBridgeY + 1;
+        for (int y = 0; y < 192; ++y) {
+            if (dil[y][x]) { run = 0; continue; }
+            ++run;
+            if (run <= kBridgeY) dil[y][x] = 1;
+        }
+        run = kBridgeY + 1;
+        for (int y = 191; y >= 0; --y) {
+            if (dil[y][x]) { run = 0; continue; }
+            ++run;
+            if (run <= kBridgeY) dil[y][x] = 1;
+        }
+    }
+
+    // Pass 3: provisional labels with 8-connectivity over the dilated mask,
+    // unioning as we go. 8 rather than 4 so a diagonal touch does not split an
+    // element that the dilation only just closed.
+    g_nlab = 1;
+    g_par[0] = 0;
+    for (int y = 0; y < 192; ++y) {
+        for (int x = 0; x < 256; ++x) {
+            if (!dil[y][x]) { g_lbl[y][x] = 0; continue; }
+            int best = 0;
+            for (int dy = -1; dy <= 0; ++dy) {
+                for (int dx = -1; dx <= 1; ++dx) {
+                    if (dy == 0 && dx >= 0) continue;
+                    const int ny = y + dy, nx = x + dx;
+                    if (ny < 0 || nx < 0 || nx >= 256) continue;
+                    const int nl = g_lbl[ny][nx];
+                    if (!nl) continue;
+                    if (!best) best = nl; else unite(best, nl);
+                }
+            }
+            if (!best) {
+                if (g_nlab < kMaxLabels) { best = g_nlab; g_par[best] = best; ++g_nlab; }
+                else best = kMaxLabels - 1;   // see the bound note above
+            }
+            g_lbl[y][x] = (int16_t)best;
+        }
+    }
+
+    // Pass 4: flatten the union-find, then take each element's extent from the
+    // ORIGINAL hit pixels rather than the dilated ones. That distinction is not
+    // cosmetic: the anchor arithmetic has to see where the element really ends,
+    // so that a right-band element keeps its native right margin exactly the way
+    // the band rule did, instead of a margin shortened by the dilation radius.
+    static int x0[kMaxLabels], x1[kMaxLabels];
+    for (int i = 0; i < g_nlab; ++i) { x0[i] = 256; x1[i] = -1; }
+    for (int y = 0; y < 192; ++y) {
+        for (int x = 0; x < 256; ++x) {
+            const int l = g_lbl[y][x];
+            if (!l) continue;
+            const int r = find_root(l);
+            g_lbl[y][x] = (int16_t)r;
+            if (!g_a[y][x].hit || g_a[y][x].owner == 3) continue;
+            if (x < x0[r]) x0[r] = x;
+            if (x > x1[r]) x1[r] = x;
+        }
+    }
+
+    // The anchor itself: one decision per element, from its own centre against
+    // the two splits. A label with no original hit pixels (all dilation, no
+    // substance) is never read for a hit pixel, but it is given the centred
+    // offset rather than left undefined.
+    g_off[0] = margin / 2;
+    for (int i = 1; i < g_nlab; ++i) {
+        if (x1[i] < 0) { g_off[i] = margin / 2; continue; }
+        const int c = (x0[i] + x1[i]) / 2;
+        g_off[i] = (c < band_l) ? 0 : (c >= band_r) ? margin : margin / 2;
+    }
+}
+
+}  // namespace hudelem
+
+// SM64DS_HUD_BANDSPLIT=1 -- put the OLD per-column band split back, on this same
+// binary. It exists to be the control half of the per-element measurement: the
+// torn frame and the whole one then come off ONE build at ONE state base, so a
+// before/after image pair cannot be two different builds disagreeing about
+// something else. Unset -- every ordinary run and every shipped build -- the
+// per-element rule above is what places the HUD.
+inline bool hud_bandsplit_env() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_HUD_BANDSPLIT");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v != 0;
+}
+
 // SM64DS_ENGINE_A_LAYERS=<hex>: composite only these layers. 0x04 is BG2 alone,
 // 0x10 the sprites alone, and unset is 0x1f -- every layer, which is what every
 // gate step and every ordinary run does. A capture taken with one bit set is
@@ -1804,6 +2028,16 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     const int uni = sy;                            /* uniform native scale (3) */
     const int margin = ntr::active_w - 256 * uni;  /* spare width (256; 0 at 4:3) */
     const int band_l = 96, band_r = 160;           /* source-x band splits */
+    /* THE ELEMENT PASS. Labelling is the whole per-element rule (see the
+       hudelem banner above): it runs ONCE for the frame, here, after every
+       layer has been resolved into g_a and before a single pixel is placed,
+       so every pixel of one element reads the same anchor. It is skipped
+       entirely at the native aspect -- where margin is 0 and there is nothing
+       to anchor -- and skipped when the band-split control is armed, which is
+       what lets that control be the OLD code path and not a re-derivation of
+       it. */
+    const bool bandsplit = hud_bandsplit_env();
+    if (ntr::widescreen && !bandsplit) hudelem::resolve(band_l, band_r, margin);
     /* TWO QUESTIONS, KEPT APART SO THE A/B ARM STILL MEASURES. `shown3d` is
        whether the 3D layer is in the picture at all, which decides whether the
        coverage mask means anything; `honour3d` is whether this run obeys its
@@ -1851,10 +2085,22 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                centred, no tear -- while every other BG keeps the approved
                band-split. One condition, no new state, and inert at 4:3 because
                the whole arm is behind `if (ntr::widescreen)`. */
+            /* THE PLACEMENT, in precedence order.
+               BG3 first: the message layer is centred at the native scale
+               whatever else is on screen, which is the rule that predates the
+               element pass and the reason BG3 is held out of its mask.
+               Then a full-2D top screen, which is pillarboxed whole.
+               Otherwise the pixel takes ITS OWN ELEMENT's anchor, so an
+               element that straddles a split moves in one piece instead of
+               being cut at the split. With SM64DS_HUD_BANDSPLIT armed the
+               last arm is the original per-column band split instead, which
+               is the control the before/after images are taken against. */
             hx0 = (g_a[y][x].owner == 3)
                           ? x * uni + margin / 2
                           : !shown3d
                           ? x * uni + margin / 2
+                          : !bandsplit
+                          ? x * uni + hudelem::g_off[hudelem::g_lbl[y][x]]
                           : (x < band_l) ? x * uni
                           : (x >= band_r) ? x * uni + margin
                                           : x * uni + margin / 2;
