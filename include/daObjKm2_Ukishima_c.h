@@ -27,14 +27,19 @@
 #include "daObjUkiyuka_c.h"
 
 struct daObjKm2_Ukishima_c : daObjUkiyuka_c {
-    /* --- vtable --- */
-    virtual ~daObjKm2_Ukishima_c();   /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared FIRST. This TU defines every virtual the class
+       has, so it emits the vtable and RTTI; out of line, mwccarm emits a
+       D2/D0/D1 triple, while retail holds D1 (0x02111b14) above D0
+       (0x02111b64) and no D2 at all, and objisolate then refuses the whole
+       TU for emitting out of ROM address order. */
+    virtual ~daObjKm2_Ukishima_c() {} /* slots 16 (D1), 17 (D0) */
 
-    int CleanupResources();            /* slot  3 */
-    int InitResources();               /* slot  0 */
+    /* The two slots daObjUkiyuka_c leaves pure. */
+    virtual s32 InitResources();      /* slot  0 */
+    virtual s32 CleanupResources();   /* slot  3 */
 };
 
-typedef char FloatingFloorBfs_size_must_be_0x32c[sizeof(daObjKm2_Ukishima_c) == 0x32c ? 1 : -1];
+typedef char daObjKm2_Ukishima_c_size_must_be_0x32c[sizeof(daObjKm2_Ukishima_c) == 0x32c ? 1 : -1];
 
 #endif /* __cplusplus */
 

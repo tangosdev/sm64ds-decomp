@@ -139,8 +139,6 @@ data_ov045_02112f08 kind:data(any) addr:0x02112f08
 _ZTS19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f14
 g_profile_KM2_UKISHIMA kind:data(any) addr:0x02112f2c ambiguous
 _ZTV19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f50
-data_ov045_02112f58 kind:data(any) addr:0x02112f58 ambiguous
-data_ov045_02112f7c kind:data(any) addr:0x02112f7c ambiguous
 _ZTI15daObjKm2_Gura_c kind:data(any) addr:0x02112fd0
 data_ov045_02112fdc kind:data(any) addr:0x02112fdc
 _ZTS15daObjKm2_Gura_c kind:data(any) addr:0x02112fe8
