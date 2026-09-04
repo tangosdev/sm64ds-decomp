@@ -148,7 +148,7 @@ src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02120580 end:0x02120618
 
-src/Scuttlebug_Spawn.c:
+src/d_a_spd.c:
     complete
     .text start:0x02120618 end:0x02120668
 
@@ -235,11 +235,11 @@ src/_ZN3MrI8BehaviorEv.cpp:
     complete
     .text start:0x021216ec end:0x02121734
 
-src/BigMrI_Spawn.c:
+src/d_a_eykn_eyekun_boss.c:
     complete
     .text start:0x021219cc end:0x02121a1c
 
-src/MrI_Spawn.c:
+src/d_a_eykn_eyekun.c:
     complete
     .text start:0x02121a1c end:0x02121a6c
 
@@ -299,7 +299,7 @@ src/_ZN6Coffin13InitResourcesEv.cpp:
     complete
     .text start:0x0212255c end:0x02122670
 
-src/daObjCasket_c_classInit.c:
+src/d_a_obj_casket.c:
     complete
     .text start:0x02122670 end:0x021226a0
 

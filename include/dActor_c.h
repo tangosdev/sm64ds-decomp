@@ -80,16 +80,28 @@ struct dActor_c : dBase_c {
     s32 unk_0a4;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
-    /* Bit meanings below are a best-effort reading, not pinned by the ROM the
-     * way the offsets are. Only 0x10000 is proven; the rest are a plausible
-     * reading from the surrounding game mechanics, not independently
-     * verified:
-     *   0x000001 skip behavior while unseen   0x000002 skip render while unseen
-     *   0x000008 unseen                       0x000010 past shadow range
-     *   0x000020 area mismatch                0x010000 suppress behavior (PROVEN)
-     *   0x020000 entering yoshi's mouth        0x040000 inside yoshi's mouth
-     *   0x2000000 squishable                   0x10000000 targetable by egg */
-    u32 mFlags;             /* 0x0b0 -- bit 0x10000 suppresses behaviour; see the bit table above */
+    /* Two populations of bits share this word. The profile descriptor's +0x08
+     * word is copied in verbatim by the constructor; the framework then sets and
+     * clears its own bits in the same storage. Across the 353 soundly-parsed
+     * actor descriptors no profile authors any runtime bit, and the runtime
+     * writes none of the authored ones -- so the split below is a measured
+     * partition, not a guess. Census and evidence:
+     * notes/profile-lifecycle-crosswalk.md.
+     *
+     * AUTHORED BY THE PROFILE, with a recovered consumer:
+     *   0x00000001 enables the clip test; with 0x08 set, skip behaviour
+     *   0x00000002 enables the clip test; with 0x08 set, skip render
+     *   0x00010000 defeat the global force-think override while invisible
+     *   0x08000000 spawn even if the death table says already killed
+     * AUTHORED BY THE PROFILE, consumer not yet recovered:
+     *   0x04  0x80  0x200  0x8000  0x800000  0x1000000  0x2000000
+     *   0x4000000  0x10000000  0x20000000  0x40000000
+     * WRITTEN BY THE FRAMEWORK, never by a profile:
+     *   0x000008 off screen        0x000010 beyond mFarDistance (also kills the
+     *   0x000020 area not showing    drop shadow)
+     *   0x020000 / 0x040000 yoshi-mouth states, written by actor code
+     * AfterInitResources seeds 0x38, so an actor starts fully invisible. */
+    u32 mFlags;             /* 0x0b0 -- see the bit table above */
     /* The clip volume, all four set together by SetRanges out of the actor's
        entry in the spawn-info table. BeforeBehavior projects
        (mPosX, mPosY + mClipOffsetY, mPosZ) into camera space and hands the

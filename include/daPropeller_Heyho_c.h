@@ -18,7 +18,7 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE ROM'S OWN, not a rounded-up field span: `FlyGuy_Spawn` calls
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daPropeller_Heyho_c_classInit` calls
  * `fBase_c::operator new(1000)` -- 0x3e8 -- and stores `_ZTV19daPropeller_Heyho_c`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3e4; the difference is trailing space no source reads.

@@ -1,6 +1,6 @@
 /* class Eyerok : dBgActor_c. Real C++ form.
  *
- * Base and size from the factory (src/Eyerok_Spawn.cpp): fBase_c::operator
+ * Base and size from the factory (src/daIwante_c_classInit.cpp): fBase_c::operator
  * new(0x874), then dBgActor_c::dBgActor_c(), then stores _ZTV6Eyerok. Two
  * vtable stores in the destructor -- own, then dBgActor_c's -- confirming a
  * DIRECT dBgActor_c child, no intermediate. The apparent third store some
@@ -9,7 +9,7 @@
  * POINTER argument, not a vptr store; it never writes to `this`.
  *
  * dBgActor_c ends at 0x320. Every member below closes exactly on the next
- * (confirmed against src/Eyerok_Spawn.cpp and src/_ZN6EyerokD1Ev.c, which
+ * (confirmed against src/daIwante_c_classInit.cpp and src/_ZN6EyerokD1Ev.c, which
  * construct/destroy each in this order):
  *
  *     dCcAcPos_c  0x320 + 0x40 = 0x360
@@ -30,11 +30,16 @@
  * pair the ROM writes at 0x672/0x673, and the "unused tail" at 0x83c is the
  * Matrix4x3 InitResources passes to dBgW_KcMbg::SetFile followed by the two
  * uniqueIDs of the hands it spawns. 0x870 + 4 = 0x874, which is exactly the
- * literal src/Eyerok_Spawn.cpp passes to operator new -- the size is now
+ * literal src/daIwante_c_classInit.cpp passes to operator new -- the size is now
  * corroborated by the field span rather than merely asserted over it.
  *
  * 0x674 is a second, class-owned dBgW_KcMbg (named by _ZN10dBgW_KcMbgD1Ev in
  * the destructor), distinct from dBgActor_c's own at 0x124.
+ *
+ * SM64DS RTTI names the implementation daIwante_c. The reconstructed
+ * factory daIwante_c_classInit (historical alias
+ * Eyerok_Spawn) constructs it for the IWANTE
+ * registry profile.
  */
 #ifndef EYEROK_H
 #define EYEROK_H
@@ -102,7 +107,7 @@ struct Eyerok : dBgActor_c {
     /* NOT unused tail. InitResources passes `this + 0x83c` as the Matrix4x3 &
        argument of dBgW_KcMbg::SetFile on every path, and writes the two words
        after it with the uniqueIDs of the two hands it spawns. 0x83c + 0x30 =
-       0x86c, and 0x870 + 4 = 0x874, the literal src/Eyerok_Spawn.cpp passes to
+       0x86c, and 0x870 + 4 = 0x874, the literal src/daIwante_c_classInit.cpp passes to
        operator new -- so the class now closes on its own size. */
     Matrix4x3 mClsnMat2;                                    /* 0x83c */
     s32 mHandUniqueID1;                                     /* 0x86c */

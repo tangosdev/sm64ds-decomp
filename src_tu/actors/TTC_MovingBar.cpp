@@ -23,8 +23,8 @@
  *   [4] 0x0211b4e0  src/_ZN13TTC_MovingBar6RenderEv.cpp
  *   [5] 0x0211b508  src/_ZN13TTC_MovingBar8BehaviorEv.cpp
  *   [6] 0x0211b640  src/_ZN13TTC_MovingBar13InitResourcesEv.cpp
- *   [7] 0x0211b780  src/TtcRotatingTriangle_Spawn.c
- *   [8] 0x0211b7b8  src/TtcRotatingGear_Spawn.c
+ *   [7] 0x0211b780  src/daObjCtKaitendai_c_classInit_CT_MECHA07.c
+ *   [8] 0x0211b7b8  src/daObjCtKaitendai_c_classInit_CT_MECHA06.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -86,14 +86,14 @@ extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- TtcRotatingGear_Spawn, 0x0211b7b8, size 0x38 */
+/* ROM ordinal 8 -- daObjCtKaitendai_c_classInit_CT_MECHA06, 0x0211b7b8, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol TtcRotatingGear_Spawn
+// @symbol daObjCtKaitendai_c_classInit_CT_MECHA06
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13TTC_MovingBar */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *TtcRotatingGear_Spawn(void)
+int *daObjCtKaitendai_c_classInit_CT_MECHA06(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(892);
     if (p) {
@@ -110,14 +110,14 @@ int *TtcRotatingGear_Spawn(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- TtcRotatingTriangle_Spawn, 0x0211b780, size 0x38 */
+/* ROM ordinal 7 -- daObjCtKaitendai_c_classInit_CT_MECHA07, 0x0211b780, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol TtcRotatingTriangle_Spawn
+// @symbol daObjCtKaitendai_c_classInit_CT_MECHA07
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV13TTC_MovingBar */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *TtcRotatingTriangle_Spawn(void)
+int *daObjCtKaitendai_c_classInit_CT_MECHA07(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(892);
     if (p) {

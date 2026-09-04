@@ -6,7 +6,7 @@
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree -- both read straight out
  * of the ROM, because this class had no source file at all until now.
  *
- * `BooCage_Spawn` (ov063:0x0211c4d0) constructs, in order:
+ * `daTBasket_c_classInit` (ov063:0x0211c4d0) constructs, in order:
  *
  *     _ZN7fBase_cnwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
  *     _ZN12dEnemyBase_cC2Ev                 <- the base, so this derives from dEnemyBase_c
@@ -27,6 +27,11 @@
  * The ROM's RTTI names this class daTBasket_c. The member shape is OneUpMushroom's
  * exactly -- same four types at the same four offsets -- which is what a shared
  * spawn-and-hold idiom looks like; the classes differ only in total size.
+ *
+ * SM64DS RTTI names the implementation daTBasket_c. The reconstructed
+ * factory daTBasket_c_classInit (historical alias
+ * BooCage_Spawn) constructs it for the T_BASKET
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"
@@ -38,7 +43,7 @@
 /* ROM-authenticated lifecycle identity.  `_ZTI11daTBasket_c` / `_ZTS11daTBasket_c`
  * exist in ov063; no `_ZTI7BooCage` / `_ZTS7BooCage` ever did, so the cartridge
  * names this class and `BooCage` was only ever the actor's coined name -- which
- * is why `BooCage_Spawn` / `BooCage_SpawnInfo` keep it, exactly as ov018 keeps
+ * is why `daTBasket_c_classInit` / `g_profile_T_BASKET` keep it, exactly as ov018 keeps
  * `MotherPenguin_Spawn` for `daPgMthr_c`. */
 struct daTBasket_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */

@@ -5,11 +5,7 @@
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
 src/actors/d_a_obj_rc_buranko.cpp:
     complete
-    .text start:0x021111a0 end:0x02111414
-
-src/daObjRcBuranko_c_classInit.c:
-    complete
-    .text start:0x02111414 end:0x02111444
+    .text start:0x021111a0 end:0x02111444
 
 src/actors/d_a_obj_rc_kaitendai.cpp:
     complete
@@ -21,11 +17,7 @@ src/daObjRc_Kaitendai_c_classInit.c:
 
 src/actors/d_a_obj_rc_hane.cpp:
     complete
-    .text start:0x02111580 end:0x02111904
-
-src/daObjRc_Hane_c_classInit.c:
-    complete
-    .text start:0x02111904 end:0x0211193c
+    .text start:0x02111580 end:0x0211193c
 
 src/_ZN10DonutBlockD1Ev.cpp:
     complete
@@ -69,11 +61,7 @@ src/daObjRc_Tikuwa_c_classInit.c:
 
 src/actors/d_a_obj_rc_guruguru.cpp:
     complete
-    .text start:0x02111d14 end:0x02111f5c
-
-src/daObjRc_Guruguru_c_classInit.c:
-    complete
-    .text start:0x02111f5c end:0x02111f8c
+    .text start:0x02111d14 end:0x02111f8c
 
 src/actors/d_a_obj_rc_dorifu.cpp:
     complete

@@ -10,7 +10,7 @@
  * coined it DorrieCap): the typeinfo at ov065
  * 0x0211cd4c names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x0211cdc4 (31 slots, same count as dActor_c's) is what pairs it
- * to DorrieCap_Spawn, which stores that address after allocating 0x184 bytes
+ * to daDossyCap_c_classInit, which stores that address after allocating 0x184 bytes
  * via fBase_c::operator new.
  *
  * The Spawn constructs the three owned subobjects below at 0xd4..0x140 in
@@ -36,6 +36,11 @@
  * whose leading "fields" duplicated dActor_c's storage -- because giving a
  * non-derived struct a virtual would have inserted a vptr and shifted every
  * offset. Deriving from dActor_c is what makes the declarations below honest.
+ *
+ * SM64DS RTTI names the implementation daDossyCap_c. The reconstructed
+ * factory daDossyCap_c_classInit (historical alias
+ * DorrieCap_Spawn) constructs it for the DOSSY_CAP
+ * registry profile.
  */
 struct daDossyCap_c : dActor_c {
     /* Used both as a Player* (Behavior chases it through +0x360) and as a raw

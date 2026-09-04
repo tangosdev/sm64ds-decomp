@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov036/daObjRc_Guruguru_c, hand-curated.
- * 6 function(s), .text 0x02111d14..0x02111f5c.
+ * 7 function(s), .text 0x02111d14..0x02111f8c.
  *
  * The RC_GURUGURU profile's powered turntable: a dBgActor_c that adds a fixed
  * yaw step to its own heading every frame and drags its model and collision
@@ -15,9 +15,14 @@
  * InitResources (0), CleanupResources (3), Behavior (6) and Render (9) -- and
  * adds one s16 of its own storage in dBgActor_c's tail padding at 0x31e.
  *
- * The .text run ends at 0x02111f5c: daObjRc_Guruguru_c_classInit lives there
- * in its own C file and _ZN16daObjRc_Dorifu_cD1Ev at 0x02111f8c opens the next
- * class, so nothing outside this TU's six functions belongs to it.
+ * The .text run ends at 0x02111f8c, where _ZN16daObjRc_Dorifu_cD1Ev opens the
+ * next class. daObjRc_Guruguru_c_classInit at 0x02111f5c is the last function
+ * inside it: the RC_GURUGURU registry profile's spawn function, sitting
+ * immediately after InitResources in the ROM's own .text order. It used to
+ * keep its own C file, folded in here because the promotion predated the
+ * profile-reconstruction campaign, not because the ROM ever put it elsewhere.
+ * It keeps C linkage and is written first here, being the highest-address
+ * member.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
  * emits one .text section per function in the REVERSE of source order, so the
@@ -32,6 +37,7 @@
  *   [3] 0x02111df8  src/_ZN18daObjRc_Guruguru_c6RenderEv.cpp
  *   [4] 0x02111e20  src/_ZN18daObjRc_Guruguru_c8BehaviorEv.cpp
  *   [5] 0x02111eb0  src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp
+ *   [6] 0x02111f5c  src/daObjRc_Guruguru_c_classInit.c
  */
 
 #include "daObjRc_Guruguru_c.h"
@@ -61,6 +67,32 @@ extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16
 bool _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h / decl_common.h as the legacy file did --
+   this TU declares in place, and reaching a shared header would change what
+   the rest of the TU sees. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV18daObjRc_Guruguru_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjRc_Guruguru_c_classInit, 0x02111f5c, size 0x30       */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjRc_Guruguru_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjRc_Guruguru_c through
+   RTTI, allocation size, vtable identity, and the RC_GURUGURU registry
+   profile; later EAD lineage supplies classInit. Exact original spelling is
+   not preserved. Historical alias: ArmedRotatingPlatform_Spawn.
+
+   800 = 0x320: dBgActor_c's own size, with this class's one s16 at 0x31e in
+   its tail padding, exactly as the header comment above reads it. */
+extern "C" int *daObjRc_Guruguru_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV18daObjRc_Guruguru_c; }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

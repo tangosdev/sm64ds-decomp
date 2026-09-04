@@ -6,11 +6,16 @@
 
 /* daDonketu_c in the ROM's RTTI. Derives from daOts_c, which owns every member this
  * header used to restate -- the ModelAnim, the dBgCh_Actr, the file table, the
- * dCcAc_c and the ShadowModel are all the base's, and Bully_Spawn proves
+ * dCcAc_c and the ShadowModel are all the base's, and daDonketu_c_classInit proves
  * it by constructing them between the two vtable stores.
  *
- * SIZE 0x400, which is the literal in Bully_Spawn's fBase_c::operator new. The base
+ * SIZE 0x400, which is the literal in daDonketu_c_classInit's fBase_c::operator new. The base
  * ends at 0x398, so everything below is Bully's own.
+ *
+ * SM64DS RTTI names the implementation daDonketu_c. The reconstructed
+ * factory daDonketu_c_classInit (historical alias
+ * Bully_Spawn) constructs it for the DONKETU
+ * registry profile.
  */
 struct Bully : daOts_c {
     u8  pad_398[0x64];

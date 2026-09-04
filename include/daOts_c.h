@@ -28,7 +28,7 @@
  *   out-of-line copy for the vtable to point at. The children inline it (no `bl`
  *   anywhere), and slots 16/17 of _ZTV7daOts_c hold these two addresses.
  *
- *   Bully_Spawn, BigBully_Spawn and daIDonketu_c_Spawn are the SAME function apart
+ *   daDonketu_c_classInit, daBDonketu_c_classInit and daIDonketu_c_Spawn are the SAME function apart
  *   from the allocation size and the last instruction. Each stores TWO vtables --
  *   this class's, from the inlined base constructor, and then its own -- with the
  *   four members constructed between them at those same four offsets.

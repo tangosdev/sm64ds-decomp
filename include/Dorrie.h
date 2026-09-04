@@ -7,10 +7,15 @@
  * has to be checked directly for its exact 31-slot dActor_c shape.
  *
  * DorriePlatform is independently corroborated by the two 0x1c callbacks used
- * by Dorrie_Spawn and the D1/D0 pair: each callback constructs or destroys a
+ * by daDossy_c_classInit and the D1/D0 pair: each callback constructs or destroys a
  * dBgW_KcMbg at +0x30, the array stride is 0x200, and InitResources advances
  * the matrix and collider views at exactly that stride. Matrix4x3 (0x30) plus
  * dBgW_KcMbg (0x1c8) plus Vector3_16 (0x6) naturally pads to 0x200.
+ *
+ * SM64DS RTTI names the implementation daDossy_c. The reconstructed
+ * factory daDossy_c_classInit (historical alias
+ * Dorrie_Spawn) constructs it for the DOSSY
+ * registry profile.
  */
 #ifndef DORRIE_H
 #define DORRIE_H

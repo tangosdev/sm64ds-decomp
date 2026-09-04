@@ -68,17 +68,17 @@
       "ordinal": 6
     },
     {
-      "symbol": "TtcRotatingTriangle_Spawn",
+      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA07",
       "address": "0x0211b780",
       "size": "0x00000038",
-      "legacy_source": "src/TtcRotatingTriangle_Spawn.c",
+      "legacy_source": "src/daObjCtKaitendai_c_classInit_CT_MECHA07.c",
       "ordinal": 7
     },
     {
-      "symbol": "TtcRotatingGear_Spawn",
+      "symbol": "daObjCtKaitendai_c_classInit_CT_MECHA06",
       "address": "0x0211b7b8",
       "size": "0x00000038",
-      "legacy_source": "src/TtcRotatingGear_Spawn.c",
+      "legacy_source": "src/daObjCtKaitendai_c_classInit_CT_MECHA06.c",
       "ordinal": 8
     }
   ],

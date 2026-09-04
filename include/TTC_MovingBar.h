@@ -33,7 +33,7 @@ struct TTC_MovingBar : dBgActor_c {
     int InitResources();
     int Render();
 
-    /* Tail padding. The field span stops short of the real size: TtcRotatingGear_Spawn and TtcRotatingTriangle_Spawn
+    /* Tail padding. The field span stops short of the real size: daObjCtKaitendai_c_classInit_CT_MECHA06 and daObjCtKaitendai_c_classInit_CT_MECHA07
        call fBase_c::operator new(0x37c), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_34c[0x30];      /* 0x34c, to the ROM's 0x37c */

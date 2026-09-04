@@ -129,11 +129,7 @@ src/RollingRock_Spawn.c:
 
 src/actors/d_a_obj_cv_shutter.cpp:
     complete
-    .text start:0x02112db4 end:0x02112ed4
-
-src/daObjCvShutter_c_classInit.c:
-    complete
-    .text start:0x02112ed4 end:0x02112f10
+    .text start:0x02112db4 end:0x02112f10
 
 src/__sinit_ov021_02113500.c:
     complete

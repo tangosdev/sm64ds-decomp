@@ -9,6 +9,11 @@
  * The factory allocates 0xd8 bytes and constructs dActor_c. Its 0xd0-byte base
  * leaves the two InitResources fields at 0xd4 and 0xd5, with alignment padding
  * on either side. The vtable and RTTI independently confirm the inheritance.
+ *
+ * SM64DS RTTI names the implementation daTrsIcon_c. The reconstructed
+ * factory daTrsIcon_c_classInit (historical alias
+ * BigBooIcon_Spawn) constructs it for the ICON_TERESA
+ * registry profile.
  */
 struct daTrsIcon_c : dActor_c {
     u8 pad_0d0[4];        /* 0x0d0 */
@@ -26,6 +31,6 @@ struct daTrsIcon_c : dActor_c {
 typedef char daTrsIcon_c_size_must_be_0xd8[
     sizeof(struct daTrsIcon_c) == 0xd8 ? 1 : -1];
 
-extern "C" daTrsIcon_c *BigBooIcon_Spawn();
+extern "C" daTrsIcon_c *daTrsIcon_c_classInit();
 
 #endif /* DATRSICON_C_H */

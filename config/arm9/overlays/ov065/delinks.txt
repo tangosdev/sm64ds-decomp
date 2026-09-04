@@ -92,7 +92,7 @@ src/_ZN6Snufit13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02116f40 end:0x02116f48
 
-src/Snufit_Spawn.c:
+src/d_a_yurei_mucho.c:
     complete
     .text start:0x02116f48 end:0x02116f98
 
@@ -180,7 +180,7 @@ src/_ZN5Swoop13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02117ee0 end:0x02117ee8
 
-src/Swoop_Spawn.c:
+src/d_a_basabasa.c:
     complete
     .text start:0x02117ee8 end:0x02117f40
 
@@ -284,11 +284,11 @@ src/_ZN12daDossyCap_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021195e4 end:0x021195ec
 
-src/DorrieCap_Spawn.c:
+src/d_a_dossy_cap.c:
     complete
     .text start:0x021195ec end:0x02119634
 
-src/Dorrie_Spawn.c:
+src/d_a_dossy.c:
     complete
     .text start:0x02119634 end:0x021196bc
 
@@ -332,11 +332,11 @@ src/_ZN15TtcRotatingCube13InitResourcesEv.cpp:
     complete
     .text start:0x02119c38 end:0x02119ebc
 
-src/TtcRotatingPrism_Spawn.c:
+src/d_a_obj_ct_rotate_block_ct_mecha02.c:
     complete
     .text start:0x02119ebc end:0x02119efc
 
-src/TtcRotatingCube_Spawn.c:
+src/d_a_obj_ct_rotate_block_ct_mecha01.c:
     complete
     .text start:0x02119efc end:0x02119f3c
 
@@ -372,7 +372,7 @@ src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211a358 end:0x0211a45c
 
-src/daObjCtMecha03_c_classInit.c:
+src/d_a_obj_ct_mecha03.c:
     complete
     .text start:0x0211a45c end:0x0211a494
 
@@ -412,11 +412,11 @@ src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp:
     complete
     .text start:0x0211aacc end:0x0211aae0
 
-src/TtcConveyorBeltLarge_Spawn.cpp:
+src/d_a_obj_ct_mecha04_ct_mecha04l.cpp:
     complete
     .text start:0x0211aae0 end:0x0211ab20
 
-src/TtcConveyorBeltSmall_Spawn.cpp:
+src/d_a_obj_ct_mecha04_ct_mecha04s.cpp:
     complete
     .text start:0x0211ab20 end:0x0211ab60
 
@@ -424,7 +424,7 @@ src/actors/daObjCtMecha05_c.cpp:
     complete
     .text start:0x0211ab60 end:0x0211b328
 
-src/daObjCtMecha05_c_classInit.cpp:
+src/d_a_obj_ct_mecha05.cpp:
     complete
     .text start:0x0211b328 end:0x0211b360
 
@@ -456,11 +456,11 @@ src/_ZN13TTC_MovingBar13InitResourcesEv.cpp:
     complete
     .text start:0x0211b640 end:0x0211b780
 
-src/TtcRotatingTriangle_Spawn.c:
+src/d_a_obj_ct_kaitendai_ct_mecha07.c:
     complete
     .text start:0x0211b780 end:0x0211b7b8
 
-src/TtcRotatingGear_Spawn.c:
+src/d_a_obj_ct_kaitendai_ct_mecha06.c:
     complete
     .text start:0x0211b7b8 end:0x0211b7f0
 
@@ -487,11 +487,11 @@ src/_ZN15TtcRotatingGear8BehaviorEv.cpp:
 src/_ZN15TtcRotatingGear13InitResourcesEv.cpp:
     .text start:0x0211ba88 end:0x0211bb7c
 
-src/TtcMovingCubeB_Spawn.c:
+src/d_a_obj_ct_mecha08_ct_mecha08b.c:
     complete
     .text start:0x0211bb7c end:0x0211bbac
 
-src/TtcMovingCubeA_Spawn.c:
+src/d_a_obj_ct_mecha08_ct_mecha08a.c:
     complete
     .text start:0x0211bbac end:0x0211bbdc
 
@@ -522,7 +522,7 @@ src/_ZN14TTC_MovingBeam8BehaviorEv.cpp:
 src/_ZN14TTC_MovingBeam13InitResourcesEv.cpp:
     .text start:0x0211bf04 end:0x0211c040
 
-src/daObjCtMecha09_c_classInit.c:
+src/d_a_obj_ct_mecha09.c:
     complete
     .text start:0x0211c040 end:0x0211c078
 

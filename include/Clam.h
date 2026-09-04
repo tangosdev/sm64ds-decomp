@@ -9,7 +9,7 @@
 
 #include "dActor_c.h"
 
-/* Clam_Spawn constructs dActor_c, then ModelAnim and dCcAc_c at +0xd4 and
+/* daObjShell_c_classInit constructs dActor_c, then ModelAnim and dCcAc_c at +0xd4 and
  * +0x138. D1/D0 destroy the same subobjects in reverse, independently pinning
  * both the inheritance and owned-member layout. */
 struct Clam : dActor_c {

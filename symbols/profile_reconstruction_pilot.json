@@ -69,9 +69,9 @@
             "overlay": "ov026",
             "factory_module": "ov026",
             "profile_address": "0x02113abc",
-            "current_profile_name": "data_ov026_02113abc",
+            "current_profile_name": "g_profile_WL_POLELIFT",
             "factory_address": "0x02111678",
-            "current_factory_name": "func_ov026_02111678"
+            "current_factory_name": "daObjWlPolelift_c_classInit"
           }
         ]
       },
@@ -91,9 +91,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },
@@ -105,9 +105,9 @@
             "overlay": "ov033",
             "factory_module": "ov033",
             "profile_address": "0x02112358",
-            "current_profile_name": "TinyCover_SpawnInfo",
+            "current_profile_name": "g_profile_TT_FUTA",
             "factory_address": "0x021113a4",
-            "current_factory_name": "TinyCover_Spawn"
+            "current_factory_name": "daObjTtFuta_c_classInit"
           },
           {
             "overlay": "ov047",
@@ -171,9 +171,9 @@
             "overlay": "ov033",
             "factory_module": "ov033",
             "profile_address": "0x02112358",
-            "current_profile_name": "TinyCover_SpawnInfo",
+            "current_profile_name": "g_profile_TT_FUTA",
             "factory_address": "0x021113a4",
-            "current_factory_name": "TinyCover_Spawn"
+            "current_factory_name": "daObjTtFuta_c_classInit"
           },
           {
             "overlay": "ov047",
@@ -223,9 +223,9 @@
             "overlay": "ov032",
             "factory_module": "ov032",
             "profile_address": "0x02113800",
-            "current_profile_name": "data_ov032_02113800",
+            "current_profile_name": "g_profile_BAKUBAKU",
             "factory_address": "0x0211244c",
-            "current_factory_name": "func_ov032_0211244c"
+            "current_factory_name": "daBakubaku_c_classInit"
           }
         ]
       },
@@ -245,9 +245,9 @@
             "overlay": "ov026",
             "factory_module": "ov026",
             "profile_address": "0x02113abc",
-            "current_profile_name": "data_ov026_02113abc",
+            "current_profile_name": "g_profile_WL_POLELIFT",
             "factory_address": "0x02111678",
-            "current_factory_name": "func_ov026_02111678"
+            "current_factory_name": "daObjWlPolelift_c_classInit"
           }
         ]
       }
@@ -384,14 +384,15 @@
       "inheritance_chain": "dScBoot_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "arm9",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "arm9",
           "factory_module": "arm9",
           "profile_address": "0x020914a8",
-          "current_profile_name": "data_020914a8",
+          "current_profile_name": "g_profile_BOOT",
           "factory_address": "0x02023624",
-          "current_factory_name": "func_02023624"
+          "current_factory_name": "dScBoot_c_classInit"
         }
       ],
       "tu_start": "0x20049f0",
@@ -759,16 +760,17 @@
           "profile_address": "0x020914a8"
         }
       ],
-      "current_factory_name": "func_02023624",
-      "current_factory_file": "src/func_02023624.c",
+      "current_factory_name": "dScBoot_c_classInit",
+      "current_factory_file": "src/dScBoot_c_classInit.c",
       "proposed_factory_name": "dScBoot_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x020914a8",
-      "current_profile_name": "data_020914a8",
+      "current_profile_name": "g_profile_BOOT",
       "proposed_profile_name": "g_profile_BOOT",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 0,
@@ -860,14 +862,15 @@
       "inheritance_chain": "dScStage_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "arm9",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "arm9",
           "factory_module": "arm9",
           "profile_address": "0x0209213c",
-          "current_profile_name": "_ZN5Stage9spawnDataE",
+          "current_profile_name": "g_profile_STAGE",
           "factory_address": "0x0202e088",
-          "current_factory_name": "Stage_Spawn"
+          "current_factory_name": "dScStage_c_classInit"
         }
       ],
       "tu_start": "0x20049f0",
@@ -1235,16 +1238,17 @@
           "profile_address": "0x0209213c"
         }
       ],
-      "current_factory_name": "Stage_Spawn",
-      "current_factory_file": "src/Stage_Spawn.cpp",
+      "current_factory_name": "dScStage_c_classInit",
+      "current_factory_file": "src/dScStage_c_classInit.cpp",
       "proposed_factory_name": "dScStage_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0209213c",
-      "current_profile_name": "_ZN5Stage9spawnDataE",
+      "current_profile_name": "g_profile_STAGE",
       "proposed_profile_name": "g_profile_STAGE",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 3,
@@ -1336,14 +1340,15 @@
       "inheritance_chain": "dScMiniGm_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "ov005",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov005",
           "factory_module": "ov005",
           "profile_address": "0x020c2440",
-          "current_profile_name": "data_ov005_020c2440",
+          "current_profile_name": "g_profile_MINIGAME",
           "factory_address": "0x020c21ec",
-          "current_factory_name": "func_ov005_020c21ec"
+          "current_factory_name": "dScMiniGm_c_classInit"
         }
       ],
       "tu_start": "0x20c21ec",
@@ -1367,16 +1372,17 @@
           "profile_address": "0x020c2440"
         }
       ],
-      "current_factory_name": "func_ov005_020c21ec",
-      "current_factory_file": "src/func_ov005_020c21ec.c",
+      "current_factory_name": "dScMiniGm_c_classInit",
+      "current_factory_file": "src/dScMiniGm_c_classInit.c",
       "proposed_factory_name": "dScMiniGm_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x020c2440",
-      "current_profile_name": "data_ov005_020c2440",
+      "current_profile_name": "g_profile_MINIGAME",
       "proposed_profile_name": "g_profile_MINIGAME",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 5,
@@ -1423,44 +1429,27 @@
       "inheritance_chain": "daObjCannonShutter_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov002",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov002",
           "factory_module": "ov002",
           "profile_address": "0x02109d14",
-          "current_profile_name": "daObjCannonShutter_c_SpawnInfo",
+          "current_profile_name": "g_profile_CANNON_SHUTTER",
           "factory_address": "0x020bcccc",
-          "current_factory_name": "daObjCannonShutter_c_Spawn"
+          "current_factory_name": "daObjCannonShutter_c_classInit"
         }
       ],
-      "tu_start": "0x20bc8f4",
-      "tu_end": "0x20bccfc",
-      "tu_left_boundary_confidence": "high",
+      "tu_start": "0x20bcccc",
+      "tu_end": "0x20bd828",
+      "tu_left_boundary_confidence": "medium",
       "tu_right_boundary_confidence": "medium",
-      "tu_classes": [
-        "daObjCannonShutter_c"
-      ],
+      "tu_classes": [],
       "tu_profiles": [
         "CANNON_SHUTTER"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov002_02101968",
-          "address": "0x02101968",
-          "size": "0x68",
-          "classification": "high",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "2 of 2 ownership global(s) map through consumers to ov002:40"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x020bcccc",
       "factory_size": "0x00000030",
       "registry_factory_reference_count": 1,
@@ -1472,7 +1461,7 @@
           "profile_address": "0x02109d14"
         }
       ],
-      "current_factory_name": "daObjCannonShutter_c_Spawn",
+      "current_factory_name": "daObjCannonShutter_c_classInit",
       "current_factory_file": "src/actors/daObjCannonShutter_c.cpp",
       "proposed_factory_name": "daObjCannonShutter_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
@@ -1480,8 +1469,9 @@
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x02109d14",
-      "current_profile_name": "daObjCannonShutter_c_SpawnInfo",
+      "current_profile_name": "g_profile_CANNON_SHUTTER",
       "proposed_profile_name": "g_profile_CANNON_SHUTTER",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 14,
@@ -1499,17 +1489,15 @@
       "class_size": "0x00000330",
       "installed_vtable": "0x02109d38",
       "expected_vtable": "_ZTV20daObjCannonShutter_c",
-      "factory_ordinal_in_tu": 8,
-      "factory_is_last_in_tu": true,
+      "factory_ordinal_in_tu": 1,
+      "factory_is_last_in_tu": false,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x24",
       "profile_to_vtable_delta": "+0x24",
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_obj_cannon_shutter.cpp",
       "probable_filename": "d_a_obj_cannon_shutter.cpp",
-      "tu_filename_candidates": [
-        "d_a_obj_cannon_shutter.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
@@ -1530,6 +1518,7 @@
       "inheritance_chain": "daObjC1_Trap_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov010",
       "registry_candidate_count": 2,
+      "overlay_resolution": "resolved_by_rtti_name_correspondence",
       "registry_candidates": [
         {
           "overlay": "ov010",
@@ -1570,8 +1559,7 @@
             "resource-handle-initialization"
           ],
           "evidence": [
-            "3 of 3 ownership global(s) map through consumers to ov010:0",
-            "ordered hypothesis ov010:0 (ov010/daObjC1_Trap_c): module has one sinit per candidate TU; this is corroboration, not proof"
+            "3 of 3 ownership global(s) map through consumers to ov010:0"
           ],
           "blockers": []
         }
@@ -1602,6 +1590,7 @@
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x02112ac0",
       "current_profile_name": "Trap_SpawnInfo",
       "proposed_profile_name": "g_profile_C1_TRAP",
@@ -1652,6 +1641,7 @@
       "inheritance_chain": "",
       "overlay": "ov002",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov002",
@@ -1695,6 +1685,7 @@
       "factory_via": "arm9:_ZN8dActor_cC1Ev",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "",
       "profile_address": "0x0210aa94",
       "current_profile_name": "StarCamera_SpawnInfo",
       "proposed_profile_name": "g_profile_STAR_CAMERA",
@@ -1745,6 +1736,7 @@
       "inheritance_chain": "daPly_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov002",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov002",
@@ -1786,6 +1778,7 @@
       "factory_via": "ov002:_ZN6PlayerC1Ev",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0210a704",
       "current_profile_name": "Player_SpawnInfo",
       "proposed_profile_name": "g_profile_PLAYER",
@@ -1836,23 +1829,22 @@
       "inheritance_chain": "daObjWaterfall_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov002",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov002",
           "factory_module": "ov002",
           "profile_address": "0x0210947c",
-          "current_profile_name": "WaterfallMist_SpawnInfo",
+          "current_profile_name": "g_profile_WATERFALL",
           "factory_address": "0x020b6ee8",
-          "current_factory_name": "WaterfallMist_Spawn"
+          "current_factory_name": "daObjWaterfall_c_classInit"
         }
       ],
-      "tu_start": "0x20b6e08",
+      "tu_start": "0x20b6ee8",
       "tu_end": "0x20b6f18",
-      "tu_left_boundary_confidence": "high",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daObjWaterfall_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "WATERFALL"
       ],
@@ -1869,16 +1861,17 @@
           "profile_address": "0x0210947c"
         }
       ],
-      "current_factory_name": "WaterfallMist_Spawn",
-      "current_factory_file": "src/WaterfallMist_Spawn.cpp",
+      "current_factory_name": "daObjWaterfall_c_classInit",
+      "current_factory_file": "src/actors/d_a_obj_waterfall.cpp",
       "proposed_factory_name": "daObjWaterfall_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0210947c",
-      "current_profile_name": "WaterfallMist_SpawnInfo",
+      "current_profile_name": "g_profile_WATERFALL",
       "proposed_profile_name": "g_profile_WATERFALL",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 197,
@@ -1896,7 +1889,7 @@
       "class_size": "0x000000dc",
       "installed_vtable": "0x021094a0",
       "expected_vtable": "_ZTV16daObjWaterfall_c",
-      "factory_ordinal_in_tu": 5,
+      "factory_ordinal_in_tu": 1,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x20",
@@ -1904,14 +1897,12 @@
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_obj_waterfall.cpp",
       "probable_filename": "d_a_obj_waterfall.cpp",
-      "tu_filename_candidates": [
-        "d_a_obj_waterfall.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
       "profile_name_confidence": "B+",
-      "filename_confidence": "B",
+      "filename_confidence": "B-",
       "selection_reason": "canonical WATERFALL worked example",
       "notes": "community actor gloss=WATERFALL_MIST"
     },
@@ -1927,6 +1918,7 @@
       "inheritance_chain": "daKrb_c -> dCapEnemy_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov084",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov084",
@@ -1982,12 +1974,13 @@
       ],
       "current_factory_name": "Goomba_Spawn",
       "current_factory_file": "src/Goomba_Spawn.c",
-      "proposed_factory_name": "daKrb_c_classInit",
+      "proposed_factory_name": "daKrb_c_classInit_KURIBO",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 3,
       "proposed_factory_collision": "ov084:0x0212bff8;ov084:0x0212c054;ov084:0x0212c0b0",
+      "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x021308ec",
       "current_profile_name": "Goomba_SpawnInfo",
       "proposed_profile_name": "g_profile_KURIBO",
@@ -2024,7 +2017,7 @@
       "profile_name_confidence": "B+",
       "filename_confidence": "B-",
       "selection_reason": "ordinary enemy with ROM RTTI name unlike English gloss",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; community actor gloss=GOOMBA"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; community actor gloss=GOOMBA"
     },
     {
       "actor_id": 209,
@@ -2038,12 +2031,13 @@
       "inheritance_chain": "daTrs_c -> dCapEnemy_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov063",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov063",
           "factory_module": "ov063",
           "profile_address": "0x0211e770",
-          "current_profile_name": "Boo_SpawnInfo",
+          "current_profile_name": "g_profile_TERESA",
           "factory_address": "0x0211c590",
           "current_factory_name": "Boo_Spawn"
         }
@@ -2066,17 +2060,18 @@
           "symbol": "__sinit_ov063_0211e29c",
           "address": "0x0211e29c",
           "size": "0x130",
-          "classification": "high",
+          "classification": "medium",
           "causes": [
             "destructor-registration",
             "dynamic-global-data",
             "resource-handle-initialization"
           ],
           "evidence": [
-            "7 of 7 ownership global(s) map through consumers to ov063:0",
-            "ordered hypothesis ov063:0 (ov063/daTBasket_c+daTrsIcon_c+daTrs_c): module has one sinit per candidate TU; this is corroboration, not proof"
+            "7 of 7 ownership global(s) map through consumers to ov063:0"
           ],
-          "blockers": []
+          "blockers": [
+            "module TU map is under-segmented; consumer ownership is only medium confidence"
+          ]
         }
       ],
       "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
@@ -2093,14 +2088,15 @@
       ],
       "current_factory_name": "Boo_Spawn",
       "current_factory_file": "src/actors/daTrs_c/Boo_Spawn.cpp",
-      "proposed_factory_name": "daTrs_c_classInit",
+      "proposed_factory_name": "daTrs_c_classInit_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 2,
       "proposed_factory_collision": "ov063:0x0211c520;ov063:0x0211c590",
+      "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x0211e770",
-      "current_profile_name": "Boo_SpawnInfo",
+      "current_profile_name": "g_profile_TERESA",
       "proposed_profile_name": "g_profile_TERESA",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 209,
@@ -2136,7 +2132,7 @@
       "profile_name_confidence": "B+",
       "filename_confidence": "",
       "selection_reason": "first of two profiles constructing daTrs_c",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOO"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOO"
     },
     {
       "actor_id": 210,
@@ -2150,12 +2146,13 @@
       "inheritance_chain": "daTrs_c -> dCapEnemy_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov063",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov063",
           "factory_module": "ov063",
           "profile_address": "0x0211e78c",
-          "current_profile_name": "BigBoo_SpawnInfo",
+          "current_profile_name": "g_profile_BOSS_TERESA",
           "factory_address": "0x0211c520",
           "current_factory_name": "BigBoo_Spawn"
         }
@@ -2178,17 +2175,18 @@
           "symbol": "__sinit_ov063_0211e29c",
           "address": "0x0211e29c",
           "size": "0x130",
-          "classification": "high",
+          "classification": "medium",
           "causes": [
             "destructor-registration",
             "dynamic-global-data",
             "resource-handle-initialization"
           ],
           "evidence": [
-            "7 of 7 ownership global(s) map through consumers to ov063:0",
-            "ordered hypothesis ov063:0 (ov063/daTBasket_c+daTrsIcon_c+daTrs_c): module has one sinit per candidate TU; this is corroboration, not proof"
+            "7 of 7 ownership global(s) map through consumers to ov063:0"
           ],
-          "blockers": []
+          "blockers": [
+            "module TU map is under-segmented; consumer ownership is only medium confidence"
+          ]
         }
       ],
       "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
@@ -2205,14 +2203,15 @@
       ],
       "current_factory_name": "BigBoo_Spawn",
       "current_factory_file": "src/actors/BigBoo/BigBoo_Spawn.cpp",
-      "proposed_factory_name": "daTrs_c_classInit",
+      "proposed_factory_name": "daTrs_c_classInit_BOSS_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 2,
       "proposed_factory_collision": "ov063:0x0211c520;ov063:0x0211c590",
+      "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x0211e78c",
-      "current_profile_name": "BigBoo_SpawnInfo",
+      "current_profile_name": "g_profile_BOSS_TERESA",
       "proposed_profile_name": "g_profile_BOSS_TERESA",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 210,
@@ -2248,7 +2247,7 @@
       "profile_name_confidence": "B+",
       "filename_confidence": "",
       "selection_reason": "second daTrs_c profile; tests classInit name collision",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BIG_BOO"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BIG_BOO"
     },
     {
       "actor_id": 219,
@@ -2262,45 +2261,27 @@
       "inheritance_chain": "daWanwan_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov014",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov014",
           "factory_module": "ov014",
           "profile_address": "0x02114750",
-          "current_profile_name": "ChainChomp_SpawnInfo",
+          "current_profile_name": "g_profile_WANWAN",
           "factory_address": "0x02112d1c",
-          "current_factory_name": "ChainChomp_Spawn"
+          "current_factory_name": "daWanwan_c_classInit"
         }
       ],
-      "tu_start": "0x2111308",
+      "tu_start": "0x2112d1c",
       "tu_end": "0x2112e0c",
-      "tu_left_boundary_confidence": "high",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daWanwan_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "WANWAN"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov014_02113118",
-          "address": "0x02113118",
-          "size": "0x1e4",
-          "classification": "high",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "5 of 5 ownership global(s) map through consumers to ov014:1",
-            "ordered hypothesis ov014:1 (ov014/daWanwan_c): module has one sinit per candidate TU; this is corroboration, not proof"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x02112d1c",
       "factory_size": "0x000000f0",
       "registry_factory_reference_count": 1,
@@ -2312,16 +2293,17 @@
           "profile_address": "0x02114750"
         }
       ],
-      "current_factory_name": "ChainChomp_Spawn",
-      "current_factory_file": "src/ChainChomp_Spawn.cpp",
+      "current_factory_name": "daWanwan_c_classInit",
+      "current_factory_file": "src/actors/d_a_wanwan.cpp",
       "proposed_factory_name": "daWanwan_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x02114750",
-      "current_profile_name": "ChainChomp_SpawnInfo",
+      "current_profile_name": "g_profile_WANWAN",
       "proposed_profile_name": "g_profile_WANWAN",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 219,
@@ -2339,7 +2321,7 @@
       "class_size": "0x00000620",
       "installed_vtable": "0x021147ec",
       "expected_vtable": "_ZTV10daWanwan_c",
-      "factory_ordinal_in_tu": 29,
+      "factory_ordinal_in_tu": 1,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x38",
@@ -2347,14 +2329,12 @@
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_wanwan.cpp",
       "probable_filename": "d_a_wanwan.cpp",
-      "tu_filename_candidates": [
-        "d_a_wanwan.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
       "profile_name_confidence": "B+",
-      "filename_confidence": "B",
+      "filename_confidence": "B-",
       "selection_reason": "enemy/actor with established RTTI and vtable",
       "notes": "community actor gloss=CHAIN_CHOMP"
     },
@@ -2370,43 +2350,27 @@
       "inheritance_chain": "daObj_Mip_Key_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov085",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov085",
           "factory_module": "ov085",
           "profile_address": "0x021301b4",
-          "current_profile_name": "RabbitKey_SpawnInfo",
+          "current_profile_name": "g_profile_OBJ_MIP_KEY",
           "factory_address": "0x0212d4e8",
-          "current_factory_name": "RabbitKey_Spawn"
+          "current_factory_name": "daObj_Mip_Key_c_classInit"
         }
       ],
-      "tu_start": "0x212cc88",
+      "tu_start": "0x212d4e8",
       "tu_end": "0x212d528",
-      "tu_left_boundary_confidence": "high",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "RabbitKey"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "OBJ_MIP_KEY"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov085_0212f9bc",
-          "address": "0x0212f9bc",
-          "size": "0x84",
-          "classification": "high",
-          "causes": [
-            "dynamic-global-data"
-          ],
-          "evidence": [
-            "2 of 2 ownership global(s) map through consumers to ov085:3",
-            "ordered hypothesis ov085:3 (ov085/RabbitKey): module has one sinit per candidate TU; this is corroboration, not proof"
-          ],
-          "blockers": []
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x0212d4e8",
       "factory_size": "0x00000040",
       "registry_factory_reference_count": 1,
@@ -2418,16 +2382,17 @@
           "profile_address": "0x021301b4"
         }
       ],
-      "current_factory_name": "RabbitKey_Spawn",
-      "current_factory_file": "src/RabbitKey_Spawn.c",
+      "current_factory_name": "daObj_Mip_Key_c_classInit",
+      "current_factory_file": "src/daObj_Mip_Key_c_classInit.c",
       "proposed_factory_name": "daObj_Mip_Key_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x021301b4",
-      "current_profile_name": "RabbitKey_SpawnInfo",
+      "current_profile_name": "g_profile_OBJ_MIP_KEY",
       "proposed_profile_name": "g_profile_OBJ_MIP_KEY",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 229,
@@ -2445,7 +2410,7 @@
       "class_size": "0x000001a0",
       "installed_vtable": "0x021301d8",
       "expected_vtable": "_ZTV15daObj_Mip_Key_c",
-      "factory_ordinal_in_tu": 15,
+      "factory_ordinal_in_tu": 1,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0x20",
@@ -2458,7 +2423,7 @@
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
       "profile_name_confidence": "B+",
-      "filename_confidence": "B",
+      "filename_confidence": "B-",
       "selection_reason": "required OBJ_MIP_KEY; current community RabbitKey naming",
       "notes": "community actor gloss=RABBIT_KEY"
     },
@@ -2474,6 +2439,7 @@
       "inheritance_chain": "daPropeller_Heyho_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov070",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov070",
@@ -2489,7 +2455,7 @@
       "tu_left_boundary_confidence": "",
       "tu_right_boundary_confidence": "high",
       "tu_classes": [
-        "FlyGuy"
+        "daPropeller_Heyho_c"
       ],
       "tu_profiles": [
         "PROPELLER_HEYHO"
@@ -2506,8 +2472,7 @@
             "resource-handle-initialization"
           ],
           "evidence": [
-            "13 of 13 ownership global(s) map through consumers to ov070:0",
-            "ordered hypothesis ov070:0 (ov070/FlyGuy): module has one sinit per candidate TU; this is corroboration, not proof"
+            "13 of 13 ownership global(s) map through consumers to ov070:0"
           ],
           "blockers": []
         }
@@ -2525,13 +2490,14 @@
         }
       ],
       "current_factory_name": "FlyGuy_Spawn",
-      "current_factory_file": "src/FlyGuy_Spawn.c",
+      "current_factory_file": "src/actors/daPropeller_Heyho_c.cpp",
       "proposed_factory_name": "daPropeller_Heyho_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x02123144",
       "current_profile_name": "FlyGuy_SpawnInfo",
       "proposed_profile_name": "g_profile_PROPELLER_HEYHO",
@@ -2559,7 +2525,9 @@
       "data_order": "rtti < rtti_name < profile < vtable",
       "class_filename_candidate": "d_a_propeller_heyho.cpp",
       "probable_filename": "d_a_propeller_heyho.cpp",
-      "tu_filename_candidates": [],
+      "tu_filename_candidates": [
+        "d_a_propeller_heyho.cpp"
+      ],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
@@ -2580,12 +2548,13 @@
       "inheritance_chain": "daObjKinokoTag_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov002",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov002",
           "factory_module": "ov002",
           "profile_address": "0x02108cd0",
-          "current_profile_name": "MegaMushroomCreateTag_SpawnInfo",
+          "current_profile_name": "g_profile_KINOKO_CREATE_TAG",
           "factory_address": "0x020b4a00",
           "current_factory_name": "daObjKinokoTag_c_Spawn"
         }
@@ -2615,14 +2584,15 @@
       ],
       "current_factory_name": "daObjKinokoTag_c_Spawn",
       "current_factory_file": "src/actors/daObjKinokoTag_c.cpp",
-      "proposed_factory_name": "daObjKinokoTag_c_classInit",
+      "proposed_factory_name": "daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 2,
       "proposed_factory_collision": "ov002:0x020b4a00;ov002:0x020b4a38",
+      "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x02108cd0",
-      "current_profile_name": "MegaMushroomCreateTag_SpawnInfo",
+      "current_profile_name": "g_profile_KINOKO_CREATE_TAG",
       "proposed_profile_name": "g_profile_KINOKO_CREATE_TAG",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 319,
@@ -2657,7 +2627,7 @@
       "profile_name_confidence": "B+",
       "filename_confidence": "B",
       "selection_reason": "object-tag actor with prior evidence-bounded factory rename",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; community actor gloss=MEGA_MUSHROOM_CREATE_TAG"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; community actor gloss=MEGA_MUSHROOM_CREATE_TAG"
     },
     {
       "actor_id": 325,
@@ -2671,6 +2641,7 @@
       "inheritance_chain": "daBook_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov020",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov020",
@@ -2725,12 +2696,13 @@
       ],
       "current_factory_name": "BookShot_Spawn",
       "current_factory_file": "src/BookShot_Spawn.c",
-      "proposed_factory_name": "daBook_c_classInit",
+      "proposed_factory_name": "daBook_c_classInit_SHOOT_BOOK",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 3,
       "proposed_factory_collision": "ov020:0x021127f4;ov020:0x02112880;ov020:0x021128dc",
+      "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x021148b4",
       "current_profile_name": "BookShot_SpawnInfo",
       "proposed_profile_name": "g_profile_SHOOT_BOOK",
@@ -2768,7 +2740,7 @@
       "profile_name_confidence": "B+",
       "filename_confidence": "",
       "selection_reason": "profile in a recovered multi-class, multi-profile TU",
-      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOOK_SHOT"
+      "notes": "multiple factory addresses would collide on one global <Class>_classInit spelling; disambiguated by ROM profile id; one recovered TU carries multiple distinct RTTI-derived filename stems; no probable filename selected; community actor gloss=BOOK_SHOT"
     },
     {
       "actor_id": 328,
@@ -2782,14 +2754,15 @@
       "inheritance_chain": "daBookGen_c -> dActor_c -> dBase_c -> fBase_c",
       "overlay": "ov020",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov020",
           "factory_module": "ov020",
           "profile_address": "0x0211487c",
-          "current_profile_name": "BookShotSpawner_SpawnInfo",
+          "current_profile_name": "g_profile_BOOK_GENERATOR",
           "factory_address": "0x02112850",
-          "current_factory_name": "BookShotSpawner_Spawn"
+          "current_factory_name": "daBookGen_c_classInit"
         }
       ],
       "tu_start": "0x21111a0",
@@ -2834,16 +2807,17 @@
           "profile_address": "0x0211487c"
         }
       ],
-      "current_factory_name": "BookShotSpawner_Spawn",
-      "current_factory_file": "src/BookShotSpawner_Spawn.c",
+      "current_factory_name": "daBookGen_c_classInit",
+      "current_factory_file": "src/daBookGen_c_classInit.c",
       "proposed_factory_name": "daBookGen_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0211487c",
-      "current_profile_name": "BookShotSpawner_SpawnInfo",
+      "current_profile_name": "g_profile_BOOK_GENERATOR",
       "proposed_profile_name": "g_profile_BOOK_GENERATOR",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 328,
@@ -2893,14 +2867,15 @@
       "inheritance_chain": "dScMgCup_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "ov006",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov006",
           "factory_module": "ov006",
           "profile_address": "0x0213c020",
-          "current_profile_name": "data_ov006_0213c020",
+          "current_profile_name": "g_profile_MG_CUP",
           "factory_address": "0x020e0574",
-          "current_factory_name": "func_ov006_020e0574"
+          "current_factory_name": "dScMgCup_c_classInit"
         }
       ],
       "tu_start": "0x20e0574",
@@ -2924,16 +2899,17 @@
           "profile_address": "0x0213c020"
         }
       ],
-      "current_factory_name": "func_ov006_020e0574",
-      "current_factory_file": "src/func_ov006_020e0574.cpp",
+      "current_factory_name": "dScMgCup_c_classInit",
+      "current_factory_file": "src/dScMgCup_c_classInit.cpp",
       "proposed_factory_name": "dScMgCup_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0213c020",
-      "current_profile_name": "data_ov006_0213c020",
+      "current_profile_name": "g_profile_MG_CUP",
       "proposed_profile_name": "g_profile_MG_CUP",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 361,
@@ -2980,44 +2956,27 @@
       "inheritance_chain": "dScMgCurling_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "ov006",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov006",
           "factory_module": "ov006",
           "profile_address": "0x0213c214",
-          "current_profile_name": "MgShuffleShell_SpawnInfo",
+          "current_profile_name": "g_profile_MG_CURLING",
           "factory_address": "0x020e3820",
-          "current_factory_name": "MgShuffleShell_Spawn"
+          "current_factory_name": "dScMgCurling_c_classInit"
         }
       ],
-      "tu_start": "0x20e0638",
+      "tu_start": "0x20e3820",
       "tu_end": "0x20e3854",
       "tu_left_boundary_confidence": "medium",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "dScMgCurling_c"
-      ],
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "MG_CURLING"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov006_021304ac",
-          "address": "0x021304ac",
-          "size": "0x2ac",
-          "classification": "medium",
-          "causes": [
-            "dynamic-global-data"
-          ],
-          "evidence": [
-            "7 of 7 ownership global(s) map through consumers to ov006:15"
-          ],
-          "blockers": [
-            "module TU map is under-segmented; consumer ownership is only medium confidence"
-          ]
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x020e3820",
       "factory_size": "0x00000034",
       "registry_factory_reference_count": 1,
@@ -3029,16 +2988,17 @@
           "profile_address": "0x0213c214"
         }
       ],
-      "current_factory_name": "MgShuffleShell_Spawn",
-      "current_factory_file": "src/MgShuffleShell_Spawn.c",
+      "current_factory_name": "dScMgCurling_c_classInit",
+      "current_factory_file": "src/dScMgCurling_c_classInit.c",
       "proposed_factory_name": "dScMgCurling_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0213c214",
-      "current_profile_name": "MgShuffleShell_SpawnInfo",
+      "current_profile_name": "g_profile_MG_CURLING",
       "proposed_profile_name": "g_profile_MG_CURLING",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 374,
@@ -3056,7 +3016,7 @@
       "class_size": "0x00004eec",
       "installed_vtable": "0x0213c304",
       "expected_vtable": "_ZTV14dScMgCurling_c",
-      "factory_ordinal_in_tu": 47,
+      "factory_ordinal_in_tu": 1,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "+0xb0",
@@ -3064,9 +3024,7 @@
       "data_order": "profile < rtti < rtti_name < vtable",
       "class_filename_candidate": "d_s_mg_curling.cpp",
       "probable_filename": "d_s_mg_curling.cpp",
-      "tu_filename_candidates": [
-        "d_s_mg_curling.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B+",
@@ -3087,14 +3045,15 @@
       "inheritance_chain": "dScMgCurling2_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c",
       "overlay": "ov006",
       "registry_candidate_count": 1,
+      "overlay_resolution": "unique_registry_context",
       "registry_candidates": [
         {
           "overlay": "ov006",
           "factory_module": "ov006",
           "profile_address": "0x0213c434",
-          "current_profile_name": "data_ov006_0213c434",
+          "current_profile_name": "g_profile_MG_CURLING_J",
           "factory_address": "0x020e6bf4",
-          "current_factory_name": "func_ov006_020e6bf4"
+          "current_factory_name": "dScMgCurling2_c_classInit"
         }
       ],
       "tu_start": "0x20e6bf4",
@@ -3118,16 +3077,17 @@
           "profile_address": "0x0213c434"
         }
       ],
-      "current_factory_name": "func_ov006_020e6bf4",
-      "current_factory_file": "src/func_ov006_020e6bf4.c",
+      "current_factory_name": "dScMgCurling2_c_classInit",
+      "current_factory_file": "src/dScMgCurling2_c_classInit.c",
       "proposed_factory_name": "dScMgCurling2_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
       "factory_via": "",
       "class_factory_count": 1,
       "proposed_factory_collision": "",
+      "factory_name_resolution": "unique_class_factory",
       "profile_address": "0x0213c434",
-      "current_profile_name": "data_ov006_0213c434",
+      "current_profile_name": "g_profile_MG_CURLING_J",
       "proposed_profile_name": "g_profile_MG_CURLING_J",
       "descriptor_layout": "base_profile_0x08",
       "profile_index": 375,

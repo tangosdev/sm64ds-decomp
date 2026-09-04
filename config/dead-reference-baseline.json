@@ -90,6 +90,10 @@
    "ref": "src/_ZN9FaderWipeC1Ev.c"
   },
   {
+   "file": "notes/bgobject-provenance.md",
+   "ref": "src/Eyerok_Spawn.cpp"
+  },
+  {
    "file": "notes/collision-query-classes.md",
    "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
   },

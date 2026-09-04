@@ -10,7 +10,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Scuttlebug_Spawn  fBase_c::operator new(940 = 0x3ac), dActor_c::dActor_c(), stores _ZTV10Scuttlebug,
+ *   daSpd_c_classInit  fBase_c::operator new(940 = 0x3ac), dActor_c::dActor_c(), stores _ZTV10Scuttlebug,
  *                 then the four members below in this order.
  *   ~Scuttlebug   the same members destroyed in reverse, then ~dActor_c.
  *
@@ -19,6 +19,11 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov071). Only the
  * slots declared below differ; every other slot holds the base's own word and is inherited,
  * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daSpd_c. The reconstructed
+ * factory daSpd_c_classInit (historical alias
+ * Scuttlebug_Spawn) constructs it for the SPIDER
+ * registry profile.
  */
 struct Scuttlebug : dActor_c {
     u8  pad_0d0[0x4];

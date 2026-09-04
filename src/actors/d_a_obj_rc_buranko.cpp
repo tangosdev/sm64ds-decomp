@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov036/daObjRcBuranko_c, hand-curated.
- * 7 function(s), .text 0x021111a0..0x02111414.
+ * 8 function(s), .text 0x021111a0..0x02111444.
  *
  * The Rainbow Cruise swinging platform (profile RC_BURANKO): a mesh collider
  * hung like a pendulum, tipped 0x2000 to one side at spawn and swinging back
@@ -39,6 +39,14 @@
  *   [4] 0x021112c8  src/_ZN16daObjRcBuranko_c6RenderEv.cpp
  *   [5] 0x021112f0  src/_ZN16daObjRcBuranko_c8BehaviorEv.cpp
  *   [6] 0x0211137c  src/_ZN16daObjRcBuranko_c13InitResourcesEv.cpp
+ *   [7] 0x02111414  src/daObjRcBuranko_c_classInit.c
+ *
+ * THE EIGHTH IS THE FACTORY. daObjRcBuranko_c_classInit (historical alias
+ * SwingingPlatform_Spawn) is the RC_BURANKO registry profile's spawn function
+ * and sits immediately after InitResources in the ROM's own .text order, so it
+ * is part of this TU. It was outside it only because the promotion predated
+ * the profile-reconstruction campaign. It keeps C linkage and is written first
+ * here, being the highest-address member.
  */
 
 #include "daObjRcBuranko_c.h"
@@ -76,6 +84,32 @@ extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vect
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, const void *mtx, int scale, s16 angleY, void *clps);
+
+/* The factory's own dependencies, restated here rather than reached through a
+   decl_*.h -- this TU declares in place, and pulling in a shared header would
+   change what the rest of the TU sees. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV16daObjRcBuranko_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 7 -- daObjRcBuranko_c_classInit, 0x02111414, size 0x30         */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjRcBuranko_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjRcBuranko_c through
+   RTTI, allocation size, vtable identity, and the RC_BURANKO registry profile;
+   later EAD lineage supplies classInit. Exact original spelling is not
+   preserved. Historical alias: SwingingPlatform_Spawn.
+
+   800 = 0x320, the literal the header comment above already reads as this
+   class's size: dBgActor_c's own, with this class's one s16 in its tail
+   padding. */
+extern "C" int *daObjRcBuranko_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV16daObjRcBuranko_c; }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -102,6 +102,56 @@ PILOT_SELECTION = [
     (375, "ov006", "required MG_CURLING_J; tests same-address false-profile rejection"),
 ]
 
+# Ten actor ids share five registry pointers.  Every overlay involved loads at
+# 0x021111a0 and they are mutually exclusive, so one numeric pointer decodes as a
+# valid profile descriptor in two overlays at once.  The pointer alone therefore
+# cannot say which overlay's descriptor an actor uses, and SM64DS offers no
+# actor-id -> overlay table to ask: these overlays are selected per level, and a
+# full scan of arm9_dec.bin for a 391-entry table of overlay ids finds none.
+#
+# Four independent cartridge lines of evidence nevertheless agree on one 1:1
+# assignment for every pair, so the join is recorded here rather than guessed:
+#
+#   1. each overlay holds its OWN descriptor at the shared address, and that
+#      descriptor's factory word equals the overlay's own operator-new factory
+#      (verified: all 20 candidate rows, desc_word0 == registry factory_address);
+#   2. each overlay contains exactly one Itanium-mangled RTTI name string in the
+#      cartridge -- "14daObjC1_Trap_c" in ov010 against "16daObjCtMecha10_c" in
+#      ov035, and so on for all ten;
+#   3. the arm9 debug profile-id string transliterates onto that class name
+#      (C1_TRAP/daObjC1_Trap_c, MC_METALNET/daObjMc_Metalnet_c, ...);
+#   4. names already carried in the tree agree, and were applied independently of
+#      this table: ov026 g_profile_WL_POLELIFT, ov033 g_profile_TT_FUTA, plus the
+#      surviving coined spawn-info names ov009 MetalNet_SpawnInfo, ov027
+#      SlidingIce_SpawnInfo and ov043 StairsBdw_SpawnInfo (Bdw is the KM1 stage
+#      tag used across the seesaw and sliding-platform families).
+#
+# This is a name-correspondence join over ROM-proven endpoints, not a byte proof
+# of overlay selection.  registry_candidate_count and overlay_ambiguous stay at
+# their measured values so the underlying ambiguity is never erased.
+FACTORY_SETTLED = (
+    "unique_class_factory",
+    "disambiguated_by_profile_id",
+)
+
+OVERLAY_SETTLED = (
+    "unique_registry_context",
+    "resolved_by_rtti_name_correspondence",
+)
+
+MULTIPLEXED_RESOLUTION = {
+    36: ("ov010", "daObjC1_Trap_c"),
+    121: ("ov035", "daObjCtMecha10_c"),
+    339: ("ov009", "daObjMc_Metalnet_c"),
+    89: ("ov026", "daObjWlPolelift_c"),
+    93: ("ov027", "daObjSlIceBlock_c"),
+    228: ("ov032", "daBakubaku_c"),
+    104: ("ov033", "daObjTtFuta_c"),
+    156: ("ov047", "daObjKm3_Kaitendai_c"),
+    134: ("ov043", "daObjKm1_Dorifu_c"),
+    174: ("ov052", "daObjEmmLog_c"),
+}
+
 SYM_RE = re.compile(
     r"^(\S+)\s+kind:(function|data|bss)\([^)]*\)\s+addr:(0x[0-9a-fA-F]+)"
 )
@@ -122,6 +172,7 @@ TSV_COLUMNS = [
     "inheritance_chain",
     "overlay",
     "registry_candidate_count",
+    "overlay_resolution",
     "registry_candidates",
     "tu_start",
     "tu_end",
@@ -143,6 +194,7 @@ TSV_COLUMNS = [
     "factory_via",
     "class_factory_count",
     "proposed_factory_collision",
+    "factory_name_resolution",
     "profile_address",
     "current_profile_name",
     "proposed_profile_name",
@@ -199,6 +251,7 @@ FULL_COLUMNS = [
     "candidate_ordinal",
     "registry_candidate_count",
     "overlay_ambiguous",
+    "overlay_resolution",
     "overlay",
     "profile_address",
     "current_profile_name",
@@ -226,7 +279,9 @@ FULL_COLUMNS = [
     "class_name",
     "class_name_source",
     "proposed_factory_collision",
+    "factory_name_resolution",
     "class_filename_candidate",
+    "factory_filename",
     "tu_start",
     "tu_end",
     "profile_rename_recommended",
@@ -690,9 +745,18 @@ def make_observations(refresh: bool, no_refresh: bool):
 
     # A candidate filename/factory name cannot be reviewed in isolation from every
     # other registry entry.  Detect classInit collisions over the full inventory.
+    #
+    # A superseded multiplex candidate is a phantom: its factory address belongs
+    # to the overlay that won the pointer, not to this actor id.  Counting it
+    # here would invent a collision, so the census runs over live rows only.
     factory_proposals = collections.defaultdict(set)
-    for candidates in all_candidates.values():
+    factory_addr_profiles = collections.defaultdict(lambda: collections.defaultdict(set))
+    for actor_id, candidates in all_candidates.items():
         for chosen in candidates:
+            if pilot_overlay_resolution(
+                actor_id, chosen["module"], len(candidates)
+            ).startswith("superseded_by_"):
+                continue
             site = site_by_factory.get(
                 (chosen["factory_module"], chosen["factory_address"])
             )
@@ -701,9 +765,10 @@ def make_observations(refresh: bool, no_refresh: bool):
                 and site.get("class")
                 and not is_base_vtable_only(site, rtti, opnew["classes"])
             ):
-                factory_proposals[f"{site['class']}_classInit"].add(
-                    (chosen["factory_module"], chosen["factory_address"])
-                )
+                key = f"{site['class']}_classInit"
+                addr = (chosen["factory_module"], chosen["factory_address"])
+                factory_proposals[key].add(addr)
+                factory_addr_profiles[key][addr].add(debug_names[actor_id][0])
 
     factory_registry_refs = collections.defaultdict(list)
     for actor_id, candidates in sorted(all_candidates.items()):
@@ -758,10 +823,12 @@ def make_observations(refresh: bool, no_refresh: bool):
             elif "dActor_c" in chain or base_only:
                 descriptor_layout = "actor_profile_0x1c"
 
-            proposed_factory = f"{class_name}_classInit" if class_name else ""
+            base_factory = f"{class_name}_classInit" if class_name else ""
             collisions = sorted(
-                factory_proposals.get(proposed_factory, set())
-            ) if proposed_factory else []
+                factory_proposals.get(base_factory, set())
+            ) if base_factory else []
+            # The collision stays measured even once it is resolved: this text
+            # is the record of how many factories share the one class.
             collision_text = (
                 ";".join(f"{m}:{hx(a)}" for m, a in collisions)
                 if len(collisions) > 1
@@ -775,26 +842,74 @@ def make_observations(refresh: bool, no_refresh: bool):
                 f"{tu_name['stem']}.cpp" if tu_name.get("stem") else ""
             )
 
+            resolved_module, resolved_class = MULTIPLEXED_RESOLUTION.get(
+                actor_id, (None, None)
+            )
+            if len(candidates) == 1:
+                overlay_resolution = "unique_registry_context"
+            elif resolved_module is None:
+                overlay_resolution = "unresolved_overlay_multiplex"
+            elif candidate["module"] == resolved_module:
+                # Guard the table against a regenerated class identity: the join is
+                # only honoured while the overlay still carries the RTTI name it was
+                # resolved on.
+                if class_name != resolved_class:
+                    raise SystemExit(
+                        f"actor {actor_id} {profile_id}: multiplex resolution expects "
+                        f"{resolved_class} in {resolved_module}, found {class_name!r}"
+                    )
+                overlay_resolution = "resolved_by_rtti_name_correspondence"
+            else:
+                overlay_resolution = f"superseded_by_{resolved_module}"
+
+            if overlay_resolution.startswith("superseded_by_"):
+                # A superseded candidate is a phantom reading of the winning
+                # overlay's factory.  It is never named, so it is never
+                # disambiguated either -- asking would make the census contradict
+                # itself, because the census counts live rows only.
+                proposed_factory = base_factory
+                factory_name_resolution = "superseded_candidate"
+            else:
+                proposed_factory, factory_name_resolution = resolve_factory_name(
+                    class_name,
+                    profile_id,
+                    (candidate["factory_module"], candidate["factory_address"]),
+                    factory_proposals,
+                    factory_addr_profiles,
+                )
+
             recommendation_reasons = []
-            if len(candidates) > 1:
+            if overlay_resolution == "unresolved_overlay_multiplex":
                 recommendation_reasons.append("overlay_multiplexed_registry_pointer")
+            elif overlay_resolution.startswith("superseded_by_"):
+                recommendation_reasons.append(
+                    f"overlay_multiplex_{overlay_resolution}"
+                )
             if base_only or not class_name:
                 recommendation_reasons.append("most_derived_class_unresolved")
-            if collision_text:
+            # A superseded row was never a naming candidate, so reporting the
+            # class's collision against it would read as unresolvable when it is
+            # in fact resolved for every live row.
+            if (
+                collision_text
+                and factory_name_resolution not in FACTORY_SETTLED
+                and factory_name_resolution != "superseded_candidate"
+            ):
                 recommendation_reasons.append("global_classinit_name_collision")
             if not candidate["current_factory_name"]:
                 recommendation_reasons.append("current_factory_symbol_unresolved")
             if not candidate["current_profile_name"]:
                 recommendation_reasons.append("current_profile_symbol_unresolved")
 
-            profile_recommended = (
-                len(candidates) == 1 and bool(candidate["current_profile_name"])
+            overlay_settled = overlay_resolution in OVERLAY_SETTLED
+            profile_recommended = overlay_settled and bool(
+                candidate["current_profile_name"]
             )
             factory_recommended = (
-                len(candidates) == 1
+                overlay_settled
                 and bool(candidate["current_factory_name"])
                 and bool(class_name)
-                and not collision_text
+                and factory_name_resolution in FACTORY_SETTLED
             )
             full_rows.append(
                 {
@@ -807,6 +922,7 @@ def make_observations(refresh: bool, no_refresh: bool):
                     "candidate_ordinal": ordinal,
                     "registry_candidate_count": len(candidates),
                     "overlay_ambiguous": len(candidates) > 1,
+                    "overlay_resolution": overlay_resolution,
                     "overlay": candidate["module"],
                     "profile_address": hx(candidate["profile_address"]),
                     "current_profile_name": candidate["current_profile_name"],
@@ -865,7 +981,12 @@ def make_observations(refresh: bool, no_refresh: bool):
                         else ""
                     ),
                     "proposed_factory_collision": collision_text,
+                    "factory_name_resolution": factory_name_resolution,
                     "class_filename_candidate": filename_candidate,
+                    # Filled in by assign_factory_filenames() once every row is
+                    # known: the target stem's uniqueness is a property of the
+                    # whole inventory, not of one row.
+                    "factory_filename": "",
                     "tu_start": unit["start"] if unit else "",
                     "tu_end": unit["end"] if unit else "",
                     "profile_rename_recommended": (
@@ -931,9 +1052,22 @@ def make_observations(refresh: bool, no_refresh: bool):
         probable_filename = (
             class_filename_candidate if class_filename_candidate and not filename_contradictions else ""
         )
-        proposed_factory = f"{class_name}_classInit" if class_name else ""
-        collisions = sorted(factory_proposals.get(proposed_factory, set())) if proposed_factory else []
+        chosen_overlay_resolution = pilot_overlay_resolution(
+            chosen["actor_id"], chosen["module"], len(chosen["registry_candidates"])
+        )
+        base_factory = f"{class_name}_classInit" if class_name else ""
+        collisions = sorted(factory_proposals.get(base_factory, set())) if base_factory else []
         collision_text = ";".join(f"{m}:{hx(a)}" for m, a in collisions) if len(collisions) > 1 else ""
+        if chosen_overlay_resolution.startswith("superseded_by_"):
+            proposed_factory, factory_name_resolution = base_factory, "superseded_candidate"
+        else:
+            proposed_factory, factory_name_resolution = resolve_factory_name(
+                class_name,
+                chosen["profile_id"],
+                (chosen["factory_module"], chosen["factory_address"]),
+                factory_proposals,
+                factory_addr_profiles,
+            )
 
         class_rec = opnew["classes"].get(class_name, {}) if class_name else {}
         if not class_rec and site:
@@ -961,7 +1095,15 @@ def make_observations(refresh: bool, no_refresh: bool):
         if base_only:
             notes.append("most-derived class has no independently installed vtable; class name left blank")
         if collision_text:
-            notes.append("multiple factory addresses would collide on one global <Class>_classInit spelling")
+            notes.append(
+                "multiple factory addresses would collide on one global "
+                "<Class>_classInit spelling"
+                + (
+                    "; disambiguated by ROM profile id"
+                    if factory_name_resolution == "disambiguated_by_profile_id"
+                    else ""
+                )
+            )
         if class_size is not None and site and class_size != site["size"]:
             notes.append("header size assertion differs from ROM allocation size")
         if chosen["factory_module"] == "arm9" and unit and len(unit.get("classes", [])) > 5:
@@ -1034,6 +1176,7 @@ def make_observations(refresh: bool, no_refresh: bool):
             "inheritance_chain": chain,
             "overlay": chosen["module"],
             "registry_candidate_count": len(chosen["registry_candidates"]),
+            "overlay_resolution": chosen_overlay_resolution,
             "registry_candidates": chosen["registry_candidates"],
             "tu_start": unit["start"] if unit else "",
             "tu_end": unit["end"] if unit else "",
@@ -1060,6 +1203,7 @@ def make_observations(refresh: bool, no_refresh: bool):
             "factory_via": site.get("via") or "" if site else "",
             "class_factory_count": class_rec.get("sites", ""),
             "proposed_factory_collision": collision_text,
+            "factory_name_resolution": factory_name_resolution,
             "profile_address": hx(chosen["profile_address"]),
             "current_profile_name": chosen["current_profile_name"],
             "proposed_profile_name": f"g_profile_{chosen['profile_id']}",
@@ -1174,6 +1318,7 @@ def make_observations(refresh: bool, no_refresh: bool):
             if not any(c["execute_order"] == actor_id for c in candidates)
         ],
     }
+    assign_factory_filenames(full_rows)
     return rows, full_rows, opnew, inventory_context
 
 
@@ -1192,13 +1337,101 @@ def write_tsv(path: pathlib.Path, columns, rows) -> None:
             writer.writerow({k: tsv_value(row.get(k, "")) for k in columns})
 
 
+def assign_factory_filenames(full_rows) -> None:
+    """Give every recommended factory rename a unique target source filename.
+
+    The stem is the NSMBW-convention one that ``tools/tu_names.py`` derives from
+    the ROM's own RTTI class name (``daObjKm2_Ami_Bou_c`` -> ``d_a_obj_km2_ami_bou``),
+    which is where ``class_filename_candidate`` comes from.  That stem is a
+    property of the CLASS, and a class with several registry entries has several
+    factories, so the stem alone cannot name all of their files.  Those cases take
+    the same disambiguator the symbol name takes -- the ROM profile id, lowercased
+    -- giving ``d_a_trs_trap_teresapit.c`` beside ``d_a_trs_trap_kuribo.c``.
+
+    The extension is copied from the factory's CURRENT source file and never
+    changed.  A ``.c`` -> ``.cpp`` rename changes the language mode the pinned
+    mwccarm compiles the file under and would cost the byte match, so the
+    reconstructed filename inherits the extension rather than proposing one.
+
+    The value is empty for a row with no recommended factory rename, no derived
+    class stem, or no current source file: nothing to rename, nothing to name.
+    """
+    claimants = collections.defaultdict(set)
+    for row in full_rows:
+        stem = factory_filename_stem(row)
+        if stem:
+            claimants[stem].add((row["factory_module"], row["factory_address"]))
+    for row in full_rows:
+        stem = factory_filename_stem(row)
+        if not stem:
+            continue
+        if len(claimants[stem]) > 1:
+            stem = f"{stem}_{row['profile_id'].lower()}"
+        row["factory_filename"] = stem + pathlib.PurePosixPath(
+            row["current_factory_file"]
+        ).suffix
+
+
+def factory_filename_stem(row) -> str:
+    """The undisambiguated stem a row would claim, or "" if it claims none."""
+    if row["factory_rename_recommended"] != "yes":
+        return ""
+    if not row["class_filename_candidate"] or not row["current_factory_file"]:
+        return ""
+    return pathlib.PurePosixPath(row["class_filename_candidate"]).stem
+
+
+def pilot_overlay_resolution(actor_id, module, candidate_count):
+    """Same join as the full inventory, for the pilot sample's chosen candidate."""
+    if candidate_count == 1:
+        return "unique_registry_context"
+    resolved = MULTIPLEXED_RESOLUTION.get(actor_id)
+    if resolved is None:
+        return "unresolved_overlay_multiplex"
+    return (
+        "resolved_by_rtti_name_correspondence"
+        if module == resolved[0]
+        else f"superseded_by_{resolved[0]}"
+    )
+
+
+def resolve_factory_name(
+    class_name, profile_id, addr, factory_proposals, factory_addr_profiles
+):
+    """Name a per-profile factory, disambiguating a shared class by profile id.
+
+    A class reached from several registry entries has one distinct factory
+    function per entry -- seven separate seesaws, one daObjSeesaw_c -- so a bare
+    <Class>_classInit cannot name them all.  Every component of the suffixed
+    spelling is ROM-proven: the class from RTTI, the profile id from the arm9
+    debug table, and the pairing between them from the registry descriptor's
+    factory pointer.  Only the convention of joining them is ours.
+
+    The suffix is a bijection or it is nothing.  If one factory address were
+    reachable from two profile ids, the suffix would give one function two
+    names, so that case raises rather than guessing which id owns it.
+    """
+    if not class_name:
+        return "", ""
+    base = f"{class_name}_classInit"
+    if len(factory_proposals.get(base, set())) <= 1:
+        return base, "unique_class_factory"
+    owners = factory_addr_profiles.get(base, {}).get(addr, set())
+    if owners != {profile_id}:
+        raise SystemExit(
+            f"{base} at {addr}: profile-id disambiguation is not a bijection; "
+            f"row claims {profile_id!r}, census says {sorted(owners)}"
+        )
+    return f"{base}_{profile_id}", "disambiguated_by_profile_id"
+
+
 def build_rename_rows(rows):
     out = []
     for row in rows:
         factory_yes = (
             bool(row["proposed_factory_name"])
-            and not row["proposed_factory_collision"]
-            and row["registry_candidate_count"] == 1
+            and row["factory_name_resolution"] in FACTORY_SETTLED
+            and row["overlay_resolution"] in OVERLAY_SETTLED
             and row["factory_shape"] in ("new_plus_inlined_ctor", "new_plus_ctor_call")
         )
         if row["current_factory_name"]:
@@ -1207,10 +1440,15 @@ def build_rename_rows(rows):
                 if row["class_name"]
                 else "allocation_only;most_derived_class_unresolved"
             )
-            if row["proposed_factory_collision"]:
+            if row["factory_name_resolution"] == "disambiguated_by_profile_id":
+                # The collision is real and still recorded; the suffix resolves it.
+                factory_evidence += "+classinit_disambiguated_by_rom_profile_id"
+            elif row["proposed_factory_collision"]:
                 factory_evidence += ";not_apply=global_name_collision"
-            if row["registry_candidate_count"] != 1:
-                factory_evidence += ";not_apply=overlay_multiplexed_registry_pointer"
+            if row["overlay_resolution"] not in OVERLAY_SETTLED:
+                factory_evidence += (
+                    f";not_apply=overlay_multiplex_{row['overlay_resolution']}"
+                )
             if row["factory_shape"] not in (
                 "new_plus_inlined_ctor",
                 "new_plus_ctor_call",
@@ -1229,13 +1467,17 @@ def build_rename_rows(rows):
                 }
             )
 
-        profile_yes = row["registry_candidate_count"] == 1
+        profile_yes = row["overlay_resolution"] in OVERLAY_SETTLED
         if row["current_profile_name"]:
             profile_evidence = (
                 "rom_profile_id+registry_descriptor+factory_pointer+nsmbw_lineage"
             )
+            if row["overlay_resolution"] == "resolved_by_rtti_name_correspondence":
+                profile_evidence += "+overlay_multiplex_rtti_name_correspondence"
             if not profile_yes:
-                profile_evidence += ";not_apply=overlay_multiplexed_registry_pointer"
+                profile_evidence += (
+                    f";not_apply=overlay_multiplex_{row['overlay_resolution']}"
+                )
             out.append(
                 {
                     "current_symbol": row["current_profile_name"],
@@ -1292,8 +1534,17 @@ def check_full_rows(rows) -> None:
             "CHECK FAIL: not every registry ID has a candidate whose +0x04 "
             "halfword equals the ID"
         )
+    filenames = [row["factory_filename"] for row in rows if row["factory_filename"]]
+    duplicates = sorted(
+        name for name, n in collections.Counter(filenames).items() if n > 1
+    )
+    if duplicates:
+        raise SystemExit(
+            "CHECK FAIL: factory_filename is not unique: " + ", ".join(duplicates)
+        )
     print(
-        f"CHECK OK: {len(rows)} candidate rows cover all {N_ACTORS} registry IDs"
+        f"CHECK OK: {len(rows)} candidate rows cover all {N_ACTORS} registry IDs; "
+        f"{len(filenames)} unique factory filenames"
     )
 
 
