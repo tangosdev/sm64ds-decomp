@@ -128,7 +128,7 @@ data_ov071_02122cc8 kind:data(any) addr:0x02122cc8
 data_ov071_02122cd0 kind:data(any) addr:0x02122cd0
 _ZTS8daEykn_c kind:data(any) addr:0x02122cd8
 _ZTI8daEykn_c kind:data(any) addr:0x02122ce4
-MrI_SpawnInfo kind:data(any) addr:0x02122cf0 ambiguous
+g_profile_EYEKUN kind:data(any) addr:0x02122cf0 ambiguous
 g_profile_EYEKUN_BOSS kind:data(any) addr:0x02122d0c ambiguous
 _ZTV3MrI kind:data(any) addr:0x02122d30
 _ZTV8daEykn_c kind:data(any) addr:0x02122d30

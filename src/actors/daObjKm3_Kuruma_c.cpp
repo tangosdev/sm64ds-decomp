@@ -79,7 +79,13 @@ extern "C" daObjKm3_Kuruma_c *daObjKm3_Dorifu_c_Spawn()
     return actor;
 }
 
-extern "C" KurumaSpawnInfo daObjKm3_Dorifu_c_SpawnInfo = {
+/* Reconstructed source-style name: SM64DS proves daObjKm3_Kuruma_c through
+ * RTTI adjacency (_ZTI/_ZTS at 0x021123fc/0x02112414, _ZTV at 0x0211244c,
+ * this descriptor between them), allocation size 0x320, the vtable this
+ * factory installs, and the KM3_KURUMA registry profile; later EAD lineage
+ * supplies the g_profile_ form. Exact original spelling is not preserved.
+ * Historical alias: daObjKm3_Dorifu_c_SpawnInfo. */
+extern "C" KurumaSpawnInfo g_profile_KM3_KURUMA = {
     daObjKm3_Dorifu_c_Spawn,
     0x0097,
     0x00de,

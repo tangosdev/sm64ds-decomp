@@ -1335,6 +1335,7 @@ ov047	0x0211227c	RickshawBs_SpawnInfo	g_profile_KM3_KURUMAJIKU	reconstructed pro
 ov047	0x02112358	data_ov047_02112358	g_profile_KM3_KAITENDAI	reconstructed profile global; literal ROM ID KM3_KAITENDAI+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov047	0x0211237c	data_ov047_0211237c	_ZTV20daObjKm3_Kaitendai_c	vtable alloc=? (was _ZTV10RickshawBs)
 ov047	0x02112428	data_ov047_02112428	daObjKm3_Dorifu_c_SpawnInfo	spawninfo
+ov047	0x02112428	daObjKm3_Dorifu_c_SpawnInfo	g_profile_KM3_KURUMA	reconstructed profile global; literal ROM ID KM3_KURUMA+registry role+later EAD lineage; exact SM64DS spelling not preserved; restores the campaign rename that PR #2162 reverted to a different class name (ROM RTTI adjacency puts this descriptor inside the daObjKm3_Kuruma_c block)
 ov047	0x021124ec	data_ov047_021124ec	StairsBs_SpawnInfo	spawninfo
 ov047	0x0211254c	data_ov047_0211254c	_ZTV17daObjKm3_Dorifu_c	vtable alloc=0x320
 ov052	0x02111440	func_ov052_02111440	_ZN14SquarePathLiftD1Ev	vtable slot 16
@@ -1928,6 +1929,7 @@ ov071	0x02122c08	data_ov071_02122c08	Scuttlebug_SpawnInfo	spawninfo
 ov071	0x02122c08	Scuttlebug_SpawnInfo	g_profile_SPIDER	reconstructed profile global; literal ROM ID SPIDER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02122c2c	data_ov071_02122c2c	_ZTV10Scuttlebug	vtable alloc=0x3ac
 ov071	0x02122cf0	data_ov071_02122cf0	MrI_SpawnInfo	spawninfo
+ov071	0x02122cf0	MrI_SpawnInfo	g_profile_EYEKUN	reconstructed profile global; literal ROM ID EYEKUN+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02122d0c	data_ov071_02122d0c	BigMrI_SpawnInfo	spawninfo
 ov071	0x02122d0c	BigMrI_SpawnInfo	g_profile_EYEKUN_BOSS	reconstructed profile global; literal ROM ID EYEKUN_BOSS+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov071	0x02122d30	data_ov071_02122d30	_ZTV3MrI	vtable alloc=0x218

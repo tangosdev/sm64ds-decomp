@@ -98,7 +98,7 @@ _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
 data_ov047_02112408 kind:data(any) addr:0x02112408
 _ZTS17daObjKm3_Kuruma_c kind:data(any) addr:0x02112414
-daObjKm3_Dorifu_c_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
+g_profile_KM3_KURUMA kind:data(any) addr:0x02112428 ambiguous
 _ZTV17daObjKm3_Kuruma_c kind:data(any) addr:0x0211244c
 _ZTI17daObjKm3_Dorifu_c kind:data(any) addr:0x021124cc
 data_ov047_021124d4 kind:data(any) addr:0x021124d4 ambiguous

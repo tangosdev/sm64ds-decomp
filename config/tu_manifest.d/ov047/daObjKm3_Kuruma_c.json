@@ -8,7 +8,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "manually corrected contiguous linker run: 0x021113f8..0x02111510, five functions; build/tu_map.json stopped at 0x021114d4 and omitted the immediately adjacent daObjKm3_Dorifu_c_Spawn factory",
-    "daObjKm3_Dorifu_c_Spawn allocates sizeof(daObjKm3_Kuruma_c), calls the dBgActor base constructor, then stores the daObjKuruma_c and daObjKm3_Kuruma_c vptrs; daObjKm3_Dorifu_c_SpawnInfo at 0x02112428 relocates directly to that factory",
+    "daObjKm3_Dorifu_c_Spawn allocates sizeof(daObjKm3_Kuruma_c), calls the dBgActor base constructor, then stores the daObjKuruma_c and daObjKm3_Kuruma_c vptrs; g_profile_KM3_KURUMA at 0x02112428 (historical alias daObjKm3_Dorifu_c_SpawnInfo) relocates directly to that factory",
     "the next class destructor begins exactly at 0x02111510, while this class's RTTI, descriptor, type name, SpawnInfo, and vtable tile 0x021123fc..0x021124cc without a gap"
   ],
   "sections": [
@@ -80,7 +80,7 @@
       "evidence": "compiler-emitted type-name string matches the retail bytes"
     },
     {
-      "symbol": "daObjKm3_Dorifu_c_SpawnInfo",
+      "symbol": "g_profile_KM3_KURUMA",
       "address": "0x02112428",
       "size": "0x1c",
       "evidence": "typed actor descriptor; factory relocation and all priority, flag, and range words match retail"
@@ -743,7 +743,7 @@
   ],
   "compiler_only_output": [],
   "notes": [
-    "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Dorifu_c_Spawn factory and its SpawnInfo establish the corrected five-function boundary.",
+    "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Dorifu_c_Spawn factory and its descriptor establish the corrected five-function boundary.",
     "This TU owns the contiguous data band 0x021123fc..0x021124cc: compiler-emitted RTTI and type-name records, resource descriptor, SpawnInfo, and vtable storage. Only inherited vague RTTI copies remain exact-symbol externalized.",
     "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; there is no compiler-only D2 body.",
     "The manual C-linkage factory remains intentional: natural new has not been proven to preserve the retail allocator and vptr relocation shape."
@@ -1092,7 +1092,7 @@
           ".data"
         ],
         "licensedSymbols": [
-          "daObjKm3_Dorifu_c_SpawnInfo",
+          "g_profile_KM3_KURUMA",
           "_ZTI17daObjKm3_Kuruma_c",
           "_ZTS17daObjKm3_Kuruma_c",
           "_ZTV17daObjKm3_Kuruma_c",
@@ -1511,7 +1511,7 @@
           ".data"
         ],
         "licensedSymbols": [
-          "daObjKm3_Dorifu_c_SpawnInfo",
+          "g_profile_KM3_KURUMA",
           "_ZTI17daObjKm3_Kuruma_c",
           "_ZTS17daObjKm3_Kuruma_c",
           "_ZTV17daObjKm3_Kuruma_c",
