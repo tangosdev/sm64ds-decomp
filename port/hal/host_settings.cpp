@@ -1429,9 +1429,9 @@ int reload_live(const char *text)
     if (voice_changed) {
         changed = 1;
         fprintf(stderr, "[settings] live re-read: voice %s, volume %d, mic "
-                "'%s', radii %d..%d\n", g_voice_enabled ? "ON" : "off",
-                g_voice_volume, g_voice_mic[0] ? g_voice_mic : "(default)",
-                g_voice_near, g_voice_far);
+                "'%s', index %d, radii %d..%d\n", g_voice_enabled ? "ON" : "off",
+                g_voice_volume, g_voice_mic[0] ? g_voice_mic : "(auto-pick)",
+                g_voice_mic_index, g_voice_near, g_voice_far);
     }
     if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
         color != g_gap_color || vol != g_volume || mcap != g_mouse_capture ||

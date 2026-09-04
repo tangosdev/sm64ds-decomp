@@ -23,7 +23,23 @@ Quiet and muted through mp2_proof.spawn, plus SM64DS_NO_AUDIO=1 and the tone
 hook on every window, so no recording device and no output device is opened by
 any of them.
 
+--REAL-MIC DROPS THE TONE HOOK, and it exists for one thing the default run
+cannot reach: the AUTO-PICK SCAN. With the tone hook on, no capture device is
+opened at all, so the scan that hal/voice_capture_win.cpp runs on the first
+cap_open -- opening every recording device in turn and sampling it, a couple
+hundred milliseconds of wall clock on the host frame loop -- never happens, and
+claim 2 above is silent about it. With --real-mic the ON pass opens the real
+hardware and really scans, and the same frame-for-frame comparison against the
+voice-OFF pass is then a statement about the scan too.
+
+It is a smaller claim per window on purpose. A machine has one microphone and
+several windows, so with real hardware they contend for it and only some of
+them capture; what is asserted per window is that voice was ON and the tone hook
+was OFF, plus that AT LEAST ONE window really captured. The hash comparison,
+which is the point, is unchanged and is over every window either way.
+
     python port/tools/voice_determinism.py [--windows N] [--frames N]
+                                           [--real-mic]
 
 Exit 0 all green, 1 on the first red.
 """
@@ -68,7 +84,7 @@ def settings(d, on):
         json.dump(cfg, f, indent=2)
 
 
-def run_pass(tag, n, frames, port, voice_on):
+def run_pass(tag, n, frames, port, voice_on, real_mic=False):
     """N windows, one session, one arena. Returns the per-window log paths."""
     base = os.path.join(OUT, tag)
     dirs, procs, logs = [], [], []
@@ -94,7 +110,12 @@ def run_pass(tag, n, frames, port, voice_on):
         e["SM64DS_COMMS_REPORT"] = "1"
         e["SM64DS_COMMS_INJECT"] = "key=%s" % KEYS[k % len(KEYS)]
         e["SM64DS_NO_AUDIO"] = "1"
-        e["SM64DS_VOICE_TEST_TONE"] = "1"
+        # The tone hook REPLACES the capture device, so it is exactly what has
+        # to come off for the auto-pick scan to run. Off only on the ON pass:
+        # the OFF pass opens nothing whatever this says, and leaving the hook on
+        # there keeps the two passes' environments as close as they can be.
+        if not (real_mic and voice_on):
+            e["SM64DS_VOICE_TEST_TONE"] = "1"
         e["SM64DS_VOICE_REPORT"] = "1"
         if k == 0:
             e["SM64DS_COMMS_ROLE"] = "parent"
@@ -144,6 +165,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--windows", type=int, default=4)
     ap.add_argument("--frames", default="900")
+    ap.add_argument("--real-mic", action="store_true",
+                    help="open the real recording hardware on the ON pass, so "
+                         "the auto-pick scan is inside what the hash "
+                         "comparison covers")
     a = ap.parse_args()
 
     if not os.path.exists(EXE):
@@ -159,19 +184,40 @@ def main():
     n = a.windows
     ok = True
 
-    on_logs, on_rcs = run_pass("on", n, a.frames, PORT, True)
+    on_logs, on_rcs = run_pass("on", n, a.frames, PORT, True,
+                               real_mic=a.real_mic)
     ok &= M.verdict(all(r == 0 for r in on_rcs),
                     "voice-det every window with voice ON exited clean | rc %s"
                     % (on_rcs,))
     # THE ON PASS HAS TO ACTUALLY BE TALKING, or the cross-run comparison at
     # the bottom is trivially true and proves nothing. Every window sends, every
     # window receives from its peers, and nothing is malformed.
-    for k in range(n):
-        c = voice_counts(M.text(on_logs[k]))
-        ok &= M.verdict(c is not None and c["on"] == 1 and c["tx"] > 0 and
-                        c["rx"] > 0 and c["bad"] == 0 and c["dev"] == 0,
-                        "voice-det ON p%d was really talking and listening | %s"
-                        % (k, c))
+    counts = [voice_counts(M.text(on_logs[k])) for k in range(n)]
+    if a.real_mic:
+        # Real hardware: several windows, one microphone. Per window all that
+        # can be asserted is that voice was on with no tone hook standing in
+        # for the device; the capture claim is made once, over the pass.
+        for k in range(n):
+            c = counts[k]
+            ok &= M.verdict(c is not None and c["on"] == 1 and c["tone"] == 0
+                            and c["bad"] == 0,
+                            "voice-det ON p%d had voice on with the REAL "
+                            "capture path, no tone hook | %s" % (k, c))
+        scanned = sum(1 for k in range(n)
+                      if "auto-pick: measuring" in M.text(on_logs[k]))
+        ok &= M.verdict(scanned > 0,
+                        "voice-det ON the auto-pick scan really ran | %d of %d "
+                        "window(s) scanned" % (scanned, n))
+        ok &= M.verdict(any(c and c["cap"] > 0 for c in counts),
+                        "voice-det ON at least one window captured real audio "
+                        "| cap=%s" % ([c["cap"] if c else None for c in counts],))
+    else:
+        for k in range(n):
+            c = counts[k]
+            ok &= M.verdict(c is not None and c["on"] == 1 and c["tx"] > 0 and
+                            c["rx"] > 0 and c["bad"] == 0 and c["dev"] == 0,
+                            "voice-det ON p%d was really talking and listening "
+                            "| %s" % (k, c))
     for i in range(n):
         for j in range(i + 1, n):
             rc, line = dhdiff(on_logs[i], on_logs[j])
