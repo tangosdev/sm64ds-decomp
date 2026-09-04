@@ -128,3 +128,62 @@ vars above -> this game side applies them post-boot. Same seam shape as
 SM64DS_VS_CHARS. Survivors must not be assigned Luigi as a character (the mode
 owns character assignment); team logic keys off g_li_team, not mCharacter, so a
 mis-assignment would not corrupt the logic, only the look.
+
+## ROLLBACK NETCODE: what this mode does across a rewind
+The battery does NOT run the rollback ladder, so a green battery says nothing
+here. Run it directly: `python port\tools\rollback_proof.py --only DET,VS4
+--extra SM64DS_VS_LUIGI_INFECTION=1`.
+
+PEER TO PEER is clean and always was: the VS4 sweep is 6/6 pairings NO
+DIVERGENCE at RTT 0/40/80/160 with the mode armed. The seed comes from the
+environment every peer shares, and the countdown and the pick are pure functions
+of the host frame -- no local clock, no rand.
+
+THE RESTORE+RETICK CHECK found two real defects, both now fixed.
+
+1. THE MODE'S STATE WAS OUTSIDE THE SNAPSHOT. g_li_team and g_li_seeded are
+   simulation state in host statics, so the three regions a snapshot copies (the
+   arena, .dsstate, the hardware stores) did not carry them. li_infect
+   early-returns on the team bit, so a rewind put the arena back -- the
+   converted player a survivor again -- and left the bit set, and the replay
+   never re-applied the character swap. Across the pick at frame 240 the same
+   latch lost the tagger outright. They now ride the snapshot slot the way the
+   seam counters and the divergence clock do (port_luigi_state_get/set in
+   hal/luigi_infection.cpp, carried in hal/rollback.cpp). NOT .dsstate:
+   dsstate_seg.h reserves that bracket for hosted DS globals and
+   tools/dsstate_guard.py says host-only symbols must not be in it.
+   PROVEN: a rewind spanning the seed at f240 comes back arena=0 hw=0.
+
+2. THE MUSIC WAS NOT PUT BACK. The restore re-seeds the sound driver, which
+   clears the sequence player; suppressing the countdown's LoadAndSetMusic on a
+   replayed frame left the re-run with no music where the straight run had 0x4d
+   (DET named the bytes: data_023c0000 +0x35a4 and the pointer beside it). The
+   music is STATE, so it is re-issued on a replayed frame. The BEEPS are
+   effects and re-trigger too, which is what hal/rollback.cpp already specifies
+   for in-game sound -- the replay re-triggers into the reset queue and the
+   output stage is muted. Standing them down was tried and is wrong: it makes
+   the replay do less than the straight run did. Only the TRACES stand down.
+
+WHAT IS STILL RED, AND IT IS NOT THIS MODE. When a countdown beep lands inside
+the rewind window, 3-4 bytes of the ARM9 Data TCM sequence-player block
+(data_023c0000 +0x3594..0x35e4) drift. in_sound_queue in hal/rollback.cpp
+excuses the ARM9 data_020a* sound structures but not that DTCM block, so the
+rung reads DSSTATE-DIFFERS instead of IDENTICAL-EXCEPT-SOUNDQUEUE. It follows
+the beep, not the mode -- measured both ways at the same window:
+
+    window      mode OFF                       mode ARMED
+    f85..94     DSSTATE-DIFFERS, 4 outside     IDENTICAL, 0
+    f150..159   IDENTICAL, 0                   DSSTATE-DIFFERS, 4 outside
+    f235..244   0 outside (spans the seed)     3 outside, arena=0
+    f255..264   --                             0 outside
+
+The mode stretches the countdown from ~2s to 5s, so its beeps land on different
+frames than the ROM's; whichever build has a beep in the window shows the
+signature. The arena and the hardware stores are byte-identical in every one of
+these. The fix belongs to the rollback lane: either name the DTCM block in
+in_sound_queue the way the ARM9 structures are named, or have the restore
+re-seed it. Widening that list to make this lane green was deliberately NOT
+done here -- it is a determinism gate and it is not this lane's to loosen.
+
+DET16 fails identically with the mode on and off (0/16 windows bring up
+NetMode ROLLBACK on this machine); that is environmental and discounted.
