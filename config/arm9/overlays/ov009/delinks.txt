@@ -60,7 +60,7 @@ src/actors/d_a_obj_mc_metalnet.cpp:
     complete
     .text start:0x02111dc4 end:0x02112078
 
-src/actors/d_a_mc_flag.cpp:
+src/game/actors/d_a_mc_flag.cpp:
     complete
     .text start:0x02112078 end:0x02112228
 

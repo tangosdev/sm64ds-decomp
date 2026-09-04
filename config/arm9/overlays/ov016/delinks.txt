@@ -152,7 +152,7 @@ src/daObjKi_Hasira_c_classInit.c:
     complete
     .text start:0x02112ec4 end:0x02112ef4
 
-src/actors/d_a_obj_ki_ita.cpp:
+src/game/actors/d_a_obj_ki_ita.cpp:
     complete
     .text start:0x02112ef4 end:0x02112ff8
 

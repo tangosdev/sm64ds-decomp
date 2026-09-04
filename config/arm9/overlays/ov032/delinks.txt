@@ -4,7 +4,7 @@
     .ctor       start:0x02112e94 end:0x02112ea0 kind:rodata align:4
     .data       start:0x02112ec0 end:0x02113a40 kind:data align:32
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
-src/actors/d_a_bakubaku.cpp:
+src/game/actors/d_a_bakubaku.cpp:
     complete
     .text start:0x021111a0 end:0x021124a8
     .data start:0x021137e4 end:0x021138a0

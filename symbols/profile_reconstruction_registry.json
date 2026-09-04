@@ -15065,7 +15065,7 @@
       "factory_module": "ov009",
       "factory_address": "0x021121f0",
       "current_factory_name": "daMcFlag_c_Spawn",
-      "current_factory_file": "src/actors/d_a_mc_flag.cpp",
+      "current_factory_file": "src/game/actors/d_a_mc_flag.cpp",
       "proposed_factory_name": "daMcFlag_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00000138",

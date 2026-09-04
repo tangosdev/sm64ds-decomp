@@ -1,8 +1,8 @@
 {
   "id": "ov072/daBgSnwmn_c",
   "module": "ov072",
-  "source": "src/actors/d_a_bg_snwmn.cpp",
-  "promoted_source": "src/actors/d_a_bg_snwmn.cpp",
+  "source": "src/game/actors/d_a_bg_snwmn.cpp",
+  "promoted_source": "src/game/actors/d_a_bg_snwmn.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",

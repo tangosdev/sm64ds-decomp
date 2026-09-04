@@ -232,7 +232,7 @@ src/daObjFl_Amilift_c_classInit.c:
     complete
     .text start:0x02117fe8 end:0x02118020
 
-src/actors/d_a_obj_fl_gura.cpp:
+src/game/actors/d_a_obj_fl_gura.cpp:
     complete
     .text start:0x02118020 end:0x02118138
 

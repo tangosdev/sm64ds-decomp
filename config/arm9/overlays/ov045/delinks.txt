@@ -128,12 +128,12 @@ src/daObjKm2_Ukishima_c_classInit.c:
     complete
     .text start:0x02111bf4 end:0x02111c30
 
-src/actors/d_a_obj_km2_gura.cpp:
+src/game/actors/d_a_obj_km2_gura.cpp:
     complete
     .text start:0x02111c30 end:0x02111d48
     .data start:0x02112fdc end:0x021130a0
 
-src/actors/d_a_obj_km2_fall_block.cpp:
+src/game/actors/d_a_obj_km2_fall_block.cpp:
     complete
     .text start:0x02111d48 end:0x02111e60
 
