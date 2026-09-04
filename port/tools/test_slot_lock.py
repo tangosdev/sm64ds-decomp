@@ -89,6 +89,25 @@ def test_lock_path_honours_override(lockfile):
     assert slot_lock.lock_path() == lockfile
 
 
+def test_enabled_without_explicit_path_is_refused(lockfile, monkeypatch):
+    # Opting into locking (SM64DS_TEST_LOCK) without an explicit shared path
+    # must FAIL LOUDLY, not silently lock a private/default file. This is the
+    # footgun: a lane that forgets the path is the one that will not notice a
+    # silent non-serialisation.
+    monkeypatch.setenv("SM64DS_TEST_LOCK", "1")
+    monkeypatch.delenv("SM64DS_TEST_LOCK_PATH", raising=False)
+    with pytest.raises(slot_lock.SlotLockMisconfigured):
+        slot_lock.acquire(timeout=1)
+
+
+def test_enabled_with_explicit_path_is_allowed(lockfile, monkeypatch):
+    # The same opt-in WITH an explicit path (the fixture set one) is fine.
+    monkeypatch.setenv("SM64DS_TEST_LOCK", "1")
+    path = slot_lock.acquire(label="ok", timeout=1)
+    assert os.path.exists(path)
+    slot_lock.release(path)
+
+
 # --- acquire / release basics --------------------------------------------
 
 def test_acquire_creates_lockfile_with_our_pid(lockfile):

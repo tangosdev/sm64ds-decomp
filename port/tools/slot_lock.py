@@ -37,9 +37,13 @@ across lanes. Resolution order:
      temp> is tempfile.gettempdir() (honours %TEMP%/%TMP%).
 
 On this box %TEMP% is pointed at C:\\tmp for every lane (the AppData-Temp exe
-block workaround), so (2) resolves to one shared file and the default is
-correct with no override. If a lane ever sets a private %TEMP%, point every
-lane at one file with $SM64DS_TEST_LOCK_PATH.
+block workaround), so (2) resolves to one shared file. BUT because a lane with a
+private %TEMP% would silently lock its OWN file and reintroduce the collision as
+a flaky red, opting into locking now REQUIRES the explicit path: when
+SM64DS_TEST_LOCK is set, acquire() raises SlotLockMisconfigured unless
+$SM64DS_TEST_LOCK_PATH is also set. The default in (2) remains for direct/hand
+CLI use, where a single human on the box is not racing another lane. acquire()
+also prints the resolved path once per process so a wrong path shows in the log.
 
 THE LOCKFILE CONTENTS are JSON: pid, host, an epoch acquire time, and a label.
 The pid and time are what the stale-break below reads.
@@ -118,6 +122,23 @@ class SlotLockTimeout(TimeoutError):
     This is an infra condition (another lane held the slot too long), not a
     game fault. The message names the current holder's pid and hold time.
     """
+
+
+class SlotLockMisconfigured(RuntimeError):
+    """SM64DS_TEST_LOCK is on but no explicit SM64DS_TEST_LOCK_PATH is set.
+
+    A lane that opts into locking without an explicit shared path falls back to
+    the default under %TEMP%, which does NOT serialise across lanes that run a
+    private %TEMP% -- and that failure is SILENT: the lane looks locked, then two
+    runs collide and it surfaces as a flaky cross-level red, never as a missing
+    lock. The lane that forgets the path is exactly the one that will not notice,
+    so refuse loudly at acquire time instead of locking a private file.
+    """
+
+
+# Announce the resolved lockfile path once per process (a log makes a wrong or
+# private path visible instead of silent). See acquire().
+_path_announced = False
 
 
 def _truthy(v):
@@ -252,7 +273,21 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS):
     A stale lock -- dead holder pid or older than MAX_HOLD_SECONDS -- is broken
     and re-acquired; the break is O_EXCL-raced so only one waiter wins it.
     """
+    global _path_announced
+    # HARD REFUSAL: if a caller opted into locking (SM64DS_TEST_LOCK) but did not
+    # pin an explicit shared path, refuse rather than lock a private/default file
+    # that silently fails to serialise across lanes. See SlotLockMisconfigured.
+    if enabled() and not os.environ.get("SM64DS_TEST_LOCK_PATH"):
+        raise SlotLockMisconfigured(
+            "SM64DS_TEST_LOCK is set but SM64DS_TEST_LOCK_PATH is not. Locking "
+            "without an explicit shared path silently fails to serialise across "
+            "lanes that run a private %TEMP%. Export SM64DS_TEST_LOCK_PATH to one "
+            "machine-wide file in every lane, e.g. "
+            "C:\\tmp\\sm64ds-test-slot\\windowed_test.lock")
     path = lock_path()
+    if not _path_announced:
+        print(f"[slot_lock] windowed test slot lockfile: {path}", file=sys.stderr)
+        _path_announced = True
     if timeout is None:
         timeout = acquire_timeout()
     deadline = time.time() + timeout
