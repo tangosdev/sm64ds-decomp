@@ -15,6 +15,7 @@ import os, sys, time, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mp2_proof as M
 import voice_proof as V
+import slot_lock
 
 ROOT = V.ROOT
 EXE = V.EXE
@@ -58,7 +59,14 @@ def run_off_pair():
     return dict(rc_a=ra, rc_b=rb, ta=M.text(la), tb=M.text(lb), la=la, lb=lb)
 
 def main():
-    res = run_off_pair()
+    # THE WINDOWED TEST SLOT. walk_window.exe opens a real OS window and drives
+    # the port'''s single windowed render/input path, so two of them on one
+    # machine collide and throw a random rc=1 on a different level or scene each
+    # run. The lock is held for the WHOLE pair rather than per launch: both
+    # windows have to be alive at once for the session to form, so a per-launch
+    # lock would have window A holding the slot while it waits for B.
+    with slot_lock.slot(label="voice_off_probe"):
+        res = run_off_pair()
     ok = True
     ok &= M.verdict(res["rc_a"] == 0 and res["rc_b"] == 0,
                     "voice OFF both windows exited clean | rc %s/%s"

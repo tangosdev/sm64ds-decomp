@@ -13,8 +13,8 @@ write, and it is exact.
 
 ## 1. The settings keys, exactly (this is the launcher lane's spec)
 
-All five live in `settings.json`, the flat JSON object the launcher already
-writes beside the exe. All five **reload live** - the game re-reads them while
+All six live in `settings.json`, the flat JSON object the launcher already
+writes beside the exe. All six **reload live** - the game re-reads them while
 it is running, so the launcher's toggle works mid-match with no restart. Key
 names are matched case-insensitively, the same rule every other key in that
 file follows.
@@ -22,7 +22,8 @@ file follows.
 | Key | Type | Default | Meaning |
 |---|---|---|---|
 | `VoiceEnabled` | bool | `false` | The master switch. **False opens no recording device at all** - not opened and muted, not opened and discarded. Turning it off while the game is running closes the device it had and drops every buffered remote voice. |
-| `VoiceMicDevice` | string | `""` | `""` is the system's default recording device. Any other value is matched **case-insensitively as a substring** against the device names Windows reports; first match wins. No match falls back to the default device with one line on stderr. |
+| `VoiceMicDevice` | string | `""` | `""` (and the literal `"auto"`) is **auto-pick**: the game opens each recording device in turn for a fraction of a second, measures the peak sample, and takes the first one that is actually producing audio. The literal `"default"` (or `"system"`) forces the Windows default device with no scan. Any other value is matched **case-insensitively as a substring** against the device names Windows reports, first match wins, and the scan is skipped. No match falls back to the default device with one line on stderr. |
+| `VoiceMicIndex` | int | `-1` | `-1` is "no index given" and leaves `VoiceMicDevice` in charge. `0` or above is a winmm device id used **verbatim**: no scan, no name match, no quiet fallback if it will not open. It **outranks `VoiceMicDevice`** when both are set. It exists for the machine whose two devices report the same truncated 31-character name, which a substring match cannot tell apart. |
 | `VoiceVolume` | int 0..100 | `80` | Linear gain on decoded remote audio, on top of the distance falloff. **Independent of the existing `Volume` key** - muting the game does not mute the people you are playing with. |
 | `VoiceNearRadius` | int | `512` | World units. Full `VoiceVolume` inside this distance. |
 | `VoiceFarRadius` | int | `3072` | World units. Silence at and beyond it; log falloff between the two. |
@@ -44,6 +45,54 @@ Rules the launcher can rely on:
   launcher shows a player and the string the game sees are routinely different
   lengths. An exact match would refuse the device the player picked out of the
   launcher's own list.
+- **Auto-pick never hard-fails.** No devices, nothing that opens, or every
+  device measuring silent all end on the Windows default with a line naming
+  which of those it was. The all-silent line says, in words a player can act
+  on, to check the mic's own mute switch, the input level slider and the
+  microphone privacy setting.
+- **The scan runs once.** It is cached for the process and dropped only when
+  the player changes `VoiceMicDevice`, `VoiceMicIndex` or `VoiceEnabled`. The
+  game's five-second open-retry timer does not re-run it, so a box with a
+  broken microphone does not re-scan every device every five seconds.
+
+### Why the default stopped being "the Windows default device"
+
+`waveInOpen` returns `MMSYSERR_NOERROR` for a device that is muted in Windows,
+blocked by the microphone privacy gate, or has its input level slider at zero.
+So "it opened" was never evidence that it works, and the failure a player saw
+was a silent channel with no error anywhere. A per-device probe measured the
+shape of it on the owner's machine, at the voice format, 16 kHz mono:
+
+    device 0  'Microphone (5- Razer BlackShark)'  opens OK, PEAK    1/32767
+    device 1  'Microphone (Razer Seiren Mini)'    opens OK, PEAK  470/32767
+
+Device 0 was the Windows **default** recording device, so it is the one the
+game got. Both open. Only one is a microphone in any useful sense.
+
+The scan is what separates those two rows: each device is opened on the voice
+format, sampled for up to 150 ms, and the first whose peak clears a **32/32767
+silence floor** wins. 32 sits an order of magnitude over a device reading dead
+and an order of magnitude under a live one, and below the noise floor a real
+microphone shows in a quiet room -- which is the number that matters, because
+auto-pick has to work for a player who is not talking while the game boots.
+
+The measure loop returns the moment the floor is cleared and the whole scan is
+capped at 600 ms, so the real cost on a two-device machine is one full window
+on the dead default plus a short early-out on the live mic: **about 200 ms,
+once, on the first tick that finds voice on.** It is on the host frame loop
+beside `sync_tick`, never on a deterministic tick path, and `voice_determinism`
+is the standing assertion of that.
+
+### What the launcher shows
+
+The Settings dialog's microphone dropdown offers **"Auto (recommended)"** as
+its first and default row, writing `VoiceMicDevice: ""` and
+`VoiceMicIndex: -1`, then one row per device winmm reports. A normal row stores
+the **name** and leaves the index at `-1`, because winmm ids are positions in a
+list that shifts when hardware is plugged in and names are not. The one
+exception is a device whose truncated name is shared with another: those rows
+show their winmm id and are the only ones that write `VoiceMicIndex`, because
+for them the id is the only thing that identifies the choice.
 
 ### Getting the device list into the launcher
 
@@ -61,19 +110,46 @@ An example settings.json:
 ```json
 {
   "VoiceEnabled": true,
-  "VoiceMicDevice": "Headset",
+  "VoiceMicDevice": "",
+  "VoiceMicIndex": -1,
   "VoiceVolume": 80,
   "VoiceNearRadius": 512,
   "VoiceFarRadius": 3072
 }
 ```
 
+That is the auto-pick shape, which is what the launcher writes unless the
+player picked a device. `"VoiceMicDevice": "Headset"` names one by substring;
+`"VoiceMicIndex": 1` names one by winmm id and outranks the name.
+
+### Proving the pick
+
+`port/tools/voice_micpick_proof.py` runs the real game three times with three
+real `settings.json` files and reads which device it landed on:
+
+- **auto** must run the scan, report every device it measured, and choose one
+  the scan itself called `LIVE`
+- **`VoiceMicIndex: 0`** must run no scan at all and open device 0
+- **a named device** must run no scan and open the device it named
+
+On the owner's machine it reproduces the probe's split and picks the live mic:
+
+    [voice] auto-pick: measuring 2 recording devices at 16000 Hz mono, up to 150 ms each, silence floor 32/32767
+    [voice] auto-pick:   device 0 'Microphone (5- Razer BlackShark': peak 1/32767 -- silent
+    [voice] auto-pick:   device 1 'Microphone (Razer Seiren Mini)': peak 409/32767 -- LIVE
+    [voice] auto-pick: CHOSE device 1 'Microphone (Razer Seiren Mini)' -- first device whose peak (409) clears the 32/32767 silence floor
+    [voice] capture open: 16000 Hz mono, 8 x 320 samples (160 ms), device 1 'Microphone (Razer Seiren Mini)' (asked for auto-pick)
+
 ### Boot and live-reload logging
 
-With `VoiceEnabled` on, boot prints one line naming the mic, the volume and the
-two radii. A live re-read that changed any of the five prints
+With `VoiceEnabled` on, boot prints one line naming the mic, the index, the
+volume and the two radii. The capture-open line names the **resolved** device
+(id and name read back off the device that opened) rather than the setting that
+asked for it -- a line saying the capture device is `""` is exactly what made
+this bug invisible the first time. A live re-read that changed any of the six
+prints
 
-    [settings] live re-read: voice ON, volume 80, mic 'Headset', radii 512..3072
+    [settings] live re-read: voice ON, volume 80, mic 'Headset', index -1, radii 512..3072
 
 so a support log shows what the player actually had.
 

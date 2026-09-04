@@ -358,6 +358,11 @@ int  g_hooked;                   // the mixer hook is registered
 int  g_vol;                      // VoiceVolume, 0..100
 int  g_near, g_far;              // the two radii, world units
 char g_mic[voice::kCapNameBytes];
+/* VoiceMicIndex as of the last tick. -1 is "no index given", which is both the
+   setting's default and the value that leaves VoiceMicDevice (and therefore
+   auto-pick) in charge, so it has to be the initial value here too -- 0 would
+   read as "the player explicitly asked for device 0" on the very first tick. */
+int  g_mic_index = -1;
 
 /* When the last cap_open attempt was made, so a device that will not open is
    retried on a timer instead of on every frame. 0 means "no attempt yet", which
@@ -510,6 +515,7 @@ void refresh_settings()
     g_near = host_setting_voice_near_radius();
     g_far = host_setting_voice_far_radius();
     const char *mic = host_setting_voice_mic_device();
+    const int mic_index = host_setting_voice_mic_index();
 
     if (want != g_on) {
         g_on = want;
@@ -552,10 +558,15 @@ void refresh_settings()
        one in is picked up while the player is still wondering why it is quiet.
        The capture layer stays silent on those retries anyway -- its latch
        prints once per name -- so the backoff is about work, not noise. */
-    const int name_changed = strcmp(mic, g_mic) != 0;
+    const int name_changed = strcmp(mic, g_mic) != 0 || mic_index != g_mic_index;
     if (name_changed) {
         strncpy(g_mic, mic, sizeof g_mic - 1);
         g_mic[sizeof g_mic - 1] = '\0';
+        g_mic_index = mic_index;
+        /* Clears the capture layer's per-name failure latch AND its cached
+           auto-pick choice. A player who just edited the device setting is
+           owed a fresh scan; the five-second retry below is not a player
+           action and deliberately does not come through here. */
         voice::cap_rearm();
     }
     if (voice::cap_is_open() && !name_changed) return;
@@ -564,7 +575,7 @@ void refresh_settings()
     if (!name_changed && g_open_retry_ms &&
         (unsigned)(now - g_open_retry_ms) < kOpenRetryMs) return;
     g_open_retry_ms = now ? now : 1;
-    voice::cap_open(g_mic);
+    voice::cap_open(g_mic, g_mic_index);
 }
 
 /* 440 Hz at full scale minus 6 dB, in 20 ms frames, phase carried across
