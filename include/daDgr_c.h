@@ -16,7 +16,7 @@
  *
  * BASE: dBgActor_c, direct. The RTTI edge (base_key ov002:0x021089ec, offset 0)
  * agrees with the destructor: func_ov025_021111a0 (D1, vtable slot 16) stores
- * exactly two vtables in sequence -- `data_ov025_02113760` (its own) then
+ * exactly two vtables in sequence -- `_ZTV7daDgr_c` (its own) then
  * `_ZTV10dBgActor_c` -- which is what one intermediate-free inlined base looks
  * like. dBgActor_c's own destructor is declared inline in its class body, so
  * every direct child inlines its body rather than calling it out of line.
@@ -72,14 +72,16 @@ struct daDgr_c : dBgActor_c {
     u32 mDustParticle2;
 
     /* --- vtable, in ROM order. Do not reorder. ---
-     * A leaf class (no RTTI children), so the destructor is declared OUT OF
-     * LINE here rather than inline, matching every other leaf under
-     * dBgActor_c (e.g. include/BigBrickBlock.h). Defined as a real method in
-     * src/_ZN7daDgr_cD1Ev.cpp / src/_ZN7daDgr_cD0Ev.cpp -- both empty bodies,
-     * because this class owns no member with its own destructor; the compiler
-     * emits the two inherited vtable stores and the two dBgActor_c member
-     * teardowns on its own. */
-    virtual ~daDgr_c();
+     * Inline, and declared FIRST. This TU defines every virtual the class has,
+     * so it emits the vtable and RTTI; out of line, mwccarm emits the D2/D1/D0
+     * triple in D0-before-D1 order, but retail puts D1 (0x021111a0) ABOVE D0
+     * (0x021111e4), and objisolate then refuses the whole TU for emitting out
+     * of ROM address order. The inline body emits only the retail D1/D0 pair,
+     * in retail order, and emits no D2. The body is empty because this class
+     * owns no member with its own destructor; the compiler emits the two
+     * inherited vtable stores and dBgActor_c's Model and dBgW_KcMbg teardowns
+     * on its own. */
+    virtual ~daDgr_c() {}              /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides of inherited fBase_c slots. Each takes its base's index
      *     (see include/fBase_c.h for the full 32-slot table). --- */
@@ -88,9 +90,9 @@ struct daDgr_c : dBgActor_c {
     virtual s32 Behavior();            /* slot 6 */
     virtual s32 Render();              /* slot 9 */
 
-    /* slot 31 (Kill) is NOT overridden: the vtable word at data_ov025_02113760
-       + 0x7c is 0x020ee55c, identical to dBgActor_c's own slot 31 -- confirmed
-       by reloc, not assumed. */
+    /* slot 31 (Kill) is NOT overridden: the vtable word at the 0x02113760 address
+       point + 0x7c (0x021137dc) is 0x020ee55c, identical to
+       dBgActor_c's own slot 31 -- confirmed by reloc, not assumed. */
 };
 
 typedef char daDgr_c_size_must_be_0x334[sizeof(daDgr_c) == 0x334 ? 1 : -1];
