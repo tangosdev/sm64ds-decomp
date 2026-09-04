@@ -322,7 +322,7 @@ around it are free. The measurement is in a comment at the site.
 This header already carried a full prose account of every offset; the names below just
 make the code say what the prose said. Bodies read: the four per-function files under `src/` that the class carried at the
 time, one each for `InitResources`, `Behavior`, `Render` and `CleanupResources`. All four have since been folded into the single
-translation unit `src/actors/d_a_obj_bc_switch.cpp`, where the same bodies now live as
+translation unit `src/game/actors/d_a_obj_bc_switch.cpp`, where the same bodies now live as
 real member definitions.
 
 | Offset | Name | Evidence |
@@ -339,7 +339,7 @@ The rename carried into the shadow TU as well as `src/` — that file builds onl
 a `tuModules` profile, so a stale spelling there compiles nowhere and no normal gate
 would have caught it. `tools/check_src_tu_compiles.py` (72/72) and
 `tools/check_src_tu.py` were run after. The shadow TU has since been promoted into the
-production build as `src/actors/d_a_obj_bc_switch.cpp`, so it is no longer shadow: the
+production build as `src/game/actors/d_a_obj_bc_switch.cpp`, so it is no longer shadow: the
 same nine functions are now compiled and linked into the ROM from one file.
 
 ---

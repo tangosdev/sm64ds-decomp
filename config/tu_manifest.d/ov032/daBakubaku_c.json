@@ -1,8 +1,8 @@
 {
   "id": "ov032/daBakubaku_c",
   "module": "ov032",
-  "source": "src/actors/d_a_bakubaku.cpp",
-  "promoted_source": "src/actors/d_a_bakubaku.cpp",
+  "source": "src/game/actors/d_a_bakubaku.cpp",
+  "promoted_source": "src/game/actors/d_a_bakubaku.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "medium",

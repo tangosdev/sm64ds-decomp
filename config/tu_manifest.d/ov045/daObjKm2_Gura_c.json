@@ -1,8 +1,8 @@
 {
   "id": "ov045/daObjKm2_Gura_c",
   "module": "ov045",
-  "source": "src/actors/d_a_obj_km2_gura.cpp",
-  "promoted_source": "src/actors/d_a_obj_km2_gura.cpp",
+  "source": "src/game/actors/d_a_obj_km2_gura.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_km2_gura.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",

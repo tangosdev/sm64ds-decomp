@@ -51,7 +51,7 @@ struct daObjKm2_Fall_Block_c : daObjFallBlock_c {
        pure `virtual s32 InitResources() = 0` / `= 0` pair, so they are already
        virtual and add no slot; the return type is spelt s32 to match that
        declaration exactly. Whichever TU defines the key function emits this
-       class's _ZTV/_ZTI/_ZTS group -- src/actors/d_a_obj_km2_fall_block.cpp,
+       class's _ZTV/_ZTI/_ZTS group -- src/game/actors/d_a_obj_km2_fall_block.cpp,
        which licenses all three as deadstrip-data so romdata_check word-compares
        them against the cartridge.
 

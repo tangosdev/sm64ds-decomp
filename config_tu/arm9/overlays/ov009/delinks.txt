@@ -25,7 +25,7 @@ src_tu/actors/MetalNet.cpp:
     .data start:0x02113a98 end:0x02113b2c
     .bss start:0x02113e88 end:0x02113eb0
 
-src/actors/d_a_mc_flag.cpp:
+src/game/actors/d_a_mc_flag.cpp:
     .text start:0x02112078 end:0x02112228
     .init start:0x02112ac8 end:0x02112b34
     .ctor start:0x02112b40 end:0x02112b44

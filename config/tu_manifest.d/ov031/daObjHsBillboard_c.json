@@ -1,8 +1,8 @@
 {
   "id": "ov031/daObjHsBillboard_c",
   "module": "ov031",
-  "source": "src/actors/d_a_obj_hs_billboard.cpp",
-  "promoted_source": "src/actors/d_a_obj_hs_billboard.cpp",
+  "source": "src/game/actors/d_a_obj_hs_billboard.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_hs_billboard.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

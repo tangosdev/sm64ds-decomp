@@ -68,7 +68,7 @@ struct daIDonketu_c : daOts_c {
        `virtual int Behavior() = 0` / `virtual int InitResources() = 0` pair, so they
        are already virtual and add no slot; the spellings match those declarations
        exactly. Whichever TU defines the key function emits this class's
-       _ZTV/_ZTI/_ZTS group -- src/actors/d_a_i_donketu.cpp, which licenses them as
+       _ZTV/_ZTI/_ZTS group -- src/game/actors/d_a_i_donketu.cpp, which licenses them as
        deadstrip-data so romdata_check word-compares them against the cartridge. */
     int Behavior();                     /* slot  6 */
     int InitResources();                /* slot  0 */

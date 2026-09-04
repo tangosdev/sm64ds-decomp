@@ -1,8 +1,8 @@
 {
   "id": "ov052/daObjEmmLog_c",
   "module": "ov052",
-  "source": "src/actors/d_a_obj_emm_log.cpp",
-  "promoted_source": "src/actors/d_a_obj_emm_log.cpp",
+  "source": "src/game/actors/d_a_obj_emm_log.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_emm_log.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

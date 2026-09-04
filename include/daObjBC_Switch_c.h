@@ -44,7 +44,7 @@ struct daObjBC_Switch_c : dBgActor_c {
      *
      * Safe to do here only because this class is a leaf: no _ZTI in the ROM
      * names it as a base, so no other TU's codegen moves with it.
-     * src/actors/d_a_obj_bc_switch.cpp carries the leaf proof. */
+     * src/game/actors/d_a_obj_bc_switch.cpp carries the leaf proof. */
     virtual ~daObjBC_Switch_c() {}
 
     s32 Behavior();
