@@ -18,6 +18,38 @@ extern int data_ov002_0211067c;
 extern int data_ov002_0211013c;
 }
 
+/* Actor's vtable as far as this file reaches: slot 18 OnYoshiTryEat() and slot
+   19 OnTurnIntoEgg(Player &), spelled as VIRTUALS rather than as raw function
+   pointers.
+
+   On ARM the two spellings are the same three instructions -- r0 = receiver,
+   r1 = argument, branch through the slot -- so this file still byte-matches
+   the ROM (mwccarm 1.2 base/sp2/sp2p3, strict relocs, 0x020d6474 size 0x1f8).
+   The same is true of every sibling on this path, which is why they already
+   spell it this way: St_YoshiPower_Main's `Obj`, func_ov002_020d7430's `Obj`,
+   func_ov002_020d6790's `Obj`, func_ov002_020ecd18's `VObj`.
+
+   It is NOT the same on the host. A raw function-pointer call compiles cdecl
+   -- receiver pushed, caller cleans -- while every seated slot-18/19 face in
+   port/hal is the thiscall-shaped __fastcall: receiver in ecx, the argument
+   pushed, and the CALLEE popping it. Against the cdecl spelling the slot-19
+   face read its Player& off the stack, where the caller had left the eaten
+   ENEMY, and popped four bytes the caller popped again -- so the frame-7 egg
+   lay returned through a wild `ret`, took an access violation inside the
+   Player's own state callback, and the actor-walk quarantine net froze the
+   walker. The walker is Yoshi. That is the reported "producing an egg as
+   yoshi causes yoshi to freeze". This spelling is the fix, and it costs the
+   ROM nothing. */
+struct EggActor {
+    virtual int v00(); virtual int v01(); virtual int v02(); virtual int v03();
+    virtual int v04(); virtual int v05(); virtual int v06(); virtual int v07();
+    virtual int v08(); virtual int v09(); virtual int v10(); virtual int v11();
+    virtual int v12(); virtual int v13(); virtual int v14(); virtual int v15();
+    virtual int v16(); virtual int v17();
+    virtual int OnYoshiTryEat();               /* slot 18, +0x48 */
+    virtual int OnTurnIntoEgg(char* player);   /* slot 19, +0x4c */
+};
+
 int Player::St_Swallow_Main()
 {
     void* p360;
@@ -44,10 +76,10 @@ int Player::St_Swallow_Main()
     goto L65e4;
 
 L653c:
-    (*(void (**)(void*, char*))(*(char**)p360 + 0x4c))(p360, ((char*)this));
+    ((EggActor*)p360)->OnTurnIntoEgg(((char*)this));
     {
         void* q = *(void**)((char*)&mObjInMouth);
-        if ((*(int (**)(void*))(*(char**)q + 0x48))(q) == 1) goto L65e4;
+        if (((EggActor*)q)->OnYoshiTryEat() == 1) goto L65e4;
     }
     if ((unsigned short)(mStateFlags & 0x1000)) goto L65e4;
     {

@@ -505,6 +505,43 @@ extern "C" void port_adventure_probe(int frame)
                     *(unsigned *)(pp + 0x338) = uid;   /* tongue target id */
             }
         }
+        /* SM64DS_YOSHI_SWALLOW=1: complete the tongue-to-mouth TRANSFER that the
+           port's frozen head animation never reaches, so the REAL swallow path
+           runs headless.
+
+           St_YoshiPower_Main case 1 makes exactly two writes when the body
+           animation crosses frame 0xa (src/_ZN6Player18St_YoshiPower_MainEv.cpp):
+
+               obj->unk_0b0 |=  0x40000;    // now in the mouth
+               obj->unk_0b0 &= ~0x20000;    // no longer on the tongue
+
+           In the port that frame is never crossed -- the p+0x160 head ModelAnim
+           does not advance (see the note at the head-render fix above), so the
+           body anim it copies its cursor from starts past 0xa. St_YoshiPower_
+           Cleanup then sees 0x20000 still set and DROPS the enemy, and Yoshi
+           never leaves St_YoshiPower. That is a separate, already-documented
+           animation defect; this driver steps over it and NOTHING ELSE. It makes
+           the ROM's own two writes, at the same point in the eat, and then gets
+           out of the way: func_ov002_020d6790 (from Player::Behavior) reads the
+           enemy's OnYoshiTryEat itself, picks the state itself, and every frame
+           of St_Swallow_Init / St_Swallow_Main / OnTurnIntoEgg / YoshiEgg_Spawn
+           after that is the game's. So a freeze this exposes is the game's.
+
+           Off unless the env is set, and it only ever fires while the player is
+           actually holding a tongued enemy. */
+        if (pp && rf >= 0 && frame >= rf && frame < rf + win) {
+            static int fwd = -1;
+            if (fwd < 0) fwd = std::getenv("SM64DS_YOSHI_SWALLOW") != 0;
+            char *h = *(char **)(pp + 0x360);
+            if (fwd && h && (*(unsigned *)(h + 0xb0) & 0x20000)) {
+                *(unsigned *)(h + 0xb0) |= 0x40000u;
+                *(unsigned *)(h + 0xb0) &= ~0x20000u;
+                std::fprintf(stderr, "[eggrepro] f%d mouth-transfer on %p "
+                             "(b0 now 0x%x)\n", frame, (void *)h,
+                             *(unsigned *)(h + 0xb0));
+                std::fflush(stderr);
+            }
+        }
         /* State dump while (likely) frozen, to see which eat substate is stuck. */
         if (rf >= 0 && pp && frame >= rf && frame < rf + win) {
             static int last6e3 = -1, laststuck = 0;

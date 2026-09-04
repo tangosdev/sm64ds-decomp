@@ -9364,7 +9364,16 @@ int main(void)
                (SM64DS_LEVEL=6) with SM64DS_TRACE_STATE=2 to read the tongue
                state chain 0x020d7ed0 (Init) / 0x020d7504 (Main). */
             if (selftest && getenv("SM64DS_SELFTEST_TONGUE") &&
-                frame >= 210 && ((frame - 210) % 40) < 3)
+                frame >= 210 && ((frame - 210) % 40) < 3 &&
+                /* SM64DS_SELFTEST_TONGUE_ONCE=1: press exactly ONCE, at f210.
+                   The repeating press is what the tongue-render lane wanted; the
+                   SWALLOW wants the opposite. A second B while an enemy is in the
+                   mouth is the SPIT (St_YoshiPower_Main case 4), and the swallow
+                   hand-off (func_ov002_020d6790) additionally needs the 0x5a-frame
+                   lockout at Player+0x6c6 to run down first -- 90 frames, longer
+                   than the 40-frame period -- so the repeating press can never
+                   reach a swallow. One press and then wait can. */
+                (frame < 213 || !getenv("SM64DS_SELFTEST_TONGUE_ONCE")))
                 btn |= 1;
             /* JUMPSPAM probe: the frame-hitch repro. A press edge every
                <period> frames from f20, three frames held so the edge is not
