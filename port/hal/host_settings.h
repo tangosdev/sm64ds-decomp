@@ -356,6 +356,37 @@ int host_setting_adventure_ghosts(void);
    16:9) and is consulted only when SM64DS_ASPECT is unset. */
 double host_setting_aspect(void);
 
+/* ---- VsLuigiInfection: the Luigi Infection VS MODE, launcher toggle ------
+   Default 0, and 0 is a normal VS match, byte-identical to a build without
+   the key. Luigi Infection is a not-ROM-accurate VS mode (one player starts
+   as a hidden Luigi and tags survivors, who convert and join his team until
+   the clock runs out), so it rides the same rule every mode here does: default
+   OFF, reachable only when a player asks for it by name.
+
+   THE TWO HALVES AND THE ONE CHANNEL BETWEEN THEM. The mode's logic is the
+   game-side module hal/luigi_infection.cpp (its own lane), which arms off the
+   environment variable SM64DS_VS_LUIGI_INFECTION and reads SM64DS_VS_LUIGI_TIME
+   for an optional test clock. This key is the LAUNCHER'S channel to that flag:
+   the launcher's Settings dialog writes "VsLuigiInfection" (and optionally
+   "VsLuigiInfectionSeconds") to settings.json, and host_settings BRIDGES the
+   file to the environment -- when the key is on and the player has not already
+   exported the variable, load_once publishes SM64DS_VS_LUIGI_INFECTION=1 (and
+   SM64DS_VS_LUIGI_TIME from the seconds key) so the game side reads ONE channel
+   and the file is one way of writing it. This is the Aspect contract exactly:
+   the environment wins, so SM64DS_VS_LUIGI_INFECTION set for a proof run beats
+   the file, and an unset environment is the file's answer.
+
+   host_setting_vs_luigi_infection returns 1 when the mode is on, else 0, with
+   the same env override in front: SM64DS_VS_LUIGI_INFECTION unset is the file's
+   answer, empty or "0" forces it off, any other value forces it on (the grammar
+   hal/luigi_infection.cpp's own reader uses).
+   host_setting_vs_luigi_infection_seconds is the optional test clock in whole
+   seconds; 0 (the default, and an absent or non-positive key) means the ROM's
+   own match clock, the faithful one. SM64DS_VS_LUIGI_TIME overrides the file
+   the same way. */
+int host_setting_vs_luigi_infection(void);
+int host_setting_vs_luigi_infection_seconds(void);
+
 /* ---- CustomPalette: the third Mods key ---------------------------------
    Default 0, and the default is the only setting that is the ROM. 1..3
    pick a palette combo file, palettes/combo<N>.pal in the same folder

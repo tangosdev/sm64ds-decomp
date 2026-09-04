@@ -46,6 +46,21 @@ int ieq(const char *a, const char *b, size_t n)
     return 1;
 }
 
+/* Publish one environment variable for a child of this process to read with
+   getenv. The one use is the VsLuigiInfection bridge (load_once): the launcher
+   writes the mode into settings.json and this hands it to the game-side module
+   that arms off SM64DS_VS_LUIGI_INFECTION, so the two lanes share one flag and
+   need no header between them. _putenv_s / setenv both take a copy, so the
+   pointers here need not outlive the call. */
+void port_setenv(const char *name, const char *value)
+{
+#ifdef _WIN32
+    _putenv_s(name, value);
+#else
+    setenv(name, value, 1);
+#endif
+}
+
 /* Whole file into a NUL-terminated buffer the caller frees. Null on any
    failure at all, which every caller reads as "use the defaults". */
 char *slurp(const char *path)
@@ -723,6 +738,14 @@ int g_adventure_ghosts = 0;
    walk_window's boot, which calls ntr::configure_aspect(host_setting_aspect()). */
 double g_aspect = 0.0;
 
+/* VsLuigiInfection and VsLuigiInfectionSeconds. Default off / ROM clock, the
+   normal VS match. See the header: this key is the launcher's channel to the
+   game-side Luigi Infection module, which arms off SM64DS_VS_LUIGI_INFECTION;
+   load_once bridges the file to that variable when the mode is on and the
+   player has not set it. */
+int g_vs_luigi_infection = 0;
+int g_vs_luigi_seconds = 0;
+
 /* ---- PROXIMITY VOICE CHAT, lane VOICE ------------------------------------
    Six keys, all of them host preferences and none of them a mod: nothing
    here touches game state, the lockstep input path, or a single byte the
@@ -1052,6 +1075,8 @@ void load_once(void)
     g_name_tags = 1;
     g_adventure_ghosts = 0;
     g_aspect = 0.0;
+    g_vs_luigi_infection = 0;
+    g_vs_luigi_seconds = 0;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
     g_yoshi_row = -1;
     g_padlayout_n = 0;
@@ -1176,6 +1201,34 @@ void load_once(void)
             if (!json_value(text, "Aspect") && json_bool(text, "Widescreen", 0))
                 a = 16.0 / 9.0;
             g_aspect = aspect_sanitise(a);
+        }
+        /* VsLuigiInfection: the Luigi Infection VS mode, read against its own
+           default of OFF beside the mode keys above, so a file written before
+           the key existed reads as a normal VS match. VsLuigiInfectionSeconds
+           is the optional test clock in whole seconds; a non-positive or absent
+           value is 0, the ROM's own match clock. */
+        g_vs_luigi_infection = json_bool(text, "VsLuigiInfection", 0);
+        {
+            const int s = json_int(text, "VsLuigiInfectionSeconds", 0);
+            g_vs_luigi_seconds = s > 0 ? s : 0;
+        }
+        /* THE BRIDGE to the game-side module. hal/luigi_infection.cpp (its own
+           lane) arms off the environment variable SM64DS_VS_LUIGI_INFECTION and
+           reads SM64DS_VS_LUIGI_TIME for its test clock. When this file turns
+           the mode on and the player has NOT already exported the variable,
+           publish it, so the launcher's settings.json is one channel to the same
+           flag the environment toggles. Env-wins, the Aspect contract: an
+           environment value already set (a proof run) is left untouched. */
+        if (g_vs_luigi_infection && !getenv("SM64DS_VS_LUIGI_INFECTION")) {
+            port_setenv("SM64DS_VS_LUIGI_INFECTION", "1");
+            if (g_vs_luigi_seconds > 0 && !getenv("SM64DS_VS_LUIGI_TIME")) {
+                char secbuf[16];
+                snprintf(secbuf, sizeof secbuf, "%d", g_vs_luigi_seconds);
+                port_setenv("SM64DS_VS_LUIGI_TIME", secbuf);
+            }
+            fprintf(stderr, "[settings] VsLuigiInfection on: published "
+                    "SM64DS_VS_LUIGI_INFECTION=1%s for the game side\n",
+                    g_vs_luigi_seconds > 0 ? " (+SM64DS_VS_LUIGI_TIME)" : "");
         }
         {
             char who[24];
@@ -1705,6 +1758,47 @@ extern "C" double host_setting_aspect(void)
     if (env >= 0.0) return env;
     load_once();
     return g_aspect;
+}
+
+/* VsLuigiInfection: 1 when the Luigi Infection VS mode is on, else 0. Same
+   shape as host_setting_adventure_ghosts -- an environment override in front of
+   the file -- with the grammar hal/luigi_infection.cpp's own reader uses:
+   SM64DS_VS_LUIGI_INFECTION unset is the file's answer, empty or "0" forces it
+   off, any other value forces it on. So a proof run pins the mode without a
+   settings.json, and the file is the launcher's channel to the same flag. Note
+   load_once ALSO publishes SM64DS_VS_LUIGI_INFECTION into the environment when
+   the file turns the mode on and it was unset; this accessor is the read side
+   of the same answer, for a host-layer caller that wants the bool directly. */
+extern "C" int host_setting_vs_luigi_infection(void)
+{
+    static int env = -2;
+    if (env == -2) {
+        const char *e = getenv("SM64DS_VS_LUIGI_INFECTION");
+        env = e ? ((e[0] == 0 || (e[0] == '0' && e[1] == 0)) ? 0 : 1) : -1;
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_vs_luigi_infection;
+}
+
+/* VsLuigiInfectionSeconds: the optional test clock in whole seconds, 0 for the
+   ROM's own match clock. SM64DS_VS_LUIGI_TIME overrides the file the same way,
+   and a non-positive override or file value is 0. */
+extern "C" int host_setting_vs_luigi_infection_seconds(void)
+{
+    static int env_read = 0;
+    static int env = -1;             /* <0 means "the environment said nothing" */
+    if (!env_read) {
+        env_read = 1;
+        const char *e = getenv("SM64DS_VS_LUIGI_TIME");
+        if (e && *e) {
+            const int v = atoi(e);
+            env = v > 0 ? v : 0;
+        }
+    }
+    if (env >= 0) return env;
+    load_once();
+    return g_vs_luigi_seconds;
 }
 
 /* The C++ predicate the header promises. One reader, so the ghost render and

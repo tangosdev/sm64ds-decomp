@@ -1205,6 +1205,11 @@ void port_message_pump(void);
 /* the OTHER statement of Stage::Behavior the port hosts (hal/star_flow.cpp):
    the VS 3-2-1, which ends by starting the arena's own music */
 void port_vs_countdown_tick(void);
+/* LUIGI INFECTION pre-round START COUNTDOWN (hal/star_flow.cpp). The drive owns
+   the VS countdown state + cadence + tagger pick when the mode is armed; the
+   render draws the ROM's READY? / red 3-2-1 / START. Both inert otherwise. */
+void port_luigi_countdown_drive(int frame);
+void port_luigi_countdown_render(void);
 /* and the tail of that same VS block: the match clock running out, the results
    request the ROM makes when it does, and the end marker. Returns nonzero when
    the run has asked to quit (SM64DS_VS_EXIT_ON_END). */
@@ -3014,6 +3019,17 @@ static void character_set_pending(int ch)
    Yoshi cap for it to run. The reasoning is in hal/player_bridges.cpp, where
    it lives because it wants Player.h. SM64DS_SWITCH=<0..3> drives it headless. */
 extern "C" void port_player_set_character(void *player, unsigned ch);
+/* SM64DS_VS_CHARS: the game side of VS character selection. Reads a per-slot
+   character pick (mirrors SM64DS_VS_NAMES/SM64DS_VS_COLORS) and applies it once,
+   post-boot, through the proven door path. VS-scoped and one-shot inside; inert
+   with no SM64DS_VS_CHARS. Defined in hal/player_bridges.cpp beside the swap. */
+extern "C" void port_vs_apply_chars(int frame);
+/* SM64DS_VS_LUIGI_INFECTION: seed the starting Luigi. Defined in
+   hal/luigi_infection.cpp; VS-scoped, one-shot, inert with the mode off. */
+extern "C" void port_luigi_seed(int frame);
+/* SM64DS_VS_LUIGI_HITTEST: stage tag/immunity/survivor hits through the host
+   hit resolver at frame 130. Defined in hal/luigi_infection.cpp; off by default. */
+extern "C" void port_luigi_hittest(int frame);
 static int menu_on;
 /* B closed the menu and is still physically down: swallow it until it comes
    back up. See the block below the menu's input, where it is spent. */
@@ -10919,6 +10935,11 @@ int main(void)
            which is the only music a VS arena has. Self-guarded on the mode, so
            an adventure frame reaches one load and a compare. */
         port_vs_countdown_tick();
+        /* LUIGI INFECTION START COUNTDOWN, update half (host-frame deterministic).
+           When the mode is armed it owns the whole VS countdown -- the state, the
+           stretched ~5s cadence, the beeps/music and the tagger pick at the end.
+           port_vs_countdown_tick just stepped aside for it. Inert otherwise. */
+        port_luigi_countdown_drive(frame);
         /* AND THE TAIL OF THAT SAME BLOCK. Stage::Behavior's countdown and its
            end-of-match test are statements of one function, so they are ticked
            from one place, in the ROM's own order -- the countdown first, which
@@ -11687,6 +11708,22 @@ int main(void)
                         g_character = g_character_pending = sw & 3;
                     }
                 }
+                /* SM64DS_VS_CHARS: the game side of VS character selection. Each
+                   VS slot's chosen character is applied here, once, at the same
+                   frame the SM64DS_SWITCH probe above fires, through the proven
+                   door path -- but per slot (data_0209f394[i]) rather than only
+                   the local body. VS-scoped and one-shot inside; inert with no
+                   SM64DS_VS_CHARS (the all-Yoshi arena is byte-unchanged). This
+                   is the seam the lobby character picker feeds. */
+                port_vs_apply_chars(frame);
+                /* LUIGI INFECTION START COUNTDOWN, render half: draw the ROM's
+                   own READY? banner + red 3-2-1 + START over the arena while the
+                   countdown runs. The tagger pick moved to countdown end (the
+                   drive above, beside port_vs_countdown_tick); this is the draw,
+                   placed after the actors so its sprites join the VS timer's
+                   engine-A OAM batch. Inert with no SM64DS_VS_LUIGI_INFECTION. */
+                port_luigi_countdown_render();
+                port_luigi_hittest(frame);
                 port_particle_frame();
                 if (selftest) {
                     const ntr::GxTriangle *at = ntr::gx_polygons(after);

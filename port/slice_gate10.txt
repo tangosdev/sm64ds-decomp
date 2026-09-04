@@ -531,7 +531,7 @@ src/func_ov002_020ce8bc.c
 src/func_ov002_020d6790.cpp
 src/func_ov002_020d80d0.c
 src/func_ov002_020d8158.c
-src/func_ov002_020d869c.cpp
+# src/func_ov002_020d869c.cpp -- HOST COPY: unmatched/LuigiInfection_Hit.cpp (the VS player-on-player hit resolver, verbatim, plus the Luigi Infection team branch: a Luigi victim is immune, a survivor struck by a Luigi is tagged; inert with the mode off)
 src/func_ov002_020db704.c
 src/func_ov002_020e032c.c
 src/func_ov002_020e4bb8.c

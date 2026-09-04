@@ -63,6 +63,7 @@
 #include <cstdint>
 
 #include "comms_loopback.h"
+#include "vs_width.h"                     // kPortMaxPlayers, the team array's width
 
 // hal/sdat: C++-linkage free functions (see the note in lk6_savestate.cpp).
 void sd_consumer_reset(void);
@@ -87,6 +88,15 @@ void port_comms_counters_get(unsigned long long *exchanges, unsigned long long *
 void port_comms_counters_set(unsigned long long exchanges, unsigned long long rounds);
 int  port_dh_frame_get(void);
 void port_dh_frame_set(int f);
+// Luigi Infection's team array and seed latch: simulation state that lives in
+// host statics (hal/luigi_infection.cpp explains why it is not in .dsstate), so
+// the slot carries it the way it carries the counters above.
+void port_luigi_state_get(int *team, int *seeded);
+void port_luigi_state_set(const int *team, int seeded);
+// The replay flag the mode's own files read. DEFINED in hal/luigi_infection.cpp
+// (which is linked into targets this file is not), mirrored from g_replaying at
+// the two places it moves, so a target without this boundary reads a truthful 0.
+extern "C" int g_port_rb_replaying;
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
 extern int data_020a4b98[];               // the actor walker's list-5 view
 // THE HOSTED ARM7 SOUND COMMAND QUEUE (hal/player_bridges.cpp, hal/sdat).
@@ -131,6 +141,8 @@ struct Slot {
     // host bookkeeping outside the three regions, put back with them
     unsigned long long exchanges, rounds;   // the seam's counters
     int       dh_frame;                     // the divergence detector's clock
+    int       li_team[kPortMaxPlayers];     // Luigi Infection's team array
+    int       li_seeded;                    // ...and its seed latch
     char     *arena;
     char     *ds;
     void     *cursor;
@@ -484,6 +496,7 @@ int snapshot(unsigned tag, int frame)
     s.frame = frame;
     port_comms_counters_get(&s.exchanges, &s.rounds);
     s.dh_frame = port_dh_frame_get();
+    port_luigi_state_get(s.li_team, &s.li_seeded);
     memcpy(s.arena, port_arena_base(), g_arena_size);
     memcpy(s.ds, &dsstate_lo, g_ds_size);
     s.cursor = port_arena_cursor();
@@ -505,6 +518,7 @@ bool restore(unsigned tag)
     port_arena_set_cursor(s->cursor);
     port_comms_counters_set(s->exchanges, s->rounds);
     port_dh_frame_set(s->dh_frame);
+    port_luigi_state_set(s->li_team, s->li_seeded);
     hw_restore_to(tag, *s);
     sd_consumer_reset();
     sd_sdat_reseat();
@@ -712,6 +726,7 @@ void report()
 void end_replay(bool count = true)
 {
     g_replaying = false;
+    g_port_rb_replaying = 0;
     sd_host_mute(0);
     port::comms_rb_det_reuse(false);
     const double ms = now_ms() - g_replay_t0;
@@ -755,6 +770,7 @@ bool rollback_to(unsigned D, int *frame, unsigned tag, bool det)
     if (depth > g_max_depth) g_max_depth = depth;
     *frame = at_frame;
     g_replaying = true;
+    g_port_rb_replaying = 1;
     g_replay_from = D;
     g_replay_to = tag;
     ++g_rollbacks;

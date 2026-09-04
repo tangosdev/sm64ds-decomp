@@ -472,3 +472,7 @@ YoshiEgg_SpawnInfo:0x1c _ZTV8YoshiEgg:0x7c data_ov002_021000a0:0x8 data_ov002_02
 # data_ov002_0210d8b4 for the pressed mesh (+0x4ec; 0x20 bytes to
 # data_ov002_0210d8d4). The four SharedFilePtr cells are already above.
 QuestionSwitch_SpawnInfo data_ov002_0210d774:0x20 data_ov002_0210d8b4:0x20
+
+# Stage::RenderVsModeCountdown banner/START sprite templates (READY? + START,
+# five languages each) -- hosted for the Luigi Infection pre-round countdown
+data_ov002_0210d008 data_ov002_0210d098 data_ov002_0210d130 data_ov002_0210d1c8 data_ov002_0210d210 data_ov002_0210d378 data_ov002_0210d3a0 data_ov002_0210d3c0 data_ov002_0210d3e0 data_ov002_0210d420

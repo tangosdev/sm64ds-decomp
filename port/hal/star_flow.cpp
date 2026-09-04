@@ -144,6 +144,19 @@ void HitDeathPlane(int arg)
 }
 }  // extern "C"
 
+/* Luigi Infection (hal/luigi_infection.cpp). The pre-round countdown driver
+ * below needs these, and port_vs_countdown_tick guards on the first so the mode
+ * owns the whole countdown when it is armed. Both are a cached compare when
+ * SM64DS_VS_LUIGI_INFECTION is unset. */
+extern "C" int  port_luigi_enabled(void);
+extern "C" void port_luigi_seed(int frame);
+/* Nonzero while a rewind is being re-run, so the effects the countdown drives
+   (the beeps, the music, the trace) stand down the way every other outside-world
+   touch in the frame loop already does. DEFINED in hal/luigi_infection.cpp and
+   written by hal/rollback.cpp -- this file is linked into targets rollback.cpp
+   is not in, so calling its rb_replaying() directly is unresolved in those. */
+extern "C" int g_port_rb_replaying;
+
 // =============================================================================
 // The boot: the state the whole loop reads before any of it means anything
 // =============================================================================
@@ -722,6 +735,13 @@ void port_vs_countdown_tick(void)
 {
     if (data_0209f2d8 != 1)
         return;
+    /* LUIGI INFECTION owns the whole countdown when it is armed -- the state,
+       the stretched ~5s cadence, the beeps, the arena music and the tagger pick
+       (port_luigi_countdown_drive below). So the native ~2s sound countdown
+       steps aside here. Gated on the mode: a normal VS round never takes this
+       early return and everything below is byte-unchanged. */
+    if (port_luigi_enabled())
+        return;
     int cnt = 0;
     /* run vs16: over data_0209fc50 -- what SetNumPlayers seated -- rather than
        four. The gate below already compares against that same number, so a
@@ -756,6 +776,140 @@ void port_vs_countdown_tick(void)
         g_course_music = 0x4d;
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
     }
+}
+
+/* ---- SM64DS_VS_LUIGI_INFECTION: the pre-round START COUNTDOWN ---------------
+ *
+ * Luigi Infection asks for a full FIVE-SECOND wait before the first Luigi, so
+ * players can read the arena and the tagger cannot snowball off the spawn. This
+ * does not invent a countdown: it drives the ROM's OWN VS start countdown -- the
+ * one Stage::InitResources seats (data_0209f2bc = 3) and the matched
+ * Stage::RenderVsModeCountdown draws as the READY? banner, the big red 3/2/1
+ * numeral, then START. The ROM's countdown is ~2s; this stretches it to 5s off
+ * the HOST FRAME COUNTER, so every peer runs the identical cadence and seeds the
+ * tagger on the identical frame (lockstep VS -- no local clock, no rand). The
+ * port hosts RenderVsModeCountdown NOWHERE for a normal VS round, and
+ * port_vs_countdown_tick above steps aside when the mode is armed, so a normal
+ * round is byte-unchanged.
+ *
+ * The schedule, in host ticks (walk_window runs the 3D logic at ~30Hz, so 30
+ * ticks ~= one second), anchored at frame 90 -- the frame the tagger used to be
+ * seeded, past the level-entry no-control freeze:
+ *     [90,150)   count 3   READY? + red 3    ~2.0s (the get-ready / spread beat)
+ *     [150,195)  count 2   READY? + red 2    ~1.5s
+ *     [195,240)  count 1   READY? + red 1    ~1.5s
+ *      240       count 0   START  + port_luigi_seed picks the tagger (a full 5s)
+ *     [240,270)  count 0   START held up (f304 non-zero so the glyph stays)
+ * The native render pairs the READY? banner with the leading numeral, so the "3"
+ * doubles as the get-ready beat held two seconds; 2 and 1 tick once a second.
+ * data_0209f2bc != 0 across the window freezes the players exactly as the DS's
+ * own 3-2-1 does (func_ov002_020c71e0), and it drops to 0 at the pick. */
+extern void _ZN5Stage21RenderVsModeCountdownEv(void);
+extern void *data_0209f5bc;   /* the installed fader; the render derefs it, unguarded */
+
+enum {
+    kLiCdStart = 90,
+    kLiCd3End  = 150,
+    kLiCd2End  = 195,
+    kLiCdPick  = 240,   /* count reaches 0: START + the tagger pick, a full 5s in */
+    kLiCdEnd   = 270    /* START glyph held to here */
+};
+
+/* UPDATE half, called from the frame loop's behavior phase beside
+   port_vs_countdown_tick: set the ROM countdown counter for this host frame,
+   ring the native beeps / GO on the stretched cadence, and pick the tagger when
+   the count reaches 0. Inert unless the mode is armed. */
+void port_luigi_countdown_drive(int frame)
+{
+    if (data_0209f2d8 != 1) return;         /* VS only */
+    if (!port_luigi_enabled()) return;      /* a normal VS round never enters */
+    if (frame < kLiCdStart) return;         /* seat_vs_countdown left the counter
+                                               at 3; hold there until the arena
+                                               is ready and the render can draw */
+
+    int count;
+    if      (frame < kLiCd3End) count = 3;
+    else if (frame < kLiCd2End) count = 2;
+    else if (frame < kLiCdPick) count = 1;
+    else                        count = 0;
+
+    data_0209f2bc = (unsigned char)count;
+    data_0209f304 = (unsigned short)((count != 0 || frame < kLiCdEnd) ? 0x28 : 0);
+
+    /* the native countdown audio on the stretched schedule: Sound::Play2D(2,..)
+       -- a beep entering each count (0x2b), the GO chord (0x2a) and the arena's
+       own music (0x4d) at START -- the exact calls port_vs_countdown_tick makes.
+
+       A REPLAYED FRAME SPLITS THESE TWO WAYS, and the split is the point. A
+       rewind re-runs these frames to catch the world up, and the pad, the mouse,
+       the camera rig and the editor channel all stand down for it. An EFFECT
+       nothing reads back (a beep) must not fire twice. STATE the restore wiped
+       (the music selection) must be re-issued, or the replay ends somewhere the
+       straight run never was. See each block below.
+
+       THE COUNTER WRITES ABOVE ARE NOT GUARDED and must not be: they are the
+       world, they are pure functions of the frame, and reproducing them is what
+       the replay is for. */
+    /* THE BEEPS RE-TRIGGER ON A REPLAYED FRAME, deliberately, because that is
+       what this port's rollback does with in-game sound: hal/rollback.cpp says
+       so in as many words -- the restore re-seeds the command queue, "the replay
+       re-triggers sounds into the reset queue", the output stage is muted
+       (sd_host_mute), and the DET rung NAMES the queue's bytes rather than
+       counting them as a divergence. Standing these down was tried and is
+       wrong twice over: it makes the replay do less than the straight run did,
+       which is the opposite of reproducing it, and it measured no better
+       (4 bytes outside the queue either way). The stand-down rule the frame loop
+       applies to the pad, the mouse, the camera rig, the editor channel and
+       port::voice_tick is for effects the port does NOT mute and does NOT
+       excuse -- an input read, or a packet on a wire. */
+    if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End)
+        func_02012790(0x2b);
+    else if (frame == kLiCdPick)
+        func_02012790(0x2a);
+
+    /* THE ARENA MUSIC IS STATE, NOT AN EFFECT, so it is re-issued on a replayed
+       frame rather than suppressed -- the one place this mode does NOT stand
+       down, and the distinction is the whole point. A restore re-seeds the sound
+       driver (sd_consumer_reset / sd_sdat_reseat in hal/rollback.cpp), which
+       clears the sequence player the straight run had playing; if the replay
+       does not put the selection back, the re-run reaches the same frame with no
+       music where the straight run had 0x4d. That is both a divergence in the
+       sequence-player block and a match that falls silent after a rewind. The
+       replay is muted (sd_host_mute), so re-issuing costs nothing audible. */
+    if (frame == kLiCdPick) {
+        g_course_music = 0x4d;
+        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
+    }
+
+    /* The trace is an effect too, and its own latch is a host static a rewind
+       cannot put back, so a replay would both double-print and leave the latch
+       reading a count the world has since backed out of. */
+    static int last_shown = -99;
+    if (count != last_shown && !g_port_rb_replaying) {
+        last_shown = count;
+        fprintf(stderr, "[luigi] COUNTDOWN f%d shows %s\n", frame,
+                count == 3 ? "READY? + 3" : count == 2 ? "READY? + 2" :
+                count == 1 ? "READY? + 1" : "START (0)");
+    }
+
+    /* THE PICK, at countdown end -- moved here from the old frame-90 seed.
+       port_luigi_seed self-latches on g_li_seeded, so calling it every frame
+       from the pick on seeds exactly once, on frame 240. */
+    if (frame >= kLiCdPick)
+        port_luigi_seed(frame);
+}
+
+/* RENDER half, called from the frame loop's render phase after the actors so the
+   countdown sprites join the same engine-A OAM batch the VS timer fills: the
+   ROM's own Stage::RenderVsModeCountdown, which reads data_0209f2bc and draws
+   READY? + the red numeral + START. Null-guarded on the fader that render
+   dereferences without a check. Inert unless the mode is armed. */
+void port_luigi_countdown_render(void)
+{
+    if (data_0209f2d8 != 1) return;
+    if (!port_luigi_enabled()) return;
+    if (data_0209f5bc == 0) return;
+    _ZN5Stage21RenderVsModeCountdownEv();
 }
 
 // =============================================================================
@@ -987,6 +1141,19 @@ static int vs_players(void)
 }
 static int g_end_total;
 static int g_end_by_king;
+/* Luigi Infection: 0 = not this mode, 1 = the Luigis won (all infected), 2 =
+ * the survivors won (clock ran out with one alive). Set in the end poll, read
+ * by the banner and the marker so the winner line names the team, not a slot. */
+static int g_end_by_luigi;
+
+/* SM64DS_VS_LUIGI_INFECTION, defined in hal/luigi_infection.cpp. All inert (a
+ * cached compare) when the mode is off. */
+extern "C" int  port_luigi_enabled(void);
+extern "C" int  port_luigi_seeded(void);
+extern "C" int  port_luigi_survivors_alive(void);
+extern "C" int  port_luigi_match_slots(void);
+extern "C" int  port_luigi_time_frames(void);
+extern "C" void port_luigi_match_reset(void);
 
 /* ===================== KING OF THE STAR (host win mode) =====================
  *
@@ -1447,6 +1614,22 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
     }
     if (!on || g_end_fired < 0 || data_0209f2d8 != 1 || n < 64)
         return 0;
+    /* LUIGI INFECTION names a TEAM, not a scoreline: the whole match is a race
+       between the taggers and the survivors, so the banner says which side won
+       and how many survivors were left rather than picking a slot by carried
+       stars. */
+    if (g_end_by_luigi != 0) {
+        const int surv = port_luigi_survivors_alive();
+        const int np_li = port_luigi_match_slots();
+        if (g_end_by_luigi == 1)
+            std::snprintf(out, (size_t)n,
+                    "MATCH OVER  -  THE LUIGIS WIN  (all %d infected)", np_li);
+        else
+            std::snprintf(out, (size_t)n,
+                    "MATCH OVER  -  THE SURVIVORS WIN  (%d of %d left)",
+                    surv, np_li);
+        return 1;
+    }
     /* THE MECHANICAL HALF IS EXACT AT EVERY N. The winner, the draw test and
        the score list all run over the players who are actually in the match,
        not over four. What the DISPLAY does with sixteen scores is a separate
@@ -1511,6 +1694,10 @@ extern "C" int port_vs_match_end_poll(int frame)
             g_end_announced = 0;
             g_end_by_target = 0;
             g_end_by_king = 0;
+            g_end_by_luigi = 0;
+            /* Leaving VS clears the Luigi Infection latch too, so the next VS
+               entry re-seeds one tagger from a clean team array. */
+            port_luigi_match_reset();
         }
         /* Outside VS the king match is disarmed, so the next VS entry re-zeroes
            the points. This is the only reset point, so a king match always
@@ -1634,8 +1821,31 @@ extern "C" int port_vs_match_end_poll(int frame)
             for (int i = 0; i < np_end; ++i)
                 if (g_king_points[i] >= king_target) { king_winner = i; break; }
         }
-        if (!timeup && star_winner < 0 && king_winner < 0)
+        /* ---- TRIGGER FOUR: LUIGI INFECTION. Two ways a Luigi Infection match
+         * ends, both dual-win rather than a single scoreline:
+         *   - every survivor infected -> the LUIGIS win, and it can fire before
+         *     the clock (the point of the mode);
+         *   - the clock runs out with a survivor still alive -> the SURVIVORS
+         *     win. The clock is the ROM's own match timer by default (timeup),
+         *     or the SM64DS_VS_LUIGI_TIME test override measured from the frame
+         *     the tagger is seeded -- countdown end, kLiCdPick -- so the match
+         *     clock starts AFTER the pre-round countdown, not during it.
+         * Only after the seed has run, so an empty team array on frame one is
+         * never read as "everyone infected". Feeds the same one end path. */
+        int luigi_end = 0;   /* 0 none, 1 Luigis win, 2 survivors win */
+        if (port_luigi_enabled() && port_luigi_seeded()) {
+            const int surv = port_luigi_survivors_alive();
+            if (surv == 0) {
+                luigi_end = 1;
+            } else {
+                const int tf = port_luigi_time_frames();
+                const int expired = tf > 0 ? (frame >= kLiCdPick + tf) : timeup;
+                if (expired) luigi_end = 2;
+            }
+        }
+        if (!timeup && star_winner < 0 && king_winner < 0 && luigi_end == 0)
             return 0;
+        g_end_by_luigi = luigi_end;
         g_end_fired = frame;
         g_end_by_target = (star_winner >= 0);
         g_end_by_king = (king_winner >= 0);
@@ -1651,7 +1861,13 @@ extern "C" int port_vs_match_end_poll(int frame)
             g_end_scores[i] = (king_target > 0) ? g_king_points[i]
                                                 : (int)data_0209f310[i];
         g_end_total = (int)NumVsStarsObtained();
-        if (king_winner >= 0)
+        if (luigi_end != 0)
+            fprintf(stderr, "[vs] f%d LUIGI INFECTION OVER: %s (survivors "
+                    "alive=%d, players=%d)\n", frame,
+                    luigi_end == 1 ? "all survivors infected, the LUIGIS win"
+                                   : "the clock ran out, the SURVIVORS win",
+                    port_luigi_survivors_alive(), port_luigi_match_slots());
+        else if (king_winner >= 0)
             fprintf(stderr, "[vs] f%d KING TARGET REACHED: player %d has %d "
                     "point(s), the target is %d (points %d,%d,%d,%d)\n", frame,
                     king_winner, g_king_points[king_winner], king_target,
@@ -1783,7 +1999,9 @@ extern "C" int port_vs_match_end_poll(int frame)
     const char *win_name = (win_slot >= 0) ? vs_name_for(win_slot) : 0;
     fprintf(stderr, "[vs] MATCH OVER f%d win=%s scores=%s players=%d total=%d "
             "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
-            g_end_by_king ? "king-target"
+            g_end_by_luigi == 1 ? "luigi-all-infected"
+              : g_end_by_luigi == 2 ? "survivor-timeout"
+              : g_end_by_king ? "king-target"
                           : (g_end_by_target ? "star-target" : "time-up"),
             scores_field, np_marker,
             g_end_total, (unsigned)data_02092664,
