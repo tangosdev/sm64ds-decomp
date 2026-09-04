@@ -262,6 +262,35 @@ Mat &current_pos() { return g.pos; }
 // w that is zero or negative (a vertex behind the camera) sprays the
 // triangle across the screen, which is exactly what the pre-clip pipeline
 // did the moment a perspective camera walked into geometry.
+/* SM64DS_STAR_GEO: per-frame census of what the geometry engine was handed
+   and what came out. Inert unless the env var is set. Reports the model-space
+   and clip-space bounding boxes, the vertex count, and the two matrices in
+   force at the frame's FIRST vertex -- which is what tells a scale change
+   apart from a camera move apart from a projection change. */
+struct StarGeo {
+    int on = -1, n = 0, snapped = 0;
+    float mnx, mny, mnz, mxx, mxy, mxz;      /* model space  */
+    float cnx, cny, cnz, cxx, cxy, cxz;      /* clip space   */
+    float cnw, cxw;
+    Mat pos0, proj0;
+    /* the matrix in force at the vertex that reached furthest in clip x, and
+       that vertex's own model-space coordinates: the frame's bbox is a UNION
+       over every object, so the extreme vertex is the only one that names
+       WHICH object grew. */
+    Mat posE; float ex = 0, emx = 0, emy = 0, emz = 0, ew = 0;
+    /* every DISTINCT position matrix the frame used, with its vertex count:
+       one row per drawn object, which is what separates the sky from the
+       star without having to guess which vertex belongs to which. */
+    struct Row { float a, b, c, tx, ty, tz; int n; };
+    Row tab[32]; int ntab = 0;
+    unsigned frame = 0;
+};
+StarGeo g_stargeo;
+int stargeo_on() {
+    if (g_stargeo.on < 0) g_stargeo.on = std::getenv("SM64DS_STAR_GEO") ? 1 : 0;
+    return g_stargeo.on;
+}
+
 GxVertex project(int16_t x, int16_t y, int16_t z) {
     const Vec4 v{x * FX12, y * FX12, z * FX12, 1.0f};
     Vec4 c = mul(mul(v, current_pos()), g.proj);
@@ -284,6 +313,46 @@ GxVertex project(int16_t x, int16_t y, int16_t z) {
         const float widen =
             (4.0f / 3.0f) * ((float)active_h / (float)active_w);
         c.x *= widen;
+    }
+
+    if (stargeo_on()) {
+        StarGeo &G = g_stargeo;
+        const float mx = x * FX12, my = y * FX12, mz = z * FX12;
+        if (!G.n) {
+            G.mnx = G.mxx = mx; G.mny = G.mxy = my; G.mnz = G.mxz = mz;
+            G.cnx = G.cxx = c.x; G.cny = G.cxy = c.y; G.cnz = G.cxz = c.z;
+            G.cnw = G.cxw = c.w;
+            G.pos0 = current_pos(); G.proj0 = g.proj; G.snapped = 1;
+            G.ex = c.x; G.ew = c.w; G.posE = current_pos();
+            G.emx = mx; G.emy = my; G.emz = mz;
+        } else {
+            if (c.x > G.ex) {
+                G.ex = c.x; G.ew = c.w; G.posE = current_pos();
+                G.emx = mx; G.emy = my; G.emz = mz;
+            }
+            if (mx < G.mnx) G.mnx = mx; if (mx > G.mxx) G.mxx = mx;
+            if (my < G.mny) G.mny = my; if (my > G.mxy) G.mxy = my;
+            if (mz < G.mnz) G.mnz = mz; if (mz > G.mxz) G.mxz = mz;
+            if (c.x < G.cnx) G.cnx = c.x; if (c.x > G.cxx) G.cxx = c.x;
+            if (c.y < G.cny) G.cny = c.y; if (c.y > G.cxy) G.cxy = c.y;
+            if (c.z < G.cnz) G.cnz = c.z; if (c.z > G.cxz) G.cxz = c.z;
+            if (c.w < G.cnw) G.cnw = c.w; if (c.w > G.cxw) G.cxw = c.w;
+        }
+        {
+            const Mat &P = current_pos();
+            int k = 0;
+            for (; k < G.ntab; ++k)
+                if (G.tab[k].a == P.m[0] && G.tab[k].b == P.m[5] &&
+                    G.tab[k].c == P.m[10] && G.tab[k].tx == P.m[12] &&
+                    G.tab[k].ty == P.m[13] && G.tab[k].tz == P.m[14]) break;
+            if (k == G.ntab && G.ntab < 32) {
+                G.tab[k] = {P.m[0], P.m[5], P.m[10],
+                            P.m[12], P.m[13], P.m[14], 0};
+                ++G.ntab;
+            }
+            if (k < G.ntab) ++G.tab[k].n;
+        }
+        ++G.n;
     }
 
     GxVertex out{};
@@ -526,6 +595,8 @@ void mtx_load_log(uint8_t cmd, const uint32_t *p) {
 #endif
     fflush(stderr);
 }
+
+int param_count(uint8_t cmd);   /* defined below; the trap needs it */
 
 void exec(uint8_t cmd, const uint32_t *p, int np) {
     (void)np;
@@ -809,6 +880,39 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         default: break;
+    }
+    /* SM64DS_STAR_TRAP: catch the exact matrix command that installs the
+       title star's blown-up transform, with the raw parameter words and the
+       host return addresses that issued it. The star's signature is a
+       position matrix whose z scale sits at 1.4648 while x/y have jumped
+       past 10 -- the ~16x that a signed 1.3.12 value read unsigned produces
+       the frame it goes negative. */
+    if (cmd >= 0x10 && cmd <= 0x1C) {
+        static int budget = -1;
+        if (budget < 0) {
+            const char *e = getenv("SM64DS_STAR_TRAP");
+            budget = e ? atoi(e) : 0;
+        }
+        if (budget > 0 && g.pos.m[0] > 10.0f &&
+            g.pos.m[10] > 1.40f && g.pos.m[10] < 1.55f) {
+            --budget;
+            fprintf(stderr, "[startrap] cmd %02x mode %d -> pos diag "
+                    "%.4f %.4f %.4f | raw", cmd, g.mode,
+                    g.pos.m[0], g.pos.m[5], g.pos.m[10]);
+            const int n = param_count(cmd);
+            for (int i = 0; i < n; ++i)
+                fprintf(stderr, " %08x(%d)", p[i], (int32_t)p[i]);
+            fprintf(stderr, "\n");
+#if defined(_WIN32)
+            void *bt[24];
+            const unsigned short got = RtlCaptureStackBackTrace(0, 24, bt, 0);
+            fprintf(stderr, "[startrap]   from");
+            for (unsigned short i = 0; i < got; ++i)
+                fprintf(stderr, " %p", bt[i]);
+            fprintf(stderr, "\n");
+#endif
+            fflush(stderr);
+        }
     }
 }
 
@@ -1143,6 +1247,38 @@ void gx_reset() {
        second, for a buffer whose size barely changes frame to frame. Moving
        them out across the assignment and back in keeps their capacity;
        clear() on these trivially destructible element types is a size store. */
+    if (stargeo_on()) {
+        StarGeo &G = g_stargeo;
+        if (G.n && G.snapped) {
+            std::fprintf(stderr,
+                "[stargeo] f%u verts=%d model x[%.1f %.1f] y[%.1f %.1f] "
+                "z[%.1f %.1f] | clip x[%.3f %.3f] y[%.3f %.3f] w[%.3f %.3f]"
+                " | pos diag %.4f %.4f %.4f trans %.3f %.3f %.3f"
+                " | proj %.4f %.4f %.4f m11=%.4f m14=%.4f\n",
+                G.frame, G.n, G.mnx, G.mxx, G.mny, G.mxy, G.mnz, G.mxz,
+                G.cnx, G.cxx, G.cny, G.cxy, G.cnw, G.cxw,
+                G.pos0.m[0], G.pos0.m[5], G.pos0.m[10],
+                G.pos0.m[12], G.pos0.m[13], G.pos0.m[14],
+                G.proj0.m[0], G.proj0.m[5], G.proj0.m[10],
+                G.proj0.m[11], G.proj0.m[14]);
+            std::fprintf(stderr,
+                "[stargeoE] f%u extreme cx=%.3f w=%.3f model(%.2f %.2f %.2f)"
+                " posE diag %.4f %.4f %.4f trans %.3f %.3f %.3f\n",
+                G.frame, G.ex, G.ew, G.emx, G.emy, G.emz,
+                G.posE.m[0], G.posE.m[5], G.posE.m[10],
+                G.posE.m[12], G.posE.m[13], G.posE.m[14]);
+            for (int k = 0; k < G.ntab; ++k)
+                std::fprintf(stderr,
+                    "[stargeoM] f%u obj%d verts=%d scale(%.4f %.4f %.4f)"
+                    " xy/z=%.3f trans(%.3f %.3f %.3f)\n",
+                    G.frame, k, G.tab[k].n, G.tab[k].a, G.tab[k].b,
+                    G.tab[k].c,
+                    G.tab[k].c != 0.0f ? G.tab[k].a / G.tab[k].c : 0.0f,
+                    G.tab[k].tx, G.tab[k].ty, G.tab[k].tz);
+        }
+        ++G.frame; G.n = 0; G.snapped = 0; G.ntab = 0;
+    }
+
     std::vector<GxVertex> strip = std::move(g.strip);
     std::vector<GxTriangle> tris = std::move(g.tris);
     strip.clear();

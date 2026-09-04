@@ -99,7 +99,44 @@ void MultiCopyHalf(unsigned short *src, unsigned short *dst, unsigned n)
 /* PORT_HOST_ABI: ARM/Thumb asm primitives (matrix builders), MSVC cannot assemble.
    Thumb matrix builders (asm primitives; semantics from their headers):
    4x3 fx32 rotation matrices from (sin, cos), 4096 = 1.0 */
-void func_02052800(int *m, int s, int c)   /* X rotation */
+/* THE ARGUMENT IS SIXTEEN BITS WIDE, AND THAT IS THE WHOLE FIX.
+
+   These three are host reimplementations of ARM/Thumb asm primitives that
+   take their sine and cosine in registers, so the DS body reads a full 32-bit
+   word. Their ROM callers do not agree on how wide the argument is:
+
+     include/decl_common.h:2144-2146   (struct Matrix4x3*, short, short)
+     src/func_ov007_020c39f8.c:5-7     (struct Matrix4x3*, short, short)
+     src/Matrix4x3_FromRotationX/Y/Z.c (void*, int, int)
+
+   On ARM that disagreement is invisible. AAPCS makes the CALLER widen a
+   narrow argument into the whole register, sign-extending a signed one, so
+   the asm primitive's `stmia r0!, {r2}` stores a correct negative either way.
+   On the host's 32-bit cdecl the caller only has to define the LOW SIXTEEN
+   BITS of the argument slot when the prototype says `short`, and MSVC
+   zero-extends there -- so a definition taking `int` reads the upper half as
+   whatever the caller happened to leave, which for a negative cosine is zero.
+
+   Measured on SCENE_TITLE: the star's Z angle crosses 90 degrees at frame 42,
+   the table's cosine goes -44, and func_ov007_020c39f8 -- the ONE caller in
+   the tree using the `short` prototype -- delivered 0x0000ffd4 (65492) rather
+   than 0xffffffd4. 65492/4096 = 15.99, so the star's x and y scale jumped by
+   almost exactly 16 and it snapped to fill the screen until the cosine came
+   back positive 43 frames later. Matrix4x3_FromRotationX/Y/Z never showed it
+   because their `int` prototype makes the caller push all 32 bits.
+
+   Taking the parameters as `short` fixes both prototypes at once and is
+   lossless for every caller in the tree: all four pass an entry of
+   `extern short data_02082214[]`, the unit sine table, whose values live in
+   [-4096, 4096]. A caller declaring `int` pushes 32 bits and the callee reads
+   the low 16, which is the same number; a caller declaring `short` defines
+   exactly those 16 bits. Narrowing at the boundary is safe in a way that
+   widening is not, which is why the type moves here rather than in the ROM
+   headers -- and it keeps src/ and include/ untouched.
+
+   The DS semantics are unchanged: 4096 = 1.0, rows as the asm banners give
+   them in src/func_02052800.c, src/func_02052820.c and src/func_0205283c.c. */
+void func_02052800(int *m, short s, short c)   /* X rotation */
 {
     m[0] = 0x1000; m[1] = 0; m[2] = 0;
     m[3] = 0; m[4] = c; m[5] = s;
@@ -107,7 +144,7 @@ void func_02052800(int *m, int s, int c)   /* X rotation */
     m[9] = 0; m[10] = 0; m[11] = 0;
 }
 /* PORT_HOST_ABI: ARM/Thumb asm primitive (Z-rotation matrix), MSVC cannot assemble. */
-void func_0205283c(int *m, int s, int c)   /* Z rotation */
+void func_0205283c(int *m, short s, short c)   /* Z rotation */
 {
     m[0] = c; m[1] = s; m[2] = 0;
     m[3] = -s; m[4] = c; m[5] = 0;
