@@ -24,6 +24,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daFPkn_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daFPkn_c_classInit_FIREPAKUN at 0x0212eaa8 (historical alias
+ * FirePiranhaPlantBig_Spawn) allocates 0x22c and installs this class's
+ * cartridge vtable. It backs the FIREPAKUN registry profile, whose
+ * descriptor at 0x02130ae8 is reconstructed as g_profile_FIREPAKUN.
  */
 
 #include "dEnemyBase_c.h"

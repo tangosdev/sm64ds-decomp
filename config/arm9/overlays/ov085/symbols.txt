@@ -12,7 +12,7 @@ _ZN4Toad16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x021297e8
 _ZN4Toad6RenderEv kind:function(arm,size=0x24) addr:0x02129854
 _ZN4Toad8BehaviorEv kind:function(arm,size=0x204) addr:0x02129878
 _ZN4Toad13InitResourcesEv kind:function(arm,size=0x254) addr:0x02129a7c
-Toad_Spawn kind:function(arm,size=0x48) addr:0x02129cd0
+daKinopio_c_classInit kind:function(arm,size=0x48) addr:0x02129cd0
 _ZN13PrincessPeachD1Ev kind:function(arm,size=0x48) addr:0x02129d18
 _ZN13PrincessPeachD0Ev kind:function(arm,size=0x5c) addr:0x02129d60
 _ZN13PrincessPeach12UpdateLookAtEv kind:function(arm,size=0x100) addr:0x02129dbc
@@ -37,7 +37,7 @@ _ZN13PrincessPeach16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212a5
 _ZN13PrincessPeach6RenderEv kind:function(arm,size=0x24) addr:0x0212a508
 _ZN13PrincessPeach8BehaviorEv kind:function(arm,size=0x5c) addr:0x0212a52c
 _ZN13PrincessPeach13InitResourcesEv kind:function(arm,size=0xfc) addr:0x0212a588
-PrincessPeach_Spawn kind:function(arm,size=0x50) addr:0x0212a684
+daPeach_c_classInit kind:function(arm,size=0x50) addr:0x0212a684
 _ZN6RabbitD1Ev kind:function(arm,size=0x50) addr:0x0212a6d4
 _ZN6RabbitD0Ev kind:function(arm,size=0x64) addr:0x0212a724
 func_ov085_0212a788 kind:function(arm,size=0xa0) addr:0x0212a788
@@ -69,7 +69,7 @@ func_ov085_0212c150 kind:function(arm,size=0xe0) addr:0x0212c150
 _ZN6Rabbit8BehaviorEv kind:function(arm,size=0x5cc) addr:0x0212c230
 _ZN6Rabbit13InitResourcesEv kind:function(arm,size=0x41c) addr:0x0212c7fc
 _ZN6Rabbit13OnYoshiTryEatEv kind:function(arm,size=0x14) addr:0x0212cc18
-Rabbit_Spawn kind:function(arm,size=0x5c) addr:0x0212cc2c
+daMip_c_classInit kind:function(arm,size=0x5c) addr:0x0212cc2c
 _ZN9RabbitKeyD1Ev kind:function(arm,size=0x38) addr:0x0212cc88
 _ZN9RabbitKeyD0Ev kind:function(arm,size=0x4c) addr:0x0212ccc0
 func_ov085_0212cd0c kind:function(arm,size=0x74) addr:0x0212cd0c
@@ -117,14 +117,14 @@ _ZN9LakituBro16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212eacc
 _ZN9LakituBro6RenderEv kind:function(arm,size=0x48) addr:0x0212ead0
 _ZN9LakituBro8BehaviorEv kind:function(arm,size=0xd4) addr:0x0212eb18
 _ZN9LakituBro13InitResourcesEv kind:function(arm,size=0x168) addr:0x0212ebec
-LakituBro_Spawn kind:function(arm,size=0x58) addr:0x0212ed54
+daC_Jugem_c_classInit kind:function(arm,size=0x58) addr:0x0212ed54
 _ZN8WallSignD1Ev kind:function(arm,size=0x4c) addr:0x0212edac
 _ZN8WallSignD0Ev kind:function(arm,size=0x60) addr:0x0212edf8
 _ZN8WallSign16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x0212ee58
 _ZN8WallSign6RenderEv kind:function(arm,size=0x28) addr:0x0212ee7c
 _ZN8WallSign8BehaviorEv kind:function(arm,size=0x30c) addr:0x0212eea4
 _ZN8WallSign13InitResourcesEv kind:function(arm,size=0x94) addr:0x0212f1b0
-WallSign_Spawn kind:function(arm,size=0x38) addr:0x0212f244
+daObjKanban_c_classInit kind:function(arm,size=0x38) addr:0x0212f244
 data_ov085_0212f27c kind:data(any) addr:0x0212f27c
 data_ov085_0212f280 kind:data(any) addr:0x0212f280
 data_ov085_0212f29c kind:data(any) addr:0x0212f29c
@@ -148,7 +148,7 @@ data_ov085_0212fe40 kind:data(any) addr:0x0212fe40
 data_ov085_0212fe48 kind:data(any) addr:0x0212fe48
 _ZTI11daKinopio_c kind:data(any) addr:0x0212fe50
 _ZTS11daKinopio_c kind:data(any) addr:0x0212fe5c
-Toad_SpawnInfo kind:data(any) addr:0x0212fe6c
+g_profile_KINOPIO kind:data(any) addr:0x0212fe6c
 data_ov085_0212fe88 kind:data(any) addr:0x0212fe88
 _ZTV4Toad kind:data(any) addr:0x0212feb8
 _ZTV11daKinopio_c kind:data(any) addr:0x0212feb8
@@ -164,7 +164,7 @@ data_ov085_0212ff74 kind:data(any) addr:0x0212ff74
 data_ov085_0212ff7c kind:data(any) addr:0x0212ff7c
 _ZTS9daPeach_c kind:data(any) addr:0x0212ff84
 _ZTI9daPeach_c kind:data(any) addr:0x0212ff90
-PrincessPeach_SpawnInfo kind:data(any) addr:0x0212ff9c
+g_profile_PEACH_PRINCESS kind:data(any) addr:0x0212ff9c
 _ZTV13PrincessPeach kind:data(any) addr:0x0212ffc0
 _ZTV9daPeach_c kind:data(any) addr:0x0212ffc0
 data_ov085_0212ffff kind:data(any) addr:0x0212ffff
@@ -186,7 +186,7 @@ data_ov085_021300ac kind:data(any) addr:0x021300ac
 data_ov085_021300b4 kind:data(any) addr:0x021300b4
 _ZTS7daMip_c kind:data(any) addr:0x021300bc
 _ZTI7daMip_c kind:data(any) addr:0x021300c8
-Rabbit_SpawnInfo kind:data(any) addr:0x021300d4
+g_profile_MIP kind:data(any) addr:0x021300d4
 _ZTV6Rabbit kind:data(any) addr:0x021300f8
 _ZTV7daMip_c kind:data(any) addr:0x021300f8
 data_ov085_02130174 kind:data(any) addr:0x02130174
@@ -224,12 +224,12 @@ data_ov085_021302f4 kind:data(any) addr:0x021302f4
 data_ov085_021302fc kind:data(any) addr:0x021302fc
 _ZTI11daC_Jugem_c kind:data(any) addr:0x02130304
 _ZTS11daC_Jugem_c kind:data(any) addr:0x02130310
-LakituBro_SpawnInfo kind:data(any) addr:0x02130320 ambiguous
+g_profile_C_JUGEM kind:data(any) addr:0x02130320 ambiguous
 _ZTV9LakituBro kind:data(any) addr:0x02130344
 _ZTV11daC_Jugem_c kind:data(any) addr:0x02130344
 _ZTI13daObjKanban_c kind:data(any) addr:0x021303c0
 _ZTS13daObjKanban_c kind:data(any) addr:0x021303cc
-WallSign_SpawnInfo kind:data(any) addr:0x021303dc
+g_profile_KANBAN kind:data(any) addr:0x021303dc
 _ZTV8WallSign kind:data(any) addr:0x02130400
 _ZTV13daObjKanban_c kind:data(any) addr:0x02130400
 data_ov085_02130480 kind:bss addr:0x02130480

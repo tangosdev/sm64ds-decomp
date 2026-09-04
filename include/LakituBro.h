@@ -24,6 +24,16 @@
  * SIZE IS THE ROM'S OWN: `LakituBro_Spawn` calls
  * `fBase_c::operator new(744)` -- 0x2e8 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS proves this class as daC_Jugem_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daC_Jugem_c_classInit at 0x0212ed54 (historical alias LakituBro_Spawn)
+ * allocates 0x2e8 and installs this class's cartridge vtable. It backs the
+ * C_JUGEM registry profile, whose descriptor at 0x02130320 is reconstructed
+ * as g_profile_C_JUGEM.
  */
 
 #include "dEnemyBase_c.h"

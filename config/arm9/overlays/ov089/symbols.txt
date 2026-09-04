@@ -16,8 +16,8 @@ _ZN3Key16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02132084
 _ZN3Key6RenderEv kind:function(arm,size=0xa4) addr:0x021320f0
 _ZN3Key8BehaviorEv kind:function(arm,size=0x310) addr:0x02132194
 _ZN3Key13InitResourcesEv kind:function(arm,size=0x32c) addr:0x021324a4
-LastStar_Spawn kind:function(arm,size=0x58) addr:0x021327d0
-Key_Spawn kind:function(arm,size=0x58) addr:0x02132828
+daObjKey_c_classInit_LAST_STAR kind:function(arm,size=0x58) addr:0x021327d0
+daObjKey_c_classInit_OBJ_KEY kind:function(arm,size=0x58) addr:0x02132828
 data_ov089_02132880 kind:data(any) addr:0x02132880
 data_ov089_02132894 kind:data(any) addr:0x02132894
 data_ov089_021328b4 kind:data(any) addr:0x021328b4
@@ -34,8 +34,8 @@ data_ov089_02132b38 kind:data(any) addr:0x02132b38
 data_ov089_02132b40 kind:data(any) addr:0x02132b40
 _ZTI10daObjKey_c kind:data(any) addr:0x02132b4c
 _ZTS10daObjKey_c kind:data(any) addr:0x02132b58
-Key_SpawnInfo kind:data(any) addr:0x02132b68
-LastStar_SpawnInfo kind:data(any) addr:0x02132b84
+g_profile_OBJ_KEY kind:data(any) addr:0x02132b68
+g_profile_LAST_STAR kind:data(any) addr:0x02132b84
 _ZTV3Key kind:data(any) addr:0x02132ba8
 _ZTV10daObjKey_c kind:data(any) addr:0x02132ba8
 data_ov089_02132c40 kind:bss addr:0x02132c40

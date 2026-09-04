@@ -10,6 +10,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daSnowman_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daSnowman_c_classInit at 0x02125ec0 (historical alias MrBlizzard_Spawn)
+ * allocates 0x46c and installs this class's cartridge vtable. It backs the
+ * SNOWMAN registry profile, whose descriptor at 0x021289cc is reconstructed
+ * as g_profile_SNOWMAN.
  */
 
 #ifdef __cplusplus

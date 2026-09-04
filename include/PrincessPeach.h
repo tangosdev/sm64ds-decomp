@@ -19,6 +19,16 @@ struct Player;
  * data_ov085_0213055c. SetState selects one pair and calls its first member;
  * Behavior calls the second member. The descriptive helper names are useful
  * source names, not names authenticated by the cartridge.
+ *
+ * SM64DS proves this class as daPeach_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daPeach_c_classInit at 0x0212a684 (historical alias PrincessPeach_Spawn)
+ * allocates 0x36c and installs this class's cartridge vtable. It backs the
+ * PEACH_PRINCESS registry profile, whose descriptor at 0x0212ff9c is
+ * reconstructed as g_profile_PEACH_PRINCESS.
  */
 struct PrincessPeach : dActor_c {
     u8 mPad0d0[0x4];                    /* 0x0d0 */

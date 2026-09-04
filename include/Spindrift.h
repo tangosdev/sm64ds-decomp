@@ -22,6 +22,16 @@
  * class's sizeof.
  *
  * The ROM's RTTI names this class daHuwa_c.
+ *
+ * SM64DS proves this class as daHuwa_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daHuwa_c_classInit at 0x02124040 (historical alias Spindrift_Spawn)
+ * allocates 0x39c and installs this class's cartridge vtable. It backs the
+ * HUWAHUWA registry profile, whose descriptor at 0x02128858 is reconstructed
+ * as g_profile_HUWAHUWA.
  */
 
 #include "dEnemyBase_c.h"

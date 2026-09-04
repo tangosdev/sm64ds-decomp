@@ -31,6 +31,16 @@
  * SIZE IS THE ROM'S OWN: `Key_Spawn` calls
  * `fBase_c::operator new(1136)` -- 0x470 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS proves this class as daObjKey_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daObjKey_c_classInit_OBJ_KEY at 0x02132828 (historical alias Key_Spawn)
+ * allocates 0x470 and installs this class's cartridge vtable. It backs the
+ * OBJ_KEY registry profile, whose descriptor at 0x02132b68 is reconstructed
+ * as g_profile_OBJ_KEY.
  */
 
 #include "dEnemyBase_c.h"

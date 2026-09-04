@@ -22,7 +22,7 @@ _ZN7Skeeter13InitResourcesEv kind:function(arm,size=0x2bc) addr:0x0213235c
 _ZN7Skeeter16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02132618
 _ZN7Skeeter13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02132620
 _ZN7Skeeter13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0213264c
-Skeeter_Spawn kind:function(arm,size=0x48) addr:0x02132654
+daMenbo_c_classInit kind:function(arm,size=0x48) addr:0x02132654
 _ZN8MantaRayD1Ev kind:function(arm,size=0x40) addr:0x0213269c
 _ZN8MantaRayD0Ev kind:function(arm,size=0x54) addr:0x021326dc
 func_ov090_02132730 kind:function(arm,size=0xb4) addr:0x02132730
@@ -35,7 +35,7 @@ _ZN8MantaRay16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02132c64
 _ZN8MantaRay6RenderEv kind:function(arm,size=0x2c) addr:0x02132c68
 _ZN8MantaRay8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02132c94
 _ZN8MantaRay13InitResourcesEv kind:function(arm,size=0x1b0) addr:0x02132e38
-MantaRay_Spawn kind:function(arm,size=0x4c) addr:0x02132fe8
+daManta_c_classInit kind:function(arm,size=0x4c) addr:0x02132fe8
 _ZN10CheepCheepD1Ev kind:function(arm,size=0x40) addr:0x02133034
 _ZN10CheepCheepD0Ev kind:function(arm,size=0x54) addr:0x02133074
 func_ov090_021330c8 kind:function(arm,size=0xc8) addr:0x021330c8
@@ -50,7 +50,7 @@ _ZN10CheepCheep16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021333dc
 _ZN10CheepCheep6RenderEv kind:function(arm,size=0x50) addr:0x021333e0
 _ZN10CheepCheep8BehaviorEv kind:function(arm,size=0x100) addr:0x02133430
 _ZN10CheepCheep13InitResourcesEv kind:function(arm,size=0x104) addr:0x02133530
-CheepCheep_Spawn kind:function(arm,size=0x48) addr:0x02133634
+daPukupuku_c_classInit kind:function(arm,size=0x48) addr:0x02133634
 _ZN5SharkD1Ev kind:function(arm,size=0x40) addr:0x0213367c
 _ZN5SharkD0Ev kind:function(arm,size=0x54) addr:0x021336bc
 func_ov090_02133710 kind:function(arm,size=0x120) addr:0x02133710
@@ -63,7 +63,7 @@ _ZN5Shark16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021339a8
 _ZN5Shark6RenderEv kind:function(arm,size=0x2c) addr:0x021339ac
 _ZN5Shark8BehaviorEv kind:function(arm,size=0x1c0) addr:0x021339d8
 _ZN5Shark13InitResourcesEv kind:function(arm,size=0x108) addr:0x02133b98
-Shark_Spawn kind:function(arm,size=0x48) addr:0x02133ca0
+daShark_c_classInit kind:function(arm,size=0x48) addr:0x02133ca0
 __sinit_ov090_02133ce8 kind:function(arm,size=0x1c0) addr:0x02133ce8
 __sinit_ov090_02133ea8 kind:function(arm,size=0xa4) addr:0x02133ea8
 __sinit_ov090_02133f4c kind:function(arm,size=0xd4) addr:0x02133f4c
@@ -83,7 +83,7 @@ data_ov090_02134118 kind:data(any) addr:0x02134118
 _ZTS9daMenbo_c kind:data(any) addr:0x02134120
 data_ov090_0213412c kind:data(any) addr:0x0213412c
 _ZTI9daMenbo_c kind:data(any) addr:0x02134138
-Skeeter_SpawnInfo kind:data(any) addr:0x02134144 ambiguous
+g_profile_MENBO kind:data(any) addr:0x02134144 ambiguous
 _ZTV7Skeeter kind:data(any) addr:0x02134168
 _ZTV9daMenbo_c kind:data(any) addr:0x02134168
 data_ov090_021341e4 kind:data(any) addr:0x021341e4
@@ -91,7 +91,7 @@ data_ov090_021341ec kind:data(any) addr:0x021341ec
 _ZTS9daManta_c kind:data(any) addr:0x021341f4
 data_ov090_02134200 kind:data(any) addr:0x02134200
 _ZTI9daManta_c kind:data(any) addr:0x0213420c
-MantaRay_SpawnInfo kind:data(any) addr:0x02134218 ambiguous
+g_profile_MANTA kind:data(any) addr:0x02134218 ambiguous
 _ZTV8MantaRay kind:data(any) addr:0x0213423c
 data_ov090_021342b8 kind:data(any) addr:0x021342b8
 data_ov090_021342c0 kind:data(any) addr:0x021342c0
@@ -100,14 +100,14 @@ data_ov090_021342d0 kind:data(any) addr:0x021342d0
 data_ov090_021342d8 kind:data(any) addr:0x021342d8
 _ZTI12daPukupuku_c kind:data(any) addr:0x021342e4
 _ZTS12daPukupuku_c kind:data(any) addr:0x021342f0
-CheepCheep_SpawnInfo kind:data(any) addr:0x02134300 ambiguous
+g_profile_PUKUPUKU kind:data(any) addr:0x02134300 ambiguous
 _ZTV10CheepCheep kind:data(any) addr:0x02134324
 _ZTV12daPukupuku_c kind:data(any) addr:0x02134324
 data_ov090_021343a0 kind:data(any) addr:0x021343a0
 data_ov090_021343a8 kind:data(any) addr:0x021343a8
 data_ov090_021343b0 kind:data(any) addr:0x021343b0
 _ZTI9daShark_c kind:data(any) addr:0x021343bc
-Shark_SpawnInfo kind:data(any) addr:0x021343c8 ambiguous
+g_profile_SHARK kind:data(any) addr:0x021343c8 ambiguous
 _ZTV5Shark kind:data(any) addr:0x021343ec
 _ZTV9daShark_c kind:data(any) addr:0x021343ec
 data_ov090_02134480 kind:bss addr:0x02134480

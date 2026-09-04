@@ -24,6 +24,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daPkn_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daPkn_c_classInit at 0x02130110 (historical alias PiranhaPlant_Spawn)
+ * allocates 0x47c and installs this class's cartridge vtable. It backs the
+ * PAKUN registry profile, whose descriptor at 0x02130c04 is reconstructed as
+ * g_profile_PAKUN.
  */
 
 #include "dEnemyBase_c.h"

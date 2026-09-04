@@ -12,6 +12,16 @@
  * destructor calls: dCcAc_c at 0x0d4, ModelAnim at 0x108, and ShadowModel at
  * 0x16c. The two Matrix4x3 objects and state fields are addressed by the
  * class's own nonvirtual methods and pointer-to-member state table.
+ *
+ * SM64DS proves this class as daKinopio_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daKinopio_c_classInit at 0x02129cd0 (historical alias Toad_Spawn)
+ * allocates 0x210 and installs this class's cartridge vtable. It backs the
+ * KINOPIO registry profile, whose descriptor at 0x0212fe6c is reconstructed
+ * as g_profile_KINOPIO.
  */
 #ifndef TOAD_H
 #define TOAD_H

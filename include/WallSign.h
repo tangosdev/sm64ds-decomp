@@ -12,6 +12,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daObjKanban_c through RTTI, allocation size
+ * and vtable identity. The factory and profile spellings below are
+ * reconstructed source-style names -- evidence-bounded proposals, not
+ * recovered SM64DS symbols.
+ *
+ * daObjKanban_c_classInit at 0x0212f244 (historical alias WallSign_Spawn)
+ * allocates 0x368 and installs this class's cartridge vtable. It backs the
+ * KANBAN registry profile, whose descriptor at 0x021303dc is reconstructed
+ * as g_profile_KANBAN.
  */
 
 #ifdef __cplusplus

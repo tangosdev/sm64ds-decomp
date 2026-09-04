@@ -10,7 +10,7 @@ _ZN9Spindrift8BehaviorEv kind:function(arm,size=0x264) addr:0x02123c6c
 _ZN9Spindrift13InitResourcesEv kind:function(arm,size=0x108) addr:0x02123ed0
 _ZN9Spindrift13OnTurnIntoEggER6Player kind:function(arm,size=0x60) addr:0x02123fd8
 _ZN9Spindrift13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02124038
-Spindrift_Spawn kind:function(arm,size=0x50) addr:0x02124040
+daHuwa_c_classInit kind:function(arm,size=0x50) addr:0x02124040
 _ZN10MrBlizzardD1Ev kind:function(arm,size=0x48) addr:0x02124090
 _ZN10MrBlizzardD0Ev kind:function(arm,size=0x5c) addr:0x021240d8
 func_ov081_02124134 kind:function(arm,size=0x108) addr:0x02124134
@@ -45,7 +45,7 @@ _ZN10MrBlizzard6RenderEv kind:function(arm,size=0x6c) addr:0x02125820
 _ZN10MrBlizzard8BehaviorEv kind:function(arm,size=0x314) addr:0x0212588c
 _ZN10MrBlizzard13InitResourcesEv kind:function(arm,size=0x318) addr:0x02125ba0
 _ZN10MrBlizzard16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02125eb8
-MrBlizzard_Spawn kind:function(arm,size=0x54) addr:0x02125ec0
+daSnowman_c_classInit kind:function(arm,size=0x54) addr:0x02125ec0
 _ZN8SnowballD1Ev kind:function(arm,size=0x48) addr:0x02125f14
 _ZN8SnowballD0Ev kind:function(arm,size=0x5c) addr:0x02125f5c
 func_ov081_02125fb8 kind:function(arm,size=0x144) addr:0x02125fb8
@@ -58,7 +58,7 @@ _ZN8Snowball16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021262bc
 _ZN8Snowball6RenderEv kind:function(arm,size=0x2c) addr:0x021262c0
 _ZN8Snowball8BehaviorEv kind:function(arm,size=0xcc) addr:0x021262ec
 _ZN8Snowball13InitResourcesEv kind:function(arm,size=0xfc) addr:0x021263b8
-Snowball_Spawn kind:function(arm,size=0x50) addr:0x021264b4
+daSnowball_c_classInit kind:function(arm,size=0x50) addr:0x021264b4
 _ZN8MoneybagD1Ev kind:function(arm,size=0x50) addr:0x02126504
 _ZN8MoneybagD0Ev kind:function(arm,size=0x64) addr:0x02126554
 _ZN8Moneybag13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021265b8
@@ -95,7 +95,7 @@ _ZN8Moneybag6RenderEv kind:function(arm,size=0x74) addr:0x021277e0
 _ZN8Moneybag8BehaviorEv kind:function(arm,size=0x54) addr:0x02127854
 _ZN8Moneybag13InitResourcesEv kind:function(arm,size=0x1d4) addr:0x021278a8
 _ZN8Moneybag13OnTurnIntoEggER6Player kind:function(arm,size=0x60) addr:0x02127a7c
-Moneybag_Spawn kind:function(arm,size=0x58) addr:0x02127adc
+daGmch_c_classInit kind:function(arm,size=0x58) addr:0x02127adc
 _ZN8IceBlockD1Ev kind:function(arm,size=0x4c) addr:0x02127b34
 _ZN8IceBlockD0Ev kind:function(arm,size=0x60) addr:0x02127b80
 func_ov081_02127be0 kind:function(arm,size=0xec) addr:0x02127be0
@@ -119,7 +119,7 @@ __sinit_ov081_021287b8 kind:function(arm,size=0x6c) addr:0x021287b8
 .p__sinit_ov081_021287b8 kind:data(word) addr:0x02128834
 _ZTS8daHuwa_c kind:data(any) addr:0x02128840
 _ZTI8daHuwa_c kind:data(any) addr:0x0212884c
-Spindrift_SpawnInfo kind:data(any) addr:0x02128858 ambiguous
+g_profile_HUWAHUWA kind:data(any) addr:0x02128858 ambiguous
 _ZTV9Spindrift kind:data(any) addr:0x0212887c
 _ZTV8daHuwa_c kind:data(any) addr:0x0212887c
 data_ov081_021288f8 kind:data(any) addr:0x021288f8
@@ -148,14 +148,14 @@ data_ov081_021289a6 kind:data(any) addr:0x021289a6
 data_ov081_021289a8 kind:data(any) addr:0x021289a8
 _ZTI11daSnowman_c kind:data(any) addr:0x021289b0
 _ZTS11daSnowman_c kind:data(any) addr:0x021289bc
-MrBlizzard_SpawnInfo kind:data(any) addr:0x021289cc
+g_profile_SNOWMAN kind:data(any) addr:0x021289cc
 _ZTV10MrBlizzard kind:data(any) addr:0x021289f0
 _ZTV11daSnowman_c kind:data(any) addr:0x021289f0
 data_ov081_02128a6c kind:data(any) addr:0x02128a6c
 data_ov081_02128a74 kind:data(any) addr:0x02128a74
 _ZTI12daSnowball_c kind:data(any) addr:0x02128a7c
 _ZTS12daSnowball_c kind:data(any) addr:0x02128a88
-Snowball_SpawnInfo kind:data(any) addr:0x02128a98
+g_profile_SNOWBALL kind:data(any) addr:0x02128a98
 _ZTV8Snowball kind:data(any) addr:0x02128abc
 _ZTV12daSnowball_c kind:data(any) addr:0x02128abc
 data_ov081_02128b38 kind:data(any) addr:0x02128b38
@@ -178,7 +178,7 @@ data_ov081_02128bb8 kind:data(any) addr:0x02128bb8
 data_ov081_02128bc0 kind:data(any) addr:0x02128bc0
 _ZTS8daGmch_c kind:data(any) addr:0x02128bc8
 _ZTI8daGmch_c kind:data(any) addr:0x02128bd4
-Moneybag_SpawnInfo kind:data(any) addr:0x02128be0
+g_profile_GAMAGUCHI kind:data(any) addr:0x02128be0
 _ZTV8Moneybag kind:data(any) addr:0x02128c04
 _ZTV8daGmch_c kind:data(any) addr:0x02128c04
 _ZTI15daObjIceBlock_c kind:data(any) addr:0x02128c80

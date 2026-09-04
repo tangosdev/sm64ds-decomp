@@ -21,6 +21,16 @@
  * so that literal IS this class's sizeof. The evidenced fields reach only
  * 0x38c; the 0x94 between is trailing space no source reads, and a rounded-up
  * field span would have made this assert wrong by 120 bytes.
+ *
+ * SM64DS proves this class as daManta_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daManta_c_classInit at 0x02132fe8 (historical alias MantaRay_Spawn)
+ * allocates 0x404 and installs this class's cartridge vtable. It backs the
+ * MANTA registry profile, whose descriptor at 0x02134218 is reconstructed as
+ * g_profile_MANTA.
  */
 
 #include "dEnemyBase_c.h"

@@ -22,6 +22,16 @@
  * `fBase_c::operator new(908)` -- 0x38c -- and stores `_ZTV8Snowball`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x388; the difference is trailing space no source reads.
+ *
+ * SM64DS proves this class as daSnowball_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daSnowball_c_classInit at 0x021264b4 (historical alias Snowball_Spawn)
+ * allocates 0x38c and installs this class's cartridge vtable. It backs the
+ * SNOWBALL registry profile, whose descriptor at 0x02128a98 is reconstructed
+ * as g_profile_SNOWBALL.
  */
 
 #include "dEnemyBase_c.h"

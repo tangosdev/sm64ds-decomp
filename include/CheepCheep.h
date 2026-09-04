@@ -10,6 +10,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daPukupuku_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daPukupuku_c_classInit at 0x02133634 (historical alias CheepCheep_Spawn)
+ * allocates 0x388 and installs this class's cartridge vtable. It backs the
+ * PUKUPUKU registry profile, whose descriptor at 0x02134300 is reconstructed
+ * as g_profile_PUKUPUKU.
  */
 
 #ifdef __cplusplus

@@ -20,6 +20,16 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov081). Only the
  * slots declared below differ; every other slot holds the base's own word and is inherited,
  * so it is deliberately not redeclared here.
+ *
+ * SM64DS proves this class as daGmch_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daGmch_c_classInit at 0x02127adc (historical alias Moneybag_Spawn)
+ * allocates 0x3f4 and installs this class's cartridge vtable. It backs the
+ * GAMAGUCHI registry profile, whose descriptor at 0x02128be0 is
+ * reconstructed as g_profile_GAMAGUCHI.
  */
 struct Moneybag : dActor_c {
     u8  pad_0d0[0x4];

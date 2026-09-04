@@ -68,6 +68,26 @@
  * every other override shares its declaration), so it stays its own follow-on.
  *
  * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
+ *
+ * SM64DS proves this class as daKrb_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daKrb_c_classInit_KURIBO at 0x0212c0b0 (historical alias Goomba_Spawn)
+ * allocates 0x478 and installs this class's cartridge vtable. It backs the
+ * KURIBO registry profile, whose descriptor at 0x021308ec is reconstructed
+ * as g_profile_KURIBO.
+ *
+ * daKrb_c_classInit_KURIBO_S at 0x0212c054 (historical alias
+ * GoombaSmall_Spawn) allocates 0x478 and installs this class's cartridge
+ * vtable. It backs the KURIBO_S registry profile, whose descriptor at
+ * 0x02130908 is reconstructed as g_profile_KURIBO_S.
+ *
+ * daKrb_c_classInit_KURIBO_L at 0x0212bff8 (historical alias
+ * GoombaLarge_Spawn) allocates 0x478 and installs this class's cartridge
+ * vtable. It backs the KURIBO_L registry profile, whose descriptor at
+ * 0x02130924 is reconstructed as g_profile_KURIBO_L.
  */
 struct daKrb_c : dCapEnemy_c {
     dCcAc_c mdCcAc_c;         /* 0x180 */

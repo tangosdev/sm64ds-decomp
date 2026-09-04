@@ -26,6 +26,16 @@
  * SIZE IS THE ROM'S OWN: `Rabbit_Spawn` calls
  * `fBase_c::operator new(1140)` -- 0x474 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS proves this class as daMip_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daMip_c_classInit at 0x0212cc2c (historical alias Rabbit_Spawn) allocates
+ * 0x474 and installs this class's cartridge vtable. It backs the MIP
+ * registry profile, whose descriptor at 0x021300d4 is reconstructed as
+ * g_profile_MIP.
  */
 
 #include "dEnemyBase_c.h"

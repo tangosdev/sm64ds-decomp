@@ -9,6 +9,16 @@
 /* BobOmbBuddy_Spawn allocates 0x1f0 bytes, constructs dActor_c, then constructs
  * dCcAc_c at 0xd4, ModelAnim at 0x108, and ShadowModel at 0x16c.
  * D1 destroys the three members in reverse order before chaining to dActor_c.
+ *
+ * SM64DS proves this class as daRedBombhei_c through RTTI, allocation size
+ * and vtable identity. The factory and profile spellings below are
+ * reconstructed source-style names -- evidence-bounded proposals, not
+ * recovered SM64DS symbols.
+ *
+ * daRedBombhei_c_classInit at 0x0212d200 (historical alias
+ * BobOmbBuddy_Spawn) allocates 0x1f0 and installs this class's cartridge
+ * vtable. It backs the RED_BOMBHEI registry profile, whose descriptor at
+ * 0x02130a14 is reconstructed as g_profile_RED_BOMBHEI.
  */
 struct BobOmbBuddy : dActor_c {
     u8                 pad_0d0[0x4];

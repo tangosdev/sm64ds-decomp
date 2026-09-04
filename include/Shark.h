@@ -10,6 +10,16 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS proves this class as daShark_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daShark_c_classInit at 0x02133ca0 (historical alias Shark_Spawn) allocates
+ * 0x3a0 and installs this class's cartridge vtable. It backs the SHARK
+ * registry profile, whose descriptor at 0x021343c8 is reconstructed as
+ * g_profile_SHARK.
  */
 
 #ifdef __cplusplus
