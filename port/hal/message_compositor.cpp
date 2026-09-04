@@ -1138,6 +1138,20 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
             pd = (int16_t)rd16(oam_a() + (grp * 4 + 3) * 8u + 6);
         }
 
+        /* SM64DS_STAR_AFF: the engine-A OBJ affine trace. This raster is the
+           ONLY live consumer of engine A's sprites (ntr/ppu.cpp's
+           ppu_scanout_obj has no caller outside tests/smoke_oam.cpp), so a
+           probe placed there measures nothing. */
+        {
+            static int on = -1;
+            if (on < 0) on = std::getenv("SM64DS_STAR_AFF") ? 1 : 0;
+            if (on && affine)
+                std::fprintf(stderr, "[staraff] f%u oam%d grp=%d %dx%d dbl=%d "
+                             "at(%d,%d) tile=%u pa=%d pb=%d pc=%d pd=%d\n",
+                             g_obj_frame, i, (int)((a1 >> 9) & 0x1F), w, h,
+                             dbl ? 1 : 0, x, y, (unsigned)tile, pa, pb, pc, pd);
+        }
+
         for (int sy = 0; sy < bh; ++sy) {
             const int py = y + sy;
             if (py < 0 || py >= 192) continue;
