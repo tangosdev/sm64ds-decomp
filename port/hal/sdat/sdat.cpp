@@ -119,6 +119,42 @@ sd_u32 sdat_file_id_of(const void *p)
 // seqBase is the file's DATA base (what the START command carries in b); the
 // SSAR case reads the entry table beside it, the SSEQ case the INFO record.
 //
+// WHY ONLY cpr, AND NOT ppr OR THE PLAYER RECORD'S maxSeq. Those two are real
+// and they are enforced -- but they are ARM9-side, and on the ARM9 side this
+// project runs the ROM's own decompiled code, so implementing them here would
+// be writing a second copy of something already running.
+//
+// The arbitration lives in func_0204f63c, which IS decompiled, in
+// src/func_0204f63c.cpp, and is called from the sequence-start core in
+// src/func_02051a98.c. Its body is the ROM's:
+//
+//     if (seqCount(+8) >= seqMax(+0x18)) {      // the PLAYER record's cap
+//         it = lowest-priority sequence on this player;
+//         if (!it) return 0;                    // nothing to evict
+//         if (r7 < it[0x3d]) return 0;          // new ppr < victim ppr: REFUSE
+//         stop(it);
+//     }
+//     if (!func_0204f364(r7)) return 0;         // global 16-slot pool, also
+//                                               // gated on ppr
+//
+// maxSeq reaches that +0x18 field through Sound::Player::SetPlayableSeqCount,
+// which hal/sdat/sound_abi.cpp deliberately hosts as an ALIAS onto
+// data_020a4d6c + id*0x1c + 0x18 precisely so the write lands in the block
+// func_0204f63c reads it back out of. That aliasing exists because the two DS
+// views (data_020a4d6c and data_020a4d84) are one array on hardware.
+//
+// cpr is different, and that is why it needed seating here. It is not consumed
+// on the ARM9 at all: func_02051a98 reads info->cpr at +7 and immediately ships
+// it across as SND_SetSeqPriority -> SNDi_SetPlayerParam(offset 4, size 1) ->
+// ARM7 command 3, which stores it to player->priority. The ARM7 is the side
+// this port reimplements, so cpr is the one of the three that had nowhere to
+// land until now.
+//
+// So the split is: ppr and maxSeq decide whether a SEQUENCE gets a player slot
+// (ARM9, already faithful, not ours); cpr feeds the per-NOTE channel priority
+// (ARM7, ours). They do not otherwise interact -- the ARM7 image contains no
+// SDAT parsing at all, and the allocator's only caller is the note-on path.
+//
 // MEASURED, on this tree, with the opening harness (SM64DS_SCENE=1 +
 // SM64DS_TITLE_ENTRY=1, touch past the title at f720 and the file-select at
 // f800, 3000 frames, SM64DS_NO_AUDIO=1 so the mixer is clocked at exactly
