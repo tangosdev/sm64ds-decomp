@@ -139,6 +139,22 @@ sd_u32 sdat_file_id_of(const void *p)
 // Before, EVERY voice in the opening ran at 64..69 -- the trace histogram has
 // no value above 69 in it -- because 64 was the hardcoded default and the
 // cpr byte never reached the player. After, the SDAT's own 96 and 127 appear.
+//
+// THE ROM SAYS THIS DIRECTLY, INDEPENDENT OF THE PORT. Reading the cpr byte
+// out of extracted/dsd/files/data/sound_data.sdat:
+//
+//   INFO SEQ records (83 of them, the music):
+//     cpr 64:37  65:3  72:6  73:4  106:32  127:1
+//   SSAR entries across the five sound-effect archives (1464 of them):
+//     cpr 96:1143  127:269  and 52 others spread over 0,40,50,64,80,90,92,
+//     98,100,110,115,120
+//
+// So 1412 of the game's 1464 sound effects are authored at 96 or 127, and
+// exactly FOUR are at 64. The port ran all 1464 of them at 64, level with the
+// music. That is the whole bug: with every voice at one priority the 16-channel
+// allocator's "steal the lowest, oldest among equals" degenerates into "steal
+// whatever started first", so in a busy scene the music and the effects evict
+// each other by arrival order instead of by the order the ROM asked for.
 int sdat_seq_priority(const sd_u8 *seqBase, sd_u32 startOff)
 {
     if (!seqBase || !g_sdat.base || !g_sdat.info) return 64;
