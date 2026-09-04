@@ -84,37 +84,9 @@ src/CastleWater_Spawn.c:
     complete
     .text start:0x02111d8c end:0x02111dc4
 
-src/_ZN8MetalNetD1Ev.cpp:
+src/actors/d_a_obj_mc_metalnet.cpp:
     complete
-    .text start:0x02111dc4 end:0x02111e08
-
-src/_ZN8MetalNetD0Ev.cpp:
-    complete
-    .text start:0x02111e08 end:0x02111e60
-
-src/_ZN8MetalNet16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111e60 end:0x02111ea4
-
-src/_ZN8MetalNet16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02111ea4 end:0x02111ea8
-
-src/_ZN8MetalNet6RenderEv.cpp:
-    complete
-    .text start:0x02111ea8 end:0x02111ed0
-
-src/_ZN8MetalNet8BehaviorEv.cpp:
-    complete
-    .text start:0x02111ed0 end:0x02111f40
-
-src/_ZN8MetalNet13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111f40 end:0x02112048
-
-src/MetalNet_Spawn.c:
-    complete
-    .text start:0x02112048 end:0x02112078
+    .text start:0x02111dc4 end:0x02112078
 
 src/actors/d_a_mc_flag.cpp:
     complete

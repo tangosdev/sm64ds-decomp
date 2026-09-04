@@ -19,14 +19,14 @@ _ZN11CastleWater6RenderEv kind:function(arm,size=0x34) addr:0x02111c18
 _ZN11CastleWater8BehaviorEv kind:function(arm,size=0x28) addr:0x02111c4c
 _ZN11CastleWater13InitResourcesEv kind:function(arm,size=0x118) addr:0x02111c74
 CastleWater_Spawn kind:function(arm,size=0x38) addr:0x02111d8c
-_ZN8MetalNetD1Ev kind:function(arm,size=0x44) addr:0x02111dc4
-_ZN8MetalNetD0Ev kind:function(arm,size=0x58) addr:0x02111e08
-_ZN8MetalNet16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111e60
-_ZN8MetalNet16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111ea4
-_ZN8MetalNet6RenderEv kind:function(arm,size=0x28) addr:0x02111ea8
-_ZN8MetalNet8BehaviorEv kind:function(arm,size=0x70) addr:0x02111ed0
-_ZN8MetalNet13InitResourcesEv kind:function(arm,size=0x108) addr:0x02111f40
-MetalNet_Spawn kind:function(arm,size=0x30) addr:0x02112048
+_ZN18daObjMc_Metalnet_cD1Ev kind:function(arm,size=0x44) addr:0x02111dc4
+_ZN18daObjMc_Metalnet_cD0Ev kind:function(arm,size=0x58) addr:0x02111e08
+_ZN18daObjMc_Metalnet_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111e60
+_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111ea4
+_ZN18daObjMc_Metalnet_c6RenderEv kind:function(arm,size=0x28) addr:0x02111ea8
+_ZN18daObjMc_Metalnet_c8BehaviorEv kind:function(arm,size=0x70) addr:0x02111ed0
+_ZN18daObjMc_Metalnet_c13InitResourcesEv kind:function(arm,size=0x108) addr:0x02111f40
+daObjMc_Metalnet_c_classInit kind:function(arm,size=0x30) addr:0x02112048
 _ZN10daMcFlag_cD1Ev kind:function(arm,size=0x30) addr:0x02112078
 _ZN10daMcFlag_cD0Ev kind:function(arm,size=0x44) addr:0x021120a8
 _ZN10daMcFlag_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021120ec
@@ -162,8 +162,7 @@ data_ov009_02113a74 kind:data(any) addr:0x02113a74 ambiguous
 _ZTI18daObjMc_Metalnet_c kind:data(any) addr:0x02113a98
 data_ov009_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 _ZTS18daObjMc_Metalnet_c kind:data(any) addr:0x02113aa4
-MetalNet_SpawnInfo kind:data(any) addr:0x02113abc ambiguous
-_ZTV8MetalNet kind:data(any) addr:0x02113ae0
+g_profile_MC_METALNET kind:data(any) addr:0x02113abc ambiguous
 _ZTV18daObjMc_Metalnet_c kind:data(any) addr:0x02113ae0
 data_ov009_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov009_02113b2c kind:data(any) addr:0x02113b2c ambiguous
