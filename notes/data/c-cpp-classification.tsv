@@ -376,7 +376,6 @@ src/RopeBarrier_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/RotatingClockHand_Spawn.c	WEAK-refs-only	ov035				1		None		-
 src/RotatingCogSmall_Spawn.c	WEAK-refs-only	ov035				1		None		-
 src/daObjFl_Koma_D_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
-src/daObjRc_Kaitendai_c_classInit.c	S1-stores-rom-vptr	ov036			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV18RotatingPlatformRr	-
 src/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/RotatingUpDownPlatformUtm_Spawn.c	WEAK-refs-only	ov091				1		None		-
 src/RotatingUpDownPlatform_Spawn.c	WEAK-refs-only	ov091				1		None		-

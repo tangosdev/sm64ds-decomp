@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov036/daObjRc_Kaitendai_c, hand-curated.
- * 4 function(s), .text 0x02111444..0x02111544.
+ * 5 function(s), .text 0x02111444..0x02111580.
  *
  * Rainbow Ride's spinning disc. It adds no state of its own to daObjKaitendai_c
  * (see include/daObjRc_Kaitendai_c.h) and overrides only the two vtable slots
@@ -20,6 +20,13 @@
  *   [1] 0x02111494  src/_ZN19daObjRc_Kaitendai_cD0Ev.cpp
  *   [2] 0x021114f8  src/_ZN19daObjRc_Kaitendai_c16CleanupResourcesEv.cpp
  *   [3] 0x0211150c  src/_ZN19daObjRc_Kaitendai_c13InitResourcesEv.cpp
+ *   [4] 0x02111544  src/daObjRc_Kaitendai_c_classInit.c
+ *
+ * THE FIFTH IS THE FACTORY. daObjRc_Kaitendai_c_classInit (historical alias
+ * RotatingPlatformRr_Spawn) is the RC_KAITEN registry profile's spawn function
+ * and sits immediately after InitResources in the ROM's own .text order, so it
+ * is part of this TU. It keeps C linkage and is written first here, being the
+ * highest-address member.
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources of
@@ -44,6 +51,38 @@ extern int func_ov002_020b66a8(void *self, void *data);
 extern short data_ov036_02113b18;
 extern short data_ov036_02113b1c;
 extern void *data_ov036_02113b2c;
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h / decl_common.h as the legacy file did --
+   this TU declares in place (see the includes note above) and decl_common.h is
+   known to mis-declare some TUs' own functions as data. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV16daObjKaitendai_c[];
+extern int _ZTV19daObjRc_Kaitendai_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- daObjRc_Kaitendai_c_classInit, 0x02111544, size 0x3c      */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjRc_Kaitendai_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjRc_Kaitendai_c through
+   RTTI, allocation size, vtable identity, and the RC_KAITEN registry profile;
+   later EAD lineage supplies classInit. Exact original spelling is not
+   preserved. Historical alias: RotatingPlatformRr_Spawn.
+
+   Two vptr stores, not one: the inlined daObjKaitendai_c constructor writes its
+   own vptr and this class's write follows it. 800 = 0x320 = the whole object;
+   this class adds no fields. */
+extern "C" int *daObjRc_Kaitendai_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV16daObjKaitendai_c;
+        p[0] = (int)_ZTV19daObjRc_Kaitendai_c;
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

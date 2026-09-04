@@ -9,11 +9,7 @@ src/actors/d_a_obj_rc_buranko.cpp:
 
 src/actors/d_a_obj_rc_kaitendai.cpp:
     complete
-    .text start:0x02111444 end:0x02111544
-
-src/daObjRc_Kaitendai_c_classInit.c:
-    complete
-    .text start:0x02111544 end:0x02111580
+    .text start:0x02111444 end:0x02111580
 
 src/actors/d_a_obj_rc_hane.cpp:
     complete
