@@ -17,7 +17,8 @@
  *   base  daObjKaitendai_c, ov002 0x021091ac
  *
  * NO FIELDS OF ITS OWN, and the factory that says so is NOT the one named after this
- * class. `func_ov047_021113bc`, still unnamed, is the function that allocates 800 =
+ * class. daObjKm3_Kaitendai_c_classInit (historical alias func_ov047_021113bc)
+ * is the function that allocates 800 =
  * 0x320 and stores this class's vtable second. daObjKm3_Kurumajiku_c_classInit
  * (historical alias RickshawBs_Spawn) allocates 816 and
  * builds daObjKm3_Kurumajiku_c: the ov047 "Bs" names were crossed -- this class was

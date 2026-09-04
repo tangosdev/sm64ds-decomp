@@ -7,7 +7,7 @@ _ZN20daObjKm3_Kaitendai_cD1Ev kind:function(arm,size=0x50) addr:0x021112bc
 _ZN20daObjKm3_Kaitendai_cD0Ev kind:function(arm,size=0x64) addr:0x0211130c
 _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111370
 _ZN20daObjKm3_Kaitendai_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111384
-func_ov047_021113bc kind:function(arm,size=0x3c) addr:0x021113bc
+daObjKm3_Kaitendai_c_classInit kind:function(arm,size=0x3c) addr:0x021113bc
 _ZN17daObjKm3_Kuruma_cD1Ev kind:function(arm,size=0x50) addr:0x021113f8
 _ZN17daObjKm3_Kuruma_cD0Ev kind:function(arm,size=0x64) addr:0x02111448
 _ZN17daObjKm3_Kuruma_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114ac
@@ -93,7 +93,7 @@ data_ov047_02112324 kind:data(any) addr:0x02112324
 _ZTI20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112328
 data_ov047_02112334 kind:data(any) addr:0x02112334
 _ZTS20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112340
-data_ov047_02112358 kind:data(any) addr:0x02112358
+g_profile_KM3_KAITENDAI kind:data(any) addr:0x02112358
 _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
 data_ov047_02112408 kind:data(any) addr:0x02112408

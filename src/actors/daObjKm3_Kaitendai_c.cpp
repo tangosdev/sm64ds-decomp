@@ -66,10 +66,12 @@ extern s16 data_ov047_02112324;
 }
 
 /* ROM ordinal 4 -- func_ov047_021113bc, 0x021113bc, size 0x3c */
-// @symbol func_ov047_021113bc
-/* This function is still unnamed in the object table, but its allocation
- * size and vptr stores prove that it constructs daObjKm3_Kaitendai_c. */
-extern "C" daObjKm3_Kaitendai_c *func_ov047_021113bc()
+// @symbol daObjKm3_Kaitendai_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjKm3_Kaitendai_c through
+ * RTTI, allocation size, vtable identity, and the KM3_KAITENDAI registry
+ * profile; later EAD lineage supplies classInit. Exact original spelling is
+ * not preserved. Historical alias: func_ov047_021113bc. */
+extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit()
 {
     daObjKm3_Kaitendai_c *actor =
         static_cast<daObjKm3_Kaitendai_c *>(_ZN7fBase_cnwEj(0x320));
@@ -84,8 +86,12 @@ extern "C" daObjKm3_Kaitendai_c *func_ov047_021113bc()
     return actor;
 }
 
-extern "C" KaitendaiSpawnInfo data_ov047_02112358 = {
-    func_ov047_021113bc,
+/* Reconstructed source-style name: SM64DS proves this descriptor through its
+ * registry role, the KM3_KAITENDAI literal ROM profile ID, and the factory
+ * relocation it carries; later EAD lineage supplies g_profile_. Exact original
+ * spelling is not preserved. Historical alias: data_ov047_02112358. */
+extern "C" KaitendaiSpawnInfo g_profile_KM3_KAITENDAI = {
+    daObjKm3_Kaitendai_c_classInit,
     0x009c,
     0x00e3,
     2,

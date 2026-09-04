@@ -35,7 +35,8 @@
  * UpdateClsnPosAndRot. Its own Render (`func_ov002_020b66f0`) dispatches through
  * the Model at 0xd4. Its own destructor destroys only dBgActor_c's two members. And
  * all five factories -- daObjBk_Ukisima_c_classInit, daObjFl_Koma_D_c_classInit,
- * daObjWc_Obj07_c_Spawn, RotatingPlatformRr_Spawn and `func_ov047_021113bc`,
+ * daObjWc_Obj07_c_Spawn, RotatingPlatformRr_Spawn and
+ * daObjKm3_Kaitendai_c_classInit (historical alias func_ov047_021113bc),
  * which is daObjKm3_Kaitendai_c's real factory -- pass 800 = 0x320 to
  * fBase_c::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
  * a field anywhere in this class or in any of the five leaves.

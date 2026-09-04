@@ -7,8 +7,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "manually corrected contiguous linker run: 0x021112bc..0x021113f8, five functions; build/tu_map.json stopped at 0x021113bc and omitted the immediately adjacent factory func_ov047_021113bc",
-    "func_ov047_021113bc constructs daObjKm3_Kaitendai_c (size 0x320, dBgActor base constructor, then daObjKaitendai and daObjKm3_Kaitendai vptr stores), and the actor descriptor at 0x02112358 relocates directly to it inside this class's RTTI/type-name/vtable data band",
+    "manually corrected contiguous linker run: 0x021112bc..0x021113f8, five functions; build/tu_map.json stopped at 0x021113bc and omitted the immediately adjacent factory daObjKm3_Kaitendai_c_classInit",
+    "daObjKm3_Kaitendai_c_classInit constructs daObjKm3_Kaitendai_c (size 0x320, dBgActor base constructor, then daObjKaitendai and daObjKm3_Kaitendai vptr stores), and the actor descriptor at 0x02112358 relocates directly to it inside this class's RTTI/type-name/vtable data band",
     "one mwccarm 2004/b56 compile emits all five text contributions plus the measured class data; strict partitioned linkcheck proved 5/5 text contributions and the 0x02112334..0x021123fc data tail, and ordinary intact-object production extends that ownership through the compiler-emitted RTTI at 0x02112328"
   ],
   "sections": [
@@ -53,7 +53,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov047_021113bc",
+      "symbol": "daObjKm3_Kaitendai_c_classInit",
       "address": "0x021113bc",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov047_021113bc.c",
@@ -80,7 +80,7 @@
       "evidence": "compiler-emitted type-name string matches the retail bytes; its dedicated section pads to the next four-byte boundary"
     },
     {
-      "symbol": "data_ov047_02112358",
+      "symbol": "g_profile_KM3_KAITENDAI",
       "address": "0x02112358",
       "size": "0x1c",
       "evidence": "typed actor descriptor; factory relocation and all priority, flag, and range words match retail"
@@ -162,7 +162,7 @@
       "source": "0x02112358",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov047_021113bc",
+      "symbol": "daObjKm3_Kaitendai_c_classInit",
       "addend": 0,
       "target_module": "ov047",
       "target_address": "0x021113bc"
@@ -1001,7 +1001,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "func_ov047_021113bc",
+            "symbol": "daObjKm3_Kaitendai_c_classInit",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1078,7 +1078,7 @@
           "_ZTS20daObjKm3_Kaitendai_c",
           "_ZTV20daObjKm3_Kaitendai_c",
           "data_ov047_02112334",
-          "data_ov047_02112358"
+          "g_profile_KM3_KAITENDAI"
         ],
         "deferredOutputs": [
           {
@@ -1102,7 +1102,7 @@
             "size": "0x00000038"
           },
           {
-            "symbol": "func_ov047_021113bc",
+            "symbol": "daObjKm3_Kaitendai_c_classInit",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1130,7 +1130,7 @@
           "_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv",
           "_ZN20daObjKm3_Kaitendai_cD0Ev",
           "_ZN20daObjKm3_Kaitendai_cD1Ev",
-          "func_ov047_021113bc"
+          "daObjKm3_Kaitendai_c_classInit"
         ],
         "deadTextSymbols": [
           "$a",
@@ -1363,7 +1363,7 @@
           },
           {
             "ordinal": 4,
-            "symbol": "func_ov047_021113bc",
+            "symbol": "daObjKm3_Kaitendai_c_classInit",
             "identical": true,
             "relocCount": 4,
             "differences": []
@@ -1440,7 +1440,7 @@
           "_ZTS20daObjKm3_Kaitendai_c",
           "_ZTV20daObjKm3_Kaitendai_c",
           "data_ov047_02112334",
-          "data_ov047_02112358"
+          "g_profile_KM3_KAITENDAI"
         ],
         "deferredOutputs": [
           {
@@ -1464,7 +1464,7 @@
             "size": "0x00000038"
           },
           {
-            "symbol": "func_ov047_021113bc",
+            "symbol": "daObjKm3_Kaitendai_c_classInit",
             "section": ".text",
             "size": "0x0000003c"
           }
@@ -1492,7 +1492,7 @@
           "_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv",
           "_ZN20daObjKm3_Kaitendai_cD0Ev",
           "_ZN20daObjKm3_Kaitendai_cD1Ev",
-          "func_ov047_021113bc"
+          "daObjKm3_Kaitendai_c_classInit"
         ],
         "deadTextSymbols": [
           "$a",
