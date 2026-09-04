@@ -155,19 +155,30 @@ def states():
     it produces images that look like evidence for a state nobody photographed.
     """
     return {
-        # THE MENUS. All three are scene-path boots held open by a frame budget
-        # nothing reaches. SM64DS_SCENE_WINDOW=1 is required alongside a
+        # THE MENUS. All four are scene-path boots held open by a frame budget
+        # nothing reaches, and all four are FROZEN by SM64DS_SCENE_MENU once
+        # their screen has formed. The freeze is not decoration: measured
+        # unfrozen, two launches of the title differ in 4.5 percent of the
+        # frame and the star select in 0.3 to 0.7 percent, which is the screen
+        # animating, and the HUD isolation below subtracts one capture from
+        # another and means nothing between two different frames. The minigame
+        # menu was already still (0.000 percent) and is frozen anyway, so every
+        # row in this table is measured the same way. SM64DS_SCENE_WINDOW=1 is required alongside a
         # SCENE_FRAMES budget: the scene path is windowed only when
         # SCENE_FRAMES is UNSET unless SCENE_WINDOW says otherwise
         # (walk_window.cpp:6508-6518).
         "title":      {"SM64DS_SCENE": "1", "SM64DS_SCENE_WINDOW": "1",
-                       "SM64DS_SCENE_FRAMES": "100000"},
+                       "SM64DS_SCENE_FRAMES": "100000",
+                       "SM64DS_SCENE_MENU": "120"},
         "starselect": {"SM64DS_SCENE": "4", "SM64DS_SCENE_WINDOW": "1",
-                       "SM64DS_SCENE_FRAMES": "100000"},
+                       "SM64DS_SCENE_FRAMES": "100000",
+                       "SM64DS_SCENE_MENU": "120"},
         "mgmenu":     {"SM64DS_SCENE": "5", "SM64DS_SCENE_WINDOW": "1",
-                       "SM64DS_SCENE_FRAMES": "100000"},
+                       "SM64DS_SCENE_FRAMES": "100000",
+                       "SM64DS_SCENE_MENU": "120"},
         "vsmenu":     {"SM64DS_SCENE": "6", "SM64DS_SCENE_WINDOW": "1",
-                       "SM64DS_SCENE_FRAMES": "100000"},
+                       "SM64DS_SCENE_FRAMES": "100000",
+                       "SM64DS_SCENE_MENU": "120"},
 
         # THE FILE SELECT IS REACHED BY SM64DS_SKIP_MENU, NOT SM64DS_TITLE_ENTRY.
         # TITLE_ENTRY only ARMS the bridge that lets a picked file fall through
@@ -176,7 +187,8 @@ def states():
         # file select without picking a file (title_entry.cpp:567-655). The
         # screen lands around frame 550-600, so this row needs a long wait.
         "fileselect": {"SM64DS_SCENE_WINDOW": "1", "SM64DS_SCENE_FRAMES": "100000",
-                       "SM64DS_SKIP_MENU": "1"},
+                       "SM64DS_SKIP_MENU": "1",
+                       "SM64DS_SCENE_MENU": "700"},
 
         # THE COURSE HUD. Level 6 (Bob-omb Battlefield) and not the castle
         # family, because RenderCoinCount takes an early-out on course 0x1d and
@@ -504,8 +516,8 @@ def judge(out, st, meta):
                 rows.append(res)
                 continue
             res["unstable_px"] = int(unstable.sum())
-            res["unstable_pct"] = round(100.0 * unstable.mean(), 4)
-            res["static"] = res["unstable_pct"] <= 0.1
+            res["unstable_pct"] = round(float(unstable.mean()) * 100.0, 4)
+            res["static"] = bool(res["unstable_pct"] <= 0.1)
             if not res["static"]:
                 res["verdict"] = "DYNAMIC - not scored"
                 rows.append(res)
@@ -513,9 +525,9 @@ def judge(out, st, meta):
             trust = ~unstable
 
             dpi, uni_n, uni_w, margin = geom(nat_img.shape, i1.shape)
-            res["dpi"] = dpi
+            res["dpi"] = float(dpi)
             res["uni_native"], res["uni_wide"] = uni_n, uni_w
-            res["margin"] = margin
+            res["margin"] = int(margin)
             expect = uni_w / uni_n
 
             ib = load(fb)
@@ -545,7 +557,7 @@ def judge(out, st, meta):
             tb = tear_pairs(eb, margin)
             res["tears_fix"], res["tears_band"] = tf, tb
             res["tear_fix"], res["tear_band"] = bool(tf), bool(tb)
-            res["clip"] = any(e["x0"] <= 0 or e["x1"] >= W - 1 for e in ef)
+            res["clip"] = bool(any(e["x0"] <= 0 or e["x1"] >= W - 1 for e in ef))
 
             # STRETCH. Every element is composited at ONE uniform scale, so the
             # widest element at the wide aspect must be the widest at native
@@ -555,11 +567,11 @@ def judge(out, st, meta):
             # what the widest measures.
             wn = max((e["w"] for e in nat), default=0)
             wf = max((e["w"] for e in ef), default=0)
-            res["widest_native"], res["widest_wide"] = wn, wf
+            res["widest_native"], res["widest_wide"] = int(wn), int(wf)
             res["expect_ratio"] = round(expect, 3)
             res["ratio"] = round(wf / wn, 3) if wn else None
-            res["stretch"] = (res["ratio"] is not None
-                              and abs(res["ratio"] - expect) > 0.12)
+            res["stretch"] = bool(res["ratio"] is not None
+                                  and abs(res["ratio"] - expect) > 0.12)
             rows.append(res)
 
     hdr = (f"{'state':<12}{'aspect':<8}{'stat':<6}{'elem':<6}"
