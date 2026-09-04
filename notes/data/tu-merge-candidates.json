@@ -6848,18 +6848,18 @@
    "start": "0x21111a0",
    "end": "0x2111444",
    "classes": [
-    "SwingingPlatform"
+    "daObjRcBuranko_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN16SwingingPlatformD1Ev.cpp",
-    "src/_ZN16SwingingPlatformD0Ev.c",
+    "src/_ZN16daObjRcBuranko_cD1Ev.cpp",
+    "src/_ZN16daObjRcBuranko_cD0Ev.c",
     "src/func_ov036_0211123c.c",
-    "src/_ZN16SwingingPlatform16CleanupResourcesEv.cpp",
-    "src/_ZN16SwingingPlatform6RenderEv.cpp",
-    "src/_ZN16SwingingPlatform8BehaviorEv.cpp",
-    "src/_ZN16SwingingPlatform13InitResourcesEv.cpp",
+    "src/_ZN16daObjRcBuranko_c16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjRcBuranko_c6RenderEv.cpp",
+    "src/_ZN16daObjRcBuranko_c8BehaviorEv.cpp",
+    "src/_ZN16daObjRcBuranko_c13InitResourcesEv.cpp",
     "src/daObjRcBuranko_c_classInit.c"
    ],
    "ext_mix": {

@@ -254,7 +254,7 @@ SKIP SlidingPlatformRr: ov091:0x2132448 already claimed by SlidingPlatformWf (vt
 AMBIG actor 125 SHIP_WING: ['ov036', 'ov026'] -> ov036
 AMBIG actor 126 DONUT_BLOCK: ['ov036', 'ov026'] -> ov036
 AMBIG actor 127 SWINGING_PLATFORM: ['ov036', 'ov009'] -> ov036
-NOVTABLE actor 127 SwingingPlatform (alloc=0x320)
+NOVTABLE actor 127 daObjRcBuranko_c (alloc=0x320)
 SKIP SeesawRr: ov095:0x21374fc already claimed by SeesawBob (vtable alloc=0x328)
 SKIP SeesawRr: ov095:0x2135b74 already claimed by SeesawBob (vtable slot 0)
 SKIP SeesawRr: ov095:0x21359c4 already claimed by SeesawBob (vtable slot 3)

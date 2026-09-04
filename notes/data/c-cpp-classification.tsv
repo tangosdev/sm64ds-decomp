@@ -480,7 +480,7 @@ src/SubVec3.c	PURE-C	arm9				1		None		-
 src/SublevelToLevel.c	PURE-C	arm9				1		None		-
 src/daObjWlSubmarine_c_classInit.c	S1-stores-rom-vptr	ov026			stores _ZTV9Submarine	1		None	_ZTV9Submarine	-
 src/SurfaceInfo_TestFlag0x20.c	PURE-C	arm9				1		None		-
-src/daObjRcBuranko_c_classInit.c	S1-stores-rom-vptr	ov036			stores _ZTV16SwingingPlatform	1		None	_ZTV16SwingingPlatform	-
+src/daObjRcBuranko_c_classInit.c	S1-stores-rom-vptr	ov036			stores _ZTV16daObjRcBuranko_c	1		None	_ZTV16daObjRcBuranko_c	-
 src/daObjWc_Obj04_c_classInit.c	WEAK-refs-only	ov029				1		None		-
 src/daObjC0_Switch_c_Spawn.c	S1-stores-rom-vptr	ov012			stores _ZTV16daObjC0_Switch_c	1		None	_ZTV16daObjC0_Switch_c	-
 src/Swoop_Spawn.c	WEAK-refs-only	ov065				1		None		-
@@ -781,7 +781,7 @@ src/_ZN16MeshColliderBaseD1Ev.c	DTOR-ONLY	arm9	dBgW	MeshColliderBase/dBgW	_ZN16M
 src/_ZN16MeshColliderBaseD2Ev.c	DTOR-ONLY	arm9		MeshColliderBase	_ZN16MeshColliderBaseD2Ev	1		True	_ZTV16MeshColliderBase	-
 src/_ZN16SpinningPlatformD0Ev.c	DTOR-ONLY	ov035	daObjCtMecha11_c	SpinningPlatform/daObjCtMecha11_c	_ZN16SpinningPlatformD0Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN16SpinningPlatformD1Ev.c	DTOR-ONLY	ov035	daObjCtMecha11_c	SpinningPlatform/daObjCtMecha11_c	_ZN16SpinningPlatformD1Ev	1		True	_ZTV10dBgActor_c	-
-src/_ZN16SwingingPlatformD0Ev.c	DTOR-ONLY	ov036	daObjRcBuranko_c	SwingingPlatform/daObjRcBuranko_c	_ZN16SwingingPlatformD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16SwingingPlatform	-
+src/_ZN16daObjRcBuranko_cD0Ev.c	DTOR-ONLY	ov036	daObjRcBuranko_c	daObjRcBuranko_c/daObjRcBuranko_c	_ZN16daObjRcBuranko_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjRcBuranko_c	-
 src/_ZN16daObjFallBlock_cD0Ev.c	DTOR-ONLY	ov098	daObjBlockS_c	daObjBlockS_c/daObjFallBlock_c	_ZN16daObjFallBlock_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjFallBlock_c	-
 src/_ZN16daObjFallBlock_cD1Ev.c	DTOR-ONLY	ov098	daObjBlockS_c	daObjBlockS_c/daObjFallBlock_c	_ZN16daObjFallBlock_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjFallBlock_c	-
 src/_ZN16daObjRc_Dorifu_cD0Ev.c	DTOR-ONLY	ov036	daObjRc_Dorifu_c	daObjRc_Dorifu_c	_ZN16daObjRc_Dorifu_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13daObjDorifu_c/_ZTV16daObjRc_Dorifu_c	-
