@@ -128,12 +128,39 @@ touched, and no slice manifest was edited.
 
 ## 5. Build and battery
 
-`port/build-port.cmd` (all guards) and `python port/tools/battery.py
---skip-build` were run in this worktree, TMP/TEMP under
-`C:/tmp/hud-leaves/build/tmp`. See the tip-line report for the exact
-outcome; no linkage change was expected (the three newly-`complete` bodies
-were already reachable/verified source, not new content, and none of the
-eight are seated in `port/hal` or a slice manifest in this lane).
+`port/build-port.cmd` (all guards) was run in this worktree, TMP/TEMP under
+`C:/tmp/hud-leaves/build/tmp`: 26343/26343 build steps, `walk_window.exe`
+and `smoke_player.exe` linked, `dsstate_guard` OK, `alternatename_guard` OK
+(0 new defeats), `gxband_guard` OK, `tailjump_guard` OK (forms OK). One
+earlier attempt hit four spurious `cl.exe` FAILED compiles with no emitted
+diagnostic text; a clean rerun with full (non-truncated) logging built
+green end to end, so that was a transient flake (this box is known to see
+antivirus interference with fresh compiler invocations), not a real error --
+confirmed by the rebuild reusing the ninja cache and reaching
+26343/26343 cleanly.
+
+`python port/tools/battery.py --skip-build` needed one more wiring step
+this lane's setup had not covered: a fresh worktree has no `build/assets/`
+(gitignored, holds the asset catalog `smoke_actor.exe` reads), so the first
+run died with `smoke_actor.exe: FAIL rc=3221226505` (`STATUS_STACK_BUFFER_
+OVERRUN`) -- exactly the false-fault the `decomp-worktree` skill's section 5
+warns about, not a code fault. Junctioned `build/assets` from the cons main
+checkout (`files.tsv` sha256 verified identical to the main tree's) and
+reran:
+
+    battery: ALL GREEN
+    linkage: 9488 (83.8%)
+    ptr_audit: 0 unhosted code pointers
+    shipcfg build: ok, walk_window.exe linked in build\port-kit (PORT_ROM_CLEAN, static CRT)
+    shipcfg selftest: ok, rc=0 and walk_window_selftest.bmp written
+    skips: level 27 without TTC_MOVING_BEAM, level 45 without GOOMBOSS (both pre-existing, owned by the decomp, unrelated to this lane)
+
+No linkage change from this lane: the `complete` markers in section 4 only
+change which object (`dsd`-supplied ROM bytes vs `mwccarm`-compiled source)
+backs those three address ranges in the ARM9/overlay ROM rebuild -- a
+byte-identical substitution once matched, per section 3 -- and have no
+effect on the separate MSVC port/host build `battery.py` measures. None of
+the eight bodies is seated in `port/hal` or a slice manifest in this lane.
 
 ## 6. What is NOT in this lane
 
