@@ -3,8 +3,8 @@
   "codegen_hacks": {
     "cv_launder": 4,
     "cv_launder_sites": 7,
-    "extern_vtable": 160,
-    "extern_vtable_classes": 163,
+    "extern_vtable": 161,
+    "extern_vtable_classes": 164,
     "inline_asm": 13,
     "launder_or_forced": 209,
     "launder_sites": 438
@@ -41,27 +41,27 @@
       },
       "method": {
         "draft": 10,
-        "migrated": 2815,
+        "migrated": 2820,
         "unmigrated": 115
       }
     },
     "cpp_still_handspelled": 57,
     "mangled_c": 69,
-    "mangled_cpp": 3767,
-    "mangled_total": 3836,
+    "mangled_cpp": 3772,
+    "mangled_total": 3841,
     "nonmatching_drafts": 10,
     "unmigrated_total": 126
   },
   "shadow_decls": {
     "local_body_no_include": 1040,
     "local_body_no_include_cpp": 400,
-    "local_struct_body": 1889,
-    "local_struct_body_cpp": 1014,
-    "pad_layout": 465
+    "local_struct_body": 1885,
+    "local_struct_body_cpp": 1010,
+    "pad_layout": 462
   },
   "totals": {
-    "c_extension": 6011,
-    "cpp_extension": 4473,
-    "src_files": 10484
+    "c_extension": 6006,
+    "cpp_extension": 4448,
+    "src_files": 10454
   }
 }
