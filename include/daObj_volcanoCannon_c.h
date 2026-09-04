@@ -1,10 +1,10 @@
 /* daObj_volcanoCannon_c, reconstructed from its factory, destructor pair, vtable/RTTI,
  * collision member, state dispatcher and five matched methods.
  *
- * The cartridge's RTTI calls this class daObj_volcanoCannon_c while the
- * configured function names use daObj_volcanoCannon_c. The English spelling is kept as
- * the compatibility-facing C++ class; the ROM-owned metadata is audited
- * independently at _ZTI21daObj_volcanoCannon_c / _ZTV21daObj_volcanoCannon_c.
+ * The name is the cartridge's own: the ROM RTTI string at ov022:0x02114440
+ * spells 21daObj_volcanoCannon_c, and the class was carried under the coined
+ * name VolcanoFire until that string settled it. The registry profile is
+ * OBJ_VOLCANO_CANNON, whose descriptor sits at 0x02114458.
  *
  * daObj_volcanoCannon_c_classInit allocates 0x11c bytes, constructs dActor_c, then dCcAc_c at
  * +0xd4. The D1 body destroys that member and then the base, closing the same

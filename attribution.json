@@ -1468,6 +1468,16 @@
     "src/actors/d_a_obj_km2_agaru.cpp#_ZN16daObjKm2_Agaru_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/d_a_obj_km2_agaru.cpp#func_ov045_021114a8": "github-actions[bot]",
     "src/actors/d_a_obj_km2_agaru.cpp#func_ov045_021114c8": "github-actions[bot]",
-    "src/actors/d_a_obj_km2_agaru.cpp#daObjKm2_Agaru_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_obj_km2_agaru.cpp#daObjKm2_Agaru_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_cD0Ev": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#func_ov022_02112654": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#func_ov022_021126ac": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#func_ov022_02112710": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE": "andrewboudreau",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#_ZN21daObj_volcanoCannon_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_volcano_cannon.cpp#daObj_volcanoCannon_c_classInit": "github-actions[bot]"
   }
 }
