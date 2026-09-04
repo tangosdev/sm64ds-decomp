@@ -6000,7 +6000,7 @@ src/func_ov027_02111680.c	P2-vtable-only	ov027	daIDonketu_c	daIDonketu_c	vtable 
 src/func_ov027_02111a28.c	WEAK-refs-only	ov027				1		None		-
 src/func_ov027_02111c48.c	WEAK-refs-only	ov027				1		None		-
 src/func_ov027_02111d70.c	PURE-C	ov027				1		None		-
-src/func_ov027_0211207c.c	S1-stores-rom-vptr	ov027			stores _ZTV10daPgDfdr_c	1		None	_ZTV10daPgDfdr_c	-
+src/daPgDfdr_c_classInit.c	S1-stores-rom-vptr	ov027			stores _ZTV10daPgDfdr_c	1		None	_ZTV10daPgDfdr_c	-
 src/func_ov027_02112158.c	WEAK-refs-only	ov027				1		None		-
 src/func_ov027_021123b0.c	PURE-C	ov027				1		None		-
 src/func_ov027_02112424.c	WEAK-refs-only	ov027				1		None		-

@@ -104,7 +104,7 @@ src/_ZN10daPgDfdr_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111eb4 end:0x0211207c
 
-src/func_ov027_0211207c.c:
+src/daPgDfdr_c_classInit.c:
     complete
     .text start:0x0211207c end:0x021120c4
 
