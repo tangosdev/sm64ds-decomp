@@ -155,26 +155,41 @@ sd_u32 sdat_file_id_of(const void *p)
 // (ARM7, ours). They do not otherwise interact -- the ARM7 image contains no
 // SDAT parsing at all, and the allocator's only caller is the note-on path.
 //
-// MEASURED, on this tree, with the opening harness (SM64DS_SCENE=1 +
-// SM64DS_TITLE_ENTRY=1, touch past the title at f720 and the file-select at
-// f800, 3000 frames, SM64DS_NO_AUDIO=1 so the mixer is clocked at exactly
-// 1/60 s per frame and the run is deterministic). Counts are from
-// SM64DS_VOICE_TRACE=1: "chan N start" is a note that got a channel,
-// "chan ALLOC FAILED" is a note that got nothing and is simply not heard.
-// The cutscene column is the 3000-frame run minus an 850-frame run that
-// stops before the cutscene begins, so it is the opening's own share:
+// MEASURED with port/tools/opening_audio_measure.py, which IS the recipe --
+// the numbers below cannot be quoted without it, because an earlier version of
+// this measurement was written down as a list of environment variables and
+// turned out to depend on the worktree's leftover save file. The opening only
+// plays down the NEW FILE path, so a tree that has had the battery run against
+// it boots to the title and stays there. The script forces the save absent and
+// refuses to print anything unless the log says a cutscene script is running.
 //
-//                          cutscene: notes sounded / notes dropped
-//   cpr discarded (before)              652 / 384
-//   cpr seated (this commit)            820 / 216
-//   cpr inverted (127-cpr, control)     605 / 431
+// Counts are note-ons: one [pd] on line per note that got a mixer channel, one
+// [pd] off line per note that got nothing and is simply not heard.
+// SM64DS_NO_AUDIO=1 clocks the mixer at exactly 1/60 s per video frame, so the
+// run repeats exactly. Both builds are handed the SAME 1449 note-ons.
 //
-// The inverted row is the detector control: it breaks the same byte in the
-// other direction and the dropped-note count moves the other way, so the
-// 216 is a real reading and not a counter that always says the same thing.
-// Before, EVERY voice in the opening ran at 64..69 -- the trace histogram has
-// no value above 69 in it -- because 64 was the hardcoded default and the
-// cpr byte never reached the player. After, the SDAT's own 96 and 127 appear.
+//                                       sounded / dropped
+//   whole 4000-frame run   (1449 notes)
+//     cons baseline                        1038 / 411   (28.4%)
+//     this branch                          1140 / 309   (21.3%)
+//   title and file-select only, 700 frames  (272 notes)
+//     cons baseline                         264 / 8     (2.9%)
+//     this branch                           234 / 38    (14.0%)
+//   the cutscene itself, by subtraction    (1177 notes)
+//     cons baseline                         774 / 403   (34.2%)
+//     this branch                           906 / 271   (23.0%)
+//
+// So the opening cutscene gains 132 notes it used to lose, and the title and
+// file-select LOSES 30 it used to keep. THE TITLE REGRESSION IS REAL AND IS
+// NOT WAVED AWAY AS "hardware-correct": it is what the ROM's own arithmetic
+// produces, because the title's music sits at cpr 64 while the effects over it
+// sit at cpr 96, and 96+64 outranks 64+64. Whether that trade is worth
+// shipping is a judgement for a listener, not for this comment.
+//
+// No track goes silent in any of these runs -- every track that loses notes
+// also keeps some, so a losing part THINS rather than disappearing. It does
+// thin badly: the opening's busiest music track drops 30 note-ons in a row at
+// its worst, which is a real hole, not a texture change.
 //
 // THE ROM SAYS THIS DIRECTLY, INDEPENDENT OF THE PORT. Reading the cpr byte
 // out of extracted/dsd/files/data/sound_data.sdat:
