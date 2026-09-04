@@ -210,7 +210,7 @@ ov016 0x211260c  n=8  L=185  ShipUp           CONF1
 **B7 — R1 · 8 TUs / 63 files / net −55 / 1,440 lines**
 ```
 ov016 0x2112ff8  n=8  L=233  SlidingBox           CONF2 pcov=3
-ov017 0x21111a0  n=7  L=159  ShipWater            CONF2 WHOLEMOD pcov=2
+ov017 0x21111a0  n=7  L=159  daObjKsWater_c            CONF2 WHOLEMOD pcov=2
 ov022 0x21111a0  n=9  L=240  VolcanoRing          CONF1
 ov022 0x21116c4  n=9  L=160  FloatOnLavaPlatform  CONF2
 ov022 0x2112130  n=7  L=135  LavaPlank            CONF2

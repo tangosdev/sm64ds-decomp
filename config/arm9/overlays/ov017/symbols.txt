@@ -1,9 +1,9 @@
-_ZN9ShipWaterD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
-_ZN9ShipWaterD0Ev kind:function(arm,size=0x60) addr:0x021111ec
-_ZN9ShipWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211124c
-_ZN9ShipWater6RenderEv kind:function(arm,size=0x34) addr:0x02111290
-_ZN9ShipWater8BehaviorEv kind:function(arm,size=0xfc) addr:0x021112c4
-_ZN9ShipWater13InitResourcesEv kind:function(arm,size=0xc0) addr:0x021113c0
+_ZN14daObjKsWater_cD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN14daObjKsWater_cD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN14daObjKsWater_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211124c
+_ZN14daObjKsWater_c6RenderEv kind:function(arm,size=0x34) addr:0x02111290
+_ZN14daObjKsWater_c8BehaviorEv kind:function(arm,size=0xfc) addr:0x021112c4
+_ZN14daObjKsWater_c13InitResourcesEv kind:function(arm,size=0xc0) addr:0x021113c0
 daObjKsWater_c_classInit kind:function(arm,size=0x38) addr:0x02111480
 data_ov017_021114b8 kind:data(any) addr:0x021114b8
 data_ov017_021114bc kind:data(any) addr:0x021114bc
@@ -73,7 +73,6 @@ _ZTI14daObjKsWater_c kind:data(any) addr:0x02111bb4
 _ZTS14daObjKsWater_c kind:data(any) addr:0x02111bc0
 g_profile_KS_MIZU kind:data(any) addr:0x02111bd4 ambiguous
 data_ov017_02111be0 kind:data(any) addr:0x02111be0 ambiguous
-_ZTV9ShipWater kind:data(any) addr:0x02111bf8
 _ZTV14daObjKsWater_c kind:data(any) addr:0x02111bf8
 data_ov017_02111c20 kind:data(any) addr:0x02111c20 ambiguous
 data_ov017_02111c54 kind:data(any) addr:0x02111c54 ambiguous
