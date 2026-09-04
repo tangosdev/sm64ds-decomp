@@ -785,7 +785,6 @@ extern int _ZTV9BlueFlame[];
 extern int _ZTV9Butterfly[];
 extern int _ZTV10daChRoom_c[];
 extern int _ZTV12daDossyCap_c[];
-extern int _ZTV9HugeWater[];
 extern int _ZTV9KoopaFlag[];
 extern int _ZTV9LakituBro[];
 extern int _ZTV9MontyMole[];

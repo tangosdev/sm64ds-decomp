@@ -753,4 +753,4 @@ same offsets:
   `dBgActor_c::mClsnMat` (0x2ec + 0x14), and naming a matrix element from a single
   `s16` read would be an invention.
 * The classes with no fields of their own — `MetalNet`, `IceSheet`,
-  `FortressTower`, `HugeWater` — have nothing left to name.
+  `FortressTower`, `daObjTdWater_c` — have nothing left to name.

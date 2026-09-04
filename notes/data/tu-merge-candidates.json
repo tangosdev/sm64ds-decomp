@@ -7404,17 +7404,17 @@
    "start": "0x2112698",
    "end": "0x21128f0",
    "classes": [
-    "HugeWater"
+    "daObjTdWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9HugeWaterD1Ev.cpp",
-    "src/_ZN9HugeWaterD0Ev.cpp",
-    "src/_ZN9HugeWater16CleanupResourcesEv.cpp",
-    "src/_ZN9HugeWater6RenderEv.cpp",
-    "src/_ZN9HugeWater8BehaviorEv.cpp",
-    "src/_ZN9HugeWater13InitResourcesEv.cpp",
+    "src/_ZN14daObjTdWater_cD1Ev.cpp",
+    "src/_ZN14daObjTdWater_cD0Ev.cpp",
+    "src/_ZN14daObjTdWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjTdWater_c6RenderEv.cpp",
+    "src/_ZN14daObjTdWater_c8BehaviorEv.cpp",
+    "src/_ZN14daObjTdWater_c13InitResourcesEv.cpp",
     "src/daObjTdWater_c_classInit.c"
    ],
    "ext_mix": {

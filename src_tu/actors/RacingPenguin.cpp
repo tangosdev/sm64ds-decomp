@@ -386,11 +386,11 @@ extern "C" {
 /* decl_common.h's void* views of these are visible file-wide; Release takes the
  * pointer as void*, byte-identical to the legacy file's typed view */
 void _ZN13SharedFilePtr7ReleaseEv(void *self);
-extern void* _ZN9HugeWater6RenderEv[7];
+extern void* _ZN14daObjTdWater_c6RenderEv[7];
 int _ZN13RacingPenguin16CleanupResourcesEv(void){
   int i;
   _ZN13SharedFilePtr7ReleaseEv(&data_ov019_02113498);
-  for(i=0;i<7;i++) _ZN13SharedFilePtr7ReleaseEv(_ZN9HugeWater6RenderEv[i]);
+  for(i=0;i<7;i++) _ZN13SharedFilePtr7ReleaseEv(_ZN14daObjTdWater_c6RenderEv[i]);
   for(i=0;i<3;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov019_0211277c[i]);
   return 1;
 }

@@ -14,7 +14,7 @@
  * dBgActor_c's constructor, and installs this table. The empty derived
  * destructor correspondingly lets the compiler destroy the inherited
  * dBgActor_c object. The adjacent 0x021139a4 table is a different class:
- * RTTI names it daObjTdWater_c and its slots point into HugeWater's TU.
+ * RTTI names it daObjTdWater_c and its slots point into daObjTdWater_c's TU.
  */
 struct daObjTdFuta_c : dBgActor_c {
 
