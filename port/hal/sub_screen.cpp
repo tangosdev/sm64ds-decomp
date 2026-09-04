@@ -1368,21 +1368,6 @@ void hal_obj_parity_probe(void)
         if (!a0 && !a1 && !a2) continue;
         if ((a0 & 0xFF) == 0xC0 && !a1 && !a2) { ++hpark; continue; }
         ++hc;
-        if (std::getenv("SM64DS_STAR_AFF_PROBE")) {
-            const int aff = (a0 & 0x100) ? 1 : 0;
-            int pa = 256, pb = 0, pc = 0, pd = 256;
-            if (aff) {
-                const int grp = (a1 >> 9) & 0x1F;
-                pa = (short)*(volatile unsigned short *)(0x07000000u + (grp*4+0)*8u + 6);
-                pb = (short)*(volatile unsigned short *)(0x07000000u + (grp*4+1)*8u + 6);
-                pc = (short)*(volatile unsigned short *)(0x07000000u + (grp*4+2)*8u + 6);
-                pd = (short)*(volatile unsigned short *)(0x07000000u + (grp*4+3)*8u + 6);
-            }
-            std::fprintf(stderr, "[staraffE] i=%d aff=%d shape=%d size=%d "
-                         "x=%d y=%d tile=%u a0=%04x a1=%04x pa=%d pb=%d pc=%d pd=%d\n",
-                         i, aff, (a0>>14)&3, (a1>>14)&3, (int)(a1&0x1FF),
-                         (int)(a0&0xFF), (unsigned)(a2&0x3FF), a0, a1, pa, pb, pc, pd);
-        }
         if ((size_t)hn < sizeof hw - 32)
             hn += std::snprintf(hw + hn, sizeof hw - (size_t)hn,
                                 " %d:(%d,%d,t%u)", i, (int)(a1 & 0x1FF),

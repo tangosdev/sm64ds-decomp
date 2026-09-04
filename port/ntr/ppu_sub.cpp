@@ -514,12 +514,6 @@ void raster_obj(uint32_t dispcnt) {
             pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6);
             pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
         }
-        if (std::getenv("SM64DS_STAR_AFF_PROBE")) {
-            std::fprintf(stderr, "[staraff] i=%d aff=%d shape=%d size=%d w=%d h=%d "
-                         "bw=%d bh=%d x=%d y=%d dbl=%d tile=%u pal=%u "
-                         "pa=%d pb=%d pc=%d pd=%d\n", i, affine?1:0, shape, size, w, h,
-                         bw, bh, x, y, dbl?1:0, tile, pal, pa, pb, pc, pd);
-        }
 
         for (int sy = 0; sy < bh; ++sy) {
             const int py = y + sy;
