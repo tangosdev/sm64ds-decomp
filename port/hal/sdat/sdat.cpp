@@ -118,6 +118,27 @@ sd_u32 sdat_file_id_of(const void *p)
 //
 // seqBase is the file's DATA base (what the START command carries in b); the
 // SSAR case reads the entry table beside it, the SSEQ case the INFO record.
+//
+// MEASURED, on this tree, with the opening harness (SM64DS_SCENE=1 +
+// SM64DS_TITLE_ENTRY=1, touch past the title at f720 and the file-select at
+// f800, 3000 frames, SM64DS_NO_AUDIO=1 so the mixer is clocked at exactly
+// 1/60 s per frame and the run is deterministic). Counts are from
+// SM64DS_VOICE_TRACE=1: "chan N start" is a note that got a channel,
+// "chan ALLOC FAILED" is a note that got nothing and is simply not heard.
+// The cutscene column is the 3000-frame run minus an 850-frame run that
+// stops before the cutscene begins, so it is the opening's own share:
+//
+//                          cutscene: notes sounded / notes dropped
+//   cpr discarded (before)              652 / 384
+//   cpr seated (this commit)            820 / 216
+//   cpr inverted (127-cpr, control)     605 / 431
+//
+// The inverted row is the detector control: it breaks the same byte in the
+// other direction and the dropped-note count moves the other way, so the
+// 216 is a real reading and not a counter that always says the same thing.
+// Before, EVERY voice in the opening ran at 64..69 -- the trace histogram has
+// no value above 69 in it -- because 64 was the hardcoded default and the
+// cpr byte never reached the player. After, the SDAT's own 96 and 127 appear.
 int sdat_seq_priority(const sd_u8 *seqBase, sd_u32 startOff)
 {
     if (!seqBase || !g_sdat.base || !g_sdat.info) return 64;
