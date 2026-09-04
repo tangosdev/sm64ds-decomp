@@ -18,7 +18,7 @@ string or linker symbol that proves the spelling.
 Several negative results are equally important:
 
 - the current arm9 TU map is under-segmented into one very large interval, so it
-  cannot select `d_sc_boot.cpp` or `d_sc_stage.cpp`;
+  cannot select `d_s_boot.cpp` or `d_s_stage.cpp`;
 - the recovered Boo TU has multiple RTTI filename stems;
 - the recovered Book TU contains both `daBook_c` and `daBookGen_c`, so the two
   mechanical candidates cannot both be the TU filename;
@@ -39,7 +39,7 @@ The extractor combines:
 1. text intervals and boundary confidence from `tools/tu_map.py`;
 2. RTTI class-family stems from `tools/tu_names.py`;
 3. profiles and factories from the registry extractor;
-4. later EAD `d_a*` / `d_sc*` source organization as lineage evidence.
+4. later EAD `d_a*` / `d_s*` source organization as lineage evidence.
 
 `tools/tu_names.py` explicitly emits hypotheses.  No game-code `__FILE__`
 strings were found that independently name these SM64DS files.  A unique stem
@@ -86,9 +86,9 @@ claim about the whole link.
 
 | Profile | Current intake file | Recovered TU | Class-derived candidate | Selected probable filename | Order / lineage evidence | Confidence | Contradiction or limitation |
 |---|---|---|---|---|---|---|---|
-| `BOOT` | `src/dScBoot_c_classInit.c` | arm9 `0x020049f0..0x020707a4` | `d_sc_boot.cpp` | — | later `d_sc_*` family only | — | arm9 interval contains many unrelated families |
-| `STAGE` | `src/dScStage_c_classInit.cpp` | arm9 `0x020049f0..0x020707a4` | `d_sc_stage.cpp` | — | later `d_sc_*` family only | — | same under-segmented arm9 interval as `BOOT` |
-| `MINIGAME` | `src/func_ov005_020c21ec.c` | ov005 `0x020c21ec..0x020c2250` | `d_sc_mini_gm.cpp` | `d_sc_mini_gm.cpp` | later `d_sc_*`; no RTTI stem in interval | B- | one-function, factory-only interval |
+| `BOOT` | `src/dScBoot_c_classInit.c` | arm9 `0x020049f0..0x020707a4` | `d_s_boot.cpp` | — | later `d_s_*` family only | — | arm9 interval contains many unrelated families |
+| `STAGE` | `src/dScStage_c_classInit.cpp` | arm9 `0x020049f0..0x020707a4` | `d_s_stage.cpp` | — | later `d_s_*` family only | — | same under-segmented arm9 interval as `BOOT` |
+| `MINIGAME` | `src/func_ov005_020c21ec.c` | ov005 `0x020c21ec..0x020c2250` | `d_s_mini_gm.cpp` | `d_s_mini_gm.cpp` | later `d_s_*`; no RTTI stem in interval | B- | one-function, factory-only interval |
 | `CANNON_SHUTTER` | `src/actors/daObjCannonShutter_c.cpp` | ov002 `0x020bc8f4..0x020bccfc` | `d_a_obj_cannon_shutter.cpp` | same | unique `d_a_obj_*` stem | B- | right boundary is medium |
 | `C1_TRAP` | `src/actors/daObjC1_Trap_c.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |
 | `STAR_CAMERA` | `src/StarCamera_Spawn.cpp` | ov002 `0x020e6c40..0x020ebf8c` | — | — | TU contains a broader Star family | — | no most-derived RTTI class for the factory |
@@ -103,9 +103,9 @@ claim about the whole link.
 | `KINOKO_CREATE_TAG` | `src/actors/daObjKinokoTag_c.cpp` | ov002 `0x020b46a0..0x020b4a70` | `d_a_obj_kinoko_tag.cpp` | same | unique stem and high/high boundaries | B | two same-class factories weaken source organization inference |
 | `SHOOT_BOOK` | `src/BookShot_Spawn.c` | ov020 `0x021111a0..0x02112938` | `d_a_book.cpp` | — | class-family candidate | — | TU also yields `d_a_book_gen.cpp` |
 | `BOOK_GENERATOR` | `src/BookShotSpawner_Spawn.c` | same ov020 TU | `d_a_book_gen.cpp` | — | class-family candidate | — | one TU cannot have both mechanical filenames |
-| `MG_CUP` | `src/func_ov006_020e0574.cpp` | ov006 `0x020e0574..0x020e0638` | `d_sc_mg_cup.cpp` | same | adjacent earlier class interval has `d_sc_mg_cup` | B- | factory is split into its own tiny interval |
-| `MG_CURLING` | `src/dScMgCurling_c_classInit.c` | ov006 `0x020e0638..0x020e3854` | `d_sc_mg_curling.cpp` | same | local `cup -> curling -> curling2` sequence is compatible with related-family order | B- | boundaries are medium/high, not source proof |
-| `MG_CURLING_J` | `src/dScMgCurling2_c_classInit.c` | ov006 `0x020e6bf4..0x020e6c28` | `d_sc_mg_curling2.cpp` | same | immediately follows the `d_sc_mg_curling2` method interval | B- | factory-only interval; class and profile suffixes differ |
+| `MG_CUP` | `src/func_ov006_020e0574.cpp` | ov006 `0x020e0574..0x020e0638` | `d_s_mg_cup.cpp` | same | adjacent earlier class interval has `d_s_mg_cup` | B- | factory is split into its own tiny interval |
+| `MG_CURLING` | `src/dScMgCurling_c_classInit.c` | ov006 `0x020e0638..0x020e3854` | `d_s_mg_curling.cpp` | same | local `cup -> curling -> curling2` sequence is compatible with related-family order | B- | boundaries are medium/high, not source proof |
+| `MG_CURLING_J` | `src/dScMgCurling2_c_classInit.c` | ov006 `0x020e6bf4..0x020e6c28` | `d_s_mg_curling2.cpp` | same | immediately follows the `d_s_mg_curling2` method interval | B- | factory-only interval; class and profile suffixes differ |
 
 ## WATERFALL ordering trace
 
@@ -126,6 +126,6 @@ coherence, semantics, and lineage—not on a claimed lexical link order.
 ## Answer to the filename hypothesis
 
 Nintendo-style stems are useful for forming candidates and can agree with
-coherent TUs.  Alphabetical linking did not provide general predictive power in
-this pilot.  Filename migration should therefore wait for additional evidence;
-there is no rename-only PR to make from this result.
+coherent TUs. Alphabetical linking did not provide general predictive power in
+this pilot. Adopting the lineage convention for repository filenames does not
+turn those names into recovered historical facts.

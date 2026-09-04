@@ -3,9 +3,9 @@
 
 EAD's class names encode a filesystem convention that the GameCube Zelda codebases
 document: a lowercase prefix naming the layer, CamelCase for the rest, `_c` for
-"class".  `daKrb_c` in that scheme lives in `d_a_krb.cpp`, `dBgActor_c` in
-`d_bg_actor.cpp`.  This pass applies the rule to every RTTI class name and joins the
-result onto the recovered translation-unit map.
+"class".  Later NSMBW source corroborates `dScBoot_c` -> `d_s_boot.cpp` and
+`daObjFruitTree_c` -> `d_a_obj_fruit_tree.cpp`.  This pass applies the convention to
+every RTTI class name and joins the result onto the recovered translation-unit map.
 
 WHAT IS EVIDENCE HERE AND WHAT IS NOT
 -------------------------------------
@@ -66,10 +66,11 @@ RECONCILE = REPO / "build" / "rtti_reconcile.json"
 TUMAP = REPO / "build" / "tu_map.json"
 OUT = REPO / "build" / "tu_names.json"
 
-# Lowercase prefix -> path stem.  Order matters: `da` must be tried before `d`.
+# Class prefix -> path stem.  Order matters: specific prefixes precede `d`.
 # Counts are over the 429 records, so an unlisted prefix is not merely unhandled,
 # it does not occur.
 PREFIX = [
+    ("dSc", "d_s", "scene"),        # NSMBW: dScBoot_c -> d_s_boot.cpp
     ("da", "d_a", "actor"),          # 282
     ("d", "d", "game layer"),        # 101
     ("c", "c", "common/library"),    # 12
