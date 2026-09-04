@@ -850,15 +850,22 @@ void port_luigi_countdown_drive(int frame)
        THE COUNTER WRITES ABOVE ARE NOT GUARDED and must not be: they are the
        world, they are pure functions of the frame, and reproducing them is what
        the replay is for. */
-    /* THE BEEPS ARE ONE-SHOT EFFECTS and stand down. Nothing reads them back;
-       re-ringing one only pushes the ARM7 command queue somewhere the straight
-       run never put it. */
-    if (!g_port_rb_replaying) {
-        if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End)
-            func_02012790(0x2b);
-        else if (frame == kLiCdPick)
-            func_02012790(0x2a);
-    }
+    /* THE BEEPS RE-TRIGGER ON A REPLAYED FRAME, deliberately, because that is
+       what this port's rollback does with in-game sound: hal/rollback.cpp says
+       so in as many words -- the restore re-seeds the command queue, "the replay
+       re-triggers sounds into the reset queue", the output stage is muted
+       (sd_host_mute), and the DET rung NAMES the queue's bytes rather than
+       counting them as a divergence. Standing these down was tried and is
+       wrong twice over: it makes the replay do less than the straight run did,
+       which is the opposite of reproducing it, and it measured no better
+       (4 bytes outside the queue either way). The stand-down rule the frame loop
+       applies to the pad, the mouse, the camera rig, the editor channel and
+       port::voice_tick is for effects the port does NOT mute and does NOT
+       excuse -- an input read, or a packet on a wire. */
+    if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End)
+        func_02012790(0x2b);
+    else if (frame == kLiCdPick)
+        func_02012790(0x2a);
 
     /* THE ARENA MUSIC IS STATE, NOT AN EFFECT, so it is re-issued on a replayed
        frame rather than suppressed -- the one place this mode does NOT stand
