@@ -754,7 +754,6 @@ extern int _ZTV8BookShot[];
 extern int _ZTV8CccArena[];
 extern int _ZTV8Fireball[];
 extern int _ZTV8IceBlock[];
-extern int _ZTV8IceSheet[];
 extern int _ZTV8MantaRay[];
 extern int _ZTV8Moneybag[];
 extern int _ZTV14CutsceneObject[];
