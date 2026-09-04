@@ -1488,6 +1488,15 @@
     "src/actors/d_a_dgr.cpp#_ZN7daDgr_c6RenderEv": "tangosdev",
     "src/actors/d_a_dgr.cpp#_ZN7daDgr_c8BehaviorEv": "github-actions[bot]",
     "src/actors/d_a_dgr.cpp#_ZN7daDgr_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/d_a_dgr.cpp#daDgr_c_classInit": "github-actions[bot]"
+    "src/actors/d_a_dgr.cpp#daDgr_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_cD1Ev": "tangosdev",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_cD0Ev": "tangosdev",
+    "src/actors/d_a_obj_ct_mecha03.cpp#func_ov065_02119fe8": "github-actions[bot]",
+    "src/actors/d_a_obj_ct_mecha03.cpp#func_ov065_0211a114": "github-actions[bot]",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_c6RenderEv": "tangosdev",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_ct_mecha03.cpp#_ZN16daObjCtMecha03_c13InitResourcesEv": "tangosdev",
+    "src/actors/d_a_obj_ct_mecha03.cpp#daObjCtMecha03_c_classInit": "github-actions[bot]"
   }
 }
