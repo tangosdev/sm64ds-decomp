@@ -34,12 +34,16 @@ extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     dCcAc_c *, dActor_c *, Fix12i, Fix12i, u32, u32);
 }
 
-extern "C" daObjKinokoTag_c *MegaMushroomTag_Spawn();
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_Spawn();
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG();
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG();
 
 /* ROM ordinal 8 -- evidence-bounded actor-table C ABI factory. */
-// @symbol MegaMushroomTag_Spawn
-extern "C" daObjKinokoTag_c *MegaMushroomTag_Spawn()
+// @symbol daObjKinokoTag_c_classInit_KINOKO_TAG
+/* Reconstructed source-style name: SM64DS proves daObjKinokoTag_c through
+ * RTTI, allocation size, vtable identity, and the KINOKO_TAG registry
+ * profile; later EAD lineage supplies classInit. Exact original spelling is
+ * not preserved. Historical alias: MegaMushroomTag_Spawn. */
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG()
 {
     daObjKinokoTag_c *tag =
         (daObjKinokoTag_c *)_ZN7fBase_cnwEj(sizeof(daObjKinokoTag_c));
@@ -55,7 +59,7 @@ extern "C" daObjKinokoTag_c *MegaMushroomTag_Spawn()
  * Exact original SM64DS spelling is not preserved. Historical project alias:
  * MegaMushroomTag_SpawnInfo. */
 extern "C" KinokoTagSpawnInfo g_profile_KINOKO_TAG = {
-    MegaMushroomTag_Spawn,
+    daObjKinokoTag_c_classInit_KINOKO_TAG,
     0x0140,
     0x013e,
     0x00000003,
@@ -66,8 +70,12 @@ extern "C" KinokoTagSpawnInfo g_profile_KINOKO_TAG = {
 };
 
 /* ROM ordinal 7 -- class-anchored inferred actor-table C ABI factory. */
-// @symbol daObjKinokoTag_c_Spawn
-extern "C" daObjKinokoTag_c *daObjKinokoTag_c_Spawn()
+// @symbol daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG
+/* Reconstructed source-style name: SM64DS proves daObjKinokoTag_c through
+ * RTTI, allocation size, vtable identity, and the KINOKO_CREATE_TAG registry
+ * profile; later EAD lineage supplies classInit. Exact original spelling is
+ * not preserved. Historical alias: daObjKinokoTag_c_Spawn. */
+extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG()
 {
     daObjKinokoTag_c *tag =
         (daObjKinokoTag_c *)_ZN7fBase_cnwEj(sizeof(daObjKinokoTag_c));
@@ -83,7 +91,7 @@ extern "C" daObjKinokoTag_c *daObjKinokoTag_c_Spawn()
  * Exact original SM64DS spelling is not preserved. Historical project alias:
  * MegaMushroomCreateTag_SpawnInfo. */
 extern "C" KinokoTagSpawnInfo g_profile_KINOKO_CREATE_TAG = {
-    daObjKinokoTag_c_Spawn,
+    daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG,
     0x013f,
     0x013d,
     0,

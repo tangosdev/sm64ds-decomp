@@ -68,14 +68,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjKinokoTag_c_Spawn",
+      "symbol": "daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG",
       "address": "0x020b4a00",
       "size": "0x00000038",
       "legacy_source": "src/daObjKinokoTag_c_Spawn.c",
       "ordinal": 7
     },
     {
-      "symbol": "MegaMushroomTag_Spawn",
+      "symbol": "daObjKinokoTag_c_classInit_KINOKO_TAG",
       "address": "0x020b4a38",
       "size": "0x00000038",
       "legacy_source": "src/MegaMushroomTag_Spawn.c",
@@ -153,7 +153,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov002",
       "canonical_address": "0x02108cd0",
-      "reason": "The KINOKO_CREATE_TAG profile is naturally defined beside its factory. Its reconstructed global spelling comes from the literal ROM registry ID plus later EAD lineage; romdata_check proves its daObjKinokoTag_c_Spawn relocation and every descriptor word before isolation."
+      "reason": "The KINOKO_CREATE_TAG profile is naturally defined beside its factory. Its reconstructed global spelling comes from the literal ROM registry ID plus later EAD lineage; romdata_check proves its daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG relocation and every descriptor word before isolation."
     },
     {
       "symbol": "_ZTV16daObjKinokoTag_c",

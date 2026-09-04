@@ -1,5 +1,17 @@
 #ifndef DAOBJKINOKOTAG_C_H
 #define DAOBJKINOKOTAG_C_H
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjKinokoTag_c -- daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG (was
+ *       daObjKinokoTag_c_Spawn), g_profile_KINOKO_CREATE_TAG (was
+ *       MegaMushroomCreateTag_SpawnInfo)
+ *   daObjKinokoTag_c -- daObjKinokoTag_c_classInit_KINOKO_TAG (was
+ *       MegaMushroomTag_Spawn), g_profile_KINOKO_TAG (was
+ *       MegaMushroomTag_SpawnInfo)
+ */
 
 #include "dActor_c.h"
 #include "dCcAc_c.h"
