@@ -38,9 +38,13 @@ void func_ov006_0210a4ac(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgMushroomRoulette_Spawn, 0x0210a400, size 0xac */
+/* ROM ordinal 0 -- dScMgRoulette_c_classInit, 0x0210a400, size 0xac */
 /* -------------------------------------------------------------------------- */
-extern "C" void* MgMushroomRoulette_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves dScMgRoulette_c through RTTI,
+ * allocation size, vtable identity, and the MG_ROULETTE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgMushroomRoulette_Spawn. */
+extern "C" void* dScMgRoulette_c_classInit(void){
   char* c = (char*)_ZN7fBase_cnwEj(0x5400);
   if (c) {
     _ZN11dScMgBase_cC2Ev();

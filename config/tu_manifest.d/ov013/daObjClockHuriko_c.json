@@ -68,7 +68,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "daObjClockHuriko_c_Spawn",
+      "symbol": "daObjClockHuriko_c_classInit",
       "address": "0x02111384",
       "size": "0x00000038",
       "legacy_source": "src/daObjClockHuriko_c_Spawn.c",

@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "MgBingoBallSlotsShot_Spawn",
+      "symbol": "dScMgSmartball_c_classInit",
       "address": "0x02119824",
       "size": "0x000000dc",
       "legacy_source": "src/MgBingoBallSlotsShot_Spawn.cpp",

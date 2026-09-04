@@ -40,9 +40,13 @@ void func_ov006_020fa740(int *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgPairAGoneAndOn_Spawn, 0x020fa6ac, size 0x94 */
+/* ROM ordinal 0 -- dScMgMCarlo2_c_classInit, 0x020fa6ac, size 0x94 */
 /* -------------------------------------------------------------------------- */
-extern "C" void* MgPairAGoneAndOn_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves dScMgMCarlo2_c through RTTI,
+ * allocation size, vtable identity, and the MG_MCARLO2 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPairAGoneAndOn_Spawn. */
+extern "C" void* dScMgMCarlo2_c_classInit(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x5930);
   if (p) {
     _ZN11dScMgBase_cC2Ev(p);

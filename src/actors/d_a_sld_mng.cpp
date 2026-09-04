@@ -66,9 +66,9 @@ extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
 extern Vector3 data_ov019_021135d8;
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- daSldMng_c_Spawn, 0x0211274c, size 0x30 */
+/* ROM ordinal 4 -- daSldMng_c_classInit, 0x0211274c, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol daSldMng_c_Spawn
+// @symbol daSldMng_c_classInit
 /* resolved: VT = _ZTV10daSldMng_c.
  *
  * The natural C++ spelling `return new daSldMng_c` reproduces the text, but
@@ -78,7 +78,11 @@ extern Vector3 data_ov019_021135d8;
  * defines the vtable, and mwccarm's `_ZTV<C>` addresses the object's start --
  * the two-word [offset-to-top, typeinfo] preamble -- while symbols.txt's
  * `_ZTV10daSldMng_c` at 0x021133cc is already the slot array. Hence `&[2]`. */
-extern "C" int *daSldMng_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSldMng_c through RTTI,
+ * allocation size, vtable identity, and the SLIDER_MANAGER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daSldMng_c_Spawn. */
+extern "C" int *daSldMng_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(216);
     if (p) {

@@ -50,9 +50,13 @@ void func_ov006_020dbe14(int *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgPicturePoker_Spawn, 0x020dbd54, size 0xc0 */
+/* ROM ordinal 0 -- dScMgCard_c_classInit, 0x020dbd54, size 0xc0 */
 /* -------------------------------------------------------------------------- */
-extern "C" void* MgPicturePoker_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves dScMgCard_c through RTTI,
+ * allocation size, vtable identity, and the MG_CARD registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPicturePoker_Spawn. */
+extern "C" void* dScMgCard_c_classInit(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x539c);
   if (p) {
     _ZN11dScMgBase_cC2Ev(p);

@@ -43,9 +43,13 @@ extern void _ZN8dActor_cC2Ev(void *);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- daSCre_c_Spawn, 0x0211278c, size 0x30 */
+/* ROM ordinal 3 -- daSCre_c_classInit, 0x0211278c, size 0x30 */
 /* -------------------------------------------------------------------------- */
-extern "C" daSCre_c *daSCre_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSCre_c through RTTI,
+ * allocation size, vtable identity, and the STAR_CREATE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daSCre_c_Spawn. */
+extern "C" daSCre_c *daSCre_c_classInit(void)
 {
     daSCre_c *p = (daSCre_c *)_ZN7fBase_cnwEj(sizeof(daSCre_c));
     if (p) {

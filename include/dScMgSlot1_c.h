@@ -7,12 +7,12 @@
  * (D1), 17 (D0), 18 (own new slot -- stays a raw extern "C" helper,
  * src/func_ov006_0210c674.c, same precedent as every other dScMgBase_c
  * leaf's slot 18), 27 (OnHitByMegaChar), 28 (OnHitFromUnderneath).
- * rtti_vtables.py --own also reports slot 36 (MgBingoBallSlotsShot_Spawn);
+ * rtti_vtables.py --own also reports slot 36 (dScMgSmartball_c_classInit);
  * that one is SPURIOUS -- address-gap math confirms it: the vtable data
  * symbol ends exactly 0x90 bytes (36 words) before the unrelated
- * MgBingoBallSlotsShot_SpawnInfo table, which MgBingoBallSlotsShot_Spawn
+ * g_profile_MG_SMARTBALL table, which dScMgSmartball_c_classInit
  * itself uses to build a completely different, larger object with its own
- * vtable -- excluded, along with MgBingoBallSlotsShot_Spawn and anything
+ * vtable -- excluded, along with dScMgSmartball_c_classInit and anything
  * named "MgBingoBallSlotsShot", from this migration.
  *
  * slot 9's recovered symbol name (_ZN3OAM7SECONDSE, i.e. "OAM::SECONDS") is

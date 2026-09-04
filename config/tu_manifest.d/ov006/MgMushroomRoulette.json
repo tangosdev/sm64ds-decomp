@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "MgMushroomRoulette_Spawn",
+      "symbol": "dScMgRoulette_c_classInit",
       "address": "0x0210a400",
       "size": "0x000000ac",
       "legacy_source": "src/MgMushroomRoulette_Spawn.cpp",

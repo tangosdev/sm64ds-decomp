@@ -131,7 +131,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "Trap_Spawn",
+      "symbol": "daObjC1_Trap_c_classInit",
       "address": "0x02111998",
       "size": "0x00000038",
       "legacy_source": "src/Trap_Spawn.c",
@@ -212,11 +212,11 @@
       "reason": "The genuine class declaration naturally emits the exact ROM type-name string at its canonical ov010 home."
     },
     {
-      "symbol": "Trap_SpawnInfo",
+      "symbol": "g_profile_C1_TRAP",
       "disposition": "deadstrip-data",
       "canonical_module": "ov010",
       "canonical_address": "0x02112ac0",
-      "reason": "The source naturally defines the typed 0x1c actor descriptor with the Trap_Spawn relocation and exact scheduling, flags, and culling words; romdata_check proves the complete object."
+      "reason": "The source naturally defines the typed 0x1c actor descriptor with the daObjC1_Trap_c_classInit relocation and exact scheduling, flags, and culling words; romdata_check proves the complete object."
     },
     {
       "symbol": "_ZTV14daObjC1_Trap_c",
@@ -229,7 +229,7 @@
   "notes": [
     "State0..State4, GetSpawner, UpdateCollisionTransform, UpdateModelTransform, and OnCollision are inferred class-anchored aliases: the class identity, relationships, relocations, and codegen are proven, but the original private source spellings are not. Behavior dispatches through the typed PMF table initialized by the separately retained __sinit source.",
     "The inline virtual destructor plus out-of-line InitResources key function emits retail's D1 then D0 pair with no D2 and no forcing or dummy output. A POD position local avoids introducing Vector3's unrelated vague-linkage destructor helper.",
-    "Trap_Spawn and func_ov010_02111984 retain their proven C ABI spellings. The factory keeps the exact actor allocator/base/member constructor/vptr sequence because natural new selects the wrong allocator; the adapter is the measured three-argument callback boundary and immediately calls typed OnCollision.",
+    "daObjC1_Trap_c_classInit (historical alias Trap_Spawn) and func_ov010_02111984 retain their proven C ABI linkage. The factory keeps the exact actor allocator/base/member constructor/vptr sequence because natural new selects the wrong allocator; the adapter is the measured three-argument callback boundary and immediately calls typed OnCollision.",
     "The PMF descriptor band, deferred initializer, SharedFilePtr resources, CLPS block, ctor pointer, and BSS remain externally owned. A natural initializer probe matched, but its resource special-member relocation identities are not yet proven, so this promotion deliberately claims none of those ranges."
   ],
   "verification": {
@@ -282,11 +282,11 @@
         "_ZTI8dActor_c",
         "_ZTI14daObjC1_Trap_c",
         "_ZTS14daObjC1_Trap_c",
-        "Trap_SpawnInfo",
+        "g_profile_C1_TRAP",
         "_ZTV14daObjC1_Trap_c"
       ],
       "dataExternalized": [
-        "Trap_SpawnInfo",
+        "g_profile_C1_TRAP",
         "_ZTI10dBgActor_c",
         "_ZTI14daObjC1_Trap_c",
         "_ZTI7dBase_c",

@@ -7,7 +7,7 @@
  * name: it writes dScMgD3DBase_c's vtable, then THIS class's, and
  * everything it builds after that derived vptr store belongs here. The
  * English name is kept because it is already attributed, the same
- * convention as MgPicturePoker_Spawn for dScMgCard_c -- but note that until
+ * convention as dScMgCard_c_classInit for dScMgCard_c -- but note that until
  * the base was renamed, mModel and both arrays below were declared on
  * dScMgD3DBase_c itself and 0x5834 was asserted as the BASE's size. They
  * are this class's.

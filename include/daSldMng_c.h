@@ -21,6 +21,10 @@
  * at 0xd0; the intervening word has no observed meaning and remains unnamed.
  * InitResources seeds mKillTimer with 120, and Behavior counts it down before
  * killing the actor. Behavior's two-way switch and byte increment pin mState.
+ *
+ * SM64DS RTTI names the implementation daSldMng_c. The reconstructed factory
+ * daSldMng_c_classInit (historical alias daSldMng_c_Spawn) installs this class's
+ * cartridge vtable for the SLIDER_MANAGER registry profile.
  */
 struct daSldMng_c : dActor_c {
     u32 unk_0d0;          /* 0x0d0 */

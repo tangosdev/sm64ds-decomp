@@ -33,7 +33,7 @@ _ZN10daMcFlag_c16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021120ec
 _ZN10daMcFlag_c6RenderEv kind:function(arm,size=0x28) addr:0x0211211c
 _ZN10daMcFlag_c8BehaviorEv kind:function(arm,size=0x4c) addr:0x02112144
 _ZN10daMcFlag_c13InitResourcesEv kind:function(arm,size=0x60) addr:0x02112190
-daMcFlag_c_Spawn kind:function(arm,size=0x38) addr:0x021121f0
+daMcFlag_c_classInit kind:function(arm,size=0x38) addr:0x021121f0
 data_ov009_02112228 kind:data(any) addr:0x02112228
 data_ov009_0211222c kind:data(any) addr:0x0211222c
 data_ov009_02112230 kind:data(any) addr:0x02112230
@@ -153,7 +153,7 @@ data_ov009_02113998 kind:data(any) addr:0x02113998 ambiguous
 data_ov009_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 _ZTI14daObjMcWater_c kind:data(any) addr:0x021139d4
 _ZTS14daObjMcWater_c kind:data(any) addr:0x021139e0
-daObjMcWater_c_SpawnInfo kind:data(any) addr:0x021139f4 ambiguous
+g_profile_MC_WATER kind:data(any) addr:0x021139f4 ambiguous
 data_ov009_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 _ZTV14daObjMcWater_c kind:data(any) addr:0x02113a18
 data_ov009_02113a50 kind:data(any) addr:0x02113a50 ambiguous
@@ -168,7 +168,7 @@ data_ov009_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 data_ov009_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 _ZTI10daMcFlag_c kind:data(any) addr:0x02113b60
 _ZTS10daMcFlag_c kind:data(any) addr:0x02113b6c
-daMcFlag_c_SpawnInfo kind:data(any) addr:0x02113b7c ambiguous
+g_profile_MC_FLAG kind:data(any) addr:0x02113b7c ambiguous
 data_ov009_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov009_02113b90 kind:data(any) addr:0x02113b90 ambiguous
 _ZTV10daMcFlag_c kind:data(any) addr:0x02113ba0

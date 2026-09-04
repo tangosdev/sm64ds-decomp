@@ -74,7 +74,7 @@
 
 /* THE BOARD IS 40 PIECES ON ONE INTRUSIVE DOUBLY-LINKED LIST, each 0x30
  * bytes -- the destructor's own `__destroy_arr(this + 0x51a8, 0x28, 0x30,
- * func_ov006_020f8ff0)` sizes and counts them, and MgPairAGoneAndOn_Spawn
+ * func_ov006_020f8ff0)` sizes and counts them, and dScMgMCarlo2_c_classInit
  * constructs the same 0x28 x 0x30 array. The 23 one-function legacy files
  * each modelled the element partially and under four different names
  * (`Node`, `Obj`, `A`, and a vtable-less typedef); every offset they agree

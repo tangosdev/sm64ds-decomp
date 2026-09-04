@@ -3,7 +3,7 @@
  * (build/rtti.json). Its own vtable is ov006:0x0213fc7c. The last of
  * dScMgD3DBase_c's four children, and the largest class in the family.
  *
- * SIZE 0x7bac, from MgTrampolineTerror_Spawn's own
+ * SIZE 0x7bac, from dScMgTrampoline2_c_classInit's own
  * `_ZN7fBase_cnwEj(0x7bac)`. The English _Spawn name is already
  * attributed and is kept.
  *
@@ -31,7 +31,12 @@
  * the destructor body is all six calls and nothing else.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf. No separate operator
- * delete is needed: dScMgD3DBase_c, the immediate base, provides one. */
+ * delete is needed: dScMgD3DBase_c, the immediate base, provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgTrampoline2_c. The reconstructed factory
+ * dScMgTrampoline2_c_classInit (historical alias MgTrampolineTerror_Spawn) installs this class's
+ * cartridge vtable for the MG_TRAMPOLINE2 registry profile.
+ */
 #ifndef DSCMGTRAMPOLINE2_C_H
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"

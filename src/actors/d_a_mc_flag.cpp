@@ -5,7 +5,7 @@
  * reads "10daMcFlag_c", and the __si_class_type_info record at 0x02113b60
  * names dActor_c (_ZTI8dActor_c, arm9 0x0208e390) as the direct and only
  * base.  Flag was the project's coined name and is gone from the sources;
- * daMcFlag_c_Spawn and daMcFlag_c_SpawnInfo are convention spellings for two
+ * daMcFlag_c_classInit and g_profile_MC_FLAG are convention spellings for two
  * derived C symbols the ROM says nothing about (historical aliases:
  * Flag_Spawn, Flag_SpawnInfo).
  *
@@ -47,7 +47,7 @@
 extern "C" SharedFilePtr data_ov009_02113eb8;
 extern "C" SharedFilePtr data_ov009_02113eb0;
 
-/* Declared so daMcFlag_c_Spawn can spell the vptr store as &_ZTV[2].  That
+/* Declared so daMcFlag_c_classInit can spell the vptr store as &_ZTV[2].  That
    spelling is safe here for a reason worth stating exactly, because the
    obvious reading of it is wrong: this TU does emit the vtable (it is the
    key-function TU), but production isolation empties that emitted section and
@@ -94,10 +94,14 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *self,
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- daMcFlag_c_Spawn, 0x021121f0, size 0x38 */
+/* ROM ordinal 6 -- daMcFlag_c_classInit, 0x021121f0, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol daMcFlag_c_Spawn
-extern "C" daMcFlag_c *daMcFlag_c_Spawn(void)
+// @symbol daMcFlag_c_classInit
+/* Reconstructed source-style name: SM64DS proves daMcFlag_c through RTTI,
+ * allocation size, vtable identity, and the MC_FLAG registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daMcFlag_c_Spawn. */
+extern "C" daMcFlag_c *daMcFlag_c_classInit(void)
 {
     daMcFlag_c *actor = (daMcFlag_c *)_ZN7fBase_cnwEj(sizeof(daMcFlag_c));
     if (actor) {

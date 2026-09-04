@@ -74,10 +74,14 @@ void func_ov010_02111984(
     int unused, daObjC1_Trap_c *trap, dActor_c *other);
 }
 
-extern "C" daObjC1_Trap_c *Trap_Spawn();
+extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit();
 
 /* ROM ordinal 16: the actor-table factory is a genuine C ABI boundary. */
-extern "C" daObjC1_Trap_c *Trap_Spawn()
+/* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
+ * allocation size, vtable identity, and the C1_TRAP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Trap_Spawn. */
+extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit()
 {
     daObjC1_Trap_c *trap =
         (daObjC1_Trap_c *)_ZN7fBase_cnwEj(sizeof(daObjC1_Trap_c));
@@ -89,8 +93,8 @@ extern "C" daObjC1_Trap_c *Trap_Spawn()
     return trap;
 }
 
-extern "C" TrapSpawnInfo Trap_SpawnInfo = {
-    Trap_Spawn,
+extern "C" TrapSpawnInfo g_profile_C1_TRAP = {
+    daObjC1_Trap_c_classInit,
     0x0024,
     0x0143,
     0,

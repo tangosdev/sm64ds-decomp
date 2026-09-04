@@ -84,6 +84,10 @@
  *
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths
  * are observed.
+ *
+ * SM64DS RTTI names the implementation daObjClockHuriko_c. The reconstructed factory
+ * daObjClockHuriko_c_classInit (historical alias daObjClockHuriko_c_Spawn) installs this class's
+ * cartridge vtable for the CLOCK_HURIKO registry profile.
  */
 
 #ifdef __cplusplus

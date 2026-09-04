@@ -182,7 +182,7 @@ typedef struct { int e[12]; } Mtx43T;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- dScMgJump2_c_Spawn, 0x020efaf0, size 0x118 */
+/* ROM ordinal 28 -- dScMgJump2_c_classInit, 0x020efaf0, size 0x118 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void *_ZN7fBase_cnwEj(u32 sz);
@@ -198,7 +198,7 @@ void func_ov006_020eed64();
 void func_ov006_020efc08();
 void func_ov006_020c6f3c();
 
-// @symbol dScMgJump2_c_Spawn
+// @symbol dScMgJump2_c_classInit
 /* recovered: vtable identified. Formerly mangled _ZN8PathLift17BaseInitResourcesEv --
    a name matched across an OVERLAY BOUNDARY at a near-identical address to the real
    PathLift (ov002, _ZN8PathLiftD1Ev and friends), neither this class's method nor a
@@ -209,7 +209,11 @@ void func_ov006_020c6f3c();
    daObjEmmLog_c_Spawn, the tree's other `<ClassName>_Spawn` factory) rather than
    the game-name-based dScMgJump_c_classInit that dScMgJump_c's own factory
    carries. See include/dScMgJump2_c.h. */
-void *dScMgJump2_c_Spawn()
+/* Reconstructed source-style name: SM64DS proves dScMgJump2_c through RTTI,
+ * allocation size, vtable identity, and the MG_JUMP2 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: dScMgJump2_c_Spawn. */
+void *dScMgJump2_c_classInit()
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x5a78);
     if (p) {

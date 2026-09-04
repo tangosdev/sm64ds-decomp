@@ -6,7 +6,12 @@
    elem_size, dtor) idiom dScMgBase_c's own D1/D0 use for touchIcon_0f4 (see
    dScMgBase_c.h's file banner and src/_ZN11dScMgBase_cD1Ev.cpp) -- declared
    here, not per-destructor-file, matching dScMgBase_c.h's own placement of
-   func_ov004_020b929c. */
+   func_ov004_020b929c.
+ *
+ * SM64DS RTTI names the implementation dScMgHanachan_c. The reconstructed factory
+ * dScMgHanachan_c_classInit (historical alias MgWhichWiggler_Spawn) installs this class's
+ * cartridge vtable for the MG_HANACHAN registry profile.
+ */
 extern "C" void __destroy_arr(void *arr, int count, int elemSize, void *dtor);
 extern "C" void func_ov006_020ea324(void);
 

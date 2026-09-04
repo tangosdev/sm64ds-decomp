@@ -54,9 +54,13 @@ extern "C" void* func_ov006_021248a8(char* c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgTrampolineTerror_Spawn, 0x0212471c, size 0x18c */
+/* ROM ordinal 0 -- dScMgTrampoline2_c_classInit, 0x0212471c, size 0x18c */
 /* -------------------------------------------------------------------------- */
-extern "C" void *MgTrampolineTerror_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves dScMgTrampoline2_c through RTTI,
+ * allocation size, vtable identity, and the MG_TRAMPOLINE2 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgTrampolineTerror_Spawn. */
+extern "C" void *dScMgTrampoline2_c_classInit(void)
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x7bac);
     if (p) {

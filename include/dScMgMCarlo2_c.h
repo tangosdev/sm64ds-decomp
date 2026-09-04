@@ -1,9 +1,9 @@
 /* class dScMgMCarlo2_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgMCarlo2_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgPairAGoneAndOn_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). The coined English Spawn-function name was
+ * MgPairAGoneAndOn_Spawn; the factory now carries the reconstructed
+ * dScMgMCarlo2_c_classInit spelling, and the class itself takes its
+ * real ROM identity, matching this tree's current convention.
  *
  * SIZE 0x5930, from MgPairAGoneAndOn_Spawn.cpp's own
  * `_ZN7fBase_cnwEj(0x5930)`.
@@ -37,7 +37,12 @@
  * ROM address to claim and no inbound relocation. The two calls below are
  * ordinary reverse-declaration member destruction, spelled out only because
  * the members are raw bytes. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgMCarlo2_c. The reconstructed factory
+ * dScMgMCarlo2_c_classInit (historical alias MgPairAGoneAndOn_Spawn) installs this class's
+ * cartridge vtable for the MG_MCARLO2 registry profile.
+ */
 #ifndef DSCMGMCARLO2_C_H
 #define DSCMGMCARLO2_C_H
 #include "dScMgSingle3DBase_c.h"

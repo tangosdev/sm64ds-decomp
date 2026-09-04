@@ -3,7 +3,7 @@
  * Its own vtable is ov006:0x0213ccfc.
  *
  * SIZE 0x5a78 -- AND ITS FACTORY USED TO CARRY ANOTHER CLASS'S NAME ENTIRELY.
- * The allocation lives in `dScMgJump2_c_Spawn` (ov006:0x020efaf0, renamed from
+ * The allocation lives in `dScMgJump2_c_classInit` (ov006:0x020efaf0, renamed from
  * the mangled `_ZN8PathLift17BaseInitResourcesEv`, which was neither a PathLift
  * method nor a BaseInitResources): its body is `operator new(0x5a78)`,
  * dScMgBase_c's constructor, dScMgD3DBase_c's vtable, mSysTracker, then THIS
@@ -26,7 +26,12 @@
  *
  * THE DESTRUCTOR IS DEFINED IN THE CLASS BODY, for the emission-order reason
  * spelled out at the definition below. No separate operator delete is needed:
- * dScMgD3DBase_c, the immediate base, provides one. */
+ * dScMgD3DBase_c, the immediate base, provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgJump2_c. The reconstructed factory
+ * dScMgJump2_c_classInit (historical alias dScMgJump2_c_Spawn) installs this class's
+ * cartridge vtable for the MG_JUMP2 registry profile.
+ */
 #ifndef DSCMGJUMP2_C_H
 #define DSCMGJUMP2_C_H
 #include "dScMgD3DBase_c.h"

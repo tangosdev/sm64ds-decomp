@@ -1,9 +1,9 @@
 /* class dScMgRoulette_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgRoulette_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is
- * MgMushroomRoulette_Spawn; kept as the symbol name for the factory
- * (already attributed), but the class itself takes its real ROM identity,
- * matching this tree's current convention.
+ * (build/rtti.json). The coined English Spawn-function name was
+ * MgMushroomRoulette_Spawn; the factory now carries the reconstructed
+ * dScMgRoulette_c_classInit spelling, and the class itself takes its
+ * real ROM identity, matching this tree's current convention.
  *
  * SIZE 0x5400, from MgMushroomRoulette_Spawn.cpp's own
  * `_ZN7fBase_cnwEj(0x5400)`.
@@ -41,7 +41,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN15dScMgRoulette_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgRoulette_c. The reconstructed factory
+ * dScMgRoulette_c_classInit (historical alias MgMushroomRoulette_Spawn) installs this class's
+ * cartridge vtable for the MG_ROULETTE registry profile.
+ */
 #ifndef DSCMGROULETTE_C_H
 #define DSCMGROULETTE_C_H
 #include "dScMgSingle3DBase_c.h"

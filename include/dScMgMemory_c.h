@@ -12,7 +12,7 @@
  * this tree's convention and its six already-migrated siblings; the factory
  * now spells `dScMgMemory_c_classInit` (historical alias
  * MgMemoryMatch_Spawn), which is already attributed, exactly as
- * include/dScMgCard_c.h does for MgPicturePoker_Spawn.
+ * include/dScMgCard_c.h does for dScMgCard_c_classInit.
  *
  * The rename is length-neutral, which is a small mercy: "MgMemoryMatch" and
  * "dScMgMemory_c" are both 13 characters, so every mangled name keeps its

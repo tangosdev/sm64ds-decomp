@@ -77,13 +77,17 @@ extern int data_ov014_021145c4;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- daObjBSwdoor_c_Spawn, 0x021112cc, size 0x3c */
+/* ROM ordinal 5 -- daObjBSwdoor_c_classInit, 0x021112cc, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjBSwdoor_c_Spawn
+// @symbol daObjBSwdoor_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV13daObjSwdoor_c */
-extern "C" int *daObjBSwdoor_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjBSwdoor_c through RTTI,
+ * allocation size, vtable identity, and the SWITCHDOOR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjBSwdoor_c_Spawn. */
+extern "C" int *daObjBSwdoor_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(804);
     if (p) {

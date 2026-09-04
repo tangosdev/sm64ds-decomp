@@ -70,14 +70,18 @@ extern signed char data_02092110[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjClockHuriko_c_Spawn, 0x02111384, size 0x38 */
+/* ROM ordinal 7 -- daObjClockHuriko_c_classInit, 0x02111384, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjClockHuriko_c_Spawn
+// @symbol daObjClockHuriko_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV18daObjClockHuriko_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daObjClockHuriko_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjClockHuriko_c through RTTI,
+ * allocation size, vtable identity, and the CLOCK_HURIKO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjClockHuriko_c_Spawn. */
+int *daObjClockHuriko_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(296);
     if (p) {

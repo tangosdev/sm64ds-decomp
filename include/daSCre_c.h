@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   daSCre_c_Spawn  fBase_c::operator new(212 = 0xd4), dActor_c::dActor_c(),
+ *   daSCre_c_classInit  fBase_c::operator new(212 = 0xd4), dActor_c::dActor_c(),
  *                   stores _ZTV8daSCre_c, then the members below in this order.
  *   ~daSCre_c       the same members destroyed in reverse, then ~dActor_c.
  *
@@ -15,6 +15,10 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daSCre_c. The reconstructed factory
+ * daSCre_c_classInit (historical alias daSCre_c_Spawn) installs this class's
+ * cartridge vtable for the STAR_CREATE registry profile.
  */
 struct daSCre_c : dActor_c {
     u8  pad_0d0[0x4];

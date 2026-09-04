@@ -47,7 +47,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "daSldMng_c_Spawn",
+      "symbol": "daSldMng_c_classInit",
       "address": "0x0211274c",
       "size": "0x00000030",
       "legacy_source": "src/daSldMng_c_Spawn.c",

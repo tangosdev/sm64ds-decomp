@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "daMcFlag_c_Spawn",
+      "symbol": "daMcFlag_c_classInit",
       "address": "0x021121f0",
       "size": "0x00000038",
       "legacy_source": "src/daMcFlag_c_Spawn.c",

@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   daObjC0_Switch_c_Spawn  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV16daObjC0_Switch_c,
+ *   daObjC0_Switch_c_classInit  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV16daObjC0_Switch_c,
  *                 then the members below in this order.
  *   ~daObjC0_Switch_c   the same members destroyed in reverse, then ~dBgActor_c.
  *
@@ -21,6 +21,10 @@
  * and set this byte -- OnGroundPounded no-ops if already set, then walks every other
  * actorID-0x22 instance and, on finding one already pressed, sets a shared flag in
  * data_0209caa0[2]. It is this switch pillar's own "pressed" state.
+ *
+ * SM64DS RTTI names the implementation daObjC0_Switch_c. The reconstructed factory
+ * daObjC0_Switch_c_classInit (historical alias daObjC0_Switch_c_Spawn) installs this class's
+ * cartridge vtable for the C0_SWITCH registry profile.
  */
 struct daObjC0_Switch_c : dBgActor_c {
     u8  mPressed;            /* 0x31e */

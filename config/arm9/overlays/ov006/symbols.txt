@@ -481,7 +481,7 @@ _ZN11dScMgCard_c15OnGroundPoundedEv kind:function(arm,size=0x34) addr:0x020db6ec
 _ZN11dScMgCard_c13OnTurnIntoEggEi kind:function(arm,size=0x2bc) addr:0x020db720
 _ZN11dScMgCard_c13OnYoshiTryEatEi kind:function(arm,size=0x114) addr:0x020db9dc
 _ZN11dScMgCard_c13InitResourcesEv kind:function(arm,size=0x264) addr:0x020dbaf0
-MgPicturePoker_Spawn kind:function(arm,size=0xc0) addr:0x020dbd54
+dScMgCard_c_classInit kind:function(arm,size=0xc0) addr:0x020dbd54
 func_ov006_020dbe14 kind:function(arm,size=0x1c) addr:0x020dbe14
 func_ov006_020dbe30 kind:function(arm,size=0x10) addr:0x020dbe30
 _ZN11dScMgCoin_cD1Ev kind:function(arm,size=0x24) addr:0x020dbe40
@@ -835,7 +835,7 @@ func_ov006_020ed8a4 kind:function(arm,size=0x1a4) addr:0x020ed8a4
 _ZN15dScMgHanachan_c13OnYoshiTryEatEi kind:function(arm,size=0xbc) addr:0x020eda48
 _ZN15dScMgHanachan_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x020edb04
 func_ov006_020edcb0 kind:function(arm,size=0x168) addr:0x020edcb0
-MgWhichWiggler_Spawn kind:function(arm,size=0x68) addr:0x020ede18
+dScMgHanachan_c_classInit kind:function(arm,size=0x68) addr:0x020ede18
 func_ov006_020ede80 kind:function(arm,size=0x40) addr:0x020ede80
 _ZN11dScMgJump_cD1Ev kind:function(arm,size=0x94) addr:0x020edec0
 _ZN11dScMgJump_cD0Ev kind:function(arm,size=0xa8) addr:0x020edf54
@@ -884,7 +884,7 @@ func_ov006_020ef7f8 kind:function(arm,size=0x3c) addr:0x020ef7f8
 _ZN12dScMgJump2_c13InitResourcesEv kind:function(arm,size=0x250) addr:0x020ef834
 _ZN12dScMgJump2_c13OnTurnIntoEggEi kind:function(arm,size=0x24) addr:0x020efa84
 _ZN12dScMgJump2_c13OnYoshiTryEatEi kind:function(arm,size=0x48) addr:0x020efaa8
-dScMgJump2_c_Spawn kind:function(arm,size=0x118) addr:0x020efaf0
+dScMgJump2_c_classInit kind:function(arm,size=0x118) addr:0x020efaf0
 func_ov006_020efc08 kind:function(arm,size=0x4) addr:0x020efc08
 _ZN12dScMgLuigi_cD1Ev kind:function(arm,size=0x24) addr:0x020efc0c
 _ZN12dScMgLuigi_cD0Ev kind:function(arm,size=0x38) addr:0x020efc30
@@ -1091,7 +1091,7 @@ _ZN14dScMgMCarlo2_c8BehaviorEv kind:function(arm,size=0x294) addr:0x020fa13c
 _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi kind:function(arm,size=0x104) addr:0x020fa3d0
 _ZN14dScMgMCarlo2_c13OnYoshiTryEatEi kind:function(arm,size=0x98) addr:0x020fa4d4
 _ZN14dScMgMCarlo2_c13InitResourcesEv kind:function(arm,size=0x140) addr:0x020fa56c
-MgPairAGoneAndOn_Spawn kind:function(arm,size=0x94) addr:0x020fa6ac
+dScMgMCarlo2_c_classInit kind:function(arm,size=0x94) addr:0x020fa6ac
 func_ov006_020fa740 kind:function(arm,size=0x1c) addr:0x020fa740
 _ZN15dScMgPachinko_cD1Ev kind:function(arm,size=0x24) addr:0x020fa75c
 _ZN15dScMgPachinko_cD0Ev kind:function(arm,size=0x38) addr:0x020fa780
@@ -1355,7 +1355,7 @@ _ZN15dScMgRoulette_c6RenderEv kind:function(arm,size=0x26c) addr:0x02109834
 func_ov006_02109aa0 kind:function(arm,size=0xc) addr:0x02109aa0
 _ZN15dScMgRoulette_c8BehaviorEv kind:function(arm,size=0x6e8) addr:0x02109aac
 _ZN15dScMgRoulette_c13InitResourcesEv kind:function(arm,size=0x26c) addr:0x0210a194
-MgMushroomRoulette_Spawn kind:function(arm,size=0xac) addr:0x0210a400
+dScMgRoulette_c_classInit kind:function(arm,size=0xac) addr:0x0210a400
 func_ov006_0210a4ac kind:function(arm,size=0x4) addr:0x0210a4ac
 _ZN19dScMgSingle3DBase_cD1Ev kind:function(arm,size=0x38) addr:0x0210a4b0
 _ZN19dScMgSingle3DBase_cD0Ev kind:function(arm,size=0x4c) addr:0x0210a4e8
@@ -1538,7 +1538,7 @@ _ZN16dScMgSmartball_c13OnYoshiTryEatEi kind:function(arm,size=0x58) addr:0x02118
 _ZN16dScMgSmartball_c9Virtual7CEv kind:function(arm,size=0x8c) addr:0x02118ae4
 _ZN16dScMgSmartball_c13InitResourcesEv kind:function(arm,size=0x8dc) addr:0x02118b70
 _ZN16dScMgSmartball_c21AfterCleanupResourcesEj kind:function(arm,size=0x3d8) addr:0x0211944c
-MgBingoBallSlotsShot_Spawn kind:function(arm,size=0xdc) addr:0x02119824
+dScMgSmartball_c_classInit kind:function(arm,size=0xdc) addr:0x02119824
 func_ov006_02119900 kind:function(arm,size=0x4) addr:0x02119900
 _ZN12dScMgSound_cD1Ev kind:function(arm,size=0x54) addr:0x02119904
 _ZN12dScMgSound_cD0Ev kind:function(arm,size=0x68) addr:0x02119958
@@ -1788,7 +1788,7 @@ _ZN18dScMgTrampoline2_c13OnTurnIntoEggEi kind:function(arm,size=0x34) addr:0x021
 _ZN18dScMgTrampoline2_c13OnYoshiTryEatEi kind:function(arm,size=0x120) addr:0x021242cc
 _ZN18dScMgTrampoline2_c13InitResourcesEv kind:function(arm,size=0x1bc) addr:0x021243ec
 func_ov006_021245a8 kind:function(arm,size=0x174) addr:0x021245a8
-MgTrampolineTerror_Spawn kind:function(arm,size=0x18c) addr:0x0212471c
+dScMgTrampoline2_c_classInit kind:function(arm,size=0x18c) addr:0x0212471c
 func_ov006_021248a8 kind:function(arm,size=0x60) addr:0x021248a8
 _ZN10dScMgBSC_cD1Ev kind:function(arm,size=0x74) addr:0x02124908
 _ZN10dScMgBSC_cD0Ev kind:function(arm,size=0x88) addr:0x0212497c
@@ -3456,7 +3456,7 @@ data_ov006_0213bbb4 kind:data(any) addr:0x0213bbb4
 _ZTV14dScMgBomroom_c kind:data(any) addr:0x0213bbb4
 data_ov006_0213bc44 kind:data(any) addr:0x0213bc44
 _ZTI12dMgCardObj_c kind:data(any) addr:0x0213bc48
-MgPicturePoker_SpawnInfo kind:data(any) addr:0x0213bc50
+g_profile_MG_CARD kind:data(any) addr:0x0213bc50
 _ZTI17dMgDilarCardObj_c kind:data(any) addr:0x0213bc58
 _ZTI19dScMgSingle3DBase_c kind:data(any) addr:0x0213bc64
 _ZTI11dScMgCard_c kind:data(any) addr:0x0213bc70
@@ -3664,7 +3664,7 @@ data_ov006_0213c96c kind:data(any) addr:0x0213c96c
 data_ov006_0213c974 kind:data(any) addr:0x0213c974
 data_ov006_0213c97c kind:data(any) addr:0x0213c97c
 data_ov006_0213c984 kind:data(any) addr:0x0213c984
-MgWhichWiggler_SpawnInfo kind:data(any) addr:0x0213c98c ambiguous
+g_profile_MG_HANACHAN kind:data(any) addr:0x0213c98c ambiguous
 data_ov006_0213c994 kind:data(any) addr:0x0213c994
 data_ov006_0213c99c kind:data(any) addr:0x0213c99c
 data_ov006_0213c9a4 kind:data(any) addr:0x0213c9a4
@@ -3715,7 +3715,7 @@ data_ov006_0213cbb4 kind:data(any) addr:0x0213cbb4
 data_ov006_0213cbc8 kind:data(any) addr:0x0213cbc8
 _ZTV11dScMgJump_c kind:data(any) addr:0x0213cbe4
 data_ov006_0213cc74 kind:data(any) addr:0x0213cc74
-MgBounceAndTrounce_SpawnInfo kind:data(any) addr:0x0213cc7c ambiguous
+g_profile_MG_JUMP2 kind:data(any) addr:0x0213cc7c ambiguous
 data_ov006_0213cc84 kind:data(any) addr:0x0213cc84
 data_ov006_0213cc8c kind:data(any) addr:0x0213cc8c
 data_ov006_0213cc94 kind:data(any) addr:0x0213cc94
@@ -3858,7 +3858,7 @@ data_ov006_0213d6f8 kind:data(any) addr:0x0213d6f8
 data_ov006_0213d6fc kind:data(any) addr:0x0213d6fc
 data_ov006_0213d700 kind:data(any) addr:0x0213d700
 _ZTI19dMgMCarlo2CardObj_c kind:data(any) addr:0x0213d704
-MgPairAGoneAndOn_SpawnInfo kind:data(any) addr:0x0213d70c ambiguous
+g_profile_MG_MCARLO2 kind:data(any) addr:0x0213d70c ambiguous
 _ZTI14dScMgMCarlo2_c kind:data(any) addr:0x0213d714
 data_ov006_0213d728 kind:data(any) addr:0x0213d728
 _ZTS14dScMgMCarlo2_c kind:data(any) addr:0x0213d730
@@ -4011,7 +4011,7 @@ _ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 data_ov006_0213e2dc kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
 data_ov006_0213e2e8 kind:data(any) addr:0x0213e2e8
-MgMushroomRoulette_SpawnInfo kind:data(any) addr:0x0213e2f0 ambiguous
+g_profile_MG_ROULETTE kind:data(any) addr:0x0213e2f0 ambiguous
 data_ov006_0213e2f8 kind:data(any) addr:0x0213e2f8
 _ZTI15dScMgRoulette_c kind:data(any) addr:0x0213e300
 _ZTS15dScMgRoulette_c kind:data(any) addr:0x0213e30c
@@ -4095,7 +4095,7 @@ data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
 _ZTV12dScMgSlot3_c kind:data(any) addr:0x0213eaa8
 data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
 _ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
-MgBingoBallSlotsShot_SpawnInfo kind:data(any) addr:0x0213ebd0 ambiguous
+g_profile_MG_SMARTBALL kind:data(any) addr:0x0213ebd0 ambiguous
 _ZTI21cMgSmartball_object_c kind:data(any) addr:0x0213ebd8
 _ZTI21cMgSmartball_pakkun_c kind:data(any) addr:0x0213ebe0
 _ZTI19cMgSmartball_ball_c kind:data(any) addr:0x0213ebec
@@ -4291,7 +4291,7 @@ data_ov006_0213fb04 kind:data(any) addr:0x0213fb04
 data_ov006_0213fb18 kind:data(any) addr:0x0213fb18
 _ZTV17dScMgTrampoline_c kind:data(any) addr:0x0213fb34
 data_ov006_0213fbc4 kind:data(any) addr:0x0213fbc4
-MgTrampolineTerror_SpawnInfo kind:data(any) addr:0x0213fbc8 ambiguous
+g_profile_MG_TRAMPOLINE2 kind:data(any) addr:0x0213fbc8 ambiguous
 data_ov006_0213fbd0 kind:data(any) addr:0x0213fbd0
 data_ov006_0213fbd8 kind:data(any) addr:0x0213fbd8
 data_ov006_0213fbe0 kind:data(any) addr:0x0213fbe0

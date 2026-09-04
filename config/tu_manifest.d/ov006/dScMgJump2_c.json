@@ -215,7 +215,7 @@
       "ordinal": 27
     },
     {
-      "symbol": "dScMgJump2_c_Spawn",
+      "symbol": "dScMgJump2_c_classInit",
       "address": "0x020efaf0",
       "size": "0x00000118",
       "legacy_source": "src/dScMgJump2_c_Spawn.c",

@@ -78,10 +78,14 @@ extern void _ZN10dBgActor_cC2Ev(void *);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjC0_Switch_c_Spawn, 0x02111420, size 0x30 */
+/* ROM ordinal 7 -- daObjC0_Switch_c_classInit, 0x02111420, size 0x30 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daObjC0_Switch_c_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjC0_Switch_c through RTTI,
+ * allocation size, vtable identity, and the C0_SWITCH registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: daObjC0_Switch_c_Spawn. */
+int *daObjC0_Switch_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(800);
     if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)(_ZTV16daObjC0_Switch_c + 2); }

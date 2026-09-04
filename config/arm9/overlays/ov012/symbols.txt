@@ -5,7 +5,7 @@ _ZN16daObjC0_Switch_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02
 _ZN16daObjC0_Switch_c6RenderEv kind:function(arm,size=0x28) addr:0x02111324
 _ZN16daObjC0_Switch_c8BehaviorEv kind:function(arm,size=0x24) addr:0x0211134c
 _ZN16daObjC0_Switch_c13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111370
-daObjC0_Switch_c_Spawn kind:function(arm,size=0x30) addr:0x02111420
+daObjC0_Switch_c_classInit kind:function(arm,size=0x30) addr:0x02111420
 _ZN13BasementWaterD1Ev kind:function(arm,size=0x4c) addr:0x02111450
 _ZN13BasementWaterD0Ev kind:function(arm,size=0x60) addr:0x0211149c
 _ZN13BasementWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021114fc
@@ -95,7 +95,7 @@ data_ov012_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov012_0211229c kind:data(any) addr:0x0211229c ambiguous
 _ZTI16daObjC0_Switch_c kind:data(any) addr:0x02112300
 _ZTS16daObjC0_Switch_c kind:data(any) addr:0x0211230c
-daObjC0_Switch_c_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
+g_profile_C0_SWITCH kind:data(any) addr:0x02112320 ambiguous
 _ZTV16daObjC0_Switch_c kind:data(any) addr:0x02112344
 data_ov012_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous

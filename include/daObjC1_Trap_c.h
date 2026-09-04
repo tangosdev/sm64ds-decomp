@@ -6,7 +6,11 @@
 /* The ROM's RTTI identifies daObjC1_Trap_c as a direct dBgActor_c subclass.
  * Its own storage starts at 0x320 with the rendered trap-door model; the
  * inherited dBgActor_c model and moving collider remain at 0x0d4 and 0x124.
- * Trap_Spawn's 0x3b0 allocation fixes the complete size.
+ * daObjC1_Trap_c_classInit's 0x3b0 allocation fixes the complete size.
+ *
+ * SM64DS RTTI names the implementation daObjC1_Trap_c. The reconstructed factory
+ * daObjC1_Trap_c_classInit (historical alias Trap_Spawn) installs this class's
+ * cartridge vtable for the C1_TRAP registry profile.
  */
 
 #ifdef __cplusplus

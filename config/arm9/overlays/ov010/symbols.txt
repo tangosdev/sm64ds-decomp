@@ -14,7 +14,7 @@ _ZN14daObjC1_Trap_c8BehaviorEv kind:function(arm,size=0x74) addr:0x021115e0
 _ZN14daObjC1_Trap_c13InitResourcesEv kind:function(arm,size=0x1f8) addr:0x02111654
 _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c kind:function(arm,size=0x138) addr:0x0211184c
 func_ov010_02111984 kind:function(arm,size=0x14) addr:0x02111984
-Trap_Spawn kind:function(arm,size=0x38) addr:0x02111998
+daObjC1_Trap_c_classInit kind:function(arm,size=0x38) addr:0x02111998
 _ZN9LightBeamD1Ev kind:function(arm,size=0x38) addr:0x021119d0
 _ZN9LightBeamD0Ev kind:function(arm,size=0x4c) addr:0x02111a08
 func_ov010_02111a54 kind:function(arm,size=0x40) addr:0x02111a54
@@ -116,7 +116,7 @@ _ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
 data_ov010_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
 _ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
-Trap_SpawnInfo kind:data(any) addr:0x02112ac0 ambiguous
+g_profile_C1_TRAP kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
 _ZTV14daObjC1_Trap_c kind:data(any) addr:0x02112ae4
 data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous

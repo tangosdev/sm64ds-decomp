@@ -1,9 +1,9 @@
 /* class dScMgCard_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgCard_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgPicturePoker_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). The coined English Spawn-function name was
+ * MgPicturePoker_Spawn; the factory now carries the reconstructed
+ * dScMgCard_c_classInit spelling, and the class itself takes its
+ * real ROM identity, matching this tree's current convention.
  *
  * SIZE 0x539c, from MgPicturePoker_Spawn.cpp's own
  * `_ZN7fBase_cnwEj(0x539c)`.
@@ -41,7 +41,12 @@
  * because the members are raw bytes; the third call releases the shared table
  * by raw offset, since two of its words stay named. No separate operator
  * delete is needed -- dScMgBase_c, two levels up, already provides one.
- * Same recipe as include/dScMgMCarlo2_c.h, and for the same reason. */
+ * Same recipe as include/dScMgMCarlo2_c.h, and for the same reason.
+ *
+ * SM64DS RTTI names the implementation dScMgCard_c. The reconstructed factory
+ * dScMgCard_c_classInit (historical alias MgPicturePoker_Spawn) installs this class's
+ * cartridge vtable for the MG_CARD registry profile.
+ */
 #ifndef DSCMGCARD_C_H
 #define DSCMGCARD_C_H
 #include "dScMgSingle3DBase_c.h"

@@ -3,7 +3,7 @@ _ZN14daObjBSwdoor_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 _ZN14daObjBSwdoor_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111254
 _ZN14daObjBSwdoor_c8BehaviorEv kind:function(arm,size=0x2c) addr:0x02111268
 _ZN14daObjBSwdoor_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111294
-daObjBSwdoor_c_Spawn kind:function(arm,size=0x3c) addr:0x021112cc
+daObjBSwdoor_c_classInit kind:function(arm,size=0x3c) addr:0x021112cc
 _ZN10daWanwan_cD1Ev kind:function(arm,size=0xb4) addr:0x02111308
 _ZN10daWanwan_cD0Ev kind:function(arm,size=0xc8) addr:0x021113bc
 func_ov014_02111484 kind:function(arm,size=0x54) addr:0x02111484
@@ -158,7 +158,7 @@ data_ov014_02114598 kind:data(any) addr:0x02114598 ambiguous
 _ZTI14daObjBSwdoor_c kind:data(any) addr:0x021145b8
 data_ov014_021145c4 kind:data(any) addr:0x021145c4
 _ZTS14daObjBSwdoor_c kind:data(any) addr:0x021145d0
-daObjBSwdoor_c_SpawnInfo kind:data(any) addr:0x021145e4 ambiguous
+g_profile_SWITCHDOOR kind:data(any) addr:0x021145e4 ambiguous
 _ZTV14daObjBSwdoor_c kind:data(any) addr:0x02114608
 data_ov014_0211462c kind:data(any) addr:0x0211462c ambiguous
 data_ov014_02114688 kind:data(any) addr:0x02114688

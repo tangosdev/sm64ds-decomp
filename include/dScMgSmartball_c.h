@@ -9,11 +9,12 @@
  * straight away -- no second vptr store, which is what an inlined
  * intermediate base's destructor would have left behind.
  *
- * SIZE 0x629c, from MgBingoBallSlotsShot_Spawn's own
+ * SIZE 0x629c, from dScMgSmartball_c_classInit's own
  * `_ZN7fBase_cnwEj(0x629c)`, and the last array closes EXACTLY on it:
- * 0x599c + 0x40 * 0x24 = 0x629c. The English _Spawn name is already
- * attributed and is kept, the same convention as MgPicturePoker_Spawn for
- * dScMgCard_c.
+ * 0x599c + 0x40 * 0x24 = 0x629c. The coined English _Spawn name
+ * MgBingoBallSlotsShot_Spawn is already attributed and is retained as a
+ * historical alias, the same convention as dScMgCard_c_classInit
+ * (historical alias MgPicturePoker_Spawn) for dScMgCard_c.
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse order:
  * built 0x47c8, 0x4854, 0x48d4, 0x599c; destroyed 0x599c, 0x48d4, 0x4854,
@@ -39,7 +40,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN16dScMgSmartball_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, the immediate base, already provides one. */
+ * dScMgBase_c, the immediate base, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgSmartball_c. The reconstructed factory
+ * dScMgSmartball_c_classInit (historical alias MgBingoBallSlotsShot_Spawn) installs this class's
+ * cartridge vtable for the MG_SMARTBALL registry profile.
+ */
 #ifndef DSCMGSMARTBALL_C_H
 #define DSCMGSMARTBALL_C_H
 #include "dScMgBase_c.h"

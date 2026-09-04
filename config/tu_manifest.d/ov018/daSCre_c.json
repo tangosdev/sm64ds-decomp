@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "daSCre_c_Spawn",
+      "symbol": "daSCre_c_classInit",
       "address": "0x0211278c",
       "size": "0x00000030",
       "legacy_source": "src/daSCre_c_Spawn.c",

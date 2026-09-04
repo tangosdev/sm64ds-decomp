@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "MgPairAGoneAndOn_Spawn",
+      "symbol": "dScMgMCarlo2_c_classInit",
       "address": "0x020fa6ac",
       "size": "0x00000094",
       "legacy_source": "src/MgPairAGoneAndOn_Spawn.cpp",

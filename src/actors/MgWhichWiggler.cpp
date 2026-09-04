@@ -25,7 +25,7 @@ extern int data_ov006_0213cab8[];
  * `void*(char*)`.  A guessed declaration and the real definition are two
  * overloads in C++, so the guess is dropped rather than restated. */
 extern void func_ov006_020ea324(void *);
-void *MgWhichWiggler_Spawn(void);
+void *dScMgHanachan_c_classInit(void);
 extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
 /* TUBUILD RECONCILE -- the legacy file for func_ov006_020ede80 declared
@@ -47,10 +47,14 @@ extern "C" void* func_ov006_020ede80(char* self)   /* `this` is a keyword in C++
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgWhichWiggler_Spawn, 0x020ede18, size 0x68 */
+/* ROM ordinal 0 -- dScMgHanachan_c_classInit, 0x020ede18, size 0x68 */
 /* -------------------------------------------------------------------------- */
 // tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
-extern "C" void *MgWhichWiggler_Spawn(void) {
+/* Reconstructed source-style name: SM64DS proves dScMgHanachan_c through RTTI,
+ * allocation size, vtable identity, and the MG_HANACHAN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgWhichWiggler_Spawn. */
+extern "C" void *dScMgHanachan_c_classInit(void) {
     char *o = (char *)_ZN7fBase_cnwEj(0x4f68);
     if (o != 0) {
         _ZN11dScMgBase_cC2Ev(o);

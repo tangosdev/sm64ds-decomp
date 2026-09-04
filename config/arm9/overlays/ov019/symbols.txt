@@ -32,7 +32,7 @@ _ZN10daSldMng_cD1Ev kind:function(arm,size=0x24) addr:0x0211261c
 _ZN10daSldMng_cD0Ev kind:function(arm,size=0x38) addr:0x02112640
 _ZN10daSldMng_c8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
 _ZN10daSldMng_c13InitResourcesEv kind:function(arm,size=0x30) addr:0x0211271c
-daSldMng_c_Spawn kind:function(arm,size=0x30) addr:0x0211274c
+daSldMng_c_classInit kind:function(arm,size=0x30) addr:0x0211274c
 data_ov019_0211277c kind:data(any) addr:0x0211277c
 data_ov019_02112788 kind:data(any) addr:0x02112788
 __sinit_ov019_021127a4 kind:function(arm,size=0x370) addr:0x021127a4
@@ -106,7 +106,7 @@ _ZTV10daPgRcer_c kind:data(any) addr:0x02113310
 data_ov019_02113344 kind:data(any) addr:0x02113344 ambiguous
 _ZTI10daSldMng_c kind:data(any) addr:0x0211338c
 _ZTS10daSldMng_c kind:data(any) addr:0x02113398
-daSldMng_c_SpawnInfo kind:data(any) addr:0x021133a8 ambiguous
+g_profile_SLIDER_MANAGER kind:data(any) addr:0x021133a8 ambiguous
 _ZTV10daSldMng_c kind:data(any) addr:0x021133cc
 data_ov019_02113434 kind:data(any) addr:0x02113434 ambiguous
 data_ov019_02113460 kind:bss addr:0x02113460

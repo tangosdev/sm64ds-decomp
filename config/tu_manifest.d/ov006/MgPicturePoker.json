@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "MgPicturePoker_Spawn",
+      "symbol": "dScMgCard_c_classInit",
       "address": "0x020dbd54",
       "size": "0x000000c0",
       "legacy_source": "src/MgPicturePoker_Spawn.cpp",

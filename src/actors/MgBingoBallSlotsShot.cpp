@@ -24,7 +24,7 @@ extern void func_0203d738(void);
 extern void NullDestructor_0203d47c(void);
 extern void func_ov006_02119900(void);
 extern void func_ov006_0210d894(void);
-void *MgBingoBallSlotsShot_Spawn(void);
+void *dScMgSmartball_c_classInit(void);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -35,10 +35,14 @@ extern "C" void func_ov006_02119900(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- MgBingoBallSlotsShot_Spawn, 0x02119824, size 0xdc */
+/* ROM ordinal 0 -- dScMgSmartball_c_classInit, 0x02119824, size 0xdc */
 /* -------------------------------------------------------------------------- */
 // tu_create.py: the definition was inside an extern "C" block; the block was closed before it and the definition given explicit C linkage
-extern "C" void *MgBingoBallSlotsShot_Spawn(void) {
+/* Reconstructed source-style name: SM64DS proves dScMgSmartball_c through RTTI,
+ * allocation size, vtable identity, and the MG_SMARTBALL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgBingoBallSlotsShot_Spawn. */
+extern "C" void *dScMgSmartball_c_classInit(void) {
     char *o = (char *)_ZN7fBase_cnwEj(0x629c);
     if (o != 0) {
         _ZN11dScMgBase_cC2Ev(o);

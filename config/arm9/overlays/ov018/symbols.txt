@@ -35,7 +35,7 @@ daPgMthr_c_classInit kind:function(arm,size=0x58) addr:0x0211267c
 _ZN8daSCre_cD1Ev kind:function(arm,size=0x24) addr:0x021126d4
 _ZN8daSCre_cD0Ev kind:function(arm,size=0x38) addr:0x021126f8
 _ZN8daSCre_c8BehaviorEv kind:function(arm,size=0x5c) addr:0x02112730
-daSCre_c_Spawn kind:function(arm,size=0x30) addr:0x0211278c
+daSCre_c_classInit kind:function(arm,size=0x30) addr:0x0211278c
 _ZN15daObjIceBoard_cD1Ev kind:function(arm,size=0x44) addr:0x021127bc
 _ZN15daObjIceBoard_cD0Ev kind:function(arm,size=0x58) addr:0x02112800
 _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02112858
@@ -149,13 +149,13 @@ data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 BridgePenguin_SpawnInfo kind:data(any) addr:0x02113a00 ambiguous
 _ZTS8daSCre_c kind:data(any) addr:0x02113a38
 _ZTI8daSCre_c kind:data(any) addr:0x02113a44
-daSCre_c_SpawnInfo kind:data(any) addr:0x02113a50 ambiguous
+g_profile_STAR_CREATE kind:data(any) addr:0x02113a50 ambiguous
 _ZTV8daSCre_c kind:data(any) addr:0x02113a74
 data_ov018_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov018_02113abc kind:data(any) addr:0x02113abc ambiguous
 _ZTI15daObjIceBoard_c kind:data(any) addr:0x02113af0
 _ZTS15daObjIceBoard_c kind:data(any) addr:0x02113afc
-daObjIceBoard_c_classInitInfo kind:data(any) addr:0x02113b10 ambiguous
+g_profile_ICE_BOARD kind:data(any) addr:0x02113b10 ambiguous
 data_ov018_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 _ZTV15daObjIceBoard_c kind:data(any) addr:0x02113b34
 data_ov018_02113b50 kind:data(any) addr:0x02113b50 ambiguous

@@ -16,7 +16,7 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjSwdoor_c, ov002 0x021099c0
  *
- * SIZE 0x324, from daObjBSwdoor_c_Spawn's literal 804. It overrides slots 0
+ * SIZE 0x324, from daObjBSwdoor_c_classInit's literal 804. It overrides slots 0
  * (InitResources), 3 (CleanupResources) and 6 (Behavior), all three of which the
  * base leaves null.
  *
@@ -30,6 +30,10 @@
  * dBgActor_c's, twice removed, and are inherited now -- dBgActor_c calls the second
  * one mMeshCollider, which is why _ZN14daObjBSwdoor_c13InitResourcesEv.cpp changes
  * with this header.
+ *
+ * SM64DS RTTI names the implementation daObjBSwdoor_c. The reconstructed factory
+ * daObjBSwdoor_c_classInit (historical alias daObjBSwdoor_c_Spawn) installs this class's
+ * cartridge vtable for the SWITCHDOOR registry profile.
  */
 
 #ifdef __cplusplus

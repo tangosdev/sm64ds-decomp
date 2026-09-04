@@ -54,7 +54,7 @@
       "ordinal": 4
     },
     {
-      "symbol": "daObjBSwdoor_c_Spawn",
+      "symbol": "daObjBSwdoor_c_classInit",
       "address": "0x021112cc",
       "size": "0x0000003c",
       "legacy_source": "src/daObjBSwdoor_c_Spawn.c",

@@ -4,7 +4,7 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 
-/* daMcFlag_c_Spawn allocates 0x138 bytes, constructs dActor_c, writes the daMcFlag_c
+/* daMcFlag_c_classInit allocates 0x138 bytes, constructs dActor_c, writes the daMcFlag_c
  * vtable, then constructs the ModelAnim member at 0xd4.  Both destructor
  * variants destroy that member before chaining to dActor_c, independently
  * confirming the ownership and the class extent.
@@ -20,6 +20,10 @@
  * The 31-slot ROM vtable differs from dActor_c only in slots 0, 3, 6, 9, 16
  * and 17, exactly the declarations below.  All other actor virtuals are
  * inherited and must not be redeclared here.
+ *
+ * SM64DS RTTI names the implementation daMcFlag_c. The reconstructed factory
+ * daMcFlag_c_classInit (historical alias daMcFlag_c_Spawn) installs this class's
+ * cartridge vtable for the MC_FLAG registry profile.
  */
 struct daMcFlag_c : dActor_c {
     u8        pad_0d0[0x4];
