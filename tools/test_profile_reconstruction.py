@@ -6,6 +6,15 @@ import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import profile_reconstruction as PR
+import tu_names as TN
+
+
+class TranslationUnitFilenameTests(unittest.TestCase):
+    def test_nsmbw_lineage_prefixes(self):
+        self.assertEqual(TN.candidate_stem("dScBoot_c"), "d_s_boot")
+        self.assertEqual(TN.candidate_stem("dScMgCurling2_c"), "d_s_mg_curling2")
+        self.assertEqual(TN.candidate_stem("daObjWaterfall_c"), "d_a_obj_waterfall")
+        self.assertEqual(TN.candidate_stem("daObj_Mip_Key_c"), "d_a_obj_mip_key")
 
 
 class ProfileReconstructionUnitTests(unittest.TestCase):
@@ -101,6 +110,7 @@ class ProfileReconstructionOutputTests(unittest.TestCase):
         self.assertEqual(row["registry_candidate_count"], 1)
         self.assertEqual(row["overlay"], "ov006")
         self.assertEqual(row["class_name"], "dScMgCurling2_c")
+        self.assertEqual(row["class_filename_candidate"], "d_s_mg_curling2.cpp")
 
     def test_duplicate_class_factories_are_not_globally_renamed(self):
         for profile in ("KURIBO", "TERESA", "BOSS_TERESA", "KINOKO_CREATE_TAG", "SHOOT_BOOK"):

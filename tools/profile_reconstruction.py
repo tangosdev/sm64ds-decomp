@@ -991,7 +991,7 @@ def make_observations(refresh: bool, no_refresh: bool):
         if probable_filename:
             filename_evidence = (
                 "RTTI class-family stem from tools/tu_names.py + recovered text TU from "
-                "tools/tu_map.py + later EAD d_a/d_sc path convention; no SM64DS __FILE__ proof"
+                "tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof"
             )
         elif class_filename_candidate:
             filename_evidence = (
