@@ -558,14 +558,15 @@ address-only, so the exact original source names remain unknown.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5d94 | `mScrollY` | `func_ov006_02121bc8` approaches it toward `mScrollTargetY` by 2 a tick; `OnKicked` and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |
+| 0x5d94 | `mScrollY` | `dScMgTrampoline_c::UpdateScroll` approaches it toward `mScrollTargetY` by 2 a tick; `OnKicked` and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |
 | 0x5d98 | `mScrollTargetY` | The other argument of that `ApproachLinear`; recomputed as `(q << 3) + 0x20` once the scroll has caught up. InitResources seeds it from `mScrollY`. |
 | 0x5d9c | `mScrollHoldTimer` | Loaded with 0x78 and run down to 0 by `ApproachLinear(..., 0, 1)`; the target may not move again until it reaches 0. |
 | 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
 | 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `dScMgTrampoline_c::StatePlay` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
-| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `func_ov006_0212157c` refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
+| 0x5dac | `mDragSoundHandle` | `UpdateTouchInput` passes the previous word to `func_02012468`, stores its returned handle, and zeroes it when a new drag begins; the intro interpolation uses the same positional-sound update path. |
+| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
 | 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; `OnAttacked2` measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
-| 0x5db8 | `mInputEnabled` | s16. `func_ov006_0212157c` clears `mTouching` and returns immediately while it is 0. |
+| 0x5db8 | `mInputEnabled` | s16. `UpdateTouchInput` clears `mTouching` and returns immediately while it is 0. |
 | 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |
 | 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; `OnAttacked2` is the only reader and clears it after scoring the swipe. |
 

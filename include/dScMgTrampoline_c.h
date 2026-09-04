@@ -82,6 +82,11 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     void BeginPlay();      /* ov006 0x02121cf4 */
     void BeginIntro();     /* ov006 0x02121f04 */
 
+    /* Per-frame helpers called by Behavior/StatePlay. Their names describe
+       matched behavior; exact original spellings are not present in the ROM. */
+    void UpdateTouchInput(); /* ov006 0x0212157c */
+    void UpdateScroll();     /* ov006 0x02121bc8 */
+
     u32 mState[2];         /* 0x5004 -- raw eight-byte State encoding; direct
                               global PMF initializers emit a non-ROM __sinit */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */
@@ -97,7 +102,8 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s32 mArrow1X;         /* 0x5da4 -- the two guide arrows Render draws at
                              n + 0xf0; each slides between 0 and 0x20 */
     s32 mArrow2X;         /* 0x5da8 */
-    u8  pad_5dac[0x4];    /* 0x5dac -- the drag sound handle */
+    s32 mDragSoundHandle; /* 0x5dac -- returned by the positional drag-sound
+                             updater and fed back on the next frame */
     s16 mTouchX;          /* 0x5db0 -- the current stylus sample */
     s16 mTouchY;          /* 0x5db2 */
     s16 mTouchStartX;     /* 0x5db4 -- copied from mTouch on the press edge and
