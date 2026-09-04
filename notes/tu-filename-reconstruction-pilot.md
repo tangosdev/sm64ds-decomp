@@ -95,8 +95,8 @@ claim about the whole link.
 | `PLAYER` | `src/Player_Spawn.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
 | `WATERFALL` | `src/game/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
 | `KURIBO` | `src/Goomba_Spawn.c` | ov084 `0x02129020..0x0212c10c` | `d_a_krb.cpp` | same | one distinct stem | B- | duplicate class entries; left edge lacks confidence |
-| `TERESA` | `src/actors/daTrs_c/Boo_Spawn.cpp` | ov063 `0x02115ee0..0x0211c600` | `d_a_trs.cpp` | — | later `d_a_*` family | — | same TU also yields `d_a_t_basket.cpp`; TU-map check has baseline failure |
-| `BOSS_TERESA` | `src/actors/BigBoo/BigBoo_Spawn.cpp` | same ov063 TU | `d_a_trs.cpp` | — | same class as `TERESA` | — | multi-stem TU and two same-class profiles |
+| `TERESA` | `src/game/actors/daTrs_c/Boo_Spawn.cpp` | ov063 `0x02115ee0..0x0211c600` | `d_a_trs.cpp` | — | later `d_a_*` family | — | same TU also yields `d_a_t_basket.cpp`; TU-map check has baseline failure |
+| `BOSS_TERESA` | `src/game/actors/daTrs_c/BigBoo_Spawn.cpp` | same ov063 TU | `d_a_trs.cpp` | — | same class as `TERESA` | — | multi-stem TU and two same-class profiles |
 | `WANWAN` | `src/ChainChomp_Spawn.cpp` | ov014 `0x02111308..0x02112e0c` | `d_a_wanwan.cpp` | same | unique stem and high/high boundaries | B | nearby `d_a_obj_*` units are not globally lexical |
 | `OBJ_MIP_KEY` | `src/daObj_Mip_Key_c_classInit.c` | ov085 `0x0212cc88..0x0212d528` | `d_a_obj_mip_key.cpp` | same | class family plus high/high boundaries | B | TU-name tool has no surviving stem for this interval |
 | `PROPELLER_HEYHO` | `src/game/actors/d_a_propeller_heyho.cpp` | ov070 `0x0211f000..0x02120570` | `d_a_propeller_heyho.cpp` | same | class family only | B- | no recovered interval stem; left edge lacks confidence |

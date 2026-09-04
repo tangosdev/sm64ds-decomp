@@ -4,31 +4,31 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211edc0 kind:data align:32
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
-src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f48
 
-src/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
-src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_cD1Ev.cpp:
     complete
     .text start:0x02115fc4 end:0x0211600c
 
-src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_cD0Ev.cpp:
     complete
     .text start:0x0211600c end:0x02116068
 
-src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp:
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp:
     complete
     .text start:0x02116068 end:0x0211608c
 
-src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp:
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD0Ev.cpp:
     complete
     .text start:0x0211608c end:0x021160c4
 
-src/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021160c4 end:0x021160d4
 
@@ -323,71 +323,71 @@ src/unnamed/ov063/func_ov063_0211adfc.c:
     complete
     .text start:0x0211adfc end:0x0211ae1c
 
-src/actors/BooCage/_ZN11daTBasket_c16CleanupResourcesEv.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
-src/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae40 end:0x0211af6c
 
-src/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211af6c end:0x0211af70
 
-src/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
     complete
     .text start:0x0211af70 end:0x0211b078
 
-src/actors/BooCage/_ZN11daTBasket_c6RenderEv.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_c6RenderEv.cpp:
     complete
     .text start:0x0211b078 end:0x0211b0a4
 
-src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b0a4 end:0x0211b888
 
-src/actors/BooCage/_ZN11daTBasket_c8BehaviorEv.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
-src/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211b9bc end:0x0211c35c
 
-src/actors/BooCage/_ZN11daTBasket_c13InitResourcesEv.cpp:
+src/game/actors/daTBasket_c/_ZN11daTBasket_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c35c end:0x0211c444
 
-src/actors/BigBooIcon/_ZN11daTrsIcon_c13InitResourcesEv.cpp:
+src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c444 end:0x0211c480
 
-src/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 
-src/actors/BigBooIcon/BigBooIcon_Spawn.c:
+src/game/actors/daTrsIcon_c/BigBooIcon_Spawn.c:
     complete
     .text start:0x0211c4a0 end:0x0211c4d0
 
-src/actors/BooCage/BooCage_Spawn.c:
+src/game/actors/daTBasket_c/BooCage_Spawn.c:
     complete
     .text start:0x0211c4d0 end:0x0211c520
 
-src/actors/BigBoo/BigBoo_Spawn.cpp:
+src/game/actors/daTrs_c/BigBoo_Spawn.cpp:
     complete
     .text start:0x0211c520 end:0x0211c590
 
-src/actors/daTrs_c/Boo_Spawn.cpp:
+src/game/actors/daTrs_c/Boo_Spawn.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
-src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp:
     complete
     .text start:0x0211c600 end:0x0211c638
 
-src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD0Ev.cpp:
     complete
     .text start:0x0211c638 end:0x0211c684
 
@@ -427,19 +427,19 @@ src/unnamed/ov063/func_ov063_0211cc18.c:
     complete
     .text start:0x0211cc18 end:0x0211cdec
 
-src/actors/MansionSteps/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211cdec end:0x0211ce30
 
-src/actors/MansionSteps/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211ce30 end:0x0211ce34
 
-src/actors/MansionSteps/_ZN11daTrsTrap_c6RenderEv.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c6RenderEv.cpp:
     complete
     .text start:0x0211ce34 end:0x0211ce74
 
-src/actors/MansionSteps/_ZN11daTrsTrap_c8BehaviorEv.cpp:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp:
     complete
     .text start:0x0211ce74 end:0x0211cf00
 
@@ -451,47 +451,47 @@ src/unnamed/ov063/func_ov063_0211d28c.c:
     complete
     .text start:0x0211d28c end:0x0211d2a0
 
-src/actors/TrapDoor/TrapDoor_Spawn.c:
+src/game/actors/daTrsTrap_c/TrapDoor_Spawn.c:
     complete
     .text start:0x0211d2a0 end:0x0211d2e0
 
-src/actors/MerryGoRound/MerryGoRound_Spawn.c:
+src/game/actors/daTrsTrap_c/MerryGoRound_Spawn.c:
     complete
     .text start:0x0211d2e0 end:0x0211d320
 
-src/actors/Bookshelf/Bookshelf_Spawn.c:
+src/game/actors/daTrsTrap_c/Bookshelf_Spawn.c:
     complete
     .text start:0x0211d320 end:0x0211d360
 
-src/actors/MansionSteps/MansionSteps_Spawn.c:
+src/game/actors/daTrsTrap_c/MansionSteps_Spawn.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD1Ev.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d3f0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp:
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp:
     complete
     .text start:0x0211d3f0 end:0x0211d454
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211d454 end:0x0211d468
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh13InitResourcesEv.cpp:
     complete
     .text start:0x0211d468 end:0x0211d47c
 
-src/actors/FallBlockBbh/daObjTh_Fall_Block_c_classInit.c:
+src/game/actors/daObjTh_Fall_Block_c/daObjTh_Fall_Block_c_classInit.c:
     complete
     .text start:0x0211d47c end:0x0211d4b8
 
-src/actors/MadPiano/_ZN8MadPianoD1Ev.cpp:
+src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp:
     complete
     .text start:0x0211d4b8 end:0x0211d54c
 
-src/actors/MadPiano/_ZN8MadPianoD0Ev.cpp:
+src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp:
     complete
     .text start:0x0211d54c end:0x0211d5f4
 
@@ -535,23 +535,23 @@ src/unnamed/ov063/func_ov063_0211ddf4.cpp:
     complete
     .text start:0x0211ddf4 end:0x0211de3c
 
-src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp:
+src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211de3c end:0x0211de8c
 
-src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp:
+src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp:
     complete
     .text start:0x0211de8c end:0x0211deb8
 
-src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp:
+src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp:
     complete
     .text start:0x0211deb8 end:0x0211dfac
 
-src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp:
+src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp:
     complete
     .text start:0x0211dfac end:0x0211e128
 
-src/actors/MadPiano/MadPiano_Spawn.cpp:
+src/game/actors/daPiano_c/MadPiano_Spawn.cpp:
     complete
     .text start:0x0211e128 end:0x0211e1c0
 
@@ -567,6 +567,6 @@ src/unnamed/ov063/__sinit_ov063_0211e590.c:
     complete
     .init start:0x0211e590 end:0x0211e5fc
 
-src/actors/MadPiano/__sinit_ov063_0211e5fc.c:
+src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c:
     complete
     .init start:0x0211e5fc end:0x0211e6fc
