@@ -5,7 +5,7 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEj(0x5ff8)`
- * (src/func_ov006_0212b7f8.cpp).
+ * (src/d_s_mg_flower.cpp).
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER. The factory builds
  * mArray at 0x4f38 (0x16 elements of 0x20, element ctor

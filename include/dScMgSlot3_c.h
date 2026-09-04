@@ -6,7 +6,7 @@
  * than to a neighbour.
  *
  * SIZE 0x5044, from the factory's own `_ZN7fBase_cnwEj(0x5044)`
- * (src/func_ov006_0210c120.c). The evidenced field span stops at 0x5043,
+ * (src/d_s_mg_slot3.c). The evidenced field span stops at 0x5043,
  * so the trailing byte is alignment, not unclaimed space.
  *
  * TABLE at 0x4f38, constructed by func_ov006_020c221c and destroyed by

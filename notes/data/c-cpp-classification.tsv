@@ -278,15 +278,15 @@ src/MegaMushroom_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/Message_DrawCenteredLine.c	WEAK-refs-only	arm9				1		None		-
 src/daObjFl_Amilift_c_classInit.c	S1-stores-rom-vptr	ov064			stores _ZTV12MetalNetLift	1		None	_ZTV12MetalNetLift	-
 src/daObjMc_Metalnet_c_classInit.c	WEAK-refs-only	ov009				1		None		-
-src/MgBobOmbSquad_Spawn.c	WEAK-refs-only	ov006				1		None		-
-src/MgHideAndBooSeek_Spawn.c	WEAK-refs-only	ov006				1		None		-
-src/MgLakituLaunch_Spawn.c	P2-vtable-only	ov006	dScMgPachinko_c	dScMgPachinko_c	vtable dScMgPachinko_c slot 38 @0x2104258	1		True		-
-src/MgMemoryMaster_Spawn.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
-src/MgMemoryMatch_Spawn.c	S1-stores-rom-vptr	ov006			stores _ZTV13dScMgMemory_c	1		None	_ZTV13dScMgMemory_c/_ZTV19dScMgSingle3DBase_c	-
-src/MgPuzzlePanelPuzzlePanic_Spawn.c	WEAK-refs-only	ov006				1		None		-
-src/dScMgCurling_c_classInit.c	WEAK-refs-only	ov006				1		None		-
-src/MgSortOrSplode_Spawn.c	WEAK-refs-only	ov006				1		None		-
-src/MgWanted_Spawn.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_pachinko.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_teresa.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_pachinko2.c	P2-vtable-only	ov006	dScMgPachinko_c	dScMgPachinko_c	vtable dScMgPachinko_c slot 38 @0x2104258	1		True		-
+src/d_s_mg_memory2.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
+src/d_s_mg_memory.c	S1-stores-rom-vptr	ov006			stores _ZTV13dScMgMemory_c	1		None	_ZTV13dScMgMemory_c/_ZTV19dScMgSingle3DBase_c	-
+src/d_s_mg_panel.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_curling.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_bomroom.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_luigi.c	WEAK-refs-only	ov006				1		None		-
 src/Mod.c	PURE-C					0		None		not-in-delinks
 src/Moneybag_Spawn.c	WEAK-refs-only	ov081				1		None		-
 src/MontyMoleRock_Spawn.c	WEAK-refs-only	ov080				1		None		-
@@ -4548,7 +4548,7 @@ src/func_ov006_020e64e4.c	PURE-C	ov006				1		None		-
 src/func_ov006_020e6528.c	PURE-C	ov006				1		None		-
 src/func_ov006_020e667c.c	PURE-C	ov006				1		None		-
 src/func_ov006_020e668c.c	PURE-C	ov006				1		None		-
-src/dScMgCurling2_c_classInit.c	WEAK-refs-only	ov006				1		None		-
+src/d_s_mg_curling2.c	WEAK-refs-only	ov006				1		None		-
 src/func_ov006_020e6cac.c	P2-vtable-only	ov006	dScMgD3DBase_c	dScMgD3DBase_c	vtable dScMgD3DBase_c slot 30 @0x20e6cac	1	active	True		-
 src/func_ov006_020e6d8c.c	P2-vtable-only	ov006	dScMgD3DBase_c	dScMgD3DBase_c	vtable dScMgD3DBase_c slot 28 @0x20e6d8c	1		True		-
 src/func_ov006_020e6d98.c	P2-vtable-only	ov006	dScMgD3DBase_c	dScMgD3DBase_c	vtable dScMgD3DBase_c slot 27 @0x20e6d98	1		True		-
@@ -5052,7 +5052,7 @@ src/func_ov006_0210adac.c	PURE-C	ov006				1		None		-
 src/func_ov006_0210af64.c	WEAK-refs-only	ov006				1		None		-
 src/func_ov006_0210b1fc.c	PURE-C	ov006				1		None		-
 src/func_ov006_0210b314.c	P2-vtable-only	ov006	dScMgSlot3_c	dScMgSlot3_c	vtable dScMgSlot3_c slot 18 @0x210b314	1		True		-
-src/func_ov006_0210c120.c	S1-stores-rom-vptr	ov006			stores _ZTV12dScMgSlot3_c	1		None	_ZTV12dScMgSlot3_c/_ZTV19dScMgSingle3DBase_c	-
+src/d_s_mg_slot3.c	S1-stores-rom-vptr	ov006			stores _ZTV12dScMgSlot3_c	1		None	_ZTV12dScMgSlot3_c/_ZTV19dScMgSingle3DBase_c	-
 src/func_ov006_0210c180.c	PURE-C	ov006				1		None		-
 src/func_ov006_0210c1a8.c	PURE-C	ov006				1		None		-
 src/func_ov006_0210c208.c	PURE-C	ov006				1		None		-

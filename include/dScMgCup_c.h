@@ -11,7 +11,7 @@
  * header.
  *
  * SIZE 0x5470, from the factory's own `_ZN7fBase_cnwEj(0x5470)`
- * (src/dScMgCup_c_classInit.cpp).
+ * (src/d_s_mg_cup.cpp).
  *
  * THE FACTORY AND THE DESTRUCTOR AGREE MEMBER FOR MEMBER, which is the
  * bar this tree sets (see include/dScMgCard_c.h's own note). The factory

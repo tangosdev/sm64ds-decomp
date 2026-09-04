@@ -5,7 +5,7 @@
  * dScMg3DEsp_c_classInit spelling, and the class itself takes its
  * real ROM identity, matching this tree's current convention.
  *
- * SIZE 0x5558, from MgPsycheOut_Spawn.cpp's own
+ * SIZE 0x5558, from d_s_mg3_d_esp.cpp's own
  * `_ZN7fBase_cnwEj(0x5558)`.
  *
  * This class does NOT use the 0x270-byte shared table five siblings do

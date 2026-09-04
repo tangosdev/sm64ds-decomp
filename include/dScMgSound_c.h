@@ -5,7 +5,7 @@
  * dScMgSound_c_classInit spelling, and the class itself takes its
  * real ROM identity, matching this tree's current convention.
  *
- * SIZE 0x562c, from MgBoomBox_Spawn.cpp's own `_ZN7fBase_cnwEj(0x562c)`.
+ * SIZE 0x562c, from d_s_mg_sound.cpp's own `_ZN7fBase_cnwEj(0x562c)`.
  *
  * ONE OWN MEMBER, evidenced by the destructor (func_ov006_02119904,
  * pre-migration): a single explicit call to func_ov006_020c3288(c +

@@ -386,7 +386,7 @@ inherited 0xb4/0xbc slot 18 touches) are NOT represented here -- they
 stay inside a pad, same discipline as every prior sibling. The class's
 true allocation size, 0x53fc, is independently confirmed (not just the
 last-named-field's rounded end) by the untouched constructor's own
-`_ZN7fBase_cnwEj(0x53fc)` call (src/func_ov006_020d5974.cpp), which
+`_ZN7fBase_cnwEj(0x53fc)` call (src/d_s_mg_amida.cpp), which
 also independently corroborates all four destroyed-array offsets/sizes
 via its own construction-side func_020733a8 calls.
 

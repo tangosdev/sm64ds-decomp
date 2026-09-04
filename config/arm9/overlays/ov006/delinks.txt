@@ -1437,7 +1437,7 @@ src/_ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x020d5924 end:0x020d5974
 
-src/func_ov006_020d5974.cpp:
+src/d_s_mg_amida.cpp:
     complete
     .text start:0x020d5974 end:0x020d5a50
 
@@ -1754,7 +1754,7 @@ src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp:
     complete
     .text start:0x020d9244 end:0x020d9574
 
-src/MgSortOrSplode_Spawn.c:
+src/d_s_mg_bomroom.c:
     complete
     .text start:0x020d9574 end:0x020d95a4
 
@@ -2006,7 +2006,7 @@ src/_ZN11dScMgCoin_c13InitResourcesEv.cpp:
     complete
     .text start:0x020de704 end:0x020de940
 
-src/MgCoincentration_Spawn.cpp:
+src/d_s_mg_coin.cpp:
     complete
     .text start:0x020de940 end:0x020de988
 
@@ -2129,7 +2129,7 @@ src/_ZN10dScMgCup_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e0308 end:0x020e0574
 
-src/dScMgCup_c_classInit.cpp:
+src/d_s_mg_cup.cpp:
     complete
     .text start:0x020e0574 end:0x020e0634
 
@@ -2308,7 +2308,7 @@ src/_ZN14dScMgCurling_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e3578 end:0x020e3820
 
-src/dScMgCurling_c_classInit.c:
+src/d_s_mg_curling.c:
     complete
     .text start:0x020e3820 end:0x020e3854
 
@@ -2507,7 +2507,7 @@ src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e6894 end:0x020e6bf4
 
-src/dScMgCurling2_c_classInit.c:
+src/d_s_mg_curling2.c:
     complete
     .text start:0x020e6bf4 end:0x020e6c28
 
@@ -2887,7 +2887,7 @@ src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e9e70 end:0x020ea1f0
 
-src/MgPsycheOut_Spawn.cpp:
+src/d_s_mg3_d_esp.cpp:
     complete
     .text start:0x020ea1f0 end:0x020ea280
 
@@ -3202,7 +3202,7 @@ src/_ZN11dScMgJump_c13OnTurnIntoEggEi.cpp:
     complete
     .text start:0x020ee8dc end:0x020ee994
 
-src/MgBounceAndPounce_Spawn.cpp:
+src/d_s_mg_jump.cpp:
     complete
     .text start:0x020eeafc end:0x020eebe8
 
@@ -3423,7 +3423,7 @@ src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f3460 end:0x020f3800
 
-src/MgWanted_Spawn.c:
+src/d_s_mg_luigi.c:
     complete
     .text start:0x020f3800 end:0x020f3834
 
@@ -3606,7 +3606,7 @@ src/_ZN13dScMgMemory_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f53e4 end:0x020f5504
 
-src/MgMemoryMatch_Spawn.c:
+src/d_s_mg_memory.c:
     complete
     .text start:0x020f5504 end:0x020f5564
 
@@ -3809,7 +3809,7 @@ src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f74b4 end:0x020f75d4
 
-src/MgMemoryMaster_Spawn.c:
+src/d_s_mg_memory2.c:
     complete
     .text start:0x020f75d4 end:0x020f7634
 
@@ -3817,7 +3817,7 @@ src/actors/dScMgMCarlo_c.cpp:
     complete
     .text start:0x020f7634 end:0x020f8e44
 
-src/func_ov006_020f8e44.cpp:
+src/d_s_mg_m_carlo.cpp:
     complete
     .text start:0x020f8e44 end:0x020f8ed8
 
@@ -4107,7 +4107,7 @@ src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp:
     complete
     .text start:0x020fefc0 end:0x020ff3ec
 
-src/MgBobOmbSquad_Spawn.c:
+src/d_s_mg_pachinko.c:
     complete
     .text start:0x020ff3ec end:0x020ff420
 
@@ -4397,7 +4397,7 @@ src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp:
     complete
     .text start:0x02103ed0 end:0x02104258
 
-src/MgLakituLaunch_Spawn.c:
+src/d_s_mg_pachinko2.c:
     complete
     .text start:0x02104258 end:0x0210428c
 
@@ -4673,7 +4673,7 @@ src/_ZN12dScMgPanel_c13InitResourcesEv.cpp:
     complete
     .text start:0x021073b0 end:0x02107858
 
-src/MgPuzzlePanelPuzzlePanic_Spawn.c:
+src/d_s_mg_panel.c:
     complete
     .text start:0x02107858 end:0x0210788c
 
@@ -4916,7 +4916,7 @@ src/_ZN12dScMgSlot3_c8BehaviorEv.cpp:
 src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp:
     .text start:0x0210bdb0 end:0x0210c120
 
-src/func_ov006_0210c120.c:
+src/d_s_mg_slot3.c:
     complete
     .text start:0x0210c120 end:0x0210c180
 
@@ -4999,7 +4999,7 @@ src/_ZN12dScMgSlot1_c6RenderEv.cpp:
 src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp:
     .text start:0x0210d1fc end:0x0210d6b8
 
-src/func_ov006_0210d6b8.cpp:
+src/d_s_mg_slot1.cpp:
     complete
     .text start:0x0210d6b8 end:0x0210d740
 
@@ -5830,7 +5830,7 @@ src/_ZN12dScMgSound_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c984 end:0x0211cb70
 
-src/MgBoomBox_Spawn.cpp:
+src/d_s_mg_sound.cpp:
     complete
     .text start:0x0211cb70 end:0x0211cbd0
 
@@ -6153,7 +6153,7 @@ src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp:
     complete
     .text start:0x021203fc end:0x021207a8
 
-src/MgHideAndBooSeek_Spawn.c:
+src/d_s_mg_teresa.c:
     complete
     .text start:0x021207a8 end:0x021207dc
 
@@ -6161,7 +6161,7 @@ src/actors/d_sc_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x02122490
 
-src/MgTrampolineTime_Spawn.cpp:
+src/d_s_mg_trampoline.cpp:
     complete
     .text start:0x02122490 end:0x021225a8
 
@@ -6333,7 +6333,7 @@ src/actors/dScMgBSC_c.cpp:
     complete
     .text start:0x02124908 end:0x021255f8
 
-src/MgLuckyStars_Spawn.cpp:
+src/d_s_mg_bsc.cpp:
     complete
     .text start:0x021255f8 end:0x0212568c
 
@@ -6492,7 +6492,7 @@ src/func_ov006_0212a3c0.c:
     complete
     .text start:0x0212a3c0 end:0x0212a520
 
-src/MgSnowballSlalom_Spawn.cpp:
+src/d_s_mg_snowball.cpp:
     complete
     .text start:0x0212a520 end:0x0212a554
 
@@ -6528,7 +6528,7 @@ src/_ZN13dScMgFlower_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212b480 end:0x0212b7f8
 
-src/func_ov006_0212b7f8.cpp:
+src/d_s_mg_flower.cpp:
     complete
     .text start:0x0212b7f8 end:0x0212b88c
 

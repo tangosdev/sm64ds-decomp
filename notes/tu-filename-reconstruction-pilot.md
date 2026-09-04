@@ -104,8 +104,8 @@ claim about the whole link.
 | `SHOOT_BOOK` | `src/BookShot_Spawn.c` | ov020 `0x021111a0..0x02112938` | `d_a_book.cpp` | — | class-family candidate | — | TU also yields `d_a_book_gen.cpp` |
 | `BOOK_GENERATOR` | `src/BookShotSpawner_Spawn.c` | same ov020 TU | `d_a_book_gen.cpp` | — | class-family candidate | — | one TU cannot have both mechanical filenames |
 | `MG_CUP` | `src/func_ov006_020e0574.cpp` | ov006 `0x020e0574..0x020e0638` | `d_s_mg_cup.cpp` | same | adjacent earlier class interval has `d_s_mg_cup` | B- | factory is split into its own tiny interval |
-| `MG_CURLING` | `src/dScMgCurling_c_classInit.c` | ov006 `0x020e0638..0x020e3854` | `d_s_mg_curling.cpp` | same | local `cup -> curling -> curling2` sequence is compatible with related-family order | B- | boundaries are medium/high, not source proof |
-| `MG_CURLING_J` | `src/dScMgCurling2_c_classInit.c` | ov006 `0x020e6bf4..0x020e6c28` | `d_s_mg_curling2.cpp` | same | immediately follows the `d_s_mg_curling2` method interval | B- | factory-only interval; class and profile suffixes differ |
+| `MG_CURLING` | `src/d_s_mg_curling.c` | ov006 `0x020e0638..0x020e3854` | `d_s_mg_curling.cpp` | same | local `cup -> curling -> curling2` sequence is compatible with related-family order | B- | boundaries are medium/high, not source proof |
+| `MG_CURLING_J` | `src/d_s_mg_curling2.c` | ov006 `0x020e6bf4..0x020e6c28` | `d_s_mg_curling2.cpp` | same | immediately follows the `d_s_mg_curling2` method interval | B- | factory-only interval; class and profile suffixes differ |
 
 ## WATERFALL ordering trace
 

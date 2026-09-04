@@ -103,7 +103,7 @@ Pounce" (a real minigame) when the class it actually names is the shared
 `tools/rtti_vtables.py --own` for all 15 TRUE direct children found no
 match for its D1/D0 addresses (it isn't one of them); its own vtable
 address ([ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213c62c) matches `dScMgD3DBase_c`'s RTTI record exactly,
-and `MgBounceAndPounce_Spawn.cpp`'s construction order corroborates it
+and `d_s_mg_jump.cpp`'s construction order corroborates it
 independently -- it writes its OWN vtable mid-construction, then
 `dScMgJump_c`'s vtable (one of its four children) at the very end,
 exactly the base-then-derived order a real constructor produces. **A

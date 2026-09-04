@@ -5,7 +5,7 @@
  * dScMgBSC_c_classInit spelling, and the class itself takes its
  * real ROM identity, matching this tree's current convention.
  *
- * SIZE 0x51d0, from MgLuckyStars_Spawn.cpp's own
+ * SIZE 0x51d0, from d_s_mg_bsc.cpp's own
  * `_ZN7fBase_cnwEj(0x51d0)`.
  *
  * ONE SHARED MEMBER at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64),

@@ -20101,7 +20101,7 @@
    "n_functions_map": 2,
    "n_files": 2,
    "files": [
-    "src/func_ov006_020d5974.cpp",
+    "src/d_s_mg_amida.cpp",
     "src/func_ov006_020d5a50.c"
    ],
    "ext_mix": {
@@ -20577,7 +20577,7 @@
    "n_functions_map": 2,
    "n_files": 2,
    "files": [
-    "src/dScMgCup_c_classInit.cpp",
+    "src/d_s_mg_cup.cpp",
     "src/func_ov006_020e0634.c"
    ],
    "ext_mix": {
@@ -21741,7 +21741,7 @@
    "n_functions_map": 2,
    "n_files": 2,
    "files": [
-    "src/func_ov006_020f8e44.cpp",
+    "src/d_s_mg_m_carlo.cpp",
     "src/func_ov006_020f8ed8.c"
    ],
    "ext_mix": {
@@ -22432,7 +22432,7 @@
     "src/_ZN12dScMgSlot3_c6RenderEv.cpp",
     "src/_ZN12dScMgSlot3_c8BehaviorEv.cpp",
     "src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp",
-    "src/func_ov006_0210c120.c",
+    "src/d_s_mg_slot3.c",
     "src/func_ov006_0210c180.c",
     "src/func_ov006_0210c1a8.c",
     "src/func_ov006_0210c208.c",
@@ -23391,7 +23391,7 @@
    "n_files": 2,
    "files": [
     "src/func_ov006_021295ac.cpp",
-    "src/MgSnowballSlalom_Spawn.cpp"
+    "src/d_s_mg_snowball.cpp"
    ],
    "ext_mix": {
     ".cpp": 2
@@ -23510,7 +23510,7 @@
    "n_functions_map": 2,
    "n_files": 2,
    "files": [
-    "src/func_ov006_0212b7f8.cpp",
+    "src/d_s_mg_flower.cpp",
     "src/func_ov006_0212b88c.c"
    ],
    "ext_mix": {
@@ -33950,7 +33950,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgSortOrSplode_Spawn.c"
+    "src/d_s_mg_bomroom.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -33998,7 +33998,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgCoincentration_Spawn.cpp"
+    "src/d_s_mg_coin.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34046,7 +34046,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScMgCurling_c_classInit.c"
+    "src/d_s_mg_curling.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34092,7 +34092,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/dScMgCurling2_c_classInit.c"
+    "src/d_s_mg_curling2.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34190,7 +34190,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgPsycheOut_Spawn.cpp"
+    "src/d_s_mg3_d_esp.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34286,7 +34286,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgBounceAndPounce_Spawn.cpp"
+    "src/d_s_mg_jump.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34383,7 +34383,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgWanted_Spawn.c"
+    "src/d_s_mg_luigi.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34431,7 +34431,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgMemoryMatch_Spawn.c"
+    "src/d_s_mg_memory.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34479,7 +34479,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgMemoryMaster_Spawn.c"
+    "src/d_s_mg_memory2.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34527,7 +34527,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgBobOmbSquad_Spawn.c"
+    "src/d_s_mg_pachinko.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34575,7 +34575,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgLakituLaunch_Spawn.c"
+    "src/d_s_mg_pachinko2.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34623,7 +34623,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgPuzzlePanelPuzzlePanic_Spawn.c"
+    "src/d_s_mg_panel.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34717,7 +34717,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov006_0210d6b8.cpp"
+    "src/d_s_mg_slot1.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34767,7 +34767,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgBoomBox_Spawn.cpp"
+    "src/d_s_mg_sound.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34815,7 +34815,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgHideAndBooSeek_Spawn.c"
+    "src/d_s_mg_teresa.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -34863,7 +34863,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgTrampolineTime_Spawn.cpp"
+    "src/d_s_mg_trampoline.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
@@ -34960,7 +34960,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MgLuckyStars_Spawn.cpp"
+    "src/d_s_mg_bsc.cpp"
    ],
    "ext_mix": {
     ".cpp": 1
