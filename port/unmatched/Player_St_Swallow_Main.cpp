@@ -35,20 +35,36 @@
  * hal/actor_classes_bob_world.cpp). Against the cdecl site above that is wrong
  * TWICE:
  *
- *   1. THE ARGUMENT. The face reads its `p` off the stack at [esp+4], which the
+ *   1. THE STACK -- this is the half that faults. The slot-19 face ends in
+ *      `ret 4` (it pops its own argument) while the caller's `add esp,0Ch`
+ *      pops those same four bytes again. esp leaves the block four bytes high
+ *      and stays that way to the end of the function, so `pop esi; ret` takes
+ *      the return address into esi and returns to whatever sat above it. That
+ *      is a wild jump, and the quarantine dump says so: code c0000005
+ *      ACCESSING 00096000 -- an EXECUTE fault at 0x00096000, with nothing
+ *      meaningful behind it on the stack.
+ *   2. THE ARGUMENT. The face reads its `p` off the stack at [esp+4], which the
  *      cdecl caller filled with p360 -- the ENEMY -- not with `this`. So
- *      OnTurnIntoEgg(Player &player) is handed the eaten enemy as the player.
- *      Goomba's body (src/func_ov084_0212b344.c) then runs
+ *      OnTurnIntoEgg(Player &player) is handed the eaten enemy as the player,
+ *      and Goomba's body (src/func_ov084_0212b344.c) runs
  *      Actor::GivePlayerCoins, Player::IsCollectingCap and
- *      Player::RegisterEggCoinCount over a Goomba, reading Player fields
- *      hundreds of bytes past the end of it. That is the access violation.
- *   2. THE STACK. The face pops four on the way out while the caller's
- *      `add esp,0Ch` pops those same four again, so esp ends the block four
- *      bytes high and the function's own `pop esi; ret` takes the wrong word.
+ *      Player::RegisterEggCoinCount over a Goomba -- reading, and WRITING,
+ *      Player fields hundreds of bytes past the end of it. That half does not
+ *      fault (the actor heap is mapped either side of it), it corrupts
+ *      quietly, which is why the broken run still gets as far as laying the
+ *      egg before the return kills it.
  *
  * The receiver itself survives by luck at both sites -- MSVC happens to load
- * p360 into ecx to reach its vptr and then pushes ecx -- so the fault is the
- * argument, not the `this`. Fixing the convention fixes both halves at once.
+ * p360 into ecx to reach its vptr and then pushes ecx -- so `this` is not the
+ * problem here. Fixing the convention fixes both halves at once.
+ *
+ * MEASURED BOTH WAYS with port/tools/yoshi_egg_proof.py. On this file: PASS
+ * 5/5 -- 281 YOSHI_EGG Behavior ticks, out of St_Swallow at f321 into St_Walk,
+ * nothing quarantined, the Player still moving at f599. On the SAME tree with
+ * this file taken back off slice_gate10.txt and relinked against the src .cpp:
+ * FAIL -- the PLAYER quarantined at f317, the state never leaving 0x020d666c,
+ * and the Player's position pinned at (-3695.0, 0.0, 4030.1) for the remaining
+ * 280 frames. That last line is the report, verbatim.
  *
  * WHAT IT LOOKED LIKE. Reported as "producing an egg as yoshi causes yoshi to
  * freeze which softlocks the game", and that is exactly what it is: the AV is
