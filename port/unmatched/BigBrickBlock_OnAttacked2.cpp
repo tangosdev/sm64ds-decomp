@@ -25,6 +25,10 @@
  * unmatched/ArrowSign_OnAttacked1.cpp and the slot-23 DISPATCHER in
  * unmatched/Actor_OnAttacked2Dispatch.cpp.
  *
+ * The underlying src (func_ov002_020b3788, size 0x64) is a verified 2004/b56
+ * byte-match of the ROM overlay ov002 (match.py --module ov002 strict-reloc), so
+ * this is a conversion of real recovered code, not of a guess.
+ *
  * This copy is the matched source line for line with exactly ONE thing
  * changed: the slot-31 dispatch goes through a C++ virtual so MSVC emits the
  * same __thiscall bbb_kill expects (receiver in ecx, no push, no caller
