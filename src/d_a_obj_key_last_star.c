@@ -1,4 +1,4 @@
-// @symbol Key_Spawn
+// @symbol daObjKey_c_classInit_LAST_STAR
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -10,7 +10,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV3Key */
-int *Key_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjKey_c through RTTI,
+ * allocation size, vtable identity, and the LAST_STAR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: LastStar_Spawn. */
+int *daObjKey_c_classInit_LAST_STAR(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1136);
     if (p) {

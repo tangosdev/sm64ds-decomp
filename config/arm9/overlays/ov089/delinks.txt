@@ -75,11 +75,11 @@ src/_ZN3Key13InitResourcesEv.cpp:
     complete
     .text start:0x021324a4 end:0x021327d0
 
-src/LastStar_Spawn.c:
+src/d_a_obj_key_last_star.c:
     complete
     .text start:0x021327d0 end:0x02132828
 
-src/Key_Spawn.c:
+src/d_a_obj_key_obj_key.c:
     complete
     .text start:0x02132828 end:0x02132880
 

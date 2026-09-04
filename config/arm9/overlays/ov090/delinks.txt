@@ -99,7 +99,7 @@ src/_ZN7Skeeter13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0213264c end:0x02132654
 
-src/Skeeter_Spawn.c:
+src/d_a_menbo.c:
     complete
     .text start:0x02132654 end:0x0213269c
 
@@ -151,7 +151,7 @@ src/_ZN8MantaRay13InitResourcesEv.cpp:
     complete
     .text start:0x02132e38 end:0x02132fe8
 
-src/MantaRay_Spawn.c:
+src/d_a_manta.c:
     complete
     .text start:0x02132fe8 end:0x02133034
 
@@ -211,7 +211,7 @@ src/_ZN10CheepCheep13InitResourcesEv.cpp:
     complete
     .text start:0x02133530 end:0x02133634
 
-src/CheepCheep_Spawn.c:
+src/d_a_pukupuku.c:
     complete
     .text start:0x02133634 end:0x0213367c
 
@@ -263,7 +263,7 @@ src/_ZN5Shark13InitResourcesEv.cpp:
     complete
     .text start:0x02133b98 end:0x02133ca0
 
-src/Shark_Spawn.c:
+src/d_a_shark.c:
     complete
     .text start:0x02133ca0 end:0x02133ce8
 

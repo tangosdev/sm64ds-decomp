@@ -1,4 +1,4 @@
-// @symbol FirePiranhaPlantSmall_Spawn
+// @symbol daFPkn_c_classInit_FIREPAKUN
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -8,7 +8,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV19FirePiranhaPlantBig */
-int *FirePiranhaPlantSmall_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daFPkn_c through RTTI,
+ * allocation size, vtable identity, and the FIREPAKUN registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: FirePiranhaPlantBig_Spawn. */
+int *daFPkn_c_classInit_FIREPAKUN(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(556);
     if (p) {

@@ -94,11 +94,11 @@ claim about the whole link.
 | `STAR_CAMERA` | `src/StarCamera_Spawn.cpp` | ov002 `0x020e6c40..0x020ebf8c` | — | — | TU contains a broader Star family | — | no most-derived RTTI class for the factory |
 | `PLAYER` | `src/d_a_ply.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
 | `WATERFALL` | `src/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
-| `KURIBO` | `src/Goomba_Spawn.c` | ov084 `0x02129020..0x0212c10c` | `d_a_krb.cpp` | same | one distinct stem | B- | duplicate class entries; left edge lacks confidence |
+| `KURIBO` | `src/d_a_krb_kuribo.c` | ov084 `0x02129020..0x0212c10c` | `d_a_krb.cpp` | same | one distinct stem | B- | duplicate class entries; left edge lacks confidence |
 | `TERESA` | `src/actors/daTrs_c/d_a_trs_teresa.cpp` | ov063 `0x02115ee0..0x0211c600` | `d_a_trs.cpp` | — | later `d_a_*` family | — | same TU also yields `d_a_t_basket.cpp`; TU-map check has baseline failure |
 | `BOSS_TERESA` | `src/actors/BigBoo/d_a_trs_boss_teresa.cpp` | same ov063 TU | `d_a_trs.cpp` | — | same class as `TERESA` | — | multi-stem TU and two same-class profiles |
 | `WANWAN` | `src/ChainChomp_Spawn.cpp` | ov014 `0x02111308..0x02112e0c` | `d_a_wanwan.cpp` | same | unique stem and high/high boundaries | B | nearby `d_a_obj_*` units are not globally lexical |
-| `OBJ_MIP_KEY` | `src/daObj_Mip_Key_c_classInit.c` | ov085 `0x0212cc88..0x0212d528` | `d_a_obj_mip_key.cpp` | same | class family plus high/high boundaries | B | TU-name tool has no surviving stem for this interval |
+| `OBJ_MIP_KEY` | `src/d_a_obj_mip_key.c` | ov085 `0x0212cc88..0x0212d528` | `d_a_obj_mip_key.cpp` | same | class family plus high/high boundaries | B | TU-name tool has no surviving stem for this interval |
 | `PROPELLER_HEYHO` | `src/actors/daPropeller_Heyho_c.cpp` | ov070 `0x0211f000..0x02120570` | `d_a_propeller_heyho.cpp` | same | class family only | B- | no recovered interval stem; left edge lacks confidence |
 | `KINOKO_CREATE_TAG` | `src/actors/daObjKinokoTag_c.cpp` | ov002 `0x020b46a0..0x020b4a70` | `d_a_obj_kinoko_tag.cpp` | same | unique stem and high/high boundaries | B | two same-class factories weaken source organization inference |
 | `SHOOT_BOOK` | `src/d_a_book_shoot_book.c` | ov020 `0x021111a0..0x02112938` | `d_a_book.cpp` | — | class-family candidate | — | TU also yields `d_a_book_gen.cpp` |

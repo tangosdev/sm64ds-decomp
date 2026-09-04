@@ -4,7 +4,11 @@ extern void _ZN10dCcAcPos_cC1Ev(void *);
 extern void _ZN10dBgCh_ActrC1Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
 extern int _ZTV7Skeeter[];
-int *Skeeter_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daMenbo_c through RTTI,
+ * allocation size, vtable identity, and the MENBO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Skeeter_Spawn. */
+int *daMenbo_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {

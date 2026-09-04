@@ -1,4 +1,4 @@
-// @symbol Goomba_Spawn
+// @symbol daKrb_c_classInit_KURIBO
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_dCapEnemy_c.h"
@@ -10,7 +10,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV7daKrb_c */
-int *Goomba_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daKrb_c through RTTI,
+ * allocation size, vtable identity, and the KURIBO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Goomba_Spawn. */
+int *daKrb_c_classInit_KURIBO(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1144);
     if (p) {

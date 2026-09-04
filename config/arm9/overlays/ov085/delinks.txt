@@ -60,7 +60,7 @@ src/_ZN4Toad13InitResourcesEv.cpp:
     complete
     .text start:0x02129a7c end:0x02129cd0
 
-src/Toad_Spawn.c:
+src/d_a_kinopio.c:
     complete
     .text start:0x02129cd0 end:0x02129d18
 
@@ -159,7 +159,7 @@ src/_ZN13PrincessPeach13InitResourcesEv.cpp:
     complete
     .text start:0x0212a588 end:0x0212a684
 
-src/PrincessPeach_Spawn.c:
+src/d_a_peach.c:
     complete
     .text start:0x0212a684 end:0x0212a6d4
 
@@ -287,7 +287,7 @@ src/_ZN6Rabbit13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212cc18 end:0x0212cc2c
 
-src/Rabbit_Spawn.c:
+src/d_a_mip.c:
     complete
     .text start:0x0212cc2c end:0x0212cc88
 
@@ -347,7 +347,7 @@ src/_ZN9RabbitKey13InitResourcesEv.cpp:
     complete
     .text start:0x0212d46c end:0x0212d4e8
 
-src/daObj_Mip_Key_c_classInit.c:
+src/d_a_obj_mip_key.c:
     complete
     .text start:0x0212d4e8 end:0x0212d528
 
@@ -478,7 +478,7 @@ src/_ZN9LakituBro13InitResourcesEv.cpp:
     complete
     .text start:0x0212ebec end:0x0212ed54
 
-src/LakituBro_Spawn.c:
+src/d_a_c_jugem.c:
     complete
     .text start:0x0212ed54 end:0x0212edac
 
@@ -506,7 +506,7 @@ src/_ZN8WallSign13InitResourcesEv.cpp:
     complete
     .text start:0x0212f1b0 end:0x0212f244
 
-src/WallSign_Spawn.c:
+src/d_a_obj_kanban.c:
     complete
     .text start:0x0212f244 end:0x0212f27c
 

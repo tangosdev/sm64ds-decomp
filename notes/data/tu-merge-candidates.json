@@ -1843,7 +1843,7 @@
     "src/_ZN10MrBlizzard8BehaviorEv.cpp",
     "src/_ZN10MrBlizzard13InitResourcesEv.cpp",
     "src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp",
-    "src/MrBlizzard_Spawn.c"
+    "src/d_a_snowman.c"
    ],
    "ext_mix": {
     ".cpp": 18,
@@ -2277,7 +2277,7 @@
     "src/_ZN10CheepCheep6RenderEv.cpp",
     "src/_ZN10CheepCheep8BehaviorEv.cpp",
     "src/_ZN10CheepCheep13InitResourcesEv.cpp",
-    "src/CheepCheep_Spawn.c"
+    "src/d_a_pukupuku.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -2343,7 +2343,7 @@
     "src/_ZN9RabbitKey6RenderEv.cpp",
     "src/_ZN9RabbitKey8BehaviorEv.cpp",
     "src/_ZN9RabbitKey13InitResourcesEv.cpp",
-    "src/daObj_Mip_Key_c_classInit.c"
+    "src/d_a_obj_mip_key.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -2631,7 +2631,7 @@
     "src/_ZN6Rabbit8BehaviorEv.cpp",
     "src/_ZN6Rabbit13InitResourcesEv.cpp",
     "src/_ZN6Rabbit13OnYoshiTryEatEv.cpp",
-    "src/Rabbit_Spawn.c"
+    "src/d_a_mip.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -3350,7 +3350,7 @@
     "src/_ZN8Snowball6RenderEv.cpp",
     "src/_ZN8Snowball8BehaviorEv.cpp",
     "src/_ZN8Snowball13InitResourcesEv.cpp",
-    "src/Snowball_Spawn.c"
+    "src/d_a_snowball.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -4342,7 +4342,7 @@
     "src/_ZN9Spindrift13InitResourcesEv.cpp",
     "src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp",
     "src/_ZN9Spindrift13OnYoshiTryEatEv.cpp",
-    "src/Spindrift_Spawn.c"
+    "src/d_a_huwa.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -4407,7 +4407,7 @@
     "src/_ZN5Shark6RenderEv.cpp",
     "src/_ZN5Shark8BehaviorEv.cpp",
     "src/_ZN5Shark13InitResourcesEv.cpp",
-    "src/Shark_Spawn.c"
+    "src/d_a_shark.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -4615,7 +4615,7 @@
     "src/_ZN8MantaRay6RenderEv.cpp",
     "src/_ZN8MantaRay8BehaviorEv.cpp",
     "src/_ZN8MantaRay13InitResourcesEv.cpp",
-    "src/MantaRay_Spawn.c"
+    "src/d_a_manta.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -6504,7 +6504,7 @@
     "src/_ZN8WallSign6RenderEv.cpp",
     "src/_ZN8WallSign8BehaviorEv.cpp",
     "src/_ZN8WallSign13InitResourcesEv.cpp",
-    "src/WallSign_Spawn.c"
+    "src/d_a_obj_kanban.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -7594,7 +7594,7 @@
     "src/_ZN8IceBlock6RenderEv.cpp",
     "src/_ZN8IceBlock8BehaviorEv.cpp",
     "src/_ZN8IceBlock13InitResourcesEv.cpp",
-    "src/daObjIceBlock_c_classInit.c"
+    "src/d_a_obj_ice_block.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -28903,7 +28903,7 @@
     "src/_ZN8Moneybag8BehaviorEv.cpp",
     "src/_ZN8Moneybag13InitResourcesEv.cpp",
     "src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp",
-    "src/Moneybag_Spawn.c"
+    "src/d_a_gmch.c"
    ],
    "ext_mix": {
     ".cpp": 22,
@@ -28986,9 +28986,9 @@
     "src/_ZN6Goomba6RenderEv.cpp",
     "src/_ZN6Goomba8BehaviorEv.cpp",
     "src/_ZN6Goomba13OnYoshiTryEatEv.cpp",
-    "src/GoombaLarge_Spawn.c",
-    "src/GoombaSmall_Spawn.c",
-    "src/Goomba_Spawn.c"
+    "src/d_a_krb_kuribo_l.c",
+    "src/d_a_krb_kuribo_s.c",
+    "src/d_a_krb_kuribo.c"
    ],
    "ext_mix": {
     ".c": 22,
@@ -29067,7 +29067,7 @@
     "src/_ZN11BobOmbBuddy6RenderEv.cpp",
     "src/_ZN11BobOmbBuddy8BehaviorEv.cpp",
     "src/_ZN11BobOmbBuddy13InitResourcesEv.cpp",
-    "src/BobOmbBuddy_Spawn.c"
+    "src/d_a_red_bombhei.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -29136,9 +29136,9 @@
     "src/_ZN19FirePiranhaPlantBig16OnAimedAtWithEggEv.cpp",
     "src/_ZN19FirePiranhaPlantBig13OnTurnIntoEggER6Player.cpp",
     "src/_ZN19FirePiranhaPlantBig13OnYoshiTryEatEv.cpp",
-    "src/FirePiranhaPlant_Spawn.c",
-    "src/FirePiranhaPlantSmall_Spawn.c",
-    "src/FirePiranhaPlantBig_Spawn.c"
+    "src/d_a_f_pkn_pakun2.c",
+    "src/d_a_f_pkn_firepakun_s.c",
+    "src/d_a_f_pkn_firepakun.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -29210,7 +29210,7 @@
     "src/_ZN12PiranhaPlant6RenderEv.cpp",
     "src/_ZN12PiranhaPlant8BehaviorEv.cpp",
     "src/_ZN12PiranhaPlant13InitResourcesEv.cpp",
-    "src/PiranhaPlant_Spawn.c"
+    "src/d_a_pkn.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -29273,7 +29273,7 @@
     "src/_ZN4Toad6RenderEv.cpp",
     "src/_ZN4Toad8BehaviorEv.cpp",
     "src/_ZN4Toad13InitResourcesEv.cpp",
-    "src/Toad_Spawn.c"
+    "src/d_a_kinopio.c"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -29350,7 +29350,7 @@
     "src/_ZN13PrincessPeach6RenderEv.cpp",
     "src/_ZN13PrincessPeach8BehaviorEv.cpp",
     "src/_ZN13PrincessPeach13InitResourcesEv.cpp",
-    "src/PrincessPeach_Spawn.c"
+    "src/d_a_peach.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -29431,7 +29431,7 @@
     "src/_ZN9LakituBro6RenderEv.cpp",
     "src/_ZN9LakituBro8BehaviorEv.cpp",
     "src/_ZN9LakituBro13InitResourcesEv.cpp",
-    "src/LakituBro_Spawn.c"
+    "src/d_a_c_jugem.c"
    ],
    "ext_mix": {
     ".cpp": 17,
@@ -29504,8 +29504,8 @@
     "src/_ZN3Key6RenderEv.cpp",
     "src/_ZN3Key8BehaviorEv.cpp",
     "src/_ZN3Key13InitResourcesEv.cpp",
-    "src/LastStar_Spawn.c",
-    "src/Key_Spawn.c"
+    "src/d_a_obj_key_last_star.c",
+    "src/d_a_obj_key_obj_key.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -29578,7 +29578,7 @@
     "src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp",
     "src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp",
     "src/_ZN7Skeeter13OnYoshiTryEatEv.cpp",
-    "src/Skeeter_Spawn.c"
+    "src/d_a_menbo.c"
    ],
    "ext_mix": {
     ".cpp": 18,

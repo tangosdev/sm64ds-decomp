@@ -131,15 +131,15 @@ src/_ZN7daKrb_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212bfc0 end:0x0212bff8
 
-src/GoombaLarge_Spawn.c:
+src/d_a_krb_kuribo_l.c:
     complete
     .text start:0x0212bff8 end:0x0212c054
 
-src/GoombaSmall_Spawn.c:
+src/d_a_krb_kuribo_s.c:
     complete
     .text start:0x0212c054 end:0x0212c0b0
 
-src/Goomba_Spawn.c:
+src/d_a_krb_kuribo.c:
     complete
     .text start:0x0212c0b0 end:0x0212c10c
 
@@ -231,7 +231,7 @@ src/_ZN11BobOmbBuddy13InitResourcesEv.cpp:
     complete
     .text start:0x0212d028 end:0x0212d200
 
-src/BobOmbBuddy_Spawn.c:
+src/d_a_red_bombhei.c:
     complete
     .text start:0x0212d200 end:0x0212d248
 
@@ -307,15 +307,15 @@ src/_ZN19FirePiranhaPlantBig13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212e9f8 end:0x0212ea18
 
-src/FirePiranhaPlant_Spawn.c:
+src/d_a_f_pkn_pakun2.c:
     complete
     .text start:0x0212ea18 end:0x0212ea60
 
-src/FirePiranhaPlantSmall_Spawn.c:
+src/d_a_f_pkn_firepakun_s.c:
     complete
     .text start:0x0212ea60 end:0x0212eaa8
 
-src/FirePiranhaPlantBig_Spawn.c:
+src/d_a_f_pkn_firepakun.c:
     complete
     .text start:0x0212eaa8 end:0x0212eaf0
 
@@ -411,7 +411,7 @@ src/_ZN12PiranhaPlant13InitResourcesEv.cpp:
     complete
     .text start:0x0212feb4 end:0x02130110
 
-src/PiranhaPlant_Spawn.c:
+src/d_a_pkn.c:
     complete
     .text start:0x02130110 end:0x02130174
 

@@ -1,4 +1,4 @@
-// @symbol BobOmbBuddy_Spawn
+// @symbol daRedBombhei_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -8,7 +8,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11BobOmbBuddy */
-int *BobOmbBuddy_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daRedBombhei_c through RTTI,
+ * allocation size, vtable identity, and the RED_BOMBHEI registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BobOmbBuddy_Spawn. */
+int *daRedBombhei_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(496);
     if (p) {

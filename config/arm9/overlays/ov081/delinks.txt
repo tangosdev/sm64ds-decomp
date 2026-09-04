@@ -52,7 +52,7 @@ src/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124038 end:0x02124040
 
-src/Spindrift_Spawn.c:
+src/d_a_huwa.c:
     complete
     .text start:0x02124040 end:0x02124090
 
@@ -192,7 +192,7 @@ src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02125eb8 end:0x02125ec0
 
-src/MrBlizzard_Spawn.c:
+src/d_a_snowman.c:
     complete
     .text start:0x02125ec0 end:0x02125f14
 
@@ -244,7 +244,7 @@ src/_ZN8Snowball13InitResourcesEv.cpp:
     complete
     .text start:0x021263b8 end:0x021264b4
 
-src/Snowball_Spawn.c:
+src/d_a_snowball.c:
     complete
     .text start:0x021264b4 end:0x02126504
 
@@ -391,7 +391,7 @@ src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02127a7c end:0x02127adc
 
-src/Moneybag_Spawn.c:
+src/d_a_gmch.c:
     complete
     .text start:0x02127adc end:0x02127b34
 
@@ -431,7 +431,7 @@ src/_ZN8IceBlock13InitResourcesEv.cpp:
     complete
     .text start:0x02127ff0 end:0x021280a0
 
-src/daObjIceBlock_c_classInit.c:
+src/d_a_obj_ice_block.c:
     complete
     .text start:0x021280a0 end:0x021280d8
 
