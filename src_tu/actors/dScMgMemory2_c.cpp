@@ -15,56 +15,56 @@
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x020f5564  src/_ZN14dScMgMemory2_cD1Ev.cpp
  *   [1] 0x020f55b8  src/_ZN14dScMgMemory2_cD0Ev.cpp
- *   [2] 0x020f5620  src/func_ov006_020f5620.c
- *   [3] 0x020f565c  src/func_ov006_020f565c.c
- *   [4] 0x020f5694  src/func_ov006_020f5694.c
- *   [5] 0x020f56f8  src/func_ov006_020f56f8.c
- *   [6] 0x020f572c  src/func_ov006_020f572c.c
- *   [7] 0x020f5740  src/func_ov006_020f5740.c
- *   [8] 0x020f5744  src/func_ov006_020f5744.c
- *   [9] 0x020f58d0  src/func_ov006_020f58d0.c
- *   [10] 0x020f593c  src/func_ov006_020f593c.c
- *   [11] 0x020f59c0  src/func_ov006_020f59c0.c
- *   [12] 0x020f5a64  src/func_ov006_020f5a64.cpp
- *   [13] 0x020f5b98  src/func_ov006_020f5b98.c
- *   [14] 0x020f5c40  src/func_ov006_020f5c40.cpp
- *   [15] 0x020f5cb4  src/func_ov006_020f5cb4.c
- *   [16] 0x020f5de0  src/func_ov006_020f5de0.c
- *   [17] 0x020f5e70  src/func_ov006_020f5e70.c
- *   [18] 0x020f5e74  src/func_ov006_020f5e74.c
- *   [19] 0x020f5f0c  src/func_ov006_020f5f0c.c
- *   [20] 0x020f6084  src/func_ov006_020f6084.c
- *   [21] 0x020f6088  src/func_ov006_020f6088.c
- *   [22] 0x020f6230  src/func_ov006_020f6230.c
- *   [23] 0x020f639c  src/func_ov006_020f639c.c
- *   [24] 0x020f6488  src/func_ov006_020f6488.c
- *   [25] 0x020f6538  src/func_ov006_020f6538.c
- *   [26] 0x020f6678  src/func_ov006_020f6678.c
- *   [27] 0x020f670c  src/func_ov006_020f670c.c
- *   [28] 0x020f67a0  src/func_ov006_020f67a0.c
- *   [29] 0x020f6830  src/func_ov006_020f6830.c
- *   [30] 0x020f6904  src/func_ov006_020f6904.c
- *   [31] 0x020f6a00  src/func_ov006_020f6a00.c
- *   [32] 0x020f6a78  src/func_ov006_020f6a78.c
- *   [33] 0x020f6b00  src/func_ov006_020f6b00.c
- *   [34] 0x020f6b78  src/func_ov006_020f6b78.c
- *   [35] 0x020f6bf0  src/func_ov006_020f6bf0.c
- *   [36] 0x020f6c90  src/func_ov006_020f6c90.c
- *   [37] 0x020f6f88  src/func_ov006_020f6f88.c
- *   [38] 0x020f7064  src/func_ov006_020f7064.c
- *   [39] 0x020f7190  src/func_ov006_020f7190.c
- *   [40] 0x020f71c8  src/func_ov006_020f71c8.cpp
- *   [41] 0x020f7210  src/func_ov006_020f7210.c
- *   [42] 0x020f7234  src/func_ov006_020f7234.cpp
- *   [43] 0x020f7280  src/func_ov006_020f7280.c
- *   [44] 0x020f72c0  src/func_ov006_020f72c0.c
+ *   [2] 0x020f5620  src/_ZN14dScMgMemory2_c11DrawMessageEv.c
+ *   [3] 0x020f565c  src/_ZN14dScMgMemory2_c10DrawCursorEv.c
+ *   [4] 0x020f5694  src/_ZN14dScMgMemory2_c12UpdateCursorEv.c
+ *   [5] 0x020f56f8  src/_ZN14dScMgMemory2_c10ShowCursorEv.c
+ *   [6] 0x020f572c  src/_ZN14dScMgMemory2_c10HideCursorEv.c
+ *   [7] 0x020f5740  src/_ZN14dScMgMemory2_c10PlayerWaitEi.c
+ *   [8] 0x020f5744  src/_ZN14dScMgMemory2_c10PlayerMoveEi.c
+ *   [9] 0x020f58d0  src/_ZN14dScMgMemory2_c10PlayerDropEi.c
+ *   [10] 0x020f593c  src/_ZN14dScMgMemory2_c11InitPlayersEv.c
+ *   [11] 0x020f59c0  src/_ZN14dScMgMemory2_c13CheckFinishedEv.c
+ *   [12] 0x020f5a64  src/_ZN14dScMgMemory2_c9JudgePairEv.cpp
+ *   [13] 0x020f5b98  src/_ZN14dScMgMemory2_c9DrawCardsEv.c
+ *   [14] 0x020f5c40  src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp
+ *   [15] 0x020f5cb4  src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c
+ *   [16] 0x020f5de0  src/_ZN14dScMgMemory2_c12CardFlipDownEi.c
+ *   [17] 0x020f5e70  src/_ZN14dScMgMemory2_c8CardWaitEi.c
+ *   [18] 0x020f5e74  src/_ZN14dScMgMemory2_c10CardFlipUpEi.c
+ *   [19] 0x020f5f0c  src/_ZN14dScMgMemory2_c10CardSelectEi.c
+ *   [20] 0x020f6084  src/_ZN14dScMgMemory2_c8CardIdleEi.c
+ *   [21] 0x020f6088  src/_ZN14dScMgMemory2_c8CardMoveEi.c
+ *   [22] 0x020f6230  src/_ZN14dScMgMemory2_c12ResultFinishEv.c
+ *   [23] 0x020f639c  src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c
+ *   [24] 0x020f6488  src/_ZN14dScMgMemory2_c12ResultRewardEv.c
+ *   [25] 0x020f6538  src/_ZN14dScMgMemory2_c10ResultWaitEv.c
+ *   [26] 0x020f6678  src/_ZN14dScMgMemory2_c11RoundRevealEv.c
+ *   [27] 0x020f670c  src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c
+ *   [28] 0x020f67a0  src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c
+ *   [29] 0x020f6830  src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c
+ *   [30] 0x020f6904  src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c
+ *   [31] 0x020f6a00  src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c
+ *   [32] 0x020f6a78  src/_ZN14dScMgMemory2_c13RoundDealHardEv.c
+ *   [33] 0x020f6b00  src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c
+ *   [34] 0x020f6b78  src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c
+ *   [35] 0x020f6bf0  src/_ZN14dScMgMemory2_c10RoundStartEv.c
+ *   [36] 0x020f6c90  src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c
+ *   [37] 0x020f6f88  src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c
+ *   [38] 0x020f7064  src/_ZN14dScMgMemory2_c9ResetGameEv.c
+ *   [39] 0x020f7190  src/_ZN14dScMgMemory2_c9StateExitEv.c
+ *   [40] 0x020f71c8  src/_ZN14dScMgMemory2_c11StateResultEv.cpp
+ *   [41] 0x020f7210  src/_ZN14dScMgMemory2_c10StateJudgeEv.c
+ *   [42] 0x020f7234  src/_ZN14dScMgMemory2_c9StatePlayEv.cpp
+ *   [43] 0x020f7280  src/_ZN14dScMgMemory2_c10StateSetupEv.c
+ *   [44] 0x020f72c0  src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c
  *   [45] 0x020f730c  src/_ZN14dScMgMemory2_c15OnGroundPoundedEv.cpp
  *   [46] 0x020f7320  src/_ZN14dScMgMemory2_c13OnTurnIntoEggEi.cpp
  *   [47] 0x020f7394  src/_ZN14dScMgMemory2_c13OnYoshiTryEatEi.cpp
  *   [48] 0x020f73f4  src/_ZN14dScMgMemory2_c6RenderEv.cpp
  *   [49] 0x020f7458  src/_ZN14dScMgMemory2_c8BehaviorEv.cpp
  *   [50] 0x020f74b4  src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp
- *   [51] 0x020f75d4  src/MgMemoryMaster_Spawn.c
+ *   [51] 0x020f75d4  src/dScMgMemory2_c_classInit.c
  */
 
 /* CODEWARRIOR CODEGEN BOUNDARY. With deferred emission enabled, later option

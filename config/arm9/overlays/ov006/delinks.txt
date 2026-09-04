@@ -3435,175 +3435,175 @@ src/_ZN14dScMgMemory2_cD0Ev.cpp:
     complete
     .text start:0x020f55b8 end:0x020f5620
 
-src/func_ov006_020f5620.c:
+src/_ZN14dScMgMemory2_c11DrawMessageEv.c:
     complete
     .text start:0x020f5620 end:0x020f565c
 
-src/func_ov006_020f565c.c:
+src/_ZN14dScMgMemory2_c10DrawCursorEv.c:
     complete
     .text start:0x020f565c end:0x020f5694
 
-src/func_ov006_020f5694.c:
+src/_ZN14dScMgMemory2_c12UpdateCursorEv.c:
     complete
     .text start:0x020f5694 end:0x020f56f8
 
-src/func_ov006_020f56f8.c:
+src/_ZN14dScMgMemory2_c10ShowCursorEv.c:
     complete
     .text start:0x020f56f8 end:0x020f572c
 
-src/func_ov006_020f572c.c:
+src/_ZN14dScMgMemory2_c10HideCursorEv.c:
     complete
     .text start:0x020f572c end:0x020f5740
 
-src/func_ov006_020f5740.c:
+src/_ZN14dScMgMemory2_c10PlayerWaitEi.c:
     complete
     .text start:0x020f5740 end:0x020f5744
 
-src/func_ov006_020f5744.c:
+src/_ZN14dScMgMemory2_c10PlayerMoveEi.c:
     complete
     .text start:0x020f5744 end:0x020f58d0
 
-src/func_ov006_020f58d0.c:
+src/_ZN14dScMgMemory2_c10PlayerDropEi.c:
     complete
     .text start:0x020f58d0 end:0x020f593c
 
-src/func_ov006_020f593c.c:
+src/_ZN14dScMgMemory2_c11InitPlayersEv.c:
     complete
     .text start:0x020f593c end:0x020f59c0
 
-src/func_ov006_020f59c0.c:
+src/_ZN14dScMgMemory2_c13CheckFinishedEv.c:
     complete
     .text start:0x020f59c0 end:0x020f5a64
 
-src/func_ov006_020f5a64.cpp:
+src/_ZN14dScMgMemory2_c9JudgePairEv.cpp:
     complete
     .text start:0x020f5a64 end:0x020f5b98
 
-src/func_ov006_020f5b98.c:
+src/_ZN14dScMgMemory2_c9DrawCardsEv.c:
     complete
     .text start:0x020f5b98 end:0x020f5c40
 
-src/func_ov006_020f5c40.cpp:
+src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp:
     complete
     .text start:0x020f5c40 end:0x020f5cb4
 
-src/func_ov006_020f5cb4.c:
+src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c:
     complete
     .text start:0x020f5cb4 end:0x020f5de0
 
-src/func_ov006_020f5de0.c:
+src/_ZN14dScMgMemory2_c12CardFlipDownEi.c:
     complete
     .text start:0x020f5de0 end:0x020f5e70
 
-src/func_ov006_020f5e70.c:
+src/_ZN14dScMgMemory2_c8CardWaitEi.c:
     complete
     .text start:0x020f5e70 end:0x020f5e74
 
-src/func_ov006_020f5e74.c:
+src/_ZN14dScMgMemory2_c10CardFlipUpEi.c:
     complete
     .text start:0x020f5e74 end:0x020f5f0c
 
-src/func_ov006_020f5f0c.c:
+src/_ZN14dScMgMemory2_c10CardSelectEi.c:
     complete
     .text start:0x020f5f0c end:0x020f6084
 
-src/func_ov006_020f6084.c:
+src/_ZN14dScMgMemory2_c8CardIdleEi.c:
     complete
     .text start:0x020f6084 end:0x020f6088
 
-src/func_ov006_020f6088.c:
+src/_ZN14dScMgMemory2_c8CardMoveEi.c:
     complete
     .text start:0x020f6088 end:0x020f6230
 
-src/func_ov006_020f6230.c:
+src/_ZN14dScMgMemory2_c12ResultFinishEv.c:
     complete
     .text start:0x020f6230 end:0x020f639c
 
-src/func_ov006_020f639c.c:
+src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c:
     complete
     .text start:0x020f639c end:0x020f6488
 
-src/func_ov006_020f6488.c:
+src/_ZN14dScMgMemory2_c12ResultRewardEv.c:
     complete
     .text start:0x020f6488 end:0x020f6538
 
-src/func_ov006_020f6538.c:
+src/_ZN14dScMgMemory2_c10ResultWaitEv.c:
     complete
     .text start:0x020f6538 end:0x020f6678
 
-src/func_ov006_020f6678.c:
+src/_ZN14dScMgMemory2_c11RoundRevealEv.c:
     complete
     .text start:0x020f6678 end:0x020f670c
 
-src/func_ov006_020f670c.c:
+src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c:
     complete
     .text start:0x020f670c end:0x020f67a0
 
-src/func_ov006_020f67a0.c:
+src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c:
     complete
     .text start:0x020f67a0 end:0x020f6830
 
-src/func_ov006_020f6830.c:
+src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c:
     complete
     .text start:0x020f6830 end:0x020f6904
 
-src/func_ov006_020f6904.c:
+src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c:
     complete
     .text start:0x020f6904 end:0x020f6a00
 
-src/func_ov006_020f6a00.c:
+src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c:
     complete
     .text start:0x020f6a00 end:0x020f6a78
 
-src/func_ov006_020f6a78.c:
+src/_ZN14dScMgMemory2_c13RoundDealHardEv.c:
     complete
     .text start:0x020f6a78 end:0x020f6b00
 
-src/func_ov006_020f6b00.c:
+src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c:
     complete
     .text start:0x020f6b00 end:0x020f6b78
 
-src/func_ov006_020f6b78.c:
+src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c:
     complete
     .text start:0x020f6b78 end:0x020f6bf0
 
-src/func_ov006_020f6bf0.c:
+src/_ZN14dScMgMemory2_c10RoundStartEv.c:
     complete
     .text start:0x020f6bf0 end:0x020f6c90
 
-src/func_ov006_020f6c90.c:
+src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c:
     complete
     .text start:0x020f6c90 end:0x020f6f88
 
-src/func_ov006_020f6f88.c:
+src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c:
     complete
     .text start:0x020f6f88 end:0x020f7064
 
-src/func_ov006_020f7064.c:
+src/_ZN14dScMgMemory2_c9ResetGameEv.c:
     complete
     .text start:0x020f7064 end:0x020f7190
 
-src/func_ov006_020f7190.c:
+src/_ZN14dScMgMemory2_c9StateExitEv.c:
     complete
     .text start:0x020f7190 end:0x020f71c8
 
-src/func_ov006_020f71c8.cpp:
+src/_ZN14dScMgMemory2_c11StateResultEv.cpp:
     complete
     .text start:0x020f71c8 end:0x020f7210
 
-src/func_ov006_020f7210.c:
+src/_ZN14dScMgMemory2_c10StateJudgeEv.c:
     complete
     .text start:0x020f7210 end:0x020f7234
 
-src/func_ov006_020f7234.cpp:
+src/_ZN14dScMgMemory2_c9StatePlayEv.cpp:
     complete
     .text start:0x020f7234 end:0x020f7280
 
-src/func_ov006_020f7280.c:
+src/_ZN14dScMgMemory2_c10StateSetupEv.c:
     complete
     .text start:0x020f7280 end:0x020f72c0
 
-src/func_ov006_020f72c0.c:
+src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c:
     complete
     .text start:0x020f72c0 end:0x020f730c
 
@@ -3631,7 +3631,7 @@ src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f74b4 end:0x020f75d4
 
-src/MgMemoryMaster_Spawn.c:
+src/dScMgMemory2_c_classInit.c:
     complete
     .text start:0x020f75d4 end:0x020f7634
 
