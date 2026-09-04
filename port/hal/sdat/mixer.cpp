@@ -130,40 +130,112 @@ void sd_mix_reset(void)
     g_tickAcc = 0;
 }
 
+/* THE ROM'S OWN CHANNEL ALLOCATOR, transcribed from the ARM7 driver.
+ *
+ * The routine is at 0x037FC26C in the ARM7 image (arm7.bin offset 0x043D4;
+ * the driver is autoloaded to 0x037F8000, so runtime = fileoff - 0x168 +
+ * 0x037F8000). Its 16-channel table is at 0x038075C4, stride 0x54, with the
+ * priority a u8 at +0x22 and the volume pair a u16 at +0x24.
+ *
+ * WHAT IT ACTUALLY DOES, and where this port used to differ:
+ *
+ *   1. IT SCANS IN A FIXED ORDER THAT IS NOT 0..15. The loop indexes a
+ *      16-byte table at 0x03805964 holding
+ *          4, 5, 6, 7, 2, 0, 3, 1, 8, 9, 10, 11, 14, 12, 15, 13
+ *      Nothing in the ARM7 image ever writes that table. It decides which
+ *      channel wins a complete priority-and-volume tie, so scanning 0..15
+ *      instead picks a different victim.
+ *
+ *   2. THERE IS NO "IS THIS CHANNEL BUSY" TEST. This port used to hand back
+ *      the first inactive channel outright. The ROM has no such branch: a
+ *      channel that has STOPPED is given priority 0 by the per-frame update
+ *      (0x037FC5A8, 0x037FC6A4 and 0x037FC7AC all store 0 to +0x22), so it
+ *      sorts to the front on its own and needs no special case. Matching that
+ *      is why sd_mix_kill and the two envelope-end paths below now zero the
+ *      priority.
+ *
+ *   3. STRICTLY LOWER PRIORITY WINS, then QUIETEST WINS. Equal priority is
+ *      broken by the compare at 0x037FBD54, which returns -1 when the
+ *      incumbent is LOUDER and the caller then takes the challenger. It is a
+ *      STRICT less-than, so an exact tie keeps whichever came first in scan
+ *      order. This port had no volume tie-break at all: it kept the lowest
+ *      channel INDEX, which is what made channel 0 absorb 274 of the opening's
+ *      1157 note starts while channel 15 took 37.
+ *
+ *   4. A CHANNEL IN ITS RELEASE TAIL KEEPS ITS FULL PRIORITY. It gets no
+ *      discount; only a channel that has reached the floor drops to 0. So the
+ *      release tails this mixer holds are faithful, and the thing that
+ *      resolves them is (3): among equals the fading one is the quietest and
+ *      is therefore the one taken.
+ *
+ *   5. ACCEPT IFF requested >= best. The final test is a single
+ *      "cmp P, B / blt return NULL" at 0x037FC328, so an EQUAL priority may
+ *      steal. This port already agreed here.
+ *
+ * The one place the port cannot be bit-exact: the ROM compares
+ * (vol & 0xFF) << 4 >> shiftTable[vol >> 8], shiftTable = {0,1,2,4}, i.e. a
+ * 0..127 volume paired with a hardware divider. This mixer collapses both into
+ * a single logarithmic attenuation, so the ORDERING is identical but the
+ * quantisation is finer: two channels the ROM would call exactly equal can be
+ * ordered here. That can only change which of two equally loud, equal priority
+ * channels is taken, never whether a note is dropped.
+ */
+namespace {
+
+const int kScanOrder[SD_CHANNELS] = {
+    4, 5, 6, 7, 2, 0, 3, 1, 8, 9, 10, 11, 14, 12, 15, 13
+};
+
+/* The tie-break quantity, in tenths of a decibel of attenuation (always <= 0;
+   quieter is smaller). c.ampl is the envelope in 1/128 of a tenth of a dB and
+   c.volDb10 is the already-combined external volume. */
+int chan_attenuation_db10(const Channel &c)
+{
+    return c.volDb10 + (int)(c.ampl / 128);
+}
+
+}  // namespace
+
 int sd_mix_alloc(int priority)
 {
-    for (int i = 0; i < SD_CHANNELS; i++)
-        if (!g_ch[i].active) return i;
-    // Steal the lowest-priority voice, oldest first among equals.
     int best = -1;
-    for (int i = 0; i < SD_CHANNELS; i++) {
-        if (g_ch[i].priority > priority) continue;
-        if (best < 0 || g_ch[i].priority < g_ch[best].priority) best = i;
+    for (int k = 0; k < SD_CHANNELS; k++) {
+        const int i = kScanOrder[k];
+        if (best < 0) { best = i; continue; }   /* first candidate, outright */
+        if (g_ch[i].priority > g_ch[best].priority) continue;
+        if (g_ch[i].priority == g_ch[best].priority
+            && chan_attenuation_db10(g_ch[i])
+                   >= chan_attenuation_db10(g_ch[best]))
+            continue;                           /* strict: a tie keeps the first */
+        best = i;
     }
-    if (best < 0) {
-        SD_VT("chan ALLOC FAILED: all 16 sounding, none at or below "
-              "priority %d\n", priority);
-    if (best < 0 && g_voice_trace) {
-        /* WHY THE CENSUS. "all 16 sounding" is not the same claim as "all 16
-           audible": a channel whose note has been released is still marked
-           active here until its envelope reaches the -72.3 dB floor, and a
-           slow release keeps it holding a slot long after it stopped being
-           worth hearing. If a drop happens while most channels sit in
-           ENV_RELEASE, the saturation is the port holding release tails, not
-           the scene genuinely wanting 17 voices. Printing the state next to
-           the priority is what tells those two apart. */
-        static const char *st[] = { "off", "atk", "dec", "sus", "rel" };
-        for (int i = 0; i < SD_CHANNELS; i++)
-            sd_vtrace("    chan %2d: prio %3d, %s, ampl %d%s\n", i,
-                      g_ch[i].priority,
-                      st[g_ch[i].state >= 0 && g_ch[i].state <= 4
-                         ? g_ch[i].state : 0],
-                      (int)g_ch[i].ampl, g_ch[i].active ? "" : ", INACTIVE");
-    }
+    if (best < 0) return -1;                    /* unreachable: 16 candidates */
+
+    if (priority < g_ch[best].priority) {
+        SD_VT("chan ALLOC FAILED: quietest lowest-priority channel is %d at "
+              "priority %d, above the requested %d\n", best,
+              g_ch[best].priority, priority);
+        if (g_voice_trace) {
+            /* "all 16 sounding" is not the same claim as "all 16 audible": a
+               released channel still holds its slot, and its full priority,
+               until its envelope reaches the floor. Printing the state next to
+               the priority is what tells a genuinely busy scene apart from a
+               pile of release tails. */
+            static const char *st[] = { "off", "atk", "dec", "sus", "rel" };
+            for (int i = 0; i < SD_CHANNELS; i++)
+                sd_vtrace("    chan %2d: prio %3d, %s, atten %d dB10%s\n", i,
+                          g_ch[i].priority,
+                          st[g_ch[i].state >= 0 && g_ch[i].state <= 4
+                             ? g_ch[i].state : 0],
+                          chan_attenuation_db10(g_ch[i]),
+                          g_ch[i].active ? "" : ", INACTIVE");
+        }
         return -1;
     }
-    SD_VT("chan %2d STOLEN for priority %d (victim priority %d)\n", best,
-          priority, g_ch[best].priority);
+    if (g_ch[best].active)
+        SD_VT("chan %2d STOLEN for priority %d (victim priority %d, atten "
+              "%d dB10)\n", best, priority, g_ch[best].priority,
+              chan_attenuation_db10(g_ch[best]));
     g_ch[best].active = 0;
     return best;
 }
@@ -253,6 +325,7 @@ void sd_mix_kill(int ch, const char *why)
     if (g_ch[ch].active) SD_VT("chan %2d kill: %s\n", ch, why);
     g_ch[ch].active = 0;
     g_ch[ch].state = ENV_OFF;
+    g_ch[ch].priority = 0;   /* stopped sorts first, as on the ARM7 */
 }
 
 int sd_mix_active(int ch)
@@ -286,6 +359,7 @@ void sd_mix_frame(void)
                 SD_VT("chan %2d off: envelope release reached silence\n", i);
                 c.active = 0;
                 c.state = ENV_OFF;
+                c.priority = 0;   /* reached the floor: priority 0 */
             }
             break;
         default:
@@ -330,6 +404,7 @@ void sd_mix_render(sd_s16 *dst, int frames)
                         SD_VT("chan %2d off: sample ran out (%u samples, "
                               "no loop)\n", i, (unsigned)c.total);
                         c.active = 0;
+                        c.priority = 0;   /* stopped: priority 0 */
                         break;
                     }
                 }

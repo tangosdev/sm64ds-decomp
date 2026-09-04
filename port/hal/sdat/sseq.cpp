@@ -444,7 +444,7 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
         SD_VT("note p%d t%d key %d DROPPED: playback rate %.3f out of "
               "range\n", pi, ti, key, rate);
         SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=rate rate=%.9f\n",
-              g_frame, pi, ti, key, tk.priority, rate);
+              g_frame, pi, ti, key, pl.cpr + tk.priority, rate);
         return;
     }
     /* The inputs the rate is made of. UNCONDITIONAL, one line per note-on.
@@ -462,19 +462,37 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
           pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
           tk.bendRange, pitchUnits, rate);
 
-    int ch = sd_mix_alloc(tk.priority);
+    /* THE ALLOCATOR PRIORITY IS THE SUM OF THE PLAYER'S AND THE TRACK'S.
+       ARM7 note-on at 0x037FD410:
+           ldrb r2, [r7, #4]    ; player->priority  (the SDAT cpr)
+           ldrb r1, [r8, #0x12] ; track->priority   (64, or the 0xC6 value)
+           add  r1, r2, r1      ; <<< the sum is what AllocChannel gets
+       Both addends are byte loads and the sum is NOT clamped, so it runs
+       0..510 even though the channel stores it back through a strb. With
+       this ROM's values it never exceeds 255, but the accept/reject test
+       upstream uses the untruncated sum, so the sum is what we pass.
+
+       This is the whole reason the music was losing notes to the effects.
+       SM64DS's BGM carries cpr 106 and its tracks set 0xC6 in the 64..69
+       band, so the ROM asks for about 106+66 = 172. Its sound effects
+       carry cpr 96 with no 0xC6 at all, so they ask for 96+64 = 160. The
+       MUSIC OUTRANKS THE EFFECTS on hardware. Folding cpr into the track
+       priority instead produced 66 for the music against 96 for the
+       effects, which is the same comparison upside down. */
+    const int prio = pl.cpr + tk.priority;
+    int ch = sd_mix_alloc(prio);
     if (ch < 0) {
         SD_VT("note p%d t%d key %d DROPPED: no mixer channel free\n", pi, ti,
               key);
         SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=nochan\n",
-              g_frame, pi, ti, key, tk.priority);
+              g_frame, pi, ti, key, prio);
         return;
     }
     if (g_note[ch].active)
         SD_VT("chan %2d taken from player %d track %d\n", ch,
               g_note[ch].player, g_note[ch].track);
 
-    sd_mix_start(ch, &w, &n, db10, pan, rate, tk.priority);
+    sd_mix_start(ch, &w, &n, db10, pan, rate, prio);
     g_note[ch].active = 1;
     g_note[ch].player = pi;
     g_note[ch].track = ti;
@@ -688,7 +706,8 @@ int run_track(Player &pl, int pi, int ti)
                 t2.volume = 127; t2.expression = 127; t2.pan = 64;
                 // Opened tracks start at the player's base priority, the same
                 // as track 0; a 0xC6 in the opened track overrides it.
-                t2.bendRange = 2; t2.priority = pl.cpr; t2.noteWait = 1;
+                /* Same TrackInit default as track 0; 0xC6 overrides it. */
+                t2.bendRange = 2; t2.priority = 64; t2.noteWait = 1;
                 t2.prog = 0;
             }
             break;
@@ -935,7 +954,9 @@ int sd_seq_start(int p, const sd_u8 *seqBase, sd_u32 startOff,
     t0.active = 1;
     t0.pc = startOff;
     t0.volume = 127; t0.expression = 127; t0.pan = 64;
-    t0.bendRange = 2; t0.priority = pl.cpr; t0.noteWait = 1;
+    /* TrackInit at 0x037FDA74: mov r1,#0x40 / strb r1,[r4,#0x12]. The
+       player's cpr is NOT folded in here; see the sum at the note-on. */
+    t0.bendRange = 2; t0.priority = 64; t0.noteWait = 1;
 
     // A multi-track sequence opens with 0xFE <u16 mask>; track 0's own code
     // follows the 0x93 open-track commands, so nothing special is needed
