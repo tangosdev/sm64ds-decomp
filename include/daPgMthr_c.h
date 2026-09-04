@@ -12,7 +12,7 @@
  * function; ov018/daPgMthr_c defines it, and every other override, so mwccarm
  * homes _ZTI/_ZTS/_ZTV in that translation unit.
  *
- * sizeof is independently pinned by MotherPenguin_Spawn allocating 0x38c.
+ * sizeof is independently pinned by daPgMthr_c_classInit allocating 0x38c.
  * Field names for the unknown tail are placeholders. */
 #ifndef DAPGMTHR_C_H
 #define DAPGMTHR_C_H
@@ -104,7 +104,7 @@ struct daPgMthr_c {
     s32 unk_374;            /* 0x374 */
     /* Trailing remainder, 0x14 bytes. Every marker is already typed and the
        last field the five recovered functions touch ends at 0x378;
-       MotherPenguin_Spawn allocates 0x38c. The reference does not document
+       daPgMthr_c_classInit allocates 0x38c. The reference does not document
        this class's members. */
     u8  pad_378[0x14];
 };

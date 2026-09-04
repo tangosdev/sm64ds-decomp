@@ -5,7 +5,7 @@ _ZN11daObjKumo_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x0211125
 _ZN11daObjKumo_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
 _ZN11daObjKumo_c8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112a0
 _ZN11daObjKumo_c13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211132c
-Cloud_Spawn kind:function(arm,size=0x38) addr:0x0211137c
+daObjKumo_c_classInit kind:function(arm,size=0x38) addr:0x0211137c
 __sinit_ov039_021113b4 kind:function(arm,size=0x40) addr:0x021113b4
 .p__sinit_ov039_021113b4 kind:data(word) addr:0x021113f4
 data_ov039_02111400 kind:data(any) addr:0x02111400

@@ -8,8 +8,9 @@
  * config/arm9/overlays/ov018/delinks.txt), where twenty-two separate
  * one-function entries used to stand.
  *
- * THE TWENTY-THIRD IS THE FACTORY, FOLDED IN LATER. MotherPenguin_Spawn at
- * 0x0211267c is the PENGUIN_MOTHER registry profile's spawn function. It sits
+ * THE TWENTY-THIRD IS THE FACTORY, FOLDED IN LATER. daPgMthr_c_classInit
+ * (historical alias MotherPenguin_Spawn) at 0x0211267c is the PENGUIN_MOTHER
+ * registry profile's spawn function. It sits
  * immediately after InitResources in the ROM's own .text order, inside this
  * TU's recovered boundary, and was outside only because this promotion
  * predated the profile-reconstruction campaign. It keeps C linkage and brings
@@ -153,9 +154,9 @@ extern void _ZN10dBgCh_ActrC1Ev(void *self);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- MotherPenguin_Spawn, 0x0211267c, size 0x58               */
+/* ROM ordinal 22 -- daPgMthr_c_classInit, 0x0211267c, size 0x58              */
 /* -------------------------------------------------------------------------- */
-// @symbol MotherPenguin_Spawn
+// @symbol daPgMthr_c_classInit
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10daPgMthr_c */
 /* The PENGUIN_MOTHER profile's factory, and the highest-address member of this
@@ -168,7 +169,7 @@ extern void _ZN10dBgCh_ActrC1Ev(void *self);
    The vptr store here is the plain bare-symbol one the legacy file carried,
    not the &_ZTV[2] form the compiler generates for the in-class destructor;
    the two coexist because _ZTV10daPgMthr_c IS the address point. */
-extern "C" int *MotherPenguin_Spawn(void)
+extern "C" int *daPgMthr_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(908);
     if (p) {

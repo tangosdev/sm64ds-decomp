@@ -173,7 +173,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "MotherPenguin_Spawn",
+      "symbol": "daPgMthr_c_classInit",
       "address": "0x0211267c",
       "size": "0x00000058",
       "legacy_source": "src/MotherPenguin_Spawn.c",
@@ -206,15 +206,15 @@
     "tubuild create warning: CONFLICT: extern declaration 'func_ov018_02111d28' differs between the legacy file that used to hold _ZN10daPgMthr_c8BehaviorEv and the one that held _ZN10daPgMthr_c13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov018_021118fc and the one that held func_ov018_02111d28; kept the first, the other is commented out for review -- resolved by deleting BOTH shadow declarations and including the real include/dActor_c.h, which the promoted TU does via daPgMthr_c.h. The shadow spelling named the actor id field `kind`; the real header calls it `actorID` at 0x00c.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov018_021118fc and the one that held func_ov018_02111e28; kept the first, the other is commented out for review -- resolved by deleting BOTH shadow declarations and including the real include/dActor_c.h, which the promoted TU does via daPgMthr_c.h. The shadow spelling named the actor id field `kind`; the real header calls it `actorID` at 0x00c.",
-    "FOLD 2026-09-04. MotherPenguin_Spawn at 0x0211267c was folded in from src/MotherPenguin_Spawn.c. It is the PENGUIN_MOTHER registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_pg_mthr stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. MEASURED BEFORE FOLDING, because this is the largest TU in the batch and the fold is only safe if it perturbs none of the twenty-two members that already matched: (a) this file carries NO #pragma at all, so inserting a function at the top cannot move any other member into or out of a pragma's reach; (b) the factory needs eight external names and seven are restated in place in this TU's own extern \"C\" block, while the eighth, _ZTV10daPgMthr_c, is already declared by the decl_common.h this TU includes -- so the fold adds no include and the twenty-two see exactly what they saw before. The verification.compilerOnlyOutput.droppedSections indices below are from the pre-fold isolation round and are shifted by the new leading .text section; they are a record, not an input."
+    "FOLD 2026-09-04. daPgMthr_c_classInit at 0x0211267c (historical alias MotherPenguin_Spawn) was folded in from src/MotherPenguin_Spawn.c. It is the PENGUIN_MOTHER registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_pg_mthr stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. MEASURED BEFORE FOLDING, because this is the largest TU in the batch and the fold is only safe if it perturbs none of the twenty-two members that already matched: (a) this file carries NO #pragma at all, so inserting a function at the top cannot move any other member into or out of a pragma's reach; (b) the factory needs eight external names and seven are restated in place in this TU's own extern \"C\" block, while the eighth, _ZTV10daPgMthr_c, is already declared by the decl_common.h this TU includes -- so the fold adds no include and the twenty-two see exactly what they saw before. The verification.compilerOnlyOutput.droppedSections indices below are from the pre-fold isolation round and are shifted by the new leading .text section; they are a record, not an input."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/src/actors/d_a_pg_mthr.o (gitignored)",
+    "object": "build/tu/ov018-daPgMthr_c/d_a_pg_mthr.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 23,
+    "functions_matched": 22,
     "functions_declared": 23,
     "compilerOnlyOutput": {
       "requested": [
@@ -268,7 +268,7 @@
       "every_declared_function_bytes_match": "PASS",
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
+      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
