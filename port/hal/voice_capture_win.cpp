@@ -260,7 +260,13 @@ long scan_peak(HWAVEIN dev, int ms, long stop_at)
     }
 
     p_Start(dev);
-    short peak = 0;
+    /* int, not short. The absolute value is taken in int width because -32768
+       has no positive counterpart in a short: negating it there wraps back to
+       -32768, so a full-scale negative sample would compare BELOW the floor and
+       a device blasting at clip could be called silent. This function decides
+       which microphone a player gets, so the one sample value the arithmetic
+       cannot represent is not a rounding detail. */
+    int peak = 0;
     const DWORD start = GetTickCount();
     int next = 0;
     while ((long)peak <= stop_at &&
@@ -270,8 +276,8 @@ long scan_peak(HWAVEIN dev, int ms, long stop_at)
             int got = (int)(h.dwBytesRecorded / sizeof(short));
             if (got > kCapFrameSamples) got = kCapFrameSamples;
             for (int i = 0; i < got; ++i) {
-                const short v = buf[next][i];
-                const short a = v < 0 ? (short)-v : v;
+                const int v = (int)buf[next][i];
+                const int a = v < 0 ? -v : v;
                 if (a > peak) peak = a;
             }
             h.dwFlags &= ~WHDR_DONE;
