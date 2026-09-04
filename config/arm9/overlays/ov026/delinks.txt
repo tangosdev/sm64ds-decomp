@@ -36,7 +36,7 @@ src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111598 end:0x02111678
 
-src/daObjWlPolelift_c_classInit.cpp:
+src/d_a_obj_wl_polelift.cpp:
     complete
     .text start:0x02111678 end:0x021116c8
 
@@ -64,7 +64,7 @@ src/_ZN13BowserShutter13InitResourcesEv.cpp:
     complete
     .text start:0x021117d8 end:0x02111888
 
-src/daObjWlKoopaShutter_c_classInit.c:
+src/d_a_obj_wl_koopa_shutter.c:
     complete
     .text start:0x02111888 end:0x021118b8
 
@@ -88,7 +88,7 @@ src/_ZN9Submarine13InitResourcesEv.cpp:
     complete
     .text start:0x021119c0 end:0x02111a70
 
-src/daObjWlSubmarine_c_classInit.c:
+src/d_a_obj_wl_submarine.c:
     complete
     .text start:0x02111a70 end:0x02111aa0
 
@@ -144,7 +144,7 @@ src/_ZN9Whirlpool13InitResourcesEv.cpp:
     complete
     .text start:0x021120ec end:0x021121bc
 
-src/Whirlpool_Spawn.c:
+src/d_a_water_tatumaki.c:
     complete
     .text start:0x021121bc end:0x021121fc
 
@@ -196,7 +196,7 @@ src/_ZN12WaterSuction13InitResourcesEv.cpp:
     complete
     .text start:0x021123c8 end:0x02112450
 
-src/WaterSuction_Spawn.c:
+src/d_a_water_suikomi.c:
     complete
     .text start:0x02112450 end:0x02112490
 

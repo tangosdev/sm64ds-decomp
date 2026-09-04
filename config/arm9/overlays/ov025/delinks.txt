@@ -40,7 +40,7 @@ src/_ZN7daDgr_c13InitResourcesEv.cpp:
     complete
     .text start:0x021117dc end:0x02111898
 
-src/func_ov025_02111898.c:
+src/d_a_dgr.c:
     complete
     .text start:0x02111898 end:0x021118c8
 
@@ -76,7 +76,7 @@ src/_ZN7daDkk_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111c24 end:0x02111cf4
 
-src/Grindel_Spawn.c:
+src/d_a_dkk.c:
     complete
     .text start:0x02111cf4 end:0x02111d40
 
@@ -112,7 +112,7 @@ src/_ZN11PyramidStep13InitResourcesEv.cpp:
     complete
     .text start:0x02111fa0 end:0x021120ac
 
-src/daObjDpBrock_c_classInit.c:
+src/d_a_obj_dp_brock.c:
     complete
     .text start:0x021120ac end:0x021120e4
 
@@ -148,7 +148,7 @@ src/func_ov025_021125dc.c:
     complete
     .text start:0x021125dc end:0x021125f0
 
-src/daDpLift_c_classInit.cpp:
+src/d_a_dp_lift.cpp:
     complete
     .text start:0x021125f0 end:0x02112654
 

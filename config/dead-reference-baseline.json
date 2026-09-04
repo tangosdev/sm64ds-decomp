@@ -94,6 +94,10 @@
    "ref": "src/Eyerok_Spawn.cpp"
   },
   {
+   "file": "notes/bgobject-provenance.md",
+   "ref": "src/func_ov025_02111898.c"
+  },
+  {
    "file": "notes/collision-query-classes.md",
    "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
   },
@@ -132,6 +136,10 @@
   {
    "file": "notes/ghidra-dsd-landscape.md",
    "ref": "lib/dsd-ghidra-src.zip"
+  },
+  {
+   "file": "notes/ghidra-dsd-landscape.md",
+   "ref": "src/Wiggler_Spawn.c"
   },
   {
    "file": "notes/global-data-migration.md",

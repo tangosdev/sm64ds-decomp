@@ -71,7 +71,7 @@ src/func_ov021_02112128.c:
     complete
     .text start:0x02112128 end:0x02112168
 
-src/daObjCvNewsLift_c_classInit.cpp:
+src/d_a_obj_cv_news_lift.cpp:
     complete
     .text start:0x02112168 end:0x021121e8
 
@@ -123,7 +123,7 @@ src/_ZN11RollingRock13InitResourcesEv.cpp:
     complete
     .text start:0x02112b2c end:0x02112d64
 
-src/RollingRock_Spawn.c:
+src/d_a_grock.c:
     complete
     .text start:0x02112d64 end:0x02112db4
 

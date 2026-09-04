@@ -28,15 +28,15 @@ src/_ZN16RotatingCogSmall13InitResourcesEv.cpp:
     complete
     .text start:0x021114e0 end:0x0211165c
 
-src/RotatingCogSmall_Spawn.c:
+src/d_a_obj_ct_mecha10_ct_mecha12s.c:
     complete
     .text start:0x0211165c end:0x0211168c
 
-src/func_ov035_0211168c.c:
+src/d_a_obj_ct_mecha10_ct_mecha12l.c:
     complete
     .text start:0x0211168c end:0x021116bc
 
-src/RotatingClockHand_Spawn.c:
+src/d_a_obj_ct_mecha10_ct_mecha10.c:
     complete
     .text start:0x021116bc end:0x021116ec
 
@@ -72,7 +72,7 @@ src/_ZN16SpinningPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x02111a98 end:0x02111b98
 
-src/daObjCtMecha11_c_classInit.c:
+src/d_a_obj_ct_mecha11.c:
     complete
     .text start:0x02111b98 end:0x02111bd0
 

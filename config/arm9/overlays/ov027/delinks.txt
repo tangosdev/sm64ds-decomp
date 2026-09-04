@@ -32,11 +32,11 @@ src/_ZN10SlidingIce13InitResourcesEv.cpp:
     complete
     .text start:0x02111440 end:0x02111564
 
-src/SlidingIce_Spawn.c:
+src/d_a_obj_sl_ice_block_sl_iceblock_shot.c:
     complete
     .text start:0x02111564 end:0x02111594
 
-src/SlidingIceSpawner_Spawn.c:
+src/d_a_obj_sl_ice_block_sl_iceblock.c:
     complete
     .text start:0x02111594 end:0x021115c4
 
@@ -104,7 +104,7 @@ src/_ZN10daPgDfdr_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111eb4 end:0x0211207c
 
-src/func_ov027_0211207c.c:
+src/d_a_pg_dfdr.c:
     complete
     .text start:0x0211207c end:0x021120c4
 
@@ -172,7 +172,7 @@ src/_ZN13SnowmanBreath13InitResourcesEv.cpp:
     complete
     .text start:0x021129dc end:0x02112ab4
 
-src/SnowmanBreath_Spawn.c:
+src/d_a_snm_bth.c:
     complete
     .text start:0x02112ab4 end:0x02112b14
 

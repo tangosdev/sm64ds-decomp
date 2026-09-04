@@ -3156,7 +3156,7 @@
     "src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp",
     "src/func_ov022_0211191c.cpp",
     "src/func_ov022_0211193c.c",
-    "src/daObjFl_Block_c_classInit.c"
+    "src/d_a_obj_fl_block.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -3550,7 +3550,7 @@
     "src/_ZN11VolcanoRing13InitResourcesEv.cpp",
     "src/func_ov022_02111558.c",
     "src/func_ov022_02111564.c",
-    "src/daObjFl_Ring_c_classInit.c"
+    "src/d_a_obj_fl_ring.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -3610,7 +3610,7 @@
     "src/_ZN11PyramidStep6RenderEv.cpp",
     "src/_ZN11PyramidStep8BehaviorEv.cpp",
     "src/_ZN11PyramidStep13InitResourcesEv.cpp",
-    "src/daObjDpBrock_c_classInit.c"
+    "src/d_a_obj_dp_brock.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -4214,7 +4214,7 @@
     "src/_ZN11RollingRock6RenderEv.cpp",
     "src/_ZN11RollingRock8BehaviorEv.c",
     "src/_ZN11RollingRock13InitResourcesEv.cpp",
-    "src/RollingRock_Spawn.c"
+    "src/d_a_grock.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -4876,7 +4876,7 @@
     "src/_ZN9Whirlpool6RenderEv.cpp",
     "src/_ZN9Whirlpool8BehaviorEv.cpp",
     "src/_ZN9Whirlpool13InitResourcesEv.cpp",
-    "src/Whirlpool_Spawn.c"
+    "src/d_a_water_tatumaki.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -5968,7 +5968,7 @@
     "src/_ZN13daObjHmBskt_c6RenderEv.cpp",
     "src/_ZN13daObjHmBskt_c8BehaviorEv.cpp",
     "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp",
-    "src/daObjHmBskt_c_classInit.c"
+    "src/d_a_obj_hm_bskt.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -6214,7 +6214,7 @@
     "src/_ZN12WaterSuction6RenderEv.cpp",
     "src/_ZN12WaterSuction8BehaviorEv.cpp",
     "src/_ZN12WaterSuction13InitResourcesEv.cpp",
-    "src/WaterSuction_Spawn.c"
+    "src/d_a_water_suikomi.c"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -6681,7 +6681,7 @@
     "src/_ZN10LavaBridge6RenderEv.cpp",
     "src/_ZN10LavaBridge8BehaviorEv.cpp",
     "src/_ZN10LavaBridge13InitResourcesEv.cpp",
-    "src/daObjFl_London_c_classInit.c"
+    "src/d_a_obj_fl_london.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -6740,7 +6740,7 @@
     "src/_ZN10LavaSeesaw6RenderEv.cpp",
     "src/_ZN10LavaSeesaw8BehaviorEv.cpp",
     "src/_ZN10LavaSeesaw13InitResourcesEv.cpp",
-    "src/daObjFl_Seesaw_c_classInit.c"
+    "src/d_a_obj_fl_seesaw.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -6799,7 +6799,7 @@
     "src/_ZN10SlidingIce6RenderEv.cpp",
     "src/_ZN10SlidingIce8BehaviorEv.cpp",
     "src/_ZN10SlidingIce13InitResourcesEv.cpp",
-    "src/SlidingIce_Spawn.c"
+    "src/d_a_obj_sl_ice_block_sl_iceblock_shot.c"
    ],
    "ext_mix": {
     ".cpp": 7,
@@ -7530,10 +7530,10 @@
     "src/_ZN18daObjHsBillboard_c16CleanupResourcesEv.cpp",
     "src/_ZN18daObjHsBillboard_c6RenderEv.cpp",
     "src/_ZN18daObjHsBillboard_c13InitResourcesEv.cpp",
-    "src/SlideDecorationBlueSmiley_Spawn.c",
-    "src/SlideDecorationOrangeSmiley_Spawn.c",
-    "src/SlideDecorationYellowStar_Spawn.c",
-    "src/SlideDecorationSilverStar_Spawn.c"
+    "src/d_a_obj_hs_billboard_hs_b_star.c",
+    "src/d_a_obj_hs_billboard_hs_y_star.c",
+    "src/d_a_obj_hs_billboard_hs_star.c",
+    "src/d_a_obj_hs_billboard_hs_moon.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -7894,7 +7894,7 @@
     "src/_ZN9LavaPlank6RenderEv.cpp",
     "src/_ZN9LavaPlank8BehaviorEv.cpp",
     "src/_ZN9LavaPlank13InitResourcesEv.cpp",
-    "src/daObjFl_UkiKi_c_classInit.c"
+    "src/d_a_obj_fl_uki_ki.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -8664,7 +8664,7 @@
     "src/_ZN13RollingLogTtm16CleanupResourcesEv.c",
     "src/_ZN13RollingLogTtm8BehaviorEv.c",
     "src/_ZN13RollingLogTtm13InitResourcesEv.c",
-    "src/daObjHmMaruta_c_classInit.c"
+    "src/d_a_obj_hm_maruta.c"
    ],
    "ext_mix": {
     ".cpp": 1,
@@ -8913,7 +8913,7 @@
     "src/_ZN11VolcanoFire16CleanupResourcesEv.c",
     "src/_ZN11VolcanoFire8BehaviorEv.cpp",
     "src/_ZN11VolcanoFire13InitResourcesEv.cpp",
-    "src/VolcanoFire_Spawn.c"
+    "src/d_a_obj_volcano_cannon.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -9156,7 +9156,7 @@
     "src/_ZN13RollingLogLll16CleanupResourcesEv.cpp",
     "src/_ZN13RollingLogLll8BehaviorEv.cpp",
     "src/_ZN13RollingLogLll13InitResourcesEv.cpp",
-    "src/daObjFlMaruta_c_classInit.c"
+    "src/d_a_obj_fl_maruta.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -9383,7 +9383,7 @@
     "src/_ZN9Submarine16CleanupResourcesEv.cpp",
     "src/_ZN9Submarine6RenderEv.cpp",
     "src/_ZN9Submarine13InitResourcesEv.cpp",
-    "src/daObjWlSubmarine_c_classInit.c"
+    "src/d_a_obj_wl_submarine.c"
    ],
    "ext_mix": {
     ".cpp": 4,
@@ -9776,7 +9776,7 @@
     "src/_ZN21FloatingFloorLllSmallD0Ev.c",
     "src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c",
     "src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c",
-    "src/FloatingFloorLllSmall_Spawn.c"
+    "src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c"
    ],
    "ext_mix": {
     ".cpp": 1,
@@ -10166,7 +10166,7 @@
     "src/_ZN19RotatingPlatformLllD0Ev.c",
     "src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp",
     "src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp",
-    "src/daObjFl_Koma_D_c_classInit.c"
+    "src/d_a_obj_fl_koma_d.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -24755,7 +24755,7 @@
     "src/func_ov021_02111fe4.c",
     "src/func_ov021_02112024.cpp",
     "src/func_ov021_02112128.c",
-    "src/daObjCvNewsLift_c_classInit.cpp"
+    "src/d_a_obj_cv_news_lift.cpp"
    ],
    "ext_mix": {
     ".cpp": 8,
@@ -24994,7 +24994,7 @@
     "src/_ZN11PyramidLift13InitResourcesEv.cpp",
     "src/func_ov025_021125bc.cpp",
     "src/func_ov025_021125dc.c",
-    "src/daDpLift_c_classInit.cpp"
+    "src/d_a_dp_lift.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -25109,7 +25109,7 @@
     "src/_ZN13BowserShutter6RenderEv.cpp",
     "src/_ZN13BowserShutter8BehaviorEv.cpp",
     "src/_ZN13BowserShutter13InitResourcesEv.cpp",
-    "src/daObjWlKoopaShutter_c_classInit.c"
+    "src/d_a_obj_wl_koopa_shutter.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -25237,7 +25237,7 @@
     "src/_ZN13SnowmanBreath6RenderEv.cpp",
     "src/_ZN13SnowmanBreath8BehaviorEv.cpp",
     "src/_ZN13SnowmanBreath13InitResourcesEv.cpp",
-    "src/SnowmanBreath_Spawn.cpp"
+    "src/d_a_snm_bth.cpp"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -25597,7 +25597,7 @@
     "src/_ZN7Wiggler16CleanupResourcesEv.cpp",
     "src/_ZN7Wiggler6RenderEv.cpp",
     "src/_ZN7Wiggler13InitResourcesEv.cpp",
-    "src/Wiggler_Spawn.c"
+    "src/d_a_hanachan.c"
    ],
    "ext_mix": {
     ".cpp": 14,
@@ -25659,7 +25659,7 @@
     "src/_ZN16RotatingCogSmall6RenderEv.cpp",
     "src/_ZN16RotatingCogSmall8BehaviorEv.cpp",
     "src/_ZN16RotatingCogSmall13InitResourcesEv.cpp",
-    "src/RotatingCogSmall_Spawn.c"
+    "src/d_a_obj_ct_mecha10_ct_mecha12s.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -25716,7 +25716,7 @@
     "src/_ZN16SpinningPlatform6RenderEv.cpp",
     "src/_ZN16SpinningPlatform8BehaviorEv.cpp",
     "src/_ZN16SpinningPlatform13InitResourcesEv.cpp",
-    "src/daObjCtMecha11_c_classInit.c"
+    "src/d_a_obj_ct_mecha11.c"
    ],
    "ext_mix": {
     ".c": 5,
@@ -35234,7 +35234,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/FloatingFloorLllBig_Spawn.c"
+    "src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35282,7 +35282,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/daObjFl_Fall_Block_c_classInit.c"
+    "src/d_a_obj_fl_fall_block.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35328,7 +35328,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov025_02111898.c"
+    "src/d_a_dgr.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35378,7 +35378,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/Grindel_Spawn.c"
+    "src/d_a_dkk.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35424,7 +35424,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/daObjWlPolelift_c_classInit.cpp"
+    "src/d_a_obj_wl_polelift.cpp"
    ],
    "ext_mix": {
     ".c": 1
@@ -35474,7 +35474,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SlidingIceSpawner_Spawn.c"
+    "src/d_a_obj_sl_ice_block_sl_iceblock.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35520,7 +35520,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov027_0211207c.c"
+    "src/d_a_pg_dfdr.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35570,7 +35570,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/UkikiStar_Spawn.c"
+    "src/d_a_mky_monkey_star.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35618,7 +35618,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/UkikiThief_Spawn.c"
+    "src/d_a_mky_monkey_thief.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35712,7 +35712,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov035_0211168c.c"
+    "src/d_a_obj_ct_mecha10_ct_mecha12l.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -35762,7 +35762,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/RotatingClockHand_Spawn.c"
+    "src/d_a_obj_ct_mecha10_ct_mecha10.c"
    ],
    "ext_mix": {
     ".c": 1

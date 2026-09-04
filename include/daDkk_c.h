@@ -5,7 +5,7 @@
 
 /* RTTI names the class directly: _ZTS7daDkk_c / _ZTI7daDkk_c
  * (config/arm9/overlays/ov025/symbols.txt 0x021137e0/0x021137ec). The
- * factory the tree calls daDkk_c_classInit (src/Grindel_Spawn.c) gives the real
+ * factory the tree calls daDkk_c_classInit (src/d_a_dkk.c) gives the real
  * size: fBase_c::operator new(928) == 0x3a0.
  *
  * BASE IS daDsnBase_c, NOT dBgActor_c DIRECTLY. daDkk_c_classInit's un-migrated

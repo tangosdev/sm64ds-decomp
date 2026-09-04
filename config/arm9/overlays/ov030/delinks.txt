@@ -32,7 +32,7 @@ src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111410 end:0x02111524
 
-src/daObjHmBskt_c_classInit.c:
+src/d_a_obj_hm_bskt.c:
     complete
     .text start:0x02111524 end:0x0211155c
 
@@ -56,7 +56,7 @@ src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
     complete
     .text start:0x02111638 end:0x0211164c
 
-src/daObjHmMaruta_c_classInit.c:
+src/d_a_obj_hm_maruta.c:
     complete
     .text start:0x0211164c end:0x02111688
 
@@ -236,11 +236,11 @@ src/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x021145d4 end:0x021145e0
 
-src/UkikiStar_Spawn.c:
+src/d_a_mky_monkey_star.c:
     complete
     .text start:0x021145e0 end:0x02114638
 
-src/UkikiThief_Spawn.c:
+src/d_a_mky_monkey_thief.c:
     complete
     .text start:0x02114638 end:0x02114690
 

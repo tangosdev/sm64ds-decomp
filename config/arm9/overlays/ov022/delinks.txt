@@ -36,7 +36,7 @@ src/func_ov022_02111564.c:
     complete
     .text start:0x02111564 end:0x02111578
 
-src/daObjFl_Ring_c_classInit.c:
+src/d_a_obj_fl_ring.c:
     complete
     .text start:0x02111578 end:0x021115a8
 
@@ -56,7 +56,7 @@ src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp:
     complete
     .text start:0x02111670 end:0x02111688
 
-src/daObjFl_Koma_D_c_classInit.c:
+src/d_a_obj_fl_koma_d.c:
     complete
     .text start:0x02111688 end:0x021116c4
 
@@ -92,7 +92,7 @@ src/func_ov022_0211193c.c:
     complete
     .text start:0x0211193c end:0x02111950
 
-src/daObjFl_Block_c_classInit.c:
+src/d_a_obj_fl_block.c:
     complete
     .text start:0x02111950 end:0x02111980
 
@@ -124,7 +124,7 @@ src/_ZN10LavaBridge13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111c7c
 
-src/daObjFl_London_c_classInit.c:
+src/d_a_obj_fl_london.c:
     complete
     .text start:0x02111c7c end:0x02111cac
 
@@ -156,7 +156,7 @@ src/_ZN10LavaSeesaw13InitResourcesEv.cpp:
     complete
     .text start:0x02111ea0 end:0x02111f3c
 
-src/daObjFl_Seesaw_c_classInit.c:
+src/d_a_obj_fl_seesaw.c:
     complete
     .text start:0x02111f3c end:0x02111f6c
 
@@ -176,11 +176,11 @@ src/_ZN21FloatingFloorLllSmall13InitResourcesEv.cpp:
     complete
     .text start:0x02112040 end:0x021120b8
 
-src/FloatingFloorLllSmall_Spawn.c:
+src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c:
     complete
     .text start:0x021120b8 end:0x021120f4
 
-src/FloatingFloorLllBig_Spawn.c:
+src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c:
     complete
     .text start:0x021120f4 end:0x02112130
 
@@ -208,7 +208,7 @@ src/_ZN9LavaPlank13InitResourcesEv.cpp:
     complete
     .text start:0x021122ac end:0x02112350
 
-src/daObjFl_UkiKi_c_classInit.c:
+src/d_a_obj_fl_uki_ki.c:
     complete
     .text start:0x02112350 end:0x02112380
 
@@ -216,7 +216,7 @@ src/actors/daObjFl_Fall_Block_c.cpp:
     complete
     .text start:0x02112380 end:0x0211245c
 
-src/daObjFl_Fall_Block_c_classInit.c:
+src/d_a_obj_fl_fall_block.c:
     complete
     .text start:0x0211245c end:0x02112498
 
@@ -240,7 +240,7 @@ src/_ZN13RollingLogLll13InitResourcesEv.cpp:
     complete
     .text start:0x02112590 end:0x021125a4
 
-src/daObjFlMaruta_c_classInit.c:
+src/d_a_obj_fl_maruta.c:
     complete
     .text start:0x021125a4 end:0x021125e0
 
@@ -280,7 +280,7 @@ src/_ZN11VolcanoFire13InitResourcesEv.cpp:
     complete
     .text start:0x021128b8 end:0x02112918
 
-src/VolcanoFire_Spawn.c:
+src/d_a_obj_volcano_cannon.c:
     complete
     .text start:0x02112918 end:0x02112950
 
