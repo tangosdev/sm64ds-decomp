@@ -1896,43 +1896,21 @@
           "overlay": "ov084",
           "factory_module": "ov084",
           "profile_address": "0x021308ec",
-          "current_profile_name": "Goomba_SpawnInfo",
+          "current_profile_name": "g_profile_KURIBO",
           "factory_address": "0x0212c0b0",
-          "current_factory_name": "Goomba_Spawn"
+          "current_factory_name": "daKrb_c_classInit_KURIBO"
         }
       ],
-      "tu_start": "0x2129020",
+      "tu_start": "0x212bff8",
       "tu_end": "0x212c10c",
-      "tu_left_boundary_confidence": "",
-      "tu_right_boundary_confidence": "high",
-      "tu_classes": [
-        "daKrb_c",
-        "daKrb_c"
-      ],
+      "tu_left_boundary_confidence": "medium",
+      "tu_right_boundary_confidence": "medium",
+      "tu_classes": [],
       "tu_profiles": [
         "KURIBO"
       ],
-      "static_initializers": [
-        {
-          "symbol": "__sinit_ov084_0213035c",
-          "address": "0x0213035c",
-          "size": "0x1fc",
-          "classification": "medium",
-          "causes": [
-            "destructor-registration",
-            "dynamic-global-data",
-            "resource-handle-initialization"
-          ],
-          "evidence": [
-            "8 of 10 ownership global(s) map through consumers to ov084:0",
-            "2 ownership global(s) have no recovered source consumer"
-          ],
-          "blockers": [
-            "module TU map is under-segmented; consumer ownership is only medium confidence"
-          ]
-        }
-      ],
-      "static_initializer_evidence": "directional global/consumer ownership from tools/sinit_owners.py; .init address adjacency is not used",
+      "static_initializers": [],
+      "static_initializer_evidence": "no initializer assigned by tools/sinit_owners.py; absence is not proof",
       "factory_address": "0x0212c0b0",
       "factory_size": "0x0000005c",
       "registry_factory_reference_count": 1,
@@ -1944,8 +1922,8 @@
           "profile_address": "0x021308ec"
         }
       ],
-      "current_factory_name": "Goomba_Spawn",
-      "current_factory_file": "src/Goomba_Spawn.c",
+      "current_factory_name": "daKrb_c_classInit_KURIBO",
+      "current_factory_file": "src/d_a_krb_kuribo.c",
       "proposed_factory_name": "daKrb_c_classInit_KURIBO",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1954,7 +1932,7 @@
       "proposed_factory_collision": "ov084:0x0212bff8;ov084:0x0212c054;ov084:0x0212c0b0",
       "factory_name_resolution": "disambiguated_by_profile_id",
       "profile_address": "0x021308ec",
-      "current_profile_name": "Goomba_SpawnInfo",
+      "current_profile_name": "g_profile_KURIBO",
       "proposed_profile_name": "g_profile_KURIBO",
       "descriptor_layout": "actor_profile_0x1c",
       "profile_index": 200,
@@ -1972,7 +1950,7 @@
       "class_size": "0x00000478",
       "installed_vtable": "0x02130948",
       "expected_vtable": "_ZTV7daKrb_c",
-      "factory_ordinal_in_tu": 35,
+      "factory_ordinal_in_tu": 3,
       "factory_is_last_in_tu": true,
       "profile_alignment": 0,
       "profile_to_rtti_delta": "-0xc",
@@ -1980,9 +1958,7 @@
       "data_order": "rtti_name < rtti < profile < vtable",
       "class_filename_candidate": "d_a_krb.cpp",
       "probable_filename": "d_a_krb.cpp",
-      "tu_filename_candidates": [
-        "d_a_krb.cpp"
-      ],
+      "tu_filename_candidates": [],
       "filename_contradictions": "",
       "filename_evidence": "RTTI class-family stem from tools/tu_names.py + recovered text TU from tools/tu_map.py + later EAD d_a/d_s path convention; no SM64DS __FILE__ proof",
       "factory_confidence": "B",
@@ -2305,7 +2281,7 @@
         }
       ],
       "current_factory_name": "daObj_Mip_Key_c_classInit",
-      "current_factory_file": "src/daObj_Mip_Key_c_classInit.c",
+      "current_factory_file": "src/d_a_obj_mip_key.c",
       "proposed_factory_name": "daObj_Mip_Key_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
