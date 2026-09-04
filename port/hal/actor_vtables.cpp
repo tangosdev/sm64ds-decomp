@@ -252,7 +252,12 @@ extern "C" {
 /* PORT_HOST_ABI: ARM/Thumb asm primitive (Y-rotation matrix), MSVC cannot assemble.
    asm primitive: 4x3 fx32 Y-rotation from (sin, cos):
    rows {c,0,-s},{0,1,0},{s,0,c},{0,0,0} */
-void func_02052820(int *m, int s, int c)
+/* The sine and cosine are SIXTEEN BITS at this boundary; the derivation is
+   over func_02052800 in hal/cxx_aliases.cpp. In short: the ROM callers
+   disagree about the argument width, ARM's caller-widens rule hides it, the
+   host's cdecl does not, and a negative cosine arrived here zero-extended --
+   which is the title star's 16x scale snap. */
+void func_02052820(int *m, short s, short c)
 {
     m[0] = c;      m[1] = 0; m[2] = -s;
     m[3] = 0;      m[4] = 0x1000; m[5] = 0;
