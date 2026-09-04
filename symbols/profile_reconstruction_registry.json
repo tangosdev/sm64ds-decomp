@@ -15947,7 +15947,7 @@
       "factory_module": "ov006",
       "factory_address": "0x020f75d4",
       "current_factory_name": "dScMgMemory2_c_classInit",
-      "current_factory_file": "src/MgMemoryMaster_Spawn.c",
+      "current_factory_file": "src/dScMgMemory2_c_classInit.c",
       "proposed_factory_name": "dScMgMemory2_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "alloc_size": "0x00005410",

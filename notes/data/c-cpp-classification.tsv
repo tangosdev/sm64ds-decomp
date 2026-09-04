@@ -281,7 +281,7 @@ src/daObjMc_Metalnet_c_classInit.c	WEAK-refs-only	ov009				1		None		-
 src/MgBobOmbSquad_Spawn.c	WEAK-refs-only	ov006				1		None		-
 src/MgHideAndBooSeek_Spawn.c	WEAK-refs-only	ov006				1		None		-
 src/MgLakituLaunch_Spawn.c	P2-vtable-only	ov006	dScMgPachinko_c	dScMgPachinko_c	vtable dScMgPachinko_c slot 38 @0x2104258	1		True		-
-src/MgMemoryMaster_Spawn.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
+src/dScMgMemory2_c_classInit.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
 src/MgMemoryMatch_Spawn.c	S1-stores-rom-vptr	ov006			stores _ZTV13dScMgMemory_c	1		None	_ZTV13dScMgMemory_c/_ZTV19dScMgSingle3DBase_c	-
 src/MgPuzzlePanelPuzzlePanic_Spawn.c	WEAK-refs-only	ov006				1		None		-
 src/dScMgCurling_c_classInit.c	WEAK-refs-only	ov006				1		None		-
@@ -4763,45 +4763,45 @@ src/func_ov006_020f51f0.c	PURE-C	ov006				1		None		-
 src/func_ov006_020f523c.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 21 @0x20f523c	1	active	True		-
 src/func_ov006_020f5250.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 19 @0x20f5250	1	active	True		-
 src/func_ov006_020f52c4.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 18 @0x20f52c4	1	active	True		-
-src/func_ov006_020f5620.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f565c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5694.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f56f8.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f572c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5740.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5744.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f58d0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f593c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f59c0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5b98.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5cb4.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5de0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5e70.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5e74.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5f0c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6084.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6088.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f6230.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f639c.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f6488.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6538.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6678.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f670c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f67a0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6830.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6904.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
-src/func_ov006_020f6a00.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6a78.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6b00.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6b78.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6bf0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6c90.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6f88.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7064.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7190.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7210.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7280.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f72c0.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11DrawMessageEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10DrawCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12UpdateCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10ShowCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10HideCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerWaitEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerMoveEi.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerDropEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11InitPlayersEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13CheckFinishedEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9DrawCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12CardFlipDownEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardWaitEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10CardFlipUpEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10CardSelectEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardIdleEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardMoveEi.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ResultFinishEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ResultRewardEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10ResultWaitEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11RoundRevealEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
+src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundDealHardEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10RoundStartEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9ResetGameEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9StateExitEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10StateJudgeEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10StateSetupEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c	PURE-C	ov006				1		None		-
 src/func_ov006_020f730c.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 21 @0x20f730c	1	active	True		-
 src/func_ov006_020f7320.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 19 @0x20f7320	1	active	True		-
 src/func_ov006_020f7394.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 18 @0x20f7394	1	active	True		-
