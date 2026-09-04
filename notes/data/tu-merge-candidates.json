@@ -5724,17 +5724,17 @@
    "start": "0x21111a0",
    "end": "0x21114b8",
    "classes": [
-    "ShipWater"
+    "daObjKsWater_c"
    ],
    "n_functions_map": 7,
    "n_files": 7,
    "files": [
-    "src/_ZN9ShipWaterD1Ev.cpp",
-    "src/_ZN9ShipWaterD0Ev.cpp",
-    "src/_ZN9ShipWater16CleanupResourcesEv.cpp",
-    "src/_ZN9ShipWater6RenderEv.cpp",
-    "src/_ZN9ShipWater8BehaviorEv.cpp",
-    "src/_ZN9ShipWater13InitResourcesEv.c",
+    "src/_ZN14daObjKsWater_cD1Ev.cpp",
+    "src/_ZN14daObjKsWater_cD0Ev.cpp",
+    "src/_ZN14daObjKsWater_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjKsWater_c6RenderEv.cpp",
+    "src/_ZN14daObjKsWater_c8BehaviorEv.cpp",
+    "src/_ZN14daObjKsWater_c13InitResourcesEv.c",
     "src/daObjKsWater_c_classInit.c"
    ],
    "ext_mix": {
