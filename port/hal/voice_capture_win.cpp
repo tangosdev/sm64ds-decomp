@@ -313,6 +313,88 @@ int cap_enumerate(char names[][kCapNameBytes], int max)
     return n;
 }
 
+/* SM64DS_VOICE_MIC_PROBE=1. Opens the system default recording device with
+   the exact WAVEFORMATEX voice capture uses -- same rate, same 1 channel,
+   same 16-bit PCM -- independent of cap_open/g_open above so a probe run
+   never disturbs a session that happens to be live. Prints the device name,
+   the format requested, and SUCCESS or the waveInOpen error code; on success
+   it samples three seconds of real input and prints the peak sample. */
+void cap_probe()
+{
+    fprintf(stderr, "[voice-probe] requesting %d Hz, 1 channel, 16-bit PCM\n",
+            (int)kCapRate);
+    if (!load_lib()) {
+        fprintf(stderr, "[voice-probe] FAILED: winmm unavailable\n");
+        return;
+    }
+    const UINT id = resolve_device("");
+    WAVEINCAPSA caps;
+    memset(&caps, 0, sizeof caps);
+    const char *devname = p_Caps(id, &caps, sizeof caps) == MMSYSERR_NOERROR
+                               ? caps.szPname : "(unknown)";
+    fprintf(stderr, "[voice-probe] device: %s\n", devname);
+
+    WAVEFORMATEX wf;
+    memset(&wf, 0, sizeof wf);
+    wf.wFormatTag = WAVE_FORMAT_PCM;
+    wf.nChannels = 1;
+    wf.nSamplesPerSec = kCapRate;
+    wf.wBitsPerSample = 16;
+    wf.nBlockAlign = 2;
+    wf.nAvgBytesPerSec = kCapRate * 2;
+
+    HWAVEIN dev;
+    const MMRESULT mr = p_Open(&dev, id, &wf, 0, 0, CALLBACK_NULL);
+    if (mr != MMSYSERR_NOERROR) {
+        fprintf(stderr, "[voice-probe] FAILED: waveInOpen error %d\n", (int)mr);
+        return;
+    }
+    fprintf(stderr, "[voice-probe] SUCCESS\n");
+
+    enum { PBUF = 4 };
+    short *buf[PBUF];
+    WAVEHDR hdr[PBUF];
+    for (int i = 0; i < PBUF; ++i) {
+        buf[i] = (short *)calloc(kCapFrameSamples, sizeof(short));
+        memset(&hdr[i], 0, sizeof hdr[i]);
+        hdr[i].lpData = (LPSTR)buf[i];
+        hdr[i].dwBufferLength = kCapFrameSamples * sizeof(short);
+        p_Prepare(dev, &hdr[i], sizeof(WAVEHDR));
+        p_Add(dev, &hdr[i], sizeof(WAVEHDR));
+    }
+    p_Start(dev);
+
+    short peak = 0;
+    const DWORD until = GetTickCount() + 3000;
+    int next = 0;
+    while (GetTickCount() < until) {
+        WAVEHDR &h = hdr[next];
+        if (h.dwFlags & WHDR_DONE) {
+            const int n = (int)(h.dwBytesRecorded / sizeof(short));
+            for (int i = 0; i < n; ++i) {
+                const short v = buf[next][i];
+                const short a = v < 0 ? (short)-v : v;
+                if (a > peak) peak = a;
+            }
+            h.dwFlags &= ~WHDR_DONE;
+            h.dwBytesRecorded = 0;
+            h.dwBufferLength = kCapFrameSamples * sizeof(short);
+            p_Add(dev, &h, sizeof(WAVEHDR));
+            next = (next + 1) % PBUF;
+        }
+        Sleep(10);
+    }
+
+    p_Reset(dev);
+    p_Stop(dev);
+    for (int i = 0; i < PBUF; ++i) {
+        p_Unprepare(dev, &hdr[i], sizeof(WAVEHDR));
+        free(buf[i]);
+    }
+    p_Close(dev);
+    fprintf(stderr, "[voice-probe] peak input level: %d / 32767\n", (int)peak);
+}
+
 #else   /* not _WIN32 */
 
 int cap_open(const char *) { return 0; }
@@ -321,6 +403,7 @@ int cap_is_open() { return 0; }
 void cap_rearm() {}
 int cap_read_frame(short *) { return 0; }
 int cap_enumerate(char[][kCapNameBytes], int) { return 0; }
+void cap_probe() {}
 
 #endif
 

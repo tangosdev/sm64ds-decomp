@@ -296,6 +296,13 @@ import subprocess
 import sys
 import time
 
+# The windowed test slot lock lives beside this file. Importing it is free and
+# never changes behaviour on its own -- run() below consults slot_lock.enabled()
+# (the SM64DS_TEST_LOCK opt-in) before it takes the lock, so an unset
+# environment launches walk_window exactly as it always did. See slot_lock.py.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import slot_lock
+
 SELFTEST_FRAMES = "300"
 STEP_TIMEOUT = 600
 
@@ -803,7 +810,29 @@ else:
     SI_MIN = None
 
 
+def _is_windowed_cmd(cmd):
+    """Is this a walk_window launch -- the one command that opens the windowed
+    test slot? Only these serialise through the lock; the build cmd, the smoke
+    exes, linkage.py and ptr_audit.py do not open a game window and are left to
+    run in parallel with another lane's non-windowed work."""
+    if not cmd:
+        return False
+    base = os.path.basename(str(cmd[0])).lower()
+    return base.startswith("walk_window") and base.endswith(".exe")
+
+
 def run(cmd, cwd, env=None, timeout=STEP_TIMEOUT):
+    # EXCLUSIVE WINDOWED SLOT. When SM64DS_TEST_LOCK is set (opt-in, see
+    # slot_lock.py) every walk_window launch this battery makes holds the one
+    # machine-wide windowed slot for its lifetime, so two lanes' windowed tests
+    # cannot overlap and throw the random cross-level rc=1 that this lock exists
+    # to end. Unset, or for a non-windowed command, this is a plain
+    # subprocess.run and the battery behaves exactly as before.
+    if slot_lock.enabled() and _is_windowed_cmd(cmd):
+        with slot_lock.slot(label=f"battery {os.path.basename(str(cmd[0]))}"):
+            return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
+                                  capture_output=True, text=True,
+                                  creationflags=NO_CONSOLE, startupinfo=SI_MIN)
     return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
                           capture_output=True, text=True,
                           creationflags=NO_CONSOLE, startupinfo=SI_MIN)
