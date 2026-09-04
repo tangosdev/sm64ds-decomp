@@ -204,6 +204,12 @@ extern "C" const char *port_crash_dir_get_stub(void)
 #define PORT_Q_MAX     256      /* frozen instances this level (bounded leak) */
 #define PORT_Q_IDS     512      /* actor id space for the class rate limit */
 
+/* The player class id. Both versus players are this id, so a class-level latch
+   on it (see port_quarantine_actor) would freeze EVERY player instance on sight
+   and turn one player's fault into a two-player softlock. The player is exempt
+   from the class rate limit; a faulting player quarantines only that instance. */
+#define PORT_Q_PLAYER_ID 0xbf
+
 static void *port_q_frozen[PORT_Q_MAX];
 static int   port_q_frozen_n;
 static unsigned char port_q_class_count[PORT_Q_IDS]; /* quarantines per id */
@@ -252,6 +258,42 @@ static unsigned char port_q_class_skip[PORT_Q_IDS];  /* id-level skip latch */
    Single-threaded: the game loop is one thread, the latch is set microseconds
    before the raise and cleared by the handler that consumes it. */
 static void *port_q_decline_target;
+
+/* --- THE INTERACTION RECEIVER: the genuine-AV counterpart of the decline target
+   ----------------------------------------------------------------------------
+
+   DEFECT 2. port_q_decline_target above covers a NAMED decline (a trap thunk
+   that calls port_actor_slot_decline_for). It does NOT cover a genuine access
+   violation -- a real bad-pointer dereference inside a seated body -- because
+   nothing on that path names anyone, so the __except fell back to the WALKER.
+   When the walker is the player and the fault is inside an object the player is
+   interacting with (a cap, a brick, a receiver found by collision id and called
+   through its own vtable slot), freezing the walker froze the PLAYER for a fault
+   that was the receiver's -- the same soft-lock shape the decline target already
+   fixed for the named case.
+
+   The interaction dispatch veneers (Actor_OnAttacked2Dispatch,
+   Actor_OnKickedDispatch, Player_HeadBonk) are the one place the receiver is
+   known before it is called. They bracket the receiver's virtual call with
+   port_actor_interaction_begin/end; if the receiver's body genuinely faults, the
+   __except attributes the fault to the receiver latched here rather than to the
+   walker. begin returns the previous value and end restores it, so nested
+   interactions and clean returns leave no stale latch. Single-threaded, exactly
+   like the decline target. A dispatch that names nothing and touches no receiver
+   leaves this null and keeps the walker attribution -- for it, the walker is the
+   only actor the fault tells us about, and the safety net still freezes it. */
+static void *port_q_interaction_receiver;
+
+extern "C" void *port_actor_interaction_begin(void *receiver)
+{
+    void *prev = port_q_interaction_receiver;
+    port_q_interaction_receiver = receiver;
+    return prev;
+}
+extern "C" void port_actor_interaction_end(void *prev)
+{
+    port_q_interaction_receiver = prev;
+}
 
 /* Shared "per-actor decline" for the HAL trap sites that used to std::abort()
    on an unhosted vtable slot or an unhosted actor state. Those declines fire
@@ -400,7 +442,16 @@ static void port_quarantine_actor(void *actor, unsigned code, unsigned off)
 {
     unsigned id = port_q_actor_id(actor);
     int class_latched_now = 0;
-    if (id < PORT_Q_IDS) {
+    /* DEFECT 1 -- the class latch EXEMPTS THE PLAYER. The rate limit below
+       latches an id's whole class off after two quarantines; from then on every
+       instance of that id is frozen on sight without ever faulting. Both versus
+       players share PORT_Q_PLAYER_ID, so latching it froze BOTH players on the
+       SECOND cap-eat access violation from EITHER of them -- whether or not the
+       other had ever touched a cap -- and one player's fault became a two-player
+       softlock. Rate-limiting a spammy enemy id still makes sense; rate-limiting
+       the player never does. The player quarantines by INSTANCE only (below); its
+       class is never latched, so a second player is never frozen on sight. */
+    if (id < PORT_Q_IDS && id != PORT_Q_PLAYER_ID) {
         if (port_q_class_count[id] < 255) ++port_q_class_count[id];
         if (port_q_class_count[id] >= 2 && !port_q_class_skip[id]) {
             port_q_class_skip[id] = 1;      /* rate limit: whole class off */
@@ -470,15 +521,18 @@ static int port_q_filter(EXCEPTION_POINTERS *ep, unsigned *code, unsigned *off)
        port_fault_synthetic. There is no "testhook" tag any more because there
        is no file to tag -- a dump that is not written cannot be misread.
 
-       And a NAMED decline whose target is already frozen writes no SECOND dump.
-       Attribution keeps the player alive, which means he can walk back and hit
-       the same dead brick again, and every hit re-raises -- the raise cannot be
-       suppressed (the trap thunks' `ret` is only safe because it is
+       And a decline/interaction whose target is already frozen writes no SECOND
+       dump. Attribution keeps the player alive, which means he can walk back and
+       hit the same dead brick again, and every hit re-raises -- the raise cannot
+       be suppressed (the trap thunks' `ret` is only safe because it is
        unreachable), but the FILE it produces can be, and must be: these dumps
-       upload into the live player index. The freeze and the unwind are
-       unchanged; only the write is skipped. */
+       upload into the live player index. The same holds for a genuine AV inside
+       an already-frozen interaction receiver (DEFECT 2). The freeze and the
+       unwind are unchanged; only the write is skipped. */
     if (!port_fault_synthetic &&
-        !(port_q_decline_target && port_q_is_frozen(port_q_decline_target)))
+        !(port_q_decline_target && port_q_is_frozen(port_q_decline_target)) &&
+        !(port_q_interaction_receiver &&
+          port_q_is_frozen(port_q_interaction_receiver)))
         port_rich_dump_ex(ep, *code,
                           port_faults_fatal() ? "quarantine-fatal"
                                               : "quarantine");
@@ -669,9 +723,11 @@ static int port_dispatch_guarded(PortListFn fn, void *actor)
     if (port_q_is_frozen(actor))
         return 1;               /* frozen: never dispatch again (leak until exit) */
     /* Clear before the call, not after: a latch left behind by an earlier
-       decline must never be able to blame this actor's unrelated fault on
-       somebody else. Only a decline raised inside THIS fn(actor) can set it. */
+       decline or interaction must never be able to blame this actor's unrelated
+       fault on somebody else. Only a decline or an interaction veneer running
+       inside THIS fn(actor) can set them. */
     port_q_decline_target = 0;
+    port_q_interaction_receiver = 0;
     __try {
         /* test-only: raise the real per-actor decline AV so this actor is frozen
            through the exact path a genuine fault would take. No-op unless
@@ -681,15 +737,21 @@ static int port_dispatch_guarded(PortListFn fn, void *actor)
         fn(actor);
     } __except (port_q_filter(GetExceptionInformation(), &code, &off)) {
         /* only reached when the filter chose to swallow (not FAULTS_FATAL).
-           A named decline freezes the actor that declined; anything else --
-           a real access violation somewhere in this callback -- still freezes
-           the actor being walked, which is the only thing we know about it. */
-        victim = port_q_decline_target ? port_q_decline_target : actor;
+           Attribution order: a NAMED decline names the actor that declined; else
+           the interaction receiver a dispatch veneer latched (a genuine AV inside
+           an object the walker was interacting with -- DEFECT 2, so a crash in a
+           receiver does not freeze the player driving it); else the walker, the
+           only actor a bare fault in this callback tells us about. */
+        victim = port_q_decline_target ? port_q_decline_target
+               : (port_q_interaction_receiver ? port_q_interaction_receiver
+                                              : actor);
         port_q_decline_target = 0;
+        port_q_interaction_receiver = 0;
         port_quarantine_actor(victim, code, off);
         return 1;
     }
     port_q_decline_target = 0;
+    port_q_interaction_receiver = 0;
     return 0;
 }
 

@@ -95,6 +95,11 @@ extern void _ZN10ClsnResultD1Ev(void *self);
 
 extern char data_ov002_0211001c;
 extern int data_02099368;
+/* The quarantine net's interaction-receiver latch (func_02043fdc_hostcopy.cpp):
+   name the receiver about to be dispatched so a genuine access violation inside
+   its slot freezes the RECEIVER, not the player driving the head-bonk. */
+void *port_actor_interaction_begin(void *receiver);
+void port_actor_interaction_end(void *prev);
 }
 
 /* The one changed line's shape. Twenty-eight filler virtuals put the
@@ -189,8 +194,11 @@ extern "C" int func_ov002_020cef84(char *self)
                 tmp.f20 = *(int *)(rl + 0x30);
                 tmp.f24 = *(int *)(rl + 0x34);
                 a = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&tmp));
-                if (a)
+                if (a) {
+                    void *port_prev_recv = port_actor_interaction_begin(a);
                     ((HbActor *)a)->OnHitFromUnderneath(self);
+                    port_actor_interaction_end(port_prev_recv);
+                }
                 _ZN10ClsnResultD1Ev(&tmp);
             }
         }
