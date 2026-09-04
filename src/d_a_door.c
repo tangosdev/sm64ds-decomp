@@ -1,4 +1,4 @@
-// @symbol Door_Spawn
+// @symbol daDoor_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -7,7 +7,11 @@
 extern int _ZTV4Door[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV4Door */
-int *Door_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daDoor_c through RTTI,
+ * allocation size, vtable identity, and the DOOR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Door_Spawn. */
+int *daDoor_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(328);
     if (p) {

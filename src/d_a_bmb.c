@@ -1,4 +1,4 @@
-// @symbol BobOmb_Spawn
+// @symbol daBmb_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6BobOmb */
-int *BobOmb_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daBmb_c through RTTI,
+ * allocation size, vtable identity, and the BOMBHEI registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BobOmb_Spawn. */
+int *daBmb_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1024);
     if (p) {

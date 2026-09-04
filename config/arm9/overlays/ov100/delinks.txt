@@ -64,7 +64,7 @@ src/_ZN9Butterfly13InitResourcesEv.cpp:
     complete
     .text start:0x02141c6c end:0x02141ea4
 
-src/Butterfly_Spawn.c:
+src/d_a_btfly.c:
     complete
     .text start:0x02141ea4 end:0x02141f04
 
@@ -127,7 +127,7 @@ src/_ZN15RollingIronBall8BehaviorEv.cpp:
 src/_ZN15RollingIronBall13InitResourcesEv.cpp:
     .text start:0x02142de0 end:0x0214316c
 
-src/RollingIronBall_Spawn.c:
+src/d_a_ibl.c:
     complete
     .text start:0x0214316c end:0x021431c4
 
@@ -195,7 +195,7 @@ src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021442d4 end:0x021442dc
 
-src/UnchainedChomp_Spawn.cpp:
+src/d_a_wanwan2.cpp:
     complete
     .text start:0x021442dc end:0x021443f4
 
@@ -322,7 +322,7 @@ src/_ZN4Door8BehaviorEv.cpp:
 src/_ZN4Door13InitResourcesEv.c:
     .text start:0x021455a0 end:0x0214589c
 
-src/Door_Spawn.c:
+src/d_a_door.c:
     complete
     .text start:0x0214589c end:0x021458d4
 
@@ -402,7 +402,7 @@ src/_ZN8StarDoor13InitResourcesEv.cpp:
     complete
     .text start:0x0214612c end:0x021461d4
 
-src/StarDoor_Spawn.c:
+src/d_a_star_gate.c:
     complete
     .text start:0x021461d4 end:0x0214620c
 
@@ -474,7 +474,7 @@ src/_ZN4Fish13InitResourcesEv.cpp:
     complete
     .text start:0x02146c68 end:0x02146d38
 
-src/Fish_Spawn.cpp:
+src/d_a_fish.cpp:
     complete
     .text start:0x02146d38 end:0x02146d7c
 
@@ -482,7 +482,7 @@ src/actors/daObjPathLift_c.cpp:
     complete
     .text start:0x02146d7c end:0x02147328
 
-src/daObjPathLift_c_classInit.cpp:
+src/d_a_obj_path_lift.cpp:
     complete
     .text start:0x02147328 end:0x021473a4
 

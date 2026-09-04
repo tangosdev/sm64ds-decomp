@@ -2,7 +2,7 @@
 # spawns through its factory, initializes, behaves and renders through
 # vtable dispatch. Sits on the full prior stack.
 
-src/ArrowSignRight_Spawn.c
+src/d_a_obj_yajirusi_yajirusi_r.c
 src/_ZN14ArrowSignRight13InitResourcesEv.cpp
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
 src/_ZN14ArrowSignRight8BehaviorEv.cpp

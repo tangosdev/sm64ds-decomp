@@ -139,11 +139,11 @@ src/_ZN5Pokey13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02136cd0 end:0x02136d10
 
-src/PokeySegment_Spawn.c:
+src/d_a_sanbo_sanbo_body.c:
     complete
     .text start:0x02136d10 end:0x02136d60
 
-src/Pokey_Spawn.c:
+src/d_a_sanbo_sanbo.c:
     complete
     .text start:0x02136d60 end:0x02136db0
 
@@ -186,7 +186,7 @@ src/_ZN7Tornado8BehaviorEv.cpp:
 src/_ZN7Tornado13InitResourcesEv.cpp:
     .text start:0x02137564 end:0x021376bc
 
-src/Tornado_Spawn.c:
+src/d_a_tor.c:
     complete
     .text start:0x021376bc end:0x0213770c
 

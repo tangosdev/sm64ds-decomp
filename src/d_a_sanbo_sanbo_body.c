@@ -1,4 +1,4 @@
-// @symbol PokeySegment_Spawn
+// @symbol daSanbo_c_classInit_SANBO_BODY
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV5Pokey */
-int *PokeySegment_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daSanbo_c through RTTI,
+ * allocation size, vtable identity, and the SANBO_BODY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: PokeySegment_Spawn. */
+int *daSanbo_c_classInit_SANBO_BODY(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {

@@ -1,4 +1,4 @@
-// @symbol Tornado_Spawn
+// @symbol daTor_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV7Tornado */
-int *Tornado_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daTor_c through RTTI,
+ * allocation size, vtable identity, and the TORNADO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Tornado_Spawn. */
+int *daTor_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(880);
     if (p) {

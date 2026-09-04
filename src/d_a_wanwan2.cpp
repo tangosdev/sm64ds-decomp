@@ -1,5 +1,5 @@
 //cpp
-// @symbol UnchainedChomp_Spawn
+// @symbol daWanwan2_c_classInit
 #include "UnchainedChomp.h"
 
 extern "C" {
@@ -20,7 +20,11 @@ void _ZN8Vector3sD1Ev();
 void func_0203d73c();
 }
 
-extern "C" UnchainedChomp *UnchainedChomp_Spawn()
+/* Reconstructed source-style name: SM64DS proves daWanwan2_c through RTTI,
+ * allocation size, vtable identity, and the WANWAN2 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: UnchainedChomp_Spawn. */
+extern "C" UnchainedChomp *daWanwan2_c_classInit()
 {
     UnchainedChomp *actor =
         (UnchainedChomp *)_ZN7fBase_cnwEj(sizeof(UnchainedChomp));

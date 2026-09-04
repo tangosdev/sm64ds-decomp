@@ -1,5 +1,5 @@
 //cpp
-// @symbol Cannon_Spawn
+// @symbol daCnn_c_classInit
 #include "Cannon.h"
 
 /* This compiler rejects both the cartridge's class-specific operator-new
@@ -13,7 +13,11 @@ void _ZN7dCcAc_cC1Ev(void *self);
 extern void *_ZTV6Cannon;
 }
 
-extern "C" Cannon *Cannon_Spawn()
+/* Reconstructed source-style name: SM64DS proves daCnn_c through RTTI,
+ * allocation size, vtable identity, and the CANNON registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Cannon_Spawn. */
+extern "C" Cannon *daCnn_c_classInit()
 {
     Cannon *actor = (Cannon *)_ZN7fBase_cnwEj(sizeof(Cannon));
     if (actor) {

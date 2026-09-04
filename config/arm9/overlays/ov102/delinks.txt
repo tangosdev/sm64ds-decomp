@@ -28,27 +28,27 @@ src/_ZN13FortressTower13InitResourcesEv.cpp:
     complete
     .text start:0x02148c94 end:0x02148e9c
 
-src/RopeBarrier_Spawn.c:
+src/d_a_obj_simple_bg_mc_hazad.c:
     complete
     .text start:0x02148e9c end:0x02148ecc
 
-src/CgStairs_Spawn.c:
+src/d_a_obj_simple_bg_mc_dodai.c:
     complete
     .text start:0x02148ecc end:0x02148efc
 
-src/WarpPipe_Spawn.c:
+src/d_a_obj_simple_bg_dokan.c:
     complete
     .text start:0x02148efc end:0x02148f2c
 
-src/FortressTower_Spawn.c:
+src/d_a_obj_simple_bg_bk_tower.c:
     complete
     .text start:0x02148f2c end:0x02148f5c
 
-src/RockTriangle_Spawn.c:
+src/d_a_obj_simple_bg_ki_hasira_dai.c:
     complete
     .text start:0x02148f5c end:0x02148f8c
 
-src/StaticRock_Spawn.c:
+src/d_a_obj_simple_bg_ki_iwa.c:
     complete
     .text start:0x02148f8c end:0x02148fbc
 
@@ -192,27 +192,27 @@ src/_ZN13QuestionBlock13InitResourcesEv.cpp:
     complete
     .text start:0x0214a4a4 end:0x0214a7ec
 
-src/CapBlockWario_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_w.c:
     complete
     .text start:0x0214a7ec end:0x0214a82c
 
-src/CapBlockLuigi_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_l.c:
     complete
     .text start:0x0214a82c end:0x0214a86c
 
-src/CapBlockMario_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_m.c:
     complete
     .text start:0x0214a86c end:0x0214a8ac
 
-src/ExclamationBlock_Spawn.c:
+src/d_a_obj_hatena_block_item_block.c:
     complete
     .text start:0x0214a8ac end:0x0214a8ec
 
-src/QuestionBlock_Spawn.c:
+src/d_a_obj_hatena_block_hatena_block.c:
     complete
     .text start:0x0214a8ec end:0x0214a92c
 
-src/ExclamationBlockVs_Spawn.c:
+src/d_a_obj_hatena_block_vs_item_block.c:
     complete
     .text start:0x0214a92c end:0x0214a96c
 
@@ -352,7 +352,7 @@ src/_ZN6BobOmb13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214c6e4 end:0x0214c6f8
 
-src/BobOmb_Spawn.c:
+src/d_a_bmb.c:
     complete
     .text start:0x0214c6f8 end:0x0214c748
 
@@ -448,7 +448,7 @@ src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214d6a0 end:0x0214d6b4
 
-src/KoopaShell_Spawn.c:
+src/d_a_shl.c:
     complete
     .text start:0x0214d6b4 end:0x0214d70c
 

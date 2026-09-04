@@ -1,4 +1,4 @@
-// @symbol KoopaShell_Spawn
+// @symbol daShl_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10KoopaShell */
-int *KoopaShell_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daShl_c through RTTI,
+ * allocation size, vtable identity, and the SHELL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: KoopaShell_Spawn. */
+int *daShl_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(992);
     if (p) {

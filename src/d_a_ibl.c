@@ -1,4 +1,4 @@
-// @symbol RollingIronBall_Spawn
+// @symbol daIbl_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -10,7 +10,11 @@
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV15RollingIronBall */
 extern void _ZN7PathPtrC1Ev(void *);
-int *RollingIronBall_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daIbl_c through RTTI,
+ * allocation size, vtable identity, and the IRONBALL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: RollingIronBall_Spawn. */
+int *daIbl_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1020);
     if (p) {

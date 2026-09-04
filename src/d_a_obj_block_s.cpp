@@ -8,7 +8,11 @@ void _ZN10dCcAcPos_cC1Ev(void* p);
 }
 extern void* _ZTV5Crate;
 
-extern "C" void* Crate_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjBlockS_c through RTTI,
+ * allocation size, vtable identity, and the BLOCK_S registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Crate_Spawn. */
+extern "C" void* daObjBlockS_c_classInit(void)
 {
     char* p = (char*)_ZN7fBase_cnwEj(0x608);
     if (p) {
