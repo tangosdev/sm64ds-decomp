@@ -407,6 +407,7 @@ static bool winapi_load(void)
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
 #include "hal/voice_chat.h"      /* lane VOICE: proximity voice chat */
+#include "hal/mic_probe.h"       /* SM64DS_MIC_PROBE: gated capture-format probe */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
 /* run mg16 lane MP3: hal/comms_lockstep.h is RETIRED. Its transcription of
    src/func_0203ea5c.c existed only because that TU was in no slice; the TU is
@@ -6843,6 +6844,14 @@ static int scene_window_run(void)
    not as the process entry point. */
 int main(void)
 {
+    /* SM64DS_MIC_PROBE=1: measure which capture formats the default microphone
+       accepts, write mic_probe.log next to the exe, and exit before the game
+       starts. Inert with the flag unset -- it reads one environment variable
+       and returns, opening no audio device and changing nothing -- so it rides
+       the shipped exe harmlessly and only wakes when a tester asks it to. This
+       is the mic test that does not need the (hidden) voice panel. */
+    if (port::voice::mic_probe_run_if_enabled())
+        return 0;
     /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
        host_setting_aspect() reads the Aspect key from settings.json (or
        SM64DS_ASPECT, or the legacy SM64DS_WIDESCREEN) as a RATIO -- width over

@@ -8144,6 +8144,13 @@ list(APPEND SLICE_COMMS_SOURCES hal/comms_sync.cpp)
 # the three that take that one -- the FINDING 5 shape again: a fourth variable
 # each of them has to remember is how a lane's TUs silently leave a link.
 list(APPEND SLICE_COMMS_SOURCES hal/voice_chat.cpp hal/voice_capture_win.cpp)
+# The mic-capture probe rides here for the same reason voice does: its one
+# caller is tests/walk_window.cpp (walk_window and walk_window_hires), and this
+# list is exactly the set that compiles that file, so it cannot silently leave
+# a link. It is a self-contained TU with no other references, so smoke_player
+# linking it too is dead inert code -- SM64DS_MIC_PROBE gates the only entry
+# and the whole file returns 0 when it is unset.
+list(APPEND SLICE_COMMS_SOURCES hal/mic_probe_win.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
 foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)
