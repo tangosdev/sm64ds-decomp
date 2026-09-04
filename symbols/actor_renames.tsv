@@ -802,12 +802,12 @@ ov022	0x02112560	func_ov022_02112560	_ZN13RollingLogLll8BehaviorEv	vtable slot 6
 ov022	0x02112590	func_ov022_02112590	_ZN13RollingLogLll13InitResourcesEv	vtable slot 0 (was _ZN12FallBlockLll13InitResourcesEv)
 ov022	0x021125a4	func_ov022_021125a4	RollingLogLll_Spawn	spawnfunc
 ov022	0x021125a4	RollingLogLll_Spawn	daObjFlMaruta_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov022	0x021125e0	func_ov022_021125e0	_ZN11VolcanoFireD1Ev	vtable slot 16 (was _ZN13RollingLogLllD1Ev)
-ov022	0x02112610	func_ov022_02112610	_ZN11VolcanoFireD0Ev	vtable slot 17 (was _ZN13RollingLogLllD0Ev)
-ov022	0x021127e0	func_ov022_021127e0	_ZN11VolcanoFire16CleanupResourcesEv	vtable slot 3 (was _ZN13RollingLogLll16CleanupResourcesEv)
-ov022	0x02112800	func_ov022_02112800	_ZN11VolcanoFire8BehaviorEv	vtable slot 6 (was _ZN13RollingLogLll8BehaviorEv)
-ov022	0x021128b8	func_ov022_021128b8	_ZN11VolcanoFire13InitResourcesEv	vtable slot 0 (was _ZN13RollingLogLll13InitResourcesEv)
-ov022	0x02112918	func_ov022_02112918	VolcanoFire_Spawn	spawnfunc
+ov022	0x021125e0	func_ov022_021125e0	_ZN21daObj_volcanoCannon_cD1Ev	vtable slot 16 (was _ZN13RollingLogLllD1Ev)
+ov022	0x02112610	func_ov022_02112610	_ZN21daObj_volcanoCannon_cD0Ev	vtable slot 17 (was _ZN13RollingLogLllD0Ev)
+ov022	0x021127e0	func_ov022_021127e0	_ZN21daObj_volcanoCannon_c16CleanupResourcesEv	vtable slot 3 (was _ZN13RollingLogLll16CleanupResourcesEv)
+ov022	0x02112800	func_ov022_02112800	_ZN21daObj_volcanoCannon_c8BehaviorEv	vtable slot 6 (was _ZN13RollingLogLll8BehaviorEv)
+ov022	0x021128b8	func_ov022_021128b8	_ZN21daObj_volcanoCannon_c13InitResourcesEv	vtable slot 0 (was _ZN13RollingLogLll13InitResourcesEv)
+ov022	0x02112918	func_ov022_02112918	daObj_volcanoCannon_c_classInit	spawnfunc
 ov022	0x02113cf4	data_ov022_02113cf4	VolcanoRing_SpawnInfo	spawninfo
 ov022	0x02113cf4	VolcanoRing_SpawnInfo	g_profile_FL_RING	reconstructed profile global; literal ROM ID FL_RING+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x02113dc4	data_ov022_02113dc4	RotatingPlatformLll_SpawnInfo	spawninfo
@@ -830,8 +830,8 @@ ov022	0x021142a0	FallBlockLll_SpawnInfo	g_profile_FL_KUZURE	reconstructed profil
 ov022	0x02114380	data_ov022_02114380	RollingLogLll_SpawnInfo	spawninfo
 ov022	0x02114380	RollingLogLll_SpawnInfo	g_profile_FL_MARUTA	reconstructed profile global; literal ROM ID FL_MARUTA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov022	0x021143a4	data_ov022_021143a4	_ZTV13RollingLogLll	vtable alloc=? (was _ZTV12FallBlockLll)
-ov022	0x02114458	data_ov022_02114458	VolcanoFire_SpawnInfo	spawninfo
-ov022	0x0211447c	data_ov022_0211447c	_ZTV11VolcanoFire	vtable alloc=? (was _ZTV13RollingLogLll)
+ov022	0x02114458	data_ov022_02114458	g_profile_OBJ_VOLCANO_CANNON	spawninfo
+ov022	0x0211447c	data_ov022_0211447c	_ZTV21daObj_volcanoCannon_c	vtable alloc=? (was _ZTV13RollingLogLll)
 ov023	0x021111a0	func_ov023_021111a0	_ZN16daObjFm_Battan_cD1Ev	vtable slot 16; class identity proven by ov023 RTTI/ZTS
 ov023	0x021111ec	func_ov023_021111ec	_ZN16daObjFm_Battan_cD0Ev	vtable slot 17; class identity proven by ov023 RTTI/ZTS
 ov023	0x0211124c	func_ov023_0211124c	_ZN16daObjFm_Battan_c12UpdateShadowEv	inferred private spelling; class ownership/calls/codegen proven
