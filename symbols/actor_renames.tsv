@@ -2769,3 +2769,6 @@ ov006	0x02121778	func_ov006_02121778	_ZN17dScMgTrampoline_c13StateWaitExitEv	coi
 ov006	0x02121848	func_ov006_02121848	_ZN17dScMgTrampoline_c12StateResultsEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac8 and the matched body identify the results transition state
 ov006	0x021218fc	func_ov006_021218fc	_ZN17dScMgTrampoline_c9StatePlayEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac0 and the matched body identify the active-play state
 ov006	0x02121d64	func_ov006_02121d64	_ZN17dScMgTrampoline_c10StateIntroEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fab0 and the matched body identify the intro state
+ov006	0x021218c4	func_ov006_021218c4	_ZN17dScMgTrampoline_c12BeginResultsEv	coined: ROM symbol is address-only; helper initializes the results timer and installs the StateResults PMF descriptor
+ov006	0x02121cf4	func_ov006_02121cf4	_ZN17dScMgTrampoline_c9BeginPlayEv	coined: ROM symbol is address-only; helper enables input, initializes play fields, and installs the StatePlay PMF descriptor
+ov006	0x02121f04	func_ov006_02121f04	_ZN17dScMgTrampoline_c10BeginIntroEv	coined: ROM symbol is address-only; helper initializes intro interpolation fields and installs the StateIntro PMF descriptor

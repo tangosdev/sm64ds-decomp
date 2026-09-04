@@ -550,6 +550,12 @@ four vtable methods; the citations below name those functions. All of them,
 helpers and vtable methods alike, now live in the class's own translation unit,
 src/actors/dScMgTrampoline_c.cpp.
 
+The three state-entry helpers are now real `dScMgTrampoline_c` members too:
+`BeginIntro`, `BeginPlay`, and `BeginResults`. Each initializes the fields for
+one phase and finishes by copying that phase's TU-owned PMF descriptor into
+`mState`. Those English spellings are behavioral coinage; the ROM symbols were
+address-only, so the exact original source names remain unknown.
+
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x5d94 | `mScrollY` | `func_ov006_02121bc8` approaches it toward `mScrollTargetY` by 2 a tick; `OnKicked` and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |

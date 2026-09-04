@@ -75,6 +75,13 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     void StatePlay();      /* ov006 0x021218fc */
     void StateIntro();     /* ov006 0x02121d64 */
 
+    /* State-entry helpers. Each initializes the fields needed by the named
+       state and then installs that state's TU-owned PMF descriptor. These
+       English names are behavioral coinage; the ROM symbols were address-only. */
+    void BeginResults();   /* ov006 0x021218c4 */
+    void BeginPlay();      /* ov006 0x02121cf4 */
+    void BeginIntro();     /* ov006 0x02121f04 */
+
     u32 mState[2];         /* 0x5004 -- raw eight-byte State encoding; direct
                               global PMF initializers emit a non-ROM __sinit */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */
