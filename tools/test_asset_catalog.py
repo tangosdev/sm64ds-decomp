@@ -68,7 +68,7 @@ class AssetCatalogTests(unittest.TestCase):
             root = pathlib.Path(tmp)
             src = root / "src"
             init = src / "unnamed" / "ov063" / "__sinit_ov063_test.c"
-            actor = src / "actors" / "MadPiano" / "InitResources.cpp"
+            actor = src / "game" / "actors" / "daPiano_c" / "InitResources.cpp"
             init.parent.mkdir(parents=True)
             actor.parent.mkdir(parents=True)
             init.write_text(
@@ -103,7 +103,7 @@ class AssetCatalogTests(unittest.TestCase):
         self.assertEqual(global_row["suggested_name"], "gPianoModelFile")
         self.assertEqual(global_row["confidence"], "high")
         self.assertEqual(global_row["payload_type"], "BMD_File")
-        self.assertIn("src/actors/MadPiano/InitResources.cpp",
+        self.assertIn("src/game/actors/daPiano_c/InitResources.cpp",
                       global_row["consumer_sources"])
 
         field_row = next(row for row in candidates
@@ -116,7 +116,7 @@ class AssetCatalogTests(unittest.TestCase):
         self.assertEqual(layouts[0]["confidence"], "high")
         self.assertEqual(
             layouts[0]["suggested_path"],
-            "src/actors/MadPiano/__sinit_ov063_test.c",
+            "src/game/actors/daPiano_c/__sinit_ov063_test.c",
         )
 
     def test_candidate_blocks_one_owner_with_multiple_assets(self):

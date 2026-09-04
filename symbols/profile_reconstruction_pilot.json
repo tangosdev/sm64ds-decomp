@@ -2092,7 +2092,7 @@
         }
       ],
       "current_factory_name": "Boo_Spawn",
-      "current_factory_file": "src/actors/daTrs_c/Boo_Spawn.cpp",
+      "current_factory_file": "src/game/actors/daTrs_c/Boo_Spawn.cpp",
       "proposed_factory_name": "daTrs_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2204,7 +2204,7 @@
         }
       ],
       "current_factory_name": "BigBoo_Spawn",
-      "current_factory_file": "src/actors/BigBoo/BigBoo_Spawn.cpp",
+      "current_factory_file": "src/game/actors/daTrs_c/BigBoo_Spawn.cpp",
       "proposed_factory_name": "daTrs_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
