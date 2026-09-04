@@ -74,6 +74,8 @@ int AngleDiff(int a, int b);
    shape mangles to (?ClosestPlayer@Actor@@QAEPAU1@XZ). */
 struct Actor { Actor *ClosestPlayer(); };
 
+/* PORT_HOST_ABI: MSVC front-end refusal C2733 (declaration overload) in the
+   matched TU. Behaviour unchanged. */
 extern "C" void func_ov085_02129dbc(void *selfv)
 {
     Actor *self = (Actor *)selfv;
@@ -109,6 +111,8 @@ int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 void* _ZNK12WithMeshClsn13GetWallResultEv(void* c);
 
+/* PORT_HOST_ABI: MSVC front-end refusal C4716 (int body falling off the end)
+   in the matched TU. The dropped return value is dead at both callers. */
 int func_ov085_02129ebc(int* self, void* clsn)
 {
     int n0[3];

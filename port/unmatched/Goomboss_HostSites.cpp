@@ -79,7 +79,8 @@ int _ZN8Goomboss6RenderEv(void *selfv)
 }
 
 /* ---- (2) func_ov074_021222e0, ROM 0x021222e0 ----------------------------
-   The mParam == 0x1111 Render. Same slot-5 collision, null scale. */
+   The mParam == 0x1111 Render. Same slot-5 collision, null scale.
+   PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
 int func_ov074_021222e0(char *c)
 {
     Vector3 v;

@@ -330,6 +330,10 @@ struct MemModelC {
     int   a0f4;                       /* 0xf4 */
 };
 
+/* PORT_HOST_ABI: mwcc pointer-to-member wall, the field-embedded form (an
+   8-byte {code,adj} pair stored INSIDE the object, MSVC's PMF is 4 bytes and
+   strides the layout wrong); section 3 above. Host-copied with MgPmf in the
+   pmf field's place so the rest of the struct's offsets stay true. */
 extern "C" void func_ov006_020c07e8(void *x)
 {
     MemModelC *c = (MemModelC *)x;

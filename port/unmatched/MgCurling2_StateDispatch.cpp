@@ -344,7 +344,10 @@ extern "C" int func_ov006_020e683c(char *c)
  *
  * Verbatim except the two dispatch sites. src launders both decrements through
  * `(u16*)((long long)(int)(p + off))`, an mwcc rematerialisation lever with no
- * host meaning; the plain pointer arithmetic below is the same store. */
+ * host meaning; the plain pointer arithmetic below is the same store.
+ * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
+ * tables and host-copied as the class's address-switch dispatch (c2_call0/
+ * c2_call1). */
 extern "C" void func_ov006_020e6354(char *c)
 {
     if (*(unsigned short *)(c + 0x55b6) != 0) {
@@ -412,7 +415,9 @@ extern "C" void func_ov006_020e4800(char *o)
  *
  * Two dispatches off two adjacent index bytes, +0x48de and +0x48df, both at
  * arity 1 with the loop index the caller handed in. The ROM sets `mov r1,r5`
- * before each `blx r2`, which is where the arity is read from. */
+ * before each `blx r2`, which is where the arity is read from.
+ * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
+ * tables and host-copied as the class's address-switch dispatch, c2_call1. */
 extern "C" void func_ov006_020e42b4(char *c, int i)
 {
     const int idx = i * 0x24;
@@ -422,7 +427,9 @@ extern "C" void func_ov006_020e42b4(char *c, int i)
     c2_call1(c, data_ov006_021419a0[k1], i);
 }
 
-/* ---- src/func_ov006_020e4744.cpp, table 021419b8 (arity 1) ---------------- */
+/* ---- src/func_ov006_020e4744.cpp, table 021419b8 (arity 1) ----------------
+ * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
+ * table and host-copied as the class's address-switch dispatch, c2_call1. */
 extern "C" void func_ov006_020e4744(char *o, int i)
 {
     const unsigned char idx = *(unsigned char *)(o + i * 0x24 + 0x48de);
