@@ -5663,6 +5663,7 @@ src/_ZN3HUD15CalculateDigitsEt.c:
     .text start:0x020fbdac end:0x020fbe38
 
 src/_ZN3HUD15RenderLifeCountEv.cpp:
+    complete
     .text start:0x020fbe38 end:0x020fc04c
 
 src/_ZN3HUD19RenderCameraButtonsEv.cpp:
@@ -5681,6 +5682,7 @@ src/_ZN3HUD14RenderRedCoinsEv.cpp:
     .text start:0x020fc77c end:0x020fc81c
 
 src/_ZN3HUD15RenderCoinCountEv.cpp:
+    complete
     .text start:0x020fc81c end:0x020fca18
 
 src/_ZN3HUD13RenderVsTimerEv.cpp:
