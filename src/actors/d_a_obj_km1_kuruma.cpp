@@ -1,10 +1,10 @@
 //cpp
 /* Production translation unit for ov043/daObjKm1_Kuruma_c, hand-curated.
- * 4 function(s), .text 0x02111518..0x021115f4.
+ * 5 function(s), .text 0x02111518..0x02111630.
  *
  * ENROLLED AND CANONICAL. config/arm9/overlays/ov043/delinks.txt licenses that
  * whole run to this one path, so the ROM build compiles this file in place of
- * the four legacy one-function sources it replaces.
+ * the four legacy class-method sources and adjacent factory it replaces.
  *
  * The Bob-omb Battlefield rickshaw platform -- the cart that rides on the axle
  * (daObjKm1_Kurumajiku_c, the same overlay's other half). It adds no state of
@@ -23,6 +23,7 @@
  *   [1] 0x02111568  src/_ZN17daObjKm1_Kuruma_cD0Ev.cpp
  *   [2] 0x021115cc  src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.cpp
  *   [3] 0x021115e0  src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.cpp
+ *   [4] 0x021115f4  src/daObjKm1_Kuruma_c_classInit.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -45,6 +46,42 @@ int func_ov002_020b68b0(daObjKm1_Kuruma_c *self, ResourceDescriptor *descriptor)
 int func_ov002_020b6958(daObjKm1_Kuruma_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov043_02112418;
 }
+
+struct Km1KurumaProfile {
+    daObjKm1_Kuruma_c *(*classInit)();
+    s16 profileID;
+    s16 groupFlags;
+    u32 actorFlags;
+    Fix12i cullRadiusX;
+    Fix12i cullRadiusY;
+    u32 executeOrder;
+    u32 drawOrder;
+};
+
+typedef char Km1KurumaProfile_size_must_be_0x1c[
+    sizeof(Km1KurumaProfile) == 0x1c ? 1 : -1];
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- daObjKm1_Kuruma_c_classInit, 0x021115f4, size 0x3c       */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjKm1_Kuruma_c_classInit
+extern "C" daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit()
+{
+    return new daObjKm1_Kuruma_c();
+}
+
+/* The profile ID and descriptor relationship survive in the cartridge. The
+   local descriptor type name is reconstructed from that runtime role. */
+extern "C" Km1KurumaProfile g_profile_KM1_KURUMA = {
+    daObjKm1_Kuruma_c_classInit,
+    0x0088,
+    0x00b1,
+    2,
+    0,
+    0x00200000,
+    0x01000000,
+    0
+};
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- _ZN17daObjKm1_Kuruma_c13InitResourcesEv, 0x021115e0, size 0x14 */
@@ -76,7 +113,7 @@ int daObjKm1_Kuruma_c::CleanupResources()
 // @symbol _ZN17daObjKm1_Kuruma_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjKm1_Kuruma_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
-   D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body
+   D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the body
    out of line here instead flips them to D0-before-D1 and the isolation step
    rejects the object.
 
