@@ -57,6 +57,7 @@ Exit 0 all green, 1 on the first red.
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -159,8 +160,167 @@ def dhdiff(a, b):
     return p.returncode, (lines[-1] if lines else "(no output)")
 
 
+
+# ---------------------------------------------------------------------------
+# THE CROSS-RUN COMPARISON, KEYED BY COMMS ROUND
+#
+# dhdiff compares two logs at the same FRAME INDEX, and refuses outright when
+# the rounds= columns disagree, because at a drifted index it would be
+# comparing two different game moments and manufacturing a divergence. That
+# refusal is right for the case it was written for (two windows of one live
+# session) and it is the wrong tool for the CROSS-RUN pair, which is the same
+# window in two SEPARATE runs:
+#
+#   the parent window boots first and then waits for its peer to join, and how
+#   many host frames it spends inside one comms round is wall clock. Measured
+#   here on a loaded machine: the voice-OFF parent spent TWO host frames on
+#   rounds 521, 522 and 523 where the voice-ON parent spent one. Three frames
+#   of skew, and from then on every frame index in one run names a different
+#   moment in the other, so dhdiff refused 598 of 1200 frames.
+#
+# Note WHICH run had the extra frames: the OFF one, which has no voice code in
+# it at all. The skew is the machine, not the feature -- but frame-index
+# comparison cannot say that, and a harness that goes red on the machine being
+# busy is a harness people learn to ignore.
+#
+# So the cross-run claim is made on the ROUND instead. rounds= is the exchanged
+# comms counter, the one both consoles agree on, and the END-OF-ROUND world
+# hash is the state the simulation actually reached in that round -- the number
+# of host frames it took to get there is not simulation state. Comparing the
+# last hash of each shared round is therefore the same claim, stated on an axis
+# the wall clock cannot move. Where there is no skew at all the two comparisons
+# are identical, and dhdiff is still run and still believed for every pair that
+# it can align.
+#
+# The final round is dropped: once the session ends the round counter stops
+# advancing while frames keep being hashed, so its "last frame" is an arbitrary
+# point in a tail of different lengths.
+DH_LINE = re.compile(r'^\[dh\] f(\d+) n=(\d+) w=([0-9a-f]+) o=([0-9a-f]+)'
+                     r' rounds=(\d+)')
+
+
+def end_of_round_hashes(path):
+    """{comms round -> the world/other hash pair as of that round's LAST
+    hashed frame}, plus how many frames each round took."""
+    last, frames = {}, {}
+    with open(path, "r", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            m = DH_LINE.match(line.strip())
+            if not m:
+                continue
+            rd = int(m.group(5))
+            last[rd] = (m.group(3), m.group(4))
+            frames[rd] = frames.get(rd, 0) + 1
+    return last, frames
+
+
+def cross_run_by_round(a, b):
+    """-> (ok, message). Compares the END-OF-ROUND world hash of two runs of
+    the same window over every comms round they share."""
+    la, fa = end_of_round_hashes(a)
+    lb, fb = end_of_round_hashes(b)
+    if not la or not lb:
+        return False, ("no rounds= data in at least one log, so the round-keyed "
+                       "comparison could not run at all")
+    tail = min(max(la), max(lb))
+    shared = [r for r in sorted(set(la) & set(lb)) if r < tail]
+    if not shared:
+        return False, "the two runs share no completed comms round"
+    bad = [r for r in shared if la[r] != lb[r]]
+    skew = sorted(r for r in shared if fa[r] != fb[r])
+    if bad:
+        return False, ("the end-of-round world hash DIFFERS on %d of %d shared "
+                       "rounds, first at round %d" % (len(bad), len(shared), bad[0]))
+    return True, ("IDENTICAL end-of-round world hash on all %d shared comms "
+                  "rounds (1..%d)%s" % (len(shared), shared[-1],
+                  "" if not skew else
+                  "; %d round(s) took a different number of HOST FRAMES in the "
+                  "two runs (%s) -- wall clock, not state, and the reason the "
+                  "frame-index comparison cannot be used here"
+                  % (len(skew), ",".join(str(r) for r in skew[:6]))))
+
+
+
+def _selftest():
+    """The round-keyed comparison, on fixtures, including the case that matters.
+
+    A CHECKER THAT STOPS REFUSING IS A SILENT HAZARD. This one exists to let a
+    cross-run claim be made on a machine whose wall clock skewed the frame
+    index, so the failure mode to guard against is not "it goes red", it is "it
+    goes green on two runs that really did diverge". Every arm below is about
+    that. Runs on synthetic logs, needs no game and no recording device.
+    """
+    import tempfile
+
+    def write(rows):
+        # rows: (frame, round, world hash)
+        fd, path = tempfile.mkstemp(suffix=".log", text=True)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            for fr, rd, w in rows:
+                f.write("[dh] f%d n=3 w=%s o=aaaaaaaa rounds=%d\n" % (fr, w, rd))
+        return path
+
+    fails = []
+
+    def check(name, ok, detail=""):
+        print(("ok    " if ok else "FAIL  ") + name + ("" if ok else "   <- " + detail))
+        if not ok:
+            fails.append(name)
+
+    # One frame per round, identical: the no-skew case, and the tail round is
+    # dropped so the comparison is over rounds 1..3.
+    a = write([(i, i, "0000000%d" % i) for i in range(1, 5)])
+    b = write([(i, i, "0000000%d" % i) for i in range(1, 5)])
+    ok, msg = cross_run_by_round(a, b)
+    check("identical runs agree", ok and "all 3 shared" in msg, msg)
+
+    # THE CASE THIS EXISTS FOR. One run spent two host frames on round 2. The
+    # END of round 2 is the same state in both, so this must still agree -- and
+    # must SAY that the frame counts differed rather than hiding it.
+    c = write([(1, 1, "00000001"), (2, 2, "0000ffff"), (3, 2, "00000002"),
+               (4, 3, "00000003"), (5, 4, "00000004")])
+    ok, msg = cross_run_by_round(a, c)
+    check("a round that took an extra HOST FRAME still agrees", ok, msg)
+    check("and the extra frame is reported, not hidden", "HOST FRAMES" in msg, msg)
+
+    # THE ARM THAT MATTERS. One world hash differs at the end of a round. If
+    # this passes, every green above means nothing.
+    d = write([(1, 1, "00000001"), (2, 2, "0000dead"), (3, 3, "00000003"), (4, 4, "00000004")])
+    ok, msg = cross_run_by_round(a, d)
+    check("a changed end-of-round world hash is caught", not ok, msg)
+    check("and it names the round", "round 2" in msg, msg)
+
+    # A divergence hidden UNDER a skewed round: the extra frame is the one that
+    # matches, the end-of-round frame is the one that does not. Keying on the
+    # last frame is what makes this visible; keying on the first would miss it.
+    e = write([(1, 1, "00000001"), (2, 2, "00000002"), (3, 2, "0000dead"),
+               (4, 3, "00000003"), (5, 4, "00000004")])
+    ok, msg = cross_run_by_round(a, e)
+    check("a divergence hidden under a skewed round is caught", not ok, msg)
+
+    # No rounds= at all -> refuse, never silently pass.
+    fd, bare = tempfile.mkstemp(suffix=".log", text=True)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write("[dh] f1 n=3 w=h01 o=aaaaaaaa\n")
+    ok, msg = cross_run_by_round(a, bare)
+    check("a log with no rounds= is REFUSED, not passed", not ok, msg)
+
+    # No shared completed round -> refuse.
+    g = write([(1, 90, "00000090"), (2, 91, "00000091")])
+    ok, msg = cross_run_by_round(a, g)
+    check("runs sharing no completed round are REFUSED", not ok, msg)
+
+    for path in (a, b, c, d, e, g, bare):
+        try:
+            os.remove(path)
+        except OSError:
+            pass
+
+    print("selftest %s (%d failed)" % ("PASS" if not fails else "FAIL", len(fails)))
+    return 0 if not fails else 1
+
+
 def voice_counts(text):
-    import re
     m = None
     for m in re.finditer(r"\[voice\] \S+: on=(\d+) tone=(\d+) dev=(\d+) "
                          r"cap=(\d+) tx=(\d+) rx=(\d+) bad=(\d+) dup=(\d+)",
@@ -177,11 +337,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--windows", type=int, default=4)
     ap.add_argument("--frames", default="900")
+    ap.add_argument("--selftest", action="store_true",
+                    help="run the round-keyed comparison against fixtures and "
+                         "exit; no game, no recording device, no windowed slot")
     ap.add_argument("--real-mic", action="store_true",
                     help="open the real recording hardware on the ON pass, so "
                          "the auto-pick scan is inside what the hash "
                          "comparison covers")
     a = ap.parse_args()
+
+    if a.selftest:
+        return _selftest()
 
     if not os.path.exists(EXE):
         print("no walk_window.exe at %s -- build first" % EXE)
@@ -263,11 +429,23 @@ def _passes(a):
     # THE STRONG CLAIM. Same window, same slot, same held key, voice on against
     # voice off. Any world state voice touched would show here and nowhere
     # else.
+    #
+    # Made on the COMMS ROUND, not the frame index -- see cross_run_by_round
+    # above for why, and why that is the same claim rather than a smaller one.
+    # dhdiff is still run and its answer is still printed beside it: when it can
+    # align the two logs, a divergence IT reports is a red on its own, because
+    # two tools agreeing is worth more than one.
     for k in range(n):
         rc, line = dhdiff(on_logs[k], off_logs[k])
-        ok &= M.verdict(rc == 0,
-                        "voice-det CROSS-RUN p%d: voice ON hashes are "
-                        "identical to voice OFF | %s" % (k, line))
+        rok, rline = cross_run_by_round(on_logs[k], off_logs[k])
+        ok &= M.verdict(rok,
+                        "voice-det CROSS-RUN p%d: voice ON world state is "
+                        "identical to voice OFF | %s" % (k, rline))
+        # rc 2 is "refused to align", which the round-keyed claim above has
+        # just answered. rc 1 is a real frame-index divergence and stays a red.
+        ok &= M.verdict(rc != 1,
+                        "voice-det CROSS-RUN p%d frame-index cross-check | %s"
+                        % (k, line))
 
     print("")
     for v in M.VERDICTS:
