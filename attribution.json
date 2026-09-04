@@ -1615,7 +1615,7 @@
     "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_cD0Ev": "github-actions[bot]",
     "src/actors/daObjTdWater_c.cpp#_ZN14daObjTdWater_cD1Ev": "github-actions[bot]",
     "src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp": "andrewboudreau",
-    "src/dScTitle_c_classInit.cpp": "ruspecial",
+    "src/d_s_title.cpp": "ruspecial",
     "src/daObjCannonShutter_c_Spawn.cpp": "tangosdev",
     "src/daObjEmmLog_c_Spawn.c": "tangosdev",
     "src/daObjEmmLog_c_Spawn.cpp": "tangosdev",
