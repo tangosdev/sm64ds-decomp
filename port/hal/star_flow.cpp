@@ -840,26 +840,38 @@ void port_luigi_countdown_drive(int frame)
        -- a beep entering each count (0x2b), the GO chord (0x2a) and the arena's
        own music (0x4d) at START -- the exact calls port_vs_countdown_tick makes.
 
-       NOT ON A REPLAYED FRAME. A rewind re-runs these frames to catch the world
-       up, and the pad, the mouse, the camera rig and the editor channel all
-       stand down for exactly that reason: a replayed frame must not touch the
-       outside world a second time. Sound is the outside world. Re-ringing the
-       beep pushed the ARM9's voice lists somewhere the straight run never put
-       them, and that was the four .dsstate bytes outside the sound queue that
-       failed the DET rung with this mode armed (mode off came back IDENTICAL).
-       The COUNTER WRITES ABOVE ARE NOT GUARDED and must not be: they are the
-       world, they are pure functions of the frame, and the replay exists to
-       reproduce them. g_course_music is likewise state rather than an effect --
-       it is set to the same 0x4d either way -- but the LoadAndSetMusic call
-       beside it is an effect, so both it and the beeps go behind the guard. */
+       A REPLAYED FRAME SPLITS THESE TWO WAYS, and the split is the point. A
+       rewind re-runs these frames to catch the world up, and the pad, the mouse,
+       the camera rig and the editor channel all stand down for it. An EFFECT
+       nothing reads back (a beep) must not fire twice. STATE the restore wiped
+       (the music selection) must be re-issued, or the replay ends somewhere the
+       straight run never was. See each block below.
+
+       THE COUNTER WRITES ABOVE ARE NOT GUARDED and must not be: they are the
+       world, they are pure functions of the frame, and reproducing them is what
+       the replay is for. */
+    /* THE BEEPS ARE ONE-SHOT EFFECTS and stand down. Nothing reads them back;
+       re-ringing one only pushes the ARM7 command queue somewhere the straight
+       run never put it. */
     if (!g_port_rb_replaying) {
-        if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End) {
+        if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End)
             func_02012790(0x2b);
-        } else if (frame == kLiCdPick) {
+        else if (frame == kLiCdPick)
             func_02012790(0x2a);
-            g_course_music = 0x4d;
-            _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
-        }
+    }
+
+    /* THE ARENA MUSIC IS STATE, NOT AN EFFECT, so it is re-issued on a replayed
+       frame rather than suppressed -- the one place this mode does NOT stand
+       down, and the distinction is the whole point. A restore re-seeds the sound
+       driver (sd_consumer_reset / sd_sdat_reseat in hal/rollback.cpp), which
+       clears the sequence player the straight run had playing; if the replay
+       does not put the selection back, the re-run reaches the same frame with no
+       music where the straight run had 0x4d. That is both a divergence in the
+       sequence-player block and a match that falls silent after a rewind. The
+       replay is muted (sd_host_mute), so re-issuing costs nothing audible. */
+    if (frame == kLiCdPick) {
+        g_course_music = 0x4d;
+        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
     }
 
     /* The trace is an effect too, and its own latch is a host static a rewind
