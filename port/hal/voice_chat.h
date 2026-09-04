@@ -135,6 +135,13 @@ int cap_read_frame(short *out);
 enum : int { kCapNameBytes = 96 };
 int cap_enumerate(char names[][kCapNameBytes], int max);
 
+// SM64DS_VOICE_MIC_PROBE=1 support: opens the default recording device with
+// the exact format voice capture uses, prints the device name and whether
+// the open succeeded, then samples a few seconds of real audio and prints
+// the peak level. Blocks for the duration of the probe. A no-op build target
+// (no WIN32 backend) answers with nothing, same as every other entry here.
+void cap_probe();
+
 }  // namespace voice
 }  // namespace port
 

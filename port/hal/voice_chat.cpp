@@ -723,6 +723,12 @@ void voice_tick()
         for (int i = 0; i < kCommsMaxPlayers; ++i) rv_reset(g_rv[i]);
         if (env_on("SM64DS_VOICE_DEVICES")) dump_devices();
         if (env_on("SM64DS_VOICE_CODEC_SELFTEST")) codec_selftest();
+        /* Owner-facing mic proof (lane MIC PROBE): the settings panel that
+           would exercise the microphone is hidden until the capture fallback
+           lands, so this is the only way to test one from a shipped bundle.
+           Blocks for a few seconds; off by default, no other behaviour
+           changes when unset. */
+        if (env_on("SM64DS_VOICE_MIC_PROBE")) voice::cap_probe();
         if (g_tone)
             fprintf(stderr, "[voice] SM64DS_VOICE_TEST_TONE=1: a generated "
                             "440 Hz tone replaces the microphone and NO "
