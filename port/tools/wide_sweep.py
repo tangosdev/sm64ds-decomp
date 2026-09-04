@@ -272,7 +272,7 @@ def states():
         "vstimeup":   {"SM64DS_VS_MAP": "0", "SM64DS_MENU_AT": "2900",
                        "SM64DS_VS_EXIT_ON_END": "0",
                        "SM64DS_VS_END_SCENE": "0",
-                       "_wait": "78"},
+                       "_wait": "300"},
     }
 
 
@@ -320,11 +320,19 @@ def recipe_text(state_env, aspect, bandsplit, layers_off):
 
 def grab(png, state_env, aspect, bandsplit=False, layers_off=False, wait=14.0):
     """One launch, one photograph. Returns (ok, note)."""
+    # WaitSec is only how long to look for the window; SettleMaxSec is the real
+    # budget, because the grabber now waits for the picture to STOP CHANGING
+    # rather than for a guessed number of seconds. A visible window presents
+    # every frame to the glass and runs far slower than the minimised runs the
+    # frame-cost numbers came from: the VS time-up state needed 115 one-second
+    # polls to reach its freeze at frame 2900, against the 78 seconds that had
+    # been guessed for it.
     cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
-           "-File", GRAB, "-OutPng", png, "-WaitSec", str(wait)]
+           "-File", GRAB, "-OutPng", png, "-WaitSec", "8",
+           "-SettleMaxSec", str(wait)]
     try:
         r = subprocess.run(cmd, env=env_for(state_env, aspect, bandsplit, layers_off),
-                           capture_output=True, text=True, timeout=wait + 90)
+                           capture_output=True, text=True, timeout=wait + 120)
     except subprocess.TimeoutExpired:
         return False, "grab timed out"
     if not os.path.exists(png):
@@ -480,7 +488,7 @@ def main():
     ap.add_argument("--capture", action="store_true")
     ap.add_argument("--judge", action="store_true")
     ap.add_argument("--states", default="")
-    ap.add_argument("--wait", type=float, default=14.0)
+    ap.add_argument("--wait", type=float, default=120.0)   # settle budget, seconds
     a = ap.parse_args()
     if not (a.capture or a.judge):
         ap.error("give --capture, --judge, or both")

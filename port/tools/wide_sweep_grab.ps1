@@ -23,6 +23,7 @@ param(
   [Parameter(Mandatory=$true)][string]$OutPng,
   [double]$WaitSec = 12.0,
   [double]$SettleSec = 1.2,
+  [double]$SettleMaxSec = 240.0,
   [string]$Exe = ""
 )
 $ErrorActionPreference = "Stop"
@@ -92,6 +93,30 @@ public class WsGrab {
     ShowWindow(h, 9); SetWindowPos(h, IntPtr.Zero, 8, 31, 0, 0, 0x0001|0x0004);
     BringWindowToTop(h); SetForegroundWindow(h);
   }
+  // Capture once and return BOTH a content hash and (optionally) the file.
+  // The hash is what lets the caller wait for the picture to STOP CHANGING
+  // rather than guess how long that takes -- see the settle loop below.
+  public static string LastGeom = "";
+  public static long Shot(IntPtr h, string path) {
+    RECT c; GetClientRect(h, out c);
+    int w = c.R - c.L, ht = c.B - c.T;
+    if (w <= 0 || ht <= 0) return -1;
+    POINT o; o.X = 0; o.Y = 0; ClientToScreen(h, ref o);
+    long sum = 1469598103934665603L;
+    using (var bmp = new Bitmap(w, ht, PixelFormat.Format32bppArgb)) {
+      using (var g = Graphics.FromImage(bmp))
+        g.CopyFromScreen(o.X, o.Y, 0, 0, new Size(w, ht), CopyPixelOperation.SourceCopy);
+      var bd = bmp.LockBits(new Rectangle(0,0,w,ht), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+      int n = Math.Abs(bd.Stride) * ht;
+      byte[] buf = new byte[n];
+      System.Runtime.InteropServices.Marshal.Copy(bd.Scan0, buf, 0, n);
+      bmp.UnlockBits(bd);
+      for (int i = 0; i < n; i++) { sum ^= buf[i]; sum *= 1099511628211L; }
+      if (!string.IsNullOrEmpty(path)) bmp.Save(path, ImageFormat.Png);
+    }
+    LastGeom = string.Format("{0}x{1} @ {2},{3}", w, ht, o.X, o.Y);
+    return sum;
+  }
   public static string Grab(IntPtr h, string path) {
     RECT c; GetClientRect(h, out c);
     int w = c.R - c.L, ht = c.B - c.T;
@@ -119,13 +144,44 @@ if ($hwnd -eq [IntPtr]::Zero) {
   if (-not $p.HasExited) { $p.Kill() }
   throw "no SM64DS window appeared within $WaitSec s (process exited=$($p.HasExited))"
 }
-# Raise, let the compositor actually paint it, then grab. The settle is not
-# superstition: a window raised and photographed in the same tick is caught
-# mid-present and the bottom band comes back as whatever was underneath.
+# WAIT FOR THE PICTURE TO STOP CHANGING, then photograph it.
+#
+# The sweep isolates the HUD by subtracting one capture from another, which
+# is only meaningful between two captures of the SAME frame. That needs the
+# game frozen -- SM64DS_MENU_AT / SM64DS_SCENE_MENU stop the tick at a named
+# frame -- and it needs the capture to happen AFTER the freeze has been
+# reached, not merely after a hopeful number of seconds.
+#
+# A FIXED DWELL IS NOT GOOD ENOUGH, measured. With a visible window the game
+# presents every frame to the glass and runs far slower than the minimised
+# runs the frame-cost numbers came from, so a dwell tuned on one aspect
+# misses the freeze on another. The VS time-up state (frame 2900) and the
+# 21:9 course HUD both came back with two launches differing in 17 to 94
+# percent of the frame: not noise, just two different live frames.
+#
+# So this polls instead: grab, wait, grab again, and accept only when two
+# consecutive captures a second apart are IDENTICAL. That is the same
+# condition the checker later re-verifies across two separate launches, so
+# the capture cannot hand it a frame it will refuse. If the picture never
+# settles the script says so and still writes the last frame, because a
+# state that genuinely cannot be frozen is a result worth seeing.
 [WsGrab]::Front($hwnd)
 Start-Sleep -Milliseconds ([int]($SettleSec * 1000))
+$settleDeadline = (Get-Date).AddSeconds($SettleMaxSec)
+$prev = [long]0; $have = $false; $settled = $false; $polls = 0
+while ((Get-Date) -lt $settleDeadline) {
+  if ($p.HasExited) { break }
+  [WsGrab]::Front($hwnd)
+  $h1 = [WsGrab]::Shot($hwnd, $null)
+  $polls++
+  if ($have -and $h1 -eq $prev) { $settled = $true; break }
+  $prev = $h1; $have = $true
+  Start-Sleep -Milliseconds 1000
+}
 [WsGrab]::Front($hwnd)
-Start-Sleep -Milliseconds 250
-$geom = [WsGrab]::Grab($hwnd, $OutPng)
-Write-Output "GRABBED $OutPng client=$geom"
+Start-Sleep -Milliseconds 200
+[void][WsGrab]::Shot($hwnd, $OutPng)
+$geom = [WsGrab]::LastGeom
+$tag = if ($settled) { "settled" } else { "NEVER-SETTLED" }
+Write-Output "GRABBED $OutPng client=$geom $tag after $polls polls"
 if (-not $p.HasExited) { $p.Kill() | Out-Null }
