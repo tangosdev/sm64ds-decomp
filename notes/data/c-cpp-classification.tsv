@@ -134,7 +134,6 @@ src/FUN_02029ab0.c	WEAK-refs-only	arm9				1		None		-
 src/FUN_0202a130.c	PURE-C	arm9				1		None		-
 src/actors/d_a_obj_km2_fall_block.cpp	S1-stores-rom-vptr	ov045			stores _ZTV12FallBlockBfs	1		None	_ZTV12FallBlockBfs/_ZTV16daObjFallBlock_c	-
 src/daObjFl_Fall_Block_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjFallBlock_c	1		None	_ZTV16daObjFallBlock_c/_ZTV20daObjFl_Fall_Block_c	-
-src/daObjBk_Fall_Block_c_classInit.c	S1-stores-rom-vptr	ov015			stores _ZTV20daObjBk_Fall_Block_c	1		None	_ZTV20daObjBk_Fall_Block_c/_ZTV16daObjFallBlock_c	-
 src/FirePiranhaPlantBig_Spawn.c	WEAK-refs-only	ov084				1		None		-
 src/FirePiranhaPlantSmall_Spawn.c	WEAK-refs-only	ov084				1		None		-
 src/FirePiranhaPlant_Spawn.c	WEAK-refs-only	ov084				1		None		-
@@ -338,7 +337,6 @@ src/Player_ReleaseHeldActor.c	PURE-C	ov002				1		None		-
 src/Player_ScaleByCharFactor.c	PURE-C					0		None		not-in-delinks
 src/PokeySegment_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/Pokey_Spawn.c	WEAK-refs-only	ov096				1		None		-
-src/daObjBkBillboard_c_classInit.c	S1-stores-rom-vptr	ov015			stores _ZTV18daObjBkBillboard_c	1		None	_ZTV18daObjBkBillboard_c	-
 src/daObjKm2_Ami_Bou_c_classInit.c	WEAK-refs-only	ov045				1		None		-
 src/PoppingLavaBubbles_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV18PoppingLavaBubbles	1		None	_ZTV18PoppingLavaBubbles	-
 src/PowerFlower_Spawn.c	WEAK-refs-only	ov002				1		None		-
@@ -381,13 +379,11 @@ src/daObjFlMaruta_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV13RollingL
 src/daObjHmMaruta_c_classInit.c	S1-stores-rom-vptr	ov030			stores _ZTV13RollingLogTtm	1		None	_ZTV13RollingLogTtm/_ZTV13daObjMaruta_c	-
 src/RollingRock_Spawn.c	S1-stores-rom-vptr	ov021			stores _ZTV11RollingRock	1		None	_ZTV11RollingRock	-
 src/RopeBarrier_Spawn.c	WEAK-refs-only	ov102				1		None		-
-src/daObjBk_Rotebar_c_classInit.c	WEAK-refs-only	ov015				1		None		-
 src/RotatingClockHand_Spawn.c	WEAK-refs-only	ov035				1		None		-
 src/RotatingCogSmall_Spawn.c	WEAK-refs-only	ov035				1		None		-
 src/daObjFl_Koma_D_c_classInit.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
 src/daObjRc_Kaitendai_c_classInit.c	S1-stores-rom-vptr	ov036			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV18RotatingPlatformRr	-
 src/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
-src/daObjBk_Ukisima_c_classInit.c	S1-stores-rom-vptr	ov015			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV17daObjBk_Ukisima_c	-
 src/RotatingUpDownPlatformUtm_Spawn.c	WEAK-refs-only	ov091				1		None		-
 src/RotatingUpDownPlatform_Spawn.c	WEAK-refs-only	ov091				1		None		-
 src/RunKuppaScript.c	PURE-C	arm9				1		None		-
@@ -429,7 +425,6 @@ src/daObjRc_Hane_c_classInit.c	WEAK-refs-only	ov036				1		None		-
 src/ShowArea.c	PURE-C	arm9				1		None		-
 src/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBob	1		None	_ZTV10ShutterBob/_ZTV13daObjSwdoor_c	-
-src/daObjCvShutter_c_classInit.c	S1-stores-rom-vptr	ov021			stores _ZTV16daObjCvShutter_c	1		None	_ZTV16daObjCvShutter_c/_ZTV13daObjSwdoor_c	-
 src/SignPost_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/SilverStarBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/SilverStar_Spawn.c	WEAK-refs-only	ov002				1		None		-

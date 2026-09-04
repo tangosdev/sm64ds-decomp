@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov015/daObjBkBillboard_c, hand-curated.
- * 6 function(s), .text 0x021111a0..0x021112dc.
+ * 7 function(s), .text 0x021111a0..0x02111314.
  *
  * The billboard on a pole in Big Boo's Haunt (`bk` is the ROM's tag for that
  * stage). It derives DIRECTLY from dActor_c -- the cartridge's own RTTI says
@@ -28,6 +28,13 @@
  *   [3] 0x02111254  src/_ZN18daObjBkBillboard_c16CleanupResourcesEv.cpp
  *   [4] 0x02111278  src/_ZN18daObjBkBillboard_c6RenderEv.cpp
  *   [5] 0x021112a0  src/_ZN18daObjBkBillboard_c13InitResourcesEv.cpp
+ *   [6] 0x021112dc  src/daObjBkBillboard_c_classInit.c
+ *
+ * THE SEVENTH IS THE FACTORY. daObjBkBillboard_c_classInit (historical alias
+ * PoleBillboard_Spawn) is the BK_BILLBOARD registry profile's spawn function
+ * and sits immediately after InitResources in the ROM's own .text order, so it
+ * is part of this TU. It keeps C linkage and is written first here, being the
+ * highest-address member.
  */
 
 #include "daObjBkBillboard_c.h"
@@ -54,6 +61,37 @@ extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 /* Defined further down this same file -- InitResources is written above it
    because the emitted order is the reverse of the source order. */
 void func_ov015_02111214(char *t);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_Actor.h / decl_ActorBase.h / decl_Model.h as the legacy file did --
+   this TU declares in place, and pulling new decl_*.h headers in changes what
+   the TU sees and can perturb members that already match. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN8dActor_cC2Ev(void *self);
+extern void _ZN5ModelC1Ev(void *self);
+extern int _ZTV18daObjBkBillboard_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjBkBillboard_c_classInit, 0x021112dc, size 0x38       */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjBkBillboard_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjBkBillboard_c through
+   RTTI, allocation size, vtable identity, and the BK_BILLBOARD registry
+   profile; later EAD lineage supplies classInit. Exact original spelling is
+   not preserved. Historical alias: PoleBillboard_Spawn.
+
+   292 = 0x124 = the whole object: dActor_c's 0xd4 plus this class's one Model
+   member, whose constructor runs on `p + 0xd4` right after the vptr store. */
+extern "C" int *daObjBkBillboard_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(292);
+    if (p) {
+        _ZN8dActor_cC2Ev(p);
+        p[0] = (int)_ZTV18daObjBkBillboard_c;
+        _ZN5ModelC1Ev((char *)p + 0xd4);
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

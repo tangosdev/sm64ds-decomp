@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov015/daObjBk_Fall_Block_c, hand-curated.
- * 4 function(s), .text 0x02112cf4..0x02112dd0.
+ * 5 function(s), .text 0x02112cf4..0x02112e0c.
  *
  * ENROLLED AND CANONICAL. config/arm9/overlays/ov015/delinks.txt licenses that
  * whole run to this one path, so the ROM build compiles this file in place of
@@ -24,6 +24,13 @@
  *   [1] 0x02112d44  src/_ZN20daObjBk_Fall_Block_cD0Ev.cpp
  *   [2] 0x02112da8  src/_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv.cpp
  *   [3] 0x02112dbc  src/_ZN20daObjBk_Fall_Block_c13InitResourcesEv.cpp
+ *   [4] 0x02112dd0  src/daObjBk_Fall_Block_c_classInit.c
+ *
+ * THE FIFTH IS THE FACTORY. daObjBk_Fall_Block_c_classInit is the BK_DOWN_B
+ * registry profile's spawn function and sits immediately after InitResources in
+ * the ROM's own .text order, so it is part of this TU. It keeps C linkage and
+ * is written first here, being the highest-address member -- and above the
+ * first positional `#pragma long_calls on`, which must not reach it.
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
@@ -57,6 +64,41 @@ extern "C" {
 int func_ov098_0213a2cc(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
 int func_ov098_0213a794(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov015_02114880;
+
+/* The factory's own dependencies, restated here. The legacy file already
+   declared them in place -- it pulled in no decl_*.h header at all -- so this
+   is that file's own spelling carried over verbatim. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV16daObjFallBlock_c[];
+extern int _ZTV20daObjBk_Fall_Block_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- daObjBk_Fall_Block_c_classInit, 0x02112dd0, size 0x3c     */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjBk_Fall_Block_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjBk_Fall_Block_c through
+   RTTI, allocation size, most-derived vtable identity, and the BK_DOWN_B
+   registry profile; later EAD lineage supplies classInit. Exact original
+   spelling is not preserved. Historical alias: daObjBk_Fall_Block_c_Spawn.
+
+   Two vptr stores, not one: the inlined daObjFallBlock_c constructor writes its
+   own vptr and this class's write follows it. 844 = 0x34c = the whole object;
+   this class adds no fields.
+
+   Written above the first `#pragma long_calls on` below deliberately: the
+   pragma is positional and must not reach this function, which the ROM calls
+   with a plain near branch. */
+extern "C" int *daObjBk_Fall_Block_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(844);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV16daObjFallBlock_c;
+        p[0] = (int)_ZTV20daObjBk_Fall_Block_c;
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

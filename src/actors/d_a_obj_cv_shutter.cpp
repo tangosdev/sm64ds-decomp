@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov021/daObjCvShutter_c, hand-curated.
- * 5 function(s), .text 0x02112db4..0x02112ed4.
+ * 6 function(s), .text 0x02112db4..0x02112f10.
  *
  * Hazy Maze Cave's switch-operated shutter (`cv` is the ROM's tag for that
  * stage). It adds no state of its own beyond four unobserved bytes at 0x320
@@ -22,6 +22,13 @@
  *   [2] 0x02112e68  src/_ZN16daObjCvShutter_c16CleanupResourcesEv.cpp
  *   [3] 0x02112e7c  src/_ZN16daObjCvShutter_c8BehaviorEv.cpp
  *   [4] 0x02112ec0  src/_ZN16daObjCvShutter_c13InitResourcesEv.cpp
+ *   [5] 0x02112ed4  src/daObjCvShutter_c_classInit.c
+ *
+ * THE SIXTH IS THE FACTORY. daObjCvShutter_c_classInit (historical alias
+ * ShutterHmc_Spawn) is the CV_SHUTTER registry profile's spawn function and
+ * sits immediately after InitResources in the ROM's own .text order, so it is
+ * part of this TU. It keeps C linkage and is written first here, being the
+ * highest-address member.
  */
 
 /* Includes and externs: the union of the legacy files', kept at their legacy
@@ -35,6 +42,38 @@ int func_ov002_020bac18(void);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern int func_ov002_020bad10(void *self, void *data);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h as the legacy file did -- this TU declares
+   in place, and pulling new decl_*.h headers in changes what the TU sees and
+   can perturb members that already match. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV13daObjSwdoor_c[];
+extern int _ZTV16daObjCvShutter_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 5 -- daObjCvShutter_c_classInit, 0x02112ed4, size 0x3c         */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjCvShutter_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjCvShutter_c through RTTI,
+   allocation size, most-derived vtable identity, and the CV_SHUTTER registry
+   profile; later EAD lineage supplies classInit. Exact original spelling is not
+   preserved. Historical alias: ShutterHmc_Spawn.
+
+   Two vptr stores, not one: the inlined daObjSwdoor_c constructor writes its
+   own vptr and this class's write follows it. 804 = 0x324 = the whole object,
+   the four unobserved bytes at 0x320 included. */
+extern "C" int *daObjCvShutter_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(804);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV13daObjSwdoor_c;
+        p[0] = (int)_ZTV16daObjCvShutter_c;
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */
