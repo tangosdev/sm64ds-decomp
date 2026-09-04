@@ -514,7 +514,7 @@ int host_settings_gen(void);
 int host_setting_volume(void);
 
 /* ---- PROXIMITY VOICE CHAT, lane VOICE ----------------------------------
-   Five keys, and every one of them RELOADS LIVE -- they are host preferences
+   Six keys, and every one of them RELOADS LIVE -- they are host preferences
    with no cached artefact behind them, so the Mods panel's restart promise
    does not apply and the launcher's toggle is expected to work mid-match.
 
@@ -523,15 +523,35 @@ int host_setting_volume(void);
                     opened and discarded: hal/voice_chat.cpp asks this before
                     it touches winmm at all, and turning the key off while the
                     game is running closes the device it had.
-   VoiceMicDevice   string, default "". "" is the system's default recording
-                    device. Any other value is matched case-insensitively as a
-                    SUBSTRING against the names winmm reports, first match
-                    wins; no match falls back to the default with one line on
-                    stderr. Substring because winmm truncates device names to
-                    31 characters and a launcher listing them cannot always
-                    show the whole name. A value longer than the buffer reads
-                    as "" -- the same "a typo is not a choice" rule the
-                    palette keys follow.
+   VoiceMicDevice   string, default "". "" (and the literal "auto") is
+                    AUTO-PICK: hal/voice_capture_win.cpp opens each recording
+                    device in turn for a fraction of a second, measures the
+                    peak sample, and takes the first one that is actually
+                    producing audio. That is the default because a device that
+                    opens fine and captures nothing -- Windows-muted, privacy
+                    blocked, or a live headset mic sitting behind the wrong
+                    Windows default -- is indistinguishable from a working one
+                    until something records from it, and what the player sees
+                    is a silent channel with no error anywhere. The literal
+                    "default" (or "system") forces the Windows default device
+                    with no scan. Any other value is matched case-insensitively
+                    as a SUBSTRING against the names winmm reports, first match
+                    wins, and the scan is skipped; no match falls back to the
+                    default with one line on stderr. Substring because winmm
+                    truncates device names to 31 characters and a launcher
+                    listing them cannot always show the whole name. A value
+                    longer than the buffer reads as "" -- the same "a typo is
+                    not a choice" rule the palette keys follow.
+   VoiceMicIndex    int, default -1. -1 means "no index given", which is what
+                    leaves VoiceMicDevice in charge. 0 or above is a winmm
+                    device id used VERBATIM: no scan, no name match, and no
+                    quiet fall back to the default if it will not open. It is
+                    the escape hatch for a machine with two devices whose
+                    truncated 31-character names are identical, which a
+                    substring match cannot tell apart, and it OUTRANKS
+                    VoiceMicDevice when both are set. An id past the end of the
+                    machine's device list fails the open like any other bad
+                    device and is latched, not retried sixty times a second.
    VoiceVolume      int 0..100, default 80. A linear gain on decoded remote
                     audio, on top of the distance falloff. INDEPENDENT of the
                     game's Volume key, and the voice mix runs after the master
@@ -548,6 +568,7 @@ int host_setting_volume(void);
 int host_setting_voice_enabled(void);
 int host_setting_voice_volume(void);
 const char *host_setting_voice_mic_device(void);
+int host_setting_voice_mic_index(void);
 int host_setting_voice_near_radius(void);
 int host_setting_voice_far_radius(void);
 

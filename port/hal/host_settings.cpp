@@ -724,7 +724,7 @@ int g_adventure_ghosts = 0;
 double g_aspect = 0.0;
 
 /* ---- PROXIMITY VOICE CHAT, lane VOICE ------------------------------------
-   Five keys, all of them host preferences and none of them a mod: nothing
+   Six keys, all of them host preferences and none of them a mod: nothing
    here touches game state, the lockstep input path, or a single byte the
    simulation reads. The whole feature is off by default, and off means NO
    CAPTURE DEVICE IS OPENED AT ALL -- not a device opened and discarded, not
@@ -736,16 +736,39 @@ double g_aspect = 0.0;
                       it off closes the capture device and silences every
                       remote voice within a frame, turning it on opens the
                       device again.
-     VoiceMicDevice   "" (default) is the system's default recording device.
-                      Any other value is matched, case-insensitively and as a
-                      SUBSTRING, against the names winmm reports for the
-                      machine's recording devices; the first match wins and no
-                      match falls back to the default device with one line on
-                      stderr. Substring rather than exact because the names
-                      winmm reports are truncated to 31 characters and a
-                      launcher listing them cannot always show a player the
-                      whole thing. RELOADS LIVE: a changed name reopens the
-                      device.
+     VoiceMicDevice   "" (default), and the literal "auto", mean AUTO-PICK
+                      rather than "the Windows default device". The capture
+                      backend opens each recording device in turn for a
+                      fraction of a second, measures the peak sample, and
+                      takes the first one that is actually producing audio;
+                      if every device measures silent it falls back to the
+                      Windows default and says so. The default moved from
+                      "Windows default device" to "auto" because a device can
+                      open perfectly and capture nothing -- muted in Windows,
+                      blocked by the privacy gate, or simply the wrong device
+                      left as the system default -- and there is no way to
+                      tell that apart from a working microphone without
+                      recording from it. That case is a silent voice channel
+                      with no error line anywhere, which is the worst failure
+                      shape this feature has. The literal "default" (or
+                      "system") forces the Windows default device with no
+                      scan. Any other value is matched, case-insensitively and
+                      as a SUBSTRING, against the names winmm reports for the
+                      machine's recording devices; the first match wins, the
+                      scan is skipped, and no match falls back to the default
+                      device with one line on stderr. Substring rather than
+                      exact because the names winmm reports are truncated to
+                      31 characters and a launcher listing them cannot always
+                      show a player the whole thing. RELOADS LIVE: a changed
+                      name reopens the device.
+     VoiceMicIndex    -1 (default) means "no index given" and leaves
+                      VoiceMicDevice in charge. 0 or above is a winmm device
+                      id used VERBATIM -- no scan, no name match, no silent
+                      fall back to the default if it will not open -- and it
+                      OUTRANKS VoiceMicDevice when both are set. It exists for
+                      the machine whose two devices report the same truncated
+                      31-character name, which a substring match cannot tell
+                      apart. RELOADS LIVE: a changed index reopens the device.
      VoiceVolume      0..100, default 80. A linear gain on the decoded remote
                       audio, applied on top of the distance falloff. It is NOT
                       the game's Volume key and is deliberately independent of
@@ -766,7 +789,8 @@ double g_aspect = 0.0;
    guessed; port/status/VOICE.md carries the arena span they came from. */
 int  g_voice_enabled;                /* default 0, and 0 opens no device */
 int  g_voice_volume = 80;
-char g_voice_mic[96];                /* "" = the system default device */
+char g_voice_mic[96];                /* "" = auto-pick, see above */
+int  g_voice_mic_index = -1;         /* -1 = no index given; >= 0 is verbatim */
 int  g_voice_near = 512;
 int  g_voice_far  = 3072;
 
@@ -967,6 +991,13 @@ int read_voice_keys(const char *text)
     char mic[sizeof g_voice_mic];
     mic[0] = '\0';
     json_str(text, "VoiceMicDevice", mic, sizeof mic);
+    /* -1 is BOTH the default and the "absent key" answer, so a file without
+       the key and a file that spells it -1 land in the same place: no index
+       given, VoiceMicDevice decides. Any negative value reads as -1 rather
+       than being carried through, because a negative device id is not a
+       choice anybody made and winmm has no meaning for one. */
+    int mic_idx = json_int(text, "VoiceMicIndex", g_voice_mic_index);
+    if (mic_idx < 0) mic_idx = -1;
     {
         const int v = json_int(text, "VoiceVolume", -1);
         if (v >= 0) vol = v > 100 ? 100 : v;
@@ -990,6 +1021,7 @@ int read_voice_keys(const char *text)
     if (vol != g_voice_volume) { g_voice_volume = vol; changed = 1; }
     if (near_r != g_voice_near) { g_voice_near = near_r; changed = 1; }
     if (far_r != g_voice_far) { g_voice_far = far_r; changed = 1; }
+    if (mic_idx != g_voice_mic_index) { g_voice_mic_index = mic_idx; changed = 1; }
     if (strcmp(mic, g_voice_mic) != 0) {
         strncpy(g_voice_mic, mic, sizeof g_voice_mic - 1);
         g_voice_mic[sizeof g_voice_mic - 1] = '\0';
@@ -1026,6 +1058,7 @@ void load_once(void)
     g_voice_enabled = 0;
     g_voice_volume = 80;
     g_voice_mic[0] = '\0';
+    g_voice_mic_index = -1;
     g_voice_near = 512;
     g_voice_far = 3072;
     /* NetMode: rollback by default again (0.3.7, 2026-09-04; reverts the 0.3.6
@@ -1293,9 +1326,10 @@ void load_once(void)
     if (g_voice_enabled)
         fprintf(stderr, "[settings] VoiceEnabled on -- proximity voice chat "
                 "will open a recording device in an online match. Mic '%s', "
-                "volume %d, audible from %d units out to %d (%s)\n",
-                g_voice_mic[0] ? g_voice_mic : "(system default)",
-                g_voice_volume, g_voice_near, g_voice_far, path);
+                "index %d, volume %d, audible from %d units out to %d (%s)\n",
+                g_voice_mic[0] ? g_voice_mic : "(auto-pick)",
+                g_voice_mic_index, g_voice_volume, g_voice_near, g_voice_far,
+                path);
     if (g_mouse_capture)
         fprintf(stderr, "[settings] MouseCapture on -- an adventure window "
                         "holds the pointer and bare mouse movement turns the "
@@ -1701,6 +1735,12 @@ extern "C" const char *host_setting_voice_mic_device(void)
 {
     load_once();
     return g_voice_mic;
+}
+
+extern "C" int host_setting_voice_mic_index(void)
+{
+    load_once();
+    return g_voice_mic_index;
 }
 
 extern "C" int host_setting_voice_near_radius(void)

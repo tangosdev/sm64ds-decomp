@@ -56,10 +56,15 @@
  * -----------------------------------------------------------------------
  * THE SETTINGS
  * -----------------------------------------------------------------------
- * VoiceEnabled, VoiceMicDevice, VoiceVolume, VoiceNearRadius and
- * VoiceFarRadius, all of them in settings.json and all of them reloading live.
- * hal/host_settings.h carries the exact spec; port/status/VOICE.md carries it
- * again for the launcher lane.
+ * VoiceEnabled, VoiceMicDevice, VoiceMicIndex, VoiceVolume, VoiceNearRadius
+ * and VoiceFarRadius, all of them in settings.json and all of them reloading
+ * live. hal/host_settings.h carries the exact spec; port/status/VOICE.md
+ * carries it again for the launcher lane.
+ *
+ * VoiceMicDevice DEFAULTS TO AUTO-PICK rather than to the Windows default
+ * recording device. See cap_open below for what that does and why: a device
+ * that opens fine and captures silence is the failure this feature actually
+ * shipped with, and nothing short of recording from it can see it.
  *
  * -----------------------------------------------------------------------
  * THE TEST HOOKS
@@ -103,19 +108,56 @@ namespace voice {
 
 enum : int { kCapRate = 16000, kCapFrameSamples = 320 };   // 20 ms
 
-// Open the named recording device, or the system default for "" or null.
-// Returns 1 when a device is live. Safe to call when one already is: the same
-// name is a no-op and a different name closes and reopens.
-int cap_open(const char *device_name);
+// Open a recording device and start capturing. Returns 1 when one is live.
+// Safe to call when one already is: the same name AND index is a no-op, a
+// different one closes and reopens.
+//
+// WHICH DEVICE, in the order the backend asks:
+//
+//   device_index >= 0        that winmm device id, VERBATIM. No scan, no name
+//                            match, and no quiet fall back to the default if
+//                            it will not open -- an explicit choice that fails
+//                            has to fail visibly. This is VoiceMicIndex.
+//   name "" or "auto"        AUTO-PICK. Every device is opened in turn for a
+//                            fraction of a second and the first one whose peak
+//                            sample clears the silence floor wins; all-silent
+//                            falls back to the Windows default with a line
+//                            saying so. This is the DEFAULT, and the reason is
+//                            that a device which opens fine and captures
+//                            nothing (Windows-muted, privacy-blocked, or just
+//                            the wrong system default) is indistinguishable
+//                            from a working one until something records from
+//                            it. The scan result is cached for the process and
+//                            cleared only by cap_rearm, so it costs a few
+//                            hundred milliseconds ONCE, on the first open, and
+//                            nothing on any retry.
+//   name "default"/"system"  the Windows default device, no scan.
+//   any other name           case-insensitive SUBSTRING match against the
+//                            names winmm reports, first match wins, no scan;
+//                            no match falls back to the default with one line
+//                            on stderr.
+//
+// NOT ON A DETERMINISTIC PATH. The only caller is hal/voice_chat.cpp's
+// refresh_settings, off voice_tick, which the host frame loop runs beside
+// sync_tick and which reads nothing the simulation writes and writes nothing
+// the simulation reads. The scan's wall-clock cost lands on the host loop the
+// same way a file poll or a device open already does; it cannot reorder,
+// re-time or perturb a lockstep or rollback tick, and port/tools/
+// voice_determinism.py is the standing assertion of that.
+int cap_open(const char *device_name, int device_index);
 void cap_close();
 int cap_is_open();
 
-// Clear the "this name cannot be opened" latch. cap_open refuses in silence
-// after a failure so that a box with no recording device does not run the
-// enumerate-and-open loop sixty times a second; this is how the caller says
-// the situation changed and it is worth another try. Called when the player
-// edits VoiceMicDevice or turns VoiceEnabled off and on, never on a timer --
-// the retry interval is the caller's, so the policy lives in one place.
+// Clear the "this name cannot be opened" latch, AND the cached auto-pick
+// choice. cap_open refuses in silence after a failure so that a box with no
+// recording device does not run the enumerate-and-open loop sixty times a
+// second; this is how the caller says the situation changed and it is worth
+// another try. Called when the player edits VoiceMicDevice or VoiceMicIndex or
+// turns VoiceEnabled off and on, never on a timer -- the retry interval is the
+// caller's, so the policy lives in one place. The cached scan is dropped here
+// for the same reason and only here: a player action is the one event that
+// justifies paying for the scan again, and a five-second open retry is not
+// one, or a box with a broken mic would re-scan every device forever.
 void cap_rearm();
 
 // One 20 ms frame of 320 mono s16 samples at 16 kHz into `out`. Returns 1 when
