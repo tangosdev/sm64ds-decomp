@@ -41,6 +41,17 @@ audio out. A recording device IS opened -- that is the entire point.
 
 Exit 0 all green, 1 on the first red.
 """
+# THE WINDOWED TEST SLOT. walk_window.exe opens a real OS window and drives the
+# port's single windowed render/input path, so two of them on one machine
+# collide and throw a random rc=1 on a DIFFERENT level or scene each run --
+# reds that come back clean when repeated in isolation. This harness launches
+# walk_window, so it takes the machine-wide slot lock for the WHOLE run.
+#
+# THE WHOLE RUN, not each launch, and that is the load-bearing part: a VS pass
+# here needs several windows ALIVE AT ONCE, so a per-launch lock would have
+# window 0 holding the slot while it waits for window 1 to join and never let
+# go. The unit of exclusion is the pass, not the process.
+
 import argparse
 import json
 import os
@@ -50,6 +61,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mp2_proof as M
+import slot_lock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -122,6 +134,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames", type=int, default=DEFAULT_FRAMES)
     a = ap.parse_args()
+
+    # See THE WINDOWED TEST SLOT above. Held across all three rungs: they run
+    # one after another and the slot is not worth handing back between them.
+    with slot_lock.slot(label="voice_micpick_proof"):
+        return _run(a)
+
+
+def _run(a):
 
     if not os.path.isfile(EXE):
         print("RED  no walk_window.exe at %s" % EXE)

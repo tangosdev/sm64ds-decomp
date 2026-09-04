@@ -652,21 +652,22 @@ void cap_probe()
         fprintf(stderr, "[voice-probe] FAILED: winmm unavailable\n");
         return;
     }
-    const UINT id = resolve_device("");
+    /* "default", not "", and the difference is new: "" now means AUTO-PICK,
+       which would run the whole device scan and report whatever it landed on.
+       This probe says on the tin that it opens the SYSTEM DEFAULT device, and
+       an owner running it wants to know what THAT device does -- which, on the
+       machine auto-pick was written for, is the one reading peak 1/32767. */
+    const UINT id = resolve_device("default", -1);
     WAVEINCAPSA caps;
     memset(&caps, 0, sizeof caps);
     const char *devname = p_Caps(id, &caps, sizeof caps) == MMSYSERR_NOERROR
                                ? caps.szPname : "(unknown)";
     fprintf(stderr, "[voice-probe] device: %s\n", devname);
 
+    /* The same one place cap_open and the auto-pick scan build it, so the
+       probe cannot drift onto a format the live path does not use. */
     WAVEFORMATEX wf;
-    memset(&wf, 0, sizeof wf);
-    wf.wFormatTag = WAVE_FORMAT_PCM;
-    wf.nChannels = 1;
-    wf.nSamplesPerSec = kCapRate;
-    wf.wBitsPerSample = 16;
-    wf.nBlockAlign = 2;
-    wf.nAvgBytesPerSec = kCapRate * 2;
+    voice_format(&wf);
 
     HWAVEIN dev;
     const MMRESULT mr = p_Open(&dev, id, &wf, 0, 0, CALLBACK_NULL);
