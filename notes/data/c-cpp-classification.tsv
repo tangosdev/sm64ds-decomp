@@ -10,7 +10,6 @@ src/daSetSE_c_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/daBrq_c_classInit.c	WEAK-refs-only	ov070				1		None		-
 src/AngleDiff.c	PURE-C	arm9				1		None		-
 src/ApproachAngle.c	PURE-C	arm9				1		None		-
-src/daObjRc_Guruguru_c_classInit.c	WEAK-refs-only	ov036				1		None		-
 src/daObjWc_Obj02_c_classInit.c	WEAK-refs-only	ov029				1		None		-
 src/ArrowPathLift_Spawn.c	WEAK-refs-only	ov091				1		None		-
 src/ArrowSignLeft_Spawn.c	WEAK-refs-only	ov098				1		None		-
@@ -423,7 +422,6 @@ src/Shark_Spawn.c	WEAK-refs-only	ov090				1		None		-
 src/ShipDown_Spawn.c	WEAK-refs-only	ov016				1		None		-
 src/ShipUp_Spawn.c	WEAK-refs-only	ov016				1		None		-
 src/daObjKsWater_c_classInit.c	WEAK-refs-only	ov017				1		None		-
-src/daObjRc_Hane_c_classInit.c	WEAK-refs-only	ov036				1		None		-
 src/ShowArea.c	PURE-C	arm9				1		None		-
 src/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBob	1		None	_ZTV10ShutterBob/_ZTV13daObjSwdoor_c	-
@@ -478,7 +476,6 @@ src/SubVec3.c	PURE-C	arm9				1		None		-
 src/SublevelToLevel.c	PURE-C	arm9				1		None		-
 src/daObjWlSubmarine_c_classInit.c	S1-stores-rom-vptr	ov026			stores _ZTV9Submarine	1		None	_ZTV9Submarine	-
 src/SurfaceInfo_TestFlag0x20.c	PURE-C	arm9				1		None		-
-src/daObjRcBuranko_c_classInit.c	S1-stores-rom-vptr	ov036			stores _ZTV16daObjRcBuranko_c	1		None	_ZTV16daObjRcBuranko_c	-
 src/daObjWc_Obj04_c_classInit.c	WEAK-refs-only	ov029				1		None		-
 src/daObjC0_Switch_c_Spawn.c	S1-stores-rom-vptr	ov012			stores _ZTV16daObjC0_Switch_c	1		None	_ZTV16daObjC0_Switch_c	-
 src/Swoop_Spawn.c	WEAK-refs-only	ov065				1		None		-

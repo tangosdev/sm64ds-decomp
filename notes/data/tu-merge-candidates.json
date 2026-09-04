@@ -5470,8 +5470,7 @@
     "src/func_ov036_02111618.c",
     "src/_ZN14daObjRc_Hane_c6RenderEv.cpp",
     "src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp",
-    "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp",
-    "src/daObjRc_Hane_c_classInit.c"
+    "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -6859,8 +6858,7 @@
     "src/_ZN16daObjRcBuranko_c16CleanupResourcesEv.cpp",
     "src/_ZN16daObjRcBuranko_c6RenderEv.cpp",
     "src/_ZN16daObjRcBuranko_c8BehaviorEv.cpp",
-    "src/_ZN16daObjRcBuranko_c13InitResourcesEv.cpp",
-    "src/daObjRcBuranko_c_classInit.c"
+    "src/_ZN16daObjRcBuranko_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -8015,8 +8013,7 @@
     "src/_ZN18daObjRc_Guruguru_c16CleanupResourcesEv.cpp",
     "src/_ZN18daObjRc_Guruguru_c6RenderEv.cpp",
     "src/_ZN18daObjRc_Guruguru_c8BehaviorEv.cpp",
-    "src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp",
-    "src/daObjRc_Guruguru_c_classInit.c"
+    "src/_ZN18daObjRc_Guruguru_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,

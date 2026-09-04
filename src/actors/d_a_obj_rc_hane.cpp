@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov036/daObjRc_Hane_c, hand-curated.
- * 7 function(s), .text 0x02111580..0x02111904.
+ * 8 function(s), .text 0x02111580..0x0211193c.
  *
  * Rainbow Ride's flapping wing (profile RC_HANE): a decorative model rocked
  * about the actor's X and Y angles by a canned 64-entry table, with an
@@ -34,9 +34,14 @@
  * destructor is not written here at all; it is inline in the header and so
  * emits last, which is where the cartridge has it.
  *
- * daObjRc_Hane_c_classInit (0x02111904) is NOT part of this entry and keeps
- * its own C file, the same arrangement daObjRc_Kaitendai_c and
- * daObjRcBuranko_c already landed with in this overlay.
+ * THE EIGHTH IS THE FACTORY. daObjRc_Hane_c_classInit (0x02111904, historical
+ * alias daObjRc_Hane_c_Spawn) is the RC_HANE registry profile's spawn function
+ * and sits immediately after InitResources in the ROM's own .text order, so it
+ * is part of this TU. It used to keep its own C file -- the arrangement the
+ * neighbouring promotions landed with -- and is folded in here because the
+ * promotion predated the profile-reconstruction campaign, not because the ROM
+ * ever put it elsewhere. It keeps C linkage and is written first here, being
+ * the highest-address member.
  *
  * Consolidated from these legacy one-function sources (ROM address order):
  *   [0] 0x02111580  src/_ZN14daObjRc_Hane_cD1Ev.cpp
@@ -46,6 +51,7 @@
  *   [4] 0x0211169c  src/_ZN14daObjRc_Hane_c6RenderEv.cpp
  *   [5] 0x021116c0  src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp
  *   [6] 0x02111854  src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp
+ *   [7] 0x02111904  src/daObjRc_Hane_c_classInit.c
  */
 
 /* decl_common.h is deliberately NOT included: it declares
@@ -102,6 +108,39 @@ void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *v);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_Actor.h / decl_ActorBase.h / decl_common.h as the legacy file did --
+   this TU deliberately does not include decl_common.h (see the note above), so
+   reaching one now would undo that. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN8dActor_cC2Ev(void *self);
+extern void _ZN11CommonModelC1Ev(void *self);
+extern int _ZTV14daObjRc_Hane_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 7 -- daObjRc_Hane_c_classInit, 0x02111904, size 0x38           */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjRc_Hane_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjRc_Hane_c through RTTI,
+   allocation size, vtable identity, and the RC_HANE registry profile; later
+   EAD lineage supplies classInit. Exact original spelling is not preserved.
+   Historical alias: daObjRc_Hane_c_Spawn.
+
+   284 = 0x11c, the class size the header comment above already reads off the
+   cartridge. The base run here is dActor_c, not dBgActor_c -- the same fact
+   the 31-word vtable proves -- and the CommonModel at 0xd4 is constructed by
+   hand after it. */
+extern "C" int *daObjRc_Hane_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(284);
+    if (p) {
+        _ZN8dActor_cC2Ev(p);
+        p[0] = (int)_ZTV14daObjRc_Hane_c;
+        _ZN11CommonModelC1Ev((char *)p + 0xd4);
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

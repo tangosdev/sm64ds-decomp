@@ -15,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x02111580",
-      "end": "0x02111904"
+      "end": "0x0211193c"
     }
   ],
   "functions": [
@@ -67,6 +67,13 @@
       "size": "0x000000b0",
       "legacy_source": "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp",
       "ordinal": 6
+    },
+    {
+      "symbol": "daObjRc_Hane_c_classInit",
+      "address": "0x02111904",
+      "size": "0x00000038",
+      "legacy_source": "src/daObjRc_Hane_c_classInit.c",
+      "ordinal": 7
     }
   ],
   "data": [],
@@ -74,7 +81,8 @@
   "notes": [
     "Hand-curated, not generated. See the file's own header comment for the full evidence and for why the destructor is inline in the header rather than written in the TU.",
     "MEASURED 2026-09-04, reading extracted/dsd/arm9_overlays/ov036.bin directly (ov036 base 0x021111a0, from extracted/dsd/arm9_overlays/overlays.yaml): _ZTV14daObjRc_Hane_c's symbols.txt address 0x02113c38 IS the address point -- 0x02113c30 is the offset-to-top word 0, 0x02113c34 is 0x02113bf4 (&_ZTI14daObjRc_Hane_c), slot 0 at 0x02113c38 is 0x02111854 (InitResources), slot 3 is 0x021115f4 (CleanupResources), slot 6 is 0x021116c0 (Behavior), slot 9 is 0x0211169c (Render), slots 16 and 17 are 0x02111580 and 0x021115b0 (D1, D0). _ZTI14daObjRc_Hane_c's +4 word points at 0x02113c00, whose bytes are the length-prefixed string '14daObjRc_Hane_c' -- the ROM's own spelling, not the coined ShipWing -- and its +8 base pointer is 0x0208e390 = _ZTI8dActor_c (arm9), so the cartridge itself states the direct base.",
-    "THE VTABLE IS 31 WORDS, NOT 32, AND THAT IS THE SECOND PROOF OF THE BASE. It runs 0x02113c38..0x02113cb4, and 0x02113cb4 is already daObjRc_Tikuwa_c's typeinfo record (first word 0x0209a764, the __si_class_type_info vptr; +4 string reads '16daObjRc_Tikuwa_c'). _ZTV8dActor_c at arm9 0x0208e3a4 is the same 31 words, ending at 0x0208e420. The dBgActor_c-derived neighbours in this very overlay are 32 words and carry Kill (0x020ee55c) in slot 31 -- daObjRc_Kaitendai_c's table runs 0x02113b74..0x02113bf4 and ends on exactly that word. There is no slot 31 here to override because dActor_c has no slot 31."
+    "THE VTABLE IS 31 WORDS, NOT 32, AND THAT IS THE SECOND PROOF OF THE BASE. It runs 0x02113c38..0x02113cb4, and 0x02113cb4 is already daObjRc_Tikuwa_c's typeinfo record (first word 0x0209a764, the __si_class_type_info vptr; +4 string reads '16daObjRc_Tikuwa_c'). _ZTV8dActor_c at arm9 0x0208e3a4 is the same 31 words, ending at 0x0208e420. The dBgActor_c-derived neighbours in this very overlay are 32 words and carry Kill (0x020ee55c) in slot 31 -- daObjRc_Kaitendai_c's table runs 0x02113b74..0x02113bf4 and ends on exactly that word. There is no slot 31 here to override because dActor_c has no slot 31.",
+    "FOLD 2026-09-04. daObjRc_Hane_c_classInit at 0x02111904 was folded in from src/daObjRc_Hane_c_classInit.c. It is the RC_HANE registry profile's factory and sits immediately after InitResources in the ROM's .text order, so it was always part of this TU; it was left outside only because the promotion predated the profile-reconstruction campaign. Folding it is what frees the d_a_obj_rc_hane stem, which tools/layout_check.py L2 would otherwise refuse to let the one-function source take. It keeps C linkage; its externs are restated in this TU rather than reached through decl_common.h, which this TU deliberately does not include."
   ],
   "compiler_only_output": [
     {
@@ -147,8 +155,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov036-daObjRc_Hane_c/daObjRc_Hane_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 7,
-    "functions_declared": 7,
+    "functions_matched": 8,
+    "functions_declared": 8,
     "compilerOnlyOutput": {
       "requested": [],
       "deadstripped": [],
