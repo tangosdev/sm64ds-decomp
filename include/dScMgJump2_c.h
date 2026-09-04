@@ -49,7 +49,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        virtual destructor is always reached through the vtable.
        It does give up the key function: with this inline, the first virtual
        DECLARED but not defined here is OnYoshiTryEat below, which lives in
-       src/actors/d_sc_mg_jump2.cpp, so _ZTV12dScMgJump2_c is still emitted
+       src/minigames/d_s_mg_jump2.cpp, so _ZTV12dScMgJump2_c is still emitted
        by that one translation unit and by no other. */
     virtual ~dScMgJump2_c() {
         _ZN5ModelD1Ev((char *)this + 0x5a14);

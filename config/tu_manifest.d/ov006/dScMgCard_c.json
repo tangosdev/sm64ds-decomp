@@ -1,8 +1,8 @@
 {
   "id": "ov006/dScMgCard_c",
   "module": "ov006",
-  "source": "src/actors/dScMgCard_c.cpp",
-  "promoted_source": "src/actors/dScMgCard_c.cpp",
+  "source": "src/minigames/d_s_mg_card.cpp",
+  "promoted_source": "src/minigames/d_s_mg_card.cpp",
   "status": "promoted",
   "goal": {
     "idiomCensus": {
@@ -318,14 +318,14 @@
     "2026-08-31 conversion to real members: the twenty-eight tubuild extern \"C\" free functions became real member functions -- dScMgCard_c's own scene logic (RenderHud, UpdateState, the hand-evaluation family SettleHand/ArrangeHand/MarkSingles/EvaluateHand/CompareHands/AllLifted/AllInState/CountInState/FindInState/DrawCardValue/FillWeights, the adjudicated vtable-slot events OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded) and the element motion members FlyOff/SetHome/Redeal/DealIn/GetOffscreenY/Render/Update over the RTTI-confirmed element classes dMgCardObj_c/dMgDilarCardObj_c. The header retype of mArray1/mArray2 from raw byte arrays to the element classes is destructor-neutral (measured) and unlocks UpdateState's member spellings. Each function was byte-verified with tools/match.py as it converted, and the hash dumps bracketing the final respells show every then-enrolled function section identical to the matched baseline.",
     "COINED NAMES, the one thing not provable: the twenty-eight renamed functions' ROM symbols are address-only (func_ov006_020d96e0..func_ov006_020db9dc), so no recovered spelling exists to confirm or contradict the behavioral names. RenderHud, UpdateState, SettleHand, ArrangeHand, MarkSingles, EvaluateHand, CompareHands, AllLifted, AllInState, CountInState, FindInState, DrawCardValue, FillWeights, FlyOff, SetHome, Redeal, DealIn and the element Render/Update/GetOffscreenY are coined from what each function does; OnYoshiTryEat/OnTurnIntoEgg/OnGroundPounded are the family's adjudicated legacy recovered names (vtable slots 18/19/21, notes/minigame-family-decisions.md); the two element D1 symbols are the compiler's own mangling of the classes this TU's _ZTI/_ZTS proves. The coinage is disclosed here, in the per-function banner comments, and in symbols/actor_renames.tsv's why column.",
     "D3 declarations: Sound::PlayBank2_2D, GX::LoadOBJPltt, GXS::LoadOBJPltt, G2x::SetBlendAlpha, ApproachLinear and ApproachLinear2 are declared at their RATIFIED_TRUE_NAMES forms (parameter types read off the mangled names, see the engine-helpers banner in the source); func_ov006_020c0aa8 and func_ov006_020c1804 keep the void* spellings shared with dScMgBSC_c/dScMgMCarlo2_c, and func_ov006_020c1a88 this TU's extern int (char*) form, because redeclaring a C-linkage symbol with different parameter types is an illegal overloading. The local shadow types (Node, Five, Struct30, OamAttrTmpl, Slot6, Obj6 and kin) are byte-exact struct spellings of raw-offset object headers the family has not yet carved; retiring them belongs to a header carve, not this TU.",
-    "tubuild reconcile note: the warnings above named the legacy file by its function's old auto-generated symbol func_ov006_020db720, which was renamed to _ZN11dScMgCard_c13OnTurnIntoEggEi (ov006 0x020db720). The rename rewrote that name inside the conflict markers in src/actors/dScMgCard_c.cpp, because those are comment text, but not inside these notes, which are prose. Only the spelling changed: the remaining conflicts are still OPEN and their markers still stand. Checked by tools/check_tubuild_conflicts.py.",
-    "tubuild reconcile note: several conflict markers the warnings above were frozen against are no longer present in src/actors/dScMgCard_c.cpp. They were reconciled in place and the notes were not updated at the time, so those entries claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
+    "tubuild reconcile note: the warnings above named the legacy file by its function's old auto-generated symbol func_ov006_020db720, which was renamed to _ZN11dScMgCard_c13OnTurnIntoEggEi (ov006 0x020db720). The rename rewrote that name inside the conflict markers in src/minigames/d_s_mg_card.cpp, because those are comment text, but not inside these notes, which are prose. Only the spelling changed: the remaining conflicts are still OPEN and their markers still stand. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild reconcile note: several conflict markers the warnings above were frozen against are no longer present in src/minigames/d_s_mg_card.cpp. They were reconciled in place and the notes were not updated at the time, so those entries claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgCard_c/dScMgCard_c.o (gitignored)",
+    "object": "build/tu/ov006-dScMgCard_c/d_s_mg_card.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 32,
     "functions_declared": 37,
