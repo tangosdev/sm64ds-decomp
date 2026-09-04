@@ -1,5 +1,5 @@
 //cpp
-/* func_ov006_0210d6b8 at 0x0210d6b8 (ov006), size 0x88
+/* dScMgSlot1_c_classInit at 0x0210d6b8 (ov006), size 0x88
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
@@ -13,8 +13,12 @@ extern void func_ov006_0210c208(char *p);
 extern void *_ZTV12dScMgSlot1_c;
 extern void *_ZTVN12dScMgSlot1_c9betIcon_cE;
 extern void *_ZTV9dThIcon_c;
-void *func_ov006_0210d6b8(void);
-void *func_ov006_0210d6b8(void)
+void *dScMgSlot1_c_classInit(void);
+/* Reconstructed source-style name: SM64DS proves dScMgSlot1_c through RTTI,
+ * allocation size, vtable identity, and the MG_SLOT1 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov006_0210d6b8. */
+void *dScMgSlot1_c_classInit(void)
 {
     dScMgSlot1_c *scene =
         (dScMgSlot1_c *)_ZN7fBase_cnwEj(sizeof(dScMgSlot1_c));

@@ -42,7 +42,12 @@
  * homeless D2 entirely. The two calls below are ordinary reverse-declaration
  * member destruction, spelled out only because the members are raw bytes.
  * No separate operator delete is needed -- dScMgBase_c, two levels up,
- * already provides one. */
+ * already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgMCarlo_c. The reconstructed factory
+ * dScMgMCarlo_c_classInit (historical alias func_ov006_020f8e44) installs this class's
+ * cartridge vtable for the MG_MCARLO registry profile.
+ */
 #ifndef DSCMGMCARLO_C_H
 #define DSCMGMCARLO_C_H
 #include "dScMgSingle3DBase_c.h"

@@ -10,14 +10,15 @@
  * `_ZTI13dScMgMemory_c`, whose `_ZTS` string reads "13dScMgMemory_c". Same
  * class, two names. The class takes its real ROM identity here, matching
  * this tree's convention and its six already-migrated siblings; the factory
- * keeps `MgMemoryMatch_Spawn`, which is already attributed, exactly as
+ * now spells `dScMgMemory_c_classInit` (historical alias
+ * MgMemoryMatch_Spawn), which is already attributed, exactly as
  * include/dScMgCard_c.h does for MgPicturePoker_Spawn.
  *
  * The rename is length-neutral, which is a small mercy: "MgMemoryMatch" and
  * "dScMgMemory_c" are both 13 characters, so every mangled name keeps its
  * `_ZN13`/`_ZTV13` prefix and no length arithmetic changes.
  *
- * SIZE 0x5340, from MgMemoryMatch_Spawn's own `_ZN7fBase_cnwEj(0x5340)`.
+ * SIZE 0x5340, from dScMgMemory_c_classInit's own `_ZN7fBase_cnwEj(0x5340)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80
  * and destroyed by func_ov006_020c1c64 -- the same pair, at the same
@@ -44,7 +45,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN13dScMgMemory_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgMemory_c. The reconstructed factory
+ * dScMgMemory_c_classInit (historical alias MgMemoryMatch_Spawn) installs this class's
+ * cartridge vtable for the MG_MEMORY registry profile.
+ */
 #ifndef DSCMGMEMORY_C_H
 #define DSCMGMEMORY_C_H
 #include "dScMgSingle3DBase_c.h"

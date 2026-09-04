@@ -13,7 +13,11 @@ extern int _ZTV13dScMgMCarlo_c;
  * files disagreeing about the one fact that sizes the array. */
 extern "C" void func_ov006_020f7730(int *p);
 extern "C" void func_ov006_020f8ed8(void);
-extern "C" void* func_ov006_020f8e44(void){
+/* Reconstructed source-style name: SM64DS proves dScMgMCarlo_c through RTTI,
+ * allocation size, vtable identity, and the MG_MCARLO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov006_020f8e44. */
+extern "C" void* dScMgMCarlo_c_classInit(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x60b0);
   if (p) {
     _ZN11dScMgBase_cC2Ev(p);

@@ -8,7 +8,11 @@ extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV10dScMgBSC_c;
 extern "C" void NullDestructor_0203d47c(void);
 extern "C" void func_0203d738(void);
-extern "C" void* MgLuckyStars_Spawn(void){
+/* Reconstructed source-style name: SM64DS proves dScMgBSC_c through RTTI,
+ * allocation size, vtable identity, and the MG_BS_CARD registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgLuckyStars_Spawn. */
+extern "C" void* dScMgBSC_c_classInit(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x51d0);
   if (p) {
     _ZN11dScMgBase_cC2Ev(p);

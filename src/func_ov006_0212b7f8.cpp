@@ -8,7 +8,11 @@ extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV13dScMgFlower_c;
 extern "C" void func_ov006_0212a650(void);
 extern "C" void func_ov006_0212b88c(void);
-extern "C" void* func_ov006_0212b7f8(void){
+/* Reconstructed source-style name: SM64DS proves dScMgFlower_c through RTTI,
+ * allocation size, vtable identity, and the MG_FLOWER registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: func_ov006_0212b7f8. */
+extern "C" void* dScMgFlower_c_classInit(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x5ff8);
   if (p) {
     _ZN11dScMgBase_cC2Ev(p);

@@ -36,7 +36,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN13dScMgFlower_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgFlower_c. The reconstructed factory
+ * dScMgFlower_c_classInit (historical alias func_ov006_0212b7f8) installs this class's
+ * cartridge vtable for the MG_FLOWER registry profile.
+ */
 #ifndef DSCMGFLOWER_C_H
 #define DSCMGFLOWER_C_H
 #include "dScMgSingle3DBase_c.h"

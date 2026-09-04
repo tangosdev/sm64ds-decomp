@@ -22,7 +22,12 @@
    draws into sub BG0 instead of consulting the layer index at +0x6c.  Fields below
    dScMgBase_c's own 0x4660 are INHERITED, not this class's own -- accessed
    via raw offsets on a char* cast of `this` (0xb4 touched here, already
-   dScMgBase_c's own). */
+   dScMgBase_c's own).
+ *
+ * SM64DS RTTI names the implementation dScMgTeresa_c. The reconstructed factory
+ * dScMgTeresa_c_classInit (historical alias MgHideAndBooSeek_Spawn) installs this class's
+ * cartridge vtable for the MG_TERESA registry profile.
+ */
 struct dScMgTeresa_c : dScMgBase_c {
     virtual ~dScMgTeresa_c();
     virtual s32 InitResources();  /* slot 0 */

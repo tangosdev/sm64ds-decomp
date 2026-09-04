@@ -10,7 +10,12 @@
    dScMgBase_c's own 0x4660 are INHERITED, not this class's own -- accessed
    via raw offsets on a char* cast of `this` (0xac is inside dScMgBase_c's
    own pad_0ac, not a named field, so it stays raw even though 0xa4/0xa8 are
-   named and used directly). */
+   named and used directly).
+ *
+ * SM64DS RTTI names the implementation dScMgCoin_c. The reconstructed factory
+ * dScMgCoin_c_classInit (historical alias MgCoincentration_Spawn) installs this class's
+ * cartridge vtable for the MG_COIN registry profile.
+ */
 struct dScMgCoin_c : dScMgBase_c {
     virtual ~dScMgCoin_c();
     virtual s32 InitResources();   /* slot 0 */

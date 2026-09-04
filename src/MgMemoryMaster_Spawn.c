@@ -4,7 +4,11 @@ extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_ov006_020c1d80(void *);
 extern int _ZTV19dScMgSingle3DBase_c[];
 extern int _ZTV14dScMgMemory2_c[];
-int *MgMemoryMaster_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves dScMgMemory2_c through RTTI,
+ * allocation size, vtable identity, and the MG_MEMORY_J registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgMemoryMaster_Spawn. */
+int *dScMgMemory2_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(0x5410);
     if (p) {

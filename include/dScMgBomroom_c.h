@@ -12,7 +12,12 @@
    directly; the large block of fields touched only by non-virtual helper
    functions (func_ov006_020d5b00 and friends, still raw extern "C" calls,
    not migrated methods) is not represented here -- it stays inside the
-   leading pad. */
+   leading pad.
+ *
+ * SM64DS RTTI names the implementation dScMgBomroom_c. The reconstructed factory
+ * dScMgBomroom_c_classInit (historical alias MgSortOrSplode_Spawn) installs this class's
+ * cartridge vtable for the MG_BOMROOM registry profile.
+ */
 struct dScMgBomroom_c : dScMgBase_c {
     virtual ~dScMgBomroom_c();
     virtual s32 InitResources();  /* slot 0 */

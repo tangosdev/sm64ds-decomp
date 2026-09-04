@@ -207,7 +207,7 @@ void func_ov006_020c6f3c();
    and every member -- a factory for dScMgJump2_c. Renamed per the fallback
    convention (no known game object name for this minigame; compare
    daObjEmmLog_c_Spawn, the tree's other `<ClassName>_Spawn` factory) rather than
-   the game-name-based MgBounceAndPounce_Spawn that dScMgJump_c's own factory
+   the game-name-based dScMgJump_c_classInit that dScMgJump_c's own factory
    carries. See include/dScMgJump2_c.h. */
 void *dScMgJump2_c_Spawn()
 {

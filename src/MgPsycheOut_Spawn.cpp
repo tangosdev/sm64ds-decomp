@@ -8,8 +8,12 @@ extern void _ZN15dMg3DEspModel_cC1Ev(void *);
 extern void _ZN18TextureTransformerC1Ev(void *);
 extern int _ZTV19dScMgSingle3DBase_c[];
 extern int _ZTV12dScMg3DEsp_c[];
-void *MgPsycheOut_Spawn(void);
-void *MgPsycheOut_Spawn(void){
+void *dScMg3DEsp_c_classInit(void);
+/* Reconstructed source-style name: SM64DS proves dScMg3DEsp_c through RTTI,
+ * allocation size, vtable identity, and the MG_3DESP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgPsycheOut_Spawn. */
+void *dScMg3DEsp_c_classInit(void){
     char *o = (char *)_ZN7fBase_cnwEj(0x5558);
     if(o != 0){
         _ZN11dScMgBase_cC2Ev(o);

@@ -32,7 +32,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN12dScMgSlot3_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgSlot3_c. The reconstructed factory
+ * dScMgSlot3_c_classInit (historical alias func_ov006_0210c120) installs this class's
+ * cartridge vtable for the MG_SLOT3 registry profile.
+ */
 #ifndef DSCMGSLOT3_C_H
 #define DSCMGSLOT3_C_H
 #include "dScMgSingle3DBase_c.h"

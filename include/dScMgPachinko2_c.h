@@ -12,7 +12,12 @@
    already dScMgBase_c's own). Own fields observed only from slots
    0/6/9/16/17/18 directly; fields touched only by non-virtual helper
    functions (still raw extern "C" calls, not migrated methods) are not
-   represented here. */
+   represented here.
+ *
+ * SM64DS RTTI names the implementation dScMgPachinko2_c. The reconstructed factory
+ * dScMgPachinko2_c_classInit (historical alias MgLakituLaunch_Spawn) installs this class's
+ * cartridge vtable for the MG_TAMAIRE registry profile.
+ */
 struct dScMgPachinko2_c : dScMgBase_c {
     virtual ~dScMgPachinko2_c();
     virtual s32 InitResources();  /* slot 0 */

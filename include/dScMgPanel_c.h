@@ -10,7 +10,12 @@
    accessed via raw offsets on a char* cast of `this`, same as every other
    dScMgBase_c leaf. Own fields observed only from slots 0/6/9/16/17/18
    directly; fields touched only by non-virtual helper functions (still
-   raw extern "C" calls, not migrated methods) are not represented here. */
+   raw extern "C" calls, not migrated methods) are not represented here.
+ *
+ * SM64DS RTTI names the implementation dScMgPanel_c. The reconstructed factory
+ * dScMgPanel_c_classInit (historical alias MgPuzzlePanelPuzzlePanic_Spawn) installs this class's
+ * cartridge vtable for the MG_PANEL registry profile.
+ */
 struct dScMgPanel_c : dScMgBase_c {
     virtual ~dScMgPanel_c();
     virtual s32 InitResources();  /* slot 0 */

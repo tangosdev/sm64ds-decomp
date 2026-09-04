@@ -6,7 +6,7 @@
  *
  * SIZE 0xc59c, and the allocation is NOT in this class's own constructor.
  * func_ov006_021295ac takes an already-allocated `char*` -- it is a C2,
- * not a factory. Its one caller, MgSnowballSlalom_Spawn, is where
+ * not a factory. Its one caller, dScMgSnowball_c_classInit, is where
  * `_ZN7fBase_cnwEj(0xc59c)` lives. Deriving a size from the field span
  * would have stopped at 0xbe94 and been 0x708 short.
  *
@@ -59,7 +59,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN15dScMgSnowball_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgSnowball_c. The reconstructed factory
+ * dScMgSnowball_c_classInit (historical alias MgSnowballSlalom_Spawn) installs this class's
+ * cartridge vtable for the MG_SNOWBALL registry profile.
+ */
 #ifndef DSCMGSNOWBALL_C_H
 #define DSCMGSNOWBALL_C_H
 #include "dScMgSingle3DBase_c.h"

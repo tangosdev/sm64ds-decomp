@@ -2,7 +2,7 @@
  * dScMgTrampoline_c : dScMgD3DBase_c, single edge, offset 0
  * (build/rtti.json). Its own vtable is ov006:0x0213fb34.
  *
- * SIZE 0x5dc8, from MgTrampolineTime_Spawn's own
+ * SIZE 0x5dc8, from dScMgTrampoline_c_classInit's own
  * `_ZN7fBase_cnwEj(0x5dc8)`. That factory writes dScMgD3DBase_c's vtable,
  * then this class's, then the three arrays below; the English _Spawn name
  * is already attributed and is kept.
@@ -17,7 +17,12 @@
  *
  * THE DESTRUCTOR IS DEFINED IN THE CLASS BODY, for the emission-order reason
  * spelled out at the definition below. No separate operator delete is needed:
- * dScMgD3DBase_c, the immediate base, provides one. */
+ * dScMgD3DBase_c, the immediate base, provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgTrampoline_c. The reconstructed factory
+ * dScMgTrampoline_c_classInit (historical alias MgTrampolineTime_Spawn) installs this class's
+ * cartridge vtable for the MG_TRAMPOLINE registry profile.
+ */
 #ifndef DSCMGTRAMPOLINE_C_H
 #define DSCMGTRAMPOLINE_C_H
 #include "dScMgD3DBase_c.h"

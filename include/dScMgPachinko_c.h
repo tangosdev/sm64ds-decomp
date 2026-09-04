@@ -7,14 +7,19 @@
    6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
    named -- stays a raw extern "C" helper). rtti_vtables.py --own also
    reports slots 36/38, but both are spurious: the true vtable ends at 36
-   words (address-gap math against the neighbouring MgLakituLaunch_SpawnInfo
+   words (address-gap math against the neighbouring g_profile_MG_TAMAIRE
    table, and relocs.txt cross-references confirm it belongs to a wholly
    different actor's spawn descriptor, not this class) -- excluded, along
-   with func_ov006_021019e0 and MgLakituLaunch_Spawn, from this migration.
+   with func_ov006_021019e0 and dScMgPachinko2_c_classInit, from this migration.
    Fields below dScMgBase_c's own 0x4660 are INHERITED, not this class's
    own -- accessed via raw offsets on a char* cast of `this` (0xa4, 0xc0,
    0xc3, 0xc4 all touched here, all already dScMgBase_c's own, same as
-   dScMgPachinko2_c's). */
+   dScMgPachinko2_c's).
+ *
+ * SM64DS RTTI names the implementation dScMgPachinko_c. The reconstructed factory
+ * dScMgPachinko_c_classInit (historical alias MgBobOmbSquad_Spawn) installs this class's
+ * cartridge vtable for the MG_PACHINKO registry profile.
+ */
 struct dScMgPachinko_c : dScMgBase_c {
     virtual ~dScMgPachinko_c();
     virtual s32 InitResources();  /* slot 0 */

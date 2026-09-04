@@ -1,9 +1,9 @@
 /* class dScMgBSC_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMgBSC_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgLuckyStars_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). The coined English Spawn-function name was
+ * MgLuckyStars_Spawn; the factory now carries the reconstructed
+ * dScMgBSC_c_classInit spelling, and the class itself takes its
+ * real ROM identity, matching this tree's current convention.
  *
  * SIZE 0x51d0, from MgLuckyStars_Spawn.cpp's own
  * `_ZN7fBase_cnwEj(0x51d0)`.
@@ -39,7 +39,12 @@
  * are still raw byte arrays with no element type recovered.
  *
  * No separate operator delete is needed -- dScMgBase_c, two levels up,
- * already provides one. */
+ * already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgBSC_c. The reconstructed factory
+ * dScMgBSC_c_classInit (historical alias MgLuckyStars_Spawn) installs this class's
+ * cartridge vtable for the MG_BS_CARD registry profile.
+ */
 #ifndef DSCMGBSC_C_H
 #define DSCMGBSC_C_H
 #include "dScMgSingle3DBase_c.h"

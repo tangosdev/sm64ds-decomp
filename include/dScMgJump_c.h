@@ -2,7 +2,7 @@
  * dScMgJump_c : dScMgD3DBase_c, single edge, offset 0 (build/rtti.json).
  * Its own vtable is ov006:0x0213cbe4.
  *
- * SIZE 0x5834, from MgBounceAndPounce_Spawn's own
+ * SIZE 0x5834, from dScMgJump_c_classInit's own
  * `_ZN7fBase_cnwEj(0x5834)`. THAT FACTORY IS THIS CLASS'S, despite its
  * name: it writes dScMgD3DBase_c's vtable, then THIS class's, and
  * everything it builds after that derived vptr store belongs here. The
@@ -31,7 +31,12 @@
  * the same function, are what bound dScMgD3DBase_c at 0x5004 from above.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf. No separate operator
- * delete is needed: dScMgD3DBase_c, the immediate base, provides one. */
+ * delete is needed: dScMgD3DBase_c, the immediate base, provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgJump_c. The reconstructed factory
+ * dScMgJump_c_classInit (historical alias MgBounceAndPounce_Spawn) installs this class's
+ * cartridge vtable for the MG_JUMP registry profile.
+ */
 #ifndef DSCMGJUMP_C_H
 #define DSCMGJUMP_C_H
 #include "dScMgD3DBase_c.h"

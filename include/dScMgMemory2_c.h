@@ -8,11 +8,12 @@
  * `_ZN14MgMemoryMasterD1Ev`/`D0Ev` and `_ZTV14MgMemoryMaster`, and the ROM
  * disagrees. The vptr value is ov006:0x0213d4d4; the RTTI pointer one word
  * below it is `_ZTI14dScMgMemory2_c`, whose `_ZTS` string reads
- * "14dScMgMemory2_c". The factory keeps `MgMemoryMaster_Spawn`, already
+ * "14dScMgMemory2_c". The factory now spells `dScMgMemory2_c_classInit`
+ * (historical alias MgMemoryMaster_Spawn), already
  * attributed. "MgMemoryMaster" and "dScMgMemory2_c" are both 14 characters,
  * so the rename is length-neutral and no mangled prefix changes.
  *
- * SIZE 0x5410, from MgMemoryMaster_Spawn's own `_ZN7fBase_cnwEj(0x5410)`.
+ * SIZE 0x5410, from dScMgMemory2_c_classInit's own `_ZN7fBase_cnwEj(0x5410)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80 /
  * func_ov006_020c1c64), the same one four siblings use. As with
@@ -31,7 +32,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN14dScMgMemory2_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgMemory2_c. The reconstructed factory
+ * dScMgMemory2_c_classInit (historical alias MgMemoryMaster_Spawn) installs this class's
+ * cartridge vtable for the MG_MEMORY_J registry profile.
+ */
 #ifndef DSCMGMEMORY2_C_H
 #define DSCMGMEMORY2_C_H
 #include "dScMgSingle3DBase_c.h"

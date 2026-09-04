@@ -1,9 +1,9 @@
 /* class dScMg3DEsp_c, real ROM name confirmed by tools/rtti_extract.py:
  * dScMg3DEsp_c : dScMgSingle3DBase_c, single edge, offset 0
- * (build/rtti.json). English Spawn-function name is MgPsycheOut_Spawn;
- * kept as the symbol name for the factory (already attributed), but the
- * class itself takes its real ROM identity, matching this tree's current
- * convention.
+ * (build/rtti.json). The coined English Spawn-function name was
+ * MgPsycheOut_Spawn; the factory now carries the reconstructed
+ * dScMg3DEsp_c_classInit spelling, and the class itself takes its
+ * real ROM identity, matching this tree's current convention.
  *
  * SIZE 0x5558, from MgPsycheOut_Spawn.cpp's own
  * `_ZN7fBase_cnwEj(0x5558)`.
@@ -35,7 +35,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN12dScMg3DEsp_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * dScMgBase_c, two levels up, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMg3DEsp_c. The reconstructed factory
+ * dScMg3DEsp_c_classInit (historical alias MgPsycheOut_Spawn) installs this class's
+ * cartridge vtable for the MG_3DESP registry profile.
+ */
 #ifndef DSCMG3DESP_C_H
 #define DSCMG3DESP_C_H
 #include "dScMgSingle3DBase_c.h"

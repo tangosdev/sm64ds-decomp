@@ -13,7 +13,7 @@
  * not a coined one like MgBounceAndPounce was. Renamed to the fallback
  * `<ClassName>_Spawn` convention (compare daObjEmmLog_c_Spawn): no game object
  * name is known for this minigame, unlike dScMgJump_c's own factory
- * MgBounceAndPounce_Spawn.
+ * dScMgJump_c_classInit.
  *
  * mPlayers is dMgJump3DMario_c[3], now named by the ROM's own RTTI and its
  * paired constructor/destructor helpers. The compiler therefore owns the

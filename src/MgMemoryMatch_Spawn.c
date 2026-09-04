@@ -4,7 +4,11 @@ extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_ov006_020c1d80(void *);
 extern int _ZTV19dScMgSingle3DBase_c[];
 extern int _ZTV13dScMgMemory_c[];
-int *MgMemoryMatch_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves dScMgMemory_c through RTTI,
+ * allocation size, vtable identity, and the MG_MEMORY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgMemoryMatch_Spawn. */
+int *dScMgMemory_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(0x5340);
     if (p) {

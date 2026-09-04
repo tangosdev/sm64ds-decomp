@@ -12,10 +12,10 @@
  * THE OLD HEADER INHERITED THAT ERROR AND MODELLED THIS CLASS WITH ONE
  * CHILD'S FIELDS. It declared mModel at 0x501c, a 3*0xb8 table at 0x506c
  * and a 6*0xf0 table at 0x5294, and asserted sizeof == 0x5834 "from
- * MgBounceAndPounce_Spawn's own operator new(0x5834) -- the third and
+ * dScMgJump_c_classInit's own operator new(0x5834) -- the third and
  * strongest confirmation". All four belong to dScMgJump_c.
  *
- * MgBounceAndPounce_Spawn IS dScMgJump_c's FACTORY, and its own body says
+ * dScMgJump_c_classInit IS dScMgJump_c's FACTORY, and its own body says
  * so: it writes THIS class's vtable, and then writes _ZTV11dScMgJump_c --
  * dScMgJump_c's own vtable, confirmed by RTTI -- and only AFTER that derived
  * vptr store does it construct the Model at 0x501c and the two tables.

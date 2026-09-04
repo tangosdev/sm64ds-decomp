@@ -13,7 +13,11 @@ extern void func_ov006_020c6f70();
 extern void func_ov006_020c6f3c();
 }
 
-extern "C" void *MgBounceAndPounce_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves dScMgJump_c through RTTI,
+ * allocation size, vtable identity, and the MG_JUMP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgBounceAndPounce_Spawn. */
+extern "C" void *dScMgJump_c_classInit(void)
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x5834);
     if (p) {

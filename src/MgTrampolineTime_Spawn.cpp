@@ -15,7 +15,11 @@ extern void func_ov006_021225a8();
 extern void func_ov006_02120a54(void *);
 }
 
-extern "C" void *MgTrampolineTime_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves dScMgTrampoline_c through RTTI,
+ * allocation size, vtable identity, and the MG_TRAMPOLINE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MgTrampolineTime_Spawn. */
+extern "C" void *dScMgTrampoline_c_classInit(void)
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x5dc8);
     if (p) {

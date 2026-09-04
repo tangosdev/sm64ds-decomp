@@ -11,7 +11,12 @@
    `this`, same as every other dScMgBase_c leaf. Own fields observed only
    from slots 0/5/6/9/16/17/18 directly; fields touched only by non-virtual
    helper functions (still raw extern "C" calls, not migrated methods) are
-   not represented here. */
+   not represented here.
+ *
+ * SM64DS RTTI names the implementation dScMgLuigi_c. The reconstructed factory
+ * dScMgLuigi_c_classInit (historical alias MgWanted_Spawn) installs this class's
+ * cartridge vtable for the MG_LUIGI registry profile.
+ */
 struct dScMgLuigi_c : dScMgBase_c {
     virtual ~dScMgLuigi_c();
     virtual s32 InitResources();          /* slot 0 */
