@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov015/daObjBk_Ukisima_c, hand-curated.
- * 4 function(s), .text 0x02112bd0..0x02112cb8.
+ * 5 function(s), .text 0x02112bd0..0x02112cf4.
  *
  * Bob-omb Battlefield's spinning disc. It adds no state of its own to
  * daObjKaitendai_c (see include/daObjBk_Ukisima_c.h) and overrides only the two
@@ -21,6 +21,13 @@
  *   [1] 0x02112c20  src/_ZN17daObjBk_Ukisima_cD0Ev.cpp
  *   [2] 0x02112c84  src/_ZN17daObjBk_Ukisima_c16CleanupResourcesEv.cpp
  *   [3] 0x02112c98  src/_ZN17daObjBk_Ukisima_c13InitResourcesEv.cpp
+ *   [4] 0x02112cb8  src/daObjBk_Ukisima_c_classInit.c
+ *
+ * THE FIFTH IS THE FACTORY. daObjBk_Ukisima_c_classInit (historical alias
+ * RotatingPlatformWf_Spawn) is the BK_UKISIMA registry profile's spawn function
+ * and sits immediately after InitResources in the ROM's own .text order, so it
+ * is part of this TU. It keeps C linkage and is written first here, being the
+ * highest-address member.
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources of
@@ -52,6 +59,38 @@ int func_ov002_020b676c(daObjBk_Ukisima_c *self, ResourceDescriptor *descriptor,
 int func_ov002_020b66a8(daObjBk_Ukisima_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov015_021147a4;
 extern short data_ov015_02114794;
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h / decl_common.h as the legacy file did --
+   this TU declares in place, and pulling new decl_*.h headers in changes what
+   the TU sees and can perturb members that already match. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV16daObjKaitendai_c[];
+extern int _ZTV17daObjBk_Ukisima_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- daObjBk_Ukisima_c_classInit, 0x02112cb8, size 0x3c        */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjBk_Ukisima_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjBk_Ukisima_c through
+   RTTI, allocation size, most-derived vtable identity, and the BK_UKISIMA
+   registry profile; later EAD lineage supplies classInit. Exact original
+   spelling is not preserved. Historical alias: RotatingPlatformWf_Spawn.
+
+   Two vptr stores, not one: the inlined daObjKaitendai_c constructor writes its
+   own vptr and this class's write follows it. 800 = 0x320 = the whole object;
+   this class adds no fields. */
+extern "C" int *daObjBk_Ukisima_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(800);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV16daObjKaitendai_c;
+        p[0] = (int)_ZTV17daObjBk_Ukisima_c;
+    }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

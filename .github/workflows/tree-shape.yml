@@ -1,0 +1,96 @@
+# The two suites whose inputs are the TREE, not `tools/`.
+#
+# tool-tests.yml runs 29 modules on every PR touching `tools/**` or `nearmiss/**`. That
+# filter is right for the other 27: their inputs are the tools themselves. It is wrong
+# for these two, whose assertions read `config/**/delinks.txt`, `config/**/symbols.txt`
+# and `src/**` -- so a PR that renames a source and rewrites its enrollment changes
+# exactly what they check, matches neither path, and never runs them.
+#
+# Measured 2026-09-04, and this is not hypothetical. The actor/process profile
+# reconstruction campaign renamed 310 one-symbol sources to the NSMBW convention across
+# 21 PRs. `test_srcpath.py::EnrolmentMatchesTheTree` fails on every one of them. Two PRs
+# in that campaign touched `tools/` and so ran the job -- one of them, #2250, went red.
+# The other nineteen touched neither path, never ran it, and displayed a full green
+# check list. A missing check reads exactly like a passing one, which is the same shape
+# as dead-references.yml's own reason for existing.
+#
+# WHY A SEPARATE JOB rather than adding `src/**` to tool-tests.yml. That filter would
+# drag all 519 assertions and a `pip install -r tools/requirements.txt` onto essentially
+# every PR in the repository -- every match, every promotion, every rename. These two
+# modules are stdlib-only (srcpath -> relocs; bytegate -> chaos_db_ci, relocs; both
+# stdlib), so this job needs no wheels and no toolchain. Keeping it separate is what
+# lets the filter be wide.
+#
+# WHAT THIS DOES NOT COVER. Nothing here compiles anything or reads the ROM. These are
+# tree-shape assertions: enrollment resolves both ways, one-symbol sources sit on a
+# legal filename, nothing enrolled points outside `src/`. The byte gates stay where they
+# are -- pr-validate.yml relays those to the private build box.
+name: tree shape
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "config/**/delinks.txt"
+      - "config/**/symbols.txt"
+      # The modules under test and what they derive names with. tu_names.candidate_stem
+      # became load-bearing for test_srcpath when the reconstructed-filename rule landed:
+      # a change there reds 310 files at once, so it belongs in this filter.
+      - "tools/srcpath.py"
+      - "tools/tu_names.py"
+      - "tools/bytegate.py"
+      - "tools/relocs.py"
+      - "tools/chaos_db_ci.py"
+      - "tools/test_srcpath.py"
+      - "tools/test_bytegate.py"
+      - ".github/workflows/tree-shape.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "config/**/delinks.txt"
+      - "config/**/symbols.txt"
+      - "tools/srcpath.py"
+      - "tools/tu_names.py"
+      - "tools/bytegate.py"
+      - "tools/relocs.py"
+      - "tools/chaos_db_ci.py"
+      - "tools/test_srcpath.py"
+      - "tools/test_bytegate.py"
+      - ".github/workflows/tree-shape.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Deliberately NOT sharing a group with tool-tests.yml or the range gates: a shared
+  # group cancels the sibling rather than the stale run of the same check, which is how
+  # #2042 lost its merge check.
+  group: tree-shape-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tree-shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history for the same reason tool-tests.yml takes it: test_srcpath and
+          # test_bytegate resolve tracked paths, and a shallow checkout makes them
+          # assert against a one-commit repository.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tree-shape tests
+        # ONE invocation, so the "Ran N tests" line is the whole claim and a module that
+        # stops contributing is visible as a drop in N. No pip step on purpose: if either
+        # module ever grows a third-party import, this job fails at COLLECTION -- loudly,
+        # not silently -- and that is the signal to decide whether it still belongs here.
+        # Counts at time of writing: test_srcpath 51, test_bytegate 18, total 69.
+        run: |
+          python -m unittest -v \
+            tools.test_srcpath \
+            tools.test_bytegate

@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov015/daObjBk_Rotebar_c, hand-curated.
- * 6 function(s), .text 0x02112944..0x02112ba0.
+ * 7 function(s), .text 0x02112944..0x02112bd0.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov015 0x021146dc  "17daObjBk_Rotebar_c"
@@ -29,6 +29,13 @@
  *   [3] 0x02112a24  src/_ZN17daObjBk_Rotebar_c6RenderEv.cpp
  *   [4] 0x02112a4c  src/_ZN17daObjBk_Rotebar_c8BehaviorEv.cpp
  *   [5] 0x02112b04  src/_ZN17daObjBk_Rotebar_c13InitResourcesEv.cpp
+ *   [6] 0x02112ba0  src/daObjBk_Rotebar_c_classInit.c
+ *
+ * THE SEVENTH IS THE FACTORY. daObjBk_Rotebar_c_classInit (historical alias
+ * RotatingBridge_Spawn) is the BK_ROTEBAR registry profile's spawn function and
+ * sits immediately after InitResources in the ROM's own .text order, so it is
+ * part of this TU. It keeps C linkage and is written first here, being the
+ * highest-address member.
  */
 
 #include "daObjBk_Rotebar_c.h"
@@ -68,6 +75,33 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 /* Sound::PlayLong keeps its mangled spelling for the same reason every other
    caller in the tree does: no shared header declares it. */
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 a, u32 id, const void *pos, s16 f);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h / decl_common.h as the legacy file did --
+   this TU declares in place, and pulling new decl_*.h headers in changes what
+   the TU sees and can perturb members that already match. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern int _ZTV17daObjBk_Rotebar_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjBk_Rotebar_c_classInit, 0x02112ba0, size 0x30        */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjBk_Rotebar_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjBk_Rotebar_c through
+   RTTI, allocation size, vtable identity, and the BK_ROTEBAR registry profile;
+   later EAD lineage supplies classInit. Exact original spelling is not
+   preserved. Historical alias: RotatingBridge_Spawn.
+
+   804 = 0x324 = the whole object, which is the literal the class's size assert
+   in include/daObjBk_Rotebar_c.h is taken from. One vptr store only: the base
+   here is dBgActor_c and this class derives from it directly. */
+extern "C" int *daObjBk_Rotebar_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(804);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV17daObjBk_Rotebar_c; }
+    return p;
 }
 
 /* -------------------------------------------------------------------------- */

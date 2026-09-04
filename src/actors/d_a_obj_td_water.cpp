@@ -1,6 +1,6 @@
 //cpp
 /* Production translation unit for ov032/daObjTdWater_c, hand-curated.
- * 6 function(s), .text 0x02112698..0x021128b8.
+ * 7 function(s), .text 0x02112698..0x021128f0.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov032 0x0211396c  "14daObjTdWater_c"
@@ -26,6 +26,14 @@
  *   [3] 0x02112788  src/_ZN14daObjTdWater_c6RenderEv.cpp
  *   [4] 0x021127bc  src/_ZN14daObjTdWater_c8BehaviorEv.cpp
  *   [5] 0x021127f0  src/_ZN14daObjTdWater_c13InitResourcesEv.cpp
+ *   [6] 0x021128b8  src/daObjTdWater_c_classInit.c
+ *
+ * THE SEVENTH IS THE FACTORY. daObjTdWater_c_classInit (historical alias
+ * HugeWater_Spawn) is the TD_WATER registry profile's spawn function and sits
+ * immediately after InitResources in the ROM's own .text order, so it is part
+ * of this TU. It was outside it only because the promotion predated the
+ * profile-reconstruction campaign. It keeps C linkage and is written first
+ * here, being the highest-address member.
  */
 
 #include "daObjTdWater_c.h"
@@ -61,6 +69,38 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 /* Event has no shared header anywhere in the tree -- every caller declares it
    locally, so this matches the house spelling rather than inventing one. */
 int _ZN5Event6GetBitEj(u32 bit);
+
+/* The factory's own dependencies, restated here rather than pulled in through
+   decl_ActorBase.h / decl_Platform.h / decl_TextureTransformer.h /
+   decl_common.h as the legacy file did -- this TU declares in place, and
+   reaching a shared header would change what the rest of the TU sees. */
+extern void *_ZN7fBase_cnwEj(unsigned size);
+extern void _ZN10dBgActor_cC2Ev(void *self);
+extern void _ZN18TextureTransformerC1Ev(void *self);
+extern int _ZTV14daObjTdWater_c[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- daObjTdWater_c_classInit, 0x021128b8, size 0x38           */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjTdWater_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjTdWater_c through RTTI,
+   allocation size, vtable identity, and the TD_WATER registry profile; later
+   EAD lineage supplies classInit. Exact original spelling is not preserved.
+   Historical alias: HugeWater_Spawn.
+
+   820 = 0x334, the class's own size: dBgActor_c's 0x320 plus the
+   TextureTransformer at 0x320, whose constructor the factory runs by hand
+   after the base's. */
+extern "C" int *daObjTdWater_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(820);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV14daObjTdWater_c;
+        _ZN18TextureTransformerC1Ev((char *)p + 0x320);
+    }
+    return p;
 }
 
 /* ROM ordinal 5 -- ...13InitResourcesEv, 0x021127f0, size 0xc8 */

@@ -25,6 +25,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daBasabasa_c. The reconstructed
+ * factory daBasabasa_c_classInit (historical alias
+ * Swoop_Spawn) constructs it for the BASABASA
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

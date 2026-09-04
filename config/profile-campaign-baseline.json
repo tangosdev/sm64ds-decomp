@@ -1,0 +1,158 @@
+{
+  "_comment": "Coined actor_renames.tsv claims that config/**/symbols.txt does not carry at that address, banked so tools/check_profile_campaign.py fails only on NEW drift. An entry stops matching as soon as either side changes, so rebanking cannot silence an address permanently -- only the exact divergence someone looked at. Every entry here is a real defect awaiting an owner, not an accepted exception; the tool prints the banked count on every run so a green is not read as a clean file. Seven are the ledger running AHEAD of the tree (a name the build never emitted) and ten are it running BEHIND (a rename nobody recorded).",
+  "known": [
+    {
+      "module": "ov002",
+      "address": "0x020b56d8",
+      "claimed": "QuestionSwitch_Spawn",
+      "actual": [
+        "daObjHatenaSwitch_c_classInit"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov002",
+      "address": "0x020f085c",
+      "claimed": "InvisibleSecret_Spawn",
+      "actual": [
+        "daSCoin_c_Spawn"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov002",
+      "address": "0x02108e38",
+      "claimed": "QuestionSwitch_SpawnInfo",
+      "actual": [
+        "g_profile_HATENA_SWITCH"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov009",
+      "address": "0x02112048",
+      "claimed": "DockPole_Spawn",
+      "actual": [
+        "daObjMc_Metalnet_c_classInit"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov009",
+      "address": "0x02113abc",
+      "claimed": "DockPole_SpawnInfo",
+      "actual": [
+        "g_profile_MC_METALNET"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov029",
+      "address": "0x02111340",
+      "claimed": "daObjWcObj01_c_classInit",
+      "actual": [
+        "daObjWcObj01_c_Spawn"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov029",
+      "address": "0x02112044",
+      "claimed": "daObjWcObj06_c_classInit",
+      "actual": [
+        "daObjWcObj06_c_Spawn"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov029",
+      "address": "0x02113c08",
+      "claimed": "g_profile_WC_OBJ01",
+      "actual": [
+        "daObjWcObj01_c_SpawnInfo"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov029",
+      "address": "0x02113f20",
+      "claimed": "FloatOnWaterPlatformWdwRectangle_SpawnInfo",
+      "actual": [
+        "daObjWcObj06_c_SpawnInfo"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov043",
+      "address": "0x0211176c",
+      "claimed": "daObjKm1_Dorifu_c_classInit",
+      "actual": [
+        "StairsBdw_Spawn"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov043",
+      "address": "0x021124fc",
+      "claimed": "g_profile_KM1_DORIFU",
+      "actual": [
+        "StairsBdw_SpawnInfo"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov045",
+      "address": "0x02112cd0",
+      "claimed": "g_profile_KM2_AGARU",
+      "actual": [
+        "FireSeaElevator_SpawnInfo"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov065",
+      "address": "0x0211b328",
+      "claimed": "TTC_MovingBar_Spawn",
+      "actual": [
+        "daObjCtMecha05_c_classInit"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov065",
+      "address": "0x0211d290",
+      "claimed": "TTC_MovingBar_SpawnInfo",
+      "actual": [
+        "g_profile_CT_MECHA05"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov070",
+      "address": "0x02120520",
+      "claimed": "daPropeller_Heyho_c_classInit",
+      "actual": [
+        "FlyGuy_Spawn"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt, so the build has never emitted it. This is the PROPELLER_HEYHO shape the gate was added for. Banked to land the gate green, NOT accepted -- the fix is to apply the rename or retract the row."
+    },
+    {
+      "module": "ov100",
+      "address": "0x02147328",
+      "claimed": "PathLift_Spawn",
+      "actual": [
+        "daObjPathLift_c_classInit"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    },
+    {
+      "module": "ov100",
+      "address": "0x02148558",
+      "claimed": "PathLift_SpawnInfo",
+      "actual": [
+        "g_profile_PATH_LIFT"
+      ],
+      "note": "ledger BEHIND the tree: symbols.txt already carries the campaign name and no ledger row was appended to record it, so this row asserts a superseded spelling. Banked to land the gate green, NOT accepted -- the fix is one appended ledger row."
+    }
+  ]
+}

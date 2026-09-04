@@ -6,11 +6,7 @@
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
 src/actors/d_a_obj_bk_billboard.cpp:
     complete
-    .text start:0x021111a0 end:0x021112dc
-
-src/daObjBkBillboard_c_classInit.c:
-    complete
-    .text start:0x021112dc end:0x02111314
+    .text start:0x021111a0 end:0x02111314
 
 src/_ZN14KnockDownPlankD1Ev.cpp:
     complete
@@ -210,27 +206,15 @@ src/daObjBk_Lift_c_classInit.c:
 
 src/actors/d_a_obj_bk_rotebar.cpp:
     complete
-    .text start:0x02112944 end:0x02112ba0
-
-src/daObjBk_Rotebar_c_classInit.c:
-    complete
-    .text start:0x02112ba0 end:0x02112bd0
+    .text start:0x02112944 end:0x02112bd0
 
 src/actors/d_a_obj_bk_ukisima.cpp:
     complete
-    .text start:0x02112bd0 end:0x02112cb8
-
-src/daObjBk_Ukisima_c_classInit.c:
-    complete
-    .text start:0x02112cb8 end:0x02112cf4
+    .text start:0x02112bd0 end:0x02112cf4
 
 src/actors/d_a_obj_bk_fall_block.cpp:
     complete
-    .text start:0x02112cf4 end:0x02112dd0
-
-src/daObjBk_Fall_Block_c_classInit.c:
-    complete
-    .text start:0x02112dd0 end:0x02112e0c
+    .text start:0x02112cf4 end:0x02112e0c
 
 src/__sinit_ov015_02112f9c.c:
     complete

@@ -14,10 +14,15 @@
  * the readable spelling while relocation isolation binds that spelling back to
  * the cartridge table.
  *
- * Both TtcRotatingCube_Spawn and TtcRotatingPrism_Spawn allocate 0x3d8 bytes,
+ * Both daObjCtRotateBlock_c_classInit_CT_MECHA01 and daObjCtRotateBlock_c_classInit_CT_MECHA02 allocate 0x3d8 bytes,
  * construct this exact base/member chain, and install the same vtable. Their
  * actor IDs select mVariant during InitResources, so they are two actor entries
  * for one class rather than evidence for two C++ types.
+ *
+ * SM64DS RTTI names the implementation daObjCtRotateBlock_c. The reconstructed
+ * factory daObjCtRotateBlock_c_classInit_CT_MECHA01 (historical alias
+ * TtcRotatingCube_Spawn) constructs it for the CT_MECHA01
+ * registry profile.
  */
 struct TtcRotatingCube : dBgActor_c {
     Model mRotatingModel;                 /* 0x320 */

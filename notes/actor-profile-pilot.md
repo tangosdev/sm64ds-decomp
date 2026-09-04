@@ -33,18 +33,70 @@ The class and profile namespaces are demonstrably independent.  Examples include
 `g_profile_<ROM_ID>` is a consistent Tier-B spelling for the 20 sampled globals.
 All 391 non-sentinel ROM debug identifiers are unique, so the spelling itself has no
 full-population collision.  That does not make it a surviving SM64DS symbol.  One
-sample, `C1_TRAP`, is deliberately marked do-not-apply because its numeric registry
-pointer is overlay-multiplexed even though the profile ID is unique.
+sample, `C1_TRAP`, was long marked do-not-apply because its numeric registry pointer
+is overlay-multiplexed even though the profile ID is unique; it is now resolved by
+name correspondence and stays at confidence `B` for that reason (see
+[below](#how-the-ten-are-resolved-and-what-that-does-not-prove)).
 
 ## Evidence boundary
 
 - **Tier A:** actor-table index and pointer, literal ROM debug string and string
   address, descriptor bytes, factory pointer, allocation size, vtable, RTTI class,
   inheritance, and overlay/TU observations.
-- **Tier B:** `g_profile_<ID>`, `<Class>_classInit`, and Nintendo-style filenames.
+- **Tier B:** `g_profile_<ID>`, `<Class>_classInit`, `<Class>_classInit_<ID>`, and
+  Nintendo-style filenames.
   These are reconstruction candidates, never relabeled as ROM symbols.
 - **Tier C:** English/community labels such as `WaterfallMist`, `RabbitKey`,
   `Goomba`, and `FlyGuy`.
+
+### Naming a class that several profiles reach
+
+The NSMBW `className##_classInit` spelling assumes one factory per class.  SM64DS
+breaks that assumption 118 times: `daObjSeesaw_c` is reached from seven registry
+entries, each with its own factory function at its own address, and one class
+cannot supply seven distinct symbol names -- nor seven distinct source filenames.
+
+Where a class has more than one live factory, the profile id disambiguates it:
+
+| class factories | proposed spelling |
+| --- | --- |
+| one | `<Class>_classInit` |
+| more than one | `<Class>_classInit_<PROFILE_ID>` |
+
+Every component is ROM-proven -- the class from RTTI, the profile id from the arm9
+debug table, and the pairing between them from the descriptor's factory pointer --
+so only the convention of joining them is ours, which is why these stay Tier B.
+The suffix is a decomp-local disambiguator, not recovered Nintendo syntax: no
+SM64DS macro or `__FILE__` string is known that spells a profile-suffixed factory.
+
+The suffix is a bijection or it is nothing.  If one factory address were reachable
+from two profile ids the suffix would give one function two names, so
+`resolve_factory_name()` raises instead of guessing which id owns it.  Resolving a
+collision never erases it: `proposed_factory_collision` still lists every address
+that shares the class, and `factory_name_resolution` records how the name was
+settled.
+
+### The `factory_filename` column
+
+`class_filename_candidate` is the NSMBW-convention stem `tools/tu_names.py` derives
+from the ROM's own RTTI class name (`daObjKm2_Ami_Bou_c` -> `d_a_obj_km2_ami_bou`).
+That stem belongs to the CLASS, so the 42 shared classes above would have several
+factories claiming one file.  `factory_filename` is the per-factory target, built by
+the same rule as the symbol:
+
+- stem = `class_filename_candidate` with `.cpp` stripped;
+- when two or more distinct factory addresses claim that stem, append `_` and the
+  lowercased ROM profile id -- `d_a_trs_trap_teresapit` beside `d_a_trs_trap_kaidan`;
+- the extension is copied from the factory's **current** source file and never
+  changed.  A `.c` -> `.cpp` rename changes the language mode the pinned mwccarm
+  compiles under and would cost the byte match, so `d_s_boot.c` keeps its `.c` even
+  though the stem is written `.cpp` in `class_filename_candidate`;
+- the column is empty for a row with no recommended factory rename or no current
+  source file.
+
+390 rows carry one and all 390 are distinct; `--check` and the tool tests both
+assert that.  Like the symbol, the stem is Tier B and the profile-id suffix is a
+decomp-local convention.
 
 The lineage reference was pinned at NSMBW-Decomp revision
 [`2e010f8708d8232c736b1ece507400dfd76aaa9c`](https://github.com/NSMBW-Community/NSMBW-Decomp/commit/2e010f8708d8232c736b1ece507400dfd76aaa9c).
@@ -157,8 +209,46 @@ The registry is not a simple global `actor_id -> one descriptor object` map.  Th
 extractor pass resolves all 391 indices, but 10 indices have two valid allocating
 interpretations because mutually exclusive overlays reuse the same virtual address.
 For example, pointer `0x02112ac0` means `C1_TRAP`/`daObjC1_Trap_c` in ov010 and a
-different `CT_MECHA12L` profile in ov035.  The dry-run map therefore refuses both
-`C1_TRAP` renames without additional overlay-context policy.
+different `CT_MECHA12L` profile in ov035.
+
+### How the ten are resolved, and what that does not prove
+
+All ten are now assigned, by **RTTI name correspondence** rather than by the
+pointer.  Four cartridge lines of evidence agree on the same 1:1 assignment for
+every pair:
+
+1. each overlay holds its own descriptor at the shared address, and that
+   descriptor's factory word equals that overlay's own operator-new factory --
+   true for all 20 candidate rows;
+2. each overlay involved carries exactly one Itanium-mangled RTTI name string:
+   `14daObjC1_Trap_c` in ov010 against `16daObjCtMecha10_c` in ov035, and so on
+   for all ten;
+3. the arm9 debug profile-id string transliterates onto that class name
+   (`C1_TRAP`/`daObjC1_Trap_c`, `MC_METALNET`/`daObjMc_Metalnet_c`, ...); and
+4. names already in the tree, applied independently of this table, agree: ov026
+   `g_profile_WL_POLELIFT`, ov033 `g_profile_TT_FUTA`, plus the surviving coined
+   `MetalNet_SpawnInfo` (ov009), `SlidingIce_SpawnInfo` (ov027) and
+   `StairsBdw_SpawnInfo` (ov043).
+
+**This is a name-correspondence join over ROM-proven endpoints, not a byte proof
+of overlay selection.**  Both endpoints are Tier A -- the descriptor bytes in each
+overlay, and the RTTI name string in each overlay -- but the edge joining them is
+a spelling argument, so resolved rows stay confidence **B**, never `B+`.
+
+The negative result that makes the join necessary is worth keeping: an exhaustive
+scan of `arm9_dec.bin` for a 391-entry actor-id -> overlay-id table (byte, half
+and word strides, strict and relaxed) **found nothing**.  There is no such table
+to consult, because these overlays are selected per level, not per actor id.  If
+one is ever found it supersedes this join outright.
+
+The measured ambiguity is preserved rather than erased: `registry_candidate_count`
+stays 2 and `overlay_ambiguous` stays true on both rows.  A new
+`overlay_resolution` column marks the winner
+`resolved_by_rtti_name_correspondence` and the loser `superseded_by_ovNNN`.  A
+superseded row is a phantom reading of the winning overlay's factory, so it is
+never recommended for rename and never disambiguated.  The table is guarded: if a
+regenerated class identity no longer matches it, the tool raises rather than
+silently re-pointing a rename.
 
 This is not the same as the stale ov098 `MgShellSmash_SpawnInfo` alias at
 `0x0213c434`.  That word points at an ordinary `dActor_c` virtual method, not an
@@ -170,8 +260,9 @@ the sole class-initializing candidate for `MG_CURLING_J`.
 1. **Is `SpawnInfo` functioning as a profile?** Yes, as the 0x1c actor-profile
    descriptor.  A separate 0x08 base/scene-profile form also exists.
 2. **Is `g_profile_<ROM_ID>` consistent?** Yes across the 20-row pilot, with unique
-   ROM IDs across all 391 entries.  Overlay-multiplexed pointers still require
-   context before applying a rename.
+   ROM IDs across all 391 entries.  The ten overlay-multiplexed pointers are now
+   assigned by RTTI name correspondence, which lifts the recommendation to all 391
+   profile descriptors and 390 factories while keeping those ten at confidence B.
 3. **Are profile and class names separate namespaces?** Yes, directly and repeatedly.
 4. **Can the original type be called `ActorProfile`?** Not as a recovered SM64DS
    spelling.  Documentation should say “actor/process profile descriptor” and retain

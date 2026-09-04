@@ -12,6 +12,11 @@
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
+ *
+ * SM64DS RTTI names the implementation daObjCtKaitendai_c. The reconstructed
+ * factory daObjCtKaitendai_c_classInit_CT_MECHA06 (historical alias
+ * TtcRotatingGear_Spawn) constructs it for the CT_MECHA06
+ * registry profile.
  */
 
 #ifdef __cplusplus

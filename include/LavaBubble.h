@@ -5,7 +5,7 @@
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN10LavaBubbleD1Ev` destroys each member, and
- * `LavaBubble_Spawn` constructs the same types at the same offsets before
+ * `daBbl_c_classInit` constructs the same types at the same offsets before
  * storing `_ZTV10LavaBubble`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
@@ -20,9 +20,14 @@
  *   - unk_130 = dCcAc_c.hitFlags
  *   - unk_134 = dCcAc_c.otherOwner
  *
- * SIZE IS THE ROM'S OWN: `LavaBubble_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daBbl_c_classInit` calls
  * `fBase_c::operator new(796)` -- 0x31c -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daBbl_c. The reconstructed
+ * factory daBbl_c_classInit (historical alias
+ * LavaBubble_Spawn) constructs it for the BUBBLE
+ * registry profile.
  */
 
 #include "dEnemyBase_c.h"

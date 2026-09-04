@@ -32,7 +32,7 @@ _ZN5Bully14UpdateRunStateEv kind:function(arm,size=0x70) addr:0x021171b0
 _ZN5Bully16UpdateDeathStateEv kind:function(arm,size=0xf0) addr:0x02117220
 _ZN5Bully8BehaviorEv kind:function(arm,size=0x114) addr:0x02117310
 _ZN5Bully13InitResourcesEv kind:function(arm,size=0x20) addr:0x02117424
-Bully_Spawn kind:function(arm,size=0x5c) addr:0x02117444
+daDonketu_c_classInit kind:function(arm,size=0x5c) addr:0x02117444
 _ZN8BigBullyD1Ev kind:function(arm,size=0x54) addr:0x021174a0
 _ZN8BigBullyD0Ev kind:function(arm,size=0x68) addr:0x021174f4
 _ZN8BigBully14UpdateRunStateEv kind:function(arm,size=0x70) addr:0x0211755c
@@ -40,7 +40,7 @@ _ZN8BigBully16UpdateDeathStateEv kind:function(arm,size=0x80) addr:0x021175cc
 _ZN8BigBully6RenderEv kind:function(arm,size=0x38) addr:0x0211764c
 _ZN8BigBully8BehaviorEv kind:function(arm,size=0x100) addr:0x02117684
 _ZN8BigBully13InitResourcesEv kind:function(arm,size=0x198) addr:0x02117784
-BigBully_Spawn kind:function(arm,size=0x5c) addr:0x0211791c
+daBDonketu_c_classInit kind:function(arm,size=0x5c) addr:0x0211791c
 _ZN12MetalNetLiftD1Ev kind:function(arm,size=0x44) addr:0x02117978
 _ZN12MetalNetLiftD0Ev kind:function(arm,size=0x58) addr:0x021179bc
 func_ov064_02117a14 kind:function(arm,size=0x30) addr:0x02117a14
@@ -80,7 +80,7 @@ _ZN10LavaBubble6RenderEv kind:function(arm,size=0x8) addr:0x02118848
 _ZN10LavaBubble8BehaviorEv kind:function(arm,size=0x188) addr:0x02118850
 _ZN10LavaBubble13InitResourcesEv kind:function(arm,size=0x130) addr:0x021189d8
 _ZN10LavaBubble13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02118b08
-LavaBubble_Spawn kind:function(arm,size=0x40) addr:0x02118b10
+daBbl_c_classInit kind:function(arm,size=0x40) addr:0x02118b10
 _ZN17BowserPuzzlePieceD1Ev kind:function(arm,size=0x44) addr:0x02118b50
 _ZN17BowserPuzzlePieceD0Ev kind:function(arm,size=0x58) addr:0x02118b94
 _ZN19BowserPuzzleManagerD1Ev kind:function(arm,size=0x24) addr:0x02118bec
@@ -117,7 +117,7 @@ _ZN9JetStream16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021198b0
 _ZN9JetStream6RenderEv kind:function(arm,size=0x8) addr:0x021198b4
 _ZN9JetStream8BehaviorEv kind:function(arm,size=0x70) addr:0x021198bc
 _ZN9JetStream13InitResourcesEv kind:function(arm,size=0xec) addr:0x0211992c
-JetStream_Spawn kind:function(arm,size=0x40) addr:0x02119a18
+daWater_Hakidasi_c_classInit kind:function(arm,size=0x40) addr:0x02119a18
 _ZN9WaterRingD1Ev kind:function(arm,size=0x48) addr:0x02119a58
 _ZN9WaterRingD0Ev kind:function(arm,size=0x5c) addr:0x02119aa0
 func_ov064_02119afc kind:function(arm,size=0x164) addr:0x02119afc
@@ -132,7 +132,7 @@ _ZN9WaterRing16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02119fc4
 _ZN9WaterRing6RenderEv kind:function(arm,size=0x34) addr:0x02119fc8
 _ZN9WaterRing8BehaviorEv kind:function(arm,size=0x94) addr:0x02119ffc
 _ZN9WaterRing13InitResourcesEv kind:function(arm,size=0x120) addr:0x0211a090
-WaterRing_Spawn kind:function(arm,size=0x50) addr:0x0211a1b0
+daWater_Ring_c_classInit kind:function(arm,size=0x50) addr:0x0211a1b0
 _ZN13TreasureChestD1Ev kind:function(arm,size=0x38) addr:0x0211a200
 _ZN13TreasureChestD0Ev kind:function(arm,size=0x4c) addr:0x0211a238
 _ZN13TreasureChest20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x0211a284
@@ -156,7 +156,7 @@ _ZN4Clam16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0211a9f4
 _ZN4Clam6RenderEv kind:function(arm,size=0x28) addr:0x0211aa30
 _ZN4Clam8BehaviorEv kind:function(arm,size=0x26c) addr:0x0211aa58
 _ZN4Clam13InitResourcesEv kind:function(arm,size=0xac) addr:0x0211acc4
-Clam_Spawn kind:function(arm,size=0x40) addr:0x0211ad70
+daObjShell_c_classInit kind:function(arm,size=0x40) addr:0x0211ad70
 data_ov064_0211adb0 kind:data(any) addr:0x0211adb0
 data_ov064_0211adbc kind:data(any) addr:0x0211adbc
 data_ov064_0211adc8 kind:data(any) addr:0x0211adc8
@@ -186,12 +186,12 @@ data_ov064_0211b768 kind:data(any) addr:0x0211b768
 _ZTV7daOts_c kind:data(any) addr:0x0211b768
 _ZTI11daDonketu_c kind:data(any) addr:0x0211b7fc
 _ZTS11daDonketu_c kind:data(any) addr:0x0211b808
-Bully_SpawnInfo kind:data(any) addr:0x0211b818
+g_profile_DONKETU kind:data(any) addr:0x0211b818
 data_ov064_0211b834 kind:data(any) addr:0x0211b834
 _ZTV5Bully kind:data(any) addr:0x0211b870
 _ZTI12daBDonketu_c kind:data(any) addr:0x0211b904
 _ZTS12daBDonketu_c kind:data(any) addr:0x0211b910
-BigBully_SpawnInfo kind:data(any) addr:0x0211b920
+g_profile_BOSS_DONKETU kind:data(any) addr:0x0211b920
 data_ov064_0211b93c kind:data(any) addr:0x0211b93c
 _ZTV8BigBully kind:data(any) addr:0x0211b978
 data_ov064_0211ba0c kind:data(any) addr:0x0211ba0c
@@ -232,7 +232,7 @@ data_ov064_0211bea0 kind:data(any) addr:0x0211bea0
 data_ov064_0211bea8 kind:data(any) addr:0x0211bea8
 _ZTS7daBbl_c kind:data(any) addr:0x0211beb0
 _ZTI7daBbl_c kind:data(any) addr:0x0211bebc
-LavaBubble_SpawnInfo kind:data(any) addr:0x0211bec8
+g_profile_BUBBLE kind:data(any) addr:0x0211bec8
 _ZTV10LavaBubble kind:data(any) addr:0x0211beec
 _ZTV7daBbl_c kind:data(any) addr:0x0211beec
 data_ov064_0211bf68 kind:data(any) addr:0x0211bf68
@@ -269,7 +269,7 @@ data_ov064_0211c2dc kind:data(any) addr:0x0211c2dc
 data_ov064_0211c2e4 kind:data(any) addr:0x0211c2e4
 _ZTI18daWater_Hakidasi_c kind:data(any) addr:0x0211c2ec
 _ZTS18daWater_Hakidasi_c kind:data(any) addr:0x0211c2f8
-JetStream_SpawnInfo kind:data(any) addr:0x0211c310
+g_profile_WATER_HAKIDASI kind:data(any) addr:0x0211c310
 _ZTV9JetStream kind:data(any) addr:0x0211c334
 _ZTV18daWater_Hakidasi_c kind:data(any) addr:0x0211c334
 data_ov064_0211c3b0 kind:data(any) addr:0x0211c3b0
@@ -279,7 +279,7 @@ data_ov064_0211c3c8 kind:data(any) addr:0x0211c3c8
 data_ov064_0211c3d0 kind:data(any) addr:0x0211c3d0
 _ZTI14daWater_Ring_c kind:data(any) addr:0x0211c3dc
 _ZTS14daWater_Ring_c kind:data(any) addr:0x0211c3e8
-WaterRing_SpawnInfo kind:data(any) addr:0x0211c3fc
+g_profile_WATER_RING kind:data(any) addr:0x0211c3fc
 _ZTV9WaterRing kind:data(any) addr:0x0211c420
 _ZTV14daWater_Ring_c kind:data(any) addr:0x0211c420
 data_ov064_0211c49c kind:data(any) addr:0x0211c49c
@@ -295,7 +295,7 @@ _ZTV13TreasureChest kind:data(any) addr:0x0211c50c
 _ZTV11daObjTbox_c kind:data(any) addr:0x0211c50c
 _ZTI12daObjShell_c kind:data(any) addr:0x0211c588
 _ZTS12daObjShell_c kind:data(any) addr:0x0211c594
-Clam_SpawnInfo kind:data(any) addr:0x0211c5a4 ambiguous
+g_profile_OBJ_SHELL kind:data(any) addr:0x0211c5a4 ambiguous
 _ZTV4Clam kind:data(any) addr:0x0211c5c8
 _ZTV12daObjShell_c kind:data(any) addr:0x0211c5c8
 data_ov064_0211c610 kind:data(any) addr:0x0211c610 ambiguous

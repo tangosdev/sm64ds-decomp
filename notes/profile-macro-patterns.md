@@ -146,15 +146,32 @@ provides a reconstruction prior.
 ## Why the exact `classInit` macro remains unresolved
 
 The full registry creates a contradiction for naive global token concatenation:
-42 of 314 distinct `<Class>_classInit` proposals have multiple factory
-addresses.  The pilot includes same-class multi-profile cases in the same TU,
-notably `TERESA` and `BOSS_TERESA`, where two functions would both become
-`daTrs_c_classInit`.
+42 distinct `<Class>_classInit` proposals, covering 118 registry rows, have
+multiple factory addresses.  The pilot includes same-class multi-profile cases in
+the same TU, notably `TERESA` and `BOSS_TERESA`, where two functions would both
+become `daTrs_c_classInit`.
 
 Possible historical explanations include static/local linkage, unique generated
-suffixes, profile-qualified names, or a different source organization.  None is
-selected by the ROM evidence.  Inventing a compensating macro would hide this
-open question.
+suffixes, profile-qualified names, or a different source organization.  **None is
+selected by the ROM evidence, and that has not changed.**  The question this note
+opens is still open.
+
+What has changed is that the campaign no longer needs an answer to it in order to
+name those 118 functions and their files.  Where a class has more than one live
+factory the campaign appends the ROM profile id -- `daTrs_c_classInit_TERESA` and
+`daTrs_c_classInit_BOSS_TERESA`, in files `d_a_trs_teresa.cpp` and
+`d_a_trs_boss_teresa.cpp` -- recorded in the registry dataset's
+`factory_name_resolution` and `factory_filename` columns.
+
+That suffix is a **decomp-local disambiguator, explicitly not recovered Nintendo
+syntax**.  It is Tier B for the same reason the bare spelling is: the class comes
+from RTTI and the profile id from the arm9 debug table, both Tier A, but joining
+them with an underscore is the project's convention.  It is chosen because it is a
+bijection over ROM-proven endpoints and can be checked -- the generator raises if
+one factory address is reachable from two profile ids -- not because the cartridge
+shows it.  Inventing a compensating *macro* would still hide the open question, so
+none is proposed; see
+[`actor-profile-pilot.md`](actor-profile-pilot.md#naming-a-class-that-several-profiles-reach).
 
 ## Safest experimental source shape
 
@@ -190,7 +207,8 @@ High-confidence architectural findings:
 Lineage-supported findings:
 
 - `g_profile_<ROM_ID>` is a coherent reconstructed global-name scheme;
-- `<Class>_classInit` is coherent only where it is unique;
+- `<Class>_classInit` is coherent only where it is unique; where it is not, the
+  decomp-local `<Class>_classInit_<PROFILE_ID>` disambiguates it;
 - later `d_a*` / `d_sc*` organization is a useful filename prior.
 
 Unresolved:
