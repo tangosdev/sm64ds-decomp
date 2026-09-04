@@ -1824,7 +1824,22 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                PILLARBOXED instead: centred at the uniform scale, black margins
                either side, margin/2 == the bottom panel's pan_x0 (128) so the two
                DS screens line up exactly (ntr/ppu_sub.cpp's stacked wide branch). */
-            hx0 = !shown3d
+            /* THE MESSAGE LAYER IS NEVER BAND-SPLIT. BG3 (owner 3,
+               kOwnerName[3]) is engine A's dialogue/message layer -- its glyph
+               tiles are the box text (the box rect itself is blank, so only the
+               glyphs are `hit` here). The band-split is right for the sparse
+               corner HUD, which is meant to ride out to the edges, but it TEARS
+               a line of text: the two margin gaps open between the source-x
+               bands, so the run reads ~1.78x wide with 128px voids where the
+               splits fall. So BG3 takes the SAME pillarbox placement a full 2D
+               screen gets (x*uni + margin/2, centred at the uniform native
+               scale) whether or not a 3D layer is behind it -- native size,
+               centred, no tear -- while every other BG keeps the approved
+               band-split. One condition, no new state, and inert at 4:3 because
+               the whole arm is behind `if (ntr::widescreen)`. */
+            hx0 = (g_a[y][x].owner == 3)
+                          ? x * uni + margin / 2
+                          : !shown3d
                           ? x * uni + margin / 2
                           : (x < band_l) ? x * uni
                           : (x >= band_r) ? x * uni + margin
