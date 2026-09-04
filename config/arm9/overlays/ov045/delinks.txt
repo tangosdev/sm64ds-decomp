@@ -19,19 +19,19 @@ src/actors/d_a_obj_km2_nobiru.cpp:
     .text start:0x02111840 end:0x02111b14
     .data start:0x02112e3c end:0x02112efc
 
-src/_ZN16FloatingFloorBfsD1Ev.cpp:
+src/_ZN19daObjKm2_Ukishima_cD1Ev.cpp:
     complete
     .text start:0x02111b14 end:0x02111b64
 
-src/_ZN16FloatingFloorBfsD0Ev.cpp:
+src/_ZN19daObjKm2_Ukishima_cD0Ev.cpp:
     complete
     .text start:0x02111b64 end:0x02111bc8
 
-src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp:
+src/_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111bc8 end:0x02111bdc
 
-src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
+src/_ZN19daObjKm2_Ukishima_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111bf4
 

@@ -24,7 +24,7 @@
  *
  * TWO DESCENDANTS: daObjFl_Ukiyuka_c (FloatingFloorLllSmall, which has a second
  * factory FloatingFloorLllBig_Spawn building the same class with different
- * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
+ * parameters) and daObjKm2_Ukishima_c (daObjKm2_Ukishima_c).
  *
  * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
  * -- now `_ZN14daObjUkiyuka_c8BehaviorEv`:

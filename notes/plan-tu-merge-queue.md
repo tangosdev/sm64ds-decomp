@@ -177,7 +177,7 @@ batch is where shape-family amortization first pays.
 ```
 ov043 0x2111630  n=4  L=75   daObjKm1_Dorifu_c
 ov044 0x21111a0  n=7  L=88   OrangeBallBillboard   WHOLEMOD (module-edge both ends, corroborated)
-ov045 0x2111b14  n=5  L=99   FloatingFloorBfs
+ov045 0x2111b14  n=5  L=99   daObjKm2_Ukishima_c
 ov045 0x2111c30  n=5  L=74   TiltingPlatformBfs    pcov=3
 ov047 0x21111a0  n=4  L=68   daObjKm3_Kurumajiku_c pcov=2
 ov047 0x21114d4  n=5  L=96   daObjKm3_Dorifu_c

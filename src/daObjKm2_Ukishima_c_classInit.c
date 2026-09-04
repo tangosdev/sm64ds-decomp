@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int _ZTV14daObjUkiyuka_c[];
-extern int _ZTV16FloatingFloorBfs[];
+extern int _ZTV19daObjKm2_Ukishima_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV14daObjUkiyuka_c */
 /* Reconstructed source-style name: SM64DS proves daObjKm2_Ukishima_c through
@@ -17,7 +17,7 @@ int *daObjKm2_Ukishima_c_classInit(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14daObjUkiyuka_c;
-        p[0] = (int)_ZTV16FloatingFloorBfs;
+        p[0] = (int)_ZTV19daObjKm2_Ukishima_c;
     }
     return p;
 }

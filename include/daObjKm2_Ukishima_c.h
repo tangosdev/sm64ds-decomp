@@ -1,5 +1,5 @@
-#ifndef FLOATINGFLOORBFS_H
-#define FLOATINGFLOORBFS_H
+#ifndef DAOBJKM2_UKISHIMA_C_H
+#define DAOBJKM2_UKISHIMA_C_H
 
 #include "types.h"
 
@@ -12,7 +12,7 @@
  *
  *   _ZTI19daObjKm2_Ukishima_c  ov045 0x02112efc
  *   _ZTS19daObjKm2_Ukishima_c  ov045 0x02112f14
- *   _ZTV16FloatingFloorBfs  ov045 0x02112f50  (its record sits at V-4)
+ *   _ZTV19daObjKm2_Ukishima_c  ov045 0x02112f50  (its record sits at V-4)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjUkiyuka_c, ov002 0x02109104
  *
@@ -26,16 +26,16 @@
 
 #include "daObjUkiyuka_c.h"
 
-struct FloatingFloorBfs : daObjUkiyuka_c {
+struct daObjKm2_Ukishima_c : daObjUkiyuka_c {
     /* --- vtable --- */
-    virtual ~FloatingFloorBfs();   /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjKm2_Ukishima_c();   /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */
 };
 
-typedef char FloatingFloorBfs_size_must_be_0x32c[sizeof(FloatingFloorBfs) == 0x32c ? 1 : -1];
+typedef char FloatingFloorBfs_size_must_be_0x32c[sizeof(daObjKm2_Ukishima_c) == 0x32c ? 1 : -1];
 
 #endif /* __cplusplus */
 
-#endif /* FLOATINGFLOORBFS_H */
+#endif /* DAOBJKM2_UKISHIMA_C_H */
