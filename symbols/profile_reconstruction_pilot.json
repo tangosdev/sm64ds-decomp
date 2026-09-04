@@ -157,9 +157,9 @@
             "overlay": "ov052",
             "factory_module": "ov052",
             "profile_address": "0x021124fc",
-            "current_profile_name": "data_ov052_021124fc",
+            "current_profile_name": "g_profile_EMM_LOG",
             "factory_address": "0x02111410",
-            "current_factory_name": "daObjEmmLog_c_Spawn"
+            "current_factory_name": "daObjEmmLog_c_classInit"
           }
         ]
       },
@@ -201,9 +201,9 @@
             "overlay": "ov052",
             "factory_module": "ov052",
             "profile_address": "0x021124fc",
-            "current_profile_name": "data_ov052_021124fc",
+            "current_profile_name": "g_profile_EMM_LOG",
             "factory_address": "0x02111410",
-            "current_factory_name": "daObjEmmLog_c_Spawn"
+            "current_factory_name": "daObjEmmLog_c_classInit"
           }
         ]
       },
