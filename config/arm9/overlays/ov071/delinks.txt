@@ -243,7 +243,7 @@ src/MrI_Spawn.c:
     complete
     .text start:0x02121a1c end:0x02121a6c
 
-src/actors/daEyBm_c.cpp:
+src/game/actors/d_a_ey_bm.cpp:
     complete
     .text start:0x02121a6c end:0x02121fe4
 

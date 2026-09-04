@@ -1,8 +1,8 @@
 {
   "id": "ov047/daObjKm3_Kaitendai_c",
   "module": "ov047",
-  "source": "src/actors/daObjKm3_Kaitendai_c.cpp",
-  "promoted_source": "src/actors/daObjKm3_Kaitendai_c.cpp",
+  "source": "src/game/actors/d_a_obj_km3_kaitendai.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_km3_kaitendai.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",

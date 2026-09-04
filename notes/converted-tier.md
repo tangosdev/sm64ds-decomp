@@ -214,7 +214,7 @@ A GONE path is now resolved through the manifest (via `tools/tu_manifest.py`, pe
 naming the absorbing file:
 
 ```sh
-MOVED -- absorbed into src/actors/daObjPathLift_c.cpp by TU promotion
+MOVED -- absorbed into src/game/actors/d_a_obj_path_lift.cpp by TU promotion
          (ov100/daObjPathLift_c), which fails: No raw offset arithmetic ...;
          Calls things by real names, not mangled _Z
 ```

@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjKinokoTag_c",
   "module": "ov002",
-  "source": "src/actors/daObjKinokoTag_c.cpp",
-  "promoted_source": "src/actors/daObjKinokoTag_c.cpp",
+  "source": "src/game/actors/d_a_obj_kinoko_tag.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_kinoko_tag.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
