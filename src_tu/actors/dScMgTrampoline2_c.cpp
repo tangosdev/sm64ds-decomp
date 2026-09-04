@@ -139,6 +139,22 @@ struct Player { void St_Null_Init(); };
 /* shadow struct 'P2' */
 struct P2 { int words[2]; };
 
+union StateValue {
+    int words[2];
+    double asDouble;
+};
+
+struct TrampolineTerrorProfile {
+    void *(*spawn)(void);
+    s16 behaviorPriority;
+    s16 renderPriority;
+};
+
+typedef char TrampolineTerrorProfile_size_must_be_8[
+    sizeof(TrampolineTerrorProfile) == 8 ? 1 : -1];
+
+struct Tbl { int a, b, c; };
+
 /* shadow typedef 'u8' */
 typedef unsigned char u8;
 
@@ -267,7 +283,7 @@ extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short 
 extern int data_ov006_0213fbd0[];
 extern Player *func_ov006_020cedf0(void *c);
 extern int func_ov006_020ca7b8(void);
-extern double data_ov006_0213fbe0;
+extern union StateValue data_ov006_0213fbe0;
 extern void func_ov006_020ca840(void *c);
 extern struct P2 data_ov006_0213fbf0;
 extern int data_ov006_02140818;
@@ -305,6 +321,16 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void Deallocate(void *ptr);
 extern void func_ov006_02122e20(void *self, int a);
 extern int data_ov006_0213fc34[];
+extern int data_ov006_02134d40[];
+extern int data_ov006_02134d4c[];
+extern int data_ov006_02134d58[];
+extern int data_ov006_02134d34[];
+extern int data_ov006_02134d28[];
+extern int data_ov006_021373a4[];
+extern int data_ov006_021373fc[];
+extern int data_ov006_0213734c[];
+extern int data_ov006_021372f4[];
+extern int data_ov006_02137454[];
 extern void *_ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN11dScMgBase_cC2Ev(void *scene);
 extern void _ZN8Particle10SysTrackerC1Ev(void *tracker);
@@ -350,7 +376,42 @@ extern Model *func_ov006_02122c68(Model *model);
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_021245a8, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_021245a8, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MultiStore16(u16 val, char *dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
+ /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
+
+void *MgTrampolineTerror_Spawn(void);
+void func_ov006_02123b20(void);
+void func_ov006_02123b24(char *scene);
+void func_ov006_02123bf4(char *scene);
+void func_ov006_02123cb4(char *scene);
+void func_ov006_02124088(char *scene);
+
+/* Data owned by the same original TU. */
+int data_ov006_0213fbc4 = 1;
+TrampolineTerrorProfile MgTrampolineTerror_SpawnInfo = {
+    MgTrampolineTerror_Spawn, 0x181, 0x181
+};
+int data_ov006_0213fbd0[] = { (int)func_ov006_02123b20, 0 };
+P2 data_ov006_0213fbd8 = {{ (int)func_ov006_02124088, 0 }};
+StateValue data_ov006_0213fbe0 = {{ (int)func_ov006_02123b24, 0 }};
+S2 data_ov006_0213fbe8 = {{ (int)func_ov006_02123cb4, 0 }};
+P2 data_ov006_0213fbf0 = {{ (int)func_ov006_02123bf4, 0 }};
+Tbl data_ov006_0213fbf8 = { 0x600, 0xc00, 0xe00 };
+int data_ov006_0213fc10[] = { 1000, 5000, 10000, 20000 };
+int data_ov006_0213fc20[] = {
+    (int)data_ov006_02134d40,
+    (int)data_ov006_02134d4c,
+    (int)data_ov006_02134d58,
+    (int)data_ov006_02134d34,
+    (int)data_ov006_02134d28
+};
+int data_ov006_0213fc34[] = { 0x107, 0x109, 0x104, 0x105, 0x106 };
+int *data_ov006_0213fc48[] = {
+    data_ov006_021373a4,
+    data_ov006_021373fc,
+    data_ov006_0213734c,
+    data_ov006_021372f4,
+    data_ov006_02137454
+};
 }
 
 /* This overload is C++, unlike the address-spelled C ABI declarations above. */
@@ -766,7 +827,7 @@ extern "C" void func_ov006_02123bf4(char *c)
     func_ov004_020b0a54(0x12);
     *(unsigned char *)(c + 0xc3) = 0;
     *(int *)(c + 0x7b84) = 0xb4;
-    *(double *)(c + 0x5004) = data_ov006_0213fbe0;
+    *(double *)(c + 0x5004) = data_ov006_0213fbe0.asDouble;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1562,7 +1623,6 @@ extern "C" void func_ov006_02122a1c(void* self)
 /* ROM ordinal 5 -- func_ov006_021228bc, 0x021228bc, size 0x160 */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-struct Tbl { int a, b, c; };
 extern struct Tbl data_ov006_0213fbf8;
 extern unsigned short data_ov006_0212f144[];
 extern int RandomIntInternal(int* seed);
