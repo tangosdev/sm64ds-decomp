@@ -1,5 +1,5 @@
 //cpp
-// @symbol MadPiano_Spawn
+// @symbol daPiano_c_classInit
 #include "MadPiano.h"
 
 /* The pinned compiler has no usable source spelling for the class-specific
@@ -18,7 +18,11 @@ void _ZN10dBgCh_ActrC1Ev(void *self);
 extern void *_ZTV8MadPiano;
 }
 
-extern "C" MadPiano *MadPiano_Spawn()
+/* Reconstructed source-style name: SM64DS proves daPiano_c through RTTI,
+ * allocation size, vtable identity, and the PIANO registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: MadPiano_Spawn. */
+extern "C" MadPiano *daPiano_c_classInit()
 {
     MadPiano *actor = (MadPiano *)_ZN7fBase_cnwEj(sizeof(MadPiano));
     if (actor) {

@@ -1,4 +1,4 @@
-// @symbol DorrieCap_Spawn
+// @symbol daDossyCap_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -8,7 +8,11 @@
 extern void _ZN10dCapIcon_cC1Ev(void *);
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12daDossyCap_c */
-int *DorrieCap_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daDossyCap_c through RTTI,
+ * allocation size, vtable identity, and the DOSSY_CAP registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: DorrieCap_Spawn. */
+int *daDossyCap_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(388);
     if (p) {

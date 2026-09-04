@@ -1,4 +1,4 @@
-// @symbol JetStream_Spawn
+// @symbol daWater_Hakidasi_c_classInit
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9JetStream */
-int *JetStream_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daWater_Hakidasi_c through RTTI,
+ * allocation size, vtable identity, and the WATER_HAKIDASI registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: JetStream_Spawn. */
+int *daWater_Hakidasi_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(888);
     if (p) {

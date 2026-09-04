@@ -140,7 +140,7 @@ src/_ZN5Bully13InitResourcesEv.cpp:
     complete
     .text start:0x02117424 end:0x02117444
 
-src/Bully_Spawn.c:
+src/d_a_donketu.c:
     complete
     .text start:0x02117444 end:0x021174a0
 
@@ -172,7 +172,7 @@ src/_ZN8BigBully13InitResourcesEv.cpp:
     complete
     .text start:0x02117784 end:0x0211791c
 
-src/BigBully_Spawn.c:
+src/d_a_b_donketu.c:
     complete
     .text start:0x0211791c end:0x02117978
 
@@ -228,7 +228,7 @@ src/func_ov064_02117fd4.c:
     complete
     .text start:0x02117fd4 end:0x02117fe8
 
-src/daObjFl_Amilift_c_classInit.c:
+src/d_a_obj_fl_amilift.c:
     complete
     .text start:0x02117fe8 end:0x02118020
 
@@ -260,7 +260,7 @@ src/_ZN15RotatingFirebar13InitResourcesEv.cpp:
     complete
     .text start:0x02118480 end:0x02118564
 
-src/daObjFl_KomaU_c_classInit.cpp:
+src/d_a_obj_fl_koma_u.cpp:
     complete
     .text start:0x02118564 end:0x021185c0
 
@@ -316,7 +316,7 @@ src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02118b08 end:0x02118b10
 
-src/LavaBubble_Spawn.c:
+src/d_a_bbl.c:
     complete
     .text start:0x02118b10 end:0x02118b50
 
@@ -412,11 +412,11 @@ src/func_ov064_021192bc.c:
     complete
     .text start:0x021192bc end:0x021192d0
 
-src/daObjFl_Coin_c_classInit.c:
+src/d_a_obj_fl_coin.c:
     complete
     .text start:0x021192d0 end:0x02119300
 
-src/daObjFl_Puzzle_c_classInit.c:
+src/d_a_obj_fl_puzzle.c:
     complete
     .text start:0x02119300 end:0x02119330
 
@@ -464,7 +464,7 @@ src/_ZN9JetStream13InitResourcesEv.cpp:
     complete
     .text start:0x0211992c end:0x02119a18
 
-src/JetStream_Spawn.c:
+src/d_a_water_hakidasi.c:
     complete
     .text start:0x02119a18 end:0x02119a58
 
@@ -524,7 +524,7 @@ src/_ZN9WaterRing13InitResourcesEv.cpp:
     complete
     .text start:0x0211a090 end:0x0211a1b0
 
-src/WaterRing_Spawn.c:
+src/d_a_water_ring.c:
     complete
     .text start:0x0211a1b0 end:0x0211a200
 
@@ -588,7 +588,7 @@ src/_ZN13TreasureChest13InitResourcesEv.cpp:
     complete
     .text start:0x0211a814 end:0x0211a8f0
 
-src/daObjTbox_c_classInit.c:
+src/d_a_obj_tbox.c:
     complete
     .text start:0x0211a8f0 end:0x0211a930
 
@@ -620,7 +620,7 @@ src/_ZN4Clam13InitResourcesEv.cpp:
     complete
     .text start:0x0211acc4 end:0x0211ad70
 
-src/Clam_Spawn.cpp:
+src/d_a_obj_shell.cpp:
     complete
     .text start:0x0211ad70 end:0x0211adb0
 

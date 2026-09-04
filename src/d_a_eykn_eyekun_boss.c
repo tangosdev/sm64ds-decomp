@@ -1,4 +1,4 @@
-// @symbol BigMrI_Spawn
+// @symbol daEykn_c_classInit_EYEKUN_BOSS
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -9,7 +9,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV3MrI */
-int *BigMrI_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daEykn_c through RTTI,
+ * allocation size, vtable identity, and the EYEKUN_BOSS registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: BigMrI_Spawn. */
+int *daEykn_c_classInit_EYEKUN_BOSS(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(536);
     if (p) {

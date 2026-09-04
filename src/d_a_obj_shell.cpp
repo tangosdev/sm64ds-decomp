@@ -1,5 +1,5 @@
 //cpp
-// @symbol Clam_Spawn
+// @symbol daObjShell_c_classInit
 #include "Clam.h"
 
 /* This compiler rejects both the cartridge's class-specific operator-new
@@ -13,7 +13,11 @@ void _ZN7dCcAc_cC1Ev(void *self);
 extern void *_ZTV4Clam;
 }
 
-extern "C" Clam *Clam_Spawn()
+/* Reconstructed source-style name: SM64DS proves daObjShell_c through RTTI,
+ * allocation size, vtable identity, and the OBJ_SHELL registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Clam_Spawn. */
+extern "C" Clam *daObjShell_c_classInit()
 {
     Clam *actor = (Clam *)_ZN7fBase_cnwEj(sizeof(Clam));
     if (actor) {

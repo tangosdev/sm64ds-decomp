@@ -1,4 +1,4 @@
-// @symbol Bully_Spawn
+// @symbol daDonketu_c_classInit
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
@@ -11,7 +11,11 @@ extern int data_ov064_0211b768[];
 extern int _ZTV5Bully[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov064_0211b768 */
-int *Bully_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daDonketu_c through RTTI,
+ * allocation size, vtable identity, and the DONKETU registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Bully_Spawn. */
+int *daDonketu_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1024);
     if (p) {

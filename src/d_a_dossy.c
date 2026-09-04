@@ -14,7 +14,11 @@ extern void _ZN14DorriePlatformD1Ev(void*);
 extern void _ZN14DorriePlatformC1Ev(void*);
 extern void* _ZTV6Dorrie[];
 
-int* Dorrie_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daDossy_c through RTTI,
+ * allocation size, vtable identity, and the DOSSY registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Dorrie_Spawn. */
+int* daDossy_c_classInit(void)
 {
     int* p = (int*)_ZN7fBase_cnwEj(0x11b8);
     if (p) {

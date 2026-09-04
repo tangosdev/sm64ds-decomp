@@ -1,4 +1,4 @@
-// @symbol TtcRotatingPrism_Spawn
+// @symbol daObjCtRotateBlock_c_classInit_CT_MECHA01
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
@@ -7,7 +7,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV15TtcRotatingCube */
-int *TtcRotatingPrism_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daObjCtRotateBlock_c through RTTI,
+ * allocation size, vtable identity, and the CT_MECHA01 registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: TtcRotatingCube_Spawn. */
+int *daObjCtRotateBlock_c_classInit_CT_MECHA01(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(984);
     if (p) {

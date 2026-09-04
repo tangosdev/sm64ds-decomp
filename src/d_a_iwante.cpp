@@ -12,7 +12,11 @@ extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" void func_0203d384(void);
 extern void *_ZTV6Eyerok[];
 
-extern "C" void *Eyerok_Spawn(void)
+/* Reconstructed source-style name: SM64DS proves daIwante_c through RTTI,
+ * allocation size, vtable identity, and the IWANTE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: Eyerok_Spawn. */
+extern "C" void *daIwante_c_classInit(void)
 {
     unsigned char *c = (unsigned char *)_ZN7fBase_cnwEj(0x874);
     if (c) {

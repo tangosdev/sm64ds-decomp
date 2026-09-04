@@ -1,5 +1,5 @@
 //cpp
-// @symbol TtcConveyorBeltSmall_Spawn
+// @symbol daObjCtMecha04_c_classInit_CT_MECHA04S
 #include "daObjCtMecha04_c.h"
 
 /* The small conveyor is a second spawn entry for the same RTTI class. */
@@ -11,7 +11,11 @@ void _ZN11ShadowModelC1Ev(void *self);
 extern void *_ZTV16daObjCtMecha04_c;
 }
 
-extern "C" daObjCtMecha04_c *TtcConveyorBeltSmall_Spawn()
+/* Reconstructed source-style name: SM64DS proves daObjCtMecha04_c through RTTI,
+ * allocation size, vtable identity, and the CT_MECHA04S registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: TtcConveyorBeltSmall_Spawn. */
+extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S()
 {
     daObjCtMecha04_c *actor =
         (daObjCtMecha04_c *)_ZN7fBase_cnwEj(sizeof(daObjCtMecha04_c));
