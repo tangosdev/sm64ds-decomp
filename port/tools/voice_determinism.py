@@ -320,6 +320,30 @@ def _selftest():
     return 0 if not fails else 1
 
 
+def agree(ok_list, a, b, label):
+    """One pair, compared the same way everywhere: the END-OF-ROUND world hash
+    over every shared comms round, with dhdiff run beside it as a cross-check.
+
+    WHY BOTH, AND WHY THIS WAY ROUND. dhdiff compares at the FRAME INDEX and
+    refuses when the rounds= columns disagree, which is the honest answer to
+    "these two logs are not at the same moment at the same index" -- but on a
+    loaded machine that is the normal condition, not a defect, because how many
+    HOST FRAMES a window spends inside one comms round is wall clock. Measured
+    here with another lane's battery running: the two VOICE-OFF windows, which
+    contain no voice code at all, drifted on ten rounds and dhdiff refused.
+
+    So the claim is made on the round, where the wall clock cannot reach it,
+    and dhdiff still gets a vote: an rc of 1 is a real frame-index divergence
+    and stays a red on its own. Only rc 2, "I will not align these", is treated
+    as answered -- and it is answered, by the line printed right above it.
+    """
+    rok, rline = cross_run_by_round(a, b)
+    ok_list[0] &= M.verdict(rok, "%s | %s" % (label, rline))
+    rc, dline = dhdiff(a, b)
+    ok_list[0] &= M.verdict(rc != 1, "%s frame-index cross-check | %s"
+                            % (label, dline))
+
+
 def voice_counts(text):
     m = None
     for m in re.finditer(r"\[voice\] \S+: on=(\d+) tone=(\d+) dev=(\d+) "
@@ -404,11 +428,12 @@ def _passes(a):
                             c["rx"] > 0 and c["bad"] == 0 and c["dev"] == 0,
                             "voice-det ON p%d was really talking and listening "
                             "| %s" % (k, c))
+    box = [ok]
     for i in range(n):
         for j in range(i + 1, n):
-            rc, line = dhdiff(on_logs[i], on_logs[j])
-            ok &= M.verdict(rc == 0,
-                            "voice-det ON p%d vs p%d | %s" % (i, j, line))
+            agree(box, on_logs[i], on_logs[j],
+                  "voice-det ON p%d vs p%d" % (i, j))
+    ok = box[0]
 
     off_logs, off_rcs = run_pass("off", n, a.frames, PORT + 32, False)
     ok &= M.verdict(all(r == 0 for r in off_rcs),
@@ -420,11 +445,12 @@ def _passes(a):
                         "voice-det OFF p%d sent and received NOTHING (the "
                         "report line is only emitted with voice on) | %s"
                         % (k, c))
+    box = [ok]
     for i in range(n):
         for j in range(i + 1, n):
-            rc, line = dhdiff(off_logs[i], off_logs[j])
-            ok &= M.verdict(rc == 0,
-                            "voice-det OFF p%d vs p%d | %s" % (i, j, line))
+            agree(box, off_logs[i], off_logs[j],
+                  "voice-det OFF p%d vs p%d" % (i, j))
+    ok = box[0]
 
     # THE STRONG CLAIM. Same window, same slot, same held key, voice on against
     # voice off. Any world state voice touched would show here and nowhere
@@ -435,17 +461,12 @@ def _passes(a):
     # dhdiff is still run and its answer is still printed beside it: when it can
     # align the two logs, a divergence IT reports is a red on its own, because
     # two tools agreeing is worth more than one.
+    box = [ok]
     for k in range(n):
-        rc, line = dhdiff(on_logs[k], off_logs[k])
-        rok, rline = cross_run_by_round(on_logs[k], off_logs[k])
-        ok &= M.verdict(rok,
-                        "voice-det CROSS-RUN p%d: voice ON world state is "
-                        "identical to voice OFF | %s" % (k, rline))
-        # rc 2 is "refused to align", which the round-keyed claim above has
-        # just answered. rc 1 is a real frame-index divergence and stays a red.
-        ok &= M.verdict(rc != 1,
-                        "voice-det CROSS-RUN p%d frame-index cross-check | %s"
-                        % (k, line))
+        agree(box, on_logs[k], off_logs[k],
+              "voice-det CROSS-RUN p%d: voice ON world state is identical to "
+              "voice OFF" % k)
+    ok = box[0]
 
     print("")
     for v in M.VERDICTS:
