@@ -3955,7 +3955,42 @@ static void __fastcall ps_abeh(void *s, void *, unsigned a)
    him itself (hal_render_player_world) right after the bucket. The two hooks
    around it are the game's own. */
 extern "C" int _ZN5Actor12BeforeRenderEv(void *self);
-static int __fastcall ps_render(void *, void *) { return 1; }
+/* hal/player_bridges.cpp -- the ROM's Player body draw, C++ linkage there so it
+   is declared plainly here (an extern "C" spelling would not resolve to it). */
+void hal_render_player_world(void *player);
+/* ---- THE OPENING CAST'S BODIES, run opening-cast -------------------------
+ * Slot 9 used to be a bare `return 1`, on the premise that Player::Render's
+ * body is drawn by the harness (tests/walk_window.cpp) right after the render
+ * bucket. That premise is complete only for the players in the data_0209f394[]
+ * array: the harness's own per-slot loop walks exactly data_0209f394[0 ..
+ * data_0209f21c-1], which LoadEntranceObjects filled and which holds ONE entry
+ * in single-file adventure (data_0209f21c == 1).
+ *
+ * The new-file opening spawns the three extra hero characters as Player actors
+ * that the kuppa cutscene script positions and states -- they are NOT the
+ * entrance's players and are NOT in that array. So the harness never reached
+ * their bodies. Their SHADOW still drew (ShadowModel::RenderAll walks every
+ * node, array or not), which is exactly the reported symptom: a shadow moving
+ * on the ground with no character above it, everywhere but the one player the
+ * array knows about (the controlled character) and Lakitu (its own actor).
+ *
+ * The render bucket dispatches THIS slot for every live Player actor, so it is
+ * the one place that sees all four. A player already in the array stays a
+ * no-op and is drawn by the harness after the bucket, unchanged and still
+ * last; a player the array does not know -- the cutscene cast -- is drawn here
+ * through the same body path (hal_render_player_world reads that player's own
+ * seated body matrix, so it positions each one itself). Normal play, VS and
+ * co-op are byte-unaffected: every player they run is in the array, so this
+ * loop finds it and returns before drawing. */
+static int __fastcall ps_render(void *self, void *)
+{
+    const int count = (int)data_0209f21c;
+    for (int i = 0; i < count; ++i)
+        if (data_0209f394[i] == self)
+            return 1;               /* array player: the harness draws it */
+    hal_render_player_world(self);  /* cutscene cast: draw its body here */
+    return 1;
+}
 static int __fastcall ps_bren(void *s, void *)
 { return _ZN5Actor12BeforeRenderEv(s); }
 static void __fastcall ps_aren(void *s, void *, unsigned a)
