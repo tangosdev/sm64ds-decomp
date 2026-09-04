@@ -60,45 +60,9 @@ src/actors/d_a_s_cre.cpp:
     complete
     .text start:0x021126d4 end:0x021127bc
 
-src/_ZN8IceSheetD1Ev.cpp:
+src/actors/d_a_obj_ice_board.cpp:
     complete
-    .text start:0x021127bc end:0x02112800
-
-src/_ZN8IceSheetD0Ev.cpp:
-    complete
-    .text start:0x02112800 end:0x02112858
-
-src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02112858 end:0x02112880
-
-src/_ZN8IceSheet4KillEv.cpp:
-    complete
-    .text start:0x02112880 end:0x021128e0
-
-src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp:
-    complete
-    .text start:0x021128e0 end:0x02112924
-
-src/_ZN8IceSheet16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112924 end:0x02112968
-
-src/_ZN8IceSheet6RenderEv.cpp:
-    complete
-    .text start:0x02112968 end:0x02112990
-
-src/_ZN8IceSheet8BehaviorEv.cpp:
-    complete
-    .text start:0x02112990 end:0x021129c0
-
-src/_ZN8IceSheet13InitResourcesEv.cpp:
-    complete
-    .text start:0x021129c0 end:0x02112a44
-
-src/IceSheet_Spawn.c:
-    complete
-    .text start:0x02112a44 end:0x02112a74
+    .text start:0x021127bc end:0x02112a74
 
 src/__sinit_ov018_02112c14.c:
     complete
