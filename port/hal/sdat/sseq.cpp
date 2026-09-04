@@ -133,6 +133,12 @@ struct Player {
     int tempo, tempoCount;
     int volume, pan;
     int volDb10;            // PLAYER_PARAM 6: distance/fade attenuation
+    // The sequence's base CHANNEL PRIORITY, out of the SDAT's cpr byte. Every
+    // track of this player starts here (sd_seq_start and 0x93 open-track); the
+    // 0xC6 opcode overrides it per track. See sdat_seq_priority: defaulting
+    // this to 64 flattened the opening's cpr-96..127 SFX down onto the BGM and
+    // let the mixer steal between them at random.
+    int cpr;
     sd_s16 var[SD_VARS];
 };
 
@@ -672,7 +678,9 @@ int run_track(Player &pl, int pi, int ti)
                 t2.active = keepActive;
                 t2.pc = off;
                 t2.volume = 127; t2.expression = 127; t2.pan = 64;
-                t2.bendRange = 2; t2.priority = 64; t2.noteWait = 1;
+                // Opened tracks start at the player's base priority, the same
+                // as track 0; a 0xC6 in the opened track overrides it.
+                t2.bendRange = 2; t2.priority = pl.cpr; t2.noteWait = 1;
                 t2.prog = 0;
             }
             break;
@@ -909,12 +917,17 @@ int sd_seq_start(int p, const sd_u8 *seqBase, sd_u32 startOff,
     pl.tempoCount = 0;
     pl.volume = 127;
     pl.pan = 64;
+    // The player's base channel priority, out of the SDAT record. The ARM7
+    // starts every one of a player's tracks at this; the port used to default
+    // to 64 and lose it, which inverted the ROM's steal order (see
+    // sdat_seq_priority).
+    pl.cpr = sdat_seq_priority(seqBase, startOff);
 
     Track &t0 = pl.tr[0];
     t0.active = 1;
     t0.pc = startOff;
     t0.volume = 127; t0.expression = 127; t0.pan = 64;
-    t0.bendRange = 2; t0.priority = 64; t0.noteWait = 1;
+    t0.bendRange = 2; t0.priority = pl.cpr; t0.noteWait = 1;
 
     // A multi-track sequence opens with 0xFE <u16 mask>; track 0's own code
     // follows the 0x93 open-track commands, so nothing special is needed

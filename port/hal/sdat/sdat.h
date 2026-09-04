@@ -71,6 +71,10 @@ sd_u32 sdat_file_size(sd_u32 fileId);
 // Reverse map: a resident pointer back to its file id, or -1u.
 sd_u32 sdat_file_id_of(const void *p);
 
+// The sequence's base channel priority (the SDAT cpr byte), the priority every
+// track of the player starts at; 0xC6 overrides it per track. See the body.
+int sdat_seq_priority(const sd_u8 *seqBase, sd_u32 startOff);
+
 // ---- SWAV ---------------------------------------------------------------
 
 // Every SWAV is decoded to mono s16 once and cached, keyed by its record

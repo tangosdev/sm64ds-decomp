@@ -102,6 +102,59 @@ sd_u32 sdat_file_id_of(const void *p)
     return (sd_u32)-1;
 }
 
+// The sequence's base CHANNEL PRIORITY (the SDAT's cpr byte), which is the
+// priority every track of the player starts at on the ARM7. The SSEQ 0xC6
+// opcode overrides it per track; a stream with no 0xC6 keeps it.
+//
+// This existed nowhere in the port before, and its absence inverted the ROM's
+// voice-steal order in any busy scene. The opening cutscene is the worst case:
+// its SFX carry cpr 96..127 (NCS_SE_VT_PEACH_LETTER and NCS_SE_VO_SLEEP1_Y are
+// 127) and set no 0xC6, while NCS_BGM_OPENING carries cpr 64 and its lead
+// track sets 0xC6 66. On hardware the SFX therefore dominate the music and the
+// mix ducks cleanly. The port defaulted every track to 64, so the 127-priority
+// voices ran at 64 -- level with the BGM -- and the 16-channel mixer stole
+// between them at random, dropping the letter narration and the music in turn.
+// That is the opening's "sounds overlap and cut out".
+//
+// seqBase is the file's DATA base (what the START command carries in b); the
+// SSAR case reads the entry table beside it, the SSEQ case the INFO record.
+int sdat_seq_priority(const sd_u8 *seqBase, sd_u32 startOff)
+{
+    if (!seqBase || !g_sdat.base || !g_sdat.info) return 64;
+    sd_u32 fid = sdat_file_id_of(seqBase);
+    if (fid == (sd_u32)-1) return 64;
+    sd_u8 *f = sdat_file(fid);
+    if (!f) return 64;
+
+    if (!memcmp(f, "SSAR", 4)) {
+        // entry table: count at +0x1c, entries at +0x20, 12 bytes each:
+        // { seqOff u32, bank u16, vol u8, cpr u8, ppr u8, ply u8 }. seqOff is
+        // relative to the DATA base, which is exactly startOff's frame.
+        sd_u32 count = rd32(f + 0x1c);
+        for (sd_u32 i = 0; i < count; i++) {
+            sd_u8 *e = f + 0x20 + i * 12;
+            if (rd32(e) == startOff) return e[7];
+        }
+        return 64;
+    }
+    if (!memcmp(f, "SSEQ", 4)) {
+        // A standalone sequence carries its cpr in the INFO SEQ record whose
+        // fileId names this file: { fileId u16, unk u16, bank u16, vol u8,
+        // cpr u8, ... }.
+        sd_u32 recOff = rd32(g_sdat.info + 8 + SDAT_REC_SEQ * 4);
+        if (!recOff) return 64;
+        sd_u8 *tbl = g_sdat.info + recOff;
+        sd_u32 n = rd32(tbl);
+        for (sd_u32 i = 0; i < n; i++) {
+            sd_u32 v = rd32(tbl + 4 + i * 4);
+            if (!v) continue;
+            sd_u8 *e = g_sdat.info + v;
+            if (rd16(e) == fid) return e[7];
+        }
+    }
+    return 64;
+}
+
 // ---- INFO ---------------------------------------------------------------
 
 sd_u8 *sdat_info_entry(int rec, sd_u32 id)
