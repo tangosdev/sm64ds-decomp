@@ -54,7 +54,11 @@ class TreeTests(unittest.TestCase):
         """If this is red, src_tu is stranded -- fix the tree, not the test."""
         report = C.check(REPO / "src_tu")
         self.assertTrue(report["ok"], report["failures"][:10])
-        self.assertGreater(report["checked"]["sources"], 30)
+        # A smoke floor, not a target: src_tu only ever SHRINKS, because every TU
+        # promotion consolidates its shadow source into src/. The number here says
+        # "the check walked a real tree", so it has to stay below the live count --
+        # it was 30 when this promotion took the count to exactly 30.
+        self.assertGreater(report["checked"]["sources"], 10)
         self.assertGreater(report["checked"]["references"], 100)
 
     def test_cli_exits_zero_on_the_committed_tree(self):

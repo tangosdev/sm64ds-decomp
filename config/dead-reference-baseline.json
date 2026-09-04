@@ -402,6 +402,10 @@
    "ref": "include/Enemy.h"
   },
   {
+   "file": "tools/check_src_tu.py",
+   "ref": "src_tu/actors/CastleWater.cpp"
+  },
+  {
    "file": "tools/d0_migrate.py",
    "ref": "src/_ZN5EnemyD0Ev.c"
   },

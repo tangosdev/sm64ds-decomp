@@ -82,9 +82,9 @@ descriptors occupy exactly `0x021138fc..0x0211391c` (32 data bytes).
 
 This is initializer ordinal 0 of 4. `.p__sinit_ov009_02112458` at
 `0x02112b34` points to it; the next word points to
-`__sinit_ov009_02112524`, independently owned by CastleWater. The parallel
+`__sinit_ov009_02112524`, independently owned by daObjMcWater_c. The parallel
 TU-shaped config attributes Bird's exact `.text`, `.init`, `.ctor`, data, and
-BSS intervals and keeps them ordered before CastleWater.
+BSS intervals and keeps them ordered before daObjMcWater_c.
 
 With `SINIT_OWNERSHIP_PROBE`, `notes/sinit-probes/bird.cpp` organically emits:
 
