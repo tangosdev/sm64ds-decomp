@@ -19,25 +19,10 @@ src/actors/d_a_obj_km2_nobiru.cpp:
     .text start:0x02111840 end:0x02111b14
     .data start:0x02112e3c end:0x02112efc
 
-src/_ZN19daObjKm2_Ukishima_cD1Ev.cpp:
+src/actors/d_a_obj_km2_ukishima.cpp:
     complete
-    .text start:0x02111b14 end:0x02111b64
-
-src/_ZN19daObjKm2_Ukishima_cD0Ev.cpp:
-    complete
-    .text start:0x02111b64 end:0x02111bc8
-
-src/_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111bc8 end:0x02111bdc
-
-src/_ZN19daObjKm2_Ukishima_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111bdc end:0x02111bf4
-
-src/daObjKm2_Ukishima_c_classInit.c:
-    complete
-    .text start:0x02111bf4 end:0x02111c30
+    .text start:0x02111b14 end:0x02111c30
+    .data start:0x02112efc end:0x02112fd0
 
 src/actors/d_a_obj_km2_gura.cpp:
     complete
