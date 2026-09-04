@@ -288,7 +288,7 @@ src/OneUpMushroom_Spawn.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
-src/actors/daBar_c.cpp:
+src/game/actors/d_a_bar.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
 
@@ -460,7 +460,7 @@ src/game/actors/WingFeather/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/actors/daObjAbuku_c.cpp:
+src/game/actors/d_a_obj_abuku.cpp:
     complete
     .text start:0x020b3298 end:0x020b35a0
 
@@ -596,7 +596,7 @@ src/OneUpMushroomBlockTag_Spawn.c:
     complete
     .text start:0x020b4670 end:0x020b46a0
 
-src/actors/daObjKinokoTag_c.cpp:
+src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
     .text start:0x020b46a0 end:0x020b4a70
 
@@ -624,7 +624,7 @@ src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp:
     complete
     .text start:0x020b4d58 end:0x020b4ed8
 
-src/actors/daObjHatenaSwitch_c.cpp:
+src/game/actors/d_a_obj_hatena_switch.cpp:
     complete
     .text start:0x020b4ed8 end:0x020b5734
     .data start:0x02108e14 end:0x02108edc
@@ -984,7 +984,7 @@ src/Cap_Spawn.c:
     complete
     .text start:0x020b8b98 end:0x020b8bf0
 
-src/actors/daObjPushblock_c.cpp:
+src/game/actors/d_a_obj_pushblock.cpp:
     complete
     .text start:0x020b8bf0 end:0x020b910c
 
@@ -1336,7 +1336,7 @@ src/HealingHeart_Spawn.c:
     complete
     .text start:0x020bc8b4 end:0x020bc8f4
 
-src/actors/daObjCannonShutter_c.cpp:
+src/game/actors/d_a_obj_cannon_shutter.cpp:
     complete
     .text start:0x020bc8f4 end:0x020bccfc
 

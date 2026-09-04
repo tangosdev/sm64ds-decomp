@@ -22,8 +22,8 @@ data_ov023_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov023_02111a4c kind:data(any) addr:0x02111a4c ambiguous
 data_ov023_02111a58 kind:data(any) addr:0x02111a58 ambiguous
 data_ov023_02111a78 kind:data(any) addr:0x02111a78 ambiguous
-__sinit_daObjFm_Battan_c.cpp kind:function(arm,size=0x6c) addr:0x02111aa8
-.p__sinit_daObjFm_Battan_c.cpp kind:data(word) addr:0x02111b14
+__sinit_d_a_obj_fm_battan.cpp kind:function(arm,size=0x6c) addr:0x02111aa8
+.p__sinit_d_a_obj_fm_battan.cpp kind:data(word) addr:0x02111b14
 data_ov023_02111b20 kind:data(any) addr:0x02111b20
 data_ov023_02111b24 kind:data(any) addr:0x02111b24
 data_ov023_02111b28 kind:data(any) addr:0x02111b28

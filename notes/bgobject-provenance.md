@@ -381,7 +381,7 @@ In the C twin, the `u8` marker at `0x2ec` became `mClsnMat`, the name
 `dBgW_KcMbg::SetFile`.
 
 The rename carried into the promoted translation unit
-`src/actors/daObjCannonShutter_c.cpp` -- it lived under `src_tu/` as a shadow TU until
+`src/game/actors/d_a_obj_cannon_shutter.cpp` -- it lived under `src_tu/` as a shadow TU until
 `config/arm9/overlays/ov002/delinks.txt` enrolled it as the production source -- along
 with the same raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub
 sub; }` shadow is gone in favour of `mModel.Render(0)`, and `InitResources` reaches
@@ -483,7 +483,7 @@ In the `#else` C twin, ten offsets already named at exactly those offsets in
 Bodies read in the promoted class TU: `daObjHatenaSwitch_c::InitResources`,
 `daObjHatenaSwitch_c::Behavior`, `daObjHatenaSwitch_c::CleanupResources`, and
 `daObjHatenaSwitch_c::OnGroundPounded` in
-`src/actors/daObjHatenaSwitch_c.cpp`.
+`src/game/actors/d_a_obj_hatena_switch.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -711,7 +711,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `LavaPlank` ([ov022](../config/arm9/overlays/ov022/symbols.txt)) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
 `PathLift::mAfterClsnRan` also carried into the `daObjRcCarpet_c::Behavior` member
-in `src/actors/daObjRcCarpet_c.cpp`, a subclass that reads the inherited field — the
+in `src/game/actors/d_a_obj_rc_carpet.cpp`, a subclass that reads the inherited field — the
 kind of cross-file breakage a header rename in this family causes, and which
 `tools/rombuild.py` catches while `build_pin.verify` on the renamed class alone does not.
 

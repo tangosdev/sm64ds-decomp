@@ -1,8 +1,8 @@
 {
   "id": "ov065/daObjCtMecha05_c",
   "module": "ov065",
-  "source": "src/actors/daObjCtMecha05_c.cpp",
-  "promoted_source": "src/actors/daObjCtMecha05_c.cpp",
+  "source": "src/game/actors/d_a_obj_ct_mecha05.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_ct_mecha05.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

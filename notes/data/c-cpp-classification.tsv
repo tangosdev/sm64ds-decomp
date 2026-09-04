@@ -371,9 +371,9 @@ src/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/ResetInput.c	PURE-C	arm9				1		None		-
 src/ResetKuppaScript.c	PURE-C	arm9				1		None		-
 src/daObjKm1_Kurumajiku_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV11RickshawBdw	1		None	_ZTV11RickshawBdw/_ZTV17daObjKurumajiku_c	-
-src/actors/daObjKm3_Kurumajiku_c.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
+src/game/actors/d_a_obj_km3_kurumajiku.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
 src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
-src/actors/daObjKm3_Kuruma_c.cpp	S1-stores-rom-vptr	ov047			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm3_Kuruma_c	-
+src/game/actors/d_a_obj_km3_kuruma.cpp	S1-stores-rom-vptr	ov047			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm3_Kuruma_c	-
 src/daObjKi_Hasira_c_classInit.c	S1-stores-rom-vptr	ov016			stores _ZTV10RockPillar	1		None	_ZTV10RockPillar	-
 src/RockTriangle_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/RollingIronBall_Spawn.c	WEAK-refs-only	ov100				1		None		-

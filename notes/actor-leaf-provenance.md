@@ -238,7 +238,7 @@ overlay.
 | 0x10e | `mLifeTimer` | 0x12c (300 frames) at init, `DecIfAbove0_Short`, pops at 0. |
 | 0x110 | `mParticle` | particle-handle shape, effect 1. |
 
-Source: `src/actors/daObjAbuku_c.cpp`.
+Source: `src/game/actors/d_a_obj_abuku.cpp`.
 
 ## daEyBm_c -- include/daEyBm_c.h
 
@@ -249,7 +249,7 @@ Source: `src/actors/daObjAbuku_c.cpp`.
 | 0x32c | `mParticle2` | same, effect 0x47. |
 | 0x330 | `mLifeTimer` | 0x96 (150 frames) at init, `DecIfAbove0_Short` in `Behavior`. |
 
-Source: `src/actors/daEyBm_c.cpp`.
+Source: `src/game/actors/d_a_ey_bm.cpp`.
 
 ## daKpFr_c -- include/daKpFr_c.h
 
@@ -259,7 +259,7 @@ Source: `src/actors/daEyBm_c.cpp`.
 | 0x324 | `mParticle1` | particle-handle shape, effect 0x7f, emitted at `mPosY + 0x4b000`. |
 | 0x328 | `mParticle2` | same, effect 0x80. |
 
-Source: `src/actors/daKpFr_c.cpp`.
+Source: `src/game/actors/d_a_kp_fr.cpp`.
 
 ## daKrpa_c -- include/daKrpa_c.h
 
@@ -268,7 +268,7 @@ Source: `src/actors/daKpFr_c.cpp`.
 | 0x35c | `mMatrix` | identity-matrix shape. |
 | 0x3a8 | `mHeightAboveGnd` | `InitResources` raycasts a `dBgCh_Gnd` down from `mPos` and stores `(mPosY - hit height) + 0x1e000`, or the constant 0x1f4000 when nothing is hit. |
 
-Source: `src/actors/daKrpa_c.cpp`.
+Source: `src/game/actors/d_a_krpa.cpp`.
 
 ## Spiny -- include/Spiny.h
 

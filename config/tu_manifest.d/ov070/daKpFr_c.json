@@ -1,8 +1,8 @@
 {
   "id": "ov070/daKpFr_c",
   "module": "ov070",
-  "source": "src/actors/daKpFr_c.cpp",
-  "promoted_source": "src/actors/daKpFr_c.cpp",
+  "source": "src/game/actors/d_a_kp_fr.cpp",
+  "promoted_source": "src/game/actors/d_a_kp_fr.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
