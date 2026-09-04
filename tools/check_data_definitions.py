@@ -51,9 +51,11 @@ USAGE
     python tools/check_data_definitions.py           # gate; exit 1 on any hit
     python tools/check_data_definitions.py --list    # print every symbol found
 
-Reads the objects `tools/eligible.py` already leaves in build/src/. It compiles
-nothing, so it costs about a second -- but it is therefore only as fresh as the
-last eligible.py run, and says so when the tree is newer.
+Reads objects that are already on disk: the ones `tools/eligible.py` leaves in
+build/eligible-scratch/ and the ones `tools/rombuild.py` leaves in build/src/.
+Both roots are scanned because either tool may be the last one run. It compiles
+nothing, so it costs about a second -- but it is therefore only as fresh as that
+last run, and says so when the tree is newer.
 """
 import argparse
 import io
@@ -64,6 +66,17 @@ from elftools.elf.elffile import ELFFile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 BUILD = REPO / "build" / "src"
+# eligible.py writes one object per (file, symbol) into a separate root, nested
+# under the source's own directory, so this one needs a recursive glob.
+SCRATCH = REPO / "build" / "eligible-scratch"
+
+
+def objects():
+    """Every already-compiled object, from whichever root produced it."""
+    found = list(BUILD.glob("*.o")) if BUILD.is_dir() else []
+    if SCRATCH.is_dir():
+        found += SCRATCH.rglob("*.o")
+    return sorted(found)
 
 # ROM address symbols. A source file may legitimately define its own named
 # globals; what it may not do is define one of the delinker's carved-out
@@ -93,9 +106,15 @@ def defined_rom_objects(obj_path):
     return sorted(found)
 
 
+def label(obj):
+    """The source this object came from, as a repo-relative path."""
+    if obj.is_relative_to(SCRATCH):
+        return obj.relative_to(SCRATCH).with_suffix("").as_posix()
+    return f"src/{obj.stem}"
+
+
 def audit():
-    return {o.stem: syms for o in sorted(BUILD.glob("*.o"))
-            if (syms := defined_rom_objects(o))}
+    return {label(o): syms for o in objects() if (syms := defined_rom_objects(o))}
 
 
 def main():
@@ -105,25 +124,26 @@ def main():
                     help="print every offending symbol, not just the file count")
     args = ap.parse_args()
 
-    if not BUILD.is_dir():
-        print("no build/src objects -- run tools/eligible.py first")
+    scanned = objects()
+    if not scanned:
+        print("no compiled objects in build/eligible-scratch/ or build/src/ -- "
+              "run tools/eligible.py first")
         print("skipping (this is NOT a pass)")
         return 0
 
-    objects = sorted(BUILD.glob("*.o"))
     hits = audit()
 
     if not hits:
-        print(f"data-definitions: {len(objects)} object(s), none define a ROM data symbol")
+        print(f"data-definitions: {len(scanned)} object(s), none define a ROM data symbol")
         return 0
 
     total = sum(len(v) for v in hits.values())
     print(f"data-definitions FAILED: {total} ROM symbol(s) defined across "
-          f"{len(hits)} object(s), of {len(objects)} scanned\n")
-    for stem in sorted(hits):
-        shown = hits[stem] if args.list else hits[stem][:4]
-        more = "" if args.list or len(hits[stem]) <= 4 else f" (+{len(hits[stem]) - 4} more)"
-        print(f"  src/{stem}")
+          f"{len(hits)} object(s), of {len(scanned)} scanned\n")
+    for source in sorted(hits):
+        shown = hits[source] if args.list else hits[source][:4]
+        more = "" if args.list or len(hits[source]) <= 4 else f" (+{len(hits[source]) - 4} more)"
+        print(f"  {source}")
         print(f"      {', '.join(shown)}{more}")
     print("\nThese are DEFINITIONS where a declaration was meant. Inside")
     print('`extern "C" { ... }` a variable needs an explicit `extern`:')

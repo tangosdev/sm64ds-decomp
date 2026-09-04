@@ -191,6 +191,7 @@ jobs:
             tools.test_asset_catalog \
             tools.test_attribution \
             tools.test_bytegate \
+            tools.test_check_data_definitions \
             tools.test_cpp_rename_verify \
             tools.test_delaunder \
             tools.test_enroll \
@@ -223,12 +224,17 @@ jobs:
 #                                      local header drags into the validation compile.
 #   test_asm_policy             (14)   asm_policy.py -- the one shared answer to "is this
 #                                      an asm transcription?". Guards the VACUOUS match.
-#   test_asset_catalog           (7)   asset_catalog.py -- NitroFS catalog build and the
-#                                      source references into it.
+#   test_asset_catalog          (10)   asset_catalog.py -- NitroFS catalog build, the
+#                                      source references into it, and `resolve`, which
+#                                      must read an integer as a runtime handle and
+#                                      never as a NitroFS file ID.
 #   test_attribution            (17)   chaos_db_ci.py -- rebuilds chaos-db.json from
 #                                      COMMITTED history; the credit data the site reads.
 #   test_bytegate               (18)   bytegate.py -- the byte-gate-failure half of the
 #                                      matched test, over layout_check/relocs/srcpath.
+#   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
+#                                      gate scans. It globbed only build/src/, which
+#                                      eligible.py never writes, so it skipped silently.
 #   test_cpp_rename_verify      (16)   cpp_rename.py -- func_ADDR -> demangled _ZN name
 #                                      renames. A wrong substitution here is silent.
 #   test_delaunder              (25)   delaunder.py -- removing launder idioms one site

@@ -641,6 +641,76 @@ def cmd_generate(args) -> None:
     print(f"  headers : {args.file_header}, {args.handle_header}")
 
 
+def resolve_queries(queries: list[str], handles: list[AssetHandle],
+                    references: list[dict[str, str]]) -> list[tuple[str, list]]:
+    """Answer handle numbers, path fragments, and owner symbols from the catalog.
+
+    An integer literal is always a runtime handle, never a NitroFS file ID; the
+    two number spaces disagree and guessing between them invents asset names.
+    """
+    by_handle = {entry.handle: entry for entry in handles}
+    results = []
+    for query in queries:
+        value = _integer_literal(query)
+        if value is not None:
+            entry = by_handle.get(value)
+            results.append((query, [entry] if entry else []))
+            continue
+        needle = query.lower()
+        matches = [entry for entry in handles if needle in entry.path.lower()]
+        if not matches:
+            owners = {row["raw_id"] for row in references
+                      if needle in row["owner"].lower() and row["owner"]}
+            matches = [by_handle[handle] for handle in
+                       sorted(_integer_literal(raw) or -1 for raw in owners)
+                       if handle in by_handle]
+        results.append((query, matches))
+    return results
+
+
+def cmd_resolve(args) -> None:
+    if not args.handles.is_file():
+        sys.exit(f"Handle catalog not found: {args.handles}\nRun the generate command first.")
+    handles = read_handles(args.handles)
+    references = []
+    if args.references.is_file():
+        with args.references.open(encoding="utf-8", newline="") as f:
+            references = list(csv.DictReader(f, delimiter="\t"))
+    names = constants_for(handles, value_attr="handle", prefix="ASSET_HANDLE")
+    by_handle_refs = collections.defaultdict(list)
+    for row in references:
+        if row["status"] == "runtime-handle":
+            by_handle_refs[_integer_literal(row["raw_id"])].append(row)
+
+    unresolved = 0
+    for query, matches in resolve_queries(args.query, handles, references):
+        if not matches:
+            value = _integer_literal(query)
+            if value is not None and value >= 0x8000:
+                print(f"{query}: not a runtime handle; values >= 0x8000 bypass the "
+                      f"overlay 0 table and stay encoded-or-unresolved")
+            else:
+                print(f"{query}: no match")
+            unresolved += 1
+            continue
+        for entry in matches[:args.limit]:
+            print(f"{entry.handle} (0x{entry.handle:04x})  {entry.path}")
+            print(f"    kind={entry.kind} size={entry.size:,} "
+                  f"nitro_file_id={entry.file_id} (0x{entry.file_id:04x})")
+            print(f"    {names[entry.handle]}")
+            for row in by_handle_refs.get(entry.handle, [])[:args.limit]:
+                owner = row["owner"] or "-"
+                suggested = row["suggested_owner"]
+                label = f"{owner} -> {suggested}" if suggested else owner
+                print(f"    used by {row['source']}:{row['line']} "
+                      f"{row['callee']}  {label}")
+        if len(matches) > args.limit:
+            print(f"    ... {len(matches) - args.limit:,} more matches "
+                  f"(raise --limit to see them)")
+    if unresolved:
+        sys.exit(1)
+
+
 def cmd_references(args) -> None:
     if not args.handles.is_file():
         sys.exit(f"Handle catalog not found: {args.handles}\nRun the generate command first.")
@@ -683,6 +753,18 @@ def main(argv=None) -> None:
     references.add_argument("--layouts", type=pathlib.Path,
                             default=DEFAULT_LAYOUT_CANDIDATES)
     references.set_defaults(func=cmd_references)
+
+    resolve = commands.add_parser(
+        "resolve",
+        help="look up runtime handles by number, path fragment, or owner symbol")
+    resolve.add_argument("query", nargs="+",
+                         help="a handle literal (1570, 0x622), a path fragment "
+                              "(kb1_ball), or an owner symbol (data_ov044_02111680)")
+    resolve.add_argument("--handles", type=pathlib.Path, default=DEFAULT_HANDLES)
+    resolve.add_argument("--references", type=pathlib.Path, default=DEFAULT_REFERENCES)
+    resolve.add_argument("--limit", type=int, default=10,
+                         help="maximum matches printed per query (default 10)")
+    resolve.set_defaults(func=cmd_resolve)
 
     args = parser.parse_args(argv)
     args.func(args)

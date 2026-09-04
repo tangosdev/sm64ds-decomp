@@ -158,6 +158,32 @@ class AssetCatalogTests(unittest.TestCase):
             AC.resource_owner_from_source("src/_ZN7Message11DisplayTextEt.cpp")
         )
 
+    def test_resolve_reads_literals_as_handles_not_file_ids(self):
+        handles = [
+            AC.AssetHandle(1, 0x123, "data/a.bmd", 10),
+            AC.AssetHandle(2, 0x001, "data/b.kcl", 20),
+        ]
+        # 1 is a handle, so it must name a.bmd and never the file_id 1 asset.
+        self.assertEqual(
+            [h.path for _, m in AC.resolve_queries(["1", "0x2"], handles, []) for h in m],
+            ["data/a.bmd", "data/b.kcl"],
+        )
+
+    def test_resolve_matches_path_fragments_and_owner_symbols(self):
+        handles = [AC.AssetHandle(5, 0x9, "data/special_obj/kb1_ball/kb1_ball.bmd", 7)]
+        references = [{
+            "raw_id": "0x0005", "status": "runtime-handle",
+            "owner": "data_ov044_02111680",
+        }]
+        by_fragment = AC.resolve_queries(["kb1_ball"], handles, references)
+        self.assertEqual([h.handle for h in by_fragment[0][1]], [5])
+        by_owner = AC.resolve_queries(["data_ov044_02111680"], handles, references)
+        self.assertEqual([h.handle for h in by_owner[0][1]], [5])
+
+    def test_resolve_reports_no_match_for_encoded_values(self):
+        handles = [AC.AssetHandle(1, 0x123, "data/a.bmd", 10)]
+        self.assertEqual(AC.resolve_queries(["0x9807"], handles, []), [("0x9807", [])])
+
 
 if __name__ == "__main__":
     unittest.main()

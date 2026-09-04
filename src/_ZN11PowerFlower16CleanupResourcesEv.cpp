@@ -6,13 +6,13 @@
 
 extern "C" {
 void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov002_0210d9d0[];
-extern int data_ov002_0210d9b0[];
+extern int gPFlowerCloseModelFile[];
+extern int gPFlowerOpenModelFile[];
 }
 
 s32 PowerFlower::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9b0);
+    _ZN13SharedFilePtr7ReleaseEv(gPFlowerCloseModelFile);
+    _ZN13SharedFilePtr7ReleaseEv(gPFlowerOpenModelFile);
     return 1;
 }

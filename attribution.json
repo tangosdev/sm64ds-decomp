@@ -2504,6 +2504,13 @@
     "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_c8BehaviorEv": "github-actions[bot]",
     "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_cD0Ev": "github-actions[bot]",
     "src/actors/daObjMc_Metalnet_c.cpp#_ZN18daObjMc_Metalnet_cD1Ev": "github-actions[bot]",
-    "src/actors/daObjMc_Metalnet_c.cpp#daObjMc_Metalnet_c_classInit": "github-actions[bot]"
+    "src/actors/daObjMc_Metalnet_c.cpp#daObjMc_Metalnet_c_classInit": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_cD1Ev": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_cD0Ev": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#func_ov036_02111618": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]"
   }
 }

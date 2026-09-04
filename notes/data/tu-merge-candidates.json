@@ -5459,18 +5459,18 @@
    "start": "0x2111580",
    "end": "0x211193c",
    "classes": [
-    "ShipWing"
+    "daObjRc_Hane_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN8ShipWingD1Ev.cpp",
-    "src/_ZN8ShipWingD0Ev.cpp",
-    "src/_ZN8ShipWing16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjRc_Hane_cD1Ev.cpp",
+    "src/_ZN14daObjRc_Hane_cD0Ev.cpp",
+    "src/_ZN14daObjRc_Hane_c16CleanupResourcesEv.cpp",
     "src/func_ov036_02111618.c",
-    "src/_ZN8ShipWing6RenderEv.cpp",
-    "src/_ZN8ShipWing8BehaviorEv.cpp",
-    "src/_ZN8ShipWing13InitResourcesEv.cpp",
+    "src/_ZN14daObjRc_Hane_c6RenderEv.cpp",
+    "src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp",
+    "src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp",
     "src/daObjRc_Hane_c_classInit.c"
    ],
    "ext_mix": {
@@ -26130,21 +26130,21 @@
    "start": "0x2117980",
    "end": "0x2117d1c",
    "classes": [
-    "BowserFireSeaArena"
+    "daKpa2Bg_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN18BowserFireSeaArenaD1Ev.cpp",
-    "src/_ZN18BowserFireSeaArenaD0Ev.cpp",
+    "src/_ZN10daKpa2Bg_cD1Ev.cpp",
+    "src/_ZN10daKpa2Bg_cD0Ev.cpp",
     "src/func_ov060_02117a3c.c",
     "src/func_ov060_02117a64.c",
     "src/func_ov060_02117ae0.c",
-    "src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp",
-    "src/_ZN18BowserFireSeaArena6RenderEv.cpp",
-    "src/_ZN18BowserFireSeaArena8BehaviorEv.cpp",
-    "src/_ZN18BowserFireSeaArena13InitResourcesEv.cpp",
-    "src/BowserFireSeaArena_Spawn.c"
+    "src/_ZN10daKpa2Bg_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daKpa2Bg_c6RenderEv.cpp",
+    "src/_ZN10daKpa2Bg_c8BehaviorEv.cpp",
+    "src/_ZN10daKpa2Bg_c13InitResourcesEv.cpp",
+    "src/daKpa2Bg_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 6,

@@ -45,14 +45,13 @@ OV076 -> OV077..OV082 -> OV083 -> OV084..OV087 -> OV088 -> OV089..OV092
       -> OV093 -> OV094..OV097 -> OV098 -> OV099 -> OV100, OV101 -> OV102
 ```
 
-Each `AFTER(...)` group is a slot whose members are mutually exclusive. ov061,
-ov068, ov076, ov083, ov088, ov093, ov099 and ov101 are 32-byte spacers that pin the
+Each `AFTER(...)` group is a slot whose members are mutually exclusive. [ov061](../config/arm9/overlays/ov061/symbols.txt), [ov068](../config/arm9/overlays/ov068/symbols.txt), [ov076](../config/arm9/overlays/ov076/symbols.txt), [ov083](../config/arm9/overlays/ov083/symbols.txt), [ov088](../config/arm9/overlays/ov088/symbols.txt), [ov093](../config/arm9/overlays/ov093/symbols.txt), [ov099](../config/arm9/overlays/ov099/symbols.txt) and [ov101](../config/arm9/overlays/ov101/symbols.txt) are 32-byte spacers that pin the
 next slot's address.
 
-Note what this does **not** say: ov000 ends at `0x020BF4E0` and ov006 starts at
+Note what this does **not** say: [ov000](../config/arm9/overlays/ov000/symbols.txt) ends at `0x020BF4E0` and [ov006](../config/arm9/overlays/ov006/symbols.txt) starts at
 `0x020BFEC0`, so geometry alone permits them together. §3 is what rules it out.
 
-## 3. ov000 is a boot overlay (**E1**)
+## 3. [ov000](../config/arm9/overlays/ov000/symbols.txt) is a boot overlay (**E1**)
 
 `src/func_0201a2f8.c` -- loaded, entered at its own base address, unloaded, all
 before anything else exists:
@@ -69,15 +68,15 @@ This is exhaustive, not a sample: the ROM reaches `LoadOverlay` (`0x02018028`) a
 `UnloadOverlay` (`0x02017f34`) through exactly **15 calls and 2 function-pointer
 loads** (`config/**/relocs.txt`), every one of those functions is decompiled in
 `src/`, and only this one names overlay 0. There is no `UnloadOverlay(1)` anywhere,
-so ov001 is resident from boot onward.
+so [ov001](../config/arm9/overlays/ov001/symbols.txt) is resident from boot onward.
 
-**So ov000 is never resident alongside another overlay, and the only arm9 code that
+**So [ov000](../config/arm9/overlays/ov000/symbols.txt) is never resident alongside another overlay, and the only arm9 code that
 can see it is `func_0201a2f8` itself.** Every `overlays(0,N)` shortlist from an
 overlay means N. That alone answers the note's biggest case -- 22 references to
-`func_020beb68`, which is `ov004`'s bss, referenced 68 more times from inside ov004.
+`func_020beb68`, which is [ov004](../config/arm9/overlays/ov004/symbols.txt)'s bss, referenced 68 more times from inside [ov004](../config/arm9/overlays/ov004/symbols.txt).
 
 The window matters. `func_0201a2f8`'s own call to `func_020aa420` is the one place
-where ov000 *is* the answer; a module-granular version of this rule got that
+where [ov000](../config/arm9/overlays/ov000/symbols.txt) *is* the answer; a module-granular version of this rule got that
 backwards, which is why `possible()` takes the referring function.
 
 ## 4. The scene slot (**E3**, **E4**)
@@ -86,15 +85,15 @@ backwards, which is why `possible()` takes the referring function.
 
 | scene | overlay |
 |---|---|
-| 1 | ov007 |
-| 2, 4, 8 | ov003 |
-| 3, 6, 7 | ov002 |
-| 5 | ov005 |
-| 0x169..0x186 (minigames, `IsMinigameActorID`) | ov006 |
+| 1 | [ov007](../config/arm9/overlays/ov007/symbols.txt) |
+| 2, 4, 8 | [ov003](../config/arm9/overlays/ov003/symbols.txt) |
+| 3, 6, 7 | [ov002](../config/arm9/overlays/ov002/symbols.txt) |
+| 5 | [ov005](../config/arm9/overlays/ov005/symbols.txt) |
+| 0x169..0x186 (minigames, `IsMinigameActorID`) | [ov006](../config/arm9/overlays/ov006/symbols.txt) |
 
 `func_0201a694` unloads the previous one before loading the next and tracks it in a
-single word `data_0208ee4c`, so **exactly one of {ov002, ov003, ov005, ov006, ov007}
-is resident**. Scene 6 additionally loads ov075 once (file select).
+single word `data_0208ee4c`, so **exactly one of {[ov002](../config/arm9/overlays/ov002/symbols.txt), [ov003](../config/arm9/overlays/ov003/symbols.txt), [ov005](../config/arm9/overlays/ov005/symbols.txt), [ov006](../config/arm9/overlays/ov006/symbols.txt), [ov007](../config/arm9/overlays/ov007/symbols.txt)}
+is resident**. Scene 6 additionally loads [ov075](../config/arm9/overlays/ov075/symbols.txt) once (file select).
 
 And `src/func_0201a798.c:8`:
 
@@ -102,8 +101,8 @@ And `src/func_0201a798.c:8`:
 if (id == (int)&overlay_6) LoadOverlay((int)&overlay_4);
 ```
 
-**ov006 always drags ov004 in with it** (`func_0201a754` mirrors the unload). Since
-ov004 overlaps ov000, that is a second, independent proof for the ov006 -> ov004
+**[ov006](../config/arm9/overlays/ov006/symbols.txt) always drags [ov004](../config/arm9/overlays/ov004/symbols.txt) in with it** (`func_0201a754` mirrors the unload). Since
+[ov004](../config/arm9/overlays/ov004/symbols.txt) overlaps [ov000](../config/arm9/overlays/ov000/symbols.txt), that is a second, independent proof for the [ov006](../config/arm9/overlays/ov006/symbols.txt) -> [ov004](../config/arm9/overlays/ov004/symbols.txt)
 family.
 
 ## 5. The level tables (**E6**)
@@ -130,18 +129,19 @@ arm9 `.data`. Decoded from `extracted/dsd/arm9/arm9.bin`:
 - `data_02075998[52][7]` -- per level, a 1-based index into each group (0 = none).
   At most one member of a group per level.
 
-Plus a hard-coded tail: levels 0x24/0x26/0x28 load ov060 instead; every other level
-loads ov098 (conditionally) and ov102.
+
+Plus a hard-coded tail: levels 0x24/0x26/0x28 load [ov060](../config/arm9/overlays/ov060/symbols.txt) instead; every other level
+loads [ov098](../config/arm9/overlays/ov098/symbols.txt) (conditionally) and [ov102](../config/arm9/overlays/ov102/symbols.txt).
 
 So the resident set for level L is
 `{ov001, ov002, ov(L+8)} u {group[i][idx[L][i]]} u ({ov060} | {ov098, ov102})`,
 and a module in the level system can only reference overlays reachable from some
 level that loads it.
 
-Worked example: `src/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in ov065, which
-is `group[0][4]`, loaded by levels 13, 27 and 33 -- level overlays ov021, ov035,
-ov041. Its ambiguous target `0x021121b8` listed eleven candidate level overlays;
-exactly one, **ov035**, is in that set.
+Worked example: `src/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in [ov065](../config/arm9/overlays/ov065/symbols.txt), which
+is `group[0][4]`, loaded by levels 13, 27 and 33 -- level overlays [ov021](../config/arm9/overlays/ov021/symbols.txt), [ov035](../config/arm9/overlays/ov035/symbols.txt),
+[ov041](../config/arm9/overlays/ov041/symbols.txt). Its ambiguous target `0x021121b8` listed eleven candidate level overlays;
+exactly one, **[ov035](../config/arm9/overlays/ov035/symbols.txt)**, is in that set.
 
 ## 6. Calls prove residency (**E5**)
 
@@ -149,14 +149,14 @@ Where dsd resolved a relocation to a single overlay *and* classified it as a cal
 that BL transferred control, so the target was in memory. Loads do not count: a
 pointer-shaped word can name an address nothing dereferences.
 
-This is what settles the `ov002` vs `ov007` family (`_ZN5EnemyC2Ev` at `0x020aed98`,
-`_ZN8Platform4KillEv` at `0x020ee55c`, 159 sites between them). ov002 and ov007
+This is what settles the [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov007](../config/arm9/overlays/ov007/symbols.txt) family (`_ZN5EnemyC2Ev` at `0x020aed98`,
+`_ZN8Platform4KillEv` at `0x020ee55c`, 159 sites between them). [ov002](../config/arm9/overlays/ov002/symbols.txt) and [ov007](../config/arm9/overlays/ov007/symbols.txt)
 share a base so they are exclusive, and the ~30 referring object overlays each have
-an unambiguous *call* into ov002.
+an unambiguous *call* into [ov002](../config/arm9/overlays/ov002/symbols.txt).
 
 A referrer whose own proven set is self-contradictory is loaded in more than one
-configuration and is excluded from this rule -- `arm9` is the case, being always
-resident and calling both ov002 and ov004.
+configuration and is excluded from this rule -- [arm9](../config/arm9/symbols.txt) is the case, being always
+resident and calling both [ov002](../config/arm9/overlays/ov002/symbols.txt) and [ov004](../config/arm9/overlays/ov004/symbols.txt).
 
 ## 7. Falsification
 
@@ -172,8 +172,7 @@ calls contradicted: 0
 ```
 
 **Zero of 2322 cross-module calls contradict it.** The 10 exceptions are all
-`kind:load` -- pointer-shaped words in ov007 and ov009 naming addresses in overlays
-they cannot coexist with, i.e. constants dsd read as pointers, no control flow.
+`kind:load` -- pointer-shaped words in [ov007](../config/arm9/overlays/ov007/symbols.txt) and [ov009](../config/arm9/overlays/ov009/symbols.txt) naming addresses in overlays they cannot coexist with, i.e. constants dsd read as pointers, no control flow.
 
 ## 8. What it settled
 
@@ -196,16 +195,16 @@ ambiguity -- and it is now the biggest single block of work left.
 
 | file | referrer | why residency cannot decide |
 |---|---|---|
-| `src/func_ov002_020ec670.c` | ov002 | `0x02123804` -- all four of ov077/078/079/080 hold a real, differently-sized function there. Engine code reaching into a slot; the callee genuinely depends on the level. |
-| `src/_ZN14CutsceneObject13InitResourcesEv.cpp` | ov002 | `0x02113c20` in the level slot; ov002 is resident for every level. |
-| `src/_ZN16BowserShockwaves13InitResourcesEv.cpp` | ov060 | narrowed to the three Bowser levels (ov044/ov046/ov048); all 19 candidate symbols are dsd placeholders. |
-| `src/func_ov089_0213162c.c` | ov089 | ov089 is loaded by many levels. |
-| `src/_ZN6Bullet13InitResourcesEv.cpp` | ov002 | ov065 vs ov075 (see below). |
-| `src/_ZN8CapEnemy6AddCapEj.c` | arm9 | ov002 vs ov007; arm9 spans both. |
-| `src/func_02008b4c.c` | arm9 | ov002 vs ov006; both hold a real function. |
-| `src/func_02029408.c` | arm9 | ov002 `_ZN6Player8CanPauseEv` vs ov004 (see below). |
-| `src/func_0201a458.c` | arm9 | ov062 vs ov065, and ov006 vs ov100 (see below). |
-| `src/func_0201a2f8.c` | arm9 | the one place ov000 *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
+| `src/func_ov002_020ec670.c` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | `0x02123804` -- all four of [ov077](../config/arm9/overlays/ov077/symbols.txt)/[ov078](../config/arm9/overlays/ov078/symbols.txt)/[ov079](../config/arm9/overlays/ov079/symbols.txt)/[ov080](../config/arm9/overlays/ov080/symbols.txt) hold a real, differently-sized function there. Engine code reaching into a slot; the callee genuinely depends on the level. |
+| `src/_ZN14CutsceneObject13InitResourcesEv.cpp` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | `0x02113c20` in the level slot; [ov002](../config/arm9/overlays/ov002/symbols.txt) is resident for every level. |
+| `src/_ZN16BowserShockwaves13InitResourcesEv.cpp` | [ov060](../config/arm9/overlays/ov060/symbols.txt) | narrowed to the three Bowser levels ([ov044](../config/arm9/overlays/ov044/symbols.txt)/[ov046](../config/arm9/overlays/ov046/symbols.txt)/[ov048](../config/arm9/overlays/ov048/symbols.txt)); all 19 candidate symbols are dsd placeholders. |
+| `src/func_ov089_0213162c.c` | [ov089](../config/arm9/overlays/ov089/symbols.txt) | [ov089](../config/arm9/overlays/ov089/symbols.txt) is loaded by many levels. |
+| `src/_ZN6Bullet13InitResourcesEv.cpp` | [ov002](../config/arm9/overlays/ov002/symbols.txt) | [ov065](../config/arm9/overlays/ov065/symbols.txt) vs [ov075](../config/arm9/overlays/ov075/symbols.txt) (see below). |
+| `src/_ZN8CapEnemy6AddCapEj.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov007](../config/arm9/overlays/ov007/symbols.txt); arm9 spans both. |
+| `src/func_02008b4c.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) vs [ov006](../config/arm9/overlays/ov006/symbols.txt); both hold a real function. |
+| `src/func_02029408.c` | [arm9](../config/arm9/symbols.txt) | [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN6Player8CanPauseEv` vs [ov004](../config/arm9/overlays/ov004/symbols.txt) (see below). |
+| `src/func_0201a458.c` | [arm9](../config/arm9/symbols.txt) | [ov062](../config/arm9/overlays/ov062/symbols.txt) vs [ov065](../config/arm9/overlays/ov065/symbols.txt), and [ov006](../config/arm9/overlays/ov006/symbols.txt) vs [ov100](../config/arm9/overlays/ov100/symbols.txt) (see below). |
+| `src/func_0201a2f8.c` | [arm9](../config/arm9/symbols.txt) | the one place [ov000](../config/arm9/overlays/ov000/symbols.txt) *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
 
 Four of these have a second, weaker line of evidence available. **dsd flags a symbol
 `ambiguous` in `symbols.txt` when it invented it only to have a name for a possible
@@ -215,10 +214,10 @@ evidence, and none is a function -- only `data(any)` or `bss`. So a flagged
 candidate is a placeholder and an unflagged one is a symbol dsd derived
 independently. Where exactly one candidate is unflagged:
 
-- `_ZN6Bullet13InitResourcesEv` `0x0211d610` -> **ov065** (ov075's is flagged)
-- `func_0201a458` `0x0211d9c0` -> **ov065**; `0x02140d80` -> **ov100** (which is what
+- `_ZN6Bullet13InitResourcesEv` `0x0211d610` -> **[ov065](../config/arm9/overlays/ov065/symbols.txt)** ([ov075](../config/arm9/overlays/ov075/symbols.txt)'s is flagged)
+- `func_0201a458` `0x0211d9c0` -> **[ov065](../config/arm9/overlays/ov065/symbols.txt)**; `0x02140d80` -> **[ov100](../config/arm9/overlays/ov100/symbols.txt)** (which is what
   `func_02034fbc` loads immediately before calling it)
-- `func_02029408` `0x020bd828` -> **ov002 `_ZN6Player8CanPauseEv`**
+- `func_02029408` `0x020bd828` -> **[ov002](../config/arm9/overlays/ov002/symbols.txt)** `_ZN6Player8CanPauseEv`**
 
 That is weaker than residency and is deliberately **not** wired into the tool. It
 would need someone to decide the flag is trustworthy as evidence rather than as a
@@ -231,12 +230,9 @@ structure problem, not a lookup.
 
 ## 10. A misnaming found on the way
 
-`overlay_64` and `overlay_66` in `src/func_02034fbc.c`, `src/func_ov007_020cc2cc.c`
-and `src/func_ov075_02117bc4.c` are **overlay ids 100 and 102**: the literals in the
-ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal.
+`overlay_64` and `overlay_66` in `src/func_02034fbc.c`, [src/func_ov007_020cc2cc.c](../config/arm9/overlays/ov007/symbols.txt) and [src/func_ov075_02117bc4.c](../config/arm9/overlays/ov075/symbols.txt) are **overlay ids 100 and 102**: the literals in the ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal.
 `overlay_75` next to them is genuine decimal 75 (`0x4b`), so the convention is not
-even consistent. Taken literally, ov064 and ov066 overlap and `LoadOverlay` would
-`Crash()`; ov100 and ov102 do not. Renaming them is a separate, easy change.
+even consistent. Taken literally, [ov064](../config/arm9/overlays/ov064/symbols.txt) and [ov066](../config/arm9/overlays/ov066/symbols.txt) overlap and `LoadOverlay` would `Crash()`; [ov100](../config/arm9/overlays/ov100/symbols.txt) and [ov102](../config/arm9/overlays/ov102/symbols.txt) do not. Renaming them is a separate, easy change.
 
 ## Related
 

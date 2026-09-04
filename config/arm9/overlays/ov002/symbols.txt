@@ -2669,11 +2669,11 @@ data_ov002_0210d954 kind:data(any) addr:0x0210d954
 data_ov002_0210d974 kind:data(any) addr:0x0210d974
 data_ov002_0210d9a0 kind:bss addr:0x0210d9a0
 data_ov002_0210d9a8 kind:bss addr:0x0210d9a8
-data_ov002_0210d9b0 kind:bss addr:0x0210d9b0
+gPFlowerOpenModelFile kind:bss addr:0x0210d9b0
 data_ov002_0210d9b8 kind:bss addr:0x0210d9b8
 data_ov002_0210d9c0 kind:bss addr:0x0210d9c0
 data_ov002_0210d9c8 kind:bss addr:0x0210d9c8
-data_ov002_0210d9d0 kind:bss addr:0x0210d9d0
+gPFlowerCloseModelFile kind:bss addr:0x0210d9d0
 data_ov002_0210d9d8 kind:bss addr:0x0210d9d8
 data_ov002_0210d9e0 kind:bss addr:0x0210d9e0
 data_ov002_0210d9e8 kind:bss addr:0x0210d9e8

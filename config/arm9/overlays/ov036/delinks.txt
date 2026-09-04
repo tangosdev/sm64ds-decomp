@@ -19,33 +19,9 @@ src/daObjRc_Kaitendai_c_classInit.c:
     complete
     .text start:0x02111544 end:0x02111580
 
-src/_ZN8ShipWingD1Ev.cpp:
+src/actors/d_a_obj_rc_hane.cpp:
     complete
-    .text start:0x02111580 end:0x021115b0
-
-src/_ZN8ShipWingD0Ev.cpp:
-    complete
-    .text start:0x021115b0 end:0x021115f4
-
-src/_ZN8ShipWing16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021115f4 end:0x02111618
-
-src/func_ov036_02111618.c:
-    complete
-    .text start:0x02111618 end:0x0211169c
-
-src/_ZN8ShipWing6RenderEv.cpp:
-    complete
-    .text start:0x0211169c end:0x021116c0
-
-src/_ZN8ShipWing8BehaviorEv.cpp:
-    complete
-    .text start:0x021116c0 end:0x02111854
-
-src/_ZN8ShipWing13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111854 end:0x02111904
+    .text start:0x02111580 end:0x02111904
 
 src/daObjRc_Hane_c_classInit.c:
     complete

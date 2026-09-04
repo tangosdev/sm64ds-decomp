@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN18BowserFireSeaArena13InitResourcesEv
+// @symbol _ZN10daKpa2Bg_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method
@@ -8,7 +8,7 @@
  * 0x374 is mMovingMeshCollider2, and 0x2ec is mClsnMat -- inherited from dBgActor_c,
  * which is also where the collider's transform comes from. unk_08e is dActor_c::mAngleY.
  */
-#include "BowserFireSeaArena.h"
+#include "daKpa2Bg_c.h"
 #include "dBgW.h"
 /* Every _ZN... prototype below is already a mangled ROM name; without extern "C" a
    .cpp file re-mangles it (e.g. _ZN5Model8LoadFileER13SharedFilePtr ->
@@ -19,13 +19,13 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern "C" void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
 extern "C" int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 /* `int`, not a local `typedef int Fix12;`. That typedef used to sit above and now
-   collides with the real Fix12<> template, which BowserFireSeaArena.h reaches
+   collides with the real Fix12<> template, which daKpa2Bg_c.h reaches
    through dActor_c.h. The parameter is passed in a register either way. */
 extern "C" int func_020393d4(void*, void*);
 extern "C" int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 
 
-int BowserFireSeaArena::InitResources()
+int daKpa2Bg_c::InitResources()
 {
   void* mdl;
   void* kcl;

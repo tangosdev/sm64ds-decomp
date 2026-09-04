@@ -33729,15 +33729,15 @@ matched: yes</title></rect><rect x="1080.02" y="251.44" width="4.93" height="5.3
 module: ov036
 addr: 0x02111544
 size: 60 bytes
-matched: yes</title></rect><rect x="1080.02" y="256.74" width="4.93" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWingD1Ev
+matched: yes</title></rect><rect x="1080.02" y="256.74" width="4.93" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_cD1Ev
 module: ov036
 addr: 0x02111580
 size: 48 bytes
-matched: yes</title></rect><rect x="1080.02" y="260.99" width="4.93" height="6.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWingD0Ev
+matched: yes</title></rect><rect x="1080.02" y="260.99" width="4.93" height="6.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_cD0Ev
 module: ov036
 addr: 0x021115b0
 size: 68 bytes
-matched: yes</title></rect><rect x="1080.02" y="267.00" width="4.93" height="3.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWing16CleanupResourcesEv
+matched: yes</title></rect><rect x="1080.02" y="267.00" width="4.93" height="3.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_c16CleanupResourcesEv
 module: ov036
 addr: 0x021115f4
 size: 36 bytes
@@ -33745,15 +33745,15 @@ matched: yes</title></rect><rect x="1084.95" y="251.44" width="3.91" height="14.
 module: ov036
 addr: 0x02111618
 size: 132 bytes
-matched: yes</title></rect><rect x="1084.95" y="266.17" width="3.91" height="4.02" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWing6RenderEv
+matched: yes</title></rect><rect x="1084.95" y="266.17" width="3.91" height="4.02" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_c6RenderEv
 module: ov036
 addr: 0x0211169c
 size: 36 bytes
-matched: yes</title></rect><rect x="1088.86" y="251.44" width="9.39" height="18.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWing8BehaviorEv
+matched: yes</title></rect><rect x="1088.86" y="251.44" width="9.39" height="18.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_c8BehaviorEv
 module: ov036
 addr: 0x021116c0
 size: 404 bytes
-matched: yes</title></rect><rect x="1098.25" y="251.44" width="7.16" height="10.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ShipWing13InitResourcesEv
+matched: yes</title></rect><rect x="1098.25" y="251.44" width="7.16" height="10.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjRc_Hane_c13InitResourcesEv
 module: ov036
 addr: 0x02111854
 size: 176 bytes
@@ -34941,11 +34941,11 @@ matched: yes</title></rect><rect x="1190.38" y="327.78" width="4.50" height="8.2
 module: ov060
 addr: 0x02117938
 size: 72 bytes
-matched: yes</title></rect><rect x="1194.88" y="327.78" width="5.25" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArenaD1Ev
+matched: yes</title></rect><rect x="1194.88" y="327.78" width="5.25" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_cD1Ev
 module: ov060
 addr: 0x02117980
 size: 84 bytes
-matched: yes</title></rect><rect x="1200.13" y="327.78" width="6.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArenaD0Ev
+matched: yes</title></rect><rect x="1200.13" y="327.78" width="6.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_cD0Ev
 module: ov060
 addr: 0x021179d4
 size: 104 bytes
@@ -34961,23 +34961,23 @@ matched: yes</title></rect><rect x="1216.86" y="327.78" width="7.49" height="8.2
 module: ov060
 addr: 0x02117ae0
 size: 120 bytes
-matched: yes</title></rect><rect x="1224.35" y="327.78" width="4.25" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArena16CleanupResourcesEv
+matched: yes</title></rect><rect x="1224.35" y="327.78" width="4.25" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_c16CleanupResourcesEv
 module: ov060
 addr: 0x02117b58
 size: 68 bytes
-matched: yes</title></rect><rect x="1228.60" y="327.78" width="2.75" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArena6RenderEv
+matched: yes</title></rect><rect x="1228.60" y="327.78" width="2.75" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_c6RenderEv
 module: ov060
 addr: 0x02117b9c
 size: 44 bytes
-matched: yes</title></rect><rect x="1231.35" y="327.78" width="6.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArena8BehaviorEv
+matched: yes</title></rect><rect x="1231.35" y="327.78" width="6.49" height="8.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_c8BehaviorEv
 module: ov060
 addr: 0x02117bc8
 size: 104 bytes
-matched: yes</title></rect><rect x="1163.91" y="335.99" width="11.00" height="8.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18BowserFireSeaArena13InitResourcesEv
+matched: yes</title></rect><rect x="1163.91" y="335.99" width="11.00" height="8.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa2Bg_c13InitResourcesEv
 module: ov060
 addr: 0x02117c30
 size: 172 bytes
-matched: yes</title></rect><rect x="1163.91" y="344.00" width="11.00" height="2.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>BowserFireSeaArena_Spawn
+matched: yes</title></rect><rect x="1163.91" y="344.00" width="11.00" height="2.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daKpa2Bg_c_classInit
 module: ov060
 addr: 0x02117cdc
 size: 64 bytes

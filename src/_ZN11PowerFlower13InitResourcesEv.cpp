@@ -16,19 +16,19 @@ extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 }
 
-extern void *data_ov002_0210d9d0[];
-extern void *data_ov002_0210d9b0[];
+extern void *gPFlowerCloseModelFile[];
+extern void *gPFlowerOpenModelFile[];
 
 int PowerFlower::InitResources()
 {
     struct Vector3 pos;
     short *angp;
 
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9d0);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9b0);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x124, data_ov002_0210d9b0[1], 1, -1) == 0)
+    _ZN5Model8LoadFileER13SharedFilePtr(gPFlowerCloseModelFile);
+    _ZN5Model8LoadFileER13SharedFilePtr(gPFlowerOpenModelFile);
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x124, gPFlowerOpenModelFile[1], 1, -1) == 0)
         return 0;
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, data_ov002_0210d9d0[1], 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, gPFlowerCloseModelFile[1], 1, -1) == 0)
         return 0;
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
         return 0;

@@ -13,8 +13,8 @@ extern char data_ov002_0210da58[];
 extern char data_ov002_0210da18[];
 extern char data_ov002_0210d9d8[];
 extern char data_ov002_0210da30[];
-extern char data_ov002_0210d9b0[];
-extern char data_ov002_0210d9d0[];
+extern char gPFlowerOpenModelFile[];
+extern char gPFlowerCloseModelFile[];
 extern char data_ov002_0210d9e0[];
 extern char data_ov002_0210da40[];
 extern char data_ov002_0210d9a0[];
@@ -53,18 +53,18 @@ int QuestionBlock::CleanupResources()
             ((SharedFilePtr *)(data_ov002_0210da30))->Release();
             break;
         case 7:
-            ((SharedFilePtr *)(data_ov002_0210d9b0))->Release();
-            ((SharedFilePtr *)(data_ov002_0210d9d0))->Release();
+            ((SharedFilePtr *)(gPFlowerOpenModelFile))->Release();
+            ((SharedFilePtr *)(gPFlowerCloseModelFile))->Release();
             ((SharedFilePtr *)(data_ov002_0210d9e0))->Release();
             break;
         case 5:
             ((SharedFilePtr *)(data_ov002_0210da58))->Release();
-            ((SharedFilePtr *)(data_ov002_0210d9b0))->Release();
-            ((SharedFilePtr *)(data_ov002_0210d9d0))->Release();
+            ((SharedFilePtr *)(gPFlowerOpenModelFile))->Release();
+            ((SharedFilePtr *)(gPFlowerCloseModelFile))->Release();
             break;
         case 6:
-            ((SharedFilePtr *)(data_ov002_0210d9b0))->Release();
-            ((SharedFilePtr *)(data_ov002_0210d9d0))->Release();
+            ((SharedFilePtr *)(gPFlowerOpenModelFile))->Release();
+            ((SharedFilePtr *)(gPFlowerCloseModelFile))->Release();
             break;
         }
     }
