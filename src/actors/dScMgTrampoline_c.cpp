@@ -273,7 +273,6 @@ extern int data_ov006_02142f60;
 extern int data_0209e650;
 extern void func_ov006_020d0ac0(void);
 extern void func_ov006_02121bc8(char *self);
-extern void func_ov006_021218c4(char *c);
 extern int func_ov006_020ccd04(int *r0);
 extern void func_ov006_020cc9fc(char *c);
 extern short func_ov006_02121768(char *c);
@@ -283,7 +282,6 @@ extern int RandomIntInternal(int *seed);
 extern "C" void func_ov006_020cd62c(int n);
 extern "C" void func_ov006_020cd510(int a);
 void func_ov006_020d0bd8(void);
-void func_ov006_02121cf4(char *c);
 int _ZN4cstd4fdivEii(int a, int b);
 extern s16 data_ov006_0212e04c;
 extern s16 data_ov006_0212e044;
@@ -307,7 +305,6 @@ extern void func_ov006_020cd424(unsigned int, int);
 extern void func_ov006_02120ca0(void);
 extern int data_ov006_0213fb18[];
 extern void func_ov006_02120a44(char *);
-extern void func_ov006_02121f04(char *);
 extern void func_ov006_020c8a9c(int, int);
 extern void func_02012718(int, int);
 extern void func_ov006_02120c40(void);
@@ -622,7 +619,7 @@ void dScMgTrampoline_c::OnYoshiTryEat(int /* arg */)
         MultiStore16(fill, dst, 0x6000);
     }
 
-    func_ov006_02121f04(o);
+    BeginIntro();
 }/* -------------------------------------------------------------------------- */
 /* ROM ordinal 38 -- _ZN17dScMgTrampoline_c13OnTurnIntoEggEi, 0x02121f70, size 0x34 */
 /* -------------------------------------------------------------------------- */
@@ -638,12 +635,12 @@ int dScMgTrampoline_c::OnTurnIntoEgg(int /* mode */)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- func_ov006_02121f04, 0x02121f04, size 0x6c */
+/* ROM ordinal 37 -- dScMgTrampoline_c::BeginIntro, 0x02121f04, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121f04
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02121f04(char *o)
+// @symbol _ZN17dScMgTrampoline_c10BeginIntroEv
+void dScMgTrampoline_c::BeginIntro()
 {
+    char *o = (char *)this;
     short a;
     short b;
 
@@ -656,7 +653,6 @@ void func_ov006_02121f04(char *o)
     *(short *)(o + 0x5db2) = b;
     *(int *)(o + 0x5dac) = 0;
     *(P2Words *)(o + 0x5004) = *(P2Words *)&data_ov006_0213fab0;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -687,7 +683,7 @@ void dScMgTrampoline_c::StateIntro()
 
         func_ov006_020d0bd8();
         func_02012718(0x1af, 0x8000);
-        func_ov006_02121cf4(c);
+        BeginPlay();
         return;
     }
 
@@ -717,18 +713,18 @@ void dScMgTrampoline_c::StateIntro()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov006_02121cf4, 0x02121cf4, size 0x70 */
+/* ROM ordinal 35 -- dScMgTrampoline_c::BeginPlay, 0x02121cf4, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_02121cf4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_02121cf4(char* c) {
+// @symbol _ZN17dScMgTrampoline_c9BeginPlayEv
+void dScMgTrampoline_c::BeginPlay()
+{
+    char *c = (char *)this;
     *(int*)(c + 0x5d90) = 0x1e;
     *(short*)(c + 0x5db8) = 1;
     func_ov006_02120a18((u16 *)(c + 0x5d84), *(short*)(c + 0x5dba));
     *(int*)(c + 0x5dac) = 0;
     _ZN5Sound12PlayBank2_2DEj(0x1b6);
     *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213fac0;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -786,7 +782,7 @@ void dScMgTrampoline_c::StatePlay()
 
     if (data_ov006_0213b0ec == 0) {
         *(s16 *)(c + 0x5db8) = 0;
-        func_ov006_021218c4(c);
+        BeginResults();
     } else {
         if (_Z14ApproachLinearRiii((int *)(c + 0x5d90), 0, 1)) {
             if (data_ov006_02140588 >= 5 || data_ov006_0214058c < 3) {
@@ -849,15 +845,15 @@ void dScMgTrampoline_c::StatePlay()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov006_021218c4, 0x021218c4, size 0x38 */
+/* ROM ordinal 32 -- dScMgTrampoline_c::BeginResults, 0x021218c4, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_021218c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_021218c4(char *c) {
+// @symbol _ZN17dScMgTrampoline_c12BeginResultsEv
+void dScMgTrampoline_c::BeginResults()
+{
+    char *c = (char *)this;
     func_ov006_020cd1e0(c);
     *(int*)(c + 0x5d90) = 0x5a;
     *(P2Words *)(c + 0x5004) = *(P2Words *)&data_ov006_0213fac8;
-}
 }
 
 /* -------------------------------------------------------------------------- */
