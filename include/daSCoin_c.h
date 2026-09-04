@@ -82,7 +82,12 @@ struct daSCoin_c : dActor_c {
        destruction. Zero means "not dying". [_ZN9daSCoin_c8BehaviorEv.cpp] */
     u8  mDeathTimer;            /* 0x113 */
 
-    virtual ~daSCoin_c();            /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared FIRST. This TU defines every virtual the class
+       has, so it emits the vtable and RTTI; out of line, mwccarm emits a
+       D2/D0/D1 triple, while retail holds D1 (0x020f03c4) above D0
+       (0x020f03f4) and no D2 at all, and objisolate then refuses the whole
+       TU for emitting out of ROM address order. */
+    virtual ~daSCoin_c() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();         /* slot  0 */
     virtual s32  CleanupResources();      /* slot  3 */

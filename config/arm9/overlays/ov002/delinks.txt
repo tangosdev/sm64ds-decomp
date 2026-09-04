@@ -4391,41 +4391,10 @@ src/func_ov002_020f035c.c:
     complete
     .text start:0x020f035c end:0x020f03c4
 
-src/_ZN9daSCoin_cD1Ev.cpp:
+src/actors/d_a_s_coin.cpp:
     complete
-    .text start:0x020f03c4 end:0x020f03f4
-
-src/_ZN9daSCoin_cD0Ev.cpp:
-    complete
-    .text start:0x020f03f4 end:0x020f0438
-
-src/func_ov002_020f0438.cpp:
-    complete
-    .text start:0x020f0438 end:0x020f051c
-
-src/func_ov002_020f051c.cpp:
-    complete
-    .text start:0x020f051c end:0x020f05f4
-
-src/func_ov002_020f05f4.c:
-    complete
-    .text start:0x020f05f4 end:0x020f069c
-
-src/_ZN9daSCoin_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f069c end:0x020f06c0
-
-src/_ZN9daSCoin_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020f06c0 end:0x020f07dc
-
-src/_ZN9daSCoin_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f07dc end:0x020f085c
-
-src/daSCoin_c_Spawn.c:
-    complete
-    .text start:0x020f085c end:0x020f0894
+    .text start:0x020f03c4 end:0x020f0894
+    .data start:0x0210aff4 end:0x0210b0ac
 
 src/_ZN6NumberD1Ev.cpp:
     complete
