@@ -443,23 +443,31 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     if (rate <= 0.0 || rate > 64.0) {
         SD_VT("note p%d t%d key %d DROPPED: playback rate %.3f out of "
               "range\n", pi, ti, key, rate);
+        SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=rate rate=%.9f\n",
+              g_frame, pi, ti, key, tk.priority, rate);
         return;
     }
-    // The inputs the rate is made of, printed whenever the note lands more
-    // than a semitone from the wave's own pitch. A sample that comes out low
-    // and long is one of these being wrong, and which one cannot be read
-    // back out of the rate alone.
-    if (semis < -1.0 || semis > 1.0)
-        SD_VT("note p%d t%d key %d: %+.2f semitones off base %d "
-              "(transpose %d, bend %d, range %d, track pitch %d units) -> "
-              "rate %.4f\n",
-              pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
-              tk.bendRange, pitchUnits, rate);
+    /* The inputs the rate is made of. UNCONDITIONAL, one line per note-on.
+       This used to fire only when the note landed more than a semitone from
+       the wave's own pitch, on the theory that a note sitting at its base
+       pitch has nothing interesting to say about pitch. That was the wrong
+       trade: it also meant a track playing near its base pitch produced NO
+       success record at all, so pairing survivors against the DROPPED lines
+       below -- "did that part go silent, or just thin out" -- could not be
+       answered from this trace. A dropped note only means something next to
+       the notes that were NOT dropped, so both sides have to be printed. */
+    SD_VT("note p%d t%d key %d: %+.2f semitones off base %d "
+          "(transpose %d, bend %d, range %d, track pitch %d units) -> "
+          "rate %.4f\n",
+          pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
+          tk.bendRange, pitchUnits, rate);
 
     int ch = sd_mix_alloc(tk.priority);
     if (ch < 0) {
         SD_VT("note p%d t%d key %d DROPPED: no mixer channel free\n", pi, ti,
               key);
+        SD_PD("off f=%d p=%d t=%d ch=-1 key=%d prio=%d why=nochan\n",
+              g_frame, pi, ti, key, tk.priority);
         return;
     }
     if (g_note[ch].active)
