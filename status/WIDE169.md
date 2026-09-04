@@ -498,22 +498,63 @@ was. (The meter is a BG layer, not OBJ, so it is not in the OBJ-diff measurement
 above; its extent is carried from an earlier lane and was not independently
 re-measured here.)
 
-WHAT IS OWED, AND WHEN. Two elements that appear in ordinary play STRADDLE a
-band boundary, and a band split cuts a straddling element in half with the full
-margin opened through the middle of it:
+WHAT WAS OWED, AND WHAT PAID IT. Two elements that appear in ordinary play
+STRADDLE a band boundary, and a band split cuts a straddling element in half
+with the full margin opened through the middle of it:
 
 * the red-coin pip row. Pip 8 sits at DS x 85-100, which crosses `band_l` (96).
-  Pixels below 96 ride left, pixels at 96 and above stay centred, so the pip is
-  torn with 128 px of gap through it.
-* the TIME label. It sits at DS x 140-179, which crosses `band_r` (160). Same
-  failure, at the other boundary.
+* the TIME label. It sits at DS x 140-179, which crosses `band_r` (160).
 
-Neither is on screen in the runs measured above, which is why the measured
-difference is zero. Both appear the moment somebody plays a red-coin star or a
-timed level. So the honest statement is: THE BAND SPLIT IS FREE TODAY AND OWED
-BEFORE RED COINS OR TIMERS MATTER. The fix is a per-element reanchor done
-upstream of the composite, where element identity still exists. It is not urgent
-and it is not optional forever.
+To those two, add the ones a later pass named: the pause banner's number sits
+ON 160, and the VS "TIME UP" banner and a level-clear banner are centred rects
+wide enough to cross both splits. None is exotic; all are ordinary play.
+
+THAT DEBT IS NOW PAID, and the paragraph this replaces said it could not be,
+so the correction is worth stating plainly. The old text read: the compositor
+"has already lost per-element identity ... A true per-element reanchor would
+have to be done further upstream, where the elements still exist as elements."
+That is true of the OWNER BYTE and false of the PIXELS. A layer is not an
+element, which is why owner cannot answer the question -- but an on-screen
+element is a spatially coherent cluster of set pixels with empty space around
+it, and coherence is recoverable from the buffer by LABELLING it. Identity was
+not lost at this seam. It only had to be recovered geometrically instead of
+read off a byte, and no move upstream was needed.
+
+What ships is `hudelem::resolve` in `port/hal/message_compositor.cpp`, run once
+per frame after every layer is resolved into `g_a` and before any pixel is
+placed. It dilates the hit mask by 16 x 8 DS pixels -- so a line of text is one
+blob rather than a row of loose glyphs -- labels it 8-connected, and gives each
+label ONE offset chosen from that element's own centre against the same two
+splits. Every pixel of an element then moves together, so a tear is impossible
+by construction: tearing needs two offsets inside one element and an element
+now has exactly one.
+
+THE BRIDGE IS SIZED, NOT GUESSED, and its error direction is deliberate. It
+must be larger than the gaps INSIDE an element (the font is on an 8 px tile
+grid, so 16 closes a text run) and smaller than the gaps BETWEEN elements that
+should anchor apart (lives ends at 47 and the meter starts at 108, 61 clear;
+the meter ends at 147 and the counters start at 207, 59 clear). If it
+over-merges, two elements share an anchor and both stay whole, which is a
+placement judgement. If it under-merges, an element splits, which is a defect.
+Over-merging is a look and under-merging is a bug, so 16 errs large.
+
+IT IS A NO-OP ON EVERYTHING SECTION 6 ALREADY MEASURED. An element wholly
+inside one band has its centre in that band too, so it takes the offset every
+one of its pixels already had. The three clusters measured above -- lives at
+6-47 (centre 26, left), the meter at 108-147 (centre 127, centre) and the coin
+and star counters at 207-247 (centre 227, right) -- are unchanged. Only a
+formerly-torn element moves, which is what makes the before/after a clean
+control rather than a whole-HUD reshuffle.
+
+`SM64DS_HUD_BANDSPLIT=1` restores the old per-column split on the same binary,
+so the torn control and the whole frame come off ONE build at ONE state base.
+`port/tools/wide_sweep.py` is the sweep that reads both.
+
+AND IT COSTS NOTHING MEASURABLE. Four linear passes over the 192x256 mask. On
+level 1 at 16:9, mean frame time is 16.93 ms with the element pass and 17.69 ms
+with the band split -- the difference is inside the run-to-run spread, so the
+honest reading is "below the noise floor", not "faster". Both sit at about half
+the 33 ms budget. The pass is skipped entirely at the native aspect.
 
 THE FULL-2D EXCEPTION. A minigame's top screen is a full 2D raster with no 3D
 layer behind it (`shown3d` is false). Reanchoring that tears it into vertical
@@ -587,14 +628,27 @@ key can say 2.37 and the fit will deliver a 21:9 picture out of the same buffer;
 that half is done, and `Aspect: 9.0` clamping to 1024x342 is the proof the
 arithmetic holds past 16:9. What is not done is the HUD.
 
-TRUE ULTRAWIDE BEYOND ABOUT 2.0 IS GATED ON THE PER-ELEMENT HUD WORK. The 3D
-side scales fine: section 2's widen is a ratio and does not care how wide the
-frame is. The HUD does care. Each band boundary opens a hole of `margin / 2`,
-and `margin` grows with the width. At 16:9 that is 256 spare, so 128 px at each
-boundary. At 21:9 (1344x576, say) it is 576 spare, so two holes of 288 px each.
-An element straddling a boundary is not just torn, it is torn with a gap wider
-than the element. So section 6's owed work is a hard prerequisite for ultrawide,
-not a nice-to-have.
+TRUE ULTRAWIDE BEYOND ABOUT 2.0 WAS GATED ON THE PER-ELEMENT HUD WORK, AND
+THAT GATE IS OPEN. The 3D side always scaled fine: section 2's widen is a ratio
+and does not care how wide the frame is. The HUD was the half that cared. Under
+the band split each boundary opened a hole of `margin / 2` and `margin` grew
+with the width -- 256 spare at 16:9, so 128 px per boundary, but 576 spare at
+21:9, so 288 px per boundary, which is a gap WIDER THAN THE ELEMENT it cuts.
+That is why ultrawide was the aspect most likely to expose a fault 16:9 hides.
+
+Per-element anchoring removes the mechanism rather than shrinking the hole. No
+element is ever cut, at any width, because the offset is chosen once per
+element and not once per column. The holes that remain open BETWEEN elements,
+where the 3D field fills them, which is what the extra width is for.
+
+WHAT IS STILL NOT DONE IS THE EVIDENCE, NOT THE ENGINE, and the two must not be
+conflated. `port/tools/wide_sweep.py` captures 21:9 alongside 16:9 for exactly
+this reason. Until that sweep has a clean per-state result at 21:9, the
+launcher's Aspect dropdown offers Native and 16:9 ONLY -- see AspectPanel.cs,
+which says the same thing at the control. A hand-written `Aspect` in
+settings.json still reaches any ratio in [1.0, 3.0]; what the DIALOG offers is
+what has been photographed and checked. When the sweep passes, the list grows
+by one row and no code changes.
 
 ## 9. Reproducing
 
