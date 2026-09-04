@@ -2764,3 +2764,8 @@ ov016	0x02112ef4	_ZN23FloatOnWaterPlatformJrbD1Ev	_ZN13daObjKi_Ita_cD1Ev	ROM RTT
 ov016	0x02112f44	_ZN23FloatOnWaterPlatformJrbD0Ev	_ZN13daObjKi_Ita_cD0Ev	ROM RTTI class identity; unchanged function address; vtable slot 17
 ov016	0x02112fa8	_ZN23FloatOnWaterPlatformJrb13InitResourcesEv	_ZN13daObjKi_Ita_c13InitResourcesEv	ROM RTTI class identity; unchanged function address; vtable slot 0
 ov016	0x02114bcc	_ZTV23FloatOnWaterPlatformJrb	_ZTV13daObjKi_Ita_c	ROM RTTI class identity; unchanged public vtable address point
+ov006	0x02121774	func_ov006_02121774	_ZN17dScMgTrampoline_c9StateDoneEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213faa8 and the empty matched body identify the terminal state
+ov006	0x02121778	func_ov006_02121778	_ZN17dScMgTrampoline_c13StateWaitExitEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213faa0 and the matched body identify the exit-wait state
+ov006	0x02121848	func_ov006_02121848	_ZN17dScMgTrampoline_c12StateResultsEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac8 and the matched body identify the results transition state
+ov006	0x021218fc	func_ov006_021218fc	_ZN17dScMgTrampoline_c9StatePlayEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac0 and the matched body identify the active-play state
+ov006	0x02121d64	func_ov006_02121d64	_ZN17dScMgTrampoline_c10StateIntroEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fab0 and the matched body identify the intro state
