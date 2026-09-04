@@ -150,6 +150,12 @@ void HitDeathPlane(int arg)
  * SM64DS_VS_LUIGI_INFECTION is unset. */
 extern "C" int  port_luigi_enabled(void);
 extern "C" void port_luigi_seed(int frame);
+/* Nonzero while a rewind is being re-run, so the effects the countdown drives
+   (the beeps, the music, the trace) stand down the way every other outside-world
+   touch in the frame loop already does. DEFINED in hal/luigi_infection.cpp and
+   written by hal/rollback.cpp -- this file is linked into targets rollback.cpp
+   is not in, so calling its rb_replaying() directly is unresolved in those. */
+extern "C" int g_port_rb_replaying;
 
 // =============================================================================
 // The boot: the state the whole loop reads before any of it means anything
@@ -832,17 +838,35 @@ void port_luigi_countdown_drive(int frame)
 
     /* the native countdown audio on the stretched schedule: Sound::Play2D(2,..)
        -- a beep entering each count (0x2b), the GO chord (0x2a) and the arena's
-       own music (0x4d) at START -- the exact calls port_vs_countdown_tick makes. */
-    if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End) {
-        func_02012790(0x2b);
-    } else if (frame == kLiCdPick) {
-        func_02012790(0x2a);
-        g_course_music = 0x4d;
-        _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
+       own music (0x4d) at START -- the exact calls port_vs_countdown_tick makes.
+
+       NOT ON A REPLAYED FRAME. A rewind re-runs these frames to catch the world
+       up, and the pad, the mouse, the camera rig and the editor channel all
+       stand down for exactly that reason: a replayed frame must not touch the
+       outside world a second time. Sound is the outside world. Re-ringing the
+       beep pushed the ARM9's voice lists somewhere the straight run never put
+       them, and that was the four .dsstate bytes outside the sound queue that
+       failed the DET rung with this mode armed (mode off came back IDENTICAL).
+       The COUNTER WRITES ABOVE ARE NOT GUARDED and must not be: they are the
+       world, they are pure functions of the frame, and the replay exists to
+       reproduce them. g_course_music is likewise state rather than an effect --
+       it is set to the same 0x4d either way -- but the LoadAndSetMusic call
+       beside it is an effect, so both it and the beeps go behind the guard. */
+    if (!g_port_rb_replaying) {
+        if (frame == kLiCdStart || frame == kLiCd3End || frame == kLiCd2End) {
+            func_02012790(0x2b);
+        } else if (frame == kLiCdPick) {
+            func_02012790(0x2a);
+            g_course_music = 0x4d;
+            _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
+        }
     }
 
+    /* The trace is an effect too, and its own latch is a host static a rewind
+       cannot put back, so a replay would both double-print and leave the latch
+       reading a count the world has since backed out of. */
     static int last_shown = -99;
-    if (count != last_shown) {
+    if (count != last_shown && !g_port_rb_replaying) {
         last_shown = count;
         fprintf(stderr, "[luigi] COUNTDOWN f%d shows %s\n", frame,
                 count == 3 ? "READY? + 3" : count == 2 ? "READY? + 2" :

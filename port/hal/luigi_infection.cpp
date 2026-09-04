@@ -57,6 +57,21 @@ extern unsigned char data_0209f250;        /* local player index */
 extern void port_player_set_character(void *player, unsigned ch);
 }
 
+/* NONZERO WHILE A REWIND IS BEING RE-RUN. The mode's WORLD writes (the team
+ * bits, the character swap, the mapID blanking) must happen on a replayed frame
+ * -- reproducing them is what the replay is for -- but its EFFECTS on the
+ * outside world stand down, the same rule the pad, the mouse, the camera rig
+ * and the editor channel follow in the frame loop.
+ *
+ * DEFINED HERE AND WRITTEN BY hal/rollback.cpp, rather than read back out of
+ * rollback's own rb_replaying(), because this file and hal/star_flow.cpp are
+ * linked into targets that rollback.cpp is NOT in (smoke_player, the hires
+ * window). Calling rb_replaying() from here is an unresolved external in every
+ * one of them. Owning the flag on this side inverts that: a build with the
+ * rollback boundary sets it, and a build without one leaves it 0 -- which is
+ * exactly the truth for a target that can never replay a frame. */
+extern "C" int g_port_rb_replaying = 0;
+
 /* the minimap's per-player mapID band, sixteen wide, DEFINED in
  * unmatched/Minimap_Behavior.cpp (which inherits C linkage from the extern "C"
  * block in Minimap_wide.h); -1 in a slot means "draw no blip for it". Declared
@@ -142,6 +157,46 @@ extern "C" int port_luigi_is_infected_player(const void *p)
 
 extern "C" int port_luigi_seeded(void) { return g_li_seeded; }
 
+/* ---- THE ROLLBACK SNAPSHOT'S COPY OF THIS MODE'S STATE --------------------
+ * g_li_team and g_li_seeded ARE simulation state: the team array decides who
+ * the minimap hides, who the hit resolver converts and who the win poll counts,
+ * and li_infect swaps the player's BODY as a consequence of setting a bit here.
+ * They are host statics, so they sit outside all three regions the rollback
+ * snapshot copies (the DS arena, .dsstate and the hardware stores) -- and
+ * .dsstate is not the place for them, because hal/dsstate_seg.h reserves that
+ * bracket for hosted DS globals and tools/dsstate_guard.py says in as many
+ * words that host-only symbols must NOT be in it.
+ *
+ * So they ride the snapshot the way the seam's counters and the divergence
+ * detector's clock already do (port_comms_counters_get/set, port_dh_frame_get/
+ * set in hal/rollback.cpp): a getter and a setter the frame boundary calls, and
+ * the slot carries the bytes beside the arena cursor.
+ *
+ * WHAT GOES WRONG WITHOUT THIS, precisely. li_infect early-returns when the
+ * team bit is already set. A rewind puts the arena back -- the converted player
+ * is a survivor again -- but left the bit set, so the replay's tag reaches that
+ * early return and NEVER RE-APPLIES the character swap. The world and this
+ * array then disagree for the rest of the match, and the two consoles disagree
+ * with each other as soon as their rewinds differ. The same holds for
+ * g_li_seeded across the pick at frame 240: it latches, so a rewind over it
+ * loses the tagger for good.
+ *
+ * The env-derived configuration (g_li_read / g_li_on / g_li_seed_slot /
+ * g_li_time_frames) is deliberately NOT carried: it is parsed once out of an
+ * environment every peer shares and never moves after, so restoring it would
+ * copy bytes that cannot have changed. */
+extern "C" void port_luigi_state_get(int *team, int *seeded)
+{
+    for (int i = 0; i < kPortMaxPlayers; ++i) team[i] = g_li_team[i];
+    *seeded = g_li_seeded;
+}
+
+extern "C" void port_luigi_state_set(const int *team, int seeded)
+{
+    for (int i = 0; i < kPortMaxPlayers; ++i) g_li_team[i] = team[i];
+    g_li_seeded = seeded;
+}
+
 /* survivors still alive: slots that have a body and are NOT on Luigi's team.
  * -1 when the mode is off, so a caller can tell "no survivors" (0) from "not
  * this mode" (-1). */
@@ -181,6 +236,7 @@ extern "C" void port_luigi_tag_player(const void *victim)
     if (!g_li_on) return;
     const int s = li_slot_of(victim);
     if (s < 0 || g_li_team[s]) return;
+    if (!g_port_rb_replaying)
     std::fprintf(stderr, "[luigi] TAG: slot %d converted to Luigi "
             "(survivors left = %d)\n", s, port_luigi_survivors_alive() - 1);
     li_infect(s);
@@ -215,6 +271,7 @@ extern "C" void port_luigi_seed(int frame)
                 "nothing seeded\n");
         return;
     }
+    if (!g_port_rb_replaying)
     std::fprintf(stderr, "[luigi] SEED f%d: slot %d starts as Luigi (the "
             "tagger); local player is slot %d\n", frame, slot,
             (int)data_0209f250);
@@ -241,7 +298,10 @@ extern "C" void port_luigi_minimap_hide(void)
        survivors and suppressed for taggers, per slot. Gated and off by default. */
     static int probe = -1;
     if (probe < 0) probe = std::getenv("SM64DS_VS_LUIGI_PROBE") ? 1 : 0;
-    if (!probe) return;
+    /* rb_replaying before the tick below, not after: the cadence counter is a
+       host static a rewind cannot put back, so a replayed frame would both
+       double-print and walk the counter past where the straight run left it. */
+    if (!probe || g_port_rb_replaying) return;
     static unsigned tick;
     if ((tick++ % 60) != 0) return;
     std::fprintf(stderr, "[luigi] MINIMAP curmap=%d", (int)data_ov002_02111148);
