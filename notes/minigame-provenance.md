@@ -548,7 +548,7 @@ Almost everything this class does with its own tail happens in the ov006
 helper functions its pointer-to-member state machine dispatches to, not in the
 four vtable methods; the citations below name those functions. All of them,
 helpers and vtable methods alike, now live in the class's own translation unit,
-src/actors/d_sc_mg_trampoline.cpp.
+src/actors/dScMgTrampoline_c.cpp.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

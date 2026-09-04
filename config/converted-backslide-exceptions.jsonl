@@ -188,11 +188,11 @@
 {"path": "src/actors/daPgMthr_c.cpp#_ZN10daPgMthr_c8BehaviorEv", "reason": "ov018/daPgMthr_c promoted to a single TU (src/actors/d_a_pg_mthr.cpp); the 6 CONVERTED member rows move from the per-symbol src/_ZN10daPgMthr_c*.cpp paths to the promoted file."}
 {"path": "src/actors/daPgMthr_c.cpp#_ZN10daPgMthr_cD0Ev", "reason": "ov018/daPgMthr_c promoted to a single TU (src/actors/d_a_pg_mthr.cpp); the 6 CONVERTED member rows move from the per-symbol src/_ZN10daPgMthr_c*.cpp paths to the promoted file."}
 {"path": "src/actors/daPgMthr_c.cpp#_ZN10daPgMthr_cD1Ev", "reason": "ov018/daPgMthr_c promoted to a single TU (src/actors/d_a_pg_mthr.cpp); the 6 CONVERTED member rows move from the per-symbol src/_ZN10daPgMthr_c*.cpp paths to the promoted file."}
-{"path": "src/_ZN17dScMgTrampoline_c13OnTurnIntoEggEi.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/d_sc_mg_trampoline.cpp); 42 legacy one-function files consolidated"}
-{"path": "src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/d_sc_mg_trampoline.cpp); 42 legacy one-function files consolidated"}
-{"path": "src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/d_sc_mg_trampoline.cpp); 42 legacy one-function files consolidated"}
-{"path": "src/_ZN17dScMgTrampoline_cD0Ev.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/d_sc_mg_trampoline.cpp); 42 legacy one-function files consolidated"}
-{"path": "src/_ZN17dScMgTrampoline_cD1Ev.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/d_sc_mg_trampoline.cpp); 42 legacy one-function files consolidated"}
+{"path": "src/_ZN17dScMgTrampoline_c13OnTurnIntoEggEi.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/dScMgTrampoline_c.cpp); 42 legacy one-function files consolidated"}
+{"path": "src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/dScMgTrampoline_c.cpp); 42 legacy one-function files consolidated"}
+{"path": "src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/dScMgTrampoline_c.cpp); 42 legacy one-function files consolidated"}
+{"path": "src/_ZN17dScMgTrampoline_cD0Ev.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/dScMgTrampoline_c.cpp); 42 legacy one-function files consolidated"}
+{"path": "src/_ZN17dScMgTrampoline_cD1Ev.cpp", "reason": "ov006/dScMgTrampoline_c promoted to a single TU (src/actors/dScMgTrampoline_c.cpp); 42 legacy one-function files consolidated"}
 {"path": "src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}
 {"path": "src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}
 {"path": "src/_ZN18RotatingPlatformRrD0Ev.cpp", "reason": "ov036/daObjRc_Kaitendai_c: four per-function sources promoted into src/actors/d_a_obj_rc_kaitendai.cpp (a move into a CONVERTED file, not a removal)"}

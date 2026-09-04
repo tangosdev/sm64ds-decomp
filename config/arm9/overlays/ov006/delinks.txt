@@ -5967,17 +5967,10 @@ src/MgHideAndBooSeek_Spawn.c:
     complete
     .text start:0x021207a8 end:0x021207dc
 
-src/actors/d_sc_mg_trampoline.cpp:
+src/actors/dScMgTrampoline_c.cpp:
     complete
-    .text start:0x021207dc end:0x02122490
-
-src/MgTrampolineTime_Spawn.cpp:
-    complete
-    .text start:0x02122490 end:0x021225a8
-
-src/func_ov006_021225a8.c:
-    complete
-    .text start:0x021225a8 end:0x021225ac
+    .text start:0x021207dc end:0x021225ac
+    .data start:0x0213faa0 end:0x0213fbc4
 
 src/actors/dScMgTrampoline2_c.cpp:
     complete
