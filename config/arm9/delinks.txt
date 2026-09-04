@@ -700,7 +700,7 @@ src/_ZN6Camera13InitResourcesEv.cpp:
     complete
     .text start:0x0200e338 end:0x0200e444
 
-src/Camera_Spawn.cpp:
+src/d_camera.cpp:
     complete
     .text start:0x0200e444 end:0x0200e494
 
@@ -3758,7 +3758,7 @@ src/_ZN9BootSceneD0Ev.cpp:
     complete
     .text start:0x020235d4 end:0x02023624
 
-src/dScBoot_c_classInit.c:
+src/d_s_boot.c:
     complete
     .text start:0x02023624 end:0x02023688
 
@@ -4244,7 +4244,7 @@ src/_Z17LoadLevelOverlaysi.cpp:
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
     .text start:0x0202df70 end:0x0202e088
 
-src/dScStage_c_classInit.cpp:
+src/d_s_stage.cpp:
     complete
     .text start:0x0202e088 end:0x0202e118
 
@@ -4711,7 +4711,7 @@ src/_ZN7dScMB_c13InitResourcesEv.cpp:
     complete
     .text start:0x0203506c end:0x020352b4
 
-src/func_020352b4.c:
+src/d_s_mb.c:
     complete
     .text start:0x020352b4 end:0x02035354
 

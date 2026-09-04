@@ -86,8 +86,8 @@ claim about the whole link.
 
 | Profile | Current intake file | Recovered TU | Class-derived candidate | Selected probable filename | Order / lineage evidence | Confidence | Contradiction or limitation |
 |---|---|---|---|---|---|---|---|
-| `BOOT` | `src/dScBoot_c_classInit.c` | arm9 `0x020049f0..0x020707a4` | `d_s_boot.cpp` | — | later `d_s_*` family only | — | arm9 interval contains many unrelated families |
-| `STAGE` | `src/dScStage_c_classInit.cpp` | arm9 `0x020049f0..0x020707a4` | `d_s_stage.cpp` | — | later `d_s_*` family only | — | same under-segmented arm9 interval as `BOOT` |
+| `BOOT` | `src/d_s_boot.c` | arm9 `0x020049f0..0x020707a4` | `d_s_boot.cpp` | — | later `d_s_*` family only | — | arm9 interval contains many unrelated families |
+| `STAGE` | `src/d_s_stage.cpp` | arm9 `0x020049f0..0x020707a4` | `d_s_stage.cpp` | — | later `d_s_*` family only | — | same under-segmented arm9 interval as `BOOT` |
 | `MINIGAME` | `src/func_ov005_020c21ec.c` | ov005 `0x020c21ec..0x020c2250` | `d_s_mini_gm.cpp` | `d_s_mini_gm.cpp` | later `d_s_*`; no RTTI stem in interval | B- | one-function, factory-only interval |
 | `CANNON_SHUTTER` | `src/actors/daObjCannonShutter_c.cpp` | ov002 `0x020bc8f4..0x020bccfc` | `d_a_obj_cannon_shutter.cpp` | same | unique `d_a_obj_*` stem | B- | right boundary is medium |
 | `C1_TRAP` | `src/actors/daObjC1_Trap_c.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |

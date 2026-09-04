@@ -10,8 +10,8 @@
     "class label(s): daObjPushblock_c",
     "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "high-confidence left cut at 0x020b8bf0 and right cut at 0x020b9148 in build/tu_map.json",
-    "PushBlock_Spawn is the tenth function of that one mapped run, not an adjacent candidate: build/tu_map.json reports no cut at 0x020b910c",
-    "this promotion licenses the first nine functions of the run (0x020b8bf0..0x020b910c) and defers PushBlock_Spawn, so the licensed range is a prefix of the mapped run rather than a mapped boundary"
+    "daObjPushblock_c_classInit is the tenth function of that one mapped run, not an adjacent candidate: build/tu_map.json reports no cut at 0x020b910c",
+    "this promotion licenses the first nine functions of the run (0x020b8bf0..0x020b910c) and defers daObjPushblock_c_classInit, so the licensed range is a prefix of the mapped run rather than a mapped boundary"
   ],
   "sections": [
     {
@@ -177,8 +177,8 @@
     "All nine functions are genuine daObjPushblock_c members over the real shared header.",
     "The inline virtual destructor and InitResources key function make mwcc emit the retail D1/D0 pair in ROM order with no D2, together with the class RTTI and vtable.",
     "Behavior's previous eight-byte wall disappears in the whole TU when the home-coordinate declarations remain beside their first uses, reproducing the retail load/register order.",
-    "PushBlock_Spawn is the tenth function of this entry's one mapped run and is deferred, not a separate TU. Its typed C++ source hand-spells the fBase_c actor-heap allocator because a natural new expression produces the wrong allocator relocation -- a constraint it would be under inside this TU as well, as the promoted ov002/daObjAbuku_c entry shows through daObjAbuku_c_classInit (historical alias daObjAbuku_c_Spawn).",
-    "PushBlock_SpawnInfo remains outside this manifest because data adjacency alone does not establish ownership."
+    "daObjPushblock_c_classInit is the tenth function of this entry's one mapped run and is deferred, not a separate TU. Its typed C++ source hand-spells the fBase_c actor-heap allocator because a natural new expression produces the wrong allocator relocation -- a constraint it would be under inside this TU as well, as the promoted ov002/daObjAbuku_c entry shows through daObjAbuku_c_classInit (historical alias daObjAbuku_c_Spawn).",
+    "g_profile_PUSHBLOCK remains outside this manifest because data adjacency alone does not establish ownership."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

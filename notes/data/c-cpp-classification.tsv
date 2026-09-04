@@ -17,17 +17,17 @@ src/ArrowSignRight_Spawn.c	WEAK-refs-only	ov098				1		None		-
 src/AutoloadCallback.c	PURE-C	arm9				1		None		-
 src/BabyPenguin_Spawn.c	WEAK-refs-only	ov072				1		None		-
 src/daObjC0Water_c_classInit.c	WEAK-refs-only	ov012				1		None		-
-src/BigBrickBlock_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_l_dp_block_l.c	WEAK-refs-only	ov002				1		None		-
 src/daBDonketu_c_classInit.c	S1-stores-rom-vptr	ov064			stores _ZTV8BigBully	1		None	_ZTV8BigBully	-
 src/BigMovingIceBlock_Spawn.c	WEAK-refs-only	ov056				1		None		-
 src/daEykn_c_classInit_EYEKUN_BOSS.c	WEAK-refs-only	ov071				1		None		-
 src/daObjBkKillerdai_c_classInit.c	S1-stores-rom-vptr	ov079			stores _ZTV11BillBlaster	1		None	_ZTV11BillBlaster	-
 src/Bird_Spawn.c	WEAK-refs-only	ov009				1		None		-
 src/BitUnPack.c	PURE-C					0		None		not-in-delinks
-src/BlackBrickBlock_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_l_block_ll.c	WEAK-refs-only	ov002				1		None		-
 src/daObjBC_Switch_c_classInit.c	S1-stores-rom-vptr	ov002			stores _ZTV16daObjBC_Switch_c	1		None	_ZTV16daObjBC_Switch_c	-
-src/BlueCoin_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/BlueFlame_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_coin_blue_coin.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_fire_obj_blue_fire.c	WEAK-refs-only	ov002				1		None		-
 src/BobOmbBuddy_Spawn.c	WEAK-refs-only	ov084				1		None		-
 src/BobOmb_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/daBookGen_c_classInit.c	WEAK-refs-only	ov020				1		None		-
@@ -43,8 +43,8 @@ src/daObjWlKoopaShutter_c_classInit.c	S1-stores-rom-vptr	ov026			stores _ZTV13Bo
 src/BowserSkyPlatform_Spawn.c	S1-stores-rom-vptr	ov060			stores _ZTV17BowserSkyPlatform	1		None	_ZTV17BowserSkyPlatform	-
 src/BowserTail_Spawn.c	WEAK-refs-only	ov060				1		None		-
 src/Bowser_Spawn.c	WEAK-refs-only	ov060				1		None		-
-src/BrickBlockSwitchActivated_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/BrickBlock_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_l_sw_block_l.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_l_block_l.c	WEAK-refs-only	ov002				1		None		-
 src/BulletBill_Spawn.c	WEAK-refs-only	ov079				1		None		-
 src/Bullet_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/daDonketu_c_classInit.c	S1-stores-rom-vptr	ov064			stores _ZTV5Bully	1		None	_ZTV5Bully	-
@@ -56,7 +56,7 @@ src/CannonHatch_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/CapBlockLuigi_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockMario_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockWario_Spawn.c	WEAK-refs-only	ov102				1		None		-
-src/Cap_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_mario_cap.c	WEAK-refs-only	ov002				1		None		-
 src/daObjMcWater_c_classInit.c	WEAK-refs-only	ov009				1		None		-
 src/CccArena_Spawn.c	WEAK-refs-only	ov073				1		None		-
 src/CccBigIce_Spawn.c	WEAK-refs-only	ov073				1		None		-
@@ -72,7 +72,7 @@ src/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
 src/ClockPaintingHandLong_Spawn.c	WEAK-refs-only	ov013				1		None		-
 src/daObjClockHuriko_c_Spawn.c	S1-stores-rom-vptr	ov013			stores _ZTV18daObjClockHuriko_c	1		None	_ZTV18daObjClockHuriko_c	-
 src/d_a_obj_casket.c	WEAK-refs-only	ov071				1		None		-
-src/Coin_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_coin_coin.c	WEAK-refs-only	ov002				1		None		-
 src/CollectStar.c	PURE-C	arm9				1		None		-
 src/CollectStarInCurLevel.c	PURE-C	arm9				1		None		-
 src/CollectStarInLevel.c	PURE-C	arm9				1		None		-
@@ -147,7 +147,7 @@ src/FloatingFloorBfs_Spawn.c	S1-stores-rom-vptr	ov045			stores _ZTV14daObjUkiyuk
 src/FloatingFloorLllBig_Spawn.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
 src/FloatingFloorLllSmall_Spawn.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
 src/daPropeller_Heyho_c_classInit.c	WEAK-refs-only	ov070				1		None		-
-src/FortressTowerWall_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_l_bk_futa.c	WEAK-refs-only	ov002				1		None		-
 src/FortressTower_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/FortressWallBreakable_Spawn.c	WEAK-refs-only	ov079				1		None		-
 src/FortressWall_Spawn.c	WEAK-refs-only	ov079				1		None		-
@@ -177,7 +177,7 @@ src/GiveVsStars.c	PURE-C	arm9				1		None		-
 src/GoombaLarge_Spawn.c	WEAK-refs-only	ov084				1		None		-
 src/GoombaSmall_Spawn.c	WEAK-refs-only	ov084				1		None		-
 src/Goomba_Spawn.c	WEAK-refs-only	ov084				1		None		-
-src/GreenShellBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_item_tag_blk_gnshell_tag.c	WEAK-refs-only	ov002				1		None		-
 src/Grindel_Spawn.c	S1-stores-rom-vptr	ov025			stores _ZTV11daDsnBase_c	1		None	_ZTV11daDsnBase_c/_ZTV7daDkk_c	-
 src/Halt.c	PURE-C					0		None		not-in-delinks
 src/HauntedChair_Spawn.c	WEAK-refs-only	ov020				1		None		-
@@ -266,9 +266,9 @@ src/Matrix4x3_FromRotationZ.c	PURE-C	arm9				1		None		-
 src/Matrix4x3_FromRotationZXYExt.c	PURE-C	arm9				1		None		-
 src/Matrix4x3_FromTranslation.c	PURE-C	arm9				1		None		-
 src/Matrix4x3_LoadIdentity.c	PURE-C	arm9				1		None		-
-src/MegaMushroomBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_item_tag_blk_skinoko_tag.c	WEAK-refs-only	ov002				1		None		-
 src/MegaMushroomCreateTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/MegaMushroom_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_1up_scaleup_kinoko.c	WEAK-refs-only	ov002				1		None		-
 src/Message_DrawCenteredLine.c	WEAK-refs-only	arm9				1		None		-
 src/d_a_obj_fl_amilift.c	S1-stores-rom-vptr	ov064			stores _ZTV12MetalNetLift	1		None	_ZTV12MetalNetLift	-
 src/daObjMc_Metalnet_c_classInit.c	WEAK-refs-only	ov009				1		None		-
@@ -315,8 +315,8 @@ src/OS_SleepThread.c	WEAK-refs-only	arm9				1		None		-
 src/OS_WakeupThread.c	WEAK-refs-only	arm9				1		None		-
 src/ObjectMessageIDToActualMessageID.c	PURE-C	arm9				1		None		-
 src/OneUpLogo_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/OneUpMushroomBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/OneUpMushroom_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_item_tag_blk_okinoko_tag.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_1up_oneupkinoko.c	WEAK-refs-only	ov002				1		None		-
 src/OpenCannon.c	PURE-C	arm9				1		None		-
 src/OpenCannonInCurLevel.c	PURE-C	arm9				1		None		-
 src/OpenCannonInLevel.c	PURE-C	arm9				1		None		-
@@ -332,13 +332,13 @@ src/Player_ScaleByCharFactor.c	PURE-C					0		None		not-in-delinks
 src/PokeySegment_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/Pokey_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/daObjKm2_Ami_Bou_c_classInit.c	WEAK-refs-only	ov045				1		None		-
-src/PoppingLavaBubbles_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV18PoppingLavaBubbles	1		None	_ZTV18PoppingLavaBubbles	-
-src/PowerFlower_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_lava.c	S1-stores-rom-vptr	ov002			stores _ZTV18PoppingLavaBubbles	1		None	_ZTV18PoppingLavaBubbles	-
+src/d_a_obj_power_up_item.c	WEAK-refs-only	ov002				1		None		-
 src/daSCre_c_Spawn.c	S1-stores-rom-vptr	ov018			stores _ZTV8daSCre_c	1		None	_ZTV8daSCre_c	-
 src/PowerStar_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/PrepareVsMode.c	WEAK-refs-only	arm9				1		None		-
 src/PrincessPeach_Spawn.c	WEAK-refs-only	ov085				1		None		-
-src/PushBlock_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV16daObjPushblock_c	1		None	_ZTV16daObjPushblock_c	-
+src/daObjPushblock_c_classInit.c	S1-stores-rom-vptr	ov002			stores _ZTV16daObjPushblock_c	1		None	_ZTV16daObjPushblock_c	-
 src/daObjDpBrock_c_classInit.c	WEAK-refs-only	ov025				1		None		-
 src/daObjDlPyramidDummy_c_classInit.c	WEAK-refs-only	ov024				1		None		-
 src/daObjDlPyramid_c_classInit.c	WEAK-refs-only	ov024				1		None		-
@@ -356,8 +356,8 @@ src/ReadSignedVarInt.c	PURE-C	arm9				1		None		-
 src/ReadUnalignedInt.c	PURE-C	arm9				1		None		-
 src/ReadUnalignedShort.c	PURE-C	arm9				1		None		-
 src/ReadUnalignedUshort.c	PURE-C	arm9				1		None		-
-src/RedCoin_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/RedFlame_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_coin_red_coin.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_fire_obj_red_fire.c	WEAK-refs-only	ov002				1		None		-
 src/RequestScreenFade.c	PURE-C	ov007				1		None		-
 src/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/ResetInput.c	PURE-C	arm9				1		None		-
@@ -419,7 +419,7 @@ src/ShowArea.c	PURE-C	arm9				1		None		-
 src/ShowCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/daObjBSwdoor_c_classInit.c	S1-stores-rom-vptr	ov014			stores _ZTV10ShutterBob	1		None	_ZTV10ShutterBob/_ZTV13daObjSwdoor_c	-
 src/SignPost_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/SilverStarBlockTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_obj_block_item_tag_blk_slvstar_tag.c	WEAK-refs-only	ov002				1		None		-
 src/SilverStar_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/Skeeter_Spawn.c	S1-stores-rom-vptr	ov090			stores _ZTV7Skeeter	1		None	_ZTV7Skeeter	-
 src/daObjSm_Lift_c_classInit.c	S1-stores-rom-vptr	ov018			stores _ZTV7SkiLift	1		None	_ZTV7SkiLift	-
@@ -550,11 +550,11 @@ src/Whirlpool_Spawn.c	WEAK-refs-only	ov026				1		None		-
 src/WhompKing_Spawn.c	S1-stores-rom-vptr	ov079			stores _ZTV5Whomp	1		None	_ZTV5Whomp	-
 src/Whomp_Spawn.c	S1-stores-rom-vptr	ov079			stores _ZTV5Whomp	1		None	_ZTV5Whomp	-
 src/Wiggler_Spawn.c	S1-stores-rom-vptr	ov034			stores _ZTV7Wiggler	1		None	_ZTV7Wiggler	-
-src/game/actors/WingFeather/WingFeather_Spawn.c	WEAK-refs-only	ov002				1		None		-
+src/game/actors/WingFeather/d_a_feather.c	WEAK-refs-only	ov002				1		None		-
 src/Wireless_Reset.c	PURE-C	arm9				1		None		-
 src/WithMeshClsn_UpdateContinuous_Veneer.c	WEAK-refs-only	arm9				1		None		-
 src/WithMeshClsn_UpdateDiscreteNoLava_veneer.c	WEAK-refs-only	arm9				1		None		-
-src/daYegg_c_classInit.c	WEAK-refs-only	ov002				1		None		-
+src/d_a_yegg.c	WEAK-refs-only	ov002				1		None		-
 src/_Z19UnloadLevelOverlaysi.c	P4-mangled-freefn	arm9			_Z19UnloadLevelOverlaysi	1	active	None		-
 src/_Z23LoadMinimapChangeObjecti5Fix12IiEh.c	P4-mangled-freefn	arm9			_Z23LoadMinimapChangeObjecti5Fix12IiEh	1		None		by-value-class-param
 src/_ZN10BrickBlockD0Ev.c	DTOR-ONLY	ov002	daObjBlockItemTag_c	BrickBlock/daObjBlockItemTag_c	_ZN10BrickBlockD0Ev	1		True	_ZTV10BrickBlock	-
@@ -1861,7 +1861,7 @@ src/func_02023408.c	PURE-C	arm9				1		None		-
 src/func_0202345c.c	PURE-C	arm9				1		None		-
 src/func_02023498.c	PURE-C	arm9				1		None		-
 src/func_02023544.c	PURE-C	arm9				1		None		-
-src/dScBoot_c_classInit.c	S1-stores-rom-vptr	arm9			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
+src/d_s_boot.c	S1-stores-rom-vptr	arm9			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
 src/func_02029408.c	PURE-C	arm9				1		None		-
 src/func_02029600.c	PURE-C	arm9				1		None		-
 src/func_0202a850.c	PURE-C	arm9				1		None		-
@@ -1938,7 +1938,7 @@ src/func_02034b40.c	P2-vtable-only	arm9	dScMB_c::graphCallback_c	dScMB_c	vtable 
 src/func_02034d24.c	P2-vtable-only	arm9	dScMB_c::graphCallback_c	dScMB_c	vtable dScMB_c::graphCallback_c slot 2 @0x2034d24	1		True		-
 src/func_02034d2c.c	P2-vtable-only	arm9	dScMB_c::graphCallback_c	dScMB_c	vtable dScMB_c::graphCallback_c slot 0 @0x2034d2c	1		True		-
 src/func_02034fbc.c	WEAK-refs-only	arm9				1		None		-
-src/func_020352b4.c	S1-stores-rom-vptr	arm9			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
+src/d_s_mb.c	S1-stores-rom-vptr	arm9			stores _ZTV8dScene_c	1		None	_ZTV8dScene_c	-
 src/func_02035354.c	PURE-C	arm9				1		None		-
 src/func_02035394.c	PURE-C	arm9				1		None		-
 src/func_020353b0.c	PURE-C	arm9				1		None		-

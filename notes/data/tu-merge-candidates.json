@@ -1614,7 +1614,7 @@
     "src/_ZN11PowerFlower8BehaviorEv.cpp",
     "src/_ZN11PowerFlower13InitResourcesEv.cpp",
     "src/_ZN11PowerFlower13OnYoshiTryEatEv.cpp",
-    "src/PowerFlower_Spawn.c"
+    "src/d_a_obj_power_up_item.c"
    ],
    "ext_mix": {
     ".cpp": 9,
@@ -1683,10 +1683,10 @@
     "src/_ZN13BigBrickBlock6RenderEv.cpp",
     "src/_ZN13BigBrickBlock8BehaviorEv.cpp",
     "src/_ZN13BigBrickBlock13InitResourcesEv.c",
-    "src/FortressTowerWall_Spawn.c",
-    "src/BlackBrickBlock_Spawn.c",
-    "src/BrickBlockSwitchActivated_Spawn.c",
-    "src/BigBrickBlock_Spawn.c"
+    "src/d_a_obj_block_l_bk_futa.c",
+    "src/d_a_obj_block_l_block_ll.c",
+    "src/d_a_obj_block_l_sw_block_l.c",
+    "src/d_a_obj_block_l_dp_block_l.c"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -2139,8 +2139,8 @@
     "src/_ZN13OneUpMushroom6RenderEv.cpp",
     "src/_ZN13OneUpMushroom8BehaviorEv.cpp",
     "src/_ZN13OneUpMushroom13InitResourcesEv.cpp",
-    "src/MegaMushroom_Spawn.c",
-    "src/OneUpMushroom_Spawn.c"
+    "src/d_a_1up_scaleup_kinoko.c",
+    "src/d_a_1up_oneupkinoko.c"
    ],
    "ext_mix": {
     ".cpp": 15,
@@ -7296,7 +7296,7 @@
     "src/_ZN9BlueFlame13InitResourcesEv.cpp",
     "src/_ZN9BlueFlame13OnTurnIntoEggER6Player.cpp",
     "src/_ZN9BlueFlame13OnYoshiTryEatEv.cpp",
-    "src/BlueFlame_Spawn.c"
+    "src/d_a_obj_fire_obj_blue_fire.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -8718,7 +8718,7 @@
    "n_functions_map": 11,
    "n_files": 11,
    "files": [
-    "src/BrickBlock_Spawn.c",
+    "src/d_a_obj_block_l_block_l.c",
     "src/_ZN10BrickBlockD1Ev.cpp",
     "src/_ZN10BrickBlockD0Ev.c",
     "src/func_ov002_020b41b8.c",
@@ -8851,7 +8851,7 @@
     "src/_ZN16daObjPushblock_c6RenderEv.cpp",
     "src/_ZN16daObjPushblock_c8BehaviorEv.c",
     "src/_ZN16daObjPushblock_c13InitResourcesEv.cpp",
-    "src/PushBlock_Spawn.c"
+    "src/daObjPushblock_c_classInit.c"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -12000,7 +12000,7 @@
     "src/func_02023544.c",
     "src/_ZN9BootSceneD1Ev.cpp",
     "src/_ZN9BootSceneD0Ev.cpp",
-    "src/dScBoot_c_classInit.c",
+    "src/d_s_boot.c",
     "src/_ZN5StageD1Ev.cpp",
     "src/_ZN5StageD0Ev.cpp",
     "src/_ZN5Stage9VE_UpdateEv.cpp",
@@ -12239,7 +12239,7 @@
     "src/_ZN7dScMB_c8BehaviorEv.c",
     "src/func_02034fbc.c",
     "src/_ZN7dScMB_c13InitResourcesEv.c",
-    "src/func_020352b4.c",
+    "src/d_s_mb.c",
     "src/func_02035354.c",
     "src/func_02035394.c",
     "src/func_020353b0.c",
@@ -14891,9 +14891,9 @@
     "src/_ZN4Coin13InitResourcesEv.c",
     "src/_ZN4Coin13OnTurnIntoEggER6Player.cpp",
     "src/_ZN4Coin13OnYoshiTryEatEv.cpp",
-    "src/BlueCoin_Spawn.c",
-    "src/RedCoin_Spawn.c",
-    "src/Coin_Spawn.c"
+    "src/d_a_coin_blue_coin.c",
+    "src/d_a_coin_red_coin.c",
+    "src/d_a_coin_coin.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -14953,7 +14953,7 @@
     "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp",
     "src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp",
     "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp",
-    "src/game/actors/WingFeather/WingFeather_Spawn.c"
+    "src/game/actors/WingFeather/d_a_feather.c"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -15545,7 +15545,7 @@
     "src/_ZN18PoppingLavaBubblesD0Ev.c",
     "src/func_ov002_020b6d84.c",
     "src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp",
-    "src/PoppingLavaBubbles_Spawn.c"
+    "src/d_a_obj_lava.c"
    ],
    "ext_mix": {
     ".cpp": 2,
@@ -16867,7 +16867,7 @@
     "src/_ZN8YoshiEgg6RenderEv.cpp",
     "src/_ZN8YoshiEgg8BehaviorEv.cpp",
     "src/_ZN8YoshiEgg13InitResourcesEv.cpp",
-    "src/daYegg_c_classInit.c"
+    "src/d_a_yegg.c"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -32398,7 +32398,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/SilverStarBlockTag_Spawn.c"
+    "src/d_a_obj_block_item_tag_blk_slvstar_tag.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -32446,7 +32446,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/GreenShellBlockTag_Spawn.c"
+    "src/d_a_obj_block_item_tag_blk_gnshell_tag.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -32494,7 +32494,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/MegaMushroomBlockTag_Spawn.c"
+    "src/d_a_obj_block_item_tag_blk_skinoko_tag.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -32542,7 +32542,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/OneUpMushroomBlockTag_Spawn.c"
+    "src/d_a_obj_block_item_tag_blk_okinoko_tag.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -32686,7 +32686,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/RedFlame_Spawn.c"
+    "src/d_a_obj_fire_obj_red_fire.c"
    ],
    "ext_mix": {
     ".c": 1
@@ -32931,7 +32931,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/Cap_Spawn.c"
+    "src/d_a_obj_mario_cap.c"
    ],
    "ext_mix": {
     ".c": 1

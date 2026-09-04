@@ -68,10 +68,10 @@
       "ordinal": 6
     },
     {
-      "symbol": "WingFeather_Spawn",
+      "symbol": "daFeather_c_classInit",
       "address": "0x020b3248",
       "size": "0x00000050",
-      "legacy_source": "src/game/actors/WingFeather/WingFeather_Spawn.c",
+      "legacy_source": "src/game/actors/WingFeather/d_a_feather.c",
       "ordinal": 7
     }
   ],
@@ -124,7 +124,7 @@
       "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp",
       "src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp",
       "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp",
-      "src/game/actors/WingFeather/WingFeather_Spawn.c"
+      "src/game/actors/WingFeather/d_a_feather.c"
     ],
     "extraInertImports": 97,
     "extraImportsWithNoHome": [],

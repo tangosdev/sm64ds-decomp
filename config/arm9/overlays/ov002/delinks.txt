@@ -280,11 +280,11 @@ src/_ZN13OneUpMushroom13InitResourcesEv.cpp:
     complete
     .text start:0x020b01c0 end:0x020b0530
 
-src/MegaMushroom_Spawn.c:
+src/d_a_1up_scaleup_kinoko.c:
     complete
     .text start:0x020b0530 end:0x020b0580
 
-src/OneUpMushroom_Spawn.c:
+src/d_a_1up_oneupkinoko.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
@@ -416,15 +416,15 @@ src/_ZN4Coin13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b2a90 end:0x020b2a98
 
-src/BlueCoin_Spawn.c:
+src/d_a_coin_blue_coin.c:
     complete
     .text start:0x020b2a98 end:0x020b2af0
 
-src/RedCoin_Spawn.c:
+src/d_a_coin_red_coin.c:
     complete
     .text start:0x020b2af0 end:0x020b2b48
 
-src/Coin_Spawn.c:
+src/d_a_coin_coin.c:
     complete
     .text start:0x020b2b48 end:0x020b2ba0
 
@@ -456,7 +456,7 @@ src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp:
     complete
     .text start:0x020b311c end:0x020b3248
 
-src/game/actors/WingFeather/WingFeather_Spawn.c:
+src/game/actors/WingFeather/d_a_feather.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
@@ -520,23 +520,23 @@ src/_ZN13BigBrickBlock13InitResourcesEv.cpp:
     complete
     .text start:0x020b3d78 end:0x020b406c
 
-src/FortressTowerWall_Spawn.c:
+src/d_a_obj_block_l_bk_futa.c:
     complete
     .text start:0x020b406c end:0x020b409c
 
-src/BlackBrickBlock_Spawn.c:
+src/d_a_obj_block_l_block_ll.c:
     complete
     .text start:0x020b409c end:0x020b40cc
 
-src/BrickBlockSwitchActivated_Spawn.c:
+src/d_a_obj_block_l_sw_block_l.c:
     complete
     .text start:0x020b40cc end:0x020b40fc
 
-src/BigBrickBlock_Spawn.c:
+src/d_a_obj_block_l_dp_block_l.c:
     complete
     .text start:0x020b40fc end:0x020b412c
 
-src/BrickBlock_Spawn.c:
+src/d_a_obj_block_l_block_l.c:
     complete
     .text start:0x020b412c end:0x020b415c
 
@@ -580,19 +580,19 @@ src/_ZN10BrickBlock13InitResourcesEv.cpp:
     complete
     .text start:0x020b451c end:0x020b45e0
 
-src/SilverStarBlockTag_Spawn.c:
+src/d_a_obj_block_item_tag_blk_slvstar_tag.c:
     complete
     .text start:0x020b45e0 end:0x020b4610
 
-src/GreenShellBlockTag_Spawn.c:
+src/d_a_obj_block_item_tag_blk_gnshell_tag.c:
     complete
     .text start:0x020b4610 end:0x020b4640
 
-src/MegaMushroomBlockTag_Spawn.c:
+src/d_a_obj_block_item_tag_blk_skinoko_tag.c:
     complete
     .text start:0x020b4640 end:0x020b4670
 
-src/OneUpMushroomBlockTag_Spawn.c:
+src/d_a_obj_block_item_tag_blk_okinoko_tag.c:
     complete
     .text start:0x020b4670 end:0x020b46a0
 
@@ -653,11 +653,11 @@ src/_ZN9BlueFlame13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b59a0 end:0x020b59a8
 
-src/BlueFlame_Spawn.c:
+src/d_a_obj_fire_obj_blue_fire.c:
     complete
     .text start:0x020b59a8 end:0x020b59e0
 
-src/RedFlame_Spawn.c:
+src/d_a_obj_fire_obj_red_fire.c:
     complete
     .text start:0x020b59e0 end:0x020b5a18
 
@@ -853,7 +853,7 @@ src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp:
     complete
     .text start:0x020b6dd0 end:0x020b6dd8
 
-src/PoppingLavaBubbles_Spawn.c:
+src/d_a_obj_lava.c:
     complete
     .text start:0x020b6dd8 end:0x020b6e08
 
@@ -980,7 +980,7 @@ src/_ZN15daObjMarioCap_c8BehaviorEv.cpp:
 src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp:
     .text start:0x020b86d0 end:0x020b8b98
 
-src/Cap_Spawn.c:
+src/d_a_obj_mario_cap.c:
     complete
     .text start:0x020b8b98 end:0x020b8bf0
 
@@ -988,7 +988,7 @@ src/actors/daObjPushblock_c.cpp:
     complete
     .text start:0x020b8bf0 end:0x020b910c
 
-src/PushBlock_Spawn.cpp:
+src/d_a_obj_pushblock.cpp:
     complete
     .text start:0x020b910c end:0x020b9148
 
@@ -1064,7 +1064,7 @@ src/_ZN11PowerFlower13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b9e04 end:0x020b9e0c
 
-src/PowerFlower_Spawn.c:
+src/d_a_obj_power_up_item.c:
     complete
     .text start:0x020b9e0c end:0x020b9e64
 
@@ -4272,7 +4272,7 @@ src/_ZN8YoshiEgg13InitResourcesEv.cpp:
     complete
     .text start:0x020ee144 end:0x020ee3d8
 
-src/daYegg_c_classInit.c:
+src/d_a_yegg.c:
     complete
     .text start:0x020ee3d8 end:0x020ee42c
 
