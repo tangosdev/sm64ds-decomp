@@ -596,6 +596,8 @@ void mtx_load_log(uint8_t cmd, const uint32_t *p) {
     fflush(stderr);
 }
 
+int param_count(uint8_t cmd);   /* defined below; the trap needs it */
+
 void exec(uint8_t cmd, const uint32_t *p, int np) {
     (void)np;
     ++g_cmd_n[cmd];
@@ -878,6 +880,39 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         default: break;
+    }
+    /* SM64DS_STAR_TRAP: catch the exact matrix command that installs the
+       title star's blown-up transform, with the raw parameter words and the
+       host return addresses that issued it. The star's signature is a
+       position matrix whose z scale sits at 1.4648 while x/y have jumped
+       past 10 -- the ~16x that a signed 1.3.12 value read unsigned produces
+       the frame it goes negative. */
+    if (cmd >= 0x10 && cmd <= 0x1C) {
+        static int budget = -1;
+        if (budget < 0) {
+            const char *e = getenv("SM64DS_STAR_TRAP");
+            budget = e ? atoi(e) : 0;
+        }
+        if (budget > 0 && g.pos.m[0] > 10.0f &&
+            g.pos.m[10] > 1.40f && g.pos.m[10] < 1.55f) {
+            --budget;
+            fprintf(stderr, "[startrap] cmd %02x mode %d -> pos diag "
+                    "%.4f %.4f %.4f | raw", cmd, g.mode,
+                    g.pos.m[0], g.pos.m[5], g.pos.m[10]);
+            const int n = param_count(cmd);
+            for (int i = 0; i < n; ++i)
+                fprintf(stderr, " %08x(%d)", p[i], (int32_t)p[i]);
+            fprintf(stderr, "\n");
+#if defined(_WIN32)
+            void *bt[24];
+            const unsigned short got = RtlCaptureStackBackTrace(0, 24, bt, 0);
+            fprintf(stderr, "[startrap]   from");
+            for (unsigned short i = 0; i < got; ++i)
+                fprintf(stderr, " %p", bt[i]);
+            fprintf(stderr, "\n");
+#endif
+            fflush(stderr);
+        }
     }
 }
 
