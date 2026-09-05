@@ -2926,7 +2926,7 @@ Three corrections fell straight out of it, all of which had been recorded as evi
   meaningless, including ones asserted this session on the grounds that the token appears in
   the binary -- appearing in the binary is not the same as being pragma-exposed.
 - **`long_calls` is not a pragma.** The source now at
-  `src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp` carried
+  `src/actors/daObjCtMecha04_c.cpp` carried
   `#pragma long_calls on` plus a comment crediting it for the pooled
   `ldr ip,[pc,#8]; bx ip` tail-call. It was silently ignored; the file matches on all 12
   builds with the line removed. Comment corrected.
