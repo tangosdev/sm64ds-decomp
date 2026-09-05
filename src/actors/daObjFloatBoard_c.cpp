@@ -85,8 +85,6 @@ short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 int   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(dBgActor_c *self, int x, int z);
 }
 
-/* Not called, and not in the ROM. Forces the DELETING destructor to be asked
- * for first. */
 /* ROM ordinal 6 -- vtable slot 6, ov002 0x020b5c4c.
  *
  * The board floats at mWaterY, sinks 0x28000 further while someone is standing
