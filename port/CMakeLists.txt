@@ -8183,6 +8183,40 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS "func_0203bc7c=func_0203bc7c_narrow")
 list(APPEND SLICE_COMMS_SOURCES hal/comms_fanout_wide.cpp)
 
+# ---- gate 2thr: THE DS THREAD SCHEDULER, RUN AS THE ROM WROTE IT -----------
+# run link2, lane THR.
+#
+# hal/os_thread.cpp's two host bodies are gone from every shipped target (they
+# survive behind PORT_OS_THREAD_HOST_PAIR for the two console probes at the
+# foot of this file, which exist to MEASURE them). What replaces them is not
+# another stand-in one layer up but the ROM's own scheduler: src/OS_SleepThread
+# .c, src/OS_WakeupThread.c and src/func_02057f54.c now link and run, on top of
+# hal/boot2_thread.cpp, which gives the two hand-asm ARM context primitives a
+# fiber-backed body -- the generalisation port/ntr/include/ntr/rt.h:11-14 said
+# the fiber mechanism was for.
+#
+# APPENDED TO SLICE_COMMS_SOURCES ON PURPOSE, the same way the conductor is:
+# the three targets that take that variable (smoke_player, walk_window,
+# walk_window_hires) are exactly the three that used to take hal/os_thread.cpp's
+# hosted pair, so the pair and its replacement have the same consumers and no
+# target can end up with neither. port/slice_gate2thr.txt says what is in it,
+# what is deliberately not, and why.
+#
+# NOTE the three rows also appear in port/slice_gate10.txt, where the filter
+# above (`if(src MATCHES "/OS_SleepThread\\.c$" ...)`) still drops them. That
+# filter is left alone deliberately: it is the only thing keeping these three
+# from arriving on two lists at once.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2thr.txt" SLICE2THR_LINES)
+set(SLICE2THR_SOURCES "")
+foreach(line IN LISTS SLICE2THR_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE2THR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_COMMS_SOURCES hal/boot2_thread.cpp ${SLICE2THR_SOURCES})
+
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
     hal/sdat/sdat.cpp
@@ -13398,3 +13432,26 @@ target_compile_definitions(mp_comms_seam PRIVATE SM64DS_PLATFORM_PC
 if(MSVC)
     target_compile_options(mp_comms_seam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
+
+# ---- gate 2thr: THE RETIRED HOST PAIR, KEPT ONLY WHERE IT IS MEASURED ------
+# run link2, lane THR.
+#
+# hal/os_thread.cpp's OS_SleepThread / OS_WakeupThread now compile only under
+# PORT_OS_THREAD_HOST_PAIR, and these are the two targets that define it. Both
+# are console probes with no window and no BMP, and mp_sleepwake's whole reason
+# to exist is the A/B: ARM 1 links the ROM bodies with the manager globals
+# stubbed at zero and MEASURES the 0xC0000005, ARM 2 links the host pair. Give
+# ARM 2 the ROM bodies instead and the comparison it was written to make stops
+# existing, so the retired stand-in stays reachable HERE and nowhere else.
+#
+# It is not reachable in a shipped target: walk_window, walk_window_hires and
+# smoke_player take SLICE_COMMS_SOURCES, which now carries src/OS_SleepThread.c
+# and src/OS_WakeupThread.c themselves. Neither probe links hal/cxx_aliases.cpp,
+# so the ROM bodies could not link into them anyway -- the thread manager BSS
+# they read (data_020a612c, data_020a6134, data_020a6128) lives there.
+#
+# WHAT THIS OWES: mp_sleepwake's ARM 2 half now describes a stand-in that no
+# shipped binary carries. The probe still builds and still runs; its prose is a
+# lane behind. port/tests/mp_sleepwake.cpp is not this lane's file.
+target_compile_definitions(mp_sleepwake PRIVATE PORT_OS_THREAD_HOST_PAIR)
+target_compile_definitions(mp_comms_seam PRIVATE PORT_OS_THREAD_HOST_PAIR)

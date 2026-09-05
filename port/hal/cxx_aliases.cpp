@@ -320,14 +320,17 @@ int func_01ff9e2c(unsigned a, unsigned b, unsigned c, unsigned d)
    ARMProcessorMode reads CPSR & 0x1f; host always reports system mode */
 int ARMProcessorMode(void) { return 0x1f; }
 
-/* DS thread scheduler context ops. The port runs the game on ONE fiber (the
-   ntr rt loop owns real scheduling), so a save reports "already resumed"
-   (setjmp-nonzero) and the reschedule path backs out without switching.
-   A restore reaching the host would mean a second DS thread went live.
-   PORT_HOST_ABI: ARM register context save/restore, no host equivalent. */
-int ARMSaveContext(void *ctx) { (void)ctx; return 1; }
-/* PORT_HOST_ABI: ARM register context restore (second DS thread), no host equivalent. */
-void ARMRestoreContext(void *ctx) { (void)ctx; __debugbreak(); }
+/* DS thread scheduler context ops -- MOVED, run link2 lane THR.
+   ARMSaveContext and ARMRestoreContext used to be stubbed here: a save that
+   reported "already resumed" (setjmp-nonzero) so func_02057f54 backed out
+   without switching, and a restore that trapped because "a second DS thread
+   went live" was assumed impossible. A second DS thread IS live now -- the
+   ROM's own idle thread, src/func_02057e34.c -- so both bodies are in
+   hal/boot2_thread.cpp, backed by the fiber seam ntr/include/ntr/rt.h:11-14
+   describes. They are still PORT_HOST_ABI and for the same reason (hand-asm
+   ARM register-file primitives); the tag and its evidence moved with them.
+   Nothing else changed here: ARMProcessorMode above still answers 0x1f, which
+   is what makes func_02057f54 take the switching arm of its own branch. */
 
 /* PORT_HOST_ABI: ARM asm primitive (hand-asm digit-carry), MSVC cannot assemble.
    func_02071644 (hand-asm): backward digit-carry increment over the decimal
@@ -546,7 +549,41 @@ int data_0209f274[8];
    staged array now, not blank storage, or the death path faults on it. */
 int data_0209a5ec, data_0209a5f4[2], data_0209a5fc, data_0209a600;
 int data_0209a604, data_0209a60c[2], data_0209a614, data_0209a618;
-int data_0209a61c[4], data_020a6128, data_020a6134[4];
+int data_0209a61c[4], data_020a6128;
+/* data_020a6134, THE OS THREAD MANAGER, RESIZED 0x10 -> 0x14. Run link2 lane
+   THR, and this is the one existing definition in this file that lane changes.
+ *
+ * IT WAS UNDERSIZED AND THE READ WAS OFF THE END. src/func_02057f54.c -- the
+ * ROM's reschedule, linked as of port/slice_gate2thr.txt -- spells the manager
+ *
+ *     struct CtxState { u16 m0, m2, m4, m6; void *m8; int mc;
+ *                       void (*m10)(void*, void*); };
+ *
+ * and its last statement before the switch is `if (s->m10 != 0) s->m10(...)`.
+ * m10 is at +0x10. At `int[4]` the object was 0x10 bytes, so that load read
+ * four bytes past its end and the call it guards would have been made on
+ * whatever followed in .dsstate. Same class as the run/link100 BOOT lane's
+ * refusal of func_02058308.
+ *
+ * WHY 0x14 AND NOT THE FULL ROM SPAN. config/arm9/symbols.txt has
+ * data_020a6134 at 0x020a6134 with the next symbol data_020a613c at +8, then
+ * data_020a6148 at +0x14 and data_020a6188 at +0x54 -- i.e. the ROM emitted
+ * INTERIOR symbols for one object that really runs 0x020a6134..0x020a6188:
+ *
+ *     +0x00  the four u16 flags        data_020a6134
+ *     +0x08  current thread, list head, switch callback   data_020a613c
+ *     +0x14  the sixteen thread-id slots                  data_020a6148
+ *     +0x54  the idle thread object                       data_020a6188
+ *
+ * The slot table at +0x14 is ALREADY HOSTED, as hal/auto_bss.cpp's
+ * data_020a6148, and every linked TU that touches a slot spells it that way
+ * (func_02058200, func_020581a8). Hosting the full 0x54 here would put the
+ * same sixteen ROM words in two host objects that disagree. So this stops at
+ * +0x14, one word past the highest field any linked TU reads off
+ * data_020a6134, and the note is the debt: whoever links src/func_02058308.c
+ * -- the only TU that reaches the slots THROUGH data_020a6134 -- has to unify
+ * the two first. */
+int data_020a6134[5];
 DSSTATE_END
 
 /* ---- THE GX BANK-STATE BLOCK, 0x020a6088..0x020a60a4, IN ROM ORDER ---------
