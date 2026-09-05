@@ -1958,13 +1958,13 @@
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]",
-    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_cD1Ev": "github-actions[bot]",
-    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_cD0Ev": "github-actions[bot]",
+    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_cD1Ev": "tangosdev",
+    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_cD0Ev": "tangosdev",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c12UpdateShadowEv": "tangosdev",
-    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c16CleanupResourcesEv": "github-actions[bot]",
-    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c6RenderEv": "github-actions[bot]",
+    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c6RenderEv": "tangosdev",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c8BehaviorEv": "andrewboudreau",
-    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c13InitResourcesEv": "andrewboudreau",
+    "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c13InitResourcesEv": "tangosdev",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c": "noreply",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_": "tangosdev"
   }
