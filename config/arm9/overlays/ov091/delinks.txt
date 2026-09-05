@@ -204,41 +204,9 @@ src/_ZN11daDsnBase_cD1Ev.cpp:
     complete
     .text start:0x02132d6c end:0x02132dc0
 
-src/func_ov091_02132dc0.cpp:
+src/actors/daDsnBase_c.cpp:
     complete
-    .text start:0x02132dc0 end:0x02132e64
-
-src/func_ov091_02132e64.c:
-    complete
-    .text start:0x02132e64 end:0x02132e98
-
-src/func_ov091_02132e98.c:
-    complete
-    .text start:0x02132e98 end:0x02132f04
-
-src/func_ov091_02132f04.cpp:
-    complete
-    .text start:0x02132f04 end:0x02132ff4
-
-src/func_ov091_02132ff4.c:
-    complete
-    .text start:0x02132ff4 end:0x02133020
-
-src/func_ov091_02133020.c:
-    complete
-    .text start:0x02133020 end:0x02133098
-
-src/func_ov091_02133098.cpp:
-    complete
-    .text start:0x02133098 end:0x021331b8
-
-src/_ZN11daDsnBase_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021331b8 end:0x02133210
-
-src/_ZN11daDsnBase_c6RenderEv.cpp:
-    complete
-    .text start:0x02133210 end:0x02133254
+    .text start:0x02132dc0 end:0x02133254
 
 src/func_ov091_02133254.cpp:
     complete
