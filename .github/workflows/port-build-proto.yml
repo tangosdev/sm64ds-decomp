@@ -194,7 +194,20 @@ jobs:
           # fail here by design -- there is no cartridge image on this runner --
           # so their objects and every final link stay unbuilt while every
           # ROM-free object still compiles. That is the measurement.
-          ninja -C build/port -k 0 > logs/build.log 2>&1
+          #
+          # Run detached and print a progress line every 60s, so a job that hits
+          # the timeout still leaves a rate curve in the step log instead of
+          # nothing at all.
+          ninja -C build/port -k 0 > logs/build.log 2>&1 &
+          ninja_pid=$!
+          while kill -0 "$ninja_pid" 2>/dev/null; do
+            sleep 60
+            now=$(date +%s)
+            prog=$(grep -o '^\[[0-9]*/[0-9]*\]' logs/build.log | tail -1)
+            fails=$(grep -c '^FAILED:' logs/build.log)
+            echo "t+$(( (now-start)/60 ))m$(( (now-start)%60 ))s  progress=${prog:-none}  failed_edges=${fails}"
+          done
+          wait "$ninja_pid"
           rc=$?
           end=$(date +%s)
           echo "BUILD_SECONDS=$((end-start))" >> "$GITHUB_ENV"
@@ -221,6 +234,48 @@ jobs:
           echo "OBJ FILES IN THE GRAPH           : $OBJ_COUNT"
           echo "BUILT_OBJ=$BUILT" >> "$GITHUB_ENV"
           du -sh build/port 2>/dev/null || true
+
+      - name: Per-edge timings from .ninja_log
+        if: env.BUILD_MODE == 'full'
+        shell: bash
+        run: |
+          set +e
+          cp build/port/.ninja_log logs/ninja_log.txt 2>/dev/null
+          python - <<'PY'
+          import os
+          p = "build/port/.ninja_log"
+          if not os.path.exists(p):
+              print("no .ninja_log"); raise SystemExit(0)
+          rows = []
+          with open(p, "r", errors="replace") as f:
+              for line in f:
+                  if line.startswith("#"):
+                      continue
+                  parts = line.rstrip("\n").split("\t")
+                  if len(parts) < 4:
+                      continue
+                  try:
+                      s, e = int(parts[0]), int(parts[1])
+                  except ValueError:
+                      continue
+                  rows.append((e - s, parts[3]))
+          objs = [r for r in rows if r[1].endswith(".obj")]
+          tot = sum(d for d, _ in rows) / 1000.0
+          tobj = sum(d for d, _ in objs) / 1000.0
+          print(f"edges recorded      : {len(rows)}")
+          print(f"  of which .obj     : {len(objs)}")
+          print(f"total edge CPU time : {tot:.0f} s  ({tot/3600:.2f} core-hours)")
+          print(f"  .obj CPU time     : {tobj:.0f} s  ({tobj/3600:.2f} core-hours)")
+          if objs:
+              ds = sorted(d for d, _ in objs)
+              def pct(q):
+                  return ds[min(len(ds) - 1, int(len(ds) * q))] / 1000.0
+              print(f"per-object seconds  : p50={pct(.5):.2f} p90={pct(.9):.2f} "
+                    f"p99={pct(.99):.2f} max={ds[-1]/1000.0:.2f} mean={tobj/len(objs):.2f}")
+          print("--- 15 slowest edges ---")
+          for d, o in sorted(rows, reverse=True)[:15]:
+              print(f"{d/1000.0:8.2f}s  {o}")
+          PY
 
       - name: sccache stats
         if: env.SCCACHE_ON == 'true'
