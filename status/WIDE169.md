@@ -650,6 +650,77 @@ settings.json still reaches any ratio in [1.0, 3.0]; what the DIALOG offers is
 what has been photographed and checked. When the sweep passes, the list grows
 by one row and no code changes.
 
+## 8b. The per-STATE acceptance sweep
+
+`port/tools/wide_sweep.py` photographs each distinct UI state at the native
+aspect, at 16:9 and at 21:9, and scores the pixels. Every image is GDI
+CopyFromScreen over the window's own client rectangle, never a framebuffer
+dump, for the reason the black-bottom present bug established: a correct
+framebuffer and a wrong window are a thing that has actually happened here.
+
+THE HUD IS ISOLATED BY SUBTRACTION. Each state is captured with all layers and
+again with `SM64DS_ENGINE_A_LAYERS=0x00`; the pixels that differ are the 2D
+HUD. That is only meaningful between two captures of the SAME frame, so the
+state is frozen (`SM64DS_MENU_AT` on the level path, `SM64DS_SCENE_MENU` on the
+scene path) and the freeze is CHECKED: two separate launches must photograph
+identical frames or the row is refused as DYNAMIC rather than scored.
+
+RESULT, on the rebased tip, at both wide aspects:
+
+| state | 16:9 | 21:9 |
+|---|---|---|
+| minigame menu | PASS, control TORN | PASS, control TORN |
+| course HUD (star + coin) | PASS | PASS |
+| message box | PASS | PASS |
+| VS HUD | PASS | PASS |
+| title, star select, VS menu | PASS (no engine-A 2D to anchor) | PASS |
+| file select | DYNAMIC at 16:9, PASS at 21:9 | |
+| VS TIME UP | NOT CAPTURABLE, see below | NOT CAPTURABLE |
+
+THE MINIGAME MENU IS THE POSITIVE, and it is the only state where the band
+split and the element rule disagree. Its top screen is a full 2D raster WITH a
+3D layer behind it, so it took the band-split arm rather than the pillarbox
+arm, and the split cut it into strips: the checker finds two tear pairs in the
+control and none in the fix, over 1.6 million changed pixels at 16:9 and 1.1
+million at 21:9. That is the defect section 7 flagged and declined -- "A 2D-TOP
+MINIGAME WILL STRETCH. That is a known, deliberate, flagged gap" -- and the
+element rule closes it without a special case, because a full-screen raster is
+one element and one element gets one anchor.
+
+EVERY OTHER STATE IS A NO-OP, AND THAT IS THE HONEST HEADLINE. On the course
+HUD, the message box and the VS HUD the two rules place every pixel
+IDENTICALLY: zero changed pixels. No element on those screens straddles a
+split, so there is nothing for either rule to get wrong. The change is
+STRUCTURAL there -- it removes the mechanism by which a future element could be
+torn -- and it is currently invisible. It should not be described as fixing
+something a player can see on those screens, because it does not.
+
+WHAT THE SWEEP DOES CONFIRM on those states is the shape claim, measured in DS
+pixels so it survives re-anchoring: the course HUD's two clusters are 41 and 42
+DS px wide at native, at 16:9 and at 21:9; the message box is 123 DS px wide at
+all three. Nothing is stretched. The counters keep their native edge margins
+exactly (32 native px becomes 48 at 16:9, which is 32 x 1.5), so they ride the
+screen edges at native size, and the message box stays centred at native size.
+
+THE VS "TIME UP" BANNER COULD NOT BE PHOTOGRAPHED, and this is a gap in the
+evidence rather than a result. It is the one element known to straddle: it is
+an OBJ sprite drawn at DS x 0x80 by `HUD::RenderVsTimer`, which IS linked and
+IS called, unlike the ROM's pause banner. Reaching it costs about 2790 frames
+of match clock, which the port has no knob to shorten, and at that point the
+picture will not hold still: the menu's freeze stops the TICK but the RENDER
+keeps running, so anything animated by the render carries on and two launches
+never photograph the same frame. Every attempt came back DYNAMIC and was
+refused rather than scored. Whether the element rule keeps that banner whole is
+therefore ARGUED (it is one element, so it gets one anchor) and NOT MEASURED.
+
+21:9 IS CAPTURED BUT NOT OFFERED. Every 21:9 row above passes, and the fit
+there is 1024x440, so `uni` is 2 rather than 3 and the spare width is 512
+rather than 256 -- the HUD is drawn at a SMALLER native scale and the gaps
+between elements are twice as wide. Nothing is torn or stretched at that width.
+The launcher still offers Native and 16:9 only, because the sweep has two
+unscored rows (the file select at 16:9 and the TIME UP banner at both) and a
+dropdown entry should not run ahead of the evidence.
+
 ## 9. Reproducing
 
     build with port\build-port.cmd (there is one game target, walk_window)
