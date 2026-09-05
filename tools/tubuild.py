@@ -927,17 +927,6 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
     return "\n".join(out).rstrip("\n") + "\n", warnings
 
 
-def _legacy_rel(name):
-    # cmd_create tolerates a SOURCELESS member (it becomes a banner and verify
-    # reports it MISSING), but this builder did not: SP.path_for returned None
-    # and the .relative_to crashed, so the one shape cmd_create was taught to
-    # survive still aborted `create` before a manifest existed. Measured on
-    # ov006/dScMgHanachan_c, whose func_ov006_020ea914 is a banked near-miss
-    # with no src/ file at all.
-    p = SP.path_for(name)
-    return p.relative_to(REPO).as_posix() if p is not None else None
-
-
 def build_manifest_entry(tu_id, module, rec, unit, ord_rows, out_path, warnings):
     start, end = int(unit["start"], 16), int(unit["end"], 16)
     classes = unit.get("classes") or []
@@ -967,7 +956,7 @@ def build_manifest_entry(tu_id, module, rec, unit, ord_rows, out_path, warnings)
         "sections": [{"name": ".text", "start": f"0x{start:08x}", "end": f"0x{end:08x}"}],
         "functions": [
             {"symbol": name, "address": f"0x{addr:08x}", "size": f"0x{size:08x}",
-             "legacy_source": _legacy_rel(name), "ordinal": o}
+             "legacy_source": SP.path_for(name).relative_to(REPO).as_posix(), "ordinal": o}
             for o, name, addr, size in ord_rows
         ],
         "data": [],
