@@ -137,19 +137,50 @@ def check(text, rc):
     else:
         print("  4 CHAR     (no character probe emitted; relying on 2/5)")
 
-    # 5. the player is still moving
-    tail = frames[-90:]
-    if len(tail) < 30:
-        fails.append("5 ALIVE: only %d frames of player trace" % len(tail))
+    # 5. the Player survives the cap.
+    #
+    # NOT "is he still moving at frame 600". MEASURED: the selftest holds one
+    # stick direction forever, so on BoB he eventually walks into a wall and
+    # stands there pushing -- state 020cfa90, speed 40960, animation cycling,
+    # position static. A cap-free control run of the same length ends at the
+    # SAME position (-1552.0, 0.0, 2015.9) in the SAME state as Yoshi, so that
+    # stop is level geometry and has nothing to do with the cap. The cap only
+    # makes him Mario, who walks faster and reaches the wall sooner, which is
+    # why a naive end-of-run movement check flags the cap run and not the
+    # control. Two assertions that actually separate a fault from a wall:
+    #
+    #   5a he MOVES in the window right after the cap -- where a freeze would
+    #      show, since the fault happens inside the cap call itself
+    #   5b he is still being TICKED at the end -- a quarantined actor is never
+    #      dispatched again, so its animation cursor stops dead. A player
+    #      leaning on a wall still animates.
+    capf = int(cap.group(1)) if cap else None
+    if capf is None:
+        fails.append("5 ALIVE: no cap frame to measure from")
     else:
-        xs = set(round(f[1][0], 1) for f in tail)
-        zs = set(round(f[1][2], 1) for f in tail)
-        if len(xs) < 3 and len(zs) < 3:
-            fails.append("5 ALIVE: the Player has not moved for the last %d "
-                         "frames (stuck at %s) -- FROZEN" % (len(tail), tail[-1][1]))
+        after = [f for f in frames if capf < f[0] <= capf + 120]
+        if len(after) < 60:
+            fails.append("5a MOVE: only %d frames traced after the cap" % len(after))
         else:
-            print("  5 ALIVE    ok: %d distinct x / %d distinct z over the last "
-                  "%d frames" % (len(xs), len(zs), len(tail)))
+            xs = set(round(f[1][0], 1) for f in after)
+            zs = set(round(f[1][2], 1) for f in after)
+            if len(xs) < 3 and len(zs) < 3:
+                fails.append("5a MOVE: the Player did not move in the %d frames "
+                             "after the cap (stuck at %s) -- FROZEN BY THE CAP"
+                             % (len(after), after[-1][1]))
+            else:
+                print("  5a MOVE    ok: %d distinct x / %d distinct z in the %d "
+                      "frames after the cap" % (len(xs), len(zs), len(after)))
+        anim = re.compile(r"cur=([\d.]+)")
+        curs = [anim.search(l).group(1) for l in lines[-400:]
+                if l.startswith("[f") and anim.search(l)]
+        if len(set(curs[-60:])) < 3:
+            fails.append("5b ALIVE: the Player's animation cursor has stopped "
+                         "advancing -- he is no longer being ticked (frozen)")
+        else:
+            print("  5b ALIVE   ok: animation cursor still advancing at the end "
+                  "(%d distinct values over the last 60 traced frames)"
+                  % len(set(curs[-60:])))
 
     if rc != 0:
         fails.append("0 EXIT: walk_window returned %d" % rc)
