@@ -46,8 +46,9 @@ void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN8dActor_cC2Ev(void *actor);
 void _ZN11CommonModelC1Ev(CommonModel *model);
-extern int _ZTV12daStarGate_c[];
 }
+
+extern int _ZTV12daStarGate_c[];
 
 extern u8 data_0209f250;
 extern Camera *data_0209f318;
