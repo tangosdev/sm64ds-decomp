@@ -23,6 +23,8 @@ Commit first. Two of these gates pass silently on a dirty tree.
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
     python tools/check_tubuild_conflicts.py --list
+    python tools/tu_order_check.py <ov>/<Class>
+    python tools/layout_check.py
     python tools/tiers_ratchet.py --check
 
 PASS signals:
@@ -43,9 +45,31 @@ Neither is a defect in the change. Both have a sanctioned remedy.
 - **`tiers_ratchet --check`** goes red by construction: folding N CONVERTED
   shards into one file loses N−1 rows (`baseline 2597 current 2593, -4 lost`).
   Remedy: `python tools/tiers_ratchet.py --update --reason "<why>"`.
-- **`port_refcheck.py`** goes red on stale references to the shards you deleted,
-  held in the `port/slice_gate9.txt` family of manifests. Remedy: update them.
-  Nothing else watches `port/`.
+- **`port_refcheck.py`** *may* go red on stale references to the shards you
+  deleted, held in the `port/slice_gate9.txt` family of manifests. Remedy: update
+  them. Nothing else watches `port/`. It is often green with no edit — only
+  `tiers_ratchet` is red by construction.
+
+## Rebasing onto a moved `main` — the trap no gate catches
+
+A class branch cut before `main` moved must be rebased, and **the two ratchet
+files behave differently and only one of them tells you**:
+
+- `config/converted-baseline.json` **conflicts loudly**. It is regenerated whole
+  per promotion, so any overlap collides. That is the safe one.
+- `config/converted-backslide-exceptions.jsonl` **auto-merges silently and
+  reintroduces stale rows.** Measured here: a cherry-pick re-added five
+  `ShipWing` rows naming `src/actors/d_a_obj_rc_hane.cpp`, a path `main` had
+  since moved to `src/game/actors/`. Nothing flagged it. No gate reads those
+  paths.
+
+**Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
+Never resolve either by hand and never let the merge resolve them for you — the
+tool regenerates them correctly from the current tree, and a merged result is
+wrong in a way that survives every gate.
+
+Keep `main`'s version of `notes/data/c-cpp-classification.tsv` and
+`notes/data/tu-merge-candidates.json` too; those carry `main`'s own changes.
 
 ## Gates that lie
 
@@ -63,9 +87,12 @@ Neither is a defect in the change. Both have a sanctioned remedy.
   fails identically for `ov002/daBar_c` on untouched `main`. **Take the writer's
   pre-promotion linkcheck as the evidence.** Do not re-run it here and do not
   report its failure as a defect in the change.
-- `linkcheck --baseline` builds the **working tree**, so a baseline taken after
-  header edits proves nothing, and a fresh worktree needs one before any
-  linkcheck runs at all (it will otherwise die on unrelated classes).
+- `linkcheck --baseline` is needed **only if you actually run a `linkcheck`** —
+  which this role is told not to do. Running it anyway costs a full scratch
+  delink and link for nothing, and `rombuild.py` runs its own baseline control
+  regardless. When you do need it: it builds the **working tree**, so a baseline
+  taken after header edits proves nothing, and a fresh worktree must take one
+  before any linkcheck or it dies on unrelated classes.
 - Never run two consumers of `build/` at once — a backgrounded `rombuild` beside
   `eligible.py` invents link errors.
 
@@ -85,6 +112,8 @@ Body carries the proof block verbatim:
     tubuild linkcheck (pre-promotion)  SCRATCH-LINK-VERIFIED, ROM sha256 identical to baseline
     rombuild -j16   106/106 exact, 100.000000% of compared bytes, mismatching 0
     romdata_check   5 VERIFIED, 4 PARTIAL, 0 DIFFERS
+
+Those figures are **one class's example, not a target.** Paste your own.
 
 plus a class-identity write-up: cite the `_ZTS` / `_ZTI` (with base) / `_ZTV` ROM
 addresses and the factory's `new`-size literal; diff the vtable slot-by-slot
