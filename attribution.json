@@ -1721,6 +1721,8 @@
     "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c8BehaviorEv": "github-actions[bot]",
     "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/daStarGate_c.cpp#daStarGate_c_classInit": "github-actions[bot]",
-    "src/actors/daStarGate_c.cpp#__sinit_daStarGate_c.cpp": "github-actions[bot]"
+    "src/actors/daStarGate_c.cpp#__sinit_daStarGate_c.cpp": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#__sinit_ov100_02147a70": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#d_a_star_gate": "github-actions[bot]"
   }
 }
