@@ -63,6 +63,10 @@ src/_ZN11dScMiniGm_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020c0b00 end:0x020c0b04
 
+src/_ZN11dScMiniGm_c6RenderEv.cpp:
+    complete
+    .text start:0x020c0b04 end:0x020c0f38
+
 src/func_ov005_020c0f38.c:
     complete
     .text start:0x020c0f38 end:0x020c1030
