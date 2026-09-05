@@ -1,0 +1,97 @@
+{
+  "class": "daDgr_c",
+  "rtti_name": "7daDgr_c",
+  "rtti_name_address": "0x02113724",
+  "typeinfo": {
+    "symbol": "_ZTI7daDgr_c",
+    "address": "0x02113730",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x02113724",
+    "base_typeinfo": "_ZTI10dBgActor_c (ov002 0x021089ec)",
+    "raw_words": [
+      "0x0209a764",
+      "0x02113724",
+      "0x021089ec"
+    ]
+  },
+  "overlay": "ov025",
+  "module_base": "0x021111a0",
+  "base_class": "dBgActor_c",
+  "ancestor_chain": ["dBgActor_c", "dActor_c", "dBase_c", "fBase_c"],
+  "vtable": {
+    "symbol": "_ZTV7daDgr_c",
+    "address": "0x02113760",
+    "slots": 32,
+    "emitted_storage_start": "0x02113758",
+    "emitted_storage_end": "0x021137e0",
+    "emitted_storage_size": "0x88",
+    "preamble": {
+      "offset_to_top_address": "0x02113758",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0211375c",
+      "typeinfo_pointer": "0x02113730"
+    },
+    "extent_evidence": "PROVEN BY THE FOLLOWING WORD, not inferred. Read from extracted/overlays/overlay_0025.bin at base 0x021111a0 (the `.text start:` on line 1 of config/arm9/overlays/ov025/delinks.txt): 32 consecutive function pointers run from the address point 0x02113760 through 0x021137dc. The next word, at 0x021137e0, is 0x44616437 -- little-endian bytes 37 64 61 44, the ASCII \"7daD\" that begins the following _ZTS type-name string, not a code pointer. So 0x021137e0 is the exclusive end and the emitted preamble-plus-slots storage is exactly 0x88 bytes. tubuild verify independently reports the emitted _ZTV section at size 0x88, which corroborates 32 slots (0x88 = 2 preamble words + 32). tools/rtti_vtables.py would report 34 for this class; that is the known _ZTV extent overrun counting the two preamble words as slots.",
+    "slot_name_note": "Names are inherited interface labels from include/dActor_c.h and include/dBgActor_c.h, or ABI destructor labels. The ROM proves slot identity and target address; it does not preserve those English spellings.",
+    "own_slots": [
+      {"slot": 0,  "target": "0x021117dc", "symbol": "_ZN7daDgr_c13InitResourcesEv"},
+      {"slot": 3,  "target": "0x02111384", "symbol": "_ZN7daDgr_c16CleanupResourcesEv"},
+      {"slot": 6,  "target": "0x021113f0", "symbol": "_ZN7daDgr_c8BehaviorEv"},
+      {"slot": 9,  "target": "0x021113c8", "symbol": "_ZN7daDgr_c6RenderEv"},
+      {"slot": 16, "target": "0x021111a0", "symbol": "_ZN7daDgr_cD1Ev"},
+      {"slot": 17, "target": "0x021111e4", "symbol": "_ZN7daDgr_cD0Ev"}
+    ],
+    "inherited_slots_note": "MEASURED by word-diffing this table against _ZTV10dBgActor_c (ov002 0x0210ae38, base 0x020ad660) slot for slot: exactly six words differ, slots 0, 3, 6, 9, 16 and 17, and every other word is byte-identical to dBgActor_c's. So this class overrides nothing else and adds no new virtual of its own. Slot 31 is 0x020ee55c, dBgActor_c's own Kill, inherited rather than overridden -- and slot 31 existing at all is what makes the table 32 words rather than dActor_c's 31: the dBgActor_c length rule.",
+    "destructor_order": "D1 at 0x021111a0 precedes D0 at 0x021111e4 in the cartridge, and no D2 exists anywhere in the module. D1-BELOW-D0 IS THE REPRODUCIBLE DIRECTION: it is exactly what mwccarm 2004/b56 emits from an INLINE in-class virtual destructor, so no subset licensing is needed and this TU promotes whole. The out-of-line form would give D2, D0, D1 plus a homeless D2 and would fail linkcheck's ROM-ascending .text audit. include/daDgr_c.h previously declared the destructor out of line by analogy with include/BigBrickBlock.h; that analogy is wrong for this class and the promotion corrected it."
+  },
+  "text_span": {
+    "start": "0x021111a0",
+    "end": "0x02111898",
+    "function_count": 9,
+    "boundary_confidence": "medium",
+    "source": "build/tu_map.json via tools/tu_map.py"
+  },
+  "functions": [
+    {"address": "0x021111a0", "size": "0x44",  "symbol": "_ZN7daDgr_cD1Ev"},
+    {"address": "0x021111e4", "size": "0x58",  "symbol": "_ZN7daDgr_cD0Ev"},
+    {"address": "0x0211123c", "size": "0xa4",  "symbol": "func_ov025_0211123c"},
+    {"address": "0x021112e0", "size": "0x64",  "symbol": "func_ov025_021112e0"},
+    {"address": "0x02111344", "size": "0x40",  "symbol": "func_ov025_02111344"},
+    {"address": "0x02111384", "size": "0x44",  "symbol": "_ZN7daDgr_c16CleanupResourcesEv"},
+    {"address": "0x021113c8", "size": "0x28",  "symbol": "_ZN7daDgr_c6RenderEv"},
+    {"address": "0x021113f0", "size": "0x3ec", "symbol": "_ZN7daDgr_c8BehaviorEv"},
+    {"address": "0x021117dc", "size": "0xbc",  "symbol": "_ZN7daDgr_c13InitResourcesEv"}
+  ],
+  "size": {
+    "value": "0x334",
+    "evidence": "The class factory (daDgr_c_classInit, historical alias func_ov025_02111898) passes the literal 820 = 0x334 to fBase_c::operator new, read off the retail instruction. A field span is only a lower bound; this literal is the size. It closes exactly on dBgActor_c's 0x320 plus this class's own 0x14 tail bytes."
+  },
+  "layout": {
+    "inherited_through": "dBgActor_c, which ends its own data at 0x31e and rounds to 0x320",
+    "own_fields": [
+      {"offset": "0x320", "type": "s32", "name": "mBasePosY",      "evidence": "InitResources copies dActor_c::mPosY (+0x60) here; Behavior reads it back as the resting height that the sine offset from data_02082214 is added to, and as the base for the dust particles' Y."},
+      {"offset": "0x324", "type": "s16", "name": "mAngleXSpeed",   "evidence": "Behavior sets it to +-(0x400/n) and accumulates it into dActor_c::mAngleX every frame of a swing; InitResources zeroes it."},
+      {"offset": "0x326", "type": "u16", "name": "mPhaseTimer",    "evidence": "Behavior increments it on every call and compares it against 0x20, against n+8 and against m = n<<3. Read unsigned."},
+      {"offset": "0x328", "type": "s8",  "name": "mSwingStage",    "evidence": "Incremented up to 0x14 then reset to the -1 sentinel; read as `10 - value` to shape the swing speed. Signed: the -1 compare is a signed test."},
+      {"offset": "0x329", "type": "u8",  "name": "mSwingDir",      "evidence": "Toggled with XOR 1 at the end of a swing; picks the sign of mAngleXSpeed and of the Z step."},
+      {"offset": "0x32a", "type": "u8[2]", "name": "pad_32a",      "evidence": "Never dereferenced by any of the nine functions; 2 bytes closing the s8/u8 pair up to the next s32."},
+      {"offset": "0x32c", "type": "u32", "name": "mDustParticle1", "evidence": "A Particle::System::New handle (effect 0x2d) passed back as that call's own first argument, i.e. handle recycling; positioned 100 units along the platform's facing."},
+      {"offset": "0x330", "type": "u32", "name": "mDustParticle2", "evidence": "The same handle shape for the other end, 100 units the opposite way. 0x330 + 4 = 0x334, the factory's allocation literal."}
+    ]
+  },
+  "compiler_only_output_prediction": {
+    "rows": 12,
+    "derivation": "2 x (4 ancestors + self) = 10 RTTI rows, + 1 _ZTV7daDgr_c = 11, + 1 for the Vector3 this TU odr-uses = 12. MEASURED at that number by tubuild verify, which is the point of recording it: this class had NO sibling oracle, so the queue defaulted its route to text-only with compiler-only:unknown. The route is text-only and the count is 12.",
+    "vector3_term": "The Vector3 term is a FUNCTION LOCAL, not a member. daDgr_c has no Vector3 field at all; func_ov025_0211123c declares `volatile struct Vector3 v;` on the stack, and that odr-use alone re-emits _ZN7Vector3D1Ev. There is no file-local anonymous struct holding it, so there is no 13th genuinely-homeless row.",
+    "all_homed": "All 12 have a configured ROM home in some module's symbols.txt -- arm9 for the six fBase_c/dBase_c/dActor_c records and Vector3's D1, ov002 for the two dBgActor_c records, ov025 for this class's own three. So all 12 license as deadstrip-data (deadstrip-duplicate for the one function) and externalized_output is EMPTY. Nothing here takes the non-promotable canonical-import route."
+  },
+  "unproven": [
+    "func_ov025_0211123c, func_ov025_021112e0 and func_ov025_02111344 have no ROM-preserved names. config/arm9/overlays/ov025/symbols.txt spells all three by address and include/decl_common.h types them as taking char*, so the promotion keeps those spellings and leaves them extern \"C\" free functions rather than inventing member names. Their bodies, signatures as used, and call sites are proven; their original identifiers, member-versus-free form, and parameter types are not.",
+    "The header's field names (mBasePosY, mAngleXSpeed, mPhaseTimer, mSwingStage, mSwingDir, mDustParticle1, mDustParticle2) are descriptive reconstructions predating this promotion. Offsets, widths, signedness and the arithmetic relating them are ROM-proven; the English spellings are not.",
+    "The `swinging platform` reading of Behavior -- easing via `10 - mSwingStage` bucketed to 1/2/4, dust at either end, a ground shake on the last frame -- is an interpretation of proven arithmetic, not a ROM fact.",
+    "boundary_confidence is medium on the right edge (left is a module edge), and the module sinit corroboration is module-wide (4 sinits / 4 .ctor entries, corroborated=False), not narrowed to this TU.",
+    "data_ov025_02112c28 is the CLPS_Block passed to dBgW_KcMbg::SetFile, and data_ov025_02113a60 / data_ov025_02113a68 are the two SharedFilePtr handles. Their addresses and use are proven; SharedFilePtr's own layout is deliberately not recovered (see include/SharedFilePtr.h), so these are reached only through member calls."
+  ]
+}
