@@ -9514,6 +9514,45 @@ foreach(line IN LISTS SLICE212_LINES)
     list(APPEND SLICE212_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- gate 214 (run link100, lane BOOT): THE ROM'S OWN BOOT CHAIN ------------
+#
+# The port boots through tests/walk_window.cpp's main(), which stands in for
+# the ROM's Entry and main(). Two of the ROM's boot steps were already on that
+# path and named as such -- Heap::InitializeRootHeap and
+# Heap::InitializeGameHeap(0x3b000, 0) -- and the rest of the chain was not
+# there at all, which is why 503 matched translation units reachable ONLY
+# through Entry/main were unlinked. hal/boot_os.cpp transcribes the runnable
+# spans of src/func_02019780.c, src/main.c and src/func_0201a054.c and calls
+# the ROM's own bodies at the points the ROM calls them; everything in this
+# slice is reached from there by the ROM's own call graph, never by a call
+# added to make a file link.
+#
+# hal/boot_hw.cpp is the OTHER half and does NOT raise the count: the ARM
+# primitives at the leaves of that chain (CP15 cache/MPU, CPSR mode toggles,
+# `swp`, the literal-pool veneers, MSL's hand-written format DFA). Each one
+# carries a PORT_HOST_ABI: tag naming the instruction MSVC cannot assemble, so
+# port/tools/linkage.py counts them as documented exceptions rather than as
+# work still owed.
+#
+# WHAT IS NOT IN HERE, and it is hardware and not effort: the four PXI arms of
+# func_02058c84 spin on the ARM7's channel-ready bits at 0x027ffc00 + 0x388 and
+# port/ntr models no IPC at all, so calling them never returns; func_02058ec8
+# and func_02059594 reach func_02058764, which reads the Slot-2 magic at
+# 0x08000000 and no ntr::kRegions entry covers that address. The header block
+# of hal/boot_os.cpp lists every skipped step with its measurement.
+#
+# On the two targets that compile tests/walk_window.cpp, because that file is
+# where the boot calls live. See port/slice_gate214.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate214.txt" SLICE214_LINES)
+set(SLICE214_SOURCES hal/boot_os.cpp hal/boot_hw.cpp hal/boot_globals.cpp)
+foreach(line IN LISTS SLICE214_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE214_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12749,6 +12788,10 @@ endforeach()
 # a special build of it. Inert unless SM64DS_IO_PRESSURE_AT is set in the
 # environment, and nothing in the tree sets it.
 add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    # run link100 lane BOOT: the ROM's own boot chain, called from the four
+    # port_boot_rom_* seams in tests/walk_window.cpp's main. See the gate-214
+    # block above and the header of hal/boot_os.cpp.
+    ${SLICE214_SOURCES}
     # dialogue pipeline (2026-08-08): the box pump (Stage::UpdateMessage's
     # dialogue arm), the engine-A 2D-over-3D compositor, and the headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
@@ -12998,6 +13041,9 @@ add_custom_command(TARGET walk_window POST_BUILD
 
 # hires clone for screenshot sessions (4x resolution, ~1/16 the fps)
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    # run link100 lane BOOT: same slice as walk_window, for the same reason --
+    # this target compiles tests/walk_window.cpp, which carries the boot calls.
+    ${SLICE214_SOURCES}
     # dialogue pipeline (2026-08-08): pump, engine-A compositor, headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
     # the launcher's settings.json, read by the game (camera turn direction,

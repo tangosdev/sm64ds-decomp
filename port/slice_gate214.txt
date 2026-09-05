@@ -1,0 +1,130 @@
+# gate 214 (run link100, lane BOOT): THE ROM'S OWN BOOT CHAIN
+#
+# 88 matched translation units that were unlinked for one reason only: the port
+# booted through its own main() and never called the ROM's Entry/main chain, so
+# nothing in the ROM's reference graph ever reached them. They are reached now,
+# by the ROM's own calls, from the four spans hal/boot_os.cpp transcribes --
+# src/func_02019780.c before the root heap, src/main.c's first three calls, and
+# src/func_0201a054.c on either side of the game heap. Not one line in this
+# file is kept alive by a call the ROM does not make.
+#
+# HOW IT WAS DERIVED, and how to re-derive it after a rebase. The --seed list
+# is EXACTLY the set of ROM functions hal/boot_os.cpp calls and the --ban list
+# is exactly the set it refuses, with boot_os.cpp's header naming what is
+# missing for each. Everything else here is downstream of a seed through
+# config/arm9/relocs.txt, which is the ROM's own reference graph:
+#
+#   python port/tools/boot_reach.py --root <root> --list <unlinked TU list> #     --ban  func_0205b858,func_0205bad8,func_02059e48,func_0206a88c,#            func_0205fde8,func_02019ebc,func_02058c84,func_02019780,#            func_02057198 #     --seed func_02057000,func_02059cb4,func_02059788,func_02059bc0,#            func_02059578,func_0201a03c,func_020427f8,func_02042784,#            func_02053a8c,func_0203d740,func_0201a4e4,func_0203bb5c,#            func_0203ad84,func_0203b684,func_020233f0,func_0201a5cc #     --out port/slice_gate214.txt slice
+#
+# func_02057198 is banned for a reason that is not about hardware: its matched
+# TU declares func_0205a74c `static` and never defines it, which mwccarm
+# accepted and MSVC refuses (C2129). hal/boot_hw.cpp carries the body with NO
+# PORT_HOST_ABI tag, so it stays counted as work owed; the fix is one word in
+# the decomp.
+#
+#
+# TWO ROWS THE INPUT LIST WAS WRONG ABOUT, removed by hand after the first link
+# said LNK2005 and the map said why:
+#   src/func_020233f0.c   already seated by port/slice_gate29.txt, where it goes
+#                         through hostgen and lands as host-src/src/
+#                         func_020233f0.cpp -- a different source path to CMake,
+#                         the same symbol to the linker. It was already LINKED.
+#   src/UnloadOverlay.c   hal/scene_vs_menu.cpp defines UnloadOverlay through
+#                         its VS_SEAM() macro, which is why a plain search for a
+#                         definition does not find it. That face stays; the
+#                         matched TU does not go in beside it.
+#
+# NOT in here, on purpose: the 35 TUs a host file already defines (seating them
+# is LNK2005 -- the CP15, context-switch and IRQ ones are PORT_HOST_ABI
+# exceptions in hal/boot_hw.cpp, hal/cxx_aliases.cpp and ntr/runtime.cpp), and
+# the hand-asm leaves MSVC cannot assemble, which hal/boot_hw.cpp stands in for
+# with a tag apiece. hal/boot_globals.cpp hosts the DS globals these bodies
+# read, sized by ROM span and carrying the ROM's own .data bytes.
+src/FS_LoadOverlay.c
+src/GetSceneOverlayID.c
+src/_ZN3IRQ13VBlankHandlerEv.c
+src/_ZN3OAM5FlushEv.c
+src/_ZN4cstd8__assertEPKcPKcPKci.cpp
+src/func_02017fd0.c
+src/func_02018434.c
+src/func_02018474.c
+src/func_020184e0.c
+src/func_02018b64.c
+src/func_02018c00.c
+src/func_02018cbc.c
+src/func_02018e00.c
+src/func_02019100.c
+src/func_02019144.c
+src/func_0201a03c.c
+src/func_0201a4e4.c
+src/func_0201a5cc.c
+src/func_0201a614.c
+src/func_0201a694.c
+src/func_0201a754.c
+src/func_0201a798.c
+src/func_0203ad84.c
+src/func_0203b684.c
+src/func_0203bb5c.c
+src/func_0203d740.c
+src/func_0203d7b8.c
+src/func_02042784.c
+src/func_020427f8.c
+src/func_02053a8c.c
+src/func_02055454.c
+src/func_02057000.c
+src/func_020570b8.c
+src/func_02057128.c
+src/func_02057140.c
+src/func_02057158.c
+src/func_02057178.c
+src/func_02057228.c
+src/func_02057f54.c
+src/func_02059578.c
+src/func_02059624.c
+src/func_02059700.c
+src/func_02059788.c
+src/func_02059bc0.c
+src/func_02059cb4.c
+src/func_0205c864.c
+src/func_0205caa8.c
+src/func_0205d5e8.c
+src/func_0205dc0c.c
+src/func_0205dc60.c
+src/func_0205dc7c.c
+src/func_0205dd9c.c
+src/func_0205de9c.c
+src/func_0205df40.c
+src/func_0205dffc.c
+src/func_0205e088.c
+src/func_0205e0b0.c
+src/func_0205e0f4.c
+src/func_0205e280.c
+src/func_0205e3d4.c
+src/func_0205e6e4.c
+src/func_0205e7e0.c
+src/func_0205e89c.c
+src/func_0206bc8c.c
+src/func_0206bdb4.c
+src/func_0206c244.c
+src/func_0206c51c.c
+src/func_0206c8b4.c
+src/func_0206c90c.c
+src/func_0206c93c.c
+src/func_0206c9f4.c
+src/func_0206ca44.c
+src/func_0206ca7c.c
+src/func_0206cb0c.c
+src/func_0206cbc0.c
+src/func_0206ccd8.c
+src/func_0206cd9c.c
+src/func_0206ce20.c
+src/func_0206ce90.c
+src/func_0206cec0.c
+src/func_0206cee0.c
+src/func_0206cf7c.c
+src/func_0206cf98.c
+src/func_0206d32c.c
+src/func_0206d868.c
+src/func_0206d890.c
+src/func_0206d8c4.c
+src/func_0206d940.c
