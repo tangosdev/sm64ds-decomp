@@ -296,7 +296,8 @@ ones — `unsigned short` against `unsigned int`, `int(void*)` against `int(int)
 a function declared `void(void)` but called with `this`, a const-ness mismatch,
 and a scalar declared against an array.
 
-**Grep every shadow declaration against `include/decl_*.h` before you compile.**
+**Grep every shadow declaration against the `decl_*.h` headers under `include/`
+before you compile.**
 The detector does not compare against real headers at all, and a real header
 always wins. Two measured disagreements were on *return type*: `decl_common.h`
 types `func_02012718` as returning void where the shard said int, and
