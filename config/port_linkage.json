@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 9121,
-  "matchedTus": 11324,
-  "measuredAt": "2026-08-30",
+  "linkedTus": 9492,
+  "matchedTus": 11328,
+  "measuredAt": "2026-09-05",
   "branch": "port-mount-noseat-cluster",
-  "commit": "ce1afba51",
+  "commit": "7db4fc602",
   "stale": false,
-  "basis": "single lane cons at its pushed tip ce1afba51, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the merge that closed cast-campaign wave 3). +346 over the morning's 8775 stamp: eight reviewed merges seating ov064's last three classes, Princess Peach, Snowball and Moneybag, the snowmen and the Fly Guy, three level-overlay tails (ov025 the first overlay at 100%), the ov091 lifts and Fwoosh, and the Tick Tock Clock cluster behind a per-level re-patch mechanism; plus the two Goomboss state bodies and the declared Wiggler Behavior propagated from main by address. The tree crosses 80 percent. Two disclosed holes remain and both matched on main today: func_ov074_02121380 (declared, div 11, execution-audited) and _ZN14TTC_MovingBeam8BehaviorEv (byte-matched, PR #2026) -- seating lanes for both are in flight. Remaining frontier: wave-4 partial-overlay tails, then arm9/ov002/ov006."
+  "basis": "single lane cons at its pushed tip 7db4fc602 (the per-element wide-HUD merge, 2026-09-04 22:17), measured against a clean rebuild of that tip in an isolated tree (C:/tmp/l1-int, port/build-port.cmd, walk_window.map written 2026-09-05 00:03) and cross-checked against the tip's own gate-build map in the cons checkout, which gives the same count. +371 over the 9121 stamp: the September landings on this lane, each pulling its ROM closure in: the opening cutscene's cast and its audio driver, the Yoshi egg and held-object softlock seats (slots 29/30), the sixteen-player VS conductor and its wide fan-out, the Luigi Infection mode, the controls stack, the wide-HUD anchoring. The remaining 1836, measured off the ROM's own relocation graph: 521 documented host-ABI exceptions, 503 in the ROM's boot chain (Entry/main and the SDK bands the host boot still stands in for), 234 behind the Stage vtable's hosted slots, 39 SaveData, 118 enrolled but dead-stripped, 30 shadows, about 750 across unregistered overlay class tables, arm9 data-table chains and the class tail, 119 guessed bodies the stub guard keeps out, 38 unreferenced. Run link100 is working the boot chain, Stage, SaveData, the shadows and the overlay classes."
 }
