@@ -1,14 +1,16 @@
 //cpp
-/* Translation unit ov006/dScMgMCarlo2_c  (23 function(s)).
+/* Translation unit ov006/dScMgMCarlo2_c  (25 function(s)).
  * Reconstructed with tools/tubuild.py create, then reconciled by hand.
  *
  * ENROLLED AND CANONICAL. config/arm9/overlays/ov006/delinks.txt names this
- * one file for the whole .text range 0x020f8ef4..0x020fa6ac, so every byte
+ * one file for the whole .text range 0x020f8ef4..0x020fa75c, so every byte
  * of that range in the retail overlay is built from the source below -- the
- * 23 legacy one-function files it replaced are gone. Verified: all 23 members
+ * 25 legacy functions it replaced are gone. The adjacent factory and element
+ * constructor are included because the factory profile and this class's RTTI,
+ * vtables, initializer, data, and BSS form one continuous ownership cluster.
  * byte-exact, the linked module byte-identical to the cartridge, and the full
  * ROM identical to the stock build. See the measurements in
- * config/tu_manifest.d/ov006/dScMgMCarlo2_c.json.
+ * config/tu_manifest.d/ov006/dScMgMCarlo2_c+MgPairAGoneAndOn.json.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -40,6 +42,8 @@
  *   [20] 0x020fa3d0  src/func_ov006_020fa3d0.c
  *   [21] 0x020fa4d4  src/func_ov006_020fa4d4.cpp
  *   [22] 0x020fa56c  src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp
+ *   [23] 0x020fa6ac  src/MgPairAGoneAndOn_Spawn.cpp
+ *   [24] 0x020fa740  src/func_ov006_020fa740.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
@@ -53,7 +57,7 @@
  *   _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi: #pragma opt_propagation off   [NOT carried]
  * Neither is carried, and the measurements say the cartridge's own
  * translation unit did not have it either. opt_propagation is file-global
- * last-wins, so a TU has exactly one setting for all 23 members, and there
+ * last-wins, so a TU has exactly one setting for all 25 functions, and there
  * is only one place it could go -- the top. Set there it costs four OTHER
  * members their match (ordinals 3, 5, 10 and 18), and prepending it to the
  * unmodified legacy sources of those four breaks them there too. So `off`
@@ -62,7 +66,7 @@
  *
  * Both members verify byte-exact with propagation ON once their source is
  * shaped the way the cartridge's was -- see the note on each below. That
- * is the load-bearing evidence: a single setting, no pragma, 23/23.
+ * is the load-bearing evidence: a single setting, no pragma, all bodies exact.
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -72,68 +76,30 @@
 #include "types.h"
 #include "decl_common.h"
 
-/* THE BOARD IS 40 PIECES ON ONE INTRUSIVE DOUBLY-LINKED LIST, each 0x30
- * bytes -- the destructor's own `__destroy_arr(this + 0x51a8, 0x28, 0x30,
- * func_ov006_020f8ff0)` sizes and counts them, and dScMgMCarlo2_c_classInit
- * constructs the same 0x28 x 0x30 array. The 23 one-function legacy files
- * each modelled the element partially and under four different names
- * (`Node`, `Obj`, `A`, and a vtable-less typedef); every offset they agree
- * on is unified here, and the disagreements are resolved by offset:
- * Render's own `struct Node { virtual void m0(); Node *next; ... }` put its
- * link at 0x04, which is `prev` in every other file, so Render walks the
- * list BACKWARDS -- see its own note.
+/* THE BOARD IS 40 dMgMCarlo2CardObj_c objects on one intrusive doubly-linked
+ * list. Its 0x30-byte layout and two virtual slots are corroborated by every
+ * matched access and by the ROM's own RTTI/vtable records.
  *
  * data_ov006_0214257c is the head of the live list and _02142568 its tail
- * (func_ov006_020f9760 builds it and leaves both set); _0214256c heads the
- * list of pieces already cleared, which func_ov006_020f9000 recycles back
+ * (SetupBoard builds it and leaves both set); _0214256c heads the list of
+ * pieces already cleared, which UpdateBoard recycles back
  * onto the tail. */
-struct Node {
-    virtual void v0();              /* slot 0 -- draw this piece            */
-    virtual void v1(s16 index);     /* slot 1 -- advance this piece         */
-    /* 0x04 */ Node* prev;
-    /* 0x08 */ Node* next;
-    /* 0x0c */ int f_0c;            /* x, 20.12 fixed point                 */
-    /* 0x10 */ int f_10;            /* y                                    */
-    /* 0x14 */ int f_14;            /* target x                             */
-    /* 0x18 */ int f_18;            /* target y                             */
-    /* 0x1c */ int f_1c;            /* x step toward the target             */
-    /* 0x20 */ int f_20;            /* y step; its sign picks the draw pass */
-    /* 0x24 */ int f_24;            /* scale, approached toward 0x4000      */
-    /* 0x28 */ s16 f_28;            /* countdown                            */
-    /* 0x2a */ s16 f_2a;            /* board slot index                     */
-    /* 0x2c */ u8  f_2c;            /* face, drawn by func_ov006_020f9560   */
-    /* 0x2d */ u8  f_2d;            /* state                                */
-    /* 0x2e */ u8  f_2e;            /* drawn this frame                     */
-};
-
-/* Shape-only shadow of this scene class's OWN vtable, used for the slot-18
- * self-dispatch at the end of InitResources. Not a distinct type -- delete
- * it once dScMgBase_c declares slots 18..35 for real. */
-struct SceneVtable {
-    virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
-    virtual void v4();  virtual void v5();  virtual void v6();  virtual void v7();
-    virtual void v8();  virtual void v9();  virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-    virtual void v16(); virtual void v17(); virtual void v18(int x);
-};
 
 /* The minigame's own globals. Everything already declared by
  * include/decl_common.h with a type this file agrees with is NOT repeated
- * here -- only the four list pointers, which decl_common cannot spell
- * because it does not know `Node`. */
+ * here -- only the typed card-list pointers. */
 extern "C" {
-extern Node* data_ov006_02142568;   /* tail of the live list                */
-extern Node* data_ov006_0214256c;   /* head of the cleared list             */
-extern Node* data_ov006_02142570;   /* first piece of the pair being matched */
-extern Node* data_ov006_02142574;   /* second piece                          */
-extern Node* data_ov006_02142578;   /* where Render starts its backward walk */
-extern Node* data_ov006_0214257c;   /* head of the live list                */
+extern dMgMCarlo2CardObj_c* data_ov006_02142568;
+extern dMgMCarlo2CardObj_c* data_ov006_0214256c;
+extern dMgMCarlo2CardObj_c* data_ov006_02142570;
+extern dMgMCarlo2CardObj_c* data_ov006_02142574;
+extern dMgMCarlo2CardObj_c* data_ov006_02142578;
+extern dMgMCarlo2CardObj_c* data_ov006_0214257c;
 extern s16 data_ov006_02142558;     /* frames left before the pair resolves  */
 extern s16 data_ov006_0214255c;     /* pieces still animating                */
 extern s16 data_ov006_02142560;     /* difficulty row into data_ov006_0212e97c */
 extern int data_ov006_02142580[];   /* per-face weights the picker draws from  */
 extern int data_ov006_021425a8[];   /* sprite handles, indexed by 0213d770      */
-extern int data_ov006_0213d728[];   /* the array element's vtable-ish payload   */
 extern unsigned short data_ov006_0213d770[];
 extern int data_ov006_0212e954[];   /* the starting weights                     */
 extern int data_ov006_0212e97c[][10]; /* per-difficulty weight top-ups          */
@@ -156,9 +122,6 @@ void DecompressLZ16(int src, int dst);
 void Vec2_Sub(int* out, int* a, int* b);
 unsigned int func_02012790(unsigned int id);
 int  func_0203d5dc(void* a, void* b);
-void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
-void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
-void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 void func_ov004_020ad90c(void* t);
 void func_ov004_020adb1c(int score);
 void func_ov006_0210a534(void* c);
@@ -169,27 +132,19 @@ void func_ov006_020c1804(void* t);
 void func_ov006_020c19d0(void* t);
 int  func_ov006_020c1a88(void* t);
 
-/* This TU's own members, forward-declared for the calls that run up the file */
-void func_ov006_020f8ff0(int* p);
-void func_ov006_020f9000(void);
-void func_ov006_020f94f4(void);
-int  func_ov006_020f9560(void);
-int  func_ov006_020f95f0(void);
-int  func_ov006_020f9668(void);
-int  func_ov006_020f96e0(void);
-void func_ov006_020f9760(Node* base);
-void func_ov006_020f98dc(char* piece);
-void func_ov006_020f9994(char* piece, int slot);
-int  func_ov006_020f9bec(Node* piece);
-int  func_ov006_020f9cbc(Node* a, Node* b);
-void func_ov006_020f9d68(Node* piece, int slot);
-void func_ov006_020f9db8(Node* piece, int slot);
-/* Spelled `(char*, int)` because THE DEFINITION is: the legacy file that
- * holds it byte-matches with those parameter types, and the two legacy
- * callers that spelled it `(Node*, s16)` byte-match too, so the two
- * spellings are provably the same code. The definition wins. */
-void func_ov006_020f9f40(char* piece, int slot);
+void* _ZN7fBase_cnwEj(unsigned int);
+void _ZN11dScMgBase_cC2Ev(void*);
+void _ZN8Particle10SysTrackerC1Ev(void*);
+void func_ov006_020c1d80(void*);
+void func_020733a8(void*, int, int, void*, void*);
+extern int _ZTV19dScMgSingle3DBase_c;
+extern int _ZTV14dScMgMCarlo2_c[];
+void _ZN19dMgMCarlo2CardObj_cC1Ev(void*);
 }
+
+namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
+namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
+namespace Sound { void PlayBank2_2D(unsigned int); }
 
 /* The ROM's own symbols demangle to these, so this is how they are spelled:
  * _Z14ApproachLinearRiii is ApproachLinear(int&, int, int) and
@@ -197,6 +152,35 @@ void func_ov006_020f9f40(char* piece, int slot);
  * with C++ linkage -- the reference parameter is what mangles them. */
 int ApproachLinear(int& value, int target, int step);
 int ApproachLinear2(s16& value, s16 target, s16 step);
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 24 -- dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c, 0x020fa740 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN19dMgMCarlo2CardObj_cC1Ev
+dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
+    : mPrev(0), mNext(0)
+{
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 23 -- dScMgMCarlo2_c_classInit, 0x020fa6ac, size 0x94 */
+/* -------------------------------------------------------------------------- */
+// @symbol dScMgMCarlo2_c_classInit
+extern "C" void* dScMgMCarlo2_c_classInit()
+{
+    char* p = (char*)_ZN7fBase_cnwEj(0x5930);
+    if (p) {
+        _ZN11dScMgBase_cC2Ev(p);
+        *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
+        _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
+        *(int*)p = (int)&_ZTV14dScMgMCarlo2_c[2];
+        func_ov006_020c1d80(p + 0x4f38);
+        func_020733a8(p + 0x51a8, 0x28, 0x30,
+                     (void*)_ZN19dMgMCarlo2CardObj_cC1Ev,
+                     (void*)_ZN19dMgMCarlo2CardObj_cD1Ev);
+    }
+    return p;
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- _ZN14dScMgMCarlo2_c13InitResourcesEv, 0x020fa56c, size 0x140 */
@@ -208,10 +192,7 @@ int ApproachLinear2(s16& value, s16 target, s16 step);
  * slot 0 (fBase_c::InitResources). The old file's `recovered name:
  * dScMgMCarlo2_c_InitResources` agreed.
  *
- * The final `((SceneVtable *)c)->v18(-1)` is a self-dispatch through this
- * class's own vtable slot 18. It stays a shape-only shim because
- * include/dScMgBase_c.h stops declaring slots at 17; once it declares 18..35
- * this becomes a plain `this->...(-1)` and SceneVtable goes away. */
+ * The final call is the scene's own slot-18 reset hook. */
 s32 dScMgMCarlo2_c::InitResources()
 {
     char *c = (char *)this;
@@ -224,8 +205,8 @@ s32 dScMgMCarlo2_c::InitResources()
     f2 = LoadFile(0xbb);
     DecompressLZ16(f1, 0x6400000);
     DecompressLZ16(f1, 0x6600000);
-    _ZN2GX11LoadOBJPlttEPKvjj((void *)f2, 0, 0x100);
-    _ZN3GXS11LoadOBJPlttEPKvjj((void *)f2, 0, 0x100);
+    GX::LoadOBJPltt((void *)f2, 0, 0x100);
+    GXS::LoadOBJPltt((void *)f2, 0, 0x100);
     Deallocate((void *)f1);
     Deallocate((void *)f2);
     data_0209d45c = 0x11;
@@ -235,7 +216,7 @@ s32 dScMgMCarlo2_c::InitResources()
     func_ov006_020c0aa8((void *)(c + 0x4660));
     if (func_ov006_020c1a88((void *)(c + 0x4f38)) == 0) return 0;
     func_ov004_020b682c();
-    ((SceneVtable *)c)->v18(-1);
+    OnYoshiTryEat(-1);
     this->unk_592a = 0;
     this->unk_0a8 = 0xa;
     this->unk_0ac = this->unk_0a8;
@@ -249,29 +230,25 @@ s32 dScMgMCarlo2_c::InitResources()
 // recovered name: dScMgMCarlo2_c_OnYoshiTryEat_020fa4d4
 /* Resets the whole board: rebuild the 40 pieces, clear the match latch,
  * re-arm the shared table, then hand the score display a zero. */
-extern "C" {
 void dScMgMCarlo2_c::OnYoshiTryEat(int /* arg */)
 {
     char *c = (char *)this;
 
-    struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
-  func_ov006_020f9760((Node *)(c + 0x51a8));
+  dScMgMCarlo2_c::SetupBoard(mArray);
   data_ov006_0213d6fc = 0;
-  self->unk_592e = 0;
-  self->unk_511e = 1;
+  unk_592e = 0;
+  mShared.unk_1e6 = 1;
   func_ov006_020c1604(c + 0x4f38, 4, 4, c + 0x592e);
-  self->unk_4f52 = 1;
-  self->unk_592a = 0;
+  mShared.unk_01a = 1;
+  unk_592a = 0;
   func_ov004_020adb1c(0);
-  self->unk_5928 = 1;
-}
+  unk_5928 = 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi, 0x020fa3d0, size 0x104 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14dScMgMCarlo2_c13OnTurnIntoEggEi
-extern "C" {  /* .c-derived member: C linkage for the whole block */
 int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
 {
     char *self = (char *)this;
@@ -299,7 +276,7 @@ int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
             short *p;
             func_02012790(0x62);
             *(short *)(self + 0x592a) = 0x1e;
-            func_ov006_020f94f4();
+            dScMgMCarlo2_c::FlipDealtCards();
             p = (short *)(self + 0x5928);
             *p += 1;
         }
@@ -313,7 +290,6 @@ int dScMgMCarlo2_c::OnTurnIntoEgg(int /* mode */)
         break;
     }
     return 0;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -358,7 +334,7 @@ s32 dScMgMCarlo2_c::Behavior()
     case 2:
         data_ov006_0213d700 = unk_592e * 5 << 12;
         if (unk_592e == 4) {
-            if (func_ov006_020f9668() == 0) {
+            if (dScMgMCarlo2_c::BoardBusy() == 0) {
                 unk_592e = 0;
                 {
                     s16 *p = (s16 *)((int)c + 0x5928);
@@ -368,7 +344,7 @@ s32 dScMgMCarlo2_c::Behavior()
         }
         break;
     case 3:
-        if (func_ov006_020f95f0() == 0) {
+        if (dScMgMCarlo2_c::BoardReady() == 0) {
             int r5;
             if (data_ov006_0213d6fc == 1)
                 data_ov006_0213d6fc = 0;
@@ -376,10 +352,10 @@ s32 dScMgMCarlo2_c::Behavior()
             if (data_ov006_0213d6f4 != 0 && r5 > 10 && r5 <= 18
                 && func_ov006_020c1718(c + 0x4f38) != 0) {
                 unk_592e = 0;
-                unk_511e = 0;
+                mShared.unk_1e6 = 0;
                 func_ov006_020c1164(c + 0x4f38, 2, &unk_592e);
                 if (data_ov006_0213d6f4 == 2)
-                    unk_4f52 = 0;
+                    mShared.unk_01a = 0;
             } else {
                 int lim = unk_592e + 0x12;
                 if (r5 >= lim) {
@@ -390,12 +366,12 @@ s32 dScMgMCarlo2_c::Behavior()
             }
         } else {
             if (data_ov006_0213d6fc == 0) {
-                if (func_ov006_020f96e0() != 0) {
+                if (dScMgMCarlo2_c::HasRemovablePair() != 0) {
                     data_ov006_0213d6fc = 1;
                 } else {
                     if (data_ov006_0213d6f8 != 0) {
-                        if (unk_4f52 == 1) {
-                            unk_4f52 = 0;
+                        if (mShared.unk_01a == 1) {
+                            mShared.unk_01a = 0;
                         } else if (func_ov006_020c16b4(c + 0x4f38) != 0) {
                             func_ov006_020c0d68(c + 0x4f38);
                             func_ov004_020b0a54(0x12);
@@ -414,7 +390,7 @@ s32 dScMgMCarlo2_c::Behavior()
     }
 
     func_ov006_020c19d0(c + 0x4f38);
-    func_ov006_020f9000();
+    dScMgMCarlo2_c::UpdateBoard();
     return 1;
 }
 
@@ -439,10 +415,10 @@ s32 dScMgMCarlo2_c::Render()
 {
     char *c = (char *)this;
     short v;
-    Node *n6;
+    dMgMCarlo2CardObj_c *n6;
     int i5;
     int i6;
-    Node *n5;
+    dMgMCarlo2CardObj_c *n5;
 
     func_ov006_020c0aa8(c + 0x4660);
 
@@ -460,18 +436,18 @@ s32 dScMgMCarlo2_c::Render()
     for (i5 = 0; i5 < 0x14; i5++) {
         if (n6 == 0)
             break;
-        if (n6->f_20 > 0)
-            n6->v0();
-        n6 = n6->prev;
+        if (n6->mYStep > 0)
+            n6->Render();
+        n6 = n6->mPrev;
     }
 
     n5 = data_ov006_02142578;
     for (i6 = 0; i6 < 0x14; i6++) {
         if (n5 == 0)
             break;
-        if (n5->f_20 == 0)
-            n5->v0();
-        n5 = n5->prev;
+        if (n5->mYStep == 0)
+            n5->Render();
+        n5 = n5->mPrev;
     }
 
     func_ov006_020c1804(c + 0x4f38);
@@ -501,96 +477,89 @@ s32 dScMgMCarlo2_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov006_020f9f40, 0x020f9f40, size 0xa0 */
+/* ROM ordinal 16 -- dMgMCarlo2CardObj_c::Init, 0x020f9f40, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9f40
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f9f40(char* c, int r1){
-    *(short*)(c+0x2a) = (short)r1;
+// @symbol _ZN19dMgMCarlo2CardObj_c4InitEi
+void dMgMCarlo2CardObj_c::Init(int r1){
+    mSlot = (short)r1;
     if (r1 >= 0x14) {
-        *(short*)(c+0x28) = 1;
+        mDealDelay = 1;
     } else {
-        *(short*)(c+0x28) = (short)(((r1 % 5) << 1) + 1);
+        mDealDelay = (short)(((r1 % 5) << 1) + 1);
     }
-    *(int*)(c+0x24) = 0;
-    if (r1 == 0x13) data_ov006_02142578 = (Node *)c;
-    *(unsigned char*)(c+0x2e) = 1;
-    *(int*)(c+0x1c) = 0;
-    *(int*)(c+0x20) = 0;
-    *(unsigned char*)(c+0x2d) = 0;
-    *(unsigned char*)(c+0x2c) = (unsigned char)func_ov006_020f9560();
-    *(int*)(c+8) = 0;
-    *(int*)(c+4) = *(int*)(c+8);
-}
+    mLift = 0;
+    if (r1 == 0x13) data_ov006_02142578 = this;
+    mVisible = 1;
+    mXStep = 0;
+    mYStep = 0;
+    mState = 0;
+    mFace = (unsigned char)dScMgMCarlo2_c::DrawCardValue();
+    mNext = 0;
+    mPrev = mNext;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov006_020f9db8, 0x020f9db8, size 0x188 */
+/* ROM ordinal 15 -- dMgMCarlo2CardObj_c::DealIn, 0x020f9db8, size 0x188 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9db8
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f9db8(Node *o, int a)
+// @symbol _ZN19dMgMCarlo2CardObj_c6DealInEi
+void dMgMCarlo2CardObj_c::DealIn(int a)
 {
     int v[3];
 
     if (a >= 0x14)
         return;
 
-    if (o->f_2a >= 0x14) {
-        o->f_0c = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
-        o->f_10 = -0x30000;
-        data_ov006_02142578 = o;
-        o->f_2d = 1;
-    } else if (o->f_2d == 0) {
-        o->f_0c = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
-        o->f_10 = -0x30000;
-        o->f_2d = 4;
+    if (mSlot >= 0x14) {
+        mX = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
+        mY = -0x30000;
+        data_ov006_02142578 = this;
+        mState = 1;
+    } else if (mState == 0) {
+        mX = (0x70 - ((data_ov006_0213d6f4 >> 2) << 1)) << 12;
+        mY = -0x30000;
+        mState = 4;
         data_ov006_0214255c++;
     } else {
-        o->f_2d = 4;
+        mState = 4;
         data_ov006_0214255c++;
     }
 
-    o->f_14 = ((a % 5) * 32 + 0x30) << 12;
-    o->f_18 = ((a / 5) * 0x30) << 12;
-    o->f_2a = (short)a;
+    mTargetX = ((a % 5) * 32 + 0x30) << 12;
+    mTargetY = ((a / 5) * 0x30) << 12;
+    mSlot = (short)a;
 
-    Vec2_Sub(v, &o->f_14, &o->f_0c);
+    Vec2_Sub(v, &mTargetX, &mX);
 
-    o->f_1c = v[0];
-    o->f_20 = v[1];
-    func_0203d630(&o->f_1c, 0x124);
+    mXStep = v[0];
+    mYStep = v[1];
+    func_0203d630(&mXStep, 0x124);
 
-    if (o->f_1c < 0)
-        o->f_1c = -o->f_1c;
-    if (o->f_20 < 0)
-        o->f_20 = -o->f_20;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_020f9d68, 0x020f9d68, size 0x50 */
-/* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9d68
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f9d68(Node *o, int n) {
-    *(short*)((char*)o + 0x28) = (short)((4 - n % 5) * 2);
-    *(unsigned char*)((char*)o + 0x2d) = 5;
-}
+    if (mXStep < 0)
+        mXStep = -mXStep;
+    if (mYStep < 0)
+        mYStep = -mYStep;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_020f9cbc, 0x020f9cbc, size 0xac */
+/* ROM ordinal 14 -- dMgMCarlo2CardObj_c::FlipAway, 0x020f9d68, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9cbc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020f9cbc(Node *a, Node *b)
+// @symbol _ZN19dMgMCarlo2CardObj_c8FlipAwayEi
+void dMgMCarlo2CardObj_c::FlipAway(int n) {
+    mDealDelay = (short)((4 - n % 5) * 2);
+    mState = 5;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 13 -- dMgMCarlo2CardObj_c::IsPairWith, 0x020f9cbc, size 0xac */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_
+int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *b)
 {
     int ai, bi, dm, dd;
-    if (b->f_2c != a->f_2c)
+    if (b->mFace != mFace)
         goto fail;
-    bi = b->f_2a;
-    ai = a->f_2a;
+    bi = b->mSlot;
+    ai = mSlot;
     dm = ai % 5 - bi % 5;
     dd = ai / 5 - bi / 5;
     if (dm < 0)
@@ -605,14 +574,12 @@ int func_ov006_020f9cbc(Node *a, Node *b)
 fail:
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_020f9bec, 0x020f9bec, size 0xd0 */
+/* ROM ordinal 12 -- dMgMCarlo2CardObj_c::HitTest, 0x020f9bec, size 0xd0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9bec
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020f9bec(Node *c)
+// @symbol _ZN19dMgMCarlo2CardObj_c7HitTestEv
+int dMgMCarlo2CardObj_c::HitTest()
 {
     u8 idx;
     int off;
@@ -620,7 +587,7 @@ int func_ov006_020f9bec(Node *c)
     int a, b;
 
     if (data_ov006_0213d6fc == 0) return 0;
-    if (func_ov006_020f9668() != 0) goto fail;
+    if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
 
     idx = data_020a0e40[0];
     off = idx * 4;
@@ -630,124 +597,117 @@ int func_ov006_020f9bec(Node *c)
     }
     if (has == 0) goto fail;
 
-    a = data_020a0dea[idx * 4] - (c->f_0c >> 12);
-    b = data_020a0deb[idx * 4] - (c->f_10 >> 12);
+    a = data_020a0dea[idx * 4] - (mX >> 12);
+    b = data_020a0deb[idx * 4] - (mY >> 12);
     if (a > 7 && a < 0x28 && b > 0 && b < 0x31) return 1;
 fail:
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_020f9994, 0x020f9994, size 0x258 */
+/* ROM ordinal 11 -- dMgMCarlo2CardObj_c::Update, 0x020f9994, size 0x258 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9994
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f9994(char *c, int b)
+// @symbol _ZN19dMgMCarlo2CardObj_c6UpdateEi
+void dMgMCarlo2CardObj_c::Update(int b)
 {
-    switch (*(unsigned char *)(c + 0x2d)) {
+    switch (mState) {
     case 0:
         {
-            short *p = (short *)(c + 0x28);
+            short *p = &mDealDelay;
             short v = *(short *)p;
             *(short *)p = (short)(v - 1);
         }
-        if (*(short *)(c + 0x28) != 0)
+        if (mDealDelay != 0)
             return;
         data_ov006_0213d6f4--;
-        func_ov006_020f9db8((Node *)c, b);
+        DealIn(b);
         return;
     case 2:
-        if (*(short *)(c + 0x2a) != b) {
-            func_ov006_020f9db8((Node *)c, b);
+        if (mSlot != b) {
+            DealIn(b);
             return;
         }
-        if (func_ov006_020f9bec((Node *)c) == 0)
+        if (HitTest() == 0)
             return;
         if (data_ov006_02142570 == 0) {
-            data_ov006_02142570 = (Node *)c;
-            *(unsigned char *)(c + 0x2d) = 3;
-            _ZN5Sound12PlayBank2_2DEj(0x153);
+            data_ov006_02142570 = this;
+            mState = 3;
+            Sound::PlayBank2_2D(0x153);
             return;
         }
-        if (func_ov006_020f9cbc((Node *)c, data_ov006_02142570) != 0) {
-            data_ov006_02142574 = (Node *)c;
+        if (IsPairWith(data_ov006_02142570) != 0) {
+            data_ov006_02142574 = this;
             data_ov006_02142558 = 0x20;
-            *(unsigned char *)(c + 0x2d) = 3;
-            _ZN5Sound12PlayBank2_2DEj(0x154);
+            mState = 3;
+            Sound::PlayBank2_2D(0x154);
             return;
         }
-        *(unsigned char *)((char *)data_ov006_02142570 + 0x2d) = 2;
+        data_ov006_02142570->mState = 2;
         data_ov006_02142570 = 0;
         func_02012790(0xe);
         return;
     case 3:
-        if (func_ov006_020f9bec((Node *)c) == 0)
+        if (HitTest() == 0)
             return;
-        *(unsigned char *)(c + 0x2d) = 2;
-        if (data_ov006_02142570 != (Node *)c)
+        mState = 2;
+        if (data_ov006_02142570 != this)
             return;
         if (data_ov006_02142574 != 0)
             return;
-        _ZN5Sound12PlayBank2_2DEj(0x155);
+        Sound::PlayBank2_2D(0x155);
         data_ov006_02142570 = 0;
         return;
     case 1:
     case 4:
-        ApproachLinear(*(int *)(c + 0xc), *(int *)(c + 0x14), *(int *)(c + 0x1c));
-        ApproachLinear(*(int *)(c + 0x10), *(int *)(c + 0x18), *(int *)(c + 0x20));
-        ApproachLinear(*(int *)(c + 0x24), 0x4000, 0x300);
-        if (func_0203d5dc(c + 0xc, c + 0x14) != 0)
+        ApproachLinear(mX, mTargetX, mXStep);
+        ApproachLinear(mY, mTargetY, mYStep);
+        ApproachLinear(mLift, 0x4000, 0x300);
+        if (func_0203d5dc(&mX, &mTargetX) != 0)
             return;
-        if (*(int *)(c + 0x24) != 0x4000)
+        if (mLift != 0x4000)
             return;
-        *(unsigned char *)(c + 0x2d) = 2;
+        mState = 2;
         ApproachLinear2(data_ov006_0214255c, 0, 1);
-        *(int *)(c + 0x1c) = 0;
-        *(int *)(c + 0x20) = 0;
+        mXStep = 0;
+        mYStep = 0;
         return;
     case 5:
-        if (ApproachLinear2(*(s16 *)(c + 0x28), 0, 1) == 0)
+        if (ApproachLinear2(mDealDelay, 0, 1) == 0)
             return;
-        ApproachLinear(*(int *)(c + 0xc), -0x30000, 0x10000);
+        ApproachLinear(mX, -0x30000, 0x10000);
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_020f98dc, 0x020f98dc, size 0xb8 */
+/* ROM ordinal 10 -- dMgMCarlo2CardObj_c::Render, 0x020f98dc, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f98dc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f98dc(char *thiz)
+// @symbol _ZN19dMgMCarlo2CardObj_c6RenderEv
+void dMgMCarlo2CardObj_c::Render()
 {
     unsigned char k;
-    if (*(unsigned char*)(thiz + 0x2e) == 0) return;
-    k = *(unsigned char*)(thiz + 0x2d);
+    if (mVisible == 0) return;
+    k = mState;
     if (k == 0) return;
     if (k == 3) {
         if (((&data_020a0db0)[0] & 8) != 0) return;
     }
     {
-        int idx = (*(unsigned char*)(thiz + 0x2c) + 1) * 5
-                  + (*(int*)(thiz + 0x24) >> 12);
+        int idx = (mFace + 1) * 5 + (mLift >> 12);
         unsigned short e = data_ov006_0213d770[idx];
         Hud_RenderSprite(
             (void*)data_ov006_021425a8[e],
-            (*(int*)(thiz + 0xc) >> 12) + 0x18,
-            (*(int*)(thiz + 0x10) >> 12) + 0x18,
+            (mX >> 12) + 0x18,
+            (mY >> 12) + 0x18,
             -1,
             -1);
     }
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_020f9760, 0x020f9760, size 0x17c */
+/* ROM ordinal 9 -- dScMgMCarlo2_c::SetupBoard, 0x020f9760, size 0x17c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9760
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f9760(Node* base)
+// @symbol _ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c
+void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
 {
     do {
         {
@@ -759,9 +719,9 @@ void func_ov006_020f9760(Node* base)
         }
         {
             s16 j = 0;
-            Node* p = base;
+            dMgMCarlo2CardObj_c* p = base;
             do {
-                func_ov006_020f9f40((char *)p, j);
+                p->Init(j);
                 p = p + 1;
                 j = j + 1;
             } while (j < 0x28);
@@ -780,55 +740,51 @@ void func_ov006_020f9760(Node* base)
         data_ov006_0213d700 = 0;
         {
             s16 i = 0;
-            Node* h = base;
+            dMgMCarlo2CardObj_c* h = base;
             do {
-                Node* t = &base[i + 1];
-                Node* save = h->next;
-                h->next = t;
-                t->prev = h;
+                dMgMCarlo2CardObj_c* t = &base[i + 1];
+                dMgMCarlo2CardObj_c* save = h->mNext;
+                h->mNext = t;
+                t->mPrev = h;
                 {
-                    Node* u = t->next;
+                    dMgMCarlo2CardObj_c* u = t->mNext;
                     if (u != 0) {
-                        do { t = u; u = u->next; } while (u != 0);
+                        do { t = u; u = u->mNext; } while (u != 0);
                     }
                 }
-                t->next = save;
-                if (t->next == 0) data_ov006_02142568 = t;
+                t->mNext = save;
+                if (t->mNext == 0) data_ov006_02142568 = t;
                 h = h + 1;
                 i++;
             } while (i < 0x27);
         }
-    } while (func_ov006_020f96e0() == 0);
-}
+    } while (HasRemovablePair() == 0);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_020f96e0, 0x020f96e0, size 0x80 */
+/* ROM ordinal 8 -- dScMgMCarlo2_c::HasRemovablePair, 0x020f96e0, size 0x80 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f96e0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020f96e0(void)
+// @symbol _ZN14dScMgMCarlo2_c16HasRemovablePairEv
+int dScMgMCarlo2_c::HasRemovablePair()
 {
-    Node *p, *q;
+    dMgMCarlo2CardObj_c *p, *q;
     p = data_ov006_0214257c;
-    while (p != 0 && p->f_2a < 0x14) {
-        q = p->next;
-        while (q != 0 && q->f_2a < 0x14) {
-            if (func_ov006_020f9cbc(p, q) != 0) return 1;
-            q = q->next;
+    while (p != 0 && p->mSlot < 0x14) {
+        q = p->mNext;
+        while (q != 0 && q->mSlot < 0x14) {
+            if (p->IsPairWith(q) != 0) return 1;
+            q = q->mNext;
         }
-        p = p->next;
+        p = p->mNext;
     }
     return 0;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_020f9668, 0x020f9668, size 0x78 */
+/* ROM ordinal 7 -- dScMgMCarlo2_c::BoardBusy, 0x020f9668, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9668
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020f9668(void) {
+// @symbol _ZN14dScMgMCarlo2_c9BoardBusyEv
+int dScMgMCarlo2_c::BoardBusy() {
     int ret = 1;
     int a = (data_ov006_0213d700 << 4) >> 0x10;
     int b = data_ov006_0213d6f8;
@@ -840,18 +796,16 @@ int func_ov006_020f9668(void) {
     }
     return ret;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_020f95f0, 0x020f95f0, size 0x78 */
+/* ROM ordinal 6 -- dScMgMCarlo2_c::BoardReady, 0x020f95f0, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f95f0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN14dScMgMCarlo2_c10BoardReadyEv
 /* One expression, one exit. The cartridge keeps the result pinned in r0 for
  * the whole body (mov r0,#0 up front, mov r0,#1 on the one success path);
  * spelling the guards as early `return 0`s instead lets the compiler
  * rematerialise the zero at each exit, which is the extra 8 bytes. */
-int func_ov006_020f95f0(void) {
+int dScMgMCarlo2_c::BoardReady() {
     int a = (data_ov006_0213d700 << 4) >> 16;
     int r = 0;
     int b = data_ov006_0213d6f8;
@@ -865,14 +819,12 @@ int func_ov006_020f95f0(void) {
     }
     return r;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_020f9560, 0x020f9560, size 0x90 */
+/* ROM ordinal 5 -- dScMgMCarlo2_c::DrawCardValue, 0x020f9560, size 0x90 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9560
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020f9560(void){
+// @symbol _ZN14dScMgMCarlo2_c13DrawCardValueEv
+int dScMgMCarlo2_c::DrawCardValue(){
     unsigned char pick = 0;
     int total = 0;
     int i;
@@ -890,80 +842,77 @@ int func_ov006_020f9560(void){
     }
     return pick;
 }
-}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_020f94f4, 0x020f94f4, size 0x6c */
+/* ROM ordinal 4 -- dScMgMCarlo2_c::FlipDealtCards, 0x020f94f4, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f94f4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f94f4(void){
-    Node* node = data_ov006_0214257c;
+// @symbol _ZN14dScMgMCarlo2_c14FlipDealtCardsEv
+void dScMgMCarlo2_c::FlipDealtCards(){
+    dMgMCarlo2CardObj_c* node = data_ov006_0214257c;
     short i = 0;
     if((data_ov006_0213d700>>12) <= 0) return;
     do {
         if(node == 0) return;
-        func_ov006_020f9d68(node, i);
+        node->FlipAway(i);
         i = i+1;
-        node = node->next;
+        node = node->mNext;
     } while(i < (data_ov006_0213d700>>12));
-}
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_020f9000, 0x020f9000, size 0x4f4 */
+/* ROM ordinal 3 -- dScMgMCarlo2_c::UpdateBoard, 0x020f9000, size 0x4f4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f9000
-extern "C" void func_ov006_020f9000(void)
+// @symbol _ZN14dScMgMCarlo2_c11UpdateBoardEv
+void dScMgMCarlo2_c::UpdateBoard()
 {
-    Node* head = data_ov006_0214257c;
+    dMgMCarlo2CardObj_c* head = data_ov006_0214257c;
 
     if (data_ov006_02142570 != 0 && data_ov006_02142574 != 0) {
         data_ov006_02142558 -= 1;
         if (data_ov006_02142558 == 0) {
-            Node* a;
-            Node* b;
-            Node* t;
-            Node* u;
-            s16 kb = data_ov006_02142574->f_2a;
-            s16 ka = data_ov006_02142570->f_2a;
+            dMgMCarlo2CardObj_c* a;
+            dMgMCarlo2CardObj_c* b;
+            dMgMCarlo2CardObj_c* t;
+            dMgMCarlo2CardObj_c* u;
+            s16 kb = data_ov006_02142574->mSlot;
+            s16 ka = data_ov006_02142570->mSlot;
             if (ka > kb)
                 data_ov006_0213d700 = kb << 12;
             else
                 data_ov006_0213d700 = ka << 12;
 
             a = data_ov006_02142570;
-            if (data_ov006_0214257c == a) data_ov006_0214257c = a->next;
-            if (data_ov006_0214256c == a) data_ov006_0214256c = a->next;
-            if (data_ov006_02142578 == a) data_ov006_02142578 = a->prev;
-            if (data_ov006_02142568 == a) data_ov006_02142568 = a->prev;
-            if (a->prev != 0) a->prev->next = a->next;
-            if (a->next != 0) a->next->prev = a->prev;
-            a->next = 0;
-            a->prev = a->next;
+            if (data_ov006_0214257c == a) data_ov006_0214257c = a->mNext;
+            if (data_ov006_0214256c == a) data_ov006_0214256c = a->mNext;
+            if (data_ov006_02142578 == a) data_ov006_02142578 = a->mPrev;
+            if (data_ov006_02142568 == a) data_ov006_02142568 = a->mPrev;
+            if (a->mPrev != 0) a->mPrev->mNext = a->mNext;
+            if (a->mNext != 0) a->mNext->mPrev = a->mPrev;
+            a->mNext = 0;
+            a->mPrev = a->mNext;
 
             b = data_ov006_02142574;
-            if (data_ov006_0214257c == b) data_ov006_0214257c = b->next;
-            if (data_ov006_0214256c == b) data_ov006_0214256c = b->next;
-            if (data_ov006_02142578 == b) data_ov006_02142578 = b->prev;
-            if (data_ov006_02142568 == b) data_ov006_02142568 = b->prev;
-            if (b->prev != 0) b->prev->next = b->next;
-            if (b->next != 0) b->next->prev = b->prev;
-            b->next = 0;
-            b->prev = b->next;
+            if (data_ov006_0214257c == b) data_ov006_0214257c = b->mNext;
+            if (data_ov006_0214256c == b) data_ov006_0214256c = b->mNext;
+            if (data_ov006_02142578 == b) data_ov006_02142578 = b->mPrev;
+            if (data_ov006_02142568 == b) data_ov006_02142568 = b->mPrev;
+            if (b->mPrev != 0) b->mPrev->mNext = b->mNext;
+            if (b->mNext != 0) b->mNext->mPrev = b->mPrev;
+            b->mNext = 0;
+            b->mPrev = b->mNext;
 
             a = data_ov006_02142570;
             t = data_ov006_0214256c;
             if (t == 0) {
                 data_ov006_0214256c = a;
             } else {
-                u = t->next;
+                u = t->mNext;
                 if (u != 0) {
-                    do { t = u; u = u->next; } while (u != 0);
+                    do { t = u; u = u->mNext; } while (u != 0);
                 }
-                t->next = a;
-                a->prev = t;
-                a->next = 0;
+                t->mNext = a;
+                a->mPrev = t;
+                a->mNext = 0;
             }
 
             b = data_ov006_02142574;
@@ -971,13 +920,13 @@ extern "C" void func_ov006_020f9000(void)
             if (t == 0) {
                 data_ov006_0214256c = b;
             } else {
-                u = t->next;
+                u = t->mNext;
                 if (u != 0) {
-                    do { t = u; u = u->next; } while (u != 0);
+                    do { t = u; u = u->mNext; } while (u != 0);
                 }
-                t->next = b;
-                b->prev = t;
-                b->next = 0;
+                t->mNext = b;
+                b->mPrev = t;
+                b->mNext = 0;
             }
 
             data_ov006_02142574 = 0;
@@ -997,29 +946,29 @@ extern "C" void func_ov006_020f9000(void)
                     } while (i < 10);
                 }
                 {
-                    Node* p = data_ov006_0214256c;
+                    dMgMCarlo2CardObj_c* p = data_ov006_0214256c;
                     if (p != 0) {
                         do {
-                            Node* nxt = p->next;
+                            dMgMCarlo2CardObj_c* nxt = p->mNext;
                             if (data_ov006_0214257c == p) data_ov006_0214257c = nxt;
-                            if (data_ov006_0214256c == p) data_ov006_0214256c = p->next;
-                            if (data_ov006_02142578 == p) data_ov006_02142578 = p->prev;
-                            if (data_ov006_02142568 == p) data_ov006_02142568 = p->prev;
-                            if (p->prev != 0) p->prev->next = p->next;
-                            if (p->next != 0) p->next->prev = p->prev;
-                            p->next = 0;
-                            p->prev = p->next;
-                            func_ov006_020f9f40((char *)p, (s16)(data_ov006_02142568->f_2a + 1));
+                            if (data_ov006_0214256c == p) data_ov006_0214256c = p->mNext;
+                            if (data_ov006_02142578 == p) data_ov006_02142578 = p->mPrev;
+                            if (data_ov006_02142568 == p) data_ov006_02142568 = p->mPrev;
+                            if (p->mPrev != 0) p->mPrev->mNext = p->mNext;
+                            if (p->mNext != 0) p->mNext->mPrev = p->mPrev;
+                            p->mNext = 0;
+                            p->mPrev = p->mNext;
+                            p->Init((s16)(data_ov006_02142568->mSlot + 1));
                             {
-                                Node* h = data_ov006_02142568;
-                                Node* save = h->next;
-                                h->next = p;
-                                p->prev = h;
-                                if (p->next != 0) {
-                                    do { p = *(Node* volatile*)&p->next; } while (p->next != 0);
+                                dMgMCarlo2CardObj_c* h = data_ov006_02142568;
+                                dMgMCarlo2CardObj_c* save = h->mNext;
+                                h->mNext = p;
+                                p->mPrev = h;
+                                if (p->mNext != 0) {
+                                    do { p = *(dMgMCarlo2CardObj_c* volatile*)&p->mNext; } while (p->mNext != 0);
                                 }
-                                p->next = save;
-                                if (p->next == 0) data_ov006_02142568 = p;
+                                p->mNext = save;
+                                if (p->mNext == 0) data_ov006_02142568 = p;
                             }
                             p = nxt;
                         } while (p != 0);
@@ -1035,10 +984,10 @@ extern "C" void func_ov006_020f9000(void)
             if ((data_ov006_0213d700 >> 12) <= 0) return;
             do {
                 if (head == 0) return;
-                if (head->f_2d == 1)
-                    head->v1(i);
+                if (head->mState == 1)
+                    head->Update(i);
                 i = i + 1;
-                head = head->next;
+                head = head->mNext;
             } while (i < (data_ov006_0213d700 >> 12));
         }
     } else {
@@ -1050,20 +999,20 @@ extern "C" void func_ov006_020f9000(void)
             if ((data_ov006_0213d700 >> 12) <= 0) return;
             do {
                 if (head == 0) return;
-                head->v1(i);
+                head->Update(i);
                 i = i + 1;
-                head = head->next;
+                head = head->mNext;
             } while (i < (data_ov006_0213d700 >> 12));
         }
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_020f8ff0, 0x020f8ff0, size 0x10 */
+/* ROM ordinal 2 -- dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c, 0x020f8ff0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov006_020f8ff0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020f8ff0(int *p) { p[0] = (int)data_ov006_0213d728; }
+// @symbol _ZN19dMgMCarlo2CardObj_cD1Ev
+dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c()
+{
 }
 
 /* -------------------------------------------------------------------------- */
