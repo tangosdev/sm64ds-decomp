@@ -4396,3 +4396,242 @@ hide the structure. Also: the permuter needs a C-shaped base (pycparser cannot p
 `extern "C"` or `class`), and for a body like this one a C file with the mangled name as a
 plain identifier and `this` as an explicit first parameter reproduces the C++ output
 word-for-word, so the residue can be worked in C and ported back.
+
+## 6br. `tst` is a compiler-VERSION split, `long_calls` is not an mwccarm pragma at all, and `2004/b56` only half-screens pragmas (2026-09-05, arm9 handback run m100)
+
+Three tooling-level results from the 0x0205xxxx handback pile. None of them is a source
+shape -- they change which functions are even reachable, and they retire two levers that
+have been re-tried by hand at least twice.
+
+### 1. `tst Rn,#imm` vs `ands Rd,Rn,#imm` is decided by the compiler build, not by the source
+
+The 1.2 line and `2004/b56` never emit `tst` for a masked branch; they emit `ands` into a
+scratch register. The 2.0 line and the whole DSi line always emit `tst`. Same source, same
+flags, twenty-five builds:
+
+```c
+typedef unsigned int u32;
+void tst_probe(u32 *p, u32 x) { if (x & 2) *p = 1; }
+```
+
+```
+1.2/base 1.2/sp2 1.2/sp2p3 1.2/sp3 1.2/sp4 2004/b56   ->  021011e2  ands r1, r1, #2
+2.0/{base,sp1,sp1p2,sp1p5,sp1p6,sp1p7,sp2,sp2p2,sp2p3,sp2p4}
+dsi/{1.1,1.1p1,1.2,1.2p1,1.2p2,1.3,1.3p1,1.6sp1,1.6sp2}
+                                                      ->  020011e3  tst  r1, #2
+```
+(the following three words -- `movne r1,#1 / strne r1,[r0] / bx lr` -- are byte-identical
+across all twenty-five, so this is the whole delta.)
+
+Nothing on the source side moves it. It is not a peephole you can provoke and it is not an
+`optimize_for_size` effect; the split is clean at the 1.2/2004 vs 2.0/dsi line.
+
+**How to apply.** A `tst` in the target is a VERSION ORACLE, and a cheap one -- it is
+visible in the disassembly before you write any C. If the ROM bytes for your function
+contain `tst`, `2004/b56` (the canonical build, 6ai) can never reproduce them, and every
+divergence count you collect under `--version 2004/b56` is measuring the wrong compiler.
+Re-run under `--version 2.0/<build>` (or a dsi build) from the start, and if it lands, pin
+it by appending `<name> 2.0/<build>` to `config/rombuild-versions.txt`. Conversely an
+`ands Rd,Rn,#imm` whose result is dead rules the 2.0 and dsi lines OUT. The ROM mixes
+both, which is consistent with 6ah: the shipping toolchain was not one binary.
+
+**The oracle classifies COMPILER OUTPUT only.** Hand-written asm uses `tst` freely and
+carries no version signal at all, so the rule above says nothing about a hand-asm body.
+`func_0205a588` -- the subject of 6bs, banked as a HAND-ASM PRIMITIVE -- has four `tst`
+instructions (+0x08, +0x38, +0x6c, +0x74) and that does not disqualify `2004/b56` for
+anything, because no compiler wrote those words. Apply the oracle to a body you have reason
+to believe a compiler produced, and re-check the banner before you re-pin a version on it.
+
+### 2. `#pragma long_calls` is not an mwccarm pragma -- and the veneer it was supposed to
+produce is what a plain tail call already emits
+
+`#pragma long_calls on` draws `warning: illegal #pragma` from every build in the tree that
+supports the screen (all of 1.2/*, all of 2.0/*, all of dsi/*), exactly like the invented
+`#pragma zzz_totally_bogus_name`. It is an ARM/RVCT pragma that was borrowed into decomp
+folklore; mwccarm does not have it. Output with it is byte-identical to output without it
+on every build. Every "tried long_calls, inert" line anywhere is a 6as false negative, and
+the lever should not be re-tried.
+
+**51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/`) -- 50 of
+them overlay files (19 in ov007, the rest spread over
+ov002/006/014/015/016/022/029/030/036/063/064/065/066/073/079/080/091/095/098) and exactly
+ONE arm9 file, `src/func_0205d4a0.c`. Most sit under a header comment that says the pragma
+is what emits the pooled veneer. They all still byte-match, because the pragma is inert, but
+the comment is wrong and every one of those compiles now prints `warning: illegal #pragma`
+under the `-w illpragmas` in `DEFAULT_FLAGS`. Deleting the line from those files is a no-op
+on the bytes; only the comment needs rewriting.
+
+The reason it looked plausible is that the veneer shape it was supposed to force is already
+the default. With `-interworking` (which is in `DEFAULT_FLAGS`), a function whose entire
+body is one call in TAIL position lowers to a pc-relative indirect long branch, no pragma:
+
+```c
+extern void far_target(void);
+void veneer_probe(void) { far_target(); }
+```
+```
+-interworking on : ldr ip, [pc] ; bx ip ; <reloc word at +8>     (12 bytes, no frame)
+-interworking off: b far_target                                   (4 bytes)
+```
+The return type is irrelevant (`return far_target();` on an `int` function is the same three
+words). Add a SECOND call and it is no longer a tail call, so you get the ordinary
+`stmdb sp!,{lr} / sub sp,sp,#4 / bl / bl / add / ldm / bx lr` frame instead. That is the
+whole mechanism: tail position plus interworking, nothing else.
+
+**Corpus check that settles it.** Scanning arm9 for every 12-byte ARM function in
+`config/arm9/symbols.txt`, the pc-relative-load-then-`bx` shape appears 63 times in three
+register forms:
+
+```
+ldr r12,[pc,#0] ; bx r12   58 sites   <- compiler output; 56 have a src file, 0 NONMATCHING
+ldr r0, [pc,#0] ; bx lr     4 sites   <- not a veneer: returns a constant address
+ldr r1, [pc,#0] ; bx r1     1 site    <- func_02057014, the only one
+```
+So the ip form is a solved shape (a one-line tail call in a plain `.c` file reproduces it;
+of the 56 banked sources, 33 are plain `.c` files that do exactly that and the other 23 are
+`.cpp`), and `func_02057014` routing the address through **r1** is a 1-in-63 outlier that no
+register-allocation lever reaches -- ip is where the compiler's tail-call thunk always puts
+it, and there is no C construct that names r1 for a branch target. That function is a FLOOR
+(hand-written), not a missing source spelling.
+
+### 3. `2004/b56` DOES honour `-w illpragmas`, but only for pragma ARGUMENTS, not for pragma NAMES
+
+6as says b56 "does NOT support `-w illpragmas`". That is half right, and the half that is
+wrong is the dangerous half. Measured on the same three files:
+
+```
+                       #pragma long_calls on   #pragma zzz_bogus_name off   #pragma opt_propagation bogusarg
+1.2/{base,sp2p3,sp4}   illegal #pragma         illegal #pragma              illegal #pragma
+2.0/{base,sp2p3}       illegal #pragma         illegal #pragma              illegal #pragma
+dsi/{1.2p2,1.6sp2}     illegal #pragma         illegal #pragma              illegal #pragma
+2004/b56               (silent)                (silent)                     illegal #pragma
+```
+
+b56's diagnostic fires on a real pragma given a bad argument and stays silent on a name it
+has never heard of. So under b56 a clean compile proves your pragma's ARGUMENT parsed, and
+proves nothing whatsoever about whether the pragma exists. A typo'd or invented name still
+reads as "inert" there.
+
+**How to apply.** Unchanged from 6as in practice, but for a sharper reason: screen every
+pragma name against a 1.2 build once (`--version 1.2/sp2p3`, or any `--all` run) before
+banking a pragma result, even when your function's pinned version is b56 and even when the
+b56 run was silent. Silence from b56 is not evidence.
+
+## 6bs. The ROM's compiler does not recycle a register that just died; every build we own does, and that single delta is the whole residue on one arm9 floor and part of the residue on three more (2026-09-05)
+
+**The rule, in one probe.** Give a function a parameter that dies at the first store and a
+temporary born immediately after it:
+
+```c
+typedef int s32;
+void reuse_probe(s32 *m, s32 a, s32 b)
+{
+    m[0] = b;          /* b (r2) dies here */
+    m[1] = 0;          /* which register does the 0 get? */
+    m[2] = 0;
+    m[3] = 0;
+    m[4] = a;
+}
+```
+
+Every installed build recycles `b`'s register:
+
+```
+1.2/base 1.2/sp4 2004/b56 2.0/base 2.0/sp2p4  ->  str r2,[r0] ; mov r2,#0 ; str r2,[r0,#4] ...
+```
+(the dsi line merges the pair into `stm r0,{r2,r3}` and does not answer the question.)
+The allocator takes the LOWEST free scratch register, and "free" includes one that died on
+the previous instruction. The ROM's compiler skips it and takes the next register that has
+not been used yet.
+
+**Four sites, same delta -- the entire residue on `func_0205256c`, and three of the fourteen
+divergent words on `func_0205a588`.**
+
+| site | dead register at that point | ROM picks | every build picks |
+|---|---|---|---|
+| `func_0205256c` +0x04, the shared `0` temp | r2 (`c`, stored at +0x00 and +0x02) | `r3` | `r2` |
+| `func_0205a588` +0x10, the loaded halfword | nothing dead here -- r3 and ip are both fresh | `ip` | `r3` |
+| `func_0205a588` +0x5c, the loop end pointer | r3 (`n & ~3`, dies at this instruction) | `ip` | `r3` |
+| `func_0205a588` +0x7c, the tail halfword load | r2 (`n`, dies at the `bxeq` above) | `r3` | `r2` |
+
+Row two is NOT the recycle rule. Nothing has died at +0x10, so what it shows is the same
+preference one step earlier: handed two untouched scratch registers, the ROM's compiler
+reaches for `ip` where every build we own takes the lowest one, `r3`. It may well be the same
+underlying bias, but only rows one, three and four are the dead-register case proper.
+
+On `func_0205256c` this is provably the ONLY residue: a source shape exists whose fourteen
+Thumb instructions match the ROM one-for-one in mnemonic, operand form and order, and the
+diff is a whole-function `r2 <-> r3` swap. The shape is one reused local plus one short-lived
+local:
+
+```c
+#pragma thumb on
+#pragma opt_propagation off
+void func_0205256c(s32 *m, s32 s, s32 c) {
+    s32 t, ns;
+    m[0] = c;  m[8] = c;
+    t = 0;   m[1] = t; m[3] = t; m[5] = t; m[7] = t;
+    ns = -s;
+    t = 1;   t = t << 12;
+    m[6] = s; m[2] = ns; m[4] = t;
+}
+```
+
+**What does NOT move it** (measured on that shape, ~200 compiles): all six declaration
+orders of the temps and in-place vs split declaration (once the declaration is split from the
+assignment, RANK STOPS MATTERING ENTIRELY -- a useful negative against 6aj, which holds for
+initialised declarations, not for `s32 a, b;` followed by assignments); a twelve-statement
+pairwise-transposition hill-climb over the whole body (6bf method, four restarts); all
+fourteen real `opt_*`/`optimize_for_size`/`global_optimizer`/`peephole` pragmas in both
+directions; `register`, `const`, `unsigned`, `short`, `long`; and all twenty-five installed
+builds (1.2 and dsi both give the same count, 10 of 14, though dsi hoists the `rsbs` so its
+ten are not literally 1.2's ten; 2.0 gives 11). On `func_0205a588` the same conclusion falls
+out of a 240-cell product sweep of head/mid/loop/tail spellings -- all 240 compile to the
+SAME 37 words, so block-local spelling is fully canonicalised there -- and a 58-cell pragma
+sweep on top of it, every cell 14/37.
+
+**The one construct that flips it is not usable.** Sourcing the temp from a `volatile` local
+(`volatile s32 zz = 0; s32 z = zz;`) does make the allocator skip the dead register and take
+r3 -- but it also materialises the stack slot, so the function grows by eight bytes, 0x1c to
+0x24. The spelling has to be exact: feeding the volatile into the EXISTING reused temp does
+not flip the register at all (r2 comes back, at the same 0x24), and only a SEPARATE named
+local fed from the volatile reaches r3. An extern-const source (`s32 z = g_zero;`) skips it
+too and costs a literal-pool load. There is no register-resident construct that skips a dead
+register, because the choice is made after every source-level distinction has been erased.
+
+**How to apply.** When a near-miss is a pure register permutation AND the permutation is
+"the ROM used a fresh register where we recycled a just-dead one", stop sweeping source
+shapes: it is a build delta, in the same class as 6av's outgoing-arg phi coalesce, and the
+ROM's own compiler (CW NITRO V0.6.1, 6ah, unarchived) is the missing piece. Bank the
+shape-exact draft as a seed and move on. Conversely, if a near-miss has the ROM recycling a
+dead register and your draft using a fresh one, the defect is yours and is worth chasing --
+that direction is the compiler's default and is always reachable.
+
+## 6bt. mwccarm's only ldm/stm path is the equal-width block move, so a 3-in / 4-out burst is not compiler output (func_02052514, 2026-09-05)
+
+`func_02052514` widens a 3x3 fx32 matrix to a 4x4 in three bursts:
+
+```
+ldm r0!, {r2, r3, r4}          <- 12 bytes in
+stm r1!, {r2, r3, r4, ip}      <- 16 bytes out, ip pre-loaded with 0 at the top
+```
+
+**mwccarm cannot emit this, and the reason is structural.** There is exactly one construct
+that produces `ldm`/`stm` at all: the inline block move for a whole-struct assignment, and it
+always loads and stores the SAME width -- `d->v = *s` on a 12-byte struct gives
+`ldm rX, {a,b,c}` / `stm rY, {a,b,c}` (no writeback, and it burns two `add` instructions per
+row recomputing the addresses). Nothing merges free-standing `ldr`/`str` into a multiple:
+writing the row as three loads into named locals followed by four stores gives nine separate
+`ldr` and twelve separate `str`, in any order, with or without pointer post-increment
+(measured, six unrolled shapes, 0x50-0x78 bytes against the ROM's 0x3c; a rolled
+post-increment loop lands at 0x44, still with no data `ldm`/`stm`).
+
+So the ROM's fabricated fourth word -- a zero that rides along in the store multiple but was
+never in the load multiple -- has no C spelling. Combined with the leaf frame
+`stmdb sp!,{r4}` / `ldm sp!,{r4}` (mwccarm spends `push {r4,lr}` here because its block move
+needs `lr` as a scratch), this is a hand-written primitive and the existing HAND-ASM header on
+`src/func_02052514.c` is correct. Do not re-open it.
+
+The transferable test: **an `ldm`/`stm` pair with different register counts, or an `stm` whose
+register list contains a value the matching `ldm` did not load, is hand-asm.** Equal widths
+with two `add`s in front of them is compiler output.

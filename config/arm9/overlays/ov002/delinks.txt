@@ -4276,49 +4276,9 @@ src/d_a_yegg.c:
     complete
     .text start:0x020ee3d8 end:0x020ee42c
 
-src/_ZN10dBgActor_cD1Ev.cpp:
+src/actors/dBgActor_c.cpp:
     complete
-    .text start:0x020ee42c end:0x020ee464
-
-src/_ZN10dBgActor_cD0Ev.cpp:
-    complete
-    .text start:0x020ee464 end:0x020ee4b0
-
-src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp:
-    complete
-    .text start:0x020ee4b0 end:0x020ee55c
-
-src/_ZN10dBgActor_c4KillEv.cpp:
-    complete
-    .text start:0x020ee55c end:0x020ee5d0
-
-src/func_ov002_020ee5d0.c:
-    complete
-    .text start:0x020ee5d0 end:0x020ee674
-
-src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp:
-    complete
-    .text start:0x020ee674 end:0x020ee7cc
-
-src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp:
-    complete
-    .text start:0x020ee7cc end:0x020ee830
-
-src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp:
-    complete
-    .text start:0x020ee830 end:0x020ee870
-
-src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp:
-    complete
-    .text start:0x020ee870 end:0x020ee934
-
-src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp:
-    complete
-    .text start:0x020ee934 end:0x020eea50
-
-src/_ZN10dBgActor_cC2Ev.cpp:
-    complete
-    .text start:0x020eea50 end:0x020eea84
+    .text start:0x020ee42c end:0x020eea84
 
 src/func_ov002_020eea84.c:
     complete

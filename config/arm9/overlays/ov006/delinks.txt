@@ -3547,7 +3547,7 @@ src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c:
     complete
     .text start:0x020f6830 end:0x020f6904
 
-src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c:
+src/_ZN14dScMgMemory2_c14RoundShowCardsEv.cpp:
     complete
     .text start:0x020f6904 end:0x020f6a00
 
@@ -3825,6 +3825,9 @@ src/func_ov006_020fc9b0.c:
 src/func_ov006_020fca1c.c:
     complete
     .text start:0x020fca1c end:0x020fcb4c
+
+src/func_ov006_020fcb4c.c:
+    .text start:0x020fcb4c end:0x020fcd8c
 
 src/func_ov006_020fcd8c.c:
     complete
@@ -4571,6 +4574,10 @@ src/func_ov006_02108650.c:
     complete
     .text start:0x02108650 end:0x02108b90
 
+src/func_ov006_02108b90.c:
+    complete
+    .text start:0x02108b90 end:0x02108cc0
+
 src/func_ov006_02108cc0.c:
     complete
     .text start:0x02108cc0 end:0x02108d28
@@ -5316,6 +5323,9 @@ src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp:
 src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp:
     complete
     .text start:0x02118ae4 end:0x02118b70
+
+src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp:
+    .text start:0x02118b70 end:0x0211944c
 
 src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:
     complete

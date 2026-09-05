@@ -18,10 +18,10 @@ python tools/cpp_tu_state.py --check-note
 
 | Measure | Live value |
 | --- | ---: |
-| MATCHED functions | 11253 / 11402 (98.69%) |
-| MATCHED code bytes | 2123736 / 2238108 (94.89%) |
-| Strict CONVERTED source functions | 2674 / 11317 (23.63%) |
-| Physical production source files | 10427 |
+| MATCHED functions | 11259 / 11402 (98.75%) |
+| MATCHED code bytes | 2128848 / 2238108 (95.12%) |
+| Strict CONVERTED source functions | 2671 / 11320 (23.60%) |
+| Physical production source files | 10399 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,21 +32,21 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked production source files | 10427 |
-| Tracked `.c` files | 5990 |
-| Tracked `.cpp` files | 4437 |
+| Tracked production source files | 10399 |
+| Tracked `.c` files | 5986 |
+| Tracked `.cpp` files | 4413 |
 | `.cpp` files missing first-line `//cpp` | 0 |
-| Mangled-symbol source files | 3846 |
-| Genuinely migrated C++ symbol files | 3717 |
-| Not semantically migrated | 126 |
+| Mangled-symbol source files | 3848 |
+| Genuinely migrated C++ symbol files | 3721 |
+| Not semantically migrated | 125 |
 | `.cpp` files still hand-spelling their symbol | 57 |
-| Nonmatching C++-symbol drafts | 11 |
-| Delinks path-owned function-symbol records | 11217 |
-| Path-owned records still supplied from ROM bytes | 119 |
-| Source-built (`complete`) function-symbol records | 11098 |
-| Source-built (`complete`) source files | 10203 |
-| Complete sources owning more than one function | 94 |
-| Source-built records inside multi-function sources | 989 |
+| Nonmatching C++-symbol drafts | 10 |
+| Delinks path-owned function-symbol records | 11222 |
+| Path-owned records still supplied from ROM bytes | 123 |
+| Source-built (`complete`) function-symbol records | 11099 |
+| Source-built (`complete`) source files | 10173 |
+| Complete sources owning more than one function | 96 |
+| Source-built records inside multi-function sources | 1022 |
 | Largest function-symbol-records-per-source count | 47 |
 | Complete source paths missing from git | 0 |
 
@@ -56,7 +56,7 @@ require the delinks entry's `complete` marker; entries without it are ROM-byte
 placeholders and are not reported as decompiled. The join remains correct when a
 source owns two functions; filenames are not treated as the authority.
 
-Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/func_01ff97d8.c` (6 function-symbol records), `src/game/actors/d_a_bakubaku.cpp` (24 function-symbol records), `src/game/actors/d_a_bar.cpp` (8 function-symbol records), `src/game/actors/d_a_bg_snwmn.cpp` (9 function-symbol records), `src/game/actors/d_a_cam_tag.cpp` (8 function-symbol records), `src/game/actors/d_a_ch_room.cpp` (8 function-symbol records), `src/game/actors/d_a_ch_scene.cpp` (9 function-symbol records), `src/game/actors/d_a_ey_bm.cpp` (13 function-symbol records), and 84 more in `--json`.
+Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/dBgActor_c.cpp` (11 function-symbol records), `src/actors/daOts_c.cpp` (22 function-symbol records), `src/func_01ff97d8.c` (6 function-symbol records), `src/game/actors/d_a_bakubaku.cpp` (24 function-symbol records), `src/game/actors/d_a_bar.cpp` (8 function-symbol records), `src/game/actors/d_a_bg_snwmn.cpp` (9 function-symbol records), `src/game/actors/d_a_cam_tag.cpp` (8 function-symbol records), `src/game/actors/d_a_ch_room.cpp` (8 function-symbol records), and 86 more in `--json`.
 
 A `.cpp` extension alone proves nothing about compiler language mode; this build
 selects C++ only when the first line is exactly `//cpp`. The marker-missing count
@@ -72,16 +72,16 @@ partition to add to the migrated and unmigrated rows.
 | Measure | Live value |
 | --- | ---: |
 | Tracked `src_tu/` source files | 32 |
-| Manifest entries | 125 |
-| Functions named by manifest entries | 1700 |
-| Unique functions named by the manifest | 1700 |
+| Manifest entries | 127 |
+| Functions named by manifest entries | 1733 |
+| Unique functions named by the manifest | 1722 |
 | Modules represented | 38 |
-| Manifest shadow sources present in git | 125 |
+| Manifest shadow sources present in git | 127 |
 | Entries licensing non-text sections | 16 |
-| Entries actually production-enrolled at `promoted_source` | 93 |
+| Entries actually production-enrolled at `promoted_source` | 95 |
 | Existing promotion paths that disagree with delinks | 0 |
 
-Manifest statuses: `link-verified` 4, `promoted` 93, `shadow` 1, `text-verified` 27.
+Manifest statuses: `link-verified` 4, `promoted` 95, `shadow` 1, `text-verified` 27.
 
 `config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every
