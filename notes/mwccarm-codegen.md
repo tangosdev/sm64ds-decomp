@@ -4435,6 +4435,13 @@ it by appending `<name> 2.0/<build>` to `config/rombuild-versions.txt`. Converse
 `ands Rd,Rn,#imm` whose result is dead rules the 2.0 and dsi lines OUT. The ROM mixes
 both, which is consistent with 6ah: the shipping toolchain was not one binary.
 
+**The oracle classifies COMPILER OUTPUT only.** Hand-written asm uses `tst` freely and
+carries no version signal at all, so the rule above says nothing about a hand-asm body.
+`func_0205a588` -- the subject of 6bs, banked as a HAND-ASM PRIMITIVE -- has four `tst`
+instructions (+0x08, +0x38, +0x6c, +0x74) and that does not disqualify `2004/b56` for
+anything, because no compiler wrote those words. Apply the oracle to a body you have reason
+to believe a compiler produced, and re-check the banner before you re-pin a version on it.
+
 ### 2. `#pragma long_calls` is not an mwccarm pragma -- and the veneer it was supposed to
 produce is what a plain tail call already emits
 
@@ -4445,12 +4452,14 @@ folklore; mwccarm does not have it. Output with it is byte-identical to output w
 on every build. Every "tried long_calls, inert" line anywhere is a 6as false negative, and
 the lever should not be re-tried.
 
-**51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/` -- 19 in
-ov007, the rest spread over ov015/064/065/066/073/079/080/091/095/098 and 21 arm9 files), most
-of them under a header comment that says the pragma is what emits the pooled veneer. They all
-still byte-match, because the pragma is inert, but the comment is wrong and every one of those
-compiles now prints `warning: illegal #pragma` under the `-w illpragmas` in `DEFAULT_FLAGS`.
-Deleting the line from those files is a no-op on the bytes; only the comment needs rewriting.
+**51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/`) -- 50 of
+them overlay files (19 in ov007, the rest spread over
+ov002/006/014/015/016/022/029/030/036/063/064/065/066/073/079/080/091/095/098) and exactly
+ONE arm9 file, `src/func_0205d4a0.c`. Most sit under a header comment that says the pragma
+is what emits the pooled veneer. They all still byte-match, because the pragma is inert, but
+the comment is wrong and every one of those compiles now prints `warning: illegal #pragma`
+under the `-w illpragmas` in `DEFAULT_FLAGS`. Deleting the line from those files is a no-op
+on the bytes; only the comment needs rewriting.
 
 The reason it looked plausible is that the veneer shape it was supposed to force is already
 the default. With `-interworking` (which is in `DEFAULT_FLAGS`), a function whose entire
@@ -4474,15 +4483,16 @@ whole mechanism: tail position plus interworking, nothing else.
 register forms:
 
 ```
-ldr r12,[pc,#0] ; bx r12   58 sites   <- compiler output; 33 already MATCHED, 0 NONMATCHING
+ldr r12,[pc,#0] ; bx r12   58 sites   <- compiler output; 56 have a src file, 0 NONMATCHING
 ldr r0, [pc,#0] ; bx lr     4 sites   <- not a veneer: returns a constant address
 ldr r1, [pc,#0] ; bx r1     1 site    <- func_02057014, the only one
 ```
-So the ip form is a solved shape (a one-line tail call in a plain `.c` file reproduces it,
-and 33 files in `src/` do exactly that), and `func_02057014` routing the address through
-**r1** is a 1-in-63 outlier that no register-allocation lever reaches -- ip is where the
-compiler's tail-call thunk always puts it, and there is no C construct that names r1 for a
-branch target. That function is a FLOOR (hand-written), not a missing source spelling.
+So the ip form is a solved shape (a one-line tail call in a plain `.c` file reproduces it;
+of the 56 banked sources, 33 are plain `.c` files that do exactly that and the other 23 are
+`.cpp`), and `func_02057014` routing the address through **r1** is a 1-in-63 outlier that no
+register-allocation lever reaches -- ip is where the compiler's tail-call thunk always puts
+it, and there is no C construct that names r1 for a branch target. That function is a FLOOR
+(hand-written), not a missing source spelling.
 
 ### 3. `2004/b56` DOES honour `-w illpragmas`, but only for pragma ARGUMENTS, not for pragma NAMES
 
@@ -4534,14 +4544,20 @@ The allocator takes the LOWEST free scratch register, and "free" includes one th
 the previous instruction. The ROM's compiler skips it and takes the next register that has
 not been used yet.
 
-**Four sites, same delta, and it is the entire residue on all four.**
+**Four sites, same delta -- the entire residue on `func_0205256c`, and three of the fourteen
+divergent words on `func_0205a588`.**
 
 | site | dead register at that point | ROM picks | every build picks |
 |---|---|---|---|
 | `func_0205256c` +0x04, the shared `0` temp | r2 (`c`, stored at +0x00 and +0x02) | `r3` | `r2` |
-| `func_0205a588` +0x10, the loaded halfword | r3 free, ip free | `ip` | `r3` |
+| `func_0205a588` +0x10, the loaded halfword | nothing dead here -- r3 and ip are both fresh | `ip` | `r3` |
 | `func_0205a588` +0x5c, the loop end pointer | r3 (`n & ~3`, dies at this instruction) | `ip` | `r3` |
 | `func_0205a588` +0x7c, the tail halfword load | r2 (`n`, dies at the `bxeq` above) | `r3` | `r2` |
+
+Row two is NOT the recycle rule. Nothing has died at +0x10, so what it shows is the same
+preference one step earlier: handed two untouched scratch registers, the ROM's compiler
+reaches for `ip` where every build we own takes the lowest one, `r3`. It may well be the same
+underlying bias, but only rows one, three and four are the dead-register case proper.
 
 On `func_0205256c` this is provably the ONLY residue: a source shape exists whose fourteen
 Thumb instructions match the ROM one-for-one in mnemonic, operand form and order, and the
@@ -4568,17 +4584,20 @@ initialised declarations, not for `s32 a, b;` followed by assignments); a twelve
 pairwise-transposition hill-climb over the whole body (6bf method, four restarts); all
 fourteen real `opt_*`/`optimize_for_size`/`global_optimizer`/`peephole` pragmas in both
 directions; `register`, `const`, `unsigned`, `short`, `long`; and all twenty-five installed
-builds (1.2 and dsi both give the same 10-of-14 swap, 2.0 gives 11). On `func_0205a588` the
-same conclusion falls out of a 240-cell product sweep of head/mid/loop/tail spellings -- all
-240 compile to the SAME 37 words, so block-local spelling is fully canonicalised there -- and
-a 58-cell pragma sweep on top of it, every cell 14/37.
+builds (1.2 and dsi both give the same count, 10 of 14, though dsi hoists the `rsbs` so its
+ten are not literally 1.2's ten; 2.0 gives 11). On `func_0205a588` the same conclusion falls
+out of a 240-cell product sweep of head/mid/loop/tail spellings -- all 240 compile to the
+SAME 37 words, so block-local spelling is fully canonicalised there -- and a 58-cell pragma
+sweep on top of it, every cell 14/37.
 
 **The one construct that flips it is not usable.** Sourcing the temp from a `volatile` local
 (`volatile s32 zz = 0; s32 z = zz;`) does make the allocator skip the dead register and take
-r3 -- but it also materialises the stack slot, so the function grows from 0x1c to 0x2c. An
-extern-const source (`s32 z = g_zero;`) skips it too and costs a literal-pool load. There is
-no register-resident construct that skips a dead register, because the choice is made after
-every source-level distinction has been erased.
+r3 -- but it also materialises the stack slot, so the function grows by eight bytes, 0x1c to
+0x24. The spelling has to be exact: feeding the volatile into the EXISTING reused temp does
+not flip the register at all (r2 comes back, at the same 0x24), and only a SEPARATE named
+local fed from the volatile reaches r3. An extern-const source (`s32 z = g_zero;`) skips it
+too and costs a literal-pool load. There is no register-resident construct that skips a dead
+register, because the choice is made after every source-level distinction has been erased.
 
 **How to apply.** When a near-miss is a pure register permutation AND the permutation is
 "the ROM used a fresh register where we recycled a just-dead one", stop sweeping source
@@ -4604,7 +4623,8 @@ always loads and stores the SAME width -- `d->v = *s` on a 12-byte struct gives
 row recomputing the addresses). Nothing merges free-standing `ldr`/`str` into a multiple:
 writing the row as three loads into named locals followed by four stores gives nine separate
 `ldr` and twelve separate `str`, in any order, with or without pointer post-increment
-(measured, six shapes, 0x50-0x78 bytes against the ROM's 0x3c).
+(measured, six unrolled shapes, 0x50-0x78 bytes against the ROM's 0x3c; a rolled
+post-increment loop lands at 0x44, still with no data `ldm`/`stm`).
 
 So the ROM's fabricated fourth word -- a zero that rides along in the store multiple but was
 never in the load multiple -- has no C spelling. Combined with the leaf frame
