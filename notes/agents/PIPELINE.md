@@ -9,7 +9,7 @@ instance and a Claude instance read the same files and follow the same protocol.
 
 ## The shape
 
-One class moves through five stages. Each is a separate agent run with a fresh
+One class moves through five stages, plus a sixth that is not per-class. Each is a separate agent run with a fresh
 context, reading the previous stage's written output rather than inheriting a
 conversation.
 
@@ -20,6 +20,12 @@ conversation.
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
 | 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
+| - | `integrator` | several already-green PRs | one branch, one validator run |
+
+The `integrator` is not a stage - it runs only when several proven class PRs are
+open at once, and it exists purely because the validator is one box. See
+`roles/integrator.md`. It re-derives nothing; it moves proven commits onto a
+fresh base and proves that the composition changed nothing.
 
 Stage 2 is wider than its one row suggests. Besides the source and manifest, a
 promotion edits `delinks.txt`, `converted-baseline.json` (via `tiers_ratchet
@@ -34,6 +40,11 @@ promotions touch no header at all.
 Stages 1-3 never run a byte gate; stage 4 is the only one that decides whether
 the bytes are right. Stage 3 never changes semantics. Stage 5 is a different
 agent from stage 4 — a producer's own green output is evidence, not review.
+
+**Every merge to `main` invalidates the pinned base of every other open PR.** So
+the cost of N separately-landed promotions is not N validator runs; it is N runs
+plus N-1 rebases plus the ledger conflicts those rebases cause. Past two or
+three open class PRs, the integrator is cheaper than the queue.
 
 ## The queue
 

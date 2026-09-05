@@ -19,7 +19,9 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     #      state "derived"). Revert it if it appears -- it does not always. The
     #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
     #      had that status and verify still wrote nothing. It more likely writes
-    #      only when no partial_isolation block exists yet. Check, do not assume.
+    #      only when no partial_isolation block exists yet -- a second promotion
+#      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
+#      consistent with that. Check, do not assume.
     python tools/rombuild.py -j 6 --no-rom
     python tools/romdata_check.py --files src/actors/<Class>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
@@ -48,6 +50,11 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/port_refcheck.py
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
+    python tools/cpp_tu_state.py --check-note
+    #    ^ notes/cpp-tu-current-state.md is generated and goes stale on every
+    #      promotion. Regenerate with --write-note and commit it in the same
+    #      PR; a stale note on
+    #      main is how the queue starts lying about what is already promoted.
     python tools/check_tubuild_conflicts.py --list
     python tools/layout_check.py
 
@@ -117,7 +124,10 @@ settled — import the module and call `check_object()` directly. **Pass
 `names=romdata_check.name_index()`**: without it `module` comes back `None`,
 which defeats the cross-module proof the call is for. The records carry `module`
 but **no address field**, so addresses still need checking against `symbols.txt`
-separately.
+separately. That file's format is `NAME kind:<k> addr:0x<hex> ...` — one
+space-separated field list per line, **not** `NAME = 0x...`. A grep written for
+the `=` spelling matches nothing and reads as "symbol absent", which is the
+wrong conclusion in the exact place it matters.
 
 ## What actually goes red on a promotion
 
@@ -158,6 +168,14 @@ auto-merging file is the dangerous one and the loudly conflicting one is safe.
 **Detect the damage, do not just apply the remedy.** `git merge-tree
 --write-tree <base> <head>` shows you the silent auto-merge before it lands, and
 an identical-whole-record count over the exceptions file shows you double-banking.
+
+**But do not use `merge-tree` to decide whether a PR will merge.** For
+`config/converted-backslide-exceptions.jsonl` it is exactly the tool that says
+**clean** where GitHub says **CONFLICTING**, because the file is declared
+`merge=union` in `.gitattributes` and GitHub ignores the driver. Use it to
+inspect content; use `gh pr view <n> --json mergeable` to decide mergeability.
+Every local compose prediction made with `merge-tree` in this pipeline has
+under-reported conflicts.
 
 **Dedupe by whole record, never by path.** Rows are `{path, reason}` and one
 path legitimately recurs under different reasons — `main` carries 66 such rows
@@ -216,6 +234,14 @@ second banking. Do it non-destructively: copy the post-cherry-pick files aside,
 the auto-merge was correct — `git checkout HEAD --` both and commit nothing.
 Different means the silent merge lost or duplicated rows, and the regenerated
 version is the one to keep.
+
+**Committing the regenerated exceptions file destroys the writers' reasons.**
+Rows carry whatever string you pass to `--reason`, so regenerating from a clean
+base and committing the result replaces N informative per-class reasons with N
+identical generic ones. Nothing reads those strings, so no gate goes red and no
+reviewer diff makes it obvious — it is silent data loss. This is the second half
+of the non-destructive recipe above: when the regenerated file differs from your
+copy *only in the `reason` strings*, your copy is the one to keep.
 
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
@@ -281,7 +307,11 @@ already stale. Getting this wrong costs a full validation cycle.
 - **`opnew_sizes.py` prints no per-class row** — read `build/opnew_sizes.json`.
 - **`check_references` and `check_dead_references` emit "run `--update` to bank
   it" nudges that are NOT failures.** Do not bank them from a class PR; they are
-  someone else's baseline to shrink.
+  someone else's baseline to shrink. The same goes for any *shrinkable baseline*
+  line: a clean promotion legitimately removes dead references, so the nudge
+  fires on healthy PRs. `config/unresolved-baseline.json` is maintained by the
+  automated `[skip ci]` refresh — a class PR that touches it is adding noise the
+  next refresh will overwrite.
 - **`opnew_sizes.py` and `rtti_vtables.py` both need `build/rtti.json`**, which
   only `tools/rtti_extract.py` writes. Without it they die on a bare
   `FileNotFoundError` naming no remedy. Run the extractor first.
