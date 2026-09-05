@@ -25,7 +25,18 @@ Start every job with:
     python tools/tubuild.py inspect <ov>/<Class>
 
 Its "disqualifying complications" block is accurate and tells you up front what
-you are dealing with. Trust it over the queue's `blockers` column.
+you are dealing with. **Trust it over the queue's `blockers` column**, which is
+inferred rather than measured: `promotion_route` and any `compiler-only:~N` were
+copied from the row's `sibling_oracle` manifest, and 91 of 226 rows have no
+oracle at all and simply default to text-only. The `~` means estimate. Confirm
+the real count at build time -- `tubuild verify` will tell you exactly which
+symbols are unlicensed, and inheritance depth changes the number per class
+(`daBar_c` carries three levels of inherited base RTTI: `fBase_c`, `dBase_c`,
+`dActor_c`).
+
+If your class has no `sibling_oracle`, you are the measurement pass. Record what
+`tubuild verify` actually reported in your PR so the next agent inherits a real
+number instead of a default.
 
 ## The loop
 
