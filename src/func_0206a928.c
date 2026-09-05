@@ -22,10 +22,9 @@
 #pragma opt_common_subs off
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);
-struct Stream {
-    u8 unk00[0x10];
-    WriteFn fn;
-};
+struct Stream;
+
+#define WRITE_FN(s) (*(WriteFn *)((u8 *)(s) + 0x10))
 
 extern u16 data_0209a0a0[][9];
 extern u16 data_0209a130[];
@@ -103,7 +102,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
         if (state == 0) {
             if (c == '%') {
                 if (nbuf != 0) {
-                    ctx->fn(ctx, buf, nbuf);
+                    WRITE_FN(ctx)(ctx, buf, nbuf);
                     nbuf = 0;
                 }
                 flags = 0;
@@ -115,7 +114,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 WRITE8(p, c);
                 nbuf++;
                 if (nbuf == 64) {
-                    ctx->fn(ctx, buf, nbuf);
+                    WRITE_FN(ctx)(ctx, buf, nbuf);
                     nbuf = 0;
                 }
             }
@@ -132,7 +131,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             WRITE8(p, c);
             nbuf++;
             if (nbuf == 64) {
-                ctx->fn(ctx, buf, nbuf);
+                WRITE_FN(ctx)(ctx, buf, nbuf);
                 nbuf = 0;
             }
             state = 0;
@@ -231,7 +230,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
         case 1:
             *ap += 1;
             cc = (*ap)[-1];
-            ctx->fn(ctx, (char *)&cc, 1);
+            WRITE_FN(ctx)(ctx, (char *)&cc, 1);
             break;
         case 0: {
             char *s;
@@ -247,7 +246,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 if (len < width)
                     func_0206c9f4(ctx, width - len);
             }
-            ctx->fn(ctx, s, len);
+            WRITE_FN(ctx)(ctx, s, len);
             if (left) {
                 if (len < width)
                     func_0206c9f4(ctx, width - len);
@@ -373,7 +372,7 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
             len = buf + 63 - p;
             if (w > 0 && !(flags & 5))
                 func_0206c9f4(ctx, w);
-            ctx->fn(ctx, p + 1, len);
+            WRITE_FN(ctx)(ctx, p + 1, len);
             if (w > 0 && (flags & 1))
                 func_0206c9f4(ctx, w);
             break;
@@ -572,11 +571,11 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
                 fp++;
                 if (READ8(fp) == '.') {
                     while (nz > 0) {
-                        ctx->fn(ctx, data_0208689c, 1);
+                        WRITE_FN(ctx)(ctx, data_0208689c, 1);
                         nz--;
                     }
                 }
-                ctx->fn(ctx, fp, 1);
+                WRITE_FN(ctx)(ctx, fp, 1);
                 len--;
             }
             if (fwidth > 0 && (flags & 1))
@@ -586,5 +585,5 @@ void func_0206a928(struct Stream *ctx, char *fmt, int **ap)
         state = 0;
     }
     if (nbuf != 0)
-        ctx->fn(ctx, buf, nbuf);
+        WRITE_FN(ctx)(ctx, buf, nbuf);
 }
