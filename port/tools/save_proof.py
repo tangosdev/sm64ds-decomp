@@ -106,12 +106,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=os.path.abspath(os.path.join(here, "..", "..")))
     ap.add_argument("--frames", default="140")
+    ap.add_argument("--exe", default="",
+                    help="binary to drive; default build/port/walk_window.exe. "
+                         "Point it at build/port-kit/walk_window.exe to prove a "
+                         "SHIPPED kit saves -- the medium is named constants, not "
+                         "a romdata mount, so ROM-CLEAN does not zero it")
     ap.add_argument("--keep", action="store_true",
                     help="leave the proof's save file behind for inspection")
     args = ap.parse_args()
 
     root = os.path.abspath(args.root)
-    exe = os.path.join(root, "build", "port", "walk_window.exe")
+    exe = os.path.abspath(args.exe) if args.exe else os.path.join(
+        root, "build", "port", "walk_window.exe")
     rundir = os.path.join(root, "build", "save_proof")
     sav = os.path.join(rundir, "sm64ds.sav")
     os.makedirs(rundir, exist_ok=True)
