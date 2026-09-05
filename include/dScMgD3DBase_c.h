@@ -104,8 +104,21 @@ struct dScMgD3DBase_c : dScMgBase_c {
        18 new slots (18-35) -- 24 through 31, and 33 -- per
        tools/rtti_vtables.py --own dScMgD3DBase_c, and slot 33 above was the
        last one still waiting on its base to name it.  All nine are spelled out
-       here; nothing this class overrides is left implicit, and its table is a
-       byte-exact 34-slot prefix rather than a 31-slot one.
+       here; nothing this class overrides is left implicit, and the emitted
+       table is the WHOLE 36-slot table -- not a prefix of any length.
+
+       THAT LAST CLAUSE USED TO READ "a byte-exact 34-slot prefix", and it was
+       stale: it was written while slots 34 and 35 were still unnamed.
+       dScMgBase_c.h now declares all eighteen of its own new slots through 35,
+       so mwcc emits 0x98 bytes here -- two header words plus 36 code pointers
+       -- and the cartridge agrees word for word.  Read straight out of ov006:
+       offset-to-top 0 at 0x0213c624, _ZTI14dScMgD3DBase_c at 0x0213c628,
+       address point 0x0213c62c, 36 consecutive code pointers, last slot at
+       0x0213c6b8.  The word at 0x0213c6bc is 0x6f6d6168 -- the start of the
+       string "hamon", which carries its own data symbol -- so there is no 37th
+       slot, and no trailing null slot in which an undeclared override could
+       hide.  Do not reintroduce prefix language here without re-reading those
+       words; a "prefix" claim is exactly what would excuse a short table.
 
        They are the same case nine times over: dScMgJump_c and dScMgJump2_c both
        point at THIS class's body for each of them, so the declaration belongs
