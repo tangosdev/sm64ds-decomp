@@ -320,6 +320,36 @@ static void ov47_fill_shared(void *volatile *vt)
    binding, and it recognises exactly two shapes -- one `void **vt = <named
    array>;` and this two-element loop. The ov036 base bringup carries the same
    note and the same reason. */
+/* The two intermediates' OWN destructor pairs, ov002, matched src on
+   slice_gate216.txt (run link100 lane TAIL). Slots 16 and 17 trapped before,
+   on the ov036 reading -- an abstract intermediate installed only between two
+   member teardowns never reaches its own destructors -- and that reading is
+   exactly what makes seating them free: nothing dispatches them, so this
+   changes no behaviour and makes the port's copy of each table carry the pair
+   the ROM puts there. The mechanism and its three conditions (real hosted
+   storage, no other writer, no live dispatch) are hal/w2_dtor_heads.cpp's.
+
+   THE ROM'S OWN WORDS, config/arm9/overlays/ov002/relocs.txt via
+   port/tools/tail_slots.py --module ov002 --vtable <base> --width 32:
+
+     0x02109278 +0x40 -> 0x020b686c  D1    +0x44 -> 0x020b6814  D0
+     0x02109320 +0x40 -> 0x020b6a3c  D1    +0x44 -> 0x020b69e4  D0
+
+   Each body's own literal pool holds its table and then _ZTV8Platform (ov002
+   0x0210ae38); the recovery spells those two as the shared-header placeholders
+   _ZTV10dBgActor_c and VT1, which the -D block for slice_gate216 in
+   port/CMakeLists.txt binds per source to the addresses read above. */
+extern "C" {
+void *func_ov002_020b686c(void *self);   /* 0x02109278 slot 16 */
+void *func_ov002_020b6814(void *self);   /* 0x02109278 slot 17 */
+void *func_ov002_020b6a3c(void *self);   /* 0x02109320 slot 16 */
+void *func_ov002_020b69e4(void *self);   /* 0x02109320 slot 17 */
+}
+static void *__fastcall ov47_b78_d1(void *s, void *) { return func_ov002_020b686c(s); }
+static void *__fastcall ov47_b78_d0(void *s, void *) { return func_ov002_020b6814(s); }
+static void *__fastcall ov47_320_d1(void *s, void *) { return func_ov002_020b6a3c(s); }
+static void *__fastcall ov47_320_d0(void *s, void *) { return func_ov002_020b69e4(s); }
+
 static void ov47_base_bringup(void)
 {
     static int done;
@@ -334,8 +364,8 @@ static void ov47_base_bringup(void)
         vt[3]  = (void *)ov47_base_trap3;
         vt[6]  = (void *)ov47_base_trap6;
         vt[9]  = (void *)ov47_base_trap9;
-        vt[16] = (void *)ov47_base_trap0;
-        vt[17] = (void *)ov47_base_trap0;
+        vt[16] = (void *)(k == 0 ? ov47_320_d1 : ov47_b78_d1);
+        vt[17] = (void *)(k == 0 ? ov47_320_d0 : ov47_b78_d0);
         vt[31] = (void *)ov47_kill;    /* both are Platform-derived */
     }
 }

@@ -9514,6 +9514,73 @@ foreach(line IN LISTS SLICE212_LINES)
     list(APPEND SLICE212_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- gate 216: the ROM's own vtable words the link did not carry -------------
+#
+# Run link100, lane TAIL. Fourteen matched TUs, every one of them a word the
+# ROM puts in a table the port ALREADY hosts and fills: two Actor tail veneers
+# at slots 8 and 11 of every Actor table, four abstract ov002 intermediates'
+# own destructor pairs, and four words of the Bully/BigBully base. No new
+# class, no new mount, no new behaviour -- each slot held a trap or a shortcut
+# into the base and now holds the body config/<module>/relocs.txt names at that
+# offset. The per-slot reads are reproducible with port/tools/tail_slots.py and
+# quoted in port/slice_gate216.txt and at each seat.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate216.txt" SLICE216_LINES)
+set(SLICE216_SOURCES "")
+foreach(line IN LISTS SLICE216_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE216_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THE SIX PER-SOURCE RENAMES, and where each target came from. Six of the eight
+# intermediate destructors are shared-header recoveries: they spell the class's
+# OWN table as _ZTV10dBgActor_c and the base it overwrites it with as VT1, and
+# hal/cxx_aliases.cpp binds a bare VT1 to auto_bss's dummy for the whole link
+# -- so leaving one unrenamed does not fail the link, it writes the wrong table
+# into a live object's vptr (the CannonHatch/MetalNet shape). Each target below
+# is the address that TU's OWN ROM body loads, read out of the relocations
+# INSIDE the function's span in config/arm9/overlays/ov002/relocs.txt:
+#
+#   func_ov002_020b6664 (D1)  pool 020b66a0/a4:  0x021091d4, 0x0210ae38
+#   func_ov002_020b660c (D0)  pool 020b6658/5c/60: 0x021091d4, 0x0210ae38, 0x020a0eac
+#   func_ov002_020b686c (D1)  pool 020b68a8/ac:  0x02109278, 0x0210ae38
+#   func_ov002_020b6814 (D0)  pool 020b6860/64/68: 0x02109278, 0x0210ae38, 0x020a0eac
+#   func_ov002_020b6a3c (D1)  pool 020b6a78/7c:  0x02109320, 0x0210ae38
+#   func_ov002_020b69e4 (D0)  pool 020b6a30/34/38: 0x02109320, 0x0210ae38, 0x020a0eac
+#
+# 0x0210ae38 is _ZTV8Platform by config/arm9/overlays/ov002/symbols.txt:2225,
+# hosted as `void *_ZTV8Platform[32]` in hal/actor_vtables.cpp; 0x020a0eac is
+# the game heap word. The daObjDorifu_c pair (020b4af8 / 020b4a70) and the four
+# ov064 bodies spell every one of their targets by its real name and take no -D
+# at all, which is why they are not listed here.
+foreach(g216 func_ov002_020b6664 func_ov002_020b686c func_ov002_020b6a3c)
+    if(g216 STREQUAL "func_ov002_020b6664")
+        set(G216_OWN data_ov002_021091d4)
+    elseif(g216 STREQUAL "func_ov002_020b686c")
+        set(G216_OWN data_ov002_02109278)
+    else()
+        set(G216_OWN data_ov002_02109320)
+    endif()
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${g216}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=${G216_OWN};VT1=_ZTV8Platform")
+endforeach()
+foreach(g216 func_ov002_020b660c func_ov002_020b6814 func_ov002_020b69e4)
+    if(g216 STREQUAL "func_ov002_020b660c")
+        set(G216_OWN data_ov002_021091d4)
+    elseif(g216 STREQUAL "func_ov002_020b6814")
+        set(G216_OWN data_ov002_02109278)
+    else()
+        set(G216_OWN data_ov002_02109320)
+    endif()
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${g216}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=${G216_OWN};VT1=_ZTV8Platform;G0=data_020a0eac")
+endforeach()
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12693,7 +12760,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12904,7 +12971,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13152,7 +13219,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp

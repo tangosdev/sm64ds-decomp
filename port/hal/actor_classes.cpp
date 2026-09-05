@@ -78,6 +78,13 @@ extern "C" {
 int _ZN5Actor19BeforeInitResourcesEv(void *self);      /* slot 1  */
 void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
 int _ZN5Actor14BeforeBehaviorEv(void *self);           /* slot 7  */
+/* Slots 8 and 11: the ROM's own words for every Actor-derived table. Both are
+   two-instruction ARM tail-call veneers (`ldr ip,[pc]; bx ip`) that drop into
+   ActorBase's implementation with `this` in r0 and the VirtualFuncSuccess code
+   in r1 still riding, so the matched TUs are declared void() and take neither.
+   See the seat below for why that is sound at 8 and 11 and NOT at 5. */
+void _ZN5Actor13AfterBehaviorEj(void);                 /* slot 8,  arm9 0x02010fc8 */
+void _ZN5Actor11AfterRenderEj(void);                   /* slot 11, arm9 0x02010f6c */
 int _ZN5Actor12BeforeRenderEv(void *self);             /* slot 10 */
 int _ZN5Actor13OnYoshiTryEatEv(void *self);            /* slot 18 */
 /* slot 19. The ROM body is a tail-call veneer to KillAndTrackInDeathTable and
@@ -110,16 +117,42 @@ static void __fastcall ac_ainit(void *s, void *, unsigned a)
 static int __fastcall ac_bclean(void *s, void *)
 { return ((Actor *)s)->Actor::BeforeCleanupResources(); }
 /* Slots 5, 8 and 11 are ARM tail-call veneers on the ROM -- two instructions
-   that drop into ActorBase's implementation with the argument still riding in
-   r1. A host forward through the veneer's own C face would lose it, so the
-   thunk calls the target directly, the same reading the Player's AfterBehavior
-   slot already takes. */
+   that drop into ActorBase's implementation with `this` in r0 and the
+   VirtualFuncSuccess code in r1 still riding. This comment used to rule all
+   THREE of them unforwardable, and that ruling is now SPLIT, on the same
+   evidence hal/method_faces.cpp took for _ZTV5Scene slots 8 and 11 and
+   hal/w2_dtor_heads.cpp records at its slot-2 entry: what settles a dropped
+   receiver is the CALLEE, not the veneer.
+
+     ?AfterBehavior@ActorBase@@UAEXI@Z    00000000: C2 04 00   ret 4
+     ?AfterRender@ActorBase@@UAEXI@Z      00000000: C2 04 00   ret 4
+
+   Neither reads ecx and neither reads [ebp+8]; /OPT:ICF folds the two onto one
+   address. There is no read for a dropped receiver to be wrong about, so slots
+   8 and 11 now take the ROM's own veneer (below), whose matched TU resolves to
+   the two tagged `ret 4` host definitions in hal/method_faces.cpp -- exactly
+   what the ARM tail jump lands on.
+
+   SLOT 5 STAYS DIRECT and the reason has bytes behind it too:
+   ActorBase::AfterCleanupResources is NOT empty. It walks this->sceneNode
+   (+0x14) and this->behavNode (+0x28) off the processing lists, destroys
+   this->unk4C and this->unk48, dispatches its own virtual destructor and hands
+   the object to Memory::Deallocate -- every one of those a read of the
+   receiver, and its first statement is a test of the ARGUMENT (it only runs on
+   VS_SUCCESS). That is the CRASH half of the dropped-receiver mode, so
+   src/_ZN5Actor21AfterCleanupResourcesEj.cpp stays unlinked and this thunk
+   keeps calling the target directly. */
 static void __fastcall ac_aclean(void *s, void *, unsigned a)
 { ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
 static int __fastcall ac_bbeh(void *s, void *)
 { return _ZN5Actor14BeforeBehaviorEv(s); }
+/* slot 8: the ROM's word, Actor::AfterBehavior. The dispatch arrives
+   __thiscall with `this` in ecx and the VirtualFuncSuccess code on the stack;
+   both are named and then deliberately unused, because the veneer takes
+   neither and its target is `ret 4`. Same shape as w2_dtor_heads.cpp's
+   scene_after_behavior. */
 static void __fastcall ac_abeh(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+{ (void)s; (void)a; _ZN5Actor13AfterBehaviorEj(); }
 /* SM64DS_ACTOR_PROBE=2: why an actor did or did not reach its own Render.
    Actor::BeforeRender is the gate -- it refuses on WRONG_AREA (0x20) and on
    OFF_SCREEN (0x8) when the actor asked to be culled off screen (0x2) -- and
@@ -156,8 +189,9 @@ static int __fastcall ac_bren(void *s, void *)
     }
     return r;
 }
+/* slot 11: the ROM's word, Actor::AfterRender. Same reading as slot 8. */
 static void __fastcall ac_aren(void *s, void *, unsigned a)
-{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+{ (void)s; (void)a; _ZN5Actor11AfterRenderEj(); }
 static int __fastcall ac_heap(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
 static int __fastcall ac_yoshi(void *s, void *)
@@ -1975,6 +2009,14 @@ static void *__fastcall uc_d1(void *s, void *)
     return c;
 }
 
+/* SLOT 17: the ROM's own deleting destructor, matched src on slice_gate216.
+   It is a real C++ method (`void *_ZN14UnchainedChompD0Ev(UnchainedChomp *)`
+   inside an extern "C" block), so the C name IS what the object defines and
+   this adapter only supplies the ecx->arg convention. */
+extern "C" void *_ZN14UnchainedChompD0Ev(void *self);   /* ov100 0x02143290 */
+static void *__fastcall uc_d0(void *s, void *)
+{ return _ZN14UnchainedChompD0Ev(s); }
+
 extern "C" void hal_fill_unchained_chomp_vtable(void)
 {
     void **vt = _ZTV14UnchainedChomp;
@@ -1985,9 +2027,20 @@ extern "C" void hal_fill_unchained_chomp_vtable(void)
     vt[9] = (void *)uc_render;
     vt[12] = (void *)uc_pdes;
     vt[16] = (void *)uc_d1;
-    /* 17 keeps the trap, the Butterfly/Fish reading: destroy is D1 + an explicit
-       Deallocate; nothing on this level calls the deleting form. */
-    vt[17] = (void *)ac_trap17;
+    /* 17 USED TO KEEP THE TRAP, on the Butterfly/Fish reading: destroy is D1 +
+       an explicit Deallocate, and nothing on this level calls the deleting
+       form. That reading is unchanged and it is what makes the ROM's own word
+       free to seat here (run link100 lane TAIL): the slot is not dispatched, so
+       this changes no behaviour, and if a later level ever does dispatch it the
+       matched body is what the ROM would have run instead of an abort.
+
+       THE ROM'S OWN WORD, config/arm9/overlays/ov100/relocs.txt via
+       port/tools/tail_slots.py --module ov100 --vtable 0x02148188 --width 31:
+       slot 17 -> 0x02143290 = _ZN14UnchainedChompD0Ev, on slice_gate216.txt.
+       The body is uc_d1's chain plus the final Memory::Deallocate, spelled as
+       a real C++ method against UnchainedChomp.h, so this is the qualified
+       face and not the flat-C adapter the other seats take. */
+    vt[17] = (void *)uc_d0;
     /* 31 slots, a plain Actor table. Slot 29 (OnAimedAtWithEgg) is the chomp's
        own body, ov100 0x021442d4 -- the ROM word in _ZTV14UnchainedChomp slot
        29. It is on slice_gate21.txt now and seated here rather than declining,

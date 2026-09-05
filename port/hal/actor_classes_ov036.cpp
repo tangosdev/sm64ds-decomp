@@ -442,6 +442,25 @@ DSSTATE_END
    first and vtspan refused to resolve it. The arrays are declared `void *`
    above for the same reason -- an `int` array needs a cast here, and a cast
    defeats MULTIBIND. */
+/* The two intermediates' OWN destructor pairs, ov002, matched src on
+   slice_gate216.txt. Flat C bodies taking the receiver as an ordinary first
+   argument, so each slot takes the ecx->arg adapter the rest of this file
+   uses; each returns the receiver, which the __fastcall slot forwards. */
+extern "C" {
+void *func_ov002_020b6664(void *self);   /* 0x021091d4 slot 16, daObjKaitendai_c D1 */
+void *func_ov002_020b660c(void *self);   /* 0x021091d4 slot 17, daObjKaitendai_c D0 */
+void *func_ov002_020b4af8(void *self);   /* 0x02108d94 slot 16, daObjDorifu_c D1 */
+void *func_ov002_020b4a70(void *self);   /* 0x02108d94 slot 17, daObjDorifu_c D0 */
+}
+static void *__fastcall ov36_kaitendai_d1(void *s, void *)
+{ return func_ov002_020b6664(s); }
+static void *__fastcall ov36_kaitendai_d0(void *s, void *)
+{ return func_ov002_020b660c(s); }
+static void *__fastcall ov36_dorifu_d1(void *s, void *)
+{ return func_ov002_020b4af8(s); }
+static void *__fastcall ov36_dorifu_d0(void *s, void *)
+{ return func_ov002_020b4a70(s); }
+
 static void ov36_base_bringup(void)
 {
     static int done;
@@ -458,10 +477,29 @@ static void ov36_base_bringup(void)
         vt[3]  = (void *)ov36_base_trap3;
         vt[6]  = (void *)ov36_base_trap6;
         vt[9]  = (void *)ov36_base_trap9;
-        /* 16/17: an abstract intermediate installed only between two member
-           teardowns never reaches its own destructors either. */
-        vt[16] = (void *)ov36_base_trap0;
-        vt[17] = (void *)ov36_base_trap0;
+        /* 16/17 USED TO TRAP HERE, on the reading that "an abstract
+           intermediate installed only between two member teardowns never
+           reaches its own destructors either". That reading is unchanged and
+           it is exactly why these two slots can now carry the ROM's own words
+           instead: nothing dispatches them, so seating them changes no
+           behaviour and makes the port's copy of each table carry the pair the
+           ROM puts there. Run link100 lane TAIL; the mechanism and its three
+           conditions are hal/w2_dtor_heads.cpp's.
+
+           THE ROM'S OWN WORDS, config/arm9/overlays/ov002/relocs.txt, read by
+           port/tools/tail_slots.py --module ov002 --vtable <base> --width 32:
+
+             0x02108d94 +0x40 -> 0x020b4af8   D1   +0x44 -> 0x020b4a70   D0
+             0x021091d4 +0x40 -> 0x020b6664   D1   +0x44 -> 0x020b660c   D0
+
+           and each body's own two vtable stores are the table it belongs to
+           and then _ZTV8Platform (ov002 0x0210ae38), read out of the four
+           literal pools rather than taken from the recovery's placeholder
+           names -- see the -D block for slice_gate216 in port/CMakeLists.txt.
+           The two daObjDorifu_c bodies spell both tables by their real names
+           and need no rename at all. */
+        vt[16] = (void *)(k == 0 ? ov36_kaitendai_d1 : ov36_dorifu_d1);
+        vt[17] = (void *)(k == 0 ? ov36_kaitendai_d0 : ov36_dorifu_d0);
         vt[31] = (void *)ov36_kill;    /* both are Platform-derived */
     }
 }
