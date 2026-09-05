@@ -43,8 +43,9 @@ Neither is a defect in the change. Both have a sanctioned remedy.
 - **`tiers_ratchet --check`** goes red by construction: folding N CONVERTED
   shards into one file loses N−1 rows (`baseline 2597 current 2593, -4 lost`).
   Remedy: `python tools/tiers_ratchet.py --update --reason "<why>"`.
-- **`port_refcheck.py`** goes red on stale `port/slice_gate*.txt` references to
-  the shards you deleted. Remedy: update them. Nothing else watches `port/`.
+- **`port_refcheck.py`** goes red on stale references to the shards you deleted,
+  held in the `port/slice_gate9.txt` family of manifests. Remedy: update them.
+  Nothing else watches `port/`.
 
 ## Gates that lie
 
