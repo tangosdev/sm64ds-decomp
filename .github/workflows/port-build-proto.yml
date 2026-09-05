@@ -1,0 +1,257 @@
+# PROTOTYPE / MEASUREMENT ONLY -- not part of the project's CI.
+#
+# Question: can a free GitHub-hosted windows-latest runner take the PC port's
+# from-scratch MSVC compile off the desktop?
+#
+# HARD RULE: no Nintendo bytes reach GitHub. This workflow never fetches,
+# generates or uploads ROM-derived data. The repo has no extracted/ tree, so
+# port/tools/romdata.py and port/tools/ovdata.py -- the only two build-time
+# generators that read the cartridge image -- simply FAIL here. The build runs
+# with `ninja -k 0`, which compiles every ROM-free object and leaves the ~15
+# ROM-backed objects and every final link unbuilt. That is the intended shape:
+# the object compile is what we are measuring, and it is the part that does not
+# need the ROM. Nothing but the log is uploaded.
+#
+# It builds the port tree of another already-public branch (default
+# port-mount-noseat-cluster) because origin/main's port/ is only the 14 smoke
+# gates (228 sources); the ~33k-object build lives on the port branch.
+# Checking out that ref does not modify it.
+
+name: port-build-proto
+
+on:
+  push:
+    branches: [ci/port-build-proto]
+  workflow_dispatch:
+    inputs:
+      port_ref:
+        description: "Branch whose port/ tree to build"
+        required: false
+        default: "port-mount-noseat-cluster"
+      build_mode:
+        description: "recon = configure + count objects only; full = compile every object"
+        required: false
+        default: "recon"
+      touch_hal:
+        description: "true = append a comment line to port/hal/os_time.cpp before building"
+        required: false
+        default: "false"
+      sccache_enabled:
+        description: "false = no compiler launcher at all (true cold reference)"
+        required: false
+        default: "true"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 350
+    env:
+      PORT_REF: ${{ github.event.inputs.port_ref || 'port-mount-noseat-cluster' }}
+      BUILD_MODE: ${{ github.event.inputs.build_mode || 'recon' }}
+      TOUCH_HAL: ${{ github.event.inputs.touch_hal || 'false' }}
+      SCCACHE_ON: ${{ github.event.inputs.sccache_enabled || 'true' }}
+      SCCACHE_GHA_ENABLED: "true"
+
+    steps:
+      - name: Runner spec
+        shell: pwsh
+        run: |
+          "=== runner ==="
+          "runner name : $env:RUNNER_NAME"
+          "runner arch : $env:RUNNER_ARCH  os: $env:RUNNER_OS"
+          "image       : $env:ImageOS $env:ImageVersion"
+          "NUMBER_OF_PROCESSORS = $env:NUMBER_OF_PROCESSORS"
+          Get-CimInstance Win32_Processor |
+            Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed |
+            Format-List
+          $os = Get-CimInstance Win32_OperatingSystem
+          "RAM total  : {0:N1} GB" -f ($os.TotalVisibleMemorySize / 1MB)
+          "RAM free   : {0:N1} GB" -f ($os.FreePhysicalMemory / 1MB)
+          Get-PSDrive C | ForEach-Object {
+            "disk C:    : used {0:N1} GB free {1:N1} GB" -f ($_.Used/1GB), ($_.Free/1GB)
+          }
+          "=== inputs ==="
+          "PORT_REF=$env:PORT_REF BUILD_MODE=$env:BUILD_MODE TOUCH_HAL=$env:TOUCH_HAL SCCACHE_ON=$env:SCCACHE_ON"
+
+      - name: Checkout the port branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.port_ref || 'port-mount-noseat-cluster' }}
+          fetch-depth: 1
+
+      - name: Assert the workspace holds no ROM-derived input
+        shell: bash
+        run: |
+          set -e
+          bad=0
+          for p in extracted sm64.nds build/assets arm9_dec.bin; do
+            if [ -e "$p" ]; then echo "UNEXPECTED ROM-DERIVED PATH PRESENT: $p"; bad=1; fi
+          done
+          if [ "$bad" != "0" ]; then exit 1; fi
+          echo "clean: no extracted/, no sm64.nds, no build/assets/, no arm9_dec.bin"
+          echo "tree at: $(git rev-parse HEAD)  ($PORT_REF)"
+          echo "port/CMakeLists.txt lines: $(wc -l < port/CMakeLists.txt)"
+          echo "slice files: $(ls port/slice_gate*.txt | wc -l)"
+
+      - name: Set up 32-bit MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      - name: Toolchain versions
+        shell: bash
+        run: |
+          echo "=== cl ==="   ; cl 2>&1 | head -2 || true
+          echo "=== link ===" ; link 2>&1 | head -2 || true
+          echo "=== cmake ===" ; cmake --version | head -1
+          echo "=== python ===" ; python --version
+          echo "=== ninja ===" ; (ninja --version || echo "NINJA MISSING") 2>&1
+          echo "VCToolsVersion=$VCToolsVersion"
+          echo "VSCMD_ARG_TGT_ARCH=$VSCMD_ARG_TGT_ARCH"
+
+      - name: Ensure ninja
+        shell: pwsh
+        run: |
+          if (-not (Get-Command ninja -ErrorAction SilentlyContinue)) {
+            choco install ninja -y --no-progress
+            echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          } else {
+            "ninja already on PATH: $((Get-Command ninja).Source)"
+          }
+
+      - name: Install sccache
+        if: env.SCCACHE_ON == 'true'
+        uses: Mozilla-Actions/sccache-action@v0.0.9
+
+      - name: Touch one HAL source
+        if: env.TOUCH_HAL == 'true'
+        shell: bash
+        run: |
+          echo "// port-build-proto warm-with-one-edit marker ${{ github.run_id }}" >> port/hal/os_time.cpp
+          tail -1 port/hal/os_time.cpp
+
+      - name: Configure
+        shell: bash
+        run: |
+          set +e
+          mkdir -p logs
+          LAUNCH=""
+          if [ "$SCCACHE_ON" = "true" ]; then
+            LAUNCH="-DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache"
+          fi
+          start=$(date +%s)
+          cmake -S port -B build/port -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=ON \
+            $LAUNCH > logs/configure.log 2>&1
+          rc=$?
+          end=$(date +%s)
+          echo "CONFIGURE_SECONDS=$((end-start))" >> "$GITHUB_ENV"
+          echo "configure wall: $((end-start))s (rc=$rc)"
+          echo "=== configure log (tail 80) ==="
+          tail -80 logs/configure.log
+          exit $rc
+
+      - name: Count the compile graph
+        shell: bash
+        run: |
+          set -e
+          ninja -C build/port -t targets all > logs/ninja_targets.txt 2>&1 || true
+          OBJ=$(grep -c '\.obj: ' logs/ninja_targets.txt || true)
+          EXE=$(grep -c '\.exe: ' logs/ninja_targets.txt || true)
+          LIB=$(grep -c '\.lib: ' logs/ninja_targets.txt || true)
+          CUSTOM=$(grep -c ': CUSTOM_COMMAND' logs/ninja_targets.txt || true)
+          echo "OBJECT FILES IN THE GRAPH : $OBJ"
+          echo "EXECUTABLES               : $EXE"
+          echo "STATIC LIBS               : $LIB"
+          echo "CUSTOM COMMANDS           : $CUSTOM"
+          echo "OBJ_COUNT=$OBJ" >> "$GITHUB_ENV"
+          {
+            echo "### compile graph"
+            echo ""
+            echo "| item | count |"
+            echo "| --- | --- |"
+            echo "| .obj | $OBJ |"
+            echo "| .exe | $EXE |"
+            echo "| .lib | $LIB |"
+            echo "| custom commands | $CUSTOM |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "--- unique source paths cmake fed ninja ---"
+          grep -o 'CMakeFiles/[^ ]*\.obj' logs/ninja_targets.txt | wc -l || true
+
+      - name: Build every ROM-free object
+        id: build
+        if: env.BUILD_MODE == 'full'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          start=$(date +%s)
+          # -k 0: keep going. The ROM-backed generators (romdata.py, ovdata.py)
+          # fail here by design -- there is no cartridge image on this runner --
+          # so their objects and every final link stay unbuilt while every
+          # ROM-free object still compiles. That is the measurement.
+          ninja -C build/port -k 0 > logs/build.log 2>&1
+          rc=$?
+          end=$(date +%s)
+          echo "BUILD_SECONDS=$((end-start))" >> "$GITHUB_ENV"
+          echo "build wall: $((end-start))s = $(( (end-start)/60 ))m$(( (end-start)%60 ))s (ninja rc=$rc)"
+          echo "log lines: $(wc -l < logs/build.log)"
+          echo "=== last ninja progress line ==="
+          grep -o '^\[[0-9]*/[0-9]*\]' logs/build.log | tail -1 || true
+          echo "=== FAILED: lines ==="
+          grep -n '^FAILED:' logs/build.log | head -60 || true
+          echo "=== FAILED count ==="
+          grep -c '^FAILED:' logs/build.log || true
+          echo "=== first 40 lines ==="
+          head -40 logs/build.log
+          echo "=== last 60 lines ==="
+          tail -60 logs/build.log
+          exit 0
+
+      - name: Objects actually produced
+        if: env.BUILD_MODE == 'full'
+        shell: bash
+        run: |
+          BUILT=$(find build/port -name '*.obj' | wc -l)
+          echo "OBJ FILES ON DISK AFTER THE BUILD: $BUILT"
+          echo "OBJ FILES IN THE GRAPH           : $OBJ_COUNT"
+          echo "BUILT_OBJ=$BUILT" >> "$GITHUB_ENV"
+          du -sh build/port 2>/dev/null || true
+
+      - name: sccache stats
+        if: env.SCCACHE_ON == 'true'
+        shell: bash
+        run: |
+          sccache --show-stats 2>&1 | tee logs/sccache.log || true
+          sccache --show-adv-stats 2>&1 | tail -40 || true
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### port-build-proto"
+            echo ""
+            echo "- ref built: \`$PORT_REF\`"
+            echo "- mode: \`$BUILD_MODE\`  sccache: \`$SCCACHE_ON\`  touch_hal: \`$TOUCH_HAL\`"
+            echo "- cores: \`$NUMBER_OF_PROCESSORS\`"
+            echo "- configure: \`${CONFIGURE_SECONDS:-n/a}\` s"
+            echo "- build: \`${BUILD_SECONDS:-n/a}\` s"
+            echo "- objects in graph: \`${OBJ_COUNT:-n/a}\`  built: \`${BUILT_OBJ:-n/a}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "done"
+
+      - name: Upload logs only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: port-build-proto-logs-${{ github.run_id }}-${{ github.run_attempt }}
+          # Text logs only. No .obj, no .exe, no generated sources -- nothing
+          # ROM-derived exists on this runner in the first place.
+          path: logs/
+          if-no-files-found: warn
+          retention-days: 7
