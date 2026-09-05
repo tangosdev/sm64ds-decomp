@@ -61,6 +61,7 @@ src/func_ov016_02111bf0.cpp:
     .text start:0x02111bf0 end:0x02111c40
 
 src/func_ov016_02111c40.c:
+    complete
     .text start:0x02111c40 end:0x02111f38
 
 src/_ZN5Unagi16CleanupResourcesEv.cpp:
