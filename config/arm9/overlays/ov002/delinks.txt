@@ -669,25 +669,9 @@ src/_ZN17daObjFloatBoard_cD1Ev.cpp:
     complete
     .text start:0x020b5a70 end:0x020b5ab4
 
-src/func_ov002_020b5ab4.cpp:
+src/actors/daObjFloatBoard_c.cpp:
     complete
-    .text start:0x020b5ab4 end:0x020b5b98
-
-src/func_ov002_020b5b98.c:
-    complete
-    .text start:0x020b5b98 end:0x020b5be0
-
-src/_ZN17daObjFloatBoard_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b5be0 end:0x020b5c24
-
-src/_ZN17daObjFloatBoard_c6RenderEv.cpp:
-    complete
-    .text start:0x020b5c24 end:0x020b5c4c
-
-src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020b5c4c end:0x020b5e58
+    .text start:0x020b5ab4 end:0x020b5e58
 
 src/func_ov002_020b5e58.cpp:
     complete
@@ -4829,6 +4813,10 @@ src/func_ov002_020f3d98.cpp:
 src/func_ov002_020f40fc.c:
     complete
     .text start:0x020f40fc end:0x020f43cc
+
+src/func_ov002_020f43cc.c:
+    complete
+    .text start:0x020f43cc end:0x020f4710
 
 src/func_ov002_020f4710.c:
     complete

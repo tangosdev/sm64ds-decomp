@@ -196,6 +196,10 @@ src/func_ov071_0212110c.c:
     complete
     .text start:0x0212110c end:0x021211e0
 
+src/func_ov071_021211e0.c:
+    complete
+    .text start:0x021211e0 end:0x021214f4
+
 src/func_ov071_021214f4.c:
     complete
     .text start:0x021214f4 end:0x0212152c

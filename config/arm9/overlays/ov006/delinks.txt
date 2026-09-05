@@ -1309,6 +1309,10 @@ src/func_ov006_020cfc58.c:
     complete
     .text start:0x020cfc58 end:0x020cfc74
 
+src/func_ov006_020cfc74.c:
+    complete
+    .text start:0x020cfc74 end:0x020d01e0
+
 src/func_ov006_020d09e0.c:
     complete
     .text start:0x020d09e0 end:0x020d0ac0
@@ -1332,6 +1336,10 @@ src/func_ov006_020d0b78.c:
 src/func_ov006_020d0bd8.c:
     complete
     .text start:0x020d0bd8 end:0x020d0c38
+
+src/func_ov006_020d0c38.c:
+    complete
+    .text start:0x020d0c38 end:0x020d0fe4
 
 src/func_ov006_020d0fe4.c:
     complete
@@ -2507,113 +2515,9 @@ src/d_s_mg_curling2.c:
     complete
     .text start:0x020e6bf4 end:0x020e6c28
 
-src/_ZN14dScMgD3DBase_cD1Ev.cpp:
+src/actors/dScMgD3DBase_c.cpp:
     complete
-    .text start:0x020e6c28 end:0x020e6c60
-
-src/_ZN14dScMgD3DBase_cD0Ev.cpp:
-    complete
-    .text start:0x020e6c60 end:0x020e6cac
-
-src/_ZN14dScMgD3DBase_c25OnAimedAtWithEggReturnVecEv.cpp:
-    complete
-    .text start:0x020e6cac end:0x020e6d24
-
-src/_ZN14dScMgD3DBase_c16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x020e6d24 end:0x020e6d8c
-
-src/_ZN14dScMgD3DBase_c19OnHitFromUnderneathEv.cpp:
-    complete
-    .text start:0x020e6d8c end:0x020e6d98
-
-src/_ZN14dScMgD3DBase_c15OnHitByMegaCharEv.cpp:
-    complete
-    .text start:0x020e6d98 end:0x020e6da4
-
-src/func_ov006_020e6da4.c:
-    complete
-    .text start:0x020e6da4 end:0x020e6db4
-
-src/func_ov006_020e6db4.c:
-    complete
-    .text start:0x020e6db4 end:0x020e6df0
-
-src/Sound_PlayBank1Panned.cpp:
-    complete
-    .text start:0x020e6df0 end:0x020e6e3c
-
-src/func_ov006_020e6e3c.c:
-    complete
-    .text start:0x020e6e3c end:0x020e6e4c
-
-src/_ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv.cpp:
-    complete
-    .text start:0x020e6e4c end:0x020e6e54
-
-src/_ZN14dScMgD3DBase_c8OnPushedEv.cpp:
-    complete
-    .text start:0x020e6e54 end:0x020e6e78
-
-src/_ZN14dScMgD3DBase_c8OnKickedEv.cpp:
-    complete
-    .text start:0x020e6e78 end:0x020e6f60
-
-src/_ZN14dScMgD3DBase_c21AfterCleanupResourcesEj.cpp:
-    complete
-    .text start:0x020e6f60 end:0x020e700c
-
-src/_ZN14dScMgD3DBase_c11AfterRenderEj.cpp:
-    complete
-    .text start:0x020e700c end:0x020e7040
-
-src/_ZN14dScMgD3DBase_c12BeforeRenderEv.cpp:
-    complete
-    .text start:0x020e7040 end:0x020e7074
-
-src/_ZN14dScMgD3DBase_c14BeforeBehaviorEv.cpp:
-    complete
-    .text start:0x020e7074 end:0x020e70c0
-
-src/_ZN14dScMgD3DBase_c18AfterInitResourcesEj.cpp:
-    complete
-    .text start:0x020e70c0 end:0x020e70e4
-
-src/_ZN14dScMgD3DBase_c19BeforeInitResourcesEv.cpp:
-    complete
-    .text start:0x020e70e4 end:0x020e7110
-
-src/func_ov006_020e7110.c:
-    complete
-    .text start:0x020e7110 end:0x020e7124
-
-src/_ZN14dScMgD3DBase_c9Virtual84Ev.cpp:
-    complete
-    .text start:0x020e7124 end:0x020e72c0
-
-src/_ZN14dScMgD3DBase_c9Virtual7CEv.cpp:
-    complete
-    .text start:0x020e72c0 end:0x020e73c4
-
-src/func_ov006_020e73c4.cpp:
-    complete
-    .text start:0x020e73c4 end:0x020e740c
-
-src/func_ov006_020e740c.c:
-    complete
-    .text start:0x020e740c end:0x020e7428
-
-src/func_ov006_020e7428.c:
-    complete
-    .text start:0x020e7428 end:0x020e7508
-
-src/func_ov006_020e7508.cpp:
-    complete
-    .text start:0x020e7508 end:0x020e759c
-
-src/func_ov006_020e759c.c:
-    complete
-    .text start:0x020e759c end:0x020e7660
+    .text start:0x020e6c28 end:0x020e7660
 
 src/_ZN12dScMg3DEsp_cD1Ev.cpp:
     complete
@@ -3810,6 +3714,10 @@ src/func_ov006_020fc500.c:
     complete
     .text start:0x020fc500 end:0x020fc718
 
+src/func_ov006_020fc718.c:
+    complete
+    .text start:0x020fc718 end:0x020fc7d0
+
 src/func_ov006_020fc7d0.cpp:
     complete
     .text start:0x020fc7d0 end:0x020fc844
@@ -4437,6 +4345,10 @@ src/func_ov006_02106910.c:
 src/func_ov006_02106a08.c:
     complete
     .text start:0x02106a08 end:0x02106aa8
+
+src/func_ov006_02106aa8.c:
+    complete
+    .text start:0x02106aa8 end:0x02106bac
 
 src/func_ov006_02106bac.c:
     complete
@@ -5220,6 +5132,10 @@ src/func_ov006_021147d0.c:
     complete
     .text start:0x021147d0 end:0x02114800
 
+src/func_ov006_02114800.c:
+    complete
+    .text start:0x02114800 end:0x02114b10
+
 src/func_ov006_02114b10.c:
     complete
     .text start:0x02114b10 end:0x02114c04
@@ -5610,6 +5526,10 @@ src/func_ov006_0211b954.cpp:
 src/func_ov006_0211b9c8.cpp:
     complete
     .text start:0x0211b9c8 end:0x0211ba88
+
+src/func_ov006_0211ba88.cpp:
+    complete
+    .text start:0x0211ba88 end:0x0211bbe0
 
 src/func_ov006_0211bbe0.c:
     complete

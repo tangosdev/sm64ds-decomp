@@ -16,10 +16,16 @@ conversation.
 | stage | role | consumes | produces |
 |---|---|---|---|
 | 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
-| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp` + its manifest |
+| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp`, its manifest, and the bookkeeping below |
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
 | 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
+
+Stage 2 is wider than its one row suggests. Besides the source and manifest, a
+promotion edits `delinks.txt`, `converted-baseline.json` (via `tiers_ratchet
+--update`, never by hand), `converted-backslide-exceptions.jsonl`, any `port/`
+slice manifest naming a deleted shard, and any prose naming one. Six non-source
+files is typical.
 
 The writer is **gathering, not authoring**: 387 of 429 classes already have a
 real header, and the shards being folded together are existing matched code. Most
@@ -59,6 +65,13 @@ commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
 
     python tools/classqueue.py next    --role writer
     python tools/classqueue.py claim   dActor_c --role writer --worktree C:/tmp/sm64ds-dactor
+
+`claim` takes the **bare class name**. `ovNNN/dActor_c` is accepted and
+normalized to the same ref — a class lives in one overlay, so the prefix adds
+nothing. Before that normalization the two spellings built two different refs
+and two agents could hold one class simultaneously; live claims existed in both
+forms. Create the worktree first and claim once with `--worktree`: re-claiming
+to attach the path afterwards is denied against yourself.
     python tools/classqueue.py release dActor_c --role writer
     python tools/classqueue.py list
 

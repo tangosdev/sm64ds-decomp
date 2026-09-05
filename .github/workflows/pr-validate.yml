@@ -59,7 +59,7 @@ jobs:
       # a pull request that needed it, which is the failure nobody would notice.
       #
       # What is NOT inert, and why -- the verdict covers reconstruction AND attribution:
-      #   src/ include/ src_tu/   compiled, or change codegen
+      #   src/ include/           compiled, or change codegen
       #   config/                 delinks.txt and symbols.txt decide what is compiled and
       #                           where; relocs.txt decides what it points at
       #   tools/                  the ROM build itself
@@ -85,9 +85,26 @@ jobs:
             echo "no files returned -- treating as validation-relevant"
             exit 0
           fi
-          # Inert: prose, generated progress pages, and the licence. Note docs/index.html
-          # and docs/progress-treemap.svg are bot-written progress artefacts, not sources.
-          inert='^(docs/|notes/|\.github/ISSUE_TEMPLATE/)|(^|/)[^/]+\.(md|png|jpg|jpeg|gif|svg)$|^LICENSE$'
+          # Inert: prose, generated progress pages, the licence, and src_tu/. Note
+          # docs/index.html and docs/progress-treemap.svg are bot-written progress
+          # artefacts, not sources.
+          #
+          # src_tu/ is inert HERE because nothing relay validation runs ever reads it.
+          # The build enrolls only the files config/**/delinks.txt names, and no
+          # delinks.txt names a src_tu/ path; tools/rombuild.py:enrolled() then rejects
+          # any path whose top-level directory is not src/ or mods/ unless it is handed
+          # extra_roots, which rombuild.py:1192 populates only for --tu-module /
+          # --partitioned-tu builds. The stock profile the relay runs passes neither, so
+          # a src_tu-only pull request used to buy a full ROM build plus module compare
+          # -- one at a time, ahead of everyone else in the queue -- that compiled not
+          # one line of what it changed.
+          #
+          # src_tu/ is still gated, just not here: the COMPILE half is
+          # tools/check_src_tu_compiles.py, run from tools/hooks/pre-push and on the
+          # build box (the runner has neither mwccarm nor the ROM), and the REFERENCE
+          # half -- includes resolve, mangled symbols exist -- is
+          # .github/workflows/src-tu-refs.yml. Do not weaken either one.
+          inert='^(docs/|notes/|src_tu/|\.github/ISSUE_TEMPLATE/)|(^|/)[^/]+\.(md|png|jpg|jpeg|gif|svg)$|^LICENSE$'
           relevant=false
           while IFS= read -r f; do
             if ! printf '%s\n' "$f" | grep -Eq "$inert"; then

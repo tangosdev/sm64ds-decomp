@@ -98,8 +98,30 @@ struct daObjFallBlock_c : dBgActor_c {
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN16daObjFallBlock_cD1Ev (which does exist out of line, at ov098
-       0x02139fc8, still under its func_ov098_ name). An out-of-line declaration
-       here would make each descendant emit a `bl` the ROM does not have. */
+       0x02139fc8). An out-of-line declaration here would make each descendant
+       emit a `bl` the ROM does not have.
+
+       MEASURED, not assumed. config/arm9/overlays/ov098/relocs.txt holds exactly
+       two inbound references to the destructor pair:
+
+         from:0x0213c5fc kind:load to:0x02139fc8   _ZTV16daObjFallBlock_c + 0x40
+         from:0x0213c600 kind:load to:0x02139f70   _ZTV16daObjFallBlock_c + 0x44
+
+       -- vtable slots 16 and 17, the two this header already names. No
+       instruction anywhere in the image calls either address, and no
+       _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt; an
+       out-of-line base destructor would make all four descendants call D2 and
+       would leave it live. The in-class body is the cartridge's form.
+
+       IT COSTS TWO OF THE TWELVE, AND THAT IS THE RIGHT TRADE. An in-class inline
+       destructor makes mwccarm emit D1 before D0, and the ROM lays them down the
+       other way round (D0 0x02139f70, D1 0x02139fc8). So the merged TU in
+       src/actors/daObjFallBlock_c.cpp reproduces all twelve bodies byte-for-byte
+       but can only put ten of them in the licensed .text in ROM order; the pair
+       stays in its own two shards and is licensed deadstrip-duplicate -- see that
+       file and config/tu_manifest.d/ov098/daObjFallBlock_c.json. Do not "fix"
+       the ordering by moving this body out of line: it trades four descendants'
+       bytes for one TU's. */
     virtual ~daObjFallBlock_c() {}
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). This class

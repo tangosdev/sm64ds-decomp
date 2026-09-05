@@ -207,8 +207,8 @@ so they stay `unk_`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x3cc | `mStateTable` | [func_ov027_02111d70](../src/func_ov027_02111d70.c) writes `&data_ov027_02113ce4[idx]` into it and [func_ov027_02111d38](../src/func_ov027_02111d38.cpp) / [func_ov027_02111cfc](../src/func_ov027_02111cfc.cpp) read `*(p)` and `*(p + 1)` as function pointers and call them through `this`. Left a raw `void *` — the callee's exact function-pointer type is not proven. |
-| 0x3d8 | `mTimer` | [func_ov027_02111ca8](../src/func_ov027_02111ca8.cpp) sets `0x14`; [func_ov027_02111c48](../src/func_ov027_02111c48.c) runs it down through `DecIfAbove0_Byte`. |
+| 0x3cc | `mStateTable` | `func_ov027_02111d70` writes `&data_ov027_02113ce4[idx]` into it and `func_ov027_02111d38` / `func_ov027_02111cfc` read `*(p)` and `*(p + 1)` as function pointers and call them through `this`. All three are members of [src/actors/daPgDfdr_c.cpp](../src/actors/daPgDfdr_c.cpp) since the ov027 TU promotion. Left a raw `void *` — the callee's exact function-pointer type is not proven. |
+| 0x3d8 | `mTimer` | `func_ov027_02111ca8` sets `0x14`; `func_ov027_02111c48` runs it down through `DecIfAbove0_Byte`. Both are members of [src/actors/daPgDfdr_c.cpp](../src/actors/daPgDfdr_c.cpp) since the ov027 TU promotion. |
 
 Left `unk_`: `0x3d0` (set to 0 or 1, no reader identified), `0x3d4` (an index into
 `data_ov027_02113a1c` keyed by `0x3d9`), `0x3d9` (0..9, reset above 9). In the C twin,
@@ -219,8 +219,9 @@ offsets in `include/dActor_c.h` were repointed to those names: `mCamSpacePosX`,
 `mHorzSpeed`, `mVertAccel`, `mTerminalVelocity`, `mVertSpeed`, `mFlags`,
 `mClipOffsetY`, `mClipRadius`.
 
-Both `src/_ZN10daPgDfdr_c13InitResourcesEv.cpp` and
-`src/_ZN10daPgDfdr_c8BehaviorEv.cpp` were `extern "C"` free functions over a raw
+`daPgDfdr_c::InitResources` and `daPgDfdr_c::Behavior` — then two separate
+one-function shards, now both members of `src/actors/daPgDfdr_c.cpp` — were
+`extern "C"` free functions over a raw
 `char *`; both are real methods now, byte-exact. The header already declared both
 virtual, so `tools/eligible.py` is unchanged by this. The conversion made one thing
 readable that the offsets hid: `Behavior`'s two `Animation::Advance` calls are the
@@ -625,9 +626,10 @@ In the C twin, `0x09c` becomes `mVertAccel`, `0x0a0` `mTerminalVelocity`,
 
 ## daObjCtMecha03_c (`include/daObjCtMecha03_c.h`, [ov065](../config/arm9/overlays/ov065/symbols.txt), size 0x388)
 
-A pendulum, in four fields `Behavior` integrates. Bodies read:
-`src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp`,
-`src/_ZN16daObjCtMecha03_c8BehaviorEv.cpp`.
+A pendulum, in four fields `Behavior` integrates. `InitResources` and
+`Behavior` are read from the promoted translation unit
+`src/actors/daObjCtMecha03_c.cpp`, which absorbed the eight one-function
+sources that used to hold them.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

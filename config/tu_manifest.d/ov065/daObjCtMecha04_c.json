@@ -1,0 +1,323 @@
+{
+  "id": "ov065/daObjCtMecha04_c",
+  "module": "ov065",
+  "source": "src/actors/daObjCtMecha04_c.cpp",
+  "promoted_source": "src/actors/daObjCtMecha04_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211a494..0x211aae0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjCtMecha04_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211a494",
+      "end": "0x0211aae0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjCtMecha04_cD1Ev",
+      "address": "0x0211a494",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN16daObjCtMecha04_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_cD0Ev",
+      "address": "0x0211a4e8",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN16daObjCtMecha04_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c12UpdateShadowEv",
+      "address": "0x0211a550",
+      "size": "0x000000e8",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c12UpdateShadowEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c16CleanupResourcesEv",
+      "address": "0x0211a638",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c6RenderEv",
+      "address": "0x0211a69c",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c8BehaviorEv",
+      "address": "0x0211a6d0",
+      "size": "0x000001a0",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c13InitResourcesEv",
+      "address": "0x0211a870",
+      "size": "0x000001c8",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c",
+      "address": "0x0211aa38",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_",
+      "address": "0x0211aacc",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The genuine dBgCh_Gnd local makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte bx lr body at its canonical arm9 home and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits inherited fBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits inherited dBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits inherited dActor_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "The key-function TU emits inherited dBgActor_c typeinfo as vague linkage; romdata_check verifies the complete single-inheritance record at its canonical ov002 home."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "The key-function TU emits inherited dBgActor_c's type-name string as vague linkage; romdata_check verifies its compiler-sized payload at the canonical ov002 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI16daObjCtMecha04_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d174",
+      "reason": "The genuine class identity naturally emits daObjCtMecha04_c's 12-byte single-inheritance typeinfo record. romdata_check verifies its ABI kind, type-name relocation, and dBgActor_c base link at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTS16daObjCtMecha04_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d180",
+      "reason": "The genuine class identity naturally emits the ROM-named daObjCtMecha04_c type string; romdata_check verifies its exact compiler-sized bytes at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTV16daObjCtMecha04_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d1ec",
+      "reason": "The key-function TU emits the full daObjCtMecha04_c vtable storage. romdata_check applies the measured eight-byte ABI address-point bias and verifies the 32 retail slots plus storage preamble at the canonical ov065 home before text-only production isolation discards it."
+    }
+  ],
+  "notes": [
+    "Production translation unit promoted from a tools/tubuild.py shadow after all nine owned text functions, emission order, relocation addends, and relocation destinations verified from one compile.",
+    "tubuild create warning (RESOLVED): the legacy func_020393c4 declarations differed only in raw pointer/integer spellings; the consolidated TU keeps the smallest void-pointer callback-install ABI used by both callers.",
+    "tubuild create warning (RESOLVED): the legacy data_0209f2c0 declarations differed only as u8 versus unsigned char; the consolidated TU keeps the equivalent u8 declaration.",
+    "The inline destructor in the directly included class header makes mwccarm emit exactly the retail D1 then D0 pair, without a D2. All seven hand-written member definitions carry unique @symbol markers.",
+    "UpdateShadow, MoveActorOnBelt, and AfterClsnCallback are descriptive reconstruction labels, not ROM-preserved English names. For MoveActorOnBelt, the member/free form, target type, and dActor_c& spelling encoded in the symbol are inferred. For AfterClsnCallback, static/member/free form and all pointer/type spellings encoded in the symbol are inferred. The ROM proves class ownership or callback role, register-level call shape, bodies, layout, and relocation destinations."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daObjCtMecha04_c/daObjCtMecha04_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        36
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI16daObjCtMecha04_c",
+        "_ZTS16daObjCtMecha04_c",
+        "_ZTV16daObjCtMecha04_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjCtMecha04_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjCtMecha04_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjCtMecha04_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov065-daObjCtMecha04_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211a494",
+        "end": "0x0211aae0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211a494",
+          "end": "0x0211aae0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 9
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
