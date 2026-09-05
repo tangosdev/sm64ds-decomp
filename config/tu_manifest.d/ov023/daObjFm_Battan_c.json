@@ -1,15 +1,15 @@
 {
   "id": "ov023/daObjFm_Battan_c",
   "module": "ov023",
-  "source": "src/actors/daObjFm_Battan_c.cpp",
-  "promoted_source": "src/actors/daObjFm_Battan_c.cpp",
+  "source": "src/game/actors/d_a_obj_fm_battan.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fm_battan.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111760, 9 functions, from build/tu_map.json (tools/tu_map.py)",
     "ROM class identity: _ZTI16daObjFm_Battan_c at 0x02111fa0 and _ZTS16daObjFm_Battan_c at 0x02111fac",
-    "the compiler-generated __sinit_daObjFm_Battan_c.cpp is byte-identical to retail __sinit_ov023_02111aa8 and has the same ten relocation sites and destinations",
+    "the compiler-generated __sinit_d_a_obj_fm_battan.cpp is byte-identical to retail __sinit_ov023_02111aa8 and has the same ten relocation sites and destinations",
     "retail .ctor points to that initializer; class RTTI/profile/vtable occupy 0x02111fa0..0x02112064; the two resource handles and two registration nodes occupy 0x02112080..0x021120a8",
     "ov023 also contains independently extracted level-data bands in .rodata and .data; those remain ROM-gap linker inputs and are not attributed to this actor TU"
   ],
@@ -107,7 +107,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daObjFm_Battan_c.cpp",
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
       "address": "0x02111aa8",
       "size": "0x6c",
       "binding": "STB_GLOBAL",
@@ -116,7 +116,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daObjFm_Battan_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fm_battan.cpp",
       "address": "0x02111b14",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -218,13 +218,13 @@
   ],
   "symbol_binding_rewrites": [
     {
-      "symbol": "__sinit_daObjFm_Battan_c.cpp",
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daObjFm_Battan_c.cpp",
+      "symbol": ".p__sinit_d_a_obj_fm_battan.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -348,7 +348,7 @@
       "source": "0x02111b14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daObjFm_Battan_c.cpp",
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
       "addend": 0,
       "target_module": "ov023",
       "target_address": "0x02111aa8"
@@ -801,7 +801,7 @@
     "compilerOnlyOutput": {
       "requested": [],
       "unhandled": [
-        "__sinit_daObjFm_Battan_c.cpp"
+        "__sinit_d_a_obj_fm_battan.cpp"
       ],
       "data": [
         "_ZTI7fBase_c",

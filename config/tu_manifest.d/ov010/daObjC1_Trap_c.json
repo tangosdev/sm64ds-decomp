@@ -1,8 +1,8 @@
 {
   "id": "ov010/daObjC1_Trap_c",
   "module": "ov010",
-  "source": "src/actors/daObjC1_Trap_c.cpp",
-  "promoted_source": "src/actors/daObjC1_Trap_c.cpp",
+  "source": "src/game/actors/d_a_obj_c1_trap.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_c1_trap.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

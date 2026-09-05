@@ -89,8 +89,8 @@ claim about the whole link.
 | `BOOT` | `src/d_s_boot.c` | arm9 `0x020049f0..0x020707a4` | `d_s_boot.cpp` | — | later `d_s_*` family only | — | arm9 interval contains many unrelated families |
 | `STAGE` | `src/d_s_stage.cpp` | arm9 `0x020049f0..0x020707a4` | `d_s_stage.cpp` | — | later `d_s_*` family only | — | same under-segmented arm9 interval as `BOOT` |
 | `MINIGAME` | `src/func_ov005_020c21ec.c` | ov005 `0x020c21ec..0x020c2250` | `d_s_mini_gm.cpp` | `d_s_mini_gm.cpp` | later `d_s_*`; no RTTI stem in interval | B- | one-function, factory-only interval |
-| `CANNON_SHUTTER` | `src/actors/daObjCannonShutter_c.cpp` | ov002 `0x020bc8f4..0x020bccfc` | `d_a_obj_cannon_shutter.cpp` | same | unique `d_a_obj_*` stem | B- | right boundary is medium |
-| `C1_TRAP` | `src/actors/daObjC1_Trap_c.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |
+| `CANNON_SHUTTER` | `src/game/actors/d_a_obj_cannon_shutter.cpp` | ov002 `0x020bc8f4..0x020bccfc` | `d_a_obj_cannon_shutter.cpp` | same | unique `d_a_obj_*` stem | B- | right boundary is medium |
+| `C1_TRAP` | `src/game/actors/d_a_obj_c1_trap.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |
 | `STAR_CAMERA` | `src/StarCamera_Spawn.cpp` | ov002 `0x020e6c40..0x020ebf8c` | — | — | TU contains a broader Star family | — | no most-derived RTTI class for the factory |
 | `PLAYER` | `src/d_a_ply.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
 | `WATERFALL` | `src/game/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
@@ -99,8 +99,8 @@ claim about the whole link.
 | `BOSS_TERESA` | `src/actors/BigBoo/d_a_trs_boss_teresa.cpp` | same ov063 TU | `d_a_trs.cpp` | — | same class as `TERESA` | — | multi-stem TU and two same-class profiles |
 | `WANWAN` | `src/ChainChomp_Spawn.cpp` | ov014 `0x02111308..0x02112e0c` | `d_a_wanwan.cpp` | same | unique stem and high/high boundaries | B | nearby `d_a_obj_*` units are not globally lexical |
 | `OBJ_MIP_KEY` | `src/d_a_obj_mip_key.c` | ov085 `0x0212cc88..0x0212d528` | `d_a_obj_mip_key.cpp` | same | class family plus high/high boundaries | B | TU-name tool has no surviving stem for this interval |
-| `PROPELLER_HEYHO` | `src/actors/daPropeller_Heyho_c.cpp` | ov070 `0x0211f000..0x02120570` | `d_a_propeller_heyho.cpp` | same | class family only | B- | no recovered interval stem; left edge lacks confidence |
-| `KINOKO_CREATE_TAG` | `src/actors/daObjKinokoTag_c.cpp` | ov002 `0x020b46a0..0x020b4a70` | `d_a_obj_kinoko_tag.cpp` | same | unique stem and high/high boundaries | B | two same-class factories weaken source organization inference |
+| `PROPELLER_HEYHO` | `src/game/actors/d_a_propeller_heyho.cpp` | ov070 `0x0211f000..0x02120570` | `d_a_propeller_heyho.cpp` | same | class family only | B- | no recovered interval stem; left edge lacks confidence |
+| `KINOKO_CREATE_TAG` | `src/game/actors/d_a_obj_kinoko_tag.cpp` | ov002 `0x020b46a0..0x020b4a70` | `d_a_obj_kinoko_tag.cpp` | same | unique stem and high/high boundaries | B | two same-class factories weaken source organization inference |
 | `SHOOT_BOOK` | `src/d_a_book_shoot_book.c` | ov020 `0x021111a0..0x02112938` | `d_a_book.cpp` | — | class-family candidate | — | TU also yields `d_a_book_gen.cpp` |
 | `BOOK_GENERATOR` | `src/BookShotSpawner_Spawn.c` | same ov020 TU | `d_a_book_gen.cpp` | — | class-family candidate | — | one TU cannot have both mechanical filenames |
 | `MG_CUP` | `src/func_ov006_020e0574.cpp` | ov006 `0x020e0574..0x020e0638` | `d_s_mg_cup.cpp` | same | adjacent earlier class interval has `d_s_mg_cup` | B- | factory is split into its own tiny interval |

@@ -420,7 +420,7 @@ src/d_a_obj_ct_mecha04_ct_mecha04s.cpp:
     complete
     .text start:0x0211ab20 end:0x0211ab60
 
-src/actors/daObjCtMecha05_c.cpp:
+src/game/actors/daObjCtMecha05_c.cpp:
     complete
     .text start:0x0211ab60 end:0x0211b328
 

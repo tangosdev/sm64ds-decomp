@@ -1462,7 +1462,7 @@
         }
       ],
       "current_factory_name": "daObjCannonShutter_c_classInit",
-      "current_factory_file": "src/actors/daObjCannonShutter_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_cannon_shutter.cpp",
       "proposed_factory_name": "daObjCannonShutter_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -1565,7 +1565,7 @@
         }
       ],
       "current_factory_name": "daObjC1_Trap_c_classInit",
-      "current_factory_file": "src/actors/daObjC1_Trap_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_c1_trap.cpp",
       "proposed_factory_name": "daObjC1_Trap_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2370,7 +2370,7 @@
         }
       ],
       "current_factory_name": "daPropeller_Heyho_c_classInit",
-      "current_factory_file": "src/actors/daPropeller_Heyho_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_propeller_heyho.cpp",
       "proposed_factory_name": "daPropeller_Heyho_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2459,7 +2459,7 @@
         }
       ],
       "current_factory_name": "daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG",
-      "current_factory_file": "src/actors/daObjKinokoTag_c.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_kinoko_tag.cpp",
       "proposed_factory_name": "daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
