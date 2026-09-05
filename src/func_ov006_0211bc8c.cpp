@@ -22,7 +22,7 @@
  *
  * Every offset here is inside mTable, the single 0x6f4-byte member
  * include/dScMgSound_c.h describes, so they stay raw casts off the scene, the
- * same way src/func_ov006_0211ba88.c and src/func_ov006_0211bbe0.c reach them.
+ * same way src/func_ov006_0211ba88.cpp and src/func_ov006_0211bbe0.c reach them.
  *
  * TWO SPELLINGS ARE LOAD-BEARING, both measured. First,
  * func_ov006_0211b654's SECOND argument: the callee is (scene, slot) --
