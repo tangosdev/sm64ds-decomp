@@ -1794,49 +1794,97 @@ def main():
               f"unable to run.")
         return 1
 
-    scene_retired = []
-    scene_unblocked = []
-    for sc in scenes:
+    # THE SCENE ROWS RUN N-WIDE TOO, on the same shape as the level rows above:
+    # one function does a whole row, the rows are reported in scene order
+    # whatever order they ran in, and each worker keeps its own directory for
+    # its whole row. The scene rows are the cheaper half -- measured on this box
+    # at 1.8s against a level row's 3.5s -- and they are also the half that
+    # opens NO WINDOW AT ALL: port_scene_want_window refuses a window to a scene
+    # run that names a frame budget, which every row here does, and run link100
+    # lane SLOT confirmed it from the logs (twenty concurrent scene runs, not
+    # one "[win]" line between them).
+    def scene_row(sc, wdir=None):
+        if wdir is None:
+            wdir = free_dirs.get()
+            try:
+                return scene_row(sc, wdir)
+            finally:
+                free_dirs.put(wdir)
+        exe = os.path.join(wdir, "walk_window.exe")
         block = SCENE_BLOCKED.get(sc)
         if block:
-            r = run([os.path.join(build, "walk_window.exe")], build,
-                    env=scene_env(sc))
+            env = scene_env(sc)
+            if wdir != build:
+                env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+            r = run([exe], wdir, env=env)
             # BOTH streams: the unmatched-body trap that names the blocker
             # writes to stderr (unbuffered, so a fault cannot swallow it) and
             # the scene's own progress lines go to stdout.
-            out = (r.stdout or "") + (r.stderr or "")
-            if not r.returncode:
+            return sc, r.returncode, r.stdout, (r.stdout or "") + (r.stderr or ""), \
+                block, None, None, None
+        skip = SCENE_SKIPS.get(sc)
+        env = scene_env(sc, skip[0] if skip else None)
+        if wdir != build:
+            env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+        r = run([exe], wdir, env=env)
+        if r.returncode or not skip:
+            return sc, r.returncode, r.stdout, "", None, skip, None, None
+        still, how = scene_retire_probe(wdir, sc)
+        return sc, 0, r.stdout, "", None, skip, still, how
+
+    def report_scene(sc, rc, out, both, block, skip, still, how):
+        if block:
+            if not rc:
                 print(f"selftest scene {sc}: BLOCK RETIRED -- the bare run "
                       f"now completes. Delete scene {sc} from SCENE_BLOCKED "
                       f"in port/tools/battery.py.")
                 scene_unblocked.append(sc)
-                continue
-            if block[1] not in out:
-                print(f"selftest scene {sc}: FAIL rc={r.returncode} -- it "
+                return True
+            if block[1] not in both:
+                print(f"selftest scene {sc}: FAIL rc={rc} -- it "
                       f"failed, but NOT with its recorded blocker. "
                       f"SCENE_BLOCKED expects {block[1]!r} in the output and "
                       f"it is not there, so this is a different failure.")
-                print(out[-1500:])
-                return 1
+                print(both[-1500:])
+                return False
             print(f"selftest scene {sc}: BLOCKED as recorded, owned by "
-                  f"{block[0]} (rc={r.returncode}, blocker reproduced)")
-            continue
-        skip = SCENE_SKIPS.get(sc)
-        r = run([os.path.join(build, "walk_window.exe")], build,
-                env=scene_env(sc, skip[0] if skip else None))
-        if r.returncode:
-            print(f"selftest scene {sc}: FAIL rc={r.returncode}"
+                  f"{block[0]} (rc={rc}, blocker reproduced)")
+            return True
+        if rc:
+            print(f"selftest scene {sc}: FAIL rc={rc}"
                   + (f" ({skip[0]})" if skip else ""))
-            print(r.stdout[-1500:])
-            return 1
+            print((out or "")[-1500:])
+            return False
         if not skip:
             print(f"selftest scene {sc}: ok")
-            continue
-        still, how = scene_retire_probe(build, sc)
+            return True
         print(f"selftest scene {sc}: ok with {skip[0]}, owned by {skip[1]}"
               f" ({how})")
         if not still:
             scene_retired.append(sc)
+        return True
+
+    scene_retired = []
+    scene_unblocked = []
+    scene_phase_t0 = time.time()
+    with windowed_phase(workers, len(scenes), "battery scene phase"):
+        if workers == 1:
+            for sc in scenes:
+                if not report_scene(*scene_row(sc, build)):
+                    return 1
+        else:
+            free_dirs = queue.Queue()
+            for d in wdirs:
+                free_dirs.put(d)
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futs = [pool.submit(scene_row, sc) for sc in scenes]
+                for f in futs:
+                    if not report_scene(*f.result()):
+                        for g in futs:
+                            g.cancel()
+                        return 1
+    print(f"scenes: {len(scenes)} rows in {time.time() - scene_phase_t0:.0f}s "
+          f"at {workers} wide")
 
     for sc in scene_retired:
         skip = SCENE_SKIPS[sc]
