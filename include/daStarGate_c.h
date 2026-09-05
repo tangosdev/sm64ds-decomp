@@ -41,14 +41,6 @@ struct daStarGate_c : dActor_c {
     u8          mCloseDoorTimer; /* 0x114 */
     u8          pad_115[0x3];
 
-    /* These state names come from later source lineage. Their addresses,
-       contents, and use as five separate state descriptors are ROM-proven. */
-    static State ST_OPEN_CLOSE;
-    static State ST_STAY_CLOSED;
-    static State ST_WAIT;
-    static State ST_TALKING_TO_PLAYER;
-    static State ST_UNLOCKING;
-
     virtual ~daStarGate_c() {}
 
     virtual s32 InitResources();
@@ -73,6 +65,14 @@ struct daStarGate_c : dActor_c {
     bool St_TalkingToPlayer_Main(Player *player);
     bool St_Unlocking_Init(Player *player);
     bool St_Unlocking_Main(Player *player);
+
+    /* These state names come from later source lineage. Their addresses,
+       contents, and use as five separate state descriptors are ROM-proven. */
+    static State ST_OPEN_CLOSE;
+    static State ST_STAY_CLOSED;
+    static State ST_WAIT;
+    static State ST_TALKING_TO_PLAYER;
+    static State ST_UNLOCKING;
 };
 
 typedef char daStarGate_c_State_size_must_be_0x10[
