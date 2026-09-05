@@ -1,270 +1,269 @@
 //cpp
 // @symbol _ZN12dScStarSel_c8BehaviorEv
-// NONMATCHING: different op / idiom (div=112). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-/* dScStarSel_c::Behavior() -- vtable slot 6. extern "C" carries the literal
- * mangled name unmangled -- see include/dScStarSel_c.h. */
-struct Obj {
-  virtual void v0(); virtual void v1(); virtual void v2();
-  virtual void m_c(int a, int b);
-  virtual void m_10(int a, int b);
-  virtual int v5();
-  virtual int m_18();
-  virtual int m_1c();
+// NONMATCHING: 27/525 at exact size (was 100). Real dScStarSel_c method over
+// include/dScStarSel_c.h, vtable slot 6. Every remaining divergence is register
+// naming inside the touch-hit search loop (the ROM keeps found in lr, i in ip,
+// the touch record pointer in r6); declaration order moves it between 27 and 35.
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
+#include "common.h"
+#include "dScStarSel_c.h"
+#include "decl_common.h"
+#include "Message.h"
+
+struct VObj {
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3();
+    virtual void v4();
+    virtual int v5();
 };
-extern Obj* data_0209f5bc;
 
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
-extern "C" int IsButtonInputValid(void);
-extern "C" int SublevelToLevel(int i);
-extern "C" void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
-extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int id);
-extern "C" void func_02012790(int a);
-extern "C" int func_ov003_020adf50(char* c);
-extern "C" void func_ov003_020ae358(char* c);
+extern "C" {
+u8 DecIfAbove0_Byte(u8 *p);
+u16 DecIfAbove0_Short(u16 *p);
+void func_02012790(int idx);
 
-extern signed char data_02092110;
-extern int data_0208ee44;
-extern short data_0209f5e8;
-extern unsigned char data_02092128;
-extern unsigned char data_02092114;
-extern unsigned char data_0209caa0[];
-extern unsigned char data_020a0e40;
-struct Row020a0de8 { unsigned char b0, b1, b2, b3; };
-extern struct Row020a0de8 data_020a0de8[];
-extern unsigned char data_020a0de9[][4];
-extern unsigned short data_020a0e58[];
-extern unsigned short data_020a0e5a[];
-extern unsigned char data_0209f1f0;
+extern VObj *data_0209f5bc;
+extern s8 data_02092110;
+extern s32 data_0208ee44;
+extern u16 data_0209f5e8[];
+extern u8 data_02092128;
+extern u8 data_0209caa0[];
+extern u8 data_020a0e40;
+extern u8 data_020a0de8[];
+extern u8 data_020a0de9[];
+extern u16 data_020a0e58[];
+extern u16 data_020a0e5a[];
+}
 
-#define U8(o)  (*(unsigned char*)(c+(o)))
-#define U16(o) (*(unsigned short*)(c+(o)))
-#define S16(o) (*(short*)(c+(o)))
+#define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
+#define FH(p, o) (*(s16 *)((u8 *)(p) + (o)))
+#define FU(p, o) (*(u16 *)((u8 *)(p) + (o)))
 
-extern "C" int _ZN12dScStarSel_c8BehaviorEv(char* c) {
+s32 dScStarSel_c::Behavior()
+{
+    s32 cur;
+    u8 idx;
+    u8 touched;
+    u8 ty;
+    s32 i;
+    u8 tx;
+    s32 found;
+    u8 *rec;
+    s32 n;
+    s32 hit;
+    s32 pressed;
+
     if (data_0209f5bc->v5() != 0) {
-        DecIfAbove0_Byte((unsigned char*)(c + 0x117));
-        DecIfAbove0_Byte((unsigned char*)(c + 0x118));
-        if ((U8(0x119) != 0) || ((SublevelToLevel(data_02092110) > 0xE) && (IsButtonInputValid() != 0))) {
-            if (U8(0x119) != 0) {
-                *(unsigned char*)(((long long)(int)(c + 0x119)) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+        DecIfAbove0_Byte(&FB(this, 0x117));
+        DecIfAbove0_Byte(&FB(this, 0x118));
+        if (FB(this, 0x119) != 0 || (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+            if (FB(this, 0x119) != 0) {
+                FB(this, 0x119) -= data_0208ee44;
             }
-            if ((U8(0x119) == 0) || ((SublevelToLevel(data_02092110) > 0xE) && (IsButtonInputValid() != 0))) {
-                _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0);
-                *(short*)((char*)&data_0209f5e8 + 0xc) = 0x7fff;
-                if (SublevelToLevel(data_02092110) <= 0xE) {
-                    data_0209f1f0 = U8(0x115) + 1;
+            if (FB(this, 0x119) == 0 || (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+                StartSceneFade(3, 0, 0);
+                data_0209f5e8[6] = 0x7fff;
+                if (SublevelToLevel(data_02092110) <= 0xe) {
+                    data_0209f1f0 = FB(this, 0x115) + 1;
                 } else {
                     data_0209f1f0 = 1;
                 }
             }
-        } else if ((U8(0x135) != 0) && (IsButtonInputValid() != 0)) {
-            unsigned char temp_r1 = U8(0x133);
-            if ((temp_r1 == 0) && ((unsigned)U8(0x130) > 1U) && (data_0209caa0[0x41] == 3)) {
-                U8(0x133) = 2;
-                func_02012790(0x12E);
-            } else if (U8(0x139) == 0) {
-                if (temp_r1 == 1) {
-                    unsigned char temp_r0 = (unsigned char)func_ov003_020adf50(c);
-                    data_02092128 = temp_r0;
-                    data_02092114 = temp_r0;
-                    U8(0x132) = temp_r0;
-                    U8(0x118) = (unsigned char)(data_0208ee44 * 3);
-                    U8(0x139) = 2;
+        } else if (FB(this, 0x135) != 0 && IsButtonInputValid() != 0) {
+            u8 mode = FB(this, 0x133);
+            if (mode == 0 && FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
+                FB(this, 0x133) = 2;
+                func_02012790(0x12e);
+            } else if (FB(this, 0x139) == 0) {
+                if (mode == 1) {
+                    u8 ch = func_ov003_020adf50((char *)this);
+                    data_02092128 = ch;
+                    data_02092114 = ch;
+                    FB(this, 0x132) = ch;
+                    FB(this, 0x118) = data_0208ee44 * 3;
+                    FB(this, 0x139) = 2;
                 } else {
-                    U8(0x133) = 2;
-                    U8(0x132) = 3;
-                    U8(0x118) = (unsigned char)(data_0208ee44 * 6);
-                    U8(0x139) = 1;
+                    FB(this, 0x133) = 2;
+                    FB(this, 0x132) = 3;
+                    FB(this, 0x118) = data_0208ee44 * 6;
+                    FB(this, 0x139) = 1;
                 }
-                U8(0x119) = 0x10;
-                func_02012790(data_0209caa0[0x41] + 0x3C);
+                FB(this, 0x119) = 0x10;
+                func_02012790(data_0209caa0[0x41] + 0x3c);
             }
-        } else if (SublevelToLevel(data_02092110) <= 0xE) {
-            int var_r4 = U8(0x115);
-            int var_lr = 0;
-            struct Row020a0de8 *row = &data_020a0de8[data_020a0e40];
-            unsigned char temp_r1_2 = row->b0;
-            if (temp_r1_2 != 0) {
-                unsigned char temp_r0_2 = U8(0x114);
-                int var_ip = 0;
-                if ((int)temp_r0_2 > 0) {
-                    unsigned char row_b2 = row->b2;
-                    unsigned char row_b3 = row->b3;
+        } else if (SublevelToLevel(data_02092110) <= 0xe) {
+            idx = data_020a0e40;
+            cur = FB(this, 0x115);
+            found = 0;
+            touched = data_020a0de8[idx * 4];
+            if (touched != 0) {
+                n = FB(this, 0x114);
+                i = 0;
+                if (n > 0) {
+                    rec = &data_020a0de8[idx * 4];
+                    tx = rec[2];
+                    ty = rec[3];
                     do {
-                        if (((unsigned)(unsigned char)((row_b2 - *(unsigned char*)(c + var_ip + 0x11A)) + 8) < 0x10U)
-                            && ((unsigned)row_b3 < 0x28U)
-                            && ((U8(0x131) >> var_ip) & 1)) {
-                            int var_r0;
-                            if ((temp_r1_2 != 0) && (data_020a0de9[data_020a0e40][0] != 0)) {
-                                var_r0 = 1;
-                            } else {
-                                var_r0 = 0;
-                            }
-                            if ((var_r0 != 0) || (var_r4 != var_ip)) {
-                                U8(0x117) = (unsigned char)(data_0208ee44 * 3);
-                            }
-                            if (var_r4 != var_ip) {
-                                var_r4 = var_ip;
-                                func_02012790(0x12E);
-                            }
-                            U8(0x133) = 0;
-                            var_lr = 1;
-                            break;
+                    if ((u8)(tx - FB((u8 *)this + i, 0x11a) + 8) < 0x10 && ty < 0x28 && ((FB(this, 0x131) >> i) & 1)) {
+                        hit = (touched != 0 && data_020a0de9[idx * 4] != 0);
+                        if (hit != 0 || cur != i) {
+                            FB(this, 0x117) = data_0208ee44 * 3;
                         }
-                        var_ip += 1;
-                    } while (var_ip < (int)temp_r0_2);
+                        if (cur != i) {
+                            cur = i;
+                            func_02012790(0x12e);
+                        }
+                        FB(this, 0x133) = 0;
+                        found = 1;
+                        break;
+                    }
+                    i++;
+                    } while (i < n);
                 }
             }
-            if ((var_lr == 0) && (U8(0x135) == 2) && (U8(0x133) == 0) && (data_0209caa0[0x42] == 0)) {
+            if (found == 0 && FB(this, 0x135) == 2 && FB(this, 0x133) == 0 && data_0209caa0[0x42] == 0) {
                 if (data_020a0e58[0] & 0x20) {
-                    int temp_r1_3 = data_020a0e58[1] & 0x20;
-                    if ((temp_r1_3 != 0) || (U16(0x104) == 0)) {
-                        unsigned short var_r1;
-                        if (temp_r1_3 != 0) var_r1 = 0x10; else var_r1 = 8;
-                        U16(0x104) = var_r1;
-                        if (var_r4 != 0) {
-                            unsigned char temp_r1_4 = U8(0x131);
-                            var_r4 -= 1;
-                            if (!(((int)temp_r1_4 >> var_r4) & 1)) {
-                                do {
-                                    var_r4 -= 1;
-                                } while (!(((int)temp_r1_4 >> var_r4) & 1));
+                    pressed = data_020a0e58[1] & 0x20;
+                    if (pressed != 0 || FU(this, 0x104) == 0) {
+                        FU(this, 0x104) = pressed ? 0x10 : 8;
+                        if (cur != 0) {
+                            u8 mask = FB(this, 0x131);
+                            cur--;
+                            while (!((mask >> cur) & 1)) {
+                                cur--;
                             }
-                            func_02012790(0x12E);
+                            func_02012790(0x12e);
                         }
                     }
-                } else {
-                    int temp_r1_5 = data_020a0e58[1] & 0x10;
-                    if ((data_020a0e58[0] & 0x10) && ((temp_r1_5 != 0) || (U16(0x104) == 0))) {
-                        unsigned short var_r1_2;
-                        if (temp_r1_5 != 0) var_r1_2 = 0x10; else var_r1_2 = 8;
-                        U16(0x104) = var_r1_2;
-                        if (var_r4 < (int)U8(0x114) - 1) {
-                            unsigned char temp_r1_6 = U8(0x131);
-                            var_r4 += 1;
-                            if (!(((int)temp_r1_6 >> var_r4) & 1)) {
-                                do {
-                                    var_r4 += 1;
-                                } while (!(((int)temp_r1_6 >> var_r4) & 1));
+                } else if (data_020a0e58[0] & 0x10) {
+                    pressed = data_020a0e58[1] & 0x10;
+                    if (pressed != 0 || FU(this, 0x104) == 0) {
+                        FU(this, 0x104) = pressed ? 0x10 : 8;
+                        if (cur < FB(this, 0x114) - 1) {
+                            u8 mask = FB(this, 0x131);
+                            cur++;
+                            while (!((mask >> cur) & 1)) {
+                                cur++;
                             }
-                            func_02012790(0x12E);
+                            func_02012790(0x12e);
                         }
                     }
                 }
             }
-            if (U8(0x115) != var_r4) {
-                U8(0x115) = var_r4;
-                _ZN7Message28DisplayStarNameForStarSelectEj((unsigned int)(short)var_r4);
-                U8(0x117) = (unsigned char)(data_0208ee44 * 3);
+            if (FB(this, 0x115) != cur) {
+                FB(this, 0x115) = cur;
+                Message::DisplayStarNameForStarSelect((s16)cur);
+                FB(this, 0x117) = data_0208ee44 * 3;
             }
-            if (U8(0x139) == 0) {
-                func_ov003_020ae358(c);
+            if (FB(this, 0x139) == 0) {
+                func_ov003_020ae358((char *)this);
             }
         }
-        if (SublevelToLevel(data_02092110) <= 0xE) {
-            unsigned char temp_r0_3 = U8(0x135);
-            if (temp_r0_3 == 0) {
-                if ((IsButtonInputValid() != 0) || ((data_0209caa0[0x42] == 0) && (*(unsigned short*)((char*)data_020a0e5a + data_020a0e40 * 4) & 0xF0))) {
-                    func_02012790(0x12E);
-                    if ((data_0209caa0[0x42] == 0) && (data_020a0e58[1] & 0x30)) {
-                        U8(0x135) = 1;
+
+        if (SublevelToLevel(data_02092110) <= 0xe) {
+            if (FB(this, 0x135) == 0) {
+                if (IsButtonInputValid() != 0 || (data_0209caa0[0x42] == 0 && (data_020a0e5a[data_020a0e40 * 2] & 0xf0))) {
+                    func_02012790(0x12e);
+                    if (data_0209caa0[0x42] == 0 && (data_020a0e58[1] & 0x30)) {
+                        FB(this, 0x135) = 1;
                     } else {
-                        U8(0x135) = 2;
+                        FB(this, 0x135) = 2;
                     }
-                    if (SublevelToLevel(data_02092110) <= 0xE) {
-                        U8(0x133) = 0;
-                    } else if (((unsigned)U8(0x130) > 1U) && (data_0209caa0[0x41] == 3)) {
-                        U8(0x133) = 1;
-                        if (U8(0x130) != 4) {
-                            U8(0x134) = 0;
+                    if (SublevelToLevel(data_02092110) <= 0xe) {
+                        FB(this, 0x133) = 0;
+                    } else if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
+                        FB(this, 0x133) = 1;
+                        if (FB(this, 0x130) != 4) {
+                            FB(this, 0x134) = 0;
                         } else {
-                            U8(0x134) = 1;
+                            FB(this, 0x134) = 1;
                         }
                     } else {
-                        U8(0x133) = 2;
+                        FB(this, 0x133) = 2;
                     }
                 }
-            } else if (temp_r0_3 == 1) {
+            } else if (FB(this, 0x135) == 1) {
                 if (data_020a0e58[1] != 0) {
-                    U8(0x135) = 2;
+                    FB(this, 0x135) = 2;
                 }
-            } else if ((data_0209caa0[0x42] == 0) && (data_020a0e58[0] & 0xC0)) {
-                if (data_020a0e58[1] & 0x40) {
-                    if (U8(0x133) != 0) {
-                        U8(0x133) -= 1;
-                        if (U8(0x133) == 1) {
-                            unsigned char temp_r2 = U8(0x130);
-                            if (((unsigned)temp_r2 > 1U) && (data_0209caa0[0x41] == 3)) {
-                                if (temp_r2 != 4) {
-                                    U8(0x134) = 0;
+            } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0] & 0xc0)) {
+                u16 keys = data_020a0e58[1];
+                if (keys & 0x40) {
+                    if (FB(this, 0x133) != 0) {
+                        FB(this, 0x133) -= 1;
+                        if (FB(this, 0x133) == 1) {
+                            if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
+                                if (FB(this, 0x130) != 4) {
+                                    FB(this, 0x134) = 0;
                                 } else {
-                                    U8(0x134) = 1;
+                                    FB(this, 0x134) = 1;
                                 }
                             } else {
-                                U8(0x133) = 0;
+                                FB(this, 0x133) = 0;
                             }
                         }
-                        func_02012790(0x12E);
+                        func_02012790(0x12e);
                     }
-                } else if ((data_020a0e58[1] & 0x80) && (U8(0x133) != 2)) {
-                    U8(0x133) += 1;
-                    if (U8(0x133) == 1) {
-                        unsigned char temp_r2_2 = U8(0x130);
-                        if (((unsigned)temp_r2_2 > 1U) && (data_0209caa0[0x41] == 3)) {
-                            if (temp_r2_2 != 4) {
-                                U8(0x134) = 0;
+                } else if (keys & 0x80) {
+                    if (FB(this, 0x133) != 2) {
+                        FB(this, 0x133) += 1;
+                        if (FB(this, 0x133) == 1) {
+                            if (FB(this, 0x130) > 1 && data_0209caa0[0x41] == 3) {
+                                if (FB(this, 0x130) != 4) {
+                                    FB(this, 0x134) = 0;
+                                } else {
+                                    FB(this, 0x134) = 1;
+                                }
                             } else {
-                                U8(0x134) = 1;
+                                FB(this, 0x133) = 2;
                             }
-                        } else {
-                            U8(0x133) = 2;
                         }
+                        func_02012790(0x12e);
                     }
-                    func_02012790(0x12E);
                 }
             }
-            if (((unsigned)U8(0x130) <= 1U) || (data_0209caa0[0x41] != 3)) {
-                if (U16(0x108) != 0) {
-                    U16(0x108) -= 1;
-                    if (U16(0x108) == 0) {
-                        S16(0x10A) = 0;
-                        S16(0x10E) = -0x400;
-                        S16(0x10C) = S16(0x10E);
-                        U8(0x136) = 1;
+
+            if (FB(this, 0x130) <= 1 || data_0209caa0[0x41] != 3) {
+                if (FU(this, 0x108) != 0) {
+                    FU(this, 0x108) -= 1;
+                    if (FU(this, 0x108) == 0) {
+                        FH(this, 0x10a) = 0;
+                        FH(this, 0x10e) = -0x400;
+                        FH(this, 0x10c) = FH(this, 0x10e);
+                        FB(this, 0x136) = 1;
                     }
                 } else {
-                    if (!(U8(0x136) & 2)) {
-                        *(short*)(((long long)(int)(c + 0x10C)) & 0xFFFFFFFFFFFFFFFFLL) += 0x100;
-                        if (S16(0x10C) >= 0) {
-                            U8(0x136) = 1;
+                    if (!(FB(this, 0x136) & 2)) {
+                        FH(this, 0x10c) += 0x100;
+                        if (FH(this, 0x10c) >= 0) {
+                            FB(this, 0x136) = 1;
                         }
                     } else {
-                        *(short*)(((long long)(int)(c + 0x10C)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x100;
-                        if (S16(0x10C) >= 0) {
-                            U8(0x136) = 3;
+                        FH(this, 0x10c) -= 0x100;
+                        if (FH(this, 0x10c) >= 0) {
+                            FB(this, 0x136) = 3;
                         }
                     }
-                    *(short*)(((long long)(int)(c + 0x10A)) & 0xFFFFFFFFFFFFFFFFLL) += S16(0x10C);
-                    unsigned char temp_r2_3 = U8(0x136);
-                    if ((temp_r2_3 == 1) && (S16(0x10A) >= 0)) {
-                        U8(0x136) = 2;
-                    } else if ((temp_r2_3 == 3) && (S16(0x10A) <= 0)) {
-                        *(short*)(((long long)(int)(c + 0x10E)) & 0xFFFFFFFFFFFFFFFFLL) += 0x80;
-                        if (S16(0x10E) >= -0x180) {
-                            U16(0x108) = 0x78;
-                            S16(0x10A) = 0;
+                    FH(this, 0x10a) += FH(this, 0x10c);
+                    if (FB(this, 0x136) == 1 && FH(this, 0x10a) >= 0) {
+                        FB(this, 0x136) = 2;
+                    } else if (FB(this, 0x136) == 3 && FH(this, 0x10a) <= 0) {
+                        FH(this, 0x10e) += 0x80;
+                        if (FH(this, 0x10e) >= -0x180) {
+                            FU(this, 0x108) = 0x78;
+                            FH(this, 0x10a) = 0;
                         } else {
-                            S16(0x10C) = S16(0x10E);
-                            U8(0x136) = 1;
+                            FH(this, 0x10c) = FH(this, 0x10e);
+                            FB(this, 0x136) = 1;
                         }
                     }
                 }
             }
         }
     }
-    DecIfAbove0_Short((unsigned short*)(c + 0x104));
+    DecIfAbove0_Short(&FU(this, 0x104));
     return 1;
 }
