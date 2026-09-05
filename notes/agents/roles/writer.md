@@ -49,12 +49,19 @@ for '<ov>/<Class>'; run 'create' first`. The real cycle is:
     python tools/tubuild.py linkcheck --baseline       # ONCE per fresh worktree
     python tools/tubuild.py linkcheck <ov>/<Class>     # BEFORE promotion; see below
 
-**`linkcheck --baseline` is mandatory and it is not optional in a fresh
-worktree.** Skip it and `linkcheck` exits 1 at `[4/8]` naming two *unrelated*
-intact-object TUs — `ov036/daObjRcCarpet_c` and `ov070/daPropeller_Heyho_c` —
-with `vtable partition baseline proof unavailable`. Nothing about your class,
-and it costs a full run to work out. Take the baseline **before** any header
-edit, since it builds the working tree.
+**`linkcheck --baseline` is mandatory in a fresh worktree, and its position in
+the sequence is load-bearing.** Skip it and `linkcheck` exits 1 at `[4/8]` naming
+two *unrelated* intact-object TUs — `ov036/daObjRcCarpet_c` and
+`ov070/daPropeller_Heyho_c` — with `vtable partition baseline proof
+unavailable`. Nothing about your class, and it costs a full run to work out.
+
+It builds the **working tree with no substitution**, so it must run while the
+tree is still pristine — *before* you move the destructor inline. Do it after
+the header edit and the still-enrolled `D1Ev.cpp`/`D0Ev.cpp` shards redefine the
+now-inline destructor and the control run breaks. Working order:
+
+    create -> linkcheck --baseline (pristine tree) -> header edit + reconcile
+           -> verify -> linkcheck <ov>/<Class>
 
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
@@ -69,7 +76,11 @@ steps the dry-run does not print:
 2. Splice their N `delinks.txt` entries into one.
 3. **Edit the manifest yourself:** `status` → `promoted`, `source` → the new
    path. `verify` does not do this, and `promote --dry-run` refuses to run at
-   all while `status` is still `text-verified`.
+   all while `status` is still `text-verified`. Use `promoted`: 93 landed
+   manifests do, against 27 left on `text-verified`, and the oracle `daBar_c` is
+   one of the 93. `text-verified` only *gates* anything for intact-object TUs
+   (`tubuild.py:4543`), so leaving it is silently harmless today and wrong the
+   moment the class changes route.
 4. **`python tools/tiers_ratchet.py --update --reason "<why>"` — never hand-edit
    `converted-baseline.json`.** The tool also writes
    `config/converted-backslide-exceptions.jsonl`, re-sorts the array, and adds
@@ -77,12 +88,19 @@ steps the dry-run does not print:
    five criteria. A hand edit gets the count right and the **set** wrong.
 5. **Rewrite each manifest conflict note** from `tubuild create warning:
    CONFLICT:` to `tubuild create warning (RESOLVED): CONFLICT:`, or
-   `check_tubuild_conflicts.py` fails once per note.
+   `check_tubuild_conflicts.py` fails once per note. **Keep the trailing
+   `; kept the first` verbatim** and append your resolution after it — the
+   checker's `NOTE_RE` (`check_tubuild_conflicts.py:95-99`) requires that exact
+   phrase, so deleting it because it is no longer true turns a `STALE NOTE` into
+   an `UNPARSED NOTE`.
 6. **Grep the prose for every shard filename you deleted** and remove the
    literal token — `check_dead_references.py` reads bare `src/` tokens, not just
    links, so rewriting the sentence around the name is not enough. Rewording
    `notes/cpp-conversion-enemies.md` was needed for `daOts_c`.
 7. Fix the `port/` slice manifests that referenced a deleted shard.
+8. **`config/arm9/overlays/*/delinks.txt` is CRLF.** A naive line rewrite
+   normalizes the whole file and buries your one-line change in a thousand-line
+   diff. Preserve the line endings.
 
 **Run `linkcheck` before you promote.** Once the source is enrolled in
 `delinks.txt`, `linkcheck` routes down the intact path unconditionally and fails
@@ -107,6 +125,15 @@ Dispositions (from `tubuild.py` ~2146-2260):
 | `deadstrip` | a symbol with no ROM home |
 | `deadstrip-duplicate` | a **function** that does have a ROM home — **requires `canonical_module` and `canonical_address`** |
 | `deadstrip-data` | any `_ZTV` / `_ZTI` / `_ZTS` — plain `deadstrip` is rejected for these |
+
+**The row count is predictable from inheritance depth**, so do not copy an
+oracle's count unless the oracle sits at the same depth:
+
+    rows = 2 x (ancestors + self)  +  1 vtable  +  1 Vector3 D1
+
+`daPgDfdr_c` (`dBgActor_c` -> `dActor_c` -> `dBase_c` -> `fBase_c`, 5 levels)
+needs 2x5+2 = **12**. Its oracle `daIDonketu_c` sits one level deeper and needs
+14 — which is exactly how the queue's estimate came out wrong.
 
 **Do not assume a symbol's `canonical_module` is your TU's module.** `_ZTI`/`_ZTS`
 have vague linkage, so the linker keeps **one** copy wherever it first landed,
@@ -150,6 +177,17 @@ mwccarm 2004/b56 behaviours, not style preferences.
   those accesses only** restored the match. Reconcile freely, but when a function
   goes short, suspect the field-address CSE first and put the raw spelling back
   on the smallest set of accesses that fixes it.
+- **A merge changes the include set, and that can change a type.** The merged TU
+  sees the *union* of N shards' includes, so a type with two guarded definitions
+  resolves to whichever header now arrives first. Measured on `daPgDfdr_c`:
+  `common.h` and `math/Matrix.h` both define `Matrix4x3` at 0x30, the shard saw
+  `common.h`'s flat `s32 m[12]`, and the merged file reached `math/Matrix.h`
+  first (via `daPgDfdr_c.h` -> `Model.h`) and got `Matrix3x3 r; Vector3 t`.
+  mwcc then split one whole-matrix assignment into a 9-word `ldm`/`stm` plus a
+  3-word tail it CSE'd — `0x94` became `0xac`, in a function nobody had touched.
+  Reordering the includes restored the match. `Vector3_16` behaves the same way.
+  **When a function goes LONG after a merge and you did not touch it, check the
+  include union before you look at CSE.** (Short, and you touched it: CSE.)
 - **Struct copy:** C++ scalarizes word-by-word where C block-moves — about 12
   bytes short. Force it with `struct M { int w[12]; };`.
 - **bool widening:** `int f = (a==b); if (f)` is longer in C++ than `if (a==b)`.

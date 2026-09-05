@@ -61,7 +61,7 @@ Write `notes/data/class-facts/<class>.json`:
       "module_base": "0x020ad660",
       "vtable": {"symbol": "_ZTV7da1up_c", "address": "0x021083c8", "slots": 31},
       "base_class": "dActor_c",
-      "base_evidence": "31-word vtable; 22 of 31 slots point into arm9",
+      "base_evidence": "_ZTI7da1up_c +8 -> _ZTI8dActor_c (__si_class_type_info)",
       "typeinfo": {"ZTI": "0x021138bc", "ZTI_module": "ov027",
                    "ZTS": "0x021138a4", "ZTS_module": "ov027"},
       "modules_touched": ["ov064", "ov027", "ov002", "arm9"],
