@@ -49,7 +49,7 @@ src/_ZN9CameraTagD0Ev.c
 # func_ov039_02111214 is the matrix helper InitResources calls; the src TU
 # spells it func_ov044_02111214 (a sibling overlay's name for the same
 # shared-window address) and CMakeLists routes that per source to ov039's own
-# body, which the ROM reloc at 0x0211136c names -- module:overlay(39). The
+# body, which the ROM reloc at 0x02111354 names -- module:overlay(39). The
 # same TU bumps data_ov041_021118e0, routed the same way to
 # data_ov039_021118e0 (four bytes, defined in the fill because decl_common.h
 # declares the sibling spelling as a scalar rather than an array).

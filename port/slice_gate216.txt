@@ -108,7 +108,7 @@ src/func_ov064_021163bc.c
 #
 # ---- 4. UNCHAINED_CHOMP'S OWN DELETING DESTRUCTOR, slot 17 -----------------
 #
-# _ZTV14UnchainedChomp (ov100 0x02148188) is a host array hal/actor_classes.cpp
+# _ZTV14UnchainedChomp (ov100 0x02148054) is a host array hal/actor_classes.cpp
 # fills, and its slot 17 trapped on the Butterfly/Fish reading recorded at the
 # fill: "destroy is D1 + an explicit Deallocate; nothing on this level calls the
 # deleting form." Slot 16 is already filled with a hand transcription of the
@@ -167,11 +167,13 @@ src/_ZN14UnchainedChompD1Ev.cpp
 #
 # ---- NOT IN THIS GATE, and why, so the rows stop reading as work -----------
 #
-# * func_ov018_021111a0 / _021111e4 (SKI_LIFT's own D1/D0, data_ov018_021138cc
-#   slots 16/17). Same shape, but that table is a LIVE registered class's own
-#   and its two slots are host thunks with a documented divergence, not traps.
-#   Swapping a live teardown is a behaviour change and belongs to whoever owns
-#   that class, not to a head seat.
+# * func_ov018_021111e4 (SKI_LIFT's own D0, data_ov018_021138cc slot 17). Its
+#   D1 sibling func_ov018_021111a0 (slot 16) IS in this gate (second batch, the
+#   six class D1s off hand thunks); the D0 stays out because that slot is a host
+#   thunk with a documented divergence, not a trap. Review note: four of the six
+#   second-batch D1 seats are on live, dispatched classes, so their teardown now
+#   runs the ROM body -- that is a behaviour change, proven by the battery, not
+#   a no-op.
 # * The four _ZThn80_ this-adjusting destructor thunks (_ZTV9ModelAnim[9],
 #   _ZTV10ModelAnim2[9,10], _ZTV14BlendModelAnim[9]). Group 1 of
 #   hal/w2_dtor_heads.cpp's sweep: the matched sources are mwcc ARTEFACT

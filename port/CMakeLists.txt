@@ -9545,11 +9545,13 @@ foreach(line IN LISTS SLICE215_LINES)
 endforeach()
 # ---- gate 216: the ROM's own vtable words the link did not carry -------------
 #
-# Run link100, lane TAIL. Fourteen matched TUs, every one of them a word the
+# Run link100, lane TAIL. Twenty-one matched TUs (fourteen in the first batch,
+# seven in the second), every one of them a word the
 # ROM puts in a table the port ALREADY hosts and fills: two Actor tail veneers
 # at slots 8 and 11 of every Actor table, four abstract ov002 intermediates'
 # own destructor pairs, and four words of the Bully/BigBully base. No new
-# class, no new mount, no new behaviour -- each slot held a trap or a shortcut
+# class, no new mount; four of the six second-batch D1 seats are on live,
+# dispatched classes (their teardown now runs the ROM body) -- each slot held a trap or a shortcut
 # into the base and now holds the body config/<module>/relocs.txt names at that
 # offset. The per-slot reads are reproducible with port/tools/tail_slots.py and
 # quoted in port/slice_gate216.txt and at each seat.
@@ -10046,7 +10048,7 @@ set_source_files_properties(
 # Cloud::InitResources carries TWO sibling-overlay spellings of addresses
 # that are ov039's own in this class's module: it calls
 # func_ov044_02111214 and bumps data_ov041_021118e0, while the ROM relocs
-# at 0x0211136c and 0x02111378 both read module:overlay(39). Routed per
+# at 0x02111354 and 0x02111378 both read module:overlay(39). Routed per
 # source, which a definition cannot defeat the way an /alternatename can.
 # func_ov039_02111214 is the matched TU on slice_gate217;
 # data_ov039_021118e0 is the four-byte counter the fill defines.

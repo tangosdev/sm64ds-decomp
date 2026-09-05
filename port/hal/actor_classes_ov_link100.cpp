@@ -128,7 +128,7 @@
 // ---- TWO SIBLING-OVERLAY SPELLINGS, ROUTED PER SOURCE ----------------------
 // src/_ZN5Cloud13InitResourcesEv.cpp calls `func_ov044_02111214` and bumps
 // `data_ov041_021118e0`: two sibling overlays' names for addresses that, in
-// THIS class's module, are ov039's own (the ROM relocs at 0x0211136c and
+// THIS class's module, are ov039's own (the ROM relocs at 0x02111354 and
 // 0x02111378 both read module:overlay(39)). port/CMakeLists.txt routes both
 // with a per-source -D, which a definition cannot defeat the way an
 // /alternatename can. func_ov039_02111214 is a matched TU and joins the slice;
