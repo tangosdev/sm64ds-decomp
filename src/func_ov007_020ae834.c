@@ -24,32 +24,24 @@ extern int func_ov007_020aeaec(char *c, int flag, int lo, int hi);
 extern void func_ov007_020ae810(char *c);
 extern void func_ov007_020aeb34(char *c, int t);
 
-struct Sub {
-    short f0;
-    short f2;
-    int f4;
-    int f8;
-    int fc;
-};
-
 void func_ov007_020ae834(char *c)
 {
-    struct Sub *s = *(struct Sub **)(c + 4);
+    char *s = *(char **)(c + 4);
     int state;
     int done;
     int st;
     int flag;
 
-    state = s->f0;
-    if ((state == 0 && s->f2 == 3) || (state == 1 && s->f2 == 4)) {
-        s->f2 = -1;
-    } else if (state == 1 && s->f2 == 7) {
-        s->f2 = 3;
+    state = *(short *)s;
+    if ((state == 0 && *(short *)(s + 2) == 3) || (state == 1 && *(short *)(s + 2) == 4)) {
+        *(short *)(s + 2) = -1;
+    } else if (state == 1 && *(short *)(s + 2) == 7) {
+        *(short *)(s + 2) = 3;
     }
 
     func_ov007_020c92d0(s);
-    done = s->fc;
-    st = s->f0;
+    done = *(int *)(s + 0xc);
+    st = *(short *)s;
     if (done == 0)
         *(int *)(c + 0x18) = 0;
 
@@ -80,14 +72,14 @@ void func_ov007_020ae834(char *c)
             func_ov007_020aeb34(c, (int)(((long long)t * t) >> 12));
         }
         if (flag && *(int *)(c + 0x14) == 0) {
-            (*(struct Sub **)(c + 4))->f2 = 0;
+            *(short *)(*(char **)(c + 4) + 2) = 0;
             break;
         }
         if (!flag && *(int *)(c + 0x14) == 0x1000) {
             if (st == 7)
-                (*(struct Sub **)(c + 4))->f2 = 3;
+                *(short *)(*(char **)(c + 4) + 2) = 3;
             else
-                (*(struct Sub **)(c + 4))->f2 = 1;
+                *(short *)(*(char **)(c + 4) + 2) = 1;
         }
         break;
     case 5:
@@ -98,7 +90,7 @@ void func_ov007_020ae834(char *c)
         if (*(int *)(c + 0x10) == 0)
             *(int *)(c + 0x18) = 0;
         if ((flag && *(int *)(c + 0x10) == 0x1000) || (!flag && *(int *)(c + 0x10) == 0)) {
-            (*(struct Sub **)(c + 4))->f2 = 0;
+            *(short *)(*(char **)(c + 4) + 2) = 0;
             break;
         }
         *(int *)(c + 0x10) = func_ov007_020aeaec(c, (flag == 0) ? 1 : 0, 0, 0x14);

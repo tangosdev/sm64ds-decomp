@@ -15,9 +15,9 @@
  * Codegen notes: the function is void (the ROM overwrites r0 in place after
  * both calls); func_ov002_020f5a94 takes c (r0 stays live to the bl). The
  * dx/dy block needs TWO named bases: px = c + off defined before the clamp
- * (colours to sb) and s = c + idx * 0x4c at the block start (shares the
- * laundered product's inner mul but not its value number, so it is the r2
- * base the tx/ty loads and the +0x24 store share).
+ * (colours to sb) and s = c + idx * 0x4c at the block start (recomputes the
+ * same product as off under its own value number, so it is the r2 base the
+ * tx/ty loads and the +0x24 store share).
  */
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern int func_ov002_020f5a94(void *a);
@@ -28,8 +28,7 @@ void func_ov002_020f43cc(char *c, int i) {
     int idx = i;
     char *px;
     char *s;
-    int off = (int)(((long long)(idx * 0x4c)) & 0xFFFFFFFFFFFFFFFFLL);
-    volatile int t1; (void)&t1;
+    int off = idx * 0x4c;
     {
         unsigned short v = *(unsigned short *)(c + 0x30 + off);
         if (v != 0) {

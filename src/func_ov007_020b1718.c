@@ -23,8 +23,6 @@ extern void func_ov007_020b2764(int a);
 
 extern char* data_ov007_0210342c;
 
-struct S12 { int a, b, c; };
-
 void func_ov007_020b1718(void)
 {
     char* F = *(char**)(data_ov007_0210342c + 0xf4);
@@ -90,9 +88,9 @@ void func_ov007_020b1718(void)
             char* d;
             func_ov007_020b257c();
             d = *(char**)(m + 0x3c);
-            *(struct S12*)(d + 0x20) = *(struct S12*)(m + 0x14);
+            *(Vector3*)(d + 0x20) = *(Vector3*)(m + 0x14);
             d = *(char**)(m + 0x3c);
-            *(struct S12*)(d + 0x14) = *(struct S12*)(d + 0x20);
+            *(Vector3*)(d + 0x14) = *(Vector3*)(d + 0x20);
             *(int*)(*(char**)(m + 0x40) + 0x18) = *(int*)(m + 0x2c);
             d = *(char**)(m + 0x40);
             *(int*)(d + 0x14) = *(int*)(d + 0x18);
@@ -114,7 +112,8 @@ void func_ov007_020b1718(void)
         r7val = v - 2;
         divisor = 0x28;
         {
-            *(int*)(m + 0x14) = (int)(((s64)(0x1000 - u) * *(int*)(*(char**)(m + 0x3c) + 0x14) + (s64)(int)(unsigned int)u * *(int*)(*(char**)(m + 0x3c) + 0x20)) >> 12);
+            int uu = (int)(unsigned int)u;
+            *(int*)(m + 0x14) = (int)(((s64)(0x1000 - u) * *(int*)(*(char**)(m + 0x3c) + 0x14) + (s64)uu * *(int*)(*(char**)(m + 0x3c) + 0x20)) >> 12);
             {
                 char* d2 = *(char**)(m + 0x3c);
                 r3 = u - (int)(((s64)r3 * (0x2000 - r3)) >> 12);
