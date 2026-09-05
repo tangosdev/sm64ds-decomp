@@ -4499,3 +4499,84 @@ reads as "inert" there.
 pragma name against a 1.2 build once (`--version 1.2/sp2p3`, or any `--all` run) before
 banking a pragma result, even when your function's pinned version is b56 and even when the
 b56 run was silent. Silence from b56 is not evidence.
+
+## 6bs. The ROM's compiler does not recycle a register that just died; every build we own does, and that single delta is the whole residue on four separate arm9 floors (2026-09-05)
+
+**The rule, in one probe.** Give a function a parameter that dies at the first store and a
+temporary born immediately after it:
+
+```c
+typedef int s32;
+void reuse_probe(s32 *m, s32 a, s32 b)
+{
+    m[0] = b;          /* b (r2) dies here */
+    m[1] = 0;          /* which register does the 0 get? */
+    m[2] = 0;
+    m[3] = 0;
+    m[4] = a;
+}
+```
+
+Every installed build recycles `b`'s register:
+
+```
+1.2/base 1.2/sp4 2004/b56 2.0/base 2.0/sp2p4  ->  str r2,[r0] ; mov r2,#0 ; str r2,[r0,#4] ...
+```
+(the dsi line merges the pair into `stm r0,{r2,r3}` and does not answer the question.)
+The allocator takes the LOWEST free scratch register, and "free" includes one that died on
+the previous instruction. The ROM's compiler skips it and takes the next register that has
+not been used yet.
+
+**Four sites, same delta, and it is the entire residue on all four.**
+
+| site | dead register at that point | ROM picks | every build picks |
+|---|---|---|---|
+| `func_0205256c` +0x04, the shared `0` temp | r2 (`c`, stored at +0x00 and +0x02) | `r3` | `r2` |
+| `func_0205a588` +0x10, the loaded halfword | r3 free, ip free | `ip` | `r3` |
+| `func_0205a588` +0x5c, the loop end pointer | r3 (`n & ~3`, dies at this instruction) | `ip` | `r3` |
+| `func_0205a588` +0x7c, the tail halfword load | r2 (`n`, dies at the `bxeq` above) | `r3` | `r2` |
+
+On `func_0205256c` this is provably the ONLY residue: a source shape exists whose fourteen
+Thumb instructions match the ROM one-for-one in mnemonic, operand form and order, and the
+diff is a whole-function `r2 <-> r3` swap. The shape is one reused local plus one short-lived
+local:
+
+```c
+#pragma thumb on
+#pragma opt_propagation off
+void func_0205256c(s32 *m, s32 s, s32 c) {
+    s32 t, ns;
+    m[0] = c;  m[8] = c;
+    t = 0;   m[1] = t; m[3] = t; m[5] = t; m[7] = t;
+    ns = -s;
+    t = 1;   t = t << 12;
+    m[6] = s; m[2] = ns; m[4] = t;
+}
+```
+
+**What does NOT move it** (measured on that shape, ~200 compiles): all six declaration
+orders of the temps and in-place vs split declaration (once the declaration is split from the
+assignment, RANK STOPS MATTERING ENTIRELY -- a useful negative against 6aj, which holds for
+initialised declarations, not for `s32 a, b;` followed by assignments); a twelve-statement
+pairwise-transposition hill-climb over the whole body (6bf method, four restarts); all
+fourteen real `opt_*`/`optimize_for_size`/`global_optimizer`/`peephole` pragmas in both
+directions; `register`, `const`, `unsigned`, `short`, `long`; and all twenty-five installed
+builds (1.2 and dsi both give the same 10-of-14 swap, 2.0 gives 11). On `func_0205a588` the
+same conclusion falls out of a 240-cell product sweep of head/mid/loop/tail spellings -- all
+240 compile to the SAME 37 words, so block-local spelling is fully canonicalised there -- and
+a 58-cell pragma sweep on top of it, every cell 14/37.
+
+**The one construct that flips it is not usable.** Sourcing the temp from a `volatile` local
+(`volatile s32 zz = 0; s32 z = zz;`) does make the allocator skip the dead register and take
+r3 -- but it also materialises the stack slot, so the function grows from 0x1c to 0x2c. An
+extern-const source (`s32 z = g_zero;`) skips it too and costs a literal-pool load. There is
+no register-resident construct that skips a dead register, because the choice is made after
+every source-level distinction has been erased.
+
+**How to apply.** When a near-miss is a pure register permutation AND the permutation is
+"the ROM used a fresh register where we recycled a just-dead one", stop sweeping source
+shapes: it is a build delta, in the same class as 6av's outgoing-arg phi coalesce, and the
+ROM's own compiler (CW NITRO V0.6.1, 6ah, unarchived) is the missing piece. Bank the
+shape-exact draft as a seed and move on. Conversely, if a near-miss has the ROM recycling a
+dead register and your draft using a fresh one, the defect is yours and is worth chasing --
+that direction is the compiler's default and is always reachable.
