@@ -25,9 +25,11 @@ far and may be wrong; the cartridge is not.
    pointer) sit at −8 and −4. Dump every slot. The table ends where the next
    RTTI name string begins; trailing null slots are truncated by the linker, so
    a short table is not proof of a short class.
-3. **The base class.** Vtable *length* identifies it: 31 words = `dActor_c`,
-   32 = `dBgActor_c`. Confirm against which slots point outside this overlay
-   (inherited, into arm9) versus inside it (this class's own overrides).
+3. **The base class.** The authoritative evidence is the `__si_class_type_info`
+   record: its `+8` word names the direct base outright (for `dBgActor_c`,
+   `_ZTI10dBgActor_c` points at `_ZTI8dActor_c`). Lead with that. Vtable
+   *length* — 31 words = `dActor_c`, 32 = `dBgActor_c` — is corroboration for
+   subclasses, not proof, so do not report it as the reason.
 4. **Own overrides.** For each slot whose target lies inside this overlay: the
    slot index, the target address, and the inherited slot name from
    `include/dActor_c.h` (slots 18-30 are declared there in order). Slot index is
@@ -67,6 +69,7 @@ the writer's list of things they must not fabricate.
 
 ## Done when
 
-The JSON is committed and pushed on a branch named `facts/<class>`, and you have
-reported: the base class and how you proved it, the override count, and what you
-could not prove.
+The JSON is committed on `cpp/<Class>-tu` — the *same* branch the writing goes
+on, because scout and writer are one claim and two branches for one handoff is
+pure friction. Report: the base class and the `__si_class_type_info` record that
+proves it, the override count, and what you could not prove.
