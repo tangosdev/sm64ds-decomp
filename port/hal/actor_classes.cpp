@@ -58,6 +58,16 @@
 // this file has never proved, and the body is not in a slice; a named decline
 // is the honest seat. Same reading as hal/actor_classes_wf.cpp.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
 #include "Actor.h"
@@ -1729,16 +1739,6 @@ extern "C" void hal_fill_exit_vtable(void)
 // positions, sit in both lists and tick. Every one of their eighteen slots is
 // matched src; nothing here changes when the particles arrive.
 #include "PoppingLavaBubbles.h"
-
-/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
-   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
-   this file fills IS the arm9 base body 0x020100dc (checked against
-   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
-   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
-   The three-parameter __fastcall is the sret contract MSVC uses for a
-   thiscall member returning a 12-byte struct: this in ecx, the hidden result
-   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
-extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN18PoppingLavaBubbles13InitResourcesEv(void *self);   /* face */
 int _ZN18PoppingLavaBubbles8BehaviorEv(char *self);

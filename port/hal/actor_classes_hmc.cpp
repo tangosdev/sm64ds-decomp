@@ -21,11 +21,6 @@
 // dispatches slot 31 (Kill) virtually, which is why 31 is bound rather than
 // trapped: the first ground-pound of a crate reaches it.
 #include <cstdio>
-#include <cstdlib>
-
-#include "Actor.h"
-#include "ActorBase.h"
-#include "Crate.h"
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -36,6 +31,11 @@
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+#include <cstdlib>
+
+#include "Actor.h"
+#include "ActorBase.h"
+#include "Crate.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */

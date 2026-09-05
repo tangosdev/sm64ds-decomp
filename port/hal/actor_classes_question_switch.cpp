@@ -44,11 +44,6 @@
 // BlueCoinSwitch precedent).
 
 #include <cstdio>
-#include <cstdlib>
-
-#include "Actor.h"
-#include "ActorBase.h"
-#include "QuestionSwitch.h"
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -59,6 +54,11 @@
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+#include <cstdlib>
+
+#include "Actor.h"
+#include "ActorBase.h"
+#include "QuestionSwitch.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same arm9 bodies every sibling fill writes */

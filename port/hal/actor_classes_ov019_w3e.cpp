@@ -94,12 +94,6 @@
 // .dsstate, so the guard has to roll back with it.
 
 #include <cstdio>
-#include "dsstate_seg.h"
-#include "dtor_faces_cpp.h"
-
-#include "Actor.h"
-#include "ActorBase.h"
-#include "RacingPenguin.h"
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -110,6 +104,12 @@
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+#include "dsstate_seg.h"
+#include "dtor_faces_cpp.h"
+
+#include "Actor.h"
+#include "ActorBase.h"
+#include "RacingPenguin.h"
 
 extern "C" {
 /* the arm9 shared half, read off this table's own reloc run */

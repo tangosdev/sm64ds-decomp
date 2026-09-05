@@ -51,13 +51,6 @@
 // Neither D-source is listed in slice_intro.txt; nothing else references either
 // symbol (the ROM's D0 inlines the chain rather than calling D1).
 #include <cstdio>
-#include <cstdlib>
-
-#include "Actor.h"
-#include "dtor_faces_cpp.h"
-#include "ActorBase.h"
-#include "CutsceneObject.h"
-#include "Model.h"   /* the model class the vtable seat below describes */
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -68,6 +61,13 @@
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+#include <cstdlib>
+
+#include "Actor.h"
+#include "dtor_faces_cpp.h"
+#include "ActorBase.h"
+#include "CutsceneObject.h"
+#include "Model.h"   /* the model class the vtable seat below describes */
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill in this tree

@@ -144,14 +144,6 @@
 // though BABY_PENGUIN is unregistered this gate, since the fill and the
 // PMF work are complete and this finding stands on its own.
 #include <cstdio>
-#include <cstdlib>
-
-#include "Actor.h"
-#include "dtor_faces_cpp.h"
-#include "ActorBase.h"
-#include "BabyPenguin.h"
-#include "SnowmanBody.h"
-#include "SnowmanHead.h"
 
 /* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
    Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
@@ -162,6 +154,14 @@
    thiscall member returning a 12-byte struct: this in ecx, the hidden result
    pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+#include <cstdlib>
+
+#include "Actor.h"
+#include "dtor_faces_cpp.h"
+#include "ActorBase.h"
+#include "BabyPenguin.h"
+#include "SnowmanBody.h"
+#include "SnowmanHead.h"
 
 extern "C" {
 int _ZN5Actor19BeforeInitResourcesEv(void *self);
