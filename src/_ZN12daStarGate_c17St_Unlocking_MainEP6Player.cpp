@@ -1,18 +1,19 @@
 //cpp
-extern "C" {
-int _ZN6Player21IsOpeningDoorWithStarEv(void* p);
-int func_ov100_02145e10(void* a, void* b);
-}
-struct E6 { char b0; signed char b1; char b2,b3,b4,b5; };
-extern E6 data_ov100_02148390[];
+// @symbol _ZN12daStarGate_c17St_Unlocking_MainEP6Player
+#include "daStarGate_c.h"
+#include "Player.h"
+
+extern daStarGateInfo data_ov100_02148390[];
 extern int data_0209caa0[];
 
-extern "C" int func_ov100_02145b10(char* c, char* a2)
+bool daStarGate_c::St_Unlocking_Main(Player *player)
 {
-    if (!_ZN6Player21IsOpeningDoorWithStarEv(a2)) {
-        signed char sh = ((signed char*)((char*)data_ov100_02148390 + *(int*)(c + 8) * 6))[1];
+    if (!player->IsOpeningDoorWithStar()) {
+        daStarGateInfo *entry = (daStarGateInfo *)
+            ((char *)data_ov100_02148390 + param1 * 6);
+        s8 sh = entry->saveFlag;
         data_0209caa0[1] |= 0x8000 << sh;
-        func_ov100_02145e10(c, a2);
+        TryOpenDoor(player);
     }
-    return 1;
+    return true;
 }

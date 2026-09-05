@@ -1,40 +1,21 @@
 //cpp
+// @symbol _ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE
 #include "dPa_c.h"
 #include "dBgCh_Gnd.h"
-
-struct dActor_c;
-
-struct Node {
-    Node *next;
-    char p4[4];
-    int f8;
-    int fc;
-    int f10;
-    int f14;
-    int f18;
-    int f1c;
-    char p20[0x2c - 0x20];
-    unsigned short f2c;
-    unsigned short f2e;
-};
-
-struct System;
+#include "Particle__System.h"
 
 extern "C" int func_02037e38(unsigned int *p);
 
-namespace Particle {
-struct System {};
-typedef dPa_c::level_c::simpleCallback_c SimpleCallback;
-struct CheckLavaCallback : SimpleCallback { void SpawnParticles(System &sys); };
-
-void CheckLavaCallback::SpawnParticles(System &sys)
+void dPa_c::level_c::checkYoganCallback_c::SpawnParticles(
+    Particle::System& system)
 {
-    SimpleCallback::SpawnParticles(sys);
+    simpleCallback_c::SpawnParticles(system);
 
-    for (Node *n = *(Node **)((char *)&sys + 8); n != 0; n = n->next) {
-        int sx = n->f14 + n->f8;
-        int sy = n->f18 + n->fc;
-        int sz = n->f1c + n->f10;
+    for (Particle::ParticleNode *particle = system.particles.head;
+         particle != 0; particle = particle->next) {
+        int sx = particle->offsetAsr3.x + particle->positionAsr3.x;
+        int sy = particle->offsetAsr3.y + particle->positionAsr3.y;
+        int sz = particle->offsetAsr3.z + particle->positionAsr3.z;
         dBgCh_Gnd rg;
         int vy = (sy << 3) + 0x12c000;
         Vector3 v;
@@ -46,10 +27,10 @@ void CheckLavaCallback::SpawnParticles(System &sys)
             goto Lac;
         if (func_02037e38((u32*)&rg.surface) != 1) {
         Lac:
-            n->f2e = n->f2c;
+            particle->age = particle->lifetime;
         } else {
-            n->f18 = (rg.clsnY + 0x7000 >> 3) - n->fc;
+            particle->offsetAsr3.y =
+                ((rg.clsnY + 0x7000) >> 3) - particle->positionAsr3.y;
         }
     }
-}
 }

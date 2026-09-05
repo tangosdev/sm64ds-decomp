@@ -1,2 +1,10 @@
-extern void _ZN6Player11OpenBigDoorEv(void* p);
-int func_ov100_02145b7c(int unused, void* p) { _ZN6Player11OpenBigDoorEv(p); return 1; }
+//cpp
+// @symbol _ZN12daStarGate_c17St_Unlocking_InitEP6Player
+#include "daStarGate_c.h"
+#include "Player.h"
+
+bool daStarGate_c::St_Unlocking_Init(Player *player)
+{
+    player->OpenBigDoor();
+    return true;
+}

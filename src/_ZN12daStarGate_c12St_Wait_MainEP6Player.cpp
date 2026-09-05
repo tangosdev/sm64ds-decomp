@@ -1,61 +1,64 @@
-// @symbol func_ov100_02145c58
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_Player.h"
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
-/* func_ov100_02145c58 at 0x02145c58
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov100).
- */
-extern unsigned char NumStars(void);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
-extern void _ZN6Player11OpenBigDoorEv(char* p);
-extern int func_ov100_02145f68(char* c, void* p, char* b);
+//cpp
+// @symbol _ZN12daStarGate_c12St_Wait_MainEP6Player
+#include "daStarGate_c.h"
+#include "Player.h"
 
+extern "C" unsigned char NumStars(void);
+extern "C" int func_ov100_02144f84(void);
 
-
+extern daStarGateInfo data_ov100_02148390[];
 extern char data_0209caa0[];
 
-int func_ov100_02145c58(char* a, char* b) {
-    signed char* entry;
-    int s5, lt, r6, msg;
-    int vec[3];
+bool daStarGate_c::St_Wait_Main(Player *player)
+{
+    daStarGateInfo *entry;
+    int isSpecial, notEnoughStars, isMario, messageID;
+    Vector3 messagePos;
 
-    if (func_ov100_02145e74(a, b)) {
-        entry = data_ov100_02148390 + *(int*)(a + 8) * 6;
-        s5 = (entry[0] == 0x50);
-        lt = ((int)NumStars() < entry[0]);
-        r6 = (*(unsigned char*)(data_0209caa0 + 0x41) == 0);
+    if (IsInFrontOfPlayer(player)) {
+        entry = &data_ov100_02148390[param1];
+        isSpecial = entry->numStars == 0x50;
+        notEnoughStars = (int)NumStars() < entry->numStars;
+        isMario = *(unsigned char *)(data_0209caa0 + 0x41) == 0;
 
-        if (*(int*)(data_0209caa0 + 4) & (0x8000 << entry[1]))
-            goto e10;
-        if (s5) {
-            if (*(int*)(a + 0x88) <= 0) goto e10;
-            if (!lt && r6) goto e10;
+        if (*(int *)(data_0209caa0 + 4) & (0x8000 << entry->saveFlag))
+            goto tryOpen;
+        if (isSpecial) {
+            if (mScaleZ <= 0)
+                goto tryOpen;
+            if (!notEnoughStars && isMario)
+                goto tryOpen;
         }
+
         {
-            int t5c = *(int*)(a + 0x5c);
-            int t64 = *(int*)(a + 0x64);
-            int t60 = *(int*)(a + 0x60) + 0xb4000;
-            vec[0] = t5c;
-            vec[1] = t60;
-            vec[2] = t64;
+            int x = mPosX;
+            int z = mPosZ;
+            int y = mPosY + 0xb4000;
+            messagePos.x = x;
+            messagePos.y = y;
+            messagePos.z = z;
         }
-        if (!(r6 && !s5 && !lt)) {
-            if (func_ov100_02144f84() == 0) return 1;
-            msg = r6 ? *(short*)(entry + 2) : *(short*)(entry + 4);
-            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(b, a, msg, vec, 0, 2) == 0) goto e10;
-            if (s5) _ZN6Player11OpenBigDoorEv(b);
-            func_ov100_02145f68(a, data_ov100_02148984, b);
-            return 1;
+
+        if (!(isMario && !isSpecial && !notEnoughStars)) {
+            if (func_ov100_02144f84() == 0)
+                return true;
+            messageID = isMario ? entry->notEnoughStarsMsgID
+                                : entry->notMarioMsgID;
+            if (player->ShowMessage(*this, messageID, &messagePos, 0, 2) == 0)
+                goto tryOpen;
+            if (isSpecial)
+                player->OpenBigDoor();
+            ChangeState(&ST_TALKING_TO_PLAYER, player);
+            return true;
         } else {
-            if (_ZN6Player13TryTalkToDoorEh(b, 1) == 0) goto e10;
-            func_ov100_02145f68(a, data_ov100_02148994, b);
-            return 1;
+            if (player->TryTalkToDoor(1) == 0)
+                goto tryOpen;
+            ChangeState(&ST_UNLOCKING, player);
+            return true;
         }
-    e10:
-        func_ov100_02145e10(a, b);
+
+    tryOpen:
+        TryOpenDoor(player);
     }
-    return 1;
+    return true;
 }

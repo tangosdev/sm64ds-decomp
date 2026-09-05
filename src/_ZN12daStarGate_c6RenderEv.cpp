@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN8StarDoor6RenderEv
+// @symbol _ZN12daStarGate_c6RenderEv
 
-#include "StarDoor.h"
+#include "daStarGate_c.h"
 
 extern "C" {
 u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
 
-int StarDoor::Render()
+int daStarGate_c::Render()
 {
     if (IsAreaShowing((s8)mAngleX) != 0 ||
         IsAreaShowing((s8)mAngleZ) != 0) {

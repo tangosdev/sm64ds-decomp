@@ -1,15 +1,20 @@
 //cpp
+// @symbol _ZN12daStarGate_c17St_OpenClose_InitEP6Player
+#include "daStarGate_c.h"
+
 extern "C" {
-extern int ShowArea(int);
+int ShowArea(int areaID);
 extern int data_0209f318[];
-int _ZN6Camera9SetFlag_3Ev(void*);
-extern int func_02012694(int, void*);
-int func_ov100_02145ab4(char *c){
-  ShowArea((signed char)*(short*)(c+0x8c));
-  ShowArea((signed char)*(short*)(c+0x90));
-  _ZN6Camera9SetFlag_3Ev((void*)data_0209f318[0]);
-  *(int*)(c+0xa0) = -0x8a000;
-  func_02012694(0x4e, c+0x74);
-  return 1;
+int _ZN6Camera9SetFlag_3Ev(void *camera);
+int func_02012694(int soundID, void *position);
 }
+
+bool daStarGate_c::St_OpenClose_Init(Player *)
+{
+    ShowArea((s8)mAngleX);
+    ShowArea((s8)mAngleZ);
+    _ZN6Camera9SetFlag_3Ev((void *)data_0209f318[0]);
+    mTerminalVelocity = -0x8a000;
+    func_02012694(0x4e, &mCamSpacePosX);
+    return true;
 }

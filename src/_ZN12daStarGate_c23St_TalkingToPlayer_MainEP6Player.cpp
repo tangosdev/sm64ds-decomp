@@ -1,19 +1,20 @@
-extern int func_ov100_02145014(void);
-extern int _ZN6Player12GetTalkStateEv(char* p);
-extern void func_ov100_02145e10(char* c, char* a);
-extern int func_ov100_02145e74(char* c, char* a);
-extern void func_ov100_02145f68(char* c, void* p, char* a2);
-extern signed char data_ov100_02148390[];
-extern int data_ov100_02148964;
+//cpp
+// @symbol _ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player
+#include "daStarGate_c.h"
+#include "Player.h"
 
-int func_ov100_02145b9c(char* r5, char* r4){
+extern "C" int func_ov100_02145014(void);
+extern daStarGateInfo data_ov100_02148390[];
+
+bool daStarGate_c::St_TalkingToPlayer_Main(Player *player)
+{
   func_ov100_02145014();
-  if (_ZN6Player12GetTalkStateEv(r4) == -1) {
-    if (data_ov100_02148390[*(int*)(r5 + 8) * 6] == 0x50) {
-      func_ov100_02145e10(r5, r4);
-    } else if (func_ov100_02145e74(r5, r4) == 0) {
-      func_ov100_02145f68(r5, &data_ov100_02148964, r4);
+  if (player->GetTalkState() == -1) {
+    if (data_ov100_02148390[param1].numStars == 0x50) {
+      TryOpenDoor(player);
+    } else if (!IsInFrontOfPlayer(player)) {
+      ChangeState(&ST_STAY_CLOSED, player);
     }
   }
-  return 1;
+  return true;
 }

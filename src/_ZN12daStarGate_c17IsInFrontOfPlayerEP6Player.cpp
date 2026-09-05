@@ -1,14 +1,21 @@
-extern int AngleDiff(int a, int b);
-int func_ov100_02145e74(char* r0, char* r1){
+//cpp
+// @symbol _ZN12daStarGate_c17IsInFrontOfPlayerEP6Player
+#include "daStarGate_c.h"
+#include "Player.h"
+
+extern "C" int AngleDiff(int a, int b);
+
+bool daStarGate_c::IsInFrontOfPlayer(Player *player)
+{
   int v, z, a;
-  v = *(int*)(r0+0x80); if (v < 0) v = -v; if (v > 0x82000) goto fail;
-  v = *(int*)(r0+0x84); if (v < 0) v = -v; if (v > 0x32000) goto fail;
-  z = *(int*)(r0+0x88);
+  v = mScaleX; if (v < 0) v = -v; if (v > 0x82000) goto fail;
+  v = mScaleY; if (v < 0) v = -v; if (v > 0x32000) goto fail;
+  z = mScaleZ;
   v = (z < 0) ? -z : z; if (v > 0x78000) goto fail;
-  if (z < 0) a = *(short*)(r0+0x8e);
-  else a = *(short*)(r0+0x8e) + 0x8000;
+  if (z < 0) a = mAngleY;
+  else a = mAngleY + 0x8000;
   a = (short)a;
-  if (AngleDiff(a, *(short*)(r1+0x8e)) < 0x2000) return 1;
+  if (AngleDiff(a, player->mAngleY) < 0x2000) return true;
 fail:
-  return 0;
+  return false;
 }

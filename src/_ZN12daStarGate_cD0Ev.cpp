@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN8StarDoorD0Ev
+// @symbol _ZN12daStarGate_cD0Ev
 
-#include "StarDoor.h"
+#include "daStarGate_c.h"
 
-StarDoor::~StarDoor()
+daStarGate_c::~daStarGate_c()
 {
 }

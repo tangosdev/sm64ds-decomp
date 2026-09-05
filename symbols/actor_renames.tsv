@@ -2958,13 +2958,13 @@ ov100	0x021442dc	func_ov100_021442dc	UnchainedChomp_Spawn	spawnfunc
 ov100	0x021442dc	UnchainedChomp_Spawn	daWanwan2_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x0214589c	func_ov100_0214589c	Door_Spawn	spawnfunc
 ov100	0x0214589c	Door_Spawn	daDoor_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov100	0x021458d4	func_ov100_021458d4	_ZN8StarDoorD1Ev	vtable slot 16 (was _ZN4DoorD1Ev)
-ov100	0x02145904	func_ov100_02145904	_ZN8StarDoorD0Ev	vtable slot 17 (was _ZN4DoorD0Ev)
-ov100	0x02145fbc	func_ov100_02145fbc	_ZN8StarDoor16CleanupResourcesEv	vtable slot 3 (was _ZN4Door16CleanupResourcesEv)
-ov100	0x02145fe0	func_ov100_02145fe0	_ZN8StarDoor16OnPendingDestroyEv	vtable slot 12 (was _ZN4Door16OnPendingDestroyEv)
-ov100	0x02145fe4	func_ov100_02145fe4	_ZN8StarDoor6RenderEv	vtable slot 9 (was _ZN4Door6RenderEv)
-ov100	0x021460dc	func_ov100_021460dc	_ZN8StarDoor8BehaviorEv	vtable slot 6 (was _ZN4Door8BehaviorEv)
-ov100	0x0214612c	func_ov100_0214612c	_ZN8StarDoor13InitResourcesEv	vtable slot 0 (was _ZN4Door13InitResourcesEv)
+ov100	0x021458d4	func_ov100_021458d4	_ZN12daStarGate_cD1Ev	vtable slot 16 (was _ZN4DoorD1Ev); corrected to the ROM-RTTI-backed class identity
+ov100	0x02145904	func_ov100_02145904	_ZN12daStarGate_cD0Ev	vtable slot 17 (was _ZN4DoorD0Ev); corrected to the ROM-RTTI-backed class identity
+ov100	0x02145fbc	func_ov100_02145fbc	_ZN12daStarGate_c16CleanupResourcesEv	vtable slot 3 (was _ZN4Door16CleanupResourcesEv); corrected to the ROM-RTTI-backed class identity
+ov100	0x02145fe0	func_ov100_02145fe0	_ZN12daStarGate_c16OnPendingDestroyEv	vtable slot 12 (was _ZN4Door16OnPendingDestroyEv); corrected to the ROM-RTTI-backed class identity
+ov100	0x02145fe4	func_ov100_02145fe4	_ZN12daStarGate_c6RenderEv	vtable slot 9 (was _ZN4Door6RenderEv); corrected to the ROM-RTTI-backed class identity
+ov100	0x021460dc	func_ov100_021460dc	_ZN12daStarGate_c8BehaviorEv	vtable slot 6 (was _ZN4Door8BehaviorEv); corrected to the ROM-RTTI-backed class identity
+ov100	0x0214612c	func_ov100_0214612c	_ZN12daStarGate_c13InitResourcesEv	vtable slot 0 (was _ZN4Door13InitResourcesEv); corrected to the ROM-RTTI-backed class identity
 ov100	0x021461d4	func_ov100_021461d4	StarDoor_Spawn	spawnfunc
 ov100	0x021461d4	StarDoor_Spawn	daStarGate_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x0214620c	func_ov100_0214620c	_ZN4FishD1Ev	vtable slot 16
@@ -3165,3 +3165,28 @@ ov016	0x02112ef4	_ZN23FloatOnWaterPlatformJrbD1Ev	_ZN13daObjKi_Ita_cD1Ev	ROM RTT
 ov016	0x02112f44	_ZN23FloatOnWaterPlatformJrbD0Ev	_ZN13daObjKi_Ita_cD0Ev	ROM RTTI class identity; unchanged function address; vtable slot 17
 ov016	0x02112fa8	_ZN23FloatOnWaterPlatformJrb13InitResourcesEv	_ZN13daObjKi_Ita_c13InitResourcesEv	ROM RTTI class identity; unchanged function address; vtable slot 0
 ov016	0x02114bcc	_ZTV23FloatOnWaterPlatformJrb	_ZTV13daObjKi_Ita_c	ROM RTTI class identity; unchanged public vtable address point
+ov100	0x021458d4	_ZN8StarDoorD1Ev	_ZN12daStarGate_cD1Ev	ROM RTTI class identity; unchanged vtable slot 16 ownership
+ov100	0x02145904	_ZN8StarDoorD0Ev	_ZN12daStarGate_cD0Ev	ROM RTTI class identity; unchanged vtable slot 17 ownership
+ov100	0x02145948	func_ov100_02145948	_ZN12daStarGate_c18St_StayClosed_MainEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, state transitions, and PTMF target
+ov100	0x02145988	func_ov100_02145988	_ZN12daStarGate_c17St_OpenClose_MainEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, state transitions, and PTMF target
+ov100	0x02145ab4	func_ov100_02145ab4	_ZN12daStarGate_c17St_OpenClose_InitEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, and PTMF target
+ov100	0x02145b10	func_ov100_02145b10	_ZN12daStarGate_c17St_Unlocking_MainEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, state transitions, and PTMF target
+ov100	0x02145b7c	func_ov100_02145b7c	_ZN12daStarGate_c17St_Unlocking_InitEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, and PTMF target
+ov100	0x02145b9c	func_ov100_02145b9c	_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, state transitions, and PTMF target
+ov100	0x02145c2c	func_ov100_02145c2c	_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, and PTMF target
+ov100	0x02145c58	func_ov100_02145c58	_ZN12daStarGate_c12St_Wait_MainEP6Player	lineage-supported private state name and Player pointer spelling; ROM proves daStarGate_c ownership, one pointer argument, state transitions, and PTMF target
+ov100	0x02145e10	func_ov100_02145e10	_ZN12daStarGate_c11TryOpenDoorEP6Player	lineage-supported helper name and Player pointer spelling; exclusive daStarGate_c callers and actor/player field accesses prove ownership and call shape
+ov100	0x02145e74	func_ov100_02145e74	_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player	lineage-supported helper name and Player pointer spelling; exclusive daStarGate_c callers and actor/player field accesses prove ownership and call shape
+ov100	0x02145f00	func_ov100_02145f00	_ZN12daStarGate_c26CalculateRelativePlayerPosEv	lineage-supported helper name; exclusive Behavior caller and writes to daStarGate_c relative-position fields prove ownership
+ov100	0x02145f68	func_ov100_02145f68	_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player	lineage-supported helper, nested State, and Player pointer spellings; ROM proves daStarGate_c ownership, two pointer arguments, the 0x10 State layout, and PTMF dispatch
+ov100	0x02145fbc	_ZN8StarDoor16CleanupResourcesEv	_ZN12daStarGate_c16CleanupResourcesEv	ROM RTTI class identity; unchanged vtable slot 3 ownership
+ov100	0x02145fe0	_ZN8StarDoor16OnPendingDestroyEv	_ZN12daStarGate_c16OnPendingDestroyEv	ROM RTTI class identity; unchanged vtable slot 12 ownership
+ov100	0x02145fe4	_ZN8StarDoor6RenderEv	_ZN12daStarGate_c6RenderEv	ROM RTTI class identity; unchanged vtable slot 9 ownership
+ov100	0x021460dc	_ZN8StarDoor8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	ROM RTTI class identity; unchanged vtable slot 6 ownership and typed state-main PTMF dispatch
+ov100	0x0214612c	_ZN8StarDoor13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	ROM RTTI class identity; unchanged vtable slot 0 ownership and initial-state transition
+ov100	0x021483cc	_ZTV8StarDoor	_ZTV12daStarGate_c	ROM RTTI class identity; unchanged public vtable address point
+ov100	0x02148954	data_ov100_02148954	_ZN12daStarGate_c13ST_OPEN_CLOSEE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
+ov100	0x02148964	data_ov100_02148964	_ZN12daStarGate_c14ST_STAY_CLOSEDE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
+ov100	0x02148974	data_ov100_02148974	_ZN12daStarGate_c7ST_WAITE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
+ov100	0x02148984	data_ov100_02148984	_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
+ov100	0x02148994	data_ov100_02148994	_ZN12daStarGate_c12ST_UNLOCKINGE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets

@@ -1,21 +1,17 @@
 //cpp
-// @symbol _ZN8StarDoor13InitResourcesEv
+// @symbol _ZN12daStarGate_c13InitResourcesEv
 
 #include "Model.h"
 #include "SharedFilePtr.h"
-#include "StarDoor.h"
+#include "daStarGate_c.h"
 
-extern "C" {
-void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
-int func_ov100_02145f68(StarDoor *door, void *callback, int argument);
-}
+extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 
 extern SharedFilePtr data_ov100_02148934;
 extern u8 data_0209f250;
 extern int data_0209f394[];
-extern int data_ov100_02148974[];
 
-int StarDoor::InitResources()
+int daStarGate_c::InitResources()
 {
     param1 = (u32)param1 >> 16;
 
@@ -27,7 +23,7 @@ int StarDoor::InitResources()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    func_ov100_02145f68(this, data_ov100_02148974,
-                        data_0209f394[data_0209f250]);
+    ChangeState(&ST_WAIT,
+                (Player *)data_0209f394[data_0209f250]);
     return 1;
 }

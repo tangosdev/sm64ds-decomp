@@ -1,9 +1,12 @@
-extern int func_ov100_02144fcc(void *c, void *p);
-extern void func_ov100_02145f68(void *c, void *p, void *a2);
-extern char data_ov100_02148974[];
-int func_ov100_02145948(void *c, void *a1) {
-    if (func_ov100_02144fcc(c, a1)) {
-        func_ov100_02145f68(c, data_ov100_02148974, a1);
-    }
-    return 1;
+//cpp
+// @symbol _ZN12daStarGate_c18St_StayClosed_MainEP6Player
+#include "daStarGate_c.h"
+
+extern "C" int func_ov100_02144fcc(daStarGate_c *gate, Player *player);
+
+bool daStarGate_c::St_StayClosed_Main(Player *player)
+{
+    if (func_ov100_02144fcc(this, player))
+        ChangeState(&ST_WAIT, player);
+    return true;
 }

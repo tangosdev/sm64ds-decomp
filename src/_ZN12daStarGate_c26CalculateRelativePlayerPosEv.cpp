@@ -1,18 +1,22 @@
-// @symbol func_ov100_02145f00
-/* recovered: shared common types */
-#include "common.h"
-extern void Vec3_Sub(struct Vector3* out, struct Vector3* a, struct Vector3* b);
-extern void Vec3_RotateYAndTranslate(struct Vector3* out, void* m, int ang, struct Vector3* in);
+//cpp
+// @symbol _ZN12daStarGate_c26CalculateRelativePlayerPosEv
+#include "daStarGate_c.h"
+
+#include "Player.h"
+
+extern "C" void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
+extern "C" void Vec3_RotateYAndTranslate(Vector3* out, void* m, int ang, Vector3* in);
 
 extern unsigned char data_0209f250;
-extern char* data_0209f394[];
+extern Player* data_0209f394[];
 extern char data_020a0ebc[];
 
-char* func_ov100_02145f00(char* c)
+Player *daStarGate_c::CalculateRelativePlayerPos()
 {
-    struct Vector3 tmp;
-    char* p = data_0209f394[data_0209f250];
-    Vec3_Sub(&tmp, (struct Vector3*)(p + 0x5c), (struct Vector3*)(c + 0x5c));
-    Vec3_RotateYAndTranslate((struct Vector3*)(c + 0x80), data_020a0ebc, (short)(-*(short*)(c + 0x8e)), &tmp);
-    return p;
+    Vector3 tmp;
+    Player* player = data_0209f394[data_0209f250];
+    Vec3_Sub(&tmp, (Vector3*)&player->mPosX, (Vector3*)&mPosX);
+    Vec3_RotateYAndTranslate((Vector3*)&mScaleX, data_020a0ebc,
+                             (short)-mAngleY, &tmp);
+    return player;
 }

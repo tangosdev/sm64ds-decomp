@@ -1,8 +1,13 @@
-extern void func_02012694(int a, char *b);
-extern void func_ov100_02145070(int v);
+//cpp
+// @symbol _ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player
+#include "daStarGate_c.h"
 
-int func_ov100_02145c2c(char *c) {
-    func_02012694(0xb8, c + 0x74);
+extern "C" void func_02012694(int soundID, void *position);
+extern "C" void func_ov100_02145070(int value);
+
+bool daStarGate_c::St_TalkingToPlayer_Init(Player *)
+{
+    func_02012694(0xb8, &mCamSpacePosX);
     func_ov100_02145070(0x87);
-    return 1;
+    return true;
 }

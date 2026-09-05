@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN8StarDoor16OnPendingDestroyEv
+// @symbol _ZN12daStarGate_c16OnPendingDestroyEv
 
-#include "StarDoor.h"
+#include "daStarGate_c.h"
 
-void StarDoor::OnPendingDestroy()
+void daStarGate_c::OnPendingDestroy()
 {
 }

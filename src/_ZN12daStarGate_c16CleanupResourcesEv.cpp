@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN8StarDoor16CleanupResourcesEv
+// @symbol _ZN12daStarGate_c16CleanupResourcesEv
 
 #include "SharedFilePtr.h"
-#include "StarDoor.h"
+#include "daStarGate_c.h"
 
 extern SharedFilePtr data_ov100_02148934;
 
-int StarDoor::CleanupResources()
+int daStarGate_c::CleanupResources()
 {
     data_ov100_02148934.Release();
     return 1;

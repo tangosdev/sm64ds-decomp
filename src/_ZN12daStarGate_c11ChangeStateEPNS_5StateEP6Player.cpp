@@ -1,4 +1,11 @@
 //cpp
-struct C; typedef int (C::*PMF)(int);
-struct C { char pad[0x110]; PMF *pp; };
-extern "C" int func_ov100_02145f68(C *c, PMF *p, int a2) { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(a2); }
+// @symbol _ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player
+#include "daStarGate_c.h"
+
+bool daStarGate_c::ChangeState(State *nextState, Player *player)
+{
+    mState = nextState;
+    if (mState->init == 0)
+        return true;
+    return (this->*(mState->init))(player);
+}
