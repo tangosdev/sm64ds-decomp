@@ -21,6 +21,16 @@
 // dispatches slot 31 (Kill) virtually, which is why 31 is bound rather than
 // trapped: the first ground-pound of a crate reaches it.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
 #include "Actor.h"
@@ -93,7 +103,7 @@ static void hmc_trap_report(void *self, int slot)
     static int __fastcall hmc_trap##n(void *s, void *) \
     { hmc_trap_report(s, n); return 0; }
 HMC_TRAP(13) HMC_TRAP(14) HMC_TRAP(20) HMC_TRAP(22)
-HMC_TRAP(25) HMC_TRAP(26) HMC_TRAP(27) HMC_TRAP(28) HMC_TRAP(29) HMC_TRAP(30)
+HMC_TRAP(25) HMC_TRAP(26) HMC_TRAP(27) HMC_TRAP(28) HMC_TRAP(29)
 #undef HMC_TRAP
 /* Slots 23/24 take the three-parameter shape so they emit `ret 4`: their one
    dispatch site each is now thiscall (Actor_OnAttacked2Dispatch.cpp /
@@ -145,6 +155,13 @@ static int __fastcall crate_yoshi(void *s, void *)
 /* slot 19's second argument arrives on the stack, the cap_egg reading */
 static int __fastcall crate_egg(void *s, void *, void *o)
 { func_ov098_02139e78((char *)s, (char *)o); return 0; }
+/* Slot 29, OnAimedAtWithEgg: the Crate does NOT override it. _ZTV5Crate
+   (ov098 0x0213c534) holds the arm9 base 0x02010124 there, so this is the
+   ROM's word. It was trapped, and it has to answer now because slot 30 below
+   is the Actor base body, whose one job is to add slot 29's result to y. */
+extern "C" int _ZN5Actor16OnAimedAtWithEggEv(void *self);
+static int __fastcall crate_aimed(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
 /* Slot 21 is OnGroundPounded(Actor &other), and its argument arrives the way
    slot 19's does: on the stack. The ov098 body reads only r0 and ignores the
    pounder, but the HOST caller still pushes it, because the slot's
@@ -192,7 +209,7 @@ extern "C" void hal_fill_crate_vtable(void)
     vt[26] = (void *)hmc_trap26;
     vt[27] = (void *)hmc_trap27;
     vt[28] = (void *)hmc_trap28;
-    vt[29] = (void *)hmc_trap29;
-    vt[30] = (void *)hmc_trap30;
+    vt[29] = (void *)crate_aimed;   /* Actor::OnAimedAtWithEgg, the ROM's word */
+    vt[30] = (void *)port_actor_s30_base;
     vt[31] = (void *)crate_kill;
 }

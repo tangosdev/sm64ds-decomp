@@ -2119,3 +2119,39 @@ func_ov002_020b4fc4  REAL_DECOMP  SEATQSWITCH.md#slot-21  3/3 words (mov r1,#0; 
 # on a brick declined and faulted from inside St_PunchKick. Its src is a real
 # decomp (the marker records how the NAME was recovered, not the body's origin).
 func_ov002_020b36dc  REAL_DECOMP  brick-punch#slot-24  OnKicked 0xac: id +0xc == 0x2e -> Kill(slot 31); else attacker +8 == 3 return, id == 0x11 needs +8 == 2 else Kill, else Kill; slot 31 reached as a C++ virtual (thiscall). match.py --module ov002 strict-reloc: 2004/b56 byte match
+#
+# ---------------------------------------------------------------------------
+# lane EGG-SLOT30, the Yoshi-egg flight softlock. Vtable slot 30
+# (Actor::OnAimedAtWithEggReturnVec) was trapped in 85 of 86 fills, and the
+# egg's in-flight state dispatches it on its target EVERY FRAME, so throwing an
+# egg at any targetable actor froze the egg in mid-air. The seat is the ROM's
+# own arm9 base body 0x020100dc. That base body's one job is to add the result
+# of slot 29 (Actor::OnAimedAtWithEgg) to y -- so the two classes whose ROM
+# slot 29 is their OWN override had to be seated at the same time, or a seated
+# slot 30 would have dispatched straight into a trapped slot 29 and only moved
+# the freeze one slot along.
+#
+# Both bodies are two-instruction constant returns. There is no room for a
+# guess in either: the body is fully determined by the two ROM words, and
+# match.py reproduces those words from this source on 1.2/base, 1.2/sp2 and
+# 1.2/sp2p3 with strict relocs. The marker on each records how the NAME was
+# recovered (from the vtable slot), not where the body came from.
+#
+#   func_ov100_021442d4  ROM: 0000a0e3 1eff2fe1
+#                        = e3a00000 mov r0, #0        / e12fff1e bx lr
+#                        src: `return 0;`             -- 2/2 words
+#   func_ov100_02141fa8  ROM: 820aa0e3 1eff2fe1
+#                        = e3a00a82 mov r0, #0x82000  / e12fff1e bx lr
+#                        src: `return 532480;` (0x82000 == 130.0 in 20.12)
+#                                                     -- 2/2 words
+#
+# Commands (both, all three configs, MATCH on each):
+#   python tools/match.py --c src/func_ov100_021442d4.c --func func_ov100_021442d4 \
+#     --addr 0x021442d4 --size 0x8 --module ov100 --trio --strict-relocs
+#   python tools/match.py --c src/func_ov100_02141fa8.c --func func_ov100_02141fa8 \
+#     --addr 0x02141fa8 --size 0x8 --module ov100 --trio --strict-relocs
+#
+# id 337, ov100, UnchainedChomp (daWanwan2_c) slot 29 -- SEATED by this lane.
+func_ov100_021442d4  REAL_DECOMP  egg-slot30#slot-29  2/2 words (mov r0,#0; bx lr) under 2004/b56 --module ov100 strict-reloc, all three 1.2 configs; UnchainedChomp::OnAimedAtWithEgg returns a 0 egg lock-on radius
+# id 220, ov100, RollingIronBall (daIbl_c) slot 29 -- SEATED by this lane.
+func_ov100_02141fa8  REAL_DECOMP  egg-slot30#slot-29  2/2 words (mov r0,#0x82000; bx lr) under 2004/b56 --module ov100 strict-reloc, all three 1.2 configs; RollingIronBall::OnAimedAtWithEgg returns a 130.0 egg lock-on radius

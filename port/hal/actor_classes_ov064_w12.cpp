@@ -80,6 +80,16 @@
 // are matched, and __sinit_ov064_0211b59c builds the table -- so the whole cost
 // of that class is one verified host copy of 540 bytes of ARM.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
@@ -162,7 +172,7 @@ static void ov64w12_trap_report(void *self, int slot)
 #define OV64W12_TRAP(n) \
     static int __fastcall ov64w12_trap##n(void *s, void *) \
     { ov64w12_trap_report(s, n); return 0; }
-OV64W12_TRAP(13) OV64W12_TRAP(14) OV64W12_TRAP(30)
+OV64W12_TRAP(13) OV64W12_TRAP(14)
 #undef OV64W12_TRAP
 
 static int __fastcall cl_binit(void *s, void *)
@@ -274,7 +284,7 @@ extern "C" void hal_fill_clam_vtable(void)
     vt[27] = (void *)cl_mega;
     vt[28] = (void *)cl_under;
     vt[29] = (void *)cl_egg;
-    vt[30] = (void *)ov64w12_trap30;
+    vt[30] = (void *)port_actor_s30_base;
     /* 31 slots: Clam is an Actor, not a Platform. No slot 31. */
 }
 

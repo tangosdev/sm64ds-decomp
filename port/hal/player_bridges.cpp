@@ -465,6 +465,11 @@ extern "C" signed char g_party_render_ghost[16] = {
 extern "C" {
 extern void *port_first_live_actor_of_class(unsigned id);   /* hal/actor_registry.cpp */
 extern unsigned port_unique_id_of_actor(void *actor);       /* hal/actor_registry.cpp */
+/* the ROM's own cap-pickup entry point; src/_ZN6Player18SetNewHatCharacterEjjb.cpp,
+   called by the cap actor at src/func_ov002_020b74d0.c:51. Used only by the
+   SM64DS_YOSHI_CAP repro driver below. */
+extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned a, unsigned b,
+                                               bool c);
 }
 extern "C" void port_adventure_probe(int frame)
 {
@@ -539,6 +544,53 @@ extern "C" void port_adventure_probe(int frame)
                 std::fprintf(stderr, "[eggrepro] f%d mouth-transfer on %p "
                              "(b0 now 0x%x)\n", frame, (void *)h,
                              *(unsigned *)(h + 0xb0));
+                std::fflush(stderr);
+            }
+        }
+        /* SM64DS_YOSHI_CAP=<frame>: the CHARACTER-CAP pickup, driven at a
+           chosen frame while Yoshi is holding an enemy in his mouth.
+
+           This is the ordinary single-player route into
+           func_ov002_020bdb50's slot-19 dispatch. The cap actor's own state
+           machine (src/func_ov002_020b74d0.c:51, case 1) does exactly this
+           call and nothing else on the way in:
+
+               Player::SetNewHatCharacter(cap->mCharacter & 0xff, 0, 0)
+
+           and SetNewHatCharacter's first act is func_ov002_020bdb50(this, 0),
+           which -- because arg is 0 and mObjInMouth is non-null -- reads the
+           held enemy's vtable slots 18 and 19. Nothing guards it: there is no
+           "is Yoshi holding something" check anywhere on that path.
+
+           The harness cannot walk Yoshi into a cap block headless (it cannot
+           steer him at a specific piece of level furniture), so this makes the
+           cap actor's OWN call, with the cap actor's OWN arguments, at a
+           chosen frame. Everything downstream -- SetNewHatCharacter,
+           func_ov002_020bdb50, the two vtable dispatches -- is the game's.
+           Off unless the env is set, and it fires once. */
+        if (pp) {
+            static int capf = -2;
+            static unsigned capchr = 0u;
+            static int capdone = 0;
+            if (capf == -2) {
+                const char *e = std::getenv("SM64DS_YOSHI_CAP");
+                capf = e ? std::atoi(e) : -1;
+                const char *c2 = std::getenv("SM64DS_YOSHI_CAP_CHAR");
+                if (c2) capchr = (unsigned)std::strtoul(c2, 0, 0);
+            }
+            if (capf >= 0 && !capdone && frame >= capf) {
+                char *h = *(char **)(pp + 0x360);
+                std::fprintf(stderr, "[caprepro] f%d held=%p -> "
+                             "SetNewHatCharacter(%u, 0, 0)\n",
+                             frame, (void *)h, capchr);
+                std::fflush(stderr);
+                capdone = 1;
+                _ZN6Player18SetNewHatCharacterEjjb(pp, capchr, 0, 0);
+                std::fprintf(stderr, "[capheld] after cap: held=%d\n",
+                             *(void **)(pp + 0x360) ? 1 : 0);
+                std::fprintf(stderr, "[capchar] mCharacter=%u mHatCharacter=%u\n",
+                             (unsigned)*(unsigned char *)(pp + 0x6d9),
+                             (unsigned)*(unsigned char *)(pp + 0x6dd));
                 std::fflush(stderr);
             }
         }

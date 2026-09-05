@@ -171,6 +171,16 @@
 // the dispatch site pushes the colliding Actor and the callee pops it, so a
 // two-parameter thunk would emit a bare `ret` and desync the caller.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include <cstdlib>
 
 #include "dsstate_seg.h"
@@ -397,7 +407,7 @@ static void ov36_fill_shared(void *volatile *vt)
     vt[27] = (void *)ov36_mega;     /* Actor::OnHitByMegaChar(Player&) */
     vt[28] = (void *)ov36_under;    /* Actor::OnHitFromUnderneath(Actor&) */
     vt[29] = (void *)ov36_aimed;    /* Actor::OnAimedAtWithEgg */
-    vt[30] = (void *)ov36_trap30;   /* Actor::OnAimedAtWithEggReturnVec, SRET */
+    vt[30] = (void *)port_actor_s30_base;   /* Actor::OnAimedAtWithEggReturnVec, SRET */
 }
 
 // ============================================================================

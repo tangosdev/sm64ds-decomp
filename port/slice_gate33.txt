@@ -290,6 +290,12 @@ src/RollingIronBall_Spawn.c
 src/_ZN15RollingIronBall13InitResourcesEv.cpp
 src/_ZN15RollingIronBall16CleanupResourcesEv.cpp
 src/_ZN15RollingIronBall8BehaviorEv.cpp
+# slot 29, RollingIronBall::OnAimedAtWithEgg (ov100 0x02141fa8, 8 bytes,
+# `return 0x82000` == 130.0): the ROM word in _ZTV15RollingIronBall slot 29,
+# needed for the same reason UnchainedChomp's is -- the class's slot 30 is now
+# the Actor base body, which dispatches slot 29. Byte-matches on all three
+# 1.2 configs with strict relocs.
+src/func_ov100_02141fa8.c
 src/_ZN15RollingIronBall6RenderEv.cpp
 src/_ZN15RollingIronBallD1Ev.c
 src/_ZN15RollingIronBallD0Ev.c

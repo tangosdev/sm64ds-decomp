@@ -166,6 +166,16 @@
 // transcription of src/__sinit_ov045_02112280.c, four calls, and the two file
 // ids in it (1635 model, 1636 clsn) are the ROM's own, read from that body.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
@@ -234,7 +244,7 @@ static void ov45_trap_report(void *self, int slot)
 #define OV45_TRAP(n) \
     static int __fastcall ov45_trap##n(void *s, void *) \
     { ov45_trap_report(s, n); return 0; }
-OV45_TRAP(13) OV45_TRAP(14) OV45_TRAP(17) OV45_TRAP(30)
+OV45_TRAP(13) OV45_TRAP(14) OV45_TRAP(17)
 #undef OV45_TRAP
 
 static int __fastcall ov45_binit(void *s, void *)
@@ -331,7 +341,7 @@ static void ov45_fill_shared(void *volatile *vt)
     vt[27] = (void *)ov45_mega;
     vt[28] = (void *)ov45_under;
     vt[29] = (void *)ov45_egg;
-    vt[30] = (void *)ov45_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- the mount bring-up ----------------------------------------------------

@@ -42,6 +42,16 @@
 // Yoshi egg at anything as Mario. FortressWall is a Platform whose slot 30 is
 // the arm9 base body, filled by the shared pass.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
@@ -92,7 +102,7 @@ static void we_trap_report(void *self, int slot)
 #define WE_TRAP(n) \
     static int __fastcall we_trap##n(void *s, void *) \
     { we_trap_report(s, n); return 0; }
-WE_TRAP(13) WE_TRAP(14) WE_TRAP(16) WE_TRAP(17) WE_TRAP(19) WE_TRAP(30)
+WE_TRAP(13) WE_TRAP(14) WE_TRAP(16) WE_TRAP(17) WE_TRAP(19)
 #undef WE_TRAP
 
 // ---- the ten shared lifecycle halves plus Actor's tail ---------------------
@@ -118,6 +128,15 @@ static int __fastcall we_heap(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::OnHeapCreated(); }
 static int __fastcall we_yoshi(void *s, void *)
 { return _ZN5Actor13OnYoshiTryEatEv(s); }
+/* Slot 29, OnAimedAtWithEgg. The shared default used to be we_trap19, which
+   is the slot-19 trap wearing the wrong hat; the two classes that never
+   overwrite it -- BILL_BLASTER (data_ov079_02127fb8) and FORTRESS_WALL
+   (_ZTV12FortressWall) -- both hold the arm9 base 0x02010124 in ROM slot 29,
+   so the base body IS their word. It has to answer now because the shared
+   slot 30 is the Actor base body, which dispatches slot 29. */
+extern "C" int _ZN5Actor16OnAimedAtWithEggEv(void *self);
+static int __fastcall we_aimed(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
 static int __fastcall we_v50(void *s, void *)
 { return _ZN5Actor9Virtual50Ev(s); }
 static int __fastcall we_pounded(void *s, void *, void *o)
@@ -168,8 +187,8 @@ static void we31_fill_shared(void **vt)
     vt[26] = (void *)we_cannon;
     vt[27] = (void *)we_mega;
     vt[28] = (void *)we_under;
-    vt[29] = (void *)we_trap19;   /* overwritten where a class overrides it */
-    vt[30] = (void *)we_trap30;
+    vt[29] = (void *)we_aimed;    /* overwritten where a class overrides it */
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ============================================================================

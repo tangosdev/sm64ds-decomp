@@ -75,6 +75,16 @@
 // with the link closed and only the seat to write. Until then they have no
 // registry row, so the spawn gate names them as skipped instead of dying.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include <cstdlib>
 
@@ -177,7 +187,7 @@ static int __fastcall bw_turn_egg(void *s, void *, void *p)
    Their own `ret` is unreachable -- port_actor_slot_decline aborts or raises
    for the quarantine handler -- so the two-parameter shape is dead code. */
 #define BW_TRAP(n)     static int __fastcall bw_trap##n(void *s, void *)     { bw_trap_report(s, n); return 0; }
-BW_TRAP(21) BW_TRAP(22) BW_TRAP(27) BW_TRAP(29) BW_TRAP(30) BW_TRAP(31)
+BW_TRAP(21) BW_TRAP(22) BW_TRAP(27) BW_TRAP(29) BW_TRAP(31)
 #undef BW_TRAP
 
 /* Actor's own interaction tail. Slots 21..28 take an argument the __thiscall
@@ -202,6 +212,10 @@ static int __fastcall bw_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall bw_egg(void *s, void *)
 { return _ZN5Actor16OnAimedAtWithEggEv(s); }
+/* RollingIronBall's own slot 29, ov100 0x02141fa8 (slice_gate33). */
+extern "C" int func_ov100_02141fa8(void);
+static int __fastcall rib_aimed(void *, void *)
+{ return func_ov100_02141fa8(); }
 /* slot 31, the Platform tail; only the Platform tables below write it */
 static int __fastcall bw_kill(void *s, void *)
 { _ZN8Platform4KillEv(s); return 0; }
@@ -233,7 +247,7 @@ static void bw_fill_shared(void **vt)
     vt[27] = (void *)bw_mega;
     vt[28] = (void *)bw_under;
     vt[29] = (void *)bw_egg;
-    vt[30] = (void *)bw_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- CommonModel, the first time it is hosted ------------------------------
@@ -1695,8 +1709,10 @@ extern "C" void hal_fill_rolling_iron_ball_vtable(void)
        reference edge that links the TU. */
     vt[17] = (void *)rib_d0;
     /* 31 slots, a plain Actor table. Slot 29 (OnAimedAtWithEgg) is the ball's
-       own body (ov100 0x02141fa8), matched in src and in no slice. */
-    vt[29] = (void *)bw_trap29;
+       own body, ov100 0x02141fa8 -- the ROM word in _ZTV15RollingIronBall slot
+       29, on slice_gate33.txt now. Seated for the same reason UnchainedChomp's
+       is: slot 30 is the Actor base body, and it dispatches slot 29. */
+    vt[29] = (void *)rib_aimed;
 }
 
 // ---- WARP_PIPE (298, ov102) ------------------------------------------------

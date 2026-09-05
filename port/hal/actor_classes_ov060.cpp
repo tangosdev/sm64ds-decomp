@@ -61,6 +61,16 @@
 // (port/ov046_syms.txt). CLPS records carry no pointers; the copy cannot
 // diverge from the whole-image mount the loaders walk.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
@@ -303,7 +313,7 @@ static void ov60_trap_report(void *self, int slot)
 #define OV60_TRAP(n) \
     static int __fastcall ov60_trap##n(void *s, void *) \
     { ov60_trap_report(s, n); return 0; }
-OV60_TRAP(13) OV60_TRAP(14) OV60_TRAP(17) OV60_TRAP(30)
+OV60_TRAP(13) OV60_TRAP(14) OV60_TRAP(17)
 #undef OV60_TRAP
 
 static int __fastcall ov60_binit(void *s, void *)
@@ -395,7 +405,7 @@ static void ov60_fill_shared(void *volatile *vt)
     vt[27] = (void *)ov60_mega;
     vt[28] = (void *)ov60_under;
     vt[29] = (void *)ov60_egg;
-    vt[30] = (void *)ov60_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- the mount bring-up ----------------------------------------------------

@@ -94,6 +94,16 @@
 // .dsstate, so the guard has to roll back with it.
 
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 
@@ -218,7 +228,7 @@ static void rp_trap_report(void *self, int slot)
 #define RP_TRAP(n) \
     static int __fastcall rp_trap##n(void *s, void *) \
     { rp_trap_report(s, n); return 0; }
-RP_TRAP(13) RP_TRAP(14) RP_TRAP(30)
+RP_TRAP(13) RP_TRAP(14)
 #undef RP_TRAP
 
 static int __fastcall rp_binit(void *s, void *)
@@ -380,5 +390,5 @@ extern "C" void hal_fill_racing_penguin_vtable(void)
     vt[29] = (void *)rp_egg;
     /* Slot 30 declines: its ROM body returns a Vector3 by value and the sret
        contract is unproved -- the same reading gate 143 took next door. */
-    vt[30] = (void *)rp_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }

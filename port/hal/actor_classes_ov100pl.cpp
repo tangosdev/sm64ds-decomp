@@ -135,6 +135,16 @@
 //          DIFFERENT table from gate 73's Utm one at 0x02134c5c. See
 //          hal/actor_classes_ov091.cpp.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 
 #include "Actor.h"
@@ -277,7 +287,7 @@ static void pl_trap_report(void *self, int slot, const char *which)
 #define PL_TRAP(n) \
     static int __fastcall pl_trap##n(void *s, void *) \
     { pl_trap_report(s, n, "path-lift"); return 0; }
-PL_TRAP(13) PL_TRAP(14) PL_TRAP(30)
+PL_TRAP(13) PL_TRAP(14)
 #undef PL_TRAP
 /* the four ActorBase defaults the pure-intermediate base table carries and
    no live object can ever reach (see the header's six-site argument) */
@@ -397,7 +407,7 @@ static void pl_fill_shared(void *volatile *vt)
     vt[27] = (void *)pl_mega;
     vt[28] = (void *)pl_under;
     vt[29] = (void *)pl_egg;
-    vt[30] = (void *)pl_trap30;      /* returns a Vector3 by value; the SRET
+    vt[30] = (void *)port_actor_s30_base;      /* returns a Vector3 by value; the SRET
                                         contract is unproved -- scuttlebug   */
     vt[31] = (void *)pl_kill;        /* Platform::Kill, both tables          */
     vt[32] = (void *)pl_after_clsn;  /* the INHERITED extra virtual          */

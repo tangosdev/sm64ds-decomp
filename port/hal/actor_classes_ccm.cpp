@@ -45,6 +45,16 @@
 // unk_05c/060/064 and arms a 0x78-frame timer; Behavior waits for the player
 // within 0x180000, plays a sound, counts the timer down and kills the actor.
 #include <cstdio>
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 #include "dsstate_seg.h"
 #include "dtor_faces_cpp.h"
 #include <cstdlib>
@@ -161,7 +171,6 @@ static int __fastcall ccm_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ccm_aimed(void *s, void *)
 { return _ZN5Actor16OnAimedAtWithEggEv(s); }
-static int __fastcall ccm_trap30(void *s, void *) { ccm_trap_report(s, 30); return 0; }
 
 /* Slot 16, D1. The ROM body is an empty ~IceSlideManager: no member sub-objects
    (the header is plain u8 fields), so it is Actor::D2 alone, the ac_d1_actor_only
@@ -245,7 +254,7 @@ extern "C" void hal_fill_ice_slide_manager_vtable(void)
     vt[27] = (void *)ccm_mega;
     vt[28] = (void *)ccm_under;
     vt[29] = (void *)ccm_aimed;
-    vt[30] = (void *)ccm_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ============================================================================
@@ -533,7 +542,7 @@ static void ccm190_fill_shared(void **vt)
     vt[27] = (void *)ccm190_mega;
     vt[28] = (void *)ccm190_under;
     vt[29] = (void *)ccm190_aimed;
-    vt[30] = (void *)ccm190_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- ICE_SHEET fill (Platform, 32 slots) -----------------------------------
@@ -644,7 +653,7 @@ extern "C" void hal_fill_power_star_create_vtable(void)
     vt[27] = (void *)ccm190_mega;
     vt[28] = (void *)ccm190_under;
     vt[29] = (void *)ccm190_aimed;
-    vt[30] = (void *)ccm190_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- ONE_UP_LOGO fill (Actor, 31 slots, no Kill) ---------------------------
