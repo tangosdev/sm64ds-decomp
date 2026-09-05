@@ -99,6 +99,7 @@ import os
 import socket
 import sys
 import tempfile
+import threading
 import time
 
 # The longest a single windowed run should ever hold the slot is battery's
@@ -348,6 +349,78 @@ def slot(label="", timeout=None, poll=POLL_SECONDS):
     try:
         yield path
     finally:
+        release(path)
+
+
+# ---- HOLDING THE SLOT ACROSS A WHOLE PHASE (run link100, lane SLOT) --------
+#
+# WHY THE PER-LAUNCH LOCK IS THE BOTTLENECK. battery.py takes and drops this
+# lock around EACH walk_window launch, and a battery makes about ninety of them
+# over roughly a quarter of an hour. That serialises two different things at
+# once: it keeps two LANES apart, which is the job, and it also keeps a lane
+# apart from ITSELF, which is not -- a battery physically cannot run two of its
+# own rows side by side while every row wants the same lock. With eight lanes on
+# the box the queue is the whole cost of the evening.
+#
+# So a caller that wants several of its own children in flight has to hold the
+# slot across the PHASE and launch inside it. acquire() cannot simply become
+# re-entrant to allow that: test_acquire_blocks_a_second_acquire pins the
+# opposite contract on purpose -- a second acquire in the same process BLOCKS,
+# which is what makes a lost release show up as a hang instead of as two runs
+# quietly sharing a slot. Re-entrancy is therefore its own function, opted into
+# by name at the call site, and acquire()/release() are byte-for-byte what they
+# were.
+#
+# held() is the predicate the nesting is built on and is worth having alone: it
+# answers "is the lockfile mine right now" from the file itself rather than from
+# memory, so a lock broken as stale underneath us reads as NOT held and the next
+# nested call goes and takes it properly.
+# The depth is mutated from WORKER THREADS -- the whole point is that a phase
+# hold on the main thread lets several launcher threads run at once -- so it is
+# guarded. `n += 1` on a module global is not atomic, and a drifted counter here
+# would release the slot while a lane still had children in it.
+_nest_depth = 0
+_nest_guard = threading.Lock()
+
+
+def held(path=None):
+    """Does THIS process hold the slot right now, per the lockfile itself?"""
+    if path is None:
+        path = lock_path()
+    pid, _, _ = _read_holder(path)
+    return pid == os.getpid()
+
+
+@contextlib.contextmanager
+def slot_reentrant(label="", timeout=None, poll=POLL_SECONDS):
+    """slot(), except a nested use by a process that already holds it is free.
+
+    The outermost use acquires and releases exactly as slot() does; an inner use
+    inside it neither touches the lockfile nor waits, and its exit does not
+    release. Other lanes see one O_EXCL lockfile for the whole nested span and
+    are shut out for all of it, which is the property the lock exists for.
+    """
+    global _nest_depth
+    path = lock_path()
+    with _nest_guard:
+        nested = _nest_depth > 0 and held(path)
+        if nested:
+            _nest_depth += 1
+    if nested:
+        try:
+            yield path
+        finally:
+            with _nest_guard:
+                _nest_depth -= 1
+        return
+    path = acquire(label=label, timeout=timeout, poll=poll)
+    with _nest_guard:
+        _nest_depth += 1
+    try:
+        yield path
+    finally:
+        with _nest_guard:
+            _nest_depth -= 1
         release(path)
 
 
