@@ -6,8 +6,8 @@
     "extern_vtable": 165,
     "extern_vtable_classes": 168,
     "inline_asm": 13,
-    "launder_or_forced": 209,
-    "launder_sites": 438
+    "launder_or_forced": 208,
+    "launder_sites": 437
   },
   "exclusions": {
     "by_value_class_param": 54
@@ -53,15 +53,15 @@
     "unmigrated_total": 124
   },
   "shadow_decls": {
-    "local_body_no_include": 1039,
-    "local_body_no_include_cpp": 400,
-    "local_struct_body": 1880,
-    "local_struct_body_cpp": 1007,
-    "pad_layout": 462
+    "local_body_no_include": 1036,
+    "local_body_no_include_cpp": 397,
+    "local_struct_body": 1874,
+    "local_struct_body_cpp": 1001,
+    "pad_layout": 459
   },
   "totals": {
-    "c_extension": 5992,
-    "cpp_extension": 4407,
-    "src_files": 10399
+    "c_extension": 5972,
+    "cpp_extension": 4359,
+    "src_files": 10331
   }
 }
