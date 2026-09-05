@@ -3810,6 +3810,10 @@ src/func_ov006_020fc500.c:
     complete
     .text start:0x020fc500 end:0x020fc718
 
+src/func_ov006_020fc718.c:
+    complete
+    .text start:0x020fc718 end:0x020fc7d0
+
 src/func_ov006_020fc7d0.cpp:
     complete
     .text start:0x020fc7d0 end:0x020fc844
@@ -5219,6 +5223,10 @@ src/_ZN16dScMgSmartball_c8OnPushedEv.cpp:
 src/func_ov006_021147d0.c:
     complete
     .text start:0x021147d0 end:0x02114800
+
+src/func_ov006_02114800.c:
+    complete
+    .text start:0x02114800 end:0x02114b10
 
 src/func_ov006_02114b10.c:
     complete
