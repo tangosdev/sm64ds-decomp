@@ -568,6 +568,7 @@ extern "C" int port_party_member(int slot);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
+
 /* the real input processor (Stage::CheckInput) and its environment.
    Stage::Behavior calls it now (_ZTV5Stage slot 6, run link100 lane FRAME);
    this file calls it only on the frames that never dispatch the Stage at all
@@ -6910,6 +6911,212 @@ static int scene_window_run(void)
    host process needs its own main() to open the window and pump frames; the
    ROM's void main(void) links as a decomp TU that the host boot path calls,
    not as the process entry point. */
+/* ---- THE Ctrl BRIDGE, PUBLISHED AT THE ROM'S OWN BOUNDARY ----------------
+   (run link100, lane FRAME.)
+
+   _ZTV5Stage slot 6 runs the ROM's Stage::Behavior, and Stage::Behavior:107 is
+   Stage::CheckInput -- so the Ctrl block at data_0209f498 is filled from inside
+   port_actor_tick, at the head of the behaviour walk. Everything below used to
+   sit in the input phase immediately after a hand-placed CheckInput call.
+
+   The port hosts five of Ctrl's interior fields as SEPARATE arrays
+   (data_0209f4a0/a2/a4/a6/ac), so a copy is needed that the cartridge does not
+   need, and the only correct place for it is the instant the ROM's own write
+   finishes: after Stage::Behavior returns, before any other actor's Behavior
+   reads it. hal/stage_frame.cpp's slot-6 thunk calls this there.
+
+   The four statics are this frame's pad, stashed by the input phase above so
+   the publish can run from inside the tick without the frame loop's locals.
+   They are written every frame before port_actor_tick and read once after
+   Stage::Behavior, which is the whole of their lifetime. */
+static XPad g_fc_pad;
+static int  g_fc_pad_live;
+static int  g_fc_menu_on;
+static int  g_fc_selftest;
+
+extern "C" void port_frame_ctrl_publish(void)
+{
+    const XPad &pad = g_fc_pad;
+    const int pad_live = g_fc_pad_live;
+    const int menu_on = g_fc_menu_on;
+    const int selftest = g_fc_selftest;
+    (void)pad_live; (void)menu_on; (void)selftest;
+    /* main()'s own run_mode lambda, repeated here rather than shared, because
+       it is two terms and sharing it would mean giving a file-scope function a
+       reference to a frame-loop local. Same definition, same pin: a selftest is
+       always button mode, whatever settings.json says. */
+    const auto run_mode = [&]() -> int {
+        return selftest ? RUN_BUTTON : g_run_mode;
+    };
+
+            /* the matched TU writes its own data_0209f498 block; older
+               TUs read per-field split symbols -- copy the record out
+               ----------------------------------------------------------------
+               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
+               This copied slot 0 and only slot 0, which was right while the
+               port asserted one player and is the exact reason a second
+               player could receive input and still not move.
+
+               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
+               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
+               with Ctrl striding 0x18 per player. That is why
+               port/unmatched/Player_Behavior.cpp reads its stick angle as
+               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
+               on hardware that walks straight into player N's own Ctrl record.
+               The port hosts the five as SEPARATE arrays, so the same walk
+               lands inside data_0209f4a6's own storage instead, reading a byte
+               nobody wrote. Slot 0 worked because its offset is zero.
+
+               So the copy writes each player's fields at that same 0x18 stride,
+               which puts player N's values exactly where the ROM's walk looks
+               for them.
+
+               THE CEILING IS GONE, and it was never a layout fact. An
+               earlier revision of this comment said the split symbols could
+               not be enlarged because they sit interior to .dsstate and
+               growing them retires every BMP baseline. The first half was
+               wrong: they are SEPARATE host symbols, not interior addresses,
+               and this tree already sizes two of the family
+               (data_0209f4ac/data_0209f4ae) at 0x18 * 4 for exactly this
+               reason -- hal/actor_vtables.cpp carries the note about the stray
+               that taught it. The rest now match. Baselines do move, which is
+               what rung 1's position check is for. */
+            {
+                const char *q = (const char *)data_0209f498;
+                int np = (int)data_0209f21c;
+                if (np < 1) np = 1;
+                /* 0.3.2: sixteen. The five split arrays this fans into
+                   (hal/actor_vtables.cpp f49c/f49e/f4a0/f4ac/f4ae, and
+                   auto_bss.cpp's f4a2/f4a4/f4a6) are all 0x18 * kPortMaxPlayers
+                   now; the old cap at four was what kept slots 4..15 motionless
+                   in a wide match -- their records arrived and were never
+                   fanned out, so every peer agreed they stood still. */
+                if (np > kPortMaxPlayers) np = kPortMaxPlayers;
+                for (int pi = 0; pi < np; ++pi) {
+                    const char *r = q + pi * 0x18;
+                    const int o = pi * 0x18;
+                    /* THE BUTTONS, and leaving them out was the second input
+                       seam. Ctrl+0x04 is the HELD word and +0x06 is
+                       pressed-this-frame, and they are what every button
+                       reader in the game uses -- crouch among them. Fanning
+                       the stick fields and not these meant movement routed to
+                       the right player and one button family did not: crouch
+                       in the child's window crouched MARIO in the child's
+                       world. Same one-line character as the PadData[0]
+                       clobber, one layer further in. */
+                    *(short *)((char *)data_0209f49c + o) = *(const short *)(r + 0x04);
+                    *(short *)((char *)data_0209f49e + o) = *(const short *)(r + 0x06);
+                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
+                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
+                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
+                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
+                }
+            }
+            /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
+               stick. See the RUN_ mode block up by the menu enum for why this
+               is the game's own analog path and not a new one.
+
+               CheckInput has just written the D-PAD answer: magnitude pinned
+               at 0x1000, touching zero, direction quantized to the eight
+               table entries. That is right for a keyboard and wrong for a
+               stick, so when there IS a stick and it is off its rest, the
+               same five fields are written again the way CheckInput's TOUCH
+               branch writes them -- and every reader downstream, the walk
+               core included, cannot tell which branch filled them in.
+
+               The mapping, end to end. XInput reports each axis as +-32767,
+               so the deflection is the radius sqrt(lx^2+ly^2) clamped to the
+               stop, and the usable travel starts at XInput's own left-stick
+               floor (7849) rather than at zero, so a stick that rests a
+               little off centre is still at rest:
+
+                   mag = 0x1000 * (len - 7849) / (32767 - 7849)
+
+               clamped into 0..0x1000. Direction goes in as the touch screen's
+               axes -- x right, y DOWN, which is why the stick's up becomes a
+               negative dy -- and the angle through the ROM's own atan2 rather
+               than a host one, so it lands on the same table entry the
+               hardware would have picked.
+
+               What the game then does with it is entirely the game's:
+               func_ov002_020bf224 scales the speed target by mag/0x1000, so
+               the speed is linear in that deflection, and the walk/run flag
+               flips when mag crosses 0xdc7 with 0x80 of hysteresis -- 0xe47
+               of 0x1000 to break into a run and back under 0xdc7 to drop out
+               of it, which is 89.2 and 86.1 percent of the usable travel, or
+               91.8 and 89.4 percent of the whole stick once the dead zone is
+               counted back in. Those are the ROM's numbers and nothing here
+               touches them -- so running in this mode does mean pushing the
+               stick most of the way, which is what pushing the touch stick
+               most of the way did.
+
+               A stick inside the dead zone falls through with CheckInput's
+               answer untouched, which is button mode -- so analog mode on a
+               keyboard, or with the pad put down, is exactly the program that
+               shipped before. */
+            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
+             *
+             * Run mg16 lane MP4. Same shape as the three already gated -- it
+             * writes THIS console's stick straight into Ctrl slot 0, on the
+             * level path, AFTER the per-player fan -- and it is the stick
+             * family rather than the buttons, so on a child it would drive the
+             * HOST's character and destroy the host's own stick values in one
+             * store.
+             *
+             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
+             * includes pad_live, which is XInputGetState succeeding, and no
+             * harness has a physical gamepad -- so every green ladder in this
+             * campaign ran with this block switched off. It would have bitten
+             * the owner the first time he played multiplayer with a controller
+             * in analog mode, which is a configuration no proof had ever
+             * entered. The reviewer found it by reading, which is the only way
+             * it could have been found.
+             *
+             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
+             * the run-mode half of the condition, and SM64DS_PAD_TEST already
+             * forces the pad_live half in play mode (it fakes a pad and sets
+             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
+             * under selftest). Together they cover the block with no hardware.
+             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
+             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
+             * player-facing setting. */
+            static int force_analog = -1;
+            if (force_analog < 0)
+                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
+            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
+            if (!selftest && analog_mode && pad_live && !menu_on &&
+                !(port::comms_transport() && comms_fanout_on())) {
+                const int DEAD = 7849;      /* XInput's left-stick floor */
+                const int FULL = 32767;
+                const int dxs = pad.lx;
+                const int dys = -pad.ly;    /* stick up is touch-screen up */
+                double len = sqrt((double)dxs * dxs + (double)dys * dys);
+                if (len > FULL) len = FULL;
+                if (len > DEAD) {
+                    int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
+                    if (mag > 0x1000) mag = 0x1000;
+                    if (mag < 0) mag = 0;
+                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
+                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
+                       the ROM reads player N's fields at symbol + N*0x18 (see the
+                       fan block above). On the child data_0209f250 is 1, so the
+                       stick must land in slot 1. */
+                    const int lo = (int)data_0209f250 * 0x18;
+                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
+                    *(short *)((char *)data_0209f4a2 + lo) =
+                        (short)((double)dxs * mag / len);
+                    *(short *)((char *)data_0209f4a4 + lo) =
+                        (short)((double)dys * mag / len);
+                    *(short *)((char *)data_0209f4a6 + lo) =
+                        _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
+                    /* the field the walk/run branch keys off: "the player is
+                       on the analog stick, read the deflection" */
+                    *((unsigned char *)data_0209f4ac + lo) = 1;
+                }
+            }
+}
+
 int main(void)
 {
     /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
@@ -9149,6 +9356,16 @@ int main(void)
                the direct readers (IsButtonInputValid, Message::Update) both see
                it. Does nothing without the env var. */
             port_input_probe_apply(frame);
+            /* THIS FRAME'S PAD, STASHED FOR THE Ctrl BRIDGE (run link100, lane
+               FRAME). port_frame_ctrl_publish runs from inside port_actor_tick
+               -- hal/stage_frame.cpp's slot-6 thunk calls it the instant the
+               ROM's Stage::Behavior has filled the Ctrl block -- so it cannot
+               reach these four frame-loop locals. Written here, above the tick,
+               and read once below it; see the function's own banner. */
+            g_fc_pad = pad;
+            g_fc_pad_live = pad_live;
+            g_fc_menu_on = menu_on;
+            g_fc_selftest = selftest;
             /* STAGE::CheckInput IS THE STAGE'S AGAIN (run link100, lane FRAME).
                This is where the port used to call it -- Stage::Behavior:107,
                transcribed here so the two blocks that followed could read this
@@ -10830,212 +11047,50 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
-        /* ---- THE INPUT RECORD, READ OUT PAST THE TICK (run link100, lane
-           FRAME) -------------------------------------------------------------
-           Everything from here to the end of this block used to sit in the
-           input phase, immediately after a hand-placed Stage::CheckInput call.
-           _ZTV5Stage slot 6 holds the ROM's own Stage::Behavior now and
-           Stage::Behavior:107 IS that call, so the record these two blocks read
-           is filled from inside port_actor_tick -- and both of them have to run
-           after it or they publish LAST frame's answer. That is the whole
-           reason section 12b of port/stage_lifecycle_map.txt said retiring the
-           transcription "is not a three-line deletion".
+        /* THE BRIDGE RUNS INSIDE THE TICK NOW, and this comment is the
+           correction to where it first landed. Retiring the transcription put
+           the fan-out and the analog override HERE, past port_actor_tick, on
+           the reasoning that they have to see the record Stage::CheckInput
+           writes and CheckInput is inside the tick now. Both halves of that are
+           true and the placement was still wrong, because it asks the wrong
+           question: not "when is the record written" but "when is it READ".
 
-           ORDER, spelled out because it is the only thing that matters here:
+           src/_ZN6Player8BehaviorEv.cpp:170 reads its stick angle as
+               *(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * stride)
+           and Player::Behavior runs INSIDE port_actor_tick, after the Stage.
+           A fan-out below the tick therefore hands every actor LAST frame's
+           stick -- a one-frame input lag on every walk in the game, which no
+           exit code and no final position at 120 frames would have shown.
 
-             above the tick   the pad mirror (data_020a0e58) is written from the
-                              keyboard/pad, which is what CheckInput reads
-             INSIDE the tick  Stage::Behavior runs at the head of the behaviour
-                              list and calls CheckInput, filling data_0209f498
-             here             the fan-out copies that record into the port's
-                              split per-player arrays, and the analog override
-                              rewrites five of its fields from the stick
+           SO IT RUNS WHERE THE ROM'S OWN WRITE LANDS. On the cartridge there
+           are no split arrays at all: Stage::Behavior fills the Ctrl block at
+           data_0209f498 and every actor after it in the behaviour walk reads
+           that block directly at its 0x18 stride. The split arrays are the
+           port's own bridge around undersized host globals, so the faithful
+           place for them is exactly the instant the ROM's write finishes --
+           after Stage::Behavior returns and before any other actor's Behavior.
+           hal/stage_frame.cpp's slot-6 thunk calls port_frame_ctrl_publish()
+           there. It is a host bridge at a ROM boundary, which is what a bridge
+           is for; it is not a call the ROM makes and it moves nothing of the
+           ROM's.
 
-           THE FALLBACK IS ABOUT THE HARNESS, NOT THE GAME. Three of this file's
-           frames never dispatch slot 6 at all -- the debug menu holds the tick,
-           and the two no-spawn dev-rig arms above call a Player body directly
-           with no Stage on any list. The DS has no such frame, so on the ROM
+           WHAT IS LEFT HERE IS THE HARNESS'S OWN FRAME. Three of this file's
+           frames never dispatch slot 6 -- the debug menu holds the tick, and
+           the two no-spawn dev-rig arms above call a Player body directly with
+           no Stage on any list. The DS has no such frame, so on the ROM
            "Stage::Behavior did not run" and "the input record is stale" never
-           come apart. They can here, and a stale record on those frames is the
-           harness reading its own last answer forever. The counter in
-           hal/stage_frame.cpp is the exact test for it -- it is incremented by
-           the slot-6 thunk itself, so it cannot disagree with what ran -- and
-           the call below happens on precisely the frames the ROM's own body did
-           not make it. */
+           come apart. They can here. The counter in hal/stage_frame.cpp is the
+           exact test -- the slot-6 thunk increments it, so it cannot disagree
+           with what ran -- and these two calls happen on precisely the frames
+           the ROM's own body did not make them. */
         {
             static unsigned frame_beh_seen;
             const unsigned frame_beh_now = port_stage_behavior_calls();
-            if (frame_beh_now == frame_beh_seen)
+            if (frame_beh_now == frame_beh_seen) {
                 _ZN5Stage10CheckInputEv();
+                port_frame_ctrl_publish();
+            }
             frame_beh_seen = frame_beh_now;
-        }
-        {
-            /* the matched TU writes its own data_0209f498 block; older
-               TUs read per-field split symbols -- copy the record out
-               ----------------------------------------------------------------
-               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
-               This copied slot 0 and only slot 0, which was right while the
-               port asserted one player and is the exact reason a second
-               player could receive input and still not move.
-
-               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
-               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
-               with Ctrl striding 0x18 per player. That is why
-               port/unmatched/Player_Behavior.cpp reads its stick angle as
-               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
-               on hardware that walks straight into player N's own Ctrl record.
-               The port hosts the five as SEPARATE arrays, so the same walk
-               lands inside data_0209f4a6's own storage instead, reading a byte
-               nobody wrote. Slot 0 worked because its offset is zero.
-
-               So the copy writes each player's fields at that same 0x18 stride,
-               which puts player N's values exactly where the ROM's walk looks
-               for them.
-
-               THE CEILING IS GONE, and it was never a layout fact. An
-               earlier revision of this comment said the split symbols could
-               not be enlarged because they sit interior to .dsstate and
-               growing them retires every BMP baseline. The first half was
-               wrong: they are SEPARATE host symbols, not interior addresses,
-               and this tree already sizes two of the family
-               (data_0209f4ac/data_0209f4ae) at 0x18 * 4 for exactly this
-               reason -- hal/actor_vtables.cpp carries the note about the stray
-               that taught it. The rest now match. Baselines do move, which is
-               what rung 1's position check is for. */
-            {
-                const char *q = (const char *)data_0209f498;
-                int np = (int)data_0209f21c;
-                if (np < 1) np = 1;
-                /* 0.3.2: sixteen. The five split arrays this fans into
-                   (hal/actor_vtables.cpp f49c/f49e/f4a0/f4ac/f4ae, and
-                   auto_bss.cpp's f4a2/f4a4/f4a6) are all 0x18 * kPortMaxPlayers
-                   now; the old cap at four was what kept slots 4..15 motionless
-                   in a wide match -- their records arrived and were never
-                   fanned out, so every peer agreed they stood still. */
-                if (np > kPortMaxPlayers) np = kPortMaxPlayers;
-                for (int pi = 0; pi < np; ++pi) {
-                    const char *r = q + pi * 0x18;
-                    const int o = pi * 0x18;
-                    /* THE BUTTONS, and leaving them out was the second input
-                       seam. Ctrl+0x04 is the HELD word and +0x06 is
-                       pressed-this-frame, and they are what every button
-                       reader in the game uses -- crouch among them. Fanning
-                       the stick fields and not these meant movement routed to
-                       the right player and one button family did not: crouch
-                       in the child's window crouched MARIO in the child's
-                       world. Same one-line character as the PadData[0]
-                       clobber, one layer further in. */
-                    *(short *)((char *)data_0209f49c + o) = *(const short *)(r + 0x04);
-                    *(short *)((char *)data_0209f49e + o) = *(const short *)(r + 0x06);
-                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
-                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
-                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
-                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
-                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
-                }
-            }
-            /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
-               stick. See the RUN_ mode block up by the menu enum for why this
-               is the game's own analog path and not a new one.
-
-               CheckInput has just written the D-PAD answer: magnitude pinned
-               at 0x1000, touching zero, direction quantized to the eight
-               table entries. That is right for a keyboard and wrong for a
-               stick, so when there IS a stick and it is off its rest, the
-               same five fields are written again the way CheckInput's TOUCH
-               branch writes them -- and every reader downstream, the walk
-               core included, cannot tell which branch filled them in.
-
-               The mapping, end to end. XInput reports each axis as +-32767,
-               so the deflection is the radius sqrt(lx^2+ly^2) clamped to the
-               stop, and the usable travel starts at XInput's own left-stick
-               floor (7849) rather than at zero, so a stick that rests a
-               little off centre is still at rest:
-
-                   mag = 0x1000 * (len - 7849) / (32767 - 7849)
-
-               clamped into 0..0x1000. Direction goes in as the touch screen's
-               axes -- x right, y DOWN, which is why the stick's up becomes a
-               negative dy -- and the angle through the ROM's own atan2 rather
-               than a host one, so it lands on the same table entry the
-               hardware would have picked.
-
-               What the game then does with it is entirely the game's:
-               func_ov002_020bf224 scales the speed target by mag/0x1000, so
-               the speed is linear in that deflection, and the walk/run flag
-               flips when mag crosses 0xdc7 with 0x80 of hysteresis -- 0xe47
-               of 0x1000 to break into a run and back under 0xdc7 to drop out
-               of it, which is 89.2 and 86.1 percent of the usable travel, or
-               91.8 and 89.4 percent of the whole stick once the dead zone is
-               counted back in. Those are the ROM's numbers and nothing here
-               touches them -- so running in this mode does mean pushing the
-               stick most of the way, which is what pushing the touch stick
-               most of the way did.
-
-               A stick inside the dead zone falls through with CheckInput's
-               answer untouched, which is button mode -- so analog mode on a
-               keyboard, or with the pad put down, is exactly the program that
-               shipped before. */
-            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
-             *
-             * Run mg16 lane MP4. Same shape as the three already gated -- it
-             * writes THIS console's stick straight into Ctrl slot 0, on the
-             * level path, AFTER the per-player fan -- and it is the stick
-             * family rather than the buttons, so on a child it would drive the
-             * HOST's character and destroy the host's own stick values in one
-             * store.
-             *
-             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
-             * includes pad_live, which is XInputGetState succeeding, and no
-             * harness has a physical gamepad -- so every green ladder in this
-             * campaign ran with this block switched off. It would have bitten
-             * the owner the first time he played multiplayer with a controller
-             * in analog mode, which is a configuration no proof had ever
-             * entered. The reviewer found it by reading, which is the only way
-             * it could have been found.
-             *
-             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
-             * the run-mode half of the condition, and SM64DS_PAD_TEST already
-             * forces the pad_live half in play mode (it fakes a pad and sets
-             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
-             * under selftest). Together they cover the block with no hardware.
-             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
-             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
-             * player-facing setting. */
-            static int force_analog = -1;
-            if (force_analog < 0)
-                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
-            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
-            if (!selftest && analog_mode && pad_live && !menu_on &&
-                !(port::comms_transport() && comms_fanout_on())) {
-                const int DEAD = 7849;      /* XInput's left-stick floor */
-                const int FULL = 32767;
-                const int dxs = pad.lx;
-                const int dys = -pad.ly;    /* stick up is touch-screen up */
-                double len = sqrt((double)dxs * dxs + (double)dys * dys);
-                if (len > FULL) len = FULL;
-                if (len > DEAD) {
-                    int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
-                    if (mag > 0x1000) mag = 0x1000;
-                    if (mag < 0) mag = 0;
-                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
-                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
-                       the ROM reads player N's fields at symbol + N*0x18 (see the
-                       fan block above). On the child data_0209f250 is 1, so the
-                       stick must land in slot 1. */
-                    const int lo = (int)data_0209f250 * 0x18;
-                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
-                    *(short *)((char *)data_0209f4a2 + lo) =
-                        (short)((double)dxs * mag / len);
-                    *(short *)((char *)data_0209f4a4 + lo) =
-                        (short)((double)dys * mag / len);
-                    *(short *)((char *)data_0209f4a6 + lo) =
-                        _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
-                    /* the field the walk/run branch keys off: "the player is
-                       on the analog stick, read the deflection" */
-                    *((unsigned char *)data_0209f4ac + lo) = 1;
-                }
-            }
         }
         /* ADVENTURE GHOSTS: hold every remote body in the disable-interaction
            state, HERE because it must land AFTER the actor phases above --
@@ -11265,7 +11320,12 @@ int main(void)
                 }
             }
             if (pw) {
-                const unsigned pi = (unsigned)data_020a0e40;
+                /* the LOCAL player index. data_020a0e40 is declared as an
+                   array here (line 648), so the value is [0]; taking the
+                   symbol itself gives the address, which is what the first
+                   version of this line did and it read PadData at a megabyte
+                   past the end. */
+                const unsigned pi = (unsigned)data_020a0e40[0];
                 static int said_stage;
                 if (!said_stage) {
                     said_stage = 1;

@@ -13342,7 +13342,17 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the generated text with it.  smoke_player therefore keeps the host
     # occupant in slot 6, selected by the SM64DS_STAGE_SLOT6_ROM compile
     # definition below rather than by a second copy of the thunk.
-    hal/stage_frame.cpp hal/stage_globals.cpp ${SLICE220_SOURCES}
+    # AND hal/w8a_stage_faces.cpp WITH IT, on this target only.
+    # walk_window has carried that file since lane w8-a and this target
+    # has not; it is alias-only (five /alternatename rows and one marker
+    # byte) and three of those rows are the plumbing gate 220 needs --
+    # ?CanPause@Stage@@SAHXZ, ?IsPauseDisabled@Stage@@SAHXZ and
+    # ?CheckInput@Stage@@QAEXXZ, every one referenced only by
+    # Stage::Behavior, which is exactly what this gate adds.  Without it
+    # walk_window_hires fails with three LNK2019s that walk_window does
+    # not, which is how the omission was found.
+    hal/stage_frame.cpp hal/stage_globals.cpp hal/w8a_stage_faces.cpp
+    ${SLICE220_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
     ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}

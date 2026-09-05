@@ -36,7 +36,7 @@
 // `void PS_Cleanup()` are two different symbols and a face that picks the wrong
 // one links against nothing. The table is:
 //
-//   what Stage::Behavior / Stage::Render SPELLS   what the matched TU PUBLISHES
+//   what Stage::Behavior SPELLS                   what the matched TU PUBLISHES
 //   ------------------------------------------   -----------------------------
 //   ?Behavior@Stage@@QAEHXZ                       itself   (_ZN5Stage8BehaviorEv.cpp)
 //   ?CheckCameraInput@Stage@@SAXXZ                itself   (_ZN5Stage16CheckCameraInputEv.cpp)
@@ -46,25 +46,40 @@
 //   ?StartSceneFade@Scene@@SAXIIG@Z               itself   (already in the image)
 //   ?StopTimer@Timer@@QAEXXZ                      itself   (already in the image)
 //   ?CleanAll@ShadowModel@@SAXXZ                  itself   (already in the image)
-//   ---- and these SEVEN do not match, which is what this file is for ----
-//   ?CheckInput@Stage@@QAEXXZ                     _ZN5Stage10CheckInputEv       (flat C name)
+//   ---- these THREE the tree already had plumbing for; see below ----
+//   ?CheckInput@Stage@@QAEXXZ                     _ZN5Stage10CheckInputEv
+//   ?CanPause@Stage@@SAHXZ                        _ZN5Stage8CanPauseEv
+//   ?IsPauseDisabled@Stage@@SAHXZ                 _ZN5Stage15IsPauseDisabledEv
+//   ---- and these FOUR are what this file is for ----
 //   ?PS_Cleanup@Stage@@SAXXZ                      _ZN5Stage10PS_CleanupEv       (flat C name)
 //   ?VE_Init@Stage@@SAXXZ                         _ZN5Stage7VE_InitEv           (flat C name)
 //   ?VE_Update@Stage@@SAXXZ                       _ZN5Stage9VE_UpdateEv         (flat C name)
-//   ?CanPause@Stage@@SAHXZ                        _ZN5Stage8CanPauseEv          (flat C name)
-//   ?IsPauseDisabled@Stage@@SAHXZ                 _ZN5Stage15IsPauseDisabledEv  (flat C name)
 //   ?SetSceneToSpawn@Scene@@SAXII@Z               _ZN5Scene15SetSceneToSpawnEjj (flat C name)
 //
-// SIX OF THOSE SEVEN ARE A PURE SPELLING DIFFERENCE and the faces below are
-// one-line forwarders. All are __cdecl on both sides -- a `static` member is
-// __cdecl in MSVC, and so is a flat C function -- so the forward is a call and
-// nothing else. ?CheckInput@Stage@@QAEXXZ is the one that is not: it is
-// __thiscall, so the compiler puts the receiver in ecx and the face's own
-// prologue absorbs it. It takes no stack arguments and cleans zero bytes,
-// which is why an /alternatename alias would also have worked; a face is used
-// instead because it says the adaptation out loud and cannot be defeated by
-// somebody later defining the alias's left-hand side (the failure mode
-// port/tools/alternatename_guard.py exists for).
+// THE FOUR ARE A PURE SPELLING DIFFERENCE and the faces below are one-line
+// forwarders. All are __cdecl on both sides -- a `static` member is __cdecl in
+// MSVC, and so is a flat C function -- so each forward is a call and nothing
+// else.
+//
+// THE THREE ABOVE THEM ARE NOT THIS FILE'S, AND THAT IS A CORRECTION.
+// This file carried faces for them and the build refused it:
+// port/tools/alternatename_guard.py reported three NEW defeated aliases,
+// because hal/w8a_stage_faces.cpp:133-136 has carried
+//
+//     /alternatename:?CanPause@Stage@@SAHXZ=__ZN5Stage8CanPauseEv
+//     /alternatename:?IsPauseDisabled@Stage@@SAHXZ=__ZN5Stage15IsPauseDisabledEv
+//     /alternatename:?CheckInput@Stage@@QAEXXZ=__ZN5Stage10CheckInputEv
+//
+// since lane w8a, and a face DEFINES the left-hand side, which makes an alias
+// inert. That file says exactly what it was waiting for: "ALL FIVE ARE INERT
+// TODAY. Their LHS is referenced only by Stage::Behavior, Stage::Render and
+// Stage::RenderNumber, none of which is in this lane's slice ... They land now
+// with their provenance so the piece that adds those bodies adds translation
+// units and not plumbing." This is that piece. The faces are deleted and the
+// aliases fire. ?CheckInput@Stage@@QAEXXZ is __thiscall against a __cdecl
+// target, which the alias survives for the reason a face would have: neither
+// spelling takes a stack argument and both clean zero bytes, so the only
+// difference is an ecx the flat-C body never reads.
 //
 // AND ONE MORE NAME IS NOT A SPELLING DIFFERENCE AT ALL, AND MUST NOT BE READ
 // AS ONE.
@@ -95,33 +110,27 @@
 
 extern "C" {
 /* the flat-C matched bodies the faces below forward to */
-void _ZN5Stage10CheckInputEv(void);
 void _ZN5Stage10PS_CleanupEv(void);
 void _ZN5Stage7VE_InitEv(void);
 void _ZN5Stage9VE_UpdateEv(void);
-int  _ZN5Stage8CanPauseEv(void);
-int  _ZN5Stage15IsPauseDisabledEv(void);
 void _ZN5Scene15SetSceneToSpawnEjj(unsigned int a, unsigned int b);
 /* Stage::UpdateMessage's body, on the port: hal/message_pump.cpp */
 void port_message_pump(void);
 }
 
-/* The class, declared exactly the way the two ROM TUs declare it -- public
-   members, non-static Behavior/Render/CheckInput, static everything else. This
-   is a DECLARATION of the ROM's own methods, not a second definition of the
-   class the port uses; nothing here has storage. */
+/* The class, declared exactly the way the ROM TU declares it -- public
+   members, non-static Behavior, static everything else. This is a DECLARATION
+   of the ROM's own methods, not a second definition of the class the port uses;
+   nothing here has storage. */
 class Stage {
 public:
-    /* the two ROM bodies this lane seats. Defined in src/, not here. */
+    /* the ROM body this lane seats. Defined in src/, not here. */
     int  Behavior();
     /* the faces */
-    void CheckInput();
     static void PS_Cleanup();
     static void UpdateMessage();
     static void VE_Init();
     static void VE_Update();
-    static int  CanPause();
-    static int  IsPauseDisabled();
 };
 
 /* Scene::SetSceneToSpawn is the same shape one class over. Stage::Behavior's
@@ -137,12 +146,9 @@ public:
 
 /* ---- the faces ---------------------------------------------------------- */
 
-void Stage::CheckInput()            { _ZN5Stage10CheckInputEv(); }
 void Stage::PS_Cleanup()            { _ZN5Stage10PS_CleanupEv(); }
 void Stage::VE_Init()               { _ZN5Stage7VE_InitEv(); }
 void Stage::VE_Update()             { _ZN5Stage9VE_UpdateEv(); }
-int  Stage::CanPause()              { return _ZN5Stage8CanPauseEv(); }
-int  Stage::IsPauseDisabled()       { return _ZN5Stage15IsPauseDisabledEv(); }
 void Stage::UpdateMessage()         { port_message_pump(); }
 void Scene::SetSceneToSpawn(unsigned int a, unsigned int b)
 { _ZN5Scene15SetSceneToSpawnEjj(a, b); }
@@ -283,9 +289,31 @@ static void stage_frame_arm(void)
 
 extern "C" unsigned port_stage_behavior_calls(void) { return g_beh_calls; }
 
+/* THE Ctrl BRIDGE RUNS HERE, and the placement is the point.
+
+   The port hosts five interior fields of the ROM's Ctrl block as SEPARATE
+   arrays (data_0209f4a0/a2/a4/a6/ac), so it needs a copy the cartridge does
+   not: on hardware every actor reads data_0209f498 + N*0x18 directly, and
+   Stage::Behavior's own CheckInput is what fills it. The copy therefore
+   belongs at exactly the instant the ROM's write finishes -- after
+   Stage::Behavior returns, before any other actor's Behavior runs -- and
+   that instant is this line.
+
+   tests/walk_window.cpp defines port_frame_ctrl_publish and its banner
+   carries the measurement: the same copy placed BELOW port_actor_tick hands
+   src/_ZN6Player8BehaviorEv.cpp:170 last frame's stick, which is a
+   one-frame input lag on every walk in the game.
+
+   NOT A CALL THE ROM MAKES, and this file is not going to blur that. It is a
+   host bridge at a ROM boundary; it moves nothing of the ROM's and adds
+   nothing to what Stage::Behavior does. */
+extern "C" void port_frame_ctrl_publish(void);
+
 extern "C" int port_stage_rom_behavior(void *self)
 {
     stage_frame_arm();
     ++g_beh_calls;
-    return ((Stage *)self)->Stage::Behavior();
+    const int r = ((Stage *)self)->Stage::Behavior();
+    port_frame_ctrl_publish();
+    return r;
 }

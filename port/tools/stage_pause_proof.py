@@ -140,7 +140,7 @@ GATE_BODIES = {
     "?PS_UpdateOkAndBackButtons@Stage@@SAX_N@Z":
         "_ZN5Stage25PS_UpdateOkAndBackButtonsEb",
     "?Display@Message@@QAEXI@Z": "_ZN7Message7DisplayEj",
-    "?DisplayPauseTextVS@Message@@SAXG@Z": "_ZN7Message18DisplayPauseTextVSEt",
+    "__ZN7Message18DisplayPauseTextVSEt": "_ZN7Message18DisplayPauseTextVSEt",
     "__ZN5Stage10PS_CleanupEv": "_ZN5Stage10PS_CleanupEv",
     "__ZN5Stage7VE_InitEv": "_ZN5Stage7VE_InitEv",
     "__ZN5Sound10PauseMusicEv": "_ZN5Sound10PauseMusicEv",
