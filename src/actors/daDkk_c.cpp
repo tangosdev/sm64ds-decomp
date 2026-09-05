@@ -42,12 +42,17 @@
  * char*, where several shards had spelled them void*. The real header wins;
  * their shadow declarations are gone and the definitions below match it.
  *
- * These are the ones no header declares. func_0201267c is spelled `void
- * func_0201267c(int, void*)' by eight shards elsewhere in the tree and `int' by
- * one; the two shards merged here disagreed the same way. Neither call site
- * reads the result, so the return type cannot move a byte and the majority
- * spelling is kept. tubuild's conflict detector does not compare return types
- * and reported nothing about it. */
+ * These are the ones no header declares. The two shards merged here disagreed
+ * about func_0201267c's return type -- the [4] shard said `int', the [5] shard
+ * said `void' -- and tubuild's conflict detector does not compare return types,
+ * so it reported nothing. `void' is kept, and the deciding evidence is the
+ * symbol's own enrolled definition: src/func_0201267c.cpp, enrolled at
+ * config/arm9/delinks.txt, defines it `void func_0201267c(unsigned int id,
+ * const Vector3 *v)'. The rest of the tree agrees -- 83 files spell the return
+ * type `void' against 21 that spell it `int' -- and neither call site here
+ * reads the result, so the choice cannot move a byte either way. The parameter
+ * spelling `(int, void*)' is the tree's own majority shorthand for that
+ * signature and links because the symbol is extern "C". */
 extern "C" {
 extern void func_0201267c(int a, void *b);
 extern int func_ov091_02133254(char *c);
@@ -230,10 +235,12 @@ int daDkk_c::OnAimedAtWithEgg()
 /* ROM ordinals 1 and 0 -- _ZN7daDkk_cD0Ev (0x02111928) and _ZN7daDkk_cD1Ev
  * (0x021118c8) are deliberately NOT written here. include/daDkk_c.h defines
  * ~daDkk_c() in the class body, and that is what makes mwccarm emit the pair in
- * the cartridge's D1-then-D0 order with no D2. Owning the key function above
- * drags both variants in, so neither the `delete p' nor the `p->~daDkk_c()'
- * scaffold the two destructor shards carried is needed; both were dropped and
- * both bodies come out byte-identical without them.
+ * the cartridge's D1-then-D0 order with no D2. What the two superseded shards
+ * carried was an out-of-line `daDkk_c::~daDkk_c() {}' apiece and no forcing
+ * scaffold of any kind -- each shard compiled alone, and compiling alone is
+ * exactly why neither ever exposed the D2, D0, D1 order the out-of-line form
+ * really emits. Owning the key function above drags both variants in, so no
+ * scaffold is needed here either, and both bodies come out byte-identical.
  * -------------------------------------------------------------------------- */
 // @symbol _ZN7daDkk_cD1Ev
 // @symbol _ZN7daDkk_cD0Ev
