@@ -1203,69 +1203,6 @@
       "canonical_module": "ov006",
       "canonical_address": "0x0213c5c8",
       "reason": "inherited vague-linkage ancestor RTTI passenger; its canonical copy is independently owned, and the relocation-resolved emitted body is compared with that cartridge copy before the scratch object discards it"
-    },
-    {
-      "symbol": "_ZTS14dScMgD3DBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov006",
-      "canonical_address": "0x0213c5d4",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTI11dScMgBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov004",
-      "canonical_address": "0x020bbf6c",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTS11dScMgBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov004",
-      "canonical_address": "0x020bbf84",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTI8dScene_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020914d4",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTS8dScene_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020914b0",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
     }
   ],
   "notes": [
