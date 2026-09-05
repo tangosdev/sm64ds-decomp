@@ -182,6 +182,55 @@ jobs:
           echo "--- unique source paths cmake fed ninja ---"
           grep -o 'CMakeFiles/[^ ]*\.obj' logs/ninja_targets.txt | wc -l || true
 
+      # Why this step exists. CMake wires an ORDER-ONLY dependency from every
+      # object of a target to every generated source of that target. The ROM
+      # generators (romdata.py, ovdata.py) cannot run here, so without this step
+      # one missing generated .c blocks that target's entire object list -- run
+      # 33948182435 stopped at [524/33086] for exactly this reason.
+      #
+      # So: run only the generator edges, see which ones the missing cartridge
+      # image kills, and put an EMPTY file in place of each. An empty .c is not
+      # a copy of anything -- it contains no ROM bytes, no ROM addresses, no ROM
+      # sizes. The objects it produces are empty, so the resulting build CANNOT
+      # LINK and CANNOT RUN. This is a compile-throughput measurement only.
+      - name: Run the ROM-free generators, stub what needs the cartridge
+        if: env.BUILD_MODE == 'full'
+        shell: bash
+        run: |
+          set +e
+          ninja -C build/port -t targets all \
+            | grep -E '^host-src/[^:]+: ' | cut -d: -f1 | sort -u > logs/gen_outputs.txt
+          echo "generated outputs in the graph: $(wc -l < logs/gen_outputs.txt)"
+          gstart=$(date +%s)
+          xargs -a logs/gen_outputs.txt -n 150 ninja -C build/port -k 0 \
+            > logs/generators.log 2>&1
+          grc=$?
+          gend=$(date +%s)
+          echo "generator pass: $((gend-gstart))s (rc=$grc), failed edges: $(grep -c '^FAILED:' logs/generators.log)"
+          stubbed=0
+          while IFS= read -r f; do
+            p="build/port/$f"
+            if [ ! -f "$p" ]; then
+              mkdir -p "$(dirname "$p")"
+              case "$f" in
+                *.c|*.cpp)
+                  printf '/* CI STUB. port-build-proto could not run this generator: it\n * reads the cartridge image, which never exists on a GitHub runner.\n * Deliberately EMPTY -- no ROM bytes, no ROM addresses, no ROM sizes.\n * The object this produces is empty, so nothing here can link or run.\n */\n' > "$p" ;;
+                *) : > "$p" ;;
+              esac
+              stubbed=$((stubbed+1))
+            fi
+          done < logs/gen_outputs.txt
+          echo "STUBBED (could not be produced without the ROM): $stubbed"
+          echo "REAL    (generated here from repo sources only)  : $(( $(wc -l < logs/gen_outputs.txt) - stubbed ))"
+          echo "--- stub list ---"
+          grep -c . logs/gen_outputs.txt
+          echo "--- generator failures ---"
+          grep '^FAILED:' logs/generators.log | head -5
+          grep -A2 '^FAILED:' logs/generators.log | grep -i 'missing\|extract\|Error' | head -5
+          # Ninja records nothing for a failed edge, so an output that now exists
+          # and is newer than its .py inputs is simply up to date next pass.
+          exit 0
+
       - name: Build every ROM-free object
         id: build
         if: env.BUILD_MODE == 'full'
