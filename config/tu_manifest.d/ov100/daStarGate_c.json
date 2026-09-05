@@ -1,10 +1,10 @@
 {
   "id": "ov100/daStarGate_c",
   "module": "ov100",
-  "source": "src_tu/actors/daStarGate_c.cpp",
+  "source": "src/actors/daStarGate_c.cpp",
   "promoted_source": "src/actors/daStarGate_c.cpp",
   "production_mode": "intact-object",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous actor linker run: 0x21458d4..0x214620c, 20 function(s), with the registry-referenced class factory immediately following the 19 class methods",
@@ -365,6 +365,18 @@
     }
   ],
   "symbol_binding_rewrites": [
+    {
+      "symbol": "_ZN12daStarGate_cD1Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "_ZN12daStarGate_cD0Ev",
+      "from": "STB_LOPROC",
+      "to": "STB_GLOBAL",
+      "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+    },
     {
       "symbol": "__sinit_daStarGate_c.cpp",
       "from": "STB_LOCAL",
@@ -1074,13 +1086,7 @@
       "target_address": "0x02148954"
     }
   ],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN12daStarGate_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
-    }
-  ],
+  "compiler_only_output": [],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -1225,7 +1231,7 @@
     }
   ],
   "notes": [
-    "Genuine lifecycle and state-machine source form: daStarGate_c declares an inline virtual destructor and InitResources as its key function. The compiler, not hand-authored vtable/PTMF bytes or a forcing object, owns D1/D0/D2, class RTTI/vtable, the five state objects, and their static initializer.",
+    "Genuine lifecycle and state-machine source form: daStarGate_c defines its virtual destructor inline in this TU and InitResources as its key function. The compiler, not hand-authored vtable/PTMF bytes or a forcing object, owns D1/D0/D2, class RTTI/vtable, the five state objects, and their static initializer.",
     "SM64DS proves the daStarGate_c RTTI identity, STAR_GATE registry relationship, class layout, factory shape, state descriptor layout, PTMF targets, bodies, and relocations. The English state/method names and pointer parameter spellings are lineage-supported reconstructions; exact original source spellings are not preserved. Historical project alias: StarDoor.",
     "StarGateModelFilePtr is an evidence-bounded local wrapper spelling. Its 8-byte storage, file ID 0x4a1, constructor/destructor destinations, and runtime registration topology are direct ROM evidence; undefined_symbol_aliases map only those compiler-generated imports to their exact established addresses.",
     "The typed daStarGateInfo table reproduces all four six-byte rows. The typed STAR_GATE profile reproduces all seven fields, including actorFlags 0x00000002, and its factory relocation.",
@@ -1241,25 +1247,247 @@
     "functions_matched": 20,
     "functions_declared": 20,
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN12daStarGate_cD2Ev"
-      ],
-      "deadstripped": [
-        "_ZN12daStarGate_cD2Ev"
-      ],
-      "droppedSections": [
-        46,
-        47
-      ],
+      "requested": [],
+      "deadstripped": [],
       "data": [],
       "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 30 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 16 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov100-daStarGate_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021458d4",
+        "end": "0x0214620c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021458d4",
+          "end": "0x0214620c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02147a70",
+          "end": "0x02147bc0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02147df8",
+          "end": "0x02147dfc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02148334",
+          "end": "0x02148448",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02148934",
+          "end": "0x021489a4",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 43
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              86
+            ],
+            "desired": [
+              86
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              84
+            ],
+            "desired": [
+              84
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              7,
+              9,
+              11,
+              14,
+              18,
+              20,
+              22,
+              27,
+              35,
+              41,
+              42,
+              44
+            ],
+            "desired": [
+              22,
+              7,
+              5,
+              11,
+              14,
+              9,
+              18,
+              20,
+              27,
+              35,
+              41,
+              42,
+              44
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "desired": [
+              13,
+              29,
+              30,
+              36,
+              37,
+              38,
+              39,
+              40
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "desired": [
+                22,
+                7,
+                5,
+                11,
+                14,
+                9,
+                18,
+                20,
+                27,
+                35,
+                41,
+                42,
+                44
+              ],
+              "slots": [
+                5,
+                7,
+                9,
+                11,
+                14,
+                18,
+                20,
+                22,
+                27,
+                35,
+                41,
+                42,
+                44
+              ]
+            }
+          ],
+          "symbolIndices": 13,
+          "sectionLinks": 0,
+          "sectionInfos": 11,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
   },
   "partitioned_link": {
@@ -1270,7 +1498,7 @@
       "text": {
         "toolchain": "2004/b56",
         "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-        "mergedBytes": 15664,
+        "mergedBytes": 15408,
         "contributionEquivalent": "20/20",
         "substitutedObjectPaths": [
           "src/_ZN12daStarGate_cD1Ev.cpp",
@@ -1301,7 +1529,35 @@
             "identical": true,
             "relocCount": 3,
             "differences": [],
-            "symbolBindingRewrites": null
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 106,
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 106,
+                    "symbol": "_ZN12daStarGate_cD1Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
           },
           {
             "ordinal": 1,
@@ -1309,7 +1565,35 @@
             "identical": true,
             "relocCount": 5,
             "differences": [],
-            "symbolBindingRewrites": null
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 100,
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 100,
+                    "symbol": "_ZN12daStarGate_cD0Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
           },
           {
             "ordinal": 2,
@@ -1458,16 +1742,9 @@
         ]
       },
       "compilerOnlyPolicy": {
-        "requested": [
-          "_ZN12daStarGate_cD2Ev"
-        ],
-        "deadstripped": [
-          "_ZN12daStarGate_cD2Ev"
-        ],
-        "droppedSections": [
-          46,
-          47
-        ],
+        "requested": [],
+        "deadstripped": [],
+        "droppedSections": null,
         "errors": null
       },
       "externalizedPolicy": {
@@ -1527,17 +1804,17 @@
         ],
         "renamed": [
           {
-            "symbolIndex": 154,
+            "symbolIndex": 151,
             "from": "_ZN20StarGateModelFilePtrC1Ej",
             "to": "func_02017acc"
           },
           {
-            "symbolIndex": 156,
+            "symbolIndex": 153,
             "from": "_ZN20StarGateModelFilePtrD1Ev",
             "to": "func_02017ab4"
           },
           {
-            "symbolIndex": 155,
+            "symbolIndex": 152,
             "from": "__register_global_object",
             "to": "func_020731dc"
           }
@@ -1546,6 +1823,18 @@
       },
       "symbolBindingPolicy": {
         "requested": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
           {
             "symbol": "__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
@@ -1615,67 +1904,79 @@
         ],
         "rewritten": [
           {
-            "symbolIndex": 48,
+            "symbolIndex": 106,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 100,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 46,
             "symbol": "__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 47,
+            "symbolIndex": 45,
             "symbol": ".p__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 45,
+            "symbolIndex": 43,
             "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 39,
+            "symbolIndex": 37,
             "symbol": "@434",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 38,
+            "symbolIndex": 36,
             "symbol": "@426",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 41,
+            "symbolIndex": 39,
             "symbol": "@428",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 42,
+            "symbolIndex": 40,
             "symbol": "@432",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 40,
+            "symbolIndex": 38,
             "symbol": "@430",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 43,
+            "symbolIndex": 41,
             "symbol": "@424",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 44,
+            "symbolIndex": 42,
             "symbol": "@422",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 46,
+            "symbolIndex": 44,
             "symbol": "@420",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
@@ -1688,19 +1989,19 @@
           {
             "section": ".init",
             "original": [
-              88
+              86
             ],
             "desired": [
-              88
+              86
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              86
+              84
             ],
             "desired": [
-              86
+              84
             ]
           },
           {
@@ -1974,10 +2275,12 @@
           41,
           42,
           44,
-          86,
-          88
+          84,
+          86
         ],
         "droppedSectionIndices": [
+          46,
+          47,
           48,
           49,
           50,
@@ -2013,9 +2316,7 @@
           80,
           81,
           82,
-          83,
-          84,
-          85
+          83
         ],
         "externalizedTextSymbols": [
           "_ZN12daStarGate_c12St_Wait_MainEP6Player",
@@ -2202,13 +2503,13 @@
             "size": 132
           },
           {
-            "index": 86,
+            "index": 84,
             "name": ".ctor",
             "type": "SHT_PROGBITS",
             "size": 4
           },
           {
-            "index": 88,
+            "index": 86,
             "name": ".init",
             "type": "SHT_PROGBITS",
             "size": 336
@@ -2338,13 +2639,13 @@
       },
       "linkedStorageAliases": null,
       "objectHashes": {
-        "rawTuSha256": "3c8bfbc84c0d447e7b9eaaf786377bbb91e495ea617551ef087e30ee745d8742",
-        "rawTuBytes": 15664,
+        "rawTuSha256": "28f9fb70cfc244ab3bc54760644ef35b165b130521e2a38cba236decc7cbbb63",
+        "rawTuBytes": 15408,
         "tuObjectPath": "build/tu/ov100-daStarGate_c/link-partitioned/src_tu/actors/daStarGate_c.o",
-        "postPolicySha256": "f11de1821ab2ac2cec85cd0444d9976748b2861074241b4c71bdfdbce048bead",
-        "postOrderSha256": "0d9de91431b6a5f3415c497ec21084cb4270388c294d23e2d228d3adab414598",
-        "reducedStorageSha256": "74c77ab9d8f71a29996a37c5de4f69c312df53b11e3942bea3f08a16009f77e2",
-        "linkedDataSha256": "e9b0ce6fe7de6907c46b54d8193080e552e5220cc395e05e8f16acdb2e093a40"
+        "postPolicySha256": "19f4419e3a7de9ff9d6dbd2cac135fbd6138ac4f37ef54604ba067394ca35620",
+        "postOrderSha256": "6b8d2bae72dd91bac2d7ab0e7946a67af7040bd5d4b48f0c7cba66ae66e6f023",
+        "reducedStorageSha256": "104c40c658964458590c46a974702b28a2fc34be28281a0ca3d0422c3380163d",
+        "linkedDataSha256": "441d484e92cb489380aad130e8f09f15f5f8c753711b0a0d85e0d806f01831a0"
       },
       "artifactAudit": {
         "ok": true,
@@ -2453,7 +2754,7 @@
       "text": {
         "toolchain": "2004/b56",
         "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-        "mergedBytes": 15664,
+        "mergedBytes": 15408,
         "contributionEquivalent": "20/20",
         "substitutedObjectPaths": [
           "src/_ZN12daStarGate_cD1Ev.cpp",
@@ -2484,7 +2785,35 @@
             "identical": true,
             "relocCount": 3,
             "differences": [],
-            "symbolBindingRewrites": null
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 106,
+                  "symbol": "_ZN12daStarGate_cD1Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 106,
+                    "symbol": "_ZN12daStarGate_cD1Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
           },
           {
             "ordinal": 1,
@@ -2492,7 +2821,35 @@
             "identical": true,
             "relocCount": 5,
             "differences": [],
-            "symbolBindingRewrites": null
+            "symbolBindingRewrites": {
+              "requested": [
+                {
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL",
+                  "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+                }
+              ],
+              "rewritten": [
+                {
+                  "symbolIndex": 100,
+                  "symbol": "_ZN12daStarGate_cD0Ev",
+                  "from": "STB_LOPROC",
+                  "to": "STB_GLOBAL"
+                }
+              ],
+              "objisolate": {
+                "rewritten": [
+                  {
+                    "symbolIndex": 100,
+                    "symbol": "_ZN12daStarGate_cD0Ev",
+                    "from": "STB_LOPROC",
+                    "to": "STB_GLOBAL"
+                  }
+                ],
+                "error": null
+              }
+            }
           },
           {
             "ordinal": 2,
@@ -2641,16 +2998,9 @@
         ]
       },
       "compilerOnlyPolicy": {
-        "requested": [
-          "_ZN12daStarGate_cD2Ev"
-        ],
-        "deadstripped": [
-          "_ZN12daStarGate_cD2Ev"
-        ],
-        "droppedSections": [
-          46,
-          47
-        ],
+        "requested": [],
+        "deadstripped": [],
+        "droppedSections": null,
         "errors": null
       },
       "externalizedPolicy": {
@@ -2710,17 +3060,17 @@
         ],
         "renamed": [
           {
-            "symbolIndex": 154,
+            "symbolIndex": 151,
             "from": "_ZN20StarGateModelFilePtrC1Ej",
             "to": "func_02017acc"
           },
           {
-            "symbolIndex": 156,
+            "symbolIndex": 153,
             "from": "_ZN20StarGateModelFilePtrD1Ev",
             "to": "func_02017ab4"
           },
           {
-            "symbolIndex": 155,
+            "symbolIndex": 152,
             "from": "__register_global_object",
             "to": "func_020731dc"
           }
@@ -2729,6 +3079,18 @@
       },
       "symbolBindingPolicy": {
         "requested": [
+          {
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline complete destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
+          {
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL",
+            "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
+          },
           {
             "symbol": "__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
@@ -2798,67 +3160,79 @@
         ],
         "rewritten": [
           {
-            "symbolIndex": 48,
+            "symbolIndex": 106,
+            "symbol": "_ZN12daStarGate_cD1Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 100,
+            "symbol": "_ZN12daStarGate_cD0Ev",
+            "from": "STB_LOPROC",
+            "to": "STB_GLOBAL"
+          },
+          {
+            "symbolIndex": 46,
             "symbol": "__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 47,
+            "symbolIndex": 45,
             "symbol": ".p__sinit_daStarGate_c.cpp",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 45,
+            "symbolIndex": 43,
             "symbol": "@436",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 39,
+            "symbolIndex": 37,
             "symbol": "@434",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 38,
+            "symbolIndex": 36,
             "symbol": "@426",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 41,
+            "symbolIndex": 39,
             "symbol": "@428",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 42,
+            "symbolIndex": 40,
             "symbol": "@432",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 40,
+            "symbolIndex": 38,
             "symbol": "@430",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 43,
+            "symbolIndex": 41,
             "symbol": "@424",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 44,
+            "symbolIndex": 42,
             "symbol": "@422",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           },
           {
-            "symbolIndex": 46,
+            "symbolIndex": 44,
             "symbol": "@420",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
@@ -2871,19 +3245,19 @@
           {
             "section": ".init",
             "original": [
-              88
+              86
             ],
             "desired": [
-              88
+              86
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              86
+              84
             ],
             "desired": [
-              86
+              84
             ]
           },
           {
@@ -3157,10 +3531,12 @@
           41,
           42,
           44,
-          86,
-          88
+          84,
+          86
         ],
         "droppedSectionIndices": [
+          46,
+          47,
           48,
           49,
           50,
@@ -3196,9 +3572,7 @@
           80,
           81,
           82,
-          83,
-          84,
-          85
+          83
         ],
         "externalizedTextSymbols": [
           "_ZN12daStarGate_c12St_Wait_MainEP6Player",
@@ -3385,13 +3759,13 @@
             "size": 132
           },
           {
-            "index": 86,
+            "index": 84,
             "name": ".ctor",
             "type": "SHT_PROGBITS",
             "size": 4
           },
           {
-            "index": 88,
+            "index": 86,
             "name": ".init",
             "type": "SHT_PROGBITS",
             "size": 336
@@ -3521,13 +3895,13 @@
       },
       "linkedStorageAliases": null,
       "objectHashes": {
-        "rawTuSha256": "3c8bfbc84c0d447e7b9eaaf786377bbb91e495ea617551ef087e30ee745d8742",
-        "rawTuBytes": 15664,
+        "rawTuSha256": "28f9fb70cfc244ab3bc54760644ef35b165b130521e2a38cba236decc7cbbb63",
+        "rawTuBytes": 15408,
         "tuObjectPath": "build/tu/ov100-daStarGate_c/link-partitioned/src_tu/actors/daStarGate_c.o",
-        "postPolicySha256": "f11de1821ab2ac2cec85cd0444d9976748b2861074241b4c71bdfdbce048bead",
-        "postOrderSha256": "0d9de91431b6a5f3415c497ec21084cb4270388c294d23e2d228d3adab414598",
-        "reducedStorageSha256": "74c77ab9d8f71a29996a37c5de4f69c312df53b11e3942bea3f08a16009f77e2",
-        "linkedDataSha256": "e9b0ce6fe7de6907c46b54d8193080e552e5220cc395e05e8f16acdb2e093a40"
+        "postPolicySha256": "19f4419e3a7de9ff9d6dbd2cac135fbd6138ac4f37ef54604ba067394ca35620",
+        "postOrderSha256": "6b8d2bae72dd91bac2d7ab0e7946a67af7040bd5d4b48f0c7cba66ae66e6f023",
+        "reducedStorageSha256": "104c40c658964458590c46a974702b28a2fc34be28281a0ca3d0422c3380163d",
+        "linkedDataSha256": "441d484e92cb489380aad130e8f09f15f5f8c753711b0a0d85e0d806f01831a0"
       },
       "artifactAudit": {
         "ok": true,

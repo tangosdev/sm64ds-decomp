@@ -467,10 +467,6 @@ bool daStarGate_c::St_StayClosed_Main(Player *player)
     return true;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12daStarGate_cD1Ev, 0x021458d4, size 0x30 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_cD1Ev
-daStarGate_c::~daStarGate_c()
+inline daStarGate_c::~daStarGate_c()
 {
 }

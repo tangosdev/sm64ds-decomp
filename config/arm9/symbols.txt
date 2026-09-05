@@ -3211,6 +3211,7 @@ data_02086a08 kind:data(any) addr:0x02086a08
 data_02086a30 kind:data(any) addr:0x02086a30
 data_02086a58 kind:data(any) addr:0x02086a58
 data_02086b58 kind:data(any) addr:0x02086b58
+__ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_02073a24 kind:data(word) addr:0x02086b60
 .p__sinit_02073e6c kind:data(word) addr:0x02086b64
 .p__sinit_02074d90 kind:data(word) addr:0x02086b68

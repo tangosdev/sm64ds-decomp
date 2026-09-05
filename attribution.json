@@ -1700,6 +1700,27 @@
     "src/actors/d_a_obj_rc_hane.cpp#func_ov036_02111618": "github-actions[bot]",
     "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
     "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
-    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]"
+    "src/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_cD1Ev": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_cD0Ev": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c18St_StayClosed_MainEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c17St_OpenClose_MainEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c17St_OpenClose_InitEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c17St_Unlocking_MainEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c17St_Unlocking_InitEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c23St_TalkingToPlayer_MainEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c23St_TalkingToPlayer_InitEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c12St_Wait_MainEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c11TryOpenDoorEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c17IsInFrontOfPlayerEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c26CalculateRelativePlayerPosEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c11ChangeStateEPNS_5StateEP6Player": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c16CleanupResourcesEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c16OnPendingDestroyEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c6RenderEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#_ZN12daStarGate_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#daStarGate_c_classInit": "github-actions[bot]",
+    "src/actors/daStarGate_c.cpp#__sinit_daStarGate_c.cpp": "github-actions[bot]"
   }
 }
