@@ -65,29 +65,29 @@
  * emits one .text section per function in the reverse of source order, so the
  * highest-address ROM function is written FIRST.  Do not reorder.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [13] 0x020eb018  src/func_ov006_020eb018.cpp
- *   [14] 0x020eb0c8  src/func_ov006_020eb0c8.cpp
- *   [15] 0x020eb1e0  src/func_ov006_020eb1e0.c
- *   [16] 0x020eb31c  src/func_ov006_020eb31c.cpp
- *   [17] 0x020eb3e4  src/func_ov006_020eb3e4.c
- *   [18] 0x020eb558  src/func_ov006_020eb558.cpp
- *   [19] 0x020eb610  src/func_ov006_020eb610.cpp
- *   [20] 0x020eb768  src/func_ov006_020eb768.c
- *   [21] 0x020eb7b0  src/func_ov006_020eb7b0.c
- *   [22] 0x020eb7f8  src/func_ov006_020eb7f8.c
- *   [23] 0x020eb8f0  src/func_ov006_020eb8f0.cpp
- *   [24] 0x020eb9b0  src/func_ov006_020eb9b0.c
- *   [25] 0x020eb9dc  src/func_ov006_020eb9dc.c
- *   [26] 0x020ebb40  src/func_ov006_020ebb40.c
- *   [27] 0x020ebc08  src/func_ov006_020ebc08.c
- *   [28] 0x020ebc7c  src/func_ov006_020ebc7c.c
- *   [29] 0x020ebd7c  src/func_ov006_020ebd7c.c
- *   [30] 0x020ebe6c  src/func_ov006_020ebe6c.c
- *   [31] 0x020ebeb4  src/func_ov006_020ebeb4.c
- *   [32] 0x020ebf20  src/func_ov006_020ebf20.c
- *   [33] 0x020ec134  src/func_ov006_020ec134.c
- *   [34] 0x020ec2bc  src/func_ov006_020ec2bc.c
+ * Promoted members in this TU (ROM address order):
+ *   [13] 0x020eb018  func_ov006_020eb018
+ *   [14] 0x020eb0c8  func_ov006_020eb0c8
+ *   [15] 0x020eb1e0  func_ov006_020eb1e0
+ *   [16] 0x020eb31c  func_ov006_020eb31c
+ *   [17] 0x020eb3e4  func_ov006_020eb3e4
+ *   [18] 0x020eb558  func_ov006_020eb558
+ *   [19] 0x020eb610  func_ov006_020eb610
+ *   [20] 0x020eb768  func_ov006_020eb768
+ *   [21] 0x020eb7b0  func_ov006_020eb7b0
+ *   [22] 0x020eb7f8  func_ov006_020eb7f8
+ *   [23] 0x020eb8f0  func_ov006_020eb8f0
+ *   [24] 0x020eb9b0  func_ov006_020eb9b0
+ *   [25] 0x020eb9dc  func_ov006_020eb9dc
+ *   [26] 0x020ebb40  func_ov006_020ebb40
+ *   [27] 0x020ebc08  func_ov006_020ebc08
+ *   [28] 0x020ebc7c  func_ov006_020ebc7c
+ *   [29] 0x020ebd7c  func_ov006_020ebd7c
+ *   [30] 0x020ebe6c  func_ov006_020ebe6c
+ *   [31] 0x020ebeb4  func_ov006_020ebeb4
+ *   [32] 0x020ebf20  func_ov006_020ebf20
+ *   [33] 0x020ec134  func_ov006_020ec134
+ *   [34] 0x020ec2bc  func_ov006_020ec2bc
  */
 
 /* #pragma push / O3 / pop bracket func_ov006_020eb018 below, where its own
@@ -1152,4 +1152,3 @@ extern "C" void func_ov006_020eb018(char *c)
     func_ov006_020ec134((C *)c);
 }
 #pragma pop
-
