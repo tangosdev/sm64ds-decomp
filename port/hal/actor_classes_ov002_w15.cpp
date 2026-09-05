@@ -133,6 +133,16 @@ DSSTATE_END
    shadow class), so it needs the extern-"C" face the vtable names. The other
    four own bodies are extern-C in src already. */
 #include "MegaMushroomCreateTag.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" int _ZN21MegaMushroomCreateTag8BehaviorEv(void *self)
 { return ((MegaMushroomCreateTag *)self)
              ->MegaMushroomCreateTag::Behavior(); }
@@ -153,7 +163,7 @@ static void kt_trap_report(void *self, int slot)
 #define KT_TRAP(n) \
     static int __fastcall kt_trap##n(void *s, void *) \
     { kt_trap_report(s, n); return 0; }
-KT_TRAP(13) KT_TRAP(14) KT_TRAP(30)
+KT_TRAP(13) KT_TRAP(14)
 #undef KT_TRAP
 
 static int __fastcall kt_binit(void *s, void *)
@@ -257,5 +267,5 @@ extern "C" void hal_fill_mega_mushroom_tag_vtable(void)
     vt[27] = (void *)kt_mega;
     vt[28] = (void *)kt_under;
     vt[29] = (void *)kt_egg;
-    vt[30] = (void *)kt_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }

@@ -50,6 +50,16 @@
 #include "ActorBase.h"
 #include "QuestionSwitch.h"
 
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+
 extern "C" {
 /* the shared lifecycle halves, the same arm9 bodies every sibling fill writes */
 int  _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
@@ -123,7 +133,7 @@ static void qs_trap_report(void *self, int slot)
 #define QS_TRAP(n) \
     static int __fastcall qs_trap##n(void *s, void *) \
     { qs_trap_report(s, n); return 0; }
-QS_TRAP(13) QS_TRAP(14) QS_TRAP(30)
+QS_TRAP(13) QS_TRAP(14)
 #undef QS_TRAP
 
 // ---- the shared half (a Platform table's Actor-shaped middle) --------------
@@ -259,6 +269,6 @@ extern "C" void hal_fill_question_switch_vtable(void)
     vt[27] = (void *)qs_mega;
     vt[28] = (void *)qs_under;
     vt[29] = (void *)qs_aimed;
-    vt[30] = (void *)qs_trap30;
+    vt[30] = (void *)port_actor_s30_base;
     vt[31] = (void *)qs_kill;
 }

@@ -137,7 +137,7 @@ static void o43_trap_report(void *self, int slot)
     { o43_trap_report(s, n); return 0; }
 /* 13/14 are ActorBase::Virtual34/38, the pair every sibling fill traps. 30 is
    Actor::OnAimedAtWithEggReturnVec, the SRET body no fill's thunk models. */
-O43_TRAP(13) O43_TRAP(14) O43_TRAP(30)
+O43_TRAP(13) O43_TRAP(14)
 #undef O43_TRAP
 
 // ---- the shared half -------------------------------------------------------
@@ -288,7 +288,7 @@ extern "C" void hal_fill_diamond_lift_vtable(void)
     vt[27] = (void *)o43_mega;
     vt[28] = (void *)o43_under;
     vt[29] = (void *)o43_egg;
-    vt[30] = (void *)o43_trap30;
+    vt[30] = (void *)port_actor_s30_base;
     vt[31] = (void *)o43_kill;
 }
 
@@ -359,6 +359,16 @@ DSSTATE_END
    RickshawPlatformBdw::), so the Itanium _ZN19RickshawPlatformBdw* symbols the
    fill wants do not exist -- faced here, the ov047 STAIRS_BS recipe. */
 #include "RickshawPlatformBdw.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self)
 { return ((RickshawPlatformBdw *)self)->RickshawPlatformBdw::InitResources(); }
@@ -401,7 +411,7 @@ static void o43_fill_shared(void **vt)
     vt[27] = (void *)o43_mega;
     vt[28] = (void *)o43_under;
     vt[29] = (void *)o43_egg;
-    vt[30] = (void *)o43_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // id 137 RICKSHAW_BDW is intentionally NOT filled or registered -- see the file

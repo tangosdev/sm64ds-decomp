@@ -141,7 +141,7 @@ static void ov52_trap_report(void *self, int slot)
 #define OV52_TRAP(n) \
     static int __fastcall ov52_trap##n(void *s, void *) \
     { ov52_trap_report(s, n); return 0; }
-OV52_TRAP(13) OV52_TRAP(14) OV52_TRAP(17) OV52_TRAP(30)
+OV52_TRAP(13) OV52_TRAP(14) OV52_TRAP(17)
 #undef OV52_TRAP
 
 static int __fastcall ov52_binit(void *s, void *)
@@ -226,7 +226,7 @@ static void ov52_fill_shared(void *volatile *vt)
     vt[27] = (void *)ov52_mega;
     vt[28] = (void *)ov52_under;
     vt[29] = (void *)ov52_egg;
-    vt[30] = (void *)ov52_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- the mount bring-up ----------------------------------------------------
@@ -353,6 +353,16 @@ extern "C" void hal_fill_square_path_lift_vtable(void)
 // The four bodies src defines as real C++ methods rather than extern-C free
 // functions -- all four of SquarePathLift's. id 174's six are extern-C already.
 #include "SquarePathLift.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN14SquarePathLift13InitResourcesEv(void *self)
 { return ((SquarePathLift *)self)->SquarePathLift::InitResources(); }

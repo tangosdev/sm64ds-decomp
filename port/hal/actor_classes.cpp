@@ -179,6 +179,10 @@ static int __fastcall ac_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ac_egg(void *s, void *)
 { return _ZN5Actor16OnAimedAtWithEggEv(s); }
+/* UnchainedChomp's own slot 29, ov100 0x021442d4 (slice_gate21). */
+extern "C" int func_ov100_021442d4(void);
+static int __fastcall uc_aimed(void *, void *)
+{ return func_ov100_021442d4(); }
 /* slot 19, OnTurnIntoEgg(Player &player). Three parameters, like the rest of
    this group: the caller PUSHES the player, so the thunk has to pop it. */
 static int __fastcall ac_turn_egg(void *s, void *, void *p)
@@ -273,7 +277,7 @@ static int __fastcall ac_trap17(void *s, void *) { ac_trap_report(s, 17); return
     static int __fastcall ac_trap##n(void *s, void *) \
     { ac_trap_report(s, n); return 0; }
 AC_TRAP(21) AC_TRAP(22)
-AC_TRAP(27) AC_TRAP(28) AC_TRAP(29) AC_TRAP(30) AC_TRAP(31)
+AC_TRAP(27) AC_TRAP(28) AC_TRAP(29) AC_TRAP(31)
 #undef AC_TRAP
 /* Slots 23 and 24 take the THREE-parameter shape so they emit `ret 4`, not a
    bare `ret`. Their one dispatch site each is now thiscall (the receiver in
@@ -402,7 +406,7 @@ static void ac_fill_shared(void **vt)
     vt[27] = (void *)ac_mega;
     vt[28] = (void *)ac_under;
     vt[29] = (void *)ac_egg;
-    vt[30] = (void *)ac_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ---- TREE (actor 286, ov002) -----------------------------------------------
@@ -1725,6 +1729,16 @@ extern "C" void hal_fill_exit_vtable(void)
 // positions, sit in both lists and tick. Every one of their eighteen slots is
 // matched src; nothing here changes when the particles arrive.
 #include "PoppingLavaBubbles.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN18PoppingLavaBubbles13InitResourcesEv(void *self);   /* face */
 int _ZN18PoppingLavaBubbles8BehaviorEv(char *self);
@@ -1975,9 +1989,12 @@ extern "C" void hal_fill_unchained_chomp_vtable(void)
        Deallocate; nothing on this level calls the deleting form. */
     vt[17] = (void *)ac_trap17;
     /* 31 slots, a plain Actor table. Slot 29 (OnAimedAtWithEgg) is the chomp's
-       own body (ov100 0x021442d4), matched in src and in no slice, so it
-       declines rather than answering Actor's default 20.0 lock-on radius. */
-    vt[29] = (void *)ac_trap29;
+       own body, ov100 0x021442d4 -- the ROM word in _ZTV14UnchainedChomp slot
+       29. It is on slice_gate21.txt now and seated here rather than declining,
+       because slot 30 below is the Actor base body and that body's whole job is
+       to add slot 29's result to y: a seated 30 over a trapped 29 would only
+       move the freeze one slot along. */
+    vt[29] = (void *)uc_aimed;
 }
 
 // ============================================================================

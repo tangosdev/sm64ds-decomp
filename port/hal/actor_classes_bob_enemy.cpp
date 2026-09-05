@@ -90,7 +90,7 @@ static void e31_trap_report(void *self, int slot)
 #define E31_TRAP(n) \
     static int __fastcall e31_trap##n(void *s, void *) \
     { e31_trap_report(s, n); return 0; }
-E31_TRAP(13) E31_TRAP(14) E31_TRAP(16) E31_TRAP(17) E31_TRAP(30)
+E31_TRAP(13) E31_TRAP(14) E31_TRAP(16) E31_TRAP(17)
 #undef E31_TRAP
 
 static int __fastcall e31_binit(void *s, void *)
@@ -193,7 +193,7 @@ void ac31_fill_shared(void **vt)
     vt[28] = (void *)e31_under;
     vt[29] = (void *)e31_aimed;    /* Actor::OnAimedAtWithEgg, the ROM default;
                                       classes with their own body override it */
-    vt[30] = (void *)e31_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ============================================================================
@@ -935,6 +935,16 @@ int _ZN9KoopaFlag8BehaviorEv(void *self)
 { return ((KoopaFlag *)self)->KoopaFlag::Behavior(); }
 }
 #include "KingBobOmb.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN10KingBobOmb13InitResourcesEv(void *self)
 { return ((KingBobOmb *)self)->KingBobOmb::InitResources(); }

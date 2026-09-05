@@ -101,7 +101,6 @@ static void ov12_trap_report(void *self, int slot)
 }
 static int __fastcall ov12_trap13(void *s, void *) { ov12_trap_report(s, 13); return 0; }
 static int __fastcall ov12_trap14(void *s, void *) { ov12_trap_report(s, 14); return 0; }
-static int __fastcall ov12_trap30(void *s, void *) { ov12_trap_report(s, 30); return 0; }
 
 static int __fastcall ov12_binit(void *s, void *)
 { return _ZN5Actor19BeforeInitResourcesEv(s); }
@@ -180,7 +179,7 @@ static void ov12_fill_shared(void **vt)
     vt[27] = (void *)ov12_mega;
     vt[28] = (void *)ov12_under;
     vt[29] = (void *)ov12_aimed;
-    vt[30] = (void *)ov12_trap30;
+    vt[30] = (void *)port_actor_s30_base;
     /* the shared Platform::Kill default, COPIED out of the base table rather
        than named. ORDERING IS LOAD-BEARING: both callers run
        hal_fill_platform_vtable first, which is what puts a real thunk at
@@ -295,6 +294,16 @@ extern "C" void hal_fill_basement_water_vtable(void)
 // is NOT faced here: it is a host copy (the ModelAnim slot-5 collision,
 // port/unmatched/ModelAnim_Renders.cpp), declared extern "C" above.
 #include "SwitchPillar.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN12SwitchPillar13InitResourcesEv(void *self)
 { return ((SwitchPillar *)self)->SwitchPillar::InitResources(); }

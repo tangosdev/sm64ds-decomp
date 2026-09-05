@@ -188,7 +188,7 @@ static void ov64_trap_report(void *self, int slot)
     { ov64_trap_report(s, n); return 0; }
 /* 13/14 are ActorBase::Virtual34/38 (not linked, the sibling trap); 30 is the
    SRET OnAimedAtWithEggReturnVec no thunk shape models. */
-OV64_TRAP(13) OV64_TRAP(14) OV64_TRAP(30)
+OV64_TRAP(13) OV64_TRAP(14)
 #undef OV64_TRAP
 
 // ---- the shared 0..30 half -------------------------------------------------
@@ -264,7 +264,7 @@ static void ov64_fill_shared_0_30(void **vt)
     vt[26] = (void *)ov64_cannon;
     vt[27] = (void *)ov64_mega;
     vt[28] = (void *)ov64_under;
-    vt[30] = (void *)ov64_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
 
 // ============================================================================
@@ -462,6 +462,16 @@ extern "C" void hal_fill_rotating_firebar_vtable(void)
 #include "Bully.h"
 #include "BigBully.h"
 #include "RotatingFirebar.h"
+
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 extern "C" {
 int _ZN5Bully13InitResourcesEv(void *self)
 { ((Bully *)self)->Bully::InitResources(); return 1; }

@@ -46,6 +46,16 @@
 #include "ActorBase.h"
 #include "MontyMole.h"
 
+/* hal/actor_slot30_seat.cpp -- the shared seat for vtable slot 30,
+   Actor::OnAimedAtWithEggReturnVec. The ROM word in slot 30 of every vtable
+   this file fills IS the arm9 base body 0x020100dc (checked against
+   config/<module>/relocs.txt at vtable+30*4), and that body is now in the
+   link from src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp on slice_gate50.
+   The three-parameter __fastcall is the sret contract MSVC uses for a
+   thiscall member returning a 12-byte struct: this in ecx, the hidden result
+   pointer the one (callee-popped) stack argument. Same shape as whomp_s30. */
+extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
+
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */
 int _ZN5Actor19BeforeInitResourcesEv(void *self);            /* slot 1  */
@@ -128,7 +138,7 @@ static void mm_trap_report(void *self, int slot)
 /* 30 is Actor::OnAimedAtWithEggReturnVec, an SRET body (the matched src takes
    a hidden return-slot pointer BEFORE self); no sibling fill models that
    convention and every one traps the slot, so this fill does too. */
-MM_TRAP(13) MM_TRAP(14) MM_TRAP(30)
+MM_TRAP(13) MM_TRAP(14)
 #undef MM_TRAP
 
 // ---- the shared half -------------------------------------------------------
@@ -240,5 +250,5 @@ extern "C" void hal_fill_monty_mole_vtable(void)
     vt[27] = (void *)mm_mega;
     vt[28] = (void *)mm_under;
     vt[29] = (void *)mm_aimed;
-    vt[30] = (void *)mm_trap30;
+    vt[30] = (void *)port_actor_s30_base;
 }
