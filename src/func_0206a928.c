@@ -23,7 +23,7 @@
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);
 struct Stream {
-    char pad[0x10];
+    u8 unk00[0x10];
     WriteFn fn;
 };
 
