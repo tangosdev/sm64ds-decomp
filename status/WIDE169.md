@@ -550,11 +550,29 @@ control rather than a whole-HUD reshuffle.
 so the torn control and the whole frame come off ONE build at ONE state base.
 `port/tools/wide_sweep.py` is the sweep that reads both.
 
-AND IT COSTS NOTHING MEASURABLE. Four linear passes over the 192x256 mask. On
-level 1 at 16:9, mean frame time is 16.93 ms with the element pass and 17.69 ms
-with the band split -- the difference is inside the run-to-run spread, so the
-honest reading is "below the noise floor", not "faster". Both sit at about half
-the 33 ms budget. The pass is skipped entirely at the native aspect.
+AND IT COSTS NOTHING MEASURABLE. Four linear passes over the 192x256 mask.
+Level 1, 300-frame selftest, minimised and muted, on an otherwise idle machine,
+means over the ten [perf] samples:
+
+| run | mean | stdev | max |
+|---|---|---|---|
+| native, Aspect 0 (feature off) | 6.42 ms | 0.24 | 6.79 ms |
+| 16:9, per-element (shipped) | 12.66 ms | 0.61 | 13.76 ms |
+| 16:9, band split (SM64DS_HUD_BANDSPLIT=1) | 13.75 ms | 1.21 | 16.27 ms |
+
+The element pass reads 1.09 ms FASTER than the band split it replaces, which is
+inside one standard deviation of the control and must not be reported as a
+speedup. The honest statement is that it costs nothing measurable. It is
+skipped entirely at the native aspect, so the default build pays nothing at all.
+
+THE "WIDESCREEN IS 2X SLOWER" FIGURE IS CONFIRMED AS A RATIO AND REJECTED AS A
+BLOCKER. 12.66 against 6.42 is 1.97x, and that is real: 1024x576 is three times
+the pixels of 512x384 and the rasteriser does the work. But the number that
+decides whether it ships is the ABSOLUTE one, and 12.66 ms against a 33 ms
+budget is 38 percent of frame, with the worst single sample at 13.76 ms. Under
+heavy machine load (a capture sweep running beside it) the same measurement
+read 16.93 ms mean and 21.02 ms worst, which is still inside budget. A ratio is
+not a budget, and this one was being read as though it were.
 
 THE FULL-2D EXCEPTION. A minigame's top screen is a full 2D raster with no 3D
 layer behind it (`shown3d` is false). Reanchoring that tears it into vertical
