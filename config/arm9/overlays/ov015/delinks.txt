@@ -4,7 +4,7 @@
     .ctor       start:0x02113410 end:0x0211342c kind:rodata align:4
     .data       start:0x02113440 end:0x02114960 kind:data align:32
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
-src/actors/d_a_obj_bk_billboard.cpp:
+src/game/actors/d_a_obj_bk_billboard.cpp:
     complete
     .text start:0x021111a0 end:0x02111314
 
@@ -204,15 +204,15 @@ src/d_a_obj_bk_lift.c:
     complete
     .text start:0x0211290c end:0x02112944
 
-src/actors/d_a_obj_bk_rotebar.cpp:
+src/game/actors/d_a_obj_bk_rotebar.cpp:
     complete
     .text start:0x02112944 end:0x02112bd0
 
-src/actors/d_a_obj_bk_ukisima.cpp:
+src/game/actors/d_a_obj_bk_ukisima.cpp:
     complete
     .text start:0x02112bd0 end:0x02112cf4
 
-src/actors/d_a_obj_bk_fall_block.cpp:
+src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete
     .text start:0x02112cf4 end:0x02112e0c
 

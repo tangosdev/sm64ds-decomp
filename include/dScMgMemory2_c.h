@@ -1,4 +1,4 @@
-/* class dScMgMemory2_c, real ROM name confirmed by tools/rtti_extract.py:
+/* Memory Master uses the ROM class dScMgMemory2_c, confirmed by RTTI:
  * dScMgMemory2_c : dScMgSingle3DBase_c, single edge, offset 0
  * (build/rtti.json). The THIRTEENTH and last direct child of that base;
  * with this file the family is complete.
@@ -15,19 +15,10 @@
  *
  * SIZE 0x5410, from dScMgMemory2_c_classInit's own `_ZN7fBase_cnwEj(0x5410)`.
  *
- * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80 /
- * func_ov006_020c1c64), the same one four siblings use. As with
- * dScMgMemory_c, none of this class's own six recovered methods reads
- * inside it, so it stays entirely opaque here rather than borrowing a
- * sibling's field names for bytes this class never touches.
- *
- * 0x51a8..0x53d4 HAS NO MATCHED ACCESS IN ANY OF THIS CLASS'S OWN METHODS,
- * checked for split-literal forms as well as whole constants. That is a
- * statement about the six recovered files, not a proof about the ROM.
- *
- * OWN TAIL: three fields carried over verbatim from this header's previous
- * auto-generated form, unchanged offsets and widths. The three fields the
- * old header declared below 0x4f38 are dScMgBase_c's own.
+ * The reconstructed scene TU proves twenty 0x18-byte cards, three 0x14-byte
+ * player markers, a cursor/HUD object, and the state-machine scalars below.
+ * Address-only handler spellings are descriptive and disclosed as coined in
+ * symbols/actor_renames.tsv.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN14dScMgMemory2_cD1Ev.cpp; D0Ev.cpp
@@ -43,6 +34,57 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
+
+struct dMgMemory2SharedState_c {
+    ~dMgMemory2SharedState_c() { func_ov006_020c1c64((char *)this); }
+    u8 pad_000[0x1e6];
+    s16 ready;
+    u8 pad_1e8[0x88];
+};
+
+struct dMgMemory2Card_c {
+    s32 x;
+    s32 y;
+    s32 speed;
+    s16 angle;
+    u16 animTimer;
+    u8 value;
+    u8 unk_11;
+    u8 visible;
+    u8 active;
+    u8 state;
+    u8 frame;
+    u8 flyAwayStarted;
+    u8 pad_17;
+};
+
+struct dMgMemory2Player_c {
+    s32 x;
+    s32 y;
+    s32 speed;
+    s16 angle;
+    s16 delay;
+    u8 active;
+    u8 unk_11;
+    u8 state;
+    u8 pad_13;
+};
+
+struct dMgMemory2Cursor_c {
+    s32 x;
+    s32 y;
+    s16 angle;
+    u8 pad_0a[2];
+    u8 visible;
+    u8 frame;
+    u8 enabled;
+    u8 pad_0f;
+};
+
+typedef char dMgMemory2SharedState_c_size_must_be_0x270[sizeof(dMgMemory2SharedState_c) == 0x270 ? 1 : -1];
+typedef char dMgMemory2Card_c_size_must_be_0x18[sizeof(dMgMemory2Card_c) == 0x18 ? 1 : -1];
+typedef char dMgMemory2Player_c_size_must_be_0x14[sizeof(dMgMemory2Player_c) == 0x14 ? 1 : -1];
+typedef char dMgMemory2Cursor_c_size_must_be_0x10[sizeof(dMgMemory2Cursor_c) == 0x10 ? 1 : -1];
 
 struct dScMgMemory2_c : dScMgSingle3DBase_c {
     virtual ~dScMgMemory2_c();
@@ -62,13 +104,83 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
     s32 Behavior();        /* slot  6 -- src/_ZN14dScMgMemory2_c8BehaviorEv.cpp */
     s32 Render();          /* slot  9 -- src/_ZN14dScMgMemory2_c6RenderEv.cpp */
 
-    u8  pad_4f38[0x270];   /* 0x4f38 -- shared table, opaque here; see banner */
-    u8  pad_51a8[0x22c];   /* 0x51a8 -- no matched access, see banner */
-    s32 unk_53d4;          /* 0x53d4 */
-    s32 unk_53d8;          /* 0x53d8 */
-    u8  pad_53dc[0x2d];    /* 0x53dc */
-    u8  unk_5409;          /* 0x5409 */
-    u8  pad_540a[0x6];     /* 0x540a -- rounds up to the 0x5410 boundary */
+    void DrawMessage();
+    void DrawCursor();
+    void UpdateCursor();
+    void ShowCursor();
+    void HideCursor();
+
+    void PlayerWait(int player);
+    void PlayerMove(int player);
+    void PlayerDrop(int player);
+    void InitPlayers();
+
+    void CheckFinished();
+    void JudgePair();
+    void DrawCards();
+    void UpdateCards();
+
+    void CardFlyAway(int card);
+    void CardFlipDown(int card);
+    void CardWait(int card);
+    void CardFlipUp(int card);
+    void CardSelect(int card);
+    void CardIdle(int card);
+    void CardMove(int card);
+
+    void ResultFinish();
+    void ResultTurnCards();
+    void ResultReward();
+    void ResultWait();
+
+    void RoundReveal();
+    void *RoundWaitDeal();
+    void RoundReadyCards();
+    void RoundHideCards();
+    void RoundShowCards();
+    void RoundDealFourth();
+    void RoundDealHard();
+    void RoundDealNormal();
+    void RoundDealEasy();
+    void RoundStart();
+
+    void ShuffleCards();
+    void ChoosePreviewCards();
+    void ResetGame();
+    void StateExit();
+    void StateResult();
+    void StateJudge();
+    void StatePlay();
+    void StateSetup();
+    void SetupDifficulty();
+
+    dMgMemory2SharedState_c mShared; /* 0x4f38 */
+    dMgMemory2Card_c mCards[20];     /* 0x51a8 */
+    dMgMemory2Player_c mPlayers[3];  /* 0x5388 */
+    dMgMemory2Cursor_c mCursor;      /* 0x53c4 */
+    s32 mState;                      /* 0x53d4 */
+    s32 mSubstate;                   /* 0x53d8 */
+    u8 pad_53dc[4];                  /* 0x53dc */
+    u16 mRoundTimer;                 /* 0x53e0 */
+    u16 mCardTimer;                  /* 0x53e2 */
+    u16 mResultTimer;                /* 0x53e4 */
+    s16 mReadyCount;                 /* 0x53e6 */
+    s16 mDealCount;                  /* 0x53e8 */
+    u16 mTargetPairs;                /* 0x53ea */
+    u16 mPreviewTimer;               /* 0x53ec */
+    u8 mSelectedValues[2];           /* 0x53ee */
+    u8 mSelectedCards[2];            /* 0x53f0 */
+    u8 mValueCounts[11];             /* 0x53f2 */
+    u8 mPreviewCards[8];             /* 0x53fd */
+    u8 mPairsFound;                  /* 0x5405 */
+    u8 mSelectedCount;               /* 0x5406 */
+    u8 unk_5407;                     /* 0x5407 */
+    u8 mMisses;                      /* 0x5408 */
+    u8 mMaxMisses;                   /* 0x5409 */
+    u8 mDifficulty;                  /* 0x540a */
+    u8 mMessageVisible;              /* 0x540b */
+    u8 mInputSeen;                   /* 0x540c */
+    u8 pad_540d[3];                  /* 0x540d */
 };
 
 typedef char dScMgMemory2_c_size_must_be_0x5410[sizeof(dScMgMemory2_c) == 0x5410 ? 1 : -1];

@@ -4,12 +4,12 @@
     .ctor       start:0x021230a4 end:0x021230b4 kind:rodata align:4
     .data       start:0x021230c0 end:0x02123500 kind:data align:32
     .bss        start:0x02123500 end:0x02123720 kind:bss align:32
-src/actors/daPropeller_Heyho_c.cpp:
+src/game/actors/d_a_propeller_heyho.cpp:
     complete
     .text start:0x0211f000 end:0x02120570
     .data start:0x02123120 end:0x021231e4
 
-src/actors/daBrq_c.cpp:
+src/game/actors/daBrq_c.cpp:
     complete
     .text start:0x02120570 end:0x021210ac
     .data start:0x0212323c end:0x021232f4
@@ -34,10 +34,10 @@ src/__sinit_ov070_02123030.c:
     complete
     .init start:0x02123030 end:0x021230a4
 
-src/actors/daKrpa_c.cpp:
+src/game/actors/d_a_krpa.cpp:
     complete
     .text start:0x02121118 end:0x02121b48
 
-src/actors/daKpFr_c.cpp:
+src/game/actors/d_a_kp_fr.cpp:
     complete
     .text start:0x02121b48 end:0x02122244

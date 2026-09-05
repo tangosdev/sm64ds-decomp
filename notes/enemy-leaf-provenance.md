@@ -92,7 +92,7 @@ offsets are not member accesses to collapse.
 
 Bodies read: the `Behavior`, `InitResources` and `Render` members, then in
 one-function files, now all consolidated into the promoted TU
-`src/actors/d_a_wanwan.cpp`.
+`src/game/actors/d_a_wanwan.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -126,7 +126,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 * `Behavior` — two `((char*)this) + 0x110` became `&mdCcAcPos_c`.
 * `Render` — `((char *)this) + 0x1dc` became `(char *)mLinkModels`.
 
-The promoted TU `src/actors/d_a_wanwan.cpp` carries the same renames. rombuild
+The promoted TU `src/game/actors/d_a_wanwan.cpp` carries the same renames. rombuild
 cannot see a stale spelling — `(char *)mLinkModels` and `((char *)this) + 0x1dc`
 compile to the same bytes — so what caught the one the reconstruction still
 carried was the readability ratchet (`tools/tiers_ratchet.py --check`), which

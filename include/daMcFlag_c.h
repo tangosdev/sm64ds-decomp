@@ -33,7 +33,7 @@ struct daMcFlag_c : dActor_c {
        function, so the TU that defines it emits this class's vtable and RTTI;
        an out-of-line destructor would make mwccarm emit D2, D0, D1, but the
        cartridge has D1 then D0 and no D2, and production isolation orders the
-       spanning delink by emission order.  See src/actors/d_a_mc_flag.cpp. */
+       spanning delink by emission order.  See src/game/actors/d_a_mc_flag.cpp. */
     virtual ~daMcFlag_c() {}                       /* slots 16 (D1), 17 (D0) */
 
     virtual s32 InitResources();             /* slot  0 */

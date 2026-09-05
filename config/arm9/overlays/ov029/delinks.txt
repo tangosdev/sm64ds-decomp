@@ -4,35 +4,35 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
-src/actors/d_a_obj_wc_obj01.cpp:
+src/game/actors/d_a_obj_wc_obj01.cpp:
     complete
     .text start:0x021111a0 end:0x0211137c
 
-src/actors/d_a_obj_wc_obj02.cpp:
+src/game/actors/d_a_obj_wc_obj02.cpp:
     complete
     .text start:0x0211137c end:0x02111728
 
-src/actors/d_a_obj_wc_obj03.cpp:
+src/game/actors/d_a_obj_wc_obj03.cpp:
     complete
     .text start:0x02111728 end:0x02111ac4
 
-src/actors/d_a_obj_wc_obj05.cpp:
+src/game/actors/d_a_obj_wc_obj05.cpp:
     complete
     .text start:0x02111ac4 end:0x02111ea4
 
-src/actors/d_a_obj_wc_obj06.cpp:
+src/game/actors/d_a_obj_wc_obj06.cpp:
     complete
     .text start:0x02111ea4 end:0x02112080
 
-src/actors/d_a_obj_wc_obj07.cpp:
+src/game/actors/d_a_obj_wc_obj07.cpp:
     complete
     .text start:0x02112080 end:0x021121a4
 
-src/actors/d_a_obj_wc_mizu.cpp:
+src/game/actors/d_a_obj_wc_mizu.cpp:
     complete
     .text start:0x021121a4 end:0x02112630
 
-src/actors/d_a_obj_wc_obj04.cpp:
+src/game/actors/d_a_obj_wc_obj04.cpp:
     complete
     .text start:0x02112630 end:0x0211299c
 

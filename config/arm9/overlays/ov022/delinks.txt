@@ -212,7 +212,7 @@ src/d_a_obj_fl_uki_ki.c:
     complete
     .text start:0x02112350 end:0x02112380
 
-src/actors/daObjFl_Fall_Block_c.cpp:
+src/game/actors/daObjFl_Fall_Block_c.cpp:
     complete
     .text start:0x02112380 end:0x0211245c
 

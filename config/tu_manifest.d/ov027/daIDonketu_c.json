@@ -1,8 +1,8 @@
 {
   "id": "ov027/daIDonketu_c",
   "module": "ov027",
-  "source": "src/actors/d_a_i_donketu.cpp",
-  "promoted_source": "src/actors/d_a_i_donketu.cpp",
+  "source": "src/game/actors/d_a_i_donketu.cpp",
+  "promoted_source": "src/game/actors/d_a_i_donketu.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

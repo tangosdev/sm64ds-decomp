@@ -34,7 +34,7 @@
  * neither truncated nor overrun. The destructor pair sits at ov013
  * 0x021111a0 (D1) / 0x021111d0 (D0). This class overrides four slots beyond
  * the destructor, all four now real methods in
- * src/actors/d_a_obj_clock_huriko.cpp:
+ * src/game/actors/d_a_obj_clock_huriko.cpp:
  *
  *   0  InitResources      ov013 0x0211133c   <- the key function, see below
  *   3  CleanupResources   ov013 0x02111214
@@ -111,13 +111,13 @@ struct daObjClockHuriko_c : dActor_c {
 
        Declared first, deliberately: with the destructor inline the key
        function is the first DECLARED non-inline virtual, so this ordering is
-       what makes src/actors/d_a_obj_clock_huriko.cpp the TU that emits the
+       what makes src/game/actors/d_a_obj_clock_huriko.cpp the TU that emits the
        _ZTV/_ZTI/_ZTS group -- exactly what the promotion needs it to be. --- */
     virtual ~daObjClockHuriko_c() {}
 
     /* --- overrides of inherited fBase_c slots dActor_c left untouched.
        Now real daObjClockHuriko_c:: methods, defined in
-       src/actors/d_a_obj_clock_huriko.cpp; the earlier free-function-under-a-
+       src/game/actors/d_a_obj_clock_huriko.cpp; the earlier free-function-under-a-
        mangled-symbol idiom is gone with the promotion. --- */
     virtual s32 InitResources();          /* slot 0 */
     virtual s32 CleanupResources();       /* slot 3 */

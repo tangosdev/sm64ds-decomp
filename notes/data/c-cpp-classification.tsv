@@ -129,7 +129,7 @@ src/FS_ReadFile.c	PURE-C	arm9				1		None		-
 src/FUN_02029a68.c	PURE-C	arm9				1		None		-
 src/FUN_02029ab0.c	WEAK-refs-only	arm9				1		None		-
 src/FUN_0202a130.c	PURE-C	arm9				1		None		-
-src/actors/d_a_obj_km2_fall_block.cpp	S1-stores-rom-vptr	ov045			stores _ZTV12FallBlockBfs	1		None	_ZTV12FallBlockBfs/_ZTV16daObjFallBlock_c	-
+src/game/actors/d_a_obj_km2_fall_block.cpp	S1-stores-rom-vptr	ov045			stores _ZTV12FallBlockBfs	1		None	_ZTV12FallBlockBfs/_ZTV16daObjFallBlock_c	-
 src/d_a_obj_fl_fall_block.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjFallBlock_c	1		None	_ZTV16daObjFallBlock_c/_ZTV20daObjFl_Fall_Block_c	-
 src/d_a_f_pkn_firepakun.c	WEAK-refs-only	ov084				1		None		-
 src/d_a_f_pkn_firepakun_s.c	WEAK-refs-only	ov084				1		None		-
@@ -141,8 +141,8 @@ src/FlameChompFire_Spawn.c	WEAK-refs-only	ov070				1		None		-
 src/FlameChomp_Spawn.c	WEAK-refs-only	ov070				1		None		-
 src/d_a_obj_fl_block.c	WEAK-refs-only	ov022				1		None		-
 src/daObjKi_Ita_c_classInit.c	S1-stores-rom-vptr	ov016			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV23FloatOnWaterPlatformJrb	-
-src/actors/d_a_obj_wc_obj06.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj06_c	-
-src/actors/d_a_obj_wc_obj01.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj01_c	-
+src/game/actors/d_a_obj_wc_obj06.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj06_c	-
+src/game/actors/d_a_obj_wc_obj01.cpp	S1-stores-rom-vptr	ov029			stores _ZTV17daObjFloatBoard_c	1		None	_ZTV17daObjFloatBoard_c/_ZTV14daObjWcObj01_c	-
 src/FloatingFloorBfs_Spawn.c	S1-stores-rom-vptr	ov045			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV16FloatingFloorBfs	-
 src/d_a_obj_fl_ukiyuka_fl_ukiyuka.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
 src/d_a_obj_fl_ukiyuka_fl_ukiyuka_l.c	S1-stores-rom-vptr	ov022			stores _ZTV14daObjUkiyuka_c	1		None	_ZTV14daObjUkiyuka_c/_ZTV21FloatingFloorLllSmall	-
@@ -275,8 +275,7 @@ src/daObjMc_Metalnet_c_classInit.c	WEAK-refs-only	ov009				1		None		-
 src/d_s_mg_pachinko.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_teresa.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_pachinko2.c	P2-vtable-only	ov006	dScMgPachinko_c	dScMgPachinko_c	vtable dScMgPachinko_c slot 38 @0x2104258	1		True		-
-src/d_s_mg_memory2.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
-src/d_s_mg_memory.c	S1-stores-rom-vptr	ov006			stores _ZTV13dScMgMemory_c	1		None	_ZTV13dScMgMemory_c/_ZTV19dScMgSingle3DBase_c	-
+src/dScMgMemory2_c_classInit.c	S1-stores-rom-vptr	ov006			stores _ZTV14dScMgMemory2_c	1		None	_ZTV14dScMgMemory2_c/_ZTV19dScMgSingle3DBase_c	-
 src/d_s_mg_panel.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_curling.c	WEAK-refs-only	ov006				1		None		-
 src/d_s_mg_bomroom.c	WEAK-refs-only	ov006				1		None		-
@@ -363,9 +362,9 @@ src/ResetCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/ResetInput.c	PURE-C	arm9				1		None		-
 src/ResetKuppaScript.c	PURE-C	arm9				1		None		-
 src/d_a_obj_km1_kurumajiku.c	S1-stores-rom-vptr	ov043			stores _ZTV11RickshawBdw	1		None	_ZTV11RickshawBdw/_ZTV17daObjKurumajiku_c	-
-src/actors/daObjKm3_Kurumajiku_c.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
+src/game/actors/d_a_obj_km3_kurumajiku.cpp	S1-stores-rom-vptr	ov047			stores _ZTV17daObjKurumajiku_c	1		None	_ZTV17daObjKurumajiku_c/_ZTV21daObjKm3_Kurumajiku_c	-
 src/daObjKm1_Kuruma_c_classInit.c	S1-stores-rom-vptr	ov043			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm1_Kuruma_c	-
-src/actors/d_a_obj_km3_kuruma.cpp	S1-stores-rom-vptr	ov047			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm3_Kuruma_c	-
+src/game/actors/d_a_obj_km3_kuruma.cpp	S1-stores-rom-vptr	ov047			stores _ZTV13daObjKuruma_c	1		None	_ZTV13daObjKuruma_c/_ZTV17daObjKm3_Kuruma_c	-
 src/d_a_obj_ki_hasira.c	S1-stores-rom-vptr	ov016			stores _ZTV10RockPillar	1		None	_ZTV10RockPillar	-
 src/d_a_obj_simple_bg_ki_hasira_dai.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_ibl.c	WEAK-refs-only	ov100				1		None		-
@@ -376,7 +375,7 @@ src/d_a_obj_simple_bg_mc_hazad.c	WEAK-refs-only	ov102				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha10.c	WEAK-refs-only	ov035				1		None		-
 src/d_a_obj_ct_mecha10_ct_mecha12s.c	WEAK-refs-only	ov035				1		None		-
 src/d_a_obj_fl_koma_d.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformLll	-
-src/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
+src/game/actors/d_a_obj_wc_obj07.cpp	S1-stores-rom-vptr	ov029			stores _ZTV16daObjKaitendai_c	1		None	_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/d_a_obj_rotate_updown_lift_hs_updown_lift.c	WEAK-refs-only	ov091				1		None		-
 src/d_a_obj_rotate_updown_lift_updown_lift.c	WEAK-refs-only	ov091				1		None		-
 src/RunKuppaScript.c	PURE-C	arm9				1		None		-
@@ -1386,10 +1385,10 @@ src/actors/Boo/_ZN3Boo13InitResourcesEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/da
 src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 12 @0x211af6c | _ZN3Boo16OnPendingDestroyEv	1		True		-
 src/actors/BooCage/daTBasket_c_classInit.c	WEAK-refs-only	ov063				1		None		-
 src/actors/Bookshelf/daTrsTrap_c_classInit_BOOKSHELF.c	WEAK-refs-only	ov063				1		None		-
-src/actors/FallBlockBbh/d_a_obj_th_fall_block.c	S1-stores-rom-vptr	ov063			stores _ZTV12FallBlockBbh	1		None	_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp	DTOR-ONLY	ov063	daObjTh_Fall_Block_c	FallBlockBbh/daObjTh_Fall_Block_c	_ZN12FallBlockBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
-src/actors/MadPiano/_ZN8MadPianoD1Ev.cpp	DTOR-ONLY	ov063	daPiano_c	MadPiano/daPiano_c	_ZN8MadPianoD1Ev	1		True	_ZTV10dBgActor_c/_ZTV8MadPiano	-
-src/actors/MadPiano/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
+src/game/actors/daObjTh_Fall_Block_c/d_a_obj_th_fall_block.c	S1-stores-rom-vptr	ov063			stores _ZTV12FallBlockBbh	1		None	_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
+src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp	DTOR-ONLY	ov063	daObjTh_Fall_Block_c	FallBlockBbh/daObjTh_Fall_Block_c	_ZN12FallBlockBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
+src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp	DTOR-ONLY	ov063	daPiano_c	MadPiano/daPiano_c	_ZN8MadPianoD1Ev	1		True	_ZTV10dBgActor_c/_ZTV8MadPiano	-
+src/game/actors/daPiano_c/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/actors/MansionSteps/daTrsTrap_c_classInit_KAIDAN.c	WEAK-refs-only	ov063				1		None		-
 src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	vtable daTrsTrap_c slot 12 @0x211ce30 | _ZN12MansionSteps16OnPendingDestroyEv	1		True		-
 src/actors/MerryGoRound/daTrsTrap_c_classInit_MERRYGOROUND.c	WEAK-refs-only	ov063				1		None		-
@@ -4749,45 +4748,45 @@ src/func_ov006_020f51f0.c	PURE-C	ov006				1		None		-
 src/func_ov006_020f523c.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 21 @0x20f523c	1	active	True		-
 src/func_ov006_020f5250.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 19 @0x20f5250	1	active	True		-
 src/func_ov006_020f52c4.c	P2-vtable-only	ov006	dScMgMemory_c	dScMgMemory_c	vtable dScMgMemory_c slot 18 @0x20f52c4	1	active	True		-
-src/func_ov006_020f5620.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f565c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5694.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f56f8.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f572c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5740.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5744.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f58d0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f593c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f59c0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5b98.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5cb4.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5de0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5e70.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5e74.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f5f0c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6084.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6088.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f6230.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f639c.c	WEAK-refs-only	ov006				1		None		-
-src/func_ov006_020f6488.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6538.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6678.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f670c.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f67a0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6830.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6904.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
-src/func_ov006_020f6a00.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6a78.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6b00.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6b78.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6bf0.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6c90.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f6f88.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7064.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7190.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7210.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f7280.c	PURE-C	ov006				1		None		-
-src/func_ov006_020f72c0.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11DrawMessageEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10DrawCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12UpdateCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10ShowCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10HideCursorEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerWaitEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerMoveEi.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10PlayerDropEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11InitPlayersEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13CheckFinishedEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9DrawCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12CardFlipDownEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardWaitEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10CardFlipUpEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10CardSelectEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardIdleEi.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c8CardMoveEi.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ResultFinishEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c	WEAK-refs-only	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ResultRewardEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10ResultWaitEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c11RoundRevealEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
+src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundDealHardEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10RoundStartEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9ResetGameEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c9StateExitEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10StateJudgeEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c10StateSetupEv.c	PURE-C	ov006				1		None		-
+src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c	PURE-C	ov006				1		None		-
 src/func_ov006_020f730c.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 21 @0x20f730c	1	active	True		-
 src/func_ov006_020f7320.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 19 @0x20f7320	1	active	True		-
 src/func_ov006_020f7394.c	P2-vtable-only	ov006	dScMgMemory2_c	dScMgMemory2_c	vtable dScMgMemory2_c slot 18 @0x20f7394	1	active	True		-

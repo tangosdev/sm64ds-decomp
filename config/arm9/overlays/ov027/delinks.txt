@@ -40,7 +40,7 @@ src/d_a_obj_sl_ice_block_sl_iceblock.c:
     complete
     .text start:0x02111594 end:0x021115c4
 
-src/actors/d_a_i_donketu.cpp:
+src/game/actors/d_a_i_donketu.cpp:
     complete
     .text start:0x021115c4 end:0x021118c8
 

@@ -291,7 +291,7 @@ src/_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv.cpp:
     complete
     .text start:0x020b04e0 end:0x020b04e8
 
-src/actors/dScMgBase_c.cpp:
+src/minigames/d_s_mg_base.cpp:
     complete
     .text start:0x020b04e8 end:0x020b0a38
 

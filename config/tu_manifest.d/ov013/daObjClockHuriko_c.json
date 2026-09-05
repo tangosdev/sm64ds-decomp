@@ -1,8 +1,8 @@
 {
   "id": "ov013/daObjClockHuriko_c",
   "module": "ov013",
-  "source": "src/actors/d_a_obj_clock_huriko.cpp",
-  "promoted_source": "src/actors/d_a_obj_clock_huriko.cpp",
+  "source": "src/game/actors/d_a_obj_clock_huriko.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_clock_huriko.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

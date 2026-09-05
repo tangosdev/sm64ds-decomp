@@ -1,8 +1,8 @@
 {
   "id": "ov044/daObjKb1Billboard_c",
   "module": "ov044",
-  "source": "src/actors/d_a_obj_kb1_billboard.cpp",
-  "promoted_source": "src/actors/d_a_obj_kb1_billboard.cpp",
+  "source": "src/game/actors/d_a_obj_kb1_billboard.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_kb1_billboard.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",

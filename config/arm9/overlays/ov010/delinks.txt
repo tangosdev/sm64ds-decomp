@@ -3,7 +3,7 @@
     .ctor       start:0x0211219c end:0x021121a8 kind:rodata align:4
     .data       start:0x021121c0 end:0x02112d00 kind:data align:32
     .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
-src/actors/daObjC1_Trap_c.cpp:
+src/game/actors/d_a_obj_c1_trap.cpp:
     complete
     .text start:0x021111a0 end:0x021119d0
 

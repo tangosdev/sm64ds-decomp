@@ -3,15 +3,15 @@
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
     .data       start:0x02112a00 end:0x02114020 kind:data align:32
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
-src/actors/d_a_obj_rc_buranko.cpp:
+src/game/actors/d_a_obj_rc_buranko.cpp:
     complete
     .text start:0x021111a0 end:0x02111444
 
-src/actors/d_a_obj_rc_kaitendai.cpp:
+src/game/actors/d_a_obj_rc_kaitendai.cpp:
     complete
     .text start:0x02111444 end:0x02111580
 
-src/actors/d_a_obj_rc_hane.cpp:
+src/game/actors/d_a_obj_rc_hane.cpp:
     complete
     .text start:0x02111580 end:0x0211193c
 
@@ -55,16 +55,16 @@ src/d_a_obj_rc_tikuwa.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 
-src/actors/d_a_obj_rc_guruguru.cpp:
+src/game/actors/d_a_obj_rc_guruguru.cpp:
     complete
     .text start:0x02111d14 end:0x02111f8c
 
-src/actors/d_a_obj_rc_dorifu.cpp:
+src/game/actors/d_a_obj_rc_dorifu.cpp:
     complete
     .text start:0x02111f8c end:0x02112158
     .data start:0x02113e4c end:0x02113f4c
 
-src/actors/daObjRcCarpet_c.cpp:
+src/game/actors/d_a_obj_rc_carpet.cpp:
     complete
     .text start:0x02112158 end:0x021125b0
     .data start:0x02113f4c end:0x02114020

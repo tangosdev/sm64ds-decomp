@@ -8,9 +8,9 @@
  * is already attributed and is kept.
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse: built
- * 0x500c, 0x534c, 0x5cd0; destroyed 0x5cd0, 0x534c, 0x500c. No Model and no
- * typed member of any kind, so nothing here is compiler-generated -- the
- * destructor body is all three calls and nothing else.
+ * 0x500c, 0x534c, 0x5cd0; destroyed 0x5cd0, 0x534c, 0x500c. All three
+ * element arrays remain raw because their private types are not recovered;
+ * the destructor body is all three calls and nothing else.
  *
  * OWN TAIL, 0x5d94..0x5dc6: eighteen fields carried over verbatim from this
  * header's previous auto-generated form, at unchanged offsets and widths.
@@ -33,6 +33,8 @@ extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline_c : dScMgD3DBase_c {
+    typedef void (dScMgTrampoline_c::*State)();
+
     /* DEFINED IN THE CLASS BODY, DELIBERATELY -- not a style choice.
        D1 sits at 0x021207dc, BELOW D0 at 0x02120880. An out-of-line member
        definition makes mwccarm 2004/b56 emit the destructor group as
@@ -44,7 +46,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        virtual destructor is always reached through the vtable.
        It does give up the key function: with this inline, the first virtual
        DECLARED but not defined here is InitResources below, which lives in
-       src/actors/d_sc_mg_trampoline.cpp, so _ZTV17dScMgTrampoline_c is still
+       src/minigames/d_s_mg_trampoline.cpp, so _ZTV17dScMgTrampoline_c is still
        emitted by that one translation unit and by no other. */
     virtual ~dScMgTrampoline_c() {
         __destroy_arr(mArray3, 5, 0x24, (void *)func_ov006_02120938);
@@ -67,7 +69,31 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     virtual int  OnPushed();                           /* slot 25 */
     virtual void Virtual88(int cx, int cy, int colour, int size); /* slot 34 */
 
-    u8  pad_5004[0x8];    /* 0x5004 -- no matched access in this class's methods */
+    /* State callbacks stored in mState. The five TU-owned data descriptors
+       at ov006:0x0213faa0..0x0213fad0 prove these are no-argument member
+       functions of this class: Behavior dispatches the same eight-byte
+       pointer-to-member representation every frame. The English suffixes
+       are coined from the matched bodies; the ROM symbols were address-only. */
+    void StateDone();      /* ov006 0x02121774 */
+    void StateWaitExit();  /* ov006 0x02121778 */
+    void StateResults();   /* ov006 0x02121848 */
+    void StatePlay();      /* ov006 0x021218fc */
+    void StateIntro();     /* ov006 0x02121d64 */
+
+    /* State-entry helpers. Each initializes the fields needed by the named
+       state and then installs that state's TU-owned PMF descriptor. These
+       English names are behavioral coinage; the ROM symbols were address-only. */
+    void BeginResults();   /* ov006 0x021218c4 */
+    void BeginPlay();      /* ov006 0x02121cf4 */
+    void BeginIntro();     /* ov006 0x02121f04 */
+
+    /* Per-frame helpers called by Behavior/StatePlay. Their names describe
+       matched behavior; exact original spellings are not present in the ROM. */
+    void UpdateTouchInput(); /* ov006 0x0212157c */
+    void UpdateScroll();     /* ov006 0x02121bc8 */
+
+    u32 mState[2];         /* 0x5004 -- raw eight-byte State encoding; direct
+                              global PMF initializers emit a non-ROM __sinit */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */
     u8  mArray2[0x984];   /* 0x534c -- 3 * 0x32c, elem dtor func_ov006_020d1008 */
     u8  mArray3[0xb4];    /* 0x5cd0 -- 5 * 0x24,  elem dtor func_ov006_02120938 */
@@ -81,7 +107,8 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s32 mArrow1X;         /* 0x5da4 -- the two guide arrows Render draws at
                              n + 0xf0; each slides between 0 and 0x20 */
     s32 mArrow2X;         /* 0x5da8 */
-    u8  pad_5dac[0x4];    /* 0x5dac -- the drag sound handle */
+    s32 mDragSoundHandle; /* 0x5dac -- returned by the positional drag-sound
+                             updater and fed back on the next frame */
     s16 mTouchX;          /* 0x5db0 -- the current stylus sample */
     s16 mTouchY;          /* 0x5db2 */
     s16 mTouchStartX;     /* 0x5db4 -- copied from mTouch on the press edge and
@@ -95,8 +122,8 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s16 unk_5dc0;         /* 0x5dc0 */
     s16 unk_5dc2;         /* 0x5dc2 */
     u8  mTouching;        /* 0x5dc4 -- a drag is in progress */
-    u8  mTouchReleased;   /* 0x5dc5 -- set on the release edge; the swipe test
-                             in src/_ZN17dScMgTrampoline_c11OnAttacked2Ev.c consumes and clears it */
+    u8  mTouchReleased;   /* 0x5dc5 -- set on the release edge; OnAttacked2
+                             consumes and clears it after the swipe test */
     u8  pad_5dc6[0x2];    /* 0x5dc6 -- rounds up to the 0x5dc8 boundary */
 };
 

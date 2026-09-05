@@ -1,8 +1,8 @@
 {
   "id": "ov071/daEyBm_c",
   "module": "ov071",
-  "source": "src/actors/daEyBm_c.cpp",
-  "promoted_source": "src/actors/daEyBm_c.cpp",
+  "source": "src/game/actors/d_a_ey_bm.cpp",
+  "promoted_source": "src/game/actors/d_a_ey_bm.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

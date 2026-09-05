@@ -14,12 +14,11 @@ int dScMgMemory2_c::OnTurnIntoEgg(int /* mode */)
 {
     char *c = (char *)this;
 
-    struct dScMgMemory2_c *self = (struct dScMgMemory2_c *)(void *)c;
-    if (self->unk_53d4 == 3 && self->unk_53d8 == 0) {
+    if (mState == 3 && mSubstate == 0) {
         if (func_ov006_020c1718((int*)(c + 0x4f38)) == 0) return 0;
-        self->unk_53d8 = 1;
+        mSubstate = 1;
         FreeGfxSlotsById(0x1d);
     }
-    return self->unk_53d4 == 4;
+    return mState == 4;
 }
 }

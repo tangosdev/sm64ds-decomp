@@ -174,7 +174,7 @@ warns about. **Preserve that; do not "fix" it to `virtual`.**
 **SINCE LANDED, AND SINCE SUPERSEDED.** This pilot went in with #1684, essentially as
 written below. The class has since been renamed to the cartridge's own
 `daObjKm2_Fall_Block_c` and consolidated into one genuine TU,
-`src/actors/d_a_obj_km2_fall_block.cpp`, which is why every path in this section now
+`src/game/actors/d_a_obj_km2_fall_block.cpp`, which is why every path in this section now
 names that file: the five per-function sources are gone. Both slot methods are now
 declared plainly, so `CleanupResources` (the first declared non-inline virtual, the
 destructor being inline) deliberately IS the key function, and the `no _ZTV` half of the
@@ -183,7 +183,7 @@ the RTTI group to land, and the class stays unverifiable against the cartridge u
 does. The reasoning above is kept because the rest of the queue still rests on it, and it
 still holds wherever a class remains spread over per-function files.
 
-The exact edit (`src/actors/d_a_obj_km2_fall_block.cpp`, `0x02111e10`, size `0x14`, ov045):
+The exact edit (`src/game/actors/d_a_obj_km2_fall_block.cpp`, `0x02111e10`, size `0x14`, ov045):
 
 ```cpp
 //cpp
@@ -197,7 +197,7 @@ This is a **real** migration: the compiler mangles the name. Verify that claim w
 oracle **before** the byte gate — it needs no ROM and no serialization:
 
 ```
-python tools/mangle.py src/actors/d_a_obj_km2_fall_block.cpp \
+python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp \
     --expect _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
 ```
 
@@ -360,8 +360,8 @@ python tools/match.py --c src/_ZN10ChillBully14UpdateRunStateEv.cpp \
 and the pilot deliberately excludes:
 
 ```
-python tools/mangle.py src/actors/d_a_obj_km2_fall_block.cpp --expect _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
-python tools/match.py --c src/actors/d_a_obj_km2_fall_block.cpp \
+python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp --expect _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
+python tools/match.py --c src/game/actors/d_a_obj_km2_fall_block.cpp \
     --func _ZN21daObjKm2_Fall_Block_c13InitResourcesEv --addr 0x02111e10 --size 0x14 --module ov045
 ```
 

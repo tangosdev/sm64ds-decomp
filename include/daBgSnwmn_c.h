@@ -41,7 +41,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *     _ZN10dCcAcPos_cC1Ev(p + 0x1b0) -- dCcAcPos_c, 0x40
  * THE LAST MEMBER CLOSES EXACTLY ON THE ALLOCATION LITERAL:
  * 0x1b0 + 0x40 = 0x1f0. Nothing is left over. The destructor
- * pair emitted from src/actors/d_a_bg_snwmn.cpp tears the same five down in
+ * pair emitted from src/game/actors/d_a_bg_snwmn.cpp tears the same five down in
  * exactly the reverse order -- dCcAcPos_c, ShadowModel, TextureSequence,
  * Model, Model -- which is what a compiler-generated body emits for typed
  * members declared in ascending-offset order, so they are declared typed

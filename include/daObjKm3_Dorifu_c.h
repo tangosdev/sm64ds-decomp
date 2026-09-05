@@ -57,7 +57,7 @@ struct daObjKm3_Dorifu_c : daObjDorifu_c {
     /* CleanupResources is declared FIRST deliberately: with the destructor
        inline the key function is the first DECLARED non-inline virtual --
        declared, not lowest slot -- so this ordering is what makes
-       src/actors/d_a_obj_km3_dorifu.cpp the TU that emits the _ZTV/_ZTI/_ZTS
+       src/game/actors/d_a_obj_km3_dorifu.cpp the TU that emits the _ZTV/_ZTI/_ZTS
        group. Both are real methods for the same reason: a hand-mangled
        `extern "C"` free function does not DEFINE the key function, and then
        mwcc emits neither the RTTI group nor the inline destructor's D1/D0

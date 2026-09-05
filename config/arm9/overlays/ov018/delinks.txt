@@ -48,15 +48,15 @@ src/d_a_obj_sm_lift.c:
     complete
     .text start:0x02111818 end:0x02111848
 
-src/actors/d_a_pg_mthr.cpp:
+src/game/actors/d_a_pg_mthr.cpp:
     complete
     .text start:0x02111848 end:0x021126d4
 
-src/actors/d_a_s_cre.cpp:
+src/game/actors/d_a_s_cre.cpp:
     complete
     .text start:0x021126d4 end:0x021127bc
 
-src/actors/d_a_obj_ice_board.cpp:
+src/game/actors/d_a_obj_ice_board.cpp:
     complete
     .text start:0x021127bc end:0x02112a74
 
