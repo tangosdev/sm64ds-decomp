@@ -116,7 +116,7 @@ class as for the flat shadow the ROM's own code is built against.
 
 A swinging platform. Bodies read: `src/_ZN7daDgr_c13InitResourcesEv.cpp`,
 `src/_ZN7daDgr_c8BehaviorEv.cpp`, `src/_ZN7daDgr_c6RenderEv.cpp`,
-`src/_ZN7daDgr_c16CleanupResourcesEv.cpp`, [src/func_ov025_02111898.c](../src/func_ov025_02111898.c) (the factory).
+`src/_ZN7daDgr_c16CleanupResourcesEv.cpp`, [src/d_a_dgr.c](../src/d_a_dgr.c) (`daDgr_c_classInit`, the factory).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
