@@ -1,0 +1,96 @@
+# Gate 215: THE SAVE SYSTEM'S OWN MEDIUM PATH -- run link100, lane SAVE.
+#
+# ---- what it is ------------------------------------------------------------
+#
+# SaveData::SaveDataToCart and SaveData::ReadDataFromCart, and the card-backup
+# driver underneath them, running for real. Both were host SHADOWS in
+# hal/scene_boot.cpp -- host bodies of the same name, storing the game's
+# SaveData buffers into a container file with a host header, a host CRC32 and a
+# host valid-slot bitmap. Their four callers (ReadFileData, ReadMinigameData,
+# EraseSaveFile, SaveFile) were already linked, so what stood in was the medium
+# and not the save logic; now the medium is hosted at the ARM7 boundary instead
+# and the two leaves are the ROM's own matched TUs.
+#
+# port/ntr/backup.cpp is the medium and carries the whole derivation: the chip
+# the ROM asks for (func_02042f68(0xd01, "ds mario") in src/func_0201a054.c --
+# a 64 Kbit EEPROM, 8192 bytes), the record layout it writes, and the three
+# faces this slice needs under it.
+#
+# ---- where the seam is, and why it is there --------------------------------
+#
+# func_02060f60 is the ARM9's PXI request to the ARM7: IPCSend on channel 0xB,
+# then sleep on data_020a8180+0x34 bit 0x20 until the ARM7's receive interrupt
+# clears it. The port has no ARM7 and no PXI reply, so that sleep never ends.
+# port/ntr/backup.cpp answers it -- same command block, same result word, same
+# return convention -- and EVERYTHING ABOVE IT IN THIS SLICE IS THE ROM'S.
+#
+# Two more faces ride beside it and both are the same ruling hal/fs_names.cpp
+# already made for FS_Init: func_02057020 and func_02057078 are hand-written
+# ARM (`asm` blocks MSVC cannot assemble) over the OS lock bitmask at
+# 0x027FFFB0, a page ntr maps nothing at.
+#
+# ---- the async arm, which links and never runs -----------------------------
+#
+# func_02060484 and func_02060558 both take the address of func_02060228 for
+# their `f != 0` asynchronous arm, so it has to link even though both callers
+# in this slice pass 0. func_02060228 drags in func_02057e7c, func_02057e84 and
+# func_020584d0, the driver's thread-priority bump; func_02057e84 needs the
+# thread node data_020a6188, hosted in hal/cxx_aliases.cpp's link100 SAVE
+# block. func_02057f54 and func_0205801c below them were already sliced.
+#
+# ---- not here --------------------------------------------------------------
+#
+# The device-identify chain (func_02060398, func_02060364, func_020603c8,
+# func_02060470, func_020607e8, func_02042f68) wants two arm9 .rodata spans
+# mounted -- the device table at 0x020867bc and the record tag at 0x0208ee50 --
+# and port/CMakeLists.txt's ROM-CLEAN mode zeroes every romdata array for a
+# shipped kit. A zeroed device row is a zero-byte chip, and a zero-byte chip
+# makes SaveDataToCart's second line refuse every save, silently, on the build
+# a player runs. The foot of port/ntr/backup.cpp states the proposal.
+#
+# The card driver's erase family (func_02060a64 and neighbours) is the FLASH
+# path; a 64 Kbit EEPROM is byte-writable and this game never sends an erase.
+#
+# ---- and one more shadow, three files away ---------------------------------
+#
+# hal/message_pump.cpp drives the ROM's "Saving..." dialogue arm and stubbed the
+# WRITE at the bottom of it: a host port_save_current_file that printed "file
+# write is unhosted" once and returned. SaveData::SaveCurrentFile is two calls
+# (SaveFile for the current slot, then SaveMinigames) and both were already
+# linked; only the medium was missing. It is the seventeenth TU here and
+# port_save_current_file is now a wrapper over it.
+
+src/_ZN8SaveData14SaveDataToCartEPcjj.cpp
+src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp
+src/func_0206045c.c
+src/func_0205ff70.c
+src/func_0205ff80.c
+src/func_020600e0.c
+src/func_02060188.c
+src/func_02060484.c
+src/func_02060558.cpp
+src/func_0206062c.cpp
+src/func_0206071c.c
+src/func_0206081c.c
+src/func_02060228.c
+src/func_02057e7c.c
+src/func_02057e84.c
+src/func_020584d0.c
+
+# src/func_02057f54.c IS DELIBERATELY EXCLUDED FROM slice_gate10 AND IS HERE
+# ANYWAY, so read this before assuming one of the two lists is a mistake.
+# port/CMakeLists.txt's SLICE10_CAM filter drops OS_SleepThread, OS_WakeupThread
+# and this file together, because hal/os_thread.cpp hosts the sleep/wake pair
+# (run mg15 lane MP1) and the ROM's OS_SleepThread faults on data_020a612c->node.
+# THAT RULING IS ABOUT ITS TWO SIBLINGS AND STILL STANDS: neither is here and
+# hal/os_thread.cpp is still what runs.
+#
+# This body is here because func_02057e84 CALLS it and the link needs it, and it
+# is inert on arrival: nothing reaches func_02057e84 either. Its first two acts
+# are `r6 = data_020a612c[0]` and `r5 = func_0205801c()`, and on this host both
+# are 0 (hal/cxx_aliases.cpp hosts data_020a612c as a zeroed int[4] and the ready
+# list data_020a6134 is empty), so `if (r6 == r5) return` retires it before it
+# reaches ARMSaveContext at all. It is a load, not the deref that convicted
+# OS_SleepThread.
+src/func_02057f54.c
+src/_ZN8SaveData15SaveCurrentFileEv.c

@@ -2154,3 +2154,49 @@ bool Player::TryGrab(Actor &actor)
 #pragma comment(linker, "/alternatename:?data_020a0ebc@@3PAHA=_data_020a0ebc")
 #pragma comment(linker, "/alternatename:?data_ov002_0211028c@@3UState@@A=_data_ov002_0211028c")
 #pragma comment(linker, "/alternatename:?data_ov002_0211004c@@3HA=_data_ov002_0211004c")
+
+// ---- link100 SAVE ----------------------------------------------------------
+//
+// ONE THREAD NODE, and it is storage for a comparison that is never true.
+//
+// port/slice_gate215.txt links the card-backup driver, and two of its TUs are
+// there only because their address is taken: src/func_02060484.c and
+// src/func_02060558.cpp both hand func_02060228 to their asynchronous arm, and
+// both callers in that slice pass 0 for it. func_02060228 -> func_02057e84 is
+// the driver's thread-priority bump, and src/func_02057e84.c walks the ready
+// list looking for the node it was given, refusing to touch it if it turns out
+// to be data_020a6188 -- the idle thread, which must never be re-queued.
+//
+// The port creates no DS threads, so the list is empty and the walk ends on the
+// first compare; the symbol still has to exist for the link. Sized by ROM span,
+// data_020a6188 to the next bss symbol data_020a621c, which is 0x94 bytes --
+// one OSThread, the same shape data_020a81bc has. NOT sized by the two fields
+// src/func_02057e84.c reads (+0x68 next, +0x70 priority): see the undersized-
+// globals rule this file's GX bank block was rewritten under.
+//
+// It is hosted arm9 bss like every other symbol in this file, so it is inside a
+// DSSTATE bracket and the lk6/lk7 dev savestate captures it. dsstate_guard
+// enforces that for every data_020* symbol and there is no case for an
+// exception here.
+DSSTATE_BEGIN
+extern "C" { int data_020a6188[0x94 / 4]; }
+DSSTATE_END
+
+// THREE ALIASES THE SAVE SLICE NEEDS, and each is the same shape this file has
+// carried a dozen times: a matched TU spells a name the C++ way and the
+// definition it wants exists under the ROM's flat C name.
+//
+//   SaveData::ReadDataFromCart   src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp
+//   declares `struct SaveData { static int ReadDataFromCart(...); }` and defines
+//   the method, so its object exports ONLY MSVC's mangling. Every caller in the
+//   ROM -- ReadFileData, ReadMinigameData, and hal/scene_boot.cpp's probe --
+//   spells the Itanium C name. Exactly the trade hal/scene_boot.cpp already
+//   makes for SaveData::SaveFile one screen above its own save block.
+//
+//   IRQ::Disable / IRQ::Restore   src/func_02060558.cpp declares them as free
+//   functions in `namespace IRQ` (`?Disable@IRQ@@YAIXZ`) while line 64 of this
+//   file aliases the STATIC-MEMBER spelling (`?Disable@IRQ@@SAIXZ`). Same two
+//   definitions, a second spelling; the ROM's own bodies still run.
+#pragma comment(linker, "/alternatename:__ZN8SaveData16ReadDataFromCartEPcjj=?ReadDataFromCart@SaveData@@SAHPADII@Z")
+#pragma comment(linker, "/alternatename:?Disable@IRQ@@YAIXZ=__ZN3IRQ7DisableEv")
+#pragma comment(linker, "/alternatename:?Restore@IRQ@@YAXI@Z=__ZN3IRQ7RestoreEj")

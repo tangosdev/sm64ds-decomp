@@ -76,16 +76,19 @@
 //     the "Saved!" confirmation, which loops the arm once more and on its own close
 //     (id 0x296 != 0x295) clears data_0209d654.
 //
-// THE ONE THING NOT HOSTED is the real file write. SaveData::SaveCurrentFile ->
-// SaveData::SaveFile -> SaveData::SaveDataToCart bottoms out on the DS backup-cart
-// hardware layer (func_0203da3c/func_0206045c/func_02057020/func_02060484), none
-// of which the port hosts, and none of which is in any build slice. The box CLOSE
-// does not depend on the write completing -- it is driven purely by the
-// data_0209d67c countdown -- so a host stub of SaveData::SaveCurrentFile
-// (port_save_current_file, below) stands in for JUST the leaf: it notes once to
-// stderr that the write is unhosted, naming the symbol, and returns success. When
-// a host save backend lands, that stub is the single place it plugs in. Nothing
-// is faked silently.
+// THE FILE WRITE IS REAL NOW (run link100, lane SAVE). This block used to say
+// the write "bottoms out on the DS backup-cart hardware layer
+// (func_0203da3c/func_0206045c/func_02057020/func_02060484), none of which the
+// port hosts, and none of which is in any build slice", and stubbed the leaf
+// with a one-shot note to stderr. All four of those are in the binary now:
+// port/slice_gate215.txt links the card driver and port/ntr/backup.cpp hosts the
+// medium under it, so SaveData::SaveCurrentFile -> SaveFile -> SaveDataToCart
+// reaches a real 8192-byte cartridge image on disk. port_save_current_file below
+// is a two-line wrapper over the ROM's own function and nothing else.
+//
+// The box CLOSE still does not depend on the write completing -- it is driven
+// purely by the data_0209d67c countdown -- which is the ROM's own arrangement
+// and is left exactly as it was.
 #include <cstdio>
 #include <cstdlib>
 
@@ -102,8 +105,9 @@ struct Message {
 extern "C" {
 
 void _ZN7Message6UpdateEv(void *self);     /* Message::Update, faced in reverse_bridges */
+int  _ZN8SaveData15SaveCurrentFileEv(void);  /* the ROM save, gate 215 */
 
-static void port_save_current_file(void);  /* the save-write leaf, host stand-in (below) */
+static void port_save_current_file(void);  /* the save-write leaf (below) */
 
 extern unsigned char data_0209d660;   /* message-active flag */
 extern unsigned char data_0209d654;   /* save-screen flag (0 for a dialogue) */
@@ -280,22 +284,17 @@ void port_message_pump(void)
     }
 }
 
-/* The save-write leaf, host stand-in. On the DS this is
-   SaveData::SaveCurrentFile -> SaveData::SaveFile -> SaveData::SaveDataToCart,
-   which bottoms out on the backup-cart hardware the port does not host and which
-   is in no build slice, so calling the matched symbol would be an unresolved
-   external. The box close does not depend on the write, so this stubs JUST the
-   leaf: one-shot note to stderr naming the unhosted symbol, then success. This is
-   the single seam a real host save backend plugs into. */
+/* The save-write leaf. The ROM's own SaveData::SaveCurrentFile, linked from
+   src/_ZN8SaveData15SaveCurrentFileEv.c through port/slice_gate215.txt: it
+   writes the current file (slot data_0209caa0[0x328]) and then the minigame
+   record, and the value it returns is 1 when both reached the medium. Nothing
+   in the ROM reads that value here either -- Message's countdown owns the box
+   -- so it is traced under the pump's own debug flag and dropped. */
 static void port_save_current_file(void)
 {
-    static int noted;
-    if (!noted) {
-        noted = 1;
-        std::fprintf(stderr, "[msg] save arm: file write is unhosted -- "
-                     "SaveData::SaveCurrentFile (_ZN8SaveData15SaveCurrentFileEv) "
-                     "not in any port slice; box closes, no file written\n");
-    }
+    int ok = _ZN8SaveData15SaveCurrentFileEv();
+    if (std::getenv("SM64DS_MSG_PUMP_DEBUG"))
+        std::fprintf(stderr, "[msgpump] SaveData::SaveCurrentFile -> %d" "\n", ok);
 }
 
 } /* extern "C" */

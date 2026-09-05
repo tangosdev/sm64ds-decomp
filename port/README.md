@@ -53,9 +53,32 @@ long that screen is up (986 with a tap on frame 700, 2546 with no tap over 1200
 frames), a trap returns rather than faulting, and `rc` stays 0 with a clean
 census. The default route still reports 0.
 
-There is **no save medium yet**, so the file select offers three fresh files on
-every boot. All three are selectable and all three start a new adventure.
-Persistence is deliberately out of scope.
+### The save file
+
+The game saves. The medium is a **plain 8192-byte cartridge image**, written by
+the ROM's own `SaveData::SaveDataToCart` through the ROM's own card-backup
+driver, and it lives at
+
+    <folder holding the exe>\save\sm64ds.sav
+
+(`SM64DS_SAVE_PATH` overrides it with an exact path; with no exe folder it falls
+back to `$SM64DS_ASSET_ROOT/save/` and then `./save/`). **Deleting the file is a
+fresh cartridge** -- the port makes a new one, filled with `0xFF` the way an
+erased EEPROM cell reads, and the game's own blank-medium path runs and offers
+three fresh files. Nothing else deletes it: a file that is not exactly 8192
+bytes is left alone on disk and the run gets an erased chip in memory.
+
+What is in it is the ROM's layout and not the port's. Each save record is a
+2-byte rolling checksum, the 8-byte tag `ds mario`, then the payload; the three
+adventure files are at `slot << 7` and the minigame records at `0x180`, and the
+whole thing is written twice, once at the top of the chip and once at `0x1000`,
+because that is what the cartridge code does. `python port/tools/save_proof.py`
+checks all of that on a file the game wrote.
+
+The medium is hosted in `port/ntr/backup.cpp` at the point the DS would ask the
+ARM7 for it; the save logic above it is `src/`. Save files are not carried by
+the dev savestate (F8/F9) -- a savestate is a snapshot of RAM and the cartridge
+is not RAM.
 
 ### Developer opt-outs
 
