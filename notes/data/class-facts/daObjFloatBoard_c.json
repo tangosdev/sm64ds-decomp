@@ -1,0 +1,126 @@
+{
+  "class": "daObjFloatBoard_c",
+  "rtti_name": "17daObjFloatBoard_c",
+  "rtti_name_address": "0x02108fc0",
+  "typeinfo": {
+    "symbol": "_ZTI17daObjFloatBoard_c",
+    "address": "0x02108fb4",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "words": ["0x0209a764", "0x02108fc0", "0x021089ec"],
+    "base_typeinfo": "_ZTI10dBgActor_c (ov002 0x021089ec)"
+  },
+  "overlay": "ov002",
+  "module_base": "0x020ad660",
+  "vtable": {
+    "symbol": "_ZTV17daObjFloatBoard_c",
+    "address": "0x02108fdc",
+    "slots": 32,
+    "storage_start": "0x02108fd4",
+    "storage_end": "0x0210905c",
+    "emitted_storage_size": "0x88",
+    "preamble": {"offset_to_top": "0x0", "rtti": "0x02108fb4"},
+    "note": "the symbol IS the address point; the two ABI preamble words sit at -8 and -4. The table ends at 0x0210905c, where the next __si_class_type_info record begins (its first word is 0x0209a764, the shared __si_class_type_info vtable)."
+  },
+  "base_class": "dBgActor_c",
+  "base_evidence": "_ZTI17daObjFloatBoard_c (ov002 0x02108fb4) is a __si_class_type_info whose +8 word is 0x021089ec = _ZTI10dBgActor_c, so the direct base is dBgActor_c and nothing else. Read directly out of extracted/overlays/overlay_0002.bin at file offset 0x5b954 (module base 0x020ad660). Corroborated but NOT proven by length: _ZTV10dBgActor_c is 32 slots and this table is also 32 -- this class adds no virtual, it only overrides.",
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x00000000",
+      "name": "InitResources",
+      "note": "PURE. The ROM word is a bare 0 with no relocation. mwccarm emits exactly that for `= 0` -- there is no __cxa_pure_virtual in this image. Each of the three leaves supplies its own. This is why the class is abstract and why it has no factory and no g_profile row."
+    },
+    {
+      "slot": 3,
+      "address": "0x020b5be0",
+      "name": "CleanupResources",
+      "size": "0x44",
+      "note": "THIS CLASS'S KEY FUNCTION -- the first out-of-line virtual declared in the class body (the destructor above it is inline, and the pure InitResources is declared last and has no body). The TU that defines it emits _ZTV/_ZTI/_ZTS and both destructor variants. All three leaves inherit this word rather than overriding it."
+    },
+    {
+      "slot": 6,
+      "address": "0x020b5c4c",
+      "name": "Behavior",
+      "size": "0x20c"
+    },
+    {
+      "slot": 9,
+      "address": "0x020b5c24",
+      "name": "Render",
+      "size": "0x28"
+    },
+    {
+      "slot": 16,
+      "address": "0x020b5a70",
+      "name": "~daObjFloatBoard_c (D1)",
+      "size": "0x44",
+      "note": "body defined INLINE in include/daObjFloatBoard_c.h; the leaves inline this vptr store rather than calling it, which the compiler can only do from a visible body. This out-of-line copy exists only because the vtable is emitted here."
+    },
+    {
+      "slot": 17,
+      "address": "0x020b5a18",
+      "name": "~daObjFloatBoard_c (D0, deleting)",
+      "size": "0x58",
+      "note": "D0 SITS BELOW D1 IN THE ROM (0x020b5a18 < 0x020b5a70). dBgActor_c's pair is the other way round (D1 0x020ee42c, D0 0x020ee464). The pair's emission order is therefore not fixed across classes and must be matched, not assumed."
+    }
+  ],
+  "inherited_unchanged_slots": "slots 1,2,4,5,7,8,10-15,18-30 hold dActor_c's/dBase_c's own arm9 words; slot 31 holds 0x020ee55c = dBgActor_c::Kill. No other override.",
+  "non_virtual": [
+    {
+      "symbol": "func_ov002_020b5ab4",
+      "address": "0x020b5ab4",
+      "size": "0xe4",
+      "note": "FILE-LOCAL HELPER of this TU. Exactly one inbound relocation inside ov002: 0x020b5c68, which is inside Behavior. (config/arm9/overlays/ov000/relocs.txt also carries `from:0x020bde18 to:0x020b5ab4 module:overlay(0)` -- ov000 and ov002 both load at 0x020ad660, so that is ov000's own code referring to ov000's own bytes, not a caller of this function.) Answers 'is the board on water', writing the surface height to this+0x324. Original name NOT recoverable; the func_ spelling stands."
+    },
+    {
+      "symbol": "func_ov002_020b5b98",
+      "address": "0x020b5b98",
+      "size": "0x48",
+      "note": "Writes the model matrix at this+0xf0 from the actor's Euler angles and the translation row at 0x114/0x118/0x11c from the position >> 3. Called TWICE: 0x020b5dfc (inside this TU's Behavior) and 0x020b5e8c (inside func_ov002_020b5e58, the NEXT TU). So it has external linkage and is not file-local -- but a name for it is not recoverable either, and it is not a vtable slot of any class in the image."
+    }
+  ],
+  "text_span": {
+    "start": "0x020b5a18",
+    "end": "0x020b5e58",
+    "bytes": 1088,
+    "functions": 7,
+    "boundary_confidence": "medium/medium (tools/tu_map.py). Left neighbour src/d_a_obj_fire_obj_red_fire.c ends exactly at 0x020b5a18; right neighbour func_ov002_020b5e58 begins exactly at 0x020b5e58 and belongs to a different class."
+  },
+  "size": "0x348",
+  "size_evidence": "include/daObjFloatBoard_c.h carries a compile-time assert at 0x348. Independently corroborated by the leaf factory in src/actors/d_a_obj_wc_obj01.cpp, which calls _ZN7fBase_cnwEj(840) == 0x348 -- daObjWcObj01_c declares no field of its own, so the base closes the object.",
+  "fields": [
+    {"offset": "0x324", "name": "mWaterY", "type": "s32", "evidence": "func_ov002_020b5ab4 writes it from the raycast result (dBgCh_Gnd::clsnY) or from the stage-0x15 fallback; Behavior sets mPosY from it."},
+    {"offset": "0x32c", "name": "mFileTable", "type": "void **", "evidence": "CleanupResources releases entries [0] and [1] through it as SharedFilePtr*."},
+    {"offset": "0x330", "name": "mSinkOffset", "type": "s32", "evidence": "Behavior walks it toward -0x28000 while mRider is set and back to 0 when it is not, at 0x5000 a frame."},
+    {"offset": "0x334", "name": "mBobOffset", "type": "s32", "evidence": "Behavior sets it to 10 * sinTable[mBobPhase>>4] and adds it into mPosY."},
+    {"offset": "0x338", "name": "mBobPhase", "type": "s16", "evidence": "Behavior steps it 0xa00 a frame and indexes data_02082214 with it."},
+    {"offset": "0x33c", "name": "mRider", "type": "void *", "evidence": "Behavior reads the rider's position at rider+0x5c and tilts toward its horizontal bearing; cleared when mRiderTimeout expires."},
+    {"offset": "0x342", "name": "mRiderTimeout", "type": "u16", "evidence": "Behavior passes its address to DecIfAbove0_Short and clears mRider at zero."},
+    {"offset": "0x344", "name": "mFallbackWaterY", "type": "s32", "evidence": "func_ov002_020b5ab4 reads it only when the current stage id (data_0209f2f8) is 0x15."}
+  ],
+  "pad": [
+    {"offset": "0x320", "size": "0x4", "note": "UNOBSERVED -- no method of this class touches it"},
+    {"offset": "0x328", "size": "0x4", "note": "UNOBSERVED"},
+    {"offset": "0x33a", "size": "0x2", "note": "UNOBSERVED"},
+    {"offset": "0x340", "size": "0x2", "note": "UNOBSERVED"}
+  ],
+  "unproven": [
+    "every field NAME above -- offsets, widths and types are observed, the spellings are coined from behaviour and nothing in the ROM names them",
+    "the four gaps at 0x320/0x328/0x33a/0x340: nothing this class's own methods touch lands there and no leaf declares anything there",
+    "the original names of func_ov002_020b5ab4 and func_ov002_020b5b98",
+    "which of the two unnamed helpers, if either, was a member function -- both take the object as their only argument but neither occupies a vtable slot",
+    "the parameter/local names inside Behavior"
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-floatboard",
+    "ref": "cpp/daObjFloatBoard_c-tu (from agents/class-pipeline 8a8003d77)",
+    "tools": [
+      "tools/tubuild.py inspect ov002/daObjFloatBoard_c",
+      "tools/rtti_extract.py",
+      "tools/rtti_vtables.py --own daObjFloatBoard_c",
+      "direct word reads of extracted/overlays/overlay_0002.bin at module base 0x020ad660",
+      "config/arm9/overlays/ov002/{symbols,relocs,delinks}.txt"
+    ]
+  }
+}
