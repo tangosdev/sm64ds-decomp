@@ -312,6 +312,14 @@ so **every** merged shard needs the check. When the merge makes both spellings
 visible mwccarm rejects it as `illegal function overloading`, and the error text
 points at your *definition* line while saying nothing about the header —
 measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
+
+**Grep shadow struct *tags* too, not only declarations.** A shadow type can
+collide with a **ROM symbol**, which is a different failure and a nastier one.
+`decl_common.h` declares `extern int VT[];`, and the legacy shards carry a
+shadow `struct VT` — invisible until the merge pulls `decl_common.h` in. In C++
+a variable name hides a struct tag, so this surfaces as `undefined identifier
+'VT'` reported against **the struct that uses it**: never the header, never the
+name that actually collided. Grepping declarations alone will not find it.
 The detector does not compare against real headers at all, and a real header
 always wins. Two measured disagreements were on *return type*: `decl_common.h`
 types `func_02012718` as returning void where the shard said int, and
@@ -406,6 +414,14 @@ leads with `<<< promotion would be REFUSED` while `status` is `text-verified`,
 which is expected and is not a defect in your branch — you need the plan in
 order to *reach* the status flip. One run stopped after step 3, another printed
 all six steps and exited 0; either way read what it gives you.
+
+**`no current eligibility report` from the pre-push hook is expected in a fresh
+worktree** — it prints "skipping", not "passed", and it is not a failure. It
+appears at exactly the moment you are deciding whether your push landed cleanly,
+so read it and move on.
+
+**`eligible.py` takes no file argument** (`-j` and `--no-isolate` only). You
+cannot scope it to your class.
 
 **`wt-remove.ps1` takes `-Path`, not `-Name`** — unlike `wt-setup.ps1`. The rule
 never to use `git worktree remove` is load-bearing (it deletes through the
