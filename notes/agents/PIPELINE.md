@@ -9,17 +9,21 @@ instance and a Claude instance read the same files and follow the same protocol.
 
 ## The shape
 
-One class moves through four stages. Each stage is a separate agent run with a
-fresh context, reading the previous stage's written output rather than inheriting
-a conversation.
+One class moves through five stages. Each is a separate agent run with a fresh
+context, reading the previous stage's written output rather than inheriting a
+conversation.
 
 | stage | role | consumes | produces |
 |---|---|---|---|
-| 1 | `scout` | the ROM | `notes/data/class-facts/<class>.json` |
-| 2 | `writer` | the facts file | `include/<class>.h` + source |
+| 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
+| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp` + its manifest |
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
 | 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
+
+The writer is **gathering, not authoring**: 387 of 429 classes already have a
+real header, and the shards being folded together are existing matched code. Most
+promotions touch no header at all.
 
 Stages 1-3 never run a byte gate; stage 4 is the only one that decides whether
 the bytes are right. Stage 3 never changes semantics. Stage 5 is a different
@@ -27,20 +31,31 @@ agent from stage 4 — a producer's own green output is evidence, not review.
 
 ## The queue
 
-`notes/data/class-build-worklist.tsv` is the ordered target list, base classes
-before their subclasses. Columns:
+**`notes/data/tu-promotion-queue.tsv` is the live queue.** Each row is a class
+whose method bodies are still scattered across one-function shards, ranked
+best-first by how many shards the promotion absorbs. It carries `shard_count`,
+`promotion_route`, `blockers`, and a `sibling_oracle` naming an already-promoted
+class in the same overlay to copy.
 
-    class_name  state  header_path  base_class  subclass_count  overlays  method_count
-
-`state` is one of `DONE`, `PARTIAL`, `MISSING`. Rows are worked top-down; the
-ordering is the dependency ordering, so do not skip ahead to a subclass whose
-base is still `MISSING`.
+`notes/data/class-build-worklist.tsv` tracks a **different axis** — whether a
+class has a real *header* — and 387 of 429 are already `DONE` there. It is the
+right list for the 27-class header tail and the wrong one for this work:
+`dBgActor_c` reads `DONE` in it while sitting at row 12 of the promotion queue
+with 11 shards outstanding. `classqueue.py` prefers the promotion queue for
+exactly this reason.
 
 ## Claiming work
 
-A claim is an atomic ref create on the remote. The remote accepts a given ref
-name exactly once, so two agents racing for one class cannot both win, and no
-shared file is edited — a claims *file* is what produces merge cascades.
+A claim is a ref under `refs/claims/` pointing at a **parentless commit** unique
+to the claiming agent. Two parentless commits are never ancestor-related, so a
+second claimant's push is always a non-fast-forward and always rejected; the
+claim is then read back from the remote to confirm our object actually landed.
+No shared file is edited — a claims *file* is what produces merge cascades.
+
+The parentless part is load-bearing. An earlier version pushed `HEAD`, which git
+rejects only when the pusher is *behind* the holder. Agents branching off one
+commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
+**every agent believes it won**. Do not simplify it back.
 
     python tools/classqueue.py next    --role writer
     python tools/classqueue.py claim   dActor_c --role writer --worktree C:/tmp/sm64ds-dactor
