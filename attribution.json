@@ -1961,11 +1961,11 @@
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_cD1Ev": "tangosdev",
     "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_cD0Ev": "tangosdev",
-    "src/actors/daObjCtMecha03_c.cpp#func_ov065_02119fe8": "github-actions[bot]",
-    "src/actors/daObjCtMecha03_c.cpp#func_ov065_0211a114": "github-actions[bot]",
+    "src/actors/daObjCtMecha03_c.cpp#func_ov065_02119fe8": "tangosdev",
+    "src/actors/daObjCtMecha03_c.cpp#func_ov065_0211a114": "tangosdev",
     "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_c16CleanupResourcesEv": "tangosdev",
     "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_c6RenderEv": "tangosdev",
-    "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_c8BehaviorEv": "github-actions[bot]",
+    "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_c8BehaviorEv": "andrewboudreau",
     "src/actors/daObjCtMecha03_c.cpp#_ZN16daObjCtMecha03_c13InitResourcesEv": "tangosdev"
   }
 }
