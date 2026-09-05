@@ -4830,6 +4830,9 @@ src/func_ov002_020f40fc.c:
     complete
     .text start:0x020f40fc end:0x020f43cc
 
+src/func_ov002_020f43cc.c:
+    .text start:0x020f43cc end:0x020f4710
+
 src/func_ov002_020f4710.c:
     complete
     .text start:0x020f4710 end:0x020f4a2c
