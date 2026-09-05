@@ -376,41 +376,9 @@ src/d_a_obj_ct_mecha03.c:
     complete
     .text start:0x0211a45c end:0x0211a494
 
-src/_ZN16daObjCtMecha04_cD1Ev.cpp:
+src/actors/daObjCtMecha04_c.cpp:
     complete
-    .text start:0x0211a494 end:0x0211a4e8
-
-src/_ZN16daObjCtMecha04_cD0Ev.cpp:
-    complete
-    .text start:0x0211a4e8 end:0x0211a550
-
-src/_ZN16daObjCtMecha04_c12UpdateShadowEv.cpp:
-    complete
-    .text start:0x0211a550 end:0x0211a638
-
-src/_ZN16daObjCtMecha04_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211a638 end:0x0211a69c
-
-src/_ZN16daObjCtMecha04_c6RenderEv.cpp:
-    complete
-    .text start:0x0211a69c end:0x0211a6d0
-
-src/_ZN16daObjCtMecha04_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211a6d0 end:0x0211a870
-
-src/_ZN16daObjCtMecha04_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211a870 end:0x0211aa38
-
-src/_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c.cpp:
-    complete
-    .text start:0x0211aa38 end:0x0211aacc
-
-src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp:
-    complete
-    .text start:0x0211aacc end:0x0211aae0
+    .text start:0x0211a494 end:0x0211aae0
 
 src/d_a_obj_ct_mecha04_ct_mecha04l.cpp:
     complete

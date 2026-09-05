@@ -16,6 +16,10 @@
 #include "TextureTransformer.h"
 
 struct daObjCtMecha04_c : dBgActor_c {
+    /* Inline on purpose: this directly included declaration makes mwccarm emit
+     * the measured D1-then-D0 pair without a homeless D2. */
+    virtual ~daObjCtMecha04_c() {}
+
     TextureTransformer mTextureTransformer; /* 0x320 */
     ShadowModel mShadowModel;                /* 0x334 */
     /* UpdateShadow builds this from mAngleY, then writes the actor's X/Z and
@@ -28,15 +32,18 @@ struct daObjCtMecha04_c : dBgActor_c {
     s16 mDirectionTimer;                    /* 0x39c */
     u8  mVariant;                           /* 0x39e */
 
-    /* --- vtable --- */
-    virtual ~daObjCtMecha04_c();
-
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+    /* Descriptive reconstruction; the ROM proves ownership and the no-argument
+     * call shape, not the original English identifier. */
     void UpdateShadow();
+    /* Descriptive reconstruction. Member/free form, target type, and the
+     * dActor_c& spelling encoded in the symbol are not recoverable from ROM. */
     void MoveActorOnBelt(dActor_c &actor);
+    /* Descriptive reconstruction. Static/member/free form and every pointer
+     * type encoded in the symbol are inferred from the callback ABI. */
     static void AfterClsnCallback(dBgW *collider, dActor_c *owner,
                                   dActor_c *other);
 };
