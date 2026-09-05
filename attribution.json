@@ -1958,6 +1958,15 @@
     "src/game/actors/d_a_obj_rc_hane.cpp#func_ov036_02111618": "github-actions[bot]",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
-    "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]"
+    "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02132dc0": "andrewboudreau",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02132e64": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02132e98": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02132f04": "lunavyqo",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02132ff4": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02133020": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#func_ov091_02133098": "andrewboudreau",
+    "src/actors/daDsnBase_c.cpp#_ZN11daDsnBase_c16CleanupResourcesEv": "tangosdev",
+    "src/actors/daDsnBase_c.cpp#_ZN11daDsnBase_c6RenderEv": "tangosdev"
   }
 }
