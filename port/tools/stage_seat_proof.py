@@ -13,7 +13,7 @@ change, and nothing deletes the Stage at all. So there is no execution to
 observe and this file does not pretend to observe one -- exactly the shape
 port/stage_lifecycle_map.txt section 9 uses for slot 12.
 
-What IS observable, and what the three rungs check:
+What IS observable, and what the five rungs check:
 
   RUNG 1  STATIC.  walk_window.map carries all five matched symbols the gate
           enrolled: ?CleanupResources@Stage@@QAEHXZ (slot 3's body),
@@ -37,10 +37,18 @@ What IS observable, and what the three rungs check:
           SEATED. A probe that cannot print the other answer is not evidence,
           and this is the rung that makes rung 2 mean something.
 
-  RUNG 4  NO TRAP FIRED.  Neither run prints "is not hosted", the trap's own
-          abort line, and both exit 0. Mode 2 leaves the traps in place for the
-          whole run, so rung 4 also says the pre-seat program still boots -- the
-          seat is not load-bearing for the frame.
+  RUNG 4  NO TRAP FIRED.  Neither run prints the trap's own abort line and both
+          exit 0. Mode 2 leaves the traps in place for the whole run, so rung 4
+          also says the pre-seat program still boots -- the seat is not
+          load-bearing for the frame.
+
+  RUNG 5  THE OVERLAY TRANCHE, checked by DEFINING OBJECT and not by presence.
+          hal/stage_slot0.cpp used to define __Z19UnloadLevelOverlaysi as an
+          empty host body, so that symbol was in reach before and after and only
+          the map's object column says which body the image carries. The rung
+          fails if any of the three overlay names comes from anything but its
+          own matched TU's object -- which is the assertion "the host body is
+          RETIRED, not kept beside" actually reduces to.
 
 Quiet and muted through mp2_proof.env_base: SM64DS_NO_FOCUS, SM64DS_MINIMIZED,
 SM64DS_VOLUME=0, CREATE_NO_WINDOW and SW_SHOWMINNOACTIVE. Never raw-start
@@ -70,8 +78,25 @@ WANT_SYMS = (
     "__ZN5StageD0Ev",
 )
 
+# The overlay tranche, checked by DEFINING OBJECT rather than by presence.
+# Presence proves nothing here: hal/stage_slot0.cpp used to define
+# __Z19UnloadLevelOverlaysi as an empty host body, so the symbol was available
+# before and after and only the object column says which body the image
+# actually carries. {map symbol: the object that must define it}.
+WANT_FROM = {
+    "__Z19UnloadLevelOverlaysi": "_Z19UnloadLevelOverlaysi.c.obj",
+    "?LoadLevelOverlays@@YAXH@Z": "_Z17LoadLevelOverlaysi.cpp.obj",
+    "?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z":
+        "_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp.obj",
+}
+
 SEATED_SLOTS = (3, 16, 17)
 TRAP_SLOTS = (18, 19)
+
+# One map row: "  0001:00012345  _name  10012345 f  obj". The object is the
+# last token; closure.py reads the same column the same way.
+MAP_ROW = re.compile(r"\s+[0-9a-fA-F]{4}:[0-9a-fA-F]{8}\s+(\S+)\s+"
+                     r"[0-9a-fA-F]{8}")
 
 ROW = re.compile(r"^\[stage-seat\] slot\s+(\d+)\s+\S.*?\s(TRAP|SEATED)\s*$", re.M)
 CONTROL = re.compile(r"^\[stage-seat\] NEGATIVE CONTROL:", re.M)
@@ -182,6 +207,19 @@ def main():
     for name, t in (("probe", t1), ("control", t2)):
         check("FATAL: Stage vtable slot" not in t,
               "%s run never hit the Stage trap" % name)
+
+    print("RUNG 5 -- the overlay bodies in the image are the ROM's, not the "
+          "host stubs")
+    if os.path.exists(mapf):
+        owner = {}
+        for line in M.text(mapf).splitlines():
+            m = MAP_ROW.match(line)
+            if m and m.group(1) not in owner:
+                owner[m.group(1)] = line.split()[-1]
+        for sym, obj in WANT_FROM.items():
+            check(owner.get(sym) == obj,
+                  "%s comes from %s" % (sym, obj),
+                  owner.get(sym, "ABSENT"))
 
     print("")
     if FAILS:
