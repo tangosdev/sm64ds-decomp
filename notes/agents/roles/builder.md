@@ -60,17 +60,33 @@ and addend), and `reloc_audit` (destination identity).
 a specific symbol's identity — which is how the cross-module RTTI claim was
 settled — import the module and call `check_object()` directly.
 
-## Two gates in that list are expected to go red on this workstream
-
-Neither is a defect in the change. Both have a sanctioned remedy.
+## What actually goes red on a promotion
 
 - **`tiers_ratchet --check`** goes red by construction: folding N CONVERTED
-  shards into one file loses N−1 rows (`baseline 2597 current 2593, -4 lost`).
-  Remedy: `python tools/tiers_ratchet.py --update --reason "<why>"`.
-- **`port_refcheck.py`** *may* go red on stale references to the shards you
-  deleted, held in the `port/slice_gate9.txt` family of manifests. Remedy: update
-  them. Nothing else watches `port/`. It is often green with no edit — only
-  `tiers_ratchet` is red by construction.
+  shards into one file loses rows. Remedy below — and read it, because the
+  obvious remedy double-banks.
+- **`check_dead_references.py`** goes red whenever prose named a shard you
+  deleted. This is the common one: it fired on `notes/bgobject-provenance.md`
+  naming seven. Remedy: remove the literal token, not just the sentence around
+  it — the gate reads bare `src/` tokens.
+- **`port_refcheck.py`** has now come back **green** on three consecutive
+  promotions (402 checked, 0 stale). Check it, but do not expect it to fire or
+  go looking for a remedy it does not need.
+
+### `tiers_ratchet --update --reason` does not dedupe
+
+If the writer already banked rows and you then take `main`'s copy of the ledger
+files — which the rebase rule requires — a second `--update --reason` **appends
+duplicate rows for the same paths** rather than replacing them. Nothing warns
+you. The working recipe is to restore both files first and update exactly once:
+
+    git checkout origin/main -- config/converted-backslide-exceptions.jsonl                                 config/converted-baseline.json
+    python tools/tiers_ratchet.py --update --reason "<why>"
+
+## Your branch
+
+The writer's worktree still has `cpp/<Class>-tu` checked out, so you cannot use
+that branch name. Cut `cpp/<Class>-tu-build` from it and open the PR from there.
 
 ## Rebasing onto a moved `main` — the trap no gate catches
 
@@ -98,6 +114,11 @@ Keep `main`'s version of `notes/data/c-cpp-classification.tsv` and
 **`converted-baseline.json` is a dict, not a list.** Any "did I clobber main's
 rows?" set-diff has to unwrap `["converted"]`; comparing top-level keys silently
 reports no difference.
+
+**Re-fetch `main` and re-verify more than once.** It moved twice during a single
+`daPgDfdr_c` build, and the second move landed *that class's own direct base*
+(`dBgActor_c`, #2269). Re-fetch immediately before opening the PR, not only at
+the start.
 
 **Re-check the base immediately before you push.** The validator test-merges
 against the *exact current base* and rejects with `test merge conflicts with
