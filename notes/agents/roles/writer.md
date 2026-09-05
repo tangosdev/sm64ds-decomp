@@ -412,11 +412,20 @@ Ask the compiler rather than hand-mangling:
   Three `ambiguous` `data_ov025_*` rows are **phantom interior symbols sitting
   inside the table**. `relocs.txt` settles it — every word through `0x021138cc`
   is a relocated entry, and `0x021138d0` already belongs to the next class's
-  `_ZTI`. `verify`'s reported section size agrees.
-- **`rtti_vtables.py` over-reports slot counts** — the known `_ZTV` extent
-  overrun; 34 against a real 32 on `daObjCtMecha03_c`. Cross-check against the
-  `_ZTV` section size `verify` prints (`0x88` = 2 preamble words + 32 slots).
-  The vtable row's `reason` invites you to state a slot count, so get it right.
+  `_ZTI`. Corroborate with `romdata_check`'s **`emitted`/`bytes`** fields and
+  `blindWords: 0`.
+- **Do NOT read the extent from `romdata_check`'s `romExtent` field.** It carries
+  the *wrong short* value — `88` decimal, the false `0x58` — on the very class
+  where the answer is `0x88`. Trusting it confirms the trap instead of catching
+  it. `emitted` and `bytes` are the truthful fields.
+- **`verify` prints no `_ZTV` section size.** This file said twice to cross-check
+  against one. It does not exist; `verify` prints the MATCH table, byte
+  comparison, objisolate, emission order and the result.
+- **Corroborate every slot count, but `rtti_vtables.py` is no longer the known-bad
+  one.** It used to over-report (34 against a real 32 on `daObjCtMecha03_c`); it
+  now trims following-table tails and has agreed with direct reads since. The
+  vtable row's `reason` invites you to state a slot count, so get it from two
+  sources regardless.
 - **`rtti_vtables.py` needs `build/rtti.json`**, which only `rtti_extract.py`
   writes. Without it you get a bare `FileNotFoundError` traceback that names no
   remedy.
