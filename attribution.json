@@ -1958,6 +1958,16 @@
     "src/game/actors/d_a_obj_rc_hane.cpp#func_ov036_02111618": "github-actions[bot]",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c6RenderEv": "andrewboudreau",
     "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c8BehaviorEv": "github-actions[bot]",
-    "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]"
+    "src/game/actors/d_a_obj_rc_hane.cpp#_ZN14daObjRc_Hane_c13InitResourcesEv": "github-actions[bot]",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a00c": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a0a8": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a0e8": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a148": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_c4KillEv": "andrewboudreau",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a23c": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#func_ov098_0213a2cc": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_c6RenderEv": "tangosdev",
+    "src/actors/daObjFallBlock_c.cpp#_ZN16daObjFallBlock_c8BehaviorEv": "tangosdev"
   }
 }
