@@ -502,21 +502,13 @@ PortCardWork data_020a8180 = {
 
 DSSTATE_END
 
-// ---- FACE: OS_GetLockID (ROM: func_02057020) -------------------------------
-// PORT_HOST_ABI: hand-written ARM (`asm` block, MSVC cannot assemble) over the
-// OS lock bitmask at 0x027FFFB0, a page ntr maps nothing at. hal/fs_names.cpp
-// faces the same primitive for FS_Init and states the same reason.
-//
-// The ROM allocates the lowest free bit of two 32-bit words and numbers them
-// 0x40..0x5f and 0x60..0x7f, returning -3 when both are full. The port has one
-// caller that keeps an id (this one) and nothing that can exhaust the pool, so
-// the answer is a stable id from the first word. It must NOT be -3: both
-// SaveDataToCart and ReadDataFromCart return failure on -3 before touching the
-// medium.
-int func_02057020(void)
-{
-    return 0x40;
-}
+// ---- OS_GetLockID (ROM: func_02057020) lives in hal/boot_hw.cpp ---------
+// This file once carried a constant-id face for it (return 0x40). Lane BOOT
+// hosts the primitive faithfully in port/hal/boot_hw.cpp: the ROM's clz search
+// over the two lock words at 0x027fffb0, seeded by the boot spans. The two
+// definitions collided at integration (LNK2005), and the faithful one stays.
+// SaveDataToCart / ReadDataFromCart still refuse on -3, which that body returns
+// only when both lock words are exhausted.
 
 // ---- FACE: OS_ReleaseLockID (ROM: func_02057078) ---------------------------
 // PORT_HOST_ABI: the `asm` sibling of the above, clearing the same bit in the
