@@ -152,15 +152,36 @@ long omitted:
 |---|---|
 | `externalized_output` | a symbol whose one kept copy lives in **another module** — disposition `canonical-import` |
 
-That is where vague-linkage `_ZTI`/`_ZTS` go when mwld landed them elsewhere,
-and it can be most of your rows: `daObjFallBlock_c` (ov098) split 12 symbols as
-**2 `compiler_only_output` + 10 `externalized_output`**, its whole RTTI set
-homed in ov015. The formula below still predicts the **total**; it does not
-predict the split. Derive the split per symbol from `symbols.txt`.
+**Prefer `deadstrip-data`. `externalized_output` is the non-promotable route.**
+A cross-module home does *not* by itself send a symbol to `externalized_output`:
+what matters is whether the address has a **configured ROM home** in some
+module's `symbols.txt`. If it does — even in another overlay — it is
+`deadstrip-data` and it promotes. The promoted precedent `ov029/daObjWcObj01_c`
+carries an **empty** `externalized_output` and licenses all 13 of its RTTI
+records as `deadstrip-data`.
+
+`externalized_output` / `canonical-import` is what a TU that stops at
+text-verified uses. `daObjFallBlock_c` first wrote 10 rows there and could not
+promote; every one had a configured home, so all 10 converted to `deadstrip-data`
+and the class promoted. If you find yourself filling this block, check first
+whether those addresses are actually homed — most are.
+
+The formula below predicts the **total**; it does not predict the split.
 
 **`verify` does not deduct `externalized_output` rows from its unlicensed
 count.** A complete, correct policy still reports a high number. It reads like
 failure and is not.
+
+**A TUBUILD CONFLICT note is two edits, not one.** Marking the note `(RESOLVED)`
+while the `/* TUBUILD CONFLICT ... */` marker survives in the merged source is
+*worse* than leaving the note alone — `check_tubuild_conflicts` reports
+`REOPENED: ... is noted RESOLVED, but <file> carries its marker again once`.
+Mark the note `(RESOLVED)`, append your resolution after `; kept the first`
+verbatim, **and delete the marker comment from the source**.
+
+**`git mv src_tu/... src/...` fails only while the `src_tu/` file is untracked.**
+On a second pass over an already-committed shadow TU — which is exactly what a
+partial promotion is — `git mv` is correct and preserves the rename.
 
 **Do not read `tubuild.py`'s `promotion_refusals()` as a live gate.** It refuses
 any entry carrying `externalized_output`, but its only caller is `cmd_promote`,
