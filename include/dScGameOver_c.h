@@ -56,10 +56,28 @@ struct dScGameOver_c : dScene_c {
     u8  unk_094;                    /* 0x094 -- input-gate counter, Behavior/Render */
     u8  pad_095[0x3];    /* 0x095 -- trailing alignment */
 
-    /* Declared first -- key function; see the family convention discussed in
-       dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
-       D1 and D0 are plain functions carrying their literal mangled name. */
-    virtual ~dScGameOver_c();                            /* slots 16 (D1), 17 (D0) */
+    /* Declared first and DEFINED INLINE, both deliberately -- the same form
+       dScene_c.h and dBase_c.h use one and two levels up.
+
+       INLINE, because inline-in-class is the only admissible source form that
+       makes mwccarm 2004/b56 emit D1 before D0, and the cartridge puts D1 at
+       0x020b0580 below D0 at 0x020b05bc. Out of line the compiler emits
+       D2, D0, D1 -- the wrong order, plus a D2 that exists nowhere in the ROM.
+
+       NOT the key function, despite being declared first: an inline virtual
+       cannot be one. The key function is InitResources, the first DECLARED
+       non-inline virtual below, and src/actors/dScGameOver_c.cpp defines it --
+       which is what emits _ZTV13dScGameOver_c and, through its slots 16 and
+       17, odr-uses and emits this destructor pair out of line. That is the
+       mechanism that put 0x020b0580 and 0x020b05bc in the cartridge at all.
+
+       The body is empty and still reproduces all 0x3c + 0x50 bytes: D1's three
+       vptr stores are this class's own plus dScene_c's and dBase_c's inlined
+       (both of those are inline in class too), then fBase_c::~fBase_c; every
+       own field is a scalar, so there is no member destruction to write. D0
+       adds the operator delete dScGameOver_c inherits from its immediate base
+       dScene_c. */
+    virtual ~dScGameOver_c() {}                          /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
     virtual s32  InitResources();                        /* slot  0 */
