@@ -4445,6 +4445,13 @@ folklore; mwccarm does not have it. Output with it is byte-identical to output w
 on every build. Every "tried long_calls, inert" line anywhere is a 6as false negative, and
 the lever should not be re-tried.
 
+**51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/` -- 19 in
+ov007, the rest spread over ov015/064/065/066/073/079/080/091/095/098 and 21 arm9 files), most
+of them under a header comment that says the pragma is what emits the pooled veneer. They all
+still byte-match, because the pragma is inert, but the comment is wrong and every one of those
+compiles now prints `warning: illegal #pragma` under the `-w illpragmas` in `DEFAULT_FLAGS`.
+Deleting the line from those files is a no-op on the bytes; only the comment needs rewriting.
+
 The reason it looked plausible is that the veneer shape it was supposed to force is already
 the default. With `-interworking` (which is in `DEFAULT_FLAGS`), a function whose entire
 body is one call in TAIL position lowers to a pc-relative indirect long branch, no pragma:
@@ -4580,3 +4587,31 @@ ROM's own compiler (CW NITRO V0.6.1, 6ah, unarchived) is the missing piece. Bank
 shape-exact draft as a seed and move on. Conversely, if a near-miss has the ROM recycling a
 dead register and your draft using a fresh one, the defect is yours and is worth chasing --
 that direction is the compiler's default and is always reachable.
+
+## 6bt. mwccarm's only ldm/stm path is the equal-width block move, so a 3-in / 4-out burst is not compiler output (func_02052514, 2026-09-05)
+
+`func_02052514` widens a 3x3 fx32 matrix to a 4x4 in three bursts:
+
+```
+ldm r0!, {r2, r3, r4}          <- 12 bytes in
+stm r1!, {r2, r3, r4, ip}      <- 16 bytes out, ip pre-loaded with 0 at the top
+```
+
+**mwccarm cannot emit this, and the reason is structural.** There is exactly one construct
+that produces `ldm`/`stm` at all: the inline block move for a whole-struct assignment, and it
+always loads and stores the SAME width -- `d->v = *s` on a 12-byte struct gives
+`ldm rX, {a,b,c}` / `stm rY, {a,b,c}` (no writeback, and it burns two `add` instructions per
+row recomputing the addresses). Nothing merges free-standing `ldr`/`str` into a multiple:
+writing the row as three loads into named locals followed by four stores gives nine separate
+`ldr` and twelve separate `str`, in any order, with or without pointer post-increment
+(measured, six shapes, 0x50-0x78 bytes against the ROM's 0x3c).
+
+So the ROM's fabricated fourth word -- a zero that rides along in the store multiple but was
+never in the load multiple -- has no C spelling. Combined with the leaf frame
+`stmdb sp!,{r4}` / `ldm sp!,{r4}` (mwccarm spends `push {r4,lr}` here because its block move
+needs `lr` as a scratch), this is a hand-written primitive and the existing HAND-ASM header on
+`src/func_02052514.c` is correct. Do not re-open it.
+
+The transferable test: **an `ldm`/`stm` pair with different register counts, or an `stm` whose
+register list contains a value the matching `ldm` did not load, is hand-asm.** Equal widths
+with two `add`s in front of them is compiler output.
