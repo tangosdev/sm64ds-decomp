@@ -432,7 +432,13 @@ int data_port_backup_device[10] = {
 // src/func_020603c8.c -> func_02060364 is what does this on hardware, off the
 // back of the card driver's own thread; the port has no card thread, so the
 // same assignment is made statically here.
-int *data_020a8760 = data_port_backup_device;
+// The STORAGE for that pointer word is hal/globals_link100.cpp's grouped card
+// span (data_020a8180 / data_020a81bc / data_020a8760 as one contiguous
+// object, so the card thread's downward stack stays inside the ROM's own
+// bytes); this file only fills it. Two hosts of one name collided at
+// integration (LNK2005), and the contiguous one owns the bytes.
+extern "C" unsigned char data_020a8760[4];
+extern "C" unsigned char data_020a8180[60];
 
 // The record tag every save record carries, and the tag ReadDataFromCart
 // compares a record against before it will believe the payload. On hardware
@@ -485,7 +491,7 @@ struct PortCardWork {
 //                    or in bit 2 for the duration of a transfer and
 //                    func_0206081c ands out bits 2 and 3 at the end; bit 0 is
 //                    what says the object below them is real.
-PortCardWork data_020a8180 = {
+static const PortCardWork kCardWorkInit = {
     data_020a8160,  /* cmd    */
     0,              /* f04    */
     ~2,             /* owner  */
@@ -499,6 +505,29 @@ PortCardWork data_020a8180 = {
     1u,             /* state  */
     4               /* prio   */
 };
+
+// Fill hal/globals_link100.cpp's storage once, before anything reads it: the
+// work object's initial state and the device-row pointer that
+// src/func_02060364.c would assign off the card thread on hardware.
+namespace {
+struct PortBackupFill {
+    PortBackupFill() {
+        /* The work object is bigger than the 60 bytes dsd named data_020a8180:
+           on the ROM its own writes reach +0xd4, straight into the bytes dsd
+           named data_020a81bc (hal/globals_link100.cpp says the same), and the
+           two host arrays are laid out contiguously in that order for exactly
+           this reason. The copy below spans both names the way the ROM does. */
+        static_assert(sizeof(PortCardWork) <= 60 + 1444,
+                      "PortCardWork exceeds the card span data_020a8180..data_020a8760");
+        unsigned char *card = data_020a8180;
+        std::memcpy(card, &kCardWorkInit, sizeof kCardWorkInit);
+        int *row = data_port_backup_device;
+        std::memcpy(data_020a8760, &row, sizeof row);
+    }
+};
+PortBackupFill g_port_backup_fill;
+}  // namespace
+
 
 DSSTATE_END
 

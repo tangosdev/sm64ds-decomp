@@ -6,6 +6,7 @@
 #include "ntr/mmio.h"
 
 #include "ntr/gx.h"
+#include "ntr/ipc.h"
 #include "ntr/ppu_audit.h"
 
 #include <cstdio>
@@ -615,6 +616,12 @@ bool io_init() {
        simulates a downloaded child. That is the only thing that should ever
        make this a 2. */
     *reinterpret_cast<volatile uint16_t *>(SHARED_BASE + 0xc40) = 0;
+    /* THE ARM7 SIDE OF THE MACHINE, brought up here because here is where the
+       ranges it writes into are known to be held: the IPC model publishes into
+       the I/O window and into the shared system block, and both are mapped by
+       the loop above. Idempotent, and inert with SM64DS_IPC_MODEL=0.
+       See ntr/ipc.h. */
+    ipc_init();
     return true;
 }
 
@@ -654,6 +661,18 @@ static bool hits_gxstat(uint32_t addr, unsigned width) {
 
 uint64_t io_read(uint32_t addr, unsigned width) {
     if (!g_io && !io_init()) return 0;
+    /* BEFORE raw_read, not after: IPCFIFORECV lives at 0x04100000, outside
+       every region kRegions maps, so a fall-through would be an access
+       violation rather than a stale latch. ntr/ipc.cpp answers the four IPC
+       registers and declines everything else. */
+    {
+        bool ipc_handled = false;
+        const uint64_t ipc_v = ipc_reg_read(addr, width, &ipc_handled);
+        if (ipc_handled) {
+            if (ppu_audit_on()) ppu_audit_proxy(addr, ipc_v, width, false);
+            return ipc_v;
+        }
+    }
     if (hits_gxstat(addr, width)) gxstat_normalize();
     const uint64_t v = raw_read(addr, width);
     if (ppu_audit_on()) ppu_audit_proxy(addr, v, width, false);
@@ -663,6 +682,11 @@ uint64_t io_read(uint32_t addr, unsigned width) {
 void io_write(uint32_t addr, uint64_t value, unsigned width) {
     if (!g_io && !io_init()) return;
     if (ppu_audit_on()) ppu_audit_proxy(addr, value, width, true);
+    /* Same reason as the read side, plus one of its own: the IPC registers are
+       not latches. A store to IPCFIFOSEND hands a word to the other processor
+       and a store to IPCFIFOCNT can clear a queue, so the model owns the write
+       outright and publishes its own status back into the window. */
+    if (ipc_reg_write(addr, value, width)) return;
     raw_write(addr, value, width);
 
     // Writing the low half of the operand is what starts the unit on hardware.

@@ -217,13 +217,18 @@ static void say(const char *what) {
 // ROM's own order puts it.
 // ---------------------------------------------------------------------------
 extern "C" void port_os_lock_words_seed(void);
+extern "C" void func_0205b858(void);
+extern "C" void func_02059e48(void);
+extern "C" void func_0205fde8(void);
+extern "C" void port_ipc_rom_boot_done(void);
 
 void port_boot_rom_pre_main(void)
 {
     // func_02058c84's arms, in the ROM's order. The gaps are the PXI four;
     // see the header block for the measurement that closes them.
     /* func_02058f28() -- the OS arena, owned by hal/os_arena.cpp */
-    /* func_0205b858() -- PXI */
+    func_0205b858();   /* call 2: PXI init (func_0205bad8); the ARM7 half is
+                          hal/boot2_ipc.cpp's model, attached before main() */
     /* func_02057320() -- takes the 0x7e lock and spins on the shared block.
        Its two stores (the OS lock words at 0x027fffb0 = -1, -0x10000) are
        the only part a host can honour; hal/os_lockid.cpp writes them here,
@@ -245,10 +250,10 @@ void port_boot_rom_pre_main(void)
        now), and what is left is func_00000000 / func_00000600, two ABSOLUTE
        linker symbols the body reads as numbers. See the header block for the
        arithmetic they feed and why MSVC cannot supply them. */
-    /* func_02059e48() -- PXI channel 0xc */
+    func_02059e48();   /* call 10: PXI channel 0xc, answered by the model */
     /* func_0206a88c() -- PXI channel 0xd */
     /* func_02060890() -- the game card, reached instead through func_02042f68 */
-    /* func_0205fde8() -- PXI channel 8 */
+    func_0205fde8();   /* call 13: PXI channel 8, answered by the model */
 
     /* func_0201a490() -- one line, `data_0209a03c(data_0208ee60)`. The .data
        word at 0x0209a03c is RELOCATED (config/arm9/relocs.txt:
@@ -258,6 +263,7 @@ void port_boot_rom_pre_main(void)
        that binding this is a real call again. */
     func_0201a490();
     say("pre-main OS init (func_02019780)");
+    port_ipc_rom_boot_done();   /* the PXI model's report + selftest, after the ROM's handshake */
 }
 
 // ---------------------------------------------------------------------------

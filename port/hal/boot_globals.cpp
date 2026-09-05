@@ -319,7 +319,8 @@ unsigned char data_020a6430[4];   /* 0x020a6430, .bss, ROM span 4 */
 unsigned char data_020a6434[4];   /* 0x020a6434, .bss, ROM span 4 */
 unsigned char data_020a644c[4];   /* 0x020a644c, .bss, ROM span 4 */
 unsigned char data_020a6450[8];   /* 0x020a6450, .bss, ROM span 8 */
-unsigned char data_020a7fc8[128];   /* 0x020a7fc8, .bss, ROM span 128 */
+/* data_020a7fc8 (0x020a7fc8, .bss, 128): hosted by hal/boot2_ipc.cpp as the PXI
+   receive-callback table inside the save-state bracket (run link100 IPC fold). */
 unsigned char data_020a80c4[4];   /* 0x020a80c4, .bss, ROM span 4 */
 unsigned char data_020a89a4[4];   /* 0x020a89a4, .bss, ROM span 4 */
 unsigned char data_020a9ec0[8];   /* 0x020a9ec0, .bss, ROM span 8 */
