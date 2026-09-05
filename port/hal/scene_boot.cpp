@@ -873,258 +873,62 @@ extern "C" unsigned _ZN4CP1510EnableDTCMEv(void) { return 0x10000u; }
    case, so returning 1 made every fresh run look like a corrupted save. Returning 2
    lets the callers do what they do on a new cartridge: write the defaults and carry
    on silently, with no dialog and no top-state 9 to wedge in. */
-// PORT_HOST_ABI: THE DS BACKUP-MEDIA LEAVES, NOW FILE-BACKED (run save-system).
+// RETIRED, AND THE ROM'S OWN BODIES RUN NOW (run link100, lane SAVE).
 //
-// The two faces above used to answer "blank medium" (2) and "no media" (1) for
-// good: the host has no DS backup driver, so nothing under them ever touched a
-// medium, every boot re-ran SetDefaultValues and every in-game save went
-// nowhere. This replaces them with a real file on disk so progress persists
-// across launches -- and as the free side effect the block above describes, a
-// non-empty save is what lets func_ov007_020aebac read the title's slots as
-// used, so the logo fly-in auto-plays.
+// Everything above this line is history and is kept because the return-value
+// derivation in it is still the right one -- it is just no longer a host
+// ruling. It is the ROM's, read off the two matched TUs, and both of them are
+// in the binary:
 //
-// WHAT IS PERSISTED, AND WHY IT IS THE PAYLOAD AND NOT A FRAMED MEDIUM IMAGE.
-// The faces exchange the game's OWN SaveData bytes: ReadFileData/SaveFile hand
-// a 0x44-byte FileSaveData for slots 0..2, ReadMinigameData/SaveMinigames a
-// 0x2e4-byte MinigameSaveData for slot 3. Those buffers ARE the SaveData
-// structure the ROM produces; they are stored here verbatim, unmodified, at the
-// ROM's own per-slot medium offset (slot<<7). What the faces do NOT see is the
-// medium FRAMING the ROM's real SaveDataToCart wraps around a payload before it
-// reaches the cart -- the 2-byte rolling checksum, the 8-byte record magic
-// (data_020a4b40) and the primary+mirror copies. That framing cannot be
-// reproduced bit-for-bit on the host: BOTH data_020a4b40 (the magic) and
-// data_020a8760 (the medium size) are bss the absent CARD driver fills at
-// runtime, so a framed image would have to GUESS a magic and a size the host
-// never has. The knowable, deterministic thing is the payload, so that is what
-// is written; the persisted file's payload region is byte-identical to the
-// SaveData buffer the game handed the save path. The record framing is the
-// CARD transport, and the host owns both ends of it.
+//     src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp
+//     src/_ZN8SaveData14SaveDataToCartEPcjj.cpp
+//
+// This file used to DEFINE both names. Two host bodies, storing the game's
+// SaveData buffers verbatim into a container with a host header, a host CRC32
+// and a host valid-slot bitmap, under a block that said the ROM's own record
+// framing "cannot be reproduced bit-for-bit on the host: BOTH data_020a4b40
+// (the magic) and data_020a8760 (the medium size) are bss the absent CARD
+// driver fills at runtime, so a framed image would have to GUESS a magic and a
+// size the host never has."
+//
+// NEITHER WAS A GUESS. src/func_0201a054.c, the game's own boot spine, calls
+// func_02042f68(0xd01, data_0208ee50): 0xd01 is the card driver's device-table
+// row for a 64 Kbit EEPROM (8192 bytes) and data_0208ee50 is the eight bytes
+// "ds mario". The medium moved down to where the ARM7 would answer for it --
+// port/ntr/backup.cpp -- and the file on disk is now a plain 8192-byte
+// cartridge image with the ROM's own framing in it: a 2-byte rolling checksum,
+// the 8-byte tag, a primary copy at slot<<7 and a mirror at 4096+slot<<7.
+// port/ntr/backup.cpp's header carries the whole derivation and
+// port/slice_gate215.txt lists the sixteen TUs.
+//
+// The three things a reader of this file wants to know:
+//   * the save file is <exe folder>/save/sm64ds.sav (SM64DS_SAVE_PATH
+//     overrides); deleting it is a fresh cartridge
+//   * a fresh cartridge is 0xFF everywhere, which fails the ROM's tag compare
+//     on both copies, which is the "2" answer this block spent a page arriving
+//     at -- only now the ROM works it out instead of a host face asserting it
+//   * nothing here defines a SaveData symbol any more
 
-#include "instance_tag.h"   /* port_instance_tag(), header-only */
-
-namespace {
-
-// The game's save records, keyed by the ROM's slot id (medium offset slot<<7):
-//   slots 0,1,2  FileSaveData      0x44 bytes each  (ReadFileData / SaveFile)
-//   slot  3      MinigameSaveData  0x2e4 bytes      (ReadMinigameData/SaveMinigames)
-// The largest record ends at 0x180 + 0x2e4 = 0x464, so a 0x800-byte medium
-// holds every slot the ROM uses with room to spare.
-enum { SAVE_MEDIUM_BYTES = 0x800 };
-
-// The host container on disk: a 24-byte header then the payload region. The
-// header is host bookkeeping only -- it is what turns a truncated, hand-edited
-// or otherwise unparseable file into "blank" rather than into a bad save, and
-// it is stripped before the game ever sees a byte. The payload region holds the
-// SaveData bytes verbatim at slot<<7.
-struct SaveFileHeader {
-    unsigned char magic[8];   // "SM64DSSV"
-    unsigned int  version;    // SAVE_VERSION
-    unsigned int  medium;     // SAVE_MEDIUM_BYTES
-    unsigned int  valid;      // bit N set: slot N holds a written record
-    unsigned int  crc;        // CRC32 of the payload region
-};
-const unsigned char SAVE_MAGIC[8] = { 'S','M','6','4','D','S','S','V' };
-enum { SAVE_VERSION = 1 };
-
-// The in-memory medium, a cache of the disk file. Plain host bss, OUTSIDE every
-// DSSTATE_BEGIN/END block in this file, so the lk6/lk7 dev savestate (F8/F9)
-// never captures or restores it -- that path is unrelated and left untouched.
-struct SaveMedium {
-    int           loaded;     // 0 unread, 1 load attempted
-    unsigned int  valid;      // per-slot written bitmap
-    unsigned char bytes[SAVE_MEDIUM_BYTES];
-};
-SaveMedium g_save_medium;
-
-// Standard CRC32 (poly 0xEDB88420). Host integrity only -- unrelated to the
-// ROM's own 16-bit rolling record checksum, which is not modelled here.
-unsigned int save_crc32(const unsigned char *p, unsigned int n)
-{
-    unsigned int c = 0xFFFFFFFFu;
-    for (unsigned int i = 0; i < n; ++i) {
-        c ^= p[i];
-        for (int k = 0; k < 8; ++k)
-            c = (c >> 1) ^ (0xEDB88420u & (unsigned int)(-(int)(c & 1)));
-    }
-    return ~c;
-}
-
-// Where the save lives: SM64DS_SAVE_PATH if set, else <bundle>/sm64ds.sav in
-// the folder the exe and settings.json sit in (a player's kit), else beside
-// SM64DS_ASSET_ROOT, else the working directory. Same candidate order the
-// launcher's settings.json uses.
-int save_path(char *out, size_t cap)
-{
-    const char *env = std::getenv("SM64DS_SAVE_PATH");
-    if (env && *env) {
-        if (std::strlen(env) + 1 > cap) return 0;
-        std::snprintf(out, cap, "%s", env);
-        return 1;
-    }
-#ifdef _WIN32
-    {
-        char exe[MAX_PATH];
-        DWORD n = GetModuleFileNameA(NULL, exe, MAX_PATH);
-        if (n > 0 && n < MAX_PATH) {
-            char *bs = std::strrchr(exe, '\\');
-            char *fs = std::strrchr(exe, '/');
-            if (fs && (!bs || fs > bs)) bs = fs;
-            if (bs) {
-                *bs = '\0';
-                if (std::strlen(exe) + 16 < cap) {
-                    std::snprintf(out, cap, "%s\\sm64ds.sav", exe);
-                    return 1;
-                }
-            }
-        }
-    }
-#endif
-    {
-        const char *root = std::getenv("SM64DS_ASSET_ROOT");
-        if (root && *root && std::strlen(root) + 16 < cap) {
-            std::snprintf(out, cap, "%s/sm64ds.sav", root);
-            return 1;
-        }
-    }
-    std::snprintf(out, cap, "sm64ds.sav");
-    return 1;
-}
-
-// Load the disk file into g_save_medium once. A missing, short, wrong-magic,
-// wrong-size or crc-mismatched file leaves the medium BLANK (valid == 0), so
-// every slot reads as the ROM's blank medium and nothing is overwritten. This
-// is the corrupt-file rule: a file we cannot parse is treated as absent and is
-// NEVER wiped.
-void save_load(void)
-{
-    if (g_save_medium.loaded) return;
-    g_save_medium.loaded = 1;
-    g_save_medium.valid = 0;
-    std::memset(g_save_medium.bytes, 0, sizeof g_save_medium.bytes);
-
-    char path[1024];
-    if (!save_path(path, sizeof path)) return;
-    std::FILE *f = std::fopen(path, "rb");
-    if (!f) return;
-    SaveFileHeader h;
-    if (std::fread(&h, 1, sizeof h, f) != sizeof h) { std::fclose(f); return; }
-    if (std::memcmp(h.magic, SAVE_MAGIC, 8) != 0 || h.version != SAVE_VERSION ||
-        h.medium != SAVE_MEDIUM_BYTES) { std::fclose(f); return; }
-    unsigned char buf[SAVE_MEDIUM_BYTES];
-    if (std::fread(buf, 1, SAVE_MEDIUM_BYTES, f) != (size_t)SAVE_MEDIUM_BYTES) {
-        std::fclose(f);
-        return;
-    }
-    std::fclose(f);
-    if (save_crc32(buf, SAVE_MEDIUM_BYTES) != h.crc) return;   /* corrupt: stay blank */
-    std::memcpy(g_save_medium.bytes, buf, SAVE_MEDIUM_BYTES);
-    g_save_medium.valid = h.valid;
-}
-
-// Persist g_save_medium atomically: the whole container to a per-instance
-// sibling temp, then a replacing rename. A failed write leaves any existing
-// good save exactly where it was -- a reader sees the old file or the new one,
-// never a half-written mixture. The per-instance temp suffix keeps two copies
-// of the game sharing one save file from interleaving into one temp.
-int save_store(void)
-{
-    char path[1024];
-    if (!save_path(path, sizeof path)) return 0;
-    char tmp[1088];
-    if (std::strlen(path) + 24 >= sizeof tmp) return 0;
-    std::snprintf(tmp, sizeof tmp, "%s%s.tmp", path, port_instance_tag());
-
-    SaveFileHeader h;
-    std::memcpy(h.magic, SAVE_MAGIC, 8);
-    h.version = SAVE_VERSION;
-    h.medium = SAVE_MEDIUM_BYTES;
-    h.valid = g_save_medium.valid;
-    h.crc = save_crc32(g_save_medium.bytes, SAVE_MEDIUM_BYTES);
-
-    std::FILE *f = std::fopen(tmp, "wb");
-    if (!f) return 0;
-    int ok = (std::fwrite(&h, 1, sizeof h, f) == sizeof h) &&
-             (std::fwrite(g_save_medium.bytes, 1, SAVE_MEDIUM_BYTES, f) ==
-              (size_t)SAVE_MEDIUM_BYTES);
-    if (std::fflush(f) != 0) ok = 0;
-    if (std::fclose(f) != 0) ok = 0;
-    if (!ok) { std::remove(tmp); return 0; }
-#ifdef _WIN32
-    if (!MoveFileExA(tmp, path, MOVEFILE_REPLACE_EXISTING)) {
-        std::remove(tmp);
-        return 0;
-    }
-#else
-    if (std::rename(tmp, path) != 0) { std::remove(tmp); return 0; }
-#endif
-    return 1;
-}
-
-// The record must fit inside the medium at the ROM's own slot offset.
-int save_slot_ok(unsigned slot, unsigned len)
-{
-    unsigned off = slot << 7;
-    return off < (unsigned)SAVE_MEDIUM_BYTES && len <= (unsigned)SAVE_MEDIUM_BYTES - off;
-}
-
-} // namespace
-
-// SaveData::ReadDataFromCart's host leaf. Three-valued exactly as the ROM body
-// (src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp):
-//   0  a written record for this slot was copied into buf -- a validated read
-//   2  no record for this slot: missing/corrupt file, or a slot never written.
-//      The ROM's blank-medium answer, which sends every caller down the
-//      SetDefaultValues path (a fresh cartridge, not an error).
-//   1  the ROM's damaged-save answer, and it is NEVER returned here. The host
-//      has no cart, so its only failure is "blank"; a 1 would raise the ROM's
-//      "data is corrupted" dialog on every fresh run and soft-lock the title
-//      (run mg16 arc 2). A file that will not parse is 2, never 1.
-extern "C" int _ZN8SaveData16ReadDataFromCartEPcjj(char *buf, unsigned len, unsigned slot)
-{
-    save_load();
-    if (!buf || !save_slot_ok(slot, len)) return 2;
-    if (!(g_save_medium.valid & (1u << slot))) return 2;
-    std::memcpy(buf, g_save_medium.bytes + (slot << 7), len);
-    return 0;
-}
-
-// SaveData::SaveDataToCart's host leaf. Writes the payload verbatim into the
-// slot and persists the whole medium atomically. Returns the ROM's convention
-// (which every caller inverts): 0 on success -- both copies reached the medium,
-// here one atomic file -- and 1 on any failure. A failed persist rolls the
-// in-memory slot back and leaves the previous good save on disk untouched.
-extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char *data, unsigned size, unsigned slot)
-{
-    save_load();
-    if (!data || !save_slot_ok(slot, size)) return 1;
-
-    unsigned int   prev_valid = g_save_medium.valid;
-    unsigned char  prev[SAVE_MEDIUM_BYTES];
-    std::memcpy(prev, g_save_medium.bytes, SAVE_MEDIUM_BYTES);
-
-    std::memcpy(g_save_medium.bytes + (slot << 7), data, size);
-    g_save_medium.valid |= (1u << slot);
-    if (!save_store()) {
-        std::memcpy(g_save_medium.bytes, prev, SAVE_MEDIUM_BYTES);
-        g_save_medium.valid = prev_valid;
-        return 1;
-    }
-    return 0;
-}
+#include "ntr/backup.h"   /* the hosted cartridge medium, for its path */
 
 // SM64DS_SAVE_PROBE=write|read: the end-to-end persistence proof, driven from
 // port_scene_tick so it runs on the real title binary with data_0209caa0 and
 // the ROM save functions live. WRITE seeds a recognisable, ROM-shaped record
-// into slot 0 through the game's own SaveFile path (which calls the host
-// SaveDataToCart leaf) and prints it; READ pulls it back through ReadFileData
-// (the host ReadDataFromCart leaf) in a SECOND process and prints whether the
-// marker bytes survived, plus a raw-file compare that shows the persisted
-// payload region equals the game's SaveData bytes. Two integer compares when
-// the variable is unset.
+// into slot 0 through the game's own SaveFile path and prints it; READ pulls it
+// back through ReadFileData in a SECOND process and prints whether the marker
+// bytes survived, plus a raw-file compare against the cartridge image on disk.
+// Two integer compares when the variable is unset.
+//
+// EVERY LEAF UNDER IT IS THE ROM'S NOW (run link100, lane SAVE). SaveFile ->
+// SaveDataToCart -> the card driver -> port/ntr/backup.cpp, so a survived=1 is
+// the game's own save code round-tripping through a real medium and not a host
+// container. port/tools/save_proof.py is the scripted two-process form of this
+// and it also checks the ROM's framing byte by byte.
 extern "C" {
 int  _ZN8SaveData8SaveFileEjP12FileSaveData(unsigned fileID, void *data);
 int  _ZN8SaveData12ReadFileDataEjP12FileSaveData(unsigned fileID, void *dest);
 void _ZN8SaveData16SetDefaultValuesEP12FileSaveData(void *blk);
+int  _ZN8SaveData16ReadDataFromCartEPcjj(char *buf, unsigned len, unsigned slot);
 }
 static void port_save_probe(int frame)
 {
@@ -1144,8 +948,7 @@ static void port_save_probe(int frame)
     if (frame < at) return;
     done = 1;
 
-    char path[1024];
-    save_path(path, sizeof path);
+    const char *path = ntr::backup::path();
 
     if (mode == 1) {
         /* WRITE: a valid ROM default, then progress bytes a blank default does
@@ -1175,12 +978,12 @@ static void port_save_probe(int frame)
                      r, survived, path);
         for (int i = 0; i < 0x44; ++i) std::fprintf(stderr, "%02x", rec[i]);
         std::fprintf(stderr, "\n");
-        /* byte-accuracy: the persisted payload region (past the 24-byte host
-           header) equals the exact bytes the read leaf hands back for slot 0.
-           Compared against the FACE read, not the ReadFileData readback above,
-           because ReadFileData masks the word at +0xc on a good read while the
-           face copies the payload verbatim -- so the face read is the game's
-           SaveData buffer as stored, and it must equal the file byte for byte. */
+        /* Byte-accuracy against the CARTRIDGE IMAGE. The ROM's record for slot
+           0 starts at slot<<7 with a 2-byte checksum and the 8-byte tag, so its
+           payload is at +10; it must equal what ReadDataFromCart hands back
+           verbatim. Compared against the FACE read and not the ReadFileData
+           readback above, because ReadFileData masks the word at +0xc on a good
+           read while the medium holds the bytes as stored. */
         unsigned char face[0x44];
         std::memset(face, 0, sizeof face);
         int fr = _ZN8SaveData16ReadDataFromCartEPcjj((char *)face, 0x44, 0);
@@ -1188,7 +991,7 @@ static void port_save_probe(int frame)
         int match = 0;
         if (f) {
             unsigned char disk[0x44];
-            if (std::fseek(f, (long)sizeof(SaveFileHeader) + 0, SEEK_SET) == 0 &&
+            if (std::fseek(f, 10L, SEEK_SET) == 0 &&
                 std::fread(disk, 1, 0x44, f) == 0x44)
                 match = (fr == 0 && std::memcmp(disk, face, 0x44) == 0);
             std::fclose(f);

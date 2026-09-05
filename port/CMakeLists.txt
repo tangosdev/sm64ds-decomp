@@ -9514,6 +9514,25 @@ foreach(line IN LISTS SLICE212_LINES)
     list(APPEND SLICE212_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- GATE 215: the save system's own medium path (run link100, lane SAVE) ----
+#
+# Seventeen matched TUs: SaveData::SaveDataToCart and SaveData::ReadDataFromCart
+# (both were host shadows in hal/scene_boot.cpp) and the card-backup driver
+# under them. The MEDIUM is port/ntr/backup.cpp, listed beside this slice on
+# each target rather than inside the ntr library: it defines ROM symbols
+# (func_02060f60, func_02057020, func_02057078 and the driver's bss), and the
+# small smoke targets that link ntr have no business pulling those in.
+# See port/slice_gate215.txt and the header of port/ntr/backup.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate215.txt" SLICE215_LINES)
+set(SLICE215_SOURCES "")
+foreach(line IN LISTS SLICE215_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE215_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12694,6 +12713,9 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # gate 215 (run link100, lane SAVE): the save system's own medium path,
+    # plus the hosted backup medium the ARM7 would otherwise answer for.
+    ntr/backup.cpp ${SLICE215_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12905,6 +12927,9 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # gate 215 (run link100, lane SAVE): the save system's own medium path,
+    # plus the hosted backup medium the ARM7 would otherwise answer for.
+    ntr/backup.cpp ${SLICE215_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13153,6 +13178,9 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # gate 215 (run link100, lane SAVE): the save system's own medium path,
+    # plus the hosted backup medium the ARM7 would otherwise answer for.
+    ntr/backup.cpp ${SLICE215_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
