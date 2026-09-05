@@ -224,7 +224,10 @@ names the address. Two rows will be wrong if you guess.
 
 `tubuild create` writes `// @symbol` markers only for mangled or already-named
 members; **auto-named `func_ovNN_ADDR` shards are skipped silently.** Add theirs
-by hand or tiers scoring misses them.
+by hand or tiers scoring misses them. The gap is narrower than it sounds — a
+shard carried in RAW, inside its own `extern "C"` block, *does* get a marker.
+Only the plain `.c`-derived ones lack them. Check which you have rather than
+blanket-adding.
 
 When the policy is refused, `verify` re-reports **all** extras as unlicensed from
 the unaudited object. One bad row makes it look like nothing is licensed. Fix the
@@ -285,6 +288,10 @@ mwccarm 2004/b56 behaviours, not style preferences.
   Reordering the includes restored the match. `Vector3_16` behaves the same way.
   **When a function goes LONG after a merge and you did not touch it, check the
   include union before you look at CSE.** (Short, and you touched it: CSE.)
+  This heuristic has now found a regression it was written for: `daDgr_c`'s sole
+  DIFF was an untouched function whose `Matrix4x3` spelling flipped because the
+  merge made `math/Matrix.h` arrive first through `daDgr_c.h -> dBgW_KcMbg.h`.
+  A local flat `Mat12` restored 9/9.
 - **Struct copy:** C++ scalarizes word-by-word where C block-moves — about 12
   bytes short. Force it with `struct M { int w[12]; };`.
 - **bool widening:** `int f = (a==b); if (f)` is longer in C++ than `if (a==b)`.
@@ -421,7 +428,18 @@ appears at exactly the moment you are deciding whether your push landed cleanly,
 so read it and move on.
 
 **`eligible.py` takes no file argument** (`-j` and `--no-isolate` only). You
-cannot scope it to your class.
+cannot scope it to your class — grep `build/eligible-names.txt` afterwards.
+
+**`-j` is a `linkcheck` flag, not a `verify` flag.** `tubuild.py verify -j 6`
+dies with `unrecognized arguments: -j 6`. When this file or a launcher says "use
+`-j 6` while siblings are running", that applies to `linkcheck` and `rombuild`.
+
+**`wt-remove.ps1` prints `error: failed to delete ... Permission denied` and then
+succeeds**, falling back to a robocopy purge and reporting `removed: True`. Read
+the final line, not the error. This matters more than it looks: the rule never to
+use `git worktree remove` is load-bearing — it deletes through the junctions and
+empties the shared, non-redownloadable ROM dump — and an expected-looking failure
+here is exactly what would tempt someone into the unsafe fallback.
 
 **`wt-remove.ps1` takes `-Path`, not `-Name`** — unlike `wt-setup.ps1`. The rule
 never to use `git worktree remove` is load-bearing (it deletes through the
@@ -433,6 +451,12 @@ teardown invocation must not tempt you into the unsafe fallback.
 Not every TU is promotable whole, and stopping short can be the correct result
 rather than a failure. When the ROM's emission order cannot be reproduced by any
 admissible source form:
+
+**Never infer destructor placement from a sibling header.** `daDgr_c.h` declared
+its destructor out of line by analogy with `BigBrickBlock.h`'s leaf-class
+convention; the ROM's own addresses refuted it, and merged, the two out-of-line
+definitions were a duplicate definition *as well as* the wrong order. Read the
+cartridge, not the neighbour.
 
 The discriminator is which way the cartridge ordered the destructors. ROM **D1
 below D0** is the reproducible direction and promotes whole (`ov029/daObjWcObj01_c`);
