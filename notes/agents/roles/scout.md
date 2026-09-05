@@ -31,16 +31,24 @@ far and may be wrong; the cartridge is not.
    *length* — 31 words = `dActor_c`, 32 = `dBgActor_c` — is corroboration for
    subclasses, not proof, so do not report it as the reason.
 4. **Own overrides.** For each slot whose target lies inside this overlay: the
-   slot index, the target address, and the inherited slot name from
-   `include/dActor_c.h` (slots 18-30 are declared there in order). Slot index is
-   the method's identity — not its address.
-5. **Non-virtual methods.** Everything in the class's address range that no
+   slot index, the target address, and the inherited slot name. Slot names come
+   from **the whole base chain**, not one header: `include/dActor_c.h` declares
+   slots 18-30 and is the right source only for a direct `dActor_c` subclass. A
+   `dEnemyBase_c` descendant has a 37-slot table and takes names from each header
+   up the chain. Slot index is the method's identity — not its address.
+5. **Where the RTTI actually lives.** `_ZTI`/`_ZTS` have vague linkage: the
+   linker keeps one copy wherever it first landed, which can be a **different
+   overlay from the `_ZTV`**. Record the module for each of the three symbols
+   separately. `daOts_c`'s vtable is in ov064 while its `_ZTI`/`_ZTS` are in
+   ov027. Resolve an ambiguous `dsd` module list by finding which overlay's
+   `symbols.txt` names the address.
+6. **Non-virtual methods.** Everything in the class's address range that no
    vtable slot points to. Find callers to distinguish a real method from a
    file-local helper.
-6. **Size and fields.** The object size from the allocation call site, and the
+7. **Size and fields.** The object size from the allocation call site, and the
    field offsets you can prove from load/store displacements. Mark every field
    you could not prove as `unproven` — do not invent a name for it.
-7. **Which overlay(s)** the methods live in, and the module base address.
+8. **Which overlay(s)** the methods live in, and the module base address.
 
 ## Output
 
@@ -54,6 +62,9 @@ Write `notes/data/class-facts/<class>.json`:
       "vtable": {"symbol": "_ZTV7da1up_c", "address": "0x021083c8", "slots": 31},
       "base_class": "dActor_c",
       "base_evidence": "31-word vtable; 22 of 31 slots point into arm9",
+      "typeinfo": {"ZTI": "0x021138bc", "ZTI_module": "ov027",
+                   "ZTS": "0x021138a4", "ZTS_module": "ov027"},
+      "modules_touched": ["ov064", "ov027", "ov002", "arm9"],
       "overrides": [
         {"slot": 18, "address": "0x020af3a0", "name": "OnYoshiTryEat",
          "body": "mov r0,#4; bx lr", "note": "returns 4"}

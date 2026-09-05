@@ -46,17 +46,43 @@ for '<ov>/<Class>'; run 'create' first`. The real cycle is:
     python tools/tubuild.py create    <ov>/<Class>     # writes into src_tu/
     #   ... reconcile the merged source ...
     python tools/tubuild.py verify    <ov>/<Class>
+    python tools/tubuild.py linkcheck --baseline       # ONCE per fresh worktree
     python tools/tubuild.py linkcheck <ov>/<Class>     # BEFORE promotion; see below
+
+**`linkcheck --baseline` is mandatory and it is not optional in a fresh
+worktree.** Skip it and `linkcheck` exits 1 at `[4/8]` naming two *unrelated*
+intact-object TUs — `ov036/daObjRcCarpet_c` and `ov070/daPropeller_Heyho_c` —
+with `vtable partition baseline proof unavailable`. Nothing about your class,
+and it costs a full run to work out. Take the baseline **before** any header
+edit, since it builds the working tree.
 
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
 
 **`tubuild.py promote` is `--dry-run` only.** It prints the plan and refuses to
 act: *"only --dry-run is implemented … deliberately not available yet."* You
-execute that plan by hand: move the source out of `src_tu/`, `git rm` the shards,
-splice their N `delinks.txt` entries into one, fix `converted-baseline.json`,
-fix the `port/` references. Note `git mv` fails here — the `src_tu/` file is
-untracked at that point, so use a plain `mv` and `git add`.
+execute that plan by hand. `git mv` fails — the `src_tu/` file is untracked at
+that point — so use a plain `mv` and `git add`. The full list, including four
+steps the dry-run does not print:
+
+1. Move the source out of `src_tu/` and `git rm` the shards.
+2. Splice their N `delinks.txt` entries into one.
+3. **Edit the manifest yourself:** `status` → `promoted`, `source` → the new
+   path. `verify` does not do this, and `promote --dry-run` refuses to run at
+   all while `status` is still `text-verified`.
+4. **`python tools/tiers_ratchet.py --update --reason "<why>"` — never hand-edit
+   `converted-baseline.json`.** The tool also writes
+   `config/converted-backslide-exceptions.jsonl`, re-sorts the array, and adds
+   `src/actors/<Class>.cpp#<symbol>` member rows for members still passing all
+   five criteria. A hand edit gets the count right and the **set** wrong.
+5. **Rewrite each manifest conflict note** from `tubuild create warning:
+   CONFLICT:` to `tubuild create warning (RESOLVED): CONFLICT:`, or
+   `check_tubuild_conflicts.py` fails once per note.
+6. **Grep the prose for every shard filename you deleted** and remove the
+   literal token — `check_dead_references.py` reads bare `src/` tokens, not just
+   links, so rewriting the sentence around the name is not enough. Rewording
+   `notes/cpp-conversion-enemies.md` was needed for `daOts_c`.
+7. Fix the `port/` slice manifests that referenced a deleted shard.
 
 **Run `linkcheck` before you promote.** Once the source is enrolled in
 `delinks.txt`, `linkcheck` routes down the intact path unconditionally and fails
@@ -79,8 +105,16 @@ Dispositions (from `tubuild.py` ~2146-2260):
 | disposition | for |
 |---|---|
 | `deadstrip` | a symbol with no ROM home |
-| `deadstrip-duplicate` | a **function** that does have a ROM home |
+| `deadstrip-duplicate` | a **function** that does have a ROM home — **requires `canonical_module` and `canonical_address`** |
 | `deadstrip-data` | any `_ZTV` / `_ZTI` / `_ZTS` — plain `deadstrip` is rejected for these |
+
+**Do not assume a symbol's `canonical_module` is your TU's module.** `_ZTI`/`_ZTS`
+have vague linkage, so the linker keeps **one** copy wherever it first landed,
+which can be a different overlay entirely. Measured on `daOts_c` (ov064): its own
+`_ZTI7daOts_c`/`_ZTS7daOts_c` live in **ov027**, and ov064's vtable header word
+relocates across to them. `dsd` reports that relocation's module as a list of
+sixteen overlays; the real one is whichever overlay's `symbols.txt` actually
+names the address. Two rows will be wrong if you guess.
 
 When the policy is refused, `verify` re-reports **all** extras as unlicensed from
 the unaudited object. One bad row makes it look like nothing is licensed. Fix the
@@ -147,7 +181,11 @@ Ask the compiler rather than hand-mangling:
 Pushed on `cpp/<Class>-tu`, claim released, and you have reported verbatim:
 
     python tools/tubuild.py verify <ov>/<Class>
-    python tools/rombuild.py -j 16 --no-rom
+    python tools/rombuild.py -j 6 --no-rom
+
+Use `-j 6`, not `-j 16`, whenever sibling writers are running — check with
+`ListAgents` or `python tools/classqueue.py list`. Three concurrent `-j 16`
+builds oversubscribe the machine and slow all three.
 
 **A near-miss never lands in `src/`.** Restore the matched source and bank the
 candidate in `nearmiss/db.jsonl`.
