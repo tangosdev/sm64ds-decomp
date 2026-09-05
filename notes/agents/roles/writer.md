@@ -76,11 +76,17 @@ steps the dry-run does not print:
 2. Splice their N `delinks.txt` entries into one.
 3. **Edit the manifest yourself:** `status` → `promoted`, `source` → the new
    path. `verify` does not do this, and `promote --dry-run` refuses to run at
-   all while `status` is still `text-verified`. Use `promoted`: 93 landed
-   manifests do, against 27 left on `text-verified`, and the oracle `daBar_c` is
-   one of the 93. `text-verified` only *gates* anything for intact-object TUs
-   (`tubuild.py:4543`), so leaving it is silently harmless today and wrong the
-   moment the class changes route.
+   all while `status` is still `text-verified`. **This is not cosmetic and the
+   damage is permanent.** `tiers_ratchet.promoted_moves()` skips every manifest
+   entry whose status is not exactly `promoted`, so leaving it means your
+   absorbed shards resolve as `GONE -- not a tracked source file any more`
+   instead of `MOVED -- absorbed into ...`, and `--update` writes a **fake
+   backslide row** into `converted-backslide-exceptions.jsonl` for each one,
+   blaming a readability loss on a file that was absorbed cleanly. Measured on
+   `dBgActor_c`: `text-verified` gave 939 moves with zero for the class and four
+   bogus `GONE` rows; flipping the one field gave 10 moves and four correct
+   `MOVED` rows. It is invisible once written. (`tubuild.py:4543` reads status
+   too, but only for intact-object TUs — that reader is not the one that bites.)
 4. **`python tools/tiers_ratchet.py --update --reason "<why>"` — never hand-edit
    `converted-baseline.json`.** The tool also writes
    `config/converted-backslide-exceptions.jsonl`, re-sorts the array, and adds
