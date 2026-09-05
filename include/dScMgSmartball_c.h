@@ -70,18 +70,16 @@ struct dScMgSmartball_c : dScMgBase_c {
        The pre-migration file spelled the parameter `int mode` and still matched,
        because the ROM only ever compares it against 2 -- but the declaration it is
        overriding is `void AfterCleanupResources(u32)`, so that is what it is. */
-    /* InitResources is declared even though its body is NOT decompiled: its
-       0x8dc bytes at ov006:0x02118b70 have no delinks entry, so the module's gap
-       object still serves them straight from the cartridge. The declaration is
-       what the EMITTED vtable needs. Without it mwcc wrote fBase_c's default,
-       _ZN7fBase_c13InitResourcesEv (0x02043c80), into slot 0 while the cartridge
-       holds 0x02118b70 -- romdata_check scored _ZTV16dScMgSmartball_c DIFFERS on
-       that one word. Naming the ROM body in ov006/symbols.txt gives the slot a
-       symbol to point at; the bytes behind it are unchanged either way. */
+    /* InitResources was declared here before its body existed, because the
+       EMITTED vtable needs the declaration: without it mwcc wrote fBase_c's
+       default, _ZN7fBase_c13InitResourcesEv (0x02043c80), into slot 0 while the
+       cartridge holds 0x02118b70 -- romdata_check scored _ZTV16dScMgSmartball_c
+       DIFFERS on that one word. Its 0x8dc bytes are now decompiled and enrolled
+       (src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp); the slot is unchanged. */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnPushed();                           /* slot 25 */
     virtual int  Virtual7C();                          /* slot 31 */
-    s32  InitResources();  /* slot  0 -- ov006 0x02118b70, not decompiled */
+    s32  InitResources();  /* slot  0 -- src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp */
     void AfterCleanupResources(u32 vfSuccess);
                            /* slot  5 -- src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
     s32  Behavior();       /* slot  6 -- src/_ZN16dScMgSmartball_c8BehaviorEv.cpp */

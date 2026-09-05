@@ -11619,6 +11619,9 @@ src/func_0206e310.c:
     complete
     .text start:0x0206e310 end:0x0206e330
 
+src/func_0206e330.c:
+    .text start:0x0206e330 end:0x0206e3dc
+
 src/func_0206e3dc.c:
     complete
     .text start:0x0206e3dc end:0x0206e450
