@@ -9375,6 +9375,22 @@ int main(void)
                    reach a swallow. One press and then wait can. */
                 (frame < 213 || !getenv("SM64DS_SELFTEST_TONGUE_ONCE")))
                 btn |= 1;
+            /* THROW probe: the SECOND B press, the one that THROWS a held
+               Yoshi egg. After St_Swallow lays the egg the Player holds it
+               (mHeldObj); a B edge then enters St_YoshiPower_Init, which does
+               func_ov002_020ed63c(mHeldObj, 1) -- egg state 1, "thrown, in
+               flight". State 1's main func_ov002_020ecf94 calls
+               func_ov002_020ecd18 EVERY FRAME, and that is the function that
+               dispatches the target's vtable slot 30. Without this knob the
+               harness can lay an egg but never throw one, so the whole flight
+               path -- and slot 30 with it -- was unreachable from a test.
+               This only presses a button; nothing about the throw, the aim or
+               the flight is scripted. SM64DS_SELFTEST_TONGUE_THROW=<frame>. */
+            if (selftest && getenv("SM64DS_SELFTEST_TONGUE_THROW")) {
+                const int tf = atoi(getenv("SM64DS_SELFTEST_TONGUE_THROW"));
+                if (tf > 0 && frame >= tf && frame < tf + 3)
+                    btn |= 1;
+            }
             /* JUMPSPAM probe: the frame-hitch repro. A press edge every
                <period> frames from f20, three frames held so the edge is not
                missed. The default period of 40 is long enough that he lands
