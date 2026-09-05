@@ -210,32 +210,9 @@ void func_020593f4(void) {
 }
 
 // --- the bit allocator over the shared block --------------------------------
-// src/func_02057020.c: a `clz` search over the two 32-bit words at 0x027fffb0,
-// clearing the highest free bit and returning 0x40+index (first word) or
-// 0x60+index (second), or -3 when both are full. func_02057320 seeds those two
-// words (-1 and -0x10000) and func_02058690 draws an id from them. Written out
-// in full here because a host CAN do exactly this; only the `clz` instruction
-// is missing, and _BitScanReverse is the same operation.
-// PORT_HOST_ABI: ARM `clz` primitive; the arithmetic below is the exact
-//                equivalent (verified against the asm block instruction by
-//                instruction), not an approximation.
-int func_02057020(void) {
-    volatile unsigned int *w = (volatile unsigned int *)0x027fffb0u;
-    unsigned int base;
-    int idx;
-    unsigned int v = w[0];
-    if (v != 0) {
-        base = 0x40u; idx = 0;
-    } else {
-        v = w[1];
-        if (v == 0) return -3;
-        base = 0x60u; idx = 1;
-    }
-    unsigned int lz = 0;
-    while ((v & 0x80000000u) == 0) { v <<= 1; ++lz; }
-    w[idx] &= ~(0x80000000u >> lz);
-    return (int)(base + lz);
-}
+// src/func_02057020.c (OS_GetLockID) is hosted in hal/os_lockid.cpp, which
+// every binary links (smoke_player's SaveData path needs it too); the seed of
+// the two lock words lives beside it. Moved there at integration.
 
 // --- the game-card IREQ_MC fatal path ---------------------------------------
 // src/func_020610fc.c is an IPC send loop for command 0xd followed by a

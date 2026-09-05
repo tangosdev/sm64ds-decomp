@@ -159,13 +159,20 @@ static void say(const char *what) {
 // Called immediately before that InitializeRootHeap line, which is where the
 // ROM's own order puts it.
 // ---------------------------------------------------------------------------
+extern "C" void port_os_lock_words_seed(void);
+
 void port_boot_rom_pre_main(void)
 {
     // func_02058c84's arms, in the ROM's order. The gaps are the PXI four;
     // see the header block for the measurement that closes them.
     /* func_02058f28() -- the OS arena, owned by hal/os_arena.cpp */
     /* func_0205b858() -- PXI */
-    /* func_02057320() -- takes the 0x7e lock and spins on the shared block */
+    /* func_02057320() -- takes the 0x7e lock and spins on the shared block.
+       Its two stores (the OS lock words at 0x027fffb0 = -1, -0x10000) are
+       the only part a host can honour; hal/os_lockid.cpp writes them here,
+       at the ROM's own point in the order, so OS_GetLockID hands out ids
+       the way the ROM does instead of -3. */
+    port_os_lock_words_seed();
     /* func_02058ec8() -- reaches func_02058764 -> the unmapped GBA slot */
     func_02057000();
     /* func_02059594() -- reaches func_02058764 -> the unmapped GBA slot */

@@ -12908,7 +12908,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
-    ntr/backup.cpp ${SLICE215_SOURCES}
+    ntr/backup.cpp ${SLICE215_SOURCES} hal/os_lockid.cpp
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
@@ -13128,7 +13128,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
-    ntr/backup.cpp ${SLICE215_SOURCES}
+    ntr/backup.cpp ${SLICE215_SOURCES} hal/os_lockid.cpp
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
@@ -13384,7 +13384,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
-    ntr/backup.cpp ${SLICE215_SOURCES}
+    ntr/backup.cpp ${SLICE215_SOURCES} hal/os_lockid.cpp
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
