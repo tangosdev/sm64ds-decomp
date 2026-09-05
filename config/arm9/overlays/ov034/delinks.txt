@@ -132,6 +132,10 @@ src/_ZN7Wiggler6RenderEv.cpp:
     complete
     .text start:0x02112af4 end:0x02112b5c
 
+src/_ZN7Wiggler8BehaviorEv.cpp:
+    complete
+    .text start:0x02112b5c end:0x0211323c
+
 src/_ZN7Wiggler13InitResourcesEv.cpp:
     complete
     .text start:0x0211323c end:0x021136a4

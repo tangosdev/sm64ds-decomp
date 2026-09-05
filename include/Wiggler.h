@@ -44,10 +44,25 @@ struct Wiggler : dEnemyBase_c {
     u8  pad_462[0x16];
     dCcAcPos_c mdCc_cs1[5];    /* 0x478 */
     dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
-    u8  pad_6f8[0x10];
+    s16 unk_6f8[5];                                  /* 0x6f8 -- per-segment, Behavior adds 0x1200 */
+    u8  unk_702[5];                                  /* 0x702 -- per-segment countdown (DecIfAbove0_Byte) */
+    u8  pad_707[0x1];
     dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
     /* trailing extent the ROM's `new Wiggler` literal proves; see tools/opnew_sizes.py */
-    u8 pad_8c4[0x24];
+    u8  pad_8c4[0xc];
+    s32 unk_8d0;                                     /* 0x8d0 -- Behavior: destroyed when unk_8d0 + mPosY < -0x1f4000 */
+    u8  pad_8d4[0x4];
+    s16 unk_8d8;                                     /* 0x8d8 -- target angle for unk_444[0].y */
+    u8  pad_8da[0x1];
+    u8  unk_8db;                                     /* 0x8db -- 4 - this selects the face texture frame */
+    u8  pad_8dc[0x2];
+    u8  unk_8de;                                     /* 0x8de */
+    u8  unk_8df;                                     /* 0x8df -- nonzero: falling out of the level */
+    u8  unk_8e0;                                     /* 0x8e0 */
+    u8  unk_8e1;                                     /* 0x8e1 -- nonzero: drive the camera */
+    u8  unk_8e2;                                     /* 0x8e2 -- InitResources: star id */
+    u8  unk_8e3;                                     /* 0x8e3 -- InitResources: TrackStar result */
+    void *unk_8e4;                                   /* 0x8e4 -- Particle::System handle */
 
     virtual ~Wiggler();
 
