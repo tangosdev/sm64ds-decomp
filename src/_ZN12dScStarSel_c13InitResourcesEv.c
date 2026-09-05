@@ -1,11 +1,25 @@
 // @symbol _ZN12dScStarSel_c13InitResourcesEv
-// NONMATCHING: near-miss from DB (div=153)
-/* dScStarSel_c::InitResources() -- vtable slot 0. Plain C carries the
- * literal mangled name with no mangling needed -- see
- * include/dScStarSel_c.h. */
+/* recovered: dScStarSel_c::InitResources() -- vtable slot 0. Plain C carries
+ * the literal mangled name with no mangling needed -- see
+ * include/dScStarSel_c.h.
+ *
+ * Loads the star-select screen: sound group, VRAM banks, the two models at
+ * this+0x64 / this+0xB4, the per-language BG/OBJ graphics, the per-character
+ * palette set, then derives the star row (collected bitmask at +0x131, first
+ * uncollected slot at +0x115, count at +0x114, per-star x positions at
+ * +0x11A) and the character row (+0x124/+0x128/+0x12C, count at +0x130).
+ *
+ * The star x positions are a u8 running value: the row is centred, so it
+ * starts at 0x80 (odd count) or 0x92 (even count) minus half the count
+ * times the 0x23 pitch, and each star adds one pitch. Written as one u8 with
+ * if/else constant arms, which is what keeps the value in the register the
+ * ternary lands in (r3) and lets the loop's +0x23 temp take a fresh r1. */
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+typedef unsigned long long u64;
 typedef signed char s8;
 typedef short s16;
 typedef int s32;
@@ -17,6 +31,7 @@ typedef volatile unsigned int vu32;
 #define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
 #define FH(p, o) (*(u16 *)((u8 *)(p) + (o)))
 #define FW(p, o) (*(s32 *)((u8 *)(p) + (o)))
+#define LB(p) (*(u8 *)(u32)(u64)(u32)(p))
 
 extern void LoadTextNarcs(void);
 extern int LoadArchive(int idx);
@@ -76,30 +91,32 @@ extern s8 data_ov003_020b16c8[];
 extern s16 data_ov003_020b16e4[];
 extern u8 data_0209caa0[0x50];
 
-void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
+s32 _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
 {
     void *file;
-    u8 level;
+    s32 loopI;
     u8 accB;
     s32 anyUnfilled;
     u8 bitPos;
     u32 totalStars;
-    s32 loopI;
+    u8 level;
     s32 sp8;
     s32 spC;
+    s32 varOne;
     u8 *bitsPtr;
     u8 tmpU8;
-    u8 colorBase;
     u8 colorVal;
     s32 idx2;
     s32 charIdx;
     u8 charCount;
-    u8 charCountM1;
-    u8 tabR5, tabSL, tabSB;
-    s32 varFp, varR6;
+    s32 charCountM1;
+    u8 tabSL;
+    u8 tabSB;
+    s32 varFp;
     s32 idx8;
     s8 *tablePtr;
-    u8 *t;
+    s32 varR6;
+    u8 tabR5;
 
     LoadTextNarcs();
     LoadArchive(0);
@@ -308,18 +325,20 @@ void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
         FB(arg0, 0x115) = 0xFF;
         FB(arg0, 0x131) = 0;
         loopI = 1;
-        if (totalStars > 0U) {
-            sp8 = loopI;
-            spC = loopI;
-            bitsPtr = (u8 *)arg0 + 0x131;
+        if ((u32)accB < totalStars) {
+            sp8 = 1;
+            spC = 1;
+            varOne = 1;
+            bitsPtr = (u8 *)arg0;
+            bitsPtr += 0x131;
             do {
                 if (IsStarCollected(level, loopI) != 0) {
+                    LB((u8 *)arg0 + 0x131) |= (u8)(varOne << bitPos);
                     accB += 1;
-                    FB(arg0, 0x131) = (u8)(FB(arg0, 0x131) | (u8)(1 << bitPos));
                 } else {
                     if (FB(arg0, 0x115) == 0xFF) {
                         FB(arg0, 0x115) = bitPos;
-                        *bitsPtr = (u8)(*bitsPtr | (u8)(sp8 << bitPos));
+                        *bitsPtr |= (u8)(sp8 << bitPos);
                     }
                     anyUnfilled = spC;
                 }
@@ -329,25 +348,21 @@ void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
         }
         FB(arg0, 0x114) = bitPos;
         if ((anyUnfilled == 0) && (totalStars != 7)) {
-            FB(arg0, 0x114) = (u8)(FB(arg0, 0x114) + 1);
+            LB((u8 *)arg0 + 0x114) += 1;
             if (FB(arg0, 0x115) == 0xFF) {
                 FB(arg0, 0x115) = bitPos;
-                FB(arg0, 0x131) = (u8)(FB(arg0, 0x131) | (u8)(1 << bitPos));
+                LB((u8 *)arg0 + 0x131) |= (u8)(1 << bitPos);
             }
         }
         if (FB(arg0, 0x115) == 0xFF) {
             FB(arg0, 0x115) = 0;
         }
         tmpU8 = FB(arg0, 0x114);
-        colorBase = (tmpU8 & 1) ? 0x80 : 0x92;
-        colorVal = (u8)(colorBase - (((s32)tmpU8 >> 1) * 0x23));
-        idx2 = 0;
-        if ((s32)tmpU8 > 0) {
-            do {
-                FB((u8 *)arg0 + idx2, 0x11A) = colorVal;
-                idx2 += 1;
-                colorVal += 0x23;
-            } while (idx2 < (s32)FB(arg0, 0x114));
+        if (tmpU8 & 1) colorVal = 0x80; else colorVal = 0x92;
+        colorVal -= ((s32)tmpU8 >> 1) * 0x23;
+        for (idx2 = 0; idx2 < (s32)FB(arg0, 0x114); idx2++) {
+            FB((u8 *)arg0 + idx2, 0x11A) = colorVal;
+            colorVal += 0x23;
         }
     }
 
@@ -365,7 +380,7 @@ void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
     FB(arg0, 0x130) = 0;
     do {
         if (_ZN8SaveData19IsCharacterUnlockedEj(charIdx) != 0) {
-            FB(arg0, 0x130) = (u8)(FB(arg0, 0x130) + 1);
+            FB(arg0, 0x130)++;
         }
         charIdx += 1;
     } while (charIdx < 4);
@@ -379,22 +394,21 @@ void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
             FH(arg0, 0x108) = 0;
         }
         charCount = FB(arg0, 0x130);
-        charCountM1 = (u8)(charCount - 1);
+        charCountM1 = charCount - 1;
         tabR5 = data_ov003_020b16a8[charCountM1];
         tabSL = data_ov003_020b16a0[charCountM1];
         if ((u32)charCount > 1U) {
             varFp = 0;
             varR6 = 0;
-            idx8 = (charCount - 2) * 4;
             tabSB = data_ov003_020b16a4[charCountM1];
+            idx8 = (charCount - 2) * 4;
             if (charCountM1 > 0) {
                 tablePtr = &data_ov003_020b16c8[idx8];
                 do {
                     if (_ZN8SaveData19IsCharacterUnlockedEj(varR6) != 0) {
-                        t = (u8 *)arg0 + varR6;
-                        FB(t, 0x124) = tabR5;
-                        FB(t, 0x128) = tabSL;
-                        FB(t, 0x12C) = tabSB;
+                        FB((u8 *)arg0 + varR6, 0x124) = tabR5;
+                        FB((u8 *)arg0 + varR6, 0x128) = tabSL;
+                        FB((u8 *)arg0 + varR6, 0x12C) = tabSB;
                         varFp += 1;
                         tabR5 = (u8)(tabR5 + data_ov003_020b16e4[idx8]);
                         tabSL = (u8)(tabSL + *tablePtr);
@@ -425,4 +439,5 @@ void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
     FB(arg0, 0x116) = data_0209caa0[0x41];
     data_0208ee44 = 1;
+    return 1;
 }
