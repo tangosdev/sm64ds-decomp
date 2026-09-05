@@ -51,6 +51,20 @@ extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_0212a650(void);
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
+    /* The 2-vector value type the petal setup swaps through (Fix12 x, y --
+       the same pair func_0203d388 rotates in place). THE EMPTY DESTRUCTOR IS
+       LOAD-BEARING, for the reason types.h gives Vector3 one: a local of this
+       type keeps an 8-byte stack home even though every copy through it goes
+       register to register, and func_ov006_0212a764's frame is 0x1c only with
+       that home (0x14 without it; a plain POD pair, a ctor-only pair, an int[2]
+       and two scalar temps all lose the slot -- measured, 2004/b56). Nested so
+       the coined name cannot collide with anything global. */
+    struct Vec2 {
+        Fix12i x;
+        Fix12i y;
+        ~Vec2() {}
+    };
+
     virtual ~dScMgFlower_c();
 
     /* THIS CLASS'S OWN OVERRIDES ARE SLOTS 0, 6 AND 9 -- AND ONLY THOSE. Four
@@ -72,7 +86,18 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 Behavior();        /* slot  6 -- src/_ZN13dScMgFlower_c8BehaviorEv.cpp */
     s32 Render();          /* slot  9 -- src/_ZN13dScMgFlower_c6RenderEv.cpp */
 
-    u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650 */
+    u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650.
+                              One 0x20-byte petal record, as func_ov006_0212a764
+                              (the round setup) and Behavior read it:
+                                +0x00 u8   active        +0x04 Vec2 pos (Fix12 x, y)
+                                +0x01 u8   unk1          +0x0c s32  unk0c
+                                +0x02 u8   unk2          +0x10 s32  unk10
+                                +0x03 u8   unk3          +0x14 s32  unk14
+                                +0x1c s16  angle         +0x18 s32  unk18
+                              Left as bytes on purpose: ~dScMgFlower_c() destroys
+                              the elements itself through __destroy_arr, and a
+                              typed member with Vec2's destructor inside would
+                              make the compiler add a second, implicit pass. */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
     s32 mCursorX;          /* 0x5fb8 -- Fix12 stylus position, from the touch
                               sample data_020a0dea/deb << 12 */
