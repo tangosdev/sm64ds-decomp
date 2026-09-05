@@ -70,6 +70,13 @@ now-inline destructor and the control run breaks. Working order:
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
 
+**That list is not a progression for every check.** `verify` passing does not
+mean you are closer to `linkcheck` passing. On emission order specifically the
+two report the *same* condition at different volumes: a `verify` that says
+`PARTIAL ... not necessarily a bug` is a `linkcheck [4b/8]` FAIL that has already
+been decided. Settle the ordering question at `verify` rather than spending a
+`linkcheck` round trip to be told again.
+
 **`tubuild.py promote` is `--dry-run` only.** It prints the plan and refuses to
 act: *"only --dry-run is implemented … deliberately not available yet."* You
 execute that plan by hand — and note that **step 1 of the printed plan is wrong
