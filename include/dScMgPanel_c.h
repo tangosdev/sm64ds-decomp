@@ -10,7 +10,9 @@
    accessed via raw offsets on a char* cast of `this`, same as every other
    dScMgBase_c leaf. Own fields observed only from slots 0/6/9/16/17/18
    directly; fields touched only by non-virtual helper functions (still
-   raw extern "C" calls, not migrated methods) are not represented here.
+   raw extern "C" calls, not migrated methods) are not represented here,
+   except the ones func_ov006_02106fdc reaches (0x4cb8 count, 0x4ec4, the
+   0x4efa kind table, 0x4fdf, 0x4fe9).
  *
  * SM64DS RTTI names the implementation dScMgPanel_c. The reconstructed factory
  * dScMgPanel_c_classInit (historical alias MgPuzzlePanelPuzzlePanic_Spawn) installs this class's
@@ -28,9 +30,16 @@ struct dScMgPanel_c : dScMgBase_c {
     s32 unk_4cac;            /* 0x4cac */
     s32 unk_4cb0;            /* 0x4cb0 */
     s32 unk_4cb4;            /* 0x4cb4 */
-    u8  pad_4cb8[0x32a];
+    s32 unk_4cb8;            /* 0x4cb8 */
+    u8  pad_4cbc[0x208];
+    s16 unk_4ec4;            /* 0x4ec4 */
+    u8  pad_4ec6[0x34];
+    u8  unk_4efa[0xe5];      /* 0x4efa */
+    u8  unk_4fdf;            /* 0x4fdf */
+    u8  pad_4fe0[0x2];
     u8  unk_4fe2;            /* 0x4fe2 */
-    u8  pad_4fe3[0x7];
+    u8  pad_4fe3[0x6];
+    u8  unk_4fe9;            /* 0x4fe9 */
     u8  unk_4fea;            /* 0x4fea */
 };
 

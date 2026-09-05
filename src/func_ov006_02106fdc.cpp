@@ -1,32 +1,28 @@
 //cpp
-// NONMATCHING: different op / idiom (div=28). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-struct C;
-extern "C" void func_ov006_021050bc(C* c);
+#include "dScMgPanel_c.h"
 
-struct C { char dummy; };
-
-typedef void (C::*PMF)(int);
+typedef void (dScMgPanel_c::*PMF)(int);
 extern PMF data_ov006_02142840[];
 
-extern "C" void func_ov006_02106fdc(C* c) {
+extern "C" void func_ov006_021050bc(dScMgPanel_c* c);
+
+extern "C" void func_ov006_02106fdc(dScMgPanel_c* c)
+{
+    u8 idx;
+    int found;
+    int i;
     func_ov006_021050bc(c);
-    int found = 0;
-    int i = 0;
-    *(unsigned char*)((char*)c + 0x4000 + 0xfe9) = 1;
-    if (*(int*)((char*)c + 0x4000 + 0xcb8) > 0) {
-        do {
-            unsigned char k = *(unsigned char*)((char*)c + i + 0x4000 + 0xefa);
-            (c->*data_ov006_02142840[k])(i);
-            i++;
-            if (k != 0)
-                found++;
-        } while (i < *(int*)((char*)c + 0x4000 + 0xcb8));
+    found = 0;
+    c->unk_4fe9 = 1;
+    for (i = 0; i < c->unk_4cb8; i++) {
+        idx = c->unk_4efa[i];
+        (c->*data_ov006_02142840[idx])(i);
+        if (idx != 0)
+            found++;
     }
-    if (found != 0)
-        return;
-    *(int*)((char*)c + 0x4000 + 0xca8) = 4;
-    *(unsigned char*)((char*)c + 0x4000 + 0xfdf) = 1;
-    *(short*)((char*)c + 0x4e00 + 0xc4) = 0x40;
+    if (found == 0) {
+        c->unk_4ca8 = 4;
+        c->unk_4fdf = 1;
+        c->unk_4ec4 = 0x40;
+    }
 }
