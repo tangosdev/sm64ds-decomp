@@ -34,6 +34,26 @@
 #                         definition does not find it. That face stays; the
 #                         matched TU does not go in beside it.
 #
+#
+# MEASURED AFTER THE LINK, and it is the most useful thing this file knows:
+# 31 of these 88 land in walk_window.map and 57 do not, because the closure
+# above is the ROM's RELOCATION graph and the linker walks the graph THE PORT
+# ACTUALLY COMPILES. Every edge the ROM has that a host stand-in now owns is an
+# edge the linker never sees, so everything behind it is unreferenced and
+# /OPT:REF drops it. The three cut edges here, all of them host bodies that
+# already existed:
+#   LoadOverlay          hal/scene_boot.cpp   -> FS_LoadOverlay and the whole
+#                                                card overlay/archive loader
+#                                                (func_0205dc0c..func_0205e89c)
+#   OS_SleepThread /     hal/os_thread.cpp    -> func_02057f54, the scheduler,
+#   OS_WakeupThread                              and the lock family under it
+#   nothing linked calls cstd::__assert       -> the MSL formatter chain
+#                                                (func_0206bc8c..func_0206d940)
+# They are left in the list rather than deleted: they cost a compile each, they
+# are the ROM's own references, and the day one of those three host bodies is
+# replaced by its matched TU they link with no further work. A reader counting
+# rows here should count 31, not 88.
+#
 # NOT in here, on purpose: the 35 TUs a host file already defines (seating them
 # is LNK2005 -- the CP15, context-switch and IRQ ones are PORT_HOST_ABI
 # exceptions in hal/boot_hw.cpp, hal/cxx_aliases.cpp and ntr/runtime.cpp), and
