@@ -75,8 +75,6 @@ void func_ov098_0213a148(char *c);
 void func_ov098_0213a23c(char *c);
 extern s16 data_02082214[];
 extern signed char data_0209f2f8;
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c15FindWithActorIDEjPS_, from the legacy file for func_ov098_0213a0e8, NOT applied: extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int, void*); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov098_0213a00c, from the legacy file for _ZN16daObjFallBlock_c8BehaviorEv, NOT applied: void func_ov098_0213a00c(void *c); */
 }
 
 /* -------------------------------------------------------------------------- */
