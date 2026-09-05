@@ -1,0 +1,421 @@
+{
+  "id": "ov064/daOts_c",
+  "module": "ov064",
+  "source": "src/actors/daOts_c.cpp",
+  "promoted_source": "src/actors/daOts_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2115ee0..0x2116d1c, 22 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daOts_c",
+    "module sinit corroboration: 11 sinit(s) / 11 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02115ee0",
+      "end": "0x02116d1c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daOts_cD1Ev",
+      "address": "0x02115ee0",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daOts_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daOts_cD0Ev",
+      "address": "0x02115f28",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN7daOts_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7daOts_c16OnAimedAtWithEggEv",
+      "address": "0x02115f84",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN7daOts_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov064_02115f98",
+      "address": "0x02115f98",
+      "size": "0x00000178",
+      "legacy_source": "src/func_ov064_02115f98.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov064_02116110",
+      "address": "0x02116110",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov064_02116110.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov064_0211616c",
+      "address": "0x0211616c",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov064_0211616c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov064_02116220",
+      "address": "0x02116220",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov064_02116220.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN7daOts_c14PlayDeathSoundEv",
+      "address": "0x02116348",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN7daOts_c14PlayDeathSoundEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7daOts_c17PlayShellHitSoundEv",
+      "address": "0x0211635c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daOts_c17PlayShellHitSoundEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7daOts_c12PlayHitSoundEv",
+      "address": "0x02116360",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN7daOts_c12PlayHitSoundEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7daOts_c13PlayStepSoundEv",
+      "address": "0x02116374",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN7daOts_c13PlayStepSoundEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN7daOts_c16UpdateDeathStateEv",
+      "address": "0x021163bc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daOts_c16UpdateDeathStateEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov064_021163c0",
+      "address": "0x021163c0",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov064_021163c0.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov064_02116460",
+      "address": "0x02116460",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov064_02116460.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov064_02116560",
+      "address": "0x02116560",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov064_02116560.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN7daOts_c14UpdateRunStateEv",
+      "address": "0x021165d4",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN7daOts_c14UpdateRunStateEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov064_021165d8",
+      "address": "0x021165d8",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov064_021165d8.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov064_021166f0",
+      "address": "0x021166f0",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov064_021166f0.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov064_02116754",
+      "address": "0x02116754",
+      "size": "0x00000458",
+      "legacy_source": "src/func_ov064_02116754.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov064_02116bac",
+      "address": "0x02116bac",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov064_02116bac.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7daOts_c16CleanupResourcesEv",
+      "address": "0x02116ca0",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN7daOts_c16CleanupResourcesEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN7daOts_c6RenderEv",
+      "address": "0x02116cf0",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN7daOts_c6RenderEv.cpp",
+      "ordinal": 21
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov064_02116220.cpp (func_ov064_02116220) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov064_02116bac.cpp (func_ov064_02116bac) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov064_021163c0 and the one that held func_ov064_02116460; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov064_021163c0 and the one that held func_ov064_02116560; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov064_021163c0 and the one that held func_ov064_021165d8; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov064_02116110 and the one that held func_ov064_021166f0; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov064_02116110 and the one that held func_ov064_021166f0; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov064_021163c0 and the one that held func_ov064_02116754; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'ModelAnim') differs between the legacy file that used to hold func_ov064_021163c0 and the one that held func_ov064_02116460; kept the first, the other is commented out for review",
+    "tubuild reconcile note: every conflict and RAW warning above was resolved in src/actors/daOts_c.cpp before the first verify. The four disagreeing declarations of _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj were collapsed into one int-returning form -- five of the six call sites drop the result and func_ov064_02116560 tail-forwards it; the three spellings of _Z14ApproachLinearRsss (reference form, pointer form, and a plain ApproachLinear) into one reference form; the two of Vec3_HorzAngle into one. The stand-in struct ModelAnim and struct dActor_c were deleted outright in favour of include/ModelAnim.h and the real dActor_c that daOts_c.h pulls in, and Vector3_16f was respelled as include/Particle__System.h spells it, under the same VECTOR3_16F_DEFINED guard. The two RAW members (func_ov064_02116220 and func_ov064_02116bac) had their per-member extern \"C\" blocks unwrapped and their declarations hoisted into the file's single extern block. Marked (RESOLVED) rather than deleted so the record that the legacy files disagreed survives. Checked by tools/check_tubuild_conflicts.py.",
+    "compiler_only_output measured, not estimated: the queue row for daOts_c carried compiler-only:~16 (estimate from sibling daObjFl_Gura_c: 2 deadstrip, 14 deadstrip-data). The real count is 12 -- ONE deadstrip-duplicate (_ZN7Vector3D1Ev) and ELEVEN deadstrip-data. It is smaller than the sibling's because daObjFl_Gura_c sits one level deeper (daObjFl_Gura_c -> daObjGuragura_c -> dBgActor_c -> dActor_c) and carries a g_profile_ record this abstract class has no factory for; and it is unusual in one respect the sibling is not: this class's _ZTI/_ZTS pair lives in ov027, not in its own overlay."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov064-daOts_c/daOts_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        35
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI7daOts_c",
+        "_ZTS7daOts_c",
+        "_ZTV7daOts_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daOts_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daOts_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daOts_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov064-daOts_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02115ee0",
+        "end": "0x02116d1c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02115ee0",
+          "end": "0x02116d1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 22
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because this TU takes Vector3 locals (func_ov064_02116220 and func_ov064_02116754). The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI name; romdata_check verifies the canonical arm9 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "direct-base vague-linkage RTTI; its +8 word is the _ZTI8dActor_c record above, and it is what proves daOts_c's own base. romdata_check verifies the canonical ov002 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "direct-base vague-linkage RTTI name; romdata_check verifies the canonical ov002 copy before text isolation"
+    },
+    {
+      "symbol": "_ZTI7daOts_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov027",
+      "canonical_address": "0x021138bc",
+      "reason": "this class's own __si_class_type_info record. The linker kept the single vague-linkage copy in ov027, next to daIDonketu_c's pair, NOT in ov064: the vtable header word at ov064:0x0211b764 relocates across to it (module set overlays(9,14,...,27,...), of which ov027 is the one that names the symbol). romdata_check verifies all words and relocations before text isolation"
+    },
+    {
+      "symbol": "_ZTS7daOts_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov027",
+      "canonical_address": "0x021138a4",
+      "reason": "literal ROM RTTI type-name string \"7daOts_c\", kept in ov027 alongside _ZTI7daOts_c; romdata_check verifies the compiler copy before text isolation"
+    },
+    {
+      "symbol": "_ZTV7daOts_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov064",
+      "canonical_address": "0x0211b768",
+      "reason": "compiler-emitted vtable with two-word ABI preamble, anchored here because this TU defines the key function CleanupResources. 37 slots; slots 0 and 6 are the bare zero words of the two pure virtuals. romdata_check verifies the public address point and all slots before text isolation"
+    }
+  ]
+}
