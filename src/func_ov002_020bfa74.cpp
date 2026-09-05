@@ -1,4 +1,5 @@
 //cpp
+// @symbol func_ov002_020bfa74
 #include "Player.h"
 #include "PathPtr.h"
 #include "Particle__System.h"

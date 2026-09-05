@@ -1,4 +1,6 @@
 // @symbol func_ov007_020c6e68
+#include "common.h"
+
 /* Builds the per-group render state for path group `idx`: allocates the
  * group's node, three per-point arrays (position source, position copy, and
  * the per-point handles), then fills the copies point by point and appends two
@@ -10,10 +12,6 @@
  * Byte-exact under 2004/b56. The projected scale has to be computed BEFORE
  * the dx/dz differences: with the multiply after them the compiler colours the
  * two pointer loads the other way round and the whole block moves. */
-typedef unsigned short u16;
-typedef long long s64;
-
-struct Vec3 { int x, y, z; };
 
 extern int func_ov007_020c249c(void *grp);
 extern int func_020531a4(int a);
@@ -21,7 +19,7 @@ extern void *func_ov007_020c798c(int a, int b, void *c, int d);
 extern int func_ov007_020c3df4(int a, void *b);
 extern void *func_ov007_020c80a4(void);
 extern void func_ov007_020c8010(void *a, int *b, int *c);
-extern void func_ov007_020bfe4c(char *thiz, int a, int b, int c, struct Vec3 *out);
+extern void func_ov007_020bfe4c(char *thiz, int a, int b, int c, Vector3 *out);
 extern void func_ov007_020c7804(void *self);
 
 #define FIXMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
@@ -82,15 +80,15 @@ void func_ov007_020c6e68(char *self, int idx)
             {
                 char *a8 = *(char **)(self + 0xa8);
                 int base = (*(int **)(self + 0x28))[idx];
-                struct Vec3 *out = (struct Vec3 *)(base + flag);
+                Vector3 *out = (Vector3 *)(base + flag);
                 func_ov007_020bfe4c(a8, (*(int **)(grp + 0x24))[i], (*(int **)(grp + 0x28))[i],
                                     -(*(int *)(a8 + 0x2c)), out);
             }
             {
                 int base_d = (*(int **)(self + 0x2c))[idx];
                 int base_s = (*(int **)(self + 0x28))[idx];
-                struct Vec3 *d = (struct Vec3 *)(base_d + flag);
-                struct Vec3 *s = (struct Vec3 *)(base_s + flag);
+                Vector3 *d = (Vector3 *)(base_d + flag);
+                Vector3 *s = (Vector3 *)(base_s + flag);
                 flag += 0xc;
                 i++;
                 *d = *s;

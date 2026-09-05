@@ -1,4 +1,5 @@
 #include "common.h"
+// @symbol func_ov007_020caeac
 
 /* Texture-mapped triangle-strip emitter for the ov007 water/cloth grid: one
  * strip per grid row, alternating direction each row. The per-column texcoord
