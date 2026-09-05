@@ -43,12 +43,7 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
 u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
-void *_ZN7fBase_cnwEj(unsigned int size);
-void _ZN8dActor_cC2Ev(void *actor);
-void _ZN11CommonModelC1Ev(CommonModel *model);
 }
-
-extern int _ZTV12daStarGate_c[];
 
 extern u8 data_0209f250;
 extern Camera *data_0209f318;
@@ -137,14 +132,7 @@ extern "C" StarGateSpawnInfo g_profile_STAR_GATE = {
 // @symbol daStarGate_c_classInit
 extern "C" daStarGate_c *daStarGate_c_classInit()
 {
-    daStarGate_c *actor =
-        (daStarGate_c *)_ZN7fBase_cnwEj(sizeof(daStarGate_c));
-    if (actor) {
-        _ZN8dActor_cC2Ev(actor);
-        *(int *)actor = (int)&_ZTV12daStarGate_c[2];
-        _ZN11CommonModelC1Ev(&actor->mModel);
-    }
-    return actor;
+    return new daStarGate_c();
 }
 
 /* -------------------------------------------------------------------------- */

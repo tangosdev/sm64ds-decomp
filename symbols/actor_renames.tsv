@@ -3008,7 +3008,7 @@ ov100	0x02148164	data_ov100_02148164	Door_SpawnInfo	spawninfo
 ov100	0x02148164	Door_SpawnInfo	g_profile_DOOR	reconstructed profile global; literal ROM ID DOOR+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x021483a8	data_ov100_021483a8	StarDoor_SpawnInfo	spawninfo
 ov100	0x021483a8	StarDoor_SpawnInfo	g_profile_STAR_GATE	reconstructed profile global; literal ROM ID STAR_GATE+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov100	0x021483cc	data_ov100_021483cc	_ZTV8StarDoor	vtable alloc=? (was _ZTV4Door)
+ov100	0x021483cc	data_ov100_021483cc	_ZTV12daStarGate_c	ROM RTTI class identity; unchanged public vtable address point (previous project aliases were _ZTV4Door and _ZTV8StarDoor)
 ov100	0x02148498	data_ov100_02148498	Fish_SpawnInfo	spawninfo
 ov100	0x02148498	Fish_SpawnInfo	g_profile_FISH	reconstructed profile global; literal ROM ID FISH+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov100	0x021484bc	data_ov100_021484bc	_ZTV4Fish	vtable alloc=0x160

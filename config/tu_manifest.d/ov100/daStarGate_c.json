@@ -202,56 +202,56 @@
   ],
   "data": [
     {
-      "symbol": "@443",
+      "symbol": "@446",
       "address": "0x02148334",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_StayClosed_Main"
     },
     {
-      "symbol": "@441",
+      "symbol": "@444",
       "address": "0x0214833c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Main"
     },
     {
-      "symbol": "@433",
+      "symbol": "@436",
       "address": "0x02148344",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Main"
     },
     {
-      "symbol": "@435",
+      "symbol": "@438",
       "address": "0x0214834c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Init"
     },
     {
-      "symbol": "@439",
+      "symbol": "@442",
       "address": "0x02148354",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Init"
     },
     {
-      "symbol": "@437",
+      "symbol": "@440",
       "address": "0x0214835c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Main"
     },
     {
-      "symbol": "@431",
+      "symbol": "@434",
       "address": "0x02148364",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Init"
     },
     {
-      "symbol": "@429",
+      "symbol": "@432",
       "address": "0x0214836c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -298,7 +298,7 @@
       "evidence": "model resource handle constructed with file ID 0x4a1"
     },
     {
-      "symbol": "@427",
+      "symbol": "@430",
       "address": "0x0214893c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -390,55 +390,55 @@
       "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@443",
+      "symbol": "@446",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
     },
     {
-      "symbol": "@441",
+      "symbol": "@444",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
     },
     {
-      "symbol": "@433",
+      "symbol": "@436",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
     },
     {
-      "symbol": "@435",
+      "symbol": "@438",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
     },
     {
-      "symbol": "@439",
+      "symbol": "@442",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
     },
     {
-      "symbol": "@437",
+      "symbol": "@440",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
     },
     {
-      "symbol": "@431",
+      "symbol": "@434",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
     },
     {
-      "symbol": "@429",
+      "symbol": "@432",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
     },
     {
-      "symbol": "@427",
+      "symbol": "@430",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
@@ -940,7 +940,7 @@
       "source": "0x02147b84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@427",
+      "symbol": "@430",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214893c"
@@ -960,7 +960,7 @@
       "source": "0x02147b8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@429",
+      "symbol": "@432",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214836c"
@@ -970,7 +970,7 @@
       "source": "0x02147b90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@431",
+      "symbol": "@434",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148364"
@@ -980,7 +980,7 @@
       "source": "0x02147b94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@433",
+      "symbol": "@436",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148344"
@@ -990,7 +990,7 @@
       "source": "0x02147b98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@435",
+      "symbol": "@438",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214834c"
@@ -1000,7 +1000,7 @@
       "source": "0x02147b9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@437",
+      "symbol": "@440",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214835c"
@@ -1010,7 +1010,7 @@
       "source": "0x02147ba0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@439",
+      "symbol": "@442",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148354"
@@ -1020,7 +1020,7 @@
       "source": "0x02147ba4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@441",
+      "symbol": "@444",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214833c"
@@ -1030,7 +1030,7 @@
       "source": "0x02147ba8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@443",
+      "symbol": "@446",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148334"
