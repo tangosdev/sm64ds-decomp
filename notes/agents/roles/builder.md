@@ -84,13 +84,22 @@ and addend), and `reloc_audit` (destination identity).
 **`romdata_check`'s per-symbol verdicts are not reachable from the CLI.**
 `--show` only slices `report["differing"]` and `--json` carries counts. To prove
 a specific symbol's identity — which is how the cross-module RTTI claim was
-settled — import the module and call `check_object()` directly.
+settled — import the module and call `check_object()` directly. **Pass
+`names=romdata_check.name_index()`**: without it `module` comes back `None`,
+which defeats the cross-module proof the call is for. The records carry `module`
+but **no address field**, so addresses still need checking against `symbols.txt`
+separately.
 
 ## What actually goes red on a promotion
 
-- **`tiers_ratchet --check`** goes red by construction: folding N CONVERTED
-  shards into one file loses rows. Remedy below — and read it, because the
-  obvious remedy double-banks.
+- **`tiers_ratchet --check`** goes red only when the rows are **not already
+  banked** — after a rebase that restored the base's copies of the ledger files.
+  It is *not* red by construction, which is how this file used to put it: the
+  writer normally banks correctly and `--check` then **passes** (measured on
+  `daObjCtMecha03_c`, `daObjFallBlock_c` and `daDsnBase_c`, all PASS 2674/2674).
+  **If it passes, skip `--update` entirely** — running it anyway appends
+  duplicate rows on an unmoved base, which is the same defect as the rebase
+  case below and not only a rebase hazard.
 - **`check_dead_references.py`** goes red whenever prose named a shard you
   deleted. This is the common one: it fired on `notes/bgobject-provenance.md`
   naming seven. Remedy: remove the literal token, not just the sentence around
@@ -244,7 +253,7 @@ Body carries the proof block verbatim:
 
     tubuild verify  11/11 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED
     tubuild linkcheck (pre-promotion)  SCRATCH-LINK-VERIFIED, ROM sha256 identical to baseline
-    rombuild -j16   106/106 exact, 100.000000% of compared bytes, mismatching 0
+    rombuild -j6    106/106 exact, 100.000000% of compared bytes, mismatching 0
     romdata_check   5 VERIFIED, 4 PARTIAL, 0 DIFFERS
 
 Those figures are **one class's example, not a target.** Paste your own.
