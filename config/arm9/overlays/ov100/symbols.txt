@@ -132,14 +132,14 @@ __sinit_ov100_021473bc kind:function(arm,size=0x12c) addr:0x021473bc
 __sinit_ov100_021474e8 kind:function(arm,size=0xbc) addr:0x021474e8
 __sinit_ov100_021475a4 kind:function(arm,size=0xf4) addr:0x021475a4
 __sinit_ov100_02147698 kind:function(arm,size=0x3d8) addr:0x02147698
-__sinit_daStarGate_c.cpp kind:function(arm,size=0x150) addr:0x02147a70
+__sinit_d_a_star_gate.cpp kind:function(arm,size=0x150) addr:0x02147a70
 __sinit_ov100_02147bc0 kind:function(arm,size=0x1bc) addr:0x02147bc0
 __sinit_ov100_02147d7c kind:function(arm,size=0x6c) addr:0x02147d7c
 .p__sinit_ov100_021473bc kind:data(word) addr:0x02147de8
 .p__sinit_ov100_021474e8 kind:data(word) addr:0x02147dec
 .p__sinit_ov100_021475a4 kind:data(word) addr:0x02147df0
 .p__sinit_ov100_02147698 kind:data(word) addr:0x02147df4
-.p__sinit_daStarGate_c.cpp kind:data(word) addr:0x02147df8
+.p__sinit_d_a_star_gate.cpp kind:data(word) addr:0x02147df8
 .p__sinit_ov100_02147bc0 kind:data(word) addr:0x02147dfc
 .p__sinit_ov100_02147d7c kind:data(word) addr:0x02147e00
 data_ov100_02147e20 kind:data(any) addr:0x02147e20

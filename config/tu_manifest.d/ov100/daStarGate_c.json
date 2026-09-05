@@ -9,7 +9,7 @@
   "boundary_evidence": [
     "contiguous actor linker run: 0x21458d4..0x214620c, 20 function(s), with the registry-referenced class factory immediately following the 19 class methods",
     "ROM class identity: _ZTI12daStarGate_c at 0x02148374 and _ZTS12daStarGate_c at 0x02148380",
-    "the compiler-generated __sinit_daStarGate_c.cpp is byte-identical to retail __sinit_ov100_02147a70 and has the same nineteen relocation sites and destinations",
+    "the compiler-generated __sinit_d_a_star_gate.cpp is byte-identical to retail __sinit_ov100_02147a70 and has the same nineteen relocation sites and destinations",
     "retail .ctor points to that initializer; eight PTMF constants, class RTTI, the typed four-row gate table, profile, and vtable occupy 0x02148334..0x02148448",
     "the resource handle, destructor-registration node, temporary vector, and five 16-byte state objects occupy 0x02148934..0x021489a4"
   ],
@@ -184,7 +184,7 @@
   ],
   "init": [
     {
-      "symbol": "__sinit_daStarGate_c.cpp",
+      "symbol": "__sinit_d_a_star_gate.cpp",
       "address": "0x02147a70",
       "size": "0x150",
       "binding": "STB_GLOBAL",
@@ -193,7 +193,7 @@
   ],
   "ctor": [
     {
-      "symbol": ".p__sinit_daStarGate_c.cpp",
+      "symbol": ".p__sinit_d_a_star_gate.cpp",
       "address": "0x02147df8",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -378,13 +378,13 @@
       "evidence": "mwccarm emits the inline deleting destructor with processor-specific binding; the configured ROM symbol uses global binding"
     },
     {
-      "symbol": "__sinit_daStarGate_c.cpp",
+      "symbol": "__sinit_d_a_star_gate.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
     },
     {
-      "symbol": ".p__sinit_daStarGate_c.cpp",
+      "symbol": ".p__sinit_d_a_star_gate.cpp",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
@@ -890,7 +890,7 @@
       "source": "0x02147df8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "__sinit_daStarGate_c.cpp",
+      "symbol": "__sinit_d_a_star_gate.cpp",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02147a70"
@@ -1236,13 +1236,13 @@
     "StarGateModelFilePtr is an evidence-bounded local wrapper spelling. Its 8-byte storage, file ID 0x4a1, constructor/destructor destinations, and runtime registration topology are direct ROM evidence; undefined_symbol_aliases map only those compiler-generated imports to their exact established addresses.",
     "The typed daStarGateInfo table reproduces all four six-byte rows. The typed STAR_GATE profile reproduces all seven fields, including actorFlags 0x00000002, and its factory relocation.",
     "This intact object owns .text, .init, .ctor, the contiguous PTMF/RTTI/table/profile/vtable .data band, and the resource/state .bss band. No byte in those declared ranges is supplied by a retail gap object in the promoted build.",
-    "The earlier standalone source for __sinit_ov100_02147a70 is absorbed by the compiler-generated __sinit_daStarGate_c.cpp at the same 0x02147a70..0x02147bc0 range; its 19 relocation sites and destinations remain exact."
+    "The earlier standalone source for __sinit_ov100_02147a70 is absorbed by the compiler-generated __sinit_d_a_star_gate.cpp at the same 0x02147a70..0x02147bc0 range; its 19 relocation sites and destinations remain exact."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov100-daStarGate_c/daStarGate_c.o (gitignored)",
+    "object": "build/tu/ov100-daStarGate_c/d_a_star_gate.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 20,
     "functions_declared": 20,

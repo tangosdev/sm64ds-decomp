@@ -1748,7 +1748,7 @@
     "src/game/actors/d_a_star_gate.cpp#_ZN12daStarGate_c8BehaviorEv": "github-actions[bot]",
     "src/game/actors/d_a_star_gate.cpp#_ZN12daStarGate_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_star_gate.cpp#daStarGate_c_classInit": "github-actions[bot]",
-    "src/game/actors/d_a_star_gate.cpp#__sinit_daStarGate_c.cpp": "github-actions[bot]",
+    "src/game/actors/d_a_star_gate.cpp#__sinit_d_a_star_gate.cpp": "github-actions[bot]",
     "src/game/actors/d_a_star_gate.cpp#__sinit_ov100_02147a70": "github-actions[bot]",
     "src/game/actors/d_a_star_gate.cpp#d_a_star_gate": "github-actions[bot]",
     "src/minigames/d_s_mg_bsc.cpp#dScMgBSC_c_classInit": "bmanus2",
