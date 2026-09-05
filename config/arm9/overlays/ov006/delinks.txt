@@ -3241,6 +3241,10 @@ src/func_ov006_020f13cc.c:
     complete
     .text start:0x020f13cc end:0x020f15ac
 
+src/func_ov006_020f15ac.cpp:
+    complete
+    .text start:0x020f15ac end:0x020f17fc
+
 src/func_ov006_020f17fc.c:
     .text start:0x020f17fc end:0x020f192c
 
@@ -3279,6 +3283,10 @@ src/func_ov006_020f1ef8.c:
 src/func_ov006_020f1fcc.c:
     complete
     .text start:0x020f1fcc end:0x020f2224
+
+src/func_ov006_020f2224.cpp:
+    complete
+    .text start:0x020f2224 end:0x020f2790
 
 src/func_ov006_020f2cb8.c:
     complete
@@ -5539,6 +5547,10 @@ src/func_ov006_0211bc68.c:
     complete
     .text start:0x0211bc68 end:0x0211bc8c
 
+src/func_ov006_0211bc8c.cpp:
+    complete
+    .text start:0x0211bc8c end:0x0211bf44
+
 src/func_ov006_0211bf44.c:
     complete
     .text start:0x0211bf44 end:0x0211c080
@@ -6085,6 +6097,10 @@ src/func_ov006_0212a650.c:
 src/func_ov006_0212a654.c:
     complete
     .text start:0x0212a654 end:0x0212a764
+
+src/func_ov006_0212a764.cpp:
+    complete
+    .text start:0x0212a764 end:0x0212aa74
 
 src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp:
     complete
