@@ -207,6 +207,16 @@ in `.gitattributes`, which that file itself warns GitHub ignores. So
 nobody pushing anything, purely because the base moved — and a local compose test
 will not have predicted it.
 
+**These two rules look contradictory — here is the reconciliation.** Above, "if
+`--check` passes, skip `--update`". Here, "restore both files and re-run
+`--update`". Both are right; the rebase case needs the *damage detection*, not a
+second banking. Do it non-destructively: copy the post-cherry-pick files aside,
+`git checkout <newbase> --` both, run `--update` once, then
+`git diff --no-index` the regenerated files against your copies. Identical means
+the auto-merge was correct — `git checkout HEAD --` both and commit nothing.
+Different means the silent merge lost or duplicated rows, and the regenerated
+version is the one to keep.
+
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
 tool regenerates them correctly from the current tree, and a merged result is
@@ -275,11 +285,23 @@ already stale. Getting this wrong costs a full validation cycle.
 - **`opnew_sizes.py` and `rtti_vtables.py` both need `build/rtti.json`**, which
   only `tools/rtti_extract.py` writes. Without it they die on a bare
   `FileNotFoundError` naming no remedy. Run the extractor first.
-- **`rtti_vtables.py`'s slot count is not authoritative** — the known `_ZTV`
-  extent overrun. It reported 34 slots for `daObjCtMecha03_c` against a real 32;
-  the tail two words sat *below* the overlay's own load range. Corroborate
-  against `romdata_check`'s verified byte count (128 = 32 x 4) or the `_ZTV`
-  section size `verify` prints.
+- **Corroborate every slot count; do not take one tool's word.**
+  `rtti_vtables.py` used to over-report (34 against a real 32 on
+  `daObjCtMecha03_c`, tail words *below* the overlay's load range), but it now
+  trims following-table tails and has since agreed with a direct read. Keep
+  corroborating; drop the assumption that it is wrong.
+- **`verify` does not print a `_ZTV` section size.** I claimed it does, in this
+  file and in launch prompts — it prints the MATCH table, byte comparison,
+  objisolate, emission order and the result, and nothing else. Do not go looking.
+- **`romdata_check`'s `romExtent` field carries the WRONG short extent** — `88`
+  decimal, i.e. the false `0x58`, on the very class where the real answer is
+  `0x88`. The truthful fields are **`emitted`** and **`bytes`**, with
+  `blindWords: 0`. Following the extent field confirms the trap instead of
+  catching it.
+- **Print scalar fields only from a `check_object()` record.** Its `src` key is a
+  dict keyed by *tuples* covering every symbol in the module, so `json.dumps`
+  raises `TypeError: keys must be str...` and printing the record raw dumps about
+  20 MB.
 - **`check_object()` alone does nothing.** The per-symbol verdict recipe is:
   build `name_index()` and `rom_data_index()`, compile with `_compile(rel,
   tmpdir)`, *then* call `check_object()`. It is worth the trouble — it is how a
@@ -288,6 +310,14 @@ already stale. Getting this wrong costs a full validation cycle.
 - **Write scratch files under a class-unique name.** The session scratchpad is
   shared across concurrent pipeline agents; a sibling builder overwrote a
   `pr-body.md` mid-run. Use `pr-body-<Class>.md`.
+
+**The command blocks in this file are POSIX.** The primary shell here is
+PowerShell, where `git commit -F - <<MSG` is a parse error. Write the message to
+a class-unique scratch file and pass `-F <path>` — the same rule this file
+already gives for `pr-body-<Class>.md`.
+
+**`tu_order_check`'s `EXTRA [...] the extras above need a compiler-only policy`
+is a PASS**, not a warning, when the manifest carries the matching row.
 
 ## Flag spellings that differ from the obvious guess
 
@@ -331,7 +361,9 @@ single factory, so look for it before writing "no size available".
 commit without pushing it, so `git push` may report success and leave that commit
 sitting locally. It does not always — one measured run had the hook fire with no
 commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
-non-empty, push again. **That check is not sufficient on its own** — compare
+non-empty, push again. **Also re-read HEAD after pushing** — on one run the hook
+created its attribution commit *and* pushed it, so the extras check was empty
+while HEAD had moved, leaving any SHA captured beforehand stale. **That check is not sufficient on its own** — compare
 `gh pr view --json headRefOid` too. Another pipeline agent can push *to your
 branch*, which a local extras check cannot see; it happened twice on one PR,
 including after a force-push removed it. A PR missing its lineage commit looks complete.
