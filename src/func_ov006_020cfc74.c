@@ -18,37 +18,35 @@
 #define CLAMP(v, lo, hi) ((v) < (lo) ? (lo) : (v) > (hi) ? (hi) : (v))
 #pragma opt_common_subs off
 #pragma opt_propagation off
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 
-struct Vec3 { int x, y, z; };
 struct V2 { int x, y; };
 
 struct VT {
-    struct Vec3 *(*GetPos)(void *);
-    struct Vec3 *(*GetTargetPos)(void *);
+    Vector3 *(*GetPos)(void *);
+    Vector3 *(*GetTargetPos)(void *);
     void (*Pad08)(void *);
     int (*IsActive)(void *);
 };
 struct Cannon {
     struct VT *vt;
-    struct Vec3 v4;
+    Vector3 v4;
     int f10;
     int f14;
     u16 f18;
 };
 
-extern void Vec3_Sub(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern int DotVec3(struct Vec3 *a, struct Vec3 *b);
-extern void func_0203d6d0(int *o, int *a, int *b);
+extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern int DotVec3(Vector3 *a, Vector3 *b);
+extern void Vec2_Sub(int *o, int *a, int *b);
 extern int func_0203d524(int *a, int *b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_ov006_020e6db4(int a0, int a1, int a2);
-extern void func_ov006_020cf040(char *sl, void *arg1, struct Vec3 *r2);
+extern void func_ov006_020cf040(char *sl, void *arg1, Vector3 *r2);
 extern void func_ov006_020cfa28(char *p);
-extern void Vec3_MulScalar(struct Vec3 *out, struct Vec3 *in, int scale);
-extern void Vec3_Add(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
+extern void Vec3_MulScalar(Vector3 *out, Vector3 *in, int scale);
+extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
 
 extern struct Cannon *data_ov006_0214097c[];
 extern int data_ov006_0213b30c;
@@ -65,14 +63,14 @@ int func_ov006_020cfc74(char *c)
     i = 0;
     do {
         int b, cc, dd;
-        struct Vec3 pos0, pos1, diff;
+        Vector3 pos0, pos1, diff;
         struct V2 p1proj, p0proj;
         struct V2 negW, posW;
         struct V2 gateDir, aTest, bTest;
         int flag, s1, s2;
-        struct Vec3 sumPt, diffPt, farFwd, farBack;
-        struct Vec3 *p0;
-        struct Vec3 *p1;
+        Vector3 sumPt, diffPt, farFwd, farBack;
+        Vector3 *p0;
+        Vector3 *p1;
 
         if (data_ov006_0214097c[i] == 0)
             continue;
@@ -91,15 +89,15 @@ int func_ov006_020cfc74(char *c)
         pos1.z = p1->z;
 
         Vec3_Sub(&diff, &pos0, &pos1);
-        SubVec3(&pos0, (struct Vec3 *)(c + 8), &pos0);
-        SubVec3(&pos1, (struct Vec3 *)(c + 8), &pos1);
+        SubVec3(&pos0, (Vector3 *)(c + 8), &pos0);
+        SubVec3(&pos1, (Vector3 *)(c + 8), &pos1);
 
-        a = DotVec3((struct Vec3 *)(c + 0x20), &pos0);
-        b = DotVec3((struct Vec3 *)(c + 0x14), &pos0);
-        cc = DotVec3((struct Vec3 *)(c + 0x20), &pos1);
-        dd = DotVec3((struct Vec3 *)(c + 0x14), &pos1);
-        DotVec3((struct Vec3 *)(c + 0x14), &diff);
-        DotVec3((struct Vec3 *)(c + 0x20), &diff);
+        a = DotVec3((Vector3 *)(c + 0x20), &pos0);
+        b = DotVec3((Vector3 *)(c + 0x14), &pos0);
+        cc = DotVec3((Vector3 *)(c + 0x20), &pos1);
+        dd = DotVec3((Vector3 *)(c + 0x14), &pos1);
+        DotVec3((Vector3 *)(c + 0x14), &diff);
+        DotVec3((Vector3 *)(c + 0x20), &diff);
 
         p0proj.y = b;
         p1proj.x = cc;
@@ -111,9 +109,9 @@ int func_ov006_020cfc74(char *c)
         posW.x = *(int *)(c + 0x58);
         posW.y = 0;
 
-        func_0203d6d0((int *)&gateDir, (int *)&negW, (int *)&posW);
-        func_0203d6d0((int *)&aTest, (int *)&negW, (int *)&p1proj);
-        func_0203d6d0((int *)&bTest, (int *)&negW, (int *)&p0proj);
+        Vec2_Sub((int *)&gateDir, (int *)&negW, (int *)&posW);
+        Vec2_Sub((int *)&aTest, (int *)&negW, (int *)&p1proj);
+        Vec2_Sub((int *)&bTest, (int *)&negW, (int *)&p0proj);
 
         flag = 0;
         s1 = func_0203d524((int *)&gateDir, (int *)&aTest);
@@ -124,11 +122,11 @@ int func_ov006_020cfc74(char *c)
         if (s1 * s2 <= 0 && s1 > s2) {
             struct V2 edge, e1, e2;
             int t1, t2;
-            func_0203d6d0((int *)&edge, (int *)&p1proj, (int *)&p0proj);
+            Vec2_Sub((int *)&edge, (int *)&p1proj, (int *)&p0proj);
             gateDir = edge;
-            func_0203d6d0((int *)&e1, (int *)&p1proj, (int *)&negW);
+            Vec2_Sub((int *)&e1, (int *)&p1proj, (int *)&negW);
             aTest = e1;
-            func_0203d6d0((int *)&e2, (int *)&p1proj, (int *)&posW);
+            Vec2_Sub((int *)&e2, (int *)&p1proj, (int *)&posW);
             bTest = e2;
 
             t1 = func_0203d524((int *)&gateDir, (int *)&aTest);
@@ -172,7 +170,7 @@ int func_ov006_020cfc74(char *c)
                 arr[i]->f10 = a;
                 arr[i]->f14 = *(int *)(c + 0x58);
                 *(u16 *)(c + 0x320) = 0;
-                func_ov006_020cf040(c, (void *)(c + 0x38), (struct Vec3 *)(c + 0x44));
+                func_ov006_020cf040(c, (void *)(c + 0x38), (Vector3 *)(c + 0x44));
 
                 *(u16 *)(c + 0x324) -= 1;
                 if (*(u16 *)(c + 0x324) == 0) {
@@ -183,9 +181,9 @@ int func_ov006_020cfc74(char *c)
                 *(u16 *)(c + 0x326) += 1;
             }
         } else {
-            Vec3_MulScalar(&farFwd, (struct Vec3 *)(c + 0x20), *(int *)(c + 0x58));
+            Vec3_MulScalar(&farFwd, (Vector3 *)(c + 0x20), *(int *)(c + 0x58));
             Vec3_Add(&sumPt, &pos0, &farFwd);
-            Vec3_MulScalar(&farBack, (struct Vec3 *)(c + 0x20), *(int *)(c + 0x58));
+            Vec3_MulScalar(&farBack, (Vector3 *)(c + 0x20), *(int *)(c + 0x58));
             Vec3_Sub(&diffPt, &pos0, &farBack);
 
             if (sumPt.y < 0 && sumPt.y > -0x30000) {

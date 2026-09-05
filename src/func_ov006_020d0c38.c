@@ -18,11 +18,11 @@ typedef short s16;
 
 extern void func_0203b958(s16* o, s16* a, s16* b);
 extern int func_0203d434(int* in);
-extern int func_0203d614(int* v);
+extern int Vec2_Len(int* v);
 extern int _ZN4cstd4fdivEii(int, int);
 extern void func_0203d630(int* p, int m);
 extern void func_0203d704(int* o, int* a, int* b);
-extern void func_0203d6d0(int* o, int* a, int* b);
+extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_ov006_020d01e0(s16* slot, s16* a, s16* b);
 
 extern char data_ov006_02140990[];
@@ -101,17 +101,17 @@ int func_ov006_020d0c38(s16* sl, s16* sb) {
             return 0;
     }
 
-    if (func_0203d614(fx) < 0x30000) {
+    if (Vec2_Len(fx) < 0x30000) {
         m = (long long)half[1] * 0xc00 + 0x800;
         scaled = (int)(m >> 12);
         tmp[0] = half[0];
         tmp[1] = half[1];
         tmp[1] = scaled;
-        len = func_0203d614(tmp);
+        len = Vec2_Len(tmp);
         func_0203d630(half, _ZN4cstd4fdivEii(0x18000, len));
 
         func_0203d704(p1, mid, half);
-        func_0203d6d0(p2, mid, half);
+        Vec2_Sub(p2, mid, half);
 
         sl[0] = (s16)(p1[0] >> 12);
         sl[1] = (s16)(p1[1] >> 12);
