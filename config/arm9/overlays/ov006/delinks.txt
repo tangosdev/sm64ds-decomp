@@ -5320,7 +5320,7 @@ src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp:
     complete
     .text start:0x02118ae4 end:0x02118b70
 
-src/_ZN16dScMgSmartball_c13InitResourcesEv.c:
+src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp:
     .text start:0x02118b70 end:0x0211944c
 
 src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:

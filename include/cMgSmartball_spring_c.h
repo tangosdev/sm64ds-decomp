@@ -7,8 +7,8 @@
  *
  * SIZE 0x48, NOT FROM func_ov006_02115b0c.c LIKE EVERY OTHER SIBLING.
  * spring's allocation site is inside dScMgSmartball_c::InitResources
- * (ov006 0x02118b70), which has no matched source and is unmatched (out of
- * scope for this migration). The literal was read straight off the ROM:
+ * (ov006 0x02118b70), which had no matched source when this class was
+ * recovered. The literal was read straight off the ROM:
  * `MOV r0, #0x48` immediately before `BL _Znwj` at 0x02119098, with the
  * constructor called at 0x021190c0. Base ends at 0x34, so this class adds
  * 0x14 bytes -- five s32 fields.
@@ -54,9 +54,9 @@
  *
  * CONSTRUCTED BY func_ov006_0211157c, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. Unlike every sibling, its only caller is the unmatched
+ * reference renamed. Unlike every sibling, its only caller is
  * dScMgSmartball_c::InitResources -- func_ov006_02115b0c.c never allocates a
- * spring -- so this migration has fewer literal call sites to rename than
+ * spring -- so this migration had fewer literal call sites to rename than
  * usual. It sets the base's mRadius to 0x20000, the per-child constant every
  * sibling constructor also writes; it does not touch anything from 0x34 to
  * 0x44. */
