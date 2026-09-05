@@ -642,6 +642,10 @@ src/func_ov007_020b8070.c:
     complete
     .text start:0x020b8070 end:0x020b8188
 
+src/func_ov007_020b8188.c:
+    complete
+    .text start:0x020b8188 end:0x020b84e8
+
 src/func_ov007_020b84e8.c:
     complete
     .text start:0x020b84e8 end:0x020b84f4

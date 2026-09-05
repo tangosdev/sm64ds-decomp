@@ -27,6 +27,10 @@ src/_ZN12WorkElevator6RenderEv.cpp:
     complete
     .text start:0x02111650 end:0x021116c8
 
+src/_ZN12WorkElevator8BehaviorEv.cpp:
+    complete
+    .text start:0x021116c8 end:0x02111c6c
+
 src/_ZN12WorkElevator13InitResourcesEv.cpp:
     complete
     .text start:0x02111c6c end:0x02111ec4
