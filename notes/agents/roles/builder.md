@@ -20,9 +20,10 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
     #      had that status and verify still wrote nothing. It more likely writes
     #      only when no partial_isolation block exists yet -- a second promotion
-#      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
-#      consistent with that. Check, do not assume.
-    python tools/rombuild.py -j 6 --no-rom
+    #      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
+    #      consistent with that. Check, do not assume.
+    python tools/rombuild.py -j 6
+    Get-FileHash build/sm64ds.nds -Algorithm SHA256
     python tools/romdata_check.py --files src/actors/<Class>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
 
@@ -57,12 +58,18 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     #      main is how the queue starts lying about what is already promoted.
     python tools/check_tubuild_conflicts.py --list
     python tools/layout_check.py
+    python tools/source_coverage.py --check --base origin/main
+    python tools/prepush_attribution.py --base origin/main --head HEAD
 
 PASS signals:
 
 - `tubuild verify` → `N/N MATCH, objisolate clean, reloc-destinations clean`
 - `rombuild` → `module fidelity: 106/106 exact, 100.000000% of compared bytes`
-  and `ROM-build analysis: PASS`
+  and `ROM-build analysis: PASS`; its stock profile must report 0 mod source
+  replacements and 0 ROM-gap fallbacks, and the built NDS must have the retail
+  SHA-256
+- `source_coverage` → `0 B` handed back to the cartridge
+- `prepush_attribution` → `0 changed, 0 lost`
 - everything else → exit 0 with no backlog count increased
 
 **Re-read the manifest prose against what actually shipped.** This is the single
@@ -387,16 +394,15 @@ descendants' factories each `mov r0, #0x34c` — corroborating the header's
 `0x34c` span from four independent overlays. That is stronger evidence than a
 single factory, so look for it before writing "no size available".
 
-**Check what you actually pushed.** The pre-push hook *can* create an attribution
-commit without pushing it, so `git push` may report success and leave that commit
-sitting locally. It does not always — one measured run had the hook fire with no
-commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
-non-empty, push again. **Also re-read HEAD after pushing** — on one run the hook
-created its attribution commit *and* pushed it, so the extras check was empty
-while HEAD had moved, leaving any SHA captured beforehand stale. **That check is not sufficient on its own** — compare
-`gh pr view --json headRefOid` too. Another pipeline agent can push *to your
-branch*, which a local extras check cannot see; it happened twice on one PR,
-including after a force-push removed it. A PR missing its lineage commit looks complete.
+**Check what you actually pushed.** The feature-branch pre-push hook does not run
+the attribution gate and never creates commits. Run `prepush_attribution.py`
+yourself, commit every required `path#symbol` mapping, then run
+`git log origin/<branch>..HEAD`; if it is non-empty, push again. **Also re-read
+the remote head after pushing** with `gh pr view --json headRefOid`. Another
+pipeline agent can push to your branch, which a local extras check cannot see;
+it happened twice on one PR, including after a force-push removed a repair. A PR
+missing its lineage commit looks complete while silently losing contributor
+credit.
 
 Several validator lines are expected on a promotion and are not losses. All are
 the same many-to-one fold artifact: the counter credits only the delinks range's

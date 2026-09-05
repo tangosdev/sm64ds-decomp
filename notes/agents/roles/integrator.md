@@ -33,13 +33,14 @@ only record of what you rebased onto:
     git checkout -b integrate/<ovNN>-promotions-<MMDD> origin/main
 
 Then cherry-pick each class's **content** commits, in class order, class by
-class. Two things get dropped deliberately:
+class. Recompose generated and shared bookkeeping once:
 
-- **`Preserve <X> TU attribution and state` hook commits.** The pre-push hook
-  regenerates these; carrying them forward replays stale state onto a new base.
-  Attribution is a documented non-goal in this repo — do not spend effort
-  reconciling it, and do not let a hook commit decide your tree.
-- **Anything touching the two ratchet files.** Take `origin/main`'s copies and
+- **Regenerate the TU state note once, but preserve attribution.** A promoted TU
+  must retain one `attribution.json` `path#symbol` mapping for every absorbed
+  member. Carry those mappings from the source PRs, or reconstruct them before
+  pushing, then run `prepush_attribution.py`. The feature-branch pre-push hook
+  does not regenerate or validate attribution for you.
+- **Reconcile anything touching the two ratchet files once.** Take `origin/main`'s copies and
   reconcile once at the end (below). Cherry-picking them class by class is how
   double-banked rows get created.
 
@@ -77,11 +78,17 @@ of such rows from past promotions. A path-based dedupe deletes real history.
 
 The builders proved the classes. You prove that composing them changed nothing:
 
+Immediately before the proof block, fetch and merge the newest `origin/main`.
+If that changes the tree, repeat the one-time ledger/state reconciliation above;
+an earlier green head is not evidence for the new merge commit.
+
     python tools/tubuild.py verify <ov>/<Class>        # once per class
-    python tools/rombuild.py -j 16 --no-rom            # 106/106 exact
+    python tools/rombuild.py -j 16                     # 106/106 exact + retail NDS
     python tools/romdata_check.py --files src/actors/<Class>.cpp   # per class
     python tools/tiers_ratchet.py --check              # PASS
     python tools/cpp_tu_state.py --check-note
+    python tools/source_coverage.py --check --base origin/main
+    python tools/prepush_attribution.py --base origin/main --head HEAD
 
 Run `git status` after **every** `verify` — it writes to the manifest when it
 fails, and a dirty tree after a green-looking run means it did not pass.
@@ -92,6 +99,8 @@ because both are cheap and both have been wrong before:
 - the delink **row count** against the formula, and
 - that `externalized_output` is empty (a non-empty block means the class took
   the text-verified-only route and cannot be promoted at all).
+- that every absorbed member has a `path#symbol` attribution mapping and the
+  audit reports `0 lost`.
 
 Also re-verify every canonical address against the **owning module's**
 `symbols.txt` — not the class's own overlay. Cross-module homes are normal and
@@ -107,6 +116,8 @@ Body must carry, because none of it is recoverable from the diff:
 - the list of source PRs being superseded, by number,
 - which commits you dropped and why,
 - the ledger verdict from step 4 above, with the identical-record count,
+- the attribution verdict (`consolidated with credit intact`, `0 lost`) and the
+  source-coverage verdict (`0 B handed back to the cartridge`),
 - one gate block per class, plus the single `rombuild` and `tiers_ratchet` lines
   that cover the whole batch.
 
