@@ -320,6 +320,20 @@ visible mwccarm rejects it as `illegal function overloading`, and the error text
 points at your *definition* line while saying nothing about the header —
 measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
 
+**The detector also misses *return-type* disagreement between two shards, and
+emits both spellings.** `func_0201267c` was declared `int f(int, void*)` by one
+shard and `void` by another; `create` reported `no cross-file conflicts` and
+wrote one into the shared block and one into a RAW per-member block — an
+unconditional redeclaration error. The shard-vs-real-header case is covered
+below; this is shard-vs-shard, and it needs the same grep.
+
+**Include `decl_common.h` and match it** — that is the actual instruction. The
+reason matters: **no header under `include/` includes `decl_common.h`**, so the
+`illegal function overloading` collision only fires if *your* TU pulls it in.
+Both promoted precedents (`daDsnBase_c`, `daObjCtMecha03_c`) do. Do the same and
+align your spellings to it, rather than assuming the header will collide with
+you on its own.
+
 **Grep shadow struct *tags* too, not only declarations.** A shadow type can
 collide with a **ROM symbol**, which is a different failure and a nastier one.
 `decl_common.h` declares `extern int VT[];`, and the legacy shards carry a
@@ -358,6 +372,14 @@ Ask the compiler rather than hand-mangling:
 - **`create` before `linkcheck --baseline` is safe.** `src_tu/` is untracked and
   not in the build, so the tree is still pristine for baseline purposes. Only
   *header edits* spoil a baseline.
+- **Reading the `_ZTV` extent from the next `symbols.txt` row UNDER-reports it** —
+  the opposite error to the one below, and easier to fall for because it looks
+  authoritative. `_ZTV7daDkk_c` at `0x02113850` is followed by
+  `data_ov025_021138a8`, implying `0x58` / 22 slots; it is really `0x88` / 32.
+  Three `ambiguous` `data_ov025_*` rows are **phantom interior symbols sitting
+  inside the table**. `relocs.txt` settles it — every word through `0x021138cc`
+  is a relocated entry, and `0x021138d0` already belongs to the next class's
+  `_ZTI`. `verify`'s reported section size agrees.
 - **`rtti_vtables.py` over-reports slot counts** — the known `_ZTV` extent
   overrun; 34 against a real 32 on `daObjCtMecha03_c`. Cross-check against the
   `_ZTV` section size `verify` prints (`0x88` = 2 preamble words + 32 slots).
@@ -451,6 +473,11 @@ teardown invocation must not tempt you into the unsafe fallback.
 Not every TU is promotable whole, and stopping short can be the correct result
 rather than a failure. When the ROM's emission order cannot be reproduced by any
 admissible source form:
+
+**The destructor direction is per-class and is not inherited.** `daDkk_c`
+derives from `daDsnBase_c`, and the two go opposite ways: ov025 orders `daDkk_c`
+D1-below-D0 so it promoted whole 8-of-8, while ov091 orders `daDsnBase_c`
+D0-below-D1 so it promoted 9-of-11. Measure your own class.
 
 **Never infer destructor placement from a sibling header.** `daDgr_c.h` declared
 its destructor out of line by analogy with `BigBrickBlock.h`'s leaf-class
