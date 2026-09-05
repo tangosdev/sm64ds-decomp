@@ -3826,6 +3826,9 @@ src/func_ov006_020fca1c.c:
     complete
     .text start:0x020fca1c end:0x020fcb4c
 
+src/func_ov006_020fcb4c.c:
+    .text start:0x020fcb4c end:0x020fcd8c
+
 src/func_ov006_020fcd8c.c:
     complete
     .text start:0x020fcd8c end:0x020fce04
@@ -5316,6 +5319,9 @@ src/_ZN16dScMgSmartball_c13OnYoshiTryEatEi.cpp:
 src/_ZN16dScMgSmartball_c9Virtual7CEv.cpp:
     complete
     .text start:0x02118ae4 end:0x02118b70
+
+src/_ZN16dScMgSmartball_c13InitResourcesEv.c:
+    .text start:0x02118b70 end:0x0211944c
 
 src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:
     complete
