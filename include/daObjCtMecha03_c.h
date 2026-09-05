@@ -31,6 +31,12 @@
 #include "ShadowModel.h"
 
 struct daObjCtMecha03_c : dBgActor_c {
+    /* MEASURED -- INLINE ON PURPOSE, declared first. This directly included
+       declaration makes mwccarm emit the cartridge's D1-then-D0 pair
+       (0x02119f3c, 0x02119f88) without the otherwise homeless D2 an
+       out-of-line definition produces. */
+    virtual ~daObjCtMecha03_c() {}
+
     /* A pendulum, in the four fields the ROM's own Behavior integrates:
        mSwingDir is the sign of the restoring acceleration and flips whenever
        it agrees in sign with mSwingAngle; mSwingAccel is its magnitude;
@@ -44,9 +50,6 @@ struct daObjCtMecha03_c : dBgActor_c {
     s16 mPauseTimer;                  /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
     u8  pad_32a[0x6];
     ShadowModel mShadowModel;         /* 0x330 */
-
-    /* --- vtable --- */
-    virtual ~daObjCtMecha03_c();
 
     int CleanupResources();
     int InitResources();

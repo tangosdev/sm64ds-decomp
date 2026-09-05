@@ -340,37 +340,9 @@ src/d_a_obj_ct_rotate_block_ct_mecha01.c:
     complete
     .text start:0x02119efc end:0x02119f3c
 
-src/_ZN16daObjCtMecha03_cD1Ev.cpp:
+src/actors/daObjCtMecha03_c.cpp:
     complete
-    .text start:0x02119f3c end:0x02119f88
-
-src/_ZN16daObjCtMecha03_cD0Ev.cpp:
-    complete
-    .text start:0x02119f88 end:0x02119fe8
-
-src/func_ov065_02119fe8.cpp:
-    complete
-    .text start:0x02119fe8 end:0x0211a114
-
-src/func_ov065_0211a114.c:
-    complete
-    .text start:0x0211a114 end:0x0211a15c
-
-src/_ZN16daObjCtMecha03_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211a15c end:0x0211a1a0
-
-src/_ZN16daObjCtMecha03_c6RenderEv.cpp:
-    complete
-    .text start:0x0211a1a0 end:0x0211a1c8
-
-src/_ZN16daObjCtMecha03_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211a1c8 end:0x0211a358
-
-src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211a358 end:0x0211a45c
+    .text start:0x02119f3c end:0x0211a45c
 
 src/d_a_obj_ct_mecha03.c:
     complete

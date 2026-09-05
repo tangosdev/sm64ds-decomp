@@ -625,9 +625,10 @@ In the C twin, `0x09c` becomes `mVertAccel`, `0x0a0` `mTerminalVelocity`,
 
 ## daObjCtMecha03_c (`include/daObjCtMecha03_c.h`, [ov065](../config/arm9/overlays/ov065/symbols.txt), size 0x388)
 
-A pendulum, in four fields `Behavior` integrates. Bodies read:
-`src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp`,
-`src/_ZN16daObjCtMecha03_c8BehaviorEv.cpp`.
+A pendulum, in four fields `Behavior` integrates. `InitResources` and
+`Behavior` are read from the promoted translation unit
+`src/actors/daObjCtMecha03_c.cpp`, which absorbed the eight one-function
+sources that used to hold them.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
