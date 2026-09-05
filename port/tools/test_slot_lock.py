@@ -322,6 +322,58 @@ def test_slot_reentrant_nesting_is_thread_safe(lockfile):
     assert slot_lock._nest_depth == 0
 
 
+# --- the heartbeat: the backstop measures silence, not age ----------------
+# Measured on the box on 2026-09-05: a lane held the slot for over twenty
+# minutes through `slot_lock.py run -- python ipc_proof.py`, one legitimate hold
+# around a whole proof script, and the age bound would have declared it stale at
+# thirty minutes and started a collision with a run that was still going. A
+# phase hold makes long holds normal, so these pin the new rule.
+
+def test_a_long_live_hold_is_not_stale_while_it_beats(lockfile):
+    slot_lock.acquire(label="a long phase", timeout=2)
+    # An acquire time far past MAX_HOLD, which under the old age rule was the
+    # whole test for staleness. The holder is this live process and its mtime
+    # is fresh, so it must NOT be stale.
+    d = json.loads(open(lockfile, encoding="utf-8").read())
+    d["acquired"] = time.time() - slot_lock.MAX_HOLD_SECONDS * 3
+    with open(lockfile, "w", encoding="utf-8") as f:
+        json.dump(d, f)
+    assert slot_lock._is_stale(lockfile) is False
+    slot_lock.release(lockfile)
+
+
+def test_a_beating_holder_that_goes_silent_is_stale(lockfile):
+    # The wedged-but-alive case the backstop exists for: the file says the
+    # holder beats, this process is alive, and the beats stopped.
+    slot_lock.acquire(label="wedged", timeout=2)
+    old = time.time() - slot_lock.MAX_HOLD_SECONDS - 60
+    os.utime(lockfile, (old, old))
+    assert slot_lock._is_stale(lockfile) is True
+    slot_lock.release(lockfile)
+
+
+def test_an_old_format_lockfile_keeps_the_old_rule(lockfile):
+    # No "beat" key: written by a version without the heartbeat, or by another
+    # tool. Fresh mtime, ancient acquire time -> stale, exactly as before.
+    with open(lockfile, "w", encoding="utf-8") as f:
+        json.dump({"pid": os.getpid(), "host": "x",
+                   "acquired": time.time() - slot_lock.MAX_HOLD_SECONDS - 60,
+                   "label": "old format"}, f)
+    assert slot_lock._is_stale(lockfile) is True
+
+
+def test_beat_once_stops_when_the_lock_is_no_longer_ours(lockfile):
+    with open(lockfile, "w", encoding="utf-8") as f:
+        json.dump({"pid": 0x7FFFFFFF, "host": "x", "acquired": time.time(),
+                   "beat": time.time(), "label": "theirs"}, f)
+    before = os.path.getmtime(lockfile)
+    assert slot_lock._beat_once(lockfile, "mine") is False
+    assert os.path.getmtime(lockfile) == before   # their file was not touched
+    # and a lockfile that is simply gone stops the beat rather than raising
+    os.remove(lockfile)
+    assert slot_lock._beat_once(lockfile, "mine") is False
+
+
 # --- no-pytest standalone runner -----------------------------------------
 # When pytest is not installed this drives the same test bodies with a minimal
 # tmp_path + monkeypatch, so the lock logic can be proven anywhere Python runs.
