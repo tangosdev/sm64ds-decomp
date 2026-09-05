@@ -179,10 +179,15 @@ ROM-unlike interleave goes with it. notes/mwccarm-codegen.md gains 6ay.
 
 ### What is left: nothing, and one thing that was never a holdout
 
-`src/_ZN7daOts_cD1Ev.cpp` is the only `extern "C"` definition left under a family
-class's mangled name, and its `_force_daOts_cD1` scaffold is the sanctioned way to
-force an out-of-line variant of a class-body-inline destructor. It is not a
-holdout and should not be "fixed".
+daOts_c's out-of-line D1 shard was the only `extern "C"` definition left under a
+family class's mangled name, and its `_force_daOts_cD1` scaffold was the sanctioned
+way to force an out-of-line variant of a class-body-inline destructor. It was not a
+holdout and was not "fixed" -- it is gone for a different reason. The TU promotion
+folded all twenty-two of daOts_c's shards into `src/actors/daOts_c.cpp`, which owns
+the class's key function (`CleanupResources`, vtable slot 3), and owning the key
+function emits the vtable and drags both destructor variants in by itself. A
+forcing scaffold is what a TU that does NOT own the key function needs; the merged
+TU needs none.
 
 ## What the five walls had in common
 
