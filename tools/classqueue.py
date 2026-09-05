@@ -127,6 +127,36 @@ def cmd_next(args):
     return 1
 
 
+def prior_work(cls):
+    """Branches and worktrees that already mention this class.
+
+    The claim lock is deliberately ephemeral: `release` deletes the ref, so a
+    finished class leaves no trace. But an *abandoned* one leaves no trace
+    either -- and its branch may be local-only, so no remote check can see it.
+    A writer spent a full run reconstructing dScMgD3DBase_c before noticing
+    `wip/dScMgD3DBase_c-humanizer-blocked-0905` sitting in a sibling worktree
+    with the same class already done.
+
+    So this warns, and does not deny: a branch is usually your own earlier work
+    or a landed promotion, not a live conflict. Only a person can tell which.
+    """
+    cls = normalize_cls(cls)
+    found = []
+    r = git("branch", "--all", "--list", f"*{cls}*", "--format=%(refname:short)",
+            check=False)
+    if r.returncode == 0:
+        found += [b.strip() for b in r.stdout.splitlines() if b.strip()]
+    r = git("worktree", "list", "--porcelain", check=False)
+    if r.returncode == 0:
+        path = None
+        for line in r.stdout.splitlines():
+            if line.startswith("worktree "):
+                path = line.split(" ", 1)[1]
+            elif line.startswith("branch ") and cls in line:
+                found.append(f"{line.split(' ', 1)[1]}  (checked out at {path})")
+    return sorted(set(found))
+
+
 def cmd_claim(args):
     ref = ref_for(args.cls, args.role)
 
@@ -156,6 +186,17 @@ def cmd_claim(args):
         return 1
 
     print("CLAIMED " + body)
+
+    existing = prior_work(args.cls)
+    if existing:
+        print("", file=sys.stderr)
+        print("WARNING: work already exists for this class. The claim lock cannot",
+              file=sys.stderr)
+        print("see it -- release deletes the ref, so an abandoned branch is invisible.",
+              file=sys.stderr)
+        print("Read these before writing anything:", file=sys.stderr)
+        for b in existing:
+            print(f"  {b}", file=sys.stderr)
     return 0
 
 

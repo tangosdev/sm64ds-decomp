@@ -173,7 +173,12 @@ ever promote, which is plainly false.
 **The row count is predictable from inheritance depth**, so do not copy an
 oracle's count unless the oracle sits at the same depth:
 
-    rows = 2 x (ancestors + self)  +  1 vtable  +  1 Vector3 D1
+    rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
+                                                     member with an inline D1
+
+**The last term is conditional and was long written as if it were constant.**
+`dScMgD3DBase_c` is 5 levels deep and needs **11**, not 12, because it has no
+`Vector3` member. Count your members; do not add the 1 reflexively.
 
 `daPgDfdr_c` (`dBgActor_c` -> `dActor_c` -> `dBase_c` -> `fBase_c`, 5 levels)
 needs 2x5+2 = **12**. Its oracle `daIDonketu_c` sits one level deeper and needs
@@ -260,6 +265,30 @@ mwccarm 2004/b56 behaviours, not style preferences.
 - **`extern`, not `extern "C" { ... }`** for ROM symbols already spelled mangled
   in a `//cpp` file — the block form *defines* and collides.
 - **`//cpp` must be the file's first bytes.** The extension is never consulted.
+
+## Reconciling the merged declarations
+
+`tubuild`'s conflict detector is weaker than this file used to imply: it is not
+merely blind to parameter *types*, it misses conflicts that are outright compile
+errors. On `dScMgD3DBase_c` it reported 7 textual conflicts and missed 5 hard
+ones — `unsigned short` against `unsigned int`, `int(void*)` against `int(int)`,
+a function declared `void(void)` but called with `this`, a const-ness mismatch,
+and a scalar declared against an array.
+
+**Grep every shadow declaration against `include/decl_*.h` before you compile.**
+The detector does not compare against real headers at all, and a real header
+always wins. Two measured disagreements were on *return type*: `decl_common.h`
+types `func_02012718` as returning void where the shard said int, and
+`decl_Particle.h` does the same for `SysTracker::Initialise`. Where that
+happens, drop the `return` and let the tail call forward r0.
+
+**When source cannot settle it, ask the ROM.** One conflict — a helper declared
+`void(void)` but called with an argument — was unresolvable from the shards.
+Disassembling retail `AfterCleanupResources` showed `mov r0, r5` immediately
+before the `bl`, proving the argument is real and the callee simply ignores it.
+Two `disasm.py` runs replaced a guess and a full verify cycle. Remember
+`--base` is applied at file offset 0, so pass the module's **first
+`symbols.txt` address** (ov006 = `0x020bfec0`).
 - No C++11: no `nullptr`, `auto`, `override`, STL, east-const. This is 2004.
 
 Ask the compiler rather than hand-mangling:
@@ -305,16 +334,46 @@ Ask the compiler rather than hand-mangling:
 - **Facts JSON** goes on the same branch, not a separate `facts/` one. Scout and
   writer are one claim, so one branch.
 
+## Before you claim: look for abandoned work
+
+`classqueue.py claim` now prints a warning listing every branch and worktree
+mentioning your class. **Read them.** The lock is ephemeral by design — `release`
+deletes the ref — so a class abandoned mid-pipeline leaves *no* claim behind, and
+its branch may be local-only where no remote check can see it. A writer
+reconstructed `dScMgD3DBase_c` from scratch before noticing
+`wip/dScMgD3DBase_c-humanizer-blocked-0905` in a sibling worktree with the class
+already done.
+
+Harvest the facts file from such a branch even when you reject its source; that
+one's scout facts upgraded a vtable-extent claim from inference to proof.
+
 ## Done when
 
 Pushed on `cpp/<Class>-tu`, claim released, and you have reported verbatim:
 
     python tools/tubuild.py verify <ov>/<Class>
-    python tools/rombuild.py -j 6 --no-rom
+    python tools/tubuild.py linkcheck <ov>/<Class>     # pre-promotion only
 
-Use `-j 6`, not `-j 16`, whenever sibling writers are running — check with
-`ListAgents` or `python tools/classqueue.py list`. Three concurrent `-j 16`
-builds oversubscribe the machine and slow all three.
+**Do not run `rombuild`.** An earlier version of this section asked for it, which
+contradicted the pipeline's own split — the builder owns full-ROM proof, and a
+writer running it duplicates 20 minutes of work and invites the writer to believe
+its own green. Byte proof is the builder's job precisely because it is a
+different instance.
+
+Where you do run a parallel build, use `-j 6`, not `-j 16`, whenever sibling
+writers are running — check with `ListAgents` or `python tools/classqueue.py
+list`. Three concurrent `-j 16` builds oversubscribe the machine and slow all
+three.
+
+**`promote --dry-run` exits 1 mid-listing while `status` is `text-verified`** —
+but it prints steps 1-3 before it stops, which is the plan you need in order to
+*reach* the status flip. Run it anyway and read the partial output; the failure
+is expected, not a defect in your branch.
+
+**`wt-remove.ps1` takes `-Path`, not `-Name`** — unlike `wt-setup.ps1`. The rule
+never to use `git worktree remove` is load-bearing (it deletes through the
+junctions and empties the shared, non-redownloadable ROM dump), so a failed
+teardown invocation must not tempt you into the unsafe fallback.
 
 ## When a subset is the right answer
 
