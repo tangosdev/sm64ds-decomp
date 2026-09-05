@@ -1,0 +1,89 @@
+{
+  "class": "daDkk_c",
+  "rtti_name": "7daDkk_c",
+  "rtti_name_address": "0x021137e0",
+  "typeinfo": {
+    "symbol": "_ZTI7daDkk_c",
+    "address": "0x021137ec",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x021137e0",
+    "base_typeinfo": "_ZTI11daDsnBase_c (ov025 0x021137f8)",
+    "raw_words": [
+      "0x0209a764",
+      "0x021137e0",
+      "0x021137f8"
+    ],
+    "evidence": "config/arm9/overlays/ov025/relocs.txt lines 311-313 relocate exactly these three words. Lines 314-316 do the same for _ZTI11daDsnBase_c at 0x021137f8, whose base word points at _ZTI10dBgActor_c (ov002 0x021089ec), so the chain below is read off the cartridge's own RTTI, not inferred."
+  },
+  "overlay": "ov025",
+  "base_class": "daDsnBase_c",
+  "ancestor_chain": ["daDsnBase_c", "dBgActor_c", "dActor_c", "dBase_c", "fBase_c"],
+  "vtable": {
+    "symbol": "_ZTV7daDkk_c",
+    "address": "0x02113850",
+    "slots": 32,
+    "emitted_storage_start": "0x02113848",
+    "emitted_storage_end": "0x021138d0",
+    "emitted_storage_size": "0x88",
+    "preamble": {
+      "offset_to_top_address": "0x02113848",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0211384c",
+      "typeinfo_pointer": "0x021137ec"
+    },
+    "extent_evidence": "PROVEN BY RELOCATIONS, not by symbol spacing. config/arm9/overlays/ov025/relocs.txt relocates every word from 0x0211384c (the typeinfo pointer, -> 0x021137ec) through 0x021138cc as a `load', one per vtable entry, and the very next relocated word 0x021138d0 -> 0x0209a764 is the __si_class_type_info kind-vtable pointer of the NEXT object, _ZTI14daObjDpBrock_c. So the address point is 0x02113850, the last slot is slot 31 at 0x021138cc, and preamble-plus-slots storage is 0x02113848..0x021138d0 = 0x88 bytes. The three `ambiguous' data_ov025_021138a8/021138bc/021138c4 rows in symbols.txt fall INSIDE that range and are cross-overlay phantom interior symbols, not object boundaries -- reading the extent from the next symbols.txt row would give a false 0x58.",
+    "slot_name_note": "Names are inherited interface labels from include/dActor_c.h, include/dBgActor_c.h and include/daDsnBase_c.h, or ABI destructor labels. The ROM proves slot identity and target address; it does not preserve those English spellings.",
+    "own_slots": [
+      {"slot": 0,  "target": "0x02111c24", "symbol": "_ZN7daDkk_c13InitResourcesEv"},
+      {"slot": 6,  "target": "0x02111b64", "symbol": "_ZN7daDkk_c8BehaviorEv"},
+      {"slot": 16, "target": "0x021118c8", "symbol": "_ZN7daDkk_cD1Ev"},
+      {"slot": 17, "target": "0x02111928", "symbol": "_ZN7daDkk_cD0Ev"},
+      {"slot": 29, "target": "0x0211199c", "symbol": "_ZN7daDkk_c16OnAimedAtWithEggEv"}
+    ],
+    "inherited_slots_note": "Slot 3 resolves to ov091:0x021331b8 (daDsnBase_c::CleanupResources) and slot 9 to ov091:0x02133210 (daDsnBase_c::Render), so this leaf inherits the two concrete virtuals its base supplies and overrides only the two the base leaves pure (slots 0 and 6) plus slot 29. Slot 31 is ov002:0x020ee55c, dBgActor_c::Kill; its presence is what makes the table 32 words rather than dActor_c's 31 -- the dBgActor_c length rule. This class adds no new virtual, which is why its table is the same length as daDsnBase_c's.",
+    "destructor_order": "D1 at 0x021118c8 precedes D0 at 0x02111928 in the cartridge -- the REPRODUCIBLE direction. That is the order mwccarm 2004/b56 produces from an INLINE in-class virtual destructor; the out-of-line form gives D2,D0,D1 plus a homeless D2 the ROM does not carry. No subset licensing is needed for this class, unlike its own base daDsnBase_c, which the cartridge ordered D0-below-D1 and which therefore promoted 9-of-11."
+  },
+  "text_span": {
+    "start": "0x021118c8",
+    "end": "0x02111cf4",
+    "function_count": 8,
+    "boundary_confidence": "medium",
+    "source": "build/tu_map.json via tools/tu_map.py"
+  },
+  "functions": [
+    {"address": "0x021118c8", "size": "0x60", "symbol": "_ZN7daDkk_cD1Ev"},
+    {"address": "0x02111928", "size": "0x74", "symbol": "_ZN7daDkk_cD0Ev"},
+    {"address": "0x0211199c", "size": "0x08", "symbol": "_ZN7daDkk_c16OnAimedAtWithEggEv"},
+    {"address": "0x021119a4", "size": "0x50", "symbol": "func_ov025_021119a4"},
+    {"address": "0x021119f4", "size": "0x90", "symbol": "func_ov025_021119f4"},
+    {"address": "0x02111a84", "size": "0xe0", "symbol": "func_ov025_02111a84"},
+    {"address": "0x02111b64", "size": "0xc0", "symbol": "_ZN7daDkk_c8BehaviorEv"},
+    {"address": "0x02111c24", "size": "0xd0", "symbol": "_ZN7daDkk_c13InitResourcesEv"}
+  ],
+  "size": {
+    "value": "0x3a0",
+    "evidence": "daDkk_c_classInit (ov025 0x02111cf4) calls fBase_c::operator new with the literal 928 == 0x3a0. A field span is only a lower bound; this literal is the size. include/daDkk_c.h already carries the matching size assert."
+  },
+  "layout": {
+    "inherited_through": "daDsnBase_c, which ends its own declared data at 0x360",
+    "own_fields": [
+      {"offset": "0x390", "type": "s32 (Fix12i)", "name": "mProbeHeight", "evidence": "InitResources runs a downward dBgCh_Lin raycast from the actor position and stores GetClsnPos().y - 0x190000 here; nothing else in the TU writes it."},
+      {"offset": "0x398", "type": "s32", "name": "mState", "evidence": "Behavior switches on it, cases 0..7, one per step function. InitResources seeds it 6 or 0; func_ov025_021119a4/021119f4/02111a84 all write it."}
+    ],
+    "raw_offsets_left_unnamed": [
+      {"offset": "0x394", "note": "a Fix12 height compared against dActor_c::mPos.y in func_ov025_02111a84 and copied into it. Inside the header's pad_360[0x30]/pad_394[0x4] region; left raw so no field-address CSE lever moves under a byte-verified body."},
+      {"offset": "0x39c", "note": "s16 target angle that func_ov025_021119a4 feeds to ApproachLinear and func_ov025_021119f4 writes as mAngleY + 0x8000."},
+      {"offset": "0x39e", "note": "u8 countdown decremented by func_ov025_021119f4 and reloaded to 0x3c/0x28."},
+      {"offset": "0x39f", "note": "u8 pass counter; func_ov025_02111a84 increments it, func_ov025_021119f4 tests it against 4."}
+    ]
+  },
+  "unproven": [
+    "func_ov025_021119a4, func_ov025_021119f4 and func_ov025_02111a84 have no ROM-preserved names. config/arm9/overlays/ov025/symbols.txt does not name them at all and include/decl_common.h spells all three by address, so this promotion keeps those spellings and leaves them extern \"C\" free functions rather than inventing member names. Their bodies, signatures as used, and call sites are proven; their original identifiers, member-versus-free form, and parameter types are not.",
+    "mProbeHeight and mState are descriptive reconstructions. Offsets, widths and the arithmetic relating them are ROM-proven; the English spellings are not.",
+    "0x394, 0x39c, 0x39e and 0x39f are read and written through raw offsets and are still spelled as padding in include/daDkk_c.h. The evidence above supports naming them; this promotion deliberately did not.",
+    "The 0x360..0x390 span is declared pad_360[0x30] and belongs to daDsnBase_c's own declared-but-unmodelled 0x360..0x3a0 region. Which leaf owns which word there is not settled.",
+    "boundary_confidence is medium on both sides, and the module sinit corroboration is module-wide (4 sinits / 4 .ctor entries), not narrowed to this TU."
+  ]
+}
