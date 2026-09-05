@@ -45,9 +45,11 @@
  *     which every function matches.  The longest such run in the best of them is
  *     ordinals 12..31 (20 functions); the longest across all three is ordinals
  *     13..34 under strength reduction ON -- 22 functions -- and that is this file.
- *     The remaining 27 functions keep their own shards and their own delinks.txt
- *     entries, so nothing is lost; a later pass that finds the source shape which
- *     reproduces ebf20/ec2bc/ecba4 under `off` extends this run to ordinal 44.
+ *     The larger side's other 27 functions keep their own shards and their own
+ *     delinks.txt entries, so nothing is lost; a later pass that finds the source
+ *     shape which reproduces ebf20/ec2bc/ecba4 under `off` extends this run to
+ *     ordinal 44.  Counted over the whole 61: 22 promoted here, 38 still holding
+ *     their own shard and delinks.txt entry, and 1 -- the hole -- holding neither.
  *
  * NOT A DESTRUCTOR-ORDER REFUSAL.  The cartridge orders this class D1
  * (0x020ea280) BELOW D0 (0x020ea2c8), which is the reproducible direction
@@ -116,10 +118,8 @@ struct Pair { int v[2]; };
    assignment between two structs of named ints word-by-word (ldr/str/ldr/str)
    where C block-moves it (ldr/ldr/str/str), and these functions were C.  Every
    2-int shadow type in this file that is whole-struct-assigned anywhere is
-   spelled the same way for the same reason -- Pair, P, P2, W2, Words2. */
+   spelled the same way for the same reason -- Pair, P, P2, Words2. */
 struct Words2 { int v[2]; };
-struct E { int a, b; };
-struct W2 { int v[2]; };   /* array spelling: see struct Pair */
 
 struct B72 {
     unsigned short f0 : 2;
@@ -184,16 +184,10 @@ struct ObjB {
     unsigned char b93;              /* 0x93 */
 };
 
-/* A third view, from func_ov006_020ed494, which needs the 0x98 stride as a type
-   because it walks the array with a real pointer. */
-typedef struct Thing
-{
-    int a;              /* 0x00 */
-    int b;              /* 0x04 */
-    char pad0[0x10];    /* 0x08 */
-    V2 pos;             /* 0x18 */
-    char pad1[0x78];    /* 0x20 */
-} Thing;                /* 0x98 */
+/* A third view of the 0x98 element exists -- func_ov006_020ed494 spells the
+   whole 0x98 stride as a type because it walks the array with a real pointer --
+   but that function is on the far side of this TU's upper edge, so no such type
+   is declared here. Recorded so the next pass does not rediscover it. */
 
 /* The pointer-to-member-function view of the element used by
    func_ov006_020eb018, func_ov006_020eb31c and dScMgHanachan_c::Behavior: the
