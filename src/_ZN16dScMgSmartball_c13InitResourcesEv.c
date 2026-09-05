@@ -51,7 +51,7 @@ extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern void *_ZN3G2S13GetBG2CharPtrEv(void);
 extern void *_ZN3G2S13GetBG3CharPtrEv(void);
 extern s32 func_02054d88(void);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, u16 a, u16 b, u16 c, u16 d);
 extern void *_Znwj(unsigned int sz);
 extern void *data_ov006_0213f260;
 extern void *data_ov006_0213f280;
@@ -289,8 +289,8 @@ s32 _ZN16dScMgSmartball_c13InitResourcesEv(void *arg0)
   sb->unk_4778 = 0;
   sb->unk_477c = 0;
   sb->unk_4780 = 0;
-  _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *) 0x4000050, 0, 0x18, 4, 0xa);
-  _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *) 0x4001050, 0, 0x18, 4, 0xa);
+  _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *) 0x4000050, 0, 0x18, 4, 0xa);
+  _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *) 0x4001050, 0, 0x18, 4, 0xa);
   do
   {
     OamAttr *_p = data_ov006_021382e0[1];

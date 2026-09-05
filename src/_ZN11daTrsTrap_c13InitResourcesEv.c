@@ -28,7 +28,7 @@ enum { false, true };
 struct Vec3 { int x, y, z; };
 struct Vec16 { s16 x, y, z; };
 
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const void *v, const void *v16, int e, int f);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
 extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
@@ -37,9 +37,9 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
     void *self, void *f, void *m, int fx, short s, void *b);
 extern void func_020393d4(int *p, int v);
 extern void func_020393c4(int *p, int v);
-extern void _ZN4dBgW6EnableEP5Actor(void *self, void *actor);
+extern void _ZN4dBgW6EnableEP8dActor_c(void *self, void *actor);
 
-extern void _ZN4dBgW16UpdatePosAndAngsERS_P5ActorR5dBgPiR7Vector3P10Vector3_16S8_(void);
+extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 extern void func_ov063_0211d28c(void);
 extern void *data_ov063_0211e28c[];
 extern void *data_ov063_0211e27c[];
@@ -80,7 +80,7 @@ int _ZN11daTrsTrap_c13InitResourcesEv(char *c)
             for (i = 1; i <= 2; i++) {
                 pos.z -= 0xc8000;
                 pos.y += dx;
-                sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x41, 0x100 * i,
+                sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x41, 0x100 * i,
                     &pos, 0, *(s8 *)(c + 0xcc), -1);
                 *(s32 *)((char *)sp + 0x128) = *(s32 *)(c + 4);
                 *(u8 *)((char *)sp + 0x156) = *(u8 *)(c + 0x156);
@@ -133,9 +133,9 @@ int _ZN11daTrsTrap_c13InitResourcesEv(char *c)
     }
 
     func_020393d4((int *)(c + 0x15c),
-        (int)&_ZN4dBgW16UpdatePosAndAngsERS_P5ActorR5dBgPiR7Vector3P10Vector3_16S8_);
+        (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4((int *)(c + 0x15c), (int)&func_ov063_0211d28c);
-    _ZN4dBgW6EnableEP5Actor(c + 0x15c, c);
+    _ZN4dBgW6EnableEP8dActor_c(c + 0x15c, c);
 
     if (*(s32 *)(c + 0x140) == 2) {
         struct Vec3 base; struct Vec16 v16;
@@ -156,7 +156,7 @@ int _ZN11daTrsTrap_c13InitResourcesEv(char *c)
             base.x = *(s32 *)(c + 0x12c) - data_ov063_0211e9f8[even];
             base.y = *(s32 *)(c + 0x130) + data_ov063_0211e9f8[odd];
             base.z = *(s32 *)(c + 0x134) - 0xb4000;
-            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(actorId, j, &base, &v16, *(s8 *)(c + 0xcc), neg1);
+            sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(actorId, j, &base, &v16, *(s8 *)(c + 0xcc), neg1);
             *(s32 *)((char *)sp + 0x418) = *(s32 *)(c + 4);
             even += 2; odd += 2;
         }
