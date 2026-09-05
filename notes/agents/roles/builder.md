@@ -77,6 +77,14 @@ invisible to the byte gates. Corroborate from a second direction where you can:
 the vtable's typeinfo word relocates to the `_ZTI` address, and `check_object()`
 gives a per-symbol VERIFIED.
 
+**`verify` writes to the manifest when it FAILS, and no gate reads what it
+wrote.** This file warned only about a degenerate `partial_isolation` block. A
+*failing* run also rewrites the prose fields — an experimental run with a pragma
+removed flipped `functions_matched: 9 -> 8` and
+`every_declared_function_bytes_match: PASS -> FAIL` in the committed manifest.
+Every other tool treats those as prose, so a poisoned manifest ships silently.
+**Run `git status` after every `verify`, especially one you expected to fail.**
+
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
 and addend), and `reloc_audit` (destination identity).
@@ -170,6 +178,14 @@ files behave differently and only one of them tells you**:
   writes that filename bare rather than repo-rooted: quoting the dead path in
   full would fail `check_dead_references`, the gate this paragraph is about.
 
+**Trust `gh pr view --json mergeable` over a local merge test for these two
+files.** `config/converted-backslide-exceptions.jsonl` is declared `merge=union`
+in `.gitattributes`, which that file itself warns GitHub ignores. So
+`git merge-tree` honours the driver and reports **clean** while GitHub reports
+**CONFLICTING** on the very same pair. A green PR can flip to CONFLICTING with
+nobody pushing anything, purely because the base moved — and a local compose test
+will not have predicted it.
+
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
 tool regenerates them correctly from the current tree, and a merged result is
@@ -222,6 +238,10 @@ already stale. Getting this wrong costs a full validation cycle.
 
 ## Tools the write-up needs, and how they mislead
 
+- **`opnew_sizes.py` prints no per-class row** — read `build/opnew_sizes.json`.
+- **`check_references` and `check_dead_references` emit "run `--update` to bank
+  it" nudges that are NOT failures.** Do not bank them from a class PR; they are
+  someone else's baseline to shrink.
 - **`opnew_sizes.py` and `rtti_vtables.py` both need `build/rtti.json`**, which
   only `tools/rtti_extract.py` writes. Without it they die on a bare
   `FileNotFoundError` naming no remedy. Run the extractor first.
@@ -281,7 +301,10 @@ single factory, so look for it before writing "no size available".
 commit without pushing it, so `git push` may report success and leave that commit
 sitting locally. It does not always — one measured run had the hook fire with no
 commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
-non-empty, push again. A PR missing its lineage commit looks complete.
+non-empty, push again. **That check is not sufficient on its own** — compare
+`gh pr view --json headRefOid` too. Another pipeline agent can push *to your
+branch*, which a local extras check cannot see; it happened twice on one PR,
+including after a force-push removed it. A PR missing its lineage commit looks complete.
 
 Several validator lines are expected on a promotion and are not losses. All are
 the same many-to-one fold artifact: the counter credits only the delinks range's
