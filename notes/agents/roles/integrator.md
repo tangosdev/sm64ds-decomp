@@ -25,6 +25,10 @@ which one.
 
 ## The shape
 
+Work in a fresh short-path wired worktree created with the `decomp-worktree`
+skill. Do not compose in the primary checkout or reuse either writer's build
+directory; the compiler, ROM inputs and per-branch build state must be isolated.
+
 Cut from `origin/main` at a named SHA — write the SHA in the PR body, it is the
 only record of what you rebased onto:
 
