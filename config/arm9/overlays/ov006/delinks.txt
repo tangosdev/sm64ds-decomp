@@ -2839,93 +2839,9 @@ src/func_ov006_020eac38.c:
     complete
     .text start:0x020eac38 end:0x020eb018
 
-src/func_ov006_020eb018.cpp:
+src/actors/dScMgHanachan_c.cpp:
     complete
-    .text start:0x020eb018 end:0x020eb0c8
-
-src/func_ov006_020eb0c8.cpp:
-    complete
-    .text start:0x020eb0c8 end:0x020eb1e0
-
-src/func_ov006_020eb1e0.c:
-    complete
-    .text start:0x020eb1e0 end:0x020eb31c
-
-src/func_ov006_020eb31c.cpp:
-    complete
-    .text start:0x020eb31c end:0x020eb3e4
-
-src/func_ov006_020eb3e4.c:
-    complete
-    .text start:0x020eb3e4 end:0x020eb558
-
-src/func_ov006_020eb558.cpp:
-    complete
-    .text start:0x020eb558 end:0x020eb610
-
-src/func_ov006_020eb610.cpp:
-    complete
-    .text start:0x020eb610 end:0x020eb768
-
-src/func_ov006_020eb768.c:
-    complete
-    .text start:0x020eb768 end:0x020eb7b0
-
-src/func_ov006_020eb7b0.c:
-    complete
-    .text start:0x020eb7b0 end:0x020eb7f8
-
-src/func_ov006_020eb7f8.c:
-    complete
-    .text start:0x020eb7f8 end:0x020eb8f0
-
-src/func_ov006_020eb8f0.cpp:
-    complete
-    .text start:0x020eb8f0 end:0x020eb9b0
-
-src/func_ov006_020eb9b0.c:
-    complete
-    .text start:0x020eb9b0 end:0x020eb9dc
-
-src/func_ov006_020eb9dc.c:
-    complete
-    .text start:0x020eb9dc end:0x020ebb40
-
-src/func_ov006_020ebb40.c:
-    complete
-    .text start:0x020ebb40 end:0x020ebc08
-
-src/func_ov006_020ebc08.c:
-    complete
-    .text start:0x020ebc08 end:0x020ebc7c
-
-src/func_ov006_020ebc7c.c:
-    complete
-    .text start:0x020ebc7c end:0x020ebd7c
-
-src/func_ov006_020ebd7c.c:
-    complete
-    .text start:0x020ebd7c end:0x020ebe6c
-
-src/func_ov006_020ebe6c.c:
-    complete
-    .text start:0x020ebe6c end:0x020ebeb4
-
-src/func_ov006_020ebeb4.c:
-    complete
-    .text start:0x020ebeb4 end:0x020ebf20
-
-src/func_ov006_020ebf20.c:
-    complete
-    .text start:0x020ebf20 end:0x020ec134
-
-src/func_ov006_020ec134.c:
-    complete
-    .text start:0x020ec134 end:0x020ec2bc
-
-src/func_ov006_020ec2bc.c:
-    complete
-    .text start:0x020ec2bc end:0x020ec458
+    .text start:0x020eb018 end:0x020ec458
 
 src/func_ov006_020ec458.c:
     complete
