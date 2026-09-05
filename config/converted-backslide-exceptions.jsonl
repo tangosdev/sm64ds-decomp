@@ -310,3 +310,4 @@
 {"path": "src/_ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv.cpp", "reason": "ov006/dScMgD3DBase_c promoted: 27 one-function shards absorbed into src/actors/dScMgD3DBase_c.cpp"}
 {"path": "src/_ZN14dScMgD3DBase_cD0Ev.cpp", "reason": "ov006/dScMgD3DBase_c promoted: 27 one-function shards absorbed into src/actors/dScMgD3DBase_c.cpp"}
 {"path": "src/_ZN14dScMgD3DBase_cD1Ev.cpp", "reason": "ov006/dScMgD3DBase_c promoted: 27 one-function shards absorbed into src/actors/dScMgD3DBase_c.cpp"}
+{"path": "src/_ZN11daDsnBase_c16CleanupResourcesEv.cpp", "reason": "ov091/daDsnBase_c: partial TU promotion, 9 of 11 shards absorbed into src/actors/daDsnBase_c.cpp (licensed .text 0x02132dc0-0x02133254). The D0/D1 pair stays enrolled because the cartridge orders D0 below D1, which no admissible source form reproduces."}
