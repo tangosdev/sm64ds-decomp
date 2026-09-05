@@ -1719,6 +1719,7 @@ def main():
     # THE PHASE HOLD, and it is taken for BOTH the sequential and the parallel
     # arm of the branch below so the two differ only in width. With one worker
     # it is a no-op and each launch takes the per-launch lock as before.
+    level_phase_t0 = time.time()
     with windowed_phase(workers, "battery level phase"):
         if workers == 1:
             for lvl in levels:
@@ -1741,6 +1742,11 @@ def main():
                         for g in futs:
                             g.cancel()
                         return 1
+
+    # The one number that says whether the width is worth anything, printed
+    # whatever the width is so the two are comparable from two logs.
+    print(f"levels: {len(levels)} rows in {time.time() - level_phase_t0:.0f}s "
+          f"at {workers} wide")
 
     for lvl in retired:
         skip = LEVEL_SKIPS[lvl]
