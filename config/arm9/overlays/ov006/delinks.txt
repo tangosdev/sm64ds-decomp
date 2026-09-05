@@ -3547,7 +3547,7 @@ src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c:
     complete
     .text start:0x020f6830 end:0x020f6904
 
-src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c:
+src/_ZN14dScMgMemory2_c14RoundShowCardsEv.cpp:
     complete
     .text start:0x020f6904 end:0x020f6a00
 
@@ -4570,6 +4570,10 @@ src/func_ov006_021085c0.c:
 src/func_ov006_02108650.c:
     complete
     .text start:0x02108650 end:0x02108b90
+
+src/func_ov006_02108b90.c:
+    complete
+    .text start:0x02108b90 end:0x02108cc0
 
 src/func_ov006_02108cc0.c:
     complete
