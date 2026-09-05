@@ -2224,3 +2224,13 @@ DSSTATE_END
 // in hal/actor_classes.cpp; with this alias the seat is the matched body
 // itself.
 #pragma comment(linker, "/alternatename:?_ZTV14UnchainedChomp@@3HA=__ZTV14UnchainedChomp")
+// ---- link100 OV ----
+/* dsd gave ov039 0x02111858 TWO names (symbols.txt lines 52 and 53):
+   _ZTV5Cloud, which src/Cloud_Spawn.c stores, and _ZTV11daObjKumo_c,
+   which src/_ZN5CloudD0Ev.c restores by. One table, one host array --
+   hal/actor_classes_ov_link100.cpp defines it as _ZTV5Cloud and this
+   alias carries the other spelling onto it. BOTH names are held out of
+   port/ov039_syms.txt, so this left side is undefined everywhere and the
+   alias cannot be defeated by a definition; the same reasoning and the
+   same shape as hal/actor_classes_ov017.cpp's daObjKsWater_c alias. */
+#pragma comment(linker, "/alternatename:__ZTV11daObjKumo_c=__ZTV5Cloud")

@@ -2015,6 +2015,25 @@ void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void);/* data_ov029_0
 extern unsigned char WDW_Water_SpawnInfo[];                        /* ov029 0x021140b8, +4 = 101 */
 void *WDW_Water_Spawn(void);                                     /* ov029 0x021125f8 */
 void hal_fill_wdw_water_vtable(void);                            /* _ZTV19RotatingPlatformWdw 0x021140dc, 32 */
+/* ---- link100 OV ---- */
+/* Two overlay actor classes the registry had never carried. Both
+   resolved BY ADDRESS off ACTOR_SPAWN_TABLE; the full derivation, the
+   ov002 one-class name shift and the ov039 double name are in the header
+   of hal/actor_classes_ov_link100.cpp, the slice is
+   port/slice_gate217.txt and the ov039 mount is port/ov039_syms.txt.
+   The externs sit here rather than at the very end of the file because
+   everything past the #define below is one line-continued macro. */
+/* id 348, ov002 0x021085f8, RTTI 10daChRoom_c: the room-change trigger
+   volume of a castle door. Placed by the DOOR sub-loader (entry 0 of
+   data_ov002_0210cb88 is 348), one each on levels 17, 18 and 21. */
+extern unsigned char VirtualDoor_SpawnInfo[];   /* ov002 0x021085d4, +4 = 348 */
+void *VirtualDoor_Spawn(void);                  /* ov002 0x020b0980 */
+void hal_fill_change_room_vtable(void);         /* _ZTV9CameraTag 0x021085f8, 31 */
+/* id 314, ov039 0x02111858, RTTI 11daObjKumo_c: Tiny-Huge Island's sky
+   clouds. Level 31 places seventeen; no other level places any. */
+extern unsigned char Cloud_SpawnInfo[];         /* ov039 0x02111834, +4 = 314 */
+void *Cloud_Spawn(void);                        /* ov039 0x0211137c */
+void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -3091,4 +3110,8 @@ void hal_fill_wdw_water_vtable(void);                            /* _ZTV19Rotati
      hal_fill_bowser_shockwaves_vtable}, \
     {291, "BUBBLE", Bubble_SpawnInfo, Bubble_Spawn, hal_fill_bubble_vtable}, \
     {9, "YOSHI_EGG", YoshiEgg_SpawnInfo, YoshiEgg_Spawn, \
-     hal_fill_yoshi_egg_vtable},
+     hal_fill_yoshi_egg_vtable}, \
+    /* ---- link100 OV ---- */ \
+    {348, "CHANGE_ROOM", VirtualDoor_SpawnInfo, VirtualDoor_Spawn, \
+     hal_fill_change_room_vtable}, \
+    {314, "CLOUD", Cloud_SpawnInfo, Cloud_Spawn, hal_fill_cloud_vtable},

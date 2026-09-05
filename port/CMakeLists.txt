@@ -2528,6 +2528,17 @@ list(APPEND PORT_ACTOR_OVERLAYS ov055)
 # of the mount (host arrays hal/actor_classes_ov029.cpp fills). Derivation in
 # port/ov029_syms.txt, slice in port/slice_ov029.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov029)
+# ---- link100 OV ----
+# ov039 is level 31's own overlay (data/stage/habatake, Tiny-Huge Island's
+# sky, course 23), already mounted --whole in PORT_LEVEL_OVERLAYS above.
+# That mount is one array and names nothing, so this per-symbol mount is
+# what lets its one actor class -- CLOUD (314, RTTI 11daObjKumo_c, and
+# level 31 places seventeen) -- reach the SpawnInfo record the registry
+# rewrites in place and the two bss cells __sinit_ov039_021113b4 builds.
+# The class's vtable stays OUT of the mount: it is host storage
+# hal/actor_classes_ov_link100.cpp fills. Derivation in
+# port/ov039_syms.txt, slice in port/slice_gate217.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov039)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -10009,6 +10020,56 @@ foreach(line IN LISTS SLICE193_LINES)
     list(APPEND SLICE193_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- link100 OV ----
+# Gate 217: the last two overlay ACTOR classes in the ROM's spawn table
+# whose whole vtable is matched src with no guessed body -- id 348 (ov002
+# 0x021085f8, RTTI 10daChRoom_c) and id 314 (ov039 0x02111858, RTTI
+# 11daObjKumo_c). The fill is hal/actor_classes_ov_link100.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate217.txt" SLICE217_LINES)
+set(SLICE217_SOURCES "")
+foreach(line IN LISTS SLICE217_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE217_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The id-348 deleting destructor spells the VT placeholder; its ROM store
+# relocates to its own table (ov002 from:0x020b084c -> 0x021085f8), the
+# host array the fill writes and VirtualDoor_Spawn installs. HEAP is left
+# alone: its binding to the game heap pointer 0x020a0eac is what that body
+# means, and hal/cxx_aliases.cpp already carries that alias.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9CameraTagD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=_ZTV9CameraTag")
+# Cloud::InitResources carries TWO sibling-overlay spellings of addresses
+# that are ov039's own in this class's module: it calls
+# func_ov044_02111214 and bumps data_ov041_021118e0, while the ROM relocs
+# at 0x0211136c and 0x02111378 both read module:overlay(39). Routed per
+# source, which a definition cannot defeat the way an /alternatename can.
+# func_ov039_02111214 is the matched TU on slice_gate217;
+# data_ov039_021118e0 is the four-byte counter the fill defines.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Cloud13InitResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov044_02111214=func_ov039_02111214;data_ov041_021118e0=data_ov039_021118e0")
+# Cloud::Behavior is a flat .c TU that spells decl_common.h's two generic
+# placeholder names, FindWithActorID and SetPolygonID. Both are real arm9
+# functions the ROM relocs name outright -- 0x02010ef0
+# _ZN5Actor15FindWithActorIDEjPS_ and 0x02016abc _ZN5Model12SetPolygonIDEi,
+# read out of config/arm9/overlays/ov039/relocs.txt inside the Behavior
+# span -- and both already have a C-linkage definition in this link
+# (hal/actor_faces_bob.cpp aliases the static onto its ROM name;
+# hal/actor_classes_ov063.cpp defines the SetPolygonID face for exactly
+# this reason). Bound PER SOURCE rather than by a global /alternatename on
+# a bare placeholder name, so no other TU that spells either word is
+# steered by this lane.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Cloud8BehaviorEv.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "FindWithActorID=_ZN5Actor15FindWithActorIDEjPS_;SetPolygonID=_ZN5Model12SetPolygonIDEi")
+
 # Gate 194: HOOT_THE_OWL (234), ov094. Fresh per-symbol ov094 mount
 # (port/ov094_syms.txt). The fill is hal/actor_classes_ov094.cpp.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate194.txt" SLICE194_LINES)
@@ -12805,7 +12866,6 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
     ntr/backup.cpp ${SLICE215_SOURCES}
@@ -12822,6 +12882,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${W3E_SOURCES}
     # ov029: level 21's water_city actors, ids 94..101
     ${OV029_SOURCES}
+    # ---- link100 OV ---- ids 348 (ov002, daChRoom_c) and 314 (ov039, Cloud)
+    hal/actor_classes_ov_link100.cpp ${SLICE217_SOURCES}
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -13020,7 +13082,6 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
     ntr/backup.cpp ${SLICE215_SOURCES}
@@ -13037,6 +13098,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${W3E_SOURCES}
     # ov029: level 21's water_city actors, ids 94..101
     ${OV029_SOURCES}
+    # ---- link100 OV ---- ids 348 (ov002, daChRoom_c) and 314 (ov039, Cloud)
+    hal/actor_classes_ov_link100.cpp ${SLICE217_SOURCES}
     # _ZTV5Stage SLOT 12 (run link60, lane L4). src/_ZN5Stage16OnPendingDestroyEv.cpp
     # is named on smoke_player and walk_window_hires above, because those two
     # targets compile hal/stage_bridges.cpp -- which seats the slot -- and do
@@ -13272,7 +13335,6 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
-    hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
     ntr/backup.cpp ${SLICE215_SOURCES}
@@ -13289,6 +13351,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${W3E_SOURCES}
     # ov029: level 21's water_city actors, ids 94..101
     ${OV029_SOURCES}
+    # ---- link100 OV ---- ids 348 (ov002, daChRoom_c) and 314 (ov039, Cloud)
+    hal/actor_classes_ov_link100.cpp ${SLICE217_SOURCES}
     "${PORT_GITTIP_C}"
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(walk_window_hires PRIVATE
