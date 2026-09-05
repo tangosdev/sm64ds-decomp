@@ -93,7 +93,7 @@ claim about the whole link.
 | `C1_TRAP` | `src/actors/daObjC1_Trap_c.cpp` | ov010 `0x021111a0..0x021119d0` | `d_a_obj_c1_trap.cpp` | same | unique `d_a_obj_*` stem | B- | left edge lacks independent confidence; registry address is overlay-multiplexed |
 | `STAR_CAMERA` | `src/StarCamera_Spawn.cpp` | ov002 `0x020e6c40..0x020ebf8c` | — | — | TU contains a broader Star family | — | no most-derived RTTI class for the factory |
 | `PLAYER` | `src/d_a_ply.cpp` | ov002 `0x020bd828..0x020e6c40` | `d_a_ply.cpp` | same | unique `d_a_*` stem | B- | left boundary is medium; very large TU |
-| `WATERFALL` | `src/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
+| `WATERFALL` | `src/game/actors/d_a_obj_waterfall.cpp` | ov002 `0x020b6e08..0x020b6f18` | `d_a_obj_waterfall.cpp` | same | unique stem and high/high boundaries | B | nearby stems are not alphabetically ordered |
 | `KURIBO` | `src/d_a_krb_kuribo.c` | ov084 `0x02129020..0x0212c10c` | `d_a_krb.cpp` | same | one distinct stem | B- | duplicate class entries; left edge lacks confidence |
 | `TERESA` | `src/actors/daTrs_c/d_a_trs_teresa.cpp` | ov063 `0x02115ee0..0x0211c600` | `d_a_trs.cpp` | — | later `d_a_*` family | — | same TU also yields `d_a_t_basket.cpp`; TU-map check has baseline failure |
 | `BOSS_TERESA` | `src/actors/BigBoo/d_a_trs_boss_teresa.cpp` | same ov063 TU | `d_a_trs.cpp` | — | same class as `TERESA` | — | multi-stem TU and two same-class profiles |

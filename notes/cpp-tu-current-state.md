@@ -56,7 +56,7 @@ require the delinks entry's `complete` marker; entries without it are ROM-byte
 placeholders and are not reported as decompiled. The join remains correct when a
 source owns two functions; filenames are not treated as the authority.
 
-Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/d_a_obj_km3_kuruma.cpp` (5 function-symbol records), `src/actors/d_a_obj_mc_metalnet.cpp` (8 function-symbol records), `src/actors/d_a_obj_mc_water.cpp` (8 function-symbol records), `src/actors/d_a_obj_rc_buranko.cpp` (8 function-symbol records), `src/actors/d_a_obj_rc_dorifu.cpp` (5 function-symbol records), `src/actors/d_a_obj_rc_guruguru.cpp` (7 function-symbol records), `src/actors/d_a_obj_rc_hane.cpp` (8 function-symbol records), `src/actors/d_a_obj_rc_kaitendai.cpp` (5 function-symbol records), and 84 more in `--json`.
+Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/d_a_obj_km3_kuruma.cpp` (5 function-symbol records), `src/actors/daBar_c.cpp` (8 function-symbol records), `src/actors/daBrq_c.cpp` (18 function-symbol records), `src/actors/daEyBm_c.cpp` (13 function-symbol records), `src/actors/daKpFr_c.cpp` (21 function-symbol records), `src/actors/daKrpa_c.cpp` (25 function-symbol records), `src/actors/daObjAbuku_c.cpp` (7 function-symbol records), `src/actors/daObjC1_Trap_c.cpp` (17 function-symbol records), and 84 more in `--json`.
 
 A `.cpp` extension alone proves nothing about compiler language mode; this build
 selects C++ only when the first line is exactly `//cpp`. The marker-missing count

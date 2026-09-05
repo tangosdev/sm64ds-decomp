@@ -1834,7 +1834,7 @@
         }
       ],
       "current_factory_name": "daObjWaterfall_c_classInit",
-      "current_factory_file": "src/actors/d_a_obj_waterfall.cpp",
+      "current_factory_file": "src/game/actors/d_a_obj_waterfall.cpp",
       "proposed_factory_name": "daObjWaterfall_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2192,7 +2192,7 @@
         }
       ],
       "current_factory_name": "daWanwan_c_classInit",
-      "current_factory_file": "src/actors/d_a_wanwan.cpp",
+      "current_factory_file": "src/game/actors/d_a_wanwan.cpp",
       "proposed_factory_name": "daWanwan_c_classInit",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
