@@ -1,0 +1,296 @@
+{
+  "id": "ov006/dScMgHanachan_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgHanachan_c.cpp",
+  "promoted_source": "src/actors/dScMgHanachan_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "PARTIAL RUN, 22 of 61. tu_map calls 0x20ea280..0x20ede18 one contiguous linker run of 61 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020eb018..0x020ec458, 22 function(s), ROM ordinals 13..34. The other 39 keep their own shards and their own delinks.txt entries.",
+    "class label(s): dScMgHanachan_c",
+    "EDGE 1 -- a sourceless hole splits the run. ROM ordinal 11, func_ov006_020ea914 (0x020ea914, size 0x324), has no source anywhere in the tree: it is a banked near-miss (config/match_attempts.jsonl, best 113 divergences, size-exact but mis-coloured) and carries no entry in config/arm9/overlays/ov006/delinks.txt at all -- the cartridge's own bytes cover that range. It sits in the MIDDLE of the run, and no delink block and no TU manifest anywhere in this tree expresses a .text claim with a hole in it (both checked tree-wide: zero of each carries two .text runs). So the run can only be licensed as one of its two contiguous sides; ordinals 0..10 (0x020ea280..0x020ea914, 11 functions, including the destructor pair) are the smaller side and stay out.",
+    "EDGE 2 -- two file-global pragmas contradict each other inside the larger side. Four of its 49 functions reproduce only with `#pragma opt_strength_reduction off` (func_ov006_020eac38, func_ov006_020ec458, func_ov006_020ec93c, func_ov006_020ec9c0 -- each carried it in its own legacy file) and three only with it on (func_ov006_020ebf20, func_ov006_020ec2bc, func_ov006_020ecba4). _ZN15dScMgHanachan_c6RenderEv carried `#pragma opt_common_subs off`, which costs five other members when set. Both settings are FILE-GLOBAL last-wins in mwccarm 2004/b56, re-measured on this TU: bracketing opt_strength_reduction `off ... on` around exactly the four members that want it produced byte-for-byte the same 41/49 as omitting it entirely, so there is no positional escape. Measured whole-side scores with every other reconciliation held identical: SR off / OCS on = 44/49; SR on / OCS on = 42/49; SR off / OCS off = 40/49. Promotion needs a CONTIGUOUS run in which every function matches, and the longest such run over all three settings is ordinals 13..34 under SR on -- the 22 licensed here. The longest under SR off is ordinals 12..31, only 20.",
+    "NOT a destructor-order refusal. The ROM orders this class D1 (0x020ea280) BELOW D0 (0x020ea2c8), which is the reproducible direction (inline-in-class => D1 then D0) and would have promoted whole; the pair is out only because it lies on the far side of the sourceless hole. Consequently this TU does not own the class's key function -- the first declared virtual is the out-of-line ~dScMgHanachan_c() -- so it emits no _ZTV/_ZTI/_ZTS, needs no compiler_only_output block (verify reports zero unlicensed symbols), and needed no header edit: include/dScMgHanachan_c.h keeps the out-of-line destructor declaration that the two still-enrolled destructor shards require.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020eb018",
+      "end": "0x020ec458"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov006_020eb018",
+      "address": "0x020eb018",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov006_020eb018.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020eb0c8",
+      "address": "0x020eb0c8",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov006_020eb0c8.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020eb1e0",
+      "address": "0x020eb1e0",
+      "size": "0x0000013c",
+      "legacy_source": "src/func_ov006_020eb1e0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020eb31c",
+      "address": "0x020eb31c",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov006_020eb31c.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020eb3e4",
+      "address": "0x020eb3e4",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov006_020eb3e4.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_020eb558",
+      "address": "0x020eb558",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov006_020eb558.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020eb610",
+      "address": "0x020eb610",
+      "size": "0x00000158",
+      "legacy_source": "src/func_ov006_020eb610.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020eb768",
+      "address": "0x020eb768",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020eb768.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020eb7b0",
+      "address": "0x020eb7b0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020eb7b0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020eb7f8",
+      "address": "0x020eb7f8",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov006_020eb7f8.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020eb8f0",
+      "address": "0x020eb8f0",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_020eb8f0.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020eb9b0",
+      "address": "0x020eb9b0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov006_020eb9b0.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020eb9dc",
+      "address": "0x020eb9dc",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov006_020eb9dc.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_020ebb40",
+      "address": "0x020ebb40",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov006_020ebb40.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_020ebc08",
+      "address": "0x020ebc08",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov006_020ebc08.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_020ebc7c",
+      "address": "0x020ebc7c",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov006_020ebc7c.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020ebd7c",
+      "address": "0x020ebd7c",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov006_020ebd7c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_020ebe6c",
+      "address": "0x020ebe6c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_020ebe6c.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020ebeb4",
+      "address": "0x020ebeb4",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020ebeb4.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_020ebf20",
+      "address": "0x020ebf20",
+      "size": "0x00000214",
+      "legacy_source": "src/func_ov006_020ebf20.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_020ec134",
+      "address": "0x020ec134",
+      "size": "0x00000188",
+      "legacy_source": "src/func_ov006_020ec134.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_020ec2bc",
+      "address": "0x020ec2bc",
+      "size": "0x0000019c",
+      "legacy_source": "src/func_ov006_020ec2bc.c",
+      "ordinal": 34
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Math_Function_0203b0fc' differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020eb0c8; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020ec134' differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020eb0c8; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold func_ov006_020eb0c8 and the one that held func_ov006_020eb1e0; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020eb558 and the one that held func_ov006_020eb7f8; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020eb558 and the one that held func_ov006_020eb9dc; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020eb9dc and the one that held func_ov006_020ebc7c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020eb9dc and the one that held func_ov006_020ebd7c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02141fd4' differs between the legacy file that used to hold func_ov006_020ebc7c and the one that held func_ov006_020ebd7c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_020eb9dc and the one that held func_ov006_020ebe6c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203d704' differs between the legacy file that used to hold func_ov006_020eb1e0 and the one that held func_ov006_020ebf20; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203d704' differs between the legacy file that used to hold func_ov006_020eb1e0 and the one that held func_ov006_020ec134; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0203d704' differs between the legacy file that used to hold func_ov006_020eb1e0 and the one that held func_ov006_020ec2bc; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_020eb0c8 and the one that held func_ov006_020eb31c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020eb31c; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020ebf20; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020ec134; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_020eb018 and the one that held func_ov006_020ec2bc; kept the first, the other is commented out for review -- resolved by hand: the whole preamble was rewritten, one spelling chosen per name, and the odd call site cast; the commented-out alternate was deleted along with it. See the source file's declaration banner for the rule applied to each family."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgHanachan_c/dScMgHanachan_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 22,
+    "functions_declared": 22,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov006-dScMgHanachan_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020eb018",
+        "end": "0x020ec458",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020eb018",
+          "end": "0x020ec458",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 22
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
