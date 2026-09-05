@@ -25,7 +25,18 @@ that the evidence means what it claims.
    `notes/data/c-cpp-classification.tsv` must show `+N / -0`. Any deletion or
    reordering is a stop-and-report: row order is load-bearing and a hand merge
    silently inverts rename chains.
-7. **The merge tree, not the branch.** `premerge_check` gates each PR alone. Two
+7. **A conflict on a stacked PR is often a retarget artifact, not a stale
+   branch.** When the base branch merges, GitHub retargets the child onto `main`,
+   and the conflict appears at that moment — the branch itself never changed.
+   Say "retargeted onto main", not "the branch went stale": the second sends the
+   author hunting for changes that do not exist. Check whether the head SHA
+   actually moved before describing it.
+8. **`status: promoted` in the manifest is not cosmetic.**
+   `tiers_ratchet.promoted_moves()` skips any entry not exactly `promoted`, so a
+   TU left on `text-verified` writes a **fake backslide row** per absorbed shard
+   into `converted-backslide-exceptions.jsonl`, blaming readability loss on files
+   that were absorbed cleanly. Invisible once written. Check the field.
+9. **The merge tree, not the branch.** `premerge_check` gates each PR alone. Two
    individually-green PRs can produce a red main. Compose the merge yourself and
    verify before landing.
 
