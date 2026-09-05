@@ -7,7 +7,7 @@
 # generates or uploads ROM-derived data. The repo has no extracted/ tree, and
 # the two build-time generators that read the cartridge image -- romdata.py and
 # ovdata.py -- are REPLACED on the runner with an emitter that reads nothing and
-# writes an empty file, so the ~123 ROM-backed translation units compile to
+# writes an empty file, so the 123 ROM-backed translation units compile to
 # empty objects. The build therefore CANNOT LINK and CANNOT RUN: it measures
 # object-compile throughput and nothing else. Nothing but the log is uploaded.
 #
@@ -15,6 +15,31 @@
 # port-mount-noseat-cluster) because origin/main's port/ is only the 14 smoke
 # gates (228 sources); the ~33k-object build lives on the port branch.
 # Checking out that ref does not modify it.
+#
+# WHAT IT MEASURED (2026-09-05, standard free runner: AMD EPYC 7763, 2 cores /
+# 4 threads, 16 GB, MSVC 19.51.36256 x86, billable minutes 0 on a public repo).
+# Every run compiled all 32,716 objects with zero compile failures; the only
+# failures were the 15 .exe links, each an LNK2019 on the ROM data symbols the
+# empty emitter left out.
+#
+#   cold, sccache on          28m09s   33950051860    0.94% hits
+#   warm, sccache on          29m06s   33951572681   16.07% hits
+#   warm + 1 edited .cpp      29m05s   33952202906   22.21% hits
+#   cold, NO sccache          14m05s   33951330688
+#
+# sccache DOUBLES this build and never pays for itself. The objects average
+# 2.3 KiB, so a cache hit costs 0.125s against 0.100s to just run the compiler,
+# and the GitHub Actions cache rejected 26,820 of 32,408 writes on the cold run.
+# Run it with sccache_enabled=false.
+#
+# The warm rows are not incremental builds: nothing caches build/port, so ninja
+# rebuilds the whole graph every run and only sccache can save work. That is
+# also why touching one .cpp changes nothing -- it invalidates 1 of 32,716.
+#
+# Reference: the same build on the desktop (Ryzen 5 7600, 6c/12t) finishes in
+# 5m22s when the machine is idle, and takes ~85 minutes when the lanes are all
+# running. The runner's compiler is only ~15% slower per object than the
+# desktop's; the whole wall-clock gap is 4 threads against 12.
 
 name: port-build-proto
 
