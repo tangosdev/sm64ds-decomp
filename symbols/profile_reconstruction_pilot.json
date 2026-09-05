@@ -2013,7 +2013,7 @@
         }
       ],
       "current_factory_name": "daTrs_c_classInit_TERESA",
-      "current_factory_file": "src/actors/daTrs_c/d_a_trs_teresa.cpp",
+      "current_factory_file": "src/game/actors/daTrs_c/d_a_trs_teresa.cpp",
       "proposed_factory_name": "daTrs_c_classInit_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",
@@ -2103,7 +2103,7 @@
         }
       ],
       "current_factory_name": "daTrs_c_classInit_BOSS_TERESA",
-      "current_factory_file": "src/actors/BigBoo/d_a_trs_boss_teresa.cpp",
+      "current_factory_file": "src/game/actors/daTrs_c/d_a_trs_boss_teresa.cpp",
       "proposed_factory_name": "daTrs_c_classInit_BOSS_TERESA",
       "factory_shape": "new_plus_inlined_ctor",
       "factory_shape_evidence": "operator new size is exact and the most-derived RTTI vtable is stored in the factory",

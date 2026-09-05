@@ -513,7 +513,7 @@ def write_rename_candidates(path: pathlib.Path, rows: list[dict[str, str]]) -> N
 
 def resource_owner_from_source(source: str) -> tuple[str, str] | None:
     """Return (owner, evidence kind) for a named resource consumer source."""
-    actor_match = re.match(r"src/actors/([^/]+)/", source)
+    actor_match = re.match(r"src/(?:game/)?actors/([^/]+)/", source)
     if actor_match:
         return actor_match.group(1), "actor-directory"
 
@@ -548,7 +548,7 @@ def build_layout_candidates(rows: list[dict[str, str]],
 
     output = []
     for source, group in sorted(by_source.items()):
-        if source.startswith("src/actors/"):
+        if source.startswith(("src/actors/", "src/game/actors/")):
             continue
         owner_symbols = sorted(filter(None, {
             anonymous_owner_symbol(row["owner"]) for row in group
@@ -569,7 +569,10 @@ def build_layout_candidates(rows: list[dict[str, str]],
             str(pathlib.PurePosixPath(row["path"]).parent) for row in group
         })
         filename = pathlib.PurePosixPath(source).name
-        suggested = f"src/actors/{actors[0]}/{filename}" if len(actors) == 1 else ""
+        suggested = (
+            f"src/game/actors/{actors[0]}/{filename}"
+            if len(actors) == 1 else ""
+        )
         if len(actors) == 1:
             confidence = (
                 "high" if "actor-directory" in evidence_kinds else "medium"

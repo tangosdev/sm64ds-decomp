@@ -364,8 +364,8 @@
    "n_functions_map": 22,
    "n_files": 21,
    "files": [
-    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
+    "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",
@@ -9491,11 +9491,11 @@
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp",
-    "src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp",
-    "src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
-    "src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp",
-    "src/actors/FallBlockBbh/d_a_obj_th_fall_block.c"
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD1Ev.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh13InitResourcesEv.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/d_a_obj_th_fall_block.c"
    ],
    "ext_mix": {
     ".cpp": 3,
@@ -26625,10 +26625,10 @@
    "files": [
     "src/actors/Boo/_ZN3BooD1Ev.cpp",
     "src/actors/Boo/_ZN3BooD0Ev.cpp",
-    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp",
-    "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp",
-    "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
-    "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp",
+    "src/game/actors/daTBasket_c/_ZN11daTBasket_cD1Ev.cpp",
+    "src/game/actors/daTBasket_c/_ZN11daTBasket_cD0Ev.cpp",
+    "src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD1Ev.cpp",
+    "src/game/actors/daTrsIcon_c/_ZN11daTrsIcon_cD0Ev.cpp",
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp",
     "src/unnamed/ov063/func_ov063_021160d4.c",
     "src/unnamed/ov063/func_ov063_02116190.c",
@@ -26775,8 +26775,8 @@
    "n_functions_map": 17,
    "n_files": 17,
    "files": [
-    "src/actors/MadPiano/_ZN8MadPianoD1Ev.cpp",
-    "src/actors/MadPiano/_ZN8MadPianoD0Ev.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPianoD1Ev.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPianoD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211d5f4.c",
     "src/unnamed/ov063/func_ov063_0211d828.cpp",
     "src/unnamed/ov063/func_ov063_0211d88c.c",
@@ -26787,10 +26787,10 @@
     "src/unnamed/ov063/func_ov063_0211dd84.c",
     "src/unnamed/ov063/func_ov063_0211ddac.cpp",
     "src/unnamed/ov063/func_ov063_0211ddf4.cpp",
-    "src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp",
-    "src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp",
-    "src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp",
-    "src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPiano16CleanupResourcesEv.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPiano6RenderEv.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPiano8BehaviorEv.cpp",
+    "src/game/actors/daPiano_c/_ZN8MadPiano13InitResourcesEv.cpp",
     "src/actors/MadPiano/daPiano_c_classInit.cpp"
    ],
    "ext_mix": {
@@ -37345,8 +37345,8 @@
     "TrapDoor"
    ],
    "files": [
-    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
+    "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",
