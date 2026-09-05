@@ -4834,6 +4834,10 @@ src/func_ov002_020f4d70.c:
     complete
     .text start:0x020f4d70 end:0x020f5010
 
+src/func_ov002_020f5010.c:
+    complete
+    .text start:0x020f5010 end:0x020f5328
+
 src/func_ov002_020f5328.c:
     complete
     .text start:0x020f5328 end:0x020f55b4
