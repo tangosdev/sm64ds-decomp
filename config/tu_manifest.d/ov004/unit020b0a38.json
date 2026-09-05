@@ -218,21 +218,21 @@
       "symbol": "func_ov004_020b265c",
       "address": "0x020b265c",
       "size": "0x00000198",
-      "legacy_source": "src/func_ov004_020b265c.c",
+      "legacy_source": "src/_ZN11dScMgBase_c9Virtual84Ev.cpp",
       "ordinal": 45
     },
     {
       "symbol": "func_ov004_020b27f4",
       "address": "0x020b27f4",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov004_020b27f4.c",
+      "legacy_source": "src/_ZN11dScMgBase_c9Virtual80Ev.cpp",
       "ordinal": 46
     },
     {
       "symbol": "func_ov004_020b2880",
       "address": "0x020b2880",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov004_020b2880.c",
+      "legacy_source": "src/_ZN11dScMgBase_c9Virtual7CEv.cpp",
       "ordinal": 47
     },
     {
@@ -253,28 +253,28 @@
       "symbol": "func_ov004_020b298c",
       "address": "0x020b298c",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov004_020b298c.c",
+      "legacy_source": "src/_ZN11dScMgBase_c15OnGroundPoundedEv.cpp",
       "ordinal": 50
     },
     {
       "symbol": "func_ov004_020b2990",
       "address": "0x020b2990",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov004_020b2990.c",
+      "legacy_source": "src/_ZN11dScMgBase_c9Virtual50Ev.cpp",
       "ordinal": 51
     },
     {
       "symbol": "func_ov004_020b2994",
       "address": "0x020b2994",
       "size": "0x00000008",
-      "legacy_source": "src/func_ov004_020b2994.c",
+      "legacy_source": "src/_ZN11dScMgBase_c13OnTurnIntoEggEi.cpp",
       "ordinal": 52
     },
     {
       "symbol": "func_ov004_020b299c",
       "address": "0x020b299c",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov004_020b299c.c",
+      "legacy_source": "src/_ZN11dScMgBase_c13OnYoshiTryEatEi.cpp",
       "ordinal": 53
     },
     {
