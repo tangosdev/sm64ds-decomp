@@ -498,22 +498,81 @@ was. (The meter is a BG layer, not OBJ, so it is not in the OBJ-diff measurement
 above; its extent is carried from an earlier lane and was not independently
 re-measured here.)
 
-WHAT IS OWED, AND WHEN. Two elements that appear in ordinary play STRADDLE a
-band boundary, and a band split cuts a straddling element in half with the full
-margin opened through the middle of it:
+WHAT WAS OWED, AND WHAT PAID IT. Two elements that appear in ordinary play
+STRADDLE a band boundary, and a band split cuts a straddling element in half
+with the full margin opened through the middle of it:
 
 * the red-coin pip row. Pip 8 sits at DS x 85-100, which crosses `band_l` (96).
-  Pixels below 96 ride left, pixels at 96 and above stay centred, so the pip is
-  torn with 128 px of gap through it.
-* the TIME label. It sits at DS x 140-179, which crosses `band_r` (160). Same
-  failure, at the other boundary.
+* the TIME label. It sits at DS x 140-179, which crosses `band_r` (160).
 
-Neither is on screen in the runs measured above, which is why the measured
-difference is zero. Both appear the moment somebody plays a red-coin star or a
-timed level. So the honest statement is: THE BAND SPLIT IS FREE TODAY AND OWED
-BEFORE RED COINS OR TIMERS MATTER. The fix is a per-element reanchor done
-upstream of the composite, where element identity still exists. It is not urgent
-and it is not optional forever.
+To those two, add the ones a later pass named: the pause banner's number sits
+ON 160, and the VS "TIME UP" banner and a level-clear banner are centred rects
+wide enough to cross both splits. None is exotic; all are ordinary play.
+
+THAT DEBT IS NOW PAID, and the paragraph this replaces said it could not be,
+so the correction is worth stating plainly. The old text read: the compositor
+"has already lost per-element identity ... A true per-element reanchor would
+have to be done further upstream, where the elements still exist as elements."
+That is true of the OWNER BYTE and false of the PIXELS. A layer is not an
+element, which is why owner cannot answer the question -- but an on-screen
+element is a spatially coherent cluster of set pixels with empty space around
+it, and coherence is recoverable from the buffer by LABELLING it. Identity was
+not lost at this seam. It only had to be recovered geometrically instead of
+read off a byte, and no move upstream was needed.
+
+What ships is `hudelem::resolve` in `port/hal/message_compositor.cpp`, run once
+per frame after every layer is resolved into `g_a` and before any pixel is
+placed. It dilates the hit mask by 16 x 8 DS pixels -- so a line of text is one
+blob rather than a row of loose glyphs -- labels it 8-connected, and gives each
+label ONE offset chosen from that element's own centre against the same two
+splits. Every pixel of an element then moves together, so a tear is impossible
+by construction: tearing needs two offsets inside one element and an element
+now has exactly one.
+
+THE BRIDGE IS SIZED, NOT GUESSED, and its error direction is deliberate. It
+must be larger than the gaps INSIDE an element (the font is on an 8 px tile
+grid, so 16 closes a text run) and smaller than the gaps BETWEEN elements that
+should anchor apart (lives ends at 47 and the meter starts at 108, 61 clear;
+the meter ends at 147 and the counters start at 207, 59 clear). If it
+over-merges, two elements share an anchor and both stay whole, which is a
+placement judgement. If it under-merges, an element splits, which is a defect.
+Over-merging is a look and under-merging is a bug, so 16 errs large.
+
+IT IS A NO-OP ON EVERYTHING SECTION 6 ALREADY MEASURED. An element wholly
+inside one band has its centre in that band too, so it takes the offset every
+one of its pixels already had. The three clusters measured above -- lives at
+6-47 (centre 26, left), the meter at 108-147 (centre 127, centre) and the coin
+and star counters at 207-247 (centre 227, right) -- are unchanged. Only a
+formerly-torn element moves, which is what makes the before/after a clean
+control rather than a whole-HUD reshuffle.
+
+`SM64DS_HUD_BANDSPLIT=1` restores the old per-column split on the same binary,
+so the torn control and the whole frame come off ONE build at ONE state base.
+`port/tools/wide_sweep.py` is the sweep that reads both.
+
+AND IT COSTS NOTHING MEASURABLE. Four linear passes over the 192x256 mask.
+Level 1, 300-frame selftest, minimised and muted, on an otherwise idle machine,
+means over the ten [perf] samples:
+
+| run | mean | stdev | max |
+|---|---|---|---|
+| native, Aspect 0 (feature off) | 6.42 ms | 0.24 | 6.79 ms |
+| 16:9, per-element (shipped) | 12.66 ms | 0.61 | 13.76 ms |
+| 16:9, band split (SM64DS_HUD_BANDSPLIT=1) | 13.75 ms | 1.21 | 16.27 ms |
+
+The element pass reads 1.09 ms FASTER than the band split it replaces, which is
+inside one standard deviation of the control and must not be reported as a
+speedup. The honest statement is that it costs nothing measurable. It is
+skipped entirely at the native aspect, so the default build pays nothing at all.
+
+THE "WIDESCREEN IS 2X SLOWER" FIGURE IS CONFIRMED AS A RATIO AND REJECTED AS A
+BLOCKER. 12.66 against 6.42 is 1.97x, and that is real: 1024x576 is three times
+the pixels of 512x384 and the rasteriser does the work. But the number that
+decides whether it ships is the ABSOLUTE one, and 12.66 ms against a 33 ms
+budget is 38 percent of frame, with the worst single sample at 13.76 ms. Under
+heavy machine load (a capture sweep running beside it) the same measurement
+read 16.93 ms mean and 21.02 ms worst, which is still inside budget. A ratio is
+not a budget, and this one was being read as though it were.
 
 THE FULL-2D EXCEPTION. A minigame's top screen is a full 2D raster with no 3D
 layer behind it (`shown3d` is false). Reanchoring that tears it into vertical
@@ -587,14 +646,98 @@ key can say 2.37 and the fit will deliver a 21:9 picture out of the same buffer;
 that half is done, and `Aspect: 9.0` clamping to 1024x342 is the proof the
 arithmetic holds past 16:9. What is not done is the HUD.
 
-TRUE ULTRAWIDE BEYOND ABOUT 2.0 IS GATED ON THE PER-ELEMENT HUD WORK. The 3D
-side scales fine: section 2's widen is a ratio and does not care how wide the
-frame is. The HUD does care. Each band boundary opens a hole of `margin / 2`,
-and `margin` grows with the width. At 16:9 that is 256 spare, so 128 px at each
-boundary. At 21:9 (1344x576, say) it is 576 spare, so two holes of 288 px each.
-An element straddling a boundary is not just torn, it is torn with a gap wider
-than the element. So section 6's owed work is a hard prerequisite for ultrawide,
-not a nice-to-have.
+TRUE ULTRAWIDE BEYOND ABOUT 2.0 WAS GATED ON THE PER-ELEMENT HUD WORK, AND
+THAT GATE IS OPEN. The 3D side always scaled fine: section 2's widen is a ratio
+and does not care how wide the frame is. The HUD was the half that cared. Under
+the band split each boundary opened a hole of `margin / 2` and `margin` grew
+with the width -- 256 spare at 16:9, so 128 px per boundary, but 576 spare at
+21:9, so 288 px per boundary, which is a gap WIDER THAN THE ELEMENT it cuts.
+That is why ultrawide was the aspect most likely to expose a fault 16:9 hides.
+
+Per-element anchoring removes the mechanism rather than shrinking the hole. No
+element is ever cut, at any width, because the offset is chosen once per
+element and not once per column. The holes that remain open BETWEEN elements,
+where the 3D field fills them, which is what the extra width is for.
+
+WHAT IS STILL NOT DONE IS THE EVIDENCE, NOT THE ENGINE, and the two must not be
+conflated. `port/tools/wide_sweep.py` captures 21:9 alongside 16:9 for exactly
+this reason. Until that sweep has a clean per-state result at 21:9, the
+launcher's Aspect dropdown offers Native and 16:9 ONLY -- see AspectPanel.cs,
+which says the same thing at the control. A hand-written `Aspect` in
+settings.json still reaches any ratio in [1.0, 3.0]; what the DIALOG offers is
+what has been photographed and checked. When the sweep passes, the list grows
+by one row and no code changes.
+
+## 8b. The per-STATE acceptance sweep
+
+`port/tools/wide_sweep.py` photographs each distinct UI state at the native
+aspect, at 16:9 and at 21:9, and scores the pixels. Every image is GDI
+CopyFromScreen over the window's own client rectangle, never a framebuffer
+dump, for the reason the black-bottom present bug established: a correct
+framebuffer and a wrong window are a thing that has actually happened here.
+
+THE HUD IS ISOLATED BY SUBTRACTION. Each state is captured with all layers and
+again with `SM64DS_ENGINE_A_LAYERS=0x00`; the pixels that differ are the 2D
+HUD. That is only meaningful between two captures of the SAME frame, so the
+state is frozen (`SM64DS_MENU_AT` on the level path, `SM64DS_SCENE_MENU` on the
+scene path) and the freeze is CHECKED: two separate launches must photograph
+identical frames or the row is refused as DYNAMIC rather than scored.
+
+RESULT, on the rebased tip, at both wide aspects:
+
+| state | 16:9 | 21:9 |
+|---|---|---|
+| minigame menu | PASS, control TORN | PASS, control TORN |
+| course HUD (star + coin) | PASS | PASS |
+| message box | PASS | PASS |
+| VS HUD | PASS | PASS |
+| title, star select, VS menu | PASS (no engine-A 2D to anchor) | PASS |
+| file select | DYNAMIC at 16:9, PASS at 21:9 | |
+| VS TIME UP | NOT CAPTURABLE, see below | NOT CAPTURABLE |
+
+THE MINIGAME MENU IS THE POSITIVE, and it is the only state where the band
+split and the element rule disagree. Its top screen is a full 2D raster WITH a
+3D layer behind it, so it took the band-split arm rather than the pillarbox
+arm, and the split cut it into strips: the checker finds two tear pairs in the
+control and none in the fix, over 1.6 million changed pixels at 16:9 and 1.1
+million at 21:9. That is the defect section 7 flagged and declined -- "A 2D-TOP
+MINIGAME WILL STRETCH. That is a known, deliberate, flagged gap" -- and the
+element rule closes it without a special case, because a full-screen raster is
+one element and one element gets one anchor.
+
+EVERY OTHER STATE IS A NO-OP, AND THAT IS THE HONEST HEADLINE. On the course
+HUD, the message box and the VS HUD the two rules place every pixel
+IDENTICALLY: zero changed pixels. No element on those screens straddles a
+split, so there is nothing for either rule to get wrong. The change is
+STRUCTURAL there -- it removes the mechanism by which a future element could be
+torn -- and it is currently invisible. It should not be described as fixing
+something a player can see on those screens, because it does not.
+
+WHAT THE SWEEP DOES CONFIRM on those states is the shape claim, measured in DS
+pixels so it survives re-anchoring: the course HUD's two clusters are 41 and 42
+DS px wide at native, at 16:9 and at 21:9; the message box is 123 DS px wide at
+all three. Nothing is stretched. The counters keep their native edge margins
+exactly (32 native px becomes 48 at 16:9, which is 32 x 1.5), so they ride the
+screen edges at native size, and the message box stays centred at native size.
+
+THE VS "TIME UP" BANNER COULD NOT BE PHOTOGRAPHED, and this is a gap in the
+evidence rather than a result. It is the one element known to straddle: it is
+an OBJ sprite drawn at DS x 0x80 by `HUD::RenderVsTimer`, which IS linked and
+IS called, unlike the ROM's pause banner. Reaching it costs about 2790 frames
+of match clock, which the port has no knob to shorten, and at that point the
+picture will not hold still: the menu's freeze stops the TICK but the RENDER
+keeps running, so anything animated by the render carries on and two launches
+never photograph the same frame. Every attempt came back DYNAMIC and was
+refused rather than scored. Whether the element rule keeps that banner whole is
+therefore ARGUED (it is one element, so it gets one anchor) and NOT MEASURED.
+
+21:9 IS CAPTURED BUT NOT OFFERED. Every 21:9 row above passes, and the fit
+there is 1024x440, so `uni` is 2 rather than 3 and the spare width is 512
+rather than 256 -- the HUD is drawn at a SMALLER native scale and the gaps
+between elements are twice as wide. Nothing is torn or stretched at that width.
+The launcher still offers Native and 16:9 only, because the sweep has two
+unscored rows (the file select at 16:9 and the TIME UP banner at both) and a
+dropdown entry should not run ahead of the evidence.
 
 ## 9. Reproducing
 

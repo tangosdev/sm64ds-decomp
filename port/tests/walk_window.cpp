@@ -3031,6 +3031,7 @@ extern "C" void port_luigi_seed(int frame);
    hit resolver at frame 130. Defined in hal/luigi_infection.cpp; off by default. */
 extern "C" void port_luigi_hittest(int frame);
 static int menu_on;
+static int menu_at = -1;   /* SM64DS_MENU_AT, see where it is read */
 /* B closed the menu and is still physically down: swallow it until it comes
    back up. See the block below the menu's input, where it is spent. */
 static int menu_b_swallow;
@@ -7202,6 +7203,33 @@ int main(void)
        see it in a selftest frame: a selftest reads no live keys, so F5 never
        arrives. It pauses the tick like any other open menu. */
     menu_on = getenv("SM64DS_MENU") != 0;
+    /* SM64DS_MENU_AT=<frame> opens it LATER, on this path, at that frame --
+       the level-path twin of SM64DS_SCENE_MENU (port_scene_run above), in the
+       same shape and for the same reason.
+
+       IT EXISTS BECAUSE OPENING AT BOOT FREEZES THE STATE BEFORE IT FORMS.
+       The menu's pause is 'skip the tick', so SM64DS_MENU=1 on a level holds
+       frame 0 forever -- and a VS match has not dealt its players, started its
+       clock or drawn a single HUD sprite at frame 0, so what a capture gets is
+       an empty field. Measured exactly that way: a VS_MAP=0 capture under
+       SM64DS_MENU=1 came back with no HUD at all, and the layer mask and the
+       HUD-placement knob both read as no-ops on it because there was nothing
+       on screen for either to act on.
+
+       So the freeze has to come after the state exists. Given a frame, the
+       tick advances normally until then and stops on a fully formed screen,
+       which is what port/tools/wide_sweep.py needs: its HUD isolation
+       subtracts one capture from another and that is only meaningful between
+       two captures of the SAME frame. A still screen makes two launches
+       photograph the same frame; a live one does not.
+
+       It is an instrument and it changes nothing when unset. */
+    if (const char *e = getenv("SM64DS_MENU_AT")) {
+        menu_at = atoi(e);
+        if (menu_at < 0) menu_at = 0;
+        fprintf(stderr, "[menu] SM64DS_MENU_AT: the debug menu opens at "
+                "frame %d\n", menu_at);
+    }
 
     data_02092144[0] = 8 << 8;
     if (!boot_spawns) {
@@ -12590,6 +12618,12 @@ int main(void)
         rb_probe_frame_end(&frame, selftest);
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
+        /* SM64DS_MENU_AT: arm the freeze once the named frame is reached. It
+           is tested with >= and not == because the rollback boundary just
+           above may REWIND `frame` and re-run, so an equality test can be
+           stepped over and never fire. Latching on >= cannot be missed, and
+           setting menu_on when it is already set is a no-op. */
+        if (menu_at >= 0 && frame >= menu_at) menu_on = 1;
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
         /* the frame's stdout, one write; the setvbuf note above is why */
         fflush(stdout);
