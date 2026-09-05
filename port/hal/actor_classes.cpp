@@ -1991,23 +1991,23 @@ static int __fastcall uc_pdes(void *, void *)
    calls MarkForDestruction itself, but D1 is still reachable through ordinary
    AfterCleanupResources / level-unload teardown, so it is filled rather than
    trapped. Body is src/_ZN14UnchainedChompD1Ev.cpp line for line (D1, not D0:
-   no final Deallocate). func_ov002_020aed18 is the shared Enemy base D2. */
+   no final Deallocate). func_ov002_020aed18 is the shared Enemy base D2.
+
+   IT IS THE MATCHED TU ITSELF NOW (run link100 lane TAIL), not a
+   transcription of it. The one thing that kept src/_ZN14UnchainedChompD1Ev.cpp
+   out was a spelling, not a shape: that TU declares the table it stores as
+   `extern int _ZTV14UnchainedChomp;` at namespace scope OUTSIDE its extern "C"
+   block, so MSVC emits the reference decorated -- ?_ZTV14UnchainedChomp@@3HA
+   -- and the port's C-named host array cannot satisfy it. Measured, not
+   guessed: port/tools/closure.py on that single TU reports exactly one
+   unresolved symbol and that is the string. An /alternatename in the link100
+   block at the end of hal/cxx_aliases.cpp points the decorated name at the
+   array, which is the ordinary alias direction (an undefined name pointed at a
+   defined one, nothing redefined), and the body then links and reads the same
+   array this thunk did. */
+extern "C" void *_ZN14UnchainedChompD1Ev(void *self);   /* ov100 0x021431c4 */
 static void *__fastcall uc_d1(void *s, void *)
-{
-    char *c = (char *)s;
-    *(void **)c = (void *)_ZTV14UnchainedChomp;
-    __destroy_arr(c + 0x768, 6, 6, (void *)func_02011508);
-    __destroy_arr(c + 0x720, 6, 0xc, (void *)func_020072c0);
-    __destroy_arr(c + 0x6d8, 6, 0xc, (void *)func_020072c0);
-    _ZN11ShadowModelD1Ev(c + 0x640);
-    __destroy_arr(c + 0x550, 6, 0x28, (void *)_ZN11ShadowModelD1Ev);
-    __destroy_arr(c + 0x370, 6, 0x50, (void *)_ZN5ModelD1Ev);
-    _ZN9ModelAnimD1Ev(c + 0x30c);
-    _ZN12WithMeshClsnD1Ev(c + 0x150);
-    _ZN25MovingCylinderClsnWithPosD1Ev(c + 0x110);
-    func_ov002_020aed18(c);
-    return c;
-}
+{ return _ZN14UnchainedChompD1Ev(s); }
 
 /* SLOT 17: the ROM's own deleting destructor, matched src on slice_gate216.
    It is a real C++ method (`void *_ZN14UnchainedChompD0Ev(UnchainedChomp *)`
@@ -2090,6 +2090,11 @@ static int __fastcall dr_render(void *s, void *)
   return func_ov100_021454c8(s); }
 static int __fastcall dr_pdes(void *, void *)
 { func_ov100_021454c4(); return 0; }
+/* slot 16, the ROM's own D1: stores _ZTV8daDoor_c, destroys the ModelAnim at
+   +0xd4, then Actor's D2. Matched src on slice_gate216.txt. */
+extern "C" int *func_ov100_021443f4(int *t);   /* ov100 0x021443f4 */
+static int __fastcall dr_d1(void *s, void *)
+{ return (int)(size_t)func_ov100_021443f4((int *)s); }
 
 extern "C" void hal_fill_door_vtable(void)
 {
@@ -2100,9 +2105,18 @@ extern "C" void hal_fill_door_vtable(void)
     vt[6] = (void *)dr_behavior;
     vt[9] = (void *)dr_render;
     vt[12] = (void *)dr_pdes;
-    /* SLOTS 16/17 TRAP, the gate-17 reading: nothing on the castle grounds
-       destroys a door -- the three live from the level boot to the teardown. */
-    vt[16] = (void *)ac_d1_door;
+    /* SLOT 17 STILL TRAPS, on the gate-17 reading: nothing on the castle
+       grounds destroys a door -- the three live from the level boot to the
+       teardown -- and its matched body (func_ov100_02144424) carries the
+       inferred-stub marker besides, so it is not seatable.
+       SLOT 16 CARRIES THE ROM'S OWN WORD NOW (run link100 lane TAIL).
+       port/tools/tail_slots.py --module ov100 --vtable 0x02148188 --width 31
+       reads slot 16 -> 0x021443f4, and that body spells _ZTV8daDoor_c by the
+       same name this file's host array carries, so it takes no rename. It is
+       the shared ac_d1_door chain with the class's own member type: the ROM
+       destroys a ModelAnim at +0xd4, not a CommonModel. Not dispatched either
+       way, by the same reading that keeps 17 trapping. */
+    vt[16] = (void *)dr_d1;
     vt[17] = (void *)ac_trap17;
 }
 

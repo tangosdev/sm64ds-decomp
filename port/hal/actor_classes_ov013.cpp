@@ -243,14 +243,20 @@ static int __fastcall cp_render(void *s, void *)
    dsd's recovered-name comment calls the D0 "OnYoshiTryEat", the slot-17
    reloc and the body say otherwise) stores the own table then runs Model
    +0xd4 / Actor::D2; D0 frees on the game heap. */
+/* SLOT 16 IS THE MATCHED TU NOW, run link100 lane TAIL, and this one is the
+   cheapest seat in the campaign: the host thunk it replaces was a line-for-line
+   transcription of src/func_ov013_021111a0.c that diverged from it in NOTHING.
+   The ROM body's only pooled word is data_ov013_02112128 (reloc 0x021111cc),
+   which it spells by that real name, so there was no placeholder to rename and
+   no store to reorder -- the same three statements, reached by their own symbol
+   instead of copied. port/tools/tail_slots.py --module ov013 --vtable
+   0x02112128 --width 32 reads slot 16 -> 0x021111a0.
+   SLOT 17 KEEPS ITS THUNK: the matched D0 (func_ov013_021111d0) carries the
+   inferred-stub marker, and port/tools/inferred_stub_guard.py refuses new
+   seats of those. */
+extern "C" int *func_ov013_021111a0(int *t);   /* ov013 0x021111a0, slot 16 */
 static int __fastcall cp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov013_02112128;
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov013_021111a0((int *)s); }
 static int __fastcall cp_d0(void *s, void *)
 {
     char *t = (char *)s;

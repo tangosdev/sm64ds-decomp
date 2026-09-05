@@ -1,4 +1,4 @@
-# Gate 216: fifteen matched TUs the ROM's own vtable words name and the port's
+# Gate 216: twenty-one matched TUs the ROM's own vtable words name and the port's
 # link did not carry. Run link100, lane TAIL.
 #
 # ---- what this gate is -----------------------------------------------------
@@ -118,6 +118,52 @@ src/func_ov064_021163bc.c
 # anything ever does, the matched body is what the ROM runs where the trap
 # would have aborted.
 src/_ZN14UnchainedChompD0Ev.cpp
+#
+# ---- 5. SIX MORE D1 SLOTS, one per class, all from the same two blockers ----
+#
+# Every row here is slot 16 of a table the port hosts and fills, where the fill
+# carried a HAND THUNK instead of the ROM's word. Two things kept them out and
+# both are removed rather than argued with:
+#
+#   THE SHARED-HEADER PLACEHOLDERS. func_ov012_021111a0, func_ov016_02112a00
+#   and func_ov018_021111a0 spell their two vtable stores _ZTV16daObjC0_Switch_c
+#   / _ZTV16daObjKi_Hasira_c / _ZTV14daObjSm_Lift_c and then _ZTV10dBgActor_c.
+#   Each fill's own note says the placeholders are why the TU was dropped. The
+#   relocations INSIDE each function's span say which addresses those pooled
+#   words are, and port/CMakeLists.txt binds them per source:
+#     ov012 0x021111dc -> data_ov012_02112344   0x021111e0 -> _ZTV8Platform
+#     ov016 0x02112a3c -> data_ov016_02114b00   0x02112a40 -> _ZTV8Platform
+#     ov018 0x021111dc -> data_ov018_021138cc   0x021111e0 -> _ZTV8Platform
+#   func_ov013_021111a0 has NO placeholder at all -- its single pooled word is
+#   data_ov013_02112128 by that name -- and the thunk it replaces was a
+#   line-for-line copy of it, so that row takes no -D and changes nothing.
+#   func_ov100_021443f4 likewise spells _ZTV8daDoor_c by the array's own name.
+#
+#   THE DECORATED VTABLE REFERENCE. src/_ZN14UnchainedChompD1Ev.cpp declares
+#   `extern int _ZTV14UnchainedChomp;` outside its extern "C" block, so MSVC
+#   emits ?_ZTV14UnchainedChomp@@3HA -- the single row closure.py reports for
+#   that TU. The link100 block at the end of hal/cxx_aliases.cpp aliases it
+#   onto the host array.
+#
+# WHAT THESE SIX DO AT RUNTIME, since unlike sections 1-4 four of them ARE
+# dispatched. Each is its class's complete destructor, reached once per
+# instance from ActorBase::AfterCleanupResources at level teardown. The matched
+# body is the thunk's own chain plus the base-table store the ROM makes and the
+# thunk dropped, and nothing dispatches on the object between that store and
+# the Memory::Deallocate the caller does next. The door's and the chomp's are
+# not dispatched at all, by the readings their fills already carry.
+#
+# THE D0 HALVES ARE NOT HERE. func_ov012_021111e4, func_ov013_021111d0,
+# func_ov016_02112a44, func_ov018_021111e4 and func_ov100_02144424 all carry
+# the "recovered from vtable slot identity" marker, and
+# port/tools/inferred_stub_guard.py refuses new seats of guessed bodies. Their
+# slots keep the host thunks.
+src/func_ov012_021111a0.c
+src/func_ov013_021111a0.c
+src/func_ov016_02112a00.c
+src/func_ov018_021111a0.c
+src/func_ov100_021443f4.c
+src/_ZN14UnchainedChompD1Ev.cpp
 #
 # ---- NOT IN THIS GATE, and why, so the rows stop reading as work -----------
 #

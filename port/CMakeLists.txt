@@ -9580,6 +9580,33 @@ foreach(g216 func_ov002_020b660c func_ov002_020b6814 func_ov002_020b69e4)
         PROPERTIES COMPILE_DEFINITIONS
         "_ZTV10dBgActor_c=${G216_OWN};VT1=_ZTV8Platform;G0=data_020a0eac")
 endforeach()
+# THE THREE LIVE-CLASS D1 RENAMES. Same rule, different placeholder names: each
+# of these three bodies spells its OWN table by a config RTTI name the port
+# hosts under an address name, and the base it overwrites it with as
+# _ZTV10dBgActor_c. Targets read out of the relocations inside each function's
+# span, not from the recovery's names:
+#
+#   func_ov012_021111a0  0x021111dc -> ov012 0x02112344   0x021111e0 -> 0x0210ae38
+#   func_ov016_02112a00  0x02112a3c -> ov016 0x02114b00   0x02112a40 -> 0x0210ae38
+#   func_ov018_021111a0  0x021111dc -> ov018 0x021138cc   0x021111e0 -> 0x0210ae38
+#
+# func_ov013_021111a0 and func_ov100_021443f4 spell every word they store by a
+# name the port already defines, so they take no -D and are deliberately absent
+# here. func_ov016_02112ef4 is not in the gate at all: its MIDDLE store is ov002
+# 0x02108fdc, and that intermediate base table is hosted nowhere in this port --
+# a table to host, not a rename.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov012_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV16daObjC0_Switch_c=data_ov012_02112344;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_02112a00.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV16daObjKi_Hasira_c=data_ov016_02114b00;_ZTV10dBgActor_c=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov018_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjSm_Lift_c=data_ov018_021138cc;_ZTV10dBgActor_c=_ZTV8Platform")
 
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
