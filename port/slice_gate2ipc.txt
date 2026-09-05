@@ -1,0 +1,93 @@
+# Gate 2ipc: THE PXI LAYER -- the ROM's own ARM9<->ARM7 link, made linkable.
+#
+# ---- what was in the way ---------------------------------------------------
+#
+# port/docs/mmio-inventory.md: eight IPC registers, zero modelled. Nothing in
+# the port ever answered IPCSYNC, nothing ever filled a FIFO, and nothing ever
+# wrote the ARM7's half of the channel-registration word in the shared system
+# block. Every matched body below therefore either spun forever or read a dead
+# latch, so none of them could be enrolled and the ROM's pre-main init had to
+# stay a host transcription.
+#
+# port/ntr/ipc.cpp is the register model and port/hal/boot2_ipc.cpp is the host
+# ARM7. Neither is decompiled code and neither is tagged PORT_HOST_ABI. The
+# handshake the model runs is not invented: it is the ARM7's own loop, read out
+# of extracted/arm7.bin at file offset 0x31a4..0x31e0 (ARM7 RAM 0x023831a4),
+# which is the mirror of src/func_0205bad8.c's.
+#
+# ---- the reference graph, which is the ROM's ------------------------------
+#
+# hal/boot2_ipc.cpp's link_up seam makes three calls, and they are three of
+# src/func_02058c84.c's own (its 2nd, 10th and 13th):
+#
+#   func_0205b858 -> func_0205bad8            PXI init
+#   func_02059e48 -> func_0205ba3c/ba64       channel 0xc, registers func_02059e04
+#   func_0205fde8 -> func_0205ba3c/ba64       channel 8,   registers func_0205fcfc
+#
+# Everything else here is reached from those, by the ROM's own edges:
+#
+#   func_0205ba3c   read by all three initialisers (the readiness poll)
+#   func_0205ba64   called by all three (the callback registration)
+#   func_02059e04   ADDRESS TAKEN by func_02059e48 and stored in the ROM's
+#                   callback table data_020a7fc8[0xc]
+#   func_0205fcfc   address taken by func_0205fde8, table slot 8
+#   func_0205feac   called by func_0205fcfc on every message
+#   func_02058b9c   called by func_0205fde8
+#   _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv
+#                   ADDRESS TAKEN by func_0205bad8, which passes it to
+#                   IRQ::SetIRQHandler(0x40000, ...). That is the ROM edge that
+#                   links it; the model is separately handed the same pointer
+#                   because ntr/runtime.cpp's host SetIRQHandler models two
+#                   masks and drops 0x40000.
+#
+# No /OPT:NOREF, no /INCLUDE, no keep-alive reference. Take the three seam
+# calls away and /OPT:REF drops all nine, which is what the linkage delta on
+# this gate is measuring.
+#
+# ---- the two that are hostgen'd -------------------------------------------
+#
+# GATE2IPC_SYMS in port/CMakeLists.txt routes two of these through
+# tools/hostgen.py, and both have to be:
+#
+#   func_0205bad8       reads and writes IPCSYNC through a POINTER BOUND TO A
+#                       LITERAL (`volatile u16 *reg = (volatile u16 *)0x4000180`),
+#                       which is hostgen's MMIO_PTR shape. Built plain, its
+#                       reads come off the mapped latch, the ARM7's nibble is
+#                       always zero and the handshake never converges.
+#   _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv
+#                       reads IPCFIFORECV at 0x04100000, which is OUTSIDE every
+#                       region ntr/io.cpp maps. Built plain it does not read a
+#                       stale value, it takes an access violation.
+#
+# The rest are plain on purpose. src/IPCSend.c is plain too and is NOT here --
+# it is already linked out of port/slice_gate10.txt -- so its stores to
+# IPCFIFOSEND still latch in the window instead of reaching the model. That is
+# a stated gap, and it is why ntr/ipc.cpp publishes truthful IPCFIFOCNT status
+# back into the window: IPCSend tests the error and send-full bits before every
+# store, and src/func_0205ae30.c retries it in a `while (... < 0)` loop.
+#
+# ---- what is deliberately NOT here ----------------------------------------
+#
+#   src/func_0205f270.c + src/func_0205f300.c   channel 6, the touch/SPI
+#       driver. The model unblocks its poll, but hal/scene_boot.cpp hosts
+#       data_020a80cc as `int[6]` -- 24 bytes -- and func_0205f270's own stores
+#       reach +0x36. Enrolling it against that object writes 22 bytes past the
+#       end of it. port/touch_map.txt section 269 already records the
+#       undersize; the fix belongs in hal/scene_boot.cpp.
+#   src/func_0206a88c.c and the channel 0xd chain. Linking it pulls
+#       src/func_0206a6d0.c, the GBA-slot access-rights dance and the OS lock
+#       family under func_020570b8 / func_02057158.
+#   src/func_020616e8.c (WM_Init) and the wireless channel. Nothing calls it in
+#       this build; it is the next lane's.
+#   src/func_02059dd4.c. Its only ROM caller is src/func_01ffdd98.c, the soft
+#       reset, which is a host stub in hal/cxx_aliases.cpp.
+#
+src/func_0205b858.c
+src/func_0205ba3c.c
+src/func_0205ba64.c
+src/func_02059e48.c
+src/func_02059e04.c
+src/func_0205fde8.c
+src/func_0205fcfc.c
+src/func_0205feac.c
+src/func_02058b9c.c

@@ -119,7 +119,7 @@ endif()
 # Compiled as its own lib so every gate binary can link the pieces it needs.
 add_library(ntr STATIC
     ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
-    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
+    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp ntr/ipc.cpp)
 target_include_directories(ntr PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
 # ntr/runtime.cpp hosts two DS DMA globals (data_020a60c4/data_020a6460) that
 # are real save state, so it needs hal/dsstate_seg.h. PRIVATE: only this
@@ -147,7 +147,7 @@ endif()
 # defines above reach their targets.
 add_library(ntr_wide_rt STATIC
     ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
-    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
+    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp ntr/ipc.cpp)
 target_include_directories(ntr_wide_rt PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
 target_include_directories(ntr_wide_rt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(ntr_wide_rt PUBLIC NTR_WIDE_RT)
@@ -159,7 +159,7 @@ endif()
 # the DS-native lib (their reference pixel counts depend on 256x192).
 add_library(ntr_hires STATIC
     ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/ppu_sub.cpp ntr/ppu_audit.cpp ntr/lz77.cpp
-    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
+    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp ntr/ipc.cpp)
 target_include_directories(ntr_hires PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
 # ntr/runtime.cpp hosts two DS DMA globals (data_020a60c4/data_020a6460) that
 # are real save state, so it needs hal/dsstate_seg.h. PRIVATE: only this
@@ -9514,6 +9514,50 @@ foreach(line IN LISTS SLICE212_LINES)
     list(APPEND SLICE212_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- gate 2ipc: the PXI layer (the ARM9<->ARM7 link) -----------------------
+#
+# port/docs/mmio-inventory.md counted eight IPC registers and zero modelled,
+# and that zero is what kept the ROM's own inter-processor layer out of the
+# link: src/func_0205bad8.c's IPCSYNC handshake never converged and four
+# matched channel initialisers spun forever on an ARM7 readiness word nothing
+# ever wrote. port/ntr/ipc.cpp is the register model (added to the three ntr
+# libraries above, since ntr/io.cpp dispatches into it) and
+# port/hal/boot2_ipc.cpp is the host ARM7 and the PXI bss. Neither is
+# decompiled code. The nine matched TUs this makes linkable, the ROM edges
+# that reach them and the four channels deliberately left out are all in
+# port/slice_gate2ipc.txt.
+#
+# TWO OF THEM MUST BE HOSTGEN'D. func_0205bad8 reaches IPCSYNC through a
+# pointer bound to a literal, so built plain its reads come off the mapped
+# latch and the ARM7's nibble is always zero. IRQ::IPCRxFifoNotEmptyHandler
+# reads IPCFIFORECV at 0x04100000, which is outside every region ntr/io.cpp
+# maps -- built plain that is an access violation, not a stale read.
+set(GATE2IPC_SYMS func_0205bad8 _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv)
+set(GATE2IPC_GEN "")
+foreach(sym IN LISTS GATE2IPC_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE2IPC_GEN "${sym_out}")
+endforeach()
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2ipc.txt" SLICE2IPC_LINES)
+set(SLICE2IPC_SOURCES "")
+foreach(line IN LISTS SLICE2IPC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE2IPC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12694,6 +12738,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12905,6 +12950,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13153,6 +13199,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
