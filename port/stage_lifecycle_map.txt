@@ -1465,7 +1465,14 @@ tests/walk_window.cpp.
 ------------------------------------------------------------------------------
 
 Measured against 7db4fc602 in C:/tmp/l1-stage. Baseline gate: 9492 / 11328
-linked, battery ALL GREEN.
+linked (83.8%), battery ALL GREEN.
+
+RESULT: 9501 / 11328 (83.9%), +9, battery ALL GREEN, port/tools/
+stage_seat_proof.py ALL GREEN. Nine matched TUs in two tranches -- six behind
+the three seated vtable words (12a) and three behind the overlay bookkeeping
+the seat's own callee chain reaches (12e). No frame changed: none of the nine
+executes on any path the port takes today, and every one of them is in the
+image because the ROM's own reference graph names it.
 
 12a. WHAT LANDED: SLOTS 3, 16 AND 17
 
@@ -1672,54 +1679,70 @@ reason. The reason is the same one every time and it is not a symbol: THE PORT'S
 FRAME LOOP IS THE STAGE. Until one lane owns both, this table can only take the
 slots the frame loop does not already run.
 
-12e. SLOT 0 AND THE OVERLAY/ARCHIVE RULING, RE-EXAMINED AND UPHELD
+12e. SLOT 0 AND THE OVERLAY/ARCHIVE RULING, RE-EXAMINED: THE HALF THAT WAS
+     PORTABLE IS LANDED AND THE HALF THAT WAS NOT IS NAMED
 
-Run link100 asked this lane to re-open section 11g's ruling by asking whether
-the ROM's own loaders could run on top of the ntr FS and overlay seams, so slot
-0 could become the ROM body. Read end to end, the three loaders split cleanly
-into two classes and only one of them is portable:
+Run link100 asked this lane to re-open section 11g by asking whether the ROM's
+own loaders can run on top of the ntr FS and overlay seams. Read end to end
+they split into two classes, and the answer is different for each -- which is
+why "the port decided not to have an overlay loader" was the wrong shape of
+ruling for both halves at once.
 
-  PORTABLE, and the port already hosts every leaf they need.
-  src/_Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.c and
-  src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp are pure table bookkeeping:
-  they index data_020758c8 (already a romdata row), data_02075998 and
-  data_02075804, and then call LoadOverlay / UnloadOverlay, which
-  hal/scene_boot.cpp:777-780 already defines as empty PORT_HOST_ABI bodies. The
-  two .cpp files compile as C++ and publish MSVC names
-  (?LoadLevelOverlays@@YAXH@Z, ?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z) while
-  hal/stage_slot0.cpp:76-79 defines the flat C names -- which is why there is no
-  LNK2005 today and why all three are simply dead-stripped. Enrolling them for
-  real costs: two romdata.py rows (data_02075998 and data_02075804), host
-  definitions for the three overlay-id symbols overlay_60 / overlay_98 /
-  overlay_102, three /alternatename faces or three deleted host bodies in
-  hal/stage_slot0.cpp, and nothing else. THREE MATCHED TUs, and both files are
-  outside this lane's list.
+  PORTABLE, AND NOW LANDED. LoadLevelOverlays, UnloadLevelOverlays and
+  LoadOrUnloadObjectOverlays are pure table bookkeeping: they index
+  data_020758c8, data_02075998 and data_02075804 and then call LoadOverlay /
+  UnloadOverlay, which hal/scene_boot.cpp:777-780 already defines as empty
+  PORT_HOST_ABI bodies. The ROM's three bodies and the host's two stubs do the
+  same nothing; the difference is which one the port ships, and the port's north
+  star settles that. All three are enrolled by port/slice_gate213.txt and the
+  two empty bodies in hal/stage_slot0.cpp are RETIRED. Linked 9498 -> 9501.
 
-  NOT PORTABLE, and this is the half the ruling rests on. Everything BELOW
+  What it cost, and every row of it is in the commit: three romdata.py NAMED
+  rows (data_02075804, data_02075998, data_02092130 -- all ROM bytes, ZERO
+  relocations anywhere in 0x02075804..0x02075a40, and delta-to-next-symbol
+  exact on all three, so none is the undersized-host-global class), two host
+  ints beside the four hal/scene_boot.cpp:757 already carried (overlay_60 and
+  overlay_98), and five /alternatename directives in hal/cxx_aliases.cpp's
+  link100 block -- two function names and three MSVC data spellings, every
+  right-hand side read out of an object with dumpbin or out of closure.py's own
+  UNRESOLVED list rather than hand-built. alternatename_guard: 0 new defeats.
+  dsstate_guard: OK.
+
+  NEITHER BODY RUNS TODAY, which is why this is a link change and not a frame
+  change. LoadLevelOverlays is reached only from Stage::InitResources, gated
+  behind SM64DS_SLOT0_ROM (11d, default off); UnloadLevelOverlays only from
+  Stage::CleanupResources, which is slot 3 above. hal/stage_slot0.cpp carries
+  the retired ruling and the one hazard the retirement hands 11d's bisect: the
+  ROM's LoadLevelOverlays opens with a data_0209f278 guard that calls Crash(),
+  and src/func_0202deac.c -- the only writer of that byte in src/ -- IS in
+  walk_window.map. Unreached, not dead. A fifth possible fault on 11d's flag,
+  and it is the ROM's own.
+
+  NOT PORTABLE, and this is what the ruling now rests on. Everything BELOW
   LoadOverlay -- FS_LoadOverlay, func_02018c00, func_0203d7b8, func_02017fd0,
   func_0205dc0c and the card chain under them -- exists to DMA an overlay's ARM
-  code image off the cartridge into the DS address it was linked for. The port
+  CODE IMAGE off the cartridge into the DS address it was linked for. The port
   mounts every overlay as a host array at build time (hal/level_boot.cpp's
   port_level_table) precisely because a host cannot execute that image. Running
   the ROM's loader would copy ARM code into a window nothing will ever jump to.
-  That is an EXCEPTION-class ruling and not a work item.
+  That is an EXCEPTION-class ruling, not a work item, and no lane should size
+  it again.
 
-  THE ARCHIVE HALF is the same shape with a longer tail. LoadArchive walks
-  data_0208ecf4 -- 26 relocations, DS string pointers -- and calls func_02018934
-  to pull a whole NARC into the game heap, while hal/fs.cpp resolves
-  archive-interior ids LAZILY through port_archive_map and therefore never
-  mounts anything. Making the ROM's mount real means changing which of the two
-  answers every archive-interior file id in the game gets, which is a
-  hal/fs.cpp design change and a whole lane's regression surface, not a seam
-  this one could take honestly in a sitting.
+  THE ARCHIVE HALF is the same shape with a longer tail, and it is NOT taken
+  here. LoadArchive walks data_0208ecf4 -- 26 relocations, DS string pointers --
+  and calls func_02018934 to pull a whole NARC into the game heap, while
+  hal/fs.cpp resolves archive-interior ids LAZILY through port_archive_map and
+  therefore never mounts anything. Making the ROM's mount real changes which of
+  those two answers every archive-interior file id in the game gets. That is a
+  hal/fs.cpp design change with a whole game's regression surface behind it, not
+  a seam a Stage lane can take in a sitting, and src/LoadArchive.c /
+  src/UnloadArchive.c stay faced.
 
-SO SECTION 11g's RULING STANDS, for a fourth time and with the reason narrowed
-again: slot 0's link is closed, its fader hold is closed, and what remains is
-(11c) data_02092208, (11d wall 2) data_02092110 and (11d wall 3) the lk4
-receiver bug -- plus the overlay loader, which is not a hold that can be closed
-at all. The three portable TUs above are the only linkage left in that
-direction and they belong to whoever owns hal/stage_slot0.cpp and
-port/tools/romdata.py.
+SO SECTION 11g's RULING STANDS FOR SLOT 0 ITSELF, for a fourth time and with
+the reason narrowed again: its link is closed, its fader hold is closed, the
+overlay bookkeeping is now the ROM's, and what remains is (11c) data_02092208,
+(11d wall 2) data_02092110 and (11d wall 3) the lk4 receiver bug -- plus the
+overlay LOADER, which is not a hold that can ever be closed.
 
 12f. OWNERSHIP AND DEVIATIONS
 
@@ -1729,14 +1752,33 @@ port/hal/stage_*.cpp (new), port/tools/stage_*.py (new), the gate-213 rows in
 port/CMakeLists.txt, and an append-only block at the end of
 hal/cxx_aliases.cpp.
 
-USED: hal/stage_bridges.cpp, port/slice_gate213.txt,
-port/tools/stage_seat_proof.py, port/CMakeLists.txt (the gate-213 block and one
-appended ${SLICE213_SOURCES} on each of smoke_player, walk_window and
-walk_window_hires), and this section.
+USED, exactly as assigned: hal/stage_bridges.cpp (the three slot thunks, slot
+3's face, the seat probe), port/slice_gate213.txt, port/tools/stage_seat_proof
+.py, port/CMakeLists.txt (the gate-213 block and one appended
+${SLICE213_SOURCES} on each of smoke_player, walk_window and walk_window_hires),
+hal/cxx_aliases.cpp (the `// ---- link100 STAGE ----` block at the end, five
+directives), and this section.
+
+FOUR DEVIATIONS, DECLARED:
+
+  hal/stage_slot0.cpp      Two empty overlay bodies deleted and the ruling
+                           paragraph rewritten in place. The file matches this
+                           lane's `hal/stage_*.cpp` pattern and is the previous
+                           Stage lane's own file, and the bodies are exactly the
+                           host stand-ins gate 213 retires -- a seat that keeps
+                           them beside the ROM's is not a seat. Nothing else in
+                           the file changed; UnloadArchive's face stays.
+  hal/scene_boot.cpp       ONE hunk: `extern "C" { int overlay_60, overlay_98; }`
+                           and its note, beside the identical line 757 that
+                           already carries overlay_64/66/100/102. Forced by
+                           LoadOrUnloadObjectOverlays' last two statements.
+  port/tools/romdata.py    Three NAMED rows with their evidence beside them,
+                           the same deviation lane SD0 declared for its six.
+                           Emission only; no tool logic touched.
+  port/stage_lifecycle_map.txt   This section.
 
 NOT TOUCHED, each for a reason above: hal/scene_actor_faces.cpp (no new veneer
-face was needed), hal/cxx_aliases.cpp (slot 3's face is a method face and
-belongs beside slot 12's, not an alias), tests/walk_window.cpp,
-hal/message_pump.cpp, hal/star_flow.cpp, hal/actor_registry.cpp,
-hal/level_boot.cpp, hal/scene_boot.cpp, hal/fs.cpp, hal/stage_slot0.cpp,
-port/tools/romdata.py, hal/auto_bss.cpp.
+face was needed), tests/walk_window.cpp, hal/message_pump.cpp,
+hal/star_flow.cpp, hal/actor_registry.cpp, hal/level_boot.cpp, hal/fs.cpp,
+hal/auto_bss.cpp, hal/fader_wipes.cpp, port/ov001_syms.txt, port/ov002_syms.txt,
+hal/lk4_solidheap_seat.cpp, hal/w2_dtor_heads.cpp.

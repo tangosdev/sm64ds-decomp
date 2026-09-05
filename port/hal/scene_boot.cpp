@@ -755,6 +755,16 @@ extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 // (this file's own section 2). The ids are here so the symbols resolve, and
 // the day an overlay loader exists they become its first customer.
 extern "C" { int overlay_64, overlay_66, overlay_100, overlay_102; }
+/* Two more of the same family, and the only hunk run link100's lane STAGE made
+   in this file. src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp -- the ROM's own
+   object-overlay walk, enrolled by port/slice_gate213.txt so slot 3's
+   Stage::CleanupResources reaches a real body instead of a host stub -- ends
+   with `fn(&overlay_60)` on levels 0x24/0x26/0x28 and `fn(&overlay_98)`
+   otherwise, and neither id had a host definition. Same reasoning as the four
+   above, same one line: the ADDRESS is the id on the DS, so a host int is a
+   placeholder that resolves and that hal/scene_boot.cpp's empty LoadOverlay
+   then ignores. */
+extern "C" { int overlay_60, overlay_98; }
 
 /* THE FOUR ENTRY POINTS THEMSELVES, faced rather than linked, and this is the
    one place this lane traded linkage for honesty on purpose.

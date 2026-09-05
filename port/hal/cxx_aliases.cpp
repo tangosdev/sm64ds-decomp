@@ -2154,3 +2154,53 @@ bool Player::TryGrab(Actor &actor)
 #pragma comment(linker, "/alternatename:?data_020a0ebc@@3PAHA=_data_020a0ebc")
 #pragma comment(linker, "/alternatename:?data_ov002_0211028c@@3UState@@A=_data_ov002_0211028c")
 #pragma comment(linker, "/alternatename:?data_ov002_0211004c@@3HA=_data_ov002_0211004c")
+
+// ---- link100 STAGE ----------------------------------------------------------
+//
+// The OBJECT-OVERLAY WALK, five directives, all of them the C-linkage flip this
+// file exists for. port/slice_gate213.txt enrols the ROM's own three overlay
+// bodies so _ZTV5Stage slot 3 (Stage::CleanupResources) reaches a real
+// UnloadLevelOverlays instead of the empty host body hal/stage_slot0.cpp used
+// to define, and two of the three compile as C++ and therefore publish MSVC
+// manglings that no C caller can spell.
+//
+// EVERY RIGHT-HAND SIDE BELOW WAS READ OUT OF AN OBJECT, not built by hand.
+// The two function names came from dumpbin over the objects
+// port/tools/closure.py compiled with walk_window's own flags:
+//
+//     ?LoadLevelOverlays@@YAXH@Z                    void __cdecl LoadLevelOverlays(int)
+//     ?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z    void __cdecl LoadOrUnloadObjectOverlays(void (__cdecl*)(int), int)
+//
+// and the three data names came from closure.py's own UNRESOLVED list over the
+// same slice. hal/w8a_stage_faces.cpp's warning is the reason: a mangling one
+// letter wrong is a directive that never fires and never says so.
+//
+// PER-DIRECTIVE ABI CHECK, the hal/method_faces.cpp checklist applied to each:
+//
+//   __Z17LoadLevelOverlaysi = ?LoadLevelOverlays@@YAXH@Z
+//   __Z26LoadOrUnloadObjectOverlaysPFviEi = ?LoadOrUnloadObjectOverlays@@...
+//       Both sides are __cdecl free functions with the same arity, the same
+//       argument widths and void returns; the only difference is which
+//       compiler spelled the name. No receiver anywhere in the pair, so there
+//       is nothing to drop. src/_Z19UnloadLevelOverlaysi.c is a .c file and
+//       already defines its C name, so it takes NO directive -- adding one
+//       would be an alternatename_guard defeat over a strong definition.
+//
+//   ?data_020758c8@@3PAHA = _data_020758c8      int[]  -- the level -> overlay
+//       id map, already a romdata.py row and already read as words elsewhere.
+//   ?data_02092130@@3HA   = _data_02092130      int    -- the resident level
+//       overlay's id, a new romdata.py row (4 bytes, delta-to-next-symbol
+//       exact against data_02092134, zero relocations).
+//   ?data_0209f278@@3EA   = _data_0209f278      u8     -- the "already
+//       resident" flag hal/auto_bss.cpp:63 hosts as int[8]. The alias binds the
+//       byte at offset 0, which is the same byte src/func_0202deac.c writes
+//       through the C name, so both spellings reach one storage location.
+//       Three DATA faces, not code ones: an address alias carries no
+//       convention, and each right-hand side is a definition this tree already
+//       carries rather than another alias, so none of the three is the chained
+//       shape alternatename_guard's header warns about.
+#pragma comment(linker, "/alternatename:__Z17LoadLevelOverlaysi=?LoadLevelOverlays@@YAXH@Z")
+#pragma comment(linker, "/alternatename:__Z26LoadOrUnloadObjectOverlaysPFviEi=?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z")
+#pragma comment(linker, "/alternatename:?data_020758c8@@3PAHA=_data_020758c8")
+#pragma comment(linker, "/alternatename:?data_02092130@@3HA=_data_02092130")
+#pragma comment(linker, "/alternatename:?data_0209f278@@3EA=_data_0209f278")

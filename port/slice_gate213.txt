@@ -102,3 +102,51 @@ src/_ZN7Message15ResetAllGlobalsEv.c
 src/_ZN5StageD2Ev.c
 src/_ZN5StageD0Ev.c
 src/func_01ffb0c8.cpp
+
+# ---- THE OVERLAY TRIO, and the ruling it settles ---------------------------
+#
+# Run link100 asked this lane to re-open port/stage_lifecycle_map.txt section
+# 11g by asking whether the ROM's own loaders can run on the port's ntr FS and
+# overlay seams. Read end to end they split into two classes and only one is
+# portable:
+#
+#   NOT PORTABLE, and the ruling stands on it. Everything BELOW LoadOverlay --
+#   FS_LoadOverlay, func_02018c00, func_0203d7b8, func_02017fd0, func_0205dc0c
+#   and the card chain -- exists to DMA an overlay's ARM code image off the
+#   cartridge into the DS address it was linked for. The port mounts every
+#   overlay as a host array at build time precisely because a host cannot
+#   execute that image. None of it is enrolled and none of it ever can be.
+#
+#   PORTABLE, and it is these three. LoadLevelOverlays, UnloadLevelOverlays and
+#   LoadOrUnloadObjectOverlays are pure table bookkeeping over data_020758c8,
+#   data_02075998 and data_02075804, and they bottom out on LoadOverlay /
+#   UnloadOverlay, which hal/scene_boot.cpp:777-780 already defines as empty
+#   PORT_HOST_ABI bodies. The ROM's three bodies and the host's two stubs do
+#   the same nothing; the difference is which one the port ships.
+#
+# WHAT THEY COST, measured by port/tools/closure.py over these three alone
+# against the post-seat map -- nine unresolved and one duplicate, every row
+# closed here or in a file this lane declares:
+#
+#   _data_02075804, _data_02075998, _data_02092130   three romdata.py NAMED
+#       rows. All ROM bytes, zero relocations anywhere in
+#       0x02075804..0x02075a40, and delta-to-next-symbol is EXACT on all three
+#       (0xc4 = 7*0x1c, 0x16c = 52*7, 4) so none is the undersized-global class.
+#   _overlay_60, _overlay_98    two host ints beside the four
+#       hal/scene_boot.cpp:757 already carries.
+#   __Z26LoadOrUnloadObjectOverlaysPFviEi, and three MSVC data spellings
+#       (?data_020758c8@@3PAHA, ?data_02092130@@3HA, ?data_0209f278@@3EA)
+#       five /alternatename directives in hal/cxx_aliases.cpp's link100 block,
+#       every right-hand side read out of an object rather than hand-built.
+#   __Z19UnloadLevelOverlaysi   the DUP-DEF: hal/stage_slot0.cpp's empty host
+#       body is RETIRED, which is what "retiring the host body, not keeping it
+#       beside" means here. Its own file carries the retired ruling and the one
+#       hazard the retirement hands PART 4's bisect.
+#
+# NEITHER BODY RUNS TODAY. LoadLevelOverlays is reached only from
+# Stage::InitResources, gated behind SM64DS_SLOT0_ROM (default off);
+# UnloadLevelOverlays only from Stage::CleanupResources, which is slot 3 above
+# and is dispatched by a Process that walks only actors marked for destruction.
+src/_Z17LoadLevelOverlaysi.cpp
+src/_Z19UnloadLevelOverlaysi.c
+src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp

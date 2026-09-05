@@ -74,11 +74,54 @@ extern "C" {
 
 // PORT_HOST_ABI: releases a NARC the DS card loader mounted; the host has no mount to release (hal/fs.cpp resolves archive ids lazily, so an archive is never mounted).
 void UnloadArchive(int)             {}
-// PORT_HOST_ABI: loads the per-level DS overlay; the port has no overlay loader at all, every overlay is a static host array mounted at build time.
-void _Z17LoadLevelOverlaysi(int)    {}
-void _Z19UnloadLevelOverlaysi(int)  {}
 
 }  /* extern "C" */
+
+// ---- THE TWO OVERLAY BODIES ARE GONE (run link100, lane STAGE) -------------
+//
+// `void _Z17LoadLevelOverlaysi(int) {}` and `void _Z19UnloadLevelOverlaysi(int)
+// {}` stood here. Both are RETIRED, and the ROM's own bodies -- src/
+// _Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.c and the
+// src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp they share -- are enrolled by
+// port/slice_gate213.txt instead. The two C-linkage names come back through
+// /alternatename in hal/cxx_aliases.cpp, because both .cpp files compile as C++
+// and publish MSVC manglings.
+//
+// WHAT THE OLD RULING SAID, and why it does not survive. It said an empty body
+// "makes no claim", while the ROM's body would "drive hal/scene_boot.cpp's
+// empty LoadOverlay with an id read out of data_020758c8 and then latch that id
+// into data_02092130 as the resident level overlay -- a residency claim about a
+// loader that does not exist". That is a claim about what happens WHEN THE BODY
+// RUNS, and neither body runs:
+//
+//   LoadLevelOverlays is reached only from Stage::InitResources, which this
+//   file's own PART 4 gates behind SM64DS_SLOT0_ROM, default off.
+//   UnloadLevelOverlays is reached only from Stage::CleanupResources, which is
+//   _ZTV5Stage slot 3 -- seated by this run, and dispatched by the cleanup
+//   Process, which walks only actors marked for destruction. Nothing marks the
+//   Stage.
+//
+// So the residency word is written by nobody today and read by nobody today,
+// and the choice is between an empty host body and the ROM's own three, with no
+// behavioural difference between them. THE PORT'S NORTH STAR SETTLES THAT: the
+// port is meant to BE the decomp, and these three TUs are pure table
+// bookkeeping over data_02075998 / data_02075804 / data_020758c8 that bottoms
+// out on the same hosted LoadOverlay / UnloadOverlay leaves either way. Nothing
+// under them is portable and nothing under them is being taken: FS_LoadOverlay
+// and the card chain stay exactly where hal/scene_boot.cpp left them.
+//
+// ONE HAZARD, NAMED RATHER THAN DISCOVERED LATER, and it belongs to PART 4's
+// probe. The ROM's LoadLevelOverlays opens with
+//
+//     if (data_0209f278) { if (data_02092130 != data_020758c8[level]) Crash(); ... }
+//
+// and Crash() is a host body that aborts (hal/heap_vtable.cpp:151). src/
+// func_0202deac.c is the only writer of data_0209f278 in the whole of src/ and
+// it IS in walk_window.map, so the guard is not dead the way the branch in
+// hal/w2_dtor_heads.cpp's group 4 is dead -- it is merely unreached, because
+// LoadLevelOverlays only runs under SM64DS_SLOT0_ROM. Anyone re-running the
+// PART 4 bisect should read this as a FIFTH possible fault ahead of it, on the
+// same flag, and it is the ROM's own fault rather than a new one.
 
 // ===========================================================================
 // PART 2 -- STORAGE: TWO BSS WORDS AND ONE ALIAS
