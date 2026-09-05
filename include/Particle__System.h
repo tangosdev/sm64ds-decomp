@@ -63,10 +63,6 @@ struct System {
     Flags flags;                   /* 0x74 */
 
     static System *FromUniqueID(u32 uniqueID);
-    /* The imported Fix12<int>-by-value spelling is contradicted by mwccarm:
-       reading those class parameters homes r0-r3 to the stack, while retail
-       reads the three fixed-point scalars directly from r1-r3. */
-    static void NewSimple(u32 definitionID, Fix12i x, Fix12i y, Fix12i z);
 };
 
 typedef char System_size_must_be_0x78[sizeof(System) == 0x78 ? 1 : -1];

@@ -3682,7 +3682,7 @@ src/_ZN8Particle6System12FromUniqueIDEj.cpp:
     complete
     .text start:0x02022e68 end:0x02022e98
 
-src/_ZN8Particle6System9NewSimpleEjiii.cpp:
+src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:
     complete
     .text start:0x02022e98 end:0x02022ee0
 

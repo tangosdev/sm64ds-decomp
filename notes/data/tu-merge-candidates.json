@@ -11980,7 +11980,7 @@
     "src/func_02022d44.c",
     "src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c",
     "src/_ZN8Particle6System12FromUniqueIDEj.c",
-    "src/_ZN8Particle6System9NewSimpleEjiii.cpp",
+    "src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c",
     "src/_ZN8Particle9RenderAllEv.c",
     "src/_ZN8Particle10SysTracker6UpdateEv.c",
     "src/_ZN8Particle10SysTracker10InitialiseEv.cpp",
