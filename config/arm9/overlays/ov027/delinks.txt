@@ -44,65 +44,9 @@ src/actors/d_a_i_donketu.cpp:
     complete
     .text start:0x021115c4 end:0x021118c8
 
-src/_ZN10daPgDfdr_cD1Ev.cpp:
+src/actors/daPgDfdr_c.cpp:
     complete
-    .text start:0x021118c8 end:0x02111924
-
-src/_ZN10daPgDfdr_cD0Ev.cpp:
-    complete
-    .text start:0x02111924 end:0x02111994
-
-src/func_ov027_02111994.cpp:
-    complete
-    .text start:0x02111994 end:0x02111a28
-
-src/func_ov027_02111a28.c:
-    complete
-    .text start:0x02111a28 end:0x02111b2c
-
-src/func_ov027_02111b2c.cpp:
-    complete
-    .text start:0x02111b2c end:0x02111c48
-
-src/func_ov027_02111c48.c:
-    complete
-    .text start:0x02111c48 end:0x02111ca8
-
-src/func_ov027_02111ca8.cpp:
-    complete
-    .text start:0x02111ca8 end:0x02111cfc
-
-src/func_ov027_02111cfc.cpp:
-    complete
-    .text start:0x02111cfc end:0x02111d38
-
-src/func_ov027_02111d38.cpp:
-    complete
-    .text start:0x02111d38 end:0x02111d70
-
-src/func_ov027_02111d70.c:
-    complete
-    .text start:0x02111d70 end:0x02111d8c
-
-src/_ZN10daPgDfdr_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111d8c end:0x02111dfc
-
-src/_ZN10daPgDfdr_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02111dfc end:0x02111e00
-
-src/_ZN10daPgDfdr_c6RenderEv.cpp:
-    complete
-    .text start:0x02111e00 end:0x02111e34
-
-src/_ZN10daPgDfdr_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02111e34 end:0x02111eb4
-
-src/_ZN10daPgDfdr_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111eb4 end:0x0211207c
+    .text start:0x021118c8 end:0x0211207c
 
 src/d_a_pg_dfdr.c:
     complete

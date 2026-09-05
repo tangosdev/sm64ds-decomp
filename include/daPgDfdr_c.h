@@ -80,15 +80,22 @@ struct daPgDfdr_c : dBgActor_c {
     u8    pad_3da[0x2];
 
     /* --- vtable, in ROM order. Do not reorder. ---
-     * A leaf class (no RTTI children), so the destructor is declared OUT OF
-     * LINE here, matching every other leaf under dBgActor_c (e.g.
-     * include/BigBrickBlock.h). Defined as a real method in
-     * src/_ZN10daPgDfdr_cD1Ev.cpp / src/_ZN10daPgDfdr_cD0Ev.cpp -- both empty
-     * bodies; the compiler emits the three member teardowns (in reverse
-     * declaration order: dCcAc_c, TextureSequence, ModelAnim), the
-     * two inherited vtable stores and the two dBgActor_c member teardowns on
-     * its own. */
-    virtual ~daPgDfdr_c();
+     * THE DESTRUCTOR IS DEFINED INLINE HERE, and that is load-bearing. It used
+     * to be declared out of line and defined twice over, once in each of
+     * src/_ZN10daPgDfdr_cD1Ev.cpp and src/_ZN10daPgDfdr_cD0Ev.cpp; the promotion
+     * into one TU (src/actors/daPgDfdr_c.cpp) can carry only one definition, and
+     * an out-of-line one makes mwccarm 2004/b56 emit D0 BEFORE D1 -- the reverse
+     * of the cartridge's 0x021118c8 (D1) then 0x02111924 (D0) -- plus a third D2
+     * body with no ROM home. Defined in the class body it yields the retail
+     * D1/D0 pair in ROM order and no D2. The body stays empty: the compiler
+     * emits the three member teardowns (reverse declaration order: dCcAc_c,
+     * TextureSequence, ModelAnim), the inherited vtable store and dBgActor_c's
+     * own two member teardowns by itself.
+     *
+     * Making it inline moves the KEY FUNCTION to InitResources, the first
+     * DECLARED non-inline virtual below, so src/actors/daPgDfdr_c.cpp -- which
+     * defines InitResources -- is still the TU that emits _ZTV/_ZTI/_ZTS. */
+    virtual ~daPgDfdr_c() {}
 
     /* --- overrides of inherited fBase_c slots. Each takes its base's index
      *     (see include/fBase_c.h for the full 32-slot table). --- */
