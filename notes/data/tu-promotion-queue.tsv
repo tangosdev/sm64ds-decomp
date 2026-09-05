@@ -1,39 +1,39 @@
 class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	sibling_oracle	promotion_route
 dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	67	1814	ov006	yes	no	pragma:8;multi-class-tu:3;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 dMgJump3DMario_c	28	820	ov006	yes	no	classif:no-header:dMgJump3DMario_c;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
-dScMgD3DBase_c	27	724	ov006	yes	no	compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
+dScMgD3DBase_c	27	724	ov006	yes	yes	compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 Ukiki	44	1983	ov030	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 OneUpMushroom	36	971	ov002	unknown	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
-daOts_c	22	627	ov064	yes	no	compiler-only:~16(estimate from sibling daObjFl_Gura_c: 2 deadstrip,14 deadstrip-data)	daObjFl_Gura_c	text-only
+daOts_c	22	627	ov064	yes	yes	compiler-only:~16(estimate from sibling daObjFl_Gura_c: 2 deadstrip,14 deadstrip-data)	daObjFl_Gura_c	text-only
 Scuttlebug	36	1008	ov071	unknown	no	compiler-only:~10(estimate from sibling daEyBm_c: 10 deadstrip-data)	daEyBm_c	text-only
 MrBlizzard	34	1357	ov081	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 Pokey	34	957	ov096	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 BobOmb	34	1336	ov102	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
-dBgActor_c	11	394	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
+dBgActor_c	11	394	ov002	yes	yes	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 BabyPenguin	31	840	ov072	unknown	no	intact-object(owns non-text data at natural address; see sibling daBgSnwmn_c)	daBgSnwmn_c	intact-object
-daPgDfdr_c	15	361	ov027	yes	no	compiler-only:~14(estimate from sibling daIDonketu_c: 1 deadstrip-duplicate,13 deadstrip-data)	daIDonketu_c	text-only
+daPgDfdr_c	15	361	ov027	yes	yes	compiler-only:~14(estimate from sibling daIDonketu_c: 1 deadstrip-duplicate,13 deadstrip-data)	daIDonketu_c	text-only
 Rabbit	31	1693	ov085	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 UnknownVsEntry+UnknownVsPlayer	43	1157	ov075	unknown	no	multi-class-tu:2;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
-daObjFloatBoard_c	7	279	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
+daObjFloatBoard_c	7	279	ov002	yes	yes	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 SnowmanBody	28	665	ov072	unknown	no	intact-object(owns non-text data at natural address; see sibling daBgSnwmn_c)	daBgSnwmn_c	intact-object
 MovingBar	23	349	ov015	unknown	no	compiler-only:~9(estimate from sibling daObjBkBillboard_c: 9 deadstrip-data)	daObjBkBillboard_c	text-only
 daObjDorifu_c	6	254	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daObjGuragura_c	6	181	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daObjKurumajiku_c	6	168	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
-daObjFallBlock_c	12	410	ov098	yes	no	compiler-only:~1(estimate from sibling ArrowSignRight: 1 deadstrip)	ArrowSignRight	text-only
+daObjFallBlock_c	12	410	ov098	yes	yes	compiler-only:~1(estimate from sibling ArrowSignRight: 1 deadstrip)	ArrowSignRight	text-only
 daObjUkiyuka_c	5	140	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daObjKaitendai_c	5	128	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daObjKuruma_c	5	120	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 StarSwitch	20	475	ov002	unknown	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 Klepto	23	1203	ov062	unknown	no	-	Chuckya	text-only
-daObjCtMecha04_c	9	316	ov065	yes	no	compiler-only:~13(estimate from sibling daObjCtMecha05_c: 1 deadstrip-duplicate,12 deadstrip-data)	daObjCtMecha05_c	text-only
+daObjCtMecha04_c	9	316	ov065	yes	yes	compiler-only:~13(estimate from sibling daObjCtMecha05_c: 1 deadstrip-duplicate,12 deadstrip-data)	daObjCtMecha05_c	text-only
 dCapEnemy_c	2	40	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daObjSwdoor_c	4	102	ov002	yes	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 HUD	19	1363	ov002	unknown	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 BowserFire	26	781	ov060	unknown	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
-daObjCtMecha03_c	8	283	ov065	yes	no	compiler-only:~13(estimate from sibling daObjCtMecha05_c: 1 deadstrip-duplicate,12 deadstrip-data)	daObjCtMecha05_c	text-only
+daObjCtMecha03_c	8	283	ov065	yes	yes	compiler-only:~13(estimate from sibling daObjCtMecha05_c: 1 deadstrip-duplicate,12 deadstrip-data)	daObjCtMecha05_c	text-only
 ChiefChilly	46	1990	ov073	unknown	no	pragma:2;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
-daDsnBase_c	11	229	ov091	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
+daDsnBase_c	11	229	ov091	yes	yes	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 PowerFlower	18	508	ov002	unknown	no	compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 Snufit	22	684	ov065	unknown	no	compiler-only:~13(estimate from sibling daObjCtMecha05_c: 1 deadstrip-duplicate,12 deadstrip-data)	daObjCtMecha05_c	text-only
 daDgr_c	9	359	ov025	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
@@ -182,12 +182,12 @@ daObjMarioCap_c	30	1248	ov002	yes	no	unmatched:1;compiler-only:~10(estimate from
 dScMgMemory2_c	51	1416	ov006	yes	no	unmatched:2;pragma:2;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 PowerStar+StarMarker	77	3257	ov002	unknown	no	unmatched:2;pragma:2;multi-class-tu:2;compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 dScMgCurling2_c	49	1418	ov006	yes	no	unmatched:4;no-legacy-source:3;pragma:3;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
-dScMgMemory_c	45	1279	ov006	yes	no	unmatched:2;no-legacy-source:1;pragma:1;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
+dScMgMemory_c	45	1279	ov006	yes	yes	unmatched:2;no-legacy-source:1;pragma:1;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 Bowser+BowserTail	78	3047	ov060	unknown	no	unmatched:1;no-legacy-source:1;pragma:2;multi-class-tu:2;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 dScMgCurling_c	43	1357	ov006	yes	no	unmatched:4;no-legacy-source:3;pragma:5;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 Eyerok	61	2488	ov066	unknown	no	unmatched:6;pragma:1;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 dScMgRoulette_c	40	1663	ov006	yes	no	unmatched:1;pragma:1;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
-dScMgTrampoline2_c	39	1331	ov006	yes	no	unmatched:1;no-legacy-source:1;pragma:1;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
+dScMgTrampoline2_c	39	1331	ov006	yes	yes	unmatched:1;no-legacy-source:1;pragma:1;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only
 Moneybag	36	948	ov081	unknown	no	unmatched:1;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 SignPost	27	911	ov002	unknown	no	unmatched:1;no-legacy-source:1;compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 Door	31	956	ov100	unknown	no	unmatched:1;compiler-only:~14(estimate from sibling daObjPathLift_c: 1 deadstrip-duplicate,13 deadstrip-data)	daObjPathLift_c	text-only
