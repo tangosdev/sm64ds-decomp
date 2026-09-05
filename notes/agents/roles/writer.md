@@ -197,9 +197,18 @@ oracle's count unless the oracle sits at the same depth:
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
 
-**The last term is conditional and was long written as if it were constant.**
-`dScMgD3DBase_c` is 5 levels deep and needs **11**, not 12, because it has no
-`Vector3` member. Count your members; do not add the 1 reflexively.
+**The last term is conditional, and "member" is the wrong test.** The trigger is
+any `Vector3` the TU *odr-uses* — **function locals count**. `dScMgD3DBase_c` is
+5 levels deep and needs **11** because it touches none. `daDsnBase_c` is also 5
+levels and needs **13**: it has no `Vector3` member either, but
+`func_ov091_02132f04` holds two as locals.
+
+That 13th row is a second thing the formula never predicted: a file-local
+anonymous struct holding those locals emits its own destructor,
+`_ZN<N>@class$<n><file>_cppD1Ev`. It is genuinely homeless — plain `deadstrip`,
+the one disposition you will rarely otherwise use. So: **count the `Vector3`s the
+TU touches, members and locals alike, and add one more for any local anonymous
+struct containing them.**
 
 `daPgDfdr_c` (`dBgActor_c` -> `dActor_c` -> `dBase_c` -> `fBase_c`, 5 levels)
 needs 2x5+2 = **12**. Its oracle `daIDonketu_c` sits one level deeper and needs
@@ -297,7 +306,12 @@ a function declared `void(void)` but called with `this`, a const-ness mismatch,
 and a scalar declared against an array.
 
 **Grep every shadow declaration against the `decl_*.h` headers under `include/`
-before you compile.**
+before you compile.** This is not polish; it is the difference between compiling
+and not. Every auto-named `func_ovNN_ADDR` shard is declared in `decl_common.h`,
+so **every** merged shard needs the check. When the merge makes both spellings
+visible mwccarm rejects it as `illegal function overloading`, and the error text
+points at your *definition* line while saying nothing about the header —
+measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
 The detector does not compare against real headers at all, and a real header
 always wins. Two measured disagreements were on *return type*: `decl_common.h`
 types `func_02012718` as returning void where the shard said int, and
@@ -387,10 +401,11 @@ writers are running — check with `ListAgents` or `python tools/classqueue.py
 list`. Three concurrent `-j 16` builds oversubscribe the machine and slow all
 three.
 
-**`promote --dry-run` exits 1 mid-listing while `status` is `text-verified`** —
-but it prints steps 1-3 before it stops, which is the plan you need in order to
-*reach* the status flip. Run it anyway and read the partial output; the failure
-is expected, not a defect in your branch.
+**`promote --dry-run` prints a refusal banner and still gives you the plan.** It
+leads with `<<< promotion would be REFUSED` while `status` is `text-verified`,
+which is expected and is not a defect in your branch — you need the plan in
+order to *reach* the status flip. One run stopped after step 3, another printed
+all six steps and exited 0; either way read what it gives you.
 
 **`wt-remove.ps1` takes `-Path`, not `-Name`** — unlike `wt-setup.ps1`. The rule
 never to use `git worktree remove` is load-bearing (it deletes through the
@@ -402,6 +417,17 @@ teardown invocation must not tempt you into the unsafe fallback.
 Not every TU is promotable whole, and stopping short can be the correct result
 rather than a failure. When the ROM's emission order cannot be reproduced by any
 admissible source form:
+
+The discriminator is which way the cartridge ordered the destructors. ROM **D1
+below D0** is the reproducible direction and promotes whole (`ov029/daObjWcObj01_c`);
+ROM **D0 below D1** cannot be reproduced by any admissible form and costs you the
+pair (`daObjFloatBoard_c` 5-of-7, `daObjFallBlock_c` 10-of-12, `daDsnBase_c`
+9-of-11). Check that before you plan the range, not after.
+
+When you hold the pair out, prove it is unreachable rather than asserting it:
+in all three cases the *only* references to either address anywhere in `config/`
+were two `relocs.txt` entries landing on vtable slots 16 and 17, with no
+instruction in the image calling either.
 
 1. License the sub-range that *can* be ordered.
 2. Leave the remaining shards enrolled — they keep their `delinks.txt` entries.
