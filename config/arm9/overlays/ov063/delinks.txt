@@ -443,7 +443,7 @@ src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c8BehaviorEv.cpp:
     complete
     .text start:0x0211ce74 end:0x0211cf00
 
-src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c13InitResourcesEv.c:
+src/game/actors/daTrsTrap_c/_ZN11daTrsTrap_c13InitResourcesEv.cpp:
     .text start:0x0211cf00 end:0x0211d270
 
 src/unnamed/ov063/func_ov063_0211d270.cpp:
