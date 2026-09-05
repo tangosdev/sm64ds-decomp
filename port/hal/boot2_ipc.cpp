@@ -49,6 +49,7 @@
 // ROM's own order, and the block is marked so it can be deleted in one piece.
 
 #include "ntr/ipc.h"
+#include "dsstate_seg.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -60,9 +61,18 @@
 // Sized by ROM SPAN out of config/arm9/symbols.txt -- the distance to the next
 // bss symbol -- not by the widest field any one body happens to touch, because
 // several of these blocks are addressed past their own next symbol.
+//
+// ALL OF IT IS INSIDE THE SAVE-STATE BRACKET, and tools/dsstate_guard.py said
+// so before this file ever ran: every one of these is REAL DS STATE, not host
+// bookkeeping. The receive-callback table alone decides where an incoming FIFO
+// word goes, and a restore that left it holding the pre-save pointers while the
+// rest of the world rolled back is the class of bug hal/dsstate_seg.h exists
+// for. The host ARM7's own counters below are NOT in here: they are the model's
+// bookkeeping, and a save state has no business rolling them back.
 // ---------------------------------------------------------------------------
 
 extern "C" {
+DSSTATE_BEGIN
 
 // 0x020a6458 .. 0x020a6460. func_02059e48's "already initialised" halfword and
 // the soft-reset acknowledge flag src/func_02059e04.c sets.
@@ -96,6 +106,8 @@ unsigned char  data_020a8124[0x14];
 // the other, this is the line that has to become a single backing block.
 unsigned char data_020a8138[0x20];
 unsigned char data_020a813c[0x20];
+
+DSSTATE_END
 
 // The matched bodies this file brings up. Declared, never defined here.
 void func_0205b858(void);            // tail veneer to func_0205bad8, PXI init
