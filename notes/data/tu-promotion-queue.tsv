@@ -53,7 +53,7 @@ Koopa	37	1326	ov062	yes	no	pragma:2	Chuckya	text-only
 daObjMaruta_c	6	99	ov080	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 HootTheOwl	21	682	ov094	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 SnowmanHead	19	396	ov072	yes	no	intact-object(owns non-text data at natural address; see sibling daBgSnwmn_c)	daBgSnwmn_c	intact-object
-StarDoor	19	382	ov100	yes	no	compiler-only:~14(estimate from sibling daObjPathLift_c: 1 deadstrip-duplicate,13 deadstrip-data)	daObjPathLift_c	text-only
+daStarGate_c	19	382	ov100	yes	yes	compiler-only:~14(estimate from sibling daObjPathLift_c: 1 deadstrip-duplicate,13 deadstrip-data)	daObjPathLift_c	text-only
 CrazedCrate	20	458	ov080	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 Fwoosh	19	546	ov091	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 FirePiranhaPlantBig	18	982	ov084	yes	no	compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
