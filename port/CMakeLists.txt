@@ -9668,7 +9668,12 @@ set_source_files_properties(
 # On the two targets that compile tests/walk_window.cpp, because that file is
 # where the boot calls live. See port/slice_gate214.txt.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate214.txt" SLICE214_LINES)
-set(SLICE214_SOURCES hal/boot_os.cpp hal/boot_hw.cpp hal/boot_globals.cpp)
+# hal/globals_link100.cpp: the card driver's control block, hosted as the one
+# ROM object dsd split into three names. It is on this list because that block
+# is the storage the func_02042f68 refusal in hal/boot_os.cpp is about, and the
+# refusal and the storage should not drift apart.
+set(SLICE214_SOURCES hal/boot_os.cpp hal/boot_hw.cpp hal/boot_globals.cpp
+                     hal/globals_link100.cpp)
 foreach(line IN LISTS SLICE214_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

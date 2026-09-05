@@ -65,26 +65,75 @@
 //       through hal/sdat. Two players over one SDAT is not a boot step, it is
 //       a separate lane.
 //
-//   func_0201fec8 / func_0203bbc0 / func_02018aa4 / func_02019440
+//   func_0203bbc0 / func_02019440
 //       Left for the next step. func_0203bbc0 goes into the comms stack and
-//       Crash()es on a refusal, func_02019440 clears VRAM/OAM/palette (correct
-//       at the ROM's point in the boot, not obviously correct at the host's),
-//       and func_0201fec8 reads the user settings block. Each needs its own
-//       reading; none is blocked by hardware.
+//       Crash()es on a refusal, and func_02019440 clears VRAM/OAM/palette
+//       (correct at the ROM's point in the boot, not obviously correct at the
+//       host's). Each needs its own reading; neither is blocked by hardware.
 //
-//   func_02058308 / func_0201a9fc / func_02013e64
-//       REFUSED ON A HOST-GLOBAL SIZE, not on hardware. func_02058308 is the
-//       OS thread system and fills data_020a6134.slots[0..15] -- bytes 0x14
-//       through 0x54 of an object hal/cxx_aliases.cpp hosts as `int[4]`, 16
-//       bytes, with the next global on the same declaration line behind it.
-//       func_0201a9fc writes
-//       an s64 at data_0209d574 + 0x38 and hal/actor_vtables.cpp hosts
-//       data_0209d574 as `int[8]` -- 32 bytes, so the write lands past the end
-//       of the object. func_02013e64 memsets 0x32c bytes of data_0209caa0, the
-//       save block, which the host has already staged by this point in its own
-//       boot. Both are one-line calls that become correct the moment the
-//       hosted globals are sized by ROM span; see the port's undersized-global
-//       rule.
+//   func_0201fec8
+//       REFUSED, AND NOT FOR THE REASON THE LAST PASS OF THIS FILE GAVE. Run
+//       link100 lane GLOBALS sized data_0209d574 by its ROM span, which was
+//       the blocker written down here, and then measured what else the body
+//       reaches before seating it. func_0201fec8's fall-through arm (the port
+//       takes it: *(u16*)0x027ffc40 is 0, so buf[0] off the zeroed shared
+//       block selects the default case) is
+//
+//           func_0203db64(data_02075358, data_02075304)
+//
+//       and THAT body is a second undersized-global field of the same class,
+//       eight names wide. Counted against config/arm9/symbols.txt:
+//
+//           data_020a1064   dsd span   64, written 0x40   NO HOST AT ALL
+//           data_020a0fec   dsd span   52, written 0x1c   NO HOST AT ALL
+//           data_020a0fa0   dsd span    6, written 0x18   NO HOST AT ALL
+//           data_020a1040   dsd span    4, written 0x24   hal/camera_bridges
+//           data_020a0fb8   dsd span    6, written 0x18   hal/comms_conductor
+//           data_020a10a4   dsd span    2, written 0x58   hal/comms_conductor
+//           data_020a10fc   dsd span    2, written 0x58   hal/comms_conductor
+//           data_020a1154   dsd span   12, written 0x90   hal/camera_bridges
+//
+//       Every one of those is a dsd-split run whose host grouping would have
+//       to be proved contiguous for the FULL memset length before the call is
+//       safe, three of them are not hosted at all, and the two grouped runs
+//       that do exist belong to the comms and camera lanes rather than to
+//       this one. Sizing data_0209d574 unblocked func_0201a9fc; it did not
+//       unblock this. The measurement is left here so the next lane starts
+//       from it instead of from the old one-line claim.
+//
+//   func_02058308
+//       REFUSED, AND THE HOST-GLOBAL SIZE WAS NEVER THE WHOLE STORY. The
+//       storage half is fixed: the ROM's OS thread-info record is one
+//       0x54-byte object under three dsd names and hal/cxx_aliases.cpp's
+//       link100 GLOBALS block now hosts it as one grouped run (the old int[4]
+//       and hal/auto_bss.cpp's separate data_020a6148 were the bug, and the
+//       second of those was the quiet half -- func_02058538 scanned one array
+//       while func_02058200 wrote another). What still refuses the call is an
+//       ADDRESS, not a size. src/func_02058308.c reads two absolute linker
+//       symbols:
+//
+//           ovr = (s32)func_00000000;                 the DS's SYS stack size
+//           ... - (s32)func_00000600;                 the DS's IRQ stack size
+//
+//       Neither is in config/arm9/symbols.txt at all: dsd invented the names
+//       from literal-pool words whose VALUE is 0 and 0x600, because on the DS
+//       these are absolute linker symbols whose ADDRESS is the number. MSVC
+//       has no way to give a symbol an absolute address -- the same wall
+//       hal/scene_boot.cpp writes up for overlay_100 -- so the body does not
+//       even link today (two unresolved externals), and defining them as
+//       ordinary host functions is worse than not linking: with
+//       (s32)func_00000000 non-zero the body takes the other arm, computes
+//
+//           end = &data_023c0000 + 0x3fc0 - (s32)func_00000600
+//
+//       from a host code address, and stores 0xfddb597d through it. On the DS
+//       those two arms resolve to base 0x023c0020 / end 0x023c39c0 -- DTCM,
+//       the main thread's stack -- which is what the port would have to model
+//       to seat this at all.
+//
+//   func_02013e64
+//       memsets 0x32c bytes of data_0209caa0, the save block, which the host
+//       has already staged by this point in its own boot.
 //
 //   func_02059f48
 //       REFUSED ON A NAME. Its body is `G[0] = v`, and `G` is a placeholder
@@ -120,7 +169,7 @@ extern "C" {
 void func_02057000(void);          // DTCM word 0 = 0
 void func_02059cb4(void);          // the DMA-channel bookkeeping + DisableIRQs(4)
 // --- src/func_02019780.c ----------------------------------------------------
-/* func_0201a490 is NOT called -- see the refusal at its point in the boot */
+void func_0201a490(void);          // data_0209a03c(data_0208ee60)
 // --- src/main.c -------------------------------------------------------------
 void func_02059788(void);          // OS_InitTick: timer 0 + its IRQ handler
 void func_02059bc0(void);          // the alarm system
@@ -135,7 +184,15 @@ void func_0203d740(void);
 void func_0201a4e4(void);                     // install IRQ::VBlankHandler
 void func_0203bb5c(void);
 /* func_02042f68 is NOT called -- see the refusal at its point in the boot */
+void func_02018aa4(void);                     // the file-system bring-up
 void func_0203ad84(void);
+/* func_0201a9fc(data_0209d574): the ROM calls this twice in func_0201a054,
+   once on each side of Heap::InitializeGameHeap. hal/actor_vtables.cpp hosts
+   data_0209d574 at its ROM span of 68 bytes, which is what the +0x38 store
+   needs; the object is declared here as the char[] the matched TU's own
+   prototype takes. */
+void func_0201a9fc(void *c);
+extern char data_0209d574[];
 void func_0203b684(void);
 void func_020233f0(void);
 void func_0201a5cc(void);                     // the fatal-vector pair
@@ -182,25 +239,24 @@ void port_boot_rom_pre_main(void)
        word (hal/screen_gap.cpp), so seating the ROM body would have this line
        set the screen gap to 3. Refused until the decomp names the byte. */
     func_02059cb4();
-    /* func_02058308() -- the OS thread system. REFUSED ON A HOST-GLOBAL SIZE,
-       not on hardware: it fills data_020a6134.slots[0..15], i.e. bytes 0x14
-       through 0x54 of that object, and hal/cxx_aliases.cpp hosts
-       data_020a6134 as `int[4]` -- 16 bytes, with nothing behind it but the
-       next global on the same declaration line. Sizing that object by its ROM
-       span unblocks the thread system, func_02058200/func_02058048 and
-       func_02057f54 in one go; cxx_aliases.cpp is not this lane's file. */
+    /* func_02058308() -- the OS thread system. STILL REFUSED, and the reason
+       has changed: the host-global size named here is fixed (the ROM's one
+       0x54-byte thread-info record is a grouped run in hal/cxx_aliases.cpp
+       now), and what is left is func_00000000 / func_00000600, two ABSOLUTE
+       linker symbols the body reads as numbers. See the header block for the
+       arithmetic they feed and why MSVC cannot supply them. */
     /* func_02059e48() -- PXI channel 0xc */
     /* func_0206a88c() -- PXI channel 0xd */
     /* func_02060890() -- the game card, reached instead through func_02042f68 */
     /* func_0205fde8() -- PXI channel 8 */
 
-    /* func_0201a490() -- one line, `data_0209a03c(data_0208ee60)`, and
-       data_0209a03c is a .data FUNCTION POINTER the ROM initialises to
-       0x02057e30. config/arm9/relocs.txt says that word is relocated, so the
-       ROM byte in it is a DS address and hosting it verbatim would call into
-       nothing. Binding it to the host func_02057e30 the way hal/ptr_tables.cpp
-       binds the ROM's other function tables is the fix, and that file is not
-       this lane's. */
+    /* func_0201a490() -- one line, `data_0209a03c(data_0208ee60)`. The .data
+       word at 0x0209a03c is RELOCATED (config/arm9/relocs.txt:
+       from:0x0209a03c to:0x02057e30), so the ROM's own bytes there are a DS
+       address that means nothing here; hal/ptr_tables.cpp binds it to the host
+       func_02057e30 the way it binds the ROM's other function tables, and with
+       that binding this is a real call again. */
+    func_0201a490();
     say("pre-main OS init (func_02019780)");
 }
 
@@ -270,28 +326,40 @@ void port_boot_rom_game_init_head(void)
        bring-up above */
     /* func_0203bbc0() -- the comms stack; Crash()es on a refusal */
     func_0203bb5c();
-    /* func_0201fec8() -- the user settings block */
-    /* func_02042f68(0xd01, data_0208ee50) -- REFUSED, and this one is the same
-       undersized-global class as func_02058308 rather than a new problem. It
-       reaches func_02060890 -> func_0206002c, which stands the game card's
-       thread up with
+    /* func_0201fec8() -- the user settings block. Still refused; the blocker
+       is func_0203db64's eight-name wireless run and not data_0209d574, which
+       is sized now. The count is in the header block. */
+    /* func_02042f68(0xd01, data_0208ee50) -- STILL REFUSED, and the storage
+       half of the old refusal is gone. It reaches func_02060890 ->
+       func_0206002c, which stands the game card's thread up with
            func_02058200(&data_020a81bc, func_020602bc, 0, &data_020a8760,
                          0x400, 4)
-       -- and func_02058200 takes the FOURTH argument as the TOP of the new
-       thread's stack and writes 0x400 bytes DOWNWARD from it. On the DS that
-       is in bounds by construction: symbols.txt gives data_020a81bc a span of
-       1444 bytes ending exactly at data_020a8760, so the thread record and its
-       1KB stack are one contiguous bss object. Two separate host globals do
-       not reproduce that, and the write lands in whatever the host linker put
-       below. func_02058200 also indexes data_020a6134.arr[0..15] through
-       func_02058538, which is the same 16-byte host object that refuses
-       func_02058308. Hosting data_020a81bc..data_020a8760 as ONE span (a
-       grouped section, the idiom hal/scene_boot.cpp already uses for a split
-       run) plus sizing data_020a6134 unblocks the card driver AND the thread
-       system together -- about 37 more matched TUs. */
-    /* func_02018aa4() -- the file-system bring-up */
+       -- func_02058200 takes the FOURTH argument as the TOP of the new
+       thread's stack and fills 0x400 bytes DOWNWARD from it. hal/
+       globals_link100.cpp hosts that storage now, as one grouped run, and its
+       boundary is NOT the one written here before: func_0206002c's own base
+       register is data_020a8180 and it stores at +0xd4, which is
+       data_020a81bc + 0x98, so the group has to START at data_020a8180 and it
+       has to END past data_020a8760 (the stack top itself). 60 + 1444 + 4,
+       with the ROM evidence in that file.
+       WHAT ACTUALLY REFUSES IT is below the storage. func_0206002c's next two
+       calls are func_02058048(&data_020a81bc), which resumes the new thread
+       through func_02057f54 -- the ROM scheduler, ARMSaveContext and
+       ARMRestoreContext, on a port that runs the game on ONE fiber -- and
+       func_0205ba64(0xb, func_02060310), a PXI channel registration on the
+       seam hal/os_arena.cpp and the four func_02058c84 arms are already
+       waiting on. The thread this creates is func_020602bc, the card driver's
+       own service loop. That is the same ARM7 model the header block names,
+       not a global size, so the estimate of "about 37 more matched TUs" that
+       used to sit here belongs to the PXI lane and not to this one. */
+    func_02018aa4();          // FS_Init's once-guard (already tripped) +
+                              // func_02017e60, which clears the twelve
+                              // overlay-resident records at data_0209d3c4
     func_0203ad84();
-    /* func_0201a9fc(data_0209d574) -- writes past the hosted global's end */
+    /* The ROM calls this on both sides of Heap::InitializeGameHeap; this is
+       the first of the two. data_0209d574 is 68 bytes now, its ROM span, so
+       the s64 the tick goes into at +0x38 is inside the object. */
+    func_0201a9fc(data_0209d574);
     say("game init head (func_0201a054)");
 }
 
@@ -317,7 +385,8 @@ void port_boot_rom_game_init_head(void)
 // ---------------------------------------------------------------------------
 void port_boot_rom_game_init_tail(void)
 {
-    /* func_0201a9fc(data_0209d574) -- see the header block */
+    /* the second of func_0201a054's two calls, the one after the game heap */
+    func_0201a9fc(data_0209d574);
     /* func_02019440() -- clears VRAM/OAM/palette */
     /* func_020134c8() -- the ROM's sound bring-up */
     func_0203b684();

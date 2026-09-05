@@ -581,7 +581,22 @@ int data_020994cc[8];
 /* data_0209b008 moved to hal/camera_states.cpp: it is the first of the 19
    camera State objects, and the whole run has to carry the DS fn addresses */
 int data_0209b478[8], data_0209b484[4], data_0209b488[4];
-int data_0209b498[8], data_0209d574[8];
+int data_0209b498[8];
+/* THE POWER/WAKE-LOCK RECORD src/func_0201a054.c hands to func_0201a9fc twice,
+   sized by ROM span instead of by the file's generous [8] default. The delta
+   in config/arm9/symbols.txt is 0x0209d5b8 - 0x0209d574 = 0x44 = 68 bytes, and
+   no other dsd name falls inside that run, so 68 IS the object. Two matched
+   bodies write past 32:
+
+     src/func_0201a9fc.c  *(s64 *)(c + 0x38) = func_02059650();
+                          ROM: str r0,[r4,#0x38] / str r1,[r4,#0x3c]
+     src/func_0201a96c.c  self->field_0x40 = newVal, after reading +0x30/+0x34
+
+   At int[8] the tick store landed 24 bytes past the end of the object and on
+   top of whatever the linker put next -- which is why hal/boot_os.cpp refuses
+   both of func_0201a054's func_0201a9fc calls. Kept as `int` so the [] form
+   any mangled-name reference assumes still holds; 68 / 4 = 17 words. */
+int data_0209d574[68 / 4];
 /* Sound::PlayLong's handle table: a header plus 0x40 slots of 0x14, which
    func_02011a28 initialises from +8 and func_02011934 hashes into. The ROM
    runs 0x0209b53c..0x0209baa0 = 0x564. It was int[8] while sound was

@@ -95,3 +95,13 @@ src/func_0200d8ac.c
 src/func_0200e728.c
 src/ReadUnalignedUshort.c
 src/func_ov002_020effb8.c
+
+# ---- the one-word table, data_0209a03c ----
+# run link100, lane GLOBALS. relocs.txt has `from:0x0209a03c to:0x02057e30`:
+# the .data word AT 0x0209a03c is a relocated function pointer, so romdata's
+# raw bytes there are a DS address, and src/func_0201a490.c CALLS through it
+# (`data_0209a03c(data_0208ee60)`) in the ROM's pre-main boot. hal/ptr_tables
+# .cpp binds the word to the host function; this row is the callee, listed
+# here for the same reason as everything above it -- the only thing that
+# named it was a table of bytes. The ROM body is `bx lr`.
+src/func_02057e30.c
