@@ -168,13 +168,25 @@ if ($hwnd -eq [IntPtr]::Zero) {
 [WsGrab]::Front($hwnd)
 Start-Sleep -Milliseconds ([int]($SettleSec * 1000))
 $settleDeadline = (Get-Date).AddSeconds($SettleMaxSec)
-$prev = [long]0; $have = $false; $settled = $false; $polls = 0
+# THREE IN A ROW, NOT TWO, and the third one is not belt-and-braces.
+# A LIVE scene can hold still for a moment -- an idle player, a camera
+# between moves, a menu mid-fade -- so two consecutive identical frames
+# can happen by coincidence well before the freeze frame is reached. Accept
+# on two and the run settles at an arbitrary live frame; two LAUNCHES then
+# settle at two different arbitrary frames and the checker correctly throws
+# the pair out as DYNAMIC. Measured exactly that way: states that were
+# reliably still under a fixed dwell started reporting dynamic once a
+# two-frame settle was introduced. A genuinely frozen picture repeats
+# forever, so demanding three costs it two extra seconds and costs a
+# coincidence almost everything.
+$prev = [long]0; $have = $false; $settled = $false; $polls = 0; $same = 0
 while ((Get-Date) -lt $settleDeadline) {
   if ($p.HasExited) { break }
   [WsGrab]::Front($hwnd)
   $h1 = [WsGrab]::Shot($hwnd, $null)
   $polls++
-  if ($have -and $h1 -eq $prev) { $settled = $true; break }
+  if ($have -and $h1 -eq $prev) { $same++ } else { $same = 0 }
+  if ($same -ge 2) { $settled = $true; break }
   $prev = $h1; $have = $true
   Start-Sleep -Milliseconds 1000
 }
