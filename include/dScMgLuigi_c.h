@@ -38,16 +38,29 @@ struct dScMgLuigi_c : dScMgBase_c {
     s32 unk_4f78;            /* 0x4f78 */
     u16 mMovePhase[120];     /* 0x4f7c -- 0 slowing, 1 speeding up rightward,
                                 2 speeding up leftward */
-    u8  pad_506c[0x106];
+    u8  pad_506c[0xf0];
+    u16 unk_515c[4];         /* 0x515c -- four random 4.12 phases, seeded once
+                                the whole board has been placed */
+    u8  pad_5164[0xe];
     s16 unk_5172;            /* 0x5172 */
-    u8  pad_5174[0x101];
+    u16 unk_5174;            /* 0x5174 -- board id; indexes data_ov006_0213ce84,
+                                data_ov006_0213ce98 and data_ov006_0213cee0 */
+    u8  pad_5176[0x2];
+    u8  mGrid[13][9];        /* 0x5178 -- 13 x 9 occupancy grid for placement */
+    u8  unk_51ed[8];         /* 0x51ed -- eight random 0/1 bytes, reseeded per board */
+    u8  unk_51f5[6];         /* 0x51f5 -- six more of the same */
+    u8  pad_51fb[0x2];
+    u8  unk_51fd[120];       /* 0x51fd -- per-slot byte, cleared on placement */
     u8  mStarted[120];       /* 0x5275 -- 0 until the slot's first tick */
-    u8  pad_52ed[0x78];      /* 0x52ed -- another per-slot byte (func_ov006_020f1e90) */
+    u8  unk_52ed[120];       /* 0x52ed -- another per-slot byte (func_ov006_020f1e90) */
     u8  mSpeedLevel[120];    /* 0x5365 -- indexes data_ov006_0212e888/898/8a8 */
-    u8  pad_53dd[0x7a];      /* 0x53dd -- one more per-slot byte array (func_ov006_020f1318) */
+    u8  pad_53dd[0x78];      /* 0x53dd -- one more per-slot byte array (func_ov006_020f1318) */
+    u8  unk_5455;            /* 0x5455 -- board fully placed */
+    u8  unk_5456;            /* 0x5456 -- slots placed so far */
     u8  unk_5457;            /* 0x5457 */
     u8  pad_5458[0x1];
     u8  unk_5459;            /* 0x5459 */
+    u8  unk_545a;            /* 0x545a -- speed level the board must not reuse */
 };
 
 typedef char dScMgLuigi_c_size_must_be_0x545c[sizeof(dScMgLuigi_c) == 0x545c ? 1 : -1];
