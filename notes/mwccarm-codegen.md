@@ -4517,7 +4517,7 @@ pragma name against a 1.2 build once (`--version 1.2/sp2p3`, or any `--all` run)
 banking a pragma result, even when your function's pinned version is b56 and even when the
 b56 run was silent. Silence from b56 is not evidence.
 
-## 6bs. The ROM's compiler does not recycle a register that just died; every build we own does, and that single delta is the whole residue on four separate arm9 floors (2026-09-05)
+## 6bs. The ROM's compiler does not recycle a register that just died; every build we own does, and that single delta is the whole residue on one arm9 floor and part of the residue on three more (2026-09-05)
 
 **The rule, in one probe.** Give a function a parameter that dies at the first store and a
 temporary born immediately after it:
