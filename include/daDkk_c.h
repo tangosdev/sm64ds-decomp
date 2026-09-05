@@ -13,9 +13,9 @@
  * class's own -- daDsnBase_c.h documents the whole family (it and daDsn_c /
  * Thwomp share this base). daDsnBase_c's own destructor is defined inline in
  * its class body specifically so descendants inline its teardown rather than
- * emitting a `bl` to it; this class follows that rule and defines its own
- * destructor out of line, matching D1 (func_ov025_021118c8) and D0
- * (func_ov025_02111928): own vptr, then daDsnBase_c's (inlined --
+ * emitting a `bl` to it; this class defines its own destructor inline for the
+ * separate reason spelled out at the declaration below. D1 (0x021118c8) and D0
+ * (0x02111928) both walk: own vptr, then daDsnBase_c's (inlined --
  * ShadowModel@0x338 then TextureSequence@0x324), then dBgActor_c's (also
  * inlined, per its own header's convention -- dBgW_KcMbg@0x124 and
  * Model@0xd4), then dActor_c::~dActor_c.
@@ -54,9 +54,28 @@ struct daDkk_c : daDsnBase_c {
     u8  pad_39c[0x4];                 /* 0x39c, to the ROM's 0x3a0 */
 
     /* --- vtable --- */
-    /* Out of line on purpose: daDsnBase_c's destructor is inline, so this
-       class must emit its own body directly rather than delegate. */
-    virtual ~daDkk_c();
+    /* INLINE ON PURPOSE, and this is a byte-level requirement rather than a
+       style choice. mwccarm 2004/b56's destructor-variant order is a closed,
+       measured lever set: a destructor DEFINED IN THE CLASS BODY emits D1 then
+       D0 and nothing else, while an out-of-line definition emits D2, D0, D1 and
+       adds a homeless D2. The cartridge holds D1 at 0x021118c8 BELOW D0 at
+       0x02111928 and carries no D2 at all, so only the in-class form reproduces
+       it. The out-of-line spelling this header used to carry came from the
+       one-function shards, each of which compiled alone and so never exposed
+       the ordering.
+
+       EMPTY, BUT NOT INERT. This class adds no member of its own with a
+       destructor, yet the body is 0x60 bytes: it stores this class's vptr, then
+       daDsnBase_c's -- inlined, because daDsnBase_c.h defines its destructor in
+       its class body -- which destroys ShadowModel@0x338 then
+       TextureSequence@0x324, then dBgActor_c's, also inlined, which destroys
+       dBgW_KcMbg@0x124 and Model@0xd4, before chaining to dActor_c::~dActor_c.
+
+       Inlining it also moves this class's ABI key function down to
+       InitResources, the first declared virtual that is now neither inline nor
+       pure. That is a member src/actors/daDkk_c.cpp defines, so that TU is the
+       one that emits _ZTV7daDkk_c. */
+    virtual ~daDkk_c() {}
 
     int InitResources();
     int Behavior();
