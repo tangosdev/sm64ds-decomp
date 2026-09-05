@@ -9,17 +9,21 @@ instance and a Claude instance read the same files and follow the same protocol.
 
 ## The shape
 
-One class moves through four stages. Each stage is a separate agent run with a
-fresh context, reading the previous stage's written output rather than inheriting
-a conversation.
+One class moves through five stages. Each is a separate agent run with a fresh
+context, reading the previous stage's written output rather than inheriting a
+conversation.
 
 | stage | role | consumes | produces |
 |---|---|---|---|
-| 1 | `scout` | the ROM | `notes/data/class-facts/<class>.json` |
-| 2 | `writer` | the facts file | `include/<class>.h` + source |
+| 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
+| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp` + its manifest |
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
 | 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
+
+The writer is **gathering, not authoring**: 387 of 429 classes already have a
+real header, and the shards being folded together are existing matched code. Most
+promotions touch no header at all.
 
 Stages 1-3 never run a byte gate; stage 4 is the only one that decides whether
 the bytes are right. Stage 3 never changes semantics. Stage 5 is a different
