@@ -25,7 +25,7 @@ s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *ptr);
-void func_ov006_020f7064(void *c);
+void _ZN14dScMgMemory2_c9ResetGameEv(void *c);
 void func_ov006_020c0aa8(void *c);
 int func_ov006_020c1a88(void *c);
 int func_ov004_020ad8b8(void);
@@ -59,7 +59,7 @@ s32 dScMgMemory2_c::InitResources()
     Deallocate(a);
     Deallocate(b);
     data_0209d454 = 0x18;
-    func_ov006_020f7064(self);
+    _ZN14dScMgMemory2_c9ResetGameEv(self);
     func_ov006_020c0aa8(self + 0x4660);
     if (func_ov006_020c1a88(self + 0x4f38) == 0) return 0;
     *(int *)(self + 0xa8) = func_ov004_020ad8b8();

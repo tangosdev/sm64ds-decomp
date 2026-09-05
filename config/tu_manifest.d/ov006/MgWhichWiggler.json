@@ -1,8 +1,8 @@
 {
   "id": "ov006/MgWhichWiggler",
   "module": "ov006",
-  "source": "src/actors/MgWhichWiggler.cpp",
-  "promoted_source": "src/actors/MgWhichWiggler.cpp",
+  "source": "src/minigames/d_s_mg_hanachan.cpp",
+  "promoted_source": "src/minigames/d_s_mg_hanachan.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -38,13 +38,13 @@
   "notes": [
     "Hand-built manifest entry (tools.build_manifest_entry's schema, not its code path): tools/tubuild.py create ov006/MgWhichWiggler now fails with 'no candidate TU in build/tu_map.json' because the freshly regenerated map no longer isolates this range -- see boundary_evidence above.",
     "The src_tu/actors/MgWhichWiggler.cpp shadow file already existed (generated in an earlier session against the older, finer-cut map) and was reconciled/verified in place against this hand-written entry.",
-    "tubuild reconcile note: this entry was hand-built, so build_manifest_entry never ran and no generated warning list was ever recorded, while the shadow source carried a conflict marker that promotion copied into src/actors/MgWhichWiggler.cpp. The marker recorded a deferred decision nothing in the manifest knew about. It is resolved: the two declarations of func_020733a8 are the same declaration, differing only in asterisk placement. The dropped alternate, verbatim, was `extern void func_020733a8(void* obj, int a, int b, void* cb1, void* cb2);` against the kept `extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);`. Replaced in the source by a TUBUILD RECONCILE comment. Checked by tools/check_tubuild_conflicts.py."
+    "tubuild reconcile note: this entry was hand-built, so build_manifest_entry never ran and no generated warning list was ever recorded, while the shadow source carried a conflict marker that promotion copied into src/minigames/d_s_mg_hanachan.cpp. The marker recorded a deferred decision nothing in the manifest knew about. It is resolved: the two declarations of func_020733a8 are the same declaration, differing only in asterisk placement. The dropped alternate, verbatim, was `extern void func_020733a8(void* obj, int a, int b, void* cb1, void* cb2);` against the kept `extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);`. Replaced in the source by a TUBUILD RECONCILE comment. Checked by tools/check_tubuild_conflicts.py."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-MgWhichWiggler/MgWhichWiggler.o (gitignored)",
+    "object": "build/tu/ov006-MgWhichWiggler/d_s_mg_hanachan.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 2,
     "functions_declared": 2,

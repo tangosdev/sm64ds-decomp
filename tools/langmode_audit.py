@@ -489,7 +489,7 @@ def audit():
         # file text, which meant a comment *explaining* an idiom scored exactly like the
         # idiom, deleting an idiom scored nothing while its comment survived, and the
         # cheapest way to improve the number was to reword -- which a merged file
-        # (now src/actors/d_a_obj_bc_switch.cpp) documents doing on purpose.
+        # (now src/game/actors/d_a_obj_bc_switch.cpp) documents doing on purpose.
         # delaunder.find_sites masks comments and string literals and locates the real
         # idiom, so this number now moves only when code does.
         # The launder kinds only. delaunder's default kind set also carries PARENS,

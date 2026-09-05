@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjWaterfall_c",
   "module": "ov002",
-  "source": "src/actors/d_a_obj_waterfall.cpp",
-  "promoted_source": "src/actors/d_a_obj_waterfall.cpp",
+  "source": "src/game/actors/d_a_obj_waterfall.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_waterfall.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -132,7 +132,7 @@
     "MANUALLY CURATED READABLE C++ SHADOW: daObjWaterfall_c_classInit and g_profile_WATERFALL are reconstructed source-style names. SM64DS proves the daObjWaterfall_c RTTI identity, WATERFALL registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were WaterfallMist_Spawn and WaterfallMist_SpawnInfo.",
     "Natural `new daObjWaterfall_c` produces the retail 0x30 instruction bytes but relocates the allocator call to unresolved global `_Znwm`; mwccarm 2004/b56 rejects a placement-new declaration. The factory therefore retains the exact retail fBase_c allocator, dActor_c base constructor, and compiler-vtable address-point store rather than introducing an ABI alias or hand-authored constructor.",
     "The promoted TU emits typed 0x1c g_profile_WATERFALL data plus compiler-owned daObjWaterfall_c RTTI, type-name, and 0x84 vtable. Every emitted object matches its unique configured canonical home; inherited RTTI copies remain canonical arm9 imports.",
-    "Production is promoted as src/actors/d_a_obj_waterfall.cpp after intact-TU byte, relocation, data, module, and ROM verification.",
+    "Production is promoted as src/game/actors/d_a_obj_waterfall.cpp after intact-TU byte, relocation, data, module, and ROM verification.",
     "Promoted filename uses the snake_case scheme documented in notes/tu-naming-and-swallowers.md sec 1 (tools/tu_names.py: daObjWaterfall_c -> d_a_obj_waterfall). The class name stays exactly as the ROM's RTTI proves it; only the file stem changes."
   ],
   "verification": {

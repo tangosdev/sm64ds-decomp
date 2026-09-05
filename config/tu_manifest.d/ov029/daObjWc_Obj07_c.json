@@ -1,8 +1,8 @@
 {
   "id": "ov029/daObjWc_Obj07_c",
   "module": "ov029",
-  "source": "src/actors/d_a_obj_wc_obj07.cpp",
-  "promoted_source": "src/actors/d_a_obj_wc_obj07.cpp",
+  "source": "src/game/actors/d_a_obj_wc_obj07.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_wc_obj07.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

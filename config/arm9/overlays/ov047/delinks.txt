@@ -3,22 +3,22 @@
     .ctor       start:0x021119c4 end:0x021119d4 kind:rodata align:4
     .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/actors/daObjKm3_Kurumajiku_c.cpp:
+src/game/actors/d_a_obj_km3_kurumajiku.cpp:
     complete
     .text start:0x021111a0 end:0x021112bc
     .data start:0x02112258 end:0x02112320
 
-src/actors/daObjKm3_Kaitendai_c.cpp:
+src/game/actors/d_a_obj_km3_kaitendai.cpp:
     complete
     .text start:0x021112bc end:0x021113f8
     .data start:0x02112328 end:0x021123fc
 
-src/actors/d_a_obj_km3_kuruma.cpp:
+src/game/actors/d_a_obj_km3_kuruma.cpp:
     complete
     .text start:0x021113f8 end:0x02111510
     .data start:0x021123fc end:0x021124cc
 
-src/actors/d_a_obj_km3_dorifu.cpp:
+src/game/actors/d_a_obj_km3_dorifu.cpp:
     complete
     .text start:0x02111510 end:0x021116dc
 

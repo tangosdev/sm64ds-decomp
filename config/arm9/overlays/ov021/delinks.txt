@@ -127,7 +127,7 @@ src/d_a_grock.c:
     complete
     .text start:0x02112d64 end:0x02112db4
 
-src/actors/d_a_obj_cv_shutter.cpp:
+src/game/actors/d_a_obj_cv_shutter.cpp:
     complete
     .text start:0x02112db4 end:0x02112f10
 

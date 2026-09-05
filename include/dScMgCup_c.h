@@ -33,9 +33,9 @@
  *
  * OWN TAIL, 0x5400..0x5470, IS THE CLASS'S STATE MACHINE, not the
  * unclaimed trailing space the first draft of this header called it. The
- * first statement of Cup's own Behavior (src/_ZN10dScMgCup_c8BehaviorEv.cpp,
- * vtable slot 6) is a pointer-to-member dispatch through
- * `data_ov006_02141870[*(int*)(o + 0x5418)]`; InitResources
+ * first statement of Cup's own Behavior (vtable slot 6) is now a typed
+ * pointer-to-member dispatch through data_ov006_02141870[mState];
+ * InitResources
  * (func_ov006_020e0308.cpp, slot 0) already carries a local struct naming
  * `ones[3]` at 0x540c, `ids[3]` at 0x5420 and `flags[3]` at 0x5465; and
  * slot 9's Render reads 0x5462 and 0x5468. Matched access runs to 0x5469.
@@ -43,10 +43,10 @@
  * The size is unaffected -- 0x5470 is the factory's literal either way --
  * but the span and the literal AGREE here, which the first draft denied.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN10dScMgCup_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one. */
+ * THE SHADOW TU HAS ONE SOURCE-LEVEL DESTRUCTOR DEFINITION and lets
+ * CodeWarrior emit D1/D0/D2. Until production promotion, the enrolled D1/D0
+ * bodies remain in their legacy one-function files. No separate operator delete
+ * is needed; dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGCUP_C_H
 #define DSCMGCUP_C_H
 #include "dScMgSingle3DBase_c.h"
@@ -65,9 +65,20 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
        include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
        ancestor already declares is implicitly virtual either way, so each reuses
        an existing slot and adds no field, and the 0x5470 assert below still
-       holds. The destructor above is declared first and out of line, so it stays
-       this class's KEY FUNCTION and neither of these translation units emits
-       _ZTV10dScMgCup_c. */
+       holds. The destructor remains the key function; the reconstructed whole TU
+       emits its vtable/RTTI as compiler passengers and the TU manifest externalizes
+       them to the canonical cartridge copies. */
+    /* Inferred class-anchored aliases: __sinit_ov006_021303d0 fixes this
+       eight-entry PMF order; behavior fixes the roles, but the original
+       source spellings are not present in the ROM. */
+    void StateSetup();
+    void StatePrepareShuffle();
+    void StateShuffle();
+    void StateWaitForInput();
+    void StateSelect();
+    void StateResult();
+    void StateFinish();
+    void StateIdle();
     s32 InitResources();  /* slot  0 -- src/_ZN10dScMgCup_c13InitResourcesEv.cpp */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  Virtual50();                          /* slot 20 */
@@ -92,7 +103,11 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     s32 unk_5434[3];      /* 0x5434 -- three parallel per-cup arrays indexed */
     s32 unk_5440[3];      /* 0x5440    together by Behavior's own loop */
     s32 unk_544c[3];      /* 0x544c */
-    u8  pad_5458[0xa];    /* 0x5458 */
+    s32 mShuffleSound;     /* 0x5458 */
+    u16 mShuffleAngle;     /* 0x545c */
+    s16 mShuffleSpeed;     /* 0x545e */
+    u8  unk_5460;          /* 0x5460 */
+    u8  unk_5461;          /* 0x5461 */
     u8  unk_5462[3];      /* 0x5462 */
     u8  mFlags[3];        /* 0x5465 -- named `flags[3]` by InitResources' own struct */
     u8  unk_5468;         /* 0x5468 */

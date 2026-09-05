@@ -109,13 +109,12 @@ in the PR that adds it, not a guess about what EAD Tokyo probably had.
 
 ## Migration debt (not executed by this doc)
 
-Three already-migrated buckets predate this tree and don't fit it as-is. Remapping any of
+Two already-migrated buckets predate this tree and don't fit it as-is. Remapping any of
 these is a separate rename-only PR, done with the usual attribution-safe recipe — nothing
 here executes them:
 
 | Today | Target | Why |
 |---|---|---|
-| `src/actors/{BigBoo,...,daTrs_c}` (10 classes) | `src/game/actors/` | same content, new parent |
 | `src/engine/message/` | `src/ui/messages/` | UI content, mislabeled `engine/` |
 | `src/engine/fader/` | `src/runtime/graphics/fader/` | not a spawn-table actor; see above |
 | `src/unnamed/ov063/` | unchanged | name intentionally kept, see above |
