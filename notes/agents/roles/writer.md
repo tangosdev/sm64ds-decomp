@@ -70,6 +70,19 @@ now-inline destructor and the control run breaks. Working order:
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
 
+**Reverse-source-order is not the only admissible layout.** mwccarm lays `.text`
+down in reverse source order *by default*, which is why the merged file is
+normally written descending-ROM. With `#pragma defer_codegen off` the TU emits
+**ROM-ascending** and can be written ROM-ascending — measured on
+`ov006/dScMgMemory2_c`, 52/52 with the pragma, and "51 ordinal pair(s) NOT in
+ROM order" the moment it was removed. Ascending is the more readable form. Either
+is fine; what is not fine is writing one and assuming the other.
+
+**`verify`'s emission-order success line is boilerplate, not a measurement.** It
+prints "mwccarm reverses source order; this TU was written in reverse to
+compensate" over a file written strictly ascending. Never infer your own source
+order from it.
+
 **That list is not a progression for every check.** `verify` passing does not
 mean you are closer to `linkcheck` passing. On emission order specifically the
 two report the *same* condition at different volumes: a `verify` that says
@@ -192,7 +205,13 @@ that was promotable — if it were live, no class with cross-module RTTI could
 ever promote, which is plainly false.
 
 **The row count is predictable from inheritance depth**, so do not copy an
-oracle's count unless the oracle sits at the same depth:
+oracle's count unless the oracle sits at the same depth. **Count the chain
+yourself before trusting the queue's `compiler-only:~N`** — that column is copied
+from the `sibling_oracle` with no depth check, and has now been wrong in both
+directions. `dScMgMemory2_c` is six levels
+(`dScMgSingle3DBase_c` -> `dScMgBase_c` -> `dScene_c` -> `dBase_c` -> `fBase_c`)
+and needs `2x6 + 1 = 13`, +1 homeless `D2Ev` = **14**; the queue said ~11 because
+its oracle sits one level shallower.
 
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
@@ -444,6 +463,27 @@ Ask the compiler rather than hand-mangling:
 - **File:** `src/actors/<Class>.cpp`, the class name exactly, matching the
   class-named majority and the `layout_check` L2 stem rule. (`d_a_*.cpp` snake
   names also exist in the tree; do not add more.)
+
+  **A `promoted_source` already sitting in the manifest is a plan, not an
+  instruction.** `dScMgMemory2_c`'s manifest pre-declared
+  `src/minigames/d_s_mg_memory2.cpp`, and its own sibling and sibling-oracle did
+  land under `src/minigames/` with snake names — 13 such files against 12
+  class-named ones in `src/actors/`, both sets landed the same day. The
+  convention above wins; override the field and record in the manifest that you
+  did. Do not treat a pre-existing field as a decision someone else already made.
+
+- **Regenerate `notes/cpp-tu-current-state.md`** with
+  `python tools/cpp_tu_state.py --write-note` before you push. It is generated,
+  it goes stale on every promotion, and `--check-note` goes red in CI. That flag
+  **hard-fails on unstaged changes first** — "authority inputs have
+  unstaged/untracked changes; stage or stash" — which reads like a different
+  failure than staleness. Stage, then re-run.
+
+- **A text-only promotion does not touch `symbols.txt`.** That file maps
+  addresses to names and is unaffected by a source move; the reference promotion
+  `e193406f3` edits only `delinks.txt`, the exceptions file, the manifest and the
+  sources. If a launch prompt tells you to repoint `symbols.txt`, the prompt is
+  wrong.
 - **Branch:** `cpp/<Class>-tu`, class name verbatim including case —
   `cpp/dBgActor_c-tu`.
 - **Facts JSON** goes on the same branch, not a separate `facts/` one. Scout and
@@ -541,7 +581,19 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   pragma and `opt_common_subs` are file-global last-wins in mwccarm 2004/b56, so
   there is no positional escape — bracketing `off ... on` around exactly the four
   that want it gave byte-identical results to omitting it entirely. (`#pragma
-  push`/`O3`/`pop` *is* positional; these two are not.) Score every setting
+  push`/`O3`/`pop` *is* positional; these two are not.)
+
+  **That measurement is now suspect: try `#pragma defer_codegen off` first.**
+  Bracketed pragmas do not bind while codegen is deferred, which is the default,
+  and the measurement above was almost certainly taken that way. Measured on
+  `ov006/dScMgMemory2_c`: with `#pragma defer_codegen off` at the top of the TU,
+  **52/52 MATCH**; removing that one line dropped it to **50/52**, and the two
+  DIFFs were exactly the two functions carrying bracketed pragmas —
+  `opt_propagation off` (27 words) and `opt_loop_invariants off` (6 words). The
+  pair actually named above, `opt_strength_reduction` and `opt_common_subs`, has
+  **not** been re-tested under `defer_codegen off`. Do not take a pragma
+  collision as an automatic subset until you have tried it, and report what you
+  measure either way. Score every setting
   across the whole side and take the longest **contiguous** all-matching run:
   here SR-off scored 44/49 overall but SR-on gave the longest contiguous run, 22.
 

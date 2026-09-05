@@ -136,6 +136,25 @@ space-separated field list per line, **not** `NAME = 0x...`. A grep written for
 the `=` spelling matches nothing and reads as "symbol absent", which is the
 wrong conclusion in the exact place it matters.
 
+## Two manifest defects no gate catches
+
+**Nothing checks a manifest's `legacy_source` paths against the tree.** Measured
+on `config/tu_manifest.d/ov006/dScMgMemory2_c.json`, landed on `main`: ordinal
+30 recorded `src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c` where both the file and
+its `delinks.txt` entry are **`.cpp`**. `linkcheck` refuses before doing any work
+— `manifest names legacy source ..., which is not a delinks entry inside the
+span` — so that class's recorded `status: link-verified` was **not
+reproducible**. One bad row out of 52. When you touch a manifest, audit every
+`legacy_source` against the tree; when you find one, say how many rows you
+checked, not just the one you fixed.
+
+**`linkcheck`'s report JSON and the committed manifests use different key names
+for the same audit.** The live report writes `objectAudit.orderOk` /
+`nonLicensed`; manifests on `main` record `emittedTextOrderIsRomAscending` /
+`nonLicensedSymbols`. A script that copies one into the other silently drops the
+fields — and a dropped emission-order field reads as "not audited", not as an
+error.
+
 ## What actually goes red on a promotion
 
 - **`tiers_ratchet --check`** goes red only when the rows are **not already
