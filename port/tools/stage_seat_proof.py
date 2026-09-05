@@ -171,8 +171,16 @@ def main():
                   "%s -> %s" % (p2[0].get(i), p2[1].get(i)))
 
     print("RUNG 4 -- no trap fired in either run")
+    # THE WHOLE PREFIX, not "is not hosted". The first draft matched that
+    # fragment and went red on both runs against
+    # "[sub] LoadControllerModeText(640): top-screen text is not hosted", which
+    # hal/sub_screen.cpp prints on every boot and which has nothing to do with
+    # this table. The trap's own line is
+    #     FATAL: Stage vtable slot %d (%s) is not hosted
+    # so the prefix up to the slot number is what identifies it and cannot
+    # collide with another subsystem's wording.
     for name, t in (("probe", t1), ("control", t2)):
-        check("is not hosted" not in t,
+        check("FATAL: Stage vtable slot" not in t,
               "%s run never hit the Stage trap" % name)
 
     print("")
