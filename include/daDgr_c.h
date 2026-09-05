@@ -90,7 +90,16 @@ struct daDgr_c : dBgActor_c {
      * (This header previously declared it out of line, reasoning by analogy
      * with include/BigBrickBlock.h. The analogy is wrong for this class: the
      * ROM's own D1/D0 addresses settle it, and the one-function shards could
-     * not see the ordering because each held only one variant.) */
+     * not see the ordering because each held only one variant.)
+     *
+     * SIDE EFFECT, AND IT IS BENIGN: an inline destructor is skipped when the
+     * key function is chosen, so the key function is now InitResources -- the
+     * first non-inline virtual DECLARED below -- and no longer the destructor.
+     * Both live in src/actors/daDgr_c.cpp, so the same eleven data symbols
+     * (_ZTV7daDgr_c plus ten RTTI records) are emitted from the same TU either
+     * way and the promotion's compiler_only_output stays at 12 rows; the
+     * correction did not move the eligibility bracket. Declaring a new virtual
+     * ABOVE InitResources would move the key function again. */
     virtual ~daDgr_c() {}
 
     /* --- overrides of inherited fBase_c slots. Each takes its base's index
