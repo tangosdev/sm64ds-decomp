@@ -6,15 +6,34 @@ yourself, in your own worktree, at a named ref.
 
 ## Gate order
 
-Commit first. Two of these gates pass silently on a dirty tree.
+The order matters and is not the order you would guess. `tiers_ratchet --update`
+edits tracked files, and `check_references.py` refuses any eligibility report
+that does not match `HEAD` — so the ratchet and its commit must come **before**
+`eligible.py`, not after it. Run them the other way round and you get
+`report describes 7558d4ca8a9e, HEAD is 99567e1a082b` and have to redo both.
 
-    python tools/tubuild.py verify   <ov>/<Class>
+    # 1. bytes
+    python tools/tubuild.py verify <ov>/<Class>
+    #    ^ this WRITES to the manifest: it adds a partial_isolation block that
+    #      is degenerate post-promotion (contributionEquivalent "0/22",
+    #      state "derived"). Revert it. Neither the writer's commit nor the
+    #      landed dBgActor_c promotion carries one.
+    python tools/rombuild.py -j 6 --no-rom
+    python tools/romdata_check.py --files src/actors/<Class>.cpp
+    python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
+
+    # 2. ratchet, then COMMIT — before anything reads an eligibility report
+    python tools/tiers_ratchet.py --check
+    python tools/tiers_ratchet.py --update --reason "<why>"
+    git add -A && git commit
+
+    # 3. everything that reads HEAD or a report
+    python tools/eligible.py -j 6
+    python tools/check_references.py --against origin/main
     python tools/cpp_tu_compat.py --require-ready
     python tools/check_src_tu_compiles.py --quiet
-    python tools/eligible.py -j 16
-    python tools/check_references.py --against origin/main
-    python tools/rombuild.py -j 16 --no-rom
-    python tools/romdata_check.py --files src/actors/<Class>.cpp
+
+    # 4. the rest
     python tools/check_rename_ledger.py --repo .
     python tools/check_profile_campaign.py --repo .
     python tools/langmode_audit.py --check langmode-baseline.json
@@ -23,9 +42,7 @@ Commit first. Two of these gates pass silently on a dirty tree.
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
     python tools/check_tubuild_conflicts.py --list
-    python tools/tu_order_check.py <ov>/<Class>
     python tools/layout_check.py
-    python tools/tiers_ratchet.py --check
 
 PASS signals:
 
@@ -37,6 +54,11 @@ PASS signals:
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
 and addend), and `reloc_audit` (destination identity).
+
+**`romdata_check`'s per-symbol verdicts are not reachable from the CLI.**
+`--show` only slices `report["differing"]` and `--json` carries counts. To prove
+a specific symbol's identity — which is how the cross-module RTTI claim was
+settled — import the module and call `check_object()` directly.
 
 ## Two gates in that list are expected to go red on this workstream
 
@@ -61,7 +83,9 @@ files behave differently and only one of them tells you**:
   reintroduces stale rows.** Measured here: a cherry-pick re-added five
   `ShipWing` rows naming the former actor-directory location for
   `d_a_obj_rc_hane.cpp`; `main` had since moved it under `src/game/actors/`.
-  Nothing flagged it. No gate reads those paths.
+  Nothing flagged it. No gate reads those paths — which is also why this file
+  writes that filename bare rather than repo-rooted: quoting the dead path in
+  full would fail `check_dead_references`, the gate this paragraph is about.
 
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
@@ -71,12 +95,24 @@ wrong in a way that survives every gate.
 Keep `main`'s version of `notes/data/c-cpp-classification.tsv` and
 `notes/data/tu-merge-candidates.json` too; those carry `main`'s own changes.
 
+**`converted-baseline.json` is a dict, not a list.** Any "did I clobber main's
+rows?" set-diff has to unwrap `["converted"]`; comparing top-level keys silently
+reports no difference.
+
+**Re-check the base immediately before you push.** The validator test-merges
+against the *exact current base* and rejects with `test merge conflicts with
+exact base <sha>`. `converted-baseline.json` is rewritten by every promotion
+**and** by the automated `[skip ci]` progress refresh, so an hour-old rebase is
+already stale. Getting this wrong costs a full validation cycle.
+
 ## Gates that lie
 
-- **`check_references.py` soft-skips on a *dirty tree*, not just a missing
-  report** — it prints `report was produced from a dirty tree -- commit or
-  stash, then re-run tools/eligible.py` and **exits 0**. Commit, then
-  `eligible.py`, then this. In that order.
+- **`check_references.py` HARD-FAILS on a dirty tree or a stale report.** It
+  prints `report was produced from a dirty tree -- commit or stash, then re-run
+  tools/eligible.py` and **exits 1** (`sys.exit(str)` at
+  `check_references.py:159`; `:155` does the same for a report describing a
+  different commit). Do not read either as a soft pass. The *only* soft skip is
+  when no eligibility report exists at all.
 - **`check_src_tu_compiles.py` prints `NOT CHECKED` and exits 0** when
   `tools/mwccarm/2004/b56/mwccarm.exe` is absent — the default in a fresh
   worktree. Wire the junctions with `wt-setup.ps1` or this gate is blind.
@@ -122,6 +158,21 @@ why; state the promotion route (text-only + `compiler_only_output`, or
 intact-object) and what the sibling oracle does.
 
 Say which gates you had to `--update` and why.
+
+**If the class is abstract there is no factory and no `new`-size literal.**
+`daOts_c` has neither — nothing in the image allocates one, and its vtable
+carries pure-virtual zero words. Say so instead of inventing a number.
+
+**Check what you actually pushed.** The pre-push hook creates an attribution
+commit and does *not* push it, so `git push` can report success and leave that
+commit sitting locally. Run `git log origin/<branch>..HEAD` afterwards; if it is
+non-empty, push again. A PR missing its lineage commit looks complete.
+
+Two validator lines are expected on a promotion and are not losses. `Contributor
+credit: 0 added, N changed, 0 lost` is the hook restamping authorship, and
+`N address range(s) left the byte-verified set` is the counter reading a
+many-to-one fold — the same run reports `Relocation check: N checked; N
+VERIFIED`. Explain both in the PR body so the reviewer need not rediscover them.
 
 Add a plain-English TL;DR a CS generalist can read, above the evidence.
 
