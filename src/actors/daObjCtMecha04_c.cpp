@@ -187,12 +187,12 @@ int daObjCtMecha04_c::InitResources()
 int daObjCtMecha04_c::Behavior()
 {
     if (data_0209f2c0 == 3) {
-        func_020393c4((int *)((char *)&mMeshCollider), 0);
-        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0);
+        func_020393c4(&mMeshCollider, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
     } else {
         if (((mFlags & 8) ? 1 : 0) == 0) {
             if (func_020393bc((int *)((char *)&mMeshCollider)) == 0) {
-                func_020393c4((int *)((char *)&mMeshCollider),
+                func_020393c4(&mMeshCollider,
                               (void *)&daObjCtMecha04_c::AfterClsnCallback);
             }
 
@@ -217,11 +217,11 @@ int daObjCtMecha04_c::Behavior()
             mTextureTransformer.Advance();
             if (mBeltSpeed != 0) {
                 mSoundHandle = (int)_ZN5Sound8PlayLongEjjjRK7Vector3s(
-                    mSoundHandle, 3, 0x88, ((char *)this) + 0x74, 0);
+                    mSoundHandle, 3, 0x88, &mCamSpacePosX, 0);
             }
         }
 
-        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
     }
 
     UpdateShadow();
@@ -247,8 +247,8 @@ int daObjCtMecha04_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)(*(void **)(data_ov065_0211d194 + mVariant * 0xc)))->Release();
-    ((SharedFilePtr *)(*(void **)(data_ov065_0211d198 + mVariant * 0xc)))->Release();
+    ((SharedFilePtr *)((Entry3 *)data_ov065_0211d194)[mVariant].a)->Release();
+    ((SharedFilePtr *)((Entry3 *)data_ov065_0211d198)[mVariant].a)->Release();
     return 1;
 }
 
