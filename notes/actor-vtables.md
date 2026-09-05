@@ -230,5 +230,5 @@ function, any TU touching the destructor group emitted all of it, and
 is emitted *only* where the vtable is — so that file compiled to D1 plus its own forcing
 function, two `.text` sections, and **dropped out of the build with every byte gate still
 green**. `delete p` asks for the deleting half by name and brings it back. The same
-sentence is in `src/actors/dScMgSingle3DBase_c.cpp`, the promoted TU that absorbed
+sentence is in `src/minigames/d_s_mg_single3_d_base.cpp`, the promoted TU that absorbed
 that class's D0, which has had a key function since \#1544.

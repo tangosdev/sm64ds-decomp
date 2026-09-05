@@ -583,17 +583,34 @@ ov006	0x0213fbc8	MgTrampolineTerror_SpawnInfo	g_profile_MG_TRAMPOLINE2	reconstru
 ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213cb64	MgBounceAndPounce_SpawnInfo	g_profile_MG_JUMP	reconstructed profile global; literal ROM ID MG_JUMP+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213ce0c	data_ov006_0213ce0c	MgWanted_SpawnInfo	spawninfo
 ov006	0x0213ce0c	MgWanted_SpawnInfo	g_profile_MG_LUIGI	reconstructed profile global; literal ROM ID MG_LUIGI+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213cfd8	data_ov006_0213cfd8	MgMemoryMatch_SpawnInfo	spawninfo
 ov006	0x0213cfd8	MgMemoryMatch_SpawnInfo	g_profile_MG_MEMORY	reconstructed profile global; literal ROM ID MG_MEMORY+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213d288	data_ov006_0213d288	MgMemoryMaster_SpawnInfo	spawninfo
 ov006	0x0213d288	MgMemoryMaster_SpawnInfo	g_profile_MG_MEMORY_J	reconstructed profile global; literal ROM ID MG_MEMORY_J+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213d580	data_ov006_0213d580	g_profile_MG_MCARLO	reconstructed profile global; literal ROM ID MG_MCARLO+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213d910	data_ov006_0213d910	MgBobOmbSquad_SpawnInfo	spawninfo
 ov006	0x0213d910	MgBobOmbSquad_SpawnInfo	g_profile_MG_PACHINKO	reconstructed profile global; literal ROM ID MG_PACHINKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213da64	data_ov006_0213da64	MgLakituLaunch_SpawnInfo	spawninfo
 ov006	0x0213da64	MgLakituLaunch_SpawnInfo	g_profile_MG_TAMAIRE	reconstructed profile global; literal ROM ID MG_TAMAIRE+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213dc64	data_ov006_0213dc64	MgPuzzlePanelPuzzlePanic_SpawnInfo	spawninfo
 ov006	0x0213dc64	MgPuzzlePanelPuzzlePanic_SpawnInfo	g_profile_MG_PANEL	reconstructed profile global; literal ROM ID MG_PANEL+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213e508	data_ov006_0213e508	g_profile_MG_SLOT3	reconstructed profile global; literal ROM ID MG_SLOT3+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213e560	data_ov006_0213e560	g_profile_MG_SLOT1	reconstructed profile global; literal ROM ID MG_SLOT1+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213f69c	data_ov006_0213f69c	MgBoomBox_SpawnInfo	spawninfo
 ov006	0x0213f69c	MgBoomBox_SpawnInfo	g_profile_MG_SOUND	reconstructed profile global; literal ROM ID MG_SOUND+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213f974	data_ov006_0213f974	MgHideAndBooSeek_SpawnInfo	spawninfo
 ov006	0x0213f974	MgHideAndBooSeek_SpawnInfo	g_profile_MG_TERESA	reconstructed profile global; literal ROM ID MG_TERESA+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213fab8	data_ov006_0213fab8	MgTrampolineTime_SpawnInfo	spawninfo
 ov006	0x0213fab8	MgTrampolineTime_SpawnInfo	g_profile_MG_TRAMPOLINE	reconstructed profile global; literal ROM ID MG_TRAMPOLINE+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213fd6c	data_ov006_0213fd6c	MgLuckyStars_SpawnInfo	spawninfo
 ov006	0x0213fd6c	MgLuckyStars_SpawnInfo	g_profile_MG_BS_CARD	reconstructed profile global; literal ROM ID MG_BS_CARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0213ffb8	data_ov006_0213ffb8	MgSnowballSlalom_SpawnInfo	spawninfo
 ov006	0x0213ffb8	MgSnowballSlalom_SpawnInfo	g_profile_MG_SNOWBALL	reconstructed profile global; literal ROM ID MG_SNOWBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x02140114	data_ov006_02140114	g_profile_MG_FLOWER	reconstructed profile global; literal ROM ID MG_FLOWER+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov009	0x021111a0	func_ov009_021111a0	_ZN4BirdD1Ev	vtable slot 16
 ov009	0x021111d8	func_ov009_021111d8	_ZN4BirdD0Ev	vtable slot 17
 ov009	0x0211183c	func_ov009_0211183c	_ZN4Bird16CleanupResourcesEv	vtable slot 3
@@ -3190,3 +3207,170 @@ ov100	0x02148964	data_ov100_02148964	_ZN12daStarGate_c14ST_STAY_CLOSEDE	lineage-
 ov100	0x02148974	data_ov100_02148974	_ZN12daStarGate_c7ST_WAITE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
 ov100	0x02148984	data_ov100_02148984	_ZN12daStarGate_c20ST_TALKING_TO_PLAYERE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
 ov100	0x02148994	data_ov100_02148994	_ZN12daStarGate_c12ST_UNLOCKINGE	lineage-supported static state name; ROM proves this 0x10 BSS descriptor and its two PTMF targets
+ov006	0x020dbd54	MgPicturePoker_Spawn	dScMgCard_c_classInit	reconstructed classInit; unique MG_CARD profile + RTTI-proven class + factory allocation/vtable shape; Picture Poker remains the English minigame identity, while exact original source spelling is not preserved
+ov006	0x020f38f0	func_ov006_020f38f0	_ZN13dScMgMemory_c11DrawMessageEv	coined member name; ROM address-only symbol, scene ownership established by contiguous TU and direct scene-member access
+ov006	0x020f392c	func_ov006_020f392c	_ZN13dScMgMemory_c10DrawCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor-state writes
+ov006	0x020f3964	func_ov006_020f3964	_ZN13dScMgMemory_c12UpdateCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor interpolation
+ov006	0x020f39c8	func_ov006_020f39c8	_ZN13dScMgMemory_c10ShowCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor show transition
+ov006	0x020f39fc	func_ov006_020f39fc	_ZN13dScMgMemory_c10HideCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor hide transition
+ov006	0x020f3a10	func_ov006_020f3a10	_ZN13dScMgMemory_c10PlayerWaitEi	coined state-handler name; player PMF table and no-op wait behavior establish ownership
+ov006	0x020f3a14	func_ov006_020f3a14	_ZN13dScMgMemory_c10PlayerMoveEi	coined state-handler name; player PMF table and movement behavior establish ownership
+ov006	0x020f3ba0	func_ov006_020f3ba0	_ZN13dScMgMemory_c10PlayerDropEi	coined state-handler name; player PMF table and drop behavior establish ownership
+ov006	0x020f3c0c	func_ov006_020f3c0c	_ZN13dScMgMemory_c11InitPlayersEv	coined member name; ROM address-only symbol, initializes the scene player array
+ov006	0x020f3c90	func_ov006_020f3c90	_ZN13dScMgMemory_c13CheckFinishedEv	coined member name; ROM address-only symbol, checks the Memory Match completion condition
+ov006	0x020f3d34	func_ov006_020f3d34	_ZN13dScMgMemory_c9JudgePairEv	coined member name; ROM address-only symbol, judges the selected card pair
+ov006	0x020f3e68	func_ov006_020f3e68	_ZN13dScMgMemory_c9DrawCardsEv	coined member name; ROM address-only symbol, draws the scene card array
+ov006	0x020f3f10	func_ov006_020f3f10	_ZN13dScMgMemory_c11UpdateCardsEv	coined member name; ROM address-only symbol, dispatches the card PMF state table
+ov006	0x020f3f84	func_ov006_020f3f84	_ZN13dScMgMemory_c11CardFlyAwayEi	coined state-handler name; card PMF table and fly-away behavior establish ownership
+ov006	0x020f411c	func_ov006_020f411c	_ZN13dScMgMemory_c12CardFlipDownEi	coined state-handler name; card PMF table and flip-down behavior establish ownership
+ov006	0x020f41ac	func_ov006_020f41ac	_ZN13dScMgMemory_c8CardWaitEi	coined state-handler name; card PMF table and no-op wait behavior establish ownership
+ov006	0x020f41b0	func_ov006_020f41b0	_ZN13dScMgMemory_c10CardFlipUpEi	coined state-handler name; card PMF table and flip-up behavior establish ownership
+ov006	0x020f4248	func_ov006_020f4248	_ZN13dScMgMemory_c10CardSelectEi	coined state-handler name; card PMF table and selection behavior establish ownership
+ov006	0x020f43c0	func_ov006_020f43c0	_ZN13dScMgMemory_c8CardIdleEi	coined state-handler name; card PMF table and no-op idle behavior establish ownership
+ov006	0x020f43c4	func_ov006_020f43c4	_ZN13dScMgMemory_c8CardMoveEi	coined state-handler name; card PMF table and movement behavior establish ownership
+ov006	0x020f456c	func_ov006_020f456c	_ZN13dScMgMemory_c12ResultFinishEv	coined state-handler name; result PMF table and terminal result behavior establish ownership
+ov006	0x020f46ec	func_ov006_020f46ec	_ZN13dScMgMemory_c15ResultTurnCardsEv	coined state-handler name; result PMF table and card-turn behavior establish ownership
+ov006	0x020f47d8	func_ov006_020f47d8	_ZN13dScMgMemory_c12ResultRewardEv	coined state-handler name; result PMF table and reward behavior establish ownership
+ov006	0x020f4888	func_ov006_020f4888	_ZN13dScMgMemory_c10ResultWaitEv	coined state-handler name; result PMF table and wait behavior establish ownership
+ov006	0x020f49ac	func_ov006_020f49ac	_ZN13dScMgMemory_c11RoundRevealEv	coined state-handler name; round PMF table and reveal behavior establish ownership
+ov006	0x020f4a40	func_ov006_020f4a40	_ZN13dScMgMemory_c13RoundWaitDealEv	coined state-handler name; round PMF table and deal-wait behavior establish ownership
+ov006	0x020f4ad4	func_ov006_020f4ad4	_ZN13dScMgMemory_c13RoundDealHardEv	coined state-handler name; round PMF table and hard-deal behavior establish ownership
+ov006	0x020f4b30	func_ov006_020f4b30	_ZN13dScMgMemory_c15RoundDealNormalEv	coined state-handler name; round PMF table and normal-deal behavior establish ownership
+ov006	0x020f4bbc	func_ov006_020f4bbc	_ZN13dScMgMemory_c13RoundDealEasyEv	coined state-handler name; round PMF table and easy-deal behavior establish ownership
+ov006	0x020f4c38	func_ov006_020f4c38	_ZN13dScMgMemory_c10RoundStartEv	coined state-handler name; round PMF table and setup behavior establish ownership
+ov006	0x020f4cd8	func_ov006_020f4cd8	_ZN13dScMgMemory_c12ShuffleCardsEv	coined member name; ROM address-only symbol, shuffles the scene card array
+ov006	0x020f4f94	func_ov006_020f4f94	_ZN13dScMgMemory_c9ResetGameEv	coined member name; ROM address-only symbol, resets the Memory Match scene state
+ov006	0x020f50c0	func_ov006_020f50c0	_ZN13dScMgMemory_c9StateExitEv	coined main-state handler name; main PMF table and exit behavior establish ownership
+ov006	0x020f50f8	func_ov006_020f50f8	_ZN13dScMgMemory_c11StateResultEv	coined main-state handler name; main PMF table and result dispatch establish ownership
+ov006	0x020f5140	func_ov006_020f5140	_ZN13dScMgMemory_c10StateJudgeEv	coined main-state handler name; main PMF table and pair-judging dispatch establish ownership
+ov006	0x020f5164	func_ov006_020f5164	_ZN13dScMgMemory_c9StatePlayEv	coined main-state handler name; main PMF table and round dispatch establish ownership
+ov006	0x020f51b0	func_ov006_020f51b0	_ZN13dScMgMemory_c10StateSetupEv	coined main-state handler name; main PMF table and setup behavior establish ownership
+ov006	0x020f51f0	func_ov006_020f51f0	_ZN13dScMgMemory_c15SetupDifficultyEv	coined member name; ROM address-only symbol, derives difficulty-specific scene parameters
+ov006	0x020f5620	func_ov006_020f5620	_ZN14dScMgMemory2_c11DrawMessageEv	coined member name; ROM address-only symbol, scene ownership established by contiguous TU and direct scene-member access
+ov006	0x020f565c	func_ov006_020f565c	_ZN14dScMgMemory2_c10DrawCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor-state reads
+ov006	0x020f5694	func_ov006_020f5694	_ZN14dScMgMemory2_c12UpdateCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor animation
+ov006	0x020f56f8	func_ov006_020f56f8	_ZN14dScMgMemory2_c10ShowCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor show transition
+ov006	0x020f572c	func_ov006_020f572c	_ZN14dScMgMemory2_c10HideCursorEv	coined member name; ROM address-only symbol, behavior identified from cursor hide transition
+ov006	0x020f5740	func_ov006_020f5740	_ZN14dScMgMemory2_c10PlayerWaitEi	coined state-handler name; player PMF table and no-op wait behavior establish ownership
+ov006	0x020f5744	func_ov006_020f5744	_ZN14dScMgMemory2_c10PlayerMoveEi	coined state-handler name; player PMF table and movement behavior establish ownership
+ov006	0x020f58d0	func_ov006_020f58d0	_ZN14dScMgMemory2_c10PlayerDropEi	coined state-handler name; player PMF table and drop behavior establish ownership
+ov006	0x020f593c	func_ov006_020f593c	_ZN14dScMgMemory2_c11InitPlayersEv	coined member name; ROM address-only symbol, initializes the scene player array
+ov006	0x020f59c0	func_ov006_020f59c0	_ZN14dScMgMemory2_c13CheckFinishedEv	coined member name; ROM address-only symbol, checks Memory Master completion and failure conditions
+ov006	0x020f5a64	func_ov006_020f5a64	_ZN14dScMgMemory2_c9JudgePairEv	coined member name; ROM address-only symbol, judges the selected card pair
+ov006	0x020f5b98	func_ov006_020f5b98	_ZN14dScMgMemory2_c9DrawCardsEv	coined member name; ROM address-only symbol, draws the scene card array
+ov006	0x020f5c40	func_ov006_020f5c40	_ZN14dScMgMemory2_c11UpdateCardsEv	coined member name; ROM address-only symbol, dispatches the card PMF state table
+ov006	0x020f5cb4	func_ov006_020f5cb4	_ZN14dScMgMemory2_c11CardFlyAwayEi	coined state-handler name; card PMF table and fly-away behavior establish ownership
+ov006	0x020f5de0	func_ov006_020f5de0	_ZN14dScMgMemory2_c12CardFlipDownEi	coined state-handler name; card PMF table and flip-down behavior establish ownership
+ov006	0x020f5e70	func_ov006_020f5e70	_ZN14dScMgMemory2_c8CardWaitEi	coined state-handler name; card PMF table and no-op wait behavior establish ownership
+ov006	0x020f5e74	func_ov006_020f5e74	_ZN14dScMgMemory2_c10CardFlipUpEi	coined state-handler name; card PMF table and flip-up behavior establish ownership
+ov006	0x020f5f0c	func_ov006_020f5f0c	_ZN14dScMgMemory2_c10CardSelectEi	coined state-handler name; card PMF table and selection behavior establish ownership
+ov006	0x020f6084	func_ov006_020f6084	_ZN14dScMgMemory2_c8CardIdleEi	coined state-handler name; card PMF table and no-op idle behavior establish ownership
+ov006	0x020f6088	func_ov006_020f6088	_ZN14dScMgMemory2_c8CardMoveEi	coined state-handler name; card PMF table and movement behavior establish ownership
+ov006	0x020f6230	func_ov006_020f6230	_ZN14dScMgMemory2_c12ResultFinishEv	coined state-handler name; result PMF table and terminal result behavior establish ownership
+ov006	0x020f639c	func_ov006_020f639c	_ZN14dScMgMemory2_c15ResultTurnCardsEv	coined state-handler name; result PMF table and card-turn behavior establish ownership
+ov006	0x020f6488	func_ov006_020f6488	_ZN14dScMgMemory2_c12ResultRewardEv	coined state-handler name; result PMF table and reward behavior establish ownership
+ov006	0x020f6538	func_ov006_020f6538	_ZN14dScMgMemory2_c10ResultWaitEv	coined state-handler name; result PMF table and wait behavior establish ownership
+ov006	0x020f6678	func_ov006_020f6678	_ZN14dScMgMemory2_c11RoundRevealEv	coined state-handler name; round PMF table and reveal-to-play transition establish ownership
+ov006	0x020f670c	func_ov006_020f670c	_ZN14dScMgMemory2_c13RoundWaitDealEv	coined state-handler name; round PMF table and deal-wait behavior establish ownership
+ov006	0x020f67a0	func_ov006_020f67a0	_ZN14dScMgMemory2_c15RoundReadyCardsEv	coined state-handler name; round PMF table and card-ready transition establish ownership
+ov006	0x020f6830	func_ov006_020f6830	_ZN14dScMgMemory2_c14RoundHideCardsEv	coined state-handler name; round PMF table and flip-down transition establish ownership
+ov006	0x020f6904	func_ov006_020f6904	_ZN14dScMgMemory2_c14RoundShowCardsEv	coined state-handler name; round PMF table and preview-card flip-up behavior establish ownership
+ov006	0x020f6a00	func_ov006_020f6a00	_ZN14dScMgMemory2_c15RoundDealFourthEv	coined state-handler name; fourth ready threshold and round PMF-table order establish ownership
+ov006	0x020f6a78	func_ov006_020f6a78	_ZN14dScMgMemory2_c13RoundDealHardEv	coined state-handler name; third ready threshold and round PMF-table order establish ownership
+ov006	0x020f6b00	func_ov006_020f6b00	_ZN14dScMgMemory2_c15RoundDealNormalEv	coined state-handler name; second ready threshold and round PMF-table order establish ownership
+ov006	0x020f6b78	func_ov006_020f6b78	_ZN14dScMgMemory2_c13RoundDealEasyEv	coined state-handler name; first ready threshold and round PMF-table order establish ownership
+ov006	0x020f6bf0	func_ov006_020f6bf0	_ZN14dScMgMemory2_c10RoundStartEv	coined state-handler name; round PMF table and setup behavior establish ownership
+ov006	0x020f6c90	func_ov006_020f6c90	_ZN14dScMgMemory2_c12ShuffleCardsEv	coined member name; ROM address-only symbol, builds and initializes the difficulty-sized card deck
+ov006	0x020f6f88	func_ov006_020f6f88	_ZN14dScMgMemory2_c18ChoosePreviewCardsEv	coined member name; ROM address-only symbol, chooses the unique card indices used by the preview phase
+ov006	0x020f7064	func_ov006_020f7064	_ZN14dScMgMemory2_c9ResetGameEv	coined member name; ROM address-only symbol, resets Memory Master scene state
+ov006	0x020f7190	func_ov006_020f7190	_ZN14dScMgMemory2_c9StateExitEv	coined main-state handler name; main PMF table and exit behavior establish ownership
+ov006	0x020f71c8	func_ov006_020f71c8	_ZN14dScMgMemory2_c11StateResultEv	coined main-state handler name; main PMF table and result dispatch establish ownership
+ov006	0x020f7210	func_ov006_020f7210	_ZN14dScMgMemory2_c10StateJudgeEv	coined main-state handler name; main PMF table and pair-judging dispatch establish ownership
+ov006	0x020f7234	func_ov006_020f7234	_ZN14dScMgMemory2_c9StatePlayEv	coined main-state handler name; main PMF table and round dispatch establish ownership
+ov006	0x020f7280	func_ov006_020f7280	_ZN14dScMgMemory2_c10StateSetupEv	coined main-state handler name; main PMF table and setup behavior establish ownership
+ov006	0x020f72c0	func_ov006_020f72c0	_ZN14dScMgMemory2_c15SetupDifficultyEv	coined member name; ROM address-only symbol, derives difficulty-specific pair counts
+ov006	0x020f8ff0	func_ov006_020f8ff0	_ZN19dMgMCarlo2CardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; empty real destructor reproduces the ROM body
+ov006	0x020f9000	func_ov006_020f9000	_ZN14dScMgMCarlo2_c11UpdateBoardEv	coined: private static helper named from the matched board update/recycle state machine
+ov006	0x020f94f4	func_ov006_020f94f4	_ZN14dScMgMCarlo2_c14FlipDealtCardsEv	coined: private static helper queues each dealt card for its flip-away state
+ov006	0x020f9560	func_ov006_020f9560	_ZN14dScMgMCarlo2_c13DrawCardValueEv	coined: private static helper performs the weighted card-face draw
+ov006	0x020f95f0	func_ov006_020f95f0	_ZN14dScMgMCarlo2_c10BoardReadyEv	coined: private static helper tests whether the currently dealt board has settled
+ov006	0x020f9668	func_ov006_020f9668	_ZN14dScMgMCarlo2_c9BoardBusyEv	coined: private static helper is the complementary in-flight board test
+ov006	0x020f96e0	func_ov006_020f96e0	_ZN14dScMgMCarlo2_c16HasRemovablePairEv	coined: private static helper searches the live list for an adjacent matching pair
+ov006	0x020f9760	func_ov006_020f9760	_ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c	coined: private static helper resets, links, and validates the typed 40-card board
+ov006	0x020f98dc	func_ov006_020f98dc	_ZN19dMgMCarlo2CardObj_c6RenderEv	coined slot name; ROM element vtable slot 0 points here and the body renders one card
+ov006	0x020f9994	func_ov006_020f9994	_ZN19dMgMCarlo2CardObj_c6UpdateEi	coined slot name; ROM element vtable slot 1 points here and the body advances one card
+ov006	0x020f9bec	func_ov006_020f9bec	_ZN19dMgMCarlo2CardObj_c7HitTestEv	coined: nonvirtual card helper tests the stylus against this card
+ov006	0x020f9cbc	func_ov006_020f9cbc	_ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_	coined: nonvirtual card helper compares face and board adjacency with another card
+ov006	0x020f9d68	func_ov006_020f9d68	_ZN19dMgMCarlo2CardObj_c8FlipAwayEi	coined: nonvirtual card helper arms the staggered flip-away state
+ov006	0x020f9db8	func_ov006_020f9db8	_ZN19dMgMCarlo2CardObj_c6DealInEi	coined: nonvirtual card helper sends the card toward a board slot
+ov006	0x020f9f40	func_ov006_020f9f40	_ZN19dMgMCarlo2CardObj_c4InitEi	coined: nonvirtual card helper resets one element and assigns its slot and weighted face
+ov006	0x020fa740	func_ov006_020fa740	_ZN19dMgMCarlo2CardObj_cC1Ev	compiler-proven C1 for the RTTI-named card element; real constructor reproduces the ROM body
+ov006	0x0213d728	data_ov006_0213d728	_ZTV19dMgMCarlo2CardObj_c	RTTI-proven two-slot card-element vtable; slots relocate to Render and Update
+ov006	0x02124a04	func_ov006_02124a04	_ZN10dScMgBSC_c9StateDoneEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 12 and 13
+ov006	0x02124a08	func_ov006_02124a08	_ZN10dScMgBSC_c16StateReturnCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 11
+ov006	0x02124ae4	func_ov006_02124ae4	_ZN10dScMgBSC_c14StateWaitTableEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 9 and 10
+ov006	0x02124b58	func_ov006_02124b58	_ZN10dScMgBSC_c18StateTableReactionEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entries 7 and 8
+ov006	0x02124bb4	func_ov006_02124bb4	_ZN10dScMgBSC_c15StateJudgeCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 6
+ov006	0x02124cb4	func_ov006_02124cb4	_ZN10dScMgBSC_c16StateRevealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 5
+ov006	0x02124dc0	func_ov006_02124dc0	_ZN10dScMgBSC_c13StateWaitMoveEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 4
+ov006	0x02124e1c	func_ov006_02124e1c	_ZN10dScMgBSC_c14StateMoveCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 3
+ov006	0x02124ec4	func_ov006_02124ec4	_ZN10dScMgBSC_c15StateChooseCardEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 2
+ov006	0x02124fd8	func_ov006_02124fd8	_ZN10dScMgBSC_c13StateWaitDealEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 1
+ov006	0x021250e4	func_ov006_021250e4	_ZN10dScMgBSC_c14StateDealCardsEv	coined: ROM symbol is address-only; named from what the state does -- PMF table data_ov006_02142f94 entry 0
+ov006	0x020d96e0	func_ov006_020d96e0	_ZN12dMgCardObj_cD1Ev	RTTI-named card-element D1 ABI callback; a real inline destructor makes the exact body but lands between the scene D1/D0, so the callback spelling is retained at the measured mwccarm section-order wall
+ov006	0x020d96f0	func_ov006_020d96f0	_ZN17dMgDilarCardObj_cD1Ev	RTTI-named dealer-card D1 ABI callback; a real destructor makes the exact body only with its base inline, which moves the base D1 between the scene D1/D0, so the callback spelling is retained at the measured mwccarm section-order wall
+ov006	0x020d970c	func_ov006_020d970c	_ZN17dMgDilarCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d978c	func_ov006_020d978c	_ZN17dMgDilarCardObj_c6UpdateEv	coined: vtable slot 1 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d9998	func_ov006_020d9998	_ZN17dMgDilarCardObj_c13GetOffscreenYEv	coined: vtable slot 2 of the RTTI-proven dMgDilarCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020d99a4	func_ov006_020d99a4	_ZN12dMgCardObj_c6FlyOffEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d99ec	func_ov006_020d99ec	_ZN12dMgCardObj_c7SetHomeEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d9a14	func_ov006_020d9a14	_ZN11dScMgCard_c9RenderHudEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020d9bd0	func_ov006_020d9bd0	_ZN12dMgCardObj_c13GetOffscreenYEv	coined: vtable slot 2 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020d9bdc	func_ov006_020d9bdc	_ZN12dMgCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020d9c5c	func_ov006_020d9c5c	_ZN12dMgCardObj_c6UpdateEv	coined: vtable slot 1 of the RTTI-proven dMgCardObj_c; ROM symbol is address-only
+ov006	0x020da00c	func_ov006_020da00c	_ZN12dMgCardObj_c6RedealEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da0ac	func_ov006_020da0ac	_ZN12dMgCardObj_c6DealInEPKi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da154	func_ov006_020da154	_ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da174	func_ov006_020da174	_ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da420	func_ov006_020da420	_ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da4ac	func_ov006_020da4ac	_ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da5e8	func_ov006_020da5e8	_ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da834	func_ov006_020da834	_ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da860	func_ov006_020da860	_ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da88c	func_ov006_020da88c	_ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da8b8	func_ov006_020da8b8	_ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da8e4	func_ov006_020da8e4	_ZN11dScMgCard_c13DrawCardValueEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020da974	func_ov006_020da974	_ZN11dScMgCard_c11FillWeightsEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020dac34	func_ov006_020dac34	_ZN11dScMgCard_c11UpdateStateEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x0213bccc	data_ov006_0213bccc	_ZTV12dMgCardObj_c	vtable alloc=0x30
+ov006	0x0213bcf4	data_ov006_0213bcf4	_ZTV17dMgDilarCardObj_c	vtable alloc=0x30
+ov006	0x020dbe14	func_ov006_020dbe14	_ZN17dMgDilarCardObj_cC1Ev	RTTI-named dealer-card C1 ABI callback; the factory wall prevents placement construction and the real derived constructor requires the base constructor inline, so the callback spelling preserves the exact two-vptr body and section order
+ov006	0x020dbe30	func_ov006_020dbe30	_ZN12dMgCardObj_cC1Ev	RTTI-named card-element C1 ABI callback; retained as the construction-array callback at the measured mwccarm factory wall
+ov006	0x020f7730	func_ov006_020f7730	_ZN18dMgMCarloCardObj_cD1Ev	compiler-proven D1 for the RTTI-named card element; a real empty destructor reproduces the ROM body
+ov006	0x020f7740	func_ov006_020f7740	_ZN13dScMgMCarlo_c11UpdateBoardEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7994	func_ov006_020f7994	_ZN13dScMgMCarlo_c14FlipDealtCardsEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7a00	func_ov006_020f7a00	_ZN13dScMgMCarlo_c13DrawCardValueEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7a90	func_ov006_020f7a90	_ZN13dScMgMCarlo_c10BoardReadyEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7b10	func_ov006_020f7b10	_ZN13dScMgMCarlo_c9BoardBusyEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7b90	func_ov006_020f7b90	_ZN13dScMgMCarlo_c16HasRemovablePairEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7c10	func_ov006_020f7c10	_ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f7e2c	func_ov006_020f7e2c	_ZN18dMgMCarloCardObj_c6RenderEv	coined: vtable slot 0 of the RTTI-proven dMgMCarloCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020f7ee4	func_ov006_020f7ee4	_ZN18dMgMCarloCardObj_c6UpdateEi	coined: vtable slot 1 of the RTTI-proven dMgMCarloCardObj_c (the _ZTV this TU emits); ROM symbol is address-only
+ov006	0x020f8154	func_ov006_020f8154	_ZN18dMgMCarloCardObj_c7HitTestEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8224	func_ov006_020f8224	_ZN18dMgMCarloCardObj_c10IsPairWithEPS_	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f82d0	func_ov006_020f82d0	_ZN18dMgMCarloCardObj_c8FlipAwayEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8320	func_ov006_020f8320	_ZN18dMgMCarloCardObj_c6DealInEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f84a8	func_ov006_020f84a8	_ZN18dMgMCarloCardObj_c4InitEi	coined: ROM symbol is address-only; named from what the function does
+ov006	0x020f8540	func_ov006_020f8540	_ZN13dScMgMCarlo_c9RenderHudEv	coined: ROM symbol is address-only; named from what the function does
+ov006	0x0213d5ac	data_ov006_0213d5ac	_ZTV18dMgMCarloCardObj_c	vtable alloc=0x30
+ov006	0x020f8ed8	func_ov006_020f8ed8	_ZN18dMgMCarloCardObj_cC1Ev	compiler-proven C1 for the RTTI-named card element; real constructor reproduces the ROM body
+ov006	0x02121774	func_ov006_02121774	_ZN17dScMgTrampoline_c9StateDoneEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213faa8 and the empty matched body identify the terminal state
+ov006	0x02121778	func_ov006_02121778	_ZN17dScMgTrampoline_c13StateWaitExitEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213faa0 and the matched body identify the exit-wait state
+ov006	0x02121848	func_ov006_02121848	_ZN17dScMgTrampoline_c12StateResultsEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac8 and the matched body identify the results transition state
+ov006	0x021218fc	func_ov006_021218fc	_ZN17dScMgTrampoline_c9StatePlayEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fac0 and the matched body identify the active-play state
+ov006	0x02121d64	func_ov006_02121d64	_ZN17dScMgTrampoline_c10StateIntroEv	coined: ROM symbol is address-only; PMF descriptor data_ov006_0213fab0 and the matched body identify the intro state
+ov006	0x021218c4	func_ov006_021218c4	_ZN17dScMgTrampoline_c12BeginResultsEv	coined: ROM symbol is address-only; helper initializes the results timer and installs the StateResults PMF descriptor
+ov006	0x02121cf4	func_ov006_02121cf4	_ZN17dScMgTrampoline_c9BeginPlayEv	coined: ROM symbol is address-only; helper enables input, initializes play fields, and installs the StatePlay PMF descriptor
+ov006	0x02121f04	func_ov006_02121f04	_ZN17dScMgTrampoline_c10BeginIntroEv	coined: ROM symbol is address-only; helper initializes intro interpolation fields and installs the StateIntro PMF descriptor
+ov006	0x0212157c	func_ov006_0212157c	_ZN17dScMgTrampoline_c16UpdateTouchInputEv	coined: ROM symbol is address-only; matched body samples and tracks the stylus drag and records its release edge every frame
+ov006	0x02121bc8	func_ov006_02121bc8	_ZN17dScMgTrampoline_c12UpdateScrollEv	coined: ROM symbol is address-only; matched body derives the scroll target from score progress and approaches it every active-play frame

@@ -70,7 +70,7 @@ division.** Genuinely inert changes: renaming a field, a typedef alias (`Fix12i`
 The generated width is the width of the access matched code happened to make, not the
 field's real width. `include/daWanwan_c.h` *used to* declare `u8 mScaleX; /* 0x080 */` where
 `include/dActor_c.h:106` -- de-bannered, hand-reconstructed -- declares `s32 mScaleX` at the
-same offset, and `src/actors/d_a_wanwan.cpp` settles it by writing
+same offset, and `src/game/actors/d_a_wanwan.cpp` settles it by writing
 `*(int *)(c + 0x80) = 0x1000;`. The derived header was the wrong one.
 
 *(Re-checked 2026-08-21: this particular conflict has since been fixed -- `include/daWanwan_c.h`

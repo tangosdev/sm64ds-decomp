@@ -322,7 +322,7 @@ around it are free. The measurement is in a comment at the site.
 This header already carried a full prose account of every offset; the names below just
 make the code say what the prose said. Bodies read: the four per-function files under `src/` that the class carried at the
 time, one each for `InitResources`, `Behavior`, `Render` and `CleanupResources`. All four have since been folded into the single
-translation unit `src/actors/d_a_obj_bc_switch.cpp`, where the same bodies now live as
+translation unit `src/game/actors/d_a_obj_bc_switch.cpp`, where the same bodies now live as
 real member definitions.
 
 | Offset | Name | Evidence |
@@ -339,7 +339,7 @@ The rename carried into the shadow TU as well as `src/` — that file builds onl
 a `tuModules` profile, so a stale spelling there compiles nowhere and no normal gate
 would have caught it. `tools/check_src_tu_compiles.py` (72/72) and
 `tools/check_src_tu.py` were run after. The shadow TU has since been promoted into the
-production build as `src/actors/d_a_obj_bc_switch.cpp`, so it is no longer shadow: the
+production build as `src/game/actors/d_a_obj_bc_switch.cpp`, so it is no longer shadow: the
 same nine functions are now compiled and linked into the ROM from one file.
 
 ---
@@ -381,7 +381,7 @@ In the C twin, the `u8` marker at `0x2ec` became `mClsnMat`, the name
 `dBgW_KcMbg::SetFile`.
 
 The rename carried into the promoted translation unit
-`src/actors/daObjCannonShutter_c.cpp` -- it lived under `src_tu/` as a shadow TU until
+`src/game/actors/d_a_obj_cannon_shutter.cpp` -- it lived under `src_tu/` as a shadow TU until
 `config/arm9/overlays/ov002/delinks.txt` enrolled it as the production source -- along
 with the same raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub
 sub; }` shadow is gone in favour of `mModel.Render(0)`, and `InitResources` reaches
@@ -483,7 +483,7 @@ In the `#else` C twin, ten offsets already named at exactly those offsets in
 Bodies read in the promoted class TU: `daObjHatenaSwitch_c::InitResources`,
 `daObjHatenaSwitch_c::Behavior`, `daObjHatenaSwitch_c::CleanupResources`, and
 `daObjHatenaSwitch_c::OnGroundPounded` in
-`src/actors/daObjHatenaSwitch_c.cpp`.
+`src/game/actors/d_a_obj_hatena_switch.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -711,7 +711,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `LavaPlank` ([ov022](../config/arm9/overlays/ov022/symbols.txt)) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
 `PathLift::mAfterClsnRan` also carried into the `daObjRcCarpet_c::Behavior` member
-in `src/actors/daObjRcCarpet_c.cpp`, a subclass that reads the inherited field — the
+in `src/game/actors/d_a_obj_rc_carpet.cpp`, a subclass that reads the inherited field — the
 kind of cross-file breakage a header rename in this family causes, and which
 `tools/rombuild.py` catches while `build_pin.verify` on the renamed class alone does not.
 

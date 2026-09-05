@@ -1,8 +1,8 @@
 {
   "id": "ov100/daStarGate_c",
   "module": "ov100",
-  "source": "src/actors/daStarGate_c.cpp",
-  "promoted_source": "src/actors/daStarGate_c.cpp",
+  "source": "src/game/actors/d_a_star_gate.cpp",
+  "promoted_source": "src/game/actors/d_a_star_gate.cpp",
   "production_mode": "intact-object",
   "status": "promoted",
   "boundary_confidence": "high",

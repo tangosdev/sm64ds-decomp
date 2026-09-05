@@ -1478,12 +1478,9 @@ extern int _ZN14dScMgD3DBase_c8OnKickedEv(void*);
 extern int func_ov006_020f7a90(void);
 extern int func_ov006_020f7b10(void);
 extern int func_ov006_020f7b90(void);
-/* func_ov006_020f95f0 / _020f9668 / _020f96e0 / _020f9000 / _020f94f4 /
-   _020f9760 are all members of ov006/dScMgMCarlo2_c and every caller is a
-   member of the same translation unit, which declares them with the
-   recovered node-pointer types (_020f9760 took `void*` here because the
-   one-function legacy file could not name the element type). Nothing
-   outside that TU refers to them, so no declaration belongs here. */
+/* The former func_ov006_020f9000..020f9f40 range is owned by the real
+   dScMgMCarlo2_c / dMgMCarlo2CardObj_c classes. Every caller is in that
+   original TU, so none of those private members belongs in this header. */
 extern void func_ov006_020ff47c(void*);
 extern void func_ov006_02100140(void*);
 extern void func_ov006_02100314(void*);
@@ -2491,9 +2488,6 @@ extern void func_ov006_020f7064(void*);
 extern void func_ov006_020f7730(int *);
 extern void func_ov006_020f7740(void);
 extern void func_ov006_020f7994(void);
-/* the element destructor for dScMgMCarlo2_c's 40 x 0x30 array; it writes one
-   word into the element it is handed. Both call sites cast it to void*. */
-extern void func_ov006_020f8ff0(int*);
 extern void func_ov006_020fad90(char*);
 extern void func_ov006_020fadfc(char*);
 extern void func_ov006_020fffec(char*);
@@ -2564,7 +2558,6 @@ extern void func_ov006_02120c08(void);
 extern void func_ov006_02120c40(void);
 extern void func_ov006_02120ca0(void);
 extern void func_ov006_02120d8c(void*, int);
-extern void func_ov006_0212157c(char*);
 extern void func_ov006_02121750(char*, short);
 extern void func_ov006_02121f04(char*);
 extern void func_ov006_0212231c(void*);

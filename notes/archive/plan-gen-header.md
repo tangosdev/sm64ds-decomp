@@ -57,7 +57,7 @@ spot-checked directly):
 | named member (`unk_0d8`) | 2,357 | 2 |
 | **anything** | 3,136 | **3,071 (96.5%)** |
 
-Raw casts survive even inside migrated `.cpp` -- `src/actors/d_a_wanwan.cpp`
+Raw casts survive even inside migrated `.cpp` -- `src/game/actors/d_a_wanwan.cpp`
 still writes `*(int *)(c + 0x80) = 0x1000;`. So source text is degraded evidence, not
 destroyed evidence, and the pre-`5ddf7d2d` tree is very nearly complete evidence.
 
@@ -86,7 +86,7 @@ The worked case, confirmed three independent ways:
 |---|---|
 | `include/daWanwan_c.h`, as generated | `u8  mScaleX;  /* 0x080 */` |
 | `include/Actor.h:86` | `s32 mScaleX;  /* 0x080 */` |
-| `src/actors/d_a_wanwan.cpp` | `*(int *)(c + 0x80) = 0x1000;` |
+| `src/game/actors/d_a_wanwan.cpp` | `*(int *)(c + 0x80) = 0x1000;` |
 
 The derived header is wrong. The `u8`-block-at-`0x8c..0x96` pattern repeats across
 BobOmb, Boo, Bullet, Amp, BookShot, BowserPuzzlePiece and others -- one bug stamped

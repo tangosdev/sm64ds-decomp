@@ -326,7 +326,7 @@ src/d_a_door.c:
     complete
     .text start:0x0214589c end:0x021458d4
 
-src/actors/daStarGate_c.cpp:
+src/game/actors/d_a_star_gate.cpp:
     complete
     .text start:0x021458d4 end:0x0214620c
     .init start:0x02147a70 end:0x02147bc0
@@ -406,7 +406,7 @@ src/d_a_fish.cpp:
     complete
     .text start:0x02146d38 end:0x02146d7c
 
-src/actors/daObjPathLift_c.cpp:
+src/game/actors/daObjPathLift_c.cpp:
     complete
     .text start:0x02146d7c end:0x02147328
 

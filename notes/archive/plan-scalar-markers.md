@@ -66,7 +66,7 @@ Both are now declared `Fix12i` (a typedef of `s32`, so byte-identical). So is
 ~~No includer uses any of these fields in a way that distinguishes signed from
 unsigned -- no sub-word load, no comparison, no right shift, no division.~~
 
-There is a sub-word access: `src/actors/d_a_obj_wc_obj04.cpp:184` does an
+There is a sub-word access: `src/game/actors/d_a_obj_wc_obj04.cpp:184` does an
 `unsigned short*` read-modify-write on retyped `unk_3a0`, now `mStateTimer`.
 (It was `src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp:35` when this note was
 written, before the class was renamed to its RTTI spelling and promoted to a

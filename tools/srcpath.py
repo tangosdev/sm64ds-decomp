@@ -58,7 +58,7 @@ when the files it belongs with are ALREADY nested, and only when they agree on w
     then its module's files stay in the root, which is where the rest of them are.
   * a class-named symbol goes wherever its class already lives, if its existing files
     occupy exactly one subdirectory. `_ZN7daTrs_c6RenderEv` follows the other seven `daTrs_c`
-    files into `src/actors/daTrs_c/`; a `Player` method stays flat because all 248 of them
+    files into `src/game/actors/daTrs_c/`; a `Player` method stays flat because all 248 of them
     are still flat.
   * anything else -- free functions, thunks, plain names -- stays in the root.
 
