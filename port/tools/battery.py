@@ -933,7 +933,7 @@ def worker_dirs(root, build, n):
 
 
 @contextlib.contextmanager
-def windowed_phase(workers, label):
+def windowed_phase(workers, rows, label):
     """Hold the windowed slot for a whole phase, or do nothing.
 
     Taken ONLY when the rows are going to run more than one wide: with a single
@@ -943,7 +943,16 @@ def windowed_phase(workers, label):
     serialising this lane against itself.
     """
     if workers > 1 and slot_lock.enabled():
-        with slot_lock.slot_reentrant(label=label):
+        # DECLARE THE LENGTH. A phase hold is legitimately longer than one
+        # windowed run, and slot_lock's stale backstop breaks an UNDECLARED
+        # overlong hold on purpose -- that is how a lane that wedged holding the
+        # slot is recovered -- so a phase that did not say how long it would be
+        # would eventually be broken into the very collision the lock exists to
+        # stop. The number is this phase's own worst case: every row taking the
+        # full per-step timeout, `workers` of them at a time. slot_lock floors
+        # it at its own default, so a small phase cannot shorten the leash.
+        worst = STEP_TIMEOUT * -(-rows // max(1, workers))
+        with slot_lock.slot_reentrant(label=label, max_hold=worst):
             yield
     else:
         yield
@@ -1720,7 +1729,7 @@ def main():
     # arm of the branch below so the two differ only in width. With one worker
     # it is a no-op and each launch takes the per-launch lock as before.
     level_phase_t0 = time.time()
-    with windowed_phase(workers, "battery level phase"):
+    with windowed_phase(workers, len(levels), "battery level phase"):
         if workers == 1:
             for lvl in levels:
                 if not report_row(*level_row(lvl, build)):

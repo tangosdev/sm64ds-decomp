@@ -45,9 +45,9 @@ $SM64DS_TEST_LOCK_PATH is also set. The default in (2) remains for direct/hand
 CLI use, where a single human on the box is not racing another lane. acquire()
 also prints the resolved path once per process so a wrong path shows in the log.
 
-THE LOCKFILE CONTENTS are JSON: pid, host, an epoch acquire time, a "beat"
-declaration and a label. The pid and the file's mtime are what the stale-break
-below reads; the acquire time is what `status` reports.
+THE LOCKFILE CONTENTS are JSON: pid, host, an epoch acquire time, a label, and
+-- only when the holder declared one -- the max_hold it expects to need. The pid
+and time are what the stale-break below reads.
 
 TIMEOUT -- FAIL, NOT PROCEED. A caller that waits DEFAULT_ACQUIRE_TIMEOUT
 seconds (SM64DS_TEST_LOCK_TIMEOUT overrides) and still cannot get the slot
@@ -62,16 +62,18 @@ STALE-LOCK BREAK -- a crashed lane must not wedge the machine. A held lock is
 stale, and is broken and re-acquired, when EITHER:
   * the holder pid is dead (the primary, immediate check -- a crashed lane's
     pid is gone the moment it dies), OR
-  * the holder has been SILENT for longer than MAX_HOLD_SECONDS (the backstop:
-    a wedged-but-alive holder, or a pid the OS has since reused).
-A live holder proves it is alive by heartbeat: acquire() starts a daemon thread
-that touches the lockfile every HEARTBEAT_SECONDS, so the backstop measures
-silence rather than age. That distinction was not academic -- see _is_stale's
-banner for the twenty-minute legitimate hold this box produced on 2026-09-05,
-which the old age rule would have broken at thirty minutes and turned into a
-collision. Breaking is itself raced-safe: the breaker unlinks and then re-creates
-with O_EXCL, and if two lanes race to break the same stale lock, only one wins
-the create and the other loops back to waiting.
+  * the lockfile is older than the bound THAT HOLD DECLARED, which is
+    MAX_HOLD_SECONDS unless the holder said otherwise (the backstop: a
+    wedged-but-alive holder, or a pid the OS has since reused).
+MAX_HOLD_SECONDS is well above any single windowed run, so the backstop never
+fires on a legitimately long-held slot; the pid check is what recovers a crash
+promptly. A caller that KNOWS it will hold for longer -- a phase hold across a
+battery's fifty level rows, or `run --max-hold N` around a long child -- says so
+and is not broken, while an UNDECLARED long hold still is, because that is the
+shape of a mistake; see _is_stale for the afternoon on this box that produced
+one of each within the hour. Breaking is itself raced-safe: the breaker unlinks
+and then re-creates with O_EXCL, and if two lanes race to break the same stale
+lock, only one wins the create and the other loops back to waiting.
 
 HOLDING IT ACROSS A PHASE. acquire() is deliberately NOT re-entrant -- a second
 acquire in one process blocks, which is what makes a lost release show up as a
@@ -224,148 +226,85 @@ def _pid_alive(pid):
         return True
 
 
-def _read_holder_full(path):
-    """(pid, acquired_epoch, raw_text, last_beat) of the holder, or Nones."""
+def _read_holder(path):
+    """(pid, acquired_epoch, raw_text) of the current holder, or (None, None, text)."""
     try:
         with open(path, "r", encoding="utf-8") as f:
             text = f.read()
     except OSError:
-        return None, None, "", None
+        return None, None, ""
     try:
         data = json.loads(text)
-        return (data.get("pid"), data.get("acquired"), text, data.get("beat"))
+        return data.get("pid"), data.get("acquired"), text
     except (ValueError, AttributeError):
-        return None, None, text, None
-
-
-def _read_holder(path):
-    """(pid, acquired_epoch, raw_text) of the current holder, or (None, None, text)."""
-    pid, acquired, text, _ = _read_holder_full(path)
-    return pid, acquired, text
+        return None, None, text
 
 
 def _is_stale(path):
-    """Is the lock currently on disk stale (dead holder OR silent past MAX_HOLD)?
+    """Is the lock stale -- dead holder, or held past the bound it declared?
 
-    THE BACKSTOP MEASURES SILENCE, NOT AGE (run link100, lane SLOT). It used to
-    measure age, and that misfires on exactly the hold this lane is here to make
-    possible. Measured on the box on 2026-09-05: another lane held the slot for
-    over twenty minutes through `slot_lock.py run -- python ipc_proof.py`, which
-    is one legitimate hold around a whole proof script, and a waiter would have
-    declared it stale at thirty minutes and started colliding with a run that
-    was still going -- the lock manufacturing the very red it exists to prevent.
-    A phase hold (a battery holding the slot for its level rows instead of
-    taking it ninety times) makes long holds the normal case rather than the odd
-    one, so an age bound cannot stay.
+    THE BOUND IS THE HOLDER'S TO DECLARE (run link100, lane SLOT). It used to be
+    one constant for every hold, and that constant has to be two things at once:
+    small enough to recover the box from a lane that wedged while holding, and
+    large enough never to fire on a hold that is legitimately long. Both cases
+    are real and were seen on this box on the same afternoon -- a lane wedged
+    for twenty-six minutes inside `slot_lock.py run -- python ipc_proof.py`,
+    holding the slot with no windowed process running at all and 3 seconds of
+    CPU to show for it, while a battery holding the slot across its whole level
+    phase (the reason that phase can now run several rows wide) is a legitimate
+    hold of a similar length.
 
-    A live holder therefore BEATS: _beat_start below rewrites the lockfile every
-    HEARTBEAT_SECONDS while it holds. Staleness is then time since the last beat,
-    which still fires promptly on the two cases the bound was written for -- a
-    holder wedged so hard its beat thread stopped, and a lockfile whose pid has
-    since been reused by an unrelated process, whose beats obviously never come
-    -- while never firing on a holder that is alive and working.
-
-    THE "beat" FIELD IS A DECLARATION, NOT THE TIMESTAMP. It is written once, at
-    create time, and says "this holder heartbeats"; the beats themselves are
-    mtime touches (see _beat_once for why a touch and not a rewrite). So for a
-    beating holder the last sign of life IS the mtime, and that is the whole
-    rule. An OLD-FORMAT lockfile -- no "beat", written by a version without this
-    or by another tool -- keeps the previous rule exactly: the OLDER of the
-    mtime age and the recorded acquire age, so nothing about those files moves.
+    So a caller that KNOWS it will be long says so -- acquire(max_hold=...)
+    writes the number into the lockfile and _is_stale reads it back. A caller
+    that declares nothing keeps MAX_HOLD_SECONDS exactly as before, which is
+    what recovers the wedged case promptly: an undeclared long hold is still
+    the shape of a mistake, and it is only the declared one that is not.
     """
-    pid, acquired, _, beat = _read_holder_full(path)
+    pid, acquired, _ = _read_holder(path)
     if not _pid_alive(pid):
         return True
+    # mtime is the backstop; also honour the recorded acquire time if present.
     try:
         age = time.time() - os.path.getmtime(path)
     except OSError:
         return True
-    if beat:
-        return age > MAX_HOLD_SECONDS
     if acquired:
         age = max(age, time.time() - float(acquired))
-    return age > MAX_HOLD_SECONDS
+    return age > _declared_max_hold(path)
 
 
-def _write_locked(fd, label):
-    now = time.time()
-    payload = json.dumps({
+def _declared_max_hold(path):
+    """The bound this lockfile declared, or the default when it declared none."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            v = json.loads(f.read()).get("max_hold")
+        if v is not None:
+            v = float(v)
+            # A declaration can lengthen the leash, never shorten it below the
+            # default: a hold that claims it will be over in a second would
+            # otherwise be breakable a second later, and the whole point of the
+            # default is that it is comfortably above one windowed run.
+            return max(v, MAX_HOLD_SECONDS)
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+    return MAX_HOLD_SECONDS
+
+
+def _write_locked(fd, label, max_hold=None):
+    payload = {
         "pid": os.getpid(),
         "host": socket.gethostname(),
-        "acquired": now,
-        # The first beat. "acquired" stays the acquire time so `status` can
-        # still say how long the slot has been held; "beat" is the last sign of
-        # life and is what _is_stale reads. See that function's banner.
-        "beat": now,
+        "acquired": time.time(),
         "label": label or "",
-    })
-    os.write(fd, payload.encode("utf-8"))
+    }
+    # Only written when the caller declared one, so an ordinary lockfile is
+    # byte-for-byte the shape it always was and reads the same to every tool.
+    if max_hold:
+        payload["max_hold"] = float(max_hold)
+    os.write(fd, json.dumps(payload).encode("utf-8"))
 
 
-# ---- THE HEARTBEAT (run link100, lane SLOT) --------------------------------
-# A live holder touches its own lockfile on this cadence so the stale backstop
-# measures SILENCE rather than AGE. Well under MAX_HOLD_SECONDS so a working
-# holder is never within reach of the bound, and cheap enough that a lock held
-# for an hour costs a couple of hundred mtime updates and nothing else.
-HEARTBEAT_SECONDS = 30
-
-_beat_stop = None
-_beat_thread = None
-
-
-def _beat_once(path, label):
-    """Touch the lockfile's mtime, IF it is still ours. False = stop beating.
-
-    A TOUCH RATHER THAN A REWRITE, and the difference matters. Rewriting the
-    JSON would mean open(path, "w"), which is not O_EXCL: in the window between
-    reading the pid and writing, another lane could have broken this lock as
-    stale and taken it, and the write would then stamp OUR pid over THEIR
-    lockfile -- two processes each believing they hold the one slot, which is
-    worse than anything the backstop was guarding against. os.utime cannot do
-    that. It raises on a file that is gone (the release case and the broken
-    case), and in the one race it does have -- touching a file another lane has
-    just created -- it marks a lock that genuinely IS fresh as fresh.
-
-    The pid read is still worth doing: it is how the thread notices it has lost
-    the lock and stops, instead of touching a stranger's file every 30 seconds.
-    """
-    try:
-        pid, _, _, _ = _read_holder_full(path)
-        if pid != os.getpid():
-            return False
-        os.utime(path, None)
-        return True
-    except OSError:
-        return False
-
-
-def _beat_start(path, label):
-    """Start (or restart) the daemon thread that beats while we hold `path`."""
-    global _beat_stop, _beat_thread
-    _beat_stop_local = threading.Event()
-
-    def loop():
-        while not _beat_stop_local.wait(HEARTBEAT_SECONDS):
-            if not _beat_once(path, label):
-                return
-
-    _beat_stop = _beat_stop_local
-    # A daemon thread: a holder that exits without releasing (the crash case
-    # the pid check already covers) must not be kept alive by its own heartbeat.
-    _beat_thread = threading.Thread(target=loop, name="slot_lock-beat",
-                                    daemon=True)
-    _beat_thread.start()
-
-
-def _beat_stop_now():
-    global _beat_stop, _beat_thread
-    if _beat_stop is not None:
-        _beat_stop.set()
-    _beat_stop = None
-    _beat_thread = None
-
-
-def _try_create(path, label):
+def _try_create(path, label, max_hold=None):
     """One atomic attempt to create the lockfile. True if we now hold it."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     try:
@@ -373,13 +312,13 @@ def _try_create(path, label):
     except FileExistsError:
         return False
     try:
-        _write_locked(fd, label)
+        _write_locked(fd, label, max_hold)
     finally:
         os.close(fd)
     return True
 
 
-def acquire(label="", timeout=None, poll=POLL_SECONDS):
+def acquire(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """Block until this process holds the windowed slot, or time out.
 
     Returns the lockfile path on success. Raises SlotLockTimeout if the slot
@@ -406,8 +345,7 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS):
         timeout = acquire_timeout()
     deadline = time.time() + timeout
     while True:
-        if _try_create(path, label):
-            _beat_start(path, label)
+        if _try_create(path, label, max_hold):
             return path
         # Somebody holds it. Break it if it is stale, otherwise wait.
         if _is_stale(path):
@@ -420,8 +358,7 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS):
                     os.remove(path)
             except OSError:
                 pass
-            if _try_create(path, label):
-                _beat_start(path, label)
+            if _try_create(path, label, max_hold):
                 return path
         if time.time() >= deadline:
             pid, acquired, _ = _read_holder(path)
@@ -451,9 +388,6 @@ def release(path=None):
         path = lock_path()
     pid, _, _ = _read_holder(path)
     if pid == os.getpid():
-        # Stop beating BEFORE the unlink, so the heartbeat thread can never
-        # re-create a lockfile a moment after release freed it.
-        _beat_stop_now()
         try:
             os.remove(path)
         except OSError:
@@ -461,9 +395,10 @@ def release(path=None):
 
 
 @contextlib.contextmanager
-def slot(label="", timeout=None, poll=POLL_SECONDS):
+def slot(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """Context manager: hold the windowed slot for the block, release on exit."""
-    path = acquire(label=label, timeout=timeout, poll=poll)
+    path = acquire(label=label, timeout=timeout, poll=poll,
+                   max_hold=max_hold)
     try:
         yield path
     finally:
@@ -510,7 +445,7 @@ def held(path=None):
 
 
 @contextlib.contextmanager
-def slot_reentrant(label="", timeout=None, poll=POLL_SECONDS):
+def slot_reentrant(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """slot(), except a nested use by a process that already holds it is free.
 
     The outermost use acquires and releases exactly as slot() does; an inner use
@@ -531,7 +466,8 @@ def slot_reentrant(label="", timeout=None, poll=POLL_SECONDS):
             with _nest_guard:
                 _nest_depth -= 1
         return
-    path = acquire(label=label, timeout=timeout, poll=poll)
+    path = acquire(label=label, timeout=timeout, poll=poll,
+                   max_hold=max_hold)
     with _nest_guard:
         _nest_depth += 1
     try:
@@ -595,7 +531,8 @@ def main(argv=None):
     if cmd == "run":
         # Hold the slot for the whole lifetime of a child command.
         if "--" not in argv:
-            print("usage: slot_lock.py run [--label L] [--timeout N] -- <cmd...>",
+            print("usage: slot_lock.py run [--label L] [--timeout N] "
+                  "[--max-hold SECONDS] -- <cmd...>",
                   file=sys.stderr)
             return 2
         child = argv[argv.index("--") + 1:]
@@ -604,8 +541,15 @@ def main(argv=None):
             return 2
         import subprocess
         try:
+            # --max-hold DECLARES A LONG HOLD. `run` wraps a whole child
+            # command, and a child that is a proof script or a battery can
+            # legitimately run past the default stale bound -- at which point a
+            # waiter breaks the lock and starts a windowed run beside one that
+            # is still going. Say the number and it will not. Undeclared, the
+            # default still applies, which is what recovers a wedged holder.
             with slot(label=opt("--label", "cli run"),
-                      timeout=float(opt("--timeout", acquire_timeout()))):
+                      timeout=float(opt("--timeout", acquire_timeout())),
+                      max_hold=float(opt("--max-hold", 0)) or None):
                 return subprocess.run(child).returncode
         except SlotLockTimeout as e:
             print(f"slot: TIMEOUT -- {e}", file=sys.stderr)

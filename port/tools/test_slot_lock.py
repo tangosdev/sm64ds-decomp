@@ -322,56 +322,52 @@ def test_slot_reentrant_nesting_is_thread_safe(lockfile):
     assert slot_lock._nest_depth == 0
 
 
-# --- the heartbeat: the backstop measures silence, not age ----------------
-# Measured on the box on 2026-09-05: a lane held the slot for over twenty
-# minutes through `slot_lock.py run -- python ipc_proof.py`, one legitimate hold
-# around a whole proof script, and the age bound would have declared it stale at
-# thirty minutes and started a collision with a run that was still going. A
-# phase hold makes long holds normal, so these pin the new rule.
+# --- a hold may declare its own bound (run link100, lane SLOT) ------------
+# One constant had to be two things at once: small enough to recover the box
+# from a lane that wedged holding the slot, and large enough never to fire on a
+# hold that is legitimately long. Both happened on this box on the same
+# afternoon. So a long hold declares itself and an undeclared one still gets the
+# short leash.
 
-def test_a_long_live_hold_is_not_stale_while_it_beats(lockfile):
-    slot_lock.acquire(label="a long phase", timeout=2)
-    # An acquire time far past MAX_HOLD, which under the old age rule was the
-    # whole test for staleness. The holder is this live process and its mtime
-    # is fresh, so it must NOT be stale.
+def test_a_declared_bound_keeps_a_long_hold_alive(lockfile):
+    long_hold = slot_lock.MAX_HOLD_SECONDS * 3
+    slot_lock.acquire(label="a long phase", timeout=2, max_hold=long_hold)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS + 300)
+    os.utime(lockfile, (old, old))
     d = json.loads(open(lockfile, encoding="utf-8").read())
-    d["acquired"] = time.time() - slot_lock.MAX_HOLD_SECONDS * 3
-    with open(lockfile, "w", encoding="utf-8") as f:
-        json.dump(d, f)
+    assert d["max_hold"] == long_hold
+    # Past the DEFAULT bound, inside the declared one -> not stale.
     assert slot_lock._is_stale(lockfile) is False
     slot_lock.release(lockfile)
 
 
-def test_a_beating_holder_that_goes_silent_is_stale(lockfile):
-    # The wedged-but-alive case the backstop exists for: the file says the
-    # holder beats, this process is alive, and the beats stopped.
-    slot_lock.acquire(label="wedged", timeout=2)
-    old = time.time() - slot_lock.MAX_HOLD_SECONDS - 60
+def test_a_declared_bound_still_expires(lockfile):
+    slot_lock.acquire(label="a long phase", timeout=2,
+                      max_hold=slot_lock.MAX_HOLD_SECONDS * 2)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS * 2 + 300)
     os.utime(lockfile, (old, old))
     assert slot_lock._is_stale(lockfile) is True
     slot_lock.release(lockfile)
 
 
-def test_an_old_format_lockfile_keeps_the_old_rule(lockfile):
-    # No "beat" key: written by a version without the heartbeat, or by another
-    # tool. Fresh mtime, ancient acquire time -> stale, exactly as before.
-    with open(lockfile, "w", encoding="utf-8") as f:
-        json.dump({"pid": os.getpid(), "host": "x",
-                   "acquired": time.time() - slot_lock.MAX_HOLD_SECONDS - 60,
-                   "label": "old format"}, f)
+def test_an_undeclared_hold_keeps_the_short_leash(lockfile):
+    # The wedged case: nothing declared, so the default still breaks it. This is
+    # the property that must not be lost to make long holds workable.
+    slot_lock.acquire(label="wedged", timeout=2)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS + 120)
+    os.utime(lockfile, (old, old))
+    assert "max_hold" not in json.loads(open(lockfile, encoding="utf-8").read())
     assert slot_lock._is_stale(lockfile) is True
+    slot_lock.release(lockfile)
 
 
-def test_beat_once_stops_when_the_lock_is_no_longer_ours(lockfile):
-    with open(lockfile, "w", encoding="utf-8") as f:
-        json.dump({"pid": 0x7FFFFFFF, "host": "x", "acquired": time.time(),
-                   "beat": time.time(), "label": "theirs"}, f)
-    before = os.path.getmtime(lockfile)
-    assert slot_lock._beat_once(lockfile, "mine") is False
-    assert os.path.getmtime(lockfile) == before   # their file was not touched
-    # and a lockfile that is simply gone stops the beat rather than raising
-    os.remove(lockfile)
-    assert slot_lock._beat_once(lockfile, "mine") is False
+def test_a_declaration_cannot_shorten_the_leash(lockfile):
+    # A hold that claims it will be over in a second must not become breakable
+    # a second later; the default is a floor.
+    slot_lock.acquire(label="optimist", timeout=2, max_hold=1)
+    assert slot_lock._declared_max_hold(lockfile) == slot_lock.MAX_HOLD_SECONDS
+    assert slot_lock._is_stale(lockfile) is False
+    slot_lock.release(lockfile)
 
 
 # --- no-pytest standalone runner -----------------------------------------
