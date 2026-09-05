@@ -329,3 +329,7 @@
 {"path": "src/_ZN8StarDoorD0Ev.cpp", "reason": "ov100/daStarGate_c promotion consolidates legacy StarDoor and particle callback sources into the exact enrolled translation unit; member identities replace retired one-function paths."}
 {"path": "src/_ZN8StarDoorD1Ev.cpp", "reason": "ov100/daStarGate_c promotion consolidates legacy StarDoor and particle callback sources into the exact enrolled translation unit; member identities replace retired one-function paths."}
 {"path": "src/__sinit_ov100_02147a70.c", "reason": "ov100/daStarGate_c promotion consolidates legacy StarDoor and particle callback sources into the exact enrolled translation unit; member identities replace retired one-function paths."}
+{"path": "src/_ZN13dScGameOver_c16CleanupResourcesEv.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
+{"path": "src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
+{"path": "src/_ZN13dScGameOver_cD0Ev.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
+{"path": "src/_ZN13dScGameOver_cD1Ev.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
