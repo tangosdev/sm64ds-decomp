@@ -511,6 +511,20 @@ void _ZN4Heap18InitializeRootHeapEv(void);
 /* the ROM's own game-heap factory, off the main.c boot spine -- see the call
    site below for the two arguments and where they come from */
 void _ZN4Heap18InitializeGameHeapEjPS_(unsigned size, void *root);
+/* run link100 lane BOOT: the rest of the ROM's boot chain around those two
+   heap lines. This main() is the port's stand-in for the ROM's Entry and
+   main(), and the two heap calls above were the only two steps of that chain
+   it actually ran -- which is why every matched TU reachable only through
+   Entry/main sat unlinked. hal/boot_os.cpp transcribes the runnable spans of
+   src/func_02019780.c, src/main.c and src/func_0201a054.c and calls the ROM's
+   own bodies where the ROM calls them; its header block names every step it
+   SKIPS and the hardware that is missing (the ARM7 PXI handshake, the Slot-2
+   magic word at 0x08000000). The four seams below are placed in the ROM's
+   order relative to the two heap lines, not wherever they happened to fit. */
+void port_boot_rom_pre_main(void);
+void port_boot_rom_main_head(void);
+void port_boot_rom_game_init_head(void);
+void port_boot_rom_game_init_tail(void);
 /* the game heap's allocator, read for the boot report only: how much of the
    ROM's 0x3b000 the port's boot actually spends */
 unsigned _ZN22ExpandingHeapAllocator10MemoryLeftEv(void *self);
@@ -7090,8 +7104,16 @@ int main(void)
        move: hal/os_arena.cpp's accessors take that word as their `g` argument
        and ignore it outright. It matters on the DS, where NULL means "use the
        default OS globals", and it costs nothing to be faithful about. */
+    /* func_02019780 runs its own body BEFORE the root heap: func_02058c84's
+       arms, then func_0201a490, then this line. hal/boot_os.cpp carries that
+       span and names the four PXI arms it cannot run. */
+    port_boot_rom_pre_main();
     _ZN4Heap18InitializeRootHeapEv();
     if (!data_020a0ea0) return 2;
+    /* and main()'s own first three calls, which the ROM makes after Entry has
+       returned from func_02019780: the OS tick, the alarm system and the main
+       thread record. */
+    port_boot_rom_main_head();
     memset(data_0209b3ec, 0, 48);
     data_0209b3ec[0] = data_0209b3ec[4] = data_0209b3ec[8] = 0x1000;
     hal_fill_model_vtable();
@@ -7258,6 +7280,10 @@ int main(void)
        data_020a0ea0, takes size+0x18 from it, builds the allocator over the
        0x3b000 payload and runs the ExpandingHeap constructor over the header.
        Both bodies are src/, byte-matched, and reached by name from here. */
+    /* everything func_0201a054 does BEFORE that line, in its order: the tick
+       veneer and the boot timestamp, the VBlank handler install, the owner
+       record and the debug name. hal/boot_os.cpp lists the arms it skips. */
+    port_boot_rom_game_init_head();
     _ZN4Heap18InitializeGameHeapEjPS_(0x3b000, 0);
     if (!data_020a0eac_c) {
         /* Heap::Allocate Crash()es on a failed carve when the parent's flag
@@ -7275,6 +7301,10 @@ int main(void)
             data_020a0eac_c, 0x3b000u,
             _ZN22ExpandingHeapAllocator10MemoryLeftEv(
                 *(void **)((char *)data_020a0eac_c + 0x14)));
+
+    /* and the tail of func_0201a054, after its own InitializeGameHeap line:
+       the fade word pair and the fatal-vector pair that ends the function. */
+    port_boot_rom_game_init_tail();
 
     /* Game mode 0 (adventure) -- LoadClsnAndObjects branches its minimap
        and HUD spawns on this, and Stage::CheckInput reads it later. */
