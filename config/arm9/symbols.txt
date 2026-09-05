@@ -917,7 +917,7 @@ _ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE kind
 func_02022260 kind:function(arm,size=0x38) addr:0x02022260
 _ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev kind:function(arm,size=0x58) addr:0x02022298
 _ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb kind:function(arm,size=0x38) addr:0x020222f0
-_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0xf0) addr:0x02022328
+_ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE kind:function(arm,size=0xf0) addr:0x02022328
 _ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb kind:function(arm,size=0x4c) addr:0x02022418
 _ZN5dPa_c7level_c16bubbleCallback_c8OnUpdateERN8Particle6SystemEb kind:function(arm,size=0x98) addr:0x02022464
 _ZN5dPa_c7level_c16splashCallback_c8OnUpdateERN8Particle6SystemEb kind:function(arm,size=0xac) addr:0x020224fc
@@ -3211,6 +3211,7 @@ data_02086a08 kind:data(any) addr:0x02086a08
 data_02086a30 kind:data(any) addr:0x02086a30
 data_02086a58 kind:data(any) addr:0x02086a58
 data_02086b58 kind:data(any) addr:0x02086b58
+__ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_02073a24 kind:data(word) addr:0x02086b60
 .p__sinit_02073e6c kind:data(word) addr:0x02086b64
 .p__sinit_02074d90 kind:data(word) addr:0x02086b68
