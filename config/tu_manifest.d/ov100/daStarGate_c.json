@@ -202,56 +202,56 @@
   ],
   "data": [
     {
-      "symbol": "@436",
+      "symbol": "@443",
       "address": "0x02148334",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_StayClosed_Main"
     },
     {
-      "symbol": "@434",
+      "symbol": "@441",
       "address": "0x0214833c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Main"
     },
     {
-      "symbol": "@426",
+      "symbol": "@433",
       "address": "0x02148344",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Main"
     },
     {
-      "symbol": "@428",
+      "symbol": "@435",
       "address": "0x0214834c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Init"
     },
     {
-      "symbol": "@432",
+      "symbol": "@439",
       "address": "0x02148354",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_OpenClose_Init"
     },
     {
-      "symbol": "@430",
+      "symbol": "@437",
       "address": "0x0214835c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_Unlocking_Main"
     },
     {
-      "symbol": "@424",
+      "symbol": "@431",
       "address": "0x02148364",
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-emitted PTMF constant for St_TalkingToPlayer_Init"
     },
     {
-      "symbol": "@422",
+      "symbol": "@429",
       "address": "0x0214836c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
@@ -298,7 +298,7 @@
       "evidence": "model resource handle constructed with file ID 0x4a1"
     },
     {
-      "symbol": "@420",
+      "symbol": "@427",
       "address": "0x0214893c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -390,55 +390,55 @@
       "evidence": "mwcc emits the constructor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@436",
+      "symbol": "@443",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_StayClosed_Main PTMF is a configured initializer relocation destination at 0x02148334"
     },
     {
-      "symbol": "@434",
+      "symbol": "@441",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Main PTMF is a configured initializer relocation destination at 0x0214833c"
     },
     {
-      "symbol": "@426",
+      "symbol": "@433",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Main PTMF is a configured initializer relocation destination at 0x02148344"
     },
     {
-      "symbol": "@428",
+      "symbol": "@435",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Init PTMF is a configured initializer relocation destination at 0x0214834c"
     },
     {
-      "symbol": "@432",
+      "symbol": "@439",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_OpenClose_Init PTMF is a configured initializer relocation destination at 0x02148354"
     },
     {
-      "symbol": "@430",
+      "symbol": "@437",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Unlocking_Main PTMF is a configured initializer relocation destination at 0x0214835c"
     },
     {
-      "symbol": "@424",
+      "symbol": "@431",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_TalkingToPlayer_Init PTMF is a configured initializer relocation destination at 0x02148364"
     },
     {
-      "symbol": "@422",
+      "symbol": "@429",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local St_Wait_Main PTMF is a configured initializer relocation destination at 0x0214836c"
     },
     {
-      "symbol": "@420",
+      "symbol": "@427",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x0214893c"
@@ -940,7 +940,7 @@
       "source": "0x02147b84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@420",
+      "symbol": "@427",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214893c"
@@ -960,7 +960,7 @@
       "source": "0x02147b8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@422",
+      "symbol": "@429",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214836c"
@@ -970,7 +970,7 @@
       "source": "0x02147b90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@424",
+      "symbol": "@431",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148364"
@@ -980,7 +980,7 @@
       "source": "0x02147b94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@426",
+      "symbol": "@433",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148344"
@@ -990,7 +990,7 @@
       "source": "0x02147b98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@428",
+      "symbol": "@435",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214834c"
@@ -1000,7 +1000,7 @@
       "source": "0x02147b9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@430",
+      "symbol": "@437",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214835c"
@@ -1010,7 +1010,7 @@
       "source": "0x02147ba0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@432",
+      "symbol": "@439",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148354"
@@ -1020,7 +1020,7 @@
       "source": "0x02147ba4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@434",
+      "symbol": "@441",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214833c"
@@ -1030,7 +1030,7 @@
       "source": "0x02147ba8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@436",
+      "symbol": "@443",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02148334"
@@ -1231,7 +1231,7 @@
     }
   ],
   "notes": [
-    "Genuine lifecycle and state-machine source form: daStarGate_c defines its virtual destructor inline in this TU and InitResources as its key function. The compiler, not hand-authored vtable/PTMF bytes or a forcing object, owns D1/D0/D2, class RTTI/vtable, the five state objects, and their static initializer.",
+    "Genuine lifecycle and state-machine source form: daStarGate_c defines its virtual destructor inline in the directly included class header and InitResources as its key function. The compiler, not hand-authored vtable/PTMF bytes or a forcing object, owns the retail D1/D0 pair, class RTTI/vtable, the five state objects, and their static initializer; this source form emits no D2 body.",
     "SM64DS proves the daStarGate_c RTTI identity, STAR_GATE registry relationship, class layout, factory shape, state descriptor layout, PTMF targets, bodies, and relocations. The English state/method names and pointer parameter spellings are lineage-supported reconstructions; exact original source spellings are not preserved. Historical project alias: StarDoor.",
     "StarGateModelFilePtr is an evidence-bounded local wrapper spelling. Its 8-byte storage, file ID 0x4a1, constructor/destructor destinations, and runtime registration topology are direct ROM evidence; undefined_symbol_aliases map only those compiler-generated imports to their exact established addresses.",
     "The typed daStarGateInfo table reproduces all four six-byte rows. The typed STAR_GATE profile reproduces all seven fields, including actorFlags 0x00000002, and its factory relocation.",

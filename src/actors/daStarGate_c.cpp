@@ -466,7 +466,3 @@ bool daStarGate_c::St_StayClosed_Main(Player *player)
         ChangeState(&ST_WAIT, player);
     return true;
 }
-
-inline daStarGate_c::~daStarGate_c()
-{
-}

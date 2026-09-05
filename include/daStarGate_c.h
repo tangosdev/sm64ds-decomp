@@ -49,7 +49,7 @@ struct daStarGate_c : dActor_c {
     static State ST_TALKING_TO_PLAYER;
     static State ST_UNLOCKING;
 
-    virtual ~daStarGate_c();
+    virtual ~daStarGate_c() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();
