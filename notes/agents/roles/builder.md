@@ -59,9 +59,9 @@ files behave differently and only one of them tells you**:
   per promotion, so any overlap collides. That is the safe one.
 - `config/converted-backslide-exceptions.jsonl` **auto-merges silently and
   reintroduces stale rows.** Measured here: a cherry-pick re-added five
-  `ShipWing` rows naming `src/actors/d_a_obj_rc_hane.cpp`, a path `main` had
-  since moved to `src/game/actors/`. Nothing flagged it. No gate reads those
-  paths.
+  `ShipWing` rows naming the former actor-directory location for
+  `d_a_obj_rc_hane.cpp`; `main` had since moved it under `src/game/actors/`.
+  Nothing flagged it. No gate reads those paths.
 
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
