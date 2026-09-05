@@ -93,6 +93,9 @@ an earlier green head is not evidence for the new merge commit.
     python tools/cpp_tu_state.py --check-note
     python tools/source_coverage.py --check --base origin/main
     python tools/prepush_attribution.py --base origin/main --head HEAD
+    #    ^ judge it on `lost`, not on `changed`. A fold changes attribution by
+    #      construction; only a LOST symbol is a defect. Do not go reconciling
+    #      credit beyond committing the mappings it names.
 
 Run `git status` after **every** `verify` — it writes to the manifest when it
 fails, and a dirty tree after a green-looking run means it did not pass.

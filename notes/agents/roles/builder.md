@@ -69,7 +69,14 @@ PASS signals:
   replacements and 0 ROM-gap fallbacks, and the built NDS must have the retail
   SHA-256
 - `source_coverage` → `0 B` handed back to the cartridge
-- `prepush_attribution` → `0 changed, 0 lost`
+- `prepush_attribution` → **no symbol *lost*.** Do **not** hold out for
+  `0 changed`: a promotion folds N shards into one file, and the counter credits
+  only the delinks range's *first* symbol and reclassifies the rest as
+  "claimed" — see the many-to-one fold artifact below, which lists the lines
+  that are expected and are not losses. `changed` is noise on a promotion by
+  construction; `lost` is the signal. Run the check, commit what it asks for,
+  report the numbers, and move on — reconciling credit beyond that is a stated
+  non-goal in this repo and has consumed whole sessions before.
 - everything else → exit 0 with no backlog count increased
 
 **Re-read the manifest prose against what actually shipped.** This is the single
