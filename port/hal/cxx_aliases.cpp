@@ -2200,3 +2200,27 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZN8SaveData16ReadDataFromCartEPcjj=?ReadDataFromCart@SaveData@@SAHPADII@Z")
 #pragma comment(linker, "/alternatename:?Disable@IRQ@@YAIXZ=__ZN3IRQ7DisableEv")
 #pragma comment(linker, "/alternatename:?Restore@IRQ@@YAXI@Z=__ZN3IRQ7RestoreEj")
+// ---- link100 TAIL ----------------------------------------------------------
+//
+// One alias, the same shape as the gate-200 block above it and for the same
+// reason. src/_ZN14UnchainedChompD1Ev.cpp -- the ROM word at
+// _ZTV14UnchainedChomp+0x40, seated by hal/actor_classes.cpp -- declares the
+// table it stores as
+//
+//     extern int _ZTV14UnchainedChomp;
+//
+// at namespace scope OUTSIDE its own extern "C" block, so MSVC decorates the
+// reference and the port's C-named host array (`void *_ZTV14UnchainedChomp[31]`
+// in hal/actor_classes.cpp) cannot satisfy it. MEASURED, not inferred:
+//
+//     python port/tools/closure.py --root . src/_ZN14UnchainedChompD1Ev.cpp
+//     === UNRESOLVED after this slice: 1 ===
+//         ?_ZTV14UnchainedChomp@@3HA
+//
+// -- one row, and it is that string. The alias runs in the ordinary direction
+// (an UNDEFINED name pointed at a DEFINED one; nothing is redefined), so it
+// cannot be defeated the way port/tools/alternatename_guard.py checks for.
+// The TU that used to hold this slot was a hand transcription of the same body
+// in hal/actor_classes.cpp; with this alias the seat is the matched body
+// itself.
+#pragma comment(linker, "/alternatename:?_ZTV14UnchainedChomp@@3HA=__ZTV14UnchainedChomp")

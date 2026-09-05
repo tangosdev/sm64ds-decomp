@@ -423,15 +423,21 @@ static int __fastcall rkp_kill(void *s, void *)
 /* D1/D0 host thunks: func_ov016_02112a00 (D1) / func_ov016_02112a44 (D0) store
    _ZTV16daObjKi_Hasira_c / VT0 then _ZTV10dBgActor_c / VT1 (placeholders), so
    they are dropped from the slice. Same chain as ShipUp. */
+/* SLOT 16 IS THE MATCHED TU NOW, run link100 lane TAIL. The note above names
+   the blocker as the two PLACEHOLDERS, and a per-source -D is what removes a
+   placeholder: the relocations inside func_ov016_02112a00's own span say which
+   addresses its two pooled words are --
+     0x02112a3c -> ov016 0x02114b00 (data_ov016_02114b00, RockPillar's table)
+     0x02112a40 -> ov002 0x0210ae38 (_ZTV8Platform)
+   -- so port/CMakeLists.txt binds them under slice_gate216 and the body is this
+   thunk plus the base-table store the ROM makes and the thunk left out.
+   Nothing dispatches between the two stores; the caller is
+   ActorBase::AfterCleanupResources, which frees the object next.
+   SLOT 17 KEEPS ITS THUNK: func_ov016_02112a44 carries the inferred-stub
+   marker, and port/tools/inferred_stub_guard.py refuses new seats of those. */
+extern "C" int *func_ov016_02112a00(int *t);   /* ov016 0x02112a00, slot 16 */
 static int __fastcall rkp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov016_02114b00;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov016_02112a00((int *)s); }
 static int __fastcall rkp_d0(void *s, void *)
 {
     char *t = (char *)s;

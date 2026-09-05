@@ -221,14 +221,23 @@ static int __fastcall sp_render(void *s, void *)
    MovingMeshCollider +0x124, Model +0xd4, then Actor's own D2. D0 also
    frees on the game heap (matched src's own `extern void *G0` ==
    data_020a0eac). */
+/* SLOT 16 IS THE MATCHED TU NOW, run link100 lane TAIL. The note above is the
+   reason it could not be before, and a -D removes that reason rather than
+   arguing with it: the two words the recovery spells _ZTV16daObjC0_Switch_c
+   and _ZTV10dBgActor_c are the body's OWN pooled constants, and the
+   relocations inside its span say which addresses they are --
+     0x021111dc -> ov012 0x02112344 (data_ov012_02112344, this class's table)
+     0x021111e0 -> ov002 0x0210ae38 (_ZTV8Platform)
+   so port/CMakeLists.txt binds them per source under slice_gate216 and the
+   body stores the derived table and then the base, which is what the ROM does
+   and what this thunk left out entirely. Nothing dispatches between the two
+   stores or after them: the caller is ActorBase::AfterCleanupResources, which
+   frees the object next.
+   SLOT 17 KEEPS ITS THUNK: func_ov012_021111e4 carries the inferred-stub
+   marker, and port/tools/inferred_stub_guard.py refuses new seats of those. */
+extern "C" int *func_ov012_021111a0(int *t);   /* ov012 0x021111a0, slot 16 */
 static int __fastcall sp_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov012_021111a0((int *)s); }
 static int __fastcall sp_d0(void *s, void *)
 {
     char *t = (char *)s;

@@ -909,15 +909,23 @@ static int __fastcall skl_kill(void *s, void *)
    +0x124, Model +0xd4, then Actor's own D2. D0 also frees on the game heap;
    D1's caller (ActorBase::AfterCleanupResources) frees itself after the
    dispatch, so D1 stops before the Deallocate. */
+/* SLOT 16 IS THE MATCHED TU NOW, run link100 lane TAIL. The note above names
+   the blocker as the shared PLACEHOLDERS, and a per-source -D is what removes
+   a placeholder rather than working around it: the relocations inside
+   func_ov018_021111a0's own span say which addresses its two pooled words are
+     0x021111dc -> ov018 0x021138cc (data_ov018_021138cc, SkiLift's own table)
+     0x021111e0 -> ov002 0x0210ae38 (_ZTV8Platform)
+   -- so port/CMakeLists.txt binds them under slice_gate216, and the body is
+   this thunk plus the base-table store the ROM makes and the thunk dropped.
+   Nothing dispatches between the two stores or after them; D1's caller,
+   ActorBase::AfterCleanupResources, frees the object next, which is why D1
+   stops before the Deallocate in both spellings.
+   SLOT 17 KEEPS ITS THUNK: func_ov018_021111e4 carries the inferred-stub
+   marker (dsd's recovered name even calls it OnYoshiTryEat), and
+   port/tools/inferred_stub_guard.py refuses new seats of those. */
+extern "C" int *func_ov018_021111a0(int *t);   /* ov018 0x021111a0, slot 16 */
 static int __fastcall skl_d1(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov018_021138cc;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov018_021111a0((int *)s); }
 static int __fastcall skl_d0(void *s, void *)
 {
     char *t = (char *)s;

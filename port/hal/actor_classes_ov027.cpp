@@ -492,6 +492,39 @@ static void ov27_fill_shared(void *volatile *vt)
    reports as "table binding not modelled" -- a GAP IN THE CHECK, not a pass.
    The array is declared `void *` above for the same reason: an `int` array
    needs a cast here, and a cast defeats the binding read. */
+/* THE BULLY BASE'S OWN FOUR ROM WORDS, run link100 lane TAIL. Four slots of
+   this table trapped on the reading recorded below -- an intermediate the
+   derived constructor overwrites one instruction later, whose own destructors
+   are never dispatched -- and that reading is exactly what makes seating them
+   free: nothing dispatches these four, so this changes no behaviour and makes
+   the port's copy carry the words the ROM puts there. The mechanism and its
+   three conditions are hal/w2_dtor_heads.cpp's.
+
+   READ OUT OF config/arm9/overlays/ov064/relocs.txt by
+   port/tools/tail_slots.py --module ov064 --vtable 0x0211b768 --width 37:
+
+     +0x40 -> 0x02115ee0  D1        +0x44 -> 0x02115f28  D0
+     +0x7c -> 0x021165d4  slot 31   +0x80 -> 0x021163bc  slot 32
+
+   The two destructors spell data_ov064_0211b768 by its real name and need no
+   -D; slots 31 and 32 are `void f(void) {}` in the ROM, three bytes of `bx lr`
+   apiece, so the adapters below name their receiver and drop it -- there is no
+   read for a dropped receiver to be wrong about. */
+extern "C" {
+void *func_ov064_02115ee0(void *self);   /* slot 16, D1 */
+void *func_ov064_02115f28(void *self);   /* slot 17, D0 */
+void func_ov064_021165d4(void);          /* slot 31, empty */
+void func_ov064_021163bc(void);          /* slot 32, empty */
+}
+static void *__fastcall ov27_bully_base_d1(void *s, void *)
+{ return func_ov064_02115ee0(s); }
+static void *__fastcall ov27_bully_base_d0(void *s, void *)
+{ return func_ov064_02115f28(s); }
+static int __fastcall ov27_bully_base_s31(void *s, void *)
+{ (void)s; func_ov064_021165d4(); return 0; }
+static int __fastcall ov27_bully_base_s32(void *s, void *)
+{ (void)s; func_ov064_021163bc(); return 0; }
+
 static void ov27_bully_base_bringup(void)
 {
     static int done;
@@ -505,14 +538,17 @@ static void ov27_bully_base_bringup(void)
     vt[6]  = (void *)ov27_base_trap6;
     vt[9]  = (void *)ov27_base_trap9;
     /* 16/17: an intermediate installed only between two member teardowns never
-       reaches its own destructors either. */
-    vt[16] = (void *)ov27_base_trap0;
-    vt[17] = (void *)ov27_base_trap0;
+       reaches its own destructors either -- so they carry the ROM's own pair
+       (see the block above this function) rather than the trap. */
+    vt[16] = (void *)ov27_bully_base_d1;
+    vt[17] = (void *)ov27_bully_base_d0;
     /* 31..36 are Enemy/Bully's own virtuals. The derived table overwrites all
        six one instruction later in the constructor and the two destructors
-       never dispatch through them, so they trap rather than borrow 217's. */
-    vt[31] = (void *)ov27_base_trap0;
-    vt[32] = (void *)ov27_base_trap0;
+       never dispatch through them, so 33..36 trap rather than borrow 217's;
+       31 and 32 carry the ROM's own (empty) bodies for the same reason 16/17
+       do. */
+    vt[31] = (void *)ov27_bully_base_s31;
+    vt[32] = (void *)ov27_bully_base_s32;
     vt[33] = (void *)ov27_base_trap0;
     vt[34] = (void *)ov27_base_trap0;
     vt[35] = (void *)ov27_base_trap0;

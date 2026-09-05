@@ -1,0 +1,191 @@
+# Gate 216: twenty-one matched TUs the ROM's own vtable words name and the port's
+# link did not carry. Run link100, lane TAIL.
+#
+# ---- what this gate is -----------------------------------------------------
+#
+# Every row here is a WORD THE ROM PUTS IN A TABLE THE PORT ALREADY HOSTS. None
+# of them is a new class, a new mount or a new behaviour: each is a slot whose
+# host array was filled with a trap or with a shortcut into the base class,
+# where config/<module>/relocs.txt names a matched TU at exactly that offset.
+# The reference edge is therefore the ROM's own, which is the whole of what
+# port/tools/linkage.py's headline is allowed to count.
+#
+# The reads are reproducible rather than transcribed. port/tools/tail_slots.py
+# takes a module, a table address and a width, resolves every slot through the
+# module's own relocs.txt and symbols.txt, and marks each word L (its matched
+# TU is in walk_window.map), U (a matched TU exists and is NOT in the map) or X
+# (no matched TU exists at all). Every row below is a U row, quoted in the
+# seat's own comment where it is seated:
+#
+#   python port/tools/tail_slots.py --module ov002 --vtable 0x02108d94 --width 32
+#   python port/tools/tail_slots.py --module ov002 --vtable 0x021091d4 --width 32
+#   python port/tools/tail_slots.py --module ov002 --vtable 0x02109278 --width 32
+#   python port/tools/tail_slots.py --module ov002 --vtable 0x02109320 --width 32
+#   python port/tools/tail_slots.py --module ov064 --vtable 0x0211b768 --width 37
+#
+# ---- 1. THE TWO ACTOR TAIL VENEERS, slots 8 and 11 of every Actor table -----
+#
+# _ZN5Actor13AfterBehaviorEj (arm9 0x02010fc8) and _ZN5Actor11AfterRenderEj
+# (0x02010f6c) are the ROM's words at slots 8 and 11 of ~180 vtables -- every
+# Actor-derived class in the game. Both are two-instruction ARM tail-call
+# veneers (`ldr ip,[pc]; bx ip`) into ActorBase's bodies, so `this` and the
+# VirtualFuncSuccess code ride through r0/r1 and the matched TUs are declared
+# void() taking neither. hal/actor_classes.cpp used to call the ActorBase
+# target directly for that reason.
+#
+# WHAT SETTLES IT IS THE CALLEE, and hal/method_faces.cpp measured it for the
+# _ZTV5Scene pair of the same family:
+#
+#     ?AfterBehavior@ActorBase@@UAEXI@Z   00000000: C2 04 00   ret 4
+#     ?AfterRender@ActorBase@@UAEXI@Z     00000000: C2 04 00   ret 4
+#
+# Neither reads ecx, neither reads [ebp+8], and /OPT:ICF folds them onto one
+# address. A dropped receiver cannot be wrong where there is no read to be
+# wrong about. Both C names are already DEFINED and PORT_HOST_ABI-tagged in
+# hal/method_faces.cpp, and that file's own comment names these two TUs as the
+# ones that would resolve there "if a later lane links them". This is that
+# lane.
+#
+# SLOT 5 IS NOT HERE and the reason is the same test failing the other way.
+# _ZN5Actor21AfterCleanupResourcesEj's target, ActorBase::AfterCleanupResources
+# (0x02043b2c), walks this->sceneNode (+0x14) and this->behavNode (+0x28) off
+# the two processing lists, destroys this->unk4C and this->unk48, dispatches
+# its own virtual destructor and calls Memory::Deallocate -- every one a read
+# of the receiver, and its first statement tests the ARGUMENT. That is the
+# CRASH half of the dropped-receiver mode, so slot 5 keeps calling the target
+# directly and the TU stays unlinked.
+src/_ZN5Actor13AfterBehaviorEj.cpp
+src/_ZN5Actor11AfterRenderEj.cpp
+#
+# ---- 2. FOUR ABSTRACT ov002 INTERMEDIATES' OWN DESTRUCTOR PAIRS -------------
+#
+# data_ov002_02108d94 (daObjDorifu_c) and data_ov002_021091d4 (daObjKaitendai_c)
+# are filled by hal/actor_classes_ov036.cpp; data_ov002_02109278 and
+# data_ov002_02109320 (ids 151 and 152's intermediate bases) by
+# hal/actor_classes_ov047.cpp. All four had slots 16 and 17 trapping, with the
+# same note at each fill: "an abstract intermediate installed only between two
+# member teardowns never reaches its own destructors either."
+#
+# THAT NOTE IS WHY THE SEAT IS FREE, not a reason against it. Nothing
+# dispatches these eight words, so seating them changes no behaviour; what it
+# changes is that the port's copy of each table now carries the pair the ROM
+# puts there instead of a trap. Same three conditions as every seat in
+# hal/w2_dtor_heads.cpp: real hosted storage (the four `void *x[32]` arrays),
+# no other writer (each bring-up runs once, guarded by its own `done`), no live
+# dispatch (the note above, unchanged).
+#
+# The daObjDorifu_c pair spells both of its vtable stores by their real names.
+# The other six carry the shared-header placeholders _ZTV10dBgActor_c (the
+# class's OWN table) and VT1 (_ZTV8Platform, ov002 0x0210ae38), bound per
+# source in port/CMakeLists.txt from each body's own literal pool -- read out
+# of the relocations inside each function's span, not from the recovery's
+# names. G0 is the game heap (data_020a0eac) in the three deleting halves.
+src/func_ov002_020b4af8.c
+src/func_ov002_020b4a70.c
+src/func_ov002_020b6664.c
+src/func_ov002_020b660c.c
+src/func_ov002_020b686c.c
+src/func_ov002_020b6814.c
+src/func_ov002_020b6a3c.c
+src/func_ov002_020b69e4.c
+#
+# ---- 3. THE BULLY/BIGBULLY BASE TABLE, four words --------------------------
+#
+# data_ov064_0211b768 is the 37-slot base Bully and BigBully share, hosted and
+# filled by hal/actor_classes_ov027.cpp. Slots 16/17 trapped on the same
+# intermediate reading as section 2; slots 31 and 32 trapped because "the
+# derived table overwrites all six one instruction later in the constructor and
+# the two destructors never dispatch through them".
+#
+# The two destructors name data_ov064_0211b768 directly and need no rename.
+# 0x021165d4 and 0x021163bc are `void f(void) {}` -- one `bx lr` each -- so
+# their slot adapters name the receiver and drop it, which cannot be wrong for
+# a body with no loads in it.
+src/func_ov064_02115ee0.c
+src/func_ov064_02115f28.c
+src/func_ov064_021165d4.c
+src/func_ov064_021163bc.c
+#
+# ---- 4. UNCHAINED_CHOMP'S OWN DELETING DESTRUCTOR, slot 17 -----------------
+#
+# _ZTV14UnchainedChomp (ov100 0x02148188) is a host array hal/actor_classes.cpp
+# fills, and its slot 17 trapped on the Butterfly/Fish reading recorded at the
+# fill: "destroy is D1 + an explicit Deallocate; nothing on this level calls the
+# deleting form." Slot 16 is already filled with a hand transcription of the
+# matched D1 for the same class, so the shape is settled; slot 17 now carries
+# the matched body itself. The ROM's word at 0x021481cc is 0x02143290 =
+# _ZN14UnchainedChompD0Ev. If nothing dispatches it the seat is free; if
+# anything ever does, the matched body is what the ROM runs where the trap
+# would have aborted.
+src/_ZN14UnchainedChompD0Ev.cpp
+#
+# ---- 5. SIX MORE D1 SLOTS, one per class, all from the same two blockers ----
+#
+# Every row here is slot 16 of a table the port hosts and fills, where the fill
+# carried a HAND THUNK instead of the ROM's word. Two things kept them out and
+# both are removed rather than argued with:
+#
+#   THE SHARED-HEADER PLACEHOLDERS. func_ov012_021111a0, func_ov016_02112a00
+#   and func_ov018_021111a0 spell their two vtable stores _ZTV16daObjC0_Switch_c
+#   / _ZTV16daObjKi_Hasira_c / _ZTV14daObjSm_Lift_c and then _ZTV10dBgActor_c.
+#   Each fill's own note says the placeholders are why the TU was dropped. The
+#   relocations INSIDE each function's span say which addresses those pooled
+#   words are, and port/CMakeLists.txt binds them per source:
+#     ov012 0x021111dc -> data_ov012_02112344   0x021111e0 -> _ZTV8Platform
+#     ov016 0x02112a3c -> data_ov016_02114b00   0x02112a40 -> _ZTV8Platform
+#     ov018 0x021111dc -> data_ov018_021138cc   0x021111e0 -> _ZTV8Platform
+#   func_ov013_021111a0 has NO placeholder at all -- its single pooled word is
+#   data_ov013_02112128 by that name -- and the thunk it replaces was a
+#   line-for-line copy of it, so that row takes no -D and changes nothing.
+#   func_ov100_021443f4 likewise spells _ZTV8daDoor_c by the array's own name.
+#
+#   THE DECORATED VTABLE REFERENCE. src/_ZN14UnchainedChompD1Ev.cpp declares
+#   `extern int _ZTV14UnchainedChomp;` outside its extern "C" block, so MSVC
+#   emits ?_ZTV14UnchainedChomp@@3HA -- the single row closure.py reports for
+#   that TU. The link100 block at the end of hal/cxx_aliases.cpp aliases it
+#   onto the host array.
+#
+# WHAT THESE SIX DO AT RUNTIME, since unlike sections 1-4 four of them ARE
+# dispatched. Each is its class's complete destructor, reached once per
+# instance from ActorBase::AfterCleanupResources at level teardown. The matched
+# body is the thunk's own chain plus the base-table store the ROM makes and the
+# thunk dropped, and nothing dispatches on the object between that store and
+# the Memory::Deallocate the caller does next. The door's and the chomp's are
+# not dispatched at all, by the readings their fills already carry.
+#
+# THE D0 HALVES ARE NOT HERE. func_ov012_021111e4, func_ov013_021111d0,
+# func_ov016_02112a44, func_ov018_021111e4 and func_ov100_02144424 all carry
+# the "recovered from vtable slot identity" marker, and
+# port/tools/inferred_stub_guard.py refuses new seats of guessed bodies. Their
+# slots keep the host thunks.
+src/func_ov012_021111a0.c
+src/func_ov013_021111a0.c
+src/func_ov016_02112a00.c
+src/func_ov018_021111a0.c
+src/func_ov100_021443f4.c
+src/_ZN14UnchainedChompD1Ev.cpp
+#
+# ---- NOT IN THIS GATE, and why, so the rows stop reading as work -----------
+#
+# * func_ov018_021111a0 / _021111e4 (SKI_LIFT's own D1/D0, data_ov018_021138cc
+#   slots 16/17). Same shape, but that table is a LIVE registered class's own
+#   and its two slots are host thunks with a documented divergence, not traps.
+#   Swapping a live teardown is a behaviour change and belongs to whoever owns
+#   that class, not to a head seat.
+# * The four _ZThn80_ this-adjusting destructor thunks (_ZTV9ModelAnim[9],
+#   _ZTV10ModelAnim2[9,10], _ZTV14BlendModelAnim[9]). Group 1 of
+#   hal/w2_dtor_heads.cpp's sweep: the matched sources are mwcc ARTEFACT
+#   reconstructions that under MSVC define ??1Derived@@UAE@XZ and not the
+#   thunk's own name at all. Not linkable, in this gate or any other.
+# * _ZN15FaderBrightnessD0Ev / D1Ev / AdvanceFade (data_0208eacc slots 0,1,2),
+#   _ZN5FaderD0Ev / D1Ev (data_0208eafc) and _ZN10FaderColorD0Ev
+#   (data_0208eb2c). Real hosted storage, trap-filled -- but the fill is
+#   l2_fill_0208ea6c in hal/scene_boot.cpp, which this lane owns only for
+#   shadow hunks, and those three tables are on func_02017278's live critical
+#   path rather than being abstract intermediates. Proposal, not a seat.
+# * Every remaining Render/Behavior row the sweep turns up (Snufit, Swoop,
+#   Dorrie, MontyMole, Amp, FlameChomp, Bully, Koopa, ShipUp, Wiggler, ...).
+#   Those slots are served by HOST COPIES, not traps, and the copies exist for
+#   the ModelAnim slot-5 collision (port/unmatched/W19_Slot5_Renders.cpp) or a
+#   pointer-to-member dispatch. Linking them would re-introduce a measured
+#   crash.
