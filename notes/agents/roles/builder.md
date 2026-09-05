@@ -25,7 +25,12 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
 
     # 2. ratchet, then COMMIT — before anything reads an eligibility report
     python tools/tiers_ratchet.py --check
-    python tools/tiers_ratchet.py --update --reason "<why>"
+    #    ^ if this PASSES, do NOT --update. The writer already banked, and
+    #      --update appends rather than replaces, so running it anyway commits
+    #      exactly the double-banking defect described below. Audit instead:
+    #      count byte-identical whole records, and set-diff
+    #      converted-baseline.json["converted"] against the base.
+    python tools/tiers_ratchet.py --update --reason "<why>"   # only if --check FAILED
     git add -A && git commit
 
     # 3. everything that reads HEAD or a report
@@ -186,6 +191,25 @@ already stale. Getting this wrong costs a full validation cycle.
 - Never run two consumers of `build/` at once — a backgrounded `rombuild` beside
   `eligible.py` invents link errors.
 
+## Tools the write-up needs, and how they mislead
+
+- **`opnew_sizes.py` and `rtti_vtables.py` both need `build/rtti.json`**, which
+  only `tools/rtti_extract.py` writes. Without it they die on a bare
+  `FileNotFoundError` naming no remedy. Run the extractor first.
+- **`rtti_vtables.py`'s slot count is not authoritative** — the known `_ZTV`
+  extent overrun. It reported 34 slots for `daObjCtMecha03_c` against a real 32;
+  the tail two words sat *below* the overlay's own load range. Corroborate
+  against `romdata_check`'s verified byte count (128 = 32 x 4) or the `_ZTV`
+  section size `verify` prints.
+- **`check_object()` alone does nothing.** The per-symbol verdict recipe is:
+  build `name_index()` and `rom_data_index()`, compile with `_compile(rel,
+  tmpdir)`, *then* call `check_object()`. It is worth the trouble — it is how a
+  cross-module RTTI home gets proved from the other direction
+  (`_ZTI10dBgActor_c ov002 VERIFIED 12 bytes`).
+- **Write scratch files under a class-unique name.** The session scratchpad is
+  shared across concurrent pipeline agents; a sibling builder overwrote a
+  `pr-body.md` mid-run. Use `pr-body-<Class>.md`.
+
 ## Flag spellings that differ from the obvious guess
 
 - `langmode_audit.py --check` takes a **path**: `--check langmode-baseline.json`.
@@ -206,8 +230,9 @@ Body carries the proof block verbatim:
 Those figures are **one class's example, not a target.** Paste your own.
 
 plus a class-identity write-up: cite the `_ZTS` / `_ZTI` (with base) / `_ZTV` ROM
-addresses and the factory's `new`-size literal; diff the vtable slot-by-slot
-against the base's to enumerate the overrides; state the destructor placement and
+addresses and the factory's `new`-size literal (`tools/opnew_sizes.py`); diff the
+vtable slot-by-slot against the base's to enumerate the overrides
+(`tools/rtti_vtables.py --own <Class>`); state the destructor placement and
 why; state the promotion route (text-only + `compiler_only_output`, or
 intact-object) and what the sibling oracle does.
 
@@ -223,11 +248,19 @@ sitting locally. It does not always — one measured run had the hook fire with 
 commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
 non-empty, push again. A PR missing its lineage commit looks complete.
 
-Two validator lines are expected on a promotion and are not losses. `Contributor
-credit: 0 added, N changed, 0 lost` is the hook restamping authorship, and
-`N address range(s) left the byte-verified set` is the counter reading a
-many-to-one fold — the same run reports `Relocation check: N checked; N
-VERIFIED`. Explain both in the PR body so the reviewer need not rediscover them.
+Several validator lines are expected on a promotion and are not losses. All are
+the same many-to-one fold artifact: the counter credits only the delinks range's
+**first** symbol and reclassifies the rest as "claimed".
+
+    Contributor credit: 0 added, N changed, 0 lost
+    N address range(s) left the byte-verified set
+    N more function(s) now claim a match that nothing compiles
+    Byte-verified functions -N, code bytes -N,NNN
+
+The byte figure reconciles exactly — on `daObjCtMecha03_c`, -1,236 is the eight
+functions' 1,312 bytes minus D1's `0x4c`. The same run reports `Relocation
+check: N checked; N VERIFIED`. Explain all four in the PR body, or the next
+builder chases the ones you left out.
 
 Add a plain-English TL;DR a CS generalist can read, above the evidence.
 
@@ -237,4 +270,7 @@ minutes, and it validates **the final SHA** — do not push again once it is gre
 
 ## Done when
 
-PR open, `PR validation` green, claim released. Do not merge your own PR.
+PR open, `PR validation` green, claim released **if one exists** — a class the
+writer already released, or that was never claimed, has no `refs/claims/*` ref
+and nothing to release. `python tools/classqueue.py status <Class>` answers this
+read-only. Do not merge your own PR.

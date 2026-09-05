@@ -200,6 +200,35 @@ def cmd_claim(args):
     return 0
 
 
+def cmd_status(args):
+    """Read-only: is this class claimed, and by whom?
+
+    Added because builder.md's "release your claim when done" gave no way to ask
+    whether there *was* one. A class the writer already released, or that was
+    never claimed, has no ref -- and a release of a claim you do not hold is
+    indistinguishable from a bug without this.
+    """
+    cls = normalize_cls(args.cls)
+    live = held()
+    mine = {ref: sha for ref, sha in live.items()
+            if ref.rsplit("/", 1)[-1] == cls}
+    if not mine:
+        print(f"UNCLAIMED {cls}")
+    for ref, sha in sorted(mine.items()):
+        body = git("cat-file", "-p", sha, check=False).stdout
+        detail = body.strip().splitlines()[-1] if body.strip() else ""
+        print(f"CLAIMED {ref}")
+        print(f"  {detail}")
+
+    prior = prior_work(cls)
+    if prior:
+        print("")
+        print("branches and worktrees mentioning this class:")
+        for b in prior:
+            print(f"  {b}")
+    return 0
+
+
 def cmd_release(args):
     git("push", "origin", "--no-verify", "--delete", ref_for(args.cls, args.role))
     print(f"RELEASED {args.cls} ({args.role})")
@@ -240,6 +269,10 @@ def main():
     c.add_argument("--role", required=True, choices=ROLES)
     c.add_argument("--worktree", default="")
     c.set_defaults(fn=cmd_claim)
+
+    st = sub.add_parser("status", help="report whether a class is claimed (read-only)")
+    st.add_argument("cls")
+    st.set_defaults(fn=cmd_status)
 
     r = sub.add_parser("release", help="drop a claim")
     r.add_argument("cls")
