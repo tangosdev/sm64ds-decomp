@@ -3,7 +3,7 @@
   "module": "ov027",
   "source": "src/actors/daPgDfdr_c.cpp",
   "promoted_source": "src/actors/daPgDfdr_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21118c8..0x211207c, 15 function(s), from build/tu_map.json (tools/tu_map.py)",
