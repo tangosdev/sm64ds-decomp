@@ -714,3 +714,7 @@
 {"id":"ov006:0x020f593c","module":"ov006","addr":34560316,"name":"func_ov006_020f593c","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_020f593c.c"}
 {"id":"ov006:0x02123428","module":"ov006","addr":34747432,"name":"func_ov006_02123428","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"andrewboudreau","srcPath":"src/func_ov006_02123428.cpp"}
 {"id":"arm9:0x0206a928","module":"arm9","addr":33990952,"name":"func_0206a928","matchProvenance":{"kind":"ai","model":"claude","reasoning":"max","harness":"grok-build"},"author":"github-actions[bot]","srcPath":"src/func_0206a928.c"}
+{"id":"ov063:0x021166ac","module":"ov063","addr":34694828,"name":"func_ov063_021166ac","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov063_021166ac.cpp"}
+{"id":"ov007:0x020b8188","module":"ov007","addr":34308488,"name":"func_ov007_020b8188","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov007_020b8188.c"}
+{"id":"ov021:0x021116c8","module":"ov021","addr":34674376,"name":"_ZN12WorkElevator8BehaviorEv","matchProvenance":{"kind":"human"},"author":"github-actions[bot]","srcPath":"src/_ZN12WorkElevator8BehaviorEv.cpp"}
+{"id":"ov004:0x020ae5c4","module":"ov004","addr":34268612,"name":"func_ov004_020ae5c4","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov004_020ae5c4.cpp"}
