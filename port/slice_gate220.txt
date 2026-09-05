@@ -1,0 +1,130 @@
+# GATE 220 -- _ZTV5Stage SLOT 6: THE ROM'S OWN Stage::Behavior, AND THE FRAME
+# LOOP THAT WAS HOSTING IT.  (run link100, lane FRAME)
+# ============================================================================
+#
+# WHAT THIS GATE IS.  Slot 6 of the Stage's own vtable held a host occupant --
+# `static int __fastcall st_behavior(void *, void *) { return 1; }` -- through
+# five Stage lanes.  Every one of them declined the ROM body, and
+# port/stage_lifecycle_map.txt section 12b finally measured why: it was never a
+# missing symbol.  port/tests/walk_window.cpp WAS the port's copy of
+# Stage::Behavior, transcribed statement by statement into the frame loop, with
+# the freeze-mask latch in hal/actor_registry.cpp, UpdateMessage's body in
+# hal/message_pump.cpp and the VS countdown in hal/star_flow.cpp.  Seating the
+# ROM body without retiring those runs the cutscene script twice a frame.
+#
+# All five sites are retired in the same commit as this file.  Section 13 of
+# port/stage_lifecycle_map.txt is the accounting; hal/stage_frame.cpp carries
+# the faces and the two entry points; hal/stage_globals.cpp hosts the eighteen
+# arm9 .bss words the closure reads.
+#
+# WHY THE PAUSE SCREEN IS IN HERE AND COULD NOT BE SEAMED.  Stage::Behavior's
+# last block is the pause TRIGGER: on START it writes data_0209f2c4 = 1, stops
+# the timer and calls PS_Init() then PS_Update().  A seat that seamed those two
+# would enter the pause state and never leave it -- the pause trio
+# (data_0209f294 | data_0209f2c4 | data_0209f20c) gates Actor::BeforeBehavior,
+# so the world would freeze with no menu drawn and no way out.  That is worse
+# than the program this replaces, where START did nothing at all.
+#
+# AND IT IS REACHABLE, which is the half that settles it rather than an
+# argument from caution.  In adventure mode the trigger's own gate is
+#
+#     if ((b1 && data_0209fc68 == 0) || (data_0209caa0[2] & 0x80))
+#
+# where b1 is VS mode, so a single-player frame needs flags2 bit 7.  Exactly
+# one write in the whole image sets that bit: src/func_ov085_0212d5dc.cpp:51,
+# LakituBro's last opening state, `data_0209caa0[2] |= 0x80`.  It is the
+# "the opening has been seen" bit -- HUD::Behavior and HUD::Render gate on the
+# same word -- so any run that has been through the opening reaches the pause
+# trigger, and the port's own boot goes through the opening.  The whole
+# PS_Update tree is therefore enrolled: the five menu arms
+# (PS_UpdateSaveMenu, PS_UpdateOptionsMenu, PS_UpdateOkAndBackButtons,
+# UpdateMenuButtons) and the nine Message::Display* bodies they draw through.
+#
+# THE ONE SEAM, NAMED.  func_020199a4 is not here.  Stage::Behavior reaches it
+# on the VS side only (`if (data_0209fcc8 >= 7u) func_020199a4()`), and its own
+# closure is 63 further TUs behind a 36-symbol wall that is the DS's own HEAP
+# ALLOCATOR (func_0204xxxx/func_0205xxxx, NestedHeapIterator, HeapAllocator)
+# and the IRQ/CP15 primitives under it -- WaitByLoop, func_02057014,
+# func_02057198 and func_02059d8c are ARM asm MSVC cannot assemble.  The port
+# has its own allocator and does not want the cartridge's.  hal/stage_frame.cpp
+# carries the seam and it is LOUD: a reach prints once and names itself.
+#
+# WHAT THE ENROLMENT COSTS OUTSIDE THIS FILE, all of it declared in section 13:
+#   hal/stage_globals.cpp   18 arm9 .bss words, sized by ROM span, plus the
+#                           __aeabi_uidiv host primitive (the signed twin has
+#                           been in hal/actor_vtables.cpp since wave 5)
+#   port/tools/romdata.py   EIGHT NAMED rows, every one checked the way lane
+#                           STAGE checked its three: relocation-free over the
+#                           whole span (config/arm9/relocs.txt) and
+#                           delta-to-next-symbol exact.  They are the pause
+#                           screen's BG TILE-OFFSET TABLES and not pointers,
+#                           which is the thing to check before reading the
+#                           `PAG` in ?data_020755c0@@3PAGA as an address:
+#                           src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp:36 reads
+#                           `G2S::GetBG1ScrPtr() + data_020755c0[j]`, so the
+#                           table holds tile INDICES and the pointer is the
+#                           accessor's.
+#   hal/cxx_aliases.cpp     the link100 FRAME block: spelling binds between the
+#                           .c-recovered and .cpp-recovered halves of one call
+#                           graph.  Nothing there changes a body; each row
+#                           names the same function twice.
+#
+src/Message_DrawCenteredLine.c
+src/_ZN3G2S12GetBG1ScrPtrEv.c
+src/_ZN5Sound10PauseMusicEv.c
+src/_ZN5Sound12PlayBank3_2DEj.cpp
+src/_ZN5Sound12UnpauseMusicEv.c
+src/_ZN5Stage10PS_CleanupEv.c
+src/_ZN5Stage17PS_UpdateSaveMenuEb.c
+src/_ZN5Stage17UpdateMenuButtonsEb.c
+src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp
+src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp
+src/_ZN5Stage7PS_InitEv.cpp
+src/_ZN5Stage7VE_InitEv.cpp
+src/_ZN5Stage8BehaviorEv.cpp
+src/_ZN5Stage9LC_UpdateEv.cpp
+src/_ZN5Stage9PS_UpdateEv.cpp
+src/_ZN5Stage9VE_UpdateEv.cpp
+src/_ZN6Player8CanPauseEv.cpp
+src/_ZN7Message11DisplayTextEt.cpp
+src/_ZN7Message16DisplayPauseTextEth.cpp
+src/_ZN7Message18DisplayPauseTextVSEt.cpp
+src/_ZN7Message19DisplayDontSaveTextEt.cpp
+src/_ZN7Message19DisplaySaveMenuTextEt.c
+src/_ZN7Message21DisplayLevelClearTextEta.c
+src/_ZN7Message21DisplaySaveStatusTextEt.cpp
+src/_ZN7Message22DisplayOptionsMenuTextEt.cpp
+src/_ZN7Message25DisplayControllerModeTextEt.cpp
+src/_ZN7Message7DisplayEj.cpp
+src/func_02011c24.c
+src/func_02011c54.c
+src/func_02011db4.c
+src/func_02019a58.c
+src/func_0201b100.c
+src/func_0201cfb8.c
+src/func_0201d418.c
+src/func_0201d850.c
+src/func_0201e220.cpp
+src/func_02029408.c
+src/func_02031428.c
+src/func_020321fc.c
+src/func_020326ac.c
+src/func_02032f54.c
+src/func_020345b0.c
+src/func_0204efe0.c
+src/func_0204f558.c
+src/func_0204f958.c
+src/func_0204fce8.c
+src/func_0204fed0.cpp
+src/func_020501b8.c
+src/func_02052234.c
+src/func_0205ac28.c
+src/func_0205ad6c.c
+src/func_0205f650.c
+src/func_0205f66c.c
+src/func_0205f68c.c
+src/func_0205fa78.c
+src/func_0205fab4.c
+src/_ZN5Stage8CanPauseEv.c
+src/_ZN5Stage15IsPauseDisabledEv.c
+src/func_ov002_020bd8ac.c
