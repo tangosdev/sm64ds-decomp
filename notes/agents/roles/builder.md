@@ -16,9 +16,10 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/tubuild.py verify <ov>/<Class>
     #    ^ this CAN write to the manifest: it may add a partial_isolation block
     #      that is degenerate post-promotion (contributionEquivalent "0/22",
-    #      state "derived"). Revert it if it appears. It does not always: a
-    #      daPgDfdr_c rebase left the tree clean, so it is likely conditional on
-    #      the manifest already reading status: promoted. Check, do not assume.
+    #      state "derived"). Revert it if it appears -- it does not always. The
+    #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
+    #      had that status and verify still wrote nothing. It more likely writes
+    #      only when no partial_isolation block exists yet. Check, do not assume.
     python tools/rombuild.py -j 6 --no-rom
     python tools/romdata_check.py --files src/actors/<Class>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
@@ -56,6 +57,25 @@ PASS signals:
 - `rombuild` → `module fidelity: 106/106 exact, 100.000000% of compared bytes`
   and `ROM-build analysis: PASS`
 - everything else → exit 0 with no backlog count increased
+
+**Re-read the manifest prose against what actually shipped.** This is the single
+largest class of defect found so far, and no gate looks at it. When a writer
+narrows a range mid-run, the rationale written for the *earlier* plan stays
+behind and can assert the opposite of what shipped. On `daObjFallBlock_c`, four
+places still described the superseded 12-function state: `boundary_evidence`
+claimed the set was "left whole at 12/12 **rather than** cut to the orderable
+10" — contradicting the entry directly below it — a note concluded **"PROMOTION
+IS REFUSED"**, the header warned "IT COSTS THE TU PROMOTION" beside a path the
+file no longer occupies, and the shipped `.cpp` was still headed *"SHADOW
+translation unit — NOT ENROLLED, NOT CANONICAL. This file contributes nothing to
+the ROM build."* All byte gates were green throughout.
+
+**Check every `compiler_only_output` canonical address against the owning
+module's own `symbols.txt`**, and scan the tree to confirm each is defined
+exactly once. Cross-module homes are normal, not a smell — but a wrong one is
+invisible to the byte gates. Corroborate from a second direction where you can:
+the vtable's typeinfo word relocates to the `_ZTI` address, and `check_object()`
+gives a per-symbol VERIFIED.
 
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
@@ -241,6 +261,12 @@ Say which gates you had to `--update` and why.
 **If the class is abstract there is no factory and no `new`-size literal.**
 `daOts_c` has neither — nothing in the image allocates one, and its vtable
 carries pure-virtual zero words. Say so instead of inventing a number.
+
+There is a third case between the two: an **abstract base whose descendants are
+concrete**. `daObjFallBlock_c` allocates nothing itself, but its four
+descendants' factories each `mov r0, #0x34c` — corroborating the header's
+`0x34c` span from four independent overlays. That is stronger evidence than a
+single factory, so look for it before writing "no size available".
 
 **Check what you actually pushed.** The pre-push hook *can* create an attribution
 commit without pushing it, so `git push` may report success and leave that commit
