@@ -21,15 +21,29 @@
  * Model@0xd4), then dActor_c::~dActor_c.
  *
  * daDsnBase_c ends its own data at 0x360; this class's own storage starts
- * there. THE SPAN ONLY REACHES 0x39c -- daDsnBase_c.h notes 0x360..0x3a0
- * exists in both leaves (daDkk_c_classInit allocates 0x3a0, Thwomp_Spawn 0x3a4)
- * but stays declared per-leaf until a later pass shows both reading the same
- * offsets. Here the two fields are:
+ * there. daDsnBase_c.h notes 0x360..0x3a0 exists in both leaves
+ * (daDkk_c_classInit allocates 0x3a0, Thwomp_Spawn 0x3a4) but stays declared
+ * per-leaf until a later pass shows both reading the same offsets. This TU
+ * touches SIX words in that span. TWO ARE NAMED HERE:
  *
- *   0x390  a Fix12 height read/written by InitResources' raycast probe and
- *          nothing else -- coined mProbeHeight.
+ *   0x390  a Fix12 height InitResources' raycast probe writes and nothing in
+ *          this TU reads -- coined mProbeHeight.
  *   0x398  a small state selector Behavior switches on (cases 0..7) --
  *          coined mState.
+ *
+ * FOUR MORE ARE LIVE BUT LEFT UNNAMED, reached through raw offsets exactly as
+ * the un-migrated shards reached them. They stay inside pad_394 and pad_39c
+ * until a second reader fixes what they are:
+ *
+ *   0x394  s32. The state-5 fall reads it as the ground height to snap to and
+ *          never writes it -- so it is NOT mProbeHeight under another name.
+ *          0x390 and 0x394 are separate words; both accesses byte-match.
+ *   0x39c  s16, a target facing angle: state 6 writes it, state 7 approaches it.
+ *   0x39e  u8, the post-landing pause countdown.
+ *   0x39f  u8, the landing counter that turns the actor on its fourth pass.
+ *
+ * Naming them is a prose question only -- every access above is already a raw
+ * offset, so no byte moves either way.
  *
  * Slot 29, OnAimedAtWithEgg, is an override this class supplies beyond the
  * two (InitResources, Behavior) daDsnBase_c leaves abstract; the signature
