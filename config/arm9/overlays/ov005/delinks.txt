@@ -51,6 +51,10 @@ src/func_ov005_020c0250.cpp:
     complete
     .text start:0x020c0250 end:0x020c0378
 
+src/func_ov005_020c0378.cpp:
+    complete
+    .text start:0x020c0378 end:0x020c06cc
+
 src/func_ov005_020c06cc.c:
     complete
     .text start:0x020c06cc end:0x020c0878
