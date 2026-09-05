@@ -600,8 +600,12 @@ NAMED = [
     # path the port takes.
     "data_02099fb0",
     # run link100, lane STAGE: the OBJECT-OVERLAY tables, so the ROM's own
-    # LoadOrUnloadObjectOverlays can run on the port's hosted LoadOverlay /
-    # UnloadOverlay leaves instead of a host body standing in for it.
+    # LoadOrUnloadObjectOverlays can run on the port's two hosted leaves instead
+    # of a host body standing in for it. The two leaves are not the same kind of
+    # thing and this comment used to imply they were (corrected by lane
+    # STAGEFIX): LoadOverlay is an empty PORT_HOST_ABI body in
+    # hal/scene_boot.cpp, while UnloadOverlay is a loud-once refusal seam at
+    # hal/scene_vs_menu.cpp:992 that prints to stderr on its first call.
     #
     #   data_02075998[level][i]  the seven per-level SELECTOR columns
     #   data_02075804[i][v]      the overlay id each selector picks

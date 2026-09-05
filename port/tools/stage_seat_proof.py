@@ -6,14 +6,24 @@ WHAT IS BEING PROVED, and what deliberately is not.
 
 Slots 3, 16 and 17 of the Stage's own vtable now hold the ROM's own bodies
 (Stage::CleanupResources, ~Stage D2 and ~Stage D0) instead of the named-abort
-trap hal_fill_stage_vtable writes into every slot at boot. NOTHING IN THE PORT
-DISPATCHES ANY OF THE THREE: the cleanup Process walks only actors marked for
-destruction and hal/level_change.cpp keeps one Stage alive across every level
-change, and nothing deletes the Stage at all. So there is no execution to
-observe and this file does not pretend to observe one -- exactly the shape
-port/stage_lifecycle_map.txt section 9 uses for slot 12.
+trap hal_fill_stage_vtable writes into every slot at boot.
 
-What IS observable, and what the five rungs check:
+SLOTS 16 AND 17 ARE NOT DISPATCHED: both are reached by a delete through the
+vptr, and nothing in the port deletes the Stage. So there is no execution to
+observe for them and this file does not pretend to observe one -- exactly the
+shape port/stage_lifecycle_map.txt section 9 uses for slot 12.
+
+SLOT 3 IS DIFFERENT, and the first version of this file said it was not. Its
+dispatch IS reachable: port/stage_lifecycle_map.txt section 5 MEASURED a VS
+match-end scene request arriving at it, and section 9 traces a live death-plane
+chain into it. The ROM's body is a real level teardown, so seating it
+unconditionally removed a deliberate safety stop. The ROM call therefore sits
+behind SM64DS_STAGE_SLOT3_ROM -- presence = on, default off, in
+hal/stage_bridges.cpp's st_clean thunk -- which is the same shape
+hal/stage_slot0.cpp uses to gate the ROM's Stage::InitResources. Rungs 6 and 7
+MEASURE that gate rather than asserting it: the same binary, one run each way.
+
+What IS observable, and what the seven rungs check:
 
   RUNG 1  STATIC.  walk_window.map carries all five matched symbols the gate
           enrolled: ?CleanupResources@Stage@@QAEHXZ (slot 3's body),
@@ -49,6 +59,29 @@ What IS observable, and what the five rungs check:
           fails if any of the three overlay names comes from anything but its
           own matched TU's object -- which is the assertion "the host body is
           RETIRED, not kept beside" actually reduces to.
+
+  RUNG 6  THE GATE, SHUT.  SM64DS_STAGE_SLOT3_DISPATCH=1 dispatches
+          _ZTV5Stage[3] on the Stage once, at process exit, the way the cleanup
+          Process would. With SM64DS_STAGE_SLOT3_ROM unset -- the shipped
+          default -- the run must print the trap's own line, naming slot 3 and
+          CleanupResources, must NOT print the ROM-body note, and must not exit
+          0. That is the safety stop, observed rather than argued.
+
+  RUNG 7  THE GATE, OPEN.  The same dispatch with SM64DS_STAGE_SLOT3_ROM set:
+          the ROM-body note must print, the trap line must not, and the probe
+          must report the ROM's own return of 1 -- which only happens if
+          Stage::CleanupResources ran to its last statement. The pair is what
+          makes "gated" a measurement: rung 6 alone cannot tell a gate from a
+          revert, and rung 7 alone cannot tell a gate from an unconditional
+          seat.
+
+          AT EXIT, and that is why this is safe to run at all: the ROM's
+          teardown releases the level's file handles, deletes the skybox and
+          the area transformers, zeroes the area table and the Camera and calls
+          Deallocate. Nothing in the port may run behind that, so the dispatch
+          is registered with std::atexit and happens after main returns.
+          Neither rung is a mode anyone ships in, the same standing as
+          SM64DS_STAGE_SEAT_PROBE=2.
 
 Quiet and muted through mp2_proof.env_base: SM64DS_NO_FOCUS, SM64DS_MINIMIZED,
 SM64DS_VOLUME=0, CREATE_NO_WINDOW and SW_SHOWMINNOACTIVE. Never raw-start
@@ -92,6 +125,16 @@ WANT_FROM = {
 
 SEATED_SLOTS = (3, 16, 17)
 TRAP_SLOTS = (18, 19)
+
+# The four lines rungs 6 and 7 read the gate through, spelled exactly as the
+# port prints them. The trap's is the WHOLE prefix plus the slot number and the
+# slot name, not the "is not hosted" fragment -- rung 4's comment below is the
+# reason that fragment is not safe to match on.
+SLOT3_TRAP_LINE = "FATAL: Stage vtable slot 3 (CleanupResources) is not hosted"
+SLOT3_ROM_NOTE = ("[stage] slot 3: SM64DS_STAGE_SLOT3_ROM is set, so the ROM's "
+                  "Stage::CleanupResources is running")
+SLOT3_DISPATCHED = "[stage-slot3] dispatching _ZTV5Stage[3]"
+SLOT3_RETURNED = "[stage-slot3] Stage::CleanupResources returned 1"
 
 # One map row: "  0001:00012345  _name  10012345 f  obj". The object is the
 # last token; closure.py reads the same column the same way.
@@ -138,6 +181,29 @@ def run(root, exe, out, frames, mode):
     e = M.env_base(root, d, "stage%d" % mode)
     e["SM64DS_WINDOW_SELFTEST"] = str(frames)
     e["SM64DS_STAGE_SEAT_PROBE"] = str(mode)
+    rc = M.run_one(exe, d, e, log, timeout=600)
+    return rc, M.text(log)
+
+
+def run_dispatch(root, exe, out, frames, rom):
+    """One slot-3 dispatch run. `rom` is the gate: False leaves
+    SM64DS_STAGE_SLOT3_ROM unset, which is the shipped default and the named
+    abort; True sets it, which is the ROM's own body.
+
+    env_base scrubs every inherited SM64DS_ variable before it sets its own, so
+    a lane's shell cannot leak the gate into the run that is supposed to be
+    without it -- which is the one way this pair could quietly stop measuring
+    anything.
+    """
+    tag = "slot3_%s" % ("rom" if rom else "trap")
+    d = os.path.join(out, tag)
+    os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+    log = os.path.join(d, "run.log")
+    e = M.env_base(root, d, tag)
+    e["SM64DS_WINDOW_SELFTEST"] = str(frames)
+    e["SM64DS_STAGE_SLOT3_DISPATCH"] = "1"
+    if rom:
+        e["SM64DS_STAGE_SLOT3_ROM"] = "1"
     rc = M.run_one(exe, d, e, log, timeout=600)
     return rc, M.text(log)
 
@@ -220,6 +286,31 @@ def main():
             check(owner.get(sym) == obj,
                   "%s comes from %s" % (sym, obj),
                   owner.get(sym, "ABSENT"))
+
+    print("RUNG 6 -- gate shut: a slot-3 dispatch still aborts by name")
+    rc6, t6 = run_dispatch(root, exe, out, a.frames, False)
+    check(SLOT3_DISPATCHED in t6, "the probe dispatched _ZTV5Stage[3]")
+    check(SLOT3_TRAP_LINE in t6,
+          "the dispatch landed on the named abort for slot 3")
+    check(SLOT3_ROM_NOTE not in t6,
+          "the ROM's Stage::CleanupResources did NOT run")
+    # An aborting run must not look like a clean one. This is the assertion
+    # that would catch a gate wired the wrong way round -- a run that seated
+    # the ROM body and finished quietly would pass the three checks above only
+    # if the trap line were also missing, and this one closes that door.
+    check(rc6 != 0, "the aborting run did not exit 0", "rc=%d" % rc6)
+
+    print("RUNG 7 -- gate open: the same dispatch reaches the ROM's body")
+    rc7, t7 = run_dispatch(root, exe, out, a.frames, True)
+    check(SLOT3_DISPATCHED in t7, "the probe dispatched _ZTV5Stage[3]")
+    check(SLOT3_ROM_NOTE in t7, "the ROM's Stage::CleanupResources ran")
+    check("FATAL: Stage vtable slot" not in t7,
+          "no Stage trap fired in the gated-open run")
+    # The ROM's own last statement is `return 1`, so this line is only printed
+    # if the body ran all the way through rather than faulting somewhere in the
+    # teardown.
+    check(SLOT3_RETURNED in t7,
+          "Stage::CleanupResources returned the ROM's own 1")
 
     print("")
     if FAILS:

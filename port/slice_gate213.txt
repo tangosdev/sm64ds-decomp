@@ -119,10 +119,21 @@ src/func_01ffb0c8.cpp
 #
 #   PORTABLE, and it is these three. LoadLevelOverlays, UnloadLevelOverlays and
 #   LoadOrUnloadObjectOverlays are pure table bookkeeping over data_020758c8,
-#   data_02075998 and data_02075804, and they bottom out on LoadOverlay /
-#   UnloadOverlay, which hal/scene_boot.cpp:777-780 already defines as empty
-#   PORT_HOST_ABI bodies. The ROM's three bodies and the host's two stubs do
-#   the same nothing; the difference is which one the port ships.
+#   data_02075998 and data_02075804, and they bottom out on two hosted leaves
+#   that are NOT the same kind of thing (corrected run link100, lane STAGEFIX;
+#   this line used to call both of them empty bodies in scene_boot.cpp):
+#     LoadOverlay     an empty PORT_HOST_ABI body, hal/scene_boot.cpp's
+#                     overlay-loader block.
+#     UnloadOverlay   a LOUD-ONCE REFUSAL SEAM, hal/scene_vs_menu.cpp:992, one
+#                     of that file's VS_SEAM family. The first call prints
+#                     "[vs] refused-subtree seam entered: UnloadOverlay" to
+#                     stderr; every call answers the idle value.
+#   The ROM's three bodies and the host's two leaves still do the same nothing:
+#   both spellings are __cdecl, the caller cleans the one argument the seam
+#   ignores, and nothing reaches either today. So the difference is still only
+#   which one the port ships. What changes is that opening SM64DS_SLOT0_ROM or
+#   SM64DS_STAGE_SLOT3_ROM will make that stderr line appear, from
+#   scene_vs_menu.cpp rather than from scene_boot.cpp.
 #
 # WHAT THEY COST, measured by port/tools/closure.py over these three alone
 # against the post-seat map -- nine unresolved and one duplicate, every row
@@ -142,11 +153,27 @@ src/func_01ffb0c8.cpp
 #       body is RETIRED, which is what "retiring the host body, not keeping it
 #       beside" means here. Its own file carries the retired ruling and the one
 #       hazard the retirement hands PART 4's bisect.
+#   _LoadOrUnloadObjectOverlays   A SECOND DUP-DEF, MISSED THE FIRST TIME and
+#       retired by run link100 lane STAGEFIX. hal/scene_boot.cpp carried
+#       `extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}`, and
+#       because the ROM's TU compiles as C++ the two never collided: the host
+#       body decorated as _LoadOrUnloadObjectOverlays, the ROM's as
+#       ?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z, and /OPT:REF dropped the
+#       host one because nothing spells that name. One name, two definitions in
+#       the source, and only the map's DEFINING-OBJECT column could tell which
+#       shipped -- which is why port/tools/stage_seat_proof.py rung 5 asks that
+#       column. The empty body is deleted, with a note where it stood.
 #
-# NEITHER BODY RUNS TODAY. LoadLevelOverlays is reached only from
+# NEITHER BODY RUNS TODAY, and both are held off by a GATE rather than by the
+# absence of a caller. LoadLevelOverlays is reached only from
 # Stage::InitResources, gated behind SM64DS_SLOT0_ROM (default off);
 # UnloadLevelOverlays only from Stage::CleanupResources, which is slot 3 above
-# and is dispatched by a Process that walks only actors marked for destruction.
+# and is gated behind SM64DS_STAGE_SLOT3_ROM (default off, run link100 lane
+# STAGEFIX). Slot 3's dispatch itself IS reachable -- a measured VS match-end
+# scene request (port/stage_lifecycle_map.txt section 5) and a live death-plane
+# chain (section 9) both arrive at it -- so "a Process that walks only actors
+# marked for destruction" is not the reason nothing runs, and this line used to
+# say it was.
 src/_Z17LoadLevelOverlaysi.cpp
 src/_Z19UnloadLevelOverlaysi.c
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp
