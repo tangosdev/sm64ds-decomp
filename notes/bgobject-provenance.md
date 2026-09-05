@@ -114,9 +114,13 @@ class as for the flat shadow the ROM's own code is built against.
 
 ## daDgr_c (`include/daDgr_c.h`, [ov025](../config/arm9/overlays/ov025/symbols.txt), size 0x334)
 
-A swinging platform. Bodies read: `src/_ZN7daDgr_c13InitResourcesEv.cpp`,
-`src/_ZN7daDgr_c8BehaviorEv.cpp`, `src/_ZN7daDgr_c6RenderEv.cpp`,
-`src/_ZN7daDgr_c16CleanupResourcesEv.cpp`, [src/d_a_dgr.c](../src/d_a_dgr.c) (`daDgr_c_classInit`, the factory).
+A swinging platform. All nine bodies now live in one translation unit,
+[src/actors/daDgr_c.cpp](../src/actors/daDgr_c.cpp) — `InitResources`, `Behavior`,
+`Render`, `CleanupResources`, the `D1`/`D0` destructor pair and the three
+`func_ov025_*` helpers. They were nine separate one-function files when the offsets
+below were read, which is why the paragraphs further down still describe them one at a
+time. The factory `daDgr_c_classInit` is a separate TU and stays in
+[src/d_a_dgr.c](../src/d_a_dgr.c).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -139,8 +143,9 @@ Left `unk_`: `0x31c` / `0x31d` in the C twin — those are `dBgActor_c`'s own tw
 trailing bytes and are `unk_` in `include/dBgActor_c.h` too, which this pass does not
 own.
 
-`src/_ZN7daDgr_c13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
-`char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
+`daDgr_c::InitResources` (then a file of its own, now ordinal 8 of
+[src/actors/daDgr_c.cpp](../src/actors/daDgr_c.cpp)) was an `extern "C"` free function
+over a raw `char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
 `dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
 *(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
 header, with `&mModel`, `&mMeshCollider`, `mClsnMat`, `mAngleY`, `mPosY` and the six
