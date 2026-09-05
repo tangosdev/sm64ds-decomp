@@ -655,7 +655,7 @@ _ALIAS_RE = re.compile(
 def find_aliases(body, bases):
     """Locals that provably still hold `this`, e.g. `unsigned char *c = (unsigned char *)thiz;`.
 
-    Only single-assignment aliases qualify.  src/actors/d_a_wanwan.cpp
+    Only single-assignment aliases qualify.  src/game/actors/d_a_wanwan.cpp
     is the reason both halves of that rule matter: it aliases `thiz` to `c`
     (keep), but it also walks `unsigned char *dst = c;` forward with `dst = dst + 0xc`
     inside a loop (drop -- after one iteration `dst + 0x524` is no longer a field of

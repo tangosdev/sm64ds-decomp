@@ -673,7 +673,7 @@ def iter_definitions(text):
 
     Necessary because a definition never spells the symbol the ROM knows it by:
     ov014's `_ZN10daWanwan_c13InitResourcesEv` is written
-    `int daWanwan_c::InitResources()` in src/actors/d_a_wanwan.cpp, with `this`
+    `int daWanwan_c::InitResources()` in src/game/actors/d_a_wanwan.cpp, with `this`
     aliased to a local `c`.  Requiring the mangled name would have found zero
     accesses there -- the same shape of miss that section 2 of the plan is about.
     """

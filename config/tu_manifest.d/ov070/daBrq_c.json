@@ -1,8 +1,8 @@
 {
   "id": "ov070/daBrq_c",
   "module": "ov070",
-  "source": "src/actors/daBrq_c.cpp",
-  "promoted_source": "src/actors/daBrq_c.cpp",
+  "source": "src/game/actors/daBrq_c.cpp",
+  "promoted_source": "src/game/actors/daBrq_c.cpp",
   "status": "promoted",
   "production_mode": "intact-object",
   "boundary_confidence": "high",

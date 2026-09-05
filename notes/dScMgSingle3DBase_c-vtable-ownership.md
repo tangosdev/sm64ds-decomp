@@ -1,6 +1,6 @@
 # Owning `_ZTV19dScMgSingle3DBase_c` — the two prerequisites
 
-The promoted TU `src/actors/dScMgSingle3DBase_c.cpp` emits this class's
+The promoted TU `src/minigames/d_s_mg_single3_d_base.cpp` emits this class's
 `_ZTV`/`_ZTI`/`_ZTS` today, and they byte-compare against the cartridge. They are
 nonetheless carried as `deadstrip-data` licences rather than owned outright
 (`production_mode: "intact-object"`, the mode #2054 landed and #2057 first used).

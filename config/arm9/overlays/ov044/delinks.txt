@@ -3,7 +3,7 @@
     .ctor       start:0x02111354 end:0x02111358 kind:rodata align:4
     .data       start:0x02111360 end:0x02111680 kind:data align:32
     .bss        start:0x02111680 end:0x021116a0 kind:bss align:32
-src/actors/d_a_obj_kb1_billboard.cpp:
+src/game/actors/d_a_obj_kb1_billboard.cpp:
     complete
     .text start:0x021111a0 end:0x02111314
     .init start:0x02111314 end:0x02111354

@@ -48,7 +48,7 @@ no/partial-overlap indices that looked like they might be genuine identity
 questions rather than ordinary translation). A further **13 indices** were
 cross-checked against `_ZTS…` RTTI class names and `*_Spawn` function names in
 `config/arm9/**/symbols.txt` to establish the index → class → glossary join
-the task asked for (the same technique used previously for [daKpFr_c](../src/actors/daKpFr_c.cpp)). This
+the task asked for (the same technique used previously for [daKpFr_c](../src/game/actors/d_a_kp_fr.cpp)). This
 is a sample, not an exhaustive pass over all 391 — see the bucket counts above
 for what wasn't hand-reviewed.
 

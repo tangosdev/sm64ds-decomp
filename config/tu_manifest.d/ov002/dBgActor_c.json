@@ -3,7 +3,7 @@
   "module": "ov002",
   "source": "src/actors/dBgActor_c.cpp",
   "promoted_source": "src/actors/dBgActor_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20ee42c..0x20eea84, 11 function(s), from build/tu_map.json (tools/tu_map.py)",

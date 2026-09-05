@@ -548,24 +548,31 @@ Almost everything this class does with its own tail happens in the ov006
 helper functions its pointer-to-member state machine dispatches to, not in the
 four vtable methods; the citations below name those functions. All of them,
 helpers and vtable methods alike, now live in the class's own translation unit,
-src/actors/d_sc_mg_trampoline.cpp.
+src/minigames/d_s_mg_trampoline.cpp.
+
+The three state-entry helpers are now real `dScMgTrampoline_c` members too:
+`BeginIntro`, `BeginPlay`, and `BeginResults`. Each initializes the fields for
+one phase and finishes by copying that phase's TU-owned PMF descriptor into
+`mState`. Those English spellings are behavioral coinage; the ROM symbols were
+address-only, so the exact original source names remain unknown.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5d94 | `mScrollY` | `func_ov006_02121bc8` approaches it toward `mScrollTargetY` by 2 a tick; `OnKicked` and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |
+| 0x5d94 | `mScrollY` | `dScMgTrampoline_c::UpdateScroll` approaches it toward `mScrollTargetY` by 2 a tick; `OnKicked` and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |
 | 0x5d98 | `mScrollTargetY` | The other argument of that `ApproachLinear`; recomputed as `(q << 3) + 0x20` once the scroll has caught up. InitResources seeds it from `mScrollY`. |
 | 0x5d9c | `mScrollHoldTimer` | Loaded with 0x78 and run down to 0 by `ApproachLinear(..., 0, 1)`; the target may not move again until it reaches 0. |
 | 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
-| 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `func_ov006_021218fc` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
-| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `func_ov006_0212157c` refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
+| 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `dScMgTrampoline_c::StatePlay` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
+| 0x5dac | `mDragSoundHandle` | `UpdateTouchInput` passes the previous word to `func_02012468`, stores its returned handle, and zeroes it when a new drag begins; the intro interpolation uses the same positional-sound update path. |
+| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
 | 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; `OnAttacked2` measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
-| 0x5db8 | `mInputEnabled` | s16. `func_ov006_0212157c` clears `mTouching` and returns immediately while it is 0. |
+| 0x5db8 | `mInputEnabled` | s16. `UpdateTouchInput` clears `mTouching` and returns immediately while it is 0. |
 | 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |
 | 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; `OnAttacked2` is the only reader and clears it after scoring the swipe. |
 
 Left `unk_`: 0x5dba (an s16 with its own getter/setter pair,
 `func_ov006_02121750` and `func_ov006_02121768`, but no reader that says what it
-means), 0x5dbc..0x5dc2 (four s16 counters inside `func_ov006_021218fc`'s
+means), 0x5dbc..0x5dc2 (four s16 counters inside `dScMgTrampoline_c::StatePlay`'s
 banner-blink logic).
 
 ## The minigame camera, and the base fields it explains
@@ -619,7 +626,7 @@ Only the fields several descendants corroborate are named here; this class has
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. `func_ov004_020adb1c` -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (src/actors/dScMgBSC_c.cpp) and src/func_ov006_020ea3d0.c; dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
+| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. `func_ov004_020adb1c` -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (src/minigames/d_s_mg_bsc.cpp) and src/func_ov006_020ea3d0.c; dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
 | 0x21c | `mSavedMainBgBits` | src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp (slot 29) stores `data_0209d45c` here; src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp (slot 30) restores it from here. |
 | 0x220 | `mSavedSubBgBits` | The same save/restore pair for `data_0209d454`. |
 | 0x224 | `mSavedScreenSwap` | Saved as `(POWCNT1 & 0x8000) >> 15` and restored as `n << 15` by that same pair. |
@@ -653,7 +660,7 @@ bytes the reset zeroes and nothing reads).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5388 | `mState` | `func_ov006_020dac34` in src/actors/dScMgCard_c.cpp is one long `switch` on it that mostly `++`s it; `func_ov006_020db720` in the same file switches on the same field; the reset in `func_ov006_020db9dc`, also there, starts it at 1. |
+| 0x5388 | `mState` | `func_ov006_020dac34` in src/minigames/d_s_mg_card.cpp is one long `switch` on it that mostly `++`s it; `func_ov006_020db720` in the same file switches on the same field; the reset in `func_ov006_020db9dc`, also there, starts it at 1. |
 | 0x538a | `mStateTimer` | Reloaded with 0x10, 0x14, 0x1e, 0x3c or 0x5a on each step and run down to 0 (by `--` or `ApproachLinear2`) before `mState` advances. |
 | 0x5396 | `mFrameCounter` | `dScMgCard_c::Behavior`'s only own statement is `+= 1`; Render blinks the highlighted cards on bit 3. |
 | 0x5398 | `mScore` | Render keeps it as a high-water mark of the base's `mHudScore` and pushes it back out through `func_ov004_020adb1c` every frame. |

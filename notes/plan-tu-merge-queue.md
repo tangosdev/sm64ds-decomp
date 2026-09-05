@@ -421,7 +421,7 @@ tb.cmd_create(a)
 **Validated read-only against the tree**: over all 131 refused safe-pool files this
 recovers **130**. The single residual was `func_ov018_021118fc` (Tier 2,
 `ov018/daPgMthr_c`; it lived in a per-function legacy source at the time and is now
-part of the promoted `src/actors/d_a_pg_mthr.cpp`), and it fails for a different
+part of the promoted `src/game/actors/d_a_pg_mthr.cpp`), and it fails for a different
 reason worth naming — its definition is
 `struct dActor_c* func_ov018_021118fc(char* c) {`, and `split_legacy_source`'s first-word
 test sees `struct` in `_DECL_KEYWORDS` and consumes the whole function as a shadow
@@ -695,7 +695,7 @@ Per `tubuild.py inspect` (authoritative over the census): **6 functions without
 `complete`**, of which **3 have no legacy source at all** — `func_ov063_021166ac`,
 `func_ov063_02117cdc`, `_ZN3Boo6RenderEv`/`_ZN3Boo8BehaviorEv`/`_ZN3Boo13InitResourcesEv`
 region. Boo has no legacy source anywhere and no directory of its own; the nearest
-named relatives are `src/actors/BigBoo` and `src/actors/BooCage`.
+named relatives are `src/game/actors/daTrs_c` and `src/game/actors/daTBasket_c`.
 3 members carry `opt_propagation off` / `opt_common_subs off` / `optimize_for_size on`.
 **Swallower: 97 functions, 69% of ov063**, carrying 4 class labels, **3 separate vtables**
 (`_ZTV3Boo`, `_ZTV7BooCage`, `_ZTV10BigBooIcon`) and 3 destructor pairs. 94 members is

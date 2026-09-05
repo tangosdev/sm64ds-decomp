@@ -288,19 +288,19 @@ src/d_a_1up_oneupkinoko.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
-src/actors/daBar_c.cpp:
+src/game/actors/d_a_bar.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
 
-src/actors/d_a_cam_tag.cpp:
+src/game/actors/d_a_cam_tag.cpp:
     complete
     .text start:0x020b0748 end:0x020b07f8
 
-src/actors/d_a_ch_room.cpp:
+src/game/actors/d_a_ch_room.cpp:
     complete
     .text start:0x020b07f8 end:0x020b09b0
 
-src/actors/d_a_ch_scene.cpp:
+src/game/actors/d_a_ch_scene.cpp:
     complete
     .text start:0x020b09b0 end:0x020b0f54
 
@@ -460,7 +460,7 @@ src/game/actors/WingFeather/d_a_feather.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/actors/daObjAbuku_c.cpp:
+src/game/actors/d_a_obj_abuku.cpp:
     complete
     .text start:0x020b3298 end:0x020b35a0
 
@@ -596,7 +596,7 @@ src/d_a_obj_block_item_tag_blk_okinoko_tag.c:
     complete
     .text start:0x020b4670 end:0x020b46a0
 
-src/actors/daObjKinokoTag_c.cpp:
+src/game/actors/d_a_obj_kinoko_tag.cpp:
     complete
     .text start:0x020b46a0 end:0x020b4a70
 
@@ -624,7 +624,7 @@ src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp:
     complete
     .text start:0x020b4d58 end:0x020b4ed8
 
-src/actors/daObjHatenaSwitch_c.cpp:
+src/game/actors/d_a_obj_hatena_switch.cpp:
     complete
     .text start:0x020b4ed8 end:0x020b5734
     .data start:0x02108e14 end:0x02108edc
@@ -857,7 +857,7 @@ src/d_a_obj_lava.c:
     complete
     .text start:0x020b6dd8 end:0x020b6e08
 
-src/actors/d_a_obj_waterfall.cpp:
+src/game/actors/d_a_obj_waterfall.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6f18
 
@@ -984,7 +984,7 @@ src/d_a_obj_mario_cap.c:
     complete
     .text start:0x020b8b98 end:0x020b8bf0
 
-src/actors/daObjPushblock_c.cpp:
+src/game/actors/daObjPushblock_c.cpp:
     complete
     .text start:0x020b8bf0 end:0x020b910c
 
@@ -1300,7 +1300,7 @@ src/d_a_obj_tatefuda.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
-src/actors/d_a_obj_wakame.cpp:
+src/game/actors/d_a_obj_wakame.cpp:
     complete
     .text start:0x020bc414 end:0x020bc5e0
 
@@ -1336,7 +1336,7 @@ src/d_a_obj_heart.c:
     complete
     .text start:0x020bc8b4 end:0x020bc8f4
 
-src/actors/daObjCannonShutter_c.cpp:
+src/game/actors/d_a_obj_cannon_shutter.cpp:
     complete
     .text start:0x020bc8f4 end:0x020bccfc
 
@@ -4137,11 +4137,11 @@ src/d_a_star_star.c:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
-src/actors/d_a_tree.cpp:
+src/game/actors/d_a_tree.cpp:
     complete
     .text start:0x020ebf8c end:0x020ec388
 
-src/actors/d_a_warpkun.cpp:
+src/game/actors/d_a_warpkun.cpp:
     complete
     .text start:0x020ec388 end:0x020ec56c
 
@@ -4519,7 +4519,7 @@ src/d_a_obj1_up_logo.c:
     complete
     .text start:0x020f1170 end:0x020f11b0
 
-src/actors/d_a_obj_bc_switch.cpp:
+src/game/actors/d_a_obj_bc_switch.cpp:
     complete
     .text start:0x020f11b0 end:0x020f15fc
 
@@ -4571,7 +4571,7 @@ src/d_a_e_switch.c:
     complete
     .text start:0x020f1954 end:0x020f198c
 
-src/actors/d_a_set_se.cpp:
+src/game/actors/d_a_set_se.cpp:
     complete
     .text start:0x020f198c end:0x020f1bc4
 
@@ -5228,7 +5228,7 @@ src/d_a_f_pkn_ball.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
-src/actors/d_a_sound_obj.cpp:
+src/game/actors/d_a_sound_obj.cpp:
     complete
     .text start:0x020f934c end:0x020f975c
 

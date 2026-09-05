@@ -1,8 +1,8 @@
 {
   "id": "ov045/daObjKm2_Fall_Block_c",
   "module": "ov045",
-  "source": "src/actors/d_a_obj_km2_fall_block.cpp",
-  "promoted_source": "src/actors/d_a_obj_km2_fall_block.cpp",
+  "source": "src/game/actors/d_a_obj_km2_fall_block.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_km2_fall_block.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

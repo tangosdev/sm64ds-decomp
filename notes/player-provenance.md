@@ -362,7 +362,7 @@ Only two slots are the actor's own, and both are witnessed:
 | 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the ROM's own store is a `strb` of the loaded byte plus one, which is why the slot is `u8`. |
 
 Both methods, the compiler-generated D1/D0 pair and the spawn veneer now live in
-one genuine translation unit, `src/actors/d_a_sld_mng.cpp` (manifest entry
+one genuine translation unit, `src/game/actors/d_a_sld_mng.cpp` (manifest entry
 `ov019/daSldMng_c`, `.text 0x0211261c..0x0211277c`). The shadow that entry used
 to carry under `src_tu/actors/` and the five per-function sources it was built
 from are deleted; that entry's `legacy_source` fields still name each of them. Because that TU defines `InitResources` -- the first declared
