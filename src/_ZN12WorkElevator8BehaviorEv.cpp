@@ -100,7 +100,6 @@ s32 WorkElevator::Behavior()
         }
     } else {
         if (mLoweredPlatform != -1) {
-            
             unk_c70 = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_c70, 3, 0x88, &mCamSpacePosX, 0);
             mPrevAngleY = data_ov021_02114740[mLoweredPlatform];
             mHorzSpeed = 0x5000;

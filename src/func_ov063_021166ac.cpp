@@ -46,7 +46,7 @@ extern "C" void func_ov063_021166ac(char *c)
     Vector3 t2;
     Vector3 pos;
 
-    if (*(u8 *)(c + 0x5cf) == 0xf) {
+    if (t->unk_5cf == 0xf) {
         func_ov063_0211640c(c);
         return;
     }
@@ -63,8 +63,8 @@ extern "C" void func_ov063_021166ac(char *c)
         *(s32 *)(c + 0x42c) = *(s32 *)(c + 0x50c) >> 3;
     }
 
-    if (*(u8 *)(c + 0x5cc) == 3 || *(u8 *)(c + 0x5cc) == 3 ||
-        *(u8 *)(c + 0x5cc) == 3 || *(u8 *)(c + 0x5cc) == 3) {
+    if (t->unk_5cc == 3 || t->unk_5cc == 3 ||
+        t->unk_5cc == 3 || t->unk_5cc == 3) {
         Vec3_Asr(&t1, (Vector3 *)(c + 0x5c), 3);
         Matrix4x3_FromTranslation(&data_020a0e68, t1.x, t1.y, t1.z);
         *(Matrix4x3 *)(c + 0x39c) = data_020a0e68;
