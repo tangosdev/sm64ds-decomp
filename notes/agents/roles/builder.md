@@ -70,6 +70,27 @@ file no longer occupies, and the shipped `.cpp` was still headed *"SHADOW
 translation unit — NOT ENROLLED, NOT CANONICAL. This file contributes nothing to
 the ROM build."* All byte gates were green throughout.
 
+**Verify a partial's structural claim by parsing `delinks.txt` for `.text`
+coverage gaps** across the whole `tu_map` run. This is the highest-value check
+available on a partial and it settles the question in one pass: on
+`dScMgHanachan_c` it produced 39 `.text` blocks with exactly one gap — the
+sourceless hole — and the exact held-out shard count as a by-product. The
+supporting invariant is worth re-deriving rather than trusting: **0 of 13,201
+delink blocks and 0 of 136 TU manifests carry more than one `.text` run**, which
+is why a licensed claim cannot span a hole.
+
+**Diff the declared type and `extern` set against what the shipped members
+actually reference.** A twice-narrowed TU carries preamble residue for the
+functions it dropped — `dScMgHanachan_c` shipped three unreferenced shadow
+structs and about thirty externs for functions outside its range, one of them
+carrying a comment asserting a stride requirement belonging to a function above
+the upper edge. Prose checking alone does not catch dead *declarations*.
+
+**All-zero `romdata_check` counts are the correct result** for a TU that does not
+own its key function, and are positive evidence for an empty
+`compiler_only_output`. The proof-block example shows nonzero counts; do not read
+zeros as a failed run.
+
 **Check every `compiler_only_output` canonical address against the owning
 module's own `symbols.txt`**, and scan the tree to confirm each is defined
 exactly once. Cross-module homes are normal, not a smell — but a wrong one is
@@ -233,6 +254,15 @@ already stale. Getting this wrong costs a full validation cycle.
   regardless. When you do need it: it builds the **working tree**, so a baseline
   taken after header edits proves nothing, and a fresh worktree must take one
   before any linkcheck or it dies on unrelated classes.
+- **`pytest tools/` is not a CI signal.** The workflows invoke targeted
+  `python -m unittest tools.test_<gate>` modules only, so a green `tools` check
+  does not mean the suite passes. Two tests fail on untouched `origin/main`
+  (`test_dtor_members.py::test_the_frozen_census_reproduces` and
+  `test_opnew_sizes.py::test_only_two_live_classes_are_genuinely_headerless`).
+  Do not adopt those as your regression.
+- **PowerShell `| Select-Object -Last N` buffers everything**, so a backgrounded
+  `rombuild` writes a zero-byte output file until it exits. You cannot watch
+  progress that way.
 - Never run two consumers of `build/` at once — a backgrounded `rombuild` beside
   `eligible.py` invents link errors.
 
