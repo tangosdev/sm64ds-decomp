@@ -24,8 +24,12 @@ Start every job with:
 
     python tools/tubuild.py inspect <ov>/<Class>
 
-Its "disqualifying complications" block is accurate and tells you up front what
-you are dealing with. **Trust it over the queue's `blockers` column**, which is
+Its "disqualifying complications" block tells you up front what you are dealing
+with, but **the conflict detector does not compare parameter types**: it will
+print `no cross-file conflicts detected` over a file carrying two contradictory
+declarations of the same helper (`extern "C" int f(char*)` from one shard and
+`int f(Class*)` from another), and even a nested `extern "C" { extern "C" ... }`.
+`create` can emit a TU that does not compile. Read what it wrote. **Trust it over the queue's `blockers` column**, which is
 inferred rather than measured: `promotion_route` and any `compiler-only:~N` were
 copied from the row's `sibling_oracle` manifest, and 91 of 226 rows have no
 oracle at all and simply default to text-only. The `~` means estimate. Confirm
@@ -68,8 +72,9 @@ accurate and both matter — read them.
 
 **`tubuild.py promote` is `--dry-run` only.** It prints the plan and refuses to
 act: *"only --dry-run is implemented … deliberately not available yet."* You
-execute that plan by hand. `git mv` fails — the `src_tu/` file is untracked at
-that point — so use a plain `mv` and `git add`. The full list, including four
+execute that plan by hand — and note that **step 1 of the printed plan is wrong
+as written**: it says `git mv src_tu/... -> src/...`, which fails because the
+`src_tu/` file is untracked at that point. Use a plain `mv` and `git add`. The full list, including four
 steps the dry-run does not print:
 
 1. Move the source out of `src_tu/` and `git rm` the shards.
@@ -171,6 +176,20 @@ mwccarm 2004/b56 behaviours, not style preferences.
 - **`virtual ~X() {}` inline, declared FIRST member.** Out-of-line emits
   D2/D0/D1 in the wrong order plus a homeless D2; the ROM carries D1-then-D0
   and no D2.
+- **Emission order is a hard gate, and it is the constraint most likely to stop
+  you.** `linkcheck [4b/8]` fatally refuses a TU whose licensed `.text` sections
+  are not in ROM-ascending order: `licensed .text functions are not emitted in
+  ROM address order`. Beware that `tubuild verify` reports the same condition as
+  `PARTIAL ... not necessarily a bug`, which reads advisory and is not.
+
+  The destructor pair is the usual way to hit it, and the lever set is closed —
+  measured, not guessed: **inline in class ⇒ D1 then D0, always**; out-of-line
+  ⇒ D2, D0, D1. A `delete p` scaffold, a `p->~X()` scaffold, and moving the
+  declaration below the overrides all change **nothing**. So if the cartridge
+  puts D0 *below* D1, no admissible source form reproduces the order, and the
+  pair cannot live in this TU's licensed run. See the comment block in
+  `src/game/actors/d_a_obj_wc_obj01.cpp` and `notes/tu-reconstruction-pilot-report.md`
+  section 3.
 - **The TU must odr-use the class** or nothing is emitted at all.
 - **vptr store is `(int)&_ZTV...[2]`**, never the raw symbol — the addend loses
   8 on rebind, and only `objisolate`'s addend check sees a miss.
@@ -230,6 +249,26 @@ Pushed on `cpp/<Class>-tu`, claim released, and you have reported verbatim:
 Use `-j 6`, not `-j 16`, whenever sibling writers are running — check with
 `ListAgents` or `python tools/classqueue.py list`. Three concurrent `-j 16`
 builds oversubscribe the machine and slow all three.
+
+## When a subset is the right answer
+
+Not every TU is promotable whole, and stopping short can be the correct result
+rather than a failure. When the ROM's emission order cannot be reproduced by any
+admissible source form:
+
+1. License the sub-range that *can* be ordered.
+2. Leave the remaining shards enrolled — they keep their `delinks.txt` entries.
+3. License the TU's own copies of those functions as `deadstrip-duplicate`.
+4. Record why in the manifest's `boundary_evidence`.
+
+`daObjFloatBoard_c` absorbed 5 of 7 this way: the cartridge puts `D0` at
+`0x020b5a18` below `D1` at `0x020b5a70`, all three descendants inline the vptr
+store, and **no instruction in the image calls either address** — only vtable
+slots 16 and 17 name them. So the header's inline body is the cartridge's form
+and the pair cannot be in this TU's licensed run.
+
+State the refusal and its evidence in your report. A measured 5-of-7 is worth
+more than a forced 7-of-7, and far more than a near-miss.
 
 **A near-miss never lands in `src/`.** Restore the matched source and bank the
 candidate in `nearmiss/db.jsonl`.

@@ -30,7 +30,13 @@ far and may be wrong; the cartridge is not.
    `_ZTI10dBgActor_c` points at `_ZTI8dActor_c`). Lead with that. Vtable
    *length* — 31 words = `dActor_c`, 32 = `dBgActor_c` — is corroboration for
    subclasses, not proof, so do not report it as the reason.
-4. **Own overrides.** For each slot whose target lies inside this overlay: the
+4. **Own overrides.** Ask the tooling rather than reading a header:
+
+       python tools/rtti_extract.py            # writes build/rtti.json -- FIRST
+       python tools/rtti_vtables.py --own <Class>
+
+   `rtti_vtables.py` crashes with a bare `FileNotFoundError: build/rtti.json` if
+   you skip the extract step. For each slot whose target lies inside this overlay: the
    slot index, the target address, and the inherited slot name. Slot names come
    from **the whole base chain**, not one header: `include/dActor_c.h` declares
    slots 18-30 and is the right source only for a direct `dActor_c` subclass. A
