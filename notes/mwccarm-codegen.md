@@ -4396,3 +4396,106 @@ hide the structure. Also: the permuter needs a C-shaped base (pycparser cannot p
 `extern "C"` or `class`), and for a body like this one a C file with the mangled name as a
 plain identifier and `this` as an explicit first parameter reproduces the C++ output
 word-for-word, so the residue can be worked in C and ported back.
+
+## 6br. `tst` is a compiler-VERSION split, `long_calls` is not an mwccarm pragma at all, and `2004/b56` only half-screens pragmas (2026-09-05, arm9 handback run m100)
+
+Three tooling-level results from the 0x0205xxxx handback pile. None of them is a source
+shape -- they change which functions are even reachable, and they retire two levers that
+have been re-tried by hand at least twice.
+
+### 1. `tst Rn,#imm` vs `ands Rd,Rn,#imm` is decided by the compiler build, not by the source
+
+The 1.2 line and `2004/b56` never emit `tst` for a masked branch; they emit `ands` into a
+scratch register. The 2.0 line and the whole DSi line always emit `tst`. Same source, same
+flags, twenty-five builds:
+
+```c
+typedef unsigned int u32;
+void tst_probe(u32 *p, u32 x) { if (x & 2) *p = 1; }
+```
+
+```
+1.2/base 1.2/sp2 1.2/sp2p3 1.2/sp3 1.2/sp4 2004/b56   ->  021011e2  ands r1, r1, #2
+2.0/{base,sp1,sp1p2,sp1p5,sp1p6,sp1p7,sp2,sp2p2,sp2p3,sp2p4}
+dsi/{1.1,1.1p1,1.2,1.2p1,1.2p2,1.3,1.3p1,1.6sp1,1.6sp2}
+                                                      ->  020011e3  tst  r1, #2
+```
+(the following three words -- `movne r1,#1 / strne r1,[r0] / bx lr` -- are byte-identical
+across all twenty-five, so this is the whole delta.)
+
+Nothing on the source side moves it. It is not a peephole you can provoke and it is not an
+`optimize_for_size` effect; the split is clean at the 1.2/2004 vs 2.0/dsi line.
+
+**How to apply.** A `tst` in the target is a VERSION ORACLE, and a cheap one -- it is
+visible in the disassembly before you write any C. If the ROM bytes for your function
+contain `tst`, `2004/b56` (the canonical build, 6ai) can never reproduce them, and every
+divergence count you collect under `--version 2004/b56` is measuring the wrong compiler.
+Re-run under `--version 2.0/<build>` (or a dsi build) from the start, and if it lands, pin
+it by appending `<name> 2.0/<build>` to `config/rombuild-versions.txt`. Conversely an
+`ands Rd,Rn,#imm` whose result is dead rules the 2.0 and dsi lines OUT. The ROM mixes
+both, which is consistent with 6ah: the shipping toolchain was not one binary.
+
+### 2. `#pragma long_calls` is not an mwccarm pragma -- and the veneer it was supposed to
+produce is what a plain tail call already emits
+
+`#pragma long_calls on` draws `warning: illegal #pragma` from every build in the tree that
+supports the screen (all of 1.2/*, all of 2.0/*, all of dsi/*), exactly like the invented
+`#pragma zzz_totally_bogus_name`. It is an ARM/RVCT pragma that was borrowed into decomp
+folklore; mwccarm does not have it. Output with it is byte-identical to output without it
+on every build. Every "tried long_calls, inert" line anywhere is a 6as false negative, and
+the lever should not be re-tried.
+
+The reason it looked plausible is that the veneer shape it was supposed to force is already
+the default. With `-interworking` (which is in `DEFAULT_FLAGS`), a function whose entire
+body is one call in TAIL position lowers to a pc-relative indirect long branch, no pragma:
+
+```c
+extern void far_target(void);
+void veneer_probe(void) { far_target(); }
+```
+```
+-interworking on : ldr ip, [pc] ; bx ip ; <reloc word at +8>     (12 bytes, no frame)
+-interworking off: b far_target                                   (4 bytes)
+```
+The return type is irrelevant (`return far_target();` on an `int` function is the same three
+words). Add a SECOND call and it is no longer a tail call, so you get the ordinary
+`stmdb sp!,{lr} / sub sp,sp,#4 / bl / bl / add / ldm / bx lr` frame instead. That is the
+whole mechanism: tail position plus interworking, nothing else.
+
+**Corpus check that settles it.** Scanning arm9 for every 12-byte ARM function in
+`config/arm9/symbols.txt`, the pc-relative-load-then-`bx` shape appears 63 times in three
+register forms:
+
+```
+ldr r12,[pc,#0] ; bx r12   58 sites   <- compiler output; 33 already MATCHED, 0 NONMATCHING
+ldr r0, [pc,#0] ; bx lr     4 sites   <- not a veneer: returns a constant address
+ldr r1, [pc,#0] ; bx r1     1 site    <- func_02057014, the only one
+```
+So the ip form is a solved shape (a one-line tail call in a plain `.c` file reproduces it,
+and 33 files in `src/` do exactly that), and `func_02057014` routing the address through
+**r1** is a 1-in-63 outlier that no register-allocation lever reaches -- ip is where the
+compiler's tail-call thunk always puts it, and there is no C construct that names r1 for a
+branch target. That function is a FLOOR (hand-written), not a missing source spelling.
+
+### 3. `2004/b56` DOES honour `-w illpragmas`, but only for pragma ARGUMENTS, not for pragma NAMES
+
+6as says b56 "does NOT support `-w illpragmas`". That is half right, and the half that is
+wrong is the dangerous half. Measured on the same three files:
+
+```
+                       #pragma long_calls on   #pragma zzz_bogus_name off   #pragma opt_propagation bogusarg
+1.2/{base,sp2p3,sp4}   illegal #pragma         illegal #pragma              illegal #pragma
+2.0/{base,sp2p3}       illegal #pragma         illegal #pragma              illegal #pragma
+dsi/{1.2p2,1.6sp2}     illegal #pragma         illegal #pragma              illegal #pragma
+2004/b56               (silent)                (silent)                     illegal #pragma
+```
+
+b56's diagnostic fires on a real pragma given a bad argument and stays silent on a name it
+has never heard of. So under b56 a clean compile proves your pragma's ARGUMENT parsed, and
+proves nothing whatsoever about whether the pragma exists. A typo'd or invented name still
+reads as "inert" there.
+
+**How to apply.** Unchanged from 6as in practice, but for a sharper reason: screen every
+pragma name against a 1.2 build once (`--version 1.2/sp2p3`, or any `--all` run) before
+banking a pragma result, even when your function's pinned version is b56 and even when the
+b56 run was silent. Silence from b56 is not evidence.
