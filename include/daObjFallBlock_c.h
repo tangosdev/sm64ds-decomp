@@ -113,11 +113,12 @@ struct daObjFallBlock_c : dBgActor_c {
        out-of-line base destructor would make all four descendants call D2 and
        would leave it live. The in-class body is the cartridge's form.
 
-       IT COSTS THE TU PROMOTION, AND THAT IS THE RIGHT TRADE. An in-class inline
+       IT COSTS TWO OF THE TWELVE, AND THAT IS THE RIGHT TRADE. An in-class inline
        destructor makes mwccarm emit D1 before D0, and the ROM lays them down the
        other way round (D0 0x02139f70, D1 0x02139fc8). So the merged TU in
-       src_tu/actors/daObjFallBlock_c.cpp reproduces all twelve bodies
-       byte-for-byte but cannot put its licensed .text in ROM order -- see that
+       src/actors/daObjFallBlock_c.cpp reproduces all twelve bodies byte-for-byte
+       but can only put ten of them in the licensed .text in ROM order; the pair
+       stays in its own two shards and is licensed deadstrip-duplicate -- see that
        file and config/tu_manifest.d/ov098/daObjFallBlock_c.json. Do not "fix"
        the ordering by moving this body out of line: it trades four descendants'
        bytes for one TU's. */
