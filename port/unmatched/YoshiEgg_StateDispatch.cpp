@@ -37,6 +37,7 @@
  * half that frame.
  */
 #include <cstdio>
+#include <cstdlib>
 
 extern "C" {
 
@@ -99,5 +100,17 @@ extern "C" void func_ov002_020ed684(void *cv)
 {
     char *c = (char *)cv;
     int j = *(int *)(c + 0x3f0);
+    /* TEST INSTRUMENT (SM64DS_EGG_TRACE=1), off by default: one line per egg
+       tick naming the state, the target uniqueID at +0x410 and the re-home
+       count at +0x41c. This is what lets a headless proof say "the egg was
+       really thrown and really flew" rather than inferring it. Reads only. */
+    {
+        static int tr = -1;
+        if (tr < 0) tr = std::getenv("SM64DS_EGG_TRACE") != 0;
+        if (tr)
+            std::fprintf(stderr, "[eggstate] self=%p state=%d target=%u hops=%d\n",
+                         (void *)c, j, *(unsigned *)(c + 0x410),
+                         (int)*(unsigned char *)(c + 0x41c));
+    }
     yegg_state_call(c, data_ov002_02110a5c[2 * j + 1].code, "main");
 }

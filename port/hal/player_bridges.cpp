@@ -581,12 +581,17 @@ extern "C" void port_adventure_probe(int frame)
             if (capf >= 0 && !capdone && frame >= capf) {
                 char *h = *(char **)(pp + 0x360);
                 std::fprintf(stderr, "[caprepro] f%d held=%p -> "
-                             "SetNewHatCharacter(%u, 0, 0)
-",
+                             "SetNewHatCharacter(%u, 0, 0)\n",
                              frame, (void *)h, capchr);
                 std::fflush(stderr);
                 capdone = 1;
                 _ZN6Player18SetNewHatCharacterEjjb(pp, capchr, 0, 0);
+                std::fprintf(stderr, "[capheld] after cap: held=%d\n",
+                             *(void **)(pp + 0x360) ? 1 : 0);
+                std::fprintf(stderr, "[capchar] mCharacter=%u mHatCharacter=%u\n",
+                             (unsigned)*(unsigned char *)(pp + 0x6d9),
+                             (unsigned)*(unsigned char *)(pp + 0x6dd));
+                std::fflush(stderr);
             }
         }
         /* State dump while (likely) frozen, to see which eat substate is stuck. */
