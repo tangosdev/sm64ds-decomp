@@ -142,7 +142,33 @@ Dispositions (from `tubuild.py` ~2146-2260):
 |---|---|
 | `deadstrip` | a symbol with no ROM home |
 | `deadstrip-duplicate` | a **function** that does have a ROM home — **requires `canonical_module` and `canonical_address`** |
-| `deadstrip-data` | any `_ZTV` / `_ZTI` / `_ZTS` — plain `deadstrip` is rejected for these |
+| `deadstrip-data` | a data symbol (`_ZTV`/`_ZTI`/`_ZTS`) that **does** have a ROM home in your module — plain `deadstrip` is rejected for these |
+
+The real rule is **homed vs. homeless**, not function vs. data: `deadstrip` for
+no home, `deadstrip-*` for a home. And there is a **third bucket** this file
+long omitted:
+
+| block | for |
+|---|---|
+| `externalized_output` | a symbol whose one kept copy lives in **another module** — disposition `canonical-import` |
+
+That is where vague-linkage `_ZTI`/`_ZTS` go when mwld landed them elsewhere,
+and it can be most of your rows: `daObjFallBlock_c` (ov098) split 12 symbols as
+**2 `compiler_only_output` + 10 `externalized_output`**, its whole RTTI set
+homed in ov015. The formula below still predicts the **total**; it does not
+predict the split. Derive the split per symbol from `symbols.txt`.
+
+**`verify` does not deduct `externalized_output` rows from its unlicensed
+count.** A complete, correct policy still reports a high number. It reads like
+failure and is not.
+
+**Do not read `tubuild.py`'s `promotion_refusals()` as a live gate.** It refuses
+any entry carrying `externalized_output`, but its only caller is `cmd_promote`,
+which is `--dry-run`-only and prints "the mutating path ... is deliberately not
+available yet". Every promotion here is done by hand, so that refusal governs a
+path nobody runs. A writer took it at face value and nearly abandoned a class
+that was promotable — if it were live, no class with cross-module RTTI could
+ever promote, which is plainly false.
 
 **The row count is predictable from inheritance depth**, so do not copy an
 oracle's count unless the oracle sits at the same depth:
@@ -160,6 +186,10 @@ which can be a different overlay entirely. Measured on `daOts_c` (ov064): its ow
 relocates across to them. `dsd` reports that relocation's module as a list of
 sixteen overlays; the real one is whichever overlay's `symbols.txt` actually
 names the address. Two rows will be wrong if you guess.
+
+`tubuild create` writes `// @symbol` markers only for mangled or already-named
+members; **auto-named `func_ovNN_ADDR` shards are skipped silently.** Add theirs
+by hand or tiers scoring misses them.
 
 When the policy is refused, `verify` re-reports **all** extras as unlicensed from
 the unaudited object. One bad row makes it look like nothing is licensed. Fix the
@@ -235,6 +265,35 @@ mwccarm 2004/b56 behaviours, not style preferences.
 Ask the compiler rather than hand-mangling:
 
     python tools/mangle.py candidate.cpp --expect _ZN...
+
+## Tool traps measured by writers before you
+
+- **`linkcheck --partial` skips the emission-order gate.** Plain `linkcheck`
+  runs the `[4b/8]` licensing audit only when `not baseline and not partial and
+  not partitioned` (`tubuild.py:5061`), and that audit is where the hard
+  ROM-ascending `.text` refusal lives. So when your order is *not* reproducible
+  you can still get real link-and-ROM evidence — full module fidelity and a
+  stock-identical ROM sha256 — out of `--partial`. Settling order at `verify` is
+  still right; this is the extra evidence available once you have.
+- **`create` before `linkcheck --baseline` is safe.** `src_tu/` is untracked and
+  not in the build, so the tree is still pristine for baseline purposes. Only
+  *header edits* spoil a baseline.
+- **`rtti_vtables.py` over-reports slot counts** — the known `_ZTV` extent
+  overrun; 34 against a real 32 on `daObjCtMecha03_c`. Cross-check against the
+  `_ZTV` section size `verify` prints (`0x88` = 2 preamble words + 32 slots).
+  The vtable row's `reason` invites you to state a slot count, so get it right.
+- **`rtti_vtables.py` needs `build/rtti.json`**, which only `rtti_extract.py`
+  writes. Without it you get a bare `FileNotFoundError` traceback that names no
+  remedy.
+- **If no facts file exists, write one.** This role file treats
+  `notes/data/class-facts/<Class>.json` as a hard input whose `unproven` list is
+  binding, but a scout does not always run first. Produce it yourself from
+  `rtti_extract.py` plus a direct overlay read, and commit it — the next stage
+  reads it.
+- **Commit the facts file *before* `promote --dry-run` step 1.** Steps 1-2 (`mv`
+  + `git rm`) leave the source promotion **staged**, so any commit you make
+  afterwards silently swallows it. A writer following this file's own "facts
+  JSON goes on the same branch" convention had to `reset --soft` and re-split.
 
 ## Conventions — fixed, so nine agents do not pick nine ways
 

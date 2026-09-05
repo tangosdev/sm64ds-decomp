@@ -26,6 +26,7 @@ import getpass
 import json
 import os
 import pathlib
+import re
 import secrets
 import socket
 import subprocess
@@ -52,8 +53,31 @@ def git(*args, check=True):
     return r
 
 
+def normalize_cls(cls):
+    """Reduce a class id to the single spelling the claim ref is named with.
+
+    Callers reach for two spellings interchangeably -- bare `daOts_c` and
+    overlay-qualified `ov064/daOts_c` -- and the role files use both. Left
+    alone, those build *different* refs, so two agents claiming one class in
+    two spellings would each create a ref and each believe it won. That is the
+    same class of hole as pushing HEAD; it was live on the remote (claims
+    existed as both `writer/daObjCtMecha04_c` and
+    `writer/ov006/dScMgD3DBase_c`) before this was added.
+
+    The bare class name is the canonical form: a class lives in exactly one
+    overlay, so the prefix carries no information the name does not.
+    """
+    cls = cls.strip().strip("/")
+    if not cls:
+        raise SystemExit("empty class id")
+    cls = cls.rsplit("/", 1)[-1]
+    if not re.fullmatch(r"[A-Za-z0-9_+.-]+", cls):
+        raise SystemExit(f"class id {cls!r} is not a valid ref component")
+    return cls
+
+
 def ref_for(cls, role):
-    return f"refs/claims/{role}/{cls}"
+    return f"refs/claims/{role}/{normalize_cls(cls)}"
 
 
 def held():

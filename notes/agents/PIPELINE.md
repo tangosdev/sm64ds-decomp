@@ -65,6 +65,13 @@ commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
 
     python tools/classqueue.py next    --role writer
     python tools/classqueue.py claim   dActor_c --role writer --worktree C:/tmp/sm64ds-dactor
+
+`claim` takes the **bare class name**. `ovNNN/dActor_c` is accepted and
+normalized to the same ref — a class lives in one overlay, so the prefix adds
+nothing. Before that normalization the two spellings built two different refs
+and two agents could hold one class simultaneously; live claims existed in both
+forms. Create the worktree first and claim once with `--worktree`: re-claiming
+to attach the path afterwards is denied against yourself.
     python tools/classqueue.py release dActor_c --role writer
     python tools/classqueue.py list
 

@@ -14,10 +14,11 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
 
     # 1. bytes
     python tools/tubuild.py verify <ov>/<Class>
-    #    ^ this WRITES to the manifest: it adds a partial_isolation block that
-    #      is degenerate post-promotion (contributionEquivalent "0/22",
-    #      state "derived"). Revert it. Neither the writer's commit nor the
-    #      landed dBgActor_c promotion carries one.
+    #    ^ this CAN write to the manifest: it may add a partial_isolation block
+    #      that is degenerate post-promotion (contributionEquivalent "0/22",
+    #      state "derived"). Revert it if it appears. It does not always: a
+    #      daPgDfdr_c rebase left the tree clean, so it is likely conditional on
+    #      the manifest already reading status: promoted. Check, do not assume.
     python tools/rombuild.py -j 6 --no-rom
     python tools/romdata_check.py --files src/actors/<Class>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
@@ -80,13 +81,45 @@ files — which the rebase rule requires — a second `--update --reason` **appe
 duplicate rows for the same paths** rather than replacing them. Nothing warns
 you. The working recipe is to restore both files first and update exactly once:
 
-    git checkout origin/main -- config/converted-backslide-exceptions.jsonl                                 config/converted-baseline.json
+    git checkout <the-new-base> -- config/converted-backslide-exceptions.jsonl                                    config/converted-baseline.json
     python tools/tiers_ratchet.py --update --reason "<why>"
+
+**`<the-new-base>` is whatever you rebased onto — not always `origin/main`.**
+When you are stacked on a sibling class branch, `git checkout origin/main --`
+**permanently destroys the sibling's rows**: `write_baseline` regenerates the
+whole `converted` set from the tree so the loud file self-heals, but
+`append_exceptions` opens the exceptions file `"a"` and only ever appends, so
+what you drop there never comes back. That asymmetry is also why the silently
+auto-merging file is the dangerous one and the loudly conflicting one is safe.
+
+**Detect the damage, do not just apply the remedy.** `git merge-tree
+--write-tree <base> <head>` shows you the silent auto-merge before it lands, and
+an identical-whole-record count over the exceptions file shows you double-banking.
+
+**Dedupe by whole record, never by path.** Rows are `{path, reason}` and one
+path legitimately recurs under different reasons — `main` carries 66 such rows
+from past promotions. Only byte-identical repetition is the defect. A builder
+who deduped by path would delete real history.
 
 ## Your branch
 
 The writer's worktree still has `cpp/<Class>-tu` checked out, so you cannot use
 that branch name. Cut `cpp/<Class>-tu-build` from it and open the PR from there.
+
+## Rebasing when the branch you compose with has not landed
+
+Your class branch may have to stack on a sibling's branch rather than on `main`.
+Two things follow:
+
+- **`git rebase --onto <newbase> origin/main` replays too much.** A class branch
+  cut from `agents/class-pipeline` shares that branch's commits with its
+  siblings, and `origin/main..HEAD` includes all of them — so they collide
+  add/add on the role files and `tools/classqueue.py`, which a later shared
+  commit already edited on the base. `git merge-base` reports `origin/main` and
+  gives you no warning. Instead: `git reset --hard <newbase>`, then cherry-pick
+  only the class's own commits.
+- **Retarget the PR too**: `gh pr edit <n> --base <sibling-branch>`. Without it
+  the PR's diff silently claims the sibling's work as its own.
 
 ## Rebasing onto a moved `main` — the trap no gate catches
 
@@ -184,9 +217,10 @@ Say which gates you had to `--update` and why.
 `daOts_c` has neither — nothing in the image allocates one, and its vtable
 carries pure-virtual zero words. Say so instead of inventing a number.
 
-**Check what you actually pushed.** The pre-push hook creates an attribution
-commit and does *not* push it, so `git push` can report success and leave that
-commit sitting locally. Run `git log origin/<branch>..HEAD` afterwards; if it is
+**Check what you actually pushed.** The pre-push hook *can* create an attribution
+commit without pushing it, so `git push` may report success and leave that commit
+sitting locally. It does not always — one measured run had the hook fire with no
+commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
 non-empty, push again. A PR missing its lineage commit looks complete.
 
 Two validator lines are expected on a promotion and are not losses. `Contributor
