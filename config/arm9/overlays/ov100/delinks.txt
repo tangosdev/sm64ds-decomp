@@ -326,85 +326,13 @@ src/d_a_door.c:
     complete
     .text start:0x0214589c end:0x021458d4
 
-src/_ZN8StarDoorD1Ev.cpp:
+src/game/actors/d_a_star_gate.cpp:
     complete
-    .text start:0x021458d4 end:0x02145904
-
-src/_ZN8StarDoorD0Ev.cpp:
-    complete
-    .text start:0x02145904 end:0x02145948
-
-src/func_ov100_02145948.c:
-    complete
-    .text start:0x02145948 end:0x02145988
-
-src/func_ov100_02145988.cpp:
-    complete
-    .text start:0x02145988 end:0x02145ab4
-
-src/func_ov100_02145ab4.cpp:
-    complete
-    .text start:0x02145ab4 end:0x02145b10
-
-src/func_ov100_02145b10.cpp:
-    complete
-    .text start:0x02145b10 end:0x02145b7c
-
-src/func_ov100_02145b7c.c:
-    complete
-    .text start:0x02145b7c end:0x02145b9c
-
-src/func_ov100_02145b9c.c:
-    complete
-    .text start:0x02145b9c end:0x02145c2c
-
-src/func_ov100_02145c2c.c:
-    complete
-    .text start:0x02145c2c end:0x02145c58
-
-src/func_ov100_02145c58.c:
-    complete
-    .text start:0x02145c58 end:0x02145e10
-
-src/func_ov100_02145e10.c:
-    complete
-    .text start:0x02145e10 end:0x02145e74
-
-src/func_ov100_02145e74.c:
-    complete
-    .text start:0x02145e74 end:0x02145f00
-
-src/func_ov100_02145f00.c:
-    complete
-    .text start:0x02145f00 end:0x02145f68
-
-src/func_ov100_02145f68.cpp:
-    complete
-    .text start:0x02145f68 end:0x02145fbc
-
-src/_ZN8StarDoor16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02145fbc end:0x02145fe0
-
-src/_ZN8StarDoor16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02145fe0 end:0x02145fe4
-
-src/_ZN8StarDoor6RenderEv.cpp:
-    complete
-    .text start:0x02145fe4 end:0x021460dc
-
-src/_ZN8StarDoor8BehaviorEv.cpp:
-    complete
-    .text start:0x021460dc end:0x0214612c
-
-src/_ZN8StarDoor13InitResourcesEv.cpp:
-    complete
-    .text start:0x0214612c end:0x021461d4
-
-src/d_a_star_gate.c:
-    complete
-    .text start:0x021461d4 end:0x0214620c
+    .text start:0x021458d4 end:0x0214620c
+    .init start:0x02147a70 end:0x02147bc0
+    .ctor start:0x02147df8 end:0x02147dfc
+    .data start:0x02148334 end:0x02148448
+    .bss start:0x02148934 end:0x021489a4
 
 src/_ZN4FishD1Ev.cpp:
     complete
@@ -501,10 +429,6 @@ src/__sinit_ov100_021475a4.c:
 src/__sinit_ov100_02147698.c:
     complete
     .init start:0x02147698 end:0x02147a70
-
-src/__sinit_ov100_02147a70.c:
-    complete
-    .init start:0x02147a70 end:0x02147bc0
 
 src/__sinit_ov100_02147bc0.c:
     complete
