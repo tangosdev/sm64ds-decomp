@@ -47,9 +47,9 @@ void func_ov006_02114800(char *c, int *pair, int a3)
         *(int *)(p + 0x59a8) = (int)(r >> 15);
         r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
         func_0203d388(pang, (unsigned short)(r * 2));
-        *(int *)(((int)p + 0x59a8) & 0xFFFFFFFFFFFFFFFF) <<= 1;
-        *(int *)(((int)p + 0x59a4) & 0xFFFFFFFFFFFFFFFF) += *(int *)(p + 0x599c);
-        *(int *)(((int)p + 0x59a8) & 0xFFFFFFFFFFFFFFFF) += *(int *)(p + 0x59a0);
+        *(int *)(p + 0x59a8) <<= 1;
+        *(int *)(p + 0x59a4) += *(int *)(p + 0x599c);
+        *(int *)(p + 0x59a8) += *(int *)(p + 0x59a0);
         *(int *)(p + 0x59ac) = z_b;
         *(int *)(p + 0x59b0) = ten;
         *(unsigned char *)(p + 0x59bc) = (unsigned char)one;
