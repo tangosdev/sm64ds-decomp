@@ -301,7 +301,37 @@ mwccarm 2004/b56 behaviours, not style preferences.
   access does not. Only the byte gate settles it.
 - **`extern`, not `extern "C" { ... }`** for ROM symbols already spelled mangled
   in a `//cpp` file — the block form *defines* and collides.
+- **The mirror case, and it is the common one.** A symbol whose ROM name is
+  mangled but which the shards spell **unmangled** must be declared **outside**
+  the `extern "C"` block: inside it, C linkage strips the mangling and `[5/8]`
+  fails `Undefined : "<name>"`. Measured on `ApproachLinear`, ROM symbol
+  `_Z14ApproachLinearRiii`. The rule is *mangled spelling inside, unmangled C++
+  spelling outside* — and **`verify` stays green either way**, so nothing catches
+  this until `linkcheck`.
 - **`//cpp` must be the file's first bytes.** The extension is never consulted.
+
+## Mechanics of a large merge
+
+These are steps, not debugging responses. Do them before the first compile and
+they cost minutes; discover them after and each is a cycle.
+
+- **Emit forward declarations for every member.** mwcc lays `.text` down in
+  *reverse* source order, so the merged file is written descending-ROM and
+  nearly every intra-TU call is a forward reference. Skipping this produced
+  about twenty `undefined identifier func_ovNN_*` errors on one 49-function
+  attempt.
+- **Discard the generated preamble above roughly 30 members.** tubuild's emitted
+  one had `Self`/`Pmf` in dependency-wrong order, a `Vector3` redeclaration
+  against the real header, duplicate `P2`/`Pair`/`Obj` tags, and three
+  contradictory externs for a single data symbol. Hand-curate from the parsed
+  shards instead.
+- **A caller may pass more arguments than the definition takes.** Two sites did.
+  Declare the unused extra parameter — it preserves the caller's argument setup
+  and costs the callee nothing.
+- **Every 2-int shadow struct that is ever whole-struct-assigned must be spelled
+  with an array member.** C++ scalarizes what C block-moved. This one rule
+  accounted for seven byte-diffs in a single merge; treat it as a checklist
+  sweep, not a per-diff discovery.
 
 ## Reconciling the merged declarations
 
@@ -319,6 +349,9 @@ so **every** merged shard needs the check. When the merge makes both spellings
 visible mwccarm rejects it as `illegal function overloading`, and the error text
 points at your *definition* line while saying nothing about the header —
 measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
+**The fix pattern is to change the *definition* to the header's type and add a
+one-line cast alias inside the body** — not to fight the header. Three members of
+one TU hit this at once (`char*` vs `void*` twice, `int*` vs `char*` once).
 
 **The detector also misses *return-type* disagreement between two shards, and
 emits both spellings.** `func_0201267c` was declared `int f(int, void*)` by one
@@ -484,6 +517,30 @@ its destructor out of line by analogy with `BigBrickBlock.h`'s leaf-class
 convention; the ROM's own addresses refuted it, and merged, the two out-of-line
 definitions were a duplicate definition *as well as* the wrong order. Read the
 cartridge, not the neighbour.
+
+**Destructor order is not the only reason to take a subset.** Two more, both
+measured on `ov006/dScMgHanachan_c` (22 of 61):
+
+- **A sourceless function splits the run.** `func_ov006_020ea914` has no `src/`
+  file anywhere and no `delinks.txt` entry — the cartridge's own bytes cover it.
+  **A licensed claim cannot have a hole**: no delink block and no TU manifest in
+  the tree carries two `.text` runs. So a run with a sourceless member in the
+  middle can only be taken as one of its two contiguous sides. Take the larger
+  and say so.
+- **Two file-global pragmas that contradict each other.** Four members reproduce
+  only with `opt_strength_reduction off` and three only with it **on**. Both that
+  pragma and `opt_common_subs` are file-global last-wins in mwccarm 2004/b56, so
+  there is no positional escape — bracketing `off ... on` around exactly the four
+  that want it gave byte-identical results to omitting it entirely. (`#pragma
+  push`/`O3`/`pop` *is* positional; these two are not.) Score every setting
+  across the whole side and take the longest **contiguous** all-matching run:
+  here SR-off scored 44/49 overall but SR-on gave the longest contiguous run, 22.
+
+**When the key function falls outside your licensed range, the row-count formula
+does not apply at all.** That TU emits no `_ZTV`/`_ZTI`/`_ZTS`, so there is no
+`compiler_only_output` block — zero rows, not the ~9 the formula predicts — and
+the header needs no edit. Check where the key function landed before deriving
+anything.
 
 The discriminator is which way the cartridge ordered the destructors. ROM **D1
 below D0** is the reproducible direction and promotes whole (`ov029/daObjWcObj01_c`);
