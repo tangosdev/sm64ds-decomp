@@ -1,0 +1,49 @@
+# ov039 per-symbol mount (run link100, lane OV): level 31's own overlay
+# (data/stage/habatake, Tiny-Huge Island's sky, course 23, base 0x021111a0).
+#
+# ov039 is ALREADY mounted --whole in PORT_LEVEL_OVERLAYS -- that mount is one
+# array and names nothing -- so this is the SECOND mount, per symbol, the
+# ov009/ov010/ov015/ov016/ov018/ov029 treatment applied to a sixth level
+# overlay so its one actor class reaches the record the registry rewrites and
+# the bss its own static initialiser builds.
+#
+# THE ONE CLASS AND ITS ID (SpawnInfo +4 halfword, cross-checked against
+# ACTOR_SPAWN_TABLE[314] and against the level-31 object table, which places
+# seventeen of them):
+#   314  Cloud (RTTI 11daObjKumo_c)  SpawnInfo 0x02111834  Spawn 0x0211137c
+#
+# ---- the SpawnInfo record (0x1c) ------------------------------------------
+# Pinned to the record's real 0x1c rather than left to the next-symbol delta,
+# the ov098/ov100/ov029 convention. The registry rewrites its +0 factory word
+# in place and the ActorBase constructor reads the +4/+6 priorities back out of
+# the same bytes, so this has to be storage the actor code and the registry
+# agree on -- which is exactly why the --whole mount cannot serve it.
+Cloud_SpawnInfo:0x1c
+#
+# ---- the sinit-built bss window (0x021118e4..0x02111900) -------------------
+# __sinit_ov039_021113b4 constructs the model SharedFilePtr at 0x021118e4
+# (func_02017acc with file 1141) and registers its teardown node at
+# 0x021118ec (func_020731dc). Both cells are reserved here so the
+# constructor's writes land in hosted memory; the sinit itself runs from
+# hal/actor_classes_ov_link100.cpp's bring-up, ahead of the registry install.
+#
+# SIZES ARE THE ROM SPAN, not the next-symbol delta, because 0x021118ec is the
+# LAST symbol in the overlay: dsd's delta would size it 0 and
+# SharedFilePtr's teardown node writes past that. ov039's .bss is
+# 0x021118e0..0x02111900 (delinks.txt), so 0x021118e4 gets the 8 bytes to its
+# neighbour and 0x021118ec the 0x14 to the end of the section.
+data_ov039_021118e4:0x8 data_ov039_021118ec:0x14
+#
+# ---- HELD OUT, deliberately ------------------------------------------------
+# _ZTV5Cloud / _ZTV11daObjKumo_c (0x02111858): dsd's TWO names for the class
+# vtable. Vtables are host arrays the registry fills, never mounted bytes --
+# and holding both names out is what lets hal/cxx_aliases.cpp's link100 block
+# alias the second onto the first without a definition anywhere able to defeat
+# it (the ov017 daObjKsWater_c treatment).
+#
+# data_ov039_021118e0 (four bytes): the counter Cloud::InitResources bumps.
+# It is NOT sinit-built, and the src TU spells it with a sibling overlay's
+# name (data_ov041_021118e0) that decl_common.h declares as a SCALAR int
+# rather than an array -- a mounted array would be the wrong shape for that
+# declaration. Defined in hal/actor_classes_ov_link100.cpp instead, and the
+# per-source -D in port/CMakeLists.txt binds the sibling spelling to it.

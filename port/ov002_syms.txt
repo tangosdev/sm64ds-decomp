@@ -476,3 +476,16 @@ QuestionSwitch_SpawnInfo data_ov002_0210d774:0x20 data_ov002_0210d8b4:0x20
 # Stage::RenderVsModeCountdown banner/START sprite templates (READY? + START,
 # five languages each) -- hosted for the Luigi Infection pre-round countdown
 data_ov002_0210d008 data_ov002_0210d098 data_ov002_0210d130 data_ov002_0210d1c8 data_ov002_0210d210 data_ov002_0210d378 data_ov002_0210d3a0 data_ov002_0210d3c0 data_ov002_0210d3e0 data_ov002_0210d420
+# ---- link100 OV ----
+# id 348, RTTI 10daChRoom_c, the room-change trigger volume of a castle
+# door. ACTOR_SPAWN_TABLE[348] -> 0x021085d4 (VirtualDoor_SpawnInfo, +4
+# halfword 348), +0 word VirtualDoor_Spawn (0x020b0980), which installs
+# 0x021085f8 -- the table the config names _ZTV9CameraTag (the gate-20
+# name shift once more; that table's Itanium -4 typeinfo word names
+# 10daChRoom_c, and 0x0210853c one class earlier is CameraTag's
+# 10daCamTag_c, already seated as id 333). The class reads nothing out of
+# ov002 but this record: its InitResources works on the spawn param and
+# its Behavior on arm9 globals, so the 0x1c the registry rewrites the
+# factory word in is the whole mount. The vtable is HOST STORAGE the
+# registry fills (hal/actor_classes_ov_link100.cpp), NOT mounted.
+VirtualDoor_SpawnInfo:0x1c
