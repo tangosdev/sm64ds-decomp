@@ -1599,6 +1599,10 @@ src/func_ov002_020bf9d4.cpp:
     complete
     .text start:0x020bf9d4 end:0x020bfa74
 
+src/func_ov002_020bfa74.cpp:
+    complete
+    .text start:0x020bfa74 end:0x020bfec0
+
 src/func_ov002_020bfec0.c:
     complete
     .text start:0x020bfec0 end:0x020c0108
