@@ -1,13 +1,13 @@
 {
   "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
   "codegen_hacks": {
-    "cv_launder": 3,
-    "cv_launder_sites": 6,
+    "cv_launder": 4,
+    "cv_launder_sites": 7,
     "extern_vtable": 165,
-    "extern_vtable_classes": 167,
+    "extern_vtable_classes": 168,
     "inline_asm": 13,
-    "launder_or_forced": 211,
-    "launder_sites": 441
+    "launder_or_forced": 209,
+    "launder_sites": 438
   },
   "exclusions": {
     "by_value_class_param": 54
@@ -16,8 +16,8 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 53,
-        "unmigrated": 1
+        "migrated": 55,
+        "unmigrated": 3
       },
       "C2": {
         "draft": 0,
@@ -31,8 +31,8 @@
       },
       "D1": {
         "draft": 0,
-        "migrated": 403,
-        "unmigrated": 3
+        "migrated": 405,
+        "unmigrated": 5
       },
       "D2": {
         "draft": 0,
@@ -41,27 +41,27 @@
       },
       "method": {
         "draft": 11,
-        "migrated": 2713,
-        "unmigrated": 72
+        "migrated": 2824,
+        "unmigrated": 115
       }
     },
-    "cpp_still_handspelled": 49,
-    "mangled_c": 30,
-    "mangled_cpp": 3654,
-    "mangled_total": 3684,
+    "cpp_still_handspelled": 57,
+    "mangled_c": 69,
+    "mangled_cpp": 3777,
+    "mangled_total": 3846,
     "nonmatching_drafts": 11,
-    "unmigrated_total": 79
+    "unmigrated_total": 126
   },
   "shadow_decls": {
-    "local_body_no_include": 1053,
-    "local_body_no_include_cpp": 407,
-    "local_struct_body": 1900,
-    "local_struct_body_cpp": 1019,
-    "pad_layout": 467
+    "local_body_no_include": 1040,
+    "local_body_no_include_cpp": 400,
+    "local_struct_body": 1884,
+    "local_struct_body_cpp": 1009,
+    "pad_layout": 462
   },
   "totals": {
-    "c_extension": 6046,
-    "cpp_extension": 4472,
-    "src_files": 10518
+    "c_extension": 5990,
+    "cpp_extension": 4437,
+    "src_files": 10427
   }
 }
