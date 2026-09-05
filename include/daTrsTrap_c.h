@@ -37,8 +37,8 @@ struct daTrsTrap_c : dActor_c {
        (dBgActor_c 0x124/0x2ec, SpinningPlatform and TtcRotatingCube the same,
        both of which hand `this + 0x2ec` to dBgW_KcMbg::SetFile as a
        `const Matrix4x3 &`). 0x15c + 0x1c8 = 0x324, and 0x324 + 0x30 closes on
-       the 0x354 daTrsTrap_c_classInit_KAIDAN allocates. InitResources, which is where
-       the SetFile call would be, is still a near miss and not in the tree. */
+       the 0x354 daTrsTrap_c_classInit_KAIDAN allocates. InitResources is now in the
+       tree and hands this member to dBgW_KcMbg::SetFile as that `const Matrix4x3 &`. */
     Matrix4x3 mClsnMat;            /* 0x324 */
 
     /* --- vtable ---
@@ -46,7 +46,7 @@ struct daTrsTrap_c : dActor_c {
      * order here; the destructor stays first-declared because it is the ABI key
      * function and picks the TU that emits _ZTV11daTrsTrap_c. */
     virtual ~daTrsTrap_c();          /* slots 16 (D1), 17 (D0) */
-    virtual s32 InitResources();     /* slot  0 -- ov063:0x0211cf00, still delinked */
+    virtual s32 InitResources();     /* slot  0 -- ov063:0x0211cf00 */
     virtual s32 CleanupResources();  /* slot  3 -- ov063:0x0211cdec */
     virtual s32 Behavior();          /* slot  6 -- ov063:0x0211ce74 */
     virtual s32 Render();            /* slot  9 -- ov063:0x0211ce34 */
