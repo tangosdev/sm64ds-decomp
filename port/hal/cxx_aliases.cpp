@@ -546,7 +546,11 @@ int data_0209f274[8];
    staged array now, not blank storage, or the death path faults on it. */
 int data_0209a5ec, data_0209a5f4[2], data_0209a5fc, data_0209a600;
 int data_0209a604, data_0209a60c[2], data_0209a614, data_0209a618;
-int data_0209a61c[4], data_020a6128, data_020a6134[4];
+int data_0209a61c[4], data_020a6128;
+/* data_020a6134 IS NOT HERE ANY MORE -- see the link100 GLOBALS block at the
+   foot of this file. It is not a 16-byte object of its own: it is the first of
+   three dsd names over ONE 0x54-byte ROM record, and hosting it as int[4] on
+   this line is what refused func_02058308 in hal/boot_os.cpp. */
 DSSTATE_END
 
 /* ---- THE GX BANK-STATE BLOCK, 0x020a6088..0x020a60a4, IN ROM ORDER ---------
@@ -2154,3 +2158,109 @@ bool Player::TryGrab(Actor &actor)
 #pragma comment(linker, "/alternatename:?data_020a0ebc@@3PAHA=_data_020a0ebc")
 #pragma comment(linker, "/alternatename:?data_ov002_0211028c@@3UState@@A=_data_ov002_0211028c")
 #pragma comment(linker, "/alternatename:?data_ov002_0211004c@@3HA=_data_ov002_0211004c")
+
+// ============================================================================
+// ---- link100 GLOBALS -------------------------------------------------------
+// ============================================================================
+//
+// THE ROM's OS THREAD-INFO RECORD, 0x020a6134..0x020a6188, HOSTED AS ONE
+// OBJECT UNDER THE THREE NAMES dsd GAVE IT.
+//
+// WHAT WAS WRONG. hal/boot_os.cpp refuses func_02058308 (the OS thread system)
+// because "data_020a6134 is hosted as int[4], 16 bytes, and the body writes
+// bytes 0x14..0x53". That reading of the defect is right and THE REMEDY IT
+// NAMES IS NOT: this port's standing rule is "size a hosted global by its ROM
+// span, the delta to the next symbol in config/arm9/symbols.txt", and applying
+// that rule literally here produces an EIGHT-byte object --
+//
+//     data_020a6134  bss   next symbol data_020a613c   delta 8
+//     data_020a613c  bss   next symbol data_020a6148   delta 12
+//     data_020a6148  bss   next symbol data_020a6188   delta 64
+//
+// -- which is smaller than the sixteen bytes that were already there and fixes
+// nothing. The delta rule assumes one dsd name per ROM object and that
+// assumption fails here: dsd emitted a name at every offset some function
+// LDR'd directly, so three of its names cover ONE record and the object's real
+// span is the distance from the first of them to the first name that is not
+// part of it, 0x020a6188 - 0x020a6134 = 0x54 = 84 bytes.
+//
+// THE MEASUREMENT, from extracted/arm9_dec.bin at base 0x02004000 rather than
+// from the decompilation. src/func_02058308.c is the widest writer and its ARM
+// is unambiguous:
+//
+//     02058334  ldr r4, =0x020a6134
+//     0205833c  add r0, r4, r1, lsl #2      \  i = 0..15
+//     02058344  str r5, [r0, #0x14]         /  clears +0x14 .. +0x53
+//     0205837c  str r0, [r4, #0x14]            +0x14  thread table[0]
+//     02058380  str r0, [r4, #0xc]             +0x0c  list head
+//     02058384  str r0, [r4, #8]               +0x08  current thread
+//     020583f4  strh ip, [r1, #2]              +0x02  (r1 = 0x020a6134)
+//     020583f8  strh r0, [r1]                  +0x00
+//     020583fc  strh r0, [r1, #4]              +0x04
+//     02058400  str r1, [r3]                   r3 = 0x027fffa0, the DS's
+//                                              OSThreadInfo pointer word
+//
+// The last byte written is 0x53 and the next dsd name is at +0x54. It is one
+// NitroSDK OSThreadInfo and nothing of it spills into data_020a6188, which is
+// a thread record of its own: dsd gives it 0x94 = 148 bytes, and 0x90 is the
+// last offset func_02058200 writes in the object it is handed.
+//
+// AND THE SECOND HALF OF THE DEFECT, which a resize alone does NOT fix:
+// hal/auto_bss.cpp hosted data_020a6148 as its own separate `int[8]`. On the
+// DS that name IS data_020a6134 + 0x14, and two matched bodies reach the same
+// sixteen table slots through the two different names --
+//
+//     src/func_02058538.c   scans data_020a6134.arr[0..15]  (+0x14 + 4i)
+//                           for a free slot and returns the index
+//     src/func_02058200.c   writes data_020a6148[id] = self
+//     src/func_020581a8.cpp writes data_020a6148[o->idx] = 0
+//
+// -- so with two host objects the allocator writes one array and the scanner
+// reads another: func_02058538 would hand out slot 0 for every thread, for
+// ever, and nothing would fault. That is the quiet half of this bug class and
+// it is why these three are hosted as a grouped run instead of resized in
+// place.
+//
+// Every one is .bss, so zeroed host storage reads what the DS's cleared BSS
+// reads. align(1) on the members keeps the ROM's own spacing (align(4) would
+// pad the 12-byte middle member and push the table to +0x18), and
+// port_link100_osti_check() reads the layout back at start-up rather than
+// trusting the linker to have honoured it -- the same idiom the GX bank block
+// above and hal/scene_boot.cpp's L2 pack use.
+#define LINK100_BSS(sec, name, size)                              \
+    __pragma(section(sec, read, write))                           \
+    extern "C" __declspec(allocate(sec)) __declspec(align(1))     \
+    unsigned char name[size] = {0}
+
+/* +0x00  u16 needsRescheduling, u16 irqDepth, u16, u16 */
+LINK100_BSS(".dsstate$osti00", data_020a6134, 8);
+/* +0x08  OSThread *current, OSThread *list, switch callback.
+   src/func_02058308.c also parks the ADDRESS of this member in data_020a612c,
+   which src/func_02057f54.c then dereferences to find the running thread --
+   so this one has to be at +8 of the record and not merely exist. */
+LINK100_BSS(".dsstate$osti01", data_020a613c, 12);
+/* +0x14  OSThread *table[16] -- the sixteen slots func_02058538 allocates */
+LINK100_BSS(".dsstate$osti02", data_020a6148, 64);
+
+extern "C" int port_link100_osti_check(void)
+{
+    static const struct { const unsigned char *p; int want; const char *n; } k[] = {
+        { data_020a6134,  0x00, "data_020a6134" },
+        { data_020a613c,  0x08, "data_020a613c" },
+        { data_020a6148,  0x14, "data_020a6148" },
+    };
+    int bad = 0;
+    for (int i = 0; i < 3; ++i)
+        if (k[i].p - data_020a6134 != k[i].want) {
+            fprintf(stderr, "  [link100] OSThreadInfo PACK BROKEN: %s at "
+                         "+0x%x, ROM says +0x%x\n", k[i].n,
+                         (unsigned)(k[i].p - data_020a6134), k[i].want);
+            bad = 1;
+        }
+    return bad;
+}
+
+namespace {
+struct Link100OstiCheck { Link100OstiCheck() { port_link100_osti_check(); } };
+Link100OstiCheck g_link100_osti_check;
+}  /* anonymous namespace */

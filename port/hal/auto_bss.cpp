@@ -55,8 +55,25 @@ int data_0209fd14[8];
 int data_0209fd20[8];
 int data_020a0f40[8];
 int data_020a0f70[8];
-int data_020a6148[8];
-int data_0209d3c4[8];
+/* data_020a6148 MOVED to the link100 GLOBALS block at the foot of
+   hal/cxx_aliases.cpp. It is NOT storage of its own: 0x020a6148 is
+   data_020a6134 + 0x14, the sixteen-slot thread table inside the ROM's one
+   0x54-byte OSThreadInfo record, and src/func_02058538.c reaches those same
+   slots through the OTHER name. Two host objects meant the allocator wrote one
+   array while the scanner read the other -- silently, with nothing to fault.
+   The three names are a grouped run there; the measurement is in that block. */
+/* THE OVERLAY-RESIDENT TABLE, and the generous-default convention was 112
+   bytes short of it. ROM span from config/arm9/symbols.txt is
+   0x0209d454 - 0x0209d3c4 = 0x90 = 144 bytes, which is exactly the twelve
+   12-byte records src/func_02017e60.c writes:
+
+       for (i = 0; i < 12; i++, p++) { p->a = -1; p->b = 0; p->c = 0; }
+
+   src/LoadOverlay.c and src/func_02017e94.c walk the same twelve. At int[8]
+   that loop ran 112 bytes past the end of the object and over whatever this
+   file's link-sweep loop had put next to it. func_02018aa4, the ROM's own
+   file-system bring-up in src/func_0201a054.c, is the call that reaches it. */
+int data_0209d3c4[144 / 4];
 int data_0209d4f8[8];
 int data_0209d518[8];
 int data_0209d5b8[8];

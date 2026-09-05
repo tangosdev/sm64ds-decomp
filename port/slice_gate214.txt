@@ -148,3 +148,51 @@ src/func_0206d868.c
 src/func_0206d890.c
 src/func_0206d8c4.c
 src/func_0206d940.c
+
+# ---------------------------------------------------------------------------
+# run link100, lane GLOBALS: four more rows, and what made room for them
+# ---------------------------------------------------------------------------
+#
+# Three hosted DS globals were smaller than the ROM object they stand for, and
+# hal/boot_os.cpp refused four of func_0201a054's own calls because of it. The
+# sizes are ROM spans now (hal/cxx_aliases.cpp's link100 GLOBALS block,
+# hal/auto_bss.cpp, hal/actor_vtables.cpp, hal/globals_link100.cpp), so these
+# four bodies run where the ROM runs them:
+#
+#   src/func_0201a490.c    src/func_02019780.c calls it between func_02058c84
+#                          and the root heap. It is one line,
+#                          data_0209a03c(data_0208ee60), through a RELOCATED
+#                          .data word; hal/ptr_tables.cpp binds that word to
+#                          the host func_02057e30, whose ROM body is `{}`.
+#                          src/func_02057e30.c itself goes in
+#                          port/slice_ptrsweep.txt and not here: it is a
+#                          pointer-table CALLEE, and that slice is the one on
+#                          the same three targets as hal/ptr_tables.cpp. This
+#                          file is on two of them, so listing it here would
+#                          leave smoke_player with the binding and not the
+#                          function.
+#
+#   src/func_02018aa4.c    src/func_0201a054.c calls it on the `if (!r4)` arm
+#   src/func_02017e60.c    the port takes. func_0205d89c is a host face
+#                          (hal/fs_names.cpp) whose once-flag a static
+#                          initialiser has already tripped, so the call that
+#                          does work is func_02017e60 -- and that one writes
+#                          all twelve 12-byte overlay-resident records at
+#                          data_0209d3c4, 144 bytes into what was a 32-byte
+#                          host object.
+#
+# NOT ADDED, on purpose, and each is measured rather than assumed:
+#   src/func_0201a9fc.c    already compiled by port/slice_gate10.txt; the two
+#                          call sites hal/boot_os.cpp adds are what link it.
+#                          Listing it here as well would be LNK2005.
+#   src/func_0205d89c.c    hal/fs_names.cpp defines the face; same reason.
+#   src/func_02058308.c    reads func_00000000 / func_00000600, absolute
+#                          linker symbols MSVC cannot supply. Two unresolved
+#                          externals, not a size.
+#   src/func_0201fec8.c    reaches func_0203db64, which is eight more
+#                          dsd-split runs of the same undersized class.
+#   src/func_02042f68.c    reaches the ROM scheduler and a PXI channel.
+# hal/boot_os.cpp carries the full measurement for all four refusals.
+src/func_02017e60.c
+src/func_02018aa4.c
+src/func_0201a490.c

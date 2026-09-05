@@ -446,6 +446,36 @@ void port_ptr_tables_check(void)
         }
 }
 
+/* ---- table 3: data_0209a03c, one word, and it is the same bug -------------
+ *
+ * config/arm9/relocs.txt has exactly three rows for this address:
+ *
+ *     from:0x0201a4b4 kind:load to:0x0209a03c    src/func_0201a490.c reads it
+ *     from:0x020417c4 kind:load to:0x0209a03c    src/func_0204175c.c reads it
+ *     from:0x0209a03c kind:load to:0x02057e30    THE WORD ITSELF
+ *
+ * The third row is the one that matters: the word AT 0x0209a03c is relocated,
+ * so the four bytes romdata.py would hand over are the DS address 0x02057e30
+ * and calling through them on the host is a jump into nothing. Both readers
+ * CALL it -- src/func_0201a490.c is one line, `data_0209a03c(data_0208ee60)`
+ * -- which is why hal/boot_os.cpp refused func_0201a490 outright rather than
+ * hosting the word: "hosting the raw word would call into nothing".
+ *
+ * 0x02057e30 is src/func_02057e30.c, and the whole ROM body is `{}`. So the
+ * binding is the ordinary one this file makes everywhere above: the host
+ * pointer to the host function, not the DS address of the DS function. The
+ * cast is because the ROM's call site spells the pointer `void (*)(void *)`
+ * while the callee is decompiled `void (void)` -- the DS passes the argument
+ * in r0 and the empty body never reads it, and cdecl lets the caller clean up,
+ * so the one-argument shape is the faithful spelling of the call.
+ *
+ * It is .data, not .bss, so it goes inside the DSSTATE bracket with the tables
+ * above and the save state rolls it back like the rest. */
+extern void func_02057e30(void);
+DSSTATE_BEGIN
+void (*data_0209a03c)(void *) = (void (*)(void *))func_02057e30;
+DSSTATE_END
+
 }  /* extern "C" */
 
 /* src/func_02008b4c.c, reached from commands 12 and 38 through func_02009414,
