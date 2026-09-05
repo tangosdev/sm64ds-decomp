@@ -208,45 +208,9 @@ src/_ZN16daObjFallBlock_cD1Ev.cpp:
     complete
     .text start:0x02139fc8 end:0x0213a00c
 
-src/func_ov098_0213a00c.cpp:
+src/actors/daObjFallBlock_c.cpp:
     complete
-    .text start:0x0213a00c end:0x0213a0a8
-
-src/func_ov098_0213a0a8.cpp:
-    complete
-    .text start:0x0213a0a8 end:0x0213a0e8
-
-src/func_ov098_0213a0e8.c:
-    complete
-    .text start:0x0213a0e8 end:0x0213a148
-
-src/func_ov098_0213a148.c:
-    complete
-    .text start:0x0213a148 end:0x0213a17c
-
-src/_ZN16daObjFallBlock_c4KillEv.cpp:
-    complete
-    .text start:0x0213a17c end:0x0213a23c
-
-src/func_ov098_0213a23c.c:
-    complete
-    .text start:0x0213a23c end:0x0213a284
-
-src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x0213a284 end:0x0213a2cc
-
-src/func_ov098_0213a2cc.c:
-    complete
-    .text start:0x0213a2cc end:0x0213a314
-
-src/_ZN16daObjFallBlock_c6RenderEv.cpp:
-    complete
-    .text start:0x0213a314 end:0x0213a36c
-
-src/_ZN16daObjFallBlock_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0213a36c end:0x0213a794
+    .text start:0x0213a00c end:0x0213a794
 
 src/func_ov098_0213a794.cpp:
     complete

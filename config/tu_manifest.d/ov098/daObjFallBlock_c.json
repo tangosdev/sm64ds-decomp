@@ -1,107 +1,94 @@
 {
   "id": "ov098/daObjFallBlock_c",
   "module": "ov098",
-  "source": "src_tu/actors/daObjFallBlock_c.cpp",
+  "source": "src/actors/daObjFallBlock_c.cpp",
   "promoted_source": "src/actors/daObjFallBlock_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2139f70..0x213a794, 12 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjFallBlock_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "EMISSION ORDER -- MEASURED REFUSAL, not a near-miss. The ROM puts D0 (0x02139f70) BELOW D1 (0x02139fc8). daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and an in-class inline destructor emits D1 then D0; the only other admissible spelling, out of line, emits D2/D0/D1. Scaffolds change nothing (the two legacy shards carried one each and both are dropped here). So the licensed run cannot be put in ROM order without spelling the destructor out of line, and the cartridge refuses that spelling: config/arm9/overlays/ov098/relocs.txt carries exactly two inbound references to the pair -- from:0x0213c5fc to:0x02139fc8 and from:0x0213c600 to:0x02139f70 -- which are _ZTV16daObjFallBlock_c + 0x40 and + 0x44 off the address point, i.e. vtable slots 16 and 17, the two the header already names. NO instruction in the image calls either address, and no _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt -- an out-of-line base destructor would make each of the four descendants call D2 and would leave it live. The in-class inline body is the cartridge's form. Same shape daObjFloatBoard_c settled at (notes/agents/roles/writer.md, 'When a subset is the right answer'); the difference is that this TU cannot be promoted at all for an unrelated reason (externalized_output, below), so the licensed set is left whole at 12/12 rather than cut to the orderable 10 -- 12 proven bodies are strictly more evidence than 10, and no promotion is riding on the order today."
+    "EMISSION ORDER -- MEASURED REFUSAL, not a near-miss. The ROM puts D0 (0x02139f70) BELOW D1 (0x02139fc8). daObjFallBlock_c.h defines `~daObjFallBlock_c() {}` in the class body, and an in-class inline destructor emits D1 then D0; the only other admissible spelling, out of line, emits D2/D0/D1. Scaffolds change nothing (the two legacy shards carried one each and both are dropped here). So the licensed run cannot be put in ROM order without spelling the destructor out of line, and the cartridge refuses that spelling: config/arm9/overlays/ov098/relocs.txt carries exactly two inbound references to the pair -- from:0x0213c5fc to:0x02139fc8 and from:0x0213c600 to:0x02139f70 -- which are _ZTV16daObjFallBlock_c + 0x40 and + 0x44 off the address point, i.e. vtable slots 16 and 17, the two the header already names. NO instruction in the image calls either address, and no _ZN16daObjFallBlock_cD2Ev exists in the image or in any symbols.txt -- an out-of-line base destructor would make each of the four descendants call D2 and would leave it live. The in-class inline body is the cartridge's form. Same shape daObjFloatBoard_c settled at (notes/agents/roles/writer.md, 'When a subset is the right answer'); the difference is that this TU cannot be promoted at all for an unrelated reason (externalized_output, below), so the licensed set is left whole at 12/12 rather than cut to the orderable 10 -- 12 proven bodies are strictly more evidence than 10, and no promotion is riding on the order today.",
+    "PARTIAL PROMOTION, 10 OF 12. All TWELVE functions verify byte-for-byte from this one TU (12/12 MATCH, objisolate clean, reloc-destinations clean, and PARTIAL-LINK-VERIFIED with the full ROM identical to the stock control -- see the branch's first commit, which licensed all 12). D0 and D1 are held out of the licensed run for EMISSION ORDER ALONE, per the daObjFloatBoard_c / ov029/daObjWcObj01_c precedent: they keep their delinks.txt entries and their src/ shards, and this TU's own copies are licensed deadstrip-duplicate against ov098 0x02139f70 / 0x02139fc8. The licensed run is now 0x0213a00c..0x0213a794, ten functions in ROM-ascending order."
   ],
   "sections": [
     {
       "name": ".text",
-      "start": "0x02139f70",
+      "start": "0x0213a00c",
       "end": "0x0213a794"
     }
   ],
   "functions": [
     {
-      "symbol": "_ZN16daObjFallBlock_cD0Ev",
-      "address": "0x02139f70",
-      "size": "0x00000058",
-      "legacy_source": "src/_ZN16daObjFallBlock_cD0Ev.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN16daObjFallBlock_cD1Ev",
-      "address": "0x02139fc8",
-      "size": "0x00000044",
-      "legacy_source": "src/_ZN16daObjFallBlock_cD1Ev.cpp",
-      "ordinal": 1
-    },
-    {
       "symbol": "func_ov098_0213a00c",
       "address": "0x0213a00c",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov098_0213a00c.cpp",
-      "ordinal": 2
+      "ordinal": 0
     },
     {
       "symbol": "func_ov098_0213a0a8",
       "address": "0x0213a0a8",
       "size": "0x00000040",
       "legacy_source": "src/func_ov098_0213a0a8.cpp",
-      "ordinal": 3
+      "ordinal": 1
     },
     {
       "symbol": "func_ov098_0213a0e8",
       "address": "0x0213a0e8",
       "size": "0x00000060",
       "legacy_source": "src/func_ov098_0213a0e8.c",
-      "ordinal": 4
+      "ordinal": 2
     },
     {
       "symbol": "func_ov098_0213a148",
       "address": "0x0213a148",
       "size": "0x00000034",
       "legacy_source": "src/func_ov098_0213a148.c",
-      "ordinal": 5
+      "ordinal": 3
     },
     {
       "symbol": "_ZN16daObjFallBlock_c4KillEv",
       "address": "0x0213a17c",
       "size": "0x000000c0",
       "legacy_source": "src/_ZN16daObjFallBlock_c4KillEv.cpp",
-      "ordinal": 6
+      "ordinal": 4
     },
     {
       "symbol": "func_ov098_0213a23c",
       "address": "0x0213a23c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a23c.c",
-      "ordinal": 7
+      "ordinal": 5
     },
     {
       "symbol": "_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player",
       "address": "0x0213a284",
       "size": "0x00000048",
       "legacy_source": "src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp",
-      "ordinal": 8
+      "ordinal": 6
     },
     {
       "symbol": "func_ov098_0213a2cc",
       "address": "0x0213a2cc",
       "size": "0x00000048",
       "legacy_source": "src/func_ov098_0213a2cc.c",
-      "ordinal": 9
+      "ordinal": 7
     },
     {
       "symbol": "_ZN16daObjFallBlock_c6RenderEv",
       "address": "0x0213a314",
       "size": "0x00000058",
       "legacy_source": "src/_ZN16daObjFallBlock_c6RenderEv.cpp",
-      "ordinal": 10
+      "ordinal": 8
     },
     {
       "symbol": "_ZN16daObjFallBlock_c8BehaviorEv",
       "address": "0x0213a36c",
       "size": "0x00000428",
       "legacy_source": "src/_ZN16daObjFallBlock_c8BehaviorEv.cpp",
-      "ordinal": 11
+      "ordinal": 9
     }
   ],
   "data": [],
@@ -109,8 +96,8 @@
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "tubuild create warning: RAW: src/func_ov098_0213a0a8.cpp (func_ov098_0213a0a8) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c15FindWithActorIDEjPS_' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held func_ov098_0213a0e8; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'func_ov098_0213a00c' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held _ZN16daObjFallBlock_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15FindWithActorIDEjPS_' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held func_ov098_0213a0e8; kept the first, the other is commented out for review -- RESOLVED: the kept spelling `dActor_c *(unsigned int, dActor_c *)` is the right one; the loser typed both the return and the `after` parameter `void *`, which cannot be passed back into the kept declaration in C++ (no implicit void*->dActor_c*). func_ov098_0213a0e8's local was retyped dActor_c* instead. 10/10 MATCH confirms the kept declaration reproduces the cartridge's calls. Marker comment removed from the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov098_0213a00c' differs between the legacy file that used to hold func_ov098_0213a00c and the one that held _ZN16daObjFallBlock_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the kept spelling `void func_ov098_0213a00c(char *)` matches the definition this TU now owns; the loser's `void *` parameter was a shard-local convenience. 10/10 MATCH confirms it. Marker comment removed from the merged source.",
     "KEY FUNCTION IS Kill(), NOT THE DESTRUCTOR. The destructor is inline in daObjFallBlock_c.h, so the key function is the first non-inline, non-pure virtual -- Kill(), vtable slot 31 -- and this TU defines it. That is why this TU emits _ZTV16daObjFallBlock_c and both destructor variants with no forcing scaffold of any kind. tubuild create carried the two scaffolds the legacy shards used (an explicit `p->~daObjFallBlock_c()` in the D1 shard, a stub redefinition of Kill() in the D0 shard); merged, the stub is an outright redefinition of the real Kill() body and neither scaffold is needed. Both removed, 12/12 still MATCH.",
     "UNLICENSED-SYMBOL COUNT, DERIVED NOT COPIED. writer.md's formula `2 x (ancestors + self) + 1 vtable + 1 Vector3 D1` over the real chain daObjFallBlock_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c (5 levels) predicts 2*5 + 1 + 1 = 12, and the compiled object emits exactly 12 unlicensed symbols. The queue's `compiler-only:~1`, copied from sibling ArrowSignRight, is not wrong so much as counting a different thing: ArrowSignRight's ONE compiler_only_output row is its homeless D2Ev, and its other eight went to externalized_output while four more stayed unlicensed. Here the 12 split 2 / 10: compiler_only_output takes _ZN7Vector3D1Ev (deadstrip-duplicate) and _ZTV16daObjFallBlock_c (deadstrip-data); externalized_output takes all ten _ZTI/_ZTS records. Every canonical address was read out of config/**/symbols.txt and every relocation out of this TU's own compiled ELF, not assumed from the sibling.",
     "TWO ROWS THE SIBLING ORACLE COULD NOT WRITE, AND WHY. (1) ov098/ArrowSignRight.json records that _ZN7Vector3D1Ev fits neither policy schema because compiler_only_output refuses a symbol with a configured ROM home. That note is now stale: tubuild.py grew `deadstrip-duplicate` for exactly this case -- a FUNCTION with a ROM home another source owns (arm9 0x020072c0) -- and verify accepts it here (`compiler-only : exact deadstrip ['_ZN7Vector3D1Ev']`). (2) ArrowSignRight left its own _ZTI/_ZTS/_ZTV unlicensed. This class's own _ZTI16daObjFallBlock_c and _ZTS16daObjFallBlock_c CAN be canonical-imported because mwld's one kept copy of them is not in this module at all: ov015 owns both (0x02114874 / 0x0211488c) and ov098's vtable header word relocates across to them. The vtable itself is the one record that stays in this module, so it takes deadstrip-data against its own ov098 home rather than externalization.",
@@ -122,36 +109,163 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov098-daObjFallBlock_c/daObjFallBlock_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 12,
-    "functions_declared": 12,
+    "functions_matched": 10,
+    "functions_declared": 10,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN16daObjFallBlock_cD0Ev",
+        "_ZN16daObjFallBlock_cD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN16daObjFallBlock_cD0Ev",
+        "_ZN16daObjFallBlock_cD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
         20,
         21,
+        22,
+        23,
+        24,
+        25,
         35
       ],
       "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI16daObjFallBlock_c",
+        "_ZTS16daObjFallBlock_c",
         "_ZTV16daObjFallBlock_c"
       ],
       "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjFallBlock_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjFallBlock_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
         "_ZTV16daObjFallBlock_c"
       ]
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN16daObjFallBlock_cD0Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov098",
+      "canonical_address": "0x02139f70",
+      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD0Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139f70."
+    },
+    {
+      "symbol": "_ZN16daObjFallBlock_cD1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "ov098",
+      "canonical_address": "0x02139fc8",
+      "reason": "HELD OUT OF THE LICENSED RUN FOR EMISSION ORDER, NOT FOR BYTES -- this TU reproduces it exactly (see boundary_evidence). The ROM orders the pair D0 0x02139f70 then D1 0x02139fc8; an in-class inline destructor, which daObjFallBlock_c.h has on measured cartridge evidence, always emits D1 then D0. src/_ZN16daObjFallBlock_cD1Ev.cpp stays enrolled and keeps its delinks.txt entry, so this TU's own copy is a duplicate body of the one the cartridge owns at 0x02139fc8."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002"
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTI16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x02114874",
+      "reason": "this class's OWN vague-linkage RTTI record. mwld kept the first copy it saw, and that copy is not in this TU's module: ov015 (daObjBk_Fall_Block_c's level overlay, the first descendant linked) owns both records, and ov098's _ZTV16daObjFallBlock_c header word relocates across to them. Canonical module read from ov015/symbols.txt, not inferred from the relocation's module list."
+    },
+    {
+      "symbol": "_ZTS16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x0211488c",
+      "reason": "this class's OWN vague-linkage RTTI record. mwld kept the first copy it saw, and that copy is not in this TU's module: ov015 (daObjBk_Fall_Block_c's level overlay, the first descendant linked) owns both records, and ov098's _ZTV16daObjFallBlock_c header word relocates across to them. Canonical module read from ov015/symbols.txt, not inferred from the relocation's module list."
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
@@ -165,249 +279,6 @@
       "canonical_module": "ov098",
       "canonical_address": "0x0213c5bc",
       "reason": "this TU owns the key function (Kill -- the destructor is inline in daObjFallBlock_c.h, so the first non-inline, non-pure virtual is the key function), so it emits the class vtable. The record has a real ROM home in this same module at 0x0213c5bc, outside this TU's .text run, and is carried by the existing per-symbol delink rather than by this TU."
-    }
-  ],
-  "externalized_output": [
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x8",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi17__class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a774"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e60"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x9",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xa",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e54"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7fBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086d70"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTI10dBgActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021089ec",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS10dBgActor_c",
-          "addend": 0,
-          "target_module": "ov002",
-          "target_address": "0x02108a04"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI8dActor_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x0208e390"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS10dBgActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xd",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108a04",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002",
-      "relocations": []
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS8dActor_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x0208e384"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI7dBase_c",
-          "addend": 0,
-          "target_module": "arm9",
-          "target_address": "0x02086e78"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTI16daObjFallBlock_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0xc",
-      "canonical_module": "ov015",
-      "canonical_address": "0x02114874",
-      "reason": "this class's OWN vague-linkage RTTI record. mwld kept the first copy it saw, and that copy is not in this TU's module: ov015 (daObjBk_Fall_Block_c's level overlay, the first descendant linked) owns both records, and ov098's _ZTV16daObjFallBlock_c header word relocates across to them. Canonical module read from ov015/symbols.txt, not inferred from the relocation's module list.",
-      "relocations": [
-        {
-          "offset": 0,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTVN3abi20__si_class_type_infoE",
-          "addend": 8,
-          "target_module": "arm9",
-          "target_address": "0x0209a764"
-        },
-        {
-          "offset": 4,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTS16daObjFallBlock_c",
-          "addend": 0,
-          "target_module": "ov015",
-          "target_address": "0x0211488c"
-        },
-        {
-          "offset": 8,
-          "type": "R_ARM_ABS32",
-          "kind": "load",
-          "symbol": "_ZTI10dBgActor_c",
-          "addend": 0,
-          "target_module": "ov002",
-          "target_address": "0x021089ec"
-        }
-      ]
-    },
-    {
-      "symbol": "_ZTS16daObjFallBlock_c",
-      "disposition": "canonical-import",
-      "section": ".data",
-      "binding": "STB_LOPROC",
-      "size": "0x13",
-      "canonical_module": "ov015",
-      "canonical_address": "0x0211488c",
-      "reason": "this class's OWN vague-linkage RTTI record. mwld kept the first copy it saw, and that copy is not in this TU's module: ov015 (daObjBk_Fall_Block_c's level overlay, the first descendant linked) owns both records, and ov098's _ZTV16daObjFallBlock_c header word relocates across to them. Canonical module read from ov015/symbols.txt, not inferred from the relocation's module list.",
-      "relocations": []
     }
   ],
   "partial_isolation": {
