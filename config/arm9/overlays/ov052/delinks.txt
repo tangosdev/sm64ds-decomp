@@ -4,7 +4,7 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
-src/actors/d_a_obj_emm_log.cpp:
+src/game/actors/d_a_obj_emm_log.cpp:
     complete
     .text start:0x021111a0 end:0x02111440
 

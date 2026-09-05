@@ -1,8 +1,8 @@
 {
   "id": "ov002/daCamTag_c",
   "module": "ov002",
-  "source": "src/actors/d_a_cam_tag.cpp",
-  "promoted_source": "src/actors/d_a_cam_tag.cpp",
+  "source": "src/game/actors/d_a_cam_tag.cpp",
+  "promoted_source": "src/game/actors/d_a_cam_tag.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -86,7 +86,7 @@
     "round": "tools/rombuild.py -j16 -- the promoted TU compiled and isolated in the production build, 106/106 exact, 100.000000%, mismatching 0",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/ (gitignored) -- produced from src/actors/d_a_cam_tag.cpp, the enrolled production source; the src_tu/ shadow object this field used to name no longer exists.",
+    "object": "build/ (gitignored) -- produced from src/game/actors/d_a_cam_tag.cpp, the enrolled production source; the src_tu/ shadow object this field used to name no longer exists.",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 8,
     "functions_declared": 8,

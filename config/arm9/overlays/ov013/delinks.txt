@@ -4,7 +4,7 @@
     .ctor       start:0x02111760 end:0x02111768 kind:rodata align:4
     .data       start:0x02111780 end:0x02112280 kind:data align:32
     .bss        start:0x02112280 end:0x021122c0 kind:bss align:32
-src/actors/d_a_obj_clock_huriko.cpp:
+src/game/actors/d_a_obj_clock_huriko.cpp:
     complete
     .text start:0x021111a0 end:0x021113bc
 

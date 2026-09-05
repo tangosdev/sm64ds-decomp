@@ -292,15 +292,15 @@ src/actors/daBar_c.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0748
 
-src/actors/d_a_cam_tag.cpp:
+src/game/actors/d_a_cam_tag.cpp:
     complete
     .text start:0x020b0748 end:0x020b07f8
 
-src/actors/d_a_ch_room.cpp:
+src/game/actors/d_a_ch_room.cpp:
     complete
     .text start:0x020b07f8 end:0x020b09b0
 
-src/actors/d_a_ch_scene.cpp:
+src/game/actors/d_a_ch_scene.cpp:
     complete
     .text start:0x020b09b0 end:0x020b0f54
 
@@ -4559,7 +4559,7 @@ src/d_a_obj1_up_logo.c:
     complete
     .text start:0x020f1170 end:0x020f11b0
 
-src/actors/d_a_obj_bc_switch.cpp:
+src/game/actors/d_a_obj_bc_switch.cpp:
     complete
     .text start:0x020f11b0 end:0x020f15fc
 

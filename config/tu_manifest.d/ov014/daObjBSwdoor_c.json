@@ -1,8 +1,8 @@
 {
   "id": "ov014/daObjBSwdoor_c",
   "module": "ov014",
-  "source": "src/actors/d_a_obj_b_swdoor.cpp",
-  "promoted_source": "src/actors/d_a_obj_b_swdoor.cpp",
+  "source": "src/game/actors/d_a_obj_b_swdoor.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_b_swdoor.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

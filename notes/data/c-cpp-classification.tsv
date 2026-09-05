@@ -129,7 +129,7 @@ src/FS_ReadFile.c	PURE-C	arm9				1		None		-
 src/FUN_02029a68.c	PURE-C	arm9				1		None		-
 src/FUN_02029ab0.c	WEAK-refs-only	arm9				1		None		-
 src/FUN_0202a130.c	PURE-C	arm9				1		None		-
-src/actors/d_a_obj_km2_fall_block.cpp	S1-stores-rom-vptr	ov045			stores _ZTV12FallBlockBfs	1		None	_ZTV12FallBlockBfs/_ZTV16daObjFallBlock_c	-
+src/game/actors/d_a_obj_km2_fall_block.cpp	S1-stores-rom-vptr	ov045			stores _ZTV12FallBlockBfs	1		None	_ZTV12FallBlockBfs/_ZTV16daObjFallBlock_c	-
 src/d_a_obj_fl_fall_block.c	S1-stores-rom-vptr	ov022			stores _ZTV16daObjFallBlock_c	1		None	_ZTV16daObjFallBlock_c/_ZTV20daObjFl_Fall_Block_c	-
 src/d_a_f_pkn_firepakun.c	WEAK-refs-only	ov084				1		None		-
 src/d_a_f_pkn_firepakun_s.c	WEAK-refs-only	ov084				1		None		-

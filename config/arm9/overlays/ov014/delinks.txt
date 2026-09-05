@@ -3,7 +3,7 @@
     .ctor       start:0x02113368 end:0x02113374 kind:rodata align:4
     .data       start:0x02113380 end:0x02114940 kind:data align:32
     .bss        start:0x02114940 end:0x021149e0 kind:bss align:32
-src/actors/d_a_obj_b_swdoor.cpp:
+src/game/actors/d_a_obj_b_swdoor.cpp:
     complete
     .text start:0x021111a0 end:0x02111308
 
