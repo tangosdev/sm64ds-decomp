@@ -273,10 +273,10 @@ jobs:
         run: |
           set +e
           start=$(date +%s)
-          # -k 0: keep going. The ROM-backed generators (romdata.py, ovdata.py)
-          # fail here by design -- there is no cartridge image on this runner --
-          # so their objects and every final link stay unbuilt while every
-          # ROM-free object still compiles. That is the measurement.
+          # -k 0: keep going. The ~123 translation units the cartridge would have
+          # filled are empty here, so their objects are empty and every final link
+          # is expected to fail on undefined symbols. Every ROM-free object still
+          # compiles, and that is the measurement.
           #
           # Run detached and print a progress line every 60s, so a job that hits
           # the timeout still leaves a rate curve in the step log instead of
