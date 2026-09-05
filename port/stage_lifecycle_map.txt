@@ -1458,3 +1458,285 @@ NOT TOUCHED: hal/fader_wipes.cpp (11b explains why it needed nothing),
 port/ov001_syms.txt, port/ov002_syms.txt, hal/auto_bss.cpp, hal/level_boot.cpp,
 hal/level_change.cpp, hal/scene_boot.cpp, hal/lk4_solidheap_seat.cpp,
 tests/walk_window.cpp.
+
+
+12. LANE STAGE (run link100): THE LAST THREE TRAPS ARE SEATED, AND SLOTS 6 AND
+    9 ARE BLOCKED ON A FILE NO STAGE LANE HAS EVER OWNED
+------------------------------------------------------------------------------
+
+Measured against 7db4fc602 in C:/tmp/l1-stage. Baseline gate: 9492 / 11328
+linked, battery ALL GREEN.
+
+12a. WHAT LANDED: SLOTS 3, 16 AND 17
+
+Three of the eighteen ROM words were still the named-abort trap. All three are
+seated now, with the ROM's own bodies, and every index is read out of the ROM
+rather than inferred from the ActorBase slot order:
+
+    from:0x020921cc kind:load to:0x0202c9a8 module:main   slot  3
+    from:0x02092200 kind:load to:0x02023688 module:main   slot 16
+    from:0x02092204 kind:load to:0x020236f0 module:main   slot 17
+
+and config/arm9/symbols.txt puts a matched TU on each destination
+(_ZN5Stage16CleanupResourcesEv line 1084, _ZN5StageD2Ev 973, _ZN5StageD0Ev
+974). port/slice_gate213.txt is the enrolment; hal/stage_bridges.cpp is the
+seat.
+
+  SLOT 3 NEEDS A FACE. src/_ZN5Stage16CleanupResourcesEv.cpp is a real C++
+  method against include/Stage.h and publishes only
+  ?CleanupResources@Stage@@QAEHXZ, so the slot cannot hold a pointer to a C
+  name that does not exist -- the same shape slot 12 needed, and the face sits
+  beside slot 12's.
+
+  SLOTS 16 AND 17 NEED NO FACE. Both matched TUs are flat C,
+  `struct Stage *f(struct Stage *thiz)` with the receiver as an ordinary first
+  argument, so each takes the ecx->arg adapter every seat in this family uses.
+  Their whole callee closure -- MeshCollider::~MeshCollider, Model::~Model,
+  Particle::SysTracker::~SysTracker, ActorBase::~ActorBase and
+  Memory::Deallocate -- is already linked: not one of the five appears in the
+  run's stage_closure.tsv, which is the enumeration of every UNLINKED matched
+  TU this table reaches. So the pair is exactly two TUs and no closure.
+
+NOTHING DISPATCHES ANY OF THE THREE, and that is a property of the port's own
+lists rather than a hope. Slot 3 is dispatched by the CLEANUP Process
+(func_02043fdc over data_020a4ba8, phase 4 of port_actor_tick in
+hal/actor_registry.cpp), which walks only actors marked for destruction, and
+hal/level_change.cpp keeps ONE Stage alive across every level change. Slots 16
+and 17 are reached by a delete through the vptr, and nothing in the port deletes
+the Stage. This is the slot-12 shape from section 9 applied to the three slots
+section 9 said would be next: the body is in the image and the slot no longer
+aborts if it is ever reached, and no run here observed either thunk fire.
+
+THE ONE CONSEQUENCE, and it is a real one. Section 9's chain ends at slot 3's
+trap: Scene::BeforeBehavior marks the Stage once data_02092664 leaves 0x187,
+and one frame later the cleanup Process dispatches slots 4, 3 and 5. Section 9
+argued the abort was "the right place for it to stop". After this seat the abort
+is gone and slot 3 runs the ROM's real teardown against a Stage the port will
+not rebuild. The seat keeps a ONE-SHOT stderr note at each of the three thunks
+so the event is still named -- a printf, not a guard, and the dispatch proceeds
+into the ROM body either way. A guard there would be a symptom patch over the
+missing Stage teardown; the note keeps the diagnostic the trap provided while
+the slot does what the ROM's own table says it does. Whoever gives the port a
+real Stage teardown should read that note as the thing their work retires.
+
+THE PROOF is port/tools/stage_seat_proof.py, four rungs, with a negative
+control that matters: SM64DS_STAGE_SEAT_PROBE=1 prints all twenty words
+classified TRAP or SEATED against this build's own trap-thunk table, and =2
+re-installs the trap in 3/16/17 after the seat and prints a second table in the
+SAME run, so the probe demonstrably can print the other answer. Rung 2 also
+asserts slots 18 and 19 -- host storage past the ROM's eighteen words -- still
+read TRAP, which is what stops the rung passing on a probe broken into printing
+SEATED for everything.
+
+12b. SLOT 6 IS BLOCKED, AND NOT ON ITS CLOSURE
+
+Section 6 sized slot 6 at "19 unresolved plus three" and section 7 named the
+holds as data_020a0dea and the ov002 sprite templates. ONE OF THOSE TWO HOLDS
+IS GONE and the section should stop quoting it: data_020a0dea IS HOSTED, in
+hal/auto_bss.cpp:280, as a placed one-byte band beside data_020a0de8/e9/eb.
+Section 6's "cannot be hosted without re-shaping the TouchInfo block" was true
+when it was written and is not true now.
+
+THE HOLD THAT REPLACED IT IS NOT A SYMBOL AT ALL. It is that
+tests/walk_window.cpp IS THE PORT'S HOST COPY OF Stage::Behavior, transcribed
+statement by statement into the frame loop, and no Stage lane has ever owned
+that file. Read out, each with the file's own words beside it:
+
+    tests/walk_window.cpp:9107   _ZN5Stage10CheckInputEv()
+        Stage::Behavior:107. Called every frame from the input block, followed
+        immediately (:9140-:9172) by the fan-out that copies the Ctrl record
+        into the split host arrays data_0209f49c/9e/a0/a2/a4/a6/ac -- the
+        undersized-host-global bridge -- and then (:9173+) by the RUN-mode
+        analog override, which rewrites five of the same Ctrl fields from the
+        pad's left stick.
+    tests/walk_window.cpp:10767  ShadowModel::CleanAll()
+        Stage::Behavior's last statement, and the file says so.
+    tests/walk_window.cpp:10788  ProcessKuppaScript()
+        "STAR1: Stage::Behavior:112 -- advance the running cutscene/kuppa
+        script one frame. The port transcribes Stage::Behavior statement by
+        statement and this one was missing." Gated by SM64DS_NO_KUPPA_TICK,
+        default ON.
+    hal/actor_registry.cpp:908   data_0209b464 = data_0209b454
+        "THE FREEZE MASK LATCH -- Stage::Behavior's FIRST statement", placed at
+        the head of phase 3 for the reason the ROM places it there.
+    hal/message_pump.cpp         Stage::UpdateMessage's whole body, the one
+        statement of Stage::Behavior that owns the message box.
+    hal/star_flow.cpp:651        Stage::Behavior's VS countdown statement, "run
+        every frame the way Stage::Behavior runs it".
+
+SEATING SLOT 6 WITHOUT RETIRING THOSE RUNS FOUR OF THEM TWICE PER FRAME. Three
+of the four are survivable and one is not, and the difference is the whole of
+the ruling:
+
+    the freeze latch      IDEMPOTENT. A copy of one word.
+    ShadowModel::CleanAll BENIGN. walk_window's call is before the tick and
+                          Stage::Behavior's is the first body phase 3 runs, so
+                          both empty a list the actors have not filled yet.
+    Stage::CheckInput     NEARLY IDEMPOTENT, and the near is measured rather
+                          than assumed: held and pressed are |= accumulations,
+                          and the touch branch's clamp is a fixed point (a
+                          second pass over an already-clamped tx/ty recomputes
+                          the same dx, dy and mag). What is NOT idempotent is
+                          DecIfAbove0_Byte on p->cnt and p->delay, which would
+                          run down at twice the rate.
+    ProcessKuppaScript    NOT SURVIVABLE. The script VM would advance two frames
+                          per frame and every cutscene in the game would run at
+                          double speed.
+
+AND RETIRING THEM IS NOT A THREE-LINE DELETION, which is the second half of the
+ruling. walk_window's CheckInput call is load-bearing for ORDER: the split-array
+fan-out and the RUN-mode analog override both run immediately after it and both
+have to see this frame's Ctrl record. Move the CheckInput into Stage::Behavior
+and it lands inside the tick, AFTER the fan-out has already copied last frame's
+record and after the analog override has written its values -- which
+Stage::Behavior's own CheckInput would then overwrite with the D-pad answer. A
+correct seat has to move the fan-out and the analog override to the far side of
+port_actor_tick, or hoist them into the slot-6 thunk, and that is a frame-loop
+change in a file this lane was not given.
+
+SIZED, so the next lane does not have to re-measure it: the slot-6 closure in
+this run's stage_closure.tsv is 134 matched TUs, 127 of them unflagged (7 are
+documented host-ABI exceptions, and 2 of the 127 carry NONMATCHING banners). It
+is by far the largest single edge left on this table, and every one of those 134
+is blocked behind one frame-loop refactor rather than behind any symbol.
+
+TWO SMALLER TRAPS INSIDE THAT CLOSURE, found while sizing it and worth having in
+writing before someone spends a build on them:
+
+  src/_ZN5Stage13UpdateMessageEv.cpp IS A STUB THAT ALSO DOES NOT RESOLVE THE
+  CALL. hal/message_pump.cpp already records the first half -- the TU defines
+  its own empty Message::UpdateWindow / Message::Update / Message::DisplaySaving
+  / SaveData::SaveCurrentFile locally, so linking it would tick nothing. The
+  second half is new: Stage::Behavior declares `static void UpdateMessage()` and
+  so spells ?UpdateMessage@Stage@@SAXXZ, while that TU defines the method
+  non-static and so publishes ?UpdateMessage@Stage@@QAEXXZ. They are different
+  symbols. Enrolling the TU does not even satisfy slot 6's caller; a face is
+  needed either way, and what the face should point at is a question about the
+  stub, not about the slot.
+
+  src/_ZN5Stage7PS_InitEv HAS TWO FILES, .c and .cpp, with the same stem.
+  config/arm9/delinks.txt names the .c; config/match_attempts.jsonl records the
+  .cpp as the matching attempt (0 divergences, srcPath
+  src/_ZN5Stage7PS_InitEv.cpp). Only the .cpp publishes ?PS_Init@Stage@@SAXXZ,
+  which is what Stage::Behavior's `static void PS_Init()` declaration spells, so
+  a slot-6 slice takes the .cpp and a slice that takes both is an LNK2005.
+
+12c. SLOT 9 IS BLOCKED HARDER, AND FOR A REASON WORTH KEEPING
+
+Section 6 declined slot 9 with "a slot-9 occupant that calls the same three
+bridges would move where the call is made without changing what is drawn". That
+sentence is the one this section has to correct, because it is the assumption a
+later lane would act on and it is wrong in a specific way.
+
+WHERE the call is made is exactly what cannot move. tests/walk_window.cpp
+transcribes Stage::Render statement by statement across :11984-:12060 -- skybox,
+the BTA advance, RenderModel, ShadowModel::RenderAll, RenderModelTransparent,
+then CylinderClsn::Process and func_ov001_020aaf40, each with the ROM line it
+stands for named in a comment -- and it deliberately splits the frame in two:
+
+    "THE ACTOR RENDER BUCKET GOES HERE, and the reason is the shim immediately
+     below. ... everything on it is ROM code working in SCENE units ... The shim
+     converts that same view matrix for the port's own world-unit models. So the
+     bucket runs BEFORE the conversion and the harness's two draws after it, and
+     each side gets the matrix it was written against."
+
+Slot 9 is dispatched from inside that bucket (port_actor_render,
+hal/actor_registry.cpp, walking data_020a4b98 -- the list the Stage joined when
+T3 landed). So seating the ROM's Stage::Render does not merely duplicate the
+draws: it moves the level model, the skybox and the transparent pass to the
+WRONG SIDE of the world/scene matrix shim. That is a picture change, and no
+arrangement of hal/stage_bridges.cpp can undo it, because the shim is in the
+frame loop.
+
+Slot 9's closure in this run is 30 matched TUs, 24 of them unflagged.
+
+12d. WHAT A REAL SLOT-6/SLOT-9 LANE NEEDS, named precisely
+
+  tests/walk_window.cpp   the file. Not a hunk in it -- the file. The job is to
+                          take the four transcribed Stage::Behavior statements
+                          and the seven transcribed Stage::Render ones out of
+                          the frame loop, move the Ctrl fan-out and the RUN-mode
+                          analog override to the far side of port_actor_tick,
+                          and settle the world/scene matrix shim so the render
+                          bucket and the level draw can be the same pass.
+  hal/message_pump.cpp    its UpdateMessage tick retires the day slot 6 seats,
+                          and the stub/mangling question in 12b has to be
+                          answered first.
+  hal/star_flow.cpp       the VS countdown statement, same day.
+  hal/actor_registry.cpp  the freeze-mask latch at :908, same day. Idempotent,
+                          so it is the one that can go last.
+
+None of those four is a Stage-vtable file, which is why every Stage lane so far
+has declined these two slots and why each has declined them for a different
+reason. The reason is the same one every time and it is not a symbol: THE PORT'S
+FRAME LOOP IS THE STAGE. Until one lane owns both, this table can only take the
+slots the frame loop does not already run.
+
+12e. SLOT 0 AND THE OVERLAY/ARCHIVE RULING, RE-EXAMINED AND UPHELD
+
+Run link100 asked this lane to re-open section 11g's ruling by asking whether
+the ROM's own loaders could run on top of the ntr FS and overlay seams, so slot
+0 could become the ROM body. Read end to end, the three loaders split cleanly
+into two classes and only one of them is portable:
+
+  PORTABLE, and the port already hosts every leaf they need.
+  src/_Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.c and
+  src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp are pure table bookkeeping:
+  they index data_020758c8 (already a romdata row), data_02075998 and
+  data_02075804, and then call LoadOverlay / UnloadOverlay, which
+  hal/scene_boot.cpp:777-780 already defines as empty PORT_HOST_ABI bodies. The
+  two .cpp files compile as C++ and publish MSVC names
+  (?LoadLevelOverlays@@YAXH@Z, ?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z) while
+  hal/stage_slot0.cpp:76-79 defines the flat C names -- which is why there is no
+  LNK2005 today and why all three are simply dead-stripped. Enrolling them for
+  real costs: two romdata.py rows (data_02075998 and data_02075804), host
+  definitions for the three overlay-id symbols overlay_60 / overlay_98 /
+  overlay_102, three /alternatename faces or three deleted host bodies in
+  hal/stage_slot0.cpp, and nothing else. THREE MATCHED TUs, and both files are
+  outside this lane's list.
+
+  NOT PORTABLE, and this is the half the ruling rests on. Everything BELOW
+  LoadOverlay -- FS_LoadOverlay, func_02018c00, func_0203d7b8, func_02017fd0,
+  func_0205dc0c and the card chain under them -- exists to DMA an overlay's ARM
+  code image off the cartridge into the DS address it was linked for. The port
+  mounts every overlay as a host array at build time (hal/level_boot.cpp's
+  port_level_table) precisely because a host cannot execute that image. Running
+  the ROM's loader would copy ARM code into a window nothing will ever jump to.
+  That is an EXCEPTION-class ruling and not a work item.
+
+  THE ARCHIVE HALF is the same shape with a longer tail. LoadArchive walks
+  data_0208ecf4 -- 26 relocations, DS string pointers -- and calls func_02018934
+  to pull a whole NARC into the game heap, while hal/fs.cpp resolves
+  archive-interior ids LAZILY through port_archive_map and therefore never
+  mounts anything. Making the ROM's mount real means changing which of the two
+  answers every archive-interior file id in the game gets, which is a
+  hal/fs.cpp design change and a whole lane's regression surface, not a seam
+  this one could take honestly in a sitting.
+
+SO SECTION 11g's RULING STANDS, for a fourth time and with the reason narrowed
+again: slot 0's link is closed, its fader hold is closed, and what remains is
+(11c) data_02092208, (11d wall 2) data_02092110 and (11d wall 3) the lk4
+receiver bug -- plus the overlay loader, which is not a hold that can be closed
+at all. The three portable TUs above are the only linkage left in that
+direction and they belong to whoever owns hal/stage_slot0.cpp and
+port/tools/romdata.py.
+
+12f. OWNERSHIP AND DEVIATIONS
+
+Assigned: hal/stage_bridges.cpp, hal/scene_actor_faces.cpp,
+port/stage_lifecycle_map.txt, port/slice_gate213.txt (new),
+port/hal/stage_*.cpp (new), port/tools/stage_*.py (new), the gate-213 rows in
+port/CMakeLists.txt, and an append-only block at the end of
+hal/cxx_aliases.cpp.
+
+USED: hal/stage_bridges.cpp, port/slice_gate213.txt,
+port/tools/stage_seat_proof.py, port/CMakeLists.txt (the gate-213 block and one
+appended ${SLICE213_SOURCES} on each of smoke_player, walk_window and
+walk_window_hires), and this section.
+
+NOT TOUCHED, each for a reason above: hal/scene_actor_faces.cpp (no new veneer
+face was needed), hal/cxx_aliases.cpp (slot 3's face is a method face and
+belongs beside slot 12's, not an alias), tests/walk_window.cpp,
+hal/message_pump.cpp, hal/star_flow.cpp, hal/actor_registry.cpp,
+hal/level_boot.cpp, hal/scene_boot.cpp, hal/fs.cpp, hal/stage_slot0.cpp,
+port/tools/romdata.py, hal/auto_bss.cpp.

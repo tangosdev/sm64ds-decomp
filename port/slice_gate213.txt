@@ -1,0 +1,104 @@
+# Gate 213: the three _ZTV5Stage slots the port still TRAPPED -- 3, 16 and 17.
+# (run link100, lane STAGE.)
+#
+# ---- what this is ----------------------------------------------------------
+#
+# hal/stage_bridges.cpp fills the Stage's own eighteen-word vtable and, after
+# run link60 lane L4, seats fourteen of the eighteen with the ROM's own bodies.
+# Three slots were left on the named-abort trap:
+#
+#     slot  ROM word (config/arm9/relocs.txt)       body
+#      3    from:0x020921cc -> 0x0202c9a8           Stage::CleanupResources
+#     16    from:0x02092200 -> 0x02023688           Stage::~Stage  (D2)
+#     17    from:0x02092204 -> 0x020236f0           Stage::~Stage  (D0)
+#
+# and config/arm9/symbols.txt names a matched TU on each of the three
+# addresses (lines 1084, 973, 974). Every index above is READ OUT OF THE ROM --
+# (0x020921cc - 0x020921c0) / 4 = 3, and 0x02092200/0x02092204 are +16 and +17
+# words -- not inferred from the ActorBase slot order, though that order agrees.
+#
+# The reference edge IS the work: walk_window links with /OPT:REF, so these
+# three matched TUs were compiled (slice_w8a carries D2 and D0) and dropped for
+# want of anything naming them. A ROM vtable slot the port never filled is the
+# honest place to put the name.
+#
+# ---- what each slot costs at the link --------------------------------------
+#
+# SLOT 3. port/stage_lifecycle_map.txt section 5 measured this twice. The
+# 2026-09-01 reading (lane VSEND) is the live one: with
+# src/_ZN5Stage16CleanupResourcesEv.cpp added, link.exe wants exactly TWO
+# externals -- Sound::ResetPlayerVoiceGroup and Message::ResetAllGlobals -- and
+# with those two added the link closes clean. The five the older reading named
+# (data_020756f0, FaderWipe::~FaderWipe, UnloadLevelOverlays, UnloadArchive and
+# the ITCM func_01ffb0c8) all resolve on this tree. Both leaves are four-line
+# matched C whose own callees (func_0203d974, func_020510a4, func_0201eaac) are
+# already in the image or already faced.
+#
+# CleanupResources is a real C++ method against include/Stage.h, so it
+# publishes ?CleanupResources@Stage@@QAEHXZ and no C caller can spell it. The
+# slot takes a face, the same shape slot 12's does.
+#
+# SLOT 16 and 17. src/_ZN5StageD2Ev.c and src/_ZN5StageD0Ev.c are flat C,
+# `struct Stage *f(struct Stage *thiz)` with the receiver as an ordinary first
+# argument, so each slot takes the ecx->arg adapter every seat in this family
+# uses. Their whole callee closure -- MeshCollider::~MeshCollider,
+# Model::~Model, Particle::SysTracker::~SysTracker, ActorBase::~ActorBase and
+# Memory::Deallocate -- is already linked (none of the five appears in the
+# run's stage_closure.tsv, which lists every UNLINKED matched TU the Stage
+# table reaches). So these two are exactly two TUs and no closure.
+#
+# ---- what runs, and what does not ------------------------------------------
+#
+# NOTHING DISPATCHES ANY OF THE THREE TODAY, and that is a property of the
+# port's own lists rather than a hope:
+#
+#   slot 3 is dispatched by the CLEANUP Process (func_02043fdc over
+#   data_020a4ba8, phase 4 of port_actor_tick), which only walks actors marked
+#   for destruction. hal/level_change.cpp keeps ONE Stage alive across every
+#   level change and nothing marks it.
+#
+#   slots 16 and 17 are dispatched by a delete through the vptr. Nothing in the
+#   port deletes the Stage; port_stage_create builds it once and
+#   hal/stage_bridges.cpp's g_stage holds it for the process's life.
+#
+# So this gate changes no frame. What it changes is that the three words in the
+# port's copy of the Stage's table are the ROM's own bodies instead of a trap,
+# which is what /OPT:REF needs to keep them.
+#
+# THE ONE CONSEQUENCE, named rather than left for the next reader.
+# port/stage_lifecycle_map.txt section 9 traces a live MarkForDestruction edge:
+# Scene::BeforeBehavior (slot 7, seated, run every frame) marks the Stage once
+# data_02092664 leaves its 0x187 sentinel, which hal/star_flow.cpp:127 opens on
+# a death plane or a star. Before this gate that path aborted at slot 3's trap
+# one frame later. After it, slot 3 runs the ROM's real teardown against a
+# Stage the port will not rebuild. The seat therefore keeps a ONE-SHOT stderr
+# note at the slot (a print, not a guard) so the event is still named; the
+# named abort is gone because a trap is not a body, and the ROM's answer to its
+# own slot is the ROM's own function.
+#
+# ---- the seventeenth, found by the probe rather than by the handoff --------
+#
+# port/tools/closure.py over this slice against the baseline walk_window.map
+# reports TWO unresolved and only one of them is real:
+#
+#   __Z19UnloadLevelOverlaysi  NOT REAL. hal/stage_slot0.cpp:79 defines it as a
+#       one-line PORT_HOST_ABI body and that file is on all three targets. It is
+#       absent from the MAP because /OPT:REF strips a COMDAT nothing references,
+#       which is exactly the state slot 3 ends -- closure.py measures the image,
+#       not the objects, so this row is the tool reading the consequence of the
+#       problem the slice is fixing.
+#   _func_01ffb0c8             REAL, and it is the module-universe trap
+#       port/stage_lifecycle_map.txt section 5 warned about in writing.
+#       src/func_01ffb0c8.cpp is MeshCollider::GetFile in ITCM, and it is on
+#       port/slice_gate9.txt -- which CMakeLists puts on smoke_actor,
+#       smoke_savestate and smoke_persist ONLY. walk_window never carried it, so
+#       section 5's "func_01ffb0c8 ... resolves now" is wrong for this target
+#       and the TU is enrolled here.
+#
+# ---- the slice -------------------------------------------------------------
+src/_ZN5Stage16CleanupResourcesEv.cpp
+src/_ZN5Sound21ResetPlayerVoiceGroupEv.c
+src/_ZN7Message15ResetAllGlobalsEv.c
+src/_ZN5StageD2Ev.c
+src/_ZN5StageD0Ev.c
+src/func_01ffb0c8.cpp
