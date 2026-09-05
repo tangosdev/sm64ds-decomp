@@ -22,7 +22,7 @@
  * field and the intrusive list threaded through mPrev/mNext.
  *
  * OWN TAIL, 0x5928..0x5930: three fields are real matched access
- * (src/actors/dScMgMCarlo2_c.cpp).
+ * (src/minigames/d_s_mg_m_carlo2.cpp).
  *
  * LIFECYCLE IS COMPILER-OWNED. The empty inline scene destructor destroys
  * members in reverse declaration order: the typed card array, the shared

@@ -355,7 +355,7 @@ precondition for `production_mode: "intact-object"` ownership of the minigame fa
 
 ## Independent confirmation from a derived class (2026-08-30)
 
-[ov006/dScMgBSC_c](../src/actors/dScMgBSC_c.cpp), promoted as a 19-function TU, **overrides three of these slots**, and its own bodies confirm the map from a second direction:
+[ov006/dScMgBSC_c](../src/minigames/d_s_mg_bsc.cpp), promoted as a 19-function TU, **overrides three of these slots**, and its own bodies confirm the map from a second direction:
 
 | slot | base body ([ov004](../config/arm9/overlays/ov004/symbols.txt)) | base name here | dScMgBSC_c's override |
 |---|---|---|---|

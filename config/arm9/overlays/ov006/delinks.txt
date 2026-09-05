@@ -1758,7 +1758,7 @@ src/d_s_mg_bomroom.c:
     complete
     .text start:0x020d9574 end:0x020d95a4
 
-src/actors/dScMgCard_c.cpp:
+src/minigames/d_s_mg_card.cpp:
     complete
     .text start:0x020d95a4 end:0x020dbe40
 
@@ -3126,7 +3126,7 @@ src/func_ov006_020edcb0.c:
     complete
     .text start:0x020edcb0 end:0x020ede18
 
-src/actors/MgWhichWiggler.cpp:
+src/minigames/d_s_mg_hanachan.cpp:
     complete
     .text start:0x020ede18 end:0x020edec0
 
@@ -3202,7 +3202,7 @@ src/d_s_mg_jump.cpp:
     complete
     .text start:0x020eeafc end:0x020eebe8
 
-src/actors/d_sc_mg_jump2.cpp:
+src/minigames/d_s_mg_jump2.cpp:
     complete
     .text start:0x020eebe8 end:0x020efc08
 
@@ -3423,7 +3423,7 @@ src/d_s_mg_luigi.c:
     complete
     .text start:0x020f3800 end:0x020f3834
 
-src/actors/dScMgMemory_c.cpp:
+src/minigames/d_s_mg_memory.cpp:
     complete
     .text start:0x020f3834 end:0x020f5564
 
@@ -3635,11 +3635,11 @@ src/dScMgMemory2_c_classInit.c:
     complete
     .text start:0x020f75d4 end:0x020f7634
 
-src/actors/dScMgMCarlo_c.cpp:
+src/minigames/d_s_mg_m_carlo.cpp:
     complete
     .text start:0x020f7634 end:0x020f8ef4
 
-src/actors/dScMgMCarlo2_c.cpp:
+src/minigames/d_s_mg_m_carlo2.cpp:
     complete
     .text start:0x020f8ef4 end:0x020fa75c
 
@@ -4643,11 +4643,11 @@ src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp:
     complete
     .text start:0x0210a194 end:0x0210a400
 
-src/actors/MgMushroomRoulette.cpp:
+src/minigames/d_s_mg_roulette.cpp:
     complete
     .text start:0x0210a400 end:0x0210a4b0
 
-src/actors/dScMgSingle3DBase_c.cpp:
+src/minigames/d_s_mg_single3_d_base.cpp:
     complete
     .text start:0x0210a4b0 end:0x0210a8c0
 
@@ -5321,7 +5321,7 @@ src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x0211944c end:0x02119824
 
-src/actors/MgBingoBallSlotsShot.cpp:
+src/minigames/d_s_mg_smartball.cpp:
     complete
     .text start:0x02119824 end:0x02119904
 
@@ -5967,17 +5967,17 @@ src/d_s_mg_teresa.c:
     complete
     .text start:0x021207a8 end:0x021207dc
 
-src/actors/dScMgTrampoline_c.cpp:
+src/minigames/d_s_mg_trampoline.cpp:
     complete
     .text start:0x021207dc end:0x021225ac
     .data start:0x0213faa0 end:0x0213fbc4
 
-src/actors/dScMgTrampoline2_c.cpp:
+src/minigames/d_s_mg_trampoline2.cpp:
     complete
     .text start:0x021225ac end:0x02124908
     .data start:0x0213fbc4 end:0x0213fd0c
 
-src/actors/dScMgBSC_c.cpp:
+src/minigames/d_s_mg_bsc.cpp:
     complete
     .text start:0x02124908 end:0x0212568c
 

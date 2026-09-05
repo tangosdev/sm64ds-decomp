@@ -91,7 +91,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
        this class's key function.  An inline destructor is emitted in every
        TU that needs it, so it anchors nothing; the key function is
        AfterInitResources, the first DECLARED non-inline virtual, which is
-       why the vtable and typeinfo land in src/actors/dScMgSingle3DBase_c.cpp
+       why the vtable and typeinfo land in src/minigames/d_s_mg_single3_d_base.cpp
        (see that class's rows in config/tu_manifest.d/ov006/).
        MUST STAY DEFINED INLINE -- all 13 children inline this body, and
        _ZN19dScMgSingle3DBase_cD2Ev exists nowhere in the ROM, so an
@@ -105,7 +105,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
            vtable already carries bodies at both (ov004:0x020b04e0 for slot 26,
            ov004:0x020b265c for slot 33).  Slot 26 is declared below now that
            dScMgBase_c has named it, and its ov006 body is a real member
-           definition in src/actors/dScMgSingle3DBase_c.cpp rather than the
+           definition in src/minigames/d_s_mg_single3_d_base.cpp rather than the
            mangled free function it had to be while the base was silent.
            Slot 33 is declared below now as well, and its ov006 body is a
            real member definition in the same file, where it byte-verified for
