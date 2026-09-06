@@ -66,32 +66,38 @@ def enrolled_addresses():
 
 
 def alias_collision_addresses():
-    """{(module, addr)} where a size-0 function record and a SIZED one collide -- the
-    derived half of the byte-gate-failure class.
+    """{(module, addr)} where a size-0 function record and a SIZED one collide.
 
-    ADDRESSES, not records, so the caller must exclude only the `size == 0` side. Both
+    ADDRESSES, not records, so the caller must act on only the `size == 0` side. Both
     records live at the same key and dropping both would be the opposite of the fix: the
     sized primaries here are the bodies that SHOULD be counted once someone matches them,
-    and func_01ff8708 is 1,776 bytes of it.
+    and func_01ff8708 is 1,776 bytes of it. bytegate.is_zero_size_alias is the one
+    predicate that gets that right; call it rather than re-spelling the test.
 
-    config/arm9/itcm/symbols.txt declares four bodies twice, once as a sized function and
+    config/arm9/itcm/symbols.txt declares eight bodies twice, once as a sized function and
     once as a zero-size alias at the identical address (_dmul beside func_01ff8708,
     _ll_sdiv beside func_01ffaa34, _s32_div_f beside __aeabi_idiv, _u32_div_f beside
-    __aeabi_uidiv). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
-    onto the ZERO-SIZE record, so the same 1,776-byte body was counted matched at 0 bytes
-    as the alias and unmatched at full size as the primary. linkcheck reports all four
+    __aeabi_uidiv, and _dadd, _deq, _ll_udiv, _ull_mod likewise); config/arm9/symbols.txt
+    declares two more (__cxa_vec_cleanup beside __destroy_arr, __cxa_vec_ctor beside
+    func_020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    onto the ZERO-SIZE record, so the same 1,776-byte body read as matched at 0 bytes
+    under the alias and unmatched at full size under the primary. linkcheck reports those
     NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
     against a zero-length range.
 
-    Deriving this rather than listing it means it self-heals both ways: repointing the
-    alias at the sized symbol in config restores the count, and the four aliases that
-    carry the same defect but are not matched today (__cxa_vec_cleanup, _dadd, _ll_udiv,
-    _ull_mod) are already covered if anyone matches them. Eight such records exist in the
-    universe and every one has a sized twin, so this cannot catch a legitimately
-    zero-size lone symbol.
+    Those ten records leave the universe here, numerator and denominator both. A second
+    name for a function already in the list is not a second function, and the zero-size
+    half can never be byte-compared, so leaving it in the denominator (which is what
+    happened until 2026-09-06) parks ten records that no amount of decompilation can
+    clear. Deriving the set rather than listing it means the drop self-heals: repoint the
+    alias at a real size in config and the record returns to the count with no edit here.
+    Every zero-size record in the universe today has a sized twin, and a zero-size symbol
+    that stands alone is NOT caught by this -- it stays counted, so a genuinely unmatched
+    stub cannot be hidden by calling it an alias.
 
     Committed config only, no ROM and no compiler, so it runs in the workflows that
-    publish the count. The other half of the class cannot be; see tools/bytegate.py.
+    publish the count. The other half of the byte-gate-failure class cannot be; see
+    tools/bytegate.py.
     """
     return BG.alias_collision_addresses(RL.module_universe)
 
@@ -532,6 +538,7 @@ def main():
     wont_build = BG.excluded_paths()
     bytegate_n = collections.Counter()
     enrollment_n = collections.Counter()
+    alias_dropped = 0
     transcribed_files, unbannered_files = set(), set()
     # Every module, itcm included. relocs.module_universe is the one definition of
     # what "every module" means, and it fails loudly rather than skipping a new one.
@@ -541,6 +548,16 @@ def main():
             if not m:
                 continue
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
+            # A zero-size record sharing an address with a sized one is a second NAME
+            # for the function already on that address, not a second function, so it
+            # never becomes a record at all -- it is out of the numerator and out of
+            # the denominator alike. It used to be published as an unmatched record,
+            # which put ten rows in every total that nothing could ever clear, gave the
+            # treemap ten zero-area rectangles, and handed two records the same `id`.
+            # See alias_collision_addresses for the ten and for how the drop self-heals.
+            if BG.is_zero_size_alias(label, addr, size, alias_addrs):
+                alias_dropped += 1
+                continue
             f = SP.path_for(name)
             src_path = f.relative_to(REPO).as_posix() if f else None
             text = f.read_text(errors="ignore") if f else ""
@@ -559,23 +576,15 @@ def main():
             # not promoted, which is why the report's options B and C were rejected: they
             # would have deleted matches that are demonstrably correct. `verified` is
             # unchanged and still published beside this, and none of the 22 was verified,
-            # so that number does not move.
+            # so that number does not move. The alias half of the class is handled above,
+            # by never becoming a record; what is left here is the manifest half.
             #
-            # `size == 0` is load-bearing: alias_collision_addresses keys on the address
-            # and both records sit on it. Dropping the sized side too would refuse to
-            # count func_01ff8708 and friends the day someone matches them, which is the
-            # defect this is meant to clear, not deepen.
-            zero_alias = size == 0 and (label, addr) in alias_addrs
             # The gate is applied only to records the OLD test would have counted, so
             # that it is credited with what it actually removed rather than with every
-            # record the class happens to describe. Four of the eight zero-size aliases
-            # have no source at all and were never counted; stamping those would claim a
-            # subtraction that is not this rule's and would make the CI line disagree
-            # with the 22 this policy names.
+            # record the class happens to describe.
             countable = (bool(src_path) and not asm_policy.has_draft_banner(text)
                          and cls != "transcribed")
-            bytegate_fail = countable and (
-                zero_alias or (src_path is not None and src_path in wont_build))
+            bytegate_fail = countable and src_path is not None and src_path in wont_build
             matched = countable and not bytegate_fail
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,
@@ -584,7 +593,7 @@ def main():
                 # Recorded on the record, not just subtracted from a total. A reader who
                 # wonders why a src/ file exists for an unmatched function gets the
                 # answer here instead of having to re-run the gate.
-                rec["byteGate"] = "zero-size-alias" if zero_alias else "will-not-build"
+                rec["byteGate"] = "will-not-build"
                 bytegate_n[rec["byteGate"]] += 1
             if src_path:
                 rec["srcPath"] = src_path
@@ -695,6 +704,11 @@ def main():
     # exclusion is the same mistake the enrollment split was added to fix.
     print("  byte-gate failures (NOT counted matched): " + (", ".join(
         f"{k}={n}" for k, n in sorted(bytegate_n.items())) or "none"))
+    # And the records that never became records. This one changes the DENOMINATOR, so it
+    # is the last thing that may move quietly: if this number drifts, the published rate
+    # drifted with it and the log is where anyone would look.
+    print(f"  zero-size aliases dropped from the universe: {alias_dropped} "
+          f"(second names for functions already counted at the same address)")
     # A stale manifest row means someone edited one of the will-not-build files without
     # re-running the gate, so its exclusion has lapsed and that function is being counted
     # again. Permissive by design -- the count falls back to the old behaviour rather than
