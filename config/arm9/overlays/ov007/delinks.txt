@@ -2139,7 +2139,6 @@ src/_ZN9dScDSMT_c16CleanupResourcesEv.cpp:
     .text start:0x020cc45c end:0x020cc4c0
 
 src/_ZN9dScDSMT_c13InitResourcesEv.cpp:
-    complete
     .text start:0x020cc4c0 end:0x020cc600
 
 src/func_ov007_020cc600.c:

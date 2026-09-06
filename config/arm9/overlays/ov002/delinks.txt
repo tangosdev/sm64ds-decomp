@@ -2004,7 +2004,6 @@ src/func_ov002_020c6fe4.c:
     .text start:0x020c6fe4 end:0x020c70ac
 
 src/func_ov002_020c70ac.c:
-    complete
     .text start:0x020c70ac end:0x020c7194
 
 src/func_ov002_020c7194.cpp:
@@ -2620,7 +2619,6 @@ src/_ZN6Player20St_LedgeHang_CleanupEv.cpp:
     .text start:0x020d092c end:0x020d0948
 
 src/func_ov002_020d0948.c:
-    complete
     .text start:0x020d0948 end:0x020d0a44
 
 src/_ZN6Player17St_LedgeHang_MainEv.cpp:
@@ -3260,7 +3258,6 @@ src/_ZN6Player17St_SweepKick_InitEv.cpp:
     .text start:0x020dc510 end:0x020dc560
 
 src/func_ov002_020dc560.c:
-    complete
     .text start:0x020dc560 end:0x020dc740
 
 src/_ZN6Player17St_ButtSlide_MainEv.cpp:
@@ -3636,7 +3633,6 @@ src/func_ov002_020e25f0.c:
     .text start:0x020e25f0 end:0x020e2664
 
 src/func_ov002_020e2664.c:
-    complete
     .text start:0x020e2664 end:0x020e28d4
 
 src/func_ov002_020e28d4.c:
@@ -3848,7 +3844,6 @@ src/func_ov002_020e7090.cpp:
     .text start:0x020e7090 end:0x020e7104
 
 src/func_ov002_020e7104.c:
-    complete
     .text start:0x020e7104 end:0x020e717c
 
 src/UnloadSilverStarAndNumber.c:
@@ -4040,7 +4035,6 @@ src/func_ov002_020e9af4.c:
     .text start:0x020e9af4 end:0x020e9d18
 
 src/func_ov002_020e9d18.c:
-    complete
     .text start:0x020e9d18 end:0x020ea06c
 
 src/func_ov002_020ea06c.cpp:
@@ -4427,7 +4421,6 @@ src/func_ov002_020f0438.cpp:
     .text start:0x020f0438 end:0x020f051c
 
 src/func_ov002_020f051c.c:
-    complete
     .text start:0x020f051c end:0x020f05f4
 
 src/func_ov002_020f05f4.c:
@@ -4599,7 +4592,6 @@ src/_ZN8MugenBgm8BehaviorEv.cpp:
     .text start:0x020f1c64 end:0x020f1eb4
 
 src/_ZN8MugenBgm13InitResourcesEv.cpp:
-    complete
     .text start:0x020f1eb4 end:0x020f1f40
 
 src/d_a_mugen_bgm.c:
