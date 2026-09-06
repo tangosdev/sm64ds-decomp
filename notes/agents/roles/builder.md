@@ -78,6 +78,11 @@ PASS signals:
   exact, 100.000000%` plus equality with the run's own source-independent stock
   baseline control
 - `source_coverage` → `0 B` handed back to the cartridge
+- **`rombuild`'s BASELINE CONTROL legitimately prints
+  `dsd check symbols --fail FAIL`** — 9 pre-existing errors, present on untouched
+  `main`. It is absent from the PASS list above and it is not your defect, but a
+  builder grepping the log for `FAIL` will stop on it. Compare the error count
+  against the control run and report `0 new`
 - `prepush_attribution` → **no symbol *lost*.** Do **not** hold out for
   `0 changed`: a promotion folds N shards into one file, and the counter credits
   only the delinks range's *first* symbol and reclassifies the rest as
@@ -144,6 +149,13 @@ Every other tool treats those as prose, so a poisoned manifest ships silently.
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
 and addend), and `reloc_audit` (destination identity).
+
+**`match.py`'s API is not shaped the way that instruction implies.**
+`extract_func` returns a `(bytes, relocs)` **pair**, and the signature is
+`target_bytes(addr, size, bin_path: pathlib.Path, base: int)` — passing a module
+label like `"ov006"` raises
+`AttributeError: 'str' object has no attribute 'read_bytes'`. For an overlay pass
+`pathlib.Path("extracted/dsd/arm9_overlays/ov006.bin")` with base `0x020bfec0`.
 
 **`romdata_check`'s per-symbol verdicts are not reachable from the CLI.**
 `--show` only slices `report["differing"]` and `--json` carries counts. To prove
@@ -356,6 +368,17 @@ second banking. Do it non-destructively: copy the post-cherry-pick files aside,
 the auto-merge was correct — `git checkout HEAD --` both and commit nothing.
 Different means the silent merge lost or duplicated rows, and the regenerated
 version is the one to keep.
+
+**The recipe is missing its last step, and the omission is dangerous.**
+`--update` *appends* to the exceptions file, so by the time you have diffed and
+decided "my copy is the one to keep", the tool has **already overwritten the
+working file**. Restoring your copy is a separate, explicit action —
+`git checkout HEAD --` it, or copy it back. Deciding is not restoring.
+
+**And `--check` goes red on a narrower trigger than stated.** Measured: red after
+restoring **only** `config/converted-baseline.json`. The exceptions file plays no
+part in the backslide verdict at all, so do not restore it "to make the check
+pass" — that only risks the rows.
 
 **Committing the regenerated exceptions file destroys the writers' reasons.**
 Rows carry whatever string you pass to `--reason`, so regenerating from a clean
