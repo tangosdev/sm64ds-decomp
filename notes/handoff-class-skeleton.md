@@ -1,5 +1,16 @@
 # Handoff: the class skeleton, and how much of it is proven
 
+> **STATUS: STALE — verify before use.** Section 4 item 5's claim "the real blocker...
+> enrolled destructor migrations in this tree: zero" is now FALSE, disproved by 20+
+> TU-promotion commits landed since (e.g. `dScMgRoulette_c`, `dScMgHanachan_c`,
+> `daObjMarioCap_c` — see git log for "promote ... into a single C++ TU"). The "37
+> unnamed slots" and "`daDemo_c` bases_only" open items are unverified a month later
+> and should be re-measured, not quoted. The skeleton-conformance methodology and
+> tool chain (§1-2) and the two `rtti_vtables.json` bugs fixed along the way (§4,
+> over-read/under-read) remain valid and reusable. `docs/class-reference.html` is
+> still actively regenerated (last commit 2026-09-05) by the underlying tool, even
+> though this handoff's own numbers are not current. Verified 2026-09-06.
+
 **Written 2026-08-07.** Branch `docs/class-reference-confidence`, five commits, pushed to
 `origin`. Everything below is checkable; every number appears with the command that
 produces it. Where an earlier answer was wrong, it is recorded rather than quietly fixed.
