@@ -1,8 +1,8 @@
 extern short data_02082214[];
 extern int data_ov002_021101b4[];
-extern void _ZN6Player11ChangeStateERNS_5StateE(int self, int state);
+extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
 
-void func_ov002_020d0948(int self)
+void func_ov002_020d0948(char* self)
 {
     int base = (short)(*(short*)(self + 0x8e) + 0x8000);
     if (*(unsigned char*)(self + 0x703) != 0) {

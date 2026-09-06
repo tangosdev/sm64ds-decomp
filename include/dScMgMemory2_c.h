@@ -21,9 +21,11 @@
  * symbols/actor_renames.tsv.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN14dScMgMemory2_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one.
+ * its own. Defined once, out of line, in src/actors/dScMgMemory2_c.cpp;
+ * mwccarm emits D1 and D0 from that single definition, in that order,
+ * which is the cartridge's order (D1 0x020f5564, D0 0x020f55b8). No
+ * separate operator delete is needed -- dScMgBase_c, two levels up,
+ * already provides one.
  *
  * SM64DS RTTI names the implementation dScMgMemory2_c. The reconstructed factory
  * dScMgMemory2_c_classInit (historical alias MgMemoryMaster_Spawn) installs this class's
@@ -95,14 +97,18 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
        spell theirs -- an override of a virtual an ancestor already declares is
        implicitly virtual either way, so each reuses an existing slot and adds no
        field, and the 0x5410 assert below still holds. The destructor above is
-       declared first and out of line, so it stays this class's KEY FUNCTION and
-       none of these translation units emits _ZTV14dScMgMemory2_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp */
+       declared first and out of line, so it is this class's KEY FUNCTION: the
+       one TU that defines it (src/actors/dScMgMemory2_c.cpp) therefore emits
+       _ZTV14dScMgMemory2_c, _ZTI14dScMgMemory2_c and _ZTS14dScMgMemory2_c as
+       compiler-only output. The cartridge keeps its own copies at ov006
+       0x0213d4d4 / 0x0213d350 / 0x0213d35c, so all thirteen typeinfo records
+       are licensed deadstrip-data in that TU's manifest rather than claimed. */
+    s32 InitResources();   /* slot  0 -- 0x020f74b4 */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
     virtual void OnGroundPounded();                    /* slot 21 */
-    s32 Behavior();        /* slot  6 -- src/_ZN14dScMgMemory2_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN14dScMgMemory2_c6RenderEv.cpp */
+    s32 Behavior();        /* slot  6 -- 0x020f7458 */
+    s32 Render();          /* slot  9 -- 0x020f73f4 */
 
     void DrawMessage();
     void DrawCursor();

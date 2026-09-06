@@ -1508,164 +1508,53 @@ src/func_ov006_020d5e3c.c:
 src/func_ov006_020d5e5c.c:
     .text start:0x020d5e5c end:0x020d5eb8
 
-src/func_ov006_020d5eb8.c:
+src/actors/dScMgBomroom_c.cpp:
     complete
-    .text start:0x020d5eb8 end:0x020d5f28
+    .text start:0x020d5eb8 end:0x020d7c4c
 
-src/func_ov006_020d5f28.c:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/func_ov006_020d7c4c.cpp:
     complete
-    .text start:0x020d5f28 end:0x020d5f2c
-
-src/func_ov006_020d5f2c.c:
-    complete
-    .text start:0x020d5f2c end:0x020d5fd8
-
-src/func_ov006_020d5fd8.c:
-    .text start:0x020d5fd8 end:0x020d5fec
-
-src/func_ov006_020d5fec.cpp:
-    complete
-    .text start:0x020d5fec end:0x020d604c
-
-src/func_ov006_020d604c.c:
-    complete
-    .text start:0x020d604c end:0x020d6084
-
-src/func_ov006_020d6084.cpp:
-    complete
-    .text start:0x020d6084 end:0x020d6098
-
-src/func_ov006_020d6098.c:
-    complete
-    .text start:0x020d6098 end:0x020d6100
-
-src/func_ov006_020d6100.c:
-    complete
-    .text start:0x020d6100 end:0x020d6170
-
-src/func_ov006_020d6170.c:
-    complete
-    .text start:0x020d6170 end:0x020d61dc
-
-src/func_ov006_020d61dc.c:
-    complete
-    .text start:0x020d61dc end:0x020d6264
-
-src/func_ov006_020d6264.c:
-    .text start:0x020d6264 end:0x020d6278
-
-src/func_ov006_020d6278.cpp:
-    complete
-    .text start:0x020d6278 end:0x020d62e0
-
-src/func_ov006_020d62e0.c:
-    complete
-    .text start:0x020d62e0 end:0x020d634c
-
-src/func_ov006_020d634c.c:
-    complete
-    .text start:0x020d634c end:0x020d63ac
-
-src/func_ov006_020d63ac.c:
-    complete
-    .text start:0x020d63ac end:0x020d63d4
-
-src/func_ov006_020d63d4.c:
-    complete
-    .text start:0x020d63d4 end:0x020d6454
-
-src/func_ov006_020d6454.c:
-    complete
-    .text start:0x020d6454 end:0x020d64c4
-
-src/func_ov006_020d64c4.c:
-    complete
-    .text start:0x020d64c4 end:0x020d64c8
-
-src/func_ov006_020d64c8.c:
-    complete
-    .text start:0x020d64c8 end:0x020d65b4
-
-src/func_ov006_020d65b4.c:
-    .text start:0x020d65b4 end:0x020d65c8
-
-src/func_ov006_020d65c8.cpp:
-    complete
-    .text start:0x020d65c8 end:0x020d6630
-
-src/func_ov006_020d6630.c:
-    complete
-    .text start:0x020d6630 end:0x020d669c
-
-src/func_ov006_020d669c.c:
-    complete
-    .text start:0x020d669c end:0x020d66c4
-
-src/func_ov006_020d66c4.cpp:
-    complete
-    .text start:0x020d66c4 end:0x020d672c
-
-src/func_ov006_020d672c.c:
-    .text start:0x020d672c end:0x020d6784
-
-src/func_ov006_020d6784.c:
-    .text start:0x020d6784 end:0x020d68a8
-
-src/func_ov006_020d68a8.c:
-    complete
-    .text start:0x020d68a8 end:0x020d69b8
-
-src/func_ov006_020d69b8.c:
-    complete
-    .text start:0x020d69b8 end:0x020d6b88
-
-src/func_ov006_020d6b88.c:
-    complete
-    .text start:0x020d6b88 end:0x020d6c90
-
-src/func_ov006_020d6c90.c:
-    complete
-    .text start:0x020d6c90 end:0x020d6d7c
-
-src/func_ov006_020d6d7c.c:
-    complete
-    .text start:0x020d6d7c end:0x020d6e8c
-
-src/func_ov006_020d6e8c.c:
-    complete
-    .text start:0x020d6e8c end:0x020d7524
-
-src/func_ov006_020d7524.c:
-    complete
-    .text start:0x020d7524 end:0x020d7604
-
-src/func_ov006_020d7604.c:
-    complete
-    .text start:0x020d7604 end:0x020d7778
-
-src/func_ov006_020d7778.c:
-    complete
-    .text start:0x020d7778 end:0x020d777c
-
-src/func_ov006_020d777c.c:
-    complete
-    .text start:0x020d777c end:0x020d7958
-
-src/func_ov006_020d7958.c:
-    complete
-    .text start:0x020d7958 end:0x020d795c
-
-src/func_ov006_020d795c.c:
-    complete
-    .text start:0x020d795c end:0x020d7a84
-
-src/func_ov006_020d7a84.c:
-    complete
-    .text start:0x020d7a84 end:0x020d7c00
-
-src/func_ov006_020d7c00.cpp:
-    complete
-    .text start:0x020d7c00 end:0x020d7c4c
+    .text start:0x020d7c4c end:0x020d7e7c
 
 src/func_ov006_020d7e7c.c:
     complete
@@ -2241,6 +2130,10 @@ src/func_ov006_020e1c68.c:
     complete
     .text start:0x020e1c68 end:0x020e1dc8
 
+src/func_ov006_020e1dc8.cpp:
+    complete
+    .text start:0x020e1dc8 end:0x020e20bc
+
 src/func_ov006_020e269c.c:
     complete
     .text start:0x020e269c end:0x020e26f8
@@ -2420,6 +2313,10 @@ src/func_ov006_020e4b78.c:
     complete
     .text start:0x020e4b78 end:0x020e4bd4
 
+src/func_ov006_020e4bd4.cpp:
+    complete
+    .text start:0x020e4bd4 end:0x020e4ed4
+
 src/func_ov006_020e4ed4.c:
     complete
     .text start:0x020e4ed4 end:0x020e4fe8
@@ -2431,6 +2328,10 @@ src/func_ov006_020e4fe8.c:
 src/func_ov006_020e507c.c:
     complete
     .text start:0x020e507c end:0x020e513c
+
+src/func_ov006_020e513c.cpp:
+    complete
+    .text start:0x020e513c end:0x020e5450
 
 src/func_ov006_020e59b0.c:
     complete
@@ -3148,213 +3049,9 @@ src/minigames/d_s_mg_memory.cpp:
     complete
     .text start:0x020f3834 end:0x020f5564
 
-src/_ZN14dScMgMemory2_cD1Ev.cpp:
+src/actors/dScMgMemory2_c.cpp:
     complete
-    .text start:0x020f5564 end:0x020f55b8
-
-src/_ZN14dScMgMemory2_cD0Ev.cpp:
-    complete
-    .text start:0x020f55b8 end:0x020f5620
-
-src/_ZN14dScMgMemory2_c11DrawMessageEv.c:
-    complete
-    .text start:0x020f5620 end:0x020f565c
-
-src/_ZN14dScMgMemory2_c10DrawCursorEv.c:
-    complete
-    .text start:0x020f565c end:0x020f5694
-
-src/_ZN14dScMgMemory2_c12UpdateCursorEv.c:
-    complete
-    .text start:0x020f5694 end:0x020f56f8
-
-src/_ZN14dScMgMemory2_c10ShowCursorEv.c:
-    complete
-    .text start:0x020f56f8 end:0x020f572c
-
-src/_ZN14dScMgMemory2_c10HideCursorEv.c:
-    complete
-    .text start:0x020f572c end:0x020f5740
-
-src/_ZN14dScMgMemory2_c10PlayerWaitEi.c:
-    complete
-    .text start:0x020f5740 end:0x020f5744
-
-src/_ZN14dScMgMemory2_c10PlayerMoveEi.c:
-    complete
-    .text start:0x020f5744 end:0x020f58d0
-
-src/_ZN14dScMgMemory2_c10PlayerDropEi.c:
-    complete
-    .text start:0x020f58d0 end:0x020f593c
-
-src/_ZN14dScMgMemory2_c11InitPlayersEv.c:
-    complete
-    .text start:0x020f593c end:0x020f59c0
-
-src/_ZN14dScMgMemory2_c13CheckFinishedEv.c:
-    complete
-    .text start:0x020f59c0 end:0x020f5a64
-
-src/_ZN14dScMgMemory2_c9JudgePairEv.cpp:
-    complete
-    .text start:0x020f5a64 end:0x020f5b98
-
-src/_ZN14dScMgMemory2_c9DrawCardsEv.c:
-    complete
-    .text start:0x020f5b98 end:0x020f5c40
-
-src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp:
-    complete
-    .text start:0x020f5c40 end:0x020f5cb4
-
-src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c:
-    complete
-    .text start:0x020f5cb4 end:0x020f5de0
-
-src/_ZN14dScMgMemory2_c12CardFlipDownEi.c:
-    complete
-    .text start:0x020f5de0 end:0x020f5e70
-
-src/_ZN14dScMgMemory2_c8CardWaitEi.c:
-    complete
-    .text start:0x020f5e70 end:0x020f5e74
-
-src/_ZN14dScMgMemory2_c10CardFlipUpEi.c:
-    complete
-    .text start:0x020f5e74 end:0x020f5f0c
-
-src/_ZN14dScMgMemory2_c10CardSelectEi.c:
-    complete
-    .text start:0x020f5f0c end:0x020f6084
-
-src/_ZN14dScMgMemory2_c8CardIdleEi.c:
-    complete
-    .text start:0x020f6084 end:0x020f6088
-
-src/_ZN14dScMgMemory2_c8CardMoveEi.c:
-    complete
-    .text start:0x020f6088 end:0x020f6230
-
-src/_ZN14dScMgMemory2_c12ResultFinishEv.c:
-    complete
-    .text start:0x020f6230 end:0x020f639c
-
-src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c:
-    complete
-    .text start:0x020f639c end:0x020f6488
-
-src/_ZN14dScMgMemory2_c12ResultRewardEv.c:
-    complete
-    .text start:0x020f6488 end:0x020f6538
-
-src/_ZN14dScMgMemory2_c10ResultWaitEv.c:
-    complete
-    .text start:0x020f6538 end:0x020f6678
-
-src/_ZN14dScMgMemory2_c11RoundRevealEv.c:
-    complete
-    .text start:0x020f6678 end:0x020f670c
-
-src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c:
-    complete
-    .text start:0x020f670c end:0x020f67a0
-
-src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c:
-    complete
-    .text start:0x020f67a0 end:0x020f6830
-
-src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c:
-    complete
-    .text start:0x020f6830 end:0x020f6904
-
-src/_ZN14dScMgMemory2_c14RoundShowCardsEv.cpp:
-    complete
-    .text start:0x020f6904 end:0x020f6a00
-
-src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c:
-    complete
-    .text start:0x020f6a00 end:0x020f6a78
-
-src/_ZN14dScMgMemory2_c13RoundDealHardEv.c:
-    complete
-    .text start:0x020f6a78 end:0x020f6b00
-
-src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c:
-    complete
-    .text start:0x020f6b00 end:0x020f6b78
-
-src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c:
-    complete
-    .text start:0x020f6b78 end:0x020f6bf0
-
-src/_ZN14dScMgMemory2_c10RoundStartEv.c:
-    complete
-    .text start:0x020f6bf0 end:0x020f6c90
-
-src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c:
-    complete
-    .text start:0x020f6c90 end:0x020f6f88
-
-src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c:
-    complete
-    .text start:0x020f6f88 end:0x020f7064
-
-src/_ZN14dScMgMemory2_c9ResetGameEv.c:
-    complete
-    .text start:0x020f7064 end:0x020f7190
-
-src/_ZN14dScMgMemory2_c9StateExitEv.c:
-    complete
-    .text start:0x020f7190 end:0x020f71c8
-
-src/_ZN14dScMgMemory2_c11StateResultEv.cpp:
-    complete
-    .text start:0x020f71c8 end:0x020f7210
-
-src/_ZN14dScMgMemory2_c10StateJudgeEv.c:
-    complete
-    .text start:0x020f7210 end:0x020f7234
-
-src/_ZN14dScMgMemory2_c9StatePlayEv.cpp:
-    complete
-    .text start:0x020f7234 end:0x020f7280
-
-src/_ZN14dScMgMemory2_c10StateSetupEv.c:
-    complete
-    .text start:0x020f7280 end:0x020f72c0
-
-src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c:
-    complete
-    .text start:0x020f72c0 end:0x020f730c
-
-src/_ZN14dScMgMemory2_c15OnGroundPoundedEv.cpp:
-    complete
-    .text start:0x020f730c end:0x020f7320
-
-src/_ZN14dScMgMemory2_c13OnTurnIntoEggEi.cpp:
-    complete
-    .text start:0x020f7320 end:0x020f7394
-
-src/_ZN14dScMgMemory2_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x020f7394 end:0x020f73f4
-
-src/_ZN14dScMgMemory2_c6RenderEv.cpp:
-    complete
-    .text start:0x020f73f4 end:0x020f7458
-
-src/_ZN14dScMgMemory2_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020f7458 end:0x020f74b4
-
-src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f74b4 end:0x020f75d4
-
-src/dScMgMemory2_c_classInit.c:
-    complete
-    .text start:0x020f75d4 end:0x020f7634
+    .text start:0x020f5564 end:0x020f7634
 
 src/minigames/d_s_mg_m_carlo.cpp:
     complete
@@ -3888,6 +3585,10 @@ src/func_ov006_02102f3c.c:
     complete
     .text start:0x02102f3c end:0x02102fe8
 
+src/func_ov006_02102fe8.cpp:
+    complete
+    .text start:0x02102fe8 end:0x02103360
+
 src/func_ov006_02103360.c:
     complete
     .text start:0x02103360 end:0x02103608
@@ -3921,6 +3622,7 @@ src/func_ov006_02103bfc.c:
     .text start:0x02103bfc end:0x02103cbc
 
 src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x02103cbc end:0x02103d28
 
 src/_ZN16dScMgPachinko2_c6RenderEv.cpp:
@@ -4134,6 +3836,10 @@ src/func_ov006_02106048.c:
 src/func_ov006_02106080.c:
     complete
     .text start:0x02106080 end:0x02106168
+
+src/func_ov006_02106168.cpp:
+    complete
+    .text start:0x02106168 end:0x021063a0
 
 src/func_ov006_021063a0.cpp:
     complete
@@ -4920,197 +4626,9 @@ src/actors/dScMgSound_c.cpp:
     complete
     .text start:0x02119904 end:0x0211cbd0
 
-src/_ZN13dScMgTeresa_cD1Ev.cpp:
+src/actors/dScMgTeresa_c.cpp:
     complete
-    .text start:0x0211cbd0 end:0x0211cbf4
-
-src/_ZN13dScMgTeresa_cD0Ev.cpp:
-    complete
-    .text start:0x0211cbf4 end:0x0211cc2c
-
-src/func_ov006_0211cc2c.c:
-    complete
-    .text start:0x0211cc2c end:0x0211cc90
-
-src/func_ov006_0211cc90.c:
-    complete
-    .text start:0x0211cc90 end:0x0211cca8
-
-src/func_ov006_0211cca8.c:
-    complete
-    .text start:0x0211cca8 end:0x0211cd24
-
-src/func_ov006_0211cd24.c:
-    complete
-    .text start:0x0211cd24 end:0x0211ce90
-
-src/func_ov006_0211ce90.c:
-    complete
-    .text start:0x0211ce90 end:0x0211ce94
-
-src/func_ov006_0211ce94.c:
-    complete
-    .text start:0x0211ce94 end:0x0211cef4
-
-src/func_ov006_0211cef4.c:
-    complete
-    .text start:0x0211cef4 end:0x0211d018
-
-src/func_ov006_0211d018.c:
-    complete
-    .text start:0x0211d018 end:0x0211d0f8
-
-src/func_ov006_0211d0f8.c:
-    complete
-    .text start:0x0211d0f8 end:0x0211d224
-
-src/func_ov006_0211d224.c:
-    complete
-    .text start:0x0211d224 end:0x0211d368
-
-src/func_ov006_0211d368.c:
-    complete
-    .text start:0x0211d368 end:0x0211d4e8
-
-src/func_ov006_0211d4e8.c:
-    complete
-    .text start:0x0211d4e8 end:0x0211d5a8
-
-src/func_ov006_0211d5a8.cpp:
-    complete
-    .text start:0x0211d5a8 end:0x0211d608
-
-src/func_ov006_0211d608.c:
-    complete
-    .text start:0x0211d608 end:0x0211d688
-
-src/func_ov006_0211d688.c:
-    complete
-    .text start:0x0211d688 end:0x0211d69c
-
-src/func_ov006_0211d69c.c:
-    complete
-    .text start:0x0211d69c end:0x0211d75c
-
-src/func_ov006_0211d75c.c:
-    complete
-    .text start:0x0211d75c end:0x0211d7b0
-
-src/func_ov006_0211d7b0.c:
-    complete
-    .text start:0x0211d7b0 end:0x0211d7b4
-
-src/func_ov006_0211d7b4.c:
-    complete
-    .text start:0x0211d7b4 end:0x0211d7d8
-
-src/func_ov006_0211d7d8.c:
-    complete
-    .text start:0x0211d7d8 end:0x0211d7ec
-
-src/func_ov006_0211d7ec.c:
-    complete
-    .text start:0x0211d7ec end:0x0211d86c
-
-src/func_ov006_0211d86c.cpp:
-    complete
-    .text start:0x0211d86c end:0x0211d924
-
-src/func_ov006_0211d924.c:
-    complete
-    .text start:0x0211d924 end:0x0211dad0
-
-src/func_ov006_0211dad0.c:
-    complete
-    .text start:0x0211dad0 end:0x0211db7c
-
-src/func_ov006_0211db7c.c:
-    complete
-    .text start:0x0211db7c end:0x0211dce0
-
-src/func_ov006_0211dce0.c:
-    complete
-    .text start:0x0211dce0 end:0x0211dd0c
-
-src/func_ov006_0211dd0c.cpp:
-    complete
-    .text start:0x0211dd0c end:0x0211dd6c
-
-src/func_ov006_0211dd6c.c:
-    complete
-    .text start:0x0211dd6c end:0x0211ddb8
-
-src/func_ov006_0211ddb8.c:
-    complete
-    .text start:0x0211ddb8 end:0x0211ddcc
-
-src/func_ov006_0211ddcc.c:
-    complete
-    .text start:0x0211ddcc end:0x0211de54
-
-src/func_ov006_0211de54.c:
-    complete
-    .text start:0x0211de54 end:0x0211de7c
-
-src/func_ov006_0211de7c.c:
-    complete
-    .text start:0x0211de7c end:0x0211dec0
-
-src/func_ov006_0211dec0.c:
-    complete
-    .text start:0x0211dec0 end:0x0211e020
-
-src/func_ov006_0211e020.c:
-    complete
-    .text start:0x0211e020 end:0x0211e0c8
-
-src/func_ov006_0211e0c8.cpp:
-    complete
-    .text start:0x0211e0c8 end:0x0211e118
-
-src/func_ov006_0211e118.c:
-    complete
-    .text start:0x0211e118 end:0x0211e184
-
-src/func_ov006_0211e184.c:
-    complete
-    .text start:0x0211e184 end:0x0211e220
-
-src/func_ov006_0211e220.c:
-    complete
-    .text start:0x0211e220 end:0x0211e29c
-
-src/func_ov006_0211e29c.c:
-    complete
-    .text start:0x0211e29c end:0x0211e318
-
-src/func_ov006_0211e318.c:
-    complete
-    .text start:0x0211e318 end:0x0211e3e0
-
-src/func_ov006_0211e3e0.c:
-    complete
-    .text start:0x0211e3e0 end:0x0211e460
-
-src/func_ov006_0211e460.c:
-    complete
-    .text start:0x0211e460 end:0x0211e4e0
-
-src/func_ov006_0211e4e0.c:
-    complete
-    .text start:0x0211e4e0 end:0x0211e55c
-
-src/func_ov006_0211e55c.c:
-    complete
-    .text start:0x0211e55c end:0x0211e5cc
-
-src/func_ov006_0211e5cc.c:
-    complete
-    .text start:0x0211e5cc end:0x0211e658
-
-src/func_ov006_0211e658.c:
-    complete
-    .text start:0x0211e658 end:0x0211e72c
+    .text start:0x0211cbd0 end:0x0211e72c
 
 src/func_ov006_0211e7d8.c:
     complete
@@ -5225,6 +4743,7 @@ src/_ZN13dScMgTeresa_c9Virtual50Ev.cpp:
     .text start:0x02120238 end:0x02120248
 
 src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x02120248 end:0x02120348
 
 src/_ZN13dScMgTeresa_c6RenderEv.cpp:

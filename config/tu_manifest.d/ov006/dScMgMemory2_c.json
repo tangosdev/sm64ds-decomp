@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgMemory2_c",
   "module": "ov006",
-  "source": "src_tu/minigames/d_s_mg_memory2.cpp",
-  "promoted_source": "src/minigames/d_s_mg_memory2.cpp",
-  "status": "link-verified",
+  "source": "src/actors/dScMgMemory2_c.cpp",
+  "promoted_source": "src/actors/dScMgMemory2_c.cpp",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f5564..0x20f7634, 52 functions; the immediately adjacent unique MG_MEMORY_J factory closes the scene object",
@@ -232,7 +232,7 @@
       "symbol": "_ZN14dScMgMemory2_c14RoundShowCardsEv",
       "address": "0x020f6904",
       "size": "0x000000fc",
-      "legacy_source": "src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c",
+      "legacy_source": "src/_ZN14dScMgMemory2_c14RoundShowCardsEv.cpp",
       "ordinal": 30
     },
     {
@@ -391,13 +391,16 @@
     "COINED NAMES: the 43 handler/helper ROM symbols were address-only, so no recovered spelling exists to confirm or contradict the descriptive names in functions[]. The ROM proves dScMgMemory2_c ownership and the PMF tables prove state-group identities; exact original source spellings are disclosed as unknown here and in symbols/actor_renames.tsv.",
     "MEASURED CW 1.2 FACTORY WALL: dScMgMemory2_c_classInit is allocation plus a fully folded scene construction sequence. Semantic placement construction is unavailable in this compiler setup, so the literal classInit bridge preserves allocation size, base construction, vptr transitions, Particle::SysTracker construction and shared-state construction explicitly and byte-exact.",
     "FACTORY RELOCATION PROOF: the TU-local _ZTV14dScMgMemory2_c reference uses the ABI two-word preamble (+8); objisolate rebases it to the ROM slot-array convention. This makes focused verification genuinely 52/52 with clean relocation destinations, rather than relying on a same-object exception.",
-    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The PMF tables, resource/static data, compiler-generated RTTI/vtable, __sinit_ov006_021314e4 and 0x021423a8..0x02142490 BSS remain ROM-gap owned until their exact input-section order and initializers are reconstructed."
+    "CURRENT NON-TEXT BOUNDARY: this promotion owns the complete contiguous .text run only. The PMF tables, resource/static data, compiler-generated RTTI/vtable, __sinit_ov006_021314e4 and 0x021423a8..0x02142490 BSS remain ROM-gap owned until their exact input-section order and initializers are reconstructed.",
+    "PROMOTED to src/actors/dScMgMemory2_c.cpp. The whole 52-function run moves as one unit -- no subset was taken: the cartridge orders D1 (0x020f5564) BELOW D0 (0x020f55b8), the reproducible direction, and delinks.txt carries no coverage hole across 0x020f5564..0x020f7634, so nothing forces a cut. Placement follows notes/agents/roles/writer.md's fixed convention (src/actors/<Class>.cpp) and the same-overlay pipeline precedent src/actors/dScMgD3DBase_c.cpp, superseding the pre-promotion plan's src/minigames/d_s_mg_memory2.cpp; the thirteen sibling d_s_mg_*.cpp files predate that convention.",
+    "COMPILER-ONLY ROW COUNT IS 13 DATA + 1 FUNCTION, DERIVED not copied. dScMgMemory2_c -> dScMgSingle3DBase_c -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c is SIX levels, so 2 x 6 typeinfo rows + 1 vtable = 13, with no Vector3 term (the class has no Vector3 member and no member's locals odr-use one). The queue row's compiler-only:~11 estimate was copied from sibling_oracle dScMgSingle3DBase_c, which sits one level shallower (2 x 5 + 1 = 11); the estimate is short by exactly the two rows this class's own extra ancestry adds. The 14th row is _ZN14dScMgMemory2_cD2Ev, a genuinely homeless base-object destructor -- plain deadstrip.",
+    "EMISSION ORDER WITHOUT REVERSING THE SOURCE. This TU is written ROM-ASCENDING and still emits ROM-ascending, because `#pragma defer_codegen off` (line 230, after the includes and the extern block) makes mwccarm 2004/b56 emit each definition as it is encountered instead of deferring and reversing. That is what keeps the two file-local optimisation pragmas -- opt_propagation off around DrawCards and opt_loop_invariants off around ResultFinish, each bracketed #pragma push/pop -- attached to the members that measured them, and it is why the out-of-line destructor here yields licensed D1-then-D0 rather than the D2/D0/D1 the deferred path gives."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgMemory2_c/d_s_mg_memory2.o (gitignored)",
+    "object": "build/tu/ov006-dScMgMemory2_c/dScMgMemory2_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 52,
     "functions_declared": 52,
