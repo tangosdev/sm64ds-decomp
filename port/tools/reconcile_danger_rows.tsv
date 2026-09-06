@@ -1,0 +1,710 @@
+module	address	old_name	new_name	file	line	basis	text
+ov002	0x020b6e08	_ZN18PoppingLavaBubblesD1Ev	_ZN16daObjWaterfall_cD1Ev	port/slice_dtorfaces.txt	15	P	src/_ZN18PoppingLavaBubblesD1Ev.cpp
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/CMakeLists.txt	9605	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN18PoppingLavaBubblesD0Ev.c"""
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/hal/actor_classes.cpp	1779	U	int *_ZN18PoppingLavaBubblesD0Ev(int *self);     /* slot 17, gate 207 */
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/hal/actor_classes.cpp	1792	U	{ return (int)(size_t)_ZN18PoppingLavaBubblesD0Ev((int *)s); }
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/hal/actor_classes.cpp	1810	U	_ZN18PoppingLavaBubblesD0Ev, not WaterfallMist's. */
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/ov002_frontier.txt	175	P	src/_ZN18PoppingLavaBubblesD0Ev.c    VT=_ZTV18PoppingLavaBubbles
+ov002	0x020b6e2c	_ZN18PoppingLavaBubblesD0Ev	_ZN16daObjWaterfall_cD0Ev	port/slice_gate207.txt	106	P	src/_ZN18PoppingLavaBubblesD0Ev.c
+ov002	0x020b6eac	_ZN18PoppingLavaBubbles13InitResourcesEv	_ZN16daObjWaterfall_c13InitResourcesEv	port/faces_adjudicated.txt	122	U	_ZN18PoppingLavaBubbles13InitResourcesEv                       FORWARDS    hal/method_faces.cpp:830 -- one statement calling PoppingLavaBubbles::InitResources
+ov002	0x020b6eac	_ZN18PoppingLavaBubbles13InitResourcesEv	_ZN16daObjWaterfall_c13InitResourcesEv	port/hal/actor_classes.cpp	1777	U	int _ZN18PoppingLavaBubbles13InitResourcesEv(void *self);   /* face */
+ov002	0x020b6eac	_ZN18PoppingLavaBubbles13InitResourcesEv	_ZN16daObjWaterfall_c13InitResourcesEv	port/hal/actor_classes.cpp	1784	U	{ return _ZN18PoppingLavaBubbles13InitResourcesEv(s); }
+ov002	0x020b6eac	_ZN18PoppingLavaBubbles13InitResourcesEv	_ZN16daObjWaterfall_c13InitResourcesEv	port/hal/method_faces.cpp	830	U	int _ZN18PoppingLavaBubbles13InitResourcesEv(void *self)
+ov002	0x020b6eac	_ZN18PoppingLavaBubbles13InitResourcesEv	_ZN16daObjWaterfall_c13InitResourcesEv	port/slice_gate20.txt	64	P	src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/CMakeLists.txt	9606	U	"PROPERTIES COMPILE_DEFINITIONS ""VT=_ZTV18PoppingLavaBubbles"")"
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes.cpp	1699	U	//   WaterfallMist_Spawn -> _ZTV18PoppingLavaBubbles  RTTI 16daObjWaterfall_c
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes.cpp	1760	A	// _ZTV18PoppingLavaBubbles, ov002 0x021094a0. The moat's waterfall spray, and
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes.cpp	1780	U	void *_ZTV18PoppingLavaBubbles[31];
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes.cpp	1796	U	void **vt = _ZTV18PoppingLavaBubbles;
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes.cpp	1804	U	WaterfallMist_Spawn installs is _ZTV18PoppingLavaBubbles, and that
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes_bob_world.cpp	989	U	// installs _ZTV18PoppingLavaBubbles, whose RTTI is 16daObjWaterfall_c; the
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/hal/actor_classes_ov070.cpp	676	H	the sentence is 'NOT the class at _ZTV18PoppingLavaBubbles', i.e. the table at the renamed address; 0x021093e0 named beside it is the UNNAMED table it contrasts with
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/ov002_frontier.txt	175	U	src/_ZN18PoppingLavaBubblesD0Ev.c    VT=_ZTV18PoppingLavaBubbles
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/slice_gate20.txt	16	A	#   WaterfallMist_Spawn 0x020b6ee8 -> _ZTV18PoppingLavaBubbles = 0x021094a0,
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/slice_gate207.txt	18	U	#   _ZTV18PoppingLavaBubbles   0x020b6e08  0x020b6e08  0x020b6e2c  0x020b6e2c
+ov002	0x021094a0	_ZTV18PoppingLavaBubbles	_ZTV16daObjWaterfall_c	port/slice_gate33.txt	204	U	# WATERFALL_MIST (197) installs _ZTV18PoppingLavaBubbles, RTTI daObjWaterfall_c.
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/ov006_player_map.txt	31	A	_ZN6Player12St_Null_InitEv            0x020cac30  size 0x8
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/ov006_player_map.txt	51	A	_ZN6Player12St_Null_InitEv                   0x020cac30  0x6c
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/ov006_player_map.txt	69	P	A fourth, src/_ZN6Player12St_Null_InitEv.cpp, reads data_ov006_021405bc
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/ov006_player_map.txt	122	A	_ZN6Player12St_Null_InitEv size 0x6c. Different sizes, different
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/ov006_player_map.txt	260	P	src/_ZN6Player12St_Null_InitEv.cpp,
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/slice_tte.txt	509	P	src/_ZN6Player12St_Null_InitEv.cpp
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/slice_w1l5.txt	172	A	#       _ZN6Player12St_Null_InitEv         ov006's 0x020cac30; same shape.
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/unmatched/MgTrampolineTerror_Faces.cpp	172	U	void _ZN6Player12St_Null_InitEv(void);
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/unmatched/MgTrampolineTerror_Faces.cpp	185	P	body src/_ZN6Player12St_Null_InitEv.cpp takes `(void)` -- it walks
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/unmatched/MgTrampolineTerror_Faces.cpp	192	U	void Player::St_Null_Init() { _ZN6Player12St_Null_InitEv(); }
+ov006	0x020cac30	_ZN6Player12St_Null_InitEv	func_ov006_020cac30	port/unmatched/MgTrampolineTerror_SubDispatch.cpp	35	U	*       _ZN6Player12St_Null_InitEv
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/ov006_player_map.txt	32	A	_ZN6Player23St_InYoshiMouth_CleanupEv 0x020d6084  size 0x34
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/ov006_player_map.txt	52	A	_ZN6Player23St_InYoshiMouth_CleanupEv        0x020d6084  0x14
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/ov006_player_map.txt	60	P	src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp -- writes this+0x62ad
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/ov006_player_map.txt	261	P	src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp and
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/slice_sos.txt	160	P	src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp
+ov006	0x020d6084	_ZN6Player23St_InYoshiMouth_CleanupEv	func_ov006_020d6084	port/slice_w1l5.txt	170	A	#       _ZN6Player23St_InYoshiMouth_CleanupEv  ov006's 0x020d6084; the .inc
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/ov006_minigame_scout.txt	199	A	base that body wore the name _ZN6Player16St_WallJump_InitEv. On main it
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/ov006_player_map.txt	33	A	_ZN6Player16St_WallJump_InitEv        0x020e17f8  size 0xb0
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/ov006_player_map.txt	53	A	_ZN6Player16St_WallJump_InitEv               0x020e17f8  0x5c
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/ov006_player_map.txt	63	P	src/_ZN6Player16St_WallJump_InitEv.cpp -- reads this+0x4eb0/0x4eb4/
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/ov006_player_map.txt	262	P	src/_ZN6Player16St_WallJump_InitEv.cpp, and the func_ov006_* stems
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/slice_mg1.txt	171	P	src/_ZN6Player16St_WallJump_InitEv.cpp
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/slice_w1l5.txt	207	U	#       _ZN6Player16St_WallJump_InitEv   ov004 020afdd0, ov006 data 0213c2e4
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/unmatched/MgCurling_State_020e1854.cpp	91	A	// 2. The immediate neighbour, `_ZN6Player16St_WallJump_InitEv` at 0x020e17f8,
+ov006	0x020e17f8	_ZN6Player16St_WallJump_InitEv	func_ov006_020e17f8	port/unmatched/MgCurling_State_020e1854.cpp	98	A	//    src/_ZN6Player16St_WallJump_InitEv.cpp reads this+0x4eb0, +0x4eb4 and
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/hal/cxx_aliases.cpp	1081	A	`_ZN6Player7ST_WAITE kind:function(arm,size=0x68) addr:0x02110154` -- that
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/hal/cxx_aliases.cpp	1085	A	src/_ZN6Player7ST_WAITE.cpp is a real matched TU of ov006's FUNCTION, and it
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/hal/scene_mg.cpp	2654	A	// src/_ZN6Player7ST_WAITE.cpp. Both are real, matched ov006 bodies at those
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/ov006_player_map.txt	54	A	_ZN6Player7ST_WAITE                          0x02110154  0x68
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/ov034_syms.txt	157	A	#   src/_ZN6Player7ST_WAITE.cpp  (OV006 0x02110154, size 0x68, so its body is
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/slice_smb.txt	235	A	# 0x02111144 START_INTRO_MINIMAP_ZOOM and 0x02110154 _ZN6Player7ST_WAITE, and
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/slice_smb.txt	253	A	# src/_ZN6Player7ST_WAITE.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	12	A	* gives 0x02110154 the file src/_ZN6Player7ST_WAITE.cpp; the decomp's main has
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	35	P	*     src/_ZN6Player7ST_WAITE.cpp:3      void data_ov034_02114738(void);
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	36	P	*     src/_ZN6Player7ST_WAITE.cpp:15     data_ov034_02114738();
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	48	P	* src/_ZN6Player7ST_WAITE.cpp is off port/slice_smb.txt so the link has one
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	53	U	* The first draft of this file defined the flat name _ZN6Player7ST_WAITE, on
+ov006	0x02110154	_ZN6Player7ST_WAITE	_ZN19cMgSmartball_slot_c14RestoreInitialEv	port/unmatched/MgSmartball_SlotRestore.cpp	76	P	* THE FIELD LAYOUT BELOW IS src/_ZN6Player7ST_WAITE.cpp's OWN, character for
+ov006	0x02110244	_ZN6Player6ST_OWLE	func_ov006_02110244	port/ov006_player_map.txt	55	A	_ZN6Player6ST_OWLE                           0x02110244  0x27c
+ov006	0x02110244	_ZN6Player6ST_OWLE	func_ov006_02110244	port/slice_smb.txt	429	P	src/_ZN6Player6ST_OWLE.c
+ov006	0x02110244	_ZN6Player6ST_OWLE	func_ov006_02110244	port/slice_w1l5.txt	173	U	#       _ZN6Player6ST_OWLE                 an ov006 class, not a Player member
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/abi_checks.txt	961	P	src/_ZN6Player17St_EndingFly_MainEv.cpp:13 is flat cdecl (void *self) and
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/abi_checks.txt	1017	P	not: src/_ZN6Player17St_EndingFly_MainEv.cpp is matched, in the slice, and
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2294	A	// (c) THE _ZN6Player17St_EndingFly_MainEv NAMING TRAP, which the 2d map warns
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2298	A	//     matched TU is src/_ZN6Player17St_EndingFly_MainEv.cpp, it is in this
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2617	P	src/_ZN6Player17St_EndingFly_MainEv.cpp is in this slice and defines the
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2648	U	void _ZN6Player17St_EndingFly_MainEv(void *self);
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2656	U	{ _ZN6Player17St_EndingFly_MainEv((void *)(size_t)data_ov007_02103448); }
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/hal/scene_boot.cpp	2660	U	{ _ZN6Player17St_EndingFly_MainEv(this); }
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/ov004_ov007_2d_map.txt	53	P	One naming trap to carry forward: src/_ZN6Player17St_EndingFly_MainEv.cpp is
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/ov007_binding_diff.txt	162	P	src/Sprite_SetAnimation.c, and src/_ZN6Player17St_EndingFly_MainEv.cpp, which is
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/ov007_seat.txt	1127	U	_ZN6Player17St_EndingFly_MainEv  defined 1, declared (void) by
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/ov007_seat.txt	1325	A	symbol carrying the name _ZN6Player17St_EndingFly_MainEv, which takes `void *self`
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/ov007_seat.txt	3841	U	target _ZN6Player17St_EndingFly_MainEv, which is also 5d's. The 22 is DECLARED
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/slice_ov007.txt	163	P	src/_ZN6Player17St_EndingFly_MainEv.cpp
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/slice_w1l5.txt	105	A	# is named _ZN6Player17St_EndingFly_MainEv by the community config, and ov002's
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/slice_w1l5.txt	208	U	#       _ZN6Player17St_EndingFly_MainEv  ov007 data 02103254
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck.py	273	U	# emits the symbol _ZN6Player17St_EndingFly_MainEv, exactly like the flat
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck.py	571	U	['_ZN6Player17St_EndingFly_MainEv'],
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck.py	574	U	['_ZN6Player17St_EndingFly_MainEv'],
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck.py	603	U	SYM = '_ZN6Player17St_EndingFly_MainEv'
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck.py	644	U	'_ZN6Player17St_EndingFly_MainEv'), True,
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck_receiver_baseline.txt	47	U	#   _ZN6Player17St_EndingFly_MainEv|src/func_ov007_020b7764.cpp
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck_receiver_baseline.txt	59	U	#   _ZN6Player17St_EndingFly_MainEv|src/func_ov007_020c05f8.c
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck_receiver_baseline.txt	184	U	_ZN6Player17St_EndingFly_MainEv|src/func_ov007_020adbc8.c
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck_receiver_baseline.txt	185	U	_ZN6Player17St_EndingFly_MainEv|src/func_ov007_020ade14.c
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/aritycheck_receiver_baseline.txt	186	U	_ZN6Player17St_EndingFly_MainEv|src/func_ov007_020ca26c.c
+ov007	0x020c3d1c	_ZN6Player17St_EndingFly_MainEv	func_ov007_020c3d1c	port/tools/tailjump_guard.py	338	U	'callee': '_ZN6Player17St_EndingFly_MainEv',
+ov015	0x02111ba0	_ZN14KnockDownPlankD1Ev	_ZN9MovingBarD1Ev	port/hal/actor_classes_wf.cpp	601	U	int *_ZN14KnockDownPlankD1Ev(int *self);                 /* .c, C linkage */
+ov015	0x02111ba0	_ZN14KnockDownPlankD1Ev	_ZN9MovingBarD1Ev	port/hal/actor_classes_wf.cpp	648	U	{ return (int)(size_t)_ZN14KnockDownPlankD1Ev((int *)s); }
+ov015	0x02111ba0	_ZN14KnockDownPlankD1Ev	_ZN9MovingBarD1Ev	port/slice_gate59.txt	99	P	src/_ZN14KnockDownPlankD1Ev.c
+ov015	0x02111be4	_ZN14KnockDownPlankD0Ev	_ZN9MovingBarD0Ev	port/hal/actor_classes_wf.cpp	602	A	int *_ZN14KnockDownPlankD0Ev(int *self);                 /* .c, slot 17, DTOR-PAIRS seat (0x02111be4) */
+ov015	0x02111be4	_ZN14KnockDownPlankD0Ev	_ZN9MovingBarD0Ev	port/hal/actor_classes_wf.cpp	650	U	{ return (int)(size_t)_ZN14KnockDownPlankD0Ev((int *)s); }
+ov015	0x02111be4	_ZN14KnockDownPlankD0Ev	_ZN9MovingBarD0Ev	port/slice_gate59.txt	100	P	src/_ZN14KnockDownPlankD0Ev.c
+ov015	0x02111be4	_ZN14KnockDownPlankD0Ev	_ZN9MovingBarD0Ev	port/slice_w1l1.txt	118	U	#     _ZN14KnockDownPlankD0Ev from:0x021145d0 -> _ZTV14KnockDownPlank+0x44
+ov015	0x02112004	_ZN14KnockDownPlank16CleanupResourcesEv	_ZN9MovingBar16CleanupResourcesEv	port/slice_gate59.txt	97	P	src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp
+ov015	0x02112068	_ZN14KnockDownPlank6RenderEv	_ZN9MovingBar6RenderEv	port/slice_gate59.txt	98	P	src/_ZN14KnockDownPlank6RenderEv.cpp
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/hal/actor_classes_wf.cpp	600	U	int _ZN14KnockDownPlank8BehaviorEv(void *self);          /* host copy, extern C */
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/hal/actor_classes_wf.cpp	641	U	{ return _ZN14KnockDownPlank8BehaviorEv(s); }
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/port_catchup_inventory.txt	460	A	# ov015's _ZN14KnockDownPlank8BehaviorEv is main's name
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/port_catchup_inventory.txt	462	A	# already links, while this branch's _ZN14KnockDownPlank8BehaviorEv is main's
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/unmatched/KnockDownPlank_Behavior.cpp	1	P	/* HOST COPY of src/_ZN14KnockDownPlank8BehaviorEv.cpp -- the mwcc
+ov015	0x02112090	_ZN14KnockDownPlank8BehaviorEv	_ZN9MovingBar8BehaviorEv	port/unmatched/KnockDownPlank_Behavior.cpp	139	U	"extern ""C"" int _ZN14KnockDownPlank8BehaviorEv(void *selfv)"
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/CMakeLists.txt	11729	P	# src/_ZN14KnockDownPlank13InitResourcesEv.cpp:30 (ov015's KNOCK_DOWN_PLANK,
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/CMakeLists.txt	11752	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14KnockDownPlank13InitResourcesEv.cpp"""
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/hal/actor_classes_ov034.cpp	203	P	naming race at 0x02114538, so src/_ZN14KnockDownPlank13InitResourcesEv.cpp:30
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/hal/actor_classes_wf.cpp	623	P	per-source -D on src/_ZN14KnockDownPlank13InitResourcesEv.cpp in
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/ov034_syms.txt	194	P	# rather than assumed: src/_ZN14KnockDownPlank13InitResourcesEv.cpp (ov015,
+ov015	0x021120fc	_ZN14KnockDownPlank13InitResourcesEv	_ZN9MovingBar13InitResourcesEv	port/slice_gate59.txt	96	P	src/_ZN14KnockDownPlank13InitResourcesEv.cpp
+ov015	0x02112944	_ZN9TowerStepD1Ev	_ZN17daObjBk_Rotebar_cD1Ev	port/hal/actor_classes_wf.cpp	347	U	int *_ZN9TowerStepD1Ev(int *self);                /* .c, C linkage */
+ov015	0x02112944	_ZN9TowerStepD1Ev	_ZN17daObjBk_Rotebar_cD1Ev	port/hal/actor_classes_wf.cpp	364	U	{ return (int)(size_t)_ZN9TowerStepD1Ev((int *)s); }
+ov015	0x02112944	_ZN9TowerStepD1Ev	_ZN17daObjBk_Rotebar_cD1Ev	port/slice_gate59.txt	45	P	src/_ZN9TowerStepD1Ev.c
+ov015	0x02112988	_ZN9TowerStepD0Ev	_ZN17daObjBk_Rotebar_cD0Ev	port/hal/actor_classes_wf.cpp	348	A	int *_ZN9TowerStepD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02112988) */
+ov015	0x02112988	_ZN9TowerStepD0Ev	_ZN17daObjBk_Rotebar_cD0Ev	port/hal/actor_classes_wf.cpp	366	U	{ return (int)(size_t)_ZN9TowerStepD0Ev((int *)s); }
+ov015	0x02112988	_ZN9TowerStepD0Ev	_ZN17daObjBk_Rotebar_cD0Ev	port/slice_gate59.txt	46	P	src/_ZN9TowerStepD0Ev.c
+ov015	0x021129e0	_ZN9TowerStep16CleanupResourcesEv	_ZN17daObjBk_Rotebar_c16CleanupResourcesEv	port/slice_gate59.txt	42	P	src/_ZN9TowerStep16CleanupResourcesEv.cpp
+ov015	0x02112a24	_ZN9TowerStep6RenderEv	_ZN17daObjBk_Rotebar_c6RenderEv	port/slice_gate59.txt	44	P	src/_ZN9TowerStep6RenderEv.cpp
+ov015	0x02112a4c	_ZN9TowerStep8BehaviorEv	_ZN17daObjBk_Rotebar_c8BehaviorEv	port/slice_gate59.txt	43	P	src/_ZN9TowerStep8BehaviorEv.cpp
+ov015	0x02112b04	_ZN9TowerStep13InitResourcesEv	_ZN17daObjBk_Rotebar_c13InitResourcesEv	port/slice_gate59.txt	41	P	src/_ZN9TowerStep13InitResourcesEv.cpp
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	24	U	// and the next-symbol bound lies for five of these seven (_ZTV14KnockDownPlank
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	41	A	//   id 53 MOVING_BAR_BIG       -> 0x0211458c  _ZTV14KnockDownPlank / Dossunbar_c
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	567	A	// 0x0211458c (config _ZTV14KnockDownPlank / _ZTV19daObjBk_Dossunbar_c), so an
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	596	A	// it as _ZTV14KnockDownPlank and the class D1 restores it as
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	604	U	void *_ZTV14KnockDownPlank[32];
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	653	U	void **vt = _ZTV14KnockDownPlank;
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/hal/actor_classes_wf.cpp	667	U	/* 32 slots. _ZTV14KnockDownPlank overrides two of the tail with its own
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/ov015_syms.txt	12	U	# (_ZTV13PoleBillboard, _ZTV14KnockDownPlank, _ZTV14MovingBarSmall,
+ov015	0x0211458c	_ZTV14KnockDownPlank	_ZTV9MovingBar	port/slice_w1l1.txt	118	U	#     _ZN14KnockDownPlankD0Ev from:0x021145d0 -> _ZTV14KnockDownPlank+0x44
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/hal/actor_classes_wf.cpp	44	A	//   id 51 ROTATING_BRIDGE      -> 0x02114714  _ZTV9TowerStep / Rotebar_c
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/hal/actor_classes_wf.cpp	339	A	// RotatingBridge_Spawn installs 0x02114714 (config _ZTV9TowerStep /
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/hal/actor_classes_wf.cpp	349	U	void *_ZTV9TowerStep[32];
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/hal/actor_classes_wf.cpp	369	U	void **vt = _ZTV9TowerStep;
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/ov015_syms.txt	13	U	# _ZTV9TowerStep, _ZTV11FallBlockWf) and TWO are real actor vtables dsd left as
+ov015	0x02114714	_ZTV9TowerStep	_ZTV17daObjBk_Rotebar_c	port/tools/vtspan.py	16	U	data_ov018_02113a74 reads as 18 words that way and is 31; _ZTV9TowerStep
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/hal/actor_classes_ccm.cpp	983	P	/* D1: src/_ZN7SkiLiftD1Ev.cpp is a real MSVC-synthesised destructor
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/ov018_syms.txt	90	A	#  16  D1               0x02111848  own (_ZN7SkiLiftD1Ev.cpp) -- a real
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/slice_dtorfaces.txt	68	P	src/_ZN7SkiLiftD1Ev.cpp
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/slice_gate191.txt	79	U	#  16  D1               _ZN7SkiLiftD1Ev  own -- a real MSVC-synthesised
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/slice_gate191.txt	110	U	# MotherPenguin's D1 (_ZN7SkiLiftD1Ev.cpp) is NOT in this list -- a real
+ov018	0x02111848	_ZN7SkiLiftD1Ev	_ZN10daPgMthr_cD1Ev	port/slice_gate191.txt	163	P	# (MotherPenguin InitResources -- the Prepare fix), src/_ZN7SkiLiftD1Ev.cpp
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/hal/actor_classes_ccm.cpp	478	P	/* MotherPenguin's own D0 (src/_ZN7SkiLiftD0Ev.c) spells its table by the
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/hal/actor_classes_ccm.cpp	879	U	int *_ZN7SkiLiftD0Ev(int *self);                  /* slot 17, spells _ZTV10daPgMthr_c */
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/hal/actor_classes_ccm.cpp	996	U	{ return (int)(size_t)_ZN7SkiLiftD0Ev((int *)s); }
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/ov018_syms.txt	95	A	#  17  D0               0x02111898  own (_ZN7SkiLiftD0Ev.c) -- stores
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/slice_gate191.txt	85	U	#  17  D0               _ZN7SkiLiftD0Ev  own -- stores _ZTV10daPgMthr_c, its
+ov018	0x02111898	_ZN7SkiLiftD0Ev	_ZN10daPgMthr_cD0Ev	port/slice_gate191.txt	151	P	src/_ZN7SkiLiftD0Ev.c
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/hal/actor_classes_ccm.cpp	875	U	int _ZN7SkiLift16CleanupResourcesEv(void);
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/hal/actor_classes_ccm.cpp	975	U	{ (void)s; return _ZN7SkiLift16CleanupResourcesEv(); }   /* .cpp body takes void */
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/ov018_syms.txt	84	A	#   3  CleanupResources 0x021123ec  own (_ZN7SkiLift16CleanupResourcesEv.cpp)
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/slice_gate190.txt	20	U	# (_ZN7SkiLift16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/slice_gate190.txt	142	U	# (_ZN7SkiLift16CleanupResourcesEv.cpp) and MotherPenguin's sinit fix
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/slice_gate191.txt	74	U	#   3  CleanupResources _ZN7SkiLift16CleanupResourcesEv  own
+ov018	0x021123ec	_ZN7SkiLift16CleanupResourcesEv	_ZN10daPgMthr_c16CleanupResourcesEv	port/slice_gate191.txt	148	P	src/_ZN7SkiLift16CleanupResourcesEv.cpp
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/hal/actor_classes_ccm.cpp	877	U	int _ZN7SkiLift6RenderEv(char *self);
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/hal/actor_classes_ccm.cpp	980	U	return _ZN7SkiLift6RenderEv((char *)s); }
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/hal/cxx_aliases.cpp	2017	P	/* gate 191: src/_ZN7SkiLift6RenderEv.cpp (MotherPenguin's own Render, under
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/ov018_syms.txt	86	A	#   9  Render           0x02112454  own (_ZN7SkiLift6RenderEv.cpp)
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/slice_gate191.txt	76	U	#   9  Render           _ZN7SkiLift6RenderEv  own
+ov018	0x02112454	_ZN7SkiLift6RenderEv	_ZN10daPgMthr_c6RenderEv	port/slice_gate191.txt	149	P	src/_ZN7SkiLift6RenderEv.cpp
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/hal/actor_classes_ccm.cpp	876	U	int _ZN7SkiLift8BehaviorEv(void *self);           /* face below */
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/hal/actor_classes_ccm.cpp	977	U	{ return _ZN7SkiLift8BehaviorEv(s); }
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/hal/actor_classes_ccm.cpp	1036	U	int _ZN7SkiLift8BehaviorEv(void *self)
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/ov018_syms.txt	85	A	#   6  Behavior         0x02112480  own (_ZN7SkiLift8BehaviorEv.cpp)
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/slice_gate191.txt	75	U	#   6  Behavior         _ZN7SkiLift8BehaviorEv  own
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/slice_gate191.txt	105	P	# identical from main HEAD post-c19c90882 (#1301). src/_ZN7SkiLift8BehaviorEv.cpp
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/slice_gate191.txt	136	U	# MotherPenguin's Behavior (_ZN7SkiLift8BehaviorEv.cpp) is NOT in this list --
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/unmatched/MotherPenguin_Behavior.cpp	1	P	/* HOST COPY of src/_ZN7SkiLift8BehaviorEv.cpp -- the MSVC dtor-slot-shift
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/unmatched/MotherPenguin_Behavior.cpp	5	U	* CLASS IDENTITY NOTE: despite the mangled name _ZN7SkiLift8BehaviorEv,
+ov018	0x02112480	_ZN7SkiLift8BehaviorEv	_ZN10daPgMthr_c8BehaviorEv	port/unmatched/MotherPenguin_Behavior.cpp	35	P	* src/_ZN7SkiLift8BehaviorEv.cpp stays byte-locked and untouched, dropped
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/hal/actor_classes_ccm.cpp	836	U	// _ZN7SkiLift13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/hal/actor_classes_ccm.cpp	874	U	int _ZN7SkiLift13InitResourcesEv(void *self);     /* face below -- HOST COPY */
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/hal/actor_classes_ccm.cpp	973	U	{ return _ZN7SkiLift13InitResourcesEv(s); }
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/hal/actor_classes_ccm.cpp	1034	U	int _ZN7SkiLift13InitResourcesEv(void *self)
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/ov018_syms.txt	17	U	# _ZN7SkiLift13InitResourcesEv.cpp's data_ov036/ov056/func_ov022 spellings to
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/slice_gate191.txt	72	U	#   0  InitResources    _ZN7SkiLift13InitResourcesEv  own -- RETIRED to the
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/slice_gate191.txt	103	P	# src/_ZN7SkiLift13InitResourcesEv.cpp's window-shared ov036/ov056/ov022
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/slice_gate191.txt	147	P	src/_ZN7SkiLift13InitResourcesEv.cpp
+ov018	0x021124d0	_ZN7SkiLift13InitResourcesEv	_ZN10daPgMthr_c13InitResourcesEv	port/slice_gate191.txt	162	P	# src/func_ov018_021111e4.c (SkiLift D0), src/_ZN7SkiLift13InitResourcesEv.cpp
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/CMakeLists.txt	1808	U	# data_ov018_021138cc) and MOTHER_PENGUIN (257, own vtable _ZTV7SkiLift ==
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ccm.cpp	483	U	array _ZTV7SkiLift. */
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ccm.cpp	825	U	// class-identity mislabel: MotherPenguin_Spawn.c installs _ZTV7SkiLift ==
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ccm.cpp	880	U	void *MotherPenguin_Spawn(void);                  /* installs _ZTV7SkiLift == _ZTV10daPgMthr_c */
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ccm.cpp	881	U	int _ZTV7SkiLift[31];                             /* == _ZTV10daPgMthr_c, host array */
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ccm.cpp	1010	U	void **vt = (void **)_ZTV7SkiLift;
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/actor_classes_ov094.cpp	87	U	the SkiLift/MotherPenguin (_ZTV7SkiLift == _ZTV10daPgMthr_c) one-speller
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/hal/dtor_faces_cpp.cpp	199	U	was a trap. SkiLift above is the ROM word 16 of _ZTV7SkiLift, which the
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/ov018_syms.txt	25	A	# _ZTV7SkiLift == _ZTV10daPgMthr_c at 0x021139bc (MotherPenguin_SpawnInfo
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/ov018_syms.txt	73	A	# ---- MotherPenguin's OWN vtable, _ZTV7SkiLift == _ZTV10daPgMthr_c at
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/slice_gate191.txt	11	A	# installs _ZTV7SkiLift == _ZTV10daPgMthr_c at 0x021139bc (MotherPenguin_
+ov018	0x021139bc	_ZTV7SkiLift	_ZTV10daPgMthr_c	port/slice_gate191.txt	70	A	# _ZTV7SkiLift == _ZTV10daPgMthr_c (0x021139bc..02113a34 inclusive), read
+ov022	0x021116c4	_ZN19RotatingPlatformLllD1Ev	_ZN19FloatOnLavaPlatformD1Ev	port/hal/actor_classes_ov022.cpp	508	U	int *_ZN19RotatingPlatformLllD1Ev(int *self);                  /* slot 16 */
+ov022	0x021116c4	_ZN19RotatingPlatformLllD1Ev	_ZN19FloatOnLavaPlatformD1Ev	port/hal/actor_classes_ov022.cpp	531	U	{ return (int)(size_t)_ZN19RotatingPlatformLllD1Ev((int *)s); }
+ov022	0x021116c4	_ZN19RotatingPlatformLllD1Ev	_ZN19FloatOnLavaPlatformD1Ev	port/slice_w8packs.txt	34	P	src/_ZN19RotatingPlatformLllD1Ev.c
+ov022	0x02111708	_ZN19RotatingPlatformLllD0Ev	_ZN19FloatOnLavaPlatformD0Ev	port/hal/actor_classes_ov022.cpp	509	U	int *_ZN19RotatingPlatformLllD0Ev(int *self);                  /* slot 17 */
+ov022	0x02111708	_ZN19RotatingPlatformLllD0Ev	_ZN19FloatOnLavaPlatformD0Ev	port/hal/actor_classes_ov022.cpp	533	U	{ return (int)(size_t)_ZN19RotatingPlatformLllD0Ev((int *)s); }
+ov022	0x02111708	_ZN19RotatingPlatformLllD0Ev	_ZN19FloatOnLavaPlatformD0Ev	port/slice_w8packs.txt	35	P	src/_ZN19RotatingPlatformLllD0Ev.c
+ov022	0x02111760	_ZN19RotatingPlatformLll16CleanupResourcesEv	_ZN19FloatOnLavaPlatform16CleanupResourcesEv	port/slice_w8packs.txt	36	P	src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp
+ov022	0x02111870	_ZN19RotatingPlatformLll13InitResourcesEv	_ZN19FloatOnLavaPlatform13InitResourcesEv	port/slice_w8packs.txt	39	P	src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp
+ov022	0x021125e0	_ZN13RollingLogLllD1Ev	_ZN11VolcanoFireD1Ev	port/hal/actor_classes_ov022_w3e.cpp	118	P	// src/_ZN13RollingLogLllD1Ev.cpp (243's slot 16) is a real MSVC-synthesised
+ov022	0x021125e0	_ZN13RollingLogLllD1Ev	_ZN11VolcanoFireD1Ev	port/hal/actor_classes_ov022_w3e.cpp	589	A	/* slot 16: src/_ZN13RollingLogLllD1Ev.cpp is held out (MSVC mangles it
+ov022	0x021125e0	_ZN13RollingLogLllD1Ev	_ZN11VolcanoFireD1Ev	port/slice_dtorfaces.txt	44	P	src/_ZN13RollingLogLllD1Ev.cpp
+ov022	0x021125e0	_ZN13RollingLogLllD1Ev	_ZN11VolcanoFireD1Ev	port/slice_w3e_ov022.txt	79	P	#   src/_ZN13RollingLogLllD1Ev.cpp  (VolcanoFire's slot 16)
+ov022	0x021125e0	_ZN13RollingLogLllD1Ev	_ZN11VolcanoFireD1Ev	port/slice_w3e_ov022.txt	82	U	# ??1RollingLogLll@@UAE@XZ and never as the Itanium _ZN13RollingLogLllD1Ev the
+ov022	0x02112610	_ZN13RollingLogLllD0Ev	_ZN11VolcanoFireD0Ev	port/hal/actor_classes_ov022_w3e.cpp	567	U	int *_ZN13RollingLogLllD0Ev(int *self);                 /* slot 17 */
+ov022	0x02112610	_ZN13RollingLogLllD0Ev	_ZN11VolcanoFireD0Ev	port/hal/actor_classes_ov022_w3e.cpp	596	U	{ return (int)(size_t)_ZN13RollingLogLllD0Ev((int *)s); }
+ov022	0x02112610	_ZN13RollingLogLllD0Ev	_ZN11VolcanoFireD0Ev	port/slice_w3e_ov022.txt	132	P	src/_ZN13RollingLogLllD0Ev.c
+ov022	0x021127e0	_ZN13RollingLogLll16CleanupResourcesEv	_ZN11VolcanoFire16CleanupResourcesEv	port/hal/actor_classes_ov022_w3e.cpp	566	U	int _ZN13RollingLogLll16CleanupResourcesEv(void *self); /* slot 3 */
+ov022	0x021127e0	_ZN13RollingLogLll16CleanupResourcesEv	_ZN11VolcanoFire16CleanupResourcesEv	port/hal/actor_classes_ov022_w3e.cpp	584	U	{ return _ZN13RollingLogLll16CleanupResourcesEv(s); }
+ov022	0x021127e0	_ZN13RollingLogLll16CleanupResourcesEv	_ZN11VolcanoFire16CleanupResourcesEv	port/slice_w3e_ov022.txt	137	P	src/_ZN13RollingLogLll16CleanupResourcesEv.c
+ov022	0x02112800	_ZN13RollingLogLll8BehaviorEv	_ZN11VolcanoFire8BehaviorEv	port/CMakeLists.txt	12032	P	# src/_ZN13RollingLogLll8BehaviorEv.cpp reads the record at BYTE offset 8 --
+ov022	0x02112800	_ZN13RollingLogLll8BehaviorEv	_ZN11VolcanoFire8BehaviorEv	port/CMakeLists.txt	12036	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13RollingLogLll8BehaviorEv.cpp"""
+ov022	0x02112800	_ZN13RollingLogLll8BehaviorEv	_ZN11VolcanoFire8BehaviorEv	port/hal/actor_classes_ov022_w3e.cpp	102	P	//   src/_ZN13RollingLogLll8BehaviorEv.cpp  calls the record at +8
+ov022	0x02112800	_ZN13RollingLogLll8BehaviorEv	_ZN11VolcanoFire8BehaviorEv	port/slice_w3e_ov022.txt	138	P	src/_ZN13RollingLogLll8BehaviorEv.cpp
+ov022	0x021128b8	_ZN13RollingLogLll13InitResourcesEv	_ZN11VolcanoFire13InitResourcesEv	port/CMakeLists.txt	11927	P	#   src/_ZN13RollingLogLll13InitResourcesEv.cpp, and that TU already spells
+ov022	0x021128b8	_ZN13RollingLogLll13InitResourcesEv	_ZN11VolcanoFire13InitResourcesEv	port/slice_w3e_ov022.txt	139	P	src/_ZN13RollingLogLll13InitResourcesEv.cpp
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/hal/actor_classes.inc	1204	U	void hal_fill_float_on_lava_platform_vtable(void); /* _ZTV19RotatingPlatformLll, 32 */
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/hal/actor_classes_ov022.cpp	55	U	//                            table  spelled _ZTV19RotatingPlatformLll
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/hal/actor_classes_ov022.cpp	512	A	void *_ZTV19RotatingPlatformLll[32];
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/hal/actor_classes_ov022.cpp	537	U	void *volatile *vt = (void *volatile *)_ZTV19RotatingPlatformLll;
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/ov022_syms.txt	79	U	#   74 FloatOnLavaPlatform _ZN19RotatingPlatformLll*      _ZTV19RotatingPlatformLll
+ov022	0x02113eac	_ZTV19RotatingPlatformLll	_ZTV19FloatOnLavaPlatform	port/ov022_syms.txt	97	A	#   0x02113eac..0x02113f2c  74  32 slots  _ZTV19RotatingPlatformLll +02113f20
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/hal/actor_classes.inc	1945	U	void hal_fill_volcano_fire_vtable(void);              /* _ZTV13RollingLogLll, 31 */
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/hal/actor_classes_ov022_w3e.cpp	85	U	// _ZTV13RollingLogLll, which IS this file's host array.
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/hal/actor_classes_ov022_w3e.cpp	577	U	void *_ZTV13RollingLogLll[31];
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/hal/actor_classes_ov022_w3e.cpp	606	U	void *volatile *vt = (void *volatile *)_ZTV13RollingLogLll;
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/ov022_syms.txt	82	U	#  243 VolcanoFire         _ZN13RollingLogLll*            _ZTV13RollingLogLll
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/ov022_syms.txt	104	A	#   0x0211447c..0x021144f8 243  31 slots  _ZTV13RollingLogLll
+ov022	0x0211447c	_ZTV13RollingLogLll	_ZTV21daObj_volcanoCannon_c	port/slice_w3e_ov022.txt	72	U	#   243 VolcanoFire    bodies spelled _ZN13RollingLogLll*  table _ZTV13RollingLogLll
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/CMakeLists.txt	9514	U	#   _ZN9SubmarineD1Ev.c and Whirlpool_Spawn.c write _ZTV9Submarine, the D0
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/CMakeLists.txt	9534	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9SubmarineD1Ev.c"""
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/hal/actor_classes_ov026.cpp	68	U	// _ZN9SubmarineD1Ev at 16 and _ZN9SubmarineD0Ev at 17, and its own vtable[-1]
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/hal/actor_classes_ov026.cpp	266	U	int *_ZN9SubmarineD1Ev(int *self);                 /* slot 16 D1              */
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/hal/actor_classes_ov026.cpp	583	U	{ return (int)(size_t)_ZN9SubmarineD1Ev((int *)s); }
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/ov026_syms.txt	307	U	# _ZN9Submarine16OnPendingDestroyEv at 12, _ZN9SubmarineD1Ev at 16 and
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/slice_ov026cast.txt	24	U	# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9SubmarineD1Ev at 16 and
+ov026	0x02111aa0	_ZN9SubmarineD1Ev	_ZN9WhirlpoolD1Ev	port/slice_ov026cast.txt	85	P	src/_ZN9SubmarineD1Ev.c
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/hal/actor_classes_ov026.cpp	68	U	// _ZN9SubmarineD1Ev at 16 and _ZN9SubmarineD0Ev at 17, and its own vtable[-1]
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/hal/actor_classes_ov026.cpp	267	U	int *_ZN9SubmarineD0Ev(int *self);                 /* slot 17 D0              */
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/hal/actor_classes_ov026.cpp	585	U	{ return (int)(size_t)_ZN9SubmarineD0Ev((int *)s); }
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/ov026_syms.txt	308	U	# _ZN9SubmarineD0Ev at 17. The real Submarine's table 0x02113c6c carries
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/slice_ov026cast.txt	25	U	# _ZN9SubmarineD0Ev at 17, and its own vtable[-1] typeinfo record's name string
+ov026	0x02111ad8	_ZN9SubmarineD0Ev	_ZN9WhirlpoolD0Ev	port/slice_ov026cast.txt	86	P	src/_ZN9SubmarineD0Ev.c
+ov026	0x02111fa4	_ZN9Submarine16CleanupResourcesEv	_ZN9Whirlpool16CleanupResourcesEv	port/hal/actor_classes_ov026.cpp	262	U	int _ZN9Submarine16CleanupResourcesEv(void);       /* slot 3, .c body, (void) */
+ov026	0x02111fa4	_ZN9Submarine16CleanupResourcesEv	_ZN9Whirlpool16CleanupResourcesEv	port/hal/actor_classes_ov026.cpp	574	U	{ (void)s; return _ZN9Submarine16CleanupResourcesEv(); }
+ov026	0x02111fa4	_ZN9Submarine16CleanupResourcesEv	_ZN9Whirlpool16CleanupResourcesEv	port/ov026_syms.txt	305	U	# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9Submarine16CleanupResourcesEv
+ov026	0x02111fa4	_ZN9Submarine16CleanupResourcesEv	_ZN9Whirlpool16CleanupResourcesEv	port/slice_ov026cast.txt	92	P	src/_ZN9Submarine16CleanupResourcesEv.c
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/hal/actor_classes_ov026.cpp	264	U	int _ZN9Submarine6RenderEv(void *self);            /* slot 9, HOST COPY       */
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/hal/actor_classes_ov026.cpp	579	U	return _ZN9Submarine6RenderEv(s); }
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/ov026_syms.txt	306	U	# at 3, _ZN9Submarine8BehaviorEv at 6, _ZN9Submarine6RenderEv at 9,
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/slice_ov026cast.txt	137	P	#   src/_ZN9Submarine6RenderEv.cpp  -> port/unmatched/Whirlpool_Render.cpp
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/unmatched/Whirlpool_Render.cpp	1	P	/* HOST COPY of src/_ZN9Submarine6RenderEv.cpp -- the WHIRLPOOL's Render
+ov026	0x02111fd8	_ZN9Submarine6RenderEv	_ZN9Whirlpool6RenderEv	port/unmatched/Whirlpool_Render.cpp	41	U	int _ZN9Submarine6RenderEv(void *selfv)
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	67	U	// table 0x02113d54 carries _ZN9Submarine13InitResourcesEv at slot 0,
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	77	U	// Consequence for this file: _ZN9Submarine13InitResourcesEv is filled into the
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	169	P	// src/_ZN9Submarine13InitResourcesEv.cpp declares its three mount references
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	261	U	int _ZN9Submarine13InitResourcesEv(void *self);    /* slot 0, FACED below     */
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	572	U	{ return _ZN9Submarine13InitResourcesEv(s); }
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	637	U	// _ZN9Submarine13InitResourcesEv.cpp and _ZN12WaterSuction13InitResourcesEv.cpp
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/hal/actor_classes_ov026.cpp	644	U	int _ZN9Submarine13InitResourcesEv(void *self)
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/ov026_syms.txt	305	U	# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9Submarine16CleanupResourcesEv
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/slice_ov026cast.txt	24	U	# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9SubmarineD1Ev at 16 and
+ov026	0x021120ec	_ZN9Submarine13InitResourcesEv	_ZN9Whirlpool13InitResourcesEv	port/slice_ov026cast.txt	94	P	src/_ZN9Submarine13InitResourcesEv.cpp
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/CMakeLists.txt	2208	A	# puts _ZTV9Submarine on 0x02113d54, whose own typeinfo name string reads
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/CMakeLists.txt	9514	A	#   _ZN9SubmarineD1Ev.c and Whirlpool_Spawn.c write _ZTV9Submarine, the D0
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/CMakeLists.txt	9516	A	#     _ZTV9Submarine row is the WRONG label (that table's own vtable[-1]
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/CMakeLists.txt	9537	U	"""_ZTV9Submarine=_ZTV18daWater_Tatumaki_c"")"
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/hal/actor_classes_ov026.cpp	72	A	// _ZTV9Submarine on 0x02113d54 and THAT ROW IS THE WRONG ONE; the same file's
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/ov026_syms.txt	119	A	# _ZTV9Submarine, 0x02113e24 carries both _ZTV12WaterSuction and
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/ov026_syms.txt	207	A	# _ZTV9Submarine, is the wrong one. The Submarine's table is 0x02113c6c, which
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/ov026_syms.txt	212	A	#   config/arm9/overlays/ov026/symbols.txt:201  _ZTV9Submarine  addr:0x02113d54
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/slice_ov026cast.txt	29	A	# _ZTV9Submarine on 0x02113d54 and that row is the wrong one.
+ov026	0x02113d54	_ZTV9Submarine	_ZTV18daWater_Tatumaki_c	port/tools/vtspan.py	287	A	purpose: config puts both _ZTV9Submarine and _ZTV18daWater_Tatumaki_c
+ov030	0x02111688	_ZN13RollingLogTtmD1Ev	_ZN5UkikiD1Ev	port/hal/actor_classes_ov030.cpp	611	P	/* Slot 16, D1. src/_ZN13RollingLogTtmD1Ev.cpp is a real MSVC-synthesised
+ov030	0x02111688	_ZN13RollingLogTtmD1Ev	_ZN5UkikiD1Ev	port/slice_dtorfaces.txt	45	P	src/_ZN13RollingLogTtmD1Ev.cpp
+ov030	0x02111688	_ZN13RollingLogTtmD1Ev	_ZN5UkikiD1Ev	port/slice_ov030cast.txt	99	P	#   src/_ZN13RollingLogTtmD1Ev.cpp -> spelled INLINE in the fill (slot 16)
+ov030	0x02111688	_ZN13RollingLogTtmD1Ev	_ZN5UkikiD1Ev	port/slice_ov030cast.txt	104	U	#     ?1RollingLogTtm@@UAE@XZ, never as the Itanium _ZN13RollingLogTtmD1Ev the
+ov030	0x02111688	_ZN13RollingLogTtmD1Ev	_ZN5UkikiD1Ev	port/slice_w3e_ov022.txt	85	U	# _ZN13RollingLogTtmD1Ev) all keep out for the same reason. The chain is
+ov030	0x021116d0	_ZN13RollingLogTtmD0Ev	_ZN5UkikiD0Ev	port/CMakeLists.txt	10525	U	#     0x020a0eac, the same global _ZN13RollingLogTtmD0Ev.c names outright.
+ov030	0x021116d0	_ZN13RollingLogTtmD0Ev	_ZN5UkikiD0Ev	port/hal/actor_classes_ov030.cpp	231	U	int *_ZN13RollingLogTtmD0Ev(int *self);              /* slot 17 */
+ov030	0x021116d0	_ZN13RollingLogTtmD0Ev	_ZN5UkikiD0Ev	port/hal/actor_classes_ov030.cpp	277	P	src/_ZN13RollingLogTtmD0Ev.c spells _ZTV7daMky_c. The host array carries the
+ov030	0x021116d0	_ZN13RollingLogTtmD0Ev	_ZN5UkikiD0Ev	port/hal/actor_classes_ov030.cpp	646	U	{ return (int)(size_t)_ZN13RollingLogTtmD0Ev((int *)s); }
+ov030	0x021116d0	_ZN13RollingLogTtmD0Ev	_ZN5UkikiD0Ev	port/slice_ov030cast.txt	207	P	src/_ZN13RollingLogTtmD0Ev.c
+ov030	0x021141c4	_ZN13RollingLogTtm16CleanupResourcesEv	_ZN5Ukiki16CleanupResourcesEv	port/hal/actor_classes_ov030.cpp	220	U	int _ZN13RollingLogTtm16CleanupResourcesEv(void);    /* slot 3, .c body takes void */
+ov030	0x021141c4	_ZN13RollingLogTtm16CleanupResourcesEv	_ZN5Ukiki16CleanupResourcesEv	port/hal/actor_classes_ov030.cpp	603	U	{ (void)s; return _ZN13RollingLogTtm16CleanupResourcesEv(); }
+ov030	0x021141c4	_ZN13RollingLogTtm16CleanupResourcesEv	_ZN5Ukiki16CleanupResourcesEv	port/hal/actor_classes_ov030.cpp	689	U	// _ZN13RollingLogTtm16CleanupResourcesEv and _ZN13RollingLogTtm16OnPendingDestroyEv
+ov030	0x021141c4	_ZN13RollingLogTtm16CleanupResourcesEv	_ZN5Ukiki16CleanupResourcesEv	port/slice_ov030cast.txt	241	P	src/_ZN13RollingLogTtm16CleanupResourcesEv.c
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/CMakeLists.txt	13025	A	# cell through dsd's cross-overlay name _ZN13RollingLogTtm8BehaviorEv, which is a
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/CMakeLists.txt	13032	A	"""_ZN13RollingLogTtm8BehaviorEv=data_ov029_02114278"")"
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/hal/actor_classes_ov030.cpp	223	U	02112c10.c declares _ZN13RollingLogTtm8BehaviorEv with no parameters and
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/ov029_syms.txt	68	A	# _ZN13RollingLogTtm8BehaviorEv (a cross-overlay name collision on the shared
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/slice_ov030cast.txt	83	P	#   src/_ZN13RollingLogTtm8BehaviorEv.cpp -> unmatched/Ukiki_Behavior.cpp
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/tools/aritycheck_plainfunc_baseline.txt	178	P	func_ov030_021141a8|src/_ZN13RollingLogTtm8BehaviorEv.cpp
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/unmatched/Ukiki_Behavior.cpp	1	A	/* HOST COPY of src/_ZN13RollingLogTtm8BehaviorEv.cpp -- the Ukiki's Behavior,
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/unmatched/Ukiki_Behavior.cpp	82	U	* THE SYMBOL IS DELIBERATELY NOT _ZN13RollingLogTtm8BehaviorEv, and that is a
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/unmatched/Ukiki_Behavior.cpp	87	U	*    `extern int _ZN13RollingLogTtm8BehaviorEv();` -- no parameters -- and a
+ov030	0x02114278	_ZN13RollingLogTtm8BehaviorEv	_ZN5Ukiki8BehaviorEv	port/unmatched/Ukiki_StateTick.cpp	19	U	* _ZN13RollingLogTtm8BehaviorEv calls func_ov030_02114134 directly -- so the
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/hal/actor_classes_ov030.cpp	218	U	int _ZN13RollingLogTtm13InitResourcesEv(void *self);  /* slot 0, FACED at the bottom of this file */
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/hal/actor_classes_ov030.cpp	294	P	src/_ZN13RollingLogTtm13InitResourcesEv.cpp  extern char data_ov002_*;
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/hal/actor_classes_ov030.cpp	601	U	{ return _ZN13RollingLogTtm13InitResourcesEv(s); }
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/hal/actor_classes_ov030.cpp	677	P	// src/_ZN13RollingLogTtm13InitResourcesEv.cpp and _ZN13RollingLogTtm6RenderEv
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/hal/actor_classes_ov030.cpp	693	U	int _ZN13RollingLogTtm13InitResourcesEv(void *self)
+ov030	0x02114378	_ZN13RollingLogTtm13InitResourcesEv	_ZN5Ukiki13InitResourcesEv	port/slice_ov030cast.txt	244	P	src/_ZN13RollingLogTtm13InitResourcesEv.cpp
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/CMakeLists.txt	2317	A	# vtables (_ZTV13daObjHmBskt_c, _ZTV15daObjHmMaruta_c and _ZTV13RollingLogTtm ==
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes.inc	1493	U	void hal_fill_ukiki_vtable(void);                    /* _ZTV13RollingLogTtm == _ZTV7daMky_c, 31 */
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	42	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	54	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	250	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	274	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	276	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	630	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/hal/actor_classes_ov030.cpp	662	H	the declaration's own comment reads 'vtspan: data_ov030_02115bfc, really _ZTV7daMky_c' -- the renamed address, named outright
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/ov030_syms.txt	89	A	#   config/arm9/overlays/ov030/symbols.txt:143  _ZTV13RollingLogTtm 0x02115bfc
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/ov030_syms.txt	102	U	# _ZTV13RollingLogTtm (decl_common.h:524) for what is really daMky_c's table.
+ov030	0x02115bfc	_ZTV13RollingLogTtm	_ZTV7daMky_c	port/ov030_syms.txt	156	U	#   0x02115bf4..0x02115c78  Ukiki/daMky_c  31 slots  drops _ZTV13RollingLogTtm
+ov033	0x021113d4	_ZN9TinyCoverD1Ev	_ZN9TinyWaterD1Ev	port/CMakeLists.txt	10726	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9TinyCoverD1Ev.c"""
+ov033	0x021113d4	_ZN9TinyCoverD1Ev	_ZN9TinyWaterD1Ev	port/hal/actor_classes_ov033.cpp	120	U	int *_ZN9TinyCoverD1Ev(int *self);         /* slot 16 */
+ov033	0x021113d4	_ZN9TinyCoverD1Ev	_ZN9TinyWaterD1Ev	port/hal/actor_classes_ov033.cpp	357	U	{ return (int)(size_t)_ZN9TinyCoverD1Ev((int *)s); }
+ov033	0x021113d4	_ZN9TinyCoverD1Ev	_ZN9TinyWaterD1Ev	port/slice_sweep1_ov033.txt	33	U	#   _ZN9TinyCoverD1Ev.c      id 105's D1.  Its two stores are LABELLED
+ov033	0x021113d4	_ZN9TinyCoverD1Ev	_ZN9TinyWaterD1Ev	port/slice_sweep1_ov033.txt	66	P	src/_ZN9TinyCoverD1Ev.c
+ov033	0x02111420	_ZN9TinyCoverD0Ev	_ZN9TinyWaterD0Ev	port/CMakeLists.txt	10730	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9TinyCoverD0Ev.c"""
+ov033	0x02111420	_ZN9TinyCoverD0Ev	_ZN9TinyWaterD0Ev	port/hal/actor_classes_ov033.cpp	121	U	int *_ZN9TinyCoverD0Ev(int *self);         /* slot 17 */
+ov033	0x02111420	_ZN9TinyCoverD0Ev	_ZN9TinyWaterD0Ev	port/hal/actor_classes_ov033.cpp	359	U	{ return (int)(size_t)_ZN9TinyCoverD0Ev((int *)s); }
+ov033	0x02111420	_ZN9TinyCoverD0Ev	_ZN9TinyWaterD0Ev	port/slice_sweep1_ov033.txt	34	U	#   _ZN9TinyCoverD0Ev.c      id 105's D0.  BACKWARDS by the resolver: the
+ov033	0x02111420	_ZN9TinyCoverD0Ev	_ZN9TinyWaterD0Ev	port/slice_sweep1_ov033.txt	67	P	src/_ZN9TinyCoverD0Ev.c
+ov033	0x02111480	_ZN9TinyCover16CleanupResourcesEv	_ZN9TinyWater16CleanupResourcesEv	port/hal/actor_classes_ov033.cpp	167	U	int _ZN9TinyCover16CleanupResourcesEv(void *self)
+ov033	0x02111480	_ZN9TinyCover16CleanupResourcesEv	_ZN9TinyWater16CleanupResourcesEv	port/hal/actor_classes_ov033.cpp	350	U	{ return _ZN9TinyCover16CleanupResourcesEv(s); }
+ov033	0x02111480	_ZN9TinyCover16CleanupResourcesEv	_ZN9TinyWater16CleanupResourcesEv	port/slice_sweep1_ov033.txt	68	P	src/_ZN9TinyCover16CleanupResourcesEv.cpp
+ov033	0x021114c4	_ZN9TinyCover6RenderEv	_ZN9TinyWater6RenderEv	port/hal/actor_classes_ov033.cpp	169	U	int _ZN9TinyCover6RenderEv(void *self)
+ov033	0x021114c4	_ZN9TinyCover6RenderEv	_ZN9TinyWater6RenderEv	port/hal/actor_classes_ov033.cpp	355	U	return _ZN9TinyCover6RenderEv(s); }
+ov033	0x021114c4	_ZN9TinyCover6RenderEv	_ZN9TinyWater6RenderEv	port/slice_sweep1_ov033.txt	69	P	src/_ZN9TinyCover6RenderEv.cpp
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/hal/actor_classes_ov033.cpp	122	U	int _ZN9TinyCover8BehaviorEv(void *self);  /* slot 6, a plain .c body */
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/hal/actor_classes_ov033.cpp	352	U	{ return _ZN9TinyCover8BehaviorEv(s); }
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/slice_sweep1_ov033.txt	70	P	src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	161	P	_ZN5Event6GetBitEj|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	178	P	_ZN5Sound15PlaySecretSoundEP5ActorPt|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	179	P	_ZN5Sound8PlayLongEjjjRK7Vector3j|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	201	P	_ZN8Platform19UpdateClsnPosAndRotEv|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	202	P	_ZN8Platform21UpdateModelPosAndRotYEv|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	204	P	_ZN9ActorBase18MarkForDestructionEv|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021114f8	_ZN9TinyCover8BehaviorEv	_ZN9TinyWater8BehaviorEv	port/tools/aritycheck_receiver_baseline.txt	215	P	_ZN9Animation7AdvanceEv|src/_ZN9TinyCover8BehaviorEv.c
+ov033	0x021115bc	_ZN9TinyCover13InitResourcesEv	_ZN9TinyWater13InitResourcesEv	port/hal/actor_classes_ov033.cpp	165	U	int _ZN9TinyCover13InitResourcesEv(void *self)
+ov033	0x021115bc	_ZN9TinyCover13InitResourcesEv	_ZN9TinyWater13InitResourcesEv	port/hal/actor_classes_ov033.cpp	348	U	{ return _ZN9TinyCover13InitResourcesEv(s); }
+ov033	0x021115bc	_ZN9TinyCover13InitResourcesEv	_ZN9TinyWater13InitResourcesEv	port/slice_sweep1_ov033.txt	71	P	src/_ZN9TinyCover13InitResourcesEv.cpp
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/CMakeLists.txt	2260	U	# WRONG table (_ZTV9TinyCover is the WATER class's; the cover's is unnamed),
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes.inc	1561	A	vtable in this overlay and it is on the WRONG class: _ZTV9TinyCover
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes.inc	1576	U	void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes_ov033.cpp	14	A	// dsd names exactly one vtable here, _ZTV9TinyCover at 0x02112440, and it is
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes_ov033.cpp	129	A	void *_ZTV9TinyCover[32];      /* 0x02112440, id 105 TINY_WATER */
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes_ov033.cpp	335	A	// TINY_WATER (105) -- table 0x02112440 (dsd _ZTV9TinyCover), RTTI
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/hal/actor_classes_ov033.cpp	364	U	void *volatile *vt = (void *volatile *)_ZTV9TinyCover;
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/ov033_syms.txt	35	A	# dsd names ONE vtable in this overlay, _ZTV9TinyCover at 0x02112440, and it is
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/ov033_syms.txt	49	A	#   id 105 TINY_WATER  ->  0x02112440, the table dsd called _ZTV9TinyCover,
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/ov033_syms.txt	71	A	# _ZTV9TinyCover  0x02112440, THIRTY-TWO slots, ends 0x021124c0.
+ov033	0x02112440	_ZTV9TinyCover	_ZTV9TinyWater	port/slice_sweep1_ov033.txt	20	A	# _ZTV9TinyCover, RTTI 14daObjTtWater_c) and the _ZN9TinyCover* bodies. Three
+ov036	0x02111d14	_ZN10DonutBlockD1Ev	_ZN18daObjRc_Guruguru_cD1Ev	port/CMakeLists.txt	11097	U	#       _ZN10DonutBlockD1Ev.c          0x02111d50 -> 0x02113dcc == _ZTV10DonutBlock
+ov036	0x02111d14	_ZN10DonutBlockD1Ev	_ZN18daObjRc_Guruguru_cD1Ev	port/CMakeLists.txt	11116	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD1Ev.c"""
+ov036	0x02111d14	_ZN10DonutBlockD1Ev	_ZN18daObjRc_Guruguru_cD1Ev	port/hal/actor_classes_ov036.cpp	713	U	int *_ZN10DonutBlockD1Ev(int *self);                   /* slot 16, D1 */
+ov036	0x02111d14	_ZN10DonutBlockD1Ev	_ZN18daObjRc_Guruguru_cD1Ev	port/hal/actor_classes_ov036.cpp	729	U	{ return (int)(size_t)_ZN10DonutBlockD1Ev((int *)s); }
+ov036	0x02111d14	_ZN10DonutBlockD1Ev	_ZN18daObjRc_Guruguru_cD1Ev	port/slice_ov036cast.txt	92	P	src/_ZN10DonutBlockD1Ev.c
+ov036	0x02111d58	_ZN10DonutBlockD0Ev	_ZN18daObjRc_Guruguru_cD0Ev	port/CMakeLists.txt	11098	U	#       _ZN10DonutBlockD0Ev.c          0x02111da4 -> 0x02113dcc == _ZTV10DonutBlock
+ov036	0x02111d58	_ZN10DonutBlockD0Ev	_ZN18daObjRc_Guruguru_cD0Ev	port/CMakeLists.txt	11117	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD0Ev.c"""
+ov036	0x02111d58	_ZN10DonutBlockD0Ev	_ZN18daObjRc_Guruguru_cD0Ev	port/hal/actor_classes_ov036.cpp	714	U	int *_ZN10DonutBlockD0Ev(int *self);                   /* slot 17, D0 */
+ov036	0x02111d58	_ZN10DonutBlockD0Ev	_ZN18daObjRc_Guruguru_cD0Ev	port/hal/actor_classes_ov036.cpp	731	U	{ return (int)(size_t)_ZN10DonutBlockD0Ev((int *)s); }
+ov036	0x02111d58	_ZN10DonutBlockD0Ev	_ZN18daObjRc_Guruguru_cD0Ev	port/slice_ov036cast.txt	93	P	src/_ZN10DonutBlockD0Ev.c
+ov036	0x02111db0	_ZN10DonutBlock16CleanupResourcesEv	_ZN18daObjRc_Guruguru_c16CleanupResourcesEv	port/hal/actor_classes_ov036.cpp	710	U	int _ZN10DonutBlock16CleanupResourcesEv(void *self);   /* slot 3, faced */
+ov036	0x02111db0	_ZN10DonutBlock16CleanupResourcesEv	_ZN18daObjRc_Guruguru_c16CleanupResourcesEv	port/hal/actor_classes_ov036.cpp	722	U	{ return _ZN10DonutBlock16CleanupResourcesEv(s); }
+ov036	0x02111db0	_ZN10DonutBlock16CleanupResourcesEv	_ZN18daObjRc_Guruguru_c16CleanupResourcesEv	port/hal/actor_classes_ov036.cpp	892	U	int _ZN10DonutBlock16CleanupResourcesEv(void *self)
+ov036	0x02111db0	_ZN10DonutBlock16CleanupResourcesEv	_ZN18daObjRc_Guruguru_c16CleanupResourcesEv	port/slice_ov036cast.txt	94	P	src/_ZN10DonutBlock16CleanupResourcesEv.cpp
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/hal/actor_classes_ov036.cpp	712	U	int _ZN10DonutBlock6RenderEv(void *self);              /* slot 9, faced */
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/hal/actor_classes_ov036.cpp	727	U	return _ZN10DonutBlock6RenderEv(s); }
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/hal/actor_classes_ov036.cpp	896	U	int _ZN10DonutBlock6RenderEv(void *self)
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/slice_ov036cast.txt	11	U	# _ZN10DonutBlock6RenderEv.cpp is ARMED_ROTATING_PLATFORM's Render, and so on.
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/slice_ov036cast.txt	91	U	# _ZN10DonutBlock6RenderEv.cpp is the same safe +0xd4 plain-Model shadow draw.
+ov036	0x02111df8	_ZN10DonutBlock6RenderEv	_ZN18daObjRc_Guruguru_c6RenderEv	port/slice_ov036cast.txt	95	P	src/_ZN10DonutBlock6RenderEv.cpp
+ov036	0x02111e20	_ZN10DonutBlock8BehaviorEv	_ZN18daObjRc_Guruguru_c8BehaviorEv	port/hal/actor_classes_ov036.cpp	259	P	// shape. src/_ZN10DonutBlock8BehaviorEv.cpp (which is ARMED_ROTATING_PLATFORM's
+ov036	0x02111e20	_ZN10DonutBlock8BehaviorEv	_ZN18daObjRc_Guruguru_c8BehaviorEv	port/hal/actor_classes_ov036.cpp	711	U	int _ZN10DonutBlock8BehaviorEv(void *self);            /* slot 6, faced */
+ov036	0x02111e20	_ZN10DonutBlock8BehaviorEv	_ZN18daObjRc_Guruguru_c8BehaviorEv	port/hal/actor_classes_ov036.cpp	724	U	{ return _ZN10DonutBlock8BehaviorEv(s); }
+ov036	0x02111e20	_ZN10DonutBlock8BehaviorEv	_ZN18daObjRc_Guruguru_c8BehaviorEv	port/hal/actor_classes_ov036.cpp	894	U	int _ZN10DonutBlock8BehaviorEv(void *self)
+ov036	0x02111e20	_ZN10DonutBlock8BehaviorEv	_ZN18daObjRc_Guruguru_c8BehaviorEv	port/slice_ov036cast.txt	96	P	src/_ZN10DonutBlock8BehaviorEv.cpp
+ov036	0x02111eb0	_ZN10DonutBlock13InitResourcesEv	_ZN18daObjRc_Guruguru_c13InitResourcesEv	port/hal/actor_classes_ov036.cpp	210	U	//   _ZN10DonutBlock13InitResourcesEv.cpp         ArmedRotatingPlatform's own
+ov036	0x02111eb0	_ZN10DonutBlock13InitResourcesEv	_ZN18daObjRc_Guruguru_c13InitResourcesEv	port/hal/actor_classes_ov036.cpp	709	U	int _ZN10DonutBlock13InitResourcesEv(void *self);      /* slot 0, faced */
+ov036	0x02111eb0	_ZN10DonutBlock13InitResourcesEv	_ZN18daObjRc_Guruguru_c13InitResourcesEv	port/hal/actor_classes_ov036.cpp	720	U	{ return _ZN10DonutBlock13InitResourcesEv(s); }
+ov036	0x02111eb0	_ZN10DonutBlock13InitResourcesEv	_ZN18daObjRc_Guruguru_c13InitResourcesEv	port/hal/actor_classes_ov036.cpp	890	U	int _ZN10DonutBlock13InitResourcesEv(void *self)
+ov036	0x02111eb0	_ZN10DonutBlock13InitResourcesEv	_ZN18daObjRc_Guruguru_c13InitResourcesEv	port/slice_ov036cast.txt	97	P	src/_ZN10DonutBlock13InitResourcesEv.cpp
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/CMakeLists.txt	2336	U	# DONUT_BLOCK's, _ZTV10DonutBlock is ARMED_ROTATING_PLATFORM's and
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/CMakeLists.txt	11097	A	#       _ZN10DonutBlockD1Ev.c          0x02111d50 -> 0x02113dcc == _ZTV10DonutBlock
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/CMakeLists.txt	11098	A	#       _ZN10DonutBlockD0Ev.c          0x02111da4 -> 0x02113dcc == _ZTV10DonutBlock
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/CMakeLists.txt	11118	U	"PROPERTIES COMPILE_DEFINITIONS ""_ZTV18daObjRc_Guruguru_c=_ZTV10DonutBlock"")"
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/hal/actor_classes.inc	207	U	_ZTV10DonutBlock and TRICKY_TRIANGLES' is _ZTV21ArmedRotatingPlatform. The
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/hal/actor_classes_ov036.cpp	27	A	//   132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c    _ZTV10DonutBlock            (0x02113dcc, 32)
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/hal/actor_classes_ov036.cpp	716	U	int _ZTV10DonutBlock[32];  /* vtspan: _ZTV10DonutBlock */
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/hal/actor_classes_ov036.cpp	716	U	int _ZTV10DonutBlock[32];  /* vtspan: _ZTV10DonutBlock */
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/hal/actor_classes_ov036.cpp	735	U	void *volatile *vt = (void *volatile *)_ZTV10DonutBlock;
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/ov036_syms.txt	137	A	# 132  ARMED_ROTATING_PLATFORM  18daObjRc_Guruguru_c   0x02113dcc  _ZTV10DonutBlock             _ZN10DonutBlock*
+ov036	0x02113dcc	_ZTV10DonutBlock	_ZTV18daObjRc_Guruguru_c	port/ov036_syms.txt	216	A	#   0x02113dcc..0x02113e4c  132  32 slots  _ZTV10DonutBlock +02113e00
+ov043	0x02111518	_ZN11RickshawBdwD1Ev	_ZN17daObjKm1_Kuruma_cD1Ev	port/CMakeLists.txt	9405	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11RickshawBdwD1Ev.c"""
+ov043	0x02111518	_ZN11RickshawBdwD1Ev	_ZN17daObjKm1_Kuruma_cD1Ev	port/hal/actor_classes_ov043.cpp	335	U	int *_ZN11RickshawBdwD1Ev(int *self);                   /* slot 16 */
+ov043	0x02111518	_ZN11RickshawBdwD1Ev	_ZN17daObjKm1_Kuruma_cD1Ev	port/hal/actor_classes_ov043.cpp	431	U	{ return (int)(size_t)_ZN11RickshawBdwD1Ev((int *)s); }
+ov043	0x02111518	_ZN11RickshawBdwD1Ev	_ZN17daObjKm1_Kuruma_cD1Ev	port/slice_bdw.txt	54	P	src/_ZN11RickshawBdwD1Ev.c
+ov043	0x02111568	_ZN11RickshawBdwD0Ev	_ZN17daObjKm1_Kuruma_cD0Ev	port/CMakeLists.txt	9409	P	"""${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11RickshawBdwD0Ev.c"""
+ov043	0x02111568	_ZN11RickshawBdwD0Ev	_ZN17daObjKm1_Kuruma_cD0Ev	port/hal/actor_classes_ov043.cpp	336	U	int *_ZN11RickshawBdwD0Ev(int *self);                   /* slot 17 */
+ov043	0x02111568	_ZN11RickshawBdwD0Ev	_ZN17daObjKm1_Kuruma_cD0Ev	port/hal/actor_classes_ov043.cpp	433	U	{ return (int)(size_t)_ZN11RickshawBdwD0Ev((int *)s); }
+ov043	0x02111568	_ZN11RickshawBdwD0Ev	_ZN17daObjKm1_Kuruma_cD0Ev	port/slice_bdw.txt	55	P	src/_ZN11RickshawBdwD0Ev.c
+ov043	0x021115cc	_ZN11RickshawBdw16CleanupResourcesEv	_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv	port/hal/actor_classes_ov043.cpp	334	U	int _ZN11RickshawBdw16CleanupResourcesEv(void *self);   /* slot 3  */
+ov043	0x021115cc	_ZN11RickshawBdw16CleanupResourcesEv	_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv	port/hal/actor_classes_ov043.cpp	424	U	{ return _ZN11RickshawBdw16CleanupResourcesEv(s); }
+ov043	0x021115cc	_ZN11RickshawBdw16CleanupResourcesEv	_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv	port/slice_bdw.txt	53	P	src/_ZN11RickshawBdw16CleanupResourcesEv.c
+ov043	0x021115e0	_ZN11RickshawBdw13InitResourcesEv	_ZN17daObjKm1_Kuruma_c13InitResourcesEv	port/hal/actor_classes_ov043.cpp	333	U	int _ZN11RickshawBdw13InitResourcesEv(void *self);      /* slot 0  */
+ov043	0x021115e0	_ZN11RickshawBdw13InitResourcesEv	_ZN17daObjKm1_Kuruma_c13InitResourcesEv	port/hal/actor_classes_ov043.cpp	422	U	{ return _ZN11RickshawBdw13InitResourcesEv(s); }
+ov043	0x021115e0	_ZN11RickshawBdw13InitResourcesEv	_ZN17daObjKm1_Kuruma_c13InitResourcesEv	port/slice_bdw.txt	52	P	src/_ZN11RickshawBdw13InitResourcesEv.c
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/CMakeLists.txt	9398	A	# (host array _ZTV11RickshawBdw), intermediate base ov002 0x02109278. Its
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/CMakeLists.txt	9403	U	"""_ZTV17daObjKm1_Kuruma_c=data_ov002_02109278;VT1=_ZTV11RickshawBdw"")"
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/CMakeLists.txt	9407	U	"""_ZTV17daObjKm1_Kuruma_c=_ZTV11RickshawBdw;_ZTV10dBgActor_c=data_ov002_02109278;VT2=_ZTV8Platform"")"
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/CMakeLists.txt	9411	U	"""_ZTV17daObjKm1_Kuruma_c=_ZTV11RickshawBdw;_ZTV10dBgActor_c=data_ov002_02109278;VT2=_ZTV8Platform;G0=data_020a0eac"")"
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/hal/actor_classes_ov043.cpp	313	U	// _ZTV11RickshawBdw / _ZN11RickshawBdw* are id 136's; _ZTV19RickshawPlatformBdw
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/hal/actor_classes_ov043.cpp	363	A	int _ZTV11RickshawBdw[32];          /* 0x0211245c, id 136 RICKSHAW_PLATFORM_BDW */
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/hal/actor_classes_ov043.cpp	438	U	void **vt = (void **)_ZTV11RickshawBdw;
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/ov043_syms.txt	36	A	# _ZTV names here are one class over: 0x0211245c is spelled _ZTV11RickshawBdw
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/ov043_syms.txt	84	A	#   0x0211245c..0x021124dc 136  32 slots  _ZTV11RickshawBdw +02112464
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/ov043_syms.txt	188	U	#   _ZTV11RickshawBdw        32   tail 32  typeinfo 32  terminator 32  run 32
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/ov043_syms.txt	204	A	#   0x0211245c  0x0211240c  17daObjKm1_Kuruma_c         136  _ZTV11RickshawBdw
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/ov043_syms.txt	215	U	# _ZTV11RickshawBdw and the _ZN11RickshawBdw* bodies both belong to id 136,
+ov043	0x0211245c	_ZTV11RickshawBdw	_ZTV17daObjKm1_Kuruma_c	port/slice_bdw.txt	18	U	"# ""RickshawBdw"" by dsd (_ZN11RickshawBdw* bodies, _ZTV11RickshawBdw) is id 136;"
+ov045	0x0211150c	_ZN15FireSeaElevatorD1Ev	_ZN8PoleLiftD1Ev	port/hal/actor_classes_ov045.cpp	456	U	int *_ZN15FireSeaElevatorD1Ev(int *self);                  /* slot 16 */
+ov045	0x0211150c	_ZN15FireSeaElevatorD1Ev	_ZN8PoleLiftD1Ev	port/hal/actor_classes_ov045.cpp	476	U	{ return (int)(size_t)_ZN15FireSeaElevatorD1Ev((int *)s); }
+ov045	0x0211150c	_ZN15FireSeaElevatorD1Ev	_ZN8PoleLiftD1Ev	port/slice_w1l4.txt	389	P	src/_ZN15FireSeaElevatorD1Ev.c
+ov045	0x02111558	_ZN15FireSeaElevatorD0Ev	_ZN8PoleLiftD0Ev	port/hal/actor_classes_ov045.cpp	457	U	int *_ZN15FireSeaElevatorD0Ev(int *self);                  /* slot 17 */
+ov045	0x02111558	_ZN15FireSeaElevatorD0Ev	_ZN8PoleLiftD0Ev	port/hal/actor_classes_ov045.cpp	478	U	{ return (int)(size_t)_ZN15FireSeaElevatorD0Ev((int *)s); }
+ov045	0x02111558	_ZN15FireSeaElevatorD0Ev	_ZN8PoleLiftD0Ev	port/slice_w1l4.txt	390	P	src/_ZN15FireSeaElevatorD0Ev.c
+ov045	0x021115b8	_ZN15FireSeaElevator16CleanupResourcesEv	_ZN8PoleLift16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	453	U	int _ZN15FireSeaElevator16CleanupResourcesEv(void *self);  /* slot 3  */
+ov045	0x021115b8	_ZN15FireSeaElevator16CleanupResourcesEv	_ZN8PoleLift16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	469	U	{ return _ZN15FireSeaElevator16CleanupResourcesEv(s); }
+ov045	0x021115b8	_ZN15FireSeaElevator16CleanupResourcesEv	_ZN8PoleLift16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	813	U	int _ZN15FireSeaElevator16CleanupResourcesEv(void *self)
+ov045	0x021115b8	_ZN15FireSeaElevator16CleanupResourcesEv	_ZN8PoleLift16CleanupResourcesEv	port/slice_w1l4.txt	391	P	src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp
+ov045	0x021115f0	_ZN15FireSeaElevator6RenderEv	_ZN8PoleLift6RenderEv	port/hal/actor_classes_ov045.cpp	455	U	int _ZN15FireSeaElevator6RenderEv(void *self);             /* slot 9  */
+ov045	0x021115f0	_ZN15FireSeaElevator6RenderEv	_ZN8PoleLift6RenderEv	port/hal/actor_classes_ov045.cpp	474	U	return _ZN15FireSeaElevator6RenderEv(s); }
+ov045	0x021115f0	_ZN15FireSeaElevator6RenderEv	_ZN8PoleLift6RenderEv	port/hal/actor_classes_ov045.cpp	817	U	int _ZN15FireSeaElevator6RenderEv(void *self)
+ov045	0x021115f0	_ZN15FireSeaElevator6RenderEv	_ZN8PoleLift6RenderEv	port/slice_w1l4.txt	392	P	src/_ZN15FireSeaElevator6RenderEv.cpp
+ov045	0x02111618	_ZN15FireSeaElevator8BehaviorEv	_ZN8PoleLift8BehaviorEv	port/hal/actor_classes_ov045.cpp	454	U	int _ZN15FireSeaElevator8BehaviorEv(void *self);           /* slot 6  */
+ov045	0x02111618	_ZN15FireSeaElevator8BehaviorEv	_ZN8PoleLift8BehaviorEv	port/hal/actor_classes_ov045.cpp	471	U	{ return _ZN15FireSeaElevator8BehaviorEv(s); }
+ov045	0x02111618	_ZN15FireSeaElevator8BehaviorEv	_ZN8PoleLift8BehaviorEv	port/hal/actor_classes_ov045.cpp	815	U	int _ZN15FireSeaElevator8BehaviorEv(void *self)
+ov045	0x02111618	_ZN15FireSeaElevator8BehaviorEv	_ZN8PoleLift8BehaviorEv	port/slice_w1l4.txt	393	P	src/_ZN15FireSeaElevator8BehaviorEv.cpp
+ov045	0x02111738	_ZN15FireSeaElevator13InitResourcesEv	_ZN8PoleLift13InitResourcesEv	port/hal/actor_classes_ov045.cpp	452	U	int _ZN15FireSeaElevator13InitResourcesEv(void *self);     /* slot 0  */
+ov045	0x02111738	_ZN15FireSeaElevator13InitResourcesEv	_ZN8PoleLift13InitResourcesEv	port/hal/actor_classes_ov045.cpp	467	U	{ return _ZN15FireSeaElevator13InitResourcesEv(s); }
+ov045	0x02111738	_ZN15FireSeaElevator13InitResourcesEv	_ZN8PoleLift13InitResourcesEv	port/hal/actor_classes_ov045.cpp	811	U	int _ZN15FireSeaElevator13InitResourcesEv(void *self)
+ov045	0x02111738	_ZN15FireSeaElevator13InitResourcesEv	_ZN8PoleLift13InitResourcesEv	port/slice_w1l4.txt	394	P	src/_ZN15FireSeaElevator13InitResourcesEv.cpp
+ov045	0x02111840	_ZN8PoleLiftD1Ev	_ZN17ExtendingPlatformD1Ev	port/hal/actor_classes_ov045.cpp	113	U	// 3. _ZN8PoleLiftD1Ev is a real MSVC destructor over structs declared inside its
+ov045	0x02111840	_ZN8PoleLiftD1Ev	_ZN17ExtendingPlatformD1Ev	port/hal/actor_classes_ov045.cpp	558	P	/* slot 16, HOST CHAIN: src/_ZN8PoleLiftD1Ev.cpp is a real MSVC destructor over
+ov045	0x02111840	_ZN8PoleLiftD1Ev	_ZN17ExtendingPlatformD1Ev	port/slice_dtorfaces.txt	62	P	src/_ZN8PoleLiftD1Ev.cpp
+ov045	0x02111840	_ZN8PoleLiftD1Ev	_ZN17ExtendingPlatformD1Ev	port/slice_w1l4.txt	348	U	# (E2) _ZN8PoleLiftD1Ev IS THE OTHER ONE. It is a real MSVC destructor written
+ov045	0x02111840	_ZN8PoleLiftD1Ev	_ZN17ExtendingPlatformD1Ev	port/slice_w1l4.txt	376	U	# _ZN8PoleLift16CleanupResourcesEv and _ZN8PoleLiftD1Ev are deliberately absent
+ov045	0x02111878	_ZN8PoleLiftD0Ev	_ZN17ExtendingPlatformD0Ev	port/hal/actor_classes_ov045.cpp	516	U	int *_ZN8PoleLiftD0Ev(int *self);                     /* slot 17 */
+ov045	0x02111878	_ZN8PoleLiftD0Ev	_ZN17ExtendingPlatformD0Ev	port/hal/actor_classes_ov045.cpp	564	U	{ return (int)(size_t)_ZN8PoleLiftD0Ev((int *)s); }
+ov045	0x02111878	_ZN8PoleLiftD0Ev	_ZN17ExtendingPlatformD0Ev	port/slice_w1l4.txt	396	P	src/_ZN8PoleLiftD0Ev.c
+ov045	0x02111938	_ZN8PoleLift16CleanupResourcesEv	_ZN17ExtendingPlatform16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	103	U	// 2. _ZN8PoleLift16CleanupResourcesEv (id 148, slot 3) SPELLS ITS TWO
+ov045	0x02111938	_ZN8PoleLift16CleanupResourcesEv	_ZN17ExtendingPlatform16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	533	U	/* slot 3, HOST THUNK, not the matched TU. src/_ZN8PoleLift16CleanupResourcesEv
+ov045	0x02111938	_ZN8PoleLift16CleanupResourcesEv	_ZN17ExtendingPlatform16CleanupResourcesEv	port/slice_w1l4.txt	340	U	# (E) _ZN8PoleLift16CleanupResourcesEv IS THE ONE BODY THAT CANNOT BE LINKED.
+ov045	0x02111938	_ZN8PoleLift16CleanupResourcesEv	_ZN17ExtendingPlatform16CleanupResourcesEv	port/slice_w1l4.txt	376	U	# _ZN8PoleLift16CleanupResourcesEv and _ZN8PoleLiftD1Ev are deliberately absent
+ov045	0x02111974	_ZN8PoleLift6RenderEv	_ZN17ExtendingPlatform6RenderEv	port/hal/actor_classes_ov045.cpp	514	U	int _ZN8PoleLift6RenderEv(void *self);                /* slot 9  */
+ov045	0x02111974	_ZN8PoleLift6RenderEv	_ZN17ExtendingPlatform6RenderEv	port/hal/actor_classes_ov045.cpp	555	U	return _ZN8PoleLift6RenderEv(s); }
+ov045	0x02111974	_ZN8PoleLift6RenderEv	_ZN17ExtendingPlatform6RenderEv	port/hal/actor_classes_ov045.cpp	821	U	int _ZN8PoleLift6RenderEv(void *self)
+ov045	0x02111974	_ZN8PoleLift6RenderEv	_ZN17ExtendingPlatform6RenderEv	port/slice_w1l4.txt	398	P	src/_ZN8PoleLift6RenderEv.cpp
+ov045	0x021119c0	_ZN8PoleLift8BehaviorEv	_ZN17ExtendingPlatform8BehaviorEv	port/hal/actor_classes_ov045.cpp	513	U	int _ZN8PoleLift8BehaviorEv(char *self);              /* slot 6, extern-C .cpp */
+ov045	0x021119c0	_ZN8PoleLift8BehaviorEv	_ZN17ExtendingPlatform8BehaviorEv	port/hal/actor_classes_ov045.cpp	552	U	{ return _ZN8PoleLift8BehaviorEv((char *)s); }
+ov045	0x021119c0	_ZN8PoleLift8BehaviorEv	_ZN17ExtendingPlatform8BehaviorEv	port/slice_w1l4.txt	399	P	src/_ZN8PoleLift8BehaviorEv.cpp
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/hal/actor_classes_ov045.cpp	512	U	int _ZN8PoleLift13InitResourcesEv(void *self);        /* slot 0  */
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/hal/actor_classes_ov045.cpp	532	U	{ return _ZN8PoleLift13InitResourcesEv(s); }
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/hal/actor_classes_ov045.cpp	819	U	int _ZN8PoleLift13InitResourcesEv(void *self)
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/ov045_syms.txt	83	U	# data_ov045_021131d0 clsn file 1636), which _ZN8PoleLift13InitResourcesEv reads.
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/slice_w1l4.txt	332	U	#     _ZN8PoleLift13InitResourcesEv (id 148's slot 0) reads data_ov045_021131d8
+ov045	0x02111a30	_ZN8PoleLift13InitResourcesEv	_ZN17ExtendingPlatform13InitResourcesEv	port/slice_w1l4.txt	400	P	src/_ZN8PoleLift13InitResourcesEv.cpp
+ov045	0x02111c30	_ZN16FloatingFloorBfsD1Ev	_ZN15daObjKm2_Gura_cD1Ev	port/hal/actor_classes_ov045.cpp	679	U	int *_ZN16FloatingFloorBfsD1Ev(int *self);                  /* slot 16 */
+ov045	0x02111c30	_ZN16FloatingFloorBfsD1Ev	_ZN15daObjKm2_Gura_cD1Ev	port/hal/actor_classes_ov045.cpp	715	U	{ return (int)(size_t)_ZN16FloatingFloorBfsD1Ev((int *)s); }
+ov045	0x02111c30	_ZN16FloatingFloorBfsD1Ev	_ZN15daObjKm2_Gura_cD1Ev	port/slice_w1l4.txt	472	P	src/_ZN16FloatingFloorBfsD1Ev.c
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/CMakeLists.txt	10814	A	#     pool 0x02111478 -> 0x02111c80  spelled &_ZN16FloatingFloorBfsD0Ev
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/CMakeLists.txt	10816	A	# THE MIDDLE ONE IS LIVE ON THIS TIP: src/_ZN16FloatingFloorBfsD0Ev.c is in
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/CMakeLists.txt	10826	U	"""data_ov056_02111a60=data_ov017_02111a60;_ZN16FloatingFloorBfsD0Ev=data_ov017_02111c80;data_ov055_02111a94=data_ov017_02111a94"")"
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/hal/actor_classes.inc	1597	U	spelled &_ZN16FloatingFloorBfsD0Ev, an ov045 FUNCTION that is in the map
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/hal/actor_classes_ov017.cpp	35	A	//     pool 0x02111478 -> 0x02111c80   spelled &_ZN16FloatingFloorBfsD0Ev
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/hal/actor_classes_ov017.cpp	37	A	// src/_ZN16FloatingFloorBfsD0Ev.c is in port/slice_w1l4.txt and its symbol is
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/hal/actor_classes_ov045.cpp	680	U	int *_ZN16FloatingFloorBfsD0Ev(int *self);                  /* slot 17 */
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/hal/actor_classes_ov045.cpp	717	U	{ return (int)(size_t)_ZN16FloatingFloorBfsD0Ev((int *)s); }
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/ov017_syms.txt	91	A	#                      &_ZN16FloatingFloorBfsD0Ev -- an OV045 FUNCTION.
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/ov017_syms.txt	96	P	# src/_ZN16FloatingFloorBfsD0Ev.c is in port/slice_w1l4.txt and the symbol is
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/slice_sweep1_ov017.txt	27	U	#       _ZN16FloatingFloorBfsD0Ev-> data_ov017_02111c80  (pool 0x02111478)
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/slice_sweep1_ov017.txt	42	P	# THE MIDDLE ONE IS LIVE ON THIS TIP. src/_ZN16FloatingFloorBfsD0Ev.c is in
+ov045	0x02111c80	_ZN16FloatingFloorBfsD0Ev	_ZN15daObjKm2_Gura_cD0Ev	port/slice_w1l4.txt	473	P	src/_ZN16FloatingFloorBfsD0Ev.c
+ov045	0x02111ce4	_ZN16FloatingFloorBfs16CleanupResourcesEv	_ZN15daObjKm2_Gura_c16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	676	U	int _ZN16FloatingFloorBfs16CleanupResourcesEv(void *self);  /* slot 3  */
+ov045	0x02111ce4	_ZN16FloatingFloorBfs16CleanupResourcesEv	_ZN15daObjKm2_Gura_c16CleanupResourcesEv	port/hal/actor_classes_ov045.cpp	708	U	{ return _ZN16FloatingFloorBfs16CleanupResourcesEv(s); }
+ov045	0x02111ce4	_ZN16FloatingFloorBfs16CleanupResourcesEv	_ZN15daObjKm2_Gura_c16CleanupResourcesEv	port/slice_w1l4.txt	471	P	src/_ZN16FloatingFloorBfs16CleanupResourcesEv.c
+ov045	0x02111cf8	_ZN16FloatingFloorBfs13InitResourcesEv	_ZN15daObjKm2_Gura_c13InitResourcesEv	port/hal/actor_classes_ov045.cpp	675	U	int _ZN16FloatingFloorBfs13InitResourcesEv(void *self);     /* slot 0  */
+ov045	0x02111cf8	_ZN16FloatingFloorBfs13InitResourcesEv	_ZN15daObjKm2_Gura_c13InitResourcesEv	port/hal/actor_classes_ov045.cpp	706	U	{ return _ZN16FloatingFloorBfs13InitResourcesEv(s); }
+ov045	0x02111cf8	_ZN16FloatingFloorBfs13InitResourcesEv	_ZN15daObjKm2_Gura_c13InitResourcesEv	port/slice_w1l4.txt	470	P	src/_ZN16FloatingFloorBfs13InitResourcesEv.c
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/hal/actor_classes.inc	924	U	void hal_fill_pole_lift_vtable(void);                /* fills _ZTV15FireSeaElevator, 32 */
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/hal/actor_classes_ov043.cpp	101	U	_ZTV15FireSeaElevator. */
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/hal/actor_classes_ov045.cpp	460	A	void *_ZTV15FireSeaElevator[32];
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/hal/actor_classes_ov045.cpp	482	U	void *volatile *vt = (void *volatile *)_ZTV15FireSeaElevator;
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/hal/actor_classes_ov073.cpp	111	U	platform tables carry (checked slot for slot against _ZTV15FireSeaElevator
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/ov045_syms.txt	52	A	#                           _ZTV15FireSeaElevator == _ZTV18daObjKm2_Ami_Bou_c
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/slice_w1l4.txt	151	A	# PoleLift_Spawn stores _ZTV15FireSeaElevator. The ROM settles it: ov045's
+ov045	0x02112dbc	_ZTV15FireSeaElevator	_ZTV18daObjKm2_Ami_Bou_c	port/slice_w1l4.txt	543	U	# (data_ov045_02112cf4, _ZTV15FireSeaElevator, _ZTV8PoleLift,
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/hal/actor_classes.inc	925	U	void hal_fill_extending_platform_vtable(void);       /* fills _ZTV8PoleLift, 31 */
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/hal/actor_classes_ov045.cpp	526	U	void *_ZTV8PoleLift[31];
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/hal/actor_classes_ov045.cpp	568	U	void *volatile *vt = (void *volatile *)_ZTV8PoleLift;
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/ov045_syms.txt	54	A	#                           _ZTV8PoleLift == _ZTV17daObjKm2_Nobiru_c
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/slice_w1l4.txt	150	A	# names are the correct ones. ExtendingPlatform_Spawn stores _ZTV8PoleLift, and
+ov045	0x02112e80	_ZTV8PoleLift	_ZTV17daObjKm2_Nobiru_c	port/slice_w1l4.txt	543	U	# (data_ov045_02112cf4, _ZTV15FireSeaElevator, _ZTV8PoleLift,
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/hal/actor_classes.inc	928	U	void hal_fill_tilting_platform_bfs_vtable(void);     /* fills _ZTV16FloatingFloorBfs, 32 */
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/hal/actor_classes_ov045.cpp	683	U	void *_ZTV16FloatingFloorBfs[32];
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/hal/actor_classes_ov045.cpp	702	U	*(void **)p = (void *)_ZTV16FloatingFloorBfs;
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/hal/actor_classes_ov045.cpp	721	U	void *volatile *vt = (void *volatile *)_ZTV16FloatingFloorBfs;
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/ov045_syms.txt	58	A	#                           _ZTV16FloatingFloorBfs
+ov045	0x02113020	_ZTV16FloatingFloorBfs	_ZTV15daObjKm2_Gura_c	port/slice_w1l4.txt	544	U	# data_ov045_02112f50, _ZTV12FallBlockBfs -- _ZTV16FloatingFloorBfs is
+ov060	0x02118438	_ZN17BowserSkyPlatformD1Ev	_ZN9SpikeBombD1Ev	port/hal/actor_classes_ov060.cpp	535	P	/* slot 16, HOST THUNK: src/_ZN17BowserSkyPlatformD1Ev.cpp is a real MSVC
+ov060	0x02118438	_ZN17BowserSkyPlatformD1Ev	_ZN9SpikeBombD1Ev	port/slice_dtorfaces.txt	21	P	src/_ZN17BowserSkyPlatformD1Ev.cpp
+ov060	0x02118438	_ZN17BowserSkyPlatformD1Ev	_ZN9SpikeBombD1Ev	port/slice_w6a.txt	55	P	# D1 is HELD OUT: src/_ZN17BowserSkyPlatformD1Ev.cpp is a real MSVC destructor
+ov060	0x02118470	_ZN17BowserSkyPlatformD0Ev	_ZN9SpikeBombD0Ev	port/hal/actor_classes_ov060.cpp	157	U	int *_ZN17BowserSkyPlatformD0Ev(int *self);                /* slot 17 */
+ov060	0x02118470	_ZN17BowserSkyPlatformD0Ev	_ZN9SpikeBombD0Ev	port/hal/actor_classes_ov060.cpp	543	U	{ return (int)(size_t)_ZN17BowserSkyPlatformD0Ev((int *)s); }
+ov060	0x02118470	_ZN17BowserSkyPlatformD0Ev	_ZN9SpikeBombD0Ev	port/slice_w6a.txt	65	P	src/_ZN17BowserSkyPlatformD0Ev.c
+ov060	0x02118ab0	_ZN17BowserSkyPlatform16CleanupResourcesEv	_ZN9SpikeBomb16CleanupResourcesEv	port/hal/actor_classes_ov060.cpp	154	U	int _ZN17BowserSkyPlatform16CleanupResourcesEv(void);      /* slot 3  */
+ov060	0x02118ab0	_ZN17BowserSkyPlatform16CleanupResourcesEv	_ZN9SpikeBomb16CleanupResourcesEv	port/hal/actor_classes_ov060.cpp	529	U	{ return _ZN17BowserSkyPlatform16CleanupResourcesEv(); }
+ov060	0x02118ab0	_ZN17BowserSkyPlatform16CleanupResourcesEv	_ZN9SpikeBomb16CleanupResourcesEv	port/slice_w6a.txt	64	P	src/_ZN17BowserSkyPlatform16CleanupResourcesEv.c
+ov060	0x02118ad4	_ZN17BowserSkyPlatform6RenderEv	_ZN9SpikeBomb6RenderEv	port/hal/actor_classes_ov060.cpp	156	U	int _ZN17BowserSkyPlatform6RenderEv(void *self);           /* slot 9  */
+ov060	0x02118ad4	_ZN17BowserSkyPlatform6RenderEv	_ZN9SpikeBomb6RenderEv	port/hal/actor_classes_ov060.cpp	534	U	return _ZN17BowserSkyPlatform6RenderEv(s); }
+ov060	0x02118ad4	_ZN17BowserSkyPlatform6RenderEv	_ZN9SpikeBomb6RenderEv	port/hal/actor_classes_ov060.cpp	778	U	int _ZN17BowserSkyPlatform6RenderEv(void *self)
+ov060	0x02118ad4	_ZN17BowserSkyPlatform6RenderEv	_ZN9SpikeBomb6RenderEv	port/slice_w6a.txt	63	P	src/_ZN17BowserSkyPlatform6RenderEv.cpp
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/hal/actor_classes_ov060.cpp	155	U	int _ZN17BowserSkyPlatform8BehaviorEv(void *self);         /* slot 6  */
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/hal/actor_classes_ov060.cpp	531	U	{ return _ZN17BowserSkyPlatform8BehaviorEv(s); }
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/hal/actor_classes_ov060.cpp	776	U	int _ZN17BowserSkyPlatform8BehaviorEv(void *self)
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/slice_w6a.txt	62	P	src/_ZN17BowserSkyPlatform8BehaviorEv.cpp
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/unmatched/Ov060_StateDispatch.cpp	68	U	*     (func_ov060_021128c0, _ZN17BowserSkyPlatform8BehaviorEv)
+ov060	0x02118b2c	_ZN17BowserSkyPlatform8BehaviorEv	_ZN9SpikeBomb8BehaviorEv	port/unmatched/Ov060_StateDispatch.cpp	91	U	* func_ov060_021128c0 and _ZN17BowserSkyPlatform8BehaviorEv already decode the
+ov060	0x02118bb4	_ZN17BowserSkyPlatform13InitResourcesEv	_ZN9SpikeBomb13InitResourcesEv	port/hal/actor_classes_ov060.cpp	153	U	int _ZN17BowserSkyPlatform13InitResourcesEv(void *self);   /* slot 0  */
+ov060	0x02118bb4	_ZN17BowserSkyPlatform13InitResourcesEv	_ZN9SpikeBomb13InitResourcesEv	port/hal/actor_classes_ov060.cpp	527	U	{ return _ZN17BowserSkyPlatform13InitResourcesEv(s); }
+ov060	0x02118bb4	_ZN17BowserSkyPlatform13InitResourcesEv	_ZN9SpikeBomb13InitResourcesEv	port/hal/actor_classes_ov060.cpp	774	U	int _ZN17BowserSkyPlatform13InitResourcesEv(void *self)
+ov060	0x02118bb4	_ZN17BowserSkyPlatform13InitResourcesEv	_ZN9SpikeBomb13InitResourcesEv	port/slice_w6a.txt	61	P	src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/hal/actor_classes.inc	965	U	void hal_fill_spike_bomb_vtable(void);          /* fills _ZTV17BowserSkyPlatform, 31 */
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/hal/actor_classes_ov060.cpp	198	A	void *_ZTV17BowserSkyPlatform[31];   /* SPIKE BOMB's table, 0x0211aa8c */
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/hal/actor_classes_ov060.cpp	501	A	// dsd names _ZTV17BowserSkyPlatform / _ZTV9daKirai_c is the one SpikeBomb_Spawn
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/hal/actor_classes_ov060.cpp	502	U	// stores (src/SpikeBomb_Spawn.c, `p[0] = (int)_ZTV17BowserSkyPlatform`), and
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/hal/actor_classes_ov060.cpp	547	U	void *volatile *vt = (void *volatile *)_ZTV17BowserSkyPlatform;
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/ov060_syms.txt	29	A	# the table at 0x0211aa8c labeled _ZTV17BowserSkyPlatform == _ZTV9daKirai_c is
+ov060	0x0211aa8c	_ZTV17BowserSkyPlatform	_ZTV9daKirai_c	port/slice_w6a.txt	14	U	#  note; SpikeBomb_Spawn stores the table dsd labelled _ZTV17BowserSkyPlatform,
+ov064	0x02118020	_ZN12MetalNetLiftD1Ev	_ZN14daObjFl_Gura_cD1Ev	port/hal/actor_classes_ov064_w9.cpp	179	U	int *_ZN12MetalNetLiftD1Ev(int *self);                  /* slot 16 */
+ov064	0x02118020	_ZN12MetalNetLiftD1Ev	_ZN14daObjFl_Gura_cD1Ev	port/hal/actor_classes_ov064_w9.cpp	346	U	{ return (int)(size_t)_ZN12MetalNetLiftD1Ev((int *)s); }
+ov064	0x02118020	_ZN12MetalNetLiftD1Ev	_ZN14daObjFl_Gura_cD1Ev	port/slice_w9a.txt	39	P	src/_ZN12MetalNetLiftD1Ev.c
+ov064	0x02118070	_ZN12MetalNetLiftD0Ev	_ZN14daObjFl_Gura_cD0Ev	port/hal/actor_classes_ov064_w9.cpp	180	U	int *_ZN12MetalNetLiftD0Ev(int *self);                  /* slot 17 */
+ov064	0x02118070	_ZN12MetalNetLiftD0Ev	_ZN14daObjFl_Gura_cD0Ev	port/hal/actor_classes_ov064_w9.cpp	348	U	{ return (int)(size_t)_ZN12MetalNetLiftD0Ev((int *)s); }
+ov064	0x02118070	_ZN12MetalNetLiftD0Ev	_ZN14daObjFl_Gura_cD0Ev	port/slice_w9a.txt	40	P	src/_ZN12MetalNetLiftD0Ev.c
+ov064	0x021180d4	_ZN12MetalNetLift16CleanupResourcesEv	_ZN14daObjFl_Gura_c16CleanupResourcesEv	port/hal/actor_classes_ov064_w9.cpp	178	U	int _ZN12MetalNetLift16CleanupResourcesEv(void *self);  /* slot 3  */
+ov064	0x021180d4	_ZN12MetalNetLift16CleanupResourcesEv	_ZN14daObjFl_Gura_c16CleanupResourcesEv	port/hal/actor_classes_ov064_w9.cpp	339	U	{ return _ZN12MetalNetLift16CleanupResourcesEv(s); }
+ov064	0x021180d4	_ZN12MetalNetLift16CleanupResourcesEv	_ZN14daObjFl_Gura_c16CleanupResourcesEv	port/slice_w9a.txt	38	P	src/_ZN12MetalNetLift16CleanupResourcesEv.c
+ov064	0x021180e8	_ZN12MetalNetLift13InitResourcesEv	_ZN14daObjFl_Gura_c13InitResourcesEv	port/hal/actor_classes_ov064_w9.cpp	177	U	int _ZN12MetalNetLift13InitResourcesEv(void *self);     /* slot 0  */
+ov064	0x021180e8	_ZN12MetalNetLift13InitResourcesEv	_ZN14daObjFl_Gura_c13InitResourcesEv	port/hal/actor_classes_ov064_w9.cpp	337	U	{ return _ZN12MetalNetLift13InitResourcesEv(s); }
+ov064	0x021180e8	_ZN12MetalNetLift13InitResourcesEv	_ZN14daObjFl_Gura_c13InitResourcesEv	port/slice_w9a.txt	37	P	src/_ZN12MetalNetLift13InitResourcesEv.c
+ov064	0x02118b50	_ZN19BowserPuzzleManagerD1Ev	_ZN17BowserPuzzlePieceD1Ev	port/hal/actor_classes_bowserpuzzle.cpp	128	U	int *_ZN19BowserPuzzleManagerD1Ev(void *self);              /* slot 16, .c */
+ov064	0x02118b50	_ZN19BowserPuzzleManagerD1Ev	_ZN17BowserPuzzlePieceD1Ev	port/hal/actor_classes_bowserpuzzle.cpp	329	U	{ return (int)(size_t)_ZN19BowserPuzzleManagerD1Ev(s); }
+ov064	0x02118b50	_ZN19BowserPuzzleManagerD1Ev	_ZN17BowserPuzzlePieceD1Ev	port/slice_gate179.txt	42	P	src/_ZN19BowserPuzzleManagerD1Ev.c
+ov064	0x02118b94	_ZN19BowserPuzzleManagerD0Ev	_ZN17BowserPuzzlePieceD0Ev	port/hal/actor_classes_bowserpuzzle.cpp	129	U	int *_ZN19BowserPuzzleManagerD0Ev(void *self);              /* slot 17, .c */
+ov064	0x02118b94	_ZN19BowserPuzzleManagerD0Ev	_ZN17BowserPuzzlePieceD0Ev	port/hal/actor_classes_bowserpuzzle.cpp	331	U	{ return (int)(size_t)_ZN19BowserPuzzleManagerD0Ev(s); }
+ov064	0x02118b94	_ZN19BowserPuzzleManagerD0Ev	_ZN17BowserPuzzlePieceD0Ev	port/slice_gate179.txt	41	P	src/_ZN19BowserPuzzleManagerD0Ev.c
+ov064	0x021190b0	_ZN19BowserPuzzleManager8BehaviorEv	_ZN17BowserPuzzlePiece8BehaviorEv	port/hal/actor_classes_bowserpuzzle.cpp	127	U	int _ZN19BowserPuzzleManager8BehaviorEv(void *self);         /* slot 6, host copy */
+ov064	0x021190b0	_ZN19BowserPuzzleManager8BehaviorEv	_ZN17BowserPuzzlePiece8BehaviorEv	port/hal/actor_classes_bowserpuzzle.cpp	324	U	{ return _ZN19BowserPuzzleManager8BehaviorEv(s); }     /* host copy */
+ov064	0x021190b0	_ZN19BowserPuzzleManager8BehaviorEv	_ZN17BowserPuzzlePiece8BehaviorEv	port/slice_gate179.txt	19	U	#   _ZN19BowserPuzzleManager8BehaviorEv.cpp   -> BowserPuzzle_StateDispatch.cpp
+ov064	0x021190b0	_ZN19BowserPuzzleManager8BehaviorEv	_ZN17BowserPuzzlePiece8BehaviorEv	port/unmatched/BowserPuzzle_StateDispatch.cpp	83	U	"extern ""C"" int _ZN19BowserPuzzleManager8BehaviorEv(void *self)"
+ov064	0x021191a8	_ZN19BowserPuzzleManager13InitResourcesEv	_ZN17BowserPuzzlePiece13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	124	U	int _ZN19BowserPuzzleManager13InitResourcesEv(void *self);   /* slot 0, .cpp method, face below */
+ov064	0x021191a8	_ZN19BowserPuzzleManager13InitResourcesEv	_ZN17BowserPuzzlePiece13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	320	U	{ return _ZN19BowserPuzzleManager13InitResourcesEv(s); }
+ov064	0x021191a8	_ZN19BowserPuzzleManager13InitResourcesEv	_ZN17BowserPuzzlePiece13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	452	U	int _ZN19BowserPuzzleManager13InitResourcesEv(void *self)
+ov064	0x021191a8	_ZN19BowserPuzzleManager13InitResourcesEv	_ZN17BowserPuzzlePiece13InitResourcesEv	port/slice_gate179.txt	39	P	src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp
+ov064	0x02119330	_ZN17BowserPuzzlePieceD1Ev	_ZN9JetStreamD1Ev	port/hal/actor_classes_bowserpuzzle.cpp	139	U	int *_ZN17BowserPuzzlePieceD1Ev(void *self);                /* slot 16, .c */
+ov064	0x02119330	_ZN17BowserPuzzlePieceD1Ev	_ZN9JetStreamD1Ev	port/hal/actor_classes_bowserpuzzle.cpp	415	U	{ return (int)(size_t)_ZN17BowserPuzzlePieceD1Ev(s); }
+ov064	0x02119330	_ZN17BowserPuzzlePieceD1Ev	_ZN9JetStreamD1Ev	port/slice_gate179.txt	48	P	src/_ZN17BowserPuzzlePieceD1Ev.c
+ov064	0x02119368	_ZN17BowserPuzzlePieceD0Ev	_ZN9JetStreamD0Ev	port/hal/actor_classes_bowserpuzzle.cpp	140	U	int *_ZN17BowserPuzzlePieceD0Ev(void *self);                /* slot 17, .c */
+ov064	0x02119368	_ZN17BowserPuzzlePieceD0Ev	_ZN9JetStreamD0Ev	port/hal/actor_classes_bowserpuzzle.cpp	417	U	{ return (int)(size_t)_ZN17BowserPuzzlePieceD0Ev(s); }
+ov064	0x02119368	_ZN17BowserPuzzlePieceD0Ev	_ZN9JetStreamD0Ev	port/slice_gate179.txt	47	P	src/_ZN17BowserPuzzlePieceD0Ev.c
+ov064	0x02119880	_ZN17BowserPuzzlePiece16CleanupResourcesEv	_ZN9JetStream16CleanupResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	135	U	int _ZN17BowserPuzzlePiece16CleanupResourcesEv(void *self);  /* slot 3, .c C linkage */
+ov064	0x02119880	_ZN17BowserPuzzlePiece16CleanupResourcesEv	_ZN9JetStream16CleanupResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	407	U	{ return _ZN17BowserPuzzlePiece16CleanupResourcesEv(s); }
+ov064	0x02119880	_ZN17BowserPuzzlePiece16CleanupResourcesEv	_ZN9JetStream16CleanupResourcesEv	port/slice_gate179.txt	44	P	src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.c
+ov064	0x021198b4	_ZN17BowserPuzzlePiece6RenderEv	_ZN9JetStream6RenderEv	port/hal/actor_classes_bowserpuzzle.cpp	137	U	int _ZN17BowserPuzzlePiece6RenderEv(void *self);             /* slot 9, .c C linkage, faced below */
+ov064	0x021198b4	_ZN17BowserPuzzlePiece6RenderEv	_ZN9JetStream6RenderEv	port/hal/actor_classes_bowserpuzzle.cpp	411	U	{ return _ZN17BowserPuzzlePiece6RenderEv(s); }           /* .c stub, faced below */
+ov064	0x021198b4	_ZN17BowserPuzzlePiece6RenderEv	_ZN9JetStream6RenderEv	port/slice_gate179.txt	46	P	src/_ZN17BowserPuzzlePiece6RenderEv.c
+ov064	0x021198bc	_ZN17BowserPuzzlePiece8BehaviorEv	_ZN9JetStream8BehaviorEv	port/hal/actor_classes_bowserpuzzle.cpp	138	U	int _ZN17BowserPuzzlePiece8BehaviorEv(void *self);           /* slot 6, host copy */
+ov064	0x021198bc	_ZN17BowserPuzzlePiece8BehaviorEv	_ZN9JetStream8BehaviorEv	port/hal/actor_classes_bowserpuzzle.cpp	409	U	{ return _ZN17BowserPuzzlePiece8BehaviorEv(s); }        /* host copy */
+ov064	0x021198bc	_ZN17BowserPuzzlePiece8BehaviorEv	_ZN9JetStream8BehaviorEv	port/slice_gate179.txt	20	U	#   _ZN17BowserPuzzlePiece8BehaviorEv.cpp     -> BowserPuzzle_StateDispatch.cpp
+ov064	0x021198bc	_ZN17BowserPuzzlePiece8BehaviorEv	_ZN9JetStream8BehaviorEv	port/unmatched/BowserPuzzle_StateDispatch.cpp	127	U	"extern ""C"" int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)"
+ov064	0x0211992c	_ZN17BowserPuzzlePiece13InitResourcesEv	_ZN9JetStream13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	134	U	int _ZN17BowserPuzzlePiece13InitResourcesEv(void *self);     /* slot 0, .cpp method, face below */
+ov064	0x0211992c	_ZN17BowserPuzzlePiece13InitResourcesEv	_ZN9JetStream13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	405	U	{ return _ZN17BowserPuzzlePiece13InitResourcesEv(s); }
+ov064	0x0211992c	_ZN17BowserPuzzlePiece13InitResourcesEv	_ZN9JetStream13InitResourcesEv	port/hal/actor_classes_bowserpuzzle.cpp	456	U	int _ZN17BowserPuzzlePiece13InitResourcesEv(void *self)
+ov064	0x0211992c	_ZN17BowserPuzzlePiece13InitResourcesEv	_ZN9JetStream13InitResourcesEv	port/slice_gate179.txt	43	P	src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes.inc	1220	U	void hal_fill_tilting_platform_lll_vtable(void);      /* _ZTV12MetalNetLift, 32 */
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes.inc	2624	U	_ZTV12MetalNetLift; the class is id 72, not the gate-178 id 69, and \
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_gate178.cpp	20	A	// The _ZN12MetalNetLift* symbols (_ZTV12MetalNetLift 0x0211bd2c, InitResources
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_gate178.cpp	23	A	// TiltingPlatformLll_Spawn installs _ZTV12MetalNetLift. That class and its ov002
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_w9.cpp	20	H	gate 178's header pins it: '_ZTV12MetalNetLift 0x0211bd2c' -- the renamed address; 0x0211bc68 in the same paragraph is id 69's table
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_w9.cpp	133	H	gate 178's header pins it: '_ZTV12MetalNetLift 0x0211bd2c' -- the renamed address; 0x0211bc68 in the same paragraph is id 69's table
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_w9.cpp	192	H	gate 178's header pins it: '_ZTV12MetalNetLift 0x0211bd2c' -- the renamed address; 0x0211bc68 in the same paragraph is id 69's table
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_w9.cpp	357	H	gate 178's header pins it: '_ZTV12MetalNetLift 0x0211bd2c' -- the renamed address; 0x0211bc68 in the same paragraph is id 69's table
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/hal/actor_classes_ov064_w9.cpp	364	H	gate 178's header pins it: '_ZTV12MetalNetLift 0x0211bd2c' -- the renamed address; 0x0211bc68 in the same paragraph is id 69's table
+ov064	0x0211bd2c	_ZTV12MetalNetLift	_ZTV14daObjFl_Gura_c	port/slice_w9a.txt	26	U	# _ZTV12MetalNetLift as HOST storage (the ov015/ov016/ov080 rule), so the
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes.inc	831	U	names cross the classes: id 78's factory installs _ZTV19BowserPuzzleManager
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes.inc	837	U	void *BowserPuzzlePiece_Spawn(void);     /* installs _ZTV19BowserPuzzleManager */
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_bowserpuzzle.cpp	16	A	// _ZTV19BowserPuzzleManager (ov064 0x0211c25c) and _ZTV17BowserPuzzlePiece
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_bowserpuzzle.cpp	28	A	// allocates 828 bytes, runs Platform's ctor and installs _ZTV19BowserPuzzleManager
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_bowserpuzzle.cpp	164	U	int _ZTV19BowserPuzzleManager[32];
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_bowserpuzzle.cpp	335	U	void **vt = (void **)_ZTV19BowserPuzzleManager;
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_bowserpuzzle.cpp	432	U	/* id 78's registry fill: the factory installs _ZTV19BowserPuzzleManager (the
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/hal/actor_classes_ov064_w3c.cpp	25	A	// (0x02119300, dsd BowserPuzzlePiece_Spawn) installs _ZTV19BowserPuzzleManager
+ov064	0x0211c25c	_ZTV19BowserPuzzleManager	_ZTV16daObjFl_Puzzle_c	port/ov064_syms.txt	264	A	# BowserPuzzlePiece_Spawn) installs _ZTV19BowserPuzzleManager (0x0211c25c,
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes.inc	1870	A	_ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S table (RTTI
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	16	A	// _ZTV19BowserPuzzleManager (ov064 0x0211c25c) and _ZTV17BowserPuzzlePiece
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	42	A	// _ZTV17BowserPuzzlePiece (0x0211c334) is installed only mid-teardown by the
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	51	A	// Manager host array. The Piece D1/D0 (.c) spell _ZTV17BowserPuzzlePiece /
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	168	U	int _ZTV17BowserPuzzlePiece[31];
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	174	A	address as _ZTV17BowserPuzzlePiece) are already defined elsewhere in the build. */
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	179	A	_ZTV17BowserPuzzlePiece, an aliased symbol pair the dsd export carries twice.
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	421	U	void **vt = (void **)_ZTV17BowserPuzzlePiece;
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_bowserpuzzle.cpp	433	U	828-byte class's real table), so fill that; also fill _ZTV17BowserPuzzlePiece,
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_ov064_w3c.cpp	27	A	"// data_ov064_0211c1d8 (""14daObjFl_Coin_c""); and _ZTV17BowserPuzzlePiece"
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_ov064_w3c.cpp	166	U	_ZTV17BowserPuzzlePiece and is NOT redeclared here. */
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/hal/actor_classes_ov064_w3c.cpp	300	A	/* _ZTV17BowserPuzzlePiece IS JetStream's table (0x0211c334, RTTI
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/ov064_syms.txt	266	A	"# (""14daObjFl_Coin_c""); and _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S,"
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/slice_gate179.txt	30	U	# Piece D1/D0 write _ZTV17BowserPuzzlePiece / _ZTV18daWater_Hakidasi_c, the same
+ov064	0x0211c334	_ZTV17BowserPuzzlePiece	_ZTV18daWater_Hakidasi_c	port/slice_w3c.txt	15	A	# _ZTV17BowserPuzzlePiece (0x0211c334) is JET STREAM'S table and the seven
+ov091	0x02133968	_ZN5StumpD1Ev	_ZN6FwooshD1Ev	port/hal/actor_classes_ov091.cpp	49	U	*   * _ZN5StumpD0Ev spells _ZTV10daHyuhyu_c while _ZN5StumpD1Ev and
+ov091	0x02133968	_ZN5StumpD1Ev	_ZN6FwooshD1Ev	port/hal/actor_classes_ov091.cpp	194	U	int *_ZN5StumpD1Ev(int *self);                   /* slot 16 */
+ov091	0x02133968	_ZN5StumpD1Ev	_ZN6FwooshD1Ev	port/hal/actor_classes_ov091.cpp	493	U	{ return (int)(size_t)_ZN5StumpD1Ev((int *)s); }
+ov091	0x02133968	_ZN5StumpD1Ev	_ZN6FwooshD1Ev	port/slice_w3f2.txt	196	P	src/_ZN5StumpD1Ev.c
+ov091	0x021339a8	_ZN5StumpD0Ev	_ZN6FwooshD0Ev	port/hal/actor_classes_ov091.cpp	49	U	*   * _ZN5StumpD0Ev spells _ZTV10daHyuhyu_c while _ZN5StumpD1Ev and
+ov091	0x021339a8	_ZN5StumpD0Ev	_ZN6FwooshD0Ev	port/hal/actor_classes_ov091.cpp	195	U	int *_ZN5StumpD0Ev(int *self);                   /* slot 17 */
+ov091	0x021339a8	_ZN5StumpD0Ev	_ZN6FwooshD0Ev	port/hal/actor_classes_ov091.cpp	495	U	{ return (int)(size_t)_ZN5StumpD0Ev((int *)s); }
+ov091	0x021339a8	_ZN5StumpD0Ev	_ZN6FwooshD0Ev	port/slice_w3f2.txt	197	P	src/_ZN5StumpD0Ev.c
+ov091	0x02134108	_ZN5Stump16CleanupResourcesEv	_ZN6Fwoosh16CleanupResourcesEv	port/hal/actor_classes_ov091.cpp	190	U	int _ZN5Stump16CleanupResourcesEv(void *self);   /* face: below */
+ov091	0x02134108	_ZN5Stump16CleanupResourcesEv	_ZN6Fwoosh16CleanupResourcesEv	port/hal/actor_classes_ov091.cpp	484	U	{ return _ZN5Stump16CleanupResourcesEv(s); }
+ov091	0x02134108	_ZN5Stump16CleanupResourcesEv	_ZN6Fwoosh16CleanupResourcesEv	port/hal/actor_classes_ov091.cpp	534	U	int _ZN5Stump16CleanupResourcesEv(void *self)
+ov091	0x02134108	_ZN5Stump16CleanupResourcesEv	_ZN6Fwoosh16CleanupResourcesEv	port/slice_w3f2.txt	193	P	src/_ZN5Stump16CleanupResourcesEv.cpp
+ov091	0x02134184	_ZN5Stump6RenderEv	_ZN6Fwoosh6RenderEv	port/hal/actor_classes_ov091.cpp	191	U	int _ZN5Stump6RenderEv(void *self);              /* unmatched/Ov091_HostSites */
+ov091	0x02134184	_ZN5Stump6RenderEv	_ZN6Fwoosh6RenderEv	port/hal/actor_classes_ov091.cpp	489	U	return _ZN5Stump6RenderEv(s); }
+ov091	0x02134184	_ZN5Stump6RenderEv	_ZN6Fwoosh6RenderEv	port/slice_w3f2.txt	67	P	#        src/_ZN5Stump6RenderEv.cpp                       FWOOSH's Render.
+ov091	0x02134184	_ZN5Stump6RenderEv	_ZN6Fwoosh6RenderEv	port/unmatched/Ov091_HostSites.cpp	280	P	* first level-22 run faulted through it. src/_ZN5Stump6RenderEv.cpp draws with
+ov091	0x02134184	_ZN5Stump6RenderEv	_ZN6Fwoosh6RenderEv	port/unmatched/Ov091_HostSites.cpp	297	U	"extern ""C"" int _ZN5Stump6RenderEv(void *selfv)"
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/hal/actor_classes_ov091.cpp	192	U	int _ZN5Stump8BehaviorEv(void *self);            /* unmatched/Ov091_HostSites */
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/hal/actor_classes_ov091.cpp	486	U	{ return _ZN5Stump8BehaviorEv(s); }
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/slice_w3f2.txt	46	P	#        src/_ZN5Stump8BehaviorEv.cpp                     FWOOSH's TICK, the
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/slice_w3f2.txt	118	U	#          _ZN5Stump8BehaviorEv's own span, and it is in no vtable slot;
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/unmatched/Ov091_HostSites.cpp	222	P	* src/_ZN5Stump8BehaviorEv.cpp reaches the same cell through
+ov091	0x021341ec	_ZN5Stump8BehaviorEv	_ZN6Fwoosh8BehaviorEv	port/unmatched/Ov091_HostSites.cpp	230	U	"extern ""C"" int _ZN5Stump8BehaviorEv(void *self)"
+ov091	0x02134324	_ZN5Stump13InitResourcesEv	_ZN6Fwoosh13InitResourcesEv	port/hal/actor_classes_ov091.cpp	189	U	int _ZN5Stump13InitResourcesEv(void *self);      /* face: below */
+ov091	0x02134324	_ZN5Stump13InitResourcesEv	_ZN6Fwoosh13InitResourcesEv	port/hal/actor_classes_ov091.cpp	482	U	{ return _ZN5Stump13InitResourcesEv(s); }
+ov091	0x02134324	_ZN5Stump13InitResourcesEv	_ZN6Fwoosh13InitResourcesEv	port/hal/actor_classes_ov091.cpp	532	U	int _ZN5Stump13InitResourcesEv(void *self)
+ov091	0x02134324	_ZN5Stump13InitResourcesEv	_ZN6Fwoosh13InitResourcesEv	port/slice_w3f2.txt	192	P	src/_ZN5Stump13InitResourcesEv.cpp
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes.inc	477	U	the Stump the config's _ZTV5Stump names -- see the section header in
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes.inc	559	A	name _ZTV5Stump sits on FWOOSH's table and actor 27's is the unnamed
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_bob_enemy.cpp	646	A	//   _ZTV5Stump        ov091 0x021353ac, RTTI daHyuhyu_c -- and that table is
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_ov091.cpp	50	H	the header reads 'the config symbol _ZTV5Stump sits at 0x021353ac with RTTI 10daHyuhyu_c'; 0x021352bc in the same paragraph is actor 27's own table, a different class
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_ov091.cpp	64	H	the header reads 'the config symbol _ZTV5Stump sits at 0x021353ac with RTTI 10daHyuhyu_c'; 0x021352bc in the same paragraph is actor 27's own table, a different class
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_ov091.cpp	69	H	the header reads 'the config symbol _ZTV5Stump sits at 0x021353ac with RTTI 10daHyuhyu_c'; 0x021352bc in the same paragraph is actor 27's own table, a different class
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_ov091.cpp	174	H	the header reads 'the config symbol _ZTV5Stump sits at 0x021353ac with RTTI 10daHyuhyu_c'; 0x021352bc in the same paragraph is actor 27's own table, a different class
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/hal/actor_classes_ov091.cpp	506	H	the header reads 'the config symbol _ZTV5Stump sits at 0x021353ac with RTTI 10daHyuhyu_c'; 0x021352bc in the same paragraph is actor 27's own table, a different class
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/ov091_syms.txt	22	A	# THE CONFIG'S _ZTV5Stump IS NOT ACTOR 27's TABLE. Stump_SpawnInfo (0x02135298,
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/ov091_syms.txt	25	A	# calls _ZTV5Stump lives at 0x021353ac, its RTTI is daHyuhyu_c, and it is
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/slice_gate32.txt	450	A	# ov091 0x021352bc whose RTTI is daObjPile_c, while _ZTV5Stump at 0x021353ac
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/slice_w3f2.txt	139	U	# 0x021353a4..0x02135440 (_ZTV5Stump, 31 slots) between Fwoosh_SpawnInfo:0x1c
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/tools/inferred_stub_adjudicated.txt	2016	A	# _ZTV5Stump (ov091 0x021353ac, 31 slots, RTTI 10daHyuhyu_c) carries three
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/tools/inferred_stub_adjudicated.txt	2035	U	func_ov091_02134498  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 18 OnYoshiTryEat, addr 0x02134498 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/tools/inferred_stub_adjudicated.txt	2036	U	func_ov091_0213448c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 19 OnTurnIntoEgg, addr 0x0213448c size 0xc; match.py MATCHING at 2004/b56 with --strict-relocs
+ov091	0x021353ac	_ZTV5Stump	_ZTV10daHyuhyu_c	port/tools/inferred_stub_adjudicated.txt	2037	U	func_ov091_02134484  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 29 OnAimedAtWithEgg, addr 0x02134484 size 0x8; match.py MATCHING at 2004/b56 with --strict-rel
+ov100	0x021458d4	_ZN4DoorD1Ev	_ZN12daStarGate_cD1Ev	port/slice_dtorfaces.txt	17	P	src/_ZN4DoorD1Ev.cpp
+ov100	0x021458d4	_ZN4DoorD1Ev	_ZN12daStarGate_cD1Ev	port/slice_gate40.txt	31	U	# _ZN4DoorD1Ev.cpp (slot 16) is NOT here on purpose: it is a real C++
+ov100	0x02145904	_ZN4DoorD0Ev	_ZN12daStarGate_cD0Ev	port/hal/actor_classes.cpp	390	P	/* src/_ZN4DoorD0Ev.c is the same chain with the deallocate on the end, which
+ov100	0x02145904	_ZN4DoorD0Ev	_ZN12daStarGate_cD0Ev	port/hal/actor_classes.cpp	2147	U	int *_ZN4DoorD0Ev(int *self);                   /* C in src */
+ov100	0x02145904	_ZN4DoorD0Ev	_ZN12daStarGate_cD0Ev	port/hal/actor_classes.cpp	2164	U	{ return (int)(size_t)_ZN4DoorD0Ev((int *)s); }
+ov100	0x02145904	_ZN4DoorD0Ev	_ZN12daStarGate_cD0Ev	port/slice_gate40.txt	43	P	src/_ZN4DoorD0Ev.c
+ov100	0x02145fbc	_ZN4Door16CleanupResourcesEv	_ZN12daStarGate_c16CleanupResourcesEv	port/hal/actor_classes.cpp	2145	U	int _ZN4Door16CleanupResourcesEv(void);         /* C in src */
+ov100	0x02145fbc	_ZN4Door16CleanupResourcesEv	_ZN12daStarGate_c16CleanupResourcesEv	port/hal/actor_classes.cpp	2155	U	{ return _ZN4Door16CleanupResourcesEv(); }
+ov100	0x02145fbc	_ZN4Door16CleanupResourcesEv	_ZN12daStarGate_c16CleanupResourcesEv	port/slice_gate40.txt	41	P	src/_ZN4Door16CleanupResourcesEv.c
+ov100	0x02145fe0	_ZN4Door16OnPendingDestroyEv	_ZN12daStarGate_c16OnPendingDestroyEv	port/hal/actor_classes.cpp	2146	U	void _ZN4Door16OnPendingDestroyEv(void);        /* C in src */
+ov100	0x02145fe0	_ZN4Door16OnPendingDestroyEv	_ZN12daStarGate_c16OnPendingDestroyEv	port/hal/actor_classes.cpp	2162	U	{ _ZN4Door16OnPendingDestroyEv(); return 0; }
+ov100	0x02145fe0	_ZN4Door16OnPendingDestroyEv	_ZN12daStarGate_c16OnPendingDestroyEv	port/slice_gate40.txt	42	P	src/_ZN4Door16OnPendingDestroyEv.c
+ov100	0x02145fe4	_ZN4Door6RenderEv	_ZN12daStarGate_c6RenderEv	port/hal/actor_classes.cpp	2144	U	int _ZN4Door6RenderEv(int self);                /* C in src */
+ov100	0x02145fe4	_ZN4Door6RenderEv	_ZN12daStarGate_c6RenderEv	port/hal/actor_classes.cpp	2160	U	return _ZN4Door6RenderEv((int)(size_t)s); }
+ov100	0x02145fe4	_ZN4Door6RenderEv	_ZN12daStarGate_c6RenderEv	port/slice_gate40.txt	40	P	src/_ZN4Door6RenderEv.c
+ov100	0x021460dc	_ZN4Door8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	port/faces_adjudicated.txt	137	U	_ZN4Door8BehaviorEv                                            FORWARDS    hal/method_faces.cpp:745 -- one statement calling Door::Behavior
+ov100	0x021460dc	_ZN4Door8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	port/hal/actor_classes.cpp	2143	U	int _ZN4Door8BehaviorEv(void *self);            /* face: method_faces */
+ov100	0x021460dc	_ZN4Door8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	port/hal/actor_classes.cpp	2157	U	{ return _ZN4Door8BehaviorEv(s); }
+ov100	0x021460dc	_ZN4Door8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	port/hal/method_faces.cpp	745	U	int _ZN4Door8BehaviorEv(void *self)
+ov100	0x021460dc	_ZN4Door8BehaviorEv	_ZN12daStarGate_c8BehaviorEv	port/slice_gate40.txt	39	P	src/_ZN4Door8BehaviorEv.cpp
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/faces_adjudicated.txt	136	U	_ZN4Door13InitResourcesEv                                      FORWARDS    hal/method_faces.cpp:743 -- one statement calling Door::InitResources
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/hal/actor_classes.cpp	2142	U	int _ZN4Door13InitResourcesEv(void *self);      /* face: method_faces */
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/hal/actor_classes.cpp	2153	U	{ return _ZN4Door13InitResourcesEv(s); }
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/hal/cxx_aliases.cpp	1908	U	_ZN4Door13InitResourcesEv.cpp declares its four data symbols with plain
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/hal/method_faces.cpp	743	U	int _ZN4Door13InitResourcesEv(void *self)
+ov100	0x0214612c	_ZN4Door13InitResourcesEv	_ZN12daStarGate_c13InitResourcesEv	port/slice_gate40.txt	38	P	src/_ZN4Door13InitResourcesEv.cpp
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2058	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2127	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2129	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2131	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2148	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2168	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.cpp	2177	H	gate 22's header says config hands _ZTV4Door to the STAR door (RTTI daStarGate_c) while the real door at 0x02148188 stayed unnamed
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/actor_classes.inc	278	U	as data_ov100_02148188 while giving `_ZTV4Door` to the star door; the ROM's
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/hal/dtor_faces_cpp.cpp	124	U	Fish, Door (ov100; the ROM word 16 of _ZTV4Door), PeachPainting (ov010),
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/slice_gate21.txt	16	U	#   StarDoor_Spawn  0x021461d4 -> _ZTV4Door           RTTI 12daStarGate_c
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/slice_gate21.txt	18	U	# So config's `_ZTV4Door` is the STAR door's table and the whole _ZN4Door*
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/slice_gate22.txt	10	A	# the ROM's RTTI calls 8daDoor_c; config's `_ZTV4Door` is a DIFFERENT table at
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/slice_gate40.txt	7	H	the file's own words: config's _ZTV4Door is the table whose RTTI reads 12daStarGate_c, not the real door at 0x02148188 -- so it means the renamed address, and the rename is what stops the name misleading
+ov100	0x021483cc	_ZTV4Door	_ZTV12daStarGate_c	port/slice_gate40.txt	17	H	the file's own words: config's _ZTV4Door is the table whose RTTI reads 12daStarGate_c, not the real door at 0x02148188 -- so it means the renamed address, and the rename is what stops the name misleading
