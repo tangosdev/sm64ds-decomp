@@ -2130,6 +2130,10 @@ src/func_ov006_020e1c68.c:
     complete
     .text start:0x020e1c68 end:0x020e1dc8
 
+src/func_ov006_020e1dc8.cpp:
+    complete
+    .text start:0x020e1dc8 end:0x020e20bc
+
 src/func_ov006_020e269c.c:
     complete
     .text start:0x020e269c end:0x020e26f8
@@ -2309,6 +2313,10 @@ src/func_ov006_020e4b78.c:
     complete
     .text start:0x020e4b78 end:0x020e4bd4
 
+src/func_ov006_020e4bd4.cpp:
+    complete
+    .text start:0x020e4bd4 end:0x020e4ed4
+
 src/func_ov006_020e4ed4.c:
     complete
     .text start:0x020e4ed4 end:0x020e4fe8
@@ -2320,6 +2328,10 @@ src/func_ov006_020e4fe8.c:
 src/func_ov006_020e507c.c:
     complete
     .text start:0x020e507c end:0x020e513c
+
+src/func_ov006_020e513c.cpp:
+    complete
+    .text start:0x020e513c end:0x020e5450
 
 src/func_ov006_020e59b0.c:
     complete
