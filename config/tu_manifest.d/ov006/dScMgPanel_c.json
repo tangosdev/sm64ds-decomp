@@ -633,7 +633,8 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "superseded-by-production-link",
+      "resultNote": "THIS BLOCK IS A STAGE-2 SNAPSHOT AND IT DID NOT REPRODUCE. Re-run at stage 4, the source as shipped did not link at all: the four C++-named members' declarations had C++ linkage and the object carried 41 mangled undefined symbols, with mwldarm aborting on 22 of them. See the LINK DEFECT note. The recorded phases and byte figures below are left as the record of the run that produced them; they are NOT the evidence for this promotion. The live evidence is verification.production. Re-running `tubuild.py linkcheck ov006/dScMgPanel_c` cannot regenerate this block either: post-promotion the command refuses at [4/8] with `intact production requires one .text claim and at least one non-text claim` for every already-enrolled text-only TU (controlled on ov006/dScMgTeresa_c, which this branch never touched, and traced to tubuild.py:4613 -> 4777 -> tu_production.py:41).",
       "scratch": "build/tu/ov006-dScMgPanel_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -703,6 +704,38 @@
         "matchesStockRom": true
       },
       "linkerOutput": null
+    },
+    "production": {
+      "round": "stage 4 -- tools/rombuild.py -j 6, whose BASELINE CONTROL is a full scratch dsd delink, lcf, whole-tree mwccarm, mwldarm link and ROM build of the WORKING TREE; a text-only promoted TU is compiled and linked inside it like any other enrolled source",
+      "result": "production-link-verified",
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "sourceBuiltFunctions": {
+        "reproducing": 11174,
+        "mismatching": 0
+      },
+      "sourceOwnedDataClaims": {
+        "reproducing": 20,
+        "mismatching": 0
+      },
+      "romBuildAnalysis": "PASS",
+      "profile": "stock -- 0 mod source replacements, 0 ROM-gap fallbacks",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "equalsBaselineControlRom": true
+      },
+      "symbolCheckNewVsBaseline": 0,
+      "symbolCheckBaselineErrorCount": 9,
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 71
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "objectUndefinedMangledSymbols": 0,
+      "negativeControl": "deleting only `#pragma defer_codegen off` gives order_ok False -- `licensed .text functions are not emitted in ROM address order`; the pragma is load-bearing for the emission order as well as the bytes"
     }
   },
   "compiler_only_output": [
