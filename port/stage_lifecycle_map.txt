@@ -2295,3 +2295,98 @@ NOT TOUCHED by FRAME2: hal/stage_frame.cpp, hal/stage_globals.cpp,
 port/slice_gate220.txt, hal/stage_bridges.cpp, hal/actor_registry.cpp,
 hal/star_flow.cpp, hal/message_pump.cpp, port/CMakeLists.txt,
 port/tools/romdata.py, hal/cxx_aliases.cpp.
+
+
+15. LANE OPENFAULT (run link100): THE SLOT-6 DISPATCH COMES BACK WITH TWO
+    CALLEE-SAVED REGISTERS DESTROYED, AND IT IS NOT A NEW FAULT
+
+Run link100's ARM9T lane reported one quarantined access violation on the
+opening-cutscene path and said, honestly, that it could not tell whether it had
+caused it. It had not. This section is the attribution and the mechanism; the
+long form, with every register dump and both crash files, is the lane's
+out/OPENFAULT bundle.
+
+THE REPRO IS port/tools/tail2_states_proof.py, UNCHANGED.
+
+    python port/tools/tail2_states_proof.py <tree root> --frames 4000
+
+and the reason a bare SM64DS_SKIP_MENU + SM64DS_WINDOW_SELFTEST run reports a
+clean 300 frames instead is that it never leaves the title. Three things on top
+of SKIP_MENU are load-bearing: SM64DS_SCENE_WINDOW=1 with a large
+SM64DS_SCENE_FRAMES (so the scene window does not end the run at the title),
+the SM64DS_TOUCH_PROBE presses at (44,68) that pick the NEW FILE slot, and a
+FRESH save file. The fault is at frame 2474, so the selftest budget has to be
+at least ~2500.
+
+PRE-EXISTING, MEASURED BOTH SIDES. Two worktrees, two binaries, three runs
+each, rc=0 every time and one fault every time:
+
+    CURRENT   04951eaa1                       3 of 3, off +001f0f9f
+    BASELINE  1f9d029b6 (the parent of the    3 of 3, off +001f091f
+              ARM9T fold 22d7ccba6)
+    ARM9T's own three runs, still on disk     3 of 3, off +001f0ccf
+
+The offsets differ because the three links lay out differently;
+port/tools/faultmap.py resolves all three to func_02043288 + 0x4f against their
+own maps. Everything else is identical in all nine dumps: frame 2474, level 1,
+actor 30056A8C id 3, `access 00000000 at 00000020`, and
+eax 2 / ebx 0 / ecx 1e / edx 0 / esi 1 / edi 1e at esp 001af194 ebp 001af1a4.
+
+THE ACTOR IS THE STAGE. `id 3` is not in the registry so the line prints "(?)",
+but the same run says `[stage] Stage actor 30056A8C (id 3, prio beh 3 ren 6)`,
+and hal/actor_registry.cpp already records that the Stage HEADS the behaviour
+list.
+
+WHAT FIRES. func_02043288 is ActorBase::Process over slots 7/6/8 and hostgen's
+VIRTUAL_CALL patch compiles it to three direct dispatches through one CACHED
+vptr:
+
+    +0x06  mov edi,[ebp+8]        self
+    +0x0d  mov ebx,[edi]          the vptr, LOADED ONCE
+    +0x0f  mov eax,[ebx+1Ch] / call eax      slot 7  BeforeBehavior
+    +0x1a  mov eax,[ebx+18h] / call eax      slot 6  Behavior
+    +0x4f  mov eax,[ebx+20h]                 slot 8  AfterBehavior  <- FAULT
+
+Nothing between +0x23 and +0x4f touches ebx, and the two earlier loads through
+it worked, so the slot-6 call destroyed it. Measured under cdb rather than
+argued: at the call site ebx is a real vtable address and edi is the Stage; at
++0x23, one instruction later, ebx is 0 and edi is 0x1e -- and ESP IS EXACTLY
+RIGHT (ebp-0x0C, the three pushes). Two callee-saved registers are wrong and
+the stack pointer is not.
+
+NARROWED ONE LEVEL FURTHER, and it clears the port's own line at that seam.
+port_stage_rom_behavior makes two calls; conditional breakpoints on `ebx == 0`
+after each say the damage is already done when the ROM's Stage::Behavior
+returns (006B1FA3), so port_frame_ctrl_publish is not the writer. Neither
+port_stage_rom_behavior nor Stage::Behavior saves ebx or edi -- MSVC allocated
+neither register in either -- so both are transparent to a clobber from below
+and neither can be the writer either. The frame this happens on is the frame
+the opening's LEVEL CHANGE lands on: `[lvl] change: level 1 -> 1`, teardown,
+`[intro] the opening is ARMED`, boot, `[lvl] level 1 up`, all inside that one
+dispatch, which is the reentrancy section 12b's own note already describes.
+
+WHY THE RUN SURVIVES, AND WHAT IT COSTS. port_dispatch_guarded catches it,
+freezes the Stage and resumes the walk at the successor it read before the
+call, so rc stays 0 and the frame completes. But the Stage is frozen for the
+rest of the level: every frame after 2474 shows the player parked at
+(-1200, 254, 6800) with the camera fixed. The opening cutscene is exactly what
+stops.
+
+IT IS NOT port/ov007_seat.txt's MECHANISM. Sections 5 and 5a there are a trap
+that RETURNS 0 into a dereference, on func_0204335c (the INIT Process, slots
+1/0/2), inside InitResources, fatally. This is a null in a CALLEE-SAVED
+REGISTER, on func_02043288 (the BEHAVIOUR Process, slots 7/6/8), and it is
+survivable. The eight `data_0208ea6c vtable slot` lines that precede it are the
+sibling fader tables' residual traps -- the level change's own chatter, present
+at every level change -- and the same run prints 1340 trap lines in total. They
+are adjacency, not causation.
+
+NO FIX IS SHIPPED, DELIBERATELY. The faulting call site is correct: caching the
+vptr once and using it three times is what the ROM's ActorBase::Process does.
+Re-loading `*(void**)self` before slot 8 would hide this fault, leave edi
+wrong, leave the writer in place and remove the only symptom anyone has of it.
+What the next lane needs is a breakpoint bisect down the Stage::Behavior
+subtree with `ebx == 0` as the predicate -- and a warning: cdb cannot script
+STEPPING here (`.while(...){p}` fails with "Debuggee already running", from a
+-c list and from stdin alike), so the bisect is conditional breakpoints
+bracketing a call, one bit per run.
