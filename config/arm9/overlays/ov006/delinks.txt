@@ -4055,6 +4055,10 @@ src/func_ov006_02115150.c:
     complete
     .text start:0x02115150 end:0x02115248
 
+src/func_ov006_02115248.cpp:
+    complete
+    .text start:0x02115248 end:0x02115480
+
 src/func_ov006_02115480.c:
     complete
     .text start:0x02115480 end:0x02115598
