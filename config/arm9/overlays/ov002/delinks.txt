@@ -24,6 +24,10 @@ src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp:
     complete
     .text start:0x020addc0 end:0x020ade78
 
+src/_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr.cpp:
+    complete
+    .text start:0x020ade78 end:0x020ae244
+
 src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp:
     complete
     .text start:0x020ae244 end:0x020ae2b8
