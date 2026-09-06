@@ -1,9 +1,14 @@
 //cpp
 /* ov066/Eyerok -- ROM ordinals 25..58 of the 61-function linker run at
  * 0x02115ee0..0x0211a2e4.  PARTIAL by necessity: six shards in the run
- * (ordinals 8, 16, 20, 22, 24, 59) reference the cross-overlay addresses
- * 0x02112c08/c88/ca8/cc8/d48, which no modules symbols.txt names, so they
- * carry no `complete` marker and are excluded from the link.  A licensed
+ * (ordinals 8, 16, 20, 22, 24, 59) reference 0x02112c08/c88/ca8/cc8/d48 under
+ * the spellings func_02112c08 etc, which no modules symbols.txt defines, so
+ * they carry no `complete` marker and are excluded from the link.  Those
+ * addresses sit below this overlays own base (ov066 spans
+ * 0x02115ee0..0x0211b0ec), in the lower overlay slot ov066 is co-resident
+ * with; fourteen other overlays each name an ambiguous overlay-local symbol
+ * at the same addresses and disagree on its kind, so naming them is an
+ * overlay-residency question rather than a spelling one.  A licensed
  * .text claim cannot contain a hole, so this file takes the largest
  * contiguous linkable side: ordinals 25..58, 0x021184c0..0x02119ce8.
  *
@@ -78,8 +83,6 @@
 /* Local shadow types the shards carried. Anything a real header supplies
  * (Vector3, Matrix4x3, BlendModelAnim, Fix12i, s16/s32/u8/u16/u32) has been
  * dropped in favour of the header. */
-enum Bool { FALSE, TRUE };
-typedef struct Vec3 { int x, y, z; } Vec3;
 struct EVec3 { int x, y, z; };
 struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual int g5(void*); };
 struct C;
@@ -112,7 +115,6 @@ extern int data_ov066_0211aeb4[];
 extern int data_ov066_0211aebc[];
 
 /* ---- ov066 .bss / .data byte flags and counters ---- */
-extern unsigned char data_ov066_0211ae00;
 extern unsigned char data_ov066_0211ae04;
 extern unsigned char data_ov066_0211ae08;
 extern unsigned char data_ov066_0211ae0c;
@@ -124,23 +126,15 @@ extern int data_ov066_0211ad18[];
 /* ---- ov066 .bss state descriptors, 0x10 bytes each ---- */
 extern char data_ov066_0211afcc;
 extern char data_ov066_0211afdc;
-extern char data_ov066_0211afec;
 extern char data_ov066_0211affc;
 extern char data_ov066_0211b00c;
-extern char data_ov066_0211b01c;
 extern char data_ov066_0211b02c;
 extern char data_ov066_0211b03c;
-extern char data_ov066_0211b04c;
-extern char data_ov066_0211b05c;
 extern char data_ov066_0211b06c;
 extern char data_ov066_0211b07c;
-extern char data_ov066_0211b08c;
-extern char data_ov066_0211b09c;
 extern char data_ov066_0211b0ac;
-extern char data_ov066_0211b0bc;
 extern char data_ov066_0211b0cc;
 extern char data_ov066_0211b0dc;
-extern char data_ov066_0211b0ec;
 
 /* ---- arm9 data ---- */
 extern int data_0209e650;
@@ -148,8 +142,6 @@ extern void *data_0209f318;
 extern int data_020a0e68[];
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
-extern int AngleDiff(int a, int b);
-extern int ApproachAngle(s16 *angle, int target, int a, int b, int max);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void *m, short ang);
@@ -158,24 +150,15 @@ extern void MulVec3Mat4x3(void *a, void *m, void *b);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern void Vec3_Asr(void *d, void *s, int sh);
-extern int Vec3_Dist(const void *a, const void *b);
-extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern void func_020092c4(void *cam, void *out, void *target);
-extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(int a, void *p);
-extern void func_020393c4(void *p, void *v);
-extern void func_020393d4(void *p, void *v);
-extern void func_020398fc(void *p);
 
 /* ---- arm9 / ov002 methods, mangled ROM spelling ---- */
-extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *out, void *tgt, int step);
-extern void _Z14ApproachLinearRiii(int *r, int target, int step);
 extern void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void *self, void *m, short s);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const void *v);
-extern void _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
 extern void _ZN15TextureSequence6UpdateER15ModelComponents(void *self, void *mc);
@@ -191,43 +174,29 @@ extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void _ZN6Camera9SetFlag_3Ev(void *cam);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *actor, unsigned int msg, const void *v, unsigned int d, unsigned int e);
 extern int _ZN6Player12GetTalkStateEv(void *self);
-extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void _ZN6Player17SetNoControlStateEhih(void *self, unsigned char a, int b, unsigned char c);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern void _ZN8dActor_c15HugeLandingDustEb(void *self, int b);
-extern void _ZN8dActor_c16TriplePoofDustAtERK7Vector3(void *self, const void *v);
-extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *m, int rad, int h, unsigned int u);
 extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, const void *v, unsigned int d);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, const void *pos, const void *p, int e, int f);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern u8 _ZN8dActor_c9TrackStarEjj(void *actor, u32 a, u32 b);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
-extern int _ZNK9Animation13GetFrameCountEv(void *self);
 
 /* ---- siblings of this TU that stayed in their own src/ files ---- */
-extern int func_ov066_0211603c(void *c);
 extern void func_ov066_021162e8(void *c);
 extern void func_ov066_0211632c(void *c);
-extern void func_ov066_02116390(void *c);
-extern void func_ov066_021164ec(void *c);
-extern void func_ov066_021165cc(void *c);
-extern void func_ov066_021166c8(void *c);
 extern int func_ov066_021168b0(void *c);
 extern int func_ov066_021168ec(void *c);
 extern int func_ov066_02116a68(void *c);
 extern void func_ov066_02116ac4(void *c, int v);
-extern int func_ov066_02116b78(void *c);
 
-/* ---- this TU's own members, forward-declared (mwcc emits .text in reverse
- *      source order, so nearly every intra-TU call is a forward reference) ---- */
+/* ---- this TU's own members, forward-declared: the file is written
+ *      ROM-ascending, so a member that calls one defined further down
+ *      needs a declaration first ---- */
 extern void func_ov066_021194a4(char *c);
 extern void func_ov066_021194fc(char *c);
 extern int func_ov066_02119454(void *c, void *p);
