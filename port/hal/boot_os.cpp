@@ -177,6 +177,14 @@
 //       region second. Together they are ~29 matched TUs, about half of them
 //       hand-asm exceptions.
 //
+//       ONE CORRECTION FOR func_0206a88c, from run link100 lane IPCSEND: `G`
+//       is not the first thing in its way and neither is Slot-2. Its call ONE,
+//       func_0206a5c0, writes 20 bytes from data_020a9de0 -- four dsd names
+//       that are hosted NOWHERE -- and everything else in the arm sits behind
+//       func_0206a6d0's REG_POSTFLG guard, which this port never opens. The
+//       full re-derivation is at the arm's own point in the pre-main span
+//       below, including the two grouped runs it wants.
+//
 //   func_020134c8 -> func_020133bc
 //       The ROM's sound bring-up. RE-DERIVED by run link100's lane THREAD, and
 //       it is back to ONE blocker rather than two: thread creation is modelled
@@ -439,16 +447,53 @@ void port_boot_rom_pre_main(void)
        linker symbols the body reads as numbers. See the header block for the
        arithmetic they feed and why MSVC cannot supply them. */
     func_02059e48();   /* call 10: PXI channel 0xc, answered by the model */
-    /* func_0206a88c() -- PXI channel 0xd. LANE IPC OPENED THE CHANNEL AND `G`
-       CLOSED IT AGAIN. hal/boot2_ipc.cpp claims 0xd at power-on, so the
-       readiness spin `while (func_0205ba3c(0xd, 1) == 0)` turns now, and
-       func_0206a6d0's GBA-slot DMA is not even reached (its own guard is
-       `if ((*(volatile u16 *)0x4000300 & 1) == 0) return;` -- REG_POSTFLG,
-       which nothing in this port writes, so the mapped I/O word is zero and the
-       body returns before the 0x08000080 read). What blocks it is func_0206a3a4,
-       three calls in: `func_02057158(arg0)`, the same OS lock whose cleanup
-       callback writes `G`. Same one-line-per-file decomp fix as the two arms
-       above; ~18 matched TUs behind it, several of them hand-asm. */
+    /* func_0206a88c() -- PXI channel 0xd. STILL REFUSED, and run link100 lane
+       IPCSEND re-derived the whole list rather than inheriting it, because the
+       obvious question after that lane is "did the send unblock this too".
+       IT DID NOT, AND IT NEVER COULD HAVE. The only IPCSend in this chain is
+       src/func_0206a318.c, and func_0206a6d0 is the only thing that calls it --
+       past func_0206a6d0's own guard, `if ((*(volatile u16 *)0x4000300 & 1) ==
+       0) return;`. That is REG_POSTFLG, nothing in this port writes it (the
+       only mention of the address in the whole tree is that read), so the
+       mapped word is zero and the body returns before it reaches the send, the
+       0x08000080 DMA or anything else. Measured on the seat this lane did
+       take: the exit census over a 300-frame level run lists tag 7 and tag 8
+       and nothing else.
+       SO WHAT IS LEFT, in the order func_0206a88c would hit it:
+         (1) A HOST-GLOBAL GROUPING JOB, AND IT COMES FIRST -- before `G`,
+             before the guard, on call ONE. func_0206a5c0 does
+             `CpuSet(&local, data_020a9de0, 0x5000001)`: five words, 20 bytes,
+             from data_020a9de0. NONE of data_020a9de0 / de4 / de8 / dec is
+             hosted anywhere in this port, and that write crosses all four, so
+             they are ONE 0x20-byte run ending at data_020a9e00. The second run
+             is data_020a9e00 + data_020a9e04: func_0206a6d0 reads
+             `data_020a9e00 + 0xbe`, which lands inside data_020a9e04's own
+             span, and the next symbol after data_020a9e04 is data_020a9ec0 --
+             so 0x020a9e00..0x020a9ec0, 0xc0 bytes, one object. This is
+             hal/globals_link100.cpp's card block done again, and until it
+             exists the very first call of the very first arm writes 20 bytes
+             into whatever the linker put next.
+         (2) `G`, WHICH IS THE DECOMP'S AND IS A LINK CLAIM HERE RATHER THAN A
+             RUNTIME ONE. func_0206a3a4 -> func_02057158 -> the cleanup
+             callback func_02057140, `*(unsigned short *)G ^= 0x80`. All three
+             of those TUs are ALREADY LINKED out of port/slice_gate214.txt, so
+             nothing new arrives with them; what a seat would add is that the
+             body becomes REACHABLE if REG_POSTFLG ever stops reading zero.
+         (3) TWO UNMAPPED PAGES, both behind the same guard and neither in
+             ntr::kRegions: 0x08000080 (the Slot-2 GBA cart, which
+             DMASyncHalfTransfer reads 0x40 halfwords out of) and 0xffff0020
+             (the ARM9 exception-vector page MultiCopy_Int writes 0x9c bytes
+             to).
+         (4) AN ARM7 GBA-SLOT DRIVER. hal/boot2_ipc.cpp holds 0xd
+             OBSERVED ONLY, and if the guard ever opened, func_0206a318's word
+             would get no answer -- so func_0206a6d0's `while (data_020a9de0 !=
+             1) WaitByLoop(1)` would never turn, and any answer whose
+             (data & 0x3f) is not 1 makes src/func_0206a694.c call Crash().
+       Every C TU in the closure exists and compiles (func_0206a5c0, 694, 634,
+       600, 6d0, 3a4, 458, 424, 37c, 318 and IRQ::SetIRQs are all plain C; its
+       three hand-asm leaves MultiCopy_Int, CP15::FlushAndInvalidateDataCache
+       and WaitByLoop are already hosted), so this is four pieces of host work
+       and one decomp fix, not a link wall. */
     /* func_02060890() -- the game card, reached instead through func_02042f68 */
     func_0205fde8();   /* call 13: PXI channel 8, answered by the model */
 
