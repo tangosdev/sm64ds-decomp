@@ -1,81 +1,252 @@
 {
   "class": "Scuttlebug",
+  "class_name_is_coined": true,
   "rtti_name": "7daSpd_c",
   "rtti_name_address": "0x02122bf0",
-  "coined_name_warning": "The tree spells this class Scuttlebug; the cartridge's RTTI spells it daSpd_c (spd = spider, and the registry profile is g_profile_SPIDER at 0x02122c08). ov071/symbols.txt aliases the VTABLE under both names at one address but does NOT alias _ZTI/_ZTS. That asymmetry is what blocks the promotion -- see notes below.",
-  "typeinfo": {
-    "symbol": "_ZTI7daSpd_c",
-    "address": "0x02122bfc",
-    "kind": "__si_class_type_info",
-    "size": "0xc",
-    "base_typeinfo": "_ZTI8dActor_c (arm9 0x0208e390)",
-    "evidence": "config/arm9/overlays/ov071/relocs.txt: 0x02122c00 -> 0x02122bf0 (_ZTS7daSpd_c), 0x02122c04 -> arm9 0x0208e390 (_ZTI8dActor_c)."
+
+  "identity_evidence": {
+    "verdict": "Scuttlebug is COINED. The cartridge's class name is daSpd_c. Under the current rule a coined name is allowed, but it must be recorded as coined and never presented as ROM-proven -- this field is that record.",
+    "rom_string": "extracted/overlays/overlay_0071.bin, file offset 0x3bf0 -> address 0x02122bf0, bytes 37 64 61 53 70 64 5f 63 00 = \"7daSpd_c\\0\". That is the Itanium length-prefixed _ZTS form: length 7, then the 7 characters d a S p d _ c.",
+    "negative_search": "A byte search of every extracted image (extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin and all extracted/overlays/*.bin) for the length-prefixed form b'10Scuttlebug\\0' returns 0 hits, and for the raw substring b'Scuttlebug' also 0 hits. The string 'Spider' -- the sense of Spd, and the spelling the project's g_profile_SPIDER uses -- returns 0 hits as well. Nothing named Scuttlebug or Spider exists anywhere in this cartridge.",
+    "whole_overlay_string_census": "ov071 contains exactly five printable runs of >=5 characters in its entire 0x3f80 bytes: 7daSpd_c (0x02122bf0), 8daEykn_c (0x02122cd8), 8daEyBm_c (0x02122dac), STANDUP (0x02122e6c) and 13daObjCasket_c (0x02122ea0). Four of the five are _ZTS records; there is no room for a hidden English name.",
+    "tooling_corroboration": "tools/rtti_extract.py builds build/rtti.json from the ROM (429 records, 0 unresolved). Its record for this class is {module: ov071, addr: 0x02122bfc, kind: si, mangled: 7daSpd_c, name: daSpd_c, name_addr: 0x02122bf0, vtable: 0x02122c2c}. `tools/rtti_vtables.py --own daSpd_c` prints the full override set; `--own Scuttlebug` prints 'no vtable for Scuttlebug' -- the ROM-derived database has never heard the name.",
+    "symbols_txt_asymmetry": "config/arm9/overlays/ov071/symbols.txt aliases the VTABLE under both spellings at one address (_ZTV10Scuttlebug and _ZTV7daSpd_c, both addr:0x02122c2c) but names _ZTS/_ZTI under the daSpd_c spelling only. So a TU compiled as `class Scuttlebug` emits _ZTS10Scuttlebug (13 bytes) and _ZTI10Scuttlebug, neither of which has any home in the cartridge. That is survivable on the queue's declared text-only route, where the RTTI data is externalized/deadstripped, and FATAL to an intact-object route. Do not attempt intact-object under the coined spelling.",
+    "sibling_naming_pattern": "Three of ov071's four classes carry coined tree names and one does not: Scuttlebug=daSpd_c (coined), MrI=daEykn_c (coined; symbols.txt aliases _ZTV3MrI and _ZTV8daEykn_c at 0x02122d30), Coffin=daObjCasket_c (coined), daEyBm_c=daEyBm_c (the ROM name, and the one class already promoted)."
   },
+
   "overlay": "ov071",
-  "module_text_start": "0x0211f000",
+  "module_base": "0x0211f000",
+  "module_base_derivation": "extracted/dsd/arm9_overlays/overlays.yaml, entry id:71 -> base_address 34009088 = 0x0211f000, code_size 0x3f80, bss_size 0x180. Two independent checks: (a) extracted/overlays/overlay_0071.bin is exactly 16256 = 0x3f80 bytes, equal to code_size, so file offset 0 IS address 0x0211f000 and address = 0x0211f000 + file_offset with no adjustment; (b) the lowest symbol in config/arm9/overlays/ov071/symbols.txt is _ZN10ScuttlebugD1Ev addr:0x0211f000, and the bytes at file offset 0x0211f000-0x0211f000 = 0 are e92d4010 = `push {r4, lr}` -- a function prologue, not data. Every RTTI read below was taken at address minus 0x0211f000. NOTE: ov070, ov071 and ov072 all load at 0x0211f000; they are mutually exclusive overlays sharing one address window, which is why every relocation scan below is filtered on the destination MODULE and not on the address.",
+  "module_extent": {"text_and_data": "0x0211f000..0x02122f80", "bss": "0x02122f80..0x02123100"},
+  "sections": {
+    ".text": "0x0211f000..0x021226a0",
+    ".rodata": "0x021226a0..0x021226ac",
+    ".init": "0x021226ac..0x02122b30",
+    ".ctor": "0x02122b30..0x02122b40",
+    ".data": "0x02122b60..0x02122f80",
+    ".bss": "0x02122f80..0x02123100",
+    "source": "config/arm9/overlays/ov071/delinks.txt, section header block"
+  },
+
   "vtable": {
-    "symbol": "_ZTV10Scuttlebug (== _ZTV7daSpd_c)",
+    "symbol": "_ZTV7daSpd_c (aliased in symbols.txt as _ZTV10Scuttlebug)",
     "address": "0x02122c2c",
+    "module": "ov071",
     "slots": 31,
-    "symbol_extent": "0x7c",
-    "storage": "0x02122c24..0x02122ca8 = 0x84",
-    "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top, RTTI pointer) sit at -8 and -4",
-    "evidence": "THREE independent tools agree. (1) mwccarm's own emitted storage size, harvested from a deliberately unlicensed verify run: EXTRA .data _ZTV10Scuttlebug size=0x84. (2) tools/rtti_vtables.py --own daSpd_c -> 31 slots (base dActor_c 31). It answers only to the ROM RTTI spelling: --own Scuttlebug prints nothing. (3) The relocation run in relocs.txt: 0x02122c28 (the typeinfo preamble word) through 0x02122ca4 with no gap, closing immediately before data_ov071_02122ca8, which is also what the naive next-symbol read gives here (0x02122ca8 - 0x02122c2c = 0x7c). All three land on 0x7c / 31 slots / 0x84 storage."
+    "symbol_extent": "0x02122c2c..0x02122ca8 = 0x7c = 31 words",
+    "storage_extent": "0x02122c24..0x02122ca8 = 0x84, including the two ABI preamble words",
+    "address_point_note": "The symbol IS the address point. offset-to-top at 0x02122c24 = 0x00000000 and the typeinfo pointer at 0x02122c28 = 0x02122bfc (_ZTI7daSpd_c). Read from extracted/overlays/overlay_0071.bin at file offsets 0x3c24/0x3c28. Confirmed a third time from code: both daSpd_c_classInit (literal at 0x02120664) and _ZN10ScuttlebugD1Ev (literal at 0x0211f044) store the bare value 0x02122c2c into this+0, not &_ZTV[2].",
+    "extent_evidence": [
+      "Next symbol: config/arm9/overlays/ov071/symbols.txt has data_ov071_02122ca8 immediately after _ZTV7daSpd_c, so the table cannot run past 0x02122ca8.",
+      "Content: the word at 0x02122ca8 is 0x021214f4 = func_ov071_021214f4, a function belonging to daEykn_c/MrI, not to this class. It is the first entry of daEykn_c's own state table, laid out in exactly the same shape as this class's.",
+      "Relocations: config/arm9/overlays/ov071/relocs.txt carries an unbroken run of `kind:load` records from 0x02122c28 through 0x02122ca4 with no gap, and the next record, from:0x02122ca8, targets 0x021214f4.",
+      "Base length: _ZTV8dActor_c in arm9 runs 0x0208e3a4..0x0208e420 (next symbol data_0208e420) = 0x7c = 31 words, the same length. This class adds no slot; it only overrides."
+    ],
+    "truncation_caveat": "31 is not a truncated count. The last slot (30) holds a non-null arm9 word 0x020100dc, and dActor_c's own table is 31 words too, so no trailing null slots were dropped here."
   },
+
   "base_class": "dActor_c",
-  "base_evidence": "_ZTI7daSpd_c is a __si_class_type_info whose +8 word relocates to _ZTI8dActor_c (arm9 0x0208e390), so the direct base is dActor_c and nothing else. Corroborated by length: _ZTV8dActor_c and _ZTV7daSpd_c are both 31 slots -- this class adds no slot, it only overrides.",
-  "ancestor_chain": ["Scuttlebug/daSpd_c", "dActor_c", "dBase_c", "fBase_c"],
+  "base_evidence": "_ZTI7daSpd_c sits at 0x02122bfc (ov071) and is a __si_class_type_info: +0 = 0x0209a764 = _ZTVN3abi20__si_class_type_infoE (config/arm9/symbols.txt line 4500), +4 = 0x02122bf0 = _ZTS7daSpd_c, +8 = 0x0208e390 = _ZTI8dActor_c (config/arm9/symbols.txt line 3539). The +8 word names the direct base outright, so the direct base is dActor_c and nothing else. Bytes read from extracted/overlays/overlay_0071.bin at file offsets 0x3bfc/0x3c00/0x3c04; the same three words appear in config/arm9/overlays/ov071/relocs.txt as from:0x02122bfc->main, from:0x02122c00->overlay(71), from:0x02122c04->main.",
+  "base_corroboration": "Vtable length agrees (31 words for both) and the class's overrides land exactly on slots that hold fBase_c/dActor_c implementations in _ZTV8dActor_c. Corroboration, not the proof.",
+  "ancestor_chain": ["daSpd_c (tree spelling Scuttlebug)", "dActor_c", "dBase_c", "fBase_c"],
+
+  "typeinfo": {
+    "ZTV": "0x02122c2c", "ZTV_module": "ov071",
+    "ZTI": "0x02122bfc", "ZTI_module": "ov071",
+    "ZTS": "0x02122bf0", "ZTS_module": "ov071",
+    "vague_linkage_note": "All three live in ov071. The daOts_c hazard -- _ZTI/_ZTS landing in a different overlay from the _ZTV -- does NOT apply to this class. Confirmed both from build/rtti.json (vtable_module ov071, name_addr 0x02122bf0 in ov071) and from ov071's own symbols.txt naming all three addresses."
+  },
+  "modules_touched": ["ov071", "arm9"],
+
   "overrides": [
-    {"slot": 0,  "address": "0x021203f8", "name": "InitResources", "size": "0x188"},
-    {"slot": 3,  "address": "0x02120308", "name": "CleanupResources", "size": "0x30"},
-    {"slot": 6,  "address": "0x02120398", "name": "Behavior", "size": "0x60"},
-    {"slot": 9,  "address": "0x0212033c", "name": "Render", "size": "0x5c"},
-    {"slot": 12, "address": "0x02120338", "name": "OnPendingDestroy", "size": "0x4", "note": "empty body; the override exists only to occupy the slot"},
-    {"slot": 16, "address": "0x0211f000", "name": "~Scuttlebug (D1)", "size": "0x48", "note": "the FIRST byte of ov071's .text; the header defines the destructor inline, which is what makes mwccarm emit D1 then D0 with no D2"},
-    {"slot": 17, "address": "0x0211f048", "name": "~Scuttlebug (D0, deleting)", "size": "0x5c"},
-    {"slot": 18, "address": "0x0211f0a4", "name": "OnYoshiTryEat", "size": "0x8", "note": "THE KEY FUNCTION: with the destructor inline this is the first non-inline virtual the class declares, so the TU that defines it emits _ZTV/_ZTI/_ZTS. Body returns the constant 6."},
-    {"slot": 19, "address": "0x02120580", "name": "OnTurnIntoEgg(Player&)", "size": "0x98"},
-    {"slot": 29, "address": "0x0211f0ac", "name": "OnAimedAtWithEgg", "size": "0x8", "note": "returns the constant 204800"}
+    {"slot": 0,  "address": "0x021203f8", "size": "0x188", "inherited_name": "fBase_c::InitResources()",     "base_impl": "0x02043c80", "tree_symbol": "_ZN10Scuttlebug13InitResourcesEv"},
+    {"slot": 3,  "address": "0x02120308", "size": "0x30",  "inherited_name": "fBase_c::CleanupResources()",  "base_impl": "0x02043bf0", "tree_symbol": "_ZN10Scuttlebug16CleanupResourcesEv"},
+    {"slot": 6,  "address": "0x02120398", "size": "0x60",  "inherited_name": "fBase_c::Behavior()",          "base_impl": "0x02043b24", "tree_symbol": "_ZN10Scuttlebug8BehaviorEv"},
+    {"slot": 9,  "address": "0x0212033c", "size": "0x5c",  "inherited_name": "fBase_c::Render()",            "base_impl": "0x02043af0", "tree_symbol": "_ZN10Scuttlebug6RenderEv"},
+    {"slot": 12, "address": "0x02120338", "size": "0x4",   "inherited_name": "fBase_c::OnPendingDestroy()",  "base_impl": "0x02043ac0", "tree_symbol": "_ZN10Scuttlebug16OnPendingDestroyEv", "body": "bx lr", "note": "empty body; the override exists only to occupy the slot"},
+    {"slot": 16, "address": "0x0211f000", "size": "0x48",  "inherited_name": "dActor_c::~dActor_c() [D1]",   "base_impl": "0x02011374", "tree_symbol": "_ZN10ScuttlebugD1Ev", "note": "the FIRST byte of ov071's .text"},
+    {"slot": 17, "address": "0x0211f048", "size": "0x5c",  "inherited_name": "dActor_c::~dActor_c() [D0]",   "base_impl": "0x02011314", "tree_symbol": "_ZN10ScuttlebugD0Ev"},
+    {"slot": 18, "address": "0x0211f0a4", "size": "0x8",   "inherited_name": "dActor_c::OnYoshiTryEat()",    "base_impl": "0x02010160", "tree_symbol": "_ZN10Scuttlebug13OnYoshiTryEatEv", "body": "mov r0, #6; bx lr", "note": "returns the constant 6"},
+    {"slot": 19, "address": "0x02120580", "size": "0x98",  "inherited_name": "dActor_c::OnTurnIntoEgg(Player&)", "base_impl": "0x02010154", "tree_symbol": "_ZN10Scuttlebug13OnTurnIntoEggER6Player", "note": "the R6Player reference spelling is a GUESS -- a reference and a pointer generate identical ARM here. The base's arm9 symbol is spelt the same way, which is corroboration of style, not of the type."},
+    {"slot": 29, "address": "0x0211f0ac", "size": "0x8",   "inherited_name": "dActor_c::OnAimedAtWithEgg()", "base_impl": "0x02010124", "tree_symbol": "_ZN10Scuttlebug16OnAimedAtWithEggEv", "body": "mov r0, #0x32000; bx lr", "note": "returns 0x32000 = 204800 = 50 << 12, so very likely Fix12(50). The return TYPE is unproven; the tree declares int."}
   ],
-  "inherited_unchanged_slots": "every slot other than 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29 holds dActor_c's own word.",
-  "text_span": "0x0211f000..0x02120668, 37 functions, contiguous with no gap",
+  "override_count": 10,
+  "inherited_unchanged_slots": "Every slot other than 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29 holds the identical word found at the same index in _ZTV8dActor_c (0x0208e3a4). Verified word by word.",
+  "overrides_evidence": "Slot names come from the base chain, not from a header: each base_impl address above was resolved in config/arm9/symbols.txt. Slots 0/3/6/9/12 resolve to fBase_c methods, slots 16-19 and 29 to dActor_c methods. `python tools/rtti_extract.py && python tools/rtti_vtables.py --own daSpd_c` reproduces the same ten slots independently.",
+
+  "text_run": {
+    "span": "0x0211f000..0x02120668",
+    "functions": 37,
+    "contiguity": "37 consecutive delinks entries with zero gaps -- each entry's end is the next entry's start. The run starts at the first byte of ov071's .text and ends immediately before _ZN3MrID1Ev at 0x02120668.",
+    "source": "config/arm9/overlays/ov071/delinks.txt on base b4eee7425"
+  },
+
   "shard_count_correction": {
-    "tu_map_says": 36,
+    "queue_says": 36,
     "real": 37,
-    "why": "tools/tu_map.py cuts on symbol NAME. daSpd_c_classInit at 0x02120618 is not spelt _ZN10Scuttlebug..., so it was never labelled and never counted, even though _ZN10Scuttlebug13OnTurnIntoEggER6Player ends at exactly 0x02120580 + 0x98 = 0x02120618 -- a ZERO-byte gap. Its delinks.txt entry is src/d_a_spd.c. ov071 puts each class's <class>_classInit last in its own run: the promoted daEyBm_c carries daEyBm_c_classInit as its 13th member, and daObjCasket_c and daEykn_c do the same."
+    "why": "The 37th shard is src/d_a_spd.c, holding daSpd_c_classInit at 0x02120618 (size 0x50). tools/tu_map.py cuts on symbol NAME, and daSpd_c_classInit is spelt neither _ZN10Scuttlebug... nor func_ov071_..., so it was never labelled and never counted -- even though _ZN10Scuttlebug13OnTurnIntoEggER6Player ends at exactly 0x02120580 + 0x98 = 0x02120618, a ZERO-byte gap. ov071 puts each class's factory last in its own run; the promoted sibling daEyBm_c carries daEyBm_c_classInit the same way.",
+    "consequence": "A promotion that folds only the 36 name-matched shards leaves a one-function hole inside a contiguous run and cannot produce a single `complete` span. Fold all 37."
   },
+
   "size": "0x3ac",
-  "size_evidence": "daSpd_c_classInit's own literal: fBase_c::operator new(940 = 0x3ac). The trailing byte fields close exactly on it, and ~Scuttlebug destroys the four members in reverse.",
-  "members": [
-    {"offset": "0x0d4", "type": "ModelAnim",  "name": "mModelAnim"},
-    {"offset": "0x138", "type": "ShadowModel", "name": "mShadowModel"},
-    {"offset": "0x160", "type": "dCcAc_c",    "name": "mdCcAc_c"},
-    {"offset": "0x194", "type": "dBgCh_Actr", "name": "mWithMeshClsn"},
-    {"offset": "0x3a8", "type": "u8",         "name": "mTimer", "note": "typed u8 in the header but read and written as a HALFWORD by six members"}
-  ],
-  "compiler_only_output_measured": {
-    "queue_said": "compiler-only:>=9",
-    "measured": 10,
-    "derivation": "2 x (3 ancestors + self) + 1 vtable = 9, plus 1 for _ZN7Vector3D1Ev because the TU odr-uses Vector3 at all (four function locals -- three in func_ov071_0211f148, one in func_ov071_0211f8d0 -- and the term is +1 however many objects). No file-local anonymous struct holds them, so no extra @class$ destructor.",
-    "rows": [
-      {"symbol": "_ZN7Vector3D1Ev", "section": ".text", "size": "0x4", "home": "arm9 0x020072c0", "disposition": "deadstrip-duplicate"},
-      {"symbol": "_ZTI7fBase_c", "size": "0x8", "home": "arm9 0x02086d70", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTS7fBase_c", "size": "0x9", "home": "arm9 0x02086e60", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTS7dBase_c", "size": "0x9", "home": "arm9 0x02086e54", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTI7dBase_c", "size": "0xc", "home": "arm9 0x02086e78", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTS8dActor_c", "size": "0xa", "home": "arm9 0x0208e384", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTI8dActor_c", "size": "0xc", "home": "arm9 0x0208e390", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTV10Scuttlebug", "size": "0x84", "home": "ov071 0x02122c2c", "disposition": "deadstrip-data"},
-      {"symbol": "_ZTS10Scuttlebug", "size": "0xd", "home": "NONE -- the cartridge's record is _ZTS7daSpd_c", "disposition": "BLOCKED"},
-      {"symbol": "_ZTI10Scuttlebug", "size": "0xc", "home": "NONE -- the cartridge's record is _ZTI7daSpd_c", "disposition": "BLOCKED"}
-    ]
+  "size_evidence": "daSpd_c_classInit at 0x02120618 opens `push {r4,lr}` / `mov r0,#0x3ac` / `bl 0x02043444`, and 0x02043444 is _ZN7fBase_cnwEj (fBase_c::operator new(unsigned)) in config/arm9/symbols.txt. 0x3ac = 940. The trailing fields close exactly on it: a halfword at 0x3a8 and a byte at 0x3aa, then one pad byte.",
+
+  "construction": {
+    "factory": "daSpd_c_classInit @ 0x02120618, size 0x50",
+    "sequence": [
+      "mov r0,#0x3ac ; bl 0x02043444   -> _ZN7fBase_cnwEj  (allocate 940 bytes)",
+      "movs r4,r0 ; beq               (null check; returns null without constructing)",
+      "bl 0x0201150c                  -> _ZN8dActor_cC2Ev  (BASE ctor, C2 variant)",
+      "ldr r1,[pc,#0x2c] ; str r1,[r4] -> literal at 0x02120664 = 0x02122c2c, the vtable address point",
+      "add r0,r4,#0xd4  ; bl 0x02016958 -> _ZN9ModelAnimC1Ev",
+      "add r0,r4,#0x138 ; bl 0x02016068 -> _ZN11ShadowModelC1Ev",
+      "add r0,r4,#0x160 ; bl 0x020149c8 -> _ZN7dCcAc_cC1Ev",
+      "add r0,r4,#0x194 ; bl 0x02037430 -> _ZN10dBgCh_ActrC1Ev",
+      "mov r0,r4 ; pop {r4,lr} ; bx lr"
+    ],
+    "destructor_mirror": "_ZN10ScuttlebugD1Ev at 0x0211f000 stores the same literal 0x02122c2c (pool at 0x0211f044) and then destroys 0x194 -> _ZN10dBgCh_ActrD1Ev, 0x160 -> _ZN7dCcAc_cD1Ev, 0x138 -> _ZN11ShadowModelD1Ev, 0xd4 -> _ZN9ModelAnimD1Ev, then 0x020112c8 = _ZN8dActor_cD2Ev. Exactly reverse order, so all four member offsets and types are proven twice, from opposite ends.",
+    "D0_tail": "_ZN10ScuttlebugD0Ev at 0x0211f048 repeats the D1 body inline, then loads the heap pointer from the literal at 0x0211f0a0 = 0x020a0eac and calls 0x0203c1e8 = _ZN6Memory10DeallocateEPvP4Heap. There is no D2 for this class anywhere in ov071 -- a D1,D0 pair with no D2 is what mwccarm 2004/b56 emits for an INLINE destructor.",
+    "vtable_emission_note": "With the destructor inline, the first non-inline virtual this class declares is OnYoshiTryEat at 0x0211f0a4, which lies inside the licensed run. That is the key function, and the TU defining it emits _ZTV/_ZTI/_ZTS."
   },
-  "unproven": [
-    "the original SM64DS spelling of daSpd_c_classInit (historical project alias Scuttlebug_Spawn) and of Scuttlebug_SetState",
-    "the English names of the 29 auto-named func_ov071_* state handlers and helpers -- their class ownership, bodies, calls and ordering are proven, their names are not",
-    "what mTimer expiring means: six members read and write it as a halfword and Behavior discards DecIfAbove0_Short's result",
-    "the 4-byte gap at 0x0d0 -- no load or store in this class's 37 functions touches it",
-    "whether g_profile_SPIDER at 0x02122c08 belongs to this TU's data band; it is not claimed here and the TU does not define it (the promoted sibling daEyBm_c does claim its own g_profile_EYEKUN_BEAM)"
+
+  "fields": [
+    {"offset": "0x000", "extent": "0x000..0x0d0", "type": "dActor_c", "name": "(base subobject)", "proof": "include/dActor_c.h asserts sizeof(dActor_c) == 0xd0; the first own member sits at 0x0d4 and the ROM writes 0x0d0 itself, so the base cannot extend past 0x0d0."},
+    {"offset": "0x0d0", "size": 4, "type": "u32 / pointer", "name": null, "name_status": "unproven", "proof": "PROVEN LIVE, not padding. Word ldr/str off the this-pointer in four functions: _ZN10Scuttlebug13InitResourcesEv writes it (`str r0,[r4,#0xd0]` @0x02120528), func_ov071_0211f8d0 reads it four times and writes it once, func_ov071_0211fa54 reads and writes it. include/Scuttlebug.h on this base declares `u8 pad_0d0[0x4]` -- that is wrong."},
+    {"offset": "0x0d4", "size": "0x64", "type": "ModelAnim", "name": "mModelAnim", "proof": "ctor _ZN9ModelAnimC1Ev and dtor _ZN9ModelAnimD1Ev on this+0xd4. 0xd4 + 0x64 = 0x138, exactly the next constructed member offset."},
+    {"offset": "0x138", "size": "0x28", "type": "ShadowModel", "name": "mShadowModel", "proof": "ctor _ZN11ShadowModelC1Ev / dtor _ZN11ShadowModelD1Ev on this+0x138. 0x138 + 0x28 = 0x160, the next constructed member offset."},
+    {"offset": "0x160", "size": "0x34", "type": "dCcAc_c", "name": "mdCcAc_c", "proof": "ctor _ZN7dCcAc_cC1Ev / dtor _ZN7dCcAc_cD1Ev on this+0x160. 0x160 + 0x34 = 0x194, the next constructed member offset. Also passed to _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c from Behavior."},
+    {"offset": "0x194", "size": "0x1bc", "type": "dBgCh_Actr", "name": "mWithMeshClsn", "proof": "ctor _ZN10dBgCh_ActrC1Ev / dtor _ZN10dBgCh_ActrD1Ev on this+0x194. 0x194 + 0x1bc = 0x350, the next this-relative address whose address is taken. Behavior calls _ZNK10dBgCh_Actr14GetResultFlag1Ev and _ZNK10dBgCh_Actr12TouchesWaterEv on it. An `add rD,this,#0x300` in nine functions is 0x16c INTO this member, not a separate field."},
+    {"offset": "0x350", "type": null, "name": null, "name_status": "unproven", "proof": "address taken (`add rD,this,#0x350`) in two functions; size and type unproven."},
+    {"offset": "0x374", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word store in one function."},
+    {"offset": "0x378", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word store in one function."},
+    {"offset": "0x37c", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word store in one function."},
+    {"offset": "0x380", "size": 4, "type": "pointer to a 16-byte state-table entry", "name": "(current state)", "proof": "PROVEN. Scuttlebug_SetState does `str r1,[r0,#0x380]` where r1 = stateTableBase + index*16, and both dispatch thunks (func_ov071_021202b4, func_ov071_02120278) read it back from [this,#0x380]. See state_machine."},
+    {"offset": "0x384", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word load/store in two functions."},
+    {"offset": "0x388", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word load/store in two functions."},
+    {"offset": "0x38c", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word load/store in two functions."},
+    {"offset": "0x390", "type": null, "name": null, "name_status": "unproven", "proof": "word store, and its address is taken, across four functions."},
+    {"offset": "0x394", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word store in two functions."},
+    {"offset": "0x398", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word store in two functions."},
+    {"offset": "0x39c", "size": 4, "type": null, "name": null, "name_status": "unproven", "proof": "word load/store in ELEVEN functions -- the hottest own field after the state pointer."},
+    {"offset": "0x3a0", "type": null, "name": null, "name_status": "unproven", "proof": "word load/store and address taken, three functions."},
+    {"offset": "0x3a8", "size": 2, "type": "s16 (halfword)", "name": "mTimer", "proof": "_ZN10Scuttlebug8BehaviorEv does `add r0,r4,#0x3a8 ; bl 0x0203adbc` and 0x0203adbc is DecIfAbove0_Short in config/arm9/symbols.txt -- a short* parameter. Behavior discards the result. include/Scuttlebug.h on this base declares `u8 mTimer` with `u8 pad_3a9[0x3]` after it; the ROM says halfword, and 0x3aa is a SEPARATE byte field, so that declaration is wrong in both halves."},
+    {"offset": "0x3aa", "size": 1, "type": "u8", "name": null, "name_status": "unproven", "proof": "ldrb/strb in three functions: func_ov071_0211f498 reads and writes it, _ZN10Scuttlebug13InitResourcesEv writes it (`strb r2,[r4,#0x3aa]` @0x02120500), _ZN10Scuttlebug13OnTurnIntoEggER6Player reads it twice and writes it once."},
+    {"offset": "0x3ab", "size": 1, "type": "padding", "name": null, "proof": "never accessed; 0x3aa+1 = 0x3ab and the object ends at 0x3ac."}
   ],
-  "provenance": "Written by the writer stage for ov071/Scuttlebug (no scout run existed). Sources: tools/tubuild.py inspect + verify, tools/rtti_vtables.py --own daSpd_c over build/rtti.json, tools/disasm.py over extracted/overlays/overlay_0071.bin, config/arm9/overlays/ov071/{symbols,relocs,delinks}.txt, and config/arm9/symbols.txt."
+  "fields_method": "This-relative accesses were collected by decoding all 37 functions with capstone, seeding the this-register set with r0 at entry, propagating through `mov`, and recording every `[thisreg,#imm]` load/store plus every `add rD,thisreg,#imm`. That is a heuristic for the register set, so a single-function offset is weaker evidence than a multi-function one; each offset above carries its witness count. The four member subobjects and the state pointer are proven independently and do not rest on the heuristic.",
+
+  "state_machine": {
+    "summary": "This class runs a 9-state machine whose states are PAIRS of pointer-to-member-function records. It is the most important structural fact for the writer, and the tree's header does not model it at all.",
+    "table_data_records": {
+      "address": "0x02122b60..0x02122bf0",
+      "size": "0x90 = 144 bytes",
+      "shape": "18 consecutive 8-byte Itanium PMF records {fn ptr; ptrdiff_t adj;}. Every ptr word is relocated (config/arm9/overlays/ov071/relocs.txt, from:0x02122b60 through from:0x02122be8, all module:overlay(71)) to a function inside this class's own 0x0211f000..0x02120668 run, and every adj word is 0, so all 18 targets are non-virtual members. The band ends exactly where _ZTS7daSpd_c begins at 0x02122bf0.",
+      "targets_in_order": [
+        {"state": 0, "on_enter": "0x0211fee4", "per_frame": "0x02120130"},
+        {"state": 1, "on_enter": "0x02120028", "per_frame": "0x0211ff84"},
+        {"state": 2, "on_enter": "0x021201b4", "per_frame": "0x02120200"},
+        {"state": 3, "on_enter": "0x0211fa54", "per_frame": "0x0211f694"},
+        {"state": 4, "on_enter": "0x0211f6f8", "per_frame": "0x0211f7d4"},
+        {"state": 5, "on_enter": "0x0211f8d0", "per_frame": "0x0211fb0c"},
+        {"state": 6, "on_enter": "0x0211fb24", "per_frame": "0x0211fbf4"},
+        {"state": 7, "on_enter": "0x0211fc60", "per_frame": "0x0211fcd4"},
+        {"state": 8, "on_enter": "0x0211fd58", "per_frame": "0x0211fe38"}
+      ]
+    },
+    "table_runtime_array": {
+      "address": "0x02122fa8..0x02123038",
+      "size": "0x90 = 144 = 9 entries x 16 bytes",
+      "section": ".bss",
+      "proof": "Scuttlebug_SetState's literal pool word at 0x02120300 is 0x02122fa8, and it computes `add r1,r2,r1,lsl #4` -- a 16-byte stride, i.e. two 8-byte PMFs per state. The next .bss symbol in ov071/symbols.txt is data_ov071_02123038, and 0x02123038 - 0x02122fa8 = 0x90 = 9 x 16 exactly. The 9-state count therefore falls out of the .bss extent and the .data record count independently of each other.",
+      "filled_by": "__sinit_ov071_021226ac (.init 0x021226ac..0x021228c8). Its literal pool at 0x0212287c..0x021228c4 holds all 18 .data record addresses plus 0x02122fa8, the array base."
+    },
+    "setter": {
+      "symbol": "Scuttlebug_SetState @ 0x021202ec, size 0x1c",
+      "body": "ldr r2,[pc,#0xc] (=0x02122fa8) ; ldr ip,[pc,#0xc] (=0x021202b4) ; add r1,r2,r1,lsl #4 ; str r1,[r0,#0x380] ; bx ip",
+      "meaning": "SetState(this, index) stores &stateTable[index] at this+0x380 and TAIL-CALLS the on-enter dispatcher. It has 13 distinct callers inside the run -- the most-called function in the class."
+    },
+    "dispatchers": [
+      {"symbol": "func_ov071_021202b4", "address": "0x021202b4", "size": "0x38", "role": "invokes the CURRENT state's on-enter PMF (entry offset +0)", "callers": "none by BL -- Scuttlebug_SetState reaches it by `bx ip` through the literal at 0x02120304. A BL-only caller scan reports it as an orphan; it is not."},
+      {"symbol": "func_ov071_02120278", "address": "0x02120278", "size": "0x3c", "role": "invokes the CURRENT state's per-frame PMF (entry offset +8: `ldr r1,[r0,#0x380] ; add r3,r1,#8`)", "callers": "_ZN10Scuttlebug8BehaviorEv only"}
+    ],
+    "pmf_call_sequence": "Both dispatchers use the standard Itanium ARM PMF sequence: load adj from [entry,#4], `add this,this,adj asr #1`, `ands #1` to test the virtual bit, then either an indirect vtable load or a direct pointer, then `blx`. All 18 adj words are 0, so the virtual path is never taken by this class's own table.",
+    "writer_hazard": "These 18 records are pointer-to-member records in UNOWNED .data, and dsd resolves them by symbol NAME. The moment stage 3b renames a state handler from func_ov071_XXXXXXXX to _ZN10Scuttlebug...Ev, the new mangled name must reach config/arm9/overlays/ov071/symbols.txt IN THE SAME COMMIT, or that record links as 0x00000000. No byte gate at stage 2 or 3 catches it."
+  },
+
+  "non_virtual": [
+    {"address": "0x021202ec", "size": "0x1c", "symbol": "Scuttlebug_SetState", "role": "state setter", "intra_run_callers": 13, "name_status": "coined -- the original spelling is unproven"},
+    {"address": "0x021202b4", "size": "0x38", "symbol": "func_ov071_021202b4", "role": "on-enter PMF dispatcher", "intra_run_callers": "reached by bx from SetState, not by BL"},
+    {"address": "0x02120278", "size": "0x3c", "symbol": "func_ov071_02120278", "role": "per-frame PMF dispatcher", "intra_run_callers": 1},
+    {"address": "0x0211f0b4", "size": "0x94", "symbol": "func_ov071_0211f0b4", "role": "shared helper", "intra_run_callers": 2},
+    {"address": "0x0211f148", "size": "0x154", "symbol": "func_ov071_0211f148", "role": "shared helper", "intra_run_callers": 4},
+    {"address": "0x0211f29c", "size": "0x1fc", "symbol": "func_ov071_0211f29c", "role": "shared helper", "intra_run_callers": 6},
+    {"address": "0x0211f498", "size": "0x8c", "symbol": "func_ov071_0211f498", "role": "shared helper", "intra_run_callers": 4},
+    {"address": "0x0211f524", "size": "0x170", "symbol": "func_ov071_0211f524", "role": "shared helper, called from Behavior and InitResources", "intra_run_callers": 2},
+    {"address": "0x02120618", "size": "0x50", "symbol": "daSpd_c_classInit", "role": "the actor factory; referenced only from g_profile_SPIDER+0", "intra_run_callers": 0}
+  ],
+  "state_handlers_are_the_other_18": "The remaining 18 functions (0x0211f694, 0x0211f6f8, 0x0211f7d4, 0x0211f8d0, 0x0211fa54, 0x0211fb0c, 0x0211fb24, 0x0211fbf4, 0x0211fc60, 0x0211fcd4, 0x0211fd58, 0x0211fe38, 0x0211fee4, 0x0211ff84, 0x02120028, 0x02120130, 0x021201b4, 0x02120200) have ZERO BL callers anywhere in ov071. They are reached exclusively through the PMF table above. A BL-only call scan makes every one of them look dead.",
+
+  "callers": {
+    "inbound_cross_module": "NONE. config/arm9/relocs.txt contains 13891 rows, 251 of which name some overlay, and 0 of which name overlay(70), overlay(71) or overlay(72) -- so the filter pattern is demonstrably live and the zero is a real zero, not the ov006-vs-overlay(6) spelling trap. No other overlay's relocs.txt mentions overlay(71) either; only ov071's own does.",
+    "how_the_class_is_reached": "Through g_profile_SPIDER at 0x02122c08, whose first word is relocated to 0x02120618 = daSpd_c_classInit (relocs.txt from:0x02122c08 -> 0x02120618 module:overlay(71)). The profile is registered by the overlay's own static initialisers at load time; nothing in arm9 points into ov071 directly.",
+    "intra_overlay": "A relocation scan cannot see intra-overlay BLs at all, so the whole 0x0211f000..0x021226a0 .text was decoded and every `bl` (cond AL, opcode 0xeb) resolved. Result: zero BLs cross the 0x02120668 run boundary in either direction -- nothing outside the run calls into it, and nothing inside the run calls out to another ov071 class's function. The run is call-closed."
+  },
+
+  "data_and_bss_band": {
+    "note": "The queue's promotion_route for this row is text-only, so none of this is owned by the promoted TU. It is recorded so the writer need not rediscover the boundary, and so nobody mistakes an unowned neighbour for part of the class.",
+    ".data": "0x02122b60..0x02122ca8 -- 18 PMF records (0x02122b60), _ZTS7daSpd_c (0x02122bf0), _ZTI7daSpd_c (0x02122bfc), g_profile_SPIDER (0x02122c08, marked `ambiguous` in symbols.txt), vtable storage (0x02122c24, address point 0x02122c2c), ending immediately before daEykn_c's band at 0x02122ca8. Same shape daEyBm_c's promoted manifest describes for its own band.",
+    ".bss": "0x02122f80..0x02123038 -- five symbols: 0x02122f80, 0x02122f88, 0x02122f90, 0x02122f9c (resource handles; __sinit_ov071_021226ac pairs 0x02122f80/0x02122f9c with id 0x425 -> arm9 0x02017ab4, and 0x02122f88/0x02122f90 with id 0x426 -> arm9 0x02017984) and the 0x90-byte state array at 0x02122fa8.",
+    ".init": "__sinit_ov071_021226ac, 0x021226ac..0x021228c8, its own delinks shard (src/__sinit_ov071_021226ac.c). NOT one of the 37 text shards.",
+    ".ctor": "the word at 0x02122b30 = 0x021226ac, first of ov071's four sinit slots. The other three (0x021228c8, 0x02122a1c, 0x02122a64) belong to the overlay's other classes; daEyBm_c's promoted manifest names __sinit_ov071_02122a1c as its own."
+  },
+
+  "sibling_oracle_daEyBm_c": {
+    "verdict": "SIBLING. Not a base, not unrelated. Safe to copy from.",
+    "relationship_evidence": "_ZTI8daEyBm_c sits at 0x02122db8 in ov071 and is a __si_class_type_info whose +8 word is 0x0208e390 = _ZTI8dActor_c -- the SAME direct base as this class. Neither class's typeinfo appears in the other's base chain, so they are peers under dActor_c. Bytes read from extracted/overlays/overlay_0071.bin at file offsets 0x3db8/0x3dc0; _ZTS8daEyBm_c is the length-prefixed string \"8daEyBm_c\\0\" at 0x02122dac (file offset 0x3dac), found exactly once in the whole ROM.",
+    "structural_agreement": "_ZTV8daEyBm_c has its address point at 0x02122de8 and runs to 0x02122e64 = 0x7c = 31 slots, identical in length to this class's table and to _ZTV8dActor_c. Its overrides sit on slots 0, 3, 6, 9, 12, 16, 17, 18 -- a strict subset of this class's ten, which add slots 19 and 29. Same base, same table length, same override style, same overlay, and its .data band is laid out in the same order (records -> _ZTS -> _ZTI -> g_profile_* -> _ZTV).",
+    "promotion_state": "PROMOTED on origin/main b4eee7425. config/tu_manifest.d/ov071/daEyBm_c.json is status:promoted, 13 functions, promoted_source src/game/actors/d_a_ey_bm.cpp; include/daEyBm_c.h exists. Its manifest's 10-row compiler_only_output list is the closest available template for this class's.",
+    "naming_difference_to_watch": "daEyBm_c kept its ROM name, so its manifest can and does claim _ZTS8daEyBm_c and _ZTI8daEyBm_c at real ov071 canonical addresses. This class CANNOT do that under the coined spelling -- see identity_evidence.symbols_txt_asymmetry. Copy daEyBm_c's structure, not its RTTI-ownership claims."
+  },
+
+  "header_divergences_to_fix": [
+    "include/Scuttlebug.h declares `u8 pad_0d0[0x4]`, but 0x0d0 is a live 4-byte field written by InitResources and read/written by three more functions.",
+    "include/Scuttlebug.h declares `u8 pad_350[0x58]` covering 0x350..0x3a8, but thirteen live offsets sit inside it (0x350, 0x374, 0x378, 0x37c, 0x380, 0x384, 0x388, 0x38c, 0x390, 0x394, 0x398, 0x39c, 0x3a0), including the state pointer at 0x380.",
+    "include/Scuttlebug.h declares `u8 mTimer; u8 pad_3a9[0x3];` at 0x3a8, but the ROM passes &this[0x3a8] to DecIfAbove0_Short (a short*), so 0x3a8 is a halfword, and 0x3aa is a separate live u8 with its own ldrb/strb sites.",
+    "The header models no state machine at all."
+  ],
+
+  "unproven": [
+    "The English names of all 29 auto-named func_ov071_* handlers and helpers. Their class ownership, bodies, call graph, PMF-table positions and ordering are proven; their names are not.",
+    "The original spellings of daSpd_c_classInit (historical project alias Scuttlebug_Spawn) and Scuttlebug_SetState.",
+    "The parameter type in _ZN10Scuttlebug13OnTurnIntoEggER6Player: R6Player asserts a reference and the bytes cannot distinguish a reference from a pointer.",
+    "The return type of OnAimedAtWithEgg. 0x32000 = 50 << 12 smells like Fix12(50), but the ROM proves only the 32-bit constant.",
+    "The types and names of every field marked name_status:unproven above -- 0x0d0, 0x350, 0x374, 0x378, 0x37c, 0x384, 0x388, 0x38c, 0x390, 0x394, 0x398, 0x39c, 0x3a0, 0x3aa.",
+    "What mTimer expiring means. Behavior decrements it every frame and discards the result, so the meaning lives in a state handler that has not been read.",
+    "Which of the nine states is the initial one, and the semantic name of any state.",
+    "Whether g_profile_SPIDER (0x02122c08) would be emitted by this TU. It is marked `ambiguous` in symbols.txt, the queue's route for this row is text-only so nothing claims it, and the promoted sibling daEyBm_c DOES claim its own g_profile_EYEKUN_BEAM. Not settled here.",
+    "The resource ids 0x425 and 0x426 in __sinit_ov071_021226ac's literal pool are read from that pool, not from a decode of the sinit body; what they name is unproven."
+  ],
+
+  "provenance": {
+    "stage": "scout",
+    "base": "b4eee7425e0912a698f311aa893bd8ff609bf78d (origin/main), merged into cpp/Scuttlebug-tu; branch verified 0 commits behind origin/main after the merge",
+    "worktree": "C:/tmp/sm64ds-scuttlebug",
+    "branch": "cpp/Scuttlebug-tu",
+    "rom_sources": [
+      "extracted/overlays/overlay_0071.bin -- all vtable, RTTI, PMF-table and instruction bytes",
+      "extracted/arm9_dec.bin -- _ZTV8dActor_c at 0x0208e3a4, module base 0x02004000 per extracted/dsd/arm9/arm9.yaml",
+      "extracted/dsd/arm9_overlays/overlays.yaml -- module base and code/bss sizes",
+      "extracted/arm9.bin, extracted/arm7.bin and all extracted/overlays/*.bin -- the negative name search"
+    ],
+    "tree_sources": [
+      "config/arm9/overlays/ov071/{symbols,relocs,delinks}.txt",
+      "config/arm9/{symbols,relocs}.txt",
+      "config/tu_manifest.d/ov071/daEyBm_c.json",
+      "notes/data/tu-promotion-queue.tsv",
+      "include/Scuttlebug.h, include/dActor_c.h, include/dBgCh_Actr.h, include/ModelAnim.h, include/ShadowModel.h, include/dCcAc_c.h"
+    ],
+    "tools_run": "python tools/rtti_extract.py (429 records, 0 unresolved) then python tools/rtti_vtables.py --own daSpd_c and --own daEyBm_c; capstone decode of ov071 .text for the BL call graph and the this-relative field scan.",
+    "tree_derived_fields": "shard_count_correction.queue_says, sibling_oracle_daEyBm_c.promotion_state, header_divergences_to_fix and data_and_bss_band's delinks boundaries are TREE-derived and rot on every promotion. Everything under identity_evidence, vtable, base_evidence, overrides, construction, fields, state_machine and callers is ROM-derived and cannot.",
+    "supersedes": "the earlier writer-stage version of this file on commit 60202175b, which asserted (a) that no load or store touches 0x0d0 -- four functions do -- and (b) a single u8 mTimer at 0x3a8, where the ROM shows a halfword at 0x3a8 and a separate u8 at 0x3aa. It also carried no state-machine section."
+  }
 }
