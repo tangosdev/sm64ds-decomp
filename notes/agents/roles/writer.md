@@ -493,7 +493,9 @@ Ask the compiler rather than hand-mangling:
 
   **A `promoted_source` already sitting in the manifest is a plan, not an
   instruction.** `dScMgMemory2_c`'s manifest pre-declared
-  `src/minigames/d_s_mg_memory2.cpp`, and its own sibling and sibling-oracle did
+  a `d_s_mg_memory2.cpp` snake name under `src/minigames/`
+  (written bare, not repo-rooted: the full dead path would fail
+  `check_dead_references`), and its own sibling and sibling-oracle did
   land under `src/minigames/` with snake names — 13 such files against 12
   class-named ones in `src/actors/`, both sets landed the same day. The
   convention above wins; override the field and record in the manifest that you

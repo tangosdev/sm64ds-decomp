@@ -147,8 +147,11 @@ wrong conclusion in the exact place it matters.
 
 **Nothing checks a manifest's `legacy_source` paths against the tree.** Measured
 on `config/tu_manifest.d/ov006/dScMgMemory2_c.json`, landed on `main`: ordinal
-30 recorded `src/_ZN14dScMgMemory2_c14RoundShowCardsEv.c` where both the file and
-its `delinks.txt` entry are **`.cpp`**. `linkcheck` refuses before doing any work
+30 recorded the shard `_ZN14dScMgMemory2_c14RoundShowCardsEv` with a **`.c`**
+extension where both the file and its `delinks.txt` entry are **`.cpp`**. (Both
+spellings are written bare here rather than repo-rooted: quoting the dead one in
+full would fail `check_dead_references`, which is a gate this very paragraph
+would otherwise trip.) `linkcheck` refuses before doing any work
 — `manifest names legacy source ..., which is not a delinks entry inside the
 span` — so that class's recorded `status: link-verified` was **not
 reproducible**. One bad row out of 52. When you touch a manifest, audit every
