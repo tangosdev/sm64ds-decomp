@@ -30,11 +30,20 @@ struct dScMgPanel_c : dScMgBase_c {
     s32 unk_4cac;            /* 0x4cac */
     s32 unk_4cb0;            /* 0x4cb0 */
     s32 unk_4cb4;            /* 0x4cb4 */
-    s32 unk_4cb8;            /* 0x4cb8 */
-    u8  pad_4cbc[0x208];
+    s32 unk_4cb8;            /* 0x4cb8 -- panel count (<= 0x24) */
+    s32 unk_4cbc;            /* 0x4cbc -- layout index + 4 */
+    s32 unk_4cc0;            /* 0x4cc0 -- pick count (<= 0x30) */
+    s32 unk_4cc4[0x24];      /* 0x4cc4 -- panel x, Fix12, from the layout table */
+    s32 unk_4d54[0x24];      /* 0x4d54 -- panel y, Fix12, from the layout table */
+    u8  pad_4de4[0xe0];
     s16 unk_4ec4;            /* 0x4ec4 */
     u8  pad_4ec6[0x34];
-    u8  unk_4efa[0xe5];      /* 0x4efa */
+    u8  unk_4efa[0x24];      /* 0x4efa -- panel kind, indexed below unk_4cb8 */
+    u8  unk_4f1e[0x24];      /* 0x4f1e -- panel face, from the face table */
+    u8  unk_4f42[0x24];      /* 0x4f42 -- panel face copy, flipped by picks */
+    u8  pad_4f66[0x48];
+    u8  unk_4fae[0x30];      /* 0x4fae -- picked panel indices */
+    u8  unk_4fde;            /* 0x4fde -- number of picks so far */
     u8  unk_4fdf;            /* 0x4fdf */
     u8  pad_4fe0[0x2];
     u8  unk_4fe2;            /* 0x4fe2 */
