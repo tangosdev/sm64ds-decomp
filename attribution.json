@@ -2694,6 +2694,24 @@
     "src/actors/Player.cpp#_ZNK6Player14GetBodyModelIDEjb": "tangosdev",
     "src/actors/Player.cpp#func_ov002_020bd8ac": "tangosdev",
     "src/actors/Player.cpp#func_ov002_020cec2c": "alexsobolew7",
-    "src/actors/Player.cpp#func_ov002_020bdd9c": "tangosdev"
+    "src/actors/Player.cpp#func_ov002_020bdd9c": "tangosdev",
+    "src/actors/Player.cpp#_ZN6Player16IncMegaKillCountEv": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020bdd2c": "lunavyqo",
+    "src/actors/Player.cpp#func_ov002_020bf224": "ruspecial",
+    "src/actors/Player.cpp#func_ov002_020bf36c": "lunavyqo",
+    "src/actors/Player.cpp#func_ov002_020c06fc": "lunavyqo",
+    "src/actors/Player.cpp#func_ov002_020c1eb4": "ruspecial",
+    "src/actors/Player.cpp#func_ov002_020c200c": "ruspecial",
+    "src/actors/Player.cpp#func_ov002_020c3bdc": "tangosdev",
+    "src/actors/Player.cpp#_ZN6Player21St_OpeningWakeUp_MainEv": "lunavyqo",
+    "src/actors/Player.cpp#_ZN6Player15St_Respawn_InitEv": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020c84b0": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020c8f0c": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020c91bc": "tangosdev",
+    "src/actors/Player.cpp#_ZN6Player12CanEnterDoorEh": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020cc660": "tangosdev",
+    "src/actors/Player.cpp#func_ov002_020cd3e0": "ruspecial",
+    "src/actors/Player.cpp#func_ov002_020ce798": "ruspecial",
+    "src/actors/Player.cpp#func_ov002_020ceb7c": "ruspecial"
   }
 }
