@@ -1,0 +1,434 @@
+{
+  "id": "ov074/Goomboss",
+  "module": "ov074",
+  "source": "src/actors/Goomboss.cpp",
+  "promoted_source": "src/actors/Goomboss.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0211f154..0x02121380, 36 function(s). build/tu_map.json (tools/tu_map.py) segments this class's run as 0x0211f000..0x02122764 with 53 functions; the real run is 0x0211f000..0x0212290c with 55, because tu_map cuts on symbol name and never labelled the two factories daKuriKing_c_classInit_KURIKING_VANISH (0x02122764) and daKuriKing_c_classInit_KURIKING (0x02122838), both of which store _ZTV8Goomboss.",
+    "class label(s): Goomboss -- the tree's coined name. The cartridge's own RTTI names this class daKuriKing_c (_ZTI12daKuriKing_c / _ZTS12daKuriKing_c at ov074:0x02122e30 and 0x02122e3c), while the vtable is named _ZTV8Goomboss at ov074:0x02122eb8. Both spellings are live in ov074's symbols.txt at once; this promotion keeps the tree's spelling and does not rename.",
+    "THE CLAIM IS A SUBSET, and the cut is forced twice over. (1) func_ov074_02121380 (0x02121380, size 0x374) is a banked near-miss at 11 divergent words with NO delinks.txt entry, so the cartridge's own bytes cover 0x02121380..0x021216f4 and the run has a hole in it; no delink block and no TU manifest in this tree carries two .text runs, so only one contiguous side can be claimed and this is the larger -- 38 functions against 16. (2) The run's first two members, _ZN8GoombossD1Ev (0x0211f000) and _ZN8GoombossD0Ev (0x0211f0a0), cannot be in it either; see the destructor note.",
+    "module sinit corroboration: 1 sinit(s) / 1 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211f154",
+      "end": "0x02121380"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov074_0211f154",
+      "address": "0x0211f154",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov074_0211f154.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov074_0211f244",
+      "address": "0x0211f244",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov074_0211f244.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov074_0211f344",
+      "address": "0x0211f344",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov074_0211f344.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov074_0211f38c",
+      "address": "0x0211f38c",
+      "size": "0x0000022c",
+      "legacy_source": "src/func_ov074_0211f38c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov074_0211f5b8",
+      "address": "0x0211f5b8",
+      "size": "0x00000450",
+      "legacy_source": "src/func_ov074_0211f5b8.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov074_0211fa08",
+      "address": "0x0211fa08",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov074_0211fa08.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov074_0211fa74",
+      "address": "0x0211fa74",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov074_0211fa74.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov074_0211fb84",
+      "address": "0x0211fb84",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov074_0211fb84.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov074_0211fbd0",
+      "address": "0x0211fbd0",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov074_0211fbd0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov074_0211fc34",
+      "address": "0x0211fc34",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov074_0211fc34.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov074_0211fc38",
+      "address": "0x0211fc38",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov074_0211fc38.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov074_0211fd48",
+      "address": "0x0211fd48",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov074_0211fd48.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov074_0211fd74",
+      "address": "0x0211fd74",
+      "size": "0x00000238",
+      "legacy_source": "src/func_ov074_0211fd74.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov074_0211ffac",
+      "address": "0x0211ffac",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov074_0211ffac.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov074_0211ffcc",
+      "address": "0x0211ffcc",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov074_0211ffcc.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov074_0212007c",
+      "address": "0x0212007c",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov074_0212007c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov074_02120080",
+      "address": "0x02120080",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov074_02120080.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov074_0212016c",
+      "address": "0x0212016c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov074_0212016c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov074_0212018c",
+      "address": "0x0212018c",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov074_0212018c.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov074_021201ec",
+      "address": "0x021201ec",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov074_021201ec.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov074_021201f0",
+      "address": "0x021201f0",
+      "size": "0x000001f0",
+      "legacy_source": "src/func_ov074_021201f0.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov074_021203e0",
+      "address": "0x021203e0",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov074_021203e0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov074_021203e4",
+      "address": "0x021203e4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov074_021203e4.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov074_0212042c",
+      "address": "0x0212042c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov074_0212042c.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov074_02120474",
+      "address": "0x02120474",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov074_02120474.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov074_021204c0",
+      "address": "0x021204c0",
+      "size": "0x00000208",
+      "legacy_source": "src/func_ov074_021204c0.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov074_021206c8",
+      "address": "0x021206c8",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov074_021206c8.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov074_021207b8",
+      "address": "0x021207b8",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov074_021207b8.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov074_02120808",
+      "address": "0x02120808",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov074_02120808.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov074_0212087c",
+      "address": "0x0212087c",
+      "size": "0x000002a8",
+      "legacy_source": "src/func_ov074_0212087c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov074_02120b24",
+      "address": "0x02120b24",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov074_02120b24.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov074_02120b90",
+      "address": "0x02120b90",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov074_02120b90.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov074_02120bb8",
+      "address": "0x02120bb8",
+      "size": "0x000001bc",
+      "legacy_source": "src/func_ov074_02120bb8.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov074_02120d74",
+      "address": "0x02120d74",
+      "size": "0x000004fc",
+      "legacy_source": "src/func_ov074_02120d74.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov074_02121270",
+      "address": "0x02121270",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov074_02121270.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov074_02121300",
+      "address": "0x02121300",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov074_02121300.cpp",
+      "ordinal": 35
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Promoted by hand from the `tools/tubuild.py promote --dry-run` plan (promote is dry-run only). 36 of the class's 55 shards are folded in; the source's own header comment carries the reconciliation notes.",
+    "THE DESTRUCTOR PAIR IS DELIBERATELY EXCLUDED, AND NOT FOR THE USUAL REASON. The cartridge orders them D1 (0x0211f000) then D0 (0x0211f0a0), which is the REPRODUCIBLE direction -- measured here on mwccarm 2004/b56, an inline in-class `virtual ~Goomboss() {}` emits the pair with no D2, while an out-of-line definition emits D2 (0xa0), D0 (0xb4), D1 (0xa0) in that section order. The blocker is the KEY FUNCTION. With the destructor inline the key function becomes the first out-of-line virtual the class declares, Behavior at 0x02121bf0, which is on the far side of the near-miss hole. A TU that does not own the key function emits no vtable, and with no vtable nothing odr-uses the destructor, so neither variant is emitted at all (measured: a probe TU over the inline-destructor header emits zero symbols beyond its own function). A forcing scaffold does emit the pair, and in ROM order when `delete p;` precedes `p->~Goomboss();` -- the variants come out in reverse order of first odr-use, measured here and recorded in no role file -- but mwccarm emits the scaffold itself into .text immediately BELOW D1, and D1 sits at 0x0211f000, the first byte of ov074's .text. There is no address below it. src/_ZN8GoombossD1Ev.cpp and src/_ZN8GoombossD0Ev.cpp therefore keep their own delinks entries and this object emits no copy of either.",
+    "THE ONE THING BETWEEN 36 AND 55 IS func_ov074_02121380. Match it and the hole closes, a single TU owns Behavior and therefore the key function, the vtable and both destructors come with it, and the whole 0x0211f000..0x0212290c run promotes. notes/mwccarm-codegen.md 6bq records the levers already tried and calls it one lever short.",
+    "The manifest is text-only. _ZTV8Goomboss (ov074:0x02122eb8, 31 slots, 0x7c symbol extent / 0x84 storage) and the whole dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c vague-linkage chain are NOT emitted by this object at all, because the licensed range excludes the key function; there is nothing to deadstrip but Vector3's inline destructor. `externalized_output` is absent -- no symbol needed the canonical-import route.",
+    "The row count was MEASURED, not inherited: ov074 had no sibling oracle. A probe TU that owns the key function emits exactly 11 data symbols -- _ZTV8Goomboss plus _ZTI/_ZTS for Goomboss, dEnemyBase_c, dActor_c, dBase_c and fBase_c -- which is 2 x 5 levels + 1 vtable, the formula's prediction, exact. This entry needs 1 row rather than 11 only because its licensed range excludes the key function.",
+    "A TRAP FOR THE NEXT ov074 WRITER: a TU that does own the key function emits _ZTI8Goomboss and _ZTS8Goomboss under the COINED name, and tools/romdata_check.check_object reports both UNNAMED -- no module's symbols.txt names those addresses, because the cartridge homes them as _ZTI12daKuriKing_c and _ZTS12daKuriKing_c. Those two rows are plain `deadstrip` (homeless), NOT `deadstrip-data`. The other nine are homed and are deadstrip-data: _ZTV8Goomboss ov074:0x02122eb8, _ZTI12dEnemyBase_c ov002:0x021081c0, _ZTS12dEnemyBase_c ov002:0x021081cc, _ZTI8dActor_c arm9:0x0208e390, _ZTS8dActor_c arm9:0x0208e384, _ZTI7dBase_c arm9:0x02086e78, _ZTS7dBase_c arm9:0x02086e54, _ZTI7fBase_c arm9:0x02086d70, _ZTS7fBase_c arm9:0x02086e60.",
+    "src/_ZN8Goomboss13InitResourcesEv.cpp's delinks entry lacks the `complete` marker, which is the draft signal, but build_pin.verify reproduces it byte-for-byte at 2004/b56. The marker looks stale; it is outside this claim either way and was left alone.",
+    "Two reconciliations the merge forced. include/common.h is now included BEFORE include/Goomboss.h: Goomboss.h reaches math/Matrix.h's structured Matrix4x3 while every legacy shard saw common.h's flat `s32 m[12]`, and with the structured spelling arriving first func_ov074_02121270 and func_ov074_02121300 both went long on their whole-matrix assignments. And func_ov074_021201f0's angle temp is spelt `struct Ang16 { short v[3]; }`: its shard is a .c file compiled as C, where the whole-struct assignment is a block move, while as C++ the same assignment is scalarised, the local loses its frame home and the body came out 0x20 short.",
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov074_02120080.cpp (func_ov074_02120080) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov074_0212018c.cpp (func_ov074_0212018c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov074_02120474.cpp (func_ov074_02120474) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov074_02121300.cpp (func_ov074_02121300) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov074_021223bc.cpp (func_ov074_021223bc) did not split (the definition is inside the extern \"C\" block opened on line 13, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15FindWithActorIDEjPS_' differs between the legacy file that used to hold func_ov074_0211f344 and the one that held func_ov074_0211f5b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0211f5b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fa08; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fa74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fa74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021204c0' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fa74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021203e4' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_0211fbd0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov074_0211fbd0 and the one that held func_ov074_0211fc38; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fc38; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0211fc38; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fc38; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021216f4' differs between the legacy file that used to hold func_ov074_0211fbd0 and the one that held func_ov074_0211fc38; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a20' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021207b8' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Short' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0211fd74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02120808' differs between the legacy file that used to hold func_ov074_0211fb84 and the one that held func_ov074_0211ffac; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021206c8' differs between the legacy file that used to hold func_ov074_0211fd74 and the one that held func_ov074_0211ffcc; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0211ffcc; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_021201f0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player9StartTalkER7fBase_cb' differs between the legacy file that used to hold func_ov074_0211fc38 and the one that held func_ov074_021201f0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021201f0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021201f0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021203e4' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_021201f0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_01ffa344' differs between the legacy file that used to hold func_ov074_0211fa08 and the one that held func_ov074_021204c0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021204c0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a20' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_021206c8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov074_0211fbd0 and the one that held func_ov074_021206c8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021206c8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_021216f4' differs between the legacy file that used to hold func_ov074_0211fbd0 and the one that held func_ov074_021206c8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021206c8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a20' differs between the legacy file that used to hold func_ov074_0211fa74 and the one that held func_ov074_021207b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021207b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov074_0211ffcc and the one that held func_ov074_02120808; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'AngleDiff' differs between the legacy file that used to hold func_ov074_0211ffcc and the one that held func_ov074_02120808; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov074_02121a4c' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120808; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_0212087c; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120bb8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120d74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov074_0211f38c and the one that held func_ov074_02120d74; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov074_0211fbd0 and the one that held func_ov074_021216f4; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov074_0211f154 and the one that held func_ov074_0212195c; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_0212199c; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held _ZN8Goomboss8BehaviorEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov074_0211f154 and the one that held _ZN8Goomboss8BehaviorEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_01ffa344' differs between the legacy file that used to hold func_ov074_0211fa08 and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov074_02121a4c and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov074_02121a4c and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210da30' differs between the legacy file that used to hold _ZN8Goomboss16CleanupResourcesEv and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130cf8' differs between the legacy file that used to hold _ZN8Goomboss16CleanupResourcesEv and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov074_02123040' differs between the legacy file that used to hold _ZN8Goomboss16CleanupResourcesEv and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov074_02123000' differs between the legacy file that used to hold _ZN8Goomboss16CleanupResourcesEv and the one that held _ZN8Goomboss13InitResourcesEv; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov084_02130cf8' differs between the legacy file that used to hold _ZN8Goomboss16CleanupResourcesEv and the one that held func_ov074_0212229c; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN15MaterialChanger6UpdateER15ModelComponents' differs between the legacy file that used to hold _ZN8Goomboss6RenderEv and the one that held func_ov074_021222e0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov074_02121270 and the one that held func_ov074_021222e0; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_021207b8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov074_0211f5b8 and the one that held func_ov074_02120bb8; kept the first, the other is commented out for review The merged TU carries ONE declaration per symbol: every intra-TU member is declared once from its own definition in the forward-declaration block, and every external symbol keeps the spelling include/decl_common.h or the real header gives it, with a cast at the call site where a shard disagreed. Both alternates are gone from the source and the TU is 36/36 MATCH."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov074-Goomboss/Goomboss.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 36,
+    "functions_declared": 36,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        7
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- PRE-PROMOTION run against a pristine tree. Once the source is enrolled in delinks.txt this command routes down the intact-object path and refuses; that refusal is expected and is not damage.",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov074-Goomboss/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211f154",
+        "end": "0x02121380",
+        "bytes": 8748,
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 36
+        },
+        "orderOk": true,
+        "homeless": 0,
+        "collidesGap": 0,
+        "collidesSrc": 0,
+        "emittedTextOrderIsRomAscending": true,
+        "explicitlyDeadstrippedFromScratchObject": [
+          "_ZN7Vector3D1Ev"
+        ]
+      },
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": 9,
+      "symbolCheckNote": "dsd check symbols --fail reports 9 errors; the pristine-tree baseline control reports the same 9. 0 new, 0 resolved -- pre-existing and not attributable to this TU, but the check is not green and is not reported as such.",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "byteNeutralityOfPostLinkcheckEdit": "The only source edit after the recorded linkcheck was deleting 59 TUBUILD CONFLICT marker comments. The object sha256 before and after that edit is afcc5f436236bfa597c41ac93f36581b0856dfb0b7541ceea455969df3b8e727 (20520 bytes) in both cases."
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because several members of this TU take Vector3 locals (func_ov074_021201f0, func_ov074_021204c0, func_ov074_02120bb8 and others). The cartridge owns it at arm9:0x020072c0, an enrolled source already reaches it, and it is outside this entry's licensed range (.text 0x0211f154-0x02121380), so production isolation discards this object's byte-identical copy."
+    }
+  ]
+}
