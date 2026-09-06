@@ -11,6 +11,42 @@ single C++ TU". Read it (`git show --stat 72c6dcfb6`) before you start.
 Do **not** use a `Reconstruct N actor profiles (wave NN)` commit as your
 template. Those rename registry rows and never touch the shard pile.
 
+## Stage 3b: gathering is only half the job
+
+Folding the shards into one byte-matching TU earns `status: promoted`. It does not
+make the class a class. Until 2026-09-06 nothing here asked for methods, and the
+landed spread runs from `dScMgCoin_c` at **0 of 33** members to `dScMgMemory2_c` at
+**51 of 52** -- all of them `promoted`, all counted the same by every metric. See
+`PIPELINE.md`, "A promoted TU is not a reconstructed class", for the full table.
+
+**Convert as far as byte-match allows.** Turn each `func_ovNNN_*(char *self, ...)`
+member into a real `<Class>::` method declared in the header; the leading `char
+*self` becomes the implicit `this` in the same register, so most conversions cost
+nothing -- but **measure, do not assume**. Work in batches, run `tubuild.py verify`
+after each, and isolate any regression to one cause before continuing. A member
+whose first parameter is not the object, or that will not convert byte-neutrally,
+**stays a free function**: that is a result, not a failure. `dScMgMemory2_c` is the
+oracle for every mechanical question -- read its source and manifest first.
+
+This may run as a separate pass on the same branch after stages 2 and 3 have
+already pushed. Whenever you report a promotion, give the method count next to the
+match count: "31/31 MATCH" hides "1 of 31 is a method".
+
+**The rename is ONE edit.** A converted member gets a new mangled name, and any
+pointer-to-member record in unowned `.data` that still spells the target `func_*`
+then links as `0x00000000` -- dsd resolves those records by NAME. `symbols.txt` and
+the manifest's `functions[]` move in the same commit. No byte gate at stage 2 or 3
+catches this; the cheap link evidence is a `.symtab` undefined-symbol scan of the
+emitted object.
+
+## Coined-name classes are parked
+
+Do not claim a class whose name was coined rather than read from the cartridge's
+RTTI -- check `identity_evidence` in its facts file first. A coined name cannot be
+corroborated against the ROM, so a promotion under one banks a claim the cartridge
+cannot support. This parks 143 of the 201 unpromoted queue rows. **Do not run
+`class_rename.py`** to get around it.
+
 ## Inputs
 
 - `notes/data/tu-promotion-queue.tsv` — your target, its `shard_count`,
