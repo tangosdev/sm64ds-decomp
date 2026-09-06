@@ -1,14 +1,59 @@
 # Which overlays can be resident together
 
 **Status:** answered. The map is code, in `tools/overlay_residency.py`, and
-`resolve_placeholders.py` uses it. This note is the evidence behind it.
+`resolve_placeholders.py` uses it. This note is the evidence behind it, and now
+also carries the original problem statement it closed (§0, folded in from the
+retired `overlay-ambiguous-references.md`).
 
-`notes/overlay-ambiguous-references.md` said 169 (later 171) references could not be
-resolved because two overlays both define the target address and nothing said which
-was loaded. Something does say: the game's own loader. **127 of the 137 that were
-genuinely overlay-ambiguous are now settled.**
+169 (later 171) references could not be resolved because two overlays both define
+the target address and nothing said which was loaded. Something does say: the
+game's own loader. **127 of the 137 that were genuinely overlay-ambiguous are now
+settled.**
 
 ---
+
+## 0. The original problem: 169 references ambiguous between overlays
+
+169 functions could not be enrolled because a reference in them targeted an address
+that **two or more overlays both define**, and nothing in the data said which one was
+resident when the code ran. `tools/resolve_placeholders.py` resolves a reference by
+joining the call site's own relocation to the owning module and then to that module's
+symbol table:
+
+```sh
+from:0x021111e8 kind:load to:0x021099e4 module:overlay(2)
+```
+
+That works when dsd names one overlay. For these 169 it named several --
+`module:overlays(0,4)` -- because overlays share address space and dsd could not tell
+them apart either. Where only one candidate defines a symbol at the target address the
+tool settles it automatically. These were the cases where **both candidates defined
+something, and the two disagreed**:
+
+| references | name in source | candidates | settled by (below) |
+|---:|---|---|---|
+| 22 | `func_020beb68` | `ov000:data_ov000_020beb68` vs `ov004:data_ov004_020beb68` | ov004, §3 |
+| 9 | `func_020aea30` | `ov002:func_ov002_020aea30` vs `ov004:_ZN5Enemy12KillByAttack...` | ov002 |
+| 8 | `func_020ada40` | `ov002:func_ov002_020ada40` vs `ov004:_ZN5Enemy20KillByInvincib...` | ov002 |
+| 6 | `func_020aed98` | `ov002:_ZN5EnemyC2Ev` vs `ov007:func_ov007_020aed98` | ov002 `_ZN5EnemyC2Ev`, §6 |
+| 5 | `func_020bc7d4` | `ov000:data_ov000_020bc7d4` vs `ov004:data_ov004_020bc7d4` | ov004 |
+| 5 | `_ZTV10dBgActor_c` | `ov006:data_ov006_0213c5bc` vs `ov098:data_ov098_0213c5bc` | ov098 |
+
+A guess here was not cheap. `match.py` compares relocated words as wildcards, so
+picking the wrong overlay still byte-matches -- the mistake would surface only at the
+ROM link, and only for whichever files happened to get enrolled. That blind spot
+already hid three wrong-callee bugs before this was closed: `Door::Behavior`,
+`func_ov004_020b29c0`, `func_ov004_020b2a84`.
+
+Reproduce the original list:
+
+```sh
+python tools/eligible.py
+python tools/resolve_placeholders.py          # report only; nothing is written
+```
+
+Everything it reports as `0x... names {...}` was one of these 169. §1-§9 below are
+how the list got settled.
 
 ## 1. The premise the whole thing rests on
 
@@ -237,5 +282,8 @@ even consistent. Taken literally, [ov064](../config/arm9/overlays/ov064/symbols.
 ## Related
 
 - `tools/overlay_residency.py` -- the model, with `--check`
-- `notes/overlay-ambiguous-references.md` -- the problem this closes
 - `notes/runbook-reference-repair.md` -- the loop that consumes it
+- #1071 -- the resolver, and the ratchet that keeps new instances out
+- `notes/declaration-centralization.md` -- the larger structural problem behind
+  scattered, disagreeing references
+- `notes/rom-build.md` -- how enrollment and the ROM link fit together

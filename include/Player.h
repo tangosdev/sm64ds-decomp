@@ -764,7 +764,7 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *     anim 0x28 and a launch speed and plays a character voice. That is a wall
  *     jump.
  *
- *     This is the failure mode described in notes/overlay-ambiguous-references.md.
+ *     This is the failure mode described in notes/overlay-residency.md.
  *
  *   St_Null_Init was the SAME defect and moved in the same commit: ov006 had it
  *     at 0x020cac30 (size 0x6c), ov002 has an eight-byte `return 1` there,

@@ -36,14 +36,48 @@ section).
 
 ## cMgSmartball_ball_c (`include/cMgSmartball_ball_c.h`)
 
-16 of 17 `unk_` fields named.
+Real ROM name confirmed by `tools/rtti_extract.py` (`build/rtti.json`): own
+vtable ov006:0x0213ec98, RTTI ov006:0x0213ebec (`_ZTI19cMgSmartball_ball_c`),
+`_ZTS19cMgSmartball_ball_c` at ov006:0x0213edc0. One of eleven direct children
+of `cMgSmartball_object_c`. Size 0x12c, from `_Znwj(0x12c)` in
+`func_ov006_02115b0c`; the base ends at 0x34, so this class adds 0xf8 bytes --
+the densest of the eleven children.
+
+28 of 29 struct members below have names; the sole `unk_` is 0x039. Six more
+byte ranges are explicit `pad_` arrays (0x044, 0x0e7, 0x101, 0x111, 0x122,
+0x12a) -- evidenced as gaps, not merely unexamined -- see the second table.
+
+**Twelve of the 28 names are borrowed, not invented**: `state3a`, `state3b`,
+`hit`, `hitA`, `hitB`, `hitC`, `anyHit`, `specialHit`, `nearby`, `targetIndex`,
+`soundTimer`, `soundPlayed`. `func_ov006_02112ad8.c` and
+`func_ov006_021128fc.c` -- two out-of-scope helpers `SaveSnapshot` calls with
+`this` -- each reinterpret the pointer through their own local Obj-style
+struct cast and name these exact offsets. Every one of them is also
+independently touched by `RestoreInitial`'s exhaustive zero pass, so the width
+and existence of each field is evidenced in-scope; only the spelling is
+borrowed. Anything without that corroboration keeps an `unk_`/`pad_` name.
+
+Constructed by `func_ov006_02114548`, a free function per the house recipe. It
+calls the base constructor and writes only this vtable and the base's
+`unk_028 = 0x8000`; it touches nothing at or past 0x34, so it adds no evidence
+to the field list.
 
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x034 | `mZoneCooldown` | `src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp` decrements it while >0 and refuses to re-latch `mUpperWallSolid` until it reads <= 0. A cooldown, not a lifetime: `RestoreInitial` zeroes it. |
 | 0x038 | `mUpperWallSolid` | Set to 1 by `SaveSnapshot` when the ball is inside x [0xe8000,0xf0000) z [0x78000,0xa8000). Its only reader is `src/func_ov006_021126b4.c`, the out-of-bounds predicate, where a non-zero value makes it report z >= 0x78000 in the x band [0xd8000,0xe0000) as blocked. |
+| 0x03a | `state3a` | Borrowed from `func_ov006_02112ad8.c`'s own Obj-style cast of this class; gates most of that function's per-frame collision work. Width and existence corroborated by `RestoreInitial`. |
+| 0x03b | `state3b` | Ditto, same helper. Set once `mZoneDwell` (below) passes 0x1e, and by the same `func_ov006_02111d4c.c` that raises `mIsFrozen`. |
 | 0x03c | `mZoneDwell` | `SaveSnapshot` counts it up while the ball is inside x [0x8000,0xd8000) z [0x74000,0x7c000), sets `state3b` past 0x1e, saturates at 0x12c, and resets it to 0 on the frame the ball leaves. A dwell counter, not a countdown. |
 | 0x040 | `mExpireTimer` | Armed by `src/func_ov006_02111dcc.c`, which refuses to re-arm it while it is positive. `SaveSnapshot` ages it and, on expiry, clears the base's `mIsActive`; after that both `SaveSnapshot` and `Update` return immediately. |
+| 0x04c | `hit[0x20]` | Borrowed from `func_ov006_02112ad8.c`/`func_ov006_021128fc.c`'s local Obj-style cast; width and existence corroborated in-scope by `RestoreInitial`'s exhaustive zero pass. Meaning of the 0x20-byte slot beyond the name is not evidenced. |
+| 0x06c | `hitA[0x20]` | Same corroboration as `hit`. |
+| 0x08c | `hitB[0x20]` | Same corroboration as `hit`. |
+| 0x0ac | `hitC[0x20]` | Same corroboration as `hit`. |
+| 0x0cc | `anyHit` | Same borrowed-naming/`RestoreInitial` corroboration as the `hit*` group. |
+| 0x0cd | `specialHit` | Same corroboration; additionally, `SaveSnapshot` bails out of its per-frame work early while this is set. |
+| 0x0ce | `nearby[0x19]` | Same borrowed-naming/`RestoreInitial` corroboration as the `hit*` group; ends at 0xe6, immediately before the `pad_0e7` gap below. |
+| 0x0f8 | `targetIndex` | Set to -1 by `RestoreInitial`; begins immediately after the `pad_0e7` gap below. Borrowed from the same two helpers' Obj cast. |
 | 0x0fc | `mCollisionCooldown` | Three frames of deafness after a ball-vs-ball hit. `src/func_ov006_02115830.c`, the collision resolver, returns without touching either velocity while EITHER participant's counter is positive, and sets BOTH to 3 on the way out of either path; `SaveSnapshot` ages it and `RestoreInitial` zeroes it. |
 | 0x100 | `mIsWaiting` | 1 = still queued. `RestoreInitial` sets it; `SaveSnapshot` clears it once this ball's index equals `mgr+0x4664` and `mInPlay` is up. While set, `SaveSnapshot` runs `src/func_ov006_021128fc.c` (line up behind the predecessor in `mgr+0x4688`); once clear it runs the physics path `src/func_ov006_02112ad8.c`. |
 | 0x104 | `mQueueGap` | `src/func_ov006_021128fc.c` writes it twice, both times as `(this ball's index - mgr[0x4664]) * 0xf`. Nothing reads it back -- the name records the arithmetic, which is unambiguous, not a use. |
@@ -55,13 +89,18 @@ section).
 | 0x11c | `mStuckFrames` | Incremented by `SaveSnapshot` when the ball is out of bounds or has not moved 0x8000; reset to 0 on a refresh. `src/func_ov006_02111df4.c` reports the ball as needing a rescue once it reaches 0x78 -- 120 frames, two seconds. |
 | 0x120 | `mPipeUsed` | One-shot: this ball has already been taken by the pipe. `cMgSmartball_dokan_c::SaveSnapshot` sweeps the manager's ball table, skips any ball with it set, and -- for a ball in the pipe's mouth (within 0x8000 in x, -0x40000..-0x38000 in z) -- warps it, scores it and sets this. `RestoreInitial` zeroes it, so it is once per ball per round. |
 | 0x121 | `mInPlay` | `src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp` draws nothing while it is 0; `src/func_ov006_02111df4.c` reports a ball with it clear as finished; `src/func_ov006_021128fc.c` tests it on both this ball and its predecessor; `src/func_ov006_02111e7c.c` raises it. `RestoreInitial` clears it only for slot indices >= 9 on the second board. |
+| 0x124 | `soundTimer` | Countdown, decremented while >0 by `SaveSnapshot`, zeroed by `RestoreInitial`. Borrowed from the same two helpers' Obj cast. |
+| 0x128 | `soundPlayed` | Zeroed by `RestoreInitial`. Borrowed from the same two helpers' Obj cast. |
 | 0x129 | `mExitGateOpen` | `SaveSnapshot` latches it once the ball has crossed the plane through the corner (0xd8000, -0x80000) by more than the base's `mRadius`. Until then `src/func_ov006_021126b4.c` reports z < -0x80000 as out of bounds, and `src/func_ov006_021122e0.c` gates its bottom-right exit test on it. |
 
-Left `unk_`, deliberately:
+Left `unk_`/`pad_`, deliberately:
 
 | offset | why |
 | --- | --- |
 | 0x039 | Cleared next to `mUpperWallSolid` and by `RestoreInitial`. Nothing in the tree reads it. |
+| `pad_044[0x8]` (0x044-0x04b) | `hitX`/`hitZ` in `func_ov006_02112ad8.c`'s borrowed naming, but none of this class's own four functions touches them, so per the `wing_c` precedent (see below) they stay an explicit pad -- unmodelled, not unread. |
+| `pad_0e7[0x11]` (0xe7-0xf7) | A genuine gap: `RestoreInitial`'s exhaustive zero pass skips straight over it (`nearby[]` ends at 0xe6, `targetIndex` starts at 0xf8) and `func_ov006_02112ad8.c`'s Obj cast also treats it as padding. |
+| `pad_101`, `pad_111`, `pad_122`, `pad_12a` | Pure alignment gaps between adjacent int fields (house style: explicit pads over implicit compiler-inserted ones). |
 
 `mCollisionCooldown` and `mPipeUsed` were in this table until a later pass
 found their readers. Both live OUTSIDE the class, reaching the ball through

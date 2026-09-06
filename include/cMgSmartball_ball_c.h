@@ -1,9 +1,10 @@
 /* The ball in the Smartball minigame -- one of eleven direct children of
  * cMgSmartball_object_c. Size 0x12c. The layout
  * below comes from this class's own RestoreInitial, which zeroes every field
- * exhaustively; see notes/minigame-provenance.md.
+ * exhaustively.
  *
- * FIELD NAMES, and the evidence behind each, are tabulated in
+ * FIELD NAMES, and the evidence behind each (including the two out-of-scope
+ * helpers that lend several of them), are tabulated in
  * notes/smartball-provenance.md. ONE field keeps an unk_ name on purpose:
  * unk_039 has no reader anywhere in the tree, so there is nothing to name it
  * from.
