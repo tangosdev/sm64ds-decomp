@@ -599,6 +599,30 @@ NAMED = [
     # and func_02048e94 also write 4 into it at runtime, and neither is on any
     # path the port takes.
     "data_02099fb0",
+    # run link100, lane STAGE: the OBJECT-OVERLAY tables, so the ROM's own
+    # LoadOrUnloadObjectOverlays can run on the port's two hosted leaves instead
+    # of a host body standing in for it. The two leaves are not the same kind of
+    # thing and this comment used to imply they were (corrected by lane
+    # STAGEFIX): LoadOverlay is an empty PORT_HOST_ABI body in
+    # hal/scene_boot.cpp, while UnloadOverlay is a loud-once refusal seam at
+    # hal/scene_vs_menu.cpp:992 that prints to stderr on its first call.
+    #
+    #   data_02075998[level][i]  the seven per-level SELECTOR columns
+    #   data_02075804[i][v]      the overlay id each selector picks
+    #   data_02092130            the resident level overlay's id, the word
+    #                            LoadLevelOverlays latches and
+    #                            UnloadLevelOverlays reads back
+    #
+    # All three are ROM BYTES and the delta-to-next-symbol rule is exact on
+    # every one of them, which is the test that keeps them out of the
+    # undersized-host-global class two rows above: config/arm9/symbols.txt puts
+    # data_020758c8 0xc4 after data_02075804 (7 rows of 7 words, the shape
+    # `data_02075804[i].t[v]` walks) and data_02075b04 0x16c after
+    # data_02075998 (52 levels of 7 bytes, the ROM's whole level count), and
+    # data_02092134 is 4 bytes after data_02092130. config/arm9/relocs.txt has
+    # ZERO rows anywhere in 0x02075804..0x02075a40, so none of this is a
+    # pointer table and ptr_audit has nothing to say about it.
+    "data_02075804", "data_02075998", "data_02092130",
 ]
 
 

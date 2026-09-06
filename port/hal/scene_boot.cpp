@@ -755,9 +755,22 @@ extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 // (this file's own section 2). The ids are here so the symbols resolve, and
 // the day an overlay loader exists they become its first customer.
 extern "C" { int overlay_64, overlay_66, overlay_100, overlay_102; }
+/* Two more of the same family, and the only hunk run link100's lane STAGE made
+   in this file. src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp -- the ROM's own
+   object-overlay walk, enrolled by port/slice_gate213.txt so slot 3's
+   Stage::CleanupResources reaches a real body instead of a host stub -- ends
+   with `fn(&overlay_60)` on levels 0x24/0x26/0x28 and `fn(&overlay_98)`
+   otherwise, and neither id had a host definition. Same reasoning as the four
+   above, same one line: the ADDRESS is the id on the DS, so a host int is a
+   placeholder that resolves and that hal/scene_boot.cpp's empty LoadOverlay
+   then ignores. */
+extern "C" { int overlay_60, overlay_98; }
 
-/* THE FOUR ENTRY POINTS THEMSELVES, faced rather than linked, and this is the
-   one place this lane traded linkage for honesty on purpose.
+/* THE ENTRY POINTS THEMSELVES, faced rather than linked, and this is the
+   one place this lane traded linkage for honesty on purpose. FOUR when this
+   was written; THREE now, because gate 213 took the fourth
+   (LoadOrUnloadObjectOverlays) for the ROM's own body -- see the note where it
+   used to stand, below.
    All four have matched src TUs and all four were IN the slice for one build.
    Taking them meant taking the DS card overlay/archive loader under them --
    FS_LoadOverlay, func_02018c00, func_0203d7b8, func_0205e088, func_02017fd0,
@@ -777,7 +790,23 @@ extern "C" { int overlay_64, overlay_66, overlay_100, overlay_102; }
 extern "C" void LoadOverlay(int)                       {}
 extern "C" void func_02017e94(int)                     {}
 extern "C" void UnloadArchives(void)                   {}
-extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}
+/* AND THE FOURTH IS RETIRED (run link100, lane STAGEFIX). It stood here as
+       extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}
+   until gate 213 enrolled the ROM's own src/
+   _Z26LoadOrUnloadObjectOverlaysPFviEi.cpp. That TU compiles as C++ and
+   publishes ?LoadOrUnloadObjectOverlays@@YAXP6AXH@ZH@Z, so this empty body did
+   not collide with it -- it survived beside it under a different decorated
+   name, _LoadOrUnloadObjectOverlays, and the source carried two definitions of
+   one function while /OPT:REF silently dropped this one for want of anybody
+   spelling it. Both real callers reach the ROM's body:
+   src/_Z17LoadLevelOverlaysi.cpp declares it in C++ and binds the MSVC
+   mangling straight, and src/_Z19UnloadLevelOverlaysi.c spells
+   __Z26LoadOrUnloadObjectOverlaysPFviEi, which hal/cxx_aliases.cpp's link100
+   block aliases onto the same body. Which body ships was never in doubt;
+   keeping the second definition in the source was the defect.
+   port/tools/stage_seat_proof.py rung 5 is the standing check, and it asks the
+   map's DEFINING-OBJECT column rather than asking whether the name is present,
+   which is the only question that could ever have told the two apart. */
 
 /* PORT_HOST_ABI: CP15::EnableDTCM sets the ARM946 control register's DTCM
    enable bit, and the host has no CP15. Its TU is a fourth `asm` block MSVC

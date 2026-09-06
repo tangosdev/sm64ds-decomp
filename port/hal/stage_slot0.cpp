@@ -74,11 +74,86 @@ extern "C" {
 
 // PORT_HOST_ABI: releases a NARC the DS card loader mounted; the host has no mount to release (hal/fs.cpp resolves archive ids lazily, so an archive is never mounted).
 void UnloadArchive(int)             {}
-// PORT_HOST_ABI: loads the per-level DS overlay; the port has no overlay loader at all, every overlay is a static host array mounted at build time.
-void _Z17LoadLevelOverlaysi(int)    {}
-void _Z19UnloadLevelOverlaysi(int)  {}
 
 }  /* extern "C" */
+
+// ---- THE TWO OVERLAY BODIES ARE GONE (run link100, lane STAGE) -------------
+//
+// `void _Z17LoadLevelOverlaysi(int) {}` and `void _Z19UnloadLevelOverlaysi(int)
+// {}` stood here. Both are RETIRED, and the ROM's own bodies -- src/
+// _Z17LoadLevelOverlaysi.cpp, src/_Z19UnloadLevelOverlaysi.c and the
+// src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp they share -- are enrolled by
+// port/slice_gate213.txt instead. The two C-linkage names come back through
+// /alternatename in hal/cxx_aliases.cpp, because both .cpp files compile as C++
+// and publish MSVC manglings.
+//
+// WHAT THE OLD RULING SAID, and why it does not survive. It said an empty body
+// "makes no claim", while the ROM's body would "drive hal/scene_boot.cpp's
+// empty LoadOverlay with an id read out of data_020758c8 and then latch that id
+// into data_02092130 as the resident level overlay -- a residency claim about a
+// loader that does not exist". That is a claim about what happens WHEN THE BODY
+// RUNS, and neither body runs:
+//
+//   LoadLevelOverlays is reached only from Stage::InitResources, which this
+//   file's own PART 4 gates behind SM64DS_SLOT0_ROM, default off.
+//   UnloadLevelOverlays is reached only from Stage::CleanupResources, which is
+//   _ZTV5Stage slot 3 -- seated by this run and, since run link100 lane
+//   STAGEFIX, gated behind SM64DS_STAGE_SLOT3_ROM (presence = on, default off),
+//   so the shipped dispatch is the named abort it always was.
+//   THE DISPATCH IS NOT UNREACHABLE, and the first draft of this paragraph
+//   said it was ("nothing marks the Stage"). port/stage_lifecycle_map.txt
+//   section 5 MEASURED a VS match-end scene request arriving at it, and
+//   section 9 traces a live death-plane chain into it. What keeps the ROM body
+//   from running is the gate, not the absence of a caller.
+//
+// So the residency word is written by nobody today and read by nobody today,
+// and the choice is between an empty host body and the ROM's own three, with no
+// behavioural difference between them. THE PORT'S NORTH STAR SETTLES THAT: the
+// port is meant to BE the decomp, and these three TUs are pure table
+// bookkeeping over data_02075998 / data_02075804 / data_020758c8 that bottoms
+// out on the same two hosted leaves either way. Nothing under them is portable
+// and nothing under them is being taken: FS_LoadOverlay and the card chain stay
+// exactly where hal/scene_boot.cpp left them.
+//
+// NAME THOSE TWO LEAVES CORRECTLY. This paragraph, port/slice_gate213.txt,
+// port/stage_lifecycle_map.txt 12e and port/tools/romdata.py all said the same
+// thing: that both leaves are empty PORT_HOST_ABI bodies in hal/scene_boot.cpp.
+// One is; the other is not, and a reader who goes looking for it there does not
+// find it (corrected run link100, lane STAGEFIX):
+//
+//   LoadOverlay      IS an empty PORT_HOST_ABI body -- hal/scene_boot.cpp,
+//                    `extern "C" void LoadOverlay(int) {}` in the overlay-loader
+//                    block.
+//   UnloadOverlay    IS NOT. It is a LOUD-ONCE REFUSAL SEAM at
+//                    hal/scene_vs_menu.cpp:992, one of that file's VS_SEAM
+//                    family: the first call prints
+//                        [vs] refused-subtree seam entered: UnloadOverlay
+//                    to stderr, every call answers the idle value, and it is
+//                    declared `int UnloadOverlay(void)` there while the ROM's
+//                    callers spell `void UnloadOverlay(int)`.
+//
+// THE NEUTRALITY CONCLUSION SURVIVES, which is why this is a wording fix and
+// not a ruling change. Both spellings are __cdecl, so the CALLER cleans the one
+// argument the seam ignores, and the int it hands back in eax lands where the
+// callers read nothing. And nothing reaches it today: UnloadOverlay is called
+// only from LoadOrUnloadObjectOverlays, which is called only from
+// LoadLevelOverlays (gated, SM64DS_SLOT0_ROM) and UnloadLevelOverlays (called
+// only from Stage::CleanupResources, gated, SM64DS_STAGE_SLOT3_ROM). What
+// changes is that whoever opens either gate should expect that stderr line, and
+// should look for it in scene_vs_menu.cpp rather than in scene_boot.cpp.
+//
+// ONE HAZARD, NAMED RATHER THAN DISCOVERED LATER, and it belongs to PART 4's
+// probe. The ROM's LoadLevelOverlays opens with
+//
+//     if (data_0209f278) { if (data_02092130 != data_020758c8[level]) Crash(); ... }
+//
+// and Crash() is a host body that aborts (hal/heap_vtable.cpp:151). src/
+// func_0202deac.c is the only writer of data_0209f278 in the whole of src/ and
+// it IS in walk_window.map, so the guard is not dead the way the branch in
+// hal/w2_dtor_heads.cpp's group 4 is dead -- it is merely unreached, because
+// LoadLevelOverlays only runs under SM64DS_SLOT0_ROM. Anyone re-running the
+// PART 4 bisect should read this as a FIFTH possible fault ahead of it, on the
+// same flag, and it is the ROM's own fault rather than a new one.
 
 // ===========================================================================
 // PART 2 -- STORAGE: TWO BSS WORDS AND ONE ALIAS
@@ -278,6 +353,44 @@ void _ZN11ShadowModel8CleanAllEv(void)
 // are independent, and an unconditional swap answers neither because a run that
 // dies has one stack and two candidate causes. Gated, mode 0 leaves the shipped
 // dispatch byte for byte as it was and each wall gets its own run.
+//
+// ---------------------------------------------------------------------------
+// SM64DS_STAGE_SLOT3_ROM, THE SIBLING GATE, documented here because this is
+// where a reader looking for "which Stage slots run the ROM's body and under
+// what" will come (run link100, lane STAGEFIX).
+//
+//   WHERE      hal/stage_bridges.cpp, the st_clean thunk on _ZTV5Stage slot 3.
+//   SHAPE      PRESENCE, not a number: set to anything (0 included) and the
+//              slot runs the ROM's Stage::CleanupResources; unset and it runs
+//              the named abort the slot carried before it was seated, same
+//              reporter, same message, same abort. Read once. Slot 0's gate
+//              parses a number because it has four modes to select between;
+//              slot 3 has one, so there is nothing to parse.
+//   WHY GATED  for a DIFFERENT reason than this file's own gate, and the two
+//              are worth telling apart. Slot 0's gate asks whether the ROM's
+//              body WORKS on the host -- four measured walls, below -- on a
+//              slot the port dispatches on every level entry. Slot 3's asks
+//              whether the ROM's body SHOULD run at all, on a slot the port
+//              reaches only when something has gone wrong. Seating it
+//              unconditionally removed a deliberate safety stop: the port keeps
+//              ONE Stage across every level change and never rebuilds it, so a
+//              cleanup Process dispatch runs the ROM's real teardown -- twelve
+//              file handles released, the area table and the Camera zeroed,
+//              Deallocate called -- and then the game keeps running on the
+//              torn-down level, where before it aborted by name. The four
+//              places in this repo that reach the dispatch are listed at
+//              st_clean and in port/stage_lifecycle_map.txt sections 5, 9 and
+//              12a.
+//   PROOF      port/tools/stage_seat_proof.py rungs 6 and 7 dispatch the slot
+//              on the same binary with the variable unset and set, and check
+//              that the first run aborts by name and the second reaches the ROM
+//              body and comes back with the ROM's own 1.
+//   COST       none in linkage. The thunk names port_stage_cleanup_resources on
+//              a branch the linker cannot prove dead, so
+//              ?CleanupResources@Stage@@QAEHXZ stays in walk_window.map from
+//              its own object -- exactly the way
+//              ?InitResources@Stage@@QAEHXZ stays in it under THIS gate.
+// ---------------------------------------------------------------------------
 //
 // AND THE HOST BOOT BODY STILL RUNS IN FRONT OF IT, which makes modes 1 and 2 a
 // PROBE and not a candidate seat. port_stage_a_boot is not a pure subset of

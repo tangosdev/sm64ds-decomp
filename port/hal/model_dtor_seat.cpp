@@ -159,4 +159,23 @@ extern "C" void hal_seat_model_family_dtors(void)
     _ZTV15MaterialChanger[0]    = (void *)matchg_d0;
     _ZTV18TextureTransformer[0] = (void *)texxfm_d0;
     data_0208e87c[0]            = (int)(size_t)modelbase_d0;
+
+    /* run link100, lane STAGEFIX: _ZTV18TextureTransformer's ROM slot 1 (the
+       Itanium D0, folded away by MSVC the same way slot 0 above already
+       explains) duplicated rather than left at its zero default.
+       src/_ZN5Stage16CleanupResourcesEv.cpp's area-table loop walks every
+       area entry's TextureTransformer* (Stage+0x8bc, stride 0xc) with the
+       SAME faithful two-word vtable read Stage's own skybox hits --
+       hal/stage_bridges.cpp's st_skybox_vtable_fixup has the full account of
+       why that read targets the ROM's slot 1 -- and this table's slot 1 is
+       otherwise unused: nothing else in the tree reads or writes
+       _ZTV18TextureTransformer[1..3], unlike _ZTV5Model[1], which
+       hal/method_faces.cpp:199 already ruled load-bearing (Model::DoSetFile)
+       and therefore off limits. A castle-grounds boot allocates exactly one
+       TextureTransformer ("[stage] texture transformers: 1 of 1 areas
+       animate"), and with SM64DS_STAGE_SLOT3_ROM open its area-table entry is
+       destroyed the same frame the skybox is -- so this slot needed the same
+       fix the skybox's own vtable got, just without the "shared table"
+       complication that forced a private copy there. */
+    _ZTV18TextureTransformer[1] = (void *)texxfm_d0;
 }
