@@ -12,7 +12,7 @@ The fourth is this file's own: attribution by address is worth nothing if the HE
 then looked up by name. One vtable address carries several `_ZTV` spellings and only one
 of them has a file, so the single-spelling join reported NO HEADER for 125 classes the
 tree describes -- and their sizes went uncompared. Four cases cover it, and a live
-ratchet holds the residue at the two classes that really have no header.
+ratchet requires every sized class to remain reachable through some header spelling.
 
 The two end-to-end cases skip themselves when the ROM dump is not installed, the same
 way tools/test_build_pin.py does.
@@ -274,15 +274,16 @@ def test_every_site_the_ROM_has_is_attributed_to_a_class():
     assert all(s["size"] is not None for s in doc["sites"])
 
 
-def test_only_two_live_classes_are_genuinely_headerless():
+def test_no_live_sized_class_is_headerless():
     """The ratchet on the alias join: it silently reverts to 127 if the join regresses.
 
-    `BigBooIcon` (0xd8) and `RecRoomCupboard` (0x21c) are the only two sized classes in
-    this ROM that no header in `include/` describes under any spelling their vtable
-    carries.  The probe is off: the header LOOKUP is what is under test, not sizeof."""
+    The last two exceptions were retired by legitimate class reconstruction:
+    `RecRoomCupboard` gained its own header, and `BigBooIcon` resolves through the
+    `daTrsIcon_c` vtable alias to that class's header.  The probe is off: the header
+    LOOKUP is what is under test, not sizeof.  The full bucket is the assertion value
+    so a future exception names the class, ROM size, and failed path immediately."""
     if not _rom():
         return
     doc = O.build(REPO, REPO / "extracted")
     buckets, _hdr, _st = O.gap(REPO, doc, probe=False)
-    assert sorted(n for n, *_ in buckets["NO HEADER"]) == \
-        ["BigBooIcon", "RecRoomCupboard"], buckets["NO HEADER"]
+    assert buckets["NO HEADER"] == [], buckets["NO HEADER"]
