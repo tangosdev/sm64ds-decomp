@@ -4029,6 +4029,7 @@ extern "C" {
 int _ZN6Player16CleanupResourcesEv(void *self);
 void _ZN6Player16OnPendingDestroyEv(void *self);
 void *_ZN6PlayerD2Ev(void *self);
+void *_ZN6PlayerD0Ev(void *self);   /* slot 17, gate 224 */
 }
 static int __fastcall ps_bclean(void *s, void *)
 { return ((Actor *)s)->Actor::BeforeCleanupResources(); }
@@ -4044,6 +4045,25 @@ static void __fastcall ps_pdes(void *s, void *)
    deallocate -- the caller does that one line later. */
 static int __fastcall ps_d1(void *s, void *)
 { return (int)(size_t)_ZN6PlayerD2Ev(s); }
+/* SLOT 17, THE DELETING DESTRUCTOR -- run link100 lane OV6, gate 224. The ROM
+   parks _ZN6PlayerD0Ev (ov002 0x020e67a8) here and this table is NOT MSVC-
+   folded: it is the ROM's own thirty-one-slot mount, slot 16 carries D1 above
+   and slot 17 carries its own word, so there is no folding argument against
+   seating it of the kind that blocks the Model/ModelAnim tables next door
+   (hal/actor_classes_intro.cpp, and group 2 of hal/w2_dtor_heads.cpp). It had
+   trapped -- i.e. abort()ed -- for want of a seat rather than for a reason:
+   hal_fill_player_vtable said "keeps the trap on purpose, per the note above"
+   and no such note was ever written.
+   The body is src/_ZN6PlayerD0Ev.cpp, matched, on port/slice_gate224.txt. It
+   is the ordinary Itanium deleting destructor -- reinstall the vptr, tear the
+   five members and the three __destroy_arr runs down, Actor::~Actor, then
+   Memory::Deallocate with data_020a0eac -- and it spells every symbol it
+   touches by its real name, so it needs no -D binding. port/tools/closure.py
+   on the single TU reports 0 unresolved and 0 dup-def against this tree's map.
+   ABI is ps_d1's: a flat C body taking `this` as an ordinary first argument,
+   behind the ecx->arg adapter every slot in this table uses. */
+static int __fastcall ps_d0(void *s, void *)
+{ return (int)(size_t)_ZN6PlayerD0Ev(s); }
 
 /* ---- THE PLAYER'S TABLE IS THIRTY-ONE SLOTS, AND ONLY TWENTY WERE SEEDED --
    data_ov002_0210a83c is _ZTV6Player, and it comes from the ov002 per-symbol
@@ -4213,8 +4233,10 @@ extern "C" void hal_fill_player_vtable(void)
     vt[5] = (void *)ps_aclean;
     vt[12] = (void *)ps_pdes;
     vt[16] = (void *)ps_d1;
-    /* 18..29, the ROM's own contents. 17 (D0) keeps the trap on purpose, per
-       the note above. 18 is the Player's OWN OnYoshiTryEat (ov002 0x020e69b8),
+    vt[17] = (void *)ps_d0;
+    /* 18..29, the ROM's own contents. 17 (D0) is seated by gate 224; this used
+       to read "keeps the trap on purpose, per the note above" and no such note
+       was ever written -- see the ps_d0 block for what the ROM puts there. 18 is the Player's OWN OnYoshiTryEat (ov002 0x020e69b8),
        seated now that its TU rides slice_gate16 -- while it was in no slice
        the slot trapped, since forwarding to Actor's would run the wrong code
        rather than less code. 30 keeps the trap -- its ROM body returns a

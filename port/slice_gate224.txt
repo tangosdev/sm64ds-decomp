@@ -1,4 +1,19 @@
-# gate 224 (run link100, lane OV6)
+# gate 224 (run link100, lane OV6): the ov002 vtables the port hosted nowhere.
+#
+# Seated by hal/actor_base_tables_ov002.cpp (six base tables read out of
+# config/arm9/overlays/ov002/relocs.txt) and, for the last line, by
+# hal/level_boot.cpp's hal_fill_player_vtable slot 17. Every body here was
+# already compiled into the build or is added by this file and then dropped by
+# /OPT:REF without the vtable slot that references it; the slot IS the work.
+#
+# NOT HERE, and each for a measured reason in this gate's write-up:
+#   src/func_ov002_020b5c24.cpp   unmatched/Jrb_Renders.cpp defines it under a
+#                                 PORT_HOST_ABI tag (closure.py named the
+#                                 LNK2005 before any link ran)
+#   src/func_ov006_02123340.cpp   same, unmatched/MgTrampolineTerror_StateDispatch
+#   src/func_ov006_02120da8.c     does not compile under MSVC: `obj + 0x6c` on a
+#                                 void* at line 37, C2036. A decomp-side cast.
+#   the seven guess-marked bodies on data_ov002_021096b0 -- those slots trap.
 src/func_ov002_020b5a18.c
 src/func_ov002_020b5a70.c
 src/func_ov002_020b5fd8.c
@@ -9,5 +24,4 @@ src/func_ov002_020b8bf0.c
 src/func_ov002_020b8c9c.cpp
 src/func_ov002_020bab0c.c
 src/func_ov002_020bab64.c
-src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
-src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
+src/_ZN6PlayerD0Ev.cpp
