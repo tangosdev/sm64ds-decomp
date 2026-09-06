@@ -268,9 +268,23 @@ def verification_split(functions, enrollment):
     leads.  ``matched`` itself is deliberately left alone: ``attribution_snapshot`` keys
     contributor credit off it, so redefining it here would move credit for everyone.
     """
-    enrolled = {key.split("-", 1)[0] for key in enrollment["source"]}
-    verified = {k: r for k, r in functions["matched"].items() if k in enrolled}
-    claimed = {k: r for k, r in functions["matched"].items() if k not in enrolled}
+    # A complete delinks entry is an object contribution, not necessarily one
+    # function.  A promoted TU can cover dozens of consecutive function records;
+    # comparing only the entry's start address misclassifies every member after the
+    # first as "claimed, not byte-verified" even though rombuild compiles and checks
+    # the entire range.  Classify against the full enrolled interval, just as
+    # enrollment_snapshot's sourceFunctions counter does.
+    enrolled = collections.defaultdict(list)
+    for entry in enrollment["source"].values():
+        enrolled[entry["module"]].append((entry["addr"], entry["end"]))
+
+    def is_verified(record):
+        end = record["addr"] + record["size"]
+        return any(start <= record["addr"] and end <= stop
+                   for start, stop in enrolled[record["module"]])
+
+    verified = {k: r for k, r in functions["matched"].items() if is_verified(r)}
+    claimed = {k: r for k, r in functions["matched"].items() if not is_verified(r)}
     return {
         "verified": verified,
         "claimed": claimed,
@@ -384,6 +398,70 @@ def _rom_state(report):
             # nothing to compare against is not a regression.
             "romData": report.get("romData"),
             "failure": failure}
+
+
+def _data_symbol_set(data, field):
+    """Return stable ``(module, symbol)`` identities, or None for an old report."""
+    rows = data.get(field)
+    if not isinstance(rows, list):
+        return None
+    out = set()
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("symbol"), str):
+            return None
+        out.add((row.get("module"), row["symbol"]))
+    return out
+
+
+def _data_name(identity):
+    module, symbol = identity
+    return f"{module or '?'}:{symbol}"
+
+
+def rom_data_regressions(base_data, head_data):
+    """Name data-verification losses that a count-only ratchet can hide."""
+    if base_data.get("verified") is None:
+        return []
+    if head_data.get("verified") is None:
+        return ["head full-ROM report omitted the ROM-data measurement"]
+
+    out = []
+    base_verified = _data_symbol_set(base_data, "verifiedSymbols")
+    head_verified = _data_symbol_set(head_data, "verifiedSymbols")
+    if base_verified is not None and head_verified is not None:
+        lost = sorted(base_verified - head_verified, key=lambda x: (x[0] or "", x[1]))
+        if lost:
+            names = ", ".join(_data_name(x) for x in lost[:3])
+            more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
+            out.append(f"ROM data verification lost {len(lost)} exact symbol(s): "
+                       f"{names}{more}")
+    elif head_data["verified"] < base_data["verified"]:
+        out.append(
+            f"ROM data verified from source fell from {base_data['verified']} to "
+            f"{head_data['verified']} symbol(s)")
+
+    if (base_data.get("verifiedBytes") is not None
+            and head_data.get("verifiedBytes") is not None
+            and head_data["verifiedBytes"] < base_data["verifiedBytes"]):
+        out.append(
+            f"ROM data verified bytes fell from {base_data['verifiedBytes']} to "
+            f"{head_data['verifiedBytes']}")
+
+    base_differing = _data_symbol_set(base_data, "differingSymbols")
+    head_differing = _data_symbol_set(head_data, "differingSymbols")
+    if base_differing is not None and head_differing is not None:
+        new = sorted(head_differing - base_differing, key=lambda x: (x[0] or "", x[1]))
+        if new:
+            names = ", ".join(_data_name(x) for x in new[:3])
+            more = f", +{len(new) - 3} more" if len(new) > 3 else ""
+            out.append(f"ROM data gained {len(new)} differing symbol(s): {names}{more}")
+    elif (base_data.get("differs") is not None
+          and head_data.get("differs") is not None
+          and head_data["differs"] > base_data["differs"]):
+        out.append(
+            f"ROM data differing symbols rose from {base_data['differs']} to "
+            f"{head_data['differs']}")
+    return out
 
 
 def _link_state(rows):
@@ -626,17 +704,13 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     # A RATCHET, not a gate. The emitted vtable and RTTI that `objisolate` discards are
     # compared against the cartridge, and most of the tree fails that today for a
     # understood reason -- a generated flat header declares no virtuals, so mwcc emits a
-    # two-slot stub where the ROM has thirty-one. Failing a merge on it would fail nearly
-    # every C++ file for pre-existing modelling debt. So the count may rise freely and
-    # may not fall: this is the only check in the report that watches ROM DATA at all.
+    # two-slot stub where the ROM has thirty-one. Failing a merge on all existing debt
+    # would fail nearly every C++ file. Instead, known-good symbol identities and bytes
+    # may not be lost, new differing symbols are refused, and a missing head measurement
+    # is not allowed to disable the ratchet.
     base_data = base_rom_state.get("romData") or {}
     head_data = head_rom_state.get("romData") or {}
-    data_ratchet = (base_data.get("verified") is not None
-                    and head_data.get("verified") is not None)
-    if data_ratchet and head_data["verified"] < base_data["verified"]:
-        reasons.append(
-            f"ROM data verified from source fell from {base_data['verified']} to "
-            f"{head_data['verified']} symbol(s)")
+    reasons.extend(rom_data_regressions(base_data, head_data))
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \
@@ -838,11 +912,20 @@ def render_markdown(r):
         # source is one dsd handed back from the cartridge and compared against itself.
         mc = head_rom["analysis"].get("moduleComposition")
         if mc:
+            unowned_data = mc.get("unownedDataBytes", mc["dataBytes"])
+            unowned_percent = (100.0 * unowned_data / mc["moduleBytes"]
+                               if mc["moduleBytes"] else 0.0)
             lines.append(
                 f"| Module bytes from source | {mc['sourceBytes']:,} / "
                 f"{mc['moduleBytes']:,} ({mc['sourceBytesOfModulePercent']:.1f}%); "
-                f"{mc['dataBytes']:,} ({mc['dataBytesOfModulePercent']:.1f}%) are data "
+                f"{unowned_data:,} ({unowned_percent:.1f}%) are data "
                 f"no delink entry reaches |")
+            if mc.get("retailGapBytes") is not None:
+                lines.append(
+                    f"| Retail-gap contribution | {mc['retailGapBytes']:,} module "
+                    f"bytes ({mc.get('retailGapCodeBytes', 0):,} function-code; "
+                    f"{mc.get('unownedDataBytes', mc['dataBytes']):,} "
+                    "data/non-function) |")
     rom_data = head_rom.get("romData")
     if rom_data:
         lines.append(f"| ROM data reproduced from source | {rom_data['verified']:,} "
