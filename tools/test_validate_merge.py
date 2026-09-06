@@ -71,6 +71,23 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(report["attribution"]["lost"], [])
         self.assertEqual(report["attribution"]["head"]["alice"]["functions"], 1)
 
+    def test_every_function_in_a_complete_tu_range_is_byte_verified(self):
+        functions = {"matched": {
+            "ov006:0x02000000": {
+                "module": "ov006", "addr": 0x02000000, "size": 4},
+            "ov006:0x02000004": {
+                "module": "ov006", "addr": 0x02000004, "size": 8},
+        }}
+        enrollment = {"source": {"ov006:0x02000000-0x0200000c": {
+            "module": "ov006", "addr": 0x02000000, "end": 0x0200000c,
+        }}}
+
+        split = VM.verification_split(functions, enrollment)
+        self.assertEqual(split["stats"]["verifiedFunctions"], 2)
+        self.assertEqual(split["stats"]["verifiedBytes"], 12)
+        self.assertEqual(split["stats"]["claimedFunctions"], 0)
+        self.assertEqual(split["claimed"], {})
+
     def test_nonmatching_is_read_from_requested_revision(self):
         (self.repo / "src" / "Example.c").write_text(
             "// NONMATCHING\nint Example(void) { return 0; }\n")
@@ -424,6 +441,48 @@ class ValidateMerge(unittest.TestCase):
         }])
         self.assertEqual(state["tally"], {"RAW-ASM": 1})
         self.assertEqual(len(state["blocking"]), 1)
+
+
+class RomDataRatchet(unittest.TestCase):
+    def data(self, verified=(), differing=(), verified_bytes=None):
+        body = {
+            "verified": len(verified),
+            "differs": len(differing),
+            "verifiedSymbols": [
+                {"module": module, "symbol": symbol}
+                for module, symbol in verified],
+            "differingSymbols": [
+                {"module": module, "symbol": symbol}
+                for module, symbol in differing],
+        }
+        body["verifiedBytes"] = (4 * len(verified)
+                                  if verified_bytes is None else verified_bytes)
+        return body
+
+    def test_equal_count_cannot_hide_a_lost_exact_symbol(self):
+        base = self.data(verified=(("ov006", "_ZTV3Old"),))
+        head = self.data(verified=(("ov006", "_ZTV3New"),))
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+        self.assertIn("ov006:_ZTV3Old", "; ".join(out))
+
+    def test_equal_count_cannot_hide_a_new_differing_symbol(self):
+        base = self.data(differing=(("ov006", "_ZTV3Old"),))
+        head = self.data(differing=(("ov006", "_ZTV3New"),))
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("gained 1 differing symbol" in reason for reason in out))
+        self.assertIn("ov006:_ZTV3New", "; ".join(out))
+
+    def test_verified_byte_loss_is_not_hidden(self):
+        base = self.data(verified=(("arm9", "Data"),), verified_bytes=16)
+        head = self.data(verified=(("arm9", "Data"),), verified_bytes=12)
+        self.assertTrue(any("verified bytes fell" in reason
+                            for reason in VM.rom_data_regressions(base, head)))
+
+    def test_omitting_the_head_measurement_is_a_regression(self):
+        base = self.data(verified=(("arm9", "Data"),))
+        self.assertEqual(VM.rom_data_regressions(base, {}),
+                         ["head full-ROM report omitted the ROM-data measurement"])
 
 
 class ModuleFidelityDetail(unittest.TestCase):
