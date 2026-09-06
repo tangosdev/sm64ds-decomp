@@ -38,30 +38,81 @@
 //       blocked on `G` rather than on the FIFO -- see below.
 //
 //   func_02019ebc
-//       func_02061128(func_02019f10) -- the wireless manager's thread, and the
-//       head of the ~175-TU WM chain. RE-DERIVED after lanes IPC and THR, since
-//       both of the things this used to name have moved:
-//         * "the port runs the game on ONE fiber (ARMSaveContext reports
-//           already resumed)" is no longer true. hal/boot2_thread.cpp gives
-//           every DS thread a Windows fiber and the ROM's own func_02057f54
-//           switches between them.
-//         * hal/boot2_ipc.cpp claims channel 0xa, so WM_Init's readiness spin
-//           would turn.
-//       WHAT IT STILL WANTS, measured: (1) THREAD CREATION. boot2_thread.cpp is
-//       explicit that func_02058200 / func_02058538 / func_02058568 are not
-//       linked and that "the only two threads are the two seated below. A
-//       restore of a context this file has never seen is REFUSED loudly rather
-//       than guessed at." func_02019ebc's whole purpose is to create a THIRD,
-//       so it needs the seam to grow a CreateFiber path with the ROM's own
-//       thread record behind it -- and it needs the DS stack func_02058200
-//       paints, which the fiber model deliberately does not have.
-//       (2) AN ARM7 WIRELESS DRIVER. boot2_ipc.cpp holds channel 0xa OBSERVED
-//       ONLY, on the stated grounds that "nothing in this build runs WM_Init,
-//       so a fabricated wireless answer would be answering a question no one
-//       asked". Running WM_Init asks the question, and then every
-//       WM_SendCommand needs a completion or the ROM waits forever -- the same
-//       shape as the channel-6 refusal below. Neither is this lane's; both are
-//       now single named pieces of work rather than "there is one fiber".
+//       RE-DERIVED AGAIN, by run link100's lane THREAD, and THREAD CREATION IS
+//       NO LONGER ON THE LIST. That lane linked src/func_02058200.c and the
+//       card driver's own use of it, so "func_02019ebc's whole purpose is to
+//       create a THIRD thread" stopped being a blocker; what stopped it being
+//       one is the same fiber seam this paragraph used to ask for. FOUR things
+//       are left, and NONE of them is the scheduler. Every one was measured off
+//       extracted/arm9_dec.bin (flat, load base 0x02004000) rather than
+//       inherited.
+//
+//       (1) func_02061128 IS NOT A SYMBOL AND HAS NO TU. src/func_02019ebc.c is
+//       one line, `func_02061128(func_02019f10)`, and config/arm9/symbols.txt
+//       has no entry at 0x02061128 at all. It is INSIDE func_020610fc, whose
+//       row reads size=0x3c (0x020610fc..0x02061138) -- and
+//       src/func_020610fc.c's own banner already names the overlap: "The
+//       symbol's span also contains an unreachable epilogue-less tail that
+//       stores r0 into data_020a89a4". That tail IS func_02061128, and it is
+//       three instructions:
+//
+//           02061128  ldr r1, [pc, #4]      pool 0x02061134 = 0x020a89a4
+//           0206112c  str r0, [r1]
+//           02061130  bx lr
+//
+//       i.e. `func_02061128(fn) { data_020a89a4 = fn; }`. SO func_02019ebc DOES
+//       NOT START THE WIRELESS MANAGER -- it REGISTERS it, and the thing that
+//       reads data_020a89a4 is src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp, the
+//       game-card IREQ_MC interrupt handler. (data_020a89a4 itself is hosted:
+//       hal/boot_globals.cpp:325, four bytes, its ROM span.) Linking
+//       func_02019ebc therefore needs config/arm9/symbols.txt to SPLIT
+//       func_020610fc at +0x2c and a TU for the tail -- a decomp-side change,
+//       not a port one, and the first thing anyone taking this on has to do.
+//
+//       (2) NOTHING WOULD RUN IT EVEN THEN. That handler is installed by
+//       func_02061138 with IRQ::SetIRQHandler(0x100000, ...) and
+//       ntr/runtime.cpp's SetIRQHandler keeps masks 0x200000 (GXFIFO) and 2
+//       (HBlank) and drops every other one. func_02061138 also cannot link:
+//       its handler reaches func_020610fc, which is HAND-ASM (an IPCSend loop
+//       and a deliberate `b self`) that MSVC cannot assemble. Same reason the
+//       card bring-up below calls func_0206002c rather than func_02060890.
+//
+//       (3) THE WM THREAD'S STORAGE IS 16 KB THE PORT HOSTS NOWHERE, and this
+//       is the real work. src/func_02019f10.c is the entry func_02061128
+//       registers, and its own literal pool says exactly what it builds:
+//
+//           02019f28  ldr r0, [pc, #0x38]    pool 0x02019f58 = 0x02086214
+//           02019f30  sub r4, r0, #0x94      the record: 0x02086180
+//           02019f34  ldr r1, [pc, #0x34]    pool 0x02019f60 = func_02019f64
+//           02019f3c  mov r3, r4             stack TOP = the record's own base
+//           02019f40  str r2, [sp]           pool 0x02019f5c = 0x3f6c, the size
+//           02019f4c  bl  func_02058200
+//           02019f54  bl  func_02058048
+//
+//       So the record is 0x02086180..0x02086214 (0x94, one OSThread) and the
+//       stack is [0x02082214, 0x02086180) -- 16,236 bytes. config/arm9/
+//       symbols.txt has NO name anywhere in that range (the last one below is
+//       data_02082210, the first at or above is data_02086214), which is why
+//       the decompiled TU can only spell the record as `data_02086214 - 0x94`.
+//       hal/scene_boot.cpp hosts data_02086214 as `unsigned char
+//       data_02086214[256]` -- the arctan table src/func_020538b8.c indexes --
+//       and with that hosting alone func_02058200's MultiStore_Int would clear
+//       16 KB of whatever the linker happened to put BELOW that array. It wants
+//       the treatment hal/globals_link100.cpp gave the card driver: ONE grouped
+//       run covering 0x02082214..0x02086214 with data_02086214 at +0x4000, and
+//       scene_boot.cpp's array moved into it. That is the whole of the storage
+//       problem and it is a day's careful work, not a wall.
+//
+//       (4) AN ARM7 WIRELESS DRIVER, unchanged from the last pass.
+//       hal/boot2_ipc.cpp holds channel 0xa OBSERVED ONLY, on the stated
+//       grounds that "nothing in this build runs WM_Init, so a fabricated
+//       wireless answer would be answering a question no one asked". Running
+//       WM_Init asks it, and then every WM_SendCommand needs a completion or
+//       the ROM waits forever -- the same shape as the channel-6 refusal below.
+//
+//       NOT STARTED BY THIS LANE, deliberately: (1) is a decomp change, (3) is
+//       a globals lane and (4) is a subsystem. What this lane owed the WM chain
+//       was the scheduler, and the scheduler is done.
 //
 //   func_02058c84 and func_02019780 THEMSELVES
 //       Both CALL the arms still skipped below, so neither can be seated as a
@@ -127,13 +178,29 @@
 //       hand-asm exceptions.
 //
 //   func_020134c8 -> func_020133bc
-//       The ROM's sound bring-up. It takes 1MB out of Memory::Allocate and
-//       stands the ROM's own SDAT player up over it, and the port serves sound
-//       through hal/sdat. Two players over one SDAT is not a boot step, it is
-//       a separate lane. RE-DERIVED after lane THR: it is now blocked twice
-//       over, because its closure reaches func_02058200 and hal/boot2_thread
-//       .cpp states that thread CREATION is not modelled -- THR made the switch
-//       real, not a third fiber.
+//       The ROM's sound bring-up. RE-DERIVED by run link100's lane THREAD, and
+//       it is back to ONE blocker rather than two: thread creation is modelled
+//       now (port/slice_gate223.txt), so what is left is the reason BOOT gave
+//       first. func_020133bc takes 1MB out of Memory::Allocate and stands the
+//       ROM's OWN SDAT player up over it, and the port serves sound through
+//       hal/sdat. Two players over one SDAT is a subsystem decision, not a boot
+//       step, and nothing this lane did touches it.
+//
+//       THE THREAD HALF, measured so the sound lane does not re-derive it.
+//       func_020133bc's own call func_020506fc(2) is the sound thread's
+//       creation and it has the SAME SHAPE as the card driver's:
+//
+//           func_02058200(&data_020a5684, func_02050038, 0, &data_020a5bb8,
+//                         0x400, arg)
+//
+//       so data_020a5684 (the OSThread record) and data_020a8760's counterpart
+//       data_020a5bb8 (the stack TOP) have to be ONE contiguous object, and
+//       dsd split it three ways exactly as it split the card's:
+//       data_020a5684 -> data_020a5718 -> data_020a5bb8, total 0x534 = the
+//       0x94 record plus padding plus the 1 KB stack. data_020a5684 is hosted
+//       NOWHERE today and data_020a5bb8 IS hosted elsewhere, so the grouping
+//       is hal/globals_link100.cpp's card block done a second time, including
+//       the LNK2005 hand-over that one went through. Named, not taken.
 //
 //   func_0203bbc0
 //       RUN link100 lane BOOT2 measured this instead of inheriting "Crash()es
