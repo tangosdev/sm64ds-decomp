@@ -1,0 +1,13 @@
+# gate 224 (run link100, lane OV6)
+src/func_ov002_020b5a18.c
+src/func_ov002_020b5a70.c
+src/func_ov002_020b5fd8.c
+src/func_ov002_020b6030.c
+src/func_ov002_020b6388.c
+src/func_ov002_020b63e0.c
+src/func_ov002_020b8bf0.c
+src/func_ov002_020b8c9c.cpp
+src/func_ov002_020bab0c.c
+src/func_ov002_020bab64.c
+src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
+src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp

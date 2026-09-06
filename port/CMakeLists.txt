@@ -14053,6 +14053,102 @@ endforeach()
 target_sources(walk_window PRIVATE hal/thread_create.cpp)
 target_sources(walk_window_hires PRIVATE hal/thread_create.cpp)
 
+
+# ---- gate 224 (run link100, lane OV6): SIX ov002 BASE TABLES --------------
+#
+# port/CMakeLists.txt has said, at the gate-216 rename block above, that
+# data_ov002_02108fdc is "a table to host, not a rename", and the ov029 binding
+# block adds that "the ROM's own ov002 base tables (data_ov002_02108fdc/
+# 021091d4) are NOT host arrays, so a dead store is never bound to them". Lane
+# TAIL hosted 0x021091d4 in hal/actor_classes_ov036.cpp. This gate hosts the
+# other five plus 0x02108284 (CapEnemy's), in hal/actor_base_tables_ov002.cpp,
+# and seats the ROM's own words in every slot the port has a body for. The
+# widths come from the next-symbol delta in config/arm9/overlays/ov002/
+# symbols.txt and the slot contents from that overlay's relocs.txt; the whole
+# derivation, including the seven slots on 0x021096b0 that TRAP because their
+# ROM word names a guessed body, is in that file's header.
+#
+# ON ALL THREE BIG TARGETS. The seat's shared half calls Actor/ActorBase faces
+# and port_actor_s30_base out of hal/actor_classes.cpp, which walk_window,
+# walk_window_hires and smoke_player all compile; a target that got the arrays
+# without the faces would fail at link, so the three move together. Appended as
+# target_sources ABOVE the sharing block below.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate224.txt" SLICE224_LINES)
+set(SLICE224_SOURCES "")
+foreach(line IN LISTS SLICE224_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE224_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t224 walk_window walk_window_hires smoke_player)
+    target_sources(${_t224} PRIVATE ${SLICE224_SOURCES} hal/actor_base_tables_ov002.cpp)
+endforeach()
+#
+# THE NINE DESTRUCTORS' vptr BINDINGS. Every one of these bodies was recovered
+# through a shared header, so it spells its two vptr stores with placeholder
+# names (_ZTV10dBgActor_c / _ZTV11dCapEnemy_c / _ZTV16daObjPushblock_c, then
+# VT1), and the same placeholder is a DIFFERENT table in a different TU -- the
+# ov065 disease the ov029 block above documents. Each row is read out of that
+# body's OWN literal pool in config/arm9/overlays/ov002/relocs.txt, never out
+# of the recovery's names, and the rule is the ov029 block's unchanged: the
+# LIVE (last) store gets its true target and the DEAD earlier store is bound to
+# the class's own array, which gate 224 is what makes definable.
+#
+#   func_ov002_020b5a18  0x020b5a64 -> 0x02108fdc   0x020b5a68 -> 0x0210ae38
+#   func_ov002_020b5a70  0x020b5aac -> 0x02108fdc   0x020b5ab0 -> 0x0210ae38
+#   func_ov002_020b5fd8  0x020b6024 -> 0x02109084   0x020b6028 -> 0x0210ae38
+#   func_ov002_020b6030  0x020b606c -> 0x02109084   0x020b6070 -> 0x0210ae38
+#   func_ov002_020b6388  0x020b63d4 -> 0x0210912c   0x020b63d8 -> 0x0210ae38
+#   func_ov002_020b63e0  0x020b641c -> 0x0210912c   0x020b6420 -> 0x0210ae38
+#   func_ov002_020b8bf0  0x020b8c34 -> 0x021096b0   0x020b8c38 -> 0x0210ae38
+#   func_ov002_020bab0c  0x020bab58 -> 0x021099e4   0x020bab5c -> 0x0210ae38
+#   func_ov002_020bab64  0x020baba0 -> 0x021099e4   0x020baba4 -> 0x0210ae38
+#
+# 0x0210ae38 is _ZTV8Platform on all nine.
+foreach(_g224 func_ov002_020b5a18 func_ov002_020b5a70)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${_g224}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=data_ov002_02108fdc;VT1=_ZTV8Platform;G0=data_020a0eac")
+endforeach()
+foreach(_g224 func_ov002_020b5fd8 func_ov002_020b6030)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${_g224}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=data_ov002_02109084;VT1=_ZTV8Platform;G0=data_020a0eac")
+endforeach()
+foreach(_g224 func_ov002_020b6388 func_ov002_020b63e0)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${_g224}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=data_ov002_0210912c;VT1=_ZTV8Platform;G0=data_020a0eac")
+endforeach()
+foreach(_g224 func_ov002_020bab0c func_ov002_020bab64)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${_g224}.c"
+        PROPERTIES COMPILE_DEFINITIONS
+        "_ZTV10dBgActor_c=data_ov002_021099e4;VT1=_ZTV8Platform;G0=data_020a0eac")
+endforeach()
+# 020b8bf0 stores its OWN table first (the config RTTI name) and _ZTV8Platform
+# last, so here the placeholder that gets the live target is _ZTV10dBgActor_c.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b8bf0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV16daObjPushblock_c=data_ov002_021096b0;_ZTV10dBgActor_c=_ZTV8Platform")
+# CapEnemy's pair is ALREADY in port/slice_gate32.txt and was dropped by
+# /OPT:REF for want of a reference edge; gate 224's slot 16/17 seat is that
+# edge. Both bodies name their table by the config RTTI placeholder, and D0
+# also takes the heap global as G0:
+#   _ZN8CapEnemyD2Ev  0x02006550 -> ov002 0x02108284      (arm9 pool)
+#   _ZN8CapEnemyD0Ev  0x020aee38 -> ov002 0x02108284, 0x020aee3c -> 0x020a0eac
+# D2 spells data_ov002_02108284 by its real name and needs no binding.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8CapEnemyD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV11dCapEnemy_c=data_ov002_02108284;G0=data_020a0eac")
+
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
