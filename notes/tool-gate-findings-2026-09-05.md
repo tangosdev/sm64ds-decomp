@@ -51,6 +51,12 @@ were already on main and source cleanup is intentionally out of scope, the
 initial code baseline was aligned to current main at 1,188 pairs. Future
 additions remain failures.
 
+Before publication on 2026-09-06, the branch was rebased over another 70 main
+commits. Its C/C++ tree was verified identical to `origin/main` before the debt
+baseline was refreshed. Landed promotions had added 400 dead comment-reference
+pairs and healed one old pair, bringing the pinned-main baseline to 1,587.
+Again, no source cleanup or source edit was made.
+
 ## Verification
 
 - Frozen census tests: 39 passed; both census scripts pass their `--check`
@@ -58,6 +64,6 @@ additions remain failures.
 - Header-offset tests: 39 passed; related header-generation tests: 21 passed.
 - Representative live headers checked all documented fields, including
   `dScMgBase_c.h` (40 fields) and `dActor_c.h` (33 fields).
-- Dead-reference suites: 60 passed. The repository scan covers 10,728 C/C++
-  files on the integration base and reports no new dead references or broken
-  Markdown links.
+- Dead-reference suites: 60 passed. The final repository scan covers 10,046
+  C/C++ files on the integration base and reports no new dead references or
+  broken Markdown links.
