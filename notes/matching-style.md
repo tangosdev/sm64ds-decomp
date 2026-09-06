@@ -250,7 +250,8 @@ own fix -- **do not pre-fold the base**. Modelling `self + 0x4694 + (i<<6)` as a
 mwcc pool-load it and hoist the result into callee-saved registers (observed: 7-register push).
 Modelling the same thing as a **stride-0x40 struct array** indexed `[i]` yields the ROM's
 `add rX,self,i,lsl#6; add rX,rX,#0x4000; ldrb [rX,#0x694]` and rematerializes per region.
-(`src/func_ov006_020d69b8.c`, `src/func_ov006_020d816c.c`.)
+(`src/actors/dScMgBomroom_c.cpp`, which absorbed the former `func_ov006_020d69b8`
+shard; and `src/func_ov006_020d816c.c`.)
 
 Related: write the cast **inline** at each use. Hoisting it into a local pointer (`Ent *ents = ...`)
 forces one addressing form everywhere; inline lets mwcc pick per context, which is what the ROM does.
