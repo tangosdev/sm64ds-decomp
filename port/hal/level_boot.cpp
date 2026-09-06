@@ -1522,6 +1522,16 @@ static const PortLevelDesc port_level_table[] = {
     {42, "VS map 4 (level 42)", "ov050", 0x02111204,
      port_ov050_patch, port_ov050_at,
      &port_ov050_ds_base, &port_ov050_ds_end, 0},
+    /* ---- link100 TAIL2 ---- LEVEL 31, the one stage id the ROM has and the
+       port did not mount. Every field is the w21 block's own derivation above
+       (ov039 0x02111438, course 23, subCount 1, flags 0x00, handles
+       074d/074b/074e/074f), re-read here against config/arm9 rather than
+       copied: data_020758c8[31] -> ov039 and data_02092208[31] -> 0x02111438.
+       ov039 has been on PORT_LEVEL_OVERLAYS since wave 21 and its data is
+       mounted; only the row and its thunk were missing. own_sinits stays 0. */
+    {31, "Wing Cap tower (habatake, course 23)", "ov039", 0x02111438,
+     port_ov039_patch, port_ov039_at,
+     &port_ov039_ds_base, &port_ov039_ds_end, 0},
 };
 
 enum { PORT_LEVEL_COUNT = sizeof port_level_table / sizeof port_level_table[0] };
@@ -1992,6 +2002,9 @@ static void *port_mount_row_lvl43(void) { return port_level_mount_at(47); }
 static void *port_mount_row_lvl29vs(void) { return port_level_mount_at(48); }
 static void *port_mount_row_lvl42vs(void) { return port_level_mount_at(49); }
 
+/* ---- link100 TAIL2 ---- index 50, the level-31 row appended above. */
+static void *port_mount_row_lvl31(void) { return port_level_mount_at(50); }
+
 static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_0, port_mount_row_1, port_mount_row_2, port_mount_row_3,
     port_mount_row_4,
@@ -2040,6 +2053,7 @@ static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_lvl43,
     port_mount_row_lvl29vs,
     port_mount_row_lvl42vs,
+    port_mount_row_lvl31,
 };
 
 // ---- the loader dispatch table ---------------------------------------------
