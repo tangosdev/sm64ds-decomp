@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2680,
+  "count": 2682,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -2127,6 +2127,8 @@
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_c16OnPendingDestroyEv",
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_cD0Ev",
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_cD1Ev",
+    "src/actors/dScMgCup_c.cpp#_ZN10dScMgCup_c8BehaviorEv",
+    "src/actors/dScMgCup_c.cpp#_ZN10dScMgCup_c9StateIdleEv",
     "src/actors/dScMgD3DBase_c.cpp#Sound_PlayBank1Panned",
     "src/actors/dScMgD3DBase_c.cpp#_ZN14dScMgD3DBase_c24OnHitByCannonBlastedCharEv",
     "src/actors/dScMgD3DBase_c.cpp#_ZN14dScMgD3DBase_cD0Ev",

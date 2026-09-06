@@ -1,9 +1,9 @@
 {
   "id": "ov006/dScMgCup_c",
   "module": "ov006",
-  "source": "src_tu/minigames/d_s_mg_cup.cpp",
+  "source": "src/actors/dScMgCup_c.cpp",
   "promoted_source": "src/actors/dScMgCup_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous 32-function text run: 0x020de988..0x020e0638; the next address starts dScMgCurling_c",
@@ -256,7 +256,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgCup_c/d_s_mg_cup.o (gitignored)",
+    "object": "build/tu/ov006-dScMgCup_c/dScMgCup_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 32,
     "functions_declared": 32,
@@ -330,105 +330,18 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "failed",
-      "scratch": "build/tu/ov006-dScMgCup_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": false,
-        "checkSymbols": false
-      },
-      "tuRange": {
-        "start": "0x020de988",
-        "end": "0x020e0638",
-        "differingBytes": 0,
-        "firstDiff": null
-      },
-      "tuRanges": [
-        {
-          "section": ".text",
-          "start": "0x020de988",
-          "end": "0x020e0638",
-          "differingBytes": 0,
-          "firstDiff": null
-        }
-      ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 32
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
-      "symbolCheckNewVsBaseline": [
-        "[ERROR]   Possible name: _ZN10dScMgCup_c10StateSetupEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateFinishEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateResultEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateSelectEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c12StateShuffleEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c17StateWaitForInputEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c19StatePrepareShuffleEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c9StateIdleEv",
-        "[ERROR] Symbol 'func_ov006_020df1bc' in overlay 6 at 0x020df1bc not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df1c0' in overlay 6 at 0x020df1c0 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df28c' in overlay 6 at 0x020df28c not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df3bc' in overlay 6 at 0x020df3bc not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df540' in overlay 6 at 0x020df540 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df5b8' in overlay 6 at 0x020df5b8 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020dfcd8' in overlay 6 at 0x020dfcd8 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020dfd48' in overlay 6 at 0x020dfd48 not found in linked binary"
-      ],
-      "symbolCheckErrors": [
-        "[ERROR]   Possible name: _ZN10dScMgCup_c10StateSetupEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateFinishEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateResultEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c11StateSelectEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c12StateShuffleEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c17StateWaitForInputEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c19StatePrepareShuffleEv",
-        "[ERROR]   Possible name: _ZN10dScMgCup_c9StateIdleEv",
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df1bc' in overlay 6 at 0x020df1bc not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df1c0' in overlay 6 at 0x020df1c0 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df28c' in overlay 6 at 0x020df28c not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df3bc' in overlay 6 at 0x020df3bc not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df540' in overlay 6 at 0x020df540 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020df5b8' in overlay 6 at 0x020df5b8 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020dfcd8' in overlay 6 at 0x020dfcd8 not found in linked binary",
-        "[ERROR] Symbol 'func_ov006_020dfd48' in overlay 6 at 0x020dfd48 not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "symbolCheckBaselineErrors": [
-        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
-        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
-        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
-        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
-        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
-      ],
-      "moduleSetSha256": "8fffda765b36c1b6660ba1cd30bb7ca6ef2822226a5540c527820fdfa8427825",
-      "rom": null,
-      "linkerOutput": null
+      "result": "unavailable-for-this-TU",
+      "why": "tools/tubuild.py linkcheck has no usable route for this promotion, in BOTH directions, and neither refusal is a defect in this TU. AFTER promotion it routes down the intact-object path unconditionally and refuses at [4/8] with `intact production requires one .text claim and at least one non-text claim`; this TU is text-only (data: [], bss: []) by design, so it can never satisfy that. BEFORE promotion it refused too, for a reason specific to this class: the promotion carries a symbols.txt rename (see production.symbolRename below) that the un-promoted tree cannot satisfy, so the stock control link that [4/8] requires as a baseline proof cannot be green while the legacy shards are still enrolled. The substitution and the rename are one edit. Recorded measurements from the pre-promotion attempts, before the rename was applied: [1/8] spliced 32 entries into one; delink, lcf, compile and link all ok; the whole .text range 0x020de988..0x020e0638 IDENTICAL (differingBytes 0); objectAudit 32 LICENSED, 0 non-licensed, 0 unlicensed sections, emitted text order ROM-ascending. The only failures were checkModules (32 bytes, the eight State PMF words) and checkSymbols (16 lines), and both are exactly what the rename fixes.",
+      "supersededBy": "production"
+    },
+    "production": {
+      "round": "python tools/rombuild.py -j 6 --no-rom -- the real production build of the real tree, not a scratch substitution",
+      "result": "PASS",
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "sourceBuiltFunctions": "11,142 reproducing / 0 mismatching (2,108,236 of 2,211,124 code bytes, 95.35%)",
+      "intactTuGates": "dsd modules PASS, zero new symbol errors, storage aliases exact",
+      "checkSymbols": "the 9 pre-existing baseline error lines only (overlay_100, overlay_102, data_020ad524, data_020ad560 and five ITCM symbols); the promotion adds none",
+      "symbolRename": "config/arm9/overlays/ov006/symbols.txt renames eight addresses from func_ov006_* to the class-anchored mangled member names this TU defines: 0x020df1bc _ZN10dScMgCup_c9StateIdleEv, 0x020df1c0 StateFinish, 0x020df28c StateResult, 0x020df3bc StateSelect, 0x020df540 StateWaitForInput, 0x020df5b8 StateShuffle, 0x020dfcd8 StatePrepareShuffle, 0x020dfd48 StateSetup. THE RENAME IS LOAD-BEARING, NOT COSMETIC: the eight 8-byte pointer-to-member records in ov006 .data at 0x0213bfe8..0x0213c040 relocate to these addresses, and dsd resolves those relocations BY SYMBOL NAME. Without the rename the delinked .data gap object cannot resolve them and all eight code words link as 0x00000000 -- measured, 32 differing bytes in ov006, the only module fidelity failure of the whole promotion. The names themselves are class-anchored inferences from PMF order and behaviour, not cartridge-proved spellings; the tree already carried the same kind of coined member symbol for this class (_ZN10dScMgCup_c9Virtual50Ev, and Virtual50 is coined) before this change. dsd check symbols reports zero new errors after the rename."
     }
   },
   "compiler_only_output": [

@@ -1,6 +1,6 @@
 //cpp
-/* SHADOW translation unit -- not enrolled in the production ROM build.
- * ov006/dScMgCup_c: 32 functions, 0x020de988..0x020e0638.
+/* ov006/dScMgCup_c: 32 functions, 0x020de988..0x020e0638, enrolled in the
+ * production ROM build as one complete delinks entry.
  *
  * The boundary is reconstructed through the complete class run, the adjacent
  * MG_CUP factory, and its empty array-element constructor; dScMgCurling_c begins
