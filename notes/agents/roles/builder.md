@@ -66,15 +66,25 @@ PASS signals:
 - `tubuild verify` → `N/N MATCH, objisolate clean, reloc-destinations clean`
 - `rombuild` → `module fidelity: 106/106 exact, 100.000000% of compared bytes`
   and `ROM-build analysis: PASS`; its stock profile must report 0 mod source
-  replacements and 0 ROM-gap fallbacks, and the built NDS must have the retail
-  SHA-256
+  replacements and 0 ROM-gap fallbacks. **There is no retail-SHA oracle — do not
+  look for one.** The built ROM differs from the repo's own `sm64.nds` in ~54 KB
+  across ~7,000 ranges, all outside the compared modules, and the manifest's
+  `matchesStockRom` means "identical to this tree's last `build/sm64ds.nds`",
+  not "identical to retail". The real checks are `module fidelity: 106/106
+  exact, 100.000000%` plus equality with the run's own source-independent stock
+  baseline control
 - `source_coverage` → `0 B` handed back to the cartridge
 - `prepush_attribution` → **no symbol *lost*.** Do **not** hold out for
   `0 changed`: a promotion folds N shards into one file, and the counter credits
   only the delinks range's *first* symbol and reclassifies the rest as
   "claimed" — see the many-to-one fold artifact below, which lists the lines
-  that are expected and are not losses. `changed` is noise on a promotion by
-  construction; `lost` is the signal. Run the check, commit what it asks for,
+  that are expected and are not losses. **But `changed` is not noise by
+  construction, and this file used to say it was.** With correct `path#symbol`
+  overrides committed, the validator reports `0 changed` and the four "expected"
+  fold lines collapse to one (`N address range(s) left the byte-verified set`).
+  Measured on `ov006/dScMgRoulette_c`: `32 consolidated with credit intact,
+  0 changed, 0 lost`. So aim for `0 changed`; if you cannot reach it, say which
+  rows resist and why, rather than writing it off as inherent. Run the check, commit what it asks for,
   report the numbers, and move on — reconciling credit beyond that is a stated
   non-goal in this repo and has consumed whole sessions before.
 - everything else → exit 0 with no backlog count increased
@@ -134,7 +144,9 @@ and addend), and `reloc_audit` (destination identity).
 **`romdata_check`'s per-symbol verdicts are not reachable from the CLI.**
 `--show` only slices `report["differing"]` and `--json` carries counts. To prove
 a specific symbol's identity — which is how the cross-module RTTI claim was
-settled — import the module and call `check_object()` directly. **Pass
+settled — import the module and call `check_object()` directly. The signature is
+`check_object(obj_path, rel, names=None)` — passing a rom index positionally
+raises `TypeError: got multiple values for argument 'names'`. **Pass
 `names=romdata_check.name_index()`**: without it `module` comes back `None`,
 which defeats the cross-module proof the call is for. The records carry `module`
 but **no address field**, so addresses still need checking against `symbols.txt`
@@ -217,6 +229,35 @@ under-reported conflicts.
 path legitimately recurs under different reasons — `main` carries 66 such rows
 from past promotions. Only byte-identical repetition is the defect. A builder
 who deduped by path would delete real history.
+
+## Check for a shallow clone before trusting ANY attribution output
+
+    git rev-parse --is-shallow-repository        # must print false
+
+**A shallow clone silently corrupts every attribution answer, and the wrong
+answer is permanent.** `first_matchers()` / `match_finishers()` replay `src/`
+history, so a truncated clone makes every lineage start at the newest commit
+that touched the file — which is usually the automated refresh, i.e.
+`github-actions[bot]`. `prepush_attribution` then reports dozens "lost", and
+banking its suggestion writes override rows that are **highest priority and
+never pruned**.
+
+Measured 2026-09-05: this repo's primary checkout was shallow at **1,325 of
+4,743 commits** for a whole session. A builder banked 40 override rows from that
+output before catching it; the merge validator's "Before" column showed it would
+have stripped functions from three named human contributors and mislabelled 24
+more. After `git fetch --unshallow`, the recomputed owner set agreed with all 25
+owners the validator printed, with **0 disagreements**.
+
+`attribution.json` currently carries **968 of 2,036 override rows crediting
+`github-actions[bot]`**, which is what this defect looks like at scale. CI is not
+the source — the workflows that read history correctly set `fetch-depth: 0`.
+Local agent runs are.
+
+**So: never bank an attribution override from a shallow clone.** If
+`--is-shallow-repository` prints true, run `git fetch --unshallow` and recompute
+before writing anything. Worktrees share the parent clone's `.git`, so one
+shallow clone makes every worktree cut from it shallow too.
 
 ## Do not use `git stash` in this repo
 
@@ -374,7 +415,10 @@ already stale. Getting this wrong costs a full validation cycle.
   decimal, i.e. the false `0x58`, on the very class where the real answer is
   `0x88`. The truthful fields are **`emitted`** and **`bytes`**, with
   `blindWords: 0`. Following the extent field confirms the trap instead of
-  catching it.
+  catching it. **This is class-specific, not universal** — on
+  `dScMgRoulette_c` the field reads `144`, which is correct and equal to
+  `emitted`/`bytes`. So it is unreliable rather than always-wrong: never take it
+  alone, and corroborate as above.
 - **Print scalar fields only from a `check_object()` record.** Its `src` key is a
   dict keyed by *tuples* covering every symbol in the module, so `json.dumps`
   raises `TypeError: keys must be str...` and printing the record raw dumps about
