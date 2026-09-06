@@ -23,7 +23,7 @@ void func_ov006_020df5b8(char *c)
         *(int*)(c + 0x5458) = func_02012468(*(int*)(c + 0x5458), 2, 0x1cb, 2, 0, amp, 0, 0);
     }
 
-    *(u16*)(((long long)(int)(c + 0x545c))) += *(s16*)(c + 0x545e);
+    *(u16*)(c + 0x545c) += *(s16*)(c + 0x545e);
 
     {
         s16 vv = *(s16*)(c + 0x545e);
@@ -88,7 +88,7 @@ void func_ov006_020df5b8(char *c)
             int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
             *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420) = tb;
             *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420) = ta;
-            *(u8*)(((long long)(int)(c + 0x5460))) -= 1;
+            *(u8*)(c + 0x5460) -= 1;
             if (*(u8*)(c + 0x5460) == 0) {
                 *(int*)(c + 0x541c) = 0x1e;
                 *(int*)(c + 0x5418) = 3;
@@ -101,7 +101,7 @@ void func_ov006_020df5b8(char *c)
             s16 vv = *(s16*)(c + 0x545e);
             if ((vv >= 0 && uu >= 0x5555u) || (vv < 0 && uu <= 0xaaabu)) {
                 *(s16*)(c + 0x545e) = -vv;
-                *(u16*)(c + 0x545c) += 0x8000;
+                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -171,5 +171,5 @@ void func_ov006_020df5b8(char *c)
         }
     }
 
-    *(int*)(((long long)(int)(c + 0x541c))) += 1;
+    *(int*)(c + 0x541c) += 1;
 }

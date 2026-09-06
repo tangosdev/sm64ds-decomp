@@ -531,6 +531,7 @@ src/func_ov006_020c6348.c:
     .text start:0x020c6348 end:0x020c6378
 
 src/func_ov006_020c6378.c:
+    complete
     .text start:0x020c6378 end:0x020c63dc
 
 src/func_ov006_020c63dc.c:
@@ -1506,6 +1507,7 @@ src/func_ov006_020d5e3c.c:
     .text start:0x020d5e3c end:0x020d5e5c
 
 src/func_ov006_020d5e5c.c:
+    complete
     .text start:0x020d5e5c end:0x020d5eb8
 
 src/actors/dScMgBomroom_c.cpp:
@@ -1573,6 +1575,7 @@ src/func_ov006_020d816c.c:
     .text start:0x020d816c end:0x020d8324
 
 src/func_ov006_020d8324.c:
+    complete
     .text start:0x020d8324 end:0x020d836c
 
 src/func_ov006_020d836c.cpp:
@@ -1667,137 +1670,9 @@ src/_ZN11dScMgCoin_cD0Ev.cpp:
     complete
     .text start:0x020dbe64 end:0x020dbe9c
 
-src/func_ov006_020dbf7c.c:
+src/actors/dScMgCoin_c.cpp:
     complete
-    .text start:0x020dbf7c end:0x020dc154
-
-src/func_ov006_020dc154.c:
-    complete
-    .text start:0x020dc154 end:0x020dc1c4
-
-src/func_ov006_020dc1c4.c:
-    complete
-    .text start:0x020dc1c4 end:0x020dc26c
-
-src/func_ov006_020dc26c.c:
-    complete
-    .text start:0x020dc26c end:0x020dc294
-
-src/func_ov006_020dc294.c:
-    complete
-    .text start:0x020dc294 end:0x020dc298
-
-src/func_ov006_020dc298.cpp:
-    complete
-    .text start:0x020dc298 end:0x020dc2f8
-
-src/func_ov006_020dc2f8.c:
-    complete
-    .text start:0x020dc2f8 end:0x020dc334
-
-src/func_ov006_020dc334.c:
-    complete
-    .text start:0x020dc334 end:0x020dc348
-
-src/func_ov006_020dc348.c:
-    complete
-    .text start:0x020dc348 end:0x020dc370
-
-src/func_ov006_020dc370.c:
-    complete
-    .text start:0x020dc370 end:0x020dc3bc
-
-src/func_ov006_020dc3bc.c:
-    complete
-    .text start:0x020dc3bc end:0x020dc414
-
-src/func_ov006_020dc414.c:
-    complete
-    .text start:0x020dc414 end:0x020dc4b0
-
-src/func_ov006_020dc4b0.c:
-    complete
-    .text start:0x020dc4b0 end:0x020dc4c8
-
-src/func_ov006_020dc4c8.c:
-    complete
-    .text start:0x020dc4c8 end:0x020dc5c4
-
-src/func_ov006_020dc5c4.c:
-    complete
-    .text start:0x020dc5c4 end:0x020dc6d0
-
-src/func_ov006_020dc6d0.c:
-    complete
-    .text start:0x020dc6d0 end:0x020dc754
-
-src/func_ov006_020dc754.cpp:
-    complete
-    .text start:0x020dc754 end:0x020dc7b4
-
-src/func_ov006_020dc7b4.c:
-    complete
-    .text start:0x020dc7b4 end:0x020dc7fc
-
-src/func_ov006_020dc7fc.c:
-    complete
-    .text start:0x020dc7fc end:0x020dc814
-
-src/func_ov006_020dc814.c:
-    complete
-    .text start:0x020dc814 end:0x020dc870
-
-src/func_ov006_020dc870.c:
-    complete
-    .text start:0x020dc870 end:0x020dc900
-
-src/func_ov006_020dc900.c:
-    complete
-    .text start:0x020dc900 end:0x020dc960
-
-src/func_ov006_020dc960.c:
-    complete
-    .text start:0x020dc960 end:0x020dc99c
-
-src/func_ov006_020dc99c.c:
-    complete
-    .text start:0x020dc99c end:0x020dca04
-
-src/func_ov006_020dca04.c:
-    complete
-    .text start:0x020dca04 end:0x020dcb1c
-
-src/func_ov006_020dcb1c.c:
-    complete
-    .text start:0x020dcb1c end:0x020dcc48
-
-src/func_ov006_020dcc48.c:
-    complete
-    .text start:0x020dcc48 end:0x020dccb8
-
-src/func_ov006_020dccb8.c:
-    complete
-    .text start:0x020dccb8 end:0x020dcd74
-
-src/func_ov006_020dcd74.c:
-    complete
-    .text start:0x020dcd74 end:0x020dce3c
-
-src/func_ov006_020dce3c.c:
-    complete
-    .text start:0x020dce3c end:0x020dcea8
-
-src/func_ov006_020dcea8.c:
-    complete
-    .text start:0x020dcea8 end:0x020dcffc
-
-src/func_ov006_020dcffc.c:
-    complete
-    .text start:0x020dcffc end:0x020dd000
-
-src/func_ov006_020dd000.c:
-    complete
-    .text start:0x020dd000 end:0x020dd0e0
+    .text start:0x020dbf7c end:0x020dd0e0
 
 src/func_ov006_020dd2cc.cpp:
     complete
@@ -1992,6 +1867,7 @@ src/func_ov006_020df540.c:
     .text start:0x020df540 end:0x020df5b8
 
 src/func_ov006_020df5b8.c:
+    complete
     .text start:0x020df5b8 end:0x020dfcd8
 
 src/func_ov006_020dfcd8.c:
@@ -2147,6 +2023,7 @@ src/func_ov006_020e285c.c:
     .text start:0x020e285c end:0x020e2868
 
 src/func_ov006_020e2868.c:
+    complete
     .text start:0x020e2868 end:0x020e2c08
 
 src/func_ov006_020e2c08.c:
@@ -2346,6 +2223,7 @@ src/func_ov006_020e5b70.c:
     .text start:0x020e5b70 end:0x020e5b7c
 
 src/func_ov006_020e5b7c.c:
+    complete
     .text start:0x020e5b7c end:0x020e5e3c
 
 src/func_ov006_020e5e3c.c:
@@ -2917,6 +2795,7 @@ src/func_ov006_020f0dd8.c:
     .text start:0x020f0dd8 end:0x020f0e28
 
 src/func_ov006_020f0e28.c:
+    complete
     .text start:0x020f0e28 end:0x020f0eac
 
 src/func_ov006_020f0eac.c:
@@ -2956,18 +2835,23 @@ src/func_ov006_020f15ac.cpp:
     .text start:0x020f15ac end:0x020f17fc
 
 src/func_ov006_020f17fc.c:
+    complete
     .text start:0x020f17fc end:0x020f192c
 
 src/func_ov006_020f192c.c:
+    complete
     .text start:0x020f192c end:0x020f1a70
 
 src/func_ov006_020f1a70.c:
+    complete
     .text start:0x020f1a70 end:0x020f1b98
 
 src/func_ov006_020f1b98.c:
+    complete
     .text start:0x020f1b98 end:0x020f1cb4
 
 src/func_ov006_020f1cb4.c:
+    complete
     .text start:0x020f1cb4 end:0x020f1dbc
 
 src/func_ov006_020f1dbc.c:
@@ -3019,6 +2903,7 @@ src/func_ov006_020f319c.c:
     .text start:0x020f319c end:0x020f31dc
 
 src/func_ov006_020f31dc.c:
+    complete
     .text start:0x020f31dc end:0x020f3260
 
 src/func_ov006_020f3260.c:
@@ -3218,6 +3103,7 @@ src/func_ov006_020fc1b4.c:
     .text start:0x020fc1b4 end:0x020fc1f8
 
 src/func_ov006_020fc1f8.c:
+    complete
     .text start:0x020fc1f8 end:0x020fc2ec
 
 src/func_ov006_020fc2ec.c:
@@ -3328,6 +3214,7 @@ src/func_ov006_020feba8.c:
     .text start:0x020feba8 end:0x020fed58
 
 src/_ZN15dScMgPachinko_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x020fed58 end:0x020fedc4
 
 src/_ZN15dScMgPachinko_c6RenderEv.cpp:
@@ -3527,6 +3414,7 @@ src/func_ov006_0210246c.cpp:
     .text start:0x0210246c end:0x021024e0
 
 src/func_ov006_021024e0.c:
+    complete
     .text start:0x021024e0 end:0x02102564
 
 src/func_ov006_02102564.c:
@@ -3641,289 +3529,9 @@ src/d_s_mg_pachinko2.c:
     complete
     .text start:0x02104258 end:0x0210428c
 
-src/_ZN12dScMgPanel_cD1Ev.cpp:
+src/actors/dScMgPanel_c.cpp:
     complete
-    .text start:0x0210428c end:0x021042b0
-
-src/_ZN12dScMgPanel_cD0Ev.cpp:
-    complete
-    .text start:0x021042b0 end:0x021042e8
-
-src/func_ov006_021042e8.c:
-    complete
-    .text start:0x021042e8 end:0x02104354
-
-src/func_ov006_02104354.c:
-    complete
-    .text start:0x02104354 end:0x0210446c
-
-src/func_ov006_0210446c.c:
-    complete
-    .text start:0x0210446c end:0x02104558
-
-src/func_ov006_02104558.c:
-    complete
-    .text start:0x02104558 end:0x02104580
-
-src/func_ov006_02104580.c:
-    complete
-    .text start:0x02104580 end:0x02104870
-
-src/func_ov006_02104870.c:
-    complete
-    .text start:0x02104870 end:0x021048b0
-
-src/func_ov006_021048b0.c:
-    complete
-    .text start:0x021048b0 end:0x021048e4
-
-src/func_ov006_021048e4.c:
-    complete
-    .text start:0x021048e4 end:0x02104920
-
-src/func_ov006_02104920.c:
-    complete
-    .text start:0x02104920 end:0x02104a10
-
-src/func_ov006_02104a10.cpp:
-    complete
-    .text start:0x02104a10 end:0x02104ac0
-
-src/func_ov006_02104ac0.c:
-    complete
-    .text start:0x02104ac0 end:0x02104ac4
-
-src/func_ov006_02104ac4.cpp:
-    complete
-    .text start:0x02104ac4 end:0x02104b24
-
-src/func_ov006_02104b24.c:
-    complete
-    .text start:0x02104b24 end:0x02104b4c
-
-src/func_ov006_02104b4c.c:
-    complete
-    .text start:0x02104b4c end:0x02104b5c
-
-src/func_ov006_02104b5c.c:
-    complete
-    .text start:0x02104b5c end:0x02104bac
-
-src/func_ov006_02104bac.c:
-    complete
-    .text start:0x02104bac end:0x02104bb0
-
-src/func_ov006_02104bb0.c:
-    complete
-    .text start:0x02104bb0 end:0x02104c08
-
-src/func_ov006_02104c08.c:
-    complete
-    .text start:0x02104c08 end:0x02104c60
-
-src/func_ov006_02104c60.cpp:
-    complete
-    .text start:0x02104c60 end:0x02104cfc
-
-src/func_ov006_02104cfc.c:
-    complete
-    .text start:0x02104cfc end:0x02104d44
-
-src/func_ov006_02104d44.c:
-    complete
-    .text start:0x02104d44 end:0x02104d94
-
-src/func_ov006_02104d94.c:
-    complete
-    .text start:0x02104d94 end:0x02104e70
-
-src/func_ov006_02104e70.c:
-    complete
-    .text start:0x02104e70 end:0x02104e80
-
-src/func_ov006_02104e80.c:
-    complete
-    .text start:0x02104e80 end:0x02104ea8
-
-src/func_ov006_02104ea8.c:
-    complete
-    .text start:0x02104ea8 end:0x02104eb8
-
-src/func_ov006_02104eb8.c:
-    complete
-    .text start:0x02104eb8 end:0x02104ec8
-
-src/func_ov006_02104ec8.c:
-    complete
-    .text start:0x02104ec8 end:0x02104ecc
-
-src/func_ov006_02104ecc.cpp:
-    complete
-    .text start:0x02104ecc end:0x02104fb4
-
-src/func_ov006_02104fb4.c:
-    complete
-    .text start:0x02104fb4 end:0x0210500c
-
-src/func_ov006_0210500c.c:
-    complete
-    .text start:0x0210500c end:0x0210508c
-
-src/func_ov006_0210508c.c:
-    complete
-    .text start:0x0210508c end:0x021050bc
-
-src/func_ov006_021050bc.cpp:
-    complete
-    .text start:0x021050bc end:0x02105118
-
-src/func_ov006_02105118.c:
-    complete
-    .text start:0x02105118 end:0x02105134
-
-src/func_ov006_02105134.c:
-    complete
-    .text start:0x02105134 end:0x021051dc
-
-src/func_ov006_021051dc.c:
-    complete
-    .text start:0x021051dc end:0x021053a8
-
-src/func_ov006_021053a8.cpp:
-    complete
-    .text start:0x021053a8 end:0x02105670
-
-src/func_ov006_02105670.c:
-    complete
-    .text start:0x02105670 end:0x02105730
-
-src/func_ov006_02105730.c:
-    complete
-    .text start:0x02105730 end:0x021057f0
-
-src/func_ov006_021057f0.cpp:
-    complete
-    .text start:0x021057f0 end:0x02105854
-
-src/func_ov006_02105854.c:
-    complete
-    .text start:0x02105854 end:0x02105ab4
-
-src/func_ov006_02105ab4.c:
-    complete
-    .text start:0x02105ab4 end:0x02105c1c
-
-src/func_ov006_02105c1c.c:
-    complete
-    .text start:0x02105c1c end:0x02105c88
-
-src/func_ov006_02105c88.c:
-    complete
-    .text start:0x02105c88 end:0x02105d20
-
-src/func_ov006_02105d20.c:
-    complete
-    .text start:0x02105d20 end:0x02105de4
-
-src/func_ov006_02105de4.c:
-    complete
-    .text start:0x02105de4 end:0x02106048
-
-src/func_ov006_02106048.c:
-    complete
-    .text start:0x02106048 end:0x02106080
-
-src/func_ov006_02106080.c:
-    complete
-    .text start:0x02106080 end:0x02106168
-
-src/func_ov006_02106168.cpp:
-    complete
-    .text start:0x02106168 end:0x021063a0
-
-src/func_ov006_021063a0.cpp:
-    complete
-    .text start:0x021063a0 end:0x02106664
-
-src/func_ov006_02106664.c:
-    complete
-    .text start:0x02106664 end:0x02106758
-
-src/func_ov006_02106758.c:
-    complete
-    .text start:0x02106758 end:0x021067a4
-
-src/func_ov006_021067a4.c:
-    complete
-    .text start:0x021067a4 end:0x021068d8
-
-src/func_ov006_021068d8.c:
-    complete
-    .text start:0x021068d8 end:0x02106910
-
-src/func_ov006_02106910.c:
-    complete
-    .text start:0x02106910 end:0x02106a08
-
-src/func_ov006_02106a08.c:
-    complete
-    .text start:0x02106a08 end:0x02106aa8
-
-src/func_ov006_02106aa8.c:
-    complete
-    .text start:0x02106aa8 end:0x02106bac
-
-src/func_ov006_02106bac.c:
-    complete
-    .text start:0x02106bac end:0x02106bc0
-
-src/func_ov006_02106bc0.c:
-    complete
-    .text start:0x02106bc0 end:0x02106ca4
-
-src/func_ov006_02106ca4.cpp:
-    complete
-    .text start:0x02106ca4 end:0x02106eb8
-
-src/func_ov006_02106eb8.cpp:
-    complete
-    .text start:0x02106eb8 end:0x02106f44
-
-src/func_ov006_02106f44.cpp:
-    complete
-    .text start:0x02106f44 end:0x02106fdc
-
-src/func_ov006_02106fdc.cpp:
-    complete
-    .text start:0x02106fdc end:0x0210709c
-
-src/func_ov006_0210709c.cpp:
-    complete
-    .text start:0x0210709c end:0x0210713c
-
-src/func_ov006_0210713c.cpp:
-    complete
-    .text start:0x0210713c end:0x021071d4
-
-src/func_ov006_021071d4.c:
-    complete
-    .text start:0x021071d4 end:0x021071fc
-
-src/_ZN12dScMgPanel_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x021071fc end:0x0210730c
-
-src/_ZN12dScMgPanel_c6RenderEv.cpp:
-    complete
-    .text start:0x0210730c end:0x02107358
-
-src/_ZN12dScMgPanel_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02107358 end:0x021073b0
-
-src/_ZN12dScMgPanel_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021073b0 end:0x02107858
+    .text start:0x0210428c end:0x02107858
 
 src/d_s_mg_panel.c:
     complete
@@ -4809,6 +4417,7 @@ src/func_ov006_02125bbc.c:
     .text start:0x02125bbc end:0x02125cdc
 
 src/func_ov006_02125cdc.c:
+    complete
     .text start:0x02125cdc end:0x02125f68
 
 src/func_ov006_02126948.c:

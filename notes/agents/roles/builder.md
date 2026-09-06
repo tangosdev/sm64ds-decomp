@@ -241,6 +241,19 @@ a manifest you then commit.
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
 and addend), and `reloc_audit` (destination identity).
 
+**And all four of those together still do not prove the TU LINKS.** Measured on
+`ov006/dScMgPanel_c`: 71/71 MATCH, objisolate clean, reloc-destinations clean,
+`[4b]` object audit `order_ok True, {'LICENSED': 71}, 0 refusals` — and the
+object carried **41 undefined symbols that do not exist anywhere in the image**,
+because a declaration got the wrong linkage. Every byte gate is happy with a
+relocation against a name nobody defines; only the linker is not. **Add one
+cheap check to the sweep**: read the compiled object's `.symtab` and list the
+`SHN_UNDEF` entries (a ~20-line ELF walk over
+`build/tu/<ov>-<Class>/<Class>.o`). Any `_Z…`-mangled name whose demangling is a
+plain C ROM symbol — `_Z8LoadFilei`, `_Z19func_ov006_021063a0Pv` — is a linkage
+bug, and it costs seconds where finding it through a failed `rombuild` costs an
+hour. Legitimate `_ZN…` / `_ZT…` names are not what you are looking for.
+
 **`match.py`'s API is not shaped the way that instruction implies.**
 `extract_func` returns a `(bytes, relocs)` **pair**, and the signature is
 `target_bytes(addr, size, bin_path: pathlib.Path, base: int)` — passing a module
@@ -566,28 +579,38 @@ already stale. Getting this wrong costs a full validation cycle.
   Once the source is enrolled in `delinks.txt`, `cmd_linkcheck` sets
   `enrolled_intact_candidate = True` unconditionally and routes down the intact
   path whatever `production_mode` says; it dies at `[4/8]`. Pre-existing — it
-  fails identically for `ov002/daBar_c`, and for already-promoted untouched
-  `ov006/dScMgTeresa_c`, on `main`. The chain is `tubuild.py:4613` -> `:4777` ->
-  `tu_production.py:41`; `rombuild.intact_tu_policies` (`rombuild.py:773`) skips
-  entries without `production_mode: intact-object`, which is why the normal
-  build never takes that path. **Never add a `production_mode` key or a fake
-  non-text claim to make the error disappear** — a text-only TU that must not
-  own its vtable would then be lying to `rombuild`.
+  fails identically for `ov002/daBar_c` on untouched `main`, and a second
+  control taken on the `dScMgPanel_c` run reproduces it on
+  `ov006/dScMgTeresa_c`, an already-promoted text-only TU that run never
+  touched: `FAIL src/actors/dScMgTeresa_c.cpp: isolate: intact TU preparation
+  refused: ov006/dScMgTeresa_c: intact production requires one .text claim and
+  at least one non-text claim`. The exact chain is
+  `tubuild.py:4613` (`enrolled_intact_candidate = True` for any entry already in
+  `delinks.txt` that is neither `partial` nor `partitioned`) ->
+  `tubuild.py:4777` (`intact_override[entry["source"]] = entry`) ->
+  `tu_production.py:41`, which refuses a manifest with no non-text claim. A
+  text-only promotion has `data: []`, `bss: []` and no `production_mode` key at
+  all, so it can never satisfy it. `rombuild.intact_tu_policies` skips entries
+  without `production_mode: "intact-object"`, which is why the normal build does
+  not take this path. **Never add a `production_mode` or a fake non-text claim
+  to make it go away** — `rombuild` would have to eat the lie later.
+  Do not report its failure as a defect in the change.
 
-  **This file used to say "take the writer's pre-promotion linkcheck as the
-  evidence", and that instruction would have shipped a TU that does not link.**
-  On ov006/`dScMgPanel_c` the writer's `SCRATCH-LINK-VERIFIED` was not
-  reproducible, and `mwldarm` aborted with 22 `Undefined`. **`rombuild`'s
-  BASELINE CONTROL is the link proof for a text-only promotion** — it links the
-  working tree, and a link failure there surfaces as `could not bootstrap strict
-  stock control`, which reads like a stale baseline and is not.
-
-  **And byte match + objisolate + reloc_audit + the `[4b]` audit is NOT a link
-  proof.** All four were green on that TU while it had 41 mangled undefined
-  symbols. Add a ~20-line **`.symtab` undefined-symbol scan** of the emitted
-  object to your sweep: it costs seconds against an hour through a failed
-  `rombuild`, and a mangled `_Z…` undefined naming a symbol the TU itself
-  defines is the signature.
+  **But do NOT take the writer's recorded linkcheck as proof of the link.** This
+  file used to say to, and on `ov006/dScMgPanel_c` that was wrong: the manifest
+  recorded `result: scratch-link-verified` with `phases.link: true`, and the
+  source as shipped **did not link at all** — 41 mangled undefined symbols, and
+  mwldarm aborting with 22 `Undefined`. **The link proof you can still run is
+  `rombuild.py` itself.** Its BASELINE CONTROL is a full scratch delink, lcf,
+  whole-tree `mwccarm`, `mwldarm` link and ROM build of the **working tree**, and
+  a text-only promoted TU is compiled and linked inside it like any other
+  enrolled source (only `production_mode: intact-object` sources are demoted to
+  ROM gap bytes). So `rombuild` reaching `module fidelity: 106/106 exact` *is*
+  the link evidence for a text-only promotion, and a fresh worktree that has to
+  bootstrap that control will surface the failure whether you asked for it or
+  not. In `dScMgPanel_c`'s case the whole diagnosis came out of
+  `could not bootstrap strict stock control`, which reads like a stale-baseline
+  complaint and is not one — read the `LINK FAILED` block above it.
   **But do not leave the `[4b/8]` gate unverified just because `linkcheck`
   refuses.** The object audit behind it is reachable in about a minute without a
   linkcheck at all: `_compile_tu(entry)` -> `apply_compiler_only_policy` ->

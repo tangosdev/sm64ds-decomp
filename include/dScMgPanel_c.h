@@ -2,21 +2,24 @@
 #define DSCMGPANEL_C_H
 #include "dScMgBase_c.h"
 
-/* dScMgPanel_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py (no
-   RTTI record names it as a base). Own vtable slots: 0 (InitResources),
-   6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
-   named -- stays a raw extern "C" helper, not a declared method). Fields
-   below dScMgBase_c's own 0x4660 are INHERITED, not this class's own --
-   accessed via raw offsets on a char* cast of `this`, same as every other
-   dScMgBase_c leaf. Own fields observed only from slots 0/6/9/16/17/18
-   directly; fields touched only by non-virtual helper functions (still
-   raw extern "C" calls, not migrated methods) are not represented here,
-   except the ones func_ov006_02106fdc reaches (0x4cb8 count, 0x4ec4, the
-   0x4efa kind table, 0x4fdf, 0x4fe9).
+/* dScMgPanel_c : dScMgBase_c -- the Puzzle Panic minigame scene, MG_PANEL in
+ * the profile registry.  A confirmed leaf: no RTTI record in the cartridge
+ * names it as a base (tools/rtti_extract.py).
  *
- * SM64DS RTTI names the implementation dScMgPanel_c. The reconstructed factory
- * dScMgPanel_c_classInit (historical alias MgPuzzlePanelPuzzlePanic_Spawn) installs this class's
- * cartridge vtable for the MG_PANEL registry profile.
+ * Six vtable slots are its own: 0 InitResources, 6 Behavior, 9 Render, the
+ * 16/17 destructor pair, and 18 OnYoshiTryEat(int), an override of
+ * dScMgBase_c's.  Everything below 0x4660 belongs to dScMgBase_c and is
+ * reached through a char* view of `this`, the same way every other
+ * dScMgBase_c leaf reaches it.
+ *
+ * The field names below are READINGS of what the code does, not recovered
+ * identifiers -- the offsets, widths and array counts are ROM facts, the
+ * English is not.  Fields the non-virtual helpers touch but the six slots do
+ * not are left inside the padding runs rather than guessed at.
+ *
+ * The factory dScMgPanel_c_classInit is a reconstruction (historical alias
+ * MgPuzzlePanelPuzzlePanic_Spawn); it installs this vtable for MG_PANEL.
+ * Only the CLASS name is a cartridge string.
  */
 struct dScMgPanel_c : dScMgBase_c {
     virtual ~dScMgPanel_c();
