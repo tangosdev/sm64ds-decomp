@@ -8,7 +8,7 @@
       "actual": [
         "FlyGuy_Spawn"
       ],
-      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt. FIXED in PR #2238 (cpp/profile-reconstruction-wave31), which renames it in symbols.txt, in the promoted intact-object TU src/actors/daPropeller_Heyho_c.cpp that defines it, and in that TU manifest. This entry is retained only because #2238 is not yet merged; drop it in the same change that lands #2238. Every other entry banked with this gate has been adjudicated and removed."
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt. FIXED in PR #2238 (cpp/profile-reconstruction-wave31), which renames it in symbols.txt, in the promoted intact-object TU src/game/actors/d_a_propeller_heyho.cpp that defines it, and in that TU manifest. This entry is retained only because #2238 is not yet merged; drop it in the same change that lands #2238. Every other entry banked with this gate has been adjudicated and removed."
     }
   ]
 }

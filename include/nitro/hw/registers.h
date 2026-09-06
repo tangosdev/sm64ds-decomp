@@ -14,7 +14,7 @@
 /*
  * Every address below was read out of the cartridge, not looked up: the object
  * file's relocation says which word of a function carries the register address,
- * and the retail word at that offset holds it. See notes/phantom-references.md.
+ * and the retail word at that offset holds it.
  */
 
 /* 2D display engines */

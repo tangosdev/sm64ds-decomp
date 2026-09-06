@@ -50,10 +50,14 @@ A note is a retire candidate at zero inbound citations, the union of three searc
    style, invisible to (1). Measured: of 31 notes with zero hits from (1), 2
    (`actor-profile-pilot.md`, `llm-assisted-global-data-migration.md`) are cited
    exactly this way and are not retire candidates.
-3. `git grep -n "<basename>"` across the whole tree — catches a bare mention in a
-   `.c`/`.js`/`.json`/`.jsonl` comment or string, file types no gate scans. Measured:
-   48 of 75 currently-dead `notes/...` citations live exactly here, permanently
-   invisible to every gate.
+3. `git grep -n "<basename>"` across the whole tree — a fallback for file types still
+   outside (1)'s surface. As of the 2026-09 gate extension, `check_dead_references.py`
+   itself now scans `.c`/`.h`/`.cpp`/`.hpp` comments, `.js` comments and string/template
+   literals, and every `.json`/`.jsonl` (config prose plus `tu_manifest.d`'s
+   `boundary_evidence`/`notes` fields), so a hit here that falls inside those surfaces
+   should already have surfaced in (1) — this step is now needed mainly for what (1)
+   still can't reach. The historical "48 of 75" count predates that extension and
+   should be re-measured before relying on it.
 
 **Zero on all three:** delete the file outright in one commit and add a row to
 `notes/archive/ARCHIVE_LOG.md` (path, date, one-line topic, last commit sha). Do not
@@ -65,13 +69,20 @@ move it to `archive/` — history plus the ledger row is enough.
 doesn't change, so nothing that cites it, and none of the 785 depth-sensitive relative
 links elsewhere in `notes/`, needs to change. A move never is: 11 files are `PINNED`
 (read at runtime from `config/tu_manifest.d/**`, not CI-checked), 14 more are `HIGH`.
-The last archive-by-move pass still produces dead citations: `notes/pret-idioms.md`
-moved to `notes/archive/pret-idioms.md`, and three agent-prompt files
-(`tools/refine_run.js`, `tools/sched_run.js`, `tools/archive/crack_pr104.js`) still
-send agents to the dead path. `notes/archive/` is therefore **frozen**: no new
-entries, by this rule (retirement deletes, never relocates) or by hand — the 8 files
-already there stay put, since moving them back costs the exact citation-rewrite this
-rule exists to avoid, for files that all still carry live citations.
+The last archive-by-move pass produced exactly this failure: `pret-idioms.md` moved
+from `notes/` to `notes/archive/pret-idioms.md`, and agent-prompt files (`tools/refine_run.js`,
+`tools/sched_run.js`, `tools/archive/crack_pr104.js`) kept sending agents to the dead
+path — invisible to (1) because nothing scanned `.js` string/template literals. Both
+gaps are now closed: `check_dead_references.py` scans `tools/**/*.js` (comments and
+string/template literals) among the other newly-added surfaces in (3) below, and every
+citer was repointed — the four live agent-prompt sites (`tangos.json`,
+`tools/chaosviewer.config.json`, `tools/refine_run.js`, `tools/sched_run.js`) to
+`notes/matching-style.md`, since pret-idioms.md's guidance is superseded there rather
+than merely relocated, and the remaining non-prompt citers to the real
+`notes/archive/pret-idioms.md` path. `notes/archive/` remains **frozen** regardless: no
+new entries, by this rule (retirement deletes, never relocates) or by hand — the 8
+files already there stay put, since moving them back costs the exact citation-rewrite
+this rule exists to avoid, for files that all still carry live citations.
 
 ## 4. Where new findings go
 

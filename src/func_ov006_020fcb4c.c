@@ -8,8 +8,8 @@
  *
  * The two velocity-component base offsets must be introduced in the order
  * below: the constant pool emits 0x4668 before 0x466c, and the declaration
- * order is what fixes it (notes/pret-idioms.md, declaration order controls
- * literal-pool order as well as regalloc). */
+ * order is what fixes it (notes/archive/pret-idioms.md, declaration order
+ * controls literal-pool order as well as regalloc). */
 #include "types.h"
 extern s16 data_02082214[];
 extern int data_0209d4b8;

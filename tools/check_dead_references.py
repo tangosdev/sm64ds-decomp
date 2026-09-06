@@ -23,9 +23,23 @@ WHAT IT CHECKS
 Prose surfaces only:
   - `tools/**/*.py`   module/function/class docstrings, `#` comments, and the strings
                       passed to argparse as help/epilog/description/usage
+  - `tools/**/*.js`   `//` and `/* */` comments, AND every string/template literal --
+                      this tree's orchestration scripts build multi-hundred-line agent
+                      prompts as one backtick template literal, and a stale path in
+                      one of those is live prompt text, not dead prose
+  - `src/**`, `src_tu/**`, `include/**` (`.c`/`.h`/`.cpp`/`.hpp`)  `//` and `/* */`
+                      comments only -- not string bodies, since this C/C++ is
+                      byte-verified recovered source and a ROM string constant's stray
+                      `/` is noise, not a citation
   - `notes/**/*.md`, top-level `*.md`, `docs/**/*.md`, `port/docs/*.md`
   - `.github/workflows/*.yml`  comments and `name:` / `run:` lines
   - `.claude/skills/**/*.md`
+  - `config/**/*.json`, top-level `*.json` (except `ROOT_JSON_LEDGERS`, see below), and
+                      every `*.jsonl` anywhere in the tree -- whole lines, since a JSON
+                      string cannot itself contain a raw newline. This is where
+                      `config/tu_manifest.d/**`'s own `boundary_evidence` and `notes`
+                      fields live, and where a stalled matching agent's catalogue
+                      (`notes/levers.jsonl`) does too.
 
 In those it finds repo-rooted path references -- a token whose first segment is a real
 top-level directory of this repo (`tools/`, `notes/`, `include/`, `src/`, ...) -- and
@@ -54,13 +68,21 @@ this one does not, and a baseline nobody needs is a place for real breakage to h
 
 HOW IT AVOIDS CRYING WOLF
 -------------------------
-Two mechanisms, because a noisy gate gets switched off and then protects nothing:
+Three mechanisms, because a noisy gate gets switched off and then protects nothing:
 
 1. Generated and gitignored roots (`build/`, `extracted/`, `progress/`) are skipped
    outright -- a reference to `build/tu_map.json` is correct even on a fresh clone
    where the file is absent.
 
-2. Everything else is measured against `config/dead-reference-baseline.json`, the same
+2. `ROOT_JSON_LEDGERS` (`attribution.json` and its auto-generated siblings) are
+   skipped outright too, for a different reason: their path-shaped strings are
+   historical attribution keys, not citations of a file that is supposed to still
+   exist. Scanning `attribution.json` in the first draft of this surface turned up
+   over 3000 "dead" overrides -- every one of them a match whose source file was
+   later renamed or folded into a TU, which is exactly what attribution is supposed
+   to survive, not what this gate exists to flag.
+
+3. Everything else is measured against `config/dead-reference-baseline.json`, the same
    ratchet shape this repo already uses for byte, layout and langmode known-issues.
    Only a reference that is dead AND not in the baseline fails the run. That admits
    the whole existing false-positive population -- synthetic example paths in test
@@ -108,8 +130,55 @@ TOPDIRS = {"tools", "notes", "src", "src_tu", "include", "config", "config_tu",
            "docs", "port", "mods", "audit", "symbols", "nearmiss", ".github",
            "asm", "assets", "lib"}
 
+# `src`/`src_tu`/`include` comments and a TU manifest's own `boundary_evidence`/`notes`
+# fields are the two surfaces where this tree's normal STYLE is to narrate a promoted
+# TU's own merge history in prose -- "duplicated across src/<Class>D1Ev.cpp and
+# D0Ev.cpp; both are absorbed into src/actors/<Class>.cpp" is accurate, deliberate,
+# and permanent, not a rename anyone forgot to follow through. Measured:
+# turning those two surfaces loose with the full `TOPDIRS` set produced 400+ "dead"
+# hits, and all but a couple dozen were exactly this shape -- a `src`/`src_tu`/`include`
+# path naming a pre-merge file that is SUPPOSED to be gone. `notes/` is what these two
+# surfaces exist to protect (a TU manifest citing its own evidence note, a header or
+# source comment pointing a reader at the lever that explains it), so a reference only
+# counts here when its head segment is `notes` -- every other surface keeps the full
+# `TOPDIRS` set it already had.
+NOTES_ONLY_HEADS = {"notes"}
+
 # Gitignored or generated at build time: absent from a clean checkout by design.
 GENERATED = {"build", "extracted", "progress"}
+
+# Root-level JSON files that are ledgers, not prose: their path-shaped strings are
+# historical keys (a match's attribution, a coverage snapshot) that are SUPPOSED to
+# outlive the file they name once it is renamed or folded into a TU -- that is the
+# entire point of attribution following a rename rather than resetting. Scanning them
+# turns a working ratchet into thousands of "dead" entries that are not a rename
+# someone forgot to follow through, so they are excluded the same way `GENERATED`
+# directories are: on purpose, not by omission. `tangos.json` is the one root JSON
+# file that is genuinely prose (setup/agent instructions) and stays in scope.
+ROOT_JSON_LEDGERS = {"attribution.json", "contributions.json",
+                      "contributor-colors.json", "langmode-baseline.json"}
+
+# `config/**/*.jsonl` ledgers of the same shape: one record per historical event
+# (a match attempt, a match's provenance, a coverage waiver, a backslide exception),
+# keyed by a `srcPath`/`path` that names the file AT THE TIME of that event. A function
+# recorded here as `src/func_ov006_....c` is routinely absorbed into a TU under
+# `src_tu/` later -- expected, not a citation gone stale. `notes/levers.jsonl` and
+# `nearmiss/db.jsonl` are excluded from this set on purpose: they are read as live
+# input (a lever catalogue, near-miss source) rather than written as an append-only
+# history, so a dead path in either is a real citation bug.
+JSONL_LEDGERS = {"config/match_attempts.jsonl", "config/match_provenance.jsonl",
+                  "config/converted-backslide-exceptions.jsonl",
+                  "config/source-coverage-exceptions.jsonl"}
+
+# A `src`/`src_tu` block comment enumerating the ordinal + ROM address + pre-merge
+# filename of every function a promoted TU absorbed (`tools/tubuild.py create`'s own
+# header shape, e.g. `[3] 0x0210788c  src/func_ov006_...c`). Those paths are, again,
+# supposed to be gone -- absorbing them is the promotion -- so a line in that exact
+# shape is stripped before the path scan runs over C/C++ comments at all. Measured at
+# 1463 such lines across the tree; every one names a `src/` file that no longer exists,
+# and none of them is a rename anyone forgot to follow through.
+LEGACY_LISTING_RE = re.compile(
+    r"^[ \t]*\*?[ \t]*\[\d+\][ \t]+0x[0-9A-Fa-f]+[ \t].*$", re.MULTILINE)
 
 SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
              ".pytest_cache", "node_modules", ".venv", "venv"}
@@ -127,14 +196,33 @@ NUL = bytes([0])
 
 # --------------------------------------------------------------------------- scan
 
+CODE_EXTS = (".c", ".h", ".cpp", ".hpp")
+
+
+def _baseline_rel():
+    """`BASELINE`'s own path relative to `REPO`, or `None` when it isn't under `REPO` at
+    all -- which happens in tests that repoint `REPO` to a throwaway tree without also
+    repointing `BASELINE` (most don't need to: this is the only call site that cares).
+    `None` never equals a real `rel` string, so the self-reference guard below simply
+    stops applying instead of raising `ValueError` on a path that isn't a subpath.
+    """
+    try:
+        return BASELINE.relative_to(REPO).as_posix()
+    except ValueError:
+        return None
+
+
 def _prose_targets():
     out = []
+    baseline_rel = _baseline_rel()
     for base, dirs, files in os.walk(REPO):
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
         rel_base = pathlib.Path(base).relative_to(REPO).as_posix()
         for f in files:
             rel = f if rel_base == "." else f"{rel_base}/{f}"
-            if rel.startswith("tools/") and rel.endswith(".py"):
+            if rel.startswith("tools/") and rel.endswith((".py", ".js")):
+                out.append(rel)
+            elif rel.startswith(("src/", "src_tu/", "include/")) and rel.endswith(CODE_EXTS):
                 out.append(rel)
             elif rel.startswith("notes/") and rel.endswith(".md"):
                 out.append(rel)
@@ -144,7 +232,14 @@ def _prose_targets():
                 out.append(rel)
             elif rel.startswith(".github/workflows/") and rel.endswith((".yml", ".yaml")):
                 out.append(rel)
+            elif (rel.startswith("config/") and rel.endswith(".json")
+                    and rel != baseline_rel):
+                out.append(rel)
+            elif rel.endswith(".jsonl") and rel not in JSONL_LEDGERS:
+                out.append(rel)
             elif "/" not in rel and rel.endswith(".md"):
+                out.append(rel)
+            elif "/" not in rel and rel.endswith(".json") and rel not in ROOT_JSON_LEDGERS:
                 out.append(rel)
     return sorted(out)
 
@@ -182,9 +277,125 @@ def _yaml_prose(text):
             yield i, line
 
 
+def _scan_c_like(text, want_strings):
+    """[(lineno, snippet)] for `//`/`/* */` comments (and, if `want_strings`, every
+    quoted string or backtick template literal) in a C, C++ or JavaScript file.
+
+    A small state machine, not a preprocessor: it only has to tell code from comment
+    (and, when asked, from string) well enough that a `/` inside a quoted ROM string,
+    or a `//` inside one, is never mistaken for the start of a real comment. It does
+    not understand macros or raw-string literals -- it does not need to, since it is
+    only extracting comment/string TEXT for the same `PATH_RE` scan every other prose
+    surface gets, not compiling anything.
+    """
+    out = []
+    i, n = 0, len(text)
+    line = 1
+    quotes = "\"'`" if want_strings else "\"'"
+    while i < n:
+        c = text[i]
+        if c == "\n":
+            line += 1
+            i += 1
+            continue
+        if c in quotes:
+            start, start_line = i, line
+            i += 1
+            while i < n and text[i] != c:
+                if text[i] == "\\" and i + 1 < n:
+                    i += 2
+                    continue
+                if text[i] == "\n":
+                    line += 1
+                i += 1
+            i = min(i + 1, n)
+            if want_strings:
+                out.append((start_line, text[start:i]))
+            continue
+        if c == "/" and i + 1 < n and text[i + 1] == "/":
+            j = text.find("\n", i)
+            j = n if j == -1 else j
+            out.append((line, text[i:j]))
+            i = j
+            continue
+        if c == "/" and i + 1 < n and text[i + 1] == "*":
+            end = text.find("*/", i + 2)
+            end = n if end == -1 else end + 2
+            snippet = text[i:end]
+            out.append((line, snippet))
+            line += snippet.count("\n")
+            i = end
+            continue
+        i += 1
+    return out
+
+
+def _c_comments(text):
+    """[(lineno, snippet)] for comments in a `src/`, `src_tu/` or `include/` file.
+
+    Comments only, deliberately -- this C/C++ is RECOVERED, byte-verified ROM source,
+    and a string constant's stray `/` (division written out, a date, an in-game
+    message) is noise here, not a citation. The two shapes this exists for are both
+    comments: a `/* */` block naming a lever note next to the code it explains
+    (`src/func_ov006_020fcb4c.c`), and a `//` line in a header (`include/nitro/hw/
+    registers.h`).
+
+    `LEGACY_LISTING_RE` is scrubbed out of every block before the path scan sees it --
+    see that constant's docstring for why a promoted TU's own pre-merge file listing is
+    not a citation this gate should judge.
+    """
+    return [(ln, LEGACY_LISTING_RE.sub("", snippet))
+            for ln, snippet in _scan_c_like(text, want_strings=False)]
+
+
+def _js_prose(text):
+    """[(lineno, snippet)] for comments AND string/template literals in a `.js` file.
+
+    Different from `_c_comments` on purpose: this tree's orchestration scripts
+    (`tools/sched_run.js`, `tools/refine_run.js`) build their entire agent prompt as
+    ONE backtick template literal handed to `phase(...)` -- that is where a stale
+    `notes/<name>.md` reference (one that had moved to `notes/archive/`) actually
+    lived, not in a `//` comment. Treating the whole literal as prose mirrors how
+    `_py_prose` treats a docstring as prose rather than as ordinary code.
+    """
+    return _scan_c_like(text, want_strings=True)
+
+
 def _text_prose(text):
     for i, line in enumerate(text.splitlines(), 1):
         yield i, line
+
+
+def _tu_manifest_prose(text):
+    """[(lineno, snippet)] for the `boundary_evidence` and `notes` fields of a
+    `config/tu_manifest.d/**` manifest -- and NOTHING else in the file.
+
+    Deliberately narrow. `legacy_source` (and `source`/`promoted_source`) name the
+    PRE-MERGE per-function file a TU absorbed, permanently, since absorbing it is the
+    whole point of the promotion -- scanning those turned a green gate into thousands
+    of "dead" hits, one per promoted function, in the first draft of this surface.
+    `boundary_evidence` and `notes` are the two fields that carry actual PROSE, a human
+    explaining a decision, and that is where a citation to a `notes/<name>.md` writeup
+    actually lives.
+    """
+    try:
+        data = json.loads(text)
+    except (ValueError, TypeError):
+        return []
+    out = []
+    for key in ("boundary_evidence", "notes"):
+        value = data.get(key) if isinstance(data, dict) else None
+        if not value:
+            continue
+        # The line number is the field's own opening line -- approximate, same as
+        # every other multi-line prose region this tool reports (a docstring, a JS
+        # template literal), and enough to find the field by eye in `--list` output.
+        idx = text.find(f'"{key}"')
+        lineno = text.count("\n", 0, idx) + 1 if idx != -1 else 1
+        for item in (value if isinstance(value, list) else [value]):
+            if isinstance(item, str):
+                out.append((lineno, item))
+    return out
 
 
 def _normalise(ref):
@@ -198,10 +409,19 @@ def collect(root=REPO):
     files = _prose_targets()
     for rel in files:
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
+        heads = TOPDIRS
         if rel.endswith(".py"):
             regions = _py_prose(text)
+        elif rel.endswith(".js"):
+            regions = _js_prose(text)
+        elif rel.endswith(CODE_EXTS):
+            regions = _c_comments(text)
+            heads = NOTES_ONLY_HEADS
         elif rel.endswith((".yml", ".yaml")):
             regions = _yaml_prose(text)
+        elif rel.startswith("config/tu_manifest.d/") and rel.endswith(".json"):
+            regions = _tu_manifest_prose(text)
+            heads = NOTES_ONLY_HEADS
         else:
             regions = _text_prose(text)
         for lineno, snippet in regions:
@@ -210,7 +430,7 @@ def collect(root=REPO):
                 if not ref or "/" not in ref:
                     continue
                 head = ref.split("/", 1)[0]
-                if head in GENERATED or head not in TOPDIRS:
+                if head in GENERATED or head not in heads:
                     continue
                 if GLOBBY.search(ref):
                     continue

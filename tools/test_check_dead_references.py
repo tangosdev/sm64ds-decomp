@@ -302,5 +302,135 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(pairs), len(set(pairs)))
 
 
+class NewSurfaceTests(unittest.TestCase):
+    """Positive and negative controls for the surfaces the 2026-09 extension added:
+    `src/`/`src_tu/`/`include/` comments, `.js` string/template literals, config and
+    root JSON, and `.jsonl`. Each gets a live-detection test and, where the surface
+    exists specifically to suppress a false-positive population (TU-merge history in
+    C/C++ comments, ledger files), a noise test proving the suppression still works.
+    """
+
+    def _dead(self, build):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            build(t)
+            old_repo, old_base = CDR.REPO, CDR.BASELINE
+            CDR.REPO = t.root
+            # Needed the moment a test writes under config/: `_prose_targets` computes
+            # `BASELINE.relative_to(REPO)`, which raises unless BASELINE is repointed
+            # under this same tree (mirrors `FailLoudlyTests`' pattern).
+            CDR.BASELINE = t.root / "config" / "dead-reference-baseline.json"
+            try:
+                _files, _refs, dead = CDR.dead_references(t.root)
+            finally:
+                CDR.REPO, CDR.BASELINE = old_repo, old_base
+            return {(f, r) for f, r in dead}
+
+    # -- src/, src_tu/, include/ comments --
+
+    def test_a_dead_notes_reference_in_a_c_comment_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "src/thing.c", "/* see notes/gone.md for the story */\nint x;\n"))
+        self.assertIn(("src/thing.c", "notes/gone.md"), dead)
+
+    def test_a_reference_in_a_c_string_literal_is_not_detected(self):
+        """Only comments count here -- a ROM string constant's stray `/` is noise."""
+        dead = self._dead(lambda t: t.write(
+            "src/thing.c", 'const char *s = "notes/gone.md";\n'))
+        self.assertEqual(dead, set())
+
+    def test_a_dead_src_reference_in_a_c_comment_is_not_reported(self):
+        """`src/`/`src_tu/`/`include/` comments narrate their own TU-merge history in
+        `src/` paths that are SUPPOSED to be gone -- only a `notes/` head counts here."""
+        dead = self._dead(lambda t: t.write(
+            "include/thing.h",
+            "// absorbed from src/func_gone.c into this header\n"))
+        self.assertEqual(dead, set())
+
+    def test_legacy_listing_lines_are_stripped_from_c_comments(self):
+        """Unit-level: `_c_comments` itself, since `NOTES_ONLY_HEADS` would mask the
+        same effect if tested only through `dead_references`."""
+        comments = CDR._c_comments(
+            "/* absorbed functions:\n"
+            " * [1] 0x02001234  src/func_gone_a.c\n"
+            " * [2] 0x02001238  src/func_gone_b.c\n"
+            " * see notes/gone.md for the full story\n"
+            " */\n")
+        joined = "\n".join(snippet for _ln, snippet in comments)
+        self.assertNotIn("func_gone_a.c", joined)
+        self.assertNotIn("func_gone_b.c", joined)
+        self.assertIn("notes/gone.md", joined)
+
+    # -- tools/**/*.js --
+
+    def test_a_dead_reference_in_a_js_comment_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "tools/thing.js", "// see notes/gone.md\nconsole.log(1);\n"))
+        self.assertIn(("tools/thing.js", "notes/gone.md"), dead)
+
+    def test_a_dead_reference_in_a_js_template_literal_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "tools/thing.js",
+            "const prompt = `Read notes/gone.md before you start.`\n"))
+        self.assertIn(("tools/thing.js", "notes/gone.md"), dead)
+
+    # -- config/**/*.json, incl. the tu_manifest.d field restriction --
+
+    def test_a_dead_reference_in_config_json_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "config/thing.json", '{"note": "see notes/gone.md"}\n'))
+        self.assertIn(("config/thing.json", "notes/gone.md"), dead)
+
+    def test_tu_manifest_boundary_evidence_is_scanned(self):
+        dead = self._dead(lambda t: t.write(
+            "config/tu_manifest.d/ov001/Thing.json",
+            json.dumps({"boundary_evidence": "see notes/gone.md",
+                        "legacy_source": ["src/func_gone.c"]})))
+        self.assertIn(
+            ("config/tu_manifest.d/ov001/Thing.json", "notes/gone.md"), dead)
+
+    def test_tu_manifest_legacy_source_is_not_scanned(self):
+        """`legacy_source` names the pre-merge file a promotion absorbed -- gone on
+        purpose, not a citation this gate should judge."""
+        dead = self._dead(lambda t: t.write(
+            "config/tu_manifest.d/ov001/Thing.json",
+            json.dumps({"legacy_source": ["src/func_gone.c"]})))
+        self.assertEqual(dead, set())
+
+    def test_tu_manifest_prose_only_yields_boundary_evidence_and_notes(self):
+        """Unit-level: `_tu_manifest_prose` itself."""
+        text = json.dumps({
+            "boundary_evidence": "see notes/gone.md",
+            "notes": ["also notes/other.md"],
+            "legacy_source": ["src/func_gone.c"],
+        })
+        refs = [snippet for _ln, snippet in CDR._tu_manifest_prose(text)]
+        self.assertEqual(set(refs), {"see notes/gone.md", "also notes/other.md"})
+
+    # -- root-level *.json, incl. ROOT_JSON_LEDGERS --
+
+    def test_a_dead_reference_in_root_json_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "tangos.json", '{"readFirst": "notes/gone.md"}\n'))
+        self.assertIn(("tangos.json", "notes/gone.md"), dead)
+
+    def test_root_json_ledgers_are_skipped(self):
+        dead = self._dead(lambda t: t.write(
+            "attribution.json", '{"src/func_gone.c": {"who": "someone"}}\n'))
+        self.assertEqual(dead, set())
+
+    # -- **/*.jsonl, incl. JSONL_LEDGERS --
+
+    def test_a_dead_reference_in_jsonl_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "notes/levers.jsonl", '{"source": "sm64ds:notes/gone.md"}\n'))
+        self.assertIn(("notes/levers.jsonl", "notes/gone.md"), dead)
+
+    def test_jsonl_ledgers_are_skipped(self):
+        dead = self._dead(lambda t: t.write(
+            "config/match_attempts.jsonl", '{"srcPath": "src/func_gone.c"}\n'))
+        self.assertEqual(dead, set())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

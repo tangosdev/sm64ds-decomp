@@ -100,8 +100,7 @@ int *daObjCtKaitendai_c_classInit_CT_MECHA06(void)
         _ZN10dBgActor_cC2Ev(p);
         /* This TU DEFINES _ZTV13TTC_MovingBar (it anchors the vtable via
          * the out-of-line destructor below), so the vptr store must skip
-         * the two hidden ABI slots with +2 -- see
-         * notes/key-function-tu-vptr-store-blocker.md. */
+         * the two hidden ABI slots with +2. */
         p[0] = (int)(_ZTV13TTC_MovingBar + 2);
         _ZN11ShadowModelC1Ev((char *)p + 0x324);
     }
@@ -124,8 +123,7 @@ int *daObjCtKaitendai_c_classInit_CT_MECHA07(void)
         _ZN10dBgActor_cC2Ev(p);
         /* This TU DEFINES _ZTV13TTC_MovingBar (it anchors the vtable via
          * the out-of-line destructor below), so the vptr store must skip
-         * the two hidden ABI slots with +2 -- see
-         * notes/key-function-tu-vptr-store-blocker.md. */
+         * the two hidden ABI slots with +2. */
         p[0] = (int)(_ZTV13TTC_MovingBar + 2);
         _ZN11ShadowModelC1Ev((char *)p + 0x324);
     }
