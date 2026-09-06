@@ -5312,3 +5312,11 @@ HOW TO SEE IT BEFORE THE LINK DOES: `tools/tubuild.py undefinable_alias_names()`
 every name whose only symbols.txt homes are size-0 rows inside a carved-out range. It was
 `{__end__catch, __cxa_vec_cleanup, _deq}` when the trap fired; after both renames only
 `_deq` (arm9 itcm 0x01ff9d40) is left, and no object in a full stock build imports it.
+
+---
+
+**Note (added at end-of-file on purpose, to avoid shifting any line number cited
+elsewhere in `notes/`): `notes/codegen-rules.md` condenses sections `## 1`-`## 6d` and
+`## 6az` above into a ~20KB doctrine file meant to be loaded whole. Read it for the rules;
+come back here (by section label) for the fuller derivation, evidence, and the dated
+discovery log (`## 6e` onward) that it does not condense.**
