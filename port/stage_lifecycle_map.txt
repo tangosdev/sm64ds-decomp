@@ -2543,3 +2543,238 @@ green, 363 distinct player positions each), `battery.py --skip-build
 at 86.7%, ptr_audit 0, shipcfg build and selftest ok), and the four subsystem
 proofs directly: ipc_proof 15 checks 0 failed, thread_proof PASS,
 thread_create_proof PASS, save_proof ALL GREEN.
+
+
+17. LANE DTORSKEW (run link100): THE REST OF THE CLASS, COUNTED RATHER THAN
+    GUESSED -- FIFTY-THREE DECLARATIONS, TWO LIVE DEFECTS, AND A TRAP CENSUS
+
+Section 16 fixed one instance of a class of defect and said the mechanical
+sweep was still owed. This section is that sweep. It also answers the second
+half of the mechanism -- the trap stub that did not clean the stack -- with a
+census rather than an anecdote.
+
+THE SHAPE, restated so this section stands alone. mwccarm gives
+`virtual ~X()` TWO vtable entries, the Itanium D1/D0 pair, and MSVC folds them
+into ONE. So on the host every virtual declared AFTER that destructor sits one
+slot early. That is a BUG only where the table the object actually carries is
+ROM-ORDERED. Where the port lays the table out itself in MSVC order the two
+skews cancel and the declaration is harmless, which is why
+StartEntranceFaderWipe reads like the defect and is not one (section 16).
+
+THE RAW COUNT. src/ and include/ together hold 699 aggregates that declare at
+least one virtual member. 216 of them declare a virtual destructor. FIFTY-FOUR
+declare at least one further virtual after it -- the shape that can skew. The
+tools are in the lane bundle (sweep.py); the census is reproducible.
+
+IT COUNTED FIFTY-THREE ON THE FIRST PASS AND THE TOOL WAS WRONG, which is worth
+recording because the same mistake is easy to repeat. The capture loop tested
+for the end of a declaration AFTER counting the depth of the character it was
+looking at, so an INLINE body's opening `{` incremented the counter instead of
+terminating the declaration, and every virtual after the first inline one in
+that class became invisible. It hid exactly one row --
+src/_ZN11WingFeather6RenderEv.cpp's `struct Sub`, `virtual ~Sub() {}` then four
+more -- and what found it was cross-checking the dispatch census against the
+sweep: five dispatching TUs also spell a virtual destructor and only four of
+them were in the list. A sweep is only as good as the thing that contradicts it.
+
+port/ was swept the same way: 26 aggregates with virtuals, 5 with a virtual
+destructor, ONE with a virtual after it, and that one is deliberate.
+hal/fader_wipes.cpp's HalFaderWipe spells `virtual ~HalFaderWipe() {}` and then
+`virtual void DtorDeleting() {}` so that MSVC gives the pair the two words the
+ROM's _ZTV9FaderWipe has -- which is what makes that file's alias onto the ROM
+symbol sound, and it is the MSVC-ordered table the two FaderWipe rows below are
+cleared against. Every other shadow class in port/ uses plain virtuals.
+
+THE DISPATCH EVIDENCE IS THE EMITTED CODE, NOT THE C. 459 src TUs include one
+of the twenty-one headers this sweep tracks -- the twenty that carry the shape,
+plus include/ActorBase.h, whose destructor is declared LAST and so carries none
+of it -- and 566 declare a local
+`virtual` shadow class; the 860 objects those produce were disassembled and
+every indirect transfer through a vtable -- `call` AND tail `jmp` -- was read
+out with the index the host compiled. There are 501. All but twenty are
+local shadow classes with plain virtuals, which count in ROM/Itanium numbering
+and land correctly on the ROM-ordered tables. The twenty that matter:
+
+    Heap::ResizeToFit                 idx 14   src/_ZN4Heap11ResizeToFitEv.c
+    CylinderClsn::Process             idx 1,2  (six sites)
+    MeshColliderBase carry trio       idx 9,10,11
+    FaderBrightness setters+predicate idx 4,5  (six sites)
+    MeshCollider::GetSurfaceInfo      idx 3
+    BlendModelAnim/ModelAnim V18      idx 3
+    Player::St_Swallow_Main           idx 18,19
+    WingFeather::Render               idx 4
+    StartEntrance/ExitFaderWipe       idx 7,8  (tail jumps)
+
+TWO OF THOSE WERE LIVE DEFECTS AND ARE FIXED HERE.
+
+FIRST, Heap. src/_ZN4Heap11ResizeToFitEv.c declares the ROM's fifteen-virtual
+Heap with `virtual ~Heap()` at the head, and its one line of body is a virtual
+`VResizeToFit()`. MSVC compiled that to
+
+    ?ResizeToFit@Heap@@QAEIXZ
+      mov eax,dword ptr [edi]
+      call dword ptr [eax+38h]        <- index 14
+
+and hal/heap_vtable.cpp's _ZTV13ExpandingHeap is ROM-ordered sixteen slots:
+index 14 is VGetNodeID and VResizeToFit is 15. So the host's ResizeToFit never
+resized anything and returned the heap's NODE ID instead, which is a plausible
+non-zero number, so the `if (!result)` rescue path never fired either. It is
+reached from _ZN9ActorBase9Virtual34Ejj at three sites (:57, :116, :123)
+through slot 13 of _ZTV5Actor, which hal/lk4_solidheap_seat.cpp seats. Both
+words are zero-argument __fastcall thunks, so nothing was corrupted -- this one
+is silently wrong rather than fatal, which is why nothing had caught it.
+
+SECOND, the cylinder family, and this one the port already knew about from the
+other end. include/CylinderClsn.h declares ~CylinderClsn then GetPos (ROM slot
+2) then GetOwnerID (ROM slot 3), and CylinderClsn::Process is header-compiled
+and dispatches both on every node of the active list:
+
+    ?Process@CylinderClsn@@SAXXZ
+      call dword ptr [eax+4]          <- index 1, the DELETING DESTRUCTOR
+      call dword ptr [eax+8]          <- index 2, GetPos
+
+hal/actor_classes.cpp fills all four cylinder tables ROM-ordered ([0] D1, [1]
+D0, [2] GetPos, [3] GetOwnerID), and hal/actor_registry.cpp's own note records
+the collision and the price the port paid for it: the matched symbol stays
+switched off behind SM64DS_CYLINDER_PASS and a 0x49c ROM-shaped host copy
+(port/unmatched/CylinderClsn_Process.cpp) runs the pass instead. That copy is
+unchanged and still what runs; what changes is that the matched symbol is no
+longer wrong. Turning the switch over is a separate lane's measurement.
+
+THE FIX IS SECTION 16'S, four headers wide. The destructor pair is respelled
+as `virtual void Destructor1(); virtual void Destructor0();` -- and it has to
+be the SAME TWO NAMES in the three derived headers, because an override takes
+its base's slots while a fresh name would append one. All sixteen TUs that see
+the class still byte-match on 2004/b56 (the four cylinder .cpp bodies, the
+three accessors, the six destructor/constructor .c TUs, Init and Process), and
+so does _ZN4Heap11ResizeToFitEv at 0x0203c390 size 0x48. After the fix the
+emitted host code reads `call [eax+3Ch]` for VResizeToFit and `[eax+8]` /
+`[eax+0Ch]` for GetPos / GetOwnerID: the ROM's own indices.
+
+THREE MORE ARE LIVE AND ARE DELIBERATELY LEFT ALONE, because the port already
+compensates them AT THE SEAT and each compensation is measured:
+
+  MeshColliderBase   hal/mmc_vtable.cpp seats TransformPos/GetAngularVelY/
+                     GetVelocity at the MSVC indices 9/10/11 their matched
+                     callers read, and parks TransformPos in index 9 for the
+                     duration of the BeforeClsn callback. Its own block
+                     comment carries the disassembly.
+  FaderBrightness    hal/fdr_arm9_fader_seat.cpp and hal/scene_boot.cpp both
+                     build an MSVC-ORDERED VIEW for exactly the two setters
+                     whose trailing predicate skews. Section 16 is that seat.
+  Fader              the base of the same pair.
+
+Respelling those headers would make three hal files wrong in the opposite
+direction, in the subsystem the opening gate rests on, and gains nothing the
+seats do not already deliver. Naming them here is the point; changing them is
+a lane with a proof of its own.
+
+THE REST ARE CLEARED, AND THE REASON IS THE SAME EVERY TIME: the table the
+port dispatches is MSVC-ORDERED, so the two skews cancel.
+
+  Model, ModelAnim, ModelAnim2, BlendModelAnim, ModelBase, CommonModel,
+  ShadowModel   hal/cxxname_bridge.cpp lays them out dtor 0, DoSetFile 1,
+                UpdateVerts 2, Virtual10 3, Render 4, Virtual18 5, and
+                dual-fills slot 5 for the ROM shadows that count in Itanium
+                numbering. hostgen's func_02016ff4 patch is the one site the
+                dual fill cannot serve and it is resolved at the caller.
+  MeshCollider  hal/clsn_vtable.cpp is a HYBRID -- MSVC-ordered 0..4, ROM-
+                ordered 6..9 -- and the only MSVC dispatch into it is
+                GetSurfaceInfo's `GetNormal()` at index 3, which is the
+                MSVC-ordered half. Correct as it stands.
+  StartEntranceFaderWipe / StartExitFaderWipe   section 16's cleared
+                look-alike: the table is the MSVC-ordered HalFaderWipe.
+  WingFeather::Render's local `Sub`   `virtual ~Sub() {}` then a/b/c/f4, and
+                `sub->f4(0)` over &mModel compiles to `call [eax+10h]`, index
+                4. On the ARM the pair costs two slots so f4 is ROM slot 5,
+                Model::Render -- and index 4 of the MSVC-ordered host Model and
+                ModelAnim tables is Render as well. The skews cancel.
+  Actor, ActorDerived, Player, MovingMeshCollider, ExtendingMeshCollider,
+  dScMgPachinko_c   ROM-ordered tables, and NOTHING dispatches the skewed
+                slots through the class. Every reader of Actor's own 18..30
+                is a local shadow struct with plain virtuals (EggActor,
+                HeldActor, Atk2Actor, KickActor, HbActor, PpEggSlot), which
+                is the idiom that is right by construction. include/
+                ActorBase.h's decision to declare the destructor LAST is what
+                keeps slots 0..15 in agreement and confines this to the tail.
+                LATENT, not clean: seat one of those slots through the class
+                and it becomes the Heap defect.
+  the fourteen thunk-shape TUs   _ZThn80_* and func_020375b0/5c0/780c/781c/
+                d84/d94/da4/db4 declare Base1/Base2/Derived purely so mwccarm
+                emits a this-adjusting thunk. They contain no call at all;
+                twenty-eight of the fifty-three are these.
+
+THE SECOND HALF OF THE MECHANISM: THE TRAP CENSUS.
+
+Section 16's fault needed the skew AND a trap stub whose call shape was wrong.
+The stubs were counted the same way, off the emitted code. 431 hal objects,
+8034 functions, 9264 vtable slot fills. 256 of the seated targets are
+trap-shaped.
+
+  233   never reach their own `ret`. They funnel into port_actor_slot_decline,
+        std::abort or RaiseException; the SEH filter in port_dispatch_guarded
+        restores esp from the frame, so the pop size cannot matter. This is
+        abicheck's DECLINE/NORETURN exemption and the same reasoning.
+   23   RETURN NORMALLY, which is the l2_vt_trap shape and the only shape that
+        can corrupt a caller.
+          1  l2_vt_trap8, already `ret 8`, seated at data_0208eacc[3] and [4]
+             -- section 16's own fix.
+          1  l2_vt_trap, bare `ret`, surviving on data_0208eacc slots 2 and
+             5..11. The seat seeds all twelve of eacc with it and then
+             overwrites 0, 1, 3 and 4; the eafc and eb2c seeds are all
+             overwritten too, so those two tables carry no trap at all. EVERY
+             ROM WORD BEHIND THE EIGHT SURVIVORS TAKES ZERO STACK ARGUMENTS
+             (AdvanceFade, IsAtStart, IsAtEnd, IsBetweenStartAndEnd, SetToEnd,
+             SetToStart, and the two words of the next table's header), so a
+             bare ret is the correct frame.
+         21  Actor EXTENSION slots 31..36 on six tables (Bully, BigBully, the
+             ov027 chain-chomp table, three FallBlock tables), all bare `ret`.
+             abicheck refuses to judge these -- EXT_UNJUDGED, "read its
+             dispatch site out of the emitted code" -- so that is what was
+             done.
+
+THE EXTENSION-SLOT SWEEP, on this lane's own walk_window.exe. Every indirect
+transfer through offsets 0x7c, 0x80, 0x84, 0x88, 0x8c and 0x90, in both forms:
+
+    slot 31   27 transfers (15 call, 12 jmp)     0 with a live push
+    slot 32    3 transfers                       1 with ONE pushed word
+    slot 33    2 transfers                       0
+    slot 34    7 transfers                       4 with FOUR pushed words
+    slot 35   13 transfers                       0
+    slot 36   21 transfers                       0
+
+A push counts as live only if no intervening call or `add esp` retired it and
+it is not a prologue register save; the three sites that looked like pushes
+under a cruder filter (00454CBF, 0048128F, 005BE79B) were read by hand and are
+`push ebx/esi/edi` prologues.
+
+BOTH PUSHING FAMILIES ARE ALREADY SEATED CORRECTLY. The slot-32 site is
+func_ov002_020eff90, the PathLift collider callback abicheck's
+ACTOR_EXT_SLOT_AUTHORITY already rules at one argument. The four slot-34 sites
+are all inside func_ov004_020ae5c4, the dScMgBase_c line rasteriser, and
+hal/scene_mg.cpp's mb_v34 takes the four and pops them. Every extension-slot
+dispatcher for the Bully family is func_ov064_02116220 / 02116560 / 021165d8 /
+02116754 / 02116d1c and NONE of them pushes, so the twenty-one bare-`ret`
+traps on those tables are the right frame.
+
+SO PART C FIXED NOTHING, AND THAT IS THE RESULT RATHER THAN A GAP: after
+section 16's l2_vt_trap8 there is no trap stub left in the port whose pop size
+disagrees with its slot's dispatch sites. The measurement is what was missing,
+not the repair.
+
+ONE PRE-EXISTING RED IS RECORDED AND NOT TOUCHED. `abicheck.py --disasm-dir`
+exits 1 on this branch's tip with 16 rows NEW against
+abicheck_extslot_baseline.txt -- all of them slot-31/32 `*_kill` fills whose
+tables have no authority row. They are not this lane's: no hal file was edited
+here, and the sweep above says every one of them is shape-correct. Retiring
+that baseline is the owning lane's call, and abicheck's own header says so.
+
+WHAT WAS RUN, all on this branch's own binary: the build clean; linkage 9820
+(86.7%) at the 9820 floor, unmoved; battery.py --skip-build --linked-floor 9820
+ALL GREEN (20 smokes, 51 of 51 levels with only the two pre-existing
+decomp-owned skips, 36 of 36 scenes, ptr_audit 0 unhosted code pointers,
+shipcfg build and selftest ok); tail2_states_proof.py --frames 4000 with the
+OPENING GATE at PASS -- 0 quarantined faults and 363 distinct player positions
+over frames 2474..3999, the same count section 16 measured; and the four
+subsystem proofs directly: ipc_proof 15 checks 0 failed ALL GREEN, thread_proof
+PASS, thread_create_proof PASS, save_proof ALL GREEN.
