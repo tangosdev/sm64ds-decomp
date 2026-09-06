@@ -96,6 +96,22 @@ def hand_spells_own_symbol(path, stem):
     linkage, and an earlier version of this function wrongly discarded those, reporting
     five constructors as migrated when none are. Declarations end in `;` and so never
     match the pattern in the first place.
+
+    A CALL is not a definition, and the trailing-`{` rule alone cannot tell them apart:
+    in `if (_ZN6Player12FinishedAnimEv(self)) {` the `[^;{]*` swallows the inner `)`,
+    the outer `)` closes the group and the if-body's `{` completes the match. This never
+    fired while every file owned exactly one symbol -- a call to some OTHER class's
+    member is never asked about -- so it stayed invisible until a TU promotion put many
+    members and their mangled cross-calls in one file. Measured on the 301-member
+    ov002/Player TU: 8 members written as real `Player::Method()` definitions were
+    reported hand-spelled purely because the file also CALLS them through the mangled
+    name, which raised the ratchet by 8 with no source regression behind it.
+
+    `DEF_LINE_PREFIX` is the fix, and it already existed: `ANY_MANGLED_DEF` has carried
+    it since 537 files were mis-swept in exactly this way. Applying it here changes
+    those 8 classifications and nothing else across every `.cpp` in `src/` -- a pointer
+    return type like `int *_ZN14daObjWc_Mizu_cD0Ev(int *t) {` still counts, because `*`
+    is a declarator token and `(` is not.
     """
     try:
         t = (REPO / path).read_text(errors="ignore")
@@ -106,6 +122,8 @@ def hand_spells_own_symbol(path, stem):
         line = t[line_start:m.start()]
         if line.lstrip().startswith(("//", "*", "/*")):
             continue
+        if not DEF_LINE_PREFIX.match(line):
+            continue        # a call inside an expression, not a definition
         return True
     return False
 
@@ -142,8 +160,9 @@ def tracked_sources():
 
 
 # Any mangled symbol DEFINED in the body -- same shape as hand_spells_own_symbol,
-# but not anchored to the file's own stem, which costs two guards that function
-# does not need.
+# but not anchored to the file's own stem. It used to say that costs "two guards
+# that function does not need"; the DEF_LINE_PREFIX one it DOES need, and a
+# 301-member TU promotion is what finally showed it.
 #
 # The lookbehind is not decoration: without it `_Z` matches inside a longer
 # identifier, and `void START_INTRO_MINIMAP_ZOOM(char* c){` was read as defining a

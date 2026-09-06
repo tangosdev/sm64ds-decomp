@@ -531,6 +531,7 @@ src/func_ov006_020c6348.c:
     .text start:0x020c6348 end:0x020c6378
 
 src/func_ov006_020c6378.c:
+    complete
     .text start:0x020c6378 end:0x020c63dc
 
 src/func_ov006_020c63dc.c:
@@ -1506,6 +1507,7 @@ src/func_ov006_020d5e3c.c:
     .text start:0x020d5e3c end:0x020d5e5c
 
 src/func_ov006_020d5e5c.c:
+    complete
     .text start:0x020d5e5c end:0x020d5eb8
 
 src/actors/dScMgBomroom_c.cpp:
@@ -1573,6 +1575,7 @@ src/func_ov006_020d816c.c:
     .text start:0x020d816c end:0x020d8324
 
 src/func_ov006_020d8324.c:
+    complete
     .text start:0x020d8324 end:0x020d836c
 
 src/func_ov006_020d836c.cpp:
@@ -1667,137 +1670,9 @@ src/_ZN11dScMgCoin_cD0Ev.cpp:
     complete
     .text start:0x020dbe64 end:0x020dbe9c
 
-src/func_ov006_020dbf7c.c:
+src/actors/dScMgCoin_c.cpp:
     complete
-    .text start:0x020dbf7c end:0x020dc154
-
-src/func_ov006_020dc154.c:
-    complete
-    .text start:0x020dc154 end:0x020dc1c4
-
-src/func_ov006_020dc1c4.c:
-    complete
-    .text start:0x020dc1c4 end:0x020dc26c
-
-src/func_ov006_020dc26c.c:
-    complete
-    .text start:0x020dc26c end:0x020dc294
-
-src/func_ov006_020dc294.c:
-    complete
-    .text start:0x020dc294 end:0x020dc298
-
-src/func_ov006_020dc298.cpp:
-    complete
-    .text start:0x020dc298 end:0x020dc2f8
-
-src/func_ov006_020dc2f8.c:
-    complete
-    .text start:0x020dc2f8 end:0x020dc334
-
-src/func_ov006_020dc334.c:
-    complete
-    .text start:0x020dc334 end:0x020dc348
-
-src/func_ov006_020dc348.c:
-    complete
-    .text start:0x020dc348 end:0x020dc370
-
-src/func_ov006_020dc370.c:
-    complete
-    .text start:0x020dc370 end:0x020dc3bc
-
-src/func_ov006_020dc3bc.c:
-    complete
-    .text start:0x020dc3bc end:0x020dc414
-
-src/func_ov006_020dc414.c:
-    complete
-    .text start:0x020dc414 end:0x020dc4b0
-
-src/func_ov006_020dc4b0.c:
-    complete
-    .text start:0x020dc4b0 end:0x020dc4c8
-
-src/func_ov006_020dc4c8.c:
-    complete
-    .text start:0x020dc4c8 end:0x020dc5c4
-
-src/func_ov006_020dc5c4.c:
-    complete
-    .text start:0x020dc5c4 end:0x020dc6d0
-
-src/func_ov006_020dc6d0.c:
-    complete
-    .text start:0x020dc6d0 end:0x020dc754
-
-src/func_ov006_020dc754.cpp:
-    complete
-    .text start:0x020dc754 end:0x020dc7b4
-
-src/func_ov006_020dc7b4.c:
-    complete
-    .text start:0x020dc7b4 end:0x020dc7fc
-
-src/func_ov006_020dc7fc.c:
-    complete
-    .text start:0x020dc7fc end:0x020dc814
-
-src/func_ov006_020dc814.c:
-    complete
-    .text start:0x020dc814 end:0x020dc870
-
-src/func_ov006_020dc870.c:
-    complete
-    .text start:0x020dc870 end:0x020dc900
-
-src/func_ov006_020dc900.c:
-    complete
-    .text start:0x020dc900 end:0x020dc960
-
-src/func_ov006_020dc960.c:
-    complete
-    .text start:0x020dc960 end:0x020dc99c
-
-src/func_ov006_020dc99c.c:
-    complete
-    .text start:0x020dc99c end:0x020dca04
-
-src/func_ov006_020dca04.c:
-    complete
-    .text start:0x020dca04 end:0x020dcb1c
-
-src/func_ov006_020dcb1c.c:
-    complete
-    .text start:0x020dcb1c end:0x020dcc48
-
-src/func_ov006_020dcc48.c:
-    complete
-    .text start:0x020dcc48 end:0x020dccb8
-
-src/func_ov006_020dccb8.c:
-    complete
-    .text start:0x020dccb8 end:0x020dcd74
-
-src/func_ov006_020dcd74.c:
-    complete
-    .text start:0x020dcd74 end:0x020dce3c
-
-src/func_ov006_020dce3c.c:
-    complete
-    .text start:0x020dce3c end:0x020dcea8
-
-src/func_ov006_020dcea8.c:
-    complete
-    .text start:0x020dcea8 end:0x020dcffc
-
-src/func_ov006_020dcffc.c:
-    complete
-    .text start:0x020dcffc end:0x020dd000
-
-src/func_ov006_020dd000.c:
-    complete
-    .text start:0x020dd000 end:0x020dd0e0
+    .text start:0x020dbf7c end:0x020dd0e0
 
 src/func_ov006_020dd2cc.cpp:
     complete
@@ -1992,6 +1867,7 @@ src/func_ov006_020df540.c:
     .text start:0x020df540 end:0x020df5b8
 
 src/func_ov006_020df5b8.c:
+    complete
     .text start:0x020df5b8 end:0x020dfcd8
 
 src/func_ov006_020dfcd8.c:
@@ -2147,6 +2023,7 @@ src/func_ov006_020e285c.c:
     .text start:0x020e285c end:0x020e2868
 
 src/func_ov006_020e2868.c:
+    complete
     .text start:0x020e2868 end:0x020e2c08
 
 src/func_ov006_020e2c08.c:
@@ -2346,6 +2223,7 @@ src/func_ov006_020e5b70.c:
     .text start:0x020e5b70 end:0x020e5b7c
 
 src/func_ov006_020e5b7c.c:
+    complete
     .text start:0x020e5b7c end:0x020e5e3c
 
 src/func_ov006_020e5e3c.c:
@@ -2917,6 +2795,7 @@ src/func_ov006_020f0dd8.c:
     .text start:0x020f0dd8 end:0x020f0e28
 
 src/func_ov006_020f0e28.c:
+    complete
     .text start:0x020f0e28 end:0x020f0eac
 
 src/func_ov006_020f0eac.c:
@@ -2956,18 +2835,23 @@ src/func_ov006_020f15ac.cpp:
     .text start:0x020f15ac end:0x020f17fc
 
 src/func_ov006_020f17fc.c:
+    complete
     .text start:0x020f17fc end:0x020f192c
 
 src/func_ov006_020f192c.c:
+    complete
     .text start:0x020f192c end:0x020f1a70
 
 src/func_ov006_020f1a70.c:
+    complete
     .text start:0x020f1a70 end:0x020f1b98
 
 src/func_ov006_020f1b98.c:
+    complete
     .text start:0x020f1b98 end:0x020f1cb4
 
 src/func_ov006_020f1cb4.c:
+    complete
     .text start:0x020f1cb4 end:0x020f1dbc
 
 src/func_ov006_020f1dbc.c:
@@ -3019,6 +2903,7 @@ src/func_ov006_020f319c.c:
     .text start:0x020f319c end:0x020f31dc
 
 src/func_ov006_020f31dc.c:
+    complete
     .text start:0x020f31dc end:0x020f3260
 
 src/func_ov006_020f3260.c:
@@ -3049,213 +2934,9 @@ src/minigames/d_s_mg_memory.cpp:
     complete
     .text start:0x020f3834 end:0x020f5564
 
-src/_ZN14dScMgMemory2_cD1Ev.cpp:
+src/actors/dScMgMemory2_c.cpp:
     complete
-    .text start:0x020f5564 end:0x020f55b8
-
-src/_ZN14dScMgMemory2_cD0Ev.cpp:
-    complete
-    .text start:0x020f55b8 end:0x020f5620
-
-src/_ZN14dScMgMemory2_c11DrawMessageEv.c:
-    complete
-    .text start:0x020f5620 end:0x020f565c
-
-src/_ZN14dScMgMemory2_c10DrawCursorEv.c:
-    complete
-    .text start:0x020f565c end:0x020f5694
-
-src/_ZN14dScMgMemory2_c12UpdateCursorEv.c:
-    complete
-    .text start:0x020f5694 end:0x020f56f8
-
-src/_ZN14dScMgMemory2_c10ShowCursorEv.c:
-    complete
-    .text start:0x020f56f8 end:0x020f572c
-
-src/_ZN14dScMgMemory2_c10HideCursorEv.c:
-    complete
-    .text start:0x020f572c end:0x020f5740
-
-src/_ZN14dScMgMemory2_c10PlayerWaitEi.c:
-    complete
-    .text start:0x020f5740 end:0x020f5744
-
-src/_ZN14dScMgMemory2_c10PlayerMoveEi.c:
-    complete
-    .text start:0x020f5744 end:0x020f58d0
-
-src/_ZN14dScMgMemory2_c10PlayerDropEi.c:
-    complete
-    .text start:0x020f58d0 end:0x020f593c
-
-src/_ZN14dScMgMemory2_c11InitPlayersEv.c:
-    complete
-    .text start:0x020f593c end:0x020f59c0
-
-src/_ZN14dScMgMemory2_c13CheckFinishedEv.c:
-    complete
-    .text start:0x020f59c0 end:0x020f5a64
-
-src/_ZN14dScMgMemory2_c9JudgePairEv.cpp:
-    complete
-    .text start:0x020f5a64 end:0x020f5b98
-
-src/_ZN14dScMgMemory2_c9DrawCardsEv.c:
-    complete
-    .text start:0x020f5b98 end:0x020f5c40
-
-src/_ZN14dScMgMemory2_c11UpdateCardsEv.cpp:
-    complete
-    .text start:0x020f5c40 end:0x020f5cb4
-
-src/_ZN14dScMgMemory2_c11CardFlyAwayEi.c:
-    complete
-    .text start:0x020f5cb4 end:0x020f5de0
-
-src/_ZN14dScMgMemory2_c12CardFlipDownEi.c:
-    complete
-    .text start:0x020f5de0 end:0x020f5e70
-
-src/_ZN14dScMgMemory2_c8CardWaitEi.c:
-    complete
-    .text start:0x020f5e70 end:0x020f5e74
-
-src/_ZN14dScMgMemory2_c10CardFlipUpEi.c:
-    complete
-    .text start:0x020f5e74 end:0x020f5f0c
-
-src/_ZN14dScMgMemory2_c10CardSelectEi.c:
-    complete
-    .text start:0x020f5f0c end:0x020f6084
-
-src/_ZN14dScMgMemory2_c8CardIdleEi.c:
-    complete
-    .text start:0x020f6084 end:0x020f6088
-
-src/_ZN14dScMgMemory2_c8CardMoveEi.c:
-    complete
-    .text start:0x020f6088 end:0x020f6230
-
-src/_ZN14dScMgMemory2_c12ResultFinishEv.c:
-    complete
-    .text start:0x020f6230 end:0x020f639c
-
-src/_ZN14dScMgMemory2_c15ResultTurnCardsEv.c:
-    complete
-    .text start:0x020f639c end:0x020f6488
-
-src/_ZN14dScMgMemory2_c12ResultRewardEv.c:
-    complete
-    .text start:0x020f6488 end:0x020f6538
-
-src/_ZN14dScMgMemory2_c10ResultWaitEv.c:
-    complete
-    .text start:0x020f6538 end:0x020f6678
-
-src/_ZN14dScMgMemory2_c11RoundRevealEv.c:
-    complete
-    .text start:0x020f6678 end:0x020f670c
-
-src/_ZN14dScMgMemory2_c13RoundWaitDealEv.c:
-    complete
-    .text start:0x020f670c end:0x020f67a0
-
-src/_ZN14dScMgMemory2_c15RoundReadyCardsEv.c:
-    complete
-    .text start:0x020f67a0 end:0x020f6830
-
-src/_ZN14dScMgMemory2_c14RoundHideCardsEv.c:
-    complete
-    .text start:0x020f6830 end:0x020f6904
-
-src/_ZN14dScMgMemory2_c14RoundShowCardsEv.cpp:
-    complete
-    .text start:0x020f6904 end:0x020f6a00
-
-src/_ZN14dScMgMemory2_c15RoundDealFourthEv.c:
-    complete
-    .text start:0x020f6a00 end:0x020f6a78
-
-src/_ZN14dScMgMemory2_c13RoundDealHardEv.c:
-    complete
-    .text start:0x020f6a78 end:0x020f6b00
-
-src/_ZN14dScMgMemory2_c15RoundDealNormalEv.c:
-    complete
-    .text start:0x020f6b00 end:0x020f6b78
-
-src/_ZN14dScMgMemory2_c13RoundDealEasyEv.c:
-    complete
-    .text start:0x020f6b78 end:0x020f6bf0
-
-src/_ZN14dScMgMemory2_c10RoundStartEv.c:
-    complete
-    .text start:0x020f6bf0 end:0x020f6c90
-
-src/_ZN14dScMgMemory2_c12ShuffleCardsEv.c:
-    complete
-    .text start:0x020f6c90 end:0x020f6f88
-
-src/_ZN14dScMgMemory2_c18ChoosePreviewCardsEv.c:
-    complete
-    .text start:0x020f6f88 end:0x020f7064
-
-src/_ZN14dScMgMemory2_c9ResetGameEv.c:
-    complete
-    .text start:0x020f7064 end:0x020f7190
-
-src/_ZN14dScMgMemory2_c9StateExitEv.c:
-    complete
-    .text start:0x020f7190 end:0x020f71c8
-
-src/_ZN14dScMgMemory2_c11StateResultEv.cpp:
-    complete
-    .text start:0x020f71c8 end:0x020f7210
-
-src/_ZN14dScMgMemory2_c10StateJudgeEv.c:
-    complete
-    .text start:0x020f7210 end:0x020f7234
-
-src/_ZN14dScMgMemory2_c9StatePlayEv.cpp:
-    complete
-    .text start:0x020f7234 end:0x020f7280
-
-src/_ZN14dScMgMemory2_c10StateSetupEv.c:
-    complete
-    .text start:0x020f7280 end:0x020f72c0
-
-src/_ZN14dScMgMemory2_c15SetupDifficultyEv.c:
-    complete
-    .text start:0x020f72c0 end:0x020f730c
-
-src/_ZN14dScMgMemory2_c15OnGroundPoundedEv.cpp:
-    complete
-    .text start:0x020f730c end:0x020f7320
-
-src/_ZN14dScMgMemory2_c13OnTurnIntoEggEi.cpp:
-    complete
-    .text start:0x020f7320 end:0x020f7394
-
-src/_ZN14dScMgMemory2_c13OnYoshiTryEatEi.cpp:
-    complete
-    .text start:0x020f7394 end:0x020f73f4
-
-src/_ZN14dScMgMemory2_c6RenderEv.cpp:
-    complete
-    .text start:0x020f73f4 end:0x020f7458
-
-src/_ZN14dScMgMemory2_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020f7458 end:0x020f74b4
-
-src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f74b4 end:0x020f75d4
-
-src/dScMgMemory2_c_classInit.c:
-    complete
-    .text start:0x020f75d4 end:0x020f7634
+    .text start:0x020f5564 end:0x020f7634
 
 src/minigames/d_s_mg_m_carlo.cpp:
     complete
@@ -3422,6 +3103,7 @@ src/func_ov006_020fc1b4.c:
     .text start:0x020fc1b4 end:0x020fc1f8
 
 src/func_ov006_020fc1f8.c:
+    complete
     .text start:0x020fc1f8 end:0x020fc2ec
 
 src/func_ov006_020fc2ec.c:
@@ -3532,6 +3214,7 @@ src/func_ov006_020feba8.c:
     .text start:0x020feba8 end:0x020fed58
 
 src/_ZN15dScMgPachinko_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x020fed58 end:0x020fedc4
 
 src/_ZN15dScMgPachinko_c6RenderEv.cpp:
@@ -3731,6 +3414,7 @@ src/func_ov006_0210246c.cpp:
     .text start:0x0210246c end:0x021024e0
 
 src/func_ov006_021024e0.c:
+    complete
     .text start:0x021024e0 end:0x02102564
 
 src/func_ov006_02102564.c:
@@ -3826,6 +3510,7 @@ src/func_ov006_02103bfc.c:
     .text start:0x02103bfc end:0x02103cbc
 
 src/_ZN16dScMgPachinko2_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x02103cbc end:0x02103d28
 
 src/_ZN16dScMgPachinko2_c6RenderEv.cpp:
@@ -4039,6 +3724,10 @@ src/func_ov006_02106048.c:
 src/func_ov006_02106080.c:
     complete
     .text start:0x02106080 end:0x02106168
+
+src/func_ov006_02106168.cpp:
+    complete
+    .text start:0x02106168 end:0x021063a0
 
 src/func_ov006_021063a0.cpp:
     complete
@@ -4942,6 +4631,7 @@ src/_ZN13dScMgTeresa_c9Virtual50Ev.cpp:
     .text start:0x02120238 end:0x02120248
 
 src/_ZN13dScMgTeresa_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x02120248 end:0x02120348
 
 src/_ZN13dScMgTeresa_c6RenderEv.cpp:
@@ -5007,6 +4697,7 @@ src/func_ov006_02125bbc.c:
     .text start:0x02125bbc end:0x02125cdc
 
 src/func_ov006_02125cdc.c:
+    complete
     .text start:0x02125cdc end:0x02125f68
 
 src/func_ov006_02126948.c:

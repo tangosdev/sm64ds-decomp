@@ -25,9 +25,6 @@ extern int data_ov002_02110034;
 extern int data_ov002_021105bc;
 extern int data_ov002_02110574;
 
-/* Both angle bumps read +0x8e through a const view: `+= 0x8000` makes mwcc
-   CSE the self+0x8e address into r1 (addne r1,r4,#0x8e / ldrshne r0,[r1] /
-   strhne r0,[r1]); the cartridge folds it into ldrsh/strh [r4,#0x8e]. */
 int func_ov002_020e2664(char* self)
 {
     u16 flags;
@@ -40,7 +37,7 @@ int func_ov002_020e2664(char* self)
     flags = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
     if (flags & 0x400) {
         if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_021101e4)) {
-            *(s16*)(self + 0x8e) = *(const s16*)(self + 0x8e) + 0x8000;
+            *(s16*)(self + 0x8e) = *(s16*)(self + 0x8e) + 0x8000;
         }
         if (func_ov002_020d674c(self)) {
             _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211004c);
@@ -77,7 +74,7 @@ int func_ov002_020e2664(char* self)
         return 0;
 
     if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_021101e4)) {
-        *(s16*)(self + 0x8e) = *(const s16*)(self + 0x8e) + 0x8000;
+        *(s16*)(self + 0x8e) = *(s16*)(self + 0x8e) + 0x8000;
     }
     *(s16*)(self + 0x94) = *(s16*)(self + 0x8e);
 

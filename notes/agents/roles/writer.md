@@ -52,7 +52,16 @@ uniquification stops being advice.** Measured at 41 members: duplicate
 - a naive `C` tag rename corrupts `extern "C"` into `extern "C_5fec"` —
   placeholder-protect the string first;
 - member-local `extern` declarations that mention a renamed tag must **not** be
-  hoisted into the shared block.
+  hoisted into the shared block;
+- `re.sub(r'^(\s+)extern "C" ', ..., re.M)` matches **across a preceding blank
+  line**, because `\s` includes `
+`. It rewrites file-scope `extern "C" {`
+  into `extern {` and reports `declaration syntax error` eighty lines away. Use
+  `[ 	]+`;
+- any scan for a member's definition line must **skip comments**. A doc comment
+  naming `Class::Method` is taken as the definition, which silently leaves that
+  shard's declaration block at file scope — three `illegal function
+  overloading` errors, none of them near the real cause.
 
 **And `create`'s merging of a shared `struct` is a codegen hazard, not a naming
 one.** On `dScMgSound_c`, eleven dispatch members saw `struct C` **incomplete**
@@ -391,6 +400,26 @@ home check is a **name lookup**, and the byte comparison is deferred to
 `verify` and a genuine 13-versus-12-byte mismatch downstream. The refusal is
 correct; the fix is the rename, as its own reviewable change.
 
+**Every path you cite must resolve from the repo root on a fresh clone.**
+This is a real defect, not a hypothetical: four private Claude-memory slugs are
+committed in this tree as though they were repo notes. Naming the slugs alone,
+because spelling them the way the source does would trip the dead-reference gate
+in this very file: `actor-class-names-off-by-one` in `include/daObjHmBskt_c.h`,
+`key-function-tu-vptr-store-blocker` in
+`src/game/actors/d_a_obj_km3_dorifu.cpp` and twice in
+`src_tu/actors/TTC_MovingBar.cpp`, `phantom-references` in
+`include/nitro/hw/registers.h`, and `stale-tu-map-overcut-ov006` in two
+`config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings — each written
+there with a `notes/` prefix and a `.md` suffix. Those files live
+in one machine's private memory directory; nobody else can follow the reference,
+and the dead-reference gate never saw them because it walked only `.md`.
+
+State the test as the fresh-clone property, not as "don't cite memory". An agent
+that can see its own memory directory finds the file sitting right there, so
+"is this a memory slug" is not a question it can answer — "does this path resolve
+in a fresh clone" is. The same test catches the neighbouring mistake of citing an
+untracked local scratch file. Cite a tracked repo path, or state the fact inline.
+
 Look the class up in `build/rtti.json` before you decide anything else, and
 expect the alias case: `symbols.txt` can carry **both** spellings at one address
 (`_ZTV10KingBobOmb` and `_ZTV12daBombking_c` at `0x02126e4c`). If you own the key
@@ -493,9 +522,23 @@ both destructor variants in.
 
 mwccarm 2004/b56 behaviours, not style preferences.
 
-- **`virtual ~X() {}` inline, declared FIRST member.** Out-of-line emits
-  D2/D0/D1 in the wrong order plus a homeless D2; the ROM carries D1-then-D0
-  and no D2.
+- **The destructor form is a MEASUREMENT, not a default.** Two forms reproduce
+  the ROM's usual `D1`-then-`D0`-and-no-`D2`, and which one a TU needs is a
+  question to measure per TU:
+
+  - `virtual ~X() {}` **inline, declared FIRST member** — the variants emit in
+    reverse order of their first odr-use;
+  - the destructor **out of line** under `#pragma defer_codegen off` — emits
+    `D1, D0, D2`.
+
+  Out-of-line *without* that pragma emits `D2/D0/D1` in the wrong order plus a
+  homeless `D2`, which is where the flat "always inline it" rule this file used
+  to state came from. Landed both ways: ov006/`dScMgTeresa_c` and
+  ov006/`dScMgPanel_c` (71/71, link-verified) are both out-of-line +
+  `defer_codegen off`. **Try both before you take a partial** — and note the
+  inline form has a cost of its own, since it moves the key function to the
+  first out-of-line virtual declared, which on a coined-name class turns a
+  harmless name into a hard promotion refusal.
 - **Emission order is a hard gate, and it is the constraint most likely to stop
   you.** `linkcheck [4b/8]` fatally refuses a TU whose licensed `.text` sections
   are not in ROM-ascending order: `licensed .text functions are not emitted in
@@ -628,6 +671,17 @@ they cost minutes; discover them after and each is a cycle.
   `extern struct V dv;` in three separate function bodies compile cleanly. Only
   a **file-scope** redeclaration is rejected.
 
+  **But the licence is for FUNCTIONS with C linkage, and a project header
+  revokes it for data.** Measured on ov006/`dScMgPanel_c`:
+  `include/dScMgBase_c.h:12` already declares
+  `extern "C" void *data_ov004_020beb68;`, ordinal 60 recovered the object as
+  `char *`, and the block-scope form is rejected outright —
+  `identifier 'data_ov004_020beb68' redeclared; was declared as: 'void *'`.
+  The wording above sends you hunting for a file-scope duplicate *inside your
+  own TU* that is not there; the conflicting declaration is in a header you
+  include. The fix that kept 71/71 was a reinterpreting macro, not a
+  redeclaration.
+
 - **Canonicalising a DATA declaration is a codegen hazard, exactly like merging
   a shared `struct`.** Hoisting one canonical data declaration and casting each
   member's view back with a macro **changed the codegen of six members** on
@@ -685,6 +739,17 @@ excludes the header and declares every symbol the header would have supplied.
 So: include it and align *by default*, but when a spelling it dictates breaks a
 byte match, measure both ways and say which you took and why. The bytes outrank
 the header.
+
+**And "include it" inverts above some member count — this is a size-dependent
+rule, not a default.** `decl_common.h` declares 10 of ov006/`dScMgPanel_c`'s 71
+members and **7 of the 10 contradict the byte-matched shard**, two of them on
+the return type. Including it makes each an `illegal function overloading`
+error against code that already matches. That TU excluded the header (the ov002
+`Player` precedent) and gave the four class-method members their `decl_common`
+declarations at block scope instead. The more members a TU absorbs, the likelier
+the header contradicts one — so count the collisions before you decide. Two
+promoted TUs include it and two of the largest exclude it, and both choices are
+right for their size.
 
 **Grep shadow struct *tags* too, not only declarations.** A shadow type can
 collide with a **ROM symbol**, which is a different failure and a nastier one.
@@ -973,13 +1038,16 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
 
   | configuration | result |
   |---|---|
-  | pragma present, file-global by default | 250/301 |
-  | pragma deleted outright (the control) | 293/301 |
-  | pragma bracketed in `push`/`pop` | 294/301 — buys back the 43 casualties but **not ordinal 35 itself** |
+  | pragma present, file-global by default | 255/301 |
+  | pragma deleted outright (the control) | 300/301 |
+  | pragma bracketed in `push`/`pop` | 300/301 — **identical to deleting it** |
   | `#pragma defer_codegen off` + the bracket, source ROM-ascending | **301/301** |
 
-  That 294-vs-301 gap is the whole point: a bracket that looks like it worked can
-  still be leaving its own member on the floor.
+  **The bracketed and deleted rows are the same number, and that is the point.**
+  While codegen is deferred the bracket binds to nothing, so it is worth **zero**
+  members — not "buys back the casualties but not its own". An earlier revision of
+  this file printed 250 / 293 / 294 here and glossed a "294-vs-301 gap"; those
+  figures do not reproduce. Re-measured on the shipped ov002/`Player` TU.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:

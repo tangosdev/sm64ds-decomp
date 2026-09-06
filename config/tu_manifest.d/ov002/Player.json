@@ -1,0 +1,2263 @@
+{
+  "id": "ov002/Player",
+  "module": "ov002",
+  "source": "src/actors/Player.cpp",
+  "promoted_source": "src/actors/Player.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "PARTIAL RUN, 301 of 600. tu_map calls 0x020bd828..0x020e6a08 one contiguous linker run of 600 function(s) (build/tu_map.json, tools/tu_map.py). This TU licenses 0x020bd828..0x020cfea4, 301 function(s), ROM ordinals 0..300. The other 299 keep their own shards and their own delinks.txt entries.",
+    "class label(s): Player",
+    "EDGE 1 (the only edge, at the TOP) -- a sourceless hole splits the run. ROM ordinal 301, func_ov002_020cfea4 (0x020cfea4), has no shard anywhere in src/ and no entry in config/arm9/overlays/ov002/delinks.txt: the cartridge's own bytes cover that range. No delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of the segments a hole leaves. Ordinals 0..300 is the LARGEST of them and is the side taken.",
+    "The run's other holes, all above this claim and all left alone: ordinal 344 func_ov002_020d3b9c (0x020d3b9c) and ordinal 430 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec) are sourceless the same way; ordinal 470 func_ov002_020dc560 (0x020dc560) has a shard that reproduces under the pinned compiler but carries no `complete` marker, so it is not delinked and cannot be folded in either. Segment sizes: 0..300 = 301 (TAKEN), 471..599 = 129, 345..429 = 85, 302..343 = 42, 431..469 = 39. Every rejected candidate is smaller than the one taken.",
+    "EDGE 0 (the bottom) is the linker run's own start, 0x020bd828 -- not a boundary this TU chose. The claim begins where the run begins.",
+    "The KEY FUNCTION falls OUTSIDE this range. include/Player.h declares `virtual ~Player();` first among the non-inline virtuals, so the destructor is the key function; its variants live at ordinals 595/596, far above ordinal 300. The compiled object confirms the consequence: it defines no _ZTV6Player, _ZTI6Player or _ZTS6Player at all, so this promotion emits no vtable, needs no header edit, and the 2*(ancestors+self)+1 vtable-record formula does not apply to it.",
+    "The three near-miss recoveries this claim depends on landed FIRST, as their own commit with their own `complete` markers (compound-assign field-address CSE in func_ov002_020c70ac and func_ov002_020e2664; pointer-vs-int parameter typing in func_ov002_020d0948). Only func_ov002_020c70ac and func_ov002_020e2664's sibling recovery sit inside this range; the third is above it and was recovered because it was measured in the same pass."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020bd828",
+      "end": "0x020cfea4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN6Player8CanPauseEv",
+      "address": "0x020bd828",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN6Player8CanPauseEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov002_020bd8ac",
+      "address": "0x020bd8ac",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020bd8ac.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020bd8c0",
+      "address": "0x020bd8c0",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020bd8c0.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020bd928",
+      "address": "0x020bd928",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020bd928.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020bd984",
+      "address": "0x020bd984",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020bd984.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov002_020bd9ec",
+      "address": "0x020bd9ec",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020bd9ec.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov002_020bda48",
+      "address": "0x020bda48",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov002_020bda48.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN6Player8HasNoCapEv",
+      "address": "0x020bda98",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN6Player8HasNoCapEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov002_020bdb50",
+      "address": "0x020bdb50",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov002_020bdb50.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov002_020bdc18",
+      "address": "0x020bdc18",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov002_020bdc18.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN6Player16IncMegaKillCountEv",
+      "address": "0x020bdc58",
+      "size": "0x000000d4",
+      "legacy_source": "src/_ZN6Player16IncMegaKillCountEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov002_020bdd2c",
+      "address": "0x020bdd2c",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov002_020bdd2c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov002_020bdd9c",
+      "address": "0x020bdd9c",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov002_020bdd9c.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN6Player14InitMetalWarioEv",
+      "address": "0x020bde14",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN6Player14InitMetalWarioEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov002_020bdef0",
+      "address": "0x020bdef0",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020bdef0.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN6Player15InitVanishLuigiEv",
+      "address": "0x020bdf4c",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN6Player15InitVanishLuigiEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov002_020bdf8c",
+      "address": "0x020bdf8c",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov002_020bdf8c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov002_020be008",
+      "address": "0x020be008",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov002_020be008.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN6Player18SetNewHatCharacterEjjb",
+      "address": "0x020be0f8",
+      "size": "0x000000e8",
+      "legacy_source": "src/_ZN6Player18SetNewHatCharacterEjjb.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN6Player16SetRealCharacterEj",
+      "address": "0x020be1e0",
+      "size": "0x00000144",
+      "legacy_source": "src/_ZN6Player16SetRealCharacterEj.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN6Player18TurnOffToonShadingEj",
+      "address": "0x020be324",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN6Player18TurnOffToonShadingEj.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020be3b0",
+      "address": "0x020be3b0",
+      "size": "0x000006cc",
+      "legacy_source": "src/func_ov002_020be3b0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov002_020bea7c",
+      "address": "0x020bea7c",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020bea7c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN6Player15IsCollectingCapEv",
+      "address": "0x020bea94",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN6Player15IsCollectingCapEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov002_020beabc",
+      "address": "0x020beabc",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov002_020beabc.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov002_020beb38",
+      "address": "0x020beb38",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov002_020beb38.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov002_020bebd4",
+      "address": "0x020bebd4",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov002_020bebd4.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov002_020bec2c",
+      "address": "0x020bec2c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov002_020bec2c.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov002_020bec84",
+      "address": "0x020bec84",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020bec84.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov002_020bec9c",
+      "address": "0x020bec9c",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov002_020bec9c.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZNK6Player14GetBodyModelIDEjb",
+      "address": "0x020becc8",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZNK6Player14GetBodyModelIDEjb.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov002_020becf4",
+      "address": "0x020becf4",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov002_020becf4.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN6Player12FinishedAnimEv",
+      "address": "0x020bed98",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN6Player12FinishedAnimEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "Player_AdvanceAnims",
+      "address": "0x020bedd4",
+      "size": "0x000000f8",
+      "legacy_source": "src/Player_AdvanceAnims.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN6Player6IsAnimEj",
+      "address": "0x020beecc",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN6Player6IsAnimEj.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN6Player7SetAnimEji5Fix12IiEj",
+      "address": "0x020bef2c",
+      "size": "0x00000210",
+      "legacy_source": "src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov002_020bf13c",
+      "address": "0x020bf13c",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov002_020bf13c.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov002_020bf224",
+      "address": "0x020bf224",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov002_020bf224.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov002_020bf27c",
+      "address": "0x020bf27c",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020bf27c.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_ov002_020bf2d8",
+      "address": "0x020bf2d8",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov002_020bf2d8.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "Player_ScaleByCharFactor",
+      "address": "0x020bf30c",
+      "size": "0x00000034",
+      "legacy_source": "src/Player_ScaleByCharFactor.c",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_ov002_020bf340",
+      "address": "0x020bf340",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov002_020bf340.c",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_ov002_020bf36c",
+      "address": "0x020bf36c",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov002_020bf36c.cpp",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov002_020bf40c",
+      "address": "0x020bf40c",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov002_020bf40c.c",
+      "ordinal": 43
+    },
+    {
+      "symbol": "_ZN6Player4HealEi",
+      "address": "0x020bf4e4",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN6Player4HealEi.cpp",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN6Player9GetHealthEv",
+      "address": "0x020bf548",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN6Player9GetHealthEv.cpp",
+      "ordinal": 45
+    },
+    {
+      "symbol": "func_ov002_020bf56c",
+      "address": "0x020bf56c",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020bf56c.cpp",
+      "ordinal": 46
+    },
+    {
+      "symbol": "func_ov002_020bf5e0",
+      "address": "0x020bf5e0",
+      "size": "0x00000220",
+      "legacy_source": "src/func_ov002_020bf5e0.c",
+      "ordinal": 47
+    },
+    {
+      "symbol": "func_ov002_020bf800",
+      "address": "0x020bf800",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov002_020bf800.cpp",
+      "ordinal": 48
+    },
+    {
+      "symbol": "func_ov002_020bf88c",
+      "address": "0x020bf88c",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov002_020bf88c.c",
+      "ordinal": 49
+    },
+    {
+      "symbol": "func_ov002_020bf90c",
+      "address": "0x020bf90c",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov002_020bf90c.c",
+      "ordinal": 50
+    },
+    {
+      "symbol": "func_ov002_020bf9d4",
+      "address": "0x020bf9d4",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov002_020bf9d4.cpp",
+      "ordinal": 51
+    },
+    {
+      "symbol": "func_ov002_020bfa74",
+      "address": "0x020bfa74",
+      "size": "0x0000044c",
+      "legacy_source": "src/func_ov002_020bfa74.cpp",
+      "ordinal": 52
+    },
+    {
+      "symbol": "func_ov002_020bfec0",
+      "address": "0x020bfec0",
+      "size": "0x00000248",
+      "legacy_source": "src/func_ov002_020bfec0.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "func_ov002_020c0108",
+      "address": "0x020c0108",
+      "size": "0x00000214",
+      "legacy_source": "src/func_ov002_020c0108.c",
+      "ordinal": 54
+    },
+    {
+      "symbol": "func_ov002_020c031c",
+      "address": "0x020c031c",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020c031c.cpp",
+      "ordinal": 55
+    },
+    {
+      "symbol": "func_ov002_020c0364",
+      "address": "0x020c0364",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov002_020c0364.c",
+      "ordinal": 56
+    },
+    {
+      "symbol": "func_ov002_020c0434",
+      "address": "0x020c0434",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov002_020c0434.c",
+      "ordinal": 57
+    },
+    {
+      "symbol": "func_ov002_020c04ac",
+      "address": "0x020c04ac",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov002_020c04ac.c",
+      "ordinal": 58
+    },
+    {
+      "symbol": "func_ov002_020c04e0",
+      "address": "0x020c04e0",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov002_020c04e0.c",
+      "ordinal": 59
+    },
+    {
+      "symbol": "func_ov002_020c0688",
+      "address": "0x020c0688",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020c0688.cpp",
+      "ordinal": 60
+    },
+    {
+      "symbol": "func_ov002_020c06fc",
+      "address": "0x020c06fc",
+      "size": "0x000005c0",
+      "legacy_source": "src/func_ov002_020c06fc.c",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_ov002_020c0cbc",
+      "address": "0x020c0cbc",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov002_020c0cbc.c",
+      "ordinal": 62
+    },
+    {
+      "symbol": "func_ov002_020c0d90",
+      "address": "0x020c0d90",
+      "size": "0x00000224",
+      "legacy_source": "src/func_ov002_020c0d90.c",
+      "ordinal": 63
+    },
+    {
+      "symbol": "func_ov002_020c0fb4",
+      "address": "0x020c0fb4",
+      "size": "0x00000280",
+      "legacy_source": "src/func_ov002_020c0fb4.c",
+      "ordinal": 64
+    },
+    {
+      "symbol": "func_ov002_020c1234",
+      "address": "0x020c1234",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020c1234.cpp",
+      "ordinal": 65
+    },
+    {
+      "symbol": "func_ov002_020c133c",
+      "address": "0x020c133c",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_ov002_020c133c.c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "func_ov002_020c14b8",
+      "address": "0x020c14b8",
+      "size": "0x00000234",
+      "legacy_source": "src/func_ov002_020c14b8.c",
+      "ordinal": 67
+    },
+    {
+      "symbol": "func_ov002_020c16ec",
+      "address": "0x020c16ec",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov002_020c16ec.c",
+      "ordinal": 68
+    },
+    {
+      "symbol": "func_ov002_020c179c",
+      "address": "0x020c179c",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov002_020c179c.cpp",
+      "ordinal": 69
+    },
+    {
+      "symbol": "func_ov002_020c18b0",
+      "address": "0x020c18b0",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov002_020c18b0.c",
+      "ordinal": 70
+    },
+    {
+      "symbol": "func_ov002_020c19d0",
+      "address": "0x020c19d0",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020c19d0.cpp",
+      "ordinal": 71
+    },
+    {
+      "symbol": "func_ov002_020c1ad8",
+      "address": "0x020c1ad8",
+      "size": "0x000001ac",
+      "legacy_source": "src/func_ov002_020c1ad8.c",
+      "ordinal": 72
+    },
+    {
+      "symbol": "func_ov002_020c1c84",
+      "address": "0x020c1c84",
+      "size": "0x000001c0",
+      "legacy_source": "src/func_ov002_020c1c84.c",
+      "ordinal": 73
+    },
+    {
+      "symbol": "func_ov002_020c1e44",
+      "address": "0x020c1e44",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov002_020c1e44.c",
+      "ordinal": 74
+    },
+    {
+      "symbol": "func_ov002_020c1eb4",
+      "address": "0x020c1eb4",
+      "size": "0x00000158",
+      "legacy_source": "src/func_ov002_020c1eb4.cpp",
+      "ordinal": 75
+    },
+    {
+      "symbol": "func_ov002_020c200c",
+      "address": "0x020c200c",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov002_020c200c.c",
+      "ordinal": 76
+    },
+    {
+      "symbol": "func_ov002_020c2138",
+      "address": "0x020c2138",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov002_020c2138.cpp",
+      "ordinal": 77
+    },
+    {
+      "symbol": "func_ov002_020c2270",
+      "address": "0x020c2270",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov002_020c2270.cpp",
+      "ordinal": 78
+    },
+    {
+      "symbol": "func_ov002_020c231c",
+      "address": "0x020c231c",
+      "size": "0x0000028c",
+      "legacy_source": "src/func_ov002_020c231c.c",
+      "ordinal": 79
+    },
+    {
+      "symbol": "func_ov002_020c25a8",
+      "address": "0x020c25a8",
+      "size": "0x0000042c",
+      "legacy_source": "src/func_ov002_020c25a8.c",
+      "ordinal": 80
+    },
+    {
+      "symbol": "func_ov002_020c29d4",
+      "address": "0x020c29d4",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov002_020c29d4.cpp",
+      "ordinal": 81
+    },
+    {
+      "symbol": "func_ov002_020c2b08",
+      "address": "0x020c2b08",
+      "size": "0x000002b0",
+      "legacy_source": "src/func_ov002_020c2b08.c",
+      "ordinal": 82
+    },
+    {
+      "symbol": "func_ov002_020c2db8",
+      "address": "0x020c2db8",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov002_020c2db8.c",
+      "ordinal": 83
+    },
+    {
+      "symbol": "func_ov002_020c2e78",
+      "address": "0x020c2e78",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov002_020c2e78.cpp",
+      "ordinal": 84
+    },
+    {
+      "symbol": "_ZN6Player7CanWarpEv",
+      "address": "0x020c2ef0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN6Player7CanWarpEv.cpp",
+      "ordinal": 85
+    },
+    {
+      "symbol": "_ZN6Player7IsInAirEv",
+      "address": "0x020c2f3c",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN6Player7IsInAirEv.cpp",
+      "ordinal": 86
+    },
+    {
+      "symbol": "func_ov002_020c2f64",
+      "address": "0x020c2f64",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov002_020c2f64.c",
+      "ordinal": 87
+    },
+    {
+      "symbol": "func_ov002_020c2fec",
+      "address": "0x020c2fec",
+      "size": "0x0000015c",
+      "legacy_source": "src/func_ov002_020c2fec.c",
+      "ordinal": 88
+    },
+    {
+      "symbol": "func_ov002_020c3148",
+      "address": "0x020c3148",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020c3148.c",
+      "ordinal": 89
+    },
+    {
+      "symbol": "func_ov002_020c3160",
+      "address": "0x020c3160",
+      "size": "0x00000644",
+      "legacy_source": "src/func_ov002_020c3160.c",
+      "ordinal": 90
+    },
+    {
+      "symbol": "func_ov002_020c37a4",
+      "address": "0x020c37a4",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov002_020c37a4.cpp",
+      "ordinal": 91
+    },
+    {
+      "symbol": "func_ov002_020c38a0",
+      "address": "0x020c38a0",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov002_020c38a0.c",
+      "ordinal": 92
+    },
+    {
+      "symbol": "func_ov002_020c3a48",
+      "address": "0x020c3a48",
+      "size": "0x00000194",
+      "legacy_source": "src/func_ov002_020c3a48.c",
+      "ordinal": 93
+    },
+    {
+      "symbol": "func_ov002_020c3bdc",
+      "address": "0x020c3bdc",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov002_020c3bdc.c",
+      "ordinal": 94
+    },
+    {
+      "symbol": "func_ov002_020c3cf0",
+      "address": "0x020c3cf0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov002_020c3cf0.c",
+      "ordinal": 95
+    },
+    {
+      "symbol": "_ZN6Player17St_EndingFly_MainEv",
+      "address": "0x020c3d1c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6Player17St_EndingFly_MainEv.cpp",
+      "ordinal": 96
+    },
+    {
+      "symbol": "_ZN6Player17St_EndingFly_InitEv",
+      "address": "0x020c3d6c",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6Player17St_EndingFly_InitEv.cpp",
+      "ordinal": 97
+    },
+    {
+      "symbol": "func_ov002_020c3dbc",
+      "address": "0x020c3dbc",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020c3dbc.c",
+      "ordinal": 98
+    },
+    {
+      "symbol": "_ZN6Player21St_OpeningWakeUp_MainEv",
+      "address": "0x020c3dd0",
+      "size": "0x000000bc",
+      "legacy_source": "src/_ZN6Player21St_OpeningWakeUp_MainEv.cpp",
+      "ordinal": 99
+    },
+    {
+      "symbol": "func_ov002_020c3e8c",
+      "address": "0x020c3e8c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020c3e8c.c",
+      "ordinal": 100
+    },
+    {
+      "symbol": "func_ov002_020c3ea0",
+      "address": "0x020c3ea0",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov002_020c3ea0.c",
+      "ordinal": 101
+    },
+    {
+      "symbol": "_ZN6Player21St_OpeningWakeUp_InitEv",
+      "address": "0x020c3ed8",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN6Player21St_OpeningWakeUp_InitEv.cpp",
+      "ordinal": 102
+    },
+    {
+      "symbol": "func_ov002_020c3f18",
+      "address": "0x020c3f18",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020c3f18.c",
+      "ordinal": 103
+    },
+    {
+      "symbol": "func_ov002_020c3f2c",
+      "address": "0x020c3f2c",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020c3f2c.c",
+      "ordinal": 104
+    },
+    {
+      "symbol": "_ZN6Player15St_Respawn_MainEv",
+      "address": "0x020c3f40",
+      "size": "0x00000148",
+      "legacy_source": "src/_ZN6Player15St_Respawn_MainEv.cpp",
+      "ordinal": 105
+    },
+    {
+      "symbol": "_ZN6Player15St_Respawn_InitEv",
+      "address": "0x020c4088",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN6Player15St_Respawn_InitEv.cpp",
+      "ordinal": 106
+    },
+    {
+      "symbol": "func_ov002_020c4188",
+      "address": "0x020c4188",
+      "size": "0x0000023c",
+      "legacy_source": "src/func_ov002_020c4188.c",
+      "ordinal": 107
+    },
+    {
+      "symbol": "func_ov002_020c43c4",
+      "address": "0x020c43c4",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov002_020c43c4.c",
+      "ordinal": 108
+    },
+    {
+      "symbol": "func_ov002_020c44c4",
+      "address": "0x020c44c4",
+      "size": "0x0000029c",
+      "legacy_source": "src/func_ov002_020c44c4.c",
+      "ordinal": 109
+    },
+    {
+      "symbol": "_ZN6Player15St_Talk_CleanupEv",
+      "address": "0x020c4760",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN6Player15St_Talk_CleanupEv.cpp",
+      "ordinal": 110
+    },
+    {
+      "symbol": "func_ov002_020c47f4",
+      "address": "0x020c47f4",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov002_020c47f4.cpp",
+      "ordinal": 111
+    },
+    {
+      "symbol": "_ZN6Player12St_Talk_MainEv",
+      "address": "0x020c48e0",
+      "size": "0x000002f8",
+      "legacy_source": "src/_ZN6Player12St_Talk_MainEv.cpp",
+      "ordinal": 112
+    },
+    {
+      "symbol": "_ZN6Player12St_Talk_InitEv",
+      "address": "0x020c4bd8",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN6Player12St_Talk_InitEv.cpp",
+      "ordinal": 113
+    },
+    {
+      "symbol": "_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh",
+      "address": "0x020c4c60",
+      "size": "0x00000260",
+      "legacy_source": "src/_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh.cpp",
+      "ordinal": 114
+    },
+    {
+      "symbol": "_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh",
+      "address": "0x020c4ec0",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh.cpp",
+      "ordinal": 115
+    },
+    {
+      "symbol": "_ZN6Player18HasFinishedTalkingEv",
+      "address": "0x020c4efc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN6Player18HasFinishedTalkingEv.cpp",
+      "ordinal": 116
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020c4f40Et",
+      "address": "0x020c4f40",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN6Player12Unk_020c4f40Et.cpp",
+      "ordinal": 117
+    },
+    {
+      "symbol": "_ZN6Player9StartTalkER7fBase_cb",
+      "address": "0x020c4fa0",
+      "size": "0x00000230",
+      "legacy_source": "src/_ZN6Player9StartTalkER7fBase_cb.cpp",
+      "ordinal": 118
+    },
+    {
+      "symbol": "func_ov002_020c51d0",
+      "address": "0x020c51d0",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020c51d0.cpp",
+      "ordinal": 119
+    },
+    {
+      "symbol": "func_ov002_020c5244",
+      "address": "0x020c5244",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov002_020c5244.c",
+      "ordinal": 120
+    },
+    {
+      "symbol": "_ZN6Player12GetTalkStateEv",
+      "address": "0x020c524c",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN6Player12GetTalkStateEv.cpp",
+      "ordinal": 121
+    },
+    {
+      "symbol": "_ZN6Player21St_StuckInGround_MainEv",
+      "address": "0x020c52bc",
+      "size": "0x00000188",
+      "legacy_source": "src/_ZN6Player21St_StuckInGround_MainEv.cpp",
+      "ordinal": 122
+    },
+    {
+      "symbol": "func_ov002_020c5444",
+      "address": "0x020c5444",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov002_020c5444.cpp",
+      "ordinal": 123
+    },
+    {
+      "symbol": "_ZN6Player21St_StuckInGround_InitEv",
+      "address": "0x020c54e8",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN6Player21St_StuckInGround_InitEv.cpp",
+      "ordinal": 124
+    },
+    {
+      "symbol": "_ZN6Player24St_BowserEarthquake_MainEv",
+      "address": "0x020c5560",
+      "size": "0x0000012c",
+      "legacy_source": "src/_ZN6Player24St_BowserEarthquake_MainEv.cpp",
+      "ordinal": 125
+    },
+    {
+      "symbol": "_ZN6Player24St_BowserEarthquake_InitEv",
+      "address": "0x020c568c",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN6Player24St_BowserEarthquake_InitEv.cpp",
+      "ordinal": 126
+    },
+    {
+      "symbol": "func_ov002_020c56f0",
+      "address": "0x020c56f0",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov002_020c56f0.c",
+      "ordinal": 127
+    },
+    {
+      "symbol": "_ZN6Player15St_DeadPit_MainEv",
+      "address": "0x020c5780",
+      "size": "0x00000240",
+      "legacy_source": "src/_ZN6Player15St_DeadPit_MainEv.cpp",
+      "ordinal": 128
+    },
+    {
+      "symbol": "_ZN6Player15St_DeadPit_InitEv",
+      "address": "0x020c59c0",
+      "size": "0x00000308",
+      "legacy_source": "src/_ZN6Player15St_DeadPit_InitEv.cpp",
+      "ordinal": 129
+    },
+    {
+      "symbol": "_ZN6Player14EnterWhirlpoolEv",
+      "address": "0x020c5cc8",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN6Player14EnterWhirlpoolEv.cpp",
+      "ordinal": 130
+    },
+    {
+      "symbol": "func_ov002_020c5cd8",
+      "address": "0x020c5cd8",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov002_020c5cd8.c",
+      "ordinal": 131
+    },
+    {
+      "symbol": "func_ov002_020c5d0c",
+      "address": "0x020c5d0c",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov002_020c5d0c.c",
+      "ordinal": 132
+    },
+    {
+      "symbol": "func_ov002_020c5d60",
+      "address": "0x020c5d60",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov002_020c5d60.c",
+      "ordinal": 133
+    },
+    {
+      "symbol": "func_ov002_020c5dec",
+      "address": "0x020c5dec",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020c5dec.cpp",
+      "ordinal": 134
+    },
+    {
+      "symbol": "_ZN6Player15St_DeadHit_MainEv",
+      "address": "0x020c5e34",
+      "size": "0x000001dc",
+      "legacy_source": "src/_ZN6Player15St_DeadHit_MainEv.cpp",
+      "ordinal": 135
+    },
+    {
+      "symbol": "_ZN6Player15St_DeadHit_InitEv",
+      "address": "0x020c6010",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN6Player15St_DeadHit_InitEv.cpp",
+      "ordinal": 136
+    },
+    {
+      "symbol": "func_ov002_020c607c",
+      "address": "0x020c607c",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov002_020c607c.cpp",
+      "ordinal": 137
+    },
+    {
+      "symbol": "func_ov002_020c61ac",
+      "address": "0x020c61ac",
+      "size": "0x000002d0",
+      "legacy_source": "src/func_ov002_020c61ac.c",
+      "ordinal": 138
+    },
+    {
+      "symbol": "func_ov002_020c647c",
+      "address": "0x020c647c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov002_020c647c.cpp",
+      "ordinal": 139
+    },
+    {
+      "symbol": "func_ov002_020c6538",
+      "address": "0x020c6538",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov002_020c6538.cpp",
+      "ordinal": 140
+    },
+    {
+      "symbol": "_ZN6Player17St_Squish_CleanupEv",
+      "address": "0x020c65f8",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN6Player17St_Squish_CleanupEv.cpp",
+      "ordinal": 141
+    },
+    {
+      "symbol": "_ZN6Player14St_Squish_MainEv",
+      "address": "0x020c662c",
+      "size": "0x000002dc",
+      "legacy_source": "src/_ZN6Player14St_Squish_MainEv.cpp",
+      "ordinal": 142
+    },
+    {
+      "symbol": "func_ov002_020c6908",
+      "address": "0x020c6908",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov002_020c6908.cpp",
+      "ordinal": 143
+    },
+    {
+      "symbol": "_ZN6Player14St_Squish_InitEv",
+      "address": "0x020c69a0",
+      "size": "0x00000070",
+      "legacy_source": "src/_ZN6Player14St_Squish_InitEv.cpp",
+      "ordinal": 144
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020c6a10Ej",
+      "address": "0x020c6a10",
+      "size": "0x000000cc",
+      "legacy_source": "src/_ZN6Player12Unk_020c6a10Ej.cpp",
+      "ordinal": 145
+    },
+    {
+      "symbol": "func_ov002_020c6adc",
+      "address": "0x020c6adc",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov002_020c6adc.cpp",
+      "ordinal": 146
+    },
+    {
+      "symbol": "_ZN6Player16St_Teleport_MainEv",
+      "address": "0x020c6b3c",
+      "size": "0x00000288",
+      "legacy_source": "src/_ZN6Player16St_Teleport_MainEv.cpp",
+      "ordinal": 147
+    },
+    {
+      "symbol": "_ZN6Player16St_Teleport_InitEv",
+      "address": "0x020c6dc4",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6Player16St_Teleport_InitEv.cpp",
+      "ordinal": 148
+    },
+    {
+      "symbol": "func_ov002_020c6e14",
+      "address": "0x020c6e14",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov002_020c6e14.c",
+      "ordinal": 149
+    },
+    {
+      "symbol": "_ZN6Player21St_LevelEnter_CleanupEv",
+      "address": "0x020c6f34",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN6Player21St_LevelEnter_CleanupEv.cpp",
+      "ordinal": 150
+    },
+    {
+      "symbol": "_ZN6Player18St_LevelEnter_MainEv",
+      "address": "0x020c6f3c",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN6Player18St_LevelEnter_MainEv.cpp",
+      "ordinal": 151
+    },
+    {
+      "symbol": "func_ov002_020c6fe4",
+      "address": "0x020c6fe4",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov002_020c6fe4.c",
+      "ordinal": 152
+    },
+    {
+      "symbol": "func_ov002_020c70ac",
+      "address": "0x020c70ac",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov002_020c70ac.c",
+      "ordinal": 153
+    },
+    {
+      "symbol": "func_ov002_020c7194",
+      "address": "0x020c7194",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020c7194.cpp",
+      "ordinal": 154
+    },
+    {
+      "symbol": "func_ov002_020c71e0",
+      "address": "0x020c71e0",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov002_020c71e0.cpp",
+      "ordinal": 155
+    },
+    {
+      "symbol": "func_ov002_020c72a4",
+      "address": "0x020c72a4",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov002_020c72a4.cpp",
+      "ordinal": 156
+    },
+    {
+      "symbol": "func_ov002_020c7350",
+      "address": "0x020c7350",
+      "size": "0x000002a0",
+      "legacy_source": "src/func_ov002_020c7350.cpp",
+      "ordinal": 157
+    },
+    {
+      "symbol": "func_ov002_020c75f0",
+      "address": "0x020c75f0",
+      "size": "0x00000248",
+      "legacy_source": "src/func_ov002_020c75f0.c",
+      "ordinal": 158
+    },
+    {
+      "symbol": "_ZN6Player18St_LevelEnter_InitEv",
+      "address": "0x020c7838",
+      "size": "0x00000484",
+      "legacy_source": "src/_ZN6Player18St_LevelEnter_InitEv.cpp",
+      "ordinal": 159
+    },
+    {
+      "symbol": "func_ov002_020c7cbc",
+      "address": "0x020c7cbc",
+      "size": "0x00000114",
+      "legacy_source": "src/func_ov002_020c7cbc.c",
+      "ordinal": 160
+    },
+    {
+      "symbol": "func_ov002_020c7dd0",
+      "address": "0x020c7dd0",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov002_020c7dd0.cpp",
+      "ordinal": 161
+    },
+    {
+      "symbol": "_ZN6Player15IsEnteringLevelEv",
+      "address": "0x020c7e84",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6Player15IsEnteringLevelEv.cpp",
+      "ordinal": 162
+    },
+    {
+      "symbol": "_ZN6Player20IsStateEnteringLevelEv",
+      "address": "0x020c7ed4",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN6Player20IsStateEnteringLevelEv.cpp",
+      "ordinal": 163
+    },
+    {
+      "symbol": "func_ov002_020c7f10",
+      "address": "0x020c7f10",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov002_020c7f10.cpp",
+      "ordinal": 164
+    },
+    {
+      "symbol": "func_ov002_020c7ff8",
+      "address": "0x020c7ff8",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov002_020c7ff8.c",
+      "ordinal": 165
+    },
+    {
+      "symbol": "_ZN6Player20St_NoControl_CleanupEv",
+      "address": "0x020c8128",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN6Player20St_NoControl_CleanupEv.cpp",
+      "ordinal": 166
+    },
+    {
+      "symbol": "_ZN6Player17St_NoControl_MainEv",
+      "address": "0x020c816c",
+      "size": "0x00000344",
+      "legacy_source": "src/_ZN6Player17St_NoControl_MainEv.cpp",
+      "ordinal": 167
+    },
+    {
+      "symbol": "func_ov002_020c84b0",
+      "address": "0x020c84b0",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov002_020c84b0.c",
+      "ordinal": 168
+    },
+    {
+      "symbol": "func_ov002_020c8540",
+      "address": "0x020c8540",
+      "size": "0x000001d4",
+      "legacy_source": "src/func_ov002_020c8540.c",
+      "ordinal": 169
+    },
+    {
+      "symbol": "func_ov002_020c8714",
+      "address": "0x020c8714",
+      "size": "0x00000268",
+      "legacy_source": "src/func_ov002_020c8714.c",
+      "ordinal": 170
+    },
+    {
+      "symbol": "func_ov002_020c897c",
+      "address": "0x020c897c",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov002_020c897c.c",
+      "ordinal": 171
+    },
+    {
+      "symbol": "func_ov002_020c8a4c",
+      "address": "0x020c8a4c",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020c8a4c.cpp",
+      "ordinal": 172
+    },
+    {
+      "symbol": "func_ov002_020c8b54",
+      "address": "0x020c8b54",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov002_020c8b54.c",
+      "ordinal": 173
+    },
+    {
+      "symbol": "func_ov002_020c8b78",
+      "address": "0x020c8b78",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov002_020c8b78.cpp",
+      "ordinal": 174
+    },
+    {
+      "symbol": "func_ov002_020c8cb0",
+      "address": "0x020c8cb0",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov002_020c8cb0.cpp",
+      "ordinal": 175
+    },
+    {
+      "symbol": "func_ov002_020c8d14",
+      "address": "0x020c8d14",
+      "size": "0x000001f8",
+      "legacy_source": "src/func_ov002_020c8d14.c",
+      "ordinal": 176
+    },
+    {
+      "symbol": "func_ov002_020c8f0c",
+      "address": "0x020c8f0c",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020c8f0c.cpp",
+      "ordinal": 177
+    },
+    {
+      "symbol": "func_ov002_020c8f80",
+      "address": "0x020c8f80",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov002_020c8f80.cpp",
+      "ordinal": 178
+    },
+    {
+      "symbol": "func_ov002_020c904c",
+      "address": "0x020c904c",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov002_020c904c.c",
+      "ordinal": 179
+    },
+    {
+      "symbol": "func_ov002_020c9128",
+      "address": "0x020c9128",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov002_020c9128.cpp",
+      "ordinal": 180
+    },
+    {
+      "symbol": "func_ov002_020c91bc",
+      "address": "0x020c91bc",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov002_020c91bc.c",
+      "ordinal": 181
+    },
+    {
+      "symbol": "func_ov002_020c924c",
+      "address": "0x020c924c",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020c924c.c",
+      "ordinal": 182
+    },
+    {
+      "symbol": "func_ov002_020c9288",
+      "address": "0x020c9288",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020c9288.cpp",
+      "ordinal": 183
+    },
+    {
+      "symbol": "func_ov002_020c92fc",
+      "address": "0x020c92fc",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov002_020c92fc.c",
+      "ordinal": 184
+    },
+    {
+      "symbol": "func_ov002_020c94a4",
+      "address": "0x020c94a4",
+      "size": "0x000001b8",
+      "legacy_source": "src/func_ov002_020c94a4.c",
+      "ordinal": 185
+    },
+    {
+      "symbol": "func_ov002_020c965c",
+      "address": "0x020c965c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov002_020c965c.c",
+      "ordinal": 186
+    },
+    {
+      "symbol": "func_ov002_020c9718",
+      "address": "0x020c9718",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov002_020c9718.c",
+      "ordinal": 187
+    },
+    {
+      "symbol": "_ZN6Player17St_NoControl_InitEv",
+      "address": "0x020c976c",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN6Player17St_NoControl_InitEv.cpp",
+      "ordinal": 188
+    },
+    {
+      "symbol": "func_ov002_020c97e0",
+      "address": "0x020c97e0",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov002_020c97e0.c",
+      "ordinal": 189
+    },
+    {
+      "symbol": "func_ov002_020c97f8",
+      "address": "0x020c97f8",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov002_020c97f8.cpp",
+      "ordinal": 190
+    },
+    {
+      "symbol": "func_ov002_020c9840",
+      "address": "0x020c9840",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov002_020c9840.cpp",
+      "ordinal": 191
+    },
+    {
+      "symbol": "func_ov002_020c98a4",
+      "address": "0x020c98a4",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020c98a4.cpp",
+      "ordinal": 192
+    },
+    {
+      "symbol": "func_ov002_020c990c",
+      "address": "0x020c990c",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov002_020c990c.c",
+      "ordinal": 193
+    },
+    {
+      "symbol": "func_ov002_020c9998",
+      "address": "0x020c9998",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020c9998.c",
+      "ordinal": 194
+    },
+    {
+      "symbol": "func_ov002_020c9a04",
+      "address": "0x020c9a04",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov002_020c9a04.c",
+      "ordinal": 195
+    },
+    {
+      "symbol": "func_ov002_020c9ac0",
+      "address": "0x020c9ac0",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov002_020c9ac0.cpp",
+      "ordinal": 196
+    },
+    {
+      "symbol": "func_ov002_020c9b10",
+      "address": "0x020c9b10",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020c9b10.c",
+      "ordinal": 197
+    },
+    {
+      "symbol": "func_ov002_020c9b5c",
+      "address": "0x020c9b5c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov002_020c9b5c.c",
+      "ordinal": 198
+    },
+    {
+      "symbol": "func_ov002_020c9b7c",
+      "address": "0x020c9b7c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov002_020c9b7c.c",
+      "ordinal": 199
+    },
+    {
+      "symbol": "func_ov002_020c9c00",
+      "address": "0x020c9c00",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020c9c00.c",
+      "ordinal": 200
+    },
+    {
+      "symbol": "func_ov002_020c9c4c",
+      "address": "0x020c9c4c",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020c9c4c.c",
+      "ordinal": 201
+    },
+    {
+      "symbol": "func_ov002_020c9cc0",
+      "address": "0x020c9cc0",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020c9cc0.c",
+      "ordinal": 202
+    },
+    {
+      "symbol": "func_ov002_020c9d1c",
+      "address": "0x020c9d1c",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov002_020c9d1c.c",
+      "ordinal": 203
+    },
+    {
+      "symbol": "func_ov002_020c9d68",
+      "address": "0x020c9d68",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov002_020c9d68.cpp",
+      "ordinal": 204
+    },
+    {
+      "symbol": "func_ov002_020c9de4",
+      "address": "0x020c9de4",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov002_020c9de4.c",
+      "ordinal": 205
+    },
+    {
+      "symbol": "func_ov002_020c9e18",
+      "address": "0x020c9e18",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov002_020c9e18.c",
+      "ordinal": 206
+    },
+    {
+      "symbol": "Player_DisableInteraction",
+      "address": "0x020c9e40",
+      "size": "0x0000001c",
+      "legacy_source": "src/Player_DisableInteraction.c",
+      "ordinal": 207
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020c9e5cEh",
+      "address": "0x020c9e5c",
+      "size": "0x00000298",
+      "legacy_source": "src/_ZN6Player12Unk_020c9e5cEh.cpp",
+      "ordinal": 208
+    },
+    {
+      "symbol": "func_ov002_020ca0f4",
+      "address": "0x020ca0f4",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020ca0f4.c",
+      "ordinal": 209
+    },
+    {
+      "symbol": "func_ov002_020ca108",
+      "address": "0x020ca108",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020ca108.cpp",
+      "ordinal": 210
+    },
+    {
+      "symbol": "_ZN6Player11OpenBigDoorEv",
+      "address": "0x020ca144",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN6Player11OpenBigDoorEv.cpp",
+      "ordinal": 211
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020ca150Eh",
+      "address": "0x020ca150",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN6Player12Unk_020ca150Eh.cpp",
+      "ordinal": 212
+    },
+    {
+      "symbol": "_ZN6Player17SetNoControlStateEhih",
+      "address": "0x020ca1b8",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN6Player17SetNoControlStateEhih.cpp",
+      "ordinal": 213
+    },
+    {
+      "symbol": "func_ov002_020ca270",
+      "address": "0x020ca270",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020ca270.cpp",
+      "ordinal": 214
+    },
+    {
+      "symbol": "_ZN6Player15JumpIntoBooCageER7Vector3",
+      "address": "0x020ca2ac",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN6Player15JumpIntoBooCageER7Vector3.cpp",
+      "ordinal": 215
+    },
+    {
+      "symbol": "_ZN6Player13TryTalkToDoorEh",
+      "address": "0x020ca344",
+      "size": "0x0000008c",
+      "legacy_source": "src/_ZN6Player13TryTalkToDoorEh.cpp",
+      "ordinal": 216
+    },
+    {
+      "symbol": "_ZN6Player21IsOpeningDoorWithStarEv",
+      "address": "0x020ca3d0",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN6Player21IsOpeningDoorWithStarEv.cpp",
+      "ordinal": 217
+    },
+    {
+      "symbol": "_ZN6Player16TryTalkToKeyDoorEv",
+      "address": "0x020ca410",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN6Player16TryTalkToKeyDoorEv.cpp",
+      "ordinal": 218
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020ca488Ev",
+      "address": "0x020ca488",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN6Player12Unk_020ca488Ev.cpp",
+      "ordinal": 219
+    },
+    {
+      "symbol": "_ZN6Player16TryEnterStarDoorER7Vector3s",
+      "address": "0x020ca498",
+      "size": "0x00000134",
+      "legacy_source": "src/_ZN6Player16TryEnterStarDoorER7Vector3s.cpp",
+      "ordinal": 220
+    },
+    {
+      "symbol": "_ZN6Player12CanEnterDoorEh",
+      "address": "0x020ca5cc",
+      "size": "0x0000013c",
+      "legacy_source": "src/_ZN6Player12CanEnterDoorEh.cpp",
+      "ordinal": 221
+    },
+    {
+      "symbol": "_ZN6Player17PlayMammaMiaSoundEv",
+      "address": "0x020ca708",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN6Player17PlayMammaMiaSoundEv.cpp",
+      "ordinal": 222
+    },
+    {
+      "symbol": "_ZN6Player24TryExitWhiteDoorWithStarEv",
+      "address": "0x020ca724",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN6Player24TryExitWhiteDoorWithStarEv.cpp",
+      "ordinal": 223
+    },
+    {
+      "symbol": "func_ov002_020ca78c",
+      "address": "0x020ca78c",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020ca78c.c",
+      "ordinal": 224
+    },
+    {
+      "symbol": "_ZN6Player16St_DebugFly_MainEv",
+      "address": "0x020ca7f4",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN6Player16St_DebugFly_MainEv.cpp",
+      "ordinal": 225
+    },
+    {
+      "symbol": "_ZN6Player16St_DebugFly_InitEv",
+      "address": "0x020ca8d0",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN6Player16St_DebugFly_InitEv.cpp",
+      "ordinal": 226
+    },
+    {
+      "symbol": "_ZN6Player12Unk_020ca8f8Ev",
+      "address": "0x020ca8f8",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN6Player12Unk_020ca8f8Ev.cpp",
+      "ordinal": 227
+    },
+    {
+      "symbol": "func_ov002_020ca940",
+      "address": "0x020ca940",
+      "size": "0x000002a0",
+      "legacy_source": "src/func_ov002_020ca940.c",
+      "ordinal": 228
+    },
+    {
+      "symbol": "func_ov002_020cabe0",
+      "address": "0x020cabe0",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov002_020cabe0.cpp",
+      "ordinal": 229
+    },
+    {
+      "symbol": "_ZN6Player15St_Null_CleanupEv",
+      "address": "0x020cac20",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN6Player15St_Null_CleanupEv.cpp",
+      "ordinal": 230
+    },
+    {
+      "symbol": "_ZN6Player12St_Null_MainEv",
+      "address": "0x020cac28",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN6Player12St_Null_MainEv.cpp",
+      "ordinal": 231
+    },
+    {
+      "symbol": "_ZN6Player12St_Null_InitEv",
+      "address": "0x020cac30",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN6Player12St_Null_InitEv.cpp",
+      "ordinal": 232
+    },
+    {
+      "symbol": "_ZN6Player21St_CameraZoom_CleanupEv",
+      "address": "0x020cac38",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN6Player21St_CameraZoom_CleanupEv.cpp",
+      "ordinal": 233
+    },
+    {
+      "symbol": "func_ov002_020cac60",
+      "address": "0x020cac60",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov002_020cac60.c",
+      "ordinal": 234
+    },
+    {
+      "symbol": "_ZN6Player18St_CameraZoom_MainEv",
+      "address": "0x020cad10",
+      "size": "0x00000100",
+      "legacy_source": "src/_ZN6Player18St_CameraZoom_MainEv.cpp",
+      "ordinal": 235
+    },
+    {
+      "symbol": "func_ov002_020cae10",
+      "address": "0x020cae10",
+      "size": "0x000000e4",
+      "legacy_source": "src/func_ov002_020cae10.c",
+      "ordinal": 236
+    },
+    {
+      "symbol": "_ZN6Player18St_CameraZoom_InitEv",
+      "address": "0x020caef4",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN6Player18St_CameraZoom_InitEv.cpp",
+      "ordinal": 237
+    },
+    {
+      "symbol": "func_ov002_020caf68",
+      "address": "0x020caf68",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov002_020caf68.c",
+      "ordinal": 238
+    },
+    {
+      "symbol": "func_ov002_020caf98",
+      "address": "0x020caf98",
+      "size": "0x000001c4",
+      "legacy_source": "src/func_ov002_020caf98.cpp",
+      "ordinal": 239
+    },
+    {
+      "symbol": "_ZN6Player17St_Headstand_MainEv",
+      "address": "0x020cb15c",
+      "size": "0x00000194",
+      "legacy_source": "src/_ZN6Player17St_Headstand_MainEv.cpp",
+      "ordinal": 240
+    },
+    {
+      "symbol": "_ZN6Player17St_Headstand_InitEv",
+      "address": "0x020cb2f0",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN6Player17St_Headstand_InitEv.cpp",
+      "ordinal": 241
+    },
+    {
+      "symbol": "func_ov002_020cb354",
+      "address": "0x020cb354",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov002_020cb354.cpp",
+      "ordinal": 242
+    },
+    {
+      "symbol": "func_ov002_020cb400",
+      "address": "0x020cb400",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020cb400.cpp",
+      "ordinal": 243
+    },
+    {
+      "symbol": "func_ov002_020cb474",
+      "address": "0x020cb474",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov002_020cb474.cpp",
+      "ordinal": 244
+    },
+    {
+      "symbol": "_ZN6Player16St_Climb_CleanupEv",
+      "address": "0x020cb568",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN6Player16St_Climb_CleanupEv.cpp",
+      "ordinal": 245
+    },
+    {
+      "symbol": "_ZN6Player13St_Climb_MainEv",
+      "address": "0x020cb5bc",
+      "size": "0x00000778",
+      "legacy_source": "src/_ZN6Player13St_Climb_MainEv.cpp",
+      "ordinal": 246
+    },
+    {
+      "symbol": "_ZN6Player13St_Climb_InitEv",
+      "address": "0x020cbd34",
+      "size": "0x00000174",
+      "legacy_source": "src/_ZN6Player13St_Climb_InitEv.cpp",
+      "ordinal": 247
+    },
+    {
+      "symbol": "func_ov002_020cbea8",
+      "address": "0x020cbea8",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov002_020cbea8.c",
+      "ordinal": 248
+    },
+    {
+      "symbol": "func_ov002_020cc01c",
+      "address": "0x020cc01c",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov002_020cc01c.cpp",
+      "ordinal": 249
+    },
+    {
+      "symbol": "func_ov002_020cc05c",
+      "address": "0x020cc05c",
+      "size": "0x000000e4",
+      "legacy_source": "src/func_ov002_020cc05c.c",
+      "ordinal": 250
+    },
+    {
+      "symbol": "_ZN6Player9IsOnShellEv",
+      "address": "0x020cc140",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN6Player9IsOnShellEv.cpp",
+      "ordinal": 251
+    },
+    {
+      "symbol": "func_ov002_020cc16c",
+      "address": "0x020cc16c",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov002_020cc16c.c",
+      "ordinal": 252
+    },
+    {
+      "symbol": "func_ov002_020cc1f4",
+      "address": "0x020cc1f4",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov002_020cc1f4.c",
+      "ordinal": 253
+    },
+    {
+      "symbol": "_ZN6Player16St_Shell_CleanupEv",
+      "address": "0x020cc228",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN6Player16St_Shell_CleanupEv.cpp",
+      "ordinal": 254
+    },
+    {
+      "symbol": "_ZN6Player13St_Shell_MainEv",
+      "address": "0x020cc27c",
+      "size": "0x000003e4",
+      "legacy_source": "src/_ZN6Player13St_Shell_MainEv.cpp",
+      "ordinal": 255
+    },
+    {
+      "symbol": "func_ov002_020cc660",
+      "address": "0x020cc660",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov002_020cc660.c",
+      "ordinal": 256
+    },
+    {
+      "symbol": "_ZN6Player13St_Shell_InitEv",
+      "address": "0x020cc780",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6Player13St_Shell_InitEv.cpp",
+      "ordinal": 257
+    },
+    {
+      "symbol": "_ZN6Player17St_HurtWater_MainEv",
+      "address": "0x020cc7d0",
+      "size": "0x00000140",
+      "legacy_source": "src/_ZN6Player17St_HurtWater_MainEv.cpp",
+      "ordinal": 258
+    },
+    {
+      "symbol": "_ZN6Player17St_HurtWater_InitEv",
+      "address": "0x020cc910",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN6Player17St_HurtWater_InitEv.cpp",
+      "ordinal": 259
+    },
+    {
+      "symbol": "_ZN6Player23St_MetalWaterWater_MainEv",
+      "address": "0x020cc9c0",
+      "size": "0x0000027c",
+      "legacy_source": "src/_ZN6Player23St_MetalWaterWater_MainEv.cpp",
+      "ordinal": 260
+    },
+    {
+      "symbol": "_ZN6Player23St_MetalWaterWater_InitEv",
+      "address": "0x020ccc3c",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN6Player23St_MetalWaterWater_InitEv.cpp",
+      "ordinal": 261
+    },
+    {
+      "symbol": "_ZN6Player24St_MetalWaterGround_MainEv",
+      "address": "0x020ccccc",
+      "size": "0x00000404",
+      "legacy_source": "src/_ZN6Player24St_MetalWaterGround_MainEv.cpp",
+      "ordinal": 262
+    },
+    {
+      "symbol": "_ZN6Player24St_MetalWaterGround_InitEv",
+      "address": "0x020cd0d0",
+      "size": "0x000000c0",
+      "legacy_source": "src/_ZN6Player24St_MetalWaterGround_InitEv.cpp",
+      "ordinal": 263
+    },
+    {
+      "symbol": "func_ov002_020cd190",
+      "address": "0x020cd190",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov002_020cd190.c",
+      "ordinal": 264
+    },
+    {
+      "symbol": "_ZN6Player15St_Swim_CleanupEv",
+      "address": "0x020cd1e4",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN6Player15St_Swim_CleanupEv.cpp",
+      "ordinal": 265
+    },
+    {
+      "symbol": "func_ov002_020cd218",
+      "address": "0x020cd218",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov002_020cd218.cpp",
+      "ordinal": 266
+    },
+    {
+      "symbol": "func_ov002_020cd28c",
+      "address": "0x020cd28c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov002_020cd28c.c",
+      "ordinal": 267
+    },
+    {
+      "symbol": "func_ov002_020cd2c4",
+      "address": "0x020cd2c4",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov002_020cd2c4.c",
+      "ordinal": 268
+    },
+    {
+      "symbol": "func_ov002_020cd308",
+      "address": "0x020cd308",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov002_020cd308.c",
+      "ordinal": 269
+    },
+    {
+      "symbol": "func_ov002_020cd364",
+      "address": "0x020cd364",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov002_020cd364.c",
+      "ordinal": 270
+    },
+    {
+      "symbol": "func_ov002_020cd39c",
+      "address": "0x020cd39c",
+      "size": "0x00000044",
+      "legacy_source": "src/func_ov002_020cd39c.c",
+      "ordinal": 271
+    },
+    {
+      "symbol": "func_ov002_020cd3e0",
+      "address": "0x020cd3e0",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020cd3e0.cpp",
+      "ordinal": 272
+    },
+    {
+      "symbol": "func_ov002_020cd448",
+      "address": "0x020cd448",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020cd448.cpp",
+      "ordinal": 273
+    },
+    {
+      "symbol": "func_ov002_020cd550",
+      "address": "0x020cd550",
+      "size": "0x000001cc",
+      "legacy_source": "src/func_ov002_020cd550.c",
+      "ordinal": 274
+    },
+    {
+      "symbol": "func_ov002_020cd71c",
+      "address": "0x020cd71c",
+      "size": "0x00000230",
+      "legacy_source": "src/func_ov002_020cd71c.c",
+      "ordinal": 275
+    },
+    {
+      "symbol": "_ZN6Player12St_Swim_MainEv",
+      "address": "0x020cd94c",
+      "size": "0x000009d8",
+      "legacy_source": "src/_ZN6Player12St_Swim_MainEv.cpp",
+      "ordinal": 276
+    },
+    {
+      "symbol": "func_ov002_020ce324",
+      "address": "0x020ce324",
+      "size": "0x0000022c",
+      "legacy_source": "src/func_ov002_020ce324.c",
+      "ordinal": 277
+    },
+    {
+      "symbol": "_ZN6Player12St_Swim_InitEv",
+      "address": "0x020ce550",
+      "size": "0x000000a8",
+      "legacy_source": "src/_ZN6Player12St_Swim_InitEv.cpp",
+      "ordinal": 278
+    },
+    {
+      "symbol": "func_ov002_020ce5f8",
+      "address": "0x020ce5f8",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov002_020ce5f8.c",
+      "ordinal": 279
+    },
+    {
+      "symbol": "func_ov002_020ce798",
+      "address": "0x020ce798",
+      "size": "0x00000124",
+      "legacy_source": "src/func_ov002_020ce798.c",
+      "ordinal": 280
+    },
+    {
+      "symbol": "func_ov002_020ce8bc",
+      "address": "0x020ce8bc",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov002_020ce8bc.c",
+      "ordinal": 281
+    },
+    {
+      "symbol": "func_ov002_020ce9c8",
+      "address": "0x020ce9c8",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov002_020ce9c8.c",
+      "ordinal": 282
+    },
+    {
+      "symbol": "func_ov002_020ceaf4",
+      "address": "0x020ceaf4",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov002_020ceaf4.c",
+      "ordinal": 283
+    },
+    {
+      "symbol": "func_ov002_020ceb54",
+      "address": "0x020ceb54",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov002_020ceb54.c",
+      "ordinal": 284
+    },
+    {
+      "symbol": "func_ov002_020ceb7c",
+      "address": "0x020ceb7c",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov002_020ceb7c.c",
+      "ordinal": 285
+    },
+    {
+      "symbol": "func_ov002_020cec2c",
+      "address": "0x020cec2c",
+      "size": "0x00000184",
+      "legacy_source": "src/func_ov002_020cec2c.c",
+      "ordinal": 286
+    },
+    {
+      "symbol": "func_ov002_020cedb0",
+      "address": "0x020cedb0",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov002_020cedb0.c",
+      "ordinal": 287
+    },
+    {
+      "symbol": "func_ov002_020cede0",
+      "address": "0x020cede0",
+      "size": "0x000001a4",
+      "legacy_source": "src/func_ov002_020cede0.cpp",
+      "ordinal": 288
+    },
+    {
+      "symbol": "func_ov002_020cef84",
+      "address": "0x020cef84",
+      "size": "0x00000288",
+      "legacy_source": "src/func_ov002_020cef84.cpp",
+      "ordinal": 289
+    },
+    {
+      "symbol": "func_ov002_020cf20c",
+      "address": "0x020cf20c",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov002_020cf20c.cpp",
+      "ordinal": 290
+    },
+    {
+      "symbol": "func_ov002_020cf2f8",
+      "address": "0x020cf2f8",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov002_020cf2f8.c",
+      "ordinal": 291
+    },
+    {
+      "symbol": "func_ov002_020cf384",
+      "address": "0x020cf384",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020cf384.c",
+      "ordinal": 292
+    },
+    {
+      "symbol": "_ZN6Player20St_CeilingGrate_MainEv",
+      "address": "0x020cf398",
+      "size": "0x00000324",
+      "legacy_source": "src/_ZN6Player20St_CeilingGrate_MainEv.cpp",
+      "ordinal": 293
+    },
+    {
+      "symbol": "_ZN6Player20St_CeilingGrate_InitEv",
+      "address": "0x020cf6bc",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN6Player20St_CeilingGrate_InitEv.cpp",
+      "ordinal": 294
+    },
+    {
+      "symbol": "func_ov002_020cf700",
+      "address": "0x020cf700",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020cf700.c",
+      "ordinal": 295
+    },
+    {
+      "symbol": "_ZN6Player14St_OnWall_MainEv",
+      "address": "0x020cf714",
+      "size": "0x0000037c",
+      "legacy_source": "src/_ZN6Player14St_OnWall_MainEv.cpp",
+      "ordinal": 296
+    },
+    {
+      "symbol": "_ZN6Player14St_OnWall_InitEv",
+      "address": "0x020cfa90",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN6Player14St_OnWall_InitEv.cpp",
+      "ordinal": 297
+    },
+    {
+      "symbol": "func_ov002_020cfaf0",
+      "address": "0x020cfaf0",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov002_020cfaf0.cpp",
+      "ordinal": 298
+    },
+    {
+      "symbol": "func_ov002_020cfbdc",
+      "address": "0x020cfbdc",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov002_020cfbdc.cpp",
+      "ordinal": 299
+    },
+    {
+      "symbol": "func_ov002_020cfd84",
+      "address": "0x020cfd84",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov002_020cfd84.cpp",
+      "ordinal": 300
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Written by hand, not by tools/tubuild.py create: at the time of writing, create() raised AttributeError in build_manifest_entry the moment a member of the run had no legacy source, and this run has three such members; it also wrote the .cpp before crashing, so its output could not be trusted as a starting point. That defect has SINCE BEEN FIXED on main (#2315 makes create survive a sourceless member, #2323 makes it emit an // @symbol marker per member), so a future entry for this module need not be hand-written. The builder audited all 301 hand-written rows against the pre-promotion tree: ordinals contiguous 0..300, rows tile 0x020bd828..0x020cfea4 with no gap or overlap, and every legacy_source is both a file in the base tree and an exact-path entry in the base ov002 delinks.txt with the matching extension (173 .cpp, 128 .c).",
+    "The source was assembled by a scoped generator that reuses tubuild's own split_legacy_source/unit_functions, because create()'s preamble merge does not scale to 301 members: it emits one merged file-scope declaration per ROM symbol, and 301 independent recoveries of one symbol disagree constantly. Measured instead, and used here: in mwccarm 2004/b56 a declaration written at BLOCK scope inside an `extern \"C\"` region gets C linkage, and two function bodies may declare one C symbol with different types. So every member keeps its own declarations inside its own body and no call site had to be rewritten to fit a merged spelling. The same is true of DATA declarations -- measured directly, contradicting the earlier belief that block-scope data redeclaration is rejected; only a file-scope redeclaration is. That matters for bytes, not just for tidiness: hoisting one canonical data declaration and casting each member's view back with a macro changed the codegen of six members, and the choice of which spelling became canonical depended on which other members were present.",
+    "Only what a function body cannot hold is hoisted: a namespace, a class with static or declared-but-undefined members, and any type named in a member's own signature. Those tags are made unique per member. `struct Sound` and `namespace Sound` were the one true conflict and were resolved to the namespace spelling, which mangles identically.",
+    "PRAGMA, measured with the delete-outright control first, and RE-MEASURED by the builder at the shipped revision -- the writer's counts predate the three near-miss recoveries in this branch and no longer reproduce. The shard for ordinal 35, _ZN6Player7SetAnimEji5Fix12IiEj, carries `#pragma opt_propagation off`. Under default deferred codegen that pragma is FILE-GLOBAL: it costs 46 other members their match (255/301 with it file-global, 300/301 with it simply deleted). Bracketing it in #pragma push/pop buys back nothing at all -- also 300/301, byte-identical to deleting it -- because with codegen deferred the state that binds is the state at end of file. `#pragma defer_codegen off` plus a ROM-ASCENDING source order makes the bracket bind positionally and recovers ordinal 35 as well: 301/301, which is what this entry's verification block records. Deleting only `defer_codegen off` still scores 300/301 on bytes, but the emitted .text order reverses (300 out-of-order ordinal pairs) and the pre-link object audit refuses with `licensed .text functions are not emitted in ROM address order`; the byte compare alone would not have caught it. That is why this file is written low address first, the opposite of the default deferred-codegen convention.",
+    "Two members needed a source change to survive the C-to-C++ language flip, both the same construct and both from the known scalarization family: a two-int struct copy (`*(Pair2i *)dst = *(Pair2i *)(p + k)`) that C compiles as load/load/store/store and C++ scalarizes into load/store/load/store. The array-wrapper view (`struct P2w { int w[2]; }; *(P2w *)dst = *(P2w *)(p + k);`) restores the ROM's shape exactly, in func_ov002_020c14b8 and func_ov002_020c25a8. Three other spellings were measured and rejected first (two scalar locals: 4 words wrong; copy through a named temporary: 12 bytes too long). The builder diffed all 301 shipped bodies against their pre-promotion shards and found a SECOND change family this note omitted: func_ov002_020c6fe4 and func_ov002_020c897c each do arithmetic on a `void **` load, `*(void**)(c + id*4 + 0xdc) + 0x50`, which is a GNU extension C accepts under -gccext and C++ does not; both casts became `char **`. Byte-neutral -- the address arithmetic is identical -- but an edit. Apart from those four members and the local struct TAG renames that hoisting forces (Vector3 -> Vec3i, V3 -> V3a/V3b, Obj -> ObjHS and Obj2fec, State -> State3i, Camera -> CameraRaw), no body was rewritten.",
+    "All 301 members reproduce the cartridge byte-for-byte; none is NONMATCHING and none carries an asm body."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "Dozens of the 301 members declare a Vector3 local, and include/types.h declares ~Vector3() {} inline in-class, so this TU re-emits Vector3's vague-linkage D1 (4 bytes, bx lr, STB_LOPROC) alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild hands objisolate those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0"
+    },
+    {
+      "symbol": "_ZN6V3QuadD1Ev",
+      "disposition": "deadstrip",
+      "reason": "func_ov002_020c38a0 builds a four-Vector3 aggregate on the stack. In the shard it is an unnamed local class, which mwcc mangles with a file-and-counter tag (_ZN21@class$NNNNPlayer_cppD1Ev) that moves whenever the file does; it is given a file-scope name here so the symbol this row licenses is stable. Its implicit destructor is emitted as vague linkage and is homeless -- no symbols.txt anywhere names it, the retail link discarded it, and the 301 licensed bodies reproduce the cartridge byte-for-byte without it."
+    }
+  ],
+  "externalized_output": [],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-Player/Player.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 301,
+    "functions_declared": 301,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN6V3QuadD1Ev"
+      ],
+      "deadstripped": [
+        "_ZN6V3QuadD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        87,
+        181
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-Player/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020bd828",
+        "end": "0x020cfea4",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020bd828",
+          "end": "0x020cfea4",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 301
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

@@ -1,8 +1,8 @@
 extern short data_02082214[];
 extern int data_ov002_021101b4[];
-extern void _ZN6Player11ChangeStateERNS_5StateE(int self, int state);
+extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
 
-void func_ov002_020d0948(int self)
+void func_ov002_020d0948(char* self)
 {
     /* The two header reads go through a byte pointer: with the int-typed
        self, mwcc materializes the +0x703 offset from the literal pool
