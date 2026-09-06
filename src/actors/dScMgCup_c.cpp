@@ -1,32 +1,73 @@
 //cpp
-/* SHADOW translation unit -- not enrolled in the production ROM build.
- * ov006/dScMgCup_c: 32 functions, 0x020de988..0x020e0638.
+/* dScMgCup_c -- the cup-shuffle minigame scene, ov006.
  *
- * The boundary is reconstructed through the complete class run, the adjacent
- * MG_CUP factory, and its empty array-element constructor; dScMgCurling_c begins
- * exactly at the next address. The factory allocation, vptr transition, and
- * constructed member arrays independently identify the class.
+ * One translation unit, ROM ordinals 0..31 of the contiguous linker run
+ * 0x020de988..0x020e0638: the destructor pair, fourteen file-local helpers,
+ * two empty array-element callbacks, the eight State* members the scene
+ * dispatches through, the five non-destructor vtable overrides, and the MG_CUP
+ * factory.  dScMgCurling_c begins exactly at the next address.  The factory's
+ * allocation size, its vptr transition and its constructed member arrays
+ * identify the class independently of the boundary.
  *
- * #pragma defer_codegen off is load-bearing: eager ROM-order emission lets the
- * five member-local optimizer settings remain scoped and emits D1/D0 in cartridge
- * order. The eight State* aliases are class-anchored inferences from the PMF table
- * built by __sinit_ov006_021303d0; their exact original spellings are not claimed.
+ * FUNCTION ORDER IS THE ROM'S OWN, LOWEST ADDRESS FIRST, and that is one
+ * decision with `#pragma defer_codegen off` below: generating at parse time
+ * emits .text in source order where deferred codegen reverses it, it keeps the
+ * five member-local optimiser brackets scoped, and it puts D1 ahead of D0 the
+ * way the cartridge has them.  Do not reorder and do not drop that pragma.
  *
- * Current focused result: 31/32 byte+relocation matches. StateShuffle has the
- * correct 0x720-byte instruction shape and a measured nine-word scratch-register
- * coloring residual under eager emission. Compiler-only D2/RTTI/vtable passengers
- * are explicitly deadstripped in the manifest in favor of canonical ROM copies.
+ * NOT ONE FIELD IN THIS CLASS'S OWN TAIL HAS A PROVEN NAME.  Eleven offsets in
+ * 0x5400..0x5470 are proven -- each from a load/store displacement or from a
+ * constructor call site -- and zero names are.  That is why the bodies below
+ * address state as `*(T *)(c + 0x54xx)` rather than through members: the raw
+ * offset is the honest spelling here, not a leftover the next pass should
+ * tidy away.  include/dScMgCup_c.h does spell a few of them (mState,
+ * mShuffleAngle, mShuffleSpeed, mOnes, mIds, mFlags); those are that header's
+ * inferences, not ROM facts, and only mState is used from here.
+ *
+ * THE EIGHT State* SPELLINGS ARE INFERENCES TOO.  __sinit_ov006_021303d0 fixes
+ * the pointer-to-member table's ORDER and each body's behaviour fixes its role,
+ * but the original names are not in the cartridge.  The same holds for
+ * Virtual50 and for dScMgCup_c_classInit.
+ *
+ * FIVE SPELLINGS IN THIS FILE WERE MEASURED AND MUST NOT BE TIDIED.  Each
+ * carries its own comment where it sits: func_ov006_020ded00's two spellings of
+ * +0x12; func_ov006_020def80's late `cup = i;`, which the two goto paths skip;
+ * StateShuffle's read-modify-write on +0x545c/+0x545e; Behavior's `(int)`
+ * launders over the three parallel per-cup arrays; and Render's two
+ * pointer-arithmetic towers.  Every other cast of that shape in this file was
+ * measured one at a time and deleted as byte-neutral -- a cast tower here is
+ * either load-bearing and commented, or gone.
+ *
+ * ONE byte-neutral spelling is kept anyway and is labelled as such: the
+ * `speed = -speed;` statement split inside StateShuffle.  An earlier revision
+ * claimed it bought bytes; re-measurement says it does not.  If you find any
+ * other claim in this file that a spelling is load-bearing, it was produced by
+ * deleting that spelling and re-running tools/tubuild.py verify -- keep it that
+ * way.
+ *
+ * Result: 32/32 byte+relocation matches.  Compiler-only D2/RTTI/vtable
+ * passengers are externalized in the manifest to the canonical cartridge
+ * copies; this TU claims no data and no bss.
  */
 /* Shared declarations first; TU-private layouts follow. */
 #include "dScMgCup_c.h"
 #include "types.h"
 #include "decl_common.h"
 
-/* TU-private layouts retained only where no shared project type exists yet. */
+/* TU-private layouts, kept only where no shared project type exists yet.
+   Three of them are an 8-byte pair of s32 under three names, because they are
+   three unrelated tables: Pair6 is the static cup-position table in .data,
+   Frame is an animation {id,length} row, and P8 is the per-cup live position
+   pair in the object's own tail. */
+
+/* One row of data_ov006_0213c094: a packed left/right nibble pair per round. */
 typedef struct { u8 pad; u8 lo:4; u8 hi:4; } Entry094;
 
 typedef struct { int a, b; } Pair6;
 
+/* Stand-in for an unrelated polymorphic object reached by slot, not by name.
+   Only slot 18 is ever called through it; the other nineteen exist to place
+   that slot at the right index. */
 struct Obj {
     virtual void v00();
     virtual void v01();
@@ -53,32 +94,13 @@ struct Obj {
 /* The initializer at 0x021303d0 proves an eight-entry member-function table. */
 typedef void (dScMgCup_c::*PMF)();
 
+/* One row of an animation table in data_ov006_0213c0d8: {sprite id, length}. */
 typedef struct Frame {
     int a, b;
 } Frame;
 
-struct VtObj {
-    virtual void d0();
-    virtual void d1();
-    virtual void d2();
-    virtual void d3();
-    virtual void d4();
-    virtual void d5();
-    virtual void d6();
-    virtual void d7();
-    virtual void d8();
-    virtual void d9();
-    virtual void d10();
-    virtual void d11();
-    virtual void d12();
-    virtual void d13();
-    virtual void d14();
-    virtual void d15();
-    virtual void d16();
-    virtual void d17();
-    virtual void m18(int);
-};
-
+/* InitResources' own window onto the object tail -- the one place in this file
+   where the three parallel per-cup arrays are written as arrays. */
 typedef struct Obj6e {
     char _p0[0x53e8];
     Pair6 pairs[3];  /* 0x53e8 */
@@ -90,7 +112,6 @@ typedef struct Obj6e {
     u8 flags[3];     /* 0x5465 */
 } Obj6e;
 
-
 extern "C" {
 extern void func_ov006_020dec5c(char *p, int a, int b);
 extern int func_ov006_020deac8(char *p, int a, int b, int c);
@@ -101,7 +122,7 @@ struct OamAttr;
 extern int data_ov006_0213c114[];
 extern unsigned char data_ov006_0213c064[];
 extern int data_ov006_0213c074[];
-extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi( int show, struct OamAttr* attr, int a, int b, int c, int d, int e, int f);
+extern int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int show, struct OamAttr* attr, int a, int b, int c, int d, int e, int f);
 extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int x);
 extern int func_02053200(int x);
@@ -114,7 +135,7 @@ extern Pair6 data_ov006_0213c0c4[];
 extern Pair6 data_ov006_0213c0a8[];
 extern Pair6 data_ov006_0213c0ac[];
 extern int RandomIntInternal(int *seed);
-extern "C" void func_ov004_020b0a54(int c);
+extern void func_ov004_020b0a54(int c);
 extern void func_ov006_020def80(char *self, int i);
 extern void func_ov006_020c2594(void *c);
 extern void func_ov004_020b1b78(void *c, int val);
@@ -136,6 +157,7 @@ extern signed char data_ov006_0213c084[];
 extern signed char data_ov006_0213c085[];
 extern void func_ov006_020df024(char *o);
 extern void func_ov006_020c2924(char *c);
+/* The live per-cup {x, y} pair at +0x53e8, seen from Render. */
 struct P8 { int a; int b; };
 void func_ov006_020debb4(char *a, int b);
 void func_ov006_020deed8(int a0, void *a1, int a2, int a3, int a4, int a5);
@@ -143,8 +165,8 @@ void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void func_ov004_020b2574(int arg0, int arg1);
 void func_ov004_020b1e34(void *a, int b, int c, int d);
 extern char data_ov006_02139df4[];
-extern "C" PMF data_ov006_02141870[];
-extern "C" Frame *data_ov006_0213c0d8[];
+extern PMF data_ov006_02141870[];
+extern Frame *data_ov006_0213c0d8[];
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
@@ -169,18 +191,14 @@ extern void *_ZTV10dScMgCup_c[];
 
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN10dScMgCup_cD1Ev, 0x020de988, size 0x94 */
-/* -------------------------------------------------------------------------- */
+/* [0] 0x020de988  _ZN10dScMgCup_cD1Ev  size 0x94 */
 // @symbol _ZN10dScMgCup_cD1Ev
-/* recovered: real C++ destructor. The three explicit calls reproduce the
-   ROM's own recovered body (func_ov006_020de988, pre-migration) exactly:
-   destroy mArray2 first, then mArray1 (reverse of the factory's
-   construction order), then the 0x4f38 table -- addressed by raw offset
-   from `this` because the header keeps it opaque. Everything after -- own
-   vtable store, mSysTracker destruction, chain to ~dScMgBase_c() -- is the
-   compiler's own inlining of dScMgSingle3DBase_c's now-inline destructor
-   (see include/dScMgSingle3DBase_c.h's own note). */
+/* The three explicit calls are the factory's construction order run backwards:
+   mArray2, then mArray1, then the 0x4f38 table -- that one addressed by raw
+   offset because the header keeps it opaque.  Everything the ROM does after
+   them (own vtable store, the tracker's destruction, the chain up to
+   ~dScMgBase_c) is the compiler inlining dScMgSingle3DBase_c's destructor, so
+   none of it is written here.  This one definition emits ordinal 1, D0, too. */
 dScMgCup_c::~dScMgCup_c()
 {
     __destroy_arr(mArray2, 3, 8, (void *)NullDestructor_0203d47c);
@@ -188,23 +206,13 @@ dScMgCup_c::~dScMgCup_c()
     func_ov006_020c3288((char *)this + 0x4f38);
 }
 
-/* The single source-level destructor definition above also emits the D0
- * variant at ROM ordinal 1. */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov006_020deac4, 0x020deac4, size 0x4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020deac4(void)
+/* [2] 0x020deac4  func_ov006_020deac4  size 0x4 */
+extern "C" void func_ov006_020deac4(void)
 {
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov006_020deac8, 0x020deac8, size 0x28 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020deac8(char *p, int, int, int)
+/* [3] 0x020deac8  func_ov006_020deac8  size 0x28 */
+extern "C" int func_ov006_020deac8(char *p, int, int, int)
 {
     int n = 0;
     do {
@@ -215,97 +223,73 @@ int func_ov006_020deac8(char *p, int, int, int)
     } while (n < 0x20);
     return n;
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov006_020deaf0, 0x020deaf0, size 0x58 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020deaf0(char* p, int key, int a, int b){
-  int i;
-  for(i=0; i<0x20; i++){
-    if(*(unsigned char*)(p+0x15) != 0){
-      if(key == *(signed char*)(p+0x17)){
-        func_ov006_020dec5c(p, a, b);
-      }
+/* [4] 0x020deaf0  func_ov006_020deaf0  size 0x58 */
+extern "C" void func_ov006_020deaf0(char *p, int key, int a, int b)
+{
+    int i;
+    for (i = 0; i < 0x20; i++) {
+        if (*(unsigned char *)(p + 0x15) != 0) {
+            if (key == *(signed char *)(p + 0x17)) {
+                func_ov006_020dec5c(p, a, b);
+            }
+        }
+        p += 0x18;
     }
-    p += 0x18;
-  }
-}
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov006_020deb48, 0x020deb48, size 0x6c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov006_020deb48(char *c, int a, int b, int d, signed char e) {
-    int r = func_ov006_020deac8(c, a, b, d);
-    if (r >= 0 && r < 0x20) {
-        func_ov006_020ded84(c + r * 0x18, a, b, d, e);
-        return r;
+/* [5] 0x020deb48  func_ov006_020deb48  size 0x6c */
+extern "C" int func_ov006_020deb48(char *c, int a, int b, int d, signed char e) {
+    int slot = func_ov006_020deac8(c, a, b, d);
+    if (slot >= 0 && slot < 0x20) {
+        func_ov006_020ded84(c + slot * 0x18, a, b, d, e);
+        return slot;
     }
     return -1;
 }
+
+/* [6] 0x020debb4  func_ov006_020debb4  size 0x48 */
+extern "C" void func_ov006_020debb4(char *a, int b)
+{
+    int i = 0;
+    do {
+        if (*(unsigned char *)(a + 0x15) != 0 && b == *(signed char *)(a + 0x17))
+            func_ov006_020dec88(a);
+        i++;
+        a += 0x18;
+    } while (i < 0x20);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov006_020debb4, 0x020debb4, size 0x48 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020debb4(char* a, int b){
-  int i = 0;
-  do {
-    if (*(unsigned char*)(a+0x15) != 0 && b == *(signed char*)(a+0x17))
-      func_ov006_020dec88(a);
-    i++;
-    a += 0x18;
-  } while (i < 0x20);
-}
+/* [7] 0x020debfc  func_ov006_020debfc  size 0x40 */
+extern "C" void func_ov006_020debfc(char *c)
+{
+    int i;
+    char *p = c;
+    for (i = 0; i < 0x20; i++) {
+        if (*(unsigned char *)(p + 0x15)) func_ov006_020ded00((int)p);
+        p += 0x18;
+    }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov006_020debfc, 0x020debfc, size 0x40 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020debfc(char* c){
-  int i;
-  char* p = c;
-  for (i = 0; i < 0x20; i++) {
-    if (*(unsigned char*)(p+0x15)) func_ov006_020ded00((int)p);
-    p += 0x18;
-  }
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov006_020dec3c, 0x020dec3c, size 0x20 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020dec3c(char *p) {
+/* [8] 0x020dec3c  func_ov006_020dec3c  size 0x20 */
+extern "C" void func_ov006_020dec3c(char *p) {
     int i;
     for (i = 0; i < 0x20; i++) {
         *(unsigned char *)(p + 0x15) = 0;
         p += 0x18;
     }
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov006_020dec5c, 0x020dec5c, size 0x2c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020dec5c(char* self, int a, int b)
+/* [9] 0x020dec5c  func_ov006_020dec5c  size 0x2c */
+extern "C" void func_ov006_020dec5c(char* self, int a, int b)
 {
     if (*(unsigned char*)(self + 0x16) != 1)
         return;
     *(int*)self += a;
-    *(int*)(((int)self + 4)) += b;
-}
+    *(int*)(self + 4) += b;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov006_020dec88, 0x020dec88, size 0x78 */
-/* -------------------------------------------------------------------------- */
+/* [10] 0x020dec88  func_ov006_020dec88  size 0x78 */
 extern "C" void func_ov006_020dec88(char* t)
 {
     int idx = *(signed char*)(t + 0x12) + *(unsigned char*)(t + 0x13) * 6;
@@ -320,11 +304,8 @@ extern "C" void func_ov006_020dec88(char* t)
         0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov006_020ded00, 0x020ded00, size 0x84 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ded00(int self)
+/* [11] 0x020ded00  func_ov006_020ded00  size 0x84 */
+extern "C" void func_ov006_020ded00(int self)
 {
   *((int *) (self + 0)) += *((int *) (self + 8));
   *((int *) (self + 4)) += *((int *) (self + 0xc));
@@ -348,13 +329,9 @@ void func_ov006_020ded00(int self)
     *((signed char *) (self + 0x15)) = 0;
   }
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov006_020ded84, 0x020ded84, size 0x78 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020ded84(char* t, int a, int b, int c, signed char e)
+/* [12] 0x020ded84  func_ov006_020ded84  size 0x78 */
+extern "C" void func_ov006_020ded84(char* t, int a, int b, int c, signed char e)
 {
     if (a == 2) {
         *(unsigned char*)(t + 0x16) = 0;
@@ -375,153 +352,138 @@ void func_ov006_020ded84(char* t, int a, int b, int c, signed char e)
         *(unsigned char*)(t + 0x12) = 5;
     *(unsigned char*)(t + 0x14) = 3;
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov006_020dedfc, 0x020dedfc, size 0xdc */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020dedfc(char *r7, int r6, int r5, int r4)
+/* [13] 0x020dedfc  func_ov006_020dedfc  size 0xdc */
+extern "C" void func_ov006_020dedfc(char *self, int anim, int frame, int cup)
 {
-    if (r6 == 6) {
-        if (r5 == 4) {
-            func_02012718(0x1cf, (int)*(void **)(r7 + (r4 << 3) + 0x5000 + 0x3e8));
-        } else if (r5 == 5 || r5 == 0xb) {
-            func_02012718(0x1d0, (int)*(void **)(r7 + (r4 << 3) + 0x5000 + 0x3e8));
+    if (anim == 6) {
+        if (frame == 4) {
+            func_02012718(0x1cf, (int)*(void **)(self + (cup << 3) + 0x5000 + 0x3e8));
+        } else if (frame == 5 || frame == 0xb) {
+            func_02012718(0x1d0, (int)*(void **)(self + (cup << 3) + 0x5000 + 0x3e8));
         }
     }
-    if (r6 == 5 && r5 == 6 && r4 == *(unsigned char *)(r7 + 0x5000 + 0x46d)) {
-        func_02012718(0x1ce, (int)*(void **)(r7 + (r4 << 3) + 0x5000 + 0x3e8));
+    if (anim == 5 && frame == 6 && cup == *(unsigned char *)(self + 0x5000 + 0x46d)) {
+        func_02012718(0x1ce, (int)*(void **)(self + (cup << 3) + 0x5000 + 0x3e8));
     }
-    if (r6 != 1 && r6 != 4) return;
-    if (r5 != 4) return;
+    if (anim != 1 && anim != 4) return;
+    if (frame != 4) return;
     _ZN5Sound12PlayBank2_2DEj(0x1cc);
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov006_020deed8, 0x020deed8, size 0xa8 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020deed8(int a0, void *a1, int a2, int a3, int s, int a5)
+/* [14] 0x020deed8  func_ov006_020deed8  size 0xa8 */
+extern "C" void func_ov006_020deed8(int self, void *list, int x, int y, int scale, int modeArg)
 {
-    unsigned char *sl;
-    int a5_local;
-    int e2;
-    int e3;
-    int neg1, zero, lim;
+    unsigned char *e;
+    int mode;
+    int sx;
+    int sy;
 
-    sl = (unsigned char *)a1;
-    e2 = a2 >> 12;
-    e3 = a3 >> 12;
-    a5_local = a5;
-    s = func_02053200(s);
-    neg1 = -1;
-    zero = 0;
-    lim = 0xffff;
+    e = (unsigned char *)list;
+    sx = x >> 12;
+    sy = y >> 12;
+    mode = modeArg;
+    scale = func_02053200(scale);
 
     for (;;) {
-        int r = func_ov004_020af770((int)sl, e2, e3, neg1, neg1, s, zero);
-        if (r != 0) {
-            if (a5_local == 2) {
-                if ((unsigned)(*(int *)(sl + 4) << 0x10) >> 0x1c == 3) {
-                    int *p = (int *)(((int)r + 4));
+        int oam = func_ov004_020af770((int)e, sx, sy, -1, -1, scale, 0);
+        if (oam != 0) {
+            if (mode == 2) {
+                if ((unsigned)(*(int *)(e + 4) << 0x10) >> 0x1c == 3) {
+                    int *p = (int *)(oam + 4);
                     *p = (*p & ~0xf000) | 0x4000;
                 }
             }
         }
-        if (*(unsigned short *)(sl + 6) == (unsigned short)lim)
+        if (*(unsigned short *)(e + 6) == 0xffff)
             break;
-        sl += 8;
+        e += 8;
     }
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov006_020def80, 0x020def80, size 0xa4 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020def80(char *c, int i)
+/* [15] 0x020def80  func_ov006_020def80  size 0xa4 */
+extern "C" void func_ov006_020def80(char *c, int i)
 {
-  unsigned char t;
-  char *b = c + i;
-  int new_var;
-  b += 0x5000;
-  t = *((unsigned char *) (b + 0x465));
-  if (t == 0)
-  {
-    t = *((unsigned char *) (b + 0x462));
-    if (t != 0)
-    {
-      char *s = c + (i << 2);
-      s += 0x5000;
-      *((int *) (s + 0x434)) = 4;
-    }
-    else
-    {
-      char *s = c + (i << 2);
-      s += 0x5000;
-      *((int *) (s + 0x434)) = 1;
-    }
-    goto epilogue;
-  }
-  t = *((unsigned char *) (b + 0x462));
-  if (t != 0)
-  {
-    char *s = c + (i << 2);
-    s += 0x5000;
-    *((int *) (s + 0x434)) = 5;
-    {
-      char *p;
-      if ((*((unsigned char *) ((c + 0x5000) + 0x46d))) == 0xff)
-      {
-        if ((*((unsigned char *) ((c + 0x5000) + 0x469))) != 1)
-        {
-          *((unsigned char *) ((c + 0x5000) + 0x46d)) = (unsigned char) i;
+    unsigned char flag;
+    char *row = c + i;
+    int cup;
+    row += 0x5000;
+    flag = *((unsigned char *) (row + 0x465));
+    if (flag == 0) {
+        flag = *((unsigned char *) (row + 0x462));
+        if (flag != 0) {
+            char *out = c + (i << 2);
+            out += 0x5000;
+            *((int *) (out + 0x434)) = 4;
+        } else {
+            char *out = c + (i << 2);
+            out += 0x5000;
+            *((int *) (out + 0x434)) = 1;
         }
-      }
+        goto epilogue;
     }
-    goto epilogue;
-  }
-  {
-    char *s = c + (i << 2);
-    s += 0x5000;
-    *((int *) (s + 0x434)) = 2;
-  }
-  new_var = i;
-  epilogue:
-  {
-    char *s = c + (new_var << 2);
-    s += 0x5000;
-    *((int *) (s + 0x440)) = 0;
-    *((int *) (s + 0x44c)) = 0;
-  }
+    flag = *((unsigned char *) (row + 0x462));
+    if (flag != 0) {
+        char *out = c + (i << 2);
+        out += 0x5000;
+        *((int *) (out + 0x434)) = 5;
+        if ((*((unsigned char *) ((c + 0x5000) + 0x46d))) == 0xff) {
+            if ((*((unsigned char *) ((c + 0x5000) + 0x469))) != 1) {
+                *((unsigned char *) ((c + 0x5000) + 0x46d)) = (unsigned char) i;
+            }
+        }
+        goto epilogue;
+    }
+    {
+        char *out = c + (i << 2);
+        out += 0x5000;
+        *((int *) (out + 0x434)) = 2;
+    }
+    cup = i;
 
-}
+    /* All three arms clear the same two per-cup counters, but only this last
+       one assigns `cup` -- the two `goto epilogue` paths reach the label with
+       it still unset.  Reading it there is UNDEFINED BEHAVIOUR in C++, and it
+       is deliberate: hoisting the assignment to the declaration
+       (`int cup = i;`) and deleting this line was measured and takes this
+       function from MATCH to DIFF.  Do not tidy it here.
+
+       THE HAZARD IS CLOSED, THOUGH, AND THE PORT'S REPAIR IS KNOWN.  The
+       cartridge's own epilogue at 0x020df00c is `add r0, r0, r1, lsl #2`, and
+       r1 -- the incoming `i` -- is never written on any path through this
+       function (r1 is first assigned at 0x020df014, after that use, as the zero
+       for the two stores).  So the ROM's behaviour is `cup == i`
+       unconditionally, and `int cup = i;` is not a guess at the undefined value
+       but a provably behaviour-preserving rewrite.  A host port should make
+       exactly that edit; only the byte-matching build needs the split. */
+epilogue:
+    {
+        char *out = c + (cup << 2);
+        out += 0x5000;
+        *((int *) (out + 0x440)) = 0;
+        *((int *) (out + 0x44c)) = 0;
+    }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov006_020df024, 0x020df024, size 0x198 */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov006_020df024(char *a)
+/* [16] 0x020df024  func_ov006_020df024  size 0x198 */
+extern "C" void func_ov006_020df024(char *a)
 {
     u32 rnd = (u32)RandomIntInternal(&data_0209e650);
-    u32 r16 = rnd >> 0x10;
-    int lr;
+    u32 bits = rnd >> 0x10;
+    int idx;
     int rem;
 
-    if (r16 & 1) {
-        lr = data_ov006_0213c094[*(u8*)(a + 0x5461)].hi;
+    if (bits & 1) {
+        idx = data_ov006_0213c094[*(u8*)(a + 0x5461)].hi;
     } else {
-        lr = data_ov006_0213c094[*(u8*)(a + 0x5461)].lo;
+        idx = data_ov006_0213c094[*(u8*)(a + 0x5461)].lo;
     }
 
-    lr = lr * 2;
-    if (r16 & 2)
-        lr += 1;
+    idx = idx * 2;
+    if (bits & 2)
+        idx += 1;
 
-    *(s16*)(a + 0x545e) = data_ov006_0213c0f4[lr];
+    *(s16*)(a + 0x545e) = data_ov006_0213c0f4[idx];
 
     rem = (rnd >> 0x18) % 3;
     *(int*)(a + 0x542c) = data_ov006_0213c0c0[rem].a;
@@ -559,26 +521,22 @@ void func_ov006_020df024(char *a)
         return;
     }
 }
-}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN10dScMgCup_c9StateIdleEv, 0x020df1bc, size 0x4 */
-/* -------------------------------------------------------------------------- */
+/* [17] 0x020df1bc  _ZN10dScMgCup_c9StateIdleEv  size 0x4 */
 // @symbol _ZN10dScMgCup_c9StateIdleEv
 void dScMgCup_c::StateIdle()
 {
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN10dScMgCup_c11StateFinishEv, 0x020df1c0, size 0xcc */
-/* -------------------------------------------------------------------------- */
+
+/* [18] 0x020df1c0  _ZN10dScMgCup_c11StateFinishEv  size 0xcc */
 // @symbol _ZN10dScMgCup_c11StateFinishEv
 void dScMgCup_c::StateFinish()
 {
     char *c = (char *)this;
-    *(int*)(((int)c + 0x541c)) -= 1;
+    *(int*)(c + 0x541c) -= 1;
     if (*(int*)(c + 0x5000 + 0x41c) > 0) return;
     if (*(unsigned char*)(c + 0x5000 + 0x469) != 0) {
-        if (*(int*)(c + 0xb4) < 0x270f) *(int*)(((int)c + 0xb4)) += 1;
+        if (*(int*)(c + 0xb4) < 0x270f) *(int*)(c + 0xb4) += 1;
         if (*(int*)(c + 0xb4) > *(int*)(c + 0xb8)) *(int*)(c + 0xb8) = *(int*)(c + 0xb4);
         func_ov004_020b0a54(0);
         *(int*)(c + 0x5000 + 0x418) = 7;
@@ -592,52 +550,48 @@ void dScMgCup_c::StateFinish()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN10dScMgCup_c11StateResultEv, 0x020df28c, size 0x130 */
-/* -------------------------------------------------------------------------- */
+/* [19] 0x020df28c  _ZN10dScMgCup_c11StateResultEv  size 0x130 */
 // @symbol _ZN10dScMgCup_c11StateResultEv
 #pragma push
 #pragma opt_strength_reduction off
 void dScMgCup_c::StateResult()
 {
     char *self = (char *)this;
-        int r4;
-        int i;
-        int *pc = (int *)(((int)self + 0x541c));
-        *pc = *pc - 1;
-        if (*(int *)(self + 0x5000 + 0x41c) > 0) return;
-        for (i = 0; i < 3; i++) {
-            u8 *q = (u8 *)(((int)self + i + 0x5465));
-            if (*q == 0) {
-                *q = 1;
-                func_ov006_020def80(self, i);
-            }
+    int score;
+    int i;
+    int *pc = (int *)(self + 0x541c);
+    *pc = *pc - 1;
+    if (*(int *)(self + 0x5000 + 0x41c) > 0) return;
+    for (i = 0; i < 3; i++) {
+        u8 *q = (u8 *)(self + i + 0x5465);
+        if (*q == 0) {
+            *q = 1;
+            func_ov006_020def80(self, i);
         }
-        r4 = *(int *)(self + 0xb4);
-        if (*(u8 *)(self + 0x5000 + 0x469) != 0) {
-            *(int *)(self + 0x5000 + 0x41c) = 0x3c;
-            func_ov006_020c2594(self + 0x4f38);
-            r4++;
-        } else {
-            func_ov004_020b1b78(self, 1);
-            if (*(int *)(self + 0xa8) > 0) {
-                *(int *)(self + 0x5000 + 0x41c) = 0x96;
-                func_ov006_020c2664(self + 0x4f38);
-            } else {
-                *(int *)(self + 0x5000 + 0x41c) = 0x1e;
-                func_ov006_020c2440(self + 0x4f38);
-            }
-            func_02012790(0x12f);
-        }
-        func_ov004_020adb1c(r4);
-        *(int *)(self + 0x5000 + 0x418) = 6;
-        *(u8 *)(self + 0xc3) = 0;
     }
+    score = *(int *)(self + 0xb4);
+    if (*(u8 *)(self + 0x5000 + 0x469) != 0) {
+        *(int *)(self + 0x5000 + 0x41c) = 0x3c;
+        func_ov006_020c2594(self + 0x4f38);
+        score++;
+    } else {
+        func_ov004_020b1b78(self, 1);
+        if (*(int *)(self + 0xa8) > 0) {
+            *(int *)(self + 0x5000 + 0x41c) = 0x96;
+            func_ov006_020c2664(self + 0x4f38);
+        } else {
+            *(int *)(self + 0x5000 + 0x41c) = 0x1e;
+            func_ov006_020c2440(self + 0x4f38);
+        }
+        func_02012790(0x12f);
+    }
+    func_ov004_020adb1c(score);
+    *(int *)(self + 0x5000 + 0x418) = 6;
+    *(u8 *)(self + 0xc3) = 0;
+}
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN10dScMgCup_c11StateSelectEv, 0x020df3bc, size 0x184 */
-/* -------------------------------------------------------------------------- */
+/* [20] 0x020df3bc  _ZN10dScMgCup_c11StateSelectEv  size 0x184 */
 // @symbol _ZN10dScMgCup_c11StateSelectEv
 #pragma push
 #pragma opt_common_subs off
@@ -693,9 +647,7 @@ void dScMgCup_c::StateSelect()
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN10dScMgCup_c17StateWaitForInputEv, 0x020df540, size 0x78 */
-/* -------------------------------------------------------------------------- */
+/* [21] 0x020df540  _ZN10dScMgCup_c17StateWaitForInputEv  size 0x78 */
 // @symbol _ZN10dScMgCup_c17StateWaitForInputEv
 void dScMgCup_c::StateWaitForInput()
 {
@@ -706,9 +658,8 @@ void dScMgCup_c::StateWaitForInput()
     func_ov004_020b0cac(0xf, 0x80, 0x38, 0, -1, 0xd);
     *(int *)(c + 0x5418) = 4;
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN10dScMgCup_c12StateShuffleEv, 0x020df5b8, size 0x720 */
-/* -------------------------------------------------------------------------- */
+
+/* [22] 0x020df5b8  _ZN10dScMgCup_c12StateShuffleEv  size 0x720 */
 // @symbol _ZN10dScMgCup_c12StateShuffleEv
 #pragma push
 #pragma opt_common_subs off
@@ -726,23 +677,23 @@ void dScMgCup_c::StateShuffle()
         *(int*)(c + 0x5458) = func_02012468(*(int*)(c + 0x5458), 2, 0x1cb, 2, 0, amp, 0, 0);
     }
 
-    *(u16*)(((long long)(int)(c + 0x545c))) += *(s16*)(c + 0x545e);
+    *(u16*)(c + 0x545c) += *(s16*)(c + 0x545e);
 
     {
-        s16 vv = *(s16*)(c + 0x545e);
-        if ((vv >= 0 && *(u16*)(c + 0x545c) >= 0x8000u) ||
-            (vv < 0 && *(u16*)(c + 0x545c) <= 0x8000u)) {
+        s16 speed = *(s16*)(c + 0x545e);
+        if ((speed >= 0 && *(u16*)(c + 0x545c) >= 0x8000u) ||
+            (speed < 0 && *(u16*)(c + 0x545c) <= 0x8000u)) {
             *(u16*)(c + 0x545c) = 0x8000;
         }
     }
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
-        int sv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
-            - (int)(((long long)sv * *(int*)(c + 0x5408) + 0x800) >> 12);
+            - (int)(((long long)sinv * *(int*)(c + 0x5408) + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -762,11 +713,11 @@ void dScMgCup_c::StateShuffle()
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
-        int sv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
-            + (int)(((long long)sv * *(int*)(c + 0x5408) + 0x800) >> 12);
+            + (int)(((long long)sinv * *(int*)(c + 0x5408) + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
@@ -786,13 +737,13 @@ void dScMgCup_c::StateShuffle()
 
     {
         char *state = c + 0x5400;
-        u16 uu = *(u16*)(state + 0x5c);
-        if (uu == 0x8000) {
+        u16 angle = *(u16*)(state + 0x5c);
+        if (angle == 0x8000) {
             int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
             int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
             *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420) = tb;
             *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420) = ta;
-            *(u8*)(((long long)(int)(c + 0x5460))) -= 1;
+            *(u8*)(c + 0x5460) -= 1;
             if (*(u8*)(c + 0x5460) == 0) {
                 *(int*)(c + 0x541c) = 0x1e;
                 *(int*)(c + 0x5418) = 3;
@@ -802,10 +753,31 @@ void dScMgCup_c::StateShuffle()
                 *(int*)(c + 0x5418) = 1;
             }
         } else if (*(u8*)(c + 0x546a) != 0) {
-            s16 vv = *(s16*)(state + 0x5e);
-            if ((vv >= 0 && uu >= 0x5555u) || (vv < 0 && uu <= 0xaaabu)) {
-                *(s16*)(state + 0x5e) = -vv;
-                *(u16*)(state + 0x5c) += 0x8000;
+            s16 speed = *(s16*)(state + 0x5e);
+            if ((speed >= 0 && angle >= 0x5555u) || (speed < 0 && angle <= 0xaaabu)) {
+                /* TWO of the spellings below are load-bearing, each measured by
+                   removal on this tree:
+
+                   (1) These stores must respell the FULL offset from `c`.  The
+                   two loads above share one base register through `state`, but
+                   the ROM re-materialises `this + 0x5400` here.  Reusing the
+                   cached base gives DIFF *and* a wrong relocation destination
+                   (`data_ov006_0213c085` where the ROM has `0x0213c084`).
+
+                   (2) The increment must be a plain read-modify-write.  Writing
+                   it `*(u16*)(c + 0x545c) += 0x8000;` makes mwcc CSE the field
+                   address into a register and drop the displacement, which
+                   `opt_common_subs off` (in force over this function) does not
+                   undo.  DIFF.
+
+                   The split `speed = -speed;` statement is NOT load-bearing, and
+                   an earlier revision of this comment wrongly said it was.
+                   Fusing it into the store as `*(s16*)(c + 0x545e) = -speed;`
+                   still gives 32/32 MATCH -- measured, not reasoned.  It is kept
+                   split only because it reads better beside the guard above. */
+                speed = -speed;
+                *(s16*)(c + 0x545e) = speed;
+                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -875,42 +847,39 @@ void dScMgCup_c::StateShuffle()
         }
     }
 
-    *(int*)(((long long)(int)(c + 0x541c))) += 1;
+    *(int*)(c + 0x541c) += 1;
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN10dScMgCup_c19StatePrepareShuffleEv, 0x020dfcd8, size 0x70 */
-/* -------------------------------------------------------------------------- */
+/* [23] 0x020dfcd8  _ZN10dScMgCup_c19StatePrepareShuffleEv  size 0x70 */
 // @symbol _ZN10dScMgCup_c19StatePrepareShuffleEv
 void dScMgCup_c::StatePrepareShuffle()
 {
     char *o = (char *)this;
-    int *p = (int *)(((int)o + 0x541c));
+    int *p = (int *)(o + 0x541c);
     *p = *p - 1;
     if (*(int *)(o + 0x5000 + 0x41c) > 0) return;
     func_ov006_020df024(o);
     if (*(unsigned char *)(o + 0x5000 + 0x46b) != 0) {
-        unsigned char *q = (unsigned char *)(((int)o + 0x546b));
+        unsigned char *q = (unsigned char *)(o + 0x546b);
         *q = *q - 1;
     }
     *(int *)(o + 0x5000 + 0x418) = 2;
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN10dScMgCup_c10StateSetupEv, 0x020dfd48, size 0x18c */
-/* -------------------------------------------------------------------------- */
+
+/* [24] 0x020dfd48  _ZN10dScMgCup_c10StateSetupEv  size 0x18c */
 // @symbol _ZN10dScMgCup_c10StateSetupEv
 void dScMgCup_c::StateSetup()
 {
     char *c = (char *)this;
     int i;
-    int r4;
-    unsigned int r0;
-    unsigned int r3;
-    unsigned int r1;
-    unsigned int r2;
+    int score;
+    unsigned int rnd;
+    unsigned int hi;
+    unsigned int kind;
+    unsigned int picked;
 
-    (*(int *)(((int)c + 0x541c)))--;
+    (*(int *)(c + 0x541c))--;
     if (*(int *)(c + 0x541c) > 0) {
         return;
     }
@@ -920,27 +889,27 @@ void dScMgCup_c::StateSetup()
         func_ov006_020def80(c, i);
     }
 
-    r4 = *(int *)(c + 0xb4);
-    if (r4 < 0xa) {
-        *(unsigned char *)(c + 0x5461) = (unsigned char)r4;
+    score = *(int *)(c + 0xb4);
+    if (score < 0xa) {
+        *(unsigned char *)(c + 0x5461) = (unsigned char)score;
     } else {
-        r0 = (unsigned int)RandomIntInternal(&data_0209e650);
-        r3 = r0 >> 16;
-        r1 = (r3 % 5) + 5;
-        *(unsigned char *)(c + 0x5461) = (unsigned char)r1;
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        hi = rnd >> 16;
+        kind = (hi % 5) + 5;
+        *(unsigned char *)(c + 0x5461) = (unsigned char)kind;
     }
 
     *(unsigned char *)(c + 0x5460) =
         ((unsigned char *)data_ov006_0213c094)[*(unsigned char *)(c + 0x5461) * 2];
 
-    if (r4 > 3) {
-        r0 = (unsigned int)RandomIntInternal(&data_0209e650);
-        if (r0 & 1) {
+    if (score > 3) {
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        if (rnd & 1) {
             *(unsigned char *)(c + 0x5468) = 1;
         } else {
             *(unsigned char *)(c + 0x5468) = 2;
         }
-    } else if (r4 == 3) {
+    } else if (score == 3) {
         *(unsigned char *)(c + 0x5468) = 2;
     }
 
@@ -952,9 +921,9 @@ void dScMgCup_c::StateSetup()
     *(int *)(c + 0x5458) = 0;
     FreeGfxSlotsById(0x1d);
 
-    r0 = (unsigned int)RandomIntInternal(&data_0209e650);
-    r2 = (r0 % 10) + 1;
-    *(unsigned char *)(c + 0x546c) = (unsigned char)r2;
+    rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+    picked = (rnd % 10) + 1;
+    *(unsigned char *)(c + 0x546c) = (unsigned char)picked;
 
     if (*(unsigned char *)(c + 0xc4) == 0) {
         *(unsigned char *)(c + 0xc3) = 1;
@@ -962,13 +931,13 @@ void dScMgCup_c::StateSetup()
         *(short *)(c + 0xc0) = 0;
     }
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN10dScMgCup_c9Virtual50Ev, 0x020dfed4, size 0x18 */
-/* -------------------------------------------------------------------------- */
+
+/* [25] 0x020dfed4  _ZN10dScMgCup_c9Virtual50Ev  size 0x18 */
+/* Vtable slot 20. The original name is not in the ROM; `Virtual50` is the
+   tree's placeholder spelling for this slot. Body is a single forward to the
+   0x4f38 table's own entry point, and it falls off the end -- the ROM does
+   the same, so the declared `int` return is never actually produced. */
 // @symbol _ZN10dScMgCup_c9Virtual50Ev
-// recovered name: dScMgCup_c_Virtual50
-/* recovered: renamed to Class_Method */
-/* dScMgCup_c::Virtual50 - recovered from vtable slot identity */
 int dScMgCup_c::Virtual50()
 {
     char *p = (char *)this;
@@ -976,9 +945,7 @@ int dScMgCup_c::Virtual50()
     func_ov006_020c2594(p + 0x4f38);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN10dScMgCup_c13OnYoshiTryEatEi, 0x020dfeec, size 0x17c */
-/* -------------------------------------------------------------------------- */
+/* [26] 0x020dfeec  _ZN10dScMgCup_c13OnYoshiTryEatEi  size 0x17c */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
@@ -1038,9 +1005,7 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- _ZN10dScMgCup_c6RenderEv, 0x020e0068, size 0x19c */
-/* -------------------------------------------------------------------------- */
+/* [27] 0x020e0068  _ZN10dScMgCup_c6RenderEv  size 0x19c */
 // @symbol _ZN10dScMgCup_c6RenderEv
 /* dScMgCup_c::Render -- vtable slot 9.
  *
@@ -1061,37 +1026,43 @@ s32 dScMgCup_c::Render()
     char *c = (char *)this;
     int list[3];
     int i;
-    int n;
+    int limit;
     int j;
-    int x;
-    int y;
+    int cur;
+    int next;
     int k;
-    int v;
+    int cup;
 
     for (i = 0; i < 3; i++) {
         list[i] = i;
     }
 
-    for (n = 3; n > 1; n--) {
-        for (j = 0; j < n - 1; j++) {
-            y = list[j + 1];
-            x = list[j];
-            if (*(int*)(c + x * 8 + 0x53ec) < *(int*)(c + y * 8 + 0x53ec)) {
-                list[j] = y;
-                list[j + 1] = x;
+    for (limit = 3; limit > 1; limit--) {
+        for (j = 0; j < limit - 1; j++) {
+            next = list[j + 1];
+            cur = list[j];
+            if (*(int*)(c + cur * 8 + 0x53ec) < *(int*)(c + next * 8 + 0x53ec)) {
+                list[j] = next;
+                list[j + 1] = cur;
             }
         }
     }
 
+    /* The two pointer-arithmetic spellings in the call below are load-bearing.
+       Rewriting `((int*)c + k)[0x1510]` as `*(int*)(c + k * 4 + 0x5440)`, or
+       `((struct P8*)c + cup)[0xa7d].b` as `*(int*)(c + cup * 8 + 0x53ec)`, was
+       measured here: either one alone takes Render from MATCH to DIFF. b56
+       scales the index into the base register from these forms and re-computes
+       the address from `c` in the flat form. */
     for (k = 0; k < 3; k++) {
-        v = list[k];
-        func_ov006_020debb4(c + 0x50e8, (char)v);
+        cup = list[k];
+        func_ov006_020debb4(c + 0x50e8, (char)cup);
         func_ov006_020deed8((int)c,
-            (void *)data_ov006_0213c0d8[*(int*)(c + v * 4 + 0x5434)][((int*)c + k)[0x1510]].a,
-            *(int*)(c + v * 8 + 0x53e8),
-            ((struct P8*)c + v)[0xa7d].b,
-            *(int*)(c + v * 4 + 0x540c),
-            *(unsigned char*)(c + v + 0x5462));
+            (void *)data_ov006_0213c0d8[*(int*)(c + cup * 4 + 0x5434)][((int*)c + k)[0x1510]].a,
+            *(int*)(c + cup * 8 + 0x53e8),
+            ((struct P8*)c + cup)[0xa7d].b,
+            *(int*)(c + cup * 4 + 0x540c),
+            *(unsigned char*)(c + cup + 0x5462));
     }
 
     if (*(int*)(c + 0x5418) == 4 || *(int*)(c + 0x5418) == 5) {
@@ -1105,9 +1076,7 @@ s32 dScMgCup_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- _ZN10dScMgCup_c8BehaviorEv, 0x020e0204, size 0x104 */
-/* -------------------------------------------------------------------------- */
+/* [28] 0x020e0204  _ZN10dScMgCup_c8BehaviorEv  size 0x104 */
 // @symbol _ZN10dScMgCup_c8BehaviorEv
 /* dScMgCup_c::Behavior -- vtable slot 6.
  *
@@ -1123,7 +1092,9 @@ s32 dScMgCup_c::Render()
  * src/_ZN15daObjMarioCap_c8BehaviorEv.cpp keeps its own stand-in.
  *
  * The three parallel per-cup arrays keep their `(int)` launders; those steer the
- * address arithmetic and are not spellings that can be tidied. */
+ * address arithmetic and are not spellings that can be tidied.  Re-measured:
+ * strip the launders and nothing else and Behavior goes MATCH -> DIFF, nine
+ * words. */
 #pragma push
 #pragma opt_strength_reduction off
 s32 dScMgCup_c::Behavior()
@@ -1150,9 +1121,7 @@ s32 dScMgCup_c::Behavior()
 }
 #pragma pop
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- _ZN10dScMgCup_c13InitResourcesEv, 0x020e0308, size 0x26c */
-/* -------------------------------------------------------------------------- */
+/* [29] 0x020e0308  _ZN10dScMgCup_c13InitResourcesEv  size 0x26c */
 // @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* dScMgCup_c::InitResources -- vtable slot 0.
  *
@@ -1224,13 +1193,12 @@ s32 dScMgCup_c::InitResources()
         }
     }
 
-    ((VtObj *)c)->m18(3);
+    ((Obj *)c)->v18(3);
     func_ov006_020dec3c(c + 0x50e8);
     return 1;
 }
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- dScMgCup_c_classInit, 0x020e0574, size 0xc0 */
-/* -------------------------------------------------------------------------- */
+
+/* [30] 0x020e0574  dScMgCup_c_classInit  size 0xc0 */
 // @symbol dScMgCup_c_classInit
 /* Actor-table factory. The MG_CUP profile, allocation size, RTTI and vptr
  * transition identify dScMgCup_c. The literal construction spelling preserves
@@ -1254,9 +1222,7 @@ extern "C" void *dScMgCup_c_classInit()
     return scene;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov006_020e0634, 0x020e0634, size 0x4 */
-/* -------------------------------------------------------------------------- */
+/* [31] 0x020e0634  func_ov006_020e0634  size 0x4 */
 // @symbol func_ov006_020e0634
 extern "C" void func_ov006_020e0634()
 {
