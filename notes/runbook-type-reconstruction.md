@@ -188,93 +188,33 @@ shown is that nothing depends on it. "The gate proved the width" is the overclai
 method invites, and `notes/archive/plan-scalar-markers.md` §3 is the retraction of exactly that.
 Write **byte-unobservable**, not *verified*.
 
-## 3. The ladder, with the tree's own before/after
+## 3. The ladder
 
-**Rung 0 -- generated skeleton** (`include/BrickBlock.h`, today):
+Four rungs, each a strictly bigger claim about the same bytes. Full worked example
+(`BrickBlock`/`Fader`/`AdvanceInterp`): commit `5ddf7d2d2` (#866, the shared-header layer
+that added the generated skeletons) and `73d4ed00f` (#970, the migrated `AdvanceInterp`) --
+read those diffs for the complete before/after, including the code.
 
-```c
-struct BrickBlock {
-    u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
-    u16 unk_00c;            /* 0x00c */
-    u8  pad_00e[0xc6];
-    ...
-};
-```
-
-**Rung 1 -- reconstructed header** (`include/Fader.h`, fields done, vtable NOT):
-
-```c
-/* currInterp=0x4 and speed=0x8, both 4 bytes.
- * FIXED POINT. currInterp runs 0..0x1000 -- 0.0..1.0 in 20.12. SetToEnd writes
- * 0x1000 and SetToStart writes 0; SetForwardTime derives speed as 1.0/frames,
- * which is why AdvanceInterp picks its target from the sign of speed. */
-struct Fader {
-    Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
-    Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
-```
-
-Note what the comment carries: not just names but the *range*, the *encoding*, and
-*why* the code branches the way it does. That is the deliverable. A renamed field with
-no explanation is a smaller lie, not a truth.
-
-**Two warnings this exemplar carries, both worth copying and one worth not copying.**
-
-*Copy this:* the header spells the class twice. Under `#else` (the C side) it declares
-an explicit `void* vtable; /* 0x00 */`, because a C translation unit gets no implicit
-vptr. Migrate one function of a polymorphic class without that and every C-side
-includer's offsets shift by 4.
-
-*Do not copy this:* the vtable half of `Fader.h` is **known wrong**. Dumping the four
-fader vtables out of `extracted/arm9_dec.bin` shows 10 slots each with Fader's slots
-2-9 null -- an abstract base -- while the header declares 7 non-pure virtuals, and
-`FaderBrightness.h` declares three of the missing methods non-virtual. Fields
-reconstructed, hierarchy not. Treat "this header looks finished" as a hypothesis and
-check the ROM's own vtable before building on it.
-
-**Rung 2 -- unmigrated function** (`src/_ZN10BrickBlockD0Ev.cpp`, today):
-
-```c
-int *_ZN10BrickBlockD0Ev(int *t)
-{
-    t[0] = (int)_ZTV10BrickBlock;
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
-}
-```
-
-`this` is an `int*`, members are array indices, the symbol name is spelled by hand.
-
-**Rung 3 -- migrated function** (`src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp`, done):
-
-```c
-//cpp
-// @symbol _ZN5Fader13AdvanceInterpEv
-#include "Fader.h"
-
-extern "C" void _Z14ApproachLinearRiii(Fix12i* value, Fix12i target, Fix12i step);
-
-/* Step currInterp one frame toward its target. A positive speed fades toward
-   1.0, a negative one toward 0.0; the helper takes an unsigned step. */
-void Fader::AdvanceInterp()
-{
-    Fix12i step = speed;
-    Fix12i target = step >= 0 ? 0x1000 : 0;
-    if (step < 0)
-        step = -step;
-    _Z14ApproachLinearRiii(&currInterp, target, step);
-}
-```
-
-Real method, implicit `this`, named typed members. **The compiler now mangles the
-symbol for you** -- `Fader::AdvanceInterp()` becomes `_ZN5Fader13AdvanceInterpEv`
-without anyone spelling it.
-
-Note the honest leftover: the helper is still called by its raw mangled name. **Migration
-is per-reference, not only per-function.** That line becomes
-`ApproachLinear(currInterp, target, step)` only once `ApproachLinear` has a proper
-declaration.
+- **Rung 0 -- generated skeleton** (e.g. `include/BrickBlock.h`'s original form): a
+  `u8 pad_NNN[k]` / `TYPE unk_OFF` struct with no names and no meaning, straight from the
+  evidence passes.
+- **Rung 1 -- reconstructed header**: fields named and typed, with a comment stating the
+  *range*, *encoding*, and *why* the code branches the way it does -- not just what the
+  field is called. A renamed field with no explanation is a smaller lie, not a truth.
+  **Two things a reconstructed header must get right, one of them easy to skip:**
+  *(a)* if the class is polymorphic, the C-side (`#else`) spelling needs an explicit
+  `void* vtable; /* 0x00 */` -- a C translation unit gets no implicit vptr, and migrating
+  one function without it shifts every C-side includer's offsets by 4. *(b)* "fields done"
+  is not "hierarchy done": `Fader.h`'s vtable half was fields-correct but **vtable-wrong**
+  for months -- the ROM's four fader vtables have 10 slots with slots 2-9 null (an
+  abstract base), while the header declared 7 non-pure virtuals. Check the ROM's own
+  vtable before building on a header that merely "looks finished."
+- **Rung 2 -- unmigrated function**: `this` is a raw pointer (usually `int*`), members are
+  array-index/offset arithmetic, the symbol name is hand-spelled.
+- **Rung 3 -- migrated function**: a real method with implicit `this` and named typed
+  members; the compiler mangles the symbol for you. **Migration is per-reference, not
+  only per-function** -- a call to a not-yet-migrated helper stays its raw mangled
+  `extern "C"` spelling until that helper gets a proper declaration too.
 
 ## 4. How the migration touches files
 
