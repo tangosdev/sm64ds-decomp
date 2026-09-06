@@ -63,6 +63,63 @@
  * bracketing it here and deleting it outright both give 31/31, so it buys
  * nothing and would only mislead the next reader.
  *
+ * TWO OBJECT-EMBEDDED ARRAYS DRIVE MOST OF THIS FILE, AND THE ROM NAMES
+ * NEITHER.  Twenty-one of the 31 members touch one of them, so the comments
+ * below name them by offset rather than by a guessed role:
+ *
+ *   0x48c0, 0x32 entries of 0x24.  +0x00/+0x04 an x,y pair in 20.12; +0x08 and
+ *     +0x0c the per-axis increments added to them every frame; +0x10 a second
+ *     value the +0x0c increment ramps toward; +0x14, +0x16 and +0x18 three
+ *     16-bit countdowns; +0x1c an update enable and +0x20 a draw enable;
+ *     +0x1d, +0x1e and +0x1f byte indices selecting which pointer-to-member
+ *     callback runs next (into data_ov006_02141988, _021419f8 / _021419b8 and
+ *     _021419a0 respectively); +0x21 and +0x22 two sprite indices into
+ *     data_ov006_0213a5e0.  Entries are seeded across the top of the screen by
+ *     func_ov006_020e48d4 and recycled by func_ov006_020e4800 once y passes
+ *     0xc8, i.e. they fall down the screen and wrap.
+ *
+ *   0x4fe0, 0x3c entries of 0x18.  +0x00/+0x04 an x,y pair in 20.12; +0x0c a
+ *     y increment that decays by 0x40 a frame; +0x10 a 16-bit lifetime; +0x12
+ *     a 16-bit payload drawn as the sprite's value; +0x14 a live flag and
+ *     +0x15 a 1-or-2 mode that picks the last argument to the draw call.  One
+ *     entry is spawned midway between two stones whenever they collide
+ *     (func_ov006_020e39e0), and the payload it carries is a running multiple
+ *     of ten or a hundred.
+ *
+ * A falling-snow effect and a floating score popup are the obvious readings of
+ * those two, and an earlier revision of this file wrote "snowflake" and
+ * "spark" into every member comment as though they were settled.  They are
+ * not: the scout's facts file lists "the gameplay semantics of the seven BSS
+ * destination arrays" as unproven and nothing since has proved them.  The
+ * stones are the one exception -- include/dScMgCurling2_c.h already asserts
+ * mStone[11] at 0x4660 -- so "stone" below is used as fact.
+ *
+ * WHAT THE HUMANIZER PASS MEASURED, AND WHAT IT PUT BACK.  Four shard-isms in
+ * this file look like decompiler noise and are not.  Each was deleted, the TU
+ * re-verified, and the deletion reverted when it cost bytes:
+ *   - `idx * (4 & 0xFFFFFFFF)` in func_ov006_020e4ed4 and `(i & 0xFFFFFFFF)`
+ *     in func_ov006_020e4a84.  0xFFFFFFFF is an unsigned literal, so the mask
+ *     makes exactly one subscript in each unsigned.  Deleting both: 29/31,
+ *     DIFFs on exactly those two members.  ONE level of mask is what is
+ *     needed -- func_ov006_020e4a84 arrived carrying six nested copies and
+ *     five of them are gone.
+ *   - `c + 0x4000 + b * 0x30 + 0x660` in func_ov006_020e39e0, where the same
+ *     record is spelled `c + a * 0x30 + 0x4660` two operands earlier.  The
+ *     split base is what the ROM shares across the b-indexed reads; folding it
+ *     to one constant is a DIFF.
+ *   - `(char *)self + idx + 0x48df` in func_ov006_020e42b4, where the line
+ *     above it reads through the plain `c`.  Spelling both the same way is a
+ *     DIFF; the two callbacks really do reload through differently-typed
+ *     bases.
+ * Deleted at no cost, and gone for good: a `volatile` on the countdown pointer
+ * in func_ov006_020e4b00, a nine-macro block standing in for the 0x24-stride
+ * record in func_ov006_020e3f54, `(int)` cast towers in func_ov006_020e3948
+ * and func_ov006_020e4b00, a `goto`-over-the-increment in func_ov006_020e507c,
+ * a one-use shadow struct in func_ov006_020e4a84, and the `0x4000 + 0x8xx` /
+ * `0x5000 + 0x5xx` split addressing in func_ov006_020e3bc4, _020e3c4c,
+ * _020e42b4, _020e48d4 and _020e4fe8.  func_ov006_020e39e0 is the ONE place
+ * where that split survives, and the bullet above says why.
+ *
  * decl_common.h is NOT included.  It declares nine of these 31 members and
  * eight of the nine contradict the byte-matched shard -- seven on the
  * parameter type (`void*` against the shard's `char*`) and two of those also
@@ -121,11 +178,6 @@
  * ------------------------------------------------------------------------- */
 struct C;
 typedef void (C::*PMF)(int);
-
-/* func_ov006_020e4a84's view of the five-element 0x10-byte array at 0x4870. */
-struct E22 {
-    unsigned char b[0x10];
-};
 
 /* ---------------------------------------------------------------------------
  * ROM symbols this TU calls or reads.  One file-scope `extern "C"` region:
@@ -196,22 +248,23 @@ dScMgCurling2_c::~dScMgCurling2_c()
 }
 
 
-/* [2] 0x020e38b0 -- draw the 0x3c-entry spark array at 0x4fe0, stride 0x18. */
+/* [2] 0x020e38b0 -- draw every live entry of the 0x4fe0 array, mode picking
+ * the last argument. */
 // @symbol func_ov006_020e38b0
-extern "C" void func_ov006_020e38b0(char *r0)
+extern "C" void func_ov006_020e38b0(char *c)
 {
     int i;
-    char *p = r0;
+    char *p = c;
     for (i = 0; i < 0x3c; i++) {
-        unsigned char mode = *(unsigned char*)(p + 0x4ff5);
+        unsigned char mode = *(unsigned char *)(p + 0x4ff5);
         if (mode != 0) {
-            int a = *(int*)(p + 0x4fe0) >> 0xc;
-            int b = *(int*)(p + 0x4fe4) >> 0xc;
-            int c = *(unsigned short*)(p + 0x4ff2);
+            int x = *(int *)(p + 0x4fe0) >> 0xc;
+            int y = *(int *)(p + 0x4fe4) >> 0xc;
+            int value = *(unsigned short *)(p + 0x4ff2);
             if (mode == 1) {
-                func_ov004_020b1ea4(a, b, c, -1, -1, 0, 0);
+                func_ov004_020b1ea4(x, y, value, -1, -1, 0, 0);
             } else {
-                func_ov004_020b1ea4(a, b, c, -1, -1, 0, 0x32);
+                func_ov004_020b1ea4(x, y, value, -1, -1, 0, 0x32);
             }
         }
         p += 0x18;
@@ -219,20 +272,21 @@ extern "C" void func_ov006_020e38b0(char *r0)
 }
 
 
-/* [3] 0x020e3948 -- age the same spark array one frame. */
+/* [3] 0x020e3948 -- age the 0x4fe0 array one frame: run the lifetime down,
+ * apply and decay the y increment, and clear the entry when it expires. */
 // @symbol func_ov006_020e3948
 extern "C" void func_ov006_020e3948(char *p)
 {
     int i;
-    for (i = 0; i < 60; i++, p += 0x18)
+    for (i = 0; i < 0x3c; i++, p += 0x18)
     {
         if (*(unsigned char *)(p + 0x4ff4) != 0)
         {
             if (*(unsigned short *)(p + 0x4ff0) != 0)
             {
-                *(unsigned short *)(int)(p + 0x4ff0) -= 1;
-                *(int *)(int)(p + 0x4fe4) += *(int *)(p + 0x4fec);
-                *(int *)(int)(p + 0x4fec) -= 0x40;
+                *(unsigned short *)(p + 0x4ff0) -= 1;
+                *(int *)(p + 0x4fe4) += *(int *)(p + 0x4fec);
+                *(int *)(p + 0x4fec) -= 0x40;
             }
             else
             {
@@ -244,7 +298,15 @@ extern "C" void func_ov006_020e3948(char *p)
 }
 
 
-/* [4] 0x020e39e0 -- spawn one score spark between stone `a` and stone `b`. */
+/* [4] 0x020e39e0 -- take the first free 0x4fe0 entry and place it midway
+ * between stone `a` and stone `b`.  The payload is (n+1)*10 when either stone
+ * carries the 0x468d flag and (n+1)*100 when neither does, where n is the
+ * 0x55bf counter, saturating at 0x17.
+ *
+ * `c + 0x4000 + b * 0x30 + 0x660` is the same record as
+ * `c + a * 0x30 + 0x4660` on the line's other operand.  Folding the split base
+ * into one constant is a DIFF -- the ROM shares (c + 0x4000) across the
+ * b-indexed reads.  Measured; do not tidy. */
 // @symbol func_ov006_020e39e0
 extern "C" void func_ov006_020e39e0(char *c, int a, int b)
 {
@@ -269,6 +331,8 @@ extern "C" void func_ov006_020e39e0(char *c, int a, int b)
         *(int *)(c + i * 0x18 + 0x4fe8) = 0;
         *(int *)(c + i * 0x18 + 0x4fec) = 0;
 
+        /* The && and || arms really do compute the same value; collapsing them
+           into one `||` is a DIFF, so the ROM branched twice too. */
         if (*(unsigned char *)(c + a * 0x30 + 0x468d) != 0 && *(unsigned char *)(c + 0x4000 + b * 0x30 + 0x68d) != 0) {
             *(unsigned short *)(c + 0x4ff2 + i * 0x18) = (*(unsigned char *)(c + 0x55bf) + 1) * 10;
         } else if (*(unsigned char *)(c + a * 0x30 + 0x468d) != 0 || *(unsigned char *)(c + 0x4000 + b * 0x30 + 0x68d) != 0) {
@@ -287,7 +351,7 @@ extern "C" void func_ov006_020e39e0(char *c, int a, int b)
 }
 
 
-/* [5] 0x020e3b9c -- clear the spark array. */
+/* [5] 0x020e3b9c -- clear the 0x4fe0 array. */
 // @symbol func_ov006_020e3b9c
 extern "C" void func_ov006_020e3b9c(char *p)
 {
@@ -300,24 +364,26 @@ extern "C" void func_ov006_020e3b9c(char *p)
 }
 
 
-/* [6] 0x020e3bc4 -- draw the 0x32-entry snowflake array at 0x48c0, stride 0x24. */
+/* [6] 0x020e3bc4 -- draw every draw-enabled entry of the 0x48c0 array as two
+ * stacked sprites from data_ov006_0213a5e0. */
 // @symbol func_ov006_020e3bc4
 extern "C" void func_ov006_020e3bc4(char *c)
 {
     int i;
     for (i = 0; i < 0x32; i++) {
-        if (*(unsigned char *)(c + 0x4000 + 0x8e0)) {
-            int x = *(int *)(c + 0x4000 + 0x8c0) >> 0xc;
-            int y = *(int *)(c + 0x4000 + 0x8c4) >> 0xc;
-            func_ov004_020af948(data_ov006_0213a5e0[*(unsigned char *)(c + 0x4000 + 0x8e1)], x, y, 0);
-            DrawOamSprite(data_ov006_0213a5e0[*(unsigned char *)(c + 0x4000 + 0x8e2)], x, y, 0);
+        if (*(unsigned char *)(c + 0x48e0)) {
+            int x = *(int *)(c + 0x48c0) >> 0xc;
+            int y = *(int *)(c + 0x48c4) >> 0xc;
+            func_ov004_020af948(data_ov006_0213a5e0[*(unsigned char *)(c + 0x48e1)], x, y, 0);
+            DrawOamSprite(data_ov006_0213a5e0[*(unsigned char *)(c + 0x48e2)], x, y, 0);
         }
         c += 0x24;
     }
 }
 
 
-/* [7] 0x020e3c4c -- snowflake state callback. */
+/* [7] 0x020e3c4c -- 0x48c0 callback: run the +0x18 countdown down, else ease
+ * +0x0c back toward 0x100, else clear the +0x1f index. */
 // @symbol func_ov006_020e3c4c
 extern "C" void func_ov006_020e3c4c(char *c, int i)
 {
@@ -333,12 +399,13 @@ extern "C" void func_ov006_020e3c4c(char *c, int i)
         if ((short)*q < 0x100)
             *q = 0x100;
     } else {
-        *(unsigned char *)(c + 0x4000 + idx + 0x8df) = 0;
+        *(unsigned char *)(c + idx + 0x48df) = 0;
     }
 }
 
 
-/* [8] 0x020e3ce0 -- snowflake state callback. */
+/* [8] 0x020e3ce0 -- 0x48c0 callback: ramp +0x0c up toward +0x10, then run the
+ * +0x18 countdown down, reseeding it and the +0x1f index when it expires. */
 // @symbol func_ov006_020e3ce0
 extern "C" void func_ov006_020e3ce0(char *o, int i)
 {
@@ -358,108 +425,100 @@ extern "C" void func_ov006_020e3ce0(char *o, int i)
 }
 
 
-/* [9] 0x020e3db4 -- snowflake state callback. */
+/* [9] 0x020e3db4 -- 0x48c0 callback: zero +0x0c, pick a fresh +0x10 target and
+ * +0x18 countdown, and set the +0x1f index to 1. */
 // @symbol func_ov006_020e3db4
-extern "C" void func_ov006_020e3db4(char* c, int i) {
-  int idx = i * 0x24;
-  unsigned int r;
-  *(int*)(c + 0x48cc + idx) = 0;
-  r = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-  *(int*)(c + 0x48d0 + idx) = (((r << 4) >> 15) << 4) + 0x300;
-  *(unsigned char*)(c + 0x48df + idx) = 1;
-  r = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-  r = ((r << 5) >> 15) + 0x20;
-  *(short*)(c + 0x48d8 + idx) = (unsigned char)r;
+extern "C" void func_ov006_020e3db4(char *c, int i)
+{
+    int idx = i * 0x24;
+    unsigned int r;
+
+    *(int *)(c + 0x48cc + idx) = 0;
+    r = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    *(int *)(c + 0x48d0 + idx) = (((r << 4) >> 15) << 4) + 0x300;
+    *(unsigned char *)(c + 0x48df + idx) = 1;
+    r = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((r << 5) >> 15) + 0x20;
+    *(short *)(c + 0x48d8 + idx) = (unsigned char)r;
 }
 
 
-/* [10] 0x020e3e4c -- snowflake drift callback. */
+/* [10] 0x020e3e4c -- 0x48c0 callback: step the position, hold while a
+ * countdown runs, then bleed the x increment toward zero 8 a frame from either
+ * side and clear the +0x1e index once it lands.  The hold tests +0x14 and
+ * decrements +0x16 -- the ROM's own asymmetry, and [11] and [12] do not share
+ * it. */
 // @symbol func_ov006_020e3e4c
 extern "C" void func_ov006_020e3e4c(char *base, int i)
 {
     int n = i * 0x24;
-    char *a48c8 = base + 0x48c8;
-    char *a48c0 = base + 0x48c0;
-    char *a48c4 = base + 0x48c4;
-    *(int*)(a48c0 + n) = *(int*)(a48c0 + n) + *(int*)(a48c8 + n);
-    *(int*)(a48c4 + n) = *(int*)(a48c4 + n) + *(int*)(base + n + 0x48cc);
-    if (*(u16*)(base + n + 0x48d4) != 0) {
-        char *a48d6 = base + 0x48d6;
-        *(u16*)(a48d6 + n) = *(u16*)(a48d6 + n) - 1;
-        if (*(s16*)(a48d6 + n) < 0) *(s16*)(a48d6 + n) = 0;
+    /* Three cached bases, declared in the ROM's own load order.  Reordering
+       them, or folding them back into base + constant, moves bytes. */
+    char *vx = base + 0x48c8;
+    char *x = base + 0x48c0;
+    char *y = base + 0x48c4;
+    *(int *)(x + n) = *(int *)(x + n) + *(int *)(vx + n);
+    *(int *)(y + n) = *(int *)(y + n) + *(int *)(base + n + 0x48cc);
+    if (*(u16 *)(base + n + 0x48d4) != 0) {
+        char *timer = base + 0x48d6;
+        *(u16 *)(timer + n) = *(u16 *)(timer + n) - 1;
+        if (*(s16 *)(timer + n) < 0) *(s16 *)(timer + n) = 0;
         return;
     }
-    if (*(int*)(a48c8 + n) > 0) {
-        *(int*)(a48c8 + n) = *(int*)(a48c8 + n) - 8;
-        if ((s16)*(int*)(a48c8 + n) < 0) *(int*)(a48c8 + n) = 0;
+    if (*(int *)(vx + n) > 0) {
+        *(int *)(vx + n) = *(int *)(vx + n) - 8;
+        if ((s16)*(int *)(vx + n) < 0) *(int *)(vx + n) = 0;
         return;
     }
-    if (*(int*)(a48c8 + n) < 0) {
-        *(int*)(a48c8 + n) = *(int*)(a48c8 + n) + 8;
-        if (*(int*)(a48c8 + n) > 0) *(int*)(a48c8 + n) = 0;
+    if (*(int *)(vx + n) < 0) {
+        *(int *)(vx + n) = *(int *)(vx + n) + 8;
+        if (*(int *)(vx + n) > 0) *(int *)(vx + n) = 0;
         return;
     }
-    *(u8*)(base + n + 0x48de) = 0;
+    *(u8 *)(base + n + 0x48de) = 0;
 }
 
 
-/* [11] 0x020e3f54 -- snowflake drift callback.
- * The F* macros are this shard's own spelling of the 0x24-stride record; they
- * are what byte-matched, so they are carried verbatim and undefined again
- * straight after the body. */
-#define F0(b,i)  (*(int*)  ((char*)(b) + 0x48c0 + (i)*0x24))
-#define F4(b,i)  (*(int*)  ((char*)(b) + 0x48c4 + (i)*0x24))
-#define F8(b,i)  (*(int*)  ((char*)(b) + 0x48c8 + (i)*0x24))
-#define FC(b,i)  (*(int*)  ((char*)(b) + 0x48cc + (i)*0x24))
-#define F14(b,i) (*(unsigned short*)((char*)(b) + 0x48d4 + (i)*0x24))
-#define F14S(b,i) (*(short*)((char*)(b) + 0x48d4 + (i)*0x24))
-#define F16(b,i) (*(unsigned short*)((char*)(b) + 0x48d6 + (i)*0x24))
-#define F16S(b,i) (*(short*)((char*)(b) + 0x48d6 + (i)*0x24))
-#define F1E(b,i) (*(unsigned char*)((char*)(b) + 0x48de + (i)*0x24))
+/* [11] 0x020e3f54 -- 0x48c0 callback: step the position, hold for the +0x14
+ * countdown, then push the x increment negative to a -0x300 floor, hold again
+ * for +0x16, and hand over to index 3 with a fresh countdown. */
 // @symbol func_ov006_020e3f54
 extern "C" void func_ov006_020e3f54(char *base, int idx)
 {
+    int n = idx * 0x24;
     unsigned short v;
 
-    F0(base, idx) = F0(base, idx) + F8(base, idx);
-    F4(base, idx) = F4(base, idx) + FC(base, idx);
+    *(int *)(base + 0x48c0 + n) = *(int *)(base + 0x48c0 + n) + *(int *)(base + 0x48c8 + n);
+    *(int *)(base + 0x48c4 + n) = *(int *)(base + 0x48c4 + n) + *(int *)(base + 0x48cc + n);
 
-    if (F14(base, idx) != 0) {
-        F14(base, idx) = F14(base, idx) - 1;
-        if (F14S(base, idx) < 0)
-            F14(base, idx) = 0;
+    if (*(unsigned short *)(base + 0x48d4 + n) != 0) {
+        *(unsigned short *)(base + 0x48d4 + n) = *(unsigned short *)(base + 0x48d4 + n) - 1;
+        if (*(short *)(base + 0x48d4 + n) < 0)
+            *(unsigned short *)(base + 0x48d4 + n) = 0;
         return;
     }
 
-    if (F8(base, idx) > -0x300) {
-        F8(base, idx) -= 8;
-        if (F8(base, idx) <= -0x300)
-            F8(base, idx) = 0x300;
+    if (*(int *)(base + 0x48c8 + n) > -0x300) {
+        *(int *)(base + 0x48c8 + n) -= 8;
+        if (*(int *)(base + 0x48c8 + n) <= -0x300)
+            *(int *)(base + 0x48c8 + n) = 0x300;
     }
 
-    v = F16(base, idx);
+    v = *(unsigned short *)(base + 0x48d6 + n);
     if (v != 0) {
-        F16(base, idx) = v - 1;
-        if (F16S(base, idx) < 0)
-            F16(base, idx) = 0;
+        *(unsigned short *)(base + 0x48d6 + n) = v - 1;
+        if (*(short *)(base + 0x48d6 + n) < 0)
+            *(unsigned short *)(base + 0x48d6 + n) = 0;
         return;
     }
 
-    F1E(base, idx) = 3;
-    F16(base, idx) = (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf) + 0x20);
+    *(unsigned char *)(base + 0x48de + n) = 3;
+    *(unsigned short *)(base + 0x48d6 + n) = (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf) + 0x20);
 }
-#undef F0
-#undef F4
-#undef F8
-#undef FC
-#undef F14
-#undef F14S
-#undef F16
-#undef F16S
-#undef F1E
 
 
-/* [12] 0x020e4094 -- snowflake drift callback. */
+/* [12] 0x020e4094 -- the mirror of [11]: same shape, x increment pushed the
+ * other way to a +0x300 ceiling. */
 // @symbol func_ov006_020e4094
 extern "C" void func_ov006_020e4094(char *base, int index)
 {
@@ -496,7 +555,9 @@ extern "C" void func_ov006_020e4094(char *base, int index)
 }
 
 
-/* [13] 0x020e41d0 -- snowflake drift callback. */
+/* [13] 0x020e41d0 -- 0x48c0 callback: hold for the +0x14 countdown, then zero
+ * the x increment, pick the next +0x1e index out of data_ov006_0212e4f4 and
+ * reseed both countdowns. */
 // @symbol func_ov006_020e41d0
 extern "C" void func_ov006_020e41d0(char *o, int i)
 {
@@ -513,41 +574,49 @@ extern "C" void func_ov006_020e41d0(char *o, int i)
 }
 
 
-/* [14] 0x020e42b4 -- run one snowflake's two pointer-to-member callbacks. */
+/* [14] 0x020e42b4 -- run one 0x48c0 entry's two pointer-to-member callbacks,
+ * indexed by the +0x1e and +0x1f state bytes.
+ *
+ * The second load really is spelled through `(char *)self` where the first
+ * goes through `c`; making the two agree is a DIFF. */
 // @symbol func_ov006_020e42b4
 extern "C" void func_ov006_020e42b4(char *c, int i)
 {
     C *self = (C *)c;
     int idx = i * 0x24;
-    unsigned char k0 = *(unsigned char *)(c + idx + 0x4000 + 0x8de);
+    unsigned char k0 = *(unsigned char *)(c + idx + 0x48de);
     (self->*data_ov006_021419f8[k0])(i);
-    unsigned char k1 = *(unsigned char *)((char *)self + idx + 0x4000 + 0x8df);
+    unsigned char k1 = *(unsigned char *)((char *)self + idx + 0x48df);
     (self->*data_ov006_021419a0[k1])(i);
 }
 
 
-/* [15] 0x020e4348 -- snowflake drift callback. */
+/* [15] 0x020e4348 -- 0x48c0 callback: step the position, then bleed the x
+ * increment toward zero 0x20 a frame and clear the +0x1e index on arrival. */
 // @symbol func_ov006_020e4348
-extern "C" void func_ov006_020e4348(char *base, int idx) {
+extern "C" void func_ov006_020e4348(char *base, int idx)
+{
     int off = idx * 0x24;
-    int *a = (int *)(base + 0x48c0 + off);
-    int *c = (int *)(base + 0x48c8 + off);
-    int *b = (int *)(base + 0x48c4 + off);
-    *a += *c;
-    *b += *(int *)(base + off + 0x48cc);
-    if (*c > 0) {
-        *c -= 0x20;
-        if ((int)(short)*c < 0) *c = 0;
-    } else if (*c < 0) {
-        *c += 0x20;
-        if (*c > 0) *c = 0;
+    /* x, vx, y -- the ROM's load order, not a tidy one.  Do not reorder. */
+    int *x = (int *)(base + 0x48c0 + off);
+    int *vx = (int *)(base + 0x48c8 + off);
+    int *y = (int *)(base + 0x48c4 + off);
+    *x += *vx;
+    *y += *(int *)(base + off + 0x48cc);
+    if (*vx > 0) {
+        *vx -= 0x20;
+        if ((int)(short)*vx < 0) *vx = 0;
+    } else if (*vx < 0) {
+        *vx += 0x20;
+        if (*vx > 0) *vx = 0;
     } else {
         *(unsigned char *)(base + off + 0x48de) = 0;
     }
 }
 
 
-/* [16] 0x020e440c -- snowflake drift callback. */
+/* [16] 0x020e440c -- 0x48c0 callback: as [11] at 0x20 a frame and a -0x400
+ * floor, handing over to index 3 without reseeding the countdown. */
 // @symbol func_ov006_020e440c
 extern "C" void func_ov006_020e440c(char *c, int idx)
 {
@@ -584,7 +653,8 @@ extern "C" void func_ov006_020e440c(char *c, int idx)
 }
 
 
-/* [17] 0x020e4520 -- snowflake drift callback. */
+/* [17] 0x020e4520 -- the mirror of [16], x increment pushed to a +0x400
+ * ceiling. */
 // @symbol func_ov006_020e4520
 extern "C" void func_ov006_020e4520(char *c, int idx)
 {
@@ -626,7 +696,9 @@ extern "C" void func_ov006_020e4520(char *c, int idx)
 }
 
 
-/* [18] 0x020e4630 -- snowflake drift callback. */
+/* [18] 0x020e4630 -- 0x48c0 callback: hold for the +0x14 countdown, then zero
+ * the x increment, pick a fresh y increment and a +0x1e index out of
+ * data_ov006_0212e4f8, and reseed both countdowns. */
 // @symbol func_ov006_020e4630
 extern "C" void func_ov006_020e4630(char *o, int i)
 {
@@ -644,7 +716,8 @@ extern "C" void func_ov006_020e4630(char *o, int i)
 }
 
 
-/* [19] 0x020e4744 -- run one snowflake's data_ov006_021419b8 callback. */
+/* [19] 0x020e4744 -- run one 0x48c0 entry's data_ov006_021419b8 callback,
+ * indexed by the +0x1e state byte. */
 // @symbol func_ov006_020e4744
 extern "C" void func_ov006_020e4744(char *o, int i)
 {
@@ -653,7 +726,9 @@ extern "C" void func_ov006_020e4744(char *o, int i)
 }
 
 
-/* [20] 0x020e4794 -- snowflake respawn callback.
+/* [20] 0x020e4794 -- 0x48c0 callback: pick the +0x1d index out of
+ * data_ov006_0212e4fc (entry 1 on one roll in eight) and clear +0x1e.
+ *
  * The shard declared data_0209d4b8 as `int[]` and passed it bare where every
  * other member declares the scalar and passes its address; both spell the
  * same word address, and one file-scope declaration cannot be both, so the
@@ -663,7 +738,8 @@ extern "C" void func_ov006_020e4744(char *o, int i)
  * here it gave 31/31 and deleted outright it also gave 31/31, so it buys
  * nothing on this compiler at these flags. */
 // @symbol func_ov006_020e4794
-extern "C" void func_ov006_020e4794(char *c, int idx) {
+extern "C" void func_ov006_020e4794(char *c, int idx)
+{
     unsigned r = (unsigned)RandomIntInternal(&data_0209d4b8);
     int k = 0;
     unsigned m = ((r >> 16) & 0x7fff) << 3 >> 0xf;
@@ -674,8 +750,9 @@ extern "C" void func_ov006_020e4794(char *c, int idx) {
 }
 
 
-/* [21] 0x020e4800 -- step every snowflake through data_ov006_02141988 and
- * recycle the ones that have fallen off the bottom. */
+/* [21] 0x020e4800 -- step every update-enabled 0x48c0 entry through its
+ * data_ov006_02141988 callback, and reseed the ones whose y has passed 0xc8
+ * back to a random x at y = -0x8000. */
 // @symbol func_ov006_020e4800
 extern "C" void func_ov006_020e4800(char *o)
 {
@@ -698,7 +775,11 @@ extern "C" void func_ov006_020e4800(char *o)
 }
 
 
-/* [22] 0x020e48d4 -- seed all 0x32 snowflakes. */
+/* [22] 0x020e48d4 -- zero all 0x32 entries of the 0x48c0 array, then seed each
+ * one: enabled, at a random x, with two random sprite indices whose second is
+ * the first plus one to four modulo five, and a y spread over the screen.  The
+ * first x, the y at -0x8000 and the first +0x14 store are all overwritten a few
+ * lines later; the dead stores are the ROM's, not a merge artifact. */
 // @symbol func_ov006_020e48d4
 extern "C" void func_ov006_020e48d4(char *c)
 {
@@ -713,20 +794,20 @@ extern "C" void func_ov006_020e48d4(char *c)
     p = c;
     for (; i < 0x32; i++)
     {
-        *(int *)(p + 0x4000 + 0x8c0) = 0;
-        *(int *)(p + 0x4000 + 0x8c4) = 0;
-        *(int *)(p + 0x4000 + 0x8c8) = 0;
-        *(int *)(p + 0x4000 + 0x8cc) = 0;
-        *(short *)(p + 0x4800 + 0xd4) = 0;
-        *(short *)(p + 0x4800 + 0xd6) = 0;
-        *(short *)(p + 0x4800 + 0xd8) = 0;
-        *(char *)(p + 0x4000 + 0x8dc) = 0;
-        *(char *)(p + 0x4000 + 0x8dd) = 0;
-        *(char *)(p + 0x4000 + 0x8de) = 0;
-        *(char *)(p + 0x4000 + 0x8df) = 0;
-        *(char *)(p + 0x4000 + 0x8e0) = 0;
-        *(char *)(p + 0x4000 + 0x8e1) = 0;
-        *(char *)(p + 0x4000 + 0x8e2) = 1;
+        *(int *)(p + 0x48c0) = 0;
+        *(int *)(p + 0x48c4) = 0;
+        *(int *)(p + 0x48c8) = 0;
+        *(int *)(p + 0x48cc) = 0;
+        *(short *)(p + 0x48d4) = 0;
+        *(short *)(p + 0x48d6) = 0;
+        *(short *)(p + 0x48d8) = 0;
+        *(char *)(p + 0x48dc) = 0;
+        *(char *)(p + 0x48dd) = 0;
+        *(char *)(p + 0x48de) = 0;
+        *(char *)(p + 0x48df) = 0;
+        *(char *)(p + 0x48e0) = 0;
+        *(char *)(p + 0x48e1) = 0;
+        *(char *)(p + 0x48e2) = 1;
         p += 0x24;
     }
 
@@ -736,90 +817,103 @@ extern "C" void func_ov006_020e48d4(char *c)
     {
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
         m = ((r >> 16) & 0x7fff) << 5;
-        *(int *)(p + 0x4000 + 0x8c0) = (int)((m >> 0xf)) << 0xf;
-        *(int *)(p + 0x4000 + 0x8c4) = -0x8000;
-        *(char *)(p + 0x4000 + 0x8dc) = 1;
-        *(char *)(p + 0x4000 + 0x8e0) = 1;
-        *(char *)(p + 0x4000 + 0x8dd) = 0;
-        *(char *)(p + 0x4000 + 0x8de) = 0;
+        *(int *)(p + 0x48c0) = (int)((m >> 0xf)) << 0xf;
+        *(int *)(p + 0x48c4) = -0x8000;
+        *(char *)(p + 0x48dc) = 1;
+        *(char *)(p + 0x48e0) = 1;
+        *(char *)(p + 0x48dd) = 0;
+        *(char *)(p + 0x48de) = 0;
 
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
-        *(char *)(p + 0x4000 + 0x8e1) = (char)(((r >> 16) & 0x7fff) * 5 >> 0xf);
+        *(char *)(p + 0x48e1) = (char)(((r >> 16) & 0x7fff) * 5 >> 0xf);
 
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
-        v = *(unsigned char *)(p + 0x4000 + 0x8e1) + ((((r >> 16) & 0x7fff) << 2) >> 0xf) + 1;
+        v = *(unsigned char *)(p + 0x48e1) + ((((r >> 16) & 0x7fff) << 2) >> 0xf) + 1;
         v = v & 0xff;
         if (v >= 5)
             v = (v - 5) & 0xff;
-        *(char *)(p + 0x4000 + 0x8e2) = (char)v;
+        *(char *)(p + 0x48e2) = (char)v;
 
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
-        *(short *)(p + 0x4800 + 0xd4) = (short)(((i & 7) << 6) + (((r >> 16) & 0x7fff) * 0x30 >> 0xf));
+        *(short *)(p + 0x48d4) = (short)(((i & 7) << 6) + (((r >> 16) & 0x7fff) * 0x30 >> 0xf));
 
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
         m = ((r >> 16) & 0x7fff) << 5;
-        *(int *)(p + 0x4000 + 0x8c0) = (int)((m >> 0xf)) << 0xf;
+        *(int *)(p + 0x48c0) = (int)((m >> 0xf)) << 0xf;
 
         r = (unsigned int)RandomIntInternal(&data_0209d4b8);
         q = (((r >> 16) & 0x7fff) * 0x1a) >> 0xf;
-        *(int *)(p + 0x4000 + 0x8c4) = (((q << 3) - 8)) << 0xc;
-        *(short *)(p + 0x4800 + 0xd4) = 0;
+        *(int *)(p + 0x48c4) = (((q << 3) - 8)) << 0xc;
+        *(short *)(p + 0x48d4) = 0;
         p += 0x24;
     }
 }
 
 
-/* [23] 0x020e4a84 -- draw the five score markers at 0x4870, stride 0x10. */
+/* [23] 0x020e4a84 -- draw the five 0x10-byte records at 0x4870 whose +0x0d
+ * flag is set, each with its +0x08 value as the caption.
+ *
+ * `(i & 0xFFFFFFFF)` stays: 0xFFFFFFFF is unsigned, so the mask makes this
+ * subscript unsigned and deleting it is a DIFF.  The shard carried six nested
+ * copies of the mask; one is all the bytes need. */
 // @symbol func_ov006_020e4a84
 extern "C" void func_ov006_020e4a84(unsigned char *c)
 {
-  struct E22 *a = (struct E22 *) c;
-  int new_var;
-  int i;
-  func_ov004_020b1a5c(func_ov004_020adbc0(), 6);
-  for (i = 0; i < 5; i++)
-  {
-    unsigned char *p = (unsigned char *) (&a[(((((i & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF) & 0xFFFFFFFF]);
-    if (*((unsigned char *) (p + 0x487d)))
-    {
-      new_var = (*((int *) (p + 0x4870))) >> 12;
-      func_ov004_020b2444(new_var, (*((int *) (p + 0x4874))) >> 12, *((unsigned short *) (p + 0x4878)), -1, -1, 0, 0);
-    }
-  }
+    int x;
+    int i;
 
+    func_ov004_020b1a5c(func_ov004_020adbc0(), 6);
+    for (i = 0; i < 5; i++) {
+        unsigned char *p = c + (i & 0xFFFFFFFF) * 0x10;
+        if (*(unsigned char *)(p + 0x487d)) {
+            x = *(int *)(p + 0x4870) >> 12;
+            func_ov004_020b2444(x, *(int *)(p + 0x4874) >> 12,
+                                *(unsigned short *)(p + 0x4878), -1, -1, 0, 0);
+        }
+    }
 }
 
 
-/* [24] 0x020e4b00 -- age the five score markers, playing the pop sound as each
- * lands.  The legacy shard spelled the receiver `this`, which a C++ TU cannot
- * accept as a parameter name; renamed to `self` and otherwise untouched. */
+/* [24] 0x020e4b00 -- age the five 0x4870 records: run the +0x0a countdown down
+ * and, on the frame it reaches zero, set the +0x0d flag that [23] draws on and
+ * play sound 0x1bc.
+ *
+ * The legacy shard spelled the receiver `this`, which a C++ TU cannot accept
+ * as a parameter name; renamed to `self`.  Its `volatile` on the countdown
+ * pointer was measured inert (31/31 with and without) and is gone.  The
+ * `opt_strength_reduction off` bracket is not inert -- see the file header. */
 #pragma push
 #pragma opt_strength_reduction off
 // @symbol func_ov006_020e4b00
-extern "C" void func_ov006_020e4b00(char *self) {
+extern "C" void func_ov006_020e4b00(char *self)
+{
     int i;
+
     for (i = 0; i < 5; i++) {
         char *base = self + (i << 4);
-        volatile unsigned short *t;
-        if (*(unsigned char*)(base + 0x487c) == 0) continue;
-        if (*(unsigned short*)(base + 0x487a) == 0) continue;
-        t = (volatile unsigned short*)(((int)base + 0x487a));
+        unsigned short *t;
+        if (*(unsigned char *)(base + 0x487c) == 0) continue;
+        if (*(unsigned short *)(base + 0x487a) == 0) continue;
+        t = (unsigned short *)(base + 0x487a);
         *t = *t - 1;
         if (*t != 0) continue;
-        *(unsigned char*)(base + 0x487d) = 1;
+        *(unsigned char *)(base + 0x487d) = 1;
         _ZN5Sound12PlayBank2_2DEj(0x1bc);
     }
 }
 #pragma pop
 
 
-/* [25] 0x020e4b78 -- draw the drag cursor. */
+/* [25] 0x020e4b78 -- draw the drag cursor at the 0x5584/0x5588 drag point,
+ * offset up and left, while the 0x55b9 flag is set. */
 // @symbol func_ov006_020e4b78
-extern "C" void func_ov006_020e4b78(char*c){
-  if(*(unsigned char*)(c+0x55b9)==0) return;
-  int x=*(int*)(c+0x5584);
-  int y=*(int*)(c+0x5588);
-  func_ov004_020afdd0((int)data_ov006_0213c4f0,(x>>12)-0x20,(y>>12)-8,-1,0);
+extern "C" void func_ov006_020e4b78(char *c)
+{
+    if (*(unsigned char *)(c + 0x55b9) == 0) return;
+
+    int x = *(int *)(c + 0x5584);
+    int y = *(int *)(c + 0x5588);
+    func_ov004_020afdd0((int)data_ov006_0213c4f0, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 
@@ -954,6 +1048,9 @@ extern "C" void func_ov006_020e4ed4(char *self)
     int y;
 
     idx = data_020a0e40;
+    /* `4 & 0xFFFFFFFF` is not decoration: 0xFFFFFFFF is unsigned, so the mask
+       makes this one subscript unsigned where the next is signed, and that is
+       what the ROM's index arithmetic does.  Deleting it costs 20 words. */
     if (data_020a0de8[idx * (4 & 0xFFFFFFFF)] != 0)
     {
         if (data_020a0de9[idx * 4] != 0)
@@ -962,41 +1059,39 @@ extern "C" void func_ov006_020e4ed4(char *self)
     if (flag == 0)
         return;
 
-    x = ((*((int *)(self + 0x5584))) >> 0xc) -
-        data_020a0dea[idx * 4];
-    y = ((*((int *)(self + 0x5588))) >> 0xc) -
-        data_020a0deb[idx * 4];
+    x = (*(int *)(self + 0x5584) >> 0xc) - data_020a0dea[idx * 4];
+    y = (*(int *)(self + 0x5588) >> 0xc) - data_020a0deb[idx * 4];
 
-    *((int *)(self + 0x5594)) = x << 0xc;
-    *((int *)(self + 0x5598)) = y << 0xc;
-    *((u8 *)(self + 0x55b8)) = 1;
-    *((u16 *)(self + 0x55b2)) = 0xc000;
+    *(int *)(self + 0x5594) = x << 0xc;
+    *(int *)(self + 0x5598) = y << 0xc;
+    *(u8 *)(self + 0x55b8) = 1;
+    *(u16 *)(self + 0x55b2) = 0xc000;
 
-    if (*((u8 *)(self + 0x55bd)) == 0)
+    if (*(u8 *)(self + 0x55bd) == 0)
     {
-        func_02012718(0x1d2, *((int *)(self + 0x5584)));
-        *((u8 *)(self + 0x55bd)) = 6;
+        func_02012718(0x1d2, *(int *)(self + 0x5584));
+        *(u8 *)(self + 0x55bd) = 6;
     }
 
-    *((int *)(self + 0x55a0)) = 0;
-    *((int *)(self + 0x55a4)) = 0;
-    *((int *)(self + 0x558c)) =
-        (*((int *)(self + 0x5584))) + (*((int *)(self + 0x5594)));
-    *((int *)(self + 0x5590)) =
-        (*((int *)(self + 0x5588))) + (*((int *)(self + 0x5598)));
-    *((int *)(self + 0x55a8)) = 0xff;
-    *((u8 *)(self + 0x55be)) = 0;
+    *(int *)(self + 0x55a0) = 0;
+    *(int *)(self + 0x55a4) = 0;
+    *(int *)(self + 0x558c) = *(int *)(self + 0x5584) + *(int *)(self + 0x5594);
+    *(int *)(self + 0x5590) = *(int *)(self + 0x5588) + *(int *)(self + 0x5598);
+    *(int *)(self + 0x55a8) = 0xff;
+    *(u8 *)(self + 0x55be) = 0;
 }
 
 
-/* [28] 0x020e4fe8 -- draw the "shots left" counter. */
+/* [28] 0x020e4fe8 -- draw the counter at the bottom of the screen: a fixed
+ * sprite, a language-dependent label out of data_ov006_0213c4dc, and 5 minus
+ * the 0x55ba count, floored at zero. */
 // @symbol func_ov006_020e4fe8
 extern "C" void func_ov006_020e4fe8(char *c)
 {
     int v;
-    if (*(unsigned char *)(c + 0x5000 + 0x5c3) == 0)
+    if (*(unsigned char *)(c + 0x55c3) == 0)
         return;
-    v = 5 - *(unsigned char *)(c + 0x5000 + 0x5ba);
+    v = 5 - *(unsigned char *)(c + 0x55ba);
     if (v < 0)
         v = 0;
     func_ov004_020af948((int)&data_ov006_0213c3fc, 0xd0, 0xb4, 0);
@@ -1005,23 +1100,24 @@ extern "C" void func_ov006_020e4fe8(char *c)
 }
 
 
-/* [29] 0x020e507c -- draw the eleven stones on both screens. */
+/* [29] 0x020e507c -- draw each live, visible stone on both screens: the body
+ * sprite, picked by the stone's 0x468d flag, and a shadow eight pixels down. */
 // @symbol func_ov006_020e507c
-extern "C" void func_ov006_020e507c(char* a0) {
+extern "C" void func_ov006_020e507c(char *p)
+{
     int x, y;
     int i;
-    for (i = 0; i < 0xb; i++) {
-        void* d;
-        if (*(unsigned char*)(a0 + 0x4689) == 0) goto next;
-        if (*(unsigned char*)(a0 + 0x468a) == 0) goto next;
-        x = *(int*)(a0 + 0x4660) >> 12;
-        y = *(int*)(a0 + 0x4664) >> 12;
-        if (*(unsigned char*)(a0 + 0x468d) != 0) d = &data_ov006_0213c44c;
-        else d = &data_ov006_0213c3fc;
-        RenderOamBothScreens(d, x, y, -1, 1, 0);
+
+    for (i = 0; i < 0xb; i++, p += 0x30) {
+        void *tex;
+        if (*(unsigned char *)(p + 0x4689) == 0) continue;
+        if (*(unsigned char *)(p + 0x468a) == 0) continue;
+        x = *(int *)(p + 0x4660) >> 12;
+        y = *(int *)(p + 0x4664) >> 12;
+        if (*(unsigned char *)(p + 0x468d) != 0) tex = &data_ov006_0213c44c;
+        else tex = &data_ov006_0213c3fc;
+        RenderOamBothScreens(tex, x, y, -1, 1, 0);
         RenderOamBothScreens(&data_ov006_0213c454, x, y + 8, -1, 2, 0);
-    next:
-        a0 += 0x30;
     }
 }
 
