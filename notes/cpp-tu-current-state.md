@@ -71,17 +71,17 @@ partition to add to the migrated and unmigrated rows.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked `src_tu/` source files | 32 |
-| Manifest entries | 142 |
-| Functions named by manifest entries | 2074 |
-| Unique functions named by the manifest | 2063 |
+| Tracked `src_tu/` source files | 33 |
+| Manifest entries | 143 |
+| Functions named by manifest entries | 2111 |
+| Unique functions named by the manifest | 2100 |
 | Modules represented | 41 |
-| Manifest shadow sources present in git | 142 |
+| Manifest shadow sources present in git | 143 |
 | Entries licensing non-text sections | 17 |
 | Entries actually production-enrolled at `promoted_source` | 110 |
 | Existing promotion paths that disagree with delinks | 0 |
 
-Manifest statuses: `link-verified` 4, `promoted` 110, `shadow` 1, `text-verified` 27.
+Manifest statuses: `link-verified` 4, `promoted` 110, `shadow` 1, `text-verified` 28.
 
 `config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every

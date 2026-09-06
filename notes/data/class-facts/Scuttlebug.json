@@ -1,0 +1,81 @@
+{
+  "class": "Scuttlebug",
+  "rtti_name": "7daSpd_c",
+  "rtti_name_address": "0x02122bf0",
+  "coined_name_warning": "The tree spells this class Scuttlebug; the cartridge's RTTI spells it daSpd_c (spd = spider, and the registry profile is g_profile_SPIDER at 0x02122c08). ov071/symbols.txt aliases the VTABLE under both names at one address but does NOT alias _ZTI/_ZTS. That asymmetry is what blocks the promotion -- see notes below.",
+  "typeinfo": {
+    "symbol": "_ZTI7daSpd_c",
+    "address": "0x02122bfc",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "base_typeinfo": "_ZTI8dActor_c (arm9 0x0208e390)",
+    "evidence": "config/arm9/overlays/ov071/relocs.txt: 0x02122c00 -> 0x02122bf0 (_ZTS7daSpd_c), 0x02122c04 -> arm9 0x0208e390 (_ZTI8dActor_c)."
+  },
+  "overlay": "ov071",
+  "module_text_start": "0x0211f000",
+  "vtable": {
+    "symbol": "_ZTV10Scuttlebug (== _ZTV7daSpd_c)",
+    "address": "0x02122c2c",
+    "slots": 31,
+    "symbol_extent": "0x7c",
+    "storage": "0x02122c24..0x02122ca8 = 0x84",
+    "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top, RTTI pointer) sit at -8 and -4",
+    "evidence": "THREE independent tools agree. (1) mwccarm's own emitted storage size, harvested from a deliberately unlicensed verify run: EXTRA .data _ZTV10Scuttlebug size=0x84. (2) tools/rtti_vtables.py --own daSpd_c -> 31 slots (base dActor_c 31). It answers only to the ROM RTTI spelling: --own Scuttlebug prints nothing. (3) The relocation run in relocs.txt: 0x02122c28 (the typeinfo preamble word) through 0x02122ca4 with no gap, closing immediately before data_ov071_02122ca8, which is also what the naive next-symbol read gives here (0x02122ca8 - 0x02122c2c = 0x7c). All three land on 0x7c / 31 slots / 0x84 storage."
+  },
+  "base_class": "dActor_c",
+  "base_evidence": "_ZTI7daSpd_c is a __si_class_type_info whose +8 word relocates to _ZTI8dActor_c (arm9 0x0208e390), so the direct base is dActor_c and nothing else. Corroborated by length: _ZTV8dActor_c and _ZTV7daSpd_c are both 31 slots -- this class adds no slot, it only overrides.",
+  "ancestor_chain": ["Scuttlebug/daSpd_c", "dActor_c", "dBase_c", "fBase_c"],
+  "overrides": [
+    {"slot": 0,  "address": "0x021203f8", "name": "InitResources", "size": "0x188"},
+    {"slot": 3,  "address": "0x02120308", "name": "CleanupResources", "size": "0x30"},
+    {"slot": 6,  "address": "0x02120398", "name": "Behavior", "size": "0x60"},
+    {"slot": 9,  "address": "0x0212033c", "name": "Render", "size": "0x5c"},
+    {"slot": 12, "address": "0x02120338", "name": "OnPendingDestroy", "size": "0x4", "note": "empty body; the override exists only to occupy the slot"},
+    {"slot": 16, "address": "0x0211f000", "name": "~Scuttlebug (D1)", "size": "0x48", "note": "the FIRST byte of ov071's .text; the header defines the destructor inline, which is what makes mwccarm emit D1 then D0 with no D2"},
+    {"slot": 17, "address": "0x0211f048", "name": "~Scuttlebug (D0, deleting)", "size": "0x5c"},
+    {"slot": 18, "address": "0x0211f0a4", "name": "OnYoshiTryEat", "size": "0x8", "note": "THE KEY FUNCTION: with the destructor inline this is the first non-inline virtual the class declares, so the TU that defines it emits _ZTV/_ZTI/_ZTS. Body returns the constant 6."},
+    {"slot": 19, "address": "0x02120580", "name": "OnTurnIntoEgg(Player&)", "size": "0x98"},
+    {"slot": 29, "address": "0x0211f0ac", "name": "OnAimedAtWithEgg", "size": "0x8", "note": "returns the constant 204800"}
+  ],
+  "inherited_unchanged_slots": "every slot other than 0, 3, 6, 9, 12, 16, 17, 18, 19 and 29 holds dActor_c's own word.",
+  "text_span": "0x0211f000..0x02120668, 37 functions, contiguous with no gap",
+  "shard_count_correction": {
+    "tu_map_says": 36,
+    "real": 37,
+    "why": "tools/tu_map.py cuts on symbol NAME. daSpd_c_classInit at 0x02120618 is not spelt _ZN10Scuttlebug..., so it was never labelled and never counted, even though _ZN10Scuttlebug13OnTurnIntoEggER6Player ends at exactly 0x02120580 + 0x98 = 0x02120618 -- a ZERO-byte gap. Its delinks.txt entry is src/d_a_spd.c. ov071 puts each class's <class>_classInit last in its own run: the promoted daEyBm_c carries daEyBm_c_classInit as its 13th member, and daObjCasket_c and daEykn_c do the same."
+  },
+  "size": "0x3ac",
+  "size_evidence": "daSpd_c_classInit's own literal: fBase_c::operator new(940 = 0x3ac). The trailing byte fields close exactly on it, and ~Scuttlebug destroys the four members in reverse.",
+  "members": [
+    {"offset": "0x0d4", "type": "ModelAnim",  "name": "mModelAnim"},
+    {"offset": "0x138", "type": "ShadowModel", "name": "mShadowModel"},
+    {"offset": "0x160", "type": "dCcAc_c",    "name": "mdCcAc_c"},
+    {"offset": "0x194", "type": "dBgCh_Actr", "name": "mWithMeshClsn"},
+    {"offset": "0x3a8", "type": "u8",         "name": "mTimer", "note": "typed u8 in the header but read and written as a HALFWORD by six members"}
+  ],
+  "compiler_only_output_measured": {
+    "queue_said": "compiler-only:>=9",
+    "measured": 10,
+    "derivation": "2 x (3 ancestors + self) + 1 vtable = 9, plus 1 for _ZN7Vector3D1Ev because the TU odr-uses Vector3 at all (four function locals -- three in func_ov071_0211f148, one in func_ov071_0211f8d0 -- and the term is +1 however many objects). No file-local anonymous struct holds them, so no extra @class$ destructor.",
+    "rows": [
+      {"symbol": "_ZN7Vector3D1Ev", "section": ".text", "size": "0x4", "home": "arm9 0x020072c0", "disposition": "deadstrip-duplicate"},
+      {"symbol": "_ZTI7fBase_c", "size": "0x8", "home": "arm9 0x02086d70", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTS7fBase_c", "size": "0x9", "home": "arm9 0x02086e60", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTS7dBase_c", "size": "0x9", "home": "arm9 0x02086e54", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTI7dBase_c", "size": "0xc", "home": "arm9 0x02086e78", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTS8dActor_c", "size": "0xa", "home": "arm9 0x0208e384", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTI8dActor_c", "size": "0xc", "home": "arm9 0x0208e390", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTV10Scuttlebug", "size": "0x84", "home": "ov071 0x02122c2c", "disposition": "deadstrip-data"},
+      {"symbol": "_ZTS10Scuttlebug", "size": "0xd", "home": "NONE -- the cartridge's record is _ZTS7daSpd_c", "disposition": "BLOCKED"},
+      {"symbol": "_ZTI10Scuttlebug", "size": "0xc", "home": "NONE -- the cartridge's record is _ZTI7daSpd_c", "disposition": "BLOCKED"}
+    ]
+  },
+  "unproven": [
+    "the original SM64DS spelling of daSpd_c_classInit (historical project alias Scuttlebug_Spawn) and of Scuttlebug_SetState",
+    "the English names of the 29 auto-named func_ov071_* state handlers and helpers -- their class ownership, bodies, calls and ordering are proven, their names are not",
+    "what mTimer expiring means: six members read and write it as a halfword and Behavior discards DecIfAbove0_Short's result",
+    "the 4-byte gap at 0x0d0 -- no load or store in this class's 37 functions touches it",
+    "whether g_profile_SPIDER at 0x02122c08 belongs to this TU's data band; it is not claimed here and the TU does not define it (the promoted sibling daEyBm_c does claim its own g_profile_EYEKUN_BEAM)"
+  ],
+  "provenance": "Written by the writer stage for ov071/Scuttlebug (no scout run existed). Sources: tools/tubuild.py inspect + verify, tools/rtti_vtables.py --own daSpd_c over build/rtti.json, tools/disasm.py over extracted/overlays/overlay_0071.bin, config/arm9/overlays/ov071/{symbols,relocs,delinks}.txt, and config/arm9/symbols.txt."
+}

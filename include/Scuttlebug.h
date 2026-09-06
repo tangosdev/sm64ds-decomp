@@ -40,7 +40,14 @@ struct Scuttlebug : dActor_c {
     u8  mTimer;                             /* 0x3a8 */
     u8  pad_3a9[0x3];
 
-    virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */
+    /* DEFINED INLINE, and declared ahead of every other virtual. The cartridge
+       orders the pair D1 (0x0211f000) then D0 (0x0211f048) with no D2 anywhere
+       in ov071, which is exactly what mwccarm 2004/b56 emits for an inline
+       destructor; an out-of-line one emits D2, D0, D1 plus a homeless D2.
+       Declaring it inline also moves the KEY FUNCTION down to OnYoshiTryEat,
+       the first non-inline virtual this class declares, which sits inside the
+       licensed run at 0x0211f0a4 and so anchors _ZTV10Scuttlebug here. */
+    virtual ~Scuttlebug() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -54,5 +61,12 @@ struct Scuttlebug : dActor_c {
 };
 
 typedef char Scuttlebug_size_must_be_0x3ac[sizeof(Scuttlebug) == 0x3ac ? 1 : -1];
+
+/* OnYoshiTryEat, the key function, owns the compiler-emitted definition of
+ * this vtable. daSpd_c_classInit must store its public address point directly
+ * because the measured factory calls fBase_c::operator new rather than a
+ * natural new; this declaration only exposes that compiler-owned address to
+ * the factory seam. */
+extern int _ZTV10Scuttlebug[];
 
 #endif /* SCUTTLEBUG_H */
