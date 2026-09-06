@@ -75,8 +75,7 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     /* Inline and declared first: see the file banner. The four explicit calls
        are the ROM's own order -- mModel2, mModel1, mArray, mTable -- which
        typed members could not reproduce. */
-    virtual ~dScMgRoulette_c()
-    {
+    virtual ~dScMgRoulette_c() {
         _ZN5ModelD1Ev(mModel2);
         _ZN5ModelD1Ev(mModel1);
         __destroy_arr(mArray, 5, 0x34, (void *)func_ov006_021079c8);
