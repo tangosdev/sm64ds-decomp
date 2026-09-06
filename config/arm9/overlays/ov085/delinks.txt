@@ -432,6 +432,7 @@ src/func_ov085_0212e480.c:
     .text start:0x0212e480 end:0x0212e4a4
 
 src/func_ov085_0212e4a4.c:
+    complete
     .text start:0x0212e4a4 end:0x0212e59c
 
 src/func_ov085_0212e59c.c:

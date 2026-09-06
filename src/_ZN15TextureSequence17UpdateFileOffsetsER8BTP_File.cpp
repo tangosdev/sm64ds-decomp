@@ -4,6 +4,12 @@
 
 #define REBASE(p) ((char *)(p) + base)
 
+/* Each record loop reads the offset word once and reuses it for the add: the
+   cartridge does ldr / cmp / addne / strne on the same register. Written as
+   `{ int v = *(int *)(p + 4); if (v) *(int *)(p + 4) = v + base; }` mwcc CSEs the p+4 address
+   into its own register and reloads through it (addne r2,r3,#4 / ldrne r1,[r2]),
+   two extra words per loop. */
+
 void TextureSequence::UpdateFileOffsets(BTP_File &file)
 {
     int base = (int)&file;
@@ -12,7 +18,7 @@ void TextureSequence::UpdateFileOffsets(BTP_File &file)
     {
         char *p = file.unk_04;
         while (i < (int)file.numTexRecords) {
-            if (*(int *)(p + 4)) *(int *)(p + 4) += base;
+            { int v = *(int *)(p + 4); if (v) *(int *)(p + 4) = v + base; }
             i++;
             p += 8;
         }
@@ -22,7 +28,7 @@ void TextureSequence::UpdateFileOffsets(BTP_File &file)
         char *q = file.unk_0c;
         int j = 0;
         while (j < (int)file.numPalRecords) {
-            if (*(int *)(q + 4)) *(int *)(q + 4) += base;
+            { int v = *(int *)(q + 4); if (v) *(int *)(q + 4) = v + base; }
             j++;
             q += 8;
         }
@@ -35,7 +41,7 @@ void TextureSequence::UpdateFileOffsets(BTP_File &file)
         char *r = file.unk_20;
         int k = 0;
         while (k < (int)file.numSeqRecords) {
-            if (*(int *)(r + 4)) *(int *)(r + 4) += base;
+            { int v = *(int *)(r + 4); if (v) *(int *)(r + 4) = v + base; }
             k++;
             r += 0xc;
         }

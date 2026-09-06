@@ -11,6 +11,47 @@ single C++ TU". Read it (`git show --stat 72c6dcfb6`) before you start.
 Do **not** use a `Reconstruct N actor profiles (wave NN)` commit as your
 template. Those rename registry rows and never touch the shard pile.
 
+## Stage 3b: gathering is only half the job
+
+Folding the shards into one byte-matching TU earns `status: promoted`. It does not
+make the class a class. Until 2026-09-06 nothing here asked for methods, and the
+landed spread runs from `dScMgCoin_c` at **0 of 33** members to `dScMgMemory2_c` at
+**51 of 52** -- all of them `promoted`, all counted the same by every metric. See
+`PIPELINE.md`, "A promoted TU is not a reconstructed class", for the full table.
+
+**Convert as far as byte-match allows.** Turn each `func_ovNNN_*(char *self, ...)`
+member into a real `<Class>::` method declared in the header; the leading `char
+*self` becomes the implicit `this` in the same register, so most conversions cost
+nothing -- but **measure, do not assume**. Work in batches, run `tubuild.py verify`
+after each, and isolate any regression to one cause before continuing. A member
+whose first parameter is not the object, or that will not convert byte-neutrally,
+**stays a free function**: that is a result, not a failure. `dScMgMemory2_c` is the
+oracle for every mechanical question -- read its source and manifest first.
+
+This may run as a separate pass on the same branch after stages 2 and 3 have
+already pushed. Whenever you report a promotion, give the method count next to the
+match count: "31/31 MATCH" hides "1 of 31 is a method".
+
+**The rename is ONE edit.** A converted member gets a new mangled name, and any
+pointer-to-member record in unowned `.data` that still spells the target `func_*`
+then links as `0x00000000` -- dsd resolves those records by NAME. `symbols.txt` and
+the manifest's `functions[]` move in the same commit. No byte gate at stage 2 or 3
+catches this; the cheap link evidence is a `.symtab` undefined-symbol scan of the
+emitted object.
+
+## Coined class names are allowed, and must be recorded as coined
+
+An earlier version of this file told you not to claim a class whose name was coined
+rather than read from the cartridge's RTTI. **That rule is withdrawn** -- see
+`PIPELINE.md`, "Coined class names are allowed". Ten coined-name classes have already
+shipped, so the rule condemned merged work.
+
+Claim it, and record the name as coined with its evidence in the manifest and in
+`symbols/actor_renames.tsv` -- the same discipline this file already requires for
+coined *member* names: say what the ROM proves and what you chose, separately. Check
+`identity_evidence` in the facts file and state the identity either way. **Do not run
+`class_rename.py`** to manufacture agreement.
+
 ## Inputs
 
 - `notes/data/tu-promotion-queue.tsv` — your target, its `shard_count`,
@@ -52,7 +93,16 @@ uniquification stops being advice.** Measured at 41 members: duplicate
 - a naive `C` tag rename corrupts `extern "C"` into `extern "C_5fec"` —
   placeholder-protect the string first;
 - member-local `extern` declarations that mention a renamed tag must **not** be
-  hoisted into the shared block.
+  hoisted into the shared block;
+- `re.sub(r'^(\s+)extern "C" ', ..., re.M)` matches **across a preceding blank
+  line**, because `\s` includes `
+`. It rewrites file-scope `extern "C" {`
+  into `extern {` and reports `declaration syntax error` eighty lines away. Use
+  `[ 	]+`;
+- any scan for a member's definition line must **skip comments**. A doc comment
+  naming `Class::Method` is taken as the definition, which silently leaves that
+  shard's declaration block at file scope — three `illegal function
+  overloading` errors, none of them near the real cause.
 
 **And `create`'s merging of a shared `struct` is a codegen hazard, not a naming
 one.** On `dScMgSound_c`, eleven dispatch members saw `struct C` **incomplete**
@@ -262,11 +312,49 @@ long omitted:
 |---|---|
 | `externalized_output` | a symbol whose one kept copy lives in **another module** — disposition `canonical-import` |
 
+**An unowned `.data` section in `delinks.txt` does NOT mean your TU cannot own
+data.** Prompts and notes have repeatedly stated the ov006 constraint as "the
+whole `.data` segment is one section owned by no file, so a TU there cannot own
+data objects". Measured false: `dScMgTrampoline_c+MgTrampolineTime` and
+`dScMgTrampoline2_c` each own named objects at that section's tail
+(`0x0213faa0`, `0x0213fbc4`). The section being unowned in `delinks.txt` and a
+manifest claiming individual symbols inside it are different questions. The
+constraint that does survive is narrower and is about position: ov006's vtables
+sit **mid-section**, so they cannot be carved out, and a TU there still must not
+emit its own vtable.
+
+**Do not assume a sibling convention about the `*_classInit` factory — count
+it.** It is tempting to read one promoted neighbour and generalise. On ov006,
+**14 of the 20 manifests name a `classInit`**, and three of the exclusions are
+only because a separate manifest already claims it. Whether the factory belongs
+in your claim is decided by whether it is contiguous with the run you are
+taking, not by a house style.
+
 **Prefer `deadstrip-data`. `externalized_output` is the non-promotable route.**
 A cross-module home does *not* by itself send a symbol to `externalized_output`:
 what matters is whether the address has a **configured ROM home** in some
 module's `symbols.txt`. If it does — even in another overlay — it is
-`deadstrip-data` and it promotes. The promoted precedent `ov029/daObjWcObj01_c`
+`deadstrip-data` and it promotes.
+
+**But "the address has a home" is the wrong test, and this file stated it as the
+right one.** `apply_compiler_only_policy` (`tools/tubuild.py:2280`) resolves a
+row's home through `all_symbol_homes()`, which is **keyed on the `symbols.txt`
+spelling, not the address**. Measured on ov062/`Koopa`: `_ZTI5Koopa`'s record
+sits at a fully configured ov062 address — `0x0211da68` — and was refused
+anyway, because the cartridge configures it as `_ZTI8daNknk_c`. `tubuild.py`'s
+own comment at `:2264` says it outright: *"`homes` is keyed on the symbols.txt
+spelling while `_ZTI`/`_ZTS` are LENGTH-PREFIXED mangled strings — a coined name
+misses on both the prefix and the body, and the miss reads as 'the ROM has no
+such record'."*
+
+So read the rule as **spelled-the-cartridge's-way vs. not**, and expect it to
+bite exactly one class of symbol: a coined class's own `_ZTI`/`_ZTS`, in a TU
+that owns the key function. `_ZTV` frequently escapes because somebody added a
+coined alias row for it — honest for a vtable, and **not available for `_ZTS`**,
+whose *content* is the length-prefixed name (`"5Koopa"` where the cartridge
+holds `"8daNknk_c"`). Three separate classes hit this in one day (`Koopa`,
+`Scuttlebug`, `KingBobOmb`); `class_rename.py` counts **125** in this state. The
+unblock is the rename, as its own change. The promoted precedent `ov029/daObjWcObj01_c`
 carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
 
@@ -324,6 +412,78 @@ its oracle sits one level shallower.
 
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
+
+**A coined class name is harmless UNLESS your TU owns the key function — and
+then it is a hard blocker.** Three runs in one day reached opposite conclusions
+about renaming, and this is the reconciliation:
+
+- **Your range does not own the key function** → the TU emits no vtable and no
+  RTTI at all, so the tree's coined spelling never reaches a manifest. Keep it.
+  Renaming is a `class_rename` campaign, not a promotion. (`Goomboss` kept
+  `Goomboss` over the cartridge's `daKuriKing_c`; `Eyerok` kept `Eyerok` over
+  `daIwante_c`.)
+- **Your range does own the key function** → the TU emits `_ZTI`/`_ZTS`/`_ZTV`
+  for its own class, and those rows **must** carry the ROM's RTTI spelling.
+  `verify` refuses a coined RTTI row — it is "banked as a plain deadstrip, never
+  compared against the cartridge" — and the precedent is unanimous: **994 RTTI
+  and vtable rows across every promoted manifest, zero of them under a coined
+  name** (measured 2026-09-05 against `build/rtti.json`). There is no such thing
+  as a promoted coined class.
+
+**And the inline-destructor lever can CREATE this blocker out of nothing.**
+Inlining moves the key function to the first out-of-line virtual declared. On
+ov071/`Scuttlebug` that pulled the key function *into* the claimed range — which
+is what the writer wanted for emission order, and it is also what turned a
+harmless coined name into a hard refusal. The TU then emitted
+`_ZTI10Scuttlebug` / `_ZTS10Scuttlebug`, which no `symbols.txt` anywhere names,
+and both dispositions refuse:
+
+    deadstrip-data -> "declared compiler-only data but has no configured ROM
+                       home; a homeless object is a plain deadstrip"
+    deadstrip      -> "an RTTI/vtable record banked as a plain deadstrip, which
+                       is never compared against the cartridge. If the class
+                       carries a coined name, rename it to the cartridge's RTTI
+                       spelling..."
+
+Result: `verify` 37/37 MATCH, TEXT-VERIFIED, **PROMOTION REFUSED** on two
+symbols. So before you reach for the inline destructor, check whether the class
+name is coined — the two levers interact, and `class_rename.py` reports **125
+classes** sitting in this state. Note the vtable often escapes because
+`symbols.txt` already aliases `_ZTV` under both spellings; nobody did the same
+for `_ZTI`/`_ZTS`.
+
+**Do not "fix" this by adding an alias, and understand why the temptation is
+dangerous: faking it passes every gate you can run locally.** `deadstrip-data`'s
+home check is a **name lookup**, and the byte comparison is deferred to
+`rombuild`. Giving `_ZTS10Scuttlebug` a home address would produce a green
+`verify` and a genuine 13-versus-12-byte mismatch downstream. The refusal is
+correct; the fix is the rename, as its own reviewable change.
+
+**Every path you cite must resolve from the repo root on a fresh clone.**
+This is a real defect, not a hypothetical: four private Claude-memory slugs are
+committed in this tree as though they were repo notes. Naming the slugs alone,
+because spelling them the way the source does would trip the dead-reference gate
+in this very file: `actor-class-names-off-by-one` in `include/daObjHmBskt_c.h`,
+`key-function-tu-vptr-store-blocker` in
+`src/game/actors/d_a_obj_km3_dorifu.cpp` and twice in
+`src_tu/actors/TTC_MovingBar.cpp`, `phantom-references` in
+`include/nitro/hw/registers.h`, and `stale-tu-map-overcut-ov006` in two
+`config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings — each written
+there with a `notes/` prefix and a `.md` suffix. Those files live
+in one machine's private memory directory; nobody else can follow the reference,
+and the dead-reference gate never saw them because it walked only `.md`.
+
+State the test as the fresh-clone property, not as "don't cite memory". An agent
+that can see its own memory directory finds the file sitting right there, so
+"is this a memory slug" is not a question it can answer — "does this path resolve
+in a fresh clone" is. The same test catches the neighbouring mistake of citing an
+untracked local scratch file. Cite a tracked repo path, or state the fact inline.
+
+Look the class up in `build/rtti.json` before you decide anything else, and
+expect the alias case: `symbols.txt` can carry **both** spellings at one address
+(`_ZTV10KingBobOmb` and `_ZTV12daBombking_c` at `0x02126e4c`). If you own the key
+function and hit that, say so in your report rather than renaming silently — the
+rename touches `symbols.txt` tree-wide and is a separate, reviewable decision.
 
 **The whole formula is conditional on the licensed range owning the key
 function, and this file used to state it unconditionally.** A TU that does not
@@ -421,14 +581,47 @@ both destructor variants in.
 
 mwccarm 2004/b56 behaviours, not style preferences.
 
-- **`virtual ~X() {}` inline, declared FIRST member.** Out-of-line emits
-  D2/D0/D1 in the wrong order plus a homeless D2; the ROM carries D1-then-D0
-  and no D2.
+- **The destructor form is a MEASUREMENT, not a default.** Two forms reproduce
+  the ROM's usual `D1`-then-`D0`-and-no-`D2`, and which one a TU needs is a
+  question to measure per TU:
+
+  - `virtual ~X() {}` **inline, declared FIRST member** — the variants emit in
+    reverse order of their first odr-use;
+  - the destructor **out of line** under `#pragma defer_codegen off` — emits
+    `D1, D0, D2`.
+
+  Out-of-line *without* that pragma emits `D2/D0/D1` in the wrong order plus a
+  homeless `D2`, which is where the flat "always inline it" rule this file used
+  to state came from. Landed both ways: ov006/`dScMgTeresa_c` and
+  ov006/`dScMgPanel_c` (71/71 bytes; its stage-2 "link-verified" was **not
+  reproducible** and stage 4 had to repair the linkage — see below) are both
+  out-of-line +
+  `defer_codegen off`. **Try both before you take a partial** — and note the
+  inline form has a cost of its own, since it moves the key function to the
+  first out-of-line virtual declared, which on a coined-name class turns a
+  harmless name into a hard promotion refusal.
 - **Emission order is a hard gate, and it is the constraint most likely to stop
   you.** `linkcheck [4b/8]` fatally refuses a TU whose licensed `.text` sections
   are not in ROM-ascending order: `licensed .text functions are not emitted in
   ROM address order`. Beware that `tubuild verify` reports the same condition as
   `PARTIAL ... not necessarily a bug`, which reads advisory and is not.
+
+  **And `verify`'s exit code carries no verdict about promotability.** It is
+  `return 0 if text_verified else 1` — so a run that prints `PROMOTION REFUSED`,
+  for unlicensed output or a compiler-only policy refusal, still **exits 0**.
+  Only a compile failure or a byte/reloc failure gives 1. Read the console text;
+  never gate on `$?` alone here. (Measured on ov071/`Scuttlebug`: two refused
+  runs, both exit 0.)
+
+  **Two more things that run does not say out loud.** The manifest's
+  `verification.criteria` records the **pre-policy** unlicensed count while the
+  console prints the post-policy one — `FAIL-BY-DESIGN -- 10 unlicensed
+  section/symbol(s)` in the file against `2 unlicensed section/symbol(s)` on
+  screen, after 8 were licensed. It is deterministic wording, not drift (a
+  re-run produced a byte-identical manifest), but a reader trusting the manifest
+  sees five times the real number. And it is **`linkcheck`**, not `verify`, that
+  was observed rewriting the manifest here — it adds a `verification.linkcheck`
+  block, and it can race your `git add`.
 
   The destructor pair is the usual way to hit it. Under **default** codegen the
   lever set is closed — measured, not guessed: **inline in class ⇒ D1 then D0,
@@ -521,8 +714,66 @@ they cost minutes; discover them after and each is a cycle.
 - **Discard the generated preamble above roughly 30 members.** tubuild's emitted
   one had `Self`/`Pmf` in dependency-wrong order, a `Vector3` redeclaration
   against the real header, duplicate `P2`/`Pair`/`Obj` tags, and three
-  contradictory externs for a single data symbol. Hand-curate from the parsed
-  shards instead.
+  contradictory externs for a single data symbol.
+
+  **But "hand-curate one declaration per symbol" is the wrong next step, and at
+  real size it is unworkable.** 301 independent recoveries of one symbol
+  disagree constantly, and forcing a single spelling rewrites call sites.
+  Measured on ov002/`Player` (301 members): in mwccarm 2004/b56 a declaration
+  written at **block scope inside an `extern "C"` region gets C linkage**, and
+  two function bodies may declare one C symbol with **different types**. So keep
+  every member's declarations **inside its own body** and merge nothing. Hoist
+  only what a body cannot hold — namespaces, classes with static or
+  declared-but-undefined members, and any type named in a member's own
+  signature — uniquifying tags per member.
+
+  **Read "inside an `extern "C"` region" as the load-bearing half of that
+  sentence, because a C++-NAMED MEMBER CANNOT BE INSIDE ONE.** A `func_ov006_*`
+  member is wrapped in its own file-scope `extern "C" { }`, so its block-scope
+  `extern` names the ROM symbol. A class member function — `Class::Method` — may
+  not sit in a linkage-specification region at all, so the identical block-scope
+  declaration written in *its* body gets **C++ linkage** and the reference
+  mangles. Measured on ov006/`dScMgPanel_c`: 67 wrapped members were fine, the
+  four C++-named ones (ordinals 67-70) emitted **41 mangled undefined symbols**
+  — `_Z8LoadFilei`, `_Z10DeallocatePv`, `_Z19func_ov006_021063a0Pv` — and
+  mwldarm aborted with 22 `Undefined`. Nothing before the link noticed:
+  `tubuild verify` was 71/71 MATCH with objisolate and reloc-destinations clean,
+  and the `[4b]` object audit was `order_ok True, {'LICENSED': 71}, 0 refusals`.
+  **And you cannot fix it in the body**: mwccarm 2004/b56 rejects a block-scope
+  linkage specification outright — `extern "C" { extern void f(int); }` inside a
+  function is `Error: declarator expected`. So a TU with C++-named members needs
+  **one file-scope `extern "C"` region** for what those members call, the way
+  ov006/`dScMgTeresa_c` and ov006/`dScMgRoulette_c` already do. Place it *after*
+  the last wrapped member so none of them can see it and their independently
+  recovered spellings stand. Declarations naming members of the TU itself do not
+  belong in it at all — delete them and let the call bind to the definition
+  already above it, casting at the call site if the definition's pointer type
+  differs. Data is unaffected: mwccarm leaves a file-scope variable's name
+  unmangled in C++, so `data_*` declarations stay in their bodies.
+
+- **"Block-scope data redeclaration is rejected" is false**, and believing it
+  costs bytes. Measured directly: `extern int dv;`, `extern char dv[];` and
+  `extern struct V dv;` in three separate function bodies compile cleanly. Only
+  a **file-scope** redeclaration is rejected.
+
+  **But the licence is for FUNCTIONS with C linkage, and a project header
+  revokes it for data.** Measured on ov006/`dScMgPanel_c`:
+  `include/dScMgBase_c.h:12` already declares
+  `extern "C" void *data_ov004_020beb68;`, ordinal 60 recovered the object as
+  `char *`, and the block-scope form is rejected outright —
+  `identifier 'data_ov004_020beb68' redeclared; was declared as: 'void *'`.
+  The wording above sends you hunting for a file-scope duplicate *inside your
+  own TU* that is not there; the conflicting declaration is in a header you
+  include. The fix that kept 71/71 was a reinterpreting macro, not a
+  redeclaration.
+
+- **Canonicalising a DATA declaration is a codegen hazard, exactly like merging
+  a shared `struct`.** Hoisting one canonical data declaration and casting each
+  member's view back with a macro **changed the codegen of six members** on
+  `Player` — and which spelling became canonical depended on which *other*
+  members happened to be in the file. Moving the data declarations back to block
+  scope recovered all six. The role file named the struct case as a hazard and
+  said nothing about data; they are the same hazard.
 - **A caller may pass more arguments than the definition takes.** Two sites did.
   Declare the unused extra parameter — it preserves the caller's argument setup
   and costs the callee nothing.
@@ -564,6 +815,29 @@ reason matters: **no header under `include/` includes `decl_common.h`**, so the
 Both promoted precedents (`daDsnBase_c`, `daObjCtMecha03_c`) do. Do the same and
 align your spellings to it, rather than assuming the header will collide with
 you on its own.
+
+**But a `decl_common.h` return type can cost you the match, and then the header
+is what gives way.** Measured on ov066/`Eyerok`: `decl_common.h:2730` types
+`func_ov066_02119454` as `void(void*, void*)` and the ROM function returns a
+value — declaring it `int` MATCHes, declaring it `void` does not. That TU
+excludes the header and declares every symbol the header would have supplied.
+So: include it and align *by default*, but when a spelling it dictates breaks a
+byte match, measure both ways and say which you took and why. The bytes outrank
+the header.
+
+**And "include it" inverts above some member count — this is a size-dependent
+rule, not a default.** `decl_common.h` declares 10 of ov006/`dScMgPanel_c`'s 71
+members and **7 of the 10 contradict the byte-matched shard**, two of them on
+the return type. Including it makes each an `illegal function overloading`
+error against code that already matches. That TU excluded the header (the ov002
+`Player` precedent) and gave the four class-method members their `decl_common`
+declarations at block scope instead — **and that half did not link**; they had
+to move to a file-scope `extern "C"` region, for the reason measured above.
+Excluding the header does not free you from giving a C++-named member's
+declarations C linkage somewhere. The more members a TU absorbs, the likelier
+the header contradicts one — so count the collisions before you decide. Two
+promoted TUs include it and two of the largest exclude it, and both choices are
+right for their size.
 
 **Grep shadow struct *tags* too, not only declarations.** A shadow type can
 collide with a **ROM symbol**, which is a different failure and a nastier one.
@@ -638,7 +912,11 @@ Ask the compiler rather than hand-mangling:
   symbol). **Neither rule is sound alone.**
 
   **What actually works is corroboration from three independent tools**, which is
-  what every correct extent in this campaign has rested on: the relocation gap,
+  what every correct extent in this campaign has rested on — though the third is
+  **unavailable to a TU that does not own the key function**: `check_object` only
+  sees the vtable if the TU emits it, so on a partial promotion get that number
+  from whichever shard still owns the key function, or from a throwaway probe TU
+  that does. The three are the relocation gap,
   `rtti_vtables.py --own <Class>` for the slot count — **but it answers only to
   the ROM's RTTI spelling, not the tree's**. `--own Goomboss` prints
   `no vtable for Goomboss`; `--own daKuriKing_c` prints the 31 slots. For a
@@ -839,6 +1117,25 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   **So the rule above is true by default and false under `defer_codegen off`,
   now confirmed on all three pragma families tried.** Any partial that was cut on
   a pragma contradiction is worth re-measuring.
+
+  **Why the bracket alone is not enough, stated precisely: with codegen
+  deferred, the state that binds is the state at END OF FILE.** So a `push` /
+  `opt_X off` / `pop` bracket restores the *other* members but cannot give the
+  bracketed member its own setting. The full chain, measured on ov002/`Player`
+  (301 members, one `#pragma opt_propagation off` at ordinal 35):
+
+  | configuration | result |
+  |---|---|
+  | pragma present, file-global by default | 255/301 |
+  | pragma deleted outright (the control) | 300/301 |
+  | pragma bracketed in `push`/`pop` | 300/301 — **identical to deleting it** |
+  | `#pragma defer_codegen off` + the bracket, source ROM-ascending | **301/301** |
+
+  **The bracketed and deleted rows are the same number, and that is the point.**
+  While codegen is deferred the bracket binds to nothing, so it is worth **zero**
+  members — not "buys back the casualties but not its own". An earlier revision of
+  this file printed 250 / 293 / 294 here and glossed a "294-vs-301 gap"; those
+  figures do not reproduce. Re-measured on the shipped ov002/`Player` TU.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:

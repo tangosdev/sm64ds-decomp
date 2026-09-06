@@ -1,0 +1,397 @@
+{
+  "class": "dMgJump3DMario_c",
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "module_extent": {
+    "text_data_end": "0x021402e0",
+    "bss_end": "0x021430a0",
+    "ctor_start": "0x0213356c",
+    "ctor_end": "0x021335ec",
+    "evidence": "extracted/dsd/arm9_overlays/overlays.yaml id 6: base_address 34340544 = 0x020bfec0, code_size 525344 = 0x80420, bss_size 11712 = 0x2dc0. extracted/overlays/overlay_0006.bin is 0x80420 bytes, so file offset = VA - 0x020bfec0. Getting this base wrong by 0x140 (using 0x020c0000) makes every RTTI read miss."
+  },
+
+  "identity_evidence": "The ov006 cartridge bytes at 0x0213b0b0 (file offset 0x7b1f0 of extracted/overlays/overlay_0006.bin) are the exact NUL-terminated RTTI name `16dMgJump3DMario_c`: 31 36 64 4d 67 4a 75 6d 70 33 44 4d 61 72 69 6f 5f 63 00. The typeinfo record at 0x0213b0a4 points at that string, and the vtable preamble word at 0x0213b0c8 points back at 0x0213b0a4. Read straight out of the cartridge, not from src/ or from a registry.",
+  "rtti_name": "16dMgJump3DMario_c",
+  "rtti_name_address": "0x0213b0b0",
+
+  "name_provenance": {
+    "verdict": "ROM",
+    "coined": false,
+    "blocks_promotion_on_naming": false,
+    "evidence": "Both this class and its direct base carry real cartridge RTTI: `16dMgJump3DMario_c` at ov006 0x0213b0b0 and `22dMg3DHeyhoObjAdapter_c` at ov006 0x0213afe4 (bytes at file offset 0x7b124: 32 32 64 4d 67 33 44 48 65 79 68 6f 4f 62 6a 41 64 61 70 74 65 72 5f 63 00). build/rtti.json carries the matching records ov006:0x0213b0a4 and ov006:0x0213b000. The standing ruling in notes/agents/PIPELINE.md 'Coined-name classes are parked' does not apply.",
+    "member_function_names_are_coined": "The three virtual names Unk_020c76d8 / Unk_020c76d0 / Unk_020c762c are ADDRESS-DERIVED placeholders in include/dMgJump3DMario_c.h. RTTI and the vtable prove their ownership and slot order, not their 2004 spelling. The other 23 members carry no name at all -- they are still func_ov006_*."
+  },
+
+  "typeinfo": {
+    "symbol": "_ZTI16dMgJump3DMario_c",
+    "address": "0x0213b0a4",
+    "module": "ov006",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x0213b0b0",
+    "base_typeinfo": "_ZTI22dMg3DHeyhoObjAdapter_c (ov006 0x0213b000)",
+    "raw_words": ["0x0209a764", "0x0213b0b0", "0x0213b000"],
+    "ZTI": "0x0213b0a4",
+    "ZTI_module": "ov006",
+    "ZTS": "0x0213b0b0",
+    "ZTS_module": "ov006",
+    "ZTV_module": "ov006",
+    "note": "All three symbols land in the SAME module as the vtable. There is no daOts_c-style cross-overlay split here: ov006/symbols.txt names all three addresses."
+  },
+
+  "base_class": "dMg3DHeyhoObjAdapter_c",
+  "base_evidence": "The authoritative +8 word of this class's __si_class_type_info record at ov006 0x0213b0a4 is 0x0213b000, which is _ZTI22dMg3DHeyhoObjAdapter_c in ov006/symbols.txt. Corroborated by the vtable preamble at 0x0213b0c8 -> 0x0213b0a4, and by the derived constructor at 0x020c8a04 calling _ZN22dMg3DHeyhoObjAdapter_cC2Ev (0x020c4048) before installing its own vptr.",
+
+  "base_chain": {
+    "chain": ["dMgJump3DMario_c", "dMg3DHeyhoObjAdapter_c"],
+    "length": 2,
+    "chain_terminates_evidence": "_ZTI22dMg3DHeyhoObjAdapter_c at 0x0213b000 is only 8 bytes (the next symbol, data_ov006_0213b008, starts at 0x0213b008) and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with NO base word. The chain is exactly two classes, proven from the cartridge rather than from build/rtti.json's edge list.",
+    "edges": [
+      {"derived": "dMgJump3DMario_c", "base": "dMg3DHeyhoObjAdapter_c", "derived_key": "ov006:0x0213b0a4", "base_key": "ov006:0x0213b000", "offset": 0, "resolved_by": "own_module"}
+    ],
+    "base_is_abstract": true,
+    "base_abstract_evidence": "_ZTV22dMg3DHeyhoObjAdapter_c at 0x0213afd8 has three slots and all three are 0x00000000. mwccarm emits a null slot for a pure virtual. The class also has only a C2 (base-object) constructor in the ROM and no C1, which is what you get for a type that is only ever a base subobject.",
+    "base_has_exactly_one_derived_class": "No other edge in build/rtti.json names ov006:0x0213b000 as a base."
+  },
+
+  "leaf": true,
+  "leaf_evidence": "No edge in build/rtti.json uses ov006:0x0213b0a4 as a base_key. dMgJump3DMario_c is a leaf, so its D2 and C2 have no ROM home.",
+
+  "vtable": {
+    "symbol": "_ZTV16dMgJump3DMario_c",
+    "address": "0x0213b0cc",
+    "module": "ov006",
+    "slots": 3,
+    "emitted_storage_start": "0x0213b0c4",
+    "emitted_storage_end": "0x0213b0d8",
+    "emitted_storage_size": "0x14",
+    "preamble": {
+      "offset_to_top_address": "0x0213b0c4",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0213b0c8",
+      "typeinfo_pointer": "0x0213b0a4"
+    },
+    "slot_targets": [
+      {"slot": 0, "address": "0x0213b0cc", "target": "0x020c76d8"},
+      {"slot": 1, "address": "0x0213b0d0", "target": "0x020c76d0"},
+      {"slot": 2, "address": "0x0213b0d4", "target": "0x020c762c"}
+    ],
+    "extent_evidence": "Corroborated four ways. (a) The next symbols.txt row after the address point is data_ov006_0213b0d8 at 0x0213b0d8, and there is NO interior phantom symbol inside the table to truncate a romdata_check extent lookup. (b) The unbroken relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8 (the typeinfo word) through 0x0213b0d4 and stops there. (c) The word at 0x0213b0d8 is 0x02134b6c, which is inside ov006 .data (>= 0x02133600), not a code address, so it cannot be a fourth slot. (d) MEASURED: a probe TU compiled with the pinned mwccarm 2004/b56 emits _ZTV16dMgJump3DMario_c at size 0x14, exactly the storage extent above. There are no trailing null slots hiding a further declaration.",
+    "address_point_evidence": "The constructor at 0x020c8a04 loads the literal 0x0213b0cc from its own pool at 0x020c8a2c and stores it at [this]. The _ZTV symbol IS the address point; the two header words sit at -8 and -4."
+  },
+
+  "base_vtable": {
+    "symbol": "_ZTV22dMg3DHeyhoObjAdapter_c",
+    "address": "0x0213afd8",
+    "module": "ov006",
+    "slots": 3,
+    "slot_targets": ["0x00000000", "0x00000000", "0x00000000"],
+    "emitted_storage_start": "0x0213afd0",
+    "emitted_storage_end": "0x0213afe4",
+    "emitted_storage_size": "0x14",
+    "preamble": {"offset_to_top": "0x00000000", "typeinfo_pointer": "0x0213b000"},
+    "note": "tools/rtti_vtables.py --own dMg3DHeyhoObjAdapter_c reports `0 slots` because its trailing-null trimmer eats all three. The cartridge has three zero words between the address point 0x0213afd8 and _ZTS22dMg3DHeyhoObjAdapter_c at 0x0213afe4, and the pinned compiler emits this table at exactly 0x14 bytes. Read the ROM here, not the tool.",
+    "who_odr_uses_it": "The derived destructor at 0x020c893c restores this vptr at 0x020c89c0 (literal 0x0213afd8 at 0x020c8a00), and the base constructor at 0x020c4048 installs it. The destructor is INSIDE the run, so a promoted TU emits this table too -- which is what the queue row's compiler-only floor misses."
+  },
+
+  "overrides": [
+    {"slot": 0, "address": "0x020c76d8", "size": "0x8",
+     "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev",
+     "name": "Unk_020c76d8 (address-derived placeholder)",
+     "body": "add r0, r0, #0x14; bx lr",
+     "note": "Returns &this[0x14], which func_ov006_020c7860 and func_ov006_020c7ba4 both treat as a Vector3. Base slot is PURE (null in _ZTV22dMg3DHeyhoObjAdapter_c), so there is no inherited name to take."},
+    {"slot": 1, "address": "0x020c76d0", "size": "0x8",
+     "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d0Ev",
+     "name": "Unk_020c76d0 (address-derived placeholder)",
+     "body": "add r0, r0, #0x20; bx lr",
+     "note": "Returns &this[0x20], also Vector3-shaped. Base slot is PURE."},
+    {"slot": 2, "address": "0x020c762c", "size": "0xa4",
+     "symbol": "_ZN16dMgJump3DMario_c12Unk_020c762cEv",
+     "name": "Unk_020c762c (address-derived placeholder)",
+     "body": "two pointer-to-member-function equality tests against the constants at 0x0213b058 and 0x0213b070, returning 0/1",
+     "note": "This is the mwccarm PMF comparison shape: compare [this+0x3c] against the constant's word 0, then [this+0x40] against its word 1, with the `pointer is null` short-circuit. It is what proves the +0x3c member is a pointer-to-member-function and that the 8-byte records in .data are PMF constants. Base slot is PURE."}
+  ],
+  "override_count": 3,
+  "all_three_slots_are_own": true,
+
+  "text_span": {
+    "start": "0x020c762c",
+    "end": "0x020c8a30",
+    "size": "0x1404",
+    "function_count": 28,
+    "src_file_count": 28,
+    "own_virtual_count": 3,
+    "factory_count": 0,
+    "boundary_confidence": "medium",
+    "evidence": "build/tu_map.json ov006 unit 3 is exactly 0x020c762c..0x020c8a30 with 28 functions and the single class label dMgJump3DMario_c. queue_audit.py adds nothing: there is no <Class>_classInit / <Class>_Spawn neighbour to absorb (this class is not a profile actor; it is an array member of dScMgJump_c and dScMgJump2_c). shard_count 28 and total_lines 820 in notes/data/tu-promotion-queue.tsv both reproduce exactly on this base.",
+    "boundary_caveat": "tu_map cuts on symbol NAME, and only five of the 28 symbols carry the class name (the three virtuals plus D1/C1). Everything between them is swept in because it lies between two labelled symbols; the neighbours are excluded only because nothing labels THEM. Both neighbours abut with ZERO gap: func_ov006_020c7574 ends exactly at 0x020c762c and func_ov006_020c8a30 starts exactly at 0x020c8a30. See `original_tu_extent_unproven` in `unproven`."
+  },
+
+  "run_segments": {
+    "contiguous": true,
+    "hole_count": 0,
+    "shape": "28 / 28 -- one segment",
+    "evidence": "The 28 symbols.txt sizes sum to exactly 0x1404, which is exactly 0x020c8a30 - 0x020c762c. Every function's address equals the previous function's address+size with no exception. There is no sourceless hole, so unlike dScMgCurling2_c (31 / hole / 21) and dScMgCoin_c there is no segment choice to make: a text-only promotion licenses .text 0x020c762c..0x020c8a30 whole and absorbs all 28 shards.",
+    "key_function_segment": "n/a -- one segment, and it contains the key function, both destructor/constructor symbols and all three virtuals."
+  },
+
+  "functions": [
+    {"ordinal": 0,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c762cEv", "address": "0x020c762c", "size": "0xa4",  "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c762cEv.cpp", "role": "virtual slot 2", "renameable": true,  "reached_by": ["vtable slot 2"]},
+    {"ordinal": 1,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d0Ev", "address": "0x020c76d0", "size": "0x8",   "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d0Ev.cpp", "role": "virtual slot 1", "renameable": true,  "reached_by": ["vtable slot 1"]},
+    {"ordinal": 2,  "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev", "address": "0x020c76d8", "size": "0x8",   "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d8Ev.cpp", "role": "virtual slot 0 -- KEY FUNCTION", "renameable": true, "reached_by": ["vtable slot 0"]},
+    {"ordinal": 3,  "symbol": "func_ov006_020c76e0", "address": "0x020c76e0", "size": "0x54",  "legacy_source": "src/func_ov006_020c76e0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73e4", "BL src/func_ov006_020c7418.c @0x020c7460", "BL src/func_ov006_020c7490.c @0x020c7538", "BL src/func_ov006_020c7574.c @0x020c75d4", "BL in-run func_ov006_020c7860"]},
+    {"ordinal": 4,  "symbol": "func_ov006_020c7734", "address": "0x020c7734", "size": "0x12c", "legacy_source": "src/func_ov006_020c7734.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c70d0.c @0x020c70fc"]},
+    {"ordinal": 5,  "symbol": "func_ov006_020c7860", "address": "0x020c7860", "size": "0x8c",  "legacy_source": "src/func_ov006_020c7860.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c712c.c @0x020c7168"]},
+    {"ordinal": 6,  "symbol": "func_ov006_020c78ec", "address": "0x020c78ec", "size": "0xbc",  "legacy_source": "src/func_ov006_020c78ec.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b030"]},
+    {"ordinal": 7,  "symbol": "func_ov006_020c79a8", "address": "0x020c79a8", "size": "0x88",  "legacy_source": "src/func_ov006_020c79a8.cpp", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c7c68"]},
+    {"ordinal": 8,  "symbol": "func_ov006_020c7a30", "address": "0x020c7a30", "size": "0x174", "legacy_source": "src/func_ov006_020c7a30.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b028"]},
+    {"ordinal": 9,  "symbol": "func_ov006_020c7ba4", "address": "0x020c7ba4", "size": "0xc4",  "legacy_source": "src/func_ov006_020c7ba4.c", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7c68", "BL in-run func_ov006_020c833c"]},
+    {"ordinal": 10, "symbol": "func_ov006_020c7c68", "address": "0x020c7c68", "size": "0x3c4", "legacy_source": "src/func_ov006_020c7c68.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b020", "BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c833c"]},
+    {"ordinal": 11, "symbol": "func_ov006_020c802c", "address": "0x020c802c", "size": "0x1c",  "legacy_source": "src/func_ov006_020c802c.c", "role": "state setter", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c833c", "BL in-run func_ov006_020c8680"], "note": "Copies the 8-byte PMF constant at 0x0213b020 into this+0x3c / this+0x40. This is the `mState = &dMgJump3DMario_c::<0x020c7c68>` assignment, in the clear."},
+    {"ordinal": 12, "symbol": "func_ov006_020c8048", "address": "0x020c8048", "size": "0x3c",  "legacy_source": "src/func_ov006_020c8048.c", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b090"]},
+    {"ordinal": 13, "symbol": "func_ov006_020c8084", "address": "0x020c8084", "size": "0xc8",  "legacy_source": "src/func_ov006_020c8084.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7388.c @0x020c73d8"]},
+    {"ordinal": 14, "symbol": "func_ov006_020c814c", "address": "0x020c814c", "size": "0x94",  "legacy_source": "src/func_ov006_020c814c.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constant 0x0213b080"]},
+    {"ordinal": 15, "symbol": "func_ov006_020c81e0", "address": "0x020c81e0", "size": "0x90",  "legacy_source": "src/func_ov006_020c81e0.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7418.c @0x020c7454"]},
+    {"ordinal": 16, "symbol": "func_ov006_020c8270", "address": "0x020c8270", "size": "0xcc",  "legacy_source": "src/func_ov006_020c8270.c", "role": "member", "renameable": true, "reached_by": ["BL in-run 020c7a30", "BL in-run 020c7c68", "BL in-run 020c833c", "BL in-run 020c85bc"]},
+    {"ordinal": 17, "symbol": "func_ov006_020c833c", "address": "0x020c833c", "size": "0x264", "legacy_source": "src/func_ov006_020c833c.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b060 and 0x0213b078", "BL in-run func_ov006_020c7a30"]},
+    {"ordinal": 18, "symbol": "func_ov006_020c85a0", "address": "0x020c85a0", "size": "0x1c",  "legacy_source": "src/func_ov006_020c85a0.c", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c7a30", "BL in-run func_ov006_020c7c68"]},
+    {"ordinal": 19, "symbol": "func_ov006_020c85bc", "address": "0x020c85bc", "size": "0x70",  "legacy_source": "src/func_ov006_020c85bc.cpp", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b050, 0x0213b068, 0x0213b070"]},
+    {"ordinal": 20, "symbol": "func_ov006_020c862c", "address": "0x020c862c", "size": "0x20",  "legacy_source": "src/func_ov006_020c862c.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7490.c @0x020c74ec"]},
+    {"ordinal": 21, "symbol": "func_ov006_020c864c", "address": "0x020c864c", "size": "0xc",   "legacy_source": "src/func_ov006_020c864c.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b040, 0x0213b048, 0x0213b058"], "note": "0x0213b040 is the one PMF constant whose CONSUMER sits outside the run: src/func_ov006_020c7300.c loads it at 0x020c7384. That is a reference to the data symbol, not to this function's name, so the rename is still safe -- but it means an unpromoted shard installs one of this class's states."},
+    {"ordinal": 22, "symbol": "func_ov006_020c8658", "address": "0x020c8658", "size": "0x28",  "legacy_source": "src/func_ov006_020c8658.c", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c719c.c @0x020c7250", "BL src/func_ov006_020c7574.c @0x020c75c8", "BL in-run 020c8048", "BL in-run 020c8084", "BL in-run 020c814c", "BL in-run 020c87d0"]},
+    {"ordinal": 23, "symbol": "func_ov006_020c8680", "address": "0x020c8680", "size": "0xe8",  "legacy_source": "src/func_ov006_020c8680.c", "role": "state member", "renameable": true, "reached_by": ["PMF constants 0x0213b038, 0x0213b088"]},
+    {"ordinal": 24, "symbol": "func_ov006_020c8768", "address": "0x020c8768", "size": "0x68",  "legacy_source": "src/func_ov006_020c8768.c", "role": "member", "renameable": true, "reached_by": ["BL in-run func_ov006_020c78ec"]},
+    {"ordinal": 25, "symbol": "func_ov006_020c87d0", "address": "0x020c87d0", "size": "0x16c", "legacy_source": "src/func_ov006_020c87d0.cpp", "role": "member", "renameable": false, "reached_by": ["BL src/func_ov006_020c7574.c @0x020c75ac"]},
+    {"ordinal": 26, "symbol": "_ZN16dMgJump3DMario_cD1Ev", "address": "0x020c893c", "size": "0xc8", "legacy_source": "src/_ZN16dMgJump3DMario_cD1Ev.cpp", "role": "destructor D1", "renameable": true, "reached_by": ["literal in dScMgJump_c_classInit 0x020eebd4", "literal in _ZN11dScMgJump_cD1Ev 0x020edf44", "literal in _ZN11dScMgJump_cD0Ev 0x020edfe8", "literal in dScMgJump2_c_classInit 0x020efbe4", "literal in _ZN12dScMgJump2_cD1Ev 0x020eec90", "literal in _ZN12dScMgJump2_cD0Ev 0x020eed54"]},
+    {"ordinal": 27, "symbol": "_ZN16dMgJump3DMario_cC1Ev", "address": "0x020c8a04", "size": "0x2c", "legacy_source": "src/_ZN16dMgJump3DMario_cC1Ev.cpp", "role": "constructor C1", "renameable": true, "reached_by": ["literal in dScMgJump_c_classInit 0x020eebd8", "literal in dScMgJump2_c_classInit 0x020efbe8"]}
+  ],
+
+  "callers_outside_the_run": {
+    "count_members": 8,
+    "count_call_sites": 12,
+    "all_callers_are_plain_c_shards": true,
+    "why_it_matters": "PIPELINE.md stage 3b converts as many members as byte-match allows into real dMgJump3DMario_c:: methods. These eight cannot be converted: each is called by name, with a BL, from a shard that is still a plain `.c` file. A C shard cannot name a C++ mangled member, so renaming any of these eight either breaks the caller's link or drags the caller into the promotion. They stay `extern \"C\" func_ov006_*`.",
+    "members": [
+      {"member": "func_ov006_020c76e0", "sites": 4, "callers": ["src/func_ov006_020c7388.c", "src/func_ov006_020c7418.c", "src/func_ov006_020c7490.c", "src/func_ov006_020c7574.c"]},
+      {"member": "func_ov006_020c7734", "sites": 1, "callers": ["src/func_ov006_020c70d0.c"]},
+      {"member": "func_ov006_020c7860", "sites": 1, "callers": ["src/func_ov006_020c712c.c"]},
+      {"member": "func_ov006_020c8084", "sites": 1, "callers": ["src/func_ov006_020c7388.c"]},
+      {"member": "func_ov006_020c81e0", "sites": 1, "callers": ["src/func_ov006_020c7418.c"]},
+      {"member": "func_ov006_020c862c", "sites": 1, "callers": ["src/func_ov006_020c7490.c"]},
+      {"member": "func_ov006_020c8658", "sites": 2, "callers": ["src/func_ov006_020c719c.c", "src/func_ov006_020c7574.c"]},
+      {"member": "func_ov006_020c87d0", "sites": 1, "callers": ["src/func_ov006_020c7574.c"]}
+    ],
+    "structors_referenced_from_outside": "D1 (six sites) and C1 (two sites) are referenced as literal-pool constants by the two owning scenes' classInit and destructors. Those already carry their mangled spellings and src/minigames/d_s_mg_jump2.cpp already declares them as `void _ZN16dMgJump3DMario_cD1Ev();` at lines 194-195, so no rename is involved.",
+    "convertible_members": 15,
+    "convertible_breakdown": "3 virtuals (already mangled) + D1 + C1 + 9 PMF-only members + 6 members called only from inside the run. Ceiling for stage 3b on this class: 20 of 28 members can carry a dMgJump3DMario_c:: name; 8 cannot.",
+    "method": "Two independent scans agreed exactly. (1) config/arm9/overlays/ov006/relocs.txt filtered on `module:overlay(6)` -- the spelling is `overlay(6)`, NOT `ov006`; a filter written against `ov006` rejects all 60 rows and reports zero callers. (2) A raw decode of every ARM `BL` word in extracted/overlays/overlay_0006.bin. Both give the same 12 external call sites and the same 8 targets. A cross-module scan over arm9 and the five overlays whose address ranges do NOT overlap ov006 (ov000, ov001, ov003, ov004, ov102) finds ZERO references into the run; the apparent hits from ov002/ov007/etc. are the overlay-overlap phantom and were discarded."
+  },
+
+  "data_relocations_into_range": {
+    "applies": true,
+    "severity": "HIGH -- 15 records over 9 members, all in UNOWNED .data",
+    "record_count": 15,
+    "distinct_targets": 9,
+    "record_span": "0x0213b020..0x0213b098",
+    "shape": "8-byte pointer-to-member-function constants: {code pointer, 0x00000000}. Each is its own symbol (data_ov006_0213b020, _0213b028, ... _0213b090) and each is loaded individually from one literal-pool site -- they are 15 separate constants, NOT an array.",
+    "proof_they_are_PMFs": "func_ov006_020c802c copies the record at 0x0213b020 word-for-word into this+0x3c and this+0x40, and vtable slot 2 (0x020c762c) compares this+0x3c/this+0x40 against the records at 0x0213b058 and 0x0213b070 using the mwccarm pointer-to-member equality shape (pointer compare, adjustment compare, null short-circuit).",
+    "no_sinit": "Unlike dScMgCurling2_c these constants are NOT filled by a static initializer. They sit in initialized .data (ov006 .data is 0x02133600..0x021402e0) with the pointers already baked in, and no entry in ov006's 31-entry .ctor table at 0x0213356c..0x021335ec points anywhere inside the run. There is no sinit to simulate for this class, so the phantom-index hazard does not arise here.",
+    "ownership": "config/arm9/overlays/ov006/delinks.txt claims only two .data blocks in the whole module (0x0213faa0..0x0213fbc4 and 0x0213fbc4..0x0213fd0c). 0x0213b020..0x0213b098 is unowned, so dsd delinks it straight from the cartridge and resolves each code word by looking up the NAME symbols.txt gives at the target address.",
+    "consequence": "PIPELINE.md: 'Renaming a member is one edit, not two.' If any of the nine targets below gets a dMgJump3DMario_c:: name in the promoted TU while ov006/symbols.txt still spells it func_ov006_*, the delinked .data word links as 0x00000000 and no byte gate at stage 2 or 3 catches it. The new mangled name must reach symbols.txt in the SAME commit.",
+    "records": [
+      {"record": "0x0213b020", "target": "0x020c7c68", "target_symbol": "func_ov006_020c7c68", "consumer": "func_ov006_020c802c @0x020c8044"},
+      {"record": "0x0213b028", "target": "0x020c7a30", "target_symbol": "func_ov006_020c7a30", "consumer": "func_ov006_020c7ba4 @0x020c7c64"},
+      {"record": "0x0213b030", "target": "0x020c78ec", "target_symbol": "func_ov006_020c78ec", "consumer": "func_ov006_020c79a8 @0x020c7a2c"},
+      {"record": "0x0213b038", "target": "0x020c8680", "target_symbol": "func_ov006_020c8680", "consumer": "func_ov006_020c8768 @0x020c87cc"},
+      {"record": "0x0213b040", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "func_ov006_020c7300 @0x020c7384  (OUTSIDE the run)"},
+      {"record": "0x0213b048", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "func_ov006_020c8658 @0x020c867c"},
+      {"record": "0x0213b050", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "func_ov006_020c862c @0x020c8648"},
+      {"record": "0x0213b058", "target": "0x020c864c", "target_symbol": "func_ov006_020c864c", "consumer": "_ZN16dMgJump3DMario_c12Unk_020c762cEv @0x020c76c8"},
+      {"record": "0x0213b060", "target": "0x020c833c", "target_symbol": "func_ov006_020c833c", "consumer": "func_ov006_020c85a0 @0x020c85b8"},
+      {"record": "0x0213b068", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "func_ov006_020c8270 @0x020c8330"},
+      {"record": "0x0213b070", "target": "0x020c85bc", "target_symbol": "func_ov006_020c85bc", "consumer": "_ZN16dMgJump3DMario_c12Unk_020c762cEv @0x020c76cc"},
+      {"record": "0x0213b078", "target": "0x020c833c", "target_symbol": "func_ov006_020c833c", "consumer": "func_ov006_020c8270 @0x020c8338"},
+      {"record": "0x0213b080", "target": "0x020c814c", "target_symbol": "func_ov006_020c814c", "consumer": "func_ov006_020c81e0 @0x020c826c"},
+      {"record": "0x0213b088", "target": "0x020c8680", "target_symbol": "func_ov006_020c8680", "consumer": "func_ov006_020c8084 @0x020c813c"},
+      {"record": "0x0213b090", "target": "0x020c8048", "target_symbol": "func_ov006_020c8048", "consumer": "func_ov006_020c8084 @0x020c8148"}
+    ],
+    "targets_needing_rename_in_the_same_commit": [
+      "func_ov006_020c78ec", "func_ov006_020c7a30", "func_ov006_020c7c68",
+      "func_ov006_020c8048", "func_ov006_020c814c", "func_ov006_020c833c",
+      "func_ov006_020c85bc", "func_ov006_020c864c", "func_ov006_020c8680"
+    ],
+    "vtable_words_too": "The three vtable words at 0x0213b0cc..0x0213b0d8 sit in the same unowned .data and resolve the same way, but their targets already carry mangled names, so they are safe."
+  },
+
+  "destructors": {
+    "rom_variants_present": ["D1"],
+    "D0_in_rom": false,
+    "D2_in_rom": false,
+    "C2_in_rom": false,
+    "virtual_destructor": false,
+    "virtual_destructor_evidence": "The vtable has three slots and none of them is 0x020c893c or a deleting stub; the destructor is reached only through literal-pool constants handed to the array-destroy helper at arm9 0x0207328c. A non-virtual destructor with virtual functions is what the cartridge says.",
+    "D1": {"symbol": "_ZN16dMgJump3DMario_cD1Ev", "address": "0x020c893c", "size": "0xc8", "rom_ordinal": 26},
+    "C1": {"symbol": "_ZN16dMgJump3DMario_cC1Ev", "address": "0x020c8a04", "size": "0x2c", "rom_ordinal": 27},
+    "D1_shape": "Installs 0x0213b0cc at [this]; calls seven arm9 routines on .bss objects (0x02140450, 0x02140460, 0x02140468, 0x02140458, 0x02140438, 0x02140440, 0x02140448); zeroes five .bss words (0x02140430, 0x0214040c, 0x02140424, 0x02140408, 0x0214042c); calls the ModelAnim destructor on this+0x4c; then installs the BASE vtable 0x0213afd8 at [this] and returns this. The trailing base-vptr store is the inlined dMg3DHeyhoObjAdapter_c destructor -- the base destructor is inline and non-virtual.",
+    "C1_shape": "push {r4,lr}; this->dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() via C2 at 0x020c4048; store 0x0213b0cc at [this]; ModelAnim ctor (arm9 0x02016958) on this+0x4c; return this. src/_ZN16dMgJump3DMario_cC1Ev.cpp already reproduces this from an EMPTY constructor body -- the ModelAnim member construction is implicit.",
+    "base_ctor": {"symbol": "_ZN22dMg3DHeyhoObjAdapter_cC2Ev", "address": "0x020c4048", "size": "0x18", "in_run": false, "legacy_source": "src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp",
+      "shape": "str 0x0213afd8, [r0]; strh #0, [r0, #0x10]; bx lr -- the vptr and one s16.",
+      "warning": "This is OUTSIDE the run and stays its own shard. The promoted TU must DECLARE dMg3DHeyhoObjAdapter_c's constructor and NOT define it, or it will emit a second copy."}
+  },
+
+  "key_function": {
+    "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev",
+    "address": "0x020c76d8",
+    "slot": 0,
+    "in_run": true,
+    "evidence": "The destructor is non-virtual, so the key function is the first DECLARED non-inline virtual. include/dMgJump3DMario_c.h declares Unk_020c76d8 first, and the ROM's slot order (0x020c76d8, 0x020c76d0, 0x020c762c) agrees with that declaration order. It is inside the licensed run, so the promoted TU emits the class's own _ZTV/_ZTI/_ZTS -- the dScMgSingle3DBase_c outcome, not the dScMgCoin_c one (compiler_only_output: 0)."
+  },
+
+  "compiler_only_output": {
+    "queue_row_says": "compiler-only:>=5 (derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)",
+    "measured": 10,
+    "verdict": "The queue's floor of 5 UNDERCOUNTS BY AT LEAST 5. It is a floor, not a figure, and this class breaks it in two ways the formula cannot see: the abstract BASE has a vtable of its own that this run odr-uses, and the out-of-line destructor emits three homeless structor variants plus the base's out-of-line D2.",
+    "how_measured": "Not derived -- COMPILED. A probe TU (C:/tmp/jump3d-probe/probe_jump3d.cpp) containing only `#include \"dMgJump3DMario_c.h\"` and the five structor/virtual definitions already in the tree was compiled with the pinned mwccarm 2004/b56 at the build's own flags (build_pin.flags_for -> `-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off`) and its ELF symbol table read. Every emitted symbol below is measured, and every one of the six data sizes equals the cartridge's own extent for that symbol.",
+    "entries": [
+      {"symbol": "_ZTV16dMgJump3DMario_c",         "emitted_size": "0x14", "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213b0cc", "rom_storage": "0x0213b0c4..0x0213b0d8 = 0x14", "note": "Own vtable, emitted because this TU owns the key function. Emitted size equals the ROM storage extent exactly. The _ZTV symbol is the address point, so the manifest address is 8 bytes above the emitted section start."},
+      {"symbol": "_ZTI16dMgJump3DMario_c",         "emitted_size": "0xc",  "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213b0a4", "rom_storage": "0x0213b0a4..0x0213b0b0 = 0xc"},
+      {"symbol": "_ZTS16dMgJump3DMario_c",         "emitted_size": "0x13", "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213b0b0", "rom_storage": "19 bytes, `16dMgJump3DMario_c\\0`"},
+      {"symbol": "_ZTV22dMg3DHeyhoObjAdapter_c",   "emitted_size": "0x14", "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213afd8", "rom_storage": "0x0213afd0..0x0213afe4 = 0x14", "note": "THE ENTRY THE QUEUE FLOOR MISSES. The base is abstract with all three virtuals pure, so it has NO key function and mwcc emits its vtable in every TU that odr-uses it. The destructor at 0x020c893c restores this vptr, and the destructor is inside the run."},
+      {"symbol": "_ZTI22dMg3DHeyhoObjAdapter_c",   "emitted_size": "0x8",  "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213b000", "rom_storage": "0x0213b000..0x0213b008 = 0x8"},
+      {"symbol": "_ZTS22dMg3DHeyhoObjAdapter_c",   "emitted_size": "0x19", "disposition": "deadstrip-data", "canonical_module": "ov006", "canonical_address": "0x0213afe4", "rom_storage": "25 bytes, `22dMg3DHeyhoObjAdapter_c\\0`"},
+      {"symbol": "_ZN16dMgJump3DMario_cD2Ev",      "emitted_size": "0x34 on the empty-body probe; scales with the real body", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless. dMgJump3DMario_c is a leaf, so its base-object destructor is never odr-used and the cartridge carries no D2 for it. Emitted between D1 and the constructor group, so it does not disturb the licensed run's emission order."},
+      {"symbol": "_ZN16dMgJump3DMario_cD0Ev",      "emitted_size": "0x3c on the probe", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless, and this one is a surprise: mwcc emits a deleting destructor even though this class's destructor is NOT virtual. There is no D0 anywhere in ov006/symbols.txt for this class."},
+      {"symbol": "_ZN16dMgJump3DMario_cC2Ev",      "emitted_size": "0x2c on the probe", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless. The cartridge has only C1 (0x020c8a04); the class is a leaf so its base-object constructor is never called."},
+      {"symbol": "_ZN22dMg3DHeyhoObjAdapter_cD2Ev","emitted_size": "0x10 on the probe", "disposition": "deadstrip", "canonical_module": null, "canonical_address": null, "note": "Homeless. The base's destructor is inline-empty in the header, so it is always inlined at its one call site (the tail of D1) and the ROM carries no out-of-line copy. mwcc emits one anyway."}
+    ],
+    "residual_risk": "Two things could push the count above 10, neither visible in the ROM. (1) Every vague-linkage inline class the 23 helper bodies odr-use adds a row -- `_ZN7Vector3D1Ev` appears in 20 of the 150 promoted manifests for exactly this reason. TODAY the two helpers that touch vectors use SHADOW types: src/func_ov006_020c7860.cpp declares `struct Vector3` incomplete and only passes pointers, and src/func_ov006_020c7ba4.c has its own `typedef struct { int x, y, z; } Vec3`. Keeping those shadow spellings keeps the count at 10; adopting the real include/math/Vector3.h type adds a row. (2) A pointer-to-member typedef spelled over a COMPLETE class changes mwccarm's PMF representation -- src/actors/dScMgCurling2_c.cpp keeps `struct C;` incomplete on purpose. That is a codegen risk, not a compiler_only_output one, but it is the same family of decision."
+  },
+
+  "size": "0xb8",
+  "size_evidence": "Four independent cartridge sites, all with element count 3, all naming this class's own C1/D1: dScMgJump_c_classInit `mov r2,#0xb8` at 0x020eeb7c into the array-construct helper arm9 0x020733a8 with ctor 0x020c8a04 and dtor 0x020c893c; _ZN11dScMgJump_cD1Ev `mov r2,#0xb8` at 0x020edef8 into the array-destroy helper arm9 0x0207328c; dScMgJump2_c_classInit at 0x020efb64; _ZN12dScMgJump2_cD1Ev at 0x020eec40. include/dScMgJump_c.h already carries `dMgJump3DMario_c mPlayers[3]; /* 0x506c */` and include/dScMgJump2_c.h `/* 0x500c */`, matching the array base offsets those same call sites compute.",
+
+  "fields": [
+    {"offset": "0x00", "size": "0x4", "type": "vptr", "name": "__vptr", "evidence": "Base C2 at 0x020c4048 stores 0x0213afd8 at [this]; derived C1 at 0x020c8a04 stores 0x0213b0cc at [this]; D1 restores 0x0213afd8."},
+    {"offset": "0x04", "size": "0xc", "type": "Vector3-shaped (three 32-bit components)", "name": null, "evidence": "src/func_ov006_020c7ba4.c calls Vec3_Sub(&v, this+0x14, this+0x4) with its own `struct {int x,y,z;}` shadow type. Load/store displacements 0x04, 0x08, 0x0c are used across six run functions."},
+    {"offset": "0x10", "size": "0x2", "type": "s16", "name": null, "evidence": "The base constructor at 0x020c4048 does `strh #0, [this, #0x10]` -- the only field it initializes. Four run functions do ldrh/strh at +0x10. This is the one field the ROM proves belongs to dMg3DHeyhoObjAdapter_c."},
+    {"offset": "0x12", "size": "0x2", "type": "unknown (padding or an untouched field)", "name": null, "evidence": "No access observed."},
+    {"offset": "0x14", "size": "0xc", "type": "Vector3-shaped", "name": null, "evidence": "Vtable slot 0 is literally `add r0,r0,#0x14; bx lr` -- it returns the address of this field. src/func_ov006_020c7860.cpp calls AddVec3(this+0x14, this+0x20, this+0x14). Displacements 0x14, 0x18, 0x1c are used across thirteen run functions."},
+    {"offset": "0x20", "size": "0xc", "type": "Vector3-shaped", "name": null, "evidence": "Vtable slot 1 is `add r0,r0,#0x20; bx lr`. Displacements 0x20, 0x24, 0x28 across twelve run functions."},
+    {"offset": "0x2c", "size": "0x2", "type": "unknown", "name": null, "evidence": "No access observed."},
+    {"offset": "0x2e", "size": "0x2", "type": "s16", "name": null, "evidence": "ldrsh at +0x2e in three run functions (0x020c76e0, 0x020c7c68, 0x020c833c)."},
+    {"offset": "0x30", "size": "0x2", "type": "unknown", "name": null, "evidence": "No access observed."},
+    {"offset": "0x32", "size": "0x2", "type": "s16", "name": null, "evidence": "ldrsh/strh at +0x32 in eight run functions."},
+    {"offset": "0x34", "size": "0x1", "type": "unknown", "name": null, "evidence": "No access observed."},
+    {"offset": "0x35", "size": "0x1", "type": "u8", "name": null, "evidence": "ldrb/strb at +0x35 in three run functions (0x020c7734, 0x020c85bc, 0x020c8658)."},
+    {"offset": "0x36", "size": "0x2", "type": "s16", "name": null, "evidence": "ldrsh at +0x36 in seven run functions."},
+    {"offset": "0x38", "size": "0x2", "type": "s16", "name": null, "evidence": "ldrsh at +0x38 in two run functions (0x020c7a30, 0x020c7c68)."},
+    {"offset": "0x3a", "size": "0x2", "type": "unknown", "name": null, "evidence": "No access observed."},
+    {"offset": "0x3c", "size": "0x8", "type": "pointer-to-member-function {code pointer at +0x3c, adjustment at +0x40}", "name": null,
+     "evidence": "func_ov006_020c802c copies the 8-byte constant at 0x0213b020 into +0x3c/+0x40 in one shot. Vtable slot 2 compares +0x3c and +0x40 against the constants at 0x0213b058 and 0x0213b070 in the mwccarm PMF-equality shape. Ten run functions write the pair; twelve read or take the address of +0x3c. This is the class's state/behaviour member and it is the reason the .data records exist."},
+    {"offset": "0x44", "size": "0x4", "type": "32-bit word", "name": null, "evidence": "ldr/str at +0x44 in three run functions (0x020c7c68, 0x020c833c, 0x020c87d0)."},
+    {"offset": "0x48", "size": "0x4", "type": "unknown", "name": null, "evidence": "No access observed."},
+    {"offset": "0x4c", "size": "0x64", "type": "ModelAnim", "name": "mModelAnim",
+     "evidence": "C1 calls arm9 0x02016958 (_ZN9ModelAnimC1Ev) on this+0x4c and D1 calls 0x0201691c (_ZN9ModelAnimD1Ev) on this+0x4c. include/ModelAnim.h asserts sizeof(ModelAnim) == 0x64, so the member spans 0x4c..0xb0. Thirteen run functions do `add rN, this, #0x4c`; four more reach into it at +0x68, +0x9c, +0xa4 and +0xac."},
+    {"offset": "0xb0", "size": "0x8", "type": "unknown", "name": null, "evidence": "NOTHING in the run reads or writes 0xb0..0xb8. The eight bytes are proven only by sizeof == 0xb8 minus 0x4c + 0x64. include/dMgJump3DMario_c.h calls them `u8 unk_0b0[0x08]`; that is a placeholder, not a measurement."}
+  ],
+
+  "header_state": {
+    "path": "include/dMgJump3DMario_c.h",
+    "exists": true,
+    "exists_on_base": "Verified with `git show origin/main:include/dMgJump3DMario_c.h` at 11fcd24d5f7e7cae25d6cc19c3f4388c0ac4b8cf.",
+    "landed": "1c3cbdac4, 2026-08-29, PR #1960",
+    "declares_both_classes": true,
+    "size_asserts": ["sizeof(dMg3DHeyhoObjAdapter_c) == 0x4c", "sizeof(dMgJump3DMario_c) == 0xb8"],
+    "already_proven_to_compile_and_match": "Five shards already include it and are marked `complete` in ov006 delinks.txt: the three virtuals, C1 and D1. src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp includes it too. The declared layout therefore already reproduces the cartridge's bytes for all six.",
+    "blast_radius": "Editing this header reaches, beyond the run: src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp (the base ctor shard), include/dScMgJump_c.h and include/dScMgJump2_c.h (both declare `dMgJump3DMario_c mPlayers[3]`), and through those two headers it reaches TWO ALREADY-PROMOTED TUs -- src/minigames/d_s_mg_jump2.cpp (config/tu_manifest.d/ov006/dScMgJump2_c.json) and src/minigames/d_s_mg_trampoline2.cpp (dScMgTrampoline2_c.json) -- plus seven dScMgJump_c shards. Any layout or virtual-declaration change must be byte-neutral for all of them, and neither promoted TU's manifest is regenerated by this promotion."
+  },
+
+  "modules_touched": [
+    {"module": "ov006", "module_base": "0x020bfec0", "role": "the whole run, both vtables, both RTTI records and both name strings, the 15 PMF constants, the two owning scenes"},
+    {"module": "arm9", "module_base": "0x02000000", "role": "ModelAnim/Animation/SharedFilePtr/OAM/Particle/math helpers the run calls, the array construct/destroy helpers at 0x020733a8 and 0x0207328c, and the two abi type_info vtables at 0x0209a764 and 0x0209a774"}
+  ],
+  "modules_touched_note": "No ov004 and no other overlay. A full cross-module scan (arm9 plus the five overlays that do not overlap ov006's address range) finds zero references into the run, and no module's relocs.txt other than ov006's own names a destination in 0x020c762c..0x020c8a30.",
+
+  "blockers_measured": {
+    "measured_on_base": "11fcd24d5f7e7cae25d6cc19c3f4388c0ac4b8cf",
+    "queue_row_as_shipped": "classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)",
+    "classif_no_header": {
+      "verdict": "FALSE -- the header exists. The queue row's own has_header column (`yes`) is the correct one; the blocker contradicts it and is stale.",
+      "evidence": "include/dMgJump3DMario_c.h is present on origin/main at 11fcd24d5 and is included by six committed sources.",
+      "provenance_of_the_wrong_value": "The blocker was copied from the last column of notes/data/c-cpp-classification.tsv rows 4175-4177 (`src/func_ov006_020c762c.c`, `_020c76d0.c`, `_020c76d8.c`, all tagged `no-header:dMgJump3DMario_c`). Those rows were written on 2026-08-26 by PR #1821; the header landed on 2026-08-29 in PR #1960; the queue was created on 2026-09-05 by PR #2268 and copied the blocker forward without re-deriving it. The classification TSV is an append log, so the stale rows are still the ones a reader hits. Note also that those three rows still name the shards as `.c` files -- they are `.cpp` today.",
+      "why_the_generator_cannot_fix_it": "tools/queue_audit.py re-derives only already_promoted, shard_count, total_lines, unmatched, no-legacy-source, not-in-delinks, pragma and compiler-only. Any blocker it does not recognise falls through its pass-through `else: out.append(b)` branch untouched, and no tool in tools/ emits the string `no-header` at all. `queue_audit.py --write` will NOT clear this; the fix belongs wherever the classification TSV's blocker column is regenerated. Do not hand-edit either file.",
+      "action": "Flag only. notes/data/tu-promotion-queue.tsv is generated; do not edit it here."
+    },
+    "compiler_only": {"queue_says": ">=5", "measured": 10, "verdict": "UNDERCOUNT -- see compiler_only_output above"},
+    "unmatched": {"count": 0, "evidence": "All 28 delinks.txt entries covering the run carry a `complete` marker."},
+    "no_legacy_source": {"count": 0, "evidence": "All 28 functions have both a delinks.txt entry and a src/ file; all 28 files exist on this base."},
+    "not_in_delinks": {"count": 0},
+    "pragma": {"count": 0, "evidence": "None of the 28 shard sources contains a `#pragma` line."},
+    "shard_count": {"queue_says": 28, "measured": 28},
+    "total_lines": {"queue_says": 820, "measured": 820},
+    "already_promoted": {"queue_says": "no", "measured": "no -- there is no config/tu_manifest.d/ov006/dMgJump3DMario_c.json"},
+    "queue_audit_agrees": "python tools/queue_audit.py on this base reports 2 rows disagreeing on shard_count/total_lines/no-legacy-source and 1 on unmatched. This row is not among them."
+  },
+
+  "promotion_route": "text-only",
+  "licensed_sections": [{"name": ".text", "start": "0x020c762c", "end": "0x020c8a30"}],
+
+  "emission_order": {
+    "hard_gate": "linkcheck [4b/8] refuses a TU whose emission order does not run ROM-ascending.",
+    "rom_order_ascending": ["0x020c762c 762c-virtual (slot 2)", "0x020c76d0 (slot 1)", "0x020c76d8 (slot 0)", "23 helpers 0x020c76e0..0x020c8938", "0x020c893c D1", "0x020c8a04 C1"],
+    "measured_default_defer_codegen_on": "Source order (C1, ~D, slot0, slot1, slot2) emitted as: slot2, slot1, slot0, D2, D0, D1, C1, base-D2, C2. Reverse of source order at the declaration level, with each structor expanding into its variants in place.",
+    "measured_defer_codegen_off": "The SAME source emitted as: C2, C1, base-D2, D1, D0, D2, slot0, slot1, slot2. Source order, with the destructor group ordered D1, D0, D2 -- the same order dScMgCurling2_c banks.",
+    "consequence": "Either convention can reach ROM-ascending, but they need opposite source layouts: `defer_codegen off` wants the source written in ascending ROM order (slot2 first, C1 last); the default wants it written descending (C1 first, slot2 last). Both leave D2/D0 homeless immediately around D1 and C2/base-D2 homeless around C1, which does not disturb the licensed run. 11 of the 23 promoted ov006 manifests use `#pragma defer_codegen off`, including every recent src/actors/ one (dScMgTeresa_c, dScMgPanel_c, dScMgCurling2_c, dScMgCoin_c, dScMgCup_c, dScMgMemory2_c).",
+    "measured_with": "mwccarm 2004/b56 at the build's own flags, on the probe described under compiler_only_output."
+  },
+
+  "non_virtual": {
+    "count": 23,
+    "called_from_outside_the_run": 8,
+    "reached_only_through_a_PMF_constant": 9,
+    "called_only_from_inside_the_run": 6,
+    "member_vs_file_local": "All 23 take `this` as their first argument and index the same field set (+0x04/+0x14/+0x20 vectors, +0x3c PMF, +0x4c ModelAnim), so all 23 are members rather than file-local free helpers. What separates them for stage 3b is not member-ness but reachability -- see callers_outside_the_run."
+  },
+
+  "sibling_oracles": {
+    "queue_row": "dScMgSingle3DBase_c",
+    "why_that_row_is_a_weak_oracle": "dScMgSingle3DBase_c (config/tu_manifest.d/ov006/dScMgSingle3DBase_c.json, src/minigames/d_s_mg_single3_d_base.cpp) is an OLD-convention promotion under src/minigames/, does not use `#pragma defer_codegen off`, has a 5-class chain and 11 compiler_only_output rows, and its class hangs off dScMgBase_c. This class shares none of that.",
+    "better_oracles": [
+      "config/tu_manifest.d/ov006/dScMgCurling2_c.json + src/actors/dScMgCurling2_c.cpp (#2362) -- the closest structural match: unowned-.data PMF constants that dictate an in-commit rename, an out-of-line destructor with a homeless D2, `#pragma defer_codegen off`, and a manifest that spells out the extent argument for a vtable.",
+      "config/tu_manifest.d/ov006/dScMgMemory2_c.json + src/actors/dScMgMemory2_c.cpp -- the 51-of-52 conversion, the proof stage 3b works end to end.",
+      "src/minigames/d_s_mg_jump2.cpp -- not a shape oracle but the DOWNSTREAM consumer: it already declares this class's C1/D1 by their mangled spellings at lines 194-195 and constructs the mPlayers[3] array."
+    ]
+  },
+
+  "unproven": [
+    "The names of all three virtuals. Unk_020c76d8 / Unk_020c76d0 / Unk_020c762c are address-derived placeholders. RTTI proves ownership and slot order; nothing in the cartridge carries their 2004 spelling. Slot 0 returns &this[0x14] and slot 1 returns &this[0x20], both Vector3-shaped, so they are almost certainly accessors -- but do not invent names.",
+    "The names of all 23 non-virtual members, and of every field. Offsets and widths are measured; names are not.",
+    "The base/derived SPLIT of the fields below 0x4c. include/dMgJump3DMario_c.h asserts sizeof(dMg3DHeyhoObjAdapter_c) == 0x4c and puts 0x12..0x4c in the base as `u8 unk_012[0x3a]`, but the cartridge proves only that the base initializes +0x00 and +0x10 and that ModelAnim starts at +0x4c. Any split that keeps the total layout is byte-identical TODAY because every shard reaches those fields through `(char *)this + N` casts. It stops being free the moment stage 3b turns +0x3c into a typed member: a pointer-to-member of dMgJump3DMario_c cannot be stored in a member declared in dMg3DHeyhoObjAdapter_c without a cast, which suggests +0x3c is really a DERIVED member and the base is smaller than 0x4c. Do not bank either reading.",
+    "original_tu_extent_unproven: whether the original .cpp was exactly this run. tu_map's cut is name-derived and both neighbours abut with zero gap. Two facts point at a wider file and neither is proof: (a) seven shards immediately below the run (0x020c70d0..0x020c7574, all still .c) call eight of this class's members and are the run's only external callers; (b) src/func_ov006_020c7300.c, also below the run, loads this class's PMF constant at 0x0213b040 -- it installs one of this class's own states. If the original TU included those, the promotion is under-scoped. Nothing measured here settles it.",
+    "The contents and purpose of 0xb0..0xb8. No instruction in the run touches those eight bytes.",
+    "Whether the 15 PMF constants at 0x0213b020..0x0213b098 belong to this TU's .data or to a neighbour's. They are in UNOWNED .data either way, so the text-only route never has to decide -- but a later intact-object attempt would.",
+    "Whether adopting the real Vector3/Matrix types for the +0x04/+0x14/+0x20 fields is byte-neutral. The shards use shadow types today. It is a codegen question and a compiler_only_output question at once (see residual_risk).",
+    "Which of the seven arm9 routines D1 calls on .bss objects at 0x02140408..0x02140468 are which. The addresses and the call order are measured; the routines are not named here.",
+    "Whether the eight members called from the .c shards below the run could be converted by promoting those shards too. Not attempted; out of scope for a scout."
+  ],
+
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-jump3d",
+    "ref": "cpp/dMgJump3DMario_c-tu",
+    "base": "11fcd24d5f7e7cae25d6cc19c3f4388c0ac4b8cf",
+    "base_description": "origin/main tip on 2026-09-06, AFTER the ov006 promotions of dScMgCoin_c (#2344), dScMgPanel_c (#2347), dScMgCup_c (#2348) and dScMgCurling2_c segment A (#2362). Verified with `git fetch origin main` and `git rev-parse origin/main` from the worktree.",
+    "rom_inputs": [
+      "extracted/overlays/overlay_0006.bin (0x80420 bytes, base 0x020bfec0)",
+      "extracted/arm9_dec.bin",
+      "extracted/dsd/arm9_overlays/overlays.yaml",
+      "config/arm9/overlays/ov006/symbols.txt, relocs.txt, delinks.txt"
+    ],
+    "generated_inputs": [
+      "build/rtti.json (tools/rtti_extract.py: 429 records, 413 edges, 0 unresolved)",
+      "build/rtti_vtables.json (tools/rtti_vtables.py)",
+      "build/tu_map.json (tools/tu_map.py: ov006 unit 3)"
+    ],
+    "compiler_probe": "mwccarm 2004/b56 via tools/match.compile_c with tools/build_pin.flags_for. Probe sources kept outside the repository at C:/tmp/jump3d-probe/; nothing from the probe is committed."
+  }
+}
