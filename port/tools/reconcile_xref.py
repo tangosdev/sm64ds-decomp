@@ -699,6 +699,58 @@ def cmd_danger(args):
     return 0
 
 
+def cmd_dryapply(args):
+    """Apply the map to a THROWAWAY copy of port/ and count what is left.
+
+    This is the lane's cross-reference, run forwards: rewrite every place in one
+    simultaneous pass, then look for any old spelling still standing.  An old
+    spelling that survives is only correct if it is now the NEW name of some
+    other address -- the chain case, which is what main's config says that place
+    should read.  Anything else is TRUE RESIDUE and a bug in the map.
+    """
+    import shutil
+    import tempfile
+    tmp = tempfile.mkdtemp(prefix='reconcile-dry-')
+    try:
+        shutil.copytree(os.path.join(args.root, 'port'), os.path.join(tmp, 'port'))
+        rc = do_apply(tmp, True)
+        if rc:
+            return rc
+        rows = read_map(MAP)
+        olds = set(r['old_name'] for r in rows)
+        news = set(r['new_name'] for r in rows)
+        pat = re.compile(r'(?<![A-Za-z0-9_])(' +
+                         '|'.join(sorted((re.escape(k) for k in olds), key=len, reverse=True)) +
+                         r')(?![A-Za-z0-9_])')
+        seen = collections.Counter()
+        where = collections.defaultdict(set)
+        for dirpath, dirnames, filenames in os.walk(os.path.join(tmp, 'port')):
+            dirnames[:] = [d for d in dirnames if d not in ('.git', '__pycache__')]
+            for fn in filenames:
+                if os.path.splitext(fn)[1].lower() in SKIP_EXT or fn in OWN:
+                    continue
+                fp = os.path.join(dirpath, fn)
+                try:
+                    txt = open(fp, encoding='utf-8', errors='replace').read()
+                except OSError:
+                    continue
+                rel = os.path.relpath(fp, tmp).replace(BS, '/')
+                for m in pat.finditer(txt):
+                    seen[m.group(1)] += 1
+                    where[m.group(1)].add(rel)
+        residue = sorted(n for n in seen if n not in news)
+        print('after the pass: %d old spellings still standing in %d places'
+              % (len(seen), sum(seen.values())))
+        print('  all of them the NEW name of another address (chain targets): %d'
+              % (len(seen) - len(residue)))
+        print('  TRUE RESIDUE (named by no row as a target)                 : %d' % len(residue))
+        for n in residue[:40]:
+            print('     %s  %d places  %s' % (n, seen[n], sorted(where[n])[:3]))
+        return 1 if residue else 0
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -712,6 +764,8 @@ def main(argv=None):
     g.add_argument('--apply', action='store_true', help='rewrite port/ (refuses too early)')
     g.add_argument('--danger', action='store_true',
                    help='per-place adjudication of every DANGER spelling')
+    g.add_argument('--dryapply', action='store_true',
+                   help='apply to a throwaway copy and count what is left')
     ap.add_argument('--force', action='store_true')
     args = ap.parse_args(argv)
 
@@ -719,6 +773,8 @@ def main(argv=None):
         return cmd_selftest(args)
     if args.verify:
         return cmd_verify(args)
+    if args.dryapply:
+        return cmd_dryapply(args)
     if args.danger:
         return cmd_danger(args)
     if args.apply:
