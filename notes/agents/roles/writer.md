@@ -67,6 +67,18 @@ now-inline destructor and the control run breaks. Working order:
     create -> linkcheck --baseline (pristine tree) -> header edit + reconcile
            -> verify -> linkcheck <ov>/<Class>
 
+**For a text-only TU, `linkcheck` cannot be re-run once the promotion is
+enrolled.** With the `src/` path in `delinks.txt`, `tubuild` routes the candidate
+to the intact-object path and refuses: *"intact production requires one .text
+claim and at least one non-text claim"*. That refusal is benign, not damage you
+caused — confirm it with a control on an already-promoted sibling
+(`dScMgSingle3DBase_c` produces the identical message on untouched `main`). The
+consequence is that your recorded link evidence is from a **pre-promotion tree**:
+if you then edit the source, you owe a proof that the edit is byte-neutral.
+Compile the object before and after and compare sha256 — one writer removing
+provably-inert pragmas did exactly this (identical object, 29744 bytes) and
+recorded it in the manifest. Do not let "I only removed a no-op" stand unproved.
+
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
 
@@ -174,7 +186,11 @@ carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
 
 `externalized_output` / `canonical-import` is what a TU that stops at
-text-verified uses. `daObjFallBlock_c` first wrote 10 rows there and could not
+text-verified uses. (The counts in the next sentence are historical and do not
+match the tree: `daObjFallBlock_c`'s manifest today carries **14** rows — 11
+`deadstrip-data` plus 3 `deadstrip-duplicate` — with `externalized_output`
+empty. Read it for the mechanism, not the arithmetic.)
+`daObjFallBlock_c` first wrote 10 rows there and could not
 promote; every one had a configured home, so all 10 converted to `deadstrip-data`
 and the class promoted. If you find yourself filling this block, check first
 whether those addresses are actually homed — most are.
@@ -429,10 +445,21 @@ Ask the compiler rather than hand-mangling:
   authoritative. `_ZTV7daDkk_c` at `0x02113850` is followed by
   `data_ov025_021138a8`, implying `0x58` / 22 slots; it is really `0x88` / 32.
   Three `ambiguous` `data_ov025_*` rows are **phantom interior symbols sitting
-  inside the table**. `relocs.txt` settles it — every word through `0x021138cc`
+  inside the table**. `relocs.txt` narrows it — every word through `0x021138cc`
   is a relocated entry, and `0x021138d0` already belongs to the next class's
   `_ZTI`. Corroborate with `romdata_check`'s **`emitted`/`bytes`** fields and
   `blindWords: 0`.
+
+  **But "take the contiguous relocated run" OVERSHOOTS, and this worked example
+  is what proves it.** Measured on the same ov025 table: the relocated run from
+  `0x0211384c` reaches `0x021138d8` with **no gap anywhere** — 36 words, four
+  more than the real 32 — because `_ZTI14daObjDpBrock_c` at `0x021138d0` is a
+  `__si_class_type_info`, three fully-relocated words butted straight against the
+  table. Nothing in `relocs.txt` marks that boundary. **The tie-break is
+  `symbols.txt` naming a `_ZTI`/`_ZTS` inside the run**, not the run's own shape.
+  A class whose run happens to end in a real gap (`dScMgRoulette_c`: next
+  relocated word `0x0213e444`, with `0x0213e42c..0x0213e440` unrelocated) is
+  decisive by accident, not by method — do not generalise from one.
 - **Do NOT read the extent from `romdata_check`'s `romExtent` field.** It carries
   the *wrong short* value — `88` decimal, the false `0x58` — on the very class
   where the answer is `0x88`. Trusting it confirms the trap instead of catching
@@ -593,7 +620,30 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   pair actually named above, `opt_strength_reduction` and `opt_common_subs`, has
   **not** been re-tested under `defer_codegen off`. Do not take a pragma
   collision as an automatic subset until you have tried it, and report what you
-  measure either way. Score every setting
+  measure either way.
+
+  **A second writer confirmed the lever on a third pragma AND confirmed the
+  default.** Five controls on `ov006/dScMgRoulette_c`: `optimize_for_size on` at
+  file scope with no closing `off` gave 23/40 (so the pragma really does move
+  bytes there); bracketing `on`/`off` around one offender gave 40/40, i.e. the
+  bracket did **not** bind and the trailing `off` restored the default file-wide
+  — so the file-global last-wins rule above is **correct by default**; adding
+  `#pragma defer_codegen off` to that same bracket made it bind, surgically.
+
+  **`defer_codegen off` and source layout are ONE decision, not two.** The same
+  run flipped emission order to "38 ordinal pair(s) NOT in ROM order", because
+  that TU was written descending-ROM to compensate for deferred codegen's
+  reversal. `linkcheck [4b/8]` refuses the mixture and it is a hard refusal.
+  Adopting the pragma means **rewriting the TU ROM-ascending in the same change**.
+  Budget for that before reaching for it, and never report a recovered `verify`
+  count without saying whether emission order still passes — `linkcheck
+  --partial` skips that audit entirely.
+
+  **Beware proving nothing.** That writer's own first draft claimed the opposite
+  from a single control: bracketed pragmas present gave 40/40, so the brackets
+  "worked". Deleting the pragmas outright *also* gave 40/40 — both members match
+  at plain `-O4,p` anyway, so the first control had no signal in it. Always run
+  the delete-outright control before concluding a pragma did anything. Score every setting
   across the whole side and take the longest **contiguous** all-matching run:
   here SR-off scored 44/49 overall but SR-on gave the longest contiguous run, 22.
 

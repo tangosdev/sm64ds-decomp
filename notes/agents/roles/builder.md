@@ -215,6 +215,17 @@ path legitimately recurs under different reasons — `main` carries 66 such rows
 from past promotions. Only byte-identical repetition is the defect. A builder
 who deduped by path would delete real history.
 
+## Do not use `git stash` in this repo
+
+Two hazards compound. The stash is **shared across every worktree** here, so a
+stash pushed in one worktree is visible — and poppable — in another. And a stash
+round-trip **unstages staged deletions**: push then pop, and a 40-file deletion
+set comes back as unstaged, where the next `git commit` silently omits it. A
+writer caught this once mid-promotion; a promotion is exactly the change shaped
+to lose that way, since deleting the shards is most of the diff. If you must
+shelve work, copy files aside or commit to a scratch branch, and run
+`git status` before every commit rather than trusting what you staged earlier.
+
 ## Your branch
 
 The writer's worktree still has `cpp/<Class>-tu` checked out, so you cannot use
