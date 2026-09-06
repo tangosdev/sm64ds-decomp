@@ -48,6 +48,7 @@ src/func_ov001_020aaf40.c:
     .text start:0x020aaf40 end:0x020ab110
 
 src/_ZN10dCapIcon_c6UnlinkEv.cpp:
+    complete
     .text start:0x020ab110 end:0x020ab228
 
 src/func_ov001_020ab228.c:

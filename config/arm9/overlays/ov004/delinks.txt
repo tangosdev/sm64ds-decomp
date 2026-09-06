@@ -49,6 +49,7 @@ src/func_ov004_020ada40.c:
     .text start:0x020ada40 end:0x020adafc
 
 src/func_ov004_020adafc.c:
+    complete
     .text start:0x020adafc end:0x020adb1c
 
 src/func_ov004_020adb1c.c:
@@ -56,15 +57,19 @@ src/func_ov004_020adb1c.c:
     .text start:0x020adb1c end:0x020adbc0
 
 src/func_ov004_020adbc0.c:
+    complete
     .text start:0x020adbc0 end:0x020adbe0
 
 src/func_ov004_020adbe0.c:
+    complete
     .text start:0x020adbe0 end:0x020adc00
 
 src/func_ov004_020adc00.c:
+    complete
     .text start:0x020adc00 end:0x020adc1c
 
 src/func_ov004_020adc1c.c:
+    complete
     .text start:0x020adc1c end:0x020adc3c
 
 src/func_ov004_020adc3c.c:
@@ -312,6 +317,7 @@ src/FreeGfxSlotsById.c:
     .text start:0x020b0aa0 end:0x020b0b1c
 
 src/func_ov004_020b0b1c.c:
+    complete
     .text start:0x020b0b1c end:0x020b0cac
 
 src/func_ov004_020b0cac.c:
