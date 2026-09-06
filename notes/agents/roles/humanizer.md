@@ -7,7 +7,9 @@ yourself, after every batch:
 
     python tools/tubuild.py verify <module>/<Class>
 
-It costs about **2.6 seconds** on a 71-member TU. Two humanizer runs each moved
+It costs about **2.6 seconds** on a 71-member TU, and a `DIFF` names the
+function it is in — so candidates in *different* members can share one `verify`
+run without losing isolation, which roughly halved one run's measurement count. Two humanizer runs each moved
 bytes in three separate batches; batching a dozen edits between checks buys
 nothing and costs two rounds of bisecting. `linkcheck` and `rombuild` are the
 builder's, and stage 4 remains the only stage that DECIDES.

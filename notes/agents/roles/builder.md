@@ -566,9 +566,28 @@ already stale. Getting this wrong costs a full validation cycle.
   Once the source is enrolled in `delinks.txt`, `cmd_linkcheck` sets
   `enrolled_intact_candidate = True` unconditionally and routes down the intact
   path whatever `production_mode` says; it dies at `[4/8]`. Pre-existing — it
-  fails identically for `ov002/daBar_c` on untouched `main`. **Take the writer's
-  pre-promotion linkcheck as the evidence.** Do not re-run it here and do not
-  report its failure as a defect in the change.
+  fails identically for `ov002/daBar_c`, and for already-promoted untouched
+  `ov006/dScMgTeresa_c`, on `main`. The chain is `tubuild.py:4613` -> `:4777` ->
+  `tu_production.py:41`; `rombuild.intact_tu_policies` (`rombuild.py:773`) skips
+  entries without `production_mode: intact-object`, which is why the normal
+  build never takes that path. **Never add a `production_mode` key or a fake
+  non-text claim to make the error disappear** — a text-only TU that must not
+  own its vtable would then be lying to `rombuild`.
+
+  **This file used to say "take the writer's pre-promotion linkcheck as the
+  evidence", and that instruction would have shipped a TU that does not link.**
+  On ov006/`dScMgPanel_c` the writer's `SCRATCH-LINK-VERIFIED` was not
+  reproducible, and `mwldarm` aborted with 22 `Undefined`. **`rombuild`'s
+  BASELINE CONTROL is the link proof for a text-only promotion** — it links the
+  working tree, and a link failure there surfaces as `could not bootstrap strict
+  stock control`, which reads like a stale baseline and is not.
+
+  **And byte match + objisolate + reloc_audit + the `[4b]` audit is NOT a link
+  proof.** All four were green on that TU while it had 41 mangled undefined
+  symbols. Add a ~20-line **`.symtab` undefined-symbol scan** of the emitted
+  object to your sweep: it costs seconds against an hour through a failed
+  `rombuild`, and a mangled `_Z…` undefined naming a symbol the TU itself
+  defines is the signature.
   **But do not leave the `[4b/8]` gate unverified just because `linkcheck`
   refuses.** The object audit behind it is reachable in about a minute without a
   linkcheck at all: `_compile_tu(entry)` -> `apply_compiler_only_policy` ->

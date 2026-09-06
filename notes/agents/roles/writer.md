@@ -684,6 +684,28 @@ they cost minutes; discover them after and each is a cycle.
   declared-but-undefined members, and any type named in a member's own
   signature — uniquifying tags per member.
 
+  **The one exception, and it is a LINK failure that every byte gate passes.**
+  That advice works because each `func_ovNNN_*` member sits inside its own
+  `extern "C" { }` region, so its block-scope declarations get C linkage. **A
+  class member function cannot sit inside such a region** — so the *identical*
+  declarations written inside a real class member get **C++** linkage and
+  reference mangled symbols nothing defines, including mangled ghosts of
+  symbols this very TU defines (`_Z19func_ov006_02106168Pc` *and* `...Pv`, two
+  spellings of one function). `mwccarm` rejects a block-scope `extern "C"`
+  outright (`Error: declarator expected`), so there is no in-body fix.
+
+  Measured on ov006/`dScMgPanel_c`: 71/71 MATCH, objisolate clean,
+  reloc-destinations clean, `[4b]` audit `order_ok True, LICENSED 71, 0
+  refusals` — and `mwldarm` aborted with **22 `Undefined`**, every one
+  `Referenced from "dScMgPanel_c::InitResources()"`.
+
+  **The landed shape** (`dScMgTeresa_c`, `dScMgRoulette_c`, and the repair that
+  shipped `dScMgPanel_c`): ONE file-scope `extern "C"` region holding the
+  genuinely external symbols, placed **after the last `func_*` member** so those
+  members keep their recovered per-body spellings; delete the declarations that
+  name this TU's own members, and let the three-or-so call sites take the
+  definition's pointer type. Byte-neutral — 71/71 before and after.
+
 - **"Block-scope data redeclaration is rejected" is false**, and believing it
   costs bytes. Measured directly: `extern int dv;`, `extern char dv[];` and
   `extern struct V dv;` in three separate function bodies compile cleanly. Only
