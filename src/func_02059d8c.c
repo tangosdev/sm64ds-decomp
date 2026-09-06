@@ -5,7 +5,7 @@
 // no expression over the post-subtraction result that denotes carry, and mwccarm fuses a
 // subtract with its following test only when the test is against zero (Z/N), so the HS
 // predicate is unreachable at the exact 12-byte shape. Established across 20 mwccarm builds
-// x 7 optimization levels x 8 pragmas - see notes/func_02059d8c-asm-origin.md.
+// x 7 optimization levels x 8 pragmas - see notes/archive/func_02059d8c-asm-origin.md.
 asm void func_02059d8c(void) {
 L0:
     subs r0, r0, #4;

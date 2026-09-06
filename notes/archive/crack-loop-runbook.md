@@ -77,7 +77,7 @@ with the next launch:
   source + its divergence count from every agent, sched_run returns them as
   `nearMisses`, and bank_run ingests them into nearmiss/db.jsonl and writes real
   divergence counts into nonmatching.jsonl. Nothing close is ever discarded.
-- Agents within ~6 divergences are told to read notes/pret-idioms.md and
+- Agents within ~6 divergences are told to read notes/archive/pret-idioms.md and
   notes/mwccarm-codegen.md (the full idiom catalogue) before giving up - on-demand,
   so easy functions never pay that context cost.
 

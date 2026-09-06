@@ -426,7 +426,7 @@ s32 dScMgCard_c::InitResources()
  * whole round. The name is the legacy recovered vtable name
  * (dActor_c.h:131, corroborated by ov006's symbols.txt), standing
  * uncontradicted; what the family adjudication of 2026-08-31 settled is the
- * slot's RETURN TYPE, void (notes/minigame-family-decisions.md). The body
+ * slot's RETURN TYPE, void. The body
  * agrees: it clears the card-marked counter and both highlight pairs
  * (6 means "none"), re-arms the shared-table pair the round readout uses,
  * refills the six-face weights, redeals both hands, resets the chip

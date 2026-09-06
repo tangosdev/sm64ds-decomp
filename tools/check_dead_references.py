@@ -122,6 +122,24 @@ SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
              ".pytest_cache", "node_modules", ".venv", "venv"}
 CODE_SUFFIXES = (".c", ".cc", ".cpp", ".h", ".hpp")
 
+# someone forgot to follow through, so they are excluded the same way `GENERATED`
+# directories are: on purpose, not by omission. `tangos.json` is the one root JSON
+# file that is genuinely prose (setup/agent instructions) and stays in scope.
+ROOT_JSON_LEDGERS = {"attribution.json", "contributions.json",
+                      "contributor-colors.json", "langmode-baseline.json"}
+
+# `config/**/*.jsonl` ledgers of the same shape: one record per historical event
+# (a match attempt, a match's provenance, a coverage waiver, a backslide exception),
+# keyed by a `srcPath`/`path` that names the file AT THE TIME of that event. A function
+# recorded here as `src/func_ov006_....c` is routinely absorbed into a TU under
+# `src_tu/` later -- expected, not a citation gone stale. `notes/levers.jsonl` and
+# `nearmiss/db.jsonl` are excluded from this set on purpose: they are read as live
+# input (a lever catalogue, near-miss source) rather than written as an append-only
+# history, so a dead path in either is a real citation bug.
+JSONL_LEDGERS = {"config/match_attempts.jsonl", "config/match_provenance.jsonl",
+                  "config/converted-backslide-exceptions.jsonl",
+                  "config/source-coverage-exceptions.jsonl"}
+
 PATH_RE = re.compile(r"(?<![\w./\\-])((?:[A-Za-z0-9_.\-]+/)+[A-Za-z0-9_.\-]+)(?![\w-])")
 # Templates, globs and format placeholders are not paths anyone can resolve.
 GLOBBY = re.compile(r"[*?\[\]{}<>]|\.\.\.|%s|\$\(|::")
@@ -143,7 +161,7 @@ def _prose_targets(root=None):
         rel_base = pathlib.Path(base).relative_to(root).as_posix()
         for f in files:
             rel = f if rel_base == "." else f"{rel_base}/{f}"
-            if rel.startswith("tools/") and rel.endswith(".py"):
+            if rel.startswith("tools/") and rel.endswith((".py", ".js")):
                 out.append(rel)
             elif rel.startswith("notes/") and rel.endswith(".md"):
                 out.append(rel)
@@ -156,6 +174,13 @@ def _prose_targets(root=None):
             elif "/" not in rel and rel.endswith(".md"):
                 out.append(rel)
             elif rel.endswith(CODE_SUFFIXES):
+                out.append(rel)
+            elif (rel.startswith("config/") and rel.endswith(".json")
+                    and rel != _baseline_rel()):
+                out.append(rel)
+            elif rel.endswith(".jsonl") and rel not in JSONL_LEDGERS:
+                out.append(rel)
+            elif "/" not in rel and rel.endswith(".json") and rel not in ROOT_JSON_LEDGERS:
                 out.append(rel)
     return sorted(out)
 
@@ -278,6 +303,117 @@ def _c_prose(text):
         i += 1
 
 
+def _baseline_rel():
+    """`BASELINE`'s own path relative to `REPO`, or `None` when it isn't under `REPO` at
+    all -- which happens in tests that repoint `REPO` to a throwaway tree without also
+    repointing `BASELINE` (most don't need to: this is the only call site that cares).
+    `None` never equals a real `rel` string, so the self-reference guard below simply
+    stops applying instead of raising `ValueError` on a path that isn't a subpath.
+    """
+    try:
+        return BASELINE.relative_to(REPO).as_posix()
+    except ValueError:
+        return None
+
+
+def _scan_c_like(text, want_strings):
+    """[(lineno, snippet)] for `//`/`/* */` comments (and, if `want_strings`, every
+    quoted string or backtick template literal) in a C, C++ or JavaScript file.
+
+    A small state machine, not a preprocessor: it only has to tell code from comment
+    (and, when asked, from string) well enough that a `/` inside a quoted ROM string,
+    or a `//` inside one, is never mistaken for the start of a real comment. It does
+    not understand macros or raw-string literals -- it does not need to, since it is
+    only extracting comment/string TEXT for the same `PATH_RE` scan every other prose
+    surface gets, not compiling anything.
+    """
+    out = []
+    i, n = 0, len(text)
+    line = 1
+    quotes = "\"'`" if want_strings else "\"'"
+    while i < n:
+        c = text[i]
+        if c == "\n":
+            line += 1
+            i += 1
+            continue
+        if c in quotes:
+            start, start_line = i, line
+            i += 1
+            while i < n and text[i] != c:
+                if text[i] == "\\" and i + 1 < n:
+                    i += 2
+                    continue
+                if text[i] == "\n":
+                    line += 1
+                i += 1
+            i = min(i + 1, n)
+            if want_strings:
+                out.append((start_line, text[start:i]))
+            continue
+        if c == "/" and i + 1 < n and text[i + 1] == "/":
+            j = text.find("\n", i)
+            j = n if j == -1 else j
+            out.append((line, text[i:j]))
+            i = j
+            continue
+        if c == "/" and i + 1 < n and text[i + 1] == "*":
+            end = text.find("*/", i + 2)
+            end = n if end == -1 else end + 2
+            snippet = text[i:end]
+            out.append((line, snippet))
+            line += snippet.count("\n")
+            i = end
+            continue
+        i += 1
+    return out
+
+
+def _js_prose(text):
+    """[(lineno, snippet)] for comments AND string/template literals in a `.js` file.
+
+    Different from `_c_comments` on purpose: this tree's orchestration scripts
+    (`tools/sched_run.js`, `tools/refine_run.js`) build their entire agent prompt as
+    ONE backtick template literal handed to `phase(...)` -- that is where a stale
+    `notes/<name>.md` reference (one that had moved to `notes/archive/`) actually
+    lived, not in a `//` comment. Treating the whole literal as prose mirrors how
+    `_py_prose` treats a docstring as prose rather than as ordinary code.
+    """
+    return _scan_c_like(text, want_strings=True)
+
+
+def _tu_manifest_prose(text):
+    """[(lineno, snippet)] for the `boundary_evidence` and `notes` fields of a
+    `config/tu_manifest.d/**` manifest -- and NOTHING else in the file.
+
+    Deliberately narrow. `legacy_source` (and `source`/`promoted_source`) name the
+    PRE-MERGE per-function file a TU absorbed, permanently, since absorbing it is the
+    whole point of the promotion -- scanning those turned a green gate into thousands
+    of "dead" hits, one per promoted function, in the first draft of this surface.
+    `boundary_evidence` and `notes` are the two fields that carry actual PROSE, a human
+    explaining a decision, and that is where a citation to a `notes/<name>.md` writeup
+    actually lives.
+    """
+    try:
+        data = json.loads(text)
+    except (ValueError, TypeError):
+        return []
+    out = []
+    for key in ("boundary_evidence", "notes"):
+        value = data.get(key) if isinstance(data, dict) else None
+        if not value:
+            continue
+        # The line number is the field's own opening line -- approximate, same as
+        # every other multi-line prose region this tool reports (a docstring, a JS
+        # template literal), and enough to find the field by eye in `--list` output.
+        idx = text.find(f'"{key}"')
+        lineno = text.count("\n", 0, idx) + 1 if idx != -1 else 1
+        for item in (value if isinstance(value, list) else [value]):
+            if isinstance(item, str):
+                out.append((lineno, item))
+    return out
+
+
 def _normalise(ref):
     ref = ref.strip().rstrip(TRAILING).lstrip("(\"'`[").replace("\\", "/")
     return ref.lstrip("./").rstrip("/")
@@ -289,8 +425,16 @@ def collect(root=REPO):
     files = _prose_targets(root)
     for rel in files:
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
+        heads = TOPDIRS
         if rel.endswith(".py"):
             regions = _py_prose(text)
+        elif rel.endswith(".js"):
+            regions = _js_prose(text)
+        elif rel.startswith("config/tu_manifest.d/") and rel.endswith(".json"):
+            # Only the two prose fields, and only `notes/`-headed refs in them:
+            # `legacy_source` names the pre-merge file a TU absorbed on purpose.
+            regions = _tu_manifest_prose(text)
+            heads = {"notes"}
         elif rel.endswith((".yml", ".yaml")):
             regions = _yaml_prose(text)
         elif rel.endswith(CODE_SUFFIXES):
@@ -303,7 +447,7 @@ def collect(root=REPO):
                 if not ref or "/" not in ref:
                     continue
                 head = ref.split("/", 1)[0]
-                if head in GENERATED or head not in TOPDIRS:
+                if head in GENERATED or head not in heads:
                     continue
                 if GLOBBY.search(ref):
                     continue

@@ -91,9 +91,9 @@ void* daObjKm3_Dorifu_c_classInit(void){
     func_020733a8(c+0x4b0, 5, 0x1c8, (void*)_ZN10dBgW_KcMbgC1Ev, (void*)_ZN10dBgW_KcMbgD1Ev);
     /* This TU DEFINES _ZTV17daObjKm3_Dorifu_c (it anchors the vtable via the
      * out-of-line destructor above), so the vptr store must skip the two
-     * hidden ABI slots with +2 -- see notes/key-function-tu-vptr-store-blocker.md.
-     * _ZTV13daObjDorifu_c above stays addend-0: that base's vtable is still
-     * imported (UNDEF) from elsewhere, not defined in this TU. */
+     * hidden ABI slots with +2. _ZTV13daObjDorifu_c above stays addend-0:
+     * that base's vtable is still imported (UNDEF) from elsewhere, not
+     * defined in this TU. */
     *(int*)c = (int)(_ZTV17daObjKm3_Dorifu_c + 2);
   }
   return c;
