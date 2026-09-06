@@ -1016,7 +1016,8 @@
         "_ZTV15dScMgCurling2_c (ov006 0x0213c510)",
         "_ZN15dScMgCurling2_cD2Ev -- disposition deadstrip, NOT deadstrip-data; the ROM has no D2 (see destructors)"
       ],
-      "note": "Applies only to a segment that CONTAINS the key function (segment A). dScMgCoin_c, whose promoted segment excluded its key function, has compiler_only_output: 0."
+      "note": "Applies only to a segment that CONTAINS the key function (segment A). dScMgCoin_c, whose promoted segment excluded its key function, has compiler_only_output: 0.",
+      "landed_comparison": "dScMgTeresa_c and dScMgPanel_c share this class's exact 5-class chain and each landed 12 compiler_only_output entries = the 11 floor + the deadstripped D2. That makes 12 the expected figure for a segment-A promotion here, not merely a floor."
     }
   },
   "near_miss_bank": {
@@ -1325,10 +1326,16 @@
     },
     "rom_order": "D1 (0x020e3854) then D0 (0x020e3878), adjacent, at the very start of the run. There is NO D2 anywhere: the only D2 in the family is the base's _ZN11dScMgBase_cD2Ev at ov004 0x020b29c0, which D1 and D0 both call.",
     "why_no_D2": "dScMgCurling2_c is a confirmed leaf -- no edge in build/rtti.json names it as a base -- so its own D2 is never odr-used and never emitted.",
-    "emission_recipe": "The one landed ov006 precedent for an out-of-line destructor is src/minigames/d_s_mg_memory.cpp, which puts a single destructor definition under `#pragma defer_codegen off` and gets D1 then D0 as ROM ordinals 0 and 1 -- exactly this class's shape. mwccarm ALSO emits a D2 that the ROM does not have; dScMgMemory_c.json and dScMgCup_c.json both carry it as compiler_only_output with disposition `deadstrip` (not deadstrip-data).",
-    "correction": "The pipeline brief's phrasing 'emits D1, D0, D2' describes what mwcc emits, not what the ROM contains. Here the ROM contains D1 and D0 only, and the D2 must be declared and deadstripped.",
+    "emission_recipe": "Out-of-line destructor under `#pragma defer_codegen off`, which is what 8 of the 9 modern src/actors/ ov006 promotions do (see ov006_defer_codegen_census). The two freshest, dScMgTeresa_c (#2329) and dScMgPanel_c (#2347), are the closest oracles: both declare `virtual ~<Class>();` out-of-line in the header and put a single destructor definition under the pragma. Their own source comments record that the pragma emits D1, D0, D2 -- the cartridge's order -- where the older non-deferred shape inverts to D2, D0, D1.",
+    "correction": "Not a correction of the recipe -- `defer_codegen off` does emit D1, D0, D2, and that is the house description. The narrower point is about the CARTRIDGE: this class's ROM contains D1 and D0 only, because dScMgCurling2_c is a leaf whose own D2 is never odr-used. The compiler's D2 is homeless and gets deadstripped. A writer expecting to find three destructor bodies in the ROM will not find the third.",
     "header_state": "include/dScMgCurling2_c.h ALREADY declares `virtual ~dScMgCurling2_c();` out-of-line, and declares it FIRST, ahead of InitResources/Behavior/Render/OnYoshiTryEat.",
-    "evidence": "D1 and D0 each install the 0x0213c510 address point and call ov004 0x020b29c0; D0 then calls operator delete. Neither calls any own subobject destructor."
+    "evidence": "D1 and D0 each install the 0x0213c510 address point and call ov004 0x020b29c0; D0 then calls operator delete. Neither calls any own subobject destructor.",
+    "D2_disposition": {
+      "emitted_by_compiler": true,
+      "present_in_rom": false,
+      "disposition": "compiler_only_output, disposition `deadstrip` (NOT deadstrip-data)",
+      "precedent": "dScMgTeresa_c.json carries _ZN13dScMgTeresa_cD2Ev and dScMgPanel_c.json carries _ZN12dScMgPanel_cD2Ev, both exactly this way. Older dScMgMemory_c.json and the unlanded dScMgCup_c.json agree."
+    }
   },
   "base_chain": {
     "chain": [
@@ -1383,8 +1390,48 @@
   },
   "sibling_oracles": {
     "queue_row": "dScMgSingle3DBase_c",
-    "better_for_the_destructor": "src/minigames/d_s_mg_memory.cpp + config/tu_manifest.d/ov006/dScMgMemory_c.json -- the only landed ov006 TU with an out-of-line destructor under `#pragma defer_codegen off`.",
-    "better_for_a_partial": "config/tu_manifest.d/ov006/dScMgCoin_c.json -- promoted a 33-of-61 segment that EXCLUDED its key function and therefore carries compiler_only_output: 0.",
-    "ov006_manifest_status_note": "dScMgCup_c is at status `shadow`, NOT promoted. Of the four classes the pipeline brief listed as promoted in the last day, dScMgTeresa_c (#2329), dScMgCoin_c (#2344) and dScMgPanel_c (#2347) are promoted; dScMgCup_c is not. dScMgMemory2_c (#2324) also landed in that window."
+    "primary": "config/tu_manifest.d/ov006/dScMgTeresa_c.json + src/actors/dScMgTeresa_c.cpp, and config/tu_manifest.d/ov006/dScMgPanel_c.json + src/actors/dScMgPanel_c.cpp. The two freshest ov006 promotions (#2329, #2347), both out-of-line destructor + `#pragma defer_codegen off`, both on the live src/actors/<Class>.cpp convention, and both with the IDENTICAL 5-class ancestor chain to this one (<Class> -> dScMgBase_c -> dScene_c -> dBase_c -> fBase_c). Copy these.",
+    "exact_compiler_only_prediction": "dScMgTeresa_c and dScMgPanel_c each landed exactly 12 compiler_only_output entries: the 11-entry floor this class's identical chain also predicts, plus the deadstripped D2. A segment-A promotion of dScMgCurling2_c should land 12 as well.",
+    "still_useful_from_memory": "src/minigames/d_s_mg_memory.cpp remains a readable worked example of the single-definition-emits-D1-and-D0 comment shape, but it is the ONE older src/minigames/ TU using the pragma and it follows the superseded layout convention. Read it for the prose, not for the file shape.",
+    "for_a_partial": "config/tu_manifest.d/ov006/dScMgCoin_c.json -- promoted a 33-of-61 segment that EXCLUDED its key function and therefore carries compiler_only_output: 0 and a production_mode key. Also on the src/actors/ convention and also `defer_codegen off`.",
+    "layout_convention": "Every recent ov006 promotion lands at src/actors/<Class>.cpp. The src/minigames/d_s_mg_*.cpp layout is the older shape; do not add to it. (An unlanded branch, cpp/mg-curling2, carries a src/minigames/<Class>/ re-layout that main did not take.)",
+    "ov006_manifest_status_note": "dScMgCup_c is at status `shadow` on main; its promotion is PR #2348, open and awaiting review, not landed. Of the classes promoted in the last day, dScMgTeresa_c (#2329), dScMgCoin_c (#2344), dScMgPanel_c (#2347) and dScMgMemory2_c (#2324) are in."
+  },
+  "ov006_defer_codegen_census": {
+    "measured_on_base": "9d45c00829e507f9626f5fb17591998972f5151c",
+    "promoted_ov006_manifests": 21,
+    "using_defer_codegen_off": 9,
+    "split_is_by_vintage": true,
+    "groups": [
+      {
+        "convention": "src/actors/<Class>.cpp",
+        "vintage": "current -- every recent ov006 promotion lands here",
+        "promoted": 9,
+        "using_defer_codegen_off": 8,
+        "classes": [
+          "dScMgBomroom_c",
+          "dScMgCoin_c",
+          "dScMgHanachan_c",
+          "dScMgMemory2_c",
+          "dScMgPanel_c",
+          "dScMgRoulette_c",
+          "dScMgSound_c",
+          "dScMgTeresa_c"
+        ],
+        "exception": "dScMgD3DBase_c is the only one that does not, and its header gives the class an INLINE destructor (`virtual ~dScMgD3DBase_c() {}`)."
+      },
+      {
+        "convention": "src/minigames/d_s_mg_*.cpp",
+        "vintage": "older",
+        "promoted": 12,
+        "using_defer_codegen_off": 1,
+        "classes": [
+          "dScMgMemory_c"
+        ],
+        "note": "The other 11 give the class an inline destructor in the header instead."
+      }
+    ],
+    "conclusion": "`#pragma defer_codegen off` with an out-of-line destructor is the NORM for modern ov006 promotions -- 8 of the 9 that use the live src/actors/ convention -- not a one-off. It is still a measurement rather than a default: the 12 older src/minigames/ TUs mostly took an inline destructor instead, and dScMgD3DBase_c took one even in the modern group. The writer runs the control; this scout only reports what landed.",
+    "scout_erratum": "An earlier revision of this file reported '1 of 13' and named d_s_mg_memory.cpp the oracle. That count grepped src/minigames/ alone and missed the entire src/actors/ group, which is where every recent ov006 promotion lives. Corrected here."
   }
 }
