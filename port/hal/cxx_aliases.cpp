@@ -2154,3 +2154,42 @@ bool Player::TryGrab(Actor &actor)
 #pragma comment(linker, "/alternatename:?data_020a0ebc@@3PAHA=_data_020a0ebc")
 #pragma comment(linker, "/alternatename:?data_ov002_0211028c@@3UState@@A=_data_ov002_0211028c")
 #pragma comment(linker, "/alternatename:?data_ov002_0211004c@@3HA=_data_ov002_0211004c")
+
+/* ---- link100 TAIL2 ----------------------------------------------------------
+   TWO HOSTED DS SYMBOLS gate 219's translation units need and nothing in this
+   image defined, both read off config/arm9/symbols.txt / the ov002 symbol file
+   rather than sized by what their readers happen to touch.
+
+   data_0209d3ac is arm9 BSS, FOUR bytes (the next symbol is data_0209d3b0), and
+   src/engine/fader/_ZN15FaderBrightness11AdvanceFadeEv.cpp is what wants it:
+   past full black the brightness fade flushes it out of the data cache and
+   reloads it as the backdrop palette on BOTH engines, two bytes each time. It
+   is zero-initialised storage exactly as bss is on the DS.
+
+   data_ov002_0210b97c is a THREE-POINTER table -- 0x0210b97c..0x0210b988, and
+   config/arm9/overlays/ov002/relocs.txt relocates all three words, to
+   0x021001b0, 0x02100200 and 0x02100250. That is why it is HOSTED HERE and not
+   added to port/ov002_syms.txt: the ov002 mount byte-copies, and a byte-copied
+   pointer carries a DS address into a reader (func_ov002_020f2f9c picks a row
+   set with it and reads twenty bytes through it). The three targets ARE on the
+   mount now, so this array holds the host addresses of the mounted copies --
+   the intro_ov002_seat.cpp treatment written as an initialiser, which is
+   possible here because all three targets are ordinary data symbols. */
+DSSTATE_BEGIN
+extern "C" {
+char data_0209d3ac[4];
+extern unsigned char data_ov002_021001b0[], data_ov002_02100200[],
+    data_ov002_02100250[];
+void *data_ov002_0210b97c[3] = {
+    (void *)data_ov002_021001b0,   /* ROM word +0x00 */
+    (void *)data_ov002_02100200,   /* ROM word +0x04 */
+    (void *)data_ov002_02100250,   /* ROM word +0x08 */
+};
+}
+DSSTATE_END
+/* The reader is plain C -- src/func_ov002_020f2f9c.c spells it
+   `extern int* data_ov002_0210b97c[]` -- so it wants the undecorated C name,
+   which is what the extern "C" definition above gives it, and no
+   /alternatename is needed. The three externs are `unsigned char[]` because
+   that is the shape ovdata.py's generated mount publishes every symbol in; the
+   initialiser casts. */

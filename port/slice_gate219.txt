@@ -1,0 +1,108 @@
+# GATE 219 -- CUTSCENE_OBJECT's STATE BODIES (run link100, lane TAIL2)
+#
+# The bodies the ten pointer-to-member State arrays name. What the arrays are,
+# where they come from and why the port reads them as an address switch instead
+# of an MSVC member pointer is the header of hal/cutscene_states_link100.cpp;
+# this file is only the source list.
+#
+# THE SET IS THE ROM'S, not a hand list. port/tools/tail2_cells.py walks
+# __sinit_ov002_02107370's own assignments, reads each source record out of
+# extracted/overlays/overlay_0002.bin and cross-checks it against
+# config/arm9/overlays/ov002/relocs.txt; 69 cells, 57 distinct bodies, zero
+# defects. Of the 57:
+#
+#   49  are matched TUs with no other reference in the port -- this file
+#    5  are matched TUs that are THEMSELVES pointer-to-member readers
+#       (func_ov002_020f3310 / 020f3740 / 020f3d98 / 020f562c / 020f5848), so
+#       they are HOST COPIES in hal/cutscene_states_link100.cpp and their src
+#       lines stay out. A state whose tick is itself a sub-dispatcher is the
+#       shape; the wall is the dispatch, not the body.
+#    3  have NO src TU anywhere in the tree (func_ov002_020f5010,
+#       func_ov002_020f43cc, func_ov002_020f3de4) and their cells trap by name.
+#
+# Every line below was checked to exist on disk and to carry no NONMATCHING
+# banner and no guess marker before it was written.
+src/func_ov002_020f32e4.c
+src/func_ov002_020f30f8.c
+src/func_ov002_020f3d38.c
+src/func_ov002_020f3ba0.c
+src/func_ov002_020f3ae8.c
+src/func_ov002_020f378c.c
+src/func_ov002_020f57c0.c
+src/func_ov002_020f569c.c
+src/func_ov002_020f5678.c
+src/func_ov002_020f5894.c
+src/func_ov002_020f35e4.c
+src/func_ov002_020f34bc.c
+src/func_ov002_020f340c.c
+src/func_ov002_020f335c.c
+src/func_ov002_020f2d70.c
+src/func_ov002_020f2d0c.c
+src/func_ov002_020f2bf4.c
+src/func_ov002_020f2aec.c
+src/func_ov002_020f2a88.c
+src/func_ov002_020f2a78.c
+src/func_ov002_020f55b4.c
+src/func_ov002_020f5328.c
+src/func_ov002_020f4d70.c
+src/func_ov002_020f4a2c.c
+src/func_ov002_020f4710.c
+src/func_ov002_020f40fc.c
+src/func_ov002_020f5d34.c
+src/func_ov002_020f5cd0.c
+src/func_ov002_020f5c88.c
+src/func_ov002_020f5c40.c
+src/func_ov002_020f5bf4.c
+src/func_ov002_020f5bcc.c
+src/func_ov002_020f5b98.c
+src/func_ov002_020f5b8c.c
+src/func_ov002_020f5b88.c
+src/func_ov002_020f5b84.c
+src/func_ov002_020f5b80.c
+src/func_ov002_020f5b7c.c
+src/func_ov002_020f5b24.c
+src/func_ov002_020f5efc.c
+src/func_ov002_020f5ef0.c
+src/func_ov002_020f5ee4.c
+src/func_ov002_020f5ed8.c
+src/func_ov002_020f5eb8.c
+src/func_ov002_020f5e98.c
+src/func_ov002_020f5e78.c
+src/func_ov002_020f5e58.c
+src/func_ov002_020f5e38.c
+src/func_ov002_020f5e18.c
+
+# ---- SECTION 2: THE THREE TRAP-FILLED FADER TABLES -- REMOVED --------------
+#
+# This section seated data_0208eacc/eb2c/eafc (six matched TUs, ROM addresses
+# below, all independently re-verified correct) and was pulled by the
+# finisher pass: seating them exposed a caller/callee calling-convention
+# hazard that crashes the opening cutscene. Full account in port/CMakeLists.txt
+# next to SLICE219_SOURCES's definition, and in the finisher's commit message.
+# hal/scene_boot.cpp is back to trapping all three tables, matching pre-TAIL2.
+# The six ROM words below are still real; they are just not seated.
+#
+#   data_0208eacc +0x00  0x02017814  FaderBrightness::~FaderBrightness  (D1)
+#                 +0x04  0x020177e8  FaderBrightness::~FaderBrightness  (D0)
+#                 +0x08  0x02017720  FaderBrightness::AdvanceFade
+#   data_0208eafc +0x00  0x0201786c  Fader::~Fader                      (D1)
+#                 +0x04  0x02017848  Fader::~Fader                      (D0)
+#   data_0208eb2c +0x04  0x02017598  FaderColor::~FaderColor            (D0)
+
+# ---- SECTION 3: THE CLOSURE THE 49 BODIES PULL IN --------------------------
+#
+# Nine more matched TUs, every one named by port/tools/closure.py against the
+# baseline map rather than guessed, and every one an ov002 body the state
+# machine calls directly. None carries a NONMATCHING banner or a guess marker.
+# (func_0201ef50, func_ov002_020f2e30 and func_ov002_020f39ec are the three
+# closure names that were ALREADY offered, on slice_intro.txt, and are not
+# repeated here.)
+src/func_ov002_020f2958.c
+src/func_ov002_020f2a48.c
+src/func_ov002_020f2f18.c
+src/func_ov002_020f2f64.c
+src/func_ov002_020f2f9c.c
+src/func_ov002_020f37fc.c
+src/func_ov002_020f3828.c
+src/func_ov002_020f3954.c
+src/func_ov002_020f5a94.c

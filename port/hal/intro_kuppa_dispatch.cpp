@@ -304,38 +304,27 @@ extern "C" void func_ov002_020f7d74(void *self, unsigned char *p, int a2,
  * written on MSVC each index reads FOUR words out of a TWO-word record and then
  * calls through neighbour data.
  *
- * THEY ARE TRAPPED, NOT HOSTED, AND NOT LEFT TO MISDISPATCH. Hosting them
- * properly means three more seat tables (each entry checked against the ROM
- * address its host body was compiled from) plus the closure of every function
- * those arrays name -- a round of work in its own right, and the arrays' target
- * bodies are not offered either. Letting them run as compiled would be the
- * worse option by far: it links, it looks fine, and it calls a wrong address
- * quietly.
+ * ---- link100 TAIL2 ----
+ * THEY ARE HOSTED NOW, and this paragraph is what they were before. It read
+ * "THEY ARE TRAPPED, NOT HOSTED, AND NOT LEFT TO MISDISPATCH", sized the work
+ * at "three more seat tables plus the closure of every function those arrays
+ * name -- a round of work in its own right", and noted that the arrays' target
+ * bodies were not offered either.
  *
- * So each aborts by name. If the opening reaches one, the run says which site
- * and which array, which is the next round's starting point rather than a
- * mystery. Their src lines are commented out in port/slice_intro.txt.
+ * All three claims were right and all three are now spent. Run link100 lane
+ * TAIL2 read __sinit_ov002_02107370's own assignments instead of the five
+ * sites: there are TEN of these arrays, not five, they tile ov002 bss
+ * contiguously at 0x02110e24..0x0211104c, and their 69 cells name 57 bodies of
+ * which 54 were matched-and-unlinked. The five sites here are five of the ten
+ * readers; the other five ARE state bodies that dispatch a further array.
+ *
+ * All ten readers, all ten tables and the 49 body TUs now live in
+ * hal/cutscene_states_link100.cpp (generated from the ROM by
+ * port/tools/tail2_gen_states.py, source list port/slice_gate219.txt), built
+ * the same way as this file's own two dispatchers: read the ROM's two-word
+ * record, check the function word, call the host body, never rewrite the
+ * mount. The five definitions that stood here would collide with it, so they
+ * come out; nothing else in this file changes. Their src lines stay commented
+ * out in port/slice_intro.txt, because a matched TU whose body is a
+ * pointer-to-member dispatch still cannot compile under MSVC.
  */
-static void intro_pmf_trap(const char *fn, const char *arr)
-{
-    std::fprintf(stderr,
-                 "UNHOSTED: %s dispatches a pointer-to-member out of %s and is "
-                 "TRAPPED, not hosted -- MSVC's PMF over an incomplete class is "
-                 "the four-word general representation and the ROM's records are "
-                 "two words. Reaching it is this lane's next finding; see "
-                 "hal/intro_kuppa_dispatch.cpp.\n", fn, arr);
-    std::abort();
-}
-
-extern "C" void func_ov002_020f2dd4(void *)
-{ intro_pmf_trap("func_ov002_020f2dd4", "data_ov002_02110ebc"); }
-extern "C" void func_ov002_020f37a0(void *)
-{ intro_pmf_trap("func_ov002_020f37a0", "data_ov002_02110e4c"); }
-extern "C" void func_ov002_020f5990(char *)
-{ intro_pmf_trap("func_ov002_020f5990", "data_ov002_02110e7c"); }
-/* Two more of the same, found by the closure loop's last round: both index a
-   PMF array built by the same __sinit_ov002_02107370 (7 entries and 11). */
-extern "C" void func_ov002_020f5dd8(void *, int)
-{ intro_pmf_trap("func_ov002_020f5dd8", "data_ov002_02110f34"); }
-extern "C" void func_ov002_020f5f0c(void *, int)
-{ intro_pmf_trap("func_ov002_020f5f0c", "data_ov002_02110f9c"); }
