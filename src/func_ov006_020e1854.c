@@ -46,9 +46,9 @@ extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
 extern struct B4 data_020a0dea[];
 extern struct B4 data_020a0deb[];
-extern int func_0203d744(long long x);
+extern int _ZN4cstd4sqrtEy(long long x);
 extern void func_02012718(int a, int b);
-extern u16 func_0203b4dc(int a, int b);
+extern u16 _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 
 void func_ov006_020e1854(void *arg)
 {
@@ -87,7 +87,7 @@ void func_ov006_020e1854(void *arg)
         dy = (*(int *)(c + 0x4eb4) - oldy) >> 12;
         dy2 = dy * dy;
 
-        if (func_0203d744((s64)(dx * dx + dy2)) <= 1) {
+        if (_ZN4cstd4sqrtEy((s64)(dx * dx + dy2)) <= 1) {
             *(int *)(c + 0x4eb0) = oldx;
             *(int *)(c + 0x4eb4) = oldy;
             return;
@@ -117,7 +117,7 @@ void func_ov006_020e1854(void *arg)
         }
 
         ang = *(u16 *)(c + 0x4ede);
-        *(u16 *)(c + 0x4ede) = func_0203b4dc(dy, dx >> 1);
+        *(u16 *)(c + 0x4ede) = _ZN4cstd5atan2E5Fix12IiES1_(dy, dx >> 1);
         {
             u16 a = *(u16 *)(c + 0x4ede);
             if (a <= 0x8000) {
@@ -134,7 +134,7 @@ void func_ov006_020e1854(void *arg)
         {
             int mag;
             *(u16 *)(c + 0x4ede) = (u16)((*(u16 *)(c + 0x4ede) + ang) >> 1);
-            mag = func_0203d744((s64)((dx >> 1) * (dx >> 1) + dy2)) * 9;
+            mag = _ZN4cstd4sqrtEy((s64)((dx >> 1) * (dx >> 1) + dy2)) * 9;
             mag = (mag << 12) >> 4;
             if (mag >= 0xc000)
                 mag = 0xc000;
