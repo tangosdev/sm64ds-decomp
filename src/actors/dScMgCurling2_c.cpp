@@ -97,27 +97,28 @@
  * WHAT THE HUMANIZER PASS MEASURED, AND WHAT IT PUT BACK.  Four shard-isms in
  * this file look like decompiler noise and are not.  Each was deleted, the TU
  * re-verified, and the deletion reverted when it cost bytes:
- *   - `idx * (4 & 0xFFFFFFFF)` in func_ov006_020e4ed4 and `(i & 0xFFFFFFFF)`
+ *   - `idx * (4 & 0xFFFFFFFF)` in DragBegin and `(i & 0xFFFFFFFF)`
  *     in func_ov006_020e4a84.  0xFFFFFFFF is an unsigned literal, so the mask
  *     makes exactly one subscript in each unsigned.  Deleting both: 29/31,
  *     DIFFs on exactly those two members.  ONE level of mask is what is
  *     needed -- func_ov006_020e4a84 arrived carrying six nested copies and
  *     five of them are gone.
- *   - `c + 0x4000 + b * 0x30 + 0x660` in func_ov006_020e39e0, where the same
+ *   - `c + 0x4000 + b * 0x30 + 0x660` in SpawnValue, where the same
  *     record is spelled `c + a * 0x30 + 0x4660` two operands earlier.  The
  *     split base is what the ROM shares across the b-indexed reads; folding it
  *     to one constant is a DIFF.
- *   - `(char *)self + idx + 0x48df` in func_ov006_020e42b4, where the line
+ *   - `(char *)self + idx + 0x48df` in StepXAndY, where the line
  *     above it reads through the plain `c`.  Spelling both the same way is a
  *     DIFF; the two callbacks really do reload through differently-typed
  *     bases.
  * Deleted at no cost, and gone for good: a `volatile` on the countdown pointer
  * in func_ov006_020e4b00, a nine-macro block standing in for the 0x24-stride
- * record in func_ov006_020e3f54, `(int)` cast towers in func_ov006_020e3948
+ * record in StepXPushNeg, `(int)` cast towers in func_ov006_020e3948
  * and func_ov006_020e4b00, a `goto`-over-the-increment in func_ov006_020e507c,
  * a one-use shadow struct in func_ov006_020e4a84, and the `0x4000 + 0x8xx` /
- * `0x5000 + 0x5xx` split addressing in func_ov006_020e3bc4, _020e3c4c,
- * _020e42b4, _020e48d4 and _020e4fe8.  func_ov006_020e39e0 is the ONE place
+ * `0x5000 + 0x5xx` split addressing in func_ov006_020e3bc4, StepYRampDown,
+ * StepXAndY, func_ov006_020e48d4 and func_ov006_020e4fe8.  SpawnValue is the
+ * ONE place
  * where that split survives, and the bullet above says why.
  *
  * decl_common.h is NOT included.  It declares nine of these 31 members and
@@ -129,35 +130,65 @@
  * the ov006/dScMgPanel_c precedent and declares every symbol it needs itself.
  * No header under include/ pulls decl_common.h in, so excluding it is enough.
  *
+ *
+ * METHOD-CONVERSION PASS.  Seventeen of the 29 non-destructor members are now
+ * real dScMgCurling2_c:: methods; twelve stay `extern "C" func_ov006_*`.  The
+ * split is not a byte question -- with ALL 29 converted this TU still reports
+ * 31/31 MATCH, objisolate clean, ROM-ascending -- it is a link question, and
+ * mwldarm named it exactly:
+ *
+ *     mwldarm.exe: Undefined : "func_ov006_020e38b0"
+ *     mwldarm.exe: Referenced from "dScMgCurling2_c::Render()" in
+ *     mwldarm.exe: _ZN15dScMgCurling2_c6RenderEv.o
+ *
+ * twelve times over.  Those twelve are reached by a direct `bl` from a caller
+ * that is STILL A ONE-FUNCTION SHARD above the hole -- Render, Behavior and
+ * InitResources plus func_ov006_020e668c, _020e628c and _020e5e3c -- and those
+ * shards, and include/decl_common.h, spell the target by its C name.  Renaming
+ * the definition without editing them is an undefined symbol.  They convert
+ * the day segment B is promoted, not before.
+ *
+ * The seventeen that did convert are reached only through the ov006
+ * pointer-to-member records (sixteen of them) or, for SpawnValue, from inside
+ * this TU and from the sourceless hole's own cartridge bytes.  A
+ * pointer-to-member record is resolved by dsd BY SYMBOL NAME, so the sixteen
+ * rows in config/arm9/overlays/ov006/symbols.txt move to the mangled spelling
+ * in the SAME edit as the definitions -- seventeen rows in all.  Leave one
+ * behind and its .data code word links as 0x00000000 with a green compile.
+ *
+ * THE NAMES ARE COINED, and include/dScMgCurling2_c.h carries the derivation:
+ * each handler's index in its own table, read out of __sinit_ov006_02130758,
+ * agrees with the index that handler writes back.  No name claims what the
+ * 0x48c0 records mean in the minigame; that is still unproven.
  * Promoted members in this TU (ROM address order):
  *   [0]  0x020e3854  _ZN15dScMgCurling2_cD1Ev
  *   [1]  0x020e3878  _ZN15dScMgCurling2_cD0Ev
  *   [2]  0x020e38b0  func_ov006_020e38b0
  *   [3]  0x020e3948  func_ov006_020e3948
- *   [4]  0x020e39e0  func_ov006_020e39e0
+ *   [4]  0x020e39e0  dScMgCurling2_c::SpawnValue
  *   [5]  0x020e3b9c  func_ov006_020e3b9c
  *   [6]  0x020e3bc4  func_ov006_020e3bc4
- *   [7]  0x020e3c4c  func_ov006_020e3c4c
- *   [8]  0x020e3ce0  func_ov006_020e3ce0
- *   [9]  0x020e3db4  func_ov006_020e3db4
- *   [10] 0x020e3e4c  func_ov006_020e3e4c
- *   [11] 0x020e3f54  func_ov006_020e3f54
- *   [12] 0x020e4094  func_ov006_020e4094
- *   [13] 0x020e41d0  func_ov006_020e41d0
- *   [14] 0x020e42b4  func_ov006_020e42b4
- *   [15] 0x020e4348  func_ov006_020e4348
- *   [16] 0x020e440c  func_ov006_020e440c
- *   [17] 0x020e4520  func_ov006_020e4520
- *   [18] 0x020e4630  func_ov006_020e4630
- *   [19] 0x020e4744  func_ov006_020e4744
- *   [20] 0x020e4794  func_ov006_020e4794
+ *   [7]  0x020e3c4c  dScMgCurling2_c::StepYRampDown
+ *   [8]  0x020e3ce0  dScMgCurling2_c::StepYRampUp
+ *   [9]  0x020e3db4  dScMgCurling2_c::StepYRestart
+ *   [10] 0x020e3e4c  dScMgCurling2_c::StepXSettle
+ *   [11] 0x020e3f54  dScMgCurling2_c::StepXPushNeg
+ *   [12] 0x020e4094  dScMgCurling2_c::StepXPushPos
+ *   [13] 0x020e41d0  dScMgCurling2_c::StepXPick
+ *   [14] 0x020e42b4  dScMgCurling2_c::StepXAndY
+ *   [15] 0x020e4348  dScMgCurling2_c::StepXSettleFast
+ *   [16] 0x020e440c  dScMgCurling2_c::StepXPushNegFast
+ *   [17] 0x020e4520  dScMgCurling2_c::StepXPushPosFast
+ *   [18] 0x020e4630  dScMgCurling2_c::StepXPickFast
+ *   [19] 0x020e4744  dScMgCurling2_c::StepXOnly
+ *   [20] 0x020e4794  dScMgCurling2_c::PickStepMode
  *   [21] 0x020e4800  func_ov006_020e4800
  *   [22] 0x020e48d4  func_ov006_020e48d4
  *   [23] 0x020e4a84  func_ov006_020e4a84
  *   [24] 0x020e4b00  func_ov006_020e4b00
  *   [25] 0x020e4b78  func_ov006_020e4b78
- *   [26] 0x020e4bd4  func_ov006_020e4bd4
- *   [27] 0x020e4ed4  func_ov006_020e4ed4
+ *   [26] 0x020e4bd4  dScMgCurling2_c::DragUpdate
+ *   [27] 0x020e4ed4  dScMgCurling2_c::DragBegin
  *   [28] 0x020e4fe8  func_ov006_020e4fe8
  *   [29] 0x020e507c  func_ov006_020e507c
  *   [30] 0x020e513c  func_ov006_020e513c
@@ -180,11 +211,15 @@ struct C;
 typedef void (C::*PMF)(int);
 
 /* ---------------------------------------------------------------------------
- * ROM symbols this TU calls or reads.  One file-scope `extern "C"` region:
- * every member below is a C-linkage function and the one C++-named member
- * (the destructor) neither calls nor reads any of these.  Mangled ROM
- * spellings belong INSIDE the region -- outside it the reference would be
- * mangled a second time and the link would fail on a name nothing defines.
+ * ROM symbols this TU calls or reads.  ONE file-scope `extern "C"` region,
+ * and it has to be file-scope: eighteen of the definitions below are real
+ * dScMgCurling2_c:: methods now, a class member function cannot sit inside an
+ * `extern "C" { }` block at all (mwccarm answers `declarator expected`), and a
+ * declaration that a C shard could carry inside its own body would acquire C++
+ * linkage in a method and reference a mangled name nothing defines.  Mangled
+ * ROM spellings belong INSIDE this region for the mirror-image reason --
+ * outside it the reference would be mangled a second time.  This is a LINK
+ * failure that every byte gate passes.
  * ------------------------------------------------------------------------- */
 extern "C" {
 
@@ -307,9 +342,10 @@ extern "C" void func_ov006_020e3948(char *p)
  * `c + a * 0x30 + 0x4660` on the line's other operand.  Folding the split base
  * into one constant is a DIFF -- the ROM shares (c + 0x4000) across the
  * b-indexed reads.  Measured; do not tidy. */
-// @symbol func_ov006_020e39e0
-extern "C" void func_ov006_020e39e0(char *c, int a, int b)
+// @symbol _ZN15dScMgCurling2_c10SpawnValueEii
+void dScMgCurling2_c::SpawnValue(int a, int b)
 {
+    char *c = (char *)this;
     int i;
     char *p;
     int sx;
@@ -384,9 +420,10 @@ extern "C" void func_ov006_020e3bc4(char *c)
 
 /* [7] 0x020e3c4c -- 0x48c0 callback: run the +0x18 countdown down, else ease
  * +0x0c back toward 0x100, else clear the +0x1f index. */
-// @symbol func_ov006_020e3c4c
-extern "C" void func_ov006_020e3c4c(char *c, int i)
+// @symbol _ZN15dScMgCurling2_c13StepYRampDownEi
+void dScMgCurling2_c::StepYRampDown(int i)
 {
+    char *c = (char *)this;
     int idx = i * 0x24;
     if (*(unsigned short *)(c + 0x48d8 + idx) != 0) {
         short *p = (short *)(c + 0x48d8 + idx);
@@ -406,9 +443,10 @@ extern "C" void func_ov006_020e3c4c(char *c, int i)
 
 /* [8] 0x020e3ce0 -- 0x48c0 callback: ramp +0x0c up toward +0x10, then run the
  * +0x18 countdown down, reseeding it and the +0x1f index when it expires. */
-// @symbol func_ov006_020e3ce0
-extern "C" void func_ov006_020e3ce0(char *o, int i)
+// @symbol _ZN15dScMgCurling2_c11StepYRampUpEi
+void dScMgCurling2_c::StepYRampUp(int i)
 {
+    char *o = (char *)this;
     int n = i * 0x24;
     if (*(int *)(o + 0x48d0 + n) > *(int *)(o + 0x48cc + n)) {
         *(int *)(o + 0x48cc + n) += 0x10;
@@ -427,9 +465,10 @@ extern "C" void func_ov006_020e3ce0(char *o, int i)
 
 /* [9] 0x020e3db4 -- 0x48c0 callback: zero +0x0c, pick a fresh +0x10 target and
  * +0x18 countdown, and set the +0x1f index to 1. */
-// @symbol func_ov006_020e3db4
-extern "C" void func_ov006_020e3db4(char *c, int i)
+// @symbol _ZN15dScMgCurling2_c12StepYRestartEi
+void dScMgCurling2_c::StepYRestart(int i)
 {
+    char *c = (char *)this;
     int idx = i * 0x24;
     unsigned int r;
 
@@ -448,9 +487,10 @@ extern "C" void func_ov006_020e3db4(char *c, int i)
  * side and clear the +0x1e index once it lands.  The hold tests +0x14 and
  * decrements +0x16 -- the ROM's own asymmetry, and [11] and [12] do not share
  * it. */
-// @symbol func_ov006_020e3e4c
-extern "C" void func_ov006_020e3e4c(char *base, int i)
+// @symbol _ZN15dScMgCurling2_c11StepXSettleEi
+void dScMgCurling2_c::StepXSettle(int i)
 {
+    char *base = (char *)this;
     int n = i * 0x24;
     /* Three cached bases, declared in the ROM's own load order.  Reordering
        them, or folding them back into base + constant, moves bytes. */
@@ -482,9 +522,10 @@ extern "C" void func_ov006_020e3e4c(char *base, int i)
 /* [11] 0x020e3f54 -- 0x48c0 callback: step the position, hold for the +0x14
  * countdown, then push the x increment negative to a -0x300 floor, hold again
  * for +0x16, and hand over to index 3 with a fresh countdown. */
-// @symbol func_ov006_020e3f54
-extern "C" void func_ov006_020e3f54(char *base, int idx)
+// @symbol _ZN15dScMgCurling2_c12StepXPushNegEi
+void dScMgCurling2_c::StepXPushNeg(int idx)
 {
+    char *base = (char *)this;
     int n = idx * 0x24;
     unsigned short v;
 
@@ -519,9 +560,10 @@ extern "C" void func_ov006_020e3f54(char *base, int idx)
 
 /* [12] 0x020e4094 -- the mirror of [11]: same shape, x increment pushed the
  * other way to a +0x300 ceiling. */
-// @symbol func_ov006_020e4094
-extern "C" void func_ov006_020e4094(char *base, int index)
+// @symbol _ZN15dScMgCurling2_c12StepXPushPosEi
+void dScMgCurling2_c::StepXPushPos(int index)
 {
+    char *base = (char *)this;
     int i = index * 0x24;
     unsigned short v;
 
@@ -558,9 +600,10 @@ extern "C" void func_ov006_020e4094(char *base, int index)
 /* [13] 0x020e41d0 -- 0x48c0 callback: hold for the +0x14 countdown, then zero
  * the x increment, pick the next +0x1e index out of data_ov006_0212e4f4 and
  * reseed both countdowns. */
-// @symbol func_ov006_020e41d0
-extern "C" void func_ov006_020e41d0(char *o, int i)
+// @symbol _ZN15dScMgCurling2_c9StepXPickEi
+void dScMgCurling2_c::StepXPick(int i)
 {
+    char *o = (char *)this;
     int n = i * 0x24;
     if (*(unsigned short *)(o + 0x48d4 + n) != 0) {
         *(unsigned short *)(o + 0x48d4 + n) = *(unsigned short *)(o + 0x48d4 + n) - 1;
@@ -579,9 +622,10 @@ extern "C" void func_ov006_020e41d0(char *o, int i)
  *
  * The second load really is spelled through `(char *)self` where the first
  * goes through `c`; making the two agree is a DIFF. */
-// @symbol func_ov006_020e42b4
-extern "C" void func_ov006_020e42b4(char *c, int i)
+// @symbol _ZN15dScMgCurling2_c9StepXAndYEi
+void dScMgCurling2_c::StepXAndY(int i)
 {
+    char *c = (char *)this;
     C *self = (C *)c;
     int idx = i * 0x24;
     unsigned char k0 = *(unsigned char *)(c + idx + 0x48de);
@@ -593,9 +637,10 @@ extern "C" void func_ov006_020e42b4(char *c, int i)
 
 /* [15] 0x020e4348 -- 0x48c0 callback: step the position, then bleed the x
  * increment toward zero 0x20 a frame and clear the +0x1e index on arrival. */
-// @symbol func_ov006_020e4348
-extern "C" void func_ov006_020e4348(char *base, int idx)
+// @symbol _ZN15dScMgCurling2_c15StepXSettleFastEi
+void dScMgCurling2_c::StepXSettleFast(int idx)
 {
+    char *base = (char *)this;
     int off = idx * 0x24;
     /* x, vx, y -- the ROM's load order, not a tidy one.  Do not reorder. */
     int *x = (int *)(base + 0x48c0 + off);
@@ -617,9 +662,10 @@ extern "C" void func_ov006_020e4348(char *base, int idx)
 
 /* [16] 0x020e440c -- 0x48c0 callback: as [11] at 0x20 a frame and a -0x400
  * floor, handing over to index 3 without reseeding the countdown. */
-// @symbol func_ov006_020e440c
-extern "C" void func_ov006_020e440c(char *c, int idx)
+// @symbol _ZN15dScMgCurling2_c16StepXPushNegFastEi
+void dScMgCurling2_c::StepXPushNegFast(int idx)
 {
+    char *c = (char *)this;
     int n = idx * 0x24;
 
     *(int *)(c + 0x48c0 + n) =
@@ -655,9 +701,10 @@ extern "C" void func_ov006_020e440c(char *c, int idx)
 
 /* [17] 0x020e4520 -- the mirror of [16], x increment pushed to a +0x400
  * ceiling. */
-// @symbol func_ov006_020e4520
-extern "C" void func_ov006_020e4520(char *c, int idx)
+// @symbol _ZN15dScMgCurling2_c16StepXPushPosFastEi
+void dScMgCurling2_c::StepXPushPosFast(int idx)
 {
+    char *c = (char *)this;
     int off = idx * 0x24;
 
     *(int *)(c + 0x48c0 + off) += *(int *)(c + 0x48c8 + off);
@@ -699,9 +746,10 @@ extern "C" void func_ov006_020e4520(char *c, int idx)
 /* [18] 0x020e4630 -- 0x48c0 callback: hold for the +0x14 countdown, then zero
  * the x increment, pick a fresh y increment and a +0x1e index out of
  * data_ov006_0212e4f8, and reseed both countdowns. */
-// @symbol func_ov006_020e4630
-extern "C" void func_ov006_020e4630(char *o, int i)
+// @symbol _ZN15dScMgCurling2_c13StepXPickFastEi
+void dScMgCurling2_c::StepXPickFast(int i)
 {
+    char *o = (char *)this;
     int n = i * 0x24;
     if (*(unsigned short *)(o + 0x48d4 + n) != 0) {
         *(unsigned short *)(o + 0x48d4 + n) = *(unsigned short *)(o + 0x48d4 + n) - 1;
@@ -718,9 +766,10 @@ extern "C" void func_ov006_020e4630(char *o, int i)
 
 /* [19] 0x020e4744 -- run one 0x48c0 entry's data_ov006_021419b8 callback,
  * indexed by the +0x1e state byte. */
-// @symbol func_ov006_020e4744
-extern "C" void func_ov006_020e4744(char *o, int i)
+// @symbol _ZN15dScMgCurling2_c9StepXOnlyEi
+void dScMgCurling2_c::StepXOnly(int i)
 {
+    char *o = (char *)this;
     unsigned char idx = *(unsigned char *)(o + i * 0x24 + 0x48de);
     (((C *)o)->*data_ov006_021419b8[idx])(i);
 }
@@ -737,9 +786,10 @@ extern "C" void func_ov006_020e4744(char *o, int i)
  * The shard's own `#pragma opt_propagation off` is NOT carried: bracketed
  * here it gave 31/31 and deleted outright it also gave 31/31, so it buys
  * nothing on this compiler at these flags. */
-// @symbol func_ov006_020e4794
-extern "C" void func_ov006_020e4794(char *c, int idx)
+// @symbol _ZN15dScMgCurling2_c12PickStepModeEi
+void dScMgCurling2_c::PickStepMode(int idx)
 {
+    char *c = (char *)this;
     unsigned r = (unsigned)RandomIntInternal(&data_0209d4b8);
     int k = 0;
     unsigned m = ((r >> 16) & 0x7fff) << 3 >> 0xf;
@@ -943,9 +993,10 @@ extern "C" void func_ov006_020e4b78(char *c)
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_propagation off
-// @symbol func_ov006_020e4bd4
-extern "C" void func_ov006_020e4bd4(dScMgCurling2_c *self)
+// @symbol _ZN15dScMgCurling2_c10DragUpdateEv
+void dScMgCurling2_c::DragUpdate()
 {
+    dScMgCurling2_c *self = this;
     u8 idx;
     int dx;
     int oldx;
@@ -1034,14 +1085,16 @@ extern "C" void func_ov006_020e4bd4(dScMgCurling2_c *self)
 
 
 /* [27] 0x020e4ed4 -- begin a drag: latch the grab offset and the first angle.
- * The legacy shard spelled the receiver `this`; renamed to `self`.  Its own
+ * data_ov006_02141978[0]; DragUpdate is [1].  The legacy shard spelled the
+ * receiver `this`, which is now what it actually is.  Its own
  * `void func_02012718(void *a, int b)` spelling disagreed with the one
- * func_ov006_020e4bd4 and func_ov006_020e513c recovered, so the shared
+ * DragUpdate and func_ov006_020e513c recovered, so the shared
  * declaration is `void func_02012718(int, int)` and the literal below is
  * spelled as the int it always was. */
-// @symbol func_ov006_020e4ed4
-extern "C" void func_ov006_020e4ed4(char *self)
+// @symbol _ZN15dScMgCurling2_c9DragBeginEv
+void dScMgCurling2_c::DragBegin()
 {
+    char *self = (char *)this;
     int idx;
     int flag = 0;
     int x;
@@ -1131,8 +1184,10 @@ extern "C" void func_ov006_020e507c(char *p)
  * The extra live idx/i for the trailing call is what moves k out of fp and
  * spills the 0x800 constant; the compiler does that on its own.
  *
- * The shard declared func_ov006_020e39e0 as taking a dScMgCurling2_c*; the
- * definition above is that shard's own `char*` spelling, so the call casts. */
+ * The shard declared func_ov006_020e39e0 as taking a dScMgCurling2_c*, and it
+ * was right: that member is dScMgCurling2_c::SpawnValue above, so the trailing
+ * call is an ordinary member call and needs no cast.  This one stays a free
+ * function -- src/func_ov006_020e5e3c.c still calls it by its C name. */
 // @symbol func_ov006_020e513c
 extern "C" void func_ov006_020e513c(dScMgCurling2_c *self, int idx)
 {
@@ -1192,7 +1247,7 @@ extern "C" void func_ov006_020e513c(dScMgCurling2_c *self, int idx)
                     vy2 = (int)(((long long)sn2 * 0x1a + 0x800) >> 12);
                     self->mStone[j].y = self->mStone[i].y + (vy2 << 12);
                     func_02012718(0xe8, self->mStone[idx].x);
-                    func_ov006_020e39e0((char *)self, idx, i);
+                    self->SpawnValue(idx, i);
                     return;
                 }
             }

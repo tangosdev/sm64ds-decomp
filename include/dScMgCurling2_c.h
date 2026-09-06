@@ -33,6 +33,62 @@ struct dScMgCurling2_c : dScMgBase_c {
 
     /* Slot 18 left unnamed -- same reasoning as dScMgCurling_c.h. */
 
+    /* NON-VIRTUAL MEMBERS REACHED THROUGH THE OV006 POINTER-TO-MEMBER TABLES.
+     * These seventeen are members, not free functions: ov006 .data carries an
+     * 8-byte {code pointer, zero adjustment} record for sixteen of them, and
+     * __sinit_ov006_02130758 copies those records into the BSS arrays that
+     * dScMgCurling2_c's own code dispatches through.  A zero-adjustment
+     * pointer-to-member record IS the proof of member-ness; the ROM does not
+     * carry the original identifiers, so the NAMES BELOW ARE COINED.
+     *
+     * Each name is derived from the byte the handler drives and from its index
+     * in its own table, both read out of the cartridge:
+     *
+     *   data_ov006_02141988 (+0x1d, the mode byte)
+     *     [0] PickStepMode   [1] StepXOnly   [2] StepXAndY
+     *   data_ov006_021419f8 (+0x1e, X increment, 8 a frame, +/-0x300)
+     *     [0] StepXPick  [1] StepXPushPos  [2] StepXPushNeg  [3] StepXSettle
+     *   data_ov006_021419b8 (+0x1e, X increment, 0x20 a frame, +/-0x400)
+     *     [0] StepXPickFast [1] StepXPushPosFast
+     *     [2] StepXPushNegFast [3] StepXSettleFast
+     *   data_ov006_021419a0 (+0x1f, Y increment)
+     *     [0] StepYRestart   [1] StepYRampUp   [2] StepYRampDown
+     *   data_ov006_02141978 (the stylus drag)
+     *     [0] DragBegin      [1] DragUpdate
+     *
+     * The index each handler writes back agrees with that layout in every case
+     * -- the two pushers hand to 3, the settler hands to 0, the Y chain runs
+     * 0 -> 1 -> 2 -> 0 -- and data_ov006_0212e4f4/_0212e4f8/_0212e4fc, the ROM
+     * tables the two pickers and PickStepMode read from, hold exactly {1, 2}.
+     * What the 0x48c0 records MEAN in the minigame is still unproven and no
+     * name here claims it; see src/actors/dScMgCurling2_c.cpp's own banner.
+     *
+     * Members whose C name a still-shard caller spells stay func_ov006_*: the
+     * twelve listed in that banner cannot be renamed without editing segment B
+     * or include/decl_common.h. */
+    void PickStepMode(int entry);
+    void StepXOnly(int entry);
+    void StepXAndY(int entry);
+
+    void StepXPick(int entry);
+    void StepXPushPos(int entry);
+    void StepXPushNeg(int entry);
+    void StepXSettle(int entry);
+
+    void StepXPickFast(int entry);
+    void StepXPushPosFast(int entry);
+    void StepXPushNegFast(int entry);
+    void StepXSettleFast(int entry);
+
+    void StepYRestart(int entry);
+    void StepYRampUp(int entry);
+    void StepYRampDown(int entry);
+
+    void DragBegin();
+    void DragUpdate();
+
+    void SpawnValue(int stone, int other);
+
     dScMgCurling2_stone mStone[11]; /* 0x4660, stride 0x30 */
     u8  pad_4870[0xd10];
     s32 unk_5580;            /* 0x5580 */

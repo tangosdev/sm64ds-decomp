@@ -49,7 +49,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov006_020e39e0",
+      "symbol": "_ZN15dScMgCurling2_c10SpawnValueEii",
       "address": "0x020e39e0",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020e39e0.c",
@@ -70,98 +70,98 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov006_020e3c4c",
+      "symbol": "_ZN15dScMgCurling2_c13StepYRampDownEi",
       "address": "0x020e3c4c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e3c4c.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov006_020e3ce0",
+      "symbol": "_ZN15dScMgCurling2_c11StepYRampUpEi",
       "address": "0x020e3ce0",
       "size": "0x000000d4",
       "legacy_source": "src/func_ov006_020e3ce0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov006_020e3db4",
+      "symbol": "_ZN15dScMgCurling2_c12StepYRestartEi",
       "address": "0x020e3db4",
       "size": "0x00000098",
       "legacy_source": "src/func_ov006_020e3db4.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov006_020e3e4c",
+      "symbol": "_ZN15dScMgCurling2_c11StepXSettleEi",
       "address": "0x020e3e4c",
       "size": "0x00000108",
       "legacy_source": "src/func_ov006_020e3e4c.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov006_020e3f54",
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushNegEi",
       "address": "0x020e3f54",
       "size": "0x00000140",
       "legacy_source": "src/func_ov006_020e3f54.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov006_020e4094",
+      "symbol": "_ZN15dScMgCurling2_c12StepXPushPosEi",
       "address": "0x020e4094",
       "size": "0x0000013c",
       "legacy_source": "src/func_ov006_020e4094.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov006_020e41d0",
+      "symbol": "_ZN15dScMgCurling2_c9StepXPickEi",
       "address": "0x020e41d0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020e41d0.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov006_020e42b4",
+      "symbol": "_ZN15dScMgCurling2_c9StepXAndYEi",
       "address": "0x020e42b4",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020e42b4.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov006_020e4348",
+      "symbol": "_ZN15dScMgCurling2_c15StepXSettleFastEi",
       "address": "0x020e4348",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov006_020e4348.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov006_020e440c",
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushNegFastEi",
       "address": "0x020e440c",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e440c.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov006_020e4520",
+      "symbol": "_ZN15dScMgCurling2_c16StepXPushPosFastEi",
       "address": "0x020e4520",
       "size": "0x00000110",
       "legacy_source": "src/func_ov006_020e4520.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov006_020e4630",
+      "symbol": "_ZN15dScMgCurling2_c13StepXPickFastEi",
       "address": "0x020e4630",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e4630.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov006_020e4744",
+      "symbol": "_ZN15dScMgCurling2_c9StepXOnlyEi",
       "address": "0x020e4744",
       "size": "0x00000050",
       "legacy_source": "src/func_ov006_020e4744.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov006_020e4794",
+      "symbol": "_ZN15dScMgCurling2_c12PickStepModeEi",
       "address": "0x020e4794",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov006_020e4794.c",
@@ -203,14 +203,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "func_ov006_020e4bd4",
+      "symbol": "_ZN15dScMgCurling2_c10DragUpdateEv",
       "address": "0x020e4bd4",
       "size": "0x00000300",
       "legacy_source": "src/func_ov006_020e4bd4.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "func_ov006_020e4ed4",
+      "symbol": "_ZN15dScMgCurling2_c9DragBeginEv",
       "address": "0x020e4ed4",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020e4ed4.c",
@@ -342,7 +342,11 @@
     "SOURCELESS and RAW above both name members ABOVE the sourceless hole (func_ov006_020e5450 itself, and _ZN15dScMgCurling2_c13OnYoshiTryEatEi at 0x020e6774). Neither is in this TU's licensed range; both keep their own shard and their own delinks.txt entry.",
     "The generated preamble was discarded and the TU hand-curated, per notes/agents/roles/writer.md: create's shared block carried a nested extern \"C\", two contradictory declarations of data_0209d4b8 (scalar and array) and of data_02082214 and data_020a0e40, and PMF0/PMF1 typedefs that its own CONFLICT comments had removed. Each member's own recovered declarations were re-merged by hand into one file-scope extern \"C\" region.",
     "decl_common.h is deliberately NOT included. It declares nine of this TU's 31 members (func_ov006_020e38b0, 020e3948, 020e3bc4, 020e4800, 020e4a84, 020e4b78, 020e4fe8, 020e507c as `void*`/`int` and 020e48d4 as `char*`), and eight of the nine contradict the byte-matched shard. Including it would raise `illegal function overloading` against code that already matches. Precedent: ov006/dScMgPanel_c, ov002/Player.",
-    "func_ov006_020e4b00 and func_ov006_020e4ed4 each spelled their receiver parameter `this`, which mwccarm 2004/b56 rejects in a C++ TU; both renamed to `self` with no other change."
+    "func_ov006_020e4b00 and func_ov006_020e4ed4 each spelled their receiver parameter `this`, which mwccarm 2004/b56 rejects in a C++ TU; both were renamed to `self`. func_ov006_020e4ed4 has since become dScMgCurling2_c::DragBegin, so its receiver really is `this` again.",
+    "METHOD-CONVERSION PASS (stage 3.5). Seventeen of the 29 non-destructor members are now real dScMgCurling2_c:: methods declared in include/dScMgCurling2_c.h: SpawnValue, StepYRampDown, StepYRampUp, StepYRestart, StepXSettle, StepXPushNeg, StepXPushPos, StepXPick, StepXAndY, StepXSettleFast, StepXPushNegFast, StepXPushPosFast, StepXPickFast, StepXOnly, PickStepMode, DragUpdate and DragBegin. Every conversion is byte-neutral: 31/31 MATCH, objisolate clean, ROM-ascending emission order, unchanged from the pre-conversion run. The bodies keep the shard's raw-offset spellings behind a `char *x = (char *)this;` prologue, so none of the humanizer's measured levers moved.",
+    "SYMBOLS.TXT IS PART OF THIS EDIT. Sixteen of the seventeen renamed members are the target of an 8-byte {code pointer, zero adjustment} pointer-to-member record in unowned ov006 .data (0x0213c40c..0x0213c4b4), which __sinit_ov006_02130758 copies into the BSS dispatch arrays. dsd resolves those records BY SYMBOL NAME, so all seventeen rows in config/arm9/overlays/ov006/symbols.txt move to the mangled spelling in the same commit; a row left behind would link its .data code word as 0x00000000 with a green compile. SpawnValue is the seventeenth: it carries no .data record and is reached only from inside this TU and from the sourceless hole's own cartridge bytes.",
+    "TWELVE MEMBERS REFUSED CONVERSION, AND THE REASON IS MEASURED AND IS NOT BYTES. With all 29 converted the TU still reports 31/31 MATCH / objisolate clean / ROM-ascending, but `python tools/rombuild.py -j 6 --no-rom` fails with exactly twelve `mwldarm.exe: Undefined` lines: func_ov006_020e38b0, _020e3948, _020e3bc4, _020e4a84, _020e4b78, _020e4fe8, _020e507c (referenced from dScMgCurling2_c::Render()), _020e4800 and _020e3948 (Behavior()), _020e48d4 (InitResources()), _020e3b9c (func_ov006_020e668c), _020e4b00 (func_ov006_020e628c) and _020e513c (func_ov006_020e5e3c). Those callers are still one-function shards above the sourceless hole, and they -- and include/decl_common.h -- spell the target by its C name. The twelve convert byte-neutrally the day segment B is promoted; nothing else blocks them.",
+    "THE SEVENTEEN NAMES ARE COINED. The ROM proves member-ness (a zero-adjustment pointer-to-member record) and each handler's index in its own table, both read out of __sinit_ov006_02130758 and quoted in include/dScMgCurling2_c.h. It does not carry the original identifiers, and the gameplay semantics of the 0x48c0 and 0x4fe0 record arrays remain on the scout's `unproven` list; no name asserts them."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

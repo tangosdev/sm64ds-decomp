@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2682,
+  "count": 2685,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -2124,6 +2124,9 @@
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_cD1Ev",
     "src/actors/dScMgCup_c.cpp#_ZN10dScMgCup_c8BehaviorEv",
     "src/actors/dScMgCup_c.cpp#_ZN10dScMgCup_c9StateIdleEv",
+    "src/actors/dScMgCurling2_c.cpp#_ZN15dScMgCurling2_c11StepXSettleEi",
+    "src/actors/dScMgCurling2_c.cpp#_ZN15dScMgCurling2_c9StepXAndYEi",
+    "src/actors/dScMgCurling2_c.cpp#_ZN15dScMgCurling2_c9StepXOnlyEi",
     "src/actors/dScMgCurling2_c.cpp#_ZN15dScMgCurling2_cD0Ev",
     "src/actors/dScMgCurling2_c.cpp#_ZN15dScMgCurling2_cD1Ev",
     "src/actors/dScMgD3DBase_c.cpp#Sound_PlayBank1Panned",
