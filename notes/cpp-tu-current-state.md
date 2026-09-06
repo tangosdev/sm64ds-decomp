@@ -42,9 +42,9 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | `.cpp` files still hand-spelling their symbol | 51 |
 | Nonmatching C++-symbol drafts | 6 |
 | Delinks path-owned function-symbol records | 11257 |
-| Path-owned records still supplied from ROM bytes | 110 |
-| Source-built (`complete`) function-symbol records | 11147 |
-| Source-built (`complete`) source files | 9369 |
+| Path-owned records still supplied from ROM bytes | 78 |
+| Source-built (`complete`) function-symbol records | 11179 |
+| Source-built (`complete`) source files | 9401 |
 | Complete sources owning more than one function | 118 |
 | Source-built records inside multi-function sources | 1896 |
 | Largest function-symbol-records-per-source count | 301 |
