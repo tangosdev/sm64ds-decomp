@@ -14,9 +14,9 @@ resolvable vtable slots were blocked on it.
 
 **Base.** dScene_c, confirmed two independent ways:
 
-* RTTI -- dScMiniGm_c's `__si_class_type_info` (ov005:0x020c2448, name
+* RTTI -- dScMiniGm_c's `__si_class_type_info` ([ov005](../config/arm9/overlays/ov005/symbols.txt):0x020c2448, name
   "dScMiniGm_c" at 0x020c2454) names its single base dScene_c (build/rtti.json).
-* Vtable -- `_ZTV11dScMiniGm_c` (ov005:0x020c2490) is 18 slots, matching
+* Vtable -- `_ZTV11dScMiniGm_c` ([ov005](../config/arm9/overlays/ov005/symbols.txt):0x020c2490) is 18 slots, matching
   dScene_c's own 18 (`tools/rtti_vtables.py --own dScMiniGm_c`). It overrides
   exactly seven: 0, 3, 6, 9, 12, 16, 17. Every other slot is still whatever
   dScene_c's table holds. dScMiniGm_c adds no new virtual, and the destructor
@@ -24,10 +24,9 @@ resolvable vtable slots were blocked on it.
   `_ZN8dScene_cD0Ev` anchors.
 
 **Size.** `dScMiniGm_c_classInit` (historical alias `func_ov005_020c21ec`) is the factory; it opens with
-`_ZN7fBase_cnwEj(0xb0)` -- fBase_c::operator new(0xb0). 0xb0 therefore comes
+`_ZN7fBase_cnwEj(0xb0)` -- `fBase_c::operator new(0xb0)`. 0xb0 therefore comes
 straight off the allocator call. The factory writes only the vtable chain
-(fBase_c -> dScene_c inlined -> data_ov005_020c2490) and two spawn-flag bits at
-fBase_c's own 0x13; it constructs no nested sub-object, matching the
+(*fBase_c -> dScene_c inlined -> [data_ov005_020c2490](../config/arm9/overlays/ov005/symbols.txt)*) and two spawn-flag bits at fBase_c's own 0x13; it constructs no nested sub-object, matching the
 plain-scalar field layout.
 
 **Members.** The old flat header put every field it found at or above 0x54,
@@ -42,7 +41,7 @@ Field names and the matched body that settles each:
 | --- | --- | --- |
 | 0x050 | `mSubBgScrollX` | InitResources sets it to 0xb0 or 0 from `data_0209b304` (the page index), then feeds it to `SetSubBg0Offset` / `SetSubBg2Offset` / `SetSubBg3Offset` and to `*(u32*)0x400101c = mSubBgScrollX & 0x1ff`. |
 | 0x054 | `mPageFlipped` | u8. Zeroed by InitResources; Behavior sets it to 1 on each of the two page-timer expiries. Render draws the left/right page arrows only while it is 0. |
-| 0x058 | `mGroupBase` | InitResources seeds it from `data_0208a170`, the base index into the minigame table `data_ov005_020c24d8[]`. func_ov005_020c0878 copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
+| 0x058 | `mGroupBase` | InitResources seeds it from `data_0208a170`, the base index into the minigame table [data_ov005_020c24d8](../config/arm9/overlays/ov005/symbols.txt)`[]`. [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
 | 0x05c | `unk_05c` | Zeroed by InitResources; func_ov005_020c0378 copies it into `(&data_0209b308)[0x30]`. Role not settled -- left `unk_`. |
 | 0x060 | `unk_060` | Zeroed by InitResources, no other matched access. |
 | 0x064 | `unk_064` | Zeroed by InitResources, no other matched access. |
@@ -51,10 +50,10 @@ Field names and the matched body that settles each:
 | 0x094 | `mNextPageTimer` | Same shape; expiry sets `data_0209b304 = 1`. Drives the right arrow. |
 | 0x098 | `mExitTimer` | Behavior counts it down to 1, then `dScene_c::SetAndStopColorFader()`, `ExitMinigameMenu()`, stops the music and sets `mExiting`. |
 | 0x09c | `mIconBlinkPhase` | Behavior free-runs it 0..0x3f; Render picks between two arrow frames on `>= 0x20`. |
-| 0x0a0 | `mScrollDelay` | func_ov005_020c0878 decrements it, reloads it to 0x1e after committing a group change, and gates cursor input on `<= 0`. |
+| 0x0a0 | `mScrollDelay` | [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) decrements it, reloads it to 0x1e after committing a group change, and gates cursor input on `<= 0`. |
 | 0x0a4 | `unk_0a4` | Zeroed by InitResources, no other matched access. |
 | 0x0a8 | `unk_0a8` | Zeroed by InitResources, no other matched access. |
-| 0x0ac | `mExiting` | u8. Behavior sets it on the exit branch; func_ov005_020c0878 / _020c0378 / _020c06cc all early-out while it is set. |
+| 0x0ac | `mExiting` | u8. Behavior sets it on the exit branch; [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) / [func_ov005_020c0378](../src/func_ov005_020c0378.cpp) / [func_ov005_020c06cc](../src/func_ov005_020c06cc.c) all early-out while it is set. |
 
 0x064..0x08c and 0x0ad..0xb0 are padding: no slot function touches them, and
 `mExiting` plus three bytes of tail padding closes exactly on the 0xb0
@@ -68,12 +67,8 @@ is empty; see notes/runbook-type-reconstruction.md section 2), so every field
 that does not carry its own evidence note is an unverified placeholder rather
 than machine-checked evidence.
 
-**Base.** dScene_c, confirmed by `tools/rtti_extract.py`: dScMgBase_c's
-`__si_class_type_info` at ov004:0x020bbf6c points at dScene_c arm9:0x020914d4,
-offset 0 -- the same edge dScene_c.h's own census documents. dScMgBase_c is also
-a second hierarchy root: 15 direct RTTI children, 32 transitive descendants (the
-minigame family -- notes/dscene-c-siblings-census.md section 2). Its own fields
-start at ROM offset 0x50 == sizeof(dScene_c), like every other dScene_c child.
+**Base.** dScene_c, confirmed by `tools/rtti_extract.py`: dScMgBase_c's `__si_class_type_info` at [ov004](../config/arm9/overlays/ov004/symbols.txt):0x020bbf6c points at dScene_c [arm9](../config/arm9/symbols.txt):0x020914d4, offset 0 -- the same edge dScene_c.h's own census documents. dScMgBase_c is also a second hierarchy root: 15 direct RTTI children, 32 transitive descendants (the
+minigame family -- [notes/dscene-c-siblings-census.md](../notes/dscene-c-siblings-census.md) section 2). Its own fields start at ROM offset 0x50 `== sizeof(dScene_c)`, like every other dScene_c child.
 
 **Destructor.** The cascade goes one more level than dScene_c's own fix.
 dScMgBase_c has 32 descendants, so its D2/D1 would have to be defined inline for
@@ -92,43 +87,34 @@ dScMgBase_c, not dScene_c.
 `func_ov004_020b929c(this + 0xf4)`, which is
 `__destroy_arr(p, count=8, elem_size=0x24, func_ov004_020b9280)`
 (0x0207328c is `__destroy_arr` / `__cxa_vec_cleanup`,
-config/arm9/symbols.txt:3050-3051). The per-element destructor writes two
+[arm9/symbols.txt](../config/arm9/symbols.txt)). The per-element destructor writes two
 vtables into `[r0+0]` back to back with no further calls -- 0x020bca7c then
 0x020ad494 -- which build/rtti.json identifies as
-`_ZTVN10dMgPsOpt_c11TouchIcon_cE` (ov004:0x020bca68, "dMgPsOpt_c::TouchIcon_c")
-and `_ZTV9dThIcon_c` (ov001:0x020ad478, "dThIcon_c", a root class). So
-TouchIcon_c : dThIcon_c, single inheritance at offset 0, both destructors
+`_ZTVN10dMgPsOpt_c11TouchIcon_cE` ([ov004](../config/arm9/overlays/ov004/symbols.txt):0x020bca68, "dMgPsOpt_c::TouchIcon_c")
+and `_ZTV9dThIcon_c` ([ov001](../config/arm9/overlays/ov001/symbols.txt):0x020ad478, "dThIcon_c", a root class). So `TouchIcon_c : dThIcon_c`, single inheritance at offset 0, both destructors
 trivial enough to fully inline into vtable writes, and 0x0f4 is 8 contiguous
 0x24-byte TouchIcon_c spanning 0x0f4..0x214. Neither class has a header yet, so
-the array stays raw bytes and the destructor calls func_ov004_020b929c on it
+the array stays raw bytes and the destructor calls `func_ov004_020b929c` on it
 explicitly, which is exactly what the ROM's D2 does. 0x214..0x21c has no matched
 access and stays padding.
 
-**data_ov004_020beb68** is a global singleton pointer to the active
-dScMgBase_c; 60+ files across ov004/ov006 read it, each having invented its own
-local type (Base*, Obj*, G*, char*, void*...). Retyping it tree-wide is its own
-slice. The D2's `*(int*)data_ov004_020beb68 = 0` writes 0 into the *global's own
-storage* -- that file declared it `extern int data_ov004_020beb68[]`, and arrays
-decay to their own address -- i.e. a plain global pointer being nulled, not a
-target zeroed through it.
+**[data_ov004_020beb68](../config/arm9/overlays/ov004/symbols.txt)** is a global singleton pointer to the active
+dScMgBase_c; 60+ files across [ov004](../config/arm9/overlays/ov004/symbols.txt)/[ov006](../config/arm9/overlays/ov006/symbols.txt) read it, each having invented its own local type (`Base*`, `Obj*`, `G*`, `char*`, `void*`...). Retyping it tree-wide is its own slice. The D2's `*(int*)data_ov004_020beb68 = 0` writes 0 into the *global's own storage* -- that file declared it `extern int data_ov004_020beb68[]`, and arrays decay to their own address -- i.e. a plain global pointer being nulled, not a target zeroed through it.
 
 **Slots 18-35** are eighteen further virtuals new at this class, the same shape
 as dActor_c's 13 new slots over fBase_c. All 18 targets are already matched
-source (func_ov004_* under arm9/ov004, notes/dscene-c-siblings-census.md
-section 2), but their signatures are not reconstructed, so they stay undeclared
-rather than guessed.
+source (`func_ov004_*` under [arm9/ov004](../config/arm9/overlays/ov004/symbols.txt), [dscene-c-siblings-census.md](../notes/dscene-c-siblings-census.md) section 2), but their signatures are not reconstructed, so they stay undeclared rather than guessed.
 
-**The blink prompt (0x0c0 / 0x0c3 / 0x0c4).** func_ov004_020b0de0, called from
+**The blink prompt (0x0c0 / 0x0c3 / 0x0c4).** [func_ov004_020b0de0](../src/func_ov004_020b0de0.c), called from
 `dScMgBase_c::BeforeRender`, is the whole story: nothing draws unless
 `mPromptEnabled` (0x0c3) is set; while `mPromptBlinkCount` (0x0c4) is below 4 the
 16-bit `mPromptBlinkTimer` (0x0c0) free-runs 0..0x2f, bumping the count each
 wrap, and the per-language prompt sprite
-(`data_ov004_020bbfa8[GetGameLanguage()] + 0x28`) is drawn at (0xc0, 0xb0) only
-during the first 0x18 frames of each cycle. Once four cycles have elapsed it is
+([data_ov004_020bbfa8](../config/arm9/overlays/ov004/symbols.txt)`[GetGameLanguage()] + 0x28`) is drawn at (0xc0, 0xb0) only during the first 0x18 frames of each cycle. Once four cycles have elapsed it is
 drawn every frame. The width and signedness of 0x0c0 come from that function's
 unsigned compares against 0x30 and 0x18; 0x0c4's from its `< 4U`.
 
-Roughly 25 pre-existing ov006 files spell these three by raw offset:
+Roughly 25 pre-existing [ov006](../config/arm9/overlays/ov006/symbols.txt) files spell these three by raw offset:
 dScMgFlower_c's, dScMgSnowball_c's and dScMgMCarlo_c's Behaviors all carry the
 identical `if (0xc4 == 0) { 0xc3 = 1; 0xc4 = 1; *(s16*)0xc0 = 0; }` idiom, i.e.
 "start the prompt blinking from the top". Naming them in the header is what lets
@@ -189,12 +175,12 @@ member -- measured on dScMgRoulette_c.h, 22/22 fields "mismatched" by exactly
 that delta. **Do not restyle those seven comments.**
 
 **The destructor must stay defined inline.** Same fix and reason as
-dScene_c.h's note: 13 direct children each inline this destructor's vptr store
+`dScene_c.h`'s note: 13 direct children each inline this destructor's vptr store
 plus mSysTracker destruction plus the chain to `~dScMgBase_c()`. Measured on
 dScMgMemory_c: a merely declared `virtual ~dScMgSingle3DBase_c();` compiles a
 derived destructor referencing `_ZN19dScMgSingle3DBase_cD2Ev` as an undefined
 external, and no such symbol exists anywhere in the ROM. The raw pre-migration
-destructors confirm it -- func_ov006_020f3834 (dScMgMemory_c's D1) destroys
+destructors confirm it -- `func_ov006_020f3834` (`dScMgMemory_c`'s *D1*) destroys
 `_ZN8Particle10SysTrackerD1Ev(c + 0x471c)` inline and then calls
 `_ZN11dScMgBase_cD2Ev(c)` directly, with no dScMgSingle3DBase_c-specific
 destructor call at all. The out-of-line definition that landed in #1421 was a
@@ -211,12 +197,11 @@ sites, which is the same call the compiler emits from the declaration.
 ## cMgSmartball_ball_c (include/cMgSmartball_ball_c.h)
 
 Real ROM name confirmed by `tools/rtti_extract.py` (build/rtti.json). Own vtable
-ov006:0x0213ec98, RTTI ov006:0x0213ebec (`_ZTI19cMgSmartball_ball_c`),
-`_ZTS19cMgSmartball_ball_c` at ov006:0x0213edc0. One of eleven direct children
-of cMgSmartball_object_c -- see that header for the family's shape (a root,
+[ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213ec98, RTTI [ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213ebec (`_ZTI19cMgSmartball_ball_c`),
+`_ZTS19cMgSmartball_ball_c` at [ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213edc0. One of eleven direct children of `cMgSmartball_object_c` -- see that header for the family's shape (a root,
 three slots, no virtual destructor).
 
-Size 0x12c, from `_Znwj(0x12c)` in func_ov006_02115b0c. The base ends at 0x34,
+Size 0x12c, from `_Znwj(0x12c)` in [func_ov006_02115b0c](../src/func_ov006_02115b0c.c). The base ends at 0x34,
 so this class adds 0xf8 bytes -- the densest of the eleven children. Everything
 below 0x34 is reached through inherited members; this class's four functions
 never touch the base's 0x31-0x33 region, so no raw cast is needed anywhere.
@@ -226,42 +211,41 @@ RestoreInitial, which is exhaustive -- every array length and every scalar width
 below comes from that function's loop bounds and store widths. SaveSnapshot and
 Update corroborate roughly half of the same offsets.
 
-**Several names are borrowed, not invented.** func_ov006_02112ad8.c and
-func_ov006_021128fc.c -- two out-of-scope helpers SaveSnapshot calls with `this`
--- each reinterpret the pointer through their own local Obj-style struct cast
+**Several names are borrowed, not invented.** [func_ov006_02112ad8.c](../src/func_ov006_02112ad8.c) and
+[func_ov006_021128fc.c](../src/func_ov006_021128fc.c) -- two out-of-scope helpers `SaveSnapshot` calls with `this` -- each reinterpret the pointer through their own local Obj-style struct cast
 and name a number of these exact offsets (hit/hitA/hitB/hitC, anyHit,
 specialHit, nearby, targetIndex, soundTimer, soundPlayed, state3a, state3b).
 Every one of those offsets is also independently touched by RestoreInitial, so
 the width and existence of each field is evidenced in-scope; only the spelling
 is borrowed. Anything without that corroboration keeps an `unk_` name.
 
-0x44-0x4b are hitX/hitZ in func_ov006_02112ad8.c's naming, but none of this
+0x44-0x4b are hitX/hitZ in [func_ov006_02112ad8.c](../src/func_ov006_02112ad8.c)'s naming, but none of this
 class's own four functions touches them, so per the wing_c precedent they stay
 an explicit pad -- unmodelled, not unread. pad_0e7[0x11] (0xe7-0xf7) is a
 genuine gap: RestoreInitial's exhaustive zero pass skips straight over it
-(nearby[] ends at 0xe6, targetIndex starts at 0xf8) and func_ov006_02112ad8.c's
+(nearby[] ends at 0xe6, targetIndex starts at 0xf8) and [func_ov006_02112ad8.c](../src/func_ov006_02112ad8.c)'s
 Obj cast also treats it as padding. pad_101 / pad_111 / pad_122 / pad_12a are
 pure alignment gaps between adjacent int fields (house style: explicit pads over
 implicit compiler-inserted ones).
 
-Constructed by func_ov006_02114548, left a free function per the recipe. It
+Constructed by [func_ov006_02114548](../src/func_ov006_02114548.c), left a free function per the recipe. It
 calls the base constructor and writes only this vtable and the base's
 `unk_028 = 0x8000`; it touches nothing at or past 0x34, so it adds no evidence
 to the field list.
 
 ## dScMgAmida_c (include/dScMgAmida_c.h)
 
-dScMgAmida_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py (zero
+`dScMgAmida_c : dScMgBase_c`, confirmed leaf via tools/rtti_extract.py (zero
 RTTI edges name dScMgAmida_c as a base).
 
 Own vtable slots (python tools/rtti_vtables.py --own dScMgAmida_c): 0
 (InitResources), 5 (AfterCleanupResources -- the recovered source locally
 declared the base override as returning void*, which is WRONG; the real
 dScMgBase_c.h override returns void, so this now calls the base method as
-a plain statement instead of returning it, same fix dScMgLuigi_c's own
+a plain statement instead of returning it, same fix `dScMgLuigi_c`'s own
 slot 5 needed), 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18
 (dScMgBase_c::OnYoshiTryEat, declared on the base and overridden here;
-the body is src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp, still a raw
+the body is `src/_ZN12dScMgAmida_c13OnYoshiTryEatEi.cpp`, still a raw
 extern "C" helper rather than a member definition, same precedent as
 every other dScMgBase_c leaf's slot 18; it no longer includes this
 header at all -- its one
@@ -274,7 +258,7 @@ was left as a raw helper by THIS migration and picked up later, when the
 slot-31 keystone commit named the base slot), 34 (now `Virtual88`,
 src/_ZN12dScMgAmida_c9Virtual88Eiiii.cpp -- the slot's signature is
 `void(int, int, int, int)`, measured from the seven call sites in
-ov004:0x020ae5c4, and this body reads only three of the four because the
+[ov004](../config/arm9/overlays/ov004/symbols.txt):0x020ae5c4, and this body reads only three of the four because the
 fourth arrives on the stack and it supplies its own size instead; it is
 the collision half of the ghost-leg rule, probing the 0x158-stride
 occupancy grid at +0x4710 and then delegating the drawing to
@@ -335,7 +319,7 @@ destroys FOUR arrays via __destroy_arr, in this exact order, in BOTH D1
 and D0 (src/_ZN12dScMgAmida_cD1Ev.cpp and .../_D0Ev.cpp carry an identical
 body, same shape dScMgHanachan_c's own D1/D0 pair uses): the 0x80x0x18
 dScMgAmida_c_Piece array at 0x4768 (own per-element dtor
-func_ov006_020d116c, a no-op -- the element type needs no real cleanup),
+[func_ov006_020d116c](../src/func_ov006_020d116c.c), a no-op -- the element type needs no real cleanup),
 then the three NullDestructor_0203d47c-based 4x8-byte arrays at 0x4744,
 0x4724, and 0x4660 in that order (their own per-element dtor is also a
 no-op). The base-D2 call and own-vtable-write are compiler generated;
@@ -407,7 +391,7 @@ ever reads or writes them, so they are not modelled as a field.
 
 ### The __destroy_arr declarations
 
-__destroy_arr / func_ov006_020d116c / NullDestructor_0203d47c: the same
+__destroy_arr / [func_ov006_020d116c](../src/func_ov006_020d116c.c) / NullDestructor_0203d47c: the same
 __destroy_arr(p, count, elemSize, dtor) idiom dScMgBase_c's own D1/D0 use
 for touchIcon_0f4 (see dScMgBase_c.h's file banner and
 src/_ZN11dScMgBase_cD1Ev.cpp) -- declared here, not per-destructor-file,
@@ -426,24 +410,24 @@ name -- a wrong name is a claim the next reader will trust.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. src/func_ov006_020d3ba0.cpp leaves it at 1. |
-| 0x46d4 | `mFinished` | u8. src/func_ov006_020d3ba0.cpp zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path (`func_ov004_020b0a54(0)` instead of `0x12`, and Render's confetti pass). |
-| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; src/func_ov006_020d3ba0.cpp passes it as the y2 argument of four `func_ov004_020ae5c4` line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
-| 0x4724 | `mLanePos[4][2]` | src/func_ov006_020d3ba0.cpp seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
+| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) leaves it at 1. |
+| 0x46d4 | `mFinished` | u8. [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path ([func_ov004_020b0a54](../src/func_ov004_020b0a54.cpp)`(0)` instead of `0x12`, and Render's confetti pass). |
+| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) passes it as the y2 argument of four [func_ov004_020ae5c4](../src/func_ov004_020ae5c4.cpp) line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
+| 0x4724 | `mLanePos[4][2]` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
 | 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
 | 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
-| 0x5368 | `mScrollSpeed` | src/func_ov006_020d3ba0.cpp computes it from the pattern table `data_ov006_0212e1b0 + mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
-| 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs `func_ov006_020d27dc` once per 16 accumulated -- a fixed-point step accumulator. |
+| 0x5368 | `mScrollSpeed` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov004/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs [func_ov006_020d27dc](../config/arm9/overlays/ov006/symbols.txt) once per 16 accumulated -- a fixed-point step accumulator. |
 | 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
-| 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of `data_ov006_0213b880`. |
-| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table `data_ov006_0213a458`. |
-| 0x53bc | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into the shared sine table `data_02082214` to get the sub-screen BG2 offset. The 16-bit width comes from the reset's own `*(s16*)` store. |
+| 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of [data_ov006_0213b880](../config/arm9/overlays/ov006/symbols.txt). |
+| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table [data_o006_0213a458](../config/arm9/overlays/ov006/symbols.txt). |
+| 0x53bc | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into the shared sine table [data_02082214](../config/arm9/symbols.txt) to get the sub-screen BG2 offset. The 16-bit width comes from the reset's own `*(s16*)` store. |
 | 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
-| 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after `func_ov004_020b0cac(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
+| 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after [func_ov004_020b0cac](../src/func_ov004_020b0cac.c)`(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
 | 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
-| 0x53d4 | `mPatternIndex` | src/func_ov006_020d3ba0.cpp picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in ov006. |
+| 0x53d4 | `mPatternIndex` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in [ov006](../config/arm9/overlays/ov006/symbols.txt). |
 | 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
-| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; src/func_ov006_020d3ba0.cpp clamps it to 0x270f (9999); Behavior pushes it to the HUD counter `func_ov004_020adb1c` every tick. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) clamps it to 0x270f (9999); Behavior pushes it to the HUD counter [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every tick. |
 
 Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
 1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
