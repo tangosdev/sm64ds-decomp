@@ -16,6 +16,13 @@ builder's, and stage 4 remains the only stage that DECIDES.
 
 You decide whether a human being working at Nintendo EAD would have typed this.
 
+**You do not convert members into methods.** That is stage 3b, and it belongs to
+the `writer` role file -- it changes mangled names and must move `symbols.txt` in
+the same edit or unowned `.data` pointer-to-member records link as `0x00000000`.
+If you think a member should become a `<Class>::` method, say so in your report
+and leave it alone. Readability at this stage is naming, structure and comments,
+not re-signaturing.
+
 ## What you are looking for
 
 Reconstructed code has a characteristic smell. Flag it:

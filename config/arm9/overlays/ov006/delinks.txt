@@ -1674,9 +1674,17 @@ src/_ZN11dScMgCoin_cD0Ev.cpp:
     complete
     .text start:0x020dbe64 end:0x020dbe9c
 
+src/func_ov006_020dbe9c.c:
+    complete
+    .text start:0x020dbe9c end:0x020dbf7c
+
 src/actors/dScMgCoin_c.cpp:
     complete
     .text start:0x020dbf7c end:0x020dd0e0
+
+src/func_ov006_020dd0e0.c:
+    complete
+    .text start:0x020dd0e0 end:0x020dd2cc
 
 src/func_ov006_020dd2cc.cpp:
     complete
@@ -1877,6 +1885,10 @@ src/func_ov006_020e1680.c:
 src/func_ov006_020e17f8.cpp:
     complete
     .text start:0x020e17f8 end:0x020e1854
+
+src/func_ov006_020e1854.c:
+    complete
+    .text start:0x020e1854 end:0x020e1b54
 
 src/func_ov006_020e1b54.c:
     complete
@@ -2642,6 +2654,10 @@ src/func_ov006_020f2224.cpp:
     complete
     .text start:0x020f2224 end:0x020f2790
 
+src/func_ov006_020f2790.cpp:
+    complete
+    .text start:0x020f2790 end:0x020f2cb8
+
 src/func_ov006_020f2cb8.c:
     complete
     .text start:0x020f2cb8 end:0x020f2e20
@@ -2933,6 +2949,10 @@ src/func_ov006_020fda7c.cpp:
     complete
     .text start:0x020fda7c end:0x020fdaf0
 
+src/func_ov006_020fdd40.cpp:
+    complete
+    .text start:0x020fdd40 end:0x020fe1a8
+
 src/func_ov006_020fe1a8.c:
     complete
     .text start:0x020fe1a8 end:0x020fe1d0
@@ -2952,6 +2972,10 @@ src/func_ov006_020fe2bc.c:
 src/func_ov006_020fe2e4.c:
     complete
     .text start:0x020fe2e4 end:0x020fe394
+
+src/func_ov006_020fe394.cpp:
+    complete
+    .text start:0x020fe394 end:0x020fe750
 
 src/func_ov006_020fe750.c:
     complete
@@ -3934,6 +3958,10 @@ src/func_ov006_0211507c.c:
 src/func_ov006_02115150.c:
     complete
     .text start:0x02115150 end:0x02115248
+
+src/func_ov006_02115248.cpp:
+    complete
+    .text start:0x02115248 end:0x02115480
 
 src/func_ov006_02115480.c:
     complete

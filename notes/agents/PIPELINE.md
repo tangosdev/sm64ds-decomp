@@ -18,6 +18,7 @@ conversation.
 | 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
 | 2 | `writer` | the facts file | one `src/actors/<Class>.cpp`, its manifest, and the bookkeeping below |
 | 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
+| 3b | `writer` again | the humanized source | as many members as byte-match allows turned into real `<Class>::` methods |
 | 4 | `builder` | the revised source | green byte gates, then a PR |
 | 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
 | - | `integrator` | several already-green PRs | one branch, one validator run |
@@ -36,6 +37,52 @@ files is typical.
 The writer is **gathering, not authoring**: 387 of 429 classes already have a
 real header, and the shards being folded together are existing matched code. Most
 promotions touch no header at all.
+
+## A promoted TU is not a reconstructed class
+
+`status: promoted` proves the shards were folded into one TU that byte-matches. It
+says **nothing** about whether the class got any methods, and until 2026-09-06 no
+role file asked for any. The result, measured on `origin/main` from each manifest's
+`functions[]` (mangled `_Z...` vs `func_*`):
+
+| class | members | real methods |
+|---|---|---|
+| `dScMgCoin_c` | 33 | 0 |
+| `dScMgTeresa_c` | 48 | 2 (D1/D0 only) |
+| `dScMgPanel_c` | 71 | 6 |
+| `dScMgCup_c` | 32 | 15 |
+| `dScMgMemory2_c` | 52 | **51** |
+
+Every one of those is `promoted`, and every queue and coverage metric counts them
+equally. A TU of thirty `extern "C" func_ovNNN_*(char *self)` free functions in
+`src/actors/<Class>.cpp` is a **merged file, not a reconstructed class** -- and the
+goal is writing the classes back.
+
+**The ruling: convert as far as byte-match allows.** `dScMgMemory2_c` is the proof
+the route works end to end. Stage 3b owns it; it is the same `writer` role file and
+may run as a separate pass on the same branch when stages 2 and 3 have already
+pushed. A member that will not convert byte-neutrally **stays a free function** --
+that is a result, not a failure. Report the count either way: "31/31 MATCH" hides
+"1 of 31 is a method".
+
+**Renaming a member is one edit, not two.** The new mangled name must reach
+`symbols.txt` in the same commit: any pointer-to-member record in unowned `.data`
+that still spells its target `func_*` links as `0x00000000`, because dsd resolves
+those records by NAME. No byte gate at stage 2 or 3 catches it. And a class member
+function **cannot sit inside an `extern "C" { }` region**, so the one file-scope
+region goes after the last surviving `func_*` member.
+
+## Coined-name classes are parked
+
+A class whose name was coined rather than read from the cartridge's RTTI **is not
+eligible for promotion**. Coined names block data verification against the ROM, and
+a promotion under one banks a claim the cartridge cannot corroborate.
+
+This parks 143 of the 201 unpromoted queue rows (2,341 shards) until the naming
+question gets its own pass. Check the class's `identity_evidence` in its facts file
+before claiming: `dScMgCurling2_c` is in scope because the ov006 bytes at
+`0x0213c4c8` are literally `15dScMgCurling2_c`. **Do not run `class_rename.py`** to
+get around this.
 
 Stage 4 is the only stage that DECIDES whether the bytes are right, and it owns
 `linkcheck` and `rombuild`. That is not the same as "stages 1-3 never run a byte
