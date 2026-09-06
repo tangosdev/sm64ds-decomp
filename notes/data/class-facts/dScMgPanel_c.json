@@ -1,0 +1,2119 @@
+{
+  "class": "dScMgPanel_c",
+  "produced_by": "scout (stage 1), second pass. The first pass on this branch (commit 3ece2622a, rebased) established identity, the vtable, the object size and the field layout; this pass re-measured every one of those from the cartridge independently, and added the sections the first pass did not cover: key function, destructor variants, the licensable text run, the pragma inventory, the predicted compiler-only output, and the TU's static-initializer output. Tools: tools/rtti_extract.py, tools/rtti_vtables.py --own dScMgPanel_c, tools/tu_map.py --module ov006, tools/tubuild.py inspect ov006/dScMgPanel_c (read-only; it does NOT build a merged TU), plus direct word reads of extracted/overlays/overlay_0006.bin. No byte gate was run - that is stage 4's job.",
+  "name_provenance": {
+    "kind": "ROM-named",
+    "statement": "dScMgPanel_c is a REAL RTTI name carried by the cartridge, not a coined reconstruction. Say this out loud because 143 of the 201 unpromoted rows in notes/data/tu-promotion-queue.tsv are coined names, and everything a scout can assert about a coined class is weaker than what is asserted here.",
+    "evidence": "build/rtti.json, regenerated from the retail image by tools/rtti_extract.py, carries the record {\"module\": \"ov006\", \"addr\": \"0x0213dd40\", \"kind\": \"si\", \"mangled\": \"12dScMgPanel_c\", \"name\": \"dScMgPanel_c\", \"name_addr\": \"0x0213dd84\", \"vtable\": \"0x0213e24c\", \"vtable_module\": \"ov006\"}. The NUL-terminated bytes at ov006 0x0213dd84 read exactly '12dScMgPanel_c'. tools/rtti_vtables.py --own dScMgPanel_c therefore answers to this spelling with no alias needed.",
+    "coined_parts": "The FACTORY name dScMgPanel_c_classInit and the historical alias MgPuzzlePanelPuzzlePanic_Spawn are reconstructions, not ROM strings. So are every func_ov006_* helper name and every field name. Only the CLASS name is cartridge-proved."
+  },
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "module_sections": {
+    ".text": "0x020bfec0..0x0212b890",
+    ".rodata": "0x0212b890..0x0212f4c4",
+    ".init": "0x0212f4c4..0x0213356c",
+    ".ctor": "0x0213356c..0x021335e8",
+    ".data": "0x02133600..0x021402e0",
+    ".bss": "0x021402e0..0x021430a0",
+    "source": "config/arm9/overlays/ov006/delinks.txt"
+  },
+  "registry_profile": {
+    "symbol": "g_profile_MG_PANEL",
+    "address": "0x0213dc64",
+    "module": "ov006",
+    "words": [
+      "0x02107858 (dScMgPanel_c_classInit)",
+      "0x017c017c"
+    ],
+    "note": "config/arm9/overlays/ov006/symbols.txt marks this row `ambiguous`. It sits INSIDE the 8-byte-stride .data cluster described under static_initializer below, but it is not one of that cluster's members - see that section for why adjacency there proves nothing."
+  },
+  "typeinfo": {
+    "ZTI": "0x0213dd40",
+    "ZTI_module": "ov006",
+    "ZTI_kind": "abi::__si_class_type_info",
+    "ZTI_size": "0x0c",
+    "ZTS": "0x0213dd84",
+    "ZTS_module": "ov006",
+    "ZTV": "0x0213e24c",
+    "ZTV_module": "ov006",
+    "raw_words_at_ZTI": [
+      "0x0209a764",
+      "0x0213dd84",
+      "0x020bbf6c"
+    ],
+    "word_meanings": [
+      "+0x00 -> arm9 0x0209a764, the ABI __si_class_type_info vtable",
+      "+0x04 -> ov006 0x0213dd84, _ZTS12dScMgPanel_c",
+      "+0x08 -> ov004 0x020bbf6c, _ZTI11dScMgBase_c"
+    ],
+    "all_three_local": "Unlike daOts_c, whose _ZTV is in ov064 while its _ZTI/_ZTS live in ov027, all three of this class's records are in ov006. Verified per symbol against config/arm9/overlays/ov006/symbols.txt, not inferred from one another."
+  },
+  "base_class": "dScMgBase_c",
+  "base_evidence": "DIRECT, from the __si_class_type_info record. _ZTI12dScMgPanel_c at ov006 0x0213dd40 has +0x08 = 0x020bbf6c. config/arm9/overlays/ov004/symbols.txt names 0x020bbf6c _ZTI11dScMgBase_c; the relocation table spells the module ambiguously as overlays(0,4) and ov000 carries the same address only as an unnamed `data_ov000_020bbf6c ... ambiguous` row, so ov004 is the module that actually names it. Vtable LENGTH is corroboration only and is not the reason: dScMgBase_c leaves 36 slots and this table is 36 slots, which is consistent with a direct dScMgBase_c subclass but would be equally consistent with several ov006 siblings.",
+  "inheritance_chain": [
+    "dScMgPanel_c",
+    "dScMgBase_c",
+    "dScene_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "inheritance_chain_evidence": "Five levels, walked through the __si_class_type_info +0x08 chain in build/rtti.json, not copied from a sibling. Same chain and same depth as dScMgTeresa_c, which is why the compiler_only prediction below can be checked against a landed manifest. The queue row's sibling_oracle dScMgSingle3DBase_c is at a DIFFERENT depth for its descendants: dScMgRoulette_c sits below dScMgSingle3DBase_c and its landed manifest carries 13 compiler-only rows, not 11.",
+  "ancestor_typeinfo_canonical": [
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "module": "ov004",
+      "address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "module": "ov004",
+      "address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "module": "arm9",
+      "address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "module": "arm9",
+      "address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "module": "arm9",
+      "address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "module": "arm9",
+      "address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "module": "arm9",
+      "address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "module": "arm9",
+      "address": "0x02086e60"
+    }
+  ],
+  "ancestor_typeinfo_evidence": "Each row read out of the named module's own symbols.txt in this worktree (C:/tmp/sm64ds-scout-panel-0905, branch cpp/dScMgPanel_c-tu). They agree symbol for symbol and address for address with the eight ancestor rows in the landed manifest config/tu_manifest.d/ov006/dScMgTeresa_c.json, which is the strongest available cross-check.",
+  "leaf": true,
+  "leaf_evidence": "No edge in build/rtti.json names dScMgPanel_c as a base (the filter `[e for e in edges if e['base']=='dScMgPanel_c']` is empty over all 429 records). That proves no RTTI-EMITTING derived class exists in the scanned image; a derived class that emitted no typeinfo would not appear.",
+  "vtable": {
+    "symbol": "_ZTV12dScMgPanel_c",
+    "address_point": "0x0213e24c",
+    "header_start": "0x0213e244",
+    "offset_to_top_address": "0x0213e244",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213e248",
+    "rtti_pointer": "0x0213dd40",
+    "slots": 36,
+    "last_slot_address": "0x0213e2d8",
+    "end": "0x0213e2dc",
+    "symbol_extent": "0x90",
+    "storage_size": "0x98",
+    "extent_evidence": "Four independent reads agree on 36 slots. (a) DIRECT: the 36 words from the address point 0x0213e24c through 0x0213e2d8 are all plausible code addresses in arm9/ov004/ov006; the next word, at 0x0213e2dc, is 0xffffffff, which is not a code pointer. (b) RELOCATIONS: config/arm9/overlays/ov006/relocs.txt has an unbroken relocated run from 0x0213e248 (the typeinfo word of the header) through 0x0213e2d8, first gap at 0x0213e2dc. (c) tools/rtti_vtables.py --own dScMgPanel_c reports 36 slots (base 36) after its own following-table trim. (d) INDEPENDENT UPPER BOUND, stronger than the usual next-symbol read: 0x0213e2dc is itself the TARGET of three load relocations, from 0x02107a64, 0x02107b0c and 0x02107b68 - all inside dScMgRoulette_c's promoted TU - so the ROM's own relocation table says a DIFFERENT object begins exactly at 0x0213e2dc. Symbol extent 0x0213e24c..0x0213e2dc = 0x90; STORAGE 0x0213e244..0x0213e2dc = 0x98, and 0x98 is the .data size the writer should expect the reconstructed TU to emit for it.",
+    "phantom_interior_symbol": "config/arm9/overlays/ov006/symbols.txt carries data_ov006_0213e24c at 0x0213e24c alongside _ZTV12dScMgPanel_c at the same address. It sits ON the address point, not inside the table, so the naive next-symbol read happens to be right here. Exactly the same shape as dScMgTeresa_c's data_ov006_0213fa0c. Do not treat that as a general licence - an interior phantom can cut a table short.",
+    "slot_name_note": "The ROM proves the slot INDEX and the target WORD. Own slot names come from ov006's own mangled symbols and are real. Inherited slot names are whatever ov004/arm9 symbols.txt calls the target; the VirtualNN spellings (slots 13, 14, 20, 31, 32, 33, 34, 35) are placeholders carried down from include/dScMgBase_c.h and include/fBase_c.h, not recovered names.",
+    "override_count": 6,
+    "override_slots": [
+      0,
+      6,
+      9,
+      16,
+      17,
+      18
+    ],
+    "own_overrides": [
+      {
+        "slot": 0,
+        "target": "0x021073b0",
+        "symbol": "_ZN12dScMgPanel_c13InitResourcesEv"
+      },
+      {
+        "slot": 6,
+        "target": "0x02107358",
+        "symbol": "_ZN12dScMgPanel_c8BehaviorEv"
+      },
+      {
+        "slot": 9,
+        "target": "0x0210730c",
+        "symbol": "_ZN12dScMgPanel_c6RenderEv"
+      },
+      {
+        "slot": 16,
+        "target": "0x0210428c",
+        "symbol": "_ZN12dScMgPanel_cD1Ev"
+      },
+      {
+        "slot": 17,
+        "target": "0x021042b0",
+        "symbol": "_ZN12dScMgPanel_cD0Ev"
+      },
+      {
+        "slot": 18,
+        "target": "0x021071fc",
+        "symbol": "_ZN12dScMgPanel_c13OnYoshiTryEatEi"
+      }
+    ],
+    "complete_slots": [
+      {
+        "slot": 0,
+        "target": "0x021073b0",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_c13InitResourcesEv",
+        "ownership": "own override"
+      },
+      {
+        "slot": 1,
+        "target": "0x020b0930",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 2,
+        "target": "0x020b08f0",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c18AfterInitResourcesEj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 3,
+        "target": "0x02043bf0",
+        "module": "arm9",
+        "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 4,
+        "target": "0x0202e5f0",
+        "module": "arm9",
+        "symbol": "_ZN8dScene_c22BeforeCleanupResourcesEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 5,
+        "target": "0x020b0840",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c21AfterCleanupResourcesEj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 6,
+        "target": "0x02107358",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_c8BehaviorEv",
+        "ownership": "own override"
+      },
+      {
+        "slot": 7,
+        "target": "0x020b0620",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c14BeforeBehaviorEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 8,
+        "target": "0x0202e3c8",
+        "module": "arm9",
+        "symbol": "_ZN8dScene_c13AfterBehaviorEj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 9,
+        "target": "0x0210730c",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_c6RenderEv",
+        "ownership": "own override"
+      },
+      {
+        "slot": 10,
+        "target": "0x020b04f4",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c12BeforeRenderEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 11,
+        "target": "0x0202e398",
+        "module": "arm9",
+        "symbol": "_ZN8dScene_c11AfterRenderEj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 12,
+        "target": "0x020b04e8",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 13,
+        "target": "0x0204357c",
+        "module": "arm9",
+        "symbol": "_ZN7fBase_c9Virtual34Ejj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 14,
+        "target": "0x0204349c",
+        "module": "arm9",
+        "symbol": "_ZN7fBase_c9Virtual38Ejj",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 15,
+        "target": "0x02043494",
+        "module": "arm9",
+        "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 16,
+        "target": "0x0210428c",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_cD1Ev",
+        "ownership": "own override"
+      },
+      {
+        "slot": 17,
+        "target": "0x021042b0",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_cD0Ev",
+        "ownership": "own override"
+      },
+      {
+        "slot": 18,
+        "target": "0x021071fc",
+        "module": "ov006",
+        "symbol": "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+        "ownership": "own override"
+      },
+      {
+        "slot": 19,
+        "target": "0x020b2994",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c13OnTurnIntoEggEi",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 20,
+        "target": "0x020b2990",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual50Ev",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 21,
+        "target": "0x020b298c",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c15OnGroundPoundedEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 22,
+        "target": "0x020ae198",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c11OnAttacked1Ev",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 23,
+        "target": "0x020ae1a0",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c11OnAttacked2Ev",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 24,
+        "target": "0x020ae140",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c8OnKickedEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 25,
+        "target": "0x020ae128",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c8OnPushedEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 26,
+        "target": "0x020b04e0",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 27,
+        "target": "0x020af27c",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c15OnHitByMegaCharEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 28,
+        "target": "0x020af04c",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c19OnHitFromUnderneathEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 29,
+        "target": "0x020af094",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c16OnAimedAtWithEggEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 30,
+        "target": "0x020aeed8",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 31,
+        "target": "0x020b2880",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual7CEv",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 32,
+        "target": "0x020b27f4",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual80Ev",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 33,
+        "target": "0x020b265c",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual84Ev",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 34,
+        "target": "0x020ae3b4",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual88Eiiii",
+        "ownership": "inherited"
+      },
+      {
+        "slot": 35,
+        "target": "0x020ad660",
+        "module": "ov004",
+        "symbol": "_ZN11dScMgBase_c9Virtual8CEv",
+        "ownership": "inherited"
+      }
+    ],
+    "complete_slots_verification": "Every one of the 36 target words re-read from extracted/overlays/overlay_0006.bin at module base 0x020bfec0 in this pass and matched the first pass word for word. The six own overrides additionally match tools/rtti_vtables.py --own. Both ends of the table relocate into this class's own text run, and every non-override target relocates OUTSIDE 0x0210428c..0x02107858, so the vtable corroborates both boundaries of the run."
+  },
+  "key_function": {
+    "symbol": "_ZN12dScMgPanel_cD1Ev",
+    "address": "0x0210428c",
+    "why": "include/dScMgPanel_c.h declares `virtual ~dScMgPanel_c();` OUT OF LINE and declares it FIRST, before InitResources/Behavior/Render/OnYoshiTryEat, so the destructor is this class's key function and the TU that defines it emits _ZTV/_ZTI/_ZTS for the whole chain.",
+    "why_this_is_easy_here": "The key function is at 0x0210428c, the LOWEST address of the licensable run, and the run has no sourceless hole - so the one TU that can be licensed is also the one that owns the key function. dScMgTeresa_c had to reason hard about this because a hole split its run and making the destructor inline would have moved the key function to the far side. That whole argument does not arise for dScMgPanel_c. The header needs no edit.",
+    "do_not_make_it_inline": "Moving the destructor inline would move the key function to InitResources at 0x021073b0 - still inside the same licensed run, so it would still link, but it would change WHICH .text section anchors the vtable and would reorder the destructor variants. There is no reason to try it: the out-of-line form is what the header already has and what the ROM's D1-below-D0 layout wants."
+  },
+  "destructors": {
+    "D1": "0x0210428c",
+    "D1_size": "0x24",
+    "D0": "0x021042b0",
+    "D0_size": "0x38",
+    "D2": null,
+    "rom_order": "D1 below D0",
+    "significance": "D1-below-D0 is the reproducible direction, so this class is NOT one of the destructor-order refusals. dScMgTeresa_c and dScMgRoulette_c, both in this overlay, both land it. Per the landed dScMgTeresa_c writeup the working form is an OUT-OF-LINE destructor under `#pragma defer_codegen off`, which emits sections D1, D0, D2; the same file records that out-of-line WITHOUT defer_codegen off emits D2, D0, D1 and is wrong. Try defer_codegen off first; do not reach for the inline form.",
+    "no_D2_in_cartridge": "config/arm9/overlays/ov006/symbols.txt names only _ZN12dScMgPanel_cD1Ev and _ZN12dScMgPanel_cD0Ev, and tools/tubuild.py inspect reports `D0/D1/D2 destructor variants : ['_ZN12dScMgPanel_cD1Ev', '_ZN12dScMgPanel_cD0Ev']`. No address anywhere in config/ names a D2 for this class.",
+    "predicted_homeless_D2": "mwcc emits three variants from one out-of-line definition, so the reconstructed TU will almost certainly emit a homeless _ZN12dScMgPanel_cD2Ev with no ROM home. dScMgTeresa_c's landed manifest carries exactly that as a 12th compiler_only_output row with disposition `deadstrip` (not `deadstrip-duplicate`). Expect the same here, emitted after D0 and before ordinal 2 where it does not disturb the licensed run's ROM-ascending emission order. This is a PREDICTION from an identical sibling, not a measurement - stage 4 settles it."
+  },
+  "candidate_text": {
+    "tu_map_run": {
+      "start": "0x0210428c",
+      "end": "0x02107858",
+      "functions": 71,
+      "boundary_confidence": "medium (left=high, right=medium)",
+      "source": "tools/tu_map.py --module ov006"
+    },
+    "licensable": {
+      "start": "0x0210428c",
+      "end": "0x02107858",
+      "functions": 71,
+      "ordinals": "0..70",
+      "bytes": "0x35cc"
+    },
+    "no_hole": "THE WHOLE RUN IS CLAIMABLE AS ONE .text BLOCK. All 71 addresses have a legacy src/ file AND a config/arm9/overlays/ov006/delinks.txt entry, every one of those entries is marked `complete`, and `python tools/tubuild.py inspect ov006/dScMgPanel_c` reports `functions without `complete` : none` and `functions with no legacy source : none`. It also reports `all functions verify under the build's pin: True` for all 71 under mwccarm 2004/b56. That is a statement about the 71 EXISTING per-shard objects, not about a merged TU - it is not a byte gate and does not pre-empt stage 4. This is the single biggest difference from dScMgTeresa_c, which could license only 48 of its 81 because a sourceless near-miss sat in the middle of its run.",
+    "factory_is_excluded": "dScMgPanel_c_classInit at 0x02107858 (size 0x34, src/d_s_mg_panel.c) is NOT part of the run and should NOT be folded in. tools/tu_map.py splits it out as its own 1-function unattributed span 0x02107858..0x0210788c, and every promoted ov006 sibling follows the same convention: dScMgTeresa_c's run ends at 0x021207a8 where d_s_mg_teresa.c begins, and dScMgRoulette_c's landed manifest licenses 0x0210788c..0x0210a400 while its classInit at 0x0210a400 stays a separate shard. The `d_s_mg_*.c` files are a family: bomroom, curling, curling2, luigi, pachinko, pachinko2, panel, slot3, teresa.",
+    "sinit_is_excluded": "__sinit_ov006_02131fa4 (0x02131fa4, size 0x318, src/__sinit_ov006_02131fa4.c) is this TU's static-initializer function and lives in ov006's .init section. It has its own delinks.txt block and stays a separate shard - ov006's delinks.txt has 31 such .init blocks against 1239 .text blocks. See static_initializer below.",
+    "functions": [
+      {
+        "ordinal": 0,
+        "address": "0x0210428c",
+        "size": "0x0024",
+        "symbol": "_ZN12dScMgPanel_cD1Ev",
+        "legacy_source": "src/_ZN12dScMgPanel_cD1Ev.cpp"
+      },
+      {
+        "ordinal": 1,
+        "address": "0x021042b0",
+        "size": "0x0038",
+        "symbol": "_ZN12dScMgPanel_cD0Ev",
+        "legacy_source": "src/_ZN12dScMgPanel_cD0Ev.cpp"
+      },
+      {
+        "ordinal": 2,
+        "address": "0x021042e8",
+        "size": "0x006c",
+        "symbol": "func_ov006_021042e8",
+        "legacy_source": "src/func_ov006_021042e8.c"
+      },
+      {
+        "ordinal": 3,
+        "address": "0x02104354",
+        "size": "0x0118",
+        "symbol": "func_ov006_02104354",
+        "legacy_source": "src/func_ov006_02104354.c"
+      },
+      {
+        "ordinal": 4,
+        "address": "0x0210446c",
+        "size": "0x00ec",
+        "symbol": "func_ov006_0210446c",
+        "legacy_source": "src/func_ov006_0210446c.c"
+      },
+      {
+        "ordinal": 5,
+        "address": "0x02104558",
+        "size": "0x0028",
+        "symbol": "func_ov006_02104558",
+        "legacy_source": "src/func_ov006_02104558.c"
+      },
+      {
+        "ordinal": 6,
+        "address": "0x02104580",
+        "size": "0x02f0",
+        "symbol": "func_ov006_02104580",
+        "legacy_source": "src/func_ov006_02104580.c"
+      },
+      {
+        "ordinal": 7,
+        "address": "0x02104870",
+        "size": "0x0040",
+        "symbol": "func_ov006_02104870",
+        "legacy_source": "src/func_ov006_02104870.c"
+      },
+      {
+        "ordinal": 8,
+        "address": "0x021048b0",
+        "size": "0x0034",
+        "symbol": "func_ov006_021048b0",
+        "legacy_source": "src/func_ov006_021048b0.c"
+      },
+      {
+        "ordinal": 9,
+        "address": "0x021048e4",
+        "size": "0x003c",
+        "symbol": "func_ov006_021048e4",
+        "legacy_source": "src/func_ov006_021048e4.c"
+      },
+      {
+        "ordinal": 10,
+        "address": "0x02104920",
+        "size": "0x00f0",
+        "symbol": "func_ov006_02104920",
+        "legacy_source": "src/func_ov006_02104920.c"
+      },
+      {
+        "ordinal": 11,
+        "address": "0x02104a10",
+        "size": "0x00b0",
+        "symbol": "func_ov006_02104a10",
+        "legacy_source": "src/func_ov006_02104a10.cpp"
+      },
+      {
+        "ordinal": 12,
+        "address": "0x02104ac0",
+        "size": "0x0004",
+        "symbol": "func_ov006_02104ac0",
+        "legacy_source": "src/func_ov006_02104ac0.c"
+      },
+      {
+        "ordinal": 13,
+        "address": "0x02104ac4",
+        "size": "0x0060",
+        "symbol": "func_ov006_02104ac4",
+        "legacy_source": "src/func_ov006_02104ac4.cpp"
+      },
+      {
+        "ordinal": 14,
+        "address": "0x02104b24",
+        "size": "0x0028",
+        "symbol": "func_ov006_02104b24",
+        "legacy_source": "src/func_ov006_02104b24.c"
+      },
+      {
+        "ordinal": 15,
+        "address": "0x02104b4c",
+        "size": "0x0010",
+        "symbol": "func_ov006_02104b4c",
+        "legacy_source": "src/func_ov006_02104b4c.c"
+      },
+      {
+        "ordinal": 16,
+        "address": "0x02104b5c",
+        "size": "0x0050",
+        "symbol": "func_ov006_02104b5c",
+        "legacy_source": "src/func_ov006_02104b5c.c"
+      },
+      {
+        "ordinal": 17,
+        "address": "0x02104bac",
+        "size": "0x0004",
+        "symbol": "func_ov006_02104bac",
+        "legacy_source": "src/func_ov006_02104bac.c"
+      },
+      {
+        "ordinal": 18,
+        "address": "0x02104bb0",
+        "size": "0x0058",
+        "symbol": "func_ov006_02104bb0",
+        "legacy_source": "src/func_ov006_02104bb0.c"
+      },
+      {
+        "ordinal": 19,
+        "address": "0x02104c08",
+        "size": "0x0058",
+        "symbol": "func_ov006_02104c08",
+        "legacy_source": "src/func_ov006_02104c08.c"
+      },
+      {
+        "ordinal": 20,
+        "address": "0x02104c60",
+        "size": "0x009c",
+        "symbol": "func_ov006_02104c60",
+        "legacy_source": "src/func_ov006_02104c60.cpp"
+      },
+      {
+        "ordinal": 21,
+        "address": "0x02104cfc",
+        "size": "0x0048",
+        "symbol": "func_ov006_02104cfc",
+        "legacy_source": "src/func_ov006_02104cfc.c"
+      },
+      {
+        "ordinal": 22,
+        "address": "0x02104d44",
+        "size": "0x0050",
+        "symbol": "func_ov006_02104d44",
+        "legacy_source": "src/func_ov006_02104d44.c"
+      },
+      {
+        "ordinal": 23,
+        "address": "0x02104d94",
+        "size": "0x00dc",
+        "symbol": "func_ov006_02104d94",
+        "legacy_source": "src/func_ov006_02104d94.c"
+      },
+      {
+        "ordinal": 24,
+        "address": "0x02104e70",
+        "size": "0x0010",
+        "symbol": "func_ov006_02104e70",
+        "legacy_source": "src/func_ov006_02104e70.c"
+      },
+      {
+        "ordinal": 25,
+        "address": "0x02104e80",
+        "size": "0x0028",
+        "symbol": "func_ov006_02104e80",
+        "legacy_source": "src/func_ov006_02104e80.c"
+      },
+      {
+        "ordinal": 26,
+        "address": "0x02104ea8",
+        "size": "0x0010",
+        "symbol": "func_ov006_02104ea8",
+        "legacy_source": "src/func_ov006_02104ea8.c"
+      },
+      {
+        "ordinal": 27,
+        "address": "0x02104eb8",
+        "size": "0x0010",
+        "symbol": "func_ov006_02104eb8",
+        "legacy_source": "src/func_ov006_02104eb8.c"
+      },
+      {
+        "ordinal": 28,
+        "address": "0x02104ec8",
+        "size": "0x0004",
+        "symbol": "func_ov006_02104ec8",
+        "legacy_source": "src/func_ov006_02104ec8.c"
+      },
+      {
+        "ordinal": 29,
+        "address": "0x02104ecc",
+        "size": "0x00e8",
+        "symbol": "func_ov006_02104ecc",
+        "legacy_source": "src/func_ov006_02104ecc.cpp"
+      },
+      {
+        "ordinal": 30,
+        "address": "0x02104fb4",
+        "size": "0x0058",
+        "symbol": "func_ov006_02104fb4",
+        "legacy_source": "src/func_ov006_02104fb4.c"
+      },
+      {
+        "ordinal": 31,
+        "address": "0x0210500c",
+        "size": "0x0080",
+        "symbol": "func_ov006_0210500c",
+        "legacy_source": "src/func_ov006_0210500c.c"
+      },
+      {
+        "ordinal": 32,
+        "address": "0x0210508c",
+        "size": "0x0030",
+        "symbol": "func_ov006_0210508c",
+        "legacy_source": "src/func_ov006_0210508c.c"
+      },
+      {
+        "ordinal": 33,
+        "address": "0x021050bc",
+        "size": "0x005c",
+        "symbol": "func_ov006_021050bc",
+        "legacy_source": "src/func_ov006_021050bc.cpp"
+      },
+      {
+        "ordinal": 34,
+        "address": "0x02105118",
+        "size": "0x001c",
+        "symbol": "func_ov006_02105118",
+        "legacy_source": "src/func_ov006_02105118.c"
+      },
+      {
+        "ordinal": 35,
+        "address": "0x02105134",
+        "size": "0x00a8",
+        "symbol": "func_ov006_02105134",
+        "legacy_source": "src/func_ov006_02105134.c"
+      },
+      {
+        "ordinal": 36,
+        "address": "0x021051dc",
+        "size": "0x01cc",
+        "symbol": "func_ov006_021051dc",
+        "legacy_source": "src/func_ov006_021051dc.c"
+      },
+      {
+        "ordinal": 37,
+        "address": "0x021053a8",
+        "size": "0x02c8",
+        "symbol": "func_ov006_021053a8",
+        "legacy_source": "src/func_ov006_021053a8.cpp"
+      },
+      {
+        "ordinal": 38,
+        "address": "0x02105670",
+        "size": "0x00c0",
+        "symbol": "func_ov006_02105670",
+        "legacy_source": "src/func_ov006_02105670.c"
+      },
+      {
+        "ordinal": 39,
+        "address": "0x02105730",
+        "size": "0x00c0",
+        "symbol": "func_ov006_02105730",
+        "legacy_source": "src/func_ov006_02105730.c"
+      },
+      {
+        "ordinal": 40,
+        "address": "0x021057f0",
+        "size": "0x0064",
+        "symbol": "func_ov006_021057f0",
+        "legacy_source": "src/func_ov006_021057f0.cpp"
+      },
+      {
+        "ordinal": 41,
+        "address": "0x02105854",
+        "size": "0x0260",
+        "symbol": "func_ov006_02105854",
+        "legacy_source": "src/func_ov006_02105854.c"
+      },
+      {
+        "ordinal": 42,
+        "address": "0x02105ab4",
+        "size": "0x0168",
+        "symbol": "func_ov006_02105ab4",
+        "legacy_source": "src/func_ov006_02105ab4.c"
+      },
+      {
+        "ordinal": 43,
+        "address": "0x02105c1c",
+        "size": "0x006c",
+        "symbol": "func_ov006_02105c1c",
+        "legacy_source": "src/func_ov006_02105c1c.c"
+      },
+      {
+        "ordinal": 44,
+        "address": "0x02105c88",
+        "size": "0x0098",
+        "symbol": "func_ov006_02105c88",
+        "legacy_source": "src/func_ov006_02105c88.c"
+      },
+      {
+        "ordinal": 45,
+        "address": "0x02105d20",
+        "size": "0x00c4",
+        "symbol": "func_ov006_02105d20",
+        "legacy_source": "src/func_ov006_02105d20.c"
+      },
+      {
+        "ordinal": 46,
+        "address": "0x02105de4",
+        "size": "0x0264",
+        "symbol": "func_ov006_02105de4",
+        "legacy_source": "src/func_ov006_02105de4.c"
+      },
+      {
+        "ordinal": 47,
+        "address": "0x02106048",
+        "size": "0x0038",
+        "symbol": "func_ov006_02106048",
+        "legacy_source": "src/func_ov006_02106048.c"
+      },
+      {
+        "ordinal": 48,
+        "address": "0x02106080",
+        "size": "0x00e8",
+        "symbol": "func_ov006_02106080",
+        "legacy_source": "src/func_ov006_02106080.c"
+      },
+      {
+        "ordinal": 49,
+        "address": "0x02106168",
+        "size": "0x0238",
+        "symbol": "func_ov006_02106168",
+        "legacy_source": "src/func_ov006_02106168.cpp"
+      },
+      {
+        "ordinal": 50,
+        "address": "0x021063a0",
+        "size": "0x02c4",
+        "symbol": "func_ov006_021063a0",
+        "legacy_source": "src/func_ov006_021063a0.cpp"
+      },
+      {
+        "ordinal": 51,
+        "address": "0x02106664",
+        "size": "0x00f4",
+        "symbol": "func_ov006_02106664",
+        "legacy_source": "src/func_ov006_02106664.c"
+      },
+      {
+        "ordinal": 52,
+        "address": "0x02106758",
+        "size": "0x004c",
+        "symbol": "func_ov006_02106758",
+        "legacy_source": "src/func_ov006_02106758.c"
+      },
+      {
+        "ordinal": 53,
+        "address": "0x021067a4",
+        "size": "0x0134",
+        "symbol": "func_ov006_021067a4",
+        "legacy_source": "src/func_ov006_021067a4.c"
+      },
+      {
+        "ordinal": 54,
+        "address": "0x021068d8",
+        "size": "0x0038",
+        "symbol": "func_ov006_021068d8",
+        "legacy_source": "src/func_ov006_021068d8.c"
+      },
+      {
+        "ordinal": 55,
+        "address": "0x02106910",
+        "size": "0x00f8",
+        "symbol": "func_ov006_02106910",
+        "legacy_source": "src/func_ov006_02106910.c"
+      },
+      {
+        "ordinal": 56,
+        "address": "0x02106a08",
+        "size": "0x00a0",
+        "symbol": "func_ov006_02106a08",
+        "legacy_source": "src/func_ov006_02106a08.c"
+      },
+      {
+        "ordinal": 57,
+        "address": "0x02106aa8",
+        "size": "0x0104",
+        "symbol": "func_ov006_02106aa8",
+        "legacy_source": "src/func_ov006_02106aa8.c"
+      },
+      {
+        "ordinal": 58,
+        "address": "0x02106bac",
+        "size": "0x0014",
+        "symbol": "func_ov006_02106bac",
+        "legacy_source": "src/func_ov006_02106bac.c"
+      },
+      {
+        "ordinal": 59,
+        "address": "0x02106bc0",
+        "size": "0x00e4",
+        "symbol": "func_ov006_02106bc0",
+        "legacy_source": "src/func_ov006_02106bc0.c"
+      },
+      {
+        "ordinal": 60,
+        "address": "0x02106ca4",
+        "size": "0x0214",
+        "symbol": "func_ov006_02106ca4",
+        "legacy_source": "src/func_ov006_02106ca4.cpp"
+      },
+      {
+        "ordinal": 61,
+        "address": "0x02106eb8",
+        "size": "0x008c",
+        "symbol": "func_ov006_02106eb8",
+        "legacy_source": "src/func_ov006_02106eb8.cpp"
+      },
+      {
+        "ordinal": 62,
+        "address": "0x02106f44",
+        "size": "0x0098",
+        "symbol": "func_ov006_02106f44",
+        "legacy_source": "src/func_ov006_02106f44.cpp"
+      },
+      {
+        "ordinal": 63,
+        "address": "0x02106fdc",
+        "size": "0x00c0",
+        "symbol": "func_ov006_02106fdc",
+        "legacy_source": "src/func_ov006_02106fdc.cpp"
+      },
+      {
+        "ordinal": 64,
+        "address": "0x0210709c",
+        "size": "0x00a0",
+        "symbol": "func_ov006_0210709c",
+        "legacy_source": "src/func_ov006_0210709c.cpp"
+      },
+      {
+        "ordinal": 65,
+        "address": "0x0210713c",
+        "size": "0x0098",
+        "symbol": "func_ov006_0210713c",
+        "legacy_source": "src/func_ov006_0210713c.cpp"
+      },
+      {
+        "ordinal": 66,
+        "address": "0x021071d4",
+        "size": "0x0028",
+        "symbol": "func_ov006_021071d4",
+        "legacy_source": "src/func_ov006_021071d4.c"
+      },
+      {
+        "ordinal": 67,
+        "address": "0x021071fc",
+        "size": "0x0110",
+        "symbol": "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+        "legacy_source": "src/_ZN12dScMgPanel_c13OnYoshiTryEatEi.cpp"
+      },
+      {
+        "ordinal": 68,
+        "address": "0x0210730c",
+        "size": "0x004c",
+        "symbol": "_ZN12dScMgPanel_c6RenderEv",
+        "legacy_source": "src/_ZN12dScMgPanel_c6RenderEv.cpp"
+      },
+      {
+        "ordinal": 69,
+        "address": "0x02107358",
+        "size": "0x0058",
+        "symbol": "_ZN12dScMgPanel_c8BehaviorEv",
+        "legacy_source": "src/_ZN12dScMgPanel_c8BehaviorEv.cpp"
+      },
+      {
+        "ordinal": 70,
+        "address": "0x021073b0",
+        "size": "0x04a8",
+        "symbol": "_ZN12dScMgPanel_c13InitResourcesEv",
+        "legacy_source": "src/_ZN12dScMgPanel_c13InitResourcesEv.cpp"
+      }
+    ]
+  },
+  "non_virtual": {
+    "function_count": 65,
+    "classification": "65 of the 71 run functions are not vtable targets. 38 have inbound arm_call relocations from elsewhere in the run (the direct_call_helpers list below, measured by the first pass and unchanged); 27 have no inbound call at all and are reached only because a static 8-byte object holds their address (address_held_by_static below). Together they account for every non-virtual function in 0x021042e8..0x021071fc. A held address proves an indirect dispatch target; it does not prove the original identifier, nor member-versus-free declaration.",
+    "direct_call_helpers": [
+      {
+        "symbol": "func_ov006_021042e8",
+        "address": "0x021042e8",
+        "size": "0x6c",
+        "callers": [
+          "0x02107338 _ZN12dScMgPanel_c6RenderEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104354",
+        "address": "0x02104354",
+        "size": "0x118",
+        "callers": [
+          "0x0210739c _ZN12dScMgPanel_c8BehaviorEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_0210446c",
+        "address": "0x0210446c",
+        "size": "0xec",
+        "callers": [
+          "0x02104648 func_ov006_02104580",
+          "0x021046a4 func_ov006_02104580",
+          "0x021047c8 func_ov006_02104580",
+          "0x02104804 func_ov006_02104580"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104558",
+        "address": "0x02104558",
+        "size": "0x28",
+        "callers": [
+          "0x021068cc func_ov006_021067a4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104580",
+        "address": "0x02104580",
+        "size": "0x2f0",
+        "callers": [
+          "0x02106e74 func_ov006_02106ca4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104870",
+        "address": "0x02104870",
+        "size": "0x40",
+        "callers": [
+          "0x02106dd0 func_ov006_02106ca4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021048b0",
+        "address": "0x021048b0",
+        "size": "0x34",
+        "callers": [
+          "0x021068c4 func_ov006_021067a4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021048e4",
+        "address": "0x021048e4",
+        "size": "0x3c",
+        "callers": [
+          "0x02105180 func_ov006_02105134"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104ac4",
+        "address": "0x02104ac4",
+        "size": "0x60",
+        "callers": [
+          "0x02107394 _ZN12dScMgPanel_c8BehaviorEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104b24",
+        "address": "0x02104b24",
+        "size": "0x28",
+        "callers": [
+          "0x021072a4 _ZN12dScMgPanel_c13OnYoshiTryEatEi",
+          "0x021077b4 _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104b4c",
+        "address": "0x02104b4c",
+        "size": "0x10",
+        "callers": [
+          "0x021068bc func_ov006_021067a4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104b5c",
+        "address": "0x02104b5c",
+        "size": "0x50",
+        "callers": [
+          "0x02107340 _ZN12dScMgPanel_c6RenderEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104c60",
+        "address": "0x02104c60",
+        "size": "0x9c",
+        "callers": [
+          "0x02105844 func_ov006_021057f0"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104cfc",
+        "address": "0x02104cfc",
+        "size": "0x48",
+        "callers": [
+          "0x02105358 func_ov006_021051dc"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104d44",
+        "address": "0x02104d44",
+        "size": "0x50",
+        "callers": [
+          "0x02107328 _ZN12dScMgPanel_c6RenderEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104d94",
+        "address": "0x02104d94",
+        "size": "0xdc",
+        "callers": [
+          "0x02107330 _ZN12dScMgPanel_c6RenderEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104e70",
+        "address": "0x02104e70",
+        "size": "0x10",
+        "callers": [
+          "0x02105918 func_ov006_02105854",
+          "0x02105968 func_ov006_02105854"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104e80",
+        "address": "0x02104e80",
+        "size": "0x28",
+        "callers": [
+          "0x02106004 func_ov006_02105de4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104ea8",
+        "address": "0x02104ea8",
+        "size": "0x10",
+        "callers": [
+          "0x02106c8c func_ov006_02106bc0",
+          "0x02106de0 func_ov006_02106ca4"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02104eb8",
+        "address": "0x02104eb8",
+        "size": "0x10",
+        "callers": [
+          "0x02105910 func_ov006_02105854",
+          "0x02105960 func_ov006_02105854"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021050bc",
+        "address": "0x021050bc",
+        "size": "0x5c",
+        "callers": [
+          "0x02106cac func_ov006_02106ca4",
+          "0x02106ec4 func_ov006_02106eb8",
+          "0x02106f50 func_ov006_02106f44",
+          "0x02106fe8 func_ov006_02106fdc",
+          "0x021070b0 func_ov006_0210709c",
+          "0x02107154 func_ov006_0210713c"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105118",
+        "address": "0x02105118",
+        "size": "0x1c",
+        "callers": [
+          "0x021071dc func_ov006_021071d4",
+          "0x021077ac _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105134",
+        "address": "0x02105134",
+        "size": "0xa8",
+        "callers": [
+          "0x02107128 func_ov006_0210709c"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021057f0",
+        "address": "0x021057f0",
+        "size": "0x64",
+        "callers": [
+          "0x02106ecc func_ov006_02106eb8"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105854",
+        "address": "0x02105854",
+        "size": "0x260",
+        "callers": [
+          "0x02106f64 func_ov006_02106f44"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105ab4",
+        "address": "0x02105ab4",
+        "size": "0x168",
+        "callers": [
+          "0x02107348 _ZN12dScMgPanel_c6RenderEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105c1c",
+        "address": "0x02105c1c",
+        "size": "0x6c",
+        "callers": [
+          "0x021051a0 func_ov006_02105134",
+          "0x021051b8 func_ov006_02105134"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105c88",
+        "address": "0x02105c88",
+        "size": "0x98",
+        "callers": [
+          "0x02107120 func_ov006_0210709c"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105d20",
+        "address": "0x02105d20",
+        "size": "0xc4",
+        "callers": [
+          "0x02107118 func_ov006_0210709c"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02105de4",
+        "address": "0x02105de4",
+        "size": "0x264",
+        "callers": [
+          "0x021070a8 func_ov006_0210709c"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02106048",
+        "address": "0x02106048",
+        "size": "0x38",
+        "callers": [
+          "0x02104f90 func_ov006_02104ecc"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02106080",
+        "address": "0x02106080",
+        "size": "0xe8",
+        "callers": [
+          "0x02106290 func_ov006_02106168"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02106168",
+        "address": "0x02106168",
+        "size": "0x238",
+        "callers": [
+          "0x0210729c _ZN12dScMgPanel_c13OnYoshiTryEatEi",
+          "0x021077a4 _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021063a0",
+        "address": "0x021063a0",
+        "size": "0x2c4",
+        "callers": [
+          "0x02107294 _ZN12dScMgPanel_c13OnYoshiTryEatEi",
+          "0x0210779c _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02106664",
+        "address": "0x02106664",
+        "size": "0xf4",
+        "callers": [
+          "0x02106364 func_ov006_02106168"
+        ]
+      },
+      {
+        "symbol": "func_ov006_02106758",
+        "address": "0x02106758",
+        "size": "0x4c",
+        "callers": [
+          "0x0210777c _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021067a4",
+        "address": "0x021067a4",
+        "size": "0x134",
+        "callers": [
+          "0x0210728c _ZN12dScMgPanel_c13OnYoshiTryEatEi",
+          "0x02107774 _ZN12dScMgPanel_c13InitResourcesEv"
+        ]
+      },
+      {
+        "symbol": "func_ov006_021068d8",
+        "address": "0x021068d8",
+        "size": "0x38",
+        "callers": [
+          "0x02106e64 func_ov006_02106ca4"
+        ]
+      }
+    ],
+    "address_held_by_static": [
+      {
+        "symbol": "func_ov006_02104920",
+        "address": "0x02104920",
+        "size": "0xf0",
+        "static_object": "data_ov006_0213dd24"
+      },
+      {
+        "symbol": "func_ov006_02104a10",
+        "address": "0x02104a10",
+        "size": "0xb0",
+        "static_object": "data_ov006_0213dcf4"
+      },
+      {
+        "symbol": "func_ov006_02104ac0",
+        "address": "0x02104ac0",
+        "size": "0x4",
+        "static_object": "data_ov006_0213dcbc"
+      },
+      {
+        "symbol": "func_ov006_02104bac",
+        "address": "0x02104bac",
+        "size": "0x4",
+        "static_object": "data_ov006_0213dd2c"
+      },
+      {
+        "symbol": "func_ov006_02104bb0",
+        "address": "0x02104bb0",
+        "size": "0x58",
+        "static_object": "data_ov006_0213dd04"
+      },
+      {
+        "symbol": "func_ov006_02104c08",
+        "address": "0x02104c08",
+        "size": "0x58",
+        "static_object": "data_ov006_0213dc8c"
+      },
+      {
+        "symbol": "func_ov006_02104ec8",
+        "address": "0x02104ec8",
+        "size": "0x4",
+        "static_object": "data_ov006_0213dcb4"
+      },
+      {
+        "symbol": "func_ov006_02104ecc",
+        "address": "0x02104ecc",
+        "size": "0xe8",
+        "static_object": "data_ov006_0213dca4"
+      },
+      {
+        "symbol": "func_ov006_02104fb4",
+        "address": "0x02104fb4",
+        "size": "0x58",
+        "static_object": "data_ov006_0213dc7c"
+      },
+      {
+        "symbol": "func_ov006_0210500c",
+        "address": "0x0210500c",
+        "size": "0x80",
+        "static_object": "data_ov006_0213dcc4"
+      },
+      {
+        "symbol": "func_ov006_0210508c",
+        "address": "0x0210508c",
+        "size": "0x30",
+        "static_object": "data_ov006_0213dcd4"
+      },
+      {
+        "symbol": "func_ov006_021051dc",
+        "address": "0x021051dc",
+        "size": "0x1cc",
+        "static_object": "data_ov006_0213dc9c"
+      },
+      {
+        "symbol": "func_ov006_021053a8",
+        "address": "0x021053a8",
+        "size": "0x2c8",
+        "static_object": "data_ov006_0213dcec"
+      },
+      {
+        "symbol": "func_ov006_02105670",
+        "address": "0x02105670",
+        "size": "0xc0",
+        "static_object": "data_ov006_0213dcdc"
+      },
+      {
+        "symbol": "func_ov006_02105730",
+        "address": "0x02105730",
+        "size": "0xc0",
+        "static_object": "data_ov006_0213dcac"
+      },
+      {
+        "symbol": "func_ov006_02106910",
+        "address": "0x02106910",
+        "size": "0xf8",
+        "static_object": "data_ov006_0213dd1c"
+      },
+      {
+        "symbol": "func_ov006_02106a08",
+        "address": "0x02106a08",
+        "size": "0xa0",
+        "static_object": "data_ov006_0213dcfc"
+      },
+      {
+        "symbol": "func_ov006_02106aa8",
+        "address": "0x02106aa8",
+        "size": "0x104",
+        "static_object": "data_ov006_0213dce4"
+      },
+      {
+        "symbol": "func_ov006_02106bac",
+        "address": "0x02106bac",
+        "size": "0x14",
+        "static_object": "data_ov006_0213dd14"
+      },
+      {
+        "symbol": "func_ov006_02106bc0",
+        "address": "0x02106bc0",
+        "size": "0xe4",
+        "static_object": "data_ov006_0213dccc"
+      },
+      {
+        "symbol": "func_ov006_02106ca4",
+        "address": "0x02106ca4",
+        "size": "0x214",
+        "static_object": "data_ov006_0213dc84"
+      },
+      {
+        "symbol": "func_ov006_02106eb8",
+        "address": "0x02106eb8",
+        "size": "0x8c",
+        "static_object": "data_ov006_0213dc6c"
+      },
+      {
+        "symbol": "func_ov006_02106f44",
+        "address": "0x02106f44",
+        "size": "0x98",
+        "static_object": "data_ov006_0213dc74"
+      },
+      {
+        "symbol": "func_ov006_02106fdc",
+        "address": "0x02106fdc",
+        "size": "0xc0",
+        "static_object": "data_ov006_0213dc54"
+      },
+      {
+        "symbol": "func_ov006_0210709c",
+        "address": "0x0210709c",
+        "size": "0xa0",
+        "static_object": "data_ov006_0213dc5c"
+      },
+      {
+        "symbol": "func_ov006_0210713c",
+        "address": "0x0210713c",
+        "size": "0x98",
+        "static_object": "data_ov006_0213dc4c"
+      },
+      {
+        "symbol": "func_ov006_021071d4",
+        "address": "0x021071d4",
+        "size": "0x28",
+        "static_object": "data_ov006_0213dd0c"
+      }
+    ],
+    "address_held_by_static_note": "RENAMED from the first pass's `data_table_callbacks`, and the framing is corrected: the 8-byte objects that hold these 27 addresses are NOT one descriptor table. See static_initializer.adjacency_is_not_an_array for the three reads that settle it. Each object holds {function pointer, 0} and each is loaded individually by __sinit_ov006_02131fa4."
+  },
+  "pragmas": {
+    "count": 8,
+    "queue_row_says": 7,
+    "correction": "The queue row's `pragma:7` is WRONG BY ONE. `python tools/tubuild.py inspect ov006/dScMgPanel_c` prints `pragmas in legacy sources : 8` and lists all eight, and an independent grep of `^#pragma` across the 71 run shards finds the same eight files. Whatever produced the queue's count disagrees with the tool the builder will actually run.",
+    "files": [
+      {
+        "file": "src/func_ov006_02104354.c",
+        "pragma": "opt_common_subs off"
+      },
+      {
+        "file": "src/func_ov006_0210446c.c",
+        "pragma": "opt_common_subs off"
+      },
+      {
+        "file": "src/func_ov006_02104580.c",
+        "pragma": "opt_common_subs off"
+      },
+      {
+        "file": "src/func_ov006_021063a0.cpp",
+        "pragma": "opt_common_subs off"
+      },
+      {
+        "file": "src/func_ov006_02106664.c",
+        "pragma": "opt_strength_reduction off"
+      },
+      {
+        "file": "src/func_ov006_021067a4.c",
+        "pragma": "opt_strength_reduction off"
+      },
+      {
+        "file": "src/func_ov006_02106aa8.c",
+        "pragma": "opt_common_subs off"
+      },
+      {
+        "file": "src/func_ov006_02106ca4.cpp",
+        "pragma": "opt_propagation off"
+      }
+    ],
+    "families": {
+      "opt_common_subs off": 5,
+      "opt_strength_reduction off": 2,
+      "opt_propagation off": 1
+    },
+    "not_a_blocker": "This is a SOLVED pattern in this overlay, with four landed precedents. Wrap each pragma-carrying function in `#pragma push` / `#pragma pop` and put `#pragma defer_codegen off` near the top of the TU. src/actors/dScMgBomroom_c.cpp does it eleven times and covers all three families including opt_propagation; src/actors/dScMgHanachan_c.cpp six times; src/actors/dScMgMemory2_c.cpp twice; src/actors/dScMgTeresa_c.cpp three times. Without `defer_codegen off` the brackets do NOT bind positionally, and opt_strength_reduction in particular behaves file-globally - which is what makes an 8-pragma TU look scary on paper.",
+    "caution": "`defer_codegen off` also fixes the emission order to ascending, so the merged source must be written in REVERSE ROM order (highest address first) exactly as src/actors/dScMgRoulette_c.cpp is. Emission order is a hard gate (linkcheck [4b/8]), not advice."
+  },
+  "compiler_only_output_prediction": {
+    "expected_rows": 12,
+    "breakdown": "11 = 2 x 5 chain levels (_ZTI + _ZTS for dScMgPanel_c, dScMgBase_c, dScene_c, dBase_c, fBase_c) + 1 _ZTV12dScMgPanel_c, plus 1 predicted homeless _ZN12dScMgPanel_cD2Ev = 12.",
+    "queue_row_says": "compiler-only:>=11",
+    "verdict": "The queue's floor of 11 is right and its 2 x 5 + 1 derivation is right. 12 is the number to expect, on the evidence of config/tu_manifest.d/ov006/dScMgTeresa_c.json, which has the IDENTICAL five-level chain and carries exactly 12 rows: the same 11 plus a homeless D2.",
+    "dispositions": "All 11 typeinfo/vtable rows should be `deadstrip-data`. Every canonical address (ov006 0x0213dd40 / 0x0213dd84 / 0x0213e24c, ov004 0x020bbf6c / 0x020bbf84, arm9 0x020914d4 / 0x020914b0 / 0x02086e78 / 0x02086e54 / 0x02086d70 / 0x02086e60) lies OUTSIDE the TU's only licensed range (.text 0x0210428c..0x02107858), so dsd delinks each from the cartridge independently and discarding this object's copy cannot cost the image a byte.",
+    "own_canonical_addresses": [
+      {
+        "symbol": "_ZTI12dScMgPanel_c",
+        "module": "ov006",
+        "address": "0x0213dd40"
+      },
+      {
+        "symbol": "_ZTS12dScMgPanel_c",
+        "module": "ov006",
+        "address": "0x0213dd84"
+      },
+      {
+        "symbol": "_ZTV12dScMgPanel_c",
+        "module": "ov006",
+        "address": "0x0213e24c"
+      }
+    ]
+  },
+  "static_initializer": {
+    "headline": "THE ORIGINAL TU WAS NOT TEXT-ONLY. It owned .data, .bss and .init output as well as .text. The queue's `promotion_route: text-only` describes what can be LICENSED, not what the original file contained, and the writer needs to know the difference.",
+    "sinit": {
+      "symbol": "__sinit_ov006_02131fa4",
+      "address": "0x02131fa4",
+      "size": "0x318",
+      "section": ".init",
+      "legacy_source": "src/__sinit_ov006_02131fa4.c",
+      "ctor_slot": "0x021335c8 (entry 23 of ov006's 31-entry .ctor table at 0x0213356c..0x021335e8)"
+    },
+    "what_it_does": "It copies groups of 8-byte {function pointer, 0} records out of .data into mutable .bss arrays: DstA at 0x021427d4, Dst8 at 0x02142888, Dst4 at 0x02142840 and 0x02142820, Dst5 at 0x02142860, Dst3 at 0x021427ec and 0x021427bc. In original source that is a set of file-scope tables whose initializers were not link-time constant.",
+    "owned_data": "27 eight-byte records scattered over ov006 0x0213dc4c..0x0213dd34, each holding one dScMgPanel_c-run function pointer in word 0 and zero in word 1. Every one of the 27 is referenced by __sinit_ov006_02131fa4 and by nothing else outside this class's own run.",
+    "owned_bss": [
+      "0x021427bc",
+      "0x021427d4",
+      "0x021427ec",
+      "0x02142820",
+      "0x02142840",
+      "0x02142860",
+      "0x02142888"
+    ],
+    "adjacency_is_not_an_array": "CORRECTION to this file's first pass, which described the 27 as one 'data-table callback' block with a 'descriptor table'. They are 27 SEPARATE 8-byte objects, not one array. Three reads say so. (a) g_profile_MG_PANEL sits at 0x0213dc64, INSIDE the run, with a different shape ({classInit, 0x017c017c}) and a different owner; an array cannot have a foreign element spliced into it. (b) 0x0213dc94 holds {0x01fc00fc, 0xffff2099}, also not a function pointer. (c) __sinit_ov006_02131fa4 loads each object's ADDRESS individually, in scrambled order (0x0213dd0c, then 0x0213dc4c, then 0x0213dc5c, then 0x0213dc54, ...), never an index off a base. What clusters them is mwld laying .data out by ASCENDING OBJECT SIZE, which parks every 8-byte object in ov006 next to every other one. Do not reconstruct a 27-entry table from this.",
+    "what_the_writer_should_do": "Follow the landed convention: declare all of it `extern` and license only .text. config/tu_manifest.d/ov006/dScMgRoulette_c.json has `data: []`, `bss: []`, `externalized_output: []` and a source that declares ~15 data_ov006_* objects extern inside an extern \"C\" block. dScMgTeresa_c's manifest is the same shape. Leave src/__sinit_ov006_02131fa4.c alone as its own shard; it is not one of the 71."
+  },
+  "factory": {
+    "symbol": "dScMgPanel_c_classInit",
+    "address": "0x02107858",
+    "size": "0x34",
+    "allocation_literal": "0x4fec",
+    "evidence": "At 0x0210785c the factory loads literal 0x00004fec and at 0x02107860 calls fBase_c::operator new (arm9 0x02043444). It then calls the dScMgBase_c constructor at 0x020b2adc and stores 0x0213e24c, this class's vtable address point, to the returned object.",
+    "verification": "Re-read this pass. src/d_s_mg_panel.c calls _ZN7fBase_cnwEj(20460) - 20460 decimal is 0x4fec - then _ZN11dScMgBase_cC2Ev, and stores data_ov006_0213e24c (the vtable address point) into word 0."
+  },
+  "object_size": {
+    "value": "0x4fec",
+    "status": "proven exact",
+    "evidence": "The literal operator-new argument in dScMgPanel_c_classInit, not a last-field lower bound. include/dScMgPanel_c.h already carries `typedef char dScMgPanel_c_size_must_be_0x4fec[sizeof(dScMgPanel_c) == 0x4fec ? 1 : -1];`."
+  },
+  "base_object_size": {
+    "value": "0x4660",
+    "status": "corroborated, not ROM-proved here",
+    "evidence": "include/dScMgBase_c.h asserts sizeof(dScMgBase_c) == 0x4660, and the lowest this-relative displacement any of the 71 functions uses is 0x4660 exactly. That agreement is strong, but it is header evidence plus an access floor, not an allocation-site measurement of dScMgBase_c itself. dScMgPanel_c's own storage is therefore 0x4660..0x4fec = 0x98c bytes."
+  },
+  "layout": {
+    "scope": "All offsets below are direct this-relative loads/stores in the 71-function Panel span. Widths, loop bounds and strides are ROM-proven. Names and semantic C++ types are intentionally not invented.",
+    "scalar_region_0x4660": [
+      {
+        "offset": "0x4660",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4664",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4668",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x466c",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4670",
+        "width": 2,
+        "type_evidence": "signed halfword reads (ldrsh) and halfword writes"
+      },
+      {
+        "offset": "0x4674",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4675",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4676",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4677",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4678",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x467c",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4680",
+        "width": 2,
+        "type_evidence": "signed halfword reads (ldrsh) and halfword writes"
+      },
+      {
+        "offset": "0x4682",
+        "width": 2,
+        "type_evidence": "unsigned halfword reads (ldrh) and halfword writes"
+      },
+      {
+        "offset": "0x4684",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4685",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4686",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4688",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x468c",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4690",
+        "width": 2,
+        "type_evidence": "halfword"
+      },
+      {
+        "offset": "0x4692",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4693",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4694",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4698",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x469c",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x46a0",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x46a4",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x46a5",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x46a6",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x46a7",
+        "width": 1,
+        "type_evidence": "byte"
+      }
+    ],
+    "record_array": {
+      "offset": "0x46a8",
+      "count": 64,
+      "stride": "0x18",
+      "exclusive_end": "0x4ca8",
+      "element_accesses": [
+        {
+          "element_offset": "0x00",
+          "width": 4
+        },
+        {
+          "element_offset": "0x04",
+          "width": 4
+        },
+        {
+          "element_offset": "0x08",
+          "width": 4
+        },
+        {
+          "element_offset": "0x0c",
+          "width": 4
+        },
+        {
+          "element_offset": "0x10",
+          "width": 1
+        },
+        {
+          "element_offset": "0x11",
+          "width": 1
+        },
+        {
+          "element_offset": "0x12",
+          "width": 1
+        },
+        {
+          "element_offset": "0x13",
+          "width": 1
+        },
+        {
+          "element_offset": "0x14",
+          "width": 1
+        },
+        {
+          "element_offset": "0x15",
+          "width": 1
+        },
+        {
+          "element_offset": "0x16",
+          "width": 1
+        }
+      ],
+      "evidence": "func_ov006_0210446c loops an index from 0 through 0x3f, multiplies it by 0x18, and addresses the listed fields relative to this+0x46a8. The next scalar begins exactly at 0x4ca8. Element byte +0x17 is not accessed by the observed code."
+    },
+    "control_words": [
+      {
+        "offset": "0x4ca8",
+        "width": 4,
+        "evidence": "Behavior reads it as an index into an 8-byte callback descriptor table; InitResources and state helpers write it."
+      },
+      {
+        "offset": "0x4cac",
+        "width": 4,
+        "evidence": "read and written by state helpers"
+      },
+      {
+        "offset": "0x4cb0",
+        "width": 4,
+        "evidence": "read and written by setup helpers"
+      },
+      {
+        "offset": "0x4cb4",
+        "width": 4,
+        "evidence": "word loads/stores; InitResources stores 0xff as a word"
+      },
+      {
+        "offset": "0x4cb8",
+        "width": 4,
+        "evidence": "loop count in several callback helpers, including func_ov006_02106fdc"
+      },
+      {
+        "offset": "0x4cbc",
+        "width": 4,
+        "evidence": "word loads/stores"
+      },
+      {
+        "offset": "0x4cc0",
+        "width": 4,
+        "evidence": "word loads/stores"
+      }
+    ],
+    "parallel_arrays": [
+      {
+        "offset": "0x4cc4",
+        "count": 36,
+        "stride": 4,
+        "width": 4,
+        "exclusive_end": "0x4d54"
+      },
+      {
+        "offset": "0x4d54",
+        "count": 36,
+        "stride": 4,
+        "width": 4,
+        "exclusive_end": "0x4de4"
+      },
+      {
+        "offset": "0x4de8",
+        "count": 36,
+        "stride": 2,
+        "width": 2,
+        "exclusive_end": "0x4e30"
+      },
+      {
+        "offset": "0x4e30",
+        "count": 36,
+        "stride": 2,
+        "width": 2,
+        "exclusive_end": "0x4e78"
+      },
+      {
+        "offset": "0x4e78",
+        "count": 36,
+        "stride": 2,
+        "width": 2,
+        "exclusive_end": "0x4ec0",
+        "type_evidence": "signed halfword reads observed"
+      },
+      {
+        "offset": "0x4ec8",
+        "count": 50,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4efa"
+      },
+      {
+        "offset": "0x4efa",
+        "count": 36,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4f1e"
+      },
+      {
+        "offset": "0x4f1e",
+        "count": 36,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4f42"
+      },
+      {
+        "offset": "0x4f42",
+        "count": 36,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4f66"
+      },
+      {
+        "offset": "0x4f66",
+        "count": 36,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4f8a"
+      },
+      {
+        "offset": "0x4f8a",
+        "count": 36,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4fae"
+      },
+      {
+        "offset": "0x4fae",
+        "count": 32,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4fce"
+      },
+      {
+        "offset": "0x4fce",
+        "count": 16,
+        "stride": 1,
+        "width": 1,
+        "exclusive_end": "0x4fde"
+      }
+    ],
+    "parallel_array_evidence": "func_ov006_021067a4 has an explicit 0x24-iteration reset loop: i<<2 addresses the two 36-word arrays, i<<1 addresses the three 36-halfword arrays, and i addresses five 36-byte arrays. The same function separately loops 0x20 times over 0x4fae and 0x10 times over 0x4fce. func_ov006_02106758 uses a nested 5 by 10 loop over 0x4ec8, proving 50 bytes. Other helpers read and write these same indexed bases.",
+    "post_array_scalars": [
+      {
+        "offset": "0x4de4",
+        "width": 4,
+        "type_evidence": "word"
+      },
+      {
+        "offset": "0x4ec0",
+        "width": 2,
+        "type_evidence": "signed halfword reads and halfword writes"
+      },
+      {
+        "offset": "0x4ec2",
+        "width": 2,
+        "type_evidence": "halfword"
+      },
+      {
+        "offset": "0x4ec4",
+        "width": 2,
+        "type_evidence": "signed halfword reads and halfword writes"
+      },
+      {
+        "offset": "0x4ec6",
+        "width": 2,
+        "type_evidence": "halfword"
+      },
+      {
+        "offset": "0x4fde",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fdf",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe0",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe1",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe2",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe3",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe4",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe5",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe6",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe7",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe8",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fe9",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4fea",
+        "width": 1,
+        "type_evidence": "byte"
+      },
+      {
+        "offset": "0x4feb",
+        "width": 1,
+        "type_evidence": "byte"
+      }
+    ],
+    "unobserved_bytes": [
+      {
+        "offset": "0x4672",
+        "size": "0x2"
+      },
+      {
+        "offset": "0x4687",
+        "size": "0x1"
+      },
+      {
+        "offset": "record+0x17",
+        "size": "0x1 per record",
+        "count": 64
+      }
+    ],
+    "provenance": "Measured by this file's FIRST pass from the 71-function span. This pass did not re-derive every displacement; it checked the arithmetic, which closes exactly (0x46a8 + 64*0x18 = 0x4ca8; 0x4cc4 + 36*4 = 0x4d54; 0x4d54 + 36*4 = 0x4de4; each 36-halfword and 36-byte run lands on the next one's base; 0x4fae + 32 = 0x4fce, + 16 = 0x4fde), and checked it against include/dScMgPanel_c.h, which agrees. One presentational difference: the header spells 0x4fae..0x4fde as a single u8[0x30] where this file splits it 32 + 16 at 0x4fce. Both cover the same bytes; the split is what the reset loops in func_ov006_021067a4 actually do."
+  },
+  "header_note": "include/dScMgPanel_c.h already exists and already declares all four named virtuals plus the destructor, with a 0x4fec size assert, so this promotion should touch no header. Its prose comment is STALE in one place: it says slot 18 'stays a raw extern \"C\" helper, not a declared method' while the struct below it declares `virtual void OnYoshiTryEat(int arg); /* slot 18 */`. The declaration is what compiles; the comment should be corrected when the class is promoted. Note also that the header gives OnYoshiTryEat a void return while the mangled cartridge name _ZN12dScMgPanel_c13OnYoshiTryEatEi encodes parameters only - the return type is not ROM-proved either way.",
+  "shard_hygiene": {
+    "missing_at_symbol": {
+      "count": 63,
+      "of": 71,
+      "note": "63 of the 71 run shards carry no `// @symbol` marker; only the six mangled-name method shards and two others have one. tiers scoring keys off `// @symbol`, so the merged TU must mark EVERY member. Do not assume the shards carry it forward."
+    },
+    "stale_classification_row": {
+      "file": "src/func_ov006_02106aa8.c",
+      "row": "notes/data/c-cpp-classification.tsv line 4992: PURE-C ... 0 ... NONMATCHING-draft;not-in-delinks",
+      "why_it_is_stale": "Commit 1d980db31 ('Match four ov006 minigame functions from the m100 third wave') matched this function. It has no NONMATCHING banner today, config/arm9/overlays/ov006/delinks.txt lists it at 0x02106aa8..0x02106bac marked `complete`, and tubuild inspect reports it OK under the pin. The ledger row was never updated. It is the only one of the 71 with a contradicted row; 21 of the 71 have no row at all. Do NOT hand-edit that ledger to fix it - it is an append log whose row order is load-bearing.",
+      "why_it_matters": "A reader who trusts the ledger will think the run has an unmatched member and refuse the whole-run licence."
+    },
+    "nearmiss_bank": "nearmiss/db.jsonl carries two rows touching this run - func_ov006_02106aa8 (27 divergences) and func_ov006_02106168 (568 bytes, 28 divergences), both `lang: c` rewrites. Both functions are matched TODAY by the shards in src/, so these are historical attempts, not live blockers. Do not restore either draft.",
+    "language_mix": "51 of the 71 shards are .c and 20 are .cpp. Merging them into one C++ TU flips 51 files worth of text from C to C++ in the langmode metric."
+  },
+  "queue_row_corrections": [
+    {
+      "field": "shard_count",
+      "queue_says": "72",
+      "measured": "71",
+      "why": "72 counts dScMgPanel_c_classInit / src/d_s_mg_panel.c. Every promoted ov006 sibling leaves the classInit out of the TU, so the promotion absorbs 71 shards, not 72. (Counting src/__sinit_ov006_02131fa4.c as well would make 73; it is also excluded.)"
+    },
+    {
+      "field": "blockers.pragma",
+      "queue_says": "7",
+      "measured": "8",
+      "why": "tools/tubuild.py inspect ov006/dScMgPanel_c prints 8, and a direct grep agrees."
+    },
+    {
+      "field": "blockers.compiler-only",
+      "queue_says": ">=11",
+      "measured": "11 floor confirmed, 12 expected",
+      "why": "The floor and its 2 x 5 + 1 derivation are right. The identical-chain sibling dScMgTeresa_c lands 12 because of a homeless D2."
+    },
+    {
+      "field": "promotion_route",
+      "queue_says": "text-only",
+      "measured": "right about licensing, misleading about the file",
+      "why": "The original TU owned .data, .bss and a .init static initializer as well as .text - see static_initializer. Only .text is claimable, which is what the route means, but a writer reading 'text-only' as 'this file held nothing but functions' will be surprised by __sinit_ov006_02131fa4."
+    },
+    {
+      "field": "sibling_oracle",
+      "queue_says": "dScMgSingle3DBase_c",
+      "measured": "use dScMgRoulette_c for shape and dScMgTeresa_c for the manifest",
+      "why": "dScMgSingle3DBase_c is in the right overlay but on a different branch of the chain. dScMgRoulette_c is the ADJACENT run (its .text starts at 0x0210788c, 0x34 bytes past this run's end), has no hole, and licenses its whole run in one block - the closest structural match. dScMgTeresa_c has the IDENTICAL five-level chain, the same 36-slot table and the same out-of-line-destructor key function, so its manifest's compiler_only_output reasoning transfers line for line."
+    }
+  ],
+  "modules_touched": [
+    "ov006",
+    "ov004",
+    "arm9",
+    "itcm"
+  ],
+  "related_modules": [
+    {
+      "module": "arm9",
+      "module_base": "0x02004000",
+      "role": "inherited slots 3/4/8/11/13/14/15, the ABI __si_class_type_info vtable at 0x0209a764, and the dScene_c/dBase_c/fBase_c typeinfo records"
+    },
+    {
+      "module": "ov004",
+      "module_base": "0x020ad660",
+      "role": "direct-base RTTI (dScMgBase_c at 0x020bbf6c / 0x020bbf84), 22 inherited slot targets, dScMgBase_c::~dScMgBase_c (D2) at 0x020b29c0, and dScMgBase_c::dScMgBase_c (C2) at 0x020b2adc"
+    },
+    {
+      "module": "ov006",
+      "module_base": "0x020bfec0",
+      "role": "class RTTI, vtable, all 71 run functions, the classInit factory, the static initializer, and every static this TU owns"
+    },
+    {
+      "module": "itcm",
+      "role": "_s32_div_f at 0x01ffabe4, called from the run"
+    }
+  ],
+  "unproven": [
+    "The original identifiers of all 65 non-virtual func_ov006_* routines, and whether each was a class member, a file-local static, or a free function. Addresses, sizes, direct callers and the static objects that hold their addresses are proven; the names are not. Do not invent method names for them.",
+    "Every English FIELD name. The offsets, access widths, signed-vs-unsigned load behaviour, array counts and strides are ROM facts; the names in include/dScMgPanel_c.h (unk_4cb8 'panel count', unk_4cc4 'panel x', unk_4efa 'panel kind', unk_4fae 'picked panel indices') are coined readings of what the code does, not recovered identifiers.",
+    "The source-level TYPE of the 27 eight-byte {function pointer, 0} statics and of the .bss arrays the sinit fills. The struct names in src/__sinit_ov006_02131fa4.c (Pair, Trip, DstA, Dst8, Dst4, Dst5, Dst3) are that shard's own inventions.",
+    "That the 71-function run was one original translation unit. tu_map's boundary confidence is medium on the right edge and ov006 is one of the modules tu_map.py reports as under-segmented, so 71 is a lower bound on what one file held, not a proven file boundary. The vtable corroborates that BOTH ENDS are this class's code, which is the strongest available check and is why the left edge reads high.",
+    "That __sinit_ov006_02131fa4 belonged to the same original file as the 71 functions. It references only this class's functions and this class's statics and nothing else, and its .ctor slot sits adjacent to the run's link position, but mwld's .ctor ordering is not a proof of file identity.",
+    "Whether a homeless _ZN12dScMgPanel_cD2Ev will actually be emitted. Predicted from dScMgTeresa_c's identical shape; only a stage-4 compile settles it.",
+    "The return type of OnYoshiTryEat. The mangled name encodes parameters only.",
+    "The two bytes at 0x4672..0x4673, the byte at 0x4687, and trailing byte +0x17 of each 0x18-byte record are never dereferenced by the 71 functions. Padding versus data-touched-elsewhere is not settled.",
+    "The names 'Virtual34', 'Virtual38', 'Virtual50', 'Virtual7C', 'Virtual80', 'Virtual84', 'Virtual88', 'Virtual8C' for the inherited slots. Placeholders from the base headers."
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-scout-panel-0905",
+    "branch": "cpp/dScMgPanel_c-tu",
+    "rebased_onto": "origin/main 8bfc6d98b0c5b3ed16cd97e712aa780c77fdad37",
+    "base_verified": "git merge-base HEAD origin/main == HEAD~1 == 8bfc6d98b, and `git log --oneline HEAD..origin/main` is empty",
+    "first_pass_commit": "3ece2622ac5d05b40783bd3aaab4cba5c595b9f0 (sealed base 395afdb2399f7d5e304183d074c5ff670ab766d3), rebased into this branch",
+    "oracles": [
+      "extracted/overlays/overlay_0006.bin",
+      "config/arm9/overlays/ov006/{symbols,relocs,delinks}.txt",
+      "config/arm9/overlays/ov004/symbols.txt",
+      "config/arm9/overlays/ov000/symbols.txt",
+      "config/arm9/symbols.txt",
+      "build/rtti.json",
+      "build/tu_map.json",
+      "config/tu_manifest.d/ov006/{dScMgTeresa_c,dScMgRoulette_c}.json (landed manifests, used as oracles for shape and for the ancestor addresses)"
+    ],
+    "tools": [
+      "python tools/rtti_extract.py",
+      "python tools/rtti_vtables.py --own dScMgPanel_c",
+      "python tools/tu_map.py --module ov006",
+      "python tools/tubuild.py inspect ov006/dScMgPanel_c"
+    ],
+    "gates_not_run": "No byte gate, no rombuild, no linkcheck, no eligible.py. Stage 4 decides whether the bytes are right.",
+    "renames_not_done": "Nothing was renamed. No shared ledger was edited."
+  }
+}
