@@ -2446,8 +2446,10 @@ def test_record_with_a_function_pointer_member_still_reads_as_a_record():
 
 def test_definition_inside_a_namespace_or_extern_c_block_names_the_block():
     """Real inputs: src/_ZN6Memory8AllocateEj.cpp (an Allman `namespace Memory`
-    whose body IS the member) and src/func_ov006_021063a0.cpp (the definition
-    inside `extern "C" {`). tubuild has nowhere to put a block-scoped member, so
+    whose body IS the member) and func_ov006_021063a0, whose shard put the
+    definition inside `extern "C" {` -- that one is now ROM ordinal 50 of
+    src/actors/dScMgPanel_c.cpp, absorbed by the ov006/dScMgPanel_c promotion.
+    tubuild has nowhere to put a block-scoped member, so
     it must refuse -- but the refusal has to name the block, or the message
     reads as "your file has no function in it" and sends a reader hunting."""
     ns = tubuild.split_legacy_source(
