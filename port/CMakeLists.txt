@@ -9514,6 +9514,32 @@ foreach(line IN LISTS SLICE212_LINES)
     list(APPEND SLICE212_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---- link100 SCENE ----
+# ---- gate 218: the two ARM9-RESIDENT SCENE CLASSES --------------------------
+# dScBoot_c (actor id 0, vtable 0x02091528, SpawnInfo 0x020914a8, factory
+# 0x02023624) and dScMB_c (id 360, vtable 0x020943c4, SpawnInfo 0x0209435c,
+# factory 0x020352b4) -- the ROM's two boot scenes, the fork
+# Scene::PrepareToSpawnBoot picks between. Both are arm9-resident, so unlike
+# every scene the port had seated before them there is no overlay to mount:
+# hal/scene_link100_boot.cpp and hal/scene_link100_mb.cpp host their vtables
+# and SpawnInfo records as arrays under the ROM's own data names, and the
+# seven .data blobs their InitResources bodies decompress come from
+# port/tools/romdata.py's NAMED list. The slice is the LINK closure, measured
+# with port/tools/closure.py against the pre-seat walk_window.map and iterated
+# to a fixpoint rather than taken from the ROM's own call graph -- the two
+# differ by a factor of several, because the port's host bodies already own
+# most of the ROM's edges. port/slice_gate218.txt carries the derivation.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate218.txt" SLICE218_LINES)
+set(SLICE218_SOURCES "")
+foreach(line IN LISTS SLICE218_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE218_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ---- end link100 SCENE ----
+
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
 # Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
@@ -12694,6 +12720,9 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -12905,6 +12934,9 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13153,6 +13185,9 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp

@@ -3560,6 +3560,38 @@ void port_scene_fill_mgm(void);
 extern unsigned char data_ov075_0211c880[];
 void *port_vs_spawn(void);
 void port_scene_fill_vs(void);
+// ---- link100 SCENE ----
+/* THE TWO ARM9-RESIDENT SCENE CLASSES, and they are the first rows in this
+   table whose class is not in an overlay at all.
+     dScBoot_c  actor id 0    SpawnInfo 0x020914a8, vtable 0x02091528
+     dScMB_c    actor id 360  SpawnInfo 0x0209435c, vtable 0x020943c4
+   Both ids are the ARM9 spawn table's own index, the rule every row above
+   uses: relocs.txt from:0x02090864 -> 0x020914a8 gives index 0, and
+   from:0x02090e04 -> 0x0209435c gives (0x02090e04 - 0x02090864)/4 = 360. Both
+   RTTI records name their class through the word before the vtable
+   ("9dScBoot_c" at 0x020914bc, "7dScMB_c" at 0x02094364), and both are DIRECT
+   Scene subclasses with the same eighteen-slot shape dScStarSel_c,
+   dScMiniGm_c and dScEntry_c have.
+   THESE ARE THE ROM'S TWO BOOT SCENES AND THEY ARE A FORK, NOT A SEQUENCE:
+   src/_ZN5Scene18PrepareToSpawnBootEv.c parks id 0 when func_0203d9b4()
+   answers non-zero and 0x168 otherwise, so a cartridge boot gets dScBoot_c and
+   a DS Download Play boot gets dScMB_c. Neither is reached from the title;
+   dScBoot_c's Behavior is what asks FOR the title.
+   src/GetSceneOverlayID.c returns -1 for both, so neither has an overlay and
+   neither needs a mount: their SpawnInfo records and vtables are host arrays
+   in hal/scene_link100_boot.cpp and hal/scene_link100_mb.cpp, which carry the
+   full derivation, the eighteen-word transcription and the fills.
+   reads_sublevel is 0 for both and it is MEASURED: the ROM reloc-graph
+   closure of each class (873 and 886 arm9 functions reachable from its factory
+   and its own slots through config/arm9/relocs.txt) contains no src/ TU that
+   names data_02092110. */
+extern unsigned char data_020914a8[];    /* dScBoot_c SpawnInfo, id 0   */
+void *port_boot_scene_spawn(void);
+void port_scene_fill_boot(void);
+extern unsigned char data_0209435c[];    /* dScMB_c   SpawnInfo, id 360 */
+void *port_mb_scene_spawn(void);
+void port_scene_fill_mb(void);
+// ---- end link100 SCENE ----
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -4308,6 +4340,27 @@ static const PortSceneClass port_scene_classes[] = {
        6 is scene id 6, the VS / wireless entry menu; see the extern block. */
     {6, "SCENE_VS_MENU", data_ov075_0211c880, port_vs_spawn,
      port_scene_fill_vs, 0},
+    // ---- link100 SCENE ----
+    /* APPENDED AFTER EVERY EXISTING ROW, the fill-order rule every appended
+       row above restates. For these two the rule costs nothing and is obeyed
+       anyway: each fill writes only its OWN host vtable array (18 words in
+       hal/scene_link100_boot.cpp and hal/scene_link100_mb.cpp), and neither
+       array is shared with any other row, so there is no word for an ordering
+       to race over.
+       0 IS A REAL ID AND THE TABLE HANDLES IT. port_scene_registry_install
+       walks on `k->name`, not on `k->id`, so the row terminator below is still
+       the terminator; port_scene_env_want is read against `>= 0` in
+       port/tests/walk_window.cpp, so SM64DS_SCENE=0 is a scene run and not an
+       unset one; and port_scene_is_hosted answers off data_020a4bb8[0], which
+       this row fills with the ROM's own record. */
+    {0, "SCENE_BOOT", data_020914a8, port_boot_scene_spawn,
+     port_scene_fill_boot, 0},
+    /* 360 is 0x168, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. */
+    {360, "SCENE_MULTIBOOT", data_0209435c, port_mb_scene_spawn,
+     port_scene_fill_mb, 0},
+    // ---- end link100 SCENE ----
     {0, 0, 0, 0, 0, 0},
 };
 
