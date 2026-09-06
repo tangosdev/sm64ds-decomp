@@ -22,9 +22,9 @@
  * _ZTI13daObjHmBskt_c and _ZTS13daObjHmBskt_c, still spelled the old
  * placeholder name; this class becoming its own key-function TU is what makes
  * the compiler emit them consistently, so config/arm9/overlays/ov030/symbols.txt
- * renames those two symbols in the same commit as this header (see
- * notes/actor-class-names-off-by-one.md and the vague-linkage rule in
- * decomp-cpp-class-form for why the rename cannot be split from the rewrite).
+ * renames those two symbols in the same commit as this header (see the
+ * vague-linkage rule in decomp-cpp-class-form for why the rename cannot be
+ * split from the rewrite).
  */
 
 #ifdef __cplusplus
