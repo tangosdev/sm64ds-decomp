@@ -78,10 +78,11 @@ python tools/rombuild.py -j16 --no-rom
 ```
 
 Before writing any code, skim
-[`notes/mwccarm-codegen.md`](notes/mwccarm-codegen.md) — it documents how this
+[`notes/codegen-rules.md`](notes/codegen-rules.md) — it documents how this
 exact compiler turns C++ into bytes (struct copies, vtable/PMF dispatch,
 destructor-variant order, the register-allocation wall). Writing with those
-habits in mind gets a first draft much closer.
+habits in mind gets a first draft much closer. The condensed rules live there;
+the dated discovery log they're mined from is `notes/mwccarm-codegen.md`.
 
 ## Easy pickings: the near-miss database
 

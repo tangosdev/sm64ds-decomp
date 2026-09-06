@@ -12,169 +12,171 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **271,388 bytes (265.0KB)** across 17 files, against a stated 150KB cap.
+Doctrine budget: **291,903 bytes (285.1KB)** across 18 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
-Tier counts: 17 doctrine, 93 evidence, 20 data, 8 archive (138 files total).
+Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
 
 ## process
 
-- **`CONVENTIONS.md`** — Lifecycle policy for notes/: types, lifecycle, mechanical retire rule, MERGE eligibility, freshness.
-- **`README.md`** — Generated router: buckets and a one-line summary per notes/ file, doctrine marked apart from evidence.
-- **`agents/LAUNCH.md`** — Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
-- **`agents/PIPELINE.md`** — The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
-- **`agents/roles/builder.md`** — Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
-- **`agents/roles/humanizer.md`** — Humanizer role: checklist for whether reconstructed C++ reads like plausible 2004 EAD source.
-- **`agents/roles/integrator.md`** — Integrator role: compose several proven class promotions onto one branch for a single validator run.
-- **`agents/roles/reviewer.md`** — Reviewer role: independent re-verification checklist before merging a class-promotion PR.
-- **`agents/roles/scout.md`** — Scout role: which ROM facts to establish and write to class-facts/<Class>.json before writing starts.
-- **`agents/roles/writer.md`** — Writer role: gather a class's scattered shard files into one real C++ TU; states the D0/D1/D2 order rule.
-- `agent-cpp-class-migration.md` _superseded_ — Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
-- `handoff-validator-and-tests.md` _superseded_ — 2026-08 handoff on validator/test coverage gaps; both asks since landed (3 workflows, header-offsets gate).
-- `match-attempts.md` — What match_attempts.jsonl records vs. nearmiss/db.jsonl and match_provenance.jsonl; the status vocabulary.
-- `match-logging-console.md` — Which tools tangOS Console's match-logging stack requires (log_attempt/stamp_provenance/bank).
-- `match-provenance.md` — How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.
-- `pr-monitor.md` — How to run the read-only PR queue monitor and the repair loop for a flagged PR.
-- `pr-validation.md` — What the merge gate checks (match/coverage/fidelity/lineage/relocations/port refs) and which tools emit it.
-- `data/class-build-worklist.tsv` _data_ — Per-class build state (DONE/etc.), header path, base class; read by the agent pipeline's claim queue.
-- `data/class-facts/README.md` _data_ — One-line pointer: scout-stage output lands here as <Class>.json, consumed by the writer stage.
-- `data/class-facts/dBgActor_c.json` _data_ — Scout-stage ROM facts for dBgActor_c: RTTI/typeinfo/vtable addresses, overlay, module base.
-- `data/class-facts/dScGameOver_c.json` _data_ — Scout-stage ROM facts for dScGameOver_c: candidate text range 0x020b0580-0x020b1118, RTTI/vtable addresses.
-- `data/class-facts/dScMgD3DBase_c.json` _data_ — Scout-stage ROM facts for dScMgD3DBase_c: candidate text partition (17 class + 10 helper fns), RTTI address.
-- `data/class-facts/dScMgHanachan_c.json` _data_ — Writer-stage ROM facts for dScMgHanachan_c (ov006): RTTI/vtable addresses from rtti_extract.py, no scout ran.
-- `data/class-facts/dScMgRoulette_c.json` _data_ — Writer-stage ROM facts for dScMgRoulette_c (ov006): symbols.txt/relocs.txt-derived, no scout facts existed.
-- `data/class-facts/daDgr_c.json` _data_ — Scout-stage ROM facts for daDgr_c: RTTI/typeinfo addresses, base class dBgActor_c.
-- `data/class-facts/daDkk_c.json` _data_ — Scout-stage ROM facts for daDkk_c: RTTI/typeinfo addresses, base class daDsnBase_c.
-- `data/class-facts/daDsnBase_c.json` _data_ — Scout-stage ROM facts for daDsnBase_c (ov025): RTTI record lives outside its own overlay; base dBgActor_c.
-- `data/class-facts/daObjCtMecha03_c.json` _data_ — Scout-stage ROM facts for daObjCtMecha03_c: RTTI/typeinfo addresses, dBgActor_c-family base.
-- `data/class-facts/daObjCtMecha04_c.json` _data_ — Scout-stage ROM facts for daObjCtMecha04_c: RTTI/typeinfo addresses, dBgActor_c-family base.
-- `data/class-facts/daObjFloatBoard_c.json` _data_ — Scout-stage ROM facts for daObjFloatBoard_c: RTTI/typeinfo words and base class dBgActor_c.
-- `data/class-facts/daOts_c.json` _data_ — Scout-stage ROM facts for daOts_c (ov064): RTTI symbol/module and section layout (.text/.rodata/.init/.ctor).
-- `data/class-facts/daPgDfdr_c.json` _data_ — Scout-stage ROM facts for daPgDfdr_c (ov027): RTTI/typeinfo addresses and __si_class_type_info word layout.
-- `data/notes-registry.tsv` _data_ — The registry itself: one row per notes/ file with its tier, bucket, status, owner tool, and summary.
-- `archive/ARCHIVE_LOG.md` _archive_ — Ledger of every note ever retired or archived: path, date, one-line reason, last commit sha.
+- **[`CONVENTIONS.md`](CONVENTIONS.md)** — Lifecycle policy for notes/: types, lifecycle, mechanical retire rule, MERGE eligibility, freshness.
+- **[`README.md`](README.md)** — Generated router: buckets and a one-line summary per notes/ file, doctrine marked apart from evidence.
+- **[`agents/LAUNCH.md`](agents/LAUNCH.md)** — Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
+- **[`agents/PIPELINE.md`](agents/PIPELINE.md)** — The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
+- **[`agents/roles/builder.md`](agents/roles/builder.md)** — Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
+- **[`agents/roles/humanizer.md`](agents/roles/humanizer.md)** — Humanizer role: checklist for whether reconstructed C++ reads like plausible 2004 EAD source.
+- **[`agents/roles/integrator.md`](agents/roles/integrator.md)** — Integrator role: compose several proven class promotions onto one branch for a single validator run.
+- **[`agents/roles/reviewer.md`](agents/roles/reviewer.md)** — Reviewer role: independent re-verification checklist before merging a class-promotion PR.
+- **[`agents/roles/scout.md`](agents/roles/scout.md)** — Scout role: which ROM facts to establish and write to class-facts/<Class>.json before writing starts.
+- **[`agents/roles/writer.md`](agents/roles/writer.md)** — Writer role: gather a class's scattered shard files into one real C++ TU; states the D0/D1/D2 order rule.
+- [`agent-cpp-class-migration.md`](agent-cpp-class-migration.md) _superseded_ — Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
+- [`handoff-validator-and-tests.md`](handoff-validator-and-tests.md) _superseded_ — 2026-08 handoff on validator/test coverage gaps; both asks since landed (3 workflows, header-offsets gate).
+- [`match-attempts.md`](match-attempts.md) — What match_attempts.jsonl records vs. nearmiss/db.jsonl and match_provenance.jsonl; the status vocabulary.
+- [`match-logging-console.md`](match-logging-console.md) — Which tools tangOS Console's match-logging stack requires (log_attempt/stamp_provenance/bank).
+- [`match-provenance.md`](match-provenance.md) — How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.
+- [`pr-monitor.md`](pr-monitor.md) — How to run the read-only PR queue monitor and the repair loop for a flagged PR.
+- [`pr-validation.md`](pr-validation.md) — What the merge gate checks (match/coverage/fidelity/lineage/relocations/port refs) and which tools emit it.
+- [`data/class-build-worklist.tsv`](data/class-build-worklist.tsv) _data_ — Per-class build state (DONE/etc.), header path, base class; read by the agent pipeline's claim queue.
+- [`data/class-facts/README.md`](data/class-facts/README.md) _data_ — One-line pointer: scout-stage output lands here as <Class>.json, consumed by the writer stage.
+- [`data/class-facts/dBgActor_c.json`](data/class-facts/dBgActor_c.json) _data_ — Scout-stage ROM facts for dBgActor_c: RTTI/typeinfo/vtable addresses, overlay, module base.
+- [`data/class-facts/dScGameOver_c.json`](data/class-facts/dScGameOver_c.json) _data_ — Scout-stage ROM facts for dScGameOver_c: candidate text range 0x020b0580-0x020b1118, RTTI/vtable addresses.
+- [`data/class-facts/dScMgD3DBase_c.json`](data/class-facts/dScMgD3DBase_c.json) _data_ — Scout-stage ROM facts for dScMgD3DBase_c: candidate text partition (17 class + 10 helper fns), RTTI address.
+- [`data/class-facts/dScMgHanachan_c.json`](data/class-facts/dScMgHanachan_c.json) _data_ — Writer-stage ROM facts for dScMgHanachan_c (ov006): RTTI/vtable addresses from rtti_extract.py, no scout ran.
+- [`data/class-facts/dScMgRoulette_c.json`](data/class-facts/dScMgRoulette_c.json) _data_ — Writer-stage ROM facts for dScMgRoulette_c (ov006): symbols.txt/relocs.txt-derived, no scout facts existed.
+- [`data/class-facts/daDgr_c.json`](data/class-facts/daDgr_c.json) _data_ — Scout-stage ROM facts for daDgr_c: RTTI/typeinfo addresses, base class dBgActor_c.
+- [`data/class-facts/daDkk_c.json`](data/class-facts/daDkk_c.json) _data_ — Scout-stage ROM facts for daDkk_c: RTTI/typeinfo addresses, base class daDsnBase_c.
+- [`data/class-facts/daDsnBase_c.json`](data/class-facts/daDsnBase_c.json) _data_ — Scout-stage ROM facts for daDsnBase_c (ov025): RTTI record lives outside its own overlay; base dBgActor_c.
+- [`data/class-facts/daObjCtMecha03_c.json`](data/class-facts/daObjCtMecha03_c.json) _data_ — Scout-stage ROM facts for daObjCtMecha03_c: RTTI/typeinfo addresses, dBgActor_c-family base.
+- [`data/class-facts/daObjCtMecha04_c.json`](data/class-facts/daObjCtMecha04_c.json) _data_ — Scout-stage ROM facts for daObjCtMecha04_c: RTTI/typeinfo addresses, dBgActor_c-family base.
+- [`data/class-facts/daObjFloatBoard_c.json`](data/class-facts/daObjFloatBoard_c.json) _data_ — Scout-stage ROM facts for daObjFloatBoard_c: RTTI/typeinfo words and base class dBgActor_c.
+- [`data/class-facts/daOts_c.json`](data/class-facts/daOts_c.json) _data_ — Scout-stage ROM facts for daOts_c (ov064): RTTI symbol/module and section layout (.text/.rodata/.init/.ctor).
+- [`data/class-facts/daPgDfdr_c.json`](data/class-facts/daPgDfdr_c.json) _data_ — Scout-stage ROM facts for daPgDfdr_c (ov027): RTTI/typeinfo addresses and __si_class_type_info word layout.
+- [`data/notes-bench.tsv`](data/notes-bench.tsv) _data_ — 10 canonical questions measuring notes/ retrieval cost (hops, path_bytes, grep fanout) from the front doors.
+- [`data/notes-registry.tsv`](data/notes-registry.tsv) _data_ — The registry itself: one row per notes/ file with its tier, bucket, status, owner tool, and summary.
+- [`archive/ARCHIVE_LOG.md`](archive/ARCHIVE_LOG.md) _archive_ — Ledger of every note ever retired or archived: path, date, one-line reason, last commit sha.
 
 ## matching
 
-- **`asm-policy.md`** — Rule for when an asm{} block still counts as "decompiled" vs. hiding an un-recovered function.
-- **`matching-style.md`** — Rules for writing C that mwccarm reproduces byte-for-byte, mined from 36 matched functions, ranked by impact.
-- **`runbook-reference-repair.md`** — Runbook for making a match's references point at the symbol the ROM actually uses (reloc-destination repair).
-- **`runbook-type-reconstruction.md`** — Runbook for turning observed offsets into named/typed members and migrating a function to real C++.
-- `arm9-endgame.md` — Routing map for arm9's last ~20 unmatched functions (the large-residue tail); re-measured 2026-08-02.
-- `arm9-msl-walls.md` — Why __pformatter/float2hex stay asm: built by a compiler family 1.2 can't reproduce; accepted by design.
-- `ask-the-compiler.md` — Worked example: using mwccarm's stack-slot debug dump to match the ROM's largest unmatched function.
-- `itcm.md` — Why ITCM's 41 functions were invisible to every tool, and what the first matches found there.
-- `link-verification.md` — How tools/linkcheck.py catches wrong-callee/reloc-destination matches the wildcard byte-diff misses.
-- `m2c-setup.md` — Wiring m2c as a free gcc-flavored semantic-draft tier for LARGE (0x400+ byte) unmatched functions.
-- `mwccarm-codegen.md` — 317KB dated log of mwccarm codegen levers (rules 1-6d, dated discoveries 6e-6bu); primary matching reference.
-- `mwccarm-pragmas.txt` — 246 #pragma names mwccarm actually recognizes (vs. silently-ignored typos), derived by exhaustive sweep.
-- `research-matching-levers.md` — Deep-research survey (dsd/objdiff/permuter/LLM pipelines) for matching speed/success at the 63% tail.
-- `levers.jsonl` _data_ — Distilled JSONL catalogue of mwccarm codegen levers (one per line); read by tools/levers.py, not by hand.
-- `archive/crack-loop-runbook.md` _historical, archive_ — Coddog fan-out matching-loop command sequence (prep/fan-out/verify); un-archived once, tooling still live.
-- `archive/func_02059d8c-asm-origin.md` _historical, archive_ — Why func_02059d8c's 3-instruction busy-wait has no pure-C preimage; recommends ASM-PRIMITIVE reclass.
-- `archive/func_ov079_02124008-floor.md` _historical, archive_ — Near-miss floor analysis for func_ov079_02124008 (div=1 materialization), banked in nearmiss/db.jsonl.
-- `archive/n64-decomp-cross-reference.md` _historical, archive_ — Incomplete survey of the N64 SM64 decomp as a reuse/contamination oracle for this repo; parked.
-- `archive/pret-idioms.md` _historical, archive_ — mwccarm idioms mined from pret's Pokemon Platinum/Diamond; superseded by notes/matching-style.md.
+- **[`asm-policy.md`](asm-policy.md)** — Rule for when an asm{} block still counts as "decompiled" vs. hiding an un-recovered function.
+- **[`codegen-rules.md`](codegen-rules.md)** — Condensed load-bearing rulebook: mwccarm-codegen.md's curated `## 1`-`## 6d` + `## 6az` sections, meant to be loaded whole.
+- **[`matching-style.md`](matching-style.md)** — Rules for writing C that mwccarm reproduces byte-for-byte, mined from 36 matched functions, ranked by impact.
+- **[`runbook-reference-repair.md`](runbook-reference-repair.md)** — Runbook for making a match's references point at the symbol the ROM actually uses (reloc-destination repair).
+- **[`runbook-type-reconstruction.md`](runbook-type-reconstruction.md)** — Runbook for turning observed offsets into named/typed members and migrating a function to real C++.
+- [`arm9-endgame.md`](arm9-endgame.md) — Routing map for arm9's last ~20 unmatched functions (the large-residue tail); re-measured 2026-08-02.
+- [`arm9-msl-walls.md`](arm9-msl-walls.md) — Why __pformatter/float2hex stay asm: built by a compiler family 1.2 can't reproduce; accepted by design.
+- [`ask-the-compiler.md`](ask-the-compiler.md) — Worked example: using mwccarm's stack-slot debug dump to match the ROM's largest unmatched function.
+- [`itcm.md`](itcm.md) — Why ITCM's 41 functions were invisible to every tool, and what the first matches found there.
+- [`link-verification.md`](link-verification.md) — How tools/linkcheck.py catches wrong-callee/reloc-destination matches the wildcard byte-diff misses.
+- [`m2c-setup.md`](m2c-setup.md) — Wiring m2c as a free gcc-flavored semantic-draft tier for LARGE (0x400+ byte) unmatched functions.
+- [`mwccarm-codegen.md`](mwccarm-codegen.md) — 317KB dated log of mwccarm codegen levers (rules 1-6d, dated discoveries 6e-6bu); primary matching reference.
+- [`mwccarm-pragmas.txt`](mwccarm-pragmas.txt) — 246 #pragma names mwccarm actually recognizes (vs. silently-ignored typos), derived by exhaustive sweep.
+- [`research-matching-levers.md`](research-matching-levers.md) — Deep-research survey (dsd/objdiff/permuter/LLM pipelines) for matching speed/success at the 63% tail.
+- [`levers.jsonl`](levers.jsonl) _data_ — Distilled JSONL catalogue of mwccarm codegen levers (one per line); read by tools/levers.py, not by hand.
+- [`archive/crack-loop-runbook.md`](archive/crack-loop-runbook.md) _historical, archive_ — Coddog fan-out matching-loop command sequence (prep/fan-out/verify); un-archived once, tooling still live.
+- [`archive/func_02059d8c-asm-origin.md`](archive/func_02059d8c-asm-origin.md) _historical, archive_ — Why func_02059d8c's 3-instruction busy-wait has no pure-C preimage; recommends ASM-PRIMITIVE reclass.
+- [`archive/func_ov079_02124008-floor.md`](archive/func_ov079_02124008-floor.md) _historical, archive_ — Near-miss floor analysis for func_ov079_02124008 (div=1 materialization), banked in nearmiss/db.jsonl.
+- [`archive/n64-decomp-cross-reference.md`](archive/n64-decomp-cross-reference.md) _historical, archive_ — Incomplete survey of the N64 SM64 decomp as a reuse/contamination oracle for this repo; parked.
+- [`archive/pret-idioms.md`](archive/pret-idioms.md) _historical, archive_ — mwccarm idioms mined from pret's Pokemon Platinum/Diamond; superseded by notes/matching-style.md.
 
 ## naming
 
-- **`cpp-naming-guide.md`** — Itanium ABI mangling quick reference and C++ naming conventions used to match ROM symbols and vtables.
-- `actor-naming.md` — How to derive real actor names from the ROM's ACTOR_SPAWN_TABLE and DynamicAllocationDecomp's ActorList.h.
-- `actor-vtables.md` — Actor/ActorDerived/ActorBase/Player vtable slot-by-slot map recovered whole from the ROM.
-- `ead-debug-name-crossref.md` — Cross-references ROM debug actor-name strings against overlay_actors.md; records accepted/rejected renames.
-- `model-rtti-names.md` — How to read a model/animation-family RTTI type_info record, and the original class names recovered.
-- `rtti-name-audit.md` — 259 of 541 _ZTV-bearing class names disagree with ROM RTTI; a coined name blocks TU promotion.
-- `rtti-reconciliation.md` — The ROM's full 429-class RTTI graph vs. this tree's class graph, and where they disagree.
-- `symbol-name-provenance.md` — Which parts of a mangled/symbols.txt name are ROM-proven vs. placeholder vs. assertion, and how to tell.
+- **[`cpp-naming-guide.md`](cpp-naming-guide.md)** — Itanium ABI mangling quick reference and C++ naming conventions used to match ROM symbols and vtables.
+- [`actor-naming.md`](actor-naming.md) — How to derive real actor names from the ROM's ACTOR_SPAWN_TABLE and DynamicAllocationDecomp's ActorList.h.
+- [`actor-vtables.md`](actor-vtables.md) — Actor/ActorDerived/ActorBase/Player vtable slot-by-slot map recovered whole from the ROM.
+- [`ead-debug-name-crossref.md`](ead-debug-name-crossref.md) — Cross-references ROM debug actor-name strings against overlay_actors.md; records accepted/rejected renames.
+- [`model-rtti-names.md`](model-rtti-names.md) — How to read a model/animation-family RTTI type_info record, and the original class names recovered.
+- [`rtti-name-audit.md`](rtti-name-audit.md) — 259 of 541 _ZTV-bearing class names disagree with ROM RTTI; a coined name blocks TU promotion.
+- [`rtti-reconciliation.md`](rtti-reconciliation.md) — The ROM's full 429-class RTTI graph vs. this tree's class graph, and where they disagree.
+- [`symbol-name-provenance.md`](symbol-name-provenance.md) — Which parts of a mangled/symbols.txt name are ROM-proven vs. placeholder vs. assertion, and how to tell.
 
 ## provenance
 
-- `actor-core-provenance.md` — fBase_c/ActorBase/ActorDerived/Actor ROM code ranges and ctor evidence moved out of the headers.
-- `actor-leaf-provenance.md` — Field-name evidence for dActor_c leaf classes (excl. Player/Bowser/dBgActor_c), byte-neutral.
-- `actor-profile-pilot.md` — Pilot: SpawnInfo is one instance of a broader process-profile system; 14 actor + 6 scene profiles sampled.
-- `bgobject-provenance.md` — Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
-- `butterfly-tornado-provenance.md` — Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
-- `class-init-pilot.md` — Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
-- `collision-query-classes.md` _superseded_ — RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
-- `collision-system.md` — Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
-- `dscene-c-siblings-census.md` — Vtable/class map for dScene_c's still-unnamed direct children, so nobody re-derives them.
-- `enemy-leaf-provenance.md` — Field-name provenance for 10 dEnemyBase_c leaf classes, set B (JetStream, Goomboss, Whomp, etc.).
-- `enemy-provenance.md` — Field-name provenance for the dEnemyBase_c family, set A, from matched-body evidence only.
-- `handoff-class-skeleton.md` _historical_ — 2026-08-07 handoff: the class-skeleton interface is solved, fields are not; past shelf life, numbers stale.
-- `handoff-sphereclsn-detectclsn.md` _superseded_ — Search record for DetectClsn(SphereClsn&); function matched in #1655 — see collision-system.md instead.
-- `minigame-provenance.md` — Where the minigame scene classes' recovered header layouts (base classes, fields) came from.
-- `overlay-ambiguous-references.md` _superseded_ — Original statement of the overlay-ambiguous-reference problem (169 refs); see overlay-residency.md.
-- `overlay-residency.md` — Which overlays can be resident together, derived from the game's own loader; resolves 127 of 137 refs.
-- `platform-provenance.md` — Where the dBgActor_c (level-object) family's header layouts and field names came from.
-- `player-provenance.md` — Field-name provenance for Player/Bowser/SpikeBomb; documents the mPrevPosX base-class shadowing trap.
-- `profile-lifecycle-crosswalk.md` — Crosswalk of SM64DS profile/lifecycle fields against an NSMBW hypothesis: confirmed vs. unresolved.
-- `profile-macro-patterns.md` — Binary-pattern pilot on actor/profile declarations; supports a repeated architecture, not an exact macro.
-- `scene-provenance.md` — Derivation notes for the dScene_c branch's headers, moved out of source comments during a readability pass.
-- `smartball-provenance.md` — Field-name provenance for the smartball minigame family and its shared cMgSmartball_object_c base.
-- `system-provenance.md` — Field provenance for non-actor system classes: particle tracker, minimap, level scene, BMD model file.
+- [`actor-core-provenance.md`](actor-core-provenance.md) — fBase_c/ActorBase/ActorDerived/Actor ROM code ranges and ctor evidence moved out of the headers.
+- [`actor-leaf-provenance.md`](actor-leaf-provenance.md) — Field-name evidence for dActor_c leaf classes (excl. Player/Bowser/dBgActor_c), byte-neutral.
+- [`actor-profile-pilot.md`](actor-profile-pilot.md) — Pilot: SpawnInfo is one instance of a broader process-profile system; 14 actor + 6 scene profiles sampled.
+- [`bgobject-provenance.md`](bgobject-provenance.md) — Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
+- [`butterfly-tornado-provenance.md`](butterfly-tornado-provenance.md) — Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
+- [`class-init-pilot.md`](class-init-pilot.md) — Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
+- [`collision-query-classes.md`](collision-query-classes.md) _superseded_ — RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
+- [`collision-system.md`](collision-system.md) — Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
+- [`dscene-c-siblings-census.md`](dscene-c-siblings-census.md) — Vtable/class map for dScene_c's still-unnamed direct children, so nobody re-derives them.
+- [`enemy-leaf-provenance.md`](enemy-leaf-provenance.md) — Field-name provenance for 10 dEnemyBase_c leaf classes, set B (JetStream, Goomboss, Whomp, etc.).
+- [`enemy-provenance.md`](enemy-provenance.md) — Field-name provenance for the dEnemyBase_c family, set A, from matched-body evidence only.
+- [`handoff-class-skeleton.md`](handoff-class-skeleton.md) _historical_ — 2026-08-07 handoff: the class-skeleton interface is solved, fields are not; past shelf life, numbers stale.
+- [`handoff-sphereclsn-detectclsn.md`](handoff-sphereclsn-detectclsn.md) _superseded_ — Search record for DetectClsn(SphereClsn&); function matched in #1655 — see collision-system.md instead.
+- [`minigame-provenance.md`](minigame-provenance.md) — Where the minigame scene classes' recovered header layouts (base classes, fields) came from.
+- [`overlay-ambiguous-references.md`](overlay-ambiguous-references.md) _superseded_ — Original statement of the overlay-ambiguous-reference problem (169 refs); see overlay-residency.md.
+- [`overlay-residency.md`](overlay-residency.md) — Which overlays can be resident together, derived from the game's own loader; resolves 127 of 137 refs.
+- [`platform-provenance.md`](platform-provenance.md) — Where the dBgActor_c (level-object) family's header layouts and field names came from.
+- [`player-provenance.md`](player-provenance.md) — Field-name provenance for Player/Bowser/SpikeBomb; documents the mPrevPosX base-class shadowing trap.
+- [`profile-lifecycle-crosswalk.md`](profile-lifecycle-crosswalk.md) — Crosswalk of SM64DS profile/lifecycle fields against an NSMBW hypothesis: confirmed vs. unresolved.
+- [`profile-macro-patterns.md`](profile-macro-patterns.md) — Binary-pattern pilot on actor/profile declarations; supports a repeated architecture, not an exact macro.
+- [`scene-provenance.md`](scene-provenance.md) — Derivation notes for the dScene_c branch's headers, moved out of source comments during a readability pass.
+- [`smartball-provenance.md`](smartball-provenance.md) — Field-name provenance for the smartball minigame family and its shared cMgSmartball_object_c base.
+- [`system-provenance.md`](system-provenance.md) — Field provenance for non-actor system classes: particle tracker, minimap, level scene, BMD model file.
 
 ## cpp-conversion
 
-- `converted-tier.md` — Why tools/tiers.py's CONVERTED metric undercounted converted C++ methods; the real_name defect and fix.
-- `cpp-conversion-enemies.md` — Sweep of the 60-class dEnemyBase_c family's real-C++ conversion status and the remaining wall.
-- `cpp-tu-current-state.md` — Generated authority page: live matching/CONVERTED/TU-reconstruction counts from build inputs.
-- `ctor-migration.md` — Log of constructors migrated to real C++ through 2026-08-24; companion to dtor-migration.md.
-- `dtor-migration.md` _historical_ — Destructor-migration failure analysis; counts frozen, see d0_migrate.py/langmode_audit for live state.
-- `dtor-variant-audit.md` — 41% of the D2 backlog is mislabelled D0/D1; tools/dtor_variant_audit.py reproduces the finding.
-- `handoff-marker-typing.md` _historical_ — 2026-08-06 handoff on object-marker typing; its "767 remaining" count is now ~20x stale (37 today).
-- `objisolate.md` — Why a lone C++ destructor can't compile/link alone, and the bugs objisolate.py fixes to reach 106/106.
-- `plan-base-headers.md` _superseded_ — Plan to fix 6 field declarations poisoning dEnemyBase_c/dCapEnemy_c; that base-class work has since landed.
-- `plan-cpp-conversion-queue.md` — Staged queue for migrating ROM-proven C++ .c files to real C++, by tier, with corrections to the census.
-- `plan-cpp-language-mode.md` _historical_ — Original #821 language-mode-gap campaign plan; superseded by langmode_audit.py + cpp-tu-current-state.md.
-- `real-cpp-migration-runbook.md` — Runbook for converting matched C to real C++ where the compiler, not hand-mangling, owns the ABI.
-- `data/c-cpp-classification.tsv` _data_ — Per-src-file C++ evidence tier (PURE-C/etc.), RTTI class, and blockers; one row per src/*.c file.
-- `archive/plan-gen-header.md` _historical, archive_ — v2 plan for tools/gen_header.py's struct-layout header generator; scope vs. declaration headers.
-- `archive/plan-scalar-markers.md` _historical, archive_ — Status of retyping scalar-sized u8 marker fields; 71 mechanical cases done per gen_header.py --report.
+- [`converted-tier.md`](converted-tier.md) — Why tools/tiers.py's CONVERTED metric undercounted converted C++ methods; the real_name defect and fix.
+- [`cpp-conversion-enemies.md`](cpp-conversion-enemies.md) — Sweep of the 60-class dEnemyBase_c family's real-C++ conversion status and the remaining wall.
+- [`cpp-tu-current-state.md`](cpp-tu-current-state.md) — Generated authority page: live matching/CONVERTED/TU-reconstruction counts from build inputs.
+- [`ctor-migration.md`](ctor-migration.md) — Log of constructors migrated to real C++ through 2026-08-24; companion to dtor-migration.md.
+- [`dtor-migration.md`](dtor-migration.md) _historical_ — Destructor-migration failure analysis; counts frozen, see d0_migrate.py/langmode_audit for live state.
+- [`dtor-variant-audit.md`](dtor-variant-audit.md) — 41% of the D2 backlog is mislabelled D0/D1; tools/dtor_variant_audit.py reproduces the finding.
+- [`handoff-marker-typing.md`](handoff-marker-typing.md) _historical_ — 2026-08-06 handoff on object-marker typing; its "767 remaining" count is now ~20x stale (37 today).
+- [`objisolate.md`](objisolate.md) — Why a lone C++ destructor can't compile/link alone, and the bugs objisolate.py fixes to reach 106/106.
+- [`plan-base-headers.md`](plan-base-headers.md) _superseded_ — Plan to fix 6 field declarations poisoning dEnemyBase_c/dCapEnemy_c; that base-class work has since landed.
+- [`plan-cpp-conversion-queue.md`](plan-cpp-conversion-queue.md) — Staged queue for migrating ROM-proven C++ .c files to real C++, by tier, with corrections to the census.
+- [`plan-cpp-language-mode.md`](plan-cpp-language-mode.md) _historical_ — Original #821 language-mode-gap campaign plan; superseded by langmode_audit.py + cpp-tu-current-state.md.
+- [`real-cpp-migration-runbook.md`](real-cpp-migration-runbook.md) — Runbook for converting matched C to real C++ where the compiler, not hand-mangling, owns the ABI.
+- [`data/c-cpp-classification.tsv`](data/c-cpp-classification.tsv) _data_ — Per-src-file C++ evidence tier (PURE-C/etc.), RTTI class, and blockers; one row per src/*.c file.
+- [`archive/plan-gen-header.md`](archive/plan-gen-header.md) _historical, archive_ — v2 plan for tools/gen_header.py's struct-layout header generator; scope vs. declaration headers.
+- [`archive/plan-scalar-markers.md`](archive/plan-scalar-markers.md) _historical, archive_ — Status of retyping scalar-sized u8 marker fields; 71 mechanical cases done per gen_header.py --report.
 
 ## tu-promotion
 
-- **`tu-promotion-conventions.md`** — PR conventions for genuine-TU promotion, grounded only in landed precedent; the reviewer's checklist.
-- `agent-partitioned-tu-workflow.md` — Operational companion to the TU-reconstruction plan; how tools/tubuild.py drives the partitioned workflow.
-- `dScMgBase_c-slots-18-35.md` — How vtable slots 18-35 got declared on dScMgBase_c, unlocking full-length emission for 32 descendants.
-- `dScMgSingle3DBase_c-vtable-ownership.md` — Two remaining blockers to dScMgSingle3DBase_c owning its own emitted _ZTV/_ZTI/_ZTS outright.
-- `plan-tu-merge-queue.md` — Planned TU-merge queue combining one-function files back into original translation units, with corrections.
-- `sinit-ownership-pilot-ov002.md` — Confirms __sinit_ov002_02100938 belongs to dEnemyBase_c's original TU; not yet promotion-ready.
-- `sinit-ownership-wave-edges-probe.cpp` — Compile-only probes proving two sinit blocks' ownership via ordinary PMF-array globals; not in any build.
-- `sinit-ownership-wave-edges.md` — Ownership verdicts for two multi-class/large-table sinit blocks (CutsceneObject+daDemo_c, Painting).
-- `sinit-ownership-wave-resource-handles.md` — Ownership audit of 3 resource-handle sinit rows (Bird, daObjBkBillboard_c, daObjMarioCap_c): confirmed.
-- `sinit-ownership.md` — How to regenerate and read tools/sinit_owners.py's review-only sinit-to-TU ownership map.
-- `sinit-probes/bird.cpp` — Compile-only organic-generation probe for Bird's model/anim-file sinit ownership, behind a research #define.
-- `sinit-probes/mario_cap.cpp` — Compile-only probe for MarioCap anim-file/state sinit ownership, behind a research #define.
-- `sinit-probes/pole_billboard.cpp` — Compile-only probe for the Pole billboard model-file sinit ownership, behind a research #define.
-- `sinit-probes/wave_a.cpp` — Compile-only probes for 3 wave-A sinit ownership claims (OneUpMushroom and others), one #define at a time.
-- `sinit-wave-a-ownership.md` — Wave-A sinit ownership verdicts: OneUpMushroom, daObjKurumajiku_c, MadPiano, all CONFIRMED via organic proof.
-- `translation-unit-reconstruction-plan.md` — Architecture/safety-model design for TU reconstruction; tools/tubuild.py and src_tu/ now implement it.
-- `tu-boundaries.md` — What tools/tu_map.py knows about original translation-unit boundaries, and where it stops knowing.
-- `tu-cpp-census-2026-08.md` — Reconciled ground-truth census (524 TUs, 1167 provably-C++ files) after fixing a stale tu_map regen bug.
-- `tu-filename-reconstruction-pilot.md` — Pilot: can Nintendo-style filenames be recovered from class/TU grouping? Useful, not a general rule.
-- `tu-naming-and-swallowers.md` — Deriving a candidate name per TU from RTTI class-name prefixes; diagnoses why `main` collapsed into one unit.
-- `tu-production-enrollment.md` — What exists toward making rombuild.py link modules from merged src_tu/ TUs, not per-function src/ files.
-- `tu-reconstruction-pilot-2-report.md` — Second read-only TU-reconstruction experiment: ov002/LevelObjects, a non-key-function TU (PINNED by config).
-- `tu-reconstruction-pilot-report.md` — First read-only TU-reconstruction experiment: ov045/PoleLift, 7/7 functions byte-identical merged (PINNED).
-- `data/tu-merge-candidates.json` _data_ — 524 candidate TUs from tu_map.py with per-module under/over-segmentation stats (74 modules, 11096 fns).
-- `data/tu-promotion-queue.tsv` _data_ — Per-class TU-promotion queue: shard count, blockers, sibling oracle, route; the writer stage's target list.
+- **[`tu-promotion-conventions.md`](tu-promotion-conventions.md)** — PR conventions for genuine-TU promotion, grounded only in landed precedent; the reviewer's checklist.
+- [`agent-partitioned-tu-workflow.md`](agent-partitioned-tu-workflow.md) — Operational companion to the TU-reconstruction plan; how tools/tubuild.py drives the partitioned workflow.
+- [`dScMgBase_c-slots-18-35.md`](dScMgBase_c-slots-18-35.md) — How vtable slots 18-35 got declared on dScMgBase_c, unlocking full-length emission for 32 descendants.
+- [`dScMgSingle3DBase_c-vtable-ownership.md`](dScMgSingle3DBase_c-vtable-ownership.md) — Two remaining blockers to dScMgSingle3DBase_c owning its own emitted _ZTV/_ZTI/_ZTS outright.
+- [`plan-tu-merge-queue.md`](plan-tu-merge-queue.md) — Planned TU-merge queue combining one-function files back into original translation units, with corrections.
+- [`sinit-ownership-pilot-ov002.md`](sinit-ownership-pilot-ov002.md) — Confirms __sinit_ov002_02100938 belongs to dEnemyBase_c's original TU; not yet promotion-ready.
+- [`sinit-ownership-wave-edges-probe.cpp`](sinit-ownership-wave-edges-probe.cpp) — Compile-only probes proving two sinit blocks' ownership via ordinary PMF-array globals; not in any build.
+- [`sinit-ownership-wave-edges.md`](sinit-ownership-wave-edges.md) — Ownership verdicts for two multi-class/large-table sinit blocks (CutsceneObject+daDemo_c, Painting).
+- [`sinit-ownership-wave-resource-handles.md`](sinit-ownership-wave-resource-handles.md) — Ownership audit of 3 resource-handle sinit rows (Bird, daObjBkBillboard_c, daObjMarioCap_c): confirmed.
+- [`sinit-ownership.md`](sinit-ownership.md) — How to regenerate and read tools/sinit_owners.py's review-only sinit-to-TU ownership map.
+- [`sinit-probes/bird.cpp`](sinit-probes/bird.cpp) — Compile-only organic-generation probe for Bird's model/anim-file sinit ownership, behind a research #define.
+- [`sinit-probes/mario_cap.cpp`](sinit-probes/mario_cap.cpp) — Compile-only probe for MarioCap anim-file/state sinit ownership, behind a research #define.
+- [`sinit-probes/pole_billboard.cpp`](sinit-probes/pole_billboard.cpp) — Compile-only probe for the Pole billboard model-file sinit ownership, behind a research #define.
+- [`sinit-probes/wave_a.cpp`](sinit-probes/wave_a.cpp) — Compile-only probes for 3 wave-A sinit ownership claims (OneUpMushroom and others), one #define at a time.
+- [`sinit-wave-a-ownership.md`](sinit-wave-a-ownership.md) — Wave-A sinit ownership verdicts: OneUpMushroom, daObjKurumajiku_c, MadPiano, all CONFIRMED via organic proof.
+- [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md) — Architecture/safety-model design for TU reconstruction; tools/tubuild.py and src_tu/ now implement it.
+- [`tu-boundaries.md`](tu-boundaries.md) — What tools/tu_map.py knows about original translation-unit boundaries, and where it stops knowing.
+- [`tu-cpp-census-2026-08.md`](tu-cpp-census-2026-08.md) — Reconciled ground-truth census (524 TUs, 1167 provably-C++ files) after fixing a stale tu_map regen bug.
+- [`tu-filename-reconstruction-pilot.md`](tu-filename-reconstruction-pilot.md) — Pilot: can Nintendo-style filenames be recovered from class/TU grouping? Useful, not a general rule.
+- [`tu-naming-and-swallowers.md`](tu-naming-and-swallowers.md) — Deriving a candidate name per TU from RTTI class-name prefixes; diagnoses why `main` collapsed into one unit.
+- [`tu-production-enrollment.md`](tu-production-enrollment.md) — What exists toward making rombuild.py link modules from merged src_tu/ TUs, not per-function src/ files.
+- [`tu-reconstruction-pilot-2-report.md`](tu-reconstruction-pilot-2-report.md) — Second read-only TU-reconstruction experiment: ov002/LevelObjects, a non-key-function TU (PINNED by config).
+- [`tu-reconstruction-pilot-report.md`](tu-reconstruction-pilot-report.md) — First read-only TU-reconstruction experiment: ov045/PoleLift, 7/7 functions byte-identical merged (PINNED).
+- [`data/tu-merge-candidates.json`](data/tu-merge-candidates.json) _data_ — 524 candidate TUs from tu_map.py with per-module under/over-segmentation stats (74 modules, 11096 fns).
+- [`data/tu-promotion-queue.tsv`](data/tu-promotion-queue.tsv) _data_ — Per-class TU-promotion queue: shard count, blockers, sibling oracle, route; the writer stage's target list.
 
 ## build
 
-- **`src-domain-buckets.md`** — Policy for which top-level src/ directory a class's first promoted file goes into.
-- `assets.md` — How to extract/catalog NitroFS assets (models, textures, sound) locally with unpack.py/rombuild.py.
-- `declaration-centralization.md` — Why every src/ file re-declares externs independently, and what centralizing them would take.
-- `emu-trace-build.md` — Engineering spec (phases, schemas, gates) for the melonDS/DeSmuME emulator-trace matching build.
-- `emu-trace-plan.md` — Premise check: what runtime emulator traces can and cannot buy for matching, ranked by divergence tier.
-- `ghidra-dsd-landscape.md` — Survey of current Ghidra/dsd usage and what adopting upstream ds-decomp PR #37 would buy.
-- `global-data-migration.md` — Design note: what it would take to source-build .data/.rodata/.bss instead of linking ROM gap objects.
-- `llm-assisted-global-data-migration.md` — Proposes static analysis + LLM inference + ROM tracing to reconstruct global-data ownership.
-- `mwccarm-version-archive-search.md` — Playbook for locating historical mwccarm compiler builds (46/49/50/56) from the 2003-2004 period.
-- `port-selftest-bmp-gate.md` — Rule for comparing the port's selftest BMP gate: byte-exact only between matching .dsstate base+layout builds.
-- `roadmap.md` _historical_ — MATCH->LIFT->PORT->POLISH roadmap to a native PC EXE; percentages frozen, see cpp-tu-current-state.md.
-- `rom-build.md` — How to produce a bootable build/sm64ds.nds hybrid-linking matched src/ with delinked ROM gap objects.
-- `setup-mwccarm.md` — How to get the pinned mwccarm 2004/b56 compiler + NITRO-SDK set up, vs. the separate version-sweep zip.
-- `worktree-inputs.md` — Which gitignored inputs (extracted/, mwccarm/, dsd.exe) a fresh worktree needs junctioned in, and how.
+- **[`src-domain-buckets.md`](src-domain-buckets.md)** — Policy for which top-level src/ directory a class's first promoted file goes into.
+- [`assets.md`](assets.md) — How to extract/catalog NitroFS assets (models, textures, sound) locally with unpack.py/rombuild.py.
+- [`declaration-centralization.md`](declaration-centralization.md) — Why every src/ file re-declares externs independently, and what centralizing them would take.
+- [`emu-trace-build.md`](emu-trace-build.md) — Engineering spec (phases, schemas, gates) for the melonDS/DeSmuME emulator-trace matching build.
+- [`emu-trace-plan.md`](emu-trace-plan.md) — Premise check: what runtime emulator traces can and cannot buy for matching, ranked by divergence tier.
+- [`ghidra-dsd-landscape.md`](ghidra-dsd-landscape.md) — Survey of current Ghidra/dsd usage and what adopting upstream ds-decomp PR #37 would buy.
+- [`global-data-migration.md`](global-data-migration.md) — Design note: what it would take to source-build .data/.rodata/.bss instead of linking ROM gap objects.
+- [`llm-assisted-global-data-migration.md`](llm-assisted-global-data-migration.md) — Proposes static analysis + LLM inference + ROM tracing to reconstruct global-data ownership.
+- [`mwccarm-version-archive-search.md`](mwccarm-version-archive-search.md) — Playbook for locating historical mwccarm compiler builds (46/49/50/56) from the 2003-2004 period.
+- [`port-selftest-bmp-gate.md`](port-selftest-bmp-gate.md) — Rule for comparing the port's selftest BMP gate: byte-exact only between matching .dsstate base+layout builds.
+- [`roadmap.md`](roadmap.md) _historical_ — MATCH->LIFT->PORT->POLISH roadmap to a native PC EXE; percentages frozen, see cpp-tu-current-state.md.
+- [`rom-build.md`](rom-build.md) — How to produce a bootable build/sm64ds.nds hybrid-linking matched src/ with delinked ROM gap objects.
+- [`setup-mwccarm.md`](setup-mwccarm.md) — How to get the pinned mwccarm 2004/b56 compiler + NITRO-SDK set up, vs. the separate version-sweep zip.
+- [`worktree-inputs.md`](worktree-inputs.md) — Which gitignored inputs (extracted/, mwccarm/, dsd.exe) a fresh worktree needs junctioned in, and how.
 
 Regenerate with `python tools/notes_index.py --write`; `python tools/notes_index.py --check` verifies this page, the registry, and every file under `notes/` all agree.

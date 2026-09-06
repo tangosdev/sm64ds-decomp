@@ -4768,3 +4768,11 @@ inert list -- decl-order permutations at function scope, named-versus-inline dif
 u64 launder on the pool arrays (which regressed `func_ov006_020dd0e0` by nine words), tail
 source order and idx reuse -- and none of it moved a byte on the matched four; the useful
 half of that list is already the near-miss database's, not this file's.
+
+---
+
+**Note (added at end-of-file on purpose, to avoid shifting any line number cited
+elsewhere in `notes/`): `notes/codegen-rules.md` condenses sections `## 1`-`## 6d` and
+`## 6az` above into a ~20KB doctrine file meant to be loaded whole. Read it for the rules;
+come back here (by section label) for the fuller derivation, evidence, and the dated
+discovery log (`## 6e` onward) that it does not condense.**
