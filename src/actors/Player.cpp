@@ -16,13 +16,17 @@
  * Do not reorder the members and do not delete that pragma.  Ordinal 35,
  * _ZN6Player7SetAnimEji5Fix12IiEj, reproduces only under `#pragma
  * opt_propagation off`, and under mwccarm's default DEFERRED codegen that
- * pragma is file-global: left plain it cost 43 other members their match, and
+ * pragma is file-global: left plain it costs 46 other members their match, and
  * bracketed in push/pop it bound to nothing, because the state that binds is
  * the state at end of file.  With codegen undeferred the bracket binds where it
  * is written -- and undeferred codegen emits .text in SOURCE order, not
- * reversed, which is why this file runs low address first.  Measured:
- * 250/301 plain, 293/301 with the pragma deleted outright, 294/301 bracketed,
- * 301/301 as written.
+ * reversed, which is why this file runs low address first.  Re-measured by the
+ * builder at this revision, deferred codegen unless stated: 255/301 with a
+ * file-global `opt_propagation off`; 300/301 with it deleted outright; 300/301
+ * bracketed in push/pop -- identical, because the bracket buys nothing while
+ * codegen is deferred; 301/301 as written.  Deleting only `defer_codegen off`
+ * still scores 300/301 on bytes but reverses the emitted .text order, and it is
+ * the pre-link object audit, not the byte compare, that refuses that.
  *
  * Two members carry a source change the C-to-C++ flip forced, both the same
  * construct: a two-int struct copy that C compiles as load/load/store/store and
