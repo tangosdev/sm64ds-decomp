@@ -1,18 +1,32 @@
-// NONMATCHING: 6/230 at exact size 0x398. The draft that stood here was 0x394 -- four
-// bytes SHORT, an incomplete reconstruction rather than a near-miss.
-//
-// 8 -> 6 came from the permuter and the lever is worth keeping: the FIRST of the two
-// reads through `rec` is spelled inline as data_020a0de8[data_020a0e40][2] while the
-// SECOND stays rec[3]. That one asymmetry fixes the order in which the two hoisted pool
-// addresses (&data_020a0e40, &data_020a0de8) are loaded at +0xfc/+0x100. Inlining both
-// reads, inlining only the second, or moving the `rec` declaration below the first test
-// all cost 53 more words.
-//
-// The residue is the last six words: the two address temps `c + i` and
-// &data_020a0de8[data_020a0e40] swap r2 and r3 (+0x11c..+0x148). Naming either of them
-// costs 52 words; both must stay anonymous, and no ordering of the two subtractions
-// moves the pair.
-
+// @symbol func_ov003_020ae358
+/* recovered: the per-frame update for the ov003 character-select cursor.
+ *
+ * data_020a0e40 selects the active record in the 4-byte-stride tables at
+ * data_020a0de8..deb. If byte 0 of that record is set and byte 1 (data_020a0de9)
+ * says the slot is unlocked, the cursor tests whether the touch point at c+0x12b
+ * is inside the record's box; a hit arms the "picked" state at c+0x133/0x132,
+ * seeds the timers at c+0x118/0x119 and plays sound data_0209caa0[0x41] + 0x3c.
+ *
+ * Failing that, the three unlocked characters are scanned in order: for each i,
+ * the touch point at (c+i)+0x124 / +0x128 is tested against bytes 2 and 3 of the
+ * same record, and a hit records the character index in c+0x132, data_02092128
+ * and data_02092114 before playing the same sound.
+ *
+ * With no record active (sect2) the d-pad half of the control word data_020a0e58
+ * moves the selection: the repeat timer at c+0x106 counts down, and while it is
+ * zero a held left/right steps c+0x134 within [0, c+0x130 - 2] and reloads the
+ * timer with 0x10 or 8 depending on data_020a0e5a.
+ *
+ * Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
+ * The 4-byte records are declared `[][4]` so each read refolds its own scale
+ * (`add r2, r4, r1, lsl #2`); flattening data_020a0dea/deb to a bare `[]` with an
+ * explicit `* 4` costs 17 words, and the same is true of data_020a0e5a. The last
+ * six words were a register transposition between the `c + i` and record-row
+ * address temps, and what closed it was naming the INDEX (`int ri`) for the second
+ * record read instead of naming the row POINTER: a named row pointer welds both
+ * reads onto one address temp and inverts the r2/r3 assignment, while the named
+ * index leaves each read to fold its own scale and hands the row temp r2.
+ */
 extern void func_02012790(int a);
 extern int _ZN8SaveData19IsCharacterUnlockedEj(unsigned int i);
 extern int func_ov003_020adec0(char *c, unsigned int r6);
@@ -62,10 +76,10 @@ void func_ov003_020ae358(char *c)
   {
     if (_ZN8SaveData19IsCharacterUnlockedEj(i) != 0)
     {
-      unsigned char *rec = data_020a0de8[data_020a0e40];
+      int ri = data_020a0e40;
       if (((unsigned short) ((data_020a0de8[data_020a0e40][2] - (*((unsigned char *) ((c + i) + 0x124)))) + 0x18)) < 0x30)
       {
-        if (((unsigned short) ((rec[3] - (*((unsigned char *) ((c + i) + 0x128)))) + 0x18)) < 0x2b)
+        if (((unsigned short) ((data_020a0de8[ri][3] - (*((unsigned char *) ((c + i) + 0x128)))) + 0x18)) < 0x2b)
         {
           *((unsigned char *) (c + 0x133)) = 1;
           *((unsigned char *) (c + 0x134)) = (unsigned char) func_ov003_020adec0(c, i);
