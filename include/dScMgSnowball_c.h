@@ -106,7 +106,12 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual int  OnKicked();                           /* slot 24 */
     virtual int  OnPushed();                           /* slot 25 */
 
-    u8    pad_4f38[0x5c00]; /* 0x4f38 -- no matched access */
+    /* 0x4f38 -- the generated course, 0x10 lanes of 0x2e0 rows. The stride
+       is the lane's: func_ov006_02126ee4 writes every tile as
+       `this + 0x4f38 + lane * 0x5c0 + row * 2`, so the lane index carries
+       0x5c0 = 0x2e0 * sizeof(u16) and the row index the halfword. 0x10 lanes
+       times 0x5c0 is 0x5c00, which closes exactly on mPosX. */
+    u16   mTileMap[0x10][0x2e0]; /* 0x4f38 */
     s32   mPosX;            /* 0xab38 -- Fix12 world position of the ball */
     s32   mPosY;            /* 0xab3c */
     s32   mPrevPosX;        /* 0xab40 -- Behavior's copy of mPos at tick start */
@@ -118,7 +123,9 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mSoundPosY;       /* 0xab54 */
     s32   unk_ab58;         /* 0xab58 -- downhill/uphill debt; while it is 0 the
                                 climb feeds mBallSize instead */
-    u8    pad_ab5c[0x4];    /* 0xab5c */
+    s32   unk_ab5c;         /* 0xab5c -- func_ov006_02126ee4 clears it, then
+                                writes the generated corridor's centre lane in
+                                Fix12 on the row before the goal */
     s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
     s32   mVelY;            /* 0xab64 */
     s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
@@ -142,7 +149,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mProbePush[0x20]; /* 0xac18 -- same probe hit solid; drives the push-out */
     u8    mProbeWater[0x20];/* 0xac38 -- same probe is inside water */
     u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
-    u8    mArray1[0x400];   /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
+    s32   mArray1[0x80][2]; /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
                                each element is a Fix12 {x,y} the ROM's own
                                Render indexes as i*8 + 0 / i*8 + 4 */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
@@ -152,7 +159,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to
                                 pick the sprite */
-    u8    mArray2[0x400];   /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
+    s32   mArray2[0x80][2]; /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
                                same Fix12 {x,y} element shape as mArray1 */
     s32   mAnimCounter;     /* 0xb9d8 -- Render bumps it, wraps at 0x20; the
                                 obstacle sprite frame is (n / 4) & 7 */
