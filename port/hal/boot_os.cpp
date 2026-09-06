@@ -218,11 +218,13 @@
 //       back on, so seating one without the other would not have been correct.
 //
 //   func_020196cc
-//       TRIED, MEASURED, BACKED OUT. Its channel-8 firmware read spins forever
-//       because src/IPCSend.c is compiled plain and its store to IPCFIFOSEND
-//       latches in ntr's mapped window instead of reaching the model -- so this
-//       port has never made an ARM9->ARM7 send at all. The full measurement,
-//       including the cdb stack, is at its own point in the tail below.
+//       SEATED, run link100 lane IPCSEND. BOOT2's refusal was right about the
+//       cause and the cause has been fixed: src/IPCSend.c is hostgen'd now
+//       (port/CMakeLists.txt's GATE2IPC_SYMS), so its store to IPCFIFOSEND
+//       reaches ntr::ipc_reg_write instead of latching in the mapped window,
+//       and this port makes ARM9->ARM7 sends for the first time. The round trip
+//       and what the host ARM7 answers are at its own point in the tail below
+//       and in port/slice_ipcsend.txt.
 //
 //   func_0201fec8
 //       REFUSED, AND NOT FOR THE REASON THE LAST PASS OF THIS FILE GAVE. Run
@@ -368,6 +370,8 @@ extern char data_0209d574[];
 void func_02019440(void);                     // the VRAM/OAM/palette clear + 3D
 void func_0203b684(void);
 void func_020233f0(void);
+void func_020196cc(void);                     // the channel-8 firmware read,
+                                              // the RNG boot seed, SetSoundMode
 void func_0201a5cc(void);                     // the fatal-vector pair
 
 
@@ -713,36 +717,41 @@ void port_boot_rom_game_init_tail(void)
     /* data_020a4bb8 = data_02090864 -- already seated by the host boot */
     func_020233f0();
     /* Scene::PrepareToSpawnBoot() -- picks the ROM boot scene */
-    /* func_020196cc() -- THE FIRMWARE READ AND THE SOUND MODE. TRIED, MEASURED,
-       AND BACKED OUT, because the measurement is worth more than the guess it
-       replaces. It reads the firmware user settings over PXI channel 8:
-       func_0205f8e0 -> func_0205fb1c -> func_0205fb58 posts
-       (a & 0xff) | 0x3006500 through func_0205f8b0, and func_0205fb1c then
-       spins in func_0205ff08 until the ARM7's answer clears data_020a8114.
-       Lane IPC's model answers channel 8 and dispatches the reply INLINE
-       (ntr/ipc.cpp's ipc_arm7_send calls raise_rx_irq), so the round trip
-       should close inside IPCSend. IT DOES NOT, AND THE REASON IS ONE FILE:
-       src/IPCSend.c is compiled PLAIN, and its `*(volatile unsigned int *)
-       0x4000188 = cmd.raw` therefore latches into ntr's mapped I/O window
-       instead of reaching ntr::ipc_reg_write. port/slice_gate2ipc.txt:62 says
-       so outright -- "src/IPCSend.c is plain too and is NOT here ... so its
-       stores to IPCFIFOSEND still latch in the window instead of reaching the
-       model. That is a stated gap." So this port has never made an ARM9->ARM7
-       SEND at all; the three PXI arms above only register and poll.
-       MEASURED, not inferred: with the call in, a level selftest hangs, and
-       cdb on the live process puts the main thread at func_0205ff08 + 0 with
-       data_020a8114 == 1.
-       WHAT IT WANTS is one hostgen row -- IPCSend joining func_0205bad8 and
-       IRQ::IPCRxFifoNotEmptyHandler in GATE2IPC_SYMS, its store being exactly
-       hostgen's MMIO_DEREF shape. It is NOT taken here because IPCSend is
-       already linked out of port/slice_gate10.txt and four of its other callers
-       are linked with it (func_0205ae30, func_0205b070, func_0205f040,
-       func_0205f8b0 -- the channel-7 sound command path, which runs every
-       frame). Making every one of those sends suddenly reach the model is lane
-       IPC's call, beside its own decision to hold channel 7 observed-only so
-       hal/sdat/consumer.cpp does not consume the batch twice. Four matched TUs
-       (func_020196cc, func_0205f8e0, func_0205fb1c, func_0205fb58) are behind
-       it, and so is every other ARM9-initiated command in the ROM. */
+    /* THE FIRMWARE READ AND THE SOUND MODE. SEATED, run link100 lane IPCSEND,
+       and what seats it is one hostgen row rather than anything about this
+       body. src/IPCSend.c is in GATE2IPC_SYMS now (its plain line is commented
+       out of port/slice_gate10.txt), so its `*(volatile unsigned int *)
+       0x4000188 = cmd.raw` reaches ntr::ipc_reg_write instead of latching in
+       the mapped I/O window, and the ARM9 makes real sends for the first time.
+       THE ROUND TRIP, END TO END. func_0205f8e0 -> func_0205fb1c ->
+       func_0205fb58 takes the busy flag (data_020a8114 = 1), parks
+       func_0205ff00 and its argument, and posts (a & 0xff) | 0x3006500 through
+       func_0205f8b0 -- IPCSend(8, 0x3006500, 0). ntr/ipc.cpp hands the word to
+       the host ARM7 on the store; hal/boot2_ipc.cpp HOLDS channel 8 with no
+       power-management driver behind it and gives the SDK's own no-handler
+       answer, the word back with bit 5 set; ipc_arm7_send dispatches it INLINE
+       through the ROM's own IRQ::IPCRxFifoNotEmptyHandler, which finds
+       func_0205fcfc in data_020a7fc8[8] and calls it with that flag; and
+       func_0205fcfc's first branch is func_0205feac(2), which clears
+       data_020a8114 and hands 2 to the parked callback. So func_0205fb1c
+       returns 2, func_0205f8e0 returns 2, and the `== 0` fails. The BOOT2 hang
+       is gone at its cause: func_0205ff08's spin is released before it is even
+       entered.
+       AND THE SKIPPED ARM IS WHERE A REAL DS ENDS UP TOO. It is
+       `if (r == 0 && a == 0) { if (b == 0) data_0208ee3c[0] = 0; }` -- both
+       BACKLIGHTS off, data_0208ee3c being the flag TurnBacklightOn/Off write.
+       A DS running this game has both on, so a != 0 and the arm is skipped
+       there as well. The port's answer is the honest one besides: this host
+       ARM7 really has no PM driver, and saying so is a smaller claim than
+       fabricating a PMIC register value.
+       THE ONE STATE CHANGE IT DOES MAKE is the ROM's own:
+       func_0203b9b4(data_0209d4b8, 0x4d2) puts the arm9 RNG on its boot
+       constant instead of the .bss zero. hal/scene_mg.cpp's RNG note names
+       THIS call as the ROM's boot seeder and its own minigame seeder re-seeds
+       on top of it. SetSoundMode(data_0209d4b4[0]) is SetSoundMode(0) off zero
+       bss -> func_02011d5c(1), which returns at once while data_0209b480 is
+       still zero this early in the boot. See port/slice_ipcsend.txt. */
+    func_020196cc();
     func_0201a5cc();
     say("game init tail (func_0201a054)");
 }
