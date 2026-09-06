@@ -1,0 +1,163 @@
+# GATE 221 -- THREE HOST STAND-INS RETIRED OUT OF THE func_0203df40 /
+# func_0203ea5c CENSUS.  (run link100, lane DF40)
+# ============================================================================
+#
+# A TRAP IN THIS FILE FORMAT, PAID FOR ONCE HERE AND WRITTEN DOWN SO THE NEXT
+# LANE DOES NOT.  Every gate reader in port/CMakeLists.txt is
+# `file(STRINGS <file> LINES)` then `foreach(line IN LISTS LINES)`, and CMake
+# splits a list on `;` but groups on SQUARE BRACKETS.  ONE UNMATCHED OPEN
+# BRACKET IN A COMMENT -- this file had 0x020a3fc0, 0x020a4b40 written as a
+# half-open interval -- makes file(STRINGS) return every remaining line as
+# ONE element, that element starts with `#`, and every enrollment below it is
+# silently dropped.  Measured: 122 elements instead of 139 lines, two of these
+# three rows never reached the build, and the failure surfaced only as three
+# LNK2019s naming symbols whose host bodies the same commit had deleted.
+# Balanced brackets are fine (`p[25]`, `int[8]`, which this file also uses and
+# which many existing slice files use).  Half-open interval notation is not.
+#
+# WHAT THIS GATE IS.  A fresh reference-graph census said the two largest
+# remaining blocks of unlinked matched TUs hang off functions that are ALREADY
+# LINKED: func_0203df40's closure (253 unlinked rows) and func_0203ea5c's
+# (207).  This file is what came out of walking those two closures against the
+# ROM's own relocation graph and asking, per row, WHY it is not in the map.
+# Three rows had an honest answer that ended in an enrollment.  The other 299
+# did not, and the census of why is the second half of this header, because a
+# measured refusal is the deliverable for those rows.
+#
+# THE CENSUS.  Union of the two closures, deduplicated: 302 matched TUs, all
+# in module main, 158 of them in both closures, 95 only under df40, 49 only
+# under ea5c.  Every one has a matched src TU; none is undecompiled.  Against
+# the ROM's relocation graph and the port's own host definitions:
+#
+#   30 of the 302 have a LIVE REFERENCE EDGE -- some function that IS in
+#      walk_window.map calls them by name in the ROM.  Every one of those 30 is
+#      a host stand-in today, which is exactly why the row is unlinked: the
+#      link resolves the caller's reference to the host body, not to the
+#      matched TU.  These are the only 30 rows a gate can act on at all.
+#
+#  272 of the 302 have NO REFERENCE EDGE IN THIS BINARY.  Every ROM path that
+#      reaches them crosses one of those 30 stand-ins first, so the linker
+#      never sees the edge and /OPT:REF drops the object before the map is
+#      written.  Enrolling one is a compile and nothing else -- it does not
+#      link, it does not count, and wiring a reference to make it count would
+#      be a call the ROM does not make.  They are not work until the stand-in
+#      above them retires; the list of which stand-in is below.
+#
+#      Checked and empty, so the 272 is not hiding a fourth mechanism:
+#        * DATA EDGES.  Zero relocations anywhere in config/arm9/relocs.txt
+#          land on one of the 302 from outside a function body -- no vtable
+#          slot, no function-pointer table, nothing a fill could seat.
+#        * PER-TU PLACEHOLDER RENAMES.  Zero set_source_files_properties
+#          COMPILE_DEFINITIONS blocks in port/CMakeLists.txt mention any name
+#          in either closure, so no row is unlinked because a -D pointed its
+#          caller's call somewhere else.
+#        * WIDE/NARROW OWNERSHIP.  dumpbin /symbols on
+#          hal/comms_conductor_wide.cpp.obj and on src/func_0203ea5c.c.obj
+#          (the narrow arm) shows the SAME twelve seam faces UNDEF in both.
+#          The wide copy references what the narrow TU references and defines
+#          none of it -- it cuts no edge, and NOT ONE row in the ea5c closure
+#          is unlinked because the wide copy owns the edge.  The vs16
+#          transcription is orthogonal to this census.
+#
+# WHERE THE 302 ACTUALLY GO, by the stand-in that owns the edge above them:
+#
+#   THE RADIO SEAM (hal/comms_seam.cpp, 12 faces + hal/comms_conductor.cpp's
+#   func_0206259c).  PORT_HOST_ABI, already tagged, and the reason holds: the
+#   ROM bodies reach the NITRO WM SDK and under it arm7.bin, which this repo
+#   does not decompile.  Of the two closures' EXCLUSIVE rows:
+#     * 93 of the 95 df40-only rows are inside func_0203e20c's closure, which
+#       is DS DOWNLOAD PLAY -- an eight-state multiboot server that feeds the
+#       cartridge to three other consoles over the radio.  A PC port has no
+#       cartridge to distribute; hal/comms_seam.cpp already refuses it in the
+#       ROM's own shape (role 3 cleared back to solo).  The other two df40-only
+#       rows ARE func_0203e20c and func_02040724, the two faces themselves.
+#     * 41 of the 49 ea5c-only rows are under one of the WM send/receive
+#       faces; the other 8 ARE faces (func_0204068c, func_020406b4,
+#       func_02040704, func_02040714, func_020408b0, func_02040a5c,
+#       func_02040a84, func_02040c34).
+#   So the exclusive count is radio to the row, and the two closable faces in
+#   it are the pair this gate takes.
+#
+#   THE ARM PRIMITIVES.  CpuCopy8, MultiCopy32Bytes, MultiCopyHalf,
+#   MultiCopy_Int, MultiStore_Int, MultiStore32Bytes and func_0205a588 are
+#   `asm { }` blocks in src/ under the hand-asm-primitive policy; IRQ::Disable
+#   / Restore / EnableIRQs and the four CP15 entries are CPSR and coprocessor
+#   instructions.  A 32-bit x86 MSVC cannot assemble any of them.  Permanent.
+#
+#   Crash.  The ROM body disables interrupts and spins on CP15 WaitForInterrupt
+#   forever after driving the DS crash screen; the host reports and aborts.
+#   Tagged, and the tag is right.
+#
+#   THE DS THREAD FACES, and a stale reason corrected on the way past.  The
+#   three that stay faced in hal/scene_vs_menu.cpp are held back by
+#   hal/boot2_thread.cpp's own WHAT IS NOT MODELLED section, NOT by the ARM
+#   context switch: run link2's lane THR put the ROM's scheduler in the build
+#   on Windows fibers, so src/func_02057f54.c, src/OS_SleepThread.c and
+#   src/OS_WakeupThread.c are LINKED today and ARMSaveContext /
+#   ARMRestoreContext have honest host bodies.  What is still not modelled is
+#   thread CREATION (func_02058200, and the stack guard words func_02057f38
+#   paints on a stack it never allocated), so a restore of a context that file
+#   has never seen is refused loudly.  func_02058048 is the interesting one:
+#   its body is IRQ-disable, `state = 1`, reschedule, IRQ-restore, all of which
+#   ARE in this build, so it is CLOSABLE ON LINKAGE and held back on BEHAVIOUR
+#   -- two of its three linked callers hand it the card driver's thread object
+#   at data_020a81bc, a thread nothing here created, and seating it turns three
+#   sites that do nothing today into three real reschedules that nobody has
+#   measured.  Named, not taken.  Its sibling is what this gate takes.
+#
+# ---------------------------------------------------------------------------
+# ROW 1: src/func_02058158.c -- THE CAROUSEL POLL
+#
+# It stood in hal/scene_vs_menu.cpp's refused-subtree block with the three
+# thread faces above and did not belong there.  The whole body is
+#
+#     int func_02058158(int *p) { return p[25] == 2; }
+#
+# a read of the thread record's state word at offset 0x64.  No scheduler, no
+# context switch, no hardware, no callees at all.  Its one linked caller is
+# src/func_0201a1bc.c, which passes data_0209d5b8; dumpbin /symbols on
+# func_0201a1bc.c.obj shows _func_02058158 UNDEF, so the reference edge the
+# /OPT:REF rule demands is already in the link and this row arrives referenced.
+#
+# A thread that was never created has a zero state word, so the ROM's own body
+# answers the same 0 the face fabricated -- for the ROM's own reason.
+#
+# AND IT CARRIED A LATENT DEFECT WITH IT.  hal/auto_bss.cpp hosted
+# data_0209d5b8 as `int[8]` = 32 bytes against a ROM span of
+# 0x0209d64c - 0x0209d5b8 = 0x94 = 148.  p[25] is offset 0x64: 68 bytes past
+# the end of the object, reading whatever that file's link-sweep loop had put
+# next to it.  It has never faulted because all four reachers were faced idle
+# and nothing read past offset 0.  Seating this body makes the read real, so
+# the object is sized to its ROM span in the same commit -- the data_0209d3c4
+# shape three lines above it in that file, one more time.
+src/func_02058158.c
+#
+# ---------------------------------------------------------------------------
+# ROWS 2 AND 3: src/func_02040a5c.c and src/func_02040a84.c -- THE STATUS-WORD
+# READ-MODIFY-WRITE
+#
+# These two were hosted in hal/comms_seam.cpp over a file-static g_wm_status,
+# tagged PORT_HOST_ABI on the ground that "the ROM keeps this status word
+# inside the NITRO WM work buffer the port does not have".  The ground does not
+# survive measurement.
+#
+# THE BUFFER IS NOT A WM OBJECT IN THIS BINARY.  Sweeping every relocation in
+# config/arm9/relocs.txt whose target lands in data_020a3fc0's ROM span
+# 0x020a3fc0 .. 0x020a4b40 returns exactly two ROM functions: func_02040a5c and
+# func_02040a84.  Nothing else in the cartridge names one byte of it by
+# relocation.  Hosting it is hosting 0xB80 bytes of DS BSS that two accessors
+# own outright, which is what this port does with DS BSS everywhere.
+#
+# THE OBSERVABLE IS PROVABLY UNCHANGED.  src/func_0203ea5c.c:386 and the wide
+# copy's :475 are both `func_02040a5c(func_02040a84())` -- read the word, clear
+# bit 0, write it back.  Zeroed storage: a84 answers 0, a5c writes 0 & ~1 == 0.
+# That was the invariant under g_wm_status and it is the invariant under the
+# ROM's own word, with no third reader in the link that could tell them apart.
+# The callees are IRQ::Disable / IRQ::Restore, already hosted in ntr/runtime.cpp
+# and already called by 32 linked TUs.
+#
+# The storage and the section it goes in, and a decomp discrepancy the move
+# surfaced (a5c writes 0xB50, a84 reads 0xB58), are written up at the
+# retirement note in hal/comms_seam.cpp.
+src/func_02040a5c.c
+src/func_02040a84.c

@@ -207,8 +207,46 @@ void func_02040724(void) {
     port::g_solo_slot = 0;
 }
 
+// ===========================================================================
+// THE NEXT TWO ARE CLOSABLE, AND THIS LANE DID NOT CLOSE THEM.
+// (run link100, lane DF40; the census that found them is in
+// port/slice_gate221.txt.)
+//
+// func_02040714 is `return data_020a0f94` and func_02040704 is
+// `return data_020a0f24`. They are the only two of this file's twelve faces
+// whose ROM bodies touch no radio at all -- two pure global reads, no callees,
+// nothing arm7.bin owns. The PORT_HOST_ABI tags below are therefore about the
+// STATE, not about the instruction: what is hosted here is not a hardware
+// access, it is the decision that the transport ANSWERS the link state rather
+// than KEEPING it in the ROM's own word. That is a real decision and it is
+// stated rather than dressed as an ABI fact.
+//
+// EVERYTHING A CLOSURE NEEDS IS ALREADY IN THE TREE:
+//   * comms_seam.h's CommsLinkState enum IS the ROM's data_020a0f94 encoding
+//     and says so -- kCommsIdle 0, kCommsConnecting 2, kCommsParentConnected
+//     3, kCommsChildConnected 4, which are exactly the cases
+//     src/func_02040724.c switches on. So `data_020a0f94 = t->state()` would
+//     be an identity, not an approximation.
+//   * data_020a0f94 is ALREADY hosted (hal/comms_conductor.cpp's MP3_BSS row,
+//     ".dsstate$ymp3s0007"), and a linked matched TU already writes it:
+//     src/func_0203fd64.c sets it to 1 on its refusal path.
+//   * src/func_0203ea5c.c calls func_02040714 exactly once per invocation
+//     (:204) and func_02040704 exactly once (:252). Neither sits in a tight
+//     loop, so a word refreshed at poll time cannot be spun on.
+//
+// WHAT IT COSTS, AND WHY IT IS NOT THIS LANE'S HUNK. data_020a0f24 is hosted
+// nowhere yet, and more to the point the seam would stop ANSWERING the state
+// and start MIRRORING it: the lifecycle faces writing the ROM's word on
+// open/become/close, and conductor_pump writing it on every poll. That mirror
+// is the DS's own shape -- on hardware the wireless thread is what writes that
+// word -- but it moves ownership inside a contract this file's banner declares
+// FROZEN, and a mirror that misses an update expires the ROM's wait bound and
+// drops a live session to solo. Two matched TUs, one contract decision, a
+// 2-player and a 4-player proof; the decision belongs to the conductor lane.
+// ===========================================================================
+
 // src/func_02040714.c is `return data_020a0f94`, the link state.
-// PORT_HOST_ABI: hosted WM/radio seam face; returns the link state the NITRO WM SDK / arm7.bin radio keeps, which this repo does not decompile.
+// PORT_HOST_ABI: hosted WM/radio seam face; the seam, not the ROM's own word, is where this port keeps the link state -- see the CLOSABLE note directly above, which is the ruling this tag stands on.
 int func_02040714(void) {
     const port::CommsTransport *t = port::comms_transport();
     return t ? t->state() : port::g_solo_state;
@@ -219,7 +257,7 @@ int func_02040714(void) {
 // src/func_0203ea5c.c:252 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
 // on ARM is a dead r0 write the callee overwrites. Declared with the argument
 // here so a stack ABI agrees with the ROM's own call sites.
-// PORT_HOST_ABI: hosted WM/radio seam face plus a register ride-through; the ROM caller passes a dead r0 the callee overwrites, declared as an argument so the host stack ABI matches the ROM call sites.
+// PORT_HOST_ABI: hosted WM/radio seam face plus a register ride-through; the ROM caller passes a dead r0 the callee overwrites, declared as an argument so the host stack ABI matches the ROM call sites, and the seam keeps the slot index the ROM keeps in data_020a0f24 -- see the CLOSABLE note above func_02040714.
 int func_02040704(int ignored) {
     (void)ignored;
     const port::CommsTransport *t = port::comms_transport();
@@ -284,14 +322,52 @@ void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
     (void)role; (void)b; (void)cb_recv; (void)cb_send; (void)e;
 }
 
-// src/func_02040a5c.c / src/func_02040a84.c: a status word the ROM keeps
-// inside the WM work buffer (data_020a3fc0 + 0xB50). There is no WM work
-// buffer here, so the seam keeps the word itself.
-static unsigned int g_wm_status;
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM keeps this status word inside the NITRO WM work buffer (data_020a3fc0 + 0xB50) the port does not have, so the seam keeps the word itself.
-void func_02040a5c(unsigned int val) { g_wm_status = val & ~1u; }
-// PORT_HOST_ABI: hosted WM/radio seam face; reads the status word the ROM keeps inside the NITRO WM work buffer the port does not have.
-int func_02040a84(void) { return (int)g_wm_status; }
+// THE STATUS-WORD PAIR IS RETIRED (run link100, lane DF40).
+//
+// src/func_02040a5c.c / src/func_02040a84.c stood here as two host bodies over
+// a file-static `g_wm_status`, on the stated ground that "there is no WM work
+// buffer here". The ground was wrong, and measuring it is what retired them.
+//
+// The pair is a read-modify-write of ONE word inside data_020a3fc0, and
+// data_020a3fc0 IS NOT A WM SDK OBJECT AS FAR AS THIS BINARY IS CONCERNED. A
+// sweep of every relocation in config/arm9/relocs.txt whose target lands in
+// its ROM span [0x020a3fc0, 0x020a4b40) returns exactly two ROM functions:
+// func_02040a5c and func_02040a84. Nothing else in the cartridge names one
+// byte of it by relocation. So hosting it is not "hosting the WM work buffer";
+// it is hosting 0xB80 bytes of DS BSS that two accessors own outright, which
+// is what this port does with DS BSS everywhere else.
+//
+// AND THE OBSERVABLE IS PROVABLY UNCHANGED. src/func_0203ea5c.c:386 (and the
+// wide copy's :475) is `func_02040a5c(func_02040a84())` -- read it, clear
+// bit 0, write it back. Storage starts zero; a84 answers 0; a5c writes
+// 0 & ~1 == 0. That was the loop invariant under g_wm_status and it is the
+// loop invariant under the ROM's own storage, with no third reader anywhere
+// in the link to tell the two apart. What changes is who computes it: the
+// ROM's own two bodies, over the ROM's own word, instead of a stand-in.
+//
+// A DECOMP DISCREPANCY THE MOVE SURFACED, recorded rather than papered over:
+// src/func_02040a5c.c writes offset 0xB50 (its struct is `char pad[0xb50];
+// u32 field_b50`) while src/func_02040a84.c reads `data_020a3fc0[726]`, which
+// is offset 0xB58. Two words, not one, for what the call site plainly means as
+// one. Both TUs are byte-matched individually, so the disagreement is in the
+// recovered C types and not in the ROM; it is invisible here because nothing
+// reads either word, and it is invisible on the DS because the ROM's own
+// bl-pair passes r0 straight through. Whichever way it resolves, this file is
+// not the place it resolves -- flagged for the arm9 side.
+//
+// The storage. ROM span 0x020a4b40 - 0x020a3fc0 = 0xB80 = 2944 bytes, sized by
+// span and not by the 0xB5c the two accessors happen to reach (the undersized
+// hosted-global trap; hal/auto_bss.cpp's data_0209d3c4 note is the precedent).
+// It is DS BSS, so it is inside the save-state bracket -- but in a section of
+// its own for the reason the $wcomms block at the foot of this file spells
+// out: an insertion INTERIOR to .dsstate shifts every hosted global past it,
+// and 2944 bytes is not a small shift. ".dsstate$ywm" sorts after every suffix
+// the tree uses ($ymp3* included: "ymp3" < "ywm" at the second character) and
+// before the $zzz high sentinel, so the captured span grows at its tail and
+// NOT ONE existing hosted global moves.
+#pragma section(".dsstate$ywm", read, write)
+__declspec(allocate(".dsstate$ywm")) __declspec(align(4))
+unsigned char data_020a3fc0[0xB80] = {0};
 
 // src/func_0203e20c.c: DS DOWNLOAD PLAY, an eight-state multiboot server that
 // feeds the game to three other consoles over the radio. A PC port with a

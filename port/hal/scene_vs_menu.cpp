@@ -968,13 +968,56 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                      COMPILED, not faced -- see the slice's correction note
      UnloadOverlay   nothing to unload: every hosted overlay is a static
                      build-time mount
-     func_02058048 / func_02058158 / func_02058200 / func_02057f38
-                     the carousel worker's queue-op, poll, thread-create and
+     func_02058048 / func_02058200 / func_02057f38
+                     the carousel worker's queue-op, thread-create and
                      reschedule -- 0. The port runs no DS threads (see the
                      OS_InitContext note above); a poll that answered "done"
                      would fabricate an animation that never ran.
    When the real netcode lane lands, the comms family here is its seam: these
-   faces are exactly the names port::comms state should answer through. */
+   faces are exactly the names port::comms state should answer through.
+
+   THE POLL IS RETIRED (run link100, lane DF40). func_02058158 stood in this
+   block with the other three and did not belong there: it is
+   `return p[25] == 2`, a read of the thread record's state word and nothing
+   else -- no scheduler, no context switch, no hardware. Its one linked caller
+   src/func_0201a1bc.c hands it data_0209d5b8, hal/auto_bss.cpp hosts that
+   record (sized to its ROM span in the same commit, having been 116 bytes
+   short), and a never-created thread's state word is zero, so the ROM's own
+   body answers the same 0 this face fabricated -- for the ROM's own reason
+   instead of by assertion. src/func_02058158.c is enrolled by
+   port/slice_gate221.txt.
+   THE OTHER THREE STAY, AND THE REASON IS NO LONGER THE ONE THIS BLOCK'S
+   FIRST PARAGRAPH GIVES. "The port runs no DS threads" was true when it was
+   written and is not now: run link2's lane THR put the ROM's own scheduler in
+   the build on Windows fibers (hal/boot2_thread.cpp), so src/func_02057f54.c,
+   src/OS_SleepThread.c and src/OS_WakeupThread.c are all LINKED and
+   ARMSaveContext / ARMRestoreContext have honest host bodies. The floor moved
+   without this file being told; it is restated here rather than left to read
+   as a hardware fact it stopped being.
+     func_02058200  hal/boot2_thread.cpp's own WHAT IS NOT MODELLED section
+                    names thread CREATION outright -- the only threads are the
+                    two it seats, and a restore of a context it has never seen
+                    is refused loudly rather than guessed at. Its tail
+                    src/func_020581a8.cpp also unhooks the exiting thread from
+                    data_020a6148, storage that file owns.
+     func_02057f38  paints the DS stack guard words 0x7bf9dd5b / 0xfddb597d at
+                    the ends of a stack func_02058200 never allocated. Same
+                    file, same section: a fiber gets a real host stack and the
+                    guard words are never written.
+     func_02058048  its ROM body is only IRQ-disable, `state = 1`, reschedule,
+                    IRQ-restore, and every one of those IS in this build now,
+                    so this row is CLOSABLE ON LINKAGE and is held back on
+                    BEHAVIOUR instead. It writes offset 0x64 of whatever object
+                    its caller hands it, and two of its three linked callers
+                    (src/func_02060228.c, src/func_0206081c.c) hand it the CARD
+                    driver's thread at data_020a81bc -- a thread nothing in
+                    this build created, inside the gxband-guarded $card00 run.
+                    Seating it turns three sites that do nothing today into
+                    three real reschedules, and what those do at those sites is
+                    a measurement nobody has made. Named, not taken; the
+                    undersized-global half of exactly this hazard is what
+                    hal/auto_bss.cpp's data_0209d5b8 note fixed for the poll.
+   (run link100, lane DF40) */
 static unsigned g_vs_seam_hits;
 static void vs_seam(const char *name)
 {
@@ -994,8 +1037,9 @@ VS_SEAM(UnloadOverlay)
 VS_SEAM(func_02057f38)
 // PORT_HOST_ABI: the port runs no DS threads; the carousel worker's queue-op answers idle 0.
 VS_SEAM(func_02058048)
-// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's poll answers idle 0.
-VS_SEAM(func_02058158)
+// func_02058158 WAS HERE and is now the ROM's own body: see the retirement
+// note in the block above. port/slice_gate221.txt carries the enrollment.
+// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's thread-create answers idle 0 (its tail func_020581a8 reaches src/func_02057f54.c, the ROM scheduler, which needs the ARM context switch).
 VS_SEAM(func_02058200)
 #undef VS_SEAM
 

@@ -13955,6 +13955,39 @@ endif()
 target_compile_definitions(mp_sleepwake PRIVATE PORT_OS_THREAD_HOST_PAIR)
 target_compile_definitions(mp_comms_seam PRIVATE PORT_OS_THREAD_HOST_PAIR)
 
+# GATE 221 (run link100, lane DF40): three host stand-ins retired out of the
+# func_0203df40 / func_0203ea5c census -- the VS carousel's poll
+# (hal/scene_vs_menu.cpp's VS_SEAM block) and the WM status-word
+# read-modify-write pair (hal/comms_seam.cpp's g_wm_status). The whole census,
+# including why the other 299 rows of those two closures are NOT work, is in
+# port/slice_gate221.txt's own header.
+#
+# ON ALL THREE BIG TARGETS, and not by preference. Each retired host body lived
+# in a file every one of them compiles -- hal/comms_seam.cpp rides
+# SLICE_COMMS_SOURCES and hal/scene_vs_menu.cpp rides SLICE_VS_SOURCES, and both
+# variables go to exactly walk_window, walk_window_hires and smoke_player. A
+# target that lost the face without gaining the body would fail at link, so the
+# three move together. Appended as target_sources ABOVE the sharing block below,
+# which reads the three targets' SOURCES back off them: a source on all three
+# joins the single shared compile by itself.
+#
+# mp_comms_seam also links hal/comms_seam.cpp directly and does NOT get these
+# rows. It does not need them: nothing that probe links references
+# func_02040a5c or func_02040a84 (only src/func_0203ea5c.c and the wide copy do,
+# and neither is in it), so the two names are simply never referenced there.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate221.txt" SLICE221_LINES)
+set(SLICE221_SOURCES "")
+foreach(line IN LISTS SLICE221_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE221_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t221 walk_window walk_window_hires smoke_player)
+    target_sources(${_t221} PRIVATE ${SLICE221_SOURCES})
+endforeach()
+
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================

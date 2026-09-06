@@ -76,7 +76,28 @@ int data_020a0f70[8];
 int data_0209d3c4[144 / 4];
 int data_0209d4f8[8];
 int data_0209d518[8];
-int data_0209d5b8[8];
+/* THE CAROUSEL WORKER'S THREAD OBJECT, and the generous default was 116 bytes
+   short of it -- the data_0209d3c4 shape above, one more time. (run link100,
+   lane DF40.)
+
+   ROM span from config/arm9/symbols.txt is 0x0209d64c - 0x0209d5b8 = 0x94 =
+   148 bytes, and that is the DS thread record src/func_02058200.c builds:
+   src/func_02058158.c reads p[25] (offset 0x64, the state word),
+   src/func_02057f38.c writes offset 0x84/0x8c, src/func_020581a8.c reaches
+   the wakeup queue at 0x90. At int[8] every one of those was 0x44 or more
+   bytes past the end of the object and over whatever this file's link-sweep
+   loop had put next to it.
+
+   IT HAS NOT FAULTED YET only because all four reachers are faced idle in
+   hal/scene_vs_menu.cpp's refused-subtree block, so nothing has read or
+   written past offset 0. This lane seats the first of them -- the poll,
+   src/func_02058158.c, whose only linked caller src/func_0201a1bc.c passes
+   exactly this object -- and that read at 0x64 becomes real, which is what
+   turns the size from a tidy-up into a correctness question. The other three
+   stay faced (they need the ROM scheduler, which needs the ARM context
+   switch). Sized by the whole ROM span rather than by 0x68 on purpose, so the
+   day one of those three lands this does not have to be found again. */
+int data_0209d5b8[148 / 4];
 int data_0209f278[8];
 int data_0209fc60[8];
 int data_0209fc78[8];
